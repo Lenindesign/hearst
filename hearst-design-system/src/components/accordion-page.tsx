@@ -155,7 +155,7 @@ export function AccordionPage() {
           description="A group of collapsible items. The first item is expanded by default. Click any header to toggle its panel."
         />
         <div className="border rounded-lg p-6">
-          <Accordion type="single" collapsible defaultValue="item-0">
+          <Accordion defaultValue={["item-0"]}>
             {FAQ_ITEMS.map((item, i) => (
               <AccordionItem key={i} value={`item-${i}`}>
                 <AccordionTrigger>{item.q}</AccordionTrigger>
@@ -179,7 +179,7 @@ export function AccordionPage() {
         />
         <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr] gap-8 items-start">
           <div className="border rounded-lg p-6">
-            <Accordion type="single" defaultValue="anatomy">
+            <Accordion defaultValue={["anatomy"]}>
               <AccordionItem value="anatomy">
                 <AccordionTrigger>Section Title</AccordionTrigger>
                 <AccordionContent>
@@ -237,7 +237,7 @@ export function AccordionPage() {
                 <code className="font-mono text-[11px]">collapsible</code> to
                 allow closing all items.
               </p>
-              <Accordion type="single" collapsible>
+              <Accordion>
                 <AccordionItem value="s1">
                   <AccordionTrigger>First section</AccordionTrigger>
                   <AccordionContent>
@@ -264,7 +264,7 @@ export function AccordionPage() {
                 Any number of items can be open simultaneously. Each item
                 toggles independently.
               </p>
-              <Accordion type="multiple" defaultValue={["m1"]}>
+              <Accordion multiple defaultValue={["m1"]}>
                 <AccordionItem value="m1">
                   <AccordionTrigger>First section</AccordionTrigger>
                   <AccordionContent>
@@ -296,7 +296,7 @@ export function AccordionPage() {
           <Card>
             <CardContent className="pt-6 space-y-4">
               <p className="text-sm font-semibold">FAQ Section</p>
-              <Accordion type="single" collapsible>
+              <Accordion>
                 {FAQ_ITEMS.slice(0, 3).map((item, i) => (
                   <AccordionItem key={i} value={`faq-${i}`}>
                     <AccordionTrigger>{item.q}</AccordionTrigger>
@@ -312,7 +312,7 @@ export function AccordionPage() {
           <Card>
             <CardContent className="pt-6 space-y-4">
               <p className="text-sm font-semibold">Settings Panel</p>
-              <Accordion type="multiple">
+              <Accordion multiple>
                 {SETTINGS_ITEMS.map((item, i) => (
                   <AccordionItem key={i} value={`set-${i}`}>
                     <AccordionTrigger>{item.title}</AccordionTrigger>
