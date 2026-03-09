@@ -302,7 +302,7 @@ function FormSection() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="firstName">First name</Label>
               <Input id="firstName" placeholder="Jane" />
@@ -446,14 +446,14 @@ export function Showcase() {
     <div className="min-h-screen bg-background">
       <NavBar />
 
-      <main className="max-w-6xl mx-auto px-6 py-10 space-y-12">
-        <div className="flex items-center gap-6">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-8 sm:space-y-12">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
           {logo && (
-            <BrandLogo slug={brand.slug} className="[&_svg]:h-10 [&_svg]:w-auto [&_svg]:max-w-[240px]" />
+            <BrandLogo slug={brand.slug} className="[&_svg]:h-8 sm:[&_svg]:h-10 [&_svg]:w-auto [&_svg]:max-w-[200px] sm:[&_svg]:max-w-[240px]" />
           )}
           <div>
-            <h1 className="text-4xl font-bold tracking-tight">{brand.name}</h1>
-            <p className="text-lg text-muted-foreground mt-2">
+            <h1 className="text-2xl sm:text-4xl font-bold tracking-tight">{brand.name}</h1>
+            <p className="text-sm sm:text-lg text-muted-foreground mt-1 sm:mt-2">
               Primary: <strong>{brand.fontDefault}</strong> · Secondary:{" "}
               <strong>{brand.fontSecondary}</strong>
             </p>

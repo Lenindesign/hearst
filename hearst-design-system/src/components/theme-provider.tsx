@@ -136,7 +136,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <ThemeContext.Provider value={{ brand, setBrand }}>
-      <div style={cssVars as React.CSSProperties}>{children}</div>
+      <div data-brand={brand.slug} style={cssVars as React.CSSProperties}>
+        {children}
+      </div>
     </ThemeContext.Provider>
   );
 }

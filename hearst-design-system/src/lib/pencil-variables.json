@@ -1,266 +1,4843 @@
 {
+  "A:--accent": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#F2F3F0"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#252629"
+      }
+    ]
+  },
+  "A:--accent-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#111111"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#F2F3F0"
+      }
+    ]
+  },
+  "A:--background": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#F5F5F5"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#252629"
+      }
+    ]
+  },
+  "A:--black": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "A:--border": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#E1E2E5"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#2E2E2E"
+      }
+    ]
+  },
+  "A:--card": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#FFFFFF"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#1F1F1F"
+      }
+    ]
+  },
+  "A:--card-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#111111"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#FFFFFF"
+      }
+    ]
+  },
+  "A:--color-error": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#F5D7F3"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#57474A"
+      }
+    ]
+  },
+  "A:--color-error-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#66005E"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#F5C4CC"
+      }
+    ]
+  },
+  "A:--color-info": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#C9D6F0"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#3C4352"
+      }
+    ]
+  },
+  "A:--color-info-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#001133"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#B2CCFF"
+      }
+    ]
+  },
+  "A:--color-success": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#DDF0C9"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#4A4E49"
+      }
+    ]
+  },
+  "A:--color-success-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#1A3300"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#D1F0C9"
+      }
+    ]
+  },
+  "A:--color-warning": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#F5E6D7"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#4F4E4C"
+      }
+    ]
+  },
+  "A:--color-warning-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#663300"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#F5E1CE"
+      }
+    ]
+  },
+  "A:--destructive": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#A62911"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#A62911"
+      }
+    ]
+  },
+  "A:--destructive-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#FFFFFF"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#FFFFFF"
+      }
+    ]
+  },
+  "A:--font-primary": {
+    "type": "string",
+    "value": "Roboto"
+  },
+  "A:--font-secondary": {
+    "type": "string",
+    "value": [
+      {
+        "theme": {
+          "A:Mode": "Light"
+        },
+        "value": "Roboto Mono"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "Roboto Mono"
+      }
+    ]
+  },
+  "A:--foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#333333"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#F5F5F5"
+      }
+    ]
+  },
+  "A:--input": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#9DA4B3"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#414347"
+      }
+    ]
+  },
+  "A:--muted": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#F2F3F0"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#2E2E2E"
+      }
+    ]
+  },
+  "A:--muted-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#5B5F66"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#A0A6B2"
+      }
+    ]
+  },
+  "A:--popover": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#FFFFFF"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#1F1F1F"
+      }
+    ]
+  },
+  "A:--popover-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#111111"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#FFFFFF"
+      }
+    ]
+  },
+  "A:--primary": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#0F5FFE"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#0F5FFE"
+      }
+    ]
+  },
+  "A:--primary-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#FFFFFF"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#F5F5F5"
+      }
+    ]
+  },
+  "A:--radius-none": {
+    "type": "number",
+    "value": 0
+  },
+  "A:--radius-pill": {
+    "type": "number",
+    "value": 999
+  },
+  "A:--radius-xs": {
+    "type": "number",
+    "value": 2
+  },
+  "A:--ring": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#E1E2E5"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#666666"
+      }
+    ]
+  },
+  "A:--secondary": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#333333"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#414347"
+      }
+    ]
+  },
+  "A:--secondary-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#FFFFFF"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#FFFFFF"
+      }
+    ]
+  },
+  "A:--sidebar": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#FFFFFF"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#2E2F33"
+      }
+    ]
+  },
+  "A:--sidebar-accent": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#333333"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#1F1F1F"
+      }
+    ]
+  },
+  "A:--sidebar-accent-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#F5F5F5"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#F5F5F5"
+      }
+    ]
+  },
+  "A:--sidebar-border": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#E1E2E5"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#414347"
+      }
+    ]
+  },
+  "A:--sidebar-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#5B5F66"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#A0A6B2"
+      }
+    ]
+  },
+  "A:--sidebar-primary": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#0F5FFE"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#0F5FFE"
+      }
+    ]
+  },
+  "A:--sidebar-primary-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#002266"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#f5f5f5"
+      }
+    ]
+  },
+  "A:--sidebar-ring": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#E1E2E5"
+      },
+      {
+        "theme": {
+          "A:Mode": "Dark"
+        },
+        "value": "#414347"
+      }
+    ]
+  },
+  "A:--white": {
+    "type": "color",
+    "value": "#FFFFFF"
+  },
+  "T:--accent": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#f5f5f5"
+      },
+      {
+        "theme": {
+          "T:Mode": "Dark"
+        },
+        "value": "#262626"
+      },
+      {
+        "theme": {
+          "T:Base": "Gray",
+          "T:Mode": "Dark"
+        },
+        "value": "#1f2937"
+      },
+      {
+        "theme": {
+          "T:Base": "Slate",
+          "T:Mode": "Dark"
+        },
+        "value": "#1e293b"
+      },
+      {
+        "theme": {
+          "T:Base": "Stone",
+          "T:Mode": "Dark"
+        },
+        "value": "#292524"
+      },
+      {
+        "theme": {
+          "T:Base": "Zinc",
+          "T:Mode": "Dark"
+        },
+        "value": "#27272a"
+      }
+    ]
+  },
+  "T:--accent-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#171717"
+      },
+      {
+        "theme": {
+          "T:Base": "Gray"
+        },
+        "value": "#111827"
+      },
+      {
+        "theme": {
+          "T:Base": "Slate"
+        },
+        "value": "#0f172a"
+      },
+      {
+        "theme": {
+          "T:Base": "Stone"
+        },
+        "value": "#1c1917"
+      },
+      {
+        "theme": {
+          "T:Base": "Zinc"
+        },
+        "value": "#18181b"
+      },
+      {
+        "theme": {
+          "T:Mode": "Dark"
+        },
+        "value": "#fafafa"
+      }
+    ]
+  },
+  "T:--background": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#fafafa"
+      },
+      {
+        "theme": {
+          "T:Mode": "Dark"
+        },
+        "value": "#0a0a0a"
+      },
+      {
+        "theme": {
+          "T:Base": "Gray",
+          "T:Mode": "Dark"
+        },
+        "value": "#030712"
+      },
+      {
+        "theme": {
+          "T:Base": "Slate",
+          "T:Mode": "Dark"
+        },
+        "value": "#020617"
+      },
+      {
+        "theme": {
+          "T:Base": "Stone",
+          "T:Mode": "Dark"
+        },
+        "value": "#0c0a09"
+      },
+      {
+        "theme": {
+          "T:Base": "Zinc",
+          "T:Mode": "Dark"
+        },
+        "value": "#09090b"
+      }
+    ]
+  },
+  "T:--black": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "T:--border": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#e5e5e5"
+      },
+      {
+        "theme": {
+          "T:Base": "Gray"
+        },
+        "value": "#e5e7eb"
+      },
+      {
+        "theme": {
+          "T:Base": "Slate"
+        },
+        "value": "#e2e8f0"
+      },
+      {
+        "theme": {
+          "T:Base": "Stone"
+        },
+        "value": "#e5e5e5"
+      },
+      {
+        "theme": {
+          "T:Base": "Zinc"
+        },
+        "value": "#e4e4e7"
+      },
+      {
+        "theme": {
+          "T:Mode": "Dark"
+        },
+        "value": "#ffffff1a"
+      }
+    ]
+  },
+  "T:--card": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#fafafa"
+      },
+      {
+        "theme": {
+          "T:Mode": "Dark"
+        },
+        "value": "#171717"
+      },
+      {
+        "theme": {
+          "T:Base": "Gray",
+          "T:Mode": "Dark"
+        },
+        "value": "#111827"
+      },
+      {
+        "theme": {
+          "T:Base": "Slate",
+          "T:Mode": "Dark"
+        },
+        "value": "#0f172a"
+      },
+      {
+        "theme": {
+          "T:Base": "Stone",
+          "T:Mode": "Dark"
+        },
+        "value": "#1c1917"
+      },
+      {
+        "theme": {
+          "T:Base": "Zinc",
+          "T:Mode": "Dark"
+        },
+        "value": "#18181b"
+      }
+    ]
+  },
+  "T:--card-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#0a0a0a"
+      },
+      {
+        "theme": {
+          "T:Base": "Gray"
+        },
+        "value": "#030712"
+      },
+      {
+        "theme": {
+          "T:Base": "Slate"
+        },
+        "value": "#020617"
+      },
+      {
+        "theme": {
+          "T:Base": "Stone"
+        },
+        "value": "#0c0a09"
+      },
+      {
+        "theme": {
+          "T:Base": "Zinc"
+        },
+        "value": "#09090b"
+      },
+      {
+        "theme": {
+          "T:Mode": "Dark"
+        },
+        "value": "#fafafa"
+      }
+    ]
+  },
+  "T:--destructive": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#e7000b"
+      },
+      {
+        "theme": {
+          "T:Mode": "Dark"
+        },
+        "value": "#ff666999"
+      }
+    ]
+  },
+  "T:--foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#0a0a0a"
+      },
+      {
+        "theme": {
+          "T:Base": "Gray"
+        },
+        "value": "#030712"
+      },
+      {
+        "theme": {
+          "T:Base": "Slate"
+        },
+        "value": "#020617"
+      },
+      {
+        "theme": {
+          "T:Base": "Stone"
+        },
+        "value": "#0c0a09"
+      },
+      {
+        "theme": {
+          "T:Base": "Zinc"
+        },
+        "value": "#09090b"
+      },
+      {
+        "theme": {
+          "T:Mode": "Dark"
+        },
+        "value": "#fafafa"
+      }
+    ]
+  },
+  "T:--input": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#e5e5e5"
+      },
+      {
+        "theme": {
+          "T:Base": "Gray"
+        },
+        "value": "#e5e7eb"
+      },
+      {
+        "theme": {
+          "T:Base": "Slate"
+        },
+        "value": "#e2e8f0"
+      },
+      {
+        "theme": {
+          "T:Base": "Stone"
+        },
+        "value": "#e5e5e5"
+      },
+      {
+        "theme": {
+          "T:Base": "Zinc"
+        },
+        "value": "#e4e4e7"
+      },
+      {
+        "theme": {
+          "T:Mode": "Dark"
+        },
+        "value": "#ffffff1a"
+      }
+    ]
+  },
+  "T:--muted": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#f5f5f5"
+      },
+      {
+        "theme": {
+          "T:Mode": "Dark"
+        },
+        "value": "#262626"
+      },
+      {
+        "theme": {
+          "T:Base": "Gray",
+          "T:Mode": "Dark"
+        },
+        "value": "#1f2937"
+      },
+      {
+        "theme": {
+          "T:Base": "Slate",
+          "T:Mode": "Dark"
+        },
+        "value": "#1e293b"
+      },
+      {
+        "theme": {
+          "T:Base": "Stone",
+          "T:Mode": "Dark"
+        },
+        "value": "#292524"
+      },
+      {
+        "theme": {
+          "T:Base": "Zinc",
+          "T:Mode": "Dark"
+        },
+        "value": "#27272a"
+      }
+    ]
+  },
+  "T:--muted-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#737373"
+      },
+      {
+        "theme": {
+          "T:Base": "Gray"
+        },
+        "value": "#6b7280"
+      },
+      {
+        "theme": {
+          "T:Base": "Slate"
+        },
+        "value": "#64748b"
+      },
+      {
+        "theme": {
+          "T:Base": "Stone"
+        },
+        "value": "#78716c"
+      },
+      {
+        "theme": {
+          "T:Base": "Zinc"
+        },
+        "value": "#71717a"
+      },
+      {
+        "theme": {
+          "T:Mode": "Dark"
+        },
+        "value": "#a3a3a3"
+      },
+      {
+        "theme": {
+          "T:Base": "Gray",
+          "T:Mode": "Dark"
+        },
+        "value": "#9ca3af"
+      },
+      {
+        "theme": {
+          "T:Base": "Slate",
+          "T:Mode": "Dark"
+        },
+        "value": "#94a3b8"
+      },
+      {
+        "theme": {
+          "T:Base": "Stone",
+          "T:Mode": "Dark"
+        },
+        "value": "#a8a29e"
+      },
+      {
+        "theme": {
+          "T:Base": "Zinc",
+          "T:Mode": "Dark"
+        },
+        "value": "#a1a1aa"
+      }
+    ]
+  },
+  "T:--popover": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#fafafa"
+      },
+      {
+        "theme": {
+          "T:Mode": "Dark"
+        },
+        "value": "#171717"
+      },
+      {
+        "theme": {
+          "T:Base": "Gray",
+          "T:Mode": "Dark"
+        },
+        "value": "#111827"
+      },
+      {
+        "theme": {
+          "T:Base": "Slate",
+          "T:Mode": "Dark"
+        },
+        "value": "#0f172a"
+      },
+      {
+        "theme": {
+          "T:Base": "Stone",
+          "T:Mode": "Dark"
+        },
+        "value": "#1c1917"
+      },
+      {
+        "theme": {
+          "T:Base": "Zinc",
+          "T:Mode": "Dark"
+        },
+        "value": "#18181b"
+      }
+    ]
+  },
+  "T:--popover-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#0a0a0a"
+      },
+      {
+        "theme": {
+          "T:Base": "Gray"
+        },
+        "value": "#030712"
+      },
+      {
+        "theme": {
+          "T:Base": "Slate"
+        },
+        "value": "#020617"
+      },
+      {
+        "theme": {
+          "T:Base": "Stone"
+        },
+        "value": "#0c0a09"
+      },
+      {
+        "theme": {
+          "T:Base": "Zinc"
+        },
+        "value": "#09090b"
+      },
+      {
+        "theme": {
+          "T:Mode": "Dark"
+        },
+        "value": "#fafafa"
+      }
+    ]
+  },
+  "T:--primary": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#171717"
+      },
+      {
+        "theme": {
+          "T:Base": "Gray"
+        },
+        "value": "#111827"
+      },
+      {
+        "theme": {
+          "T:Base": "Slate"
+        },
+        "value": "#0f172a"
+      },
+      {
+        "theme": {
+          "T:Base": "Stone"
+        },
+        "value": "#1c1917"
+      },
+      {
+        "theme": {
+          "T:Base": "Zinc"
+        },
+        "value": "#18181b"
+      },
+      {
+        "theme": {
+          "T:Mode": "Dark"
+        },
+        "value": "#e5e5e5"
+      },
+      {
+        "theme": {
+          "T:Base": "Gray",
+          "T:Mode": "Dark"
+        },
+        "value": "#e5e7eb"
+      },
+      {
+        "theme": {
+          "T:Base": "Slate",
+          "T:Mode": "Dark"
+        },
+        "value": "#e2e8f0"
+      },
+      {
+        "theme": {
+          "T:Base": "Stone",
+          "T:Mode": "Dark"
+        },
+        "value": "#e5e5e5"
+      },
+      {
+        "theme": {
+          "T:Base": "Zinc",
+          "T:Mode": "Dark"
+        },
+        "value": "#e4e4e7"
+      },
+      {
+        "theme": {
+          "T:Accent": "Red"
+        },
+        "value": "#dc2626"
+      },
+      {
+        "theme": {
+          "T:Accent": "Rose"
+        },
+        "value": "#e11d48"
+      },
+      {
+        "theme": {
+          "T:Accent": "Orange"
+        },
+        "value": "#ea580c"
+      },
+      {
+        "theme": {
+          "T:Accent": "Green"
+        },
+        "value": "#65a30d"
+      },
+      {
+        "theme": {
+          "T:Accent": "Blue"
+        },
+        "value": "#1d4ed8"
+      },
+      {
+        "theme": {
+          "T:Accent": "Yellow"
+        },
+        "value": "#facc15"
+      },
+      {
+        "theme": {
+          "T:Accent": "Violet"
+        },
+        "value": "#7c3aed"
+      },
+      {
+        "theme": {
+          "T:Accent": "Red",
+          "T:Mode": "Dark"
+        },
+        "value": "#ef4444"
+      },
+      {
+        "theme": {
+          "T:Accent": "Rose",
+          "T:Mode": "Dark"
+        },
+        "value": "#f43f5e"
+      },
+      {
+        "theme": {
+          "T:Accent": "Orange",
+          "T:Mode": "Dark"
+        },
+        "value": "#f97316"
+      },
+      {
+        "theme": {
+          "T:Accent": "Green",
+          "T:Mode": "Dark"
+        },
+        "value": "#65a30d"
+      },
+      {
+        "theme": {
+          "T:Accent": "Blue",
+          "T:Mode": "Dark"
+        },
+        "value": "#1d4ed8"
+      },
+      {
+        "theme": {
+          "T:Accent": "Yellow",
+          "T:Mode": "Dark"
+        },
+        "value": "#eab308"
+      },
+      {
+        "theme": {
+          "T:Accent": "Violet",
+          "T:Mode": "Dark"
+        },
+        "value": "#8b5cf6"
+      }
+    ]
+  },
+  "T:--primary-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#fafafa"
+      },
+      {
+        "theme": {
+          "T:Mode": "Dark"
+        },
+        "value": "#171717"
+      },
+      {
+        "theme": {
+          "T:Base": "Gray",
+          "T:Mode": "Dark"
+        },
+        "value": "#111827"
+      },
+      {
+        "theme": {
+          "T:Base": "Slate",
+          "T:Mode": "Dark"
+        },
+        "value": "#0f172a"
+      },
+      {
+        "theme": {
+          "T:Base": "Stone",
+          "T:Mode": "Dark"
+        },
+        "value": "#1c1917"
+      },
+      {
+        "theme": {
+          "T:Base": "Zinc",
+          "T:Mode": "Dark"
+        },
+        "value": "#18181b"
+      },
+      {
+        "theme": {
+          "T:Accent": "Red"
+        },
+        "value": "#fef2f2"
+      },
+      {
+        "theme": {
+          "T:Accent": "Rose"
+        },
+        "value": "#fff1f2"
+      },
+      {
+        "theme": {
+          "T:Accent": "Orange"
+        },
+        "value": "#fff7ed"
+      },
+      {
+        "theme": {
+          "T:Accent": "Green"
+        },
+        "value": "#f7fee7"
+      },
+      {
+        "theme": {
+          "T:Accent": "Blue"
+        },
+        "value": "#eff6ff"
+      },
+      {
+        "theme": {
+          "T:Accent": "Yellow"
+        },
+        "value": "#713f12"
+      },
+      {
+        "theme": {
+          "T:Accent": "Violet"
+        },
+        "value": "#f5f3ff"
+      }
+    ]
+  },
+  "T:--ring": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#a3a3a3"
+      },
+      {
+        "theme": {
+          "T:Base": "Gray"
+        },
+        "value": "#9ca3af"
+      },
+      {
+        "theme": {
+          "T:Base": "Slate"
+        },
+        "value": "#94a3b8"
+      },
+      {
+        "theme": {
+          "T:Base": "Stone"
+        },
+        "value": "#a8a29e"
+      },
+      {
+        "theme": {
+          "T:Base": "Zinc"
+        },
+        "value": "#a1a1aa"
+      },
+      {
+        "theme": {
+          "T:Mode": "Dark"
+        },
+        "value": "#737373"
+      },
+      {
+        "theme": {
+          "T:Base": "Gray",
+          "T:Mode": "Dark"
+        },
+        "value": "#6b7280"
+      },
+      {
+        "theme": {
+          "T:Base": "Slate",
+          "T:Mode": "Dark"
+        },
+        "value": "#64748b"
+      },
+      {
+        "theme": {
+          "T:Base": "Stone",
+          "T:Mode": "Dark"
+        },
+        "value": "#78716c"
+      },
+      {
+        "theme": {
+          "T:Base": "Zinc",
+          "T:Mode": "Dark"
+        },
+        "value": "#71717a"
+      },
+      {
+        "theme": {
+          "T:Accent": "Red"
+        },
+        "value": "#7f1d1d"
+      },
+      {
+        "theme": {
+          "T:Accent": "Rose"
+        },
+        "value": "#fb7185"
+      },
+      {
+        "theme": {
+          "T:Accent": "Orange"
+        },
+        "value": "#fb923c"
+      },
+      {
+        "theme": {
+          "T:Accent": "Green"
+        },
+        "value": "#a3e635"
+      },
+      {
+        "theme": {
+          "T:Accent": "Blue"
+        },
+        "value": "#3b82f6"
+      },
+      {
+        "theme": {
+          "T:Accent": "Yellow"
+        },
+        "value": "#713f12"
+      },
+      {
+        "theme": {
+          "T:Accent": "Violet"
+        },
+        "value": "#a78bfa"
+      },
+      {
+        "theme": {
+          "T:Accent": "Red",
+          "T:Mode": "Dark"
+        },
+        "value": "#dc2626"
+      },
+      {
+        "theme": {
+          "T:Accent": "Rose",
+          "T:Mode": "Dark"
+        },
+        "value": "#881337"
+      },
+      {
+        "theme": {
+          "T:Accent": "Orange",
+          "T:Mode": "Dark"
+        },
+        "value": "#7c2d12"
+      },
+      {
+        "theme": {
+          "T:Accent": "Green",
+          "T:Mode": "Dark"
+        },
+        "value": "#365314"
+      },
+      {
+        "theme": {
+          "T:Accent": "Blue",
+          "T:Mode": "Dark"
+        },
+        "value": "#2563eb"
+      },
+      {
+        "theme": {
+          "T:Accent": "Yellow",
+          "T:Mode": "Dark"
+        },
+        "value": "#ca8a06"
+      },
+      {
+        "theme": {
+          "T:Accent": "Violet",
+          "T:Mode": "Dark"
+        },
+        "value": "#4c1d95"
+      }
+    ]
+  },
+  "T:--secondary": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#f5f5f5"
+      },
+      {
+        "theme": {
+          "T:Mode": "Dark"
+        },
+        "value": "#262626"
+      },
+      {
+        "theme": {
+          "T:Base": "Gray",
+          "T:Mode": "Dark"
+        },
+        "value": "#1f2937"
+      },
+      {
+        "theme": {
+          "T:Base": "Slate",
+          "T:Mode": "Dark"
+        },
+        "value": "#1e293b"
+      },
+      {
+        "theme": {
+          "T:Base": "Stone",
+          "T:Mode": "Dark"
+        },
+        "value": "#292524"
+      },
+      {
+        "theme": {
+          "T:Base": "Zinc",
+          "T:Mode": "Dark"
+        },
+        "value": "#27272a"
+      }
+    ]
+  },
+  "T:--secondary-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#171717"
+      },
+      {
+        "theme": {
+          "T:Base": "Gray"
+        },
+        "value": "#111827"
+      },
+      {
+        "theme": {
+          "T:Base": "Slate"
+        },
+        "value": "#0f172a"
+      },
+      {
+        "theme": {
+          "T:Base": "Stone"
+        },
+        "value": "#1c1917"
+      },
+      {
+        "theme": {
+          "T:Base": "Zinc"
+        },
+        "value": "#18181b"
+      },
+      {
+        "theme": {
+          "T:Mode": "Dark"
+        },
+        "value": "#fafafa"
+      }
+    ]
+  },
+  "T:--sidebar": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#fafafa"
+      },
+      {
+        "theme": {
+          "T:Mode": "Dark"
+        },
+        "value": "#18181b"
+      }
+    ]
+  },
+  "T:--sidebar-accent": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#f4f4f4"
+      },
+      {
+        "theme": {
+          "T:Mode": "Dark"
+        },
+        "value": "#2a2a30"
+      }
+    ]
+  },
+  "T:--sidebar-accent-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#18181b"
+      },
+      {
+        "theme": {
+          "T:Mode": "Dark"
+        },
+        "value": "#fafafa"
+      }
+    ]
+  },
+  "T:--sidebar-border": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#e4e4e7"
+      },
+      {
+        "theme": {
+          "T:Mode": "Dark"
+        },
+        "value": "#ffffff1a"
+      }
+    ]
+  },
+  "T:--sidebar-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#09090b"
+      },
+      {
+        "theme": {
+          "T:Mode": "Dark"
+        },
+        "value": "#fafafa"
+      }
+    ]
+  },
+  "T:--sidebar-primary": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#18181b"
+      },
+      {
+        "theme": {
+          "T:Mode": "Dark"
+        },
+        "value": "#1447e6"
+      }
+    ]
+  },
+  "T:--sidebar-primary-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#fafafa"
+      },
+      {
+        "theme": {
+          "T:Mode": "Dark"
+        },
+        "value": "#fafafa"
+      }
+    ]
+  },
+  "T:--sidebar-ring": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#71717a"
+      },
+      {
+        "theme": {
+          "T:Mode": "Dark"
+        },
+        "value": "#71717a"
+      }
+    ]
+  },
+  "T:--white": {
+    "type": "color",
+    "value": "#ffffffff"
+  },
+  "Y:--accent": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#F5f5f5"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#131124"
+      }
+    ]
+  },
+  "Y:--accent-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "2A2933"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#F2F3F0"
+      }
+    ]
+  },
+  "Y:--background": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#FFFFFF"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#131124"
+      }
+    ]
+  },
+  "Y:--black": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "Y:--border": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#C5C5CB"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#2B283D"
+      }
+    ]
+  },
+  "Y:--card": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#FFFFFF"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#1A182E"
+      }
+    ]
+  },
+  "Y:--card-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#2A2933"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#FFFFFF"
+      }
+    ]
+  },
+  "Y:--color-error": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#FFBFB2"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#53424F"
+      }
+    ]
+  },
+  "Y:--color-error-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#590F00"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#FFBFB2"
+      }
+    ]
+  },
+  "Y:--color-info": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#C9D6F0"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#404562"
+      }
+    ]
+  },
+  "Y:--color-info-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#001133"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#B2CCFF"
+      }
+    ]
+  },
+  "Y:--color-success": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#A1E5A1"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#3B4748"
+      }
+    ]
+  },
+  "Y:--color-success-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#003300"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#A1E5A1"
+      }
+    ]
+  },
+  "Y:--color-warning": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#FFD9B2"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#53484F"
+      }
+    ]
+  },
+  "Y:--color-warning-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#4D2700"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#FFD9B2"
+      }
+    ]
+  },
+  "Y:--destructive": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#CC3314"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#CC3314"
+      }
+    ]
+  },
+  "Y:--destructive-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#FFFFFF"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#FFFFFF"
+      }
+    ]
+  },
+  "Y:--font-primary": {
+    "type": "string",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "Inter"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "Inter"
+      }
+    ]
+  },
+  "Y:--font-secondary": {
+    "type": "string",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "Inter"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "Inter"
+      }
+    ]
+  },
+  "Y:--foreground": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#2A2933"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#E8E8EA"
+      }
+    ]
+  },
+  "Y:--input": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#C5C5CB"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "2B283D"
+      }
+    ]
+  },
+  "Y:--muted": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#F5F5F5"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#2E2E2E"
+      }
+    ]
+  },
+  "Y:--muted-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#616167"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#888799"
+      }
+    ]
+  },
+  "Y:--popover": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#FFFFFF"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#1A182E"
+      }
+    ]
+  },
+  "Y:--popover-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#2A2933"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#FFFFFF"
+      }
+    ]
+  },
+  "Y:--primary": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#5749F4"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#5749F4"
+      }
+    ]
+  },
+  "Y:--primary-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#FFFFFF"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#FFFFFF"
+      }
+    ]
+  },
+  "Y:--radius-l": {
+    "type": "number",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": 40
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": 40
+      }
+    ]
+  },
+  "Y:--radius-m": {
+    "type": "number",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": 24
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": 24
+      }
+    ]
+  },
+  "Y:--radius-none": {
+    "type": "number",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": 0
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": 0
+      }
+    ]
+  },
+  "Y:--radius-pill": {
+    "type": "number",
+    "value": 999
+  },
+  "Y:--radius-xs": {
+    "type": "number",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": 6
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": 6
+      }
+    ]
+  },
+  "Y:--ring": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#E1E2E5"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#666666"
+      }
+    ]
+  },
+  "Y:--secondary": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#D9D9DB"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#403F51"
+      }
+    ]
+  },
+  "Y:--secondary-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#2A2933"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#FFFFFF"
+      }
+    ]
+  },
+  "Y:--sidebar": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#FFFFFF"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#1A182E"
+      }
+    ]
+  },
+  "Y:--sidebar-accent": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#F5F5F5"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#2B283D"
+      }
+    ]
+  },
+  "Y:--sidebar-accent-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#2A2933"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#E8E8EA"
+      }
+    ]
+  },
+  "Y:--sidebar-border": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#D9D9DB"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#2B283D"
+      }
+    ]
+  },
+  "Y:--sidebar-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#939399"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#ACABB2"
+      }
+    ]
+  },
+  "Y:--sidebar-primary": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#F5F5F5"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#0F5FFE"
+      }
+    ]
+  },
+  "Y:--sidebar-primary-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#2A2933"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#E8E8EA"
+      }
+    ]
+  },
+  "Y:--sidebar-ring": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#D9D9DB"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#2B283D"
+      }
+    ]
+  },
+  "Y:--tile": {
+    "type": "color",
+    "value": [
+      {
+        "theme": {
+          "Y:Mode": "Light"
+        },
+        "value": "#F5F5F5"
+      },
+      {
+        "theme": {
+          "Y:Mode": "Dark"
+        },
+        "value": "#1A182E"
+      }
+    ]
+  },
+  "Y:--white": {
+    "type": "color",
+    "value": "#FFFFFF"
+  },
+  "background-brand": {
+    "type": "color",
+    "value": "$brand-1"
+  },
+  "background-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "background-error": {
+    "type": "color",
+    "value": "#cc2828"
+  },
+  "background-knockout": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "background-page": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "background-subtle": {
+    "type": "color",
+    "value": "#ededed"
+  },
+  "border-radius-2xs": {
+    "type": "number",
+    "value": 4
+  },
+  "border-radius-lg": {
+    "type": "number",
+    "value": 20
+  },
+  "border-radius-md": {
+    "type": "number",
+    "value": 16
+  },
+  "border-radius-rounded": {
+    "type": "number",
+    "value": 1024
+  },
+  "border-radius-sm": {
+    "type": "number",
+    "value": 12
+  },
+  "border-radius-square": {
+    "type": "number",
+    "value": 0
+  },
+  "border-radius-xs": {
+    "type": "number",
+    "value": 8
+  },
+  "border-width-lg": {
+    "type": "number",
+    "value": 4
+  },
+  "border-width-md": {
+    "type": "number",
+    "value": 2
+  },
+  "border-width-none": {
+    "type": "number",
+    "value": 0
+  },
+  "border-width-sm": {
+    "type": "number",
+    "value": 1
+  },
   "brand-1": {
     "type": "color",
     "value": [
-      { "theme": { "brand": "White Label" }, "value": "#000000" },
-      { "theme": { "brand": "Autoweek" }, "value": "#ffc84e" },
-      { "theme": { "brand": "Best Products" }, "value": "#1c1c9b" },
-      { "theme": { "brand": "Bicycling" }, "value": "#067ea7" },
-      { "theme": { "brand": "Biography" }, "value": "#a00000" },
-      { "theme": { "brand": "Car and Driver" }, "value": "#1B5F8A" },
-      { "theme": { "brand": "Cosmopolitan" }, "value": "#d70000" },
-      { "theme": { "brand": "Country Living" }, "value": "#0a5c80" },
-      { "theme": { "brand": "Delish" }, "value": "#004685" },
-      { "theme": { "brand": "ELLE" }, "value": "#000000" },
-      { "theme": { "brand": "ELLE Decor" }, "value": "#3777bc" },
-      { "theme": { "brand": "Esquire" }, "value": "#ff3a30" },
-      { "theme": { "brand": "Good Housekeeping" }, "value": "#53c2be" },
-      { "theme": { "brand": "Harper's BAZAAR" }, "value": "#000000" },
-      { "theme": { "brand": "House Beautiful" }, "value": "#242d39" },
-      { "theme": { "brand": "Men's Health" }, "value": "#d2232e" },
-      { "theme": { "brand": "Oprah Daily" }, "value": "#e61957" },
-      { "theme": { "brand": "Popular Mechanics" }, "value": "#1c6a65" },
-      { "theme": { "brand": "Prevention" }, "value": "#44c1c5" },
-      { "theme": { "brand": "Redbook" }, "value": "#d30c4f" },
-      { "theme": { "brand": "Road & Track" }, "value": "#434343" },
-      { "theme": { "brand": "Runner's World" }, "value": "#59e7ed" },
-      { "theme": { "brand": "Seventeen" }, "value": "#ff92de" },
-      { "theme": { "brand": "The Pioneer Woman" }, "value": "#8B376C" },
-      { "theme": { "brand": "Town & Country" }, "value": "#9a0500" },
-      { "theme": { "brand": "Veranda" }, "value": "#f3ead9" },
-      { "theme": { "brand": "Woman's Day" }, "value": "#683d85" },
-      { "theme": { "brand": "Women's Health" }, "value": "#1d4ed8" }
+      {
+        "theme": {
+          "brand": "White Label"
+        },
+        "value": "#000000"
+      },
+      {
+        "theme": {
+          "brand": "Autoweek"
+        },
+        "value": "#ffc84e"
+      },
+      {
+        "theme": {
+          "brand": "Best Products"
+        },
+        "value": "#1c1c9b"
+      },
+      {
+        "theme": {
+          "brand": "Bicycling"
+        },
+        "value": "#067ea7"
+      },
+      {
+        "theme": {
+          "brand": "Biography"
+        },
+        "value": "#a00000"
+      },
+      {
+        "theme": {
+          "brand": "Car and Driver"
+        },
+        "value": "#000000"
+      },
+      {
+        "theme": {
+          "brand": "Cosmopolitan"
+        },
+        "value": "#d70000"
+      },
+      {
+        "theme": {
+          "brand": "Country Living"
+        },
+        "value": "#0a5c80"
+      },
+      {
+        "theme": {
+          "brand": "Delish"
+        },
+        "value": "#004685"
+      },
+      {
+        "theme": {
+          "brand": "ELLE"
+        },
+        "value": "#000000"
+      },
+      {
+        "theme": {
+          "brand": "ELLE Decor"
+        },
+        "value": "#3777bc"
+      },
+      {
+        "theme": {
+          "brand": "Esquire"
+        },
+        "value": "#ff3a30"
+      },
+      {
+        "theme": {
+          "brand": "Good Housekeeping"
+        },
+        "value": "#53c2be"
+      },
+      {
+        "theme": {
+          "brand": "Harper's BAZAAR"
+        },
+        "value": "#000000"
+      },
+      {
+        "theme": {
+          "brand": "House Beautiful"
+        },
+        "value": "#242d39"
+      },
+      {
+        "theme": {
+          "brand": "Men's Health"
+        },
+        "value": "#d2232e"
+      },
+      {
+        "theme": {
+          "brand": "Oprah Daily"
+        },
+        "value": "#e61957"
+      },
+      {
+        "theme": {
+          "brand": "Popular Mechanics"
+        },
+        "value": "#1c6a65"
+      },
+      {
+        "theme": {
+          "brand": "Prevention"
+        },
+        "value": "#44c1c5"
+      },
+      {
+        "theme": {
+          "brand": "Redbook"
+        },
+        "value": "#d30c4f"
+      },
+      {
+        "theme": {
+          "brand": "Road & Track"
+        },
+        "value": "#434343"
+      },
+      {
+        "theme": {
+          "brand": "Runner's World"
+        },
+        "value": "#59e7ed"
+      },
+      {
+        "theme": {
+          "brand": "Seventeen"
+        },
+        "value": "#ff92de"
+      },
+      {
+        "theme": {
+          "brand": "The Pioneer Woman"
+        },
+        "value": "#8B376C"
+      },
+      {
+        "theme": {
+          "brand": "Town & Country"
+        },
+        "value": "#9a0500"
+      },
+      {
+        "theme": {
+          "brand": "Veranda"
+        },
+        "value": "#f3ead9"
+      },
+      {
+        "theme": {
+          "brand": "Woman's Day"
+        },
+        "value": "#683d85"
+      },
+      {
+        "theme": {
+          "brand": "Women's Health"
+        },
+        "value": "#1d4ed8"
+      },
+      {
+        "theme": {
+          "brand": "Car and Driver"
+        },
+        "value": "#1B5F8A"
+      }
     ]
   },
   "brand-2": {
     "type": "color",
     "value": [
-      { "theme": { "brand": "White Label" }, "value": "#ffffff" },
-      { "theme": { "brand": "Autoweek" }, "value": "#eb3135" },
-      { "theme": { "brand": "Best Products" }, "value": "#e22d21" },
-      { "theme": { "brand": "Bicycling" }, "value": "#f8d811" },
-      { "theme": { "brand": "Biography" }, "value": "#ffffff" },
-      { "theme": { "brand": "Car and Driver" }, "value": "#00A4DB" },
-      { "theme": { "brand": "Cosmopolitan" }, "value": "#F6D3E5" },
-      { "theme": { "brand": "Country Living" }, "value": "#cde5f0" },
-      { "theme": { "brand": "Delish" }, "value": "#ffc035" },
-      { "theme": { "brand": "ELLE" }, "value": "#f5f5f4" },
-      { "theme": { "brand": "ELLE Decor" }, "value": "#ffffff" },
-      { "theme": { "brand": "Esquire" }, "value": "#f5f6f8" },
-      { "theme": { "brand": "Good Housekeeping" }, "value": "#198294" },
-      { "theme": { "brand": "Harper's BAZAAR" }, "value": "#aa0703" },
-      { "theme": { "brand": "House Beautiful" }, "value": "#fbfafa" },
-      { "theme": { "brand": "Men's Health" }, "value": "#fff200" },
-      { "theme": { "brand": "Oprah Daily" }, "value": "#166534" },
-      { "theme": { "brand": "Popular Mechanics" }, "value": "#f04e3e" },
-      { "theme": { "brand": "Prevention" }, "value": "#eaf4f5" },
-      { "theme": { "brand": "Redbook" }, "value": "#69dcbf" },
-      { "theme": { "brand": "Road & Track" }, "value": "#1b1a1a" },
-      { "theme": { "brand": "Runner's World" }, "value": "#ff7d46" },
-      { "theme": { "brand": "Seventeen" }, "value": "#eeffae" },
-      { "theme": { "brand": "The Pioneer Woman" }, "value": "#F4EDD8" },
-      { "theme": { "brand": "Town & Country" }, "value": "#030929" },
-      { "theme": { "brand": "Veranda" }, "value": "#ffffff" },
-      { "theme": { "brand": "Woman's Day" }, "value": "#d80900" },
-      { "theme": { "brand": "Women's Health" }, "value": "#ebff7c" }
+      {
+        "theme": {
+          "brand": "White Label"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Autoweek"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Best Products"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Bicycling"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Biography"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Car and Driver"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Cosmopolitan"
+        },
+        "value": "#F6D3E5"
+      },
+      {
+        "theme": {
+          "brand": "Country Living"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Delish"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "ELLE"
+        },
+        "value": "#f5f5f4"
+      },
+      {
+        "theme": {
+          "brand": "ELLE Decor"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Esquire"
+        },
+        "value": "#f5f6f8"
+      },
+      {
+        "theme": {
+          "brand": "Good Housekeeping"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Harper's BAZAAR"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "House Beautiful"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Men's Health"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Oprah Daily"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Popular Mechanics"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Prevention"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Redbook"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Road & Track"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Runner's World"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Seventeen"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "The Pioneer Woman"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Town & Country"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Veranda"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Woman's Day"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Women's Health"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Car and Driver"
+        },
+        "value": "#00A4DB"
+      },
+      {
+        "theme": {
+          "brand": "Autoweek"
+        },
+        "value": "#eb3135"
+      },
+      {
+        "theme": {
+          "brand": "Best Products"
+        },
+        "value": "#e22d21"
+      },
+      {
+        "theme": {
+          "brand": "Bicycling"
+        },
+        "value": "#f8d811"
+      },
+      {
+        "theme": {
+          "brand": "Country Living"
+        },
+        "value": "#cde5f0"
+      },
+      {
+        "theme": {
+          "brand": "Delish"
+        },
+        "value": "#ffc035"
+      },
+      {
+        "theme": {
+          "brand": "Good Housekeeping"
+        },
+        "value": "#198294"
+      },
+      {
+        "theme": {
+          "brand": "Harper's BAZAAR"
+        },
+        "value": "#aa0703"
+      },
+      {
+        "theme": {
+          "brand": "House Beautiful"
+        },
+        "value": "#fbfafa"
+      },
+      {
+        "theme": {
+          "brand": "Men's Health"
+        },
+        "value": "#fff200"
+      },
+      {
+        "theme": {
+          "brand": "Oprah Daily"
+        },
+        "value": "#166534"
+      },
+      {
+        "theme": {
+          "brand": "Popular Mechanics"
+        },
+        "value": "#f04e3e"
+      },
+      {
+        "theme": {
+          "brand": "Prevention"
+        },
+        "value": "#eaf4f5"
+      },
+      {
+        "theme": {
+          "brand": "Redbook"
+        },
+        "value": "#69dcbf"
+      },
+      {
+        "theme": {
+          "brand": "Road & Track"
+        },
+        "value": "#1b1a1a"
+      },
+      {
+        "theme": {
+          "brand": "Runner's World"
+        },
+        "value": "#ff7d46"
+      },
+      {
+        "theme": {
+          "brand": "Seventeen"
+        },
+        "value": "#eeffae"
+      },
+      {
+        "theme": {
+          "brand": "The Pioneer Woman"
+        },
+        "value": "#F4EDD8"
+      },
+      {
+        "theme": {
+          "brand": "Town & Country"
+        },
+        "value": "#030929"
+      },
+      {
+        "theme": {
+          "brand": "Woman's Day"
+        },
+        "value": "#d80900"
+      },
+      {
+        "theme": {
+          "brand": "Women's Health"
+        },
+        "value": "#ebff7c"
+      }
     ]
   },
   "brand-3": {
     "type": "color",
     "value": [
-      { "theme": { "brand": "White Label" }, "value": "#ffffff" },
-      { "theme": { "brand": "Autoweek" }, "value": "#2c6f74" },
-      { "theme": { "brand": "Best Products" }, "value": "#1a847f" },
-      { "theme": { "brand": "Bicycling" }, "value": "#EF4129" },
-      { "theme": { "brand": "Biography" }, "value": "#ffffff" },
-      { "theme": { "brand": "Car and Driver" }, "value": "#D2232A" },
-      { "theme": { "brand": "Cosmopolitan" }, "value": "#ffffff" },
-      { "theme": { "brand": "Country Living" }, "value": "#fff9ed" },
-      { "theme": { "brand": "Delish" }, "value": "#ff553e" },
-      { "theme": { "brand": "ELLE" }, "value": "#f0ede6" },
-      { "theme": { "brand": "ELLE Decor" }, "value": "#ffffff" },
-      { "theme": { "brand": "Esquire" }, "value": "#15263d" },
-      { "theme": { "brand": "Good Housekeeping" }, "value": "#125c68" },
-      { "theme": { "brand": "Harper's BAZAAR" }, "value": "#ff0000" },
-      { "theme": { "brand": "House Beautiful" }, "value": "#f5f2ee" },
-      { "theme": { "brand": "Men's Health" }, "value": "#202020" },
-      { "theme": { "brand": "Oprah Daily" }, "value": "#bef264" },
-      { "theme": { "brand": "Popular Mechanics" }, "value": "#fef837" },
-      { "theme": { "brand": "Prevention" }, "value": "#fcd029" },
-      { "theme": { "brand": "Redbook" }, "value": "#b2003c" },
-      { "theme": { "brand": "Road & Track" }, "value": "#b4b3b3" },
-      { "theme": { "brand": "Runner's World" }, "value": "#17d0d8" },
-      { "theme": { "brand": "Seventeen" }, "value": "#f1dce1" },
-      { "theme": { "brand": "The Pioneer Woman" }, "value": "#242424" },
-      { "theme": { "brand": "Town & Country" }, "value": "#f1f2f4" },
-      { "theme": { "brand": "Veranda" }, "value": "#ffffff" },
-      { "theme": { "brand": "Woman's Day" }, "value": "#ee4741" },
-      { "theme": { "brand": "Women's Health" }, "value": "#14b8a6" }
+      {
+        "theme": {
+          "brand": "White Label"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Autoweek"
+        },
+        "value": "#2c6f74"
+      },
+      {
+        "theme": {
+          "brand": "Best Products"
+        },
+        "value": "#1a847f"
+      },
+      {
+        "theme": {
+          "brand": "Bicycling"
+        },
+        "value": "#EF4129"
+      },
+      {
+        "theme": {
+          "brand": "Biography"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Car and Driver"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Cosmopolitan"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Country Living"
+        },
+        "value": "#fff9ed"
+      },
+      {
+        "theme": {
+          "brand": "Delish"
+        },
+        "value": "#ff553e"
+      },
+      {
+        "theme": {
+          "brand": "ELLE"
+        },
+        "value": "#f0ede6"
+      },
+      {
+        "theme": {
+          "brand": "ELLE Decor"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Esquire"
+        },
+        "value": "#15263d"
+      },
+      {
+        "theme": {
+          "brand": "Good Housekeeping"
+        },
+        "value": "#125c68"
+      },
+      {
+        "theme": {
+          "brand": "Harper's BAZAAR"
+        },
+        "value": "#ff0000"
+      },
+      {
+        "theme": {
+          "brand": "House Beautiful"
+        },
+        "value": "#f5f2ee"
+      },
+      {
+        "theme": {
+          "brand": "Men's Health"
+        },
+        "value": "#202020"
+      },
+      {
+        "theme": {
+          "brand": "Oprah Daily"
+        },
+        "value": "#bef264"
+      },
+      {
+        "theme": {
+          "brand": "Popular Mechanics"
+        },
+        "value": "#fef837"
+      },
+      {
+        "theme": {
+          "brand": "Prevention"
+        },
+        "value": "#fcd029"
+      },
+      {
+        "theme": {
+          "brand": "Redbook"
+        },
+        "value": "#b2003c"
+      },
+      {
+        "theme": {
+          "brand": "Road & Track"
+        },
+        "value": "#b4b3b3"
+      },
+      {
+        "theme": {
+          "brand": "Runner's World"
+        },
+        "value": "#17d0d8"
+      },
+      {
+        "theme": {
+          "brand": "Seventeen"
+        },
+        "value": "#f1dce1"
+      },
+      {
+        "theme": {
+          "brand": "The Pioneer Woman"
+        },
+        "value": "#242424"
+      },
+      {
+        "theme": {
+          "brand": "Town & Country"
+        },
+        "value": "#f1f2f4"
+      },
+      {
+        "theme": {
+          "brand": "Veranda"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Woman's Day"
+        },
+        "value": "#ee4741"
+      },
+      {
+        "theme": {
+          "brand": "Women's Health"
+        },
+        "value": "#14b8a6"
+      },
+      {
+        "theme": {
+          "brand": "Car and Driver"
+        },
+        "value": "#D2232A"
+      }
     ]
   },
   "brand-4": {
     "type": "color",
     "value": [
-      { "theme": { "brand": "White Label" }, "value": "#ffffff" },
-      { "theme": { "brand": "Autoweek" }, "value": "#e96c28" },
-      { "theme": { "brand": "Best Products" }, "value": "#24adcc" },
-      { "theme": { "brand": "Bicycling" }, "value": "#ffffff" },
-      { "theme": { "brand": "Biography" }, "value": "#ffffff" },
-      { "theme": { "brand": "Car and Driver" }, "value": "#DBCA8B" },
-      { "theme": { "brand": "Cosmopolitan" }, "value": "#ffffff" },
-      { "theme": { "brand": "Country Living" }, "value": "#3e93c3" },
-      { "theme": { "brand": "Delish" }, "value": "#adcf21" },
-      { "theme": { "brand": "ELLE" }, "value": "#ffffff" },
-      { "theme": { "brand": "ELLE Decor" }, "value": "#ffffff" },
-      { "theme": { "brand": "Esquire" }, "value": "#ff5a52" },
-      { "theme": { "brand": "Good Housekeeping" }, "value": "#f8f3f4" },
-      { "theme": { "brand": "Harper's BAZAAR" }, "value": "#77747b" },
-      { "theme": { "brand": "House Beautiful" }, "value": "#ffffff" },
-      { "theme": { "brand": "Men's Health" }, "value": "#696969" },
-      { "theme": { "brand": "Oprah Daily" }, "value": "#fde047" },
-      { "theme": { "brand": "Popular Mechanics" }, "value": "#595959" },
-      { "theme": { "brand": "Prevention" }, "value": "#33a0a3" },
-      { "theme": { "brand": "Redbook" }, "value": "#f8bbd0" },
-      { "theme": { "brand": "Road & Track" }, "value": "#ffffff" },
-      { "theme": { "brand": "Runner's World" }, "value": "#dffafc" },
-      { "theme": { "brand": "Seventeen" }, "value": "#ffffff" },
-      { "theme": { "brand": "The Pioneer Woman" }, "value": "#ffffff" },
-      { "theme": { "brand": "Town & Country" }, "value": "#092958" },
-      { "theme": { "brand": "Veranda" }, "value": "#ffffff" },
-      { "theme": { "brand": "Woman's Day" }, "value": "#ffffff" },
-      { "theme": { "brand": "Women's Health" }, "value": "#e9d5ff" }
+      {
+        "theme": {
+          "brand": "White Label"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Autoweek"
+        },
+        "value": "#e96c28"
+      },
+      {
+        "theme": {
+          "brand": "Best Products"
+        },
+        "value": "#24adcc"
+      },
+      {
+        "theme": {
+          "brand": "Bicycling"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Biography"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Car and Driver"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Cosmopolitan"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Country Living"
+        },
+        "value": "#3e93c3"
+      },
+      {
+        "theme": {
+          "brand": "Delish"
+        },
+        "value": "#adcf21"
+      },
+      {
+        "theme": {
+          "brand": "ELLE"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "ELLE Decor"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Esquire"
+        },
+        "value": "#ff5a52"
+      },
+      {
+        "theme": {
+          "brand": "Good Housekeeping"
+        },
+        "value": "#f8f3f4"
+      },
+      {
+        "theme": {
+          "brand": "Harper's BAZAAR"
+        },
+        "value": "#77747b"
+      },
+      {
+        "theme": {
+          "brand": "House Beautiful"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Men's Health"
+        },
+        "value": "#696969"
+      },
+      {
+        "theme": {
+          "brand": "Oprah Daily"
+        },
+        "value": "#fde047"
+      },
+      {
+        "theme": {
+          "brand": "Popular Mechanics"
+        },
+        "value": "#595959"
+      },
+      {
+        "theme": {
+          "brand": "Prevention"
+        },
+        "value": "#33a0a3"
+      },
+      {
+        "theme": {
+          "brand": "Redbook"
+        },
+        "value": "#f8bbd0"
+      },
+      {
+        "theme": {
+          "brand": "Road & Track"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Runner's World"
+        },
+        "value": "#dffafc"
+      },
+      {
+        "theme": {
+          "brand": "Seventeen"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "The Pioneer Woman"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Town & Country"
+        },
+        "value": "#092958"
+      },
+      {
+        "theme": {
+          "brand": "Veranda"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Woman's Day"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Women's Health"
+        },
+        "value": "#e9d5ff"
+      },
+      {
+        "theme": {
+          "brand": "Car and Driver"
+        },
+        "value": "#DBCA8B"
+      }
     ]
   },
   "brand-5": {
     "type": "color",
     "value": [
-      { "theme": { "brand": "White Label" }, "value": "#ffffff" },
-      { "theme": { "brand": "Autoweek" }, "value": "#dae5d3" },
-      { "theme": { "brand": "Best Products" }, "value": "#f8e4dd" },
-      { "theme": { "brand": "Bicycling" }, "value": "#ffffff" },
-      { "theme": { "brand": "Biography" }, "value": "#ffffff" },
-      { "theme": { "brand": "Car and Driver" }, "value": "#607D8B" },
-      { "theme": { "brand": "Cosmopolitan" }, "value": "#ffffff" },
-      { "theme": { "brand": "Country Living" }, "value": "#78756b" },
-      { "theme": { "brand": "Delish" }, "value": "#66cecf" },
-      { "theme": { "brand": "ELLE" }, "value": "#ffffff" },
-      { "theme": { "brand": "ELLE Decor" }, "value": "#ffffff" },
-      { "theme": { "brand": "Esquire" }, "value": "#e00b00" },
-      { "theme": { "brand": "Good Housekeeping" }, "value": "#9e3326" },
-      { "theme": { "brand": "Harper's BAZAAR" }, "value": "#ff5e5e" },
-      { "theme": { "brand": "House Beautiful" }, "value": "#ffffff" },
-      { "theme": { "brand": "Men's Health" }, "value": "#878787" },
-      { "theme": { "brand": "Oprah Daily" }, "value": "#4a044e" },
-      { "theme": { "brand": "Popular Mechanics" }, "value": "#414141" },
-      { "theme": { "brand": "Prevention" }, "value": "#088092" },
-      { "theme": { "brand": "Redbook" }, "value": "#ffffff" },
-      { "theme": { "brand": "Road & Track" }, "value": "#668892" },
-      { "theme": { "brand": "Runner's World" }, "value": "#cc3d00" },
-      { "theme": { "brand": "Seventeen" }, "value": "#ffffff" },
-      { "theme": { "brand": "The Pioneer Woman" }, "value": "#ffffff" },
-      { "theme": { "brand": "Town & Country" }, "value": "#F1F6FE" },
-      { "theme": { "brand": "Veranda" }, "value": "#ffffff" },
-      { "theme": { "brand": "Woman's Day" }, "value": "#ffffff" },
-      { "theme": { "brand": "Women's Health" }, "value": "#f9a8d4" }
+      {
+        "theme": {
+          "brand": "White Label"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Autoweek"
+        },
+        "value": "#dae5d3"
+      },
+      {
+        "theme": {
+          "brand": "Best Products"
+        },
+        "value": "#f8e4dd"
+      },
+      {
+        "theme": {
+          "brand": "Bicycling"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Biography"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Car and Driver"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Cosmopolitan"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Country Living"
+        },
+        "value": "#78756b"
+      },
+      {
+        "theme": {
+          "brand": "Delish"
+        },
+        "value": "#66cecf"
+      },
+      {
+        "theme": {
+          "brand": "ELLE"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "ELLE Decor"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Esquire"
+        },
+        "value": "#e00b00"
+      },
+      {
+        "theme": {
+          "brand": "Good Housekeeping"
+        },
+        "value": "#9e3326"
+      },
+      {
+        "theme": {
+          "brand": "Harper's BAZAAR"
+        },
+        "value": "#ff5e5e"
+      },
+      {
+        "theme": {
+          "brand": "House Beautiful"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Men's Health"
+        },
+        "value": "#878787"
+      },
+      {
+        "theme": {
+          "brand": "Oprah Daily"
+        },
+        "value": "#4a044e"
+      },
+      {
+        "theme": {
+          "brand": "Popular Mechanics"
+        },
+        "value": "#414141"
+      },
+      {
+        "theme": {
+          "brand": "Prevention"
+        },
+        "value": "#088092"
+      },
+      {
+        "theme": {
+          "brand": "Redbook"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Road & Track"
+        },
+        "value": "#668892"
+      },
+      {
+        "theme": {
+          "brand": "Runner's World"
+        },
+        "value": "#cc3d00"
+      },
+      {
+        "theme": {
+          "brand": "Seventeen"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "The Pioneer Woman"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Town & Country"
+        },
+        "value": "#F1F6FE"
+      },
+      {
+        "theme": {
+          "brand": "Veranda"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Woman's Day"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Women's Health"
+        },
+        "value": "#f9a8d4"
+      },
+      {
+        "theme": {
+          "brand": "Car and Driver"
+        },
+        "value": "#607D8B"
+      }
     ]
   },
   "brand-6": {
     "type": "color",
     "value": [
-      { "theme": { "brand": "White Label" }, "value": "#ffffff" },
-      { "theme": { "brand": "Autoweek" }, "value": "#f8f4f5" },
-      { "theme": { "brand": "Best Products" }, "value": "#eaf6f6" },
-      { "theme": { "brand": "Bicycling" }, "value": "#ffffff" },
-      { "theme": { "brand": "Biography" }, "value": "#ffffff" },
-      { "theme": { "brand": "Car and Driver" }, "value": "#F1F7F7" },
-      { "theme": { "brand": "Cosmopolitan" }, "value": "#ffffff" },
-      { "theme": { "brand": "Country Living" }, "value": "#9ecde1" },
-      { "theme": { "brand": "Delish" }, "value": "#c6e9f0" },
-      { "theme": { "brand": "ELLE" }, "value": "#ffffff" },
-      { "theme": { "brand": "ELLE Decor" }, "value": "#ffffff" },
-      { "theme": { "brand": "Esquire" }, "value": "#ececec" },
-      { "theme": { "brand": "Good Housekeeping" }, "value": "#d24432" },
-      { "theme": { "brand": "Harper's BAZAAR" }, "value": "#ffffff" },
-      { "theme": { "brand": "House Beautiful" }, "value": "#ffffff" },
-      { "theme": { "brand": "Men's Health" }, "value": "#ffffff" },
-      { "theme": { "brand": "Oprah Daily" }, "value": "#bae6fd" },
-      { "theme": { "brand": "Popular Mechanics" }, "value": "#ececec" },
-      { "theme": { "brand": "Prevention" }, "value": "#ffffff" },
-      { "theme": { "brand": "Redbook" }, "value": "#ffffff" },
-      { "theme": { "brand": "Road & Track" }, "value": "#bb322f" },
-      { "theme": { "brand": "Runner's World" }, "value": "#b2cccb" },
-      { "theme": { "brand": "Seventeen" }, "value": "#ffffff" },
-      { "theme": { "brand": "The Pioneer Woman" }, "value": "#ffffff" },
-      { "theme": { "brand": "Town & Country" }, "value": "#ffffff" },
-      { "theme": { "brand": "Veranda" }, "value": "#ffffff" },
-      { "theme": { "brand": "Woman's Day" }, "value": "#ffffff" },
-      { "theme": { "brand": "Women's Health" }, "value": "#ffedd5" }
+      {
+        "theme": {
+          "brand": "White Label"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Autoweek"
+        },
+        "value": "#f8f4f5"
+      },
+      {
+        "theme": {
+          "brand": "Best Products"
+        },
+        "value": "#eaf6f6"
+      },
+      {
+        "theme": {
+          "brand": "Bicycling"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Biography"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Car and Driver"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Cosmopolitan"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Country Living"
+        },
+        "value": "#9ecde1"
+      },
+      {
+        "theme": {
+          "brand": "Delish"
+        },
+        "value": "#c6e9f0"
+      },
+      {
+        "theme": {
+          "brand": "ELLE"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "ELLE Decor"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Esquire"
+        },
+        "value": "#ececec"
+      },
+      {
+        "theme": {
+          "brand": "Good Housekeeping"
+        },
+        "value": "#d24432"
+      },
+      {
+        "theme": {
+          "brand": "Harper's BAZAAR"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "House Beautiful"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Men's Health"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Oprah Daily"
+        },
+        "value": "#bae6fd"
+      },
+      {
+        "theme": {
+          "brand": "Popular Mechanics"
+        },
+        "value": "#ececec"
+      },
+      {
+        "theme": {
+          "brand": "Prevention"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Redbook"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Road & Track"
+        },
+        "value": "#bb322f"
+      },
+      {
+        "theme": {
+          "brand": "Runner's World"
+        },
+        "value": "#b2cccb"
+      },
+      {
+        "theme": {
+          "brand": "Seventeen"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "The Pioneer Woman"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Town & Country"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Veranda"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Woman's Day"
+        },
+        "value": "#ffffff"
+      },
+      {
+        "theme": {
+          "brand": "Women's Health"
+        },
+        "value": "#ffedd5"
+      },
+      {
+        "theme": {
+          "brand": "Car and Driver"
+        },
+        "value": "#F1F7F7"
+      }
     ]
+  },
+  "content-brand": {
+    "type": "color",
+    "value": "$brand-1"
+  },
+  "content-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "content-error": {
+    "type": "color",
+    "value": "#cc2828"
+  },
+  "content-knockout": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "content-on-brand": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "content-subtle": {
+    "type": "color",
+    "value": "#757575"
   },
   "font-family-default": {
     "type": "string",
     "value": [
-      { "theme": { "brand": "White Label" }, "value": "SF Pro" },
-      { "theme": { "brand": "Autoweek" }, "value": "SF Pro" },
-      { "theme": { "brand": "Best Products" }, "value": "SF Pro" },
-      { "theme": { "brand": "Bicycling" }, "value": "SF Pro" },
-      { "theme": { "brand": "Biography" }, "value": "SF Pro" },
-      { "theme": { "brand": "Car and Driver" }, "value": "Inter" },
-      { "theme": { "brand": "Cosmopolitan" }, "value": "Basis Grotesque Pro" },
-      { "theme": { "brand": "Country Living" }, "value": "Montserrat" },
-      { "theme": { "brand": "Delish" }, "value": "TT Commons Pro" },
-      { "theme": { "brand": "ELLE" }, "value": "Neue Haas Unica Pro" },
-      { "theme": { "brand": "ELLE Decor" }, "value": "SF Pro" },
-      { "theme": { "brand": "Esquire" }, "value": "Lausanne" },
-      { "theme": { "brand": "Good Housekeeping" }, "value": "Barlow Semi Condensed" },
-      { "theme": { "brand": "Harper's BAZAAR" }, "value": "Helvetica Now Text" },
-      { "theme": { "brand": "House Beautiful" }, "value": "Visuelt Pro" },
-      { "theme": { "brand": "Men's Health" }, "value": "Manrope" },
-      { "theme": { "brand": "Oprah Daily" }, "value": "SF Pro" },
-      { "theme": { "brand": "Popular Mechanics" }, "value": "SF Pro" },
-      { "theme": { "brand": "Prevention" }, "value": "Poppins" },
-      { "theme": { "brand": "Redbook" }, "value": "SF Pro" },
-      { "theme": { "brand": "Road & Track" }, "value": "SF Pro" },
-      { "theme": { "brand": "Runner's World" }, "value": "SF Pro" },
-      { "theme": { "brand": "Seventeen" }, "value": "SF Pro" },
-      { "theme": { "brand": "The Pioneer Woman" }, "value": "Livvic" },
-      { "theme": { "brand": "Town & Country" }, "value": "Montserrat" },
-      { "theme": { "brand": "Veranda" }, "value": "SF Pro" },
-      { "theme": { "brand": "Woman's Day" }, "value": "SF Pro" },
-      { "theme": { "brand": "Women's Health" }, "value": "Altone" }
+      {
+        "theme": {
+          "brand": "White Label"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Autoweek"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Best Products"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Bicycling"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Biography"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Car and Driver"
+        },
+        "value": "Inter"
+      },
+      {
+        "theme": {
+          "brand": "Cosmopolitan"
+        },
+        "value": "Basis Grotesque Pro"
+      },
+      {
+        "theme": {
+          "brand": "Country Living"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Delish"
+        },
+        "value": "TT Commons Pro"
+      },
+      {
+        "theme": {
+          "brand": "ELLE"
+        },
+        "value": "Neue Haas Unica Pro"
+      },
+      {
+        "theme": {
+          "brand": "ELLE Decor"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Esquire"
+        },
+        "value": "Lausanne"
+      },
+      {
+        "theme": {
+          "brand": "Good Housekeeping"
+        },
+        "value": "Barlow Semi Condensed"
+      },
+      {
+        "theme": {
+          "brand": "Harper's BAZAAR"
+        },
+        "value": "Helvetica Now Text"
+      },
+      {
+        "theme": {
+          "brand": "House Beautiful"
+        },
+        "value": "Visuelt Pro"
+      },
+      {
+        "theme": {
+          "brand": "Men's Health"
+        },
+        "value": "Manrope"
+      },
+      {
+        "theme": {
+          "brand": "Oprah Daily"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Popular Mechanics"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Prevention"
+        },
+        "value": "Poppins"
+      },
+      {
+        "theme": {
+          "brand": "Redbook"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Road & Track"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Runner's World"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Seventeen"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "The Pioneer Woman"
+        },
+        "value": "Livvic"
+      },
+      {
+        "theme": {
+          "brand": "Town & Country"
+        },
+        "value": "Montserrat"
+      },
+      {
+        "theme": {
+          "brand": "Veranda"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Woman's Day"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Women's Health"
+        },
+        "value": "Altone"
+      },
+      {
+        "theme": {
+          "brand": "Country Living"
+        },
+        "value": "Montserrat"
+      }
     ]
   },
   "font-family-serif": {
     "type": "string",
     "value": [
-      { "theme": { "brand": "White Label" }, "value": "SF Pro" },
-      { "theme": { "brand": "Autoweek" }, "value": "SF Pro" },
-      { "theme": { "brand": "Best Products" }, "value": "SF Pro" },
-      { "theme": { "brand": "Bicycling" }, "value": "SF Pro" },
-      { "theme": { "brand": "Biography" }, "value": "SF Pro" },
-      { "theme": { "brand": "Car and Driver" }, "value": "Barlow Condensed" },
-      { "theme": { "brand": "Cosmopolitan" }, "value": "Chronicle Display" },
-      { "theme": { "brand": "Country Living" }, "value": "PlayfairDisplay" },
-      { "theme": { "brand": "Delish" }, "value": "SF Pro" },
-      { "theme": { "brand": "ELLE" }, "value": "Modern MT Pro" },
-      { "theme": { "brand": "ELLE Decor" }, "value": "SF Pro" },
-      { "theme": { "brand": "Esquire" }, "value": "PlayFair" },
-      { "theme": { "brand": "Good Housekeeping" }, "value": "Shippori Mincho" },
-      { "theme": { "brand": "Harper's BAZAAR" }, "value": "NewParis Text" },
-      { "theme": { "brand": "House Beautiful" }, "value": "Apparel Display" },
-      { "theme": { "brand": "Men's Health" }, "value": "SF Pro" },
-      { "theme": { "brand": "Oprah Daily" }, "value": "SF Pro" },
-      { "theme": { "brand": "Popular Mechanics" }, "value": "SF Pro" },
-      { "theme": { "brand": "Prevention" }, "value": "SF Pro" },
-      { "theme": { "brand": "Redbook" }, "value": "SF Pro" },
-      { "theme": { "brand": "Road & Track" }, "value": "SF Pro" },
-      { "theme": { "brand": "Runner's World" }, "value": "SF Pro" },
-      { "theme": { "brand": "Seventeen" }, "value": "SF Pro" },
-      { "theme": { "brand": "The Pioneer Woman" }, "value": "Petrona" },
-      { "theme": { "brand": "Town & Country" }, "value": "NewParis Text" },
-      { "theme": { "brand": "Veranda" }, "value": "SF Pro" },
-      { "theme": { "brand": "Woman's Day" }, "value": "SF Pro" },
-      { "theme": { "brand": "Women's Health" }, "value": "Apparel" }
+      {
+        "theme": {
+          "brand": "White Label"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Autoweek"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Best Products"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Bicycling"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Biography"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Car and Driver"
+        },
+        "value": "Lora"
+      },
+      {
+        "theme": {
+          "brand": "Cosmopolitan"
+        },
+        "value": "Chronicle Display"
+      },
+      {
+        "theme": {
+          "brand": "Country Living"
+        },
+        "value": "PlayfairDisplay"
+      },
+      {
+        "theme": {
+          "brand": "Delish"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "ELLE"
+        },
+        "value": "Modern MT Pro"
+      },
+      {
+        "theme": {
+          "brand": "ELLE Decor"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Esquire"
+        },
+        "value": "PlayFair"
+      },
+      {
+        "theme": {
+          "brand": "Good Housekeeping"
+        },
+        "value": "Shippori Mincho"
+      },
+      {
+        "theme": {
+          "brand": "Harper's BAZAAR"
+        },
+        "value": "NewParis Text"
+      },
+      {
+        "theme": {
+          "brand": "House Beautiful"
+        },
+        "value": "Apparel Display"
+      },
+      {
+        "theme": {
+          "brand": "Men's Health"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Oprah Daily"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Popular Mechanics"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Prevention"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Redbook"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Road & Track"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Runner's World"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Seventeen"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "The Pioneer Woman"
+        },
+        "value": "Petrona"
+      },
+      {
+        "theme": {
+          "brand": "Town & Country"
+        },
+        "value": "NewParis Text"
+      },
+      {
+        "theme": {
+          "brand": "Veranda"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Woman's Day"
+        },
+        "value": "SF Pro"
+      },
+      {
+        "theme": {
+          "brand": "Women's Health"
+        },
+        "value": "Apparel"
+      },
+      {
+        "theme": {
+          "brand": "Car and Driver"
+        },
+        "value": "Barlow Condensed"
+      }
     ]
+  },
+  "n:--accent": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#F2F3F0"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#111111"
+      }
+    ]
+  },
+  "n:--accent-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#111111"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#F2F3F0"
+      }
+    ]
+  },
+  "n:--background": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#F2F3F0"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#111111"
+      }
+    ]
+  },
+  "n:--black": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "n:--border": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#CBCCC9"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#2E2E2E"
+      }
+    ]
+  },
+  "n:--card": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#FFFFFF"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#1A1A1A"
+      }
+    ]
+  },
+  "n:--card-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#111111"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#FFFFFF"
+      }
+    ]
+  },
+  "n:--color-error": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#E5DCDA"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#24100B"
+      }
+    ]
+  },
+  "n:--color-error-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#8C1C00"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#FF5C33"
+      }
+    ]
+  },
+  "n:--color-info": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#DFDFE6"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#222229"
+      }
+    ]
+  },
+  "n:--color-info-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#000066"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#B2B2FF"
+      }
+    ]
+  },
+  "n:--color-success": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#DFE6E1"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#222924"
+      }
+    ]
+  },
+  "n:--color-success-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#004D1A"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#B6FFCE"
+      }
+    ]
+  },
+  "n:--color-warning": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#E9E3D8"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#291C0F"
+      }
+    ]
+  },
+  "n:--color-warning-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#804200"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#FF8400"
+      }
+    ]
+  },
+  "n:--destructive": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#D93C15"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#FF5C33"
+      }
+    ]
+  },
+  "n:--font-primary": {
+    "type": "string",
+    "value": "JetBrains Mono"
+  },
+  "n:--font-secondary": {
+    "type": "string",
+    "value": "Geist"
+  },
+  "n:--foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#111111"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#FFFFFF"
+      }
+    ]
+  },
+  "n:--input": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#CBCCC9"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#2E2E2E"
+      }
+    ]
+  },
+  "n:--muted": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#F2F3F0"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#2E2E2E"
+      }
+    ]
+  },
+  "n:--muted-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#666666"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#B8B9B6"
+      }
+    ]
+  },
+  "n:--popover": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#FFFFFF"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#1A1A1A"
+      }
+    ]
+  },
+  "n:--popover-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#111111"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#FFFFFF"
+      }
+    ]
+  },
+  "n:--primary": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#FF8400"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#FF8400"
+      }
+    ]
+  },
+  "n:--primary-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#111111"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#111111"
+      }
+    ]
+  },
+  "n:--radius-m": {
+    "type": "number",
+    "value": 16
+  },
+  "n:--radius-none": {
+    "type": "number",
+    "value": 0
+  },
+  "n:--radius-pill": {
+    "type": "number",
+    "value": 999
+  },
+  "n:--ring": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#666666"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#666666"
+      }
+    ]
+  },
+  "n:--secondary": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#E7E8E5"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#2E2E2E"
+      }
+    ]
+  },
+  "n:--secondary-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#111111"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#FFFFFF"
+      }
+    ]
+  },
+  "n:--sidebar": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#E7E8E5"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#18181b"
+      }
+    ]
+  },
+  "n:--sidebar-accent": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#CBCCC9"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#2a2a30"
+      }
+    ]
+  },
+  "n:--sidebar-accent-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#18181b"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#fafafa"
+      }
+    ]
+  },
+  "n:--sidebar-border": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#CBCCC9"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#ffffff1a"
+      }
+    ]
+  },
+  "n:--sidebar-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#666666"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#fafafa"
+      }
+    ]
+  },
+  "n:--sidebar-primary": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#18181b"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#18181b"
+      }
+    ]
+  },
+  "n:--sidebar-primary-foreground": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#fafafa"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#fafafa"
+      }
+    ]
+  },
+  "n:--sidebar-ring": {
+    "type": "color",
+    "value": [
+      {
+        "value": "#71717a"
+      },
+      {
+        "theme": {
+          "n:Mode": "Dark"
+        },
+        "value": "#71717a"
+      }
+    ]
+  },
+  "n:--white": {
+    "type": "color",
+    "value": "#FFFFFF"
+  },
+  "palette-alert-danger-100": {
+    "type": "color",
+    "value": "#feecec"
+  },
+  "palette-alert-danger-500": {
+    "type": "color",
+    "value": "#f4504e"
+  },
+  "palette-alert-danger-600": {
+    "type": "color",
+    "value": "#cc2828"
+  },
+  "palette-alert-highlight-100": {
+    "type": "color",
+    "value": "#fdf7ce"
+  },
+  "palette-alert-highlight-500": {
+    "type": "color",
+    "value": "#db9d00"
+  },
+  "palette-alert-highlight-600": {
+    "type": "color",
+    "value": "#bd8400"
+  },
+  "palette-alert-info-100": {
+    "type": "color",
+    "value": "#f0f7ff"
+  },
+  "palette-alert-info-500": {
+    "type": "color",
+    "value": "#3689fc"
+  },
+  "palette-alert-info-600": {
+    "type": "color",
+    "value": "#0d58c9"
+  },
+  "palette-alert-success-100": {
+    "type": "color",
+    "value": "#defdeb"
+  },
+  "palette-alert-success-500": {
+    "type": "color",
+    "value": "#1bac72"
+  },
+  "palette-alert-success-600": {
+    "type": "color",
+    "value": "#088153"
+  },
+  "palette-alert-warning-100": {
+    "type": "color",
+    "value": "#fff1db"
+  },
+  "palette-alert-warning-500": {
+    "type": "color",
+    "value": "#f28c26"
+  },
+  "palette-alert-warning-600": {
+    "type": "color",
+    "value": "#d06d16"
+  },
+  "palette-neutral-100": {
+    "type": "color",
+    "value": "#f5f5f5"
+  },
+  "palette-neutral-1000": {
+    "type": "color",
+    "value": "#1c1c1c"
+  },
+  "palette-neutral-200": {
+    "type": "color",
+    "value": "#ededed"
+  },
+  "palette-neutral-300": {
+    "type": "color",
+    "value": "#d6d6d6"
+  },
+  "palette-neutral-400": {
+    "type": "color",
+    "value": "#bdbdbd"
+  },
+  "palette-neutral-500": {
+    "type": "color",
+    "value": "#949494"
+  },
+  "palette-neutral-600": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "palette-neutral-700": {
+    "type": "color",
+    "value": "#575757"
+  },
+  "palette-neutral-800": {
+    "type": "color",
+    "value": "#3b3b3b"
+  },
+  "palette-neutral-900": {
+    "type": "color",
+    "value": "#292929"
+  },
+  "palette-neutral-darkest": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "palette-neutral-lightest": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-neutral-transparent": {
+    "type": "color",
+    "value": "#00000000"
+  },
+  "space-2xl": {
+    "type": "number",
+    "value": [
+      {
+        "theme": {
+          "brand": "White Label"
+        },
+        "value": 32
+      },
+      {
+        "theme": {
+          "brand": "Autoweek"
+        },
+        "value": 32
+      },
+      {
+        "theme": {
+          "brand": "Best Products"
+        },
+        "value": 52
+      },
+      {
+        "theme": {
+          "brand": "Bicycling"
+        },
+        "value": 32
+      },
+      {
+        "theme": {
+          "brand": "Biography"
+        },
+        "value": 32
+      },
+      {
+        "theme": {
+          "brand": "Car and Driver"
+        },
+        "value": 32
+      },
+      {
+        "theme": {
+          "brand": "Cosmopolitan"
+        },
+        "value": 32
+      },
+      {
+        "theme": {
+          "brand": "Country Living"
+        },
+        "value": 32
+      },
+      {
+        "theme": {
+          "brand": "Delish"
+        },
+        "value": 32
+      },
+      {
+        "theme": {
+          "brand": "ELLE"
+        },
+        "value": 32
+      },
+      {
+        "theme": {
+          "brand": "ELLE Decor"
+        },
+        "value": 32
+      },
+      {
+        "theme": {
+          "brand": "Esquire"
+        },
+        "value": 32
+      },
+      {
+        "theme": {
+          "brand": "Good Housekeeping"
+        },
+        "value": 32
+      },
+      {
+        "theme": {
+          "brand": "Harper's BAZAAR"
+        },
+        "value": 32
+      },
+      {
+        "theme": {
+          "brand": "House Beautiful"
+        },
+        "value": 32
+      },
+      {
+        "theme": {
+          "brand": "Men's Health"
+        },
+        "value": 32
+      },
+      {
+        "theme": {
+          "brand": "Oprah Daily"
+        },
+        "value": 32
+      },
+      {
+        "theme": {
+          "brand": "Popular Mechanics"
+        },
+        "value": 32
+      },
+      {
+        "theme": {
+          "brand": "Prevention"
+        },
+        "value": 32
+      },
+      {
+        "theme": {
+          "brand": "Redbook"
+        },
+        "value": 32
+      },
+      {
+        "theme": {
+          "brand": "Road & Track"
+        },
+        "value": 32
+      },
+      {
+        "theme": {
+          "brand": "Runner's World"
+        },
+        "value": 32
+      },
+      {
+        "theme": {
+          "brand": "Seventeen"
+        },
+        "value": 32
+      },
+      {
+        "theme": {
+          "brand": "The Pioneer Woman"
+        },
+        "value": 32
+      },
+      {
+        "theme": {
+          "brand": "Town & Country"
+        },
+        "value": 32
+      },
+      {
+        "theme": {
+          "brand": "Veranda"
+        },
+        "value": 32
+      },
+      {
+        "theme": {
+          "brand": "Woman's Day"
+        },
+        "value": 32
+      },
+      {
+        "theme": {
+          "brand": "Women's Health"
+        },
+        "value": 32
+      }
+    ]
+  },
+  "space-2xs": {
+    "type": "number",
+    "value": 4
+  },
+  "space-3xl": {
+    "type": "number",
+    "value": 48
+  },
+  "space-3xs": {
+    "type": "number",
+    "value": 2
+  },
+  "space-4xl": {
+    "type": "number",
+    "value": 64
+  },
+  "space-6xl": {
+    "type": "number",
+    "value": 80
+  },
+  "space-lg": {
+    "type": "number",
+    "value": 20
+  },
+  "space-md": {
+    "type": "number",
+    "value": 16
+  },
+  "space-none": {
+    "type": "number",
+    "value": 0
+  },
+  "space-sm": {
+    "type": "number",
+    "value": 12
+  },
+  "space-xl": {
+    "type": "number",
+    "value": 24
+  },
+  "space-xs": {
+    "type": "number",
+    "value": 8
   }
 }

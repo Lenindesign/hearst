@@ -21,3 +21,6 @@ __pycache__/
 *.pyc
 
 # Symlinks (we'll commit the actual file)
+
+# Local Netlify folder
+.netlify
