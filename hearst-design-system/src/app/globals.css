@@ -2,7 +2,16 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "../lib/tokens.css";
-@import url("/fonts/chronicle-display.css");
+
+@font-face {
+  font-family: "Chronicle Display";
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src:
+    url("/fonts/ChronicleDisplay-Semibold.woff2") format("woff2"),
+    url("/fonts/ChronicleDisplay-Semibold.woff") format("woff");
+}
 
 @custom-variant dark (&:is(.dark *));
 
