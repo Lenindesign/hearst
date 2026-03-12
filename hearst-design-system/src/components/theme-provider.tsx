@@ -77,6 +77,7 @@ function brandToCssVars(brand: BrandTheme): Record<string, string> {
     "--chart-5": hexToOklch(brand.colors["5"] || primary),
     "--font-brand": `"${brand.fontDefault}", system-ui, sans-serif`,
     "--font-brand-secondary": `"${brand.fontSecondary}", Georgia, serif`,
+    "--font-headline": `"${brand.fontHeadline}", Georgia, serif`,
   };
 }
 
@@ -96,13 +97,18 @@ const GOOGLE_FONTS: Record<string, string> = {
   "Shippori Mincho": "Shippori+Mincho:wght@400;500;600;700;800",
 };
 
-function useGoogleFonts(fontDefault: string, fontSecondary: string) {
+function useGoogleFonts(fonts: string[]) {
   useEffect(() => {
-    const families: string[] = [GOOGLE_FONTS["Inter"]];
-    if (fontDefault !== "Inter" && GOOGLE_FONTS[fontDefault])
-      families.push(GOOGLE_FONTS[fontDefault]);
-    if (fontSecondary !== fontDefault && fontSecondary !== "Inter" && GOOGLE_FONTS[fontSecondary])
-      families.push(GOOGLE_FONTS[fontSecondary]);
+    const families: string[] = [];
+    const seen = new Set<string>();
+
+    for (const font of ["Inter", ...fonts]) {
+      if (!font || seen.has(font)) continue;
+      seen.add(font);
+      if (GOOGLE_FONTS[font]) families.push(GOOGLE_FONTS[font]);
+    }
+
+    if (families.length === 0) return;
 
     const id = "brand-google-fonts";
     let link = document.getElementById(id) as HTMLLinkElement | null;
@@ -117,7 +123,7 @@ function useGoogleFonts(fontDefault: string, fontSecondary: string) {
       link.href = href;
       document.head.appendChild(link);
     }
-  }, [fontDefault, fontSecondary]);
+  }, [fonts.join(",")]);
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
@@ -132,7 +138,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const cssVars = useMemo(() => brandToCssVars(brand), [brand]);
 
-  useGoogleFonts(brand.fontDefault, brand.fontSecondary);
+  useGoogleFonts([brand.fontDefault, brand.fontSecondary, brand.fontHeadline]);
 
   return (
     <ThemeContext.Provider value={{ brand, setBrand }}>

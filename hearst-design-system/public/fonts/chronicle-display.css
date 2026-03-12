@@ -1,0 +1,9 @@
+@font-face {
+  font-family: "Chronicle Display";
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src:
+    url("/fonts/ChronicleDisplay-Semibold.woff2") format("woff2"),
+    url("/fonts/ChronicleDisplay-Semibold.woff") format("woff");
+}

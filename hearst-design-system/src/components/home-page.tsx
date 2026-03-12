@@ -104,8 +104,7 @@ function MainNav({ brandSlug }: { brandSlug: string }) {
           {logo ? (
             <BrandLogo slug={brand.slug} className="[&_svg]:h-7 [&_svg]:w-auto mx-auto" />
           ) : (
-            <h1 className="text-2xl font-extrabold tracking-[6px] uppercase"
-              style={{ fontFamily: "var(--font-brand-serif, var(--font-brand-sans, system-ui))" }}>
+            <h1 className="text-2xl font-semibold tracking-[6px] uppercase font-headline">
               {brand.name}
             </h1>
           )}
@@ -135,8 +134,8 @@ function CollectionList({ brandSlug }: { brandSlug: string }) {
   return (
     <div className="w-full lg:w-[320px] shrink-0 space-y-3">
       <div className="space-y-2">
-        <h3 className="text-xl font-bold uppercase"
-          style={{ color: "var(--brand-primary, #000)", fontFamily: "var(--font-brand-serif, var(--font-brand-sans, system-ui))" }}>
+        <h3 className="text-xl font-semibold uppercase font-headline"
+          style={{ color: "var(--brand-primary, #000)" }}>
           {content.collectionTitle}
         </h3>
         <div className="h-[3px] w-full" style={{ backgroundColor: "var(--brand-primary, #000)" }} />
@@ -182,7 +181,7 @@ function HeroCard({ brandSlug }: { brandSlug: string }) {
           style={{ color: "var(--brand-primary, #000)" }}>
           {content.hero.eyebrow}
         </span>
-        <h2 className="text-2xl lg:text-[32px] font-bold leading-tight">
+        <h2 className="text-2xl lg:text-[32px] font-semibold leading-tight font-headline">
           {content.hero.title}
         </h2>
         <p className="text-base leading-relaxed" style={{ color: "var(--palette-neutral-700, #575757)" }}>
@@ -283,8 +282,7 @@ function TrendingSection({ brandSlug }: { brandSlug: string }) {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-4xl lg:text-5xl font-bold"
-        style={{ fontFamily: "var(--font-brand-sans, system-ui)" }}>
+      <h2 className="text-4xl lg:text-5xl font-semibold font-headline">
         Trending
       </h2>
       <div className="flex gap-6 overflow-x-auto scrollbar-hide pb-2">
@@ -308,8 +306,7 @@ function Footer({ brandSlug }: { brandSlug: string }) {
         {logo ? (
           <BrandLogo slug={brand.slug} className="[&_svg]:h-5 [&_svg]:w-auto" />
         ) : (
-          <span className="text-xl font-extrabold tracking-[4px] uppercase"
-            style={{ fontFamily: "var(--font-brand-serif, var(--font-brand-sans, system-ui))" }}>
+          <span className="text-xl font-semibold tracking-[4px] uppercase font-headline">
             {brand.name}
           </span>
         )}

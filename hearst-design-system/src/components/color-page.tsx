@@ -108,7 +108,7 @@ export function ColorPage() {
         <p className="text-[11px] font-semibold tracking-widest text-muted-foreground uppercase mb-2">
           Foundations
         </p>
-        <h1 className="text-4xl font-extrabold tracking-tight">Color</h1>
+        <h1 className="text-4xl font-semibold tracking-tight font-headline">Color</h1>
         <p className="text-base text-muted-foreground mt-3 max-w-2xl leading-relaxed">
           Our color system is built around a vibrant spectrum of colors,
           thoughtfully selected to engage users and enhance communication. The

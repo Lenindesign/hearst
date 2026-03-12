@@ -158,7 +158,7 @@ export function ChipPage() {
         <p className="text-[11px] font-semibold tracking-widest text-muted-foreground uppercase mb-2">
           Components
         </p>
-        <h1 className="text-4xl font-extrabold tracking-tight">Chip</h1>
+        <h1 className="text-4xl font-semibold tracking-tight font-headline">Chip</h1>
         <p className="text-base text-muted-foreground mt-3 max-w-2xl leading-relaxed">
           Chips are compact, pill-shaped elements used for filtering, selecting
           options, or displaying dismissible tags. They come in toggle and

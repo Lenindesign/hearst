@@ -92,7 +92,7 @@ export function PaginationPage() {
         <p className="text-[11px] font-semibold tracking-widest text-muted-foreground uppercase mb-2">
           Components
         </p>
-        <h1 className="text-4xl font-extrabold tracking-tight">Pagination</h1>
+        <h1 className="text-4xl font-semibold tracking-tight font-headline">Pagination</h1>
         <p className="text-base text-muted-foreground mt-3 max-w-2xl leading-relaxed">
           Pagination allows users to navigate through multi-page content. It
           supports truncation with ellipsis for large page counts, two sizes

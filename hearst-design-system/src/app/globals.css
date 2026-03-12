@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "../lib/tokens.css";
+@import url("/fonts/chronicle-display.css");
 
 @custom-variant dark (&:is(.dark *));
 
@@ -11,6 +12,7 @@
   --font-sans: var(--font-sans);
   --font-brand: var(--font-brand);
   --font-brand-secondary: var(--font-brand-secondary);
+  --font-headline: var(--font-headline, "Chronicle Display", Georgia, serif);
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);

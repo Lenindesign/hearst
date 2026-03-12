@@ -107,7 +107,7 @@ export function ButtonPage() {
         <p className="text-[11px] font-semibold tracking-widest text-muted-foreground uppercase mb-2">
           Components
         </p>
-        <h1 className="text-4xl font-extrabold tracking-tight">Button</h1>
+        <h1 className="text-4xl font-semibold tracking-tight font-headline">Button</h1>
         <p className="text-base text-muted-foreground mt-3 max-w-2xl leading-relaxed">
           Buttons trigger actions or navigate users. They adapt to each brand
           through design tokens for color, typography, and border radius. Six

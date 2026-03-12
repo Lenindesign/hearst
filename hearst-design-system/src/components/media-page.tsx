@@ -89,7 +89,7 @@ export function MediaPage() {
         <p className="text-[11px] font-semibold tracking-widest text-muted-foreground uppercase mb-2">
           Components
         </p>
-        <h1 className="text-4xl font-extrabold tracking-tight">Media</h1>
+        <h1 className="text-4xl font-semibold tracking-tight font-headline">Media</h1>
         <p className="text-base text-muted-foreground mt-3 max-w-2xl leading-relaxed">
           Media components extend the Image component with an overlay layer
           containing a media icon (play, headphones). The icon can be positioned

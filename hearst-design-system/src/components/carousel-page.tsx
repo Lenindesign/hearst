@@ -152,7 +152,7 @@ export function CarouselPage() {
         <p className="text-[11px] font-semibold tracking-widest text-muted-foreground uppercase mb-2">
           Components
         </p>
-        <h1 className="text-4xl font-extrabold tracking-tight">Carousel</h1>
+        <h1 className="text-4xl font-semibold tracking-tight font-headline">Carousel</h1>
         <p className="text-base text-muted-foreground mt-3 max-w-2xl leading-relaxed">
           Carousels display a scrollable set of content items with navigation
           controls. They include a headline, prev/next arrow buttons, a

@@ -86,7 +86,7 @@ export function DividerPage() {
         <p className="text-[11px] font-semibold tracking-widest text-muted-foreground uppercase mb-2">
           Components
         </p>
-        <h1 className="text-4xl font-extrabold tracking-tight">Divider</h1>
+        <h1 className="text-4xl font-semibold tracking-tight font-headline">Divider</h1>
         <p className="text-base text-muted-foreground mt-3 max-w-2xl leading-relaxed">
           Dividers are horizontal rules used to visually separate content
           sections. They come in three sizes (sm, md, lg) and two variants

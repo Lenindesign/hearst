@@ -159,12 +159,12 @@ function ArticleCardTitle({
     <h3
       data-slot="article-card-title"
       className={cn(
-        "font-extrabold leading-snug text-base",
+        "font-semibold leading-snug text-base font-headline",
         "group-data-[size=sm]/article-card:text-sm",
         "group-data-[size=lg]/article-card:text-xl",
         className
       )}
-      style={{ fontFamily: "var(--font-brand)", ...style }}
+      style={style}
       {...props}
     />
   );

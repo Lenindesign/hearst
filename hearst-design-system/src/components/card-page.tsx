@@ -174,7 +174,7 @@ const API_SECTIONS = [
   },
   {
     name: "ArticleCardTitle",
-    description: "Headline. Uses --font-brand for brand-specific typography.",
+    description: "Headline. Uses --font-headline (Chronicle Display 600) for all brands.",
     props: [],
   },
   {
@@ -260,7 +260,7 @@ export function CardPage() {
         <p className="text-[11px] font-semibold tracking-widest text-muted-foreground uppercase mb-2">
           Components
         </p>
-        <h1 className="text-4xl font-extrabold tracking-tight">Card</h1>
+        <h1 className="text-4xl font-semibold tracking-tight font-headline">Card</h1>
         <p className="text-base text-muted-foreground mt-3 max-w-2xl leading-relaxed">
           A composable article card built with Tailwind and shadcn patterns.
           Adapts to each Hearst brand through design tokens for color,
@@ -307,7 +307,7 @@ export function CardPage() {
             <AnatomyItem
               number={3}
               title="ArticleCardTitle"
-              description="Headline. Uses var(--font-brand) for brand-specific typography at bold weight."
+              description="Headline. Uses var(--font-headline) — Chronicle Display 600 for all brands."
             />
             <AnatomyItem
               number={4}
@@ -511,9 +511,9 @@ export function CardPage() {
           </div>
           {[
             {
-              token: "--font-brand",
+              token: "--font-headline",
               usedBy: "ArticleCardTitle",
-              value: brand.fontDefault,
+              value: "Chronicle Display",
             },
             {
               token: "--primary",
