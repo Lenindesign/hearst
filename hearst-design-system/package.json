@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "sync-tokens": "tsx scripts/sync-tokens.ts",
-    "sync-pencil": "tsx scripts/sync-from-pencil.ts"
+    "sync-pencil": "tsx scripts/sync-from-pencil.ts",
+    "sync-to-pencil": "tsx scripts/sync-to-pencil.ts",
+    "sync-watch": "tsx scripts/watch-sync.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.2.0",

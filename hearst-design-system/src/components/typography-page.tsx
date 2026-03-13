@@ -41,9 +41,8 @@ const TYPE_SCALE = [
 ];
 
 const FONT_TOKENS = [
-  { token: "--font-brand", designToken: "$font-family-default", usage: "Buttons, UI elements, body text" },
-  { token: "--font-headline", designToken: "Chronicle Display", usage: "All headlines — single source of truth (weight 600)" },
-  { token: "--font-brand-secondary", designToken: "$font-family-serif", usage: "Eyebrows, secondary text, article content" },
+  { token: "--font-brand", designToken: "$font-family-default", usage: "Headlines, buttons, UI elements" },
+  { token: "--font-brand-secondary", designToken: "$font-family-serif", usage: "Body text, article content (when specified)" },
 ];
 
 export function TypographyPage() {
@@ -56,7 +55,7 @@ export function TypographyPage() {
         <p className="text-[11px] font-semibold tracking-widest text-muted-foreground uppercase mb-2">
           Foundations
         </p>
-        <h1 className="text-4xl font-semibold tracking-tight font-headline">Typography</h1>
+        <h1 className="text-4xl tracking-tight headline">Typography</h1>
         <p className="text-base text-muted-foreground mt-3 max-w-2xl leading-relaxed">
           Our typography system uses brand-specific fonts loaded dynamically per
           theme. The type scale is a 15-step system from 12px to 128px with line
@@ -79,19 +78,25 @@ export function TypographyPage() {
               <Badge variant="secondary" className="uppercase tracking-wider">
                 Headline
               </Badge>
-              <p className="text-3xl font-semibold font-headline">
+              <p
+                className="text-3xl font-extrabold"
+                style={{ fontFamily: "var(--font-brand)" }}
+              >
                 Aa Bb Cc Dd Ee
               </p>
-              <p className="text-lg font-semibold font-headline">
+              <p
+                className="text-lg"
+                style={{ fontFamily: "var(--font-brand)" }}
+              >
                 The quick brown fox jumps over the lazy dog
               </p>
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <code className="font-mono bg-muted px-1.5 py-0.5 rounded">
-                  --font-headline
+                  --font-brand
                 </code>
                 <span>&middot;</span>
                 <code className="font-mono bg-muted px-1.5 py-0.5 rounded">
-                  Chronicle Display 600
+                  $font-family-default
                 </code>
               </div>
             </CardContent>
@@ -161,8 +166,8 @@ export function TypographyPage() {
                 style={{
                   fontSize: Math.min(step.size, 48),
                   lineHeight: `${Math.min(step.lineHeight, 52)}px`,
-                  fontFamily: step.size >= 20 ? "var(--font-headline)" : "var(--font-brand)",
-                  fontWeight: step.size >= 20 ? 600 : step.weight,
+                  fontFamily: "var(--font-brand)",
+                  fontWeight: step.weight,
                 }}
               >
                 The quick brown fox
@@ -192,7 +197,7 @@ export function TypographyPage() {
                 <p
                   className="text-2xl"
                   style={{
-                    fontFamily: "var(--font-headline)",
+                    fontFamily: "var(--font-brand)",
                     fontWeight: w.weight,
                   }}
                 >

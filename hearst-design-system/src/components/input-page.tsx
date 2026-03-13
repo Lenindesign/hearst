@@ -118,7 +118,7 @@ export function InputPage() {
         <p className="text-[11px] font-semibold tracking-widest text-muted-foreground uppercase mb-2">
           Components
         </p>
-        <h1 className="text-4xl font-semibold tracking-tight font-headline">Input</h1>
+        <h1 className="text-4xl tracking-tight headline">Input</h1>
         <p className="text-base text-muted-foreground mt-3 max-w-2xl leading-relaxed">
           Input fields allow users to enter text data. They support a label,
           leading icon, placeholder, clear button, help text, and error state.

@@ -166,7 +166,7 @@ export function LayoutPage() {
         <p className="text-[11px] font-semibold tracking-widest text-muted-foreground uppercase mb-2">
           Foundations
         </p>
-        <h1 className="text-4xl font-semibold tracking-tight font-headline">Layout</h1>
+        <h1 className="text-4xl tracking-tight headline">Layout</h1>
         <p className="text-base text-muted-foreground mt-3 max-w-2xl leading-relaxed">
           The layout system defines responsive breakpoints, container widths,
           and grid configurations. It uses a mobile-first approach with 5
@@ -190,7 +190,7 @@ export function LayoutPage() {
                 <Badge variant="secondary" className="w-full justify-center">
                   {bp.name}
                 </Badge>
-                <p className="text-2xl font-semibold text-primary font-headline">
+                <p className="text-2xl text-primary headline">
                   {bp.viewport}px
                 </p>
                 <p className="text-[10px] text-muted-foreground leading-relaxed">

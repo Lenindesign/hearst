@@ -85,7 +85,7 @@ export function FormLabelPage() {
         <p className="text-[11px] font-semibold tracking-widest text-muted-foreground uppercase mb-2">
           Components
         </p>
-        <h1 className="text-4xl font-semibold tracking-tight font-headline">Form Label</h1>
+        <h1 className="text-4xl tracking-tight headline">Form Label</h1>
         <p className="text-base text-muted-foreground mt-3 max-w-2xl leading-relaxed">
           Form labels identify input fields with a text label, optional required
           indicator, help text, and error messages. They provide context and

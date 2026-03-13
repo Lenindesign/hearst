@@ -104,7 +104,7 @@ function MainNav({ brandSlug }: { brandSlug: string }) {
           {logo ? (
             <BrandLogo slug={brand.slug} className="[&_svg]:h-7 [&_svg]:w-auto mx-auto" />
           ) : (
-            <h1 className="text-2xl font-semibold tracking-[6px] uppercase font-headline">
+            <h1 className="text-2xl tracking-[6px] uppercase headline">
               {brand.name}
             </h1>
           )}
@@ -134,7 +134,7 @@ function CollectionList({ brandSlug }: { brandSlug: string }) {
   return (
     <div className="w-full lg:w-[320px] shrink-0 space-y-3">
       <div className="space-y-2">
-        <h3 className="text-xl font-semibold uppercase font-headline"
+        <h3 className="text-xl uppercase headline"
           style={{ color: "var(--brand-primary, #000)" }}>
           {content.collectionTitle}
         </h3>
@@ -151,7 +151,7 @@ function CollectionList({ brandSlug }: { brandSlug: string }) {
               </div>
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-semibold leading-snug group-hover:underline whitespace-pre-line font-headline">
+              <p className="text-sm leading-snug group-hover:underline whitespace-pre-line headline">
                 {article.title}
               </p>
               <div className="flex items-center gap-2 mt-1 text-xs" style={{ color: "var(--palette-neutral-600, #757575)" }}>
@@ -181,7 +181,7 @@ function HeroCard({ brandSlug }: { brandSlug: string }) {
           style={{ color: "var(--brand-primary, #000)" }}>
           {content.hero.eyebrow}
         </span>
-        <h2 className="text-2xl lg:text-[32px] font-semibold leading-tight font-headline">
+        <h2 className="text-2xl lg:text-[32px] leading-tight headline">
           {content.hero.title}
         </h2>
         <p className="text-base leading-relaxed" style={{ color: "var(--palette-neutral-700, #575757)" }}>
@@ -207,7 +207,7 @@ function RightRailCard({
           style={{ color: "var(--brand-primary, #000)" }}>
           {card.eyebrow}
         </span>
-        <p className="text-sm font-semibold leading-snug group-hover:underline whitespace-pre-line font-headline">
+        <p className="text-sm leading-snug group-hover:underline whitespace-pre-line headline">
           {card.title}
         </p>
         <p className="text-xs leading-relaxed whitespace-pre-line" style={{ color: "var(--palette-neutral-600, #757575)" }}>
@@ -249,7 +249,7 @@ function NewsletterPromo({ brandSlug }: { brandSlug: string }) {
   return (
     <div className="p-6 rounded border"
       style={{ backgroundColor: "var(--palette-neutral-100, #f5f5f5)", borderColor: "var(--palette-neutral-400, #bdbdbd)" }}>
-      <h3 className="text-lg font-semibold font-headline">{content.newsletter.title}</h3>
+      <h3 className="text-lg headline">{content.newsletter.title}</h3>
       <p className="text-sm mt-1" style={{ color: "var(--palette-neutral-600, #757575)" }}>
         {content.newsletter.desc}
       </p>
@@ -267,7 +267,7 @@ function TrendingCard({ card, index }: { card: { title: string; time: string }; 
           {index + 1}
         </div>
       </div>
-      <p className="text-sm font-semibold leading-snug group-hover:underline whitespace-pre-line font-headline">
+      <p className="text-sm leading-snug group-hover:underline whitespace-pre-line headline">
         {card.title}
       </p>
       <span className="text-xs" style={{ color: "var(--palette-neutral-600, #757575)" }}>
@@ -282,7 +282,7 @@ function TrendingSection({ brandSlug }: { brandSlug: string }) {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-4xl lg:text-5xl font-semibold font-headline">
+      <h2 className="text-4xl lg:text-5xl headline">
         Trending
       </h2>
       <div className="flex gap-6 overflow-x-auto scrollbar-hide pb-2">
@@ -306,7 +306,7 @@ function Footer({ brandSlug }: { brandSlug: string }) {
         {logo ? (
           <BrandLogo slug={brand.slug} className="[&_svg]:h-5 [&_svg]:w-auto" />
         ) : (
-          <span className="text-xl font-semibold tracking-[4px] uppercase font-headline">
+          <span className="text-xl tracking-[4px] uppercase headline">
             {brand.name}
           </span>
         )}

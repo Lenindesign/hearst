@@ -21,7 +21,7 @@
   --font-sans: var(--font-sans);
   --font-brand: var(--font-brand);
   --font-brand-secondary: var(--font-brand-secondary);
-  --font-headline: var(--font-headline, "Chronicle Display", Georgia, serif);
+  --font-headline: var(--font-headline, system-ui, sans-serif);
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -144,6 +144,10 @@
 }
 
 @layer utilities {
+  .headline {
+    font-family: var(--font-headline, system-ui);
+    font-weight: var(--font-headline-weight, 700);
+  }
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }

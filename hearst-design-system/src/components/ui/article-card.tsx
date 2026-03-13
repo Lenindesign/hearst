@@ -159,7 +159,7 @@ function ArticleCardTitle({
     <h3
       data-slot="article-card-title"
       className={cn(
-        "font-semibold leading-snug text-base font-headline",
+        "headline leading-snug text-base",
         "group-data-[size=sm]/article-card:text-sm",
         "group-data-[size=lg]/article-card:text-xl",
         className
