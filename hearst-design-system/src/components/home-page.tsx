@@ -151,7 +151,7 @@ function CollectionList({ brandSlug }: { brandSlug: string }) {
               </div>
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-bold leading-snug group-hover:underline whitespace-pre-line">
+              <p className="text-sm font-semibold leading-snug group-hover:underline whitespace-pre-line font-headline">
                 {article.title}
               </p>
               <div className="flex items-center gap-2 mt-1 text-xs" style={{ color: "var(--palette-neutral-600, #757575)" }}>
@@ -177,7 +177,7 @@ function HeroCard({ brandSlug }: { brandSlug: string }) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
       </div>
       <div className="space-y-1">
-        <span className="text-xs font-semibold uppercase tracking-wide"
+        <span className="text-xs font-semibold uppercase tracking-wide font-brand-secondary"
           style={{ color: "var(--brand-primary, #000)" }}>
           {content.hero.eyebrow}
         </span>
@@ -203,11 +203,11 @@ function RightRailCard({
       <div className="w-[100px] h-[100px] rounded shrink-0"
         style={{ backgroundColor: "var(--palette-neutral-200, #ededed)" }} />
       <div className="min-w-0 space-y-1">
-        <span className="text-[11px] font-semibold uppercase tracking-wide"
+        <span className="text-[11px] font-semibold uppercase tracking-wide font-brand-secondary"
           style={{ color: "var(--brand-primary, #000)" }}>
           {card.eyebrow}
         </span>
-        <p className="text-sm font-bold leading-snug group-hover:underline whitespace-pre-line">
+        <p className="text-sm font-semibold leading-snug group-hover:underline whitespace-pre-line font-headline">
           {card.title}
         </p>
         <p className="text-xs leading-relaxed whitespace-pre-line" style={{ color: "var(--palette-neutral-600, #757575)" }}>
@@ -249,7 +249,7 @@ function NewsletterPromo({ brandSlug }: { brandSlug: string }) {
   return (
     <div className="p-6 rounded border"
       style={{ backgroundColor: "var(--palette-neutral-100, #f5f5f5)", borderColor: "var(--palette-neutral-400, #bdbdbd)" }}>
-      <h3 className="text-lg font-semibold">{content.newsletter.title}</h3>
+      <h3 className="text-lg font-semibold font-headline">{content.newsletter.title}</h3>
       <p className="text-sm mt-1" style={{ color: "var(--palette-neutral-600, #757575)" }}>
         {content.newsletter.desc}
       </p>
@@ -267,7 +267,7 @@ function TrendingCard({ card, index }: { card: { title: string; time: string }; 
           {index + 1}
         </div>
       </div>
-      <p className="text-sm font-bold leading-snug group-hover:underline whitespace-pre-line">
+      <p className="text-sm font-semibold leading-snug group-hover:underline whitespace-pre-line font-headline">
         {card.title}
       </p>
       <span className="text-xs" style={{ color: "var(--palette-neutral-600, #757575)" }}>
@@ -348,9 +348,8 @@ export function BrandHomePage() {
   const { brand } = useTheme();
 
   return (
-    <div className="min-h-screen" style={{
+    <div className="min-h-screen font-brand" style={{
       backgroundColor: "var(--palette-neutral-lightest, #fff)",
-      fontFamily: "var(--font-brand-sans, system-ui)",
     }}>
       <NavBar />
 
