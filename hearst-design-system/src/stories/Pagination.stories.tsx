@@ -14,7 +14,7 @@ const meta: Meta<typeof Pagination> = {
 export default meta;
 type Story = StoryObj<typeof Pagination>;
 
-function PaginationDemo({ totalPages = 10, size = "md" as const }) {
+function PaginationDemo({ totalPages = 10, size = "md" }: { totalPages?: number; size?: "md" | "sm" }) {
   const [page, setPage] = useState(1);
   return <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} size={size} />;
 }
