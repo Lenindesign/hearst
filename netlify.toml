@@ -1,6 +1,6 @@
 [build]
   base = "hearst-design-system"
-  command = "npm run build"
+  command = "npx storybook build -o public/storybook --quiet && npm run build"
   publish = ".next"
 
 [[plugins]]
