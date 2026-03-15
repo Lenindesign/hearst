@@ -3,14 +3,401 @@
 @import "shadcn/tailwind.css";
 @import "../lib/tokens.css";
 
+/* ─── Shared / FRE fonts ─── */
+@font-face {
+  font-family: "Inter";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.cosmopolitan.com/_assets/design-tokens/fre/static/fonts/inter-v3-latin-regular.c8ad008.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Lora";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.cosmopolitan.com/_assets/design-tokens/fre/static/fonts/lora-v35-latin-regular.192b325.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Lora";
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.cosmopolitan.com/_assets/design-tokens/fre/static/fonts/lora-v35-latin-700.woff2") format("woff2");
+}
+
+/* ─── Cosmopolitan ─── */
 @font-face {
   font-family: "Chronicle Display";
   font-weight: 600;
   font-style: normal;
   font-display: swap;
-  src:
-    url("/fonts/ChronicleDisplay-Semibold.woff2") format("woff2"),
-    url("/fonts/ChronicleDisplay-Semibold.woff") format("woff");
+  src: url("https://www.cosmopolitan.com/_assets/design-tokens/cosmopolitan/static/fonts/ChronicleDisplay_normal_normal_600.bd7a1b4.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Basis Grotesque Pro";
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.cosmopolitan.com/_assets/design-tokens/cosmopolitan/static/fonts/BasisGrotesquePro_normal_normal_500.0d89d91.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Basis Grotesque Pro";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.cosmopolitan.com/_assets/design-tokens/cosmopolitan/static/fonts/BasisGrotesquePro_normal_normal_500.0d89d91.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Basis Grotesque Pro";
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.cosmopolitan.com/_assets/design-tokens/cosmopolitan/static/fonts/BasisGrotesquePro_normal_normal_900.f202cdc.woff2") format("woff2");
+}
+
+/* ─── Esquire ─── */
+@font-face {
+  font-family: "Lausanne";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.esquire.com/_assets/design-tokens/esquire/static/fonts/Lausanne-550.e9ff2bf.woff2") format("woff2");
+}
+
+/* ─── Elle ─── */
+@font-face {
+  font-family: "Modern MT Pro";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.elle.com/_assets/design-tokens/elle/static/fonts/ModernMTPro-Extended.69f5635.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Neue Haas Unica Pro";
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.elle.com/_assets/design-tokens/elle/static/fonts/NeueHaasUnicaMedium_normal_normal.ff5375f.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Neue Haas Unica Pro";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.elle.com/_assets/design-tokens/elle/static/fonts/NeueHaasUnicaRegular_normal_normal.483b32e.woff2") format("woff2");
+}
+
+/* ─── Harper's Bazaar ─── */
+@font-face {
+  font-family: "Helvetica Now Text";
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.harpersbazaar.com/_assets/design-tokens/harpersbazaar/static/fonts/HelveticaNowText-Medium.32f7432.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Helvetica Now Text";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.harpersbazaar.com/_assets/design-tokens/harpersbazaar/static/fonts/HelveticaNowText-Regular.69be7fa.woff2") format("woff2");
+}
+@font-face {
+  font-family: "NewParis Text";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.harpersbazaar.com/_assets/design-tokens/harpersbazaar/static/fonts/NewParisText-Book.62ee35f.woff2") format("woff2");
+}
+
+/* ─── Good Housekeeping ─── */
+@font-face {
+  font-family: "Barlow Semi Condensed";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.goodhousekeeping.com/_assets/design-tokens/goodhousekeeping/static/fonts/Barlow-Semi-Condensed-400.1b44b0e.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Barlow Semi Condensed";
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.goodhousekeeping.com/_assets/design-tokens/goodhousekeeping/static/fonts/barlow-semi-condensed-800.8167e12.woff2") format("woff2");
+}
+
+/* ─── Men's Health ─── */
+@font-face {
+  font-family: "Manrope";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.menshealth.com/_assets/design-tokens/menshealth/static/fonts/manrope-v15-latin-regular.95a9399.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Manrope";
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.menshealth.com/_assets/design-tokens/menshealth/static/fonts/manrope-v15-latin-800.b531f2d.woff2") format("woff2");
+}
+
+/* ─── Car and Driver ─── */
+@font-face {
+  font-family: "Inter";
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.caranddriver.com/_assets/design-tokens/caranddriver/static/fonts/Inter-500.f84dec4.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.caranddriver.com/_assets/design-tokens/caranddriver/static/fonts/Inter-800.0a74359.woff2") format("woff2");
+}
+
+/* ─── Delish ─── */
+@font-face {
+  font-family: "TT Commons Pro";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.delish.com/_assets/design-tokens/delish/static/fonts/TTCommonsPro_normal_normal_400.dfb2033.woff2") format("woff2");
+}
+@font-face {
+  font-family: "TT Commons Pro";
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.delish.com/_assets/design-tokens/delish/static/fonts/TTCommonsPro_normal_normal_600.122e0b9.woff2") format("woff2");
+}
+@font-face {
+  font-family: "TT Commons Pro";
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.delish.com/_assets/design-tokens/delish/static/fonts/TTCommonsPro_Bold_700.2c789e3.woff2") format("woff2");
+}
+
+/* ─── Country Living ─── */
+@font-face {
+  font-family: "Montserrat";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.countryliving.com/_assets/design-tokens/countryliving/static/fonts/montserrat-v29-latin-regular.425c382.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Montserrat";
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.countryliving.com/_assets/design-tokens/countryliving/static/fonts/montserrat-v29-latin-600.7dc378e.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Playfair Display";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.countryliving.com/_assets/design-tokens/countryliving/static/fonts/playfair-display-v37-latin-regular.81957af.woff2") format("woff2");
+}
+
+/* ─── Prevention ─── */
+@font-face {
+  font-family: "Poppins";
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.prevention.com/_assets/design-tokens/prevention/static/fonts/poppins-v22-latin-700.3407479.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Poppins";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.oprahdaily.com/_assets/design-tokens/oprahdaily/static/fonts/poppins-v22-latin-regular.7b41d4b.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Poppins";
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.oprahdaily.com/_assets/design-tokens/oprahdaily/static/fonts/poppins-v22-latin-600.a078b32.woff2") format("woff2");
+}
+
+/* ─── House Beautiful ─── */
+@font-face {
+  font-family: "Visuelt Pro";
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.housebeautiful.com/_assets/design-tokens/housebeautiful/static/fonts/Visuelt-Light-Pro.b63a156.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Visuelt Pro";
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.housebeautiful.com/_assets/design-tokens/housebeautiful/static/fonts/Visuelt-Medium-Pro.137b5b1.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Visuelt Pro";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.housebeautiful.com/_assets/design-tokens/housebeautiful/static/fonts/Visuelt-Light-Pro.b63a156.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Apparel";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.housebeautiful.com/_assets/design-tokens/housebeautiful/static/fonts/Apparel_Regular.8ab5a91.woff2") format("woff2");
+}
+@font-face {
+  font-family: "SangBleu Sunrise";
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.housebeautiful.com/_assets/design-tokens/housebeautiful/static/fonts/SangBleu_Sunrise_Medium.3814a72.woff2") format("woff2");
+}
+
+/* ─── Women's Health ─── */
+@font-face {
+  font-family: "Altone";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.womenshealthmag.com/_assets/design-tokens/womenshealthmag/static/fonts/Altone-Regular.f68ec8c.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Altone";
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.womenshealthmag.com/_assets/design-tokens/womenshealthmag/static/fonts/Altone-Bold.fcd4969.woff2") format("woff2");
+}
+
+/* ─── Runner's World ─── */
+@font-face {
+  font-family: "Futura Now Text";
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.runnersworld.com/_assets/design-tokens/runnersworld/static/fonts/FuturaNowTextMedium.2993055.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Futura Now Text";
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.runnersworld.com/_assets/design-tokens/runnersworld/static/fonts/FuturaNowTextExtraBold.dbc897f.woff2") format("woff2");
+}
+@font-face {
+  font-family: "League Gothic";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.runnersworld.com/_assets/design-tokens/runnersworld/static/fonts/LeagueGothic.6a59e12.woff2") format("woff2");
+}
+
+/* ─── Bicycling ─── */
+@font-face {
+  font-family: "Velo Serif Display";
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.bicycling.com/_assets/design-tokens/bicycling/static/fonts/VeloSerifDisplay-Bold.3e67c9f.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Teko";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.bicycling.com/_assets/design-tokens/bicycling/static/fonts/teko-v7-latin-regular.9fa1a3b.woff2") format("woff2");
+}
+
+/* ─── Popular Mechanics ─── */
+@font-face {
+  font-family: "United Sans Cd";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.popularmechanics.com/_assets/design-tokens/popularmechanics/static/fonts/UnitedSansCdBk.cde089b.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Work Sans";
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.popularmechanics.com/_assets/design-tokens/popularmechanics/static/fonts/work-sans-latin-600.62f942d.woff2") format("woff2");
+}
+
+/* ─── Oprah Daily ─── */
+@font-face {
+  font-family: "Juana";
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.oprahdaily.com/_assets/design-tokens/oprahdaily/static/fonts/Juana_Light.b12bb34.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Juana";
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.oprahdaily.com/_assets/design-tokens/oprahdaily/static/fonts/Juana_Medium.deb1a5e.woff2") format("woff2");
+}
+
+/* ─── Veranda ─── */
+@font-face {
+  font-family: "League Spartan";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.veranda.com/_assets/design-tokens/veranda/static/fonts/LeagueSpartan.b4621e5.woff2") format("woff2");
+}
+
+/* ─── Woman's Day ─── */
+@font-face {
+  font-family: "Arvo";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.womansday.com/_assets/design-tokens/womansday/static/fonts/arvo-v22-latin-regular.454241c.woff2") format("woff2");
+}
+@font-face {
+  font-family: "League Spartan";
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.womansday.com/_assets/design-tokens/womansday/static/fonts/league-spartan-v11-latin-600.5f7738e.woff2") format("woff2");
+}
+
+/* ─── Road & Track ─── */
+@font-face {
+  font-family: "Buzz";
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.roadandtrack.com/_assets/design-tokens/roadandtrack/static/fonts/BuzzBlack.66fdf39.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Roboto";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.roadandtrack.com/_assets/design-tokens/roadandtrack/static/fonts/Roboto-400.11b1a87.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Roboto";
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.roadandtrack.com/_assets/design-tokens/roadandtrack/static/fonts/Roboto-900.4e829f3.woff2") format("woff2");
 }
 
 @custom-variant dark (&:is(.dark *));

@@ -84,171 +84,185 @@ function ScrollableNav({
   );
 }
 
+function HamburgerIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="4" x2="20" y1="12" y2="12" />
+      <line x1="4" x2="20" y1="6" y2="6" />
+      <line x1="4" x2="20" y1="18" y2="18" />
+    </svg>
+  );
+}
+
+function CloseIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M18 6 6 18" />
+      <path d="m6 6 12 12" />
+    </svg>
+  );
+}
+
+function NavLink({
+  href,
+  label,
+  isActive,
+  className = "",
+}: {
+  href: string;
+  label: string;
+  isActive: boolean;
+  className?: string;
+}) {
+  const resolvedHref = href === "/components" ? "/components/card" : href;
+  return (
+    <Link
+      href={resolvedHref}
+      className={`px-3 py-1.5 text-sm rounded-md transition-colors whitespace-nowrap shrink-0 ${
+        isActive
+          ? "font-medium text-foreground bg-muted"
+          : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+      } ${className}`}
+    >
+      {label}
+    </Link>
+  );
+}
+
 export function NavBar() {
   const pathname = usePathname();
   const { brand } = useTheme();
   const primary = brand.colors["1"] || Object.values(brand.colors)[0];
   const logo = brandLogos[brand.slug];
   const isComponents = pathname.startsWith("/components");
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    setMobileMenuOpen(false);
+    setMobileOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+      return () => { document.body.style.overflow = ""; };
+    }
+  }, [mobileOpen]);
+
+  function isActive(href: string) {
+    return href === "/" ? pathname === "/" : pathname.startsWith(href);
+  }
 
   return (
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+      <div className="mx-auto px-4 sm:px-6">
         {/* Top bar */}
-        <div className="h-14 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+        <div className="h-14 flex items-center gap-3 overflow-hidden">
+          {/* Logo + title — fixed width left anchor */}
+          <Link href="/" className="flex items-center gap-2 shrink-0">
             {logo ? (
-              <BrandLogo
-                slug={brand.slug}
-                className="[&_svg]:h-5 [&_svg]:w-auto shrink-0"
-              />
+              <BrandLogo slug={brand.slug} className="[&_svg]:h-5 [&_svg]:w-auto shrink-0" />
             ) : (
-              <div
-                className="w-7 h-7 rounded-md shrink-0"
-                style={{ backgroundColor: primary || "#000" }}
-              />
+              <div className="w-7 h-7 rounded-md shrink-0" style={{ backgroundColor: primary || "#000" }} />
             )}
-            <div className="min-w-0">
-              <h1 className="text-sm font-semibold leading-none truncate">
-                Hearst Design System
-              </h1>
-              <p className="text-[11px] text-muted-foreground mt-0.5 truncate">
-                {brand.name}
-              </p>
+            <div className="min-w-0 hidden lg:block">
+              <h1 className="text-sm font-semibold leading-none truncate">Hearst Design System</h1>
+              <p className="text-[11px] text-muted-foreground mt-0.5 truncate">{brand.name}</p>
             </div>
-          </div>
+          </Link>
 
-          {/* Desktop nav */}
-          <div className="hidden lg:flex items-center gap-1">
-            <nav className="flex items-center gap-1 mr-4">
-              {mainNav.map((item) => {
-                const isActive =
-                  item.href === "/"
-                    ? pathname === "/"
-                    : pathname.startsWith(item.href);
+          {/* Desktop nav — scrollable, takes all remaining space */}
+          <ScrollableNav className="hidden md:block flex-1 min-w-0">
+            {mainNav.map((item) => (
+              <NavLink key={item.href} href={item.href} label={item.label} isActive={isActive(item.href)} />
+            ))}
+          </ScrollableNav>
 
-                return (
-                  <Link
-                    key={item.href}
-                    href={
-                      item.href === "/components"
-                        ? "/components/card"
-                        : item.href
-                    }
-                    className={`px-3 py-1.5 text-sm rounded-md transition-colors whitespace-nowrap ${
-                      isActive
-                        ? "font-medium text-foreground bg-muted"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </nav>
-            <BrandSwitcher />
-          </div>
-
-          {/* Mobile controls */}
-          <div className="flex lg:hidden items-center gap-2">
+          {/* Right side: brand switcher (always) + mobile toggle (below md) */}
+          <div className="flex items-center gap-2 shrink-0 ml-auto">
             <BrandSwitcher />
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="md:hidden p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
               aria-label="Toggle menu"
+              aria-expanded={mobileOpen}
             >
-              {mobileMenuOpen ? (
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M18 6 6 18" />
-                  <path d="m6 6 12 12" />
-                </svg>
-              ) : (
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <line x1="4" x2="20" y1="12" y2="12" />
-                  <line x1="4" x2="20" y1="6" y2="6" />
-                  <line x1="4" x2="20" y1="18" y2="18" />
-                </svg>
-              )}
+              {mobileOpen ? <CloseIcon /> : <HamburgerIcon />}
             </button>
           </div>
         </div>
 
-        {/* Mobile menu dropdown */}
-        {mobileMenuOpen && (
-          <nav className="lg:hidden pb-3 border-t pt-3 space-y-1">
-            {mainNav.map((item) => {
-              const isActive =
-                item.href === "/"
-                  ? pathname === "/"
-                  : pathname.startsWith(item.href);
+        {/* Component sub-nav — scrollable on all sizes */}
+        {isComponents && !mobileOpen && (
+          <ScrollableNav className="-mb-px pb-2">
+            {componentNav.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`px-3 py-1 text-xs rounded-md transition-colors whitespace-nowrap shrink-0 ${
+                  pathname === item.href
+                    ? "font-medium text-primary bg-primary/10"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </ScrollableNav>
+        )}
+      </div>
 
-              return (
+      {/* Mobile / Tablet slide-down drawer */}
+      {mobileOpen && (
+        <>
+          <div
+            className="fixed inset-0 top-[57px] bg-black/20 z-40 md:hidden"
+            onClick={() => setMobileOpen(false)}
+            aria-hidden
+          />
+          <nav className="md:hidden absolute left-0 right-0 top-[57px] z-50 bg-background border-b shadow-lg max-h-[calc(100dvh-57px)] overflow-y-auto">
+            <div className="mx-auto px-4 sm:px-6 py-3 space-y-1">
+              {/* Main navigation */}
+              <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider px-3 pt-1">Navigation</p>
+              {mainNav.map((item) => (
                 <Link
                   key={item.href}
-                  href={
-                    item.href === "/components"
-                      ? "/components/card"
-                      : item.href
-                  }
-                  className={`block px-3 py-2 text-sm rounded-md transition-colors ${
-                    isActive
+                  href={item.href === "/components" ? "/components/card" : item.href}
+                  className={`flex items-center gap-3 px-3 py-2.5 text-sm rounded-md transition-colors ${
+                    isActive(item.href)
                       ? "font-medium text-foreground bg-muted"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                   }`}
                 >
                   {item.label}
                 </Link>
-              );
-            })}
+              ))}
+
+              {/* Component sub-nav in mobile */}
+              {isComponents && (
+                <>
+                  <div className="h-px bg-border my-2" />
+                  <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider px-3 pt-1">Components</p>
+                  <div className="grid grid-cols-2 gap-1">
+                    {componentNav.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={`px-3 py-2 text-sm rounded-md transition-colors ${
+                          pathname === item.href
+                            ? "font-medium text-primary bg-primary/10"
+                            : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                        }`}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
           </nav>
-        )}
-
-        {/* Component sub-nav — scrollable carousel on all sizes */}
-        {isComponents && (
-          <ScrollableNav className="-mb-px pb-2">
-            {componentNav.map((item) => {
-              const isActive = pathname === item.href;
-
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`px-3 py-1 text-xs rounded-md transition-colors whitespace-nowrap shrink-0 ${
-                    isActive
-                      ? "font-medium text-primary bg-primary/10"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
-          </ScrollableNav>
-        )}
-      </div>
+        </>
+      )}
     </header>
   );
 }
