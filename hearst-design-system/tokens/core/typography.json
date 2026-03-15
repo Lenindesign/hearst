@@ -1,0 +1,214 @@
+{
+  "font": {
+    "family": {
+      "mac-default": {
+        "value": "SF Pro",
+        "type": "fontFamilies"
+      },
+      "content-default": {
+        "value": "Lora",
+        "type": "fontFamilies"
+      },
+      "windows": {
+        "value": "Segoe UI",
+        "type": "fontFamilies"
+      },
+      "international": {
+        "value": "Microsoft YaHei",
+        "type": "fontFamilies"
+      }
+    },
+    "size": {
+      "1": {
+        "value": "1rem",
+        "type": "fontSizes"
+      },
+      "2": {
+        "value": "2rem",
+        "type": "fontSizes"
+      },
+      "3": {
+        "value": "3rem",
+        "type": "fontSizes"
+      },
+      "4": {
+        "value": "4rem",
+        "type": "fontSizes"
+      },
+      "5": {
+        "value": "5rem",
+        "type": "fontSizes"
+      },
+      "6": {
+        "value": "6rem",
+        "type": "fontSizes"
+      },
+      "8": {
+        "value": "8rem",
+        "type": "fontSizes"
+      },
+      "0_688": {
+        "value": "0.688rem",
+        "type": "fontSizes"
+      },
+      "0_75": {
+        "value": "0.75rem",
+        "type": "fontSizes"
+      },
+      "0_8125": {
+        "value": "0.8125rem",
+        "type": "fontSizes"
+      },
+      "0_875": {
+        "value": "0.875rem",
+        "type": "fontSizes"
+      },
+      "0_9375": {
+        "value": "0.9375rem",
+        "type": "fontSizes"
+      },
+      "1_125": {
+        "value": "1.125rem",
+        "type": "fontSizes"
+      },
+      "1_25": {
+        "value": "1.25rem",
+        "type": "fontSizes"
+      },
+      "1_5": {
+        "value": "1.5rem",
+        "type": "fontSizes"
+      },
+      "1_75": {
+        "value": "1.75rem",
+        "type": "fontSizes"
+      },
+      "1_375": {
+        "value": "1.375rem",
+        "type": "fontSizes"
+      },
+      "1_875": {
+        "value": "1.875rem",
+        "type": "fontSizes"
+      },
+      "2_25": {
+        "value": "2.25rem",
+        "type": "fontSizes"
+      },
+      "2_5": {
+        "value": "2.5rem",
+        "type": "fontSizes"
+      },
+      "2_75": {
+        "value": "2.75rem",
+        "type": "fontSizes"
+      },
+      "3_25": {
+        "value": "3.25rem",
+        "type": "fontSizes"
+      },
+      "3_5": {
+        "value": "3.5rem",
+        "type": "fontSizes"
+      },
+      "4_5": {
+        "value": "4.5rem",
+        "type": "fontSizes"
+      }
+    },
+    "weight": {
+      "31": {
+        "value": "Ultralight",
+        "type": "fontWeights"
+      },
+      "121": {
+        "value": "Thin",
+        "type": "fontWeights"
+      },
+      "276": {
+        "value": "Light",
+        "type": "fontWeights"
+      },
+      "410": {
+        "value": "Regular",
+        "type": "fontWeights"
+      },
+      "510": {
+        "value": "Medium",
+        "type": "fontWeights"
+      },
+      "650": {
+        "value": "Semibold",
+        "type": "fontWeights"
+      },
+      "700": {
+        "value": "Bold",
+        "type": "fontWeights"
+      },
+      "870": {
+        "value": "Heavy",
+        "type": "fontWeights"
+      },
+      "1000": {
+        "value": "Black",
+        "type": "fontWeights"
+      }
+    },
+    "line-height": {
+      "1_0": {
+        "value": "100%",
+        "type": "lineHeights"
+      },
+      "1_1": {
+        "value": "110%",
+        "type": "lineHeights"
+      },
+      "1_2": {
+        "value": "120%",
+        "type": "lineHeights"
+      },
+      "1_125": {
+        "value": "125%",
+        "type": "lineHeights"
+      },
+      "1_3": {
+        "value": "130%",
+        "type": "lineHeights"
+      },
+      "1_35": {
+        "value": "135%",
+        "type": "lineHeights"
+      },
+      "1_4": {
+        "value": "140%",
+        "type": "lineHeights"
+      },
+      "1_45": {
+        "value": "145%",
+        "type": "lineHeights"
+      },
+      "1_5": {
+        "value": "150%",
+        "type": "lineHeights"
+      }
+    },
+    "text-case": {
+      "none": {
+        "value": "none",
+        "type": "textCase"
+      },
+      "uppercase": {
+        "value": "uppercase",
+        "type": "textCase"
+      },
+      "lowercase": {
+        "value": "lowercase",
+        "type": "textCase"
+      },
+      "capitalize": {
+        "value": "capitalize",
+        "type": "textCase"
+      }
+    }
+  }
+}

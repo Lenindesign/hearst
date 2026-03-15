@@ -1,0 +1,10 @@
+{
+  "background-brand": {
+    "type": "color",
+    "value": "$brand-1"
+  },
+  "content-brand": {
+    "type": "color",
+    "value": "$brand-1"
+  }
+}

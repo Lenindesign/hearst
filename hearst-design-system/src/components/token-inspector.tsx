@@ -97,7 +97,7 @@ function extractTokensFromClasses(el: HTMLElement): TokenInfo[] {
   if (classList.includes("font-brand") && !classList.includes("font-brand-secondary")) {
     tokens.push({
       property: "font-family",
-      variable: "--font-brand-sans",
+      variable: "--font-brand",
       fallback: "sans-serif",
       resolved: getComputedStyle(el).fontFamily,
       layer: "typography",
@@ -106,9 +106,16 @@ function extractTokensFromClasses(el: HTMLElement): TokenInfo[] {
   if (classList.includes("headline")) {
     tokens.push({
       property: "font-family",
-      variable: "--font-brand-headline",
+      variable: "--font-headline",
       fallback: "sans-serif",
       resolved: getComputedStyle(el).fontFamily,
+      layer: "typography",
+    });
+    tokens.push({
+      property: "font-weight",
+      variable: "--font-headline-weight",
+      fallback: "700",
+      resolved: getComputedStyle(el).fontWeight,
       layer: "typography",
     });
   }

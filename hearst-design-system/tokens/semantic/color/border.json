@@ -1,0 +1,104 @@
+{
+  "border": {
+    "width": {
+      "none": {
+        "value": "{_size.0}",
+        "type": "dimension"
+      },
+      "sm": {
+        "value": "{_size.1}",
+        "type": "dimension"
+      },
+      "md": {
+        "value": "{_size.2}",
+        "type": "dimension"
+      },
+      "lg": {
+        "value": "{_size.4}",
+        "type": "dimension"
+      }
+    },
+    "radius": {
+      "square": {
+        "value": "{_size.0}",
+        "type": "dimension"
+      },
+      "xs": {
+        "value": "{_size.8}",
+        "type": "dimension"
+      },
+      "sm": {
+        "value": "{_size.12}",
+        "type": "dimension"
+      },
+      "md": {
+        "value": "{_size.16}",
+        "type": "dimension"
+      },
+      "rounded": {
+        "value": "{_size.1024}",
+        "type": "dimension"
+      },
+      "lg": {
+        "value": "{_size.20}",
+        "type": "dimension"
+      },
+      "2xs": {
+        "value": "{_size.4}",
+        "type": "dimension"
+      }
+    },
+    "transparent": {
+      "value": {
+        "width": "{width.none}",
+        "color": "{palette.neutral.transparent}",
+        "style": "solid"
+      },
+      "type": "border",
+      "description": "0px "
+    },
+    "netural-light": {
+      "value": {
+        "width": "{width.xs}",
+        "color": "{palette.neutral.300}",
+        "style": "solid"
+      },
+      "type": "border",
+      "description": "1px solid black"
+    },
+    "neutral-dark": {
+      "value": {
+        "width": "{width.xs}",
+        "color": "{palette.neutral.600}",
+        "style": "solid"
+      },
+      "type": "border",
+      "description": "1px solid neutral"
+    },
+    "brand": {
+      "value": {
+        "width": "{width.xs}",
+        "color": "{palette.brand.1}",
+        "style": "solid"
+      },
+      "type": "border",
+      "description": "1px solid brand"
+    },
+    "component": {
+      "card": {
+        "collection": {
+          "bigstoryfeed": {
+            "4-storyfeed": {
+              "border": {
+                "default": {
+                  "value": "{border.brand}",
+                  "type": "border"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "layout": {
+    "4xs": {
+      "value": "{_size.144}",
+      "type": "dimension"
+    },
+    "3xs": {
+      "value": "{_size.192}",
+      "type": "dimension"
+    },
+    "2xs": {
+      "value": "{_size.224}",
+      "type": "dimension"
+    },
+    "xs": {
+      "value": "{_size.256}",
+      "type": "dimension"
+    },
+    "sm": {
+      "value": "{_size.320}",
+      "type": "dimension"
+    },
+    "md": {
+      "value": "{_size.384}",
+      "type": "dimension"
+    },
+    "lg": {
+      "value": "{_size.512}",
+      "type": "dimension"
+    },
+    "xl": {
+      "value": "{_size.768}",
+      "type": "dimension"
+    },
+    "2xl": {
+      "value": "{_size.1024}",
+      "type": "dimension"
+    },
+    "3xl": {
+      "value": "{_size.1280}",
+      "type": "dimension"
+    },
+    "4xl": {
+      "value": "{_size.1600}",
+      "type": "dimension"
+    },
+    "5xs": {
+      "value": "{_size.128}",
+      "type": "dimension"
+    },
+    "viewport": {
+      "sm": {
+        "value": "{_size.320}",
+        "type": "dimension"
+      },
+      "md": {
+        "value": "{_size.768}",
+        "type": "dimension"
+      },
+      "lg": {
+        "value": "{_size.1024}",
+        "type": "dimension"
+      },
+      "xl": {
+        "value": "{_size.1440}",
+        "type": "dimension"
+      },
+      "2xl": {
+        "value": "{_size.1600}",
+        "type": "dimension"
+      }
+    },
+    "maxwidth": {
+      "xl": {
+        "value": "{_size.1360}",
+        "type": "dimension"
+      },
+      "2xl": {
+        "value": "{_size.1440}",
+        "type": "dimension"
+      }
+    },
+    "gutter": {
+      "sm": {
+        "value": "{_size.16}",
+        "type": "dimension"
+      },
+      "md": {
+        "value": "{_size.24}",
+        "type": "dimension"
+      },
+      "lg": {
+        "value": "{_size.32}",
+        "type": "dimension"
+      },
+      "xl": {
+        "value": "{_size.40}",
+        "type": "dimension"
+      },
+      "2xl": {
+        "value": "{_size.80}",
+        "type": "dimension"
+      }
+    },
+    "component": {
+      "navigation": {
+        "navbar": {
+          "content": {
+            "md": {
+              "value": "space-between",
+              "type": "text"
+            }
+          }
+        }
+      },
+      "title": {
+        "blocktitle": {
+          "content": {
+            "md": {
+              "value": "flex-start",
+              "type": "text"
+            }
+          }
+        }
+      }
+    }
+  }
+}

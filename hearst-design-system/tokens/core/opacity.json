@@ -1,0 +1,28 @@
+{
+  "opacity": {
+    "8": {
+      "value": "0.8",
+      "type": "opacity"
+    },
+    "16": {
+      "value": "0.16",
+      "type": "opacity"
+    },
+    "32": {
+      "value": "0.32",
+      "type": "opacity"
+    },
+    "48": {
+      "value": "0.48",
+      "type": "opacity"
+    },
+    "64": {
+      "value": "0.64",
+      "type": "opacity"
+    },
+    "88": {
+      "value": "0.88",
+      "type": "opacity"
+    }
+  }
+}

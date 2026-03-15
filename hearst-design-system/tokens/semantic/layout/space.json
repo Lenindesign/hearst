@@ -1,0 +1,52 @@
+{
+  "space": {
+    "none": {
+      "value": "{_size.0}",
+      "type": "dimension"
+    },
+    "3xs": {
+      "value": "{_size.2}",
+      "type": "dimension"
+    },
+    "2xs": {
+      "value": "{_size.4}",
+      "type": "dimension"
+    },
+    "xs": {
+      "value": "{_size.8}",
+      "type": "dimension"
+    },
+    "sm": {
+      "value": "{_size.12}",
+      "type": "dimension"
+    },
+    "md": {
+      "value": "{_size.16}",
+      "type": "dimension"
+    },
+    "lg": {
+      "value": "{_size.20}",
+      "type": "dimension"
+    },
+    "xl": {
+      "value": "{_size.24}",
+      "type": "dimension"
+    },
+    "2xl": {
+      "value": "{_size.32}",
+      "type": "dimension"
+    },
+    "3xl": {
+      "value": "{_size.48}",
+      "type": "dimension"
+    },
+    "4xl": {
+      "value": "{_size.64}",
+      "type": "dimension"
+    },
+    "6xl": {
+      "value": "{_size.80}",
+      "type": "dimension"
+    }
+  }
+}

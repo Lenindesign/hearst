@@ -1,0 +1,20 @@
+{
+  "asset": {
+    "component": {
+      "card": {
+        "collection": {
+          "eeat": {
+            "statement": {
+              "background": {
+                "default": {
+                  "value": "none",
+                  "type": "text"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

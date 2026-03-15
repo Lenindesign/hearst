@@ -1,0 +1,40 @@
+{
+  "elevation": {
+    "base": {
+      "value": "0",
+      "type": "number"
+    },
+    "sunken": {
+      "value": "-2000000",
+      "type": "number"
+    },
+    "raised": {
+      "value": "2000000",
+      "type": "number"
+    },
+    "subnav": {
+      "value": "4000000",
+      "type": "number"
+    },
+    "nav": {
+      "value": "6000000",
+      "type": "number"
+    },
+    "drawer": {
+      "value": "8000000",
+      "type": "number"
+    },
+    "overlay": {
+      "value": "10000000",
+      "type": "number"
+    },
+    "floating": {
+      "value": "12000000",
+      "type": "number"
+    },
+    "gate": {
+      "value": "14000000",
+      "type": "number"
+    }
+  }
+}

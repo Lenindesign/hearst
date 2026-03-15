@@ -1,0 +1,133 @@
+{
+  "$description": "Production font overrides per brand. These are sourced from live CDN @font-face analysis and override the Pencil font-family-default/serif values for headline and secondary typography roles.",
+  "overrides": {
+    "autoweek": {
+      "fontHeadline": "Inter",
+      "fontHeadlineWeight": 700
+    },
+    "best-products": {
+      "fontHeadline": "Inter",
+      "fontHeadlineWeight": 700
+    },
+    "bicycling": {
+      "fontHeadline": "Velo Serif Display",
+      "fontHeadlineWeight": 700
+    },
+    "biography": {
+      "fontHeadline": "Playfair Display",
+      "fontHeadlineWeight": 400
+    },
+    "car-and-driver": {
+      "fontHeadline": "Inter",
+      "fontHeadlineWeight": 800,
+      "fontSecondary": "Barlow Semi Condensed"
+    },
+    "cosmopolitan": {
+      "fontHeadline": "Chronicle Display",
+      "fontHeadlineWeight": 600,
+      "fontSecondary": "Chronicle Display"
+    },
+    "country-living": {
+      "fontHeadline": "Playfair Display",
+      "fontHeadlineWeight": 400,
+      "fontSecondary": "Playfair Display"
+    },
+    "delish": {
+      "fontHeadline": "TT Commons Pro",
+      "fontHeadlineWeight": 700
+    },
+    "elle": {
+      "fontHeadline": "Modern MT Pro",
+      "fontHeadlineWeight": 400,
+      "fontSecondary": "Modern MT Pro"
+    },
+    "elle-decor": {
+      "fontHeadline": "Modern MT Pro",
+      "fontHeadlineWeight": 400,
+      "fontSecondary": "Modern MT Pro"
+    },
+    "esquire": {
+      "fontHeadline": "Lausanne",
+      "fontHeadlineWeight": 400,
+      "fontSecondary": "Lausanne"
+    },
+    "food-network": {
+      "fontHeadline": "Inter",
+      "fontHeadlineWeight": 700
+    },
+    "good-housekeeping": {
+      "fontHeadline": "Barlow Semi Condensed",
+      "fontHeadlineWeight": 800,
+      "fontSecondary": "Barlow Semi Condensed"
+    },
+    "harpers-bazaar": {
+      "fontHeadline": "NewParis Text",
+      "fontHeadlineWeight": 400,
+      "fontSecondary": "NewParis Text"
+    },
+    "hgtv": {
+      "fontHeadline": "Inter",
+      "fontHeadlineWeight": 700
+    },
+    "house-beautiful": {
+      "fontHeadline": "SangBleu Sunrise",
+      "fontHeadlineWeight": 500,
+      "fontSecondary": "Apparel"
+    },
+    "marie-claire": {
+      "fontHeadline": "Modern MT Pro",
+      "fontHeadlineWeight": 400
+    },
+    "mens-health": {
+      "fontHeadline": "Manrope",
+      "fontHeadlineWeight": 800
+    },
+    "oprah-daily": {
+      "fontHeadline": "Juana",
+      "fontHeadlineWeight": 500,
+      "fontSecondary": "Juana"
+    },
+    "popular-mechanics": {
+      "fontHeadline": "United Sans Cd",
+      "fontHeadlineWeight": 400,
+      "fontSecondary": "Work Sans"
+    },
+    "prevention": {
+      "fontHeadline": "Poppins",
+      "fontHeadlineWeight": 700
+    },
+    "road-and-track": {
+      "fontHeadline": "Buzz",
+      "fontHeadlineWeight": 900,
+      "fontSecondary": "Roboto"
+    },
+    "runners-world": {
+      "fontHeadline": "League Gothic",
+      "fontHeadlineWeight": 400,
+      "fontSecondary": "Futura Now Text"
+    },
+    "seventeen": {
+      "fontHeadline": "Inter",
+      "fontHeadlineWeight": 800
+    },
+    "town-and-country": {
+      "fontHeadline": "Montserrat",
+      "fontHeadlineWeight": 600,
+      "fontSecondary": "Montserrat"
+    },
+    "veranda": {
+      "fontHeadline": "Playfair Display",
+      "fontHeadlineWeight": 400,
+      "fontSecondary": "Playfair Display"
+    },
+    "womans-day": {
+      "fontHeadline": "League Spartan",
+      "fontHeadlineWeight": 600,
+      "fontSecondary": "Arvo"
+    },
+    "womens-health": {
+      "fontHeadline": "Altone",
+      "fontHeadlineWeight": 700
+    }
+  }
+}

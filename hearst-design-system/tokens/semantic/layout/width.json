@@ -1,0 +1,20 @@
+{
+  "width": {
+    "none": {
+      "value": "{_border-width.0}",
+      "type": "borderWidth"
+    },
+    "xs": {
+      "value": "{_border-width.1}",
+      "type": "borderWidth"
+    },
+    "sm": {
+      "value": "{_border-width.2}",
+      "type": "borderWidth"
+    },
+    "md": {
+      "value": "{_border-width.4}",
+      "type": "borderWidth"
+    }
+  }
+}

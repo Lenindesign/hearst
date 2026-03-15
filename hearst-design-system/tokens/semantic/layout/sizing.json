@@ -1,0 +1,52 @@
+{
+  "sizing": {
+    "component": {
+      "banner": {
+        "stats": {
+          "content": {
+            "icon": {
+              "default": {
+                "value": "{_size.24}",
+                "type": "sizing"
+              }
+            },
+            "icon-container": {
+              "default": {
+                "value": "{_size.36}",
+                "type": "sizing"
+              }
+            }
+          }
+        }
+      },
+      "rating": {
+        "sm": {
+          "value": "{sizing.icon.sm}",
+          "type": "sizing"
+        },
+        "md": {
+          "value": "{sizing.icon.md}",
+          "type": "sizing"
+        },
+        "lg": {
+          "value": "{sizing.icon.lg}",
+          "type": "sizing"
+        }
+      }
+    },
+    "icon": {
+      "sm": {
+        "value": "{_size.16}",
+        "type": "sizing"
+      },
+      "md": {
+        "value": "{_size.24}",
+        "type": "sizing"
+      },
+      "lg": {
+        "value": "{_size.32}",
+        "type": "sizing"
+      }
+    }
+  }
+}

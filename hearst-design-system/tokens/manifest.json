@@ -1,0 +1,48 @@
+{
+  "generatedAt": "2026-03-15T01:25:57.008Z",
+  "layers": {
+    "core": {
+      "dir": "core",
+      "tokens": 189
+    },
+    "semantic": {
+      "dir": "semantic",
+      "tokens": 972
+    },
+    "brands": {
+      "dir": "brands",
+      "files": 28,
+      "tokens": 8036
+    }
+  },
+  "brandSlugs": [
+    "autoweek",
+    "best-products",
+    "bicycling",
+    "biography",
+    "car-and-driver",
+    "cosmopolitan",
+    "country-living",
+    "delish",
+    "elle",
+    "elle-decor",
+    "esquire",
+    "fre",
+    "good-housekeeping",
+    "harpers-bazaar",
+    "house-beautiful",
+    "mens-health",
+    "oprah-daily",
+    "popular-mechanics",
+    "prevention",
+    "redbook",
+    "road-and-track",
+    "runners-world",
+    "seventeen",
+    "the-pioneer-woman",
+    "town-and-country",
+    "veranda",
+    "womans-day",
+    "womens-health"
+  ]
+}

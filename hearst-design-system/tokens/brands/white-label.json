@@ -1,0 +1,2430 @@
+{
+  "border-brand": {
+    "type": "string",
+    "value": "{\"width\":\"1px\",\"color\":\"#000000\",\"style\":\"solid\"}"
+  },
+  "border-component-card-collection-bigstoryfeed-4-storyfeed-border-default": {
+    "type": "string",
+    "value": "{\"width\":\"1px\",\"color\":\"#000000\",\"style\":\"solid\"}"
+  },
+  "border-radius-lg": {
+    "type": "number",
+    "value": 20
+  },
+  "border-radius-md": {
+    "type": "number",
+    "value": 16
+  },
+  "border-radius-rounded": {
+    "type": "number",
+    "value": 1024
+  },
+  "border-radius-sm": {
+    "type": "number",
+    "value": 12
+  },
+  "border-radius-xs": {
+    "type": "number",
+    "value": 8
+  },
+  "brand-1": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "brand-2": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "brand-3": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "brand-4": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "brand-5": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "brand-6": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-accordion-background-knockout": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-accordion-content-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-accordion-content-hover": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-badge-background-danger": {
+    "type": "color",
+    "value": "#fed7d7"
+  },
+  "component-badge-background-highlight": {
+    "type": "color",
+    "value": "#fdecaa"
+  },
+  "component-badge-background-knockout": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-badge-background-neutral-dark": {
+    "type": "color",
+    "value": "#08142b2b"
+  },
+  "component-badge-background-neutral-light": {
+    "type": "color",
+    "value": "#1f2c3814"
+  },
+  "component-badge-background-primary": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-badge-background-success": {
+    "type": "color",
+    "value": "#bcf5da"
+  },
+  "component-badge-background-warning": {
+    "type": "color",
+    "value": "#ffe3c2"
+  },
+  "component-badge-content-highlight": {
+    "type": "color",
+    "value": "#382b00"
+  },
+  "component-badge-content-neutral-dark": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-badge-content-neutral-light": {
+    "type": "color",
+    "value": "#3b3b3b"
+  },
+  "component-badge-content-primary": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-badge-icon-highlight": {
+    "type": "color",
+    "value": "#382b00"
+  },
+  "component-badge-icon-neutral-dark": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-badge-radius-md": {
+    "type": "number",
+    "value": 8
+  },
+  "component-badge-radius-rounded": {
+    "type": "number",
+    "value": 1024
+  },
+  "component-banner-privacy-background-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-banner-privacy-border-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-banner-slim-background-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-banner-slim-border-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-banner-stats-background-default": {
+    "type": "color",
+    "value": "#ededed"
+  },
+  "component-banner-stats-border-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-banner-stats-content-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-banner-stats-content-icon-background-1": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-banner-stats-content-icon-background-2": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-banner-stats-content-icon-background-3": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-banner-stats-content-icon-background-4": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-blocktitle-border-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-blocktitle-border-width-default": {
+    "type": "number",
+    "value": 0
+  },
+  "component-blocktitle-content-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-blocktitle-icon-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-button-background-neutral-outlined-active": {
+    "type": "color",
+    "value": "#00000014"
+  },
+  "component-button-background-neutral-outlined-default": {
+    "type": "color",
+    "value": "#ffffff00"
+  },
+  "component-button-background-neutral-outlined-hover": {
+    "type": "color",
+    "value": "#0000000a"
+  },
+  "component-button-background-neutral-transparent-active": {
+    "type": "color",
+    "value": "#00000014"
+  },
+  "component-button-background-neutral-transparent-default": {
+    "type": "color",
+    "value": "#ffffff00"
+  },
+  "component-button-background-neutral-transparent-hover": {
+    "type": "color",
+    "value": "#0000000a"
+  },
+  "component-button-background-primary-outlined-active": {
+    "type": "color",
+    "value": "#0000000a"
+  },
+  "component-button-background-primary-outlined-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-background-primary-outlined-hover": {
+    "type": "color",
+    "value": "#0000000a"
+  },
+  "component-button-background-primary-solid-active": {
+    "type": "color",
+    "value": "#575757"
+  },
+  "component-button-background-primary-solid-default": {
+    "type": "color",
+    "value": "#1c1c1c"
+  },
+  "component-button-background-primary-solid-hover": {
+    "type": "color",
+    "value": "#3b3b3b"
+  },
+  "component-button-background-primary-transparent-active": {
+    "type": "color",
+    "value": "#00000014"
+  },
+  "component-button-background-primary-transparent-default": {
+    "type": "color",
+    "value": "#ffffff0a"
+  },
+  "component-button-background-primary-transparent-hover": {
+    "type": "color",
+    "value": "#0000000a"
+  },
+  "component-button-background-secondary-solid-active": {
+    "type": "color",
+    "value": "#575757"
+  },
+  "component-button-background-secondary-solid-default": {
+    "type": "color",
+    "value": "#1c1c1c"
+  },
+  "component-button-background-secondary-solid-hover": {
+    "type": "color",
+    "value": "#3b3b3b"
+  },
+  "component-button-border-neutral-outlined-active": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "component-button-border-neutral-outlined-default": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "component-button-border-neutral-outlined-hover": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "component-button-border-neutral-transparent-active": {
+    "type": "color",
+    "value": "#00000014"
+  },
+  "component-button-border-neutral-transparent-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-border-neutral-transparent-hover": {
+    "type": "color",
+    "value": "#0000000a"
+  },
+  "component-button-border-primary-outlined-active": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "component-button-border-primary-outlined-default": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "component-button-border-primary-outlined-hover": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "component-button-border-primary-solid-active": {
+    "type": "color",
+    "value": "#575757"
+  },
+  "component-button-border-primary-solid-default": {
+    "type": "color",
+    "value": "#1c1c1c"
+  },
+  "component-button-border-primary-solid-hover": {
+    "type": "color",
+    "value": "#3b3b3b"
+  },
+  "component-button-border-primary-transparent-active": {
+    "type": "color",
+    "value": "#ffffff00"
+  },
+  "component-button-border-primary-transparent-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-border-primary-transparent-hover": {
+    "type": "color",
+    "value": "#ffffff00"
+  },
+  "component-button-border-secondary-solid-active": {
+    "type": "color",
+    "value": "#575757"
+  },
+  "component-button-border-secondary-solid-default": {
+    "type": "color",
+    "value": "#1c1c1c"
+  },
+  "component-button-border-secondary-solid-hover": {
+    "type": "color",
+    "value": "#3b3b3b"
+  },
+  "component-button-content-neutral-outlined-active": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-button-content-neutral-outlined-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-button-content-neutral-outlined-hover": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-button-content-neutral-transparent-active": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-button-content-neutral-transparent-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-button-content-neutral-transparent-hover": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-button-content-primary-outlined-active": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-button-content-primary-outlined-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-button-content-primary-outlined-hover": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-button-content-primary-solid-active": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-content-primary-solid-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-content-primary-solid-hover": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-content-primary-transparent-active": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-button-content-primary-transparent-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-button-content-primary-transparent-hover": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-button-content-secondary-solid-active": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-content-secondary-solid-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-content-secondary-solid-hover": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-icon-neutral-outlined-active": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-button-icon-neutral-outlined-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-button-icon-neutral-outlined-hover": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-button-icon-neutral-transparent-active": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-button-icon-neutral-transparent-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-button-icon-neutral-transparent-hover": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-button-icon-primary-outlined-active": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-button-icon-primary-outlined-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-button-icon-primary-outlined-hover": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-button-icon-primary-solid-active": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-icon-primary-solid-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-icon-primary-solid-hover": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-icon-primary-transparent-active": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-button-icon-primary-transparent-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-button-icon-primary-transparent-hover": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-button-icon-secondary-solid-active": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-icon-secondary-solid-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-icon-secondary-solid-hover": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-radius-default": {
+    "type": "number",
+    "value": 0
+  },
+  "component-card-background-neutral": {
+    "type": "color",
+    "value": "#ededed"
+  },
+  "component-card-background-primary": {
+    "type": "color",
+    "value": "#ededed"
+  },
+  "component-card-collection-3-column-background-knockout": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-card-collection-3-column-columntitle-content-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-card-collection-3-column-content-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-card-collection-4-story-background-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-card-collection-4-story-background-knockout": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-card-collection-4-story-content-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-card-collection-bigstory-background-knockout": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-card-collection-bigstory-content-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-card-collection-bigstoryfeed-4-storyfeed-background-default": {
+    "type": "color",
+    "value": "#ededed"
+  },
+  "component-card-collection-bigstoryfeed-4-storyfeed-border-default": {
+    "type": "color",
+    "value": "transparent"
+  },
+  "component-card-collection-bigstoryfeed-4-storyfeed-content-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-card-collection-bigstoryfeed-4-storyfeed-padding-inline-default": {
+    "type": "number",
+    "value": 12
+  },
+  "component-card-collection-bigstoryfeed-background-knockout": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-card-collection-bigstoryfeed-content-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-card-collection-eeat-statement-content-description-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-card-collection-eeat-statement-content-linktext-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-card-collection-eeat-statement-content-logo-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-card-collection-eeat-statement-content-title-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-card-collection-eeat-team-carousel-card-content-author-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-card-collection-eeat-team-carousel-card-content-title-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-card-collection-eeat-team-content-description-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-card-collection-eeat-team-content-linktext-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-card-collection-eeat-team-content-title-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-card-core-content-eyebrow-backgroud-default": {
+    "type": "color",
+    "value": "transparent"
+  },
+  "component-card-core-content-eyebrow-content-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-card-core-content-eyebrow-content-hover": {
+    "type": "color",
+    "value": "#3b3b3b"
+  },
+  "component-card-core-content-meta-content-default": {
+    "type": "color",
+    "value": "#3b3b3b"
+  },
+  "component-card-core-content-timestamp-content-default": {
+    "type": "color",
+    "value": "#3b3b3b"
+  },
+  "component-card-core-content-title-content-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-card-gap-column-lg": {
+    "type": "number",
+    "value": 20
+  },
+  "component-card-gap-column-md": {
+    "type": "number",
+    "value": 16
+  },
+  "component-card-gap-column-sm": {
+    "type": "number",
+    "value": 8
+  },
+  "component-card-gap-column-xl": {
+    "type": "number",
+    "value": 32
+  },
+  "component-card-gap-column-xs": {
+    "type": "number",
+    "value": 4
+  },
+  "component-card-gap-row-lg": {
+    "type": "number",
+    "value": 20
+  },
+  "component-card-gap-row-md": {
+    "type": "number",
+    "value": 16
+  },
+  "component-card-gap-row-sm": {
+    "type": "number",
+    "value": 8
+  },
+  "component-card-gap-row-xl": {
+    "type": "number",
+    "value": 32
+  },
+  "component-card-gap-row-xs": {
+    "type": "number",
+    "value": 4
+  },
+  "component-card-min-width-desktop-4col": {
+    "type": "number",
+    "value": 216
+  },
+  "component-card-min-width-max-4col": {
+    "type": "number",
+    "value": 336
+  },
+  "component-card-min-width-mobile-1col": {
+    "type": "number",
+    "value": 320
+  },
+  "component-card-min-width-mobile-2col": {
+    "type": "number",
+    "value": 148
+  },
+  "component-card-min-width-tablet-3col": {
+    "type": "number",
+    "value": 235
+  },
+  "component-card-min-width-tablet-4col": {
+    "type": "number",
+    "value": 174
+  },
+  "component-card-padding-inline-desktop": {
+    "type": "number",
+    "value": 80
+  },
+  "component-card-padding-inline-laptop": {
+    "type": "number",
+    "value": 32
+  },
+  "component-card-padding-inline-max": {
+    "type": "number",
+    "value": 80
+  },
+  "component-card-padding-inline-mobile": {
+    "type": "number",
+    "value": 8
+  },
+  "component-card-padding-inline-tablet": {
+    "type": "number",
+    "value": 20
+  },
+  "component-card-product-content-title-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-card-product-content-title-hover": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "component-carousel-arrow-background-default-copy": {
+    "type": "color",
+    "value": "#ededed"
+  },
+  "component-carousel-arrow-content-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-checkbox-background-hover": {
+    "type": "color",
+    "value": "#d6d6d6"
+  },
+  "component-checkbox-border-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-checkbox-content-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-checkbox-radius-default": {
+    "type": "number",
+    "value": 4
+  },
+  "component-checkbox-radius-square": {
+    "type": "number",
+    "value": 0
+  },
+  "component-chip-background-neutral-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-chip-background-neutral-hover": {
+    "type": "color",
+    "value": "#f5f5f5"
+  },
+  "component-chip-background-neutral-selected": {
+    "type": "color",
+    "value": "#1c1c1c"
+  },
+  "component-chip-background-primary-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-chip-background-primary-hover": {
+    "type": "color",
+    "value": "#f5f5f5"
+  },
+  "component-chip-background-primary-selected": {
+    "type": "color",
+    "value": "#1c1c1c"
+  },
+  "component-chip-border-neutral-default": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "component-chip-border-neutral-hover": {
+    "type": "color",
+    "value": "#1c1c1c"
+  },
+  "component-chip-border-neutral-selected": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "component-chip-border-primary-default": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "component-chip-border-primary-hover": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "component-chip-border-primary-selected": {
+    "type": "color",
+    "value": "#1c1c1c"
+  },
+  "component-chip-content-neutral-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-chip-content-neutral-hover": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-chip-content-neutral-selected": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-chip-content-primary-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-chip-content-primary-hover": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-chip-content-primary-selected": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-dropdown-content-link-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-dropdown-content-link-hover": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "component-hr-border-brand": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-input-background-primary-outlined-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-input-border-radius-default": {
+    "type": "number",
+    "value": 0
+  },
+  "component-input-border-width-default": {
+    "type": "number",
+    "value": 1
+  },
+  "component-input-content": {
+    "type": "string",
+    "value": "{\"value\":\"#000000\",\"type\":\"color\"}"
+  },
+  "component-input-content-placeholder": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "component-input-content-value": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-input-icon-primary-outlined": {
+    "type": "string",
+    "value": "{\"value\":\"#1c1c1c\",\"type\":\"color\"}"
+  },
+  "component-input-icon-primary-outlined-empty": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "component-input-icon-primary-outlined-placeholder": {
+    "type": "color",
+    "value": "#575757"
+  },
+  "component-input-icon-primary-outlined-value": {
+    "type": "color",
+    "value": "#1c1c1c"
+  },
+  "component-link-inline-content-primary-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-link-inline-content-primary-hover": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "component-modal-border-radius-default": {
+    "type": "number",
+    "value": 12
+  },
+  "component-modal-element-title-font-family-default": {
+    "type": "string",
+    "value": "SF Pro"
+  },
+  "component-navigation-footer-background-default": {
+    "type": "color",
+    "value": "transparent"
+  },
+  "component-navigation-footer-border-default": {
+    "type": "color",
+    "value": "transparent"
+  },
+  "component-navigation-footer-content-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-navigation-megamenu-content-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-navigation-navbar-background-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-navigation-navbar-border-default": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "component-navigation-navbar-button-background-default": {
+    "type": "color",
+    "value": "#1c1c1c"
+  },
+  "component-navigation-navbar-button-background-hover": {
+    "type": "color",
+    "value": "#3b3b3b"
+  },
+  "component-navigation-navbar-button-border-default": {
+    "type": "color",
+    "value": "#1c1c1c"
+  },
+  "component-navigation-navbar-button-border-hover": {
+    "type": "color",
+    "value": "#3b3b3b"
+  },
+  "component-navigation-navbar-button-content-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-navigation-navbar-button-content-hover": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-navigation-navbar-button-content-transparent-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-navigation-navbar-button-content-transparent-hover": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-navigation-navbar-content-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-navigation-navbar-content-hover": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "component-navigation-navbar-content-logo-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-navigation-sidepanel-content-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-navigation-sidepanel-content-logo-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-pagination-background-active": {
+    "type": "color",
+    "value": "#08142b2b"
+  },
+  "component-pagination-background-hover": {
+    "type": "color",
+    "value": "#3838380a"
+  },
+  "component-pagination-content-active": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-pagination-content-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-pagination-content-hover": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-rating-star-full": {
+    "type": "color",
+    "value": "#f0b80f"
+  },
+  "component-rating-star-half": {
+    "type": "color",
+    "value": "#f0b80f"
+  },
+  "font-family-default": {
+    "type": "string",
+    "value": "SF Pro"
+  },
+  "font-family-sans-serif-primary": {
+    "type": "string",
+    "value": "SF Pro"
+  },
+  "font-family-serif": {
+    "type": "string",
+    "value": "SF Pro"
+  },
+  "font-family-serif-primary": {
+    "type": "string",
+    "value": "SF Pro"
+  },
+  "font-line-height-lg": {
+    "type": "string",
+    "value": "140%"
+  },
+  "font-size-2xs": {
+    "type": "number",
+    "value": 0.8125
+  },
+  "font-weight-black": {
+    "type": "string",
+    "value": "Black"
+  },
+  "font-weight-bold": {
+    "type": "string",
+    "value": "Bold"
+  },
+  "font-weight-heavy": {
+    "type": "string",
+    "value": "Heavy"
+  },
+  "font-weight-light": {
+    "type": "string",
+    "value": "Light"
+  },
+  "font-weight-medium": {
+    "type": "string",
+    "value": "Medium"
+  },
+  "font-weight-regular": {
+    "type": "string",
+    "value": "Regular"
+  },
+  "font-weight-semibold": {
+    "type": "string",
+    "value": "Semibold"
+  },
+  "font-weight-thin": {
+    "type": "string",
+    "value": "Thin"
+  },
+  "font-weight-ultra-light": {
+    "type": "string",
+    "value": "Ultralight"
+  },
+  "layout-4xs": {
+    "type": "number",
+    "value": 144
+  },
+  "layout-component-navigation-navbar-content-md": {
+    "type": "string",
+    "value": "space-between"
+  },
+  "layout-component-title-blocktitle-content-md": {
+    "type": "string",
+    "value": "flex-start"
+  },
+  "palette-alert-success-100": {
+    "type": "color",
+    "value": "#defdeb"
+  },
+  "palette-background-brand": {
+    "type": "color",
+    "value": "#1c1c1c"
+  },
+  "palette-background-brand-active": {
+    "type": "color",
+    "value": "#575757"
+  },
+  "palette-background-brand-hover": {
+    "type": "color",
+    "value": "#3b3b3b"
+  },
+  "palette-background-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-background-default-link": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "palette-background-default-link-hover": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "palette-background-knockout": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "palette-background-knockout-hover": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "palette-background-page": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-background-subtle": {
+    "type": "color",
+    "value": "#ededed"
+  },
+  "palette-background-subtle-brand": {
+    "type": "color",
+    "value": "#ededed"
+  },
+  "palette-background-utility": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "palette-brand-1": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "palette-brand-10": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-brand-11": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-brand-12": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-brand-13": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-brand-14": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-brand-2": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-brand-3": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-brand-4": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-brand-5": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-brand-6": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-brand-7": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-brand-8": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-brand-9": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-content-brand": {
+    "type": "color",
+    "value": "#1c1c1c"
+  },
+  "palette-content-brand-active": {
+    "type": "color",
+    "value": "#575757"
+  },
+  "palette-content-brand-hover": {
+    "type": "color",
+    "value": "#3b3b3b"
+  },
+  "palette-content-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "palette-content-default-active": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "palette-content-default-hover": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "palette-content-default-link": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "palette-content-default-link-hover": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "palette-content-knockout-hover": {
+    "type": "color",
+    "value": "#ededed"
+  },
+  "palette-neutral-200": {
+    "type": "color",
+    "value": "#ededed"
+  },
+  "palette-neutral-alpha-04": {
+    "type": "color",
+    "value": "#0000000a"
+  },
+  "palette-neutral-alpha-08": {
+    "type": "color",
+    "value": "#00000014"
+  },
+  "palette-neutral-alpha-12": {
+    "type": "color",
+    "value": "#0000001f"
+  },
+  "palette-neutral-alpha-16": {
+    "type": "color",
+    "value": "#00000029"
+  },
+  "palette-neutral-alpha-32": {
+    "type": "color",
+    "value": "#00000052"
+  },
+  "palette-neutral-alpha-48": {
+    "type": "color",
+    "value": "#0000007a"
+  },
+  "palette-neutral-alpha-72": {
+    "type": "color",
+    "value": "#000000b8"
+  },
+  "palette-neutral-alpha-88": {
+    "type": "color",
+    "value": "#000000e0"
+  },
+  "palette-neutral-alpha-96": {
+    "type": "color",
+    "value": "#000000f5"
+  },
+  "palette-neutral-darkest": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "palette-primary-100": {
+    "type": "color",
+    "value": "#f5f5f5"
+  },
+  "palette-primary-100-alpha": {
+    "type": "color",
+    "value": "#3838380a"
+  },
+  "palette-primary-1000": {
+    "type": "color",
+    "value": "#1c1c1c"
+  },
+  "palette-primary-1000-alpha": {
+    "type": "color",
+    "value": "#02040de8"
+  },
+  "palette-primary-200": {
+    "type": "color",
+    "value": "#ededed"
+  },
+  "palette-primary-200-alpha": {
+    "type": "color",
+    "value": "#1f2c3814"
+  },
+  "palette-primary-300": {
+    "type": "color",
+    "value": "#d6d6d6"
+  },
+  "palette-primary-300-alpha": {
+    "type": "color",
+    "value": "#08142b2b"
+  },
+  "palette-primary-400": {
+    "type": "color",
+    "value": "#bdbdbd"
+  },
+  "palette-primary-400-alpha": {
+    "type": "color",
+    "value": "#0719314a"
+  },
+  "palette-primary-500": {
+    "type": "color",
+    "value": "#949494"
+  },
+  "palette-primary-500-alpha": {
+    "type": "color",
+    "value": "#02112673"
+  },
+  "palette-primary-600": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "palette-primary-600-alpha": {
+    "type": "color",
+    "value": "#04112a96"
+  },
+  "palette-primary-700": {
+    "type": "color",
+    "value": "#575757"
+  },
+  "palette-primary-700-alpha": {
+    "type": "color",
+    "value": "#040c20b3"
+  },
+  "palette-primary-800": {
+    "type": "color",
+    "value": "#3b3b3b"
+  },
+  "palette-primary-800-alpha": {
+    "type": "color",
+    "value": "#010713cc"
+  },
+  "palette-primary-900": {
+    "type": "color",
+    "value": "#292929"
+  },
+  "palette-primary-900-alpha": {
+    "type": "color",
+    "value": "#00050fdb"
+  },
+  "palette-primary-alpha-04": {
+    "type": "color",
+    "value": "#0000000a"
+  },
+  "palette-primary-alpha-08": {
+    "type": "color",
+    "value": "#00000014"
+  },
+  "palette-primary-alpha-12": {
+    "type": "color",
+    "value": "#0000001f"
+  },
+  "palette-primary-alpha-16": {
+    "type": "color",
+    "value": "#00000029"
+  },
+  "palette-primary-alpha-32": {
+    "type": "color",
+    "value": "#00000052"
+  },
+  "palette-primary-alpha-48": {
+    "type": "color",
+    "value": "#0000007a"
+  },
+  "palette-primary-alpha-72": {
+    "type": "color",
+    "value": "#000000b8"
+  },
+  "palette-primary-alpha-88": {
+    "type": "color",
+    "value": "#000000e0"
+  },
+  "palette-primary-alpha-96": {
+    "type": "color",
+    "value": "#000000f5"
+  },
+  "typography-card-product-content-description-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-card-product-content-description-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-card-product-content-title-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-card-product-content-title-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-3column-label-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-3column-label-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-3column-title-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-3column-title-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-3column-title-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-3column-title-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-badge-lg-danger": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-badge-lg-highlight": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-badge-lg-knockout": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-badge-lg-neutral-dark": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-badge-lg-neutral-light": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-badge-lg-primary": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-badge-lg-success": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-badge-lg-warning": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-badge-md-danger": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-badge-md-highlight": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-badge-md-knockout": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-badge-md-neutral-dark": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-badge-md-neutral-light": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-badge-md-primary": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-badge-md-success": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-badge-md-warning": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-badge-sm-danger": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\",\"textCase\":\"uppercase\"}"
+  },
+  "typography-component-badge-sm-highlight": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\",\"textCase\":\"uppercase\"}"
+  },
+  "typography-component-badge-sm-knockout": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\",\"textCase\":\"uppercase\"}"
+  },
+  "typography-component-badge-sm-neutral-dark": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\",\"textCase\":\"uppercase\"}"
+  },
+  "typography-component-badge-sm-neutral-light": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\",\"textCase\":\"uppercase\"}"
+  },
+  "typography-component-badge-sm-primary": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\",\"textCase\":\"uppercase\"}"
+  },
+  "typography-component-badge-sm-success": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Semibold\",\"textCase\":\"capitalize\"}"
+  },
+  "typography-component-badge-sm-warning": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\",\"textCase\":\"uppercase\"}"
+  },
+  "typography-component-banner-privacy-description-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-banner-privacy-description-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-banner-slim-description-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-banner-slim-description-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-banner-slim-linktext-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-banner-slim-linktext-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-banner-stats-linktext-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-banner-stats-linktext-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-banner-stats-title-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-banner-stats-title-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-blocksubtitle-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-blocksubtitle-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-blocktitle-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-blocktitle-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-author-default-2xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-component-card-core-content-author-default-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-component-card-core-content-author-default-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-component-card-core-content-author-default-xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-component-card-core-content-description-brand-2xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-core-content-description-brand-2xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-core-content-description-brand-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-core-content-description-brand-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-core-content-description-brand-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-core-content-description-brand-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-core-content-description-brand-xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-core-content-description-default-2xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-core-content-description-default-2xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-core-content-description-default-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-core-content-description-default-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-core-content-description-default-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-core-content-description-default-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-core-content-description-default-xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-core-content-eyebrow-default-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-core-content-eyebrow-default-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-core-content-eyebrow-default-xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-core-content-meta-default-2xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-core-content-meta-default-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-core-content-meta-default-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-core-content-meta-default-xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-core-content-recipe-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-core-content-subtitle-brand-2xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-subtitle-brand-2xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-subtitle-brand-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-subtitle-brand-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-subtitle-brand-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-subtitle-brand-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-subtitle-brand-xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-subtitle-default-2xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-subtitle-default-2xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-subtitle-default-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-subtitle-default-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-subtitle-default-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-subtitle-default-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-subtitle-default-xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-timestamp-default-2xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-core-content-timestamp-default-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-core-content-timestamp-default-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-core-content-timestamp-default-xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-core-content-title-brand-10xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-brand-11xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-brand-12xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"4rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-brand-13xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"4.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-brand-14xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-brand-15xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"6rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-brand-2xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-brand-2xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-brand-3xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-brand-4xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-brand-5xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-brand-6xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-brand-7xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"125%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-brand-8xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-brand-9xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-brand-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-brand-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-brand-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-brand-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-brand-xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-default-10xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-default-11xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-default-12xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"4rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-default-13xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"4.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-default-14xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-default-15xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"6rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-default-2xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-default-2xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-default-3xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-default-4xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-default-5xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-default-6xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-default-7xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"125%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-default-8xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-default-9xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-default-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-default-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-default-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-default-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-core-content-title-default-xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-product-content-description-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-product-content-description-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-card-product-content-title-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-card-product-content-title-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-collection-bigstoryfeed-4-storyfeed-description-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-collection-bigstoryfeed-4-storyfeed-description-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-collection-bigstoryfeed-4-storyfeed-title-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-collection-bigstoryfeed-4-storyfeed-title-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-collection-eeat-statement-content-description-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-collection-eeat-statement-content-description-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-collection-eeat-statement-content-linktext-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-collection-eeat-statement-content-linktext-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-collection-eeat-statement-content-title-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-collection-eeat-statement-content-title-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-collection-eeat-team-card-author-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-component-collection-eeat-team-card-author-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-component-collection-eeat-team-card-title-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-collection-eeat-team-card-title-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-collection-eeat-team-content-description-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-collection-eeat-team-content-description-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-collection-eeat-team-content-linktext-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-collection-eeat-team-content-linktext-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-collection-eeat-team-content-title-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-collection-eeat-team-content-title-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-collectionList-storyList-blocktitle-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-collectionList-storyList-blocktitle-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-collectionList-storyList-title-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-collectionList-storyList-title-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-collectionList-storyList-title-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-collectionList-storyList-title-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-link-primary-2xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-link-primary-2xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-link-primary-3xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-link-primary-3xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-link-primary-4xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-link-primary-5xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-link-primary-6xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-link-primary-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-link-primary-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-link-primary-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-link-primary-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-link-primary-xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-megamenu-linktext-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-megamenu-sectionlink-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-navbar-linktext-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-newsletter-input-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-newsletter-title-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-newsletter-title-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-newsletter-title-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-railstoryitem-description-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-railstoryitem-description-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-railstoryitem-description-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-railstoryitem-description-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-component-railstoryitem-title-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-railstoryitem-title-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-railstoryitem-title-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-railstoryitem-title-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-trendingitem-title-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-trendingitem-title-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-trendingitem-title-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-component-trendingitem-title-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-size-10xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-size-10xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-size-10xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-size-11xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-size-11xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-size-11xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-size-12xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"4rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-size-12xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"4rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-size-12xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"4rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-size-13xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"4.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-size-13xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"4.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-size-13xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"4.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-size-14xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-size-14xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-size-14xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-size-15xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"6rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-size-15xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"6rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-size-15xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"6rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-size-2xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-size-2xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-size-2xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-size-2xs-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-size-2xs-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-size-2xs-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-size-3xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-size-3xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-size-3xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-size-3xs-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-size-3xs-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-size-3xs-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-size-4xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-size-4xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-size-4xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-size-4xs-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.688rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-size-4xs-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.688rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-size-4xs-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.688rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-size-5xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-size-5xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-size-5xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-size-6xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-size-6xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-size-6xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-size-7xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"125%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-size-7xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"125%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-size-7xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"125%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-size-8xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-size-8xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-size-8xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-size-9xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-size-9xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-size-9xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-size-lg-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-size-lg-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-size-lg-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-size-md-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-size-md-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-size-md-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-size-sm-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-size-sm-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-size-sm-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-size-xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-size-xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-size-xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "typography-size-xs-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+  },
+  "typography-size-xs-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+  },
+  "typography-size-xs-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Semibold\"}"
+  },
+  "brand-7": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "brand-8": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "brand-9": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "brand-10": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "brand-11": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "brand-12": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "brand-13": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "brand-14": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "font-primary": {
+    "type": "string",
+    "value": "SF Pro"
+  },
+  "font-secondary": {
+    "type": "string",
+    "value": "SF Pro"
+  },
+  "font-headline": {
+    "type": "string",
+    "value": "SF Pro"
+  },
+  "font-headline-weight": {
+    "type": "number",
+    "value": 700
+  }
+}

@@ -1,0 +1,2430 @@
+{
+  "border-brand": {
+    "type": "string",
+    "value": "{\"width\":\"1px\",\"color\":\"#8B376C\",\"style\":\"solid\"}"
+  },
+  "border-component-card-collection-bigstoryfeed-4-storyfeed-border-default": {
+    "type": "string",
+    "value": "{\"width\":\"1px\",\"color\":\"#8B376C\",\"style\":\"solid\"}"
+  },
+  "border-radius-lg": {
+    "type": "number",
+    "value": 8
+  },
+  "border-radius-md": {
+    "type": "number",
+    "value": 8
+  },
+  "border-radius-rounded": {
+    "type": "number",
+    "value": 64
+  },
+  "border-radius-sm": {
+    "type": "number",
+    "value": 4
+  },
+  "border-radius-xs": {
+    "type": "number",
+    "value": 4
+  },
+  "brand-1": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "brand-2": {
+    "type": "color",
+    "value": "#F4EDD8"
+  },
+  "brand-3": {
+    "type": "color",
+    "value": "#242424"
+  },
+  "brand-4": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "brand-5": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "brand-6": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-accordion-background-knockout": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-accordion-content-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-accordion-content-hover": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-badge-background-danger": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-badge-background-highlight": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-badge-background-knockout": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-badge-background-neutral-dark": {
+    "type": "color",
+    "value": "#8B376C2B"
+  },
+  "component-badge-background-neutral-light": {
+    "type": "color",
+    "value": "#F4EDD8"
+  },
+  "component-badge-background-primary": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-badge-background-success": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-badge-background-warning": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-badge-content-highlight": {
+    "type": "color",
+    "value": "#382b00"
+  },
+  "component-badge-content-neutral-dark": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-badge-content-neutral-light": {
+    "type": "color",
+    "value": "#3b3b3b"
+  },
+  "component-badge-content-primary": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-badge-icon-highlight": {
+    "type": "color",
+    "value": "#382b00"
+  },
+  "component-badge-icon-neutral-dark": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-badge-radius-md": {
+    "type": "number",
+    "value": 4
+  },
+  "component-badge-radius-rounded": {
+    "type": "number",
+    "value": 64
+  },
+  "component-banner-privacy-background-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-banner-privacy-border-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-banner-slim-background-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-banner-slim-border-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-banner-stats-background-default": {
+    "type": "color",
+    "value": "#F3E2ED"
+  },
+  "component-banner-stats-border-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-banner-stats-content-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-banner-stats-content-icon-background-1": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-banner-stats-content-icon-background-2": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-banner-stats-content-icon-background-3": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-banner-stats-content-icon-background-4": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-blocktitle-border-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-blocktitle-border-width-default": {
+    "type": "number",
+    "value": 0
+  },
+  "component-blocktitle-content-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-blocktitle-icon-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-button-background-neutral-outlined-active": {
+    "type": "color",
+    "value": "#1f2c3814"
+  },
+  "component-button-background-neutral-outlined-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-background-neutral-outlined-hover": {
+    "type": "color",
+    "value": "#3838380a"
+  },
+  "component-button-background-neutral-transparent-active": {
+    "type": "color",
+    "value": "#1f2c3814"
+  },
+  "component-button-background-neutral-transparent-default": {
+    "type": "color",
+    "value": "#ffffff00"
+  },
+  "component-button-background-neutral-transparent-hover": {
+    "type": "color",
+    "value": "#3838380a"
+  },
+  "component-button-background-primary-outlined-active": {
+    "type": "color",
+    "value": "#F3E2ED"
+  },
+  "component-button-background-primary-outlined-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-background-primary-outlined-hover": {
+    "type": "color",
+    "value": "#FBF4F8"
+  },
+  "component-button-background-primary-solid-active": {
+    "type": "color",
+    "value": "#250E1C"
+  },
+  "component-button-background-primary-solid-default": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-button-background-primary-solid-hover": {
+    "type": "color",
+    "value": "#3A172D"
+  },
+  "component-button-background-primary-transparent-active": {
+    "type": "color",
+    "value": "#8B376C2B"
+  },
+  "component-button-background-primary-transparent-default": {
+    "type": "color",
+    "value": "#ffffff0a"
+  },
+  "component-button-background-primary-transparent-hover": {
+    "type": "color",
+    "value": "#8B376C14"
+  },
+  "component-button-background-secondary-solid-active": {
+    "type": "color",
+    "value": "#250E1C"
+  },
+  "component-button-background-secondary-solid-default": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-button-background-secondary-solid-hover": {
+    "type": "color",
+    "value": "#3A172D"
+  },
+  "component-button-border-neutral-outlined-active": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "component-button-border-neutral-outlined-default": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "component-button-border-neutral-outlined-hover": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "component-button-border-neutral-transparent-active": {
+    "type": "color",
+    "value": "#1f2c3814"
+  },
+  "component-button-border-neutral-transparent-default": {
+    "type": "color",
+    "value": "#ffffff00"
+  },
+  "component-button-border-neutral-transparent-hover": {
+    "type": "color",
+    "value": "#3838380a"
+  },
+  "component-button-border-primary-outlined-active": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-button-border-primary-outlined-default": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-button-border-primary-outlined-hover": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-button-border-primary-solid-active": {
+    "type": "color",
+    "value": "#250E1C"
+  },
+  "component-button-border-primary-solid-default": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-button-border-primary-solid-hover": {
+    "type": "color",
+    "value": "#3A172D"
+  },
+  "component-button-border-primary-transparent-active": {
+    "type": "color",
+    "value": "#8B376C2B"
+  },
+  "component-button-border-primary-transparent-default": {
+    "type": "color",
+    "value": "#ffffff0a"
+  },
+  "component-button-border-primary-transparent-hover": {
+    "type": "color",
+    "value": "#8B376C14"
+  },
+  "component-button-border-secondary-solid-active": {
+    "type": "color",
+    "value": "#542141"
+  },
+  "component-button-border-secondary-solid-default": {
+    "type": "color",
+    "value": "#AF4588"
+  },
+  "component-button-border-secondary-solid-hover": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-button-content-neutral-outlined-active": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-button-content-neutral-outlined-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-button-content-neutral-outlined-hover": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-button-content-neutral-transparent-active": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-button-content-neutral-transparent-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-button-content-neutral-transparent-hover": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-button-content-primary-outlined-active": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-button-content-primary-outlined-default": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-button-content-primary-outlined-hover": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-button-content-primary-solid-active": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-content-primary-solid-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-content-primary-solid-hover": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-content-primary-transparent-active": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-button-content-primary-transparent-default": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-button-content-primary-transparent-hover": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-button-content-secondary-solid-active": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-content-secondary-solid-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-content-secondary-solid-hover": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-icon-neutral-outlined-active": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-button-icon-neutral-outlined-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-button-icon-neutral-outlined-hover": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-button-icon-neutral-transparent-active": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-button-icon-neutral-transparent-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-button-icon-neutral-transparent-hover": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-button-icon-primary-outlined-active": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-button-icon-primary-outlined-default": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-button-icon-primary-outlined-hover": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-button-icon-primary-solid-active": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-icon-primary-solid-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-icon-primary-solid-hover": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-icon-primary-transparent-active": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-button-icon-primary-transparent-default": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-button-icon-primary-transparent-hover": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-button-icon-secondary-solid-active": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-icon-secondary-solid-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-icon-secondary-solid-hover": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-button-radius-default": {
+    "type": "number",
+    "value": 0
+  },
+  "component-card-background-neutral": {
+    "type": "color",
+    "value": "#ededed"
+  },
+  "component-card-background-primary": {
+    "type": "color",
+    "value": "#F3E2ED"
+  },
+  "component-card-collection-3-column-background-knockout": {
+    "type": "color",
+    "value": "white"
+  },
+  "component-card-collection-3-column-columntitle-content-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-card-collection-3-column-content-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-card-collection-4-story-background-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-card-collection-4-story-background-knockout": {
+    "type": "color",
+    "value": "white"
+  },
+  "component-card-collection-4-story-content-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-card-collection-bigstory-background-knockout": {
+    "type": "color",
+    "value": "white"
+  },
+  "component-card-collection-bigstory-content-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-card-collection-bigstoryfeed-4-storyfeed-background-default": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "component-card-collection-bigstoryfeed-4-storyfeed-border-default": {
+    "type": "color",
+    "value": "transparent"
+  },
+  "component-card-collection-bigstoryfeed-4-storyfeed-content-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-card-collection-bigstoryfeed-4-storyfeed-padding-inline-default": {
+    "type": "number",
+    "value": 12
+  },
+  "component-card-collection-bigstoryfeed-background-knockout": {
+    "type": "color",
+    "value": "white"
+  },
+  "component-card-collection-bigstoryfeed-content-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-card-collection-eeat-statement-content-description-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-card-collection-eeat-statement-content-linktext-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-card-collection-eeat-statement-content-logo-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-card-collection-eeat-statement-content-title-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-card-collection-eeat-team-carousel-card-content-author-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-card-collection-eeat-team-carousel-card-content-title-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-card-collection-eeat-team-content-description-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-card-collection-eeat-team-content-linktext-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-card-collection-eeat-team-content-title-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-card-core-content-eyebrow-backgroud-default": {
+    "type": "color",
+    "value": "transparent"
+  },
+  "component-card-core-content-eyebrow-content-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-card-core-content-eyebrow-content-hover": {
+    "type": "color",
+    "value": "#3b3b3b"
+  },
+  "component-card-core-content-meta-content-default": {
+    "type": "color",
+    "value": "#3b3b3b"
+  },
+  "component-card-core-content-timestamp-content-default": {
+    "type": "color",
+    "value": "#3b3b3b"
+  },
+  "component-card-core-content-title-content-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-card-gap-column-lg": {
+    "type": "number",
+    "value": 304
+  },
+  "component-card-gap-column-md": {
+    "type": "number",
+    "value": 304
+  },
+  "component-card-gap-column-sm": {
+    "type": "number",
+    "value": 304
+  },
+  "component-card-gap-column-xl": {
+    "type": "number",
+    "value": 304
+  },
+  "component-card-gap-column-xs": {
+    "type": "number",
+    "value": 304
+  },
+  "component-card-gap-row-lg": {
+    "type": "number",
+    "value": 304
+  },
+  "component-card-gap-row-md": {
+    "type": "number",
+    "value": 304
+  },
+  "component-card-gap-row-sm": {
+    "type": "number",
+    "value": 304
+  },
+  "component-card-gap-row-xl": {
+    "type": "number",
+    "value": 304
+  },
+  "component-card-gap-row-xs": {
+    "type": "number",
+    "value": 304
+  },
+  "component-card-min-width-desktop-4col": {
+    "type": "number",
+    "value": 304
+  },
+  "component-card-min-width-max-4col": {
+    "type": "number",
+    "value": 304
+  },
+  "component-card-min-width-mobile-1col": {
+    "type": "number",
+    "value": 304
+  },
+  "component-card-min-width-mobile-2col": {
+    "type": "number",
+    "value": 304
+  },
+  "component-card-min-width-tablet-3col": {
+    "type": "number",
+    "value": 304
+  },
+  "component-card-min-width-tablet-4col": {
+    "type": "number",
+    "value": 304
+  },
+  "component-card-padding-inline-desktop": {
+    "type": "number",
+    "value": 304
+  },
+  "component-card-padding-inline-laptop": {
+    "type": "number",
+    "value": 304
+  },
+  "component-card-padding-inline-max": {
+    "type": "number",
+    "value": 304
+  },
+  "component-card-padding-inline-mobile": {
+    "type": "number",
+    "value": 304
+  },
+  "component-card-padding-inline-tablet": {
+    "type": "number",
+    "value": 304
+  },
+  "component-card-product-content-title-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-card-product-content-title-hover": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-carousel-arrow-background-default-copy": {
+    "type": "color",
+    "value": "#ededed"
+  },
+  "component-carousel-arrow-content-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-checkbox-background-hover": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-checkbox-border-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-checkbox-content-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-checkbox-radius-default": {
+    "type": "number",
+    "value": 0
+  },
+  "component-checkbox-radius-square": {
+    "type": "number",
+    "value": 0
+  },
+  "component-chip-background-neutral-default": {
+    "type": "color",
+    "value": "#d6d6d6"
+  },
+  "component-chip-background-neutral-hover": {
+    "type": "color",
+    "value": "#d6d6d6"
+  },
+  "component-chip-background-neutral-selected": {
+    "type": "color",
+    "value": "#bdbdbd"
+  },
+  "component-chip-background-primary-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-chip-background-primary-hover": {
+    "type": "color",
+    "value": "#FBF4F8"
+  },
+  "component-chip-background-primary-selected": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-chip-border-neutral-default": {
+    "type": "color",
+    "value": "#d6d6d6"
+  },
+  "component-chip-border-neutral-hover": {
+    "type": "color",
+    "value": "#d6d6d6"
+  },
+  "component-chip-border-neutral-selected": {
+    "type": "color",
+    "value": "#bdbdbd"
+  },
+  "component-chip-border-primary-default": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-chip-border-primary-hover": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-chip-border-primary-selected": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-chip-content-neutral-default": {
+    "type": "color",
+    "value": "#d6d6d6"
+  },
+  "component-chip-content-neutral-hover": {
+    "type": "color",
+    "value": "#d6d6d6"
+  },
+  "component-chip-content-neutral-selected": {
+    "type": "color",
+    "value": "#bdbdbd"
+  },
+  "component-chip-content-primary-default": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-chip-content-primary-hover": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-chip-content-primary-selected": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-dropdown-content-link-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-dropdown-content-link-hover": {
+    "type": "color",
+    "value": "#3b3b3b"
+  },
+  "component-hr-border-brand": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-input-background-primary-outlined-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-input-border-radius-default": {
+    "type": "number",
+    "value": 0
+  },
+  "component-input-border-width-default": {
+    "type": "number",
+    "value": 0
+  },
+  "component-input-content": {
+    "type": "string",
+    "value": "{\"value\":\"#ffffff\",\"type\":\"color\"}"
+  },
+  "component-input-content-placeholder": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-input-content-value": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-input-icon-primary-outlined": {
+    "type": "string",
+    "value": "{\"value\":\"#ffffff\",\"type\":\"color\"}"
+  },
+  "component-input-icon-primary-outlined-empty": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-input-icon-primary-outlined-placeholder": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-input-icon-primary-outlined-value": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-link-inline-content-primary-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-link-inline-content-primary-hover": {
+    "type": "color",
+    "value": "#3b3b3b"
+  },
+  "component-modal-border-radius-default": {
+    "type": "number",
+    "value": 0
+  },
+  "component-modal-element-title-font-family-default": {
+    "type": "string",
+    "value": "String value"
+  },
+  "component-navigation-footer-background-default": {
+    "type": "color",
+    "value": "transparent"
+  },
+  "component-navigation-footer-border-default": {
+    "type": "color",
+    "value": "transparent"
+  },
+  "component-navigation-footer-content-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-navigation-megamenu-content-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-navigation-navbar-background-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-navigation-navbar-border-default": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "component-navigation-navbar-button-background-default": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-navigation-navbar-button-background-hover": {
+    "type": "color",
+    "value": "#3A172D"
+  },
+  "component-navigation-navbar-button-border-default": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-navigation-navbar-button-border-hover": {
+    "type": "color",
+    "value": "#3A172D"
+  },
+  "component-navigation-navbar-button-content-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-navigation-navbar-button-content-hover": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-navigation-navbar-button-content-transparent-default": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-navigation-navbar-button-content-transparent-hover": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "component-navigation-navbar-content-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-navigation-navbar-content-hover": {
+    "type": "color",
+    "value": "#3b3b3b"
+  },
+  "component-navigation-navbar-content-logo-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-navigation-sidepanel-content-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-navigation-sidepanel-content-logo-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-pagination-background-active": {
+    "type": "color",
+    "value": "#08142b2b"
+  },
+  "component-pagination-background-hover": {
+    "type": "color",
+    "value": "#3838380a"
+  },
+  "component-pagination-content-active": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-pagination-content-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-pagination-content-hover": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "component-rating-star-full": {
+    "type": "color",
+    "value": "#f0b80f"
+  },
+  "component-rating-star-half": {
+    "type": "color",
+    "value": "#f0b80f"
+  },
+  "font-family-default": {
+    "type": "string",
+    "value": "Livvic"
+  },
+  "font-family-sans-serif-primary": {
+    "type": "string",
+    "value": "Livvic"
+  },
+  "font-family-serif": {
+    "type": "string",
+    "value": "Petrona"
+  },
+  "font-family-serif-primary": {
+    "type": "string",
+    "value": "Petrona"
+  },
+  "font-line-height-lg": {
+    "type": "string",
+    "value": "140%"
+  },
+  "font-size-2xs": {
+    "type": "number",
+    "value": 0.8125
+  },
+  "font-weight-black": {
+    "type": "string",
+    "value": "0"
+  },
+  "font-weight-bold": {
+    "type": "string",
+    "value": "0"
+  },
+  "font-weight-heavy": {
+    "type": "string",
+    "value": "0"
+  },
+  "font-weight-light": {
+    "type": "string",
+    "value": "0"
+  },
+  "font-weight-medium": {
+    "type": "string",
+    "value": "0"
+  },
+  "font-weight-regular": {
+    "type": "string",
+    "value": "0"
+  },
+  "font-weight-semibold": {
+    "type": "string",
+    "value": "0"
+  },
+  "font-weight-thin": {
+    "type": "string",
+    "value": "0"
+  },
+  "font-weight-ultra-light": {
+    "type": "string",
+    "value": "0"
+  },
+  "layout-4xs": {
+    "type": "number",
+    "value": 128
+  },
+  "layout-component-navigation-navbar-content-md": {
+    "type": "string",
+    "value": "space-between"
+  },
+  "layout-component-title-blocktitle-content-md": {
+    "type": "string",
+    "value": "flex-start"
+  },
+  "palette-alert-success-100": {
+    "type": "color",
+    "value": "#defdeb"
+  },
+  "palette-background-brand": {
+    "type": "color",
+    "value": "#250E1C"
+  },
+  "palette-background-brand-active": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "palette-background-brand-hover": {
+    "type": "color",
+    "value": "#542141"
+  },
+  "palette-background-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "palette-background-default-link": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "palette-background-default-link-hover": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "palette-background-knockout": {
+    "type": "color",
+    "value": "white"
+  },
+  "palette-background-knockout-hover": {
+    "type": "color",
+    "value": "#ededed"
+  },
+  "palette-background-page": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-background-subtle": {
+    "type": "color",
+    "value": "#757575"
+  },
+  "palette-background-subtle-brand": {
+    "type": "color",
+    "value": "#F3E2ED"
+  },
+  "palette-background-utility": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "palette-brand-1": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "palette-brand-10": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-brand-11": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-brand-12": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-brand-13": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-brand-14": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-brand-2": {
+    "type": "color",
+    "value": "#F4EDD8"
+  },
+  "palette-brand-3": {
+    "type": "color",
+    "value": "#242424"
+  },
+  "palette-brand-4": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-brand-5": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-brand-6": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-brand-7": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-brand-8": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-brand-9": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "palette-content-brand": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "palette-content-brand-active": {
+    "type": "color",
+    "value": "#AF4588"
+  },
+  "palette-content-brand-hover": {
+    "type": "color",
+    "value": "#AF4588"
+  },
+  "palette-content-default": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "palette-content-default-active": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "palette-content-default-hover": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "palette-content-default-link": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "palette-content-default-link-hover": {
+    "type": "color",
+    "value": "#3b3b3b"
+  },
+  "palette-content-knockout-hover": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "palette-neutral-200": {
+    "type": "color",
+    "value": "#ededed"
+  },
+  "palette-neutral-alpha-04": {
+    "type": "color",
+    "value": "#04112a96"
+  },
+  "palette-neutral-alpha-08": {
+    "type": "color",
+    "value": "#04112a96"
+  },
+  "palette-neutral-alpha-12": {
+    "type": "color",
+    "value": "#04112a96"
+  },
+  "palette-neutral-alpha-16": {
+    "type": "color",
+    "value": "#04112a96"
+  },
+  "palette-neutral-alpha-32": {
+    "type": "color",
+    "value": "#04112a96"
+  },
+  "palette-neutral-alpha-48": {
+    "type": "color",
+    "value": "#04112a96"
+  },
+  "palette-neutral-alpha-72": {
+    "type": "color",
+    "value": "#04112a96"
+  },
+  "palette-neutral-alpha-88": {
+    "type": "color",
+    "value": "#04112a96"
+  },
+  "palette-neutral-alpha-96": {
+    "type": "color",
+    "value": "#04112a96"
+  },
+  "palette-neutral-darkest": {
+    "type": "color",
+    "value": "#121212"
+  },
+  "palette-primary-100": {
+    "type": "color",
+    "value": "#FBF4F8"
+  },
+  "palette-primary-100-alpha": {
+    "type": "color",
+    "value": "#8B376C0A"
+  },
+  "palette-primary-1000": {
+    "type": "color",
+    "value": "#250E1C"
+  },
+  "palette-primary-1000-alpha": {
+    "type": "color",
+    "value": "#8B376CE8"
+  },
+  "palette-primary-200": {
+    "type": "color",
+    "value": "#F3E2ED"
+  },
+  "palette-primary-200-alpha": {
+    "type": "color",
+    "value": "#8B376C14"
+  },
+  "palette-primary-300": {
+    "type": "color",
+    "value": "#E6C1D9"
+  },
+  "palette-primary-300-alpha": {
+    "type": "color",
+    "value": "#8B376C2B"
+  },
+  "palette-primary-400": {
+    "type": "color",
+    "value": "#D28EB9"
+  },
+  "palette-primary-400-alpha": {
+    "type": "color",
+    "value": "#8B376C4A"
+  },
+  "palette-primary-500": {
+    "type": "color",
+    "value": "#C56DA5"
+  },
+  "palette-primary-500-alpha": {
+    "type": "color",
+    "value": "#8B376C73"
+  },
+  "palette-primary-600": {
+    "type": "color",
+    "value": "#AF4588"
+  },
+  "palette-primary-600-alpha": {
+    "type": "color",
+    "value": "#8B376C96"
+  },
+  "palette-primary-700": {
+    "type": "color",
+    "value": "#8B376C"
+  },
+  "palette-primary-700-alpha": {
+    "type": "color",
+    "value": "#8B376CB3"
+  },
+  "palette-primary-800": {
+    "type": "color",
+    "value": "#542141"
+  },
+  "palette-primary-800-alpha": {
+    "type": "color",
+    "value": "#8B376CCC"
+  },
+  "palette-primary-900": {
+    "type": "color",
+    "value": "#3A172D"
+  },
+  "palette-primary-900-alpha": {
+    "type": "color",
+    "value": "#8B376CDB"
+  },
+  "palette-primary-alpha-04": {
+    "type": "color",
+    "value": "#3A172D0A"
+  },
+  "palette-primary-alpha-08": {
+    "type": "color",
+    "value": "#3A172D14"
+  },
+  "palette-primary-alpha-12": {
+    "type": "color",
+    "value": "#3A172D7A"
+  },
+  "palette-primary-alpha-16": {
+    "type": "color",
+    "value": "#022b2929"
+  },
+  "palette-primary-alpha-32": {
+    "type": "color",
+    "value": "#022b2952"
+  },
+  "palette-primary-alpha-48": {
+    "type": "color",
+    "value": "#3A172DB8"
+  },
+  "palette-primary-alpha-72": {
+    "type": "color",
+    "value": "#3A172DB8"
+  },
+  "palette-primary-alpha-88": {
+    "type": "color",
+    "value": "#3A172DE1"
+  },
+  "palette-primary-alpha-96": {
+    "type": "color",
+    "value": "#3A172DF5"
+  },
+  "typography-card-product-content-description-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-card-product-content-description-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-card-product-content-title-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-card-product-content-title-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-3column-label-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-3column-label-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-3column-title-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-3column-title-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-3column-title-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-3column-title-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-badge-lg-danger": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-badge-lg-highlight": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-badge-lg-knockout": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-badge-lg-neutral-dark": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-badge-lg-neutral-light": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-badge-lg-primary": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-badge-lg-success": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-badge-lg-warning": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-badge-md-danger": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-badge-md-highlight": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-badge-md-knockout": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-badge-md-neutral-dark": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-badge-md-neutral-light": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-badge-md-primary": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-badge-md-success": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-badge-md-warning": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-badge-sm-danger": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\",\"textCase\":\"uppercase\"}"
+  },
+  "typography-component-badge-sm-highlight": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\",\"textCase\":\"uppercase\"}"
+  },
+  "typography-component-badge-sm-knockout": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\",\"textCase\":\"uppercase\"}"
+  },
+  "typography-component-badge-sm-neutral-dark": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\",\"textCase\":\"uppercase\"}"
+  },
+  "typography-component-badge-sm-neutral-light": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\",\"textCase\":\"uppercase\"}"
+  },
+  "typography-component-badge-sm-primary": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\",\"textCase\":\"uppercase\"}"
+  },
+  "typography-component-badge-sm-success": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\",\"textCase\":\"capitalize\"}"
+  },
+  "typography-component-badge-sm-warning": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\",\"textCase\":\"uppercase\"}"
+  },
+  "typography-component-banner-privacy-description-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.75rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-banner-privacy-description-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.75rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-banner-slim-description-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-banner-slim-description-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-banner-slim-linktext-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-banner-slim-linktext-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-banner-stats-linktext-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-banner-stats-linktext-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-banner-stats-title-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-banner-stats-title-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-blocksubtitle-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-blocksubtitle-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-blocktitle-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-blocktitle-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-author-default-2xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-author-default-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-author-default-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-author-default-xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-description-brand-2xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-description-brand-2xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-description-brand-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-description-brand-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-description-brand-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-description-brand-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-description-brand-xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-description-default-2xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-description-default-2xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-description-default-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-description-default-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-description-default-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-description-default-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-description-default-xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-eyebrow-default-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-eyebrow-default-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-eyebrow-default-xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-meta-default-2xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-meta-default-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-meta-default-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-meta-default-xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-recipe-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-subtitle-brand-2xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-subtitle-brand-2xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-subtitle-brand-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-subtitle-brand-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-subtitle-brand-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-subtitle-brand-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-subtitle-brand-xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-subtitle-default-2xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-subtitle-default-2xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-subtitle-default-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-subtitle-default-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-subtitle-default-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-subtitle-default-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-subtitle-default-xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-timestamp-default-2xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-timestamp-default-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-timestamp-default-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-timestamp-default-xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-brand-10xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-brand-11xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-brand-12xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"4rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-brand-13xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"4.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-brand-14xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-brand-15xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"6rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-brand-2xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-brand-2xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-brand-3xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-brand-4xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-brand-5xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-brand-6xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-brand-7xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"125%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-brand-8xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.75rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-brand-9xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-brand-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-brand-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-brand-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-brand-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-brand-xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-default-10xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-default-11xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-default-12xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"4rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-default-13xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"4.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-default-14xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-default-15xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"6rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-default-2xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-default-2xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-default-3xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-default-4xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-default-5xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-default-6xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-default-7xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"125%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-default-8xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.75rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-default-9xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-default-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-default-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-default-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-default-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-core-content-title-default-xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-product-content-description-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-product-content-description-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-product-content-title-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-card-product-content-title-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-collection-bigstoryfeed-4-storyfeed-description-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-collection-bigstoryfeed-4-storyfeed-description-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-collection-bigstoryfeed-4-storyfeed-title-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-collection-bigstoryfeed-4-storyfeed-title-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-collection-eeat-statement-content-description-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-collection-eeat-statement-content-description-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-collection-eeat-statement-content-linktext-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-collection-eeat-statement-content-linktext-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-collection-eeat-statement-content-title-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-collection-eeat-statement-content-title-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-collection-eeat-team-card-author-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-collection-eeat-team-card-author-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-collection-eeat-team-card-title-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-collection-eeat-team-card-title-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-collection-eeat-team-content-description-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-collection-eeat-team-content-description-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-collection-eeat-team-content-linktext-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-collection-eeat-team-content-linktext-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-collection-eeat-team-content-title-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-collection-eeat-team-content-title-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-collectionList-storyList-blocktitle-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-collectionList-storyList-blocktitle-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-collectionList-storyList-title-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-collectionList-storyList-title-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-collectionList-storyList-title-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-collectionList-storyList-title-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-link-primary-2xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-link-primary-2xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-link-primary-3xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-link-primary-3xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.75rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-link-primary-4xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-link-primary-5xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-link-primary-6xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-link-primary-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-link-primary-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-link-primary-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-link-primary-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-link-primary-xs": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-megamenu-linktext-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-megamenu-sectionlink-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-navbar-linktext-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-newsletter-input-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-newsletter-title-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-newsletter-title-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-newsletter-title-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-railstoryitem-description-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-railstoryitem-description-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-railstoryitem-description-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-railstoryitem-description-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-railstoryitem-title-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-railstoryitem-title-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-railstoryitem-title-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-railstoryitem-title-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-trendingitem-title-lg": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-trendingitem-title-md": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-trendingitem-title-sm": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-component-trendingitem-title-xl": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-10xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-10xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-10xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-11xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-11xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-11xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-12xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"4rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-12xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"4rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-12xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"4rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-13xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"4.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-13xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"4.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-13xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"4.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-14xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-14xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-14xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-15xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"6rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-15xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"6rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-15xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"6rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-2xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-2xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-2xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-2xs-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-2xs-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-2xs-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-3xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-3xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-3xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-3xs-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.75rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-3xs-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.75rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-3xs-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.75rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-4xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-4xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-4xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-4xs-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.688rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-4xs-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.688rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-4xs-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.688rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-5xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-5xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-5xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-6xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-6xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-6xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-7xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"125%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-7xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"125%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-7xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.5rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"125%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-8xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.75rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-8xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.75rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-8xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"2.75rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-9xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-9xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-9xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"3rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-lg-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-lg-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-lg-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-md-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-md-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-md-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-sm-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-sm-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-sm-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-xl-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-xl-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-xl-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-xs-bold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-xs-regular": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "typography-size-xs-semibold": {
+    "type": "string",
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Livvic\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"0\"}"
+  },
+  "brand-7": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "brand-8": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "brand-9": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "brand-10": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "brand-11": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "brand-12": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "brand-13": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "brand-14": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "font-primary": {
+    "type": "string",
+    "value": "Livvic"
+  },
+  "font-secondary": {
+    "type": "string",
+    "value": "Petrona"
+  },
+  "font-headline": {
+    "type": "string",
+    "value": "Livvic"
+  },
+  "font-headline-weight": {
+    "type": "number",
+    "value": 700
+  }
+}
