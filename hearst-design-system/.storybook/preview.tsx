@@ -36,6 +36,7 @@ const preview: Preview = {
       storySort: {
         order: [
           "Welcome",
+          "The Toolbox",
           "Figma Integration",
           "Pencil Integration",
           "Foundation",
