@@ -1,7 +1,19 @@
 [build]
   base = "hearst-design-system"
-  command = "npx storybook build -o public/storybook --quiet && npm run build"
+  command = "npm run build && npx storybook build -o .next/static/storybook --quiet"
   publish = ".next"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+[[redirects]]
+  from = "/storybook"
+  to = "/_next/static/storybook/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/storybook/*"
+  to = "/_next/static/storybook/:splat"
+  status = 200
+  force = true
