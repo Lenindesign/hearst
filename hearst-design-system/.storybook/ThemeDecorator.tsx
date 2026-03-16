@@ -1,6 +1,7 @@
 import React, { useMemo, useEffect } from "react";
 import type { Decorator } from "@storybook/react";
 import { brands, type BrandTheme } from "../src/lib/brands";
+import { ThemeContext } from "../src/components/theme-provider";
 
 const GOOGLE_FONTS: Record<string, string> = {
   "Inter": "Inter:wght@300;400;500;600;700;800;900",
@@ -91,19 +92,25 @@ export const ThemeDecorator: Decorator = (Story, context) => {
     [brandSlug]
   );
   const cssVars = useMemo(() => brandToCssVars(brand), [brand]);
+  const themeCtx = useMemo(
+    () => ({ brand, setBrand: () => {} }),
+    [brand]
+  );
 
   useGoogleFonts([brand.fontDefault, brand.fontSecondary, brand.fontHeadline]);
 
   return (
-    <div
-      data-brand={brand.slug}
-      style={{
-        ...cssVars,
-        fontFamily: `"${brand.fontDefault}", system-ui, sans-serif`,
-        padding: "2rem",
-      } as React.CSSProperties}
-    >
-      <Story />
-    </div>
+    <ThemeContext.Provider value={themeCtx}>
+      <div
+        data-brand={brand.slug}
+        style={{
+          ...cssVars,
+          fontFamily: `"${brand.fontDefault}", system-ui, sans-serif`,
+          padding: "2rem",
+        } as React.CSSProperties}
+      >
+        <Story />
+      </div>
+    </ThemeContext.Provider>
   );
 };

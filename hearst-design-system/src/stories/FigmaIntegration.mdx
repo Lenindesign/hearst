@@ -1,0 +1,212 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Figma Integration" />
+
+# Figma Integration
+
+How Figma connects to the Hearst Design System and stays in sync with production tokens.
+
+<a href="https://www.figma.com/design/XFDMnMs6TI0uvAwyJnDZA1/Hearst-Tokens?node-id=0-1" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: '#0d99ff', color: '#fff', borderRadius: '8px', fontWeight: 600, fontSize: '14px', textDecoration: 'none', marginBottom: '32px' }}>
+  Open Figma File — Hearst Tokens ↗
+</a>
+
+---
+
+## How It Works
+
+Figma is a **consumer** of the design system, not the source of truth.
+All token values live in Git (`tokens/` directory) and are **pushed** to Figma as variables.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                                                                 │
+│   Git  tokens/              npm run push-figma                  │
+│   ★ SOURCE OF TRUTH ★  ──────────────────────►  Figma File     │
+│                                                                 │
+│   core/global.json                               Collection:    │
+│   brands/{slug}.json                             "Hearst        │
+│   brands/_meta.json                               Design        │
+│                                                   System"       │
+│                                                                 │
+│                                                  29 Modes       │
+│                                                  (one per       │
+│                                                   brand)        │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### The sync flow
+
+| Step | What happens |
+|------|-------------|
+| 1 | Developer edits a token JSON file in `tokens/` |
+| 2 | Runs `npm run build-tokens` to generate CSS + TypeScript |
+| 3 | Commits and merges to `main` |
+| 4 | Runs `npm run push-figma` |
+| 5 | Script reads all token files, builds a Figma API payload |
+| 6 | Pushes variables to the Figma file via the REST API |
+| 7 | Designers see updated variables immediately in Figma |
+
+---
+
+## Figma File Structure
+
+### One collection, many modes
+
+The Figma file contains a single variable collection called **"Hearst Design System"** with **29 modes** — one for each brand.
+
+| Mode | Brand |
+|------|-------|
+| Mode 1 | White Label |
+| Mode 2 | Autoweek |
+| Mode 3 | Best Products |
+| Mode 4 | Bicycling |
+| Mode 5 | Car and Driver |
+| Mode 6 | Cosmopolitan |
+| ... | ... |
+| Mode 29 | Women's Health |
+
+Designers switch between brands by changing the mode in the Variables panel.
+
+### Variable categories
+
+| Category | Examples | Count |
+|----------|---------|-------|
+| **Brand colors** | `brand/1`, `brand/2` ... `brand/14` | 14 per brand |
+| **Palette brand** | `palette/brand-1` ... `palette/brand-14` | 14 per brand |
+| **Palette neutral** | `palette/neutral-100` ... `palette/neutral-900` | ~15 |
+| **Palette alert** | `palette/alert-danger-100`, `palette/alert-success-100` | ~20 |
+| **Content** | `palette/content-default`, `palette/content-brand` | ~10 |
+| **Background** | `palette/background-subtle-brand` | ~10 |
+| **Spacing** | `space/xs`, `space/md`, `space/2xl` | 11 |
+| **Border** | `border/radius-2xs`, `border/width-sm` | ~8 |
+| **Font** | `font/primary`, `font/secondary`, `font/headline` | 4 |
+| **Component** | `component/button-background-primary-solid-default` | ~200+ |
+
+### codeSyntax.WEB
+
+Every variable includes a `codeSyntax.WEB` property so developers can see the corresponding CSS variable name directly in Figma's inspect panel.
+
+| Figma variable | codeSyntax.WEB |
+|---------------|----------------|
+| `brand/1` | `--brand-1` |
+| `palette/neutral-200` | `--palette-neutral-200` |
+| `space/md` | `--space-md` |
+| `font/primary` | `--font-brand` |
+
+---
+
+## What Designers Can Do
+
+### Use variables in designs
+
+1. Select a layer in Figma
+2. Click the variable icon next to any color, spacing, or corner radius property
+3. Pick from the "Hearst Design System" collection
+4. Switch modes to preview different brands
+
+### Switch brands
+
+1. Select a frame or component
+2. Open the Variables panel
+3. Change the mode from one brand to another
+4. All bound variables update instantly
+
+### Reference token names
+
+When inspecting a design, the **codeSyntax.WEB** value tells developers exactly which CSS variable to use in code.
+
+---
+
+## What Designers Should NOT Do
+
+| Don't | Why | Instead |
+|-------|-----|---------|
+| Edit Figma Variables directly | They'll be overwritten on next `push-figma` | Request a token change via the team |
+| Define new token values in Figma | They won't reach production | File a request — developer adds to `tokens/` |
+| Use Figma inspect hex values as source of truth | Inspect shows resolved values, not token references | Use the variable name / codeSyntax.WEB |
+| Detach variables from components | Breaks the token binding | Keep variables attached |
+
+---
+
+## Font Variables — Known Limitation
+
+Figma `STRING` variables **cannot** directly control the `fontFamily` property in the UI.
+Font variables (`font/primary`, `font/secondary`, `font/headline`) are visible in the Variables panel
+and useful as a reference, but they cannot be applied to a text layer's font family dropdown.
+
+**Workaround for designers:**
+- Reference the font variable value in the Variables panel to see which font to use
+- Apply the font manually from the font picker
+- Use Text Styles or Component Variants for consistent font application
+
+---
+
+## The Push Script
+
+The `push-figma` script (`scripts/push-to-figma.ts`) does the following:
+
+1. Reads all token JSON files from `tokens/`
+2. Maps token names to Figma variable paths (e.g. `brand-1` → `brand/1`)
+3. Converts hex colors to Figma's `{r, g, b, a}` format
+4. Creates the variable collection and modes if they don't exist
+5. Sets `codeSyntax.WEB` on each variable
+6. Pushes values for all 29 brand modes via the Figma REST API
+
+### Running the sync
+
+```bash
+# From hearst-design-system/
+npm run push-figma
+```
+
+This requires a Figma personal access token configured in the environment.
+
+---
+
+## Figma ↔ Code Mapping
+
+How Figma variables map to what developers use in code:
+
+| Figma Variable | CSS Variable | Tailwind / Utility | Usage |
+|---------------|-------------|-------------------|-------|
+| `brand/1` | `var(--brand-primary)` | — | Brand accent color |
+| `palette/neutral-200` | `var(--palette-neutral-200)` | — | Light backgrounds |
+| `palette/content-default` | `var(--palette-content-default)` | — | Body text |
+| `font/primary` | `var(--font-brand)` | `font-brand` | Body font family |
+| `font/secondary` | `var(--font-brand-secondary)` | `font-brand-secondary` | Eyebrow font |
+| `font/headline` | `var(--font-headline)` | `.headline` | Headline font |
+| `space/md` | `var(--space-md)` | `gap-4` (16px) | Medium spacing |
+| `border/radius-2xs` | `var(--border-radius-2xs)` | `rounded-sm` | Small radius |
+
+---
+
+## Keeping Everything in Sync
+
+```
+                    ┌─────────────────────────────────────────┐
+                    │                                         │
+  Developer edits   │         Git  tokens/                    │
+  token JSON ──────►│         (source of truth)               │
+                    │              │                           │
+                    │              ├── build-tokens            │
+                    │              │   ├── brands.ts  (React)  │
+                    │              │   └── tokens.css (CSS)    │
+                    │              │                           │
+                    │              ├── push-figma              │
+                    │              │   └── Figma Variables     │
+                    │              │       (designers see it)  │
+                    │              │                           │
+                    │              └── push-pencil             │
+                    │                  └── .pen file           │
+                    │                      (handoff specs)     │
+                    │                                         │
+                    └─────────────────────────────────────────┘
+```
+
+All three outputs — **code**, **Figma**, and **Pencil** — are always derived from the same token JSON files.
+When a token changes in Git, running the three scripts ensures every tool sees the same values.
+
+---
+
+*Figma file: [Hearst Tokens](https://www.figma.com/design/XFDMnMs6TI0uvAwyJnDZA1/Hearst-Tokens?node-id=0-1)*

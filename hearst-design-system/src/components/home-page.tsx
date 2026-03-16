@@ -1011,16 +1011,15 @@ function Footer({ brandSlug }: { brandSlug: string }) {
   );
 }
 
-export function BrandHomePage() {
+export function HomePageTemplate() {
   const { brand } = useTheme();
 
   return (
     <div className="min-h-screen font-brand" style={{
       backgroundColor: "var(--palette-neutral-lightest, #fff)",
     }}>
-      <NavBar />
-
       <div className="max-w-[1440px] mx-auto">
+
         {/* Ad Banner */}
         <div className="flex items-center justify-center h-[100px] lg:h-[250px]"
           style={{ backgroundColor: "var(--palette-neutral-100, #f5f5f5)" }}>
@@ -1064,5 +1063,14 @@ export function BrandHomePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export function BrandHomePage() {
+  return (
+    <>
+      <NavBar />
+      <HomePageTemplate />
+    </>
   );
 }

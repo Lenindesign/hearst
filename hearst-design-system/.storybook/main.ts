@@ -2,7 +2,7 @@ import type { StorybookConfig } from "@storybook/react-vite";
 import path from "path";
 
 const config: StorybookConfig = {
-  stories: ["../src/**/*.stories.@(ts|tsx)"],
+  stories: ["../src/**/*.mdx", "../src/**/*.stories.@(ts|tsx)"],
   addons: [
     "@storybook/addon-essentials",
     "@storybook/addon-themes",
@@ -16,6 +16,8 @@ const config: StorybookConfig = {
     config.resolve.alias = {
       ...config.resolve.alias,
       "@": path.resolve(__dirname, "../src"),
+      "next/link": path.resolve(__dirname, "mocks/next-link.tsx"),
+      "next/navigation": path.resolve(__dirname, "mocks/next-navigation.ts"),
     };
 
     config.css = config.css || {};

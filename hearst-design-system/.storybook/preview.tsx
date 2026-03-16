@@ -32,6 +32,19 @@ const preview: Preview = {
     layout: "centered",
     controls: { matchers: { color: /(background|color)$/i, date: /Date$/i } },
     backgrounds: { disable: true },
+    options: {
+      storySort: {
+        order: [
+          "Welcome",
+          "Figma Integration",
+          "Pencil Integration",
+          "Foundation",
+          ["Colors", "Typography", "Tokens"],
+          "Templates",
+          "Components",
+        ],
+      },
+    },
   },
 };
 

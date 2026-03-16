@@ -1,0 +1,355 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Welcome" />
+
+# Hearst Design System
+
+> Single source of truth for designers, developers, and LLMs.
+> Every token, variable, component, and workflow is defined here.
+
+---
+
+## Architecture Overview
+
+### Three tools, three roles
+
+| Tool | Who uses it | Role |
+|------|------------|------|
+| **Figma** | Designers | Design exploration, layouts, new component concepts, prototyping |
+| **Pencil** (.pen files) | Designers + Developers | Handoff layer — approved components built with production tokens |
+| **Git** (token JSON files) | Developers + LLMs + CI | Single source of truth for all token values |
+
+### Single Source of Truth: Git
+
+The **token JSON files in `tokens/`** are the single source of truth for all design token values.
+Everything else — Pencil, Figma, CSS, React — is generated or synced from them.
+
+```
+Git tokens/ ────────┬── build-tokens ──► brands.ts + tokens.css
+(source of truth)   │                    (production code)
+                    │
+                    ├── push-figma ────► Figma Variables
+                    │                    (designers use tokens in Figma)
+                    │
+                    └── push-pencil ───► hearst-brands.pen
+                                         (handoff specs for developers)
+```
+
+### Why Git as source of truth?
+
+| | Git | Figma | Pencil |
+|---|---|---|---|
+| **Version control** | Full history, diffs, blame | Version history (limited) | Binary .pen, opaque |
+| **Code review** | PRs with reviewable JSON | No PR workflow | No PR workflow |
+| **CI/CD** | Validate tokens in pipeline | Requires plugin/API | Requires MCP |
+| **Collaboration** | Any editor, any tool | Figma-only | Pencil MCP-only |
+| **Rollback** | `git revert` | Restore version | Manual |
+| **Auditability** | Who, what, when, why | Limited | Limited |
+
+---
+
+## Token File Structure
+
+### Directory layout
+
+```
+tokens/
+├── core/
+│   └── global.json            # 401 tokens — spacing, borders, palette, elevation
+├── semantic/
+│   └── aliases.json           # Semantic references (e.g. content-brand → $brand-1)
+└── brands/
+    ├── _meta.json             # Font overrides per brand (headline, secondary)
+    ├── white-label.json       # 595 tokens
+    ├── cosmopolitan.json      # 595 tokens
+    ├── car-and-driver.json    # 595 tokens
+    └── ... (29 brand files)
+```
+
+### Token JSON format
+
+Each token file is a flat object of `{ name: { type, value } }`:
+
+```json
+{
+  "palette-neutral-200": { "type": "color", "value": "#ededed" },
+  "space-md": { "type": "number", "value": 16 },
+  "font-family-default": { "type": "string", "value": "Inter" }
+}
+```
+
+---
+
+## Token Naming Convention
+
+### Three layers
+
+| Layer | Purpose | Prefix | Used in components? |
+|-------|---------|--------|---------------------|
+| **Core** | Raw palette values | `palette-*`, `brand-*`, `space-*`, `border-*` | Only via `var()` with fallbacks |
+| **Semantic** | Purpose-driven aliases | `content-*`, `background-*` | Yes — preferred |
+| **Component** | Scoped to a UI component | `component-*` | Yes — for component-specific styling |
+
+### Naming patterns
+
+| Category | Pattern | Examples |
+|----------|---------|----------|
+| Brand colors | `brand-{1-6}` | `brand-1` (primary), `brand-2` |
+| Palette brand | `palette-brand-{1-14}` | `palette-brand-1` through `palette-brand-14` |
+| Palette neutral | `palette-neutral-{shade}` | `palette-neutral-100`, `palette-neutral-lightest` |
+| Content | `palette-content-{variant}` | `palette-content-default`, `palette-content-brand` |
+| Background | `palette-background-{variant}` | `palette-background-subtle-brand` |
+| Component | `component-{name}-{property}-{state}` | `component-button-background-primary-solid-default` |
+| Spacing | `space-{size}` | `space-xs`, `space-md`, `space-2xl` |
+| Border radius | `border-radius-{size}` | `border-radius-2xs` |
+| Font family | `font-family-{role}` | `font-family-default`, `font-family-serif` |
+| Elevation | `elevation-{level}` | `elevation-base`, `elevation-floating` |
+
+---
+
+## CSS Variable Mapping
+
+### Token → CSS → Tailwind
+
+| Token (in JSON) | CSS Variable | Tailwind Class | Usage |
+|-----------------|-------------|----------------|-------|
+| `brand-1` | `--brand-primary` | — | Brand accent color |
+| `palette-neutral-200` | `--palette-neutral-200` | — | Light backgrounds |
+| `palette-neutral-600` | `--palette-neutral-600` | — | Secondary text |
+| `palette-content-default` | `--palette-content-default` | — | Body text |
+| `palette-background-subtle-brand` | `--palette-background-subtle-brand` | — | Newsletter bg |
+| (from \_meta.json) | `--font-brand` | `font-brand` | Body font |
+| (from \_meta.json) | `--font-brand-secondary` | `font-brand-secondary` | Eyebrows |
+| (from \_meta.json) | `--font-headline` | `.headline` | Headlines |
+| `brand.colors["1"]` | `--primary` | `bg-primary`, `text-primary` | Shadcn components |
+
+### Quick reference
+
+```
+Brand accent color    → var(--brand-primary)
+Body text color       → var(--palette-content-default, #121212)
+Subtle background     → var(--palette-background-subtle-brand, #f5f0e8)
+Neutral border        → var(--palette-neutral-300, #d6d6d6)
+Secondary text        → var(--palette-neutral-600, #757575)
+Body font             → className="font-brand"
+Headline font         → className="headline"
+Secondary font        → className="font-brand-secondary"
+Shadcn primary button → className="bg-primary"
+```
+
+### Spacing scale
+
+| Token | Value | Tailwind |
+|-------|-------|----------|
+| `space-3xs` | 2px | `gap-0.5` |
+| `space-2xs` | 4px | `gap-1` |
+| `space-xs` | 8px | `gap-2` |
+| `space-sm` | 12px | `gap-3` |
+| `space-md` | 16px | `gap-4` |
+| `space-lg` | 20px | `gap-5` |
+| `space-xl` | 24px | `gap-6` |
+| `space-2xl` | 32px | `gap-8` |
+| `space-3xl` | 48px | `gap-12` |
+| `space-4xl` | 64px | `gap-16` |
+| `space-6xl` | 80px | `gap-20` |
+
+---
+
+## Brand Theming
+
+### How brand switching works
+
+1. User selects a brand from the `BrandSwitcher` dropdown
+2. `ThemeProvider` sets `data-brand="{slug}"` on the wrapper div
+3. `tokens.css` activates the matching `[data-brand="{slug}"]` CSS block
+4. `ThemeProvider` sets inline CSS vars for Tailwind bridge (`--primary`, `--font-brand`, etc.)
+5. Google Fonts are loaded dynamically for the brand's fonts
+6. All components re-render with new token values
+
+### Two token delivery systems (by design)
+
+| System | What it sets | How | Used by |
+|--------|-------------|-----|---------|
+| **tokens.css** | `--palette-*`, `--component-*`, `--space-*`, `--brand-primary` | `[data-brand="slug"]` CSS selectors | Components via `var()` |
+| **ThemeProvider** | `--primary`, `--secondary`, `--accent`, `--font-brand`, `--font-headline` | Inline `style={}` on wrapper div | Tailwind classes (`bg-primary`, `font-brand`, `.headline`) |
+
+### Supported brands (29)
+
+White Label, Autoweek, Best Products, Bicycling, Biography, Car and Driver, Cosmopolitan,
+Country Living, Delish, ELLE, ELLE Decor, Esquire, Food Network, Fre, Good Housekeeping,
+Harper's BAZAAR, HGTV, House Beautiful, Marie Claire, Men's Health, Oprah Daily,
+Popular Mechanics, Prevention, Redbook, Road & Track, Runner's World, Seventeen,
+The Pioneer Woman, Town & Country, Veranda, Woman's Day, Women's Health
+
+---
+
+## Atomic Design Structure
+
+| Level | Examples | Key Tokens |
+|-------|----------|------------|
+| **Atoms** | Text, Icon, Image, Button, Badge, Input, Link, Divider | `--font-brand`, `--palette-content-default`, `--component-button-*` |
+| **Molecules** | Newsletter Promo, Article Card, Right Rail Card, Trending Card | Composed from atoms |
+| **Organisms** | Hero Section, Collection List, Right Rail, Trending, Newsletter, Nav, Footer | Composed from molecules |
+| **Templates** | Brand Home Page | Nav → Hero + Collection → Right Rail → Newsletter → Trending → Footer |
+
+---
+
+## Workflows
+
+### Designer workflow: New component
+
+1. **Figma** — Design the component, explore layouts, get stakeholder approval
+2. **Pencil** — Rebuild the approved component with production tokens (`$brand-1`, `$space-md`)
+3. **Handoff** — Developer references Pencil via MCP for implementation specs
+
+### Designer workflow: Requesting a token change
+
+1. Designer identifies a need (e.g. "Cosmo needs a new accent color")
+2. Designer files a request (Slack, Jira, etc.)
+3. Developer edits the token JSON in git
+4. After merge, developer runs `push-pencil` to sync Pencil
+5. Designer sees the updated token automatically
+
+### Developer workflow: Adding or changing a token
+
+1. Edit the JSON file in `tokens/`
+2. Run `npm run build-tokens`
+3. Verify in the app (dev server auto-reloads)
+4. Commit all changes (JSON + generated files)
+5. After merge, push to consumers:
+   - `npm run push-figma` → Figma Variables
+   - `npm run push-pencil` → Pencil .pen file
+
+### Developer workflow: Building a new component
+
+1. Check Pencil for the approved design (MCP `batch_get` + `get_screenshot`)
+2. Create `src/components/ui/{name}.tsx` using tokens from the mapping table
+3. Always include `var()` fallbacks: `var(--token-name, #fallback)`
+4. Add Storybook story: `src/stories/{Name}.stories.tsx`
+5. Verify with 3+ brands by switching in the app
+
+---
+
+## npm Scripts Reference
+
+| Command | Purpose | When to use |
+|---------|---------|-------------|
+| `npm run build-tokens` | Build brands.ts + tokens.css from tokens/ | After editing any token JSON |
+| `npm run push-figma` | Push tokens to Figma Variables | After token changes |
+| `npm run push-pencil` | Push tokens to Pencil .pen file | After token changes |
+| `npm run dev` | Start Next.js dev server | Development |
+| `npm run build` | Production build | CI/CD |
+| `npm run storybook` | Start Storybook | Component development |
+
+---
+
+## File Structure
+
+```
+hearst/
+├── hearst-brands.pen                    # Pencil design file (synced FROM git)
+├── hearst-design-system/
+│   ├── DESIGN-SYSTEM-SPEC.md            # Full specification
+│   ├── tokens/                          # ★ SOURCE OF TRUTH ★
+│   │   ├── core/global.json             # Global tokens (401)
+│   │   ├── semantic/aliases.json        # Semantic references
+│   │   └── brands/
+│   │       ├── _meta.json               # Font overrides
+│   │       ├── cosmopolitan.json        # Per-brand tokens (595 each)
+│   │       └── ... (29 brand files)
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── ui/                      # Atomic components
+│   │   │   ├── home-page.tsx            # Brand home page template
+│   │   │   ├── theme-provider.tsx       # Brand switching + CSS vars
+│   │   │   └── token-inspector.tsx      # Dev tool: token names on hover
+│   │   ├── lib/
+│   │   │   ├── brands.ts               # GENERATED from tokens/
+│   │   │   └── tokens.css              # GENERATED from tokens/
+│   │   └── stories/                     # Storybook stories
+│   └── scripts/
+│       ├── build-from-tokens.ts         # tokens/ → brands.ts + tokens.css
+│       ├── push-to-figma.ts             # tokens/ → Figma Variables
+│       └── push-to-pencil.ts            # tokens/ → Pencil .pen file
+```
+
+---
+
+## Rules by Role
+
+### For Designers
+
+**DO:**
+- Design freely in Figma — it's your primary tool
+- Rebuild approved components in Pencil using production tokens
+- Use Pencil variables (`$brand-1`, `$content-default`, `$space-md`) for all values
+- Request token changes through the team
+- Reference Storybook to see how components render in code
+
+**DON'T:**
+- Define new token values in Figma and expect them to reach production
+- Hardcode hex values in Pencil — always use variables
+- Treat Figma inspect as the source of truth for spacing/color values
+
+### For Developers
+
+**DO:**
+- Edit token JSON files in `tokens/` — they are the source of truth
+- Run `npm run build-tokens` after editing token files
+- Use CSS variables with fallbacks: `var(--token-name, #fallback)`
+- Reference Pencil (via MCP) for approved component specs
+- Commit both token JSON changes AND generated files together
+
+**DON'T:**
+- Edit `src/lib/brands.ts` or `src/lib/tokens.css` directly — they are generated
+- Hardcode hex colors without a `var()` wrapper
+- Use Tailwind arbitrary values like `text-[#1B5F8A]` for brand colors
+- Skip fallback values in `var()` calls
+
+### For LLMs (Cursor, Claude, etc.)
+
+**DO:**
+- Read `DESIGN-SYSTEM-SPEC.md` before making design system changes
+- Edit token JSON files in `tokens/`
+- Run `npm run build-tokens` after editing token files
+- Use `.headline` for article titles, `font-brand` for body, `font-brand-secondary` for eyebrows
+- Follow atomic design: atoms → molecules → organisms → templates
+
+**DON'T:**
+- Edit generated files (`brands.ts`, `tokens.css`)
+- Treat Pencil as the source of truth — git is the source, Pencil is a consumer
+- Create new CSS variables without first adding them to `tokens/`
+
+---
+
+## End-to-End Workflow
+
+```
+ CONCEPTION              DESIGN                 DEVELOPMENT              PRODUCTION
+ ──────────              ──────                 ───────────              ──────────
+
+ Stakeholder    ───►    Figma          ───►    Git tokens/      ───►    Netlify
+ Request                Exploration            Source of Truth           Production
+                        Iteration                    │
+                        Approval                     │
+                             │                       ├── build-tokens
+                             ▼                       │   ├── brands.ts
+                        Approved                     │   └── tokens.css
+                        Design                       │
+                             │                       ├── PR → Merge → Deploy
+                             ▼                       │
+                        Pencil                       ├── push-figma → Figma Variables
+                        (handoff)                    └── push-pencil → .pen file
+```
+
+### Who does what
+
+| | Designer | Developer | CI/CD |
+|---|---|---|---|
+| **Creates** | Figma explorations, Pencil handoff | Token JSON, React components, Stories | Netlify builds |
+| **Reviews** | Storybook, staging | PRs with token JSON + code | — |
+| **Never edits** | Figma Variables directly, Token JSON | brands.ts directly, tokens.css directly | — |
+
+---
+
+*Last updated: March 2026 · Maintained by: Hearst Design System Team*

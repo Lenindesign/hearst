@@ -8,7 +8,7 @@ interface ThemeContextType {
   setBrand: (slug: string) => void;
 }
 
-const ThemeContext = createContext<ThemeContextType | null>(null);
+export const ThemeContext = createContext<ThemeContextType | null>(null);
 
 export function useTheme() {
   const ctx = useContext(ThemeContext);
