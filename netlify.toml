@@ -8,6 +8,12 @@
 
 [[redirects]]
   from = "/storybook"
+  to = "/storybook/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/storybook/"
   to = "/_next/static/storybook/index.html"
   status = 200
   force = true
