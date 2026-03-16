@@ -10,6 +10,29 @@ interface TokenInfo {
   layer: string;
 }
 
+interface ComputedSpecs {
+  tag: string;
+  fontFamily: string;
+  fontFamilyShort: string;
+  fontSize: string;
+  fontWeight: string;
+  lineHeight: string;
+  letterSpacing: string;
+  textTransform: string;
+  color: string;
+  colorHex: string;
+  backgroundColor: string;
+  backgroundColorHex: string;
+  width: string;
+  height: string;
+  padding: string;
+  margin: string;
+  borderRadius: string;
+  gap: string;
+  display: string;
+  isText: boolean;
+}
+
 const VAR_RE = /var\(--([^,)]+)(?:,\s*([^)]+))?\)/g;
 
 function classifyToken(name: string): string {
@@ -38,6 +61,60 @@ const LAYER_COLORS: Record<string, string> = {
   border: "#795548",
   other: "#9e9e9e",
 };
+
+const TEXT_TAGS = new Set(["P", "H1", "H2", "H3", "H4", "H5", "H6", "SPAN", "A", "LABEL", "BUTTON", "LI", "STRONG", "EM", "CODE"]);
+
+function rgbToHex(rgb: string): string {
+  const match = rgb.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+  if (!match) return rgb;
+  const [, r, g, b] = match;
+  return `#${[r, g, b].map((c) => parseInt(c).toString(16).padStart(2, "0")).join("")}`;
+}
+
+function shortenFontFamily(ff: string): string {
+  const first = ff.split(",")[0].trim().replace(/["']/g, "");
+  return first;
+}
+
+function collapseBoxValue(val: string): string {
+  const parts = val.split(" ").filter(Boolean);
+  if (parts.length === 4 && parts[0] === parts[1] && parts[1] === parts[2] && parts[2] === parts[3]) return parts[0];
+  if (parts.length === 4 && parts[0] === parts[2] && parts[1] === parts[3]) return `${parts[0]} ${parts[1]}`;
+  return val;
+}
+
+function getComputedSpecs(el: HTMLElement): ComputedSpecs {
+  const cs = getComputedStyle(el);
+  const tag = el.tagName;
+  const isText = TEXT_TAGS.has(tag) || (el.childNodes.length === 1 && el.childNodes[0].nodeType === Node.TEXT_NODE);
+  const rect = el.getBoundingClientRect();
+
+  const padding = collapseBoxValue(`${cs.paddingTop} ${cs.paddingRight} ${cs.paddingBottom} ${cs.paddingLeft}`);
+  const margin = collapseBoxValue(`${cs.marginTop} ${cs.marginRight} ${cs.marginBottom} ${cs.marginLeft}`);
+
+  return {
+    tag: tag.toLowerCase(),
+    fontFamily: cs.fontFamily,
+    fontFamilyShort: shortenFontFamily(cs.fontFamily),
+    fontSize: cs.fontSize,
+    fontWeight: cs.fontWeight,
+    lineHeight: cs.lineHeight,
+    letterSpacing: cs.letterSpacing === "normal" ? "0" : cs.letterSpacing,
+    textTransform: cs.textTransform,
+    color: cs.color,
+    colorHex: rgbToHex(cs.color),
+    backgroundColor: cs.backgroundColor,
+    backgroundColorHex: cs.backgroundColor === "rgba(0, 0, 0, 0)" ? "transparent" : rgbToHex(cs.backgroundColor),
+    width: `${Math.round(rect.width)}px`,
+    height: `${Math.round(rect.height)}px`,
+    padding: padding === "0px" ? "0" : padding,
+    margin: margin === "0px" ? "0" : margin,
+    borderRadius: cs.borderRadius === "0px" ? "0" : cs.borderRadius,
+    gap: cs.gap === "normal" ? "0" : cs.gap,
+    display: cs.display,
+    isText,
+  };
+}
 
 function extractTokensFromElement(el: HTMLElement): TokenInfo[] {
   const tokens: TokenInfo[] = [];
@@ -123,14 +200,34 @@ function extractTokensFromClasses(el: HTMLElement): TokenInfo[] {
   return tokens;
 }
 
+function SpecRow({ label, value, color }: { label: string; value: string; color?: string }) {
+  if (!value || value === "0" || value === "none" || value === "normal") return null;
+  return (
+    <div className="flex items-center justify-between gap-3">
+      <span className="text-gray-500 shrink-0">{label}</span>
+      <div className="flex items-center gap-1.5 min-w-0">
+        {color && color !== "transparent" && (
+          <span
+            className="inline-block w-3 h-3 rounded-sm border border-white/20 shrink-0"
+            style={{ backgroundColor: color }}
+          />
+        )}
+        <span className="text-gray-300 font-mono text-[10px] truncate">{value}</span>
+      </div>
+    </div>
+  );
+}
+
 function TokenTooltip({
   tokens,
   rect,
   component,
+  specs,
 }: {
   tokens: TokenInfo[];
   rect: DOMRect;
   component: string;
+  specs: ComputedSpecs;
 }) {
   const tooltipRef = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState({ top: 0, left: 0 });
@@ -162,56 +259,108 @@ function TokenTooltip({
       className="fixed z-[99999] pointer-events-none"
       style={{ top: pos.top, left: pos.left }}
     >
-      <div className="bg-gray-900 text-white rounded-lg shadow-2xl p-3 max-w-[380px] text-xs leading-relaxed">
-        {component && (
-          <div className="text-[10px] uppercase tracking-wider text-gray-400 mb-2 pb-1.5 border-b border-gray-700">
-            {component}
+      <div className="bg-gray-900 text-white rounded-lg shadow-2xl p-3 max-w-[420px] text-xs leading-relaxed">
+        {/* Header: component + element tag */}
+        <div className="flex items-center justify-between gap-3 mb-2 pb-1.5 border-b border-gray-700">
+          {component && (
+            <span className="text-[10px] uppercase tracking-wider text-gray-400">
+              {component}
+            </span>
+          )}
+          <span className="text-[10px] font-mono text-gray-600">
+            &lt;{specs.tag}&gt; {specs.width} x {specs.height}
+          </span>
+        </div>
+
+        {/* Typography section */}
+        {specs.isText && (
+          <div className="mb-2 pb-2 border-b border-gray-800 space-y-1">
+            <div className="text-[9px] uppercase tracking-wider text-purple-400 mb-1">Typography</div>
+            <SpecRow label="Font" value={specs.fontFamilyShort} />
+            <SpecRow label="Size" value={specs.fontSize} />
+            <SpecRow label="Weight" value={specs.fontWeight} />
+            <SpecRow label="Line Height" value={specs.lineHeight} />
+            <SpecRow label="Spacing" value={specs.letterSpacing} />
+            {specs.textTransform !== "none" && (
+              <SpecRow label="Transform" value={specs.textTransform} />
+            )}
+            <SpecRow label="Color" value={specs.colorHex} color={specs.colorHex} />
           </div>
         )}
-        <div className="space-y-2">
-          {tokens.map((t, i) => (
-            <div key={i} className="flex items-start gap-2">
-              <span
-                className="inline-block w-2 h-2 rounded-full mt-1 shrink-0"
-                style={{ backgroundColor: LAYER_COLORS[t.layer] }}
-              />
-              <div className="min-w-0">
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  <code className="font-mono text-[11px] text-emerald-400">
-                    {t.variable}
-                  </code>
-                  <span className="text-gray-500">{t.property}</span>
-                </div>
-                <div className="flex items-center gap-1.5 mt-0.5">
-                  {t.resolved && /^#[0-9a-fA-F]{3,8}$/.test(t.resolved) && (
-                    <span
-                      className="inline-block w-3 h-3 rounded-sm border border-white/20 shrink-0"
-                      style={{ backgroundColor: t.resolved }}
-                    />
-                  )}
-                  <span className="text-gray-400 font-mono text-[10px]">
-                    {t.resolved || t.fallback}
-                  </span>
+
+        {/* Layout section */}
+        {(specs.padding !== "0" || specs.gap !== "0" || specs.borderRadius !== "0") && (
+          <div className="mb-2 pb-2 border-b border-gray-800 space-y-1">
+            <div className="text-[9px] uppercase tracking-wider text-green-400 mb-1">Layout</div>
+            <SpecRow label="Padding" value={specs.padding} />
+            {specs.gap !== "0" && <SpecRow label="Gap" value={specs.gap} />}
+            {specs.borderRadius !== "0" && <SpecRow label="Radius" value={specs.borderRadius} />}
+            {specs.backgroundColorHex !== "transparent" && (
+              <SpecRow label="Background" value={specs.backgroundColorHex} color={specs.backgroundColorHex} />
+            )}
+          </div>
+        )}
+
+        {/* Non-text color/bg when no typography section */}
+        {!specs.isText && specs.backgroundColorHex !== "transparent" && specs.padding === "0" && specs.gap === "0" && specs.borderRadius === "0" && (
+          <div className="mb-2 pb-2 border-b border-gray-800 space-y-1">
+            <div className="text-[9px] uppercase tracking-wider text-blue-400 mb-1">Visual</div>
+            <SpecRow label="Background" value={specs.backgroundColorHex} color={specs.backgroundColorHex} />
+          </div>
+        )}
+
+        {/* Token variables */}
+        {tokens.length > 0 && (
+          <div className="space-y-2">
+            <div className="text-[9px] uppercase tracking-wider text-emerald-400 mb-1">Design Tokens</div>
+            {tokens.map((t, i) => (
+              <div key={i} className="flex items-start gap-2">
+                <span
+                  className="inline-block w-2 h-2 rounded-full mt-1 shrink-0"
+                  style={{ backgroundColor: LAYER_COLORS[t.layer] }}
+                />
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <code className="font-mono text-[11px] text-emerald-400">
+                      {t.variable}
+                    </code>
+                    <span className="text-gray-500">{t.property}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    {t.resolved && /^#[0-9a-fA-F]{3,8}$/.test(t.resolved) && (
+                      <span
+                        className="inline-block w-3 h-3 rounded-sm border border-white/20 shrink-0"
+                        style={{ backgroundColor: t.resolved }}
+                      />
+                    )}
+                    <span className="text-gray-400 font-mono text-[10px]">
+                      {t.resolved || t.fallback}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-        <div className="mt-2 pt-1.5 border-t border-gray-700 flex gap-2 flex-wrap">
-          {[...new Set(tokens.map((t) => t.layer))].map((layer) => (
-            <span
-              key={layer}
-              className="inline-flex items-center gap-1 text-[9px] uppercase tracking-wider"
-              style={{ color: LAYER_COLORS[layer] }}
-            >
+            ))}
+          </div>
+        )}
+
+        {/* Layer legend */}
+        {tokens.length > 0 && (
+          <div className="mt-2 pt-1.5 border-t border-gray-700 flex gap-2 flex-wrap">
+            {[...new Set(tokens.map((t) => t.layer))].map((layer) => (
               <span
-                className="w-1.5 h-1.5 rounded-full"
-                style={{ backgroundColor: LAYER_COLORS[layer] }}
-              />
-              {layer}
-            </span>
-          ))}
-        </div>
+                key={layer}
+                className="inline-flex items-center gap-1 text-[9px] uppercase tracking-wider"
+                style={{ color: LAYER_COLORS[layer] }}
+              >
+                <span
+                  className="w-1.5 h-1.5 rounded-full"
+                  style={{ backgroundColor: LAYER_COLORS[layer] }}
+                />
+                {layer}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -285,6 +434,7 @@ export function TokenInspector() {
     tokens: TokenInfo[];
     rect: DOMRect;
     component: string;
+    specs: ComputedSpecs;
   } | null>(null);
   const [highlightRect, setHighlightRect] = useState<DOMRect | null>(null);
 
@@ -293,21 +443,22 @@ export function TokenInspector() {
       if (!enabled) return;
 
       const el = e.target as HTMLElement;
-      if (!el || el.closest("[data-token-inspector]")) return;
+      if (!el || el.nodeType !== 1 || el.closest("[data-token-inspector]")) return;
 
       const styleTokens = extractTokensFromElement(el);
       const classTokens = extractTokensFromClasses(el);
       const tokens = [...styleTokens, ...classTokens];
+      const specs = getComputedSpecs(el);
 
-      if (tokens.length === 0) {
+      const rect = el.getBoundingClientRect();
+      if (rect.width < 2 || rect.height < 2) {
         setHovered(null);
         setHighlightRect(null);
         return;
       }
 
-      const rect = el.getBoundingClientRect();
       const component = getComponentName(el);
-      setHovered({ tokens, rect, component });
+      setHovered({ tokens, rect, component, specs });
       setHighlightRect(rect);
     },
     [enabled]
@@ -370,21 +521,32 @@ export function TokenInspector() {
           <path d="M12 16v-4" />
           <path d="M12 8h.01" />
         </svg>
-        {enabled ? "Inspector ON" : "Token Inspector"}
+        {enabled ? "Inspector ON" : "Visual Dictionary"}
       </button>
 
       {enabled && highlightRect && (
         <div
-          className="fixed pointer-events-none z-[99997] border-2 border-dashed transition-all duration-75"
+          className="fixed pointer-events-none z-[99997] transition-all duration-75"
           style={{
             top: highlightRect.top,
             left: highlightRect.left,
             width: highlightRect.width,
             height: highlightRect.height,
-            borderColor: "#e91e63",
-            backgroundColor: "rgba(233, 30, 99, 0.05)",
+            border: "1.5px solid #e91e63",
+            backgroundColor: "rgba(233, 30, 99, 0.04)",
+            boxShadow: "0 0 0 1px rgba(233, 30, 99, 0.15)",
           }}
-        />
+        >
+          {/* Dimension labels */}
+          <span className="absolute -top-4 left-0 text-[9px] font-mono px-1 rounded-sm"
+            style={{ backgroundColor: "#e91e63", color: "#fff" }}>
+            {Math.round(highlightRect.width)}
+          </span>
+          <span className="absolute top-0 -right-4 text-[9px] font-mono px-1 rounded-sm"
+            style={{ backgroundColor: "#e91e63", color: "#fff", writingMode: "vertical-lr" }}>
+            {Math.round(highlightRect.height)}
+          </span>
+        </div>
       )}
 
       {enabled && hovered && (
@@ -392,6 +554,7 @@ export function TokenInspector() {
           tokens={hovered.tokens}
           rect={hovered.rect}
           component={hovered.component}
+          specs={hovered.specs}
         />
       )}
 
@@ -402,9 +565,9 @@ export function TokenInspector() {
         >
           <span className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-pink-500 animate-pulse" />
-            Token Inspector Active
+            Visual Dictionary Active
           </span>
-          <span className="text-gray-500">Hover elements to see tokens</span>
+          <span className="text-gray-500">Hover any element for specs</span>
           <span className="text-gray-600">Cmd+Shift+I to toggle</span>
         </div>
       )}
