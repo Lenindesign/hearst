@@ -37,6 +37,7 @@ const preview: Preview = {
         order: [
           "Welcome",
           "The Toolbox",
+          "AI Agents",
           "Figma Integration",
           "Pencil Integration",
           "Foundation",

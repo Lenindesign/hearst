@@ -1,0 +1,182 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="AI Agents" />
+
+export const AgentCard = ({ icon, name, scope, triggers }) => (
+  <div style={{ border: '1px solid #e2e8f0', borderRadius: '12px', padding: '24px', background: '#fafbfc', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <span style={{ fontSize: '24px', width: '40px', height: '40px', borderRadius: '10px', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{icon}</span>
+      <h3 style={{ margin: 0, fontSize: '16px' }}>{name}</h3>
+    </div>
+    <p style={{ margin: 0, fontSize: '13px', color: '#475569', lineHeight: '1.6' }}>{scope}</p>
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+      {triggers.map((t, i) => (
+        <span key={i} style={{ padding: '3px 10px', background: '#e2e8f0', borderRadius: '6px', fontSize: '11px', color: '#334155', fontWeight: 500 }}>{t}</span>
+      ))}
+    </div>
+  </div>
+);
+
+export const FlowStep = ({ num, label, agent }) => (
+  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+    <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#1e293b', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 700, flexShrink: 0 }}>{num}</span>
+    <div>
+      <div style={{ fontSize: '14px', fontWeight: 600 }}>{label}</div>
+      <div style={{ fontSize: '12px', color: '#64748b' }}>{agent}</div>
+    </div>
+  </div>
+);
+
+# AI Agents
+
+Seven specialized AI agents power the Hearst Design System workflow. Each agent has deep knowledge of its domain -- the right files, scripts, conventions, and known issues.
+
+<div style={{ display: 'flex', gap: '12px', marginBottom: '32px', flexWrap: 'wrap' }}>
+  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', background: '#1e293b', color: '#fff', borderRadius: '8px', fontWeight: 600, fontSize: '13px' }}>
+    7 Agents
+  </span>
+  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', background: '#f1f5f9', color: '#334155', borderRadius: '8px', fontSize: '13px' }}>
+    Stored in <code style={{ background: '#e2e8f0', padding: '2px 6px', borderRadius: '4px' }}>.cursor/skills/</code>
+  </span>
+  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', background: '#f1f5f9', color: '#334155', borderRadius: '8px', fontSize: '13px' }}>
+    Auto-discovered by Cursor
+  </span>
+</div>
+
+---
+
+## The Agents
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '16px', marginBottom: '40px' }}>
+  <AgentCard
+    icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6"/><path d="m15.5 3.5-7 7m0 0-7 7"/><path d="m20.5 8.5-7 7m0 0-7 7"/></svg>}
+    name="Token Architect"
+    scope="Manages the tokens/ directory -- the single source of truth. Edits core, semantic, and brand JSON files. Runs build-tokens to generate brands.ts and tokens.css."
+    triggers={["edit tokens", "add brand", "change colors", "change fonts", "build-tokens"]}
+  />
+  <AgentCard
+    icon={<svg width="20" height="20" viewBox="0 0 38 57" fill="none"><path d="M19 28.5a9.5 9.5 0 1 1 19 0 9.5 9.5 0 0 1-19 0z" fill="#1ABCFE"/><path d="M0 47.5A9.5 9.5 0 0 1 9.5 38H19v9.5a9.5 9.5 0 1 1-19 0z" fill="#0ACF83"/><path d="M19 0v19h9.5a9.5 9.5 0 1 0 0-19H19z" fill="#FF7262"/><path d="M0 9.5A9.5 9.5 0 0 0 9.5 19H19V0H9.5A9.5 9.5 0 0 0 0 9.5z" fill="#F24E1E"/><path d="M0 28.5A9.5 9.5 0 0 0 9.5 38H19V19H9.5A9.5 9.5 0 0 0 0 28.5z" fill="#A259FF"/></svg>}
+    name="Figma Sync"
+    scope="Pushes Git tokens to Figma variables. Manages the Hearst Design System collection with 29 brand modes. Handles API batching and variable scopes."
+    triggers={["push-figma", "Figma variables", "sync to Figma", "variable scopes"]}
+  />
+  <AgentCard
+    icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>}
+    name="Pencil Design"
+    scope="Manages .pen files for component handoff and documentation. Uses MCP tools to insert, update, and annotate design specs. Syncs tokens via push-pencil."
+    triggers={[".pen files", "push-pencil", "component handoff", "annotations", "Pencil variables"]}
+  />
+  <AgentCard
+    icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m7 8-4 4 4 4"/><path d="m17 8 4 4-4 4"/><path d="m14 4-4 16"/></svg>}
+    name="Frontend Component"
+    scope="Builds React components using Next.js 16, Tailwind 4, and Shadcn. Consumes tokens via CSS variables and Tailwind utilities. Ensures brand theming works across all 29 brands."
+    triggers={["build component", "fix layout", "fix styling", "implement design", "React", "Tailwind"]}
+  />
+  <AgentCard
+    icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e11d48" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/></svg>}
+    name="Storybook Docs"
+    scope="Creates stories and MDX documentation pages. Configures decorators, Next.js mocks, and brand theming. Manages the Storybook sidebar structure and story sort order."
+    triggers={["add story", "Storybook", "MDX", "document component", "story configuration"]}
+  />
+  <AgentCard
+    icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>}
+    name="DevOps / Deploy"
+    scope="Deploys to Netlify, manages the build pipeline (Next.js + Storybook), handles sub-path deployment, Git operations, and the fix-storybook-paths script."
+    triggers={["deploy", "Netlify", "build", "Git commit", "CI/CD", "fix build"]}
+  />
+  <AgentCard
+    icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12h.01M15 12h.01M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><circle cx="12" cy="12" r="10"/></svg>}
+    name="QA / Review"
+    scope="Verifies brand colors, fonts, and layouts across all 29 brands. Validates token consistency, checks accessibility, and audits visual regression after changes."
+    triggers={["verify brands", "check colors", "check fonts", "accessibility", "visual regression"]}
+  />
+</div>
+
+---
+
+## How They Work Together
+
+A typical workflow touches multiple agents in sequence. Here is the flow for a common task -- updating a brand's primary color:
+
+<div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '40px', maxWidth: '600px' }}>
+  <FlowStep num="1" label="Edit brand-1 value in tokens/brands/{slug}.json" agent="Token Architect" />
+  <div style={{ display: 'flex', justifyContent: 'center' }}><span style={{ color: '#94a3b8', fontSize: '18px' }}>|</span></div>
+  <FlowStep num="2" label="Run npm run build-tokens" agent="Token Architect" />
+  <div style={{ display: 'flex', justifyContent: 'center' }}><span style={{ color: '#94a3b8', fontSize: '18px' }}>|</span></div>
+  <FlowStep num="3" label="Build and verify the React component" agent="Frontend Component" />
+  <div style={{ display: 'flex', justifyContent: 'center' }}><span style={{ color: '#94a3b8', fontSize: '18px' }}>|</span></div>
+  <FlowStep num="4" label="Add or update a Storybook story" agent="Storybook Docs" />
+  <div style={{ display: 'flex', justifyContent: 'center' }}><span style={{ color: '#94a3b8', fontSize: '18px' }}>|</span></div>
+  <FlowStep num="5" label="Verify rendering across 3+ brands" agent="QA / Review" />
+  <div style={{ display: 'flex', justifyContent: 'center' }}><span style={{ color: '#94a3b8', fontSize: '18px' }}>|</span></div>
+  <FlowStep num="6" label="Commit, push, deploy to Netlify" agent="DevOps / Deploy" />
+  <div style={{ display: 'flex', justifyContent: 'center' }}><span style={{ color: '#94a3b8', fontSize: '18px' }}>|</span></div>
+  <FlowStep num="7" label="Sync tokens to Figma and Pencil" agent="Figma Sync + Pencil Design" />
+</div>
+
+---
+
+## Agent Scope Map
+
+Each agent owns specific files and scripts. This prevents conflicts and ensures the right knowledge is applied.
+
+<div style={{ overflowX: 'auto' }}>
+
+| Agent | Files | Scripts | Key Knowledge |
+|-------|-------|---------|---------------|
+| **Token Architect** | `tokens/**/*.json` | `build-tokens`, `tokens:validate` | 3-layer architecture, naming conventions, `$brand-1` references |
+| **Figma Sync** | `scripts/push-to-figma.ts`, `scripts/push-figma-batches.ts` | `push-figma` | Figma REST API, variable scopes, 29 brand modes, payload batching |
+| **Pencil Design** | `*.pen` files | `push-pencil`, `sync-pencil` | MCP tools, `$variable` syntax, `batch_design` operations |
+| **Frontend Component** | `src/components/**`, `src/lib/**` | `dev`, `build` | ThemeProvider, `useTheme()`, CSS variables, Tailwind utilities |
+| **Storybook Docs** | `src/stories/**`, `.storybook/**` | `storybook`, `build-storybook` | ThemeDecorator, Next.js mocks, MDX, story sort order |
+| **DevOps / Deploy** | `netlify.toml`, `scripts/fix-storybook-paths.mjs` | `build`, deploy | Netlify config, sub-path deployment, `@netlify/plugin-nextjs` |
+| **QA / Review** | All components, all brands | `tokens:validate` | Brand colors, font overrides, accessibility, visual regression |
+
+</div>
+
+---
+
+## Skill File Structure
+
+Each agent is defined as a Cursor skill in the project:
+
+```
+.cursor/skills/
+  hearst-token-architect/SKILL.md      (67 lines)
+  hearst-figma-sync/SKILL.md           (77 lines)
+  hearst-pencil-design/SKILL.md        (90 lines)
+  hearst-frontend-component/SKILL.md   (81 lines)
+  hearst-storybook-docs/SKILL.md       (100 lines)
+  hearst-devops-deploy/SKILL.md        (86 lines)
+  hearst-qa-review/SKILL.md            (113 lines)
+```
+
+Skills are **auto-discovered** by Cursor based on their `description` field. When you ask a question or request a task, the matching agent's knowledge is automatically loaded into context.
+
+### What Each Skill Contains
+
+- **Frontmatter** -- `name` and `description` (triggers auto-discovery)
+- **File paths** -- Exact files the agent owns and operates on
+- **Scripts** -- npm commands and their purpose
+- **Conventions** -- Naming rules, patterns, known issues
+- **Rules** -- Guardrails to prevent mistakes (e.g. "never edit generated files")
+
+---
+
+## When to Use Which Agent
+
+<div style={{ overflowX: 'auto' }}>
+
+| Task | Agent |
+|------|-------|
+| "Change Cosmopolitan's primary color" | Token Architect |
+| "Push tokens to Figma" | Figma Sync |
+| "Update the homepage spec in Pencil" | Pencil Design |
+| "Build a newsletter component" | Frontend Component |
+| "Add a story for the Button component" | Storybook Docs |
+| "Deploy to production" | DevOps / Deploy |
+| "Check if all brands render correctly" | QA / Review |
+| "Add a new brand to the system" | Token Architect + Figma Sync + Pencil Design |
+| "End-to-end: design to production" | All agents in sequence |
+
+</div>
