@@ -977,11 +977,11 @@
   },
   "font-family-serif": {
     "type": "string",
-    "value": "SF Pro"
+    "value": "Inter"
   },
   "font-family-serif-primary": {
     "type": "string",
-    "value": "SF Pro"
+    "value": "Inter"
   },
   "font-line-height-lg": {
     "type": "string",
@@ -2417,7 +2417,7 @@
   },
   "font-secondary": {
     "type": "string",
-    "value": "SF Pro"
+    "value": "Inter"
   },
   "font-headline": {
     "type": "string",

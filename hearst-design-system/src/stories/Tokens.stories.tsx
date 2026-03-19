@@ -101,45 +101,80 @@ function Elevation() {
 
 function TokenMap() {
   const rows = [
-    { token: "brand-1", css: "--brand-primary", tw: "bg-primary", desc: "Brand accent" },
-    { token: "brand-2", css: "--brand-secondary", tw: "—", desc: "Secondary brand" },
-    { token: "font-primary", css: "--font-brand", tw: "font-brand", desc: "Body font" },
-    { token: "font-secondary", css: "--font-brand-secondary", tw: "font-brand-secondary", desc: "Accent font" },
-    { token: "font-headline", css: "--font-headline", tw: ".headline", desc: "Headline font" },
-    { token: "font-headline-weight", css: "--font-headline-weight", tw: ".headline", desc: "Headline weight" },
-    { token: "palette-neutral-200", css: "--palette-neutral-200", tw: "—", desc: "Light border" },
-    { token: "palette-neutral-600", css: "--palette-neutral-600", tw: "—", desc: "Secondary text" },
-    { token: "palette-content-default", css: "--palette-content-default", tw: "—", desc: "Body text" },
-    { token: "palette-background-page", css: "--palette-background-page", tw: "—", desc: "Page bg" },
-    { token: "space-md", css: "--space-md", tw: "gap-4", desc: "16px spacing" },
-    { token: "border-radius-sm", css: "--border-radius-sm", tw: "rounded-xl", desc: "12px radius" },
+    { token: "brand-1", css: "--brand-1", pencil: "$brand-1", figma: "brand-1", desc: "Brand accent" },
+    { token: "brand-2", css: "--brand-2", pencil: "$brand-2", figma: "brand-2", desc: "Secondary brand" },
+    { token: "font-primary", css: "--font-primary", pencil: "$font-primary", figma: "font-primary", desc: "Body font" },
+    { token: "font-secondary", css: "--font-secondary", pencil: "$font-secondary", figma: "font-secondary", desc: "Accent font" },
+    { token: "font-headline", css: "--font-headline", pencil: "$font-headline", figma: "font-headline", desc: "Headline font" },
+    { token: "palette-neutral-200", css: "--palette-neutral-200", pencil: "$palette-neutral-200", figma: "palette-neutral-200", desc: "Light border" },
+    { token: "palette-neutral-600", css: "--palette-neutral-600", pencil: "$palette-neutral-600", figma: "palette-neutral-600", desc: "Secondary text" },
+    { token: "palette-content-default", css: "--palette-content-default", pencil: "$palette-content-default", figma: "palette-content-default", desc: "Body text" },
+    { token: "palette-background-page", css: "--palette-background-page", pencil: "$palette-background-page", figma: "palette-background-page", desc: "Page bg" },
+    { token: "space-md", css: "--space-md", pencil: "$space-md", figma: "space-md", desc: "16px spacing" },
+    { token: "border-radius-sm", css: "--border-radius-sm", pencil: "$border-radius-sm", figma: "border-radius-sm", desc: "12px radius" },
   ];
 
   return (
-    <div className="w-[800px] space-y-6">
-      <h2 className="text-2xl font-bold tracking-tight">Token → CSS → Tailwind Map</h2>
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="border-b text-left">
-            <th className="py-2 pr-4 font-medium">Token (JSON)</th>
-            <th className="py-2 pr-4 font-medium">CSS Variable</th>
-            <th className="py-2 pr-4 font-medium">Tailwind</th>
-            <th className="py-2 font-medium">Usage</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((r) => (
-            <tr key={r.token} className="border-b border-border/50">
-              <td className="py-2 pr-4 font-mono text-xs">{r.token}</td>
-              <td className="py-2 pr-4 font-mono text-xs text-muted-foreground">
-                {r.css}
-              </td>
-              <td className="py-2 pr-4 font-mono text-xs">{r.tw}</td>
-              <td className="py-2 text-muted-foreground">{r.desc}</td>
+    <div className="w-full max-w-[960px] space-y-6">
+      <h2 className="text-2xl font-bold tracking-tight">
+        Canonical Name Across Tools
+      </h2>
+      <p className="text-sm text-muted-foreground">
+        Each token has one canonical name (the JSON key). The build scripts add
+        the correct prefix for each tool automatically.
+      </p>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b text-left">
+              <th className="py-2 pr-4 font-medium">
+                Canonical Name
+                <span className="block text-[10px] font-normal text-muted-foreground">
+                  Git JSON key
+                </span>
+              </th>
+              <th className="py-2 pr-4 font-medium">
+                CSS
+                <span className="block text-[10px] font-normal text-muted-foreground">
+                  -- prefix
+                </span>
+              </th>
+              <th className="py-2 pr-4 font-medium">
+                Pencil
+                <span className="block text-[10px] font-normal text-muted-foreground">
+                  $ prefix
+                </span>
+              </th>
+              <th className="py-2 pr-4 font-medium">
+                Figma
+                <span className="block text-[10px] font-normal text-muted-foreground">
+                  no prefix
+                </span>
+              </th>
+              <th className="py-2 font-medium">Usage</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr key={r.token} className="border-b border-border/50">
+                <td className="py-2 pr-4 font-mono text-xs font-semibold">
+                  {r.token}
+                </td>
+                <td className="py-2 pr-4 font-mono text-xs text-muted-foreground">
+                  {r.css}
+                </td>
+                <td className="py-2 pr-4 font-mono text-xs text-purple-600">
+                  {r.pencil}
+                </td>
+                <td className="py-2 pr-4 font-mono text-xs text-blue-600">
+                  {r.figma}
+                </td>
+                <td className="py-2 text-muted-foreground">{r.desc}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

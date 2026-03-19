@@ -861,7 +861,7 @@
   },
   "component-modal-element-title-font-family-default": {
     "type": "string",
-    "value": "SF Pro"
+    "value": "Inter"
   },
   "component-navigation-footer-background-default": {
     "type": "color",
@@ -969,19 +969,19 @@
   },
   "font-family-default": {
     "type": "string",
-    "value": "SF Pro"
+    "value": "Inter"
   },
   "font-family-sans-serif-primary": {
     "type": "string",
-    "value": "SF Pro"
+    "value": "Inter"
   },
   "font-family-serif": {
     "type": "string",
-    "value": "SF Pro"
+    "value": "Inter"
   },
   "font-family-serif-primary": {
     "type": "string",
-    "value": "SF Pro"
+    "value": "Inter"
   },
   "font-line-height-lg": {
     "type": "string",
@@ -1345,1039 +1345,1039 @@
   },
   "typography-card-product-content-description-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-card-product-content-description-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-card-product-content-title-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-card-product-content-title-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-3column-label-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-3column-label-xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-3column-title-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-3column-title-md": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-3column-title-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-3column-title-xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-badge-lg-danger": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-badge-lg-highlight": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-badge-lg-knockout": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-badge-lg-neutral-dark": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-badge-lg-neutral-light": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-badge-lg-primary": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-badge-lg-success": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-badge-lg-warning": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-badge-md-danger": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-badge-md-highlight": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-badge-md-knockout": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-badge-md-neutral-dark": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-badge-md-neutral-light": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-badge-md-primary": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-badge-md-success": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-badge-md-warning": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-badge-sm-danger": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\",\"textCase\":\"uppercase\"}"
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\",\"textCase\":\"uppercase\"}"
   },
   "typography-component-badge-sm-highlight": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\",\"textCase\":\"uppercase\"}"
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\",\"textCase\":\"uppercase\"}"
   },
   "typography-component-badge-sm-knockout": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\",\"textCase\":\"uppercase\"}"
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\",\"textCase\":\"uppercase\"}"
   },
   "typography-component-badge-sm-neutral-dark": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\",\"textCase\":\"uppercase\"}"
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\",\"textCase\":\"uppercase\"}"
   },
   "typography-component-badge-sm-neutral-light": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\",\"textCase\":\"uppercase\"}"
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\",\"textCase\":\"uppercase\"}"
   },
   "typography-component-badge-sm-primary": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\",\"textCase\":\"uppercase\"}"
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\",\"textCase\":\"uppercase\"}"
   },
   "typography-component-badge-sm-success": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Semibold\",\"textCase\":\"capitalize\"}"
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Semibold\",\"textCase\":\"capitalize\"}"
   },
   "typography-component-badge-sm-warning": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\",\"textCase\":\"uppercase\"}"
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\",\"textCase\":\"uppercase\"}"
   },
   "typography-component-banner-privacy-description-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.75rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-banner-privacy-description-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.75rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-banner-slim-description-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-banner-slim-description-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-banner-slim-linktext-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-banner-slim-linktext-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-banner-stats-linktext-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-banner-stats-linktext-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-banner-stats-title-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-banner-stats-title-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-blocksubtitle-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-blocksubtitle-xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-blocktitle-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-blocktitle-xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"3rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"3rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-author-default-2xs": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-component-card-core-content-author-default-md": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-component-card-core-content-author-default-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-component-card-core-content-author-default-xs": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-component-card-core-content-description-brand-2xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-core-content-description-brand-2xs": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-core-content-description-brand-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-core-content-description-brand-md": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-core-content-description-brand-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-core-content-description-brand-xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-core-content-description-brand-xs": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-core-content-description-default-2xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-core-content-description-default-2xs": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-core-content-description-default-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-core-content-description-default-md": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-core-content-description-default-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-core-content-description-default-xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-core-content-description-default-xs": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-core-content-eyebrow-default-md": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-core-content-eyebrow-default-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-core-content-eyebrow-default-xs": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-core-content-meta-default-2xs": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-core-content-meta-default-md": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-core-content-meta-default-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-core-content-meta-default-xs": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-core-content-recipe-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-core-content-subtitle-brand-2xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-subtitle-brand-2xs": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-subtitle-brand-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-subtitle-brand-md": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-subtitle-brand-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-subtitle-brand-xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-subtitle-brand-xs": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-subtitle-default-2xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-subtitle-default-2xs": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-subtitle-default-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-subtitle-default-md": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-subtitle-default-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-subtitle-default-xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-subtitle-default-xs": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-timestamp-default-2xs": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-core-content-timestamp-default-md": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-core-content-timestamp-default-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-core-content-timestamp-default-xs": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-core-content-title-brand-10xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"3.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"3.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-brand-11xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"3.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"3.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-brand-12xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"4rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"4rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-brand-13xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"4.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"4.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-brand-14xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-brand-15xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"6rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"6rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-brand-2xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-brand-2xs": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-brand-3xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-brand-4xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-brand-5xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-brand-6xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-brand-7xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"2.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"125%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"2.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"125%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-brand-8xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"2.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"2.75rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-brand-9xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"3rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"3rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-brand-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-brand-md": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-brand-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-brand-xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-brand-xs": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-default-10xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"3.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"3.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-default-11xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"3.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"3.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-default-12xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"4rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"4rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-default-13xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"4.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"4.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-default-14xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-default-15xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"6rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"6rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-default-2xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-default-2xs": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-default-3xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-default-4xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-default-5xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-default-6xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-default-7xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"2.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"125%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"2.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"125%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-default-8xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"2.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"2.75rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-default-9xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"3rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"3rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-default-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-default-md": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-default-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-default-xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-core-content-title-default-xs": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-product-content-description-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-product-content-description-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-card-product-content-title-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-card-product-content-title-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-collection-bigstoryfeed-4-storyfeed-description-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-collection-bigstoryfeed-4-storyfeed-description-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-collection-bigstoryfeed-4-storyfeed-title-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-collection-bigstoryfeed-4-storyfeed-title-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-collection-eeat-statement-content-description-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-collection-eeat-statement-content-description-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-collection-eeat-statement-content-linktext-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-collection-eeat-statement-content-linktext-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-collection-eeat-statement-content-title-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-collection-eeat-statement-content-title-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-collection-eeat-team-card-author-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-component-collection-eeat-team-card-author-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-component-collection-eeat-team-card-title-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-collection-eeat-team-card-title-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-collection-eeat-team-content-description-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-collection-eeat-team-content-description-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-collection-eeat-team-content-linktext-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-collection-eeat-team-content-linktext-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-collection-eeat-team-content-title-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-collection-eeat-team-content-title-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-collectionList-storyList-blocktitle-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-collectionList-storyList-blocktitle-xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-collectionList-storyList-title-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-collectionList-storyList-title-md": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-collectionList-storyList-title-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-collectionList-storyList-title-xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-link-primary-2xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-link-primary-2xs": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-link-primary-3xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-link-primary-3xs": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"0.75rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-link-primary-4xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-link-primary-5xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-link-primary-6xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-link-primary-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-link-primary-md": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-link-primary-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-link-primary-xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-link-primary-xs": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-megamenu-linktext-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-megamenu-sectionlink-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-navbar-linktext-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-newsletter-input-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-newsletter-title-md": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-newsletter-title-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-newsletter-title-xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-railstoryitem-description-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-railstoryitem-description-md": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-railstoryitem-description-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-railstoryitem-description-xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-component-railstoryitem-title-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-railstoryitem-title-md": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-railstoryitem-title-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-railstoryitem-title-xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-trendingitem-title-lg": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-trendingitem-title-md": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-trendingitem-title-sm": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-component-trendingitem-title-xl": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-size-10xl-bold": {
     "type": "string",
-    "value": "{\"fontSize\":\"3.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"3.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-size-10xl-regular": {
     "type": "string",
-    "value": "{\"fontSize\":\"3.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"3.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-size-10xl-semibold": {
     "type": "string",
-    "value": "{\"fontSize\":\"3.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"3.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-size-11xl-bold": {
     "type": "string",
-    "value": "{\"fontSize\":\"3.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"3.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-size-11xl-regular": {
     "type": "string",
-    "value": "{\"fontSize\":\"3.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"3.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-size-11xl-semibold": {
     "type": "string",
-    "value": "{\"fontSize\":\"3.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"3.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-size-12xl-bold": {
     "type": "string",
-    "value": "{\"fontSize\":\"4rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"4rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-size-12xl-regular": {
     "type": "string",
-    "value": "{\"fontSize\":\"4rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"4rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-size-12xl-semibold": {
     "type": "string",
-    "value": "{\"fontSize\":\"4rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"4rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-size-13xl-bold": {
     "type": "string",
-    "value": "{\"fontSize\":\"4.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"4.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-size-13xl-regular": {
     "type": "string",
-    "value": "{\"fontSize\":\"4.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"4.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-size-13xl-semibold": {
     "type": "string",
-    "value": "{\"fontSize\":\"4.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"4.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-size-14xl-bold": {
     "type": "string",
-    "value": "{\"fontSize\":\"5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-size-14xl-regular": {
     "type": "string",
-    "value": "{\"fontSize\":\"5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-size-14xl-semibold": {
     "type": "string",
-    "value": "{\"fontSize\":\"5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-size-15xl-bold": {
     "type": "string",
-    "value": "{\"fontSize\":\"6rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"6rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-size-15xl-regular": {
     "type": "string",
-    "value": "{\"fontSize\":\"6rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"6rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-size-15xl-semibold": {
     "type": "string",
-    "value": "{\"fontSize\":\"6rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"6rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"110%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-size-2xl-bold": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-size-2xl-regular": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-size-2xl-semibold": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"1.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-size-2xs-bold": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-size-2xs-regular": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-size-2xs-semibold": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"0.8125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-size-3xl-bold": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-size-3xl-regular": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-size-3xl-semibold": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"1.75rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-size-3xs-bold": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"0.75rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-size-3xs-regular": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.75rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-size-3xs-semibold": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"0.75rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-size-4xl-bold": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-size-4xl-regular": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-size-4xl-semibold": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"1.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-size-4xs-bold": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.688rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"0.688rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-size-4xs-regular": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.688rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.688rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-size-4xs-semibold": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.688rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"0.688rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0.4px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-size-5xl-bold": {
     "type": "string",
-    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-size-5xl-regular": {
     "type": "string",
-    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-size-5xl-semibold": {
     "type": "string",
-    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"2rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-size-6xl-bold": {
     "type": "string",
-    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-size-6xl-regular": {
     "type": "string",
-    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-size-6xl-semibold": {
     "type": "string",
-    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"2.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"130%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-size-7xl-bold": {
     "type": "string",
-    "value": "{\"fontSize\":\"2.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"125%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"2.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"125%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-size-7xl-regular": {
     "type": "string",
-    "value": "{\"fontSize\":\"2.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"125%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"2.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"125%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-size-7xl-semibold": {
     "type": "string",
-    "value": "{\"fontSize\":\"2.5rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"125%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"2.5rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"125%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-size-8xl-bold": {
     "type": "string",
-    "value": "{\"fontSize\":\"2.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"2.75rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-size-8xl-regular": {
     "type": "string",
-    "value": "{\"fontSize\":\"2.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"2.75rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-size-8xl-semibold": {
     "type": "string",
-    "value": "{\"fontSize\":\"2.75rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"2.75rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-size-9xl-bold": {
     "type": "string",
-    "value": "{\"fontSize\":\"3rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"3rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-size-9xl-regular": {
     "type": "string",
-    "value": "{\"fontSize\":\"3rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"3rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-size-9xl-semibold": {
     "type": "string",
-    "value": "{\"fontSize\":\"3rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"3rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"120%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-size-lg-bold": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-size-lg-regular": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-size-lg-semibold": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"1.25rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"140%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-size-md-bold": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-size-md-regular": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-size-md-semibold": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"1.125rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-size-sm-bold": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-size-sm-regular": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-size-sm-semibold": {
     "type": "string",
-    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"1rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.2px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-size-xl-bold": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-size-xl-regular": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-size-xl-semibold": {
     "type": "string",
-    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"1.375rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"135%\",\"letterSpacing\":\"0px\",\"fontWeight\":\"Semibold\"}"
   },
   "typography-size-xs-bold": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Bold\"}"
   },
   "typography-size-xs-regular": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Regular\"}"
   },
   "typography-size-xs-semibold": {
     "type": "string",
-    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"SF Pro\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Semibold\"}"
+    "value": "{\"fontSize\":\"0.875rem\",\"fontFamily\":\"Inter\",\"lineHeight\":\"145%\",\"letterSpacing\":\"0.3px\",\"fontWeight\":\"Semibold\"}"
   },
   "brand-7": {
     "type": "color",
@@ -2413,15 +2413,15 @@
   },
   "font-primary": {
     "type": "string",
-    "value": "SF Pro"
+    "value": "Inter"
   },
   "font-secondary": {
     "type": "string",
-    "value": "SF Pro"
+    "value": "Inter"
   },
   "font-headline": {
     "type": "string",
-    "value": "SF Pro"
+    "value": "Inter"
   },
   "font-headline-weight": {
     "type": "number",

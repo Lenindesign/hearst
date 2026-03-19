@@ -1,0 +1,712 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Token Naming Guide" />
+
+export const Segment = ({ label, color }) => (
+  <span style={{ display: 'inline-flex', alignItems: 'center', padding: '3px 10px', background: color, color: '#fff', borderRadius: '6px', fontSize: '12px', fontWeight: 600, fontFamily: 'monospace' }}>{label}</span>
+);
+
+export const TokenCard = ({ title, pattern, type, examples, description }) => (
+  <div style={{ border: '1px solid #e2e8f0', borderRadius: '12px', padding: '20px', background: '#fafbfc' }}>
+    <h4 style={{ margin: '0 0 4px', fontSize: '15px' }}>{title}</h4>
+    <code style={{ fontSize: '13px', color: '#6d28d9', background: '#f5f3ff', padding: '2px 8px', borderRadius: '4px' }}>{pattern}</code>
+    <span style={{ fontSize: '11px', color: '#64748b', marginLeft: '8px' }}>Type: {type}</span>
+    {description && <p style={{ margin: '8px 0 0', fontSize: '13px', color: '#475569' }}>{description}</p>}
+    <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '3px' }}>
+      {examples.map((ex, i) => (
+        <code key={i} style={{ fontSize: '12px', color: '#334155', background: '#f1f5f9', padding: '3px 8px', borderRadius: '4px', display: 'block' }}>{ex}</code>
+      ))}
+    </div>
+  </div>
+);
+
+export const DoItem = ({ children }) => (
+  <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', padding: '6px 0' }}>
+    <span style={{ color: '#16a34a', fontWeight: 700, fontSize: '14px', flexShrink: 0 }}>DO</span>
+    <span style={{ fontSize: '14px' }}>{children}</span>
+  </div>
+);
+
+export const DontItem = ({ children }) => (
+  <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', padding: '6px 0' }}>
+    <span style={{ color: '#dc2626', fontWeight: 700, fontSize: '14px', flexShrink: 0 }}>DON'T</span>
+    <span style={{ fontSize: '14px' }}>{children}</span>
+  </div>
+);
+
+# Token Naming Guide
+
+The definitive reference for naming design tokens in the Hearst Design System. For designers identifying tokens in specs and developers creating new components.
+
+<div style={{ display: 'flex', gap: '12px', marginBottom: '32px', flexWrap: 'wrap' }}>
+  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', background: '#f1f5f9', color: '#334155', borderRadius: '8px', fontWeight: 600, fontSize: '13px' }}>
+    1000+ tokens
+  </span>
+  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', background: '#f1f5f9', color: '#334155', borderRadius: '8px', fontSize: '13px' }}>
+    3 layers: Core / Semantic / Brand
+  </span>
+  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', background: '#f1f5f9', color: '#334155', borderRadius: '8px', fontSize: '13px' }}>
+    Source of truth: <code style={{ background: '#e2e8f0', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens/</code> in Git
+  </span>
+</div>
+
+---
+
+## The Canonical Name: One Name to Rule Them All
+
+Designers and developers only need to know **one name** for each token -- the **canonical name**. This is the plain, hyphenated key from the Git JSON files, without any prefix or syntax.
+
+<div style={{ background: '#1e293b', borderRadius: '12px', padding: '24px', margin: '24px 0' }}>
+  <div style={{ fontFamily: 'monospace', fontSize: '15px', color: '#e2e8f0', textAlign: 'center', marginBottom: '16px' }}>
+    <span style={{ color: '#fcd34d', fontWeight: 700 }}>brand-1</span>
+    <span style={{ color: '#64748b' }}> is the canonical name</span>
+  </div>
+  <div style={{ fontFamily: 'monospace', fontSize: '13px', color: '#94a3b8', lineHeight: '2.2', maxWidth: '480px', margin: '0 auto' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <span>Git JSON</span>
+      <code style={{ color: '#e2e8f0' }}>"brand-1": &#123; "value": "#d70000" &#125;</code>
+    </div>
+    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <span>CSS</span>
+      <code style={{ color: '#86efac' }}>--brand-1</code>
+    </div>
+    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <span>Pencil</span>
+      <code style={{ color: '#c4b5fd' }}>$brand-1</code>
+    </div>
+    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <span>Figma</span>
+      <code style={{ color: '#93c5fd' }}>brand-1</code>
+    </div>
+    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <span>JS / React</span>
+      <code style={{ color: '#fca5a5' }}>var(--brand-1)</code>
+    </div>
+  </div>
+</div>
+
+### Why does the name look different in each tool?
+
+Each tool enforces its own syntax. The **canonical name stays the same** -- only the prefix changes.
+
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Tool</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Syntax</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Example</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Why</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600 }}>Git JSON</td>
+      <td style={{ padding: '10px 16px' }}><code>name</code></td>
+      <td style={{ padding: '10px 16px' }}><code>brand-1</code></td>
+      <td style={{ padding: '10px 16px', color: '#64748b', fontSize: '13px' }}>Canonical, tool-agnostic source of truth</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600 }}>CSS</td>
+      <td style={{ padding: '10px 16px' }}><code>--name</code></td>
+      <td style={{ padding: '10px 16px' }}><code>--brand-1</code></td>
+      <td style={{ padding: '10px 16px', color: '#64748b', fontSize: '13px' }}>CSS custom property spec requires the <code>--</code> prefix</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600 }}>Pencil</td>
+      <td style={{ padding: '10px 16px' }}><code>$name</code></td>
+      <td style={{ padding: '10px 16px' }}><code>$brand-1</code></td>
+      <td style={{ padding: '10px 16px', color: '#64748b', fontSize: '13px' }}>Pencil uses <code>$</code> to distinguish variable refs from literal strings</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600 }}>Figma</td>
+      <td style={{ padding: '10px 16px' }}><code>name</code></td>
+      <td style={{ padding: '10px 16px' }}><code>brand-1</code></td>
+      <td style={{ padding: '10px 16px', color: '#64748b', fontSize: '13px' }}>Figma variables use the plain name, no prefix needed</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600 }}>JS / React</td>
+      <td style={{ padding: '10px 16px' }}><code>var(--name)</code></td>
+      <td style={{ padding: '10px 16px' }}><code>var(--brand-1)</code></td>
+      <td style={{ padding: '10px 16px', color: '#64748b', fontSize: '13px' }}>Accessing CSS custom properties at runtime in style values</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+### You never write the prefixed versions
+
+The build scripts handle all transformations automatically:
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px', margin: '24px 0' }}>
+  <div style={{ border: '1px solid #e2e8f0', borderRadius: '10px', padding: '16px', background: '#fafbfc', textAlign: 'center' }}>
+    <code style={{ fontSize: '12px', color: '#64748b' }}>build-tokens</code>
+    <div style={{ fontSize: '13px', fontWeight: 600, marginTop: '6px' }}>JSON to CSS + TS</div>
+    <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>Adds <code>--</code> prefix</div>
+  </div>
+  <div style={{ border: '1px solid #e2e8f0', borderRadius: '10px', padding: '16px', background: '#fafbfc', textAlign: 'center' }}>
+    <code style={{ fontSize: '12px', color: '#64748b' }}>push-pencil</code>
+    <div style={{ fontSize: '13px', fontWeight: 600, marginTop: '6px' }}>JSON to Pencil</div>
+    <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>Adds <code>$</code> prefix</div>
+  </div>
+  <div style={{ border: '1px solid #e2e8f0', borderRadius: '10px', padding: '16px', background: '#fafbfc', textAlign: 'center' }}>
+    <code style={{ fontSize: '12px', color: '#64748b' }}>push-figma</code>
+    <div style={{ fontSize: '13px', fontWeight: 600, marginTop: '6px' }}>JSON to Figma</div>
+    <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>No prefix needed</div>
+  </div>
+</div>
+
+### The naming formula
+
+When creating a new token, assemble the canonical name using only the segments that apply:
+
+<div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '20px', margin: '16px 0', fontFamily: 'monospace', fontSize: '14px', textAlign: 'center' }}>
+  layer - category - element - property - variant - state
+</div>
+
+| Segment | Required? | Examples |
+|---------|-----------|---------|
+| **layer** | Only for component tokens | `component` |
+| **category** | Always | `button`, `card`, `palette`, `font`, `space` |
+| **element** | When targeting a part | `background`, `border`, `content`, `icon` |
+| **property** | When specifying an attribute | `family`, `size`, `weight`, `radius` |
+| **variant** | When multiple variants exist | `primary`, `secondary`, `brand`, `danger` |
+| **state** | For interactive elements | `default`, `hover`, `active`, `disabled` |
+
+**Examples of canonical names:**
+
+<div style={{ background: '#1e293b', borderRadius: '10px', padding: '20px', margin: '16px 0', fontFamily: 'monospace', fontSize: '13px', color: '#e2e8f0', lineHeight: '2' }}>
+  <div><span style={{ color: '#64748b' }}>Simple:</span> brand-1, space-md, palette-neutral-500</div>
+  <div><span style={{ color: '#64748b' }}>Font:</span> font-primary, font-secondary, font-headline</div>
+  <div><span style={{ color: '#64748b' }}>Semantic:</span> font-family-default, font-family-serif</div>
+  <div><span style={{ color: '#64748b' }}>Component:</span> component-button-background-primary-solid-default</div>
+  <div><span style={{ color: '#64748b' }}>Typography:</span> typography-size-2xl-semibold</div>
+</div>
+
+---
+
+## 1. The Three Layers
+
+Every token lives in one of three layers. Each layer has a specific purpose and a specific file.
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', margin: '24px 0' }}>
+  <div style={{ border: '2px solid #7c3aed', borderRadius: '12px', padding: '20px', background: '#faf5ff' }}>
+    <h4 style={{ margin: '0 0 8px', color: '#7c3aed' }}>Core</h4>
+    <p style={{ margin: '0 0 8px', fontSize: '13px', color: '#475569' }}>Raw values shared by all brands. The foundation everything else builds on.</p>
+    <code style={{ fontSize: '12px', color: '#7c3aed' }}>tokens/core/global.json</code>
+    <div style={{ marginTop: '10px', display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+      <code style={{ fontSize: '11px', background: '#ede9fe', padding: '2px 6px', borderRadius: '4px', color: '#6d28d9' }}>{"palette-*"}</code>
+      <code style={{ fontSize: '11px', background: '#ede9fe', padding: '2px 6px', borderRadius: '4px', color: '#6d28d9' }}>{"space-*"}</code>
+      <code style={{ fontSize: '11px', background: '#ede9fe', padding: '2px 6px', borderRadius: '4px', color: '#6d28d9' }}>{"border-*"}</code>
+      <code style={{ fontSize: '11px', background: '#ede9fe', padding: '2px 6px', borderRadius: '4px', color: '#6d28d9' }}>{"elevation-*"}</code>
+      <code style={{ fontSize: '11px', background: '#ede9fe', padding: '2px 6px', borderRadius: '4px', color: '#6d28d9' }}>{"font-size-*"}</code>
+      <code style={{ fontSize: '11px', background: '#ede9fe', padding: '2px 6px', borderRadius: '4px', color: '#6d28d9' }}>{"layout-*"}</code>
+    </div>
+  </div>
+  <div style={{ border: '2px solid #2563eb', borderRadius: '12px', padding: '20px', background: '#eff6ff' }}>
+    <h4 style={{ margin: '0 0 8px', color: '#2563eb' }}>Semantic</h4>
+    <p style={{ margin: '0 0 8px', fontSize: '13px', color: '#475569' }}>Purpose-driven aliases that reference brand tokens via <code>$brand-1</code>.</p>
+    <code style={{ fontSize: '12px', color: '#2563eb' }}>tokens/semantic/aliases.json</code>
+    <div style={{ marginTop: '10px', display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+      <code style={{ fontSize: '11px', background: '#dbeafe', padding: '2px 6px', borderRadius: '4px', color: '#1d4ed8' }}>background-brand</code>
+      <code style={{ fontSize: '11px', background: '#dbeafe', padding: '2px 6px', borderRadius: '4px', color: '#1d4ed8' }}>content-brand</code>
+    </div>
+  </div>
+  <div style={{ border: '2px solid #059669', borderRadius: '12px', padding: '20px', background: '#ecfdf5' }}>
+    <h4 style={{ margin: '0 0 8px', color: '#059669' }}>Brand</h4>
+    <p style={{ margin: '0 0 8px', fontSize: '13px', color: '#475569' }}>Per-brand overrides. 29 files, one per brand. Values that make each brand unique.</p>
+    <code style={{ fontSize: '12px', color: '#059669' }}>tokens/brands/&#123;slug&#125;.json</code>
+    <div style={{ marginTop: '10px', display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+      <code style={{ fontSize: '11px', background: '#d1fae5', padding: '2px 6px', borderRadius: '4px', color: '#047857' }}>brand-1..14</code>
+      <code style={{ fontSize: '11px', background: '#d1fae5', padding: '2px 6px', borderRadius: '4px', color: '#047857' }}>{"palette-brand-*"}</code>
+      <code style={{ fontSize: '11px', background: '#d1fae5', padding: '2px 6px', borderRadius: '4px', color: '#047857' }}>{"component-*"}</code>
+      <code style={{ fontSize: '11px', background: '#d1fae5', padding: '2px 6px', borderRadius: '4px', color: '#047857' }}>{"font-family-*"}</code>
+      <code style={{ fontSize: '11px', background: '#d1fae5', padding: '2px 6px', borderRadius: '4px', color: '#047857' }}>{"typography-*"}</code>
+    </div>
+  </div>
+</div>
+
+**How they flow:**
+
+```
+tokens/core/global.json          Shared defaults (palette, spacing, borders, elevation)
+        |
+tokens/semantic/aliases.json     Aliases that point to $brand-N
+        |
+tokens/brands/{slug}.json        Brand-specific overrides (colors, fonts, component tokens)
+        |
+        v
+build-tokens  -->  brands.ts + tokens.css  -->  CSS Variables  -->  Components
+```
+
+---
+
+## 2. The Naming Formula
+
+Every token follows a consistent pattern. Not every segment is required -- use only what applies.
+
+<div style={{ background: '#1e293b', borderRadius: '12px', padding: '24px', margin: '24px 0', overflowX: 'auto' }}>
+  <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginBottom: '16px' }}>
+    <Segment label="layer" color="#7c3aed" />
+    <span style={{ color: '#64748b', fontSize: '18px' }}>-</span>
+    <Segment label="category" color="#2563eb" />
+    <span style={{ color: '#64748b', fontSize: '18px' }}>-</span>
+    <Segment label="element" color="#0891b2" />
+    <span style={{ color: '#64748b', fontSize: '18px' }}>-</span>
+    <Segment label="variant" color="#d97706" />
+    <span style={{ color: '#64748b', fontSize: '18px' }}>-</span>
+    <Segment label="style" color="#be185d" />
+    <span style={{ color: '#64748b', fontSize: '18px' }}>-</span>
+    <Segment label="state" color="#dc2626" />
+    <span style={{ color: '#64748b', fontSize: '18px' }}>-</span>
+    <Segment label="size" color="#059669" />
+  </div>
+  <div style={{ fontFamily: 'monospace', fontSize: '13px', color: '#94a3b8', lineHeight: '2' }}>
+    <div><span style={{ color: '#c4b5fd' }}>component</span>-<span style={{ color: '#93c5fd' }}>button</span>-<span style={{ color: '#67e8f9' }}>background</span>-<span style={{ color: '#fcd34d' }}>primary</span>-<span style={{ color: '#f9a8d4' }}>solid</span>-<span style={{ color: '#fca5a5' }}>default</span></div>
+    <div><span style={{ color: '#c4b5fd' }}>component</span>-<span style={{ color: '#93c5fd' }}>card</span>-<span style={{ color: '#67e8f9' }}>gap</span>-<span style={{ color: '#fcd34d' }}>column</span>-<span style={{ color: '#86efac' }}>lg</span></div>
+    <div><span style={{ color: '#93c5fd' }}>palette</span>-<span style={{ color: '#67e8f9' }}>neutral</span>-<span style={{ color: '#86efac' }}>200</span></div>
+    <div><span style={{ color: '#93c5fd' }}>space</span>-<span style={{ color: '#86efac' }}>md</span></div>
+    <div><span style={{ color: '#93c5fd' }}>font</span>-<span style={{ color: '#67e8f9' }}>size</span>-<span style={{ color: '#86efac' }}>2xl</span></div>
+  </div>
+</div>
+
+### Segment Reference
+
+| Segment | Required? | Values |
+|---------|-----------|--------|
+| **layer** | Only for component tokens | `component` |
+| **category** | Always | `button`, `card`, `badge`, `chip`, `input`, `palette`, `font`, `space`, `border`, `elevation`, `layout` |
+| **element** | When needed | `background`, `border`, `content`, `icon`, `gap`, `padding`, `radius`, `title`, `eyebrow`, `arrow` |
+| **variant** | When multiple variants exist | `primary`, `secondary`, `neutral`, `brand`, `knockout`, `danger`, `success`, `warning`, `highlight`, `info` |
+| **style** | For styled variants | `solid`, `outlined`, `transparent` |
+| **state** | For interactive elements | `default`, `hover`, `active`, `error`, `selected`, `disabled` |
+| **size** | For responsive values | `3xs`, `2xs`, `xs`, `sm`, `md`, `lg`, `xl`, `2xl`, `3xl`, `4xl`, `6xl` |
+
+---
+
+## 3. Category Reference
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '16px', margin: '24px 0' }}>
+  <TokenCard
+    title="Brand Colors"
+    pattern="brand-{1-14}"
+    type="color"
+    description="The brand's identity colors. brand-1 is always the primary accent."
+    examples={["brand-1  →  #d70000 (Cosmo)", "brand-2  →  #F6D3E5", "palette-brand-1  →  #d70000"]}
+  />
+  <TokenCard
+    title="Palette Neutral"
+    pattern="palette-neutral-{shade}"
+    type="color"
+    description="Grayscale ramp from lightest (#fff) to 1000 (#1c1c1c). Also has alpha variants."
+    examples={["palette-neutral-lightest  →  #ffffff", "palette-neutral-200  →  #ededed", "palette-neutral-600  →  #757575", "palette-neutral-1000  →  #1c1c1c"]}
+  />
+  <TokenCard
+    title="Palette Alert"
+    pattern="palette-alert-{status}-{shade}"
+    type="color"
+    description="Status colors in 100-1000 shades. Five statuses: danger, warning, success, info, highlight."
+    examples={["palette-alert-danger-600  →  #cc2828", "palette-alert-success-400  →  #29c287", "palette-alert-warning-300  →  #fec57c", "palette-alert-info-500  →  #3689fc"]}
+  />
+  <TokenCard
+    title="Palette Semantic"
+    pattern="palette-{role}-{variant}"
+    type="color"
+    description="Purpose-driven colors: background, content, and more. These change per brand."
+    examples={["palette-background-brand  →  #2e0000", "palette-background-subtle  →  #ededed", "palette-content-default  →  #121212", "palette-content-brand  →  #d70000"]}
+  />
+  <TokenCard
+    title="Spacing"
+    pattern="space-{size}"
+    type="number (px)"
+    description="Consistent spacing scale from 0 to 80px."
+    examples={["space-none → 0", "space-xs → 8", "space-md → 16", "space-xl → 24", "space-3xl → 48"]}
+  />
+  <TokenCard
+    title="Border"
+    pattern="border-{property}-{size}"
+    type="number"
+    description="Border radius and width tokens."
+    examples={["border-radius-2xs → 4", "border-radius-sm → 4", "border-radius-rounded → 64", "border-width-sm → 1", "border-width-md → 2"]}
+  />
+  <TokenCard
+    title="Elevation"
+    pattern="elevation-{level}"
+    type="number (z-index)"
+    description="Z-index scale for layering. Values are large numbers for CSS z-index."
+    examples={["elevation-sunken → -2000000", "elevation-base → 0", "elevation-nav → 6000000", "elevation-floating → 12000000"]}
+  />
+  <TokenCard
+    title="Layout"
+    pattern="layout-{property}-{size}"
+    type="number (px)"
+    description="Viewport breakpoints, gutters, and max-widths."
+    examples={["layout-viewport-sm → 320", "layout-viewport-lg → 1024", "layout-gutter-md → 24", "layout-maxwidth-2xl → 1440"]}
+  />
+  <TokenCard
+    title="Font Size"
+    pattern="font-size-{size}"
+    type="number (rem)"
+    description="Type scale from 4xs (0.688rem) to 15xl (6rem). Values are in rem."
+    examples={["font-size-xs → 0.875", "font-size-sm → 1", "font-size-2xl → 1.5", "font-size-8xl → 2.75"]}
+  />
+  <TokenCard
+    title="Font Properties"
+    pattern="font-{property}-{value}"
+    type="string"
+    description="Line heights (%), letter spacing (px), weights, and text case."
+    examples={["font-line-height-sm → 145%", "font-letter-spacing-xs → 0.3px", "font-weight-semibold → 600", "font-text-case-button → uppercase"]}
+  />
+  <TokenCard
+    title="Font Family"
+    pattern="font-family-{role}"
+    type="string"
+    description="Brand-overridable font families. Always use these instead of hardcoding font names."
+    examples={["font-family-default → Basis Grotesque Pro", "font-family-serif → Chronicle Display", "font-primary → (from _meta.json)", "font-headline → (from _meta.json)"]}
+  />
+  <TokenCard
+    title="Component Tokens"
+    pattern="component-{name}-{element}-{variant}-{state}"
+    type="color / number"
+    description="Scoped to a specific UI component. Override per brand for themed components."
+    examples={["component-button-background-primary-solid-default", "component-card-border-default", "component-input-border-radius-default", "component-navigation-navbar-background-default"]}
+  />
+  <TokenCard
+    title="Typography Presets"
+    pattern="typography-{context}-{size}"
+    type="string (JSON)"
+    description="Composite tokens encoding fontSize, fontFamily, lineHeight, letterSpacing, fontWeight."
+    examples={["typography-size-sm-bold", "typography-size-2xl-semibold", "typography-component-navbar-linktext-sm", "typography-component-card-core-content-title-default-lg"]}
+  />
+</div>
+
+---
+
+## 4. Component Token Deep Dive
+
+Let's dissect a real component -- **Button** -- to see every token it uses.
+
+### Button tokens (Cosmopolitan)
+
+```
+component-button-background-primary-solid-default      #d70000
+component-button-background-primary-solid-hover        #a30000
+component-button-background-primary-solid-active       #750000
+component-button-background-primary-outlined-default   #ffffff
+component-button-background-primary-outlined-hover     #fff0f0
+component-button-background-primary-transparent-default #ffffff0a
+component-button-border-primary-solid-default          #d70000
+component-button-border-primary-solid-hover            #a30000
+component-button-content-primary-solid-default         #ffffff
+component-button-content-primary-outlined-default      #d70000
+component-button-icon-primary-solid-default            #ffffff
+component-button-icon-primary-outlined-default         #d70000
+component-button-radius-default                        0
+```
+
+### Naming anatomy
+
+<div style={{ background: '#1e293b', borderRadius: '12px', padding: '24px', margin: '16px 0', fontFamily: 'monospace', fontSize: '14px', overflowX: 'auto' }}>
+  <div style={{ color: '#e2e8f0', marginBottom: '8px' }}>
+    <span style={{ color: '#c4b5fd' }}>component</span> - <span style={{ color: '#93c5fd' }}>button</span> - <span style={{ color: '#67e8f9' }}>background</span> - <span style={{ color: '#fcd34d' }}>primary</span> - <span style={{ color: '#f9a8d4' }}>solid</span> - <span style={{ color: '#fca5a5' }}>default</span>
+  </div>
+  <div style={{ color: '#64748b', fontSize: '12px' }}>
+    <span style={{ color: '#c4b5fd' }}>layer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> &nbsp; <span style={{ color: '#93c5fd' }}>name&nbsp;&nbsp;</span> &nbsp; <span style={{ color: '#67e8f9' }}>element&nbsp;&nbsp;&nbsp;</span> &nbsp; <span style={{ color: '#fcd34d' }}>variant</span> &nbsp; <span style={{ color: '#f9a8d4' }}>style</span> &nbsp; <span style={{ color: '#fca5a5' }}>state</span>
+  </div>
+</div>
+
+### All component names in the system (40)
+
+<div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', margin: '16px 0' }}>
+  {["accordion", "badge", "banner-privacy", "banner-slim", "banner-stats", "blocktitle", "button", "card", "card-collection-3-column", "card-collection-4-story", "card-collection-bigstory", "card-collection-bigstoryfeed", "card-collection-eeat", "card-collection-eeat-statement", "card-collection-eeat-team", "card-core", "card-product", "carousel", "checkbox", "chip", "dropdown", "hr", "input", "link-inline", "modal", "navigation-footer", "navigation-megamenu", "navigation-navbar", "navigation-sidepanel", "pagination", "rating"].map((name) => (
+    <code key={name} style={{ fontSize: '12px', background: '#f1f5f9', padding: '3px 8px', borderRadius: '4px', color: '#334155' }}>{name}</code>
+  ))}
+</div>
+
+### Element types used in component tokens
+
+| Element | What it controls | Example |
+|---------|-----------------|---------|
+| `background` | Fill color | `component-button-background-primary-solid-default` |
+| `border` | Stroke color | `component-card-border-default` |
+| `content` | Text color | `component-button-content-primary-solid-default` |
+| `icon` | Icon color | `component-button-icon-primary-solid-default` |
+| `radius` | Corner rounding | `component-button-radius-default` |
+| `gap` | Spacing between children | `component-card-collection-eeat-gap-column-lg` |
+| `padding` | Internal spacing | `component-card-product-padding-block-sm` |
+| `min-width` | Minimum size | `component-card-min-width-desktop-4col` |
+
+---
+
+## 5. Typography Token Deep Dive
+
+Typography tokens are the most complex. There are two patterns.
+
+### Pattern A: Scale Presets
+
+Base typographic scale -- size + weight combinations.
+
+```
+typography-size-{size}-{weight}
+```
+
+<div style={{ background: '#f8fafc', borderRadius: '8px', padding: '16px', margin: '16px 0', fontSize: '13px', fontFamily: 'monospace' }}>
+  <div>typography-size-<strong>sm</strong>-<strong>regular</strong></div>
+  <div>typography-size-<strong>2xl</strong>-<strong>semibold</strong></div>
+  <div>typography-size-<strong>8xl</strong>-<strong>bold</strong></div>
+</div>
+
+**Sizes**: 4xs, 3xs, 2xs, xs, sm, md, lg, xl, 2xl, 3xl, 4xl, 5xl, 6xl, 7xl, 8xl, 9xl, 10xl, 11xl, 12xl, 13xl, 14xl, 15xl
+
+**Weights**: regular, semibold, bold
+
+### Pattern B: Component Presets
+
+Typography bound to a specific component element at a specific breakpoint.
+
+```
+typography-component-{component-path}-{size}
+```
+
+<div style={{ background: '#1e293b', borderRadius: '12px', padding: '24px', margin: '16px 0', fontFamily: 'monospace', fontSize: '13px', overflowX: 'auto' }}>
+  <div style={{ color: '#e2e8f0', marginBottom: '4px' }}>
+    <span style={{ color: '#c4b5fd' }}>typography</span>-<span style={{ color: '#93c5fd' }}>component</span>-<span style={{ color: '#67e8f9' }}>card-core-content-title</span>-<span style={{ color: '#fcd34d' }}>default</span>-<span style={{ color: '#86efac' }}>lg</span>
+  </div>
+  <div style={{ color: '#64748b', fontSize: '11px' }}>
+    <span style={{ color: '#c4b5fd' }}>prefix&nbsp;&nbsp;&nbsp;&nbsp;</span> &nbsp;<span style={{ color: '#93c5fd' }}>scope&nbsp;&nbsp;&nbsp;&nbsp;</span> &nbsp;<span style={{ color: '#67e8f9' }}>component path&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> &nbsp;<span style={{ color: '#fcd34d' }}>variant</span> &nbsp;<span style={{ color: '#86efac' }}>size</span>
+  </div>
+</div>
+
+### What a typography preset value looks like
+
+Each typography token resolves to a JSON string with these properties:
+
+```json
+{
+  "fontSize": "1.25rem",
+  "fontFamily": "Chronicle Display",
+  "lineHeight": "120%",
+  "letterSpacing": "0px",
+  "fontWeight": "600"
+}
+```
+
+Some presets also include `"textCase": "uppercase"` for labels and badges.
+
+### How typography tokens compose
+
+```
+typography-component-card-core-content-title-default-lg
+    |
+    references --> typography-size-lg-semibold
+                       |
+                       references --> font-size-lg       (1.25rem)
+                                      font-line-height-lg (140%)
+                                      font-letter-spacing-lg (0px)
+                                      font-weight-semibold (600)
+                                      font-family-default  (brand-specific)
+```
+
+---
+
+## 6. Decision Tree: "How Do I Name My Token?"
+
+Follow this flowchart when you need to create a new token.
+
+<div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '24px', margin: '24px 0' }}>
+
+**Step 1: What kind of value is it?**
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px', margin: '16px 0' }}>
+  <div style={{ background: '#faf5ff', border: '1px solid #ddd6fe', borderRadius: '8px', padding: '12px' }}>
+    <strong style={{ fontSize: '13px' }}>Raw value</strong>
+    <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#64748b' }}>A color, number, or string that does not change per brand</p>
+    <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#7c3aed' }}>Add to <code>core/global.json</code></p>
+  </div>
+  <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '8px', padding: '12px' }}>
+    <strong style={{ fontSize: '13px' }}>Brand reference</strong>
+    <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#64748b' }}>A value that should resolve to a brand color</p>
+    <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#2563eb' }}>Add to <code>semantic/aliases.json</code> with <code>$brand-N</code></p>
+  </div>
+  <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', borderRadius: '8px', padding: '12px' }}>
+    <strong style={{ fontSize: '13px' }}>Brand-specific value</strong>
+    <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#64748b' }}>A value that differs for each brand</p>
+    <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#059669' }}>Add to each <code>brands/slug.json</code></p>
+  </div>
+</div>
+
+**Step 2: Is it scoped to a component?**
+
+| Answer | Action |
+|--------|--------|
+| **Yes** -- only used by one component | Prefix with `component-{name}-` |
+| **No** -- shared across components | Use the category prefix (`palette-`, `space-`, `font-`, etc.) |
+
+**Step 3: Does it change per brand?**
+
+| Answer | Action |
+|--------|--------|
+| **Yes** -- different value for Cosmo vs Esquire | Put the default in `core/global.json`, override in each `brands/{slug}.json` |
+| **No** -- same everywhere | Put only in `core/global.json` |
+
+**Step 4: Assemble the name**
+
+```
+{component?}-{category}-{element}-{variant?}-{style?}-{state?}-{size?}
+```
+
+Only include segments that are needed. Skip segments that don't apply.
+
+</div>
+
+---
+
+## 7. Naming Checklist
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '24px', margin: '24px 0' }}>
+  <div style={{ border: '1px solid #bbf7d0', borderRadius: '12px', padding: '20px', background: '#f0fdf4' }}>
+    <h4 style={{ margin: '0 0 12px', color: '#16a34a' }}>DO</h4>
+    <DoItem>Use <strong>kebab-case</strong> for all token names</DoItem>
+    <DoItem>Follow the segment order: layer - category - element - variant - style - state - size</DoItem>
+    <DoItem>Use existing size names: <code>xs, sm, md, lg, xl, 2xl, 3xl, 4xl, 6xl</code></DoItem>
+    <DoItem>Use existing state names: <code>default, hover, active, error, knockout, selected</code></DoItem>
+    <DoItem>Use existing variant names: <code>primary, secondary, neutral, brand, danger, success, warning</code></DoItem>
+    <DoItem>Reference <code>$brand-1</code> in semantic aliases for brand-aware tokens</DoItem>
+    <DoItem>Run <code>build-tokens</code> after every edit</DoItem>
+    <DoItem>Check at least 3 brands after adding tokens</DoItem>
+  </div>
+  <div style={{ border: '1px solid #fecaca', borderRadius: '12px', padding: '20px', background: '#fef2f2' }}>
+    <h4 style={{ margin: '0 0 12px', color: '#dc2626' }}>DON'T</h4>
+    <DontItem>Invent new size names (use the established scale)</DontItem>
+    <DontItem>Use camelCase or PascalCase (<code>buttonBackground</code>)</DontItem>
+    <DontItem>Hardcode brand-specific hex values in <code>core/global.json</code></DontItem>
+    <DontItem>Skip the <code>component-</code> prefix for component-scoped tokens</DontItem>
+    <DontItem>Put shared values in brand files (use <code>global.json</code> instead)</DontItem>
+    <DontItem>Edit <code>brands.ts</code> or <code>tokens.css</code> directly (they are generated)</DontItem>
+    <DontItem>Create duplicate tokens with slightly different names</DontItem>
+    <DontItem>Use abbreviations that are not already established</DontItem>
+  </div>
+</div>
+
+---
+
+## 8. Real-World Example: Build a "Tooltip" Component
+
+Walk through creating tokens for a new component from scratch.
+
+### Step 1: Identify what the component needs
+
+| Property | What it controls |
+|----------|-----------------|
+| background | Tooltip fill |
+| border | Tooltip stroke |
+| content | Text color |
+| arrow | Arrow fill |
+| radius | Corner rounding |
+| padding-block | Vertical padding |
+| padding-inline | Horizontal padding |
+
+### Step 2: Identify variants and states
+
+- **Variants**: default, informational, warning, error
+- **States**: default (only -- tooltips don't have hover states themselves)
+- **Sizes**: sm, md, lg
+
+### Step 3: Generate the token names
+
+**Color tokens** (go in `core/global.json`, override in brand files):
+
+```
+component-tooltip-background-default               #1c1c1c
+component-tooltip-background-informational          #0d58c9
+component-tooltip-background-warning                #d06d16
+component-tooltip-background-error                  #cc2828
+component-tooltip-border-default                    #292929
+component-tooltip-content-default                   #ffffff
+component-tooltip-content-informational             #ffffff
+component-tooltip-content-warning                   #ffffff
+component-tooltip-content-error                     #ffffff
+component-tooltip-arrow-default                     #1c1c1c
+```
+
+**Spacing tokens** (go in `core/global.json`, same across brands):
+
+```
+component-tooltip-radius-default                    4
+component-tooltip-padding-block-sm                  4
+component-tooltip-padding-block-md                  8
+component-tooltip-padding-block-lg                  12
+component-tooltip-padding-inline-sm                 8
+component-tooltip-padding-inline-md                 12
+component-tooltip-padding-inline-lg                 16
+```
+
+**Typography tokens** (go in brand files since they reference font-family):
+
+```
+typography-component-tooltip-content-sm
+typography-component-tooltip-content-md
+typography-component-tooltip-content-lg
+```
+
+### Step 4: Add to the right files
+
+| Token | File |
+|-------|------|
+| `component-tooltip-background-default` | `core/global.json` (default), `brands/{slug}.json` (if brand-specific) |
+| `component-tooltip-radius-default` | `core/global.json` only (same across brands) |
+| `component-tooltip-padding-block-sm` | `core/global.json` only |
+| `typography-component-tooltip-content-sm` | `brands/{slug}.json` (references font-family) |
+
+### Step 5: Run the pipeline
+
+```bash
+npm run build-tokens        # Regenerate brands.ts + tokens.css
+npm run dev                 # Verify in browser
+npm run push-figma          # After merge: sync to Figma
+npm run push-pencil         # After merge: sync to Pencil
+```
+
+---
+
+## 9. Known Typos to Avoid
+
+These typos exist in the current token set. Do not repeat them when creating new tokens.
+
+<div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '20px', margin: '24px 0' }}>
+
+| Current Name (typo) | Correct Spelling |
+|---------------------|-----------------|
+| `border-netural-light` | `border-neutral-light` |
+| `component-badge-content-dager` | `component-badge-content-danger` |
+| `component-badge-content-kockout` | `component-badge-content-knockout` |
+| `component-badge-icon-kockout` | `component-badge-icon-knockout` |
+| `component-card-core-content-title-backgroud-default` | `component-card-core-content-title-background-default` |
+
+These will be corrected in a future cleanup. For now, reference them by their current (typo) names in code, but use the correct spelling for any new tokens.
+
+</div>
+
+---
+
+## Quick Reference: Size Scale
+
+| Scale | Spacing (px) | Font Size (rem) | Line Height |
+|-------|-------------|-----------------|-------------|
+| `4xs` | -- | 0.688 | 135% |
+| `3xs` | 2 | 0.75 | 140% |
+| `2xs` | 4 | 0.8125 | 140% |
+| `xs` | 8 | 0.875 | 145% |
+| `sm` | 12 | 1 | 145% |
+| `md` | 16 | 1.125 | 145% |
+| `lg` | 20 | 1.25 | 140% |
+| `xl` | 24 | 1.375 | 135% |
+| `2xl` | 32 | 1.5 | 135% |
+| `3xl` | 48 | 1.75 | 130% |
+| `4xl` | 64 | 1.875 | 135% |
+| `5xl` | -- | 2 | 130% |
+| `6xl` | 80 | 2.25 | 130% |
+| `7xl` | -- | 2.5 | 125% |
+| `8xl` | -- | 2.75 | 120% |
+| `9xl` | -- | 3 | 120% |
+| `10xl`-`15xl` | -- | 3.25-6 | 120%-110% |

@@ -1,0 +1,473 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Token Workflow" />
+
+# Token Workflow
+
+How designers and developers communicate to create, request, and deliver design tokens across the Hearst Design System.
+
+<div style={{ display: 'flex', gap: '12px', marginBottom: '32px', flexWrap: 'wrap' }}>
+  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', background: '#f1f5f9', color: '#334155', borderRadius: '8px', fontWeight: 600, fontSize: '13px' }}>
+    Designer to Developer
+  </span>
+  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', background: '#f1f5f9', color: '#334155', borderRadius: '8px', fontWeight: 600, fontSize: '13px' }}>
+    Developer to Designer
+  </span>
+  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', background: '#f1f5f9', color: '#334155', borderRadius: '8px', fontSize: '13px' }}>
+    Source of truth: <code style={{ background: '#e2e8f0', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens/</code> in Git
+  </span>
+</div>
+
+---
+
+## The Two Directions
+
+Token work always flows in one of two directions. Each direction has a clear initiator, a set of tools, and a handoff point.
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px', margin: '24px 0' }}>
+  <div style={{ border: '2px solid #2563eb', borderRadius: '12px', padding: '24px', background: '#eff6ff' }}>
+    <h3 style={{ margin: '0 0 8px', color: '#2563eb', fontSize: '16px' }}>Designer Requests a Token</h3>
+    <p style={{ margin: '0 0 12px', fontSize: '13px', color: '#475569' }}>
+      The designer identifies a need during design work and asks the developer to create or update a token in Git.
+    </p>
+    <div style={{ fontSize: '13px', color: '#1e40af', fontWeight: 600 }}>Designer initiates, Developer delivers</div>
+  </div>
+  <div style={{ border: '2px solid #059669', borderRadius: '12px', padding: '24px', background: '#ecfdf5' }}>
+    <h3 style={{ margin: '0 0 8px', color: '#059669', fontSize: '16px' }}>Developer Delivers New Tokens</h3>
+    <p style={{ margin: '0 0 12px', fontSize: '13px', color: '#475569' }}>
+      The developer creates tokens (from a request or proactively) and pushes them so designers can use them in Figma and Pencil.
+    </p>
+    <div style={{ fontSize: '13px', color: '#047857', fontWeight: 600 }}>Developer creates, Designer consumes</div>
+  </div>
+</div>
+
+---
+
+## Tools by Role
+
+Each role has specific tools for specific tasks. Using the right tool at the right moment keeps the system in sync.
+
+### Designer Tools
+
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Task</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Tool</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>How</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Request a new token</td>
+      <td style={{ padding: '10px 16px' }}>Jira / Slack / GitHub Issue</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>File a request with the token purpose, value(s), and which brands it affects</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Explore and iterate on designs</td>
+      <td style={{ padding: '10px 16px' }}>Figma</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Use Figma variables from the "Hearst Design System" collection; switch brand modes to preview</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Use existing tokens in specs</td>
+      <td style={{ padding: '10px 16px' }}>Pencil</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Reference <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>$token-name</code> in component properties</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Verify new tokens arrived</td>
+      <td style={{ padding: '10px 16px' }}>Figma / Pencil</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Search the variable panel for the canonical name the developer provided</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Review components in code</td>
+      <td style={{ padding: '10px 16px' }}>Storybook</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Open Storybook, switch brands in the toolbar, verify visual output</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Check the correct value of a token</td>
+      <td style={{ padding: '10px 16px' }}>Storybook (Token Naming Guide)</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>The Token Naming Guide and Foundation/Tokens pages show all current values</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+### Developer Tools
+
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Task</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Tool</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Command / How</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Create or edit a token</td>
+      <td style={{ padding: '10px 16px' }}>VS Code / Cursor</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Edit the JSON file directly in <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens/</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Build generated files</td>
+      <td style={{ padding: '10px 16px' }}>Terminal</td>
+      <td style={{ padding: '10px 16px' }}><code style={{ background: '#f1f5f9', padding: '4px 10px', borderRadius: '4px', fontSize: '13px', color: '#334155' }}>npm run build-tokens</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Validate token references</td>
+      <td style={{ padding: '10px 16px' }}>Terminal</td>
+      <td style={{ padding: '10px 16px' }}><code style={{ background: '#f1f5f9', padding: '4px 10px', borderRadius: '4px', fontSize: '13px', color: '#334155' }}>npm run tokens:validate</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Preview in browser</td>
+      <td style={{ padding: '10px 16px' }}>Terminal + Browser</td>
+      <td style={{ padding: '10px 16px' }}><code style={{ background: '#f1f5f9', padding: '4px 10px', borderRadius: '4px', fontSize: '13px', color: '#334155' }}>npm run dev</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Push tokens to Figma</td>
+      <td style={{ padding: '10px 16px' }}>Terminal</td>
+      <td style={{ padding: '10px 16px' }}><code style={{ background: '#f1f5f9', padding: '4px 10px', borderRadius: '4px', fontSize: '13px', color: '#334155' }}>npm run push-figma</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Push tokens to Pencil</td>
+      <td style={{ padding: '10px 16px' }}>Terminal</td>
+      <td style={{ padding: '10px 16px' }}><code style={{ background: '#f1f5f9', padding: '4px 10px', borderRadius: '4px', fontSize: '13px', color: '#334155' }}>npm run push-pencil</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Commit and open a PR</td>
+      <td style={{ padding: '10px 16px' }}>Git / GitHub</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Standard Git workflow: branch, commit, PR, review, merge</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Deploy to production</td>
+      <td style={{ padding: '10px 16px' }}>Netlify (auto)</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Push to <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>main</code> triggers auto-deploy</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Notify designers</td>
+      <td style={{ padding: '10px 16px' }}>Jira / Slack / PR comment</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Share the canonical name(s) and what they're for</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+---
+
+## Flow 1: Designer Requests a Token
+
+<div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '24px', margin: '24px 0' }}>
+
+### Step 1 -- Designer identifies the need
+
+During design work in Figma or Pencil, the designer realizes a token is missing. For example: "I need a background color for the new Tooltip component."
+
+### Step 2 -- Designer files a request
+
+The designer creates a ticket (Jira, GitHub Issue, or Slack message) with:
+
+<div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '20px', margin: '16px 0', fontFamily: 'monospace', fontSize: '13px', lineHeight: '1.8', color: '#334155' }}>
+  <div style={{ fontWeight: 700, marginBottom: '8px', fontFamily: 'sans-serif', fontSize: '14px' }}>Token Request Template</div>
+  <div><strong>What:</strong> Background color for Tooltip component</div>
+  <div><strong>Purpose:</strong> Fill color behind tooltip text</div>
+  <div><strong>Value:</strong> #1c1c1c (dark, near-black)</div>
+  <div><strong>Brands:</strong> Same for all brands</div>
+  <div><strong>Component:</strong> Tooltip</div>
+  <div><strong>Variants:</strong> default, informational (#0d58c9), warning (#d06d16), error (#cc2828)</div>
+</div>
+
+The more detail the designer provides, the faster the developer can create the token with the correct name.
+
+### Step 3 -- Developer creates the token
+
+The developer opens the JSON file in VS Code / Cursor and adds:
+
+```json
+{
+  "component-tooltip-background-default": {
+    "type": "color",
+    "value": "#1c1c1c"
+  },
+  "component-tooltip-background-informational": {
+    "type": "color",
+    "value": "#0d58c9"
+  }
+}
+```
+
+### Step 4 -- Developer builds and validates
+
+```bash
+npm run build-tokens        # Generates brands.ts + tokens.css
+npm run tokens:validate     # Checks references are valid
+npm run dev                 # Preview in browser
+```
+
+### Step 5 -- Developer opens a PR
+
+The PR includes the JSON changes and the regenerated `brands.ts` + `tokens.css`. The PR description lists the new tokens by canonical name.
+
+### Step 6 -- After merge, developer syncs to design tools
+
+```bash
+npm run push-figma          # Tokens appear in Figma variables
+npm run push-pencil         # Tokens appear in Pencil variables
+```
+
+### Step 7 -- Developer notifies the designer
+
+<div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '20px', margin: '16px 0', fontFamily: 'monospace', fontSize: '13px', lineHeight: '1.8', color: '#334155' }}>
+  <div style={{ fontWeight: 700, marginBottom: '8px', fontFamily: 'sans-serif', fontSize: '14px' }}>Delivery Message Template</div>
+  <div><strong>Status:</strong> Merged and synced</div>
+  <div><strong>New tokens available:</strong></div>
+  <div style={{ paddingLeft: '16px' }}>component-tooltip-background-default</div>
+  <div style={{ paddingLeft: '16px' }}>component-tooltip-background-informational</div>
+  <div style={{ paddingLeft: '16px' }}>component-tooltip-background-warning</div>
+  <div style={{ paddingLeft: '16px' }}>component-tooltip-background-error</div>
+  <div style={{ marginTop: '8px' }}><strong>Figma:</strong> Search for "component-tooltip" in the variables panel</div>
+  <div><strong>Pencil:</strong> Use $component-tooltip-background-default</div>
+</div>
+
+### Step 8 -- Designer verifies
+
+The designer opens Figma or Pencil, searches for the token name, and confirms it's available with the correct value.
+
+</div>
+
+---
+
+## Flow 2: Developer Creates Tokens Proactively
+
+<div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '24px', margin: '24px 0' }}>
+
+Sometimes developers create tokens while building a component, without a prior designer request.
+
+### Step 1 -- Developer identifies the need
+
+While implementing a component, the developer realizes new tokens are needed for theming.
+
+### Step 2 -- Developer names the tokens
+
+Following the naming convention from the Token Naming Guide:
+
+```
+layer - category - element - property - variant - state
+```
+
+### Step 3 -- Developer creates, builds, and merges
+
+Same as Flow 1, Steps 3-6: edit JSON, build, validate, PR, merge, push to Figma and Pencil.
+
+### Step 4 -- Developer notifies designers
+
+The developer shares the new tokens so designers can start using them in future specs. The notification should include:
+
+- The canonical names
+- What each token controls
+- Whether they change per brand or are global
+- A Storybook link to see the component in action
+
+</div>
+
+---
+
+## Where Each File Lives
+
+Knowing which JSON file to edit is half the job. Here's the decision:
+
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>What you're adding</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>File</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', color: '#334155' }}>A value that is the <strong>same for all brands</strong></td>
+      <td style={{ padding: '10px 16px' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens/core/global.json</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>spacing, border radius, elevation, shared component defaults</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', color: '#334155' }}>A value that <strong>differs per brand</strong></td>
+      <td style={{ padding: '10px 16px' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens/brands/&#123;slug&#125;.json</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>brand colors, brand-specific component overrides, font families</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', color: '#334155' }}>An alias that <strong>references a brand token</strong></td>
+      <td style={{ padding: '10px 16px' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens/semantic/aliases.json</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ color: '#334155' }}>background-brand</code> referencing <code style={{ color: '#334155' }}>$brand-1</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', color: '#334155' }}>A <strong>font override</strong> (headline, secondary)</td>
+      <td style={{ padding: '10px 16px' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens/brands/_meta.json</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>headline font family and weight per brand</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+---
+
+## Token Status Tracking
+
+Both designers and developers need to know the status of a token at any point. Here's how to track it using existing tools.
+
+### Status Definitions
+
+| Status | Meaning | Who sets it |
+|--------|---------|-------------|
+| **Requested** | Designer has asked for a new token | Designer (via ticket) |
+| **In Progress** | Developer is creating the token in a branch | Developer (PR opened) |
+| **In Review** | Token is in a pull request awaiting approval | Developer (PR ready) |
+| **Merged** | Token is in the `main` branch | Developer (PR merged) |
+| **Synced** | Token is available in Figma and Pencil | Developer (after push-figma + push-pencil) |
+| **Deployed** | Token is live on the production site | Automatic (Netlify) |
+
+### Where to Check Status
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', margin: '24px 0' }}>
+  <div style={{ border: '1px solid #e2e8f0', borderRadius: '12px', padding: '20px', background: '#fafbfc' }}>
+    <h4 style={{ margin: '0 0 8px', fontSize: '15px', color: '#334155' }}>Designer wants to check status</h4>
+    <div style={{ fontSize: '13px', color: '#475569', lineHeight: '1.8' }}>
+      <div><strong>Is it requested?</strong> Check the Jira ticket / GitHub Issue</div>
+      <div><strong>Is it merged?</strong> Check the PR on GitHub</div>
+      <div><strong>Is it in Figma?</strong> Search the Variables panel for the canonical name</div>
+      <div><strong>Is it in Pencil?</strong> Search variables for <code style={{ background: '#f1f5f9', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>$token-name</code></div>
+      <div><strong>Is it live?</strong> Check Storybook at the production URL</div>
+    </div>
+  </div>
+  <div style={{ border: '1px solid #e2e8f0', borderRadius: '12px', padding: '20px', background: '#fafbfc' }}>
+    <h4 style={{ margin: '0 0 8px', fontSize: '15px', color: '#334155' }}>Developer wants to check status</h4>
+    <div style={{ fontSize: '13px', color: '#475569', lineHeight: '1.8' }}>
+      <div><strong>Is it in Git?</strong> Check <code style={{ background: '#f1f5f9', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>tokens/</code> on the main branch</div>
+      <div><strong>Is it built?</strong> Check <code style={{ background: '#f1f5f9', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>brands.ts</code> and <code style={{ background: '#f1f5f9', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>tokens.css</code></div>
+      <div><strong>Is it in Figma?</strong> Run <code style={{ background: '#f1f5f9', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>npm run push-figma</code> (idempotent)</div>
+      <div><strong>Is it in Pencil?</strong> Use MCP <code style={{ background: '#f1f5f9', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>get_variables</code> to inspect</div>
+      <div><strong>Is it deployed?</strong> Check Netlify deploy status</div>
+    </div>
+  </div>
+</div>
+
+---
+
+## The Complete Pipeline
+
+From request to production, every token passes through these stages. Each stage has a clear owner and tool.
+
+```
+DESIGNER                          DEVELOPER                         DESIGNER
+────────                          ─────────                         ────────
+
+1. Identify need            2. Create token in JSON          7. Verify in Figma
+   (Figma / Pencil)            (VS Code / Cursor)              (Variables panel)
+        │                           │
+        │  Request via              │  npm run build-tokens    8. Verify in Pencil
+        │  Jira / Slack             │  npm run tokens:validate    ($token-name)
+        │  GitHub Issue             │
+        ▼                      3. Preview locally              9. Use in designs
+   Token Request                   (npm run dev)                  (Figma / Pencil)
+                                    │
+                               4. Open PR
+                                   (Git / GitHub)
+                                    │
+                               5. Merge to main
+                                   (GitHub)
+                                    │
+                               6. Sync to design tools
+                                   npm run push-figma
+                                   npm run push-pencil
+                                    │
+                                    ▼
+                               Netlify auto-deploys
+                               (Storybook + App)
+```
+
+---
+
+## Token Request Template
+
+Use this when filing a token request. Copy and paste into your ticket or message.
+
+<div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '24px', margin: '24px 0' }}>
+<div style={{ fontFamily: 'monospace', fontSize: '13px', lineHeight: '2', color: '#334155' }}>
+  <div style={{ fontWeight: 700, fontSize: '14px', fontFamily: 'sans-serif', marginBottom: '12px', color: '#334155' }}>Token Request</div>
+  <div><strong>Component:</strong> [name of the component, e.g. Tooltip]</div>
+  <div><strong>Property:</strong> [what it controls, e.g. background color]</div>
+  <div><strong>Value(s):</strong> [hex, number, or font name]</div>
+  <div><strong>Brands:</strong> [Same for all / Different per brand]</div>
+  <div><strong>Variants:</strong> [default, hover, active, etc.]</div>
+  <div><strong>Priority:</strong> [blocking / nice-to-have]</div>
+  <div><strong>Context:</strong> [link to Figma frame or screenshot]</div>
+</div>
+</div>
+
+---
+
+## Token Delivery Template
+
+Use this when notifying designers that new tokens are available.
+
+<div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '24px', margin: '24px 0' }}>
+<div style={{ fontFamily: 'monospace', fontSize: '13px', lineHeight: '2', color: '#334155' }}>
+  <div style={{ fontWeight: 700, fontSize: '14px', fontFamily: 'sans-serif', marginBottom: '12px', color: '#334155' }}>Tokens Delivered</div>
+  <div><strong>PR:</strong> [link to merged PR]</div>
+  <div><strong>Status:</strong> Merged and synced to Figma + Pencil</div>
+  <div><strong>New tokens:</strong></div>
+  <div style={{ paddingLeft: '16px' }}>[canonical-name-1] -- [what it controls]</div>
+  <div style={{ paddingLeft: '16px' }}>[canonical-name-2] -- [what it controls]</div>
+  <div style={{ marginTop: '8px' }}><strong>Figma:</strong> Search for "[prefix]" in the Variables panel</div>
+  <div><strong>Pencil:</strong> Use $[canonical-name] in component properties</div>
+  <div><strong>Storybook:</strong> [link to component story]</div>
+</div>
+</div>
+
+---
+
+## Quick Reference: Who Does What
+
+| Action | Designer | Developer |
+|--------|----------|-----------|
+| Request a new token | Files a ticket with the template above | -- |
+| Name the token | Suggests a purpose (developer finalizes the name) | Applies the naming convention |
+| Choose the value | Provides the value (hex, px, font) | Enters it in the JSON file |
+| Decide which file | -- | Chooses core, semantic, or brand JSON |
+| Build and validate | -- | Runs `build-tokens` and `tokens:validate` |
+| Review the PR | Optional: reviews the values | Creates and merges the PR |
+| Sync to Figma | Verifies in the Variables panel | Runs `push-figma` |
+| Sync to Pencil | Verifies with `$token-name` | Runs `push-pencil` |
+| Use in designs | Applies the variable in Figma / Pencil | -- |
+| Use in code | -- | References `var(--token-name)` in CSS |
+
+---
+
+## Rules
+
+<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }}>
+  <div style={{ border: '2px solid #22c55e', borderRadius: '12px', padding: '20px', background: '#f0fdf4' }}>
+    <h4 style={{ margin: '0 0 12px 0', color: '#16a34a' }}>DO</h4>
+    <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '14px', lineHeight: '1.8', color: '#334155' }}>
+      <li>Always create tokens in <strong>Git first</strong></li>
+      <li>Run <code style={{ background: '#e2e8f0', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>build-tokens</code> after every edit</li>
+      <li>Run <code style={{ background: '#e2e8f0', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>push-figma</code> + <code style={{ background: '#e2e8f0', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>push-pencil</code> after merging</li>
+      <li>Notify designers with the canonical name</li>
+      <li>Include context links in token requests</li>
+      <li>Verify across at least 3 brands</li>
+    </ul>
+  </div>
+  <div style={{ border: '2px solid #ef4444', borderRadius: '12px', padding: '20px', background: '#fef2f2' }}>
+    <h4 style={{ margin: '0 0 12px 0', color: '#dc2626' }}>DON'T</h4>
+    <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '14px', lineHeight: '1.8', color: '#334155' }}>
+      <li>Create tokens directly in Figma (they get overwritten)</li>
+      <li>Hardcode hex values in Pencil (use <code style={{ background: '#e2e8f0', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>$variable</code>)</li>
+      <li>Edit <code style={{ background: '#e2e8f0', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>brands.ts</code> or <code style={{ background: '#e2e8f0', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>tokens.css</code> directly (generated files)</li>
+      <li>Skip the PR review step</li>
+      <li>Forget to sync after merging</li>
+      <li>Use Figma inspect values as source of truth</li>
+    </ul>
+  </div>
+</div>
