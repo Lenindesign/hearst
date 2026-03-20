@@ -3,6 +3,9 @@
   command = "npm run build-storybook"
   publish = "storybook-static"
 
+[build.environment]
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
+
 [[redirects]]
   from = "/storybook"
   to = "/"
