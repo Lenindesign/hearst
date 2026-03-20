@@ -46,6 +46,7 @@ const preview: Preview = {
           "Foundation",
           ["Colors", "Typography", "Tokens"],
           "Templates",
+          "FRE Components",
           "Components",
         ],
       },
