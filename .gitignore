@@ -24,3 +24,23 @@ __pycache__/
 
 # Local Netlify folder
 .netlify
+
+# Agent tools (build scripts, temp files)
+agent-tools/
+
+# Loose image files at root (car photos, generated images)
+*.jpg
+*.png
+!hearst-design-system/**/*.png
+!hearst-design-system/**/*.jpg
+
+# Pencil temp files
+.pencil-curr-args.json
+
+# Generated markdown docs at root
+HEARST-TOKEN-NAMING-TAXONOMY.md
+RESIN-VS-HEARST-DESIGN-SYSTEM-COMPARISON.md
+
+# Font sources
+hearst-design-system/fonts/
+hearst-design-system/sources/
