@@ -1,19 +1,55 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { fn } from "@storybook/test";
 import { Button } from "@/components/ui/button";
 
 const meta: Meta<typeof Button> = {
   title: "Components/Button",
   component: Button,
+  args: {
+    children: "Button",
+    onClick: fn(),
+  },
   argTypes: {
     variant: {
       control: "select",
       options: ["default", "outline", "secondary", "ghost", "destructive", "link"],
+      description: "Visual style variant. Use `default` for primary actions, `outline` for secondary, `destructive` for dangerous operations.",
+      table: { category: "Appearance", defaultValue: { summary: "default" } },
     },
     size: {
       control: "select",
       options: ["default", "xs", "sm", "lg", "icon"],
+      description: "Button size. `icon` is square for icon-only buttons.",
+      table: { category: "Appearance", defaultValue: { summary: "default" } },
     },
-    disabled: { control: "boolean" },
+    disabled: {
+      control: "boolean",
+      description: "Disables the button and applies muted styling.",
+      table: { category: "State", defaultValue: { summary: "false" } },
+    },
+    children: {
+      control: "text",
+      description: "Button label text or child elements.",
+      table: { category: "Content" },
+    },
+    onClick: {
+      action: "click",
+      description: "Fires when the button is clicked.",
+      table: { category: "Events" },
+    },
+    asChild: {
+      control: "boolean",
+      description: "Render as a child element (e.g. wrapping an `<a>` tag).",
+      table: { category: "Advanced", defaultValue: { summary: "false" } },
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        component:
+          "Primary interactive element for user actions. Adapts to the active brand theme via `--brand-primary` and `--font-brand` tokens. Maps to the Resin `component-button-*` token group.",
+      },
+    },
   },
 };
 
@@ -57,25 +93,25 @@ export const Disabled: Story = {
 };
 
 export const AllVariants: Story = {
-  render: () => (
+  render: (args) => (
     <div className="flex flex-wrap gap-3">
-      <Button variant="default">Default</Button>
-      <Button variant="outline">Outline</Button>
-      <Button variant="secondary">Secondary</Button>
-      <Button variant="ghost">Ghost</Button>
-      <Button variant="destructive">Destructive</Button>
-      <Button variant="link">Link</Button>
+      {(["default", "outline", "secondary", "ghost", "destructive", "link"] as const).map((v) => (
+        <Button key={v} {...args} variant={v}>
+          {v.charAt(0).toUpperCase() + v.slice(1)}
+        </Button>
+      ))}
     </div>
   ),
 };
 
 export const AllSizes: Story = {
-  render: () => (
+  render: (args) => (
     <div className="flex items-center gap-3">
-      <Button size="xs">Extra Small</Button>
-      <Button size="sm">Small</Button>
-      <Button size="default">Default</Button>
-      <Button size="lg">Large</Button>
+      {(["xs", "sm", "default", "lg"] as const).map((s) => (
+        <Button key={s} {...args} size={s}>
+          {s === "default" ? "Default" : s.toUpperCase()}
+        </Button>
+      ))}
     </div>
   ),
 };

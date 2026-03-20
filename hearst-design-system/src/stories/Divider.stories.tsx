@@ -5,8 +5,26 @@ const meta: Meta<typeof Divider> = {
   title: "Components/Divider",
   component: Divider,
   argTypes: {
-    variant: { control: "select", options: ["default", "subtle"] },
-    size: { control: "select", options: ["sm", "md", "lg"] },
+    variant: {
+      control: "select",
+      options: ["default", "subtle"],
+      description: "Use `default` for strong section breaks, `subtle` for light separators within a section.",
+      table: { category: "Appearance", defaultValue: { summary: "default" } },
+    },
+    size: {
+      control: "select",
+      options: ["sm", "md", "lg"],
+      description: "Thickness of the divider line.",
+      table: { category: "Appearance", defaultValue: { summary: "md" } },
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        component:
+          "Horizontal rule for separating content sections. Uses `--palette-neutral-*` tokens for color. Designers: use `sm` between related items, `lg` between major sections.",
+      },
+    },
   },
 };
 
@@ -24,20 +42,14 @@ export const Subtle: Story = {
 };
 
 export const AllSizes: Story = {
-  render: () => (
+  render: (args) => (
     <div className="w-80 space-y-6">
-      <div>
-        <p className="text-xs text-muted-foreground mb-2">Small</p>
-        <Divider size="sm" />
-      </div>
-      <div>
-        <p className="text-xs text-muted-foreground mb-2">Medium</p>
-        <Divider size="md" />
-      </div>
-      <div>
-        <p className="text-xs text-muted-foreground mb-2">Large</p>
-        <Divider size="lg" />
-      </div>
+      {(["sm", "md", "lg"] as const).map((s) => (
+        <div key={s}>
+          <p className="text-xs text-muted-foreground mb-2 capitalize">{s}</p>
+          <Divider {...args} size={s} />
+        </div>
+      ))}
     </div>
   ),
 };

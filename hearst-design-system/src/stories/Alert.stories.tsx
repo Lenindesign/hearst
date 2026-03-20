@@ -2,54 +2,84 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
-const meta: Meta<typeof Alert> = {
+interface AlertStoryProps {
+  variant: "default" | "destructive";
+  title: string;
+  description: string;
+}
+
+function AlertRenderer({ variant, title, description }: AlertStoryProps) {
+  return (
+    <div className="w-[480px]">
+      <Alert variant={variant}>
+        <AlertTitle>{title}</AlertTitle>
+        <AlertDescription>{description}</AlertDescription>
+      </Alert>
+    </div>
+  );
+}
+
+const meta: Meta = {
   title: "Components/Alert",
-  component: Alert,
+  args: {
+    variant: "default",
+    title: "New article published",
+    description: "Your article has been published and is now visible to readers.",
+  },
   argTypes: {
-    variant: { control: "select", options: ["default", "destructive"] },
+    variant: {
+      control: "select",
+      options: ["default", "destructive"],
+      description: "Use `default` for informational messages, `destructive` for errors or warnings.",
+      table: { category: "Appearance", defaultValue: { summary: "default" } },
+    },
+    title: {
+      control: "text",
+      description: "Alert heading text.",
+      table: { category: "Content" },
+    },
+    description: {
+      control: "text",
+      description: "Alert body text with additional details.",
+      table: { category: "Content" },
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        component:
+          "Contextual feedback message for user actions. Uses `component-alert-*` tokens. Designers: pair with appropriate icons for scannability.",
+      },
+    },
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof Alert>;
+type Story = StoryObj;
 
 export const Default: Story = {
-  render: () => (
-    <div className="w-[480px]">
-      <Alert>
-        <AlertTitle>New article published</AlertTitle>
-        <AlertDescription>
-          Your article has been published and is now visible to readers.
-        </AlertDescription>
-      </Alert>
-    </div>
-  ),
+  args: {
+    variant: "default",
+    title: "New article published",
+    description: "Your article has been published and is now visible to readers.",
+  },
+  render: (args) => <AlertRenderer {...(args as AlertStoryProps)} />,
 };
 
 export const Destructive: Story = {
-  render: () => (
-    <div className="w-[480px]">
-      <Alert variant="destructive">
-        <AlertTitle>Error saving draft</AlertTitle>
-        <AlertDescription>
-          There was a problem saving your draft. Please try again.
-        </AlertDescription>
-      </Alert>
-    </div>
-  ),
+  args: {
+    variant: "destructive",
+    title: "Error saving draft",
+    description: "There was a problem saving your draft. Please try again.",
+  },
+  render: (args) => <AlertRenderer {...(args as AlertStoryProps)} />,
 };
 
 export const AllVariants: Story = {
-  render: () => (
+  render: (args) => (
     <div className="w-[480px] space-y-4">
-      <Alert>
-        <AlertTitle>Default Alert</AlertTitle>
-        <AlertDescription>This is a default informational alert.</AlertDescription>
-      </Alert>
-      <Alert variant="destructive">
-        <AlertTitle>Destructive Alert</AlertTitle>
-        <AlertDescription>This indicates an error or destructive action.</AlertDescription>
-      </Alert>
+      <AlertRenderer {...(args as AlertStoryProps)} variant="default" title="Default Alert" description="This is a default informational alert." />
+      <AlertRenderer {...(args as AlertStoryProps)} variant="destructive" title="Destructive Alert" description="This indicates an error or destructive action." />
     </div>
   ),
 };
