@@ -5,13 +5,13 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/
 
 interface AccordionStoryProps {
   items: { trigger: string; content: string }[];
-  onValueChange: (value: string) => void;
+  onValueChange: (value: unknown) => void;
 }
 
 function AccordionRenderer({ items, onValueChange }: AccordionStoryProps) {
   return (
     <div className="w-96">
-      <Accordion onValueChange={onValueChange}>
+      <Accordion onValueChange={onValueChange as never}>
         {items.map((item, i) => (
           <AccordionItem key={i} value={`item-${i}`}>
             <AccordionTrigger>{item.trigger}</AccordionTrigger>

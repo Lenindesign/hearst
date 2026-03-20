@@ -37,11 +37,6 @@ const meta: Meta<typeof Button> = {
       description: "Fires when the button is clicked.",
       table: { category: "Events" },
     },
-    asChild: {
-      control: "boolean",
-      description: "Render as a child element (e.g. wrapping an `<a>` tag).",
-      table: { category: "Advanced", defaultValue: { summary: "false" } },
-    },
   },
   parameters: {
     docs: {

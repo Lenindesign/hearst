@@ -1,6 +1,6 @@
 /**
- * Rewrites relative paths in Storybook's built HTML files to absolute paths
- * so they resolve correctly when served from /_next/static/sb/ via redirect.
+ * Rewrites relative paths in Storybook's built HTML/JS files to absolute paths
+ * so they resolve correctly when served from /_next/static/sb/.
  */
 import { readFileSync, writeFileSync, readdirSync } from "fs";
 import { join } from "path";
@@ -12,12 +12,14 @@ function fixFile(filePath) {
   let content = readFileSync(filePath, "utf-8");
   const original = content;
 
-  // Replace href="./  and src="./  with absolute paths
   content = content.replaceAll('href="./', `href="${BASE}`);
   content = content.replaceAll('src="./', `src="${BASE}`);
-  // Replace url('./  in CSS (font-face etc.)
   content = content.replaceAll("url('./", `url('${BASE}`);
   content = content.replaceAll('url("./', `url("${BASE}`);
+
+  // Fix dynamic import paths in JS chunks
+  content = content.replaceAll('"./assets/', `"${BASE}assets/`);
+  content = content.replaceAll("'./assets/", `'${BASE}assets/`);
 
   if (content !== original) {
     writeFileSync(filePath, content);
@@ -25,12 +27,24 @@ function fixFile(filePath) {
   }
 }
 
-const htmlFiles = readdirSync(SB_DIR).filter(
-  (f) => f.endsWith(".html")
+const files = readdirSync(SB_DIR).filter(
+  (f) => f.endsWith(".html") || f.endsWith(".js")
 );
 
-for (const file of htmlFiles) {
+for (const file of files) {
   fixFile(join(SB_DIR, file));
 }
 
-console.log(`Processed ${htmlFiles.length} HTML file(s)`);
+// Also fix JS files in assets/
+try {
+  const assetsDir = join(SB_DIR, "assets");
+  const assetFiles = readdirSync(assetsDir).filter((f) => f.endsWith(".js"));
+  for (const file of assetFiles) {
+    fixFile(join(assetsDir, file));
+  }
+  console.log(`Processed ${assetFiles.length} asset JS file(s)`);
+} catch {
+  // assets dir may not exist
+}
+
+console.log(`Processed ${files.length} root file(s)`);

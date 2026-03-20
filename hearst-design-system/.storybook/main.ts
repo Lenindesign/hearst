@@ -23,6 +23,10 @@ const config: StorybookConfig = {
     config.css = config.css || {};
     config.css.postcss = path.resolve(__dirname, "..");
 
+    if (process.env.STORYBOOK_BASE) {
+      config.base = process.env.STORYBOOK_BASE;
+    }
+
     return config;
   },
 };

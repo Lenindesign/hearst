@@ -23,7 +23,7 @@ interface ArticleCardStoryProps {
   author: string;
   date: string;
   image: string;
-  aspectRatio: string;
+  aspectRatio: "16/9" | "4/3" | "1/1" | "3/2";
   onClick: () => void;
 }
 

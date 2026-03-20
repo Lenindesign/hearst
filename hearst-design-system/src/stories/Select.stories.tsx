@@ -19,7 +19,7 @@ interface SelectStoryProps {
   options: string[];
   disabled: boolean;
   size: "default" | "sm";
-  onValueChange: (value: string) => void;
+  onValueChange: (value: string | null) => void;
   onOpenChange: (open: boolean) => void;
 }
 
@@ -28,7 +28,7 @@ function SelectRenderer({ label: lbl, placeholder, options, disabled, size, onVa
   return (
     <div className="w-[280px] space-y-2">
       <Label>{lbl}</Label>
-      <Select onValueChange={onValueChange} onOpenChange={onOpenChange} disabled={disabled}>
+      <Select onValueChange={onValueChange as never} onOpenChange={onOpenChange as never} disabled={disabled}>
         <SelectTrigger {...triggerProps}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
