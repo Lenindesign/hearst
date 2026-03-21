@@ -42,13 +42,13 @@ A token ticket moves through six statuses. Each status has a clear owner and exi
     <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
       <td style={{ padding: '10px 16px' }}><span style={{ display: 'inline-block', padding: '2px 10px', background: '#e2e8f0', borderRadius: '4px', fontSize: '12px', fontWeight: 600, color: '#334155' }}>Requested</span></td>
       <td style={{ padding: '10px 16px', color: '#334155' }}>Designer</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Designer has filed the request with purpose, values, and brand scope</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Developer picks up the ticket</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Designer has filed the request — or for simple value changes, designer edits directly in Cursor</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Developer picks up the ticket, or designer opens a PR from Cursor</td>
     </tr>
     <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
       <td style={{ padding: '10px 16px' }}><span style={{ display: 'inline-block', padding: '2px 10px', background: '#dbeafe', borderRadius: '4px', fontSize: '12px', fontWeight: 600, color: '#1d4ed8' }}>In Progress</span></td>
-      <td style={{ padding: '10px 16px', color: '#334155' }}>Developer</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Developer is creating the token in a Git branch</td>
+      <td style={{ padding: '10px 16px', color: '#334155' }}>Developer or Designer</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Token is being created/edited in a Git branch (by developer or designer in Cursor)</td>
       <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>PR is opened</td>
     </tr>
     <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
@@ -86,7 +86,8 @@ Designer                Developer              QA                    Designer
 ────────                ─────────              ──                    ────────
 
 Requested ──────────► In Progress ──────► In Review ──────► Merged
-                        (branch)            (PR open)        (main)
+(or self-serve          (branch — by          (PR open)        (main)
+ via Cursor)             dev or designer)
                                                                 │
                                                           push-figma
                                                           push-pencil
@@ -421,12 +422,12 @@ These are optional improvements that can be added over time. None are required t
                     ────                          ──────                    ─────
 
 Designer files ──► Requested                                               Figma
-ticket                │                                                    (reference)
-                      │  Developer picks up
+ticket (or edits      │                                                    (reference)
+in Cursor)            │  Developer or designer picks up
                       ▼
                   In Progress ──────────────► Branch created              VS Code
                       │                       Token JSON edited           Cursor
-                      │                       build-tokens run
+                      │                       build-tokens + tokens:check
                       ▼                            │
                   In Review ◄──────────────── PR opened ◄──── QA         Storybook
                       │                       QA reviews                  (local)

@@ -69,10 +69,10 @@ The `tokens/` directory in the Git repository. JSON files containing every desig
 | **Developers** | Edit token JSON files directly — this is where changes originate |
 | **LLMs (Cursor/Claude)** | Read and edit token files programmatically |
 | **CI/CD** | Validates tokens on every pull request |
-| **Designers** | Never edit directly — request changes through the team |
+| **Designers (in Cursor)** | Edit token **values** directly with AI assistance — on a branch, with PR review |
 
 **When to reach for it:**
-- You need to **add, change, or remove** a design token
+- You need to **add, change, or remove** a design token (developers and designers)
 - You need to **verify** the correct value of any token
 - You need to **review the history** of when and why a token changed
 - You need to **roll back** a token change that caused issues
@@ -308,7 +308,7 @@ git push origin main
 | Explore a new design idea | **Figma** | Free-form exploration, stakeholder review |
 | Get a design approved | **Figma** | Collaboration and presentation |
 | Build an approved design with exact tokens | **Pencil** | Production-grade specs |
-| Change a color for a brand | **Git** | Source of truth for all token values |
+| Change a color for a brand | **Git** (designer: via Cursor on a branch) | Source of truth for all token values |
 | Add a new brand | **Git** | Create `tokens/brands/{slug}.json` |
 | See how a component looks in code | **Storybook** | Live rendering with real tokens |
 | Test a component across brands | **Storybook** | Brand switcher in toolbar |
@@ -369,7 +369,7 @@ git push origin main
   <div style={{ border: '2px solid #22c55e', borderRadius: '12px', padding: '20px', background: '#f0fdf4' }}>
     <h4 style={{ margin: '0 0 12px 0', color: '#16a34a' }}>DO</h4>
     <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '14px', lineHeight: '1.8' }}>
-      <li>Edit tokens in <strong>Git</strong></li>
+      <li>Edit tokens in <strong>Git</strong> (designers: use Cursor on a branch)</li>
       <li>Explore designs in <strong>Figma</strong></li>
       <li>Build approved specs in <strong>Pencil</strong></li>
       <li>Review components in <strong>Storybook</strong></li>

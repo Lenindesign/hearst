@@ -108,9 +108,16 @@ Figma ──design──► Pencil ──handoff──► Code
 - It eliminates the "Figma says one thing, code does another" problem
 
 ### What designers should NOT do:
-- Define new token values in Figma and expect them to reach production (request via team)
+- Define new token values in Figma and expect them to reach production
 - Use Figma inspect spacing/color values as source of truth (use the Figma Variables instead)
 - Edit Figma Variables directly (they are pushed from git, not the other way)
+- Commit token changes directly to `main` (always use a branch + PR)
+
+### What designers CAN do (new):
+- Edit token **values** directly in Cursor with AI assistance
+- The AI enforces branch workflow, validation, and PR creation
+- Simple changes (colors, spacing, fonts) can be self-served
+- New tokens or structural changes still require a developer
 
 ---
 
@@ -322,6 +329,37 @@ Component/{Category}/{Name}
 5. Designer sees the updated token in Pencil automatically
 ```
 
+### B2. Designer workflow: Editing tokens directly in Cursor
+
+Designers can edit token **values** directly in Cursor with AI assistance, following guardrails.
+
+```
+1. Open Cursor in the hearst-design-system project
+2. Ask the AI to change a token value (e.g. "Change Cosmo's brand-1 to #cc0000")
+3. The AI creates a branch (tokens/{description}), edits the JSON value
+4. The AI runs: npm run build-tokens && npm run tokens:check
+5. Designer previews in the dev server across 3+ brands
+6. The AI commits and opens a PR for developer review
+7. Developer reviews and merges the PR
+8. Post-merge: developer runs push-figma + push-pencil
+```
+
+**What designers CAN do in Cursor:**
+- Change hex color values
+- Change spacing/font-size numbers
+- Change font family or weight strings
+
+**What designers should NOT do in Cursor:**
+- Delete or rename token keys
+- Add brand-new tokens (request via team)
+- Edit files outside `tokens/`
+- Commit directly to `main`
+
+**Safety guardrails:**
+- `.cursor/rules/designer-tokens.md` guides the AI to enforce branch workflow
+- `npm run tokens:check` validates no tokens were removed and all brands stay consistent
+- PR review by a developer is required before merge
+
 ### C. Designer workflow: Theming a new brand
 
 ```
@@ -488,6 +526,7 @@ hearst/
 | `npm run dev` | Start Next.js dev server | Development |
 | `npm run build` | Production build | CI/CD |
 | `npm run storybook` | Start Storybook | Component development |
+| `npm run tokens:check` | Pre-commit safety check | Before committing token changes (especially for designers) |
 | `npm run sync-pencil` | Legacy: Pencil → code | Only if Pencil has unsynced changes |
 | `npm run tokens:pipeline` | Legacy: Token Studio API → code | One-time imports |
 
@@ -501,13 +540,18 @@ hearst/
 - Design freely in Figma — it's your primary tool
 - When a component is approved, rebuild it in Pencil using production tokens
 - Use Pencil variables (`$brand-1`, `$content-default`, `$space-md`) for all values
-- Request token changes through the team (developer edits git, syncs to Pencil)
+- For simple value changes: edit tokens directly in Cursor (see workflow B2)
+- For new tokens or structural changes: request through the team
 - Reference Storybook to see how components render in code
+- Always work on a branch, never commit to `main`
+- Run `tokens:check` before committing
 
 **DON'T:**
 - Define new token values in Figma and expect them to reach production
 - Hardcode hex values in Pencil — always use variables
 - Treat Figma inspect as the source of truth for spacing/color values
+- Delete or rename token keys without developer review
+- Commit directly to `main` — always open a PR
 
 ### For Developers
 
@@ -796,9 +840,11 @@ https://hips.hearstapps.com/hmg-prod/images/{image-id}?resize=980:*
 │                                  push-figma ──sync──►  Figma vars           │
 │                                  push-pencil ──sync──► .pen file            │
 │                                                                              │
-│  NEVER edit:                     NEVER edit:                                 │
-│  × Figma Variables directly      × brands.ts directly                       │
-│  × Token JSON files              × tokens.css directly                      │
+│  CAN edit (in Cursor):           NEVER edit:                                 │
+│  ✓ Token values (on a branch)    × brands.ts directly                       │
+│  NEVER edit:                     × tokens.css directly                      │
+│  × Figma Variables directly                                                 │
+│  × Commit to main directly                                                  │
 │                                                                              │
 └──────────────────────────────────────────────────────────────────────────────┘
 ```

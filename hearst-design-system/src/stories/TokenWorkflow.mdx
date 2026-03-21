@@ -20,17 +20,24 @@ How designers and developers communicate to create, request, and deliver design 
 
 ---
 
-## The Two Directions
+## The Three Directions
 
-Token work always flows in one of two directions. Each direction has a clear initiator, a set of tools, and a handoff point.
+Token work flows in one of three directions. Each direction has a clear initiator, a set of tools, and a handoff point.
 
-<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px', margin: '24px 0' }}>
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', margin: '24px 0' }}>
   <div style={{ border: '2px solid #2563eb', borderRadius: '12px', padding: '24px', background: '#eff6ff' }}>
     <h3 style={{ margin: '0 0 8px', color: '#2563eb', fontSize: '16px' }}>Designer Requests a Token</h3>
     <p style={{ margin: '0 0 12px', fontSize: '13px', color: '#475569' }}>
       The designer identifies a need during design work and asks the developer to create or update a token in Git.
     </p>
     <div style={{ fontSize: '13px', color: '#1e40af', fontWeight: 600 }}>Designer initiates, Developer delivers</div>
+  </div>
+  <div style={{ border: '2px solid #d97706', borderRadius: '12px', padding: '24px', background: '#fffbeb' }}>
+    <h3 style={{ margin: '0 0 8px', color: '#d97706', fontSize: '16px' }}>Designer Edits in Cursor</h3>
+    <p style={{ margin: '0 0 12px', fontSize: '13px', color: '#475569' }}>
+      For simple value changes (colors, spacing, fonts), the designer edits token JSON directly in Cursor with AI assistance. Always on a branch, always with a PR.
+    </p>
+    <div style={{ fontSize: '13px', color: '#92400e', fontWeight: 600 }}>Designer self-serves, Developer reviews</div>
   </div>
   <div style={{ border: '2px solid #059669', borderRadius: '12px', padding: '24px', background: '#ecfdf5' }}>
     <h3 style={{ margin: '0 0 8px', color: '#059669', fontSize: '16px' }}>Developer Delivers New Tokens</h3>
@@ -60,6 +67,11 @@ Each role has specific tools for specific tasks. Using the right tool at the rig
   </thead>
   <tbody>
     <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Change a token value</td>
+      <td style={{ padding: '10px 16px' }}>Cursor (with AI)</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Edit the JSON value directly — AI creates a branch, runs validation, opens a PR</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
       <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Request a new token</td>
       <td style={{ padding: '10px 16px' }}>Jira / Slack / GitHub Issue</td>
       <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>File a request with the token purpose, value(s), and which brands it affects</td>
@@ -238,7 +250,67 @@ The designer opens Figma or Pencil, searches for the token name, and confirms it
 
 ---
 
-## Flow 2: Developer Creates Tokens Proactively
+## Flow 2: Designer Edits Tokens in Cursor
+
+<div style={{ background: '#fffbeb', border: '2px solid #d97706', borderRadius: '12px', padding: '24px', margin: '24px 0' }}>
+
+For simple value changes — updating a color, adjusting spacing, changing a font — designers can edit tokens directly in Cursor with AI assistance. The AI enforces safety guardrails automatically.
+
+### What designers CAN change
+
+| Change | Example | File |
+|--------|---------|------|
+| Brand color | `#d70000` → `#cc0000` | `tokens/brands/{slug}.json` |
+| Spacing value | `16` → `20` | `tokens/core/global.json` |
+| Font family | `"Inter"` → `"Roboto"` | `tokens/brands/_meta.json` |
+| Font weight | `400` → `500` | `tokens/brands/_meta.json` |
+
+### What designers should NOT change
+
+- Token **keys** (names) — only values
+- Adding or removing tokens — request via team
+- Files outside `tokens/` — never
+- Semantic aliases — requires developer understanding
+
+### Step 1 — Open Cursor and describe the change
+
+Tell the AI what you want in natural language:
+- "Change Cosmopolitan's brand-1 color to #cc0000"
+- "Update the space-md value from 16 to 20"
+- "Change Elle's headline font to Didot"
+
+### Step 2 — AI creates a branch and makes the edit
+
+The AI automatically:
+1. Creates a branch (`tokens/update-cosmo-brand-color`)
+2. Edits only the value in the JSON file
+3. Runs `npm run build-tokens` to regenerate code
+4. Runs `npm run tokens:check` to validate safety
+
+### Step 3 — Preview the change
+
+The AI starts the dev server so you can see the change across brands:
+```bash
+npm run dev
+```
+
+### Step 4 — AI commits and opens a PR
+
+The AI commits the changes and opens a pull request. A developer reviews the PR before it merges to `main`.
+
+### Step 5 — After merge
+
+A developer runs the post-merge sync:
+```bash
+npm run push-figma          # Tokens appear in Figma variables
+npm run push-pencil         # Tokens appear in Pencil variables
+```
+
+</div>
+
+---
+
+## Flow 3: Developer Creates Tokens Proactively
 
 <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '24px', margin: '24px 0' }}>
 
@@ -363,24 +435,24 @@ From request to production, every token passes through these stages. Each stage 
 DESIGNER                          DEVELOPER                         DESIGNER
 ────────                          ─────────                         ────────
 
+Path A: Request                                                     
 1. Identify need            2. Create token in JSON          7. Verify in Figma
    (Figma / Pencil)            (VS Code / Cursor)              (Variables panel)
         │                           │
         │  Request via              │  npm run build-tokens    8. Verify in Pencil
-        │  Jira / Slack             │  npm run tokens:validate    ($token-name)
+        │  Jira / Slack             │  npm run tokens:check       ($token-name)
         │  GitHub Issue             │
         ▼                      3. Preview locally              9. Use in designs
    Token Request                   (npm run dev)                  (Figma / Pencil)
                                     │
                                4. Open PR
-                                   (Git / GitHub)
-                                    │
-                               5. Merge to main
-                                   (GitHub)
-                                    │
-                               6. Sync to design tools
-                                   npm run push-figma
-                                   npm run push-pencil
+Path B: Self-serve                  │
+1. Open Cursor              5. Merge to main
+2. Ask AI to change value      (GitHub)
+3. AI creates branch,           │
+   edits JSON, validates    6. Sync to design tools
+4. AI opens PR ─────────►      npm run push-figma
+   (developer reviews)         npm run push-pencil
                                     │
                                     ▼
                                Netlify auto-deploys
@@ -432,12 +504,13 @@ Use this when notifying designers that new tokens are available.
 
 | Action | Designer | Developer |
 |--------|----------|-----------|
-| Request a new token | Files a ticket with the template above | -- |
+| Change a token value | Edits in Cursor (AI creates branch + PR) | Reviews and merges the PR |
+| Request a new token | Files a ticket with the template above | Creates the token in JSON |
 | Name the token | Suggests a purpose (developer finalizes the name) | Applies the naming convention |
 | Choose the value | Provides the value (hex, px, font) | Enters it in the JSON file |
 | Decide which file | -- | Chooses core, semantic, or brand JSON |
-| Build and validate | -- | Runs `build-tokens` and `tokens:validate` |
-| Review the PR | Optional: reviews the values | Creates and merges the PR |
+| Build and validate | AI runs `build-tokens` + `tokens:check` (in Cursor) | Runs `build-tokens` and `tokens:validate` |
+| Review the PR | Optional: reviews the values | Reviews and merges the PR |
 | Sync to Figma | Verifies in the Variables panel | Runs `push-figma` |
 | Sync to Pencil | Verifies with `$token-name` | Runs `push-pencil` |
 | Use in designs | Applies the variable in Figma / Pencil | -- |
@@ -452,7 +525,8 @@ Use this when notifying designers that new tokens are available.
     <h4 style={{ margin: '0 0 12px 0', color: '#16a34a' }}>DO</h4>
     <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '14px', lineHeight: '1.8', color: '#334155' }}>
       <li>Always create tokens in <strong>Git first</strong></li>
-      <li>Run <code style={{ background: '#e2e8f0', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>build-tokens</code> after every edit</li>
+      <li>Designers: use Cursor for simple value changes (on a branch)</li>
+      <li>Run <code style={{ background: '#e2e8f0', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>build-tokens</code> + <code style={{ background: '#e2e8f0', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>tokens:check</code> after every edit</li>
       <li>Run <code style={{ background: '#e2e8f0', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>push-figma</code> + <code style={{ background: '#e2e8f0', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>push-pencil</code> after merging</li>
       <li>Notify designers with the canonical name</li>
       <li>Include context links in token requests</li>
@@ -465,7 +539,8 @@ Use this when notifying designers that new tokens are available.
       <li>Create tokens directly in Figma (they get overwritten)</li>
       <li>Hardcode hex values in Pencil (use <code style={{ background: '#e2e8f0', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>$variable</code>)</li>
       <li>Edit <code style={{ background: '#e2e8f0', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>brands.ts</code> or <code style={{ background: '#e2e8f0', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>tokens.css</code> directly (generated files)</li>
-      <li>Skip the PR review step</li>
+      <li>Skip the PR review step (even for designer self-serve edits)</li>
+      <li>Commit directly to <code style={{ background: '#e2e8f0', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>main</code> — always use a branch</li>
       <li>Forget to sync after merging</li>
       <li>Use Figma inspect values as source of truth</li>
     </ul>

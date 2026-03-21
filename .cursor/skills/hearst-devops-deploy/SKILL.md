@@ -68,8 +68,19 @@ git add . && git commit -m "message" && git push
 
 - Main branch auto-deploys to production
 - Commit messages should describe the "why" not the "what"
-- Run `build-tokens` before committing if tokens were changed
+- Run `build-tokens` and `tokens:check` before committing if tokens were changed
 - After merge: run `push-figma` and `push-pencil` to sync consumers
+
+## Designer Branch Workflow
+
+Designers editing tokens in Cursor must follow this workflow:
+
+1. Create a branch: `git checkout -b tokens/{description}`
+2. Edit token values (never commit to `main` directly)
+3. Run `npm run build-tokens && npm run tokens:check`
+4. Commit and push the branch
+5. Open a PR for developer review
+6. Developer merges after review, then runs `push-figma` + `push-pencil`
 
 ## .gitignore (relevant entries)
 

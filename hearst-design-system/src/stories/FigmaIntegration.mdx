@@ -122,8 +122,8 @@ When inspecting a design, the **codeSyntax.WEB** value tells developers exactly 
 
 | Don't | Why | Instead |
 |-------|-----|---------|
-| Edit Figma Variables directly | They'll be overwritten on next `push-figma` | Request a token change via the team |
-| Define new token values in Figma | They won't reach production | File a request — developer adds to `tokens/` |
+| Edit Figma Variables directly | They'll be overwritten on next `push-figma` | Edit the token value in Cursor (on a branch) or request via the team |
+| Define new token values in Figma | They won't reach production | For value changes: edit in Cursor. For new tokens: file a request — developer adds to `tokens/` |
 | Use Figma inspect hex values as source of truth | Inspect shows resolved values, not token references | Use the variable name / codeSyntax.WEB |
 | Detach variables from components | Breaks the token binding | Keep variables attached |
 

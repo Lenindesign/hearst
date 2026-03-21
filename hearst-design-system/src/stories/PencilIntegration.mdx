@@ -273,6 +273,15 @@ When an LLM (Cursor, Claude, etc.) needs to make design system changes:
 5. **Name it properly** — `Component/{Category}/{Name}`
 6. **Verify** with `get_screenshot`
 
+### Editing token values (designer self-serve)
+
+Designers can also edit token values directly in Cursor with AI assistance:
+
+1. Open Cursor and describe the change (e.g. "Change Cosmo's brand-1 to #cc0000")
+2. The AI creates a branch, edits the JSON value, runs `build-tokens` + `tokens:check`
+3. The AI opens a PR for developer review
+4. After merge, developer runs `push-pencil` to sync Pencil
+
 ### Rules for Pencil components
 
 | Do | Don't |

@@ -17,10 +17,12 @@
     "tokens:import": "tsx scripts/import-token-studio.ts",
     "tokens:import:snapshot": "tsx scripts/import-token-studio.ts --snapshot-only",
     "tokens:validate": "tsx scripts/validate-tokens.ts",
+    "tokens:check": "tsx scripts/check-tokens.ts",
     "tokens:build": "style-dictionary build --config style-dictionary.config.mjs",
     "tokens:pipeline": "npm run tokens:import && npm run tokens:build",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "deploy-storybook": "storybook build -o storybook-static && npx netlify deploy --prod --dir=storybook-static --site=011b0ad8-3701-4ddd-b4ed-2dfd7c3ef52f"
   },
   "dependencies": {
     "@base-ui/react": "^1.2.0",

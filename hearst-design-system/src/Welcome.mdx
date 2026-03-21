@@ -210,6 +210,16 @@ The Pioneer Woman, Town & Country, Veranda, Woman's Day, Women's Health
 4. After merge, developer runs `push-pencil` to sync Pencil
 5. Designer sees the updated token automatically
 
+### Designer workflow: Editing tokens directly in Cursor
+
+For simple value changes (colors, spacing, fonts), designers can self-serve:
+
+1. Open Cursor and describe the change in natural language
+2. AI creates a branch, edits the JSON value, runs `build-tokens` + `tokens:check`
+3. Designer previews in the dev server across 3+ brands
+4. AI opens a PR for developer review
+5. After merge, developer runs `push-figma` + `push-pencil`
+
 ### Developer workflow: Adding or changing a token
 
 1. Edit the JSON file in `tokens/`
@@ -283,13 +293,17 @@ hearst/
 - Design freely in Figma — it's your primary tool
 - Rebuild approved components in Pencil using production tokens
 - Use Pencil variables (`$brand-1`, `$content-default`, `$space-md`) for all values
-- Request token changes through the team
+- For simple value changes: edit tokens directly in Cursor (on a branch)
+- For new tokens or structural changes: request through the team
 - Reference Storybook to see how components render in code
+- Always work on a branch, never commit to `main`
 
 **DON'T:**
 - Define new token values in Figma and expect them to reach production
 - Hardcode hex values in Pencil — always use variables
 - Treat Figma inspect as the source of truth for spacing/color values
+- Delete or rename token keys without developer review
+- Commit directly to `main` — always open a PR
 
 ### For Developers
 
@@ -347,8 +361,9 @@ hearst/
 | | Designer | Developer | CI/CD |
 |---|---|---|---|
 | **Creates** | Figma explorations, Pencil handoff | Token JSON, React components, Stories | Netlify builds |
+| **Can edit (in Cursor)** | Token values (on a branch, with PR) | Everything in tokens/ | — |
 | **Reviews** | Storybook, staging | PRs with token JSON + code | — |
-| **Never edits** | Figma Variables directly, Token JSON | brands.ts directly, tokens.css directly | — |
+| **Never edits** | Figma Variables directly | brands.ts directly, tokens.css directly | — |
 
 ---
 

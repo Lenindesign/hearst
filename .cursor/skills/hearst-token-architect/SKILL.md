@@ -50,18 +50,39 @@ autoweek, best-products, bicycling, biography, car-and-driver, cosmopolitan, cou
 | `npm run push-pencil` | Syncs tokens to Pencil `.pen` file |
 | `npm run push-figma` | Syncs tokens to Figma variables |
 | `npm run tokens:validate` | Validates token structure |
+| `npm run tokens:check` | Pre-commit safety check (no removals, brand consistency, hex validation) |
 
-## Workflow
+## Workflow (Developer)
 
 1. Edit token JSON files in `tokens/`
 2. Run `npm run build-tokens` to regenerate code
-3. Verify changes in dev server with multiple brands
-4. After merge: run `push-figma` and `push-pencil` to sync consumers
+3. Run `npm run tokens:check` to validate safety
+4. Verify changes in dev server with multiple brands
+5. After merge: run `push-figma` and `push-pencil` to sync consumers
+
+## Workflow (Designer in Cursor)
+
+Designers can edit token **values** directly with AI assistance:
+
+1. Create a branch: `git checkout -b tokens/{description}`
+2. Edit only the **value** in the JSON file (never keys)
+3. Run `npm run build-tokens && npm run tokens:check`
+4. Preview in dev server across 3+ brands
+5. Commit and open a PR for developer review
+6. After merge: developer runs `push-figma` and `push-pencil`
+
+### Designer guardrails
+- **ALWAYS** work on a branch, never commit to `main`
+- **ONLY** change values — never delete, rename, or add token keys
+- **ALWAYS** run `tokens:check` before committing
+- **ALWAYS** open a PR — developer review is required
+- See `.cursor/rules/designer-tokens.md` for the full Cursor rule
 
 ## Rules
 
 - **NEVER** edit `brands.ts` or `tokens.css` directly
 - **ALWAYS** run `build-tokens` after editing token JSON
+- **ALWAYS** run `tokens:check` before committing (catches removals, inconsistencies, invalid hex)
 - **Adding a new brand:** Create `tokens/brands/{slug}.json`, add font overrides to `_meta.json`, run `build-tokens`
 - Font size values are in **rem** (not px)
 - The `$brand-1` syntax in aliases.json references the brand-specific `brand-1` value from the active brand file
