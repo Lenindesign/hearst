@@ -59,11 +59,9 @@ A proposal for simplifying the Hearst typography token architecture. This docume
 
 Our current typography tokens are **deeply nested, hard to memorize, and difficult for designers to adopt**. A single headline token looks like this:
 
-<div style={{ background: '#1e293b', borderRadius: '12px', padding: '24px', margin: '24px 0', overflowX: 'auto' }}>
-  <span style={{ fontSize: '14px', color: '#f87171', fontFamily: 'monospace', display: 'block' }}>
-    typography.component.card.core.content.title.default.5xl
-  </span>
-  <span style={{ fontSize: '12px', color: '#94a3b8', marginTop: '8px', display: 'block' }}>9 segments. Requires knowledge of component hierarchy to choose the right token.</span>
+<div style={{ background: '#1e293b', borderRadius: '12px', padding: '24px', margin: '24px 0', overflowX: 'auto', color: '#94a3b8' }}>
+  <div style={{ fontSize: '14px', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', color: '#f87171', marginBottom: '8px' }}>typography.component.card.core.content.title.default.5xl</div>
+  <div style={{ fontSize: '12px', color: '#94a3b8' }}>9 segments. Requires knowledge of component hierarchy to choose the right token.</div>
 </div>
 
 ### Key issues
