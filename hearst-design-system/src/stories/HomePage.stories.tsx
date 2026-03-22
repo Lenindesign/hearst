@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 import { HomePageTemplate } from "@/components/home-page";
+import { VisualInspector } from "@/components/visual-inspector";
 
 function HomePageWrapper() {
   return (
@@ -29,4 +30,13 @@ type Story = StoryObj;
 export const Default: Story = {
   name: "Full Page",
   render: () => <HomePageWrapper />,
+};
+
+export const WithInspector: Story = {
+  name: "Visual Inspector",
+  render: () => (
+    <VisualInspector>
+      <HomePageWrapper />
+    </VisualInspector>
+  ),
 };

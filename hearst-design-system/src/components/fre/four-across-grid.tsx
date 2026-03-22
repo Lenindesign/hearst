@@ -26,7 +26,7 @@ export interface FourAcrossGridProps {
 export function FourAcrossGrid({
   items,
   columns = 4,
-  gap = 20,
+  gap,
   aspectRatio = "4/3",
   showNumbers = false,
   onCardClick,
@@ -36,7 +36,11 @@ export function FourAcrossGrid({
   return (
     <div
       className={cn("grid", className)}
-      style={{ gridTemplateColumns: `repeat(${columns}, 1fr)`, gap, ...style }}
+      style={{
+        gridTemplateColumns: `repeat(${columns}, 1fr)`,
+        gap: gap ?? "var(--space-lg, 20px)",
+        ...style,
+      }}
     >
       {items.map((item, i) => (
         <ArticleCard
@@ -49,10 +53,7 @@ export function FourAcrossGrid({
           <div className="relative">
             <ArticleCardImage src={item.image} aspectRatio={aspectRatio} className="rounded-lg" />
             {showNumbers && (
-              <div
-                className="absolute top-2 left-2 z-20 flex items-center justify-center rounded-full text-xs font-bold bg-primary text-primary-foreground"
-                style={{ width: 26, height: 26 }}
-              >
+              <div className="absolute top-2 left-2 z-20 flex size-[var(--space-xl,24px)] items-center justify-center rounded-full text-xs font-bold bg-primary text-primary-foreground">
                 {i + 1}
               </div>
             )}

@@ -138,7 +138,7 @@ function ArticleCardEyebrow({
     <span
       data-slot="article-card-eyebrow"
       className={cn(
-        "text-[11px] font-semibold uppercase tracking-widest text-primary",
+        "text-[length:var(--text-token-4xs)] font-semibold uppercase tracking-widest text-primary",
         "group-data-[size=lg]/article-card:text-xs",
         className
       )}
@@ -201,7 +201,7 @@ function ArticleCardMeta({
       data-slot="article-card-meta"
       className={cn(
         "mt-auto flex items-center gap-2 pt-1 text-xs text-muted-foreground",
-        "group-data-[size=sm]/article-card:text-[11px]",
+        "group-data-[size=sm]/article-card:text-[length:var(--text-token-4xs)]",
         className
       )}
       {...props}

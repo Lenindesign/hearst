@@ -721,7 +721,7 @@ function getContent(brandSlug: string): ContentType {
 
 function UtilityBar() {
   return (
-    <div className="flex items-center justify-between px-3 h-8 text-[11px] font-semibold bg-primary text-primary-foreground">
+    <div className="flex items-center justify-between px-3 h-8 text-[length:var(--text-token-4xs)] font-semibold bg-primary text-primary-foreground">
       <div className="flex items-center gap-3">
         {["Shop", "Newsletter", "Sign In"].map((label) => (
           <LinkComponent
@@ -735,7 +735,7 @@ function UtilityBar() {
           </LinkComponent>
         ))}
       </div>
-      <Button variant="secondary" size="xs" className="text-[11px] font-semibold">
+      <Button variant="secondary" size="xs" className="text-[length:var(--text-token-4xs)] font-semibold">
         Subscribe
       </Button>
     </div>
@@ -749,24 +749,24 @@ function MainNav({ brandSlug }: { brandSlug: string }) {
 
   return (
     <div className="border-b border-border py-2 px-6">
-      <div className="flex items-center justify-between py-2 max-w-[1360px] mx-auto">
-        <div className="w-[180px]" />
+      <div className="flex items-center justify-between py-2 max-w-[var(--width-content-max)] mx-auto">
+        <div className="w-[var(--width-sidebar-narrow)]" />
         <div className="text-center">
           {logo ? (
             <BrandLogo slug={brand.slug} className="[&_svg]:h-10 [&_svg]:w-auto mx-auto" />
           ) : (
-            <h1 className="text-2xl tracking-[6px] uppercase headline">
+            <h1 className="text-2xl tracking-widest uppercase headline">
               {brand.name}
             </h1>
           )}
         </div>
-        <div className="w-[180px] flex justify-end gap-2">
+        <div className="w-[var(--width-sidebar-narrow)] flex justify-end gap-2">
           <Button variant="outline" size="icon-sm">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           </Button>
         </div>
       </div>
-      <nav className="flex items-center justify-center gap-6 py-2 max-w-[1360px] mx-auto overflow-x-auto scrollbar-hide">
+      <nav className="flex items-center justify-center gap-6 py-2 max-w-[var(--width-content-max)] mx-auto overflow-x-auto scrollbar-hide">
         {content.navLinks.map((link) => (
           <LinkComponent
             key={link}
@@ -794,7 +794,7 @@ function CollectionList({ brandSlug }: { brandSlug: string }) {
   }));
 
   return (
-    <div className="w-full lg:w-[320px] shrink-0 space-y-3">
+    <div className="w-full lg:w-[var(--width-sidebar)] shrink-0 space-y-3">
       <div className="space-y-2">
         <h3 className="text-xl uppercase headline text-primary">
           {content.collectionTitle}
@@ -807,7 +807,7 @@ function CollectionList({ brandSlug }: { brandSlug: string }) {
         thumbnailHeight={72}
         headlineFontSize={14}
         showDividers={false}
-        style={{ maxWidth: "100%", gap: 12 }}
+        style={{ maxWidth: "100%", gap: "var(--space-sm, 12px)" }}
       />
     </div>
   );
@@ -847,17 +847,17 @@ function RightRail({ brandSlug }: { brandSlug: string }) {
   }));
 
   return (
-    <div className="w-full lg:w-[321px] shrink-0 space-y-8">
+    <div className="w-full lg:w-[var(--width-sidebar)] shrink-0 space-y-8">
       <BigStoryFeedStacked
         items={feedItems}
         thumbnailWidth={100}
         thumbnailHeight={100}
         headlineFontSize={14}
         showDividers={false}
-        style={{ maxWidth: "100%", gap: 16 }}
+        style={{ maxWidth: "100%", gap: "var(--space-md, 16px)" }}
       />
       <div className="flex flex-col items-center gap-1 py-4 rounded bg-muted">
-        <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
+        <span className="text-[length:var(--text-token-4xs)] uppercase tracking-wider text-muted-foreground">
           Advertisement
         </span>
         <div className="w-[300px] h-[250px] rounded-md flex items-center justify-center text-sm bg-muted text-muted-foreground border border-border">
@@ -877,7 +877,7 @@ function NewsletterPromo({ brandSlug }: { brandSlug: string }) {
         <p className="text-xs font-bold uppercase tracking-widest font-brand-secondary text-foreground">
           Sign up for {brand.name}&rsquo;s Newsletter
         </p>
-        <h3 className="text-2xl lg:text-[32px] leading-tight headline">
+        <h3 className="text-2xl lg:text-[length:var(--text-token-5xl)] leading-tight headline">
           Hear from our expert journalists.
         </h3>
       </div>
@@ -892,7 +892,7 @@ function NewsletterPromo({ brandSlug }: { brandSlug: string }) {
           Sign Me Up
         </Button>
       </div>
-      <p className="text-[11px] leading-relaxed text-muted-foreground">
+      <p className="text-[length:var(--text-token-4xs)] leading-relaxed text-muted-foreground">
         By signing up, I agree to the{" "}
         <LinkComponent variant="neutral" underline size="xs" className="font-normal">Terms of Use</LinkComponent>{" "}
         (including the{" "}
@@ -927,7 +927,7 @@ function TrendingSection({ brandSlug }: { brandSlug: string }) {
       <FourAcrossGrid
         items={gridItems}
         columns={5}
-        gap={16}
+        gap={undefined}
         aspectRatio="1/1"
         showNumbers
       />
@@ -939,7 +939,7 @@ function Footer({ brandSlug }: { brandSlug: string }) {
   const { brand } = useTheme();
 
   return (
-    <div className="max-w-[1360px] mx-auto pt-12">
+    <div className="max-w-[var(--width-content-max)] mx-auto pt-12">
       <SiteFooter
         siteName={brand.name}
         socialLinks={["YouTube", "Facebook", "Instagram", "Pinterest"]}
@@ -955,7 +955,7 @@ export function HomePageTemplate() {
 
   return (
     <div className="min-h-screen font-brand bg-background">
-      <div className="max-w-[1440px] mx-auto">
+      <div className="max-w-[var(--width-page-max)] mx-auto">
 
         {/* Ad Banner */}
         <div className="flex items-center justify-center h-[100px] lg:h-[250px] bg-muted">
@@ -971,7 +971,7 @@ export function HomePageTemplate() {
         <MainNav brandSlug={brand.slug} />
 
         {/* Page Body */}
-        <div className="max-w-[1360px] mx-auto px-4 lg:px-0 pt-8 lg:pt-12 space-y-12 lg:space-y-16">
+        <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-0 pt-8 lg:pt-12 space-y-12 lg:space-y-16">
           {/* Top Section: Collection + Hero + Right Rail */}
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
             {/* Left Column */}

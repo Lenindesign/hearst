@@ -41,7 +41,7 @@ export function SiteFooter({
             {siteName}
           </div>
           {showSocialLinks && (
-            <div className="flex gap-4 text-[13px]">
+            <div className="flex gap-4 text-[length:var(--text-token-2xs)]">
               {socialLinks.map((s) => (
                 <LinkComponent
                   key={s}
@@ -57,7 +57,7 @@ export function SiteFooter({
             </div>
           )}
         </div>
-        <div className="flex gap-8 text-[13px]">
+        <div className="flex gap-8 text-[length:var(--text-token-2xs)]">
           <div className="flex flex-col gap-2">
             <span className="font-semibold mb-1">Other Hearst Subscriptions</span>
             <LinkComponent
@@ -75,7 +75,7 @@ export function SiteFooter({
 
       <Separator className="bg-background/15" />
 
-      <div className="flex justify-between items-center pt-5 text-[11px] opacity-60">
+      <div className="flex justify-between items-center pt-5 text-[length:var(--text-token-4xs)] opacity-60">
         <div>A Part of Hearst Digital Media</div>
         <div className="flex gap-4">
           {legalLinks.map((link) => (
@@ -92,7 +92,7 @@ export function SiteFooter({
           ))}
         </div>
       </div>
-      <div className="text-[10px] opacity-40 mt-3">
+      <div className="text-[length:var(--text-token-4xs)] opacity-40 mt-3">
         &copy;{copyrightYear} Hearst Magazine Media, Inc. All Rights Reserved.
       </div>
     </footer>

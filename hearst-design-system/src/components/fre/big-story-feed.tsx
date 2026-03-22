@@ -37,7 +37,7 @@ export function BigStoryFeedColRight({
   className,
 }: BigStoryFeedColRightProps) {
   return (
-    <div className={cn("grid grid-cols-[1fr_360px] gap-6", className)}>
+    <div className={cn("grid grid-cols-[1fr_var(--width-sidebar)] gap-6", className)}>
       <div
         className="relative overflow-hidden rounded-lg cursor-pointer"
         onClick={onHeroClick}
@@ -48,8 +48,8 @@ export function BigStoryFeedColRight({
           className="w-full object-cover block"
           style={{ height: heroHeight }}
         />
-        <div className="absolute inset-x-0 bottom-0 px-6 pb-6 pt-8 bg-gradient-to-t from-black/75 to-transparent text-white">
-          <h2 className="text-[28px] leading-tight headline">{heroTitle}</h2>
+        <div className="absolute inset-x-0 bottom-0 px-6 pb-6 pt-8 bg-gradient-to-t from-foreground/75 to-transparent text-background">
+          <h2 className="text-[length:var(--text-token-3xl)] leading-tight headline">{heroTitle}</h2>
         </div>
       </div>
       <div className="flex flex-col gap-4">

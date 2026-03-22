@@ -51,7 +51,7 @@ export function BigStoryImageRight({
   const isTop = imagePosition === "top";
   const headlineClass = headlineFontSize
     ? ""
-    : isTop ? "text-2xl lg:text-[32px]" : "text-2xl lg:text-4xl";
+    : isTop ? "text-2xl lg:text-[length:var(--text-token-5xl)]" : "text-2xl lg:text-4xl";
 
   return (
     <ArticleCard
@@ -131,7 +131,7 @@ export function BigStoryTextOnly({
   style,
   className,
 }: BigStoryTextOnlyProps) {
-  const headlineClass = headlineFontSize ? "" : "text-3xl lg:text-[40px]";
+  const headlineClass = headlineFontSize ? "" : "text-3xl lg:text-[length:var(--text-token-7xl)]";
 
   return (
     <ArticleCard

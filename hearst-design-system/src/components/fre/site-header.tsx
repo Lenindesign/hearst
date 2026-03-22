@@ -38,10 +38,10 @@ export function SiteHeader({
       )}
     >
       <div className="flex items-center gap-6">
-        <div className="text-[22px] font-extrabold font-headline italic tracking-tight">
+        <div className="text-[length:var(--text-token-xl)] font-extrabold font-headline italic tracking-tight">
           {siteName}
         </div>
-        <nav className="flex gap-5 text-[13px] font-medium">
+        <nav className="flex gap-5 text-[length:var(--text-token-2xs)] font-medium">
           {navItems.map((item) => (
             <LinkComponent
               key={item}
@@ -56,7 +56,7 @@ export function SiteHeader({
           ))}
         </nav>
       </div>
-      <div className="flex items-center gap-4 text-[13px]">
+      <div className="flex items-center gap-4 text-[length:var(--text-token-2xs)]">
         {showSearch && (
           <LinkComponent variant="neutral" underline={false} size="sm" onClick={onSearchClick}>
             Search
