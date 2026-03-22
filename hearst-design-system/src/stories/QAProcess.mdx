@@ -165,41 +165,157 @@ When a PR touches files in `tokens/`, QA reviews it before merge. Here is the ch
 
 ### Naming Review
 
-| Check | How to verify | Pass criteria |
-|-------|---------------|---------------|
-| Follows naming convention | Read the token key in the JSON | Matches `layer-category-element-variant-state` pattern |
-| Uses existing segment values | Compare against Token Naming Guide | Uses established sizes, states, and variants |
-| No typos | Visual inspection | Spelling is correct (check the Known Typos list) |
-| No duplicates | Search the JSON file for similar names | No existing token with the same purpose |
-| Correct prefix | Check if component-scoped | Component tokens start with `component-` |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Check</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>How to verify</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Pass criteria</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Follows naming convention</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Read the token key in the JSON</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Matches <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>layer-category-element-variant-state</code> pattern</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Uses existing segment values</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Compare against Token Naming Guide</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Uses established sizes, states, and variants</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>No typos</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Visual inspection</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Spelling is correct (check the Known Typos list)</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>No duplicates</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Search the JSON file for similar names</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>No existing token with the same purpose</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Correct prefix</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Check if component-scoped</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Component tokens start with <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-</code></td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 ### Value Review
 
-| Check | How to verify | Pass criteria |
-|-------|---------------|---------------|
-| Color values are valid hex | Inspect the value | 6-digit hex with `#` prefix |
-| Numbers are reasonable | Compare to existing scale | Spacing, radius, and sizes fit the established scale |
-| Font names are correct | Cross-reference with `_meta.json` | Matches a font available in the system |
-| Brand-specific values differ | Compare across brand files | Each brand has an appropriate override |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Check</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>How to verify</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Pass criteria</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Color values are valid hex</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Inspect the value</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>6-digit hex with <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>#</code> prefix</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Numbers are reasonable</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Compare to existing scale</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Spacing, radius, and sizes fit the established scale</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Font names are correct</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Cross-reference with <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'_meta.json'}</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Matches a font available in the system</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Brand-specific values differ</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Compare across brand files</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Each brand has an appropriate override</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 ### File Placement Review
 
-| Check | How to verify | Pass criteria |
-|-------|---------------|---------------|
-| Global tokens in `core/global.json` | Check file path | Tokens that are the same across all brands |
-| Brand tokens in `brands/{slug}.json` | Check file path | Tokens that differ per brand |
-| Semantic aliases in `semantic/aliases.json` | Check file path | Aliases that reference `$brand-N` |
-| Font overrides in `_meta.json` | Check file path | Headline/secondary font overrides |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Check</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>How to verify</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Pass criteria</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Global tokens in <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>core/global.json</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Check file path</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Tokens that are the same across all brands</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Brand tokens in <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'brands/{slug}.json'}</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Check file path</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Tokens that differ per brand</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Semantic aliases in <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>semantic/aliases.json</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Check file path</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Aliases that reference <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'$brand-N'}</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Font overrides in <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'_meta.json'}</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Check file path</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Headline/secondary font overrides</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 ### Visual Review
 
-| Check | How to verify | Pass criteria |
-|-------|---------------|---------------|
-| Component renders correctly | Run `npm run dev` or `npm run storybook` | No visual breaks |
-| Works across 3+ brands | Switch brands in Storybook toolbar | Colors, fonts, and spacing adapt correctly |
-| No regressions | Compare existing components | Other components still look correct |
-| Build passes | Run `npm run build-tokens` | No errors in terminal |
-| Validation passes | Run `npm run tokens:validate` | No reference errors |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Check</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>How to verify</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Pass criteria</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Component renders correctly</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Run <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>npm run dev</code> or <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>npm run storybook</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>No visual breaks</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Works across 3+ brands</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Switch brands in Storybook toolbar</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Colors, fonts, and spacing adapt correctly</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>No regressions</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Compare existing components</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Other components still look correct</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Build passes</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Run <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>npm run build-tokens</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>No errors in terminal</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Validation passes</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Run <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>npm run tokens:validate</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>No reference errors</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 ### PR Review Template
 
@@ -229,27 +345,96 @@ After the PR is merged and the developer runs `push-figma` + `push-pencil`, QA (
 
 ### Figma Verification
 
-| Check | How to verify | Pass criteria |
-|-------|---------------|---------------|
-| Token exists | Open Variables panel, search by canonical name | Token appears in the "Hearst Design System" collection |
-| Correct value per brand | Switch between brand modes | Each mode shows the expected value |
-| codeSyntax.WEB is set | Inspect the variable | Shows the corresponding `--token-name` CSS variable |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Check</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>How to verify</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Pass criteria</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Token exists</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Open Variables panel, search by canonical name</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>{'Token appears in the "Hearst Design System" collection'}</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Correct value per brand</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Switch between brand modes</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Each mode shows the expected value</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>codeSyntax.WEB is set</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Inspect the variable</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Shows the corresponding <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'--token-name'}</code> CSS variable</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 ### Pencil Verification
 
-| Check | How to verify | Pass criteria |
-|-------|---------------|---------------|
-| Variable exists | Search variables in Pencil or use MCP `get_variables` | Variable appears with the canonical name |
-| Correct value per theme | Switch brand themes in Pencil | Each theme resolves to the expected value |
-| No stale duplicates | Check variable count | No duplicate entries for the same brand |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Check</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>How to verify</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Pass criteria</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Variable exists</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Search variables in Pencil or use MCP <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>get_variables</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Variable appears with the canonical name</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Correct value per theme</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Switch brand themes in Pencil</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Each theme resolves to the expected value</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>No stale duplicates</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Check variable count</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>No duplicate entries for the same brand</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 ### Production Verification
 
-| Check | How to verify | Pass criteria |
-|-------|---------------|---------------|
-| Storybook is deployed | Visit the production Storybook URL | New component/changes are visible |
-| Component renders correctly | Switch brands in the toolbar | All brands render as expected |
-| Token values match Git | Compare Storybook output to JSON values | CSS variables resolve to the correct values |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Check</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>How to verify</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Pass criteria</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Storybook is deployed</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Visit the production Storybook URL</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>New component/changes are visible</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Component renders correctly</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Switch brands in the toolbar</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>All brands render as expected</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Token values match Git</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Compare Storybook output to JSON values</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>CSS variables resolve to the correct values</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 ### Post-Sync Checklist
 

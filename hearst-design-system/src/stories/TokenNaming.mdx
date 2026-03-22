@@ -164,14 +164,59 @@ When creating a new token, assemble the canonical name using only the segments t
   layer - category - element - property - variant - state
 </div>
 
-| Segment | Required? | Examples |
-|---------|-----------|---------|
-| **layer** | Only for component tokens | `component` |
-| **category** | Always | `button`, `card`, `palette`, `font`, `space` |
-| **element** | When targeting a part | `background`, `border`, `content`, `icon` |
-| **property** | When specifying an attribute | `family`, `size`, `weight`, `radius` |
-| **variant** | When multiple variants exist | `primary`, `secondary`, `brand`, `danger` |
-| **state** | For interactive elements | `default`, `hover`, `active`, `disabled` |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Segment</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Required?</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Examples</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>layer</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Only for component tokens</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>category</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Always</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>button</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>card</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>font</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>space</code>
+      </td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>element</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>When targeting a part</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>background</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>border</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>content</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>icon</code>
+      </td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>property</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>When specifying an attribute</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>family</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>size</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>weight</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>radius</code>
+      </td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>variant</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>When multiple variants exist</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>primary</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>secondary</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>brand</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>danger</code>
+      </td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>state</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>For interactive elements</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>default</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>hover</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>active</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>disabled</code>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 **Examples of canonical names:**
 
@@ -272,15 +317,66 @@ Every token follows a consistent pattern. Not every segment is required -- use o
 
 ### Segment Reference
 
-| Segment | Required? | Values |
-|---------|-----------|--------|
-| **layer** | Only for component tokens | `component` |
-| **category** | Always | `button`, `card`, `badge`, `chip`, `input`, `palette`, `font`, `space`, `border`, `elevation`, `layout` |
-| **element** | When needed | `background`, `border`, `content`, `icon`, `gap`, `padding`, `radius`, `title`, `eyebrow`, `arrow` |
-| **variant** | When multiple variants exist | `primary`, `secondary`, `neutral`, `brand`, `knockout`, `danger`, `success`, `warning`, `highlight`, `info` |
-| **style** | For styled variants | `solid`, `outlined`, `transparent` |
-| **state** | For interactive elements | `default`, `hover`, `active`, `error`, `selected`, `disabled` |
-| **size** | For responsive values | `3xs`, `2xs`, `xs`, `sm`, `md`, `lg`, `xl`, `2xl`, `3xl`, `4xl`, `6xl` |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Segment</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Required?</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Values</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>layer</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Only for component tokens</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>category</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Always</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>button</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>card</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>badge</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>chip</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>input</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>font</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>space</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>border</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>elevation</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>layout</code>
+      </td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>element</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>When needed</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>background</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>border</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>content</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>icon</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>gap</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>padding</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>radius</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>title</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>eyebrow</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>arrow</code>
+      </td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>variant</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>When multiple variants exist</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>primary</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>secondary</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>neutral</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>brand</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>knockout</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>danger</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>success</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>warning</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>highlight</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>info</code>
+      </td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>style</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>For styled variants</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>solid</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>outlined</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>transparent</code>
+      </td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>state</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>For interactive elements</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>default</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>hover</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>active</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>error</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>selected</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>disabled</code>
+      </td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>size</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>For responsive values</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>3xs</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>2xs</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>xs</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>sm</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>md</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>lg</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>xl</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>2xl</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>3xl</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>4xl</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>6xl</code>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 ---
 
@@ -425,16 +521,59 @@ component-button-radius-default                        0
 
 ### Element types used in component tokens
 
-| Element | What it controls | Example |
-|---------|-----------------|---------|
-| `background` | Fill color | `component-button-background-primary-solid-default` |
-| `border` | Stroke color | `component-card-border-default` |
-| `content` | Text color | `component-button-content-primary-solid-default` |
-| `icon` | Icon color | `component-button-icon-primary-solid-default` |
-| `radius` | Corner rounding | `component-button-radius-default` |
-| `gap` | Spacing between children | `component-card-collection-eeat-gap-column-lg` |
-| `padding` | Internal spacing | `component-card-product-padding-block-sm` |
-| `min-width` | Minimum size | `component-card-min-width-desktop-4col` |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Element</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>What it controls</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>background</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Fill color</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-button-background-primary-solid-default</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>border</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Stroke color</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-card-border-default</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>content</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Text color</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-button-content-primary-solid-default</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>icon</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Icon color</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-button-icon-primary-solid-default</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>radius</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Corner rounding</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-button-radius-default</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>gap</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Spacing between children</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-card-collection-eeat-gap-column-lg</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>padding</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Internal spacing</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-card-product-padding-block-sm</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>min-width</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Minimum size</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-card-min-width-desktop-4col</code></td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 ---
 
@@ -537,17 +676,49 @@ Follow this flowchart when you need to create a new token.
 
 **Step 2: Is it scoped to a component?**
 
-| Answer | Action |
-|--------|--------|
-| **Yes** -- only used by one component | Prefix with `component-{name}-` |
-| **No** -- shared across components | Use the category prefix (`palette-`, `space-`, `font-`, etc.) |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Answer</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Yes</strong> -- only used by one component</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Prefix with <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'component-{name}-'}</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>No</strong> -- shared across components</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Use the category prefix (<code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'palette-'}</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'space-'}</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'font-'}</code>, etc.)</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 **Step 3: Does it change per brand?**
 
-| Answer | Action |
-|--------|--------|
-| **Yes** -- different value for Cosmo vs Esquire | Put the default in `core/global.json`, override in each `brands/{slug}.json` |
-| **No** -- same everywhere | Put only in `core/global.json` |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Answer</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Yes</strong> -- different value for Cosmo vs Esquire</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Put the default in <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>core/global.json</code>, override in each <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'brands/{slug}.json'}</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>No</strong> -- same everywhere</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Put only in <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>core/global.json</code></td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 **Step 4: Assemble the name**
 
@@ -596,15 +767,46 @@ Walk through creating tokens for a new component from scratch.
 
 ### Step 1: Identify what the component needs
 
-| Property | What it controls |
-|----------|-----------------|
-| background | Tooltip fill |
-| border | Tooltip stroke |
-| content | Text color |
-| arrow | Arrow fill |
-| radius | Corner rounding |
-| padding-block | Vertical padding |
-| padding-inline | Horizontal padding |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Property</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>What it controls</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>background</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Tooltip fill</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>border</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Tooltip stroke</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>content</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Text color</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>arrow</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Arrow fill</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>radius</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Corner rounding</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>padding-block</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Vertical padding</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>padding-inline</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Horizontal padding</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 ### Step 2: Identify variants and states
 
@@ -651,12 +853,34 @@ typography-component-tooltip-content-lg
 
 ### Step 4: Add to the right files
 
-| Token | File |
-|-------|------|
-| `component-tooltip-background-default` | `core/global.json` (default), `brands/{slug}.json` (if brand-specific) |
-| `component-tooltip-radius-default` | `core/global.json` only (same across brands) |
-| `component-tooltip-padding-block-sm` | `core/global.json` only |
-| `typography-component-tooltip-content-sm` | `brands/{slug}.json` (references font-family) |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Token</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>File</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-tooltip-background-default</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>core/global.json</code> (default), <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'brands/{slug}.json'}</code> (if brand-specific)</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-tooltip-radius-default</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>core/global.json</code> only (same across brands)</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-tooltip-padding-block-sm</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>core/global.json</code> only</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>typography-component-tooltip-content-sm</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'brands/{slug}.json'}</code> (references font-family)</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 ### Step 5: Run the pipeline
 
@@ -675,13 +899,38 @@ These typos exist in the current token set. Do not repeat them when creating new
 
 <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '20px', margin: '24px 0' }}>
 
-| Current Name (typo) | Correct Spelling |
-|---------------------|-----------------|
-| `border-netural-light` | `border-neutral-light` |
-| `component-badge-content-dager` | `component-badge-content-danger` |
-| `component-badge-content-kockout` | `component-badge-content-knockout` |
-| `component-badge-icon-kockout` | `component-badge-icon-knockout` |
-| `component-card-core-content-title-backgroud-default` | `component-card-core-content-title-background-default` |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Current Name (typo)</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Correct Spelling</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>border-netural-light</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>border-neutral-light</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-badge-content-dager</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-badge-content-danger</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-badge-content-kockout</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-badge-content-knockout</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-badge-icon-kockout</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-badge-icon-knockout</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-card-core-content-title-backgroud-default</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-card-core-content-title-background-default</code></td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 These will be corrected in a future cleanup. For now, reference them by their current (typo) names in code, but use the correct spelling for any new tokens.
 
@@ -691,22 +940,119 @@ These will be corrected in a future cleanup. For now, reference them by their cu
 
 ## Quick Reference: Size Scale
 
-| Scale | Spacing (px) | Font Size (rem) | Line Height |
-|-------|-------------|-----------------|-------------|
-| `4xs` | -- | 0.688 | 135% |
-| `3xs` | 2 | 0.75 | 140% |
-| `2xs` | 4 | 0.8125 | 140% |
-| `xs` | 8 | 0.875 | 145% |
-| `sm` | 12 | 1 | 145% |
-| `md` | 16 | 1.125 | 145% |
-| `lg` | 20 | 1.25 | 140% |
-| `xl` | 24 | 1.375 | 135% |
-| `2xl` | 32 | 1.5 | 135% |
-| `3xl` | 48 | 1.75 | 130% |
-| `4xl` | 64 | 1.875 | 135% |
-| `5xl` | -- | 2 | 130% |
-| `6xl` | 80 | 2.25 | 130% |
-| `7xl` | -- | 2.5 | 125% |
-| `8xl` | -- | 2.75 | 120% |
-| `9xl` | -- | 3 | 120% |
-| `10xl`-`15xl` | -- | 3.25-6 | 120%-110% |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Scale</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Spacing (px)</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Font Size (rem)</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Line Height</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>4xs</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>--</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>0.688</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>135%</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>3xs</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>2</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>0.75</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>140%</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>2xs</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>4</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>0.8125</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>140%</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>xs</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>8</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>0.875</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>145%</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>sm</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>12</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>1</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>145%</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>md</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>16</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>1.125</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>145%</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>lg</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>20</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>1.25</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>140%</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>xl</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>24</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>1.375</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>135%</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>2xl</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>32</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>1.5</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>135%</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>3xl</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>48</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>1.75</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>130%</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>4xl</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>64</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>1.875</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>135%</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>5xl</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>--</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>2</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>130%</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>6xl</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>80</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>2.25</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>130%</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>7xl</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>--</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>2.5</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>125%</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>8xl</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>--</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>2.75</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>120%</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>9xl</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>--</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>3</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>120%</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>10xl</code>-<code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>15xl</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>--</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>3.25-6</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>120%-110%</td>
+    </tr>
+  </tbody>
+</table>
+</div>

@@ -120,18 +120,61 @@ A typical workflow touches multiple agents in sequence. Here is the flow for a c
 
 Each agent owns specific files and scripts. This prevents conflicts and ensures the right knowledge is applied.
 
-<div style={{ overflowX: 'auto' }}>
-
-| Agent | Files | Scripts | Key Knowledge |
-|-------|-------|---------|---------------|
-| **Token Architect** | `tokens/**/*.json` | `build-tokens`, `tokens:validate`, `tokens:check` | 3-layer architecture, naming conventions, `$brand-1` references, designer branch workflow |
-| **Figma Sync** | `scripts/push-to-figma.ts`, `scripts/push-figma-batches.ts` | `push-figma` | Figma REST API, variable scopes, 29 brand modes, payload batching |
-| **Pencil Design** | `*.pen` files | `push-pencil`, `sync-pencil` | MCP tools, `$variable` syntax, `batch_design` operations |
-| **Frontend Component** | `src/components/**`, `src/lib/**` | `dev`, `build` | ThemeProvider, `useTheme()`, CSS variables, Tailwind utilities |
-| **Storybook Docs** | `src/stories/**`, `.storybook/**` | `storybook`, `build-storybook` | ThemeDecorator, Next.js mocks, MDX, story sort order |
-| **DevOps / Deploy** | `netlify.toml`, `scripts/fix-storybook-paths.mjs` | `build`, deploy | Netlify config, sub-path deployment, `@netlify/plugin-nextjs` |
-| **QA / Review** | All components, all brands | `tokens:validate` | Brand colors, font overrides, accessibility, visual regression |
-
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+  <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+    <thead>
+      <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Agent</th>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Files</th>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Scripts</th>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Key Knowledge</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Token Architect</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'tokens/**/*.json'}</code></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>build-tokens</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens:validate</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens:check</code></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>3-layer architecture, naming conventions, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>$brand-1</code> references, designer branch workflow</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Figma Sync</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>scripts/push-to-figma.ts</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>scripts/push-figma-batches.ts</code></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>push-figma</code></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Figma REST API, variable scopes, 29 brand modes, payload batching</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Pencil Design</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'*.pen'}</code> files</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>push-pencil</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>sync-pencil</code></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>MCP tools, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>$variable</code> syntax, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>batch_design</code> operations</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Frontend Component</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'src/components/**'}</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'src/lib/**'}</code></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>dev</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>build</code></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>ThemeProvider, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>useTheme()</code>, CSS variables, Tailwind utilities</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Storybook Docs</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'src/stories/**'}</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'.storybook/**'}</code></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>storybook</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>build-storybook</code></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>ThemeDecorator, Next.js mocks, MDX, story sort order</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>DevOps / Deploy</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>netlify.toml</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>scripts/fix-storybook-paths.mjs</code></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>build</code>, deploy</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Netlify config, sub-path deployment, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>@netlify/plugin-nextjs</code></td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>QA / Review</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>All components, all brands</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens:validate</code></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Brand colors, font overrides, accessibility, visual regression</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
 ---
@@ -165,18 +208,51 @@ Skills are **auto-discovered** by Cursor based on their `description` field. Whe
 
 ## When to Use Which Agent
 
-<div style={{ overflowX: 'auto' }}>
-
-| Task | Agent |
-|------|-------|
-| "Change Cosmopolitan's primary color" | Token Architect (designer or developer) |
-| "Push tokens to Figma" | Figma Sync |
-| "Update the homepage spec in Pencil" | Pencil Design |
-| "Build a newsletter component" | Frontend Component |
-| "Add a story for the Button component" | Storybook Docs |
-| "Deploy to production" | DevOps / Deploy |
-| "Check if all brands render correctly" | QA / Review |
-| "Add a new brand to the system" | Token Architect + Figma Sync + Pencil Design |
-| "End-to-end: design to production" | All agents in sequence |
-
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+  <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+    <thead>
+      <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Task</th>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Agent</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>&quot;Change Cosmopolitan&apos;s primary color&quot;</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Token Architect (designer or developer)</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>&quot;Push tokens to Figma&quot;</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Figma Sync</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>&quot;Update the homepage spec in Pencil&quot;</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Pencil Design</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>&quot;Build a newsletter component&quot;</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Frontend Component</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>&quot;Add a story for the Button component&quot;</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Storybook Docs</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>&quot;Deploy to production&quot;</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>DevOps / Deploy</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>&quot;Check if all brands render correctly&quot;</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>QA / Review</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>&quot;Add a new brand to the system&quot;</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Token Architect + Figma Sync + Pencil Design</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>&quot;End-to-end: design to production&quot;</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>All agents in sequence</td>
+      </tr>
+    </tbody>
+  </table>
 </div>

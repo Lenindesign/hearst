@@ -13,11 +13,34 @@ import { Meta } from "@storybook/blocks";
 
 ### Three tools, three roles
 
-| Tool | Who uses it | Role |
-|------|------------|------|
-| **Figma** | Designers | Design exploration, layouts, new component concepts, prototyping |
-| **Pencil** (.pen files) | Designers + Developers | Handoff layer — approved components built with production tokens |
-| **Git** (token JSON files) | Developers + LLMs + CI | Single source of truth for all token values |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Tool</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Who uses it</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Role</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Figma</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Designers</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Design exploration, layouts, new component concepts, prototyping</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Pencil</strong> (.pen files)</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Designers + Developers</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Handoff layer — approved components built with production tokens</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Git</strong> (token JSON files)</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Developers + LLMs + CI</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Single source of truth for all token values</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 ### Single Source of Truth: Git
 
@@ -37,14 +60,58 @@ Git tokens/ ────────┬── build-tokens ──► brands.ts +
 
 ### Why Git as source of truth?
 
-| | Git | Figma | Pencil |
-|---|---|---|---|
-| **Version control** | Full history, diffs, blame | Version history (limited) | Binary .pen, opaque |
-| **Code review** | PRs with reviewable JSON | No PR workflow | No PR workflow |
-| **CI/CD** | Validate tokens in pipeline | Requires plugin/API | Requires MCP |
-| **Collaboration** | Any editor, any tool | Figma-only | Pencil MCP-only |
-| **Rollback** | `git revert` | Restore version | Manual |
-| **Auditability** | Who, what, when, why | Limited | Limited |
+Every design system needs one place where the "official" values live. We chose Git because it gives both designers and developers superpowers that Figma and Pencil can't match on their own.
+
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '12px 16px', fontWeight: 600, width: '20%' }}></th>
+      <th style={{ padding: '12px 16px', fontWeight: 600, color: '#16a34a' }}>Git</th>
+      <th style={{ padding: '12px 16px', fontWeight: 600, color: '#6366f1' }}>Figma</th>
+      <th style={{ padding: '12px 16px', fontWeight: 600, color: '#334155' }}>Pencil</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '12px 16px', fontWeight: 600, color: '#334155', verticalAlign: 'top' }}>See what changed and when</td>
+      <td style={{ padding: '12px 16px', fontSize: '13px', color: '#16a34a', verticalAlign: 'top' }}>Every edit is recorded with a full history — you can see exactly who changed a color, when they did it, and why. Use <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>git diff</code> to compare any two versions side by side.</td>
+      <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748b', verticalAlign: 'top' }}>Figma keeps version history, but it's hard to pinpoint a single token change across a large file.</td>
+      <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748b', verticalAlign: 'top' }}>The <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>.pen</code> file is binary — you can't easily see what changed between two versions.</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '12px 16px', fontWeight: 600, color: '#334155', verticalAlign: 'top' }}>Review before it goes live</td>
+      <td style={{ padding: '12px 16px', fontSize: '13px', color: '#16a34a', verticalAlign: 'top' }}>Token changes go through a Pull Request. Designers and developers can review the exact JSON values, leave comments, and approve before anything reaches production.</td>
+      <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748b', verticalAlign: 'top' }}>No built-in review workflow — changes to variables are immediate and can't be gated.</td>
+      <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748b', verticalAlign: 'top' }}>No review process — MCP edits take effect instantly.</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '12px 16px', fontWeight: 600, color: '#334155', verticalAlign: 'top' }}>Catch mistakes automatically</td>
+      <td style={{ padding: '12px 16px', fontSize: '13px', color: '#16a34a', verticalAlign: 'top' }}>CI runs <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>build-tokens</code> and <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens:check</code> on every PR. If a token is malformed, missing, or breaks the build, the PR is blocked before it merges.</td>
+      <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748b', verticalAlign: 'top' }}>Requires a third-party plugin or API script to validate — not built in.</td>
+      <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748b', verticalAlign: 'top' }}>Validation requires running MCP tools manually.</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '12px 16px', fontWeight: 600, color: '#334155', verticalAlign: 'top' }}>Work from anywhere</td>
+      <td style={{ padding: '12px 16px', fontSize: '13px', color: '#16a34a', verticalAlign: 'top' }}>Edit tokens in VS Code, Cursor, or any text editor. Designers can use Cursor with AI assistance. No vendor lock-in.</td>
+      <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748b', verticalAlign: 'top' }}>Requires the Figma app or web editor.</td>
+      <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748b', verticalAlign: 'top' }}>Requires the Pencil MCP connection through Cursor.</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '12px 16px', fontWeight: 600, color: '#334155', verticalAlign: 'top' }}>Undo mistakes instantly</td>
+      <td style={{ padding: '12px 16px', fontSize: '13px', color: '#16a34a', verticalAlign: 'top' }}>One command (<code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>git revert</code>) rolls back any change cleanly, even months later.</td>
+      <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748b', verticalAlign: 'top' }}>You can restore a previous version, but it rolls back the entire file — not just one token.</td>
+      <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748b', verticalAlign: 'top' }}>Manual — you'd need to re-edit the values by hand.</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '12px 16px', fontWeight: 600, color: '#334155', verticalAlign: 'top' }}>Know who did what and why</td>
+      <td style={{ padding: '12px 16px', fontSize: '13px', color: '#16a34a', verticalAlign: 'top' }}>Every commit records the author, timestamp, and a message explaining the reason for the change. Perfect for audits and onboarding new team members.</td>
+      <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748b', verticalAlign: 'top' }}>Limited to "who last edited the file" — no per-token attribution.</td>
+      <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748b', verticalAlign: 'top' }}>No built-in audit trail.</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 ---
 
@@ -84,26 +151,104 @@ Each token file is a flat object of `{ name: { type, value } }`:
 
 ### Three layers
 
-| Layer | Purpose | Prefix | Used in components? |
-|-------|---------|--------|---------------------|
-| **Core** | Raw palette values | `palette-*`, `brand-*`, `space-*`, `border-*` | Only via `var()` with fallbacks |
-| **Semantic** | Purpose-driven aliases | `content-*`, `background-*` | Yes — preferred |
-| **Component** | Scoped to a UI component | `component-*` | Yes — for component-specific styling |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Layer</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Purpose</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Prefix</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Used in components?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Core</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Raw palette values</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'palette-*'}</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'brand-*'}</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'space-*'}</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'border-*'}</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Only via <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>var()</code> with fallbacks</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Semantic</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Purpose-driven aliases</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'content-*'}</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'background-*'}</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Yes — preferred</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Component</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Scoped to a UI component</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'component-*'}</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Yes — for component-specific styling</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 ### Naming patterns
 
-| Category | Pattern | Examples |
-|----------|---------|----------|
-| Brand colors | `brand-{1-6}` | `brand-1` (primary), `brand-2` |
-| Palette brand | `palette-brand-{1-14}` | `palette-brand-1` through `palette-brand-14` |
-| Palette neutral | `palette-neutral-{shade}` | `palette-neutral-100`, `palette-neutral-lightest` |
-| Content | `palette-content-{variant}` | `palette-content-default`, `palette-content-brand` |
-| Background | `palette-background-{variant}` | `palette-background-subtle-brand` |
-| Component | `component-{name}-{property}-{state}` | `component-button-background-primary-solid-default` |
-| Spacing | `space-{size}` | `space-xs`, `space-md`, `space-2xl` |
-| Border radius | `border-radius-{size}` | `border-radius-2xs` |
-| Font family | `font-family-{role}` | `font-family-default`, `font-family-serif` |
-| Elevation | `elevation-{level}` | `elevation-base`, `elevation-floating` |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Category</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Pattern</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Examples</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Brand colors</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>brand-{'{1-6}'}</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>brand-1</code> (primary), <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>brand-2</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Palette brand</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette-brand-{'{1-14}'}</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette-brand-1</code> through <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette-brand-14</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Palette neutral</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette-neutral-{'{shade}'}</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette-neutral-100</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette-neutral-lightest</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Content</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette-content-{'{variant}'}</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette-content-default</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette-content-brand</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Background</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette-background-{'{variant}'}</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette-background-subtle-brand</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Component</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'component-{name}-{property}-{state}'}</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-button-background-primary-solid-default</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Spacing</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>space-{'{size}'}</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>space-xs</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>space-md</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>space-2xl</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Border radius</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>border-radius-{'{size}'}</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>border-radius-2xs</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Font family</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>font-family-{'{role}'}</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>font-family-default</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>font-family-serif</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Elevation</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>elevation-{'{level}'}</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>elevation-base</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>elevation-floating</code></td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 ---
 
@@ -111,17 +256,74 @@ Each token file is a flat object of `{ name: { type, value } }`:
 
 ### Token → CSS → Tailwind
 
-| Token (in JSON) | CSS Variable | Tailwind Class | Usage |
-|-----------------|-------------|----------------|-------|
-| `brand-1` | `--brand-primary` | — | Brand accent color |
-| `palette-neutral-200` | `--palette-neutral-200` | — | Light backgrounds |
-| `palette-neutral-600` | `--palette-neutral-600` | — | Secondary text |
-| `palette-content-default` | `--palette-content-default` | — | Body text |
-| `palette-background-subtle-brand` | `--palette-background-subtle-brand` | — | Newsletter bg |
-| (from \_meta.json) | `--font-brand` | `font-brand` | Body font |
-| (from \_meta.json) | `--font-brand-secondary` | `font-brand-secondary` | Eyebrows |
-| (from \_meta.json) | `--font-headline` | `.headline` | Headlines |
-| `brand.colors["1"]` | `--primary` | `bg-primary`, `text-primary` | Shadcn components |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Token (in JSON)</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>CSS Variable</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Tailwind Class</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Usage</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>brand-1</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>--brand-primary</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>—</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Brand accent color</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette-neutral-200</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>--palette-neutral-200</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>—</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Light backgrounds</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette-neutral-600</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>--palette-neutral-600</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>—</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Secondary text</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette-content-default</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>--palette-content-default</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>—</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Body text</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette-background-subtle-brand</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>--palette-background-subtle-brand</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>—</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Newsletter bg</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>(from <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'_meta.json'}</code>)</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>--font-brand</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>font-brand</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Body font</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>(from <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'_meta.json'}</code>)</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>--font-brand-secondary</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>font-brand-secondary</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Eyebrows</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>(from <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'_meta.json'}</code>)</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>--font-headline</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>.headline</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Headlines</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'brand.colors["1"]'}</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>--primary</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>bg-primary</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>text-primary</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Shadcn components</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 ### Quick reference
 
@@ -139,19 +341,74 @@ Shadcn primary button → className="bg-primary"
 
 ### Spacing scale
 
-| Token | Value | Tailwind |
-|-------|-------|----------|
-| `space-3xs` | 2px | `gap-0.5` |
-| `space-2xs` | 4px | `gap-1` |
-| `space-xs` | 8px | `gap-2` |
-| `space-sm` | 12px | `gap-3` |
-| `space-md` | 16px | `gap-4` |
-| `space-lg` | 20px | `gap-5` |
-| `space-xl` | 24px | `gap-6` |
-| `space-2xl` | 32px | `gap-8` |
-| `space-3xl` | 48px | `gap-12` |
-| `space-4xl` | 64px | `gap-16` |
-| `space-6xl` | 80px | `gap-20` |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Token</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Value</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Tailwind</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>space-3xs</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>2px</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>gap-0.5</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>space-2xs</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>4px</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>gap-1</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>space-xs</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>8px</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>gap-2</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>space-sm</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>12px</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>gap-3</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>space-md</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>16px</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>gap-4</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>space-lg</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>20px</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>gap-5</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>space-xl</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>24px</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>gap-6</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>space-2xl</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>32px</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>gap-8</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>space-3xl</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>48px</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>gap-12</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>space-4xl</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>64px</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>gap-16</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>space-6xl</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>80px</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>gap-20</code></td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 ---
 
@@ -168,10 +425,32 @@ Shadcn primary button → className="bg-primary"
 
 ### Two token delivery systems (by design)
 
-| System | What it sets | How | Used by |
-|--------|-------------|-----|---------|
-| **tokens.css** | `--palette-*`, `--component-*`, `--space-*`, `--brand-primary` | `[data-brand="slug"]` CSS selectors | Components via `var()` |
-| **ThemeProvider** | `--primary`, `--secondary`, `--accent`, `--font-brand`, `--font-headline` | Inline `style={}` on wrapper div | Tailwind classes (`bg-primary`, `font-brand`, `.headline`) |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>System</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>What it sets</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>How</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Used by</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>tokens.css</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'--palette-*'}</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'--component-*'}</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'--space-*'}</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>--brand-primary</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'[data-brand="slug"]'}</code> CSS selectors</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Components via <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>var()</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>ThemeProvider</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>--primary</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>--secondary</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>--accent</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>--font-brand</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>--font-headline</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Inline <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'style={}'}</code> on wrapper div</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Tailwind classes (<code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>bg-primary</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>font-brand</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>.headline</code>)</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 ### Supported brands (29)
 
@@ -185,12 +464,39 @@ The Pioneer Woman, Town & Country, Veranda, Woman's Day, Women's Health
 
 ## Atomic Design Structure
 
-| Level | Examples | Key Tokens |
-|-------|----------|------------|
-| **Atoms** | Text, Icon, Image, Button, Badge, Input, Link, Divider | `--font-brand`, `--palette-content-default`, `--component-button-*` |
-| **Molecules** | Newsletter Promo, Article Card, Right Rail Card, Trending Card | Composed from atoms |
-| **Organisms** | Hero Section, Collection List, Right Rail, Trending, Newsletter, Nav, Footer | Composed from molecules |
-| **Templates** | Brand Home Page | Nav → Hero + Collection → Right Rail → Newsletter → Trending → Footer |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Level</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Examples</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Key Tokens</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Atoms</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Text, Icon, Image, Button, Badge, Input, Link, Divider</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>--font-brand</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>--palette-content-default</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'--component-button-*'}</code></td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Molecules</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Newsletter Promo, Article Card, Right Rail Card, Trending Card</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Composed from atoms</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Organisms</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Hero Section, Collection List, Right Rail, Trending, Newsletter, Nav, Footer</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Composed from molecules</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Templates</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Brand Home Page</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Nav → Hero + Collection → Right Rail → Newsletter → Trending → Footer</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 ---
 
@@ -242,14 +548,49 @@ For simple value changes (colors, spacing, fonts), designers can self-serve:
 
 ## npm Scripts Reference
 
-| Command | Purpose | When to use |
-|---------|---------|-------------|
-| `npm run build-tokens` | Build brands.ts + tokens.css from tokens/ | After editing any token JSON |
-| `npm run push-figma` | Push tokens to Figma Variables | After token changes |
-| `npm run push-pencil` | Push tokens to Pencil .pen file | After token changes |
-| `npm run dev` | Start Next.js dev server | Development |
-| `npm run build` | Production build | CI/CD |
-| `npm run storybook` | Start Storybook | Component development |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Command</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Purpose</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>When to use</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>npm run build-tokens</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Build brands.ts + tokens.css from tokens/</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>After editing any token JSON</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>npm run push-figma</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Push tokens to Figma Variables</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>After token changes</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>npm run push-pencil</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Push tokens to Pencil .pen file</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>After token changes</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>npm run dev</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Start Next.js dev server</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Development</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>npm run build</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Production build</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>CI/CD</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>npm run storybook</code></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Start Storybook</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Component development</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 ---
 
@@ -358,12 +699,44 @@ hearst/
 
 ### Who does what
 
-| | Designer | Developer | CI/CD |
-|---|---|---|---|
-| **Creates** | Figma explorations, Pencil handoff | Token JSON, React components, Stories | Netlify builds |
-| **Can edit (in Cursor)** | Token values (on a branch, with PR) | Everything in tokens/ | — |
-| **Reviews** | Storybook, staging | PRs with token JSON + code | — |
-| **Never edits** | Figma Variables directly | brands.ts directly, tokens.css directly | — |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}></th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Designer</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Developer</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>CI/CD</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Creates</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Figma explorations, Pencil handoff</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Token JSON, React components, Stories</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Netlify builds</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Can edit (in Cursor)</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Token values (on a branch, with PR)</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Everything in tokens/</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>—</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Reviews</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Storybook, staging</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>PRs with token JSON + code</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>—</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Never edits</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Figma Variables directly</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>brands.ts directly, tokens.css directly</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>—</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 ---
 

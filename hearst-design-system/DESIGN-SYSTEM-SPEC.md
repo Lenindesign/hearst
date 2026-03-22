@@ -61,14 +61,16 @@ The **token JSON files in `tokens/`** are the single source of truth for all des
 
 ### Why Git as source of truth (not Figma, not Pencil)?
 
+Every design system needs one place where the "official" values live. We chose Git because it gives both designers and developers superpowers that Figma and Pencil can't match on their own.
+
 | | Git | Figma | Pencil |
 |---|---|---|---|
-| **Version control** | Full history, diffs, blame | Version history (limited) | Binary .pen, opaque |
-| **Code review** | PRs with reviewable JSON | No PR workflow | No PR workflow |
-| **CI/CD** | Validate tokens in pipeline | Requires plugin/API | Requires MCP |
-| **Collaboration** | Any editor, any tool | Figma-only | Pencil MCP-only |
-| **Rollback** | `git revert` | Restore version | Manual |
-| **Auditability** | Who, what, when, why | Limited | Limited |
+| **See what changed and when** | Every edit is recorded with a full history — you can see exactly who changed a color, when they did it, and why. Use `git diff` to compare any two versions side by side. | Figma keeps version history, but it's hard to pinpoint a single token change across a large file. | The `.pen` file is binary — you can't easily see what changed between two versions. |
+| **Review before it goes live** | Token changes go through a Pull Request. Designers and developers can review the exact JSON values, leave comments, and approve before anything reaches production. | No built-in review workflow — changes to variables are immediate and can't be gated. | No review process — MCP edits take effect instantly. |
+| **Catch mistakes automatically** | CI runs `build-tokens` and `tokens:check` on every PR. If a token is malformed, missing, or breaks the build, the PR is blocked before it merges. | Requires a third-party plugin or API script to validate — not built in. | Validation requires running MCP tools manually. |
+| **Work from anywhere** | Edit tokens in VS Code, Cursor, or any text editor. Designers can use Cursor with AI assistance. No vendor lock-in. | Requires the Figma app or web editor. | Requires the Pencil MCP connection through Cursor. |
+| **Undo mistakes instantly** | One command (`git revert`) rolls back any change cleanly, even months later. | You can restore a previous version, but it rolls back the entire file — not just one token. | Manual — you'd need to re-edit the values by hand. |
+| **Know who did what and why** | Every commit records the author, timestamp, and a message explaining the reason for the change. Perfect for audits and onboarding new team members. | Limited to "who last edited the file" — no per-token attribution. | No built-in audit trail. |
 
 ### Where each tool fits
 

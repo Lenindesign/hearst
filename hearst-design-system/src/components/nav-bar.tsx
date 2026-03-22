@@ -8,7 +8,9 @@ import { BrandSwitcher } from "./brand-switcher";
 import { BrandLogo } from "./brand-logo";
 import { brandLogos } from "@/lib/logos";
 
-const mainNav = [
+const STORYBOOK_URL = "https://hearst-ds-storybook.netlify.app";
+
+const mainNav: { label: string; href: string; external?: boolean }[] = [
   { label: "Style Guide", href: "/" },
   { label: "Home Page", href: "/home" },
   { label: "Color", href: "/color" },
@@ -16,6 +18,7 @@ const mainNav = [
   { label: "Layout", href: "/layout-system" },
   { label: "Token Mapping", href: "/tokens" },
   { label: "Components", href: "/components" },
+  { label: "Storybook", href: STORYBOOK_URL, external: true },
 ];
 
 const componentNav = [
@@ -103,27 +106,47 @@ function CloseIcon() {
   );
 }
 
+function ExternalIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline ml-1 opacity-50">
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+      <polyline points="15 3 21 3 21 9" />
+      <line x1="10" x2="21" y1="14" y2="3" />
+    </svg>
+  );
+}
+
 function NavLink({
   href,
   label,
   isActive,
+  external,
   className = "",
 }: {
   href: string;
   label: string;
   isActive: boolean;
+  external?: boolean;
   className?: string;
 }) {
+  const baseClass = `px-3 py-1.5 text-sm rounded-md transition-colors whitespace-nowrap shrink-0 ${
+    isActive
+      ? "font-medium text-foreground bg-muted"
+      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+  } ${className}`;
+
+  if (external) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" className={baseClass}>
+        {label}
+        <ExternalIcon />
+      </a>
+    );
+  }
+
   const resolvedHref = href === "/components" ? "/components/card" : href;
   return (
-    <Link
-      href={resolvedHref}
-      className={`px-3 py-1.5 text-sm rounded-md transition-colors whitespace-nowrap shrink-0 ${
-        isActive
-          ? "font-medium text-foreground bg-muted"
-          : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-      } ${className}`}
-    >
+    <Link href={resolvedHref} className={baseClass}>
       {label}
     </Link>
   );
@@ -173,7 +196,7 @@ export function NavBar() {
           {/* Desktop nav — scrollable, takes all remaining space */}
           <ScrollableNav className="hidden md:block flex-1 min-w-0">
             {mainNav.map((item) => (
-              <NavLink key={item.href} href={item.href} label={item.label} isActive={isActive(item.href)} />
+              <NavLink key={item.href} href={item.href} label={item.label} isActive={isActive(item.href)} external={item.external} />
             ))}
           </ScrollableNav>
 
@@ -223,19 +246,30 @@ export function NavBar() {
             <div className="mx-auto px-4 sm:px-6 py-3 space-y-1">
               {/* Main navigation */}
               <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider px-3 pt-1">Navigation</p>
-              {mainNav.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href === "/components" ? "/components/card" : item.href}
-                  className={`flex items-center gap-3 px-3 py-2.5 text-sm rounded-md transition-colors ${
-                    isActive(item.href)
-                      ? "font-medium text-foreground bg-muted"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {mainNav.map((item) => {
+                const cls = `flex items-center gap-3 px-3 py-2.5 text-sm rounded-md transition-colors ${
+                  isActive(item.href)
+                    ? "font-medium text-foreground bg-muted"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`;
+                if (item.external) {
+                  return (
+                    <a key={item.href} href={item.href} target="_blank" rel="noopener noreferrer" className={cls}>
+                      {item.label}
+                      <ExternalIcon />
+                    </a>
+                  );
+                }
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href === "/components" ? "/components/card" : item.href}
+                    className={cls}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
 
               {/* Component sub-nav in mobile */}
               {isComponents && (

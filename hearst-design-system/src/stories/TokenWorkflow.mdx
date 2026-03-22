@@ -258,12 +258,67 @@ For simple value changes — updating a color, adjusting spacing, changing a fon
 
 ### What designers CAN change
 
-| Change | Example | File |
-|--------|---------|------|
-| Brand color | `#d70000` → `#cc0000` | `tokens/brands/{slug}.json` |
-| Spacing value | `16` → `20` | `tokens/core/global.json` |
-| Font family | `"Inter"` → `"Roboto"` | `tokens/brands/_meta.json` |
-| Font weight | `400` → `500` | `tokens/brands/_meta.json` |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Change</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Example</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>File</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Brand color</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>#d70000</code>
+        {' '}
+        →{' '}
+        <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>#cc0000</code>
+      </td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens/brands/{'{slug}'}.json</code>
+      </td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Spacing value</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>16</code>
+        {' '}
+        →{' '}
+        <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>20</code>
+      </td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens/core/global.json</code>
+      </td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Font family</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>&quot;Inter&quot;</code>
+        {' '}
+        →{' '}
+        <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>&quot;Roboto&quot;</code>
+      </td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens/brands/{'_meta.json'}</code>
+      </td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Font weight</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>400</code>
+        {' '}
+        →{' '}
+        <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>500</code>
+      </td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens/brands/{'_meta.json'}</code>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 ### What designers should NOT change
 
@@ -391,14 +446,53 @@ Both designers and developers need to know the status of a token at any point. H
 
 ### Status Definitions
 
-| Status | Meaning | Who sets it |
-|--------|---------|-------------|
-| **Requested** | Designer has asked for a new token | Designer (via ticket) |
-| **In Progress** | Developer is creating the token in a branch | Developer (PR opened) |
-| **In Review** | Token is in a pull request awaiting approval | Developer (PR ready) |
-| **Merged** | Token is in the `main` branch | Developer (PR merged) |
-| **Synced** | Token is available in Figma and Pencil | Developer (after push-figma + push-pencil) |
-| **Deployed** | Token is live on the production site | Automatic (Netlify) |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Status</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Meaning</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Who sets it</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Requested</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Designer has asked for a new token</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Designer (via ticket)</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>In Progress</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Developer is creating the token in a branch</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Developer (PR opened)</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>In Review</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Token is in a pull request awaiting approval</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Developer (PR ready)</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Merged</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        Token is in the <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>main</code> branch
+      </td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Developer (PR merged)</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Synced</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Token is available in Figma and Pencil</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        Developer (after <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>push-figma</code> + <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>push-pencil</code>)
+      </td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Deployed</strong></td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Token is live on the production site</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Automatic (Netlify)</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 ### Where to Check Status
 
@@ -502,19 +596,86 @@ Use this when notifying designers that new tokens are available.
 
 ## Quick Reference: Who Does What
 
-| Action | Designer | Developer |
-|--------|----------|-----------|
-| Change a token value | Edits in Cursor (AI creates branch + PR) | Reviews and merges the PR |
-| Request a new token | Files a ticket with the template above | Creates the token in JSON |
-| Name the token | Suggests a purpose (developer finalizes the name) | Applies the naming convention |
-| Choose the value | Provides the value (hex, px, font) | Enters it in the JSON file |
-| Decide which file | -- | Chooses core, semantic, or brand JSON |
-| Build and validate | AI runs `build-tokens` + `tokens:check` (in Cursor) | Runs `build-tokens` and `tokens:validate` |
-| Review the PR | Optional: reviews the values | Reviews and merges the PR |
-| Sync to Figma | Verifies in the Variables panel | Runs `push-figma` |
-| Sync to Pencil | Verifies with `$token-name` | Runs `push-pencil` |
-| Use in designs | Applies the variable in Figma / Pencil | -- |
-| Use in code | -- | References `var(--token-name)` in CSS |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Action</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Designer</th>
+      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Developer</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Change a token value</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Edits in Cursor (AI creates branch + PR)</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Reviews and merges the PR</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Request a new token</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Files a ticket with the template above</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Creates the token in JSON</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Name the token</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Suggests a purpose (developer finalizes the name)</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Applies the naming convention</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Choose the value</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Provides the value (hex, px, font)</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Enters it in the JSON file</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Decide which file</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>--</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Chooses core, semantic, or brand JSON</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Build and validate</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        AI runs <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>build-tokens</code> + <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens:check</code> (in Cursor)
+      </td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        Runs <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>build-tokens</code> and <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens:validate</code>
+      </td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Review the PR</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Optional: reviews the values</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Reviews and merges the PR</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Sync to Figma</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Verifies in the Variables panel</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        Runs <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>push-figma</code>
+      </td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Sync to Pencil</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        Verifies with <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>$token-name</code>
+      </td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        Runs <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>push-pencil</code>
+      </td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Use in designs</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Applies the variable in Figma / Pencil</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>--</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Use in code</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>--</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+        References <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>var(--token-name)</code> in CSS
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 ---
 

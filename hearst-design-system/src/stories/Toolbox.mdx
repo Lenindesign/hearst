@@ -64,12 +64,35 @@ Each tool in our system has a **specific purpose**, a **specific audience**, and
 The `tokens/` directory in the Git repository. JSON files containing every design token value — colors, spacing, fonts, borders, component-specific values — for all 29 brands.
 
 **Who uses it:**
-| Role | How they interact |
-|------|------------------|
-| **Developers** | Edit token JSON files directly — this is where changes originate |
-| **LLMs (Cursor/Claude)** | Read and edit token files programmatically |
-| **CI/CD** | Validates tokens on every pull request |
-| **Designers (in Cursor)** | Edit token **values** directly with AI assistance — on a branch, with PR review |
+
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+  <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+    <thead>
+      <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Role</th>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>How they interact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Developers</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Edit token JSON files directly — this is where changes originate</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>LLMs (Cursor/Claude)</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Read and edit token files programmatically</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>CI/CD</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Validates tokens on every pull request</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Designers (in Cursor)</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Edit token <strong>values</strong> directly with AI assistance — on a branch, with PR review</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 **When to reach for it:**
 - You need to **add, change, or remove** a design token (developers and designers)
@@ -104,12 +127,35 @@ tokens/
 The Figma design file where designers explore layouts, iterate on concepts, and get stakeholder approval. It also contains Figma Variables synced from Git so designers can use production tokens.
 
 **Who uses it:**
-| Role | How they interact |
-|------|------------------|
-| **Designers** | Primary tool — design, iterate, prototype, present |
-| **Stakeholders** | Review designs, give feedback, approve |
-| **Developers** | Reference for visual intent (but not for exact values) |
-| **LLMs** | Cannot access Figma directly |
+
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+  <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+    <thead>
+      <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Role</th>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>How they interact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Designers</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Primary tool — design, iterate, prototype, present</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Stakeholders</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Review designs, give feedback, approve</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Developers</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Reference for visual intent (but not for exact values)</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>LLMs</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Cannot access Figma directly</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 **When to reach for it:**
 - You're **exploring** a new design concept
@@ -146,11 +192,33 @@ Designers see production tokens as Figma Variables, but they **cannot edit them 
 A `.pen` file (`hearst-brands.pen`) containing components built with **exact production tokens**. Accessible programmatically via MCP tools in Cursor.
 
 **Who uses it:**
-| Role | How they interact |
-|------|------------------|
-| **Designers** | Rebuild approved Figma designs using production tokens |
-| **Developers** | Read component specs via MCP (`batch_get`, `get_screenshot`) |
-| **LLMs (Cursor/Claude)** | Read specs, push token updates, create components |
+
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+  <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+    <thead>
+      <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Role</th>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>How they interact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Designers</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Rebuild approved Figma designs using production tokens</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Developers</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+          Read component specs via MCP (<code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>batch_get</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>get_screenshot</code>)
+        </td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>LLMs (Cursor/Claude)</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Read specs, push token updates, create components</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 **When to reach for it:**
 - A design is **approved** and needs to be built with production tokens
@@ -165,13 +233,38 @@ A `.pen` file (`hearst-brands.pen`) containing components built with **exact pro
 
 **Key MCP tools:**
 
-| Tool | Purpose |
-|------|---------|
-| `batch_get` | Read component structure and properties |
-| `get_screenshot` | Get a visual screenshot of any component |
-| `batch_design` | Create or modify components |
-| `get_variables` | Check current token values in the file |
-| `set_variables` | Push updated tokens from Git |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+  <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+    <thead>
+      <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Tool</th>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Purpose</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>batch_get</code></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Read component structure and properties</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>get_screenshot</code></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Get a visual screenshot of any component</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>batch_design</code></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Create or modify components</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>get_variables</code></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Check current token values in the file</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>set_variables</code></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Push updated tokens from Git</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 **How it stays in sync:**
 
@@ -192,13 +285,39 @@ Git tokens/  ──── npm run push-pencil ────►  hearst-brands.pen
 This application. An interactive catalog of every component, rendered with real code and real tokens. Supports switching between all 29 brands to see how components adapt.
 
 **Who uses it:**
-| Role | How they interact |
-|------|------------------|
-| **Designers** | Review how components render in code, verify brand theming |
-| **Developers** | Develop components in isolation, test edge cases |
-| **Stakeholders** | See the live design system without running the app |
-| **QA** | Test components across brands and states |
-| **LLMs** | Reference for component API and usage patterns |
+
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+  <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+    <thead>
+      <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Role</th>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>How they interact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Designers</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Review how components render in code, verify brand theming</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Developers</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Develop components in isolation, test edge cases</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Stakeholders</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>See the live design system without running the app</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>QA</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Test components across brands and states</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>LLMs</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Reference for component API and usage patterns</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 **When to reach for it:**
 - You want to **see** how a component looks with real code
@@ -231,10 +350,27 @@ This application. An interactive catalog of every component, rendered with real 
 An open-source tool that transforms design tokens from one format into many output formats (CSS, iOS, Android, etc.). In our system, it's used **only** for the Token Studio API legacy import path.
 
 **Who uses it:**
-| Role | How they interact |
-|------|------------------|
-| **Developers** | Run it when importing from Token Studio API (rare) |
-| **CI/CD** | Could be used for multi-platform output in the future |
+
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+  <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+    <thead>
+      <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Role</th>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>How they interact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Developers</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Run it when importing from Token Studio API (rare)</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>CI/CD</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Could be used for multi-platform output in the future</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 **When to reach for it:**
 - You need to **import** tokens from the Token Studio API (one-time or rare)
@@ -248,11 +384,34 @@ An open-source tool that transforms design tokens from one format into many outp
 
 **Important distinction:**
 
-| Task | Tool |
-|------|------|
-| Normal token workflow | `npm run build-tokens` (custom script) |
-| Token Studio API import | `npm run tokens:pipeline` (Style Dictionary) |
-| Multi-platform output | Style Dictionary config |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+  <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+    <thead>
+      <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Task</th>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Tool</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Normal token workflow</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+          <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>npm run build-tokens</code> (custom script)
+        </td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Token Studio API import</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+          <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>npm run tokens:pipeline</code> (Style Dictionary)
+        </td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Multi-platform output</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Style Dictionary config</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 ```bash
 # You'll rarely need this:
@@ -272,10 +431,29 @@ npm run build-tokens       # Custom script: tokens/ → brands.ts + tokens.css
 The hosting platform that builds and deploys the design system app and Storybook to production.
 
 **Who uses it:**
-| Role | How they interact |
-|------|------------------|
-| **Developers** | Push to `main` — Netlify builds and deploys automatically |
-| **Everyone** | Visit the production URL to see the live system |
+
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+  <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+    <thead>
+      <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Role</th>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>How they interact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Developers</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+          Push to <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>main</code> — Netlify builds and deploys automatically
+        </td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Everyone</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Visit the production URL to see the live system</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 **When it runs:**
 - Automatically on every push to `main`
@@ -303,21 +481,96 @@ git push origin main
 
 ### "I need to..."
 
-| Task | Reach for | Why |
-|------|-----------|-----|
-| Explore a new design idea | **Figma** | Free-form exploration, stakeholder review |
-| Get a design approved | **Figma** | Collaboration and presentation |
-| Build an approved design with exact tokens | **Pencil** | Production-grade specs |
-| Change a color for a brand | **Git** (designer: via Cursor on a branch) | Source of truth for all token values |
-| Add a new brand | **Git** | Create `tokens/brands/{slug}.json` |
-| See how a component looks in code | **Storybook** | Live rendering with real tokens |
-| Test a component across brands | **Storybook** | Brand switcher in toolbar |
-| Read a component's spec programmatically | **Pencil** | MCP `batch_get` |
-| Import tokens from Token Studio | **Style Dictionary** | Format conversion |
-| Deploy changes to production | **Netlify** | Push to `main`, auto-deploys |
-| Roll back a bad token change | **Git** | `git revert` |
-| Share the design system with stakeholders | **Storybook** | Production URL, no setup needed |
-| Verify the "correct" value of a token | **Git** | `tokens/brands/{slug}.json` |
+<div style={{ overflowX: 'auto', margin: '24px 0' }}>
+  <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+    <thead>
+      <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Task</th>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Reach for</th>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Why</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Explore a new design idea</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><strong>Figma</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Free-form exploration, stakeholder review</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Get a design approved</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><strong>Figma</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Collaboration and presentation</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Build an approved design with exact tokens</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><strong>Pencil</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Production-grade specs</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Change a color for a brand</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+          <strong>Git</strong> (designer: via Cursor on a branch)
+        </td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Source of truth for all token values</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Add a new brand</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><strong>Git</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+          Create <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'tokens/brands/{slug}.json'}</code>
+        </td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>See how a component looks in code</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><strong>Storybook</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Live rendering with real tokens</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Test a component across brands</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><strong>Storybook</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Brand switcher in toolbar</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Read a component's spec programmatically</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><strong>Pencil</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+          MCP <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>batch_get</code>
+        </td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Import tokens from Token Studio</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><strong>Style Dictionary</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Format conversion</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Deploy changes to production</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><strong>Netlify</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+          Push to <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>main</code>, auto-deploys
+        </td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Roll back a bad token change</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><strong>Git</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+          <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>git revert</code>
+        </td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Share the design system with stakeholders</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><strong>Storybook</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Production URL, no setup needed</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Verify the "correct" value of a token</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><strong>Git</strong></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+          <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'tokens/brands/{slug}.json'}</code>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 ---
 
