@@ -8,7 +8,7 @@ import { BrandSwitcher } from "./brand-switcher";
 import { BrandLogo } from "./brand-logo";
 import { brandLogos } from "@/lib/logos";
 
-const STORYBOOK_URL = "https://hearst-design-system.netlify.app/storybook";
+const STORYBOOK_URL = "https://hearst-design-system.netlify.app/storybook/?path=/docs/welcome--docs";
 
 const mainNav: { label: string; href: string; external?: boolean }[] = [
   { label: "Style Guide", href: "/" },
