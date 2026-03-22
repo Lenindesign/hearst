@@ -39,6 +39,7 @@ const preview: Preview = {
           "The Toolbox",
           "AI Agents",
           "Token Naming Guide",
+          "Typography Token Strategy",
           "Token Workflow",
           "QA and Jira",
           "Figma Integration",
