@@ -117,9 +117,9 @@ function ArticleCardContent({
     <div
       data-slot="article-card-content"
       className={cn(
-        "flex flex-1 flex-col gap-2 p-4",
-        "group-data-[size=sm]/article-card:p-3 group-data-[size=sm]/article-card:gap-1.5",
-        "group-data-[size=lg]/article-card:p-6 group-data-[size=lg]/article-card:gap-3",
+        "flex flex-1 flex-col gap-2 px-0 py-4",
+        "group-data-[size=sm]/article-card:px-3 group-data-[size=sm]/article-card:py-3 group-data-[size=sm]/article-card:gap-1.5",
+        "group-data-[size=lg]/article-card:py-6 group-data-[size=lg]/article-card:gap-3",
         className
       )}
       {...props}

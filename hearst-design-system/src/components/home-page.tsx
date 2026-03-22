@@ -4,6 +4,17 @@ import { useTheme } from "./theme-provider";
 import { NavBar } from "./nav-bar";
 import { BrandLogo } from "./brand-logo";
 import { brandLogos } from "@/lib/logos";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Divider } from "@/components/ui/divider";
+import { LinkComponent } from "@/components/ui/link";
+import { Separator } from "@/components/ui/separator";
+import { BigStoryFeedStacked } from "./fre/big-story-feed";
+import { BigStoryImageRight } from "./fre/big-story";
+import { FourAcrossGrid } from "./fre/four-across-grid";
+import { SiteFooter } from "./fre/site-footer";
+import { Mail } from "lucide-react";
 
 const U = "https://images.unsplash.com/photo-";
 const H = "https://hips.hearstapps.com/hmg-prod/images/";
@@ -710,17 +721,23 @@ function getContent(brandSlug: string): ContentType {
 
 function UtilityBar() {
   return (
-    <div className="flex items-center justify-between px-3 h-8 text-[11px] font-semibold"
-      style={{ backgroundColor: "var(--brand-primary, #000)", color: "#fff" }}>
+    <div className="flex items-center justify-between px-3 h-8 text-[11px] font-semibold bg-primary text-primary-foreground">
       <div className="flex items-center gap-3">
-        <span className="flex items-center gap-1 opacity-90">Shop</span>
-        <span className="flex items-center gap-1 opacity-90">Newsletter</span>
-        <span className="flex items-center gap-1 opacity-90">Sign In</span>
+        {["Shop", "Newsletter", "Sign In"].map((label) => (
+          <LinkComponent
+            key={label}
+            variant="neutral"
+            underline={false}
+            size="xs"
+            className="opacity-90 text-primary-foreground hover:text-primary-foreground/80 font-semibold"
+          >
+            {label}
+          </LinkComponent>
+        ))}
       </div>
-      <button className="px-3 py-0.5 rounded-sm text-[11px] font-semibold"
-        style={{ backgroundColor: "var(--palette-neutral-lightest, #fff)", color: "var(--brand-primary, #000)" }}>
+      <Button variant="secondary" size="xs" className="text-[11px] font-semibold">
         Subscribe
-      </button>
+      </Button>
     </div>
   );
 }
@@ -731,7 +748,7 @@ function MainNav({ brandSlug }: { brandSlug: string }) {
   const content = getContent(brandSlug);
 
   return (
-    <div className="border-b py-2 px-6" style={{ borderColor: "var(--palette-neutral-300, #d6d6d6)" }}>
+    <div className="border-b border-border py-2 px-6">
       <div className="flex items-center justify-between py-2 max-w-[1360px] mx-auto">
         <div className="w-[180px]" />
         <div className="text-center">
@@ -744,20 +761,24 @@ function MainNav({ brandSlug }: { brandSlug: string }) {
           )}
         </div>
         <div className="w-[180px] flex justify-end gap-2">
-          <div className="w-7 h-7 rounded border flex items-center justify-center text-xs"
-            style={{ borderColor: "var(--palette-neutral-400, #bdbdbd)" }}>
+          <Button variant="outline" size="icon-sm">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-          </div>
+          </Button>
         </div>
       </div>
-      <div className="flex items-center justify-center gap-6 py-2 max-w-[1360px] mx-auto overflow-x-auto scrollbar-hide">
+      <nav className="flex items-center justify-center gap-6 py-2 max-w-[1360px] mx-auto overflow-x-auto scrollbar-hide">
         {content.navLinks.map((link) => (
-          <span key={link} className="text-[13px] whitespace-nowrap cursor-pointer hover:opacity-70 transition-opacity"
-            style={{ color: "var(--palette-neutral-900, #292929)" }}>
+          <LinkComponent
+            key={link}
+            variant="neutral"
+            underline={false}
+            size="sm"
+            className="whitespace-nowrap font-normal"
+          >
             {link}
-          </span>
+          </LinkComponent>
         ))}
-      </div>
+      </nav>
     </div>
   );
 }
@@ -766,39 +787,28 @@ function CollectionList({ brandSlug }: { brandSlug: string }) {
   const content = getContent(brandSlug);
   const images = getBrandImages(brandSlug);
 
+  const feedItems = content.articles.map((article, i) => ({
+    title: article.title,
+    date: `${article.time} · ${article.readTime}`,
+    image: images.articles[i % images.articles.length],
+  }));
+
   return (
     <div className="w-full lg:w-[320px] shrink-0 space-y-3">
       <div className="space-y-2">
-        <h3 className="text-xl uppercase headline"
-          style={{ color: "var(--brand-primary, #000)" }}>
+        <h3 className="text-xl uppercase headline text-primary">
           {content.collectionTitle}
         </h3>
-        <div className="h-[3px] w-full" style={{ backgroundColor: "var(--brand-primary, #000)" }} />
+        <Divider variant="default" size="lg" className="bg-primary" />
       </div>
-      <div className="space-y-5">
-        {content.articles.map((article, i) => (
-          <div key={i} className="flex gap-3 group cursor-pointer">
-            <div className="w-[72px] h-[72px] rounded shrink-0 relative overflow-hidden"
-              style={{ backgroundColor: "var(--palette-neutral-200, #ededed)" }}>
-              <img src={images.articles[i % images.articles.length]} alt="" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
-              <div className="absolute top-1 left-1 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold text-white"
-                style={{ backgroundColor: "var(--brand-primary, #000)" }}>
-                {i + 1}
-              </div>
-            </div>
-            <div className="min-w-0">
-              <p className="text-sm leading-snug group-hover:underline whitespace-pre-line headline">
-                {article.title}
-              </p>
-              <div className="flex items-center gap-2 mt-1 text-xs" style={{ color: "var(--palette-neutral-600, #757575)" }}>
-                <span>{article.time}</span>
-                <span>·</span>
-                <span>{article.readTime}</span>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      <BigStoryFeedStacked
+        items={feedItems}
+        thumbnailWidth={72}
+        thumbnailHeight={72}
+        headlineFontSize={14}
+        showDividers={false}
+        style={{ maxWidth: "100%", gap: 12 }}
+      />
     </div>
   );
 }
@@ -808,55 +818,18 @@ function HeroCard({ brandSlug }: { brandSlug: string }) {
   const images = getBrandImages(brandSlug);
 
   return (
-    <div className="flex-1 min-w-0 space-y-2">
-      <div className="w-full aspect-square rounded relative overflow-hidden"
-        style={{ backgroundColor: "var(--palette-neutral-200, #ededed)" }}>
-        <img src={images.hero} alt="" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-      </div>
-      <div className="space-y-1">
-        <span className="text-xs font-semibold uppercase tracking-wide font-brand-secondary"
-          style={{ color: "var(--brand-primary, #000)" }}>
-          {content.hero.eyebrow}
-        </span>
-        <h2 className="text-2xl lg:text-[32px] leading-tight headline">
-          {content.hero.title}
-        </h2>
-        <p className="text-base leading-relaxed" style={{ color: "var(--palette-neutral-700, #575757)" }}>
-          {content.hero.desc}
-        </p>
-        <p className="text-[13px] font-semibold">{content.hero.author}</p>
-      </div>
-    </div>
-  );
-}
-
-function RightRailCard({
-  card,
-  image,
-}: {
-  card: { eyebrow: string; title: string; desc: string; author: string };
-  image: string;
-}) {
-  return (
-    <div className="flex gap-3 group cursor-pointer">
-      <div className="w-[100px] h-[100px] rounded shrink-0 relative overflow-hidden"
-        style={{ backgroundColor: "var(--palette-neutral-200, #ededed)" }}>
-        <img src={image} alt="" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
-      </div>
-      <div className="min-w-0 space-y-1">
-        <span className="text-[11px] font-semibold uppercase tracking-wide font-brand-secondary"
-          style={{ color: "var(--brand-primary, #000)" }}>
-          {card.eyebrow}
-        </span>
-        <p className="text-sm leading-snug group-hover:underline whitespace-pre-line headline">
-          {card.title}
-        </p>
-        <p className="text-xs leading-relaxed whitespace-pre-line" style={{ color: "var(--palette-neutral-600, #757575)" }}>
-          {card.desc}
-        </p>
-        <p className="text-xs font-semibold">{card.author}</p>
-      </div>
+    <div className="flex-1 min-w-0">
+      <BigStoryImageRight
+        label={content.hero.eyebrow}
+        headline={content.hero.title}
+        description={content.hero.desc}
+        author={content.hero.author}
+        date=""
+        image={images.hero}
+        headlineFontSize={32}
+        imagePosition="top"
+        aspectRatio="1/1"
+      />
     </div>
   );
 }
@@ -865,20 +838,29 @@ function RightRail({ brandSlug }: { brandSlug: string }) {
   const content = getContent(brandSlug);
   const images = getBrandImages(brandSlug);
 
+  const feedItems = content.rightRail.map((card, i) => ({
+    title: card.title,
+    eyebrow: card.eyebrow,
+    author: card.author,
+    date: "",
+    image: images.rightRail[i % images.rightRail.length],
+  }));
+
   return (
     <div className="w-full lg:w-[321px] shrink-0 space-y-8">
-      <div className="space-y-6">
-        {content.rightRail.map((card, i) => (
-          <RightRailCard key={i} card={card} image={images.rightRail[i % images.rightRail.length]} />
-        ))}
-      </div>
-      <div className="flex flex-col items-center gap-1 py-4 rounded"
-        style={{ backgroundColor: "var(--palette-neutral-100, #f5f5f5)" }}>
-        <span className="text-[10px] uppercase tracking-wider" style={{ color: "var(--palette-neutral-500, #949494)" }}>
+      <BigStoryFeedStacked
+        items={feedItems}
+        thumbnailWidth={100}
+        thumbnailHeight={100}
+        headlineFontSize={14}
+        showDividers={false}
+        style={{ maxWidth: "100%", gap: 16 }}
+      />
+      <div className="flex flex-col items-center gap-1 py-4 rounded bg-muted">
+        <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
           Advertisement
         </span>
-        <div className="w-[300px] h-[250px] rounded flex items-center justify-center text-sm"
-          style={{ backgroundColor: "var(--palette-neutral-200, #ededed)", color: "var(--palette-neutral-500, #949494)" }}>
+        <div className="w-[300px] h-[250px] rounded-md flex items-center justify-center text-sm bg-muted text-muted-foreground border border-border">
           AD 300 × 250
         </div>
       </div>
@@ -890,11 +872,9 @@ function NewsletterPromo({ brandSlug }: { brandSlug: string }) {
   const { brand } = useTheme();
 
   return (
-    <div className="py-10 px-6 lg:px-12 space-y-6"
-      style={{ backgroundColor: "var(--palette-background-subtle-brand, #f5f0e8)" }}>
+    <div className="py-10 px-6 lg:px-12 space-y-6 bg-accent">
       <div className="space-y-2">
-        <p className="text-xs font-bold uppercase tracking-[1.5px] font-brand-secondary"
-          style={{ color: "var(--palette-content-default, #121212)" }}>
+        <p className="text-xs font-bold uppercase tracking-widest font-brand-secondary text-foreground">
           Sign up for {brand.name}&rsquo;s Newsletter
         </p>
         <h3 className="text-2xl lg:text-[32px] leading-tight headline">
@@ -902,45 +882,29 @@ function NewsletterPromo({ brandSlug }: { brandSlug: string }) {
         </h3>
       </div>
       <div className="flex flex-col sm:flex-row gap-0">
-        <div className="flex items-center gap-2 flex-1 px-4 h-12 border border-r-0 sm:border-r-0"
-          style={{ backgroundColor: "#fff", borderColor: "var(--palette-neutral-400, #bdbdbd)" }}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--palette-neutral-500, #949494)", flexShrink: 0 }}><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-          <span className="text-sm" style={{ color: "var(--palette-neutral-500, #949494)" }}>Enter your email here.</span>
-        </div>
-        <button className="h-12 px-6 text-sm font-bold uppercase tracking-[1px] whitespace-nowrap shrink-0"
-          style={{ backgroundColor: "var(--brand-primary, #1B5F8A)", color: "#fff" }}>
+        <Input
+          size="xl"
+          placeholder="Enter your email here."
+          leadingIcon={Mail}
+          className="flex-1 [&>div]:rounded-none [&>div]:sm:rounded-l-sm [&>div]:border-border"
+        />
+        <Button size="lg" className="h-12 px-6 text-sm font-bold uppercase tracking-wider whitespace-nowrap rounded-none sm:rounded-r-sm">
           Sign Me Up
-        </button>
+        </Button>
       </div>
-      <p className="text-[11px] leading-relaxed"
-        style={{ color: "var(--palette-neutral-600, #757575)" }}>
-        By signing up, I agree to the <span className="underline cursor-pointer">Terms of Use</span> (including
-        the <span className="underline cursor-pointer">dispute resolution procedures</span>) and have reviewed
-        the <span className="underline cursor-pointer">Privacy Notice</span>.
-        This site is protected by reCAPTCHA and the Google <span className="underline cursor-pointer">Privacy
-        Policy</span> and <span className="underline cursor-pointer">Terms of Service</span> apply.
+      <p className="text-[11px] leading-relaxed text-muted-foreground">
+        By signing up, I agree to the{" "}
+        <LinkComponent variant="neutral" underline size="xs" className="font-normal">Terms of Use</LinkComponent>{" "}
+        (including the{" "}
+        <LinkComponent variant="neutral" underline size="xs" className="font-normal">dispute resolution procedures</LinkComponent>
+        ) and have reviewed the{" "}
+        <LinkComponent variant="neutral" underline size="xs" className="font-normal">Privacy Notice</LinkComponent>.
+        This site is protected by reCAPTCHA and the Google{" "}
+        <LinkComponent variant="neutral" underline size="xs" className="font-normal">Privacy Policy</LinkComponent>{" "}
+        and{" "}
+        <LinkComponent variant="neutral" underline size="xs" className="font-normal">Terms of Service</LinkComponent>{" "}
+        apply.
       </p>
-    </div>
-  );
-}
-
-function TrendingCard({ card, index, image }: { card: { title: string; time: string }; index: number; image: string }) {
-  return (
-    <div className="w-[183px] shrink-0 space-y-2 group cursor-pointer">
-      <div className="w-full aspect-square rounded relative overflow-hidden"
-        style={{ backgroundColor: "var(--palette-neutral-200, #ededed)" }}>
-        <img src={image} alt="" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
-        <div className="absolute top-1.5 left-1.5 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white"
-          style={{ backgroundColor: "var(--brand-primary, #000)" }}>
-          {index + 1}
-        </div>
-      </div>
-      <p className="text-sm leading-snug group-hover:underline whitespace-pre-line headline">
-        {card.title}
-      </p>
-      <span className="text-xs" style={{ color: "var(--palette-neutral-600, #757575)" }}>
-        {card.time}
-      </span>
     </div>
   );
 }
@@ -949,65 +913,40 @@ function TrendingSection({ brandSlug }: { brandSlug: string }) {
   const content = getContent(brandSlug);
   const images = getBrandImages(brandSlug);
 
+  const gridItems = content.trending.map((card, i) => ({
+    title: card.title,
+    subtitle: card.time,
+    image: images.trending[i % images.trending.length],
+  }));
+
   return (
     <div className="space-y-6">
       <h2 className="text-4xl lg:text-5xl headline">
         Trending
       </h2>
-      <div className="flex gap-6 overflow-x-auto scrollbar-hide pb-2">
-        {content.trending.map((card, i) => (
-          <TrendingCard key={i} card={card} index={i} image={images.trending[i % images.trending.length]} />
-        ))}
-      </div>
+      <FourAcrossGrid
+        items={gridItems}
+        columns={5}
+        gap={16}
+        aspectRatio="1/1"
+        showNumbers
+      />
     </div>
   );
 }
 
 function Footer({ brandSlug }: { brandSlug: string }) {
   const { brand } = useTheme();
-  const logo = brandLogos[brand.slug];
-  const content = getContent(brandSlug);
 
   return (
-    <footer className="pt-12 pb-8 space-y-8 max-w-[1360px] mx-auto border-t"
-      style={{ borderColor: "var(--palette-neutral-300, #d6d6d6)" }}>
-      <div className="flex items-center gap-6">
-        {logo ? (
-          <BrandLogo slug={brand.slug} className="[&_svg]:h-5 [&_svg]:w-auto" />
-        ) : (
-          <span className="text-xl tracking-[4px] uppercase headline">
-            {brand.name}
-          </span>
-        )}
-        <div className="flex gap-4">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--palette-content-default, #121212)" }}><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--palette-content-default, #121212)" }}><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--palette-content-default, #121212)" }}><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--palette-content-default, #121212)" }}><line x1="12" x2="12" y1="17" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>
-        </div>
-      </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-        {content.footerCols.map((col, i) => (
-          <div key={i} className="space-y-3">
-            {col.map((link) => (
-              <p key={link} className="text-sm cursor-pointer hover:underline">{link}</p>
-            ))}
-          </div>
-        ))}
-      </div>
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-6 border-t text-xs"
-        style={{ borderColor: "var(--palette-neutral-300, #d6d6d6)", color: "var(--palette-neutral-600, #757575)" }}>
-        <div className="flex flex-wrap gap-4">
-          <span>© 2026 Hearst Magazine Media, Inc.</span>
-          <span className="cursor-pointer hover:underline">Privacy Policy</span>
-          <span className="cursor-pointer hover:underline">Terms of Use</span>
-        </div>
-        <button className="px-3 py-1.5 rounded text-xs font-medium"
-          style={{ backgroundColor: "var(--palette-neutral-100, #f5f5f5)" }}>
-          Your Privacy Choices
-        </button>
-      </div>
-    </footer>
+    <div className="max-w-[1360px] mx-auto pt-12">
+      <SiteFooter
+        siteName={brand.name}
+        socialLinks={["YouTube", "Facebook", "Instagram", "Pinterest"]}
+        legalLinks={["Privacy Notice", "Terms of Use", "Site Map"]}
+        copyrightYear={2026}
+      />
+    </div>
   );
 }
 
@@ -1015,16 +954,12 @@ export function HomePageTemplate() {
   const { brand } = useTheme();
 
   return (
-    <div className="min-h-screen font-brand" style={{
-      backgroundColor: "var(--palette-neutral-lightest, #fff)",
-    }}>
+    <div className="min-h-screen font-brand bg-background">
       <div className="max-w-[1440px] mx-auto">
 
         {/* Ad Banner */}
-        <div className="flex items-center justify-center h-[100px] lg:h-[250px]"
-          style={{ backgroundColor: "var(--palette-neutral-100, #f5f5f5)" }}>
-          <div className="flex items-center justify-center rounded text-sm"
-            style={{ backgroundColor: "var(--palette-neutral-200, #ededed)", color: "var(--palette-neutral-500, #949494)", width: 728, height: 90 }}>
+        <div className="flex items-center justify-center h-[100px] lg:h-[250px] bg-muted">
+          <div className="flex items-center justify-center rounded-md text-sm bg-muted text-muted-foreground border border-border" style={{ width: 728, height: 90 }}>
             AD 728 × 90
           </div>
         </div>

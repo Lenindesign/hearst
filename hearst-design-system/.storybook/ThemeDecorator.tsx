@@ -37,7 +37,7 @@ function hexToOklch(hex: string): string {
   const bv = 0.0259040371 * l_ + 0.7827717662 * m_ - 0.808675766 * s_;
   const C = Math.sqrt(a * a + bv * bv);
   const H = ((Math.atan2(bv, a) * 180) / Math.PI + 360) % 360;
-  return `${L.toFixed(4)} ${C.toFixed(4)} ${H.toFixed(2)}`;
+  return `oklch(${L.toFixed(4)} ${C.toFixed(4)} ${H.toFixed(2)})`;
 }
 
 function brandToCssVars(brand: BrandTheme): Record<string, string> {
@@ -45,11 +45,11 @@ function brandToCssVars(brand: BrandTheme): Record<string, string> {
   const secondary = brand.colors["2"] || "#666666";
   return {
     "--primary": hexToOklch(primary),
-    "--primary-foreground": "1 0 0",
+    "--primary-foreground": "oklch(1 0 0)",
     "--secondary": hexToOklch(secondary),
-    "--secondary-foreground": "0.145 0 0",
-    "--accent": hexToOklch(primary),
-    "--accent-foreground": "0.145 0 0",
+    "--secondary-foreground": "oklch(0.145 0 0)",
+    "--accent": `color-mix(in oklch, ${hexToOklch(primary)} 10%, white)`,
+    "--accent-foreground": "oklch(0.145 0 0)",
     "--ring": hexToOklch(primary),
     "--brand-primary": primary,
     "--brand-secondary": secondary,
