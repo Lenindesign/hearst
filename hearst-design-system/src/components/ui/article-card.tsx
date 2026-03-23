@@ -231,7 +231,7 @@ function ArticleCardAuthor({
   return (
     <span
       data-slot="article-card-author"
-      className={cn("font-semibold text-foreground", className)}
+      className={cn("font-semibold text-foreground text-[length:var(--text-token-3xs)]", className)}
       {...props}
     />
   );

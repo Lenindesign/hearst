@@ -447,21 +447,21 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 
-  /* Typography scale from design tokens */
-  --text-token-4xs: var(--font-size-4xs, 0.688rem);
-  --text-token-3xs: var(--font-size-3xs, 0.75rem);
-  --text-token-2xs: var(--font-size-2xs, 0.8125rem);
-  --text-token-xs: var(--font-size-xs, 0.875rem);
-  --text-token-sm: var(--font-size-sm, 1rem);
-  --text-token-md: var(--font-size-md, 1.125rem);
-  --text-token-lg: var(--font-size-lg, 1.25rem);
-  --text-token-xl: var(--font-size-xl, 1.375rem);
-  --text-token-2xl: var(--font-size-2xl, 1.5rem);
-  --text-token-3xl: var(--font-size-3xl, 1.75rem);
-  --text-token-4xl: var(--font-size-4xl, 1.875rem);
-  --text-token-5xl: var(--font-size-5xl, 2rem);
-  --text-token-6xl: var(--font-size-6xl, 2.25rem);
-  --text-token-7xl: var(--font-size-7xl, 2.5rem);
+  /* Typography scale from design tokens (unitless values × 1rem) */
+  --text-token-4xs: calc(var(--font-size-4xs, 0.688) * 1rem);
+  --text-token-3xs: calc(var(--font-size-3xs, 0.75) * 1rem);
+  --text-token-2xs: calc(var(--font-size-2xs, 0.8125) * 1rem);
+  --text-token-xs: calc(var(--font-size-xs, 0.875) * 1rem);
+  --text-token-sm: calc(var(--font-size-sm, 1) * 1rem);
+  --text-token-md: calc(var(--font-size-md, 1.125) * 1rem);
+  --text-token-lg: calc(var(--font-size-lg, 1.25) * 1rem);
+  --text-token-xl: calc(var(--font-size-xl, 1.375) * 1rem);
+  --text-token-2xl: calc(var(--font-size-2xl, 1.5) * 1rem);
+  --text-token-3xl: calc(var(--font-size-3xl, 1.75) * 1rem);
+  --text-token-4xl: calc(var(--font-size-4xl, 1.875) * 1rem);
+  --text-token-5xl: calc(var(--font-size-5xl, 2) * 1rem);
+  --text-token-6xl: calc(var(--font-size-6xl, 2.25) * 1rem);
+  --text-token-7xl: calc(var(--font-size-7xl, 2.5) * 1rem);
 
   /* Spacing scale from design tokens */
   --spacing-token-3xs: var(--space-3xs, 2px);

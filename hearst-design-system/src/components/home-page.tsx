@@ -721,23 +721,25 @@ function getContent(brandSlug: string): ContentType {
 
 function UtilityBar() {
   return (
-    <div className="flex items-center justify-between px-3 h-8 text-[length:var(--text-token-4xs)] font-semibold bg-primary text-primary-foreground">
-      <div className="flex items-center gap-3">
-        {["Shop", "Newsletter", "Sign In"].map((label) => (
-          <LinkComponent
-            key={label}
-            variant="neutral"
-            underline={false}
-            size="xs"
-            className="opacity-90 text-primary-foreground hover:text-primary-foreground/80 font-semibold"
-          >
-            {label}
-          </LinkComponent>
-        ))}
+    <div className="h-8 bg-primary text-primary-foreground text-[length:var(--text-token-4xs)] font-semibold">
+      <div className="flex items-center justify-between h-full max-w-[var(--width-content-max)] mx-auto px-4 lg:px-0">
+        <div className="flex items-center gap-3">
+          {["Shop", "Newsletter", "Sign In"].map((label) => (
+            <LinkComponent
+              key={label}
+              variant="neutral"
+              underline={false}
+              size="xs"
+              className="opacity-90 text-primary-foreground hover:text-primary-foreground/80 font-semibold"
+            >
+              {label}
+            </LinkComponent>
+          ))}
+        </div>
+        <Button variant="secondary" size="xs" className="text-[length:var(--text-token-4xs)] font-semibold">
+          Subscribe
+        </Button>
       </div>
-      <Button variant="secondary" size="xs" className="text-[length:var(--text-token-4xs)] font-semibold">
-        Subscribe
-      </Button>
     </div>
   );
 }
@@ -937,11 +939,18 @@ function TrendingSection({ brandSlug }: { brandSlug: string }) {
 
 function Footer({ brandSlug }: { brandSlug: string }) {
   const { brand } = useTheme();
+  const logo = brandLogos[brand.slug];
+
+  const footerLogo = logo ? (
+    <BrandLogo slug={brand.slug} className="[&_svg]:h-8 [&_svg]:w-auto" color="#fff" />
+  ) : (
+    brand.name
+  );
 
   return (
-    <div className="max-w-[var(--width-content-max)] mx-auto pt-12">
+    <div className="pt-12">
       <SiteFooter
-        siteName={brand.name}
+        siteName={footerLogo}
         socialLinks={["YouTube", "Facebook", "Instagram", "Pinterest"]}
         legalLinks={["Privacy Notice", "Terms of Use", "Site Map"]}
         copyrightYear={2026}
@@ -955,48 +964,43 @@ export function HomePageTemplate() {
 
   return (
     <div className="min-h-screen font-brand bg-background">
-      <div className="max-w-[var(--width-page-max)] mx-auto">
-
-        {/* Ad Banner */}
-        <div className="flex items-center justify-center h-[100px] lg:h-[250px] bg-muted">
-          <div className="flex items-center justify-center rounded-md text-sm bg-muted text-muted-foreground border border-border" style={{ width: 728, height: 90 }}>
-            AD 728 × 90
-          </div>
-        </div>
-
-        {/* Utility Bar */}
-        <UtilityBar />
-
-        {/* Main Nav */}
-        <MainNav brandSlug={brand.slug} />
-
-        {/* Page Body */}
-        <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-0 pt-8 lg:pt-12 space-y-12 lg:space-y-16">
-          {/* Top Section: Collection + Hero + Right Rail */}
-          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-            {/* Left Column */}
-            <div className="flex-1 min-w-0 space-y-8 lg:space-y-12">
-              {/* Collection + Hero */}
-              <div className="flex flex-col md:flex-row gap-6 lg:gap-8">
-                <CollectionList brandSlug={brand.slug} />
-                <HeroCard brandSlug={brand.slug} />
-              </div>
-
-              {/* Newsletter + Trending */}
-              <NewsletterPromo brandSlug={brand.slug} />
-              <TrendingSection brandSlug={brand.slug} />
-            </div>
-
-            {/* Right Rail */}
-            <RightRail brandSlug={brand.slug} />
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="px-4 lg:px-0">
-          <Footer brandSlug={brand.slug} />
+      {/* Ad Banner — full width */}
+      <div className="flex items-center justify-center h-[100px] lg:h-[250px] bg-muted">
+        <div className="flex items-center justify-center rounded-md text-sm bg-muted text-muted-foreground border border-border" style={{ width: 728, height: 90 }}>
+          AD 728 × 90
         </div>
       </div>
+
+      {/* Utility Bar — full width */}
+      <UtilityBar />
+
+      {/* Main Nav — full width background, content constrained */}
+      <MainNav brandSlug={brand.slug} />
+
+      {/* Page Body — constrained */}
+      <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-0 pt-8 lg:pt-12 space-y-12 lg:space-y-16">
+        {/* Top Section: Collection + Hero + Right Rail */}
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+          {/* Left Column */}
+          <div className="flex-1 min-w-0 space-y-8 lg:space-y-12">
+            {/* Collection + Hero */}
+            <div className="flex flex-col md:flex-row gap-6 lg:gap-8">
+              <CollectionList brandSlug={brand.slug} />
+              <HeroCard brandSlug={brand.slug} />
+            </div>
+
+            {/* Newsletter + Trending */}
+            <NewsletterPromo brandSlug={brand.slug} />
+            <TrendingSection brandSlug={brand.slug} />
+          </div>
+
+          {/* Right Rail */}
+          <RightRail brandSlug={brand.slug} />
+        </div>
+      </div>
+
+      {/* Footer — full width */}
+      <Footer brandSlug={brand.slug} />
     </div>
   );
 }

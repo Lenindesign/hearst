@@ -31,14 +31,19 @@ export function SiteFooter({
   return (
     <footer
       className={cn(
-        "bg-foreground text-background px-6 py-10 font-brand",
+        "bg-foreground text-background py-10 font-brand",
         className
       )}
     >
+      <div className="max-w-[var(--width-content-max,1360px)] mx-auto px-6">
       <div className="flex justify-between items-start mb-8">
         <div>
-          <div className="text-xl font-extrabold italic mb-4 headline">
-            {siteName}
+          <div className="mb-4">
+            {typeof siteName === "string" ? (
+              <span className="text-xl font-extrabold italic headline">{siteName}</span>
+            ) : (
+              siteName
+            )}
           </div>
           {showSocialLinks && (
             <div className="flex gap-4 text-[length:var(--text-token-2xs)]">
@@ -94,6 +99,7 @@ export function SiteFooter({
       </div>
       <div className="text-[length:var(--text-token-4xs)] opacity-40 mt-3">
         &copy;{copyrightYear} Hearst Magazine Media, Inc. All Rights Reserved.
+      </div>
       </div>
     </footer>
   );

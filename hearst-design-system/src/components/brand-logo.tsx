@@ -6,9 +6,10 @@ import { brandLogos } from "@/lib/logos";
 interface BrandLogoProps {
   slug: string;
   className?: string;
+  color?: string;
 }
 
-export function BrandLogo({ slug, className = "" }: BrandLogoProps) {
+export function BrandLogo({ slug, className = "", color }: BrandLogoProps) {
   const [svg, setSvg] = useState<string | null>(null);
   const src = brandLogos[slug];
 
@@ -26,10 +27,19 @@ export function BrandLogo({ slug, className = "" }: BrandLogoProps) {
 
   if (!svg) return null;
 
+  let html = svg;
+  if (color) {
+    html = html
+      .replace(/fill="[^"]*"/g, `fill="${color}"`)
+      .replace(/style="[^"]*fill:\s*[^;"]*;?/g, (m) =>
+        m.replace(/fill:\s*[^;"]*/, `fill:${color}`)
+      );
+  }
+
   return (
     <span
       className={className}
-      dangerouslySetInnerHTML={{ __html: svg }}
+      dangerouslySetInnerHTML={{ __html: html }}
     />
   );
 }
