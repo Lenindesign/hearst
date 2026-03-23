@@ -1,0 +1,372 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Templates/Token Usage Guide" />
+
+export const Zone = ({ label, color = "#6d28d9" }) => (
+  <span style={{ display: 'inline-flex', alignItems: 'center', padding: '4px 12px', background: color, color: '#fff', borderRadius: '6px', fontSize: '11px', fontWeight: 700, fontFamily: 'monospace', letterSpacing: '0.5px', textTransform: 'uppercase' }}>{label}</span>
+);
+
+export const SectionCard = ({ title, icon, children }) => (
+  <div style={{ border: '1px solid #e2e8f0', borderRadius: '12px', padding: '24px', background: '#fafbfc', marginBottom: '16px' }}>
+    <h4 style={{ margin: '0 0 12px', fontSize: '15px', display: 'flex', alignItems: 'center', gap: '8px' }}>{icon} {title}</h4>
+    {children}
+  </div>
+);
+
+export const TableWrap = ({ children }) => (
+  <div style={{ borderRadius: '12px', border: '1px solid #e2e8f0', overflow: 'hidden', marginBottom: '16px' }}>
+    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+      {children}
+    </table>
+  </div>
+);
+
+export const Th = ({ children, width }) => (
+  <th style={{ textAlign: 'left', padding: '10px 14px', background: '#f8fafc', borderBottom: '2px solid #e2e8f0', fontSize: '12px', fontWeight: 700, color: '#64748b', width }}>{children}</th>
+);
+
+export const Td = ({ children, bold, mono }) => (
+  <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9', verticalAlign: 'top', fontWeight: bold ? 600 : 400, fontFamily: mono ? 'monospace' : 'inherit', fontSize: mono ? '12px' : '13px', color: mono ? '#6d28d9' : '#334155' }}>{children}</td>
+);
+
+export const VarTd = ({ children }) => (
+  <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9', verticalAlign: 'top', fontFamily: 'monospace', fontSize: '11px', color: '#0369a1', whiteSpace: 'nowrap' }}>{children}</td>
+);
+
+export const DefTd = ({ children }) => (
+  <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9', verticalAlign: 'top', fontFamily: 'monospace', fontSize: '11px', color: '#64748b' }}>{children}</td>
+);
+
+export const CardHeader = ({ title, description }) => (
+  <div style={{ border: '1px solid #e2e8f0', borderRadius: '12px 12px 0 0', padding: '16px 20px', background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+    <h4 style={{ margin: '0 0 4px', fontSize: '15px', fontWeight: 700 }}>{title}</h4>
+    <p style={{ margin: 0, fontSize: '13px', color: '#64748b' }}>{description}</p>
+  </div>
+);
+
+export const CardBody = ({ children }) => (
+  <div style={{ border: '1px solid #e2e8f0', borderTop: 'none', borderRadius: '0 0 12px 12px', overflow: 'hidden', marginBottom: '24px' }}>
+    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+      {children}
+    </table>
+  </div>
+);
+
+export const RefHeader = ({ title, color }) => (
+  <div style={{ padding: '12px 16px', background: color, borderBottom: '2px solid #e2e8f0' }}>
+    <span style={{ fontSize: '13px', fontWeight: 700, color: '#1e293b' }}>{title}</span>
+  </div>
+);
+
+# Template Token Usage Guide
+
+How the **Home Page** and **Article Page** templates consume design tokens — and why each choice was made. This is the reference for anyone building new templates or auditing existing ones for token compliance.
+
+<div style={{ display: 'flex', gap: '12px', marginBottom: '32px', flexWrap: 'wrap' }}>
+  <Zone label="Typography" color="#6d28d9" />
+  <Zone label="Spacing" color="#0369a1" />
+  <Zone label="Layout" color="#16a34a" />
+  <Zone label="Color" color="#dc2626" />
+  <Zone label="Font" color="#d97706" />
+</div>
+
+---
+
+## Variable Reference
+
+Every CSS custom property available to templates, grouped by category. These are defined in `globals.css` and consumed via Tailwind's arbitrary value syntax (e.g. `text-[length:var(--text-token-md)]`).
+
+### Typography Variables
+
+<TableWrap>
+  <thead>
+    <tr><Th width="180px">Variable Name</Th><Th width="280px">Definition</Th><Th width="80px">Default</Th><Th>Tailwind Usage</Th></tr>
+  </thead>
+  <tbody>
+    <tr><VarTd>--text-token-4xs</VarTd><DefTd>calc(var(--font-size-4xs, 0.688) * 1rem)</DefTd><Td>11px</Td><Td>text-[length:var(--text-token-4xs)]</Td></tr>
+    <tr><VarTd>--text-token-3xs</VarTd><DefTd>calc(var(--font-size-3xs, 0.75) * 1rem)</DefTd><Td>12px</Td><Td>text-[length:var(--text-token-3xs)]</Td></tr>
+    <tr><VarTd>--text-token-2xs</VarTd><DefTd>calc(var(--font-size-2xs, 0.8125) * 1rem)</DefTd><Td>13px</Td><Td>text-[length:var(--text-token-2xs)]</Td></tr>
+    <tr><VarTd>--text-token-xs</VarTd><DefTd>calc(var(--font-size-xs, 0.875) * 1rem)</DefTd><Td>14px</Td><Td>text-[length:var(--text-token-xs)]</Td></tr>
+    <tr><VarTd>--text-token-sm</VarTd><DefTd>calc(var(--font-size-sm, 1) * 1rem)</DefTd><Td>16px</Td><Td>text-[length:var(--text-token-sm)]</Td></tr>
+    <tr><VarTd>--text-token-md</VarTd><DefTd>calc(var(--font-size-md, 1.125) * 1rem)</DefTd><Td>18px</Td><Td>text-[length:var(--text-token-md)]</Td></tr>
+    <tr><VarTd>--text-token-lg</VarTd><DefTd>calc(var(--font-size-lg, 1.25) * 1rem)</DefTd><Td>20px</Td><Td>text-[length:var(--text-token-lg)]</Td></tr>
+    <tr><VarTd>--text-token-xl</VarTd><DefTd>calc(var(--font-size-xl, 1.375) * 1rem)</DefTd><Td>22px</Td><Td>text-[length:var(--text-token-xl)]</Td></tr>
+    <tr><VarTd>--text-token-2xl</VarTd><DefTd>calc(var(--font-size-2xl, 1.5) * 1rem)</DefTd><Td>24px</Td><Td>text-[length:var(--text-token-2xl)]</Td></tr>
+    <tr><VarTd>--text-token-3xl</VarTd><DefTd>calc(var(--font-size-3xl, 1.75) * 1rem)</DefTd><Td>28px</Td><Td>text-[length:var(--text-token-3xl)]</Td></tr>
+    <tr><VarTd>--text-token-4xl</VarTd><DefTd>calc(var(--font-size-4xl, 1.875) * 1rem)</DefTd><Td>30px</Td><Td>text-[length:var(--text-token-4xl)]</Td></tr>
+    <tr><VarTd>--text-token-5xl</VarTd><DefTd>calc(var(--font-size-5xl, 2) * 1rem)</DefTd><Td>32px</Td><Td>text-[length:var(--text-token-5xl)]</Td></tr>
+    <tr><VarTd>--text-token-6xl</VarTd><DefTd>calc(var(--font-size-6xl, 2.25) * 1rem)</DefTd><Td>36px</Td><Td>text-[length:var(--text-token-6xl)]</Td></tr>
+    <tr><VarTd>--text-token-7xl</VarTd><DefTd>calc(var(--font-size-7xl, 2.5) * 1rem)</DefTd><Td>40px</Td><Td>text-[length:var(--text-token-7xl)]</Td></tr>
+  </tbody>
+</TableWrap>
+
+### Spacing Variables
+
+<TableWrap>
+  <thead>
+    <tr><Th width="200px">Variable Name</Th><Th width="260px">Definition</Th><Th width="80px">Default</Th><Th>Tailwind Usage</Th></tr>
+  </thead>
+  <tbody>
+    <tr><VarTd>--spacing-token-3xs</VarTd><DefTd>var(--space-3xs, 2px)</DefTd><Td>2px</Td><Td>gap-[var(--spacing-token-3xs)]</Td></tr>
+    <tr><VarTd>--spacing-token-2xs</VarTd><DefTd>var(--space-2xs, 4px)</DefTd><Td>4px</Td><Td>gap-[var(--spacing-token-2xs)]</Td></tr>
+    <tr><VarTd>--spacing-token-xs</VarTd><DefTd>var(--space-xs, 8px)</DefTd><Td>8px</Td><Td>p-[var(--spacing-token-xs)]</Td></tr>
+    <tr><VarTd>--spacing-token-sm</VarTd><DefTd>var(--space-sm, 12px)</DefTd><Td>12px</Td><Td>gap-[var(--spacing-token-sm)]</Td></tr>
+    <tr><VarTd>--spacing-token-md</VarTd><DefTd>var(--space-md, 16px)</DefTd><Td>16px</Td><Td>px-[var(--spacing-token-md)]</Td></tr>
+    <tr><VarTd>--spacing-token-lg</VarTd><DefTd>var(--space-lg, 20px)</DefTd><Td>20px</Td><Td>gap-[var(--spacing-token-lg)]</Td></tr>
+    <tr><VarTd>--spacing-token-xl</VarTd><DefTd>var(--space-xl, 24px)</DefTd><Td>24px</Td><Td>space-y-[var(--spacing-token-xl)]</Td></tr>
+    <tr><VarTd>--spacing-token-2xl</VarTd><DefTd>var(--space-2xl, 32px)</DefTd><Td>32px</Td><Td>pt-[var(--spacing-token-2xl)]</Td></tr>
+    <tr><VarTd>--spacing-token-3xl</VarTd><DefTd>var(--space-3xl, 48px)</DefTd><Td>48px</Td><Td>py-[var(--spacing-token-3xl)]</Td></tr>
+    <tr><VarTd>--spacing-token-4xl</VarTd><DefTd>var(--space-4xl, 64px)</DefTd><Td>64px</Td><Td>mt-[var(--spacing-token-4xl)]</Td></tr>
+    <tr><VarTd>--spacing-token-6xl</VarTd><DefTd>var(--space-6xl, 80px)</DefTd><Td>80px</Td><Td>py-[var(--spacing-token-6xl)]</Td></tr>
+  </tbody>
+</TableWrap>
+
+### Layout Variables
+
+<TableWrap>
+  <thead>
+    <tr><Th width="200px">Variable Name</Th><Th width="100px">Value</Th><Th>Tailwind Usage</Th><Th>Purpose</Th></tr>
+  </thead>
+  <tbody>
+    <tr><VarTd>--width-content-max</VarTd><Td>1360px</Td><Td>max-w-[var(--width-content-max)]</Td><Td>Main content area constraint</Td></tr>
+    <tr><VarTd>--width-page-max</VarTd><Td>1440px</Td><Td>max-w-[var(--width-page-max)]</Td><Td>Full page outer container</Td></tr>
+    <tr><VarTd>--width-sidebar</VarTd><Td>320px</Td><Td>w-[var(--width-sidebar)]</Td><Td>Right rail width</Td></tr>
+    <tr><VarTd>--width-sidebar-narrow</VarTd><Td>180px</Td><Td>w-[var(--width-sidebar-narrow)]</Td><Td>Nav spacer for logo centering</Td></tr>
+  </tbody>
+</TableWrap>
+
+### Color Variables
+
+<TableWrap>
+  <thead>
+    <tr><Th width="200px">Variable Name</Th><Th width="200px">Default (Light)</Th><Th>Tailwind Usage</Th></tr>
+  </thead>
+  <tbody>
+    <tr><VarTd>--primary</VarTd><DefTd>oklch(0.205 0 0)</DefTd><Td>bg-primary, text-primary</Td></tr>
+    <tr><VarTd>--primary-foreground</VarTd><DefTd>oklch(0.985 0 0)</DefTd><Td>text-primary-foreground</Td></tr>
+    <tr><VarTd>--background</VarTd><DefTd>oklch(1 0 0)</DefTd><Td>bg-background</Td></tr>
+    <tr><VarTd>--foreground</VarTd><DefTd>oklch(0.145 0 0)</DefTd><Td>text-foreground, bg-foreground</Td></tr>
+    <tr><VarTd>--muted-foreground</VarTd><DefTd>oklch(0.556 0 0)</DefTd><Td>text-muted-foreground</Td></tr>
+    <tr><VarTd>--accent</VarTd><DefTd>oklch(0.97 0 0)</DefTd><Td>bg-accent</Td></tr>
+    <tr><VarTd>--border</VarTd><DefTd>oklch(0.922 0 0)</DefTd><Td>border-border</Td></tr>
+  </tbody>
+</TableWrap>
+
+### Font Variables
+
+<TableWrap>
+  <thead>
+    <tr><Th width="200px">Variable Name</Th><Th width="280px">Definition</Th><Th>Tailwind / CSS Usage</Th></tr>
+  </thead>
+  <tbody>
+    <tr><VarTd>--font-brand</VarTd><DefTd>var(--font-brand)</DefTd><Td>font-brand</Td></tr>
+    <tr><VarTd>--font-brand-secondary</VarTd><DefTd>var(--font-brand-secondary)</DefTd><Td>font-brand-secondary</Td></tr>
+    <tr><VarTd>--font-headline</VarTd><DefTd>var(--font-headline, system-ui, sans-serif)</DefTd><Td>.headline class</Td></tr>
+    <tr><VarTd>--font-headline-weight</VarTd><DefTd>var(--font-headline-weight, 700)</DefTd><Td>Applied via .headline class</Td></tr>
+  </tbody>
+</TableWrap>
+
+---
+
+## Token Categories at a Glance
+
+Both templates draw from the same five token families. The difference is *how* they use them — the home page prioritizes **density and scanning**, while the article page prioritizes **readability and focus**.
+
+<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '32px' }}>
+  <SectionCard title="Home Page" icon="🏠">
+    <p style={{ fontSize: '13px', color: '#475569', margin: 0 }}>
+      <strong>Goal:</strong> Dense, scannable content. Multiple stories compete for attention across a grid. Typography stays compact; spacing is tight to fit more above the fold.
+    </p>
+  </SectionCard>
+  <SectionCard title="Article Page" icon="📄">
+    <p style={{ fontSize: '13px', color: '#475569', margin: 0 }}>
+      <strong>Goal:</strong> Focused, long-form reading. A single story demands sustained attention. Typography is larger; spacing is generous to reduce cognitive load.
+    </p>
+  </SectionCard>
+</div>
+
+---
+
+## Typography Tokens
+
+The most critical difference between the two templates. The article page uses larger, more generous type to support long-form reading, while the home page keeps text compact for scanning.
+
+<CardHeader title="Home Page Typography" description="Compact type for scanning multiple stories at once" />
+<CardBody>
+  <thead>
+    <tr><Th width="140px">Element</Th><Th width="160px">Variable</Th><Th width="200px">Tailwind Class</Th><Th width="80px">Size</Th><Th>Why</Th></tr>
+  </thead>
+  <tbody>
+    <tr><Td bold>Hero headline</Td><VarTd>--text-token-5xl / 7xl</VarTd><Td mono>text-[length:var(--text-token-5xl)]</Td><Td>32 / 40px</Td><Td>Largest element, but shares space with image and sidebar</Td></tr>
+    <tr><Td bold>Article card title</Td><VarTd>--text-token-sm</VarTd><Td mono>text-[length:var(--text-token-sm)]</Td><Td>16px</Td><Td>Must fit in tight card layouts alongside thumbnails</Td></tr>
+    <tr><Td bold>Card eyebrow</Td><VarTd>--text-token-4xs</VarTd><Td mono>text-[length:var(--text-token-4xs)]</Td><Td>11px</Td><Td>Category labels — small to stay subordinate to titles</Td></tr>
+    <tr><Td bold>Card meta / byline</Td><VarTd>--text-token-4xs / 3xs</VarTd><Td mono>text-[length:var(--text-token-4xs)]</Td><Td>11 / 12px</Td><Td>Tertiary info (date, author) — smallest readable size</Td></tr>
+    <tr><Td bold>Utility bar</Td><VarTd>--text-token-4xs</VarTd><Td mono>text-[length:var(--text-token-4xs)]</Td><Td>11px</Td><Td>Chrome text — functional, not editorial</Td></tr>
+    <tr><Td bold>Section heading</Td><VarTd>--text-token-xl</VarTd><Td mono>text-[length:var(--text-token-xl)]</Td><Td>22px</Td><Td>"Trending", "More Stories" — mid-hierarchy labels</Td></tr>
+    <tr><Td bold>Nav links</Td><VarTd>--text-token-2xs</VarTd><Td mono>text-[length:var(--text-token-2xs)]</Td><Td>13px</Td><Td>Navigation — readable but compact</Td></tr>
+  </tbody>
+</CardBody>
+
+<CardHeader title="Article Page Typography" description="Generous type for sustained long-form reading" />
+<CardBody>
+  <thead>
+    <tr><Th width="140px">Element</Th><Th width="160px">Variable</Th><Th width="200px">Tailwind Class</Th><Th width="80px">Size</Th><Th>Why</Th></tr>
+  </thead>
+  <tbody>
+    <tr><Td bold>Hero headline</Td><VarTd>--text-token-3xl / 7xl</VarTd><Td mono>text-[length:var(--text-token-3xl)]</Td><Td>28 / 40px</Td><Td>Single headline gets full width — mobile starts larger than home page cards</Td></tr>
+    <tr><Td bold>Dek (subtitle)</Td><VarTd>--text-token-md / lg</VarTd><Td mono>text-[length:var(--text-token-md)]</Td><Td>18 / 20px</Td><Td>Bridges headline to body — needs to feel like editorial prose</Td></tr>
+    <tr style={{ background: '#fefce8' }}><Td bold>Body text ⭐</Td><VarTd>--text-token-md</VarTd><Td mono>text-[length:var(--text-token-md)]</Td><Td>18px</Td><Td>The key difference. Long-form reading demands 18px+ for comfort.</Td></tr>
+    <tr><Td bold>Subheadings (H2)</Td><VarTd>--text-token-2xl / 3xl</VarTd><Td mono>text-[length:var(--text-token-2xl)]</Td><Td>24 / 28px</Td><Td>Interview questions, section breaks — must stand out from 18px body</Td></tr>
+    <tr><Td bold>Pull quote</Td><VarTd>--text-token-2xl / 3xl</VarTd><Td mono>text-[length:var(--text-token-2xl)]</Td><Td>24 / 28px</Td><Td>Dramatic callout — same scale as subheadings but italic + brand accent</Td></tr>
+    <tr><Td bold>Breadcrumb</Td><VarTd>--text-token-4xs</VarTd><Td mono>text-[length:var(--text-token-4xs)]</Td><Td>11px</Td><Td>Wayfinding — subordinate to everything else</Td></tr>
+    <tr><Td bold>Byline</Td><VarTd>--text-token-2xs</VarTd><Td mono>text-[length:var(--text-token-2xs)]</Td><Td>13px</Td><Td>Author/date — important but not the focus</Td></tr>
+    <tr><Td bold>Image caption</Td><VarTd>--text-token-4xs</VarTd><Td mono>text-[length:var(--text-token-4xs)]</Td><Td>11px</Td><Td>Credits and styling notes — smallest tier</Td></tr>
+    <tr><Td bold>Footnote</Td><VarTd>--text-token-4xs</VarTd><Td mono>text-[length:var(--text-token-4xs)]</Td><Td>11px</Td><Td>Supplementary context — visually distinct via italic + border</Td></tr>
+    <tr><Td bold>Sidebar card title</Td><VarTd>--text-token-2xs</VarTd><Td mono>text-[length:var(--text-token-2xs)]</Td><Td>13px</Td><Td>Compact sidebar cards — same density as home page</Td></tr>
+    <tr><Td bold>Sidebar heading</Td><VarTd>--text-token-xs</VarTd><Td mono>text-[length:var(--text-token-xs)]</Td><Td>14px</Td><Td>"More on [Brand]" — label, not editorial</Td></tr>
+    <tr><Td bold>Newsletter label</Td><VarTd>--text-token-3xs</VarTd><Td mono>text-[length:var(--text-token-3xs)]</Td><Td>12px</Td><Td>Functional label above the CTA</Td></tr>
+    <tr><Td bold>Newsletter heading</Td><VarTd>--text-token-2xl / 5xl</VarTd><Td mono>text-[length:var(--text-token-2xl)]</Td><Td>24 / 32px</Td><Td>Promotional — needs to interrupt the reading flow</Td></tr>
+    <tr><Td bold>CTA button</Td><VarTd>--text-token-xs</VarTd><Td mono>text-[length:var(--text-token-xs)]</Td><Td>14px</Td><Td>Action text — readable at button scale</Td></tr>
+    <tr><Td bold>Legal text</Td><VarTd>--text-token-4xs</VarTd><Td mono>text-[length:var(--text-token-4xs)]</Td><Td>11px</Td><Td>Terms/privacy — legally required but visually minimal</Td></tr>
+  </tbody>
+</CardBody>
+
+---
+
+## Spacing Tokens
+
+Spacing controls rhythm and breathing room. The home page packs content tightly; the article page opens up to let prose breathe.
+
+<CardHeader title="Home Page Spacing" description="Tight rhythm for content density" />
+<CardBody>
+  <thead>
+    <tr><Th width="140px">Context</Th><Th width="160px">Variable</Th><Th width="220px">Tailwind Class</Th><Th width="80px">Size</Th><Th>Why</Th></tr>
+  </thead>
+  <tbody>
+    <tr><Td bold>Section gaps</Td><VarTd>--space-lg / --space-md</VarTd><Td mono>gap-[var(--spacing-token-lg)]</Td><Td>20 / 16px</Td><Td>Sections are close together to maximize above-the-fold content</Td></tr>
+    <tr><Td bold>Card internal gap</Td><VarTd>--space-sm</VarTd><Td mono>gap-[var(--spacing-token-sm)]</Td><Td>12px</Td><Td>Tight padding inside cards to keep them compact</Td></tr>
+    <tr><Td bold>Grid gap</Td><VarTd>--space-lg</VarTd><Td mono>gap-[var(--spacing-token-lg)]</Td><Td>20px</Td><Td>Enough to separate cards without wasting vertical space</Td></tr>
+    <tr><Td bold>Page top padding</Td><VarTd>--spacing-token-2xl / 3xl</VarTd><Td mono>pt-[var(--spacing-token-2xl)]</Td><Td>32 / 48px</Td><Td>Moderate breathing room below nav</Td></tr>
+    <tr><Td bold>Utility bar gap</Td><VarTd>--spacing-token-sm</VarTd><Td mono>gap-[var(--spacing-token-sm)]</Td><Td>12px</Td><Td>Functional chrome — tight spacing</Td></tr>
+  </tbody>
+</CardBody>
+
+<CardHeader title="Article Page Spacing" description="Generous rhythm for reading comfort" />
+<CardBody>
+  <thead>
+    <tr><Th width="160px">Context</Th><Th width="160px">Variable</Th><Th width="240px">Tailwind Class</Th><Th width="80px">Size</Th><Th>Why</Th></tr>
+  </thead>
+  <tbody>
+    <tr><Td bold>Body paragraph gaps</Td><VarTd>--spacing-token-xl</VarTd><Td mono>space-y-[var(--spacing-token-xl)]</Td><Td>24px</Td><Td>Paragraphs need air between them for readability at 18px</Td></tr>
+    <tr><Td bold>Section gaps</Td><VarTd>--spacing-token-2xl</VarTd><Td mono>space-y-[var(--spacing-token-2xl)]</Td><Td>32px</Td><Td>Hero → byline → body → newsletter — clear section breaks</Td></tr>
+    <tr><Td bold>Inline image margin</Td><VarTd>--spacing-token-2xl</VarTd><Td mono>my-[var(--spacing-token-2xl)]</Td><Td>32px</Td><Td>Images interrupt text flow — need generous vertical space</Td></tr>
+    <tr style={{ background: '#fefce8' }}><Td bold>Subheading top ⭐</Td><VarTd>--spacing-token-3xl</VarTd><Td mono>mt-[var(--spacing-token-3xl)]</Td><Td>48px</Td><Td>New topic = extra space. Signals a shift in the conversation.</Td></tr>
+    <tr><Td bold>Subheading bottom</Td><VarTd>--spacing-token-md</VarTd><Td mono>mb-[var(--spacing-token-md)]</Td><Td>16px</Td><Td>Tight to the answer that follows — groups question with response</Td></tr>
+    <tr><Td bold>Pull quote margin</Td><VarTd>--spacing-token-3xl</VarTd><Td mono>my-[var(--spacing-token-3xl)]</Td><Td>48px</Td><Td>Dramatic pause — the quote is a visual event, not inline text</Td></tr>
+    <tr><Td bold>Pull quote padding</Td><VarTd>--spacing-token-xl / 2xl</VarTd><Td mono>pl-[var(--spacing-token-xl)]</Td><Td>24 / 32px</Td><Td>Space between the accent border and the quote text</Td></tr>
+    <tr><Td bold>Sidebar section gaps</Td><VarTd>--spacing-token-2xl</VarTd><Td mono>space-y-[var(--spacing-token-2xl)]</Td><Td>32px</Td><Td>Ad → articles → sticky ad — clear separation</Td></tr>
+    <tr><Td bold>Sidebar card gaps</Td><VarTd>--spacing-token-md</VarTd><Td mono>gap-[var(--spacing-token-md)]</Td><Td>16px</Td><Td>Compact cards in the rail — same density as home page</Td></tr>
+    <tr><Td bold>Newsletter padding</Td><VarTd>--spacing-token-3xl / xl</VarTd><Td mono>py-[var(--spacing-token-3xl)]</Td><Td>48 / 24px</Td><Td>Generous internal padding — the promo is a contained "card"</Td></tr>
+    <tr><Td bold>Grid gutter</Td><VarTd>--spacing-token-3xl</VarTd><Td mono>gap-[var(--spacing-token-3xl)]</Td><Td>48px</Td><Td>Clear separation between reading column and sidebar</Td></tr>
+    <tr><Td bold>Breadcrumb gap</Td><VarTd>--spacing-token-2xs</VarTd><Td mono>gap-[var(--spacing-token-2xs)]</Td><Td>4px</Td><Td>Tight between crumb segments — reads as one unit</Td></tr>
+    <tr><Td bold>Footnote indent</Td><VarTd>--spacing-token-md</VarTd><Td mono>pl-[var(--spacing-token-md)]</Td><Td>16px</Td><Td>Indented from body text to signal supplementary content</Td></tr>
+    <tr><Td bold>Related articles gap</Td><VarTd>--spacing-token-md</VarTd><Td mono>gap-[var(--spacing-token-md)]</Td><Td>16px</Td><Td>Card grid — same density as home page trending section</Td></tr>
+  </tbody>
+</CardBody>
+
+---
+
+## Layout Tokens
+
+Both templates share the same layout tokens — this ensures consistent page structure across all Hearst properties.
+
+<TableWrap>
+  <thead>
+    <tr><Th width="200px">Variable</Th><Th width="80px">Value</Th><Th width="260px">Tailwind Class</Th><Th>Used in</Th></tr>
+  </thead>
+  <tbody>
+    <tr><VarTd>--width-content-max</VarTd><Td>1360px</Td><Td mono>max-w-[var(--width-content-max)]</Td><Td>Both templates — main content area constraint</Td></tr>
+    <tr><VarTd>--width-page-max</VarTd><Td>1440px</Td><Td mono>max-w-[var(--width-page-max)]</Td><Td>Home page — outermost container</Td></tr>
+    <tr><VarTd>--width-sidebar</VarTd><Td>320px</Td><Td mono>w-[var(--width-sidebar)]</Td><Td>Both templates — right rail width</Td></tr>
+    <tr><VarTd>--width-sidebar-narrow</VarTd><Td>180px</Td><Td mono>w-[var(--width-sidebar-narrow)]</Td><Td>Both templates — nav spacer for logo centering</Td></tr>
+  </tbody>
+</TableWrap>
+
+### Why the same layout tokens?
+
+Both templates live on the same sites. A reader navigating from the home page to an article should feel a consistent page width and grid structure. The content *inside* the grid changes (dense cards vs. long-form prose), but the container stays the same.
+
+---
+
+## Color Tokens
+
+Color tokens are identical across both templates — they come from the brand theme, not the template.
+
+<TableWrap>
+  <thead>
+    <tr><Th width="180px">Variable</Th><Th width="160px">Tailwind Class</Th><Th>Home Page</Th><Th>Article Page</Th></tr>
+  </thead>
+  <tbody>
+    <tr><VarTd>--primary</VarTd><Td mono>bg-primary, text-primary</Td><Td>Utility bar bg, trending badges, section headings</Td><Td>Utility bar bg, breadcrumb, pull quote border</Td></tr>
+    <tr><VarTd>--primary-foreground</VarTd><Td mono>text-primary-foreground</Td><Td>Utility bar text, badge numbers</Td><Td>Utility bar text</Td></tr>
+    <tr><VarTd>--background</VarTd><Td mono>bg-background</Td><Td>Page background</Td><Td>Page background</Td></tr>
+    <tr><VarTd>--foreground</VarTd><Td mono>text-foreground, bg-foreground</Td><Td>Body text, footer bg</Td><Td>Body text, headlines, footer bg</Td></tr>
+    <tr><VarTd>--muted-foreground</VarTd><Td mono>text-muted-foreground</Td><Td>Meta text, dates</Td><Td>Byline dates, captions, sidebar labels</Td></tr>
+    <tr><VarTd>--accent</VarTd><Td mono>bg-accent</Td><Td>Newsletter promo bg</Td><Td>Newsletter promo bg</Td></tr>
+    <tr><VarTd>--border</VarTd><Td mono>border-border</Td><Td>Dividers, card rings</Td><Td>Nav border, byline separators, footnote border</Td></tr>
+  </tbody>
+</TableWrap>
+
+---
+
+## Font Tokens
+
+Both templates use the same font stack, but apply it differently based on content hierarchy.
+
+<TableWrap>
+  <thead>
+    <tr><Th width="180px">Variable</Th><Th width="160px">Tailwind / CSS</Th><Th>Home Page</Th><Th>Article Page</Th></tr>
+  </thead>
+  <tbody>
+    <tr><VarTd>--font-brand</VarTd><Td mono>font-brand</Td><Td>Body text, nav, meta</Td><Td>Body text, byline, nav, captions</Td></tr>
+    <tr><VarTd>--font-brand-secondary</VarTd><Td mono>font-brand-secondary</Td><Td>Eyebrows, labels</Td><Td>Breadcrumbs, newsletter label, sidebar heading</Td></tr>
+    <tr><VarTd>--font-headline</VarTd><Td mono>.headline</Td><Td>Hero headline, card titles, section headings</Td><Td>Headline, subheadings, pull quotes, card titles, newsletter heading</Td></tr>
+    <tr><VarTd>--font-headline-weight</VarTd><Td mono>.headline (font-weight)</Td><Td>Applied via .headline class</Td><Td>Applied via .headline class</Td></tr>
+  </tbody>
+</TableWrap>
+
+### Why `.headline` matters
+
+The `.headline` class applies `font-family: var(--font-headline)` with the brand's headline weight. This is the single most important brand differentiator — it's what makes Cosmopolitan look different from Esquire. Both templates use it for their most prominent text, but the article page applies it more broadly (subheadings, pull quotes) because the reading experience needs more typographic variety.
+
+---
+
+## Template Comparison Summary
+
+<TableWrap>
+  <thead>
+    <tr><Th width="160px">Dimension</Th><Th>Home Page</Th><Th>Article Page</Th></tr>
+  </thead>
+  <tbody>
+    <tr><Td bold>Body text size</Td><Td>N/A (no body text)</Td><Td><code style={{ color: '#6d28d9' }}>--text-token-md</code> (18px)</Td></tr>
+    <tr><Td bold>Smallest text</Td><Td><code style={{ color: '#6d28d9' }}>--text-token-4xs</code> (11px)</Td><Td><code style={{ color: '#6d28d9' }}>--text-token-4xs</code> (11px)</Td></tr>
+    <tr><Td bold>Largest text</Td><Td><code style={{ color: '#6d28d9' }}>--text-token-7xl</code> (40px)</Td><Td><code style={{ color: '#6d28d9' }}>--text-token-7xl</code> (40px)</Td></tr>
+    <tr><Td bold>Section spacing</Td><Td><code style={{ color: '#6d28d9' }}>--space-lg</code> (20px)</Td><Td><code style={{ color: '#6d28d9' }}>--spacing-token-2xl</code> (32px)</Td></tr>
+    <tr><Td bold>Content max-width</Td><Td><code style={{ color: '#6d28d9' }}>--width-content-max</code> (1360px)</Td><Td><code style={{ color: '#6d28d9' }}>--width-content-max</code> (1360px)</Td></tr>
+    <tr><Td bold>Sidebar width</Td><Td><code style={{ color: '#6d28d9' }}>--width-sidebar</code> (320px)</Td><Td><code style={{ color: '#6d28d9' }}>--width-sidebar</code> (320px)</Td></tr>
+    <tr><Td bold>Unique components</Td><Td>HeroCard, FourAcrossGrid, BigStoryFeedStacked, NewsletterPromo</Td><Td>ArticleHero, ArticleBody, PullQuote, ArticleByline, AdPlaceholder, RelatedArticles</Td></tr>
+  </tbody>
+</TableWrap>
+
+---
+
+## Rules for New Templates
+
+1. **Never hardcode pixel values** — use `--text-token-*` for typography and `--spacing-token-*` for spacing
+2. **Always use `--width-content-max`** for the main content constraint — this ensures consistent page width
+3. **Use `--width-sidebar`** for any right rail — ads and sidebar content share this standard width
+4. **Apply `.headline`** to the most prominent text in each section — this is the brand's typographic signature
+5. **Use `font-brand-secondary`** for functional labels (eyebrows, breadcrumbs, section headers) — it provides contrast with the headline font
+6. **Color tokens come from the theme** — never reference brand colors directly; use `bg-primary`, `text-foreground`, etc.
+7. **Reading templates need `--text-token-md` (18px) minimum** for body text — scanning templates can use `--text-token-sm` (16px) or smaller
+8. **Spacing should increase with reading depth** — home page (scanning) uses tighter spacing; article page (reading) uses more generous spacing
