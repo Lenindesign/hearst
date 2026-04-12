@@ -9,7 +9,7 @@ description: Deploy the Hearst design system to Netlify, manage build pipeline, 
 
 ## Hosting
 
-- **Netlify:** hearst-design-system.app
+- **Netlify:** hearst-design-system.netlify.app
 - Next.js app + Storybook served from same domain
 
 ## netlify.toml Configuration
