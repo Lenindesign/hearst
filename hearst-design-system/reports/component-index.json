@@ -1,0 +1,2076 @@
+{
+  "generatedAt": "2026-04-07T13:43:34.425Z",
+  "totalComponents": 65,
+  "byLevel": {
+    "template": 19,
+    "molecule": 20,
+    "organism": 2,
+    "atom": 24
+  },
+  "dependencyGraph": {
+    "accordion-page": [
+      "ui/accordion",
+      "ui/badge",
+      "ui/card",
+      "ui/separator"
+    ],
+    "article-page": [
+      "ui/button",
+      "ui/input",
+      "ui/link",
+      "ui/separator",
+      "ui/article-card"
+    ],
+    "badge-page": [
+      "ui/badge",
+      "ui/card",
+      "ui/separator"
+    ],
+    "brand-logo": [],
+    "brand-switcher": [],
+    "button-page": [
+      "ui/button",
+      "ui/card",
+      "ui/badge",
+      "ui/separator",
+      "ui/tabs"
+    ],
+    "card-page": [
+      "ui/article-card",
+      "ui/card",
+      "ui/badge",
+      "ui/button",
+      "ui/separator",
+      "ui/tabs"
+    ],
+    "carousel-page": [
+      "ui/carousel",
+      "ui/badge",
+      "ui/card",
+      "ui/separator"
+    ],
+    "chip-page": [
+      "ui/chip",
+      "ui/badge",
+      "ui/card",
+      "ui/separator"
+    ],
+    "color-page": [
+      "ui/badge",
+      "ui/card",
+      "ui/separator"
+    ],
+    "content-carousel": [
+      "ui/carousel"
+    ],
+    "divider-page": [
+      "ui/divider",
+      "ui/badge",
+      "ui/card",
+      "ui/separator"
+    ],
+    "form-label-page": [
+      "ui/form-label",
+      "ui/badge",
+      "ui/card",
+      "ui/separator"
+    ],
+    "ad-placeholder": [],
+    "article-body": [],
+    "article-byline": [
+      "ui/separator"
+    ],
+    "article-hero": [],
+    "big-story-feed": [
+      "ui/article-card",
+      "ui/separator"
+    ],
+    "big-story": [
+      "ui/article-card"
+    ],
+    "four-across-grid": [
+      "ui/article-card",
+      "ui/link"
+    ],
+    "pull-quote": [],
+    "related-articles": [
+      "ui/article-card",
+      "ui/separator"
+    ],
+    "shared": [],
+    "site-footer": [
+      "ui/separator",
+      "ui/link"
+    ],
+    "site-header": [
+      "ui/button",
+      "ui/link"
+    ],
+    "home-page": [
+      "ui/button",
+      "ui/input",
+      "ui/divider",
+      "ui/link",
+      "ui/separator"
+    ],
+    "image-page": [
+      "ui/aspect-image",
+      "ui/badge",
+      "ui/card",
+      "ui/separator"
+    ],
+    "input-page": [
+      "ui/input",
+      "ui/badge",
+      "ui/card",
+      "ui/separator"
+    ],
+    "layout-page": [
+      "ui/badge",
+      "ui/card",
+      "ui/separator"
+    ],
+    "link-page": [
+      "ui/link",
+      "ui/badge",
+      "ui/card",
+      "ui/separator"
+    ],
+    "media-page": [
+      "ui/media",
+      "ui/badge",
+      "ui/card",
+      "ui/separator"
+    ],
+    "nav-bar": [],
+    "pagination-page": [
+      "ui/pagination",
+      "ui/badge",
+      "ui/card",
+      "ui/separator"
+    ],
+    "showcase": [
+      "ui/button",
+      "ui/card",
+      "ui/badge",
+      "ui/input",
+      "ui/label",
+      "ui/tabs",
+      "ui/separator",
+      "ui/switch",
+      "ui/textarea",
+      "ui/alert",
+      "ui/toggle-group"
+    ],
+    "special-offers": [],
+    "theme-provider": [],
+    "token-dashboard": [
+      "ui/card",
+      "ui/badge",
+      "ui/tabs",
+      "ui/separator"
+    ],
+    "token-inspector": [],
+    "tokens-page": [
+      "ui/card",
+      "ui/badge",
+      "ui/separator",
+      "ui/tabs"
+    ],
+    "typography-page": [
+      "ui/badge",
+      "ui/card",
+      "ui/separator"
+    ],
+    "accordion": [],
+    "alert": [],
+    "article-card": [],
+    "aspect-image": [],
+    "avatar": [],
+    "badge": [],
+    "button": [],
+    "card": [],
+    "carousel": [
+      "ui/button"
+    ],
+    "chip": [],
+    "divider": [],
+    "form-label": [],
+    "input": [],
+    "label": [],
+    "link": [],
+    "media": [],
+    "pagination": [],
+    "select": [],
+    "separator": [],
+    "switch": [],
+    "tabs": [],
+    "textarea": [],
+    "toggle-group": [
+      "ui/toggle"
+    ],
+    "toggle": [],
+    "visual-inspector": []
+  },
+  "reverseGraph": {
+    "accordion": [
+      "accordion-page"
+    ],
+    "badge": [
+      "accordion-page",
+      "badge-page",
+      "button-page",
+      "card-page",
+      "carousel-page",
+      "chip-page",
+      "color-page",
+      "divider-page",
+      "form-label-page",
+      "image-page",
+      "input-page",
+      "layout-page",
+      "link-page",
+      "media-page",
+      "pagination-page",
+      "showcase",
+      "token-dashboard",
+      "tokens-page",
+      "typography-page"
+    ],
+    "card": [
+      "accordion-page",
+      "badge-page",
+      "button-page",
+      "card-page",
+      "carousel-page",
+      "chip-page",
+      "color-page",
+      "divider-page",
+      "form-label-page",
+      "image-page",
+      "input-page",
+      "layout-page",
+      "link-page",
+      "media-page",
+      "pagination-page",
+      "showcase",
+      "token-dashboard",
+      "tokens-page",
+      "typography-page"
+    ],
+    "separator": [
+      "accordion-page",
+      "article-page",
+      "badge-page",
+      "button-page",
+      "card-page",
+      "carousel-page",
+      "chip-page",
+      "color-page",
+      "divider-page",
+      "form-label-page",
+      "article-byline",
+      "big-story-feed",
+      "related-articles",
+      "site-footer",
+      "home-page",
+      "image-page",
+      "input-page",
+      "layout-page",
+      "link-page",
+      "media-page",
+      "pagination-page",
+      "showcase",
+      "token-dashboard",
+      "tokens-page",
+      "typography-page"
+    ],
+    "button": [
+      "article-page",
+      "button-page",
+      "card-page",
+      "site-header",
+      "home-page",
+      "showcase",
+      "carousel"
+    ],
+    "input": [
+      "article-page",
+      "home-page",
+      "input-page",
+      "showcase"
+    ],
+    "link": [
+      "article-page",
+      "four-across-grid",
+      "site-footer",
+      "site-header",
+      "home-page",
+      "link-page"
+    ],
+    "article-card": [
+      "article-page",
+      "card-page",
+      "big-story-feed",
+      "big-story",
+      "four-across-grid",
+      "related-articles"
+    ],
+    "tabs": [
+      "button-page",
+      "card-page",
+      "showcase",
+      "token-dashboard",
+      "tokens-page"
+    ],
+    "carousel": [
+      "carousel-page",
+      "content-carousel"
+    ],
+    "chip": [
+      "chip-page"
+    ],
+    "divider": [
+      "divider-page",
+      "home-page"
+    ],
+    "form-label": [
+      "form-label-page"
+    ],
+    "aspect-image": [
+      "image-page"
+    ],
+    "media": [
+      "media-page"
+    ],
+    "pagination": [
+      "pagination-page"
+    ],
+    "label": [
+      "showcase"
+    ],
+    "switch": [
+      "showcase"
+    ],
+    "textarea": [
+      "showcase"
+    ],
+    "alert": [
+      "showcase"
+    ],
+    "toggle-group": [
+      "showcase"
+    ],
+    "toggle": [
+      "toggle-group"
+    ]
+  },
+  "components": [
+    {
+      "name": "accordion-page",
+      "path": "src/components/accordion-page.tsx",
+      "exports": [
+        "AccordionPage"
+      ],
+      "level": "template",
+      "dependencies": [
+        "ui/accordion",
+        "ui/badge",
+        "ui/card",
+        "ui/separator"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "text-muted-foreground",
+          "bg-primary",
+          "text-primary-foreground",
+          "bg-muted",
+          "bg-muted/30",
+          "text-primary"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 419
+    },
+    {
+      "name": "article-page",
+      "path": "src/components/article-page.tsx",
+      "exports": [
+        "ArticlePageTemplate",
+        "SidebarItem",
+        "ArticlePageContent"
+      ],
+      "level": "template",
+      "dependencies": [
+        "ui/button",
+        "ui/input",
+        "ui/link",
+        "ui/separator",
+        "ui/article-card"
+      ],
+      "tokens": {
+        "cssVariables": [
+          "--text-token-4xs",
+          "--width-content-max",
+          "--spacing-token-md",
+          "--spacing-token-sm",
+          "--spacing-token-xs",
+          "--spacing-token-xl",
+          "--width-sidebar-narrow",
+          "--text-token-2xl",
+          "--width-sidebar",
+          "--spacing-token-2xl",
+          "--text-token-xs",
+          "--text-token-2xs",
+          "--spacing-token-3xl",
+          "--text-token-3xs",
+          "--text-token-5xl"
+        ],
+        "tailwindSemantics": [
+          "bg-primary",
+          "text-primary-foreground",
+          "border-border",
+          "text-muted-foreground",
+          "bg-accent",
+          "text-foreground",
+          "bg-background"
+        ],
+        "classes": [
+          "font-brand",
+          ".headline"
+        ]
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "lineCount": 283
+    },
+    {
+      "name": "badge-page",
+      "path": "src/components/badge-page.tsx",
+      "exports": [
+        "BadgePage"
+      ],
+      "level": "template",
+      "dependencies": [
+        "ui/badge",
+        "ui/card",
+        "ui/separator"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "text-muted-foreground",
+          "bg-primary",
+          "text-primary-foreground",
+          "bg-muted",
+          "bg-muted/30",
+          "text-primary"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "lineCount": 412
+    },
+    {
+      "name": "brand-logo",
+      "path": "src/components/brand-logo.tsx",
+      "exports": [
+        "BrandLogo"
+      ],
+      "level": "molecule",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "lineCount": 46
+    },
+    {
+      "name": "brand-switcher",
+      "path": "src/components/brand-switcher.tsx",
+      "exports": [
+        "BrandSwitcher"
+      ],
+      "level": "molecule",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "border-input",
+          "bg-background"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "lineCount": 25
+    },
+    {
+      "name": "button-page",
+      "path": "src/components/button-page.tsx",
+      "exports": [
+        "ButtonPage"
+      ],
+      "level": "template",
+      "dependencies": [
+        "ui/button",
+        "ui/card",
+        "ui/badge",
+        "ui/separator",
+        "ui/tabs"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "text-muted-foreground",
+          "bg-primary",
+          "text-primary-foreground",
+          "bg-muted",
+          "bg-muted/30",
+          "text-primary"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "lineCount": 455
+    },
+    {
+      "name": "card-page",
+      "path": "src/components/card-page.tsx",
+      "exports": [
+        "CardPage"
+      ],
+      "level": "template",
+      "dependencies": [
+        "ui/article-card",
+        "ui/card",
+        "ui/badge",
+        "ui/button",
+        "ui/separator",
+        "ui/tabs"
+      ],
+      "tokens": {
+        "cssVariables": [
+          "--font-brand"
+        ],
+        "tailwindSemantics": [
+          "text-muted-foreground",
+          "bg-primary",
+          "text-primary-foreground",
+          "bg-muted",
+          "bg-muted/30",
+          "text-foreground",
+          "text-primary"
+        ],
+        "classes": [
+          "font-brand"
+        ]
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 589
+    },
+    {
+      "name": "carousel-page",
+      "path": "src/components/carousel-page.tsx",
+      "exports": [
+        "CarouselPage"
+      ],
+      "level": "template",
+      "dependencies": [
+        "ui/carousel",
+        "ui/badge",
+        "ui/card",
+        "ui/separator"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "text-muted-foreground",
+          "bg-primary",
+          "text-primary-foreground",
+          "bg-muted",
+          "bg-muted/30",
+          "text-primary"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 489
+    },
+    {
+      "name": "chip-page",
+      "path": "src/components/chip-page.tsx",
+      "exports": [
+        "ChipPage"
+      ],
+      "level": "template",
+      "dependencies": [
+        "ui/chip",
+        "ui/badge",
+        "ui/card",
+        "ui/separator"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "text-muted-foreground",
+          "bg-primary",
+          "text-primary-foreground",
+          "bg-muted",
+          "bg-muted/30",
+          "text-primary"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 427
+    },
+    {
+      "name": "color-page",
+      "path": "src/components/color-page.tsx",
+      "exports": [
+        "ColorPage"
+      ],
+      "level": "template",
+      "dependencies": [
+        "ui/badge",
+        "ui/card",
+        "ui/separator"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "text-muted-foreground",
+          "border-border/50",
+          "bg-muted",
+          "bg-primary",
+          "bg-primary/20",
+          "bg-primary-foreground",
+          "border-border",
+          "bg-foreground",
+          "text-background",
+          "border-foreground",
+          "text-primary"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "lineCount": 365
+    },
+    {
+      "name": "content-carousel",
+      "path": "src/components/content-carousel.tsx",
+      "exports": [
+        "ContentCarousel",
+        "CarouselCard"
+      ],
+      "level": "molecule",
+      "dependencies": [
+        "ui/carousel"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "bg-foreground",
+          "text-background",
+          "bg-muted"
+        ],
+        "classes": [
+          ".headline"
+        ]
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 138
+    },
+    {
+      "name": "divider-page",
+      "path": "src/components/divider-page.tsx",
+      "exports": [
+        "DividerPage"
+      ],
+      "level": "template",
+      "dependencies": [
+        "ui/divider",
+        "ui/badge",
+        "ui/card",
+        "ui/separator"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "text-muted-foreground",
+          "bg-primary",
+          "text-primary-foreground",
+          "bg-muted",
+          "text-primary",
+          "bg-muted/30"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 369
+    },
+    {
+      "name": "form-label-page",
+      "path": "src/components/form-label-page.tsx",
+      "exports": [
+        "FormLabelPage"
+      ],
+      "level": "template",
+      "dependencies": [
+        "ui/form-label",
+        "ui/badge",
+        "ui/card",
+        "ui/separator"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "text-muted-foreground",
+          "bg-primary",
+          "text-primary-foreground",
+          "bg-muted",
+          "bg-background",
+          "bg-muted/30",
+          "text-primary"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "lineCount": 416
+    },
+    {
+      "name": "ad-placeholder",
+      "path": "src/components/fre/ad-placeholder.tsx",
+      "exports": [
+        "AdPlaceholder",
+        "AdSize",
+        "AdPlaceholderProps"
+      ],
+      "level": "molecule",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [
+          "--text-token-4xs"
+        ],
+        "tailwindSemantics": [
+          "border-muted-foreground/20",
+          "bg-muted/30",
+          "text-muted-foreground/50",
+          "text-muted-foreground/40"
+        ],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "lineCount": 47
+    },
+    {
+      "name": "article-body",
+      "path": "src/components/fre/article-body.tsx",
+      "exports": [
+        "ArticleBody",
+        "ArticleInlineImage",
+        "ArticleSubheading",
+        "ArticleFootnote",
+        "ArticleBodyProps"
+      ],
+      "level": "molecule",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [
+          "--spacing-token-xl",
+          "--text-token-md",
+          "--spacing-token-2xl",
+          "--spacing-token-xs",
+          "--text-token-4xs",
+          "--text-token-2xl",
+          "--text-token-3xl",
+          "--spacing-token-3xl",
+          "--spacing-token-md",
+          "--spacing-token-3xs"
+        ],
+        "tailwindSemantics": [
+          "text-muted-foreground",
+          "border-border",
+          "text-foreground"
+        ],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 98
+    },
+    {
+      "name": "article-byline",
+      "path": "src/components/fre/article-byline.tsx",
+      "exports": [
+        "ArticleByline",
+        "ArticleBylineProps"
+      ],
+      "level": "molecule",
+      "dependencies": [
+        "ui/separator"
+      ],
+      "tokens": {
+        "cssVariables": [
+          "--spacing-token-md",
+          "--spacing-token-2xs",
+          "--text-token-2xs"
+        ],
+        "tailwindSemantics": [
+          "text-foreground"
+        ],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "lineCount": 37
+    },
+    {
+      "name": "article-hero",
+      "path": "src/components/fre/article-hero.tsx",
+      "exports": [
+        "ArticleHero",
+        "ArticleHeroProps"
+      ],
+      "level": "molecule",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [
+          "--spacing-token-xl",
+          "--spacing-token-2xs",
+          "--text-token-4xs",
+          "--text-token-3xl",
+          "--text-token-7xl",
+          "--text-token-md",
+          "--text-token-lg",
+          "--spacing-token-xs"
+        ],
+        "tailwindSemantics": [
+          "text-muted-foreground"
+        ],
+        "classes": [
+          "font-brand"
+        ]
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 67
+    },
+    {
+      "name": "big-story-feed",
+      "path": "src/components/fre/big-story-feed.tsx",
+      "exports": [
+        "BigStoryFeedColRight",
+        "BigStoryFeedStacked",
+        "BigStoryFeedColRightProps",
+        "BigStoryFeedStackedProps"
+      ],
+      "level": "molecule",
+      "dependencies": [
+        "ui/article-card",
+        "ui/separator"
+      ],
+      "tokens": {
+        "cssVariables": [
+          "--width-sidebar",
+          "--text-token-3xl"
+        ],
+        "tailwindSemantics": [
+          "from-foreground/75",
+          "text-background"
+        ],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "lineCount": 138
+    },
+    {
+      "name": "big-story",
+      "path": "src/components/fre/big-story.tsx",
+      "exports": [
+        "BigStoryImageRight",
+        "BigStoryTextOnly",
+        "BigStoryImageRightProps",
+        "BigStoryTextOnlyProps"
+      ],
+      "level": "molecule",
+      "dependencies": [
+        "ui/article-card"
+      ],
+      "tokens": {
+        "cssVariables": [
+          "--text-token-5xl",
+          "--text-token-7xl"
+        ],
+        "tailwindSemantics": [
+          "border-primary"
+        ],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 168
+    },
+    {
+      "name": "four-across-grid",
+      "path": "src/components/fre/four-across-grid.tsx",
+      "exports": [
+        "FourAcrossGrid",
+        "FourAcrossGridProps"
+      ],
+      "level": "molecule",
+      "dependencies": [
+        "ui/article-card",
+        "ui/link"
+      ],
+      "tokens": {
+        "cssVariables": [
+          "--space-lg",
+          "--space-xl"
+        ],
+        "tailwindSemantics": [
+          "bg-primary",
+          "text-primary-foreground"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "lineCount": 76
+    },
+    {
+      "name": "pull-quote",
+      "path": "src/components/fre/pull-quote.tsx",
+      "exports": [
+        "PullQuote",
+        "PullQuoteProps"
+      ],
+      "level": "molecule",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [
+          "--spacing-token-3xl",
+          "--spacing-token-xl",
+          "--spacing-token-2xl",
+          "--text-token-2xl",
+          "--text-token-3xl",
+          "--spacing-token-sm",
+          "--text-token-2xs"
+        ],
+        "tailwindSemantics": [
+          "border-primary",
+          "text-foreground",
+          "text-muted-foreground"
+        ],
+        "classes": [
+          "font-brand"
+        ]
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 31
+    },
+    {
+      "name": "related-articles",
+      "path": "src/components/fre/related-articles.tsx",
+      "exports": [
+        "RelatedArticles",
+        "RelatedArticle",
+        "RelatedArticlesProps"
+      ],
+      "level": "molecule",
+      "dependencies": [
+        "ui/article-card",
+        "ui/separator"
+      ],
+      "tokens": {
+        "cssVariables": [
+          "--spacing-token-xl",
+          "--text-token-2xl",
+          "--spacing-token-md",
+          "--spacing-token-xs",
+          "--text-token-xs"
+        ],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 58
+    },
+    {
+      "name": "shared",
+      "path": "src/components/fre/shared.tsx",
+      "exports": [
+        "token"
+      ],
+      "level": "molecule",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "lineCount": 2
+    },
+    {
+      "name": "site-footer",
+      "path": "src/components/fre/site-footer.tsx",
+      "exports": [
+        "SiteFooter",
+        "SiteFooterProps"
+      ],
+      "level": "molecule",
+      "dependencies": [
+        "ui/separator",
+        "ui/link"
+      ],
+      "tokens": {
+        "cssVariables": [
+          "--width-content-max",
+          "--text-token-2xs",
+          "--text-token-4xs"
+        ],
+        "tailwindSemantics": [
+          "text-background"
+        ],
+        "classes": [
+          "font-brand"
+        ]
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "lineCount": 107
+    },
+    {
+      "name": "site-header",
+      "path": "src/components/fre/site-header.tsx",
+      "exports": [
+        "SiteHeader",
+        "SiteHeaderProps"
+      ],
+      "level": "molecule",
+      "dependencies": [
+        "ui/button",
+        "ui/link"
+      ],
+      "tokens": {
+        "cssVariables": [
+          "--text-token-xl",
+          "--text-token-2xs"
+        ],
+        "tailwindSemantics": [
+          "border-border",
+          "bg-background"
+        ],
+        "classes": [
+          "font-brand"
+        ]
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "lineCount": 79
+    },
+    {
+      "name": "home-page",
+      "path": "src/components/home-page.tsx",
+      "exports": [
+        "HomePageTemplate",
+        "BrandHomePage"
+      ],
+      "level": "template",
+      "dependencies": [
+        "ui/button",
+        "ui/input",
+        "ui/divider",
+        "ui/link",
+        "ui/separator"
+      ],
+      "tokens": {
+        "cssVariables": [
+          "--text-token-4xs",
+          "--width-content-max",
+          "--width-sidebar-narrow",
+          "--width-sidebar",
+          "--space-sm",
+          "--space-md",
+          "--text-token-5xl"
+        ],
+        "tailwindSemantics": [
+          "bg-primary",
+          "text-primary-foreground",
+          "border-border",
+          "text-primary",
+          "bg-muted",
+          "text-muted-foreground",
+          "bg-accent",
+          "text-foreground",
+          "bg-background"
+        ],
+        "classes": [
+          "font-brand"
+        ]
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "lineCount": 1016
+    },
+    {
+      "name": "image-page",
+      "path": "src/components/image-page.tsx",
+      "exports": [
+        "ImagePage"
+      ],
+      "level": "template",
+      "dependencies": [
+        "ui/aspect-image",
+        "ui/badge",
+        "ui/card",
+        "ui/separator"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "text-muted-foreground",
+          "bg-primary",
+          "text-primary-foreground",
+          "bg-muted",
+          "bg-muted/30",
+          "text-primary"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 351
+    },
+    {
+      "name": "input-page",
+      "path": "src/components/input-page.tsx",
+      "exports": [
+        "InputPage"
+      ],
+      "level": "template",
+      "dependencies": [
+        "ui/input",
+        "ui/badge",
+        "ui/card",
+        "ui/separator"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "text-muted-foreground",
+          "bg-primary",
+          "text-primary-foreground",
+          "bg-muted",
+          "bg-muted/30",
+          "text-primary"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "lineCount": 487
+    },
+    {
+      "name": "layout-page",
+      "path": "src/components/layout-page.tsx",
+      "exports": [
+        "LayoutPage"
+      ],
+      "level": "template",
+      "dependencies": [
+        "ui/badge",
+        "ui/card",
+        "ui/separator"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "text-muted-foreground",
+          "border-border",
+          "bg-muted/30",
+          "bg-muted/60",
+          "text-primary",
+          "bg-primary/15",
+          "bg-muted",
+          "bg-primary",
+          "text-primary-foreground"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 418
+    },
+    {
+      "name": "link-page",
+      "path": "src/components/link-page.tsx",
+      "exports": [
+        "LinkPage"
+      ],
+      "level": "template",
+      "dependencies": [
+        "ui/link",
+        "ui/badge",
+        "ui/card",
+        "ui/separator"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "text-muted-foreground",
+          "bg-primary",
+          "text-primary-foreground",
+          "bg-muted",
+          "bg-muted/30",
+          "text-primary"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 465
+    },
+    {
+      "name": "media-page",
+      "path": "src/components/media-page.tsx",
+      "exports": [
+        "MediaPage"
+      ],
+      "level": "template",
+      "dependencies": [
+        "ui/media",
+        "ui/badge",
+        "ui/card",
+        "ui/separator"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "text-muted-foreground",
+          "bg-primary",
+          "text-primary-foreground",
+          "bg-muted",
+          "bg-muted/30",
+          "text-primary"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 367
+    },
+    {
+      "name": "nav-bar",
+      "path": "src/components/nav-bar.tsx",
+      "exports": [
+        "NavBar"
+      ],
+      "level": "molecule",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "from-background/95",
+          "text-foreground",
+          "bg-muted",
+          "bg-background/95",
+          "text-muted-foreground",
+          "text-primary",
+          "bg-primary/10",
+          "bg-background",
+          "bg-border"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "lineCount": 304
+    },
+    {
+      "name": "pagination-page",
+      "path": "src/components/pagination-page.tsx",
+      "exports": [
+        "PaginationPage"
+      ],
+      "level": "template",
+      "dependencies": [
+        "ui/pagination",
+        "ui/badge",
+        "ui/card",
+        "ui/separator"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "text-muted-foreground",
+          "bg-primary",
+          "text-primary-foreground",
+          "bg-muted",
+          "bg-muted/30",
+          "text-primary"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 400
+    },
+    {
+      "name": "showcase",
+      "path": "src/components/showcase.tsx",
+      "exports": [
+        "Showcase"
+      ],
+      "level": "organism",
+      "dependencies": [
+        "ui/button",
+        "ui/card",
+        "ui/badge",
+        "ui/input",
+        "ui/label",
+        "ui/tabs",
+        "ui/separator",
+        "ui/switch",
+        "ui/textarea",
+        "ui/alert",
+        "ui/toggle-group"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "text-muted-foreground",
+          "bg-muted",
+          "bg-background"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "lineCount": 488
+    },
+    {
+      "name": "special-offers",
+      "path": "src/components/special-offers.tsx",
+      "exports": [
+        "SpecialOffers",
+        "Offer"
+      ],
+      "level": "molecule",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "lineCount": 63
+    },
+    {
+      "name": "theme-provider",
+      "path": "src/components/theme-provider.tsx",
+      "exports": [
+        "useTheme",
+        "ThemeProvider",
+        "ThemeContext"
+      ],
+      "level": "molecule",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": [
+          "font-brand"
+        ]
+      },
+      "brandAware": true,
+      "responsive": false,
+      "hasHardcodedColors": true,
+      "lineCount": 152
+    },
+    {
+      "name": "token-dashboard",
+      "path": "src/components/token-dashboard.tsx",
+      "exports": [
+        "TokenDashboard"
+      ],
+      "level": "organism",
+      "dependencies": [
+        "ui/card",
+        "ui/badge",
+        "ui/tabs",
+        "ui/separator"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "bg-card",
+          "text-muted-foreground",
+          "text-muted-foreground/70",
+          "bg-muted",
+          "ring-primary",
+          "border-primary",
+          "bg-primary/5",
+          "text-foreground/80",
+          "text-foreground/70",
+          "bg-primary/30",
+          "text-muted-foreground/60",
+          "bg-background",
+          "text-primary"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "lineCount": 1108
+    },
+    {
+      "name": "token-inspector",
+      "path": "src/components/token-inspector.tsx",
+      "exports": [
+        "TokenInspector",
+        "TokenLayer",
+        "ClassTokenMapping",
+        "TokenInspectorConfig"
+      ],
+      "level": "molecule",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": [
+          "font-brand"
+        ]
+      },
+      "brandAware": true,
+      "responsive": false,
+      "hasHardcodedColors": true,
+      "lineCount": 748
+    },
+    {
+      "name": "tokens-page",
+      "path": "src/components/tokens-page.tsx",
+      "exports": [
+        "TokensPage"
+      ],
+      "level": "template",
+      "dependencies": [
+        "ui/card",
+        "ui/badge",
+        "ui/separator",
+        "ui/tabs"
+      ],
+      "tokens": {
+        "cssVariables": [
+          "--brand-primary",
+          "--palette-background-subtle-brand"
+        ],
+        "tailwindSemantics": [
+          "text-primary",
+          "text-muted-foreground",
+          "bg-muted",
+          "bg-background",
+          "bg-primary/10",
+          "border-primary/30",
+          "bg-primary",
+          "text-primary-foreground"
+        ],
+        "classes": [
+          "font-brand",
+          ".headline"
+        ]
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "lineCount": 464
+    },
+    {
+      "name": "typography-page",
+      "path": "src/components/typography-page.tsx",
+      "exports": [
+        "TypographyPage"
+      ],
+      "level": "template",
+      "dependencies": [
+        "ui/badge",
+        "ui/card",
+        "ui/separator"
+      ],
+      "tokens": {
+        "cssVariables": [
+          "--font-brand",
+          "--font-brand-secondary"
+        ],
+        "tailwindSemantics": [
+          "text-muted-foreground",
+          "bg-muted",
+          "text-primary"
+        ],
+        "classes": [
+          "font-brand"
+        ]
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 321
+    },
+    {
+      "name": "accordion",
+      "path": "src/components/ui/accordion.tsx",
+      "exports": [],
+      "level": "atom",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "lineCount": 75
+    },
+    {
+      "name": "alert",
+      "path": "src/components/ui/alert.tsx",
+      "exports": [],
+      "level": "atom",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "text-card-foreground",
+          "text-destructive",
+          "text-muted-foreground"
+        ],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 77
+    },
+    {
+      "name": "article-card",
+      "path": "src/components/ui/article-card.tsx",
+      "exports": [],
+      "level": "atom",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [
+          "--text-token-4xs",
+          "--font-brand-secondary",
+          "--text-token-3xs"
+        ],
+        "tailwindSemantics": [
+          "bg-card",
+          "text-card-foreground",
+          "ring-foreground/10",
+          "bg-muted",
+          "text-muted-foreground/30",
+          "text-primary",
+          "text-muted-foreground",
+          "text-foreground"
+        ],
+        "classes": [
+          "font-brand"
+        ]
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 273
+    },
+    {
+      "name": "aspect-image",
+      "path": "src/components/ui/aspect-image.tsx",
+      "exports": [],
+      "level": "atom",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "bg-muted",
+          "text-muted-foreground"
+        ],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 77
+    },
+    {
+      "name": "avatar",
+      "path": "src/components/ui/avatar.tsx",
+      "exports": [],
+      "level": "atom",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "bg-muted",
+          "text-muted-foreground",
+          "bg-primary",
+          "text-primary-foreground",
+          "ring-background"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "lineCount": 110
+    },
+    {
+      "name": "badge",
+      "path": "src/components/ui/badge.tsx",
+      "exports": [],
+      "level": "atom",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "text-primary-foreground",
+          "text-secondary-foreground",
+          "text-destructive",
+          "text-foreground"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "lineCount": 65
+    },
+    {
+      "name": "button",
+      "path": "src/components/ui/button.tsx",
+      "exports": [],
+      "level": "atom",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [
+          "--radius-md"
+        ],
+        "tailwindSemantics": [
+          "text-primary-foreground",
+          "bg-background",
+          "text-secondary-foreground",
+          "text-destructive"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 61
+    },
+    {
+      "name": "card",
+      "path": "src/components/ui/card.tsx",
+      "exports": [],
+      "level": "atom",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "bg-card",
+          "text-card-foreground",
+          "ring-foreground/10",
+          "text-muted-foreground",
+          "bg-muted/50"
+        ],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "lineCount": 104
+    },
+    {
+      "name": "carousel",
+      "path": "src/components/ui/carousel.tsx",
+      "exports": [],
+      "level": "atom",
+      "dependencies": [
+        "ui/button"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "lineCount": 243
+    },
+    {
+      "name": "chip",
+      "path": "src/components/ui/chip.tsx",
+      "exports": [],
+      "level": "atom",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "bg-background",
+          "text-foreground",
+          "bg-foreground",
+          "text-background"
+        ],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 77
+    },
+    {
+      "name": "divider",
+      "path": "src/components/ui/divider.tsx",
+      "exports": [],
+      "level": "atom",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 43
+    },
+    {
+      "name": "form-label",
+      "path": "src/components/ui/form-label.tsx",
+      "exports": [],
+      "level": "atom",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "text-foreground",
+          "text-muted-foreground"
+        ],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "lineCount": 46
+    },
+    {
+      "name": "input",
+      "path": "src/components/ui/input.tsx",
+      "exports": [],
+      "level": "atom",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "bg-background",
+          "text-foreground",
+          "text-muted-foreground"
+        ],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 143
+    },
+    {
+      "name": "label",
+      "path": "src/components/ui/label.tsx",
+      "exports": [],
+      "level": "atom",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "lineCount": 21
+    },
+    {
+      "name": "link",
+      "path": "src/components/ui/link.tsx",
+      "exports": [],
+      "level": "atom",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 67
+    },
+    {
+      "name": "media",
+      "path": "src/components/ui/media.tsx",
+      "exports": [],
+      "level": "atom",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "bg-muted",
+          "text-muted-foreground"
+        ],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 130
+    },
+    {
+      "name": "pagination",
+      "path": "src/components/ui/pagination.tsx",
+      "exports": [],
+      "level": "atom",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "border-border",
+          "text-background"
+        ],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "lineCount": 114
+    },
+    {
+      "name": "select",
+      "path": "src/components/ui/select.tsx",
+      "exports": [],
+      "level": "atom",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [
+          "--radius-md"
+        ],
+        "tailwindSemantics": [
+          "border-input",
+          "text-muted-foreground",
+          "bg-popover",
+          "text-popover-foreground",
+          "ring-foreground/10",
+          "bg-border"
+        ],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "lineCount": 202
+    },
+    {
+      "name": "separator",
+      "path": "src/components/ui/separator.tsx",
+      "exports": [],
+      "level": "atom",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "bg-border"
+        ],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "lineCount": 26
+    },
+    {
+      "name": "switch",
+      "path": "src/components/ui/switch.tsx",
+      "exports": [],
+      "level": "atom",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "bg-background"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "lineCount": 33
+    },
+    {
+      "name": "tabs",
+      "path": "src/components/ui/tabs.tsx",
+      "exports": [],
+      "level": "atom",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "text-muted-foreground",
+          "text-foreground/60"
+        ],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "lineCount": 83
+    },
+    {
+      "name": "textarea",
+      "path": "src/components/ui/textarea.tsx",
+      "exports": [],
+      "level": "atom",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "border-input"
+        ],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 19
+    },
+    {
+      "name": "toggle-group",
+      "path": "src/components/ui/toggle-group.tsx",
+      "exports": [],
+      "level": "atom",
+      "dependencies": [
+        "ui/toggle"
+      ],
+      "tokens": {
+        "cssVariables": [
+          "--gap",
+          "--radius-md"
+        ],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "lineCount": 90
+    },
+    {
+      "name": "toggle",
+      "path": "src/components/ui/toggle.tsx",
+      "exports": [],
+      "level": "atom",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [
+          "--radius-md"
+        ],
+        "tailwindSemantics": [
+          "border-input"
+        ],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "lineCount": 45
+    },
+    {
+      "name": "visual-inspector",
+      "path": "src/components/visual-inspector.tsx",
+      "exports": [
+        "VisualInspector"
+      ],
+      "level": "molecule",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": [
+          "font-brand"
+        ]
+      },
+      "brandAware": true,
+      "responsive": false,
+      "hasHardcodedColors": true,
+      "lineCount": 384
+    }
+  ]
+}

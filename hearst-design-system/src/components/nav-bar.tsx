@@ -17,6 +17,7 @@ const mainNav: { label: string; href: string; external?: boolean }[] = [
   { label: "Typography", href: "/typography" },
   { label: "Layout", href: "/layout-system" },
   { label: "Token Mapping", href: "/tokens" },
+  { label: "Token Dashboard", href: "/tokens/dashboard" },
   { label: "Components", href: "/components" },
   { label: "Storybook", href: STORYBOOK_URL, external: true },
 ];

@@ -1,0 +1,237 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Workflow Setup" />
+
+export const Pill = ({ children, color = "#334155", bg = "#f1f5f9" }) => (
+  <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", padding: "6px 12px", background: bg, color, borderRadius: "8px", fontSize: "12px", fontWeight: 600 }}>
+    {children}
+  </span>
+);
+
+# Workflow setup: Figma + Git + Pencil Together
+
+Use this page when you are **onboarding** or explaining the system to someone new. It answers: *“Where do I work, what do I install, and how do the three tools stay in sync?”*
+
+Designers and developers share one rule: **Git (`tokens/`) is the single source of truth.** Figma and Pencil are **consumers** of that truth — they receive updates via scripts; they do not send token values back into Git.
+
+<div style={{ border: '2px solid #2563eb', borderRadius: '12px', padding: '20px 22px', background: '#eff6ff', marginBottom: '28px' }}>
+  <h3 style={{ margin: '0 0 10px', fontSize: '15px', color: '#1e40af' }}>Developers: use the official Hearst Design System repo</h3>
+  <p style={{ margin: '0 0 12px', fontSize: '13px', color: '#1e3a8a', lineHeight: 1.6 }}>
+    <strong>Production</strong> Hearst Design System source and <strong>official Storybook</strong> are tracked in the organization repo below — not in this sandbox app.
+  </p>
+  <ul style={{ margin: '0 0 12px', paddingLeft: '20px', fontSize: '13px', color: '#1e3a8a', lineHeight: 1.75 }}>
+    <li>
+      <strong>Official HDS repository:</strong>{' '}
+      <a
+        href="https://github.com/Media-Platforms/hearst-design-system"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ color: '#1d4ed8', fontWeight: 600 }}
+      >
+        github.com/Media-Platforms/hearst-design-system
+      </a>
+    </li>
+    <li>
+      <strong>Platform integration (optional):</strong> HDS may also ship inside the FRE app at{' '}
+      <a
+        href="https://github.com/Media-Platforms/fre/tree/main/apps/fre/scopes/hdm/hds"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ color: '#1d4ed8' }}
+      >
+        Media-Platforms/fre — apps/fre/scopes/hdm/hds
+      </a>
+      . Confirm with your team which checkout you use for product work.
+    </li>
+    <li><strong>Use the official HDS Storybook</strong> (from the Media-Platforms repo / your team’s published URL) for component reference — not this repository’s Storybook alone.</li>
+    <li><strong>This repository</strong> (local Storybook + Next.js) is for <strong>testing and iteration</strong> on tokens, docs, and experiments.</li>
+  </ul>
+</div>
+
+<div style={{ display: "flex", gap: "6px", marginBottom: "24px", flexWrap: "wrap" }}>
+  <Pill>Git</Pill>
+  <Pill color="#2563eb" bg="#eff6ff">Figma</Pill>
+  <Pill color="#0f172a" bg="#e2e8f0">Pencil</Pill>
+</div>
+
+---
+
+## One mental model
+
+<div style={{ overflowX: 'auto', margin: '16px 0' }}>
+  <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+    <thead>
+      <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Tool</th>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Role</th>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>One sentence</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Git</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Source of truth</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>All token values live in JSON under <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens/</code> and are reviewed in PRs.</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Figma</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Exploration &amp; alignment</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Variables synced from Git so you can sketch and present with real brand modes.</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Pencil</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Precision handoff</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Specs and components use <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>$token</code> references so devs and LLMs read exact production values.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+**Flow (one direction):**
+
+```
+  tokens/  ──►  npm run build-tokens   ──►  brands.ts, tokens.css  (this app: Next.js + test Storybook)
+  tokens/  ──►  npm run push-figma      ──►  Figma Variables (29 brand modes)
+  tokens/  ──►  npm run push-pencil     ──►  Pencil variables in hearst-brands.pen
+```
+
+After a merge to `main`, a developer runs `build-tokens` (for the app) and, when needed, `push-figma` and `push-pencil` so designers see the same names and values in Figma and Pencil. Shipping to **production** follows your team’s release process into the canonical repo ([Media-Platforms/hearst-design-system](https://github.com/Media-Platforms/hearst-design-system)) and any downstream consumers (e.g. FRE).
+
+---
+
+## Designer setup
+
+**Goal:** You can explore in Figma, build specs in Pencil, and change token values **through Git** (with review), not by editing Figma variables directly.
+
+1. **Access**
+   - Figma: edit access to the Hearst tokens file (ask your team lead).
+   - **Pencil:** installed and signed in; open `hearst-brands.pen` from this repo when you work on handoff.
+   - **Cursor** (optional but recommended): clone the repo so you can edit `tokens/` on a branch with AI assistance, or pair with a developer.
+
+2. **Learn the names**
+   - Read [Token Naming Guide](?path=/docs/token-naming-guide--docs) for canonical paths.
+   - [Token Workflow](?path=/docs/token-workflow--docs) describes how requests and PRs work.
+
+3. **Daily workflow**
+   - **Ideate** in Figma using variables from the synced collection; switch **modes** to preview brands.
+   - **Lock approved specs** in Pencil using `$variable-name` — never hardcode hex for production tokens.
+   - **Change a value:** either file a request for a developer, or edit JSON in Cursor on a branch and open a PR (see Token Workflow).
+
+4. **Verify a sync**
+   - In Figma: Variables panel → find the name the team agreed on; check the mode matches your brand.
+   - In Pencil: variables should update after `push-pencil`; ask a developer if names/values look stale.
+
+---
+
+## Developer setup
+
+**Goal:** You know where **official** HDS lives on GitHub, and you can run **this** repo locally to build tokens and push to Figma and Pencil.
+
+1. **Official Hearst Design System (day-to-day integration)**
+
+   - **Canonical repo:** [Media-Platforms/hearst-design-system](https://github.com/Media-Platforms/hearst-design-system)
+   - **Storybook:** Use your team’s **official** HDS Storybook (published from that repo or its CI), not only this repository’s Storybook, when you need the supported component API.
+   - **FRE (optional):** [apps/fre/scopes/hdm/hds](https://github.com/Media-Platforms/fre/tree/main/apps/fre/scopes/hdm/hds) in [Media-Platforms/fre](https://github.com/Media-Platforms/fre) if your squad ships HDS through that app.
+   - This local app remains a **sandbox** for token experiments, docs, and tests before changes land in the org repo.
+
+2. **This repository (testing & token pipeline)**
+
+   ```bash
+   git clone <this-repo-url>
+   cd hearst/hearst-design-system
+   npm install
+   ```
+
+3. **Local apps (this repo only — testing)**
+
+   - Next.js: `npm run dev` → [http://localhost:3000](http://localhost:3000)
+   - Storybook: `npm run storybook` → [http://localhost:6006](http://localhost:6006) — **for validating changes here**, not the official catalog.
+
+4. **Token pipeline**
+   - After editing anything under `tokens/`: `npm run build-tokens`
+   - Validate: `npm run tokens:validate`
+
+5. **Push to Figma** (requires env vars)
+
+   Set these in your shell or `.env` (never commit secrets):
+
+   - `FIGMA_TOKEN` — personal access token with file write access  
+   - `FIGMA_FILE_KEY` — from the Figma file URL (e.g. `.../design/FILE_KEY/...`)
+
+   Then run:
+
+   ```bash
+   npm run push-figma
+   ```
+
+   Details: [Figma Integration](?path=/docs/figma-integration--docs)
+
+6. **Push to Pencil**
+
+   ```bash
+   npm run push-pencil
+   ```
+
+   Pencil MCP in Cursor is used to read/edit `.pen` content; the script syncs variables from Git. Details: [Pencil Integration](?path=/docs/pencil-integration--docs)
+
+7. **Do not edit generated files**
+   - Do not hand-edit `tokens.css` or generated `brands.ts` — always change `tokens/` and run `build-tokens`.
+
+---
+
+## How the three tools connect (cheat sheet)
+
+<div style={{ overflowX: 'auto', margin: '16px 0' }}>
+  <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+    <thead>
+      <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Question</th>
+        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Answer</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Where is the canonical hex / spacing / font token?</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens/</code> JSON (core → semantic → brand merge), then <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>build-tokens</code> output</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Where do designers sketch and present?</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Figma, using variables synced from Git</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Where do we hand off exact specs to engineering?</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Pencil, with <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>$token</code> bindings</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Where do developers preview official HDS components?</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
+          The <strong>official HDS Storybook</strong> from{' '}
+          <a href="https://github.com/Media-Platforms/hearst-design-system" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb' }}>
+            Media-Platforms/hearst-design-system
+          </a>
+          {' '}(or FRE-embedded HDS if that is how your team ships). This repo’s Storybook is <strong>testing only</strong>.
+        </td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>What runs after merge?</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>build-tokens</code>; then <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>push-figma</code> / <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>push-pencil</code> when designers need updated variables</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+---
+
+## Related docs
+
+- [The Toolbox](?path=/docs/the-toolbox--docs) — analogies and “when to use what” tool  
+- [Token Workflow](?path=/docs/token-workflow--docs) — designer ↔ developer handoffs in detail  
+- [Figma Integration](?path=/docs/figma-integration--docs)  
+- [Pencil Integration](?path=/docs/pencil-integration--docs)  
+- [Welcome](?path=/docs/welcome--docs) — architecture diagram and live links  
+- **Official HDS repo:** [github.com/Media-Platforms/hearst-design-system](https://github.com/Media-Platforms/hearst-design-system)
+- **FRE HDS scope (platform):** [Media-Platforms/fre — apps/fre/scopes/hdm/hds](https://github.com/Media-Platforms/fre/tree/main/apps/fre/scopes/hdm/hds)
+
+---
+
+*When everyone agrees Git is source of truth and Figma/Pencil are downstream, token drift and “which hex is official?” debates stay small.*

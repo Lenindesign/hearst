@@ -332,12 +332,16 @@ This application. An interactive catalog of every component, rendered with real 
 - To read component specs programmatically (use Pencil)
 
 **What lives here:**
-- **Welcome** — Architecture overview and spec
+- **Welcome** — Architecture overview, deployment map, and golden rules
+- **The Toolbox** — You are here
+- **Workflow Setup** — Onboarding: Figma + Git + Pencil together (designers and developers)
+- **AI Agents** — 7 specialized agents and their scope
+- **Token Naming / Workflow / Strategy** — Token conventions and collaboration guides
 - **Figma Integration** — How Figma connects to the system
 - **Pencil Integration** — How Pencil serves as the handoff layer
-- **The Toolbox** — You are here
 - **Foundation** — Colors, Typography, Tokens
 - **Templates** — Home Page template
+- **FRE Components** — Front-end rendering engine components
 - **Components** — Every UI component with interactive controls
 
 ---
@@ -462,18 +466,24 @@ The hosting platform that builds and deploys the design system app and Storybook
 
 **What it deploys:**
 
+The system uses **three separate Netlify sites** to avoid conflicts between the Next.js plugin and static assets:
+
 ```
 git push origin main
          │
          ▼
   Netlify detects push
          │
-         ├── npm run build        → Next.js app (main site)
-         └── npx storybook build  → Storybook (at /storybook)
-         │
-         ▼
-  Live at hearst-design-system.netlify.app
+         ├── Site 1: Next.js app          → hearst-design-system.netlify.app
+         ├── Site 2: Storybook (separate)  → hearst-ds-storybook.netlify.app
+         └── Site 3: Token Dashboard       → hearst-token-dashboard.netlify.app
 ```
+
+| Site | Stack | Deploy command |
+|------|-------|---------------|
+| Design System App | Next.js + `@netlify/plugin-nextjs` | Auto-deploy on push to `main` |
+| Storybook | Static build (`npx storybook build`) | `npm run deploy-storybook` |
+| Token Dashboard | Vite + React SPA | `npx netlify deploy --prod` from `token-dashboard/` |
 
 ---
 

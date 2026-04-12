@@ -59,7 +59,7 @@ export function BigStoryImageRight({
       size="lg"
       className={cn(
         "cursor-pointer ring-0 hover:ring-0 rounded-none bg-transparent",
-        !isTop && "grid grid-cols-2 gap-8 items-center",
+        !isTop && "!grid grid-cols-[1fr_auto] gap-6 items-center",
         className
       )}
       style={style}
@@ -96,7 +96,7 @@ export function BigStoryImageRight({
         <ArticleCardImage
           src={image}
           aspectRatio={aspectRatio ?? "4/3"}
-          className="rounded-lg"
+          className="rounded-lg !w-[200px] sm:!w-[260px]"
           style={aspectRatio ? undefined : { height: imageHeight }}
         />
       )}

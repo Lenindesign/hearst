@@ -435,6 +435,23 @@ npm run push-pencil   # → Pencil .pen file (handoff specs update)`}
           </TabsContent>
         </Tabs>
 
+        <Card>
+          <CardContent className="py-6 flex items-center justify-between">
+            <div>
+              <p className="font-semibold">Token Dashboard</p>
+              <p className="text-sm text-muted-foreground mt-0.5">
+                Explore all 18,000+ tokens live from the Figma Connector — search, compare brands, and visualize palettes.
+              </p>
+            </div>
+            <Link
+              href="/tokens/dashboard"
+              className="shrink-0 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
+            >
+              Open Dashboard
+            </Link>
+          </CardContent>
+        </Card>
+
         <footer className="text-center text-sm text-muted-foreground py-8">
           <Link href="/" className="hover:underline">
             ← Back to component showcase

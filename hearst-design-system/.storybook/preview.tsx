@@ -36,10 +36,14 @@ const preview: Preview = {
       storySort: {
         order: [
           "Welcome",
+          "How It Works",
+          "The Designer's Manifesto",
           "The Toolbox",
+          "Workflow Setup",
           "AI Agents",
           "Token Naming Guide",
           "Typography Token Strategy",
+          "Breakpoints vs Modes",
           "Token Workflow",
           "QA and Jira",
           "Figma Integration",

@@ -22,7 +22,10 @@
     "tokens:pipeline": "npm run tokens:import && npm run tokens:build",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "deploy-storybook": "storybook build -o storybook-static && npx netlify deploy --prod --dir=storybook-static --site=011b0ad8-3701-4ddd-b4ed-2dfd7c3ef52f"
+    "deploy-storybook": "storybook build -o storybook-static && npx netlify deploy --prod --dir=storybook-static --site=011b0ad8-3701-4ddd-b4ed-2dfd7c3ef52f",
+    "audit": "tsx scripts/audit-tokens.ts",
+    "audit:json": "tsx scripts/audit-tokens.ts --json",
+    "index": "tsx scripts/index-components.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.2.0",

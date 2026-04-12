@@ -72,10 +72,33 @@ hearst-design-system/
     app/            # Next.js app router pages
 ```
 
+## Component Metadata
+
+Every new component should get a `.metadata.ts` file alongside it:
+
+```
+src/components/ui/button.tsx           ← component
+src/components/ui/button.metadata.ts   ← AI-readable spec
+```
+
+- **Schema:** `src/lib/component-metadata.ts`
+- **Contents:** name, description, atomic level, whenToUse/whenNotToUse, token references, dependencies, variants, caveats
+- Read existing metadata files before building similar components to understand patterns and token usage
+
+## Instrumentation Scripts
+
+| Command | Purpose |
+|---------|---------|
+| `npm run audit` | Scan for hardcoded colors and token violations |
+| `npm run audit:json` | Save full report to `reports/token-audit.json` |
+| `npm run index` | Generate component dependency graph at `reports/component-index.json` |
+
 ## Rules
 
 - **NEVER** hardcode brand colors — use CSS variables or Tailwind tokens
 - **NEVER** edit `brands.ts` or `tokens.css` — they are generated from `tokens/`
 - **ALWAYS** test with at least 3 different brands in dev server (`npm run dev`)
+- **ALWAYS** create a `.metadata.ts` file when adding a new component
+- **ALWAYS** run `npm run audit` after creating components to verify no hardcoded values
 - Use `cn()` from `src/lib/utils.ts` for conditional class merging
 - For Storybook: wrap stories with `ThemeProvider` or `ThemeDecorator` for brand switching

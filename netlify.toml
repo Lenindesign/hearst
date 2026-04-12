@@ -1,29 +1,12 @@
 [build]
   base = "hearst-design-system"
-  command = "npm run build && STORYBOOK_BASE=/_next/static/sb/ npx storybook build -o .next/static/sb --quiet && node scripts/fix-storybook-paths.mjs"
+  command = "npm run build"
   publish = ".next"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-[[redirects]]
-  from = "/storybook"
-  to = "/_next/static/sb/index.html"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/storybook/*"
-  to = "/_next/static/sb/:splat"
-  status = 200
-  force = true
-
 [[headers]]
   for = "/_next/static/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-  for = "/_next/static/sb/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"

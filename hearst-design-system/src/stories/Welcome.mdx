@@ -1,0 +1,313 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Welcome" />
+
+export const LinkCard = ({ href, title, desc, tag }) => (
+  <a href={href} target={href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer" style={{ display: 'block', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '20px', background: '#fafbfc', textDecoration: 'none', color: 'inherit', transition: 'border-color 0.15s' }}>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+      <h3 style={{ margin: 0, fontSize: '15px', color: '#0f172a' }}>{title}</h3>
+      {tag && <span style={{ padding: '2px 8px', background: '#e2e8f0', borderRadius: '6px', fontSize: '11px', color: '#475569', fontWeight: 500 }}>{tag}</span>}
+    </div>
+    <p style={{ margin: 0, fontSize: '13px', color: '#64748b', lineHeight: '1.5' }}>{desc}</p>
+  </a>
+);
+
+export const Stat = ({ value, label }) => (
+  <div style={{ textAlign: 'center' }}>
+    <div style={{ fontSize: '32px', fontWeight: 700, letterSpacing: '-0.02em', color: '#0f172a' }}>{value}</div>
+    <div style={{ fontSize: '13px', color: '#64748b', marginTop: '2px' }}>{label}</div>
+  </div>
+);
+
+export const Table = ({ headers, rows }) => (
+  <div style={{ overflowX: 'auto', margin: '24px 0' }}>
+    <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+      <thead>
+        <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+          {headers.map((h, i) => (
+            <th key={i} style={{ padding: '10px 16px', fontWeight: 600, color: '#0f172a' }}>{h}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((row, ri) => (
+          <tr key={ri} style={{ borderBottom: '1px solid #f1f5f9', background: ri % 2 === 1 ? '#fafbfc' : 'transparent' }}>
+            {row.map((cell, ci) => (
+              <td key={ci} style={{ padding: '10px 16px', fontSize: '13px', color: ci === 0 ? '#334155' : '#64748b', fontWeight: ci === 0 ? 600 : 400 }}>{cell}</td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+);
+
+# Hearst Design System
+
+A multi-brand design system powering 29 Hearst magazine brands from a single token architecture. One source of truth, three delivery channels — code, Figma, and Pencil.
+
+<div style={{ display: 'flex', justifyContent: 'space-around', padding: '32px 0', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9', margin: '32px 0' }}>
+  <Stat value="29" label="Brands" />
+  <Stat value="18,000+" label="Tokens" />
+  <Stat value="7" label="AI Agents" />
+  <Stat value="13" label="Components" />
+</div>
+
+---
+
+## Architecture
+
+The system follows a strict one-way data flow. Git is the single source of truth — everything else is derived.
+
+```
+                    ┌─────────────────────────────┐
+                    │     Git  tokens/             │
+                    │     (single source of truth) │
+                    └──────────┬──────────────────┘
+                               │
+              ┌────────────────┼────────────────┐
+              │                │                │
+              ▼                ▼                ▼
+        build-tokens      push-figma      push-pencil
+              │                │                │
+              ▼                ▼                ▼
+        brands.ts          Figma           Pencil
+        tokens.css         Variables       Variables
+              │
+     ┌────────┴────────┐
+     │                 │
+     ▼                 ▼
+  Next.js App      Storybook
+  (main site)      (component docs)
+     │                 │
+     ▼                 ▼
+  Netlify           Netlify
+  (auto-deploy)     (separate site)
+```
+
+### Three-layer token structure
+
+<Table
+  headers={["Layer", "File", "Purpose"]}
+  rows={[
+    [
+      "Core",
+      <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens/core/global.json</code>,
+      "401 global tokens shared across all brands (spacing, borders, neutrals)"
+    ],
+    [
+      "Semantic",
+      <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens/semantic/aliases.json</code>,
+      "Aliases that reference brand tokens ($brand-1)"
+    ],
+    [
+      "Brand",
+      <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'tokens/brands/{slug}.json'}</code>,
+      "Per-brand overrides (29 files, ~600 tokens each)"
+    ],
+  ]}
+/>
+
+---
+
+## Live Properties
+
+The system is deployed across three sites:
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px', margin: '24px 0' }}>
+  <LinkCard
+    href="https://hearst-design-system.netlify.app"
+    title="Design System App"
+    desc="Next.js app with style guide, color explorer, typography specimens, component pages, and brand switching across all 29 brands."
+    tag="Next.js"
+  />
+  <LinkCard
+    href="https://hearst-ds-storybook.netlify.app"
+    title="Storybook"
+    desc="You are here. Interactive component catalog with controls, documentation, and brand theming via the toolbar."
+    tag="Storybook"
+  />
+  <LinkCard
+    href="https://hearst-token-dashboard.netlify.app"
+    title="Token Dashboard"
+    desc="Standalone app for exploring all 18,000+ tokens live from the Figma Connector. Search, compare brands, visualize palettes."
+    tag="Vite"
+  />
+</div>
+
+---
+
+## Key Scripts
+
+<Table
+  headers={["Command", "What it does"]}
+  rows={[
+    [
+      <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155', whiteSpace: 'nowrap' }}>npm run build-tokens</code>,
+      <span>Regenerates <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>brands.ts</code> + <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens.css</code> from <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens/</code> JSON</span>
+    ],
+    [
+      <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155', whiteSpace: 'nowrap' }}>npm run push-figma</code>,
+      "Pushes tokens to Figma Variables (29 brand modes)"
+    ],
+    [
+      <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155', whiteSpace: 'nowrap' }}>npm run push-pencil</code>,
+      "Pushes tokens to Pencil .pen file variables"
+    ],
+    [
+      <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155', whiteSpace: 'nowrap' }}>npm run dev</code>,
+      "Starts the Next.js app at localhost:3000"
+    ],
+    [
+      <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155', whiteSpace: 'nowrap' }}>npm run storybook</code>,
+      "Starts Storybook at localhost:6006"
+    ],
+    [
+      <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155', whiteSpace: 'nowrap' }}>npm run tokens:validate</code>,
+      "Validates all token references"
+    ],
+    [
+      <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155', whiteSpace: 'nowrap' }}>npm run deploy-storybook</code>,
+      "Builds and deploys Storybook to its Netlify site"
+    ],
+  ]}
+/>
+
+---
+
+## Workflow at a Glance
+
+<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', margin: '24px 0' }}>
+  <div style={{ border: '1px solid #e2e8f0', borderRadius: '12px', padding: '20px', background: '#fafbfc' }}>
+    <h4 style={{ margin: '0 0 8px', fontSize: '14px', color: '#0f172a' }}>Designer changes a token value</h4>
+    <ol style={{ margin: 0, paddingLeft: '20px', fontSize: '13px', color: '#475569', lineHeight: '2' }}>
+      <li>Open Cursor, describe the change in natural language</li>
+      <li>AI creates a branch, edits the JSON, runs validation</li>
+      <li>AI opens a PR — developer reviews and merges</li>
+      <li>Developer runs <code>push-figma</code> + <code>push-pencil</code></li>
+      <li>Designer verifies in Figma Variables panel</li>
+    </ol>
+  </div>
+  <div style={{ border: '1px solid #e2e8f0', borderRadius: '12px', padding: '20px', background: '#fafbfc' }}>
+    <h4 style={{ margin: '0 0 8px', fontSize: '14px', color: '#0f172a' }}>Developer adds a new component</h4>
+    <ol style={{ margin: 0, paddingLeft: '20px', fontSize: '13px', color: '#475569', lineHeight: '2' }}>
+      <li>Create tokens in <code>tokens/</code> JSON if needed</li>
+      <li>Run <code>build-tokens</code> to generate CSS variables</li>
+      <li>Build the React component using <code>var(--token)</code></li>
+      <li>Add a Storybook story with controls and docs</li>
+      <li>PR, merge, deploy — Netlify auto-deploys both sites</li>
+    </ol>
+  </div>
+</div>
+
+---
+
+## Documentation Map
+
+This Storybook is organized into sections. Here's what to read based on your role:
+
+<Table
+  headers={["Audience", "Page", "What you'll learn"]}
+  rows={[
+    [
+      "Everyone",
+      <a href="?path=/docs/the-designer-s-manifesto--docs" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 500 }}>The Designer's Manifesto</a>,
+      "Our call to action: own the ship — design is execution"
+    ],
+    [
+      "Everyone",
+      <a href="?path=/docs/the-toolbox--docs" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 500 }}>The Toolbox</a>,
+      "Which tool to use when (Git, Figma, Pencil, Storybook, Netlify)"
+    ],
+    [
+      "Everyone",
+      <a href="?path=/docs/workflow-setup--docs" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 500 }}>Workflow Setup</a>,
+      "Onboarding: how Figma, Git, and Pencil fit together (designers and developers)"
+    ],
+    [
+      "Everyone",
+      <a href="?path=/docs/token-workflow--docs" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 500 }}>Token Workflow</a>,
+      "How designers and developers collaborate on tokens"
+    ],
+    [
+      "Designers",
+      <a href="?path=/docs/figma-integration--docs" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 500 }}>Figma Integration</a>,
+      "How Figma Variables connect to the system"
+    ],
+    [
+      "Designers",
+      <a href="?path=/docs/pencil-integration--docs" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 500 }}>Pencil Integration</a>,
+      "How Pencil serves as the handoff layer"
+    ],
+    [
+      "Designers",
+      <a href="?path=/docs/token-naming-guide--docs" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 500 }}>Token Naming Guide</a>,
+      "Canonical naming conventions"
+    ],
+    [
+      "Developers",
+      <a href="?path=/docs/ai-agents--docs" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 500 }}>AI Agents</a>,
+      "7 specialized agents and their scope"
+    ],
+    [
+      "Developers",
+      <a href="?path=/docs/typography-token-strategy--docs" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 500 }}>Typography Token Strategy</a>,
+      "Font token architecture"
+    ],
+    [
+      "Developers",
+      <a href="?path=/docs/breakpoints-vs-modes--docs" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 500 }}>Breakpoints vs Modes</a>,
+      "Responsive strategy"
+    ],
+    [
+      "Developers",
+      <a href="?path=/docs/qa-and-jira--docs" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 500 }}>QA and Jira</a>,
+      "Quality assurance process"
+    ],
+    [
+      "Foundation",
+      <a href="?path=/docs/foundation-colors--docs" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 500 }}>Colors</a>,
+      "Full color palette with brand switching"
+    ],
+    [
+      "Foundation",
+      <a href="?path=/docs/foundation-typography--docs" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 500 }}>Typography</a>,
+      "Type specimens across brands"
+    ],
+    [
+      "Foundation",
+      <a href="?path=/docs/foundation-tokens--docs" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 500 }}>Tokens</a>,
+      "Token inspector"
+    ],
+  ]}
+/>
+
+Every component has interactive controls and brand theming. Use the **paintbrush icon** in the toolbar to switch brands.
+
+---
+
+## The Golden Rules
+
+<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }}>
+  <div style={{ border: '2px solid #22c55e', borderRadius: '12px', padding: '20px', background: '#f0fdf4' }}>
+    <h4 style={{ margin: '0 0 12px 0', color: '#16a34a', fontSize: '14px' }}>DO</h4>
+    <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '13px', lineHeight: '1.9', color: '#334155' }}>
+      <li>Edit tokens in <strong>Git</strong> — it's the single source of truth</li>
+      <li>Explore designs in <strong>Figma</strong></li>
+      <li>Build approved specs in <strong>Pencil</strong></li>
+      <li>Review components in <strong>Storybook</strong></li>
+      <li>Run <code>build-tokens</code> after every token edit</li>
+      <li>Run <code>push-figma</code> + <code>push-pencil</code> after merging</li>
+    </ul>
+  </div>
+  <div style={{ border: '2px solid #ef4444', borderRadius: '12px', padding: '20px', background: '#fef2f2' }}>
+    <h4 style={{ margin: '0 0 12px 0', color: '#dc2626', fontSize: '14px' }}>DON'T</h4>
+    <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '13px', lineHeight: '1.9', color: '#334155' }}>
+      <li>Edit <code>brands.ts</code> or <code>tokens.css</code> directly</li>
+      <li>Edit Figma Variables directly (they get overwritten)</li>
+      <li>Hardcode hex values in Pencil (use <code>$variable</code>)</li>
+      <li>Use Figma inspect values as source of truth</li>
+      <li>Commit directly to <code>main</code> — always use a branch</li>
+    </ul>
+  </div>
+</div>

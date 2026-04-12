@@ -1,0 +1,1167 @@
+{
+  "generatedAt": "2026-04-07T13:43:43.319Z",
+  "totalFiles": 66,
+  "filesWithViolations": 17,
+  "totalViolations": 115,
+  "byType": {
+    "hardcoded-color": 63,
+    "non-semantic-tailwind": 41,
+    "raw-color-function": 11
+  },
+  "bySeverity": {
+    "error": 74,
+    "warning": 41
+  },
+  "violations": [
+    {
+      "file": "src/components/article-page.tsx",
+      "line": 203,
+      "column": 80,
+      "type": "hardcoded-color",
+      "value": "#fff",
+      "context": "<BrandLogo slug={brand.slug} className=\"[&_svg]:h-8 [&_svg]:w-auto\" color=\"#fff\" />",
+      "severity": "error",
+      "suggestion": "Use text-background or bg-background"
+    },
+    {
+      "file": "src/components/carousel-page.tsx",
+      "line": 126,
+      "column": 15,
+      "type": "non-semantic-tailwind",
+      "value": "text-rose-700",
+      "context": "\"bg-rose-100 text-rose-700\",",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/carousel-page.tsx",
+      "line": 127,
+      "column": 14,
+      "type": "non-semantic-tailwind",
+      "value": "text-sky-700",
+      "context": "\"bg-sky-100 text-sky-700\",",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/carousel-page.tsx",
+      "line": 128,
+      "column": 16,
+      "type": "non-semantic-tailwind",
+      "value": "text-amber-700",
+      "context": "\"bg-amber-100 text-amber-700\",",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/carousel-page.tsx",
+      "line": 129,
+      "column": 18,
+      "type": "non-semantic-tailwind",
+      "value": "text-emerald-700",
+      "context": "\"bg-emerald-100 text-emerald-700\",",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/carousel-page.tsx",
+      "line": 130,
+      "column": 17,
+      "type": "non-semantic-tailwind",
+      "value": "text-violet-700",
+      "context": "\"bg-violet-100 text-violet-700\",",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/color-page.tsx",
+      "line": 102,
+      "column": 75,
+      "type": "hardcoded-color",
+      "value": "#000",
+      "context": "const primary = brand.colors[\"1\"] || Object.values(brand.colors)[0] || \"#000\";",
+      "severity": "error",
+      "suggestion": "Use text-foreground or bg-foreground"
+    },
+    {
+      "file": "src/components/form-label-page.tsx",
+      "line": 236,
+      "column": 69,
+      "type": "non-semantic-tailwind",
+      "value": "border-red-300",
+      "context": "className=\"mt-1.5 w-full h-9 px-3 text-sm border border-red-300 rounded-lg bg-background focus:outline-none focus:ring-2",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/home-page.tsx",
+      "line": 945,
+      "column": 80,
+      "type": "hardcoded-color",
+      "value": "#fff",
+      "context": "<BrandLogo slug={brand.slug} className=\"[&_svg]:h-8 [&_svg]:w-auto\" color=\"#fff\" />",
+      "severity": "error",
+      "suggestion": "Use text-background or bg-background"
+    },
+    {
+      "file": "src/components/nav-bar.tsx",
+      "line": 189,
+      "column": 98,
+      "type": "hardcoded-color",
+      "value": "#000",
+      "context": "<div className=\"w-7 h-7 rounded-md shrink-0\" style={{ backgroundColor: primary || \"#000\" }} />",
+      "severity": "error",
+      "suggestion": "Use text-foreground or bg-foreground"
+    },
+    {
+      "file": "src/components/showcase.tsx",
+      "line": 33,
+      "column": 40,
+      "type": "hardcoded-color",
+      "value": "#000",
+      "context": "const textColor = luminance > 0.5 ? \"#000\" : \"#fff\";",
+      "severity": "error",
+      "suggestion": "Use text-foreground or bg-foreground"
+    },
+    {
+      "file": "src/components/showcase.tsx",
+      "line": 33,
+      "column": 49,
+      "type": "hardcoded-color",
+      "value": "#fff",
+      "context": "const textColor = luminance > 0.5 ? \"#000\" : \"#fff\";",
+      "severity": "error",
+      "suggestion": "Use text-background or bg-background"
+    },
+    {
+      "file": "src/components/showcase.tsx",
+      "line": 34,
+      "column": 42,
+      "type": "hardcoded-color",
+      "value": "#ffffff",
+      "context": "const isWhite = hex.toLowerCase() === \"#ffffff\";",
+      "severity": "error",
+      "suggestion": "Use text-background or bg-background"
+    },
+    {
+      "file": "src/components/showcase.tsx",
+      "line": 43,
+      "column": 40,
+      "type": "hardcoded-color",
+      "value": "#e5e5e5",
+      "context": "border: isWhite ? \"1px solid #e5e5e5\" : \"none\",",
+      "severity": "error",
+      "suggestion": "Use bg-muted or a palette neutral token"
+    },
+    {
+      "file": "src/components/showcase.tsx",
+      "line": 69,
+      "column": 41,
+      "type": "hardcoded-color",
+      "value": "#ffffff",
+      "context": "([, hex]) => hex.toLowerCase() !== \"#ffffff\"",
+      "severity": "error",
+      "suggestion": "Use text-background or bg-background"
+    },
+    {
+      "file": "src/components/showcase.tsx",
+      "line": 253,
+      "column": 53,
+      "type": "hardcoded-color",
+      "value": "#000",
+      "context": "style={{ backgroundColor: primary || \"#000\" }}",
+      "severity": "error",
+      "suggestion": "Use text-foreground or bg-foreground"
+    },
+    {
+      "file": "src/components/showcase.tsx",
+      "line": 425,
+      "column": 92,
+      "type": "hardcoded-color",
+      "value": "#000",
+      "context": "{`  --brand-primary: ${brand.colors[\"1\"] || Object.values(brand.colors)[0] || \"#000\"};\\n`}",
+      "severity": "error",
+      "suggestion": "Use text-foreground or bg-foreground"
+    },
+    {
+      "file": "src/components/showcase.tsx",
+      "line": 427,
+      "column": 59,
+      "type": "hardcoded-color",
+      "value": "#ffffff",
+      "context": ".filter(([, hex]) => hex.toLowerCase() !== \"#ffffff\")",
+      "severity": "error",
+      "suggestion": "Use text-background or bg-background"
+    },
+    {
+      "file": "src/components/special-offers.tsx",
+      "line": 25,
+      "column": 27,
+      "type": "non-semantic-tailwind",
+      "value": "border-emerald-700",
+      "context": "\"rounded-lg border border-emerald-700/60 bg-gradient-to-b from-emerald-950/80 to-emerald-950/40 p-4\",",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/special-offers.tsx",
+      "line": 25,
+      "column": 66,
+      "type": "non-semantic-tailwind",
+      "value": "from-emerald-950",
+      "context": "\"rounded-lg border border-emerald-700/60 bg-gradient-to-b from-emerald-950/80 to-emerald-950/40 p-4\",",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/special-offers.tsx",
+      "line": 25,
+      "column": 86,
+      "type": "non-semantic-tailwind",
+      "value": "to-emerald-950",
+      "context": "\"rounded-lg border border-emerald-700/60 bg-gradient-to-b from-emerald-950/80 to-emerald-950/40 p-4\",",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/special-offers.tsx",
+      "line": 30,
+      "column": 61,
+      "type": "non-semantic-tailwind",
+      "value": "text-emerald-400",
+      "context": "<p className=\"mb-3 text-xs font-medium tracking-wide text-emerald-400/60 uppercase\">",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/special-offers.tsx",
+      "line": 46,
+      "column": 59,
+      "type": "non-semantic-tailwind",
+      "value": "bg-emerald-950",
+      "context": "<div className=\"flex items-center gap-2.5 rounded-full bg-emerald-950/90 border border-emerald-800/40 px-4 py-2\">",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/special-offers.tsx",
+      "line": 46,
+      "column": 84,
+      "type": "non-semantic-tailwind",
+      "value": "border-emerald-800",
+      "context": "<div className=\"flex items-center gap-2.5 rounded-full bg-emerald-950/90 border border-emerald-800/40 px-4 py-2\">",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/special-offers.tsx",
+      "line": 47,
+      "column": 86,
+      "type": "non-semantic-tailwind",
+      "value": "bg-emerald-500",
+      "context": "<span className=\"flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-white\">",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/special-offers.tsx",
+      "line": 56,
+      "column": 33,
+      "type": "non-semantic-tailwind",
+      "value": "text-emerald-300",
+      "context": "<span className=\"text-xs text-emerald-300/50 whitespace-nowrap\">",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/theme-provider.tsx",
+      "line": 54,
+      "column": 29,
+      "type": "hardcoded-color",
+      "value": "#000000",
+      "context": "return luminance > 0.5 ? \"#000000\" : \"#ffffff\";",
+      "severity": "error",
+      "suggestion": "Use text-foreground or bg-foreground"
+    },
+    {
+      "file": "src/components/theme-provider.tsx",
+      "line": 54,
+      "column": 41,
+      "type": "hardcoded-color",
+      "value": "#ffffff",
+      "context": "return luminance > 0.5 ? \"#000000\" : \"#ffffff\";",
+      "severity": "error",
+      "suggestion": "Use text-background or bg-background"
+    },
+    {
+      "file": "src/components/theme-provider.tsx",
+      "line": 58,
+      "column": 75,
+      "type": "hardcoded-color",
+      "value": "#000000",
+      "context": "const primary = brand.colors[\"1\"] || Object.values(brand.colors)[0] || \"#000000\";",
+      "severity": "error",
+      "suggestion": "Use text-foreground or bg-foreground"
+    },
+    {
+      "file": "src/components/theme-provider.tsx",
+      "line": 60,
+      "column": 64,
+      "type": "hardcoded-color",
+      "value": "#f5f5f5",
+      "context": "const secondary = brand.colors[\"2\"] || brand.colors[\"3\"] || \"#f5f5f5\";",
+      "severity": "error",
+      "suggestion": "Use bg-muted or a palette neutral token"
+    },
+    {
+      "file": "src/components/theme-provider.tsx",
+      "line": 62,
+      "column": 61,
+      "type": "hardcoded-color",
+      "value": "#e5e5e5",
+      "context": "const accent = brand.colors[\"3\"] || brand.colors[\"2\"] || \"#e5e5e5\";",
+      "severity": "error",
+      "suggestion": "Use bg-muted or a palette neutral token"
+    },
+    {
+      "file": "src/components/token-dashboard.tsx",
+      "line": 166,
+      "column": 13,
+      "type": "hardcoded-color",
+      "value": "#3b82f6",
+      "context": "color: \"#3b82f6\",",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/token-dashboard.tsx",
+      "line": 167,
+      "column": 18,
+      "type": "hardcoded-color",
+      "value": "#8b5cf6",
+      "context": "typography: \"#8b5cf6\",",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/token-dashboard.tsx",
+      "line": 168,
+      "column": 14,
+      "type": "hardcoded-color",
+      "value": "#10b981",
+      "context": "number: \"#10b981\",",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/token-dashboard.tsx",
+      "line": 169,
+      "column": 17,
+      "type": "hardcoded-color",
+      "value": "#f59e0b",
+      "context": "fontSizes: \"#f59e0b\",",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/token-dashboard.tsx",
+      "line": 170,
+      "column": 20,
+      "type": "hardcoded-color",
+      "value": "#ec4899",
+      "context": "fontFamilies: \"#ec4899\",",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/token-dashboard.tsx",
+      "line": 171,
+      "column": 19,
+      "type": "hardcoded-color",
+      "value": "#6366f1",
+      "context": "fontWeights: \"#6366f1\",",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/token-dashboard.tsx",
+      "line": 172,
+      "column": 19,
+      "type": "hardcoded-color",
+      "value": "#14b8a6",
+      "context": "lineHeights: \"#14b8a6\",",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/token-dashboard.tsx",
+      "line": 173,
+      "column": 21,
+      "type": "hardcoded-color",
+      "value": "#f97316",
+      "context": "letterSpacing: \"#f97316\",",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/token-dashboard.tsx",
+      "line": 174,
+      "column": 17,
+      "type": "hardcoded-color",
+      "value": "#06b6d4",
+      "context": "dimension: \"#06b6d4\",",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/token-dashboard.tsx",
+      "line": 175,
+      "column": 13,
+      "type": "hardcoded-color",
+      "value": "#64748b",
+      "context": "other: \"#64748b\",",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/token-dashboard.tsx",
+      "line": 176,
+      "column": 16,
+      "type": "hardcoded-color",
+      "value": "#a855f7",
+      "context": "textCase: \"#a855f7\",",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/token-dashboard.tsx",
+      "line": 191,
+      "column": 55,
+      "type": "hardcoded-color",
+      "value": "#64748b",
+      "context": "backgroundColor: typeColors[type] || \"#64748b\",",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/token-dashboard.tsx",
+      "line": 372,
+      "column": 57,
+      "type": "non-semantic-tailwind",
+      "value": "text-amber-600",
+      "context": "<code className=\"font-mono text-[10px] text-amber-600 dark:text-amber-400 truncate max-w-[120px]\">",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/token-dashboard.tsx",
+      "line": 932,
+      "column": 42,
+      "type": "non-semantic-tailwind",
+      "value": "text-amber-600",
+      "context": "<p className=\"text-xs text-amber-600 dark:text-amber-400 mt-1\">",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 42,
+      "column": 13,
+      "type": "hardcoded-color",
+      "value": "#2196f3",
+      "context": "color: \"#2196f3\",",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 45,
+      "column": 50,
+      "type": "hardcoded-color",
+      "value": "#ff9800",
+      "context": "component: { prefixes: [\"component-\"], color: \"#ff9800\" },",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 46,
+      "column": 61,
+      "type": "hardcoded-color",
+      "value": "#9c27b0",
+      "context": "typography: { prefixes: [\"font-\", \"typography-\"], color: \"#9c27b0\" },",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 47,
+      "column": 54,
+      "type": "hardcoded-color",
+      "value": "#4caf50",
+      "context": "layout: { prefixes: [\"layout-\", \"space-\"], color: \"#4caf50\" },",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 48,
+      "column": 44,
+      "type": "hardcoded-color",
+      "value": "#795548",
+      "context": "border: { prefixes: [\"border-\"], color: \"#795548\" },",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 251,
+      "column": 31,
+      "type": "raw-color-function",
+      "value": "rgba(0, 0, 0, 0)",
+      "context": "cs.backgroundColor === \"rgba(0, 0, 0, 0)\"",
+      "severity": "error",
+      "suggestion": "Replace with a CSS variable reference: var(--color-name)"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 280,
+      "column": 52,
+      "type": "hardcoded-color",
+      "value": "#9e9e9e",
+      "context": "const colors: Record<string, string> = { other: \"#9e9e9e\" };",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 433,
+      "column": 85,
+      "type": "non-semantic-tailwind",
+      "value": "border-gray-700",
+      "context": "<div className=\"flex items-center justify-between gap-3 mb-2 pb-1.5 border-b border-gray-700\">",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 435,
+      "column": 66,
+      "type": "non-semantic-tailwind",
+      "value": "text-gray-400",
+      "context": "<span className=\"text-[10px] uppercase tracking-wider text-gray-400\">",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 439,
+      "column": 49,
+      "type": "non-semantic-tailwind",
+      "value": "text-gray-600",
+      "context": "<span className=\"text-[10px] font-mono text-gray-600\">",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 445,
+      "column": 45,
+      "type": "non-semantic-tailwind",
+      "value": "border-gray-800",
+      "context": "<div className=\"mb-2 pb-2 border-b border-gray-800 space-y-1\">",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 446,
+      "column": 64,
+      "type": "non-semantic-tailwind",
+      "value": "text-purple-400",
+      "context": "<div className=\"text-[9px] uppercase tracking-wider text-purple-400 mb-1\">",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 468,
+      "column": 45,
+      "type": "non-semantic-tailwind",
+      "value": "border-gray-800",
+      "context": "<div className=\"mb-2 pb-2 border-b border-gray-800 space-y-1\">",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 469,
+      "column": 64,
+      "type": "non-semantic-tailwind",
+      "value": "text-green-400",
+      "context": "<div className=\"text-[9px] uppercase tracking-wider text-green-400 mb-1\">",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 492,
+      "column": 47,
+      "type": "non-semantic-tailwind",
+      "value": "border-gray-800",
+      "context": "<div className=\"mb-2 pb-2 border-b border-gray-800 space-y-1\">",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 493,
+      "column": 66,
+      "type": "non-semantic-tailwind",
+      "value": "text-blue-400",
+      "context": "<div className=\"text-[9px] uppercase tracking-wider text-blue-400 mb-1\">",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 506,
+      "column": 64,
+      "type": "non-semantic-tailwind",
+      "value": "text-emerald-400",
+      "context": "<div className=\"text-[9px] uppercase tracking-wider text-emerald-400 mb-1\">",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 513,
+      "column": 70,
+      "type": "hardcoded-color",
+      "value": "#9e9e9e",
+      "context": "style={{ backgroundColor: layerColors[t.layer] || \"#9e9e9e\" }}",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 517,
+      "column": 59,
+      "type": "non-semantic-tailwind",
+      "value": "text-emerald-400",
+      "context": "<code className=\"font-mono text-[11px] text-emerald-400\">",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 541,
+      "column": 47,
+      "type": "non-semantic-tailwind",
+      "value": "border-gray-700",
+      "context": "<div className=\"mt-2 pt-1.5 border-t border-gray-700 flex gap-2 flex-wrap\">",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 546,
+      "column": 56,
+      "type": "hardcoded-color",
+      "value": "#9e9e9e",
+      "context": "style={{ color: layerColors[layer] || \"#9e9e9e\" }}",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 551,
+      "column": 61,
+      "type": "hardcoded-color",
+      "value": "#9e9e9e",
+      "context": "backgroundColor: layerColors[layer] || \"#9e9e9e\",",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 573,
+      "column": 18,
+      "type": "hardcoded-color",
+      "value": "#e91e63",
+      "context": "accentColor = \"#e91e63\",",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 665,
+      "column": 53,
+      "type": "hardcoded-color",
+      "value": "#1e293b",
+      "context": "backgroundColor: enabled ? accentColor : \"#1e293b\",",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 666,
+      "column": 19,
+      "type": "hardcoded-color",
+      "value": "#fff",
+      "context": "color: \"#fff\",",
+      "severity": "error",
+      "suggestion": "Use text-background or bg-background"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 702,
+      "column": 60,
+      "type": "hardcoded-color",
+      "value": "#fff",
+      "context": "style={{ backgroundColor: accentColor, color: \"#fff\" }}",
+      "severity": "error",
+      "suggestion": "Use text-background or bg-background"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 710,
+      "column": 23,
+      "type": "hardcoded-color",
+      "value": "#fff",
+      "context": "color: \"#fff\",",
+      "severity": "error",
+      "suggestion": "Use text-background or bg-background"
+    },
+    {
+      "file": "src/components/token-inspector.tsx",
+      "line": 732,
+      "column": 69,
+      "type": "non-semantic-tailwind",
+      "value": "bg-gray-900",
+      "context": "className=\"fixed top-4 left-1/2 -translate-x-1/2 z-[99998] bg-gray-900 text-white px-4 py-2 rounded-full text-xs shadow-",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/tokens-page.tsx",
+      "line": 142,
+      "column": 75,
+      "type": "hardcoded-color",
+      "value": "#000",
+      "context": "const primary = brand.colors[\"1\"] || Object.values(brand.colors)[0] || \"#000\";",
+      "severity": "error",
+      "suggestion": "Use text-foreground or bg-foreground"
+    },
+    {
+      "file": "src/components/tokens-page.tsx",
+      "line": 144,
+      "column": 37,
+      "type": "hardcoded-color",
+      "value": "#ffffff",
+      "context": "([, v]) => v.toLowerCase() !== \"#ffffff\"",
+      "severity": "error",
+      "suggestion": "Use text-background or bg-background"
+    },
+    {
+      "file": "src/components/ui/badge.tsx",
+      "line": 23,
+      "column": 26,
+      "type": "non-semantic-tailwind",
+      "value": "text-emerald-800",
+      "context": "\"bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400\",",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/ui/badge.tsx",
+      "line": 25,
+      "column": 24,
+      "type": "non-semantic-tailwind",
+      "value": "text-amber-800",
+      "context": "\"bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400\",",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/ui/badge.tsx",
+      "line": 27,
+      "column": 25,
+      "type": "non-semantic-tailwind",
+      "value": "text-yellow-800",
+      "context": "\"bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400\",",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/ui/badge.tsx",
+      "line": 29,
+      "column": 22,
+      "type": "non-semantic-tailwind",
+      "value": "text-red-800",
+      "context": "\"bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400\",",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/ui/badge.tsx",
+      "line": 31,
+      "column": 27,
+      "type": "non-semantic-tailwind",
+      "value": "text-slate-800",
+      "context": "\"bg-slate-800/15 text-slate-800 dark:bg-slate-300/20 dark:text-slate-300\",",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/ui/badge.tsx",
+      "line": 33,
+      "column": 27,
+      "type": "non-semantic-tailwind",
+      "value": "text-slate-600",
+      "context": "\"bg-slate-400/10 text-slate-600 dark:bg-slate-400/15 dark:text-slate-400\",",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/ui/form-label.tsx",
+      "line": 24,
+      "column": 67,
+      "type": "non-semantic-tailwind",
+      "value": "bg-amber-600",
+      "context": "<span className=\"inline-block w-1.5 h-1.5 rounded-full bg-amber-600 shrink-0\" />",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/ui/form-label.tsx",
+      "line": 34,
+      "column": 56,
+      "type": "non-semantic-tailwind",
+      "value": "text-red-700",
+      "context": "<p className=\"flex items-center gap-1 text-xs text-red-700 dark:text-red-400\">",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/ui/input.tsx",
+      "line": 63,
+      "column": 56,
+      "type": "non-semantic-tailwind",
+      "value": "bg-amber-600",
+      "context": "<span className=\"w-1.5 h-1.5 rounded-full bg-amber-600\" />",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/ui/input.tsx",
+      "line": 72,
+      "column": 30,
+      "type": "non-semantic-tailwind",
+      "value": "bg-red-50",
+      "context": "\"border-red-700 bg-red-50 focus-within:border-red-700 dark:bg-red-950/20\",",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/ui/input.tsx",
+      "line": 102,
+      "column": 56,
+      "type": "non-semantic-tailwind",
+      "value": "text-red-700",
+      "context": "<p className=\"flex items-center gap-1 text-xs text-red-700\">",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/ui/media.tsx",
+      "line": 115,
+      "column": 31,
+      "type": "non-semantic-tailwind",
+      "value": "text-gray-900",
+      "context": "? \"bg-white/90 text-gray-900\"",
+      "severity": "warning",
+      "suggestion": "Replace with a semantic class (bg-primary, text-destructive, etc.)"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 43,
+      "column": 28,
+      "type": "raw-color-function",
+      "value": "rgba(0, 0, 0, 0)",
+      "context": "if (!value || value === \"rgba(0, 0, 0, 0)\" || value === \"transparent\") return null;",
+      "severity": "error",
+      "suggestion": "Replace with a CSS variable reference: var(--color-name)"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 78,
+      "column": 30,
+      "type": "hardcoded-color",
+      "value": "#3b82f6",
+      "context": "border: \"2px solid #3b82f6\",",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 79,
+      "column": 29,
+      "type": "raw-color-function",
+      "value": "rgba(59, 130, 246, 0.08)",
+      "context": "backgroundColor: \"rgba(59, 130, 246, 0.08)\",",
+      "severity": "error",
+      "suggestion": "Replace with a CSS variable reference: var(--color-name)"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 90,
+      "column": 29,
+      "type": "hardcoded-color",
+      "value": "#3b82f6",
+      "context": "backgroundColor: \"#3b82f6\",",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 91,
+      "column": 19,
+      "type": "hardcoded-color",
+      "value": "#fff",
+      "context": "color: \"#fff\",",
+      "severity": "error",
+      "suggestion": "Use text-background or bg-background"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 124,
+      "column": 27,
+      "type": "hardcoded-color",
+      "value": "#1e1e2e",
+      "context": "backgroundColor: \"#1e1e2e\",",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 125,
+      "column": 17,
+      "type": "hardcoded-color",
+      "value": "#cdd6f4",
+      "context": "color: \"#cdd6f4\",",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 127,
+      "column": 32,
+      "type": "raw-color-function",
+      "value": "rgba(0,0,0,0.4)",
+      "context": "boxShadow: \"0 8px 32px rgba(0,0,0,0.4)\",",
+      "severity": "error",
+      "suggestion": "Replace with a CSS variable reference: var(--color-name)"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 132,
+      "column": 28,
+      "type": "raw-color-function",
+      "value": "rgba(255,255,255,0.1)",
+      "context": "border: \"1px solid rgba(255,255,255,0.1)\",",
+      "severity": "error",
+      "suggestion": "Replace with a CSS variable reference: var(--color-name)"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 138,
+      "column": 36,
+      "type": "raw-color-function",
+      "value": "rgba(255,255,255,0.08)",
+      "context": "borderBottom: \"1px solid rgba(255,255,255,0.08)\",",
+      "severity": "error",
+      "suggestion": "Replace with a CSS variable reference: var(--color-name)"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 146,
+      "column": 31,
+      "type": "hardcoded-color",
+      "value": "#3b82f6",
+      "context": "backgroundColor: \"#3b82f6\",",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 147,
+      "column": 21,
+      "type": "hardcoded-color",
+      "value": "#fff",
+      "context": "color: \"#fff\",",
+      "severity": "error",
+      "suggestion": "Use text-background or bg-background"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 156,
+      "column": 32,
+      "type": "hardcoded-color",
+      "value": "#6c7086",
+      "context": "<span style={{ color: \"#6c7086\", fontSize: 11 }}>",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 196,
+      "column": 39,
+      "type": "raw-color-function",
+      "value": "rgba(255,255,255,0.06)",
+      "context": "backgroundColor: \"rgba(255,255,255,0.06)\",",
+      "severity": "error",
+      "suggestion": "Replace with a CSS variable reference: var(--color-name)"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 200,
+      "column": 29,
+      "type": "hardcoded-color",
+      "value": "#a6adc8",
+      "context": "color: \"#a6adc8\",",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 223,
+      "column": 19,
+      "type": "hardcoded-color",
+      "value": "#6c7086",
+      "context": "color: \"#6c7086\",",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 238,
+      "column": 30,
+      "type": "hardcoded-color",
+      "value": "#6c7086",
+      "context": "<span style={{ color: \"#6c7086\" }}>{label}</span>",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 239,
+      "column": 30,
+      "type": "hardcoded-color",
+      "value": "#cdd6f4",
+      "context": "<span style={{ color: \"#cdd6f4\" }}>{value}</span>",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 245,
+      "column": 28,
+      "type": "raw-color-function",
+      "value": "rgba(0, 0, 0, 0)",
+      "context": "if (!value || value === \"rgba(0, 0, 0, 0)\" || value === \"transparent\") return null;",
+      "severity": "error",
+      "suggestion": "Replace with a CSS variable reference: var(--color-name)"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 248,
+      "column": 30,
+      "type": "hardcoded-color",
+      "value": "#6c7086",
+      "context": "<span style={{ color: \"#6c7086\" }}>{label}</span>",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 251,
+      "column": 34,
+      "type": "hardcoded-color",
+      "value": "#89b4fa",
+      "context": "<span style={{ color: \"#89b4fa\", fontSize: 11 }}>{token}</span>",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 260,
+      "column": 32,
+      "type": "raw-color-function",
+      "value": "rgba(255,255,255,0.15)",
+      "context": "border: \"1px solid rgba(255,255,255,0.15)\",",
+      "severity": "error",
+      "suggestion": "Replace with a CSS variable reference: var(--color-name)"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 349,
+      "column": 30,
+      "type": "raw-color-function",
+      "value": "rgba(255,255,255,0.12)",
+      "context": "border: \"1px solid rgba(255,255,255,0.12)\",",
+      "severity": "error",
+      "suggestion": "Replace with a CSS variable reference: var(--color-name)"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 350,
+      "column": 39,
+      "type": "hardcoded-color",
+      "value": "#3b82f6",
+      "context": "backgroundColor: enabled ? \"#3b82f6\" : \"#1e1e2e\",",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 350,
+      "column": 51,
+      "type": "hardcoded-color",
+      "value": "#1e1e2e",
+      "context": "backgroundColor: enabled ? \"#3b82f6\" : \"#1e1e2e\",",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 351,
+      "column": 29,
+      "type": "hardcoded-color",
+      "value": "#fff",
+      "context": "color: enabled ? \"#fff\" : \"#a6adc8\",",
+      "severity": "error",
+      "suggestion": "Use text-background or bg-background"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 351,
+      "column": 38,
+      "type": "hardcoded-color",
+      "value": "#a6adc8",
+      "context": "color: enabled ? \"#fff\" : \"#a6adc8\",",
+      "severity": "error",
+      "suggestion": "Map to a semantic token or add to tokens/core/color.json"
+    },
+    {
+      "file": "src/components/visual-inspector.tsx",
+      "line": 356,
+      "column": 34,
+      "type": "raw-color-function",
+      "value": "rgba(0,0,0,0.3)",
+      "context": "boxShadow: \"0 4px 16px rgba(0,0,0,0.3)\",",
+      "severity": "error",
+      "suggestion": "Replace with a CSS variable reference: var(--color-name)"
+    }
+  ]
+}

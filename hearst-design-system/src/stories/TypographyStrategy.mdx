@@ -18,13 +18,14 @@ export const CompareRow = ({ current, proposed, verdict }) => (
   </div>
 );
 
-export const ScaleRow = ({ token, mobile, tablet, laptop, desktop }) => (
-  <div style={{ display: 'grid', gridTemplateColumns: '200px repeat(4, 1fr)', gap: '8px', padding: '10px 16px', borderBottom: '1px solid #e2e8f0', alignItems: 'center' }}>
+export const ScaleRow = ({ token, mobile, tablet, laptop, desktop, maps }) => (
+  <div style={{ display: 'grid', gridTemplateColumns: '160px repeat(4, 1fr) 200px', gap: '8px', padding: '10px 16px', borderBottom: '1px solid #e2e8f0', alignItems: 'center' }}>
     <code style={{ fontSize: '12px', color: '#6d28d9', fontWeight: 600 }}>{token}</code>
     <span style={{ fontSize: '12px', color: '#334155', textAlign: 'center' }}>{mobile}</span>
     <span style={{ fontSize: '12px', color: '#334155', textAlign: 'center' }}>{tablet}</span>
     <span style={{ fontSize: '12px', color: '#334155', textAlign: 'center' }}>{laptop}</span>
     <span style={{ fontSize: '12px', color: '#334155', textAlign: 'center' }}>{desktop}</span>
+    <code style={{ fontSize: '11px', color: '#64748b' }}>{maps}</code>
   </div>
 );
 
@@ -41,6 +42,14 @@ export const RoleCard = ({ role, description, sizes, usage }) => (
     </div>
     <p style={{ margin: 0, fontSize: '12px', color: '#64748b' }}>{usage}</p>
   </div>
+);
+
+export const Th = ({ children, width }) => (
+  <th style={{ textAlign: 'left', padding: '10px 14px', background: '#f8fafc', borderBottom: '2px solid #e2e8f0', fontSize: '12px', fontWeight: 700, color: '#64748b', width }}>{children}</th>
+);
+
+export const Td = ({ children, bold, mono, color }) => (
+  <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9', verticalAlign: 'top', fontWeight: bold ? 600 : 400, fontFamily: mono ? 'monospace' : 'inherit', fontSize: mono ? '12px' : '13px', color: color || (mono ? '#6d28d9' : '#334155') }}>{children}</td>
 );
 
 # Typography Token Strategy
@@ -61,7 +70,7 @@ Our current typography tokens are **deeply nested, hard to memorize, and difficu
 
 <div style={{ background: '#1e293b', borderRadius: '12px', padding: '24px', margin: '24px 0', overflowX: 'auto', color: '#94a3b8' }}>
   <div style={{ fontSize: '14px', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', color: '#f87171', marginBottom: '8px' }}>typography.component.card.core.content.title.default.5xl</div>
-  <div style={{ fontSize: '12px', color: '#94a3b8' }}>9 segments. Requires knowledge of component hierarchy to choose the right token.</div>
+  <div style={{ fontSize: '12px', color: '#94a3b8' }}>8 dot-separated segments. Requires knowledge of the component hierarchy to choose the right token.</div>
 </div>
 
 ### Key issues
@@ -69,91 +78,120 @@ Our current typography tokens are **deeply nested, hard to memorize, and difficu
 <div style={{ display: 'grid', gap: '16px', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', margin: '16px 0 32px' }}>
   <div style={{ border: '1px solid #fecaca', borderRadius: '12px', padding: '20px', background: '#fef2f2' }}>
     <div style={{ fontWeight: 700, fontSize: '14px', color: '#991b1b', marginBottom: '6px' }}>Too Deep</div>
-    <p style={{ margin: 0, fontSize: '13px', color: '#7f1d1d' }}>9 segments per token name. Designers cannot memorize or discover tokens without a reference sheet.</p>
+    <p style={{ margin: 0, fontSize: '13px', color: '#7f1d1d' }}>Up to 8 segments per token name. Designers cannot memorize or discover tokens without a reference sheet.</p>
   </div>
   <div style={{ border: '1px solid #fecaca', borderRadius: '12px', padding: '20px', background: '#fef2f2' }}>
-    <div style={{ fontWeight: 700, fontSize: '14px', color: '#991b1b', marginBottom: '6px' }}>Breakpoints in Names</div>
-    <p style={{ margin: 0, fontSize: '13px', color: '#7f1d1d' }}>We create separate tokens for each screen size (sm/md/lg/xl), multiplying the total count by 4x.</p>
+    <div style={{ fontWeight: 700, fontSize: '14px', color: '#991b1b', marginBottom: '6px' }}>Breakpoint Proliferation</div>
+    <p style={{ margin: 0, fontSize: '13px', color: '#7f1d1d' }}>Component tokens duplicate across breakpoints (sm/md/lg/xl), but inconsistently — some have 4 variants, others 2 or 3. No predictable pattern.</p>
   </div>
   <div style={{ border: '1px solid #fecaca', borderRadius: '12px', padding: '20px', background: '#fef2f2' }}>
     <div style={{ fontWeight: 700, fontSize: '14px', color: '#991b1b', marginBottom: '6px' }}>Component Coupling</div>
-    <p style={{ margin: 0, fontSize: '13px', color: '#7f1d1d' }}>Tokens named after specific components (card, collection) cannot be reused in other contexts without confusion.</p>
+    <p style={{ margin: 0, fontSize: '13px', color: '#7f1d1d' }}>Tokens named after specific components (card, collection, railstoryitem) cannot be reused in other contexts without confusion.</p>
   </div>
   <div style={{ border: '1px solid #fecaca', borderRadius: '12px', padding: '20px', background: '#fef2f2' }}>
-    <div style={{ fontWeight: 700, fontSize: '14px', color: '#991b1b', marginBottom: '6px' }}>Inconsistent Sizes</div>
-    <p style={{ margin: 0, fontSize: '13px', color: '#7f1d1d' }}>Some tokens have 2xs/xs/sm/md, others have sm/xl, others have sm/md/lg/xl. No predictable pattern.</p>
+    <div style={{ fontWeight: 700, fontSize: '14px', color: '#991b1b', marginBottom: '6px' }}>Volume</div>
+    <p style={{ margin: 0, fontSize: '13px', color: '#7f1d1d' }}>255 composite typography tokens in scale.json. Most are redundant aliases — card.core.content.title.default.5xl just points to typography.size.5xl.bold.</p>
   </div>
 </div>
+
+### What we already have right
+
+Before proposing changes, it's important to acknowledge that our token architecture already has the right **structure**:
+
+<div style={{ display: 'grid', gap: '12px', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', margin: '16px 0 32px' }}>
+  <div style={{ border: '1px solid #bbf7d0', borderRadius: '12px', padding: '20px', background: '#f0fdf4' }}>
+    <div style={{ fontWeight: 700, fontSize: '14px', color: '#166534', marginBottom: '6px' }}>3-Layer Architecture</div>
+    <p style={{ margin: 0, fontSize: '13px', color: '#14532d' }}>Core primitives (font.json) → Semantic scale (scale.json size composites) → Component aliases. This layering is correct and matches industry best practice.</p>
+  </div>
+  <div style={{ border: '1px solid #bbf7d0', borderRadius: '12px', padding: '20px', background: '#f0fdf4' }}>
+    <div style={{ fontWeight: 700, fontSize: '14px', color: '#166534', marginBottom: '6px' }}>Clean Primitive Scale</div>
+    <p style={{ margin: 0, fontSize: '13px', color: '#14532d' }}>The font.size scale (4xs → 15xl) is well-defined, consistent, and already consumed via --text-token-* CSS variables in globals.css.</p>
+  </div>
+  <div style={{ border: '1px solid #bbf7d0', borderRadius: '12px', padding: '20px', background: '#f0fdf4' }}>
+    <div style={{ fontWeight: 700, fontSize: '14px', color: '#166534', marginBottom: '6px' }}>Weight Composites</div>
+    <p style={{ margin: 0, fontSize: '13px', color: '#14532d' }}>typography.size.md.bold bundles fontSize + fontFamily + lineHeight + letterSpacing + fontWeight into one token. This composite pattern is solid.</p>
+  </div>
+</div>
+
+**The problem is not the architecture — it's the component layer.** The `typography.component.*` tree is over-specified, creating hundreds of tokens that are mostly 1:1 aliases of the size composites.
+
+---
+
+## Current Token Inventory
+
+Actual data from `tokens/semantic/typography/scale.json`:
+
+<div style={{ borderRadius: '12px', border: '1px solid #e2e8f0', overflow: 'hidden', marginBottom: '24px' }}>
+  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+    <thead>
+      <tr><Th width="200px">Category</Th><Th width="80px">Count</Th><Th width="120px">Depth</Th><Th>Examples</Th></tr>
+    </thead>
+    <tbody>
+      <tr><Td bold>Size composites</Td><Td>~66</Td><Td>4 segments</Td><Td mono>typography.size.md.bold</Td></tr>
+      <tr><Td bold>Card content</Td><Td>~80</Td><Td>7–8 segments</Td><Td mono>typography.component.card.core.content.title.default.5xl</Td></tr>
+      <tr><Td bold>Collection / layout</Td><Td>~40</Td><Td>5–8 segments</Td><Td mono>typography.component.collection.eeat.statement.content.title.lg</Td></tr>
+      <tr><Td bold>Navigation / chrome</Td><Td>~20</Td><Td>4–5 segments</Td><Td mono>typography.component.navbar.linktext.sm</Td></tr>
+      <tr><Td bold>Badge variants</Td><Td>~24</Td><Td>5 segments</Td><Td mono>typography.component.badge.sm.neutral-light</Td></tr>
+      <tr><Td bold>Other (link, banner)</Td><Td>~25</Td><Td>4–6 segments</Td><Td mono>typography.component.link.primary.md</Td></tr>
+      <tr style={{ background: '#fef2f2' }}><Td bold>Total</Td><Td bold>255</Td><Td bold>4–8</Td><Td>—</Td></tr>
+    </tbody>
+  </table>
+</div>
+
+### Redundancy analysis
+
+Most component tokens are **pass-through aliases**. For example, `typography.component.card.core.content.title.default.5xl` resolves to `{typography.size.5xl.bold}` — it adds 4 extra segments of nesting but no unique value. The card title alone has **20 size variants** (2xs through 15xl) in both `default` and `brand` flavors, producing 40 tokens for a single element.
 
 ---
 
 ## Industry Benchmarks
 
-The most adopted design systems in the world have converged on the same pattern: **flat semantic roles + responsive modes**.
+How the most adopted design systems name their typography tokens:
 
-<div style={{ overflowX: 'auto', margin: '16px 0 32px' }}>
-  <div style={{ minWidth: '600px' }}>
-    <div style={{ display: 'grid', gridTemplateColumns: '160px 1fr 120px', gap: '12px', padding: '12px 16px', background: '#f8fafc', borderRadius: '8px 8px 0 0', borderBottom: '2px solid #e2e8f0' }}>
-      <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#64748b' }}>System</span>
-      <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#64748b' }}>Token Example</span>
-      <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#64748b' }}>Segments</span>
-    </div>
-    <div style={{ display: 'grid', gridTemplateColumns: '160px 1fr 120px', gap: '12px', padding: '12px 16px', borderBottom: '1px solid #e2e8f0' }}>
-      <span style={{ fontSize: '13px', fontWeight: 600 }}>Material Design 3</span>
-      <code style={{ fontSize: '12px', color: '#334155' }}>md.sys.typescale.headline-medium</code>
-      <span style={{ fontSize: '13px', color: '#16a34a', fontWeight: 600 }}>4</span>
-    </div>
-    <div style={{ display: 'grid', gridTemplateColumns: '160px 1fr 120px', gap: '12px', padding: '12px 16px', borderBottom: '1px solid #e2e8f0', background: '#f8fafc' }}>
-      <span style={{ fontSize: '13px', fontWeight: 600 }}>Salesforce Lightning</span>
-      <code style={{ fontSize: '12px', color: '#334155' }}>slds.g.font.heading-2</code>
-      <span style={{ fontSize: '13px', color: '#16a34a', fontWeight: 600 }}>4</span>
-    </div>
-    <div style={{ display: 'grid', gridTemplateColumns: '160px 1fr 120px', gap: '12px', padding: '12px 16px', borderBottom: '1px solid #e2e8f0' }}>
-      <span style={{ fontSize: '13px', fontWeight: 600 }}>Adobe Spectrum</span>
-      <code style={{ fontSize: '12px', color: '#334155' }}>spectrum.heading.size-xl</code>
-      <span style={{ fontSize: '13px', color: '#16a34a', fontWeight: 600 }}>3</span>
-    </div>
-    <div style={{ display: 'grid', gridTemplateColumns: '160px 1fr 120px', gap: '12px', padding: '12px 16px', borderBottom: '1px solid #e2e8f0', background: '#f8fafc' }}>
-      <span style={{ fontSize: '13px', fontWeight: 600 }}>Shopify Polaris</span>
-      <code style={{ fontSize: '12px', color: '#334155' }}>p.font.heading-lg</code>
-      <span style={{ fontSize: '13px', color: '#16a34a', fontWeight: 600 }}>3</span>
-    </div>
-    <div style={{ display: 'grid', gridTemplateColumns: '160px 1fr 120px', gap: '12px', padding: '12px 16px', borderBottom: '1px solid #e2e8f0' }}>
-      <span style={{ fontSize: '13px', fontWeight: 600 }}>IBM Carbon</span>
-      <code style={{ fontSize: '12px', color: '#334155' }}>cds.type.heading-03</code>
-      <span style={{ fontSize: '13px', color: '#16a34a', fontWeight: 600 }}>3</span>
-    </div>
-    <div style={{ display: 'grid', gridTemplateColumns: '160px 1fr 120px', gap: '12px', padding: '12px 16px', borderBottom: '2px solid #e2e8f0', background: '#fef2f2' }}>
-      <span style={{ fontSize: '13px', fontWeight: 600, color: '#dc2626' }}>Hearst (current)</span>
-      <code style={{ fontSize: '12px', color: '#dc2626' }}>typography.component.card.core.content.title.default.5xl</code>
-      <span style={{ fontSize: '13px', color: '#dc2626', fontWeight: 600 }}>9</span>
-    </div>
-  </div>
+<div style={{ borderRadius: '12px', border: '1px solid #e2e8f0', overflow: 'hidden', marginBottom: '24px' }}>
+  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+    <thead>
+      <tr><Th width="140px">System</Th><Th>Token Example (CSS)</Th><Th width="100px">Segments</Th><Th width="80px">Roles</Th></tr>
+    </thead>
+    <tbody>
+      <tr><Td bold>Material Design 3</Td><Td mono>--md-sys-typescale-headline-medium</Td><Td>5</Td><Td>15</Td></tr>
+      <tr><Td bold>Adobe Spectrum</Td><Td mono>--spectrum-heading-size-xl</Td><Td>4</Td><Td>~20</Td></tr>
+      <tr><Td bold>Salesforce SLDS2</Td><Td mono>--slds-g-font-heading-2</Td><Td>5</Td><Td>~12</Td></tr>
+      <tr><Td bold>IBM Carbon</Td><Td mono>--cds-heading-03</Td><Td>3</Td><Td>14</Td></tr>
+      <tr style={{ background: '#fef2f2' }}><Td bold color="#dc2626">Hearst (current)</Td><Td mono color="#dc2626">typography.component.card.core.content.title.default.5xl</Td><Td bold color="#dc2626">8</Td><Td bold color="#dc2626">255</Td></tr>
+    </tbody>
+  </table>
 </div>
+
+**Key pattern:** Every major system converges on **semantic roles** (display, headline, body, label) with **3–5 segments** and **12–20 total tokens**. None of them encode component names or breakpoints in the token path.
+
+Material Design 3 defines exactly 15 tokens: 5 roles (Display, Headline, Title, Body, Label) x 3 sizes (Small, Medium, Large). Each token carries responsive values per platform, not per name.
 
 ---
 
-## The Recommendation: Three Layers, Flat Roles
+## The Recommendation: Flatten the Component Layer
+
+We don't need to rebuild the architecture — it's already correct. We need to **replace the 189 component-layer tokens with ~15 semantic role tokens** that sit between the existing size composites and the components.
 
 <div style={{ background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)', borderRadius: '16px', padding: '32px', margin: '24px 0', color: '#e2e8f0' }}>
   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '24px' }}>
     <div>
-      <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '2px', color: '#94a3b8', marginBottom: '8px' }}>Layer 1</div>
+      <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '2px', color: '#94a3b8', marginBottom: '8px' }}>Layer 1 — Keep as-is</div>
       <div style={{ fontSize: '18px', fontWeight: 700, marginBottom: '4px' }}>Primitive Scale</div>
-      <p style={{ fontSize: '13px', color: '#94a3b8', margin: 0 }}>Raw size values. Never used directly by designers or developers.</p>
-      <code style={{ display: 'block', marginTop: '12px', fontSize: '12px', color: '#a78bfa', background: '#1e1b4b', padding: '8px 12px', borderRadius: '6px' }}>font.size.100 = 11px{"\n"}font.size.200 = 13px{"\n"}font.size.400 = 16px{"\n"}font.size.900 = 32px</code>
+      <p style={{ fontSize: '13px', color: '#94a3b8', margin: 0 }}>Raw size values in core/typography.json and semantic font.json. Never used directly.</p>
+      <code style={{ display: 'block', marginTop: '12px', fontSize: '12px', color: '#a78bfa', background: '#1e1b4b', padding: '8px 12px', borderRadius: '6px' }}>font.size.4xs = 0.688rem (11px){"\n"}font.size.sm = 1rem (16px){"\n"}font.size.5xl = 2rem (32px){"\n"}font.size.9xl = 3rem (48px)</code>
     </div>
     <div>
-      <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '2px', color: '#94a3b8', marginBottom: '8px' }}>Layer 2</div>
+      <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '2px', color: '#94a3b8', marginBottom: '8px' }}>Layer 2 — Keep + Add Roles</div>
       <div style={{ fontSize: '18px', fontWeight: 700, marginBottom: '4px' }}>Semantic Roles</div>
-      <p style={{ fontSize: '13px', color: '#94a3b8', margin: 0 }}>What the text does. This is what designers and developers use.</p>
-      <code style={{ display: 'block', marginTop: '12px', fontSize: '12px', color: '#34d399', background: '#022c22', padding: '8px 12px', borderRadius: '6px' }}>heading.2xl = 48px{"\n"}heading.xl = 32px{"\n"}body.md = 16px{"\n"}label.sm = 13px</code>
+      <p style={{ fontSize: '13px', color: '#94a3b8', margin: 0 }}>Size composites already exist (typography.size.md.bold). Add ~15 role aliases on top.</p>
+      <code style={{ display: 'block', marginTop: '12px', fontSize: '12px', color: '#34d399', background: '#022c22', padding: '8px 12px', borderRadius: '6px' }}>heading.2xl → size.9xl.bold (48px){"\n"}heading.xl → size.5xl.bold (32px){"\n"}body.lg → size.md.regular (18px){"\n"}label.sm → size.2xs.regular (13px)</code>
     </div>
     <div>
-      <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '2px', color: '#94a3b8', marginBottom: '8px' }}>Layer 3</div>
+      <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '2px', color: '#94a3b8', marginBottom: '8px' }}>Layer 3 — Deprecate</div>
       <div style={{ fontSize: '18px', fontWeight: 700, marginBottom: '4px' }}>Component Aliases</div>
-      <p style={{ fontSize: '13px', color: '#94a3b8', margin: 0 }}>Optional. Only when a component genuinely deviates from the role.</p>
-      <code style={{ display: 'block', marginTop: '12px', fontSize: '12px', color: '#fbbf24', background: '#422006', padding: '8px 12px', borderRadius: '6px' }}>bigstory.heading = heading.xl{"\n"}blocktitle = heading.2xl{"\n"}card.eyebrow = label.md</code>
+      <p style={{ fontSize: '13px', color: '#94a3b8', margin: 0 }}>189 deeply nested tokens. Most are 1:1 pass-throughs. Replace with direct role references.</p>
+      <code style={{ display: 'block', marginTop: '12px', fontSize: '12px', color: '#fbbf24', background: '#422006', padding: '8px 12px', borderRadius: '6px' }}>card.title → heading.xl{"\n"}blocktitle → heading.2xl{"\n"}card.eyebrow → label.md{"\n"}(189 tokens → 0)</code>
     </div>
   </div>
 </div>
@@ -162,69 +200,76 @@ The most adopted design systems in the world have converged on the same pattern:
 
 ## Proposed Semantic Typography Scale
 
-These ~15 tokens replace 100+ deeply nested tokens. Each one describes what the text **does**, not where it lives.
+These ~13 role tokens replace the 189 component-layer tokens. Each describes what the text **does**, not where it lives. The "Maps to" column shows the existing primitive it references.
 
 <div style={{ overflowX: 'auto', margin: '16px 0 32px' }}>
-  <div style={{ minWidth: '700px' }}>
-    <div style={{ display: 'grid', gridTemplateColumns: '200px repeat(4, 1fr)', gap: '8px', padding: '12px 16px', background: '#f8fafc', borderRadius: '8px 8px 0 0', borderBottom: '2px solid #e2e8f0' }}>
+  <div style={{ minWidth: '800px' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: '160px repeat(4, 1fr) 200px', gap: '8px', padding: '12px 16px', background: '#f8fafc', borderRadius: '8px 8px 0 0', borderBottom: '2px solid #e2e8f0' }}>
       <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#64748b' }}>Token</span>
       <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#64748b', textAlign: 'center' }}>Mobile</span>
       <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#64748b', textAlign: 'center' }}>Tablet</span>
       <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#64748b', textAlign: 'center' }}>Laptop</span>
       <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#64748b', textAlign: 'center' }}>Desktop</span>
+      <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#64748b' }}>Maps to (existing)</span>
     </div>
     <div style={{ background: '#f0fdf4', padding: '6px 16px', fontSize: '11px', fontWeight: 700, color: '#166534', textTransform: 'uppercase', letterSpacing: '1px' }}>Headings</div>
-    <ScaleRow token="heading.2xl" mobile="32px" tablet="48px" laptop="48px" desktop="48px" />
-    <ScaleRow token="heading.xl" mobile="28px" tablet="32px" laptop="32px" desktop="32px" />
-    <ScaleRow token="heading.lg" mobile="16px" tablet="18px" laptop="20px" desktop="20px" />
-    <ScaleRow token="heading.md" mobile="16px" tablet="18px" laptop="18px" desktop="18px" />
-    <ScaleRow token="heading.sm" mobile="14px" tablet="14px" laptop="16px" desktop="16px" />
+    <ScaleRow token="heading.2xl" mobile="32px" tablet="48px" laptop="48px" desktop="48px" maps="size.5xl → 9xl.bold" />
+    <ScaleRow token="heading.xl" mobile="28px" tablet="32px" laptop="32px" desktop="32px" maps="size.3xl → 5xl.bold" />
+    <ScaleRow token="heading.lg" mobile="18px" tablet="20px" laptop="20px" desktop="20px" maps="size.md → lg.bold" />
+    <ScaleRow token="heading.md" mobile="16px" tablet="18px" laptop="18px" desktop="18px" maps="size.sm → md.bold" />
+    <ScaleRow token="heading.sm" mobile="14px" tablet="14px" laptop="16px" desktop="16px" maps="size.xs → sm.bold" />
     <div style={{ background: '#eff6ff', padding: '6px 16px', fontSize: '11px', fontWeight: 700, color: '#1e40af', textTransform: 'uppercase', letterSpacing: '1px' }}>Body</div>
-    <ScaleRow token="body.lg" mobile="16px" tablet="18px" laptop="18px" desktop="18px" />
-    <ScaleRow token="body.md" mobile="14px" tablet="16px" laptop="16px" desktop="16px" />
-    <ScaleRow token="body.sm" mobile="14px" tablet="14px" laptop="14px" desktop="14px" />
+    <ScaleRow token="body.lg" mobile="16px" tablet="18px" laptop="18px" desktop="18px" maps="size.sm → md.regular" />
+    <ScaleRow token="body.md" mobile="14px" tablet="16px" laptop="16px" desktop="16px" maps="size.xs → sm.regular" />
+    <ScaleRow token="body.sm" mobile="14px" tablet="14px" laptop="14px" desktop="14px" maps="size.xs.regular" />
     <div style={{ background: '#fefce8', padding: '6px 16px', fontSize: '11px', fontWeight: 700, color: '#854d0e', textTransform: 'uppercase', letterSpacing: '1px' }}>Labels and Metadata</div>
-    <ScaleRow token="label.md" mobile="14px" tablet="14px" laptop="14px" desktop="14px" />
-    <ScaleRow token="label.sm" mobile="13px" tablet="13px" laptop="13px" desktop="13px" />
-    <ScaleRow token="caption.md" mobile="13px" tablet="13px" laptop="13px" desktop="13px" />
-    <ScaleRow token="caption.sm" mobile="11px" tablet="11px" laptop="11px" desktop="11px" />
+    <ScaleRow token="label.lg" mobile="14px" tablet="14px" laptop="14px" desktop="14px" maps="size.xs.semibold" />
+    <ScaleRow token="label.md" mobile="13px" tablet="13px" laptop="13px" desktop="13px" maps="size.2xs.semibold" />
+    <ScaleRow token="label.sm" mobile="13px" tablet="13px" laptop="13px" desktop="13px" maps="size.2xs.regular" />
+    <ScaleRow token="caption.md" mobile="12px" tablet="12px" laptop="12px" desktop="12px" maps="size.3xs.regular" />
+    <ScaleRow token="caption.sm" mobile="11px" tablet="11px" laptop="11px" desktop="11px" maps="size.4xs.regular" />
   </div>
 </div>
 
 > Responsive values are handled by **modes** (Figma variable modes / CSS media queries), not by separate token names. One token, multiple values per breakpoint.
 
+**Note:** The "Maps to" column shows the mobile → desktop range using existing `typography.size.*` composites. No new primitive values are needed — the role tokens are aliases of what already exists.
+
 ---
 
 ## Before and After: Real Examples
 
-How existing Hearst component tokens map to the new system:
+How existing Hearst component tokens map to the new system. Current values verified against `scale.json`:
 
 <div style={{ overflowX: 'auto', margin: '16px 0 32px' }}>
   <div style={{ minWidth: '700px' }}>
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 100px', gap: '12px', padding: '12px 16px', background: '#f8fafc', borderRadius: '8px 8px 0 0', borderBottom: '2px solid #e2e8f0' }}>
-      <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#64748b' }}>Current (9 segments)</span>
-      <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#64748b' }}>Proposed (2-3 segments)</span>
+      <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#64748b' }}>Current (4–8 segments)</span>
+      <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#64748b' }}>Proposed (2 segments)</span>
       <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#64748b' }}>Result</span>
     </div>
     <div style={{ background: '#f0fdf4', padding: '6px 16px', fontSize: '11px', fontWeight: 700, color: '#166534', textTransform: 'uppercase', letterSpacing: '1px' }}>Block Headlines</div>
-    <CompareRow current="typography.component.blocktitle.xl" proposed="heading.2xl" verdict="Simpler" />
-    <CompareRow current="typography.component.blocktitle.sm" proposed="heading.2xl (mobile mode)" verdict="Simpler" />
-    <CompareRow current="typography.component.blocksubtitle.xl" proposed="heading.lg" verdict="Simpler" />
+    <CompareRow current="typography.component.blocktitle.xl → size.9xl.bold (48px)" proposed="heading.2xl" verdict="Simpler" />
+    <CompareRow current="typography.component.blocktitle.sm → size.5xl.bold (32px)" proposed="heading.2xl (mobile mode)" verdict="Simpler" />
+    <CompareRow current="typography.component.blocksubtitle.xl → size.lg.bold (20px)" proposed="heading.lg" verdict="Simpler" />
     <div style={{ background: '#eff6ff', padding: '6px 16px', fontSize: '11px', fontWeight: 700, color: '#1e40af', textTransform: 'uppercase', letterSpacing: '1px' }}>Big Story</div>
-    <CompareRow current="typography.component.card.core.content.title.default.5xl" proposed="heading.xl" verdict="Simpler" />
-    <CompareRow current="typography.component.card.core.content.description.default.md" proposed="body.lg" verdict="Simpler" />
+    <CompareRow current="typography.component.card.core.content.title.default.5xl → size.5xl.bold (32px)" proposed="heading.xl" verdict="Simpler" />
+    <CompareRow current="typography.component.card.core.content.description.default.md → size.md.regular (18px)" proposed="body.lg" verdict="Simpler" />
     <div style={{ background: '#fefce8', padding: '6px 16px', fontSize: '11px', fontWeight: 700, color: '#854d0e', textTransform: 'uppercase', letterSpacing: '1px' }}>4 Across</div>
-    <CompareRow current="typography.component.card.core.content.title.default.lg" proposed="heading.lg" verdict="Simpler" />
-    <CompareRow current="typography.component.card.core.content.description.default.sm" proposed="body.md" verdict="Simpler" />
+    <CompareRow current="typography.component.card.core.content.title.default.lg → size.lg.bold (20px)" proposed="heading.lg" verdict="Simpler" />
+    <CompareRow current="typography.component.card.core.content.description.default.sm → size.sm.regular (16px)" proposed="body.md" verdict="Simpler" />
     <div style={{ background: '#fdf2f8', padding: '6px 16px', fontSize: '11px', fontWeight: 700, color: '#9d174d', textTransform: 'uppercase', letterSpacing: '1px' }}>Shared Elements</div>
-    <CompareRow current="typography.component.card.core.content.eyebrow.default.xs" proposed="label.md" verdict="Simpler" />
-    <CompareRow current="typography.component.card.core.content.timestamp.default.2xs" proposed="label.sm" verdict="Simpler" />
-    <CompareRow current="typography.component.card.core.content.author.default.2xs" proposed="caption.md" verdict="Simpler" />
-    <CompareRow current="typography.component.card.core.content.meta.default.2xs" proposed="label.sm" verdict="Simpler" />
+    <CompareRow current="typography.component.card.core.content.eyebrow.default.xs → size.xs.regular (14px)" proposed="label.lg" verdict="Simpler" />
+    <CompareRow current="typography.component.card.core.content.timestamp.default.2xs → size.2xs.regular (13px)" proposed="label.sm" verdict="Simpler" />
+    <CompareRow current="typography.component.card.core.content.author.default.2xs → size.2xs.semibold (13px)" proposed="label.md" verdict="Simpler" />
+    <CompareRow current="typography.component.card.core.content.meta.default.2xs → size.2xs.regular (13px)" proposed="label.sm" verdict="Simpler" />
     <div style={{ background: '#f5f3ff', padding: '6px 16px', fontSize: '11px', fontWeight: 700, color: '#5b21b6', textTransform: 'uppercase', letterSpacing: '1px' }}>3 Column</div>
-    <CompareRow current="typography.component.3column.label.xl" proposed="heading.lg" verdict="Simpler" />
-    <CompareRow current="typography.component.3column.title.xl" proposed="heading.lg" verdict="Simpler" />
-    <CompareRow current="typography.component.3column.title.md" proposed="heading.sm" verdict="Simpler" />
+    <CompareRow current="typography.component.3column.label.xl → size.lg.bold (20px)" proposed="heading.lg" verdict="Simpler" />
+    <CompareRow current="typography.component.3column.title.xl → size.lg.bold (20px)" proposed="heading.lg" verdict="Simpler" />
+    <CompareRow current="typography.component.3column.title.md → size.xs.bold (14px)" proposed="heading.sm" verdict="Simpler" />
+    <div style={{ background: '#fff7ed', padding: '6px 16px', fontSize: '11px', fontWeight: 700, color: '#9a3412', textTransform: 'uppercase', letterSpacing: '1px' }}>Rail / Trending</div>
+    <CompareRow current="typography.component.railstoryitem.title.xl → size.lg.bold (20px)" proposed="heading.lg" verdict="Simpler" />
+    <CompareRow current="typography.component.trendingitem.title.sm → size.sm.bold (16px)" proposed="heading.md" verdict="Simpler" />
   </div>
 </div>
 
@@ -232,29 +277,39 @@ How existing Hearst component tokens map to the new system:
 
 ## How Responsiveness Works (Without Breakpoints in Names)
 
-Instead of creating 4 tokens per element, we define **one token** and give it different values per breakpoint using **modes**.
+Instead of creating separate tokens per breakpoint (and doing so inconsistently), we define **one token** and give it different values per breakpoint using **modes**.
 
 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', margin: '24px 0' }}>
   <div style={{ border: '1px solid #fecaca', borderRadius: '12px', padding: '20px', background: '#fef2f2' }}>
-    <div style={{ fontWeight: 700, fontSize: '14px', color: '#991b1b', marginBottom: '12px' }}>Current: 4 separate tokens</div>
+    <div style={{ fontWeight: 700, fontSize: '14px', color: '#991b1b', marginBottom: '12px' }}>Current: inconsistent breakpoint tokens</div>
     <code style={{ display: 'block', fontSize: '12px', color: '#991b1b', lineHeight: 2, fontFamily: 'monospace' }}>
-      ...bigstory.title.sm = 28px{"\n"}
-      ...bigstory.title.md = 32px{"\n"}
-      ...bigstory.title.lg = 32px{"\n"}
-      ...bigstory.title.xl = 32px
+      railstoryitem.title.sm = 16px{"\n"}
+      railstoryitem.title.md = 16px{"\n"}
+      railstoryitem.title.lg = 16px{"\n"}
+      railstoryitem.title.xl = 20px{"\n"}
+      {"\n"}
+      blocktitle.sm = 32px{"\n"}
+      blocktitle.xl = 48px{"\n"}
+      (no md or lg variant)
     </code>
-    <p style={{ margin: '12px 0 0', fontSize: '12px', color: '#7f1d1d' }}>Developer must choose the right token per breakpoint. Designer must remember 4 names.</p>
+    <p style={{ margin: '12px 0 0', fontSize: '12px', color: '#7f1d1d' }}>Some components have 4 breakpoints, others have 2. Developer must guess which variants exist.</p>
   </div>
   <div style={{ border: '1px solid #bbf7d0', borderRadius: '12px', padding: '20px', background: '#f0fdf4' }}>
     <div style={{ fontWeight: 700, fontSize: '14px', color: '#166534', marginBottom: '12px' }}>Proposed: 1 token, 4 modes</div>
     <code style={{ display: 'block', fontSize: '12px', color: '#166534', lineHeight: 2, fontFamily: 'monospace' }}>
-      heading.xl:{"\n"}
-      {"  "}mobile  = 28px{"\n"}
-      {"  "}tablet  = 32px{"\n"}
-      {"  "}laptop  = 32px{"\n"}
-      {"  "}desktop = 32px
+      heading.lg:{"\n"}
+      {"  "}mobile  = 18px{"\n"}
+      {"  "}tablet  = 20px{"\n"}
+      {"  "}laptop  = 20px{"\n"}
+      {"  "}desktop = 20px{"\n"}
+      {"\n"}
+      heading.2xl:{"\n"}
+      {"  "}mobile  = 32px{"\n"}
+      {"  "}tablet  = 48px{"\n"}
+      {"  "}laptop  = 48px{"\n"}
+      {"  "}desktop = 48px
     </code>
-    <p style={{ margin: '12px 0 0', fontSize: '12px', color: '#14532d' }}>Developer uses one token. Responsive behavior is automatic. Designer remembers one name.</p>
+    <p style={{ margin: '12px 0 0', fontSize: '12px', color: '#14532d' }}>Every token has every breakpoint. Developer uses one name. Responsive behavior is automatic.</p>
   </div>
 </div>
 
@@ -276,7 +331,7 @@ Instead of creating 4 tokens per element, we define **one token** and give it di
     </div>
     <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: '12px', padding: '12px 16px', borderBottom: '1px solid #e2e8f0' }}>
       <span style={{ fontSize: '13px', fontWeight: 600 }}>Tailwind</span>
-      <span style={{ fontSize: '13px', color: '#334155' }}>Responsive utility classes are already built in. Token values change per breakpoint automatically via CSS variables.</span>
+      <span style={{ fontSize: '13px', color: '#334155' }}>Arbitrary value syntax: <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px' }}>{'text-[length:var(--heading-xl)]'}</code>. Token values change per breakpoint automatically via the CSS variable.</span>
     </div>
     <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: '12px', padding: '12px 16px', borderBottom: '1px solid #e2e8f0', background: '#f8fafc' }}>
       <span style={{ fontSize: '13px', fontWeight: 600 }}>Pencil</span>
@@ -289,38 +344,38 @@ Instead of creating 4 tokens per element, we define **one token** and give it di
 
 ## Component Mapping
 
-When a component needs a specific typography style, it **aliases** a semantic role rather than defining its own deep path. This keeps the system flat while still allowing component-level documentation.
+When a component needs a specific typography style, it references a **semantic role** directly rather than going through a component-specific alias. This eliminates the component layer while preserving clear documentation of which role each element uses.
 
 <div style={{ display: 'grid', gap: '16px', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', margin: '16px 0 32px' }}>
   <RoleCard
     role="Big Story"
     description="Hero article layout with large headline and description."
-    sizes={["heading.xl (32px)", "body.lg (18px)", "label.md (eyebrow)", "caption.md (author)"]}
-    usage="Headline uses heading.xl. Description uses body.lg. Shared elements (eyebrow, author, meta) use the global label/caption tokens."
+    sizes={["heading.xl (32px)", "body.lg (18px)", "label.lg (eyebrow)", "label.md (author)"]}
+    usage="Headline uses heading.xl. Description uses body.lg. Shared elements (eyebrow, author, meta) use the global label tokens — same tokens used everywhere."
   />
   <RoleCard
     role="4 Across Grid"
     description="Four equal-width article cards in a row."
-    sizes={["heading.lg (20px)", "body.md (16px)", "label.md (eyebrow)", "label.sm (meta)"]}
-    usage="Smaller headlines than Big Story, but uses the same shared label and caption tokens for metadata."
+    sizes={["heading.lg (20px)", "body.md (16px)", "label.lg (eyebrow)", "label.sm (meta)"]}
+    usage="Smaller headlines than Big Story, but uses the same shared label tokens for metadata. No card-specific tokens needed."
   />
   <RoleCard
     role="3 Column"
     description="Three-column layout with section headers and article lists."
-    sizes={["heading.lg (column title, 20px)", "heading.lg to heading.sm (article titles, responsive)", "label.sm (meta)"]}
+    sizes={["heading.lg (column title, 20px)", "heading.sm (article titles, 14–16px)", "label.sm (meta)"]}
     usage="Column titles and article titles both draw from the heading scale. No custom tokens needed."
   />
   <RoleCard
     role="Big Story Feed"
     description="Hero article with sidebar of smaller stories."
-    sizes={["heading.xl (hero, 32px)", "heading.lg (sidebar titles, 20px)", "body.lg (hero dek)", "caption.md (author)"]}
-    usage="Hero uses the same heading.xl as Big Story. Sidebar titles use heading.lg, same as 4 Across."
+    sizes={["heading.xl (hero, 32px)", "heading.lg (sidebar titles, 20px)", "body.lg (hero dek)", "label.md (author)"]}
+    usage="Hero uses the same heading.xl as Big Story. Sidebar titles use heading.lg, same as 4 Across. Tokens are reusable across layouts."
   />
   <RoleCard
     role="Block Title"
     description="Page-level section headings (H2)."
     sizes={["heading.2xl (48px desktop, 32px mobile)"]}
-    usage="The largest heading in the system. Responsive sizing handled by modes, not separate tokens."
+    usage="The largest heading in the system. Responsive sizing handled by modes — one token, not two (blocktitle.sm + blocktitle.xl)."
   />
 </div>
 
@@ -330,24 +385,24 @@ When a component needs a specific typography style, it **aliases** a semantic ro
 
 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', margin: '16px 0 32px' }}>
   <div style={{ border: '1px solid #e2e8f0', borderRadius: '12px', padding: '24px', textAlign: 'center' }}>
-    <div style={{ fontSize: '36px', fontWeight: 800, color: '#16a34a' }}>~15</div>
+    <div style={{ fontSize: '36px', fontWeight: 800, color: '#16a34a' }}>~13</div>
     <div style={{ fontSize: '13px', color: '#64748b', marginTop: '4px' }}>Semantic role tokens</div>
-    <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>down from 100+</div>
+    <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>replacing 189 component tokens</div>
   </div>
   <div style={{ border: '1px solid #e2e8f0', borderRadius: '12px', padding: '24px', textAlign: 'center' }}>
-    <div style={{ fontSize: '36px', fontWeight: 800, color: '#16a34a' }}>2-3</div>
+    <div style={{ fontSize: '36px', fontWeight: 800, color: '#16a34a' }}>2</div>
     <div style={{ fontSize: '13px', color: '#64748b', marginTop: '4px' }}>Segments per name</div>
-    <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>down from 9</div>
+    <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>down from up to 8</div>
   </div>
   <div style={{ border: '1px solid #e2e8f0', borderRadius: '12px', padding: '24px', textAlign: 'center' }}>
-    <div style={{ fontSize: '36px', fontWeight: 800, color: '#16a34a' }}>1</div>
-    <div style={{ fontSize: '13px', color: '#64748b', marginTop: '4px' }}>Token per element</div>
-    <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>modes handle responsiveness</div>
+    <div style={{ fontSize: '36px', fontWeight: 800, color: '#16a34a' }}>66</div>
+    <div style={{ fontSize: '13px', color: '#64748b', marginTop: '4px' }}>Size composites kept</div>
+    <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>the foundation layer stays</div>
   </div>
   <div style={{ border: '1px solid #e2e8f0', borderRadius: '12px', padding: '24px', textAlign: 'center' }}>
     <div style={{ fontSize: '36px', fontWeight: 800, color: '#16a34a' }}>0</div>
-    <div style={{ fontSize: '13px', color: '#64748b', marginTop: '4px' }}>Component coupling</div>
-    <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>tokens are reusable anywhere</div>
+    <div style={{ fontSize: '13px', color: '#64748b', marginTop: '4px' }}>Breaking changes</div>
+    <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>additive migration, old tokens deprecated</div>
   </div>
 </div>
 
@@ -355,42 +410,65 @@ When a component needs a specific typography style, it **aliases** a semantic ro
 
 ## Migration Path
 
-This is not a rewrite. It is a **layer on top** of the existing primitive scale.
+This is not a rewrite. It is a **layer on top** of the existing size composites, followed by a gradual deprecation of the component layer.
 
 <div style={{ display: 'grid', gap: '12px', margin: '16px 0 32px' }}>
   <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', padding: '16px 20px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
     <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#6d28d9', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 700, flexShrink: 0 }}>1</div>
     <div>
       <div style={{ fontWeight: 600, fontSize: '14px', marginBottom: '4px' }}>Create the semantic role layer</div>
-      <p style={{ margin: 0, fontSize: '13px', color: '#475569' }}>Add ~15 new semantic tokens (heading.2xl through caption.sm) that alias the existing primitive scale. No existing tokens are removed or broken.</p>
+      <p style={{ margin: 0, fontSize: '13px', color: '#475569' }}>Add ~13 new role tokens (heading.2xl through caption.sm) that alias the existing typography.size.* composites. No existing tokens are removed or broken.</p>
     </div>
   </div>
   <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', padding: '16px 20px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
     <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#6d28d9', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 700, flexShrink: 0 }}>2</div>
     <div>
       <div style={{ fontWeight: 600, fontSize: '14px', marginBottom: '4px' }}>Add responsive modes</div>
-      <p style={{ margin: 0, fontSize: '13px', color: '#475569' }}>Configure Figma variable modes (mobile / tablet / desktop) and CSS media queries so each semantic token adapts per breakpoint automatically.</p>
+      <p style={{ margin: 0, fontSize: '13px', color: '#475569' }}>Configure Figma variable modes (mobile / tablet / desktop) and CSS media queries so each role token adapts per breakpoint automatically. This replaces the inconsistent sm/md/lg/xl suffixes.</p>
     </div>
   </div>
   <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', padding: '16px 20px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
     <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#6d28d9', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 700, flexShrink: 0 }}>3</div>
     <div>
       <div style={{ fontWeight: 600, fontSize: '14px', marginBottom: '4px' }}>Migrate components gradually</div>
-      <p style={{ margin: 0, fontSize: '13px', color: '#475569' }}>Update components one at a time to reference the new semantic tokens. Old tokens remain as deprecated aliases during the transition.</p>
+      <p style={{ margin: 0, fontSize: '13px', color: '#475569' }}>Update components one at a time to reference the new role tokens. Old component tokens remain as deprecated aliases during the transition — nothing breaks.</p>
     </div>
   </div>
   <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', padding: '16px 20px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
     <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#6d28d9', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 700, flexShrink: 0 }}>4</div>
     <div>
-      <div style={{ fontWeight: 600, fontSize: '14px', marginBottom: '4px' }}>Remove legacy tokens</div>
-      <p style={{ margin: 0, fontSize: '13px', color: '#475569' }}>Once all components have migrated, remove the deeply nested component typography tokens. The primitive scale remains unchanged.</p>
+      <div style={{ fontWeight: 600, fontSize: '14px', marginBottom: '4px' }}>Remove legacy component tokens</div>
+      <p style={{ margin: 0, fontSize: '13px', color: '#475569' }}>Once all components have migrated, remove the 189 component-layer tokens from scale.json. The primitive scale and size composites remain unchanged.</p>
     </div>
   </div>
 </div>
 
 ---
 
+## Risks and Open Questions
+
+<div style={{ display: 'grid', gap: '16px', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', margin: '16px 0 32px' }}>
+  <div style={{ border: '1px solid #fde68a', borderRadius: '12px', padding: '20px', background: '#fffbeb' }}>
+    <div style={{ fontWeight: 700, fontSize: '14px', color: '#92400e', marginBottom: '6px' }}>Naming overlap</div>
+    <p style={{ margin: 0, fontSize: '13px', color: '#78350f' }}>The proposed heading.2xl uses "2xl" as a role size, while the existing scale uses "2xl" as a primitive step (24px). These mean different things. We need clear documentation or a different naming convention (e.g., heading.xxl) to avoid confusion.</p>
+  </div>
+  <div style={{ border: '1px solid #fde68a', borderRadius: '12px', padding: '20px', background: '#fffbeb' }}>
+    <div style={{ fontWeight: 700, fontSize: '14px', color: '#92400e', marginBottom: '6px' }}>Badge tokens are different</div>
+    <p style={{ margin: 0, fontSize: '13px', color: '#78350f' }}>Badge typography tokens (24 of them) include textCase and custom composites — they're not simple aliases. These may need to remain as component-specific tokens or be handled separately.</p>
+  </div>
+  <div style={{ border: '1px solid #fde68a', borderRadius: '12px', padding: '20px', background: '#fffbeb' }}>
+    <div style={{ fontWeight: 700, fontSize: '14px', color: '#92400e', marginBottom: '6px' }}>Figma variable mode limits</div>
+    <p style={{ margin: 0, fontSize: '13px', color: '#78350f' }}>Figma's free plan limits variable modes. If we add 4 responsive modes per token, we need to verify our Figma plan supports this across all brand files.</p>
+  </div>
+  <div style={{ border: '1px solid #fde68a', borderRadius: '12px', padding: '20px', background: '#fffbeb' }}>
+    <div style={{ fontWeight: 700, fontSize: '14px', color: '#92400e', marginBottom: '6px' }}>Brand vs. default variants</div>
+    <p style={{ margin: 0, fontSize: '13px', color: '#78350f' }}>Card titles currently have both "default" and "brand" variants (same values but different font families in some brands). The role tokens need a strategy for brand font switching — likely via the existing --font-headline variable rather than duplicate tokens.</p>
+  </div>
+</div>
+
+---
+
 <div style={{ background: '#f8fafc', borderRadius: '12px', padding: '24px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
-  <p style={{ margin: '0 0 8px', fontSize: '15px', fontWeight: 600, color: '#334155' }}>This proposal aligns Hearst with how the world's most adopted design systems handle typography.</p>
-  <p style={{ margin: 0, fontSize: '13px', color: '#64748b' }}>Fewer tokens. Shorter names. Automatic responsiveness. Higher adoption.</p>
+  <p style={{ margin: '0 0 8px', fontSize: '15px', fontWeight: 600, color: '#334155' }}>This proposal preserves the existing 3-layer architecture while eliminating 189 redundant component tokens.</p>
+  <p style={{ margin: 0, fontSize: '13px', color: '#64748b' }}>Fewer tokens. Shorter names. Consistent responsiveness. Higher adoption. Zero breaking changes during migration.</p>
 </div>

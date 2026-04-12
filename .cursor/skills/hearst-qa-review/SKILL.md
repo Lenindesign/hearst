@@ -73,6 +73,9 @@ Check `_meta.json` overrides are applied:
 |---------|---------|
 | `npm run tokens:validate` | Validates token JSON structure |
 | `npm run build-tokens` | If this fails, tokens are malformed |
+| `npm run audit` | Scans components for hardcoded colors, non-semantic Tailwind, and token violations |
+| `npm run audit:json` | Saves full audit report to `reports/token-audit.json` |
+| `npm run index` | Generates component relationship map at `reports/component-index.json` |
 
 ---
 
@@ -106,8 +109,18 @@ Check `_meta.json` overrides are applied:
 
 ---
 
+## Component Metadata
+
+Components can have `.metadata.ts` files alongside them that provide AI-readable specs:
+- **Schema:** `src/lib/component-metadata.ts` — defines `ComponentMetadata` interface
+- **Location:** `src/components/ui/button.metadata.ts`, `src/components/ui/card.metadata.ts`, etc.
+- **Contents:** when to use, token references, dependencies, variants, violations, caveats
+- **Run `npm run index`** to auto-generate the full dependency graph
+
 ## Rules
 
 1. **Test with at least 3 brands** from different categories (e.g. Cosmopolitan, Car and Driver, Esquire)
 2. **After any token change:** verify the change propagates to CSS variables, Storybook, and the main app
 3. **Report issues** with: specific brand slug, expected value, and actual value
+4. **Run `npm run audit`** before any release to check for token violations
+5. **After adding a new component:** create a `.metadata.ts` file following the schema

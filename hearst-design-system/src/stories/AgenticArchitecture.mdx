@@ -1,0 +1,321 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="How It Works" />
+
+export const Section = ({ title, subtitle, children }) => (
+  <div style={{ marginBottom: '64px' }}>
+    <p style={{ margin: '0 0 6px', fontSize: '12px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#94a3b8' }}>{subtitle}</p>
+    <h2 style={{ margin: '0 0 20px', fontSize: '26px', fontWeight: 800, letterSpacing: '-0.02em', color: '#0f172a' }}>{title}</h2>
+    <div style={{ fontSize: '15px', color: '#334155', lineHeight: 1.8 }}>{children}</div>
+  </div>
+);
+
+export const Code = ({ children }) => (
+  <code style={{ background: '#f1f5f9', padding: '2px 7px', borderRadius: '5px', fontSize: '13px', color: '#334155', fontWeight: 500 }}>{children}</code>
+);
+
+export const Stat = ({ value, label }) => (
+  <div style={{ textAlign: 'center', padding: '16px' }}>
+    <div style={{ fontSize: '36px', fontWeight: 800, letterSpacing: '-0.03em', color: '#0f172a' }}>{value}</div>
+    <div style={{ fontSize: '13px', color: '#64748b', marginTop: '4px' }}>{label}</div>
+  </div>
+);
+
+export const LayerCard = ({ num, title, path, desc, color }) => (
+  <div style={{ border: '1px solid #e2e8f0', borderRadius: '12px', padding: '20px', borderLeft: `4px solid ${color}` }}>
+    <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', marginBottom: '8px' }}>
+      <span style={{ fontSize: '11px', fontWeight: 700, color: '#94a3b8' }}>{num}</span>
+      <h4 style={{ margin: 0, fontSize: '15px', fontWeight: 700, color: '#0f172a' }}>{title}</h4>
+    </div>
+    <p style={{ margin: '0 0 6px', fontSize: '13px', color: '#64748b', fontFamily: 'monospace' }}>{path}</p>
+    <p style={{ margin: 0, fontSize: '13px', color: '#475569', lineHeight: 1.6 }}>{desc}</p>
+  </div>
+);
+
+export const AgentRow = ({ icon, name, desc, file }) => (
+  <div style={{ display: 'flex', gap: '14px', alignItems: 'flex-start', padding: '14px 0', borderBottom: '1px solid #f1f5f9' }}>
+    <span style={{ fontSize: '20px', width: '36px', height: '36px', borderRadius: '8px', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{icon}</span>
+    <div>
+      <div style={{ fontSize: '14px', fontWeight: 700, color: '#0f172a' }}>{name}</div>
+      <div style={{ fontSize: '13px', color: '#475569', lineHeight: 1.5 }}>{desc}</div>
+      <div style={{ fontSize: '12px', color: '#94a3b8', fontFamily: 'monospace', marginTop: '2px' }}>{file}</div>
+    </div>
+  </div>
+);
+
+export const FlowArrow = () => (
+  <div style={{ textAlign: 'center', padding: '8px 0', fontSize: '18px', color: '#cbd5e1' }}>↓</div>
+);
+
+export const TerminalBlock = ({ cmd, desc }) => (
+  <div style={{ display: 'flex', gap: '12px', alignItems: 'center', padding: '10px 16px', background: '#0f172a', borderRadius: '8px', marginBottom: '6px' }}>
+    <span style={{ color: '#22c55e', fontFamily: 'monospace', fontSize: '13px', fontWeight: 600 }}>$</span>
+    <span style={{ color: '#e2e8f0', fontFamily: 'monospace', fontSize: '13px', flex: 1 }}>{cmd}</span>
+    <span style={{ color: '#64748b', fontSize: '12px' }}>{desc}</span>
+  </div>
+);
+
+<div style={{ maxWidth: '720px', margin: '0 auto', padding: '48px 0' }}>
+
+<div style={{ marginBottom: '56px' }}>
+  <p style={{ margin: '0 0 12px', fontSize: '12px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#94a3b8' }}>Hearst Design System</p>
+  <h1 style={{ fontSize: '40px', fontWeight: 900, letterSpacing: '-0.035em', color: '#0f172a', lineHeight: 1.1, margin: '0 0 20px' }}>
+    How It Works:<br />An Agentic Design System
+  </h1>
+  <p style={{ fontSize: '17px', color: '#475569', lineHeight: 1.7, margin: 0 }}>
+    This system is built so that AI agents and human designers work on the same files, with the same tokens, toward the same output. Here is exactly how the pieces fit together.
+  </p>
+</div>
+
+<div style={{ display: 'flex', justifyContent: 'space-around', padding: '24px', background: '#f8fafc', borderRadius: '12px', marginBottom: '56px', border: '1px solid #e2e8f0' }}>
+  <Stat value="29" label="Brands" />
+  <Stat value="65" label="Components" />
+  <Stat value="7" label="AI Agents" />
+  <Stat value="3" label="Deploy Targets" />
+</div>
+
+{/* ─── THE BIG IDEA ─── */}
+
+<Section subtitle="The big idea" title="Git is the single source of truth">
+
+Everything starts and ends in Git. Design tokens — colors, fonts, spacing, border radii — are stored as JSON files in a three-layer hierarchy. Every other tool in the system is a **consumer** of these files, not a source.
+
+This means:
+- Figma does not own the tokens. Git does.
+- Pencil does not own the tokens. Git does.
+- The deployed sites do not own the tokens. Git does.
+
+When a designer or an AI agent changes a token value, they change it in Git. Then scripts push that change outward to every surface.
+
+</Section>
+
+{/* ─── THREE LAYERS ─── */}
+
+<Section subtitle="Token architecture" title="Three layers, one direction">
+
+<div style={{ display: 'flex', flexDirection: 'column', gap: '12px', margin: '16px 0 24px' }}>
+  <LayerCard num="L1" title="Core" path="tokens/core/" desc="Raw, brand-agnostic values. The periodic table of the system: every color, every font size, every spacing unit. No opinions about usage. 189 tokens." color="#3b82f6" />
+  <FlowArrow />
+  <LayerCard num="L2" title="Semantic" path="tokens/semantic/" desc="Meaning layer. Maps core values to intent: 'primary', 'accent', 'heading-size', 'card-gap'. This is where design decisions live. 972 tokens." color="#8b5cf6" />
+  <FlowArrow />
+  <LayerCard num="L3" title="Brands" path="tokens/brands/" desc="29 brand files that override semantic tokens with each brand's identity. Cosmopolitan red, Esquire black, Elle minimalism. Each brand is a JSON file. 8,036 tokens total." color="#f59e0b" />
+</div>
+
+When <Code>npm run build-tokens</Code> runs, it flattens these three layers into:
+- <Code>src/lib/tokens.css</Code> — CSS custom properties for the Next.js app
+- <Code>src/lib/brands.ts</Code> — TypeScript metadata for the ThemeProvider
+
+These generated files are never edited by hand. They are rebuilt from the JSON source.
+
+</Section>
+
+{/* ─── HOW AGENTS WORK ─── */}
+
+<Section subtitle="Agentic infrastructure" title="Seven agents, one system">
+
+Each agent is a <Code>SKILL.md</Code> file stored in <Code>.cursor/skills/</Code>. When a task matches an agent's domain, Cursor loads that skill file and the AI gets deep context: which files to touch, which scripts to run, which rules to follow, and which mistakes to avoid.
+
+This is not generic AI assistance. Each agent knows the Hearst system specifically.
+
+<div style={{ margin: '20px 0' }}>
+  <AgentRow icon="🏗" name="Token Architect" desc="Edits token JSON files, runs build-tokens, validates output. Maintains the three-layer hierarchy. The only agent that touches tokens/." file=".cursor/skills/hearst-token-architect/" />
+  <AgentRow icon="⚛" name="Frontend Component" desc="Builds React components using tokens via CSS variables and Tailwind. Creates .metadata.ts files. Runs the audit after changes." file=".cursor/skills/hearst-frontend-component/" />
+  <AgentRow icon="🎨" name="Figma Sync" desc="Pushes tokens from Git to Figma variables. Manages 29 brand modes in the Figma variable collection. Never reads from Figma — only writes." file=".cursor/skills/hearst-figma-sync/" />
+  <AgentRow icon="📐" name="Pencil Design" desc="Builds and updates .pen files using Pencil MCP tools. Creates component specs with $variable bindings that map 1:1 to code tokens." file=".cursor/skills/hearst-pencil-design/" />
+  <AgentRow icon="📖" name="Storybook Docs" desc="Creates MDX documentation pages, configures decorators, manages story sort order. Maintains the documentation you are reading right now." file=".cursor/skills/hearst-storybook-docs/" />
+  <AgentRow icon="🚀" name="DevOps / Deploy" desc="Deploys to three Netlify sites: the Next.js app, Storybook, and the Token Dashboard. Handles build pipeline and Git operations." file=".cursor/skills/hearst-devops-deploy/" />
+  <AgentRow icon="🔍" name="QA Review" desc="Verifies brand rendering across all 29 brands. Runs token audits, checks accessibility, validates visual consistency." file=".cursor/skills/hearst-qa-review/" />
+</div>
+
+</Section>
+
+{/* ─── THE PIPELINE ─── */}
+
+<Section subtitle="The pipeline" title="From token to pixel, step by step">
+
+Here is the exact sequence when a design decision changes:
+
+<div style={{ margin: '16px 0 24px' }}>
+  <TerminalBlock cmd="edit tokens/brands/cosmopolitan.json" desc="Change a color" />
+  <TerminalBlock cmd="npm run build-tokens" desc="Rebuild CSS + TS" />
+  <TerminalBlock cmd="npm run push-figma" desc="Sync to Figma variables" />
+  <TerminalBlock cmd="npm run push-pencil" desc="Sync to Pencil variables" />
+  <TerminalBlock cmd="npm run audit" desc="Check for violations" />
+  <TerminalBlock cmd="npm run index" desc="Rebuild component graph" />
+  <TerminalBlock cmd="npm run dev" desc="Preview locally" />
+  <TerminalBlock cmd="npm run deploy-storybook" desc="Ship to production" />
+</div>
+
+Every step is automated. A designer can trigger this entire pipeline by describing what they want in plain English to an AI agent in Cursor. The agent knows which scripts to run and in what order.
+
+</Section>
+
+{/* ─── THREE SURFACES ─── */}
+
+<Section subtitle="Deployed surfaces" title="Three apps, one codebase">
+
+<div style={{ display: 'flex', flexDirection: 'column', gap: '12px', margin: '16px 0' }}>
+  <LayerCard num="01" title="Next.js Design System App" path="hearst-design-system.netlify.app" desc="The interactive brand showcase. Switch between 29 brands, explore components rendered with real tokens, inspect computed styles with the Token Inspector." color="#0f172a" />
+  <LayerCard num="02" title="Storybook" path="hearst-ds-storybook.netlify.app" desc="Documentation and component development environment. MDX pages for architecture, workflows, and guidelines. Brand-switchable component stories." color="#ff4785" />
+  <LayerCard num="03" title="Token Dashboard" path="hearst-token-dashboard.netlify.app" desc="Standalone explorer for the full token tree. Search, filter, and inspect every token across all three layers and 29 brands." color="#3b82f6" />
+</div>
+
+</Section>
+
+{/* ─── TOOL CHAIN ─── */}
+
+<Section subtitle="Tool roles" title="Each tool has one job">
+
+<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse', margin: '16px 0' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+      <th style={{ padding: '10px 16px', fontWeight: 700, color: '#0f172a' }}>Tool</th>
+      <th style={{ padding: '10px 16px', fontWeight: 700, color: '#0f172a' }}>Role</th>
+      <th style={{ padding: '10px 16px', fontWeight: 700, color: '#0f172a' }}>Direction</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600 }}>Git</td>
+      <td style={{ padding: '10px 16px', color: '#475569' }}>Source of truth. Tokens are JSON. Changes are reviewed in PRs.</td>
+      <td style={{ padding: '10px 16px', color: '#64748b' }}>Origin</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600 }}>Figma</td>
+      <td style={{ padding: '10px 16px', color: '#475569' }}>Exploration sketchpad. Receives variables from Git via push-figma. Designers explore here, but tokens always come from Git.</td>
+      <td style={{ padding: '10px 16px', color: '#64748b' }}>Git → Figma</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600 }}>Pencil</td>
+      <td style={{ padding: '10px 16px', color: '#475569' }}>Precision handoff. A design canvas that both humans and AI agents can read/write. Uses $variable bindings that map directly to code tokens.</td>
+      <td style={{ padding: '10px 16px', color: '#64748b' }}>Git → Pencil → Code</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600 }}>Cursor</td>
+      <td style={{ padding: '10px 16px', color: '#475569' }}>The IDE. Designers describe what they want in plain English. AI agents with SKILL.md files execute. No code knowledge required.</td>
+      <td style={{ padding: '10px 16px', color: '#64748b' }}>Human → Agent → Code</td>
+    </tr>
+    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <td style={{ padding: '10px 16px', fontWeight: 600 }}>Storybook</td>
+      <td style={{ padding: '10px 16px', color: '#475569' }}>Living documentation. Components render with real tokens, switchable per brand. This page is a Storybook MDX file.</td>
+      <td style={{ padding: '10px 16px', color: '#64748b' }}>Code → Browser</td>
+    </tr>
+    <tr>
+      <td style={{ padding: '10px 16px', fontWeight: 600 }}>Netlify</td>
+      <td style={{ padding: '10px 16px', color: '#475569' }}>Hosting. Three separate sites for the app, Storybook, and the Token Dashboard. Deployed from Git via CLI.</td>
+      <td style={{ padding: '10px 16px', color: '#64748b' }}>Git → Production</td>
+    </tr>
+  </tbody>
+</table>
+
+</Section>
+
+{/* ─── SELF-AWARENESS ─── */}
+
+<Section subtitle="Instrumentation" title="The system knows itself">
+
+Three scripts give the system self-awareness:
+
+**Token Auditor** (<Code>npm run audit</Code>)
+Scans every component file for hardcoded hex colors, non-semantic Tailwind classes, and raw color functions. Reports violations with line numbers, severity, and suggestions for which token to use instead. Currently tracking 115 violations across 17 files.
+
+**Codebase Indexer** (<Code>npm run index</Code>)
+Maps every component's exports, dependencies, token usage, atomic level, brand-awareness, and responsiveness. Generates a full dependency graph: which components use which, and which tokens go where. 65 components indexed.
+
+**Component Metadata** (<Code>.metadata.ts</Code> files)
+Each component can have a metadata file that tells AI agents: what the component does, when to use it, when not to, which tokens it consumes, what its variants and slots are, and any known limitations. This is the machine-readable spec that makes agents reliable.
+
+Together, these three systems mean an agent can: read the index to find the right component, read the metadata to understand how to use it, and run the audit to verify it followed the rules.
+
+</Section>
+
+{/* ─── FOR DESIGNERS ─── */}
+
+<Section subtitle="For designers" title="What this means for you">
+
+You do not need to know React, TypeScript, or Git commands. Here is how you work:
+
+1. **Open Cursor.** It is an editor, but you use it like a conversation.
+2. **Describe what you want.** "Change Cosmopolitan's primary color to a deeper red." Or "Build a carousel that matches this Pencil spec."
+3. **The agent does the rest.** It edits the right JSON file, rebuilds tokens, pushes to Figma and Pencil, runs the audit, and deploys.
+4. **You verify.** Open the Storybook link or the dev server. Switch brands. Check that it looks right.
+5. **If something is off, say so.** "The spacing is too tight on mobile" — the agent adjusts and redeploys.
+
+The manifesto says: **if you didn't test it in the product, you didn't design it.** This system makes that possible without writing code.
+
+</Section>
+
+{/* ─── FOR DEVELOPERS ─── */}
+
+<Section subtitle="For developers" title="What this means for you">
+
+The codebase is a standard Next.js 16 + React 19 + Tailwind CSS 4 project. What makes it different:
+
+- **Tokens are first-class data.** Not scattered across Figma files or Notion pages. They are typed JSON files with a build pipeline.
+- **Components are instrumented.** Metadata files, the dependency index, and the token auditor give you a machine-readable map of the system.
+- **Agents have guardrails.** SKILL.md files encode rules like "never hardcode colors" and "always test 3 brands." The agent follows them before you have to review.
+- **The official HDS lives at** <a href="https://github.com/Media-Platforms/hearst-design-system" style={{ color: '#3b82f6' }}>Media-Platforms/hearst-design-system</a>. This repo is the testing and iteration environment where changes are proven before they move upstream.
+
+</Section>
+
+{/* ─── FILE MAP ─── */}
+
+<Section subtitle="Codebase" title="Where everything lives">
+
+<pre style={{ background: '#0f172a', color: '#e2e8f0', padding: '24px', borderRadius: '12px', fontSize: '13px', lineHeight: 1.7, overflowX: 'auto' }}>
+{`hearst/
+├── tokens/                        ← Source of truth
+│   ├── core/                      ← L1: raw values (189 tokens)
+│   ├── semantic/                  ← L2: design decisions (972 tokens)
+│   └── brands/                    ← L3: 29 brand overrides (8,036 tokens)
+│
+├── .cursor/skills/                ← Agent skill files
+│   ├── hearst-token-architect/
+│   ├── hearst-frontend-component/
+│   ├── hearst-figma-sync/
+│   ├── hearst-pencil-design/
+│   ├── hearst-storybook-docs/
+│   ├── hearst-devops-deploy/
+│   └── hearst-qa-review/
+│
+├── hearst-design-system/          ← Next.js + Storybook app
+│   ├── src/
+│   │   ├── components/            ← React components (65 files)
+│   │   │   ├── ui/                ← Atoms: Button, Card, Badge... (24)
+│   │   │   ├── fre/               ← FRE recipe components (12)
+│   │   │   └── *.metadata.ts      ← AI-readable component specs
+│   │   ├── lib/
+│   │   │   ├── brands.ts          ← GENERATED (do not edit)
+│   │   │   ├── tokens.css         ← GENERATED (do not edit)
+│   │   │   ├── utils.ts           ← cn() helper
+│   │   │   └── component-metadata.ts ← Metadata schema
+│   │   └── stories/               ← Storybook MDX docs
+│   ├── scripts/                   ← Build + sync pipeline
+│   │   ├── build-from-tokens.ts   ← Flatten 3 layers → CSS + TS
+│   │   ├── push-to-figma.ts       ← Git → Figma variables
+│   │   ├── push-to-pencil.ts      ← Git → Pencil variables
+│   │   ├── audit-tokens.ts        ← Scan for violations
+│   │   └── index-components.ts    ← Build dependency graph
+│   └── reports/                   ← Generated audit + index reports
+│
+├── token-dashboard/               ← Standalone token explorer
+├── hearst-brands.pen              ← Main Pencil design file
+└── netlify.toml                   ← Deploy config`}
+</pre>
+
+</Section>
+
+{/* ─── CLOSING ─── */}
+
+<div style={{ background: '#0f172a', borderRadius: '16px', padding: '32px 36px', marginBottom: '48px' }}>
+  <p style={{ margin: '0 0 12px', fontSize: '13px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#64748b' }}>The principle</p>
+  <p style={{ margin: 0, fontSize: '18px', color: '#f8fafc', lineHeight: 1.7, fontWeight: 500 }}>
+    Design tokens are the contract. AI agents are the workforce. Humans set the direction. Every tool in the chain — Figma, Pencil, Cursor, Storybook, Netlify — reads from the same source and writes to the same output. That is what makes the system agentic: not that AI does the work, but that AI can understand the system well enough to do the work correctly.
+  </p>
+</div>
+
+<div style={{ textAlign: 'center', padding: '20px 0' }}>
+  <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Hearst Design System — 2026</p>
+</div>
+
+</div>

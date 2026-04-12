@@ -1,0 +1,536 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Breakpoints vs Modes" />
+
+export const Pill = ({ children, bg = "#f1f5f9", fg = "#334155" }) => (
+  <span style={{ display: 'inline-flex', alignItems: 'center', padding: '6px 14px', background: bg, color: fg, borderRadius: '8px', fontSize: '13px', fontWeight: 600 }}>{children}</span>
+);
+
+export const Th = ({ children, width }) => (
+  <th style={{ textAlign: 'left', padding: '10px 14px', background: '#f8fafc', borderBottom: '2px solid #e2e8f0', fontSize: '12px', fontWeight: 700, color: '#64748b', width }}>{children}</th>
+);
+
+export const Td = ({ children, bold, mono, color }) => (
+  <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9', verticalAlign: 'top', fontWeight: bold ? 600 : 400, fontFamily: mono ? 'monospace' : 'inherit', fontSize: mono ? '12px' : '13px', color: color || (mono ? '#6d28d9' : '#334155') }}>{children}</td>
+);
+
+# Breakpoints vs Modes
+
+A visual guide to understanding why responsive design tokens should use **modes** instead of breakpoint-suffixed names. This story uses a restaurant analogy to make the concept intuitive, then shows the technical implementation.
+
+<div style={{ display: 'flex', gap: '12px', marginBottom: '32px', flexWrap: 'wrap' }}>
+  <Pill bg="#dbeafe" fg="#1e40af">Visual Guide</Pill>
+  <Pill bg="#fef3c7" fg="#92400e">For the Whole Team</Pill>
+</div>
+
+---
+
+## The Restaurant Analogy
+
+Imagine two restaurants that both serve the same food at different portion sizes depending on the table size. They handle it very differently.
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '32px', margin: '32px 0' }}>
+  <div style={{ borderRadius: '16px', overflow: 'hidden', border: '2px solid #fecaca', background: '#fff' }}>
+    <div style={{ background: 'linear-gradient(135deg, #dc2626 0%, #991b1b 100%)', padding: '24px 28px', color: '#fff' }}>
+      <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '2px', opacity: 0.7, marginBottom: '4px' }}>Restaurant A</div>
+      <div style={{ fontSize: '22px', fontWeight: 800 }}>The Breakpoint Kitchen</div>
+    </div>
+    <div style={{ padding: '24px 28px' }}>
+      <p style={{ fontSize: '14px', color: '#334155', lineHeight: 1.7, margin: '0 0 20px' }}>
+        This restaurant has a <strong>separate menu for every table size</strong>. Small table? Here's the small-table menu. Big table? Here's the big-table menu.
+      </p>
+      <div style={{ background: '#fef2f2', borderRadius: '10px', padding: '16px 20px', marginBottom: '16px' }}>
+        <div style={{ fontSize: '12px', fontWeight: 700, color: '#991b1b', marginBottom: '10px' }}>Their menu system:</div>
+        <div style={{ fontFamily: 'monospace', fontSize: '12px', color: '#7f1d1d', lineHeight: 2.2 }}>
+          <div>pasta-small-table = small portion</div>
+          <div>pasta-medium-table = medium portion</div>
+          <div>pasta-large-table = large portion</div>
+          <div>pasta-xl-table = xl portion</div>
+          <div style={{ height: '8px' }} />
+          <div>steak-small-table = small cut</div>
+          <div>steak-large-table = large cut</div>
+          <div style={{ color: '#dc2626', fontStyle: 'italic' }}>(no medium or xl... they forgot)</div>
+        </div>
+      </div>
+      <div style={{ background: '#fef2f2', borderRadius: '10px', padding: '16px 20px' }}>
+        <div style={{ fontSize: '12px', fontWeight: 700, color: '#991b1b', marginBottom: '8px' }}>Problems:</div>
+        <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '13px', color: '#7f1d1d', lineHeight: 1.8 }}>
+          <li>Waiters must memorize <strong>which dishes have which table sizes</strong></li>
+          <li>Some dishes have 4 menus, others have 2 — no consistency</li>
+          <li>Adding a new table size means reprinting every menu</li>
+          <li>The kitchen has <strong>hundreds of menu items</strong> that are mostly the same food</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div style={{ borderRadius: '16px', overflow: 'hidden', border: '2px solid #bbf7d0', background: '#fff' }}>
+    <div style={{ background: 'linear-gradient(135deg, #16a34a 0%, #166534 100%)', padding: '24px 28px', color: '#fff' }}>
+      <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '2px', opacity: 0.7, marginBottom: '4px' }}>Restaurant B</div>
+      <div style={{ fontSize: '22px', fontWeight: 800 }}>The Mode Kitchen</div>
+    </div>
+    <div style={{ padding: '24px 28px' }}>
+      <p style={{ fontSize: '14px', color: '#334155', lineHeight: 1.7, margin: '0 0 20px' }}>
+        This restaurant has <strong>one menu</strong>. The kitchen automatically adjusts portion sizes based on the table size. Waiters just order "pasta" — the kitchen handles the rest.
+      </p>
+      <div style={{ background: '#f0fdf4', borderRadius: '10px', padding: '16px 20px', marginBottom: '16px' }}>
+        <div style={{ fontSize: '12px', fontWeight: 700, color: '#166534', marginBottom: '10px' }}>Their menu system:</div>
+        <div style={{ fontFamily: 'monospace', fontSize: '12px', color: '#14532d', lineHeight: 2.2 }}>
+          <div><strong>pasta</strong></div>
+          <div style={{ paddingLeft: '16px', color: '#166534' }}>small table → small portion</div>
+          <div style={{ paddingLeft: '16px', color: '#166534' }}>medium table → medium portion</div>
+          <div style={{ paddingLeft: '16px', color: '#166534' }}>large table → large portion</div>
+          <div style={{ paddingLeft: '16px', color: '#166534' }}>xl table → xl portion</div>
+          <div style={{ height: '8px' }} />
+          <div><strong>steak</strong></div>
+          <div style={{ paddingLeft: '16px', color: '#166534' }}>small table → small cut</div>
+          <div style={{ paddingLeft: '16px', color: '#166534' }}>medium table → medium cut</div>
+          <div style={{ paddingLeft: '16px', color: '#166534' }}>large table → large cut</div>
+          <div style={{ paddingLeft: '16px', color: '#166534' }}>xl table → xl cut</div>
+        </div>
+      </div>
+      <div style={{ background: '#f0fdf4', borderRadius: '10px', padding: '16px 20px' }}>
+        <div style={{ fontSize: '12px', fontWeight: 700, color: '#166534', marginBottom: '8px' }}>Benefits:</div>
+        <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '13px', color: '#14532d', lineHeight: 1.8 }}>
+          <li>Waiters memorize <strong>one menu</strong> — the food names</li>
+          <li>Every dish has every table size — <strong>always consistent</strong></li>
+          <li>Adding a new table size = one kitchen update, zero menu changes</li>
+          <li>The menu has <strong>only the dishes</strong>, not dishes x table sizes</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style={{ background: '#f8fafc', borderRadius: '12px', padding: '20px 24px', border: '1px solid #e2e8f0', margin: '0 0 48px' }}>
+  <p style={{ margin: 0, fontSize: '14px', color: '#475569', lineHeight: 1.7 }}>
+    <strong>The lesson:</strong> In Restaurant A, the table size is baked into the menu item name. In Restaurant B, the table size is a <em>mode</em> — the kitchen adapts automatically. Restaurant B has fewer items, is easier to learn, and never has gaps.
+  </p>
+</div>
+
+---
+
+## Now Replace "Restaurant" with "Design System"
+
+The analogy maps directly to how we handle responsive typography tokens:
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', margin: '24px 0 40px' }}>
+  <div style={{ background: '#f8fafc', borderRadius: '10px', padding: '16px 20px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+    <div style={{ fontSize: '28px', marginBottom: '6px' }}>Menu item</div>
+    <div style={{ fontSize: '13px', color: '#64748b' }}>= Token name</div>
+    <div style={{ fontSize: '12px', fontFamily: 'monospace', color: '#6d28d9', marginTop: '6px' }}>heading.xl</div>
+  </div>
+  <div style={{ background: '#f8fafc', borderRadius: '10px', padding: '16px 20px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+    <div style={{ fontSize: '28px', marginBottom: '6px' }}>Table size</div>
+    <div style={{ fontSize: '13px', color: '#64748b' }}>= Screen breakpoint</div>
+    <div style={{ fontSize: '12px', fontFamily: 'monospace', color: '#6d28d9', marginTop: '6px' }}>mobile / tablet / desktop</div>
+  </div>
+  <div style={{ background: '#f8fafc', borderRadius: '10px', padding: '16px 20px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+    <div style={{ fontSize: '28px', marginBottom: '6px' }}>Portion size</div>
+    <div style={{ fontSize: '13px', color: '#64748b' }}>= Font size value</div>
+    <div style={{ fontSize: '12px', fontFamily: 'monospace', color: '#6d28d9', marginTop: '6px' }}>28px / 32px / 32px</div>
+  </div>
+  <div style={{ background: '#f8fafc', borderRadius: '10px', padding: '16px 20px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+    <div style={{ fontSize: '28px', marginBottom: '6px' }}>Waiter</div>
+    <div style={{ fontSize: '13px', color: '#64748b' }}>= Developer / Designer</div>
+    <div style={{ fontSize: '12px', fontFamily: 'monospace', color: '#6d28d9', marginTop: '6px' }}>uses the token</div>
+  </div>
+</div>
+
+---
+
+## Visual: How a Single Token Responds Across Breakpoints
+
+This is what a **mode-based** token looks like in practice. One name, four values:
+
+<div style={{ margin: '24px 0 48px' }}>
+  <div style={{ background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)', borderRadius: '16px', padding: '32px', color: '#e2e8f0' }}>
+    <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+      <code style={{ fontSize: '20px', fontWeight: 700, color: '#a78bfa', background: '#1e1b4b', padding: '8px 20px', borderRadius: '8px' }}>heading.xl</code>
+    </div>
+
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
+      <div style={{ textAlign: 'center' }}>
+        <div style={{ background: '#1e1b4b', borderRadius: '12px', padding: '20px 12px', marginBottom: '8px' }}>
+          <div style={{ width: '48px', height: '80px', background: '#312e81', borderRadius: '6px', margin: '0 auto 12px', border: '2px solid #4c1d95', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ fontSize: '8px', color: '#a78bfa' }}>375px</span>
+          </div>
+          <div style={{ fontSize: '28px', fontWeight: 800, color: '#f87171' }}>28px</div>
+        </div>
+        <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#94a3b8' }}>Mobile</div>
+      </div>
+
+      <div style={{ textAlign: 'center' }}>
+        <div style={{ background: '#1e1b4b', borderRadius: '12px', padding: '20px 12px', marginBottom: '8px' }}>
+          <div style={{ width: '64px', height: '80px', background: '#312e81', borderRadius: '6px', margin: '0 auto 12px', border: '2px solid #4c1d95', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ fontSize: '8px', color: '#a78bfa' }}>768px</span>
+          </div>
+          <div style={{ fontSize: '28px', fontWeight: 800, color: '#fbbf24' }}>32px</div>
+        </div>
+        <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#94a3b8' }}>Tablet</div>
+      </div>
+
+      <div style={{ textAlign: 'center' }}>
+        <div style={{ background: '#1e1b4b', borderRadius: '12px', padding: '20px 12px', marginBottom: '8px' }}>
+          <div style={{ width: '80px', height: '80px', background: '#312e81', borderRadius: '6px', margin: '0 auto 12px', border: '2px solid #4c1d95', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ fontSize: '8px', color: '#a78bfa' }}>1024px</span>
+          </div>
+          <div style={{ fontSize: '28px', fontWeight: 800, color: '#34d399' }}>32px</div>
+        </div>
+        <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#94a3b8' }}>Laptop</div>
+      </div>
+
+      <div style={{ textAlign: 'center' }}>
+        <div style={{ background: '#1e1b4b', borderRadius: '12px', padding: '20px 12px', marginBottom: '8px' }}>
+          <div style={{ width: '96px', height: '80px', background: '#312e81', borderRadius: '6px', margin: '0 auto 12px', border: '2px solid #4c1d95', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ fontSize: '8px', color: '#a78bfa' }}>1440px</span>
+          </div>
+          <div style={{ fontSize: '28px', fontWeight: 800, color: '#60a5fa' }}>32px</div>
+        </div>
+        <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#94a3b8' }}>Desktop</div>
+      </div>
+    </div>
+
+    <div style={{ textAlign: 'center', marginTop: '20px', fontSize: '13px', color: '#94a3b8' }}>
+      The developer writes <code style={{ color: '#a78bfa' }}>var(--heading-xl)</code> once. The value changes automatically per screen size.
+    </div>
+  </div>
+</div>
+
+---
+
+## Side-by-Side: The Same Component, Two Approaches
+
+Here is how a **card title** would be tokenized under each approach:
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '24px', margin: '24px 0 48px' }}>
+  <div style={{ borderRadius: '16px', overflow: 'hidden', border: '2px solid #fecaca' }}>
+    <div style={{ background: '#dc2626', padding: '16px 24px', color: '#fff' }}>
+      <div style={{ fontSize: '15px', fontWeight: 700 }}>Breakpoint Tokens (current)</div>
+      <div style={{ fontSize: '12px', opacity: 0.8, marginTop: '2px' }}>4 tokens for one element</div>
+    </div>
+    <div style={{ padding: '20px 24px', background: '#fff' }}>
+      <div style={{ fontFamily: 'monospace', fontSize: '12px', lineHeight: 2.4 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0', borderBottom: '1px solid #fef2f2' }}>
+          <span style={{ color: '#991b1b' }}>card.title.sm</span>
+          <span style={{ color: '#64748b' }}>= 14px</span>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0', borderBottom: '1px solid #fef2f2' }}>
+          <span style={{ color: '#991b1b' }}>card.title.md</span>
+          <span style={{ color: '#64748b' }}>= 16px</span>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0', borderBottom: '1px solid #fef2f2' }}>
+          <span style={{ color: '#991b1b' }}>card.title.lg</span>
+          <span style={{ color: '#64748b' }}>= 20px</span>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0' }}>
+          <span style={{ color: '#991b1b' }}>card.title.xl</span>
+          <span style={{ color: '#64748b' }}>= 32px</span>
+        </div>
+      </div>
+      <div style={{ marginTop: '16px', background: '#fef2f2', borderRadius: '8px', padding: '12px 16px' }}>
+        <div style={{ fontSize: '12px', fontWeight: 600, color: '#991b1b', marginBottom: '6px' }}>Developer must:</div>
+        <ol style={{ margin: 0, paddingLeft: '18px', fontSize: '12px', color: '#7f1d1d', lineHeight: 1.8 }}>
+          <li>Know which breakpoint suffixes exist</li>
+          <li>Write media queries to switch between them</li>
+          <li>Remember: is it sm/md/lg/xl? or just sm/xl?</li>
+        </ol>
+      </div>
+      <div style={{ marginTop: '12px', background: '#1e293b', borderRadius: '8px', padding: '12px 16px' }}>
+        <div style={{ fontSize: '11px', color: '#94a3b8', marginBottom: '6px' }}>Code:</div>
+        <code style={{ fontSize: '11px', color: '#f87171', lineHeight: 1.8, display: 'block', whiteSpace: 'pre-wrap' }}>{`.title {
+  font-size: var(--card-title-sm);
+}
+@media (min-width: 768px) {
+  font-size: var(--card-title-md);
+}
+@media (min-width: 1024px) {
+  font-size: var(--card-title-lg);
+}
+@media (min-width: 1440px) {
+  font-size: var(--card-title-xl);
+}`}</code>
+      </div>
+    </div>
+  </div>
+
+  <div style={{ borderRadius: '16px', overflow: 'hidden', border: '2px solid #bbf7d0' }}>
+    <div style={{ background: '#16a34a', padding: '16px 24px', color: '#fff' }}>
+      <div style={{ fontSize: '15px', fontWeight: 700 }}>Mode Token (proposed)</div>
+      <div style={{ fontSize: '12px', opacity: 0.8, marginTop: '2px' }}>1 token for one element</div>
+    </div>
+    <div style={{ padding: '20px 24px', background: '#fff' }}>
+      <div style={{ fontFamily: 'monospace', fontSize: '12px', lineHeight: 2.4 }}>
+        <div style={{ padding: '4px 0', borderBottom: '1px solid #f0fdf4' }}>
+          <span style={{ color: '#166534', fontWeight: 700 }}>heading.lg</span>
+        </div>
+        <div style={{ paddingLeft: '16px', display: 'flex', justifyContent: 'space-between', padding: '4px 0 4px 16px', borderBottom: '1px solid #f0fdf4' }}>
+          <span style={{ color: '#64748b' }}>mobile mode</span>
+          <span style={{ color: '#166534' }}>= 18px</span>
+        </div>
+        <div style={{ paddingLeft: '16px', display: 'flex', justifyContent: 'space-between', padding: '4px 0 4px 16px', borderBottom: '1px solid #f0fdf4' }}>
+          <span style={{ color: '#64748b' }}>tablet mode</span>
+          <span style={{ color: '#166534' }}>= 20px</span>
+        </div>
+        <div style={{ paddingLeft: '16px', display: 'flex', justifyContent: 'space-between', padding: '4px 0 4px 16px', borderBottom: '1px solid #f0fdf4' }}>
+          <span style={{ color: '#64748b' }}>laptop mode</span>
+          <span style={{ color: '#166534' }}>= 20px</span>
+        </div>
+        <div style={{ paddingLeft: '16px', display: 'flex', justifyContent: 'space-between', padding: '4px 0 4px 16px' }}>
+          <span style={{ color: '#64748b' }}>desktop mode</span>
+          <span style={{ color: '#166534' }}>= 20px</span>
+        </div>
+      </div>
+      <div style={{ marginTop: '16px', background: '#f0fdf4', borderRadius: '8px', padding: '12px 16px' }}>
+        <div style={{ fontSize: '12px', fontWeight: 600, color: '#166534', marginBottom: '6px' }}>Developer must:</div>
+        <ol style={{ margin: 0, paddingLeft: '18px', fontSize: '12px', color: '#14532d', lineHeight: 1.8 }}>
+          <li>Know the token name</li>
+          <li>That's it</li>
+        </ol>
+      </div>
+      <div style={{ marginTop: '12px', background: '#1e293b', borderRadius: '8px', padding: '12px 16px' }}>
+        <div style={{ fontSize: '11px', color: '#94a3b8', marginBottom: '6px' }}>Code:</div>
+        <code style={{ fontSize: '11px', color: '#34d399', lineHeight: 1.8, display: 'block', whiteSpace: 'pre-wrap' }}>{`.title {
+  font-size: var(--heading-lg);
+}
+
+/* That's it. The CSS variable
+   changes value per breakpoint
+   automatically via the token
+   stylesheet. */`}</code>
+      </div>
+    </div>
+  </div>
+</div>
+
+---
+
+## The Consistency Problem, Visualized
+
+Our current breakpoint tokens are **inconsistent** — different components have different breakpoint coverage. Here's what that actually looks like:
+
+<div style={{ margin: '24px 0 48px' }}>
+  <div style={{ borderRadius: '12px', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
+    <div style={{ background: '#f8fafc', padding: '12px 20px', borderBottom: '2px solid #e2e8f0', display: 'grid', gridTemplateColumns: '200px repeat(4, 1fr)', gap: '8px' }}>
+      <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#64748b' }}>Component</span>
+      <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#64748b', textAlign: 'center' }}>sm</span>
+      <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#64748b', textAlign: 'center' }}>md</span>
+      <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#64748b', textAlign: 'center' }}>lg</span>
+      <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#64748b', textAlign: 'center' }}>xl</span>
+    </div>
+
+    <div style={{ display: 'grid', gridTemplateColumns: '200px repeat(4, 1fr)', gap: '8px', padding: '10px 20px', borderBottom: '1px solid #f1f5f9', alignItems: 'center' }}>
+      <code style={{ fontSize: '12px', color: '#334155' }}>railstoryitem.title</code>
+      <div style={{ textAlign: 'center' }}><span style={{ display: 'inline-block', width: '24px', height: '24px', borderRadius: '50%', background: '#16a34a', color: '#fff', fontSize: '14px', lineHeight: '24px', textAlign: 'center' }}>&#10003;</span></div>
+      <div style={{ textAlign: 'center' }}><span style={{ display: 'inline-block', width: '24px', height: '24px', borderRadius: '50%', background: '#16a34a', color: '#fff', fontSize: '14px', lineHeight: '24px', textAlign: 'center' }}>&#10003;</span></div>
+      <div style={{ textAlign: 'center' }}><span style={{ display: 'inline-block', width: '24px', height: '24px', borderRadius: '50%', background: '#16a34a', color: '#fff', fontSize: '14px', lineHeight: '24px', textAlign: 'center' }}>&#10003;</span></div>
+      <div style={{ textAlign: 'center' }}><span style={{ display: 'inline-block', width: '24px', height: '24px', borderRadius: '50%', background: '#16a34a', color: '#fff', fontSize: '14px', lineHeight: '24px', textAlign: 'center' }}>&#10003;</span></div>
+    </div>
+
+    <div style={{ display: 'grid', gridTemplateColumns: '200px repeat(4, 1fr)', gap: '8px', padding: '10px 20px', borderBottom: '1px solid #f1f5f9', alignItems: 'center', background: '#fffbeb' }}>
+      <code style={{ fontSize: '12px', color: '#334155' }}>blocktitle</code>
+      <div style={{ textAlign: 'center' }}><span style={{ display: 'inline-block', width: '24px', height: '24px', borderRadius: '50%', background: '#16a34a', color: '#fff', fontSize: '14px', lineHeight: '24px', textAlign: 'center' }}>&#10003;</span></div>
+      <div style={{ textAlign: 'center' }}><span style={{ display: 'inline-block', width: '24px', height: '24px', borderRadius: '50%', background: '#dc2626', color: '#fff', fontSize: '14px', lineHeight: '24px', textAlign: 'center' }}>&#10007;</span></div>
+      <div style={{ textAlign: 'center' }}><span style={{ display: 'inline-block', width: '24px', height: '24px', borderRadius: '50%', background: '#dc2626', color: '#fff', fontSize: '14px', lineHeight: '24px', textAlign: 'center' }}>&#10007;</span></div>
+      <div style={{ textAlign: 'center' }}><span style={{ display: 'inline-block', width: '24px', height: '24px', borderRadius: '50%', background: '#16a34a', color: '#fff', fontSize: '14px', lineHeight: '24px', textAlign: 'center' }}>&#10003;</span></div>
+    </div>
+
+    <div style={{ display: 'grid', gridTemplateColumns: '200px repeat(4, 1fr)', gap: '8px', padding: '10px 20px', borderBottom: '1px solid #f1f5f9', alignItems: 'center' }}>
+      <code style={{ fontSize: '12px', color: '#334155' }}>card.title.default</code>
+      <div style={{ textAlign: 'center' }}><span style={{ display: 'inline-block', width: '24px', height: '24px', borderRadius: '50%', background: '#16a34a', color: '#fff', fontSize: '14px', lineHeight: '24px', textAlign: 'center' }}>&#10003;</span></div>
+      <div style={{ textAlign: 'center' }}><span style={{ display: 'inline-block', width: '24px', height: '24px', borderRadius: '50%', background: '#16a34a', color: '#fff', fontSize: '14px', lineHeight: '24px', textAlign: 'center' }}>&#10003;</span></div>
+      <div style={{ textAlign: 'center' }}><span style={{ display: 'inline-block', width: '24px', height: '24px', borderRadius: '50%', background: '#16a34a', color: '#fff', fontSize: '14px', lineHeight: '24px', textAlign: 'center' }}>&#10003;</span></div>
+      <div style={{ textAlign: 'center' }}><span style={{ display: 'inline-block', width: '24px', height: '24px', borderRadius: '50%', background: '#16a34a', color: '#fff', fontSize: '14px', lineHeight: '24px', textAlign: 'center' }}>&#10003;</span></div>
+    </div>
+
+    <div style={{ display: 'grid', gridTemplateColumns: '200px repeat(4, 1fr)', gap: '8px', padding: '10px 20px', borderBottom: '1px solid #f1f5f9', alignItems: 'center', background: '#fffbeb' }}>
+      <code style={{ fontSize: '12px', color: '#334155' }}>3column.title</code>
+      <div style={{ textAlign: 'center' }}><span style={{ display: 'inline-block', width: '24px', height: '24px', borderRadius: '50%', background: '#dc2626', color: '#fff', fontSize: '14px', lineHeight: '24px', textAlign: 'center' }}>&#10007;</span></div>
+      <div style={{ textAlign: 'center' }}><span style={{ display: 'inline-block', width: '24px', height: '24px', borderRadius: '50%', background: '#16a34a', color: '#fff', fontSize: '14px', lineHeight: '24px', textAlign: 'center' }}>&#10003;</span></div>
+      <div style={{ textAlign: 'center' }}><span style={{ display: 'inline-block', width: '24px', height: '24px', borderRadius: '50%', background: '#dc2626', color: '#fff', fontSize: '14px', lineHeight: '24px', textAlign: 'center' }}>&#10007;</span></div>
+      <div style={{ textAlign: 'center' }}><span style={{ display: 'inline-block', width: '24px', height: '24px', borderRadius: '50%', background: '#16a34a', color: '#fff', fontSize: '14px', lineHeight: '24px', textAlign: 'center' }}>&#10003;</span></div>
+    </div>
+
+    <div style={{ display: 'grid', gridTemplateColumns: '200px repeat(4, 1fr)', gap: '8px', padding: '10px 20px', borderBottom: '1px solid #f1f5f9', alignItems: 'center' }}>
+      <code style={{ fontSize: '12px', color: '#334155' }}>trendingitem.title</code>
+      <div style={{ textAlign: 'center' }}><span style={{ display: 'inline-block', width: '24px', height: '24px', borderRadius: '50%', background: '#16a34a', color: '#fff', fontSize: '14px', lineHeight: '24px', textAlign: 'center' }}>&#10003;</span></div>
+      <div style={{ textAlign: 'center' }}><span style={{ display: 'inline-block', width: '24px', height: '24px', borderRadius: '50%', background: '#dc2626', color: '#fff', fontSize: '14px', lineHeight: '24px', textAlign: 'center' }}>&#10007;</span></div>
+      <div style={{ textAlign: 'center' }}><span style={{ display: 'inline-block', width: '24px', height: '24px', borderRadius: '50%', background: '#16a34a', color: '#fff', fontSize: '14px', lineHeight: '24px', textAlign: 'center' }}>&#10003;</span></div>
+      <div style={{ textAlign: 'center' }}><span style={{ display: 'inline-block', width: '24px', height: '24px', borderRadius: '50%', background: '#dc2626', color: '#fff', fontSize: '14px', lineHeight: '24px', textAlign: 'center' }}>&#10007;</span></div>
+    </div>
+
+    <div style={{ display: 'grid', gridTemplateColumns: '200px repeat(4, 1fr)', gap: '8px', padding: '10px 20px', alignItems: 'center', background: '#fffbeb' }}>
+      <code style={{ fontSize: '12px', color: '#334155' }}>blocksubtitle</code>
+      <div style={{ textAlign: 'center' }}><span style={{ display: 'inline-block', width: '24px', height: '24px', borderRadius: '50%', background: '#dc2626', color: '#fff', fontSize: '14px', lineHeight: '24px', textAlign: 'center' }}>&#10007;</span></div>
+      <div style={{ textAlign: 'center' }}><span style={{ display: 'inline-block', width: '24px', height: '24px', borderRadius: '50%', background: '#dc2626', color: '#fff', fontSize: '14px', lineHeight: '24px', textAlign: 'center' }}>&#10007;</span></div>
+      <div style={{ textAlign: 'center' }}><span style={{ display: 'inline-block', width: '24px', height: '24px', borderRadius: '50%', background: '#dc2626', color: '#fff', fontSize: '14px', lineHeight: '24px', textAlign: 'center' }}>&#10007;</span></div>
+      <div style={{ textAlign: 'center' }}><span style={{ display: 'inline-block', width: '24px', height: '24px', borderRadius: '50%', background: '#16a34a', color: '#fff', fontSize: '14px', lineHeight: '24px', textAlign: 'center' }}>&#10003;</span></div>
+    </div>
+  </div>
+
+  <div style={{ marginTop: '16px', display: 'flex', gap: '20px', justifyContent: 'center' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#64748b' }}>
+      <span style={{ display: 'inline-block', width: '16px', height: '16px', borderRadius: '50%', background: '#16a34a' }} /> Has token
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#64748b' }}>
+      <span style={{ display: 'inline-block', width: '16px', height: '16px', borderRadius: '50%', background: '#dc2626' }} /> Missing
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#64748b' }}>
+      <span style={{ display: 'inline-block', width: '16px', height: '16px', borderRadius: '50%', background: '#fbbf24' }} /> Inconsistent
+    </div>
+  </div>
+
+  <p style={{ textAlign: 'center', fontSize: '13px', color: '#64748b', marginTop: '12px' }}>
+    With <strong>modes</strong>, every row would have 4 green checkmarks — guaranteed. The mode system enforces completeness.
+  </p>
+</div>
+
+---
+
+## The Full Picture: Token Resolution Flow
+
+How a single token resolves from name to rendered pixel value:
+
+<div style={{ margin: '24px 0 48px' }}>
+  <div style={{ background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)', borderRadius: '16px', padding: '32px', color: '#e2e8f0' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px', alignItems: 'center' }}>
+
+      <div style={{ textAlign: 'center' }}>
+        <div style={{ background: '#312e81', borderRadius: '12px', padding: '16px', marginBottom: '8px', border: '2px solid #4c1d95' }}>
+          <div style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#a78bfa', marginBottom: '6px' }}>You write</div>
+          <code style={{ fontSize: '13px', color: '#c4b5fd' }}>heading.xl</code>
+        </div>
+        <div style={{ fontSize: '11px', color: '#94a3b8' }}>Semantic role</div>
+      </div>
+
+      <div style={{ textAlign: 'center', fontSize: '20px', color: '#6d28d9' }}>&#8594;</div>
+
+      <div style={{ textAlign: 'center' }}>
+        <div style={{ background: '#1e1b4b', borderRadius: '12px', padding: '16px', marginBottom: '8px', border: '2px solid #312e81' }}>
+          <div style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#818cf8', marginBottom: '6px' }}>Resolves to</div>
+          <code style={{ fontSize: '13px', color: '#a5b4fc' }}>size.5xl.bold</code>
+        </div>
+        <div style={{ fontSize: '11px', color: '#94a3b8' }}>Size composite</div>
+      </div>
+
+      <div style={{ textAlign: 'center', fontSize: '20px', color: '#6d28d9' }}>&#8594;</div>
+
+      <div style={{ textAlign: 'center' }}>
+        <div style={{ background: '#022c22', borderRadius: '12px', padding: '16px', marginBottom: '8px', border: '2px solid #064e3b' }}>
+          <div style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#34d399', marginBottom: '6px' }}>Mode applies</div>
+          <div style={{ fontSize: '13px', color: '#6ee7b7' }}>
+            <div>mobile: 28px</div>
+            <div>tablet: 32px</div>
+            <div>desktop: 32px</div>
+          </div>
+        </div>
+        <div style={{ fontSize: '11px', color: '#94a3b8' }}>Responsive value</div>
+      </div>
+
+      <div style={{ textAlign: 'center', fontSize: '20px', color: '#6d28d9' }}>&#8594;</div>
+
+      <div style={{ textAlign: 'center' }}>
+        <div style={{ background: '#422006', borderRadius: '12px', padding: '16px', marginBottom: '8px', border: '2px solid #713f12' }}>
+          <div style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#fbbf24', marginBottom: '6px' }}>Rendered</div>
+          <div style={{ fontSize: '28px', fontWeight: 800, color: '#fde68a' }}>32px</div>
+        </div>
+        <div style={{ fontSize: '11px', color: '#94a3b8' }}>On a 1024px screen</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+---
+
+## How It Works in Each Tool
+
+<div style={{ display: 'grid', gap: '16px', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', margin: '24px 0 48px' }}>
+  <div style={{ borderRadius: '12px', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
+    <div style={{ background: '#1e293b', padding: '14px 20px', color: '#fff', fontSize: '14px', fontWeight: 700 }}>Figma</div>
+    <div style={{ padding: '16px 20px' }}>
+      <p style={{ fontSize: '13px', color: '#334155', margin: '0 0 12px', lineHeight: 1.6 }}>Designer binds <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px' }}>heading.xl</code> to a text layer once. Switches between mobile / tablet / desktop <strong>modes</strong> to preview responsive sizes.</p>
+      <div style={{ background: '#f8fafc', borderRadius: '8px', padding: '12px', fontFamily: 'monospace', fontSize: '11px', color: '#6d28d9' }}>
+        Variable: heading.xl<br/>
+        Mode "mobile" → 28px<br/>
+        Mode "tablet" → 32px<br/>
+        Mode "desktop" → 32px
+      </div>
+    </div>
+  </div>
+
+  <div style={{ borderRadius: '12px', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
+    <div style={{ background: '#1e293b', padding: '14px 20px', color: '#fff', fontSize: '14px', fontWeight: 700 }}>CSS</div>
+    <div style={{ padding: '16px 20px' }}>
+      <p style={{ fontSize: '13px', color: '#334155', margin: '0 0 12px', lineHeight: 1.6 }}>Developer writes <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px' }}>var(--heading-xl)</code> once. Media queries in the token stylesheet swap the value automatically.</p>
+      <div style={{ background: '#1e293b', borderRadius: '8px', padding: '12px', fontFamily: 'monospace', fontSize: '11px', color: '#34d399' }}>
+        :root {"{"} --heading-xl: 28px {"}"}<br/>
+        @media (min-width: 768px) {"{"}<br/>
+        {"  "}:root {"{"} --heading-xl: 32px {"}"}<br/>
+        {"}"}
+      </div>
+    </div>
+  </div>
+
+  <div style={{ borderRadius: '12px', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
+    <div style={{ background: '#1e293b', padding: '14px 20px', color: '#fff', fontSize: '14px', fontWeight: 700 }}>Tailwind</div>
+    <div style={{ padding: '16px 20px' }}>
+      <p style={{ fontSize: '13px', color: '#334155', margin: '0 0 12px', lineHeight: 1.6 }}>Arbitrary value syntax references the CSS variable. No breakpoint prefixes needed — the variable does the work.</p>
+      <div style={{ background: '#1e293b', borderRadius: '8px', padding: '12px', fontFamily: 'monospace', fontSize: '11px', color: '#fbbf24' }}>
+        {'<h2 className="text-[length:var(--heading-xl)]">'}<br/>
+        {"  "}Article Title<br/>
+        {'</h2>'}
+      </div>
+    </div>
+  </div>
+
+  <div style={{ borderRadius: '12px', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
+    <div style={{ background: '#1e293b', padding: '14px 20px', color: '#fff', fontSize: '14px', fontWeight: 700 }}>Pencil</div>
+    <div style={{ padding: '16px 20px' }}>
+      <p style={{ fontSize: '13px', color: '#334155', margin: '0 0 12px', lineHeight: 1.6 }}>Bind <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px' }}>$heading-xl</code> to a text node. Switch themes to preview responsive values — same concept as Figma modes.</p>
+      <div style={{ background: '#f8fafc', borderRadius: '8px', padding: '12px', fontFamily: 'monospace', fontSize: '11px', color: '#6d28d9' }}>
+        Variable: $heading-xl<br/>
+        Theme "mobile" → 28px<br/>
+        Theme "tablet" → 32px<br/>
+        Theme "desktop" → 32px
+      </div>
+    </div>
+  </div>
+</div>
+
+---
+
+## The Numbers
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px', margin: '24px 0 40px' }}>
+  <div style={{ border: '2px solid #fecaca', borderRadius: '12px', padding: '24px', textAlign: 'center', background: '#fff' }}>
+    <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#dc2626', marginBottom: '8px' }}>Breakpoint approach</div>
+    <div style={{ fontSize: '42px', fontWeight: 800, color: '#dc2626' }}>255</div>
+    <div style={{ fontSize: '13px', color: '#64748b', marginTop: '4px' }}>tokens</div>
+    <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>up to 8 segments each</div>
+  </div>
+  <div style={{ textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '32px', color: '#64748b' }}>vs</div>
+  <div style={{ border: '2px solid #bbf7d0', borderRadius: '12px', padding: '24px', textAlign: 'center', background: '#fff' }}>
+    <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#16a34a', marginBottom: '8px' }}>Mode approach</div>
+    <div style={{ fontSize: '42px', fontWeight: 800, color: '#16a34a' }}>~13</div>
+    <div style={{ fontSize: '13px', color: '#64748b', marginTop: '4px' }}>role tokens</div>
+    <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>2 segments each</div>
+  </div>
+  <div style={{ border: '1px solid #e2e8f0', borderRadius: '12px', padding: '24px', textAlign: 'center', background: '#f8fafc' }}>
+    <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#6d28d9', marginBottom: '8px' }}>Reduction</div>
+    <div style={{ fontSize: '42px', fontWeight: 800, color: '#6d28d9' }}>95%</div>
+    <div style={{ fontSize: '13px', color: '#64748b', marginTop: '4px' }}>fewer tokens</div>
+    <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>with zero breaking changes</div>
+  </div>
+</div>
+
+---
+
+<div style={{ background: 'linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%)', borderRadius: '16px', padding: '32px', border: '1px solid #bbf7d0', textAlign: 'center' }}>
+  <p style={{ margin: '0 0 8px', fontSize: '18px', fontWeight: 700, color: '#166534' }}>Modes, not breakpoint tokens.</p>
+  <p style={{ margin: '0 0 16px', fontSize: '14px', color: '#15803d', maxWidth: '600px', marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.6 }}>
+    One token name. Responsive values handled automatically by the system. Consistent coverage across every component. Fewer tokens to learn, fewer to maintain.
+  </p>
+  <p style={{ margin: 0, fontSize: '13px', color: '#64748b' }}>
+    See also: <strong>Typography Token Strategy</strong> for the full proposal and migration path.
+  </p>
+</div>

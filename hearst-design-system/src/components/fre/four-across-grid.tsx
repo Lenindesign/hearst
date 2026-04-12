@@ -21,6 +21,7 @@ export interface FourAcrossGridProps {
   onCardClick?: (title: string) => void;
   style?: React.CSSProperties;
   className?: string;
+  responsive?: boolean;
 }
 
 export function FourAcrossGrid({
@@ -32,12 +33,21 @@ export function FourAcrossGrid({
   onCardClick,
   style,
   className,
+  responsive = true,
 }: FourAcrossGridProps) {
+  const responsiveClass = responsive
+    ? columns <= 3
+      ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-3"
+      : columns === 5
+        ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5"
+        : "grid-cols-2 md:grid-cols-4"
+    : "";
+
   return (
     <div
-      className={cn("grid", className)}
+      className={cn("grid", responsiveClass, className)}
       style={{
-        gridTemplateColumns: `repeat(${columns}, 1fr)`,
+        ...(!responsive ? { gridTemplateColumns: `repeat(${columns}, 1fr)` } : {}),
         gap: gap ?? "var(--space-lg, 20px)",
         ...style,
       }}
