@@ -25,7 +25,7 @@ export interface BaseContentType {
 
 export const BRAND_IMAGES: Record<string, BrandImageSet> = {
   cosmopolitan: {
-    hero: `${H}4ab85a6b-6eec-4e56-bdf6-4160a18d9f16.jpeg?crop=0.8xw:1xh;center,top&resize=1200:*`,
+    hero: `${H}843c358a-a55b-487d-af41-35a871b22cfd.jpg?crop=1xw:0.667xh;0xw,0.161xh&resize=1200:*`,
     articles: [
       `${H}1b035abd-5197-4304-9386-edb1487ae42e.jpeg?crop=0.763xw:0.509xh;0.11xw,0.071xh&resize=144:*`,
       `${H}gettyimages-1388107982.jpg?crop=0.829xw:0.553xh;0.087xw,0.093xh&resize=144:*`,
@@ -71,7 +71,7 @@ export const BRAND_IMAGES: Record<string, BrandImageSet> = {
     ],
   },
   "car-and-driver": {
-    hero: `${H}0016c2fa-7eab-48f6-a699-08bb611535c4.jpg?crop=0.655xw:0.983xh;0.127xw,0&resize=1200:*`,
+    hero: `${H}2026-porsche-911-turbo-s-104-69a8567611f3c.jpg?crop=1.00xw:0.75xh;0,0.15xh&resize=1200:*`,
     articles: [
       `${H}d10bac7a-1607-4cc9-809e-1cc5ef8ca2b0.jpg?crop=0.592xw:0.888xh;0.176xw,0.112xh&resize=144:*`,
       `${H}bb08c514-0be0-4aa0-bc6c-10cdbdf1f862.jpg?crop=1.00xw:0.751xh;0,0.145xh&resize=144:*`,
@@ -720,7 +720,7 @@ export const BRAND_CONTENT: Partial<Record<string, Partial<BaseContentType>>> = 
       { title: "How to Build a Capsule Wardrobe That Actually Works", time: "Mar 5, 2026", readTime: "3 Min Read" },
       { title: "The Celebrity Couples We're Obsessed With", time: "Mar 4, 2026", readTime: "2 Min Read" },
     ],
-    hero: { eyebrow: "POP CULTURE", title: "The K-Pop Group Taking Over Netflix Right Now", desc: "Love, beauty, pop culture, and style — the group everyone's talking about and why they're dominating your feed.", author: "Jessica Chen" },
+    hero: { eyebrow: "LOVE", title: "I Dated a \u201CTherapist\u201D Who Made Me Feel Anything But Safe", desc: "On paper, so much about him seemed promising. But in reality, this guy was just like every other loser on the apps\u2014if not worse.", author: "Ella Snyder" },
     rightRail: [
       { eyebrow: "BEAUTY", title: "Your Complete Guide to Spring Beauty Trends", desc: "The looks and products defining the season.", author: "Beauty Editor" },
       { eyebrow: "LOVE", title: "The Relationship Red Flags You're Ignoring", desc: "What to watch for before it's too late.", author: "Relationships Editor" },
@@ -763,7 +763,7 @@ export const BRAND_CONTENT: Partial<Record<string, Partial<BaseContentType>>> = 
       { title: "The Forgotten Rally Cars of the 1980s", time: "Mar 5, 2026", readTime: "7 Min Read" },
       { title: "Track Day Essentials: What to Bring and What to Skip", time: "Mar 4, 2026", readTime: "4 Min Read" },
     ],
-    hero: { eyebrow: "COMPARISON", title: "Modern Muscle Showdown: Charger vs. Mustang GT", desc: "Two icons go head-to-head. We put the latest Charger and Mustang GT through their paces to crown the king of American performance.", author: "John Voelcker" },
+    hero: { eyebrow: "FIRST DRIVE", title: "Porsche 911 Cup Spec Race-Car Track Drive", desc: "Porsche's new 992.2 911 Cup racer is the teacher we wish we had every day. We chased Patrick Long around the Porsche Experience Center to find out why.", author: "K.C. Colwell" },
     rightRail: [
       { eyebrow: "CULTURE", title: "The Ferrari That Redefined Grand Touring", desc: "A modern classic that changed everything.", author: "Test Team" },
       { eyebrow: "OPINION", title: "Why the Manual Transmission Will Never Die", desc: "The case for three pedals in 2026.", author: "Contributing Editor" },

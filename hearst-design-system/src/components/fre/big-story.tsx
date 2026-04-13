@@ -25,6 +25,7 @@ export interface BigStoryImageRightProps {
   date: string;
   image: string;
   headlineFontSize?: number;
+  headlineLineHeight?: number;
   imageHeight?: number;
   imagePosition?: "right" | "top";
   aspectRatio?: "16/9" | "4/3" | "1/1" | "3/2";
@@ -41,6 +42,7 @@ export function BigStoryImageRight({
   date,
   image,
   headlineFontSize,
+  headlineLineHeight,
   imageHeight = 360,
   imagePosition = "right",
   aspectRatio,
@@ -77,7 +79,7 @@ export function BigStoryImageRight({
         <ArticleCardEyebrow>{label}</ArticleCardEyebrow>
         <ArticleCardTitle
           className={cn("leading-tight", headlineClass)}
-          style={headlineFontSize ? { fontSize: headlineFontSize } : undefined}
+          style={headlineFontSize ? { fontSize: headlineFontSize, ...(headlineLineHeight ? { lineHeight: `${headlineLineHeight}px` } : {}) } : undefined}
         >
           {headline}
         </ArticleCardTitle>
@@ -113,6 +115,7 @@ export interface BigStoryTextOnlyProps {
   author: string;
   date: string;
   headlineFontSize?: number;
+  headlineLineHeight?: number;
   showBorderTop?: boolean;
   onArticleClick?: () => void;
   style?: React.CSSProperties;
@@ -126,6 +129,7 @@ export function BigStoryTextOnly({
   author,
   date,
   headlineFontSize,
+  headlineLineHeight,
   showBorderTop = true,
   onArticleClick,
   style,
@@ -149,7 +153,7 @@ export function BigStoryTextOnly({
         <ArticleCardEyebrow>{label}</ArticleCardEyebrow>
         <ArticleCardTitle
           className={cn("leading-tight", headlineClass)}
-          style={headlineFontSize ? { fontSize: headlineFontSize } : undefined}
+          style={headlineFontSize ? { fontSize: headlineFontSize, ...(headlineLineHeight ? { lineHeight: `${headlineLineHeight}px` } : {}) } : undefined}
         >
           {headline}
         </ArticleCardTitle>

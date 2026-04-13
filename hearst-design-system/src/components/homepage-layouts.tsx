@@ -102,7 +102,7 @@ function UtilityBar() {
               variant="neutral"
               underline={false}
               size="xs"
-              className="opacity-90 text-primary-foreground hover:text-primary-foreground/80 font-semibold"
+              className="opacity-90 text-white hover:text-white/80 font-semibold"
             >
               {label}
             </LinkComponent>
@@ -111,7 +111,7 @@ function UtilityBar() {
         <Button
           variant="secondary"
           size="xs"
-          className="text-[length:var(--text-token-4xs)] font-semibold"
+          className="text-[length:var(--text-token-4xs)] font-semibold bg-black text-white hover:bg-black/80"
         >
           Subscribe
         </Button>
@@ -294,17 +294,17 @@ function InlineNewsletter({
             Get the stories that matter, delivered to your inbox.
           </h3>
         </div>
-        <div className="flex flex-col sm:flex-row gap-0 w-full lg:w-auto lg:min-w-[400px]">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-0 w-full lg:w-auto lg:min-w-[400px]">
           <Input
             size="xl"
             placeholder="Enter your email here."
             leadingIcon={Mail}
-            className="flex-1 [&>div]:rounded-none [&>div]:sm:rounded-l-sm [&>div]:border-primary-foreground/20 bg-primary-foreground/10 text-primary-foreground placeholder:text-primary-foreground/50"
+            className="flex-1 h-14 [&>div]:h-14 [&>div]:rounded-none [&>div]:sm:rounded-l-sm [&>div]:border-primary-foreground/20 bg-primary-foreground/10 text-primary-foreground placeholder:text-primary-foreground/50"
           />
           <Button
             variant="secondary"
             size="lg"
-            className="h-12 px-6 text-sm font-bold uppercase tracking-wider whitespace-nowrap rounded-none sm:rounded-r-sm"
+            className="box-content h-14 px-6 text-sm font-bold uppercase tracking-wider whitespace-nowrap rounded-none sm:rounded-r-sm"
           >
             Sign Me Up
           </Button>
@@ -427,11 +427,11 @@ export function LayoutCurator() {
               {topStories.map((story, i) => (
                 <React.Fragment key={i}>
                   <div className="flex items-start gap-4 py-3 cursor-pointer group">
-                    <span className="text-2xl font-bold text-primary/30 leading-none mt-1 shrink-0 w-6 text-right">
+                    <span className="text-2xl font-bold text-black leading-none mt-1 shrink-0 w-6 text-right">
                       {i + 1}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-base lg:text-lg font-semibold leading-snug headline group-hover:text-primary transition-colors">
+                      <h4 className="text-lg md:text-xl lg:text-2xl font-semibold leading-snug headline group-hover:text-primary transition-colors">
                         {story.title}
                       </h4>
                       <p className="text-xs text-muted-foreground mt-1">
@@ -740,7 +740,7 @@ export function LayoutMosaic() {
                 <img
                   src={pick.image}
                   alt={pick.title}
-                  className="w-full h-[140px] object-cover object-[center_25%] transition-transform duration-300 group-hover:scale-105"
+                  className="w-full aspect-video object-cover object-[center_25%] transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
               <h4 className="text-sm font-semibold leading-snug headline group-hover:text-primary transition-colors">
@@ -938,7 +938,7 @@ export function LayoutStream() {
           className="w-full h-[70vh] min-h-[500px] max-h-[750px] object-cover object-[center_30%]"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 p-6 lg:p-12 max-w-3xl">
+        <div className="absolute inset-x-0 bottom-0 p-6 lg:p-12 max-w-[var(--width-content-max)] mx-auto">
           <Chip size="md" className="mb-3 bg-primary text-primary-foreground border-primary">
             {content.hero.eyebrow}
           </Chip>
@@ -974,7 +974,8 @@ export function LayoutStream() {
             author={content.rightRail[0]?.author || "Staff"}
             date={content.articles[0]?.time || ""}
             image={images.articles[0]}
-            headlineFontSize={18}
+            headlineFontSize={28}
+            headlineLineHeight={32}
             imagePosition="right"
             aspectRatio="4/3"
           />
@@ -986,7 +987,7 @@ export function LayoutStream() {
             <img
               src={images.trending[1]}
               alt={content.articles[1]?.title}
-              className="w-full h-[240px] object-cover object-[center_25%] transition-transform duration-500 group-hover:scale-105"
+              className="w-full aspect-video object-cover object-[center_25%] transition-transform duration-500 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
             <div className="absolute inset-x-0 bottom-0 p-5">
@@ -1013,7 +1014,8 @@ export function LayoutStream() {
             description={content.rightRail[2]?.desc || ""}
             author={content.rightRail[2]?.author || "Staff"}
             date={content.articles[2]?.time || ""}
-            headlineFontSize={22}
+            headlineFontSize={28}
+            headlineLineHeight={32}
             showBorderTop={false}
             className="py-0 max-w-none"
           />
@@ -1035,7 +1037,8 @@ export function LayoutStream() {
             author={content.rightRail[3]?.author || "Staff"}
             date={content.articles[3]?.time || ""}
             image={images.trending[3]}
-            headlineFontSize={18}
+            headlineFontSize={28}
+            headlineLineHeight={32}
             imagePosition="right"
             aspectRatio="4/3"
           />
@@ -1055,7 +1058,7 @@ export function LayoutStream() {
             <img
               src={images.trending[0]}
               alt="Featured video"
-              className="w-full h-[240px] object-cover object-[center_30%]"
+              className="w-full aspect-video object-cover object-[center_30%]"
             />
             <div className="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/50 transition-colors">
               <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center">
@@ -1076,7 +1079,7 @@ export function LayoutStream() {
               <img
                 src={img}
                 alt=""
-                className="w-full h-[120px] object-cover object-[center_25%]"
+                className="w-full aspect-video object-cover object-[center_25%]"
               />
               <div className="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/40 transition-colors">
                 <div className="w-10 h-10 rounded-full bg-white/80 flex items-center justify-center">
