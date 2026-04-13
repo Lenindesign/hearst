@@ -25,7 +25,7 @@ export interface BaseContentType {
 
 export const BRAND_IMAGES: Record<string, BrandImageSet> = {
   cosmopolitan: {
-    hero: `${H}843c358a-a55b-487d-af41-35a871b22cfd.jpg?crop=1xw:0.667xh;0xw,0.161xh&resize=1200:*`,
+    hero: `${H}843c358a-a55b-487d-af41-35a871b22cfd.jpg?crop=1xw:0.65xh;0xw,0.10xh&resize=1200:*`,
     articles: [
       `${H}1b035abd-5197-4304-9386-edb1487ae42e.jpeg?crop=0.763xw:0.509xh;0.11xw,0.071xh&resize=144:*`,
       `${H}gettyimages-1388107982.jpg?crop=0.829xw:0.553xh;0.087xw,0.093xh&resize=144:*`,
@@ -71,7 +71,7 @@ export const BRAND_IMAGES: Record<string, BrandImageSet> = {
     ],
   },
   "car-and-driver": {
-    hero: `${H}2026-porsche-911-turbo-s-104-69a8567611f3c.jpg?crop=1.00xw:0.75xh;0,0.15xh&resize=1200:*`,
+    hero: `${H}6cfe4054-68ce-4a1c-8c35-8a538c324741.jpg?crop=1xw:1xh;center,top&resize=1200:*`,
     articles: [
       `${H}d10bac7a-1607-4cc9-809e-1cc5ef8ca2b0.jpg?crop=0.592xw:0.888xh;0.176xw,0.112xh&resize=144:*`,
       `${H}bb08c514-0be0-4aa0-bc6c-10cdbdf1f862.jpg?crop=1.00xw:0.751xh;0,0.145xh&resize=144:*`,
@@ -186,7 +186,7 @@ export const BRAND_IMAGES: Record<string, BrandImageSet> = {
     ],
   },
   delish: {
-    hero: `${H}pistachio-tiramisu-index-web-3646-jg-del029926-69a7406a37468.jpg?crop=0.75xw:1xh;center,top&resize=1200:*`,
+    hero: `${H}brie-asparagus-and-prosciutto-stuffed-chicken-index-67f02e15ac634.jpg?crop=1.00xw:0.75xh;0,0.15xh&resize=1200:*`,
     articles: [
       `${H}sweet-potato-couscous-sunshine-bowls-index-679432a9e1970.jpg?crop=0.503xw:1.00xh;0.0433xw,0&resize=144:*`,
       `${H}547251bc-b6aa-4730-ac6e-6f91204fef8c.jpeg?crop=0.562xw:1xh;center,top&resize=144:*`,
@@ -416,26 +416,26 @@ export const BRAND_IMAGES: Record<string, BrandImageSet> = {
     ],
   },
   autoweek: {
-    hero: `${H}green-tea-cookies-1550241899.jpg?crop=0.481xw:0.321xh;0.449xw,0.532xh&resize=1200:*`,
+    hero: `${H}comparo-ford-mustang-gt-vs-dodge-charger-scat-pack-1-jpg-69a9ad3305bf5.jpg?crop=0.947xw:0.709xh;0.0240xw,0.168xh&resize=1200:*`,
     articles: [
-      `${H}peppermint-shake-wd-0320-1582136246.jpg?crop=1.00xw:0.713xh;0,0.176xh&resize=144:*`,
-      `${H}small-children-standing-outdoors-in-garden-in-royalty-free-image-1719394569.jpg?crop=0.583xw:1.00xh;0.0782xw,0&resize=144:*`,
-      `${H}woman-and-girl-reading-the-bible-royalty-free-image-1718977076.jpg?crop=0.664xw:1.00xh;0.188xw,0&resize=144:*`,
-      `${H}games-for-kids-1544052005.jpg?crop=0.486xw:0.971xh;0.514xw,0.00641xh&resize=144:*`,
-      `${H}beautiful-family-connecting-whilst-playing-games-royalty-free-image-1717003492.jpg?crop=0.668xw:1.00xh;0.147xw,0&resize=144:*`,
+      `${H}d10bac7a-1607-4cc9-809e-1cc5ef8ca2b0.jpg?crop=0.592xw:0.888xh;0.176xw,0.112xh&resize=144:*`,
+      `${H}07a566f2-f5d2-4258-8e66-2e48a7620ee1.jpeg?crop=0.668xw:1.00xh;0.332xw,0&resize=144:*`,
+      `${H}bb08c514-0be0-4aa0-bc6c-10cdbdf1f862.jpg?crop=1.00xw:0.751xh;0,0.145xh&resize=144:*`,
+      `${H}d3e0fde5-66da-4f88-a37f-2c6d0ac851a3.jpeg?crop=0.666xw:1xh;center,top&resize=144:*`,
+      `${H}buick-wildcat-ev-concept-007-1662311042.jpg?crop=0.668xw:1.00xh;0.167xw,0&resize=144:*`,
     ],
     rightRail: [
-      `${H}emt-anglers-bemidji-paulbunyan-babe-the-blue-ox-01-66c33e9ce3a0a.jpg?crop=0.670xw:1.00xh;0.221xw,0&resize=200:*`,
-      `${H}05-cq5dam-web-2000-1125-6682163970008.jpeg?crop=0.565xw:1.00xh;0.381xw,0&resize=200:*`,
-      `${H}side-by-side-pink5-66a10bd14df26.png?crop=0.502xw:1.00xh;0.498xw,0&resize=200:*`,
-      `${H}gifmaker-org-6gowzh-1529440507.gif?crop=0.500xw:1.00xh;0,0&resize=200:*`,
+      `${H}2025-ram-1500-big-horn-crew-cab-141-67d9a190d3f57.jpg?crop=0.671xw:1.00xh;0.148xw,0&resize=200:*`,
+      `${H}c0c7e218-5cbe-424a-8282-49eb186cb510.jpeg?crop=0.668xw:1.00xh;0.116xw,0&resize=200:*`,
+      `${H}fd9e6081-24d9-4d82-9698-fcb728a70c45.jpeg?crop=0.670xw:1.00xh;0.330xw,0&resize=200:*`,
+      `${H}ext-design-04-659ec4b5164d4.jpg?crop=0.5625xw:1xh;center,top&resize=200:*`,
     ],
     trending: [
-      `${H}green-tea-cookies-1550241899.jpg?crop=0.481xw:0.321xh;0.449xw,0.532xh&resize=600:*`,
-      `${H}small-children-standing-outdoors-in-garden-in-royalty-free-image-1719394569.jpg?crop=0.583xw:1.00xh;0.0782xw,0&resize=600:*`,
-      `${H}woman-and-girl-reading-the-bible-royalty-free-image-1718977076.jpg?crop=0.664xw:1.00xh;0.188xw,0&resize=600:*`,
-      `${H}emt-anglers-bemidji-paulbunyan-babe-the-blue-ox-01-66c33e9ce3a0a.jpg?crop=0.670xw:1.00xh;0.221xw,0&resize=600:*`,
-      `${H}05-cq5dam-web-2000-1125-6682163970008.jpeg?crop=0.565xw:1.00xh;0.381xw,0&resize=600:*`,
+      `${H}2026-porsche-911-turbo-s-104-69a8567611f3c.jpg?crop=0.601xw:0.901xh;0.258xw,0.0817xh&resize=600:*`,
+      `${H}2026-dodge-charger-r-t-116-69aae7ec2f465.jpg?crop=0.669xw:1.00xh;0.168xw,0&resize=600:*`,
+      `${H}ebac9151-296b-48c4-aa49-d998ee536fa7.jpeg?crop=0.670xw:1.00xh;0.228xw,0&resize=600:*`,
+      `${H}de5876d1-c693-4554-9183-5f2b45144789.jpeg?crop=0.688xw:1.00xh;0.157xw,0&resize=600:*`,
+      `${H}2024-mazda-cx-90-lt-104-695c143b0d8ef.jpg?crop=0.655xw:0.986xh;0.171xw,0&resize=600:*`,
     ],
   },
   "popular-mechanics": {
@@ -860,7 +860,7 @@ export const BRAND_CONTENT: Partial<Record<string, Partial<BaseContentType>>> = 
       { title: "Baked Feta Frittata: Our New Favorite Brunch", time: "Mar 5, 2026", readTime: "4 Min Read" },
       { title: "The St. Patrick's Day Cocktail You Need to Try", time: "Mar 4, 2026", readTime: "2 Min Read" },
     ],
-    hero: { eyebrow: "RECIPE OF THE DAY", title: "Pistachio Tiramisu Is the Dessert of the Moment", desc: "Recipes, food trends, kitchen tips — this twist on the classic is taking over dinner parties everywhere.", author: "Makinze Gore" },
+    hero: { eyebrow: "SPRING RECIPES", title: "82 Fresh Spring Dinners You\u2019ll Be Making All Season Long", desc: "Spend your free time in the sunshine, not stressing in the kitchen. These easy weeknight recipes celebrate the best of spring produce.", author: "Mackenzie Filson" },
     rightRail: [
       { eyebrow: "RECIPES", title: "Sweet Potato Couscous Sunshine Bowls", desc: "Bright, healthy, and delicious.", author: "Recipe Editor" },
       { eyebrow: "PASTA", title: "The Lemon Asparagus Pasta You'll Make All Spring", desc: "Five ingredients, 25 minutes.", author: "Pasta Editor" },
@@ -1156,6 +1156,24 @@ export const BRAND_CONTENT: Partial<Record<string, Partial<BaseContentType>>> = 
       { eyebrow: "Comfort Food", title: "The One-Pot Pasta Everyone Requests", desc: "Minimal cleanup, maximum flavor.", author: "Recipe Team" },
     ],
     navLinks: ["Home", "Recipes", "Cooking", "Entertainment", "Shopping", "Ranch Life", "Holidays", "Videos"],
+  },
+  autoweek: {
+    collectionTitle: "Latest Cars & Racing",
+    articles: [
+      { title: "Mustang GT vs. Charger Scat Pack: The Definitive Comparison", time: "Just Now", readTime: "7 Min Read" },
+      { title: "The Best Affordable Sports Cars You Can Buy in 2026", time: "2 hours ago", readTime: "5 Min Read" },
+      { title: "Why Vintage Japanese Cars Are Exploding in Value", time: "Yesterday", readTime: "6 Min Read" },
+      { title: "IndyCar 2026 Season Preview: What to Watch For", time: "Apr 10, 2026", readTime: "8 Min Read" },
+      { title: "The Electric Pickup Truck Showdown Nobody Expected", time: "Apr 9, 2026", readTime: "5 Min Read" },
+    ],
+    hero: { eyebrow: "COMPARISON", title: "Mustang GT vs. Charger Scat Pack: The Definitive Comparison", desc: "Two American muscle icons go head-to-head on the street and the track. Only one can win.", author: "Jake Lingeman" },
+    rightRail: [
+      { eyebrow: "BUYING GUIDE", title: "The Best Affordable Sports Cars You Can Buy in 2026", desc: "Performance doesn't have to break the bank.", author: "Autoweek Staff" },
+      { eyebrow: "CULTURE", title: "Why Vintage Japanese Cars Are Exploding in Value", desc: "JDM legends are commanding serious money.", author: "Wesley Wren" },
+      { eyebrow: "RACING", title: "IndyCar 2026 Season Preview: What to Watch For", desc: "New teams, new rules, and a stacked grid.", author: "Matt Weaver" },
+      { eyebrow: "EVs", title: "The Electric Pickup Truck Showdown Nobody Expected", desc: "Lightning, Cybertruck, R1T, and Silverado EV compared.", author: "Autoweek Editors" },
+    ],
+    navLinks: ["Home", "Cars", "Reviews", "News", "Racing", "Tech", "Buying Guide", "Videos"],
   },
 };
 

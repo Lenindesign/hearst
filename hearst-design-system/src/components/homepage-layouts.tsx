@@ -408,9 +408,6 @@ export function LayoutCurator() {
                 <h2 className="text-2xl lg:text-4xl leading-tight headline text-white mb-3">
                   {content.hero.title}
                 </h2>
-                <p className="text-sm text-white/70 mb-3 max-w-lg">
-                  {content.hero.desc}
-                </p>
                 <span className="text-xs text-white/50">
                   By {content.hero.author}
                 </span>
@@ -931,14 +928,14 @@ export function LayoutStream() {
       <StickyCompactNav brandSlug={brand.slug} />
 
       {/* Full-Width Hero */}
-      <div className="relative cursor-pointer group">
+      <div className="relative cursor-pointer group max-w-[var(--width-content-max)] mx-auto">
         <img
           src={images.hero}
           alt={content.hero.title}
           className="w-full h-[70vh] min-h-[500px] max-h-[750px] object-cover object-[center_30%]"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 p-6 lg:p-12 max-w-[var(--width-content-max)] mx-auto">
+        <div className="absolute inset-x-0 bottom-0 p-6 lg:p-12 max-w-[1280px] mx-auto">
           <Chip size="md" className="mb-3 bg-primary text-primary-foreground border-primary">
             {content.hero.eyebrow}
           </Chip>
