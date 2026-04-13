@@ -2,13 +2,13 @@
  * Rewrites relative paths in Storybook's built HTML/JS files to absolute paths
  * so they resolve correctly when served from /_next/static/sb/.
  */
-import { readFileSync, writeFileSync, readdirSync } from "fs";
+import { readFileSync, writeFileSync, readdirSync, existsSync } from "fs";
 import { join } from "path";
 
 const SB_DIR = join(process.cwd(), ".next", "static", "sb");
 const BASE = "/_next/static/sb/";
 
-function fixFile(filePath) {
+function fixRootFile(filePath) {
   let content = readFileSync(filePath, "utf-8");
   const original = content;
 
@@ -16,10 +16,10 @@ function fixFile(filePath) {
   content = content.replaceAll('src="./', `src="${BASE}`);
   content = content.replaceAll("url('./", `url('${BASE}`);
   content = content.replaceAll('url("./', `url("${BASE}`);
-
-  // Fix dynamic import paths in JS chunks
   content = content.replaceAll('"./assets/', `"${BASE}assets/`);
   content = content.replaceAll("'./assets/", `'${BASE}assets/`);
+  content = content.replaceAll('"./sb-', `"${BASE}sb-`);
+  content = content.replaceAll("'./sb-", `'${BASE}sb-`);
 
   if (content !== original) {
     writeFileSync(filePath, content);
@@ -27,24 +27,50 @@ function fixFile(filePath) {
   }
 }
 
-const files = readdirSync(SB_DIR).filter(
+function fixAssetFile(filePath) {
+  let content = readFileSync(filePath, "utf-8");
+  const original = content;
+
+  // Inside assets/, sibling imports like "./Welcome-hash.js" need the full path
+  content = content.replaceAll('"./assets/', `"${BASE}assets/`);
+  content = content.replaceAll("'./assets/", `'${BASE}assets/`);
+  content = content.replace(/"\.\/([\w][\w.-]*\.js)"/g, `"${BASE}assets/$1"`);
+  content = content.replace(/'\.\/([\w][\w.-]*\.js)'/g, `'${BASE}assets/$1'`);
+  content = content.replace(/"\.\/([\w][\w.-]*\.css)"/g, `"${BASE}assets/$1"`);
+
+  if (content !== original) {
+    writeFileSync(filePath, content);
+    console.log(`Fixed asset paths in ${filePath}`);
+  }
+}
+
+// Fix root-level HTML and JS files
+const rootFiles = readdirSync(SB_DIR).filter(
   (f) => f.endsWith(".html") || f.endsWith(".js")
 );
-
-for (const file of files) {
-  fixFile(join(SB_DIR, file));
+for (const file of rootFiles) {
+  fixRootFile(join(SB_DIR, file));
 }
+console.log(`Processed ${rootFiles.length} root file(s)`);
 
-// Also fix JS files in assets/
-try {
-  const assetsDir = join(SB_DIR, "assets");
-  const assetFiles = readdirSync(assetsDir).filter((f) => f.endsWith(".js"));
+// Fix JS/CSS files in assets/
+const assetsDir = join(SB_DIR, "assets");
+if (existsSync(assetsDir)) {
+  const assetFiles = readdirSync(assetsDir).filter(
+    (f) => f.endsWith(".js") || f.endsWith(".css")
+  );
   for (const file of assetFiles) {
-    fixFile(join(assetsDir, file));
+    fixAssetFile(join(assetsDir, file));
   }
-  console.log(`Processed ${assetFiles.length} asset JS file(s)`);
-} catch {
-  // assets dir may not exist
+  console.log(`Processed ${assetFiles.length} asset file(s)`);
 }
 
-console.log(`Processed ${files.length} root file(s)`);
+// Fix JS files in sb-manager/
+const sbManagerDir = join(SB_DIR, "sb-manager");
+if (existsSync(sbManagerDir)) {
+  const managerFiles = readdirSync(sbManagerDir).filter((f) => f.endsWith(".js"));
+  for (const file of managerFiles) {
+    fixRootFile(join(sbManagerDir, file));
+  }
+  console.log(`Processed ${managerFiles.length} sb-manager file(s)`);
+}
