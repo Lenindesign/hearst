@@ -4,6 +4,7 @@ import {
   LayoutCurator,
   LayoutMosaic,
   LayoutStream,
+  LayoutEditorial,
 } from "@/components/homepage-layouts";
 
 const meta: Meta = {
@@ -13,10 +14,11 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          "Three homepage layout variants optimized for different brand types. " +
+          "Four homepage layout variants optimized for different brand types. " +
           "**The Curator** (NYT-inspired) uses strong editorial hierarchy with a 60/40 hero split. " +
           "**The Mosaic** (Verge/TIME-inspired) uses a bento grid hero with category tabs. " +
           "**The Stream** (mobile-first) uses a single-column feed with alternating card formats. " +
+          "**The Editorial** (magazine-style) uses a dominant hero with stacked secondary cards. " +
           "Switch brands via the toolbar to see how each layout adapts to brand tokens.",
       },
     },
@@ -76,6 +78,26 @@ export const Stream: Story = {
           "Mobile-first engagement feed. Best for lifestyle/utility brands like Good Housekeeping, Delish, Prevention, Women's Health, and Men's Health. " +
           "Features a sticky compact nav, full-viewport hero, alternating stream cards (image-right, overlay, text-only, newsletter, native ad), " +
           "quick links bar, video spotlight, shopping carousel, and a floating subscribe CTA.",
+      },
+    },
+  },
+};
+
+export const Editorial: Story = {
+  name: "D: The Editorial",
+  render: () => (
+    <div style={{ margin: "-2rem", minHeight: "100vh" }}>
+      <LayoutEditorial />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Magazine-style hero with stacked secondary cards. Best for editorial-forward brands like Cosmopolitan, Elle, Harper's Bazaar, and Town & Country. " +
+          "Features a dominant 4:5 portrait hero on the left with eyebrow, headline, description, and byline, " +
+          "paired with two stacked article cards on the right, each with a landscape image and metadata. " +
+          "Below the fold includes a thematic content row, inline newsletter, trending bar, and big story feed.",
       },
     },
   },

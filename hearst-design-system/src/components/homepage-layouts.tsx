@@ -351,7 +351,7 @@ export function LayoutCurator() {
   const content = getContent(brand.slug);
   const images = getBrandImages(brand.slug);
 
-  const topStories = content.articles.slice(0, 4).map((a, i) => ({
+  const topStories = content.articles.slice(0, 5).map((a, i) => ({
     title: a.title,
     date: `${a.time} · ${a.readTime}`,
     image: images.articles[i % images.articles.length],
@@ -1171,10 +1171,166 @@ export function LayoutStream() {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// LAYOUT D: "The Editorial" — Magazine-style hero + stacked cards
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+export function LayoutEditorial() {
+  const { brand } = useTheme();
+  const content = getContent(brand.slug);
+  const images = getBrandImages(brand.slug);
+
+  const secondaryArticles = content.articles.slice(0, 2).map((a, i) => ({
+    title: a.title,
+    time: a.time,
+    readTime: a.readTime,
+    author:
+      content.rightRail[i % content.rightRail.length]?.author || "Staff Writer",
+    image: images.trending[(i + 1) % images.trending.length],
+  }));
+
+  const thematicItems = content.trending.slice(0, 4).map((t, i) => ({
+    title: t.title,
+    subtitle: t.time,
+    image: images.trending[i % images.trending.length],
+  }));
+
+  const bigStoryItems = content.articles.map((a, i) => ({
+    title: a.title,
+    eyebrow: content.rightRail[i % content.rightRail.length]?.eyebrow,
+    author:
+      content.rightRail[i % content.rightRail.length]?.author || "Staff Writer",
+    date: a.time,
+    image: images.trending[i % images.trending.length],
+  }));
+
+  const trendingTopics = content.navLinks
+    .filter((l) => l !== "Home")
+    .slice(0, 8);
+
+  return (
+    <div className="min-h-screen font-brand bg-background">
+      <div className="flex items-center justify-center py-4 lg:py-6 bg-muted">
+        <AdPlaceholder size="leaderboard" />
+      </div>
+
+      <UtilityBar />
+      <MainNav brandSlug={brand.slug} />
+
+      {/* Above the Fold: Hero + Stacked Horizontal Cards */}
+      <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-[116px] pt-8 lg:pt-12">
+        <div className="flex flex-col lg:flex-row lg:gap-[48px]">
+          {/* Lead Story — left 46.8% (528/1128) */}
+          <div className="lg:w-[46.8%] shrink-0 cursor-pointer group">
+            <div className="overflow-hidden">
+              <img
+                src={images.hero}
+                alt={content.hero.title}
+                className="w-full aspect-[528/660] object-cover object-[center_20%] transition-transform duration-500 group-hover:scale-105"
+              />
+            </div>
+            <div className="flex flex-col gap-[3.6px] pt-2">
+              <span className="text-[12.7px] font-normal uppercase tracking-[0.27px] leading-[1.45] text-muted-foreground">
+                {content.hero.eyebrow}
+              </span>
+              <h2 className="text-[29px] leading-[1] font-bold headline pt-[11px] group-hover:text-primary transition-colors">
+                {content.hero.title}
+              </h2>
+              <p className="text-[16.4px] leading-[1.45] text-foreground/80">
+                {content.hero.desc}
+              </p>
+              <p className="text-[11.8px] uppercase tracking-[0.36px] leading-[1.4] text-muted-foreground pt-[11px]">
+                By {content.hero.author}
+              </p>
+              <p className="text-[11.8px] tracking-[0.36px] leading-[1.4] text-muted-foreground flex items-center gap-1">
+                <span>{content.articles[0]?.readTime || "5 Min Read"}</span>
+              </p>
+            </div>
+          </div>
+
+          {/* Right Rail — 49% (553/1128), offset from top by ~107px */}
+          <div className="lg:flex-1 flex flex-col gap-[48px] lg:pt-[106px]">
+            {secondaryArticles.map((article, i) => (
+              <div
+                key={i}
+                className="flex flex-col sm:flex-row gap-[24px] cursor-pointer group"
+              >
+                {/* Card image — left half, square-ish (265×331) */}
+                <div className="sm:w-[48%] shrink-0 overflow-hidden">
+                  <img
+                    src={article.image}
+                    alt={article.title}
+                    className="w-full aspect-[265/331] object-cover object-[center_25%] transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+                {/* Card content — right half, vertically centered */}
+                <div className="flex-1 flex flex-col justify-center gap-[4px]">
+                  <h3 className="text-[28px] leading-[1.3] font-bold headline group-hover:text-primary transition-colors">
+                    {article.title}
+                  </h3>
+                  <p className="text-[13px] tracking-[0.4px] leading-[1.4] text-muted-foreground">
+                    {article.time}
+                  </p>
+                  <p className="text-[13px] tracking-[0.4px] leading-[1.4] text-muted-foreground">
+                    {article.author}
+                  </p>
+                  <p className="text-[13px] tracking-[0.4px] leading-[1.4] text-muted-foreground flex items-center gap-1">
+                    <span>{article.readTime}</span>
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Thematic Row */}
+      <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-6 pt-12 lg:pt-16">
+        <div className="border-t-2 border-primary pt-6">
+          <h2 className="text-2xl headline mb-6">{content.collectionTitle}</h2>
+          <FourAcrossGrid items={thematicItems} columns={4} aspectRatio="3/2" />
+        </div>
+      </div>
+
+      {/* Inline Newsletter */}
+      <div className="mt-12 lg:mt-16">
+        <InlineNewsletter brandName={brand.name} variant="full-width" />
+      </div>
+
+      {/* Mid-page ad */}
+      <div className="flex justify-center py-8">
+        <AdPlaceholder size="billboard" />
+      </div>
+
+      {/* Trending Bar */}
+      <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-6 py-8">
+        <QuickLinksBar topics={trendingTopics} />
+      </div>
+
+      {/* Big Story Feed */}
+      <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-6 pb-12">
+        <div className="border-t-2 border-primary pt-6">
+          <h2 className="text-2xl headline mb-6">More Stories</h2>
+          <BigStoryFeedStacked
+            items={bigStoryItems}
+            thumbnailWidth={160}
+            thumbnailHeight={120}
+            headlineFontSize={16}
+            showDividers
+          />
+        </div>
+      </div>
+
+      <FooterSection brandSlug={brand.slug} />
+      <StickyNewsletterBar brandName={brand.name} />
+    </div>
+  );
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Layout Type & Switcher
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-export type LayoutVariant = "curator" | "mosaic" | "stream";
+export type LayoutVariant = "curator" | "mosaic" | "stream" | "editorial";
 
 const LAYOUT_META: Record<
   LayoutVariant,
@@ -1192,6 +1348,10 @@ const LAYOUT_META: Record<
     label: "The Stream",
     description: "Mobile-first engagement feed",
   },
+  editorial: {
+    label: "The Editorial",
+    description: "Magazine-style hero with stacked cards",
+  },
 };
 
 export function LayoutSwitcher({
@@ -1201,7 +1361,7 @@ export function LayoutSwitcher({
   value: LayoutVariant;
   onChange: (v: LayoutVariant) => void;
 }) {
-  const variants: LayoutVariant[] = ["curator", "mosaic", "stream"];
+  const variants: LayoutVariant[] = ["curator", "mosaic", "stream", "editorial"];
 
   return (
     <div className="flex items-center gap-1 p-1 bg-background/95 backdrop-blur rounded-lg border border-border shadow-lg">
@@ -1236,5 +1396,7 @@ export function HomepageByLayout({
       return <LayoutMosaic />;
     case "stream":
       return <LayoutStream />;
+    case "editorial":
+      return <LayoutEditorial />;
   }
 }
