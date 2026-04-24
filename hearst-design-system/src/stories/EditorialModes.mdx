@@ -78,9 +78,9 @@ or change modes from M–F versus Sat/Sun. They're less identities and more stat
 
 ---
 
-## The Three Modes
+## The Three Modes: Three Gears for Different Jobs
 
-<ModeCard name="Live Mode" tagline="What's happening now" color="#dc2626" values={["Recency", "Density", "Scanning"]} layout="The Curator">
+<ModeCard name="01 — Live Mode" tagline="What's happening now" color="#dc2626" values={["Recency", "Density", "Scanning"]} layout="The Curator (default)">
 
 Optimized for the **breaking news mindset**. High story count (7 top stories), prominent trending bar,
 frequent ad slots, no inline newsletter (sticky CTA instead). The page feels *busy on purpose* —
@@ -93,7 +93,7 @@ These slow down scanning and add cognitive load when the user's job is "catch me
 
 </ModeCard>
 
-<ModeCard name="Feature Mode" tagline="Stories worth your time" color="#7c3aed" values={["Storytelling", "Visual", "Immersive"]} layout="The Editorial">
+<ModeCard name="02 — Feature Mode" tagline="Stories worth your time" color="#7c3aed" values={["Storytelling", "Visual", "Immersive"]} layout="The Editorial (default)">
 
 Optimized for the **lean-back reader**. Fewer stories (3 top stories), no leaderboard ad, no trending bar,
 prominent newsletter, video spotlight enabled. The page breathes — hero imagery dominates and
@@ -107,7 +107,7 @@ Ads and urgency signals undercut the immersive reading experience this mode is d
 
 </ModeCard>
 
-<ModeCard name="Service Mode" tagline="Find what you need" color="#0891b2" values={["Task", "Search", "Structured"]} layout="The Stream">
+<ModeCard name="03 — Service Mode" tagline="Find what you need" color="#0891b2" values={["Task", "Search", "Structured"]} layout="The Stream (default)">
 
 Optimized for the **goal-oriented visitor**. Shopping carousel enabled, high thematic row count (6),
 more editor's picks (8), no big story feed (replaced by structured categories).
@@ -150,7 +150,7 @@ A single brand can operate in multiple modes across a week, or even within a sin
 ### Example: Elle
 
 <Timeline items={[
-  { title: "Normal Weeks → Live Mode + Feature Mode (dual)", desc: "Curator layout for daily fashion news. Feature stories get editorial layout treatment.", color: "#dc2626" },
+  { title: "Normal → Live + Feature (dual)", desc: "Curator for daily fashion news; feature stories get editorial treatment (larger hero, more visual depth).", color: "#dc2626" },
   { title: "Fashion Week → Feature Mode (full)", desc: "All runway coverage, street style, designer interviews. Editorial layout, max visual impact.", color: "#7c3aed" },
   { title: "Shopping Events (Prime Day, BFCM) → Service Mode", desc: "Switch to Stream with shopping carousel, deal roundups, product grids.", color: "#0891b2" },
 ]} />
@@ -217,6 +217,12 @@ All section toggles remain available as manual overrides in the controls panel.
 ## Implementation
 
 ```tsx
+import {
+  HomepageByMode,
+  resolveMode,
+  getModeLayoutFit,
+} from "@/components/homepage-layouts";
+
 // Render a homepage in a specific editorial mode
 <HomepageByMode mode="live" />
 
@@ -228,6 +234,9 @@ All section toggles remain available as manual overrides in the controls panel.
 
 // Resolve a mode to its layout + props for custom logic
 const { layout, props } = resolveMode("live");
+
+// Check structural fit when overriding layout (e.g. CMS validation)
+const fit = getModeLayoutFit("live", "editorial"); // "poor"
 ```
 
 ---

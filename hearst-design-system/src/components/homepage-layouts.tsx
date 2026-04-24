@@ -1553,6 +1553,48 @@ export const EDITORIAL_MODES: Record<EditorialMode, EditorialModeConfig> = {
 };
 
 /**
+ * How well a layout matches an editorial mode’s intent.
+ * Modes are behavioral presets; layouts are structure. Any combination can render,
+ * but *fit* helps product and CMS decide defaults and when to show a warning.
+ */
+export type ModeLayoutFit = "default" | "good" | "possible" | "poor";
+
+/**
+ * Mode × layout compatibility (★ default / Good / Possible / Poor).
+ * Aligns with Docs / Editorial Modes in Storybook.
+ */
+export const MODE_LAYOUT_FIT: Record<
+  EditorialMode,
+  Record<LayoutVariant, ModeLayoutFit>
+> = {
+  live: {
+    curator: "default",
+    mosaic: "good",
+    stream: "possible",
+    editorial: "poor",
+  },
+  feature: {
+    curator: "possible",
+    mosaic: "good",
+    stream: "poor",
+    editorial: "default",
+  },
+  service: {
+    curator: "poor",
+    mosaic: "good",
+    stream: "default",
+    editorial: "poor",
+  },
+};
+
+export function getModeLayoutFit(
+  mode: EditorialMode,
+  layout: LayoutVariant
+): ModeLayoutFit {
+  return MODE_LAYOUT_FIT[mode][layout];
+}
+
+/**
  * Resolve an editorial mode into a layout + prop combination.
  * Pass an optional layout override to use a non-default layout
  * while keeping the mode's behavioral presets.

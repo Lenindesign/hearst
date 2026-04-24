@@ -139,17 +139,18 @@ const meta: Meta<HomepageLayoutProps> = {
     docs: {
       description: {
         component:
-          "Homepage layouts are the structural templates; **editorial modes** are the behavioral layer on top.\n\n" +
-          "### Editorial Modes (Jobs to be done)\n" +
-          "Brands don\u2019t have a single fixed layout \u2014 they shift between **editorial modes** based on purpose and timing:\n\n" +
-          "| Mode | Purpose | Values | Best Layouts |\n" +
-          "| --- | --- | --- | --- |\n" +
-          "| **Live** | What\u2019s happening now | Recency, density, scanning | Curator, Mosaic |\n" +
-          "| **Feature** | Stories worth your time | Storytelling, visual, immersive | Editorial, Mosaic |\n" +
-          "| **Service** | Find what you need | Task, search, structured | Stream, Mosaic |\n\n" +
-          "A brand can operate in **two modes simultaneously** or switch modes between weekdays and weekends " +
-          "(e.g. Esquire: Live M\u2013F, Feature Sat/Sun). Modes are states, not identities.\n\n" +
-          "### Layout Templates\n" +
+          "Homepage layouts are the **structural** templates; **editorial modes** (Live, Feature, Service) are the **behavioral** layer \u2014 section visibility, density, and defaults. " +
+          "A brand *enters* a mode; it does not *own* one.\n\n" +
+          "### Mode \u00d7 Layout (fit, not a cage)\n" +
+          "Any mode can use any layout; the mode configures *what* shows and *how dense* it is, the layout arranges it. " +
+          "Default / good / possible / poor:\n\n" +
+          "| Mode | Curator | Mosaic | Stream | Editorial |\n" +
+          "| --- | --- | --- | --- | --- |\n" +
+          "| **Live** | \u2605 default | Good | Possible | Poor |\n" +
+          "| **Feature** | Possible | Good | Poor | \u2605 default |\n" +
+          "| **Service** | Poor | Good | \u2605 default | Poor |\n\n" +
+          "Use **Mode: Live / Feature / Service** or **Editorial Modes** stories for presets, or these layouts for manual section controls.\n\n" +
+          "### Layout templates (structure only)\n" +
           "**The Curator** \u2014 NYT-inspired editorial hierarchy (60/40 hero split, numbered top stories)\n" +
           "**The Mosaic** \u2014 Verge/TIME modular grid (bento hero, category tabs, content grid)\n" +
           "**The Stream** \u2014 Mobile-first engagement feed (single-column, alternating cards)\n" +

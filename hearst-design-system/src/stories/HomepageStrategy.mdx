@@ -60,25 +60,27 @@ export const Callout = ({ emoji, title, children }) => (
   </div>
 );
 
-export const MetricRow = ({ metric, curator, mosaic, stream }) => (
+export const MetricRow = ({ metric, curator, mosaic, stream, editorial }) => (
   <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
     <td style={{ padding: '10px 16px', fontSize: '13px', fontWeight: 600, color: '#334155' }}>{metric}</td>
     <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b', textAlign: 'center' }}>{curator}</td>
     <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b', textAlign: 'center' }}>{mosaic}</td>
     <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b', textAlign: 'center' }}>{stream}</td>
+    <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b', textAlign: 'center' }}>{editorial}</td>
   </tr>
 );
 
 # Homepage Layout Strategy
 
-Three layout systems designed to maximize conversion, return visits, and time-on-site across 29 Hearst brands. Each layout targets a different reader behavior profile based on research from high-performing magazine and digital media sites.
+**Four** structural layout templates—Curator, Mosaic, Stream, and Editorial—support conversion, return visits, and time-on-site across 29 Hearst brands. **Editorial Modes** (Live, Feature, Service) sit on top: they are the behavioral layer (density, which modules run, ad pressure) while layouts define **arrangement**. See <a href="?path=/docs/docs-editorial-modes--docs">Docs / Editorial Modes</a> for the full mode framework.
 
 <Callout emoji="📖" title="See also: Editorial Modes">
 Layouts are structural templates. <strong>Editorial Modes</strong> (Live, Feature, Service) are the behavioral layer on top — the "jobs to be done" that configure how a layout behaves at any given time. See <a href="?path=/docs/docs-editorial-modes--docs">Docs / Editorial Modes</a> for the full framework.
 </Callout>
 
 <div style={{ display: 'flex', justifyContent: 'space-around', padding: '28px 0', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9', margin: '24px 0' }}>
-  <Stat value="3" label="Layout Systems" />
+  <Stat value="4" label="Layout Templates" />
+  <Stat value="3" label="Editorial Modes" />
   <Stat value="29" label="Brands Supported" />
   <Stat value="7" label="Conversion Levers" />
   <Stat value="5" label="Newsletter Touchpoints" />
@@ -86,29 +88,47 @@ Layouts are structural templates. <strong>Editorial Modes</strong> (Live, Featur
 
 ---
 
-## The Three Layouts
+## The Four Layouts (Structure)
 
-<LayoutCard name="A: The Curator" subtitle="NYT-inspired editorial hierarchy" brands="Esquire, Cosmopolitan, Elle, Harper's Bazaar, Town & Country">
+These are **templates**, not brand personalities. *Who* the reader is and *how urgent* the day feels come from **editorial mode** and scheduling—see Editorial Modes. Each layout is a different way to **arrange** modules and set a default information architecture.
 
-Targets the **lean-back reader** who trusts editorial judgment. A strong 60/40 hero split with numbered top stories creates a clear reading path. The editorial voice is front and center, guiding users through curated sections rather than asking them to browse.
+<LayoutCard name="A: The Curator" subtitle="NYT-inspired editorial hierarchy" brands="Default for **Live** on many news-forward brands: Esquire, Cosmopolitan, Elle, Harper's Bazaar, Town & Country">
 
-**Core principle:** Reduce decision fatigue. The fewer choices a reader has to make, the deeper they go.
+**Structure:** 60/40 hero split, numbered top stories, clear vertical hierarchy, room for a trending bar and high story count.
 
-</LayoutCard>
+**Fits** when the job is *ranking and scanning* (timeliness, "what’s new"). Modes can still soften or intensify: Feature Mode on Curator is *possible* with fewer stories and different modules—less ideal than The Editorial for immersion, but valid for brand constraints.
 
-<LayoutCard name="B: The Mosaic" subtitle="Verge/TIME-inspired modular grid" brands="Elle, Harper's Bazaar, House Beautiful, Veranda, Delish">
-
-Targets the **visual browser** who scans by image before reading headlines. A bento-grid hero surfaces 4 stories simultaneously, and category tabs let readers self-select their interest. The grid density means more content is visible above the fold without scrolling.
-
-**Core principle:** Show more, click more. Visual variety and clear categorization drive exploration.
+**Core principle (structural):** A single, editor-led path down the page—few parallel surfaces, strong story order.
 
 </LayoutCard>
 
-<LayoutCard name="C: The Stream" subtitle="Mobile-first engagement feed" brands="Good Housekeeping, Delish, Prevention, Women's Health, Men's Health">
+<LayoutCard name="B: The Mosaic" subtitle="Verge/TIME-inspired modular grid" brands="**Versatile** — strong for **Live, Feature, and Service**; Elle, Harper's Bazaar, House Beautiful, Veranda, Delish">
 
-Targets the **scroll-habit reader** who arrives from social or search and consumes content in a continuous feed. Alternating card formats (image-right, full-bleed overlay, text-only, newsletter, native ad) break visual monotony and sustain scroll engagement.
+**Structure:** Bento-style hero, category tabs, content grid, editor’s picks carousel. High *surface area* without a single long scroll column.
 
-**Core principle:** Keep the thumb moving. Variation in card format prevents scroll fatigue.
+**Fits** visual browsing, seasonal storytelling, and task-oriented users who self-select a lane (tabs). The same grid can be dialed to **high density** (Live) or **larger cards** (Feature) via mode presets.
+
+**Core principle (structural):** Many entry points, clear categorization, exploration over a single story arc.
+
+</LayoutCard>
+
+<LayoutCard name="C: The Stream" subtitle="Mobile-first engagement feed" brands="Default for **Service** on many utility/lifestyle brands: Good Housekeeping, Delish, Prevention, Women's Health, Men's Health">
+
+**Structure:** Single column, sticky compact header, alternating card types (image-right, full-bleed, text, commerce, etc.), room for shopping carousel and continuous scroll.
+
+**Fits** goal-oriented and social-driven sessions—*find, skim, act*. Service Mode is the natural pairing; other modes are possible (e.g. **Live** in a feed) but scan worse than The Curator for "catch me up."
+
+**Core principle (structural):** Momentum. Rhythm beats hierarchy.
+
+</LayoutCard>
+
+<LayoutCard name="D: The Editorial" subtitle="Magazine-style hero, stacked secondaries" brands="Default for **Feature** on many prestige titles: weekend Esquire, Cosmopolitan, Elle, Harper’s Bazaar, Town & Country">
+
+**Structure:** Dominant portrait hero, stacked secondary stories, room for *fewer* top slots and more *visual* breathing room. Newsletter and longform can lead without competing with a wall of small headlines.
+
+**Fits** lean-back, showcase, and runway-adjacent moments. Poor match for *high urgency* "breaking" jobs unless intentionally artistic.
+
+**Core principle (structural):** One hero moment; everything else supports it.
 
 </LayoutCard>
 
@@ -116,7 +136,11 @@ Targets the **scroll-habit reader** who arrives from social or search and consum
 
 ## Conversion Levers
 
-Each layout deploys multiple conversion mechanisms at different scroll depths. The goal is to offer at least 3 newsletter/subscribe opportunities per session without creating banner blindness.
+Each layout can deploy multiple conversion mechanisms at different scroll depths. The goal is to offer at least 3 newsletter/subscribe opportunities per session without creating banner blindness.
+
+<Callout emoji="⚙️" title="Editorial Mode overrides">
+**Live, Feature, and Service** turn modules on or off and change *which* newsletter variant appears (e.g. Live uses a **sticky** CTA instead of inline; Feature emphasizes **full-width** signup). A layout’s “default levers” below describe the **template**; always cross-check the active **mode** in <a href="?path=/docs/docs-editorial-modes--docs">Editorial Modes</a> for the live configuration.
+</Callout>
 
 ### Layout A: The Curator
 
@@ -140,6 +164,12 @@ Each layout deploys multiple conversion mechanisms at different scroll depths. T
 <Lever icon="4" title="Shopping Carousel" desc="Horizontal product scroll with 'Shop Our Picks' drives affiliate revenue. Positioned after the video section, it catches users in an exploratory mindset. Commerce content also drives return visits from deal-seekers." />
 <Lever icon="5" title="Alternating Card Formats" desc="The stream alternates between image-right, full-bleed overlay, text-only, newsletter, and native ad cards. This variation prevents the 'list blindness' that kills engagement in uniform feeds." />
 
+### Layout D: The Editorial
+
+<Lever icon="1" title="Hero-dominant composition" desc="A single large hero (portrait or strong image ratio) signals *one* story matters—aligned with Feature Mode and longform or visual showcase goals." />
+<Lever icon="2" title="Full-width newsletter" desc="When Feature presets apply, inline signup can span the content width with room for copy and visual proof—without competing with a dense headline stack." />
+<Lever icon="3" title="Reduced ad surface (in Feature)" desc="Leaderboard and mid-page suppression in Feature Mode keeps focus on the hero and secondary features; better for immersion than for ad yield." />
+
 ---
 
 ## Expected Performance Impact
@@ -152,31 +182,34 @@ Each layout deploys multiple conversion mechanisms at different scroll depths. T
         <th style={{ padding: '10px 16px', fontWeight: 600, color: '#0f172a' }}>The Curator</th>
         <th style={{ padding: '10px 16px', fontWeight: 600, color: '#0f172a' }}>The Mosaic</th>
         <th style={{ padding: '10px 16px', fontWeight: 600, color: '#0f172a' }}>The Stream</th>
+        <th style={{ padding: '10px 16px', fontWeight: 600, color: '#0f172a' }}>The Editorial</th>
       </tr>
     </thead>
     <tbody>
-      <MetricRow metric="Avg. Time on Page" curator="3-4 min" mosaic="2-3 min" stream="4-6 min" />
-      <MetricRow metric="Pages per Session" curator="3.5-4.5" mosaic="4-6" stream="2.5-3.5" />
-      <MetricRow metric="Newsletter Signup Rate" curator="2.5-3.5%" mosaic="2-3%" stream="3-4.5%" />
-      <MetricRow metric="Return Visit Rate (7-day)" curator="35-42%" mosaic="30-38%" stream="28-35%" />
-      <MetricRow metric="Scroll Depth" curator="55-65%" mosaic="45-55%" stream="70-85%" />
-      <MetricRow metric="Ad Viewability" curator="Medium" mosaic="High" stream="Very High" />
-      <MetricRow metric="Primary Revenue Driver" curator="Subscriptions" mosaic="Display Ads" stream="Affiliate + Ads" />
+      <MetricRow metric="Avg. Time on Page" curator="3-4 min" mosaic="2-3 min" stream="4-6 min" editorial="4-5 min" />
+      <MetricRow metric="Pages per Session" curator="3.5-4.5" mosaic="4-6" stream="2.5-3.5" editorial="3-4" />
+      <MetricRow metric="Newsletter Signup Rate" curator="2.5-3.5%" mosaic="2-3%" stream="3-4.5%" editorial="3-4%" />
+      <MetricRow metric="Return Visit Rate (7-day)" curator="35-42%" mosaic="30-38%" stream="28-35%" editorial="36-44%" />
+      <MetricRow metric="Scroll Depth" curator="55-65%" mosaic="45-55%" stream="70-85%" editorial="50-60%" />
+      <MetricRow metric="Ad Viewability" curator="Medium" mosaic="High" stream="Very High" editorial="Lower (by design in Feature)" />
+      <MetricRow metric="Primary Revenue Driver" curator="Subscriptions" mosaic="Display Ads" stream="Affiliate + Ads" editorial="Subscriptions + brand" />
     </tbody>
   </table>
 </div>
 
 ---
 
-## Why Three Layouts Instead of One
+## Why Four Layouts (And Three Modes) Instead of One
 
-A single homepage layout optimizes for one behavior at the expense of others. Hearst's 29 brands span fundamentally different reader types:
+A single homepage template optimizes for one *structure* at the expense of others. **Modes** then re-weight the same (or a different) template for the job of the day. Hearst's 29 brands span different reader *tasks* and *schedules*:
 
-**News-forward brands** (Esquire, Cosmo, Elle) have readers who arrive with intent to catch up. They want editorial curation and a clear hierarchy. The Curator's 60/40 split and numbered stories serve this behavior.
+**News-forward brands** (Esquire, Cosmo, Elle) often default to **Live** on **The Curator** for the weekday *catch-up*—clear hierarchy, high story count. The same brand may run **Feature** on **The Editorial** for weekend longform.
 
-**Visual-first brands** (House Beautiful, Veranda, Delish) have readers who browse by image before headline. They need high image density and the ability to self-filter by category. The Mosaic's bento grid and tabbed navigation serve this behavior.
+**Visual-first brands** (House Beautiful, Veranda, Delish) often use **The Mosaic** so readers can *browse by image* and self-filter by category; mode shifts density (e.g. fashion week = Feature, recipe season = Service).
 
-**Lifestyle/utility brands** (Good Housekeeping, Prevention, Men's Health) have readers who arrive from social or search, often on mobile, and consume in a scroll-through pattern. The Stream's mobile-first feed with varied card formats serves this behavior.
+**Lifestyle/utility brands** (Good Housekeeping, Prevention, Men's Health) often default to **Service** on **The Stream**—social/search arrival, goal-oriented scroll, shopping and categories.
+
+**Showcase and prestige** moments (print-adjacent, runway, magazine drops) map naturally to **The Editorial** under **Feature Mode**, even when the same brand uses **The Curator** the rest of the week.
 
 ### Brand-to-Layout Mapping
 
@@ -237,11 +270,11 @@ The layouts collectively deploy 5 distinct newsletter formats, each optimized fo
 <Table
   headers={["Strategy", "Mechanism", "Layout"]}
   rows={[
-    ["Newsletter signups", "Daily/weekly email brings readers back", "All three"],
+    ["Newsletter signups", "Daily/weekly email brings readers back", "All layouts (variant by mode)"],
     ["Numbered top stories", "Creates FOMO around editorial curation", "Curator"],
     ["Editor's Picks", "Personalized curation builds trust and habit", "Mosaic"],
     ["Trending section", "Social proof signals \"you're missing out\"", "Mosaic, Curator"],
-    ["Subscribe CTA", "Paid subscribers have 8-12x higher return rate", "All three"],
+    ["Subscribe CTA", "Paid subscribers have 8-12x higher return rate", "All layouts"],
   ]}
 />
 
@@ -249,13 +282,16 @@ The layouts collectively deploy 5 distinct newsletter formats, each optimized fo
 
 ## Implementation Notes
 
-All three layouts share a common component library and token system. Switching between layouts is a single prop change on the `HomepageByLayout` component:
+All four layout templates share a common component library and token system. Switch **structure** with `HomepageByLayout` or **behavior** with `HomepageByMode` (applies mode presets, then you may override the layout).
 
 ```tsx
-<HomepageByLayout layout="curator" />  // or "mosaic" or "stream"
+<HomepageByLayout layout="curator" />  // "mosaic" | "stream" | "editorial"
+
+<HomepageByMode mode="live" />
+<HomepageByMode mode="feature" layoutOverride="mosaic" />
 ```
 
-Layouts automatically adapt to the active brand's tokens (colors, typography, spacing) through the `ThemeProvider`. No layout-specific token overrides are needed.
+Layouts automatically adapt to the active brand's tokens (colors, typography, spacing) through the `ThemeProvider`. No layout-specific token overrides are needed. See <a href="?path=/docs/docs-editorial-modes--docs">Editorial Modes</a> for the preset table and brand scheduling examples.
 
 ### Shared Components Across Layouts
 
