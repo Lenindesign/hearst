@@ -1,0 +1,247 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Docs/Editorial Modes" />
+
+export const ModeCard = ({ name, tagline, color, values, layout, children }) => (
+  <div style={{ border: `2px solid ${color}`, borderRadius: '12px', padding: '28px', marginBottom: '24px', background: '#fafbfc' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+      <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: color, flexShrink: 0 }} />
+      <h3 style={{ margin: 0, fontSize: '20px', color: '#0f172a' }}>{name}</h3>
+    </div>
+    <div style={{ fontSize: '15px', fontStyle: 'italic', color: '#475569', marginBottom: '16px' }}>"{tagline}"</div>
+    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '16px' }}>
+      {values.map((v, i) => (
+        <span key={i} style={{ padding: '4px 12px', borderRadius: '100px', fontSize: '12px', fontWeight: 600, background: `${color}18`, color, border: `1px solid ${color}40` }}>{v}</span>
+      ))}
+    </div>
+    <div style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '12px' }}>Default layout: <strong style={{ color: '#475569' }}>{layout}</strong></div>
+    <div style={{ fontSize: '14px', color: '#475569', lineHeight: '1.7' }}>{children}</div>
+  </div>
+);
+
+export const Table = ({ headers, rows }) => (
+  <div style={{ overflowX: 'auto', margin: '20px 0' }}>
+    <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+      <thead>
+        <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+          {headers.map((h, i) => (
+            <th key={i} style={{ padding: '10px 16px', fontWeight: 600, color: '#0f172a' }}>{h}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((row, ri) => (
+          <tr key={ri} style={{ borderBottom: '1px solid #f1f5f9', background: ri % 2 === 1 ? '#fafbfc' : 'transparent' }}>
+            {row.map((cell, ci) => (
+              <td key={ci} style={{ padding: '10px 16px', fontSize: '13px', color: ci === 0 ? '#334155' : '#64748b', fontWeight: ci === 0 ? 600 : 400 }}>{cell}</td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+);
+
+export const Callout = ({ emoji, title, children }) => (
+  <div style={{ background: '#f0f9ff', border: '1px solid #bae6fd', borderRadius: '8px', padding: '16px 20px', margin: '20px 0' }}>
+    <div style={{ fontSize: '14px', fontWeight: 600, color: '#0369a1', marginBottom: '6px' }}>{emoji} {title}</div>
+    <div style={{ fontSize: '13px', color: '#475569', lineHeight: '1.6' }}>{children}</div>
+  </div>
+);
+
+export const Timeline = ({ items }) => (
+  <div style={{ margin: '20px 0', paddingLeft: '20px', borderLeft: '2px solid #e2e8f0' }}>
+    {items.map((item, i) => (
+      <div key={i} style={{ position: 'relative', paddingBottom: '24px', paddingLeft: '20px' }}>
+        <div style={{ position: 'absolute', left: '-27px', top: '2px', width: '12px', height: '12px', borderRadius: '50%', background: item.color || '#94a3b8', border: '2px solid white' }} />
+        <div style={{ fontSize: '13px', fontWeight: 600, color: '#0f172a' }}>{item.title}</div>
+        <div style={{ fontSize: '12px', color: '#64748b', marginTop: '2px', lineHeight: '1.5' }}>{item.desc}</div>
+      </div>
+    ))}
+  </div>
+);
+
+# Editorial Modes
+
+<div style={{ fontSize: '16px', color: '#475569', lineHeight: '1.7', marginBottom: '32px', maxWidth: '680px' }}>
+From our head of design: homepage layouts aren't fixed identities — they're <strong>editorial states</strong>.
+A brand can shift between modes based on purpose and timing, like an editorial operating system
+with different "gears" for different jobs.
+</div>
+
+<Callout emoji="💡" title="Key Insight: Modes, not Archetypes">
+The four layouts (Curator, Mosaic, Stream, Editorial) are structural templates.
+Editorial Modes are the <strong>behavioral layer</strong> on top — the "jobs to be done"
+for each variation of a UX pattern. A brand could identify with 2 of these at any given time,
+or change modes from M–F versus Sat/Sun. They're less identities and more states.
+</Callout>
+
+---
+
+## The Three Modes
+
+<ModeCard name="Live Mode" tagline="What's happening now" color="#dc2626" values={["Recency", "Density", "Scanning"]} layout="The Curator">
+
+Optimized for the **breaking news mindset**. High story count (7 top stories), prominent trending bar,
+frequent ad slots, no inline newsletter (sticky CTA instead). The page feels *busy on purpose* —
+every pixel is working to surface what's new.
+
+**When to activate:** Weekday mornings, breaking news cycles, awards seasons, election nights, game days.
+
+**Suppresses:** Inline newsletter (uses sticky CTA instead), shopping carousel, video spotlight.
+These slow down scanning and add cognitive load when the user's job is "catch me up."
+
+</ModeCard>
+
+<ModeCard name="Feature Mode" tagline="Stories worth your time" color="#7c3aed" values={["Storytelling", "Visual", "Immersive"]} layout="The Editorial">
+
+Optimized for the **lean-back reader**. Fewer stories (3 top stories), no leaderboard ad, no trending bar,
+prominent newsletter, video spotlight enabled. The page breathes — hero imagery dominates and
+longform content gets the space it deserves.
+
+**When to activate:** Weekend editions, editorial showcases, magazine launches, fashion weeks,
+long-form feature drops.
+
+**Suppresses:** Leaderboard ads, trending bar, mid-page ads, sticky newsletter.
+Ads and urgency signals undercut the immersive reading experience this mode is designed to create.
+
+</ModeCard>
+
+<ModeCard name="Service Mode" tagline="Find what you need" color="#0891b2" values={["Task", "Search", "Structured"]} layout="The Stream">
+
+Optimized for the **goal-oriented visitor**. Shopping carousel enabled, high thematic row count (6),
+more editor's picks (8), no big story feed (replaced by structured categories).
+The page is organized like a tool, not a magazine.
+
+**When to activate:** Always-on for utility brands, product roundup days, gift guide seasons,
+recipe-heavy periods, "best of" compilations.
+
+**Suppresses:** Big story feed, sticky newsletter, video spotlight.
+Narrative content competes with the structured navigation these users need.
+
+</ModeCard>
+
+---
+
+## Modes are States, Not Identities
+
+<div style={{ fontSize: '14px', color: '#475569', lineHeight: '1.7', marginBottom: '24px' }}>
+The critical mental shift: brands don't <em>have</em> a mode. They <em>enter</em> a mode.
+A single brand can operate in multiple modes across a week, or even within a single day.
+</div>
+
+### Example: Esquire's Weekly Rhythm
+
+<Timeline items={[
+  { title: "Monday 6am → Live Mode", desc: "Breaking news, culture takes, weekend recap. Curator layout with high density.", color: "#dc2626" },
+  { title: "Tuesday–Thursday → Live Mode", desc: "Daily editorial cycle. News, opinion, reviews. Curator layout.", color: "#dc2626" },
+  { title: "Friday 5pm → Feature Mode", desc: "Weekend longform drops. Big profiles, photo essays, in-depth features. Editorial layout.", color: "#7c3aed" },
+  { title: "Saturday–Sunday → Feature Mode", desc: "Immersive reading. Fewer stories, larger images, no ad pressure. Editorial layout.", color: "#7c3aed" },
+]} />
+
+### Example: Good Housekeeping
+
+<Timeline items={[
+  { title: "Default → Service Mode (always)", desc: "Product reviews, cleaning guides, recipes. Stream layout with shopping carousel.", color: "#0891b2" },
+  { title: "Gift Guide Season (Nov–Dec) → Service Mode (intensified)", desc: "Shopping carousel expanded, editor's picks at max, category tabs promoted.", color: "#0891b2" },
+  { title: "Breaking Consumer Recall → Live Mode (temporary)", desc: "Safety recall, product alert. Switch to Curator with high density for 24–48 hours.", color: "#dc2626" },
+]} />
+
+### Example: Elle
+
+<Timeline items={[
+  { title: "Normal Weeks → Live Mode + Feature Mode (dual)", desc: "Curator layout for daily fashion news. Feature stories get editorial layout treatment.", color: "#dc2626" },
+  { title: "Fashion Week → Feature Mode (full)", desc: "All runway coverage, street style, designer interviews. Editorial layout, max visual impact.", color: "#7c3aed" },
+  { title: "Shopping Events (Prime Day, BFCM) → Service Mode", desc: "Switch to Stream with shopping carousel, deal roundups, product grids.", color: "#0891b2" },
+]} />
+
+---
+
+## Mode × Layout Matrix
+
+Every mode has preferred layouts, but any mode can use any layout. The mode configures *what* appears and *how dense* it is; the layout determines *how* it's arranged.
+
+<Table
+  headers={["", "Curator", "Mosaic", "Stream", "Editorial"]}
+  rows={[
+    ["Live Mode", "★ Default — best fit", "Good — grid density works", "Possible — but feed format slows scanning", "Poor — too immersive for urgency"],
+    ["Feature Mode", "Possible — but too dense", "Good — visual grid showcases features", "Poor — feed format fragments storytelling", "★ Default — best fit"],
+    ["Service Mode", "Poor — no structured navigation", "Good — category tabs help", "★ Default — best fit", "Poor — no task-oriented structure"],
+  ]}
+/>
+
+---
+
+## Mode Configuration Reference
+
+Each mode pre-configures section visibility, content density, and behavioral defaults:
+
+<Table
+  headers={["Setting", "Live", "Feature", "Service"]}
+  rows={[
+    ["Top Stories Count", "7", "3", "5"],
+    ["Thematic Row Count", "4", "4", "6"],
+    ["Editor's Picks", "6", "4", "8"],
+    ["Leaderboard Ad", "✓", "✗", "✓"],
+    ["Mid-page Ad", "✓", "✗", "✓"],
+    ["Inline Newsletter", "✗", "✓ (full-width)", "✓ (card)"],
+    ["Sticky Newsletter CTA", "✓", "✗", "✗"],
+    ["Trending Bar", "✓", "✗", "✓"],
+    ["Big Story Feed", "✓", "✓", "✗"],
+    ["Shopping Carousel", "✗", "✗", "✓"],
+    ["Video Spotlight", "✗", "✓", "✗"],
+    ["Newsletter Variant", "card", "full-width", "card"],
+  ]}
+/>
+
+---
+
+## How to Test Modes in Storybook
+
+Modes are available as stories under **Templates / Homepage Layouts**:
+
+1. **Mode: Live** — Curator layout with Live presets applied
+2. **Mode: Feature** — Editorial layout with Feature presets applied
+3. **Mode: Service** — Stream layout with Service presets applied
+4. **Mode Switcher** — Select any mode + optionally override the layout
+
+Combine with the **brand switcher** in the Storybook toolbar to test real scenarios:
+- "Esquire in Live Mode on a Tuesday"
+- "Good Housekeeping in Service Mode"
+- "Elle in Feature Mode during Fashion Week"
+
+All section toggles remain available as manual overrides in the controls panel.
+
+---
+
+## Implementation
+
+```tsx
+// Render a homepage in a specific editorial mode
+<HomepageByMode mode="live" />
+
+// Override the default layout while keeping mode presets
+<HomepageByMode mode="feature" layoutOverride="mosaic" />
+
+// Override specific props on top of the mode preset
+<HomepageByMode mode="service" topStoriesCount={8} showVideoSpotlight />
+
+// Resolve a mode to its layout + props for custom logic
+const { layout, props } = resolveMode("live");
+```
+
+---
+
+## Next Steps
+
+<Table
+  headers={["Action", "Owner", "Status"]}
+  rows={[
+    ["Define brand → default mode mappings", "Design Lead", "In Progress"],
+    ["Define M–F vs Sat/Sun scheduling rules per brand", "Editorial + Product", "Not Started"],
+    ["Build mode scheduling API (CMS integration)", "Engineering", "Not Started"],
+    ["A/B test Esquire: Live (M–F) vs Feature (Sat/Sun)", "Growth", "Not Started"],
+    ["A/B test Good Housekeeping: Service vs Live during recalls", "Growth", "Not Started"],
+    ["Define dual-mode behavior (e.g. Elle Live + Feature)", "Design Lead", "Not Started"],
+  ]}
+/>
