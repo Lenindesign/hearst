@@ -50,6 +50,8 @@ const preview: Preview = {
           "Pencil Integration",
           "Foundation",
           ["Colors", "Typography", "Tokens"],
+          "Docs",
+          ["Homepage Layout Strategy", "Editorial Modes", "Template Tokens"],
           "Templates",
           "FRE Components",
           "Components",
