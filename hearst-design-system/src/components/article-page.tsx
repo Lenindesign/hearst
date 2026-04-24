@@ -49,7 +49,7 @@ export interface ArticlePageContent {
 function ArticleUtilityBar() {
   return (
     <div className="h-8 bg-primary text-primary-foreground text-[length:var(--text-token-4xs)] font-semibold">
-      <div className="flex items-center justify-between h-full max-w-[var(--width-content-max)] mx-auto px-[var(--spacing-token-md)] lg:px-0">
+      <div className="flex items-center justify-between h-full max-w-[var(--width-content-max)] mx-auto px-[var(--spacing-token-md)] lg:px-[var(--spacing-token-lg)]">
         <div className="flex items-center gap-[var(--spacing-token-sm)]">
           {["Shop", "Newsletter", "Sign In"].map((label) => (
             <LinkComponent
@@ -233,7 +233,7 @@ export function ArticlePageTemplate({ content }: { content: ArticlePageContent }
       </div>
 
       {/* Main content grid — constrained to content-max */}
-      <div className="max-w-[var(--width-content-max)] mx-auto px-[var(--spacing-token-md)] lg:px-0 pt-[var(--spacing-token-2xl)] lg:pt-[var(--spacing-token-3xl)]">
+      <div className="max-w-[var(--width-content-max)] mx-auto px-[var(--spacing-token-md)] lg:px-[var(--spacing-token-lg)] pt-[var(--spacing-token-2xl)] lg:pt-[var(--spacing-token-3xl)]">
         <div className="flex flex-col lg:flex-row gap-[var(--spacing-token-2xl)] lg:gap-[var(--spacing-token-3xl)]">
           {/* Article column */}
           <article className="flex-1 min-w-0 space-y-[var(--spacing-token-2xl)] pb-[var(--spacing-token-3xl)]">
@@ -271,7 +271,7 @@ export function ArticlePageTemplate({ content }: { content: ArticlePageContent }
 
       {/* Related articles — full width of content area */}
       {content.relatedArticles && content.relatedArticles.length > 0 && (
-        <div className="max-w-[var(--width-content-max)] mx-auto px-[var(--spacing-token-md)] lg:px-0 pb-[var(--spacing-token-3xl)]">
+        <div className="max-w-[var(--width-content-max)] mx-auto px-[var(--spacing-token-md)] lg:px-[var(--spacing-token-lg)] pb-[var(--spacing-token-3xl)]">
           <RelatedArticles articles={content.relatedArticles} />
         </div>
       )}

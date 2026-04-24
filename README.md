@@ -1,5 +1,7 @@
 # Hearst Design System
 
+> **Designers:** start here → [DESIGNER-WORKFLOW.md](DESIGNER-WORKFLOW.md). It covers the new Git-as-source-of-truth workflow, the tool box, token structure, and AI agents.
+
 A comprehensive white-label design system for Hearst magazine brands, built with [Pencil](https://pencil.io) and informed by Figma source files.
 
 ## Structure

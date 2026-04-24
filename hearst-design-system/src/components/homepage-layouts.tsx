@@ -45,6 +45,52 @@ import {
   type BaseContentType,
 } from "./homepage-data";
 
+// ─── Shared Props ───
+
+export interface HomepageLayoutProps {
+  showUtilityBar?: boolean;
+  showLeaderboardAd?: boolean;
+  showNewsletter?: boolean;
+  showTrendingBar?: boolean;
+  showBigStoryFeed?: boolean;
+  showFooter?: boolean;
+  showStickyNewsletter?: boolean;
+  showMidPageAd?: boolean;
+  showShoppingCarousel?: boolean;
+  showVideoSpotlight?: boolean;
+  topStoriesCount?: number;
+  gridCardCount?: number;
+  thematicRowCount?: number;
+  editorPicksCount?: number;
+  heroTitle?: string;
+  heroEyebrow?: string;
+  heroAuthor?: string;
+  collectionTitle?: string;
+  newsletterVariant?: "full-width" | "card";
+}
+
+const defaultLayoutProps: Required<HomepageLayoutProps> = {
+  showUtilityBar: true,
+  showLeaderboardAd: true,
+  showNewsletter: true,
+  showTrendingBar: true,
+  showBigStoryFeed: true,
+  showFooter: true,
+  showStickyNewsletter: true,
+  showMidPageAd: true,
+  showShoppingCarousel: true,
+  showVideoSpotlight: true,
+  topStoriesCount: 5,
+  gridCardCount: 5,
+  thematicRowCount: 4,
+  editorPicksCount: 5,
+  heroTitle: "",
+  heroEyebrow: "",
+  heroAuthor: "",
+  collectionTitle: "",
+  newsletterVariant: "full-width",
+};
+
 // ─── Shared Data (imported from homepage-data.ts) ───
 
 interface ContentType extends BaseContentType {
@@ -346,18 +392,24 @@ function QuickLinksBar({
 // LAYOUT A: "The Curator" — NYT-inspired editorial hierarchy
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-export function LayoutCurator() {
+export function LayoutCurator(props: HomepageLayoutProps = {}) {
+  const p = { ...defaultLayoutProps, ...props };
   const { brand } = useTheme();
   const content = getContent(brand.slug);
   const images = getBrandImages(brand.slug);
 
-  const topStories = content.articles.slice(0, 5).map((a, i) => ({
+  if (p.heroTitle) content.hero.title = p.heroTitle;
+  if (p.heroEyebrow) content.hero.eyebrow = p.heroEyebrow;
+  if (p.heroAuthor) content.hero.author = p.heroAuthor;
+  if (p.collectionTitle) content.collectionTitle = p.collectionTitle;
+
+  const topStories = content.articles.slice(0, p.topStoriesCount).map((a, i) => ({
     title: a.title,
     date: `${a.time} · ${a.readTime}`,
     image: images.articles[i % images.articles.length],
   }));
 
-  const thematicRow1 = content.trending.slice(0, 4).map((t, i) => ({
+  const thematicRow1 = content.trending.slice(0, p.thematicRowCount).map((t, i) => ({
     title: t.title,
     subtitle: t.time,
     image: images.trending[i % images.trending.length],
@@ -382,17 +434,18 @@ export function LayoutCurator() {
 
   return (
     <div className="min-h-screen font-brand bg-background">
-      <div className="flex items-center justify-center py-4 lg:py-6 bg-muted">
-        <AdPlaceholder size="leaderboard" />
-      </div>
+      {p.showLeaderboardAd && (
+        <div className="flex items-center justify-center py-4 lg:py-6 bg-muted">
+          <AdPlaceholder size="leaderboard" />
+        </div>
+      )}
 
-      <UtilityBar />
+      {p.showUtilityBar && <UtilityBar />}
       <MainNav brandSlug={brand.slug} />
 
       {/* Hero Zone: 60/40 split */}
       <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-6 pt-8 lg:pt-12">
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 lg:items-stretch">
-          {/* Lead Story (60%) */}
           <div className="lg:w-[60%]">
             <div className="relative overflow-hidden rounded-lg cursor-pointer group h-full">
               <img
@@ -415,7 +468,6 @@ export function LayoutCurator() {
             </div>
           </div>
 
-          {/* Top Stories Stack (40%) */}
           <div className="lg:w-[40%] flex flex-col">
             <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mb-2">
               Top Stories
@@ -463,10 +515,11 @@ export function LayoutCurator() {
         </div>
       </div>
 
-      {/* Inline Newsletter */}
-      <div className="mt-12 lg:mt-16">
-        <InlineNewsletter brandName={brand.name} variant="full-width" />
-      </div>
+      {p.showNewsletter && (
+        <div className="mt-12 lg:mt-16">
+          <InlineNewsletter brandName={brand.name} variant={p.newsletterVariant} />
+        </div>
+      )}
 
       {/* Thematic Row 2 */}
       <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-6 pt-12 lg:pt-16">
@@ -499,32 +552,35 @@ export function LayoutCurator() {
         </div>
       </div>
 
-      {/* Mid-page ad */}
-      <div className="flex justify-center py-8">
-        <AdPlaceholder size="billboard" />
-      </div>
-
-      {/* Trending Bar */}
-      <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-6 py-8">
-        <QuickLinksBar topics={trendingTopics} />
-      </div>
-
-      {/* Big Story Feed */}
-      <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-6 pb-12">
-        <div className="border-t-2 border-primary pt-6">
-          <h2 className="text-2xl headline mb-6">More Stories</h2>
-          <BigStoryFeedStacked
-            items={bigStoryItems}
-            thumbnailWidth={160}
-            thumbnailHeight={120}
-            headlineFontSize={16}
-            showDividers
-          />
+      {p.showMidPageAd && (
+        <div className="flex justify-center py-8">
+          <AdPlaceholder size="billboard" />
         </div>
-      </div>
+      )}
 
-      <FooterSection brandSlug={brand.slug} />
-      <StickyNewsletterBar brandName={brand.name} />
+      {p.showTrendingBar && (
+        <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-6 py-8">
+          <QuickLinksBar topics={trendingTopics} />
+        </div>
+      )}
+
+      {p.showBigStoryFeed && (
+        <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-6 pb-12">
+          <div className="border-t-2 border-primary pt-6">
+            <h2 className="text-2xl headline mb-6">More Stories</h2>
+            <BigStoryFeedStacked
+              items={bigStoryItems}
+              thumbnailWidth={160}
+              thumbnailHeight={120}
+              headlineFontSize={16}
+              showDividers
+            />
+          </div>
+        </div>
+      )}
+
+      {p.showFooter && <FooterSection brandSlug={brand.slug} />}
+      {p.showStickyNewsletter && <StickyNewsletterBar brandName={brand.name} />}
     </div>
   );
 }
@@ -533,12 +589,18 @@ export function LayoutCurator() {
 // LAYOUT B: "The Mosaic" — Verge/TIME-inspired modular grid
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-export function LayoutMosaic() {
+export function LayoutMosaic(props: HomepageLayoutProps = {}) {
+  const p = { ...defaultLayoutProps, ...props };
   const { brand } = useTheme();
   const content = getContent(brand.slug);
   const images = getBrandImages(brand.slug);
   const [activeTab, setActiveTab] = useState("All");
   const [showMore, setShowMore] = useState(false);
+
+  if (p.heroTitle) content.hero.title = p.heroTitle;
+  if (p.heroEyebrow) content.hero.eyebrow = p.heroEyebrow;
+  if (p.heroAuthor) content.hero.author = p.heroAuthor;
+  if (p.collectionTitle) content.collectionTitle = p.collectionTitle;
 
   const categories = content.categories || defaultCategories;
 
@@ -561,7 +623,7 @@ export function LayoutMosaic() {
     })),
   ];
 
-  const editorPicks = content.articles.slice(0, 5).map((a, i) => ({
+  const editorPicks = content.articles.slice(0, p.editorPicksCount).map((a, i) => ({
     title: a.title,
     image: images.articles[i % images.articles.length],
     time: a.time,
@@ -575,11 +637,13 @@ export function LayoutMosaic() {
 
   return (
     <div className="min-h-screen font-brand bg-background">
-      <div className="flex items-center justify-center py-4 lg:py-6 bg-muted">
-        <AdPlaceholder size="leaderboard" />
-      </div>
+      {p.showLeaderboardAd && (
+        <div className="flex items-center justify-center py-4 lg:py-6 bg-muted">
+          <AdPlaceholder size="leaderboard" />
+        </div>
+      )}
 
-      <UtilityBar />
+      {p.showUtilityBar && <UtilityBar />}
       <MainNav brandSlug={brand.slug} />
 
       {/* Bento Hero Grid */}
@@ -714,10 +778,11 @@ export function LayoutMosaic() {
         </div>
       </div>
 
-      {/* Inline Ad */}
-      <div className="flex justify-center py-8">
-        <AdPlaceholder size="billboard" />
-      </div>
+      {p.showMidPageAd && (
+        <div className="flex justify-center py-8">
+          <AdPlaceholder size="billboard" />
+        </div>
+      )}
 
       {/* Editor's Picks Carousel */}
       <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-6 py-8">
@@ -749,66 +814,66 @@ export function LayoutMosaic() {
         </div>
       </div>
 
-      {/* Split Newsletter Module */}
-      <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-6 py-8">
-        <div className="rounded-xl bg-accent border border-border overflow-hidden">
-          <div className="flex flex-col lg:flex-row">
-            <div className="flex-1 p-8 lg:p-12 space-y-6">
-              <div className="space-y-2">
-                <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                  Newsletter
-                </p>
-                <h3 className="text-2xl lg:text-3xl leading-tight headline">
-                  The best of {brand.name}, curated for you.
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  Expert journalism, trending stories, and exclusive content
-                  delivered to your inbox every morning.
-                </p>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-0">
-                <Input
-                  size="xl"
-                  placeholder="Enter your email"
-                  leadingIcon={Mail}
-                  className="flex-1 [&>div]:rounded-none [&>div]:sm:rounded-l-sm [&>div]:border-border"
-                />
-                <Button
-                  size="lg"
-                  className="h-12 px-6 text-sm font-bold uppercase tracking-wider whitespace-nowrap rounded-none sm:rounded-r-sm"
-                >
-                  Subscribe
-                </Button>
-              </div>
-            </div>
-            <div className="lg:w-[300px] bg-muted flex items-center justify-center p-8">
-              <div className="text-center space-y-3">
-                <div className="w-32 h-44 bg-background rounded shadow-lg mx-auto flex items-center justify-center">
-                  <BrandLogo
-                    slug={brand.slug}
-                    className="[&_svg]:h-6 [&_svg]:w-auto"
-                  />
+      {p.showNewsletter && (
+        <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-6 py-8">
+          <div className="rounded-xl bg-accent border border-border overflow-hidden">
+            <div className="flex flex-col lg:flex-row">
+              <div className="flex-1 p-8 lg:p-12 space-y-6">
+                <div className="space-y-2">
+                  <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                    Newsletter
+                  </p>
+                  <h3 className="text-2xl lg:text-3xl leading-tight headline">
+                    The best of {brand.name}, curated for you.
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    Expert journalism, trending stories, and exclusive content
+                    delivered to your inbox every morning.
+                  </p>
                 </div>
-                <p className="text-xs text-muted-foreground">Latest Issue</p>
+                <div className="flex flex-col sm:flex-row gap-0">
+                  <Input
+                    size="xl"
+                    placeholder="Enter your email"
+                    leadingIcon={Mail}
+                    className="flex-1 [&>div]:rounded-none [&>div]:sm:rounded-l-sm [&>div]:border-border"
+                  />
+                  <Button
+                    size="lg"
+                    className="h-12 px-6 text-sm font-bold uppercase tracking-wider whitespace-nowrap rounded-none sm:rounded-r-sm"
+                  >
+                    Subscribe
+                  </Button>
+                </div>
+              </div>
+              <div className="lg:w-[300px] bg-muted flex items-center justify-center p-8">
+                <div className="text-center space-y-3">
+                  <div className="w-32 h-44 bg-background rounded shadow-lg mx-auto flex items-center justify-center">
+                    <BrandLogo
+                      slug={brand.slug}
+                      className="[&_svg]:h-6 [&_svg]:w-auto"
+                    />
+                  </div>
+                  <p className="text-xs text-muted-foreground">Latest Issue</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Trending Mosaic */}
-      <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-6 py-8">
-        <h2 className="text-2xl headline mb-6">Trending</h2>
-        <FourAcrossGrid
-          items={trendingMosaic.slice(0, showMore ? 5 : 5)}
-          columns={5}
-          aspectRatio="1/1"
-          showNumbers
-          
-        />
-      </div>
+      {p.showTrendingBar && (
+        <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-6 py-8">
+          <h2 className="text-2xl headline mb-6">Trending</h2>
+          <FourAcrossGrid
+            items={trendingMosaic.slice(0, showMore ? 5 : 5)}
+            columns={5}
+            aspectRatio="1/1"
+            showNumbers
+          />
+        </div>
+      )}
 
-      {/* Load More */}
       <div className="flex justify-center py-8">
         <Button
           variant="outline"
@@ -820,7 +885,7 @@ export function LayoutMosaic() {
         </Button>
       </div>
 
-      <FooterSection brandSlug={brand.slug} />
+      {p.showFooter && <FooterSection brandSlug={brand.slug} />}
     </div>
   );
 }
@@ -913,11 +978,16 @@ function FloatingSubscribeCTA({
   );
 }
 
-export function LayoutStream() {
+export function LayoutStream(props: HomepageLayoutProps = {}) {
+  const p = { ...defaultLayoutProps, ...props };
   const { brand } = useTheme();
   const content = getContent(brand.slug);
   const images = getBrandImages(brand.slug);
   const [showMore, setShowMore] = useState(false);
+
+  if (p.heroTitle) content.hero.title = p.heroTitle;
+  if (p.heroEyebrow) content.hero.eyebrow = p.heroEyebrow;
+  if (p.heroAuthor) content.hero.author = p.heroAuthor;
 
   const trendingTopics = content.navLinks
     .filter((l) => l !== "Home")
@@ -998,10 +1068,11 @@ export function LayoutStream() {
           </div>
         </div>
 
-        {/* Inline Newsletter Card */}
-        <div className="py-6 border-b border-border">
-          <InlineNewsletter brandName={brand.name} variant="card" />
-        </div>
+        {p.showNewsletter && (
+          <div className="py-6 border-b border-border">
+            <InlineNewsletter brandName={brand.name} variant={p.newsletterVariant === "full-width" ? "card" : p.newsletterVariant} />
+          </div>
+        )}
 
         {/* Stream Card 3: Text Only */}
         <div className="py-6 border-b border-border">
@@ -1018,12 +1089,13 @@ export function LayoutStream() {
           />
         </div>
 
-        {/* Native Ad Card */}
-        <div className="py-6 border-b border-border">
-          <div className="flex items-center justify-center">
-            <AdPlaceholder size="inline" className="w-full" />
+        {p.showMidPageAd && (
+          <div className="py-6 border-b border-border">
+            <div className="flex items-center justify-center">
+              <AdPlaceholder size="inline" className="w-full" />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Stream Card 4: Image Right */}
         <div className="py-6 border-b border-border">
@@ -1042,12 +1114,13 @@ export function LayoutStream() {
         </div>
       </div>
 
-      {/* Quick Links Bar */}
-      <div className="max-w-3xl mx-auto px-4 py-8">
-        <QuickLinksBar topics={trendingTopics} label="Most Popular" />
-      </div>
+      {p.showTrendingBar && (
+        <div className="max-w-3xl mx-auto px-4 py-8">
+          <QuickLinksBar topics={trendingTopics} label="Most Popular" />
+        </div>
+      )}
 
-      {/* Video Spotlight */}
+      {p.showVideoSpotlight && (
       <div className="max-w-3xl mx-auto px-4 py-8">
         <h2 className="text-2xl headline mb-6">Watch Now</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1087,41 +1160,43 @@ export function LayoutStream() {
           ))}
         </div>
       </div>
+      )}
 
-      {/* Shopping / Special Offers */}
-      <div className="max-w-3xl mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-2">
-            <ShoppingBag className="size-5 text-primary" />
-            <h2 className="text-2xl headline">Shop Our Picks</h2>
-          </div>
-          <Button variant="ghost" size="sm" className="text-sm gap-1">
-            View All <ChevronRight className="size-4" />
-          </Button>
-        </div>
-        <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
-          {content.articles.slice(0, 5).map((article, i) => (
-            <div
-              key={i}
-              className="shrink-0 w-[160px] cursor-pointer group"
-            >
-              <div className="relative overflow-hidden rounded-lg mb-2">
-                <img
-                  src={images.articles[i % images.articles.length]}
-                  alt={article.title}
-                  className="w-full h-[160px] object-cover object-[center_25%] transition-transform duration-300 group-hover:scale-105"
-                />
-              </div>
-              <h4 className="text-xs font-semibold leading-snug headline group-hover:text-primary transition-colors line-clamp-2">
-                {article.title}
-              </h4>
-              <p className="text-xs text-muted-foreground mt-1">
-                {article.readTime}
-              </p>
+      {p.showShoppingCarousel && (
+        <div className="max-w-3xl mx-auto px-4 py-8">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-2">
+              <ShoppingBag className="size-5 text-primary" />
+              <h2 className="text-2xl headline">Shop Our Picks</h2>
             </div>
-          ))}
+            <Button variant="ghost" size="sm" className="text-sm gap-1">
+              View All <ChevronRight className="size-4" />
+            </Button>
+          </div>
+          <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
+            {content.articles.slice(0, 5).map((article, i) => (
+              <div
+                key={i}
+                className="shrink-0 w-[160px] cursor-pointer group"
+              >
+                <div className="relative overflow-hidden rounded-lg mb-2">
+                  <img
+                    src={images.articles[i % images.articles.length]}
+                    alt={article.title}
+                    className="w-full h-[160px] object-cover object-[center_25%] transition-transform duration-300 group-hover:scale-105"
+                  />
+                </div>
+                <h4 className="text-xs font-semibold leading-snug headline group-hover:text-primary transition-colors line-clamp-2">
+                  {article.title}
+                </h4>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {article.readTime}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* More Stream Cards */}
       {showMore && (
@@ -1164,8 +1239,8 @@ export function LayoutStream() {
         </Button>
       </div>
 
-      <FooterSection brandSlug={brand.slug} />
-      <FloatingSubscribeCTA brandName={brand.name} />
+      {p.showFooter && <FooterSection brandSlug={brand.slug} />}
+      {p.showStickyNewsletter && <FloatingSubscribeCTA brandName={brand.name} />}
     </div>
   );
 }
@@ -1174,10 +1249,16 @@ export function LayoutStream() {
 // LAYOUT D: "The Editorial" — Magazine-style hero + stacked cards
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-export function LayoutEditorial() {
+export function LayoutEditorial(props: HomepageLayoutProps = {}) {
+  const p = { ...defaultLayoutProps, ...props };
   const { brand } = useTheme();
   const content = getContent(brand.slug);
   const images = getBrandImages(brand.slug);
+
+  if (p.heroTitle) content.hero.title = p.heroTitle;
+  if (p.heroEyebrow) content.hero.eyebrow = p.heroEyebrow;
+  if (p.heroAuthor) content.hero.author = p.heroAuthor;
+  if (p.collectionTitle) content.collectionTitle = p.collectionTitle;
 
   const secondaryArticles = content.articles.slice(0, 2).map((a, i) => ({
     title: a.title,
@@ -1188,7 +1269,7 @@ export function LayoutEditorial() {
     image: images.trending[(i + 1) % images.trending.length],
   }));
 
-  const thematicItems = content.trending.slice(0, 4).map((t, i) => ({
+  const thematicItems = content.trending.slice(0, p.thematicRowCount).map((t, i) => ({
     title: t.title,
     subtitle: t.time,
     image: images.trending[i % images.trending.length],
@@ -1209,17 +1290,18 @@ export function LayoutEditorial() {
 
   return (
     <div className="min-h-screen font-brand bg-background">
-      <div className="flex items-center justify-center py-4 lg:py-6 bg-muted">
-        <AdPlaceholder size="leaderboard" />
-      </div>
+      {p.showLeaderboardAd && (
+        <div className="flex items-center justify-center py-4 lg:py-6 bg-muted">
+          <AdPlaceholder size="leaderboard" />
+        </div>
+      )}
 
-      <UtilityBar />
+      {p.showUtilityBar && <UtilityBar />}
       <MainNav brandSlug={brand.slug} />
 
       {/* Above the Fold: Hero + Stacked Horizontal Cards */}
       <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-[116px] pt-8 lg:pt-12">
         <div className="flex flex-col lg:flex-row lg:gap-[48px]">
-          {/* Lead Story — left 46.8% (528/1128) */}
           <div className="lg:w-[46.8%] shrink-0 cursor-pointer group">
             <div className="overflow-hidden">
               <img
@@ -1291,37 +1373,41 @@ export function LayoutEditorial() {
         </div>
       </div>
 
-      {/* Inline Newsletter */}
-      <div className="mt-12 lg:mt-16">
-        <InlineNewsletter brandName={brand.name} variant="full-width" />
-      </div>
-
-      {/* Mid-page ad */}
-      <div className="flex justify-center py-8">
-        <AdPlaceholder size="billboard" />
-      </div>
-
-      {/* Trending Bar */}
-      <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-6 py-8">
-        <QuickLinksBar topics={trendingTopics} />
-      </div>
-
-      {/* Big Story Feed */}
-      <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-6 pb-12">
-        <div className="border-t-2 border-primary pt-6">
-          <h2 className="text-2xl headline mb-6">More Stories</h2>
-          <BigStoryFeedStacked
-            items={bigStoryItems}
-            thumbnailWidth={160}
-            thumbnailHeight={120}
-            headlineFontSize={16}
-            showDividers
-          />
+      {p.showNewsletter && (
+        <div className="mt-12 lg:mt-16">
+          <InlineNewsletter brandName={brand.name} variant={p.newsletterVariant} />
         </div>
-      </div>
+      )}
 
-      <FooterSection brandSlug={brand.slug} />
-      <StickyNewsletterBar brandName={brand.name} />
+      {p.showMidPageAd && (
+        <div className="flex justify-center py-8">
+          <AdPlaceholder size="billboard" />
+        </div>
+      )}
+
+      {p.showTrendingBar && (
+        <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-6 py-8">
+          <QuickLinksBar topics={trendingTopics} />
+        </div>
+      )}
+
+      {p.showBigStoryFeed && (
+        <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-6 pb-12">
+          <div className="border-t-2 border-primary pt-6">
+            <h2 className="text-2xl headline mb-6">More Stories</h2>
+            <BigStoryFeedStacked
+              items={bigStoryItems}
+              thumbnailWidth={160}
+              thumbnailHeight={120}
+              headlineFontSize={16}
+              showDividers
+            />
+          </div>
+        </div>
+      )}
+
+      {p.showFooter && <FooterSection brandSlug={brand.slug} />}
+      {p.showStickyNewsletter && <StickyNewsletterBar brandName={brand.name} />}
     </div>
   );
 }
@@ -1386,17 +1472,18 @@ export function LayoutSwitcher({
 
 export function HomepageByLayout({
   layout,
+  ...props
 }: {
   layout: LayoutVariant;
-}) {
+} & HomepageLayoutProps) {
   switch (layout) {
     case "curator":
-      return <LayoutCurator />;
+      return <LayoutCurator {...props} />;
     case "mosaic":
-      return <LayoutMosaic />;
+      return <LayoutMosaic {...props} />;
     case "stream":
-      return <LayoutStream />;
+      return <LayoutStream {...props} />;
     case "editorial":
-      return <LayoutEditorial />;
+      return <LayoutEditorial {...props} />;
   }
 }

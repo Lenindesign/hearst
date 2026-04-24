@@ -5,10 +5,130 @@ import {
   LayoutMosaic,
   LayoutStream,
   LayoutEditorial,
+  HomepageByLayout,
+  type HomepageLayoutProps,
+  type LayoutVariant,
 } from "@/components/homepage-layouts";
 
-const meta: Meta = {
+const sectionControls = {
+  showUtilityBar: {
+    control: "boolean",
+    description: "Show the top utility bar (Shop / Newsletter / Sign In).",
+    table: { category: "Sections" },
+  },
+  showLeaderboardAd: {
+    control: "boolean",
+    description: "Show the leaderboard ad above the nav.",
+    table: { category: "Sections" },
+  },
+  showNewsletter: {
+    control: "boolean",
+    description: "Show the inline newsletter module.",
+    table: { category: "Sections" },
+  },
+  showTrendingBar: {
+    control: "boolean",
+    description: "Show the trending topics chip bar.",
+    table: { category: "Sections" },
+  },
+  showBigStoryFeed: {
+    control: "boolean",
+    description: 'Show the "More Stories" stacked feed.',
+    table: { category: "Sections" },
+  },
+  showFooter: {
+    control: "boolean",
+    description: "Show the site footer.",
+    table: { category: "Sections" },
+  },
+  showStickyNewsletter: {
+    control: "boolean",
+    description: "Show the sticky/floating newsletter CTA.",
+    table: { category: "Sections" },
+  },
+  showMidPageAd: {
+    control: "boolean",
+    description: "Show the mid-page billboard ad slot.",
+    table: { category: "Sections" },
+  },
+  showShoppingCarousel: {
+    control: "boolean",
+    description: "Show the shopping carousel (Stream only).",
+    table: { category: "Sections" },
+  },
+  showVideoSpotlight: {
+    control: "boolean",
+    description: "Show the video spotlight section (Stream only).",
+    table: { category: "Sections" },
+  },
+  topStoriesCount: {
+    control: { type: "range", min: 1, max: 10, step: 1 },
+    description: "Number of stories in the hero sidebar.",
+    table: { category: "Content Density" },
+  },
+  thematicRowCount: {
+    control: { type: "range", min: 2, max: 6, step: 1 },
+    description: "Number of items per thematic content row.",
+    table: { category: "Content Density" },
+  },
+  editorPicksCount: {
+    control: { type: "range", min: 2, max: 8, step: 1 },
+    description: "Number of editor's picks in carousel (Mosaic).",
+    table: { category: "Content Density" },
+  },
+  heroTitle: {
+    control: "text",
+    description: "Override the hero headline (blank = use brand default).",
+    table: { category: "Content Override" },
+  },
+  heroEyebrow: {
+    control: "text",
+    description: "Override the hero eyebrow label.",
+    table: { category: "Content Override" },
+  },
+  heroAuthor: {
+    control: "text",
+    description: "Override the hero byline.",
+    table: { category: "Content Override" },
+  },
+  collectionTitle: {
+    control: "text",
+    description: 'Override the collection section heading (e.g. "Editor\'s Picks").',
+    table: { category: "Content Override" },
+  },
+  newsletterVariant: {
+    control: { type: "inline-radio" },
+    options: ["full-width", "card"],
+    description: "Newsletter module style.",
+    table: { category: "Appearance" },
+  },
+} as const;
+
+const defaultArgs: HomepageLayoutProps = {
+  showUtilityBar: true,
+  showLeaderboardAd: true,
+  showNewsletter: true,
+  showTrendingBar: true,
+  showBigStoryFeed: true,
+  showFooter: true,
+  showStickyNewsletter: true,
+  showMidPageAd: true,
+  showShoppingCarousel: true,
+  showVideoSpotlight: true,
+  topStoriesCount: 5,
+  thematicRowCount: 4,
+  editorPicksCount: 5,
+  heroTitle: "",
+  heroEyebrow: "",
+  heroAuthor: "",
+  collectionTitle: "",
+  newsletterVariant: "full-width",
+};
+
+const meta: Meta<HomepageLayoutProps> = {
   title: "Templates/Homepage Layouts",
+  args: defaultArgs,
+  argTypes: sectionControls,
   parameters: {
     layout: "fullscreen",
     docs: {
@@ -19,20 +139,21 @@ const meta: Meta = {
           "**The Mosaic** (Verge/TIME-inspired) uses a bento grid hero with category tabs. " +
           "**The Stream** (mobile-first) uses a single-column feed with alternating card formats. " +
           "**The Editorial** (magazine-style) uses a dominant hero with stacked secondary cards. " +
-          "Switch brands via the toolbar to see how each layout adapts to brand tokens.",
+          "Switch brands via the toolbar to see how each layout adapts to brand tokens. " +
+          "Use the controls panel to toggle sections, adjust content density, and override headline text.",
       },
     },
   },
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<HomepageLayoutProps>;
 
 export const Curator: Story = {
   name: "A: The Curator",
-  render: () => (
+  render: (args) => (
     <div style={{ margin: "-2rem", minHeight: "100vh" }}>
-      <LayoutCurator />
+      <LayoutCurator {...args} />
     </div>
   ),
   parameters: {
@@ -48,9 +169,9 @@ export const Curator: Story = {
 
 export const Mosaic: Story = {
   name: "B: The Mosaic",
-  render: () => (
+  render: (args) => (
     <div style={{ margin: "-2rem", minHeight: "100vh" }}>
-      <LayoutMosaic />
+      <LayoutMosaic {...args} />
     </div>
   ),
   parameters: {
@@ -66,9 +187,9 @@ export const Mosaic: Story = {
 
 export const Stream: Story = {
   name: "C: The Stream",
-  render: () => (
+  render: (args) => (
     <div style={{ margin: "-2rem", minHeight: "100vh" }}>
-      <LayoutStream />
+      <LayoutStream {...args} />
     </div>
   ),
   parameters: {
@@ -85,9 +206,9 @@ export const Stream: Story = {
 
 export const Editorial: Story = {
   name: "D: The Editorial",
-  render: () => (
+  render: (args) => (
     <div style={{ margin: "-2rem", minHeight: "100vh" }}>
-      <LayoutEditorial />
+      <LayoutEditorial {...args} />
     </div>
   ),
   parameters: {
@@ -98,6 +219,40 @@ export const Editorial: Story = {
           "Features a dominant 4:5 portrait hero on the left with eyebrow, headline, description, and byline, " +
           "paired with two stacked article cards on the right, each with a landscape image and metadata. " +
           "Below the fold includes a thematic content row, inline newsletter, trending bar, and big story feed.",
+      },
+    },
+  },
+};
+
+export const AllLayouts: Story = {
+  name: "Layout Switcher",
+  args: { ...defaultArgs },
+  argTypes: {
+    ...sectionControls,
+    layout: {
+      control: { type: "select" },
+      options: ["curator", "mosaic", "stream", "editorial"],
+      description: "Choose which homepage layout variant to render.",
+      table: { category: "Layout" },
+    },
+  },
+  render: (args) => {
+    const { layout: _layout, ...layoutProps } = args as HomepageLayoutProps & {
+      layout?: LayoutVariant;
+    };
+    const variant = _layout || "curator";
+    return (
+      <div style={{ margin: "-2rem", minHeight: "100vh" }}>
+        <HomepageByLayout layout={variant} {...layoutProps} />
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Compare all four layout variants from a single story using the Layout control. " +
+          "Combine with the brand switcher in the toolbar to evaluate layout x brand combinations.",
       },
     },
   },

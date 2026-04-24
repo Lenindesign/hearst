@@ -25,17 +25,28 @@ function AccordionItem({ className, ...props }: AccordionPrimitive.Item.Props) {
   )
 }
 
+type AccordionTriggerProps = AccordionPrimitive.Trigger.Props & {
+  indicatorPosition?: "start" | "end"
+}
+
 function AccordionTrigger({
   className,
   children,
+  indicatorPosition = "end",
   ...props
-}: AccordionPrimitive.Trigger.Props) {
+}: AccordionTriggerProps) {
+  const iconClass =
+    indicatorPosition === "start"
+      ? "**:data-[slot=accordion-trigger-icon]:mr-2 **:data-[slot=accordion-trigger-icon]:order-first"
+      : "**:data-[slot=accordion-trigger-icon]:ml-auto"
+
   return (
     <AccordionPrimitive.Header className="flex">
       <AccordionPrimitive.Trigger
         data-slot="accordion-trigger"
         className={cn(
-          "group/accordion-trigger relative flex flex-1 items-start justify-between rounded-lg border border-transparent py-2.5 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:after:border-ring aria-disabled:pointer-events-none aria-disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-4 **:data-[slot=accordion-trigger-icon]:text-muted-foreground",
+          "group/accordion-trigger relative flex flex-1 items-start justify-between rounded-lg border border-transparent py-2.5 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:after:border-ring aria-disabled:pointer-events-none aria-disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:size-4 **:data-[slot=accordion-trigger-icon]:text-muted-foreground",
+          iconClass,
           className
         )}
         {...props}
