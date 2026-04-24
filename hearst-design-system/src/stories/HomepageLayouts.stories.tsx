@@ -235,7 +235,7 @@ export const AllLayouts: Story = {
       description: "Choose which homepage layout variant to render.",
       table: { category: "Layout" },
     },
-  },
+  } as Story["argTypes"],
   render: (args) => {
     const { layout: _layout, ...layoutProps } = args as HomepageLayoutProps & {
       layout?: LayoutVariant;
