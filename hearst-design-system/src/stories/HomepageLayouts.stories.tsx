@@ -6,8 +6,11 @@ import {
   LayoutStream,
   LayoutEditorial,
   HomepageByLayout,
+  HomepageByMode,
+  EDITORIAL_MODES,
   type HomepageLayoutProps,
   type LayoutVariant,
+  type EditorialMode,
 } from "@/components/homepage-layouts";
 
 const sectionControls = {
@@ -125,6 +128,8 @@ const defaultArgs: HomepageLayoutProps = {
   newsletterVariant: "full-width",
 };
 
+// ─── Layout Stories ──────────────────────────────────────────
+
 const meta: Meta<HomepageLayoutProps> = {
   title: "Templates/Homepage Layouts",
   args: defaultArgs,
@@ -134,13 +139,23 @@ const meta: Meta<HomepageLayoutProps> = {
     docs: {
       description: {
         component:
-          "Four homepage layout variants optimized for different brand types. " +
-          "**The Curator** (NYT-inspired) uses strong editorial hierarchy with a 60/40 hero split. " +
-          "**The Mosaic** (Verge/TIME-inspired) uses a bento grid hero with category tabs. " +
-          "**The Stream** (mobile-first) uses a single-column feed with alternating card formats. " +
-          "**The Editorial** (magazine-style) uses a dominant hero with stacked secondary cards. " +
-          "Switch brands via the toolbar to see how each layout adapts to brand tokens. " +
-          "Use the controls panel to toggle sections, adjust content density, and override headline text.",
+          "Homepage layouts are the structural templates; **editorial modes** are the behavioral layer on top.\n\n" +
+          "### Editorial Modes (Jobs to be done)\n" +
+          "Brands don\u2019t have a single fixed layout \u2014 they shift between **editorial modes** based on purpose and timing:\n\n" +
+          "| Mode | Purpose | Values | Best Layouts |\n" +
+          "| --- | --- | --- | --- |\n" +
+          "| **Live** | What\u2019s happening now | Recency, density, scanning | Curator, Mosaic |\n" +
+          "| **Feature** | Stories worth your time | Storytelling, visual, immersive | Editorial, Mosaic |\n" +
+          "| **Service** | Find what you need | Task, search, structured | Stream, Mosaic |\n\n" +
+          "A brand can operate in **two modes simultaneously** or switch modes between weekdays and weekends " +
+          "(e.g. Esquire: Live M\u2013F, Feature Sat/Sun). Modes are states, not identities.\n\n" +
+          "### Layout Templates\n" +
+          "**The Curator** \u2014 NYT-inspired editorial hierarchy (60/40 hero split, numbered top stories)\n" +
+          "**The Mosaic** \u2014 Verge/TIME modular grid (bento hero, category tabs, content grid)\n" +
+          "**The Stream** \u2014 Mobile-first engagement feed (single-column, alternating cards)\n" +
+          "**The Editorial** \u2014 Magazine-style hero with stacked secondary cards\n\n" +
+          "Use the **Editorial Modes** stories below to see how modes configure layouts automatically, " +
+          "or use the individual layout stories with manual controls.",
       },
     },
   },
@@ -150,7 +165,7 @@ export default meta;
 type Story = StoryObj<HomepageLayoutProps>;
 
 export const Curator: Story = {
-  name: "A: The Curator",
+  name: "Layout: Curator",
   render: (args) => (
     <div style={{ margin: "-2rem", minHeight: "100vh" }}>
       <LayoutCurator {...args} />
@@ -160,15 +175,17 @@ export const Curator: Story = {
     docs: {
       description: {
         story:
-          "NYT-inspired editorial hierarchy. Best for news-forward brands like Esquire, Cosmopolitan, Elle, and Harper's Bazaar. " +
-          "Features a 60/40 hero split, numbered top stories, thematic content rows, inline newsletter, trending chips bar, and a sticky bottom newsletter CTA.",
+          "**Best for: Live Mode** \u2014 NYT-inspired editorial hierarchy optimized for recency and scanning. " +
+          "60/40 hero split, numbered top stories, thematic content rows, trending chips. " +
+          "Use this layout when the editorial goal is high information density and rapid story triage. " +
+          "Brands: Esquire (M\u2013F), Cosmopolitan, Elle, Harper\u2019s Bazaar.",
       },
     },
   },
 };
 
 export const Mosaic: Story = {
-  name: "B: The Mosaic",
+  name: "Layout: Mosaic",
   render: (args) => (
     <div style={{ margin: "-2rem", minHeight: "100vh" }}>
       <LayoutMosaic {...args} />
@@ -178,15 +195,17 @@ export const Mosaic: Story = {
     docs: {
       description: {
         story:
-          "Verge/TIME-inspired modular grid. Best for visual-first brands like Elle, Harper's Bazaar, House Beautiful, Veranda, and Delish. " +
-          "Features a bento grid hero (2x2 + 1x2 + 2x 1x1), category filter tabs, 3-column content grid, editor's picks carousel, split newsletter module, and load-more pagination.",
+          "**Serves: Live + Feature + Service** \u2014 The most versatile layout. " +
+          "Bento grid hero, category filter tabs, 3-column content grid, editor\u2019s picks carousel. " +
+          "In Live Mode: dense grid, more cards. In Feature Mode: fewer, larger cards. In Service Mode: category tabs front and center. " +
+          "Brands: Elle, Harper\u2019s Bazaar, House Beautiful, Veranda, Delish.",
       },
     },
   },
 };
 
 export const Stream: Story = {
-  name: "C: The Stream",
+  name: "Layout: Stream",
   render: (args) => (
     <div style={{ margin: "-2rem", minHeight: "100vh" }}>
       <LayoutStream {...args} />
@@ -196,16 +215,17 @@ export const Stream: Story = {
     docs: {
       description: {
         story:
-          "Mobile-first engagement feed. Best for lifestyle/utility brands like Good Housekeeping, Delish, Prevention, Women's Health, and Men's Health. " +
-          "Features a sticky compact nav, full-viewport hero, alternating stream cards (image-right, overlay, text-only, newsletter, native ad), " +
-          "quick links bar, video spotlight, shopping carousel, and a floating subscribe CTA.",
+          "**Best for: Service Mode** \u2014 Mobile-first feed optimized for task completion and structured browsing. " +
+          "Sticky compact nav, alternating card formats, quick links bar, shopping carousel, video spotlight. " +
+          "Use this layout when users arrive with a specific goal. " +
+          "Brands: Good Housekeeping, Delish, Prevention, Women\u2019s Health, Best Products.",
       },
     },
   },
 };
 
 export const Editorial: Story = {
-  name: "D: The Editorial",
+  name: "Layout: Editorial",
   render: (args) => (
     <div style={{ margin: "-2rem", minHeight: "100vh" }}>
       <LayoutEditorial {...args} />
@@ -215,10 +235,10 @@ export const Editorial: Story = {
     docs: {
       description: {
         story:
-          "Magazine-style hero with stacked secondary cards. Best for editorial-forward brands like Cosmopolitan, Elle, Harper's Bazaar, and Town & Country. " +
-          "Features a dominant 4:5 portrait hero on the left with eyebrow, headline, description, and byline, " +
-          "paired with two stacked article cards on the right, each with a landscape image and metadata. " +
-          "Below the fold includes a thematic content row, inline newsletter, trending bar, and big story feed.",
+          "**Best for: Feature Mode** \u2014 Magazine-style layout optimized for storytelling and visual immersion. " +
+          "Dominant 4:5 portrait hero, stacked secondary cards, reduced ad density, prominent newsletter. " +
+          "Use this layout for weekend editions, editorial showcases, or when the goal is deep engagement. " +
+          "Brands: Cosmopolitan, Elle, Harper\u2019s Bazaar, Town & Country, Esquire (weekends).",
       },
     },
   },
@@ -251,8 +271,146 @@ export const AllLayouts: Story = {
     docs: {
       description: {
         story:
-          "Compare all four layout variants from a single story using the Layout control. " +
-          "Combine with the brand switcher in the toolbar to evaluate layout x brand combinations.",
+          "Compare all four layout templates from a single story. " +
+          "Combine with the brand switcher in the toolbar to evaluate layout \u00d7 brand combinations.",
+      },
+    },
+  },
+};
+
+// ─── Editorial Mode Stories ──────────────────────────────────
+
+export const LiveMode: Story = {
+  name: "Mode: Live",
+  args: EDITORIAL_MODES.live.presets as HomepageLayoutProps,
+  render: (args) => {
+    return (
+      <div style={{ margin: "-2rem", minHeight: "100vh" }}>
+        <HomepageByMode mode="live" {...args} />
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "**Live Mode \u2014 \u201CWhat\u2019s happening now\u201D**\n\n" +
+          "Recency \u00b7 Density \u00b7 Scanning\n\n" +
+          "High story count (7 top stories), prominent trending bar, frequent ad slots, " +
+          "no inline newsletter (sticky CTA instead). Newsletter is suppressed to maximize " +
+          "content density. Default layout: **Curator**.\n\n" +
+          "Use for: Weekday mornings, breaking news cycles, real-time editorial coverage.\n\n" +
+          "Example schedule: Esquire M\u2013F, Cosmopolitan during awards season.",
+      },
+    },
+  },
+};
+
+export const FeatureMode: Story = {
+  name: "Mode: Feature",
+  args: EDITORIAL_MODES.feature.presets as HomepageLayoutProps,
+  render: (args) => {
+    return (
+      <div style={{ margin: "-2rem", minHeight: "100vh" }}>
+        <HomepageByMode mode="feature" {...args} />
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "**Feature Mode \u2014 \u201CStories worth your time\u201D**\n\n" +
+          "Storytelling \u00b7 Visual \u00b7 Immersive\n\n" +
+          "Fewer stories (3 top stories), no leaderboard ad, no trending bar, " +
+          "prominent newsletter, video spotlight enabled. Reduced density lets " +
+          "hero imagery and longform content breathe. Default layout: **Editorial**.\n\n" +
+          "Use for: Weekend editions, editorial showcases, magazine-style brand moments.\n\n" +
+          "Example schedule: Esquire Sat/Sun, Elle during Fashion Week, Harper\u2019s Bazaar always.",
+      },
+    },
+  },
+};
+
+export const ServiceMode: Story = {
+  name: "Mode: Service",
+  args: EDITORIAL_MODES.service.presets as HomepageLayoutProps,
+  render: (args) => {
+    return (
+      <div style={{ margin: "-2rem", minHeight: "100vh" }}>
+        <HomepageByMode mode="service" {...args} />
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "**Service Mode \u2014 \u201CFind what you need\u201D**\n\n" +
+          "Task \u00b7 Search \u00b7 Structured\n\n" +
+          "Shopping carousel enabled, high thematic row count (6), more editor\u2019s picks (8), " +
+          "no big story feed (replaced by structured categories). Newsletter uses compact " +
+          "card variant. Default layout: **Stream**.\n\n" +
+          "Use for: Product-driven brands, recipe sites, goal-oriented user journeys.\n\n" +
+          "Example schedule: Good Housekeeping always, Delish always, Best Products always.",
+      },
+    },
+  },
+};
+
+export const ModeSwitcher: Story = {
+  name: "Mode Switcher",
+  args: { ...defaultArgs },
+  argTypes: {
+    ...sectionControls,
+    mode: {
+      control: { type: "select" },
+      options: ["live", "feature", "service"],
+      description: "Editorial mode — the 'job to be done' for this homepage state.",
+      table: { category: "Editorial Mode" },
+    },
+    layoutOverride: {
+      control: { type: "select" },
+      options: ["", "curator", "mosaic", "stream", "editorial"],
+      description: "Override the mode's default layout (blank = use mode default).",
+      table: { category: "Editorial Mode" },
+    },
+  } as Story["argTypes"],
+  render: (args) => {
+    const {
+      mode: _mode,
+      layoutOverride: _layoutOverride,
+      ...propOverrides
+    } = args as HomepageLayoutProps & {
+      mode?: EditorialMode;
+      layoutOverride?: LayoutVariant | "";
+    };
+    const mode = _mode || "live";
+    const layoutOverride = _layoutOverride || undefined;
+    return (
+      <div style={{ margin: "-2rem", minHeight: "100vh" }}>
+        <HomepageByMode
+          mode={mode}
+          layoutOverride={layoutOverride}
+          {...propOverrides}
+        />
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "**The full editorial modes playground.** Select a mode to apply its behavioral presets, " +
+          "then optionally override the layout. The mode configures *what* sections appear and *how dense* " +
+          "the content is; the layout determines *how* it\u2019s arranged. " +
+          "Combine with the brand switcher to test real scenarios like \u201CEsquire in Live Mode on a Tuesday\u201D " +
+          "vs. \u201CEsquire in Feature Mode on a Saturday.\u201D\n\n" +
+          "| Mode | Default Layout | Key Behavior |\n" +
+          "| --- | --- | --- |\n" +
+          "| Live | Curator | 7 stories, trending bar, no newsletter, sticky CTA |\n" +
+          "| Feature | Editorial | 3 stories, no ads, newsletter prominent, video on |\n" +
+          "| Service | Stream | Shopping on, 6 thematic rows, 8 picks, no big feed |",
       },
     },
   },

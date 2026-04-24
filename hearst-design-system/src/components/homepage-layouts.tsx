@@ -1440,6 +1440,147 @@ const LAYOUT_META: Record<
   },
 };
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Editorial Modes — "Jobs to be done" for homepage UX patterns
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//
+// Modes are *states*, not identities. A brand can operate in different
+// modes at different times (e.g. Live M–F, Feature on weekends).
+// Each mode defines an editorial purpose and maps to layout + prop presets.
+
+export type EditorialMode = "live" | "feature" | "service";
+
+export interface EditorialModeConfig {
+  label: string;
+  tagline: string;
+  description: string;
+  /** Primary UX values driving this mode */
+  values: string[];
+  /** Which layouts are best suited for this mode */
+  preferredLayouts: LayoutVariant[];
+  /** Default layout when the mode is activated */
+  defaultLayout: LayoutVariant;
+  /** Props preset that configures density, sections, and behavior */
+  presets: Partial<HomepageLayoutProps>;
+}
+
+export const EDITORIAL_MODES: Record<EditorialMode, EditorialModeConfig> = {
+  live: {
+    label: "Live Mode",
+    tagline: "What\u2019s happening now",
+    description:
+      "Optimized for recency, density, and scanning. High story count, " +
+      "prominent trending bar, frequent ad slots. Best for breaking news, " +
+      "weekday mornings, and brands where timeliness drives engagement.",
+    values: ["recency", "density", "scanning"],
+    preferredLayouts: ["curator", "mosaic"],
+    defaultLayout: "curator",
+    presets: {
+      showUtilityBar: true,
+      showLeaderboardAd: true,
+      showNewsletter: false,
+      showTrendingBar: true,
+      showBigStoryFeed: true,
+      showFooter: true,
+      showStickyNewsletter: true,
+      showMidPageAd: true,
+      showShoppingCarousel: false,
+      showVideoSpotlight: false,
+      topStoriesCount: 7,
+      gridCardCount: 5,
+      thematicRowCount: 4,
+      editorPicksCount: 6,
+      newsletterVariant: "card",
+    },
+  },
+  feature: {
+    label: "Feature Mode",
+    tagline: "Stories worth your time",
+    description:
+      "Optimized for storytelling, visual impact, and immersion. Fewer but " +
+      "larger stories, prominent hero imagery, newsletter integration. " +
+      "Best for weekends, editorial showcases, and visual-first brands.",
+    values: ["storytelling", "visual", "immersive"],
+    preferredLayouts: ["editorial", "mosaic"],
+    defaultLayout: "editorial",
+    presets: {
+      showUtilityBar: true,
+      showLeaderboardAd: false,
+      showNewsletter: true,
+      showTrendingBar: false,
+      showBigStoryFeed: true,
+      showFooter: true,
+      showStickyNewsletter: false,
+      showMidPageAd: false,
+      showShoppingCarousel: false,
+      showVideoSpotlight: true,
+      topStoriesCount: 3,
+      gridCardCount: 3,
+      thematicRowCount: 4,
+      editorPicksCount: 4,
+      newsletterVariant: "full-width",
+    },
+  },
+  service: {
+    label: "Service Mode",
+    tagline: "Find what you need",
+    description:
+      "Optimized for task completion, search, and structured navigation. " +
+      "Category-driven, shopping-forward, utility sections prominent. " +
+      "Best for brands like Good Housekeeping, Delish, Best Products " +
+      "where users arrive with a specific goal.",
+    values: ["task", "search", "structured"],
+    preferredLayouts: ["stream", "mosaic"],
+    defaultLayout: "stream",
+    presets: {
+      showUtilityBar: true,
+      showLeaderboardAd: true,
+      showNewsletter: true,
+      showTrendingBar: true,
+      showBigStoryFeed: false,
+      showFooter: true,
+      showStickyNewsletter: false,
+      showMidPageAd: true,
+      showShoppingCarousel: true,
+      showVideoSpotlight: false,
+      topStoriesCount: 5,
+      gridCardCount: 5,
+      thematicRowCount: 6,
+      editorPicksCount: 8,
+      newsletterVariant: "card",
+    },
+  },
+};
+
+/**
+ * Resolve an editorial mode into a layout + prop combination.
+ * Pass an optional layout override to use a non-default layout
+ * while keeping the mode's behavioral presets.
+ */
+export function resolveMode(
+  mode: EditorialMode,
+  layoutOverride?: LayoutVariant
+): { layout: LayoutVariant; props: HomepageLayoutProps } {
+  const config = EDITORIAL_MODES[mode];
+  return {
+    layout: layoutOverride ?? config.defaultLayout,
+    props: { ...defaultLayoutProps, ...config.presets },
+  };
+}
+
+export function HomepageByMode({
+  mode,
+  layoutOverride,
+  ...propOverrides
+}: {
+  mode: EditorialMode;
+  layoutOverride?: LayoutVariant;
+} & Partial<HomepageLayoutProps>) {
+  const { layout, props } = resolveMode(mode, layoutOverride);
+  const merged = { ...props, ...propOverrides };
+  return <HomepageByLayout layout={layout} {...merged} />;
+}
+
 export function LayoutSwitcher({
   value,
   onChange,
