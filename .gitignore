@@ -37,6 +37,9 @@ agent-tools/
 # Pencil temp files
 .pencil-curr-args.json
 
+# Cursor debug logs
+.cursor/debug-*.log
+
 # Generated markdown docs at root
 HEARST-TOKEN-NAMING-TAXONOMY.md
 RESIN-VS-HEARST-DESIGN-SYSTEM-COMPARISON.md

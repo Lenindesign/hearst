@@ -81,8 +81,8 @@ Seven specialized AI agents power the Hearst Design System workflow. Each agent 
   <AgentCard
     icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>}
     name="DevOps / Deploy"
-    scope="Deploys to three Netlify sites: Next.js app (auto-deploy), Storybook (separate site via deploy-storybook), and Token Dashboard (Vite SPA). Manages Git operations and the build pipeline."
-    triggers={["deploy", "Netlify", "build", "Git commit", "CI/CD", "fix build", "deploy-storybook"]}
+    scope="Deploys to Netlify: the Next.js app (including Storybook at /storybook) and the Token Dashboard (Vite SPA). Manages Git operations and the build pipeline."
+    triggers={["deploy", "Netlify", "build", "Git commit", "CI/CD", "fix build"]}
   />
   <AgentCard
     icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12h.01M15 12h.01M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><circle cx="12" cy="12" r="10"/></svg>}
@@ -164,8 +164,8 @@ Each agent owns specific files and scripts. This prevents conflicts and ensures 
       <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
         <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>DevOps / Deploy</strong></td>
         <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>netlify.toml</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>token-dashboard/</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>build</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>deploy-storybook</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>3 Netlify sites (Next.js app, Storybook, Token Dashboard), <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>@netlify/plugin-nextjs</code></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>build</code></td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Netlify deploy (Next.js app includes Storybook at <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>/storybook</code>), <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>@netlify/plugin-nextjs</code></td>
       </tr>
       <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
         <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>QA / Review</strong></td>

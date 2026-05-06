@@ -143,7 +143,7 @@ Here is the exact sequence when a design decision changes:
   <TerminalBlock cmd="npm run audit" desc="Check for violations" />
   <TerminalBlock cmd="npm run index" desc="Rebuild component graph" />
   <TerminalBlock cmd="npm run dev" desc="Preview locally" />
-  <TerminalBlock cmd="npm run deploy-storybook" desc="Ship to production" />
+  <TerminalBlock cmd="git push origin main" desc="Ship to production (Netlify auto-deploy)" />
 </div>
 
 Every step is automated. A designer can trigger this entire pipeline by describing what they want in plain English to an AI agent in Cursor. The agent knows which scripts to run and in what order.
@@ -156,7 +156,7 @@ Every step is automated. A designer can trigger this entire pipeline by describi
 
 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', margin: '16px 0' }}>
   <LayerCard num="01" title="Next.js Design System App" path="hearst-design-system.netlify.app" desc="The interactive brand showcase. Switch between 29 brands, explore components rendered with real tokens, inspect computed styles with the Token Inspector." color="#0f172a" />
-  <LayerCard num="02" title="Storybook" path="hearst-ds-storybook.netlify.app" desc="Documentation and component development environment. MDX pages for architecture, workflows, and guidelines. Brand-switchable component stories." color="#ff4785" />
+  <LayerCard num="02" title="Storybook" path="hearst-design-system.netlify.app/storybook" desc="Documentation and component development environment. MDX pages for architecture, workflows, and guidelines. Brand-switchable component stories." color="#ff4785" />
   <LayerCard num="03" title="Token Dashboard" path="hearst-token-dashboard.netlify.app" desc="Standalone explorer for the full token tree. Search, filter, and inspect every token across all three layers and 29 brands." color="#3b82f6" />
 </div>
 

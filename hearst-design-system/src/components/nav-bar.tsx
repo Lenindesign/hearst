@@ -8,7 +8,28 @@ import { BrandSwitcher } from "./brand-switcher";
 import { BrandLogo } from "./brand-logo";
 import { brandLogos } from "@/lib/logos";
 
-const STORYBOOK_URL = "https://hearst-design-system.netlify.app/storybook/?path=/docs/welcome--docs";
+const DEFAULT_LOCAL_STORYBOOK_URL =
+  "http://localhost:6006/?path=/story/foundation-grid-system--overlap-pattern";
+const DEFAULT_PROD_STORYBOOK_URL =
+  "https://hearst-design-system.netlify.app/storybook/?path=/docs/welcome--docs";
+
+function getStorybookUrl() {
+  const envUrl = (globalThis as any)?.process?.env?.NEXT_PUBLIC_STORYBOOK_URL as
+    | string
+    | undefined;
+  if (typeof envUrl === "string" && envUrl.length > 0) return envUrl;
+
+  // In Storybook (port 6006) or local dev, point to local Storybook.
+  if (typeof window !== "undefined") {
+    if (window.location.port === "6006" || window.location.hostname === "localhost") {
+      return DEFAULT_LOCAL_STORYBOOK_URL;
+    }
+  }
+
+  return DEFAULT_PROD_STORYBOOK_URL;
+}
+
+const STORYBOOK_URL = getStorybookUrl();
 
 const mainNav: { label: string; href: string; external?: boolean }[] = [
   { label: "Style Guide", href: "/" },

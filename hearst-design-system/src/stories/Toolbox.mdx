@@ -474,15 +474,13 @@ git push origin main
          ▼
   Netlify detects push
          │
-         ├── Site 1: Next.js app          → hearst-design-system.netlify.app
-         ├── Site 2: Storybook (separate)  → hearst-ds-storybook.netlify.app
-         └── Site 3: Token Dashboard       → hearst-token-dashboard.netlify.app
+         ├── Site 1: Next.js app (+ /storybook) → hearst-design-system.netlify.app
+         └── Site 2: Token Dashboard            → hearst-token-dashboard.netlify.app
 ```
 
 | Site | Stack | Deploy command |
 |------|-------|---------------|
-| Design System App | Next.js + `@netlify/plugin-nextjs` | Auto-deploy on push to `main` |
-| Storybook | Static build (`npx storybook build`) | `npm run deploy-storybook` |
+| Design System App (+ /storybook) | Next.js + `@netlify/plugin-nextjs` | Auto-deploy on push to `main` |
 | Token Dashboard | Vite + React SPA | `npx netlify deploy --prod` from `token-dashboard/` |
 
 ---
