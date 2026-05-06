@@ -24,13 +24,25 @@ description: Deploy the Hearst design system to Netlify, manage build pipeline, 
   package = "@netlify/plugin-nextjs"
 
 [[redirects]]
+  from = "/storybook/index.json"
+  to = "/_next/static/sb/index.json"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/storybook/iframe.html"
+  to = "/_next/static/sb/iframe.html"
+  status = 200
+  force = true
+
+[[redirects]]
   from = "/storybook"
   to = "/_next/static/sb/index.html"
   status = 200
   force = true
 
 [[redirects]]
-  from = "/storybook/*"
+  from = "/storybook/"
   to = "/_next/static/sb/index.html"
   status = 200
   force = true
