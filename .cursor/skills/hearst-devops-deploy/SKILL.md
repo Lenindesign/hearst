@@ -35,20 +35,25 @@ description: Deploy the Hearst design system to Netlify, manage build pipeline, 
   status = 301
   force = true
 
+[[redirects]]
+  from = "/_next/static/sb"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/_next/static/sb/*"
+  to = "/"
+  status = 301
+  force = true
+
 [[headers]]
   for = "/_next/static/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
-
-# If anything is still served from an old `/_next/static/sb/*` deploy, do not
-# let `index.json` / HTML shells use `immutable` (they are not fingerprinted).
-[[headers]]
-  for = "/_next/static/sb/index.json"
-  [headers.values]
-    Cache-Control = "public, max-age=0, must-revalidate"
 ```
 
-Legacy URLs under `/storybook` redirect to the main site root.
+Legacy `/storybook` and `/_next/static/sb/*` URLs redirect to `/` because Storybook is not built on Netlify (use `npm run storybook` locally).
 
 ## Build Pipeline
 
