@@ -1,6 +1,6 @@
 ---
 name: hearst-devops-deploy
-description: Deploy the Hearst design system to Netlify, manage build pipeline, Git operations. Use when deploying, fixing build issues, managing CI/CD, or running Git commits.
+description: Deploy the Hearst design system to Netlify, manage build pipeline, Storybook sub-path deployment, Git operations. Use when deploying, fixing build issues, managing CI/CD, or running Git commits.
 ---
 
 # Hearst DevOps / Deploy
@@ -9,15 +9,15 @@ description: Deploy the Hearst design system to Netlify, manage build pipeline, 
 
 ## Hosting
 
-- **Netlify:** hearst-design-system.netlify.app — Next.js style guide app only
-- **Storybook:** not deployed; official catalog is **`npm run storybook`** → http://localhost:6006
+- **Netlify:** hearst-design-system.netlify.app — Next.js style guide + **Storybook at `/storybook`**
+- **Local dev Storybook:** `npm run storybook` → http://localhost:6006
 
 ## netlify.toml Configuration
 
 ```toml
 [build]
   base = "hearst-design-system"
-  command = "npm run build"
+  command = "npm run build && npx storybook build -o .next/static/sb --quiet && node scripts/fix-storybook-paths.mjs"
   publish = ".next"
 
 [[plugins]]
@@ -25,45 +25,35 @@ description: Deploy the Hearst design system to Netlify, manage build pipeline, 
 
 [[redirects]]
   from = "/storybook"
-  to = "/"
-  status = 301
+  to = "/_next/static/sb/index.html"
+  status = 200
   force = true
 
 [[redirects]]
   from = "/storybook/*"
-  to = "/"
-  status = 301
-  force = true
-
-[[redirects]]
-  from = "/_next/static/sb"
-  to = "/"
-  status = 301
-  force = true
-
-[[redirects]]
-  from = "/_next/static/sb/*"
-  to = "/"
-  status = 301
+  to = "/_next/static/sb/index.html"
+  status = 200
   force = true
 
 [[headers]]
-  for = "/_next/static/*"
+  for = "/_next/static/sb/index.json"
   [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+    Cache-Control = "public, max-age=0, must-revalidate"
 ```
 
-Legacy `/storybook` and `/_next/static/sb/*` URLs redirect to `/` because Storybook is not built on Netlify (use `npm run storybook` locally).
+Production Storybook URL: **https://hearst-design-system.netlify.app/storybook/**  
+Canonical redirects send bare `/_next/static/sb/index.html` → `/storybook` so bookmarks stay clean.
 
 ## Build Pipeline
 
-1. `npm run build` — Next.js production build only
-
-Optional locally: `npm run storybook` (dev) or `npm run build-storybook` (static output e.g. `storybook-static/`). Use `scripts/fix-storybook-paths.mjs` only if you serve a static Storybook build from a subpath.
+1. `npm run build` — Next.js production build
+2. `npx storybook build -o .next/static/sb --quiet` — Storybook into `.next/static/sb`
+3. `node scripts/fix-storybook-paths.mjs` — rewrite relative paths to absolute (`/_next/static/sb/`)
 
 ## Known Issues
 
-- `@netlify/plugin-nextjs` intercepts routes — prefer Netlify `[[redirects]]` over Next.js rewrites for edge cases
+- `@netlify/plugin-nextjs` intercepts routes — use Netlify `[[redirects]]` for Storybook (status **200** rewrite for `/storybook`, not 301 to static path)
+- If Storybook shows blank in production, confirm `fix-storybook-paths.mjs` ran during the Netlify build
 
 ## Deploy Commands
 
@@ -102,5 +92,6 @@ Designers editing tokens in Cursor must follow this workflow:
 
 ## Rules
 
-- Deploy includes **Next.js build** only; Storybook is **local**
-- Verify the main app after deploy; verify Storybook with `npm run storybook` before merging UI changes
+- ALWAYS include both Next.js build AND Storybook build in deploy
+- NEVER skip `fix-storybook-paths.mjs` — Storybook will be broken without it
+- Verify the main app AND `/storybook` after deploy

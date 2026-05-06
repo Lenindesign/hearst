@@ -2,15 +2,23 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useRef, useEffect, useCallback } from "react";
+import {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+  useSyncExternalStore,
+} from "react";
 import { useTheme } from "./theme-provider";
 import { BrandSwitcher } from "./brand-switcher";
 import { BrandLogo } from "./brand-logo";
 import { brandLogos } from "@/lib/logos";
 
-/** Official Storybook: local dev only (`npm run storybook` → localhost:6006). Not deployed to Netlify. */
-const OFFICIAL_STORYBOOK_URL =
+const LOCAL_STORYBOOK_URL =
   "http://localhost:6006/?path=/docs/welcome--docs";
+const PROD_STORYBOOK_URL =
+  "https://hearst-design-system.netlify.app/storybook/?path=/docs/welcome--docs";
 
 type NavItem = { label: string; href: string; external?: boolean };
 
@@ -25,12 +33,25 @@ const BASE_MAIN_NAV: NavItem[] = [
   { label: "Components", href: "/components" },
 ];
 
-function buildMainNav(showStorybook: boolean): NavItem[] {
-  if (!showStorybook) return BASE_MAIN_NAV;
-  return [
-    ...BASE_MAIN_NAV,
-    { label: "Storybook", href: OFFICIAL_STORYBOOK_URL, external: true },
-  ];
+function useStorybookHref(): string {
+  return useSyncExternalStore(
+    () => () => {},
+    () => {
+      const env = process.env.NEXT_PUBLIC_STORYBOOK_URL;
+      if (typeof env === "string" && env.length > 0) return env;
+      if (typeof window === "undefined") return PROD_STORYBOOK_URL;
+      const { hostname, port } = window.location;
+      if (
+        port === "6006" ||
+        hostname === "localhost" ||
+        hostname === "127.0.0.1"
+      ) {
+        return LOCAL_STORYBOOK_URL;
+      }
+      return PROD_STORYBOOK_URL;
+    },
+    () => PROD_STORYBOOK_URL
+  );
 }
 
 const componentNav = [
@@ -171,19 +192,14 @@ export function NavBar() {
   const logo = brandLogos[brand.slug];
   const isComponents = pathname.startsWith("/components");
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [mainNav, setMainNav] = useState<NavItem[]>(() =>
-    buildMainNav(process.env.NODE_ENV === "development")
+  const storybookHref = useStorybookHref();
+  const mainNav = useMemo<NavItem[]>(
+    () => [
+      ...BASE_MAIN_NAV,
+      { label: "Storybook", href: storybookHref, external: true },
+    ],
+    [storybookHref]
   );
-
-  useEffect(() => {
-    const localHost =
-      typeof window !== "undefined" &&
-      (window.location.hostname === "localhost" ||
-        window.location.hostname === "127.0.0.1");
-    setMainNav(
-      buildMainNav(process.env.NODE_ENV === "development" || Boolean(localHost))
-    );
-  }, []);
 
   useEffect(() => {
     setMobileOpen(false);

@@ -87,11 +87,7 @@ export const Default: Story = {
 
 ## Production deployment
 
-Storybook is **not** deployed to Netlify. The official catalog is **local**: `npm run storybook` → http://localhost:6006 (Hearst logo in the shell).
-
-If you ever need a static export (e.g. internal hosting), use `npm run build-storybook` and optionally `scripts/fix-storybook-paths.mjs` for subpath asset URLs.
-
-Netlify deploy only runs `npm run build` for the Next.js app.
+Netlify builds Storybook into `.next/static/sb/` and serves it at **`/storybook`** (rewrite, URL stays `/storybook`). See **hearst-devops-deploy** skill for `netlify.toml`. Local dev remains **`npm run storybook`** → http://localhost:6006.
 
 ## Rules
 
