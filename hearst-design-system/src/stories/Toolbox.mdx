@@ -432,7 +432,7 @@ npm run build-tokens       # Custom script: tokens/ → brands.ts + tokens.css
 **Analogy:** The delivery truck that takes the finished furniture from the workshop to the showroom and the customer's home. It doesn't build anything — it packages what's been built and delivers it reliably.
 
 **What it is:**
-The hosting platform that builds and deploys the design system app and Storybook to production.
+The hosting platform that builds and deploys the Next.js design system app to production (Storybook stays local).
 
 **Who uses it:**
 
@@ -461,12 +461,12 @@ The hosting platform that builds and deploys the design system app and Storybook
 
 **When it runs:**
 - Automatically on every push to `main`
-- Builds Next.js app + Storybook
+- Builds Next.js app only (Storybook: `npm run storybook` locally)
 - Deploys to `hearst-design-system.netlify.app`
 
 **What it deploys:**
 
-The system uses **three separate Netlify sites** to avoid conflicts between the Next.js plugin and static assets:
+The system uses **two Netlify sites** (Storybook is local-only: `npm run storybook` → localhost:6006):
 
 ```
 git push origin main
@@ -474,13 +474,13 @@ git push origin main
          ▼
   Netlify detects push
          │
-         ├── Site 1: Next.js app (+ /storybook) → hearst-design-system.netlify.app
-         └── Site 2: Token Dashboard            → hearst-token-dashboard.netlify.app
+         ├── Site 1: Next.js app → hearst-design-system.netlify.app
+         └── Site 2: Token Dashboard → hearst-token-dashboard.netlify.app
 ```
 
 | Site | Stack | Deploy command |
 |------|-------|---------------|
-| Design System App (+ /storybook) | Next.js + `@netlify/plugin-nextjs` | Auto-deploy on push to `main` |
+| Design System App | Next.js + `@netlify/plugin-nextjs` | Auto-deploy on push to `main` |
 | Token Dashboard | Vite + React SPA | `npx netlify deploy --prod` from `token-dashboard/` |
 
 ---

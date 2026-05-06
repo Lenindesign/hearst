@@ -8,30 +8,13 @@ import { BrandSwitcher } from "./brand-switcher";
 import { BrandLogo } from "./brand-logo";
 import { brandLogos } from "@/lib/logos";
 
-const DEFAULT_LOCAL_STORYBOOK_URL =
-  "http://localhost:6006/?path=/story/foundation-grid-system--overlap-pattern";
-const DEFAULT_PROD_STORYBOOK_URL =
-  "https://hearst-design-system.netlify.app/storybook/?path=/docs/welcome--docs";
+/** Official Storybook: local dev only (`npm run storybook` → localhost:6006). Not deployed to Netlify. */
+const OFFICIAL_STORYBOOK_URL =
+  "http://localhost:6006/?path=/docs/welcome--docs";
 
-function getStorybookUrl() {
-  const envUrl = (globalThis as any)?.process?.env?.NEXT_PUBLIC_STORYBOOK_URL as
-    | string
-    | undefined;
-  if (typeof envUrl === "string" && envUrl.length > 0) return envUrl;
+type NavItem = { label: string; href: string; external?: boolean };
 
-  // In Storybook (port 6006) or local dev, point to local Storybook.
-  if (typeof window !== "undefined") {
-    if (window.location.port === "6006" || window.location.hostname === "localhost") {
-      return DEFAULT_LOCAL_STORYBOOK_URL;
-    }
-  }
-
-  return DEFAULT_PROD_STORYBOOK_URL;
-}
-
-const STORYBOOK_URL = getStorybookUrl();
-
-const mainNav: { label: string; href: string; external?: boolean }[] = [
+const BASE_MAIN_NAV: NavItem[] = [
   { label: "Style Guide", href: "/" },
   { label: "Home Page", href: "/home" },
   { label: "Color", href: "/color" },
@@ -40,8 +23,15 @@ const mainNav: { label: string; href: string; external?: boolean }[] = [
   { label: "Token Mapping", href: "/tokens" },
   { label: "Token Dashboard", href: "/tokens/dashboard" },
   { label: "Components", href: "/components" },
-  { label: "Storybook", href: STORYBOOK_URL, external: true },
 ];
+
+function buildMainNav(showStorybook: boolean): NavItem[] {
+  if (!showStorybook) return BASE_MAIN_NAV;
+  return [
+    ...BASE_MAIN_NAV,
+    { label: "Storybook", href: OFFICIAL_STORYBOOK_URL, external: true },
+  ];
+}
 
 const componentNav = [
   { label: "Card", href: "/components/card" },
@@ -181,6 +171,19 @@ export function NavBar() {
   const logo = brandLogos[brand.slug];
   const isComponents = pathname.startsWith("/components");
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mainNav, setMainNav] = useState<NavItem[]>(() =>
+    buildMainNav(process.env.NODE_ENV === "development")
+  );
+
+  useEffect(() => {
+    const localHost =
+      typeof window !== "undefined" &&
+      (window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1");
+    setMainNav(
+      buildMainNav(process.env.NODE_ENV === "development" || Boolean(localHost))
+    );
+  }, []);
 
   useEffect(() => {
     setMobileOpen(false);

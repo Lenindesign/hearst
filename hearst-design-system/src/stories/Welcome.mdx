@@ -78,11 +78,11 @@ The system follows a strict one-way data flow. Git is the single source of truth
      │                 │
      ▼                 ▼
   Next.js App      Storybook
-  (main site)      (component docs)
+  (main site)   (component docs, local)
      │                 │
      ▼                 ▼
- Netlify           Netlify
- (auto-deploy)     (/storybook path)
+ Netlify           localhost:6006
+ (auto-deploy)  (npm run storybook)
 ```
 
 ### Three-layer token structure
@@ -112,7 +112,7 @@ The system follows a strict one-way data flow. Git is the single source of truth
 
 ## Live Properties
 
-The system is deployed across three sites:
+The system has two deployed sites; Storybook runs only on your machine (official catalog at **localhost:6006**):
 
 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px', margin: '24px 0' }}>
   <LinkCard
@@ -122,10 +122,10 @@ The system is deployed across three sites:
     tag="Next.js"
   />
   <LinkCard
-    href="https://hearst-design-system.netlify.app/storybook"
-    title="Storybook"
-    desc="Interactive component catalog with controls, documentation, and brand theming via the toolbar."
-    tag="Storybook"
+    href="http://localhost:6006"
+    title="Storybook (local)"
+    desc="Official interactive catalog with Hearst branding: run npm run storybook, then open localhost:6006. Not hosted on Netlify."
+    tag="Local dev"
   />
   <LinkCard
     href="https://hearst-token-dashboard.netlify.app"

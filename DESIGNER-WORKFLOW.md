@@ -63,7 +63,7 @@ Figma receives tokens via `npm run push-figma`. Our design system variables show
 
 ### Storybook — the mirror
 
-Deployed at `hearst-design-system.netlify.app/storybook`. This is where you verify a change actually works across Cosmopolitan, Car and Driver, Esquire, and every other brand. If it looks right in Storybook, it looks right in production.
+Run **`npm run storybook`** and open **http://localhost:6006** (official Storybook with Hearst branding). Verify changes across Cosmopolitan, Car and Driver, Esquire, and every other brand using the toolbar. Storybook is not hosted on Netlify.
 
 ---
 
@@ -190,7 +190,6 @@ A short list of "you can't break this if you follow these."
 | A brand is missing from the switcher | Run `npm run build-tokens` — new brands in `tokens/brands/` are auto-discovered |
 | `push-figma` fails with a 413 error | Use the batched push: it splits the payload into 6 smaller batches |
 | Storybook shows a blank page locally | `rm -rf node_modules/.cache/storybook node_modules/.vite-storybook && npm run storybook` |
-| Storybook is blank in production | Confirm `scripts/fix-storybook-paths.mjs` ran during the Netlify build |
 | `tokens:check` complains about a removed key | You probably renamed or deleted a key. Restore it — keys never change. |
 
 For deeper technical context, see [`WORKFLOW.md`](WORKFLOW.md).

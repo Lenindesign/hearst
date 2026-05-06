@@ -85,12 +85,13 @@ export const Default: Story = {
 | `npm run storybook` | Dev server on port 6006 |
 | `npm run build-storybook` | Production build (default output: `storybook-static/`) |
 
-## Production Deployment
+## Production deployment
 
-- Storybook builds into `.next/static/sb/` (via `storybook build -o .next/static/sb`)
-- `scripts/fix-storybook-paths.mjs` rewrites relative paths to absolute (`/_next/static/sb/`)
-- Accessed via `/storybook` redirect in netlify.toml
-- Build command: `npm run build && npx storybook build -o .next/static/sb --quiet && node scripts/fix-storybook-paths.mjs`
+Storybook is **not** deployed to Netlify. The official catalog is **local**: `npm run storybook` → http://localhost:6006 (Hearst logo in the shell).
+
+If you ever need a static export (e.g. internal hosting), use `npm run build-storybook` and optionally `scripts/fix-storybook-paths.mjs` for subpath asset URLs.
+
+Netlify deploy only runs `npm run build` for the Next.js app.
 
 ## Rules
 

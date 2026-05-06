@@ -76,41 +76,8 @@ export function PageContainer({
   ...rest
 }: PageContainerProps) {
   const Component = Tag as React.ElementType;
-  const ref = React.useRef<HTMLElement | null>(null);
-  // #region agent log
-  React.useEffect(() => {
-    const el = ref.current;
-    if (!el || typeof window === "undefined") return;
-    const cs = window.getComputedStyle(el);
-    const rect = el.getBoundingClientRect();
-    const data = {
-      width: rect.width,
-      left: rect.left,
-      right: rect.right,
-      paddingLeft: cs.paddingLeft,
-      paddingRight: cs.paddingRight,
-      maxWidth: cs.maxWidth,
-      marginLeft: cs.marginLeft,
-      marginRight: cs.marginRight,
-      viewport: window.innerWidth,
-    };
-    fetch("http://127.0.0.1:7869/ingest/908fc3d2-a6e0-4381-89dd-35644ae2aa2c", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "5e7435" },
-      body: JSON.stringify({
-        sessionId: "5e7435",
-        location: "grid.tsx:PageContainer",
-        message: "PageContainer measured",
-        hypothesisId: "H1,H2,H6",
-        data,
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-  }, []);
-  // #endregion
   return (
     <Component
-      ref={ref}
       data-slot="page-container"
       className={cn(
         "mx-auto w-full",
@@ -204,44 +171,8 @@ export function Grid({
   ...rest
 }: GridProps) {
   const Component = Tag as React.ElementType;
-  const ref = React.useRef<HTMLElement | null>(null);
-  // #region agent log
-  React.useEffect(() => {
-    const el = ref.current;
-    if (!el || typeof window === "undefined") return;
-    const cs = window.getComputedStyle(el);
-    const rect = el.getBoundingClientRect();
-    const tracks = cs.gridTemplateColumns.split(" ").map(parseFloat);
-    const data = {
-      width: rect.width,
-      left: rect.left,
-      gap: cs.gap,
-      gridTemplateColumns: cs.gridTemplateColumns,
-      trackCount: tracks.length,
-      trackWidthPx: tracks[0],
-      sumTracksPlusGaps:
-        tracks.reduce((a, b) => a + (Number.isFinite(b) ? b : 0), 0) +
-        (tracks.length - 1) * parseFloat(cs.columnGap || "0"),
-      childrenCount: el.children.length,
-      viewport: window.innerWidth,
-    };
-    fetch("http://127.0.0.1:7869/ingest/908fc3d2-a6e0-4381-89dd-35644ae2aa2c", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "5e7435" },
-      body: JSON.stringify({
-        sessionId: "5e7435",
-        location: "grid.tsx:Grid",
-        message: "Grid measured",
-        hypothesisId: "H1,H4",
-        data,
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-  }, []);
-  // #endregion
   return (
     <Component
-      ref={ref}
       data-slot="grid"
       className={cn(
         "grid",
@@ -409,47 +340,8 @@ export function Col({
   ...rest
 }: ColProps) {
   const Component = Tag as React.ElementType;
-  const ref = React.useRef<HTMLElement | null>(null);
-  // #region agent log
-  React.useEffect(() => {
-    const el = ref.current;
-    if (!el || typeof window === "undefined") return;
-    const cs = window.getComputedStyle(el);
-    const rect = el.getBoundingClientRect();
-    const firstChild = el.firstElementChild as HTMLElement | null;
-    const childRect = firstChild?.getBoundingClientRect();
-    fetch("http://127.0.0.1:7869/ingest/908fc3d2-a6e0-4381-89dd-35644ae2aa2c", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "5e7435" },
-      body: JSON.stringify({
-        sessionId: "5e7435",
-        location: "grid.tsx:Col",
-        message: "Col measured",
-        hypothesisId: "H3,H5",
-        data: {
-          spanBase: span,
-          spanMd: spanMdProp ?? null,
-          spanLg: spanLgProp ?? null,
-          startLg: startLgProp ?? null,
-          width: rect.width,
-          left: rect.left,
-          right: rect.right,
-          gridColumnStart: cs.gridColumnStart,
-          gridColumnEnd: cs.gridColumnEnd,
-          firstChildTag: firstChild?.tagName ?? null,
-          firstChildWidth: childRect?.width ?? null,
-          firstChildLeft: childRect?.left ?? null,
-          firstChildRight: childRect?.right ?? null,
-          overflowsCol: childRect ? childRect.right > rect.right + 0.5 : false,
-        },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-  }, [span, spanMdProp, spanLgProp, startLgProp]);
-  // #endregion
   return (
     <Component
-      ref={ref}
       data-slot="col"
       className={cn(
         "min-w-0",
@@ -489,49 +381,8 @@ export function GridOverlay({
   className,
   hideOnMobile = true,
 }: GridOverlayProps) {
-  const ref = React.useRef<HTMLDivElement | null>(null);
-  // #region agent log
-  React.useEffect(() => {
-    const el = ref.current;
-    if (!el || typeof window === "undefined") return;
-    const cs = window.getComputedStyle(el);
-    const rect = el.getBoundingClientRect();
-    const firstCol = el.children[0] as HTMLElement | undefined;
-    const lastVisibleCol = Array.from(el.children)
-      .filter((c) => (c as HTMLElement).offsetParent !== null)
-      .pop() as HTMLElement | undefined;
-    const firstRect = firstCol?.getBoundingClientRect();
-    const lastRect = lastVisibleCol?.getBoundingClientRect();
-    fetch("http://127.0.0.1:7869/ingest/908fc3d2-a6e0-4381-89dd-35644ae2aa2c", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "5e7435" },
-      body: JSON.stringify({
-        sessionId: "5e7435",
-        location: "grid.tsx:GridOverlay",
-        message: "GridOverlay measured",
-        hypothesisId: "H1,H4",
-        data: {
-          width: rect.width,
-          left: rect.left,
-          right: rect.right,
-          gap: cs.gap,
-          gridTemplateColumns: cs.gridTemplateColumns,
-          firstColLeft: firstRect?.left ?? null,
-          firstColWidth: firstRect?.width ?? null,
-          lastColRight: lastRect?.right ?? null,
-          visibleColCount: Array.from(el.children).filter(
-            (c) => (c as HTMLElement).offsetParent !== null,
-          ).length,
-          viewport: window.innerWidth,
-        },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-  }, []);
-  // #endregion
   return (
     <div
-      ref={ref}
       aria-hidden
       className={cn(
         "pointer-events-none absolute inset-x-4 inset-y-0 z-0 grid grid-cols-4 gap-4 md:inset-x-6 md:grid-cols-8 md:gap-5 lg:inset-x-12 lg:grid-cols-12 lg:gap-6",
