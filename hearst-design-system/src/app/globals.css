@@ -481,6 +481,35 @@
   --width-page-max: 1440px;
   --width-sidebar: 320px;
   --width-sidebar-narrow: 180px;
+
+  /* ─── Responsive Grid System ───
+   * The grid is the spatial contract every layout obeys.
+   * - 4 columns on mobile (base)
+   * - 8 columns at md (>= 768px)
+   * - 12 columns at lg (>= 1024px)
+   * Gutters and page padding scale per breakpoint.
+   * Documented in Foundation / Grid System.
+   */
+  --grid-cols-mobile: 4;
+  --grid-cols-tablet: 8;
+  --grid-cols-desktop: 12;
+
+  --grid-gutter-mobile: var(--space-md, 16px);
+  --grid-gutter-tablet: var(--space-lg, 20px);
+  --grid-gutter-desktop: var(--space-xl, 24px);
+
+  --grid-margin-mobile: var(--space-md, 16px);
+  --grid-margin-tablet: var(--space-xl, 24px);
+  --grid-margin-desktop: var(--space-3xl, 48px);
+
+  /* Breakpoint values (kept aligned with Tailwind defaults).
+   * Use these in JS via useBreakpoint() and in arbitrary media queries
+   * via env() / matchMedia. NEVER fork these numbers in components. */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
 }
 
 :root {

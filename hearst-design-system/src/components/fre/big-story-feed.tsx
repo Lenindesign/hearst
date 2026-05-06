@@ -113,7 +113,7 @@ export function BigStoryFeedStacked({
               className="rounded-md"
               style={{ width: thumbnailWidth, height: thumbnailHeight, minHeight: thumbnailHeight }}
             />
-            <ArticleCardContent className="justify-center">
+            <ArticleCardContent className="justify-center group-data-[size=sm]/article-card:py-0">
               {item.eyebrow && (
                 <ArticleCardEyebrow>{item.eyebrow}</ArticleCardEyebrow>
               )}

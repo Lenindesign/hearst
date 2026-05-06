@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useTheme } from "./theme-provider";
 import { NavBar } from "./nav-bar";
 import { BrandLogo } from "./brand-logo";
@@ -9,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Divider } from "@/components/ui/divider";
 import { LinkComponent } from "@/components/ui/link";
-import { Separator } from "@/components/ui/separator";
+import { Col, Grid, GridOverlay, PageContainer } from "@/components/ui/grid";
 import { BigStoryFeedStacked } from "./fre/big-story-feed";
 import { BigStoryImageRight } from "./fre/big-story";
 import { FourAcrossGrid } from "./fre/four-across-grid";
@@ -23,6 +24,15 @@ import {
 
 interface ContentType extends BaseContentType {
   footerCols: string[][];
+}
+
+export interface HomePageTemplateProps {
+  /**
+   * Classic preserves the current production homepage. Overlap grid makes the
+   * breakpoint behavior visible for Storybook and design review.
+   */
+  layout?: "classic" | "overlapGrid";
+  showGridOverlay?: boolean;
 }
 
 const defaultFooterCols: string[][] = [
@@ -40,7 +50,7 @@ function getContent(brandSlug: string): ContentType {
 function UtilityBar() {
   return (
     <div className="h-8 bg-primary text-primary-foreground text-[length:var(--text-token-4xs)] font-semibold">
-      <div className="flex items-center justify-between h-full max-w-[var(--width-content-max)] mx-auto px-4 lg:px-0">
+      <PageContainer className="flex items-center justify-between h-full">
         <div className="flex items-center gap-3">
           {["Shop", "Newsletter", "Sign In"].map((label) => (
             <LinkComponent
@@ -57,7 +67,7 @@ function UtilityBar() {
         <Button variant="secondary" size="xs" className="text-[length:var(--text-token-4xs)] font-semibold">
           Subscribe
         </Button>
-      </div>
+      </PageContainer>
     </div>
   );
 }
@@ -68,8 +78,8 @@ function MainNav({ brandSlug }: { brandSlug: string }) {
   const content = getContent(brandSlug);
 
   return (
-    <div className="border-b border-border py-2 px-6">
-      <div className="flex items-center justify-between py-2 max-w-[var(--width-content-max)] mx-auto">
+    <div className="border-b border-border py-2">
+      <PageContainer className="flex items-center justify-between py-2">
         <div className="w-[var(--width-sidebar-narrow)]" />
         <div className="text-center">
           {logo ? (
@@ -85,8 +95,8 @@ function MainNav({ brandSlug }: { brandSlug: string }) {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           </Button>
         </div>
-      </div>
-      <nav className="flex items-center justify-center gap-6 py-2 max-w-[var(--width-content-max)] mx-auto overflow-x-auto scrollbar-hide">
+      </PageContainer>
+      <PageContainer as="nav" className="flex items-center justify-center gap-6 py-2 overflow-x-auto scrollbar-hide">
         {content.navLinks.map((link) => (
           <LinkComponent
             key={link}
@@ -98,12 +108,18 @@ function MainNav({ brandSlug }: { brandSlug: string }) {
             {link}
           </LinkComponent>
         ))}
-      </nav>
+      </PageContainer>
     </div>
   );
 }
 
-function CollectionList({ brandSlug }: { brandSlug: string }) {
+function CollectionList({
+  brandSlug,
+  className,
+}: {
+  brandSlug: string;
+  className?: string;
+}) {
   const content = getContent(brandSlug);
   const images = getBrandImages(brandSlug);
 
@@ -114,7 +130,7 @@ function CollectionList({ brandSlug }: { brandSlug: string }) {
   }));
 
   return (
-    <div className="w-full lg:w-[var(--width-sidebar)] shrink-0 space-y-3">
+    <div className={cn("w-full min-w-0 space-y-3", className)}>
       <div className="space-y-2">
         <h3 className="text-xl uppercase headline text-primary">
           {content.collectionTitle}
@@ -133,12 +149,18 @@ function CollectionList({ brandSlug }: { brandSlug: string }) {
   );
 }
 
-function HeroCard({ brandSlug }: { brandSlug: string }) {
+function HeroCard({
+  brandSlug,
+  className,
+}: {
+  brandSlug: string;
+  className?: string;
+}) {
   const content = getContent(brandSlug);
   const images = getBrandImages(brandSlug);
 
   return (
-    <div className="flex-1 min-w-0">
+    <div className={cn("w-full min-w-0", className)}>
       <BigStoryImageRight
         label={content.hero.eyebrow}
         headline={content.hero.title}
@@ -154,7 +176,13 @@ function HeroCard({ brandSlug }: { brandSlug: string }) {
   );
 }
 
-function RightRail({ brandSlug }: { brandSlug: string }) {
+function RightRail({
+  brandSlug,
+  className,
+}: {
+  brandSlug: string;
+  className?: string;
+}) {
   const content = getContent(brandSlug);
   const images = getBrandImages(brandSlug);
 
@@ -167,7 +195,7 @@ function RightRail({ brandSlug }: { brandSlug: string }) {
   }));
 
   return (
-    <div className="w-full lg:w-[var(--width-sidebar)] shrink-0 space-y-8">
+    <div className={cn("w-full min-w-0 space-y-8", className)}>
       <BigStoryFeedStacked
         items={feedItems}
         thumbnailWidth={100}
@@ -180,7 +208,7 @@ function RightRail({ brandSlug }: { brandSlug: string }) {
         <span className="text-[length:var(--text-token-4xs)] uppercase tracking-wider text-muted-foreground">
           Advertisement
         </span>
-        <div className="w-[300px] h-[250px] rounded-md flex items-center justify-center text-sm bg-muted text-muted-foreground border border-border">
+        <div className="w-full max-w-[300px] aspect-[6/5] rounded-md flex items-center justify-center text-sm bg-background text-muted-foreground border border-border">
           AD 300 × 250
         </div>
       </div>
@@ -188,7 +216,7 @@ function RightRail({ brandSlug }: { brandSlug: string }) {
   );
 }
 
-function NewsletterPromo({ brandSlug }: { brandSlug: string }) {
+function NewsletterPromo() {
   const { brand } = useTheme();
 
   return (
@@ -255,7 +283,7 @@ function TrendingSection({ brandSlug }: { brandSlug: string }) {
   );
 }
 
-function Footer({ brandSlug }: { brandSlug: string }) {
+function Footer() {
   const { brand } = useTheme();
   const logo = brandLogos[brand.slug];
 
@@ -277,7 +305,98 @@ function Footer({ brandSlug }: { brandSlug: string }) {
   );
 }
 
-export function HomePageTemplate() {
+function ClassicHomepageBody({ brandSlug }: { brandSlug: string }) {
+  return (
+    <Grid alignStart>
+      {/* Collection — sidebar on tablet, narrow column on desktop */}
+      <Col span="full" spanMd={3} spanLg={3}>
+        <CollectionList brandSlug={brandSlug} className="lg:w-full" />
+      </Col>
+
+      {/* Hero — fills the rest of the main column */}
+      <Col span="full" spanMd={5} spanLg={6}>
+        <HeroCard brandSlug={brandSlug} />
+      </Col>
+
+      {/* Right rail — full width on mobile, sidebar on desktop */}
+      <Col span="full" spanLg={3}>
+        <RightRail brandSlug={brandSlug} className="lg:w-full" />
+      </Col>
+
+      {/* Newsletter — spans the main 9 columns on desktop */}
+      <Col span="full" spanLg={9}>
+        <NewsletterPromo />
+      </Col>
+
+      {/* Trending — full bleed inside the page container */}
+      <Col span="full">
+        <TrendingSection brandSlug={brandSlug} />
+      </Col>
+    </Grid>
+  );
+}
+
+function OverlapGridHomepageBody({ brandSlug }: { brandSlug: string }) {
+  // NOTE: when items in the same row overlap, every item that shares the row
+  // must be EXPLICITLY placed (rowStart + startMd/startLg). Mixing explicit
+  // placement with auto-placement causes the browser to create implicit tracks
+  // past the explicit grid and collapse the fr tracks to 0px.
+  return (
+    <Grid alignStart>
+      {/* Hero — full width on mobile; center cols 4-9 on lg */}
+      <Col
+        span="full"
+        spanMd={5}
+        spanLg={6}
+        startMd={4}
+        startLg={4}
+        rowStartMd={1}
+      >
+        <HeroCard brandSlug={brandSlug} />
+      </Col>
+
+      {/* Collection card — stacks below hero on mobile, cols 1-3 LEFT on md+ */}
+      <Col
+        as="aside"
+        span="full"
+        spanMd={3}
+        spanLg={3}
+        startMd={1}
+        startLg={1}
+        rowStartMd={1}
+        raised
+      >
+        <CollectionList brandSlug={brandSlug} className="lg:w-full" />
+      </Col>
+
+      {/* Right rail — full width on mobile/tablet, sidebar on desktop */}
+      <Col
+        as="aside"
+        span="full"
+        spanLg={3}
+        startLg={10}
+        rowStartLg={1}
+      >
+        <RightRail brandSlug={brandSlug} className="lg:w-full" />
+      </Col>
+
+      {/* Newsletter — wide secondary row */}
+      <Col span="full" spanLg={9} startLg={1} className="lg:pt-10">
+        <NewsletterPromo />
+      </Col>
+
+      {/* Trending — full bleed inside the page container */}
+      <Col span="full" startLg={1}>
+        <TrendingSection brandSlug={brandSlug} />
+      </Col>
+    </Grid>
+  );
+}
+
+export function HomePageTemplate({
+  layout = "classic",
+  showGridOverlay = false,
+}: HomePageTemplateProps = {}) {
   const { brand } = useTheme();
 
   return (
@@ -295,30 +414,20 @@ export function HomePageTemplate() {
       {/* Main Nav — full width background, content constrained */}
       <MainNav brandSlug={brand.slug} />
 
-      {/* Page Body — constrained */}
-      <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-0 pt-8 lg:pt-12 space-y-12 lg:space-y-16">
-        {/* Top Section: Collection + Hero + Right Rail */}
-        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-          {/* Left Column */}
-          <div className="flex-1 min-w-0 space-y-8 lg:space-y-12">
-            {/* Collection + Hero */}
-            <div className="flex flex-col md:flex-row gap-6 lg:gap-8">
-              <CollectionList brandSlug={brand.slug} />
-              <HeroCard brandSlug={brand.slug} />
-            </div>
-
-            {/* Newsletter + Trending */}
-            <NewsletterPromo brandSlug={brand.slug} />
-            <TrendingSection brandSlug={brand.slug} />
-          </div>
-
-          {/* Right Rail */}
-          <RightRail brandSlug={brand.slug} />
+      {/* Page Body — constrained by the shared PageContainer */}
+      <PageContainer className="relative pt-8 lg:pt-12">
+        {showGridOverlay && <GridOverlay />}
+        <div className="relative z-10 space-y-12 lg:space-y-16">
+          {layout === "overlapGrid" ? (
+            <OverlapGridHomepageBody brandSlug={brand.slug} />
+          ) : (
+            <ClassicHomepageBody brandSlug={brand.slug} />
+          )}
         </div>
-      </div>
+      </PageContainer>
 
       {/* Footer — full width */}
-      <Footer brandSlug={brand.slug} />
+      <Footer />
     </div>
   );
 }

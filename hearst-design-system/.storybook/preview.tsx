@@ -49,7 +49,7 @@ const preview: Preview = {
           "Figma Integration",
           "Pencil Integration",
           "Foundation",
-          ["Colors", "Typography", "Tokens"],
+          ["Grid System", "Colors", "Typography", "Tokens"],
           "Docs",
           ["Homepage Layout Strategy", "Editorial Modes", "Template Tokens"],
           "Templates",

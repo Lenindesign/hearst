@@ -1,0 +1,133 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Foundation/Grid System/Overview" />
+
+# Grid System
+
+The grid is the **spatial contract** every page in the design system obeys. It governs how content is arranged, how components share horizontal space, and where overlap is allowed. It is intentionally small: three breakpoints, three column counts, three primitives.
+
+> One number to remember: **4 / 8 / 12** — mobile / tablet / desktop columns.
+
+---
+
+## Breakpoints
+
+We adopt the Tailwind v4 default breakpoints. They are exposed as both Tailwind prefixes (`md:`, `lg:`, …) and CSS variables (`--breakpoint-md`, …) so design and engineering use identical numbers.
+
+| Token | Min width | Tailwind prefix | Grid columns | Outer padding | Gutter |
+|-------|-----------|------------------|--------------|---------------|--------|
+| **base / mobile** | 0 px      | _(no prefix)_   | 4  | 16 px | 16 px |
+| `sm`              | 640 px    | `sm:`           | 4  | 16 px | 16 px |
+| `md` / **tablet** | 768 px    | `md:`           | 8  | 24 px | 20 px |
+| `lg` / **desktop**| 1024 px   | `lg:`           | 12 | 48 px | 24 px |
+| `xl`              | 1280 px   | `xl:`           | 12 | 48 px | 24 px |
+| `2xl`             | 1536 px   | `2xl:`          | 12 | 48 px | 24 px |
+
+We deliberately do **not** change the column count at `sm`. Jumping from 4 → 8 columns at 640 px is jittery on landscape phones; the layout reads better when 4 columns hold until proper tablet width.
+
+The maximum content width is `--width-content-max` (1360 px). Everything wider lives inside `PageContainer`'s outer padding and never touches the viewport edge above `lg`.
+
+---
+
+## The Three Primitives
+
+```tsx
+import { PageContainer, Grid, Col } from "@/components/ui/grid";
+
+<PageContainer>
+  <Grid>
+    <Col span="full" spanLg={8}>
+      <Hero />
+    </Col>
+    <Col span="full" spanLg={4}>
+      <Sidebar />
+    </Col>
+  </Grid>
+</PageContainer>
+```
+
+### `PageContainer`
+Constrains content to `--width-content-max` and applies the responsive outer padding. **Templates own one. Components do not.**
+
+| Prop | Default | Purpose |
+|------|---------|---------|
+| `width` | `"content"` | `"content"` (1360px), `"narrow"` (720px reading column), or `"full"` (max-width: none). |
+| `bleed` | `false`     | Removes outer padding for full-bleed sections like hero images. |
+
+### `Grid`
+The 4 / 8 / 12 grid track. Renders a CSS grid with the responsive gutter applied as `gap`.
+
+| Prop | Default | Purpose |
+|------|---------|---------|
+| `columns` | `{ base: 4, md: 8, lg: 12 }` | Override the column count. Pass a single number to fix it across breakpoints. |
+| `gap`     | `"default"`                  | `"tight"`, `"default"`, `"loose"`, or `"none"`. |
+| `alignStart` | `false`                   | Items align to the top instead of stretching. Required for overlap layouts. |
+
+### `Col`
+A grid cell with declarative span/start/offset.
+
+| Prop | Range | Purpose |
+|------|-------|---------|
+| `span`     | 1–4 or `"full"` | Span at base/mobile. |
+| `spanMd`   | 1–8 or `"full"` | Span at tablet. |
+| `spanLg`   | 1–12 or `"full"` | Span at desktop. |
+| `startMd` / `startLg` | 1–8 / 1–12 | Explicit column start (use for asymmetric rows or overlap). |
+| `rowStart` | 1–4 | Explicit row, lets two cells share the same row for overlap. |
+| `offsetYMd` / `offsetYLg` | -2 to 2 | Vertical translation in steps of the grid gutter — only for **intentional** overlap. |
+| `raised`   | bool | Adds `relative z-10` so an overlapping cell sits above its siblings. |
+
+Spans are restricted to literal values so Tailwind can detect every possible class at build time. **Do not pass dynamic numbers** — extend the lookup tables in `grid.tsx` instead.
+
+---
+
+## How Components Live on the Grid
+
+Components belong to one of four atomic levels. Each level has different rules about how it interacts with the grid.
+
+| Level       | Owns a Grid? | Allowed grid concerns | Example |
+|-------------|--------------|------------------------|---------|
+| **Atom**     | No  | Local flex / grid only. Never reads breakpoint props. | `Button`, `Input`, `Chip` |
+| **Molecule** | No  | Local layout. Sets `min-w-0` so it can be placed in any `Col`. | `ArticleCard`, `BigStoryImageRight` |
+| **Organism** | Sometimes | May render an internal `Grid` for its own children (e.g. `FourAcrossGrid`). | `NavBar`, `SiteFooter`, `TrendingSection` |
+| **Template** | Yes | Owns `PageContainer` and the top-level `Grid`. Decides span values. | `HomePageTemplate`, `LayoutCurator` |
+
+### Rules of the road
+
+1. **Templates own the grid.** Atoms and molecules never wrap themselves in a `PageContainer`.
+2. **Children stretch to their `Col`.** Components must set `min-w-0` and `w-full` on their root so they fit any span.
+3. **Use `span="full"` as the default.** Mobile is the source of truth — explicit span values opt in to wider screens.
+4. **Spans add up to the breakpoint total.** A row at `lg` should sum to 12. If it does not, set `startLg` so the alignment is intentional.
+5. **Overlap is opt-in.** It requires `rowStart` (so two cells share a row), `offsetY*` for displacement, and `raised` for stacking. Do not overlap on mobile — the reading order has to stay clear.
+6. **Container queries beat viewport queries inside a `Col`.** A card living in a 4-column `Col` at desktop is visually narrower than the viewport. Use `@container` for component-level responsiveness, not `lg:` prefixes.
+7. **Never re-implement breakpoints.** If a component needs a number, read `--breakpoint-md` etc. from CSS or `BREAKPOINTS` in JS. No magic numbers.
+
+### Anti-patterns
+
+- Wrapping a single button in a `PageContainer + Grid + Col`. The grid is for **page** layout.
+- Using `Col` outside a `Grid`. The span classes only mean something inside a CSS grid track.
+- Hard-coding `max-w-[1360px]` in a template. Always use `PageContainer`.
+- Relying on `useBreakpoint()` for layout. It exists for documentation, debug overlays, and edge cases (e.g. swapping a hover-only feature for a touch-friendly one).
+
+---
+
+## Tailwind Best Practices We Follow
+
+- **Mobile-first.** Base classes apply to every viewport; `md:` and `lg:` only opt in to wider behavior. We never use max-width media queries.
+- **Literal class names only.** Tailwind v4 generates classes by scanning source files; dynamic concatenation (`` `col-span-${n}` ``) does not work. Lookup tables in `grid.tsx` keep every class literal.
+- **Tokens through `@theme`.** Spacing, font sizes, and layout widths live in `globals.css` under `@theme inline {}`. They are exposed as both Tailwind utilities and CSS variables, so a single change updates both surfaces.
+- **`gap` over margins** for siblings inside a `Grid`. No margin collapse, no cleanup hacks.
+- **`min-w-0` on every `Col`.** Without it, long children (e.g. headlines, tables) will blow out the cell. The `Col` primitive sets it for you.
+- **Container queries for components.** Use `@container` inside organisms when you want them to respond to their host cell, not the viewport.
+- **No fixed pixel widths above `md`.** Components must scale or claim a span. Anything else breaks the grid.
+
+---
+
+## Verifying a Layout
+
+Three things to check before a layout is considered correct:
+
+1. **Each row sums to the breakpoint total.** Use the `GridOverlay` story to make this visible.
+2. **The mobile order is the reading order.** Resize down to 375 px and read top-to-bottom; the result should make narrative sense.
+3. **The component fits its smallest cell.** The narrowest `Col` it can land in (e.g. a 3-column desktop sidebar) should still render without overflow.
+
+> See `Foundation / Grid System / 1 · Anatomy` and the other Grid stories for runnable examples. The homepage `Templates / Home Page / Overlap Grid` story demonstrates the overlap pattern in production code.
