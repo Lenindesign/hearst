@@ -9,7 +9,7 @@ description: Deploy the Hearst design system to Netlify, manage build pipeline, 
 
 ## Hosting
 
-- **Netlify:** hearst-design-system.netlify.app — Next.js style guide + **Storybook at `/storybook/`** (trailing slash; bare `/storybook` 301s here). Next is built with **`trailingSlash: true`** so Netlify’s `/storybook/` rewrite is not fighting Next’s “strip trailing slash” redirect (which caused a redirect loop).
+- **Netlify:** hearst-design-system.netlify.app — Next.js style guide + **Storybook at `/storybook/`** (and bare `/storybook`; both **200**-rewrite to the same shell). Next uses **`trailingSlash: true`** so app routes and Storybook are not fighting slash normalization. Built Storybook HTML includes **`<base href="/storybook/">`** so `index.json` resolves under `/storybook/` in the browser.
 - **Local dev Storybook:** `npm run storybook` → http://localhost:6006
 
 ## netlify.toml Configuration
@@ -23,13 +23,7 @@ description: Deploy the Hearst design system to Netlify, manage build pipeline, 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-# /storybook → /storybook/ so relative index.json resolves under /storybook/
-[[redirects]]
-  from = "/storybook"
-  to = "/storybook/"
-  status = 301
-  force = true
-
+# index.json + iframe first, then shell (200 rewrite for both /storybook and /storybook/)
 [[redirects]]
   from = "/storybook/index.json"
   to = "/_next/static/sb/index.json"
@@ -39,6 +33,12 @@ description: Deploy the Hearst design system to Netlify, manage build pipeline, 
 [[redirects]]
   from = "/storybook/iframe.html"
   to = "/_next/static/sb/iframe.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/storybook"
+  to = "/_next/static/sb/index.html"
   status = 200
   force = true
 
@@ -67,9 +67,9 @@ Canonical redirects send bare `/_next/static/sb/index.html` → `/storybook/` so
 
 ## Known Issues
 
-- `@netlify/plugin-nextjs` intercepts routes — use Netlify `[[redirects]]` for Storybook (status **200** rewrite for `/storybook/` → static shell, not 301 to `/_next/static/sb` for normal browsing)
+- `@netlify/plugin-nextjs` intercepts routes — use Netlify `[[redirects]]` for Storybook (status **200** rewrite for `/storybook` and `/storybook/` → static shell, not 301 to `/_next/static/sb` for normal browsing)
 - If Storybook shows blank in production, confirm `fix-storybook-paths.mjs` ran during the Netlify build
-- **Use `/storybook/` (trailing slash) or rely on the `/storybook` → `/storybook/` redirect:** at `/storybook` without a slash, relative `index.json` resolves to `/index.json` (404) and the shell shows “Something went wrong loading this Storybook.”
+- **`<base href="/storybook/">`** in the built shell plus **200 rewrites** for both `/storybook` and `/storybook/` prevent `index.json` from resolving to `/index.json` (Next 404 HTML). Avoid **301** from `/storybook` → `/storybook/`; it can match `/storybook/` on the edge and cause an infinite redirect loop.
 
 ## Deploy Commands
 
