@@ -132,16 +132,16 @@ function ArticleSidebar({ items }: { items: SidebarItem[] }) {
             {items.map((item, i) => (
               <ArticleCard
                 key={i}
-                layout="horizontal"
+                layout="vertical"
                 size="sm"
                 className="cursor-pointer ring-0 hover:ring-0 rounded-none bg-transparent"
               >
                 <ArticleCardImage
                   src={item.image}
-                  aspectRatio="1/1"
-                  className="rounded-sm w-[100px] shrink-0"
+                  aspectRatio="16/9"
+                  className="rounded-sm"
                 />
-                <ArticleCardContent className="px-0">
+                <ArticleCardContent className="px-0 pt-2 pb-0">
                   {item.eyebrow && (
                     <ArticleCardEyebrow>{item.eyebrow}</ArticleCardEyebrow>
                   )}

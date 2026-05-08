@@ -9,7 +9,7 @@ const articleCardVariants = cva(
     variants: {
       layout: {
         vertical: "flex-col",
-        horizontal: "flex-row",
+        horizontal: "flex-row items-start gap-3",
       },
       size: {
         default: "",
@@ -69,8 +69,8 @@ function ArticleCardImage({
       className={cn(
         "relative shrink-0 overflow-hidden bg-muted",
         "group-data-[layout=vertical]/article-card:w-full",
-        "group-data-[layout=horizontal]/article-card:w-48 group-data-[layout=horizontal]/article-card:min-h-full",
-        "group-data-[layout=horizontal]/article-card:[aspect-ratio:unset]",
+        /* Horizontal: cap thumb so text keeps ~60%+ of the row (e.g. 4-col sidebar). */
+        "group-data-[layout=horizontal]/article-card:w-32 group-data-[layout=horizontal]/article-card:max-w-[38%] group-data-[layout=horizontal]/article-card:self-start",
         className
       )}
       style={{
@@ -118,6 +118,7 @@ function ArticleCardContent({
       data-slot="article-card-content"
       className={cn(
         "flex flex-1 flex-col gap-2 px-4 py-4",
+        "group-data-[layout=horizontal]/article-card:min-w-0",
         "group-data-[size=sm]/article-card:px-3 group-data-[size=sm]/article-card:py-3 group-data-[size=sm]/article-card:gap-1.5",
         "group-data-[size=lg]/article-card:px-5 group-data-[size=lg]/article-card:py-6 group-data-[size=lg]/article-card:gap-3",
         className
