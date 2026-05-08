@@ -9,7 +9,7 @@ description: Deploy the Hearst design system to Netlify, manage build pipeline, 
 
 ## Hosting
 
-- **Netlify:** hearst-design-system.netlify.app — Next.js style guide + **Storybook at `/storybook/`** (trailing slash; bare `/storybook` 301s here)
+- **Netlify:** hearst-design-system.netlify.app — Next.js style guide + **Storybook at `/storybook/`** (trailing slash; bare `/storybook` 301s here). Next is built with **`trailingSlash: true`** so Netlify’s `/storybook/` rewrite is not fighting Next’s “strip trailing slash” redirect (which caused a redirect loop).
 - **Local dev Storybook:** `npm run storybook` → http://localhost:6006
 
 ## netlify.toml Configuration

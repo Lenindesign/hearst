@@ -30,7 +30,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  url.pathname = "/storybook";
+  url.pathname = "/storybook/";
   return NextResponse.redirect(url);
 }
 
