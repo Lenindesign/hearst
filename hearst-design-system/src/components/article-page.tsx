@@ -48,8 +48,8 @@ export interface ArticlePageContent {
 
 function ArticleUtilityBar() {
   return (
-    <div className="h-8 bg-primary text-primary-foreground text-[length:var(--text-token-4xs)] font-semibold">
-      <div className="flex items-center justify-between h-full max-w-[var(--width-content-max)] mx-auto px-[var(--spacing-token-md)] lg:px-[var(--spacing-token-lg)]">
+    <div className="relative left-1/2 w-screen max-w-none -translate-x-1/2 bg-primary text-primary-foreground text-[length:var(--text-token-4xs)] font-semibold">
+      <div className="mx-auto flex h-8 w-full max-w-[var(--width-content-max)] items-center justify-between px-4 md:px-6 lg:px-12">
         <div className="flex items-center gap-[var(--spacing-token-sm)]">
           {["Shop", "Newsletter", "Sign In"].map((label) => (
             <LinkComponent
@@ -76,8 +76,8 @@ function ArticleNav({ navLinks }: { navLinks: string[] }) {
   const logo = brandLogos[brand.slug];
 
   return (
-    <div className="border-b border-border py-[var(--spacing-token-xs)] px-[var(--spacing-token-xl)]">
-      <div className="flex items-center justify-between py-[var(--spacing-token-xs)] max-w-[var(--width-content-max)] mx-auto">
+    <div className="border-b border-border py-[var(--spacing-token-xs)]">
+      <div className="flex items-center justify-between py-[var(--spacing-token-xs)]">
         <div className="w-[var(--width-sidebar-narrow)]" />
         <div className="text-center">
           {logo ? (
@@ -94,7 +94,7 @@ function ArticleNav({ navLinks }: { navLinks: string[] }) {
           </Button>
         </div>
       </div>
-      <nav className="flex items-center justify-center gap-[var(--spacing-token-xl)] py-[var(--spacing-token-xs)] max-w-[var(--width-content-max)] mx-auto overflow-x-auto scrollbar-hide">
+      <nav className="flex items-center justify-center gap-[var(--spacing-token-xl)] py-[var(--spacing-token-xs)] overflow-x-auto scrollbar-hide">
         {navLinks.map((link) => (
           <LinkComponent
             key={link}
@@ -220,8 +220,8 @@ function ArticleFooter() {
 export interface ArticlePageTemplateProps {
   content: ArticlePageContent;
   /**
-   * When true, shows the same 4/8/12 column overlay as the home page template
-   * (inside `PageContainer` insets) for alignment review in Storybook.
+   * When true, shows the 4/8/12 column overlay inside the shared PageContainer
+   * from the utility bar through related articles (aligned with nav + body).
    */
   showGridOverlay?: boolean;
 }
@@ -236,53 +236,53 @@ export function ArticlePageTemplate({
 
   return (
     <div className="min-h-screen font-brand bg-background">
-      <ArticleUtilityBar />
-      <ArticleNav navLinks={navLinks} />
-
-      {/* Leaderboard ad above content */}
-      <div className="flex justify-center py-[var(--spacing-token-xl)] border-b border-border">
-        <AdPlaceholder size="leaderboard" />
-      </div>
-
-      {/* Main + related: PageContainer matches GridOverlay insets (same as home page). */}
-      <PageContainer className="relative pt-[var(--spacing-token-2xl)] lg:pt-[var(--spacing-token-3xl)]">
+      {/* One PageContainer + overlay so column guides run from utility through article (nav + leaderboard + body). */}
+      <PageContainer className="relative">
         {showGridOverlay && <GridOverlay />}
         <div className="relative z-10">
-          <Grid alignStart>
-            <Col span="full" spanMd={5} spanLg={8}>
-              <article className="min-w-0 space-y-[var(--spacing-token-2xl)] pb-[var(--spacing-token-3xl)]">
-                <ArticleHero
-                  breadcrumbs={content.breadcrumbs}
-                  headline={content.headline}
-                  dek={content.dek}
-                  image={content.heroImage}
-                  imageAlt={content.heroImageAlt}
-                  imageCredit={content.heroImageCredit}
-                />
+          <ArticleUtilityBar />
+          <ArticleNav navLinks={navLinks} />
 
-                <ArticleByline
-                  author={content.author}
-                  photographedBy={content.photographedBy}
-                  publishedDate={content.publishedDate}
-                />
+          <div className="flex justify-center border-b border-border py-[var(--spacing-token-xl)]">
+            <AdPlaceholder size="leaderboard" />
+          </div>
 
-                <ArticleBody>
-                  {content.body}
-                </ArticleBody>
+          <div className="pt-[var(--spacing-token-2xl)] lg:pt-[var(--spacing-token-3xl)]">
+            <Grid alignStart>
+              <Col span="full" spanMd={5} spanLg={8}>
+                <article className="min-w-0 space-y-[var(--spacing-token-2xl)] pb-[var(--spacing-token-3xl)]">
+                  <ArticleHero
+                    breadcrumbs={content.breadcrumbs}
+                    headline={content.headline}
+                    dek={content.dek}
+                    image={content.heroImage}
+                    imageAlt={content.heroImageAlt}
+                    imageCredit={content.heroImageCredit}
+                  />
 
-                {/* Inline ad after article body */}
-                <div className="flex justify-center py-[var(--spacing-token-md)]">
-                  <AdPlaceholder size="inline" />
-                </div>
+                  <ArticleByline
+                    author={content.author}
+                    photographedBy={content.photographedBy}
+                    publishedDate={content.publishedDate}
+                  />
 
-                <ArticleNewsletter brandName={brand.name} />
-              </article>
-            </Col>
+                  <ArticleBody>
+                    {content.body}
+                  </ArticleBody>
 
-            <Col span="full" spanMd={3} spanLg={4}>
-              <ArticleSidebar items={sidebarItems} />
-            </Col>
-          </Grid>
+                  <div className="flex justify-center py-[var(--spacing-token-md)]">
+                    <AdPlaceholder size="inline" />
+                  </div>
+
+                  <ArticleNewsletter brandName={brand.name} />
+                </article>
+              </Col>
+
+              <Col span="full" spanMd={3} spanLg={4}>
+                <ArticleSidebar items={sidebarItems} />
+              </Col>
+            </Grid>
+          </div>
 
           {content.relatedArticles && content.relatedArticles.length > 0 && (
             <div className="pb-[var(--spacing-token-3xl)]">

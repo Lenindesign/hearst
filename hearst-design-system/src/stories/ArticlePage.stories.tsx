@@ -51,7 +51,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          "Full-page article template with brand-specific content. Each brand shows contextual articles with real Hearst CDN images, headlines, and sidebar items. Switch brands via the toolbar to see Car and Driver show auto news, Delish show recipes, Elle show fashion, etc.\n\n**Hearst column guide:** use the floating **Hearst column guide: On/Off** control (bottom-right of the canvas). The tinted tracks only show from the **`sm`** breakpoint up. The toolbar **grid** icon next to the brand picker is Storybook’s own layout tool, not this overlay. Press **A** to show Storybook add-ons (e.g. **Controls**).",
+          "Full-page article template with brand-specific content. Each brand shows contextual articles with real Hearst CDN images, headlines, and sidebar items. Switch brands via the toolbar to see Car and Driver show auto news, Delish show recipes, Elle show fashion, etc.\n\n**Hearst column guide:** use the floating **Hearst column guide: On/Off** control (bottom-right of the canvas). The tinted tracks span the **utility bar, main nav, leaderboard, and article** (one `PageContainer`) from the **`sm`** breakpoint up. The toolbar **grid** icon next to the brand picker is Storybook’s own layout tool, not this overlay. Press **A** to show Storybook add-ons (e.g. **Controls**).",
       },
     },
   },
