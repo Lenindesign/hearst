@@ -16,7 +16,7 @@ import {
   ArticleCardEyebrow,
 } from "@/components/ui/article-card";
 import { SiteFooter } from "./fre/site-footer";
-import { GridOverlay, PageContainer } from "@/components/ui/grid";
+import { GridOverlay, PageContainer, Grid, Col } from "@/components/ui/grid";
 import { ArticleHero } from "./fre/article-hero";
 import { ArticleByline } from "./fre/article-byline";
 import { ArticleBody } from "./fre/article-body";
@@ -115,7 +115,7 @@ function ArticleSidebar({ items }: { items: SidebarItem[] }) {
   const { brand } = useTheme();
 
   return (
-    <aside className="w-full lg:w-[var(--width-sidebar)] shrink-0 space-y-[var(--spacing-token-2xl)]">
+    <aside className="w-full min-w-0 space-y-[var(--spacing-token-2xl)]">
       {/* Top ad slot */}
       <div className="flex justify-center">
         <AdPlaceholder size="medium-rectangle" />
@@ -248,39 +248,41 @@ export function ArticlePageTemplate({
       <PageContainer className="relative pt-[var(--spacing-token-2xl)] lg:pt-[var(--spacing-token-3xl)]">
         {showGridOverlay && <GridOverlay />}
         <div className="relative z-10">
-          <div className="flex flex-col lg:flex-row gap-[var(--spacing-token-2xl)] lg:gap-[var(--spacing-token-3xl)]">
-            {/* Article column */}
-            <article className="flex-1 min-w-0 space-y-[var(--spacing-token-2xl)] pb-[var(--spacing-token-3xl)]">
-              <ArticleHero
-                breadcrumbs={content.breadcrumbs}
-                headline={content.headline}
-                dek={content.dek}
-                image={content.heroImage}
-                imageAlt={content.heroImageAlt}
-                imageCredit={content.heroImageCredit}
-              />
+          <Grid alignStart>
+            <Col span="full" spanMd={5} spanLg={8}>
+              <article className="min-w-0 space-y-[var(--spacing-token-2xl)] pb-[var(--spacing-token-3xl)]">
+                <ArticleHero
+                  breadcrumbs={content.breadcrumbs}
+                  headline={content.headline}
+                  dek={content.dek}
+                  image={content.heroImage}
+                  imageAlt={content.heroImageAlt}
+                  imageCredit={content.heroImageCredit}
+                />
 
-              <ArticleByline
-                author={content.author}
-                photographedBy={content.photographedBy}
-                publishedDate={content.publishedDate}
-              />
+                <ArticleByline
+                  author={content.author}
+                  photographedBy={content.photographedBy}
+                  publishedDate={content.publishedDate}
+                />
 
-              <ArticleBody>
-                {content.body}
-              </ArticleBody>
+                <ArticleBody>
+                  {content.body}
+                </ArticleBody>
 
-              {/* Inline ad after article body */}
-              <div className="flex justify-center py-[var(--spacing-token-md)]">
-                <AdPlaceholder size="inline" />
-              </div>
+                {/* Inline ad after article body */}
+                <div className="flex justify-center py-[var(--spacing-token-md)]">
+                  <AdPlaceholder size="inline" />
+                </div>
 
-              <ArticleNewsletter brandName={brand.name} />
-            </article>
+                <ArticleNewsletter brandName={brand.name} />
+              </article>
+            </Col>
 
-            {/* Sidebar */}
-            <ArticleSidebar items={sidebarItems} />
-          </div>
+            <Col span="full" spanMd={3} spanLg={4}>
+              <ArticleSidebar items={sidebarItems} />
+            </Col>
+          </Grid>
 
           {content.relatedArticles && content.relatedArticles.length > 0 && (
             <div className="pb-[var(--spacing-token-3xl)]">
