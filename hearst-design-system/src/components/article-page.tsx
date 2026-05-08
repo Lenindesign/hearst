@@ -4,7 +4,6 @@ import React from "react";
 import { useTheme } from "./theme-provider";
 import { BrandLogo } from "./brand-logo";
 import { brandLogos } from "@/lib/logos";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LinkComponent } from "@/components/ui/link";
@@ -17,6 +16,7 @@ import {
   ArticleCardEyebrow,
 } from "@/components/ui/article-card";
 import { SiteFooter } from "./fre/site-footer";
+import { GridOverlay, PageContainer } from "@/components/ui/grid";
 import { ArticleHero } from "./fre/article-hero";
 import { ArticleByline } from "./fre/article-byline";
 import { ArticleBody } from "./fre/article-body";
@@ -217,7 +217,19 @@ function ArticleFooter() {
   );
 }
 
-export function ArticlePageTemplate({ content }: { content: ArticlePageContent }) {
+export interface ArticlePageTemplateProps {
+  content: ArticlePageContent;
+  /**
+   * When true, shows the same 4/8/12 column overlay as the home page template
+   * (inside `PageContainer` insets) for alignment review in Storybook.
+   */
+  showGridOverlay?: boolean;
+}
+
+export function ArticlePageTemplate({
+  content,
+  showGridOverlay = false,
+}: ArticlePageTemplateProps) {
   const { brand } = useTheme();
   const navLinks = content.navLinks ?? ["Home", "News", "Features", "Culture", "Style", "Health", "Food", "Travel"];
   const sidebarItems = content.sidebarItems ?? [];
@@ -232,49 +244,51 @@ export function ArticlePageTemplate({ content }: { content: ArticlePageContent }
         <AdPlaceholder size="leaderboard" />
       </div>
 
-      {/* Main content grid — constrained to content-max */}
-      <div className="max-w-[var(--width-content-max)] mx-auto px-[var(--spacing-token-md)] lg:px-[var(--spacing-token-lg)] pt-[var(--spacing-token-2xl)] lg:pt-[var(--spacing-token-3xl)]">
-        <div className="flex flex-col lg:flex-row gap-[var(--spacing-token-2xl)] lg:gap-[var(--spacing-token-3xl)]">
-          {/* Article column */}
-          <article className="flex-1 min-w-0 space-y-[var(--spacing-token-2xl)] pb-[var(--spacing-token-3xl)]">
-            <ArticleHero
-              breadcrumbs={content.breadcrumbs}
-              headline={content.headline}
-              dek={content.dek}
-              image={content.heroImage}
-              imageAlt={content.heroImageAlt}
-              imageCredit={content.heroImageCredit}
-            />
+      {/* Main + related: PageContainer matches GridOverlay insets (same as home page). */}
+      <PageContainer className="relative pt-[var(--spacing-token-2xl)] lg:pt-[var(--spacing-token-3xl)]">
+        {showGridOverlay && <GridOverlay />}
+        <div className="relative z-10">
+          <div className="flex flex-col lg:flex-row gap-[var(--spacing-token-2xl)] lg:gap-[var(--spacing-token-3xl)]">
+            {/* Article column */}
+            <article className="flex-1 min-w-0 space-y-[var(--spacing-token-2xl)] pb-[var(--spacing-token-3xl)]">
+              <ArticleHero
+                breadcrumbs={content.breadcrumbs}
+                headline={content.headline}
+                dek={content.dek}
+                image={content.heroImage}
+                imageAlt={content.heroImageAlt}
+                imageCredit={content.heroImageCredit}
+              />
 
-            <ArticleByline
-              author={content.author}
-              photographedBy={content.photographedBy}
-              publishedDate={content.publishedDate}
-            />
+              <ArticleByline
+                author={content.author}
+                photographedBy={content.photographedBy}
+                publishedDate={content.publishedDate}
+              />
 
-            <ArticleBody>
-              {content.body}
-            </ArticleBody>
+              <ArticleBody>
+                {content.body}
+              </ArticleBody>
 
-            {/* Inline ad after article body */}
-            <div className="flex justify-center py-[var(--spacing-token-md)]">
-              <AdPlaceholder size="inline" />
+              {/* Inline ad after article body */}
+              <div className="flex justify-center py-[var(--spacing-token-md)]">
+                <AdPlaceholder size="inline" />
+              </div>
+
+              <ArticleNewsletter brandName={brand.name} />
+            </article>
+
+            {/* Sidebar */}
+            <ArticleSidebar items={sidebarItems} />
+          </div>
+
+          {content.relatedArticles && content.relatedArticles.length > 0 && (
+            <div className="pb-[var(--spacing-token-3xl)]">
+              <RelatedArticles articles={content.relatedArticles} />
             </div>
-
-            <ArticleNewsletter brandName={brand.name} />
-          </article>
-
-          {/* Sidebar */}
-          <ArticleSidebar items={sidebarItems} />
+          )}
         </div>
-      </div>
-
-      {/* Related articles — full width of content area */}
-      {content.relatedArticles && content.relatedArticles.length > 0 && (
-        <div className="max-w-[var(--width-content-max)] mx-auto px-[var(--spacing-token-md)] lg:px-[var(--spacing-token-lg)] pb-[var(--spacing-token-3xl)]">
-          <RelatedArticles articles={content.relatedArticles} />
-        </div>
-      )}
+      </PageContainer>
 
       <ArticleFooter />
     </div>
