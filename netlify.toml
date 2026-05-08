@@ -9,6 +9,15 @@
 # When the UI is at /storybook/, Storybook fetches ./index.json → /storybook/index.json.
 # A catch-all /storybook/* → index.html makes that URL return HTML → JSON.parse throws.
 # Map JSON + iframe first; only then serve the HTML shell (exact /storybook paths).
+#
+# Trailing slash matters: at /storybook (no slash), relative "index.json" resolves to /index.json (404).
+# Canonical /storybook/ keeps Storybook's relative index.json under /storybook/.
+[[redirects]]
+  from = "/storybook"
+  to = "/storybook/"
+  status = 301
+  force = true
+
 [[redirects]]
   from = "/storybook/index.json"
   to = "/_next/static/sb/index.json"
@@ -22,12 +31,6 @@
   force = true
 
 [[redirects]]
-  from = "/storybook"
-  to = "/_next/static/sb/index.html"
-  status = 200
-  force = true
-
-[[redirects]]
   from = "/storybook/"
   to = "/_next/static/sb/index.html"
   status = 200
@@ -36,13 +39,13 @@
 # Canonical URL for bookmarks that still use the static output path directly.
 [[redirects]]
   from = "/_next/static/sb/index.html"
-  to = "/storybook"
+  to = "/storybook/"
   status = 301
   force = true
 
 [[redirects]]
   from = "/_next/static/sb"
-  to = "/storybook"
+  to = "/storybook/"
   status = 301
   force = true
 

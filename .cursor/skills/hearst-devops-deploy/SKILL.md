@@ -9,7 +9,7 @@ description: Deploy the Hearst design system to Netlify, manage build pipeline, 
 
 ## Hosting
 
-- **Netlify:** hearst-design-system.netlify.app — Next.js style guide + **Storybook at `/storybook`**
+- **Netlify:** hearst-design-system.netlify.app — Next.js style guide + **Storybook at `/storybook/`** (trailing slash; bare `/storybook` 301s here)
 - **Local dev Storybook:** `npm run storybook` → http://localhost:6006
 
 ## netlify.toml Configuration
@@ -22,6 +22,13 @@ description: Deploy the Hearst design system to Netlify, manage build pipeline, 
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+# /storybook → /storybook/ so relative index.json resolves under /storybook/
+[[redirects]]
+  from = "/storybook"
+  to = "/storybook/"
+  status = 301
+  force = true
 
 [[redirects]]
   from = "/storybook/index.json"
@@ -36,16 +43,12 @@ description: Deploy the Hearst design system to Netlify, manage build pipeline, 
   force = true
 
 [[redirects]]
-  from = "/storybook"
-  to = "/_next/static/sb/index.html"
-  status = 200
-  force = true
-
-[[redirects]]
   from = "/storybook/"
   to = "/_next/static/sb/index.html"
   status = 200
   force = true
+
+# …plus canonical 301s from /_next/static/sb* → /storybook/ (see repo netlify.toml)
 
 [[headers]]
   for = "/_next/static/sb/index.json"
@@ -54,18 +57,19 @@ description: Deploy the Hearst design system to Netlify, manage build pipeline, 
 ```
 
 Production Storybook URL: **https://hearst-design-system.netlify.app/storybook/**  
-Canonical redirects send bare `/_next/static/sb/index.html` → `/storybook` so bookmarks stay clean.
+Canonical redirects send bare `/_next/static/sb/index.html` → `/storybook/` so bookmarks stay on a URL where Storybook’s relative `index.json` resolves correctly.
 
 ## Build Pipeline
 
 1. `npm run build` — Next.js production build
 2. `npx storybook build -o .next/static/sb --quiet` — Storybook into `.next/static/sb`
-3. `node scripts/fix-storybook-paths.mjs` — rewrite relative paths to absolute (`/_next/static/sb/`)
+3. `node scripts/fix-storybook-paths.mjs` — rewrite relative paths to absolute (`/_next/static/sb/`) and inject `<base href="/storybook/">` so `index.json` never resolves to `/index.json` (Next 404 HTML)
 
 ## Known Issues
 
-- `@netlify/plugin-nextjs` intercepts routes — use Netlify `[[redirects]]` for Storybook (status **200** rewrite for `/storybook`, not 301 to static path)
+- `@netlify/plugin-nextjs` intercepts routes — use Netlify `[[redirects]]` for Storybook (status **200** rewrite for `/storybook/` → static shell, not 301 to `/_next/static/sb` for normal browsing)
 - If Storybook shows blank in production, confirm `fix-storybook-paths.mjs` ran during the Netlify build
+- **Use `/storybook/` (trailing slash) or rely on the `/storybook` → `/storybook/` redirect:** at `/storybook` without a slash, relative `index.json` resolves to `/index.json` (404) and the shell shows “Something went wrong loading this Storybook.”
 
 ## Deploy Commands
 
@@ -106,4 +110,4 @@ Designers editing tokens in Cursor must follow this workflow:
 
 - ALWAYS include both Next.js build AND Storybook build in deploy
 - NEVER skip `fix-storybook-paths.mjs` — Storybook will be broken without it
-- Verify the main app AND `/storybook` after deploy
+- Verify the main app AND `/storybook/` after deploy

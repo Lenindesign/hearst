@@ -7,6 +7,21 @@ import { join } from "path";
 
 const SB_DIR = join(process.cwd(), ".next", "static", "sb");
 const BASE = "/_next/static/sb/";
+/** Public Storybook path on Netlify (rewrites to SB_DIR). Fixes relative index.json when URL is /storybook without trailing slash. */
+const STORYBOOK_PUBLIC_BASE = "/storybook/";
+
+function injectStorybookBaseHref(filePath) {
+  let content = readFileSync(filePath, "utf-8");
+  if (content.includes('href="/storybook/"') || content.includes("href='/storybook/'")) {
+    return;
+  }
+  const injected = `<base href="${STORYBOOK_PUBLIC_BASE}" />`;
+  const next = content.replace(/<head(\s[^>]*)?>/i, `<head$1>\n    ${injected}\n`);
+  if (next !== content) {
+    writeFileSync(filePath, next);
+    console.log(`Injected <base href> in ${filePath}`);
+  }
+}
 
 function fixRootFile(filePath) {
   let content = readFileSync(filePath, "utf-8");
@@ -52,6 +67,13 @@ for (const file of rootFiles) {
   fixRootFile(join(SB_DIR, file));
 }
 console.log(`Processed ${rootFiles.length} root file(s)`);
+
+for (const name of ["index.html", "iframe.html"]) {
+  const p = join(SB_DIR, name);
+  if (existsSync(p)) {
+    injectStorybookBaseHref(p);
+  }
+}
 
 // Fix JS/CSS files in assets/
 const assetsDir = join(SB_DIR, "assets");
