@@ -1,14 +1,27 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import React, { useState } from "react";
-import { ArticlePageTemplate, type ArticlePageTemplateProps } from "@/components/article-page";
+import {
+  ArticleImmersiveTemplate,
+  ArticlePageTemplate,
+  type ArticlePageTemplateProps,
+} from "@/components/article-page";
 import { useTheme } from "@/components/theme-provider";
 import { VisualInspector } from "@/components/visual-inspector";
-import { BRAND_ARTICLES } from "./article-data";
+import { BRAND_ARTICLES, COSMOPOLITAN_IMMERSIVE_ARTICLE } from "./article-data";
 
 function BrandArticlePage(props: Pick<ArticlePageTemplateProps, "showGridOverlay">) {
   const { brand } = useTheme();
   const data = BRAND_ARTICLES[brand.slug] ?? BRAND_ARTICLES["cosmopolitan"];
   return <ArticlePageTemplate content={data.content} showGridOverlay={props.showGridOverlay} />;
+}
+
+function ImmersiveArticlePage(props: Pick<ArticlePageTemplateProps, "showGridOverlay">) {
+  return (
+    <ArticleImmersiveTemplate
+      content={COSMOPOLITAN_IMMERSIVE_ARTICLE}
+      showGridOverlay={props.showGridOverlay}
+    />
+  );
 }
 
 /**
@@ -44,6 +57,34 @@ function ArticlePageStoryFrame({
   );
 }
 
+function ImmersiveArticleStoryFrame({
+  showGridInitially = false,
+}: {
+  showGridInitially?: boolean;
+}) {
+  const [showGrid, setShowGrid] = useState(showGridInitially);
+
+  return (
+    <>
+      <button
+        type="button"
+        title="Toggle Hearst 4/8/12 column guides (visible from sm breakpoint up)"
+        aria-pressed={showGrid}
+        onClick={() => setShowGrid((v) => !v)}
+        className="fixed bottom-4 right-4 z-[2147483647] rounded-md border border-border bg-background/95 px-3 py-2 text-left text-xs font-semibold text-foreground shadow-md backdrop-blur-sm hover:bg-muted"
+      >
+        Hearst column guide:{" "}
+        <span className={showGrid ? "text-primary" : "text-muted-foreground"}>
+          {showGrid ? "On" : "Off"}
+        </span>
+      </button>
+      <div style={{ margin: "-2rem", minHeight: "100vh" }}>
+        <ImmersiveArticlePage showGridOverlay={showGrid} />
+      </div>
+    </>
+  );
+}
+
 const meta: Meta = {
   title: "Templates/Article Page",
   parameters: {
@@ -74,6 +115,19 @@ export const WithGridOverlay: Story = {
       description: {
         story:
           "Same as **Full Page** here — the canvas toggle starts with the guide on. Compare with **Templates / Home Page → Overlap Grid**. Use a **tablet or desktop** viewport (`sm+`) so `GridOverlay` is not hidden.",
+      },
+    },
+  },
+};
+
+export const ImmersiveFeature: Story = {
+  name: "Immersive Feature",
+  render: () => <ImmersiveArticleStoryFrame />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Premium portrait-led article template inspired by the referenced Cosmopolitan profile structure. It keeps the article shell brandable while adding a full-bleed hero, visual chapters, story spine, media pair, interview body, newsletter, and related articles.",
       },
     },
   },

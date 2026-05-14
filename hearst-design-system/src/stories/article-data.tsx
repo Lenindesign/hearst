@@ -1,5 +1,5 @@
 import React from "react";
-import { type ArticlePageContent, type SidebarItem } from "@/components/article-page";
+import { type ArticlePageContent, type ImmersiveArticleContent } from "@/components/article-page";
 import { ArticleInlineImage, ArticleSubheading, ArticleFootnote } from "@/components/fre/article-body";
 import { PullQuote } from "@/components/fre/pull-quote";
 
@@ -18,6 +18,101 @@ function thumb(id: string) {
 function card(id: string) {
   return `${H}${id}?crop=0.666xw:1xh;center,top&resize=400:*`;
 }
+
+export const COSMOPOLITAN_IMMERSIVE_ARTICLE: ImmersiveArticleContent = {
+  breadcrumbs: [{ label: "Pop Culture" }, { label: "Celebs" }, { label: "Music" }],
+  headline: "Towa Bird Steps Into Her Own Volume",
+  dek: "On the edge of Gentleman, the artist moves through style, softness, guitar noise, and the freedom of refusing a single script.",
+  heroImage: img("e90e3b68-21ea-4ac6-a22f-ced89d88f91f.jpg", "crop=1xw:0.5xh;center,top&resize=1600:*"),
+  heroImageAlt: "Towa Bird seated for a Cosmopolitan portrait",
+  heroImageCredit: "Rona Ahdout // Hearst Owned",
+  author: "Alexandra Whittaker",
+  photographedBy: "Rona Liana Ahdout",
+  publishedDate: "May 14, 2026",
+  navLinks: ["Love", "Pop Culture", "Style", "Beauty", "Features", "Astrology", "Shopping"],
+  immersiveLabel: "Immersive Profile",
+  immersiveKicker: "The room, the word, the sound, and the person carrying all three.",
+  immersiveIntro: (
+    <>
+      <p>There are profiles that begin with a question, and there are profiles that begin with a presence. This one works best when it lets the reader sit with the portrait first: the hair, the tailoring, the stillness, the charge of someone who knows exactly how she is being looked at.</p>
+      <p>From there, the story moves in chapters. It follows the public image, then the language around Gentleman, then the instinctive looseness of songs built around guitar, feeling, and refusal.</p>
+    </>
+  ),
+  factRail: [
+    { label: "Album", value: "Gentleman" },
+    { label: "Release", value: "May 15, 2026" },
+    { label: "Focus", value: "Style, songwriting, identity" },
+    { label: "Texture", value: "Portraiture, intimacy, guitar noise" },
+  ],
+  scenes: [
+    {
+      eyebrow: "Being Seen",
+      title: "Start With the Friction",
+      body: "To be photographed is one kind of visibility. To be understood is another. The opening image holds both ideas at once: performance on the surface, private calibration underneath.",
+      image: img("002a9919-00e9-4a02-87eb-bdc9f436e453.jpg", "crop=1xw:1xh;center,top&resize=1400:*"),
+      imageAlt: "Close portrait from the Towa Bird shoot",
+      imageCredit: "Rona Ahdout // Hearst Owned",
+      quote: "The first beat is not noise. It is attention.",
+    },
+    {
+      eyebrow: "The Word",
+      title: "Turn the Theme Into a Chapter",
+      body: "Gentleman works as a hinge: softness and bravado, masculinity and femininity, style and vulnerability. The word keeps opening up, then folding back into the person who chose it.",
+      image: img("0b597e64-596d-4eda-ada9-60901567f19e.jpg", "resize=1400:*"),
+      imageAlt: "Towa Bird in a formal portrait setup",
+      imageCredit: "Rona Ahdout // Hearst Owned",
+      align: "right",
+    },
+    {
+      eyebrow: "The Sound",
+      title: "End on Momentum",
+      body: "By the time the story turns toward sound, the frame has loosened. The songs are about guitars, rules, instinct, and the relief of making work that no longer needs permission.",
+      image: img("b0208313-8e21-49c8-92e4-50236abedd26.jpg", "crop=1xw:1xh;center,top&resize=1400:*"),
+      imageAlt: "Towa Bird holding a skateboard on set",
+      imageCredit: "Rona Ahdout // Hearst Owned",
+      quote: "The point is not volume for its own sake. It is choosing the dial.",
+    },
+  ],
+  mediaPair: [
+    {
+      src: img("4d52552e-5946-454d-a50b-d479e75746ca.jpg", "crop=1xw:1xh;center,top&resize=900:*"),
+      alt: "Towa Bird portrait with tailored styling",
+      caption: "Tailoring keeps the story close to the album's central word.",
+      credit: "Rona Ahdout // Hearst Owned",
+    },
+    {
+      src: img("f0238012-6351-4d17-9d56-3da4b44f5a83.jpg", "crop=1xw:1xh;center,top&resize=900:*"),
+      alt: "Towa Bird profile portrait",
+      caption: "A quieter frame before the conversation moves inward.",
+      credit: "Rona Ahdout // Hearst Owned",
+    },
+  ],
+  body: (
+    <>
+      <ArticleSubheading>The Story Starts Before the First Answer</ArticleSubheading>
+      <p>The first question is not spoken out loud. It is built into the room: What happens when the person everyone is watching stops adjusting herself for the watching?</p>
+      <p>That pressure gives the conversation its shape. The public version is easy to see: the styling, the guitar, the following, the incoming album. The private version is quieter and more durable, made from the language someone uses when she is deciding what still fits.</p>
+      <PullQuote>Atmosphere first, then voice, then stakes.</PullQuote>
+      <ArticleSubheading>The Conversation Moves in Turns</ArticleSubheading>
+      <p>Some answers need space around them. Some can land fast and sharp. The strongest interview rhythm lets a short exchange sit near an image, then lets a bigger idea arrive with enough quiet around it to feel earned.</p>
+      <ArticleInlineImage
+        src={img("dadf45db-28bc-4c68-9382-205766bec583.jpg", "resize=1200:*")}
+        alt="Towa Bird portrait from the Cosmopolitan shoot"
+        caption="The portrait suite keeps returning the story to body language and self-presentation."
+        credit="Rona Ahdout // Hearst Owned"
+      />
+      <ArticleSubheading>Keep the World Close</ArticleSubheading>
+      <p>The final movement returns to sound: how a song changes when it stops asking for a conventional shape, how confidence can be loud without losing tenderness, and how an album can turn a contested word into something newly available.</p>
+      <ArticleFootnote number={1}>Album timing and profile context are based on the referenced Cosmopolitan feature.</ArticleFootnote>
+    </>
+  ),
+  relatedArticles: [
+    { title: "Young Miko Wants to Take You Home", image: card("81c31f6f-6638-4e0f-8465-6971305ed9e0.jpg") },
+    { title: "The Best Looks From Music's Biggest Night", image: card("5e6d4136-cb47-4d1b-82fe-a2b289f6595b.jpeg") },
+    { title: "Celebrity Style Moments Worth Revisiting", image: card("f4eb21d0-0fc4-494d-ac4c-13b6eebbac5f.jpg") },
+    { title: "The Pop Culture Interviews Everyone Is Reading", image: card("doug-699c83837b7c2.jpg") },
+  ],
+};
 
 export const BRAND_ARTICLES: Record<string, BrandArticleData> = {
   cosmopolitan: {

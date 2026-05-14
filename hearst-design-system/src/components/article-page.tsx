@@ -3,6 +3,7 @@
 import React from "react";
 import { useTheme } from "./theme-provider";
 import { BrandLogo } from "./brand-logo";
+import { cn } from "@/lib/utils";
 import { brandLogos } from "@/lib/logos";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,7 +23,7 @@ import { ArticleByline } from "./fre/article-byline";
 import { ArticleBody } from "./fre/article-body";
 import { RelatedArticles, type RelatedArticle } from "./fre/related-articles";
 import { AdPlaceholder } from "./fre/ad-placeholder";
-import { Mail } from "lucide-react";
+import { ChevronDown, Mail, Search } from "lucide-react";
 
 export interface SidebarItem {
   title: string;
@@ -44,6 +45,38 @@ export interface ArticlePageContent {
   relatedArticles?: RelatedArticle[];
   sidebarItems?: SidebarItem[];
   navLinks?: string[];
+}
+
+export interface ImmersiveArticleFact {
+  label: string;
+  value: string;
+}
+
+export interface ImmersiveArticleScene {
+  eyebrow: string;
+  title: string;
+  body: string;
+  image: string;
+  imageAlt?: string;
+  imageCredit?: string;
+  quote?: string;
+  align?: "left" | "right";
+}
+
+export interface ImmersiveArticleMediaItem {
+  src: string;
+  alt?: string;
+  caption?: string;
+  credit?: string;
+}
+
+export interface ImmersiveArticleContent extends ArticlePageContent {
+  immersiveLabel?: string;
+  immersiveKicker?: string;
+  immersiveIntro?: React.ReactNode;
+  factRail?: ImmersiveArticleFact[];
+  scenes: ImmersiveArticleScene[];
+  mediaPair?: ImmersiveArticleMediaItem[];
 }
 
 function ArticleUtilityBar() {
@@ -90,11 +123,11 @@ function ArticleNav({ navLinks }: { navLinks: string[] }) {
         </div>
         <div className="w-[var(--width-sidebar-narrow)] flex justify-end gap-[var(--spacing-token-xs)]">
           <Button variant="outline" size="icon-sm">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <Search className="size-3.5" />
           </Button>
         </div>
       </div>
-      <nav className="flex items-center justify-center gap-[var(--spacing-token-xl)] py-[var(--spacing-token-xs)] overflow-x-auto scrollbar-hide">
+      <nav className="flex items-center justify-start gap-[var(--spacing-token-xl)] overflow-x-auto py-[var(--spacing-token-xs)] scrollbar-hide md:justify-center">
         {navLinks.map((link) => (
           <LinkComponent
             key={link}
@@ -195,6 +228,241 @@ function ArticleNewsletter({ brandName }: { brandName: string }) {
   );
 }
 
+function ImmersiveHero({ content }: { content: ImmersiveArticleContent }) {
+  return (
+    <header className="relative left-1/2 min-h-[calc(100vh-4rem)] w-screen -translate-x-1/2 overflow-hidden bg-foreground text-background">
+      <img
+        src={content.heroImage}
+        alt={content.heroImageAlt || content.headline}
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,.82)_0%,rgba(0,0,0,.58)_42%,rgba(0,0,0,.12)_100%)]" />
+      <PageContainer className="relative z-10 flex min-h-[calc(100vh-4rem)] flex-col justify-end pb-[var(--spacing-token-3xl)] pt-[var(--spacing-token-3xl)]">
+        <div className="max-w-[920px] space-y-[var(--spacing-token-lg)]">
+          {content.breadcrumbs.length > 0 && (
+            <nav className="flex flex-wrap items-center gap-[var(--spacing-token-2xs)] text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-background/75 font-brand-secondary">
+              {content.breadcrumbs.map((crumb, i) => (
+                <React.Fragment key={i}>
+                  {i > 0 && <span className="text-background/45">/</span>}
+                  <span className={i === content.breadcrumbs.length - 1 ? "text-background" : ""}>
+                    {crumb.label}
+                  </span>
+                </React.Fragment>
+              ))}
+            </nav>
+          )}
+          {content.immersiveLabel && (
+            <p className="text-[length:var(--text-token-3xs)] font-bold uppercase tracking-widest text-background/85 font-brand-secondary">
+              {content.immersiveLabel}
+            </p>
+          )}
+          <h1 className="max-w-[860px] text-[length:var(--text-token-6xl)] leading-[0.98] text-background headline md:text-[length:var(--text-token-7xl)] lg:text-[5rem]">
+            {content.headline}
+          </h1>
+          {content.dek && (
+            <p className="max-w-[640px] text-[length:var(--text-token-lg)] leading-relaxed text-background/85 lg:text-[length:var(--text-token-xl)]">
+              {content.dek}
+            </p>
+          )}
+          <div className="flex flex-col gap-[var(--spacing-token-md)] border-t border-background/25 pt-[var(--spacing-token-md)] text-[length:var(--text-token-3xs)] font-semibold uppercase tracking-widest text-background/75 font-brand-secondary sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p>By {content.author}</p>
+              {content.photographedBy && <p>Photographed by {content.photographedBy}</p>}
+              <p>{content.publishedDate}</p>
+            </div>
+            <div className="flex items-center gap-[var(--spacing-token-xs)] text-background">
+              <span>Read the story</span>
+              <ChevronDown className="size-4" aria-hidden="true" />
+            </div>
+          </div>
+        </div>
+        {content.heroImageCredit && (
+          <p className="absolute bottom-[var(--spacing-token-sm)] right-[var(--spacing-token-md)] text-[length:var(--text-token-4xs)] text-background/65">
+            {content.heroImageCredit}
+          </p>
+        )}
+      </PageContainer>
+    </header>
+  );
+}
+
+function ImmersiveIntro({ content }: { content: ImmersiveArticleContent }) {
+  if (!content.immersiveIntro && !content.immersiveKicker && !content.factRail?.length) {
+    return null;
+  }
+
+  return (
+    <section className="py-[var(--spacing-token-3xl)] lg:py-[calc(var(--spacing-token-3xl)*1.5)]">
+      <Grid alignStart>
+        <Col span="full" spanMd={3} spanLg={4}>
+          <div className="space-y-[var(--spacing-token-md)] lg:sticky lg:top-[var(--spacing-token-xl)]">
+            {content.immersiveLabel && (
+              <p className="text-[length:var(--text-token-3xs)] font-bold uppercase tracking-widest text-primary font-brand-secondary">
+                {content.immersiveLabel}
+              </p>
+            )}
+            {content.immersiveKicker && (
+              <h2 className="text-[length:var(--text-token-3xl)] leading-tight headline lg:text-[length:var(--text-token-5xl)]">
+                {content.immersiveKicker}
+              </h2>
+            )}
+          </div>
+        </Col>
+        <Col span="full" spanMd={5} spanLg={5}>
+          {content.immersiveIntro && (
+            <ArticleBody className="[&>p]:text-[length:var(--text-token-lg)] [&>p]:leading-[1.75]">
+              {content.immersiveIntro}
+            </ArticleBody>
+          )}
+        </Col>
+        {content.factRail && content.factRail.length > 0 && (
+          <Col span="full" spanMd={8} spanLg={3}>
+            <dl className="divide-y divide-border border-y border-border">
+              {content.factRail.map((fact) => (
+                <div key={fact.label} className="py-[var(--spacing-token-md)]">
+                  <dt className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-muted-foreground font-brand-secondary">
+                    {fact.label}
+                  </dt>
+                  <dd className="mt-[var(--spacing-token-2xs)] text-[length:var(--text-token-sm)] font-semibold leading-snug text-foreground">
+                    {fact.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </Col>
+        )}
+      </Grid>
+    </section>
+  );
+}
+
+function ImmersiveSceneBand({
+  scene,
+  index,
+}: {
+  scene: ImmersiveArticleScene;
+  index: number;
+}) {
+  return (
+    <section className="relative left-1/2 w-screen -translate-x-1/2 border-y border-background/15 bg-foreground text-background">
+      <div className="mx-auto grid min-h-[92vh] max-w-[var(--width-content-max)] grid-cols-1 lg:grid-cols-12">
+        <figure
+          className={cn(
+            "relative min-h-[58vh] overflow-hidden lg:col-span-7 lg:min-h-[92vh]",
+            scene.align === "right" && "lg:order-2"
+          )}
+        >
+          <img
+            src={scene.image}
+            alt={scene.imageAlt || scene.title}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.18)_0%,rgba(0,0,0,0)_48%,rgba(0,0,0,.42)_100%)]" />
+          {scene.imageCredit && (
+            <figcaption className="absolute bottom-[var(--spacing-token-sm)] right-[var(--spacing-token-sm)] text-[length:var(--text-token-4xs)] text-background/70">
+              {scene.imageCredit}
+            </figcaption>
+          )}
+        </figure>
+        <div
+          className={cn(
+            "flex items-center px-4 py-[var(--spacing-token-3xl)] md:px-6 lg:col-span-5 lg:px-12",
+            scene.align === "right" && "lg:order-1"
+          )}
+        >
+          <div className="mx-auto max-w-[560px] space-y-[var(--spacing-token-lg)]">
+            <p className="text-[length:var(--text-token-3xs)] font-bold uppercase tracking-widest text-background/65 font-brand-secondary">
+              {String(index + 1).padStart(2, "0")} / {scene.eyebrow}
+            </p>
+            <h2 className="text-[length:var(--text-token-4xl)] leading-tight text-background headline lg:text-[length:var(--text-token-6xl)]">
+              {scene.title}
+            </h2>
+            <p className="text-[length:var(--text-token-md)] leading-relaxed text-background/80 lg:text-[length:var(--text-token-lg)]">
+              {scene.body}
+            </p>
+            {scene.quote && (
+              <blockquote className="border-l-4 border-primary pl-[var(--spacing-token-lg)]">
+                <p className="text-[length:var(--text-token-xl)] leading-snug text-background headline lg:text-[length:var(--text-token-2xl)]">
+                  {scene.quote}
+                </p>
+              </blockquote>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ImmersiveMediaPair({ media }: { media: ImmersiveArticleMediaItem[] }) {
+  if (media.length === 0) return null;
+
+  return (
+    <section className="py-[var(--spacing-token-3xl)]">
+      <div className="grid gap-[var(--spacing-token-md)] md:grid-cols-2">
+        {media.map((item, i) => (
+          <figure key={`${item.src}-${i}`} className="space-y-[var(--spacing-token-xs)]">
+            <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+              <img
+                src={item.src}
+                alt={item.alt || ""}
+                className="h-full w-full object-cover"
+              />
+            </div>
+            {(item.caption || item.credit) && (
+              <figcaption className="text-[length:var(--text-token-4xs)] leading-relaxed text-muted-foreground">
+                {item.caption && <span className="italic">{item.caption}</span>}
+                {item.caption && item.credit && <span> </span>}
+                {item.credit && <span>{item.credit}</span>}
+              </figcaption>
+            )}
+          </figure>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ImmersiveBodySection({
+  content,
+  brandName,
+}: {
+  content: ImmersiveArticleContent;
+  brandName: string;
+}) {
+  return (
+    <section className="pb-[var(--spacing-token-3xl)] lg:pb-[calc(var(--spacing-token-3xl)*1.5)]">
+      <Grid alignStart>
+        <Col span="full" spanMd={2} spanLg={3}>
+          <aside className="hidden space-y-[var(--spacing-token-md)] border-t border-border pt-[var(--spacing-token-md)] md:block lg:sticky lg:top-[var(--spacing-token-xl)]">
+            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-muted-foreground font-brand-secondary">
+              Story spine
+            </p>
+            <ol className="space-y-[var(--spacing-token-sm)]">
+              {content.scenes.map((scene, i) => (
+                <li key={scene.eyebrow} className="text-[length:var(--text-token-3xs)] font-semibold uppercase tracking-widest text-foreground/70 font-brand-secondary">
+                  {String(i + 1).padStart(2, "0")} {scene.eyebrow}
+                </li>
+              ))}
+            </ol>
+          </aside>
+        </Col>
+        <Col span="full" spanMd={6} spanLg={7}>
+          <div className="space-y-[var(--spacing-token-3xl)]">
+            <ArticleBody className="[&>p]:text-[length:var(--text-token-lg)] [&>p]:leading-[1.75]">
+              {content.body}
+            </ArticleBody>
+            <div className="flex justify-center py-[var(--spacing-token-md)]">
+              <AdPlaceholder size="inline" />
+            </div>
+            <ArticleNewsletter brandName={brandName} />
+          </div>
+        </Col>
+      </Grid>
+    </section>
+  );
+}
+
 function ArticleFooter() {
   const { brand } = useTheme();
   const logo = brandLogos[brand.slug];
@@ -283,6 +551,60 @@ export function ArticlePageTemplate({
               </Col>
             </Grid>
           </div>
+
+          {content.relatedArticles && content.relatedArticles.length > 0 && (
+            <div className="pb-[var(--spacing-token-3xl)]">
+              <RelatedArticles articles={content.relatedArticles} />
+            </div>
+          )}
+        </div>
+      </PageContainer>
+
+      <ArticleFooter />
+    </div>
+  );
+}
+
+export interface ArticleImmersiveTemplateProps {
+  content: ImmersiveArticleContent;
+  showGridOverlay?: boolean;
+}
+
+export function ArticleImmersiveTemplate({
+  content,
+  showGridOverlay = false,
+}: ArticleImmersiveTemplateProps) {
+  const { brand } = useTheme();
+  const navLinks = content.navLinks ?? ["Home", "News", "Features", "Culture", "Style", "Health", "Food", "Travel"];
+
+  return (
+    <div className="min-h-screen bg-background font-brand">
+      <PageContainer className="relative">
+        {showGridOverlay && <GridOverlay />}
+        <div className="relative z-10">
+          <ArticleUtilityBar />
+          <ArticleNav navLinks={navLinks} />
+        </div>
+      </PageContainer>
+
+      <ImmersiveHero content={content} />
+
+      <PageContainer className="relative">
+        {showGridOverlay && <GridOverlay />}
+        <div className="relative z-10">
+          <ImmersiveIntro content={content} />
+        </div>
+      </PageContainer>
+
+      {content.scenes.map((scene, index) => (
+        <ImmersiveSceneBand key={scene.eyebrow} scene={scene} index={index} />
+      ))}
+
+      <PageContainer className="relative">
+        {showGridOverlay && <GridOverlay />}
+        <div className="relative z-10">
+          {content.mediaPair && <ImmersiveMediaPair media={content.mediaPair} />}
+          <ImmersiveBodySection content={content} brandName={brand.name} />
 
           {content.relatedArticles && content.relatedArticles.length > 0 && (
             <div className="pb-[var(--spacing-token-3xl)]">
