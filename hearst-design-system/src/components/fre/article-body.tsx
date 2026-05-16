@@ -8,6 +8,7 @@ export interface ArticleInlineImage {
   alt?: string;
   credit?: string;
   caption?: string;
+  variant?: "default" | "wide";
 }
 
 export interface ArticleBodyProps {
@@ -36,16 +37,27 @@ export function ArticleInlineImage({
   alt,
   credit,
   caption,
+  variant = "default",
 }: ArticleInlineImage) {
+  const isWide = variant === "wide";
+
   return (
-    <figure className="my-[var(--spacing-token-2xl)] space-y-[var(--spacing-token-xs)]">
+    <figure
+      className={cn(
+        "my-[var(--spacing-token-2xl)] space-y-[var(--spacing-token-xs)]",
+        isWide && "relative left-1/2 w-screen max-w-none -translate-x-1/2 py-[var(--spacing-token-xl)]",
+      )}
+    >
       <img
         src={src}
         alt={alt || ""}
-        className="w-full h-auto rounded-lg object-cover"
+        className={cn(
+          "h-auto w-full object-cover",
+          isWide ? "max-h-[78vh] rounded-none" : "rounded-lg",
+        )}
       />
       {(caption || credit) && (
-        <figcaption className="text-[length:var(--text-token-4xs)] text-muted-foreground">
+        <figcaption className={cn("text-[length:var(--text-token-4xs)] text-muted-foreground", isWide && "mx-auto max-w-[var(--width-content-max)] px-4 md:px-6 lg:px-12")}>
           {caption && <span className="italic">{caption}</span>}
           {caption && credit && <span> </span>}
           {credit && <span>{credit}</span>}

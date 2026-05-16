@@ -86,7 +86,11 @@ function useGoogleFonts(fonts: string[]) {
 }
 
 export const ThemeDecorator: Decorator = (Story, context) => {
-  const brandSlug = context.globals.brand || "cosmopolitan";
+  const forcedBrandSlug =
+    typeof context.parameters.forceBrand === "string"
+      ? context.parameters.forceBrand
+      : undefined;
+  const brandSlug = forcedBrandSlug || context.globals.brand || "cosmopolitan";
   const brand = useMemo(
     () => brands.find((b) => b.slug === brandSlug) || brands[0],
     [brandSlug]

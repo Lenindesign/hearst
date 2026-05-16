@@ -114,6 +114,686 @@ export const COSMOPOLITAN_IMMERSIVE_ARTICLE: ImmersiveArticleContent = {
   ],
 };
 
+export const COSMOPOLITAN_EDITORIAL_ARTICLE: ImmersiveArticleContent = {
+  breadcrumbs: [{ label: "Pop Culture" }, { label: "Celebs" }, { label: "Music" }],
+  headline: "Towa Bird Thinks We Should Talk About Queer Sex More",
+  dek: "Ahead of Gentleman, Bird turns an album interview into a story about visibility, queer desire, and the confidence to make guitar music that refuses the expected shape.",
+  heroImage: img("e90e3b68-21ea-4ac6-a22f-ced89d88f91f.jpg", "resize=1200:*"),
+  heroImageAlt: "Towa Bird seated for a Cosmopolitan portrait",
+  heroImageCredit: "Rona Ahdout // Hearst Owned",
+  author: "Alexandra Whittaker",
+  photographedBy: "Rona Liana Ahdout",
+  publishedDate: "May 14, 2026",
+  navLinks: ["Love", "Pop Culture", "Style", "Beauty", "Features", "Astrology", "Shopping"],
+  immersiveLabel: "Cosmo Interview",
+  immersiveKicker: "A profile about being seen, naming desire, and letting guitar music move like a body under lights.",
+  introEyebrow: "Before the interview",
+  posterQuoteEyebrow: "Emotional pause",
+  visualEssayEyebrow: "Portrait sequence",
+  visualEssayTitle: "The images keep identity, style, and desire in the same frame.",
+  bodyRailEyebrow: "Emotional path",
+  heroImageTreatment: "grid-crop",
+  immersiveIntro: (
+    <>
+      <p>The official Cosmopolitan feature begins in the charged space between being watched and wanting to move through the world without fear. Bird talks about an album, but the deeper rhythm is visibility: how a person carries attention, style, desire, and sound in the same body.</p>
+      <p>The portraits echo that movement. A close gaze gives way to tailoring, then to looser frames where the music starts to feel less contained.</p>
+    </>
+  ),
+  factRail: [
+    { label: "Album", value: "Gentleman" },
+    { label: "Release", value: "May 15, 2026" },
+    { label: "Story axis", value: "Visibility, queer desire, freedom" },
+    { label: "Photography", value: "Rona Liana Ahdout" },
+  ],
+  scenes: [
+    {
+      eyebrow: "Being Seen",
+      title: "Visibility Has a Pulse",
+      body: "The story starts with the feeling of being perceived: confidence on one side, public self-protection on the other. The close portrait makes that tension immediate before the interview widens into music.",
+      image: img("002a9919-00e9-4a02-87eb-bdc9f436e453.jpg", "resize=1400:*"),
+      imageAlt: "Close portrait of Towa Bird from the Cosmopolitan shoot",
+      imageCredit: "Rona Ahdout // Hearst Owned",
+      quote: "Desire is not subtext here. It is the voltage.",
+    },
+    {
+      eyebrow: "The Word",
+      title: "Gentleman Splits Open",
+      body: "The album title becomes an emotional hinge. It carries softness, masculinity, style, vulnerability, and the refusal to choose only one code for the body.",
+      image: img("0b597e64-596d-4eda-ada9-60901567f19e.jpg", "resize=1400:*"),
+      imageAlt: "Towa Bird in a formal tailored portrait setup",
+      imageCredit: "Rona Ahdout // Hearst Owned",
+      align: "right",
+      quote: "A word can be outfit, armor, and invitation.",
+    },
+    {
+      eyebrow: "The Sound",
+      title: "Freedom Gets Loud",
+      body: "The final movement belongs to the songs: guitar forward, less bound by classic structure, and more interested in feeling than permission. The image can breathe here because the record does too.",
+      image: img("b0208313-8e21-49c8-92e4-50236abedd26.jpg", "resize=1400:*"),
+      imageAlt: "Towa Bird seated with a skateboard on set",
+      imageCredit: "Rona Ahdout // Hearst Owned",
+      quote: "The ending should feel like a room getting bigger.",
+    },
+  ],
+  mediaPair: [
+    {
+      src: img("4d52552e-5946-454d-a50b-d479e75746ca.jpg", "resize=900:*"),
+      alt: "Towa Bird portrait with tailored styling",
+      caption: "Tailoring gives the album title a visual grammar: softness, swagger, and refusal in the same frame.",
+      credit: "Rona Ahdout // Hearst Owned",
+    },
+    {
+      src: img("f0238012-6351-4d17-9d56-3da4b44f5a83.jpg", "resize=900:*"),
+      alt: "Towa Bird profile portrait",
+      caption: "A quieter portrait resets the pace before the story turns back toward intimacy and lyric writing.",
+      credit: "Rona Ahdout // Hearst Owned",
+    },
+  ],
+  body: (
+    <>
+      <ArticleSubheading>Start With the Body in the Room</ArticleSubheading>
+      <p>In the original interview, the album is never separated from the question of how Bird moves through the world. The design should make that connection visible: face, clothes, posture, and distance all become part of the reporting.</p>
+      <p>That is why the page opens on white space instead of spectacle. The reader gets room to meet the person before the structure starts to move.</p>
+      <PullQuote>The word itself is &ldquo;gentle&rdquo; and &ldquo;man.&rdquo;</PullQuote>
+      <ArticleSubheading>Make Desire the Center, Not the Aside</ArticleSubheading>
+      <p>Cosmopolitan&apos;s strongest context is that Bird talks about queer sex and love without treating them as subtext. Desire becomes a creative subject, a political fact, and a place where the songs get intimate.</p>
+      <ArticleInlineImage
+        src={img("dadf45db-28bc-4c68-9382-205766bec583.jpg", "resize=1200:*")}
+        alt="Towa Bird portrait from the Cosmopolitan shoot"
+        caption="The stripped-back frame gives the reader a pause between public visibility and private lyric writing."
+        credit="Rona Ahdout // Hearst Owned"
+      />
+      <ArticleSubheading>Let the Typography Carry Feeling</ArticleSubheading>
+      <p>The headline needs room because the story is about naming what usually gets compressed. Large serif forms, restrained red accents, and a narrow reading column let the page feel like an editorial object without trapping the reader in a poster.</p>
+      <ArticleSubheading>End Where the Songs Break Open</ArticleSubheading>
+      <p>By the time the conversation turns to sound, the layout can loosen. The source story describes an album less tied to classic structure, so the page responds with white space, staggered portraits, and quote scale that feels like feedback after a chord.</p>
+      <ArticleFootnote number={1}>Source-grounded prototype based on Cosmopolitan&apos;s May 14, 2026 Towa Bird interview.</ArticleFootnote>
+    </>
+  ),
+  relatedArticles: [
+    { title: "Young Miko Wants to Take You Home", image: card("81c31f6f-6638-4e0f-8465-6971305ed9e0.jpg") },
+    { title: "The Best Looks From Music's Biggest Night", image: card("5e6d4136-cb47-4d1b-82fe-a2b289f6595b.jpeg") },
+    { title: "Celebrity Style Moments Worth Revisiting", image: card("f4eb21d0-0fc4-494d-ac4c-13b6eebbac5f.jpg") },
+    { title: "The Pop Culture Interviews Everyone Is Reading", image: card("doug-699c83837b7c2.jpg") },
+  ],
+};
+
+export const CAR_AND_DRIVER_EDITORIAL_ARTICLE: ImmersiveArticleContent = {
+  breadcrumbs: [{ label: "Reviews" }, { label: "Comparison Tests" }, { label: "$30,000 Small Cars" }],
+  headline: "Comparison Test: $30,000 Small Cars",
+  dek: "Six compact contenders make the same promise in different ways: keep the price near $30,000 and still feel like a real car on a real road.",
+  heroImage: img("76471936-3e6b-463e-9551-cb792858ec07.jpg", "resize=1400:*"),
+  heroImageAlt: "Six compact cars lined up on a winding California road",
+  heroImageCredit: "Michael Simari | Car and Driver",
+  author: "K.C. Colwell",
+  photographedBy: "Michael Simari and Marc Urbano",
+  publishedDate: "May 15, 2026",
+  navLinks: ["Research Cars", "Expert Reviews", "Buying Guide", "News", "Gear", "Videos"],
+  immersiveLabel: "Comparison Test",
+  immersiveKicker: "A road test about value, restraint, and the small cars still worth caring about.",
+  introEyebrow: "Before the drive",
+  posterQuoteEyebrow: "Road note",
+  visualEssayEyebrow: "Evidence board",
+  visualEssayTitle: "The proof lives in the route, the cabins, and the score sheet.",
+  bodyRailEyebrow: "Test path",
+  heroImageTreatment: "overlay",
+  heroHeadlineScale: "cover",
+  heroHeadlineLines: ["Comparison", "Test:", "$30,000", "Small Cars"],
+  flipHeroImage: true,
+  immersiveIntro: (
+    <>
+      <p>The Car and Driver story is not a buyer&apos;s-guide grid dressed up as an article. It is a 600-mile argument, starting in Los Angeles, running up the Pacific Coast Highway, then turning inland toward a proving ground.</p>
+      <p>The visuals should work like evidence: six cars in formation, coastal distance, interiors that reveal priorities, and a final score sheet that turns miles into judgment.</p>
+    </>
+  ),
+  factRail: [
+    { label: "Field", value: "Civic, K4, Sentra, Impreza, Corolla, Jetta" },
+    { label: "Route", value: "L.A. to PCH, Big Sur, Monterey, Central Valley" },
+    { label: "Winner", value: "Honda Civic Sport Hybrid Hatchback" },
+    { label: "Distance", value: "600-plus miles" },
+  ],
+  scenes: [
+    {
+      eyebrow: "The Question",
+      title: "What Does $30,000 Buy Now?",
+      body: "The test starts with scarcity. Small cars used to be everywhere; now the average new-car price is far higher and the remaining affordable choices have to prove they still matter.",
+      image: img("76471936-3e6b-463e-9551-cb792858ec07.jpg", "resize=1400:*"),
+      imageAlt: "Six small cars driving through California hills",
+      imageCredit: "Michael Simari | Car and Driver",
+      quote: "The price is the constraint; the road is the editor.",
+    },
+    {
+      eyebrow: "The Road",
+      title: "Let the Coast Sort Them Out",
+      body: "A comparison test becomes emotional when the cars share the same light, traffic, climbs, and highway miles. The Pacific Coast Highway frame makes value feel physical, not abstract.",
+      image: img("359f30b8-11e6-4c90-b00c-8cfe06e2cf0f.jpg", "resize=1400:*"),
+      imageAlt: "The comparison-test cars crossing a coastal bridge",
+      imageCredit: "Marc Urbano | Car and Driver",
+      align: "right",
+    },
+    {
+      eyebrow: "The Verdict",
+      title: "The Civic Changes the Argument",
+      body: "The Honda wins because it makes the practical choice feel alive: quickest to 60 mph, strongest observed economy, and the chassis feel that turns a sensible hatchback into the clear answer.",
+      image: img("2025-honda-civic-hybrid-hatchback-105-698b62fc3824d.jpg", "resize=1400:*"),
+      imageAlt: "Interior of the Honda Civic Sport Hybrid Hatchback",
+      imageCredit: "Michael Simari | Car and Driver",
+      quote: "A fun affordable car can be a hybrid. That is the twist.",
+    },
+  ],
+  mediaPair: [
+    {
+      src: img("6de48aff-5d0b-4dab-ab8e-88ca95adea04.jpg", "resize=2400:*"),
+      alt: "Final results chart for the compact car comparison test",
+      caption: "The final chart gives the story its cleanest turn: Civic first, Jetta second, Corolla third.",
+      credit: "Car and Driver",
+      featured: true,
+    },
+    {
+      src: img("2026-volkswagen-jetta-sel-113-699c7b9fba635.jpg", "resize=900:*"),
+      alt: "Interior of the 2026 Volkswagen Jetta SEL",
+      caption: "The Jetta chapter is about traditional refinement: a quiet cabin, sensible controls, and comfort that almost wins the day.",
+      credit: "Michael Simari | Car and Driver",
+    },
+  ],
+  body: (
+    <>
+      <ArticleSubheading>Make the Price the Tension</ArticleSubheading>
+      <p>The story works because every car is boxed in by the same expectation. At roughly $30,000, each model has to decide what to protect: speed, comfort, fuel economy, cabin space, warranty, or the simple pleasure of driving.</p>
+      <p>That makes the design language sharper. The page should feel measured and road-tested, with big images that preserve the full scene and small data moments that land like lap times.</p>
+      <PullQuote>Value is not a discount. It is what still feels good after 600 miles.</PullQuote>
+      <ArticleSubheading>Use Interiors as Character Studies</ArticleSubheading>
+      <p>The cabins tell the story as clearly as the exterior shots. Nissan leans into comfort and driver-assistance value, Subaru feels practical but plain, Kia brings equipment and shape, Toyota adds attitude, Volkswagen reaches for refinement, and Honda keeps the interface simple enough to let the driving stand out.</p>
+      <ArticleInlineImage
+        src={img("2026-kia-k4-gt-line-107-698b5faf87293.jpg", "resize=1200:*")}
+        alt="Interior of the 2026 Kia K4 Hatchback GT-Line Turbo"
+        caption="The K4 cockpit turns the feature conversation toward screens, controls, and the difference between looking sporty and feeling cohesive."
+        credit="Michael Simari | Car and Driver"
+        variant="wide"
+      />
+      <ArticleSubheading>Let the Rankings Build Like a Drive</ArticleSubheading>
+      <p>The ordering gives the article its pace: Sentra, Impreza, K4, Corolla, Jetta, then Civic. Each step narrows what the best affordable small car has to do until the winner feels less like a surprise and more like a conclusion earned by the route.</p>
+      <ArticleSubheading>End With the Car That Expands the Category</ArticleSubheading>
+      <p>The Honda&apos;s win matters because it changes the emotional meaning of the segment. A hybrid is not just the efficient answer here; it is the quick, sorted, rewarding one. That is the story the visuals need to support.</p>
+      <ArticleFootnote number={1}>Source-grounded prototype based on Car and Driver&apos;s May 15, 2026 comparison test.</ArticleFootnote>
+    </>
+  ),
+  relatedArticles: [
+    { title: "2026 Kia K4 GT-Line Turbo vs. Honda Civic Hybrid Hatch", image: card("2026-kia-k4-gt-line-107-698b5faf87293.jpg") },
+    { title: "Comparison Test: 2026 Nissan Sentra vs. Volkswagen Jetta", image: card("2026-nissan-sentra-sl-108-699c9026b2949.jpg") },
+    { title: "The Right-to-Repair Fight Is Gaining Momentum", image: card("8b2745eb-f915-4283-aa59-bd921a42df99.jpeg") },
+    { title: "2012 Lexus LS460 on BaT Is Low-Key Luxury", image: card("311612c5-94a7-4874-b788-f60d39a244c0.jpg") },
+  ],
+};
+
+export const ELLE_EDITORIAL_ARTICLE: ImmersiveArticleContent = {
+  breadcrumbs: [{ label: "Culture" }, { label: "Art & Design" }, { label: "Architecture" }],
+  headline: "How Jeanne Gang Gave Hudson Valley Shakespeare an Incredible New Home",
+  dek: "The architect turns a theater in Putnam Valley into a study of timber, landscape, public space, and the way a building can make a community feel invited.",
+  heroImage: img("d372d396-18de-4ed2-aa89-e8b719d95639.jpg", "resize=1400:*"),
+  heroImageAlt: "Hudson Valley Shakespeare theater exterior at dusk",
+  heroImageCredit: "Jason O'Rear Photography",
+  author: "Adrienne Gaffney",
+  photographedBy: "Jason O'Rear, John David Pittman, and Studio Gang",
+  publishedDate: "May 15, 2026",
+  navLinks: ["Fashion", "Beauty", "Culture", "Horoscopes", "Shopping", "News & Politics"],
+  immersiveLabel: "Art & Design",
+  immersiveKicker: "Architecture as stagecraft, ecology, and an invitation to gather.",
+  introEyebrow: "Before opening night",
+  posterQuoteEyebrow: "Material note",
+  visualEssayEyebrow: "Spatial notes",
+  visualEssayTitle: "The theater tells its story through roofline, timber, light, and view.",
+  bodyRailEyebrow: "Design path",
+  heroImageTreatment: "overlay",
+  flipHeroImage: true,
+  immersiveIntro: (
+    <>
+      <p>The ELLE interview is about more than a new theater. Jeanne Gang describes architecture as a social medium: a way to frame how people arrive, gather, perform, and feel welcome in public space.</p>
+      <p>The images need to carry that idea. Start with the building as a glowing object in the landscape, then move inside to the stage, the structure, the architect, and the Hudson Valley site that shaped the whole project.</p>
+    </>
+  ),
+  factRail: [
+    { label: "Project", value: "Samuel H. Scripps Theater Center" },
+    { label: "Place", value: "Putnam Valley, New York" },
+    { label: "Architect", value: "Jeanne Gang / Studio Gang" },
+    { label: "Site", value: "98 acres in the Hudson Valley" },
+  ],
+  scenes: [
+    {
+      eyebrow: "The Site",
+      title: "The Landscape Is Part of the Stage",
+      body: "Gang's theater is designed around arrival, view, and atmosphere. The Hudson Valley is not backdrop decoration; it is part of what the audience and actors experience.",
+      image: img("f8a69379-5993-421f-abc4-6f3156ceac8a.jpg", "resize=1400:*"),
+      imageAlt: "Aerial view of the Hudson Valley theater site",
+      imageCredit: "Jason O'Rear",
+      quote: "The building feels less placed on the land than tuned to it.",
+    },
+    {
+      eyebrow: "The Room",
+      title: "A Theater That Opens Outward",
+      body: "The interior keeps the performance close to the landscape. Seats, stage, timber, and distant hills work together so the architecture supports both spectacle and intimacy.",
+      image: img("7216b5d6-dd56-4c47-9b44-4266ba3aae02.jpg", "resize=1400:*"),
+      imageAlt: "Inside the Scripps Theater with the landscape beyond the stage",
+      imageCredit: "Jason O'Rear",
+      align: "right",
+    },
+    {
+      eyebrow: "The Ethic",
+      title: "Public Space Should Feel Like Belonging",
+      body: "The conversation turns from theater to civic life: sustainability, social justice, and the idea that beautiful architecture can help people feel ownership of a place.",
+      image: img("f1b49acd-a7ee-41da-adef-ec37eb1a3272.jpg", "resize=1200:*"),
+      imageAlt: "Portrait of architect Jeanne Gang",
+      imageCredit: "John David Pittman",
+      quote: "Good architecture changes how people feel inside a shared space.",
+    },
+  ],
+  mediaPair: [
+    {
+      src: img("9fd7e519-0272-4a4b-b271-6d937e9ae190.jpg", "resize=1400:*"),
+      alt: "Timber beams and structural supports under the theater roof",
+      caption: "The timber structure gives the theater its emotional warmth and its sustainable logic.",
+      credit: "Studio Gang",
+      featured: true,
+    },
+    {
+      src: img("deecf73d-8c2d-43f6-aef8-8250301ec74f.jpg", "resize=1400:*"),
+      alt: "Hudson Valley Shakespeare theater glowing at dusk",
+      caption: "At night, the building reads like a lantern: civic, theatrical, and open to the landscape.",
+      credit: "Jason O'Rear",
+    },
+  ],
+  body: (
+    <>
+      <ArticleSubheading>Start With the Roofline</ArticleSubheading>
+      <p>The most important visual move is to let the theater breathe. The roof, timber, and valley views are not architectural extras; they explain the story&apos;s emotional stakes before the interview does.</p>
+      <p>Gang&apos;s work here reframes a performance space as a civic gesture: a place built for actors and audiences, but also for arrival, comfort, and public welcome.</p>
+      <PullQuote>Architecture becomes the quiet choreography before the play begins.</PullQuote>
+      <ArticleSubheading>Let Materials Carry Meaning</ArticleSubheading>
+      <p>The article turns on a material choice. A timber approach becomes more than an aesthetic solution; it makes the building feel specific to the company, the site, and the sustainability ambitions that drew Gang to the project.</p>
+      <ArticleInlineImage
+        src={img("7216b5d6-dd56-4c47-9b44-4266ba3aae02.jpg", "resize=1200:*")}
+        alt="Audience seating and stage inside the Scripps Theater"
+        caption="Inside the theater, the view beyond the stage keeps the audience aware of place."
+        credit="Jason O'Rear"
+      />
+      <ArticleSubheading>Make Community the Resolution</ArticleSubheading>
+      <p>The final movement should leave the building and return to people. Gang talks about museums, community centers, theaters, and public spaces as architecture that can lower barriers and help people feel that a place belongs to them.</p>
+      <ArticleFootnote number={1}>Source-grounded prototype based on ELLE&apos;s May 15, 2026 Jeanne Gang interview.</ArticleFootnote>
+    </>
+  ),
+  relatedArticles: [
+    { title: "How Frida Escobedo Is Making History at the Met", image: card("f1b49acd-a7ee-41da-adef-ec37eb1a3272.jpg") },
+    { title: "The Best Moments at the Venice Biennale", image: card("7216b5d6-dd56-4c47-9b44-4266ba3aae02.jpg") },
+    { title: "17 Fashion Highlights From Milan Design Week 2026", image: card("d372d396-18de-4ed2-aa89-e8b719d95639.jpg") },
+    { title: "The New Status Symbol? A Painted Portrait", image: card("deecf73d-8c2d-43f6-aef8-8250301ec74f.jpg") },
+  ],
+};
+
+export const BICYCLING_EDITORIAL_ARTICLE: ImmersiveArticleContent = {
+  breadcrumbs: [{ label: "Bikes & Gear" }, { label: "Beach Cruiser Bikes" }],
+  headline: "From Boardwalk to Bike Path: 12 Expert-Approved Beach Cruiser Bikes for Laid-Back Rides",
+  dek: "A comfort-first gear guide built around upright posture, easy rolling, and the kind of bike that makes a short ride feel like summer.",
+  heroImage: img("ef839871-f862-4d7e-a954-5570bfc4008d.jpg", "crop=1xw:0.749625187406xh;center,top&resize=1400:*"),
+  heroImageAlt: "Beach cruiser bike on a sunny path",
+  heroImageCredit: "Trevor Raab",
+  author: "Tara Seplavy",
+  publishedDate: "Updated May 8, 2026",
+  navLinks: ["Bikes & Gear", "Training", "Nutrition", "Culture", "News", "Repair"],
+  immersiveLabel: "Gear Guide",
+  immersiveKicker: "Cruisers are not about racing the clock. They are about fit, comfort, and the feeling of taking the long way home.",
+  introEyebrow: "Before the ride",
+  posterQuoteEyebrow: "Ride note",
+  visualEssayEyebrow: "Bike check",
+  visualEssayTitle: "The shape of the bike tells you what kind of ride it wants.",
+  bodyRailEyebrow: "Buying path",
+  immersiveIntro: (
+    <>
+      <p>The Bicycling guide is about ease, but not laziness. A good cruiser has a point of view: upright bars, a relaxed saddle, stable tires, and enough practical detail to make the ride feel effortless instead of flimsy.</p>
+      <p>The visual system should feel like a boardwalk test ride: bright, graphic, useful, and paced around what the reader needs to compare quickly.</p>
+    </>
+  ),
+  factRail: [
+    { label: "Story type", value: "Expert-tested gear guide" },
+    { label: "Focus", value: "Comfort, fit, stability, style" },
+    { label: "Use case", value: "Boardwalks, bike paths, errands" },
+    { label: "Reader need", value: "A cruiser that feels easy to own" },
+  ],
+  scenes: [
+    {
+      eyebrow: "The posture",
+      title: "Comfort Starts Upright",
+      body: "Cruisers work because the riding position changes the whole experience. The point is not aggression; it is a relaxed cockpit that lets the reader imagine rolling, looking around, and staying comfortable.",
+      image: "https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1744385820-Chatham7ST3pcCrankMatcha5172_1_2_1.jpg?crop=1.00xw:0.669xh;0,0.167xh&resize=1200:*",
+      imageAlt: "Mint green beach cruiser bike",
+      imageCredit: "Bicycling",
+      quote: "The right cruiser should make the first pedal stroke feel obvious.",
+    },
+    {
+      eyebrow: "The frame",
+      title: "Style Is Functional Here",
+      body: "Step-through frames, swept bars, wide saddles, and color are not just aesthetic cues. They tell the reader how the bike will behave before the spec list does.",
+      image: "https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1744382643-630-around-the-block-67f928f75c201.jpg?crop=1.00xw:0.668xh;0,0.152xh&resize=1200:*",
+      imageAlt: "Beach cruiser bike in profile",
+      imageCredit: "Bicycling",
+      align: "right",
+    },
+    {
+      eyebrow: "The ride",
+      title: "Easy Should Still Feel Solid",
+      body: "The best cruiser is simple, but not vague. Braking, gearing, tires, and weight decide whether a sunny short ride stays charming after the first mile.",
+      image: "https://hips.hearstapps.com/hmg-prod/images/priority-cruiser-selects-0077-1526503152.jpg?crop=1xw:1xh;center,top&resize=1200:*",
+      imageAlt: "Priority cruiser bike photographed for Bicycling",
+      imageCredit: "Bicycling",
+      quote: "Laid-back still needs good engineering.",
+    },
+  ],
+  mediaPair: [
+    {
+      src: "https://hips.hearstapps.com/hmg-prod/images/electric-bike-co-model-x-grid-1616007259.jpg?crop=1.00xw:0.5625xh;0,0.28xh&resize=1600:*",
+      alt: "Electric cruiser bike photographed horizontally for a gear guide",
+      caption: "A gear guide needs horizontal product clarity: the bike should read quickly, from frame shape to contact points.",
+      credit: "Bicycling",
+      featured: true,
+    },
+    {
+      src: "https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/product-images/59a71bce-64f8-48ca-99ef-28de4bcff1f0/a40add19-e82d-41cd-a76d-6bedd9c7ce22.jpg?crop=0.94xw:0.94xh;0.028xw,0.047xh&resize=980:*",
+      alt: "Beach cruiser product detail",
+      caption: "Product details still matter, but they should support the ride story rather than dominate the spread.",
+      credit: "Bicycling",
+    },
+  ],
+  body: (
+    <>
+      <ArticleSubheading>Make Comfort the Main Spec</ArticleSubheading>
+      <p>The source guide frames beach cruisers around relaxed riding, not performance theater. The editorial page should make that immediately legible: big profile images, clear comparison moments, and typography that feels energetic without pretending this is a race bike.</p>
+      <p>The buying logic is simple but important. Fit, saddle comfort, tire stability, gearing, braking, and weight decide whether a cruiser becomes a weekend habit or a garage ornament.</p>
+      <PullQuote>The best cruiser is the one that makes the easy ride feel well designed.</PullQuote>
+      <ArticleSubheading>Show the Bikes Like Objects Readers Can Judge</ArticleSubheading>
+      <p>Unlike a feature profile, the visuals need to keep returning to product evidence. Frame geometry, handlebar sweep, step-through height, and tire volume carry the story because they help readers understand why one bike feels calmer than another.</p>
+      <ArticleFootnote number={1}>Source-grounded prototype based on Bicycling&apos;s beach cruiser bike guide, updated May 8, 2026.</ArticleFootnote>
+    </>
+  ),
+  relatedArticles: [
+    { title: "The Best Electric Bikes for Everyday Rides", image: "https://hips.hearstapps.com/hmg-prod/images/electric-bike-co-model-x-grid-1616007259.jpg?crop=1xw:1xh;center,top&resize=400:*" },
+    { title: "Priority Cruiser Selects, Tested", image: card("priority-cruiser-selects-0077-1526503152.jpg") },
+    { title: "How to Choose the Right Bike Fit", image: card("79256f9c-a527-4b6a-9aeb-86fddb1d6a58.jpg") },
+    { title: "Cruiser Bikes Built for Summer Errands", image: "https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1744382643-630-around-the-block-67f928f75c201.jpg?crop=1xw:1xh;center,top&resize=400:*" },
+  ],
+};
+
+export const COUNTRY_LIVING_EDITORIAL_ARTICLE: ImmersiveArticleContent = {
+  breadcrumbs: [{ label: "Home Design" }, { label: "Decorating Ideas" }, { label: "Yellowstone" }],
+  headline: "How to Decorate Like the Duttons, According to Yellowstone's Set Designer",
+  dek: "Before Dutton Ranch premieres, Country Living revisits the layered rooms, ranch materials, and Western details that made the Yellowstone sets feel lived in.",
+  heroImage: img("4a9e0a82-c066-4b9e-b4ea-46efacb9bb43.jpg", "crop=1xw:0.75xh;0xw,0.056xh&resize=1400:*"),
+  heroImageAlt: "Yellowstone-inspired ranch interior with warm wood and Western decor",
+  heroImageCredit: "Cam McLeod / Paramount Network",
+  author: "Anna Logan",
+  publishedDate: "May 14, 2026",
+  navLinks: ["Home Design", "Gardening", "Food & Drinks", "Shopping", "DIY", "Travel"],
+  immersiveLabel: "Decorating Ideas",
+  immersiveKicker: "The Dutton look is not one object. It is leather, patina, firelight, scale, and the feeling that every room has survived a few seasons.",
+  introEyebrow: "Before the ranch",
+  posterQuoteEyebrow: "Room note",
+  visualEssayEyebrow: "Ranch layers",
+  visualEssayTitle: "The rooms tell the story through wood, leather, textiles, and history.",
+  bodyRailEyebrow: "Decor path",
+  immersiveIntro: (
+    <>
+      <p>The Country Living story works when the design feels collected rather than themed. The Dutton Ranch mood is Western, but the useful lesson is about texture: rough wood, aged leather, Navajo-inspired pattern, utilitarian pieces, and rooms that look inherited instead of installed.</p>
+      <p>The article should feel like walking through a cinematic ranch house with a decorator&apos;s eye, pausing on the details that readers can translate into their own homes.</p>
+    </>
+  ),
+  factRail: [
+    { label: "Story axis", value: "Set design as decorating lesson" },
+    { label: "Mood", value: "Western, weathered, collected" },
+    { label: "Materials", value: "Wood, leather, wool, iron" },
+    { label: "Reader promise", value: "Bring the ranch feeling home" },
+  ],
+  scenes: [
+    {
+      eyebrow: "The palette",
+      title: "Start With Weathered Warmth",
+      body: "The Dutton look begins with color and material: sun-baked neutrals, tobacco leather, dark beams, stone, and the kind of wood tones that make a room feel anchored.",
+      image: img("wilson-wyoming-log-cabin-main-room-desk-1668793118.jpg", "crop=1xw:0.965xh;0xw,0xh&resize=1400:*"),
+      imageAlt: "Rustic Wyoming cabin room with wood and Western character",
+      imageCredit: "Country Living",
+      quote: "The room should feel assembled over time, not bought in a weekend.",
+    },
+    {
+      eyebrow: "The textile",
+      title: "Pattern Carries the West",
+      body: "Throws, rugs, pillows, and woven motifs do the emotional work. They soften the ranch architecture and make the rooms feel personal, layered, and usable.",
+      image: img("531fe15b-1802-4e22-a23d-9582bf347f37.jpg", "crop=1xw:0.834xh;0xw,0.076xh&resize=1400:*"),
+      imageAlt: "Rustic interior with layered textiles",
+      imageCredit: "Country Living",
+      align: "right",
+    },
+    {
+      eyebrow: "The object",
+      title: "Use Decor That Looks Earned",
+      body: "The strongest pieces are practical first: benches, saddles, lamps, tables, iron hardware, and art that feels connected to landscape and work.",
+      image: img("wisconsin-northwoods-cabin-living-room-64f79bd213734.jpg", "crop=1xw:0.999xh;0xw,0xh&resize=1400:*"),
+      imageAlt: "Cabin living room with rustic Country Living decor",
+      imageCredit: "Country Living",
+      quote: "A ranch room needs utility before polish.",
+    },
+  ],
+  mediaPair: [
+    {
+      src: img("4a9e0a82-c066-4b9e-b4ea-46efacb9bb43.jpg", "crop=1xw:0.75xh;0xw,0.056xh&resize=1400:*"),
+      alt: "Yellowstone Dutton Ranch-inspired interior",
+      caption: "The set-design lesson is atmosphere: dark wood, strong silhouettes, layered pattern, and a room that feels lived in.",
+      credit: "Cam McLeod / Paramount Network",
+      featured: true,
+    },
+    {
+      src: "https://hips.hearstapps.com/clv.h-cdn.co/assets/17/05/farmhouse-refresh-fireplace-0317.jpg?crop=1xw:0.833xh;0xw,0.11xh&resize=1200:*",
+      alt: "Rustic fireplace with farmhouse decor",
+      caption: "Fireplaces and hearths make the ranch mood domestic instead of theatrical.",
+      credit: "Country Living",
+    },
+  ],
+  body: (
+    <>
+      <ArticleSubheading>Translate the Set, Don&apos;t Copy It</ArticleSubheading>
+      <p>The useful idea is not to turn every house into a television ranch. It is to borrow the set&apos;s sense of age, weight, and usefulness: sturdy furniture, honest textures, and decorative pieces that feel connected to a place.</p>
+      <PullQuote>The Dutton look works because nothing feels too new.</PullQuote>
+      <ArticleSubheading>Let Texture Do the Storytelling</ArticleSubheading>
+      <p>Country Living&apos;s version should be tactile. Close-ups of wood grain, woven blankets, leather seating, and iron details make the design advice feel attainable without flattening the drama of the source story.</p>
+      <ArticleFootnote number={1}>Source-grounded prototype based on Country Living&apos;s May 14, 2026 Yellowstone decorating feature.</ArticleFootnote>
+    </>
+  ),
+  relatedArticles: [
+    { title: "Rustic Cabin Ideas That Never Feel Costume-y", image: card("wilson-wyoming-log-cabin-main-room-desk-1668793118.jpg") },
+    { title: "The Best Western Decor Details", image: card("531fe15b-1802-4e22-a23d-9582bf347f37.jpg") },
+    { title: "Fireplace Ideas With Country Soul", image: "https://hips.hearstapps.com/clv.h-cdn.co/assets/17/05/farmhouse-refresh-fireplace-0317.jpg?crop=1xw:1xh;center,top&resize=400:*" },
+    { title: "Cabin Living Rooms Worth Saving", image: card("wisconsin-northwoods-cabin-living-room-64f79bd213734.jpg") },
+  ],
+};
+
+export const DELISH_EDITORIAL_ARTICLE: ImmersiveArticleContent = {
+  breadcrumbs: [{ label: "Cooking" }, { label: "Recipe Ideas" }, { label: "Summer" }],
+  headline: "I Can't Wait For Summer, So I'm Making These 14 Warm-Weather Recipes Now",
+  dek: "A bright, make-it-now recipe collection for the first impatient weeks of warm-weather cooking.",
+  heroImage: img("grilled-coca-cola-chicken-index-web-622-jg-del069925-687fdcd9ae465.jpg", "crop=1xw:0.9996684350132626xh;center,top&resize=1400:*"),
+  heroImageAlt: "Grilled Coca-Cola chicken ready for summer",
+  heroImageCredit: "Julia Gartland",
+  author: "Anya Ptacek",
+  publishedDate: "May 14, 2026",
+  navLinks: ["Cooking", "Recipes", "Food News", "Kitchen Gear", "Restaurants", "Videos"],
+  immersiveLabel: "Summer Recipes",
+  immersiveKicker: "The article is a craving list: smoky chicken, cold salads, berry desserts, and the first real feeling that dinner can move outside again.",
+  introEyebrow: "Before the first cookout",
+  posterQuoteEyebrow: "Craving note",
+  visualEssayEyebrow: "Menu board",
+  visualEssayTitle: "The story should taste like smoke, citrus, herbs, cold cream, and ripe fruit.",
+  bodyRailEyebrow: "Menu path",
+  immersiveIntro: (
+    <>
+      <p>The Delish piece is driven by impatience. Summer is not here yet, but the food can start acting like it is: grilled mains, green salads, fresh berries, seafood, lemon bars, and easy dishes that belong on a warm table.</p>
+      <p>Visually, that means abundance without clutter. Big food photography should lead the appetite, while the typography keeps the list energetic, practical, and a little playful.</p>
+    </>
+  ),
+  factRail: [
+    { label: "Recipes", value: "14 warm-weather ideas" },
+    { label: "Mood", value: "Grilled, bright, chilled, fresh" },
+    { label: "Hero dish", value: "Grilled Coca-Cola chicken" },
+    { label: "Reader promise", value: "Start summer early" },
+  ],
+  scenes: [
+    {
+      eyebrow: "The grill",
+      title: "Smoke Starts the Season",
+      body: "The hero image should feel like the first cookout: glossy chicken, char, sauce, and the unmistakable signal that dinner has left the oven behind.",
+      image: img("grilled-coca-cola-chicken-lead-web-616-jg-del069925-687fdcd53f84b.jpg", "crop=1xw:0.75xh;0xw,0.054xh&resize=1400:*"),
+      imageAlt: "Grilled Coca-Cola chicken on a platter",
+      imageCredit: "Julia Gartland",
+      quote: "The first summer recipe should smell like smoke before you read a word.",
+    },
+    {
+      eyebrow: "The salad",
+      title: "Cold, Green, and Fast",
+      body: "Pasta salad, romaine wedges, panzanella, and herbs give the piece its lighter rhythm. The page needs moments that feel crisp, easy, and ready for a picnic table.",
+      image: img("green-goddess-pasta-salad-third-web-2076-rl-base-del039925-6806c6e20a7f5.jpg", "crop=1xw:1xh;center,top&resize=1200:*"),
+      imageAlt: "Green goddess pasta salad",
+      imageCredit: "Delish",
+      align: "right",
+    },
+    {
+      eyebrow: "The sweet finish",
+      title: "End With Fruit and Sun",
+      body: "The dessert turn keeps the story emotional: strawberries, cream, lemon, and the kind of bright finish that makes the whole menu feel optimistic.",
+      image: img("strawberries-cream-tiramisu-lead-681139e6cc954.jpg", "crop=1xw:1xh;center,top&resize=1200:*"),
+      imageAlt: "Strawberries and cream tiramisu",
+      imageCredit: "Delish",
+      quote: "Summer arrives first as a craving.",
+    },
+  ],
+  mediaPair: [
+    {
+      src: img("994eba96-3a00-41ba-b186-5cf2b7150ca1.jpg", "crop=1xw:1xh;center,top&resize=1200:*"),
+      alt: "Warm-weather recipe from Delish",
+      caption: "A recipe roundup should feel browsable, but the images still need to make each dish feel specific.",
+      credit: "Delish",
+      featured: true,
+    },
+    {
+      src: img("lemon-bars-lead-65ef5aaea38e8.jpg", "crop=1xw:1xh;center,top&resize=1200:*"),
+      alt: "Lemon bars for summer dessert",
+      caption: "Lemon bars close the menu with brightness and a little nostalgia.",
+      credit: "Delish",
+    },
+  ],
+  body: (
+    <>
+      <ArticleSubheading>Make the Page Feel Hungry</ArticleSubheading>
+      <p>Delish needs appetite first. The article is a list, but the editorial treatment should not feel like a directory. It should move from grill smoke to cold salads to fruit and dessert, so the reader feels a menu forming as they scroll.</p>
+      <PullQuote>Warm-weather cooking is a mood before it is a meal plan.</PullQuote>
+      <ArticleSubheading>Let Color Lead the Story</ArticleSubheading>
+      <p>Red sauce, green herbs, golden chicken, pink strawberries, and lemon yellow can do the emotional work. The layout should use those colors as pacing, not decoration.</p>
+      <ArticleFootnote number={1}>Source-grounded prototype based on Delish&apos;s May 14, 2026 ready-for-summer recipe collection.</ArticleFootnote>
+    </>
+  ),
+  relatedArticles: [
+    { title: "Grilled Coca-Cola Chicken", image: card("grilled-coca-cola-chicken-lead-web-616-jg-del069925-687fdcd53f84b.jpg") },
+    { title: "Green Goddess Pasta Salad", image: card("green-goddess-pasta-salad-third-web-2076-rl-base-del039925-6806c6e20a7f5.jpg") },
+    { title: "Strawberries and Cream Tiramisu", image: card("strawberries-cream-tiramisu-lead-681139e6cc954.jpg") },
+    { title: "Lemon Bars for a Sunny Finish", image: card("lemon-bars-lead-65ef5aaea38e8.jpg") },
+  ],
+};
+
+export const ESQUIRE_EDITORIAL_ARTICLE: ImmersiveArticleContent = {
+  breadcrumbs: [{ label: "Entertainment" }, { label: "Music" }, { label: "A$AP Rocky" }],
+  headline: "A$AP Rocky Is Living His American Dream",
+  dek: "Hip-hop superstardom, a budding movie career, his own fashion line, and three kids with Rihanna. This is the new picture of success, and there ain't a picket fence in sight.",
+  heroImage: img("index-69753a4e634e9.jpg", "crop=0.996xw:1xh;center,top&resize=1400:*"),
+  heroImageAlt: "A$AP Rocky photographed for Esquire",
+  heroImageCredit: "Erik Carter",
+  author: "Esquire Editors",
+  publishedDate: "January 28, 2026",
+  navLinks: ["Entertainment", "Style", "Food & Drink", "News", "Gear", "Sports"],
+  immersiveLabel: "Cover Story",
+  immersiveKicker: "The profile is about swagger, family, style, risk, and a version of success that refuses the old American template.",
+  introEyebrow: "Before the dream",
+  posterQuoteEyebrow: "American note",
+  visualEssayEyebrow: "Style sequence",
+  visualEssayTitle: "The images should feel like status, motion, fatherhood, and fashion sharing the same frame.",
+  bodyRailEyebrow: "Profile path",
+  immersiveIntro: (
+    <>
+      <p>The Esquire story needs to feel controlled and electric. Rocky is moving through several identities at once: artist, actor, designer, father, partner, public figure, and the kind of cultural operator who understands image as power.</p>
+      <p>The design should be black, white, red, and cinematic, with the photography carrying scale and the typography behaving like a magazine cover under pressure.</p>
+    </>
+  ),
+  factRail: [
+    { label: "Subject", value: "A$AP Rocky" },
+    { label: "Album", value: "Don't Be Dumb" },
+    { label: "Story axis", value: "Fame, family, fashion, reinvention" },
+    { label: "Mood", value: "Sharp, nocturnal, self-possessed" },
+  ],
+  scenes: [
+    {
+      eyebrow: "The image",
+      title: "Success Without the Picket Fence",
+      body: "The American-dream frame is the hook, but Rocky's version is stranger and more interesting: family life, fashion ambition, music mythology, and a refusal to make success look conventional.",
+      image: img("esq030126digitalcover-news2-69792a3e86ffb.jpg", "resize=1400:*"),
+      imageAlt: "A$AP Rocky Esquire digital cover image",
+      imageCredit: "Erik Carter",
+      quote: "The dream is recognizable only after he remixes it.",
+    },
+    {
+      eyebrow: "The style",
+      title: "Fashion Is Part of the Reporting",
+      body: "In an Esquire profile, clothes are not decoration. They are proof of point of view: how Rocky uses tailoring, silhouette, and gesture to control what the camera thinks it knows.",
+      image: img("2-6975430c6a2b6.jpg", "resize=1400:*"),
+      imageAlt: "A$AP Rocky fashion portrait from Esquire",
+      imageCredit: "Erik Carter",
+      align: "right",
+    },
+    {
+      eyebrow: "The future",
+      title: "A Life Moving in Several Directions",
+      body: "The story widens from music into movies, family, business, and public imagination. The page should feel like momentum without losing the intimacy of a profile.",
+      image: img("3-697542c8189f7.jpg", "resize=1400:*"),
+      imageAlt: "A$AP Rocky portrait from Esquire story",
+      imageCredit: "Erik Carter",
+      quote: "The next act is not a pivot. It is an expansion.",
+    },
+  ],
+  mediaPair: [
+    {
+      src: img("4-6975432bacfce.jpg", "crop=0.979xw:1.00xh;0.0207xw,0&resize=1400:*"),
+      alt: "A$AP Rocky editorial portrait",
+      caption: "The portrait sequence should feel like a fashion portfolio with profile stakes.",
+      credit: "Erik Carter",
+      featured: true,
+    },
+    {
+      src: img("5-6975435862f00.jpg", "resize=1400:*"),
+      alt: "A$AP Rocky photographed for Esquire",
+      caption: "The quieter frames keep the story from becoming only spectacle.",
+      credit: "Erik Carter",
+    },
+  ],
+  body: (
+    <>
+      <ArticleSubheading>Make the Profile Feel Like a Cover Story</ArticleSubheading>
+      <p>The article is not just a celebrity update. It is an image of modern success: music, fashion, film, family, and brand power all moving together. The page should make those layers visible without flattening Rocky into a list of achievements.</p>
+      <PullQuote>The new American dream has no picket fence, but it has immaculate styling.</PullQuote>
+      <ArticleSubheading>Let the Photography Set the Temperature</ArticleSubheading>
+      <p>Esquire can carry more contrast and more attitude than the service brands. Big black fields, red punctuation, and deliberate white space let the portraits feel expensive and a little dangerous.</p>
+      <ArticleFootnote number={1}>Source-grounded prototype based on Esquire&apos;s January 28, 2026 A$AP Rocky cover story.</ArticleFootnote>
+    </>
+  ),
+  relatedArticles: [
+    { title: "A$AP Rocky's Esquire Cover Story", image: card("index-69753a4e634e9.jpg") },
+    { title: "The Style Portfolio Behind the Profile", image: card("4-6975432bacfce.jpg") },
+    { title: "The Esquire Interview Archive", image: card("esq030126digitalcover-news2-69792a3e86ffb.jpg") },
+    { title: "The Future of Celebrity Style", image: card("3-697542c8189f7.jpg") },
+  ],
+};
+
 export const BRAND_ARTICLES: Record<string, BrandArticleData> = {
   cosmopolitan: {
     content: {
