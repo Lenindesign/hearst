@@ -53,6 +53,8 @@ interface ArticleCardImageProps extends React.ComponentProps<"div"> {
   src?: string;
   alt?: string;
   aspectRatio?: "16/9" | "4/3" | "1/1" | "3/2";
+  imageFit?: "cover" | "contain";
+  imagePosition?: string;
 }
 
 function ArticleCardImage({
@@ -60,6 +62,8 @@ function ArticleCardImage({
   src,
   alt,
   aspectRatio = "16/9",
+  imageFit = "cover",
+  imagePosition,
   style,
   ...props
 }: ArticleCardImageProps) {
@@ -83,7 +87,8 @@ function ArticleCardImage({
         <img
           src={src}
           alt={alt || ""}
-          className="absolute inset-0 h-full w-full object-cover"
+          className={cn("absolute inset-0 h-full w-full", imageFit === "contain" ? "object-contain" : "object-cover")}
+          style={imagePosition ? { objectPosition: imagePosition } : undefined}
         />
       ) : (
         <div className="absolute inset-0 flex items-center justify-center">

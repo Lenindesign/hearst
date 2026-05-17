@@ -19,6 +19,156 @@ function card(id: string) {
   return `${H}${id}?crop=0.666xw:1xh;center,top&resize=400:*`;
 }
 
+interface SourceEditorialScene {
+  eyebrow: string;
+  title: string;
+  body: string;
+  image: string;
+  imageAlt: string;
+  imageCredit: string;
+  imageQuery?: string;
+  imageTreatment?: "before-after" | "product";
+  quote?: string;
+  layout?: "split" | "wide";
+  imageFit?: "cover" | "contain";
+  imagePosition?: string;
+}
+
+interface SourceEditorialConfig {
+  breadcrumbs: { label: string; href?: string }[];
+  headline: string;
+  dek: string;
+  heroImage: string;
+  heroImageQuery?: string;
+  heroImageAlt: string;
+  heroImageCredit: string;
+  author: string;
+  publishedDate: string;
+  navLinks: string[];
+  immersiveLabel: string;
+  immersiveKicker: string;
+  introEyebrow: string;
+  posterQuoteEyebrow: string;
+  visualEssayEyebrow: string;
+  visualEssayTitle: string;
+  bodyRailEyebrow: string;
+  factRail: ImmersiveArticleContent["factRail"];
+  scenes: SourceEditorialScene[];
+  sourceNote: string;
+  bodySubheading: string;
+  bodyCopy: string;
+  pullQuote: string;
+}
+
+function editorialSceneImageQuery(
+  scene: SourceEditorialScene,
+  layout: "split" | "wide",
+  imageFit: "cover" | "contain",
+) {
+  if (scene.imageQuery) {
+    return scene.imageQuery;
+  }
+
+  if (imageFit === "contain" || layout === "wide" || scene.imagePosition) {
+    return layout === "wide" ? "resize=1600:*" : "resize=1400:*";
+  }
+
+  return "crop=1xw:0.75xh;center,top&resize=1400:*";
+}
+
+function editorialMediaImageQuery(scene: SourceEditorialScene) {
+  if (scene.imageQuery) {
+    return scene.imageQuery;
+  }
+
+  if (scene.imageTreatment || scene.imageFit === "contain" || scene.imagePosition) {
+    return "resize=1600:*";
+  }
+
+  return "crop=1xw:1xh;center,top&resize=1200:*";
+}
+
+function editorialRelatedImageQuery(scene: SourceEditorialScene) {
+  if (scene.imageTreatment || scene.imageFit === "contain") {
+    return "resize=600:*";
+  }
+
+  return "crop=0.666xw:1xh;center,top&resize=400:*";
+}
+
+function makeSourceEditorialArticle(config: SourceEditorialConfig): ImmersiveArticleContent {
+  return {
+    breadcrumbs: config.breadcrumbs,
+    headline: config.headline,
+    dek: config.dek,
+    heroImage: img(config.heroImage, config.heroImageQuery ?? "resize=1400:*"),
+    heroImageAlt: config.heroImageAlt,
+    heroImageCredit: config.heroImageCredit,
+    author: config.author,
+    publishedDate: config.publishedDate,
+    navLinks: config.navLinks,
+    immersiveLabel: config.immersiveLabel,
+    immersiveKicker: config.immersiveKicker,
+    introEyebrow: config.introEyebrow,
+    posterQuoteEyebrow: config.posterQuoteEyebrow,
+    visualEssayEyebrow: config.visualEssayEyebrow,
+    visualEssayTitle: config.visualEssayTitle,
+    bodyRailEyebrow: config.bodyRailEyebrow,
+    immersiveIntro: (
+      <>
+        <p>{config.dek}</p>
+        <p>{config.immersiveKicker}</p>
+      </>
+    ),
+    factRail: config.factRail,
+    scenes: config.scenes.map((scene, index) => {
+      const layout = scene.layout ?? (index === 0 ? "wide" : "split");
+      const imageFit = scene.imageFit ?? (scene.imageTreatment ? "contain" : "cover");
+      return {
+        eyebrow: scene.eyebrow,
+        title: scene.title,
+        body: scene.body,
+        image: img(
+          scene.image,
+          editorialSceneImageQuery(scene, layout, imageFit),
+        ),
+        imageAlt: scene.imageAlt,
+        imageCredit: scene.imageCredit,
+        quote: scene.quote,
+        layout,
+        imageFit,
+        imagePosition: scene.imagePosition,
+        imageTreatment: scene.imageTreatment,
+      };
+    }),
+    mediaPair: config.scenes.slice(1, 3).map((scene, index) => ({
+      src: img(scene.image, editorialMediaImageQuery(scene)),
+      alt: scene.imageAlt,
+      caption: scene.body,
+      credit: scene.imageCredit,
+      featured: index === 0,
+      fit: scene.imageFit ?? (scene.imageTreatment ? "contain" : undefined),
+      position: scene.imagePosition,
+      treatment: scene.imageTreatment,
+    })),
+    body: (
+      <>
+        <ArticleSubheading>{config.bodySubheading}</ArticleSubheading>
+        <p>{config.bodyCopy}</p>
+        <PullQuote>{config.pullQuote}</PullQuote>
+        <ArticleSubheading>Let the visuals carry the context</ArticleSubheading>
+        <p>The template keeps the immersive cover, shared grid, scroll-up navigation, chapter pacing, and visual essay structure consistent while changing the mood, captions, and image choices to match what the writer is communicating.</p>
+        <ArticleFootnote number={1}>{config.sourceNote}</ArticleFootnote>
+      </>
+    ),
+    relatedArticles: config.scenes.map((scene) => ({
+      title: scene.title,
+      image: img(scene.image, editorialRelatedImageQuery(scene)),
+      imageFit: scene.imageTreatment || scene.imageFit === "contain" ? "contain" : undefined,
+    })),
+  };
+}
+
 export const COSMOPOLITAN_IMMERSIVE_ARTICLE: ImmersiveArticleContent = {
   breadcrumbs: [{ label: "Pop Culture" }, { label: "Celebs" }, { label: "Music" }],
   headline: "Towa Bird Steps Into Her Own Volume",
@@ -330,9 +480,9 @@ export const ELLE_EDITORIAL_ARTICLE: ImmersiveArticleContent = {
   breadcrumbs: [{ label: "Culture" }, { label: "Art & Design" }, { label: "Architecture" }],
   headline: "How Jeanne Gang Gave Hudson Valley Shakespeare an Incredible New Home",
   dek: "The architect turns a theater in Putnam Valley into a study of timber, landscape, public space, and the way a building can make a community feel invited.",
-  heroImage: img("d372d396-18de-4ed2-aa89-e8b719d95639.jpg", "resize=1400:*"),
-  heroImageAlt: "Hudson Valley Shakespeare theater exterior at dusk",
-  heroImageCredit: "Jason O'Rear Photography",
+  heroImage: img("deecf73d-8c2d-43f6-aef8-8250301ec74f.jpg", "resize=1400:*"),
+  heroImageAlt: "Hudson Valley Shakespeare theater glowing at dusk",
+  heroImageCredit: "Jason O'Rear",
   author: "Adrienne Gaffney",
   photographedBy: "Jason O'Rear, John David Pittman, and Studio Gang",
   publishedDate: "May 15, 2026",
@@ -389,16 +539,16 @@ export const ELLE_EDITORIAL_ARTICLE: ImmersiveArticleContent = {
   ],
   mediaPair: [
     {
-      src: img("9fd7e519-0272-4a4b-b271-6d937e9ae190.jpg", "resize=1400:*"),
-      alt: "Timber beams and structural supports under the theater roof",
-      caption: "The timber structure gives the theater its emotional warmth and its sustainable logic.",
-      credit: "Studio Gang",
+      src: img("d372d396-18de-4ed2-aa89-e8b719d95639.jpg", "resize=1400:*"),
+      alt: "Hudson Valley Shakespeare theater exterior at dusk",
+      caption: "The exterior establishes the theater as a glowing civic object in the landscape.",
+      credit: "Jason O'Rear Photography",
       featured: true,
     },
     {
-      src: img("deecf73d-8c2d-43f6-aef8-8250301ec74f.jpg", "resize=1400:*"),
-      alt: "Hudson Valley Shakespeare theater glowing at dusk",
-      caption: "At night, the building reads like a lantern: civic, theatrical, and open to the landscape.",
+      src: img("7216b5d6-dd56-4c47-9b44-4266ba3aae02.jpg", "resize=1400:*"),
+      alt: "Inside the Scripps Theater with the landscape beyond the stage",
+      caption: "Inside the theater, the view beyond the stage keeps the audience aware of place.",
       credit: "Jason O'Rear",
     },
   ],
@@ -411,10 +561,10 @@ export const ELLE_EDITORIAL_ARTICLE: ImmersiveArticleContent = {
       <ArticleSubheading>Let Materials Carry Meaning</ArticleSubheading>
       <p>The article turns on a material choice. A timber approach becomes more than an aesthetic solution; it makes the building feel specific to the company, the site, and the sustainability ambitions that drew Gang to the project.</p>
       <ArticleInlineImage
-        src={img("7216b5d6-dd56-4c47-9b44-4266ba3aae02.jpg", "resize=1200:*")}
-        alt="Audience seating and stage inside the Scripps Theater"
-        caption="Inside the theater, the view beyond the stage keeps the audience aware of place."
-        credit="Jason O'Rear"
+        src={img("9fd7e519-0272-4a4b-b271-6d937e9ae190.jpg", "resize=1200:*")}
+        alt="Timber beams and structural supports under the theater roof"
+        caption="The timber structure gives the theater its emotional warmth and its sustainable logic."
+        credit="Studio Gang"
       />
       <ArticleSubheading>Make Community the Resolution</ArticleSubheading>
       <p>The final movement should leave the building and return to people. Gang talks about museums, community centers, theaters, and public spaces as architecture that can lower barriers and help people feel that a place belongs to them.</p>
@@ -433,7 +583,7 @@ export const BICYCLING_EDITORIAL_ARTICLE: ImmersiveArticleContent = {
   breadcrumbs: [{ label: "Bikes & Gear" }, { label: "Beach Cruiser Bikes" }],
   headline: "From Boardwalk to Bike Path: 12 Expert-Approved Beach Cruiser Bikes for Laid-Back Rides",
   dek: "A comfort-first gear guide built around upright posture, easy rolling, and the kind of bike that makes a short ride feel like summer.",
-  heroImage: img("ef839871-f862-4d7e-a954-5570bfc4008d.jpg", "crop=1xw:0.749625187406xh;center,top&resize=1400:*"),
+  heroImage: img("ef839871-f862-4d7e-a954-5570bfc4008d.jpg", "resize=1400:*"),
   heroImageAlt: "Beach cruiser bike on a sunny path",
   heroImageCredit: "Trevor Raab",
   author: "Tara Seplavy",
@@ -463,43 +613,50 @@ export const BICYCLING_EDITORIAL_ARTICLE: ImmersiveArticleContent = {
       eyebrow: "The posture",
       title: "Comfort Starts Upright",
       body: "Cruisers work because the riding position changes the whole experience. The point is not aggression; it is a relaxed cockpit that lets the reader imagine rolling, looking around, and staying comfortable.",
-      image: "https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1744385820-Chatham7ST3pcCrankMatcha5172_1_2_1.jpg?crop=1.00xw:0.669xh;0,0.167xh&resize=1200:*",
+      image: "https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1744385820-Chatham7ST3pcCrankMatcha5172_1_2_1.jpg?resize=1200:*",
       imageAlt: "Mint green beach cruiser bike",
       imageCredit: "Bicycling",
       quote: "The right cruiser should make the first pedal stroke feel obvious.",
+      imageTreatment: "product",
     },
     {
       eyebrow: "The frame",
       title: "Style Is Functional Here",
       body: "Step-through frames, swept bars, wide saddles, and color are not just aesthetic cues. They tell the reader how the bike will behave before the spec list does.",
-      image: "https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1744382643-630-around-the-block-67f928f75c201.jpg?crop=1.00xw:0.668xh;0,0.152xh&resize=1200:*",
+      image: "https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1744382643-630-around-the-block-67f928f75c201.jpg?resize=1200:*",
       imageAlt: "Beach cruiser bike in profile",
       imageCredit: "Bicycling",
       align: "right",
+      imageTreatment: "product",
     },
     {
       eyebrow: "The ride",
       title: "Easy Should Still Feel Solid",
       body: "The best cruiser is simple, but not vague. Braking, gearing, tires, and weight decide whether a sunny short ride stays charming after the first mile.",
-      image: "https://hips.hearstapps.com/hmg-prod/images/priority-cruiser-selects-0077-1526503152.jpg?crop=1xw:1xh;center,top&resize=1200:*",
+      image: "https://hips.hearstapps.com/hmg-prod/images/priority-cruiser-selects-0077-1526503152.jpg?resize=1200:*",
       imageAlt: "Priority cruiser bike photographed for Bicycling",
       imageCredit: "Bicycling",
       quote: "Laid-back still needs good engineering.",
+      imageTreatment: "product",
     },
   ],
   mediaPair: [
     {
-      src: "https://hips.hearstapps.com/hmg-prod/images/electric-bike-co-model-x-grid-1616007259.jpg?crop=1.00xw:0.5625xh;0,0.28xh&resize=1600:*",
+      src: "https://hips.hearstapps.com/hmg-prod/images/electric-bike-co-model-x-grid-1616007259.jpg?resize=1600:*",
       alt: "Electric cruiser bike photographed horizontally for a gear guide",
       caption: "A gear guide needs horizontal product clarity: the bike should read quickly, from frame shape to contact points.",
       credit: "Bicycling",
       featured: true,
+      fit: "contain",
+      treatment: "product",
     },
     {
-      src: "https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/product-images/59a71bce-64f8-48ca-99ef-28de4bcff1f0/a40add19-e82d-41cd-a76d-6bedd9c7ce22.jpg?crop=0.94xw:0.94xh;0.028xw,0.047xh&resize=980:*",
+      src: "https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/product-images/59a71bce-64f8-48ca-99ef-28de4bcff1f0/a40add19-e82d-41cd-a76d-6bedd9c7ce22.jpg?resize=980:*",
       alt: "Beach cruiser product detail",
       caption: "Product details still matter, but they should support the ride story rather than dominate the spread.",
       credit: "Bicycling",
+      fit: "contain",
+      treatment: "product",
     },
   ],
   body: (
@@ -514,10 +671,10 @@ export const BICYCLING_EDITORIAL_ARTICLE: ImmersiveArticleContent = {
     </>
   ),
   relatedArticles: [
-    { title: "The Best Electric Bikes for Everyday Rides", image: "https://hips.hearstapps.com/hmg-prod/images/electric-bike-co-model-x-grid-1616007259.jpg?crop=1xw:1xh;center,top&resize=400:*" },
-    { title: "Priority Cruiser Selects, Tested", image: card("priority-cruiser-selects-0077-1526503152.jpg") },
-    { title: "How to Choose the Right Bike Fit", image: card("79256f9c-a527-4b6a-9aeb-86fddb1d6a58.jpg") },
-    { title: "Cruiser Bikes Built for Summer Errands", image: "https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1744382643-630-around-the-block-67f928f75c201.jpg?crop=1xw:1xh;center,top&resize=400:*" },
+    { title: "The Best Electric Bikes for Everyday Rides", image: "https://hips.hearstapps.com/hmg-prod/images/electric-bike-co-model-x-grid-1616007259.jpg?resize=600:*", imageFit: "contain" },
+    { title: "Priority Cruiser Selects, Tested", image: img("priority-cruiser-selects-0077-1526503152.jpg", "resize=600:*"), imageFit: "contain" },
+    { title: "How to Choose the Right Bike Fit", image: img("79256f9c-a527-4b6a-9aeb-86fddb1d6a58.jpg", "resize=600:*"), imageFit: "contain" },
+    { title: "Cruiser Bikes Built for Summer Errands", image: "https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1744382643-630-around-the-block-67f928f75c201.jpg?resize=600:*", imageFit: "contain" },
   ],
 };
 
@@ -793,6 +950,1162 @@ export const ESQUIRE_EDITORIAL_ARTICLE: ImmersiveArticleContent = {
     { title: "The Future of Celebrity Style", image: card("3-697542c8189f7.jpg") },
   ],
 };
+
+export const AUTOWEEK_EDITORIAL_ARTICLE = makeSourceEditorialArticle({
+  breadcrumbs: [{ label: "News" }, { label: "Concept Cars" }, { label: "Villa d'Este" }],
+  headline: "Tutto Rosso Capricorn 01 Zagato Will Debut at Villa d'Este",
+  dek: "The one-off hypercar turns a concours debut into a story about red paint, coachbuilt drama, and the emotional precision of a machine made to be seen.",
+  heroImage: "15c47f1a-1727-44cb-8258-b432be96a663.jpeg",
+  heroImageQuery: "crop=1xw:0.8888888888888888xh;center,top&resize=1400:*",
+  heroImageAlt: "Capricorn 01 Zagato hypercar in red",
+  heroImageCredit: "Autoweek",
+  author: "Mark Vaughn",
+  publishedDate: "May 15, 2026",
+  navLinks: ["News", "Reviews", "Racing", "Car Life", "Gear", "EV"],
+  immersiveLabel: "Villa d'Este Debut",
+  immersiveKicker: "Autoweek needs speed, craft, and reveal. The car should feel less like a product card and more like an arrival.",
+  introEyebrow: "Before the reveal",
+  posterQuoteEyebrow: "Coachbuilt note",
+  visualEssayEyebrow: "Design sequence",
+  visualEssayTitle: "The story should move through surface, proportion, mechanical intent, and concours spectacle.",
+  bodyRailEyebrow: "Design path",
+  factRail: [
+    { label: "Car", value: "Capricorn 01 Zagato" },
+    { label: "Debut", value: "Villa d'Este" },
+    { label: "Mood", value: "Red, rare, coachbuilt" },
+    { label: "Story job", value: "Make the reveal feel fast and collectible" },
+  ],
+  scenes: [
+    {
+      eyebrow: "The reveal",
+      title: "Red as the First Argument",
+      body: "The opening image should land like a concours curtain pull: color first, then shape, then the question of what kind of car earns this much theater.",
+      image: "936145be-a942-43dd-9eef-90cb3c276c91.jpeg",
+      imageAlt: "Detail view of the Capricorn 01 Zagato",
+      imageCredit: "Autoweek",
+      quote: "The paint is not decoration. It is the first performance.",
+    },
+    {
+      eyebrow: "The body",
+      title: "Coachwork Becomes Character",
+      body: "Zagato's job in the layout is proportion and tension: hard surfaces, compact drama, and the feeling that the car has been shaped for a specific room and road.",
+      image: "2b214a02-0b4f-4289-a91f-5a1f5128af4b.jpeg",
+      imageAlt: "Capricorn 01 Zagato profile detail",
+      imageCredit: "Autoweek",
+    },
+    {
+      eyebrow: "The place",
+      title: "Villa d'Este Raises the Stakes",
+      body: "A debut at Villa d'Este asks the page to slow down. This is not auto-show noise; it is lawn, lake, legacy, and a car designed to hold attention.",
+      image: "2b70a5cc-3546-4cfd-abea-3b9701107070.jpeg",
+      imageAlt: "Capricorn 01 Zagato detail at debut",
+      imageCredit: "Autoweek",
+      quote: "A reveal can be fast even when the camera lingers.",
+    },
+  ],
+  sourceNote: "Source-grounded prototype based on Autoweek's May 15, 2026 Capricorn 01 Zagato Villa d'Este story.",
+  bodySubheading: "Make the Car Feel Like an Event",
+  bodyCopy: "This Autoweek article is about more than specification. The editorial system should treat the Capricorn 01 Zagato as an object of ceremony: color, rarity, craft, and place working together.",
+  pullQuote: "The car does not need a showroom. It needs a stage.",
+});
+
+export const BEST_PRODUCTS_EDITORIAL_ARTICLE = makeSourceEditorialArticle({
+  breadcrumbs: [{ label: "Lifestyle" }, { label: "Travel" }, { label: "USA" }],
+  headline: "The 50 Best Places to Visit in the U.S., From Napa Valley to Nantucket",
+  dek: "A coast-to-coast travel list becomes more useful when the page feels like itinerary, aspiration, and practical discovery at once.",
+  heroImage: "aerial-shot-of-bixby-bridge-in-big-sur-state-park-royalty-free-image-1772255087.pjpeg",
+  heroImageQuery: "crop=1.00xw:0.752xh;0,0.130xh&resize=1400:*",
+  heroImageAlt: "Aerial view of Bixby Bridge in Big Sur",
+  heroImageCredit: "Best Products",
+  author: "Adam Schubak and Jill Fergus",
+  publishedDate: "Jan 19, 2018",
+  navLinks: ["Tech", "Home", "Travel", "Style", "Fitness", "Gifts"],
+  immersiveLabel: "Travel Guide",
+  immersiveKicker: "Best Products should feel bright and useful: a beautifully organized wish list that turns a long roundup into a visual itinerary.",
+  introEyebrow: "Before the itinerary",
+  posterQuoteEyebrow: "Travel note",
+  visualEssayEyebrow: "Route board",
+  visualEssayTitle: "The visuals should jump from coast, to desert, to city, to food, so the list feels expansive instead of endless.",
+  bodyRailEyebrow: "Route path",
+  factRail: [
+    { label: "List", value: "50 U.S. destinations" },
+    { label: "Promise", value: "Coast-to-coast ideas" },
+    { label: "Mood", value: "Useful, bright, escapist" },
+    { label: "Reader job", value: "Find the next trip quickly" },
+  ],
+  scenes: [
+    {
+      eyebrow: "The coast",
+      title: "Start With the Open Road",
+      body: "Big Sur gives the story instant scale: ocean, bridge, road, and the fantasy of a trip that begins with a bend in the highway.",
+      image: "smathers-beach-in-key-west-royalty-free-image-1772255241.pjpeg",
+      imageAlt: "Smathers Beach in Key West",
+      imageCredit: "Best Products",
+      quote: "A list becomes emotional when the first image feels like departure.",
+    },
+    {
+      eyebrow: "The view",
+      title: "Let Landscape Do the Sorting",
+      body: "Grand Canyon scale changes the rhythm. The page needs room for visual pause before returning to practical destination logic.",
+      image: "sunset-at-desert-view-point-royalty-free-image-1772255359.pjpeg",
+      imageAlt: "Grand Canyon at sunset",
+      imageCredit: "Best Products",
+    },
+    {
+      eyebrow: "The city",
+      title: "End With a Place You Can Taste",
+      body: "A destination roundup works when it remembers food, streets, music, and local texture. The final chapter should feel specific enough to act on.",
+      image: "11-kansas-city-ribs-1625695631.jpg",
+      imageAlt: "Kansas City ribs",
+      imageCredit: "Best Products",
+      quote: "The best guides make planning feel like already being there.",
+    },
+  ],
+  sourceNote: "Source-grounded prototype based on Best Products' U.S. travel guide.",
+  bodySubheading: "Make the List Feel Like a Trip",
+  bodyCopy: "The story is long by nature, so the design needs choreography: big scenic moments, quick utility beats, and a rhythm that keeps the reader oriented while still creating desire.",
+  pullQuote: "A good travel list should feel browsable, but never generic.",
+});
+
+export const BIOGRAPHY_EDITORIAL_ARTICLE = makeSourceEditorialArticle({
+  breadcrumbs: [{ label: "Musicians" }, { label: "Taylor Swift" }],
+  headline: "Taylor Swift's Docuseries The End of an Era Shows the Singer at Her Most Vulnerable",
+  dek: "The profile context is fame, performance, vulnerability, and the emotional aftermath of a global tour lived under extraordinary pressure.",
+  heroImage: "taylor-swift-performs-onstage-during-taylor-swift-the-news-photo-1765554835.pjpeg",
+  heroImageQuery: "crop=1.00xw:0.770xh;0,0.132xh&resize=1400:*",
+  heroImageAlt: "Taylor Swift performing onstage",
+  heroImageCredit: "Biography",
+  author: "Biography.com Editors",
+  publishedDate: "Apr 2, 2014",
+  navLinks: ["Musicians", "Actors", "History", "Sports", "News", "Videos"],
+  immersiveLabel: "Biography",
+  immersiveKicker: "Biography should feel archival and intimate: public scale, private stakes, and a timeline that turns celebrity into a human story.",
+  introEyebrow: "Before the archive",
+  posterQuoteEyebrow: "Timeline note",
+  visualEssayEyebrow: "Life sequence",
+  visualEssayTitle: "The visuals should move between stage, red carpet, archive, and cultural afterimage.",
+  bodyRailEyebrow: "Life path",
+  factRail: [
+    { label: "Subject", value: "Taylor Swift" },
+    { label: "Lens", value: "Career, vulnerability, cultural scale" },
+    { label: "Mood", value: "Archival, human, bright under pressure" },
+    { label: "Reader job", value: "Understand the person through the timeline" },
+  ],
+  scenes: [
+    {
+      eyebrow: "The stage",
+      title: "Scale Comes First",
+      body: "The performance image tells the reader what public life looks like at maximum size: lights, crowd, costume, precision.",
+      image: "musician-taylor-swift-performs-onstage-during-the-news-photo-1698158476.jpg",
+      imageAlt: "Taylor Swift performing during the Eras Tour",
+      imageCredit: "Biography",
+      quote: "A biography starts with the public image, then asks what it costs.",
+      imagePosition: "56% 38%",
+    },
+    {
+      eyebrow: "The lens",
+      title: "Fame Has a Close-Up",
+      body: "Red-carpet portraiture changes the distance. The story becomes about scrutiny, control, and the way a person manages being interpreted.",
+      image: "81st-golden-globe-awards-taylor-swift-on-the-red-carpet-of-news-photo-1719260997.jpg",
+      imageAlt: "Taylor Swift on a red carpet",
+      imageCredit: "Biography",
+      imagePosition: "50% 24%",
+    },
+    {
+      eyebrow: "The record",
+      title: "Memory Turns Into Material",
+      body: "The visual system should make room for albums, eras, tour images, and the artifacts that turn a career into a cultural record.",
+      image: "taylor-swift-merch-660b1a5c550bf.jpg",
+      imageQuery: "crop=0.405xw:0.81xh;0.547xw,0.093xh&resize=1400:*",
+      imageAlt: "Taylor Swift merchandise and cultural artifacts",
+      imageCredit: "Biography",
+      quote: "The archive is not static. It keeps being rewritten in public.",
+    },
+  ],
+  sourceNote: "Source-grounded prototype based on Biography's Taylor Swift page and related docuseries update.",
+  bodySubheading: "Make the Timeline Feel Human",
+  bodyCopy: "Biography needs structure, but it also needs empathy. The editorial variant should move through fame, work, pressure, and memory without feeling like a flat chronology.",
+  pullQuote: "The life story is strongest when scale and vulnerability sit in the same frame.",
+});
+
+export const ELLE_DECOR_EDITORIAL_ARTICLE = makeSourceEditorialArticle({
+  breadcrumbs: [{ label: "Design + Decorate" }, { label: "House Interiors" }],
+  headline: "This Northern California Home Captures the Spirit of Joni Mitchell",
+  dek: "Commune Design rejuvenates a family retreat through local craft, natural texture, and a design language tuned to landscape and memory.",
+  heroImage: "f5c359ae-20fc-4295-860a-1a2a29003de9.jpg",
+  heroImageQuery: "crop=1xw:0.747xh;0xw,0.056xh&resize=1400:*",
+  heroImageAlt: "Northern California house interior",
+  heroImageCredit: "Elle Decor",
+  author: "Annie Goldsmith",
+  publishedDate: "May 15, 2026",
+  navLinks: ["Design", "Decorate", "House Tours", "Shopping", "Culture", "Travel"],
+  immersiveLabel: "House Tour",
+  immersiveKicker: "Elle Decor should feel composed and transportive: rooms as atmosphere, materials as memory, and craft as the real plot.",
+  introEyebrow: "Before the tour",
+  posterQuoteEyebrow: "Material note",
+  visualEssayEyebrow: "Room sequence",
+  visualEssayTitle: "The images should move from architecture to object to texture, letting the house reveal itself slowly.",
+  bodyRailEyebrow: "Room path",
+  factRail: [
+    { label: "Design", value: "Commune Design" },
+    { label: "Place", value: "Northern California" },
+    { label: "Mood", value: "Crafted, natural, musical" },
+    { label: "Story job", value: "Turn interiors into atmosphere" },
+  ],
+  scenes: [
+    {
+      eyebrow: "The setting",
+      title: "A House Tuned to Landscape",
+      body: "The first movement should make the home feel settled into its environment, not dropped onto it.",
+      image: "386e567a-8f9d-4545-92e3-f8032fabfe50.jpg",
+      imageAlt: "Interior detail from Northern California home",
+      imageCredit: "Elle Decor",
+      quote: "The room works because the landscape is still present.",
+    },
+    {
+      eyebrow: "The craft",
+      title: "Local Hands Give It Warmth",
+      body: "The article's emotional center is collaboration: artisans, material intelligence, and the sense that every surface has been considered.",
+      image: "27f17431-3ad8-40cc-a7a0-40cc00b6fd79.jpg",
+      imageAlt: "Craft detail from Elle Decor house tour",
+      imageCredit: "Elle Decor",
+    },
+    {
+      eyebrow: "The feeling",
+      title: "Design as a Memory System",
+      body: "The Joni Mitchell reference should not feel literal. It should guide the pacing: lyrical, textured, familiar, and quietly radiant.",
+      image: "f5c359ae-20fc-4295-860a-1a2a29003de9.jpg",
+      imageAlt: "Northern California home by Commune Design",
+      imageCredit: "Elle Decor",
+      quote: "A house tour becomes memorable when the rooms feel like a chorus.",
+    },
+  ],
+  sourceNote: "Source-grounded prototype based on ELLE Decor's May 15, 2026 Commune Design Northern California house tour.",
+  bodySubheading: "Make the Home Feel Composed",
+  bodyCopy: "This story asks for quiet confidence: restrained typography, full-width room moments, and captions that make materials part of the narrative rather than decoration.",
+  pullQuote: "The design story is not what the room contains. It is how the room holds feeling.",
+});
+
+export const GOOD_HOUSEKEEPING_EDITORIAL_ARTICLE = makeSourceEditorialArticle({
+  breadcrumbs: [{ label: "Beauty" }, { label: "Hair Tools" }, { label: "Tested" }],
+  headline: "Beauty Pros Say These Are the 5 Best Curling Irons for Salon-Worthy Hair",
+  dek: "A service story becomes editorial when testing, texture, shine, and the promise of good hair are made visible.",
+  heroImage: "be51be81-ae88-4eec-913f-37028692ca0a.png",
+  heroImageQuery: "crop=1.00xw:0.835xh;0,0.0759xh&resize=1400:*",
+  heroImageAlt: "Curling irons tested by Good Housekeeping",
+  heroImageCredit: "Good Housekeeping",
+  author: "Sabina Wizemann",
+  publishedDate: "May 11, 2026",
+  navLinks: ["Home", "Beauty", "Health", "Food", "Shopping", "Holidays"],
+  immersiveLabel: "Beauty Lab Tested",
+  immersiveKicker: "Good Housekeeping should feel trusted but polished: lab proof, beauty texture, and service clarity with a premium finish.",
+  introEyebrow: "Before the test",
+  posterQuoteEyebrow: "Lab note",
+  visualEssayEyebrow: "Tool board",
+  visualEssayTitle: "The visuals should make heat, curl, finish, and trust feel instantly legible.",
+  bodyRailEyebrow: "Test path",
+  factRail: [
+    { label: "Products", value: "5 curling irons" },
+    { label: "Source", value: "Beauty Lab testing" },
+    { label: "Mood", value: "Practical, polished, trusted" },
+    { label: "Reader job", value: "Choose quickly with confidence" },
+  ],
+  scenes: [
+    {
+      eyebrow: "The test",
+      title: "Proof Before Polish",
+      body: "The opening should communicate Good Housekeeping authority: tools tested, results compared, and beauty advice grounded in expertise.",
+      image: "18de0283-f311-4645-a7db-ff89c9a129f0.png",
+      imageAlt: "Curling iron product detail",
+      imageCredit: "Good Housekeeping",
+      quote: "A beauty recommendation earns trust before it earns shine.",
+      imageTreatment: "before-after",
+    },
+    {
+      eyebrow: "The finish",
+      title: "Make the Result Visible",
+      body: "The page should show what the reader wants: curl shape, smoothness, heat control, and a tool that feels easy to imagine using.",
+      image: "e13ec776-52c0-43f9-afe4-850c71686f4e.png",
+      imageAlt: "Curling iron testing product visual",
+      imageCredit: "Good Housekeeping",
+      imageTreatment: "before-after",
+    },
+    {
+      eyebrow: "The choice",
+      title: "Service Can Still Feel Beautiful",
+      body: "The design needs shopping utility without collapsing into a grid. Heroic product imagery can make the recommendation feel curated.",
+      image: "1bf58840-4e9e-4304-aff0-7b0c5f1700d8.png",
+      imageAlt: "Curling iron product still life",
+      imageCredit: "Good Housekeeping",
+      quote: "The best service journalism makes the decision feel lighter.",
+      imageTreatment: "before-after",
+    },
+  ],
+  sourceNote: "Source-grounded prototype based on Good Housekeeping's May 11, 2026 curling irons guide.",
+  bodySubheading: "Make Testing Feel Editorial",
+  bodyCopy: "Good Housekeeping brings authority. The template should make that authority visible through clean pacing, precise captions, and polished product storytelling.",
+  pullQuote: "Trust is the story; shine is the reward.",
+});
+
+export const HARPERS_BAZAAR_EDITORIAL_ARTICLE = makeSourceEditorialArticle({
+  breadcrumbs: [{ label: "Fashion" }, { label: "Runway" }, { label: "Dior" }],
+  headline: "Hooray for Hollywood! And Jonathan Anderson's First Dior Cruise Collection",
+  dek: "A Los Angeles show becomes a tribute to fashion, film, arrival, and the charged glamour of a first collection.",
+  heroImage: "cc352106-e4fc-4833-b3d2-f7a549da0522.gif",
+  heroImageQuery: "crop=1xw:0.888888888889xh;center,top&resize=1400:*",
+  heroImageAlt: "Dior Resort 2027 Los Angeles runway moment",
+  heroImageCredit: "Launchmetrics",
+  author: "Brooke Bobb",
+  publishedDate: "May 14, 2026",
+  navLinks: ["Fashion", "Beauty", "Culture", "Celebrity", "Shopping", "Runway"],
+  immersiveLabel: "Runway Review",
+  immersiveKicker: "Bazaar needs fashion theater: cinematic image scale, elegant tension, and typography that feels like an invitation to a front row.",
+  introEyebrow: "Before the show",
+  posterQuoteEyebrow: "Runway note",
+  visualEssayEyebrow: "Look sequence",
+  visualEssayTitle: "The visuals should feel like fashion and film sharing the same spotlight.",
+  bodyRailEyebrow: "Show path",
+  factRail: [
+    { label: "House", value: "Dior" },
+    { label: "Designer", value: "Jonathan Anderson" },
+    { label: "Place", value: "Los Angeles" },
+    { label: "Mood", value: "Hollywood, heritage, first act" },
+  ],
+  scenes: [
+    {
+      eyebrow: "The entrance",
+      title: "Hollywood Sets the Light",
+      body: "The opening should make the runway feel cinematic: not just clothes, but place, legacy, and the first charged look at a new chapter.",
+      image: "88c34cac-e692-48f2-91a1-541f2d5b1b08.jpg",
+      imageAlt: "Dior runway detail",
+      imageCredit: "Launchmetrics",
+      quote: "A debut collection is a thesis delivered under lights.",
+    },
+    {
+      eyebrow: "The silhouette",
+      title: "The Look Carries the Argument",
+      body: "A Bazaar treatment should let individual looks breathe, pairing fashion detail with enough white space to feel expensive.",
+      image: "788f5d55-14f1-4a39-9c66-a388f608b5c8.jpg",
+      imageAlt: "Dior Resort 2027 look",
+      imageCredit: "Launchmetrics",
+    },
+    {
+      eyebrow: "The house",
+      title: "Heritage Meets First Act",
+      body: "The story is about interpretation: what Dior means in Los Angeles and what a new creative lead chooses to emphasize first.",
+      image: "cc352106-e4fc-4833-b3d2-f7a549da0522.gif",
+      imageAlt: "Dior Resort 2027 runway image",
+      imageCredit: "Launchmetrics",
+      quote: "The runway is also a letter of intent.",
+    },
+  ],
+  sourceNote: "Source-grounded prototype based on Harper's Bazaar's May 14, 2026 Dior Resort 2027 Los Angeles coverage.",
+  bodySubheading: "Make the Review Feel Like a Front Row",
+  bodyCopy: "Fashion coverage needs pace and restraint: show scale, look detail, cultural reference, and the quiet authority of a critic choosing what matters.",
+  pullQuote: "The collection arrives as cinema before it becomes commerce.",
+});
+
+export const HOUSE_BEAUTIFUL_EDITORIAL_ARTICLE = makeSourceEditorialArticle({
+  breadcrumbs: [{ label: "Design Inspiration" }, { label: "House Tours" }, { label: "Los Angeles" }],
+  headline: "Jeremiah Brent Added Antiques and Ample Seating to This Hosting-Ready L.A. Home",
+  dek: "A Los Angeles home tour becomes a story about hospitality, antiques, materials, and rooms made for people to gather.",
+  heroImage: "hbx030124jeremiahbrent-002-65f1e164f2a25.jpg",
+  heroImageQuery: "crop=1xw:0.5261479591836735xh;center,top&resize=1400:*",
+  heroImageAlt: "Jeremiah Brent Los Angeles home interior",
+  heroImageCredit: "House Beautiful",
+  author: "Kelly Allen",
+  publishedDate: "May 9, 2026",
+  navLinks: ["Design", "House Tours", "Shopping", "Gardening", "Lifestyle", "Color"],
+  immersiveLabel: "Digital Home Tour",
+  immersiveKicker: "House Beautiful should feel welcoming and layered: hosting as architecture, antiques as warmth, and rooms that invite the reader to stay.",
+  introEyebrow: "Before the tour",
+  posterQuoteEyebrow: "Hosting note",
+  visualEssayEyebrow: "Room sequence",
+  visualEssayTitle: "The images should show how seating, texture, and antiques create emotional hospitality.",
+  bodyRailEyebrow: "Room path",
+  factRail: [
+    { label: "Designer", value: "Jeremiah Brent" },
+    { label: "Place", value: "Los Angeles" },
+    { label: "Mood", value: "Warm, layered, hosting-ready" },
+    { label: "Story job", value: "Make rooms feel lived in" },
+  ],
+  scenes: [
+    {
+      eyebrow: "The room",
+      title: "Hospitality Starts With Scale",
+      body: "The first room image should communicate welcome: seating, light, conversation, and enough softness to make design feel human.",
+      image: "west-stafford-218-edit-65f1e1a508b1a.jpg",
+      imageAlt: "Hosting-ready interior detail",
+      imageCredit: "House Beautiful",
+      quote: "A beautiful room works hardest when people are in it.",
+    },
+    {
+      eyebrow: "The antiques",
+      title: "Old Pieces Add Memory",
+      body: "Antiques give the home a narrative before any caption explains it. The layout should use detail images like evidence of life.",
+      image: "hbx030124jeremiahbrent-001-65f1e1633e9ba.jpg",
+      imageAlt: "Antique detail in Los Angeles home",
+      imageCredit: "House Beautiful",
+    },
+    {
+      eyebrow: "The gathering",
+      title: "Design for People to Stay",
+      body: "The story is strongest when the reader understands the room as an experience: generous, social, and ready for a night that runs long.",
+      image: "hbx030124jeremiahbrent-002-65f1e164f2a25.jpg",
+      imageAlt: "Jeremiah Brent Los Angeles home",
+      imageCredit: "House Beautiful",
+      quote: "Hospitality is a design system of its own.",
+    },
+  ],
+  sourceNote: "Source-grounded prototype based on House Beautiful's May 9, 2026 Jeremiah Brent Los Angeles home tour.",
+  bodySubheading: "Make the Home Feel Ready for Company",
+  bodyCopy: "This story is about design as invitation. The editorial variant should make every image feel like a room the reader can enter, not just a picture to admire.",
+  pullQuote: "The best house tour makes you hear the room before it explains the room.",
+});
+
+export const MENS_HEALTH_EDITORIAL_ARTICLE = makeSourceEditorialArticle({
+  breadcrumbs: [{ label: "Fitness" }, { label: "Gear" }, { label: "Home Gym" }],
+  headline: "We Found the Best Adjustable Dumbbells for Every Home Gym",
+  dek: "A gear guide becomes more powerful when strength, space, testing, and equipment clarity all show up in the visual system.",
+  heroImage: "cthfwkzv-6909141a38163.jpg",
+  heroImageQuery: "crop=1.00xw:0.502xh;0,0.359xh&resize=1400:*",
+  heroImageAlt: "Adjustable dumbbells for a home gym",
+  heroImageCredit: "Men's Health",
+  author: "Charles Thorp, NASM",
+  publishedDate: "May 11, 2023",
+  navLinks: ["Fitness", "Gear", "Health", "Style", "Nutrition", "Workouts"],
+  immersiveLabel: "Gear Tested",
+  immersiveKicker: "Men's Health should feel direct and muscular: equipment as proof, training space as context, and a buying guide that still has impact.",
+  introEyebrow: "Before the lift",
+  posterQuoteEyebrow: "Training note",
+  visualEssayEyebrow: "Gear sequence",
+  visualEssayTitle: "The visuals should make weight, grip, space, and performance immediately legible.",
+  bodyRailEyebrow: "Test path",
+  factRail: [
+    { label: "Gear", value: "Adjustable dumbbells" },
+    { label: "Use case", value: "Home gyms" },
+    { label: "Mood", value: "Strong, efficient, tested" },
+    { label: "Reader job", value: "Pick the right weight system" },
+  ],
+  scenes: [
+    {
+      eyebrow: "The setup",
+      title: "Space Is the Constraint",
+      body: "The guide starts with the problem: too many weights, not enough room, and the need for gear that works hard without taking over.",
+      image: "best-adjustable-dumbbells-for-men-69090dfb172e0.jpg",
+      imageAlt: "Adjustable dumbbells in a home gym",
+      imageCredit: "Men's Health",
+      quote: "The best equipment makes a small room feel capable.",
+    },
+    {
+      eyebrow: "The test",
+      title: "Grip, Change, Repeat",
+      body: "Men's Health credibility comes from use. The page should make adjustment, grip, build, and workout flow visible.",
+      image: "best-dumbbells-for-men-6978c9866fd48.jpg",
+      imageAlt: "Dumbbell testing image",
+      imageCredit: "Men's Health",
+    },
+    {
+      eyebrow: "The build",
+      title: "A Better Home Gym Starts Here",
+      body: "The final movement should broaden from dumbbells into the room they create: efficient, focused, and ready for consistency.",
+      image: "home-gym-gear-68d44bb1eaa9d.jpg",
+      imageAlt: "Home gym gear",
+      imageCredit: "Men's Health",
+      quote: "Strength gear should clarify the workout, not clutter it.",
+    },
+  ],
+  sourceNote: "Source-grounded prototype based on Men's Health's adjustable dumbbells guide.",
+  bodySubheading: "Make Gear Feel Tested, Not Listed",
+  bodyCopy: "The Men’s Health version needs discipline: big product images, punchy captions, and practical information that feels like coaching rather than catalog copy.",
+  pullQuote: "The product story is really a space story.",
+});
+
+export const OPRAH_DAILY_EDITORIAL_ARTICLE = makeSourceEditorialArticle({
+  breadcrumbs: [{ label: "Life" }, { label: "Health" }, { label: "Menopause" }],
+  headline: "Do Your Favorite Foods Suddenly Taste Bland or Bad? It Could Be Perimenopause",
+  dek: "A health story about changing taste needs sensitivity, clarity, and a visual rhythm that makes a surprising symptom feel understood.",
+  heroImage: "24a9fb5d-e308-488b-b7b2-30afe5754185.jpg",
+  heroImageQuery: "crop=1xw:1.0xh;center,top&resize=1400:*",
+  heroImageAlt: "Food and taste changes visual",
+  heroImageCredit: "Oprah Daily",
+  author: "Christina Manian",
+  publishedDate: "May 13, 2026",
+  navLinks: ["Life", "Health", "Spirit", "Culture", "Books", "Style"],
+  immersiveLabel: "Health",
+  immersiveKicker: "Oprah Daily should feel personal and wise: surprising body changes explained with warmth, dignity, and enough beauty to invite the reader in.",
+  introEyebrow: "Before the symptom",
+  posterQuoteEyebrow: "Body note",
+  visualEssayEyebrow: "Senses sequence",
+  visualEssayTitle: "The visuals should turn taste, memory, body change, and reassurance into a calm emotional path.",
+  bodyRailEyebrow: "Health path",
+  factRail: [
+    { label: "Topic", value: "Taste changes" },
+    { label: "Context", value: "Perimenopause" },
+    { label: "Mood", value: "Warm, clear, reassuring" },
+    { label: "Reader job", value: "Feel informed, not alarmed" },
+  ],
+  scenes: [
+    {
+      eyebrow: "The surprise",
+      title: "Taste Can Change the Story",
+      body: "The opening needs empathy. A favorite food tasting wrong is small on paper, but intimate in real life.",
+      image: "8fb195a7-90bd-4e58-b55e-39b7e175b36e.jpg",
+      imageAlt: "Food and taste visual",
+      imageCredit: "Oprah Daily",
+      quote: "A symptom feels less strange when the page makes room for it.",
+    },
+    {
+      eyebrow: "The body",
+      title: "Hormones Touch the Everyday",
+      body: "The story should connect science to daily life with calm authority, letting the visual design soften complexity without oversimplifying it.",
+      image: "menopause-6890c9012285e.png",
+      imageAlt: "Menopause health illustration",
+      imageCredit: "Oprah Daily",
+    },
+    {
+      eyebrow: "The care",
+      title: "Information Can Feel Gentle",
+      body: "The final movement should feel like guidance: not a diagnosis machine, but a compassionate path toward understanding what changed.",
+      image: "relationships-6890c9389aece.png",
+      imageAlt: "Health and relationships illustration",
+      imageCredit: "Oprah Daily",
+      quote: "Clarity is care when the body starts speaking differently.",
+    },
+  ],
+  sourceNote: "Source-grounded prototype based on Oprah Daily's May 13, 2026 story on taste changes and perimenopause.",
+  bodySubheading: "Make Health Feel Human",
+  bodyCopy: "This Oprah Daily article needs a slower emotional register than a gear guide or runway story. The template should prioritize reassurance, warmth, and visual calm.",
+  pullQuote: "The body story is personal before it is clinical.",
+});
+
+export const POPULAR_MECHANICS_EDITORIAL_ARTICLE = makeSourceEditorialArticle({
+  breadcrumbs: [{ label: "Science" }, { label: "Animals" }, { label: "Research" }],
+  headline: "The Dogs of Chernobyl Are Experiencing Rapid Evolution, Study Suggests",
+  dek: "A science story becomes cinematic when the page holds the strangeness of place, the intimacy of animals, and the rigor of genetic research together.",
+  heroImage: "stray-dogs-hang-out-near-an-abandoned-partially-completed-news-photo-1764858016.pjpeg",
+  heroImageQuery: "crop=1.00xw:0.751xh;0,0.180xh&resize=1400:*",
+  heroImageAlt: "Dogs near abandoned buildings around Chernobyl",
+  heroImageCredit: "Popular Mechanics",
+  author: "Darren Orf",
+  publishedDate: "May 7, 2026",
+  navLinks: ["Science", "Technology", "Cars", "DIY", "Military", "Space"],
+  immersiveLabel: "Science",
+  immersiveKicker: "Popular Mechanics should feel investigative: eerie place, living subjects, data, and the question of what adaptation means.",
+  introEyebrow: "Before the research",
+  posterQuoteEyebrow: "Science note",
+  visualEssayEyebrow: "Evidence sequence",
+  visualEssayTitle: "The visuals should move from abandoned landscape to animal presence to scientific uncertainty.",
+  bodyRailEyebrow: "Evidence path",
+  factRail: [
+    { label: "Subject", value: "Chernobyl dogs" },
+    { label: "Lens", value: "DNA and rapid evolution" },
+    { label: "Mood", value: "Eerie, curious, evidence-led" },
+    { label: "Reader job", value: "Feel the mystery and the method" },
+  ],
+  scenes: [
+    {
+      eyebrow: "The zone",
+      title: "Place Makes the Mystery",
+      body: "The abandoned landscape should not be background. It is the environmental pressure that makes the research feel urgent.",
+      image: "abandoned-street-in-ghost-city-prypyat-in-chernobyl-royalty-free-image-1739990136.pjpeg",
+      imageAlt: "Abandoned street in Pripyat near Chernobyl",
+      imageCredit: "Popular Mechanics",
+      quote: "The setting is part of the experiment.",
+    },
+    {
+      eyebrow: "The animals",
+      title: "The Subjects Are Living With the Aftermath",
+      body: "The dogs bring intimacy to a story that could otherwise feel abstract. The page should keep them present without sensationalizing them.",
+      image: "stray-dogs-hang-out-near-an-abandoned-partially-completed-news-photo-1764858016.pjpeg",
+      imageAlt: "Dogs near abandoned Chernobyl structure",
+      imageCredit: "Popular Mechanics",
+    },
+    {
+      eyebrow: "The proof",
+      title: "Evidence Needs Atmosphere",
+      body: "The science is the point, but the storytelling works because evidence and unease move together.",
+      image: "cage-full-of-young-essex-hounds-waiting-for-their-first-cub-news-photo-1764211615.pjpeg",
+      imageAlt: "Dogs in research context",
+      imageCredit: "Popular Mechanics",
+      quote: "A good science page lets uncertainty stay visible.",
+    },
+  ],
+  sourceNote: "Source-grounded prototype based on Popular Mechanics' May 7, 2026 Chernobyl dogs DNA research story.",
+  bodySubheading: "Make the Evidence Feel Alive",
+  bodyCopy: "The Popular Mechanics version should lean into visual investigation: dark scale, clean labels, and story beats that make the reader feel both the mystery and the method.",
+  pullQuote: "Science storytelling works when the data has a place to live.",
+});
+
+export const PREVENTION_EDITORIAL_ARTICLE = makeSourceEditorialArticle({
+  breadcrumbs: [{ label: "Health" }, { label: "Symptoms" }, { label: "Fainting" }],
+  headline: "Doctors Share 10 Causes of Feeling Faint or Lightheaded",
+  dek: "Dehydration, skipped meals, and heart issues can all be behind that faint feeling.",
+  heroImage: "e78289d4-0ae9-45f9-b73a-ebe07756340d.jpeg",
+  heroImageQuery: "crop=1xw:0.749xh;0xw,0.05xh&resize=1400:*",
+  heroImageAlt: "A woman resting with her hand near her face",
+  heroImageCredit: "Prevention",
+  author: "Sarah Klein",
+  publishedDate: "May 16, 2026",
+  navLinks: ["Health", "Fitness", "Food", "Mind", "Beauty", "Aging"],
+  immersiveLabel: "Health",
+  immersiveKicker: "The page should feel calm and diagnostic: a quiet visual rhythm for a body signal that can mean several different things.",
+  introEyebrow: "Before the symptoms",
+  posterQuoteEyebrow: "Body signal",
+  visualEssayEyebrow: "Symptom notes",
+  visualEssayTitle: "The images should make lightheadedness feel legible, not alarming.",
+  bodyRailEyebrow: "Care path",
+  factRail: [
+    { label: "Signal", value: "Faintness or lightheadedness" },
+    { label: "Common causes", value: "Hydration, food, blood pressure" },
+    { label: "Risk frame", value: "Know when to call a doctor" },
+    { label: "Mood", value: "Clear, calm, useful" },
+  ],
+  scenes: [
+    {
+      eyebrow: "The signal",
+      title: "The Body Asks for Attention",
+      body: "The opening image should slow the reader down. Feeling faint is not a dramatic effect here; it is a physical cue that deserves clarity.",
+      image: "e78289d4-0ae9-45f9-b73a-ebe07756340d.jpeg",
+      imageAlt: "A woman pausing while feeling unwell",
+      imageCredit: "Prevention",
+      quote: "A health story works best when calm becomes part of the design.",
+    },
+    {
+      eyebrow: "The causes",
+      title: "Small Changes Can Shift the Whole System",
+      body: "Water, food, sleep, medication, and blood pressure all become part of the same visual field: ordinary details with real physical consequences.",
+      image: "e78289d4-0ae9-45f9-b73a-ebe07756340d.jpeg",
+      imageAlt: "A quiet health portrait",
+      imageCredit: "Prevention",
+    },
+    {
+      eyebrow: "The decision",
+      title: "Clarity Is the Service",
+      body: "The final movement should guide without panic: understand the likely reasons, watch for warning signs, and know when expert care matters.",
+      image: "e78289d4-0ae9-45f9-b73a-ebe07756340d.jpeg",
+      imageAlt: "Health portrait used for context",
+      imageCredit: "Prevention",
+    },
+  ],
+  sourceNote: "Source-grounded prototype based on Prevention's May 16, 2026 doctor explainer on lightheadedness and fainting.",
+  bodySubheading: "Make the Advice Feel Calm",
+  bodyCopy: "Prevention needs the immersive template to hold reassurance and seriousness at the same time: generous pacing, calm contrast, and labels that make the symptom path easy to follow.",
+  pullQuote: "The story is not fear; the story is listening to the body sooner.",
+});
+
+export const REDBOOK_EDITORIAL_ARTICLE = makeSourceEditorialArticle({
+  breadcrumbs: [{ label: "Entertainment" }, { label: "TV" }, { label: "Then and Now" }],
+  headline: "The Cast of Dawson's Creek Then Vs. Now",
+  dek: "A nostalgia story that works through recognition: familiar faces, time, memory, and the strange intimacy of growing up with a cast.",
+  heroImage: "dawsons-creek-jen-1516377987.jpg",
+  heroImageQuery: "crop=1xw:0.75xh;center,top&resize=1400:*",
+  heroImageAlt: "Dawson's Creek cast member then and now imagery",
+  heroImageCredit: "Redbook",
+  author: "Nicole Pomarico",
+  publishedDate: "Sep 23, 2021",
+  navLinks: ["Life", "Home", "Food", "Relationships", "Entertainment", "Style"],
+  immersiveLabel: "Then & Now",
+  immersiveKicker: "The design should feel like flipping through a memory album with sharper editorial timing.",
+  introEyebrow: "Before the rewatch",
+  posterQuoteEyebrow: "Nostalgia beat",
+  visualEssayEyebrow: "Cast notes",
+  visualEssayTitle: "The visual rhythm should make time visible without turning the cast into a gimmick.",
+  bodyRailEyebrow: "Memory path",
+  factRail: [
+    { label: "Series", value: "Dawson's Creek" },
+    { label: "Lens", value: "Cast then and now" },
+    { label: "Mood", value: "Nostalgic, warm, pop-culture fluent" },
+    { label: "Reader feeling", value: "I remember exactly where I was" },
+  ],
+  scenes: [
+    {
+      eyebrow: "The memory",
+      title: "The First Image Should Feel Familiar",
+      body: "A then-and-now story begins with recognition. The layout should honor the viewer's memory before it starts comparing.",
+      image: "dawsons-creek-dawson-1516377938.jpg",
+      imageAlt: "Dawson's Creek cast comparison",
+      imageCredit: "Redbook",
+      quote: "Nostalgia is strongest when the page gives it space.",
+    },
+    {
+      eyebrow: "The change",
+      title: "Time Becomes the Visual Device",
+      body: "The portraits do the work: the reader sees age, career, and pop-culture memory in the same glance.",
+      image: "dawsons-creek-joey-1516378002.jpg",
+      imageAlt: "Dawson's Creek Joey comparison",
+      imageCredit: "Redbook",
+    },
+    {
+      eyebrow: "The rewatch",
+      title: "The Cast Still Carries the Mood",
+      body: "The final beat should feel less like a list and more like a rewatch invitation: familiar, affectionate, and a little wistful.",
+      image: "dawsons-creek-pacey-1516378003.jpg",
+      imageAlt: "Dawson's Creek Pacey comparison",
+      imageCredit: "Redbook",
+    },
+  ],
+  sourceNote: "Source-grounded prototype based on Redbook's Dawson's Creek cast then-and-now feature.",
+  bodySubheading: "Design for Recognition",
+  bodyCopy: "Redbook needs a warm version of the immersive system: softer pacing, clearer memory beats, and imagery that lets the reader compare without feeling rushed.",
+  pullQuote: "A good nostalgia page gives memory room to catch up.",
+});
+
+export const ROAD_AND_TRACK_EDITORIAL_ARTICLE = makeSourceEditorialArticle({
+  breadcrumbs: [{ label: "Reviews" }, { label: "Bugatti" }, { label: "Track Test" }],
+  headline: "The Bugatti Bolide Is a Race Simulator for Billionaires",
+  dek: "The hyperexclusive Bugatti costs a cool $5 million and can only be driven on track. For those who can afford it, the experience is beyond intense.",
+  heroImage: "96792d35-8504-429d-b1d1-5fe53ea2cff9.jpg",
+  heroImageQuery: "crop=0.575xw:0.459xh;0.155xw,0.395xh&resize=1400:*",
+  heroImageAlt: "Bugatti Bolide on track",
+  heroImageCredit: "Road & Track",
+  author: "Daniel Pund",
+  publishedDate: "May 12, 2026",
+  navLinks: ["Reviews", "Cars", "Motorsports", "News", "Culture", "Videos"],
+  immersiveLabel: "Track Test",
+  immersiveKicker: "Road & Track should feel technical and visceral: speed, rarity, intimidation, and control.",
+  introEyebrow: "Before the lap",
+  posterQuoteEyebrow: "Track note",
+  visualEssayEyebrow: "Velocity notes",
+  visualEssayTitle: "The design should make the Bolide feel more like an event than a product.",
+  bodyRailEyebrow: "Lap path",
+  factRail: [
+    { label: "Car", value: "Bugatti Bolide" },
+    { label: "Price", value: "$5 million" },
+    { label: "Use", value: "Track only" },
+    { label: "Mood", value: "Extreme, precise, unreal" },
+  ],
+  scenes: [
+    {
+      eyebrow: "The machine",
+      title: "The Car Should Look Almost Untouchable",
+      body: "The image needs scale and menace. This is not transportation; it is a machine built around intensity.",
+      image: "96792d35-8504-429d-b1d1-5fe53ea2cff9.jpg",
+      imageAlt: "Bugatti Bolide at speed",
+      imageCredit: "Road & Track",
+      quote: "The fantasy is speed, but the story is control.",
+    },
+    {
+      eyebrow: "The track",
+      title: "The Road Disappears Into Physics",
+      body: "The module should stretch horizontally for track imagery, letting the car, asphalt, and horizon create the cinematic field.",
+      image: "96792d35-8504-429d-b1d1-5fe53ea2cff9.jpg",
+      imageAlt: "Bugatti Bolide track context",
+      imageCredit: "Road & Track",
+    },
+    {
+      eyebrow: "The limit",
+      title: "Luxury Turns Into Nerve",
+      body: "The closing beat should feel expensive but not plush: carbon, noise, g-force, and the strange privacy of an impossible car.",
+      image: "96792d35-8504-429d-b1d1-5fe53ea2cff9.jpg",
+      imageAlt: "Bugatti Bolide detail",
+      imageCredit: "Road & Track",
+    },
+  ],
+  sourceNote: "Source-grounded prototype based on Road & Track's May 12, 2026 Bugatti Bolide review.",
+  bodySubheading: "Make Speed Feel Designed",
+  bodyCopy: "Road & Track needs a darker, harder-edged immersive treatment: big horizontal photography, disciplined labels, and copy that lets engineering feel cinematic.",
+  pullQuote: "At this price, performance stops being practical and becomes atmosphere.",
+});
+
+export const RUNNERS_WORLD_EDITORIAL_ARTICLE = makeSourceEditorialArticle({
+  breadcrumbs: [{ label: "News" }, { label: "Trail Running" }, { label: "Molly Seidel" }],
+  headline: "Molly Seidel Reinvents Herself as an Ultra-Distance Trail Runner",
+  dek: "Olympic medalist Molly Seidel explains why she left marathoning, how trail running revived her career, and what's next at Western States 100.",
+  heroImage: "501e57ba-637a-44c3-bfef-064f03d6563b.jpg",
+  heroImageQuery: "crop=0.869xw:0.652xh;0.066xw,0.088xh&resize=1400:*",
+  heroImageAlt: "Molly Seidel running on a trail",
+  heroImageCredit: "Runner's World",
+  author: "Brian Metzler",
+  publishedDate: "May 15, 2026",
+  navLinks: ["Training", "Shoes", "Nutrition", "News", "Gear", "Races"],
+  immersiveLabel: "Trail Running",
+  immersiveKicker: "This is a story about changing terrain and changing identity.",
+  introEyebrow: "Before the climb",
+  posterQuoteEyebrow: "Running note",
+  visualEssayEyebrow: "Trail notes",
+  visualEssayTitle: "The visuals should move from pressure to relief, from road logic to trail instinct.",
+  bodyRailEyebrow: "Trail path",
+  factRail: [
+    { label: "Athlete", value: "Molly Seidel" },
+    { label: "Shift", value: "Marathon to ultra trail" },
+    { label: "Race", value: "Western States 100" },
+    { label: "Mood", value: "Liberated, gritty, open-air" },
+  ],
+  scenes: [
+    {
+      eyebrow: "The turn",
+      title: "The Road Was No Longer the Whole Story",
+      body: "The opening chapter should feel like a pivot: the pressure of elite marathoning giving way to a wider, rougher landscape.",
+      image: "501e57ba-637a-44c3-bfef-064f03d6563b.jpg",
+      imageAlt: "Molly Seidel running outdoors",
+      imageCredit: "Runner's World",
+      quote: "Sometimes the most honest line is not the straightest one.",
+    },
+    {
+      eyebrow: "The terrain",
+      title: "Trail Running Changes the Scale",
+      body: "The story needs air, grade, dust, and distance. The page should feel like it opens up as the runner does.",
+      image: "501e57ba-637a-44c3-bfef-064f03d6563b.jpg",
+      imageAlt: "Trail running landscape",
+      imageCredit: "Runner's World",
+    },
+    {
+      eyebrow: "The return",
+      title: "Joy Becomes a Performance Metric",
+      body: "The final beat should make reinvention feel athletic, not sentimental: the body adapts when the mind finds room again.",
+      image: "501e57ba-637a-44c3-bfef-064f03d6563b.jpg",
+      imageAlt: "Molly Seidel trail portrait",
+      imageCredit: "Runner's World",
+    },
+  ],
+  sourceNote: "Source-grounded prototype based on Runner's World's May 15, 2026 Molly Seidel trail-running feature.",
+  bodySubheading: "Let the Page Breathe Like a Trail",
+  bodyCopy: "Runner's World needs motion and openness: expansive image plates, compact evidence labels, and body copy that makes reinvention feel physical.",
+  pullQuote: "The route changes, and the story finally has room to move.",
+});
+
+export const SEVENTEEN_EDITORIAL_ARTICLE = makeSourceEditorialArticle({
+  breadcrumbs: [{ label: "Celebrity" }, { label: "Fashion" }, { label: "Dior" }],
+  headline: "Jisoo Goes Coquettish in Bow Barrettes and a Black Dress at Dior",
+  dek: "Hair accessories can go a long way.",
+  heroImage: "jisoo-attends-the-christian-dior-haute-couture-spring-news-photo-1737994143.pjpeg",
+  heroImageQuery: "crop=1.00xw:0.335xh;0,0.147xh&resize=1400:*",
+  heroImageAlt: "Jisoo at Dior's haute couture show",
+  heroImageCredit: "Getty Images",
+  author: "Alyssa Bailey",
+  publishedDate: "Jan 27, 2025",
+  navLinks: ["Celebrity", "Fashion", "Beauty", "Life", "Prom", "Quizzes"],
+  immersiveLabel: "Front Row",
+  immersiveKicker: "The treatment should feel young, polished, and fashion-literate: one accessory detail becomes the whole attitude.",
+  introEyebrow: "Before the show",
+  posterQuoteEyebrow: "Style note",
+  visualEssayEyebrow: "Front-row notes",
+  visualEssayTitle: "The visual story should hold the bow, the black dress, and the Dior room in one polished glance.",
+  bodyRailEyebrow: "Look path",
+  factRail: [
+    { label: "Star", value: "Jisoo" },
+    { label: "House", value: "Dior" },
+    { label: "Detail", value: "Bow barrettes" },
+    { label: "Mood", value: "Coquette, sleek, front-row" },
+  ],
+  scenes: [
+    {
+      eyebrow: "The detail",
+      title: "The Bow Is the Plot Twist",
+      body: "Seventeen should make the accessory feel like the emotional hook: small, sweet, and deliberately styled.",
+      image: "jisoo-attends-the-christian-dior-haute-couture-spring-news-photo-1737994143.pjpeg",
+      imageAlt: "Jisoo wearing bow barrettes",
+      imageCredit: "Getty Images",
+      quote: "A tiny accessory can change the whole sentence.",
+    },
+    {
+      eyebrow: "The dress",
+      title: "Black Keeps the Look Sharp",
+      body: "The page needs contrast: the softness of the bows against the sleek authority of a black Dior dress.",
+      image: "jisoo-attends-the-christian-dior-haute-couture-spring-news-photo-1737994143.pjpeg",
+      imageAlt: "Jisoo in a black dress",
+      imageCredit: "Getty Images",
+    },
+    {
+      eyebrow: "The room",
+      title: "Front Row Is a Performance",
+      body: "The final moment should feel public but intimate, a pop star translating fashion into a readable mood.",
+      image: "jisoo-attends-the-christian-dior-haute-couture-spring-news-photo-1737994143.pjpeg",
+      imageAlt: "Jisoo at Dior front row",
+      imageCredit: "Getty Images",
+    },
+  ],
+  sourceNote: "Source-grounded prototype based on Seventeen's January 27, 2025 Jisoo at Dior story.",
+  bodySubheading: "Make the Detail Feel Iconic",
+  bodyCopy: "Seventeen needs a bright, fashion-forward version of the system: clear image focus, social-media fluency, and type that feels confident without crowding the look.",
+  pullQuote: "The smallest styling choice can be the loudest part of the story.",
+});
+
+export const THE_PIONEER_WOMAN_EDITORIAL_ARTICLE = makeSourceEditorialArticle({
+  breadcrumbs: [{ label: "Food & Cooking" }, { label: "Meals & Menus" }, { label: "Cake" }],
+  headline: "Ree Drummond's Top 5 Best Cake Recipes of All Time",
+  dek: "The Pioneer Woman is known for decadent desserts, and her cakes are some of the most-loved.",
+  heroImage: "a67fc2b4-cc82-4b69-b6f9-22448655c613.png",
+  heroImageQuery: "crop=1xw:1.0xh;center,top&resize=1400:*",
+  heroImageAlt: "A slice of cake with frosting",
+  heroImageCredit: "The Pioneer Woman",
+  author: "Lilly Blomquist",
+  publishedDate: "Apr 16, 2026",
+  navLinks: ["Food", "Home", "Style", "Beauty", "Holidays", "Life"],
+  immersiveLabel: "Baking",
+  immersiveKicker: "Comfort food needs warmth, appetite, and the feeling that a favorite recipe has a memory attached.",
+  introEyebrow: "Before dessert",
+  posterQuoteEyebrow: "Bake note",
+  visualEssayEyebrow: "Cake notes",
+  visualEssayTitle: "The visuals should feel generous, familiar, and just polished enough to make a classic recipe feel collectible.",
+  bodyRailEyebrow: "Cake path",
+  factRail: [
+    { label: "Subject", value: "Ree Drummond cakes" },
+    { label: "Count", value: "Top five" },
+    { label: "Feeling", value: "Decadent, familiar, celebratory" },
+    { label: "Reader job", value: "Pick the cake to bake first" },
+  ],
+  scenes: [
+    {
+      eyebrow: "The slice",
+      title: "A Cake Story Starts With Appetite",
+      body: "The image should make the reader feel frosting, crumb, and celebration before the list begins.",
+      image: "a67fc2b4-cc82-4b69-b6f9-22448655c613.png",
+      imageAlt: "Cake close-up",
+      imageCredit: "The Pioneer Woman",
+      quote: "The first image should taste like the promise of dessert.",
+    },
+    {
+      eyebrow: "The classic",
+      title: "Favorites Need Familiarity",
+      body: "The design should lean into repetition and comfort: a recipe collection that feels tested, loved, and easy to return to.",
+      image: "a67fc2b4-cc82-4b69-b6f9-22448655c613.png",
+      imageAlt: "Classic cake detail",
+      imageCredit: "The Pioneer Woman",
+    },
+    {
+      eyebrow: "The table",
+      title: "Dessert Is the Gathering Point",
+      body: "The closing beat should make the cake feel social: a reason to linger, share, and cut one more slice.",
+      image: "a67fc2b4-cc82-4b69-b6f9-22448655c613.png",
+      imageAlt: "Cake served for a gathering",
+      imageCredit: "The Pioneer Woman",
+    },
+  ],
+  sourceNote: "Source-grounded prototype based on The Pioneer Woman's April 16, 2026 Ree Drummond cake recipe story.",
+  bodySubheading: "Make Comfort Feel Collectible",
+  bodyCopy: "The Pioneer Woman version should be warm and generous but still premium: tactile food photography, inviting labels, and a hero that makes the recipe list feel like an occasion.",
+  pullQuote: "A beloved recipe is part instruction, part memory.",
+});
+
+export const TOWN_AND_COUNTRY_EDITORIAL_ARTICLE = makeSourceEditorialArticle({
+  breadcrumbs: [{ label: "Leisure" }, { label: "Arts & Culture" }, { label: "Interview" }],
+  headline: "Stanley Tucci on The Devil Wears Prada 2, Meeting His Wife, and Beating Cancer",
+  dek: "Considering how the actor has handled personal trials, professional triumphs, and internet adoration, it actually might be. Gird your loins.",
+  heroImage: "839e481e-bbeb-4d01-a4c1-00c69d4b42a0.jpg",
+  heroImageQuery: "crop=1xw:0.75xh;center,top&resize=1400:*",
+  heroImageAlt: "Stanley Tucci portrait",
+  heroImageCredit: "Town & Country",
+  author: "Jessica Pressler",
+  publishedDate: "Apr 27, 2026",
+  navLinks: ["Style", "Society", "Culture", "Travel", "Watches", "Philanthropy"],
+  immersiveLabel: "Interview",
+  immersiveKicker: "Town & Country should feel urbane, conversational, and quietly glamorous.",
+  introEyebrow: "Before the martini",
+  posterQuoteEyebrow: "Profile note",
+  visualEssayEyebrow: "Portrait notes",
+  visualEssayTitle: "The visuals should hold wit, elegance, and a serious life story in balance.",
+  bodyRailEyebrow: "Conversation path",
+  factRail: [
+    { label: "Subject", value: "Stanley Tucci" },
+    { label: "Lens", value: "Work, marriage, illness, style" },
+    { label: "Tone", value: "Wry, elegant, intimate" },
+    { label: "Hook", value: "The Devil Wears Prada 2" },
+  ],
+  scenes: [
+    {
+      eyebrow: "The persona",
+      title: "Charm Is Only the Surface",
+      body: "The opening portrait should feel polished but not shallow. Tucci's public ease is the doorway into a more layered conversation.",
+      image: "839e481e-bbeb-4d01-a4c1-00c69d4b42a0.jpg",
+      imageAlt: "Stanley Tucci portrait",
+      imageCredit: "Town & Country",
+      quote: "Elegance works best when it lets complexity show.",
+    },
+    {
+      eyebrow: "The story",
+      title: "The Interview Moves Beneath the Joke",
+      body: "The page should let humor and vulnerability sit together, because the article is about both persona and survival.",
+      image: "0a05d3a4-d745-46c2-adf0-1532abe7614c.jpg",
+      imageAlt: "Stanley Tucci seated portrait",
+      imageCredit: "Town & Country",
+    },
+    {
+      eyebrow: "The return",
+      title: "Pop Culture Becomes Personal History",
+      body: "The final beat should feel like a toast: the movie hook is fun, but the resonance is a life lived with style and nerve.",
+      image: "839e481e-bbeb-4d01-a4c1-00c69d4b42a0.jpg",
+      imageAlt: "Stanley Tucci profile image",
+      imageCredit: "Town & Country",
+    },
+  ],
+  sourceNote: "Source-grounded prototype based on Town & Country's April 27, 2026 Stanley Tucci interview.",
+  bodySubheading: "Keep Wit and Weight Together",
+  bodyCopy: "Town & Country needs refined pacing: glamorous image scale, literary pull quotes, and enough whitespace for the interview to feel sophisticated rather than loud.",
+  pullQuote: "The charm opens the door; the life story keeps you there.",
+});
+
+export const VERANDA_EDITORIAL_ARTICLE = makeSourceEditorialArticle({
+  breadcrumbs: [{ label: "Home Decorators" }, { label: "Design Trends" }, { label: "Sofas" }],
+  headline: "The 9 Biggest Couch Trends of 2026, According to Designers",
+  dek: "The right sofa can be comfortable and current. Designers share their top couch trends for 2026.",
+  heroImage: "hundley-hilton-birmingham-house-tour-living-room-1649708737.jpg",
+  heroImageQuery: "crop=1xw:0.75xh;0xw,0.186xh&resize=1400:*",
+  heroImageAlt: "Elegant living room with sofa",
+  heroImageCredit: "Veranda",
+  author: "Kelsey Mulvey",
+  publishedDate: "May 8, 2026",
+  navLinks: ["Design", "Decorating", "Gardens", "Travel", "Shopping", "Entertaining"],
+  immersiveLabel: "Design Trends",
+  immersiveKicker: "Veranda should make a trend report feel like a beautifully composed room.",
+  introEyebrow: "Before the room",
+  posterQuoteEyebrow: "Design note",
+  visualEssayEyebrow: "Room notes",
+  visualEssayTitle: "The visuals should treat the sofa as architecture, invitation, and mood.",
+  bodyRailEyebrow: "Room path",
+  factRail: [
+    { label: "Subject", value: "Couch trends" },
+    { label: "Year", value: "2026" },
+    { label: "Lens", value: "Designer guidance" },
+    { label: "Mood", value: "Composed, layered, lived-in" },
+  ],
+  scenes: [
+    {
+      eyebrow: "The room",
+      title: "The Sofa Sets the Whole Tone",
+      body: "The first image should read as a room, not a product. Scale, texture, and placement explain the trend before the copy does.",
+      image: "hundley-hilton-birmingham-house-tour-living-room-1649708737.jpg",
+      imageAlt: "Living room with sofa",
+      imageCredit: "Veranda",
+      quote: "A sofa trend is really a story about how a room wants to be used.",
+    },
+    {
+      eyebrow: "The texture",
+      title: "Comfort Needs Material Evidence",
+      body: "The design should get close enough to suggest fabric, cushion, depth, and the reason a piece feels current.",
+      image: "hundley-hilton-birmingham-house-tour-living-room-1649708737.jpg",
+      imageAlt: "Sofa and living room textile detail",
+      imageCredit: "Veranda",
+    },
+    {
+      eyebrow: "The edit",
+      title: "Trend Reports Need Taste",
+      body: "The closing beat should feel curated, not list-like: a designer's eye guiding the reader through what actually lasts.",
+      image: "hundley-hilton-birmingham-house-tour-living-room-1649708737.jpg",
+      imageAlt: "Designer living room context",
+      imageCredit: "Veranda",
+    },
+  ],
+  sourceNote: "Source-grounded prototype based on Veranda's May 8, 2026 couch trends report.",
+  bodySubheading: "Make the Trend Feel Like a Room",
+  bodyCopy: "Veranda needs elegant restraint: immersive room photography, composed typography, and chapters that translate trends into atmosphere.",
+  pullQuote: "The sofa is never just seating; it is the room's social architecture.",
+});
+
+export const WOMANS_DAY_EDITORIAL_ARTICLE = makeSourceEditorialArticle({
+  breadcrumbs: [{ label: "Food & Recipes" }, { label: "Food & Drinks" }, { label: "Parfaits" }],
+  headline: "20 Easy Parfait Recipes to Eat for Breakfast and Beyond",
+  dek: "Whip up a sweet parfait for dessert or opt for a healthy fruit parfait for breakfast at home.",
+  heroImage: "layer-dessert-with-coffee-and-chocolate-cream-in-royalty-free-image-1695832013.jpg",
+  heroImageQuery: "crop=1.00xw:0.362xh;0,0.514xh&resize=1400:*",
+  heroImageAlt: "Layered parfait dessert",
+  heroImageCredit: "Woman's Day",
+  author: "Kate Franke",
+  publishedDate: "Sep 28, 2023",
+  navLinks: ["Food", "Health", "Home", "Style", "Holidays", "Relationships"],
+  immersiveLabel: "Recipes",
+  immersiveKicker: "A parfait story should feel bright, layered, easy, and a little celebratory.",
+  introEyebrow: "Before breakfast",
+  posterQuoteEyebrow: "Layer note",
+  visualEssayEyebrow: "Parfait notes",
+  visualEssayTitle: "The visuals should make layers feel like the organizing idea.",
+  bodyRailEyebrow: "Recipe path",
+  factRail: [
+    { label: "Subject", value: "Parfait recipes" },
+    { label: "Count", value: "20" },
+    { label: "Occasion", value: "Breakfast and dessert" },
+    { label: "Mood", value: "Easy, sweet, layered" },
+  ],
+  scenes: [
+    {
+      eyebrow: "The layers",
+      title: "The Structure Is the Appetite",
+      body: "The first visual should make the reader understand parfaits instantly: color, cream, crunch, fruit, and glass.",
+      image: "layer-dessert-with-coffee-and-chocolate-cream-in-royalty-free-image-1695832013.jpg",
+      imageAlt: "Layered parfait close-up",
+      imageCredit: "Woman's Day",
+      quote: "The recipe is built visibly, one layer at a time.",
+    },
+    {
+      eyebrow: "The morning",
+      title: "Breakfast Can Still Feel Like a Treat",
+      body: "The page should balance everyday usefulness with a small sense of delight.",
+      image: "layer-dessert-with-coffee-and-chocolate-cream-in-royalty-free-image-1695832013.jpg",
+      imageAlt: "Parfait breakfast idea",
+      imageCredit: "Woman's Day",
+    },
+    {
+      eyebrow: "The dessert",
+      title: "Sweetness Stays Simple",
+      body: "The final movement should keep the recipes approachable: pretty enough to crave, easy enough to make.",
+      image: "layer-dessert-with-coffee-and-chocolate-cream-in-royalty-free-image-1695832013.jpg",
+      imageAlt: "Dessert parfait",
+      imageCredit: "Woman's Day",
+    },
+  ],
+  sourceNote: "Source-grounded prototype based on Woman's Day's parfait recipe collection.",
+  bodySubheading: "Make the Layers Do the Storytelling",
+  bodyCopy: "Woman's Day needs a practical but polished recipe treatment: bright photography, friendly pacing, and visual hierarchy that makes choice feel easy.",
+  pullQuote: "A parfait is a recipe you can read before you read the recipe.",
+});
+
+export const WOMENS_HEALTH_EDITORIAL_ARTICLE = makeSourceEditorialArticle({
+  breadcrumbs: [{ label: "Life" }, { label: "Cover Profile" }, { label: "Eiza Gonzalez" }],
+  headline: "Eiza Gonzalez Is Entering Her Strongest Phase Yet",
+  dek: "The global star opens up about body dysmorphia, health challenges, and the ongoing journey to make sense of it all.",
+  heroImage: "2b5c287e-8b46-46d7-98fd-a8d83502f262.jpg",
+  heroImageQuery: "crop=1xw:0.68xh;0xw,0.03xh&resize=1400:*",
+  heroImageAlt: "Eiza Gonzalez cover portrait",
+  heroImageCredit: "Women's Health",
+  author: "Samantha Leal",
+  publishedDate: "Apr 7, 2026",
+  navLinks: ["Fitness", "Health", "Life", "Beauty", "Sex & Love", "Food"],
+  immersiveLabel: "Cover Profile",
+  immersiveKicker: "The design should feel strong, vulnerable, and physically present.",
+  introEyebrow: "Before the cover",
+  posterQuoteEyebrow: "Strength note",
+  visualEssayEyebrow: "Profile notes",
+  visualEssayTitle: "The visuals should hold glamour, discipline, grief, and recovery without flattening the story.",
+  bodyRailEyebrow: "Profile path",
+  factRail: [
+    { label: "Subject", value: "Eiza Gonzalez" },
+    { label: "Lens", value: "Strength, grief, health" },
+    { label: "Tone", value: "Direct, polished, human" },
+    { label: "Form", value: "Cover profile" },
+  ],
+  scenes: [
+    {
+      eyebrow: "The cover",
+      title: "Strength Is Not a Pose",
+      body: "The opening image should feel athletic and emotionally awake, not just glamorous.",
+      image: "2b5c287e-8b46-46d7-98fd-a8d83502f262.jpg",
+      imageAlt: "Eiza Gonzalez portrait",
+      imageCredit: "Women's Health",
+      quote: "The body can be powerful and still have a history.",
+    },
+    {
+      eyebrow: "The pressure",
+      title: "The Story Moves Beneath the Image",
+      body: "The page should let the profile talk about body image, pain, and resilience without turning vulnerability into decoration.",
+      image: "2b5c287e-8b46-46d7-98fd-a8d83502f262.jpg",
+      imageAlt: "Eiza Gonzalez profile image",
+      imageCredit: "Women's Health",
+    },
+    {
+      eyebrow: "The phase",
+      title: "The Ending Feels Like Agency",
+      body: "The closing chapter should feel forward-moving: strength as choice, practice, and self-definition.",
+      image: "2b5c287e-8b46-46d7-98fd-a8d83502f262.jpg",
+      imageAlt: "Eiza Gonzalez cover feature",
+      imageCredit: "Women's Health",
+    },
+  ],
+  sourceNote: "Source-grounded prototype based on Women's Health's April 7, 2026 Eiza Gonzalez cover profile.",
+  bodySubheading: "Make Strength Feel Human",
+  bodyCopy: "Women's Health needs a profile treatment that is polished but not cold: confident type, athletic image scale, and emotional breathing room.",
+  pullQuote: "The strongest phase is the one that lets the whole story in.",
+});
 
 export const BRAND_ARTICLES: Record<string, BrandArticleData> = {
   cosmopolitan: {

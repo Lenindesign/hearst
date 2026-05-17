@@ -14,6 +14,8 @@ export interface RelatedArticle {
   title: string;
   image: string;
   href?: string;
+  imageFit?: "cover" | "contain";
+  imagePosition?: string;
 }
 
 export interface RelatedArticlesProps {
@@ -42,6 +44,8 @@ export function RelatedArticles({
             <ArticleCardImage
               src={article.image}
               aspectRatio="4/3"
+              imageFit={article.imageFit}
+              imagePosition={article.imagePosition}
               className="rounded-lg"
             />
             <ArticleCardContent className="px-0 pt-[var(--spacing-token-xs)]">
