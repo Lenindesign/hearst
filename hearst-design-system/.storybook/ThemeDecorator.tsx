@@ -61,10 +61,14 @@ function brandToCssVars(brand: BrandTheme): Record<string, string> {
 }
 
 function useGoogleFonts(fonts: string[]) {
+  const fontKey = fonts.join(",");
+
   useEffect(() => {
     const families: string[] = [];
     const seen = new Set<string>();
-    for (const font of ["Inter", ...fonts]) {
+    const requestedFonts = fontKey.split(",").filter(Boolean);
+
+    for (const font of ["Inter", ...requestedFonts]) {
       if (!font || seen.has(font)) continue;
       seen.add(font);
       if (GOOGLE_FONTS[font]) families.push(GOOGLE_FONTS[font]);
@@ -82,15 +86,11 @@ function useGoogleFonts(fonts: string[]) {
       link.href = href;
       document.head.appendChild(link);
     }
-  }, [fonts.join(",")]);
+  }, [fontKey]);
 }
 
 export const ThemeDecorator: Decorator = (Story, context) => {
-  const forcedBrandSlug =
-    typeof context.parameters.forceBrand === "string"
-      ? context.parameters.forceBrand
-      : undefined;
-  const brandSlug = forcedBrandSlug || context.globals.brand || "cosmopolitan";
+  const brandSlug = context.globals.brand || "cosmopolitan";
   const brand = useMemo(
     () => brands.find((b) => b.slug === brandSlug) || brands[0],
     [brandSlug]

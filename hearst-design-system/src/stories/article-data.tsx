@@ -35,6 +35,7 @@ interface SourceEditorialScene {
 }
 
 interface SourceEditorialConfig {
+  displayMode?: ImmersiveArticleContent["displayMode"];
   breadcrumbs: { label: string; href?: string }[];
   headline: string;
   dek: string;
@@ -58,6 +59,8 @@ interface SourceEditorialConfig {
   bodySubheading: string;
   bodyCopy: string;
   pullQuote: string;
+  body?: React.ReactNode;
+  relatedArticles?: ImmersiveArticleContent["relatedArticles"];
 }
 
 function editorialSceneImageQuery(
@@ -98,6 +101,7 @@ function editorialRelatedImageQuery(scene: SourceEditorialScene) {
 
 function makeSourceEditorialArticle(config: SourceEditorialConfig): ImmersiveArticleContent {
   return {
+    displayMode: config.displayMode,
     breadcrumbs: config.breadcrumbs,
     headline: config.headline,
     dek: config.dek,
@@ -151,7 +155,7 @@ function makeSourceEditorialArticle(config: SourceEditorialConfig): ImmersiveArt
       position: scene.imagePosition,
       treatment: scene.imageTreatment,
     })),
-    body: (
+    body: config.body ?? (
       <>
         <ArticleSubheading>{config.bodySubheading}</ArticleSubheading>
         <p>{config.bodyCopy}</p>
@@ -161,11 +165,11 @@ function makeSourceEditorialArticle(config: SourceEditorialConfig): ImmersiveArt
         <ArticleFootnote number={1}>{config.sourceNote}</ArticleFootnote>
       </>
     ),
-    relatedArticles: config.scenes.map((scene) => ({
+    relatedArticles: config.relatedArticles ?? (config.displayMode === "photo-gallery" ? [] : config.scenes.map((scene) => ({
       title: scene.title,
       image: img(scene.image, editorialRelatedImageQuery(scene)),
       imageFit: scene.imageTreatment || scene.imageFit === "contain" ? "contain" : undefined,
-    })),
+    }))),
   };
 }
 
@@ -613,11 +617,26 @@ export const BICYCLING_EDITORIAL_ARTICLE: ImmersiveArticleContent = {
       eyebrow: "The posture",
       title: "Comfort Starts Upright",
       body: "Cruisers work because the riding position changes the whole experience. The point is not aggression; it is a relaxed cockpit that lets the reader imagine rolling, looking around, and staying comfortable.",
-      image: "https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1744385820-Chatham7ST3pcCrankMatcha5172_1_2_1.jpg?resize=1200:*",
-      imageAlt: "Mint green beach cruiser bike",
+      image: "https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/product-images/59a71bce-64f8-48ca-99ef-28de4bcff1f0/a40add19-e82d-41cd-a76d-6bedd9c7ce22.jpg?resize=1200:*",
+      imageAlt: "Priority Bicycles Coast beach cruiser bike",
       imageCredit: "Bicycling",
       quote: "The right cruiser should make the first pedal stroke feel obvious.",
       imageTreatment: "product",
+      productReview: {
+        award: "Best Overall Cruiser",
+        name: "Priority Bicycles Coast",
+        price: "$679",
+        retailer: "Priority Bicycles",
+        ctaLabel: "Shop at Priority",
+        href: "https://go.redirectingat.com?id=74968X1576257&url=https%3A%2F%2Fwww.prioritybicycles.com%2Fproducts%2Fthecoast",
+        pros: [
+          "Rust-proof frame and components.",
+          "No-maintenance Gates belt drive.",
+          "Very light for a cruiser.",
+          "Standard diamond frame available.",
+        ],
+        cons: ["One-size fits most frame."],
+      },
     },
     {
       eyebrow: "The frame",
@@ -628,27 +647,69 @@ export const BICYCLING_EDITORIAL_ARTICLE: ImmersiveArticleContent = {
       imageCredit: "Bicycling",
       align: "right",
       imageTreatment: "product",
+      productReview: {
+        award: "Best Value Cruiser",
+        name: "sixthreezero Around The Block",
+        price: "$300",
+        retailer: "Amazon",
+        ctaLabel: "Shop at Amazon",
+        href: "https://www.amazon.com/dp/B00AK0S07K",
+        pros: [
+          "Singlespeed keeps it simple.",
+          "Rear rack is standard.",
+          "Wide, soft saddle.",
+        ],
+        cons: ["Single speed not ideal for hilly areas."],
+      },
     },
     {
       eyebrow: "The ride",
       title: "Easy Should Still Feel Solid",
       body: "The best cruiser is simple, but not vague. Braking, gearing, tires, and weight decide whether a sunny short ride stays charming after the first mile.",
-      image: "https://hips.hearstapps.com/hmg-prod/images/priority-cruiser-selects-0077-1526503152.jpg?resize=1200:*",
-      imageAlt: "Priority cruiser bike photographed for Bicycling",
+      image: "https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1744385820-Chatham7ST3pcCrankMatcha5172_1_2_1.jpg?resize=1200:*",
+      imageAlt: "Retrospec Chatham Step Through 7-Speed cruiser bike",
       imageCredit: "Bicycling",
       quote: "Laid-back still needs good engineering.",
       imageTreatment: "product",
+      productReview: {
+        award: "Best Cruiser with Gears",
+        name: "Retrospec Chatham Step Through 7-Speed",
+        price: "$340",
+        retailer: "Retrospec",
+        ctaLabel: "Shop at Retrospec",
+        href: "https://retrospec.com/products/chatham-7-step-through-beach-cruiser-bike",
+        pros: [
+          "Shimano 7-speed shifter and derailleur.",
+          "Aluminum rims.",
+          "5 great colors.",
+        ],
+        cons: ["Rack and fenders not included."],
+      },
     },
   ],
   mediaPair: [
     {
-      src: "https://hips.hearstapps.com/hmg-prod/images/electric-bike-co-model-x-grid-1616007259.jpg?resize=1600:*",
-      alt: "Electric cruiser bike photographed horizontally for a gear guide",
-      caption: "A gear guide needs horizontal product clarity: the bike should read quickly, from frame shape to contact points.",
+      src: "https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1690912212-e-coast-step-mint-hero-1of1-64c944a6e86b2.jpg?resize=1600:*",
+      alt: "Priority E-Coast Step-Through electric cruiser bike",
+      caption: "Electric assist should still read like a cruiser: upright, easy to understand, and clear about the gear that makes ownership simple.",
       credit: "Bicycling",
       featured: true,
       fit: "contain",
       treatment: "product",
+      productReview: {
+        award: "Best Overall Cruiser E-Bike",
+        name: "Priority E-Coast Step-Through",
+        price: "$2,000",
+        retailer: "Priority Bicycles",
+        ctaLabel: "Shop at Priority",
+        href: "https://www.prioritybicycles.com/products/ecoast",
+        pros: [
+          "Easy maintenance belt drive.",
+          "Aluminum frame and fork.",
+          "Hydraulic disc brakes.",
+          "Fully equipped with rack, fenders, and lights.",
+        ],
+      },
     },
     {
       src: "https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/product-images/59a71bce-64f8-48ca-99ef-28de4bcff1f0/a40add19-e82d-41cd-a76d-6bedd9c7ce22.jpg?resize=980:*",
@@ -952,61 +1013,163 @@ export const ESQUIRE_EDITORIAL_ARTICLE: ImmersiveArticleContent = {
 };
 
 export const AUTOWEEK_EDITORIAL_ARTICLE = makeSourceEditorialArticle({
+  displayMode: "photo-gallery",
   breadcrumbs: [{ label: "News" }, { label: "Concept Cars" }, { label: "Villa d'Este" }],
-  headline: "Tutto Rosso Capricorn 01 Zagato Will Debut at Villa d'Este",
-  dek: "The one-off hypercar turns a concours debut into a story about red paint, coachbuilt drama, and the emotional precision of a machine made to be seen.",
+  headline: "Mama Mia! 'Tutto Rosso' Capricorn 01 Zagato Will Debut at Villa d'Este",
+  dek: "The one-off hypercar makes Villa d'Este all the better.",
   heroImage: "15c47f1a-1727-44cb-8258-b432be96a663.jpeg",
-  heroImageQuery: "crop=1xw:0.8888888888888888xh;center,top&resize=1400:*",
+  heroImageQuery: "resize=1800:*",
   heroImageAlt: "Capricorn 01 Zagato hypercar in red",
-  heroImageCredit: "Autoweek",
+  heroImageCredit: "capricorn",
   author: "Mark Vaughn",
   publishedDate: "May 15, 2026",
   navLinks: ["News", "Reviews", "Racing", "Car Life", "Gear", "EV"],
   immersiveLabel: "Villa d'Este Debut",
-  immersiveKicker: "Autoweek needs speed, craft, and reveal. The car should feel less like a product card and more like an arrival.",
-  introEyebrow: "Before the reveal",
+  immersiveKicker: "We've seen Capricorns before, most recently at Retromobile in Paris. This Zagato-bodied one-off is a customer commission headed to the Concorso d'Eleganza Villa d'Este.",
+  introEyebrow: "The reveal",
   posterQuoteEyebrow: "Coachbuilt note",
-  visualEssayEyebrow: "Design sequence",
-  visualEssayTitle: "The story should move through surface, proportion, mechanical intent, and concours spectacle.",
-  bodyRailEyebrow: "Design path",
+  visualEssayEyebrow: "Photo sequence",
+  visualEssayTitle: "The car is the page: full-width frames, short context, and no compromised crops.",
+  bodyRailEyebrow: "Gallery path",
   factRail: [
     { label: "Car", value: "Capricorn 01 Zagato" },
+    { label: "Type", value: "Customer one-off" },
     { label: "Debut", value: "Villa d'Este" },
-    { label: "Mood", value: "Red, rare, coachbuilt" },
-    { label: "Story job", value: "Make the reveal feel fast and collectible" },
+    { label: "Power", value: "900 hp" },
   ],
   scenes: [
     {
-      eyebrow: "The reveal",
-      title: "Red as the First Argument",
-      body: "The opening image should land like a concours curtain pull: color first, then shape, then the question of what kind of car earns this much theater.",
+      eyebrow: "All red",
+      title: "The Commission Sets the Tone",
+      body: "Capricorn presents Tutto Rosso as an all-red customer commission, but the story is not only color. It is also a validation prototype pointing toward series production.",
       image: "936145be-a942-43dd-9eef-90cb3c276c91.jpeg",
-      imageAlt: "Detail view of the Capricorn 01 Zagato",
-      imageCredit: "Autoweek",
-      quote: "The paint is not decoration. It is the first performance.",
+      imageAlt: "Capricorn 01 Zagato Tutto Rosso rear three-quarter view",
+      imageCredit: "capricorn",
+      imageQuery: "resize=1800:*",
+      imageFit: "contain",
+      layout: "wide",
     },
     {
-      eyebrow: "The body",
-      title: "Coachwork Becomes Character",
-      body: "Zagato's job in the layout is proportion and tension: hard surfaces, compact drama, and the feeling that the car has been shaped for a specific room and road.",
+      eyebrow: "Heritage",
+      title: "Red Carries Motorsport Memory",
+      body: "The monochrome red treatment nods to Zagato-bodied competition cars and turns the car into a modern reading of coachbuilt Italian drama.",
       image: "2b214a02-0b4f-4289-a91f-5a1f5128af4b.jpeg",
       imageAlt: "Capricorn 01 Zagato profile detail",
-      imageCredit: "Autoweek",
+      imageCredit: "capricorn",
+      imageQuery: "resize=1800:*",
+      imageFit: "contain",
+      layout: "wide",
     },
     {
-      eyebrow: "The place",
-      title: "Villa d'Este Raises the Stakes",
-      body: "A debut at Villa d'Este asks the page to slow down. This is not auto-show noise; it is lawn, lake, legacy, and a car designed to hold attention.",
+      eyebrow: "Intent",
+      title: "Enjoyment Beats Numbers",
+      body: "The Capricorn 01 is positioned around the feel of driving rather than a single maximum-speed claim. The gallery needs to let that restraint breathe.",
       image: "2b70a5cc-3546-4cfd-abea-3b9701107070.jpeg",
       imageAlt: "Capricorn 01 Zagato detail at debut",
-      imageCredit: "Autoweek",
-      quote: "A reveal can be fast even when the camera lingers.",
+      imageCredit: "capricorn",
+      imageQuery: "resize=1800:*",
+      imageFit: "contain",
+      layout: "wide",
+    },
+    {
+      eyebrow: "Joy",
+      title: "The Target Is Smile Per Mile",
+      body: "Instead of staging the car like a spec-sheet war, the article keeps returning to the emotional goal: a manual, rear-drive hypercar built to feel joyful.",
+      image: "a76dbd18-e4a6-474b-bfc5-e77db6f1078f.jpeg",
+      imageAlt: "Capricorn 01 Zagato cockpit and exterior red detail",
+      imageCredit: "capricorn",
+      imageQuery: "resize=1800:*",
+      imageFit: "contain",
+      layout: "wide",
+      quote: "Back to the joy of driving.",
+    },
+    {
+      eyebrow: "Character",
+      title: "The Car Should Feel Human",
+      body: "Robertino Wild's point is that intensity should not erase pleasure. The design has to look extreme while still suggesting approachability from the driver's seat.",
+      image: "c1493adf-7e23-4b86-bc84-2c5065bf26c4.jpeg",
+      imageAlt: "Capricorn 01 Zagato Tutto Rosso front and side detail",
+      imageCredit: "capricorn",
+      imageQuery: "resize=1800:*",
+      imageFit: "contain",
+      layout: "wide",
+    },
+    {
+      eyebrow: "Materials",
+      title: "Carbon Fiber Does the Heavy Lifting",
+      body: "The chassis, body, and much of the cabin use carbon fiber, while the remaining technical pieces lean on milled aluminum and titanium.",
+      image: "a4b62ce5-8f25-4037-ac65-4eccb991e8c8.jpeg",
+      imageAlt: "Capricorn 01 Zagato red carbon interior detail",
+      imageCredit: "capricorn",
+      imageQuery: "resize=1800:*",
+      imageFit: "contain",
+      layout: "wide",
+    },
+    {
+      eyebrow: "Chassis",
+      title: "The Suspension Supports the Story",
+      body: "A double-wishbone pushrod Bilstein suspension gives the car comfort, sport, and track modes, tying the visual drama back to road behavior.",
+      image: "97bfe1d3-f543-411e-84e9-ad330fc9c461.jpeg",
+      imageAlt: "Capricorn 01 Zagato mechanical detail",
+      imageCredit: "capricorn",
+      imageQuery: "resize=1800:*",
+      imageFit: "contain",
+      layout: "wide",
+    },
+    {
+      eyebrow: "Cockpit",
+      title: "The Red Continues Inside",
+      body: "The commissioned finish carries through the body, cockpit, components, and visible materials, making the color a system rather than a paint choice.",
+      image: "eeb3e979-f4d2-4675-a82d-51fb56d11c99.jpeg",
+      imageAlt: "Capricorn 01 Zagato red cockpit detail",
+      imageCredit: "capricorn",
+      imageQuery: "resize=1800:*",
+      imageFit: "contain",
+      layout: "wide",
+    },
+    {
+      eyebrow: "Prototype",
+      title: "Nearly Every Surface Goes Red",
+      body: "The article notes that most visible surfaces are red, with contrast reserved for functional pieces like the shift gate and pedals.",
+      image: "83b2be78-652c-47ca-8328-f07fe14d07b7.jpeg",
+      imageAlt: "Capricorn 01 Zagato red interior surface detail",
+      imageCredit: "capricorn",
+      imageQuery: "resize=1800:*",
+      imageFit: "contain",
+      layout: "wide",
+    },
+    {
+      eyebrow: "Powertrain",
+      title: "Manual Drama Meets 900 Horsepower",
+      body: "The story lands the specs late: a supercharged 5.2-liter Ford V8, a five-speed manual with a dogleg first gear, 738 lb-ft of torque, and a 223-mph top speed.",
+      image: "29c88b8c-61aa-4415-b029-326aff0f4b83.jpeg",
+      imageAlt: "Capricorn 01 Zagato red exterior view",
+      imageCredit: "capricorn",
+      imageQuery: "resize=1800:*",
+      imageFit: "contain",
+      layout: "wide",
+    },
+    {
+      eyebrow: "Validation",
+      title: "A One-Off That Still Teaches the Program",
+      body: "The final point is development as much as styling: an extreme customer vision helps Capricorn test how design, materials, and production planning work together.",
+      image: "557ac3a8-1144-4df6-a254-3c1087f910e1.png",
+      imageAlt: "Capricorn 01 Zagato Tutto Rosso side profile",
+      imageCredit: "capricorn",
+      imageQuery: "resize=1800:*",
+      imageFit: "contain",
+      layout: "wide",
     },
   ],
-  sourceNote: "Source-grounded prototype based on Autoweek's May 15, 2026 Capricorn 01 Zagato Villa d'Este story.",
-  bodySubheading: "Make the Car Feel Like an Event",
-  bodyCopy: "This Autoweek article is about more than specification. The editorial system should treat the Capricorn 01 Zagato as an object of ceremony: color, rarity, craft, and place working together.",
-  pullQuote: "The car does not need a showroom. It needs a stage.",
+  sourceNote: "Source-grounded prototype based on Autoweek's May 15, 2026 Capricorn 01 Zagato Villa d'Este production article.",
+  bodySubheading: "Keep the Gallery Structure",
+  bodyCopy: "The article works best as a long vertical image sequence, with the car shown intact and the written context arriving between photographs.",
+  pullQuote: "The car is the page.",
+  body: (
+    <>
+      <ArticleFootnote number={1}>Prototype adapted from Autoweek&apos;s May 15, 2026 Capricorn 01 Zagato Villa d&apos;Este production article and image sequence.</ArticleFootnote>
+    </>
+  ),
 });
 
 export const BEST_PRODUCTS_EDITORIAL_ARTICLE = makeSourceEditorialArticle({

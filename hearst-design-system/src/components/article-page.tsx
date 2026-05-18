@@ -23,7 +23,7 @@ import { ArticleByline } from "./fre/article-byline";
 import { ArticleBody } from "./fre/article-body";
 import { RelatedArticles, type RelatedArticle } from "./fre/related-articles";
 import { AdPlaceholder } from "./fre/ad-placeholder";
-import { ChevronDown, Mail, Search } from "lucide-react";
+import { CheckCircle2, ChevronDown, CircleX, ExternalLink, Mail, Search } from "lucide-react";
 
 export interface SidebarItem {
   title: string;
@@ -54,6 +54,17 @@ export interface ImmersiveArticleFact {
 
 type ImmersiveArticleImageTreatment = "before-after" | "product";
 
+export interface ImmersiveArticleProductReview {
+  award?: string;
+  name: string;
+  price?: string;
+  retailer?: string;
+  ctaLabel: string;
+  href: string;
+  pros?: string[];
+  cons?: string[];
+}
+
 export interface ImmersiveArticleScene {
   eyebrow: string;
   title: string;
@@ -67,6 +78,7 @@ export interface ImmersiveArticleScene {
   imageFit?: "cover" | "contain";
   imagePosition?: string;
   imageTreatment?: ImmersiveArticleImageTreatment;
+  productReview?: ImmersiveArticleProductReview;
 }
 
 export interface ImmersiveArticleMediaItem {
@@ -78,9 +90,11 @@ export interface ImmersiveArticleMediaItem {
   fit?: "cover" | "contain";
   position?: string;
   treatment?: ImmersiveArticleImageTreatment;
+  productReview?: ImmersiveArticleProductReview;
 }
 
 export interface ImmersiveArticleContent extends ArticlePageContent {
+  displayMode?: "cinematic" | "photo-gallery";
   immersiveLabel?: string;
   immersiveKicker?: string;
   immersiveIntro?: React.ReactNode;
@@ -803,6 +817,149 @@ function getCinematicEditorialStyle(brandSlug: string) {
   return cinematicEditorialStyles[getEditorialMood(brandSlug)];
 }
 
+function EditorialProductReviewList({
+  title,
+  items,
+  tone,
+}: {
+  title: string;
+  items?: string[];
+  tone: "positive" | "critical";
+}) {
+  if (!items?.length) return null;
+
+  const positive = tone === "positive";
+  const Icon = positive ? CheckCircle2 : CircleX;
+
+  return (
+    <div className="space-y-[var(--spacing-token-sm)] p-[var(--spacing-token-md)] lg:p-[var(--spacing-token-lg)]">
+      <h4
+        className={cn(
+          "headline text-[length:var(--text-token-xl)] leading-none lg:text-[length:var(--text-token-2xl)]",
+          positive ? "text-[#0f7a3b]" : "text-[#d72622]",
+        )}
+      >
+        {title}
+      </h4>
+      <ul className="space-y-[var(--spacing-token-xs)]">
+        {items.map((item) => (
+          <li
+            key={item}
+            className="grid grid-cols-[1.15rem_1fr] gap-[var(--spacing-token-xs)] text-[length:var(--text-token-sm)] font-semibold leading-snug text-foreground lg:text-[length:var(--text-token-md)]"
+          >
+            <Icon
+              aria-hidden="true"
+              className={cn(
+                "mt-0.5 size-4",
+                positive ? "text-[#0f7a3b]" : "text-[#d72622]",
+              )}
+            />
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function EditorialProductReviewModule({
+  image,
+  alt,
+  title,
+  review,
+  dark,
+  style,
+}: {
+  image: string;
+  alt?: string;
+  title: string;
+  review?: ImmersiveArticleProductReview;
+  dark: boolean;
+  style: CinematicEditorialStyle;
+}) {
+  if (!review) {
+    return (
+      <EditorialProductFrame
+        src={image}
+        alt={alt || title}
+        className={cn(
+          "ring-1",
+          dark ? "ring-background/16" : "ring-foreground/10",
+        )}
+      />
+    );
+  }
+
+  const hasReviewGrid = Boolean(review.pros?.length || review.cons?.length);
+  const hasPros = Boolean(review.pros?.length);
+  const hasCons = Boolean(review.cons?.length);
+
+  return (
+    <div
+      className={cn(
+        "overflow-hidden border bg-background text-foreground shadow-sm",
+        dark ? "border-background/16" : "border-foreground/12",
+      )}
+    >
+      <div className="grid lg:grid-cols-[minmax(260px,1.05fr)_minmax(260px,0.82fr)]">
+        <div className="relative min-h-[300px] border-b border-foreground/10 bg-white lg:min-h-[380px] lg:border-b-0 lg:border-r">
+          <img
+            src={image}
+            alt={alt || title}
+            className="absolute inset-0 h-full w-full object-contain p-[var(--spacing-token-lg)] lg:p-[var(--spacing-token-xl)]"
+          />
+        </div>
+        <div className="flex flex-col justify-center gap-[var(--spacing-token-sm)] bg-[#f8fcfd] p-[var(--spacing-token-md)] lg:p-[var(--spacing-token-lg)]">
+          {review.award && (
+            <p className={cn("inline-flex w-fit bg-[#ffd51f] px-[var(--spacing-token-sm)] py-[var(--spacing-token-2xs)] text-[length:var(--text-token-2xs)] font-extrabold uppercase tracking-[0.18em] text-foreground", style.labelClass)}>
+              {review.award}
+            </p>
+          )}
+          <h3 className="headline text-[length:var(--text-token-3xl)] leading-[0.95] lg:text-[length:var(--text-token-4xl)]">
+            {review.name}
+          </h3>
+          <div className="grid overflow-hidden border border-foreground/14">
+            {review.price && (
+              <div className="flex items-center bg-background px-[var(--spacing-token-md)] py-[var(--spacing-token-xs)] text-[length:var(--text-token-lg)] font-extrabold tracking-[0.16em]">
+                {review.price}
+              </div>
+            )}
+            <a
+              href={review.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(
+                "flex min-h-12 items-center justify-between gap-[var(--spacing-token-sm)] px-[var(--spacing-token-md)] py-[var(--spacing-token-sm)] text-[length:var(--text-token-xs)] font-extrabold uppercase tracking-[0.14em] text-background no-underline transition hover:opacity-90",
+                style.accentBg,
+              )}
+            >
+              <span className="min-w-0 whitespace-normal leading-tight">{review.ctaLabel}</span>
+              <ExternalLink aria-hidden="true" className="size-5 shrink-0" />
+            </a>
+          </div>
+          {review.retailer && (
+            <p className="text-[length:var(--text-token-4xs)] font-semibold uppercase tracking-widest text-muted-foreground">
+              Buy from {review.retailer}
+            </p>
+          )}
+        </div>
+      </div>
+      {hasReviewGrid && (
+        <div className={cn("grid border-t border-foreground/10 bg-white", hasPros && hasCons && "md:grid-cols-2")}>
+          {hasPros && (
+            <EditorialProductReviewList title="Pros" items={review.pros} tone="positive" />
+          )}
+          {hasCons && (
+          <div className={cn(hasPros && "border-t border-foreground/10 md:border-l md:border-t-0")}>
+            <EditorialProductReviewList title="Cons" items={review.cons} tone="critical" />
+          </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function EditorialMetaGrid({ content, inverted = false }: { content: ImmersiveArticleContent; inverted?: boolean }) {
   const textClass = inverted ? "text-background/82" : "text-muted-foreground";
   const labelClass = inverted ? "text-background" : "text-foreground";
@@ -873,19 +1030,68 @@ function CinematicEditorialHero({
   const logo = brandLogos[brand.slug];
   const portraitLed = content.heroImageTreatment === "grid-crop";
   const imageObject = portraitLed ? "object-[center_20%]" : style.heroObject;
+  const figureRef = React.useRef<HTMLElement>(null);
+  const imageRef = React.useRef<HTMLImageElement>(null);
+
+  React.useEffect(() => {
+    const figure = figureRef.current;
+    const image = imageRef.current;
+    if (!figure || !image) return;
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let frame = 0;
+
+    const updateParallax = () => {
+      frame = 0;
+
+      if (reduceMotion.matches) {
+        image.style.setProperty("--hero-parallax-y", "0px");
+        return;
+      }
+
+      const rect = figure.getBoundingClientRect();
+      const viewportHeight = window.innerHeight || 1;
+      const progress = Math.min(
+        Math.max((viewportHeight - rect.top) / (viewportHeight + rect.height), 0),
+        1,
+      );
+      const offset = (progress - 0.42) * 190;
+      image.style.setProperty("--hero-parallax-y", `${offset.toFixed(1)}px`);
+    };
+
+    const queueParallax = () => {
+      if (!frame) {
+        frame = window.requestAnimationFrame(updateParallax);
+      }
+    };
+
+    queueParallax();
+    window.addEventListener("scroll", queueParallax, { passive: true });
+    window.addEventListener("resize", queueParallax);
+    reduceMotion.addEventListener("change", queueParallax);
+
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", queueParallax);
+      window.removeEventListener("resize", queueParallax);
+      reduceMotion.removeEventListener("change", queueParallax);
+    };
+  }, []);
 
   return (
     <header className="relative left-1/2 w-screen -translate-x-1/2 overflow-hidden text-background">
-      <figure className="relative min-h-[820px] overflow-hidden bg-muted md:min-h-[880px] lg:min-h-[960px]">
+      <figure ref={figureRef} className="relative min-h-[820px] overflow-hidden bg-muted md:min-h-[880px] lg:min-h-[960px]">
         <img
+          ref={imageRef}
           src={content.heroImage}
           alt={content.heroImageAlt || content.headline}
-          style={content.flipHeroImage ? { transform: "scaleX(-1)" } : undefined}
-          className={cn("absolute inset-0 h-full w-full object-cover", imageObject)}
+          style={{
+            "--hero-parallax-y": "0px",
+            transform: `translate3d(0, var(--hero-parallax-y, 0px), 0) scale(1.08)${content.flipHeroImage ? " scaleX(-1)" : ""}`,
+          } as React.CSSProperties}
+          className={cn("absolute inset-x-0 top-[-12%] h-[124%] w-full object-cover will-change-transform", imageObject)}
         />
-        <div className={cn("absolute inset-0", style.heroOverlay)} />
-        <div className="absolute inset-0 bg-gradient-to-r from-foreground/82 via-foreground/34 to-foreground/6" />
-        <div className="absolute inset-x-0 bottom-0 h-3/4 bg-gradient-to-t from-foreground/86 via-foreground/34 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-[78%] bg-gradient-to-t from-foreground/90 via-foreground/45 to-foreground/0" />
         <PageContainer className="relative z-10 flex min-h-[820px] flex-col justify-between py-[var(--spacing-token-lg)] md:min-h-[880px] lg:min-h-[960px] lg:py-[var(--spacing-token-2xl)]">
           <div className="flex items-start justify-between gap-[var(--spacing-token-md)]">
             <div className="min-w-0">
@@ -893,7 +1099,7 @@ function CinematicEditorialHero({
                 <BrandLogo
                   slug={brand.slug}
                   color="#fff"
-                  className="[&_svg]:h-8 [&_svg]:w-auto md:[&_svg]:h-12"
+                  className="[&_svg]:h-11 [&_svg]:w-auto md:[&_svg]:h-16 lg:[&_svg]:h-20"
                 />
               ) : (
                 <p className="headline text-[length:var(--text-token-2xl)] uppercase tracking-widest text-background">
@@ -922,7 +1128,10 @@ function CinematicEditorialHero({
               </div>
             </Col>
             <Col span="full" spanMd={3} spanLg={4}>
-              <div className="space-y-[var(--spacing-token-lg)] border-t border-background/50 pt-[var(--spacing-token-md)]">
+              <div
+                className="space-y-[var(--spacing-token-lg)] border-t-2 pt-[var(--spacing-token-md)]"
+                style={{ borderTopColor: "var(--brand-primary)" }}
+              >
                 {content.dek && (
                   <p className="text-[length:var(--text-token-lg)] font-semibold leading-[1.55] text-background/88 lg:text-[length:var(--text-token-xl)]">
                     {content.dek}
@@ -1019,8 +1228,6 @@ function CinematicSceneChapter({
 
   if (scene.layout === "wide") {
     if (scene.imageTreatment === "before-after" || scene.imageTreatment === "product") {
-      const FigureFrame = scene.imageTreatment === "before-after" ? EditorialBeforeAfterFrame : EditorialProductFrame;
-
       return (
         <EditorialFullBleedSection
           className={cn("py-[var(--spacing-token-4xl)] lg:py-[var(--spacing-token-6xl)]", dark ? cn(style.dark, "text-background") : cn(style.paper, "text-foreground"))}
@@ -1046,11 +1253,22 @@ function CinematicSceneChapter({
             </Col>
             <Col span="full" spanMd={5} spanLg={8}>
               <figure className="space-y-[var(--spacing-token-sm)]">
-                <FigureFrame
-                  src={scene.image}
-                  alt={scene.imageAlt || scene.title}
-                  className={cn("ring-1", dark ? "ring-background/16" : "ring-foreground/10")}
-                />
+                {scene.imageTreatment === "before-after" ? (
+                  <EditorialBeforeAfterFrame
+                    src={scene.image}
+                    alt={scene.imageAlt || scene.title}
+                    className={cn("ring-1", dark ? "ring-background/16" : "ring-foreground/10")}
+                  />
+                ) : (
+                  <EditorialProductReviewModule
+                    image={scene.image}
+                    alt={scene.imageAlt || scene.title}
+                    title={scene.title}
+                    review={scene.productReview}
+                    dark={dark}
+                    style={style}
+                  />
+                )}
                 <EditorialImageCaption
                   caption={scene.title}
                   credit={scene.imageCredit}
@@ -1162,13 +1380,13 @@ function CinematicSceneChapter({
                   )}
                 />
               ) : (
-                <EditorialProductFrame
-                  src={scene.image}
+                <EditorialProductReviewModule
+                  image={scene.image}
                   alt={scene.imageAlt || scene.title}
-                  className={cn(
-                    "ring-1",
-                    dark ? "ring-background/16" : "ring-foreground/10",
-                  )}
+                  title={scene.title}
+                  review={scene.productReview}
+                  dark={dark}
+                  style={style}
                 />
               )
             ) : (
@@ -1280,26 +1498,37 @@ function CinematicVisualEssay({
         {featured && (
           <Col span="full" spanMd={8} spanLg={12}>
             <figure className="space-y-[var(--spacing-token-sm)]">
-              <div
-                className={cn(
-                  "relative overflow-hidden bg-muted",
-                  featuredIsBeforeAfter && "aspect-[2/1]",
-                  featuredIsProduct && "aspect-[16/9]",
-                  !featuredIsFramed && "min-h-[520px] md:min-h-[620px] lg:min-h-[760px]",
-                )}
-                style={{ marginLeft: "calc(50% - 50vw)", width: "100vw" }}
-              >
-                <img
-                  src={featured.src}
-                  alt={featured.alt || ""}
-                  className={cn(
-                    featuredIsFramed ? "h-full w-full" : "absolute inset-0 h-full w-full",
-                    featured.fit === "contain" ? "object-contain" : cn("object-cover", style.heroObject),
-                  )}
-                  style={featured.position ? { objectPosition: featured.position } : undefined}
+              {featuredIsProduct && featured.productReview ? (
+                <EditorialProductReviewModule
+                  image={featured.src}
+                  alt={featured.alt || featured.caption}
+                  title={featured.caption || content.visualEssayTitle || "Product review"}
+                  review={featured.productReview}
+                  dark={essayDark}
+                  style={style}
                 />
-                <div className={cn("absolute inset-y-0 left-0 w-[var(--spacing-token-xs)]", style.accentBg)} />
-              </div>
+              ) : (
+                <div
+                  className={cn(
+                    "relative overflow-hidden bg-muted",
+                    featuredIsBeforeAfter && "aspect-[2/1]",
+                    featuredIsProduct && "aspect-[16/9]",
+                    !featuredIsFramed && "min-h-[520px] md:min-h-[620px] lg:min-h-[760px]",
+                  )}
+                  style={{ marginLeft: "calc(50% - 50vw)", width: "100vw" }}
+                >
+                  <img
+                    src={featured.src}
+                    alt={featured.alt || ""}
+                    className={cn(
+                      featuredIsFramed ? "h-full w-full" : "absolute inset-0 h-full w-full",
+                      featured.fit === "contain" ? "object-contain" : cn("object-cover", style.heroObject),
+                    )}
+                    style={featured.position ? { objectPosition: featured.position } : undefined}
+                  />
+                  <div className={cn("absolute inset-y-0 left-0 w-[var(--spacing-token-xs)]", style.accentBg)} />
+                </div>
+              )}
               <EditorialImageCaption
                 caption={featured.caption}
                 credit={featured.credit}
@@ -1311,24 +1540,35 @@ function CinematicVisualEssay({
         {supporting.map((item, index) => (
           <Col key={`${item.src}-${index}`} span="full" spanMd={4} spanLg={index % 2 === 0 ? 5 : 6} startLg={index % 2 === 0 ? 2 : 7}>
             <figure className={cn("space-y-[var(--spacing-token-sm)]", index % 2 === 1 && "lg:mt-[var(--spacing-token-5xl)]")}>
-              <div
-                className={cn(
-                  "relative overflow-hidden bg-muted",
-                  item.treatment === "before-after" && "aspect-[2/1]",
-                  item.treatment === "product" && "aspect-[3/2]",
-                  !item.treatment && "aspect-[4/5]",
-                )}
-              >
-                <img
-                  src={item.src}
-                  alt={item.alt || ""}
-                  className={cn(
-                    "h-full w-full",
-                    item.fit === "contain" ? "object-contain" : cn("object-cover", style.heroObject),
-                  )}
-                  style={item.position ? { objectPosition: item.position } : undefined}
+              {item.treatment === "product" && item.productReview ? (
+                <EditorialProductReviewModule
+                  image={item.src}
+                  alt={item.alt || item.caption}
+                  title={item.caption || "Product review"}
+                  review={item.productReview}
+                  dark={essayDark}
+                  style={style}
                 />
-              </div>
+              ) : (
+                <div
+                  className={cn(
+                    "relative overflow-hidden bg-muted",
+                    item.treatment === "before-after" && "aspect-[2/1]",
+                    item.treatment === "product" && "aspect-[3/2]",
+                    !item.treatment && "aspect-[4/5]",
+                  )}
+                >
+                  <img
+                    src={item.src}
+                    alt={item.alt || ""}
+                    className={cn(
+                      "h-full w-full",
+                      item.fit === "contain" ? "object-contain" : cn("object-cover", style.heroObject),
+                    )}
+                    style={item.position ? { objectPosition: item.position } : undefined}
+                  />
+                </div>
+              )}
               <EditorialImageCaption caption={item.caption} credit={item.credit} className={cn(essayDark && "text-background/72")} />
             </figure>
           </Col>
@@ -1381,6 +1621,133 @@ function EditorialBodySection({
   );
 }
 
+function EditorialPhotoGalleryFigure({
+  src,
+  alt,
+  caption,
+  credit,
+  className,
+}: {
+  src: string;
+  alt?: string;
+  caption?: string;
+  credit?: string;
+  className?: string;
+}) {
+  return (
+    <figure className={cn("space-y-[var(--spacing-token-sm)]", className)}>
+      <div
+        className="relative border-y border-border bg-muted/40"
+        style={{ marginLeft: "calc(50% - 50vw)", width: "100vw" }}
+      >
+        <img
+          src={src}
+          alt={alt || ""}
+          className="block h-auto w-full"
+        />
+      </div>
+      <PageContainer>
+        <EditorialImageCaption
+          caption={caption}
+          credit={credit}
+          className="max-w-[960px]"
+        />
+      </PageContainer>
+    </figure>
+  );
+}
+
+function EditorialPhotoGalleryArticleTemplate({
+  content,
+  showGridOverlay = false,
+}: ArticleEditorialFeatureTemplateProps) {
+  const { brand } = useTheme();
+  const style = getCinematicEditorialStyle(brand.slug);
+  const intro = content.immersiveIntro ?? (content.dek ? <p>{content.dek}</p> : null);
+
+  return (
+    <div className={cn("min-h-screen bg-background font-brand", style.paper)}>
+      <CinematicEditorialHero content={content} brandSlug={brand.slug} />
+
+      <main className="relative z-10">
+        {intro && (
+          <PageContainer className="relative">
+            {showGridOverlay && <GridOverlay />}
+            <Grid alignStart>
+              <Col span="full" spanMd={6} spanLg={7} startLg={3}>
+                <ArticleBody className="py-[var(--spacing-token-3xl)] [&>p]:text-[length:var(--text-token-lg)] [&>p]:leading-[1.9] md:[&>p]:text-[length:var(--text-token-xl)]">
+                  {intro}
+                </ArticleBody>
+              </Col>
+            </Grid>
+          </PageContainer>
+        )}
+
+        {content.scenes.map((scene, index) => (
+          <section key={`${scene.eyebrow}-${index}`} className="py-[var(--spacing-token-2xl)]">
+            <EditorialPhotoGalleryFigure
+              src={scene.image}
+              alt={scene.imageAlt || scene.title}
+              caption={scene.title}
+              credit={scene.imageCredit}
+            />
+            <PageContainer className="relative">
+              {showGridOverlay && <GridOverlay />}
+              <Grid alignStart>
+                <Col span="full" spanMd={6} spanLg={7} startLg={3}>
+                  <div className="grid gap-[var(--spacing-token-md)] py-[var(--spacing-token-xl)]">
+                    <p className={cn("text-[length:var(--text-token-xs)] font-bold uppercase tracking-[0.16em] md:text-[length:var(--text-token-sm)]", style.accentText, style.labelClass)}>
+                      {String(index + 1).padStart(2, "0")} / {String(content.scenes.length).padStart(2, "0")} {scene.eyebrow}
+                    </p>
+                    <h2 className="headline max-w-[900px] text-[length:var(--text-token-3xl)] leading-[0.98] md:text-[length:var(--text-token-5xl)]">
+                      {scene.title}
+                    </h2>
+                    <p className={cn("max-w-[820px] text-[length:var(--text-token-lg)] leading-[1.85] md:text-[length:var(--text-token-xl)]", style.bodyText)}>
+                      {scene.body}
+                    </p>
+                    {scene.quote && (
+                      <blockquote className={cn("max-w-[840px] border-l-4 pl-[var(--spacing-token-md)]", style.accentBorder)}>
+                        <p className="headline text-[length:var(--text-token-xl)] leading-tight md:text-[length:var(--text-token-2xl)]">
+                          {scene.quote}
+                        </p>
+                      </blockquote>
+                    )}
+                  </div>
+                </Col>
+              </Grid>
+            </PageContainer>
+          </section>
+        ))}
+
+        <PageContainer className="relative">
+          {showGridOverlay && <GridOverlay />}
+          <Grid alignStart>
+            <Col span="full" spanMd={6} spanLg={7} startLg={3}>
+              <div className="space-y-[var(--spacing-token-4xl)] pb-[var(--spacing-token-4xl)] pt-[var(--spacing-token-xl)]">
+                <ArticleBody className="[&>p]:text-[length:var(--text-token-lg)] [&>p]:leading-[1.9]">
+                  {content.body}
+                </ArticleBody>
+                <div className="flex justify-center py-[var(--spacing-token-md)]">
+                  <AdPlaceholder size="inline" />
+                </div>
+                <ArticleNewsletter brandName={brand.name} />
+              </div>
+            </Col>
+          </Grid>
+
+          {content.relatedArticles && content.relatedArticles.length > 0 && (
+            <div className="pb-[var(--spacing-token-3xl)]">
+              <RelatedArticles articles={content.relatedArticles} />
+            </div>
+          )}
+        </PageContainer>
+      </main>
+
+      <ArticleFooter />
+    </div>
+  );
+}
+
 function BrandEditorialFeatureTemplate({
   content,
   showGridOverlay = false,
@@ -1388,6 +1755,15 @@ function BrandEditorialFeatureTemplate({
   const { brand } = useTheme();
   const navLinks = content.navLinks ?? ["Home", "News", "Features", "Culture", "Style", "Health", "Food", "Travel"];
   const style = getCinematicEditorialStyle(brand.slug);
+
+  if (content.displayMode === "photo-gallery") {
+    return (
+      <EditorialPhotoGalleryArticleTemplate
+        content={content}
+        showGridOverlay={showGridOverlay}
+      />
+    );
+  }
 
   return (
     <div className={cn("min-h-screen font-brand", style.paper)}>

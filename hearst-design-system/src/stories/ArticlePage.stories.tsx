@@ -9,6 +9,9 @@ import {
 import { useTheme } from "@/components/theme-provider";
 import { VisualInspector } from "@/components/visual-inspector";
 import {
+  AUTOWEEK_EDITORIAL_ARTICLE,
+  BEST_PRODUCTS_EDITORIAL_ARTICLE,
+  BIOGRAPHY_EDITORIAL_ARTICLE,
   BICYCLING_EDITORIAL_ARTICLE,
   BRAND_ARTICLES,
   CAR_AND_DRIVER_EDITORIAL_ARTICLE,
@@ -16,18 +19,55 @@ import {
   COSMOPOLITAN_EDITORIAL_ARTICLE,
   COSMOPOLITAN_IMMERSIVE_ARTICLE,
   DELISH_EDITORIAL_ARTICLE,
+  ELLE_DECOR_EDITORIAL_ARTICLE,
   ELLE_EDITORIAL_ARTICLE,
   ESQUIRE_EDITORIAL_ARTICLE,
+  GOOD_HOUSEKEEPING_EDITORIAL_ARTICLE,
+  HARPERS_BAZAAR_EDITORIAL_ARTICLE,
+  HOUSE_BEAUTIFUL_EDITORIAL_ARTICLE,
+  MENS_HEALTH_EDITORIAL_ARTICLE,
+  OPRAH_DAILY_EDITORIAL_ARTICLE,
+  POPULAR_MECHANICS_EDITORIAL_ARTICLE,
+  PREVENTION_EDITORIAL_ARTICLE,
+  REDBOOK_EDITORIAL_ARTICLE,
+  ROAD_AND_TRACK_EDITORIAL_ARTICLE,
+  RUNNERS_WORLD_EDITORIAL_ARTICLE,
+  SEVENTEEN_EDITORIAL_ARTICLE,
+  THE_PIONEER_WOMAN_EDITORIAL_ARTICLE,
+  TOWN_AND_COUNTRY_EDITORIAL_ARTICLE,
+  VERANDA_EDITORIAL_ARTICLE,
+  WOMANS_DAY_EDITORIAL_ARTICLE,
+  WOMENS_HEALTH_EDITORIAL_ARTICLE,
 } from "./article-data";
 
 const EDITORIAL_ARTICLES = {
+  autoweek: AUTOWEEK_EDITORIAL_ARTICLE,
+  "best-products": BEST_PRODUCTS_EDITORIAL_ARTICLE,
+  biography: BIOGRAPHY_EDITORIAL_ARTICLE,
   bicycling: BICYCLING_EDITORIAL_ARTICLE,
   cosmopolitan: COSMOPOLITAN_EDITORIAL_ARTICLE,
   "car-and-driver": CAR_AND_DRIVER_EDITORIAL_ARTICLE,
   "country-living": COUNTRY_LIVING_EDITORIAL_ARTICLE,
   delish: DELISH_EDITORIAL_ARTICLE,
+  "elle-decor": ELLE_DECOR_EDITORIAL_ARTICLE,
   elle: ELLE_EDITORIAL_ARTICLE,
   esquire: ESQUIRE_EDITORIAL_ARTICLE,
+  "good-housekeeping": GOOD_HOUSEKEEPING_EDITORIAL_ARTICLE,
+  "harpers-bazaar": HARPERS_BAZAAR_EDITORIAL_ARTICLE,
+  "house-beautiful": HOUSE_BEAUTIFUL_EDITORIAL_ARTICLE,
+  "mens-health": MENS_HEALTH_EDITORIAL_ARTICLE,
+  "oprah-daily": OPRAH_DAILY_EDITORIAL_ARTICLE,
+  "popular-mechanics": POPULAR_MECHANICS_EDITORIAL_ARTICLE,
+  prevention: PREVENTION_EDITORIAL_ARTICLE,
+  redbook: REDBOOK_EDITORIAL_ARTICLE,
+  "road-and-track": ROAD_AND_TRACK_EDITORIAL_ARTICLE,
+  "runners-world": RUNNERS_WORLD_EDITORIAL_ARTICLE,
+  seventeen: SEVENTEEN_EDITORIAL_ARTICLE,
+  "the-pioneer-woman": THE_PIONEER_WOMAN_EDITORIAL_ARTICLE,
+  "town-and-country": TOWN_AND_COUNTRY_EDITORIAL_ARTICLE,
+  veranda: VERANDA_EDITORIAL_ARTICLE,
+  "womans-day": WOMANS_DAY_EDITORIAL_ARTICLE,
+  "womens-health": WOMENS_HEALTH_EDITORIAL_ARTICLE,
 };
 
 function BrandArticlePage(props: Pick<ArticlePageTemplateProps, "showGridOverlay">) {
@@ -54,15 +94,6 @@ function BrandEditorialArticlePage(props: Pick<ArticlePageTemplateProps, "showGr
   return (
     <ArticleEditorialFeatureTemplate
       content={content}
-      showGridOverlay={props.showGridOverlay}
-    />
-  );
-}
-
-function EditorialArticlePage(props: Pick<ArticlePageTemplateProps, "showGridOverlay">) {
-  return (
-    <ArticleEditorialFeatureTemplate
-      content={COSMOPOLITAN_EDITORIAL_ARTICLE}
       showGridOverlay={props.showGridOverlay}
     />
   );
@@ -124,34 +155,6 @@ function ImmersiveArticleStoryFrame({
       </button>
       <div style={{ margin: "-2rem", minHeight: "100vh" }}>
         <ImmersiveArticlePage showGridOverlay={showGrid} />
-      </div>
-    </>
-  );
-}
-
-function EditorialArticleStoryFrame({
-  showGridInitially = false,
-}: {
-  showGridInitially?: boolean;
-}) {
-  const [showGrid, setShowGrid] = useState(showGridInitially);
-
-  return (
-    <>
-      <button
-        type="button"
-        title="Toggle Hearst 4/8/12 column guides (visible from sm breakpoint up)"
-        aria-pressed={showGrid}
-        onClick={() => setShowGrid((v) => !v)}
-        className="fixed bottom-4 right-4 z-[2147483647] rounded-md border border-border bg-background/95 px-3 py-2 text-left text-xs font-semibold text-foreground shadow-md backdrop-blur-sm hover:bg-muted"
-      >
-        Hearst column guide:{" "}
-        <span className={showGrid ? "text-primary" : "text-muted-foreground"}>
-          {showGrid ? "On" : "Off"}
-        </span>
-      </button>
-      <div style={{ margin: "-2rem", minHeight: "100vh" }}>
-        <EditorialArticlePage showGridOverlay={showGrid} />
       </div>
     </>
   );
@@ -228,20 +231,6 @@ export const ImmersiveFeature: Story = {
       description: {
         story:
           "Premium portrait-led article template inspired by the referenced Cosmopolitan profile structure. It keeps the article shell brandable while adding a full-bleed hero, visual chapters, story spine, media pair, interview body, newsletter, and related articles.",
-      },
-    },
-  },
-};
-
-export const EditorialFeature: Story = {
-  name: "Editorial Feature",
-  render: () => <EditorialArticleStoryFrame />,
-  parameters: {
-    forceBrand: "cosmopolitan",
-    docs: {
-      description: {
-        story:
-          "Premium Cosmopolitan editorial feature variant for the Towa Bird story, with an immersive hero, visual chapters, poster-like pull quote moments, narrow reading flow, newsletter, and related articles.",
       },
     },
   },

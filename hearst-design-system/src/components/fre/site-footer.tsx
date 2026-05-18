@@ -36,7 +36,7 @@ export function SiteFooter({
       )}
     >
       <div className="max-w-[var(--width-content-max,1360px)] mx-auto px-6">
-      <div className="flex justify-between items-start mb-8">
+      <div className="flex flex-col justify-between gap-8 mb-8 md:flex-row md:items-start">
         <div>
           <div className="mb-4">
             {typeof siteName === "string" ? (
@@ -62,7 +62,7 @@ export function SiteFooter({
             </div>
           )}
         </div>
-        <div className="flex gap-8 text-[length:var(--text-token-2xs)]">
+        <div className="flex flex-wrap gap-8 text-[length:var(--text-token-2xs)]">
           <div className="flex flex-col gap-2">
             <span className="font-semibold mb-1">Other Hearst Subscriptions</span>
             <LinkComponent
@@ -80,9 +80,9 @@ export function SiteFooter({
 
       <Separator className="bg-background/15" />
 
-      <div className="flex justify-between items-center pt-5 text-[length:var(--text-token-4xs)] opacity-60">
+      <div className="flex flex-col justify-between gap-4 pt-5 text-[length:var(--text-token-4xs)] opacity-60 md:flex-row md:items-center">
         <div>A Part of Hearst Digital Media</div>
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-4">
           {legalLinks.map((link) => (
             <LinkComponent
               key={link}
@@ -97,6 +97,9 @@ export function SiteFooter({
           ))}
         </div>
       </div>
+      <p className="mt-3 max-w-3xl text-[length:var(--text-token-4xs)] leading-relaxed text-background/55">
+        This app is for prototyping purposes only.
+      </p>
       <div className="text-[length:var(--text-token-4xs)] opacity-40 mt-3">
         &copy;{copyrightYear} Hearst Magazine Media, Inc. All Rights Reserved.
       </div>
