@@ -1029,9 +1029,19 @@ function CinematicEditorialHero({
   const { brand } = useTheme();
   const logo = brandLogos[brand.slug];
   const portraitLed = content.heroImageTreatment === "grid-crop";
-  const imageObject = portraitLed ? "object-[center_20%]" : style.heroObject;
+  const containHero = content.heroImageTreatment === "contain";
+  const imageObject = portraitLed ? "object-[center_20%]" : containHero ? "object-contain" : style.heroObject;
   const figureRef = React.useRef<HTMLElement>(null);
   const imageRef = React.useRef<HTMLImageElement>(null);
+  const heroImageStyle = containHero
+    ? ({
+        "--hero-parallax-y": "0px",
+        ...(content.flipHeroImage ? { transform: "scaleX(-1)" } : {}),
+      } as React.CSSProperties)
+    : ({
+        "--hero-parallax-y": "0px",
+        transform: `translate3d(0, var(--hero-parallax-y, 0px), 0) scale(1.08)${content.flipHeroImage ? " scaleX(-1)" : ""}`,
+      } as React.CSSProperties);
 
   React.useEffect(() => {
     const figure = figureRef.current;
@@ -1081,16 +1091,25 @@ function CinematicEditorialHero({
   return (
     <header className="relative left-1/2 w-screen -translate-x-1/2 overflow-hidden text-background">
       <figure ref={figureRef} className="relative min-h-[820px] overflow-hidden bg-muted md:min-h-[880px] lg:min-h-[960px]">
+        {containHero && (
+          <img
+            src={content.heroImage}
+            alt=""
+            aria-hidden="true"
+            className={cn("absolute inset-x-0 top-[-12%] h-[124%] w-full scale-110 object-cover opacity-50 blur-xl saturate-75", style.heroObject)}
+          />
+        )}
         <img
           ref={imageRef}
           src={content.heroImage}
           alt={content.heroImageAlt || content.headline}
-          style={{
-            "--hero-parallax-y": "0px",
-            transform: `translate3d(0, var(--hero-parallax-y, 0px), 0) scale(1.08)${content.flipHeroImage ? " scaleX(-1)" : ""}`,
-          } as React.CSSProperties}
-          className={cn("absolute inset-x-0 top-[-12%] h-[124%] w-full object-cover will-change-transform", imageObject)}
+          style={heroImageStyle}
+          className={cn(
+            containHero ? "absolute inset-x-0 top-[11%] h-[54%] w-full drop-shadow-2xl will-change-transform" : "absolute inset-x-0 top-[-12%] h-[124%] w-full object-cover will-change-transform",
+            imageObject,
+          )}
         />
+        <div className="absolute inset-x-0 top-0 h-1/3 bg-gradient-to-b from-foreground/35 via-foreground/12 to-foreground/0" />
         <div className="absolute inset-x-0 bottom-0 h-[78%] bg-gradient-to-t from-foreground/90 via-foreground/45 to-foreground/0" />
         <PageContainer className="relative z-10 flex min-h-[820px] flex-col justify-between py-[var(--spacing-token-lg)] md:min-h-[880px] lg:min-h-[960px] lg:py-[var(--spacing-token-2xl)]">
           <div className="flex items-start justify-between gap-[var(--spacing-token-md)]">

@@ -3,6 +3,89 @@
 @import "shadcn/tailwind.css";
 @import "../lib/tokens.css";
 
+@keyframes hearstPlusArticleBackdropIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes hearstPlusArticleBackdropOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes hearstPlusArticleDialogIn {
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(0.965);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes hearstPlusArticleDialogOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(12px) scale(0.985);
+  }
+}
+
+@keyframes hearstPlusArticleImageIn {
+  from {
+    filter: saturate(0.92);
+    transform: scale(1.018);
+  }
+  to {
+    filter: saturate(1);
+    transform: scale(1);
+  }
+}
+
+.hearst-plus-article-backdrop {
+  animation: hearstPlusArticleBackdropIn 180ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hearst-plus-article-backdrop-out {
+  animation: hearstPlusArticleBackdropOut 140ms cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+
+.hearst-plus-article-dialog {
+  animation: hearstPlusArticleDialogIn 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform-origin: top center;
+}
+
+.hearst-plus-article-dialog-out {
+  animation: hearstPlusArticleDialogOut 160ms cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+
+.hearst-plus-article-image {
+  animation: hearstPlusArticleImageIn 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hearst-plus-article-backdrop,
+  .hearst-plus-article-backdrop-out,
+  .hearst-plus-article-dialog,
+  .hearst-plus-article-dialog-out,
+  .hearst-plus-article-image {
+    animation-duration: 1ms;
+    transition-duration: 1ms;
+  }
+}
+
 /* ─── Shared / FRE fonts ─── */
 @font-face {
   font-family: "Inter";

@@ -40,14 +40,24 @@ function hexToOklch(hex: string): string {
   return `oklch(${L.toFixed(4)} ${C.toFixed(4)} ${H.toFixed(2)})`;
 }
 
+function getContrastColor(hex: string): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.5 ? "#000000" : "#ffffff";
+}
+
 function brandToCssVars(brand: BrandTheme): Record<string, string> {
   const primary = brand.colors["1"] || Object.values(brand.colors)[0] || "#000000";
   const secondary = brand.colors["2"] || "#666666";
+  const primaryFg = getContrastColor(primary);
+  const secondaryFg = getContrastColor(secondary);
   return {
     "--primary": hexToOklch(primary),
-    "--primary-foreground": "oklch(1 0 0)",
+    "--primary-foreground": hexToOklch(primaryFg),
     "--secondary": hexToOklch(secondary),
-    "--secondary-foreground": "oklch(0.145 0 0)",
+    "--secondary-foreground": hexToOklch(secondaryFg),
     "--accent": `color-mix(in oklch, ${hexToOklch(primary)} 10%, white)`,
     "--accent-foreground": "oklch(0.145 0 0)",
     "--ring": hexToOklch(primary),

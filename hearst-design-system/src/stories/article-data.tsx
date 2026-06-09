@@ -43,6 +43,7 @@ interface SourceEditorialConfig {
   heroImageQuery?: string;
   heroImageAlt: string;
   heroImageCredit: string;
+  heroImageTreatment?: ImmersiveArticleContent["heroImageTreatment"];
   author: string;
   publishedDate: string;
   navLinks: string[];
@@ -108,6 +109,7 @@ function makeSourceEditorialArticle(config: SourceEditorialConfig): ImmersiveArt
     heroImage: img(config.heroImage, config.heroImageQuery ?? "resize=1400:*"),
     heroImageAlt: config.heroImageAlt,
     heroImageCredit: config.heroImageCredit,
+    heroImageTreatment: config.heroImageTreatment,
     author: config.author,
     publishedDate: config.publishedDate,
     navLinks: config.navLinks,
@@ -1473,7 +1475,7 @@ export const HOUSE_BEAUTIFUL_EDITORIAL_ARTICLE = makeSourceEditorialArticle({
   headline: "Jeremiah Brent Added Antiques and Ample Seating to This Hosting-Ready L.A. Home",
   dek: "A Los Angeles home tour becomes a story about hospitality, antiques, materials, and rooms made for people to gather.",
   heroImage: "hbx030124jeremiahbrent-002-65f1e164f2a25.jpg",
-  heroImageQuery: "crop=1xw:0.5261479591836735xh;center,top&resize=1400:*",
+  heroImageQuery: "crop=1xw:0.72xh;0,0.20xh&resize=1400:*",
   heroImageAlt: "Jeremiah Brent Los Angeles home interior",
   heroImageCredit: "House Beautiful",
   author: "Kelly Allen",
@@ -1762,9 +1764,10 @@ export const REDBOOK_EDITORIAL_ARTICLE = makeSourceEditorialArticle({
   headline: "The Cast of Dawson's Creek Then Vs. Now",
   dek: "A nostalgia story that works through recognition: familiar faces, time, memory, and the strange intimacy of growing up with a cast.",
   heroImage: "dawsons-creek-jen-1516377987.jpg",
-  heroImageQuery: "crop=1xw:0.75xh;center,top&resize=1400:*",
+  heroImageQuery: "resize=1600:*",
   heroImageAlt: "Dawson's Creek cast member then and now imagery",
   heroImageCredit: "Redbook",
+  heroImageTreatment: "contain",
   author: "Nicole Pomarico",
   publishedDate: "Sep 23, 2021",
   navLinks: ["Life", "Home", "Food", "Relationships", "Entertainment", "Style"],
@@ -1789,6 +1792,7 @@ export const REDBOOK_EDITORIAL_ARTICLE = makeSourceEditorialArticle({
       image: "dawsons-creek-dawson-1516377938.jpg",
       imageAlt: "Dawson's Creek cast comparison",
       imageCredit: "Redbook",
+      imageTreatment: "before-after",
       quote: "Nostalgia is strongest when the page gives it space.",
     },
     {
@@ -1798,6 +1802,7 @@ export const REDBOOK_EDITORIAL_ARTICLE = makeSourceEditorialArticle({
       image: "dawsons-creek-joey-1516378002.jpg",
       imageAlt: "Dawson's Creek Joey comparison",
       imageCredit: "Redbook",
+      imageTreatment: "before-after",
     },
     {
       eyebrow: "The rewatch",
@@ -1806,6 +1811,7 @@ export const REDBOOK_EDITORIAL_ARTICLE = makeSourceEditorialArticle({
       image: "dawsons-creek-pacey-1516378003.jpg",
       imageAlt: "Dawson's Creek Pacey comparison",
       imageCredit: "Redbook",
+      imageTreatment: "before-after",
     },
   ],
   sourceNote: "Source-grounded prototype based on Redbook's Dawson's Creek cast then-and-now feature.",
