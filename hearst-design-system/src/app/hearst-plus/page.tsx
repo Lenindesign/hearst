@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export default function HearstPlusPage() {
   return (
     <div className={newsreader.variable}>
-      <ThemeProvider>
+      <ThemeProvider defaultBrandSlug="hearst-plus">
         <HearstPlusApp />
       </ThemeProvider>
     </div>

@@ -21,5 +21,8 @@ type Story = StoryObj<typeof HearstPlusApp>;
 
 export const DailyDestination: Story = {
   name: "Daily Destination",
+  globals: {
+    brand: "hearst-plus",
+  },
   render: () => <HearstPlusApp />,
 };

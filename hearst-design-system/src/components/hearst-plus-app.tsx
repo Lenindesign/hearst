@@ -26,6 +26,7 @@ import { XIcon } from "@phosphor-icons/react/dist/csr/X";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { brands } from "@/lib/brands";
+import { hearstPlusDarkVars } from "@/lib/hearst-plus-theme";
 import { brandLogos } from "@/lib/logos";
 import { cn } from "@/lib/utils";
 import { BrandLogo } from "./brand-logo";
@@ -225,9 +226,9 @@ const trendItems = [
 ];
 
 const collections: Collection[] = [
-  { title: "Healthy Meals", count: "18 saves", brandSlugs: ["delish", "good-housekeeping", "womans-day"], accent: "#df4b2f" },
-  { title: "Kitchen Remodel", count: "12 saves", brandSlugs: ["house-beautiful", "veranda", "elle-decor"], accent: "#6f6d98" },
-  { title: "Weekend Drive", count: "9 saves", brandSlugs: ["car-and-driver", "road-and-track", "autoweek"], accent: "#1f6386" },
+  { title: "Healthy Meals", count: "18 saves", brandSlugs: ["delish", "good-housekeeping", "womans-day"], accent: "var(--hp-food)" },
+  { title: "Kitchen Remodel", count: "12 saves", brandSlugs: ["house-beautiful", "veranda", "elle-decor"], accent: "var(--hp-home)" },
+  { title: "Weekend Drive", count: "9 saves", brandSlugs: ["car-and-driver", "road-and-track", "autoweek"], accent: "var(--hp-cars)" },
 ];
 
 const readerProfile: ReaderProfile = {
@@ -533,7 +534,7 @@ function BrandAvatar({ slug, size = "md" }: { slug: string; size?: "sm" | "md" |
     <span
       aria-hidden="true"
       className={cn(
-        "flex shrink-0 items-center justify-center overflow-hidden rounded-[8px] border border-white/12 bg-white text-[#222222]",
+        "flex shrink-0 items-center justify-center overflow-hidden rounded-[8px] bg-white text-[var(--hp-ink-on-light)]",
         size === "sm" && "size-7",
         size === "md" && "size-9",
         size === "lg" && "size-11",
@@ -572,7 +573,7 @@ function IconButton({
       aria-label={label}
       title={label}
       className={cn(
-        "flex size-10 shrink-0 items-center justify-center rounded-[8px] border border-white/12 bg-[#20242b] text-white transition hover:bg-[#2a3038] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5ca8ff] md:size-9",
+        "flex size-10 shrink-0 items-center justify-center rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-control)] text-[var(--hp-text-ui)] transition hover:bg-[var(--hp-control-hover)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--hp-focus)] md:size-9",
         className,
       )}
     >
@@ -612,11 +613,11 @@ function FeedAction({
         });
       }}
       className={cn(
-        "flex h-12 items-center justify-center gap-2 border-white/10 px-3 text-xs font-extrabold text-[#dbe3ed] transition hover:bg-[#20242b] focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#5ca8ff]",
-        active && "bg-[#12395f] text-[#d8ecff] hover:bg-[#174a7b]",
+        "flex h-12 items-center justify-center gap-2 border-[var(--hp-border)] px-3 text-xs font-semibold text-[var(--hp-text-secondary)] transition hover:bg-[var(--hp-control)] focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--hp-focus)]",
+        active && "bg-[var(--hp-friendly-accent)] text-[var(--hp-friendly-accent-text)] hover:bg-[var(--hp-friendly-accent-hover)]",
       )}
     >
-      <Icon className={cn("size-4 text-[#8b96a6]", active && "text-[#5ca8ff]")} weight={active ? "fill" : "bold"} />
+      <Icon className={cn("size-4 text-[var(--hp-text-muted)]", active && "text-[var(--hp-friendly-accent-text)]")} weight={active ? "fill" : "bold"} />
       <span>{displayedLabel}</span>
     </button>
   );
@@ -631,12 +632,12 @@ function BrandPill({ slug, compact = false }: { slug: string; compact?: boolean 
       aria-label={brand.name}
       title={brand.name}
       className={cn(
-        "flex h-11 shrink-0 items-center gap-2 rounded-[8px] border border-white/12 bg-[#171a1f] text-[#f4f7fb] transition hover:border-white/24 hover:bg-[#20242b] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5ca8ff]",
+        "flex h-11 shrink-0 items-center gap-2 rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] text-[var(--hp-text-ui)] transition hover:border-[var(--hp-border-strong)] hover:bg-[var(--hp-control)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--hp-focus)]",
         compact ? "h-10 min-w-0 justify-start pl-[3px] pr-2" : "min-w-[154px] justify-start pl-[3px] pr-3",
       )}
     >
       <BrandAvatar slug={slug} size={compact ? "sm" : "md"} />
-      <span className={cn("min-w-0 truncate text-xs font-extrabold", compact ? "max-w-[74px]" : "max-w-[104px]")}>
+      <span className={cn("min-w-0 truncate text-xs font-semibold", compact ? "max-w-[74px]" : "max-w-[104px]")}>
         {brand.name}
       </span>
     </button>
@@ -657,22 +658,22 @@ function FeedCard({
   const isLead = item.variant === "lead";
 
   return (
-    <article className="overflow-hidden rounded-[8px] border border-white/10 bg-[#181b20] shadow-[0_4px_14px_rgba(0,0,0,0.22)]">
-      <div className="flex items-start justify-between gap-3 border-b border-white/10 p-4 md:p-5">
+    <article className="overflow-hidden rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
+      <div className="flex items-start justify-between gap-3 border-b border-[var(--hp-border)] p-4 md:p-5">
         <div className="flex min-w-0 gap-3">
           <BrandAvatar slug={item.brandSlug} size="lg" />
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-              <span className="text-sm font-extrabold text-[#f4f7fb]">{brand.name}</span>
-              <span className="size-1 rounded-full bg-[#647181]" />
-              <span className="text-xs font-bold text-[#b8c3d1]">{item.topic}</span>
-              <span className="text-xs text-[#95a0ad]">{item.readTime} read</span>
+              <span className="text-sm font-extrabold text-[var(--hp-text-primary)]">{brand.name}</span>
+              <span className="size-1 rounded-full bg-[var(--hp-text-muted)]" />
+              <span className="text-xs font-bold text-[var(--hp-text-secondary)]">{item.topic}</span>
+              <span className="text-xs text-[var(--hp-text-muted)]">{item.readTime} read</span>
             </div>
-            <p className="mt-1 max-w-prose text-xs font-bold leading-5 text-[#aab5c3]">{item.signal}</p>
+            <p className="mt-1 max-w-prose text-xs font-bold leading-5 text-[var(--hp-text-secondary)]">{item.signal}</p>
           </div>
         </div>
         <div className="flex shrink-0 gap-2">
-          <Button variant="outline" size="sm" className="hidden h-10 rounded-[8px] border-white/12 bg-[#20242b] px-3 text-xs font-extrabold text-[#f4f7fb] hover:bg-[#2a3038] hover:text-white sm:inline-flex">
+          <Button variant="outline" size="sm" className="hidden h-9 rounded-[8px] border-[var(--hp-border)] bg-transparent px-3 text-xs font-semibold text-[var(--hp-text-secondary)] hover:bg-[var(--hp-control)] hover:text-[var(--hp-text-primary)] sm:inline-flex">
             Follow
           </Button>
           <IconButton label={`More options for ${item.title}`} className="size-10">
@@ -686,7 +687,7 @@ function FeedCard({
           aria-label={`Open ${item.title}`}
           data-testid={`open-story-${item.id}`}
           onClick={onOpen}
-          className="group block w-full rounded-[8px] text-left outline-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#2D75B9]"
+          className="group block w-full rounded-[8px] text-left outline-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--hp-primary)]"
         >
           <ImageFrame
             src={item.image}
@@ -699,7 +700,7 @@ function FeedCard({
             <div className="absolute inset-0 bg-gradient-to-t from-black/34 via-black/0 to-black/0" />
             <Badge
               variant="secondary"
-              className="absolute left-3 top-3 h-7 rounded-[8px] bg-white/94 px-2 text-[0.72rem] font-extrabold text-[#222222]"
+              className="absolute left-3 top-3 h-7 rounded-[8px] border border-black/10 bg-white/75 px-2 text-[0.72rem] font-semibold text-[var(--hp-ink-on-light)] shadow-none backdrop-blur-[2px]"
             >
               <Icon className="size-3" weight="bold" />
               {item.topic}
@@ -708,27 +709,27 @@ function FeedCard({
           <div className="mt-4 space-y-3">
             <h2
               className={cn(
-                "max-w-3xl text-pretty font-headline leading-[1.03] text-[#f8fbff] [font-weight:700]",
+                "max-w-3xl text-pretty font-headline leading-[1.03] text-[var(--hp-text-headline)] [font-weight:700]",
                 isLead ? "text-4xl md:text-5xl" : "text-3xl",
               )}
             >
               {item.title}
             </h2>
-            <p className={cn("max-w-2xl leading-7 text-[#b3bfcc]", isLead ? "text-base" : "text-sm")}>{item.summary}</p>
+            <p className={cn("max-w-2xl leading-7 text-[var(--hp-text-secondary)]", isLead ? "text-base" : "text-sm")}>{item.summary}</p>
           </div>
         </button>
         <div className="mt-4 flex flex-wrap items-center gap-2">
           {item.tags.map((tag) => (
-            <span key={tag} className="rounded-[8px] bg-[#232a33] px-2 py-1 text-xs font-semibold text-[#cad5e2]">
+            <span key={tag} className="rounded-[8px] border border-[var(--hp-border)] bg-transparent px-2 py-1 text-xs font-medium text-[var(--hp-text-muted)]">
               {tag}
             </span>
           ))}
-          <Button variant="ghost" size="sm" className="ml-auto h-10 rounded-[8px] text-[#dbe8f7] hover:bg-[#20242b] hover:text-white" onClick={onOpen}>
+          <Button variant="ghost" size="sm" className="ml-auto h-10 rounded-[8px] font-semibold text-[var(--hp-text-secondary)] hover:bg-[var(--hp-control)] hover:text-[var(--hp-text-primary)]" onClick={onOpen}>
             Read Story <CaretRightIcon className="size-4" weight="bold" />
           </Button>
         </div>
       </div>
-      <div className="grid grid-cols-2 border-t border-white/10 sm:grid-cols-4 sm:divide-x sm:divide-white/10">
+      <div className="grid grid-cols-2 border-t border-[var(--hp-border)] sm:grid-cols-4 sm:divide-x sm:divide-[var(--hp-border)]">
         <FeedAction icon={BookmarkSimpleIcon} label="Save" activeLabel="Saved" title={item.title} onChange={(isActive) => onFeedback(item, "save", isActive)} />
         <FeedAction icon={FolderPlusIcon} label="Collect" activeLabel="Collected" title={item.title} onChange={(isActive) => onFeedback(item, "collect", isActive)} />
         <FeedAction icon={ShareNetworkIcon} label="Share" title={item.title} />
@@ -748,10 +749,10 @@ function RailPanel({
   className?: string;
 }) {
   return (
-    <section className={cn("rounded-[8px] border border-white/10 bg-[#181b20] p-4 shadow-[0_4px_14px_rgba(0,0,0,0.22)]", className)}>
+    <section className={cn("rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]", className)}>
       <div className="mb-4 flex items-center justify-between gap-3">
-        <h2 className="text-sm font-extrabold text-[#f4f7fb]">{title}</h2>
-        <CaretRightIcon className="size-4 text-[#8b96a6]" weight="bold" />
+        <h2 className="text-sm font-extrabold text-[var(--hp-text-primary)]">{title}</h2>
+        <CaretRightIcon className="size-4 text-[var(--hp-text-muted)]" weight="bold" />
       </div>
       {children}
     </section>
@@ -760,17 +761,17 @@ function RailPanel({
 
 function AppHeader() {
   return (
-    <header className="sticky top-0 z-30 border-b border-white/10 bg-[#111418] text-white">
-      <div className="grid min-h-16 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-4 md:px-6">
+    <header className="sticky top-0 z-30 border-b border-[var(--hp-border)] bg-[var(--hp-nav)] text-[var(--hp-nav-text)]">
+      <div className="mx-auto grid min-h-16 w-full max-w-[1280px] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-4 md:px-6">
         <div className="flex items-center gap-3">
-          <IconButton label="Open navigation" className="border-white/10 bg-white/8 text-white hover:bg-white/14 lg:hidden">
+          <IconButton label="Open navigation" className="border-[var(--hp-border)] bg-white/8 text-white hover:bg-white/14 lg:hidden">
             <ListIcon className="size-4" weight="bold" />
           </IconButton>
           <span aria-label="Hearst+" className="flex h-6 min-w-0 items-center" role="img">
             <span
               aria-hidden="true"
               data-testid="hearst-plus-logo"
-              className="block h-[15px] w-[134px] bg-[#2D75B9] sm:h-[21px] sm:w-[188px]"
+              className="block h-[15px] w-[134px] bg-[var(--hp-logo)] sm:h-[21px] sm:w-[188px]"
               style={{
                 WebkitMask: "url('/logos/hearst-plus.svg') left center / contain no-repeat",
                 mask: "url('/logos/hearst-plus.svg') left center / contain no-repeat",
@@ -785,7 +786,7 @@ function AppHeader() {
               type="button"
               className={cn(
                 "h-9 whitespace-nowrap rounded-[8px] px-3 text-sm font-semibold text-white/70 transition hover:bg-white/10 hover:text-white",
-                index === 0 && "bg-[#2D75B9] text-white hover:bg-[#2D75B9]",
+                index === 0 && "bg-[var(--hp-friendly-accent)] text-[var(--hp-friendly-accent-text)] ring-1 ring-inset ring-[var(--hp-friendly-accent-border)] hover:bg-[var(--hp-friendly-accent-hover)]",
               )}
             >
               {item}
@@ -795,15 +796,15 @@ function AppHeader() {
         <div className="flex items-center justify-end gap-2">
           <button
             type="button"
-            className="hidden h-10 min-w-80 items-center gap-2 rounded-[8px] border border-white/12 bg-[#20242b] px-3 text-left text-sm text-[#b8c3d1] md:flex"
+            className="hidden h-10 min-w-80 items-center gap-2 rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-control)] px-3 text-left text-sm text-[var(--hp-text-secondary)] md:flex"
           >
-            <MagnifyingGlassIcon className="size-4 text-[#95a0ad]" weight="bold" />
+            <MagnifyingGlassIcon className="size-4 text-[var(--hp-text-muted)]" weight="bold" />
             Search every Hearst brand
           </button>
-          <IconButton label="Notifications" className="border-white/10 bg-white/8 text-white hover:bg-white/14">
+          <IconButton label="Notifications" className="border-[var(--hp-border)] bg-white/8 text-white hover:bg-white/14">
             <BellIcon className="size-4" weight="bold" />
           </IconButton>
-          <IconButton label="Account" className="border-white/10 bg-white/8 text-white hover:bg-white/14">
+          <IconButton label="Account" className="border-[var(--hp-border)] bg-white/8 text-white hover:bg-white/14">
             <UserIcon className="size-4" weight="bold" />
           </IconButton>
         </div>
@@ -814,21 +815,23 @@ function AppHeader() {
 
 function BrandUniverseStrip() {
   return (
-    <section className="border-b border-white/10 bg-[#14171c] px-4 py-4 md:px-6">
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <div>
-          <p className="text-xs font-bold uppercase text-[#8f9baa]">Brand universe</p>
-          <h2 className="text-lg font-extrabold text-[#f4f7fb]">All Hearst brands in one interest graph</h2>
+    <section className="border-b border-[var(--hp-border)] bg-[var(--hp-strip)]">
+      <div className="mx-auto w-full max-w-[1280px] px-4 py-4 md:px-6">
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <div>
+            <p className="text-xs font-bold uppercase text-[var(--hp-text-muted)]">Brand universe</p>
+            <h2 className="text-lg font-extrabold text-[var(--hp-text-primary)]">All Hearst brands in one interest graph</h2>
+          </div>
+          <Button variant="outline" size="sm" className="h-10 rounded-[8px] border-[var(--hp-border)] bg-[var(--hp-control)] text-[var(--hp-text-primary)] hover:bg-[var(--hp-control-hover)] hover:text-[var(--hp-text-primary)]">
+            <CompassIcon className="size-4" weight="bold" />
+            Explore
+          </Button>
         </div>
-        <Button variant="outline" size="sm" className="h-10 rounded-[8px] border-white/12 bg-[#20242b] text-[#f4f7fb] hover:bg-[#2a3038] hover:text-white">
-          <CompassIcon className="size-4" weight="bold" />
-          Explore
-        </Button>
-      </div>
-      <div className="flex max-w-full gap-2 overflow-x-auto overscroll-x-contain pb-1 [contain:paint]">
-        {brandUniverse.map((brand) => (
-          <BrandPill key={brand.slug} slug={brand.slug} />
-        ))}
+        <div className="flex max-w-full gap-2 overflow-x-auto overscroll-x-contain pb-1 [contain:paint]">
+          {brandUniverse.map((brand) => (
+            <BrandPill key={brand.slug} slug={brand.slug} />
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -840,13 +843,13 @@ function LeftRail() {
       <RailPanel title="Your Morning">
         <div className="space-y-3">
           {dailyBrief.map(({ icon: Icon, label, value }) => (
-            <button key={label} type="button" className="flex w-full items-center gap-3 rounded-[8px] bg-[#20242b] p-3 text-left transition hover:bg-[#272d36]">
-              <span className="flex size-9 items-center justify-center rounded-[8px] bg-[#111418] text-[#dbe8f7]">
+            <button key={label} type="button" className="flex w-full items-center gap-3 rounded-[8px] bg-[var(--hp-control)] p-3 text-left transition hover:bg-[var(--hp-control-hover)]">
+              <span className="flex size-9 items-center justify-center rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-rank-bg)] text-[var(--hp-rank-text)]">
                 <Icon className="size-4" weight="bold" />
               </span>
               <span className="min-w-0">
-                <span className="block text-sm font-bold text-[#f4f7fb]">{label}</span>
-                <span className="block text-xs text-[#a3afbd]">{value}</span>
+                <span className="block text-sm font-bold text-[var(--hp-text-primary)]">{label}</span>
+                <span className="block text-xs text-[var(--hp-text-secondary)]">{value}</span>
               </span>
             </button>
           ))}
@@ -855,8 +858,8 @@ function LeftRail() {
       <RailPanel title="Quick Actions">
         <div className="space-y-2">
           {quickActions.map(({ icon: Icon, label }) => (
-            <button key={label} type="button" className="flex h-11 w-full items-center gap-3 rounded-[8px] px-2 text-sm font-semibold text-[#dbe3ed] hover:bg-[#20242b]">
-              <Icon className="size-4 text-[#8b96a6]" weight="bold" />
+            <button key={label} type="button" className="flex h-11 w-full items-center gap-3 rounded-[8px] px-2 text-sm font-semibold text-[var(--hp-text-ui)] hover:bg-[var(--hp-control)]">
+              <Icon className="size-4 text-[var(--hp-text-muted)]" weight="bold" />
               {label}
             </button>
           ))}
@@ -882,14 +885,14 @@ function RightRail() {
             const brand = getBrand(item.brandSlug);
             return (
               <li key={item.title} className="grid grid-cols-[2rem_minmax(0,1fr)_auto] items-start gap-3">
-                <span className="flex size-7 items-center justify-center rounded-[8px] bg-[#2D75B9] text-xs font-black text-white">
+                <span className="flex size-7 items-center justify-center rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-primary-soft)] text-xs font-bold text-[var(--hp-primary)]">
                   {index + 1}
                 </span>
                 <div className="min-w-0">
-                  <p className="line-clamp-2 text-sm font-bold leading-snug text-[#f4f7fb]">{item.title}</p>
-                  <p className="mt-1 text-xs text-[#9da8b6]">{brand.name}</p>
+                  <p className="line-clamp-2 text-sm font-bold leading-snug text-[var(--hp-text-primary)]">{item.title}</p>
+                  <p className="mt-1 text-xs text-[var(--hp-text-muted)]">{brand.name}</p>
                 </div>
-                <span className="rounded-[8px] bg-[#123b29] px-2 py-1 text-xs font-bold text-[#8ee0aa]">{item.lift}</span>
+                <span className="rounded-[8px] border border-[var(--hp-border)] bg-transparent px-2 py-1 text-xs font-semibold text-[var(--hp-positive)]">{item.lift}</span>
               </li>
             );
           })}
@@ -898,17 +901,17 @@ function RightRail() {
       <RailPanel title="Collections">
         <div className="space-y-3">
           {collections.map((collection) => (
-            <button key={collection.title} type="button" className="w-full rounded-[8px] border border-white/10 bg-[#20242b] p-3 text-left hover:bg-[#272d36]">
+            <button key={collection.title} type="button" className="w-full rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-control)] p-3 text-left hover:bg-[var(--hp-control-hover)]">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-sm font-extrabold text-[#f4f7fb]">{collection.title}</p>
-                  <p className="text-xs text-[#9da8b6]">{collection.count}</p>
+                  <p className="text-sm font-bold text-[var(--hp-text-primary)]">{collection.title}</p>
+                  <p className="text-xs text-[var(--hp-text-muted)]">{collection.count}</p>
                 </div>
                 <span className="size-3 rounded-full" style={{ backgroundColor: collection.accent }} />
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
                 {collection.brandSlugs.map((slug) => (
-                  <span key={slug} className="rounded-[8px] bg-[#14171c] px-2 py-1 text-xs font-semibold text-[#dbe3ed]">
+                  <span key={slug} className="rounded-[8px] border border-[var(--hp-border)] bg-transparent px-2 py-1 text-xs font-medium text-[var(--hp-text-muted)]">
                     {getBrand(slug).name}
                   </span>
                 ))}
@@ -917,12 +920,12 @@ function RightRail() {
           ))}
         </div>
       </RailPanel>
-      <section className="rounded-[8px] border border-white/10 bg-[#0f1115] p-4 text-white">
+      <section className="rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 text-[var(--hp-text-primary)]">
         <div className="flex items-center gap-2">
-          <CheckCircleIcon className="size-5 text-[#8bd28f]" weight="bold" />
+          <CheckCircleIcon className="size-5 text-[var(--hp-positive)]" weight="bold" />
           <h2 className="text-sm font-extrabold">7 day reading streak</h2>
         </div>
-        <p className="mt-3 text-sm leading-6 text-white/72">
+        <p className="mt-3 text-sm leading-6 text-[var(--hp-text-secondary)]">
           Your strongest topics this week are cars, dinner ideas, home projects, and strength training.
         </p>
       </section>
@@ -932,44 +935,52 @@ function RightRail() {
 
 function PersonalizationBand() {
   return (
-    <section className="rounded-[8px] border border-white/10 bg-[#181b20] p-4 shadow-[0_4px_14px_rgba(0,0,0,0.22)]">
+    <section className="rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
       <div className="grid gap-4 2xl:grid-cols-[minmax(0,1fr)_auto] 2xl:items-center">
         <div>
           <div className="mb-2 flex items-center">
-            <p className="text-sm font-bold text-[#aab5c3]">Daily Read</p>
+            <p className="text-sm font-bold text-[var(--hp-text-secondary)]">Daily Read</p>
           </div>
-          <h1 className="max-w-2xl font-headline text-2xl leading-[1.08] text-[#f8fbff] [font-weight:700] md:text-3xl">
+          <h1 className="max-w-2xl font-headline text-2xl leading-[1.08] text-[var(--hp-text-headline)] [font-weight:700] md:text-3xl">
             Your morning feed across every Hearst brand.
           </h1>
         </div>
-        <div className="border-t border-white/10 pt-4 2xl:w-72 2xl:border-l 2xl:border-t-0 2xl:pl-4 2xl:pt-0">
-          <p className="text-sm font-extrabold text-[#7bbcff]">Today&apos;s Brief</p>
-          <p className="mt-1 text-sm font-bold leading-5 text-[#e7eef7]">8 stories in about 5 minutes.</p>
+        <div className="border-t border-[var(--hp-border)] pt-4 2xl:w-72 2xl:border-l 2xl:border-t-0 2xl:pl-4 2xl:pt-0">
+          <p className="text-sm font-bold text-[var(--hp-signal)]">Today&apos;s Brief</p>
+          <p className="mt-1 text-sm font-bold leading-5 text-[var(--hp-text-ui)]">8 stories in about 5 minutes.</p>
           <div className="mt-3 flex flex-wrap gap-1.5">
             {briefTopics.map((topic) => (
-              <span key={topic} className="rounded-[8px] bg-[#232a33] px-2 py-1 text-xs font-bold text-[#cad5e2]">
+              <span key={topic} className="rounded-[8px] border border-[var(--hp-border)] bg-transparent px-2 py-1 text-xs font-medium text-[var(--hp-text-chip)]">
                 {topic}
               </span>
             ))}
           </div>
-          <Button size="sm" className="mt-3 h-10 rounded-[8px] bg-[#2D75B9] text-white hover:bg-[#2465a4]">
+          <Button size="sm" className="mt-3 h-10 rounded-[8px] border border-[var(--hp-action)] bg-[var(--hp-action-soft)] font-semibold text-[var(--hp-action-soft-text)] hover:bg-[var(--hp-action-soft-hover)]">
             Start Reading
           </Button>
         </div>
       </div>
       <div className="mt-5 flex max-w-full gap-2 overflow-x-auto overscroll-x-contain pb-1 [contain:paint]">
-        {interestChips.map((chip, index) => (
-          <button
-            key={chip}
-            type="button"
-            className={cn(
-              "h-9 shrink-0 rounded-[8px] border border-white/10 bg-[#20242b] px-3 text-sm font-bold text-[#dbe3ed]",
-              index === 0 && "border-[#2D75B9] bg-[#2D75B9] text-white",
-            )}
-          >
-            {chip}
-          </button>
-        ))}
+        {interestChips.map((chip, index) => {
+          const isActive = index === 0;
+
+          return (
+            <button
+              key={chip}
+              type="button"
+              aria-pressed={isActive}
+              className={cn(
+                "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-[8px] px-3 text-sm transition focus-visible:bg-[var(--hp-friendly-accent)] focus-visible:text-[var(--hp-friendly-accent-text)] focus-visible:outline-none",
+                isActive
+                  ? "bg-[var(--hp-friendly-accent)] font-bold text-[var(--hp-friendly-accent-text)] hover:bg-[var(--hp-friendly-accent-hover)]"
+                  : "bg-transparent font-medium text-[var(--hp-text-secondary)] hover:bg-[var(--hp-control)] hover:text-[var(--hp-text-primary)]",
+              )}
+            >
+              {isActive && <CheckCircleIcon className="size-3.5" weight="fill" />}
+              {chip}
+            </button>
+          );
+        })}
       </div>
     </section>
   );
@@ -1016,8 +1027,10 @@ function ArticleModal({
 
   return (
     <div
+      data-mode="dark"
+      style={hearstPlusDarkVars}
       className={cn(
-        "fixed inset-0 z-50 bg-[#0d1014] hearst-plus-article-backdrop",
+        "hearst-plus-theme fixed inset-0 z-50 bg-[var(--hp-background)] hearst-plus-article-backdrop",
         isClosing && "hearst-plus-article-backdrop-out",
       )}
       role="presentation"
@@ -1028,7 +1041,7 @@ function ArticleModal({
         aria-labelledby={headingId}
         onKeyDown={handleDialogKeyDown}
         className={cn(
-          "fixed inset-0 overflow-y-auto bg-[#0d1014] text-white hearst-plus-article-dialog",
+          "fixed inset-0 overflow-y-auto bg-[var(--hp-background)] text-white hearst-plus-article-dialog",
           isClosing && "hearst-plus-article-dialog-out",
         )}
       >
@@ -1036,13 +1049,13 @@ function ArticleModal({
           ref={closeButtonRef}
           type="button"
           aria-label="Close article and return to Hearst+ home"
-          className="fixed right-4 top-4 z-30 flex size-14 items-center justify-center rounded-full border border-white/10 bg-[#20242b] text-white shadow-[0_8px_20px_rgba(0,0,0,0.3)] transition hover:bg-[#2a3038] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5ca8ff] md:right-6 md:size-16"
+          className="fixed right-4 top-4 z-30 flex size-14 items-center justify-center rounded-full border border-[var(--hp-border)] bg-[var(--hp-control)] text-white shadow-[var(--hp-shadow-modal)] transition hover:bg-[var(--hp-control-hover)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--hp-focus)] md:right-6 md:size-16"
           onClick={onClose}
         >
           <XIcon className="size-8" weight="bold" />
         </button>
 
-        <div className="sticky top-0 z-20 border-b border-white/10 bg-[#111418]/96 pr-20 backdrop-blur">
+        <div className="sticky top-0 z-20 border-b border-[var(--hp-border)] bg-[var(--hp-nav-translucent)] pr-20 backdrop-blur">
           <div className="mx-auto flex min-h-16 max-w-[1180px] items-center gap-3 overflow-hidden px-5 text-sm text-white/64 md:px-8 md:text-base">
             <span className="shrink-0 font-extrabold text-white">Top Stories:</span>
             <div className="flex min-w-0 items-center gap-3 overflow-hidden whitespace-nowrap">
@@ -1064,13 +1077,13 @@ function ArticleModal({
                 <span className="text-lg font-extrabold text-white">{brand.name}</span>
                 <Button
                   variant="outline"
-                  className="h-10 rounded-full border-[#2D75B9] bg-transparent px-5 text-sm font-extrabold text-[#7bbcff] hover:bg-[#12395f] hover:text-white"
+                  className="h-10 rounded-full border-[var(--hp-friendly-accent-border)] bg-transparent px-5 text-sm font-extrabold text-[var(--hp-friendly-accent-text)] hover:bg-[var(--hp-friendly-accent)] hover:text-[var(--hp-friendly-accent-text)]"
                 >
                   Follow
                 </Button>
               </div>
 
-              <h1 id={headingId} className="max-w-3xl text-pretty font-headline text-4xl leading-[1.03] text-[#f8fbff] [font-weight:700] md:text-5xl">
+              <h1 id={headingId} className="max-w-3xl text-pretty font-headline text-4xl leading-[1.03] text-[var(--hp-text-headline)] [font-weight:700] md:text-5xl">
                 {item.title}
               </h1>
 
@@ -1083,20 +1096,20 @@ function ArticleModal({
               </div>
 
               <div className="mt-7 flex flex-wrap items-center gap-3">
-                <Button className="h-12 rounded-full bg-[#2D75B9] px-5 font-extrabold text-white hover:bg-[#2465a4]">
+                <Button className="h-12 rounded-full bg-[var(--hp-action)] px-5 font-extrabold text-[var(--hp-action-text)] hover:bg-[var(--hp-action-hover)]">
                   <BookmarkSimpleIcon className="size-5" weight="bold" />
                   Save Story
                 </Button>
                 <button
                   type="button"
                   aria-label={`Share ${item.title}`}
-                  className="flex size-12 items-center justify-center rounded-full border border-white/20 text-white transition hover:bg-white/8 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  className="flex size-12 items-center justify-center rounded-full border border-[var(--hp-border-strong)] text-white transition hover:bg-white/8 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                 >
                   <ShareNetworkIcon className="size-5" weight="bold" />
                 </button>
                 <Button
                   variant="outline"
-                  className="h-12 rounded-full border-white/18 bg-transparent px-5 font-extrabold text-white hover:bg-white/8 hover:text-white"
+                  className="h-12 rounded-full border-[var(--hp-border)] bg-transparent px-5 font-extrabold text-white hover:bg-white/8 hover:text-white"
                 >
                   Add to Collection
                 </Button>
@@ -1110,7 +1123,7 @@ function ArticleModal({
                 <div className="absolute inset-0 bg-gradient-to-t from-black/42 via-black/0 to-black/0" />
                 <Badge
                   variant="secondary"
-                  className="absolute left-3 top-3 h-8 rounded-[8px] bg-white/94 px-3 text-xs font-extrabold text-[#222222]"
+                  className="absolute left-3 top-3 h-8 rounded-[8px] bg-white/94 px-3 text-xs font-extrabold text-[var(--hp-ink-on-light)]"
                 >
                   <Icon className="size-3.5" weight="bold" />
                   {item.topic}
@@ -1135,21 +1148,21 @@ function ArticleModal({
             </div>
 
             <aside className="hidden space-y-5 lg:sticky lg:top-24 lg:block">
-              <section className="rounded-[8px] border border-white/10 bg-[#181b20] p-5">
+              <section className="rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-5">
                 <h2 className="text-sm font-extrabold text-white">In Your Brief</h2>
                 <p className="mt-3 text-sm leading-6 text-white/66">
                   This story sits with food, wellness, home, and cars in today&apos;s 5-minute read.
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {briefTopics.map((topic) => (
-                    <span key={topic} className="rounded-full bg-[#232a33] px-3 py-1.5 text-xs font-bold text-[#cad5e2]">
+                    <span key={topic} className="rounded-full bg-[var(--hp-chip)] px-3 py-1.5 text-xs font-bold text-[var(--hp-text-chip)]">
                       {topic}
                     </span>
                   ))}
                 </div>
               </section>
 
-              <section className="rounded-[8px] border border-white/10 bg-[#181b20] p-5">
+              <section className="rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-5">
                 <h2 className="text-sm font-extrabold text-white">Related Reads</h2>
                 <div className="mt-4 space-y-4">
                   {relatedItems
@@ -1274,22 +1287,24 @@ export function HearstPlusApp() {
 
   return (
     <main
-      className="min-h-screen overflow-x-hidden bg-[#0d1014] font-brand text-[#f4f7fb]"
+      data-mode="dark"
+      className="hearst-plus-theme min-h-screen overflow-x-clip bg-[var(--hp-background)] text-[var(--hp-text-primary)] [font-family:var(--hp-font-ui)]"
       style={
         {
-          "--font-headline": "var(--font-hearst-plus-headline)",
-          "--font-headline-weight": "700",
+          ...hearstPlusDarkVars,
+          "--font-headline": "var(--hp-font-headline)",
+          "--font-headline-weight": "var(--hp-font-headline-weight)",
         } as React.CSSProperties
       }
     >
       <div
-        className="mx-auto min-h-screen w-full max-w-[1280px]"
+        className="min-h-screen w-full"
         aria-hidden={selectedStory ? true : undefined}
         inert={selectedStory ? true : undefined}
       >
-        <div className="min-h-screen max-w-full overflow-hidden bg-[#0d1014]">
-          <AppHeader />
-          <BrandUniverseStrip />
+        <AppHeader />
+        <BrandUniverseStrip />
+        <div className="mx-auto min-h-screen w-full max-w-[1280px] bg-[var(--hp-background)]">
           <div className="grid gap-4 px-4 py-4 md:px-6 lg:grid-cols-[260px_minmax(0,1fr)_330px] lg:py-6">
             <LeftRail />
             <section className="min-w-0 space-y-4">

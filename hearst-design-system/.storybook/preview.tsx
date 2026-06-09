@@ -1,10 +1,9 @@
-import React from "react";
 import type { Preview } from "@storybook/react";
-import { brands } from "../src/lib/brands";
+import { themeOptions } from "../src/lib/theme-options";
 import { ThemeDecorator } from "./ThemeDecorator";
 import "../src/app/globals.css";
 
-const brandOptions = brands.reduce(
+const brandOptions = themeOptions.reduce(
   (acc, b) => ({ ...acc, [b.name]: b.slug }),
   {} as Record<string, string>
 );
@@ -48,6 +47,8 @@ const preview: Preview = {
           "QA and Jira",
           "Figma Integration",
           "Pencil Integration",
+          "Apps",
+          ["Hearst Plus"],
           "Foundation",
           ["Grid System", "Colors", "Typography", "Tokens"],
           "Docs",
