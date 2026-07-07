@@ -11,8 +11,8 @@ const newsreader = Newsreader({
 });
 
 export const metadata: Metadata = {
-  title: "Hearst+",
-  description: "A cross-brand daily destination prototype for Hearst content.",
+  title: "AUTOS",
+  description: "A personalized daily destination prototype for Hearst auto brands.",
 };
 
 export default function HearstPlusPage() {

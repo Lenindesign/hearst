@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { BarbellIcon } from "@phosphor-icons/react/dist/csr/Barbell";
 import { BellIcon } from "@phosphor-icons/react/dist/csr/Bell";
 import { BookmarkSimpleIcon } from "@phosphor-icons/react/dist/csr/BookmarkSimple";
 import { CalendarBlankIcon } from "@phosphor-icons/react/dist/csr/CalendarBlank";
@@ -12,8 +11,6 @@ import { CompassIcon } from "@phosphor-icons/react/dist/csr/Compass";
 import { DotsThreeIcon } from "@phosphor-icons/react/dist/csr/DotsThree";
 import { EyeSlashIcon } from "@phosphor-icons/react/dist/csr/EyeSlash";
 import { FolderPlusIcon } from "@phosphor-icons/react/dist/csr/FolderPlus";
-import { ForkKnifeIcon } from "@phosphor-icons/react/dist/csr/ForkKnife";
-import { HouseIcon } from "@phosphor-icons/react/dist/csr/House";
 import { ListIcon } from "@phosphor-icons/react/dist/csr/List";
 import { MagnifyingGlassIcon } from "@phosphor-icons/react/dist/csr/MagnifyingGlass";
 import { NewspaperIcon } from "@phosphor-icons/react/dist/csr/Newspaper";
@@ -26,7 +23,7 @@ import { XIcon } from "@phosphor-icons/react/dist/csr/X";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { brands } from "@/lib/brands";
-import { hearstPlusDarkVars } from "@/lib/hearst-plus-theme";
+import { hearstPlusLightVars } from "@/lib/hearst-plus-theme";
 import { brandLogos } from "@/lib/logos";
 import { cn } from "@/lib/utils";
 import { BrandLogo } from "./brand-logo";
@@ -75,211 +72,232 @@ function img(id: string, query = "resize=900:*") {
   return `${H}${id}?${query}`;
 }
 
+type AppBrand = {
+  slug: string;
+  name: string;
+  accent: string;
+  secondary: string;
+  logo?: string;
+  mark: string;
+};
+
+const autosBrands: AppBrand[] = [
+  { slug: "autoweek", name: "Autoweek", accent: "#ffc84e", secondary: "#03112b", logo: brandLogos["autoweek"], mark: "AW" },
+  { slug: "motortrend", name: "MotorTrend", accent: "#BDDDFC", secondary: "#384959", mark: "MT" },
+  { slug: "car-and-driver", name: "Car and Driver", accent: "#0061af", secondary: "#d2232a", logo: brandLogos["car-and-driver"], mark: "C/D" },
+  { slug: "road-and-track", name: "Road & Track", accent: "#BDDDFC", secondary: "#384959", logo: brandLogos["road-and-track"], mark: "R&T" },
+  { slug: "hot-rod", name: "Hot Rod", accent: "#BDDDFC", secondary: "#384959", mark: "HR" },
+];
+
+const autosBrandBySlug = new Map(autosBrands.map((brand) => [brand.slug, brand]));
+
 const feedItems: FeedItem[] = [
   {
-    id: "dinner-reset",
-    brandSlug: "delish",
-    topic: "Dinner Ideas",
-    title: "A warm-weather dinner plan that does not feel like meal prep",
-    summary: "Fast recipes, one-pan shortcuts, and a smart grocery path for the first patio-weather week.",
+    id: "f1-aero",
+    brandSlug: "autoweek",
+    topic: "Racing",
+    title: "Why McLaren's 2026 car could rewrite the rules of F1 aero",
+    summary: "New aero rules, a cleaner sidepod idea, and the early testing signals that matter.",
     body: [
-      "Start with the main dish, then let the rest of the week work around it. A glossy batch of grilled chicken gives you dinner on the first night, lunch over greens the next day, and enough flavor to anchor rice bowls without tasting repeated.",
-      "The supporting pieces stay simple: lime wedges, crisp cucumbers, a fast corn salad, and one sauce that can move from plate to sandwich to midnight snack. The plan works because each part is useful on its own.",
-      "By the end of the shop, the list is short and the meals still feel loose. That is the trick for summer cooking: prepare enough to make dinner easy, but not so much that the week starts to feel scheduled.",
-      "Cook the chicken once, while the grill is already hot, and save the smaller pieces for chopped salads or tacos. If the weather turns, the same marinade works under a broiler or in a cast-iron pan.",
-      "For sides, choose ingredients that can survive a few days without getting tired. Corn, cabbage, cucumbers, herbs, and sturdy greens hold up better than delicate lettuce, and they give every plate a different texture.",
-      "The grocery list stays deliberately narrow: protein, one crunchy vegetable, one grain or tortilla, fresh citrus, herbs, and one creamy element. That gives you enough range for dinner without sending you back to the store midweek.",
-      "The last night is the easiest one. Pull the remaining chicken, warm it with a spoonful of sauce, and serve it over rice with whatever crisp vegetables are left. It feels like a new dinner because the assembly changes, not because the prep starts over.",
+      "The 2026 Formula 1 regulations are less about one clever wing and more about how each surface works with the floor. That is why McLaren's early concept is getting attention: the car looks simple from the outside, but its sidepod geometry is doing more work than it first appears.",
+      "Testing pace can mislead, so the useful clues are steadier. Long-run tire wear, sector balance, and how quickly the car responds to setup changes tell a better story than one headline lap.",
+      "The driver lineup matters here, too. A car that is predictable over a race stint gives engineers cleaner feedback, and McLaren has two drivers who can describe the same problem from different angles.",
+      "The real question is whether the concept has development room. If the team can add downforce without reviving old drag penalties, the car could become more than a strong launch spec.",
     ],
-    image: img("grilled-coca-cola-chicken-index-web-622-jg-del069925-687fdcd9ae465.jpg", "crop=1xw:0.78xh;center,top&resize=1200:*"),
-    readTime: "5 min",
-    signal: "Because you saved summer recipes",
-    tags: ["Recipes", "Weeknight", "Summer"],
+    image: img("251217-01-00-z-27my-01-696149a83bf60.jpg", "crop=1xw:0.68xh;center,top&resize=1200:*"),
+    readTime: "6 min",
+    signal: "Because you follow F1 and racing development",
+    tags: ["F1", "Aero", "Racing"],
     variant: "lead",
   },
   {
-    id: "wellness-strength",
-    brandSlug: "mens-health",
-    topic: "Fitness",
-    title: "The strength plan that fits around a full calendar",
-    summary: "Three short sessions, two recovery cues, and enough progression to keep the habit alive.",
+    id: "hybrid-suvs",
+    brandSlug: "motortrend",
+    topic: "SUVs",
+    title: "Hybrid SUVs people are comparing before summer trips",
+    summary: "The short list for shoppers balancing range, room, fuel economy, and real highway comfort.",
     body: [
-      "The plan starts with the constraint most people actually have: time. Three focused lifts a week, each built around one main movement, can still move strength forward when the sets are honest and the recovery is planned.",
-      "The work alternates pressure and relief. Push hard on the days with sleep behind you, cut volume when the week is crowded, and keep the habit intact instead of trying to rescue missed workouts with one punishing session.",
-      "Progress shows up in smaller signals before it shows up in the mirror: cleaner reps, steadier breathing, and the moment a weight that used to feel heavy becomes routine.",
+      "The strongest hybrid SUV argument is not only fuel economy. It is the way the powertrain changes a normal week: fewer stops, quieter school runs, and enough torque that a loaded cabin does not feel like a penalty.",
+      "The comparison starts with the daily details that matter after the test drive. Cargo height, second-row access, phone pairing, highway noise, and real-world mpg separate the useful options from the spec-sheet winners.",
+      "For longer trips, the best models make their efficiency feel invisible. They settle down at speed, keep driver assists from getting fussy, and leave enough range in reserve that the route does not revolve around the next stop.",
+      "The value pick is the one that keeps those advantages after incentives, insurance, and fuel are added to the monthly picture.",
     ],
-    image: img("cthfwkzv-6909141a38163.jpg", "crop=1xw:0.56xh;0,0.34xh&resize=1000:*"),
+    image: img("76471936-3e6b-463e-9551-cb792858ec07.jpg", "crop=1xw:0.63xh;center,top&resize=1000:*"),
     readTime: "7 min",
-    signal: "New in your wellness graph",
-    tags: ["Strength", "Training"],
+    signal: "Because you saved hybrid buying guides",
+    tags: ["Hybrids", "Shopping", "SUVs"],
   },
   {
-    id: "car-brief",
+    id: "small-car-comparison",
     brandSlug: "car-and-driver",
-    topic: "Cars",
+    topic: "Buying Guides",
     title: "The small-car comparison worth reading before shopping",
     summary: "A route-tested look at price, comfort, fuel economy, and the cars that still feel sharp.",
     body: [
       "Small cars still make the clearest argument on a normal road. They ask less of the driver in traffic, cost less to run, and reveal quickly which cabin details matter after the showroom lights are gone.",
       "The comparison starts with the basics: sightlines, seat comfort, highway noise, real fuel economy, and whether the infotainment gets easier or more annoying on the third day.",
       "The winner is not only the cheapest or the quickest. It is the car that keeps the everyday compromises low while still giving the driver a reason to take the long way home.",
+      "That balance matters as prices keep stretching upward. A good compact still has to feel honest: no hidden packaging penalty, no bargain-bin controls, and no drivetrain that sounds tired before the first oil change.",
     ],
-    image: img("76471936-3e6b-463e-9551-cb792858ec07.jpg", "crop=1xw:0.63xh;center,top&resize=1000:*"),
+    image: img("2025-gmc-yukon-denali-102-6852cef15027e.jpg", "crop=1xw:0.62xh;center,top&resize=1000:*"),
     readTime: "9 min",
-    signal: "You follow hybrid and compact cars",
-    tags: ["Shopping", "Hybrids"],
+    signal: "Because you follow compact and hybrid cars",
+    tags: ["Shopping", "Hybrids", "Compacts"],
   },
   {
-    id: "home-tour",
-    brandSlug: "house-beautiful",
-    topic: "Home",
-    title: "A hosting-ready entry that makes antiques feel personal",
-    summary: "A room-by-room read with ideas for warmth, seating, and visual rhythm.",
+    id: "gt3-rs-ring",
+    brandSlug: "road-and-track",
+    topic: "Performance",
+    title: "I drove the new Porsche 911 GT3 RS on the Nurburgring. It changed me.",
+    summary: "Why the newest GT3 RS feels less like a road car and more like a track tool with plates.",
     body: [
-      "The entry works because it does not treat antiques as display pieces. The table has a job, the seating invites a pause, and the objects feel collected through use rather than arranged for a photograph.",
-      "Texture carries most of the warmth: old wood against crisp walls, brass near soft upholstery, and enough negative space to keep the room from turning into a showroom.",
-      "The lesson is practical. Start with one substantial piece, give it breathing room, then add smaller objects only when they change how the room is used.",
+      "A fast lap usually rewards aggression. The GT3 RS rewards trust. The front end loads cleanly, the rear wing changes the braking zone, and the car keeps asking for a little more speed than your hands initially believe is possible.",
+      "The numbers explain part of it: more power, more aero, sharper damping. But the real difference is how all of that arrives at once, with fewer of the little delays that make a road car feel like a compromise on a circuit.",
+      "On the Nurburgring, that confidence compounds. Every kerb, compression, and blind entry becomes less about survival and more about precision.",
+      "The car is still street legal, technically. But its center of gravity is emotional as much as mechanical. It belongs where the stakes are visible.",
     ],
-    image: img("hbx030124jeremiahbrent-002-65f1e164f2a25.jpg", "crop=1xw:0.72xh;0,0.20xh&resize=1000:*"),
-    readTime: "6 min",
-    signal: "Related to your Kitchen Remodel collection",
-    tags: ["House Tours", "Decor"],
+    image: img("2024-nissan-z-nismo-149-668d5ce36ae38.jpg", "crop=1xw:0.62xh;center,top&resize=1000:*"),
+    readTime: "10 min",
+    signal: "Because you read performance reviews",
+    tags: ["Performance", "Track", "Porsche"],
   },
   {
-    id: "culture-rocky",
-    brandSlug: "esquire",
-    topic: "Culture",
-    title: "A profile that treats style as a point of view",
-    summary: "Not a celebrity recap. A read on image, persona, and the choices behind the frame.",
+    id: "budget-v8-build",
+    brandSlug: "hot-rod",
+    topic: "Project Cars",
+    title: "The budget V8 build that still makes sense",
+    summary: "Where to spend, where to save, and how to avoid turning a weekend build into a money pit.",
     body: [
-      "The profile is strongest when it treats style as evidence. A jacket, a haircut, a photograph, and a pause in an interview can all point to the same question: what does a public figure choose to reveal?",
-      "Rather than ranking looks, the piece follows the decisions around them. The clothes become a way to read confidence, performance, privacy, and the pressure of being watched.",
-      "That approach keeps the story from becoming a recap. It gives the reader a reason to stay with the person, not just the image.",
+      "A smart V8 build starts with the boring parts. Cooling, wiring, brakes, mounts, and fuel delivery decide whether the car becomes something you drive or something you keep explaining in the driveway.",
+      "The best money goes toward reliability first. A clean harness, a known-good transmission, and a cooling package with headroom will make more difference than chasing a dyno number that only appears once.",
+      "There is still room for personality. Exhaust, wheels, stance, and interior details give the car its voice, but those choices work better when the foundation is not fighting back.",
+      "The build that makes sense is the one with a finished first season. Drive it, fix what shows up, then decide how much more power the car actually wants.",
     ],
-    image: img("index-69753a4e634e9.jpg", "crop=0.996xw:1xh;center,top&resize=1000:*"),
-    readTime: "11 min",
-    signal: "Your weekend long-read pick",
-    tags: ["Profiles", "Style"],
-  },
-  {
-    id: "lab-tested",
-    brandSlug: "good-housekeeping",
-    topic: "Home Lab",
-    title: "The beauty tool worth buying once, not twice",
-    summary: "A scan-friendly lab note with what worked, what overheated, and what lasted.",
-    body: [
-      "A useful test starts after the first impression. The tool has to feel good in the hand, hold heat evenly, and survive the kind of rushed morning that makes bad controls obvious.",
-      "The lab notes favor repeatable details: cord length, surface temperature, shutoff timing, attachment fit, and whether the result holds after a few hours outside the bathroom mirror.",
-      "The best pick is not the flashiest. It is the one that performs consistently enough that buying it once feels like the point.",
-    ],
-    image: img("be51be81-ae88-4eec-913f-37028692ca0a.png", "crop=1.00xw:0.835xh;0,0.0759xh&resize=1000:*"),
-    readTime: "4 min",
-    signal: "Matched to your shopping saves",
-    tags: ["Tested", "Shopping"],
-  },
-  {
-    id: "mechanics-fusion",
-    brandSlug: "popular-mechanics",
-    topic: "Technology",
-    title: "The fusion story to understand before it becomes a headline",
-    summary: "A plain-language explainer on the science, the funding, and what still has to work.",
-    body: [
-      "The promise of fusion is easy to overstate and too important to ignore. The useful question is not whether it sounds futuristic, but which parts of the engineering are moving from theory into repeatable tests.",
-      "The explainer follows the chain from plasma control to materials, then to the money behind the newest facilities. Each step has a different risk, and each one changes the timeline readers usually hear.",
-      "Understanding those gaps makes the next breakthrough easier to judge. It also keeps the story grounded when the headlines get louder.",
-    ],
-    image: img("3d-rendering-of-core-of-a-fusion-reactor-royalty-free-image-1771366366.pjpeg", "crop=1xw:0.75xh;center,top&resize=1000:*"),
+    image: img("311612c5-94a7-4874-b788-f60d39a244c0.jpg", "crop=1xw:0.64xh;center,top&resize=1000:*"),
     readTime: "8 min",
-    signal: "Because you follow future tech",
-    tags: ["Science", "Energy"],
+    signal: "Related to your Project Builds collection",
+    tags: ["V8", "Project Cars", "Classics"],
   },
   {
-    id: "fashion-front-row",
-    brandSlug: "harpers-bazaar",
-    topic: "Fashion",
-    title: "A runway review that reads like a letter of intent",
-    summary: "The collection, the city, the references, and why the first look mattered.",
+    id: "indycar-season",
+    brandSlug: "autoweek",
+    topic: "Motorsport",
+    title: "The races that will define this IndyCar season",
+    summary: "The calendar pressure points, oval questions, and driver pairings worth watching first.",
     body: [
-      "The first look sets the terms. Before the notes and the after-party photos, it tells the room what kind of season the designer wants to make: severe, romantic, practical, or slightly unresolved.",
-      "This review follows the collection through fabric, proportion, and casting rather than treating the runway as a mood board. The city matters too, because the clothes borrow energy from where they are shown.",
-      "By the final exit, the question is less about which pieces will sell and more about which ideas will travel.",
+      "Every IndyCar season has a rhythm, and the first clue is where teams have to compromise. The early road courses reward qualifying precision, while the first oval resets the field around confidence, traffic, and pit timing.",
+      "The contenders are familiar, but the pressure is different. A stronger rookie class, tighter engineering margins, and more aggressive strategy calls are making the middle of the grid harder to escape.",
+      "The races that matter most are the ones that expose balance. If a team can carry pace across street circuits, road courses, and ovals, it has something more durable than a fast weekend.",
     ],
-    image: img("cc352106-e4fc-4833-b3d2-f7a549da0522.gif", "crop=1xw:0.888888888889xh;center,top&resize=1000:*"),
+    image: img("88841361-054e-412e-a300-a43fec380de0.jpg", "crop=1xw:0.62xh;center,top&resize=1000:*"),
+    readTime: "5 min",
+    signal: "Trending among Autoweek readers",
+    tags: ["IndyCar", "Racing", "Motorsport"],
+  },
+  {
+    id: "tow-test",
+    brandSlug: "motortrend",
+    topic: "Trucks",
+    title: "The truck tow test that separates spec sheets from reality",
+    summary: "Payload, braking, cooling, and the cabin details that matter after the grade gets steep.",
+    body: [
+      "Tow ratings are a starting point, not a verdict. The real test begins when the route adds heat, grade, crosswinds, and enough time behind the wheel for small cabin decisions to become obvious.",
+      "Cooling stability matters as much as power. A truck that pulls hard for ten minutes and then starts managing itself down is telling you something the brochure will not.",
+      "The best performers keep the driver out of the math. They brake predictably, hold mirrors steady, and make the trailer feel like a known quantity instead of a constant negotiation.",
+    ],
+    image: img("2025-gmc-yukon-denali-102-6852cef15027e.jpg", "crop=1xw:0.62xh;center,top&resize=1000:*"),
+    readTime: "9 min",
+    signal: "Because you follow trucks and utility testing",
+    tags: ["Trucks", "Testing", "Towing"],
+  },
+  {
+    id: "manual-revival",
+    brandSlug: "road-and-track",
+    topic: "Enthusiast Cars",
+    title: "Why the manual transmission keeps finding new believers",
+    summary: "Not nostalgia alone. A look at control, value, and the cars making three pedals feel current.",
+    body: [
+      "The manual transmission survives because it changes the job of driving. It slows the decision loop just enough to make every on-ramp, back road, and downshift feel chosen.",
+      "That does not make every manual car good. The best ones have clear gates, sensible gearing, and engines that reward timing instead of punishing anything less than perfection.",
+      "The revival is strongest where the transmission changes the car's identity. A manual compact, coupe, or weekend car can feel more expensive than it is because the driver has more to do.",
+    ],
+    image: img("311612c5-94a7-4874-b788-f60d39a244c0.jpg", "crop=1xw:0.64xh;center,top&resize=1000:*"),
     readTime: "6 min",
-    signal: "Trending with fashion readers",
-    tags: ["Runway", "Los Angeles"],
+    signal: "Readers of Road & Track also read",
+    tags: ["Manuals", "Driving", "Enthusiast Cars"],
   },
 ];
 
 const dailyBrief = [
-  { icon: CalendarBlankIcon, label: "Morning Brief", value: "8 stories in 5 minutes" },
-  { icon: SparkleIcon, label: "Best Stories You Missed", value: "3 new since last night" },
-  { icon: BookmarkSimpleIcon, label: "Continue Reading", value: "2 saved stories waiting" },
+  { icon: CalendarBlankIcon, label: "Morning Brief", value: "8 auto stories in 5 minutes" },
+  { icon: SparkleIcon, label: "Best Drives You Missed", value: "3 new since last night" },
+  { icon: BookmarkSimpleIcon, label: "Continue Reading", value: "2 saved reviews waiting" },
 ];
 
 const trendItems = [
-  { brandSlug: "popular-mechanics", title: "What to know about home battery backup", lift: "+41%" },
-  { brandSlug: "delish", title: "Fast dinners for the first heat wave", lift: "+33%" },
-  { brandSlug: "car-and-driver", title: "Hybrid SUVs people are comparing now", lift: "+28%" },
-  { brandSlug: "cosmopolitan", title: "The pop culture interview readers keep sharing", lift: "+21%" },
-  { brandSlug: "good-housekeeping", title: "Small laundry room fixes that work", lift: "+18%" },
+  { brandSlug: "autoweek", title: "McLaren's new F1 aero idea is getting paddock attention", lift: "+41%" },
+  { brandSlug: "motortrend", title: "Hybrid SUVs people are comparing before summer trips", lift: "+33%" },
+  { brandSlug: "car-and-driver", title: "The compact-car comparison shoppers keep saving", lift: "+28%" },
+  { brandSlug: "road-and-track", title: "The GT3 RS drive performance readers are sharing", lift: "+21%" },
+  { brandSlug: "hot-rod", title: "A budget V8 build list that avoids the money pit", lift: "+18%" },
 ];
 
 const collections: Collection[] = [
-  { title: "Healthy Meals", count: "18 saves", brandSlugs: ["delish", "good-housekeeping", "womans-day"], accent: "var(--hp-food)" },
-  { title: "Kitchen Remodel", count: "12 saves", brandSlugs: ["house-beautiful", "veranda", "elle-decor"], accent: "var(--hp-home)" },
-  { title: "Weekend Drive", count: "9 saves", brandSlugs: ["car-and-driver", "road-and-track", "autoweek"], accent: "var(--hp-cars)" },
+  { title: "EV Shortlist", count: "18 saves", brandSlugs: ["motortrend", "car-and-driver", "autoweek"], accent: "var(--hp-primary)" },
+  { title: "Track Days", count: "12 saves", brandSlugs: ["road-and-track", "autoweek", "car-and-driver"], accent: "var(--hp-primary)" },
+  { title: "Project Builds", count: "9 saves", brandSlugs: ["hot-rod", "road-and-track", "motortrend"], accent: "var(--hp-primary)" },
 ];
 
 const readerProfile: ReaderProfile = {
-  followedTopics: ["Dinner Ideas", "Cars", "Home", "Fitness", "Technology"],
-  followedBrands: ["delish", "mens-health", "car-and-driver", "house-beautiful", "popular-mechanics"],
-  savedTags: ["Recipes", "Weeknight", "Summer", "Hybrids", "Shopping", "House Tours"],
-  savedCollections: ["Healthy Meals", "Kitchen Remodel", "Weekend Drive"],
-  recentlyReadIds: ["fashion-front-row"],
+  followedTopics: ["EVs", "Buying Guides", "Performance", "Racing", "Project Cars"],
+  followedBrands: ["autoweek", "motortrend", "car-and-driver", "road-and-track", "hot-rod"],
+  savedTags: ["Hybrids", "Shopping", "F1", "Performance", "Trucks", "Classics"],
+  savedCollections: ["EV Shortlist", "Track Days", "Project Builds"],
+  recentlyReadIds: [],
   mutedTopics: [],
   timeOfDay: "morning",
 };
 
 const topicInterestMap: Record<string, string[]> = {
-  Cars: ["Cars", "Hybrids", "Shopping", "Weekend Drive"],
-  "Dinner Ideas": ["Dinner Ideas", "Recipes", "Weeknight", "Summer", "Healthy Meals"],
-  Fitness: ["Fitness", "Strength", "Training", "Wellness"],
-  Home: ["Home", "Home Lab", "House Tours", "Decor", "Kitchen Remodel"],
-  Technology: ["Technology", "Science", "Energy", "Popular Mechanics"],
-  Style: ["Fashion", "Style", "Runway"],
+  "For You": ["F1", "Hybrids", "Performance", "Shopping", "Project Cars", "Trucks"],
+  EVs: ["EVs", "Hybrids", "Shopping", "EV Shortlist", "SUVs"],
+  SUVs: ["SUVs", "Hybrids", "Shopping"],
+  "Buying Guides": ["Buying Guides", "Shopping", "Compacts", "SUVs", "Trucks"],
+  Performance: ["Performance", "Track", "Porsche", "Driving", "Enthusiast Cars"],
+  Racing: ["Racing", "F1", "IndyCar", "Motorsport", "Aero"],
+  "Project Cars": ["Project Cars", "V8", "Classics", "Project Builds"],
+  Trucks: ["Trucks", "Testing", "Towing"],
 };
 
 const collectionInterestMap: Record<string, string[]> = {
-  "Healthy Meals": ["Dinner Ideas", "Recipes", "Weeknight", "Summer", "Food"],
-  "Kitchen Remodel": ["Home", "House Tours", "Decor", "Home Lab"],
-  "Weekend Drive": ["Cars", "Hybrids", "Shopping"],
+  "EV Shortlist": ["EVs", "Hybrids", "Shopping", "SUVs"],
+  "Track Days": ["Performance", "Track", "Racing", "Porsche"],
+  "Project Builds": ["Project Cars", "V8", "Classics", "Trucks"],
 };
 
 const trendLiftByFeedId: Record<string, number> = {
-  "dinner-reset": 33,
-  "wellness-strength": 16,
-  "car-brief": 28,
-  "home-tour": 22,
-  "culture-rocky": 21,
-  "lab-tested": 18,
-  "mechanics-fusion": 41,
-  "fashion-front-row": 14,
+  "f1-aero": 41,
+  "hybrid-suvs": 33,
+  "small-car-comparison": 28,
+  "gt3-rs-ring": 21,
+  "budget-v8-build": 18,
+  "indycar-season": 24,
+  "tow-test": 17,
+  "manual-revival": 16,
 };
 
 const interestChips = [
   "For You",
-  "Dinner Ideas",
-  "Cars",
-  "Home Projects",
-  "Fitness",
-  "Style",
-  "Technology",
-  "Family",
-  "Celebrity",
+  "EVs",
+  "SUVs",
+  "Buying Guides",
+  "Performance",
+  "Racing",
+  "Project Cars",
+  "Trucks",
 ];
 
-const briefTopics = ["Food", "Home", "Wellness", "Cars"];
+const briefTopics = ["EVs", "Buying", "Racing", "Performance"];
 
 const quickActions = [
   { icon: CompassIcon, label: "Tune Feed" },
@@ -288,31 +306,21 @@ const quickActions = [
 ];
 
 const categoryIcons: Record<string, React.ElementType> = {
-  Cars: CarIcon,
-  Fitness: BarbellIcon,
-  "Dinner Ideas": ForkKnifeIcon,
-  Home: HouseIcon,
-  Technology: WrenchIcon,
-  Culture: NewspaperIcon,
+  "Buying Guides": CarIcon,
+  "Enthusiast Cars": CarIcon,
+  Motorsport: CarIcon,
+  "Project Cars": WrenchIcon,
+  Performance: CarIcon,
+  Racing: CarIcon,
+  SUVs: CarIcon,
+  Trucks: CarIcon,
 };
 
 const communityAvatarLogos: Record<string, string> = {
-  "bicycling": "/logos/community-avatars/bicycling.svg",
-  "delish": "/logos/community-avatars/delish.jpg",
-  "esquire": "/logos/community-avatars/esquire.svg",
-  "mens-health": "/logos/community-avatars/mens-health.svg",
-  "popular-mechanics": "/logos/community-avatars/popular-mechanics.svg",
   "road-and-track": "/logos/community-avatars/road-and-track.svg",
 };
 
-const brandUniverse = Object.keys(brandLogos).map((slug) => {
-  const brand = brands.find((item) => item.slug === slug);
-  return {
-    slug,
-    name: brand?.name ?? titleize(slug),
-    accent: brand?.colors["1"] ?? "#222222",
-  };
-});
+const brandUniverse = autosBrands;
 
 function titleize(slug: string) {
   return slug
@@ -322,11 +330,21 @@ function titleize(slug: string) {
 }
 
 function getBrand(slug: string) {
+  const autosBrand = autosBrandBySlug.get(slug);
+  if (autosBrand) return autosBrand;
+
   const brand = brands.find((item) => item.slug === slug);
   return {
+    slug,
     name: brand?.name ?? titleize(slug),
     accent: brand?.colors["1"] ?? "#222222",
     secondary: brand?.colors["2"] ?? "#f2f2f2",
+    logo: brandLogos[slug],
+    mark: titleize(slug)
+      .split(" ")
+      .map((part) => part.charAt(0))
+      .join("")
+      .slice(0, 3),
   };
 }
 
@@ -383,21 +401,25 @@ function getFollowedTopicMatch(item: FeedItem, profile: ReaderProfile) {
   return profile.followedTopics.find((topic) => itemMatchesInterest(item, topic));
 }
 
+function formatRecommendationValue(value: string) {
+  return /^[A-Z0-9&]+$/.test(value) || value === "EVs" ? value : value.toLowerCase();
+}
+
 function getRecommendationReason(item: FeedItem, profile: ReaderProfile) {
   const savedTag = getSavedTagMatch(item, profile);
-  if (savedTag) return `Because you saved ${savedTag.toLowerCase()}`;
+  if (savedTag) return `Because you saved ${formatRecommendationValue(savedTag)}`;
 
   const collectionTitle = getCollectionMatch(item, profile);
   if (collectionTitle) return `Related to your ${collectionTitle} collection`;
 
   const followedTopic = getFollowedTopicMatch(item, profile);
-  if (followedTopic) return `Because you follow ${followedTopic.toLowerCase()}`;
+  if (followedTopic) return `Because you follow ${formatRecommendationValue(followedTopic)}`;
 
   if (profile.followedBrands.includes(item.brandSlug)) return `Because you follow ${getBrand(item.brandSlug).name}`;
 
   if ((trendLiftByFeedId[item.id] ?? 0) > 0) return `Trending among ${getBrand(item.brandSlug).name} readers`;
 
-  return item.signal || "Recommended from your Hearst+ graph";
+  return item.signal || "Recommended from your AUTOS graph";
 }
 
 function scoreFeedItem(item: FeedItem, profile: ReaderProfile) {
@@ -433,7 +455,7 @@ function scoreFeedItem(item: FeedItem, profile: ReaderProfile) {
     breakdown.push(`trending:${trendLift}`);
   }
 
-  if (profile.timeOfDay === "morning" && ["Dinner Ideas", "Fitness", "Cars", "Home", "Home Lab", "Technology"].includes(item.topic)) {
+  if (profile.timeOfDay === "morning" && ["EVs", "SUVs", "Buying Guides", "Performance", "Racing", "Project Cars", "Trucks"].includes(item.topic)) {
     score += 10;
     breakdown.push("morning");
   }
@@ -529,6 +551,7 @@ function ImageFrame({
 function BrandAvatar({ slug, size = "md" }: { slug: string; size?: "sm" | "md" | "lg" }) {
   const image = communityAvatarLogos[slug];
   const brand = getBrand(slug);
+  const hasSvgLogo = Boolean(brandLogos[slug]);
 
   return (
     <span
@@ -542,7 +565,7 @@ function BrandAvatar({ slug, size = "md" }: { slug: string; size?: "sm" | "md" |
     >
       {image ? (
         <span className="size-full bg-cover bg-center" style={{ backgroundImage: `url(${image})` }} />
-      ) : (
+      ) : hasSvgLogo ? (
         <BrandLogo
           slug={slug}
           className={cn(
@@ -553,6 +576,17 @@ function BrandAvatar({ slug, size = "md" }: { slug: string; size?: "sm" | "md" |
           )}
           color={brand.accent}
         />
+      ) : (
+        <span
+          className={cn(
+            "font-black tracking-[0.02em] text-[var(--hp-ink-on-light)]",
+            size === "sm" && "text-[0.62rem]",
+            size === "md" && "text-[0.7rem]",
+            size === "lg" && "text-xs",
+          )}
+        >
+          {brand.mark}
+        </span>
       )}
     </span>
   );
@@ -710,7 +744,7 @@ function FeedCard({
             <h2
               className={cn(
                 "max-w-3xl text-pretty font-headline leading-[1.03] text-[var(--hp-text-headline)] [font-weight:700]",
-                isLead ? "text-4xl md:text-5xl" : "text-3xl",
+                isLead ? "text-3xl md:text-[2rem]" : "text-3xl",
               )}
             >
               {item.title}
@@ -767,16 +801,14 @@ function AppHeader() {
           <IconButton label="Open navigation" className="border-[var(--hp-border)] bg-white/8 text-white hover:bg-white/14 lg:hidden">
             <ListIcon className="size-4" weight="bold" />
           </IconButton>
-          <span aria-label="Hearst+" className="flex h-6 min-w-0 items-center" role="img">
+          <span aria-label="AUTOS" className="flex h-6 min-w-0 items-center" role="img">
             <span
               aria-hidden="true"
-              data-testid="hearst-plus-logo"
-              className="block h-[15px] w-[134px] bg-[var(--hp-logo)] sm:h-[21px] sm:w-[188px]"
-              style={{
-                WebkitMask: "url('/logos/hearst-plus.svg') left center / contain no-repeat",
-                mask: "url('/logos/hearst-plus.svg') left center / contain no-repeat",
-              }}
-            />
+              data-testid="autos-logo"
+              className="text-lg font-black tracking-[0.26em] text-[var(--hp-logo)] sm:text-xl"
+            >
+              AUTOS
+            </span>
           </span>
         </div>
         <nav className="hidden justify-center gap-1 md:flex">
@@ -799,7 +831,7 @@ function AppHeader() {
             className="hidden h-10 min-w-80 items-center gap-2 rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-control)] px-3 text-left text-sm text-[var(--hp-text-secondary)] md:flex"
           >
             <MagnifyingGlassIcon className="size-4 text-[var(--hp-text-muted)]" weight="bold" />
-            Search every Hearst brand
+            Search autos stories
           </button>
           <IconButton label="Notifications" className="border-[var(--hp-border)] bg-white/8 text-white hover:bg-white/14">
             <BellIcon className="size-4" weight="bold" />
@@ -819,8 +851,8 @@ function BrandUniverseStrip() {
       <div className="mx-auto w-full max-w-[1280px] px-4 py-4 md:px-6">
         <div className="mb-3 flex items-center justify-between gap-3">
           <div>
-            <p className="text-xs font-bold uppercase text-[var(--hp-text-muted)]">Brand universe</p>
-            <h2 className="text-lg font-extrabold text-[var(--hp-text-primary)]">All Hearst brands in one interest graph</h2>
+            <p className="text-xs font-bold uppercase text-[var(--hp-text-muted)]">Auto universe</p>
+            <h2 className="text-lg font-extrabold text-[var(--hp-text-primary)]">Five auto brands in one driver graph</h2>
           </div>
           <Button variant="outline" size="sm" className="h-10 rounded-[8px] border-[var(--hp-border)] bg-[var(--hp-control)] text-[var(--hp-text-primary)] hover:bg-[var(--hp-control-hover)] hover:text-[var(--hp-text-primary)]">
             <CompassIcon className="size-4" weight="bold" />
@@ -867,7 +899,7 @@ function LeftRail() {
       </RailPanel>
       <RailPanel title="Following">
         <div className="grid grid-cols-2 gap-2">
-          {["delish", "mens-health", "car-and-driver", "house-beautiful", "cosmopolitan", "popular-mechanics"].map((slug) => (
+          {brandUniverse.map(({ slug }) => (
             <BrandPill key={slug} slug={slug} compact />
           ))}
         </div>
@@ -879,7 +911,7 @@ function LeftRail() {
 function RightRail() {
   return (
     <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
-      <RailPanel title="Trending Across Hearst">
+      <RailPanel title="Trending Across Autos">
         <ol className="space-y-3">
           {trendItems.map((item, index) => {
             const brand = getBrand(item.brandSlug);
@@ -926,7 +958,7 @@ function RightRail() {
           <h2 className="text-sm font-extrabold">7 day reading streak</h2>
         </div>
         <p className="mt-3 text-sm leading-6 text-[var(--hp-text-secondary)]">
-          Your strongest topics this week are cars, dinner ideas, home projects, and strength training.
+          Your strongest topics this week are EVs, performance, racing, and project cars.
         </p>
       </section>
     </aside>
@@ -942,7 +974,7 @@ function PersonalizationBand() {
             <p className="text-sm font-bold text-[var(--hp-text-secondary)]">Daily Read</p>
           </div>
           <h1 className="max-w-2xl font-headline text-2xl leading-[1.08] text-[var(--hp-text-headline)] [font-weight:700] md:text-3xl">
-            Your morning feed across every Hearst brand.
+            Your morning autos feed.
           </h1>
         </div>
         <div className="border-t border-[var(--hp-border)] pt-4 2xl:w-72 2xl:border-l 2xl:border-t-0 2xl:pl-4 2xl:pt-0">
@@ -1027,8 +1059,8 @@ function ArticleModal({
 
   return (
     <div
-      data-mode="dark"
-      style={hearstPlusDarkVars}
+      data-mode="light"
+      style={hearstPlusLightVars}
       className={cn(
         "hearst-plus-theme fixed inset-0 z-50 bg-[var(--hp-background)] hearst-plus-article-backdrop",
         isClosing && "hearst-plus-article-backdrop-out",
@@ -1041,15 +1073,15 @@ function ArticleModal({
         aria-labelledby={headingId}
         onKeyDown={handleDialogKeyDown}
         className={cn(
-          "fixed inset-0 overflow-y-auto bg-[var(--hp-background)] text-white hearst-plus-article-dialog",
+          "fixed inset-0 overflow-y-auto bg-[var(--hp-background)] text-[var(--hp-text-primary)] hearst-plus-article-dialog",
           isClosing && "hearst-plus-article-dialog-out",
         )}
       >
         <button
           ref={closeButtonRef}
           type="button"
-          aria-label="Close article and return to Hearst+ home"
-          className="fixed right-4 top-4 z-30 flex size-14 items-center justify-center rounded-full border border-[var(--hp-border)] bg-[var(--hp-control)] text-white shadow-[var(--hp-shadow-modal)] transition hover:bg-[var(--hp-control-hover)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--hp-focus)] md:right-6 md:size-16"
+          aria-label="Close article and return to AUTOS home"
+          className="fixed right-4 top-4 z-30 flex size-14 items-center justify-center rounded-full border border-[var(--hp-border)] bg-[var(--hp-control)] text-[var(--hp-text-primary)] shadow-[var(--hp-shadow-modal)] transition hover:bg-[var(--hp-control-hover)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--hp-focus)] md:right-6 md:size-16"
           onClick={onClose}
         >
           <XIcon className="size-8" weight="bold" />
@@ -1074,7 +1106,7 @@ function ArticleModal({
             <div className="min-w-0">
               <div className="mb-8 flex flex-wrap items-center gap-3">
                 <BrandAvatar slug={item.brandSlug} size="lg" />
-                <span className="text-lg font-extrabold text-white">{brand.name}</span>
+                <span className="text-lg font-extrabold text-[var(--hp-text-primary)]">{brand.name}</span>
                 <Button
                   variant="outline"
                   className="h-10 rounded-full border-[var(--hp-friendly-accent-border)] bg-transparent px-5 text-sm font-extrabold text-[var(--hp-friendly-accent-text)] hover:bg-[var(--hp-friendly-accent)] hover:text-[var(--hp-friendly-accent-text)]"
@@ -1087,8 +1119,8 @@ function ArticleModal({
                 {item.title}
               </h1>
 
-              <div className="mt-6 space-y-1 text-base leading-7 text-white/62">
-                <p className="font-extrabold text-white/88">{brand.name} Editors</p>
+              <div className="mt-6 space-y-1 text-base leading-7 text-[var(--hp-text-secondary)]">
+                <p className="font-extrabold text-[var(--hp-text-primary)]">{brand.name} Editors</p>
                 <p>
                   {item.topic} · {item.readTime} read
                 </p>
@@ -1103,13 +1135,13 @@ function ArticleModal({
                 <button
                   type="button"
                   aria-label={`Share ${item.title}`}
-                  className="flex size-12 items-center justify-center rounded-full border border-[var(--hp-border-strong)] text-white transition hover:bg-white/8 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  className="flex size-12 items-center justify-center rounded-full border border-[var(--hp-border-strong)] text-[var(--hp-text-primary)] transition hover:bg-[var(--hp-control)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--hp-focus)]"
                 >
                   <ShareNetworkIcon className="size-5" weight="bold" />
                 </button>
                 <Button
                   variant="outline"
-                  className="h-12 rounded-full border-[var(--hp-border)] bg-transparent px-5 font-extrabold text-white hover:bg-white/8 hover:text-white"
+                  className="h-12 rounded-full border-[var(--hp-border)] bg-transparent px-5 font-extrabold text-[var(--hp-text-primary)] hover:bg-[var(--hp-control)] hover:text-[var(--hp-text-primary)]"
                 >
                   Add to Collection
                 </Button>
@@ -1132,15 +1164,15 @@ function ArticleModal({
 
               <div className="mt-8 flex flex-wrap items-center gap-2">
                 {item.tags.map((tag) => (
-                  <span key={tag} className="rounded-full bg-white/10 px-3 py-1.5 text-xs font-bold text-white/82">
+                  <span key={tag} className="rounded-full border border-[var(--hp-border)] bg-[var(--hp-chip)] px-3 py-1.5 text-xs font-bold text-[var(--hp-text-chip)]">
                     {tag}
                   </span>
                 ))}
               </div>
 
-              <p className="mt-8 max-w-2xl text-xl leading-8 text-white/82">{item.summary}</p>
+              <p className="mt-8 max-w-2xl text-xl leading-8 text-[var(--hp-text-secondary)]">{item.summary}</p>
 
-              <div className="mt-8 max-w-2xl space-y-7 text-lg leading-9 text-white/84">
+              <div className="mt-8 max-w-2xl space-y-7 text-lg leading-9 text-[var(--hp-text-ui)]">
                 {item.body.map((paragraph) => (
                   <p key={paragraph}>{paragraph}</p>
                 ))}
@@ -1149,9 +1181,9 @@ function ArticleModal({
 
             <aside className="hidden space-y-5 lg:sticky lg:top-24 lg:block">
               <section className="rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-5">
-                <h2 className="text-sm font-extrabold text-white">In Your Brief</h2>
-                <p className="mt-3 text-sm leading-6 text-white/66">
-                  This story sits with food, wellness, home, and cars in today&apos;s 5-minute read.
+                <h2 className="text-sm font-extrabold text-[var(--hp-text-primary)]">In Your Brief</h2>
+                <p className="mt-3 text-sm leading-6 text-[var(--hp-text-secondary)]">
+                  This story sits with buying, racing, performance, and EVs in today&apos;s 5-minute read.
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {briefTopics.map((topic) => (
@@ -1163,15 +1195,15 @@ function ArticleModal({
               </section>
 
               <section className="rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-5">
-                <h2 className="text-sm font-extrabold text-white">Related Reads</h2>
+                <h2 className="text-sm font-extrabold text-[var(--hp-text-primary)]">Related Reads</h2>
                 <div className="mt-4 space-y-4">
                   {relatedItems
                     .filter((feedItem) => feedItem.id !== item.id)
                     .slice(0, 3)
                     .map((feedItem) => (
                       <button key={feedItem.id} type="button" className="block w-full text-left">
-                        <p className="text-sm font-bold leading-5 text-white">{feedItem.title}</p>
-                        <p className="mt-1 text-xs text-white/52">{getBrand(feedItem.brandSlug).name}</p>
+                        <p className="text-sm font-bold leading-5 text-[var(--hp-text-primary)]">{feedItem.title}</p>
+                        <p className="mt-1 text-xs text-[var(--hp-text-muted)]">{getBrand(feedItem.brandSlug).name}</p>
                       </button>
                     ))}
                 </div>
@@ -1287,11 +1319,11 @@ export function HearstPlusApp() {
 
   return (
     <main
-      data-mode="dark"
+      data-mode="light"
       className="hearst-plus-theme min-h-screen overflow-x-clip bg-[var(--hp-background)] text-[var(--hp-text-primary)] [font-family:var(--hp-font-ui)]"
       style={
         {
-          ...hearstPlusDarkVars,
+          ...hearstPlusLightVars,
           "--font-headline": "var(--hp-font-headline)",
           "--font-headline-weight": "var(--hp-font-headline-weight)",
         } as React.CSSProperties

@@ -1,7 +1,7 @@
 import { brands, type BrandTheme } from "./brands";
 
 export const hearstPlusTheme: BrandTheme = {
-  name: "Hearst+",
+  name: "AUTOS",
   slug: "hearst-plus",
   colors: {
     "1": "#384959",
@@ -32,7 +32,7 @@ export const hearstPlusTheme: BrandTheme = {
     "palette-background-default-link-hover": "#384959",
     "palette-background-knockout": "#121212",
     "palette-background-knockout-hover": "#292929",
-    "palette-background-page": "#ffffff",
+    "palette-background-page": "#F4F2EE",
     "palette-background-subtle": "#ededed",
     "palette-background-subtle-brand": "#BDDDFC",
     "palette-background-utility": "#BDDDFC",

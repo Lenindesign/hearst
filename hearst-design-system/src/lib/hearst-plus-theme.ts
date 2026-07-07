@@ -3,7 +3,7 @@ import type { CSSProperties } from "react";
 export type HearstPlusCssVars = CSSProperties & Record<`--${string}`, string | number>;
 
 export const hearstPlusLightVars: HearstPlusCssVars = {
-  "--background": "var(--palette-background-page, #ffffff)",
+  "--background": "#F4F2EE",
   "--foreground": "var(--palette-content-default, #121212)",
   "--card": "var(--component-card-background-default, var(--palette-background-default, #ffffff))",
   "--card-foreground": "var(--palette-content-default, #121212)",

@@ -3,14 +3,14 @@ import React from "react";
 import { HearstPlusApp } from "@/components/hearst-plus-app";
 
 const meta: Meta<typeof HearstPlusApp> = {
-  title: "Apps/Hearst Plus",
+  title: "Apps/AUTOS",
   component: HearstPlusApp,
   parameters: {
     layout: "fullscreen",
     docs: {
       description: {
         component:
-          "Hearst+ is a cross-brand daily destination prototype. It aggregates every Hearst brand around user intent, followed topics, saved collections, and a personalized feed.",
+          "AUTOS is a focused daily destination prototype for Autoweek, MotorTrend, Car and Driver, Road & Track, and Hot Rod. It ranks auto stories around user intent, followed topics, saved collections, and a personalized feed.",
       },
     },
   },

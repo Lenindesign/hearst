@@ -1,7 +1,7 @@
 import { Meta } from "@storybook/blocks";
 import { hearstPlusDarkVars, hearstPlusLightVars } from "../lib/hearst-plus-theme";
 
-<Meta title="Apps/Hearst Plus/Design System" />
+<Meta title="Apps/AUTOS/Design System" />
 
 export const ColorSwatch = ({ name, token, value, note }) => (
   <div style={{ border: "1px solid var(--hp-border)", borderRadius: 8, overflow: "hidden", background: "var(--hp-surface)" }}>
@@ -27,13 +27,13 @@ export const RuleCard = ({ title, children }) => (
   </div>
 );
 
-# Hearst+ Design System
+# AUTOS Design System
 
-Hearst+ is the cross-brand daily destination. The system should feel personal, useful, editorial, and habit-forming without inheriting every individual publisher theme.
+AUTOS is the focused daily destination for Hearst auto brands. The system should feel personal, useful, editorial, and habit-forming without inheriting every individual publisher theme.
 
-The default mode should be dark. Hearst+ is a personalized daily destination, and the darker shell lets story imagery, brand logos, and editorial headlines carry the hierarchy. Light mode still belongs in the system as an optional high-brightness mode.
+The default mode should be light. AUTOS is a personalized daily destination, and the lighter shell keeps the car imagery, brand logos, and editorial headlines at the top of the hierarchy. Dark mode still belongs in the system as an optional immersive mode.
 
-<div className="hearst-plus-theme" data-mode="dark" style={{ ...hearstPlusDarkVars, background: "var(--hp-background)", color: "var(--hp-text-primary)", borderRadius: 8, padding: 24, margin: "24px 0", fontFamily: "var(--hp-font-ui)" }}>
+<div className="hearst-plus-theme" data-mode="light" style={{ ...hearstPlusLightVars, background: "var(--hp-background)", color: "var(--hp-text-primary)", borderRadius: 8, padding: 24, margin: "24px 0", fontFamily: "var(--hp-font-ui)" }}>
 
   <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.15fr) minmax(280px, 0.85fr)", gap: 24, alignItems: "start" }}>
     <div>
@@ -42,13 +42,13 @@ The default mode should be dark. Hearst+ is a personalized daily destination, an
         One daily feed, tuned around the reader.
       </h2>
       <p style={{ color: "var(--hp-text-secondary)", fontSize: 16, lineHeight: 1.65, maxWidth: 680, marginTop: 18 }}>
-        Hearst+ owns the product chrome. Brand identity appears through logos, attribution, story imagery, and editorial voice. The app color system stays consistent so personalization feels trustworthy.
+        AUTOS owns the product chrome. Brand identity appears through logos, attribution, story imagery, and editorial voice. The app color system stays consistent so personalization feels trustworthy.
       </p>
     </div>
     <div style={{ border: "1px solid var(--hp-border)", background: "var(--hp-surface)", borderRadius: 8, padding: 16 }}>
       <div style={{ color: "var(--hp-text-secondary)", fontSize: 13, fontWeight: 800 }}>Daily signal</div>
       <div style={{ marginTop: 12, display: "flex", flexWrap: "wrap", gap: 8 }}>
-        {["Because you saved recipes", "Trending in technology", "Continue reading", "7 day reading streak"].map((label) => (
+        {["Because you saved hybrids", "Trending in racing", "Continue reading", "7 day driving streak"].map((label) => (
           <span key={label} style={{ background: "var(--hp-chip)", color: "var(--hp-text-chip)", borderRadius: 8, padding: "8px 10px", fontSize: 12, fontWeight: 800 }}>
             {label}
           </span>
@@ -89,18 +89,18 @@ The default mode should be dark. Hearst+ is a personalized daily destination, an
 
   <h2 style={{ color: "var(--hp-text-primary)", marginTop: 36 }}>Interest Accents</h2>
   <TokenGrid>
-    <ColorSwatch name="Food" token="--hp-food" />
-    <ColorSwatch name="Wellness" token="--hp-wellness" />
+    <ColorSwatch name="EVs" token="--hp-food" />
+    <ColorSwatch name="Racing" token="--hp-wellness" />
     <ColorSwatch name="Cars" token="--hp-cars" />
-    <ColorSwatch name="Home" token="--hp-home" />
-    <ColorSwatch name="Style" token="--hp-style" />
-    <ColorSwatch name="Entertainment" token="--hp-entertainment" />
+    <ColorSwatch name="Project Cars" token="--hp-home" />
+    <ColorSwatch name="Performance" token="--hp-style" />
+    <ColorSwatch name="Buying" token="--hp-entertainment" />
   </TokenGrid>
 
   <h2 style={{ color: "var(--hp-text-primary)", marginTop: 36 }}>Usage Rules</h2>
 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))", gap: 12 }}>
     <RuleCard title="Use two colors only">
-      The Hearst+ palette is #384959 and #BDDDFC. Surfaces can use neutral black, white, and alpha mixes, but product accents stay duotone.
+      The AUTOS palette is #384959 and #BDDDFC. Surfaces can use neutral black, white, and alpha mixes, but product accents stay duotone.
     </RuleCard>
     <RuleCard title="Soft blue means action">
       Use soft blue for primary actions, selected states, rankings, focus, and daily signals. It should guide, not shout.
@@ -118,14 +118,14 @@ The default mode should be dark. Hearst+ is a personalized daily destination, an
 
 </div>
 
-## Light Mode
+## Dark Mode
 
-Use light mode intentionally. It works best for high-brightness reading contexts or documentation, but the product shell should stay dark.
+Use dark mode intentionally. It works best for immersive article reading or evening contexts, but the default product shell should stay light.
 
-<div className="hearst-plus-theme" style={{ ...hearstPlusLightVars, background: "var(--hp-background)", color: "var(--hp-text-primary)", borderRadius: 8, padding: 24, margin: "24px 0", fontFamily: "var(--hp-font-ui)" }}>
-  <div style={{ color: "var(--hp-signal)", fontSize: 13, fontWeight: 800 }}>Light alternate mode</div>
+<div className="hearst-plus-theme" data-mode="dark" style={{ ...hearstPlusDarkVars, background: "var(--hp-background)", color: "var(--hp-text-primary)", borderRadius: 8, padding: 24, margin: "24px 0", fontFamily: "var(--hp-font-ui)" }}>
+  <div style={{ color: "var(--hp-signal)", fontSize: 13, fontWeight: 800 }}>Dark alternate mode</div>
   <h2 style={{ fontFamily: "var(--hp-font-headline)", fontWeight: 700, fontSize: 40, lineHeight: 1.04, letterSpacing: 0, margin: "12px 0 0", color: "var(--hp-text-headline)" }}>
-    The system can move lighter without changing the hierarchy.
+    The system can move darker without changing the hierarchy.
   </h2>
   <p style={{ color: "var(--hp-text-secondary)", fontSize: 15, lineHeight: 1.65, maxWidth: 700, marginTop: 14 }}>
     Keep the same typography, spacing, radius, and recommendation language. Only the mode tokens change.
@@ -134,7 +134,7 @@ Use light mode intentionally. It works best for high-brightness reading contexts
 
 ## Implementation Tokens
 
-The app consumes these tokens through the Hearst+ theme variables, so the design system can evolve without replacing color values throughout the component tree.
+The app consumes these tokens through the AUTOS theme variables, so the design system can evolve without replacing color values throughout the component tree.
 
 ```css
 .hearst-plus-theme {
