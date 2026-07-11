@@ -496,7 +496,7 @@ function LifestyleRiverMedia({
   onTogglePlaying: () => void;
 }) {
   const imageClassName = featured
-    ? "h-64 w-full sm:h-80 2xl:h-full 2xl:min-h-[360px]"
+    ? "aspect-video w-full"
     : "h-full min-h-32 w-full rounded-sm";
   const videoClassName = featured
     ? "aspect-video w-full 2xl:self-center"
@@ -903,6 +903,101 @@ function LifestyleStoryReaderModal({
   );
 }
 
+function TodayEditDashboard({
+  stories,
+  profile,
+  onOpenStory,
+  onShowFollowedBrands,
+}: {
+  stories: LifestyleRiverStory[];
+  profile: LifestyleRiverProfile;
+  onOpenStory: (storyId: string) => void;
+  onShowFollowedBrands: () => void;
+}) {
+  const continueStory = stories.find((story) => getLifestyleCardKind(story) === "video") || stories[1] || stories[0];
+  const followedBrandStory =
+    stories.find((story) => profile.followedBrands.includes(story.brand)) || stories[0];
+  const trendingStory = [...stories].sort((a, b) => b.popularity - a.popularity)[0];
+  const collectionStory =
+    stories.find((story) => story.tags.some((tag) => profile.savedTags.includes(tag))) || stories[2] || stories[0];
+
+  if (!continueStory || !followedBrandStory || !trendingStory || !collectionStory) return null;
+
+  const modules = [
+    {
+      label: "Continue Reading",
+      title: continueStory.title,
+      meta: `${continueStory.brand} · ${continueStory.readTime}`,
+      action: "Resume story",
+      onClick: () => onOpenStory(continueStory.id),
+    },
+    {
+      label: "New From Your Brands",
+      title: followedBrandStory.title,
+      meta: profile.followedBrands.slice(0, 2).join(", "),
+      action: "Show my brands",
+      onClick: onShowFollowedBrands,
+    },
+    {
+      label: "Trending Today",
+      title: trendingStory.title,
+      meta: `${trendingStory.popularity} popularity · ${trendingStory.topic}`,
+      action: "Open trend",
+      onClick: () => onOpenStory(trendingStory.id),
+    },
+    {
+      label: "Your Collections",
+      title: collectionStory.title,
+      meta: `${profile.savedTags.slice(0, 3).join(", ")}`,
+      action: "Open collection pick",
+      onClick: () => onOpenStory(collectionStory.id),
+    },
+  ];
+
+  return (
+    <section className="border border-border bg-background" aria-label="Today&apos;s edit">
+      <div className="flex flex-col gap-3 border-b border-border px-4 py-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+            Today&apos;s Edit
+          </p>
+          <h2 className="headline mt-1 text-2xl leading-tight">
+            Start with what changed since your last visit.
+          </h2>
+        </div>
+        <p className="max-w-md text-sm leading-6 text-muted-foreground">
+          A compact briefing built from your brands, saved signals, and the stories gaining momentum now.
+        </p>
+      </div>
+      <div className="grid divide-y divide-border md:grid-cols-2 md:divide-x md:divide-y-0 xl:grid-cols-4">
+        {modules.map((module) => (
+          <button
+            key={module.label}
+            type="button"
+            onClick={module.onClick}
+            className="group flex min-h-[168px] flex-col justify-between p-4 text-left transition-colors hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-primary/30"
+          >
+            <span>
+              <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                {module.label}
+              </span>
+              <span className="mt-3 block text-base font-bold leading-snug text-foreground">
+                {module.title}
+              </span>
+              <span className="mt-2 block text-xs leading-5 text-muted-foreground">
+                {module.meta}
+              </span>
+            </span>
+            <span className="mt-4 text-xs font-bold text-primary underline-offset-4 group-hover:underline">
+              {module.action}
+            </span>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function LifestyleLeftSidebar({
   profile,
   topStories,
@@ -1154,6 +1249,14 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
     }));
   };
 
+  const showFollowedBrands = () => {
+    const availableFollowedBrands = sidebarBrands
+      .filter((brand) => brand.count > 0 && profile.followedBrands.includes(brand.name))
+      .map((brand) => brand.name);
+
+    setActiveBrandFilters(availableFollowedBrands);
+  };
+
   const hideStory = (id: string) => {
     setProfile((current) => ({
       ...current,
@@ -1163,6 +1266,13 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
 
   return (
     <div className="space-y-8">
+      <TodayEditDashboard
+        stories={filteredStories}
+        profile={profile}
+        onOpenStory={setOpenStoryId}
+        onShowFollowedBrands={showFollowedBrands}
+      />
+
       <div className="grid gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]">
         <LifestyleLeftSidebar
           profile={profile}
