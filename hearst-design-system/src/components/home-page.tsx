@@ -26,9 +26,8 @@ import {
   Play,
   Plus,
   ShoppingBag,
-  Sparkles,
   Star,
-  TrendingUp,
+  X,
 } from "lucide-react";
 import {
   getBrandImages,
@@ -99,18 +98,6 @@ function getLifestyleScore(story: LifestyleRiverStory, profile: LifestyleRiverPr
   if (profile.hiddenIds.includes(story.id)) score -= 500;
 
   return score;
-}
-
-function getLifestyleReason(story: LifestyleRiverStory, profile: LifestyleRiverProfile) {
-  const savedMatch = story.tags.find((tag) => profile.savedTags.includes(tag));
-  const boostedMatch = story.tags.find((tag) => profile.boostedTags.includes(tag));
-
-  if (boostedMatch) return `More like your recent ${boostedMatch} activity`;
-  if (savedMatch) return `Because you saved ${savedMatch}`;
-  if (profile.followedBrands.includes(story.brand)) return `Because you follow ${story.brand}`;
-  if (profile.followedTopics.includes(story.topic)) return `Because you follow ${story.topic}`;
-  if (story.signal === "Trending") return `Trending with ${story.brand} readers`;
-  return `${story.signal} across Hearst Lifestyle`;
 }
 
 function rankLifestyleRiver(stories: LifestyleRiverStory[], profile: LifestyleRiverProfile) {
@@ -185,7 +172,16 @@ function MainNav({
         <div className="w-[var(--width-sidebar-narrow)]" />
         <div className="text-center">
           {logo ? (
-            <BrandLogo slug={brand.slug} className="[&_svg]:h-10 [&_svg]:w-auto mx-auto" />
+            <BrandLogo
+              slug={brand.slug}
+              color={isLifestyle ? brand.colors["1"] : undefined}
+              className={cn(
+                "[&_svg]:w-auto mx-auto",
+                isLifestyle
+                  ? "[&_svg]:h-5 sm:[&_svg]:h-6 [&_svg]:max-w-[260px] sm:[&_svg]:max-w-[340px]"
+                  : "[&_svg]:h-10"
+              )}
+            />
           ) : (
             <h1 className="text-2xl tracking-widest uppercase headline">
               {brand.name}
@@ -515,7 +511,10 @@ function LifestyleRiverMedia({
       <div className="absolute inset-0 bg-black/20" />
       <button
         type="button"
-        onClick={onTogglePlaying}
+        onClick={(event) => {
+          event.stopPropagation();
+          onTogglePlaying();
+        }}
         className="absolute inset-0 flex items-center justify-center text-background"
         aria-label={`${playing ? "Pause" : "Play"} video: ${story.title}`}
       >
@@ -621,8 +620,8 @@ function LifestyleCardModule({
 
 function LifestyleRiverCard({
   story,
-  reason,
   saved,
+  onOpen,
   onSave,
   onMoreLikeThis,
   onFollowTopic,
@@ -631,8 +630,8 @@ function LifestyleRiverCard({
   featured = false,
 }: {
   story: LifestyleRiverStory;
-  reason: string;
   saved: boolean;
+  onOpen: () => void;
   onSave: () => void;
   onMoreLikeThis: () => void;
   onFollowTopic: () => void;
@@ -646,13 +645,24 @@ function LifestyleRiverCard({
 
   return (
     <article className={cn(
-      "min-w-0 overflow-hidden border border-border bg-background",
+      "min-w-0 cursor-pointer overflow-hidden border border-border bg-background transition-colors hover:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/30",
       isVideo
         ? "grid"
         : featured
         ? "grid items-stretch 2xl:grid-cols-[minmax(0,0.95fr)_minmax(320px,1fr)]"
         : "grid grid-cols-[112px_minmax(0,1fr)] gap-4 p-4 sm:grid-cols-[176px_minmax(0,1fr)]"
-    )}>
+    )}
+      role="button"
+      tabIndex={0}
+      onClick={onOpen}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onOpen();
+        }
+      }}
+      aria-label={`Open story: ${story.title}`}
+    >
       <LifestyleRiverMedia
         story={story}
         kind={kind}
@@ -686,17 +696,7 @@ function LifestyleRiverCard({
           {story.summary}
         </p>
         <LifestyleCardModule story={story} kind={kind} />
-        <div className="mt-4 flex flex-wrap items-center gap-2 text-[length:var(--text-token-4xs)]">
-          <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 font-semibold text-primary">
-            <Sparkles className="h-3.5 w-3.5" aria-hidden />
-            {reason}
-          </span>
-          <span className="inline-flex items-center gap-1 rounded-full bg-muted px-3 py-1 font-semibold text-muted-foreground">
-            <TrendingUp className="h-3.5 w-3.5" aria-hidden />
-            Popularity {story.popularity}
-          </span>
-        </div>
-        <div className="mt-5 flex flex-wrap gap-2">
+        <div className="mt-5 flex flex-wrap gap-2" onClick={(event) => event.stopPropagation()}>
           <Button variant={saved ? "default" : "outline"} size="xs" onClick={onSave} aria-pressed={saved}>
             <Bookmark className="mr-1.5 h-3.5 w-3.5" aria-hidden />
             {saved ? "Saved" : "Save"}
@@ -721,20 +721,206 @@ function LifestyleRiverCard({
   );
 }
 
+function getLifestyleReaderParagraphs(story: LifestyleRiverStory) {
+  const topicPhrase = story.topic.toLowerCase();
+  const tagPhrase = story.tags.slice(0, 3).join(", ");
+
+  return [
+    story.summary,
+    `${story.brand} editors frame this ${topicPhrase} story around the signals readers are acting on right now: ${tagPhrase}.`,
+    `In the full experience, this reader would continue into the original ${story.brand} article with inline media, related service modules, and commerce or recipe utilities when they are relevant.`,
+    `This prototype keeps the modal focused on the discovery behavior: open a story from the river, keep reading, and let the next ranked story lazy-load into the same session.`,
+  ];
+}
+
+function LifestyleReaderSidebarAd() {
+  return (
+    <aside className="hidden lg:block" aria-label="Advertisement">
+      <div className="sticky top-20 flex h-[600px] w-[300px] flex-col overflow-hidden border border-[#d7c7b8] bg-[#fffaf4] shadow-sm">
+        <div className="flex flex-1 flex-col justify-between p-6">
+          <div>
+            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-[0.24em] text-primary">
+              Advertisement
+            </p>
+            <p className="mt-8 font-brand-secondary text-4xl font-bold leading-none text-primary">
+              Make Room for Summer
+            </p>
+            <p className="mt-4 text-sm leading-6 text-muted-foreground">
+              Fresh furniture, cookware, linens, and garden finds selected for the season ahead.
+            </p>
+          </div>
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-2">
+              <div className="aspect-square bg-[#e8d9c9]" />
+              <div className="aspect-square bg-[#d7e4d1]" />
+              <div className="aspect-square bg-[#f3c7b5]" />
+              <div className="aspect-square bg-[#c9d8e8]" />
+            </div>
+            <div className="rounded-full bg-primary px-4 py-3 text-center text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary-foreground">
+              Explore the Edit
+            </div>
+            <p className="text-center text-[length:var(--text-token-4xs)] uppercase tracking-widest text-muted-foreground">
+              300 x 600 Sponsored Unit
+            </p>
+          </div>
+        </div>
+      </div>
+    </aside>
+  );
+}
+
+function LifestyleStoryReaderModal({
+  stories,
+  openStoryId,
+  onClose,
+}: {
+  stories: LifestyleRiverStory[];
+  openStoryId: string | null;
+  onClose: () => void;
+}) {
+  const scrollRef = React.useRef<HTMLDivElement | null>(null);
+  const sentinelRef = React.useRef<HTMLDivElement | null>(null);
+  const openIndex = openStoryId ? stories.findIndex((story) => story.id === openStoryId) : -1;
+  const [visibleReaderCount, setVisibleReaderCount] = React.useState(1);
+  const storyQueue = openIndex >= 0 ? stories.slice(openIndex) : [];
+  const visibleReaderStories = storyQueue.slice(0, visibleReaderCount);
+
+  React.useEffect(() => {
+    setVisibleReaderCount(1);
+    scrollRef.current?.scrollTo({ top: 0 });
+  }, [openStoryId]);
+
+  React.useEffect(() => {
+    if (!openStoryId) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [onClose, openStoryId]);
+
+  React.useEffect(() => {
+    const node = sentinelRef.current;
+    const root = scrollRef.current;
+
+    if (!node || !root || !openStoryId || visibleReaderCount >= storyQueue.length) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisibleReaderCount((count) => Math.min(count + 1, storyQueue.length));
+        }
+      },
+      { root, rootMargin: "600px" }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [openStoryId, storyQueue.length, visibleReaderCount]);
+
+  if (!openStoryId || openIndex < 0) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 bg-foreground/55 backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Story reader"
+    >
+      <div className="absolute inset-0" onClick={onClose} />
+      <div
+        ref={scrollRef}
+        className="absolute inset-x-0 bottom-0 top-6 mx-auto flex w-full max-w-6xl flex-col overflow-y-auto bg-background shadow-2xl sm:inset-y-6 sm:rounded-sm"
+      >
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background/95 px-4 py-3 backdrop-blur sm:px-6">
+          <div className="min-w-0">
+            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+              Hearst Lifestyle Reader
+            </p>
+            <p className="mt-1 truncate text-xs text-muted-foreground">
+              Lazy-loading {visibleReaderStories.length} of {storyQueue.length} stories from this river
+            </p>
+          </div>
+          <Button variant="outline" size="icon-sm" onClick={onClose} aria-label="Close story reader">
+            <X className="h-4 w-4" aria-hidden />
+          </Button>
+        </div>
+
+        <div className="grid gap-8 px-4 py-6 sm:px-8 lg:grid-cols-[minmax(0,1fr)_300px] lg:px-10">
+          <div className="min-w-0">
+            {visibleReaderStories.map((story, index) => {
+              const kind = getLifestyleCardKind(story);
+
+              return (
+                <article
+                  key={story.id}
+                  className={cn("border-b border-border pb-10", index > 0 && "pt-10")}
+                >
+                  <LifestyleRiverImage story={story} className="aspect-video w-full rounded-sm" />
+                  <div className="mx-auto mt-6 max-w-3xl">
+                    <div className="mb-3 flex flex-wrap items-center gap-2">
+                      <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                        {story.signal}
+                      </span>
+                      <span className="rounded-full bg-muted px-2 py-0.5 text-[length:var(--text-token-4xs)] font-semibold uppercase tracking-widest text-muted-foreground">
+                        {getLifestyleKindLabel(kind)}
+                      </span>
+                      <LifestyleBrandSource story={story} />
+                    </div>
+                    <h2 className="headline text-4xl leading-tight sm:text-5xl">
+                      {story.title}
+                    </h2>
+                    <div className="mt-6 space-y-5 text-base leading-8 text-foreground/80">
+                      {getLifestyleReaderParagraphs(story).map((paragraph) => (
+                        <p key={paragraph}>{paragraph}</p>
+                      ))}
+                    </div>
+                    <LifestyleCardModule story={story} kind={kind} />
+                  </div>
+                </article>
+              );
+            })}
+
+            <div ref={sentinelRef} className="flex justify-center py-8">
+              {visibleReaderCount < storyQueue.length ? (
+                <p className="text-sm text-muted-foreground">Loading the next story...</p>
+              ) : (
+                <p className="text-sm text-muted-foreground">End of this filtered story river.</p>
+              )}
+            </div>
+          </div>
+          <LifestyleReaderSidebarAd />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function LifestyleLeftSidebar({
   profile,
   topStories,
   topics,
   brands,
+  activeBrandFilters,
+  onToggleBrandFilter,
+  onClearBrandFilters,
   onFollowTopic,
-  onFollowBrand,
 }: {
   profile: LifestyleRiverProfile;
   topStories: LifestyleRiverStory[];
   topics: { name: string; count: number }[];
   brands: { name: string; slug: string; count: number }[];
+  activeBrandFilters: string[];
+  onToggleBrandFilter: (brandName: string) => void;
+  onClearBrandFilters: () => void;
   onFollowTopic: (topic: string) => void;
-  onFollowBrand: (brandName: string) => void;
 }) {
   return (
     <aside className="space-y-5 lg:sticky lg:top-6 lg:self-start" aria-label="Lifestyle discovery sidebar">
@@ -756,20 +942,31 @@ function LifestyleLeftSidebar({
       </div>
 
       <div className="border border-border p-4">
-        <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
-          Follow Brands
-        </p>
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+            Filter Brands
+          </p>
+          {activeBrandFilters.length > 0 ? (
+            <button
+              type="button"
+              onClick={onClearBrandFilters}
+              className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-muted-foreground hover:text-primary"
+            >
+              Clear
+            </button>
+          ) : null}
+        </div>
         <div className="mt-4 space-y-3">
           {brands.map((brand) => {
-            const active = profile.followedBrands.includes(brand.name);
+            const active = activeBrandFilters.includes(brand.name);
             return (
               <button
                 key={brand.name}
                 type="button"
-                onClick={() => onFollowBrand(brand.name)}
+                onClick={() => onToggleBrandFilter(brand.name)}
                 disabled={brand.count === 0}
                 className={cn(
-                  "flex w-full min-w-0 items-center justify-between gap-3 border-b border-border pb-2 text-left text-sm last:border-0 last:pb-0",
+                  "flex w-full min-w-0 items-center justify-between gap-3 border-b border-border pb-2 text-left text-sm transition-colors last:border-0 last:pb-0",
                   active && "font-bold text-primary",
                   brand.count === 0 && "cursor-not-allowed text-muted-foreground opacity-70"
                 )}
@@ -778,7 +975,10 @@ function LifestyleLeftSidebar({
                 <span className="flex min-w-0 items-center gap-2">
                   <span
                     aria-hidden
-                    className="inline-block h-5 w-5 shrink-0 rounded-sm border border-border bg-background"
+                    className={cn(
+                      "inline-block h-5 w-5 shrink-0 rounded-sm border bg-background",
+                      active ? "border-primary ring-2 ring-primary/20" : "border-border"
+                    )}
                     style={{
                       backgroundImage: `url("${lifestyleBrandFavicons[brand.slug]}")`,
                       backgroundPosition: "center",
@@ -793,6 +993,11 @@ function LifestyleLeftSidebar({
             );
           })}
         </div>
+        <p className="mt-4 text-xs leading-5 text-muted-foreground">
+          {activeBrandFilters.length > 0
+            ? `Showing ${activeBrandFilters.length} selected brand${activeBrandFilters.length === 1 ? "" : "s"}.`
+            : "All brands are included in the river."}
+        </p>
       </div>
 
       <div className="border border-border p-4">
@@ -836,6 +1041,8 @@ function LifestyleLeftSidebar({
 
 function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
   const [profile, setProfile] = React.useState<LifestyleRiverProfile>(initialLifestyleProfile);
+  const [activeBrandFilters, setActiveBrandFilters] = React.useState<string[]>([]);
+  const [openStoryId, setOpenStoryId] = React.useState<string | null>(null);
   const [visibleCount, setVisibleCount] = React.useState(8);
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -844,12 +1051,16 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
     [profile]
   );
   const filteredStories = React.useMemo(() => {
+    const brandFilteredStories = activeBrandFilters.length > 0
+      ? rankedStories.filter((story) => activeBrandFilters.includes(story.brand))
+      : rankedStories;
+
     if (activeFilter === "Saved") {
-      return rankedStories.filter((story) => profile.savedIds.includes(story.id));
+      return brandFilteredStories.filter((story) => profile.savedIds.includes(story.id));
     }
 
-    return rankedStories.filter((story) => storyMatchesLifestyleFilter(story, activeFilter));
-  }, [activeFilter, profile.savedIds, rankedStories]);
+    return brandFilteredStories.filter((story) => storyMatchesLifestyleFilter(story, activeFilter));
+  }, [activeBrandFilters, activeFilter, profile.savedIds, rankedStories]);
   const visibleStories = filteredStories.slice(0, visibleCount);
   const leadStory = visibleStories[0];
   const riverStories = visibleStories.slice(1);
@@ -878,7 +1089,7 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
 
   React.useEffect(() => {
     setVisibleCount(8);
-  }, [activeFilter]);
+  }, [activeBrandFilters, activeFilter]);
 
   React.useEffect(() => {
     const node = sentinelRef.current;
@@ -928,6 +1139,14 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
     }));
   };
 
+  const toggleBrandFilter = (brandName: string) => {
+    setActiveBrandFilters((current) =>
+      current.includes(brandName)
+        ? current.filter((name) => name !== brandName)
+        : [...current, brandName]
+    );
+  };
+
   const followBrand = (brandName: string) => {
     setProfile((current) => ({
       ...current,
@@ -947,11 +1166,13 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
       <div className="grid gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]">
         <LifestyleLeftSidebar
           profile={profile}
-          topStories={rankedStories}
+          topStories={filteredStories}
           topics={sidebarTopics}
           brands={sidebarBrands}
+          activeBrandFilters={activeBrandFilters}
+          onToggleBrandFilter={toggleBrandFilter}
+          onClearBrandFilters={() => setActiveBrandFilters([])}
           onFollowTopic={followTopic}
-          onFollowBrand={followBrand}
         />
 
         <main className="space-y-4" aria-label="Personalized lifestyle story river">
@@ -959,8 +1180,8 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
             <>
               <LifestyleRiverCard
                 story={leadStory}
-                reason={getLifestyleReason(leadStory, profile)}
                 saved={profile.savedIds.includes(leadStory.id)}
+                onOpen={() => setOpenStoryId(leadStory.id)}
                 onSave={() => toggleSaved(leadStory)}
                 onMoreLikeThis={() => boostStory(leadStory)}
                 onFollowTopic={() => followTopic(leadStory.topic)}
@@ -973,8 +1194,8 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
                 <LifestyleRiverCard
                   key={story.id}
                   story={story}
-                  reason={getLifestyleReason(story, profile)}
                   saved={profile.savedIds.includes(story.id)}
+                  onOpen={() => setOpenStoryId(story.id)}
                   onSave={() => toggleSaved(story)}
                   onMoreLikeThis={() => boostStory(story)}
                   onFollowTopic={() => followTopic(story.topic)}
@@ -1002,7 +1223,7 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
             <div className="border border-border bg-muted/30 p-8 text-center">
               <p className="headline text-2xl">No stories in {activeFilter} yet.</p>
               <p className="mt-2 text-sm text-muted-foreground">
-                Save stories or switch back to For You to keep exploring.
+                Clear a brand filter or switch back to For You to keep exploring.
               </p>
             </div>
           )}
@@ -1014,9 +1235,11 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
               Trending Across Brands
             </p>
             <ol className="mt-4 space-y-3">
-              {rankedStories.slice(0, 5).map((story, index) => (
-                <li key={story.id} className="grid grid-cols-[24px_minmax(0,1fr)] gap-3 text-sm">
-                  <span className="font-bold text-primary">{index + 1}</span>
+              {filteredStories.slice(0, 5).map((story, index) => (
+                <li key={story.id} className="grid grid-cols-[28px_minmax(0,1fr)] gap-3 text-sm">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold leading-none text-primary-foreground">
+                    {index + 1}
+                  </span>
                   <span>
                     <span className="block font-bold leading-snug">{story.title}</span>
                     <span className="text-xs text-muted-foreground">{story.brand} · {story.topic}</span>
@@ -1051,6 +1274,12 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
                 <p className="mt-1 text-muted-foreground">{profile.followedBrands.join(", ")}</p>
               </div>
               <div>
+                <p className="font-bold">Active brand filters</p>
+                <p className="mt-1 text-muted-foreground">
+                  {activeBrandFilters.length > 0 ? activeBrandFilters.join(", ") : "All brands"}
+                </p>
+              </div>
+              <div>
                 <p className="font-bold">Saved signals</p>
                 <p className="mt-1 text-muted-foreground">{profile.savedTags.slice(0, 6).join(", ")}</p>
               </div>
@@ -1058,6 +1287,12 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
           </div>
         </aside>
       </div>
+
+      <LifestyleStoryReaderModal
+        stories={filteredStories}
+        openStoryId={openStoryId}
+        onClose={() => setOpenStoryId(null)}
+      />
 
       <div className="grid gap-4 border-t border-border pt-8 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div className="space-y-3">
@@ -1202,13 +1437,6 @@ export function HomePageTemplate({
 
   return (
     <div className="min-h-screen font-brand bg-background">
-      {/* Ad Banner — full width */}
-      <div className="flex items-center justify-center h-[100px] lg:h-[250px] bg-muted">
-        <div className="flex items-center justify-center rounded-md text-sm bg-muted text-muted-foreground border border-border" style={{ width: 728, height: 90 }}>
-          AD 728 × 90
-        </div>
-      </div>
-
       {/* Utility Bar — full width */}
       <UtilityBar />
 

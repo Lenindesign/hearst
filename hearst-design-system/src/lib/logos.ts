@@ -12,6 +12,7 @@ export const brandLogos: Record<string, string> = {
   "esquire": "/logos/esquire.svg",
   "good-housekeeping": "/logos/good-housekeeping.svg",
   "harpers-bazaar": "/logos/harpers.svg",
+  "hearst-lifestyle": "/logos/hearst-lifestyle.svg",
   "house-beautiful": "/logos/house.svg",
   "mens-health": "/logos/mens.svg",
   "oprah-daily": "/logos/oprah.svg",
