@@ -35,6 +35,22 @@ export const Default: Story = {
   render: () => <HomePageWrapper />,
 };
 
+export const LifestyleCurator: Story = {
+  name: "Lifestyle Curator",
+  render: () => <HomePageWrapper layout="overlapGrid" />,
+  globals: {
+    brand: "hearst-lifestyle",
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Lifestyle destination homepage shell using the aggregate Lifestyle brand mode. The page renders an infinite-style popular story river across Phase 1 lifestyle brands, with local behavior controls that re-rank the feed and explain why each story appears.",
+      },
+    },
+  },
+};
+
 export const WithInspector: Story = {
   name: "Visual Inspector",
   render: () => (

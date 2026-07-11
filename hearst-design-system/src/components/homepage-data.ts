@@ -671,7 +671,32 @@ export const DEFAULT_IMAGES: BrandImageSet = {
   ],
 };
 
+const LIFESTYLE_IMAGES: BrandImageSet = {
+  hero: `${H}ghk-index-espressocoffeecombo-104-web-659b457957f47.jpg?crop=0.85xw:1.00xh;0.08xw,0&resize=1200:*`,
+  articles: [
+    `${H}sweet-potato-couscous-sunshine-bowls-index-679432a9e1970.jpg?crop=0.503xw:1.00xh;0.0433xw,0&resize=144:*`,
+    `${H}clx020125wellford-003-68703564d1adc.jpg?crop=0.749xw:1xh;center,top&resize=144:*`,
+    `${H}cooling-mattress-open-69af1113c9e75.png?crop=0.502xw:1.00xh;0.250xw,0&resize=144:*`,
+    `${H}0e29ce4a-2bb4-4377-970d-e59e9abf2c42.jpeg?crop=0.665xw:1xh;center,top&resize=144:*`,
+    `${H}826ef8ee-b1bc-46de-8128-10e7290f1845.jpeg?crop=0.698xw:1xh;0.183xw,0xh&resize=144:*`,
+  ],
+  rightRail: [
+    `${H}bedding-awards-index-69ab12c972312.jpg?crop=0.502xw:1.00xh;0.250xw,0&resize=200:*`,
+    `${H}lucktini-index-web-3452-del029926-jg-69a9b5fa4c4af.jpg?crop=0.500xw:1xh;center,top&resize=200:*`,
+    `${H}3188abcc-f748-4273-9624-071a52976c49.jpg?crop=1xw:0.772xh;center,top&resize=200:*`,
+    `${H}300e1b6e-b588-45fd-97a5-ca451c9683f0.jpg?crop=1xw:0.75xh;0xw,0.147xh&resize=200:*`,
+  ],
+  trending: [
+    `${H}pistachio-tiramisu-index-web-3646-jg-del029926-69a7406a37468.jpg?crop=0.75xw:1xh;center,top&resize=600:*`,
+    `${H}1-pvn-dream-week-index-69ae3bec26b48.jpg?crop=1.00xw:1.00xh;0,0&resize=600:*`,
+    `${H}6f324cc1-2238-4f3f-a7c9-e9a9bf59f7b3.jpg?crop=0.5xw:1xh;0xw,0xh&resize=600:*`,
+    `${H}53bef857-0f56-4bbe-a0be-60f51d27ed82.jpg?crop=0.85xw:1xh;center,top&resize=600:*`,
+    `${H}4ab85a6b-6eec-4e56-bdf6-4160a18d9f16.jpeg?crop=0.85xw:1xh;center,top&resize=600:*`,
+  ],
+};
+
 export function getBrandImages(slug: string): BrandImageSet {
+  if (slug === "hearst-lifestyle") return LIFESTYLE_IMAGES;
   return BRAND_IMAGES[slug] || DEFAULT_IMAGES;
 }
 
@@ -711,6 +736,40 @@ export const defaultBaseContent: BaseContentType = {
 };
 
 export const BRAND_CONTENT: Partial<Record<string, Partial<BaseContentType>>> = {
+  "hearst-lifestyle": {
+    collectionTitle: "Your Daily Edit",
+    articles: [
+      { title: "Dinner Ideas, Room Refreshes, and Better Sleep Picks for Tonight", time: "Just Now", readTime: "5 Min Read" },
+      { title: "The Cozy Country Living Finds Editors Are Saving This Week", time: "42 minutes ago", readTime: "4 Min Read" },
+      { title: "Prevention's Sleep Checklist Meets Good Housekeeping Lab Picks", time: "2 hours ago", readTime: "6 Min Read" },
+      { title: "House Beautiful Rooms That Make Small Spaces Work Harder", time: "Yesterday", readTime: "5 Min Read" },
+      { title: "Cosmo, Seventeen, and Redbook on the Style Moves Trending Now", time: "Yesterday", readTime: "4 Min Read" },
+    ],
+    hero: {
+      eyebrow: "FOR YOU",
+      title: "The Lifestyle Stories Worth Your Morning",
+      desc: "A personalized Hearst edit across food, home, wellness, shopping, family, style, and entertainment.",
+      author: "Hearst Lifestyle Editors",
+    },
+    rightRail: [
+      { eyebrow: "WHY THIS", title: "Because You Saved Dinner Ideas", desc: "Delish and The Pioneer Woman recipes are moving up in your feed.", author: "Personalized" },
+      { eyebrow: "TRENDING", title: "Good Housekeeping Readers Are Comparing Sleep Picks", desc: "Lab-tested products and Prevention wellness advice are driving morning saves.", author: "Trending Signal" },
+      { eyebrow: "FOLLOWED BRAND", title: "Country Living Weekend Projects Are Rising", desc: "Home and garden stories are popular with readers who follow House Beautiful too.", author: "Brand Graph" },
+      { eyebrow: "CONTINUE", title: "Pick Up Your Small-Space Decorating Guide", desc: "A saved House Beautiful collection is ready when you are.", author: "Saved Collection" },
+    ],
+    trending: [
+      { title: "30-Minute Dinners Readers Are Saving", time: "Trending with Delish readers" },
+      { title: "Sleep Products Worth the Splurge", time: "Good Housekeeping + Prevention" },
+      { title: "Weekend Home Projects Under $100", time: "Country Living + House Beautiful" },
+      { title: "Spring Style Moves Across Cosmo and Seventeen", time: "Rising now" },
+      { title: "Family Game Night Ideas for This Weekend", time: "Woman's Day editors" },
+    ],
+    newsletter: {
+      title: "Your Lifestyle Daily Brief",
+      desc: "A personalized edit from Hearst food, home, wellness, style, shopping, and family editors.",
+    },
+    navLinks: ["For You", "Food", "Home", "Wellness", "Style", "Shopping", "Family", "Entertainment", "Saved"],
+  },
   cosmopolitan: {
     collectionTitle: "What's Hot",
     articles: [
