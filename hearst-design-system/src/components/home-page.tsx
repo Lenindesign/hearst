@@ -733,6 +733,129 @@ function getLifestyleReaderParagraphs(story: LifestyleRiverStory) {
   ];
 }
 
+function getLifestyleContextStories(currentStory: LifestyleRiverStory, stories: LifestyleRiverStory[]) {
+  const otherStories = stories.filter((story) => story.id !== currentStory.id);
+  const sameTopic = otherStories
+    .filter((story) => story.topic === currentStory.topic)
+    .sort((a, b) => b.popularity - a.popularity)
+    .slice(0, 3);
+  const sameBrand = otherStories
+    .filter((story) => story.brand === currentStory.brand)
+    .sort((a, b) => b.popularity - a.popularity)
+    .slice(0, 3);
+  const sharedIntent = otherStories
+    .filter((story) => story.tags.some((tag) => currentStory.tags.includes(tag)))
+    .sort((a, b) => b.popularity - a.popularity)
+    .slice(0, 3);
+
+  return {
+    sameTopic,
+    sameBrand,
+    sharedIntent,
+    intentTags: currentStory.tags.slice(0, 4),
+  };
+}
+
+function LifestyleReaderContextRail({
+  currentStory,
+  stories,
+  onOpenStory,
+}: {
+  currentStory: LifestyleRiverStory;
+  stories: LifestyleRiverStory[];
+  onOpenStory: (storyId: string) => void;
+}) {
+  const recommendations = getLifestyleContextStories(currentStory, stories);
+  const kind = getLifestyleCardKind(currentStory);
+  const intentLabel = {
+    article: "Read next",
+    gallery: "Visual ideas",
+    video: "Watch next",
+    recipe: "Cook next",
+    shopping: "Shop the edit",
+  }[kind];
+
+  const modules = [
+    {
+      label: intentLabel,
+      description: `More ${currentStory.topic.toLowerCase()} picks with similar reader intent.`,
+      stories: recommendations.sharedIntent,
+    },
+    {
+      label: `More from ${currentStory.brand}`,
+      description: "Keep the session inside the same trusted brand voice.",
+      stories: recommendations.sameBrand,
+    },
+    {
+      label: `${currentStory.topic} signal`,
+      description: "Related stories gaining momentum in this topic.",
+      stories: recommendations.sameTopic,
+    },
+  ].filter((module) => module.stories.length > 0);
+
+  return (
+    <aside className="hidden xl:block" aria-label="Contextual story recommendations">
+      <div className="sticky top-20 space-y-4">
+        <div className="border border-border bg-muted/30 p-4">
+          <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+            Reader Intent
+          </p>
+          <p className="mt-3 text-sm font-bold leading-5">{currentStory.topic}</p>
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {recommendations.intentTags.map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full border border-border bg-background px-2 py-1 text-[length:var(--text-token-4xs)] font-semibold text-muted-foreground"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {modules.map((module) => (
+          <div key={module.label} className="border border-border bg-background p-4">
+            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+              {module.label}
+            </p>
+            <p className="mt-2 text-xs leading-5 text-muted-foreground">{module.description}</p>
+            <div className="mt-4 space-y-3">
+              {module.stories.map((story) => (
+                <button
+                  key={story.id}
+                  type="button"
+                  onClick={() => onOpenStory(story.id)}
+                  className="group w-full border-t border-border pt-3 text-left first:border-t-0 first:pt-0 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                >
+                  <span className="flex items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                    <span
+                      aria-hidden
+                      className="inline-block h-4 w-4 shrink-0 rounded-[3px] border border-border bg-background"
+                      style={{
+                        backgroundImage: `url("${lifestyleBrandFavicons[story.brandSlug]}")`,
+                        backgroundPosition: "center",
+                        backgroundRepeat: "no-repeat",
+                        backgroundSize: "contain",
+                      }}
+                    />
+                    {getLifestyleKindLabel(getLifestyleCardKind(story))}
+                  </span>
+                  <span className="mt-1 block text-sm font-bold leading-5 group-hover:text-primary">
+                    {story.title}
+                  </span>
+                  <span className="mt-1 block text-xs text-muted-foreground">
+                    {story.brand} · Popularity {story.popularity}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </aside>
+  );
+}
+
 function LifestyleReaderSidebarAd() {
   return (
     <aside className="hidden lg:block" aria-label="Advertisement">
@@ -773,10 +896,12 @@ function LifestyleStoryReaderModal({
   stories,
   openStoryId,
   onClose,
+  onOpenStory,
 }: {
   stories: LifestyleRiverStory[];
   openStoryId: string | null;
   onClose: () => void;
+  onOpenStory: (storyId: string) => void;
 }) {
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
@@ -837,7 +962,7 @@ function LifestyleStoryReaderModal({
       <div className="absolute inset-0" onClick={onClose} />
       <div
         ref={scrollRef}
-        className="absolute inset-x-0 bottom-0 top-6 mx-auto flex w-full max-w-6xl flex-col overflow-y-auto bg-background shadow-2xl sm:inset-y-6 sm:rounded-sm"
+        className="absolute inset-x-0 bottom-0 top-6 mx-auto flex w-full max-w-[1360px] flex-col overflow-y-auto bg-background shadow-2xl sm:inset-y-6 sm:rounded-sm"
       >
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background/95 px-4 py-3 backdrop-blur sm:px-6">
           <div className="min-w-0">
@@ -853,7 +978,12 @@ function LifestyleStoryReaderModal({
           </Button>
         </div>
 
-        <div className="grid gap-8 px-4 py-6 sm:px-8 lg:grid-cols-[minmax(0,1fr)_300px] lg:px-10">
+        <div className="grid gap-8 px-4 py-6 sm:px-8 lg:grid-cols-[minmax(0,1fr)_300px] lg:px-10 xl:grid-cols-[220px_minmax(0,1fr)_300px]">
+          <LifestyleReaderContextRail
+            currentStory={storyQueue[0]}
+            stories={stories}
+            onOpenStory={onOpenStory}
+          />
           <div className="min-w-0">
             {visibleReaderStories.map((story, index) => {
               const kind = getLifestyleCardKind(story);
@@ -1402,6 +1532,7 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
         stories={filteredStories}
         openStoryId={openStoryId}
         onClose={() => setOpenStoryId(null)}
+        onOpenStory={setOpenStoryId}
       />
 
       <div className="grid gap-4 border-t border-border pt-8 lg:grid-cols-[minmax(0,1fr)_320px]">
