@@ -766,7 +766,7 @@ function MainNav({
           </Button>
         </div>
       </PageContainer>
-      <PageContainer as="nav" className="flex items-center justify-center gap-6 py-2 overflow-x-auto scrollbar-hide">
+      <PageContainer as="nav" className="flex items-center justify-start gap-6 overflow-x-auto py-2 scrollbar-hide md:justify-center">
         {navLinks.map((link) => {
           const active = activeFilter === link;
 
@@ -2475,7 +2475,7 @@ function MobileCollapsibleSidebarCard({
   const [open, setOpen] = React.useState(defaultOpen);
 
   return (
-    <section className={cn("rounded-[8px] border border-border p-4", className)}>
+    <section className={cn("min-w-0 overflow-hidden rounded-[8px] border border-border p-4", className)}>
       <div className="hidden lg:block">
         <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
           {title}
@@ -2483,15 +2483,15 @@ function MobileCollapsibleSidebarCard({
       </div>
       <button
         type="button"
-        className="flex w-full items-start justify-between gap-3 text-left lg:hidden"
+        className="flex w-full min-w-0 items-start justify-between gap-3 overflow-hidden text-left lg:hidden"
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
       >
-        <span className="min-w-0">
+        <span className="min-w-0 flex-1 overflow-hidden">
           <span className="block text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
             {title}
           </span>
-          <span className="mt-1 block truncate text-xs font-normal normal-case tracking-normal text-muted-foreground lg:hidden">
+          <span className="mt-1 line-clamp-2 block max-w-full break-words text-xs font-normal normal-case tracking-normal text-muted-foreground lg:hidden">
             {summary}
           </span>
         </span>
@@ -2543,6 +2543,7 @@ function LifestyleLeftSidebar({
       <MobileCollapsibleSidebarCard
         title="Your Daily Edit"
         summary={topStories[0]?.title || "Top stories ready"}
+        className="hidden lg:block"
       >
         <div className="space-y-3">
           {topStories.slice(0, 3).map((story) => (
@@ -2608,7 +2609,7 @@ function LifestyleLeftSidebar({
         </p>
       </MobileCollapsibleSidebarCard>
 
-      <MobileCollapsibleSidebarCard title="Follow Topics" summary={topicSummary}>
+      <MobileCollapsibleSidebarCard title="Follow Topics" summary={topicSummary} className="hidden lg:block">
         <div className="flex flex-wrap gap-2">
           {topics.map((topic) => {
             const active = profile.followedTopics.includes(topic.name);
@@ -2627,7 +2628,7 @@ function LifestyleLeftSidebar({
         </div>
       </MobileCollapsibleSidebarCard>
 
-      <MobileCollapsibleSidebarCard title="Collections" summary={collectionSummary} className="bg-muted/30">
+      <MobileCollapsibleSidebarCard title="Collections" summary={collectionSummary} className="hidden bg-muted/30 lg:block">
         <div className="space-y-2 text-sm">
           {collectionLabels.map((label) => (
             <p key={label} className="font-bold">{label}</p>
