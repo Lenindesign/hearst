@@ -5,6 +5,9 @@ import { useTheme } from "./theme-provider";
 import { NavBar } from "./nav-bar";
 import { BrandLogo } from "./brand-logo";
 import { brandLogos } from "@/lib/logos";
+import { themeOptions } from "@/lib/theme-options";
+import { brandToCssVars } from "@/lib/theme-css-vars";
+import type { BrandTheme } from "@/lib/brands";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -61,6 +64,75 @@ const defaultFooterCols: string[][] = [
   ["Videos", "Podcasts", "Newsletters", "Events", "Awards", "Archive", "About"],
   ["Contact", "Careers", "Advertise", "Subscribe", "Press", "Privacy", "Terms"],
 ];
+
+const selectedBrandThemeAliases: Record<string, string> = {
+  "pioneer-woman": "the-pioneer-woman",
+};
+
+const supplementalBrandProfiles: Record<string, { primary: string; secondary: string; fontDefault: string; fontHeadline: string; fontHeadlineWeight: number }> = {
+  "bring-a-trailer": {
+    primary: "#f40217",
+    secondary: "#f5f5f5",
+    fontDefault: "Open Sans",
+    fontHeadline: "Open Sans",
+    fontHeadlineWeight: 700,
+  },
+  "hot-rod": {
+    primary: "#ea232a",
+    secondary: "#141416",
+    fontDefault: "Geist",
+    fontHeadline: "Barlow Condensed",
+    fontHeadlineWeight: 700,
+  },
+  motortrend: {
+    primary: "#e90c17",
+    secondary: "#141416",
+    fontDefault: "Geist",
+    fontHeadline: "Barlow Condensed",
+    fontHeadlineWeight: 700,
+  },
+};
+
+function getSelectedBrandTheme(selectedBrand: { name: string; slug: string } | null, baseTheme: BrandTheme) {
+  if (!selectedBrand) return null;
+
+  const normalizedSlug = selectedBrandThemeAliases[selectedBrand.slug] ?? selectedBrand.slug;
+  const existingTheme = themeOptions.find((option) => option.slug === normalizedSlug);
+  if (existingTheme) return existingTheme;
+
+  const supplemental = supplementalBrandProfiles[selectedBrand.slug];
+  if (!supplemental) return null;
+
+  return {
+    ...baseTheme,
+    name: selectedBrand.name,
+    slug: selectedBrand.slug,
+    colors: {
+      ...baseTheme.colors,
+      "1": supplemental.primary,
+      "2": supplemental.secondary,
+      "3": supplemental.secondary,
+    },
+    fontDefault: supplemental.fontDefault,
+    fontSecondary: supplemental.fontDefault,
+    fontHeadline: supplemental.fontHeadline,
+    fontHeadlineWeight: supplemental.fontHeadlineWeight,
+    semanticColors: {
+      ...baseTheme.semanticColors,
+      "palette-background-brand": supplemental.primary,
+      "palette-background-default-link": supplemental.primary,
+      "palette-background-utility": supplemental.primary,
+      "palette-content-brand": supplemental.primary,
+    },
+    componentTokens: {
+      ...baseTheme.componentTokens,
+      "component-button-background-primary-solid-default": supplemental.primary,
+      "component-chip-border-neutral-selected": supplemental.primary,
+      "component-chip-content-neutral-selected": supplemental.primary,
+      "component-badge-background-primary": supplemental.primary,
+    },
+  } satisfies BrandTheme;
+}
 
 const initialLifestyleProfile: LifestyleRiverProfile = {
   followedTopics: ["Food", "Home"],
@@ -726,13 +798,16 @@ function MainNav({
   brandSlug,
   activeFilter,
   onFilterChange,
+  selectedBrand,
 }: {
   brandSlug: string;
   activeFilter?: string;
   onFilterChange?: (filter: string) => void;
+  selectedBrand?: { name: string; slug: string } | null;
 }) {
   const { brand } = useTheme();
-  const logo = brandLogos[brand.slug];
+  const mastheadSlug = selectedBrand?.slug ?? brand.slug;
+  const logo = brandLogos[mastheadSlug];
   const content = getContent(brandSlug);
   const isDestinationRiver = brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
   const destinationConfig = destinationConfigs[getDestinationMode(brand.slug)];
@@ -746,12 +821,14 @@ function MainNav({
         <div className="text-center">
           {logo ? (
             <BrandLogo
-              slug={brand.slug}
-              color={isDestinationRiver ? brand.colors["1"] : undefined}
+              slug={mastheadSlug}
+              color={selectedBrand ? "#121212" : isDestinationRiver ? brand.colors["1"] : undefined}
               className={cn(
                 "[&_svg]:w-auto mx-auto",
                 isDestinationRiver
-                  ? "[&_svg]:h-5 sm:[&_svg]:h-6 [&_svg]:max-w-[260px] sm:[&_svg]:max-w-[340px]"
+                  ? selectedBrand
+                    ? "[&_svg]:h-7 sm:[&_svg]:h-9 [&_svg]:max-w-[220px] sm:[&_svg]:max-w-[300px]"
+                    : "[&_svg]:h-5 sm:[&_svg]:h-6 [&_svg]:max-w-[260px] sm:[&_svg]:max-w-[340px]"
                   : "[&_svg]:h-10"
               )}
             />
@@ -2632,10 +2709,14 @@ function LifestyleRiverHomePage({
   activeFilter,
   destination,
   onRiverReset,
+  onBrandFilterChange,
+  onSelectedBrandChange,
 }: {
   activeFilter: string;
   destination: DestinationMode;
   onRiverReset?: () => void;
+  onBrandFilterChange?: () => void;
+  onSelectedBrandChange?: (brand: { name: string; slug: string } | null) => void;
 }) {
   const config = destinationConfigs[destination];
   const [profile, setProfile] = React.useState<LifestyleRiverProfile>(config.initialProfile);
@@ -2689,6 +2770,13 @@ function LifestyleRiverHomePage({
   }, [activeStoryPool, config.sourceNotes]);
 
   React.useEffect(() => {
+    const selectedBrand = activeBrandFilters.length === 1
+      ? sidebarBrands.find((brand) => brand.name === activeBrandFilters[0]) ?? null
+      : null;
+    onSelectedBrandChange?.(selectedBrand ? { name: selectedBrand.name, slug: selectedBrand.slug } : null);
+  }, [activeBrandFilters, onSelectedBrandChange, sidebarBrands]);
+
+  React.useEffect(() => {
     setVisibleCount(8);
   }, [activeBrandFilters, activeFilter, demoState.contentDay, demoState.daypart]);
 
@@ -2697,6 +2785,12 @@ function LifestyleRiverHomePage({
       onRiverReset?.();
     });
   }, [onRiverReset]);
+
+  const anchorBrandToTop = React.useCallback(() => {
+    window.requestAnimationFrame(() => {
+      onBrandFilterChange?.();
+    });
+  }, [onBrandFilterChange]);
 
   React.useEffect(() => {
     const node = sentinelRef.current;
@@ -2861,15 +2955,15 @@ function LifestyleRiverHomePage({
   const toggleBrandFilter = (brandName: string) => {
     setActiveBrandFilters((current) =>
       current.includes(brandName)
-        ? current.filter((name) => name !== brandName)
-        : [...current, brandName]
+        ? []
+        : [brandName]
     );
-    anchorRiverToTop();
+    anchorBrandToTop();
   };
 
   const clearBrandFilters = () => {
     setActiveBrandFilters([]);
-    anchorRiverToTop();
+    anchorBrandToTop();
   };
 
   const followBrand = (brandName: string) => {
@@ -2884,8 +2978,8 @@ function LifestyleRiverHomePage({
       .filter((brand) => brand.count > 0 && profile.followedBrands.includes(brand.name))
       .map((brand) => brand.name);
 
-    setActiveBrandFilters(availableFollowedBrands);
-    anchorRiverToTop();
+    setActiveBrandFilters(availableFollowedBrands.slice(0, 1));
+    anchorBrandToTop();
   };
 
   const hideStory = (id: string) => {
@@ -3232,12 +3326,26 @@ export function HomePageTemplate({
 }: HomePageTemplateProps = {}) {
   const { brand } = useTheme();
   const [activeLifestyleFilter, setActiveLifestyleFilter] = React.useState("For You");
+  const [selectedBrand, setSelectedBrand] = React.useState<{ name: string; slug: string } | null>(null);
+  const selectedBrandTheme = React.useMemo(
+    () => getSelectedBrandTheme(selectedBrand, brand),
+    [brand, selectedBrand]
+  );
+  const selectedBrandCssVars = React.useMemo(
+    () => selectedBrandTheme ? brandToCssVars(selectedBrandTheme) : undefined,
+    [selectedBrandTheme]
+  );
   const destinationContentRef = React.useRef<HTMLDivElement | null>(null);
   const isDestinationRiver = brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
   const destinationMode = getDestinationMode(brand.slug);
   const anchorDestinationContent = React.useCallback(() => {
     window.requestAnimationFrame(() => {
       destinationContentRef.current?.scrollIntoView({ block: "start", behavior: "smooth" });
+    });
+  }, []);
+  const anchorPageToTop = React.useCallback(() => {
+    window.requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
     });
   }, []);
   const handleLifestyleFilterChange = React.useCallback((filter: string) => {
@@ -3247,7 +3355,11 @@ export function HomePageTemplate({
   }, [anchorDestinationContent]);
 
   return (
-    <div className="min-h-screen font-brand bg-background">
+    <div
+      className="min-h-screen font-brand bg-background"
+      data-filter-brand={selectedBrand?.slug}
+      style={selectedBrandCssVars as React.CSSProperties | undefined}
+    >
       {/* Utility Bar — full width */}
       <UtilityBar />
 
@@ -3256,6 +3368,7 @@ export function HomePageTemplate({
         brandSlug={brand.slug}
         activeFilter={activeLifestyleFilter}
         onFilterChange={handleLifestyleFilterChange}
+        selectedBrand={selectedBrand}
       />
 
       {/* Page Body — constrained by the shared PageContainer */}
@@ -3270,6 +3383,8 @@ export function HomePageTemplate({
               activeFilter={activeLifestyleFilter}
               destination={destinationMode}
               onRiverReset={anchorDestinationContent}
+              onBrandFilterChange={anchorPageToTop}
+              onSelectedBrandChange={setSelectedBrand}
             />
           ) : layout === "overlapGrid" ? (
             <OverlapGridHomepageBody brandSlug={brand.slug} />

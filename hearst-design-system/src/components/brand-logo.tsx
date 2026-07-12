@@ -10,24 +10,27 @@ interface BrandLogoProps {
 }
 
 export function BrandLogo({ slug, className = "", color }: BrandLogoProps) {
-  const [svg, setSvg] = useState<string | null>(null);
+  const [loadedSvg, setLoadedSvg] = useState<{ src: string; markup: string } | null>(null);
   const src = brandLogos[slug];
 
   useEffect(() => {
     if (!src) return;
     fetch(src)
-      .then((r) => r.text())
+      .then((r) => {
+        if (!r.ok) throw new Error(`Unable to load logo: ${r.status}`);
+        return r.text();
+      })
       .then((text) => {
         let cleaned = text.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "");
         cleaned = cleaned.replace(/var\(--primary\s*,\s*([^)]+)\)/g, "$1");
-        setSvg(cleaned);
+        setLoadedSvg({ src, markup: cleaned });
       })
-      .catch(() => setSvg(null));
+      .catch(() => setLoadedSvg(null));
   }, [src]);
 
-  if (!svg) return null;
+  if (!src || loadedSvg?.src !== src) return null;
 
-  let html = svg;
+  let html = loadedSvg.markup;
   if (color) {
     html = html
       .replace(/fill="[^"]*"/g, `fill="${color}"`)
