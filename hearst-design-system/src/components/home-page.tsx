@@ -64,8 +64,8 @@ const defaultFooterCols: string[][] = [
 const initialLifestyleProfile: LifestyleRiverProfile = {
   followedTopics: ["Food", "Home"],
   followedBrands: ["Good Housekeeping", "Country Living"],
-  savedTags: ["dinner ideas", "sleep", "decorating"],
-  boostedTags: [],
+  savedTags: ["dinner ideas", "sleep", "decorating", "kitchen", "design", "home"],
+  boostedTags: ["kitchen", "design", "home", "country living"],
   savedIds: [],
   hiddenIds: [],
 };
@@ -73,8 +73,8 @@ const initialLifestyleProfile: LifestyleRiverProfile = {
 const initialAutosProfile: LifestyleRiverProfile = {
   followedTopics: ["Reviews", "Buying Guides"],
   followedBrands: ["Car and Driver", "Road & Track"],
-  savedTags: ["evs", "reviews", "performance"],
-  boostedTags: [],
+  savedTags: ["evs", "electric", "reviews", "performance", "maserati", "grecale", "folgore", "price"],
+  boostedTags: ["maserati", "grecale", "folgore", "price", "electric"],
   savedIds: [],
   hiddenIds: [],
 };
@@ -486,8 +486,10 @@ function getLifestyleScoreBreakdown(
   const popularity = story.popularity;
   const followedTopic = profile.followedTopics.includes(story.topic) ? 18 : 0;
   const followedBrand = profile.followedBrands.includes(story.brand) ? 16 : 0;
-  const savedTag = story.tags.some((tag) => profile.savedTags.includes(tag)) ? 14 : 0;
-  const moreLikeThis = story.tags.some((tag) => profile.boostedTags.includes(tag)) ? 22 : 0;
+  const savedTagMatches = story.tags.filter((tag) => profile.savedTags.includes(tag)).length;
+  const boostedTagMatches = story.tags.filter((tag) => profile.boostedTags.includes(tag)).length;
+  const savedTag = savedTagMatches > 0 ? 14 + Math.min(18, (savedTagMatches - 1) * 6) : 0;
+  const moreLikeThis = boostedTagMatches > 0 ? 22 + Math.min(24, (boostedTagMatches - 1) * 8) : 0;
   const savedStory = profile.savedIds.includes(story.id) ? 6 : 0;
   const recency = getLifestyleRecencyScore(story, demoState);
   const timeOfDay = getLifestyleTimeOfDayScore(story, demoState, config);
@@ -951,7 +953,9 @@ function LifestyleRiverImage({
 function getLifestyleImagePosition(story: LifestyleRiverStory) {
   if (story.id === lifestyleDefaultLeadStoryId) return "center 22%";
   if (story.title === "Are Corbin and Parmida Still Together? Corbin Speaks Out") return "center 18%";
-  if (story.title === "All About Zoey Deutch’s Fiancé, Jimmy Tatro") return "center 18%";
+  if (story.title === "All About Zoey Deutch’s Fiancé, Jimmy Tatro") return "center 10%";
+  if (story.title === "Inside Adéla’s Night Out in Paris With Wardrobe.NYC and H&M") return "center 8%";
+  if (story.title === "Kate Middleton’s Style at Wimbledon Throughout the Years") return "center 5%";
   if (story.title === "Minka Kelly and Dan Reynolds’s Complete Relationship Timeline") return "center 18%";
   return "center";
 }
@@ -968,6 +972,248 @@ function LifestyleBrandSource({ story }: { story: LifestyleRiverStory }) {
 }
 
 type LifestyleCardKind = "article" | "gallery" | "video" | "recipe" | "shopping";
+
+type ContextualAdUnit = {
+  id: string;
+  sponsor: string;
+  title: string;
+  summary: string;
+  cta: string;
+  topics: string[];
+  tags: string[];
+  creativeLabel: string;
+  imageUrl: string;
+  palette: {
+    background: string;
+    foreground: string;
+    accent: string;
+    soft: string;
+  };
+};
+
+type ContextualAdTuple = readonly [
+  string,
+  string,
+  string,
+  string,
+  string,
+  string[],
+  string[],
+  string,
+  string,
+  string,
+  string,
+  string,
+  string
+];
+
+const contextualAdCatalog = {
+  lifestyle: [
+    ["lifestyle-home-refresh", "Hearst Market", "Summer Home Refresh", "Editor-picked bedding, cookware, storage, and patio upgrades for the rooms readers are saving now.", "Shop the edit", ["Home", "Shopping"], ["decorating", "products", "summer", "home"], "Home", "#fff7f4", "#3b1e2f", "#7A2E57", "#f0dbe6", "https://hips.hearstapps.com/hmg-prod/images/824e435b-c480-4cba-92e3-cb4f5f72286e.jpg"],
+    ["lifestyle-dinner-planner", "Delish Selects", "Tonight's Dinner Plan", "Fast mains, flexible sides, and kitchen tools matched to food and weeknight-cooking intent.", "Build dinner", ["Food", "Food Drinks", "Food News"], ["dinner ideas", "recipe", "cookout", "food"], "Food", "#fff6e8", "#3a2514", "#9a4c13", "#f3d29f", "https://hips.hearstapps.com/hmg-prod/images/f6b3c525-576e-4b56-a6d3-350a327a4531.jpg"],
+    ["lifestyle-sleep-reset", "Prevention Wellness", "Sleep Better Tonight", "Pillows, routines, and calm-down tools for readers returning to wellness content late in the day.", "See sleep picks", ["Wellness"], ["sleep", "health", "wellness"], "Wellness", "#f3f7ff", "#18243f", "#435f9a", "#dbe6ff", "https://hips.hearstapps.com/hmg-prod/images/13cee80d-3684-44b4-b7d4-56465a4730b2.jpeg"],
+    ["lifestyle-beauty-counter", "Cosmo Beauty Lab", "The 10-Minute Beauty Counter", "High-signal beauty products and routines for style, shopping, and celebrity browsing sessions.", "Open the counter", ["Style", "Shopping", "Entertainment"], ["beauty", "style", "products", "celebrity"], "Beauty", "#fff1f7", "#431525", "#b51d62", "#f8c5df", "https://hips.hearstapps.com/hmg-prod/images/body-lotion-opener-691e31beacd6b.png"],
+    ["lifestyle-garden-weekend", "Country Living Finds", "Weekend Garden List", "Planters, tools, and porch pieces tuned to gardening, outdoor, and weekend-project signals.", "Plan the weekend", ["Home", "Shopping"], ["garden", "outdoor", "decorating", "weekend"], "Garden", "#f4faef", "#17321c", "#3f7a47", "#d6e9c8", "https://hips.hearstapps.com/hmg-prod/images/ad14fef8-09c7-421e-af6b-71e2dc6f4894.jpeg"],
+    ["lifestyle-hosting-kit", "Good Housekeeping Tested", "Hosting Without the Guesswork", "Lab-informed serveware, cleaning helpers, and party tools for readers saving home-service content.", "See tested picks", ["Home", "Food", "Shopping"], ["cleaning", "products", "party", "home"], "Tested", "#f7fbfb", "#15333a", "#0b7285", "#cdebf0", "https://hips.hearstapps.com/hmg-prod/images/8e24db63-0a89-4b73-b52e-e403f15f4664.jpeg"],
+    ["lifestyle-small-space", "House Beautiful Studio", "Small-Space Fixes", "Storage, lighting, and furniture picks for apartment, room refresh, and design-intent sessions.", "Refresh a room", ["Home", "Shopping"], ["decorating", "rooms", "products", "design"], "Rooms", "#f8f5ef", "#31261d", "#80613d", "#e5d8c3", "https://hips.hearstapps.com/hmg-prod/images/bd62be17-e3bc-47ce-998b-df0fb3603b5b.jpeg"],
+    ["lifestyle-teen-style", "Seventeen Style", "Back-to-School Style Drop", "Trend-led fashion, beauty, and dorm finds for younger style and shopping journeys.", "Shop trends", ["Style", "Shopping"], ["style", "beauty", "products", "school"], "Style", "#f6f0ff", "#251342", "#7b45c4", "#dfcff6", "https://hips.hearstapps.com/hmg-prod/images/03aba195-11cd-441a-914b-e56bf5cdc562.jpeg"],
+    ["lifestyle-family-meal-kit", "Woman's Day Kitchen", "Family Meal Shortcut", "A practical sponsor module for meal planning, leftovers, and family dinner intent.", "Get the shortcut", ["Food", "Family"], ["dinner ideas", "family", "food", "recipe"], "Family", "#fff8ed", "#362312", "#a65d13", "#f4ddb7", "https://hips.hearstapps.com/hmg-prod/images/8c75311c-1d90-4191-b4dd-cfb0577ad148.jpeg"],
+    ["lifestyle-cozy-collection", "Pioneer Woman Picks", "Cozy Kitchen Collection", "Cookware, table linens, and colorful prep tools aligned with recipe and home-commerce behavior.", "Explore picks", ["Food", "Home", "Shopping"], ["cookware", "recipe", "products", "home"], "Kitchen", "#fff2ee", "#351b17", "#b94b3f", "#f3c8c0", "https://hips.hearstapps.com/hmg-prod/images/72849786-d2ce-4cfe-8e54-2aea79b0db5c.jpeg"],
+  ],
+  autos: [
+    ["autos-ev-home-charge", "ChargePoint", "EV Charging, Matched to Your Garage", "A contextual offer for readers comparing EVs, range, charging speed, and home setup decisions.", "Estimate charging", ["EVs", "Buying Guides"], ["evs", "electric", "buying", "reviews"], "EV", "#eef8ff", "#10283b", "#1b5f8a", "#cce8f7", "https://hips.hearstapps.com/hmg-prod/images/2025-chevrolet-equinox-rs-awd-132-67110e2133505.jpg"],
+    ["autos-tire-finder", "Michelin Garage", "Find the Right Performance Tire", "Tire and handling recommendations for readers deep in reviews, performance, and track-day content.", "Match tires", ["Reviews", "Performance", "Racing"], ["performance", "drive", "racing", "reviews"], "Grip", "#f2f7fb", "#101f2a", "#1b5f8a", "#d8e9f2", "https://hips.hearstapps.com/hmg-prod/images/d91a8038-0b16-435e-9cc3-e5629f2c0d81.jpeg"],
+    ["autos-auction-alert", "Collector Watch", "Auction Watchlist", "Collector-car alerts aligned to classics, Bring a Trailer behavior, and save-for-later browsing.", "Track listings", ["Classics", "Auctions"], ["auction", "classic", "collector", "used"], "Bid", "#f8f4ec", "#302414", "#7b5a27", "#e8d8b7", "https://hips.hearstapps.com/hmg-prod/images/92a52d3f-3d3c-4e38-b3bd-7f82dc8b7146.jpg"],
+    ["autos-tool-chest", "Craftsman Pro", "Build the Home Garage", "Tools, lifts, storage, and detailing gear for readers acting on trucks, classics, and project-car intent.", "Open garage", ["Trucks", "Classics", "Performance"], ["truck", "classic", "gear", "engine"], "Garage", "#f3f5f6", "#1e2529", "#4f6673", "#dce5e9", "https://hips.hearstapps.com/hmg-prod/images/f04e60d2-9db2-4c60-91ba-a037f75a8fce.jpeg"],
+    ["autos-insurance", "Hagerty", "Collector Coverage Check", "Insurance guidance for readers browsing classics, auctions, and collectible performance cars.", "Check coverage", ["Classics", "Auctions", "Buying Guides"], ["classic", "collector", "auction", "buying"], "Cover", "#eef5f8", "#0f2a38", "#1b5f8a", "#d5e8f0", "https://hips.hearstapps.com/hmg-prod/images/4d6fd00c-2cd1-4bf1-bbba-fca826f647e6.jpg"],
+    ["autos-racing-weekend", "TrackPass", "Your Racing Weekend", "Tickets, streams, and schedules for readers consuming racing news and late-night performance content.", "Plan race day", ["Racing", "Performance"], ["racing", "speed", "performance", "track"], "Race", "#f6f9ff", "#13213f", "#1b5f8a", "#d9e5fa", "https://hips.hearstapps.com/hmg-prod/images/b3eae25c-4d64-4443-aa85-d92038993110.jpeg"],
+    ["autos-detail-kit", "Meguiar's", "Weekend Detail Kit", "Wash, wax, ceramic, and interior care surfaced when the reader leans toward ownership utility.", "Build the kit", ["Buying Guides", "Classics", "Trucks"], ["used", "classic", "truck", "products"], "Detail", "#f5fbff", "#122533", "#1b5f8a", "#d7edf7", "https://hips.hearstapps.com/hmg-prod/images/35a0cc29-04f8-4da2-8884-4db6a81a1814.jpg"],
+    ["autos-finance", "Auto Finance Desk", "Know Your Monthly Number", "Financing and value tools for readers comparing models, reviews, and buying-guide content.", "Estimate payment", ["Buying Guides", "Reviews"], ["buying", "reviews", "used", "evs"], "Value", "#f4f8f9", "#162a31", "#1b5f8a", "#d9e8ed", "https://hips.hearstapps.com/hmg-prod/images/b259176b-4ee0-448c-9af3-d0a8c63a86af.jpg"],
+    ["autos-truck-cargo", "WeatherTech", "Truck Bed and Cabin Protection", "Cargo liners, mats, and storage systems for readers signaling truck and adventure utility.", "Fit my truck", ["Trucks", "Buying Guides"], ["truck", "gear", "products", "buying"], "Truck", "#f7f7f2", "#272a1e", "#5d6b39", "#e1e6cc", "https://hips.hearstapps.com/hmg-prod/images/52484e15-9a72-4b16-baf8-8470bd98f328.jpg"],
+    ["autos-performance-parts", "Summit Racing", "Performance Parts Finder", "Engine, exhaust, and suspension modules for readers following horsepower and racing signals.", "Find parts", ["Performance", "Racing", "Classics"], ["performance", "engine", "horsepower", "racing"], "Parts", "#fff3f0", "#331914", "#b33b2e", "#f3c8bf", "https://hips.hearstapps.com/hmg-prod/images/500cbd60-b7a3-4bad-9abe-367c1ff574f8.jpg"],
+  ],
+  flux: [
+    ["flux-designer-sale", "Luxury Edit", "The Designer Sale Watch", "A shopping module for readers browsing style, celebrity looks, and high-intent product stories.", "Watch the edit", ["Style", "Shopping"], ["style", "shopping", "fashion", "products"], "Style", "#f7f7f7", "#000000", "#000000", "#e5e5e5", "https://hips.hearstapps.com/hmg-prod/images/b2d33641-54c4-4049-bf45-dd15e0316852.jpg"],
+    ["flux-beauty-wardrobe", "Beauty Counter", "Build a Summer Beauty Wardrobe", "Fragrance, skin, and makeup picks aligned to beauty and style behavior.", "Open beauty", ["Beauty", "Style"], ["beauty", "style", "shopping", "fashion"], "Beauty", "#fff6fa", "#1c1016", "#000000", "#f1d9e3", "https://hips.hearstapps.com/hmg-prod/images/a52e5ed3-b530-41c3-a9e1-457d122763f8.jpg"],
+    ["flux-art-weekend", "Culture Pass", "Your Culture Weekend", "Gallery openings, restaurants, performances, and bookable moments for culture-led sessions.", "Plan the weekend", ["Culture", "Events", "Travel"], ["culture", "events", "travel", "feature"], "Culture", "#f6f3ee", "#16110c", "#000000", "#e5ded0", "https://hips.hearstapps.com/hmg-prod/images/bfa63434-07db-4da1-ad7c-9ea52c6e56ee.jpeg"],
+    ["flux-interior-materials", "Design Materials", "A Better Room Starts With Texture", "Furniture, lighting, and fabric recommendations for interiors and design-intent readers.", "Source the room", ["Design", "Shopping"], ["design", "home", "products", "interiors"], "Design", "#f4f2ef", "#181512", "#000000", "#ded8d0", "https://hips.hearstapps.com/hmg-prod/images/30454208-2b0a-4ed8-91a1-537490290eaf.jpg"],
+    ["flux-travel-club", "Town & Country Travel", "The Long Weekend List", "Hotels, luggage, and reservations tied to travel, culture, and luxury browsing behavior.", "See the list", ["Travel", "Culture", "Shopping"], ["travel", "culture", "shopping", "leisure"], "Travel", "#f2f6f7", "#101719", "#000000", "#dbe6e8", "https://hips.hearstapps.com/hmg-prod/images/cccaef24-76e6-4809-9500-8bb1d70824ab.jpg"],
+    ["flux-watch-jewelry", "Fine Objects", "Jewelry and Watch Radar", "Luxury objects matched to celebrity, event, and shopping signals.", "View radar", ["Shopping", "Style", "Events"], ["jewelry", "shopping", "celebrity", "events"], "Objects", "#faf7ef", "#1d1810", "#000000", "#e9dfc6", "https://hips.hearstapps.com/hmg-prod/images/a5eadcc3-e1d6-48d4-ad47-d42dc01a22b4.jpg"],
+    ["flux-mens-style", "Esquire Shop", "Sharper Summer Dressing", "Menswear, grooming, and accessories for culture and style readers.", "Get dressed", ["Style", "Shopping"], ["style", "fashion", "shopping", "grooming"], "Menswear", "#f5f5f4", "#111111", "#000000", "#dedede", "https://hips.hearstapps.com/hmg-prod/images/20eda3cc-1ce6-4365-ad78-44219f1391eb.png"],
+    ["flux-garden-party", "Veranda Entertains", "Garden Party Checklist", "Outdoor furniture, tabletop, flowers, and entertaining ideas for design and events sessions.", "Host outside", ["Design", "Events"], ["design", "home", "events", "garden"], "Host", "#f3f8f0", "#121d10", "#000000", "#dce8d6", "https://hips.hearstapps.com/hmg-prod/images/9357bef4-cbb5-4634-b167-58897274f85c.jpeg"],
+    ["flux-red-carpet", "Red Carpet Desk", "The Event Lookbook", "Dresses, beauty, accessories, and editor context for celebrity and event-led browsing.", "Open lookbook", ["Events", "Style", "Beauty"], ["celebrity", "events", "style", "beauty"], "Event", "#fff1f1", "#241010", "#000000", "#f0cccc", "https://hips.hearstapps.com/hmg-prod/images/7984ffdf-0689-4cd5-a2fc-966eb9187dba.jpeg"],
+    ["flux-design-consult", "Elle Decor Studio", "Find Your Design Direction", "A high-touch design consult module for readers saving interiors and home inspiration.", "Start consult", ["Design"], ["design", "home", "interiors", "products"], "Studio", "#f8f8f5", "#171713", "#000000", "#e5e5db", "https://hips.hearstapps.com/hmg-prod/images/d4338644-77dd-4f18-980f-e99a3f966d50.jpg"],
+  ],
+  ew: [
+    ["ew-running-shoe", "Runner's Lab", "Find Your Next Running Shoe", "Shoe, training, and recovery recommendations for fitness and running behavior.", "Match my run", ["Fitness", "Gear"], ["fitness", "running", "gear", "training"], "Run", "#fff0f0", "#3a080e", "#E50022", "#ffd7dc", "https://hips.hearstapps.com/hmg-prod/images/d75dce99-2d12-45cc-ad48-8e5fabb43be2.jpg"],
+    ["ew-home-gym", "Garage Gym Builder", "Build a Smarter Home Gym", "Weights, mats, benches, and programming for readers engaging with strength and gear stories.", "Plan gym", ["Fitness", "Gear"], ["fitness", "gear", "training", "products"], "Gym", "#fff4f4", "#34080d", "#E50022", "#ffdadd", "https://hips.hearstapps.com/hmg-prod/images/bass-headphones-earbuds-001-669a8ef2be058.jpg"],
+    ["ew-bike-fit", "Bicycling Fit Studio", "Dial In Your Bike Fit", "Fit tools, shoes, saddles, and gear surfaced for cycling and adventure intent.", "Tune fit", ["Gear", "Adventure", "Fitness"], ["bike", "cycling", "gear", "adventure"], "Bike", "#f2f8ff", "#102235", "#E50022", "#d8e9fb", "https://hips.hearstapps.com/hmg-prod/images/01074154-c6c1-4856-bca5-7ab2ea491991.jpeg"],
+    ["ew-recovery-kit", "Recovery Desk", "Recovery That Fits Your Routine", "Sleep, mobility, massage, and recovery tools matched to wellness and fitness signals.", "Recover better", ["Wellness", "Fitness"], ["wellness", "recovery", "sleep", "health"], "Recover", "#f6f8fb", "#111b28", "#E50022", "#dfe8f1", "https://hips.hearstapps.com/hmg-prod/images/adventure-toys-for-kids-69a8a11950639.png"],
+    ["ew-tech-kit", "Popular Mechanics Tested", "Gear That Solves the Problem", "Tech, tools, and tested equipment for science, mechanics, and gear browsing.", "See tested gear", ["Tech", "Gear"], ["tech", "gear", "science", "products"], "Tested", "#f3f6f7", "#121f25", "#E50022", "#dce6ea", "https://hips.hearstapps.com/hmg-prod/images/amazon-tech-products-2021-1635430982.jpg"],
+    ["ew-nutrition-plan", "Fuel Plan", "Nutrition for the Next Goal", "Meal, protein, hydration, and supplement signals for wellness and training readers.", "Build fuel plan", ["Nutrition", "Wellness", "Fitness"], ["nutrition", "food", "health", "training"], "Fuel", "#fff8ed", "#34220e", "#E50022", "#f2dfbd", "https://hips.hearstapps.com/hmg-prod/images/4446e948-4ffa-4a76-a3f2-06373961eb3f.jpg"],
+    ["ew-adventure-pack", "Trail Kit", "Weekend Adventure Pack", "Bags, shoes, layers, and safety gear for readers signaling adventure and outdoor interest.", "Pack better", ["Adventure", "Gear"], ["adventure", "gear", "outdoor", "products"], "Trail", "#f4faef", "#142b16", "#E50022", "#dceccd", "https://hips.hearstapps.com/hmg-prod/images/dorm-room-ideas-681a6f88db8db.jpg"],
+    ["ew-health-check", "Health Navigator", "Your Next Health Check", "Screenings, routines, and practical next steps aligned with health and life content.", "Make a plan", ["Wellness", "Life"], ["health", "wellness", "life", "sleep"], "Health", "#fff5f6", "#33080d", "#E50022", "#ffdce0", "https://hips.hearstapps.com/hmg-prod/images/pedaling-daniel-wakefield-pasley-1658942201.jpg"],
+    ["ew-smartwatch", "Wearable Lab", "Track What Actually Matters", "Watch, heart-rate, and recovery tools matched to tech, fitness, and training sessions.", "Compare watches", ["Tech", "Fitness", "Gear"], ["tech", "fitness", "gear", "training"], "Track", "#f7f7ff", "#171730", "#E50022", "#e1e1fb", "https://hips.hearstapps.com/hmg-prod/images/b32ab90f-fef4-4582-a72f-d1a8621e1148.jpg"],
+    ["ew-book-club", "Oprah Daily Life", "A Better Night Routine", "Books, journaling, sleep, and reflection picks for late-night life and wellness browsing.", "Start tonight", ["Life", "Wellness"], ["life", "sleep", "wellness", "books"], "Life", "#fff2f6", "#34101b", "#E50022", "#f4d4de", "https://hips.hearstapps.com/hmg-prod/images/ba0b950d-7abb-4544-b6df-13f3ce1d21bf.jpg"],
+  ],
+} satisfies Record<DestinationMode, ContextualAdTuple[]>;
+
+function normalizeContextualAds(units: ContextualAdTuple[]): ContextualAdUnit[] {
+  return units.map(([id, sponsor, title, summary, cta, topics, tags, creativeLabel, background, foreground, accent, soft, imageUrl]) => ({
+    id,
+    sponsor,
+    title,
+    summary,
+    cta,
+    topics,
+    tags,
+    creativeLabel,
+    imageUrl,
+    palette: { background, foreground, accent, soft },
+  }));
+}
+
+const contextualAdsByDestination: Record<DestinationMode, ContextualAdUnit[]> = {
+  lifestyle: normalizeContextualAds(contextualAdCatalog.lifestyle),
+  autos: normalizeContextualAds(contextualAdCatalog.autos),
+  flux: normalizeContextualAds(contextualAdCatalog.flux),
+  ew: normalizeContextualAds(contextualAdCatalog.ew),
+};
+
+function scoreContextualAd(
+  ad: ContextualAdUnit,
+  profile: LifestyleRiverProfile,
+  demoState: LifestyleDemoState,
+  config: DestinationConfig,
+  activeFilter: string,
+  surroundingStories: LifestyleRiverStory[]
+) {
+  const daypart = config.dayparts[demoState.daypart];
+  let score = 0;
+
+  if (activeFilter !== "For You" && ad.topics.some((topic) => topic === activeFilter || topic.startsWith(activeFilter))) score += 28;
+  score += ad.topics.filter((topic) => profile.followedTopics.includes(topic)).length * 16;
+  score += ad.tags.filter((tag) => profile.savedTags.includes(tag) || profile.boostedTags.includes(tag)).length * 14;
+  score += ad.topics.filter((topic) => daypart.preferredTopics.includes(topic)).length * 12;
+  score += ad.tags.filter((tag) => daypart.preferredTags.includes(tag)).length * 10;
+  score += surroundingStories.filter((story) => ad.topics.includes(story.topic)).length * 8;
+  score += surroundingStories.filter((story) => story.tags.some((tag) => ad.tags.includes(tag))).length * 6;
+
+  return score;
+}
+
+function getContextualAdForSlot({
+  destination,
+  slotIndex,
+  profile,
+  demoState,
+  config,
+  activeFilter,
+  stories,
+}: {
+  destination: DestinationMode;
+  slotIndex: number;
+  profile: LifestyleRiverProfile;
+  demoState: LifestyleDemoState;
+  config: DestinationConfig;
+  activeFilter: string;
+  stories: LifestyleRiverStory[];
+}) {
+  const surroundingStories = stories.slice(Math.max(0, slotIndex - 2), Math.min(stories.length, slotIndex + 3));
+  const rankedAds = contextualAdsByDestination[destination]
+    .map((ad) => ({
+      ad,
+      score: scoreContextualAd(ad, profile, demoState, config, activeFilter, surroundingStories),
+    }))
+    .sort((a, b) => b.score - a.score || a.ad.id.localeCompare(b.ad.id));
+
+  const match = rankedAds[slotIndex % rankedAds.length] ?? rankedAds[0];
+  return match;
+}
+
+function ContextualRiverAdCard({
+  ad,
+  score,
+  slotNumber,
+}: {
+  ad: ContextualAdUnit;
+  score: number;
+  slotNumber: number;
+}) {
+  return (
+    <article
+      className="grid min-w-0 overflow-hidden rounded-[8px] border border-border bg-background p-4 sm:grid-cols-[176px_minmax(0,1fr)] sm:gap-4"
+      aria-label={`Sponsored: ${ad.title}`}
+    >
+      <div
+        className="relative flex min-h-44 flex-col justify-between overflow-hidden rounded-[4px] p-4 text-sm sm:min-h-full"
+        style={{ backgroundColor: ad.palette.background, color: ad.palette.foreground }}
+      >
+        <div
+          role="img"
+          aria-label={`${ad.sponsor}: ${ad.title}`}
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url("${ad.imageUrl}")` }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/20 to-black/70" />
+        <div className="relative flex items-center justify-between gap-3 text-white">
+          <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest">
+            Sponsored
+          </span>
+          <span
+            className="flex h-9 w-9 items-center justify-center rounded-full text-xs font-black"
+            style={{ backgroundColor: ad.palette.accent, color: "#fff" }}
+          >
+            AD
+          </span>
+        </div>
+        <div className="relative text-white">
+          <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest opacity-90">
+            {ad.creativeLabel}
+          </p>
+          <p className="mt-2 line-clamp-2 text-xs font-semibold leading-4 text-white/85">
+            Live-feed creative
+          </p>
+        </div>
+      </div>
+      <div className="min-w-0 py-4 sm:py-0">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+            Contextual Ad
+          </span>
+          <span className="rounded-full bg-muted px-2 py-0.5 text-[length:var(--text-token-4xs)] font-semibold text-muted-foreground">
+            Slot {slotNumber}
+          </span>
+          <span className="text-xs text-muted-foreground">{ad.sponsor}</span>
+        </div>
+        <h2 className="headline mt-3 text-2xl leading-tight sm:text-3xl">
+          {ad.title}
+        </h2>
+        <p className="mt-3 text-sm leading-6 text-muted-foreground">
+          {ad.summary}
+        </p>
+        <div className="mt-4 flex flex-wrap gap-1.5">
+          {ad.topics.slice(0, 3).map((topic) => (
+            <span
+              key={topic}
+              className="rounded-full border border-border bg-muted/40 px-2 py-1 text-[length:var(--text-token-4xs)] font-semibold"
+            >
+              {topic}
+            </span>
+          ))}
+        </div>
+        <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-border pt-4">
+          <Button variant="outline" size="xs">
+            {ad.cta}
+          </Button>
+          <span className="text-xs text-muted-foreground">
+            Matched to intent score {score}
+          </span>
+        </div>
+      </div>
+    </article>
+  );
+}
 
 function getLifestyleCardKind(story: LifestyleRiverStory): LifestyleCardKind {
   const searchable = `${story.topic} ${story.title}`.toLowerCase();
@@ -1098,6 +1344,121 @@ function LifestyleCardModelGuide() {
             </article>
           );
         })}
+      </div>
+    </section>
+  );
+}
+
+function ContextualAdLogicGuide({
+  profile,
+  demoState,
+  config,
+  activeFilter,
+  stories,
+}: {
+  profile: LifestyleRiverProfile;
+  demoState: LifestyleDemoState;
+  config: DestinationConfig;
+  activeFilter: string;
+  stories: LifestyleRiverStory[];
+}) {
+  const firstAdMatch = getContextualAdForSlot({
+    destination: config.mode,
+    slotIndex: 0,
+    profile,
+    demoState,
+    config,
+    activeFilter,
+    stories,
+  });
+  const units = contextualAdsByDestination[config.mode];
+
+  return (
+    <section className="mt-4 rounded-[8px] border border-border bg-background" aria-label="Contextual ad logic">
+      <div className="border-b border-border p-4 sm:p-5">
+        <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+          Contextual Ad Logic
+        </p>
+        <h2 className="headline mt-1 text-2xl leading-tight">
+          Sponsored units enter the river every five cards.
+        </h2>
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+          Ads use the same intent context as the editorial ranking layer: active section, followed topics, saved tags,
+          more-like-this behavior, time of day, and the surrounding story cluster. Creative imagery uses a dedicated
+          live-feed image set pulled from public Hearst brand feeds and pre-filtered against the river dataset.
+        </p>
+      </div>
+
+      <div className="grid divide-y divide-border lg:grid-cols-[minmax(0,1fr)_320px] lg:divide-x lg:divide-y-0">
+        <div className="grid gap-4 p-4 sm:grid-cols-3 sm:p-5">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest text-primary">Placement</p>
+            <p className="mt-2 text-sm font-bold">After cards 5, 10, 15...</p>
+            <p className="mt-1 text-xs leading-5 text-muted-foreground">
+              The first unit appears after the fifth editorial card. Infinite scroll adds more as more story cards load.
+            </p>
+          </div>
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest text-primary">Matching inputs</p>
+            <p className="mt-2 text-sm font-bold">{activeFilter} · {config.dayparts[demoState.daypart].label}</p>
+            <p className="mt-1 text-xs leading-5 text-muted-foreground">
+              Followed topics, saved tags, boosted tags, daypart preferences, and nearby story tags all add to the ad score.
+            </p>
+          </div>
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest text-primary">Creative source</p>
+            <p className="mt-2 text-sm font-bold">Dedicated ad image set</p>
+            <p className="mt-1 text-xs leading-5 text-muted-foreground">
+              The ad slot uses a same-topic or same-tag CDN image that is not already in the story river data.
+            </p>
+          </div>
+        </div>
+
+        <div className="p-4 sm:p-5">
+          <p className="text-xs font-bold uppercase tracking-widest text-primary">Next matched ad</p>
+          {firstAdMatch ? (
+            <div className="mt-3 space-y-3">
+              <div className="overflow-hidden rounded-[8px] border border-border">
+                <div
+                  role="img"
+                  aria-label={`Ad creative: ${firstAdMatch.ad.title}`}
+                  className="aspect-video w-full bg-cover bg-center"
+                  style={{ backgroundImage: `url("${firstAdMatch.ad.imageUrl}")` }}
+                />
+                <div className="p-3">
+                  <p className="text-sm font-bold leading-5">{firstAdMatch.ad.title}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {firstAdMatch.ad.sponsor} · score {firstAdMatch.score}
+                  </p>
+                  <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                    Image source: live Hearst feed image outside the river dataset
+                  </p>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <p className="mt-3 text-sm text-muted-foreground">No ad match in this filtered view.</p>
+          )}
+        </div>
+      </div>
+
+      <div className="border-t border-border p-4 sm:p-5">
+        <p className="text-xs font-bold uppercase tracking-widest text-primary">Available {config.productName} ad set</p>
+        <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+          {units.map((ad) => (
+            <div key={ad.id} className="rounded-[8px] border border-border p-3">
+              <p className="text-sm font-bold leading-5">{ad.title}</p>
+              <p className="mt-1 truncate text-xs text-muted-foreground">{ad.sponsor}</p>
+              <div className="mt-2 flex flex-wrap gap-1">
+                {ad.topics.slice(0, 2).map((topic) => (
+                  <span key={topic} className="rounded-full bg-muted px-2 py-0.5 text-[length:var(--text-token-4xs)] font-semibold">
+                    {topic}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -1430,7 +1791,7 @@ function LifestyleReaderContextRail({
 
   return (
     <aside className="hidden xl:block" aria-label="Contextual story recommendations">
-      <div className="sticky top-20 space-y-4">
+      <div className="sticky top-20 max-h-[calc(100vh-7rem)] space-y-4 overflow-y-auto pr-1">
         <div className="rounded-[8px] border border-border bg-muted/30 p-4">
           <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
             Reader Intent
@@ -1483,10 +1844,15 @@ function LifestyleReaderContextRail({
 }
 
 function LifestyleReaderSidebarAd() {
+  const readerAdImageUrl = "https://hips.hearstapps.com/hmg-prod/images/bd62be17-e3bc-47ce-998b-df0fb3603b5b.jpeg";
+
   return (
     <aside className="hidden lg:block" aria-label="Advertisement">
-      <div className="sticky top-20 flex h-[600px] w-[300px] flex-col overflow-hidden rounded-[8px] border border-[#d7c7b8] bg-[#fffaf4] shadow-sm">
-        <div className="flex flex-1 flex-col justify-between p-6">
+      <div
+        className="sticky top-20 flex h-[600px] w-[300px] flex-col overflow-hidden rounded-[8px] border border-[#d7c7b8] bg-[#fffaf4] bg-cover bg-center shadow-sm"
+        style={{ backgroundImage: `url("${readerAdImageUrl}")` }}
+      >
+        <div className="flex flex-1 flex-col justify-between bg-gradient-to-b from-[#fffaf4]/95 via-[#fffaf4]/70 to-[#3b1e2f]/80 p-6">
           <div>
             <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-[0.24em] text-primary">
               Advertisement
@@ -1498,17 +1864,11 @@ function LifestyleReaderSidebarAd() {
               Fresh furniture, cookware, linens, and garden finds selected for the season ahead.
             </p>
           </div>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-2">
-              <div className="aspect-square bg-[#e8d9c9]" />
-              <div className="aspect-square bg-[#d7e4d1]" />
-              <div className="aspect-square bg-[#f3c7b5]" />
-              <div className="aspect-square bg-[#c9d8e8]" />
-            </div>
-            <div className="rounded-full bg-primary px-4 py-3 text-center text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary-foreground">
+          <div className="space-y-4 text-white">
+            <div className="rounded-full bg-primary px-4 py-3 text-center text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary-foreground shadow-sm">
               Explore the Edit
             </div>
-            <p className="text-center text-[length:var(--text-token-4xs)] uppercase tracking-widest text-muted-foreground">
+            <p className="text-center text-[length:var(--text-token-4xs)] uppercase tracking-widest text-white/85">
               300 x 600 Sponsored Unit
             </p>
           </div>
@@ -1938,6 +2298,8 @@ function LifestylePersonalizationDemoModal({
   profile,
   topStory,
   config,
+  activeFilter,
+  stories,
   onDaypartChange,
   onSimulateReturn,
   onApplyBehaviorPreset,
@@ -1949,6 +2311,8 @@ function LifestylePersonalizationDemoModal({
   profile: LifestyleRiverProfile;
   topStory?: LifestyleRiverStory;
   config: DestinationConfig;
+  activeFilter: string;
+  stories: LifestyleRiverStory[];
   onDaypartChange: (daypart: LifestyleDemoDaypart) => void;
   onSimulateReturn: (
     hours: number,
@@ -2012,6 +2376,13 @@ function LifestylePersonalizationDemoModal({
             onResetDemo={onResetDemo}
           />
           <LifestyleCardModelGuide />
+          <ContextualAdLogicGuide
+            profile={profile}
+            demoState={demoState}
+            config={config}
+            activeFilter={activeFilter}
+            stories={stories}
+          />
         </div>
       </div>
     </div>
@@ -2428,18 +2799,42 @@ function LifestyleRiverHomePage({
                 featured
               />
 
-              {riverStories.map((story) => (
-                <LifestyleRiverCard
-                  key={story.id}
-                  story={story}
-                  saved={profile.savedIds.includes(story.id)}
-                  onOpen={() => setOpenStoryId(story.id)}
-                  onSave={() => toggleSaved(story)}
-                  onMoreLikeThis={() => boostStory(story)}
-                  onFollowBrand={() => followBrand(story.brand)}
-                  onHide={() => hideStory(story.id)}
-                />
-              ))}
+              {riverStories.map((story, index) => {
+                const storyPosition = index + 2;
+                const shouldShowAdAfterStory = storyPosition % 5 === 0;
+                const adMatch = shouldShowAdAfterStory
+                  ? getContextualAdForSlot({
+                      destination,
+                      slotIndex: storyPosition / 5 - 1,
+                      profile,
+                      demoState,
+                      config,
+                      activeFilter,
+                      stories: visibleStories,
+                    })
+                  : null;
+
+                return (
+                  <React.Fragment key={story.id}>
+                    <LifestyleRiverCard
+                      story={story}
+                      saved={profile.savedIds.includes(story.id)}
+                      onOpen={() => setOpenStoryId(story.id)}
+                      onSave={() => toggleSaved(story)}
+                      onMoreLikeThis={() => boostStory(story)}
+                      onFollowBrand={() => followBrand(story.brand)}
+                      onHide={() => hideStory(story.id)}
+                    />
+                    {adMatch ? (
+                      <ContextualRiverAdCard
+                        ad={adMatch.ad}
+                        score={adMatch.score}
+                        slotNumber={storyPosition / 5}
+                      />
+                    ) : null}
+                  </React.Fragment>
+                );
+              })}
 
               <div ref={sentinelRef} className="flex justify-center py-6">
                 {visibleCount < filteredStories.length ? (
@@ -2559,6 +2954,8 @@ function LifestyleRiverHomePage({
         profile={profile}
         topStory={leadStory}
         config={config}
+        activeFilter={activeFilter}
+        stories={visibleStories}
         onDaypartChange={(daypart) => setDemoState((current) => ({ ...current, daypart }))}
         onSimulateReturn={simulateReturn}
         onApplyBehaviorPreset={applyBehaviorPreset}
