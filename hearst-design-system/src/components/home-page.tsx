@@ -1553,7 +1553,7 @@ function LifestyleRiverMedia({
 }) {
   const imageClassName = featured
     ? "aspect-video w-full"
-    : "aspect-video w-full self-start sm:aspect-[4/3] sm:rounded-[4px]";
+    : "aspect-video w-full self-start sm:h-full sm:min-h-44 sm:aspect-auto sm:rounded-[4px]";
   const videoClassName = featured
     ? "aspect-video w-full 2xl:self-center"
     : "aspect-video w-full self-start rounded-[4px]";
@@ -2016,7 +2016,7 @@ function LifestyleStoryReaderModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-foreground/55 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] bg-foreground/55 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
       aria-label="Story reader"
@@ -2026,7 +2026,7 @@ function LifestyleStoryReaderModal({
         ref={scrollRef}
         className="absolute inset-0 mx-auto flex h-[100dvh] w-full max-w-[1360px] flex-col overflow-y-auto bg-background shadow-2xl sm:inset-y-6 sm:h-auto sm:rounded-[8px]"
       >
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background/95 px-4 py-3 backdrop-blur sm:px-6">
+        <div className="sticky top-0 z-[110] flex items-center justify-between border-b border-border bg-background/95 px-4 py-3 backdrop-blur sm:px-6">
           <div className="min-w-0">
             <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
               {productName} Reader
