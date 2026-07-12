@@ -99,15 +99,17 @@ const initialEWProfile: LifestyleRiverProfile = {
 
 const initialAllProfile: LifestyleRiverProfile = {
   followedTopics: ["Home", "Reviews", "Style", "Fitness"],
-  followedBrands: ["Good Housekeeping", "Car and Driver", "Elle", "Men's Health"],
-  savedTags: ["home", "reviews", "style", "fitness", "shopping", "wellness"],
-  boostedTags: ["kitchen", "electric", "culture", "training"],
+  followedBrands: ["Country Living", "Car and Driver", "Elle", "Men's Health"],
+  savedTags: ["home", "reviews", "style", "fitness", "shopping", "wellness", "design"],
+  boostedTags: ["kitchen", "design", "electric", "culture", "training"],
   savedIds: [],
   hiddenIds: [],
 };
 
 const lifestyleDefaultLeadStoryId =
   "cosmopolitan-entertainment-celebs-a71899516-margaret-qualley-rep-denies-jack-antonoff-cheating";
+const allDefaultLeadStoryId =
+  "country-living-home-design-decorating-ideas-a71717114-joydrenching-kitchen-trend-2026";
 
 type LifestyleDemoDaypart = "morning" | "afternoon" | "evening" | "lateNight";
 
@@ -395,6 +397,7 @@ const destinationConfigs: Record<DestinationMode, DestinationConfig> = {
     stories: [...lifestyleRiverStories, ...autosRiverStories, ...fluxRiverStories, ...ewRiverStories],
     sourceNotes: [...lifestyleRiverSourceNotes, ...autosRiverSourceNotes, ...fluxRiverSourceNotes, ...ewRiverSourceNotes],
     initialProfile: initialAllProfile,
+    defaultLeadStoryId: allDefaultLeadStoryId,
     dayparts: lifestyleDemoDayparts,
     nextDayTopics: ["Home", "Style", "Reviews", "Fitness", "Shopping"],
     brandSummary:
@@ -533,6 +536,7 @@ function getLifestyleScoreBreakdown(
   const savedStory = profile.savedIds.includes(story.id) ? 6 : 0;
   const recency = getLifestyleRecencyScore(story, demoState);
   const timeOfDay = getLifestyleTimeOfDayScore(story, demoState, config);
+  const defaultLead = config.defaultLeadStoryId === story.id && demoState.contentDay === "today" ? 80 : 0;
   const nextDayNovelty =
     demoState.contentDay === "nextDay" && story.id !== demoState.previousLeadId
       ? config.nextDayTopics.includes(story.topic)
@@ -551,6 +555,7 @@ function getLifestyleScoreBreakdown(
     savedStory,
     recency,
     timeOfDay,
+    defaultLead,
     nextDayNovelty,
     repeatLeadPenalty,
     hidden,
@@ -563,6 +568,7 @@ function getLifestyleScoreBreakdown(
       savedStory +
       recency +
       timeOfDay +
+      defaultLead +
       nextDayNovelty +
       repeatLeadPenalty +
       hidden,
@@ -703,7 +709,7 @@ function UtilityBar() {
         <Button
           variant="secondary"
           size="xs"
-          className="bg-white text-[length:var(--text-token-4xs)] font-semibold text-[#7A2E57] hover:bg-white/90 hover:text-[#7A2E57]"
+          className="bg-white text-[length:var(--text-token-4xs)] font-semibold text-primary hover:bg-white/90 hover:text-primary"
         >
           Subscribe
         </Button>
