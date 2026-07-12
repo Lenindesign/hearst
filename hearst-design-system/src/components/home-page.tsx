@@ -18,6 +18,7 @@ import { SiteFooter } from "./fre/site-footer";
 import {
   Bookmark,
   Camera,
+  ChevronDown,
   ChefHat,
   EyeOff,
   ImageIcon,
@@ -672,13 +673,16 @@ function UtilityBar() {
             <LinkComponent
               key={label}
               href="#"
-              variant="neutral"
-              underline={false}
-              size="xs"
-              className="opacity-90 text-primary-foreground hover:text-primary-foreground/80 font-semibold"
-            >
-              {label}
-            </LinkComponent>
+                variant="neutral"
+                underline={false}
+                size="xs"
+                className={cn(
+                  "opacity-90 text-primary-foreground hover:text-primary-foreground/80 font-semibold",
+                  label !== "Sign In" && "max-[520px]:hidden"
+                )}
+              >
+                {label}
+              </LinkComponent>
           ))}
         </nav>
         <nav
@@ -1545,7 +1549,7 @@ function LifestyleRiverMedia({
 }) {
   const imageClassName = featured
     ? "aspect-video w-full"
-    : "h-full min-h-32 w-full rounded-[4px]";
+    : "aspect-video w-full self-start sm:aspect-[4/3] sm:rounded-[4px]";
   const videoClassName = featured
     ? "aspect-video w-full 2xl:self-center"
     : "aspect-video w-full self-start rounded-[4px]";
@@ -1713,9 +1717,9 @@ function LifestyleRiverCard({
       "min-w-0 cursor-pointer overflow-hidden rounded-[8px] border border-border bg-background transition-colors hover:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/30",
       isVideo
         ? "grid"
-        : featured
+      : featured
         ? "grid items-stretch 2xl:grid-cols-[minmax(0,0.95fr)_minmax(320px,1fr)]"
-        : "grid grid-cols-[112px_minmax(0,1fr)] gap-4 p-4 sm:grid-cols-[176px_minmax(0,1fr)]"
+        : "grid gap-0 sm:grid-cols-[176px_minmax(0,1fr)] sm:gap-4 sm:p-4"
     )}
       role="button"
       tabIndex={0}
@@ -1737,7 +1741,7 @@ function LifestyleRiverCard({
       />
       <div className={cn(
         "min-w-0",
-        isVideo ? "p-4 sm:p-5" : featured ? "flex flex-col justify-center p-5 sm:p-6 lg:p-8" : ""
+        isVideo ? "p-4 sm:p-5" : featured ? "flex flex-col justify-center p-5 sm:p-6 lg:p-8" : "p-4 sm:p-0"
       )}>
         <div className="mb-3 flex flex-wrap items-center gap-2">
           <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
@@ -1756,7 +1760,7 @@ function LifestyleRiverCard({
         </h2>
         <p className={cn(
           "mt-3 text-muted-foreground",
-          featured ? "max-w-prose text-base leading-7" : "text-sm leading-6"
+          featured ? "max-w-prose text-base leading-7" : "hidden text-sm leading-6 sm:block"
         )}>
           {story.summary}
         </p>
@@ -1773,7 +1777,7 @@ function LifestyleRiverCard({
           <Button variant="ghost" size="xs" onClick={onFollowBrand}>
             Follow {story.brand}
           </Button>
-          <Button variant="ghost" size="xs" onClick={onHide}>
+          <Button variant="ghost" size="xs" onClick={onHide} className="max-[640px]:hidden">
             <EyeOff className="mr-1.5 h-3.5 w-3.5" aria-hidden />
             Hide
           </Button>
@@ -2144,12 +2148,12 @@ function TodayEditDashboard({
 
   return (
     <section className="rounded-b-[8px] border-x border-b border-border bg-background" aria-label="Today&apos;s edit">
-      <div className="flex flex-col gap-3 border-b border-border bg-muted/20 px-4 py-4 sm:flex-row sm:items-end sm:justify-between">
+      <div className="hidden flex-col gap-2 border-b border-border bg-muted/20 px-4 py-4 sm:gap-3 md:flex md:flex-row md:items-end md:justify-between">
         <div>
           <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
             Today&apos;s Edit
           </p>
-          <h2 className="headline mt-1 text-2xl leading-tight">
+          <h2 className="headline mt-1 text-xl leading-tight sm:text-2xl">
             Start with what changed since your last visit.
           </h2>
         </div>
@@ -2158,13 +2162,13 @@ function TodayEditDashboard({
           saved signals, and the stories gaining momentum now.
         </p>
       </div>
-      <div className="grid divide-y divide-border md:grid-cols-2 md:divide-x md:divide-y-0 xl:grid-cols-4">
+      <div className="flex snap-x gap-3 overflow-x-auto p-4 [scrollbar-width:none] md:grid md:grid-cols-2 md:gap-0 md:divide-x md:divide-border md:overflow-visible md:p-0 md:[scrollbar-width:auto] xl:grid-cols-4 [&::-webkit-scrollbar]:hidden md:[&::-webkit-scrollbar]:block">
         {modules.map((module) => (
           <button
             key={module.label}
             type="button"
             onClick={module.onClick}
-            className="group flex min-h-[144px] flex-col justify-between p-4 text-left transition-colors hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-primary/30"
+            className="group flex min-h-[150px] w-[78vw] shrink-0 snap-start flex-col justify-between rounded-[8px] border border-border p-4 text-left transition-colors hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-primary/30 sm:w-[48vw] md:min-h-[144px] md:w-auto md:rounded-none md:border-0 xl:min-w-0"
           >
             <span>
               <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
@@ -2455,6 +2459,52 @@ function LifestylePersonalizationDemoModal({
   );
 }
 
+function MobileCollapsibleSidebarCard({
+  title,
+  summary,
+  children,
+  className,
+  defaultOpen = false,
+}: {
+  title: string;
+  summary: string;
+  children: React.ReactNode;
+  className?: string;
+  defaultOpen?: boolean;
+}) {
+  const [open, setOpen] = React.useState(defaultOpen);
+
+  return (
+    <section className={cn("rounded-[8px] border border-border p-4", className)}>
+      <div className="hidden lg:block">
+        <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+          {title}
+        </p>
+      </div>
+      <button
+        type="button"
+        className="flex w-full items-start justify-between gap-3 text-left lg:hidden"
+        onClick={() => setOpen((value) => !value)}
+        aria-expanded={open}
+      >
+        <span className="min-w-0">
+          <span className="block text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+            {title}
+          </span>
+          <span className="mt-1 block truncate text-xs font-normal normal-case tracking-normal text-muted-foreground lg:hidden">
+            {summary}
+          </span>
+        </span>
+        <ChevronDown
+          className={cn("mt-0.5 h-4 w-4 shrink-0 text-primary transition-transform lg:hidden", open && "rotate-180")}
+          aria-hidden
+        />
+      </button>
+      <div className={cn("mt-4 lg:block", open ? "block" : "hidden")}>{children}</div>
+    </section>
+  );
+}
+
 function LifestyleLeftSidebar({
   profile,
   topStories,
@@ -2476,16 +2526,25 @@ function LifestyleLeftSidebar({
   onClearBrandFilters: () => void;
   onFollowTopic: (topic: string) => void;
 }) {
+  const activeTopicSummary = profile.followedTopics.slice(0, 3).join(", ");
+  const brandStoryCount = brands.reduce((total, brand) => total + brand.count, 0);
+  const brandSummary =
+    activeBrandFilters.length > 0
+      ? `${activeBrandFilters.length} selected`
+      : `All brands · ${brandStoryCount} stories`;
+  const topicSummary = activeTopicSummary || `${topics.length} topics`;
+  const collectionSummary = `${collectionLabels.length} collections`;
+
   return (
     <aside
       className="space-y-5 lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:self-start lg:overflow-y-auto lg:pr-1"
       aria-label="Lifestyle discovery sidebar"
     >
-      <div className="rounded-[8px] border border-border p-4">
-        <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
-          Your Daily Edit
-        </p>
-        <div className="mt-4 space-y-3">
+      <MobileCollapsibleSidebarCard
+        title="Your Daily Edit"
+        summary={topStories[0]?.title || "Top stories ready"}
+      >
+        <div className="space-y-3">
           {topStories.slice(0, 3).map((story) => (
             <div key={story.id} className="border-b border-border pb-3 last:border-0 last:pb-0">
               <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
@@ -2496,14 +2555,11 @@ function LifestyleLeftSidebar({
             </div>
           ))}
         </div>
-      </div>
+      </MobileCollapsibleSidebarCard>
 
-      <div className="rounded-[8px] border border-border p-4">
-        <div className="flex items-center justify-between gap-3">
-          <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
-            Filter Brands
-          </p>
-          {activeBrandFilters.length > 0 ? (
+      <MobileCollapsibleSidebarCard title="Filter Brands" summary={brandSummary}>
+        {activeBrandFilters.length > 0 ? (
+          <div className="-mt-1 flex items-center justify-end">
             <button
               type="button"
               onClick={onClearBrandFilters}
@@ -2511,8 +2567,8 @@ function LifestyleLeftSidebar({
             >
               Clear
             </button>
-          ) : null}
-        </div>
+          </div>
+        ) : null}
         <div className="mt-4 space-y-3">
           {brands.map((brand) => {
             const active = activeBrandFilters.includes(brand.name);
@@ -2550,13 +2606,10 @@ function LifestyleLeftSidebar({
             ? `Showing ${activeBrandFilters.length} selected brand${activeBrandFilters.length === 1 ? "" : "s"}.`
             : "All brands are included in the river."}
         </p>
-      </div>
+      </MobileCollapsibleSidebarCard>
 
-      <div className="rounded-[8px] border border-border p-4">
-        <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
-          Follow Topics
-        </p>
-        <div className="mt-4 flex flex-wrap gap-2">
+      <MobileCollapsibleSidebarCard title="Follow Topics" summary={topicSummary}>
+        <div className="flex flex-wrap gap-2">
           {topics.map((topic) => {
             const active = profile.followedTopics.includes(topic.name);
             return (
@@ -2572,13 +2625,10 @@ function LifestyleLeftSidebar({
             );
           })}
         </div>
-      </div>
+      </MobileCollapsibleSidebarCard>
 
-      <div className="rounded-[8px] border border-border bg-muted/30 p-4">
-        <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
-          Collections
-        </p>
-        <div className="mt-4 space-y-2 text-sm">
+      <MobileCollapsibleSidebarCard title="Collections" summary={collectionSummary} className="bg-muted/30">
+        <div className="space-y-2 text-sm">
           {collectionLabels.map((label) => (
             <p key={label} className="font-bold">{label}</p>
           ))}
@@ -2586,7 +2636,7 @@ function LifestyleLeftSidebar({
             Saved stories and more-like-this actions tune these collections in the prototype.
           </p>
         </div>
-      </div>
+      </MobileCollapsibleSidebarCard>
     </aside>
   );
 }
