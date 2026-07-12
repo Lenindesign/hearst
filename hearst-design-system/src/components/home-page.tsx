@@ -891,7 +891,17 @@ function MainNav({
       )}
     >
       <PageContainer className="flex items-center justify-between">
-        <div className="w-[var(--width-sidebar-narrow)]" />
+        <div className="flex w-[var(--width-sidebar-narrow)] justify-start">
+          <Button
+            variant="outline"
+            size="icon-sm"
+            onClick={toggleColorMode}
+            aria-label={`Switch to ${colorMode === "dark" ? "light" : "dark"} mode`}
+            title={`Switch to ${colorMode === "dark" ? "light" : "dark"} mode`}
+          >
+            {colorMode === "dark" ? <Sun className="h-4 w-4" aria-hidden /> : <Moon className="h-4 w-4" aria-hidden />}
+          </Button>
+        </div>
         <div className="text-center">
           {logo ? (
             <BrandLogo
@@ -917,16 +927,7 @@ function MainNav({
             </h1>
           )}
         </div>
-        <div className="w-[var(--width-sidebar-narrow)] flex justify-end gap-2">
-          <Button
-            variant="outline"
-            size="icon-sm"
-            onClick={toggleColorMode}
-            aria-label={`Switch to ${colorMode === "dark" ? "light" : "dark"} mode`}
-            title={`Switch to ${colorMode === "dark" ? "light" : "dark"} mode`}
-          >
-            {colorMode === "dark" ? <Sun className="h-4 w-4" aria-hidden /> : <Moon className="h-4 w-4" aria-hidden />}
-          </Button>
+        <div className="flex w-[var(--width-sidebar-narrow)] justify-end">
           <Button variant="outline" size="icon-sm" aria-label="Search" title="Search">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           </Button>
@@ -2621,12 +2622,16 @@ function MobileCollapsibleSidebarCard({
   children,
   className,
   defaultOpen = false,
+  mobileActionLabel,
+  onMobileAction,
 }: {
   title: string;
   summary: string;
   children: React.ReactNode;
   className?: string;
   defaultOpen?: boolean;
+  mobileActionLabel?: string;
+  onMobileAction?: () => void;
 }) {
   const [open, setOpen] = React.useState(defaultOpen);
 
@@ -2637,25 +2642,42 @@ function MobileCollapsibleSidebarCard({
           {title}
         </p>
       </div>
-      <button
-        type="button"
-        className="flex w-full min-w-0 items-start justify-between gap-3 overflow-hidden text-left lg:hidden"
-        onClick={() => setOpen((value) => !value)}
-        aria-expanded={open}
-      >
-        <span className="min-w-0 flex-1 overflow-hidden">
+      <div className="flex min-w-0 items-start gap-3 lg:hidden">
+        <button
+          type="button"
+          className="min-w-0 flex-1 overflow-hidden text-left"
+          onClick={() => setOpen((value) => !value)}
+          aria-expanded={open}
+        >
           <span className="block text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
             {title}
           </span>
           <span className="mt-1 line-clamp-2 block max-w-full break-words text-xs font-normal normal-case tracking-normal text-muted-foreground lg:hidden">
             {summary}
           </span>
-        </span>
-        <ChevronDown
-          className={cn("mt-0.5 h-4 w-4 shrink-0 text-primary transition-transform lg:hidden", open && "rotate-180")}
-          aria-hidden
-        />
-      </button>
+        </button>
+        {mobileActionLabel && onMobileAction ? (
+          <button
+            type="button"
+            onClick={onMobileAction}
+            className="mt-0.5 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary hover:underline"
+          >
+            {mobileActionLabel}
+          </button>
+        ) : null}
+        <button
+          type="button"
+          onClick={() => setOpen((value) => !value)}
+          className="shrink-0 text-primary"
+          aria-label={`${open ? "Collapse" : "Expand"} ${title}`}
+          aria-expanded={open}
+        >
+          <ChevronDown
+            className={cn("h-4 w-4 transition-transform motion-reduce:transition-none", open && "rotate-180")}
+            aria-hidden
+          />
+        </button>
+      </div>
       <div className={cn("mt-4 lg:block", open ? "block" : "hidden")}>{children}</div>
     </section>
   );
@@ -2686,7 +2708,7 @@ function LifestyleLeftSidebar({
   const brandStoryCount = brands.reduce((total, brand) => total + brand.count, 0);
   const brandSummary =
     activeBrandFilters.length > 0
-      ? `${activeBrandFilters.length} selected`
+      ? activeBrandFilters[0]
       : `All brands · ${brandStoryCount} stories`;
   const topicSummary = activeTopicSummary || `${topics.length} topics`;
   const collectionSummary = `${collectionLabels.length} collections`;
@@ -2696,7 +2718,12 @@ function LifestyleLeftSidebar({
       className="space-y-5 lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:self-start lg:overflow-y-auto lg:pr-1"
       aria-label="Lifestyle discovery sidebar"
     >
-      <MobileCollapsibleSidebarCard title="Filter Brands" summary={brandSummary}>
+      <MobileCollapsibleSidebarCard
+        title="Filter Brands"
+        summary={brandSummary}
+        mobileActionLabel={activeBrandFilters.length > 0 ? "Clear" : undefined}
+        onMobileAction={activeBrandFilters.length > 0 ? onClearBrandFilters : undefined}
+      >
         {activeBrandFilters.length > 0 ? (
           <div className="-mt-1 flex items-center justify-end">
             <button
@@ -2742,7 +2769,7 @@ function LifestyleLeftSidebar({
         </div>
         <p className="mt-4 text-xs leading-5 text-muted-foreground">
           {activeBrandFilters.length > 0
-            ? `Showing ${activeBrandFilters.length} selected brand${activeBrandFilters.length === 1 ? "" : "s"}.`
+            ? `Showing ${activeBrandFilters[0]}.`
             : "All brands are included in the river."}
         </p>
       </MobileCollapsibleSidebarCard>
