@@ -3263,7 +3263,7 @@ export function HomePageTemplate({
         {showGridOverlay && <GridOverlay />}
         <div
           ref={isDestinationRiver ? destinationContentRef : undefined}
-          className={cn("relative z-10 scroll-mt-12", isDestinationRiver ? "space-y-8" : "space-y-12 lg:space-y-16")}
+          className={cn("relative scroll-mt-12", isDestinationRiver ? "space-y-8" : "space-y-12 lg:space-y-16")}
         >
           {isDestinationRiver ? (
             <LifestyleRiverHomePage
