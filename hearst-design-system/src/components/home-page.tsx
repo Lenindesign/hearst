@@ -618,6 +618,7 @@ function LifestyleRiverImage({
 
 function getLifestyleImagePosition(story: LifestyleRiverStory) {
   if (story.id === lifestyleDefaultLeadStoryId) return "center 22%";
+  if (story.title === "Are Corbin and Parmida Still Together? Corbin Speaks Out") return "center 18%";
   return "center";
 }
 
@@ -662,6 +663,112 @@ function getLifestyleKindLabel(kind: LifestyleCardKind) {
     recipe: "Recipe",
     shopping: "Shop",
   }[kind];
+}
+
+const lifestyleCardModelGuide: {
+  kind: LifestyleCardKind;
+  title: string;
+  icon: React.ComponentType<{ className?: string; "aria-hidden"?: boolean }>;
+  when: string;
+  module: string;
+  riverUse: string;
+}[] = [
+  {
+    kind: "article",
+    title: "Article card",
+    icon: ImageIcon,
+    when: "Use for reported reads, explainers, service pieces, and stories where the headline and summary carry the value.",
+    module: "Image, source, signal, headline, summary, explanation chip, save and feedback actions.",
+    riverUse: "Default river unit. It should appear whenever a story does not need a specialized media, recipe, or commerce treatment.",
+  },
+  {
+    kind: "gallery",
+    title: "Photo gallery card",
+    icon: Camera,
+    when: "Use for rooms, outfits, garden ideas, beauty looks, transformations, and any story where browsing visuals is the main action.",
+    module: "Image-led card with photo count, swipe-style cue, editor caption promise, and the same action row.",
+    riverUse: "Ranks up for home, style, beauty, and design intent. It breaks up text-heavy feed stretches with visual discovery.",
+  },
+  {
+    kind: "video",
+    title: "Watch card",
+    icon: Play,
+    when: "Use for entertainment clips, quick demos, interviews, explainers, and stories a reader can preview without leaving the river.",
+    module: "16:9 playable media surface, inline play or pause control, runtime, headline, summary, and feedback actions.",
+    riverUse: "Ranks up in afternoon and late-night sessions when the model sees entertainment, TV, celebrity, or passive browsing intent.",
+  },
+  {
+    kind: "recipe",
+    title: "Recipe card",
+    icon: ChefHat,
+    when: "Use for food stories where time, servings, difficulty, or meal context helps the reader decide quickly.",
+    module: "Food image, recipe badge, prep metrics, serving count, difficulty, summary, and save or more-like-this actions.",
+    riverUse: "Ranks up around morning planning and evening return visits, especially when saved tags include dinner or cooking signals.",
+  },
+  {
+    kind: "shopping",
+    title: "Shopping card",
+    icon: ShoppingBag,
+    when: "Use for tested products, editor picks, deals, buying guides, lab recommendations, and service commerce stories.",
+    module: "Product or lifestyle image, shop badge, editor-pick count, trust signal, summary, and save or follow actions.",
+    riverUse: "Ranks up for shopping behavior, product tags, followed brands, and utility moments where a reader is comparing options.",
+  },
+];
+
+function LifestyleCardModelGuide() {
+  return (
+    <section className="mt-4 rounded-[8px] border border-border bg-background" aria-label="Lifestyle river card models">
+      <div className="border-b border-border p-4 sm:p-5">
+        <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+          River Content Models
+        </p>
+        <h2 className="headline mt-1 text-2xl leading-tight">
+          Five card styles share one atomic structure.
+        </h2>
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+          The personalization layer picks the story order. The content model picks the best card treatment for the reader intent,
+          so every item still feels like one coherent Hearst Lifestyle river.
+        </p>
+      </div>
+
+      <div className="grid divide-y divide-border lg:grid-cols-5 lg:divide-x lg:divide-y-0">
+        {lifestyleCardModelGuide.map((model) => {
+          const Icon = model.icon;
+
+          return (
+            <article key={model.kind} className="min-w-0 p-4">
+              <div className="flex items-center gap-3">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                  <Icon className="h-4 w-4" aria-hidden />
+                </span>
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-bold">{model.title}</p>
+                  <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                    {getLifestyleKindLabel(model.kind)}
+                  </p>
+                </div>
+              </div>
+
+              <dl className="mt-4 space-y-3 text-xs leading-5">
+                <div>
+                  <dt className="font-bold text-foreground">When to use</dt>
+                  <dd className="mt-1 text-muted-foreground">{model.when}</dd>
+                </div>
+                <div>
+                  <dt className="font-bold text-foreground">Card modules</dt>
+                  <dd className="mt-1 text-muted-foreground">{model.module}</dd>
+                </div>
+                <div>
+                  <dt className="font-bold text-foreground">How it ranks</dt>
+                  <dd className="mt-1 text-muted-foreground">{model.riverUse}</dd>
+                </div>
+              </dl>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  );
 }
 
 function LifestyleRiverMedia({
@@ -1567,6 +1674,7 @@ function LifestylePersonalizationDemoModal({
             onApplyBehaviorPreset={onApplyBehaviorPreset}
             onResetDemo={onResetDemo}
           />
+          <LifestyleCardModelGuide />
         </div>
       </div>
     </div>
