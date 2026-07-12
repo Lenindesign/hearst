@@ -1,6 +1,19 @@
 import { writeFile } from "node:fs/promises";
+import { gunzipSync } from "node:zlib";
 
-const TARGET_STORY_COUNT = 200;
+const TARGET_COUNTS = {
+  cosmopolitan: 28,
+  "country-living": 28,
+  delish: 28,
+  "good-housekeeping": 28,
+  "house-beautiful": 28,
+  "pioneer-woman": 28,
+  prevention: 27,
+  redbook: 30,
+  seventeen: 30,
+  "womans-day": 4,
+};
+const TARGET_STORY_COUNT = Object.values(TARGET_COUNTS).reduce((total, count) => total + count, 0);
 
 const brands = [
   {
@@ -50,6 +63,7 @@ const brands = [
     brand: "Redbook",
     brandSlug: "redbook",
     feeds: ["https://www.redbookmag.com/rss/all.xml"],
+    sitemapIndex: "https://www.redbookmag.com/sitemap_index.xml",
   },
   {
     brand: "Seventeen",
@@ -58,6 +72,7 @@ const brands = [
       "https://www.seventeen.com/rss/all.xml",
       "https://www.seventeen.com/rss/celebrity.xml",
     ],
+    sitemapIndex: "https://www.seventeen.com/sitemap_index.xml",
   },
   {
     brand: "Woman's Day",
@@ -167,6 +182,90 @@ async function fetchFeed(feedUrl) {
   return response.text();
 }
 
+function getMeta(html, attribute, value) {
+  for (const match of html.matchAll(/<meta\b[^>]*>/gi)) {
+    const tag = match[0];
+    const target = tag.match(new RegExp(`${attribute}\\s*=\\s*(["'])${value}\\1`, "i"));
+    if (!target) continue;
+
+    const content = tag.match(/content\s*=\s*(["'])([\s\S]*?)\1/i);
+    if (content?.[2]) return stripHtml(content[2]);
+  }
+
+  return "";
+}
+
+async function fetchArticleStory(entry, brand) {
+  try {
+    const response = await fetch(entry.sourceUrl, {
+      headers: { "user-agent": "Hearst Design System Storybook Prototype Importer" },
+    });
+    if (!response.ok) return null;
+
+    const html = await response.text();
+    const title = getMeta(html, "property", "og:title") || getMeta(html, "name", "twitter:title");
+    const summary = getMeta(html, "name", "description") || getMeta(html, "property", "og:description");
+    const image = getMeta(html, "property", "og:image") || entry.image;
+    const publishedAt = getMeta(html, "property", "article:published_time") || entry.lastmod;
+    const topic = getTopicFromUrl(entry.sourceUrl, brand.sitemapIndex);
+
+    if (!title || !image.includes("hearstapps.com") || image.includes("placeholder")) return null;
+
+    return {
+      id: makeId(brand.brandSlug, entry.sourceUrl),
+      brand: brand.brand,
+      brandSlug: brand.brandSlug,
+      topic,
+      title,
+      summary: summary || `${brand.brand} editors recommend this ${topic.toLowerCase()} story.`,
+      image,
+      imageCredit: "",
+      readTime: makeReadTime(summary, title),
+      publishedAt: new Date(publishedAt || Date.now()).toISOString(),
+      sourceUrl: entry.sourceUrl,
+    };
+  } catch {
+    return null;
+  }
+}
+
+async function fetchSitemapStories(brand) {
+  if (!brand.sitemapIndex) return [];
+
+  const indexResponse = await fetch(brand.sitemapIndex);
+  if (!indexResponse.ok) throw new Error(`${indexResponse.status} ${brand.sitemapIndex}`);
+  const indexXml = await indexResponse.text();
+  const contentSitemap = Array.from(indexXml.matchAll(/<loc>([^<]*\/content\.[^<]+\.xml\.gz)<\/loc>/gi))[0]?.[1];
+  if (!contentSitemap) throw new Error(`No content sitemap in ${brand.sitemapIndex}`);
+
+  const sitemapResponse = await fetch(contentSitemap);
+  if (!sitemapResponse.ok) throw new Error(`${sitemapResponse.status} ${contentSitemap}`);
+  const sitemapBuffer = Buffer.from(await sitemapResponse.arrayBuffer());
+  const sitemapXml = contentSitemap.endsWith(".gz")
+    ? gunzipSync(sitemapBuffer).toString("utf8")
+    : sitemapBuffer.toString("utf8");
+  const entries = Array.from(sitemapXml.matchAll(/<url>([\s\S]*?)<\/url>/gi))
+    .map((match) => match[1])
+    .map((block) => ({
+      sourceUrl: stripHtml(getTag(block, "loc")),
+      lastmod: stripHtml(getTag(block, "lastmod")),
+      image: stripHtml(getTag(block, "image:loc")),
+    }))
+    .filter((entry) => entry.sourceUrl && entry.image.includes("hearstapps.com") && !entry.image.includes("placeholder"))
+    .sort((a, b) => new Date(b.lastmod).getTime() - new Date(a.lastmod).getTime())
+    .slice(0, 90);
+
+  const stories = [];
+  for (let index = 0; index < entries.length && stories.length < TARGET_COUNTS[brand.brandSlug]; index += 6) {
+    const batch = await Promise.all(entries.slice(index, index + 6).map((entry) => fetchArticleStory(entry, brand)));
+    stories.push(...batch.filter(Boolean));
+  }
+
+  console.log(`${brand.brand}: ${entries.length} sitemap candidates, ${stories.length} accepted stories`);
+
+  return stories.slice(0, TARGET_COUNTS[brand.brandSlug]);
+}
+
 function parseFeed(xml, feedUrl, brand) {
   return Array.from(xml.matchAll(/<item\b[\s\S]*?<\/item>/gi))
     .map((match) => match[0])
@@ -212,6 +311,14 @@ for (const brand of brands) {
     }
   }
 
+  if (brand.sitemapIndex) {
+    try {
+      collected.push(...await fetchSitemapStories(brand));
+    } catch (error) {
+      console.warn(`Skipped ${brand.sitemapIndex}: ${error.message}`);
+    }
+  }
+
   sourceNotes.push({
     brand: brand.brand,
     brandSlug: brand.brandSlug,
@@ -230,29 +337,9 @@ const byBrand = dedupedByUrl.reduce((acc, story) => {
   return acc;
 }, new Map());
 
-const activeBrandSlugs = brands
-  .map((brand) => brand.brandSlug)
-  .filter((brandSlug) => (byBrand.get(brandSlug)?.length ?? 0) > 0);
-const selected = [];
-const selectedUrls = new Set();
-let round = 0;
-
-while (
-  selected.length < TARGET_STORY_COUNT &&
-  activeBrandSlugs.some((brandSlug) => round < (byBrand.get(brandSlug)?.length ?? 0))
-) {
-  for (const brandSlug of activeBrandSlugs) {
-    const story = byBrand.get(brandSlug)?.[round];
-    if (story && !selectedUrls.has(story.sourceUrl)) {
-      selected.push(story);
-      selectedUrls.add(story.sourceUrl);
-    }
-
-    if (selected.length >= TARGET_STORY_COUNT) break;
-  }
-
-  round += 1;
-}
+const selected = brands.flatMap((brand) =>
+  (byBrand.get(brand.brandSlug) ?? []).slice(0, TARGET_COUNTS[brand.brandSlug] ?? 0)
+);
 
 const selectedCounts = selected.reduce((acc, story) => {
   acc[story.brandSlug] = (acc[story.brandSlug] ?? 0) + 1;

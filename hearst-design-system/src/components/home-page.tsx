@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import { useTheme } from "./theme-provider";
 import { NavBar } from "./nav-bar";
 import { BrandLogo } from "./brand-logo";
@@ -56,6 +57,7 @@ export interface HomePageTemplateProps {
    */
   layout?: "classic" | "overlapGrid";
   showGridOverlay?: boolean;
+  initialBrandSlug?: string;
 }
 
 const defaultFooterCols: string[][] = [
@@ -565,6 +567,31 @@ function getStoryDestinationMode(brandSlug: string): Exclude<DestinationMode, "a
   return "lifestyle";
 }
 
+function getBrandContextualFilters(brandSlug: string) {
+  const topicCounts = destinationConfigs.all.stories
+    .filter((story) => story.brandSlug === brandSlug)
+    .reduce<Record<string, number>>((counts, story) => {
+      counts[story.topic] = (counts[story.topic] ?? 0) + 1;
+      return counts;
+    }, {});
+
+  const topics = Object.entries(topicCounts)
+    .sort(([, countA], [, countB]) => countB - countA)
+    .map(([topic]) => topic);
+
+  const brandSections = brandSlug === "car-and-driver"
+    ? ["Shop New Cars", "Shop Used Cars", "Research Cars"]
+    : [];
+
+  return ["For You", ...topics, ...brandSections, "Saved"];
+}
+
+function getBrandRouteInfo(brandSlug?: string) {
+  if (!brandSlug) return null;
+  const note = destinationConfigs.all.sourceNotes.find((brand) => brand.brandSlug === brandSlug);
+  return note ? { name: note.brand, slug: note.brandSlug } : null;
+}
+
 function getContent(brandSlug: string): ContentType {
   const base = getBaseContent(brandSlug);
   return { ...base, footerCols: defaultFooterCols };
@@ -709,6 +736,15 @@ function getLifestyleDemoStoryPool(
 
 function storyMatchesLifestyleFilter(story: LifestyleRiverStory, filter: string) {
   if (filter === "For You" || filter === "Saved") return true;
+  if (story.brandSlug === "car-and-driver") {
+    if (filter === "Shop New Cars") {
+      return story.topic === "EVs" || /\b20(?:26|27|28|29)\b/.test(story.title);
+    }
+    if (filter === "Shop Used Cars") {
+      return /\b(?:19\d{2}|20(?:0\d|1\d|2[0-5]))\b/.test(story.title);
+    }
+    if (filter === "Research Cars") return true;
+  }
   if (filter === "Lifestyle") return getStoryDestinationMode(story.brandSlug) === "lifestyle";
   if (filter === "Autos") return getStoryDestinationMode(story.brandSlug) === "autos";
   if (filter === "Flux") return getStoryDestinationMode(story.brandSlug) === "flux";
@@ -724,10 +760,18 @@ const hearstDestinationSections = [
   { label: "E&W", href: "/hearst-ew/" },
 ];
 
-function UtilityBar() {
+function UtilityBar({ selectedBrand }: { selectedBrand?: { name: string; slug: string } | null }) {
   const { brand } = useTheme();
-  const activeDestination =
-    brand.slug === "hearst-all"
+  const selectedDestination = selectedBrand ? getStoryDestinationMode(selectedBrand.slug) : null;
+  const activeDestination = selectedDestination === "autos"
+    ? "Autos"
+    : selectedDestination === "flux"
+    ? "Flux"
+    : selectedDestination === "ew"
+    ? "E&W"
+    : selectedDestination === "lifestyle"
+    ? "Lifestyle"
+    : brand.slug === "hearst-all"
       ? "All"
       : brand.slug === "hearst-plus"
       ? "Autos"
@@ -811,7 +855,11 @@ function MainNav({
   const content = getContent(brandSlug);
   const isDestinationRiver = brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
   const destinationConfig = destinationConfigs[getDestinationMode(brand.slug)];
-  const navLinks = isDestinationRiver ? destinationConfig.filters : content.navLinks;
+  const navLinks = selectedBrand
+    ? getBrandContextualFilters(selectedBrand.slug)
+    : isDestinationRiver
+      ? destinationConfig.filters
+      : content.navLinks;
 
   return (
     <>
@@ -1078,19 +1126,21 @@ function Footer() {
 function LifestyleRiverImage({
   story,
   className,
+  priority = false,
 }: {
   story: LifestyleRiverStory;
   className?: string;
+  priority?: boolean;
 }) {
   return (
-    <div
-      role="img"
-      aria-label={`${story.brand}: ${story.title}`}
-      className={cn("min-w-0 bg-muted bg-cover", className)}
-      style={{
-        backgroundImage: `url("${story.image}")`,
-        backgroundPosition: getLifestyleImagePosition(story),
-      }}
+    <img
+      src={story.image}
+      alt={`${story.brand}: ${story.title}`}
+      className={cn("min-w-0 bg-muted object-cover", className)}
+      style={{ objectPosition: getLifestyleImagePosition(story) }}
+      loading={priority ? "eager" : "lazy"}
+      fetchPriority={priority ? "high" : "auto"}
+      decoding="async"
     />
   );
 }
@@ -1636,7 +1686,7 @@ function LifestyleRiverMedia({
     : "aspect-video w-full self-start rounded-[4px]";
 
   if (kind !== "video") {
-    return <LifestyleRiverImage story={story} className={imageClassName} />;
+    return <LifestyleRiverImage story={story} className={imageClassName} priority={featured} />;
   }
 
   return (
@@ -2603,24 +2653,6 @@ function LifestyleLeftSidebar({
       className="space-y-5 lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:self-start lg:overflow-y-auto lg:pr-1"
       aria-label="Lifestyle discovery sidebar"
     >
-      <MobileCollapsibleSidebarCard
-        title="Your Daily Edit"
-        summary={topStories[0]?.title || "Top stories ready"}
-        className="hidden lg:block"
-      >
-        <div className="space-y-3">
-          {topStories.slice(0, 3).map((story) => (
-            <div key={story.id} className="border-b border-border pb-3 last:border-0 last:pb-0">
-              <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
-                {story.topic}
-              </p>
-              <p className="mt-1 text-sm font-bold leading-snug">{story.title}</p>
-              <p className="mt-1 text-xs text-muted-foreground">{story.brand} · Popularity {story.popularity}</p>
-            </div>
-          ))}
-        </div>
-      </MobileCollapsibleSidebarCard>
-
       <MobileCollapsibleSidebarCard title="Filter Brands" summary={brandSummary}>
         {activeBrandFilters.length > 0 ? (
           <div className="-mt-1 flex items-center justify-end">
@@ -2672,6 +2704,24 @@ function LifestyleLeftSidebar({
         </p>
       </MobileCollapsibleSidebarCard>
 
+      <MobileCollapsibleSidebarCard
+        title="Your Daily Edit"
+        summary={topStories[0]?.title || "Top stories ready"}
+        className="hidden lg:block"
+      >
+        <div className="space-y-3">
+          {topStories.slice(0, 3).map((story) => (
+            <div key={story.id} className="border-b border-border pb-3 last:border-0 last:pb-0">
+              <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                {story.topic}
+              </p>
+              <p className="mt-1 text-sm font-bold leading-snug">{story.title}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{story.brand} · Popularity {story.popularity}</p>
+            </div>
+          ))}
+        </div>
+      </MobileCollapsibleSidebarCard>
+
       <MobileCollapsibleSidebarCard title="Follow Topics" summary={topicSummary} className="hidden lg:block">
         <div className="flex flex-wrap gap-2">
           {topics.map((topic) => {
@@ -2708,12 +2758,14 @@ function LifestyleLeftSidebar({
 function LifestyleRiverHomePage({
   activeFilter,
   destination,
+  initialBrandSlug,
   onRiverReset,
   onBrandFilterChange,
   onSelectedBrandChange,
 }: {
   activeFilter: string;
   destination: DestinationMode;
+  initialBrandSlug?: string;
   onRiverReset?: () => void;
   onBrandFilterChange?: () => void;
   onSelectedBrandChange?: (brand: { name: string; slug: string } | null) => void;
@@ -2721,7 +2773,8 @@ function LifestyleRiverHomePage({
   const config = destinationConfigs[destination];
   const [profile, setProfile] = React.useState<LifestyleRiverProfile>(config.initialProfile);
   const [demoState, setDemoState] = React.useState<LifestyleDemoState>(initialLifestyleDemoState);
-  const [activeBrandFilters, setActiveBrandFilters] = React.useState<string[]>([]);
+  const initialBrandName = config.sourceNotes.find((note) => note.brandSlug === initialBrandSlug)?.brand;
+  const [activeBrandFilters, setActiveBrandFilters] = React.useState<string[]>(initialBrandName ? [initialBrandName] : []);
   const [openStoryId, setOpenStoryId] = React.useState<string | null>(null);
   const [demoModalOpen, setDemoModalOpen] = React.useState(false);
   const [visibleCount, setVisibleCount] = React.useState(8);
@@ -3323,10 +3376,14 @@ function OverlapGridHomepageBody({ brandSlug }: { brandSlug: string }) {
 export function HomePageTemplate({
   layout = "classic",
   showGridOverlay = false,
+  initialBrandSlug,
 }: HomePageTemplateProps = {}) {
   const { brand } = useTheme();
+  const router = useRouter();
   const [activeLifestyleFilter, setActiveLifestyleFilter] = React.useState("For You");
-  const [selectedBrand, setSelectedBrand] = React.useState<{ name: string; slug: string } | null>(null);
+  const [selectedBrand, setSelectedBrand] = React.useState<{ name: string; slug: string } | null>(() =>
+    getBrandRouteInfo(initialBrandSlug)
+  );
   const selectedBrandTheme = React.useMemo(
     () => getSelectedBrandTheme(selectedBrand, brand),
     [brand, selectedBrand]
@@ -3353,6 +3410,18 @@ export function HomePageTemplate({
 
     anchorDestinationContent();
   }, [anchorDestinationContent]);
+  const handleSelectedBrandChange = React.useCallback((nextBrand: { name: string; slug: string } | null) => {
+    setActiveLifestyleFilter("For You");
+    setSelectedBrand(nextBrand);
+
+    const currentPath = window.location.pathname;
+    if (nextBrand) {
+      const nextPath = `/brands/${nextBrand.slug}/`;
+      if (currentPath !== nextPath) router.push(nextPath, { scroll: false });
+    } else if (currentPath.startsWith("/brands/")) {
+      router.push("/hearst-all/", { scroll: false });
+    }
+  }, [router]);
 
   return (
     <div
@@ -3361,7 +3430,7 @@ export function HomePageTemplate({
       style={selectedBrandCssVars as React.CSSProperties | undefined}
     >
       {/* Utility Bar — full width */}
-      <UtilityBar />
+      <UtilityBar selectedBrand={selectedBrand} />
 
       {/* Main Nav — full width background, content constrained */}
       <MainNav
@@ -3382,9 +3451,10 @@ export function HomePageTemplate({
             <LifestyleRiverHomePage
               activeFilter={activeLifestyleFilter}
               destination={destinationMode}
+              initialBrandSlug={initialBrandSlug}
               onRiverReset={anchorDestinationContent}
               onBrandFilterChange={anchorPageToTop}
-              onSelectedBrandChange={setSelectedBrand}
+              onSelectedBrandChange={handleSelectedBrandChange}
             />
           ) : layout === "overlapGrid" ? (
             <OverlapGridHomepageBody brandSlug={brand.slug} />
