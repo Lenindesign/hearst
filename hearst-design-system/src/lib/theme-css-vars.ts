@@ -81,5 +81,6 @@ export function brandToCssVars(brand: BrandTheme): Record<string, string> {
     "--font-brand-secondary": `"${brand.fontSecondary}", Georgia, serif`,
     "--font-headline": `"${brand.fontHeadline}", system-ui, sans-serif`,
     "--font-headline-weight": `${brand.fontHeadlineWeight}`,
+    "--font-headline-stretch": brand.fontHeadlineStretch || "normal",
   };
 }

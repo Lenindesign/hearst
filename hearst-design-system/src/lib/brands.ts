@@ -9,6 +9,7 @@ export interface BrandTheme {
   fontSecondary: string;
   fontHeadline: string;
   fontHeadlineWeight: number;
+  fontHeadlineStretch?: string;
   semanticColors: Record<string, string>;
   componentTokens: Record<string, string | number>;
 }

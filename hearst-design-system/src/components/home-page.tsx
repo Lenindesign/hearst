@@ -35,6 +35,9 @@ import {
   getBaseContent,
   type BaseContentType,
 } from "./homepage-data";
+import { autosRiverSourceNotes, autosRiverStories } from "./autos-river-data";
+import { ewRiverSourceNotes, ewRiverStories } from "./ew-river-data";
+import { fluxRiverSourceNotes, fluxRiverStories } from "./flux-river-data";
 import { lifestyleRiverSourceNotes, lifestyleRiverStories } from "./lifestyle-river-data";
 import type { LifestyleRiverProfile, LifestyleRiverStory } from "./lifestyle-river-types";
 
@@ -62,6 +65,33 @@ const initialLifestyleProfile: LifestyleRiverProfile = {
   followedTopics: ["Food", "Home"],
   followedBrands: ["Good Housekeeping", "Country Living"],
   savedTags: ["dinner ideas", "sleep", "decorating"],
+  boostedTags: [],
+  savedIds: [],
+  hiddenIds: [],
+};
+
+const initialAutosProfile: LifestyleRiverProfile = {
+  followedTopics: ["Reviews", "Buying Guides"],
+  followedBrands: ["Car and Driver", "Road & Track"],
+  savedTags: ["evs", "reviews", "performance"],
+  boostedTags: [],
+  savedIds: [],
+  hiddenIds: [],
+};
+
+const initialFluxProfile: LifestyleRiverProfile = {
+  followedTopics: ["Style", "Culture"],
+  followedBrands: ["Elle", "Harper's Bazaar"],
+  savedTags: ["style", "design", "culture"],
+  boostedTags: [],
+  savedIds: [],
+  hiddenIds: [],
+};
+
+const initialEWProfile: LifestyleRiverProfile = {
+  followedTopics: ["Fitness", "Wellness"],
+  followedBrands: ["Men's Health", "Women's Health"],
+  savedTags: ["fitness", "gear", "wellness"],
   boostedTags: [],
   savedIds: [],
   hiddenIds: [],
@@ -130,6 +160,111 @@ const lifestyleDemoDayparts: Record<
   },
 };
 
+const autosDemoDayparts: typeof lifestyleDemoDayparts = {
+  morning: {
+    label: "Morning Drive",
+    time: "8 AM",
+    description: "Fresh news, reviews, EVs, and buying advice for a first check-in.",
+    preferredTopics: ["News", "Reviews", "Buying Guides", "EVs"],
+    preferredKinds: ["article", "recipe", "gallery"],
+    preferredTags: ["reviews", "buying", "electric", "evs", "news"],
+  },
+  afternoon: {
+    label: "Afternoon Test Drive",
+    time: "1 PM",
+    description: "Reviews, performance, and comparison stories move up as intent gets sharper.",
+    preferredTopics: ["Reviews", "Performance", "EVs", "Racing"],
+    preferredKinds: ["recipe", "video", "gallery"],
+    preferredTags: ["review", "performance", "drive", "horsepower", "racing"],
+  },
+  evening: {
+    label: "Evening Garage",
+    time: "6 PM",
+    description: "Classics, trucks, auction finds, and longer reads fit a return session.",
+    preferredTopics: ["Classics", "Trucks", "Auctions", "Performance"],
+    preferredKinds: ["gallery", "article", "shopping"],
+    preferredTags: ["classic", "auction", "truck", "muscle", "collector"],
+  },
+  lateNight: {
+    label: "Late Night Scroll",
+    time: "10 PM",
+    description: "Racing, culture, video, and dream-car content rise for passive browsing.",
+    preferredTopics: ["Racing", "Classics", "Performance", "News"],
+    preferredKinds: ["video", "gallery", "article"],
+    preferredTags: ["racing", "classic", "performance", "engine", "speed"],
+  },
+};
+
+const fluxDemoDayparts: typeof lifestyleDemoDayparts = {
+  morning: {
+    label: "Morning Edit",
+    time: "8 AM",
+    description: "Style, beauty, design, and culture stories for a first check-in.",
+    preferredTopics: ["Style", "Beauty", "Design", "Culture"],
+    preferredKinds: ["article", "gallery", "shopping"],
+    preferredTags: ["style", "beauty", "design", "culture", "fashion"],
+  },
+  afternoon: {
+    label: "Afternoon Radar",
+    time: "1 PM",
+    description: "Shopping, events, celebrity, and culture stories rise as browsing intent increases.",
+    preferredTopics: ["Shopping", "Events", "Culture", "Style"],
+    preferredKinds: ["shopping", "gallery", "video"],
+    preferredTags: ["shopping", "celebrity", "events", "red", "fashion"],
+  },
+  evening: {
+    label: "Evening Culture",
+    time: "6 PM",
+    description: "Longer culture, design, home, and travel reads fit a return session.",
+    preferredTopics: ["Culture", "Design", "Travel", "Features"],
+    preferredKinds: ["article", "gallery", "video"],
+    preferredTags: ["culture", "design", "travel", "home", "feature"],
+  },
+  lateNight: {
+    label: "Late Night Browse",
+    time: "10 PM",
+    description: "Fashion, celebrity, interiors, and save-for-later stories move up.",
+    preferredTopics: ["Style", "Culture", "Design", "Beauty"],
+    preferredKinds: ["gallery", "video", "shopping"],
+    preferredTags: ["style", "celebrity", "design", "beauty", "shopping"],
+  },
+};
+
+const ewDemoDayparts: typeof lifestyleDemoDayparts = {
+  morning: {
+    label: "Morning Reset",
+    time: "8 AM",
+    description: "Fitness, wellness, nutrition, and gear stories for a useful first check-in.",
+    preferredTopics: ["Fitness", "Wellness", "Nutrition", "Gear"],
+    preferredKinds: ["article", "recipe", "shopping"],
+    preferredTags: ["fitness", "wellness", "nutrition", "gear", "health"],
+  },
+  afternoon: {
+    label: "Afternoon Boost",
+    time: "1 PM",
+    description: "Gear, tech, adventure, and training stories rise as active intent increases.",
+    preferredTopics: ["Gear", "Tech", "Adventure", "Fitness"],
+    preferredKinds: ["shopping", "gallery", "article"],
+    preferredTags: ["gear", "tech", "training", "running", "cycling"],
+  },
+  evening: {
+    label: "Evening Recharge",
+    time: "6 PM",
+    description: "Health, life, recovery, and practical service stories fit a return session.",
+    preferredTopics: ["Wellness", "Life", "Fitness", "Nutrition"],
+    preferredKinds: ["article", "video", "recipe"],
+    preferredTags: ["health", "sleep", "recovery", "relationships", "food"],
+  },
+  lateNight: {
+    label: "Late Night Deep Dive",
+    time: "10 PM",
+    description: "Science, mechanics, adventure, and save-for-later reads move up.",
+    preferredTopics: ["Tech", "Adventure", "Life", "Gear"],
+    preferredKinds: ["article", "gallery", "video"],
+    preferredTags: ["science", "mechanics", "adventure", "gear", "life"],
+  },
+};
+
 const lifestyleBrandFavicons: Record<string, string> = {
   cosmopolitan: "https://www.cosmopolitan.com/_assets/design-tokens/cosmopolitan/static/images/apple-touch-icon.b887080.png",
   "country-living": "https://www.countryliving.com/_assets/design-tokens/countryliving/static/images/apple-touch-icon.d0a32c5.png",
@@ -143,13 +278,188 @@ const lifestyleBrandFavicons: Record<string, string> = {
   "womans-day": "https://www.womansday.com/_assets/design-tokens/womansday/static/images/apple-touch-icon.bc2afd6.png",
 };
 
+const autosBrandFavicons: Record<string, string> = {
+  autoweek: "https://www.autoweek.com/_assets/design-tokens/autoweek/static/images/apple-touch-icon.b919ce0.png",
+  "bring-a-trailer": "https://bringatrailer.com/wp-content/themes/bringatrailer/assets/img/google-chrome-icon-192x192.png?v=4be5ad7eef",
+  "car-and-driver": "https://www.caranddriver.com/_assets/design-tokens/caranddriver/static/images/apple-touch-icon.57b92b6.png",
+  "hot-rod": "https://www.hotrod.com/logo/hotrod/icon.ico",
+  motortrend: "https://www.motortrend.com/logo/motortrend/icon.ico",
+  "road-and-track": "https://www.roadandtrack.com/_assets/design-tokens/roadandtrack/static/images/apple-touch-icon.dda61a5.png",
+};
+
+const fluxBrandFavicons: Record<string, string> = {
+  elle: "https://www.elle.com/_assets/design-tokens/elle/static/images/apple-touch-icon.0dd915e.png",
+  "elle-decor": "https://www.elledecor.com/_assets/design-tokens/elledecor/static/images/apple-touch-icon.c51311f.png",
+  esquire: "https://www.esquire.com/_assets/design-tokens/esquire/static/images/apple-touch-icon.1801cd0.png",
+  "harpers-bazaar": "https://www.harpersbazaar.com/_assets/design-tokens/harpersbazaar/static/images/apple-touch-icon.b5179c9.png",
+  "town-and-country": "https://www.townandcountrymag.com/_assets/design-tokens/townandcountrymag/static/images/apple-touch-icon.3ab52cc.png",
+  veranda: "https://www.veranda.com/_assets/design-tokens/veranda/static/images/apple-touch-icon.bed0f30.png",
+};
+
+const ewBrandFavicons: Record<string, string> = {
+  "best-products": "https://www.bestproducts.com/_assets/design-tokens/bestproducts/static/images/apple-touch-icon.721cffe.png",
+  bicycling: "https://www.bicycling.com/_assets/design-tokens/bicycling/static/images/apple-touch-icon.5c91a4c.png",
+  "mens-health": "https://www.menshealth.com/_assets/design-tokens/menshealth/static/images/apple-touch-icon.35eef3d.png",
+  "oprah-daily": "https://www.oprahdaily.com/_assets/design-tokens/oprahdaily/static/images/apple-touch-icon.e245e23.png",
+  "popular-mechanics": "https://www.popularmechanics.com/_assets/design-tokens/popularmechanics/static/images/apple-touch-icon.5d5fa0d.png",
+  "runners-world": "https://www.runnersworld.com/_assets/design-tokens/runnersworld/static/images/favicon.7c41e8e.ico",
+  "womens-health": "https://www.womenshealthmag.com/_assets/design-tokens/womenshealthmag/static/images/apple-touch-icon.6b2985f.png",
+};
+
+function getBrandIconUrl(brandSlug: string) {
+  return lifestyleBrandFavicons[brandSlug] ?? autosBrandFavicons[brandSlug] ?? fluxBrandFavicons[brandSlug] ?? ewBrandFavicons[brandSlug] ?? brandLogos[brandSlug];
+}
+
+function getBrandInitials(brand: string) {
+  return brand
+    .split(/\s+|&/)
+    .filter(Boolean)
+    .map((word) => word[0])
+    .join("")
+    .slice(0, 3)
+    .toUpperCase();
+}
+
+function BrandSourceIcon({
+  brand,
+  brandSlug,
+  className,
+}: {
+  brand: string;
+  brandSlug: string;
+  className?: string;
+}) {
+  const iconUrl = getBrandIconUrl(brandSlug);
+
+  return (
+    <span
+      aria-hidden
+      className={cn(
+        "inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-[3px] border border-border bg-background p-0.5 text-[8px] font-black leading-none text-primary",
+        className
+      )}
+      style={iconUrl ? {
+        backgroundImage: `url("${iconUrl}")`,
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "85% auto",
+      } : undefined}
+    >
+      {iconUrl ? null : getBrandInitials(brand)}
+    </span>
+  );
+}
+
+type DestinationMode = "lifestyle" | "autos" | "flux" | "ew";
+
+type DestinationConfig = {
+  mode: DestinationMode;
+  brandSlug: string;
+  productName: string;
+  riverLabel: string;
+  storyRiverLabel: string;
+  filters: string[];
+  stories: LifestyleRiverStory[];
+  sourceNotes: typeof lifestyleRiverSourceNotes | typeof autosRiverSourceNotes | typeof fluxRiverSourceNotes | typeof ewRiverSourceNotes;
+  initialProfile: LifestyleRiverProfile;
+  defaultLeadStoryId?: string;
+  dayparts: typeof lifestyleDemoDayparts;
+  nextDayTopics: string[];
+  brandSummary: string;
+  dataSourceCopy: string;
+  collectionLabels: string[];
+};
+
+const destinationConfigs: Record<DestinationMode, DestinationConfig> = {
+  lifestyle: {
+    mode: "lifestyle",
+    brandSlug: "hearst-lifestyle",
+    productName: "Hearst Lifestyle",
+    riverLabel: "Personalized lifestyle story river",
+    storyRiverLabel: "lifestyle stories",
+    filters: ["For You", "Food", "Home", "Wellness", "Style", "Shopping", "Family", "Entertainment", "Saved"],
+    stories: lifestyleRiverStories,
+    sourceNotes: lifestyleRiverSourceNotes,
+    initialProfile: initialLifestyleProfile,
+    defaultLeadStoryId: lifestyleDefaultLeadStoryId,
+    dayparts: lifestyleDemoDayparts,
+    nextDayTopics: ["Entertainment", "Shopping", "Home"],
+    brandSummary:
+      "Cosmopolitan, Country Living, Delish, Good Housekeeping, House Beautiful, The Pioneer Woman, Prevention, Redbook, Seventeen, and Woman's Day.",
+    dataSourceCopy:
+      "public Hearst lifestyle RSS metadata and filtered to stories with Hearst CDN images. Public Redbook RSS returned no image-backed items during the latest import.",
+    collectionLabels: ["Dinner ideas", "Weekend projects", "Sleep better"],
+  },
+  autos: {
+    mode: "autos",
+    brandSlug: "hearst-plus",
+    productName: "Hearst Autos",
+    riverLabel: "Personalized autos story river",
+    storyRiverLabel: "autos stories",
+    filters: ["For You", "News", "Reviews", "Buying Guides", "EVs", "Racing", "Trucks", "Classics", "Saved"],
+    stories: autosRiverStories,
+    sourceNotes: autosRiverSourceNotes,
+    initialProfile: initialAutosProfile,
+    dayparts: autosDemoDayparts,
+    nextDayTopics: ["News", "Reviews", "EVs", "Performance"],
+    brandSummary: "Autoweek, Bring a Trailer, Car and Driver, HOT ROD, MotorTrend, and Road & Track.",
+    dataSourceCopy:
+      "public autos RSS feeds and public article metadata from the requested Autos brands, filtered to stories with real images.",
+    collectionLabels: ["EV shortlist", "Weekend drives", "Auction watch"],
+  },
+  flux: {
+    mode: "flux",
+    brandSlug: "hearst-flux",
+    productName: "Hearst Flux",
+    riverLabel: "Personalized Flux story river",
+    storyRiverLabel: "Flux stories",
+    filters: ["For You", "Style", "Beauty", "Design", "Culture", "Shopping", "Events", "Travel", "Saved"],
+    stories: fluxRiverStories,
+    sourceNotes: fluxRiverSourceNotes,
+    initialProfile: initialFluxProfile,
+    dayparts: fluxDemoDayparts,
+    nextDayTopics: ["Style", "Culture", "Design", "Shopping"],
+    brandSummary: "Elle, Elle Décor, Esquire, Harper's Bazaar, Town & Country, and Veranda.",
+    dataSourceCopy:
+      "public Flux brand RSS metadata from the requested fashion, design, culture, and luxury brands, filtered to stories with real images.",
+    collectionLabels: ["Style file", "Design ideas", "Culture queue"],
+  },
+  ew: {
+    mode: "ew",
+    brandSlug: "hearst-ew",
+    productName: "Hearst E&W",
+    riverLabel: "Personalized E&W story river",
+    storyRiverLabel: "E&W stories",
+    filters: ["For You", "Fitness", "Wellness", "Gear", "Tech", "Adventure", "Nutrition", "Life", "Saved"],
+    stories: ewRiverStories,
+    sourceNotes: ewRiverSourceNotes,
+    initialProfile: initialEWProfile,
+    dayparts: ewDemoDayparts,
+    nextDayTopics: ["Fitness", "Wellness", "Gear", "Tech"],
+    brandSummary: "Best Products, Bicycling, Men's Health, Oprah Daily, Popular Mechanics, Runner's World, and Women's Health.",
+    dataSourceCopy:
+      "public E&W brand RSS metadata from the requested health, gear, fitness, wellness, and science brands, filtered to stories with real images.",
+    collectionLabels: ["Training plan", "Gear shortlist", "Wellness queue"],
+  },
+};
+
+function getDestinationMode(brandSlug: string): DestinationMode {
+  if (brandSlug === "hearst-ew") return "ew";
+  if (brandSlug === "hearst-flux") return "flux";
+  return brandSlug === "hearst-plus" ? "autos" : "lifestyle";
+}
+
 function getContent(brandSlug: string): ContentType {
   const base = getBaseContent(brandSlug);
   return { ...base, footerCols: defaultFooterCols };
 }
 
-function getLifestyleTimeOfDayScore(story: LifestyleRiverStory, demoState: LifestyleDemoState) {
-  const daypart = lifestyleDemoDayparts[demoState.daypart];
+function getLifestyleTimeOfDayScore(
+  story: LifestyleRiverStory,
+  demoState: LifestyleDemoState,
+  config = destinationConfigs.lifestyle
+) {
+  const daypart = config.dayparts[demoState.daypart];
   const kind = getLifestyleCardKind(story);
   let score = 0;
 
@@ -170,7 +480,8 @@ function getLifestyleRecencyScore(story: LifestyleRiverStory, demoState: Lifesty
 function getLifestyleScoreBreakdown(
   story: LifestyleRiverStory,
   profile: LifestyleRiverProfile,
-  demoState: LifestyleDemoState
+  demoState: LifestyleDemoState,
+  config = destinationConfigs.lifestyle
 ) {
   const popularity = story.popularity;
   const followedTopic = profile.followedTopics.includes(story.topic) ? 18 : 0;
@@ -179,10 +490,10 @@ function getLifestyleScoreBreakdown(
   const moreLikeThis = story.tags.some((tag) => profile.boostedTags.includes(tag)) ? 22 : 0;
   const savedStory = profile.savedIds.includes(story.id) ? 6 : 0;
   const recency = getLifestyleRecencyScore(story, demoState);
-  const timeOfDay = getLifestyleTimeOfDayScore(story, demoState);
+  const timeOfDay = getLifestyleTimeOfDayScore(story, demoState, config);
   const nextDayNovelty =
     demoState.contentDay === "nextDay" && story.id !== demoState.previousLeadId
-      ? story.topic === "Entertainment" || story.topic === "Shopping" || story.topic === "Home"
+      ? config.nextDayTopics.includes(story.topic)
         ? 28
         : 10
       : 0;
@@ -219,41 +530,21 @@ function getLifestyleScoreBreakdown(
 function getLifestyleScore(
   story: LifestyleRiverStory,
   profile: LifestyleRiverProfile,
-  demoState: LifestyleDemoState
+  demoState: LifestyleDemoState,
+  config = destinationConfigs.lifestyle
 ) {
-  return getLifestyleScoreBreakdown(story, profile, demoState).total;
-}
-
-function getLifestylePersonalizationReason(
-  story: LifestyleRiverStory,
-  profile: LifestyleRiverProfile,
-  demoState: LifestyleDemoState
-) {
-  const daypart = lifestyleDemoDayparts[demoState.daypart];
-
-  if (story.tags.some((tag) => profile.boostedTags.includes(tag))) return "More like stories you boosted";
-  if (demoState.contentDay === "nextDay" && story.id !== demoState.previousLeadId) return "Fresh for the next day";
-  if (story.tags.some((tag) => profile.savedTags.includes(tag))) {
-    const tag = story.tags.find((item) => profile.savedTags.includes(item));
-    return `Because you saved ${tag}`;
-  }
-  if (profile.followedBrands.includes(story.brand)) return `New from ${story.brand}`;
-  if (profile.followedTopics.includes(story.topic)) return `Matches your ${story.topic} interest`;
-  if (demoState.returnHours > 0 && story.age <= demoState.returnHours + 2) return "New since last visit";
-  if (getLifestyleTimeOfDayScore(story, demoState) > 0) return `Fits your ${daypart.label.toLowerCase()}`;
-  if (story.popularity >= 92) return "Trending across Hearst Lifestyle";
-
-  return "Balanced for freshness and variety";
+  return getLifestyleScoreBreakdown(story, profile, demoState, config).total;
 }
 
 function rankLifestyleRiver(
   stories: LifestyleRiverStory[],
   profile: LifestyleRiverProfile,
-  demoState: LifestyleDemoState
+  demoState: LifestyleDemoState,
+  config = destinationConfigs.lifestyle
 ) {
   const scored = stories
     .filter((story) => !profile.hiddenIds.includes(story.id))
-    .map((story) => ({ ...story, score: getLifestyleScore(story, profile, demoState) }))
+    .map((story) => ({ ...story, score: getLifestyleScore(story, profile, demoState, config) }))
     .sort((a, b) => b.score - a.score);
 
   const ranked: typeof scored = [];
@@ -272,24 +563,27 @@ function rankLifestyleRiver(
   return ranked;
 }
 
-function getLifestyleDemoStoryPool(demoState: LifestyleDemoState) {
-  if (demoState.contentDay === "today") return lifestyleRiverStories;
+function getLifestyleDemoStoryPool(
+  demoState: LifestyleDemoState,
+  config = destinationConfigs.lifestyle
+) {
+  if (demoState.contentDay === "today") return config.stories;
 
-  const nextDayStories = lifestyleRiverStories
-    .filter((story, index) => index % 2 === 1 || story.topic === "Entertainment" || story.topic === "Shopping")
+  const nextDayStories = config.stories
+    .filter((story, index) => index % 2 === 1 || config.nextDayTopics.includes(story.topic))
     .map((story) => ({
       ...story,
       age: Math.max(0, story.age - 24),
       popularity:
-        story.topic === "Entertainment" || story.topic === "Shopping" || story.topic === "Home"
+        config.nextDayTopics.includes(story.topic)
           ? Math.min(100, story.popularity + 8)
-          : story.topic.startsWith("Food")
+          : story.topic.startsWith("Food") || story.topic === "Reviews"
           ? Math.max(1, story.popularity - 8)
           : Math.max(1, story.popularity - 2),
       signal: story.age <= 24 ? "Trending" : story.signal,
     } satisfies LifestyleRiverStory));
 
-  return nextDayStories.length >= 80 ? nextDayStories : lifestyleRiverStories;
+  return nextDayStories.length >= 80 ? nextDayStories : config.stories;
 }
 
 function storyMatchesLifestyleFilter(story: LifestyleRiverStory, filter: string) {
@@ -297,14 +591,25 @@ function storyMatchesLifestyleFilter(story: LifestyleRiverStory, filter: string)
   return story.topic === filter || story.topic.startsWith(`${filter} `);
 }
 
+const hearstDestinationSections = [
+  { label: "Lifestyle", href: "/hearst-edit/" },
+  { label: "Autos", href: "/hearst-plus/" },
+  { label: "Flux", href: "/hearst-flux/" },
+  { label: "E&W", href: "/hearst-ew/" },
+];
+
 function UtilityBar() {
+  const { brand } = useTheme();
+  const activeDestination = brand.slug === "hearst-plus" ? "Autos" : brand.slug === "hearst-flux" ? "Flux" : brand.slug === "hearst-ew" ? "E&W" : "Lifestyle";
+
   return (
     <div className="h-8 bg-primary text-primary-foreground text-[length:var(--text-token-4xs)] font-semibold">
-      <PageContainer className="flex items-center justify-between h-full">
-        <div className="flex items-center gap-3">
+      <PageContainer className="grid h-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3">
+        <nav className="flex items-center gap-3" aria-label="Utility navigation">
           {["Shop", "Newsletter", "Sign In"].map((label) => (
             <LinkComponent
               key={label}
+              href="#"
               variant="neutral"
               underline={false}
               size="xs"
@@ -313,7 +618,32 @@ function UtilityBar() {
               {label}
             </LinkComponent>
           ))}
-        </div>
+        </nav>
+        <nav
+          className="flex min-w-0 items-center justify-center overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          aria-label="Hearst destination sections"
+        >
+          <div className="flex min-w-max items-center gap-1 rounded-full bg-black/10 p-0.5">
+            {hearstDestinationSections.map((section) => (
+              <LinkComponent
+                key={section.label}
+                href={section.href}
+                variant="neutral"
+                underline={false}
+                size="xs"
+                aria-current={section.label === activeDestination ? "page" : undefined}
+                className={cn(
+                  "rounded-full px-2 py-0.5 font-bold text-primary-foreground hover:text-primary-foreground",
+                  section.label === activeDestination
+                    ? "bg-white text-primary hover:text-primary"
+                    : "opacity-85 hover:bg-white/10 hover:opacity-100"
+                )}
+              >
+                {section.label}
+              </LinkComponent>
+            ))}
+          </div>
+        </nav>
         <Button
           variant="secondary"
           size="xs"
@@ -338,7 +668,9 @@ function MainNav({
   const { brand } = useTheme();
   const logo = brandLogos[brand.slug];
   const content = getContent(brandSlug);
-  const isLifestyle = brand.slug === "hearst-lifestyle";
+  const isDestinationRiver = brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
+  const destinationConfig = destinationConfigs[getDestinationMode(brand.slug)];
+  const navLinks = isDestinationRiver ? destinationConfig.filters : content.navLinks;
 
   return (
     <div className="border-b border-border py-2">
@@ -348,10 +680,10 @@ function MainNav({
           {logo ? (
             <BrandLogo
               slug={brand.slug}
-              color={isLifestyle ? brand.colors["1"] : undefined}
+              color={isDestinationRiver ? brand.colors["1"] : undefined}
               className={cn(
                 "[&_svg]:w-auto mx-auto",
-                isLifestyle
+                isDestinationRiver
                   ? "[&_svg]:h-5 sm:[&_svg]:h-6 [&_svg]:max-w-[260px] sm:[&_svg]:max-w-[340px]"
                   : "[&_svg]:h-10"
               )}
@@ -369,10 +701,10 @@ function MainNav({
         </div>
       </PageContainer>
       <PageContainer as="nav" className="flex items-center justify-center gap-6 py-2 overflow-x-auto scrollbar-hide">
-        {content.navLinks.map((link) => {
+        {navLinks.map((link) => {
           const active = activeFilter === link;
 
-          return isLifestyle ? (
+          return isDestinationRiver ? (
             <button
               key={link}
               type="button"
@@ -619,22 +951,15 @@ function LifestyleRiverImage({
 function getLifestyleImagePosition(story: LifestyleRiverStory) {
   if (story.id === lifestyleDefaultLeadStoryId) return "center 22%";
   if (story.title === "Are Corbin and Parmida Still Together? Corbin Speaks Out") return "center 18%";
+  if (story.title === "All About Zoey Deutch’s Fiancé, Jimmy Tatro") return "center 18%";
+  if (story.title === "Minka Kelly and Dan Reynolds’s Complete Relationship Timeline") return "center 18%";
   return "center";
 }
 
 function LifestyleBrandSource({ story }: { story: LifestyleRiverStory }) {
   return (
     <span className="inline-flex min-w-0 items-center gap-1.5 text-[length:var(--text-token-4xs)] text-muted-foreground">
-      <span
-        aria-hidden
-        className="inline-block h-4 w-4 shrink-0 rounded-[3px] border border-border bg-background"
-        style={{
-          backgroundImage: `url("${lifestyleBrandFavicons[story.brandSlug]}")`,
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "contain",
-        }}
-      />
+      <BrandSourceIcon brand={story.brand} brandSlug={story.brandSlug} />
       <span className="min-w-0 truncate">
         {story.brand} · {story.topic} · {story.readTime}
       </span>
@@ -648,21 +973,28 @@ function getLifestyleCardKind(story: LifestyleRiverStory): LifestyleCardKind {
   const searchable = `${story.topic} ${story.title}`.toLowerCase();
 
   if (story.topic.startsWith("Food")) return "recipe";
+  if (story.topic === "Reviews" || story.topic === "EVs" || story.topic === "Performance") return "recipe";
   if (/shopping|products|tested|best|buy|sale|deals|favorite|picks/.test(searchable)) return "shopping";
+  if (story.topic === "Buying Guides" || story.topic === "Auctions") return "shopping";
   if (story.topic === "Entertainment" || /watch|video|tv|show|movie|internet/.test(searchable) || story.age % 7 === 0) return "video";
-  if (/photos|gallery|style|jeans|rooms|decorating|porch|garden|designers|living room/.test(searchable) || story.age % 5 === 0) return "gallery";
+  if (/photos|gallery|style|jeans|rooms|decorating|porch|garden|designers|living room|classic|collector|auction/.test(searchable) || story.age % 5 === 0) return "gallery";
 
   return "article";
 }
 
-function getLifestyleKindLabel(kind: LifestyleCardKind) {
-  return {
+function getLifestyleKindLabel(kind: LifestyleCardKind, story?: LifestyleRiverStory) {
+  if (story && kind === "recipe" && !story.topic.startsWith("Food")) return "Specs";
+  if (story && kind === "shopping" && !["Shopping", "Style"].includes(story.topic)) return "Guide";
+
+  const labels = {
     article: "Article",
     gallery: "Gallery",
     video: "Watch",
     recipe: "Recipe",
     shopping: "Shop",
-  }[kind];
+  };
+
+  return labels[kind];
 }
 
 const lifestyleCardModelGuide: {
@@ -727,7 +1059,7 @@ function LifestyleCardModelGuide() {
         </h2>
         <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
           The personalization layer picks the story order. The content model picks the best card treatment for the reader intent,
-          so every item still feels like one coherent Hearst Lifestyle river.
+          so every item still feels like one coherent Hearst destination river.
         </p>
       </div>
 
@@ -857,6 +1189,28 @@ function LifestyleCardModule({
   }
 
   if (kind === "recipe") {
+    if (!story.topic.startsWith("Food")) {
+      return (
+        <div className="mt-4 grid grid-cols-3 gap-2 border-t border-border pt-3 text-center text-xs">
+          <div className="rounded-[8px] bg-muted px-2 py-2">
+            <p className="font-bold">{3 + (story.age % 5)} sec</p>
+            <p className="text-muted-foreground">0-60</p>
+          </div>
+          <div className="rounded-[8px] bg-muted px-2 py-2">
+            <p className="font-bold">{240 + ((story.age * 17) % 360)} hp</p>
+            <p className="text-muted-foreground">Estimate</p>
+          </div>
+          <div className="rounded-[8px] bg-muted px-2 py-2">
+            <p className="flex items-center justify-center gap-1 font-bold">
+              <Star className="h-3.5 w-3.5" aria-hidden />
+              Tested
+            </p>
+            <p className="text-muted-foreground">Signal</p>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="mt-4 grid grid-cols-3 gap-2 border-t border-border pt-3 text-center text-xs">
         <div className="rounded-[8px] bg-muted px-2 py-2">
@@ -907,24 +1261,18 @@ function LifestyleCardModule({
 function LifestyleRiverCard({
   story,
   saved,
-  reason,
-  score,
   onOpen,
   onSave,
   onMoreLikeThis,
-  onFollowTopic,
   onFollowBrand,
   onHide,
   featured = false,
 }: {
   story: LifestyleRiverStory;
   saved: boolean;
-  reason: string;
-  score: number;
   onOpen: () => void;
   onSave: () => void;
   onMoreLikeThis: () => void;
-  onFollowTopic: () => void;
   onFollowBrand: () => void;
   onHide: () => void;
   featured?: boolean;
@@ -969,7 +1317,7 @@ function LifestyleRiverCard({
             {story.signal}
           </span>
           <span className="rounded-full bg-muted px-2 py-0.5 text-[length:var(--text-token-4xs)] font-semibold uppercase tracking-widest text-muted-foreground">
-            {getLifestyleKindLabel(kind)}
+            {getLifestyleKindLabel(kind, story)}
           </span>
           <LifestyleBrandSource story={story} />
         </div>
@@ -986,14 +1334,6 @@ function LifestyleRiverCard({
           {story.summary}
         </p>
         <LifestyleCardModule story={story} kind={kind} />
-        <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
-          <span className="rounded-full bg-primary/10 px-3 py-1 font-bold text-primary">
-            {reason}
-          </span>
-          <span className="rounded-full bg-muted px-3 py-1 text-muted-foreground">
-            Score {score}
-          </span>
-        </div>
         <div className="mt-5 flex flex-wrap gap-2" onClick={(event) => event.stopPropagation()}>
           <Button variant={saved ? "default" : "outline"} size="xs" onClick={onSave} aria-pressed={saved}>
             <Bookmark className="mr-1.5 h-3.5 w-3.5" aria-hidden />
@@ -1002,9 +1342,6 @@ function LifestyleRiverCard({
           <Button variant="outline" size="xs" onClick={onMoreLikeThis}>
             <Plus className="mr-1.5 h-3.5 w-3.5" aria-hidden />
             More like this
-          </Button>
-          <Button variant="ghost" size="xs" onClick={onFollowTopic}>
-            Follow {story.topic}
           </Button>
           <Button variant="ghost" size="xs" onClick={onFollowBrand}>
             Follow {story.brand}
@@ -1126,17 +1463,8 @@ function LifestyleReaderContextRail({
                   className="group w-full border-t border-border pt-3 text-left first:border-t-0 first:pt-0 focus:outline-none focus:ring-2 focus:ring-primary/30"
                 >
                   <span className="flex items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
-                    <span
-                      aria-hidden
-                      className="inline-block h-4 w-4 shrink-0 rounded-[3px] border border-border bg-background"
-                      style={{
-                        backgroundImage: `url("${lifestyleBrandFavicons[story.brandSlug]}")`,
-                        backgroundPosition: "center",
-                        backgroundRepeat: "no-repeat",
-                        backgroundSize: "contain",
-                      }}
-                    />
-                    {getLifestyleKindLabel(getLifestyleCardKind(story))}
+                    <BrandSourceIcon brand={story.brand} brandSlug={story.brandSlug} />
+                    {getLifestyleKindLabel(getLifestyleCardKind(story), story)}
                   </span>
                   <span className="mt-1 block text-sm font-bold leading-5 group-hover:text-primary">
                     {story.title}
@@ -1193,11 +1521,13 @@ function LifestyleReaderSidebarAd() {
 function LifestyleStoryReaderModal({
   stories,
   openStoryId,
+  productName,
   onClose,
   onOpenStory,
 }: {
   stories: LifestyleRiverStory[];
   openStoryId: string | null;
+  productName: string;
   onClose: () => void;
   onOpenStory: (storyId: string) => void;
 }) {
@@ -1265,7 +1595,7 @@ function LifestyleStoryReaderModal({
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background/95 px-4 py-3 backdrop-blur sm:px-6">
           <div className="min-w-0">
             <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
-              Hearst Lifestyle Reader
+              {productName} Reader
             </p>
             <p className="mt-1 truncate text-xs text-muted-foreground">
               Lazy-loading {visibleReaderStories.length} of {storyQueue.length} stories from this river
@@ -1298,7 +1628,7 @@ function LifestyleStoryReaderModal({
                         {story.signal}
                       </span>
                       <span className="rounded-full bg-muted px-2 py-0.5 text-[length:var(--text-token-4xs)] font-semibold uppercase tracking-widest text-muted-foreground">
-                        {getLifestyleKindLabel(kind)}
+                        {getLifestyleKindLabel(kind, story)}
                       </span>
                       <LifestyleBrandSource story={story} />
                     </div>
@@ -1335,12 +1665,14 @@ function TodayEditDashboard({
   stories,
   profile,
   demoState,
+  config,
   onOpenStory,
   onShowFollowedBrands,
 }: {
   stories: LifestyleRiverStory[];
   profile: LifestyleRiverProfile;
   demoState: LifestyleDemoState;
+  config: DestinationConfig;
   onOpenStory: (storyId: string) => void;
   onShowFollowedBrands: () => void;
 }) {
@@ -1396,7 +1728,7 @@ function TodayEditDashboard({
           </h2>
         </div>
         <p className="max-w-md text-sm leading-6 text-muted-foreground">
-          A compact {lifestyleDemoDayparts[demoState.daypart].time} briefing built from your brands,
+          A compact {config.dayparts[demoState.daypart].time} briefing built from your brands,
           saved signals, and the stories gaining momentum now.
         </p>
       </div>
@@ -1433,6 +1765,7 @@ function LifestylePersonalizationDemoPanel({
   demoState,
   profile,
   topStory,
+  config,
   onDaypartChange,
   onSimulateReturn,
   currentLeadId,
@@ -1442,6 +1775,7 @@ function LifestylePersonalizationDemoPanel({
   demoState: LifestyleDemoState;
   profile: LifestyleRiverProfile;
   topStory?: LifestyleRiverStory;
+  config: DestinationConfig;
   onDaypartChange: (daypart: LifestyleDemoDaypart) => void;
   onSimulateReturn: (
     hours: number,
@@ -1453,8 +1787,8 @@ function LifestylePersonalizationDemoPanel({
   onApplyBehaviorPreset: (preset: "homeCook" | "shoppingBrowser" | "wellnessReader") => void;
   onResetDemo: () => void;
 }) {
-  const activeDaypart = lifestyleDemoDayparts[demoState.daypart];
-  const topBreakdown = topStory ? getLifestyleScoreBreakdown(topStory, profile, demoState) : null;
+  const activeDaypart = config.dayparts[demoState.daypart];
+  const topBreakdown = topStory ? getLifestyleScoreBreakdown(topStory, profile, demoState, config) : null;
 
   return (
     <section className="rounded-[8px] border border-border bg-muted/25" aria-label="Personalization demo controls">
@@ -1482,8 +1816,8 @@ function LifestylePersonalizationDemoPanel({
             <div>
               <p className="text-xs font-bold uppercase tracking-widest text-primary">Time of day</p>
               <div className="mt-3 flex flex-wrap gap-2">
-                {(Object.keys(lifestyleDemoDayparts) as LifestyleDemoDaypart[]).map((daypart) => {
-                  const item = lifestyleDemoDayparts[daypart];
+                {(Object.keys(config.dayparts) as LifestyleDemoDaypart[]).map((daypart) => {
+                  const item = config.dayparts[daypart];
                   const active = demoState.daypart === daypart;
 
                   return (
@@ -1603,6 +1937,7 @@ function LifestylePersonalizationDemoModal({
   demoState,
   profile,
   topStory,
+  config,
   onDaypartChange,
   onSimulateReturn,
   onApplyBehaviorPreset,
@@ -1613,6 +1948,7 @@ function LifestylePersonalizationDemoModal({
   demoState: LifestyleDemoState;
   profile: LifestyleRiverProfile;
   topStory?: LifestyleRiverStory;
+  config: DestinationConfig;
   onDaypartChange: (daypart: LifestyleDemoDaypart) => void;
   onSimulateReturn: (
     hours: number,
@@ -1668,6 +2004,7 @@ function LifestylePersonalizationDemoModal({
             demoState={demoState}
             profile={profile}
             topStory={topStory}
+            config={config}
             currentLeadId={topStory?.id}
             onDaypartChange={onDaypartChange}
             onSimulateReturn={onSimulateReturn}
@@ -1687,6 +2024,7 @@ function LifestyleLeftSidebar({
   topics,
   brands,
   activeBrandFilters,
+  collectionLabels,
   onToggleBrandFilter,
   onClearBrandFilters,
   onFollowTopic,
@@ -1696,6 +2034,7 @@ function LifestyleLeftSidebar({
   topics: { name: string; count: number }[];
   brands: { name: string; slug: string; count: number }[];
   activeBrandFilters: string[];
+  collectionLabels: string[];
   onToggleBrandFilter: (brandName: string) => void;
   onClearBrandFilters: () => void;
   onFollowTopic: (topic: string) => void;
@@ -1754,18 +2093,13 @@ function LifestyleLeftSidebar({
                 aria-pressed={active}
               >
                 <span className="flex min-w-0 items-center gap-2">
-                  <span
-                    aria-hidden
+                  <BrandSourceIcon
+                    brand={brand.name}
+                    brandSlug={brand.slug}
                     className={cn(
-                      "inline-block h-5 w-5 shrink-0 rounded-[8px] border bg-background",
+                      "h-5 w-5 rounded-[4px]",
                       active ? "border-primary ring-2 ring-primary/20" : "border-border"
                     )}
-                    style={{
-                      backgroundImage: `url("${lifestyleBrandFavicons[brand.slug]}")`,
-                      backgroundPosition: "center",
-                      backgroundRepeat: "no-repeat",
-                      backgroundSize: "contain",
-                    }}
                   />
                   <span className="min-w-0 truncate">{brand.name}</span>
                 </span>
@@ -1808,9 +2142,9 @@ function LifestyleLeftSidebar({
           Collections
         </p>
         <div className="mt-4 space-y-2 text-sm">
-          <p className="font-bold">Dinner ideas</p>
-          <p className="font-bold">Weekend projects</p>
-          <p className="font-bold">Sleep better</p>
+          {collectionLabels.map((label) => (
+            <p key={label} className="font-bold">{label}</p>
+          ))}
           <p className="text-xs text-muted-foreground">
             Saved stories and more-like-this actions tune these collections in the prototype.
           </p>
@@ -1820,8 +2154,15 @@ function LifestyleLeftSidebar({
   );
 }
 
-function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
-  const [profile, setProfile] = React.useState<LifestyleRiverProfile>(initialLifestyleProfile);
+function LifestyleRiverHomePage({
+  activeFilter,
+  destination,
+}: {
+  activeFilter: string;
+  destination: DestinationMode;
+}) {
+  const config = destinationConfigs[destination];
+  const [profile, setProfile] = React.useState<LifestyleRiverProfile>(config.initialProfile);
   const [demoState, setDemoState] = React.useState<LifestyleDemoState>(initialLifestyleDemoState);
   const [activeBrandFilters, setActiveBrandFilters] = React.useState<string[]>([]);
   const [openStoryId, setOpenStoryId] = React.useState<string | null>(null);
@@ -1829,10 +2170,10 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
   const [visibleCount, setVisibleCount] = React.useState(8);
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
 
-  const activeStoryPool = React.useMemo(() => getLifestyleDemoStoryPool(demoState), [demoState]);
+  const activeStoryPool = React.useMemo(() => getLifestyleDemoStoryPool(demoState, config), [config, demoState]);
   const rankedStories = React.useMemo(
-    () => rankLifestyleRiver(activeStoryPool, profile, demoState),
-    [activeStoryPool, demoState, profile]
+    () => rankLifestyleRiver(activeStoryPool, profile, demoState, config),
+    [activeStoryPool, config, demoState, profile]
   );
   const filteredStories = React.useMemo(() => {
     const brandFilteredStories = activeBrandFilters.length > 0
@@ -1864,12 +2205,12 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
       return acc;
     }, {});
 
-    return lifestyleRiverSourceNotes.map((note) => ({
+    return config.sourceNotes.map((note) => ({
       name: note.brand,
       slug: note.brandSlug,
       count: counts[note.brand] ?? 0,
     }));
-  }, [activeStoryPool]);
+  }, [activeStoryPool, config.sourceNotes]);
 
   React.useEffect(() => {
     setVisibleCount(8);
@@ -1896,7 +2237,7 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
     Array.from(new Set([...items, ...nextItems]));
 
   const resetDemo = () => {
-    setProfile(initialLifestyleProfile);
+    setProfile(config.initialProfile);
     setDemoState(initialLifestyleDemoState);
     setActiveBrandFilters([]);
     setOpenStoryId(null);
@@ -1913,19 +2254,64 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
 
   const applyBehaviorPreset = (preset: "homeCook" | "shoppingBrowser" | "wellnessReader") => {
     const presets: Record<"homeCook" | "shoppingBrowser" | "wellnessReader", Partial<LifestyleRiverProfile>> = {
-      homeCook: {
+      homeCook: destination === "autos" ? {
+        followedTopics: ["Reviews", "Buying Guides", "EVs"],
+        followedBrands: ["Car and Driver", "MotorTrend", "Road & Track"],
+        savedTags: ["reviews", "evs", "buying", "electric"],
+        boostedTags: ["review", "drive", "evs", "buying"],
+      } : destination === "flux" ? {
+        followedTopics: ["Style", "Beauty", "Culture"],
+        followedBrands: ["Elle", "Harper's Bazaar", "Esquire"],
+        savedTags: ["style", "beauty", "culture", "fashion"],
+        boostedTags: ["style", "beauty", "fashion", "celebrity"],
+      } : destination === "ew" ? {
+        followedTopics: ["Fitness", "Wellness", "Nutrition"],
+        followedBrands: ["Men's Health", "Women's Health", "Runner's World"],
+        savedTags: ["fitness", "wellness", "nutrition", "training"],
+        boostedTags: ["fitness", "training", "health", "wellness"],
+      } : {
         followedTopics: ["Food", "Food Drinks", "Home"],
         followedBrands: ["Delish", "Good Housekeeping", "Country Living"],
         savedTags: ["dinner ideas", "cookout", "cleaning", "decorating"],
         boostedTags: ["recipe", "dinner ideas", "cookout", "food"],
       },
-      shoppingBrowser: {
+      shoppingBrowser: destination === "autos" ? {
+        followedTopics: ["Buying Guides", "Auctions", "Classics"],
+        followedBrands: ["Bring a Trailer", "Autoweek", "HOT ROD"],
+        savedTags: ["auction", "classic", "collector", "used"],
+        boostedTags: ["auction", "classic", "buying", "collector"],
+      } : destination === "flux" ? {
+        followedTopics: ["Shopping", "Style", "Design"],
+        followedBrands: ["Elle", "Elle Décor", "Veranda"],
+        savedTags: ["shopping", "design", "gifts", "jewelry"],
+        boostedTags: ["shopping", "style", "design", "products"],
+      } : destination === "ew" ? {
+        followedTopics: ["Gear", "Tech", "Adventure"],
+        followedBrands: ["Best Products", "Popular Mechanics", "Bicycling"],
+        savedTags: ["gear", "tech", "adventure", "products"],
+        boostedTags: ["gear", "reviews", "tech", "bike"],
+      } : {
         followedTopics: ["Shopping", "Style", "Home"],
         followedBrands: ["Good Housekeeping", "Cosmopolitan", "House Beautiful"],
         savedTags: ["products", "style", "beauty", "decorating"],
         boostedTags: ["products", "shopping", "editor picks", "style"],
       },
-      wellnessReader: {
+      wellnessReader: destination === "autos" ? {
+        followedTopics: ["Performance", "Racing", "Trucks"],
+        followedBrands: ["HOT ROD", "Road & Track", "MotorTrend"],
+        savedTags: ["performance", "racing", "truck", "engine"],
+        boostedTags: ["performance", "racing", "horsepower", "truck"],
+      } : destination === "flux" ? {
+        followedTopics: ["Design", "Travel", "Events"],
+        followedBrands: ["Town & Country", "Veranda", "Elle Décor"],
+        savedTags: ["design", "travel", "events", "home"],
+        boostedTags: ["design", "travel", "culture", "home"],
+      } : destination === "ew" ? {
+        followedTopics: ["Wellness", "Life", "Fitness"],
+        followedBrands: ["Oprah Daily", "Women's Health", "Men's Health"],
+        savedTags: ["wellness", "life", "sleep", "health"],
+        boostedTags: ["wellness", "health", "life", "recovery"],
+      } : {
         followedTopics: ["Wellness", "Style", "Food"],
         followedBrands: ["Prevention", "Good Housekeeping", "Cosmopolitan"],
         savedTags: ["sleep", "health", "beauty", "food"],
@@ -1968,7 +2354,9 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
   const followTopic = (topic: string) => {
     setProfile((current) => ({
       ...current,
-      followedTopics: mergeUnique(current.followedTopics, [topic]),
+      followedTopics: current.followedTopics.includes(topic)
+        ? current.followedTopics.filter((item) => item !== topic)
+        : [...current.followedTopics, topic],
     }));
   };
 
@@ -2008,6 +2396,7 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
         stories={filteredStories}
         profile={profile}
         demoState={demoState}
+        config={config}
         onOpenStory={setOpenStoryId}
         onShowFollowedBrands={showFollowedBrands}
       />
@@ -2019,23 +2408,21 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
           topics={sidebarTopics}
           brands={sidebarBrands}
           activeBrandFilters={activeBrandFilters}
+          collectionLabels={config.collectionLabels}
           onToggleBrandFilter={toggleBrandFilter}
           onClearBrandFilters={() => setActiveBrandFilters([])}
           onFollowTopic={followTopic}
         />
 
-        <main className="space-y-4" aria-label="Personalized lifestyle story river">
+        <main className="space-y-4" aria-label={config.riverLabel}>
           {leadStory ? (
             <>
               <LifestyleRiverCard
                 story={leadStory}
                 saved={profile.savedIds.includes(leadStory.id)}
-                reason={getLifestylePersonalizationReason(leadStory, profile, demoState)}
-                score={getLifestyleScoreBreakdown(leadStory, profile, demoState).total}
                 onOpen={() => setOpenStoryId(leadStory.id)}
                 onSave={() => toggleSaved(leadStory)}
                 onMoreLikeThis={() => boostStory(leadStory)}
-                onFollowTopic={() => followTopic(leadStory.topic)}
                 onFollowBrand={() => followBrand(leadStory.brand)}
                 onHide={() => hideStory(leadStory.id)}
                 featured
@@ -2046,12 +2433,9 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
                   key={story.id}
                   story={story}
                   saved={profile.savedIds.includes(story.id)}
-                  reason={getLifestylePersonalizationReason(story, profile, demoState)}
-                  score={getLifestyleScoreBreakdown(story, profile, demoState).total}
                   onOpen={() => setOpenStoryId(story.id)}
                   onSave={() => toggleSaved(story)}
                   onMoreLikeThis={() => boostStory(story)}
-                  onFollowTopic={() => followTopic(story.topic)}
                   onFollowBrand={() => followBrand(story.brand)}
                   onHide={() => hideStory(story.id)}
                 />
@@ -2110,8 +2494,7 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
             </p>
             <p className="mt-2 text-xs leading-5 text-muted-foreground">
               {demoState.contentDay === "nextDay" ? "Next-day demo edition generated from " : "Pulled from "}
-              public Hearst lifestyle RSS metadata and filtered to stories with Hearst CDN images.
-              Public Redbook RSS returned no image-backed items during the latest import.
+              {config.dataSourceCopy}
             </p>
           </div>
           <div className="rounded-[8px] border border-border p-4">
@@ -2123,7 +2506,7 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
                 <p className="font-bold">Demo moment</p>
                 <p className="mt-1 text-muted-foreground">
                   {demoState.contentDay === "nextDay" ? "Next day edition · " : ""}
-                  {lifestyleDemoDayparts[demoState.daypart].label}
+                  {config.dayparts[demoState.daypart].label}
                   {demoState.returnHours > 0 ? ` · back after ${demoState.returnHours} hours` : " · first visit"}
                 </p>
               </div>
@@ -2153,6 +2536,7 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
       <LifestyleStoryReaderModal
         stories={filteredStories}
         openStoryId={openStoryId}
+        productName={config.productName}
         onClose={() => setOpenStoryId(null)}
         onOpenStory={setOpenStoryId}
       />
@@ -2174,6 +2558,7 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
         demoState={demoState}
         profile={profile}
         topStory={leadStory}
+        config={config}
         onDaypartChange={(daypart) => setDemoState((current) => ({ ...current, daypart }))}
         onSimulateReturn={simulateReturn}
         onApplyBehaviorPreset={applyBehaviorPreset}
@@ -2186,12 +2571,10 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
             Personalized Popular River
           </p>
           <h1 className="headline text-4xl leading-tight sm:text-6xl">
-            Most popular lifestyle stories, tuned by what you do next.
+            Most popular {config.storyRiverLabel}, tuned by what you do next.
           </h1>
           <p className="max-w-3xl text-base leading-7 text-muted-foreground">
-            A continuously ranked Hearst Lifestyle feed across Cosmopolitan, Country Living, Delish,
-            Good Housekeeping, House Beautiful, The Pioneer Woman, Prevention, Redbook, Seventeen,
-            and Woman&rsquo;s Day.
+            A continuously ranked {config.productName} feed across {config.brandSummary}
           </p>
         </div>
         <div className="rounded-[8px] border border-border bg-muted/40 p-4">
@@ -2320,6 +2703,8 @@ export function HomePageTemplate({
 }: HomePageTemplateProps = {}) {
   const { brand } = useTheme();
   const [activeLifestyleFilter, setActiveLifestyleFilter] = React.useState("For You");
+  const isDestinationRiver = brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
+  const destinationMode = getDestinationMode(brand.slug);
 
   return (
     <div className="min-h-screen font-brand bg-background">
@@ -2334,11 +2719,11 @@ export function HomePageTemplate({
       />
 
       {/* Page Body — constrained by the shared PageContainer */}
-      <PageContainer className={cn("relative", brand.slug === "hearst-lifestyle" ? "pt-0" : "pt-8 lg:pt-12")}>
+      <PageContainer className={cn("relative", isDestinationRiver ? "pt-0" : "pt-8 lg:pt-12")}>
         {showGridOverlay && <GridOverlay />}
-        <div className={cn("relative z-10", brand.slug === "hearst-lifestyle" ? "space-y-8" : "space-y-12 lg:space-y-16")}>
-          {brand.slug === "hearst-lifestyle" ? (
-            <LifestyleRiverHomePage activeFilter={activeLifestyleFilter} />
+        <div className={cn("relative z-10", isDestinationRiver ? "space-y-8" : "space-y-12 lg:space-y-16")}>
+          {isDestinationRiver ? (
+            <LifestyleRiverHomePage activeFilter={activeLifestyleFilter} destination={destinationMode} />
           ) : layout === "overlapGrid" ? (
             <OverlapGridHomepageBody brandSlug={brand.slug} />
           ) : (

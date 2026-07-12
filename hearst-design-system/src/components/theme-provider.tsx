@@ -23,6 +23,7 @@ const GOOGLE_FONTS: Record<string, string> = {
   "Newsreader": "Newsreader:wght@400;500;600;700;800",
   "Barlow Condensed": "Barlow+Condensed:wght@300;400;500;600;700",
   "Barlow Semi Condensed": "Barlow+Semi+Condensed:wght@300;400;500;600;700",
+  "Knockout Condensed": "Barlow+Condensed:wght@700;800;900",
   "Montserrat": "Montserrat:wght@300;400;500;600;700;800",
   "Poppins": "Poppins:wght@300;400;500;600;700",
   "Manrope": "Manrope:wght@300;400;500;600;700;800",

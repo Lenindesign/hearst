@@ -830,6 +830,7 @@
   .headline {
     font-family: var(--font-headline, system-ui);
     font-weight: var(--font-headline-weight, 700);
+    font-stretch: var(--font-headline-stretch, normal);
   }
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
