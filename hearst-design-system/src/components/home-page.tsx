@@ -739,6 +739,7 @@ function MainNav({
   const navLinks = isDestinationRiver ? destinationConfig.filters : content.navLinks;
 
   return (
+    <>
     <div className="border-b border-border py-2">
       <PageContainer className="flex items-center justify-between py-2">
         <div className="w-[var(--width-sidebar-narrow)]" />
@@ -766,6 +767,8 @@ function MainNav({
           </Button>
         </div>
       </PageContainer>
+    </div>
+    <div className={cn("border-b border-border", isDestinationRiver && "sticky top-0 z-30 bg-background/95 backdrop-blur md:static md:bg-background md:backdrop-blur-none")}>
       <PageContainer as="nav" className="flex items-center justify-start gap-6 overflow-x-auto py-2 scrollbar-hide md:justify-center">
         {navLinks.map((link) => {
           const active = activeFilter === link;
@@ -799,6 +802,7 @@ function MainNav({
         })}
       </PageContainer>
     </div>
+    </>
   );
 }
 
@@ -2020,7 +2024,7 @@ function LifestyleStoryReaderModal({
       <div className="absolute inset-0" onClick={onClose} />
       <div
         ref={scrollRef}
-        className="absolute inset-x-0 bottom-0 top-6 mx-auto flex w-full max-w-[1360px] flex-col overflow-y-auto bg-background shadow-2xl sm:inset-y-6 sm:rounded-[8px]"
+        className="absolute inset-0 mx-auto flex h-[100dvh] w-full max-w-[1360px] flex-col overflow-y-auto bg-background shadow-2xl sm:inset-y-6 sm:h-auto sm:rounded-[8px]"
       >
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background/95 px-4 py-3 backdrop-blur sm:px-6">
           <div className="min-w-0">
@@ -3232,8 +3236,16 @@ export function HomePageTemplate({
 }: HomePageTemplateProps = {}) {
   const { brand } = useTheme();
   const [activeLifestyleFilter, setActiveLifestyleFilter] = React.useState("For You");
+  const destinationContentRef = React.useRef<HTMLDivElement | null>(null);
   const isDestinationRiver = brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
   const destinationMode = getDestinationMode(brand.slug);
+  const handleLifestyleFilterChange = React.useCallback((filter: string) => {
+    setActiveLifestyleFilter(filter);
+
+    window.requestAnimationFrame(() => {
+      destinationContentRef.current?.scrollIntoView({ block: "start", behavior: "smooth" });
+    });
+  }, []);
 
   return (
     <div className="min-h-screen font-brand bg-background">
@@ -3244,13 +3256,16 @@ export function HomePageTemplate({
       <MainNav
         brandSlug={brand.slug}
         activeFilter={activeLifestyleFilter}
-        onFilterChange={setActiveLifestyleFilter}
+        onFilterChange={handleLifestyleFilterChange}
       />
 
       {/* Page Body — constrained by the shared PageContainer */}
       <PageContainer className={cn("relative", isDestinationRiver ? "pt-0" : "pt-8 lg:pt-12")}>
         {showGridOverlay && <GridOverlay />}
-        <div className={cn("relative z-10", isDestinationRiver ? "space-y-8" : "space-y-12 lg:space-y-16")}>
+        <div
+          ref={isDestinationRiver ? destinationContentRef : undefined}
+          className={cn("relative z-10 scroll-mt-12", isDestinationRiver ? "space-y-8" : "space-y-12 lg:space-y-16")}
+        >
           {isDestinationRiver ? (
             <LifestyleRiverHomePage activeFilter={activeLifestyleFilter} destination={destinationMode} />
           ) : layout === "overlapGrid" ? (
