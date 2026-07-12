@@ -2098,15 +2098,11 @@ function LifestyleStoryReaderModal({
 function TodayEditDashboard({
   stories,
   profile,
-  demoState,
-  config,
   onOpenStory,
   onShowFollowedBrands,
 }: {
   stories: LifestyleRiverStory[];
   profile: LifestyleRiverProfile;
-  demoState: LifestyleDemoState;
-  config: DestinationConfig;
   onOpenStory: (storyId: string) => void;
   onShowFollowedBrands: () => void;
 }) {
@@ -2152,20 +2148,6 @@ function TodayEditDashboard({
 
   return (
     <section className="rounded-b-[8px] border-x border-b border-border bg-background" aria-label="Today&apos;s edit">
-      <div className="hidden flex-col gap-2 border-b border-border bg-muted/20 px-4 py-4 sm:gap-3 md:flex md:flex-row md:items-end md:justify-between">
-        <div>
-          <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
-            Today&apos;s Edit
-          </p>
-          <h2 className="headline mt-1 text-xl leading-tight sm:text-2xl">
-            Start with what changed since your last visit.
-          </h2>
-        </div>
-        <p className="max-w-md text-sm leading-6 text-muted-foreground">
-          A compact {config.dayparts[demoState.daypart].time} briefing built from your brands,
-          saved signals, and the stories gaining momentum now.
-        </p>
-      </div>
       <div className="flex snap-x gap-3 overflow-x-auto p-4 [scrollbar-width:none] md:grid md:grid-cols-2 md:gap-0 md:divide-x md:divide-border md:overflow-visible md:p-0 md:[scrollbar-width:auto] xl:grid-cols-4 [&::-webkit-scrollbar]:hidden md:[&::-webkit-scrollbar]:block">
         {modules.map((module) => (
           <button
@@ -2649,9 +2631,11 @@ function LifestyleLeftSidebar({
 function LifestyleRiverHomePage({
   activeFilter,
   destination,
+  onRiverReset,
 }: {
   activeFilter: string;
   destination: DestinationMode;
+  onRiverReset?: () => void;
 }) {
   const config = destinationConfigs[destination];
   const [profile, setProfile] = React.useState<LifestyleRiverProfile>(config.initialProfile);
@@ -2707,6 +2691,12 @@ function LifestyleRiverHomePage({
   React.useEffect(() => {
     setVisibleCount(8);
   }, [activeBrandFilters, activeFilter, demoState.contentDay, demoState.daypart]);
+
+  const anchorRiverToTop = React.useCallback(() => {
+    window.requestAnimationFrame(() => {
+      onRiverReset?.();
+    });
+  }, [onRiverReset]);
 
   React.useEffect(() => {
     const node = sentinelRef.current;
@@ -2865,6 +2855,7 @@ function LifestyleRiverHomePage({
         ? current.followedTopics.filter((item) => item !== topic)
         : [...current.followedTopics, topic],
     }));
+    anchorRiverToTop();
   };
 
   const toggleBrandFilter = (brandName: string) => {
@@ -2873,6 +2864,12 @@ function LifestyleRiverHomePage({
         ? current.filter((name) => name !== brandName)
         : [...current, brandName]
     );
+    anchorRiverToTop();
+  };
+
+  const clearBrandFilters = () => {
+    setActiveBrandFilters([]);
+    anchorRiverToTop();
   };
 
   const followBrand = (brandName: string) => {
@@ -2888,6 +2885,7 @@ function LifestyleRiverHomePage({
       .map((brand) => brand.name);
 
     setActiveBrandFilters(availableFollowedBrands);
+    anchorRiverToTop();
   };
 
   const hideStory = (id: string) => {
@@ -2902,8 +2900,6 @@ function LifestyleRiverHomePage({
       <TodayEditDashboard
         stories={filteredStories}
         profile={profile}
-        demoState={demoState}
-        config={config}
         onOpenStory={setOpenStoryId}
         onShowFollowedBrands={showFollowedBrands}
       />
@@ -2917,7 +2913,7 @@ function LifestyleRiverHomePage({
           activeBrandFilters={activeBrandFilters}
           collectionLabels={config.collectionLabels}
           onToggleBrandFilter={toggleBrandFilter}
-          onClearBrandFilters={() => setActiveBrandFilters([])}
+          onClearBrandFilters={clearBrandFilters}
           onFollowTopic={followTopic}
         />
 
@@ -3239,13 +3235,16 @@ export function HomePageTemplate({
   const destinationContentRef = React.useRef<HTMLDivElement | null>(null);
   const isDestinationRiver = brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
   const destinationMode = getDestinationMode(brand.slug);
-  const handleLifestyleFilterChange = React.useCallback((filter: string) => {
-    setActiveLifestyleFilter(filter);
-
+  const anchorDestinationContent = React.useCallback(() => {
     window.requestAnimationFrame(() => {
       destinationContentRef.current?.scrollIntoView({ block: "start", behavior: "smooth" });
     });
   }, []);
+  const handleLifestyleFilterChange = React.useCallback((filter: string) => {
+    setActiveLifestyleFilter(filter);
+
+    anchorDestinationContent();
+  }, [anchorDestinationContent]);
 
   return (
     <div className="min-h-screen font-brand bg-background">
@@ -3267,7 +3266,11 @@ export function HomePageTemplate({
           className={cn("relative z-10 scroll-mt-12", isDestinationRiver ? "space-y-8" : "space-y-12 lg:space-y-16")}
         >
           {isDestinationRiver ? (
-            <LifestyleRiverHomePage activeFilter={activeLifestyleFilter} destination={destinationMode} />
+            <LifestyleRiverHomePage
+              activeFilter={activeLifestyleFilter}
+              destination={destinationMode}
+              onRiverReset={anchorDestinationContent}
+            />
           ) : layout === "overlapGrid" ? (
             <OverlapGridHomepageBody brandSlug={brand.slug} />
           ) : (
