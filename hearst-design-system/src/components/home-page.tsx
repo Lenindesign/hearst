@@ -26,6 +26,7 @@ import {
   Play,
   Plus,
   ShoppingBag,
+  SlidersHorizontal,
   Star,
   X,
 } from "lucide-react";
@@ -66,6 +67,69 @@ const initialLifestyleProfile: LifestyleRiverProfile = {
   hiddenIds: [],
 };
 
+const lifestyleDefaultLeadStoryId =
+  "cosmopolitan-entertainment-celebs-a71899516-margaret-qualley-rep-denies-jack-antonoff-cheating";
+
+type LifestyleDemoDaypart = "morning" | "afternoon" | "evening" | "lateNight";
+
+type LifestyleDemoState = {
+  daypart: LifestyleDemoDaypart;
+  returnHours: number;
+  contentDay: "today" | "nextDay";
+  previousLeadId?: string;
+};
+
+const initialLifestyleDemoState: LifestyleDemoState = {
+  daypart: "morning",
+  returnHours: 0,
+  contentDay: "today",
+};
+
+const lifestyleDemoDayparts: Record<
+  LifestyleDemoDaypart,
+  {
+    label: string;
+    time: string;
+    description: string;
+    preferredTopics: string[];
+    preferredKinds: LifestyleCardKind[];
+    preferredTags: string[];
+  }
+> = {
+  morning: {
+    label: "Morning Brief",
+    time: "8 AM",
+    description: "Fresh service, food, home, and wellness stories for a first check-in.",
+    preferredTopics: ["Food", "Food News", "Home", "Wellness"],
+    preferredKinds: ["article", "recipe", "gallery"],
+    preferredTags: ["breakfast", "cleaning", "decorating", "health", "summer"],
+  },
+  afternoon: {
+    label: "Afternoon Momentum",
+    time: "1 PM",
+    description: "Stories gaining popularity while readers browse between tasks.",
+    preferredTopics: ["Shopping", "Style", "Entertainment", "Food News"],
+    preferredKinds: ["shopping", "gallery", "video"],
+    preferredTags: ["products", "style", "celebrity", "deals", "editor picks"],
+  },
+  evening: {
+    label: "Evening Return",
+    time: "6 PM",
+    description: "Dinner, home, continue-reading, and saved-intent stories move up.",
+    preferredTopics: ["Food", "Food Drinks", "Home", "Entertainment"],
+    preferredKinds: ["recipe", "video", "shopping"],
+    preferredTags: ["dinner ideas", "cookout", "decorating", "sleep", "tv"],
+  },
+  lateNight: {
+    label: "Late Night Wind Down",
+    time: "10 PM",
+    description: "Softer wellness, relationships, beauty, and save-for-later content.",
+    preferredTopics: ["Wellness", "Style", "Relationships", "Entertainment"],
+    preferredKinds: ["article", "gallery", "video"],
+    preferredTags: ["sleep", "beauty", "relationships", "health", "celebrity"],
+  },
+};
+
 const lifestyleBrandFavicons: Record<string, string> = {
   cosmopolitan: "https://www.cosmopolitan.com/_assets/design-tokens/cosmopolitan/static/images/apple-touch-icon.b887080.png",
   "country-living": "https://www.countryliving.com/_assets/design-tokens/countryliving/static/images/apple-touch-icon.d0a32c5.png",
@@ -84,26 +148,112 @@ function getContent(brandSlug: string): ContentType {
   return { ...base, footerCols: defaultFooterCols };
 }
 
-function getLifestyleScore(story: LifestyleRiverStory, profile: LifestyleRiverProfile) {
-  let score = story.popularity;
+function getLifestyleTimeOfDayScore(story: LifestyleRiverStory, demoState: LifestyleDemoState) {
+  const daypart = lifestyleDemoDayparts[demoState.daypart];
+  const kind = getLifestyleCardKind(story);
+  let score = 0;
 
-  if (profile.followedTopics.includes(story.topic)) score += 18;
-  if (profile.followedBrands.includes(story.brand)) score += 16;
-  if (story.tags.some((tag) => profile.savedTags.includes(tag))) score += 14;
-  if (story.tags.some((tag) => profile.boostedTags.includes(tag))) score += 22;
-  if (profile.savedIds.includes(story.id)) score += 6;
-
-  score += Math.max(0, 12 - story.age);
-
-  if (profile.hiddenIds.includes(story.id)) score -= 500;
+  if (daypart.preferredTopics.some((topic) => story.topic === topic || story.topic.startsWith(`${topic} `))) {
+    score += 16;
+  }
+  if (daypart.preferredKinds.includes(kind)) score += 10;
+  if (story.tags.some((tag) => daypart.preferredTags.includes(tag))) score += 8;
 
   return score;
 }
 
-function rankLifestyleRiver(stories: LifestyleRiverStory[], profile: LifestyleRiverProfile) {
+function getLifestyleRecencyScore(story: LifestyleRiverStory, demoState: LifestyleDemoState) {
+  const freshSinceLastVisit = demoState.returnHours > 0 && story.age <= demoState.returnHours + 2;
+  return Math.max(0, 12 - story.age) + (freshSinceLastVisit ? 12 : 0);
+}
+
+function getLifestyleScoreBreakdown(
+  story: LifestyleRiverStory,
+  profile: LifestyleRiverProfile,
+  demoState: LifestyleDemoState
+) {
+  const popularity = story.popularity;
+  const followedTopic = profile.followedTopics.includes(story.topic) ? 18 : 0;
+  const followedBrand = profile.followedBrands.includes(story.brand) ? 16 : 0;
+  const savedTag = story.tags.some((tag) => profile.savedTags.includes(tag)) ? 14 : 0;
+  const moreLikeThis = story.tags.some((tag) => profile.boostedTags.includes(tag)) ? 22 : 0;
+  const savedStory = profile.savedIds.includes(story.id) ? 6 : 0;
+  const recency = getLifestyleRecencyScore(story, demoState);
+  const timeOfDay = getLifestyleTimeOfDayScore(story, demoState);
+  const nextDayNovelty =
+    demoState.contentDay === "nextDay" && story.id !== demoState.previousLeadId
+      ? story.topic === "Entertainment" || story.topic === "Shopping" || story.topic === "Home"
+        ? 28
+        : 10
+      : 0;
+  const repeatLeadPenalty = demoState.contentDay === "nextDay" && story.id === demoState.previousLeadId ? -120 : 0;
+  const hidden = profile.hiddenIds.includes(story.id) ? -500 : 0;
+
+  return {
+    popularity,
+    followedTopic,
+    followedBrand,
+    savedTag,
+    moreLikeThis,
+    savedStory,
+    recency,
+    timeOfDay,
+    nextDayNovelty,
+    repeatLeadPenalty,
+    hidden,
+    total:
+      popularity +
+      followedTopic +
+      followedBrand +
+      savedTag +
+      moreLikeThis +
+      savedStory +
+      recency +
+      timeOfDay +
+      nextDayNovelty +
+      repeatLeadPenalty +
+      hidden,
+  };
+}
+
+function getLifestyleScore(
+  story: LifestyleRiverStory,
+  profile: LifestyleRiverProfile,
+  demoState: LifestyleDemoState
+) {
+  return getLifestyleScoreBreakdown(story, profile, demoState).total;
+}
+
+function getLifestylePersonalizationReason(
+  story: LifestyleRiverStory,
+  profile: LifestyleRiverProfile,
+  demoState: LifestyleDemoState
+) {
+  const daypart = lifestyleDemoDayparts[demoState.daypart];
+
+  if (story.tags.some((tag) => profile.boostedTags.includes(tag))) return "More like stories you boosted";
+  if (demoState.contentDay === "nextDay" && story.id !== demoState.previousLeadId) return "Fresh for the next day";
+  if (story.tags.some((tag) => profile.savedTags.includes(tag))) {
+    const tag = story.tags.find((item) => profile.savedTags.includes(item));
+    return `Because you saved ${tag}`;
+  }
+  if (profile.followedBrands.includes(story.brand)) return `New from ${story.brand}`;
+  if (profile.followedTopics.includes(story.topic)) return `Matches your ${story.topic} interest`;
+  if (demoState.returnHours > 0 && story.age <= demoState.returnHours + 2) return "New since last visit";
+  if (getLifestyleTimeOfDayScore(story, demoState) > 0) return `Fits your ${daypart.label.toLowerCase()}`;
+  if (story.popularity >= 92) return "Trending across Hearst Lifestyle";
+
+  return "Balanced for freshness and variety";
+}
+
+function rankLifestyleRiver(
+  stories: LifestyleRiverStory[],
+  profile: LifestyleRiverProfile,
+  demoState: LifestyleDemoState
+) {
   const scored = stories
     .filter((story) => !profile.hiddenIds.includes(story.id))
-    .map((story) => ({ ...story, score: getLifestyleScore(story, profile) }))
+    .map((story) => ({ ...story, score: getLifestyleScore(story, profile, demoState) }))
     .sort((a, b) => b.score - a.score);
 
   const ranked: typeof scored = [];
@@ -120,6 +270,26 @@ function rankLifestyleRiver(stories: LifestyleRiverStory[], profile: LifestyleRi
   }
 
   return ranked;
+}
+
+function getLifestyleDemoStoryPool(demoState: LifestyleDemoState) {
+  if (demoState.contentDay === "today") return lifestyleRiverStories;
+
+  const nextDayStories = lifestyleRiverStories
+    .filter((story, index) => index % 2 === 1 || story.topic === "Entertainment" || story.topic === "Shopping")
+    .map((story) => ({
+      ...story,
+      age: Math.max(0, story.age - 24),
+      popularity:
+        story.topic === "Entertainment" || story.topic === "Shopping" || story.topic === "Home"
+          ? Math.min(100, story.popularity + 8)
+          : story.topic.startsWith("Food")
+          ? Math.max(1, story.popularity - 8)
+          : Math.max(1, story.popularity - 2),
+      signal: story.age <= 24 ? "Trending" : story.signal,
+    } satisfies LifestyleRiverStory));
+
+  return nextDayStories.length >= 80 ? nextDayStories : lifestyleRiverStories;
 }
 
 function storyMatchesLifestyleFilter(story: LifestyleRiverStory, filter: string) {
@@ -144,7 +314,11 @@ function UtilityBar() {
             </LinkComponent>
           ))}
         </div>
-        <Button variant="secondary" size="xs" className="text-[length:var(--text-token-4xs)] font-semibold">
+        <Button
+          variant="secondary"
+          size="xs"
+          className="bg-white text-[length:var(--text-token-4xs)] font-semibold text-[#7A2E57] hover:bg-white/90 hover:text-[#7A2E57]"
+        >
           Subscribe
         </Button>
       </PageContainer>
@@ -433,10 +607,18 @@ function LifestyleRiverImage({
     <div
       role="img"
       aria-label={`${story.brand}: ${story.title}`}
-      className={cn("min-w-0 bg-muted bg-cover bg-center", className)}
-      style={{ backgroundImage: `url("${story.image}")` }}
+      className={cn("min-w-0 bg-muted bg-cover", className)}
+      style={{
+        backgroundImage: `url("${story.image}")`,
+        backgroundPosition: getLifestyleImagePosition(story),
+      }}
     />
   );
+}
+
+function getLifestyleImagePosition(story: LifestyleRiverStory) {
+  if (story.id === lifestyleDefaultLeadStoryId) return "center 22%";
+  return "center";
 }
 
 function LifestyleBrandSource({ story }: { story: LifestyleRiverStory }) {
@@ -497,17 +679,23 @@ function LifestyleRiverMedia({
 }) {
   const imageClassName = featured
     ? "aspect-video w-full"
-    : "h-full min-h-32 w-full rounded-sm";
+    : "h-full min-h-32 w-full rounded-[4px]";
   const videoClassName = featured
     ? "aspect-video w-full 2xl:self-center"
-    : "aspect-video w-full self-start rounded-sm";
+    : "aspect-video w-full self-start rounded-[4px]";
 
   if (kind !== "video") {
     return <LifestyleRiverImage story={story} className={imageClassName} />;
   }
 
   return (
-    <div className={cn("relative min-w-0 overflow-hidden bg-muted bg-cover bg-center", videoClassName)} style={{ backgroundImage: `url("${story.image}")` }}>
+    <div
+      className={cn("relative min-w-0 overflow-hidden bg-muted bg-cover", videoClassName)}
+      style={{
+        backgroundImage: `url("${story.image}")`,
+        backgroundPosition: getLifestyleImagePosition(story),
+      }}
+    >
       <div className="absolute inset-0 bg-black/20" />
       <button
         type="button"
@@ -522,15 +710,6 @@ function LifestyleRiverMedia({
           {playing ? <Pause className="h-6 w-6" aria-hidden /> : <Play className="ml-0.5 h-6 w-6" aria-hidden />}
         </span>
       </button>
-      <div className="absolute inset-x-3 bottom-3 rounded-sm bg-black/75 px-3 py-2 text-background">
-        <div className="flex items-center justify-between gap-3 text-[length:var(--text-token-4xs)] font-semibold uppercase tracking-widest">
-          <span>{playing ? "Playing Now" : "Tap to Watch"}</span>
-          <span>{story.readTime.replace("read", "watch")}</span>
-        </div>
-        <div className="mt-2 h-1 overflow-hidden rounded-full bg-background/30">
-          <div className={cn("h-full rounded-full bg-background", playing ? "w-2/3" : "w-1/4")} />
-        </div>
-      </div>
     </div>
   );
 }
@@ -573,15 +752,15 @@ function LifestyleCardModule({
   if (kind === "recipe") {
     return (
       <div className="mt-4 grid grid-cols-3 gap-2 border-t border-border pt-3 text-center text-xs">
-        <div className="rounded-sm bg-muted px-2 py-2">
+        <div className="rounded-[8px] bg-muted px-2 py-2">
           <p className="font-bold">{recipeMinutes} min</p>
           <p className="text-muted-foreground">Total</p>
         </div>
-        <div className="rounded-sm bg-muted px-2 py-2">
+        <div className="rounded-[8px] bg-muted px-2 py-2">
           <p className="font-bold">{2 + (story.age % 5)}</p>
           <p className="text-muted-foreground">Servings</p>
         </div>
-        <div className="rounded-sm bg-muted px-2 py-2">
+        <div className="rounded-[8px] bg-muted px-2 py-2">
           <p className="flex items-center justify-center gap-1 font-bold">
             <ChefHat className="h-3.5 w-3.5" aria-hidden />
             Easy
@@ -621,6 +800,8 @@ function LifestyleCardModule({
 function LifestyleRiverCard({
   story,
   saved,
+  reason,
+  score,
   onOpen,
   onSave,
   onMoreLikeThis,
@@ -631,6 +812,8 @@ function LifestyleRiverCard({
 }: {
   story: LifestyleRiverStory;
   saved: boolean;
+  reason: string;
+  score: number;
   onOpen: () => void;
   onSave: () => void;
   onMoreLikeThis: () => void;
@@ -645,7 +828,7 @@ function LifestyleRiverCard({
 
   return (
     <article className={cn(
-      "min-w-0 cursor-pointer overflow-hidden border border-border bg-background transition-colors hover:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/30",
+      "min-w-0 cursor-pointer overflow-hidden rounded-[8px] border border-border bg-background transition-colors hover:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/30",
       isVideo
         ? "grid"
         : featured
@@ -696,6 +879,14 @@ function LifestyleRiverCard({
           {story.summary}
         </p>
         <LifestyleCardModule story={story} kind={kind} />
+        <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
+          <span className="rounded-full bg-primary/10 px-3 py-1 font-bold text-primary">
+            {reason}
+          </span>
+          <span className="rounded-full bg-muted px-3 py-1 text-muted-foreground">
+            Score {score}
+          </span>
+        </div>
         <div className="mt-5 flex flex-wrap gap-2" onClick={(event) => event.stopPropagation()}>
           <Button variant={saved ? "default" : "outline"} size="xs" onClick={onSave} aria-pressed={saved}>
             <Bookmark className="mr-1.5 h-3.5 w-3.5" aria-hidden />
@@ -796,7 +987,7 @@ function LifestyleReaderContextRail({
   return (
     <aside className="hidden xl:block" aria-label="Contextual story recommendations">
       <div className="sticky top-20 space-y-4">
-        <div className="border border-border bg-muted/30 p-4">
+        <div className="rounded-[8px] border border-border bg-muted/30 p-4">
           <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
             Reader Intent
           </p>
@@ -814,7 +1005,7 @@ function LifestyleReaderContextRail({
         </div>
 
         {modules.map((module) => (
-          <div key={module.label} className="border border-border bg-background p-4">
+          <div key={module.label} className="rounded-[8px] border border-border bg-background p-4">
             <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
               {module.label}
             </p>
@@ -859,7 +1050,7 @@ function LifestyleReaderContextRail({
 function LifestyleReaderSidebarAd() {
   return (
     <aside className="hidden lg:block" aria-label="Advertisement">
-      <div className="sticky top-20 flex h-[600px] w-[300px] flex-col overflow-hidden border border-[#d7c7b8] bg-[#fffaf4] shadow-sm">
+      <div className="sticky top-20 flex h-[600px] w-[300px] flex-col overflow-hidden rounded-[8px] border border-[#d7c7b8] bg-[#fffaf4] shadow-sm">
         <div className="flex flex-1 flex-col justify-between p-6">
           <div>
             <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-[0.24em] text-primary">
@@ -962,7 +1153,7 @@ function LifestyleStoryReaderModal({
       <div className="absolute inset-0" onClick={onClose} />
       <div
         ref={scrollRef}
-        className="absolute inset-x-0 bottom-0 top-6 mx-auto flex w-full max-w-[1360px] flex-col overflow-y-auto bg-background shadow-2xl sm:inset-y-6 sm:rounded-sm"
+        className="absolute inset-x-0 bottom-0 top-6 mx-auto flex w-full max-w-[1360px] flex-col overflow-y-auto bg-background shadow-2xl sm:inset-y-6 sm:rounded-[8px]"
       >
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background/95 px-4 py-3 backdrop-blur sm:px-6">
           <div className="min-w-0">
@@ -993,7 +1184,7 @@ function LifestyleStoryReaderModal({
                   key={story.id}
                   className={cn("border-b border-border pb-10", index > 0 && "pt-10")}
                 >
-                  <LifestyleRiverImage story={story} className="aspect-video w-full rounded-sm" />
+                  <LifestyleRiverImage story={story} className="aspect-video w-full rounded-[4px]" />
                   <div className="mx-auto mt-6 max-w-3xl">
                     <div className="mb-3 flex flex-wrap items-center gap-2">
                       <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
@@ -1036,11 +1227,13 @@ function LifestyleStoryReaderModal({
 function TodayEditDashboard({
   stories,
   profile,
+  demoState,
   onOpenStory,
   onShowFollowedBrands,
 }: {
   stories: LifestyleRiverStory[];
   profile: LifestyleRiverProfile;
+  demoState: LifestyleDemoState;
   onOpenStory: (storyId: string) => void;
   onShowFollowedBrands: () => void;
 }) {
@@ -1085,8 +1278,8 @@ function TodayEditDashboard({
   ];
 
   return (
-    <section className="border border-border bg-background" aria-label="Today&apos;s edit">
-      <div className="flex flex-col gap-3 border-b border-border px-4 py-4 sm:flex-row sm:items-end sm:justify-between">
+    <section className="rounded-b-[8px] border-x border-b border-border bg-background" aria-label="Today&apos;s edit">
+      <div className="flex flex-col gap-3 border-b border-border bg-muted/20 px-4 py-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
             Today&apos;s Edit
@@ -1096,7 +1289,8 @@ function TodayEditDashboard({
           </h2>
         </div>
         <p className="max-w-md text-sm leading-6 text-muted-foreground">
-          A compact briefing built from your brands, saved signals, and the stories gaining momentum now.
+          A compact {lifestyleDemoDayparts[demoState.daypart].time} briefing built from your brands,
+          saved signals, and the stories gaining momentum now.
         </p>
       </div>
       <div className="grid divide-y divide-border md:grid-cols-2 md:divide-x md:divide-y-0 xl:grid-cols-4">
@@ -1105,7 +1299,7 @@ function TodayEditDashboard({
             key={module.label}
             type="button"
             onClick={module.onClick}
-            className="group flex min-h-[168px] flex-col justify-between p-4 text-left transition-colors hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-primary/30"
+            className="group flex min-h-[144px] flex-col justify-between p-4 text-left transition-colors hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-primary/30"
           >
             <span>
               <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
@@ -1125,6 +1319,257 @@ function TodayEditDashboard({
         ))}
       </div>
     </section>
+  );
+}
+
+function LifestylePersonalizationDemoPanel({
+  demoState,
+  profile,
+  topStory,
+  onDaypartChange,
+  onSimulateReturn,
+  currentLeadId,
+  onApplyBehaviorPreset,
+  onResetDemo,
+}: {
+  demoState: LifestyleDemoState;
+  profile: LifestyleRiverProfile;
+  topStory?: LifestyleRiverStory;
+  onDaypartChange: (daypart: LifestyleDemoDaypart) => void;
+  onSimulateReturn: (
+    hours: number,
+    daypart: LifestyleDemoDaypart,
+    contentDay?: LifestyleDemoState["contentDay"],
+    previousLeadId?: string
+  ) => void;
+  currentLeadId?: string;
+  onApplyBehaviorPreset: (preset: "homeCook" | "shoppingBrowser" | "wellnessReader") => void;
+  onResetDemo: () => void;
+}) {
+  const activeDaypart = lifestyleDemoDayparts[demoState.daypart];
+  const topBreakdown = topStory ? getLifestyleScoreBreakdown(topStory, profile, demoState) : null;
+
+  return (
+    <section className="rounded-[8px] border border-border bg-muted/25" aria-label="Personalization demo controls">
+      <div className="grid gap-0 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="p-4 sm:p-5">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                Personalization Demo
+              </p>
+              <h2 className="headline mt-1 text-2xl leading-tight">
+                Show how the river changes when the reader comes back.
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+                This is a deterministic POC model. It re-ranks the same story pool using recency,
+                popularity, time of day, followed brands, saved tags, and observed behavior.
+              </p>
+            </div>
+            <Button variant="outline" size="xs" onClick={onResetDemo}>
+              Reset demo
+            </Button>
+          </div>
+
+          <div className="mt-5 grid gap-4 xl:grid-cols-3">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-primary">Time of day</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {(Object.keys(lifestyleDemoDayparts) as LifestyleDemoDaypart[]).map((daypart) => {
+                  const item = lifestyleDemoDayparts[daypart];
+                  const active = demoState.daypart === daypart;
+
+                  return (
+                    <Button
+                      key={daypart}
+                      variant={active ? "default" : "outline"}
+                      size="xs"
+                      onClick={() => onDaypartChange(daypart)}
+                      aria-pressed={active}
+                    >
+                      {item.time}
+                    </Button>
+                  );
+                })}
+              </div>
+              <p className="mt-3 text-sm font-bold">{activeDaypart.label}</p>
+              <p className="mt-1 text-xs leading-5 text-muted-foreground">{activeDaypart.description}</p>
+            </div>
+
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-primary">Return visit</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Button variant="outline" size="xs" onClick={() => onSimulateReturn(4, "afternoon")}>
+                  +4 hours
+                </Button>
+                <Button variant="outline" size="xs" onClick={() => onSimulateReturn(10, "evening")}>
+                  Evening return
+                </Button>
+                <Button variant="outline" size="xs" onClick={() => onSimulateReturn(14, "lateNight")}>
+                  Late night
+                </Button>
+                <Button variant={demoState.contentDay === "nextDay" ? "default" : "outline"} size="xs" onClick={() => onSimulateReturn(24, "morning", "nextDay", currentLeadId)}>
+                  Next day
+                </Button>
+              </div>
+              <p className="mt-3 text-sm font-bold">
+                {demoState.contentDay === "nextDay"
+                  ? "Next day edition"
+                  : demoState.returnHours > 0
+                  ? `Back after ${demoState.returnHours} hours`
+                  : "First visit today"}
+              </p>
+              <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                {demoState.contentDay === "nextDay"
+                  ? "A refreshed story pool loads first, then the selected time of day ranks that new edition."
+                  : "Return visits lift stories that are fresh since the last session and relevant to the new context."}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-primary">Behavior presets</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Button variant="outline" size="xs" onClick={() => onApplyBehaviorPreset("homeCook")}>
+                  Home cook
+                </Button>
+                <Button variant="outline" size="xs" onClick={() => onApplyBehaviorPreset("shoppingBrowser")}>
+                  Shops picks
+                </Button>
+                <Button variant="outline" size="xs" onClick={() => onApplyBehaviorPreset("wellnessReader")}>
+                  Wellness
+                </Button>
+              </div>
+              <p className="mt-3 text-sm font-bold">Demo behavior changes ranking live</p>
+              <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                Presets simulate saves, follows, more-like-this activity, and topic intent.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-border p-4 sm:p-5 lg:border-l lg:border-t-0">
+          <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+            Current top story score
+          </p>
+          {topStory && topBreakdown ? (
+            <div className="mt-3 space-y-3 text-sm">
+              <p className="font-bold leading-5">{topStory.title}</p>
+              <dl className="grid grid-cols-2 gap-2 text-xs">
+                <div className="bg-background p-2">
+                  <dt className="text-muted-foreground">Popularity</dt>
+                  <dd className="font-bold">{topBreakdown.popularity}</dd>
+                </div>
+                <div className="bg-background p-2">
+                  <dt className="text-muted-foreground">Recency</dt>
+                  <dd className="font-bold">{topBreakdown.recency}</dd>
+                </div>
+                <div className="bg-background p-2">
+                  <dt className="text-muted-foreground">Behavior</dt>
+                  <dd className="font-bold">
+                    {topBreakdown.followedTopic +
+                      topBreakdown.followedBrand +
+                      topBreakdown.savedTag +
+                      topBreakdown.moreLikeThis}
+                  </dd>
+                </div>
+                <div className="bg-background p-2">
+                  <dt className="text-muted-foreground">Daypart</dt>
+                  <dd className="font-bold">{topBreakdown.timeOfDay}</dd>
+                </div>
+              </dl>
+              <p className="rounded-[8px] bg-primary px-3 py-2 text-center text-sm font-bold text-primary-foreground">
+                Total score {topBreakdown.total}
+              </p>
+            </div>
+          ) : (
+            <p className="mt-3 text-sm text-muted-foreground">No story selected in the current filter.</p>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function LifestylePersonalizationDemoModal({
+  open,
+  onClose,
+  demoState,
+  profile,
+  topStory,
+  onDaypartChange,
+  onSimulateReturn,
+  onApplyBehaviorPreset,
+  onResetDemo,
+}: {
+  open: boolean;
+  onClose: () => void;
+  demoState: LifestyleDemoState;
+  profile: LifestyleRiverProfile;
+  topStory?: LifestyleRiverStory;
+  onDaypartChange: (daypart: LifestyleDemoDaypart) => void;
+  onSimulateReturn: (
+    hours: number,
+    daypart: LifestyleDemoDaypart,
+    contentDay?: LifestyleDemoState["contentDay"],
+    previousLeadId?: string
+  ) => void;
+  onApplyBehaviorPreset: (preset: "homeCook" | "shoppingBrowser" | "wellnessReader") => void;
+  onResetDemo: () => void;
+}) {
+  React.useEffect(() => {
+    if (!open) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [onClose, open]);
+
+  if (!open) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 bg-foreground/55 backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Personalization demo controls"
+    >
+      <div className="absolute inset-0" onClick={onClose} />
+      <div className="absolute inset-x-3 bottom-4 top-4 mx-auto flex w-auto max-w-6xl flex-col overflow-hidden bg-background shadow-2xl sm:inset-x-8 sm:bottom-auto sm:top-12 sm:max-h-[calc(100vh-6rem)]">
+        <div className="flex items-center justify-between border-b border-border bg-background px-4 py-3 sm:px-5">
+          <div className="min-w-0">
+            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+              Stakeholder Demo Console
+            </p>
+            <p className="mt-1 truncate text-xs text-muted-foreground">
+              Control daypart, return visit, behavior presets, and score explanation.
+            </p>
+          </div>
+          <Button variant="outline" size="icon-sm" onClick={onClose} aria-label="Close personalization demo">
+            <X className="h-4 w-4" aria-hidden />
+          </Button>
+        </div>
+        <div className="overflow-y-auto p-4 sm:p-5">
+          <LifestylePersonalizationDemoPanel
+            demoState={demoState}
+            profile={profile}
+            topStory={topStory}
+            currentLeadId={topStory?.id}
+            onDaypartChange={onDaypartChange}
+            onSimulateReturn={onSimulateReturn}
+            onApplyBehaviorPreset={onApplyBehaviorPreset}
+            onResetDemo={onResetDemo}
+          />
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -1148,8 +1593,11 @@ function LifestyleLeftSidebar({
   onFollowTopic: (topic: string) => void;
 }) {
   return (
-    <aside className="space-y-5 lg:sticky lg:top-6 lg:self-start" aria-label="Lifestyle discovery sidebar">
-      <div className="border border-border p-4">
+    <aside
+      className="space-y-5 lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:self-start lg:overflow-y-auto lg:pr-1"
+      aria-label="Lifestyle discovery sidebar"
+    >
+      <div className="rounded-[8px] border border-border p-4">
         <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
           Your Daily Edit
         </p>
@@ -1166,7 +1614,7 @@ function LifestyleLeftSidebar({
         </div>
       </div>
 
-      <div className="border border-border p-4">
+      <div className="rounded-[8px] border border-border p-4">
         <div className="flex items-center justify-between gap-3">
           <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
             Filter Brands
@@ -1201,7 +1649,7 @@ function LifestyleLeftSidebar({
                   <span
                     aria-hidden
                     className={cn(
-                      "inline-block h-5 w-5 shrink-0 rounded-sm border bg-background",
+                      "inline-block h-5 w-5 shrink-0 rounded-[8px] border bg-background",
                       active ? "border-primary ring-2 ring-primary/20" : "border-border"
                     )}
                     style={{
@@ -1225,7 +1673,7 @@ function LifestyleLeftSidebar({
         </p>
       </div>
 
-      <div className="border border-border p-4">
+      <div className="rounded-[8px] border border-border p-4">
         <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
           Follow Topics
         </p>
@@ -1247,7 +1695,7 @@ function LifestyleLeftSidebar({
         </div>
       </div>
 
-      <div className="border border-border bg-muted/30 p-4">
+      <div className="rounded-[8px] border border-border bg-muted/30 p-4">
         <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
           Collections
         </p>
@@ -1266,14 +1714,17 @@ function LifestyleLeftSidebar({
 
 function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
   const [profile, setProfile] = React.useState<LifestyleRiverProfile>(initialLifestyleProfile);
+  const [demoState, setDemoState] = React.useState<LifestyleDemoState>(initialLifestyleDemoState);
   const [activeBrandFilters, setActiveBrandFilters] = React.useState<string[]>([]);
   const [openStoryId, setOpenStoryId] = React.useState<string | null>(null);
+  const [demoModalOpen, setDemoModalOpen] = React.useState(false);
   const [visibleCount, setVisibleCount] = React.useState(8);
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
 
+  const activeStoryPool = React.useMemo(() => getLifestyleDemoStoryPool(demoState), [demoState]);
   const rankedStories = React.useMemo(
-    () => rankLifestyleRiver(lifestyleRiverStories, profile),
-    [profile]
+    () => rankLifestyleRiver(activeStoryPool, profile, demoState),
+    [activeStoryPool, demoState, profile]
   );
   const filteredStories = React.useMemo(() => {
     const brandFilteredStories = activeBrandFilters.length > 0
@@ -1290,7 +1741,7 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
   const leadStory = visibleStories[0];
   const riverStories = visibleStories.slice(1);
   const sidebarTopics = React.useMemo(() => {
-    const counts = lifestyleRiverStories.reduce<Record<string, number>>((acc, story) => {
+    const counts = activeStoryPool.reduce<Record<string, number>>((acc, story) => {
       acc[story.topic] = (acc[story.topic] ?? 0) + 1;
       return acc;
     }, {});
@@ -1298,9 +1749,9 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
     return Object.entries(counts)
       .map(([name, count]) => ({ name, count }))
       .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
-  }, []);
+  }, [activeStoryPool]);
   const sidebarBrands = React.useMemo(() => {
-    const counts = lifestyleRiverStories.reduce<Record<string, number>>((acc, story) => {
+    const counts = activeStoryPool.reduce<Record<string, number>>((acc, story) => {
       acc[story.brand] = (acc[story.brand] ?? 0) + 1;
       return acc;
     }, {});
@@ -1310,11 +1761,11 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
       slug: note.brandSlug,
       count: counts[note.brand] ?? 0,
     }));
-  }, []);
+  }, [activeStoryPool]);
 
   React.useEffect(() => {
     setVisibleCount(8);
-  }, [activeBrandFilters, activeFilter]);
+  }, [activeBrandFilters, activeFilter, demoState.contentDay, demoState.daypart]);
 
   React.useEffect(() => {
     const node = sentinelRef.current;
@@ -1335,6 +1786,55 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
 
   const mergeUnique = (items: string[], nextItems: string[]) =>
     Array.from(new Set([...items, ...nextItems]));
+
+  const resetDemo = () => {
+    setProfile(initialLifestyleProfile);
+    setDemoState(initialLifestyleDemoState);
+    setActiveBrandFilters([]);
+    setOpenStoryId(null);
+  };
+
+  const simulateReturn = (
+    returnHours: number,
+    daypart: LifestyleDemoDaypart,
+    contentDay: LifestyleDemoState["contentDay"] = "today",
+    previousLeadId?: string
+  ) => {
+    setDemoState({ returnHours, daypart, contentDay, previousLeadId });
+  };
+
+  const applyBehaviorPreset = (preset: "homeCook" | "shoppingBrowser" | "wellnessReader") => {
+    const presets: Record<"homeCook" | "shoppingBrowser" | "wellnessReader", Partial<LifestyleRiverProfile>> = {
+      homeCook: {
+        followedTopics: ["Food", "Food Drinks", "Home"],
+        followedBrands: ["Delish", "Good Housekeeping", "Country Living"],
+        savedTags: ["dinner ideas", "cookout", "cleaning", "decorating"],
+        boostedTags: ["recipe", "dinner ideas", "cookout", "food"],
+      },
+      shoppingBrowser: {
+        followedTopics: ["Shopping", "Style", "Home"],
+        followedBrands: ["Good Housekeeping", "Cosmopolitan", "House Beautiful"],
+        savedTags: ["products", "style", "beauty", "decorating"],
+        boostedTags: ["products", "shopping", "editor picks", "style"],
+      },
+      wellnessReader: {
+        followedTopics: ["Wellness", "Style", "Food"],
+        followedBrands: ["Prevention", "Good Housekeeping", "Cosmopolitan"],
+        savedTags: ["sleep", "health", "beauty", "food"],
+        boostedTags: ["sleep", "health", "wellness", "beauty"],
+      },
+    };
+
+    const selected = presets[preset];
+
+    setProfile((current) => ({
+      ...current,
+      followedTopics: mergeUnique(current.followedTopics, selected.followedTopics ?? []),
+      followedBrands: mergeUnique(current.followedBrands, selected.followedBrands ?? []),
+      savedTags: mergeUnique(current.savedTags, selected.savedTags ?? []),
+      boostedTags: mergeUnique(current.boostedTags, selected.boostedTags ?? []),
+    }));
+  };
 
   const toggleSaved = (story: LifestyleRiverStory) => {
     setProfile((current) => {
@@ -1399,6 +1899,7 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
       <TodayEditDashboard
         stories={filteredStories}
         profile={profile}
+        demoState={demoState}
         onOpenStory={setOpenStoryId}
         onShowFollowedBrands={showFollowedBrands}
       />
@@ -1421,6 +1922,8 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
               <LifestyleRiverCard
                 story={leadStory}
                 saved={profile.savedIds.includes(leadStory.id)}
+                reason={getLifestylePersonalizationReason(leadStory, profile, demoState)}
+                score={getLifestyleScoreBreakdown(leadStory, profile, demoState).total}
                 onOpen={() => setOpenStoryId(leadStory.id)}
                 onSave={() => toggleSaved(leadStory)}
                 onMoreLikeThis={() => boostStory(leadStory)}
@@ -1435,6 +1938,8 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
                   key={story.id}
                   story={story}
                   saved={profile.savedIds.includes(story.id)}
+                  reason={getLifestylePersonalizationReason(story, profile, demoState)}
+                  score={getLifestyleScoreBreakdown(story, profile, demoState).total}
                   onOpen={() => setOpenStoryId(story.id)}
                   onSave={() => toggleSaved(story)}
                   onMoreLikeThis={() => boostStory(story)}
@@ -1460,7 +1965,7 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
               </div>
             </>
           ) : (
-            <div className="border border-border bg-muted/30 p-8 text-center">
+            <div className="rounded-[8px] border border-border bg-muted/30 p-8 text-center">
               <p className="headline text-2xl">No stories in {activeFilter} yet.</p>
               <p className="mt-2 text-sm text-muted-foreground">
                 Clear a brand filter or switch back to For You to keep exploring.
@@ -1469,8 +1974,8 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
           )}
         </main>
 
-        <aside className="space-y-5 lg:sticky lg:top-6 lg:self-start">
-          <div className="border border-border p-4">
+        <aside className="space-y-5 lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:self-start lg:overflow-y-auto lg:pr-1">
+          <div className="rounded-[8px] border border-border p-4">
             <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
               Trending Across Brands
             </p>
@@ -1488,23 +1993,32 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
               ))}
             </ol>
           </div>
-          <div className="border border-border bg-muted/30 p-4">
+          <div className="rounded-[8px] border border-border bg-muted/30 p-4">
             <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
               POC Data Source
             </p>
             <p className="mt-3 text-sm font-bold">
-              {lifestyleRiverStories.length} real-image stories
+              {activeStoryPool.length} real-image stories
             </p>
             <p className="mt-2 text-xs leading-5 text-muted-foreground">
-              Pulled from public Hearst lifestyle RSS metadata and filtered to stories with Hearst CDN images.
+              {demoState.contentDay === "nextDay" ? "Next-day demo edition generated from " : "Pulled from "}
+              public Hearst lifestyle RSS metadata and filtered to stories with Hearst CDN images.
               Public Redbook RSS returned no image-backed items during the latest import.
             </p>
           </div>
-          <div className="border border-border p-4">
+          <div className="rounded-[8px] border border-border p-4">
             <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
               Why Your River Looks Like This
             </p>
             <div className="mt-4 space-y-4 text-sm">
+              <div>
+                <p className="font-bold">Demo moment</p>
+                <p className="mt-1 text-muted-foreground">
+                  {demoState.contentDay === "nextDay" ? "Next day edition · " : ""}
+                  {lifestyleDemoDayparts[demoState.daypart].label}
+                  {demoState.returnHours > 0 ? ` · back after ${demoState.returnHours} hours` : " · first visit"}
+                </p>
+              </div>
               <div>
                 <p className="font-bold">Followed topics</p>
                 <p className="mt-1 text-muted-foreground">{profile.followedTopics.join(", ")}</p>
@@ -1535,6 +2049,29 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
         onOpenStory={setOpenStoryId}
       />
 
+      <Button
+        type="button"
+        variant="default"
+        size="icon"
+        onClick={() => setDemoModalOpen(true)}
+        className="fixed bottom-5 right-5 z-40 h-12 w-12 rounded-full shadow-lg"
+        aria-label="Open personalization demo controls"
+      >
+        <SlidersHorizontal className="h-5 w-5" aria-hidden />
+      </Button>
+
+      <LifestylePersonalizationDemoModal
+        open={demoModalOpen}
+        onClose={() => setDemoModalOpen(false)}
+        demoState={demoState}
+        profile={profile}
+        topStory={leadStory}
+        onDaypartChange={(daypart) => setDemoState((current) => ({ ...current, daypart }))}
+        onSimulateReturn={simulateReturn}
+        onApplyBehaviorPreset={applyBehaviorPreset}
+        onResetDemo={resetDemo}
+      />
+
       <div className="grid gap-4 border-t border-border pt-8 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div className="space-y-3">
           <p className="text-xs font-bold uppercase tracking-[0.24em] text-primary">
@@ -1549,7 +2086,7 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
             and Woman&rsquo;s Day.
           </p>
         </div>
-        <div className="rounded-sm border border-border bg-muted/40 p-4">
+        <div className="rounded-[8px] border border-border bg-muted/40 p-4">
           <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
             Behavior Model
           </p>
@@ -1573,7 +2110,7 @@ function LifestyleRiverHomePage({ activeFilter }: { activeFilter: string }) {
           </dl>
           <p className="mt-4 text-xs leading-5 text-muted-foreground">
             Ranking uses popularity, followed topics, followed brands, saved tags, more-like-this
-            activity, recency, and diversity rules.
+            activity, recency, time of day, return-visit freshness, and diversity rules.
           </p>
         </div>
       </div>
@@ -1689,9 +2226,9 @@ export function HomePageTemplate({
       />
 
       {/* Page Body — constrained by the shared PageContainer */}
-      <PageContainer className="relative pt-8 lg:pt-12">
+      <PageContainer className={cn("relative", brand.slug === "hearst-lifestyle" ? "pt-0" : "pt-8 lg:pt-12")}>
         {showGridOverlay && <GridOverlay />}
-        <div className="relative z-10 space-y-12 lg:space-y-16">
+        <div className={cn("relative z-10", brand.slug === "hearst-lifestyle" ? "space-y-8" : "space-y-12 lg:space-y-16")}>
           {brand.slug === "hearst-lifestyle" ? (
             <LifestyleRiverHomePage activeFilter={activeLifestyleFilter} />
           ) : layout === "overlapGrid" ? (
