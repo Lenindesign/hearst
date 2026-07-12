@@ -97,6 +97,15 @@ const initialEWProfile: LifestyleRiverProfile = {
   hiddenIds: [],
 };
 
+const initialAllProfile: LifestyleRiverProfile = {
+  followedTopics: ["Home", "Reviews", "Style", "Fitness"],
+  followedBrands: ["Good Housekeeping", "Car and Driver", "Elle", "Men's Health"],
+  savedTags: ["home", "reviews", "style", "fitness", "shopping", "wellness"],
+  boostedTags: ["kitchen", "electric", "culture", "training"],
+  savedIds: [],
+  hiddenIds: [],
+};
+
 const lifestyleDefaultLeadStoryId =
   "cosmopolitan-entertainment-celebs-a71899516-margaret-qualley-rep-denies-jack-antonoff-cheating";
 
@@ -350,7 +359,12 @@ function BrandSourceIcon({
   );
 }
 
-type DestinationMode = "lifestyle" | "autos" | "flux" | "ew";
+type DestinationMode = "all" | "lifestyle" | "autos" | "flux" | "ew";
+type DestinationSourceNote =
+  | (typeof lifestyleRiverSourceNotes)[number]
+  | (typeof autosRiverSourceNotes)[number]
+  | (typeof fluxRiverSourceNotes)[number]
+  | (typeof ewRiverSourceNotes)[number];
 
 type DestinationConfig = {
   mode: DestinationMode;
@@ -360,7 +374,7 @@ type DestinationConfig = {
   storyRiverLabel: string;
   filters: string[];
   stories: LifestyleRiverStory[];
-  sourceNotes: typeof lifestyleRiverSourceNotes | typeof autosRiverSourceNotes | typeof fluxRiverSourceNotes | typeof ewRiverSourceNotes;
+  sourceNotes: readonly DestinationSourceNote[];
   initialProfile: LifestyleRiverProfile;
   defaultLeadStoryId?: string;
   dayparts: typeof lifestyleDemoDayparts;
@@ -371,6 +385,24 @@ type DestinationConfig = {
 };
 
 const destinationConfigs: Record<DestinationMode, DestinationConfig> = {
+  all: {
+    mode: "all",
+    brandSlug: "hearst-all",
+    productName: "Hearst Magazines",
+    riverLabel: "Personalized Hearst story river",
+    storyRiverLabel: "Hearst stories",
+    filters: ["For You", "Lifestyle", "Autos", "Flux", "E&W", "Home", "Style", "Reviews", "Fitness", "Shopping", "Saved"],
+    stories: [...lifestyleRiverStories, ...autosRiverStories, ...fluxRiverStories, ...ewRiverStories],
+    sourceNotes: [...lifestyleRiverSourceNotes, ...autosRiverSourceNotes, ...fluxRiverSourceNotes, ...ewRiverSourceNotes],
+    initialProfile: initialAllProfile,
+    dayparts: lifestyleDemoDayparts,
+    nextDayTopics: ["Home", "Style", "Reviews", "Fitness", "Shopping"],
+    brandSummary:
+      "Lifestyle, Autos, Flux, and E&W brands combined into one cross-Hearst personalized destination.",
+    dataSourceCopy:
+      "public RSS metadata from all four prototype sections, filtered to stories with real Hearst CDN images.",
+    collectionLabels: ["Daily edit", "Shopping ideas", "Weekend plans"],
+  },
   lifestyle: {
     mode: "lifestyle",
     brandSlug: "hearst-lifestyle",
@@ -444,9 +476,17 @@ const destinationConfigs: Record<DestinationMode, DestinationConfig> = {
 };
 
 function getDestinationMode(brandSlug: string): DestinationMode {
+  if (brandSlug === "hearst-all") return "all";
   if (brandSlug === "hearst-ew") return "ew";
   if (brandSlug === "hearst-flux") return "flux";
   return brandSlug === "hearst-plus" ? "autos" : "lifestyle";
+}
+
+function getStoryDestinationMode(brandSlug: string): Exclude<DestinationMode, "all"> {
+  if (destinationConfigs.autos.sourceNotes.some((note) => note.brandSlug === brandSlug)) return "autos";
+  if (destinationConfigs.flux.sourceNotes.some((note) => note.brandSlug === brandSlug)) return "flux";
+  if (destinationConfigs.ew.sourceNotes.some((note) => note.brandSlug === brandSlug)) return "ew";
+  return "lifestyle";
 }
 
 function getContent(brandSlug: string): ContentType {
@@ -590,10 +630,15 @@ function getLifestyleDemoStoryPool(
 
 function storyMatchesLifestyleFilter(story: LifestyleRiverStory, filter: string) {
   if (filter === "For You" || filter === "Saved") return true;
+  if (filter === "Lifestyle") return getStoryDestinationMode(story.brandSlug) === "lifestyle";
+  if (filter === "Autos") return getStoryDestinationMode(story.brandSlug) === "autos";
+  if (filter === "Flux") return getStoryDestinationMode(story.brandSlug) === "flux";
+  if (filter === "E&W") return getStoryDestinationMode(story.brandSlug) === "ew";
   return story.topic === filter || story.topic.startsWith(`${filter} `);
 }
 
 const hearstDestinationSections = [
+  { label: "All", href: "/hearst-all/" },
   { label: "Lifestyle", href: "/hearst-edit/" },
   { label: "Autos", href: "/hearst-plus/" },
   { label: "Flux", href: "/hearst-flux/" },
@@ -602,7 +647,16 @@ const hearstDestinationSections = [
 
 function UtilityBar() {
   const { brand } = useTheme();
-  const activeDestination = brand.slug === "hearst-plus" ? "Autos" : brand.slug === "hearst-flux" ? "Flux" : brand.slug === "hearst-ew" ? "E&W" : "Lifestyle";
+  const activeDestination =
+    brand.slug === "hearst-all"
+      ? "All"
+      : brand.slug === "hearst-plus"
+      ? "Autos"
+      : brand.slug === "hearst-flux"
+      ? "Flux"
+      : brand.slug === "hearst-ew"
+      ? "E&W"
+      : "Lifestyle";
 
   return (
     <div className="h-8 bg-primary text-primary-foreground text-[length:var(--text-token-4xs)] font-semibold">
@@ -670,7 +724,7 @@ function MainNav({
   const { brand } = useTheme();
   const logo = brandLogos[brand.slug];
   const content = getContent(brandSlug);
-  const isDestinationRiver = brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
+  const isDestinationRiver = brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
   const destinationConfig = destinationConfigs[getDestinationMode(brand.slug)];
   const navLinks = isDestinationRiver ? destinationConfig.filters : content.navLinks;
 
@@ -1056,7 +1110,7 @@ const contextualAdCatalog = {
     ["ew-smartwatch", "Wearable Lab", "Track What Actually Matters", "Watch, heart-rate, and recovery tools matched to tech, fitness, and training sessions.", "Compare watches", ["Tech", "Fitness", "Gear"], ["tech", "fitness", "gear", "training"], "Track", "#f7f7ff", "#171730", "#E50022", "#e1e1fb", "https://hips.hearstapps.com/hmg-prod/images/b32ab90f-fef4-4582-a72f-d1a8621e1148.jpg"],
     ["ew-book-club", "Oprah Daily Life", "A Better Night Routine", "Books, journaling, sleep, and reflection picks for late-night life and wellness browsing.", "Start tonight", ["Life", "Wellness"], ["life", "sleep", "wellness", "books"], "Life", "#fff2f6", "#34101b", "#E50022", "#f4d4de", "https://hips.hearstapps.com/hmg-prod/images/ba0b950d-7abb-4544-b6df-13f3ce1d21bf.jpg"],
   ],
-} satisfies Record<DestinationMode, ContextualAdTuple[]>;
+} satisfies Record<Exclude<DestinationMode, "all">, ContextualAdTuple[]>;
 
 function normalizeContextualAds(units: ContextualAdTuple[]): ContextualAdUnit[] {
   return units.map(([id, sponsor, title, summary, cta, topics, tags, creativeLabel, background, foreground, accent, soft, imageUrl]) => ({
@@ -1074,6 +1128,12 @@ function normalizeContextualAds(units: ContextualAdTuple[]): ContextualAdUnit[] 
 }
 
 const contextualAdsByDestination: Record<DestinationMode, ContextualAdUnit[]> = {
+  all: normalizeContextualAds([
+    ...contextualAdCatalog.lifestyle,
+    ...contextualAdCatalog.autos,
+    ...contextualAdCatalog.flux,
+    ...contextualAdCatalog.ew,
+  ]),
   lifestyle: normalizeContextualAds(contextualAdCatalog.lifestyle),
   autos: normalizeContextualAds(contextualAdCatalog.autos),
   flux: normalizeContextualAds(contextualAdCatalog.flux),
@@ -2625,7 +2685,12 @@ function LifestyleRiverHomePage({
 
   const applyBehaviorPreset = (preset: "homeCook" | "shoppingBrowser" | "wellnessReader") => {
     const presets: Record<"homeCook" | "shoppingBrowser" | "wellnessReader", Partial<LifestyleRiverProfile>> = {
-      homeCook: destination === "autos" ? {
+      homeCook: destination === "all" ? {
+        followedTopics: ["Home", "Food", "Reviews", "Style", "Fitness"],
+        followedBrands: ["Good Housekeeping", "Country Living", "Car and Driver", "Elle", "Men's Health"],
+        savedTags: ["home", "recipe", "reviews", "style", "fitness"],
+        boostedTags: ["kitchen", "electric", "fashion", "training"],
+      } : destination === "autos" ? {
         followedTopics: ["Reviews", "Buying Guides", "EVs"],
         followedBrands: ["Car and Driver", "MotorTrend", "Road & Track"],
         savedTags: ["reviews", "evs", "buying", "electric"],
@@ -2646,7 +2711,12 @@ function LifestyleRiverHomePage({
         savedTags: ["dinner ideas", "cookout", "cleaning", "decorating"],
         boostedTags: ["recipe", "dinner ideas", "cookout", "food"],
       },
-      shoppingBrowser: destination === "autos" ? {
+      shoppingBrowser: destination === "all" ? {
+        followedTopics: ["Shopping", "Buying Guides", "Style", "Gear"],
+        followedBrands: ["Good Housekeeping", "Car and Driver", "Harper's Bazaar", "Best Products"],
+        savedTags: ["shopping", "products", "buying", "gear", "style"],
+        boostedTags: ["products", "shopping", "reviews", "gear"],
+      } : destination === "autos" ? {
         followedTopics: ["Buying Guides", "Auctions", "Classics"],
         followedBrands: ["Bring a Trailer", "Autoweek", "HOT ROD"],
         savedTags: ["auction", "classic", "collector", "used"],
@@ -2667,7 +2737,12 @@ function LifestyleRiverHomePage({
         savedTags: ["products", "style", "beauty", "decorating"],
         boostedTags: ["products", "shopping", "editor picks", "style"],
       },
-      wellnessReader: destination === "autos" ? {
+      wellnessReader: destination === "all" ? {
+        followedTopics: ["Wellness", "Fitness", "Life", "Home"],
+        followedBrands: ["Prevention", "Men's Health", "Women's Health", "Oprah Daily"],
+        savedTags: ["wellness", "health", "fitness", "sleep", "home"],
+        boostedTags: ["wellness", "fitness", "health", "recovery"],
+      } : destination === "autos" ? {
         followedTopics: ["Performance", "Racing", "Trucks"],
         followedBrands: ["HOT ROD", "Road & Track", "MotorTrend"],
         savedTags: ["performance", "racing", "truck", "engine"],
@@ -3100,7 +3175,7 @@ export function HomePageTemplate({
 }: HomePageTemplateProps = {}) {
   const { brand } = useTheme();
   const [activeLifestyleFilter, setActiveLifestyleFilter] = React.useState("For You");
-  const isDestinationRiver = brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
+  const isDestinationRiver = brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
   const destinationMode = getDestinationMode(brand.slug);
 
   return (
