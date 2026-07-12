@@ -27,12 +27,14 @@ import {
   EyeOff,
   ImageIcon,
   Mail,
+  Moon,
   Pause,
   Play,
   Plus,
   ShoppingBag,
   SlidersHorizontal,
   Star,
+  Sun,
   X,
 } from "lucide-react";
 import {
@@ -817,7 +819,7 @@ function UtilityBar({ selectedBrand }: { selectedBrand?: { name: string; slug: s
                 className={cn(
                   "rounded-full px-2 py-0.5 font-bold text-primary-foreground hover:text-primary-foreground",
                   section.label === activeDestination
-                    ? "bg-white text-primary hover:text-primary"
+                    ? "bg-white text-black hover:text-black"
                     : "opacity-85 hover:bg-white/10 hover:opacity-100"
                 )}
               >
@@ -849,7 +851,8 @@ function MainNav({
   onFilterChange?: (filter: string) => void;
   selectedBrand?: { name: string; slug: string } | null;
 }) {
-  const { brand } = useTheme();
+  const { brand, colorMode, toggleColorMode } = useTheme();
+  const [mastheadCompact, setMastheadCompact] = React.useState(false);
   const mastheadSlug = selectedBrand?.slug ?? brand.slug;
   const logo = brandLogos[mastheadSlug];
   const content = getContent(brandSlug);
@@ -861,22 +864,50 @@ function MainNav({
       ? destinationConfig.filters
       : content.navLinks;
 
+  React.useEffect(() => {
+    let frame = 0;
+    const updateMasthead = () => {
+      frame = 0;
+      setMastheadCompact(window.scrollY > 12);
+    };
+    const onScroll = () => {
+      if (!frame) frame = window.requestAnimationFrame(updateMasthead);
+    };
+
+    updateMasthead();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
   return (
     <>
-    <div className="border-b border-border py-2">
-      <PageContainer className="flex items-center justify-between py-2">
+    <div
+      className={cn(
+        "flex border-b border-border transition-[height] duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] motion-reduce:transition-none",
+        mastheadCompact ? "h-14 sm:h-16" : "h-20 sm:h-24"
+      )}
+    >
+      <PageContainer className="flex items-center justify-between">
         <div className="w-[var(--width-sidebar-narrow)]" />
         <div className="text-center">
           {logo ? (
             <BrandLogo
               slug={mastheadSlug}
-              color={selectedBrand ? "#121212" : isDestinationRiver ? brand.colors["1"] : undefined}
+              color={selectedBrand
+                ? colorMode === "dark" ? "#ffffff" : "#121212"
+                : isDestinationRiver
+                  ? colorMode === "dark" ? "var(--brand-primary)" : brand.colors["1"]
+                  : undefined}
               className={cn(
-                "[&_svg]:w-auto mx-auto",
+                "mx-auto inline-flex origin-center transform-gpu transition-transform duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] motion-reduce:transition-none [&_svg]:w-auto",
+                mastheadCompact ? "scale-100" : "scale-150",
                 isDestinationRiver
                   ? selectedBrand
-                    ? "[&_svg]:h-7 sm:[&_svg]:h-9 [&_svg]:max-w-[220px] sm:[&_svg]:max-w-[300px]"
-                    : "[&_svg]:h-5 sm:[&_svg]:h-6 [&_svg]:max-w-[260px] sm:[&_svg]:max-w-[340px]"
+                    ? "[&_svg]:h-7 sm:[&_svg]:h-9 [&_svg]:max-w-[160px] sm:[&_svg]:max-w-[300px]"
+                    : "[&_svg]:h-5 sm:[&_svg]:h-6 [&_svg]:max-w-[160px] sm:[&_svg]:max-w-[340px]"
                   : "[&_svg]:h-10"
               )}
             />
@@ -887,7 +918,16 @@ function MainNav({
           )}
         </div>
         <div className="w-[var(--width-sidebar-narrow)] flex justify-end gap-2">
-          <Button variant="outline" size="icon-sm">
+          <Button
+            variant="outline"
+            size="icon-sm"
+            onClick={toggleColorMode}
+            aria-label={`Switch to ${colorMode === "dark" ? "light" : "dark"} mode`}
+            title={`Switch to ${colorMode === "dark" ? "light" : "dark"} mode`}
+          >
+            {colorMode === "dark" ? <Sun className="h-4 w-4" aria-hidden /> : <Moon className="h-4 w-4" aria-hidden />}
+          </Button>
+          <Button variant="outline" size="icon-sm" aria-label="Search" title="Search">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           </Button>
         </div>
@@ -1390,7 +1430,7 @@ function ContextualRiverAdCard({
         <h2 className="headline mt-3 text-2xl leading-tight sm:text-3xl">
           {ad.title}
         </h2>
-        <p className="mt-3 text-sm leading-6 text-muted-foreground">
+        <p className="mt-3 hidden text-sm leading-6 text-muted-foreground sm:block">
           {ad.summary}
         </p>
         <div className="mt-4 flex flex-wrap gap-1.5">
@@ -3381,7 +3421,7 @@ export function HomePageTemplate({
   showGridOverlay = false,
   initialBrandSlug,
 }: HomePageTemplateProps = {}) {
-  const { brand } = useTheme();
+  const { brand, colorMode } = useTheme();
   const router = useRouter();
   const [activeLifestyleFilter, setActiveLifestyleFilter] = React.useState("For You");
   const [selectedBrand, setSelectedBrand] = React.useState<{ name: string; slug: string } | null>(() =>
@@ -3392,8 +3432,8 @@ export function HomePageTemplate({
     [brand, selectedBrand]
   );
   const selectedBrandCssVars = React.useMemo(
-    () => selectedBrandTheme ? brandToCssVars(selectedBrandTheme) : undefined,
-    [selectedBrandTheme]
+    () => selectedBrandTheme ? brandToCssVars(selectedBrandTheme, colorMode) : undefined,
+    [colorMode, selectedBrandTheme]
   );
   const destinationContentRef = React.useRef<HTMLDivElement | null>(null);
   const isDestinationRiver = brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";

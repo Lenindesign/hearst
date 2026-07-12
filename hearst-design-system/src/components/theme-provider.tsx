@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, useMemo, useEffect } from "react";
+import { createContext, useContext, useState, useCallback, useMemo, useEffect, useRef } from "react";
 import { type BrandTheme } from "@/lib/brands";
 import { brandToCssVars } from "@/lib/theme-css-vars";
 import { themeOptions } from "@/lib/theme-options";
@@ -8,6 +8,8 @@ import { themeOptions } from "@/lib/theme-options";
 interface ThemeContextType {
   brand: BrandTheme;
   setBrand: (slug: string) => void;
+  colorMode: "light" | "dark";
+  toggleColorMode: () => void;
 }
 
 export const ThemeContext = createContext<ThemeContextType | null>(null);
@@ -75,7 +77,11 @@ export function ThemeProvider({
   children: React.ReactNode;
   defaultBrandSlug?: string;
 }) {
+  const isFluxDefault = defaultBrandSlug === "hearst-flux";
+  const colorModeStorageKey = isFluxDefault ? "hearst-color-mode:hearst-flux" : "hearst-color-mode";
   const [brandSlug, setBrandSlug] = useState(defaultBrandSlug);
+  const [colorMode, setColorMode] = useState<"light" | "dark">(isFluxDefault ? "dark" : "light");
+  const colorModeReady = useRef(false);
 
   const brand = useMemo(
     () => themeOptions.find((b) => b.slug === brandSlug) || themeOptions[0],
@@ -83,13 +89,41 @@ export function ThemeProvider({
   );
 
   const setBrand = useCallback((slug: string) => setBrandSlug(slug), []);
+  const toggleColorMode = useCallback(() => {
+    setColorMode((current) => current === "dark" ? "light" : "dark");
+  }, []);
 
-  const cssVars = useMemo(() => brandToCssVars(brand), [brand]);
+  const cssVars = useMemo(() => brandToCssVars(brand, colorMode), [brand, colorMode]);
+
+  useEffect(() => {
+    const storedMode = window.localStorage.getItem(colorModeStorageKey);
+    const preferredMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    const resolvedMode = storedMode === "dark" || storedMode === "light"
+      ? storedMode
+      : isFluxDefault
+        ? "dark"
+        : preferredMode;
+    document.documentElement.classList.toggle("dark", resolvedMode === "dark");
+    document.documentElement.style.colorScheme = resolvedMode;
+    // Initial client preference is only available after hydration.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setColorMode(resolvedMode);
+  }, [colorModeStorageKey, isFluxDefault]);
+
+  useEffect(() => {
+    if (!colorModeReady.current) {
+      colorModeReady.current = true;
+      return;
+    }
+    document.documentElement.classList.toggle("dark", colorMode === "dark");
+    document.documentElement.style.colorScheme = colorMode;
+    window.localStorage.setItem(colorModeStorageKey, colorMode);
+  }, [colorMode, colorModeStorageKey]);
 
   useGoogleFonts([brand.fontDefault, brand.fontSecondary, brand.fontHeadline]);
 
   return (
-    <ThemeContext.Provider value={{ brand, setBrand }}>
+    <ThemeContext.Provider value={{ brand, setBrand, colorMode, toggleColorMode }}>
       <div data-brand={brand.slug} style={cssVars as React.CSSProperties}>
         {children}
       </div>

@@ -39,6 +39,39 @@ function getContrastColor(hex: string): string {
   return luminance > 0.5 ? "#000000" : "#ffffff";
 }
 
+const darkModeSectionPrimaryColors: Record<string, string> = {
+  "hearst-all": "#74B9F5",
+  "hearst-lifestyle": "#EE8CBC",
+  "hearst-plus": "#78BDE8",
+  "hearst-flux": "#F2F2F2",
+  "hearst-ew": "#FF7184",
+};
+
+function relativeLuminance(hex: string) {
+  const channels = [1, 3, 5].map((index) => {
+    const channel = parseInt(hex.slice(index, index + 2), 16) / 255;
+    return channel <= 0.04045 ? channel / 12.92 : Math.pow((channel + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+}
+
+function getDarkModePrimary(brandSlug: string, primary: string) {
+  const curated = darkModeSectionPrimaryColors[brandSlug];
+  if (curated) return curated;
+
+  const darkSurfaceLuminance = relativeLuminance("#0B0B0B");
+  const source = [1, 3, 5].map((index) => parseInt(primary.slice(index, index + 2), 16));
+
+  for (let whiteMix = 0; whiteMix <= 0.75; whiteMix += 0.05) {
+    const channels = source.map((channel) => Math.round(channel + (255 - channel) * whiteMix));
+    const candidate = `#${channels.map((channel) => channel.toString(16).padStart(2, "0")).join("")}`;
+    const contrast = (relativeLuminance(candidate) + 0.05) / (darkSurfaceLuminance + 0.05);
+    if (contrast >= 4.5) return candidate;
+  }
+
+  return "#F2F2F2";
+}
+
 function toCssVars(tokens: Record<string, string | number>) {
   return Object.fromEntries(
     Object.entries(tokens).map(([key, value]) => [
@@ -48,16 +81,54 @@ function toCssVars(tokens: Record<string, string | number>) {
   );
 }
 
-export function brandToCssVars(brand: BrandTheme): Record<string, string> {
+export function brandToCssVars(brand: BrandTheme, colorMode: "light" | "dark" = "light"): Record<string, string> {
   const primary = brand.colors["1"] || Object.values(brand.colors)[0] || "#000000";
   const primaryFg = getContrastColor(primary);
   const secondary = brand.colors["2"] || brand.colors["3"] || "#f5f5f5";
   const secondaryFg = getContrastColor(secondary);
   const accent = brand.colors["3"] || brand.colors["2"] || "#e5e5e5";
   const accentFg = getContrastColor(accent);
+  const darkPrimary = getDarkModePrimary(brand.slug, primary);
+  const darkPrimaryFg = getContrastColor(darkPrimary);
   const brandColorVars = Object.fromEntries(
     Object.entries(brand.colors).map(([key, value]) => [`--brand-${key}`, value]),
   );
+
+  const darkSurfaceVars: Record<string, string> = colorMode === "dark" ? {
+    "--background": "oklch(0.145 0 0)",
+    "--foreground": "oklch(0.985 0 0)",
+    "--card": "oklch(0.205 0 0)",
+    "--card-foreground": "oklch(0.985 0 0)",
+    "--popover": "oklch(0.205 0 0)",
+    "--popover-foreground": "oklch(0.985 0 0)",
+    "--muted": "oklch(0.269 0 0)",
+    "--muted-foreground": "oklch(0.74 0 0)",
+    "--secondary": "oklch(0.269 0 0)",
+    "--secondary-foreground": "oklch(0.985 0 0)",
+    "--accent": "oklch(0.32 0 0)",
+    "--accent-foreground": "oklch(0.985 0 0)",
+    "--border": "oklch(1 0 0 / 14%)",
+    "--input": "oklch(1 0 0 / 18%)",
+    "--brand-primary": darkPrimary,
+    "--primary": hexToOklch(darkPrimary),
+    "--primary-foreground": hexToOklch(darkPrimaryFg),
+    "--ring": hexToOklch(darkPrimary),
+    "--chart-1": hexToOklch(darkPrimary),
+    "--palette-content-brand": darkPrimary,
+    "--palette-content-brand-hover": `color-mix(in oklab, ${darkPrimary} 84%, white 16%)`,
+    "--palette-content-brand-active": `color-mix(in oklab, ${darkPrimary} 72%, white 28%)`,
+    "--palette-content-default-link": darkPrimary,
+    "--palette-content-default-link-hover": `color-mix(in oklab, ${darkPrimary} 84%, white 16%)`,
+    "--palette-background-default-link": darkPrimary,
+    "--palette-background-default-link-hover": `color-mix(in oklab, ${darkPrimary} 84%, white 16%)`,
+    "--component-button-background-primary-solid-default": darkPrimary,
+    "--component-button-background-primary-solid-hover": `color-mix(in oklab, ${darkPrimary} 86%, white 14%)`,
+    "--component-button-background-primary-solid-active": `color-mix(in oklab, ${darkPrimary} 76%, white 24%)`,
+    "--component-chip-border-neutral-selected": darkPrimary,
+    "--component-chip-content-neutral-selected": darkPrimary,
+    "--component-badge-background-primary": darkPrimary,
+    "--component-badge-content-primary": darkPrimaryFg,
+  } : {};
 
   return {
     ...toCssVars(brand.semanticColors),
@@ -82,5 +153,6 @@ export function brandToCssVars(brand: BrandTheme): Record<string, string> {
     "--font-headline": `"${brand.fontHeadline}", system-ui, sans-serif`,
     "--font-headline-weight": `${brand.fontHeadlineWeight}`,
     "--font-headline-stretch": brand.fontHeadlineStretch || "normal",
+    ...darkSurfaceVars,
   };
 }
