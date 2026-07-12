@@ -2274,14 +2274,17 @@ function TodayEditDashboard({
   ];
 
   return (
-    <section className="rounded-b-[8px] border-x border-b border-border bg-background" aria-label="Today&apos;s edit">
-      <div className="flex snap-x gap-3 overflow-x-auto p-4 [scrollbar-width:none] md:grid md:grid-cols-2 md:gap-0 md:divide-x md:divide-border md:overflow-visible md:p-0 md:[scrollbar-width:auto] xl:grid-cols-4 [&::-webkit-scrollbar]:hidden md:[&::-webkit-scrollbar]:block">
+    <section
+      className="relative left-1/2 w-screen -translate-x-1/2 border-b border-border bg-background md:left-auto md:w-auto md:translate-x-0 md:rounded-b-[8px] md:border-x"
+      aria-label="Today&apos;s edit"
+    >
+      <div className="flex snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] md:grid md:grid-cols-2 md:divide-x md:divide-border md:overflow-visible md:[scrollbar-width:auto] xl:grid-cols-4 [&::-webkit-scrollbar]:hidden md:[&::-webkit-scrollbar]:block">
         {modules.map((module) => (
           <button
             key={module.label}
             type="button"
             onClick={module.onClick}
-            className="group flex min-h-[150px] w-[78vw] shrink-0 snap-start flex-col justify-between rounded-[8px] border border-border p-4 text-left transition-colors hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-primary/30 sm:w-[48vw] md:min-h-[144px] md:w-auto md:rounded-none md:border-0 xl:min-w-0"
+            className="group flex min-h-[190px] w-[88vw] shrink-0 snap-start scroll-ml-0 flex-col justify-between border-r border-border px-5 py-6 text-left transition-colors last:border-r-0 hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30 sm:w-[58vw] md:min-h-[144px] md:w-auto md:border-0 md:p-6 xl:min-w-0"
           >
             <span>
               <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
