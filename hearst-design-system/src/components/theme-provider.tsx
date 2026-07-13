@@ -78,9 +78,10 @@ export function ThemeProvider({
   defaultBrandSlug?: string;
 }) {
   const isFluxDefault = defaultBrandSlug === "hearst-flux";
-  const colorModeStorageKey = isFluxDefault ? "hearst-color-mode:hearst-flux" : "hearst-color-mode";
+  const defaultColorMode = isFluxDefault ? "dark" : "light";
+  const colorModeStorageKey = `hearst-color-mode:${defaultBrandSlug}`;
   const [brandSlug, setBrandSlug] = useState(defaultBrandSlug);
-  const [colorMode, setColorMode] = useState<"light" | "dark">(isFluxDefault ? "dark" : "light");
+  const [colorMode, setColorMode] = useState<"light" | "dark">(defaultColorMode);
   const colorModeReady = useRef(false);
 
   const brand = useMemo(
@@ -97,18 +98,15 @@ export function ThemeProvider({
 
   useEffect(() => {
     const storedMode = window.localStorage.getItem(colorModeStorageKey);
-    const preferredMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
     const resolvedMode = storedMode === "dark" || storedMode === "light"
       ? storedMode
-      : isFluxDefault
-        ? "dark"
-        : preferredMode;
+      : defaultColorMode;
     document.documentElement.classList.toggle("dark", resolvedMode === "dark");
     document.documentElement.style.colorScheme = resolvedMode;
     // Initial client preference is only available after hydration.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setColorMode(resolvedMode);
-  }, [colorModeStorageKey, isFluxDefault]);
+  }, [colorModeStorageKey, defaultColorMode]);
 
   useEffect(() => {
     if (!colorModeReady.current) {
