@@ -1994,6 +1994,112 @@ function getLifestyleContextStories(currentStory: LifestyleRiverStory, stories: 
   };
 }
 
+function scoreLifestyleRelatedStory(currentStory: LifestyleRiverStory, story: LifestyleRiverStory) {
+  const sharedTagCount = story.tags.filter((tag) => currentStory.tags.includes(tag)).length;
+  const sameTopicScore = story.topic === currentStory.topic ? 80 : 0;
+  const sameBrandScore = story.brand === currentStory.brand ? 34 : 0;
+  const sharedTagScore = sharedTagCount * 14;
+  const signalScore = story.signal === currentStory.signal ? 6 : 0;
+  const popularityScore = Math.round(story.popularity / 8);
+  const freshnessScore = Math.max(0, 10 - story.age);
+
+  return sameTopicScore + sameBrandScore + sharedTagScore + signalScore + popularityScore + freshnessScore;
+}
+
+function getLifestyleArticleRecommendations(currentStory: LifestyleRiverStory, stories: LifestyleRiverStory[]) {
+  const otherStories = stories.filter((story) => story.id !== currentStory.id);
+  const exactTopicStories = otherStories
+    .filter((story) => story.topic === currentStory.topic)
+    .sort((a, b) => scoreLifestyleRelatedStory(currentStory, b) - scoreLifestyleRelatedStory(currentStory, a));
+  const scoredStories = otherStories
+    .map((story) => ({
+      story,
+      score: scoreLifestyleRelatedStory(currentStory, story),
+    }))
+    .sort((a, b) => b.score - a.score)
+    .map(({ story }) => story);
+  const relatedStories = [...exactTopicStories, ...scoredStories].filter(
+    (story, index, array) => array.findIndex((candidate) => candidate.id === story.id) === index
+  );
+
+  return relatedStories.slice(0, 4);
+}
+
+function LifestyleArticleRecommendationsModule({
+  currentStory,
+  stories,
+  productName,
+  onOpenStory,
+}: {
+  currentStory: LifestyleRiverStory;
+  stories: LifestyleRiverStory[];
+  productName: string;
+  onOpenStory: (storyId: string) => void;
+}) {
+  const recommendations = getLifestyleArticleRecommendations(currentStory, stories);
+  const [featuredStory, ...secondaryStories] = recommendations;
+
+  if (!featuredStory) return null;
+
+  return (
+    <section className="mt-8 border-y border-border py-6" aria-label={`More in ${currentStory.topic}`}>
+      <div className="mb-5">
+        <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+          More in {currentStory.topic}
+        </p>
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+          Related picks from {productName}, ranked from this article&apos;s topic, brand, tags, freshness, and reader intent.
+        </p>
+      </div>
+
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1fr)]">
+        <button
+          type="button"
+          onClick={() => onOpenStory(featuredStory.id)}
+          className="group min-w-0 text-left focus:outline-none focus:ring-2 focus:ring-primary/30"
+        >
+          <LifestyleRiverImage story={featuredStory} className="aspect-[4/3] w-full rounded-[8px]" />
+          <span className="mt-4 flex items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+            <BrandSourceIcon brand={featuredStory.brand} brandSlug={featuredStory.brandSlug} />
+            {featuredStory.brand}
+          </span>
+          <span className="mt-2 block font-brand-secondary text-2xl font-bold leading-tight text-foreground group-hover:text-primary">
+            {featuredStory.title}
+          </span>
+          <span className="mt-2 block text-sm leading-6 text-muted-foreground">
+            {featuredStory.summary}
+          </span>
+        </button>
+
+        <div className="divide-y divide-border">
+          {secondaryStories.map((story) => (
+            <button
+              key={story.id}
+              type="button"
+              onClick={() => onOpenStory(story.id)}
+              className="group grid w-full grid-cols-[96px_minmax(0,1fr)] gap-4 py-4 text-left first:pt-0 last:pb-0 focus:outline-none focus:ring-2 focus:ring-primary/30 sm:grid-cols-[128px_minmax(0,1fr)]"
+            >
+              <LifestyleRiverImage story={story} className="aspect-square w-full rounded-[8px]" />
+              <span className="min-w-0">
+                <span className="flex items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                  <BrandSourceIcon brand={story.brand} brandSlug={story.brandSlug} />
+                  {getLifestyleKindLabel(getLifestyleCardKind(story), story)}
+                </span>
+                <span className="mt-1 block text-base font-bold leading-snug text-foreground group-hover:text-primary">
+                  {story.title}
+                </span>
+                <span className="mt-1 block text-xs leading-5 text-muted-foreground">
+                  {story.brand} · {story.topic} · {story.readTime}
+                </span>
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function LifestyleReaderContextRail({
   currentStory,
   stories,
@@ -2243,6 +2349,12 @@ function LifestyleStoryReaderModal({
                       ))}
                     </div>
                     <LifestyleCardModule story={story} kind={kind} />
+                    <LifestyleArticleRecommendationsModule
+                      currentStory={story}
+                      stories={stories}
+                      productName={productName}
+                      onOpenStory={onOpenStory}
+                    />
                   </div>
                 </article>
               );
