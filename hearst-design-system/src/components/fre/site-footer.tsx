@@ -14,6 +14,7 @@ export interface SiteFooterProps {
   onSocialClick?: (platform: string) => void;
   onLegalClick?: (link: string) => void;
   onSubscribeClick?: () => void;
+  productLinks?: Array<{ label: string; href: string }>;
   className?: string;
 }
 
@@ -26,6 +27,10 @@ export function SiteFooter({
   onSocialClick,
   onLegalClick,
   onSubscribeClick,
+  productLinks = [
+    { label: "Product story", href: "/about-hearst-magazines/" },
+    { label: "Product blueprint", href: "/hearst-product-blueprint/" },
+  ],
   className,
 }: SiteFooterProps) {
   return (
@@ -63,6 +68,21 @@ export function SiteFooter({
           )}
         </div>
         <div className="flex flex-wrap gap-8 text-[length:var(--text-token-2xs)]">
+          <div className="flex flex-col gap-2">
+            <span className="font-semibold mb-1">Explore the product</span>
+            {productLinks.map((link) => (
+              <LinkComponent
+                key={link.href}
+                href={link.href}
+                variant="neutral"
+                underline={false}
+                size="sm"
+                className="opacity-70 text-background hover:text-background/90 font-normal"
+              >
+                {link.label}
+              </LinkComponent>
+            ))}
+          </div>
           <div className="flex flex-col gap-2">
             <span className="font-semibold mb-1">Other Hearst Subscriptions</span>
             <LinkComponent

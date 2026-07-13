@@ -3,7 +3,7 @@ export const brandLogos: Record<string, string> = {
   "best-products": "/logos/bestproducts.svg",
   "bicycling": "/logos/bicycling.svg",
   "biography": "/logos/biography.svg",
-  "bring-a-trailer": "https://bringatrailer.com/wp-content/themes/bringatrailer/assets/img/logo-250k.svg",
+  "bring-a-trailer": "/logos/bring-a-trailer.svg",
   "car-and-driver": "/logos/caranddriver.svg",
   "cosmopolitan": "/logos/cosmo.svg",
   "country-living": "/logos/country.svg",
