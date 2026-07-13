@@ -203,6 +203,13 @@ const initialLifestyleDemoState: LifestyleDemoState = {
   contentDay: "today",
 };
 
+const demoDaypartReturnHours: Record<LifestyleDemoDaypart, number> = {
+  morning: 0,
+  afternoon: 5,
+  evening: 10,
+  lateNight: 14,
+};
+
 const lifestyleDemoDayparts: Record<
   LifestyleDemoDaypart,
   {
@@ -638,14 +645,20 @@ function getLifestyleScoreBreakdown(
   const savedStory = profile.savedIds.includes(story.id) ? 6 : 0;
   const recency = getLifestyleRecencyScore(story, demoState);
   const timeOfDay = getLifestyleTimeOfDayScore(story, demoState, config);
-  const defaultLead = config.defaultLeadStoryId === story.id && demoState.contentDay === "today" ? 80 : 0;
+  const isFirstMorningVisit =
+    demoState.contentDay === "today" && demoState.returnHours === 0 && demoState.daypart === "morning";
+  const defaultLead = config.defaultLeadStoryId === story.id && isFirstMorningVisit ? 80 : 0;
+  const returnFreshness =
+    demoState.returnHours > 0 && story.id !== demoState.previousLeadId && story.age <= demoState.returnHours + 4
+      ? 24
+      : 0;
   const nextDayNovelty =
     demoState.contentDay === "nextDay" && story.id !== demoState.previousLeadId
       ? config.nextDayTopics.includes(story.topic)
         ? 28
         : 10
       : 0;
-  const repeatLeadPenalty = demoState.contentDay === "nextDay" && story.id === demoState.previousLeadId ? -120 : 0;
+  const repeatLeadPenalty = demoState.returnHours > 0 && story.id === demoState.previousLeadId ? -140 : 0;
   const hidden = profile.hiddenIds.includes(story.id) ? -500 : 0;
 
   return {
@@ -658,6 +671,7 @@ function getLifestyleScoreBreakdown(
     recency,
     timeOfDay,
     defaultLead,
+    returnFreshness,
     nextDayNovelty,
     repeatLeadPenalty,
     hidden,
@@ -671,6 +685,7 @@ function getLifestyleScoreBreakdown(
       recency +
       timeOfDay +
       defaultLead +
+      returnFreshness +
       nextDayNovelty +
       repeatLeadPenalty +
       hidden,
@@ -684,6 +699,43 @@ function getLifestyleScore(
   config = destinationConfigs.lifestyle
 ) {
   return getLifestyleScoreBreakdown(story, profile, demoState, config).total;
+}
+
+function getLifestyleStrategyReason(
+  story: LifestyleRiverStory,
+  breakdown: ReturnType<typeof getLifestyleScoreBreakdown>,
+  demoState: LifestyleDemoState,
+  config = destinationConfigs.lifestyle
+) {
+  const activeDaypart = config.dayparts[demoState.daypart];
+  const reasons: string[] = [];
+
+  if (breakdown.repeatLeadPenalty < 0) {
+    reasons.push("previous lead suppressed");
+  }
+  if (breakdown.returnFreshness > 0) {
+    reasons.push("fresh since last visit");
+  }
+  if (breakdown.timeOfDay > 0) {
+    reasons.push(`${activeDaypart.label.toLowerCase()} fit`);
+  }
+  if (breakdown.moreLikeThis > 0 || breakdown.savedTag > 0) {
+    reasons.push("behavior match");
+  }
+  if (breakdown.followedBrand > 0 || breakdown.followedTopic > 0) {
+    reasons.push("followed interest");
+  }
+  if (breakdown.nextDayNovelty > 0) {
+    reasons.push("new edition novelty");
+  }
+  if (breakdown.defaultLead > 0) {
+    reasons.push("editorial starting point");
+  }
+  if (reasons.length === 0) {
+    reasons.push(`${story.popularity} popularity signal`);
+  }
+
+  return reasons.slice(0, 3).join(", ");
 }
 
 function rankLifestyleRiver(
@@ -912,12 +964,15 @@ function MainNav({
                   ? colorMode === "dark" ? "var(--brand-primary)" : brand.colors["1"]
                   : undefined}
               className={cn(
-                "mx-auto inline-flex origin-center transform-gpu transition-transform duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] motion-reduce:transition-none [&_svg]:w-auto",
-                mastheadCompact ? "scale-100" : "scale-150",
+                "mx-auto inline-flex [&_svg]:w-auto [&_svg]:transition-[height,max-width] [&_svg]:duration-300 [&_svg]:ease-[cubic-bezier(0.25,1,0.5,1)] motion-reduce:[&_svg]:transition-none",
                 isDestinationRiver
                   ? selectedBrand
-                    ? "[&_svg]:h-7 sm:[&_svg]:h-9 [&_svg]:max-w-[160px] sm:[&_svg]:max-w-[300px]"
-                    : "[&_svg]:h-5 sm:[&_svg]:h-6 [&_svg]:max-w-[160px] sm:[&_svg]:max-w-[340px]"
+                    ? mastheadCompact
+                      ? "[&_svg]:h-7 sm:[&_svg]:h-9 [&_svg]:max-w-[160px] sm:[&_svg]:max-w-[300px]"
+                      : "[&_svg]:h-10 sm:[&_svg]:h-14 [&_svg]:max-w-[240px] sm:[&_svg]:max-w-[460px]"
+                    : mastheadCompact
+                      ? "[&_svg]:h-5 sm:[&_svg]:h-6 [&_svg]:max-w-[160px] sm:[&_svg]:max-w-[340px]"
+                      : "[&_svg]:h-8 sm:[&_svg]:h-9 [&_svg]:max-w-[240px] sm:[&_svg]:max-w-[520px]"
                   : "[&_svg]:h-10"
               )}
             />
@@ -1187,23 +1242,80 @@ function LifestyleRiverImage({
 }
 
 function getLifestyleImagePosition(story: LifestyleRiverStory) {
+  const peopleForwardBrands = new Set([
+    "cosmopolitan",
+    "seventeen",
+    "elle",
+    "harpers-bazaar",
+    "town-country",
+    "esquire",
+    "redbook",
+    "oprah-daily",
+  ]);
+  const peopleForwardTopics = new Set([
+    "Beauty",
+    "Culture",
+    "Entertainment",
+    "Events",
+    "Lifestyle",
+    "Pleasure",
+    "Relationships",
+    "Style",
+    "Style Beauty",
+  ]);
+  const headCropRiskTerms = [
+    "actor",
+    "actress",
+    "bob haircut",
+    "boyfriend",
+    "cast",
+    "celebrity",
+    "characters",
+    "dating",
+    "fiancé",
+    "girlfriend",
+    "joining",
+    "looks",
+    "relationship",
+    "spotted",
+    "style",
+    "taylor swift",
+    "wedding",
+  ];
+  const title = story.title.toLowerCase();
+
   if (story.id === lifestyleDefaultLeadStoryId) return "center 22%";
+  if (story.title === "Is Dee Valladares Joining BB28? Here’s Why Fans Are Convinced She’s Another ‘Survivor’ Alum-Turned-Houseguest") return "center 6%";
   if (story.title === "Are Corbin and Parmida Still Together? Corbin Speaks Out") return "center 18%";
   if (story.title === "All About Zoey Deutch’s Fiancé, Jimmy Tatro") return "center 10%";
   if (story.title === "Inside Adéla’s Night Out in Paris With Wardrobe.NYC and H&M") return "center 8%";
   if (story.title === "Kate Middleton’s Style at Wimbledon Throughout the Years") return "center 5%";
   if (story.title === "Minka Kelly and Dan Reynolds’s Complete Relationship Timeline") return "center 18%";
+  if (peopleForwardBrands.has(story.brandSlug) && peopleForwardTopics.has(story.topic)) return "center 16%";
+  if (headCropRiskTerms.some((term) => title.includes(term))) return "center 16%";
   return "center";
 }
 
+function getLifestyleByline(story: LifestyleRiverStory) {
+  return story.byline || `${story.brand} editors`;
+}
+
 function LifestyleBrandSource({ story }: { story: LifestyleRiverStory }) {
+  const byline = getLifestyleByline(story);
+
   return (
-    <span className="inline-flex min-w-0 items-center gap-1.5 text-[length:var(--text-token-4xs)] text-muted-foreground">
+    <a
+      href={`/brands/${story.brandSlug}/`}
+      onClick={(event) => event.stopPropagation()}
+      onKeyDown={(event) => event.stopPropagation()}
+      className="inline-flex min-w-0 items-center gap-1.5 rounded-[4px] text-[length:var(--text-token-4xs)] text-muted-foreground transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+      aria-label={`Open ${story.brand} brand page`}
+    >
       <BrandSourceIcon brand={story.brand} brandSlug={story.brandSlug} />
       <span className="min-w-0 truncate">
-        {story.brand} · {story.topic} · {story.readTime}
+        {story.brand} · {story.topic} · {byline}
       </span>
-    </span>
+    </a>
   );
 }
 
@@ -1286,7 +1398,7 @@ const contextualAdCatalog = {
     ["ew-bike-fit", "Bicycling Fit Studio", "Dial In Your Bike Fit", "Fit tools, shoes, saddles, and gear surfaced for cycling and adventure intent.", "Tune fit", ["Gear", "Adventure", "Fitness"], ["bike", "cycling", "gear", "adventure"], "Bike", "#f2f8ff", "#102235", "#E50022", "#d8e9fb", "https://hips.hearstapps.com/hmg-prod/images/01074154-c6c1-4856-bca5-7ab2ea491991.jpeg"],
     ["ew-recovery-kit", "Recovery Desk", "Recovery That Fits Your Routine", "Sleep, mobility, massage, and recovery tools matched to wellness and fitness signals.", "Recover better", ["Wellness", "Fitness"], ["wellness", "recovery", "sleep", "health"], "Recover", "#f6f8fb", "#111b28", "#E50022", "#dfe8f1", "https://hips.hearstapps.com/hmg-prod/images/adventure-toys-for-kids-69a8a11950639.png"],
     ["ew-tech-kit", "Popular Mechanics Tested", "Gear That Solves the Problem", "Tech, tools, and tested equipment for science, mechanics, and gear browsing.", "See tested gear", ["Tech", "Gear"], ["tech", "gear", "science", "products"], "Tested", "#f3f6f7", "#121f25", "#E50022", "#dce6ea", "https://hips.hearstapps.com/hmg-prod/images/amazon-tech-products-2021-1635430982.jpg"],
-    ["ew-nutrition-plan", "Fuel Plan", "Nutrition for the Next Goal", "Meal, protein, hydration, and supplement signals for wellness and training readers.", "Build fuel plan", ["Nutrition", "Wellness", "Fitness"], ["nutrition", "food", "health", "training"], "Fuel", "#fff8ed", "#34220e", "#E50022", "#f2dfbd", "https://hips.hearstapps.com/hmg-prod/images/4446e948-4ffa-4a76-a3f2-06373961eb3f.jpg"],
+    ["ew-nutrition-plan", "Fuel Plan", "Nutrition for the Next Goal", "Meal, protein, hydration, and supplement signals for wellness and training readers.", "Build fuel plan", ["Nutrition", "Wellness", "Fitness"], ["nutrition", "food", "health", "training"], "Fuel", "#fff8ed", "#34220e", "#E50022", "#f2dfbd", "https://hips.hearstapps.com/hmg-prod/images/f0fa3667-bbf0-40c8-b8e9-e7bd5d82876d.jpg"],
     ["ew-adventure-pack", "Trail Kit", "Weekend Adventure Pack", "Bags, shoes, layers, and safety gear for readers signaling adventure and outdoor interest.", "Pack better", ["Adventure", "Gear"], ["adventure", "gear", "outdoor", "products"], "Trail", "#f4faef", "#142b16", "#E50022", "#dceccd", "https://hips.hearstapps.com/hmg-prod/images/dorm-room-ideas-681a6f88db8db.jpg"],
     ["ew-health-check", "Health Navigator", "Your Next Health Check", "Screenings, routines, and practical next steps aligned with health and life content.", "Make a plan", ["Wellness", "Life"], ["health", "wellness", "life", "sleep"], "Health", "#fff5f6", "#33080d", "#E50022", "#ffdce0", "https://hips.hearstapps.com/hmg-prod/images/pedaling-daniel-wakefield-pasley-1658942201.jpg"],
     ["ew-smartwatch", "Wearable Lab", "Track What Actually Matters", "Watch, heart-rate, and recovery tools matched to tech, fitness, and training sessions.", "Compare watches", ["Tech", "Fitness", "Gear"], ["tech", "fitness", "gear", "training"], "Track", "#f7f7ff", "#171730", "#E50022", "#e1e1fb", "https://hips.hearstapps.com/hmg-prod/images/b32ab90f-fef4-4582-a72f-d1a8621e1148.jpg"],
@@ -1384,71 +1496,84 @@ function ContextualRiverAdCard({
 }) {
   return (
     <article
-      className="grid min-w-0 overflow-hidden rounded-[8px] border border-border bg-background p-4 sm:grid-cols-[176px_minmax(0,1fr)] sm:gap-4"
+      className="grid min-w-0 overflow-hidden rounded-[8px] border border-border bg-background sm:grid-cols-[220px_minmax(0,1fr)]"
       aria-label={`Sponsored: ${ad.title}`}
+      style={{ backgroundColor: ad.palette.background, color: ad.palette.foreground }}
     >
-      <div
-        className="relative flex min-h-44 flex-col justify-between overflow-hidden rounded-[4px] p-4 text-sm sm:min-h-full"
-        style={{ backgroundColor: ad.palette.background, color: ad.palette.foreground }}
-      >
-        <div
-          role="img"
-          aria-label={`${ad.sponsor}: ${ad.title}`}
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url("${ad.imageUrl}")` }}
+      <div className="relative min-h-52 overflow-hidden sm:min-h-full">
+        <img
+          src={ad.imageUrl}
+          alt={`${ad.sponsor}: ${ad.title}`}
+          className="h-full w-full object-cover"
+          loading="lazy"
+          decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/20 to-black/70" />
-        <div className="relative flex items-center justify-between gap-3 text-white">
+        <div className="absolute inset-x-0 top-0 flex items-center justify-between gap-3 p-4 text-white">
           <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest">
             Sponsored
           </span>
           <span
-            className="flex h-9 w-9 items-center justify-center rounded-full text-xs font-black"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-xs font-black shadow-sm"
             style={{ backgroundColor: ad.palette.accent, color: "#fff" }}
           >
             AD
           </span>
         </div>
-        <div className="relative text-white">
+        <div className="absolute inset-x-0 bottom-0 p-4 text-white">
           <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest opacity-90">
             {ad.creativeLabel}
           </p>
-          <p className="mt-2 line-clamp-2 text-xs font-semibold leading-4 text-white/85">
-            Live-feed creative
+          <p className="mt-2 max-w-[12rem] text-sm font-bold leading-4 text-white">
+            Matched to this part of the river
           </p>
         </div>
       </div>
-      <div className="min-w-0 py-4 sm:py-0">
+      <div className="min-w-0 p-5 sm:p-6">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+          <span
+            className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest"
+            style={{ color: ad.palette.accent }}
+          >
             Contextual Ad
           </span>
-          <span className="rounded-full bg-muted px-2 py-0.5 text-[length:var(--text-token-4xs)] font-semibold text-muted-foreground">
+          <span
+            className="rounded-full px-2 py-0.5 text-[length:var(--text-token-4xs)] font-semibold"
+            style={{ backgroundColor: ad.palette.soft, color: ad.palette.foreground }}
+          >
             Slot {slotNumber}
           </span>
-          <span className="text-xs text-muted-foreground">{ad.sponsor}</span>
+          <span className="text-xs opacity-70">{ad.sponsor}</span>
         </div>
         <h2 className="headline mt-3 text-2xl leading-tight sm:text-3xl">
           {ad.title}
         </h2>
-        <p className="mt-3 hidden text-sm leading-6 text-muted-foreground sm:block">
+        <p className="mt-3 text-sm leading-6 opacity-80">
           {ad.summary}
         </p>
         <div className="mt-4 flex flex-wrap gap-1.5">
           {ad.topics.slice(0, 3).map((topic) => (
             <span
               key={topic}
-              className="rounded-full border border-border bg-muted/40 px-2 py-1 text-[length:var(--text-token-4xs)] font-semibold"
+              className="rounded-full border px-2 py-1 text-[length:var(--text-token-4xs)] font-semibold"
+              style={{
+                backgroundColor: "rgba(255, 255, 255, 0.38)",
+                borderColor: ad.palette.soft,
+                color: ad.palette.foreground,
+              }}
             >
               {topic}
             </span>
           ))}
         </div>
-        <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-border pt-4">
-          <Button variant="outline" size="xs">
+        <div
+          className="mt-5 flex flex-wrap items-center gap-3 border-t pt-4"
+          style={{ borderColor: ad.palette.soft }}
+        >
+          <Button variant="outline" size="xs" className="bg-background/80">
             {ad.cta}
           </Button>
-          <span className="text-xs text-muted-foreground">
+          <span className="text-xs opacity-70">
             Matched to intent score {score}
           </span>
         </div>
@@ -1457,11 +1582,220 @@ function ContextualRiverAdCard({
   );
 }
 
+const brandPromotionPriority = [
+  "elle",
+  "car-and-driver",
+  "delish",
+  "good-housekeeping",
+  "country-living",
+  "cosmopolitan",
+  "mens-health",
+  "esquire",
+  "harpers-bazaar",
+  "road-and-track",
+  "house-beautiful",
+  "prevention",
+  "seventeen",
+  "bicycling",
+  "oprah-daily",
+  "popular-mechanics",
+  "veranda",
+  "elle-decor",
+];
+
+type BrandPromotionMatch = {
+  brand: string;
+  brandSlug: string;
+  topics: string[];
+  stories: LifestyleRiverStory[];
+};
+
+function scoreBrandPromotionStory(story: LifestyleRiverStory, activeFilter: string) {
+  const topicScore = activeFilter !== "For You" && story.topic === activeFilter ? 120 : 0;
+  const popularityScore = story.popularity ?? 0;
+  const freshnessScore = Math.max(0, 40 - story.age);
+
+  return topicScore + popularityScore + freshnessScore;
+}
+
+function getBrandPromotionForSlot({
+  stories,
+  fallbackStories,
+  activeFilter,
+  slotNumber,
+  excludedBrandSlug,
+}: {
+  stories: LifestyleRiverStory[];
+  fallbackStories: LifestyleRiverStory[];
+  activeFilter: string;
+  slotNumber: number;
+  excludedBrandSlug?: string;
+}): BrandPromotionMatch | null {
+  const groups = new Map<string, BrandPromotionMatch>();
+  const candidateStories = excludedBrandSlug
+    ? fallbackStories.filter((story) => story.brandSlug !== excludedBrandSlug)
+    : stories;
+
+  candidateStories.forEach((story) => {
+    const existing = groups.get(story.brandSlug);
+    if (existing) {
+      existing.stories.push(story);
+      if (!existing.topics.includes(story.topic)) existing.topics.push(story.topic);
+      return;
+    }
+
+    groups.set(story.brandSlug, {
+      brand: story.brand,
+      brandSlug: story.brandSlug,
+      topics: [story.topic],
+      stories: [story],
+    });
+  });
+
+  const orderedGroups = Array.from(groups.values())
+    .map((group) => {
+      const storyPool = [...group.stories, ...fallbackStories.filter((story) => story.brandSlug === group.brandSlug)];
+      const selectedStories = storyPool
+        .filter((story, index, array) => array.findIndex((candidate) => candidate.id === story.id) === index)
+        .sort((a, b) => scoreBrandPromotionStory(b, activeFilter) - scoreBrandPromotionStory(a, activeFilter))
+        .slice(0, 4);
+
+      return {
+        ...group,
+        stories: selectedStories,
+        topics: Array.from(new Set(selectedStories.map((story) => story.topic))).slice(0, 4),
+      };
+    })
+    .filter((group) => group.stories.length >= 3)
+    .sort((a, b) => {
+      const aPriority = brandPromotionPriority.includes(a.brandSlug)
+        ? brandPromotionPriority.indexOf(a.brandSlug)
+        : brandPromotionPriority.length;
+      const bPriority = brandPromotionPriority.includes(b.brandSlug)
+        ? brandPromotionPriority.indexOf(b.brandSlug)
+        : brandPromotionPriority.length;
+
+      return aPriority - bPriority || a.brand.localeCompare(b.brand);
+    });
+
+  if (!orderedGroups.length) return null;
+
+  const promoIndex = Math.max(0, Math.floor(slotNumber / 2) - 1);
+  const selectedGroup = orderedGroups[promoIndex % orderedGroups.length];
+
+  return {
+    ...selectedGroup,
+  };
+}
+
+function BrandPromotionRiverModule({
+  promotion,
+  onOpenStory,
+}: {
+  promotion: BrandPromotionMatch;
+  onOpenStory: (storyId: string) => void;
+}) {
+  const [featuredStory, ...secondaryStories] = promotion.stories;
+  const topicSummary = promotion.topics.slice(0, 3).join(", ");
+
+  if (!featuredStory) return null;
+
+  return (
+    <section
+      className="min-w-0 overflow-hidden rounded-[8px] border border-border bg-background"
+      aria-label={`Brand spotlight: ${promotion.brand}`}
+    >
+      <div className="border-b border-border p-5 sm:p-6">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
+            <a
+              href={`/brands/${promotion.brandSlug}/`}
+              className="flex shrink-0 text-foreground transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+              aria-label={`${promotion.brand} brand page`}
+            >
+              <BrandLogo
+                slug={promotion.brandSlug}
+                color="currentColor"
+                className="[&_svg]:h-9 [&_svg]:w-auto [&_svg]:max-w-[180px]"
+              />
+            </a>
+            <span className="hidden h-10 w-px shrink-0 bg-border sm:block" aria-hidden />
+            <div className="min-w-0">
+              <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                Brand spotlight
+              </p>
+              <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                Follow {promotion.brand} for {topicSummary.toLowerCase()} picks and related stories inside this river.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="min-w-0 p-5 sm:p-6">
+        <div>
+          <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+            Related from {promotion.brand}
+          </p>
+          <p className="mt-1 text-sm leading-6 text-muted-foreground">
+            Current stories ranked by topic match, freshness, and reader intent.
+          </p>
+        </div>
+
+        <div className="mt-5 grid items-start gap-5 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1fr)]">
+          <button
+            type="button"
+            onClick={() => onOpenStory(featuredStory.id)}
+            className="group min-w-0 self-start text-left focus:outline-none focus:ring-2 focus:ring-primary/30"
+          >
+            <LifestyleRiverImage story={featuredStory} className="aspect-[4/3] w-full rounded-[8px]" />
+            <span className="mt-4 flex items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+              <BrandSourceIcon brand={featuredStory.brand} brandSlug={featuredStory.brandSlug} />
+              {getLifestyleKindLabel(getLifestyleCardKind(featuredStory), featuredStory)}
+            </span>
+            <span className="headline mt-2 block text-2xl leading-tight text-foreground">
+              {featuredStory.title}
+            </span>
+            <span className="mt-2 block text-sm leading-6 text-muted-foreground">
+              {featuredStory.summary}
+            </span>
+          </button>
+
+          <div className="divide-y divide-border">
+            {secondaryStories.map((story) => (
+              <button
+                key={story.id}
+                type="button"
+                onClick={() => onOpenStory(story.id)}
+                className="group grid w-full grid-cols-[88px_minmax(0,1fr)] gap-4 py-4 text-left first:pt-0 last:pb-0 focus:outline-none focus:ring-2 focus:ring-primary/30 sm:grid-cols-[112px_minmax(0,1fr)]"
+              >
+                <LifestyleRiverImage story={story} className="aspect-square w-full rounded-[8px]" />
+                <span className="min-w-0">
+                  <span className="flex items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                    <BrandSourceIcon brand={story.brand} brandSlug={story.brandSlug} />
+                    {getLifestyleKindLabel(getLifestyleCardKind(story), story)}
+                  </span>
+                  <span className="headline mt-1 block text-lg leading-tight text-foreground">
+                    {story.title}
+                  </span>
+                  <span className="mt-1 block text-xs leading-5 text-muted-foreground">
+                    {story.topic} · {getLifestyleByline(story)}
+                  </span>
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function getLifestyleCardKind(story: LifestyleRiverStory): LifestyleCardKind {
   const searchable = `${story.topic} ${story.title}`.toLowerCase();
 
   if (story.topic.startsWith("Food")) return "recipe";
-  if (story.topic === "Reviews" || story.topic === "EVs" || story.topic === "Performance") return "recipe";
+  if (isYearMakeModelStory(story)) return "recipe";
   if (/shopping|products|tested|best|buy|sale|deals|favorite|picks/.test(searchable)) return "shopping";
   if (story.topic === "Buying Guides" || story.topic === "Auctions") return "shopping";
   if (story.topic === "Entertainment" || /watch|video|tv|show|movie|internet/.test(searchable) || story.age % 7 === 0) return "video";
@@ -1470,8 +1804,24 @@ function getLifestyleCardKind(story: LifestyleRiverStory): LifestyleCardKind {
   return "article";
 }
 
+function isYearMakeModelStory(story: LifestyleRiverStory) {
+  const autosBrandSlugs = new Set([
+    "autoweek",
+    "bring-a-trailer",
+    "car-and-driver",
+    "hot-rod",
+    "motortrend",
+    "road-and-track",
+  ]);
+  const autosTopics = new Set(["Reviews", "EVs", "Performance", "Buying Guides"]);
+
+  if (!autosBrandSlugs.has(story.brandSlug) && !autosTopics.has(story.topic)) return false;
+
+  return /^(?:19|20)\d{2}\s+[A-Z0-9][A-Za-z0-9-]*(?:\s+[A-Z0-9][A-Za-z0-9-]*){1,6}\b/.test(story.title);
+}
+
 function getLifestyleKindLabel(kind: LifestyleCardKind, story?: LifestyleRiverStory) {
-  if (story && kind === "recipe" && !story.topic.startsWith("Food")) return "Specs";
+  if (story && kind === "recipe" && isYearMakeModelStory(story)) return "Specs";
   if (story && kind === "shopping" && !["Shopping", "Style"].includes(story.topic)) return "Guide";
 
   const labels = {
@@ -1483,6 +1833,31 @@ function getLifestyleKindLabel(kind: LifestyleCardKind, story?: LifestyleRiverSt
   };
 
   return labels[kind];
+}
+
+function LifestyleKindBadge({
+  kind,
+  story,
+}: {
+  kind: LifestyleCardKind;
+  story: LifestyleRiverStory;
+}) {
+  const label = getLifestyleKindLabel(kind, story);
+  const iconClassName = "h-3 w-3 shrink-0";
+  const icon = kind === "video"
+    ? <Play className={cn(iconClassName, "fill-current")} aria-hidden />
+    : kind === "gallery"
+      ? <ImageIcon className={iconClassName} aria-hidden />
+      : label === "Guide"
+        ? <ShoppingBag className={iconClassName} aria-hidden />
+        : null;
+
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2 py-0.5 text-[length:var(--text-token-4xs)] font-semibold uppercase tracking-widest text-muted-foreground">
+      {icon}
+      {label}
+    </span>
+  );
 }
 
 const lifestyleCardModelGuide: {
@@ -1763,36 +2138,19 @@ function LifestyleCardModule({
   story: LifestyleRiverStory;
   kind: LifestyleCardKind;
 }) {
-  const galleryCount = 6 + (story.age % 10);
   const recipeMinutes = 20 + ((story.age * 5) % 35);
   const productCount = 5 + (story.age % 8);
 
   if (kind === "gallery") {
-    return (
-      <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border pt-3 text-xs text-muted-foreground">
-        <span className="inline-flex items-center gap-1 font-semibold text-foreground">
-          <ImageIcon className="h-3.5 w-3.5" aria-hidden />
-          {galleryCount} photos
-        </span>
-        <span>Swipe-style visual story with editor captions.</span>
-      </div>
-    );
+    return null;
   }
 
   if (kind === "video") {
-    return (
-      <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border pt-3 text-xs text-muted-foreground">
-        <span className="inline-flex items-center gap-1 font-semibold text-foreground">
-          <Play className="h-3.5 w-3.5" aria-hidden />
-          Inline video
-        </span>
-        <span>Watch without leaving the river.</span>
-      </div>
-    );
+    return null;
   }
 
   if (kind === "recipe") {
-    if (!story.topic.startsWith("Food")) {
+    if (isYearMakeModelStory(story)) {
       return (
         <div className="mt-4 grid grid-cols-3 gap-2 border-t border-border pt-3 text-center text-xs">
           <div className="rounded-[8px] bg-muted px-2 py-2">
@@ -1850,15 +2208,7 @@ function LifestyleCardModule({
     );
   }
 
-  return (
-    <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border pt-3 text-xs text-muted-foreground">
-      <span className="inline-flex items-center gap-1 font-semibold text-foreground">
-        <Camera className="h-3.5 w-3.5" aria-hidden />
-        Editorial read
-      </span>
-      <span>Full story from {story.brand} editors.</span>
-    </div>
-  );
+  return null;
 }
 
 function LifestyleRiverCard({
@@ -1919,9 +2269,7 @@ function LifestyleRiverCard({
           <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
             {story.signal}
           </span>
-          <span className="rounded-full bg-muted px-2 py-0.5 text-[length:var(--text-token-4xs)] font-semibold uppercase tracking-widest text-muted-foreground">
-            {getLifestyleKindLabel(kind, story)}
-          </span>
+          <LifestyleKindBadge kind={kind} story={story} />
           <LifestyleBrandSource story={story} />
         </div>
         <h2 className={cn(
@@ -1931,8 +2279,8 @@ function LifestyleRiverCard({
           {story.title}
         </h2>
         <p className={cn(
-          "mt-3 text-muted-foreground",
-          featured ? "max-w-prose text-base leading-7" : "hidden text-sm leading-6 sm:block"
+          "text-muted-foreground",
+          featured ? "mt-3 max-w-prose text-base leading-7" : "mt-2 hidden text-sm leading-6 sm:block"
         )}>
           {story.summary}
         </p>
@@ -2052,11 +2400,11 @@ function LifestyleArticleRecommendationsModule({
         </p>
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1fr)]">
+      <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1fr)]">
         <button
           type="button"
           onClick={() => onOpenStory(featuredStory.id)}
-          className="group min-w-0 text-left focus:outline-none focus:ring-2 focus:ring-primary/30"
+          className="group min-w-0 self-start text-left focus:outline-none focus:ring-2 focus:ring-primary/30"
         >
           <LifestyleRiverImage story={featuredStory} className="aspect-[4/3] w-full rounded-[8px]" />
           <span className="mt-4 flex items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
@@ -2089,7 +2437,7 @@ function LifestyleArticleRecommendationsModule({
                   {story.title}
                 </span>
                 <span className="mt-1 block text-xs leading-5 text-muted-foreground">
-                  {story.brand} · {story.topic} · {story.readTime}
+                  {story.brand} · {story.topic} · {getLifestyleByline(story)}
                 </span>
               </span>
             </button>
@@ -2139,24 +2487,7 @@ function LifestyleReaderContextRail({
 
   return (
     <aside className="hidden xl:block" aria-label="Contextual story recommendations">
-      <div className="sticky top-20 max-h-[calc(100vh-7rem)] space-y-4 overflow-y-auto pr-1">
-        <div className="rounded-[8px] border border-border bg-muted/30 p-4">
-          <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
-            Reader Intent
-          </p>
-          <p className="mt-3 text-sm font-bold leading-5">{currentStory.topic}</p>
-          <div className="mt-3 flex flex-wrap gap-1.5">
-            {recommendations.intentTags.map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full border border-border bg-background px-2 py-1 text-[length:var(--text-token-4xs)] font-semibold text-muted-foreground"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
-
+      <div className="sticky top-20 max-h-[calc(100dvh-8.5rem)] space-y-4 overflow-y-auto overscroll-contain pb-12 pr-1">
         {modules.map((module) => (
           <div key={module.label} className="rounded-[8px] border border-border bg-background p-4">
             <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
@@ -2186,38 +2517,110 @@ function LifestyleReaderContextRail({
             </div>
           </div>
         ))}
+
+        <div className="rounded-[8px] border border-border bg-muted/30 p-4">
+          <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+            Reader Intent
+          </p>
+          <p className="mt-3 text-sm font-bold leading-5">{currentStory.topic}</p>
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {recommendations.intentTags.map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full border border-border bg-background px-2 py-1 text-[length:var(--text-token-4xs)] font-semibold text-muted-foreground"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
     </aside>
   );
 }
 
-function LifestyleReaderSidebarAd() {
-  const readerAdImageUrl = "https://hips.hearstapps.com/hmg-prod/images/bd62be17-e3bc-47ce-998b-df0fb3603b5b.jpeg";
+function getLifestyleReaderAd(currentStory: LifestyleRiverStory) {
+  const rankedAds = contextualAdsByDestination.all
+    .map((ad) => {
+      const topicScore = ad.topics.includes(currentStory.topic) ? 40 : 0;
+      const tagScore = ad.tags.filter((tag) => currentStory.tags.includes(tag)).length * 18;
+      const brandKeyword = currentStory.brand.toLowerCase().split(" ")[0] ?? "";
+      const brandSignalScore = brandKeyword && ad.sponsor.toLowerCase().includes(brandKeyword) ? 28 : 0;
+
+      return {
+        ad,
+        score: topicScore + tagScore + brandSignalScore,
+      };
+    })
+    .sort((a, b) => b.score - a.score || a.ad.id.localeCompare(b.ad.id));
+
+  return rankedAds[0]?.ad ?? contextualAdsByDestination.all[0];
+}
+
+function LifestyleReaderSidebarAd({ currentStory }: { currentStory: LifestyleRiverStory }) {
+  const ad = getLifestyleReaderAd(currentStory);
+
+  if (!ad) return null;
 
   return (
     <aside className="hidden lg:block" aria-label="Advertisement">
       <div
-        className="sticky top-20 flex h-[600px] w-[300px] flex-col overflow-hidden rounded-[8px] border border-[#d7c7b8] bg-[#fffaf4] bg-cover bg-center shadow-sm"
-        style={{ backgroundImage: `url("${readerAdImageUrl}")` }}
+        className="sticky top-20 flex h-[600px] w-[300px] flex-col overflow-hidden rounded-[8px] border border-border bg-background"
+        style={{ backgroundColor: ad.palette.background, color: ad.palette.foreground }}
       >
-        <div className="flex flex-1 flex-col justify-between bg-gradient-to-b from-[#fffaf4]/95 via-[#fffaf4]/70 to-[#3b1e2f]/80 p-6">
-          <div>
-            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-[0.24em] text-primary">
+        <div className="relative h-[268px] overflow-hidden border-b border-black/10">
+          <img
+            src={ad.imageUrl}
+            alt={`${ad.sponsor}: ${ad.title}`}
+            className="h-full w-full object-cover"
+            loading="lazy"
+            decoding="async"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/5 to-black/45" />
+          <div className="absolute inset-x-0 top-0 flex items-center justify-between p-5 text-white">
+            <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-[0.24em]">
               Advertisement
-            </p>
-            <p className="mt-8 font-brand-secondary text-4xl font-bold leading-none text-primary">
-              Make Room for Summer
-            </p>
-            <p className="mt-4 text-sm leading-6 text-muted-foreground">
-              Fresh furniture, cookware, linens, and garden finds selected for the season ahead.
+            </span>
+            <span className="rounded-full border border-white/50 bg-white/15 px-2 py-1 text-[10px] font-bold uppercase tracking-widest backdrop-blur">
+              {ad.creativeLabel}
+            </span>
+          </div>
+          <div className="absolute inset-x-0 bottom-0 p-5 text-white">
+            <p className="text-xs font-bold uppercase tracking-widest text-white/80">{ad.sponsor}</p>
+            <p className="mt-1 font-brand-secondary text-3xl font-bold leading-none text-white">
+              {ad.title}
             </p>
           </div>
-          <div className="space-y-4 text-white">
-            <div className="rounded-full bg-primary px-4 py-3 text-center text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary-foreground shadow-sm">
-              Explore the Edit
+        </div>
+
+        <div className="flex flex-1 flex-col justify-between p-6">
+          <div>
+            <p className="text-sm leading-6" style={{ color: ad.palette.foreground }}>
+              {ad.summary}
+            </p>
+            <div className="mt-5 flex flex-wrap gap-2">
+              {ad.topics.slice(0, 2).map((topic) => (
+                <span
+                  key={topic}
+                  className="rounded-full border px-2.5 py-1 text-xs font-semibold"
+                  style={{ borderColor: ad.palette.soft, backgroundColor: ad.palette.soft, color: ad.palette.foreground }}
+                >
+                  {topic}
+                </span>
+              ))}
             </div>
-            <p className="text-center text-[length:var(--text-token-4xs)] uppercase tracking-widest text-white/85">
-              300 x 600 Sponsored Unit
+          </div>
+
+          <div className="space-y-4">
+            <button
+              type="button"
+              className="w-full rounded-full px-4 py-3 text-center text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest transition-transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-primary/30 active:translate-y-0"
+              style={{ backgroundColor: ad.palette.accent, color: "#fff" }}
+            >
+              {ad.cta}
+            </button>
+            <p className="text-center text-[length:var(--text-token-4xs)] font-semibold uppercase tracking-widest" style={{ color: ad.palette.foreground }}>
+              Matched to {currentStory.topic} intent
             </p>
           </div>
         </div>
@@ -2335,9 +2738,7 @@ function LifestyleStoryReaderModal({
                       <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
                         {story.signal}
                       </span>
-                      <span className="rounded-full bg-muted px-2 py-0.5 text-[length:var(--text-token-4xs)] font-semibold uppercase tracking-widest text-muted-foreground">
-                        {getLifestyleKindLabel(kind, story)}
-                      </span>
+                      <LifestyleKindBadge kind={kind} story={story} />
                       <LifestyleBrandSource story={story} />
                     </div>
                     <h2 className="headline text-4xl leading-tight sm:text-5xl">
@@ -2368,7 +2769,7 @@ function LifestyleStoryReaderModal({
               )}
             </div>
           </div>
-          <LifestyleReaderSidebarAd />
+          <LifestyleReaderSidebarAd currentStory={storyQueue[0]} />
         </div>
       </div>
     </div>
@@ -2488,6 +2889,9 @@ function LifestylePersonalizationDemoPanel({
 }) {
   const activeDaypart = config.dayparts[demoState.daypart];
   const topBreakdown = topStory ? getLifestyleScoreBreakdown(topStory, profile, demoState, config) : null;
+  const topStrategyReason = topStory && topBreakdown
+    ? getLifestyleStrategyReason(topStory, topBreakdown, demoState, config)
+    : null;
 
   return (
     <section className="rounded-[8px] border border-border bg-muted/25" aria-label="Personalization demo controls">
@@ -2502,8 +2906,9 @@ function LifestylePersonalizationDemoPanel({
                 Show how the river changes when the reader comes back.
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-                This is a deterministic POC model. It re-ranks the same story pool using recency,
-                popularity, time of day, followed brands, saved tags, and observed behavior.
+                This demo follows the product strategy for a daily destination: keep the first visit
+                editorially useful, then refresh the lead on return visits using recency, daypart
+                mission, reader intent, and diversity rules.
               </p>
             </div>
             <Button variant="outline" size="xs" onClick={onResetDemo}>
@@ -2534,6 +2939,10 @@ function LifestylePersonalizationDemoPanel({
               </div>
               <p className="mt-3 text-sm font-bold">{activeDaypart.label}</p>
               <p className="mt-1 text-xs leading-5 text-muted-foreground">{activeDaypart.description}</p>
+              <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                Changing the hour simulates a return visit, so the previous lead is deprioritized and a
+                fresher story that fits the moment can move up.
+              </p>
             </div>
 
             <div>
@@ -2616,7 +3025,20 @@ function LifestylePersonalizationDemoPanel({
                   <dt className="text-muted-foreground">Daypart</dt>
                   <dd className="font-bold">{topBreakdown.timeOfDay}</dd>
                 </div>
+                <div className="bg-background p-2">
+                  <dt className="text-muted-foreground">Fresh return</dt>
+                  <dd className="font-bold">{topBreakdown.returnFreshness}</dd>
+                </div>
+                <div className="bg-background p-2">
+                  <dt className="text-muted-foreground">Repeat guard</dt>
+                  <dd className="font-bold">{topBreakdown.repeatLeadPenalty}</dd>
+                </div>
               </dl>
+              {topStrategyReason ? (
+                <p className="text-xs leading-5 text-muted-foreground">
+                  Strategy link: {topStrategyReason}.
+                </p>
+              ) : null}
               <p className="rounded-[8px] bg-primary px-3 py-2 text-center text-sm font-bold text-primary-foreground">
                 Total score {topBreakdown.total}
               </p>
@@ -3262,11 +3684,22 @@ function LifestyleRiverHomePage({
 
               {riverStories.map((story, index) => {
                 const storyPosition = index + 2;
-                const shouldShowAdAfterStory = storyPosition % 5 === 0;
-                const adMatch = shouldShowAdAfterStory
+                const shouldShowFeedModule = storyPosition % 5 === 0;
+                const moduleSlotNumber = storyPosition / 5;
+                const shouldShowBrandPromotion = shouldShowFeedModule && moduleSlotNumber % 2 === 0;
+                const brandPromotion = shouldShowBrandPromotion
+                  ? getBrandPromotionForSlot({
+                      stories: filteredStories,
+                      fallbackStories: rankedStories,
+                      activeFilter,
+                      slotNumber: moduleSlotNumber,
+                      excludedBrandSlug: initialBrandSlug,
+                    })
+                  : null;
+                const adMatch = shouldShowFeedModule && !shouldShowBrandPromotion
                   ? getContextualAdForSlot({
                       destination,
-                      slotIndex: storyPosition / 5 - 1,
+                      slotIndex: moduleSlotNumber - 1,
                       profile,
                       demoState,
                       config,
@@ -3290,7 +3723,13 @@ function LifestyleRiverHomePage({
                       <ContextualRiverAdCard
                         ad={adMatch.ad}
                         score={adMatch.score}
-                        slotNumber={storyPosition / 5}
+                        slotNumber={moduleSlotNumber}
+                      />
+                    ) : null}
+                    {brandPromotion ? (
+                      <BrandPromotionRiverModule
+                        promotion={brandPromotion}
+                        onOpenStory={setOpenStoryId}
                       />
                     ) : null}
                   </React.Fragment>
@@ -3417,7 +3856,15 @@ function LifestyleRiverHomePage({
         config={config}
         activeFilter={activeFilter}
         stories={visibleStories}
-        onDaypartChange={(daypart) => setDemoState((current) => ({ ...current, daypart }))}
+        onDaypartChange={(daypart) =>
+          setDemoState((current) => ({
+            ...current,
+            daypart,
+            returnHours: demoDaypartReturnHours[daypart],
+            contentDay: "today",
+            previousLeadId: leadStory?.id ?? current.previousLeadId,
+          }))
+        }
         onSimulateReturn={simulateReturn}
         onApplyBehaviorPreset={applyBehaviorPreset}
         onResetDemo={resetDemo}

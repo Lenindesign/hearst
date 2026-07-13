@@ -7,6 +7,7 @@ export type LifestyleRiverStory = {
   summary: string;
   image: string;
   imageCredit?: string;
+  byline?: string;
   readTime: string;
   popularity: number;
   signal: "Most Popular" | "Trending" | "Editor Pick" | "Continue";
