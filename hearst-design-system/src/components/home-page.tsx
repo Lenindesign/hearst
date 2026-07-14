@@ -2864,6 +2864,7 @@ function TodayEditDashboard({
       label: "Continue Reading",
       title: continueStory.title,
       meta: `${continueStory.brand} · ${continueStory.readTime}`,
+      image: continueStory.image,
       action: "Resume story",
       onClick: () => onOpenStory(continueStory.id),
     },
@@ -2871,6 +2872,7 @@ function TodayEditDashboard({
       label: "New From Your Brands",
       title: followedBrandStory.title,
       meta: profile.followedBrands.slice(0, 2).join(", "),
+      image: followedBrandStory.image,
       action: "Show my brands",
       onClick: onShowFollowedBrands,
     },
@@ -2878,6 +2880,7 @@ function TodayEditDashboard({
       label: "Trending Today",
       title: trendingStory.title,
       meta: `${trendingStory.popularity} popularity · ${trendingStory.topic}`,
+      image: trendingStory.image,
       action: "Open trend",
       onClick: () => onOpenStory(trendingStory.id),
     },
@@ -2885,6 +2888,7 @@ function TodayEditDashboard({
       label: "Your Collections",
       title: collectionStory.title,
       meta: `${profile.savedTags.slice(0, 3).join(", ")}`,
+      image: collectionStory.image,
       action: "Open collection pick",
       onClick: () => onOpenStory(collectionStory.id),
     },
@@ -2907,8 +2911,17 @@ function TodayEditDashboard({
               <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
                 {module.label}
               </span>
-              <span className="mt-3 block text-base font-bold leading-snug text-foreground">
-                {module.title}
+              <span className="mt-3 flex items-start gap-3">
+                {module.image ? (
+                  <span
+                    aria-hidden="true"
+                    className="mt-0.5 block h-16 w-20 shrink-0 rounded-[8px] bg-muted bg-cover bg-center"
+                    style={{ backgroundImage: `url("${module.image}")` }}
+                  />
+                ) : null}
+                <span className="block min-w-0 text-sm font-bold leading-snug text-foreground">
+                  {module.title}
+                </span>
               </span>
               <span className="mt-2 block text-xs leading-5 text-muted-foreground">
                 {module.meta}
@@ -3372,7 +3385,7 @@ function LifestyleLeftSidebar({
       </MobileCollapsibleSidebarCard>
 
       <MobileCollapsibleSidebarCard
-        title="Your Daily Edit"
+        title="Your Daily Habit"
         summary={topStories[0]?.title || "Top stories ready"}
         className="hidden lg:block"
       >
