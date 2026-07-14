@@ -946,9 +946,7 @@ function MainNav({
 
   const logoColor = selectedBrand
     ? colorMode === "dark" ? "#ffffff" : "#121212"
-    : isDestinationRiver
-      ? colorMode === "dark" ? "var(--brand-primary)" : brand.colors["1"]
-      : undefined;
+    : undefined;
 
   const renderMastheadLogo = (compact: boolean) => logo ? (
     <BrandLogo
@@ -962,8 +960,8 @@ function MainNav({
               ? "[&_svg]:h-7 sm:[&_svg]:h-9 [&_svg]:max-w-[160px] sm:[&_svg]:max-w-[300px]"
               : "[&_svg]:h-10 sm:[&_svg]:h-14 [&_svg]:max-w-[240px] sm:[&_svg]:max-w-[460px]"
             : compact
-              ? "[&_svg]:h-[27px] sm:[&_svg]:h-[30px] [&_svg]:max-w-[190px] sm:[&_svg]:max-w-[355px]"
-              : "[&_svg]:h-9 sm:[&_svg]:h-[45px] [&_svg]:max-w-[265px] sm:[&_svg]:max-w-[525px]"
+              ? "[&_svg]:h-[20px] sm:[&_svg]:h-[23px] [&_svg]:max-w-[143px] sm:[&_svg]:max-w-[266px]"
+              : "[&_svg]:h-[27px] sm:[&_svg]:h-[34px] [&_svg]:max-w-[199px] sm:[&_svg]:max-w-[394px]"
           : "[&_svg]:h-10"
       )}
     />
