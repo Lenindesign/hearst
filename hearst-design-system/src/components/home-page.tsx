@@ -955,7 +955,7 @@ function MainNav({
       slug={mastheadSlug}
       color={logoColor}
       className={cn(
-        "mx-auto inline-flex [&_svg]:w-auto motion-reduce:[&_svg]:transition-none",
+        "mx-auto flex items-center justify-center leading-none [&_svg]:block [&_svg]:w-auto motion-reduce:[&_svg]:transition-none",
         isDestinationRiver
           ? selectedBrand
             ? compact
@@ -1031,7 +1031,7 @@ function MainNav({
             {colorMode === "dark" ? <Sun className="h-4 w-4" aria-hidden /> : <Moon className="h-4 w-4" aria-hidden />}
           </Button>
         </div>
-        <div className="text-center">
+        <div className="flex min-w-0 justify-center">
           {renderMastheadLogo(false)}
         </div>
         <div className="flex w-[var(--width-sidebar-narrow)] justify-end">
