@@ -814,6 +814,12 @@ const hearstDestinationSections = [
   { label: "E&W", href: "/hearst-ew/" },
 ];
 
+const hearstDestinationNavHrefs = new Map(
+  hearstDestinationSections
+    .filter((section) => section.label !== "All")
+    .map((section) => [section.label, section.href])
+);
+
 function UtilityBar({ selectedBrand }: { selectedBrand?: { name: string; slug: string } | null }) {
   const { brand } = useTheme();
   const selectedDestination = selectedBrand ? getStoryDestinationMode(selectedBrand.slug) : null;
@@ -920,7 +926,11 @@ function MainNav({
     let frame = 0;
     const updateMasthead = () => {
       frame = 0;
-      setMastheadCompact(window.scrollY > 12);
+      setMastheadCompact((current) => {
+        if (window.scrollY >= 128) return true;
+        if (window.scrollY <= 64) return false;
+        return current;
+      });
     };
     const onScroll = () => {
       if (!frame) frame = window.requestAnimationFrame(updateMasthead);
@@ -934,14 +944,81 @@ function MainNav({
     };
   }, []);
 
+  const logoColor = selectedBrand
+    ? colorMode === "dark" ? "#ffffff" : "#121212"
+    : isDestinationRiver
+      ? colorMode === "dark" ? "var(--brand-primary)" : brand.colors["1"]
+      : undefined;
+
+  const renderMastheadLogo = (compact: boolean) => logo ? (
+    <BrandLogo
+      slug={mastheadSlug}
+      color={logoColor}
+      className={cn(
+        "mx-auto inline-flex [&_svg]:w-auto motion-reduce:[&_svg]:transition-none",
+        isDestinationRiver
+          ? selectedBrand
+            ? compact
+              ? "[&_svg]:h-7 sm:[&_svg]:h-9 [&_svg]:max-w-[160px] sm:[&_svg]:max-w-[300px]"
+              : "[&_svg]:h-10 sm:[&_svg]:h-14 [&_svg]:max-w-[240px] sm:[&_svg]:max-w-[460px]"
+            : compact
+              ? "[&_svg]:h-[27px] sm:[&_svg]:h-[30px] [&_svg]:max-w-[190px] sm:[&_svg]:max-w-[355px]"
+              : "[&_svg]:h-9 sm:[&_svg]:h-[45px] [&_svg]:max-w-[265px] sm:[&_svg]:max-w-[525px]"
+          : "[&_svg]:h-10"
+      )}
+    />
+  ) : (
+    <h1 className="text-2xl tracking-widest uppercase headline">
+      {brand.name}
+    </h1>
+  );
+
+  const renderNavLinks = () => navLinks.map((link) => {
+    const active = activeFilter === link;
+    const destinationHref = brand.slug === "hearst-all" ? hearstDestinationNavHrefs.get(link) : undefined;
+
+    return destinationHref ? (
+      <LinkComponent
+        key={link}
+        href={destinationHref}
+        variant="neutral"
+        underline={false}
+        size="sm"
+        className="whitespace-nowrap border-b-2 border-transparent px-0.5 pb-1 font-normal text-foreground hover:border-primary/40 hover:text-primary hover:no-underline"
+      >
+        {link}
+      </LinkComponent>
+    ) : isDestinationRiver ? (
+      <button
+        key={link}
+        type="button"
+        onClick={() => onFilterChange?.(link)}
+        className={cn(
+          "whitespace-nowrap border-b-2 border-transparent px-0.5 pb-1 text-sm font-normal transition-colors",
+          active
+            ? "border-primary font-semibold text-primary"
+            : "text-foreground hover:border-primary/40 hover:text-primary"
+        )}
+        aria-pressed={active}
+      >
+        {link}
+      </button>
+    ) : (
+      <LinkComponent
+        key={link}
+        variant="neutral"
+        underline={false}
+        size="sm"
+        className="whitespace-nowrap font-normal"
+      >
+        {link}
+      </LinkComponent>
+    );
+  });
+
   return (
     <>
-    <div
-      className={cn(
-        "flex border-b border-border transition-[height] duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] motion-reduce:transition-none",
-        mastheadCompact ? "h-14 sm:h-16" : "h-20 sm:h-24"
-      )}
-    >
+    <div className="flex h-20 border-b border-border sm:h-24">
       <PageContainer className="flex items-center justify-between">
         <div className="flex w-[var(--width-sidebar-narrow)] justify-start">
           <Button
@@ -955,32 +1032,7 @@ function MainNav({
           </Button>
         </div>
         <div className="text-center">
-          {logo ? (
-            <BrandLogo
-              slug={mastheadSlug}
-              color={selectedBrand
-                ? colorMode === "dark" ? "#ffffff" : "#121212"
-                : isDestinationRiver
-                  ? colorMode === "dark" ? "var(--brand-primary)" : brand.colors["1"]
-                  : undefined}
-              className={cn(
-                "mx-auto inline-flex [&_svg]:w-auto [&_svg]:transition-[height,max-width] [&_svg]:duration-300 [&_svg]:ease-[cubic-bezier(0.25,1,0.5,1)] motion-reduce:[&_svg]:transition-none",
-                isDestinationRiver
-                  ? selectedBrand
-                    ? mastheadCompact
-                      ? "[&_svg]:h-7 sm:[&_svg]:h-9 [&_svg]:max-w-[160px] sm:[&_svg]:max-w-[300px]"
-                      : "[&_svg]:h-10 sm:[&_svg]:h-14 [&_svg]:max-w-[240px] sm:[&_svg]:max-w-[460px]"
-                    : mastheadCompact
-                      ? "[&_svg]:h-5 sm:[&_svg]:h-6 [&_svg]:max-w-[160px] sm:[&_svg]:max-w-[340px]"
-                      : "[&_svg]:h-8 sm:[&_svg]:h-9 [&_svg]:max-w-[240px] sm:[&_svg]:max-w-[520px]"
-                  : "[&_svg]:h-10"
-              )}
-            />
-          ) : (
-            <h1 className="text-2xl tracking-widest uppercase headline">
-              {brand.name}
-            </h1>
-          )}
+          {renderMastheadLogo(false)}
         </div>
         <div className="flex w-[var(--width-sidebar-narrow)] justify-end">
           <Button variant="outline" size="icon-sm" aria-label="Search" title="Search">
@@ -991,37 +1043,48 @@ function MainNav({
     </div>
     <div className={cn("border-b border-border", isDestinationRiver && "sticky top-0 z-30 bg-background/95 backdrop-blur md:static md:bg-background md:backdrop-blur-none")}>
       <PageContainer as="nav" className="flex items-center justify-start gap-6 overflow-x-auto py-2 scrollbar-hide md:justify-center">
-        {navLinks.map((link) => {
-          const active = activeFilter === link;
-
-          return isDestinationRiver ? (
-            <button
-              key={link}
-              type="button"
-              onClick={() => onFilterChange?.(link)}
-              className={cn(
-                "whitespace-nowrap border-b-2 border-transparent px-0.5 pb-1 text-sm font-normal transition-colors",
-                active
-                  ? "border-primary font-semibold text-primary"
-                  : "text-foreground hover:border-primary/40 hover:text-primary"
-              )}
-              aria-pressed={active}
-            >
-              {link}
-            </button>
-          ) : (
-            <LinkComponent
-              key={link}
-              variant="neutral"
-              underline={false}
-              size="sm"
-              className="whitespace-nowrap font-normal"
-            >
-              {link}
-            </LinkComponent>
-          );
-        })}
+        {renderNavLinks()}
       </PageContainer>
+    </div>
+    <div
+      aria-hidden={!mastheadCompact}
+      inert={!mastheadCompact}
+      className={cn(
+        "pointer-events-none fixed inset-x-0 top-0 z-40 hidden -translate-y-2 transform-gpu border-b border-border bg-background/98 opacity-0 transition-[opacity,transform] duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none md:block",
+        mastheadCompact && "pointer-events-auto translate-y-0 opacity-100"
+      )}
+    >
+      <PageContainer className="grid h-16 grid-cols-[var(--width-sidebar-narrow)_minmax(0,1fr)_var(--width-sidebar-narrow)] items-center">
+        <div className="flex justify-start">
+          <Button
+            variant="outline"
+            size="icon-sm"
+            onClick={toggleColorMode}
+            aria-label={`Switch to ${colorMode === "dark" ? "light" : "dark"} mode`}
+            title={`Switch to ${colorMode === "dark" ? "light" : "dark"} mode`}
+          >
+            {colorMode === "dark" ? <Sun className="h-4 w-4" aria-hidden /> : <Moon className="h-4 w-4" aria-hidden />}
+          </Button>
+        </div>
+        <div
+          className={cn(
+            "text-center transition-transform duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
+            mastheadCompact ? "scale-100" : "scale-125"
+          )}
+        >
+          {renderMastheadLogo(true)}
+        </div>
+        <div className="flex justify-end">
+          <Button variant="outline" size="icon-sm" aria-label="Search" title="Search">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          </Button>
+        </div>
+      </PageContainer>
+      <div className="border-t border-border">
+        <PageContainer as="nav" className="flex items-center justify-center gap-6 overflow-x-auto py-2 scrollbar-hide">
+          {renderNavLinks()}
+        </PageContainer>
+      </div>
     </div>
     </>
   );
@@ -2274,7 +2337,7 @@ function LifestyleRiverCard({
         </div>
         <h2 className={cn(
           "headline break-words leading-tight",
-          featured ? "w-full text-3xl sm:text-4xl lg:text-5xl" : "text-xl sm:text-2xl"
+          featured ? "w-full text-3xl sm:text-[2rem] lg:text-4xl" : "text-xl sm:text-2xl"
         )}>
           {story.title}
         </h2>
