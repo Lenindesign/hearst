@@ -37,3 +37,11 @@ export const brandLogos: Record<string, string> = {
   "womans-day": "/logos/womans.svg",
   "womens-health": "/logos/womenshealth.svg",
 };
+
+export const brandIconLogos: Partial<Record<string, string>> = {
+  "road-and-track": "/logos/roadandtrack-lettermark.svg",
+};
+
+export function getBrandLogoSrc(slug: string, variant: "logo" | "icon" = "logo") {
+  return variant === "icon" ? brandIconLogos[slug] ?? brandLogos[slug] : brandLogos[slug];
+}

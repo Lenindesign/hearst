@@ -568,6 +568,7 @@ function BrandAvatar({ slug, size = "md" }: { slug: string; size?: "sm" | "md" |
       ) : hasSvgLogo ? (
         <BrandLogo
           slug={slug}
+          variant="icon"
           className={cn(
             "block [&_svg]:w-auto [&_svg]:text-current",
             size === "sm" && "[&_svg]:h-3 [&_svg]:max-w-5",

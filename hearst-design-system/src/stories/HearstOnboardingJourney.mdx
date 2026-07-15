@@ -1,0 +1,266 @@
+import { Meta } from "@storybook/blocks";
+import { hearstPlusLightVars } from "../lib/hearst-plus-theme";
+
+<Meta title="Apps/Hearst Plus/Onboarding Journey" />
+
+export const journeySteps = [
+  {
+    phase: "Entry",
+    title: "Create Account",
+    screen: "Top utility bar",
+    userNeed: "Understand why an account is useful before committing.",
+    productJob: "Position the account as personalization memory, not a paywall.",
+    primaryAction: "Create Account",
+    detail: "The top bar CTA opens the onboarding without interrupting reading until the user asks for it.",
+  },
+  {
+    phase: "Promise",
+    title: "Your daily Hearst feed, tuned to you.",
+    screen: "Welcome modal",
+    userNeed: "Know what Hearst Plus is and why it is worth a few setup steps.",
+    productJob: "Explain the scale: thousands of stories, 29 brands, one personalized place.",
+    primaryAction: "Personalize My Feed",
+    detail: "This step introduces the value prop and lists what the account saves: topics, brands, saved stories, continue reading, and comment identity.",
+  },
+  {
+    phase: "Signals",
+    title: "What should your feed learn first?",
+    screen: "Interest picker",
+    userNeed: "Tell the product what they want without a long survey.",
+    productJob: "Collect first-party intent signals for the For You ranking model.",
+    primaryAction: "Continue",
+    detail: "The user chooses at least 3 interests. The button stays disabled until the selection has enough signal.",
+  },
+  {
+    phase: "Trust",
+    title: "Follow brands you trust.",
+    screen: "Brand picker",
+    userNeed: "Keep trusted publisher voices in the feed while still discovering across Hearst.",
+    productJob: "Give the ranker brand affinity without making the app brand-first.",
+    primaryAction: "Follow Selected",
+    detail: "The user chooses at least 2 brands. Each brand shows a logo and story count so the choice feels grounded.",
+  },
+  {
+    phase: "Account Value",
+    title: "Create a free account to save your feed.",
+    screen: "Account value step",
+    userNeed: "Understand the difference between continuing anonymously and creating an account.",
+    productJob: "Convert with clear utility: saved feed, followed topics, saved stories, comments, and cross-device continuation.",
+    primaryAction: "Create Free Account",
+    detail: "The selected interests and brands are played back as the user's first preferences before they choose an account action.",
+  },
+  {
+    phase: "Return",
+    title: "Your feed is ready.",
+    screen: "Confirmation",
+    userNeed: "Know setup worked and return to reading quickly.",
+    productJob: "Close the loop and apply the new personalization state to the feed.",
+    primaryAction: "Start Reading",
+    detail: "The modal closes and the homepage updates the visible behavior model and recommendations.",
+  },
+];
+
+export const styles = {
+  shell: {
+    ...hearstPlusLightVars,
+    background: "var(--hp-background)",
+    color: "var(--hp-text-primary)",
+    borderRadius: 8,
+    padding: 24,
+    margin: "24px 0",
+    fontFamily: "var(--hp-font-ui)",
+  },
+  intro: {
+    display: "grid",
+    gridTemplateColumns: "minmax(0, 1.2fr) minmax(260px, 0.8fr)",
+    gap: 20,
+    alignItems: "stretch",
+  },
+  card: {
+    border: "1px solid var(--hp-border)",
+    borderRadius: 8,
+    background: "var(--hp-surface)",
+    padding: 18,
+  },
+  smallLabel: {
+    color: "var(--hp-signal)",
+    fontSize: 11,
+    fontWeight: 900,
+    letterSpacing: "0.12em",
+    textTransform: "uppercase",
+  },
+  headline: {
+    fontFamily: "var(--hp-font-headline)",
+    fontWeight: 700,
+    fontSize: 42,
+    lineHeight: 1.02,
+    letterSpacing: 0,
+    margin: "8px 0 0",
+    color: "var(--hp-text-headline)",
+  },
+  body: {
+    color: "var(--hp-text-secondary)",
+    fontSize: 15,
+    lineHeight: 1.65,
+    margin: "12px 0 0",
+  },
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+    gap: 12,
+    marginTop: 18,
+  },
+  flow: {
+    display: "grid",
+    gap: 14,
+    marginTop: 22,
+  },
+  step: {
+    display: "grid",
+    gridTemplateColumns: "92px minmax(0, 1fr) minmax(220px, 0.55fr)",
+    gap: 16,
+    alignItems: "start",
+    border: "1px solid var(--hp-border)",
+    borderRadius: 8,
+    background: "var(--hp-surface)",
+    padding: 16,
+  },
+  phase: {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: 34,
+    borderRadius: 8,
+    background: "var(--hp-primary)",
+    color: "var(--hp-primary-foreground)",
+    fontSize: 11,
+    fontWeight: 900,
+    letterSpacing: "0.08em",
+    textTransform: "uppercase",
+    padding: "0 10px",
+  },
+  title: {
+    fontFamily: "var(--hp-font-headline)",
+    fontSize: 25,
+    lineHeight: 1.08,
+    margin: 0,
+    color: "var(--hp-text-headline)",
+  },
+  meta: {
+    color: "var(--hp-text-secondary)",
+    fontSize: 13,
+    lineHeight: 1.55,
+    margin: "8px 0 0",
+  },
+  action: {
+    display: "inline-flex",
+    width: "fit-content",
+    borderRadius: 8,
+    background: "var(--hp-action)",
+    color: "var(--hp-action-text)",
+    fontSize: 12,
+    fontWeight: 900,
+    padding: "9px 12px",
+    marginTop: 10,
+  },
+  preview: {
+    border: "1px solid var(--hp-border)",
+    borderRadius: 8,
+    background: "var(--hp-control)",
+    padding: 12,
+  },
+  chip: {
+    display: "inline-flex",
+    borderRadius: 8,
+    background: "var(--hp-chip)",
+    color: "var(--hp-text-chip)",
+    fontSize: 11,
+    fontWeight: 800,
+    padding: "6px 8px",
+    margin: "4px 4px 0 0",
+  },
+};
+
+# Hearst Plus Sign-Up Onboarding Journey
+
+This journey frames sign-up as a way to save personalization, not as a subscription wall. The goal is to make the reader think:
+
+> Hearst Plus understands what I care about and will get better each time I use it.
+
+<div className="hearst-plus-theme" data-mode="light" style={styles.shell}>
+
+  <div style={styles.intro}>
+    <div style={styles.card}>
+      <div style={styles.smallLabel}>Journey Objective</div>
+      <h2 style={styles.headline}>Turn first visit interest into a saved daily habit.</h2>
+      <p style={styles.body}>
+        The onboarding should make the value clear before asking for account creation: thousands of stories from 29 Hearst brands, organized around the reader's interests in one place.
+      </p>
+    </div>
+    <div style={styles.card}>
+      <div style={styles.smallLabel}>Success Signal</div>
+      <p style={{ ...styles.body, marginTop: 8 }}>
+        A user finishes setup with followed interests, followed brands, saved personalization, and a clear path back to reading.
+      </p>
+      <div style={{ marginTop: 12 }}>
+        {["Interests", "Brands", "Saved feed", "Comments", "Continue reading"].map((chip) => (
+          <span key={chip} style={styles.chip}>{chip}</span>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <div style={styles.grid}>
+    <div style={styles.card}>
+      <div style={styles.smallLabel}>Free</div>
+      <p style={{ ...styles.body, marginTop: 8 }}>
+        Browse the river, open stories, and preview recommendations without an account.
+      </p>
+    </div>
+    <div style={styles.card}>
+      <div style={styles.smallLabel}>Signed-In Free</div>
+      <p style={{ ...styles.body, marginTop: 8 }}>
+        Save preferences, collections, comments, and continue reading across sessions.
+      </p>
+    </div>
+    <div style={styles.card}>
+      <div style={styles.smallLabel}>Premium Later</div>
+      <p style={{ ...styles.body, marginTop: 8 }}>
+        Keep pay value separate: fewer interruptions, premium editions, deeper utilities, and special content.
+      </p>
+    </div>
+  </div>
+
+  <div style={styles.flow}>
+    {journeySteps.map((step, index) => (
+      <section key={step.title} style={styles.step}>
+        <div>
+          <span style={styles.phase}>{index + 1}. {step.phase}</span>
+        </div>
+        <div>
+          <p style={styles.smallLabel}>{step.screen}</p>
+          <h3 style={styles.title}>{step.title}</h3>
+          <p style={styles.meta}><strong>User need:</strong> {step.userNeed}</p>
+          <p style={styles.meta}><strong>Product job:</strong> {step.productJob}</p>
+          <span style={styles.action}>{step.primaryAction}</span>
+        </div>
+        <div style={styles.preview}>
+          <p style={styles.smallLabel}>Preview Notes</p>
+          <p style={styles.meta}>{step.detail}</p>
+        </div>
+      </section>
+    ))}
+  </div>
+
+  <div style={{ ...styles.card, marginTop: 22 }}>
+    <div style={styles.smallLabel}>Recommended Next Iteration</div>
+    <h3 style={{ ...styles.title, marginTop: 8 }}>Add one lightweight social proof moment.</h3>
+    <p style={styles.body}>
+      After the brand step, we can show a short line like "Readers who follow Country Living and Autoweek often save Home, Fitness, and Reviews." That reinforces the interest graph without making the setup feel algorithmic.
+    </p>
+  </div>
+</div>
+
+## Live Prototype Path
+
+Preview the working modal in the browser at `/hearst-all/` by clicking **Create Account** in the top utility bar.

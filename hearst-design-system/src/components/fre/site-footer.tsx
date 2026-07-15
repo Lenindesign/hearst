@@ -118,7 +118,7 @@ export function SiteFooter({
         </div>
       </div>
       <p className="mt-3 max-w-3xl text-[length:var(--text-token-4xs)] leading-relaxed text-background/55">
-        This app is for prototyping purposes only.
+        Personalized daily reading experiences across Hearst Magazine Media brands.
       </p>
       <div className="text-[length:var(--text-token-4xs)] opacity-40 mt-3">
         &copy;{copyrightYear} Hearst Magazine Media, Inc. All Rights Reserved.

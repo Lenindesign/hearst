@@ -1,17 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { brandLogos } from "@/lib/logos";
+import { getBrandLogoSrc } from "@/lib/logos";
 
 interface BrandLogoProps {
   slug: string;
   className?: string;
   color?: string;
+  variant?: "logo" | "icon";
 }
 
-export function BrandLogo({ slug, className = "", color }: BrandLogoProps) {
+export function BrandLogo({ slug, className = "", color, variant = "logo" }: BrandLogoProps) {
   const [loadedSvg, setLoadedSvg] = useState<{ src: string; markup: string } | null>(null);
-  const src = brandLogos[slug];
+  const src = getBrandLogoSrc(slug, variant);
 
   useEffect(() => {
     if (!src) return;

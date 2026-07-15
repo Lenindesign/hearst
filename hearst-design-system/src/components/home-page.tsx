@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useTheme } from "./theme-provider";
 import { NavBar } from "./nav-bar";
 import { BrandLogo } from "./brand-logo";
-import { brandLogos } from "@/lib/logos";
+import { brandIconLogos, brandLogos } from "@/lib/logos";
 import { themeOptions } from "@/lib/theme-options";
 import { brandToCssVars } from "@/lib/theme-css-vars";
 import type { BrandTheme } from "@/lib/brands";
@@ -22,19 +22,25 @@ import { SiteFooter } from "./fre/site-footer";
 import {
   Bookmark,
   Camera,
+  Check,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   ChefHat,
   EyeOff,
   ImageIcon,
   Mail,
+  MessageCircle,
   Moon,
   Pause,
   Play,
   Plus,
+  Send,
   ShoppingBag,
   SlidersHorizontal,
   Star,
   Sun,
+  ThumbsUp,
   X,
 } from "lucide-react";
 import {
@@ -402,7 +408,7 @@ const ewBrandFavicons: Record<string, string> = {
 };
 
 function getBrandIconUrl(brandSlug: string) {
-  return lifestyleBrandFavicons[brandSlug] ?? autosBrandFavicons[brandSlug] ?? fluxBrandFavicons[brandSlug] ?? ewBrandFavicons[brandSlug] ?? brandLogos[brandSlug];
+  return brandIconLogos[brandSlug] ?? lifestyleBrandFavicons[brandSlug] ?? autosBrandFavicons[brandSlug] ?? fluxBrandFavicons[brandSlug] ?? ewBrandFavicons[brandSlug] ?? brandLogos[brandSlug];
 }
 
 function getBrandInitials(brand: string) {
@@ -470,6 +476,26 @@ type DestinationConfig = {
   collectionLabels: string[];
 };
 
+type LifestyleStoryComment = {
+  id: string;
+  author: string;
+  role: string;
+  body: string;
+  age: string;
+  likes: number;
+};
+
+type HearstOnboardingResult = {
+  id: number;
+  interests: string[];
+  brands: string[];
+  tags: string[];
+};
+
+function mergeUnique(items: string[], nextItems: string[]) {
+  return Array.from(new Set([...items, ...nextItems]));
+}
+
 const destinationConfigs: Record<DestinationMode, DestinationConfig> = {
   all: {
     mode: "all",
@@ -487,7 +513,7 @@ const destinationConfigs: Record<DestinationMode, DestinationConfig> = {
     brandSummary:
       "Lifestyle, Autos, Flux, and E&W brands combined into one cross-Hearst personalized destination.",
     dataSourceCopy:
-      "public RSS metadata from all four prototype sections, filtered to stories with real Hearst CDN images.",
+      "public RSS metadata from the Hearst destination sections, filtered to stories with real Hearst CDN images.",
     collectionLabels: ["Daily edit", "Shopping ideas", "Weekend plans"],
   },
   lifestyle: {
@@ -820,7 +846,13 @@ const hearstDestinationNavHrefs = new Map(
     .map((section) => [section.label, section.href])
 );
 
-function UtilityBar({ selectedBrand }: { selectedBrand?: { name: string; slug: string } | null }) {
+function UtilityBar({
+  selectedBrand,
+  onCreateAccount,
+}: {
+  selectedBrand?: { name: string; slug: string } | null;
+  onCreateAccount?: () => void;
+}) {
   const { brand } = useTheme();
   const selectedDestination = selectedBrand ? getStoryDestinationMode(selectedBrand.slug) : null;
   const activeDestination = selectedDestination === "autos"
@@ -843,8 +875,8 @@ function UtilityBar({ selectedBrand }: { selectedBrand?: { name: string; slug: s
 
   return (
     <div className="h-8 bg-primary text-primary-foreground text-[length:var(--text-token-4xs)] font-semibold">
-      <PageContainer className="grid h-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3">
-        <nav className="flex items-center gap-3" aria-label="Utility navigation">
+      <PageContainer className="grid h-full grid-cols-[minmax(0,1fr)_auto] items-center gap-2 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:gap-3">
+        <nav className="hidden items-center gap-3 sm:flex" aria-label="Utility navigation">
           {["Shop", "Newsletter", "Sign In"].map((label) => (
             <LinkComponent
               key={label}
@@ -852,17 +884,14 @@ function UtilityBar({ selectedBrand }: { selectedBrand?: { name: string; slug: s
                 variant="neutral"
                 underline={false}
                 size="xs"
-                className={cn(
-                  "opacity-90 text-primary-foreground hover:text-primary-foreground/80 font-semibold",
-                  label !== "Sign In" && "max-[520px]:hidden"
-                )}
+                className="font-semibold text-primary-foreground opacity-90 hover:text-primary-foreground/80"
               >
                 {label}
               </LinkComponent>
           ))}
         </nav>
         <nav
-          className="flex min-w-0 items-center justify-center overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="flex min-w-0 items-center justify-start overflow-x-auto [scrollbar-width:none] sm:justify-center [&::-webkit-scrollbar]:hidden"
           aria-label="Hearst destination sections"
         >
           <div className="flex min-w-max items-center gap-1 rounded-full bg-black/10 p-0.5">
@@ -889,11 +918,555 @@ function UtilityBar({ selectedBrand }: { selectedBrand?: { name: string; slug: s
         <Button
           variant="secondary"
           size="xs"
-          className="bg-white text-[length:var(--text-token-4xs)] font-semibold text-primary hover:bg-white/90 hover:text-primary"
+          className="shrink-0 bg-white px-2 text-[length:var(--text-token-4xs)] font-semibold text-black hover:bg-white/90 hover:text-black sm:px-3"
+          aria-label="Create a free account"
+          onClick={onCreateAccount}
         >
-          Subscribe
+          <span className="sm:hidden">Join</span>
+          <span className="hidden sm:inline">Create Account</span>
         </Button>
       </PageContainer>
+    </div>
+  );
+}
+
+function getOnboardingInterestOptions(config: DestinationConfig) {
+  const broadDestinationFilters = new Set(["For You", "Saved", "Lifestyle", "Autos", "Flux", "E&W"]);
+  const filterOptions = config.filters.filter((filter) => !broadDestinationFilters.has(filter));
+  const topicOptions = Array.from(new Set(config.stories.map((story) => story.topic)))
+    .filter((topic) => !broadDestinationFilters.has(topic))
+    .sort((a, b) => a.localeCompare(b));
+
+  return Array.from(new Set([...filterOptions, ...topicOptions])).slice(0, 12);
+}
+
+function getOnboardingVisual(config: DestinationConfig, initialBrandSlug?: string) {
+  const brandStory = initialBrandSlug
+    ? config.stories.find((story) => story.brandSlug === initialBrandSlug && story.image)
+    : undefined;
+  const leadStory = config.defaultLeadStoryId
+    ? config.stories.find((story) => story.id === config.defaultLeadStoryId && story.image)
+    : undefined;
+  const story = brandStory ?? leadStory ?? config.stories.find((item) => item.image);
+
+  if (!story) {
+    return {
+      image: "",
+      kicker: config.productName,
+      title: "One place for your daily reads",
+      summary: config.brandSummary,
+      story: undefined,
+    };
+  }
+
+  return {
+    image: story.image,
+    kicker: `${story.brand} / ${story.topic}`,
+    title: story.title,
+    summary: "Start here, then let Hearst tune the rest of your daily feed around what you read, save, and follow.",
+    story,
+  };
+}
+
+function HearstOnboardingModal({
+  open,
+  destination,
+  initialBrandSlug,
+  onClose,
+  onComplete,
+}: {
+  open: boolean;
+  destination: DestinationMode;
+  initialBrandSlug?: string;
+  onClose: () => void;
+  onComplete: (result: HearstOnboardingResult) => void;
+}) {
+  const config = destinationConfigs[destination];
+  const [step, setStep] = React.useState(0);
+  const [selectedInterests, setSelectedInterests] = React.useState<string[]>([]);
+  const [selectedBrands, setSelectedBrands] = React.useState<string[]>([]);
+  const [brandPage, setBrandPage] = React.useState(0);
+  const dialogRef = React.useRef<HTMLElement | null>(null);
+  const headingRef = React.useRef<HTMLHeadingElement | null>(null);
+  const restoreFocusRef = React.useRef<HTMLElement | null>(null);
+  const interestOptions = React.useMemo(() => getOnboardingInterestOptions(config), [config]);
+  const onboardingVisual = React.useMemo(
+    () => getOnboardingVisual(config, initialBrandSlug),
+    [config, initialBrandSlug]
+  );
+  const brandOptions = React.useMemo(() => {
+    const allBrandsConfig = destinationConfigs.all;
+    const counts = allBrandsConfig.stories.reduce<Record<string, number>>((acc, story) => {
+      acc[story.brand] = (acc[story.brand] ?? 0) + 1;
+      return acc;
+    }, {});
+
+    return allBrandsConfig.sourceNotes
+      .map((note) => ({
+        brand: note.brand,
+        brandSlug: note.brandSlug,
+        count: counts[note.brand] ?? 0,
+      }));
+  }, []);
+  const storyCount = config.stories.length.toLocaleString();
+  const brandCount = destination === "all" ? 29 : config.sourceNotes.length;
+  const proofLine = destination === "all"
+    ? `Thousands of stories from ${brandCount} trusted Hearst brands, organized around your interests in one place.`
+    : `${storyCount}+ stories from ${brandCount} trusted Hearst brands, organized around your interests in one place.`;
+
+  React.useEffect(() => {
+    if (!open) return;
+    setStep(0);
+    setSelectedInterests([]);
+    setSelectedBrands([]);
+    setBrandPage(0);
+  }, [open, destination]);
+
+  React.useEffect(() => {
+    if (!open) return;
+
+    restoreFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+
+    return () => {
+      restoreFocusRef.current?.focus();
+      restoreFocusRef.current = null;
+    };
+  }, [open]);
+
+  React.useEffect(() => {
+    if (!open) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      headingRef.current?.focus();
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [open, step]);
+
+  React.useEffect(() => {
+    if (!open) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+
+      const dialog = dialogRef.current;
+      if (!dialog) return;
+
+      const focusableElements = Array.from(
+        dialog.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter((element) => !element.hasAttribute("disabled") && element.getAttribute("aria-hidden") !== "true");
+
+      if (focusableElements.length === 0) {
+        event.preventDefault();
+        return;
+      }
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+      const activeElement = document.activeElement;
+
+      if (event.shiftKey && activeElement === firstElement) {
+        event.preventDefault();
+        lastElement.focus();
+      } else if (!event.shiftKey && activeElement === lastElement) {
+        event.preventDefault();
+        firstElement.focus();
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [onClose, open]);
+
+  if (!open) return null;
+
+  const toggleInterest = (interest: string) => {
+    setSelectedInterests((current) =>
+      current.includes(interest)
+        ? current.filter((item) => item !== interest)
+        : [...current, interest]
+    );
+  };
+  const toggleBrand = (brandName: string) => {
+    setSelectedBrands((current) =>
+      current.includes(brandName)
+        ? current.filter((item) => item !== brandName)
+        : [...current, brandName]
+    );
+  };
+  const completeOnboarding = () => {
+    onComplete({
+      id: Date.now(),
+      interests: selectedInterests,
+      brands: selectedBrands,
+      tags: selectedInterests.map((interest) => interest.toLowerCase()),
+    });
+    setStep(4);
+  };
+  const canContinueInterests = selectedInterests.length >= 3;
+  const canContinueBrands = selectedBrands.length >= 2;
+  const stepCount = 5;
+  const interestSelectionLabel = `${selectedInterests.length} selected`;
+  const brandSelectionLabel = `${selectedBrands.length} selected`;
+  const brandsPerPage = 12;
+  const brandPageCount = Math.max(1, Math.ceil(brandOptions.length / brandsPerPage));
+  const currentBrandPage = Math.min(brandPage, brandPageCount - 1);
+  const visibleBrandOptions = brandOptions.slice(
+    currentBrandPage * brandsPerPage,
+    currentBrandPage * brandsPerPage + brandsPerPage
+  );
+  const visualObjectPosition = onboardingVisual.story
+    ? getLifestyleImagePosition(onboardingVisual.story)
+    : "center";
+
+  return (
+    <div className="fixed inset-0 z-[120] flex items-center justify-center bg-foreground/50 p-4 backdrop-blur-sm sm:p-6">
+      <div className="absolute inset-0" onClick={onClose} />
+      <section
+        ref={dialogRef}
+        className="relative z-10 mx-auto grid max-h-[calc(100dvh-2rem)] w-full max-w-5xl overflow-hidden rounded-[16px] border border-border bg-background shadow-2xl sm:max-h-[calc(100dvh-3rem)] lg:grid-cols-[minmax(320px,0.95fr)_minmax(0,1.05fr)]"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="hearst-onboarding-title"
+        aria-describedby="hearst-onboarding-description"
+      >
+        <div className="relative hidden min-h-[560px] overflow-hidden bg-muted lg:block">
+          {onboardingVisual.image ? (
+            <img
+              src={onboardingVisual.image}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ objectPosition: visualObjectPosition }}
+              aria-hidden
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+            />
+          ) : null}
+        </div>
+
+        <div className="flex min-h-0 max-h-[calc(100dvh-2rem)] flex-col overflow-hidden sm:max-h-[calc(100dvh-3rem)] lg:max-h-none">
+          <div className="flex items-center justify-between border-b border-border px-5 py-4">
+            <div>
+              <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                Create Account
+              </p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Step {step + 1} of {stepCount}
+              </p>
+            </div>
+            <Button variant="outline" size="icon-sm" onClick={onClose} aria-label="Close onboarding">
+              <X className="h-4 w-4" aria-hidden />
+            </Button>
+          </div>
+
+        <div className="min-h-0 flex-1 overflow-y-auto p-5 sm:p-8">
+          {onboardingVisual.image ? (
+            <div className="mb-6 overflow-hidden rounded-[12px] border border-border bg-muted lg:hidden">
+              <img
+                src={onboardingVisual.image}
+                alt=""
+                className="h-48 w-full object-cover"
+                style={{ objectPosition: visualObjectPosition }}
+                aria-hidden
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+              />
+            </div>
+          ) : null}
+
+          {step === 0 ? (
+            <div className="space-y-6">
+              <div>
+                <h2
+                  ref={headingRef}
+                  id="hearst-onboarding-title"
+                  tabIndex={-1}
+                  className="headline text-4xl leading-tight outline-none"
+                >
+                  Your daily Hearst feed, tuned to you.
+                </h2>
+                <p id="hearst-onboarding-description" className="mt-4 max-w-xl text-base leading-7 text-muted-foreground">
+                  Tell us what you care about. We&apos;ll build your daily feed from across Hearst.
+                </p>
+                <p className="mt-4 max-w-xl text-sm leading-6 text-muted-foreground">
+                  {proofLine}
+                </p>
+              </div>
+              <div className="rounded-[12px] border border-border bg-muted/35 p-4">
+                <p className="text-xs font-bold uppercase tracking-widest text-primary">What your account saves</p>
+                <ul className="mt-4 space-y-3 text-sm leading-5">
+                  {["Followed topics and brands", "Saved stories and collections", "Continue reading across devices", "Comment identity and replies"].map((item) => (
+                    <li key={item} className="flex gap-2">
+                      <span className="mt-1 h-1.5 w-1.5 rounded-full bg-primary" aria-hidden />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ) : null}
+
+          {step === 1 ? (
+            <div>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h2
+                    ref={headingRef}
+                    id="hearst-onboarding-title"
+                    tabIndex={-1}
+                    className="headline text-3xl leading-tight outline-none sm:text-4xl"
+                  >
+                    What should your feed learn first?
+                  </h2>
+                  <p id="hearst-onboarding-description" className="mt-3 text-sm leading-6 text-muted-foreground">
+                    Choose at least 3 interests. These shape the first version of your For You page.
+                  </p>
+                </div>
+                <p className="inline-flex h-8 shrink-0 items-center rounded-full bg-muted px-3 text-xs font-bold text-foreground">
+                  {interestSelectionLabel}
+                </p>
+              </div>
+              <div className="mt-6 flex flex-wrap gap-2">
+                {interestOptions.map((interest) => {
+                  const active = selectedInterests.includes(interest);
+                  return (
+                    <button
+                      key={interest}
+                      type="button"
+                      onClick={() => toggleInterest(interest)}
+                      className={cn(
+                        "inline-flex min-h-10 items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+                        active
+                          ? "border-primary bg-primary text-primary-foreground"
+                          : "border-border bg-background text-foreground hover:border-primary/50 hover:bg-muted"
+                      )}
+                      aria-pressed={active}
+                    >
+                      {active ? <Check className="h-3.5 w-3.5" aria-hidden /> : null}
+                      {interest}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ) : null}
+
+          {step === 2 ? (
+            <div>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h2
+                    ref={headingRef}
+                    id="hearst-onboarding-title"
+                    tabIndex={-1}
+                    className="headline text-3xl leading-tight outline-none sm:text-4xl"
+                  >
+                    Follow brands you trust.
+                  </h2>
+                  <p id="hearst-onboarding-description" className="mt-3 text-sm leading-6 text-muted-foreground">
+                    Pick at least 2. Your feed will still discover across all Hearst brands, but these voices get a stronger signal.
+                  </p>
+                </div>
+                <p className="inline-flex h-8 shrink-0 items-center rounded-full bg-muted px-3 text-xs font-bold text-foreground">
+                  {brandSelectionLabel}
+                </p>
+              </div>
+              <div className="mt-6 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                {visibleBrandOptions.map((brandOption) => {
+                  const active = selectedBrands.includes(brandOption.brand);
+                  return (
+                    <button
+                      key={brandOption.brandSlug}
+                      type="button"
+                      onClick={() => toggleBrand(brandOption.brand)}
+                      className={cn(
+                        "flex min-h-[64px] min-w-0 items-center gap-3 rounded-[8px] border p-3 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+                        active
+                          ? "border-primary bg-primary/10 text-foreground"
+                          : "border-border bg-background hover:border-primary/50 hover:bg-muted"
+                      )}
+                      aria-pressed={active}
+                    >
+                      <BrandSourceIcon brand={brandOption.brand} brandSlug={brandOption.brandSlug} className="h-8 w-8 rounded-[6px]" />
+                      <span className="min-w-0">
+                        <span className="block truncate text-sm font-bold">{brandOption.brand}</span>
+                        <span className="mt-0.5 block text-xs text-muted-foreground">{brandOption.count} stories</span>
+                      </span>
+                      {active ? (
+                        <span className="ml-auto flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                          <Check className="h-3 w-3" aria-hidden />
+                        </span>
+                      ) : null}
+                    </button>
+                  );
+                })}
+                {Array.from({ length: brandsPerPage - visibleBrandOptions.length }).map((_, index) => (
+                  <div
+                    key={`brand-picker-placeholder-${index}`}
+                    className="hidden min-h-[64px] rounded-[8px] border border-transparent lg:block"
+                    aria-hidden="true"
+                  />
+                ))}
+              </div>
+              {brandPageCount > 1 ? (
+                <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-xs font-semibold text-muted-foreground">
+                    Showing {currentBrandPage * brandsPerPage + 1}-{Math.min((currentBrandPage + 1) * brandsPerPage, brandOptions.length)} of {brandOptions.length} brands
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon-sm"
+                      onClick={() => setBrandPage((current) => (current - 1 + brandPageCount) % brandPageCount)}
+                      aria-label="Show previous brands"
+                    >
+                      <ChevronLeft className="h-4 w-4" aria-hidden />
+                    </Button>
+                    <div className="flex items-center gap-1" aria-label="Brand pages">
+                      {Array.from({ length: brandPageCount }).map((_, index) => (
+                        <button
+                          key={`brand-page-${index}`}
+                          type="button"
+                          onClick={() => setBrandPage(index)}
+                          className={cn(
+                            "h-2 rounded-full transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+                            index === currentBrandPage
+                              ? "w-6 bg-primary"
+                              : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/60"
+                          )}
+                          aria-label={`Show brand page ${index + 1}`}
+                          aria-current={index === currentBrandPage ? "page" : undefined}
+                        />
+                      ))}
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon-sm"
+                      onClick={() => setBrandPage((current) => (current + 1) % brandPageCount)}
+                      aria-label="Show next brands"
+                    >
+                      <ChevronRight className="h-4 w-4" aria-hidden />
+                    </Button>
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          ) : null}
+
+          {step === 3 ? (
+            <div className="space-y-5">
+              <div>
+                <h2
+                  ref={headingRef}
+                  id="hearst-onboarding-title"
+                  tabIndex={-1}
+                  className="headline text-3xl leading-tight outline-none sm:text-4xl"
+                >
+                  Create a free account to save your feed.
+                </h2>
+                <p id="hearst-onboarding-description" className="mt-3 text-sm leading-6 text-muted-foreground">
+                  Your choices can tune this session now. An account keeps them available whenever you come back.
+                </p>
+                <div className="mt-5 grid gap-2 sm:grid-cols-2">
+                  {[
+                    "Personalized Daily Brief",
+                    "Saved stories",
+                    "Followed topics",
+                    "Comment history",
+                  ].map((benefit) => (
+                    <div key={benefit} className="rounded-[8px] border border-border bg-muted/30 px-3 py-2 text-sm font-semibold">
+                      {benefit}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="rounded-[12px] border border-border bg-muted/35 p-4">
+                <p className="text-xs font-bold uppercase tracking-widest text-primary">Your selections</p>
+                <p className="mt-4 text-sm font-bold">Interests</p>
+                <p className="mt-1 text-sm leading-6 text-muted-foreground">{selectedInterests.join(", ")}</p>
+                <p className="mt-4 text-sm font-bold">Brands</p>
+                <p className="mt-1 text-sm leading-6 text-muted-foreground">{selectedBrands.join(", ")}</p>
+              </div>
+            </div>
+          ) : null}
+
+          {step === 4 ? (
+            <div className="text-center">
+              <p className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary text-lg font-bold text-primary-foreground">
+                <Check className="h-5 w-5" aria-hidden />
+              </p>
+              <h2
+                ref={headingRef}
+                id="hearst-onboarding-title"
+                tabIndex={-1}
+                className="headline mx-auto mt-5 max-w-xl text-4xl leading-tight outline-none"
+              >
+                Your feed is ready.
+              </h2>
+              <p id="hearst-onboarding-description" className="mx-auto mt-3 max-w-xl text-sm leading-6 text-muted-foreground">
+                Your For You page now starts with your selected interests and brands. The more you read, save, and follow, the sharper it gets.
+              </p>
+            </div>
+          ) : null}
+        </div>
+
+        <div className="flex flex-col gap-3 border-t border-border px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <button
+            type="button"
+            onClick={onClose}
+            className="whitespace-nowrap text-sm font-semibold text-muted-foreground hover:text-foreground"
+          >
+            {step === 4 ? "Close" : "Skip for now"}
+          </button>
+          <div className="flex flex-wrap justify-end gap-2">
+            {step > 0 && step < 4 ? (
+              <Button variant="outline" size="sm" onClick={() => setStep((current) => current - 1)}>
+                Back
+              </Button>
+            ) : null}
+            {step === 0 ? (
+              <Button size="sm" onClick={() => setStep(1)}>Personalize My Feed</Button>
+            ) : null}
+            {step === 1 ? (
+              <Button size="sm" onClick={() => setStep(2)} disabled={!canContinueInterests}>
+                Continue
+              </Button>
+            ) : null}
+            {step === 2 ? (
+              <Button size="sm" onClick={() => setStep(3)} disabled={!canContinueBrands}>
+                Follow Selected
+              </Button>
+            ) : null}
+            {step === 3 ? (
+              <>
+                <Button variant="ghost" size="sm" onClick={completeOnboarding}>
+                  Sign In
+                </Button>
+                <Button size="sm" onClick={completeOnboarding} className="whitespace-nowrap">
+                  Create Free Account
+                </Button>
+              </>
+            ) : null}
+            {step === 4 ? (
+              <Button size="sm" onClick={onClose}>
+                Start Reading
+              </Button>
+            ) : null}
+          </div>
+        </div>
+        </div>
+      </section>
     </div>
   );
 }
@@ -946,7 +1519,9 @@ function MainNav({
 
   const logoColor = selectedBrand
     ? colorMode === "dark" ? "#ffffff" : "#121212"
-    : undefined;
+    : brand.slug === "hearst-flux" && colorMode === "dark"
+      ? "#ffffff"
+      : undefined;
 
   const renderMastheadLogo = (compact: boolean) => logo ? (
     <BrandLogo
@@ -1557,11 +2132,11 @@ function ContextualRiverAdCard({
 }) {
   return (
     <article
-      className="grid min-w-0 overflow-hidden rounded-[8px] border border-border bg-background sm:grid-cols-[220px_minmax(0,1fr)]"
+      className="grid min-w-0 overflow-hidden rounded-[8px] border border-border bg-background p-4 sm:grid-cols-[176px_minmax(0,1fr)] sm:gap-4"
       aria-label={`Sponsored: ${ad.title}`}
       style={{ backgroundColor: ad.palette.background, color: ad.palette.foreground }}
     >
-      <div className="relative min-h-52 overflow-hidden sm:min-h-full">
+      <div className="relative aspect-video min-w-0 overflow-hidden rounded-[4px] sm:h-full sm:min-h-44 sm:aspect-auto">
         <img
           src={ad.imageUrl}
           alt={`${ad.sponsor}: ${ad.title}`}
@@ -1590,7 +2165,7 @@ function ContextualRiverAdCard({
           </p>
         </div>
       </div>
-      <div className="min-w-0 p-5 sm:p-6">
+      <div className="min-w-0 pt-4 sm:pt-0">
         <div className="flex flex-wrap items-center gap-2">
           <span
             className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest"
@@ -2275,6 +2850,7 @@ function LifestyleCardModule({
 function LifestyleRiverCard({
   story,
   saved,
+  commentCount,
   onOpen,
   onSave,
   onMoreLikeThis,
@@ -2284,6 +2860,7 @@ function LifestyleRiverCard({
 }: {
   story: LifestyleRiverStory;
   saved: boolean;
+  commentCount: number;
   onOpen: () => void;
   onSave: () => void;
   onMoreLikeThis: () => void;
@@ -2355,6 +2932,10 @@ function LifestyleRiverCard({
             <Plus className="mr-1.5 h-3.5 w-3.5" aria-hidden />
             More like this
           </Button>
+          <Button variant="ghost" size="xs" onClick={onOpen}>
+            <MessageCircle className="mr-1.5 h-3.5 w-3.5" aria-hidden />
+            {commentCount}
+          </Button>
           <Button variant="ghost" size="xs" onClick={onFollowBrand}>
             Follow {story.brand}
           </Button>
@@ -2376,8 +2957,65 @@ function getLifestyleReaderParagraphs(story: LifestyleRiverStory) {
     story.summary,
     `${story.brand} editors frame this ${topicPhrase} story around the signals readers are acting on right now: ${tagPhrase}.`,
     `In the full experience, this reader would continue into the original ${story.brand} article with inline media, related service modules, and commerce or recipe utilities when they are relevant.`,
-    `This prototype keeps the modal focused on the discovery behavior: open a story from the river, keep reading, and let the next ranked story lazy-load into the same session.`,
+    `The reader view keeps the session moving: open a story from the river, keep reading, and let the next ranked story load into the same flow.`,
   ];
+}
+
+function getLifestyleCommentCount(story: LifestyleRiverStory, addedCount = 0) {
+  return Math.max(3, Math.round(story.popularity / 7) + (story.age % 9) + addedCount);
+}
+
+function getLifestyleSeedComments(story: LifestyleRiverStory): LifestyleStoryComment[] {
+  const kind = getLifestyleCardKind(story);
+  const topic = story.topic.toLowerCase();
+  const tag = story.tags[0] ?? topic;
+  const authors = [
+    ["Maya Chen", "saved this"],
+    ["Jordan Ellis", "follows this topic"],
+    ["Priya Shah", "regular reader"],
+    ["Andre Miles", "collection builder"],
+    ["Nora Patel", "morning reader"],
+  ] as const;
+  const offset = story.title.length % authors.length;
+  const templates: Record<LifestyleCardKind, string[]> = {
+    article: [
+      `This is the kind of ${topic} context I want in the morning brief.`,
+      `Helpful framing. I would read a follow-up with the practical next steps.`,
+      `The ${story.brand} angle is why this feels worth saving instead of skimming.`,
+    ],
+    gallery: [
+      `The image selection is doing a lot of the work here. Saving this for reference.`,
+      `This belongs in a collection. I want more visual examples around ${tag}.`,
+      `Good inspiration piece, especially if the next story keeps the same mood.`,
+    ],
+    recipe: [
+      `I would make this if the prep list stays simple.`,
+      `The ${topic} signal is right. I want the shopping list next to the recipe.`,
+      `Saving this for the weekend. The short read time helps.`,
+    ],
+    shopping: [
+      `Useful if the picks stay edited down. I do not need a giant list.`,
+      `I would compare this with a tested option before buying.`,
+      `The brand attribution helps here. I want to know who chose the picks.`,
+    ],
+    video: [
+      `This is a good quick-watch candidate before opening the full story.`,
+      `I would keep this in the queue if the clip starts with the main point.`,
+      `The topic match is strong, but I still want a written recap below it.`,
+    ],
+  };
+
+  return templates[kind].map((body, index) => {
+    const [author, role] = authors[(offset + index) % authors.length];
+    return {
+      id: `${story.id}-seed-comment-${index}`,
+      author,
+      role,
+      body,
+      age: `${index + 1}h ago`,
+      likes: 2 + ((story.popularity + story.age + index) % 18),
+    };
+  });
 }
 
 function getLifestyleContextStories(currentStory: LifestyleRiverStory, stories: LifestyleRiverStory[]) {
@@ -2434,6 +3072,100 @@ function getLifestyleArticleRecommendations(currentStory: LifestyleRiverStory, s
   return relatedStories.slice(0, 4);
 }
 
+function LifestyleStoryComments({
+  story,
+  comments,
+  onAddComment,
+}: {
+  story: LifestyleRiverStory;
+  comments: LifestyleStoryComment[];
+  onAddComment: (body: string) => void;
+}) {
+  const [draft, setDraft] = React.useState("");
+  const seededComments = React.useMemo(() => getLifestyleSeedComments(story), [story]);
+  const visibleComments = [...comments, ...seededComments].slice(0, 5);
+  const totalCount = getLifestyleCommentCount(story, comments.length);
+
+  React.useEffect(() => {
+    setDraft("");
+  }, [story.id]);
+
+  const submitComment = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const trimmed = draft.trim();
+    if (!trimmed) return;
+
+    onAddComment(trimmed);
+    setDraft("");
+  };
+
+  return (
+    <section className="mt-8 rounded-[8px] border border-border bg-muted/25 p-4 sm:p-5" aria-label={`Comments for ${story.title}`}>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <p className="flex items-center gap-2 text-sm font-bold">
+            <MessageCircle className="h-4 w-4 text-primary" aria-hidden />
+            Comments
+            <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">{totalCount}</span>
+          </p>
+          <p className="mt-1 text-xs leading-5 text-muted-foreground">
+            Reader notes from people following {story.topic.toLowerCase()} and {story.brand}.
+          </p>
+        </div>
+        <span className="rounded-full border border-border bg-background px-2.5 py-1 text-xs font-semibold text-muted-foreground">
+          Top comments
+        </span>
+      </div>
+
+      <form onSubmit={submitComment} className="mt-4 flex gap-3">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+          You
+        </div>
+        <div className="min-w-0 flex-1">
+          <textarea
+            value={draft}
+            onChange={(event) => setDraft(event.target.value)}
+            rows={3}
+            placeholder="Add a comment"
+            className="min-h-20 w-full resize-y rounded-[8px] border border-border bg-background px-3 py-2 text-sm leading-6 text-foreground shadow-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
+          />
+          <div className="mt-2 flex items-center justify-between gap-3">
+            <p className="text-xs text-muted-foreground">Keep comments useful and tied to the story.</p>
+            <Button size="xs" type="submit" disabled={!draft.trim()}>
+              <Send className="mr-1.5 h-3.5 w-3.5" aria-hidden />
+              Post
+            </Button>
+          </div>
+        </div>
+      </form>
+
+      <div className="mt-5 space-y-4">
+        {visibleComments.map((comment) => (
+          <article key={comment.id} className="grid grid-cols-[2.25rem_minmax(0,1fr)] gap-3 border-t border-border pt-4 first:border-t-0 first:pt-0">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-background text-xs font-bold text-primary ring-1 ring-border">
+              {comment.author.split(" ").map((part) => part[0]).join("").slice(0, 2)}
+            </div>
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                <p className="text-sm font-bold">{comment.author}</p>
+                <p className="text-xs text-muted-foreground">{comment.role} · {comment.age}</p>
+              </div>
+              <p className="mt-1 text-sm leading-6 text-foreground/85">{comment.body}</p>
+              <div className="mt-2 flex flex-wrap items-center gap-3 text-xs font-semibold text-muted-foreground">
+                <button type="button" className="inline-flex items-center gap-1 hover:text-primary">
+                  <ThumbsUp className="h-3.5 w-3.5" aria-hidden />
+                  {comment.likes}
+                </button>
+                <button type="button" className="hover:text-primary">Reply</button>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function LifestyleArticleRecommendationsModule({
   currentStory,
   stories,
@@ -2451,7 +3183,7 @@ function LifestyleArticleRecommendationsModule({
   if (!featuredStory) return null;
 
   return (
-    <section className="mt-8 border-y border-border py-6" aria-label={`More in ${currentStory.topic}`}>
+    <section className="mt-8 border-t border-border py-6" aria-label={`More in ${currentStory.topic}`}>
       <div className="mb-5">
         <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
           More in {currentStory.topic}
@@ -2694,14 +3426,18 @@ function LifestyleStoryReaderModal({
   stories,
   openStoryId,
   productName,
+  commentsByStoryId,
   onClose,
   onOpenStory,
+  onAddComment,
 }: {
   stories: LifestyleRiverStory[];
   openStoryId: string | null;
   productName: string;
+  commentsByStoryId: Record<string, LifestyleStoryComment[]>;
   onClose: () => void;
   onOpenStory: (storyId: string) => void;
+  onAddComment: (storyId: string, body: string) => void;
 }) {
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
@@ -2789,36 +3525,49 @@ function LifestyleStoryReaderModal({
               const kind = getLifestyleCardKind(story);
 
               return (
-                <article
-                  key={story.id}
-                  className={cn("border-b border-border pb-10", index > 0 && "pt-10")}
-                >
-                  <LifestyleRiverImage story={story} className="aspect-video w-full rounded-[4px]" />
-                  <div className="mx-auto mt-6 max-w-3xl">
-                    <div className="mb-3 flex flex-wrap items-center gap-2">
+                <React.Fragment key={story.id}>
+                  {index > 0 ? (
+                    <div className="flex items-center gap-4 py-10" aria-label="Up next">
+                      <span className="h-px flex-1 bg-border" aria-hidden="true" />
                       <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
-                        {story.signal}
+                        Up next
                       </span>
-                      <LifestyleKindBadge kind={kind} story={story} />
-                      <LifestyleBrandSource story={story} />
+                      <span className="h-px flex-1 bg-border" aria-hidden="true" />
                     </div>
-                    <h2 className="headline text-4xl leading-tight sm:text-5xl">
-                      {story.title}
-                    </h2>
-                    <div className="mt-6 space-y-5 text-base leading-8 text-foreground/80">
-                      {getLifestyleReaderParagraphs(story).map((paragraph) => (
-                        <p key={paragraph}>{paragraph}</p>
-                      ))}
+                  ) : null}
+                  <article className="border-b border-border pb-10">
+                    <LifestyleRiverImage story={story} className="aspect-video w-full rounded-[4px]" />
+                    <div className="mx-auto mt-6 max-w-3xl">
+                      <div className="mb-3 flex flex-wrap items-center gap-2">
+                        <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                          {story.signal}
+                        </span>
+                        <LifestyleKindBadge kind={kind} story={story} />
+                        <LifestyleBrandSource story={story} />
+                      </div>
+                      <h2 className="headline text-4xl leading-tight sm:text-5xl">
+                        {story.title}
+                      </h2>
+                      <div className="mt-6 space-y-5 text-base leading-8 text-foreground/80">
+                        {getLifestyleReaderParagraphs(story).map((paragraph) => (
+                          <p key={paragraph}>{paragraph}</p>
+                        ))}
+                      </div>
+                      <LifestyleCardModule story={story} kind={kind} />
+                      <LifestyleStoryComments
+                        story={story}
+                        comments={commentsByStoryId[story.id] ?? []}
+                        onAddComment={(body) => onAddComment(story.id, body)}
+                      />
+                      <LifestyleArticleRecommendationsModule
+                        currentStory={story}
+                        stories={stories}
+                        productName={productName}
+                        onOpenStory={onOpenStory}
+                      />
                     </div>
-                    <LifestyleCardModule story={story} kind={kind} />
-                    <LifestyleArticleRecommendationsModule
-                      currentStory={story}
-                      stories={stories}
-                      productName={productName}
-                      onOpenStory={onOpenStory}
-                    />
-                  </div>
-                </article>
+                  </article>
+                </React.Fragment>
               );
             })}
 
@@ -2848,12 +3597,31 @@ function TodayEditDashboard({
   onOpenStory: (storyId: string) => void;
   onShowFollowedBrands: () => void;
 }) {
-  const continueStory = stories.find((story) => getLifestyleCardKind(story) === "video") || stories[1] || stories[0];
-  const followedBrandStory =
-    stories.find((story) => profile.followedBrands.includes(story.brand)) || stories[0];
-  const trendingStory = [...stories].sort((a, b) => b.popularity - a.popularity)[0];
-  const collectionStory =
-    stories.find((story) => story.tags.some((tag) => profile.savedTags.includes(tag))) || stories[2] || stories[0];
+  const usedStoryIds = new Set<string>();
+  const compactStories = (items: Array<LifestyleRiverStory | undefined>) =>
+    items.filter((story): story is LifestyleRiverStory => Boolean(story));
+  const takeUnusedStory = (candidates: LifestyleRiverStory[]) => {
+    const story = candidates.find((candidate) => !usedStoryIds.has(candidate.id))
+      || stories.find((candidate) => !usedStoryIds.has(candidate.id));
+
+    if (story) usedStoryIds.add(story.id);
+    return story;
+  };
+
+  const continueStory = takeUnusedStory(compactStories([
+    ...stories.filter((story) => getLifestyleCardKind(story) === "video"),
+    stories[1],
+    stories[0],
+  ]));
+  const followedBrandStory = takeUnusedStory([
+    ...stories.filter((story) => profile.followedBrands.includes(story.brand)),
+    ...stories,
+  ]);
+  const trendingStory = takeUnusedStory([...stories].sort((a, b) => b.popularity - a.popularity));
+  const collectionStory = takeUnusedStory([
+    ...stories.filter((story) => story.tags.some((tag) => profile.savedTags.includes(tag))),
+    ...stories,
+  ]);
 
   if (!continueStory || !followedBrandStory || !trendingStory || !collectionStory) return null;
 
@@ -2863,7 +3631,6 @@ function TodayEditDashboard({
       title: continueStory.title,
       meta: `${continueStory.brand} · ${continueStory.readTime}`,
       image: continueStory.image,
-      action: "Resume story",
       onClick: () => onOpenStory(continueStory.id),
     },
     {
@@ -2871,7 +3638,6 @@ function TodayEditDashboard({
       title: followedBrandStory.title,
       meta: profile.followedBrands.slice(0, 2).join(", "),
       image: followedBrandStory.image,
-      action: "Show my brands",
       onClick: onShowFollowedBrands,
     },
     {
@@ -2879,7 +3645,6 @@ function TodayEditDashboard({
       title: trendingStory.title,
       meta: `${trendingStory.popularity} popularity · ${trendingStory.topic}`,
       image: trendingStory.image,
-      action: "Open trend",
       onClick: () => onOpenStory(trendingStory.id),
     },
     {
@@ -2887,7 +3652,6 @@ function TodayEditDashboard({
       title: collectionStory.title,
       meta: `${profile.savedTags.slice(0, 3).join(", ")}`,
       image: collectionStory.image,
-      action: "Open collection pick",
       onClick: () => onOpenStory(collectionStory.id),
     },
   ];
@@ -2909,7 +3673,7 @@ function TodayEditDashboard({
               <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
                 {module.label}
               </span>
-              <span className="mt-3 flex items-start gap-3">
+              <span className="mt-3 flex min-h-[86px] items-start gap-3 md:min-h-[96px]">
                 {module.image ? (
                   <span
                     aria-hidden="true"
@@ -2924,9 +3688,6 @@ function TodayEditDashboard({
               <span className="mt-2 block text-xs leading-5 text-muted-foreground">
                 {module.meta}
               </span>
-            </span>
-            <span className="mt-4 text-xs font-bold text-primary underline-offset-4 group-hover:underline">
-              {module.action}
             </span>
           </button>
         ))}
@@ -3425,7 +4186,7 @@ function LifestyleLeftSidebar({
             <p key={label} className="font-bold">{label}</p>
           ))}
           <p className="text-xs text-muted-foreground">
-            Saved stories and more-like-this actions tune these collections in the prototype.
+            Saved stories and more-like-this actions tune these collections over time.
           </p>
         </div>
       </MobileCollapsibleSidebarCard>
@@ -3437,6 +4198,7 @@ function LifestyleRiverHomePage({
   activeFilter,
   destination,
   initialBrandSlug,
+  onboardingResult,
   onRiverReset,
   onBrandFilterChange,
   onSelectedBrandChange,
@@ -3444,6 +4206,7 @@ function LifestyleRiverHomePage({
   activeFilter: string;
   destination: DestinationMode;
   initialBrandSlug?: string;
+  onboardingResult?: HearstOnboardingResult | null;
   onRiverReset?: () => void;
   onBrandFilterChange?: () => void;
   onSelectedBrandChange?: (brand: { name: string; slug: string } | null) => void;
@@ -3454,6 +4217,7 @@ function LifestyleRiverHomePage({
   const initialBrandName = config.sourceNotes.find((note) => note.brandSlug === initialBrandSlug)?.brand;
   const [activeBrandFilters, setActiveBrandFilters] = React.useState<string[]>(initialBrandName ? [initialBrandName] : []);
   const [openStoryId, setOpenStoryId] = React.useState<string | null>(null);
+  const [commentsByStoryId, setCommentsByStoryId] = React.useState<Record<string, LifestyleStoryComment[]>>({});
   const [demoModalOpen, setDemoModalOpen] = React.useState(false);
   const [visibleCount, setVisibleCount] = React.useState(8);
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
@@ -3511,6 +4275,20 @@ function LifestyleRiverHomePage({
     setVisibleCount(8);
   }, [activeBrandFilters, activeFilter, demoState.contentDay, demoState.daypart]);
 
+  React.useEffect(() => {
+    if (!onboardingResult) return;
+
+    setProfile((current) => ({
+      ...current,
+      followedTopics: mergeUnique(current.followedTopics, onboardingResult.interests),
+      followedBrands: mergeUnique(current.followedBrands, onboardingResult.brands),
+      savedTags: mergeUnique(current.savedTags, onboardingResult.tags),
+      boostedTags: mergeUnique(current.boostedTags, onboardingResult.tags),
+    }));
+    setActiveBrandFilters([]);
+    onRiverReset?.();
+  }, [onRiverReset, onboardingResult]);
+
   const anchorRiverToTop = React.useCallback(() => {
     window.requestAnimationFrame(() => {
       onRiverReset?.();
@@ -3540,14 +4318,12 @@ function LifestyleRiverHomePage({
     return () => observer.disconnect();
   }, [filteredStories.length, visibleCount]);
 
-  const mergeUnique = (items: string[], nextItems: string[]) =>
-    Array.from(new Set([...items, ...nextItems]));
-
   const resetDemo = () => {
     setProfile(config.initialProfile);
     setDemoState(initialLifestyleDemoState);
     setActiveBrandFilters([]);
     setOpenStoryId(null);
+    setCommentsByStoryId({});
   };
 
   const simulateReturn = (
@@ -3720,6 +4496,24 @@ function LifestyleRiverHomePage({
     }));
   };
 
+  const addStoryComment = (storyId: string, body: string) => {
+    setCommentsByStoryId((current) => {
+      const nextComment: LifestyleStoryComment = {
+        id: `${storyId}-session-comment-${Date.now()}`,
+        author: "You",
+        role: "reader",
+        body,
+        age: "now",
+        likes: 0,
+      };
+
+      return {
+        ...current,
+        [storyId]: [nextComment, ...(current[storyId] ?? [])],
+      };
+    });
+  };
+
   return (
     <div className="space-y-8">
       <TodayEditDashboard
@@ -3748,6 +4542,7 @@ function LifestyleRiverHomePage({
               <LifestyleRiverCard
                 story={leadStory}
                 saved={profile.savedIds.includes(leadStory.id)}
+                commentCount={getLifestyleCommentCount(leadStory, commentsByStoryId[leadStory.id]?.length ?? 0)}
                 onOpen={() => setOpenStoryId(leadStory.id)}
                 onSave={() => toggleSaved(leadStory)}
                 onMoreLikeThis={() => boostStory(leadStory)}
@@ -3787,6 +4582,7 @@ function LifestyleRiverHomePage({
                     <LifestyleRiverCard
                       story={story}
                       saved={profile.savedIds.includes(story.id)}
+                      commentCount={getLifestyleCommentCount(story, commentsByStoryId[story.id]?.length ?? 0)}
                       onOpen={() => setOpenStoryId(story.id)}
                       onSave={() => toggleSaved(story)}
                       onMoreLikeThis={() => boostStory(story)}
@@ -3820,7 +4616,7 @@ function LifestyleRiverHomePage({
                   </Button>
                 ) : (
                   <p className="text-sm text-muted-foreground">
-                    You&rsquo;re caught up on this prototype river.
+                    You&rsquo;re caught up on this river.
                   </p>
                 )}
               </div>
@@ -3856,7 +4652,7 @@ function LifestyleRiverHomePage({
           </div>
           <div className="rounded-[8px] border border-border bg-muted/30 p-4">
             <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
-              POC Data Source
+              Story Source
             </p>
             <p className="mt-3 text-sm font-bold">
               {activeStoryPool.length} real-image stories
@@ -3906,8 +4702,10 @@ function LifestyleRiverHomePage({
         stories={filteredStories}
         openStoryId={openStoryId}
         productName={config.productName}
+        commentsByStoryId={commentsByStoryId}
         onClose={() => setOpenStoryId(null)}
         onOpenStory={setOpenStoryId}
+        onAddComment={addStoryComment}
       />
 
       <Button
@@ -4084,6 +4882,8 @@ export function HomePageTemplate({
   const { brand, colorMode } = useTheme();
   const router = useRouter();
   const [activeLifestyleFilter, setActiveLifestyleFilter] = React.useState("For You");
+  const [onboardingOpen, setOnboardingOpen] = React.useState(false);
+  const [onboardingResult, setOnboardingResult] = React.useState<HearstOnboardingResult | null>(null);
   const [selectedBrand, setSelectedBrand] = React.useState<{ name: string; slug: string } | null>(() =>
     getBrandRouteInfo(initialBrandSlug)
   );
@@ -4133,7 +4933,7 @@ export function HomePageTemplate({
       style={selectedBrandCssVars as React.CSSProperties | undefined}
     >
       {/* Utility Bar — full width */}
-      <UtilityBar selectedBrand={selectedBrand} />
+      <UtilityBar selectedBrand={selectedBrand} onCreateAccount={() => setOnboardingOpen(true)} />
 
       {/* Main Nav — full width background, content constrained */}
       <MainNav
@@ -4155,6 +4955,7 @@ export function HomePageTemplate({
               activeFilter={activeLifestyleFilter}
               destination={destinationMode}
               initialBrandSlug={initialBrandSlug}
+              onboardingResult={onboardingResult}
               onRiverReset={anchorDestinationContent}
               onBrandFilterChange={anchorPageToTop}
               onSelectedBrandChange={handleSelectedBrandChange}
@@ -4166,6 +4967,16 @@ export function HomePageTemplate({
           )}
         </div>
       </PageContainer>
+
+      {isDestinationRiver ? (
+        <HearstOnboardingModal
+          open={onboardingOpen}
+          destination={destinationMode}
+          initialBrandSlug={selectedBrand?.slug ?? initialBrandSlug}
+          onClose={() => setOnboardingOpen(false)}
+          onComplete={(result) => setOnboardingResult(result)}
+        />
+      ) : null}
 
       {/* Footer — full width */}
       <Footer />
