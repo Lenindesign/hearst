@@ -496,6 +496,20 @@ function mergeUnique(items: string[], nextItems: string[]) {
   return Array.from(new Set([...items, ...nextItems]));
 }
 
+function getOnboardingSignalTags(stories: LifestyleRiverStory[], result: HearstOnboardingResult) {
+  const normalizedInterests = new Set(result.interests.map((interest) => interest.toLowerCase()));
+  const selectedBrands = new Set(result.brands);
+  const signalTags = stories
+    .filter((story) => {
+      const topicMatch = normalizedInterests.has(story.topic.toLowerCase())
+        || result.interests.some((interest) => story.topic.startsWith(`${interest} `));
+      return topicMatch || selectedBrands.has(story.brand);
+    })
+    .flatMap((story) => story.tags);
+
+  return mergeUnique(result.tags, signalTags).slice(0, 16);
+}
+
 const destinationConfigs: Record<DestinationMode, DestinationConfig> = {
   all: {
     mode: "all",
@@ -592,7 +606,11 @@ function getDestinationMode(brandSlug: string): DestinationMode {
   if (brandSlug === "hearst-all") return "all";
   if (brandSlug === "hearst-ew") return "ew";
   if (brandSlug === "hearst-flux") return "flux";
-  return brandSlug === "hearst-plus" ? "autos" : "lifestyle";
+  if (brandSlug === "hearst-plus") return "autos";
+  if (destinationConfigs.autos.sourceNotes.some((note) => note.brandSlug === brandSlug)) return "autos";
+  if (destinationConfigs.flux.sourceNotes.some((note) => note.brandSlug === brandSlug)) return "flux";
+  if (destinationConfigs.ew.sourceNotes.some((note) => note.brandSlug === brandSlug)) return "ew";
+  return "lifestyle";
 }
 
 function getStoryDestinationMode(brandSlug: string): Exclude<DestinationMode, "all"> {
@@ -662,18 +680,20 @@ function getLifestyleScoreBreakdown(
   config = destinationConfigs.lifestyle
 ) {
   const popularity = story.popularity;
-  const followedTopic = profile.followedTopics.includes(story.topic) ? 18 : 0;
+  const isOnboardingPersonalized = profile.personalizationMode === "onboarding";
+  const followedTopicMatch = profile.followedTopics.some((topic) => story.topic === topic || story.topic.startsWith(`${topic} `));
+  const followedTopic = followedTopicMatch ? (isOnboardingPersonalized ? 34 : 18) : 0;
   const followedBrand = profile.followedBrands.includes(story.brand) ? 16 : 0;
   const savedTagMatches = story.tags.filter((tag) => profile.savedTags.includes(tag)).length;
   const boostedTagMatches = story.tags.filter((tag) => profile.boostedTags.includes(tag)).length;
-  const savedTag = savedTagMatches > 0 ? 14 + Math.min(18, (savedTagMatches - 1) * 6) : 0;
-  const moreLikeThis = boostedTagMatches > 0 ? 22 + Math.min(24, (boostedTagMatches - 1) * 8) : 0;
+  const savedTag = savedTagMatches > 0 ? (isOnboardingPersonalized ? 24 : 14) + Math.min(24, (savedTagMatches - 1) * 6) : 0;
+  const moreLikeThis = boostedTagMatches > 0 ? (isOnboardingPersonalized ? 34 : 22) + Math.min(32, (boostedTagMatches - 1) * 8) : 0;
   const savedStory = profile.savedIds.includes(story.id) ? 6 : 0;
   const recency = getLifestyleRecencyScore(story, demoState);
   const timeOfDay = getLifestyleTimeOfDayScore(story, demoState, config);
   const isFirstMorningVisit =
     demoState.contentDay === "today" && demoState.returnHours === 0 && demoState.daypart === "morning";
-  const defaultLead = config.defaultLeadStoryId === story.id && isFirstMorningVisit ? 80 : 0;
+  const defaultLead = !isOnboardingPersonalized && config.defaultLeadStoryId === story.id && isFirstMorningVisit ? 80 : 0;
   const returnFreshness =
     demoState.returnHours > 0 && story.id !== demoState.previousLeadId && story.age <= demoState.returnHours + 4
       ? 24
@@ -940,44 +960,41 @@ function getOnboardingInterestOptions(config: DestinationConfig) {
   return Array.from(new Set([...filterOptions, ...topicOptions])).slice(0, 12);
 }
 
-function getOnboardingVisual(config: DestinationConfig, initialBrandSlug?: string) {
-  const brandStory = initialBrandSlug
-    ? config.stories.find((story) => story.brandSlug === initialBrandSlug && story.image)
-    : undefined;
-  const leadStory = config.defaultLeadStoryId
-    ? config.stories.find((story) => story.id === config.defaultLeadStoryId && story.image)
-    : undefined;
-  const story = brandStory ?? leadStory ?? config.stories.find((item) => item.image);
+const onboardingVisuals: Record<DestinationMode, { image: string; objectPosition: string }> = {
+  all: {
+    image: "/images/hearst-plus-onboarding.png",
+    objectPosition: "center center",
+  },
+  lifestyle: {
+    image: "/images/hearst-plus-onboarding.png",
+    objectPosition: "center center",
+  },
+  autos: {
+    image: "/images/hearst-plus-onboarding.png",
+    objectPosition: "center center",
+  },
+  flux: {
+    image: "/images/hearst-plus-onboarding.png",
+    objectPosition: "center center",
+  },
+  ew: {
+    image: "/images/hearst-plus-onboarding.png",
+    objectPosition: "center center",
+  },
+};
 
-  if (!story) {
-    return {
-      image: "",
-      kicker: config.productName,
-      title: "One place for your daily reads",
-      summary: config.brandSummary,
-      story: undefined,
-    };
-  }
-
-  return {
-    image: story.image,
-    kicker: `${story.brand} / ${story.topic}`,
-    title: story.title,
-    summary: "Start here, then let Hearst tune the rest of your daily feed around what you read, save, and follow.",
-    story,
-  };
+function getOnboardingVisual(config: DestinationConfig) {
+  return onboardingVisuals[config.mode] ?? onboardingVisuals.all;
 }
 
 function HearstOnboardingModal({
   open,
   destination,
-  initialBrandSlug,
   onClose,
   onComplete,
 }: {
   open: boolean;
   destination: DestinationMode;
-  initialBrandSlug?: string;
   onClose: () => void;
   onComplete: (result: HearstOnboardingResult) => void;
 }) {
@@ -990,10 +1007,7 @@ function HearstOnboardingModal({
   const headingRef = React.useRef<HTMLHeadingElement | null>(null);
   const restoreFocusRef = React.useRef<HTMLElement | null>(null);
   const interestOptions = React.useMemo(() => getOnboardingInterestOptions(config), [config]);
-  const onboardingVisual = React.useMemo(
-    () => getOnboardingVisual(config, initialBrandSlug),
-    [config, initialBrandSlug]
-  );
+  const onboardingVisual = React.useMemo(() => getOnboardingVisual(config), [config]);
   const brandOptions = React.useMemo(() => {
     const allBrandsConfig = destinationConfigs.all;
     const counts = allBrandsConfig.stories.reduce<Record<string, number>>((acc, story) => {
@@ -1122,10 +1136,6 @@ function HearstOnboardingModal({
     currentBrandPage * brandsPerPage,
     currentBrandPage * brandsPerPage + brandsPerPage
   );
-  const visualObjectPosition = onboardingVisual.story
-    ? getLifestyleImagePosition(onboardingVisual.story)
-    : "center";
-
   return (
     <div className="fixed inset-0 z-[120] flex items-center justify-center bg-foreground/50 p-4 backdrop-blur-sm sm:p-6">
       <div className="absolute inset-0" onClick={onClose} />
@@ -1143,7 +1153,7 @@ function HearstOnboardingModal({
               src={onboardingVisual.image}
               alt=""
               className="absolute inset-0 h-full w-full object-cover"
-              style={{ objectPosition: visualObjectPosition }}
+              style={{ objectPosition: onboardingVisual.objectPosition }}
               aria-hidden
               loading="eager"
               fetchPriority="high"
@@ -1174,7 +1184,7 @@ function HearstOnboardingModal({
                 src={onboardingVisual.image}
                 alt=""
                 className="h-48 w-full object-cover"
-                style={{ objectPosition: visualObjectPosition }}
+                style={{ objectPosition: onboardingVisual.objectPosition }}
                 aria-hidden
                 loading="eager"
                 fetchPriority="high"
@@ -4278,16 +4288,19 @@ function LifestyleRiverHomePage({
   React.useEffect(() => {
     if (!onboardingResult) return;
 
+    const signalTags = getOnboardingSignalTags(config.stories, onboardingResult);
     setProfile((current) => ({
       ...current,
-      followedTopics: mergeUnique(current.followedTopics, onboardingResult.interests),
-      followedBrands: mergeUnique(current.followedBrands, onboardingResult.brands),
-      savedTags: mergeUnique(current.savedTags, onboardingResult.tags),
-      boostedTags: mergeUnique(current.boostedTags, onboardingResult.tags),
+      followedTopics: onboardingResult.interests.length > 0 ? onboardingResult.interests : current.followedTopics,
+      followedBrands: onboardingResult.brands.length > 0 ? onboardingResult.brands : current.followedBrands,
+      savedTags: signalTags,
+      boostedTags: signalTags,
+      personalizationMode: "onboarding",
     }));
+    setDemoState(initialLifestyleDemoState);
     setActiveBrandFilters([]);
     onRiverReset?.();
-  }, [onRiverReset, onboardingResult]);
+  }, [config.stories, onRiverReset, onboardingResult]);
 
   const anchorRiverToTop = React.useCallback(() => {
     window.requestAnimationFrame(() => {
@@ -4897,7 +4910,7 @@ export function HomePageTemplate({
   );
   const destinationContentRef = React.useRef<HTMLDivElement | null>(null);
   const isDestinationRiver = brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
-  const destinationMode = getDestinationMode(brand.slug);
+  const destinationMode = getDestinationMode(selectedBrand?.slug ?? initialBrandSlug ?? brand.slug);
   const anchorDestinationContent = React.useCallback(() => {
     window.requestAnimationFrame(() => {
       destinationContentRef.current?.scrollIntoView({ block: "start", behavior: "smooth" });
@@ -4972,9 +4985,12 @@ export function HomePageTemplate({
         <HearstOnboardingModal
           open={onboardingOpen}
           destination={destinationMode}
-          initialBrandSlug={selectedBrand?.slug ?? initialBrandSlug}
           onClose={() => setOnboardingOpen(false)}
-          onComplete={(result) => setOnboardingResult(result)}
+          onComplete={(result) => {
+            setActiveLifestyleFilter("For You");
+            setOnboardingResult(result);
+            anchorDestinationContent();
+          }}
         />
       ) : null}
 

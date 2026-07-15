@@ -24,4 +24,5 @@ export type LifestyleRiverProfile = {
   boostedTags: string[];
   savedIds: string[];
   hiddenIds: string[];
+  personalizationMode?: "default" | "onboarding";
 };
