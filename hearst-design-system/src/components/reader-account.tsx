@@ -50,10 +50,13 @@ type CreateAccountInput = {
   preferences: LifestyleRiverProfile;
 };
 
+type GoogleAccountInput = Omit<CreateAccountInput, "password">;
+
 type ReaderAccountContextValue = {
   account: ReaderAccount | null;
   isHydrated: boolean;
   createAccount: (input: CreateAccountInput) => Promise<ReaderAccount>;
+  continueWithGoogle: (input: GoogleAccountInput) => Promise<ReaderAccount>;
   signIn: (email: string, password: string) => Promise<ReaderAccount>;
   signOut: () => void;
   updateAccount: (updates: Partial<Pick<ReaderAccount, "firstName" | "lastName">>) => void;
@@ -143,6 +146,43 @@ export function ReaderAccountProvider({ children }: { children: React.ReactNode 
         },
       ],
       passwordHash: await hashPassword(input.password),
+    };
+
+    persist(next);
+    window.localStorage.setItem(sessionStorageKey, next.id);
+    setIsSignedIn(true);
+    return publicAccount(next);
+  }, [persist]);
+
+  const continueWithGoogle = React.useCallback(async (input: GoogleAccountInput) => {
+    const email = normalizeEmail(input.email);
+    const existing = readStoredAccount();
+    if (existing && existing.email === email) {
+      setStoredAccount(existing);
+      window.localStorage.setItem(sessionStorageKey, existing.id);
+      setIsSignedIn(true);
+      return publicAccount(existing);
+    }
+
+    const now = new Date().toISOString();
+    const next: StoredReaderAccount = {
+      id: `reader-google-${Date.now()}`,
+      firstName: input.firstName.trim(),
+      lastName: input.lastName?.trim() ?? "",
+      email,
+      createdAt: now,
+      preferences: input.preferences,
+      commentsByStoryId: {},
+      collections: [
+        {
+          id: `collection-${Date.now()}`,
+          name: "Read Later",
+          storyIds: [...input.preferences.savedIds],
+          createdAt: now,
+          updatedAt: now,
+        },
+      ],
+      passwordHash: await hashPassword(`google:${email}`),
     };
 
     persist(next);
@@ -294,6 +334,7 @@ export function ReaderAccountProvider({ children }: { children: React.ReactNode 
     account: isSignedIn && storedAccount ? publicAccount(storedAccount) : null,
     isHydrated,
     createAccount,
+    continueWithGoogle,
     signIn,
     signOut,
     updateAccount,
@@ -307,6 +348,7 @@ export function ReaderAccountProvider({ children }: { children: React.ReactNode 
   }), [
     addComment,
     createAccount,
+    continueWithGoogle,
     createCollection,
     deleteAccount,
     deleteCollection,

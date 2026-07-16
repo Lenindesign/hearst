@@ -524,7 +524,7 @@ const destinationConfigs: Record<DestinationMode, DestinationConfig> = {
     productName: "Hearst Magazines",
     riverLabel: "Personalized Hearst story river",
     storyRiverLabel: "Hearst stories",
-    filters: ["For You", "Lifestyle", "Autos", "Fashion & Luxury", "Enthusiast & Wellness", "Home", "Style", "Reviews", "Fitness", "Shopping", "Saved"],
+    filters: ["For You", "Home", "Style", "Reviews", "Fitness", "Cars", "Shopping", "Games", "Saved"],
     stories: [...lifestyleRiverStories, ...autosRiverStories, ...fluxRiverStories, ...ewRiverStories],
     sourceNotes: [...lifestyleRiverSourceNotes, ...autosRiverSourceNotes, ...fluxRiverSourceNotes, ...ewRiverSourceNotes],
     initialProfile: initialAllProfile,
@@ -854,6 +854,7 @@ function storyMatchesLifestyleFilter(story: LifestyleRiverStory, filter: string)
   }
   if (filter === "Lifestyle") return getStoryDestinationMode(story.brandSlug) === "lifestyle";
   if (filter === "Autos") return getStoryDestinationMode(story.brandSlug) === "autos";
+  if (filter === "Cars") return getStoryDestinationMode(story.brandSlug) === "autos";
   if (filter === "Fashion & Luxury") return getStoryDestinationMode(story.brandSlug) === "flux";
   if (filter === "Enthusiast & Wellness") return getStoryDestinationMode(story.brandSlug) === "ew";
   return story.topic === filter || story.topic.startsWith(`${filter} `);
@@ -872,6 +873,7 @@ const hearstDestinationNavHrefs = new Map(
     .filter((section) => section.label !== "All")
     .map((section) => [section.label, section.href])
 );
+const hearstGamesHref = "https://motortrend-carmash.lovable.app/";
 
 function UtilityBar({
   selectedBrand,
@@ -1591,6 +1593,19 @@ function MainNav({
       <LinkComponent
         key={link}
         href={destinationHref}
+        variant="neutral"
+        underline={false}
+        size="sm"
+        className="whitespace-nowrap border-b-2 border-transparent px-0.5 pb-1 font-normal text-foreground hover:border-primary/40 hover:text-primary hover:no-underline"
+      >
+        {link}
+      </LinkComponent>
+    ) : link === "Games" ? (
+      <LinkComponent
+        key={link}
+        href={hearstGamesHref}
+        target="_blank"
+        rel="noopener noreferrer"
         variant="neutral"
         underline={false}
         size="sm"

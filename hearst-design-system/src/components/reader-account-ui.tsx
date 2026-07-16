@@ -18,10 +18,21 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { brandIconLogos } from "@/lib/logos";
+import { BrandLogo } from "./brand-logo";
 import type { LifestyleRiverProfile, LifestyleRiverStory } from "./lifestyle-river-types";
 import { useReaderAccount, type ReaderAccount } from "./reader-account";
 
 type AuthMode = "create" | "signIn";
+
+function GoogleMark() {
+  return (
+    <span className="grid size-5 place-items-center text-base font-bold" aria-hidden>
+      <span>
+        <span className="text-[#4285F4]">G</span>
+      </span>
+    </span>
+  );
+}
 
 export function ReaderAvatar({
   account,
@@ -138,7 +149,7 @@ export function ReaderAuthDialog({
   onClose: () => void;
   onAuthenticated?: () => void;
 }) {
-  const { createAccount, signIn } = useReaderAccount();
+  const { createAccount, continueWithGoogle, signIn } = useReaderAccount();
   const [mode, setMode] = React.useState<AuthMode>(initialMode);
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
@@ -205,28 +216,65 @@ export function ReaderAuthDialog({
     }
   };
 
+  const submitGoogle = async () => {
+    setError("");
+    setSubmitting(true);
+    try {
+      await continueWithGoogle({
+        firstName: "Lenin",
+        lastName: "Aviles",
+        email: "lenin.google@hearstplus.local",
+        preferences: defaultPreferences,
+      });
+      onAuthenticated?.();
+      onClose();
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : "We could not complete that request.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <ModalFrame open={open} onClose={onClose} titleId="reader-auth-title" className="max-w-lg">
       <div className="flex items-center justify-between border-b border-border px-5 py-4 sm:px-7">
-        <div>
-          <p className="text-xs font-bold text-primary">Hearst+</p>
-          <p className="mt-1 text-xs text-muted-foreground">Your preferences follow you across every destination.</p>
-        </div>
+        <BrandLogo
+          slug="hearst-all"
+          className="[&_svg]:h-7 [&_svg]:w-auto [&_svg]:max-w-[190px]"
+          color="var(--color-primary)"
+        />
         <Button data-modal-close variant="outline" size="icon-sm" className="size-11" onClick={onClose} aria-label="Close account dialog">
           <X className="h-4 w-4" aria-hidden />
         </Button>
       </div>
       <form className="overflow-y-auto p-5 sm:p-7" onSubmit={submit} noValidate>
-        <h2 id="reader-auth-title" className="headline text-3xl leading-tight sm:text-4xl">
-          {mode === "create" ? "Create your free account." : "Welcome back."}
+        <h2 id="reader-auth-title" className="text-center text-2xl font-bold leading-tight sm:text-3xl">
+          {mode === "create" ? "Create account" : "Sign in"}
         </h2>
-        <p className="mt-3 text-sm leading-6 text-muted-foreground">
+        <p className="mx-auto mt-3 max-w-sm text-center text-sm leading-6 text-muted-foreground">
           {mode === "create"
-            ? "Save your feed, collections, reading history, and comments in this browser prototype."
+            ? "Save your personalized feed, collections, comments, and reading history."
             : "Sign in to restore your personalized feed and library."}
         </p>
 
-        <div className="mt-6 space-y-4">
+        <Button
+          type="button"
+          variant="outline"
+          className="mt-6 h-11 w-full gap-3 text-base font-bold"
+          disabled={submitting}
+          onClick={submitGoogle}
+        >
+          <GoogleMark />
+          Continue with Google
+        </Button>
+
+        <div className="my-6 flex items-center gap-4">
+          <span className="h-px flex-1 bg-border" />
+          <span className="text-sm font-bold text-muted-foreground">Or</span>
+          <span className="h-px flex-1 bg-border" />
+        </div>
+
+        <div className="space-y-4">
           {mode === "create" ? (
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="text-sm font-semibold">
