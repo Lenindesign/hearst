@@ -109,7 +109,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "What icon library is used?",
-    a: "We use Lucide icons throughout the design system. Lucide is an open-source icon library with over 1,000 icons, designed with a consistent 24×24 grid and 2px stroke width.",
+    a: "We use Phosphor icons throughout the design system. The shared icon layer keeps controls consistent while allowing each icon to use the weight that best matches its context.",
   },
 ];
 

@@ -17,7 +17,7 @@ import {
   Sparkles,
   TrendingUp,
   X,
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";

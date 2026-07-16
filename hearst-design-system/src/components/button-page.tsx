@@ -19,7 +19,7 @@ import {
   Share2,
   Bookmark,
   ExternalLink,
-} from "lucide-react";
+} from "@/components/ui/icons";
 
 function SectionHeader({
   title,
@@ -186,7 +186,7 @@ export function ButtonPage() {
             <AnatomyItem
               number={1}
               title="Icon Start"
-              description="Optional leading icon. 16×16px from Lucide. Can be hidden per instance."
+              description="Optional leading icon. 16×16px from Phosphor. Can be hidden per instance."
             />
             <AnatomyItem
               number={2}

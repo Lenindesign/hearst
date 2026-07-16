@@ -37,7 +37,7 @@ import {
   TrendingUp,
   ChevronRight,
   ShoppingBag,
-} from "lucide-react";
+} from "@/components/ui/icons";
 
 import {
   getBrandImages,

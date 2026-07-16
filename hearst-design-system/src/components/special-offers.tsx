@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { DollarSign } from "lucide-react";
+import { DollarSign } from "@/components/ui/icons";
 
 export interface Offer {
   label: string;

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { Info } from "@/components/ui/icons";
 
 // ---------------------------------------------------------------------------
 // Public types — configure these to reuse in any project
@@ -667,20 +668,7 @@ export function TokenInspector({
         }}
         title={`Toggle ${title} (${shortcutLabel})`}
       >
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <path d="M12 16v-4" />
-          <path d="M12 8h.01" />
-        </svg>
+        <Info className="h-3.5 w-3.5" aria-hidden />
         {enabled ? "Inspector ON" : title}
       </button>
 

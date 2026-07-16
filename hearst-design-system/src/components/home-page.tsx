@@ -40,13 +40,14 @@ import {
   Play,
   Plus,
   Send,
+  Search,
   ShoppingBag,
   SlidersHorizontal,
   Star,
   Sun,
   ThumbsUp,
   X,
-} from "lucide-react";
+} from "@/components/ui/icons";
 import {
   getBrandImages,
   getBaseContent,
@@ -57,6 +58,8 @@ import { ewRiverSourceNotes, ewRiverStories } from "./ew-river-data";
 import { fluxRiverSourceNotes, fluxRiverStories } from "./flux-river-data";
 import { lifestyleRiverSourceNotes, lifestyleRiverStories } from "./lifestyle-river-data";
 import type { LifestyleRiverProfile, LifestyleRiverStory } from "./lifestyle-river-types";
+import { useReaderAccount } from "./reader-account";
+import { ReaderAuthDialog, ReaderAvatar, ReaderProfileDialog } from "./reader-account-ui";
 
 interface ContentType extends BaseContentType {
   footerCols: string[][];
@@ -521,7 +524,7 @@ const destinationConfigs: Record<DestinationMode, DestinationConfig> = {
     productName: "Hearst Magazines",
     riverLabel: "Personalized Hearst story river",
     storyRiverLabel: "Hearst stories",
-    filters: ["For You", "Lifestyle", "Autos", "Flux", "E&W", "Home", "Style", "Reviews", "Fitness", "Shopping", "Saved"],
+    filters: ["For You", "Lifestyle", "Autos", "Fashion & Luxury", "Enthusiast & Wellness", "Home", "Style", "Reviews", "Fitness", "Shopping", "Saved"],
     stories: [...lifestyleRiverStories, ...autosRiverStories, ...fluxRiverStories, ...ewRiverStories],
     sourceNotes: [...lifestyleRiverSourceNotes, ...autosRiverSourceNotes, ...fluxRiverSourceNotes, ...ewRiverSourceNotes],
     initialProfile: initialAllProfile,
@@ -529,7 +532,7 @@ const destinationConfigs: Record<DestinationMode, DestinationConfig> = {
     dayparts: lifestyleDemoDayparts,
     nextDayTopics: ["Home", "Style", "Reviews", "Fitness", "Shopping"],
     brandSummary:
-      "Lifestyle, Autos, Flux, and E&W brands combined into one cross-Hearst personalized destination.",
+      "Lifestyle, Autos, Fashion & Luxury, and Enthusiast & Wellness brands combined into one cross-Hearst personalized destination.",
     dataSourceCopy:
       "public RSS metadata from the Hearst destination sections, filtered to stories with real Hearst CDN images.",
     collectionLabels: ["Daily edit", "Shopping ideas", "Weekend plans"],
@@ -851,8 +854,8 @@ function storyMatchesLifestyleFilter(story: LifestyleRiverStory, filter: string)
   }
   if (filter === "Lifestyle") return getStoryDestinationMode(story.brandSlug) === "lifestyle";
   if (filter === "Autos") return getStoryDestinationMode(story.brandSlug) === "autos";
-  if (filter === "Flux") return getStoryDestinationMode(story.brandSlug) === "flux";
-  if (filter === "E&W") return getStoryDestinationMode(story.brandSlug) === "ew";
+  if (filter === "Fashion & Luxury") return getStoryDestinationMode(story.brandSlug) === "flux";
+  if (filter === "Enthusiast & Wellness") return getStoryDestinationMode(story.brandSlug) === "ew";
   return story.topic === filter || story.topic.startsWith(`${filter} `);
 }
 
@@ -860,8 +863,8 @@ const hearstDestinationSections = [
   { label: "All", href: getHearstDestinationRoute("all") },
   { label: "Lifestyle", href: getHearstDestinationRoute("lifestyle") },
   { label: "Autos", href: getHearstDestinationRoute("autos") },
-  { label: "Flux", href: getHearstDestinationRoute("flux") },
-  { label: "E&W", href: getHearstDestinationRoute("ew") },
+  { label: "Fashion & Luxury", href: getHearstDestinationRoute("flux") },
+  { label: "Enthusiast & Wellness", href: getHearstDestinationRoute("ew") },
 ];
 
 const hearstDestinationNavHrefs = new Map(
@@ -873,18 +876,21 @@ const hearstDestinationNavHrefs = new Map(
 function UtilityBar({
   selectedBrand,
   onCreateAccount,
+  onOpenProfile,
 }: {
   selectedBrand?: { name: string; slug: string } | null;
   onCreateAccount?: () => void;
+  onOpenProfile?: () => void;
 }) {
   const { brand } = useTheme();
+  const { account } = useReaderAccount();
   const selectedDestination = selectedBrand ? getStoryDestinationMode(selectedBrand.slug) : null;
   const activeDestination = selectedDestination === "autos"
     ? "Autos"
     : selectedDestination === "flux"
-    ? "Flux"
+    ? "Fashion & Luxury"
     : selectedDestination === "ew"
-    ? "E&W"
+    ? "Enthusiast & Wellness"
     : selectedDestination === "lifestyle"
     ? "Lifestyle"
     : brand.slug === "hearst-all"
@@ -892,16 +898,16 @@ function UtilityBar({
       : brand.slug === "hearst-plus"
       ? "Autos"
       : brand.slug === "hearst-flux"
-      ? "Flux"
+      ? "Fashion & Luxury"
       : brand.slug === "hearst-ew"
-      ? "E&W"
+      ? "Enthusiast & Wellness"
       : "Lifestyle";
 
   return (
     <div className="h-8 bg-primary text-primary-foreground text-[length:var(--text-token-4xs)] font-semibold">
       <PageContainer className="grid h-full grid-cols-[minmax(0,1fr)_auto] items-center gap-2 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:gap-3">
         <nav className="hidden items-center gap-3 sm:flex" aria-label="Utility navigation">
-          {["Shop", "Newsletter", "Sign In"].map((label) => (
+          {["Shop", "Newsletter"].map((label) => (
             <LinkComponent
               key={label}
               href="#"
@@ -939,23 +945,30 @@ function UtilityBar({
             ))}
           </div>
         </nav>
-        <Button
-          variant="secondary"
-          size="xs"
-          className="shrink-0 bg-white px-2 text-[length:var(--text-token-4xs)] font-semibold text-black hover:bg-white/90 hover:text-black sm:px-3"
-          aria-label="Create a free account"
-          onClick={onCreateAccount}
-        >
-          <span className="sm:hidden">Join</span>
-          <span className="hidden sm:inline">Create Account</span>
-        </Button>
+        <div className="flex shrink-0 items-center gap-2">
+          <Button
+            variant="secondary"
+            size="xs"
+            className={cn(
+              "shrink-0 text-[length:var(--text-token-4xs)] font-semibold",
+              account
+                ? "gap-1.5 bg-transparent px-0.5 text-primary-foreground hover:bg-white/10 hover:text-primary-foreground sm:pr-2"
+                : "bg-white px-2 text-black hover:bg-white/90 hover:text-black sm:px-3"
+            )}
+            aria-label={account ? "Open your profile" : "Sign up or sign in"}
+            onClick={account ? onOpenProfile : onCreateAccount}
+          >
+            {account ? <ReaderAvatar account={account} size="sm" className="!size-4 ring-1 ring-white/50 [&_[data-slot=avatar-fallback]]:text-[8px]" /> : null}
+            <span className={account ? "hidden text-xs sm:inline" : "text-[10px] sm:text-xs"}>{account ? account.firstName : "Sign Up / Sign In"}</span>
+          </Button>
+        </div>
       </PageContainer>
     </div>
   );
 }
 
 function getOnboardingInterestOptions(config: DestinationConfig) {
-  const broadDestinationFilters = new Set(["For You", "Saved", "Lifestyle", "Autos", "Flux", "E&W"]);
+  const broadDestinationFilters = new Set(["For You", "Saved", "Lifestyle", "Autos", "Fashion & Luxury", "Enthusiast & Wellness"]);
   const filterOptions = config.filters.filter((filter) => !broadDestinationFilters.has(filter));
   const topicOptions = Array.from(new Set(config.stories.map((story) => story.topic)))
     .filter((topic) => !broadDestinationFilters.has(topic))
@@ -996,11 +1009,13 @@ function HearstOnboardingModal({
   destination,
   onClose,
   onComplete,
+  onRequestAuthentication,
 }: {
   open: boolean;
   destination: DestinationMode;
   onClose: () => void;
   onComplete: (result: HearstOnboardingResult) => void;
+  onRequestAuthentication: (mode: "create" | "signIn", result: HearstOnboardingResult) => void;
 }) {
   const config = destinationConfigs[destination];
   const [step, setStep] = React.useState(0);
@@ -1119,15 +1134,12 @@ function HearstOnboardingModal({
         : [...current, brandName]
     );
   };
-  const completeOnboarding = () => {
-    onComplete({
+  const getResult = (): HearstOnboardingResult => ({
       id: Date.now(),
       interests: selectedInterests,
       brands: selectedBrands,
       tags: selectedInterests.map((interest) => interest.toLowerCase()),
     });
-    setStep(4);
-  };
   const canContinueInterests = selectedInterests.length >= 3;
   const canContinueBrands = selectedBrands.length >= 2;
   const stepCount = 5;
@@ -1145,7 +1157,7 @@ function HearstOnboardingModal({
       <div className="absolute inset-0" onClick={onClose} />
       <section
         ref={dialogRef}
-        className="relative z-10 mx-auto grid h-[min(760px,calc(100dvh-2rem))] w-full max-w-5xl overflow-hidden rounded-[16px] bg-background shadow-2xl sm:h-[min(760px,calc(100dvh-3rem))] lg:grid-cols-[minmax(320px,0.95fr)_minmax(0,1.05fr)]"
+        className="relative z-10 mx-auto grid h-[min(760px,calc(100dvh-2rem))] w-full max-w-5xl overflow-hidden rounded-[8px] bg-background shadow-2xl sm:h-[min(760px,calc(100dvh-3rem))] lg:grid-cols-[minmax(320px,0.95fr)_minmax(0,1.05fr)]"
         role="dialog"
         aria-modal="true"
         aria-labelledby="hearst-onboarding-title"
@@ -1464,10 +1476,21 @@ function HearstOnboardingModal({
             ) : null}
             {step === 3 ? (
               <>
-                <Button variant="ghost" size="sm" onClick={completeOnboarding}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    onComplete(getResult());
+                    setStep(4);
+                  }}
+                  className="whitespace-nowrap"
+                >
+                  Continue without account
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => onRequestAuthentication("signIn", getResult())}>
                   Sign In
                 </Button>
-                <Button size="sm" onClick={completeOnboarding} className="whitespace-nowrap">
+                <Button size="sm" onClick={() => onRequestAuthentication("create", getResult())} className="whitespace-nowrap">
                   Create Free Account
                 </Button>
               </>
@@ -1623,7 +1646,7 @@ function MainNav({
         </div>
         <div className="flex w-[var(--width-sidebar-narrow)] justify-end">
           <Button variant="outline" size="icon-sm" aria-label="Search" title="Search">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <Search className="h-3.5 w-3.5" aria-hidden />
           </Button>
         </div>
       </PageContainer>
@@ -1663,7 +1686,7 @@ function MainNav({
         </div>
         <div className="flex justify-end">
           <Button variant="outline" size="icon-sm" aria-label="Search" title="Search">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <Search className="h-3.5 w-3.5" aria-hidden />
           </Button>
         </div>
       </PageContainer>
@@ -3003,10 +3026,11 @@ function LifestyleLeadSlider({
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [paused, setPaused] = React.useState(false);
   const activeStory = stories[activeIndex] ?? stories[0];
+  const storyIdsKey = stories.map((story) => story.id).join("|");
 
   React.useEffect(() => {
     setActiveIndex(0);
-  }, [stories.map((story) => story.id).join("|")]);
+  }, [storyIdsKey]);
 
   React.useEffect(() => {
     if (paused || stories.length < 2) return;
@@ -3020,7 +3044,6 @@ function LifestyleLeadSlider({
 
   if (!activeStory) return null;
 
-  const commentCount = getLifestyleCommentCount(activeStory, commentsByStoryId[activeStory.id]?.length ?? 0);
   const saved = savedIds.includes(activeStory.id);
   const goToPrevious = () => setActiveIndex((index) => (index - 1 + stories.length) % stories.length);
   const goToNext = () => setActiveIndex((index) => (index + 1) % stories.length);
@@ -4414,7 +4437,8 @@ function LifestyleRiverHomePage({
   onSelectedBrandChange?: (brand: { name: string; slug: string } | null) => void;
 }) {
   const config = destinationConfigs[destination];
-  const [profile, setProfile] = React.useState<LifestyleRiverProfile>(config.initialProfile);
+  const { account, updatePreferences, addComment } = useReaderAccount();
+  const [profile, setProfile] = React.useState<LifestyleRiverProfile>(() => account?.preferences ?? config.initialProfile);
   const [demoState, setDemoState] = React.useState<LifestyleDemoState>(initialLifestyleDemoState);
   const initialBrandName = config.sourceNotes.find((note) => note.brandSlug === initialBrandSlug)?.brand;
   const [activeBrandFilters, setActiveBrandFilters] = React.useState<string[]>(initialBrandName ? [initialBrandName] : []);
@@ -4423,6 +4447,24 @@ function LifestyleRiverHomePage({
   const [demoModalOpen, setDemoModalOpen] = React.useState(false);
   const [visibleCount, setVisibleCount] = React.useState(8);
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
+  const profileRef = React.useRef(profile);
+  const appliedOnboardingResultRef = React.useRef<HearstOnboardingResult | null>(null);
+  const resolvedCommentsByStoryId = account?.commentsByStoryId ?? commentsByStoryId;
+  const readerAccountId = account?.id;
+
+  const updateReaderProfile = React.useCallback((updater: React.SetStateAction<LifestyleRiverProfile>) => {
+    const current = profileRef.current;
+    const next = typeof updater === "function" ? updater(current) : updater;
+    profileRef.current = next;
+    setProfile(next);
+    if (readerAccountId) updatePreferences(next);
+  }, [readerAccountId, updatePreferences]);
+
+  React.useEffect(() => {
+    const next = account?.preferences ?? config.initialProfile;
+    profileRef.current = next;
+    setProfile(next);
+  }, [account?.id, account?.preferences, config.initialProfile]);
 
   const activeStoryPool = React.useMemo(() => getLifestyleDemoStoryPool(demoState, config), [config, demoState]);
   const rankedStories = React.useMemo(
@@ -4480,10 +4522,11 @@ function LifestyleRiverHomePage({
   }, [activeBrandFilters, activeFilter, demoState.contentDay, demoState.daypart]);
 
   React.useEffect(() => {
-    if (!onboardingResult) return;
+    if (!onboardingResult || appliedOnboardingResultRef.current === onboardingResult) return;
+    appliedOnboardingResultRef.current = onboardingResult;
 
     const signalTags = getOnboardingSignalTags(config.stories, onboardingResult);
-    setProfile((current) => ({
+    updateReaderProfile((current) => ({
       ...current,
       followedTopics: onboardingResult.interests.length > 0 ? onboardingResult.interests : current.followedTopics,
       followedBrands: onboardingResult.brands.length > 0 ? onboardingResult.brands : current.followedBrands,
@@ -4494,7 +4537,7 @@ function LifestyleRiverHomePage({
     setDemoState(initialLifestyleDemoState);
     setActiveBrandFilters([]);
     onRiverReset?.();
-  }, [config.stories, onRiverReset, onboardingResult]);
+  }, [config.stories, onRiverReset, onboardingResult, updateReaderProfile]);
 
   const anchorRiverToTop = React.useCallback(() => {
     window.requestAnimationFrame(() => {
@@ -4526,7 +4569,7 @@ function LifestyleRiverHomePage({
   }, [filteredStories.length, visibleCount]);
 
   const resetDemo = () => {
-    setProfile(config.initialProfile);
+    updateReaderProfile(config.initialProfile);
     setDemoState(initialLifestyleDemoState);
     setActiveBrandFilters([]);
     setOpenStoryId(null);
@@ -4626,7 +4669,7 @@ function LifestyleRiverHomePage({
 
     const selected = presets[preset];
 
-    setProfile((current) => ({
+    updateReaderProfile((current) => ({
       ...current,
       followedTopics: mergeUnique(current.followedTopics, selected.followedTopics ?? []),
       followedBrands: mergeUnique(current.followedBrands, selected.followedBrands ?? []),
@@ -4636,7 +4679,7 @@ function LifestyleRiverHomePage({
   };
 
   const toggleSaved = (story: LifestyleRiverStory) => {
-    setProfile((current) => {
+    updateReaderProfile((current) => {
       const saved = current.savedIds.includes(story.id);
       return {
         ...current,
@@ -4649,7 +4692,7 @@ function LifestyleRiverHomePage({
   };
 
   const boostStory = (story: LifestyleRiverStory) => {
-    setProfile((current) => ({
+    updateReaderProfile((current) => ({
       ...current,
       boostedTags: mergeUnique(current.boostedTags, story.tags),
       followedTopics: mergeUnique(current.followedTopics, [story.topic]),
@@ -4657,7 +4700,7 @@ function LifestyleRiverHomePage({
   };
 
   const followTopic = (topic: string) => {
-    setProfile((current) => ({
+    updateReaderProfile((current) => ({
       ...current,
       followedTopics: current.followedTopics.includes(topic)
         ? current.followedTopics.filter((item) => item !== topic)
@@ -4681,7 +4724,7 @@ function LifestyleRiverHomePage({
   };
 
   const followBrand = (brandName: string) => {
-    setProfile((current) => ({
+    updateReaderProfile((current) => ({
       ...current,
       followedBrands: mergeUnique(current.followedBrands, [brandName]),
     }));
@@ -4697,13 +4740,18 @@ function LifestyleRiverHomePage({
   };
 
   const hideStory = (id: string) => {
-    setProfile((current) => ({
+    updateReaderProfile((current) => ({
       ...current,
       hiddenIds: mergeUnique(current.hiddenIds, [id]),
     }));
   };
 
   const addStoryComment = (storyId: string, body: string) => {
+    if (account) {
+      const story = config.stories.find((item) => item.id === storyId);
+      addComment({ storyId, storyTitle: story?.title ?? "Hearst story", body });
+      return;
+    }
     setCommentsByStoryId((current) => {
       const nextComment: LifestyleStoryComment = {
         id: `${storyId}-session-comment-${Date.now()}`,
@@ -4749,7 +4797,7 @@ function LifestyleRiverHomePage({
               <LifestyleLeadSlider
                 stories={heroStories}
                 savedIds={profile.savedIds}
-                commentsByStoryId={commentsByStoryId}
+                commentsByStoryId={resolvedCommentsByStoryId}
                 onOpenStory={(story) => setOpenStoryId(story.id)}
                 onSave={toggleSaved}
                 onMoreLikeThis={boostStory}
@@ -4787,7 +4835,7 @@ function LifestyleRiverHomePage({
                     <LifestyleRiverCard
                       story={story}
                       saved={profile.savedIds.includes(story.id)}
-                      commentCount={getLifestyleCommentCount(story, commentsByStoryId[story.id]?.length ?? 0)}
+                      commentCount={getLifestyleCommentCount(story, resolvedCommentsByStoryId[story.id]?.length ?? 0)}
                       onOpen={() => setOpenStoryId(story.id)}
                       onSave={() => toggleSaved(story)}
                       onMoreLikeThis={() => boostStory(story)}
@@ -4907,7 +4955,7 @@ function LifestyleRiverHomePage({
         stories={filteredStories}
         openStoryId={openStoryId}
         productName={config.productName}
-        commentsByStoryId={commentsByStoryId}
+        commentsByStoryId={resolvedCommentsByStoryId}
         onClose={() => setOpenStoryId(null)}
         onOpenStory={setOpenStoryId}
         onAddComment={addStoryComment}
@@ -5085,10 +5133,15 @@ export function HomePageTemplate({
   initialBrandSlug,
 }: HomePageTemplateProps = {}) {
   const { brand, colorMode } = useTheme();
+  const { account } = useReaderAccount();
   const router = useRouter();
   const [activeLifestyleFilter, setActiveLifestyleFilter] = React.useState("For You");
   const [onboardingOpen, setOnboardingOpen] = React.useState(false);
   const [onboardingResult, setOnboardingResult] = React.useState<HearstOnboardingResult | null>(null);
+  const [authOpen, setAuthOpen] = React.useState(false);
+  const [authMode, setAuthMode] = React.useState<"create" | "signIn">("signIn");
+  const [profileOpen, setProfileOpen] = React.useState(false);
+  const [pendingOnboardingResult, setPendingOnboardingResult] = React.useState<HearstOnboardingResult | null>(null);
   const [selectedBrand, setSelectedBrand] = React.useState<{ name: string; slug: string } | null>(() =>
     getBrandRouteInfo(initialBrandSlug)
   );
@@ -5103,6 +5156,15 @@ export function HomePageTemplate({
   const destinationContentRef = React.useRef<HTMLDivElement | null>(null);
   const isDestinationRiver = brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
   const destinationMode = getDestinationMode(selectedBrand?.slug ?? initialBrandSlug ?? brand.slug);
+  const destinationConfig = destinationConfigs[destinationMode];
+  const profileTopics = React.useMemo(
+    () => Array.from(new Set(destinationConfigs.all.stories.map((story) => story.topic))).sort(),
+    []
+  );
+  const profileBrands = React.useMemo(
+    () => destinationConfigs.all.sourceNotes.map((note) => note.brand),
+    []
+  );
   const anchorDestinationContent = React.useCallback(() => {
     window.requestAnimationFrame(() => {
       destinationContentRef.current?.scrollIntoView({ block: "start", behavior: "smooth" });
@@ -5144,7 +5206,11 @@ export function HomePageTemplate({
       style={selectedBrandCssVars as React.CSSProperties | undefined}
     >
       {/* Utility Bar — full width */}
-      <UtilityBar selectedBrand={selectedBrand} onCreateAccount={() => setOnboardingOpen(true)} />
+      <UtilityBar
+        selectedBrand={selectedBrand}
+        onCreateAccount={() => setOnboardingOpen(true)}
+        onOpenProfile={() => setProfileOpen(true)}
+      />
 
       {/* Main Nav — full width background, content constrained */}
       <MainNav
@@ -5189,7 +5255,47 @@ export function HomePageTemplate({
             setOnboardingResult(result);
             anchorDestinationContent();
           }}
+          onRequestAuthentication={(mode, result) => {
+            setPendingOnboardingResult(result);
+            setOnboardingOpen(false);
+            setAuthMode(mode);
+            setAuthOpen(true);
+          }}
         />
+      ) : null}
+
+      {isDestinationRiver ? (
+        <>
+          <ReaderAuthDialog
+            open={authOpen}
+            initialMode={authMode}
+            defaultPreferences={pendingOnboardingResult ? {
+              ...destinationConfig.initialProfile,
+              followedTopics: pendingOnboardingResult.interests,
+              followedBrands: pendingOnboardingResult.brands,
+              savedTags: pendingOnboardingResult.tags,
+              boostedTags: pendingOnboardingResult.tags,
+              personalizationMode: "onboarding",
+            } : destinationConfig.initialProfile}
+            onClose={() => { setAuthOpen(false); setPendingOnboardingResult(null); }}
+            onAuthenticated={() => {
+              if (pendingOnboardingResult) {
+                setOnboardingResult(pendingOnboardingResult);
+                setActiveLifestyleFilter("For You");
+                anchorDestinationContent();
+              }
+            }}
+          />
+          {account ? (
+            <ReaderProfileDialog
+              open={profileOpen}
+              stories={destinationConfigs.all.stories}
+              topics={profileTopics}
+              brands={profileBrands}
+              onClose={() => setProfileOpen(false)}
+            />
+          ) : null}
+        </>
       ) : null}
 
       {/* Footer — full width */}

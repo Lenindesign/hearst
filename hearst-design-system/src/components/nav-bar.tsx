@@ -14,6 +14,7 @@ import { useTheme } from "./theme-provider";
 import { BrandSwitcher } from "./brand-switcher";
 import { BrandLogo } from "./brand-logo";
 import { brandLogos } from "@/lib/logos";
+import { ExternalLink, Menu, X } from "@/components/ui/icons";
 
 const LOCAL_STORYBOOK_URL =
   "http://localhost:6006/?path=/docs/welcome--docs";
@@ -121,32 +122,15 @@ function ScrollableNav({
 }
 
 function HamburgerIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="4" x2="20" y1="12" y2="12" />
-      <line x1="4" x2="20" y1="6" y2="6" />
-      <line x1="4" x2="20" y1="18" y2="18" />
-    </svg>
-  );
+  return <Menu className="size-5" aria-hidden />;
 }
 
 function CloseIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M18 6 6 18" />
-      <path d="m6 6 12 12" />
-    </svg>
-  );
+  return <X className="size-5" aria-hidden />;
 }
 
 function ExternalIcon() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline ml-1 opacity-50">
-      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-      <polyline points="15 3 21 3 21 9" />
-      <line x1="10" x2="21" y1="14" y2="3" />
-    </svg>
-  );
+  return <ExternalLink className="ml-1 inline size-3 opacity-50" aria-hidden />;
 }
 
 function NavLink({

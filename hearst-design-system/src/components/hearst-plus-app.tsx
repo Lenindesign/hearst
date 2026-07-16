@@ -1,25 +1,27 @@
 "use client";
 
 import React from "react";
-import { BellIcon } from "@phosphor-icons/react/dist/csr/Bell";
-import { BookmarkSimpleIcon } from "@phosphor-icons/react/dist/csr/BookmarkSimple";
-import { CalendarBlankIcon } from "@phosphor-icons/react/dist/csr/CalendarBlank";
-import { CarIcon } from "@phosphor-icons/react/dist/csr/Car";
-import { CaretRightIcon } from "@phosphor-icons/react/dist/csr/CaretRight";
-import { CheckCircleIcon } from "@phosphor-icons/react/dist/csr/CheckCircle";
-import { CompassIcon } from "@phosphor-icons/react/dist/csr/Compass";
-import { DotsThreeIcon } from "@phosphor-icons/react/dist/csr/DotsThree";
-import { EyeSlashIcon } from "@phosphor-icons/react/dist/csr/EyeSlash";
-import { FolderPlusIcon } from "@phosphor-icons/react/dist/csr/FolderPlus";
-import { ListIcon } from "@phosphor-icons/react/dist/csr/List";
-import { MagnifyingGlassIcon } from "@phosphor-icons/react/dist/csr/MagnifyingGlass";
-import { NewspaperIcon } from "@phosphor-icons/react/dist/csr/Newspaper";
-import { PlusIcon } from "@phosphor-icons/react/dist/csr/Plus";
-import { ShareNetworkIcon } from "@phosphor-icons/react/dist/csr/ShareNetwork";
-import { SparkleIcon } from "@phosphor-icons/react/dist/csr/Sparkle";
-import { UserIcon } from "@phosphor-icons/react/dist/csr/User";
-import { WrenchIcon } from "@phosphor-icons/react/dist/csr/Wrench";
-import { XIcon } from "@phosphor-icons/react/dist/csr/X";
+import {
+  Bell as BellIcon,
+  Bookmark as BookmarkSimpleIcon,
+  CalendarBlank as CalendarBlankIcon,
+  Car as CarIcon,
+  ChevronRight as CaretRightIcon,
+  CheckCircle2 as CheckCircleIcon,
+  Compass as CompassIcon,
+  DotsThree as DotsThreeIcon,
+  EyeOff as EyeSlashIcon,
+  FolderPlus as FolderPlusIcon,
+  Menu as ListIcon,
+  Newspaper as NewspaperIcon,
+  Plus as PlusIcon,
+  Search as MagnifyingGlassIcon,
+  Share2 as ShareNetworkIcon,
+  Sparkles as SparkleIcon,
+  User as UserIcon,
+  Wrench as WrenchIcon,
+  X as XIcon,
+} from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { brands } from "@/lib/brands";

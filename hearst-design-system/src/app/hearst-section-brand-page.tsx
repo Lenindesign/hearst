@@ -27,7 +27,7 @@ export async function generateSectionBrandMetadata(
   if (!brand) return {};
 
   return {
-    title: `${brand.brand} | Hearst ${section === "ew" ? "E&W" : section}`,
+    title: `${brand.brand} | Hearst ${section === "ew" ? "Enthusiast & Wellness" : section === "flux" ? "Fashion & Luxury" : section}`,
     description: `A personalized ${brand.brand} story feed within the Hearst ${section} destination.`,
   };
 }

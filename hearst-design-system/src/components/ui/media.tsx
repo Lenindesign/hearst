@@ -3,7 +3,7 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
-import { Play, Headphones, type LucideIcon } from "lucide-react";
+import { Play, Headphones, type PhosphorIcon } from "@/components/ui/icons";
 
 const mediaVariants = cva("relative overflow-hidden bg-muted", {
   variants: {
@@ -48,7 +48,7 @@ const iconPositionClasses: Record<string, string> = {
   "bottom-right": "bottom-0 right-0 p-2",
 };
 
-const mediaIcons: Record<string, LucideIcon> = {
+const mediaIcons: Record<string, PhosphorIcon> = {
   play: Play,
   headphones: Headphones,
 };

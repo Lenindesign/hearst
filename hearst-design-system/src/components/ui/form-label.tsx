@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Info, TriangleAlert } from "lucide-react";
+import { Info, TriangleAlert } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 interface FormLabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {

@@ -18,7 +18,7 @@ import {
   Flame,
   Zap,
   Shield,
-} from "lucide-react";
+} from "@/components/ui/icons";
 
 function SectionHeader({
   title,
@@ -206,7 +206,7 @@ export function BadgePage() {
             <AnatomyItem
               number={1}
               title="Icon"
-              description="Optional leading icon. 12×12px from Lucide. Hidden by default, can be enabled per instance."
+              description="Optional leading icon. 12×12px from Phosphor. Hidden by default, can be enabled per instance."
             />
             <AnatomyItem
               number={2}

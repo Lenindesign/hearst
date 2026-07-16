@@ -23,7 +23,7 @@ import { ArticleByline } from "./fre/article-byline";
 import { ArticleBody } from "./fre/article-body";
 import { RelatedArticles, type RelatedArticle } from "./fre/related-articles";
 import { AdPlaceholder } from "./fre/ad-placeholder";
-import { CheckCircle2, ChevronDown, CircleX, ExternalLink, Mail, Search } from "lucide-react";
+import { CheckCircle2, ChevronDown, CircleX, ExternalLink, Mail, Search } from "@/components/ui/icons";
 
 export interface SidebarItem {
   title: string;

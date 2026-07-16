@@ -10,7 +10,7 @@ import {
   CarouselNext,
   type CarouselApi,
 } from "@/components/ui/carousel";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "@/components/ui/icons";
 
 export interface CarouselCard {
   title: string;

@@ -3,7 +3,7 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
-import { X, type LucideIcon } from "lucide-react";
+import { Info, TriangleAlert, X, type PhosphorIcon } from "@/components/ui/icons";
 
 const inputFieldVariants = cva(
   "flex items-center gap-2 w-full rounded-sm border bg-background transition-colors focus-within:border-foreground",
@@ -28,7 +28,7 @@ interface InputProps
   required?: boolean;
   helpText?: string;
   error?: string;
-  leadingIcon?: LucideIcon;
+  leadingIcon?: PhosphorIcon;
   onClear?: () => void;
 }
 
@@ -100,36 +100,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
         {error ? (
           <p className="flex items-center gap-1 text-xs text-red-700">
-            <svg
-              className="size-3.5 shrink-0"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" />
-              <path d="M12 9v4" />
-              <path d="M12 17h.01" />
-            </svg>
+            <TriangleAlert className="size-3.5 shrink-0" aria-hidden />
             {error}
           </p>
         ) : helpText ? (
           <p className="flex items-center gap-1 text-xs text-muted-foreground">
-            <svg
-              className="size-3.5 shrink-0"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <path d="M12 16v-4" />
-              <path d="M12 8h.01" />
-            </svg>
+            <Info className="size-3.5 shrink-0" aria-hidden />
             {helpText}
           </p>
         ) : null}

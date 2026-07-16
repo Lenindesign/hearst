@@ -3,7 +3,7 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink } from "@/components/ui/icons";
 
 const linkVariants = cva(
   "inline-flex items-center gap-1 font-semibold transition-colors cursor-pointer",

@@ -40,7 +40,35 @@ export const brandLogos: Record<string, string> = {
 };
 
 export const brandIconLogos: Partial<Record<string, string>> = {
+  "cosmopolitan": "https://www.cosmopolitan.com/_assets/design-tokens/cosmopolitan/static/images/apple-touch-icon.b887080.png",
+  "country-living": "https://www.countryliving.com/_assets/design-tokens/countryliving/static/images/apple-touch-icon.d0a32c5.png",
+  "delish": "https://www.delish.com/_assets/design-tokens/delish/static/images/apple-touch-icon.8adc1b7.png",
+  "good-housekeeping": "https://www.goodhousekeeping.com/_assets/design-tokens/goodhousekeeping/static/images/apple-touch-icon.da59c7c.png",
+  "house-beautiful": "https://www.housebeautiful.com/_assets/design-tokens/housebeautiful/static/images/apple-touch-icon.72cedc1.png",
+  "pioneer-woman": "https://www.thepioneerwoman.com/_assets/design-tokens/thepioneerwoman/static/images/apple-touch-icon.8133a54.png",
+  "prevention": "https://www.prevention.com/_assets/design-tokens/prevention/static/images/apple-touch-icon.ac12bc0.png",
+  "redbook": "https://www.redbookmag.com/_assets/design-tokens/redbookmag/static/images/apple-touch-icon.659f723.png",
+  "seventeen": "https://www.seventeen.com/_assets/design-tokens/seventeen/static/images/apple-touch-icon.11a9327.png",
+  "womans-day": "https://www.womansday.com/_assets/design-tokens/womansday/static/images/apple-touch-icon.bc2afd6.png",
+  "autoweek": "https://www.autoweek.com/_assets/design-tokens/autoweek/static/images/apple-touch-icon.b919ce0.png",
+  "bring-a-trailer": "https://bringatrailer.com/wp-content/themes/bringatrailer/assets/img/google-chrome-icon-192x192.png?v=4be5ad7eef",
+  "car-and-driver": "https://www.caranddriver.com/_assets/design-tokens/caranddriver/static/images/apple-touch-icon.57b92b6.png",
+  "hot-rod": "https://www.hotrod.com/logo/hotrod/icon.ico",
+  "motortrend": "https://www.motortrend.com/logo/motortrend/icon.ico",
   "road-and-track": "/logos/roadandtrack-lettermark.svg",
+  "elle": "https://www.elle.com/_assets/design-tokens/elle/static/images/apple-touch-icon.0dd915e.png",
+  "elle-decor": "https://www.elledecor.com/_assets/design-tokens/elledecor/static/images/apple-touch-icon.c51311f.png",
+  "esquire": "https://www.esquire.com/_assets/design-tokens/esquire/static/images/apple-touch-icon.1801cd0.png",
+  "harpers-bazaar": "https://www.harpersbazaar.com/_assets/design-tokens/harpersbazaar/static/images/apple-touch-icon.b5179c9.png",
+  "town-and-country": "https://www.townandcountrymag.com/_assets/design-tokens/townandcountrymag/static/images/apple-touch-icon.3ab52cc.png",
+  "veranda": "https://www.veranda.com/_assets/design-tokens/veranda/static/images/apple-touch-icon.bed0f30.png",
+  "best-products": "https://www.bestproducts.com/_assets/design-tokens/bestproducts/static/images/apple-touch-icon.721cffe.png",
+  "bicycling": "https://www.bicycling.com/_assets/design-tokens/bicycling/static/images/apple-touch-icon.5c91a4c.png",
+  "mens-health": "https://www.menshealth.com/_assets/design-tokens/menshealth/static/images/apple-touch-icon.35eef3d.png",
+  "oprah-daily": "https://www.oprahdaily.com/_assets/design-tokens/oprahdaily/static/images/apple-touch-icon.e245e23.png",
+  "popular-mechanics": "https://www.popularmechanics.com/_assets/design-tokens/popularmechanics/static/images/apple-touch-icon.5d5fa0d.png",
+  "runners-world": "https://www.runnersworld.com/_assets/design-tokens/runnersworld/static/images/favicon.7c41e8e.ico",
+  "womens-health": "https://www.womenshealthmag.com/_assets/design-tokens/womenshealthmag/static/images/apple-touch-icon.6b2985f.png",
 };
 
 export function getBrandLogoSrc(slug: string, variant: "logo" | "icon" = "logo") {

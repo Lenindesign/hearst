@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Mail, Search, Lock, User } from "lucide-react";
+import { Mail, Search, Lock, User } from "@/components/ui/icons";
 
 function SectionHeader({
   title,
@@ -101,7 +101,7 @@ const API_PROPS = [
   { name: "required", type: "boolean", default: "false", desc: "Shows required indicator dot" },
   { name: "helpText", type: "string", default: "—", desc: "Help message below the field" },
   { name: "error", type: "string", default: "—", desc: "Error message (replaces helpText)" },
-  { name: "leadingIcon", type: "LucideIcon", default: "—", desc: "Icon before the input text" },
+  { name: "leadingIcon", type: "PhosphorIcon", default: "—", desc: "Icon before the input text" },
   { name: "onClear", type: "() => void", default: "—", desc: "Clear button handler (shows X when value present)" },
   { name: "disabled", type: "boolean", default: "false", desc: "Disables the input" },
   { name: "placeholder", type: "string", default: "—", desc: "Placeholder text" },

@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
+import { ChevronRight } from "@/components/ui/icons";
 
 const CONNECTOR_URL =
   "https://figma-connector.kubeprod.hearstapps.com/token-studio/tokens";
@@ -392,15 +393,7 @@ function TokenTree({
               }
               className="flex items-center gap-1.5 py-1.5 text-xs font-medium hover:text-foreground text-foreground/70 w-full text-left"
             >
-              <svg
-                className={`w-3 h-3 transition-transform shrink-0 ${isOpen ? "rotate-90" : ""}`}
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="m9 18 6-6-6-6" />
-              </svg>
+              <ChevronRight className={`h-3 w-3 shrink-0 transition-transform ${isOpen ? "rotate-90" : ""}`} aria-hidden />
               <span>{key}</span>
               <span className="text-[10px] text-muted-foreground font-normal">
                 ({childLeaves.length})
