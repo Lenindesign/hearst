@@ -3,6 +3,7 @@ import type { CSSProperties } from "react";
 import { DraggableBrandLogoMarquee } from "@/components/brand-logo-marquee";
 import { SiteFooter } from "@/components/fre/site-footer";
 import type { BrandTheme } from "@/lib/brands";
+import { getHearstBrandRoute, getHearstDestinationRoute } from "@/lib/hearst-routes";
 import { brandLogos } from "@/lib/logos";
 import { themeOptions } from "@/lib/theme-options";
 
@@ -12,13 +13,13 @@ export function ProductHeader({ current }: { current: "story" | "blueprint" }) {
   return (
     <header className="border-b border-slate-200 bg-white">
       <div className="mx-auto flex max-w-[1360px] items-center justify-between gap-5 px-5 py-4 md:px-10">
-        <Link href="/hearst-all/" className="flex items-center" aria-label="Hearst Magazines">
+        <Link href={getHearstDestinationRoute("all")} className="flex items-center" aria-label="Hearst Magazines">
           <LogoMark slug="hearst-all" name="Hearst Magazines" color="#2D75B9" className="h-6 w-40" />
         </Link>
         <nav aria-label="Product pages" className="hidden items-center gap-6 text-sm font-semibold md:flex">
           <Link className={current === "story" ? "text-[#2D75B9]" : "text-slate-600 hover:text-slate-950"} href="/about-hearst-magazines/">Product story</Link>
           <Link className={current === "blueprint" ? "text-[#2D75B9]" : "text-slate-600 hover:text-slate-950"} href="/hearst-product-blueprint/">Blueprint</Link>
-          <Link className="text-slate-600 hover:text-slate-950" href="/hearst-all/">Open prototype</Link>
+          <Link className="text-slate-600 hover:text-slate-950" href={getHearstDestinationRoute("all")}>Open prototype</Link>
         </nav>
         <Link href={current === "story" ? "/hearst-product-blueprint/" : "/about-hearst-magazines/"} className="text-sm font-bold text-[#2D75B9] md:hidden">{current === "story" ? "Blueprint" : "Story"}</Link>
       </div>
@@ -47,7 +48,7 @@ export const brandSections = [
   {
     name: "Lifestyle",
     logoSlug: "hearst-lifestyle",
-    route: "/hearst-edit/",
+    route: getHearstDestinationRoute("lifestyle"),
     count: 259,
     color: "#7A2E57",
     brands: [
@@ -66,7 +67,7 @@ export const brandSections = [
   {
     name: "Autos",
     logoSlug: "hearst-plus",
-    route: "/hearst-plus/",
+    route: getHearstDestinationRoute("autos"),
     count: 200,
     color: "#1B5F8A",
     brands: [
@@ -81,7 +82,7 @@ export const brandSections = [
   {
     name: "Flux",
     logoSlug: "hearst-flux",
-    route: "/hearst-flux/",
+    route: getHearstDestinationRoute("flux"),
     count: 200,
     color: "#121212",
     brands: [
@@ -96,7 +97,7 @@ export const brandSections = [
   {
     name: "E&W",
     logoSlug: "hearst-ew",
-    route: "/hearst-ew/",
+    route: getHearstDestinationRoute("ew"),
     count: 200,
     color: "#E50022",
     brands: [
@@ -195,7 +196,7 @@ export function BrandPortfolioGrid({ compact = false }: { compact?: boolean }) {
             {section.brands.map(([name, slug, count]) => (
               <Link
                 key={slug}
-                href={`/brands/${slug}/`}
+                href={getHearstBrandRoute(slug)}
                 className="group flex min-h-16 items-center justify-between gap-3 border border-slate-200 bg-[#F8FAFC] px-3 py-3 hover:border-slate-400"
               >
                 <span className="flex min-w-0 items-center gap-3">
@@ -239,7 +240,7 @@ export function DestinationConvergence() {
               ))}
             </div>
             <div className="hidden h-px w-full bg-[#2D75B9] 2xl:block" />
-            <Link href="/hearst-all/" className="flex min-h-56 min-w-0 flex-col justify-center bg-[#102A43] p-6 text-white hover:bg-[#143653]">
+            <Link href={getHearstDestinationRoute("all")} className="flex min-h-56 min-w-0 flex-col justify-center bg-[#102A43] p-6 text-white hover:bg-[#143653]">
               <span className="text-xs font-black uppercase tracking-[0.16em] text-sky-300">Unified river</span>
               <strong className="mt-4 max-w-sm text-wrap font-serif text-3xl leading-none sm:text-4xl">Personalized daily briefing</strong>
               <span className="mt-5 text-sm leading-6 text-slate-300">A ranked mix that blends followed brands, current intent, freshness, utility and controlled discovery.</span>
@@ -439,7 +440,7 @@ export function BrandStyleGuide() {
                   key={slug}
                   name={name}
                   slug={slug}
-                  href={`/brands/${slug}/`}
+                  href={getHearstBrandRoute(slug)}
                   color={theme.colors["1"] || section.color}
                   accent={theme.colors["2"] || "#F2F2F2"}
                   headline={theme.fontHeadline}

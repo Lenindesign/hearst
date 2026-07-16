@@ -2,6 +2,7 @@
 
 import type { CSSProperties, MouseEvent, PointerEvent } from "react";
 import { useEffect, useRef } from "react";
+import { getHearstBrandRoute } from "@/lib/hearst-routes";
 import { brandLogos } from "@/lib/logos";
 
 type MarqueeBrand = {
@@ -147,7 +148,7 @@ export function DraggableBrandLogoMarquee({ brands }: { brands: MarqueeBrand[] }
           {rows.map((brand, index) => (
             <a
               key={`${brand.slug}-${index}`}
-              href={`/brands/${brand.slug}/`}
+              href={getHearstBrandRoute(brand.slug)}
               className="group flex h-12 w-36 shrink-0 items-center justify-center border border-white/15 bg-white/[0.04] px-4 transition hover:border-white/45 hover:bg-white/[0.1]"
               aria-label={`${brand.name} brand page`}
             >

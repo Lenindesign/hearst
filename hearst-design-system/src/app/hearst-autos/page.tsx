@@ -3,13 +3,13 @@ import { HomePageTemplate } from "@/components/home-page";
 import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
-  title: "Hearst+",
-  description: "A personalized daily destination prototype across every Hearst category.",
+  title: "Hearst Autos",
+  description: "A personalized daily destination prototype for Hearst auto brands.",
 };
 
-export default function HearstPlusPage() {
+export default function HearstAutosPage() {
   return (
-    <ThemeProvider defaultBrandSlug="hearst-all">
+    <ThemeProvider defaultBrandSlug="hearst-plus">
       <HomePageTemplate />
     </ThemeProvider>
   );

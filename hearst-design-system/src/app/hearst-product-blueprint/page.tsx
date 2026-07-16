@@ -45,7 +45,7 @@ export default function BlueprintPage() {
                 <a key={id} href={`#${id}`} className="flex gap-3 border-t border-slate-200 py-3 text-sm font-semibold text-slate-600 hover:text-[#2D75B9]"><span className="text-slate-400">{n}</span>{t}</a>
               ))}
             </nav>
-            <Link href="/hearst-all/" className="mt-8 inline-flex text-sm font-bold text-[#2D75B9]">Open prototype</Link>
+            <Link href="/hearst-plus/" className="mt-8 inline-flex text-sm font-bold text-[#2D75B9]">Open prototype</Link>
           </aside>
 
           <div className="min-w-0 space-y-24">
@@ -135,8 +135,8 @@ export default function BlueprintPage() {
               <SectionHead label="05 · Routes & navigation" title="Destination first, brand fluent" copy="Top-level sections answer broad intent. Brand pages retain their identity, SVG logo, color, typography and contextual subnavigation. The same content can be discovered through either mental model." />
               <div className="mt-10"><DestinationConvergence /></div>
               <div className="mt-8 border-l-2 border-[#2D75B9] pl-6">
-                <RouteRow route="/hearst-all/" title="Unified personalized river" items={["/hearst-edit/  Lifestyle", "/hearst-plus/  Autos", "/hearst-flux/  Flux", "/hearst-ew/  E&W"]} />
-                <RouteRow route="/brands/[brandSlug]/" title="Brand-specific destination" items={["Contextual brand categories", "Single active brand filter", "Brand logo, color and type system"]} />
+                <RouteRow route="/hearst-plus/" title="Unified personalized river" items={["/hearst-lifestyle/  Lifestyle", "/hearst-autos/  Autos", "/hearst-flux/  Flux", "/hearst-ew/  E&W"]} />
+                <RouteRow route="/lifestyle/[brandSlug]/ · /autos/[brandSlug]/" title="Brand-specific destination" items={["Contextual brand categories", "Single active brand filter", "Brand logo, color and type system"]} />
                 <RouteRow route="/about-hearst-magazines/" title="Stakeholder product story" />
                 <RouteRow route="/hearst-product-blueprint/" title="PM and engineering reference" />
               </div>
@@ -187,7 +187,7 @@ export default function BlueprintPage() {
               </div>
               <div className="mt-14 flex flex-col justify-between gap-6 bg-[#2D75B9] p-7 text-white md:flex-row md:items-center">
                 <div><h3 className="font-serif text-3xl">See the blueprint become a product.</h3><p className="mt-2 text-sm text-blue-100">Open the working river or return to the stakeholder narrative.</p></div>
-                <div className="flex flex-wrap gap-3"><Link href="/hearst-all/" className="bg-white px-4 py-3 text-sm font-bold text-[#2D75B9]">Open prototype</Link><Link href="/about-hearst-magazines/" className="border border-white/40 px-4 py-3 text-sm font-bold">Product story</Link></div>
+                <div className="flex flex-wrap gap-3"><Link href="/hearst-plus/" className="bg-white px-4 py-3 text-sm font-bold text-[#2D75B9]">Open prototype</Link><Link href="/about-hearst-magazines/" className="border border-white/40 px-4 py-3 text-sm font-bold">Product story</Link></div>
               </div>
             </section>
           </div>

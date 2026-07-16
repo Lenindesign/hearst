@@ -1245,7 +1245,7 @@ export function HearstPlusApp() {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       params.set("story", item.id);
-      window.history.pushState({ hearstPlusStory: item.id }, "", `/hearst-plus/?${params.toString()}`);
+      window.history.pushState({ hearstPlusStory: item.id }, "", `/hearst-autos/?${params.toString()}`);
     }
   }, []);
 
@@ -1259,7 +1259,7 @@ export function HearstPlusApp() {
       setIsArticleClosing(false);
 
       if (typeof window !== "undefined") {
-        window.history.pushState({ hearstPlusStory: null }, "", "/hearst-plus/");
+        window.history.pushState({ hearstPlusStory: null }, "", "/hearst-autos/");
       }
     }, 190);
   }, [isArticleClosing, selectedStory]);

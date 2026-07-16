@@ -6,6 +6,10 @@ import { useTheme } from "./theme-provider";
 import { NavBar } from "./nav-bar";
 import { BrandLogo } from "./brand-logo";
 import { brandIconLogos, brandLogos } from "@/lib/logos";
+import {
+  getHearstBrandRoute,
+  getHearstDestinationRoute,
+} from "@/lib/hearst-routes";
 import { themeOptions } from "@/lib/theme-options";
 import { brandToCssVars } from "@/lib/theme-css-vars";
 import type { BrandTheme } from "@/lib/brands";
@@ -88,7 +92,7 @@ const supplementalBrandProfiles: Record<string, { primary: string; secondary: st
     fontHeadlineWeight: 700,
   },
   "hot-rod": {
-    primary: "#ea232a",
+    primary: "#c11b17",
     secondary: "#141416",
     fontDefault: "Geist",
     fontHeadline: "Barlow Condensed",
@@ -97,8 +101,8 @@ const supplementalBrandProfiles: Record<string, { primary: string; secondary: st
   motortrend: {
     primary: "#e90c17",
     secondary: "#141416",
-    fontDefault: "Geist",
-    fontHeadline: "Barlow Condensed",
+    fontDefault: "Poppins",
+    fontHeadline: "Poppins",
     fontHeadlineWeight: 700,
   },
 };
@@ -853,11 +857,11 @@ function storyMatchesLifestyleFilter(story: LifestyleRiverStory, filter: string)
 }
 
 const hearstDestinationSections = [
-  { label: "All", href: "/hearst-all/" },
-  { label: "Lifestyle", href: "/hearst-edit/" },
-  { label: "Autos", href: "/hearst-plus/" },
-  { label: "Flux", href: "/hearst-flux/" },
-  { label: "E&W", href: "/hearst-ew/" },
+  { label: "All", href: getHearstDestinationRoute("all") },
+  { label: "Lifestyle", href: getHearstDestinationRoute("lifestyle") },
+  { label: "Autos", href: getHearstDestinationRoute("autos") },
+  { label: "Flux", href: getHearstDestinationRoute("flux") },
+  { label: "E&W", href: getHearstDestinationRoute("ew") },
 ];
 
 const hearstDestinationNavHrefs = new Map(
@@ -1141,18 +1145,18 @@ function HearstOnboardingModal({
       <div className="absolute inset-0" onClick={onClose} />
       <section
         ref={dialogRef}
-        className="relative z-10 mx-auto grid max-h-[calc(100dvh-2rem)] w-full max-w-5xl overflow-hidden rounded-[16px] border border-border bg-background shadow-2xl sm:max-h-[calc(100dvh-3rem)] lg:grid-cols-[minmax(320px,0.95fr)_minmax(0,1.05fr)]"
+        className="relative z-10 mx-auto grid h-[min(760px,calc(100dvh-2rem))] w-full max-w-5xl overflow-hidden rounded-[16px] bg-background shadow-2xl sm:h-[min(760px,calc(100dvh-3rem))] lg:grid-cols-[minmax(320px,0.95fr)_minmax(0,1.05fr)]"
         role="dialog"
         aria-modal="true"
         aria-labelledby="hearst-onboarding-title"
         aria-describedby="hearst-onboarding-description"
       >
-        <div className="relative hidden min-h-[560px] overflow-hidden bg-muted lg:block">
+        <div className="relative hidden h-full overflow-hidden bg-muted lg:block">
           {onboardingVisual.image ? (
             <img
               src={onboardingVisual.image}
               alt=""
-              className="absolute inset-0 h-full w-full object-cover"
+              className="absolute inset-0 h-full w-full object-cover outline-none ring-0"
               style={{ objectPosition: onboardingVisual.objectPosition }}
               aria-hidden
               loading="eager"
@@ -1162,7 +1166,7 @@ function HearstOnboardingModal({
           ) : null}
         </div>
 
-        <div className="flex min-h-0 max-h-[calc(100dvh-2rem)] flex-col overflow-hidden sm:max-h-[calc(100dvh-3rem)] lg:max-h-none">
+        <div className="flex min-h-0 flex-col overflow-hidden">
           <div className="flex items-center justify-between border-b border-border px-5 py-4">
             <div>
               <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
@@ -1179,11 +1183,11 @@ function HearstOnboardingModal({
 
         <div className="min-h-0 flex-1 overflow-y-auto p-5 sm:p-8">
           {onboardingVisual.image ? (
-            <div className="mb-6 overflow-hidden rounded-[12px] border border-border bg-muted lg:hidden">
+            <div className="mb-6 overflow-hidden rounded-[12px] bg-muted lg:hidden">
               <img
                 src={onboardingVisual.image}
                 alt=""
-                className="h-48 w-full object-cover"
+                className="h-48 w-full object-cover outline-none ring-0"
                 style={{ objectPosition: onboardingVisual.objectPosition }}
                 aria-hidden
                 loading="eager"
@@ -1951,7 +1955,7 @@ function LifestyleBrandSource({ story }: { story: LifestyleRiverStory }) {
 
   return (
     <a
-      href={`/brands/${story.brandSlug}/`}
+      href={getHearstBrandRoute(story.brandSlug)}
       onClick={(event) => event.stopPropagation()}
       onKeyDown={(event) => event.stopPropagation()}
       className="inline-flex min-w-0 items-center gap-1.5 rounded-[4px] text-[length:var(--text-token-4xs)] text-muted-foreground transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
@@ -2355,7 +2359,7 @@ function BrandPromotionRiverModule({
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
             <a
-              href={`/brands/${promotion.brandSlug}/`}
+              href={getHearstBrandRoute(promotion.brandSlug)}
               className="flex shrink-0 text-foreground transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
               aria-label={`${promotion.brand} brand page`}
             >
@@ -4932,10 +4936,16 @@ export function HomePageTemplate({
 
     const currentPath = window.location.pathname;
     if (nextBrand) {
-      const nextPath = `/brands/${nextBrand.slug}/`;
+      const nextPath = getHearstBrandRoute(nextBrand.slug);
       if (currentPath !== nextPath) router.push(nextPath, { scroll: false });
-    } else if (currentPath.startsWith("/brands/")) {
-      router.push("/hearst-all/", { scroll: false });
+    } else if (
+      currentPath.startsWith("/brands/")
+      || currentPath.startsWith("/lifestyle/")
+      || currentPath.startsWith("/autos/")
+      || currentPath.startsWith("/flux/")
+      || currentPath.startsWith("/ew/")
+    ) {
+      router.push(getHearstDestinationRoute("all"), { scroll: false });
     }
   }, [router]);
 

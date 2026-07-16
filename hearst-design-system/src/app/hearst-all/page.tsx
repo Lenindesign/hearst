@@ -1,17 +1,6 @@
-import type { Metadata } from "next";
-import { HomePageTemplate } from "@/components/home-page";
-import { ThemeProvider } from "@/components/theme-provider";
-
-export const metadata: Metadata = {
-  title: "Hearst Magazines",
-  description:
-    "A combined personalized Hearst destination prototype across Lifestyle, Autos, Flux, and E&W brands.",
-};
+import { redirect } from "next/navigation";
+import { getHearstDestinationRoute } from "@/lib/hearst-routes";
 
 export default function HearstAllPage() {
-  return (
-    <ThemeProvider defaultBrandSlug="hearst-all">
-      <HomePageTemplate />
-    </ThemeProvider>
-  );
+  redirect(getHearstDestinationRoute("all"));
 }
