@@ -974,15 +974,15 @@ const onboardingVisuals: Record<DestinationMode, { image: string; objectPosition
     objectPosition: "center center",
   },
   autos: {
-    image: "/images/hearst-plus-onboarding.png",
+    image: "/images/hearst-autos-onboarding.avif",
     objectPosition: "center center",
   },
   flux: {
-    image: "/images/hearst-plus-onboarding.png",
+    image: "/images/hearst-flux-onboarding.png",
     objectPosition: "center center",
   },
   ew: {
-    image: "/images/hearst-plus-onboarding.png",
+    image: "/images/hearst-ew-onboarding.png",
     objectPosition: "center center",
   },
 };
@@ -2963,6 +2963,194 @@ function LifestyleRiverCard({
   );
 }
 
+function getLeadSliderStories(stories: LifestyleRiverStory[], count = 5) {
+  const selected: LifestyleRiverStory[] = [];
+  const usedBrands = new Set<string>();
+
+  for (const story of stories) {
+    if (usedBrands.has(story.brandSlug)) continue;
+    selected.push(story);
+    usedBrands.add(story.brandSlug);
+    if (selected.length === count) return selected;
+  }
+
+  for (const story of stories) {
+    if (selected.some((item) => item.id === story.id)) continue;
+    selected.push(story);
+    if (selected.length === count) break;
+  }
+
+  return selected;
+}
+
+function LifestyleLeadSlider({
+  stories,
+  savedIds,
+  commentsByStoryId,
+  onOpenStory,
+  onSave,
+  onMoreLikeThis,
+  onFollowBrand,
+}: {
+  stories: LifestyleRiverStory[];
+  savedIds: string[];
+  commentsByStoryId: Record<string, LifestyleStoryComment[]>;
+  onOpenStory: (story: LifestyleRiverStory) => void;
+  onSave: (story: LifestyleRiverStory) => void;
+  onMoreLikeThis: (story: LifestyleRiverStory) => void;
+  onFollowBrand: (brandName: string) => void;
+}) {
+  const [activeIndex, setActiveIndex] = React.useState(0);
+  const [paused, setPaused] = React.useState(false);
+  const activeStory = stories[activeIndex] ?? stories[0];
+
+  React.useEffect(() => {
+    setActiveIndex(0);
+  }, [stories.map((story) => story.id).join("|")]);
+
+  React.useEffect(() => {
+    if (paused || stories.length < 2) return;
+
+    const intervalId = window.setInterval(() => {
+      setActiveIndex((index) => (index + 1) % stories.length);
+    }, 6500);
+
+    return () => window.clearInterval(intervalId);
+  }, [paused, stories.length]);
+
+  if (!activeStory) return null;
+
+  const commentCount = getLifestyleCommentCount(activeStory, commentsByStoryId[activeStory.id]?.length ?? 0);
+  const saved = savedIds.includes(activeStory.id);
+  const goToPrevious = () => setActiveIndex((index) => (index - 1 + stories.length) % stories.length);
+  const goToNext = () => setActiveIndex((index) => (index + 1) % stories.length);
+
+  return (
+    <article
+      className="group relative min-w-0 overflow-hidden rounded-[8px] border border-border bg-background shadow-sm"
+      aria-roledescription="carousel"
+      aria-label="Featured stories"
+    >
+      <div className="relative aspect-[16/11] min-h-[430px] overflow-hidden bg-muted lg:min-h-[460px]">
+        <div
+          className="flex h-full transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
+          style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+        >
+          {stories.map((story, index) => {
+            const slideCommentCount = getLifestyleCommentCount(story, commentsByStoryId[story.id]?.length ?? 0);
+
+            return (
+              <button
+                key={story.id}
+                type="button"
+                className="relative h-full w-full shrink-0 text-left focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30"
+                onClick={() => onOpenStory(story)}
+                aria-label={`Open story: ${story.title}`}
+                aria-hidden={index !== activeIndex}
+                tabIndex={index === activeIndex ? 0 : -1}
+              >
+                <LifestyleRiverImage
+                  story={story}
+                  className="h-full w-full"
+                  priority={index === 0}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/5" />
+                <div className="absolute inset-x-0 bottom-0 p-5 text-white sm:p-7">
+                  <div className="mb-3 flex flex-wrap items-center gap-2 text-sm font-semibold">
+                    <BrandSourceIcon brand={story.brand} brandSlug={story.brandSlug} className="h-5 w-5 rounded-[4px] border-border" />
+                    <span>{story.brand}</span>
+                    <span aria-hidden>/</span>
+                    <span className="inline-flex items-center gap-1">
+                      <MessageCircle className="h-4 w-4" aria-hidden />
+                      {slideCommentCount}
+                    </span>
+                  </div>
+                  <h2 className="headline max-w-3xl text-balance text-3xl leading-[1.02] sm:text-4xl">
+                    {story.title}
+                  </h2>
+                  <p className="mt-3 max-w-2xl text-sm leading-6 text-white/85 sm:text-base">
+                    {story.summary}
+                  </p>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+        <div className="absolute left-5 right-5 top-5 flex items-center justify-between gap-3">
+          <span className="rounded-full bg-black/45 px-3 py-1 text-sm font-bold text-white backdrop-blur">
+            {activeIndex + 1} of {stories.length}
+          </span>
+          <button
+            type="button"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60"
+            aria-label={paused ? "Resume slider" : "Pause slider"}
+            onClick={() => setPaused((value) => !value)}
+          >
+            {paused ? <Play className="h-4 w-4" aria-hidden /> : <Pause className="h-4 w-4" aria-hidden />}
+          </button>
+        </div>
+      </div>
+
+      {stories.length > 1 ? (
+        <>
+          <button
+            type="button"
+            className="absolute left-4 top-1/2 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60 sm:flex"
+            onClick={goToPrevious}
+            aria-label="Previous featured story"
+          >
+            <ChevronLeft className="h-6 w-6" aria-hidden />
+          </button>
+          <button
+            type="button"
+            className="absolute right-4 top-1/2 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60 sm:flex"
+            onClick={goToNext}
+            aria-label="Next featured story"
+          >
+            <ChevronRight className="h-6 w-6" aria-hidden />
+          </button>
+        </>
+      ) : null}
+
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border bg-background px-4 py-3">
+        <div className="flex min-w-0 flex-wrap gap-1.5" aria-label="Featured story slides">
+          {stories.map((story, index) => (
+            <button
+              key={story.id}
+              type="button"
+              className={cn(
+                "h-1.5 rounded-full transition-all",
+                index === activeIndex ? "w-8 bg-primary" : "w-4 bg-muted-foreground/30 hover:bg-muted-foreground/60"
+              )}
+              onClick={() => setActiveIndex(index)}
+              aria-label={`Show story ${index + 1}: ${story.title}`}
+              aria-current={index === activeIndex ? "true" : undefined}
+            />
+          ))}
+        </div>
+        <div className="flex shrink-0 items-center gap-2">
+          <Button
+            variant={saved ? "default" : "outline"}
+            size="xs"
+            onClick={() => onSave(activeStory)}
+            aria-pressed={saved}
+          >
+            <Bookmark className="mr-1.5 h-3.5 w-3.5" aria-hidden />
+            {saved ? "Saved" : "Save"}
+          </Button>
+          <Button variant="outline" size="xs" onClick={() => onMoreLikeThis(activeStory)}>
+            <Plus className="mr-1.5 h-3.5 w-3.5" aria-hidden />
+            More like this
+          </Button>
+          <Button variant="ghost" size="xs" onClick={() => onFollowBrand(activeStory.brand)}>
+            Follow {activeStory.brand}
+          </Button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
 function getLifestyleReaderParagraphs(story: LifestyleRiverStory) {
   const topicPhrase = story.topic.toLowerCase();
   const tagPhrase = story.tags.slice(0, 3).join(", ");
@@ -4253,8 +4441,10 @@ function LifestyleRiverHomePage({
     return brandFilteredStories.filter((story) => storyMatchesLifestyleFilter(story, activeFilter));
   }, [activeBrandFilters, activeFilter, profile.savedIds, rankedStories]);
   const visibleStories = filteredStories.slice(0, visibleCount);
-  const leadStory = visibleStories[0];
-  const riverStories = visibleStories.slice(1);
+  const heroStories = getLeadSliderStories(visibleStories, 5);
+  const leadStory = heroStories[0] ?? visibleStories[0];
+  const heroStoryIds = new Set(heroStories.map((story) => story.id));
+  const riverStories = visibleStories.filter((story) => !heroStoryIds.has(story.id));
   const sidebarTopics = React.useMemo(() => {
     const counts = activeStoryPool.reduce<Record<string, number>>((acc, story) => {
       acc[story.topic] = (acc[story.topic] ?? 0) + 1;
@@ -4556,20 +4746,18 @@ function LifestyleRiverHomePage({
         <main className="space-y-4" aria-label={config.riverLabel}>
           {leadStory ? (
             <>
-              <LifestyleRiverCard
-                story={leadStory}
-                saved={profile.savedIds.includes(leadStory.id)}
-                commentCount={getLifestyleCommentCount(leadStory, commentsByStoryId[leadStory.id]?.length ?? 0)}
-                onOpen={() => setOpenStoryId(leadStory.id)}
-                onSave={() => toggleSaved(leadStory)}
-                onMoreLikeThis={() => boostStory(leadStory)}
-                onFollowBrand={() => followBrand(leadStory.brand)}
-                onHide={() => hideStory(leadStory.id)}
-                featured
+              <LifestyleLeadSlider
+                stories={heroStories}
+                savedIds={profile.savedIds}
+                commentsByStoryId={commentsByStoryId}
+                onOpenStory={(story) => setOpenStoryId(story.id)}
+                onSave={toggleSaved}
+                onMoreLikeThis={boostStory}
+                onFollowBrand={followBrand}
               />
 
               {riverStories.map((story, index) => {
-                const storyPosition = index + 2;
+                const storyPosition = index + heroStories.length + 1;
                 const shouldShowFeedModule = storyPosition % 5 === 0;
                 const moduleSlotNumber = storyPosition / 5;
                 const shouldShowBrandPromotion = shouldShowFeedModule && moduleSlotNumber % 2 === 0;
