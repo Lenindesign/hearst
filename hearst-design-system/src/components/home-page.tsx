@@ -3245,37 +3245,41 @@ function LifestyleLeadSlider({
           <span className="rounded-full bg-black/45 px-3 py-1 text-sm font-bold text-white backdrop-blur">
             {activeIndex + 1} of {stories.length}
           </span>
-          <button
-            type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60"
-            aria-label={paused ? "Resume slider" : "Pause slider"}
-            onClick={() => setPaused((value) => !value)}
+          <div
+            className="flex items-center gap-1.5"
+            onPointerDown={(event) => event.stopPropagation()}
           >
-            {paused ? <Play className="h-4 w-4" aria-hidden /> : <Pause className="h-4 w-4" aria-hidden />}
-          </button>
+            {stories.length > 1 ? (
+              <button
+                type="button"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60"
+                onClick={goToPrevious}
+                aria-label="Previous featured story"
+              >
+                <ChevronLeft className="h-5 w-5" aria-hidden />
+              </button>
+            ) : null}
+            <button
+              type="button"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60"
+              aria-label={paused ? "Resume slider" : "Pause slider"}
+              onClick={() => setPaused((value) => !value)}
+            >
+              {paused ? <Play className="h-4 w-4" aria-hidden /> : <Pause className="h-4 w-4" aria-hidden />}
+            </button>
+            {stories.length > 1 ? (
+              <button
+                type="button"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60"
+                onClick={goToNext}
+                aria-label="Next featured story"
+              >
+                <ChevronRight className="h-5 w-5" aria-hidden />
+              </button>
+            ) : null}
+          </div>
         </div>
       </div>
-
-      {stories.length > 1 ? (
-        <>
-          <button
-            type="button"
-            className="absolute left-4 top-1/2 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60 sm:flex"
-            onClick={goToPrevious}
-            aria-label="Previous featured story"
-          >
-            <ChevronLeft className="h-6 w-6" aria-hidden />
-          </button>
-          <button
-            type="button"
-            className="absolute right-4 top-1/2 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60 sm:flex"
-            onClick={goToNext}
-            aria-label="Next featured story"
-          >
-            <ChevronRight className="h-6 w-6" aria-hidden />
-          </button>
-        </>
-      ) : null}
 
       <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border bg-[var(--hp-surface)] px-4 py-3">
         <div className="flex min-w-0 flex-wrap gap-1.5" aria-label="Featured story slides">
@@ -5973,12 +5977,45 @@ export function HomePageTemplate({
       return baseDestinationConfig;
     }
 
+    const featuredFashionStory = fluxRiverStories.find(
+      (story) => story.title === "The Best Dressed Celebrities at Paris Couture Week"
+    );
+    const curatedLeadStory = featuredFashionStory
+      ? {
+          ...featuredFashionStory,
+          id: `live-curated-${featuredFashionStory.id}`,
+          popularity: 101,
+          signal: "Editor Pick" as const,
+          age: 0,
+        }
+      : undefined;
+    const liveStories = curatedLeadStory
+      ? [
+          curatedLeadStory,
+          ...liveFeedData.stories.filter((story) => story.sourceUrl !== curatedLeadStory.sourceUrl),
+        ]
+      : liveFeedData.stories;
+    const liveSourceNotes = curatedLeadStory && !liveFeedData.sourceNotes.some((note) => note.brandSlug === curatedLeadStory.brandSlug)
+      ? [
+          {
+            brand: curatedLeadStory.brand,
+            brandSlug: curatedLeadStory.brandSlug,
+            feedCount: 1,
+            importedCount: 1,
+            selectedCount: 1,
+          },
+          ...liveFeedData.sourceNotes,
+        ]
+      : liveFeedData.sourceNotes;
+
     return {
       ...baseDestinationConfig,
-      stories: liveFeedData.stories,
-      sourceNotes: liveFeedData.sourceNotes,
-      defaultLeadStoryId: liveFeedData.stories[0]?.id,
-      dataSourceCopy: liveFeedData.dataSourceCopy,
+      stories: liveStories,
+      sourceNotes: liveSourceNotes,
+      defaultLeadStoryId: liveStories[0]?.id,
+      dataSourceCopy: curatedLeadStory
+        ? `${liveFeedData.dataSourceCopy.replace(/\.$/, "")}, with an editor-selected Fashion & Luxury lead from Hearst RSS metadata.`
+        : liveFeedData.dataSourceCopy,
       liveFeedStatus: {
         fetchedAt: liveFeedData.fetchedAt,
         isFallback: liveFeedData.isFallback,

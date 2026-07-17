@@ -11,6 +11,7 @@ const allowedHosts = new Set([
   "www.countryliving.com",
   "www.delish.com",
   "www.housebeautiful.com",
+  "www.harpersbazaar.com",
   "www.thepioneerwoman.com",
   "www.prevention.com",
   "www.redbookmag.com",
