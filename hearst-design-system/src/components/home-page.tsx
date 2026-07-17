@@ -2885,15 +2885,15 @@ function LifestyleCardModule({
     if (isYearMakeModelStory(story)) {
       return (
         <div className="mt-4 grid grid-cols-3 gap-2 border-t border-border pt-3 text-center text-xs">
-          <div className="rounded-[8px] bg-muted px-2 py-2">
+          <div className="rounded-[8px] border border-border bg-background px-2 py-2 text-foreground">
             <p className="font-bold">{3 + (story.age % 5)} sec</p>
             <p className="text-muted-foreground">0-60</p>
           </div>
-          <div className="rounded-[8px] bg-muted px-2 py-2">
+          <div className="rounded-[8px] border border-border bg-background px-2 py-2 text-foreground">
             <p className="font-bold">{240 + ((story.age * 17) % 360)} hp</p>
             <p className="text-muted-foreground">Estimate</p>
           </div>
-          <div className="rounded-[8px] bg-muted px-2 py-2">
+          <div className="rounded-[8px] border border-border bg-background px-2 py-2 text-foreground">
             <p className="flex items-center justify-center gap-1 font-bold">
               <Star className="h-3.5 w-3.5" aria-hidden />
               Tested
@@ -2906,15 +2906,15 @@ function LifestyleCardModule({
 
     return (
       <div className="mt-4 grid grid-cols-3 gap-2 border-t border-border pt-3 text-center text-xs">
-        <div className="rounded-[8px] bg-muted px-2 py-2">
+        <div className="rounded-[8px] border border-border bg-background px-2 py-2 text-foreground">
           <p className="font-bold">{recipeMinutes} min</p>
           <p className="text-muted-foreground">Total</p>
         </div>
-        <div className="rounded-[8px] bg-muted px-2 py-2">
+        <div className="rounded-[8px] border border-border bg-background px-2 py-2 text-foreground">
           <p className="font-bold">{2 + (story.age % 5)}</p>
           <p className="text-muted-foreground">Servings</p>
         </div>
-        <div className="rounded-[8px] bg-muted px-2 py-2">
+        <div className="rounded-[8px] border border-border bg-background px-2 py-2 text-foreground">
           <p className="flex items-center justify-center gap-1 font-bold">
             <ChefHat className="h-3.5 w-3.5" aria-hidden />
             Easy
@@ -3707,7 +3707,7 @@ function LifestyleReaderBody({
 }) {
   if (story.videoUrl) {
     return (
-      <div className="mt-6 space-y-4 text-[18px] leading-8 text-[#242424]">
+      <div className="mt-6 space-y-4 text-[18px] leading-8 text-foreground/85">
         <p>{story.summary}</p>
         {actions}
         <p className="border-t border-border pt-4 text-sm font-semibold text-muted-foreground">
@@ -3734,7 +3734,7 @@ function LifestyleReaderBody({
     const actionIndex = firstParagraphIndex >= 0 ? firstParagraphIndex : 0;
 
     return (
-      <div className="mt-6 space-y-7 text-[18px] leading-8 text-[#242424]">
+      <div className="mt-6 space-y-7 text-[18px] leading-8 text-foreground/85">
         {liveArticle.data.blocks.map((block, index) => {
           let content: React.ReactNode;
 
@@ -4569,7 +4569,7 @@ function LifestyleStoryReaderModal({
                     <article
                       className={cn(
                         "relative rounded-[8px] border px-5 py-5 sm:px-7 sm:py-7",
-                        getStoryDestinationMode(story.brandSlug) === "flux"
+                        readerDestination === "flux"
                           ? "border-white/15 bg-[#171b21] text-[#f7f8fa] [--border:#343b46] [--foreground:#f7f8fa] [--muted-foreground:#aeb8c5]"
                           : "border-border bg-white text-[#121212] [--foreground:#121212] [--muted-foreground:#5f6b7a]"
                       )}
