@@ -14,6 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://hearst-design-system.netlify.app"
+  ),
   title: "Hearst Design System",
   description:
     "Brand themes and component showcase for Hearst brands, built with shadcn/ui",

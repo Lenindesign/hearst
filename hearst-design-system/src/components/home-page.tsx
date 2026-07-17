@@ -2527,7 +2527,7 @@ function LifestyleKindBadge({
         : null;
 
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2 py-0.5 text-[length:var(--text-token-4xs)] font-semibold uppercase tracking-widest text-muted-foreground">
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--hp-chip-border)] bg-[var(--hp-chip)] px-2 py-0.5 text-[length:var(--text-token-4xs)] font-semibold uppercase tracking-widest text-[var(--hp-text-chip)]">
       {icon}
       {label}
     </span>
@@ -3230,7 +3230,10 @@ function LifestyleLeadSlider({
                       {slideCommentCount}
                     </span>
                   </div>
-                  <h2 className="headline max-w-3xl text-balance text-3xl leading-[1.02] sm:text-4xl">
+                  <h2 className={cn(
+                    "headline max-w-3xl text-balance text-3xl sm:text-4xl",
+                    story.brandSlug === "road-and-track" ? "leading-[1.12]" : "leading-[1.02]"
+                  )}>
                     {story.title}
                   </h2>
                   <p className="mt-3 max-w-2xl text-sm leading-6 text-white/85 sm:text-base">
@@ -3252,16 +3255,16 @@ function LifestyleLeadSlider({
             {stories.length > 1 ? (
               <button
                 type="button"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60"
+                className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60"
                 onClick={goToPrevious}
                 aria-label="Previous featured story"
               >
-                <ChevronLeft className="h-5 w-5" aria-hidden />
+                <ChevronLeft className="h-4 w-4" aria-hidden />
               </button>
             ) : null}
             <button
               type="button"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60"
+              className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60"
               aria-label={paused ? "Resume slider" : "Pause slider"}
               onClick={() => setPaused((value) => !value)}
             >
@@ -3270,11 +3273,11 @@ function LifestyleLeadSlider({
             {stories.length > 1 ? (
               <button
                 type="button"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60"
+                className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60"
                 onClick={goToNext}
                 aria-label="Next featured story"
               >
-                <ChevronRight className="h-5 w-5" aria-hidden />
+                <ChevronRight className="h-4 w-4" aria-hidden />
               </button>
             ) : null}
           </div>
@@ -3621,19 +3624,92 @@ function FullscreenImageViewer({
   );
 }
 
+function LifestyleReaderActions({
+  story,
+  saved,
+  followed,
+  commentCount,
+  onSave,
+  onToggleFollowBrand,
+}: {
+  story: LifestyleRiverStory;
+  saved: boolean;
+  followed: boolean;
+  commentCount: number;
+  onSave: () => void;
+  onToggleFollowBrand: () => void;
+}) {
+  const byline = getLifestyleByline(story);
+
+  return (
+    <div className="my-6 overflow-x-auto border-y border-border py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="flex min-w-max items-center justify-between gap-5 sm:min-w-0">
+        <button
+          type="button"
+          onClick={onToggleFollowBrand}
+          aria-pressed={followed}
+          aria-label={followed ? `Unfollow ${story.brand} brand` : `Follow ${story.brand} brand`}
+          title={followed ? `Unfollow ${story.brand} brand` : `Follow ${story.brand} brand`}
+          className="inline-flex min-w-0 items-center gap-1.5 rounded-[4px] text-[length:var(--text-token-4xs)] text-muted-foreground transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+        >
+          <BrandSourceIcon brand={story.brand} brandSlug={story.brandSlug} />
+          <span className="min-w-0 truncate">
+            {story.brand} · {story.topic} · {byline}
+          </span>
+          <span className={cn(
+            "inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-colors",
+            followed
+              ? "border-primary bg-primary text-primary-foreground"
+              : "border-border bg-muted text-muted-foreground"
+          )}>
+            {followed ? <Check className="h-3 w-3" aria-hidden /> : <Plus className="h-3 w-3" aria-hidden />}
+          </span>
+        </button>
+        <div className="flex shrink-0 items-center gap-2">
+          <button
+            type="button"
+            onClick={onSave}
+            aria-pressed={saved}
+            aria-label={saved ? "Remove from saved stories" : "Save story"}
+            title={saved ? "Remove from saved stories" : "Save story"}
+            className={cn(
+              "inline-flex h-7 w-7 shrink-0 items-center justify-center border-0 bg-transparent p-0 shadow-none outline-none ring-0 transition-colors focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0",
+              saved ? "text-primary" : "text-muted-foreground hover:text-primary"
+            )}
+          >
+            <Bookmark className="h-4 w-4" weight={saved ? "fill" : "regular"} aria-hidden />
+          </button>
+          <a
+            href={`#reader-comments-${story.id}`}
+            aria-label={`Jump to ${commentCount} comments`}
+            title={`${commentCount} comments`}
+            className="inline-flex h-7 shrink-0 items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+          >
+            <MessageCircle className="h-4 w-4" aria-hidden />
+            <span className="tabular-nums">{commentCount}</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function LifestyleReaderBody({
   story,
   liveArticle,
   onOpenImage,
+  actions,
 }: {
   story: LifestyleRiverStory;
   liveArticle?: LiveArticleLoadState;
   onOpenImage: (image: FullscreenReaderImage) => void;
+  actions: React.ReactNode;
 }) {
   if (story.videoUrl) {
     return (
       <div className="mt-6 space-y-4 text-[18px] leading-8 text-[#242424]">
         <p>{story.summary}</p>
+        {actions}
         <p className="border-t border-border pt-4 text-sm font-semibold text-muted-foreground">
           Hearst video{story.videoDuration ? ` · ${formatVideoDuration(story.videoDuration)}` : ""}
         </p>
@@ -3648,16 +3724,22 @@ function LifestyleReaderBody({
         <div className="h-4 w-full animate-pulse rounded bg-muted motion-reduce:animate-none" />
         <div className="h-4 w-5/6 animate-pulse rounded bg-muted motion-reduce:animate-none" />
         <div className="h-4 w-4/6 animate-pulse rounded bg-muted motion-reduce:animate-none" />
+        {actions}
       </div>
     );
   }
 
   if (liveArticle?.status === "ready") {
+    const firstParagraphIndex = liveArticle.data.blocks.findIndex((block) => block.type === "paragraph");
+    const actionIndex = firstParagraphIndex >= 0 ? firstParagraphIndex : 0;
+
     return (
       <div className="mt-6 space-y-7 text-[18px] leading-8 text-[#242424]">
         {liveArticle.data.blocks.map((block, index) => {
+          let content: React.ReactNode;
+
           if (block.type === "image") {
-            return (
+            content = (
               <figure key={`${block.url}-${index}`} className="py-2">
                 <button
                   type="button"
@@ -3685,17 +3767,22 @@ function LifestyleReaderBody({
                 ) : null}
               </figure>
             );
+          } else if (block.type === "heading") {
+            content = <h3 className="headline !mb-3 pt-3 text-2xl leading-tight text-foreground sm:text-3xl">{block.text}</h3>;
+          } else if (block.type === "quote") {
+            content = <blockquote className="border-y border-border py-5 font-brand-secondary text-xl leading-8 text-foreground">{block.text}</blockquote>;
+          } else if (block.type === "list") {
+            content = <ul className="list-disc space-y-2 pl-6">{block.items.map((item) => <li key={item}>{item}</li>)}</ul>;
+          } else {
+            content = <p>{block.text}</p>;
           }
-          if (block.type === "heading") {
-            return <h3 key={`${block.text}-${index}`} className="headline !mb-3 pt-3 text-2xl leading-tight text-foreground sm:text-3xl">{block.text}</h3>;
-          }
-          if (block.type === "quote") {
-            return <blockquote key={`${block.text}-${index}`} className="border-y border-border py-5 font-brand-secondary text-xl leading-8 text-foreground">{block.text}</blockquote>;
-          }
-          if (block.type === "list") {
-            return <ul key={`list-${index}`} className="list-disc space-y-2 pl-6">{block.items.map((item) => <li key={item}>{item}</li>)}</ul>;
-          }
-          return <p key={`${block.text}-${index}`}>{block.text}</p>;
+
+          return (
+            <React.Fragment key={`reader-block-${index}`}>
+              {content}
+              {index === actionIndex ? actions : null}
+            </React.Fragment>
+          );
         })}
         <p className="border-t border-border pt-5 text-sm text-muted-foreground">
           <a href={liveArticle.data.sourceUrl} target="_blank" rel="noreferrer" className="font-bold text-primary underline underline-offset-4">
@@ -3706,9 +3793,16 @@ function LifestyleReaderBody({
     );
   }
 
+  const readerParagraphs = getLifestyleReaderParagraphs(story);
+
   return (
     <div className="mt-6 space-y-5 text-base leading-8 text-foreground/80">
-      {getLifestyleReaderParagraphs(story).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+      {readerParagraphs.map((paragraph, index) => (
+        <React.Fragment key={paragraph}>
+          <p>{paragraph}</p>
+          {index === 0 ? actions : null}
+        </React.Fragment>
+      ))}
       {story.sourceUrl ? (
         <p className="border-t border-border pt-5 text-sm text-muted-foreground">
           <a href={story.sourceUrl} target="_blank" rel="noreferrer" className="font-bold text-primary underline underline-offset-4">
@@ -3859,7 +3953,11 @@ function LifestyleStoryComments({
   };
 
   return (
-    <section className="mt-8 rounded-[8px] border border-border bg-muted/25 p-4 sm:p-5" aria-label={`Comments for ${story.title}`}>
+    <section
+      id={`reader-comments-${story.id}`}
+      className="mt-8 scroll-mt-32 rounded-[8px] border border-border bg-muted/25 p-4 sm:p-5"
+      aria-label={`Comments for ${story.title}`}
+    >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="flex items-center gap-2 text-sm font-bold">
@@ -4039,7 +4137,7 @@ function LifestyleReaderContextRail({
 
   return (
     <aside className="hidden xl:block" aria-label="Contextual story recommendations">
-      <div className="sticky top-20 max-h-[calc(100dvh-8.5rem)] space-y-4 overflow-y-auto overscroll-contain pb-12 pr-1">
+      <div className="sticky top-32 max-h-[calc(100dvh-10rem)] space-y-4 overflow-y-auto overscroll-contain pb-12 pr-1">
         {modules.map((module) => (
           <div key={module.label} className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
             <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
@@ -4091,7 +4189,7 @@ function LifestyleReaderContextRail({
   );
 }
 
-function getLifestyleReaderAd(currentStory: LifestyleRiverStory) {
+function getLifestyleReaderAd(currentStory: LifestyleRiverStory, slotIndex = 0) {
   const rankedAds = contextualAdsByDestination.all
     .map((ad) => {
       const topicScore = ad.topics.includes(currentStory.topic) ? 40 : 0;
@@ -4106,18 +4204,18 @@ function getLifestyleReaderAd(currentStory: LifestyleRiverStory) {
     })
     .sort((a, b) => b.score - a.score || a.ad.id.localeCompare(b.ad.id));
 
-  return rankedAds[0]?.ad ?? contextualAdsByDestination.all[0];
+  return rankedAds[slotIndex % rankedAds.length]?.ad ?? rankedAds[0]?.ad ?? contextualAdsByDestination.all[0];
 }
 
-function LifestyleReaderSidebarAd({ currentStory }: { currentStory: LifestyleRiverStory }) {
-  const ad = getLifestyleReaderAd(currentStory);
+function LifestyleReaderSidebarAd({ currentStory, slotIndex = 0 }: { currentStory: LifestyleRiverStory; slotIndex?: number }) {
+  const ad = getLifestyleReaderAd(currentStory, slotIndex);
 
   if (!ad) return null;
 
   return (
     <aside className="hidden lg:block" aria-label="Advertisement">
       <div
-        className="sticky top-20 flex h-[600px] w-[300px] flex-col overflow-hidden rounded-[8px] border border-border bg-background"
+        className="sticky top-32 flex h-[600px] max-h-[calc(100dvh-10rem)] w-[300px] flex-col overflow-hidden rounded-[8px] border border-border bg-background"
         style={{ backgroundColor: ad.palette.background, color: ad.palette.foreground }}
       >
         <div className="relative h-[268px] overflow-hidden border-b border-black/10">
@@ -4186,22 +4284,26 @@ function LifestyleStoryReaderModal({
   availableStories,
   openStoryId,
   savedIds,
+  followedBrands,
   commentsByStoryId,
   onClose,
   onOpenStory,
   onSave,
   onMoreLikeThis,
+  onToggleFollowBrand,
   onAddComment,
 }: {
   stories: LifestyleRiverStory[];
   availableStories: LifestyleRiverStory[];
   openStoryId: string | null;
   savedIds: string[];
+  followedBrands: string[];
   commentsByStoryId: Record<string, LifestyleStoryComment[]>;
   onClose: () => void;
   onOpenStory: (storyId: string) => void;
   onSave: (story: LifestyleRiverStory) => void;
   onMoreLikeThis: (story: LifestyleRiverStory) => void;
+  onToggleFollowBrand: (brandName: string) => void;
   onAddComment: (storyId: string, body: string) => void;
 }) {
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
@@ -4441,7 +4543,7 @@ function LifestyleStoryReaderModal({
           </nav>
         </div>
 
-        <div className="grid gap-8 px-4 py-6 sm:px-8 lg:grid-cols-[minmax(0,1fr)_300px] lg:px-10 xl:grid-cols-[220px_minmax(0,1fr)_300px]">
+        <div className="grid gap-8 px-4 py-6 sm:px-8 lg:px-10 xl:grid-cols-[220px_minmax(0,1fr)]">
           <LifestyleReaderContextRail
             currentStory={storyQueue[0]}
             stories={readerStories}
@@ -4450,6 +4552,7 @@ function LifestyleStoryReaderModal({
           <div className="min-w-0">
             {visibleReaderStories.map((story, index) => {
               const kind = getLifestyleCardKind(story);
+              const useRoadAndTrackHeadline = story.brandSlug === "road-and-track";
 
               return (
                 <React.Fragment key={story.id}>
@@ -4462,85 +4565,103 @@ function LifestyleStoryReaderModal({
                       <span className="h-px flex-1 bg-border" aria-hidden="true" />
                     </div>
                   ) : null}
-                  <article
-                    className={cn(
-                      "relative rounded-[8px] border px-5 py-5 sm:px-7 sm:py-7",
-                      getStoryDestinationMode(story.brandSlug) === "flux"
-                        ? "border-white/15 bg-[#171b21] text-[#f7f8fa] [--border:#343b46] [--foreground:#f7f8fa] [--muted-foreground:#aeb8c5]"
-                        : "border-border bg-white text-[#121212] [--foreground:#121212] [--muted-foreground:#5f6b7a]"
-                    )}
-                  >
-                    {story.videoUrl ? (
-                      <div className="relative aspect-video w-full overflow-hidden rounded-[4px] bg-black">
-                        <video
-                          src={story.videoUrl}
-                          poster={story.image}
-                          controls
-                          playsInline
-                          preload="metadata"
-                          className="h-full w-full bg-black object-contain"
-                          aria-label={`Play video: ${story.title}`}
-                        />
-                        {story.videoDuration ? (
-                          <span className="pointer-events-none absolute right-3 top-3 rounded-full bg-black/70 px-2.5 py-1 text-xs font-bold tabular-nums text-white shadow-sm">
-                            {formatVideoDuration(story.videoDuration)}
-                          </span>
-                        ) : null}
-                      </div>
-                    ) : (
-                      <button
-                        type="button"
-                        className="group block w-full cursor-zoom-in rounded-[4px] focus:outline-none focus:ring-2 focus:ring-primary/40"
-                        onClick={() => setFullscreenGallery({
-                          story,
-                          images: getFullscreenReaderImages(story, liveArticles[story.id]),
-                          initialIndex: 0,
-                        })}
-                        aria-label={`View image fullscreen: ${story.title}`}
-                      >
-                        <LifestyleRiverImage
-                          story={story}
-                          className="aspect-video w-full rounded-[4px] transition-opacity group-hover:opacity-95"
-                        />
-                      </button>
-                    )}
-                    <div className="mx-auto mt-6 max-w-3xl">
-                      <div className="mb-3 flex flex-wrap items-center gap-2">
-                        <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
-                          {story.signal}
-                        </span>
-                        <LifestyleKindBadge kind={kind} story={story} />
-                        <LifestyleBrandSource story={story} />
-                      </div>
-                      <h2 className="headline text-4xl leading-tight sm:text-5xl">
-                        {story.title}
-                      </h2>
-                      <LifestyleReaderBody
-                        story={story}
-                        liveArticle={liveArticles[story.id]}
-                        onOpenImage={(image) => {
-                          const images = getFullscreenReaderImages(story, liveArticles[story.id]);
-                          setFullscreenGallery({
+                  <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px]">
+                    <article
+                      className={cn(
+                        "relative rounded-[8px] border px-5 py-5 sm:px-7 sm:py-7",
+                        getStoryDestinationMode(story.brandSlug) === "flux"
+                          ? "border-white/15 bg-[#171b21] text-[#f7f8fa] [--border:#343b46] [--foreground:#f7f8fa] [--muted-foreground:#aeb8c5]"
+                          : "border-border bg-white text-[#121212] [--foreground:#121212] [--muted-foreground:#5f6b7a]"
+                      )}
+                      style={useRoadAndTrackHeadline ? {
+                        "--font-headline": '"Buzz", "Barlow Condensed", system-ui, sans-serif',
+                        "--font-headline-weight": "900",
+                      } as React.CSSProperties : undefined}
+                    >
+                      {story.videoUrl ? (
+                        <div className="relative aspect-video w-full overflow-hidden rounded-[4px] bg-black">
+                          <video
+                            src={story.videoUrl}
+                            poster={story.image}
+                            controls
+                            playsInline
+                            preload="metadata"
+                            className="h-full w-full bg-black object-contain"
+                            aria-label={`Play video: ${story.title}`}
+                          />
+                          {story.videoDuration ? (
+                            <span className="pointer-events-none absolute right-3 top-3 rounded-full bg-black/70 px-2.5 py-1 text-xs font-bold tabular-nums text-white shadow-sm">
+                              {formatVideoDuration(story.videoDuration)}
+                            </span>
+                          ) : null}
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          className="group block w-full cursor-zoom-in rounded-[4px] focus:outline-none focus:ring-2 focus:ring-primary/40"
+                          onClick={() => setFullscreenGallery({
                             story,
-                            images,
-                            initialIndex: Math.max(0, images.findIndex((candidate) => candidate.src === image.src)),
-                          });
-                        }}
-                      />
-                      <LifestyleCardModule story={story} kind={kind} />
-                      <LifestyleStoryComments
-                        story={story}
-                        comments={commentsByStoryId[story.id] ?? []}
-                        onAddComment={(body) => onAddComment(story.id, body)}
-                      />
-                      <LifestyleArticleRecommendationsModule
-                        currentStory={story}
-                        stories={readerStories}
-                        productName={destinationConfigs[getStoryDestinationMode(story.brandSlug)].productName}
-                        onOpenStory={onOpenStory}
-                      />
-                    </div>
-                  </article>
+                            images: getFullscreenReaderImages(story, liveArticles[story.id]),
+                            initialIndex: 0,
+                          })}
+                          aria-label={`View image fullscreen: ${story.title}`}
+                        >
+                          <LifestyleRiverImage
+                            story={story}
+                            className="aspect-video w-full rounded-[4px] transition-opacity group-hover:opacity-95"
+                          />
+                        </button>
+                      )}
+                      <div className="mx-auto mt-6 max-w-3xl">
+                        <div className="mb-3 flex flex-wrap items-center gap-2">
+                          <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                            {story.signal}
+                          </span>
+                        </div>
+                        <h2 className={cn(
+                          "headline text-4xl sm:text-5xl",
+                          useRoadAndTrackHeadline ? "leading-[1.12]" : "leading-[1.05]"
+                        )}>
+                          {story.title}
+                        </h2>
+                        <LifestyleReaderBody
+                          story={story}
+                          liveArticle={liveArticles[story.id]}
+                          actions={(
+                            <LifestyleReaderActions
+                              story={story}
+                              saved={savedIds.includes(story.id)}
+                              followed={followedBrands.includes(story.brand)}
+                              commentCount={getLifestyleCommentCount(story, commentsByStoryId[story.id]?.length ?? 0)}
+                              onSave={() => onSave(story)}
+                              onToggleFollowBrand={() => onToggleFollowBrand(story.brand)}
+                            />
+                          )}
+                          onOpenImage={(image) => {
+                            const images = getFullscreenReaderImages(story, liveArticles[story.id]);
+                            setFullscreenGallery({
+                              story,
+                              images,
+                              initialIndex: Math.max(0, images.findIndex((candidate) => candidate.src === image.src)),
+                            });
+                          }}
+                        />
+                        <LifestyleCardModule story={story} kind={kind} />
+                        <LifestyleStoryComments
+                          story={story}
+                          comments={commentsByStoryId[story.id] ?? []}
+                          onAddComment={(body) => onAddComment(story.id, body)}
+                        />
+                        <LifestyleArticleRecommendationsModule
+                          currentStory={story}
+                          stories={readerStories}
+                          productName={destinationConfigs[getStoryDestinationMode(story.brandSlug)].productName}
+                          onOpenStory={onOpenStory}
+                        />
+                      </div>
+                    </article>
+                    <LifestyleReaderSidebarAd currentStory={story} slotIndex={index} />
+                  </div>
                 </React.Fragment>
               );
             })}
@@ -4553,7 +4674,6 @@ function LifestyleStoryReaderModal({
               )}
             </div>
           </div>
-          <LifestyleReaderSidebarAd currentStory={storyQueue[0]} />
         </div>
       </div>
       {fullscreenGallery ? (
@@ -4580,6 +4700,33 @@ function TodayEditDashboard({
   onOpenStory: (storyId: string) => void;
   onShowFollowedBrands: () => void;
 }) {
+  const carouselRef = React.useRef<HTMLDivElement | null>(null);
+  const [canScrollLeft, setCanScrollLeft] = React.useState(false);
+  const [canScrollRight, setCanScrollRight] = React.useState(false);
+  const updateCarouselControls = React.useCallback(() => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+    const firstCardOffset = (carousel.firstElementChild as HTMLElement | null)?.offsetLeft ?? 0;
+
+    setCanScrollLeft(carousel.scrollLeft > firstCardOffset + 2);
+    setCanScrollRight(carousel.scrollLeft < carousel.scrollWidth - carousel.clientWidth - 2);
+  }, []);
+
+  React.useEffect(() => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+
+    updateCarouselControls();
+    carousel.addEventListener("scroll", updateCarouselControls, { passive: true });
+    const resizeObserver = new ResizeObserver(updateCarouselControls);
+    resizeObserver.observe(carousel);
+
+    return () => {
+      carousel.removeEventListener("scroll", updateCarouselControls);
+      resizeObserver.disconnect();
+    };
+  }, [updateCarouselControls]);
+
   const usedStoryIds = new Set<string>();
   const compactStories = (items: Array<LifestyleRiverStory | undefined>) =>
     items.filter((story): story is LifestyleRiverStory => Boolean(story));
@@ -4607,6 +4754,16 @@ function TodayEditDashboard({
   ]);
 
   if (!continueStory || !followedBrandStory || !trendingStory || !collectionStory) return null;
+
+  const scrollCarousel = (direction: -1 | 1) => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+
+    carousel.scrollBy({
+      left: direction * Math.max(320, carousel.clientWidth * 0.72),
+      behavior: "smooth",
+    });
+  };
 
   const modules = [
     {
@@ -4644,13 +4801,16 @@ function TodayEditDashboard({
       className="relative left-1/2 w-screen -translate-x-1/2 border-b border-border bg-[var(--hp-strip)] shadow-[var(--hp-shadow-card)]"
       aria-label="Today&apos;s edit"
     >
-      <div className="mx-auto flex w-full max-w-[var(--width-content-max)] snap-x snap-mandatory overflow-x-auto px-4 [scrollbar-width:none] md:grid md:grid-cols-2 md:divide-x md:divide-border md:overflow-visible md:px-6 md:[scrollbar-width:auto] lg:px-12 xl:grid-cols-4 [&::-webkit-scrollbar]:hidden md:[&::-webkit-scrollbar]:block">
+      <div
+        ref={carouselRef}
+        className="mx-auto flex w-full max-w-[var(--width-content-max)] snap-x snap-mandatory overflow-x-auto px-4 [scrollbar-width:none] md:px-6 lg:px-12 xl:grid xl:grid-cols-4 xl:divide-x xl:divide-border xl:overflow-visible xl:snap-none xl:[scrollbar-width:auto] [&::-webkit-scrollbar]:hidden xl:[&::-webkit-scrollbar]:block"
+      >
         {modules.map((module) => (
           <button
             key={module.label}
             type="button"
             onClick={module.onClick}
-            className="group relative flex min-h-[190px] w-[88vw] shrink-0 snap-start scroll-ml-0 flex-col border-r border-border px-5 py-6 text-left transition-colors last:border-r-0 hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30 sm:w-[58vw] md:min-h-[144px] md:w-auto md:border-0 md:p-6 xl:min-w-0"
+            className="group relative flex min-h-[190px] w-[88vw] shrink-0 snap-start scroll-ml-0 flex-col border-r border-border px-5 py-6 text-left transition-colors last:border-r-0 hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30 sm:w-[58vw] md:min-h-[144px] md:w-[44vw] md:p-6 lg:w-[34vw] xl:w-auto xl:min-w-0 xl:border-0"
           >
             <span>
               <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
@@ -4672,6 +4832,30 @@ function TodayEditDashboard({
           </button>
         ))}
       </div>
+      {canScrollLeft || canScrollRight ? (
+        <div className="absolute right-5 top-5 hidden items-center gap-1.5 sm:flex xl:hidden">
+          {canScrollLeft ? (
+            <button
+              type="button"
+              onClick={() => scrollCarousel(-1)}
+              className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-primary/30"
+              aria-label="Previous stories in today's edit"
+            >
+              <ChevronLeft className="h-4 w-4" aria-hidden />
+            </button>
+          ) : null}
+          {canScrollRight ? (
+            <button
+              type="button"
+              onClick={() => scrollCarousel(1)}
+              className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-primary/30"
+              aria-label="Next stories in today's edit"
+            >
+              <ChevronRight className="h-4 w-4" aria-hidden />
+            </button>
+          ) : null}
+        </div>
+      ) : null}
     </section>
   );
 }
@@ -5064,7 +5248,7 @@ function LifestyleLeftSidebar({
 
   return (
     <aside
-      className="min-w-0 space-y-5 lg:sticky lg:top-[99px] lg:max-h-[calc(100dvh-123px)] lg:self-start lg:overflow-y-auto lg:pr-1"
+      className="min-w-0 space-y-5 lg:sticky lg:top-[112px] lg:max-h-[calc(100dvh-136px)] lg:self-start lg:overflow-y-auto lg:pr-1"
       aria-label="Lifestyle discovery sidebar"
     >
       <MobileCollapsibleSidebarCard
@@ -5504,6 +5688,15 @@ function LifestyleRiverHomePage({
     }));
   };
 
+  const toggleFollowBrand = (brandName: string) => {
+    updateReaderProfile((current) => ({
+      ...current,
+      followedBrands: current.followedBrands.includes(brandName)
+        ? current.followedBrands.filter((brand) => brand !== brandName)
+        : [...current.followedBrands, brandName],
+    }));
+  };
+
   const showFollowedBrands = () => {
     const availableFollowedBrands = sidebarBrands
       .filter((brand) => brand.count > 0 && profile.followedBrands.includes(brand.name))
@@ -5657,7 +5850,7 @@ function LifestyleRiverHomePage({
           )}
         </main>
 
-        <aside className="min-w-0 space-y-5 lg:sticky lg:top-[99px] lg:max-h-[calc(100dvh-123px)] lg:self-start lg:overflow-y-auto lg:pr-1">
+        <aside className="min-w-0 space-y-5 lg:sticky lg:top-[112px] lg:max-h-[calc(100dvh-136px)] lg:self-start lg:overflow-y-auto lg:pr-1">
           <div className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
             <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
               Trending Across Brands
@@ -5755,11 +5948,13 @@ function LifestyleRiverHomePage({
         availableStories={availableReaderStories}
         openStoryId={openStoryId}
         savedIds={profile.savedIds}
+        followedBrands={profile.followedBrands}
         commentsByStoryId={resolvedCommentsByStoryId}
         onClose={() => setOpenStoryId(null)}
         onOpenStory={setOpenStoryId}
         onSave={toggleSaved}
         onMoreLikeThis={boostStory}
+        onToggleFollowBrand={toggleFollowBrand}
         onAddComment={addStoryComment}
       />
 
