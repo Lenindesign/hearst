@@ -31,6 +31,7 @@ export function SiteFooter({
     { label: "Product story", href: "/about-hearst-magazines/" },
     { label: "Product blueprint", href: "/hearst-product-blueprint/" },
     { label: "Live feed", href: "/hearst-plus/live-feed/" },
+    { label: "Lifestyle Live", href: "/hearst-plus/lifestyle-live/" },
   ],
   className,
 }: SiteFooterProps) {

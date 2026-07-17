@@ -5,7 +5,8 @@ import { lifestyleRiverStories } from "@/components/lifestyle-river-data";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import type { LiveFeedData, LiveFeedSourceNote } from "@/lib/live-feed-types";
 
-const PERSONALIZE_URL = "https://personalize-stage.motortrend.com/recommendations";
+const PERSONALIZE_STAGE_URL = "https://personalize-stage.motortrend.com/recommendations";
+const PERSONALIZE_PRODUCTION_URL = "https://personalize.motortrend.com/recommendations";
 
 const supportedBrands = [
   ["caranddriver", "Car and Driver", "car-and-driver", "Cars"],
@@ -22,6 +23,12 @@ const supportedBrands = [
   ["seventeen", "Seventeen", "seventeen", "Style"],
   ["womansday", "Woman's Day", "womans-day", "Lifestyle"],
 ] as const;
+
+const lifestyleLiveBrands = [
+  ["cosmopolitan", "Cosmopolitan", "cosmopolitan", "Style"],
+] as const;
+
+type SupportedPersonalizeBrand = (typeof supportedBrands)[number] | (typeof lifestyleLiveBrands)[number];
 
 type ApiRecommendation = {
   __typename?: string;
@@ -103,7 +110,7 @@ function buildTags(title: string, topic: string, brand: string) {
 
 function mapRecommendation(
   item: ApiRecommendation,
-  brand: (typeof supportedBrands)[number],
+  brand: SupportedPersonalizeBrand,
   index: number,
 ): LifestyleRiverStory | null {
   const [, brandName, brandSlug, fallbackTopic] = brand;
@@ -155,7 +162,7 @@ function getPreferredVideoUrl(item: ApiVideoRecommendation) {
 
 function mapVideoRecommendation(
   item: ApiVideoRecommendation,
-  brand: (typeof supportedBrands)[number],
+  brand: SupportedPersonalizeBrand,
   index: number,
 ): LifestyleRiverStory | null {
   const [, brandName, brandSlug, fallbackTopic] = brand;
@@ -190,8 +197,14 @@ function mapVideoRecommendation(
   };
 }
 
-function fallbackData(): LiveFeedData {
-  const stories = [...autosRiverStories, ...lifestyleRiverStories].slice(0, 80);
+function fallbackData({
+  stories: fallbackStories = [...autosRiverStories, ...lifestyleRiverStories].slice(0, 80),
+  dataSourceCopy = "the local story snapshot because the Personalize stage feed is temporarily unavailable.",
+}: {
+  stories?: LifestyleRiverStory[];
+  dataSourceCopy?: string;
+} = {}): LiveFeedData {
+  const stories = fallbackStories;
   const counts = new Map<string, LiveFeedSourceNote>();
   stories.forEach((story) => {
     const current = counts.get(story.brandSlug);
@@ -212,23 +225,36 @@ function fallbackData(): LiveFeedData {
   return {
     stories,
     sourceNotes: Array.from(counts.values()),
-    dataSourceCopy: "the local story snapshot because the Personalize stage feed is temporarily unavailable.",
+    dataSourceCopy,
     fetchedAt: new Date().toISOString(),
     isFallback: true,
   };
 }
 
-export async function getPersonalizeLiveFeed(): Promise<LiveFeedData> {
-  const apiKey = process.env.PERSONALIZE_API_KEY;
-  if (!apiKey) return fallbackData();
+async function loadPersonalizeFeed({
+  apiKey,
+  endpoint,
+  brands,
+  videoBrandIds: allowedVideoBrandIds,
+  dataSourceCopy,
+  fallback,
+}: {
+  apiKey?: string;
+  endpoint: string;
+  brands: readonly SupportedPersonalizeBrand[];
+  videoBrandIds: ReadonlySet<string>;
+  dataSourceCopy: string;
+  fallback: () => LiveFeedData;
+}): Promise<LiveFeedData> {
+  if (!apiKey) return fallback();
 
   try {
     const results = await Promise.all(
-      supportedBrands.map(async (brand) => {
+      brands.map(async (brand) => {
         const [apiBrand] = brand;
         try {
           const fetchRecommendations = async (type: "all" | "video", size: number) => {
-            const url = new URL(PERSONALIZE_URL);
+            const url = new URL(endpoint);
             url.searchParams.set("type", type);
             url.searchParams.set("brand", apiBrand);
             url.searchParams.set("size", String(size));
@@ -248,7 +274,7 @@ export async function getPersonalizeLiveFeed(): Promise<LiveFeedData> {
 
           const [items, videoItems] = await Promise.all([
             fetchRecommendations("all", 10),
-            videoBrandIds.has(apiBrand)
+            allowedVideoBrandIds.has(apiBrand)
               ? fetchRecommendations("video", 4).catch((error) => {
                   console.error(`Unable to load ${apiBrand} video recommendations`, error);
                   return [];
@@ -279,23 +305,48 @@ export async function getPersonalizeLiveFeed(): Promise<LiveFeedData> {
       sourceNotes.push({
         brand: brand[1],
         brandSlug: brand[2],
-        feedCount: videoBrandIds.has(brand[0]) ? 2 : 1,
+        feedCount: allowedVideoBrandIds.has(brand[0]) ? 2 : 1,
         importedCount: items.length + videoItems.length,
         selectedCount: mapped.length + mappedVideos.length,
       });
     });
 
-    if (stories.length === 0) return fallbackData();
+    if (stories.length === 0) return fallback();
 
     return {
       stories: stories.sort((a, b) => b.popularity - a.popularity),
       sourceNotes: sourceNotes.filter((note) => note.selectedCount > 0),
-      dataSourceCopy: "the Personalize stage API, including playable Hearst video, across the currently supported Autos and Lifestyle brands.",
+      dataSourceCopy,
       fetchedAt: new Date().toISOString(),
       isFallback: false,
     };
   } catch (error) {
     console.error("Unable to load Personalize live feed", error);
-    return fallbackData();
+    return fallback();
   }
+}
+
+export async function getPersonalizeLiveFeed(): Promise<LiveFeedData> {
+  return loadPersonalizeFeed({
+    apiKey: process.env.PERSONALIZE_API_KEY,
+    endpoint: PERSONALIZE_STAGE_URL,
+    brands: supportedBrands,
+    videoBrandIds,
+    dataSourceCopy: "the Personalize stage API, including playable Hearst video, across the currently supported Autos and Lifestyle brands.",
+    fallback: () => fallbackData(),
+  });
+}
+
+export async function getPersonalizeLifestyleLiveFeed(): Promise<LiveFeedData> {
+  return loadPersonalizeFeed({
+    apiKey: process.env.PERSONALIZE_LIFESTYLE_API_KEY,
+    endpoint: PERSONALIZE_PRODUCTION_URL,
+    brands: lifestyleLiveBrands,
+    videoBrandIds: new Set(),
+    dataSourceCopy: "the production Personalize API seeded by Cosmopolitan for a Lifestyle Live prototype.",
+    fallback: () => fallbackData({
+      stories: lifestyleRiverStories.filter((story) => story.brandSlug === "cosmopolitan").slice(0, 40),
+      dataSourceCopy: "the local Cosmopolitan lifestyle snapshot because the production Personalize feed is temporarily unavailable.",
+    }),
+  });
 }

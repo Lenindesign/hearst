@@ -3659,7 +3659,7 @@ function LifestyleReaderActions({
           <span className={cn(
             "inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-colors",
             followed
-              ? "border-primary bg-primary text-primary-foreground"
+              ? "border-transparent bg-primary text-primary-foreground"
               : "border-border bg-muted text-muted-foreground"
           )}>
             {followed ? <Check className="h-3 w-3" aria-hidden /> : <Plus className="h-3 w-3" aria-hidden />}
@@ -6168,13 +6168,15 @@ export function HomePageTemplate({
   const destinationMode = getDestinationMode(selectedBrand?.slug ?? initialBrandSlug ?? brand.slug);
   const baseDestinationConfig = destinationConfigs[destinationMode];
   const destinationConfig = React.useMemo<DestinationConfig>(() => {
-    if (!liveFeedData || destinationMode !== "all" || liveFeedData.stories.length === 0) {
+    if (!liveFeedData || liveFeedData.stories.length === 0) {
       return baseDestinationConfig;
     }
 
-    const featuredFashionStory = fluxRiverStories.find(
-      (story) => story.title === "The Best Dressed Celebrities at Paris Couture Week"
-    );
+    const featuredFashionStory = destinationMode === "all"
+      ? fluxRiverStories.find(
+          (story) => story.title === "The Best Dressed Celebrities at Paris Couture Week"
+        )
+      : undefined;
     const curatedLeadStory = featuredFashionStory
       ? {
           ...featuredFashionStory,
@@ -6205,8 +6207,10 @@ export function HomePageTemplate({
 
     return {
       ...baseDestinationConfig,
+      productName: destinationMode === "lifestyle" ? "Lifestyle Live" : baseDestinationConfig.productName,
       stories: liveStories,
       sourceNotes: liveSourceNotes,
+      brandSummary: liveSourceNotes.map((note) => note.brand).join(", "),
       defaultLeadStoryId: liveStories[0]?.id,
       dataSourceCopy: curatedLeadStory
         ? `${liveFeedData.dataSourceCopy.replace(/\.$/, "")}, with an editor-selected Fashion & Luxury lead from Hearst RSS metadata.`
