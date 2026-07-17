@@ -3083,6 +3083,12 @@ function LifestyleLeadSlider({
 }) {
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [paused, setPaused] = React.useState(false);
+  const [isDragging, setIsDragging] = React.useState(false);
+  const [dragOffset, setDragOffset] = React.useState(0);
+  const swipeStartRef = React.useRef<{ x: number; y: number; time: number } | null>(null);
+  const swipeLastRef = React.useRef<{ x: number; y: number } | null>(null);
+  const suppressSlideClickRef = React.useRef(false);
+  const swipeInstructionsId = React.useId();
   const activeStory = stories[activeIndex] ?? stories[0];
   const storyIdsKey = stories.map((story) => story.id).join("|");
 
@@ -3091,31 +3097,103 @@ function LifestyleLeadSlider({
   }, [storyIdsKey]);
 
   React.useEffect(() => {
-    if (paused || stories.length < 2) return;
+    if (paused || isDragging || stories.length < 2) return;
 
     const intervalId = window.setInterval(() => {
       setActiveIndex((index) => (index + 1) % stories.length);
     }, 6500);
 
     return () => window.clearInterval(intervalId);
-  }, [paused, stories.length]);
+  }, [isDragging, paused, stories.length]);
 
   if (!activeStory) return null;
 
   const saved = savedIds.includes(activeStory.id);
   const goToPrevious = () => setActiveIndex((index) => (index - 1 + stories.length) % stories.length);
   const goToNext = () => setActiveIndex((index) => (index + 1) % stories.length);
+  const resetSwipe = () => {
+    swipeStartRef.current = null;
+    swipeLastRef.current = null;
+    setIsDragging(false);
+    setDragOffset(0);
+  };
+  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (stories.length < 2 || event.button !== 0) return;
+
+    swipeStartRef.current = { x: event.clientX, y: event.clientY, time: performance.now() };
+    swipeLastRef.current = { x: event.clientX, y: event.clientY };
+    setIsDragging(true);
+  };
+  const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const start = swipeStartRef.current;
+    if (!start) return;
+
+    swipeLastRef.current = { x: event.clientX, y: event.clientY };
+    const deltaX = event.clientX - start.x;
+    const deltaY = event.clientY - start.y;
+    if (Math.abs(deltaY) >= Math.abs(deltaX)) return;
+
+    if (Math.abs(deltaX) >= 8 && !event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.setPointerCapture(event.pointerId);
+    }
+
+    event.preventDefault();
+    const maxOffset = event.currentTarget.clientWidth * 0.22;
+    setDragOffset(Math.max(-maxOffset, Math.min(maxOffset, deltaX)));
+  };
+  const handlePointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
+    const start = swipeStartRef.current;
+    if (!start) return;
+
+    const end = swipeLastRef.current ?? { x: event.clientX, y: event.clientY };
+    const deltaX = end.x - start.x;
+    const deltaY = end.y - start.y;
+    const elapsed = Math.max(performance.now() - start.time, 1);
+    const velocity = Math.abs(deltaX) / elapsed;
+    const threshold = Math.min(64, event.currentTarget.clientWidth * 0.14);
+    const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY) * 1.2
+      && (Math.abs(deltaX) >= threshold || (Math.abs(deltaX) >= 24 && velocity >= 0.45));
+
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+
+    if (isHorizontalSwipe) {
+      suppressSlideClickRef.current = true;
+      if (deltaX < 0) goToNext();
+      else goToPrevious();
+      window.setTimeout(() => {
+        suppressSlideClickRef.current = false;
+      }, 0);
+    }
+
+    resetSwipe();
+  };
 
   return (
     <article
       className="group relative min-w-0 overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]"
       aria-roledescription="carousel"
       aria-label="Featured stories"
+      aria-describedby={swipeInstructionsId}
     >
-      <div className="relative aspect-[16/11] min-h-[430px] overflow-hidden bg-muted lg:min-h-[460px]">
+      <p id={swipeInstructionsId} className="sr-only">
+        Swipe left or right to move between featured stories.
+      </p>
+      <div
+        className="relative h-[min(128vw,520px)] touch-pan-y select-none overflow-hidden bg-muted sm:h-auto sm:min-h-[430px] sm:aspect-[16/11] lg:min-h-[460px]"
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={resetSwipe}
+        onDragStart={(event) => event.preventDefault()}
+      >
         <div
-          className="flex h-full transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
-          style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+          className={cn(
+            "flex h-full ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
+            isDragging ? "transition-none" : "transition-transform duration-500"
+          )}
+          style={{ transform: `translateX(calc(-${activeIndex * 100}% + ${dragOffset}px))` }}
         >
           {stories.map((story, index) => {
             const slideCommentCount = getLifestyleCommentCount(story, commentsByStoryId[story.id]?.length ?? 0);
@@ -3125,7 +3203,13 @@ function LifestyleLeadSlider({
                 key={story.id}
                 type="button"
                 className="relative h-full w-full shrink-0 text-left focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30"
-                onClick={() => onOpenStory(story)}
+                onClick={(event) => {
+                  if (suppressSlideClickRef.current) {
+                    event.preventDefault();
+                    return;
+                  }
+                  onOpenStory(story);
+                }}
                 aria-label={`Open story: ${story.title}`}
                 aria-hidden={index !== activeIndex}
                 tabIndex={index === activeIndex ? 0 : -1}
@@ -4095,8 +4179,8 @@ function LifestyleReaderSidebarAd({ currentStory }: { currentStory: LifestyleRiv
 
 function LifestyleStoryReaderModal({
   stories,
+  availableStories,
   openStoryId,
-  productName,
   savedIds,
   commentsByStoryId,
   onClose,
@@ -4106,8 +4190,8 @@ function LifestyleStoryReaderModal({
   onAddComment,
 }: {
   stories: LifestyleRiverStory[];
+  availableStories: LifestyleRiverStory[];
   openStoryId: string | null;
-  productName: string;
   savedIds: string[];
   commentsByStoryId: Record<string, LifestyleStoryComment[]>;
   onClose: () => void;
@@ -4118,13 +4202,57 @@ function LifestyleStoryReaderModal({
 }) {
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
-  const openIndex = openStoryId ? stories.findIndex((story) => story.id === openStoryId) : -1;
+  const [readerDestinationOverride, setReaderDestinationOverride] = React.useState<Exclude<DestinationMode, "all"> | null>(null);
+  const readerStories = readerDestinationOverride
+    ? availableStories.filter((story) => getStoryDestinationMode(story.brandSlug) === readerDestinationOverride)
+    : stories;
+  const openIndex = openStoryId ? readerStories.findIndex((story) => story.id === openStoryId) : -1;
   const [visibleReaderCount, setVisibleReaderCount] = React.useState(1);
   const [liveArticles, setLiveArticles] = React.useState<Record<string, LiveArticleLoadState>>({});
   const [fullscreenGallery, setFullscreenGallery] = React.useState<FullscreenGalleryState | null>(null);
-  const storyQueue = openIndex >= 0 ? stories.slice(openIndex) : [];
+  const storyQueue = openIndex >= 0 ? readerStories.slice(openIndex) : [];
   const visibleReaderStories = storyQueue.slice(0, visibleReaderCount);
   const visibleReaderStoryIds = visibleReaderStories.map((story) => story.id).join("|");
+  const readerContextStory = storyQueue[0];
+  const readerDestination = readerContextStory
+    ? getStoryDestinationMode(readerContextStory.brandSlug)
+    : "lifestyle";
+  const readerDestinationConfig = destinationConfigs[readerDestination];
+  const readerColorMode = readerDestination === "flux" ? "dark" : "light";
+  const readerTheme = themeOptions.find((theme) => theme.slug === readerDestinationConfig.brandSlug);
+  const readerThemeCssVars = readerTheme
+    ? brandToCssVars(readerTheme, readerColorMode) as React.CSSProperties
+    : undefined;
+  const readerSections: Array<{ label: string; mode: Exclude<DestinationMode, "all"> }> = [
+    { label: "Lifestyle", mode: "lifestyle" },
+    { label: "Autos", mode: "autos" },
+    { label: "Fashion & Luxury", mode: "flux" },
+    { label: "Enthusiast & Wellness", mode: "ew" },
+  ];
+  const otherReaderSections = readerSections.filter((section) => section.mode !== readerDestination);
+  const readerActiveFilter = readerContextStory
+    ? readerDestinationConfig.filters.find((filter) =>
+        filter !== "For You"
+        && filter !== "Saved"
+        && storyMatchesLifestyleFilter(readerContextStory, filter)
+      ) ?? "For You"
+    : "For You";
+
+  const getReaderFilterStory = (filter: string) => {
+    if (!readerContextStory) return undefined;
+    if (filter === "For You") return readerContextStory;
+
+    return readerStories.find((story) =>
+      getStoryDestinationMode(story.brandSlug) === readerDestination
+      && (filter === "Saved"
+        ? savedIds.includes(story.id)
+        : storyMatchesLifestyleFilter(story, filter))
+    );
+  };
+
+  React.useEffect(() => {
+    if (!openStoryId) setReaderDestinationOverride(null);
+  }, [openStoryId]);
 
   React.useEffect(() => {
     setVisibleReaderCount(1);
@@ -4221,26 +4349,98 @@ function LifestyleStoryReaderModal({
       <div className="absolute inset-0" onClick={onClose} />
       <div
         ref={scrollRef}
-        className="absolute inset-0 mx-auto flex h-[100dvh] w-full max-w-[1360px] flex-col overflow-y-auto bg-background shadow-2xl sm:inset-y-6 sm:h-auto sm:rounded-[8px]"
+        className="hearst-plus-theme absolute inset-0 mx-auto flex h-[100dvh] w-full max-w-[1360px] flex-col overflow-y-auto bg-background text-foreground shadow-2xl sm:inset-y-6 sm:h-auto sm:rounded-[8px]"
+        data-mode={readerColorMode}
+        data-reader-destination={readerDestination}
+        style={readerThemeCssVars}
       >
-        <div className="sticky top-0 z-[110] flex items-center justify-between border-b border-border bg-background/95 px-4 py-3 backdrop-blur sm:px-6">
-          <div className="min-w-0">
-            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
-              {productName} Reader
-            </p>
-            <p className="mt-1 truncate text-xs text-muted-foreground">
-              Lazy-loading {visibleReaderStories.length} of {storyQueue.length} stories from this river
-            </p>
+        <div className="sticky top-0 z-[110] border-b border-border bg-background/95 backdrop-blur">
+          <div className="flex min-h-16 items-center justify-between gap-4 border-b border-border/70 px-4 py-3 sm:px-6">
+            <div className="flex min-w-0 flex-1 items-center gap-4">
+              <div
+                className="flex h-6 min-w-0 max-w-[230px] flex-1 items-center sm:h-7 sm:flex-none sm:basis-[230px]"
+                role="img"
+                aria-label={readerDestinationConfig.productName}
+              >
+                <BrandLogo
+                  slug={readerDestinationConfig.brandSlug}
+                  color={readerDestination === "flux" ? "#ffffff" : undefined}
+                  className="flex h-full w-full items-center [&_svg]:block [&_svg]:h-full [&_svg]:w-full [&_svg]:max-w-full"
+                />
+              </div>
+              <div className="hidden min-w-0 border-l border-border pl-4 sm:block">
+                <p className="truncate text-xs font-bold text-foreground">
+                  Reading {readerContextStory?.brand}
+                </p>
+                <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                  {visibleReaderStories.length} of {storyQueue.length} stories loaded
+                </p>
+              </div>
+            </div>
+            <nav className="ml-auto hidden shrink-0 items-center justify-end gap-5 lg:flex" aria-label="Other Hearst sections">
+              {otherReaderSections.map((section) => {
+                const nextStory = availableStories.find((story) =>
+                  getStoryDestinationMode(story.brandSlug) === section.mode
+                );
+
+                return (
+                  <button
+                    key={section.mode}
+                    type="button"
+                    disabled={!nextStory}
+                    onClick={() => {
+                      if (!nextStory) return;
+                      setReaderDestinationOverride(section.mode);
+                      onOpenStory(nextStory.id);
+                    }}
+                    className="whitespace-nowrap text-xs font-semibold text-muted-foreground transition-colors hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
+                    aria-label={`Show ${section.label} stories in reader`}
+                  >
+                    {section.label}
+                  </button>
+                );
+              })}
+            </nav>
+            <Button variant="outline" size="icon-sm" onClick={onClose} aria-label="Close story reader">
+              <X className="h-4 w-4" aria-hidden />
+            </Button>
           </div>
-          <Button variant="outline" size="icon-sm" onClick={onClose} aria-label="Close story reader">
-            <X className="h-4 w-4" aria-hidden />
-          </Button>
+          <nav
+            className="overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            aria-label={`${readerDestinationConfig.productName} reader sections`}
+          >
+            <div className="mx-auto flex min-w-max items-center gap-6 px-4 sm:justify-center sm:px-6">
+              {readerDestinationConfig.filters.map((filter) => {
+                const filterStory = getReaderFilterStory(filter);
+                const active = filter === readerActiveFilter;
+
+                return (
+                  <button
+                    key={filter}
+                    type="button"
+                    disabled={!filterStory}
+                    onClick={() => filterStory && onOpenStory(filterStory.id)}
+                    className={cn(
+                      "whitespace-nowrap border-b-2 px-0.5 py-3 text-sm transition-colors",
+                      active
+                        ? "border-primary font-semibold text-primary"
+                        : "border-transparent text-foreground hover:border-primary/40 hover:text-primary",
+                      !filterStory && "cursor-not-allowed opacity-40"
+                    )}
+                    aria-current={active ? "page" : undefined}
+                  >
+                    {filter}
+                  </button>
+                );
+              })}
+            </div>
+          </nav>
         </div>
 
         <div className="grid gap-8 px-4 py-6 sm:px-8 lg:grid-cols-[minmax(0,1fr)_300px] lg:px-10 xl:grid-cols-[220px_minmax(0,1fr)_300px]">
           <LifestyleReaderContextRail
             currentStory={storyQueue[0]}
-            stories={stories}
+            stories={readerStories}
             onOpenStory={onOpenStory}
           />
           <div className="min-w-0">
@@ -4260,8 +4460,10 @@ function LifestyleStoryReaderModal({
                   ) : null}
                   <article
                     className={cn(
-                      "relative border-b border-border pb-10",
-                      story.id.startsWith("live-") && "rounded-[8px] border bg-white px-5 py-5 text-[#121212] sm:px-7 sm:py-7"
+                      "relative rounded-[8px] border px-5 py-5 sm:px-7 sm:py-7",
+                      getStoryDestinationMode(story.brandSlug) === "flux"
+                        ? "border-white/15 bg-[#171b21] text-[#f7f8fa] [--border:#343b46] [--foreground:#f7f8fa] [--muted-foreground:#aeb8c5]"
+                        : "border-border bg-white text-[#121212] [--foreground:#121212] [--muted-foreground:#5f6b7a]"
                     )}
                   >
                     {story.videoUrl ? (
@@ -4329,8 +4531,8 @@ function LifestyleStoryReaderModal({
                       />
                       <LifestyleArticleRecommendationsModule
                         currentStory={story}
-                        stories={stories}
-                        productName={productName}
+                        stories={readerStories}
+                        productName={destinationConfigs[getStoryDestinationMode(story.brandSlug)].productName}
                         onOpenStory={onOpenStory}
                       />
                     </div>
@@ -5033,6 +5235,13 @@ function LifestyleRiverHomePage({
 
     return brandFilteredStories.filter((story) => storyMatchesLifestyleFilter(story, activeFilter));
   }, [activeBrandFilters, activeFilter, profile.savedIds, rankedStories]);
+  const availableReaderStories = React.useMemo(() => {
+    const sourceStoryIds = new Set(config.stories.map((story) => story.id));
+    return [
+      ...config.stories,
+      ...destinationConfigs.all.stories.filter((story) => !sourceStoryIds.has(story.id)),
+    ];
+  }, [config.stories]);
   const displayStories = React.useMemo(() => {
     if (!config.liveFeedStatus) return filteredStories;
     const firstVideoIndex = filteredStories.findIndex((story) => Boolean(story.videoUrl));
@@ -5539,8 +5748,8 @@ function LifestyleRiverHomePage({
 
       <LifestyleStoryReaderModal
         stories={filteredStories}
+        availableStories={availableReaderStories}
         openStoryId={openStoryId}
-        productName={config.productName}
         savedIds={profile.savedIds}
         commentsByStoryId={resolvedCommentsByStoryId}
         onClose={() => setOpenStoryId(null)}
