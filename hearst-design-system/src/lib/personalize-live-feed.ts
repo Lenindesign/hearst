@@ -38,10 +38,29 @@ type ApiRecommendation = {
   };
 };
 
+type ApiVideoRecommendation = {
+  __typename?: "Video";
+  description?: string;
+  duration?: number;
+  id?: string;
+  preview_image?: string;
+  published_at?: string;
+  slug?: string;
+  title?: string;
+  transcodings?: Array<{
+    codec?: string | null;
+    display_name?: string;
+    full_url?: string;
+    preset_name?: string;
+  }>;
+};
+
 type ApiResponse = {
-  data?: { recommendations?: ApiRecommendation[] } | null;
+  data?: { recommendations?: Array<ApiRecommendation | ApiVideoRecommendation> } | null;
   error?: { detail?: string } | null;
 };
+
+const videoBrandIds = new Set(["caranddriver", "goodhousekeeping"]);
 
 function stripHtml(value = "") {
   return value
@@ -118,6 +137,59 @@ function mapRecommendation(
   };
 }
 
+function getPreferredVideoUrl(item: ApiVideoRecommendation) {
+  const mp4Transcodings = (item.transcodings ?? []).filter((transcoding) =>
+    transcoding.full_url?.toLowerCase().includes(".mp4")
+  );
+  const preferredNames = ["720p", "480p", "360p", "1080p", "240p"];
+
+  for (const name of preferredNames) {
+    const match = mp4Transcodings.find((transcoding) =>
+      `${transcoding.display_name ?? ""} ${transcoding.preset_name ?? ""}`.toLowerCase().includes(name)
+    );
+    if (match?.full_url) return match.full_url;
+  }
+
+  return mp4Transcodings[0]?.full_url;
+}
+
+function mapVideoRecommendation(
+  item: ApiVideoRecommendation,
+  brand: (typeof supportedBrands)[number],
+  index: number,
+): LifestyleRiverStory | null {
+  const [, brandName, brandSlug, fallbackTopic] = brand;
+  const title = stripHtml(item.title);
+  const image = withProtocol(item.preview_image);
+  const videoUrl = withProtocol(getPreferredVideoUrl(item));
+  if (!item.id || !title || !image || !videoUrl) return null;
+
+  const publishedAt = item.published_at;
+  const publishedTime = publishedAt ? new Date(publishedAt).getTime() : Date.now();
+  const age = Math.max(0, Math.floor((Date.now() - publishedTime) / 86_400_000));
+  const duration = Math.max(1, item.duration ?? 0);
+  const summary = stripHtml(item.description) || `Watch this video from ${brandName}.`;
+
+  return {
+    id: `live-video-${brandSlug}-${item.id}`,
+    brand: brandName,
+    brandSlug,
+    topic: fallbackTopic,
+    title,
+    summary,
+    image,
+    readTime: `${Math.max(1, Math.ceil(duration / 60))} min watch`,
+    popularity: Math.max(1, 99 - index),
+    signal: index % 2 === 0 ? "Trending" : "Editor Pick",
+    tags: buildTags(title, fallbackTopic, brandName).concat("video"),
+    age,
+    publishedAt,
+    mediaKind: "video",
+    videoUrl,
+    videoDuration: duration,
+  };
+}
+
 function fallbackData(): LiveFeedData {
   const stories = [...autosRiverStories, ...lifestyleRiverStories].slice(0, 80);
   const counts = new Map<string, LiveFeedSourceNote>();
@@ -155,42 +227,61 @@ export async function getPersonalizeLiveFeed(): Promise<LiveFeedData> {
       supportedBrands.map(async (brand) => {
         const [apiBrand] = brand;
         try {
-          const url = new URL(PERSONALIZE_URL);
-          url.searchParams.set("type", "all");
-          url.searchParams.set("brand", apiBrand);
-          url.searchParams.set("size", "10");
-          url.searchParams.set("useCase", "similar_items");
-          url.searchParams.set("version", "1");
+          const fetchRecommendations = async (type: "all" | "video", size: number) => {
+            const url = new URL(PERSONALIZE_URL);
+            url.searchParams.set("type", type);
+            url.searchParams.set("brand", apiBrand);
+            url.searchParams.set("size", String(size));
+            url.searchParams.set("useCase", "similar_items");
+            url.searchParams.set("version", "1");
 
-          const response = await fetch(url, {
-            headers: { accept: "application/json", "api-key": apiKey },
-            cache: "no-store",
-            signal: AbortSignal.timeout(8_000),
-          });
-          if (!response.ok) throw new Error(`Personalize returned ${response.status} for ${apiBrand}`);
-          const payload = (await response.json()) as ApiResponse;
-          if (payload.error) throw new Error(payload.error.detail || `Personalize failed for ${apiBrand}`);
-          return { brand, items: payload.data?.recommendations ?? [] };
+            const response = await fetch(url, {
+              headers: { accept: "application/json", "api-key": apiKey },
+              cache: "no-store",
+              signal: AbortSignal.timeout(8_000),
+            });
+            if (!response.ok) throw new Error(`Personalize returned ${response.status} for ${apiBrand} ${type}`);
+            const payload = (await response.json()) as ApiResponse;
+            if (payload.error) throw new Error(payload.error.detail || `Personalize failed for ${apiBrand} ${type}`);
+            return payload.data?.recommendations ?? [];
+          };
+
+          const [items, videoItems] = await Promise.all([
+            fetchRecommendations("all", 10),
+            videoBrandIds.has(apiBrand)
+              ? fetchRecommendations("video", 4).catch((error) => {
+                  console.error(`Unable to load ${apiBrand} video recommendations`, error);
+                  return [];
+                })
+              : Promise.resolve([]),
+          ]);
+
+          return { brand, items, videoItems };
         } catch (error) {
           console.error(`Unable to load ${apiBrand} recommendations`, error);
-          return { brand, items: [] };
+          return { brand, items: [], videoItems: [] };
         }
       }),
     );
 
     const stories: LifestyleRiverStory[] = [];
     const sourceNotes: LiveFeedSourceNote[] = [];
-    results.forEach(({ brand, items }, brandIndex) => {
+    results.forEach(({ brand, items, videoItems }, brandIndex) => {
       const mapped = items
+        .filter((item): item is ApiRecommendation => "media" in item)
         .map((item, itemIndex) => mapRecommendation(item, brand, brandIndex * 10 + itemIndex))
         .filter((story): story is LifestyleRiverStory => Boolean(story));
-      stories.push(...mapped);
+      const mappedVideos = (videoItems as ApiVideoRecommendation[])
+        .filter((item) => Array.isArray(item.transcodings))
+        .map((item, itemIndex) => mapVideoRecommendation(item, brand, brandIndex * 10 + itemIndex))
+        .filter((story): story is LifestyleRiverStory => Boolean(story));
+      stories.push(...mapped, ...mappedVideos);
       sourceNotes.push({
         brand: brand[1],
         brandSlug: brand[2],
-        feedCount: 1,
-        importedCount: items.length,
-        selectedCount: mapped.length,
+        feedCount: videoBrandIds.has(brand[0]) ? 2 : 1,
+        importedCount: items.length + videoItems.length,
+        selectedCount: mapped.length + mappedVideos.length,
       });
     });
 
@@ -199,7 +290,7 @@ export async function getPersonalizeLiveFeed(): Promise<LiveFeedData> {
     return {
       stories: stories.sort((a, b) => b.popularity - a.popularity),
       sourceNotes: sourceNotes.filter((note) => note.selectedCount > 0),
-      dataSourceCopy: "the Personalize stage API across the currently supported Autos and Lifestyle brands.",
+      dataSourceCopy: "the Personalize stage API, including playable Hearst video, across the currently supported Autos and Lifestyle brands.",
       fetchedAt: new Date().toISOString(),
       isFallback: false,
     };

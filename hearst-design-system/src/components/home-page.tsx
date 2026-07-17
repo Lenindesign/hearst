@@ -1577,15 +1577,15 @@ function MainNav({
       slug={mastheadSlug}
       color={logoColor}
       className={cn(
-        "mx-auto flex items-center justify-center leading-none [&_svg]:block [&_svg]:w-auto motion-reduce:[&_svg]:transition-none",
+        "mx-auto flex w-full items-center justify-center leading-none [&_svg]:block motion-reduce:[&_svg]:transition-none",
         isDestinationRiver
           ? selectedBrand
             ? compact
               ? "[&_svg]:h-7 sm:[&_svg]:h-9 [&_svg]:max-w-[160px] sm:[&_svg]:max-w-[300px]"
               : "[&_svg]:h-10 sm:[&_svg]:h-14 [&_svg]:max-w-[240px] sm:[&_svg]:max-w-[460px]"
             : compact
-              ? "[&_svg]:h-[20px] sm:[&_svg]:h-[23px] [&_svg]:max-w-[143px] sm:[&_svg]:max-w-[266px]"
-              : "[&_svg]:h-[27px] sm:[&_svg]:h-[34px] [&_svg]:max-w-[199px] sm:[&_svg]:max-w-[394px]"
+              ? "h-[16px] sm:h-[23px] [&_svg]:h-full [&_svg]:w-full"
+              : "h-[18px] sm:h-[34px] [&_svg]:h-full [&_svg]:w-full"
           : "[&_svg]:h-10"
       )}
     />
@@ -1658,7 +1658,7 @@ function MainNav({
     <>
     <div className="flex h-20 border-b border-border bg-[var(--hp-surface)] sm:h-24">
       <PageContainer className="flex items-center justify-between">
-        <div className="flex w-[var(--width-sidebar-narrow)] justify-start">
+        <div className="flex w-10 shrink-0 justify-start sm:w-[var(--width-sidebar-narrow)]">
           <Button
             variant="outline"
             size="icon-sm"
@@ -1669,10 +1669,10 @@ function MainNav({
             {colorMode === "dark" ? <Sun className="h-4 w-4" aria-hidden /> : <Moon className="h-4 w-4" aria-hidden />}
           </Button>
         </div>
-        <div className="flex min-w-0 justify-center">
+        <div className="flex min-w-0 flex-1 justify-center">
           {renderMastheadLogo(false)}
         </div>
-        <div className="flex w-[var(--width-sidebar-narrow)] justify-end">
+        <div className="flex w-10 shrink-0 justify-end sm:w-[var(--width-sidebar-narrow)]">
           <Button variant="outline" size="icon-sm" aria-label="Search" title="Search">
             <Search className="h-3.5 w-3.5" aria-hidden />
           </Button>
@@ -2467,6 +2467,7 @@ function BrandPromotionRiverModule({
 function getLifestyleCardKind(story: LifestyleRiverStory): LifestyleCardKind {
   const searchable = `${story.topic} ${story.title}`.toLowerCase();
 
+  if (story.mediaKind === "video" || story.videoUrl) return "video";
   if (story.topic.startsWith("Food")) return "recipe";
   if (isYearMakeModelStory(story)) return "recipe";
   if (/shopping|products|tested|best|buy|sale|deals|favorite|picks/.test(searchable)) return "shopping";
@@ -2805,6 +2806,31 @@ function LifestyleRiverMedia({
     return <LifestyleRiverImage story={story} className={imageClassName} priority={featured} />;
   }
 
+  if (story.videoUrl) {
+    return (
+      <div
+        className={cn("relative min-w-0 overflow-hidden bg-black", videoClassName)}
+        onClick={(event) => event.stopPropagation()}
+        onKeyDown={(event) => event.stopPropagation()}
+      >
+        <video
+          src={story.videoUrl}
+          poster={story.image}
+          controls
+          playsInline
+          preload="metadata"
+          className="h-full w-full bg-black object-contain"
+          aria-label={`Play video: ${story.title}`}
+        />
+        {story.videoDuration ? (
+          <span className="pointer-events-none absolute right-3 top-3 rounded-full bg-black/70 px-2.5 py-1 text-xs font-bold tabular-nums text-white shadow-sm">
+            {formatVideoDuration(story.videoDuration)}
+          </span>
+        ) : null}
+      </div>
+    );
+  }
+
   return (
     <div
       className={cn("relative min-w-0 overflow-hidden bg-muted bg-cover", videoClassName)}
@@ -2829,6 +2855,12 @@ function LifestyleRiverMedia({
       </button>
     </div>
   );
+}
+
+function formatVideoDuration(duration: number) {
+  const minutes = Math.floor(duration / 60);
+  const seconds = Math.floor(duration % 60);
+  return `${minutes}:${String(seconds).padStart(2, "0")}`;
 }
 
 function LifestyleCardModule({
@@ -3014,15 +3046,16 @@ function LifestyleRiverCard({
 function getLeadSliderStories(stories: LifestyleRiverStory[], count = 5) {
   const selected: LifestyleRiverStory[] = [];
   const usedBrands = new Set<string>();
+  const imageStories = stories.filter((story) => !story.videoUrl);
 
-  for (const story of stories) {
+  for (const story of imageStories) {
     if (usedBrands.has(story.brandSlug)) continue;
     selected.push(story);
     usedBrands.add(story.brandSlug);
     if (selected.length === count) return selected;
   }
 
-  for (const story of stories) {
+  for (const story of imageStories) {
     if (selected.some((item) => item.id === story.id)) continue;
     selected.push(story);
     if (selected.length === count) break;
@@ -3509,6 +3542,17 @@ function LifestyleReaderBody({
   liveArticle?: LiveArticleLoadState;
   onOpenImage: (image: FullscreenReaderImage) => void;
 }) {
+  if (story.videoUrl) {
+    return (
+      <div className="mt-6 space-y-4 text-[18px] leading-8 text-[#242424]">
+        <p>{story.summary}</p>
+        <p className="border-t border-border pt-4 text-sm font-semibold text-muted-foreground">
+          Hearst video{story.videoDuration ? ` · ${formatVideoDuration(story.videoDuration)}` : ""}
+        </p>
+      </div>
+    );
+  }
+
   if (story.id.startsWith("live-") && liveArticle?.status === "loading") {
     return (
       <div className="mt-6 space-y-3" aria-live="polite">
@@ -3555,7 +3599,7 @@ function LifestyleReaderBody({
             );
           }
           if (block.type === "heading") {
-            return <h3 key={`${block.text}-${index}`} className="headline pt-3 text-2xl leading-tight text-foreground sm:text-3xl">{block.text}</h3>;
+            return <h3 key={`${block.text}-${index}`} className="headline !mb-3 pt-3 text-2xl leading-tight text-foreground sm:text-3xl">{block.text}</h3>;
           }
           if (block.type === "quote") {
             return <blockquote key={`${block.text}-${index}`} className="border-y border-border py-5 font-brand-secondary text-xl leading-8 text-foreground">{block.text}</blockquote>;
@@ -4220,21 +4264,40 @@ function LifestyleStoryReaderModal({
                       story.id.startsWith("live-") && "rounded-[8px] border bg-white px-5 py-5 text-[#121212] sm:px-7 sm:py-7"
                     )}
                   >
-                    <button
-                      type="button"
-                      className="group block w-full cursor-zoom-in rounded-[4px] focus:outline-none focus:ring-2 focus:ring-primary/40"
-                      onClick={() => setFullscreenGallery({
-                        story,
-                        images: getFullscreenReaderImages(story, liveArticles[story.id]),
-                        initialIndex: 0,
-                      })}
-                      aria-label={`View image fullscreen: ${story.title}`}
-                    >
-                      <LifestyleRiverImage
-                        story={story}
-                        className="aspect-video w-full rounded-[4px] transition-opacity group-hover:opacity-95"
-                      />
-                    </button>
+                    {story.videoUrl ? (
+                      <div className="relative aspect-video w-full overflow-hidden rounded-[4px] bg-black">
+                        <video
+                          src={story.videoUrl}
+                          poster={story.image}
+                          controls
+                          playsInline
+                          preload="metadata"
+                          className="h-full w-full bg-black object-contain"
+                          aria-label={`Play video: ${story.title}`}
+                        />
+                        {story.videoDuration ? (
+                          <span className="pointer-events-none absolute right-3 top-3 rounded-full bg-black/70 px-2.5 py-1 text-xs font-bold tabular-nums text-white shadow-sm">
+                            {formatVideoDuration(story.videoDuration)}
+                          </span>
+                        ) : null}
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        className="group block w-full cursor-zoom-in rounded-[4px] focus:outline-none focus:ring-2 focus:ring-primary/40"
+                        onClick={() => setFullscreenGallery({
+                          story,
+                          images: getFullscreenReaderImages(story, liveArticles[story.id]),
+                          initialIndex: 0,
+                        })}
+                        aria-label={`View image fullscreen: ${story.title}`}
+                      >
+                        <LifestyleRiverImage
+                          story={story}
+                          className="aspect-video w-full rounded-[4px] transition-opacity group-hover:opacity-95"
+                        />
+                      </button>
+                    )}
                     <div className="mx-auto mt-6 max-w-3xl">
                       <div className="mb-3 flex flex-wrap items-center gap-2">
                         <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
@@ -4795,7 +4858,7 @@ function LifestyleLeftSidebar({
 
   return (
     <aside
-      className="space-y-5 lg:sticky lg:top-[99px] lg:max-h-[calc(100dvh-123px)] lg:self-start lg:overflow-y-auto lg:pr-1"
+      className="min-w-0 space-y-5 lg:sticky lg:top-[99px] lg:max-h-[calc(100dvh-123px)] lg:self-start lg:overflow-y-auto lg:pr-1"
       aria-label="Lifestyle discovery sidebar"
     >
       <MobileCollapsibleSidebarCard
@@ -4970,7 +5033,17 @@ function LifestyleRiverHomePage({
 
     return brandFilteredStories.filter((story) => storyMatchesLifestyleFilter(story, activeFilter));
   }, [activeBrandFilters, activeFilter, profile.savedIds, rankedStories]);
-  const visibleStories = filteredStories.slice(0, visibleCount);
+  const displayStories = React.useMemo(() => {
+    if (!config.liveFeedStatus) return filteredStories;
+    const firstVideoIndex = filteredStories.findIndex((story) => Boolean(story.videoUrl));
+    if (firstVideoIndex < 0 || firstVideoIndex < 8) return filteredStories;
+
+    const reorderedStories = [...filteredStories];
+    const [firstVideo] = reorderedStories.splice(firstVideoIndex, 1);
+    reorderedStories.splice(Math.min(5, reorderedStories.length), 0, firstVideo);
+    return reorderedStories;
+  }, [config.liveFeedStatus, filteredStories]);
+  const visibleStories = displayStories.slice(0, visibleCount);
   const heroStories = getLeadSliderStories(visibleStories, 5);
   const leadStory = heroStories[0] ?? visibleStories[0];
   const heroStoryIds = new Set(heroStories.map((story) => story.id));
@@ -5266,7 +5339,7 @@ function LifestyleRiverHomePage({
         onShowFollowedBrands={showFollowedBrands}
       />
 
-      <div className="grid gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]">
+      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]">
         <LifestyleLeftSidebar
           profile={profile}
           topStories={filteredStories}
@@ -5279,7 +5352,7 @@ function LifestyleRiverHomePage({
           onFollowTopic={followTopic}
         />
 
-        <main className="space-y-4" aria-label={config.riverLabel}>
+        <main className="min-w-0 space-y-4" aria-label={config.riverLabel}>
           {leadStory ? (
             <>
               <LifestyleLeadSlider
@@ -5371,7 +5444,7 @@ function LifestyleRiverHomePage({
           )}
         </main>
 
-        <aside className="space-y-5 lg:sticky lg:top-[99px] lg:max-h-[calc(100dvh-123px)] lg:self-start lg:overflow-y-auto lg:pr-1">
+        <aside className="min-w-0 space-y-5 lg:sticky lg:top-[99px] lg:max-h-[calc(100dvh-123px)] lg:self-start lg:overflow-y-auto lg:pr-1">
           <div className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
             <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
               Trending Across Brands
@@ -5401,6 +5474,15 @@ function LifestyleRiverHomePage({
               {demoState.contentDay === "nextDay" ? "Next-day demo edition generated from " : "Pulled from "}
               {config.dataSourceCopy}
             </p>
+            {destination === "all" && !config.liveFeedStatus ? (
+              <LinkComponent
+                href="/hearst-plus/live-feed/"
+                size="xs"
+                className="mt-3 font-bold"
+              >
+                View live feed demo
+              </LinkComponent>
+            ) : null}
           </div>
           <div className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
             <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">

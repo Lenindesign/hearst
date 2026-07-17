@@ -15,6 +15,9 @@ export type LifestyleRiverStory = {
   age: number;
   publishedAt?: string;
   sourceUrl?: string;
+  mediaKind?: "video";
+  videoUrl?: string;
+  videoDuration?: number;
 };
 
 export type LifestyleRiverProfile = {
