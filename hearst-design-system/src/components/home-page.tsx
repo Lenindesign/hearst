@@ -1584,8 +1584,8 @@ function MainNav({
               ? "[&_svg]:h-7 sm:[&_svg]:h-9 [&_svg]:max-w-[160px] sm:[&_svg]:max-w-[300px]"
               : "[&_svg]:h-10 sm:[&_svg]:h-14 [&_svg]:max-w-[240px] sm:[&_svg]:max-w-[460px]"
             : compact
-              ? "h-[16px] sm:h-[23px] [&_svg]:h-full [&_svg]:w-full"
-              : "h-[18px] sm:h-[34px] [&_svg]:h-full [&_svg]:w-full"
+              ? "h-[16px] w-auto max-w-[220px] sm:h-[23px] sm:max-w-[300px] [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full"
+              : "h-[22px] w-auto max-w-[280px] sm:h-[34px] sm:max-w-[360px] [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full"
           : "[&_svg]:h-10"
       )}
     />
@@ -3231,8 +3231,8 @@ function LifestyleLeadSlider({
                     </span>
                   </div>
                   <h2 className={cn(
-                    "headline max-w-3xl text-balance text-3xl sm:text-4xl",
-                    story.brandSlug === "road-and-track" ? "leading-[1.12]" : "leading-[1.02]"
+                    "headline max-w-[min(42rem,100%)] break-words text-balance text-[clamp(2rem,4.5vw,2.75rem)] sm:text-[clamp(2.25rem,3.25vw,3rem)]",
+                    story.brandSlug === "road-and-track" ? "leading-[1.12]" : "leading-[1.08]"
                   )}>
                     {story.title}
                   </h2>
