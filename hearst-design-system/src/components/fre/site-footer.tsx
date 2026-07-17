@@ -30,6 +30,7 @@ export function SiteFooter({
   productLinks = [
     { label: "Product story", href: "/about-hearst-magazines/" },
     { label: "Product blueprint", href: "/hearst-product-blueprint/" },
+    { label: "Live feed", href: "/hearst-plus/live-feed/" },
   ],
   className,
 }: SiteFooterProps) {

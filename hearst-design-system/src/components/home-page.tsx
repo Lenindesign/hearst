@@ -58,6 +58,7 @@ import { ewRiverSourceNotes, ewRiverStories } from "./ew-river-data";
 import { fluxRiverSourceNotes, fluxRiverStories } from "./flux-river-data";
 import { lifestyleRiverSourceNotes, lifestyleRiverStories } from "./lifestyle-river-data";
 import type { LifestyleRiverProfile, LifestyleRiverStory } from "./lifestyle-river-types";
+import type { LiveArticleData, LiveFeedData } from "@/lib/live-feed-types";
 import { useReaderAccount } from "./reader-account";
 import { ReaderAuthDialog, ReaderAvatar, ReaderProfileDialog } from "./reader-account-ui";
 
@@ -73,6 +74,7 @@ export interface HomePageTemplateProps {
   layout?: "classic" | "overlapGrid";
   showGridOverlay?: boolean;
   initialBrandSlug?: string;
+  liveFeedData?: LiveFeedData;
 }
 
 const defaultFooterCols: string[][] = [
@@ -459,11 +461,13 @@ function BrandSourceIcon({
 }
 
 type DestinationMode = "all" | "lifestyle" | "autos" | "flux" | "ew";
-type DestinationSourceNote =
-  | (typeof lifestyleRiverSourceNotes)[number]
-  | (typeof autosRiverSourceNotes)[number]
-  | (typeof fluxRiverSourceNotes)[number]
-  | (typeof ewRiverSourceNotes)[number];
+type DestinationSourceNote = {
+  brand: string;
+  brandSlug: string;
+  feedCount: number;
+  importedCount: number;
+  selectedCount: number;
+};
 
 type DestinationConfig = {
   mode: DestinationMode;
@@ -3176,6 +3180,85 @@ function getLifestyleReaderParagraphs(story: LifestyleRiverStory) {
   ];
 }
 
+type LiveArticleLoadState =
+  | { status: "loading" }
+  | { status: "ready"; data: LiveArticleData }
+  | { status: "error" };
+
+function LifestyleReaderBody({
+  story,
+  liveArticle,
+}: {
+  story: LifestyleRiverStory;
+  liveArticle?: LiveArticleLoadState;
+}) {
+  if (story.id.startsWith("live-") && liveArticle?.status === "loading") {
+    return (
+      <div className="mt-6 space-y-3" aria-live="polite">
+        <p className="text-sm font-semibold text-muted-foreground">Loading the full article and photos...</p>
+        <div className="h-4 w-full animate-pulse rounded bg-muted motion-reduce:animate-none" />
+        <div className="h-4 w-5/6 animate-pulse rounded bg-muted motion-reduce:animate-none" />
+        <div className="h-4 w-4/6 animate-pulse rounded bg-muted motion-reduce:animate-none" />
+      </div>
+    );
+  }
+
+  if (liveArticle?.status === "ready") {
+    return (
+      <div className="mt-6 space-y-7 text-[18px] leading-8 text-[#242424]">
+        {liveArticle.data.blocks.map((block, index) => {
+          if (block.type === "image") {
+            return (
+              <figure key={`${block.url}-${index}`} className="py-2">
+                <img
+                  src={block.url}
+                  alt={block.alt}
+                  className="max-h-[720px] w-full rounded-[4px] object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
+                {block.caption || block.credit ? (
+                  <figcaption className="mt-2 text-xs leading-5 text-muted-foreground">
+                    {[block.caption, block.credit].filter(Boolean).join(" · ")}
+                  </figcaption>
+                ) : null}
+              </figure>
+            );
+          }
+          if (block.type === "heading") {
+            return <h3 key={`${block.text}-${index}`} className="headline pt-3 text-2xl leading-tight text-foreground sm:text-3xl">{block.text}</h3>;
+          }
+          if (block.type === "quote") {
+            return <blockquote key={`${block.text}-${index}`} className="border-y border-border py-5 font-brand-secondary text-xl leading-8 text-foreground">{block.text}</blockquote>;
+          }
+          if (block.type === "list") {
+            return <ul key={`list-${index}`} className="list-disc space-y-2 pl-6">{block.items.map((item) => <li key={item}>{item}</li>)}</ul>;
+          }
+          return <p key={`${block.text}-${index}`}>{block.text}</p>;
+        })}
+        <p className="border-t border-border pt-5 text-sm text-muted-foreground">
+          <a href={liveArticle.data.sourceUrl} target="_blank" rel="noreferrer" className="font-bold text-primary underline underline-offset-4">
+            Read the original article on {story.brand}
+          </a>
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-6 space-y-5 text-base leading-8 text-foreground/80">
+      {getLifestyleReaderParagraphs(story).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+      {story.sourceUrl ? (
+        <p className="border-t border-border pt-5 text-sm text-muted-foreground">
+          <a href={story.sourceUrl} target="_blank" rel="noreferrer" className="font-bold text-primary underline underline-offset-4">
+            Read the original article on {story.brand}
+          </a>
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
 function getLifestyleCommentCount(story: LifestyleRiverStory, addedCount = 0) {
   return Math.max(3, Math.round(story.popularity / 7) + (story.age % 9) + addedCount);
 }
@@ -3658,8 +3741,10 @@ function LifestyleStoryReaderModal({
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
   const openIndex = openStoryId ? stories.findIndex((story) => story.id === openStoryId) : -1;
   const [visibleReaderCount, setVisibleReaderCount] = React.useState(1);
+  const [liveArticles, setLiveArticles] = React.useState<Record<string, LiveArticleLoadState>>({});
   const storyQueue = openIndex >= 0 ? stories.slice(openIndex) : [];
   const visibleReaderStories = storyQueue.slice(0, visibleReaderCount);
+  const visibleReaderStoryIds = visibleReaderStories.map((story) => story.id).join("|");
 
   React.useEffect(() => {
     setVisibleReaderCount(1);
@@ -3700,6 +3785,27 @@ function LifestyleStoryReaderModal({
     observer.observe(node);
     return () => observer.disconnect();
   }, [openStoryId, storyQueue.length, visibleReaderCount]);
+
+  React.useEffect(() => {
+    const controller = new AbortController();
+    visibleReaderStories.forEach((story) => {
+      if (!story.id.startsWith("live-") || !story.sourceUrl || liveArticles[story.id]) return;
+      setLiveArticles((current) => ({ ...current, [story.id]: { status: "loading" } }));
+      fetch(`/api/live-article/?url=${encodeURIComponent(story.sourceUrl)}`, { signal: controller.signal })
+        .then(async (response) => {
+          if (!response.ok) throw new Error(`Article request failed with ${response.status}`);
+          return response.json() as Promise<LiveArticleData>;
+        })
+        .then((data) => setLiveArticles((current) => ({ ...current, [story.id]: { status: "ready", data } })))
+        .catch((error) => {
+          if (error instanceof DOMException && error.name === "AbortError") return;
+          setLiveArticles((current) => ({ ...current, [story.id]: { status: "error" } }));
+        });
+    });
+    return () => controller.abort();
+  // The ID key intentionally represents the current lazy-loaded reader queue.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visibleReaderStoryIds]);
 
   if (!openStoryId || openIndex < 0) return null;
 
@@ -3750,7 +3856,12 @@ function LifestyleStoryReaderModal({
                       <span className="h-px flex-1 bg-border" aria-hidden="true" />
                     </div>
                   ) : null}
-                  <article className="border-b border-border pb-10">
+                  <article
+                    className={cn(
+                      "border-b border-border pb-10",
+                      story.id.startsWith("live-") && "rounded-[8px] border bg-white px-5 py-5 text-[#121212] sm:px-7 sm:py-7"
+                    )}
+                  >
                     <LifestyleRiverImage story={story} className="aspect-video w-full rounded-[4px]" />
                     <div className="mx-auto mt-6 max-w-3xl">
                       <div className="mb-3 flex flex-wrap items-center gap-2">
@@ -3763,11 +3874,7 @@ function LifestyleStoryReaderModal({
                       <h2 className="headline text-4xl leading-tight sm:text-5xl">
                         {story.title}
                       </h2>
-                      <div className="mt-6 space-y-5 text-base leading-8 text-foreground/80">
-                        {getLifestyleReaderParagraphs(story).map((paragraph) => (
-                          <p key={paragraph}>{paragraph}</p>
-                        ))}
-                      </div>
+                      <LifestyleReaderBody story={story} liveArticle={liveArticles[story.id]} />
                       <LifestyleCardModule story={story} kind={kind} />
                       <LifestyleStoryComments
                         story={story}
@@ -4405,6 +4512,7 @@ function LifestyleLeftSidebar({
 function LifestyleRiverHomePage({
   activeFilter,
   destination,
+  destinationConfig,
   initialBrandSlug,
   onboardingResult,
   onRiverReset,
@@ -4413,13 +4521,14 @@ function LifestyleRiverHomePage({
 }: {
   activeFilter: string;
   destination: DestinationMode;
+  destinationConfig?: DestinationConfig;
   initialBrandSlug?: string;
   onboardingResult?: HearstOnboardingResult | null;
   onRiverReset?: () => void;
   onBrandFilterChange?: () => void;
   onSelectedBrandChange?: (brand: { name: string; slug: string } | null) => void;
 }) {
-  const config = destinationConfigs[destination];
+  const config = destinationConfig ?? destinationConfigs[destination];
   const { account, updatePreferences, addComment } = useReaderAccount();
   const [profile, setProfile] = React.useState<LifestyleRiverProfile>(() => account?.preferences ?? config.initialProfile);
   const [demoState, setDemoState] = React.useState<LifestyleDemoState>(initialLifestyleDemoState);
@@ -5114,6 +5223,7 @@ export function HomePageTemplate({
   layout = "classic",
   showGridOverlay = false,
   initialBrandSlug,
+  liveFeedData,
 }: HomePageTemplateProps = {}) {
   const { brand, colorMode } = useTheme();
   const { account } = useReaderAccount();
@@ -5151,14 +5261,27 @@ export function HomePageTemplate({
   const destinationContentRef = React.useRef<HTMLDivElement | null>(null);
   const isDestinationRiver = brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
   const destinationMode = getDestinationMode(selectedBrand?.slug ?? initialBrandSlug ?? brand.slug);
-  const destinationConfig = destinationConfigs[destinationMode];
+  const baseDestinationConfig = destinationConfigs[destinationMode];
+  const destinationConfig = React.useMemo<DestinationConfig>(() => {
+    if (!liveFeedData || destinationMode !== "all" || liveFeedData.stories.length === 0) {
+      return baseDestinationConfig;
+    }
+
+    return {
+      ...baseDestinationConfig,
+      stories: liveFeedData.stories,
+      sourceNotes: liveFeedData.sourceNotes,
+      defaultLeadStoryId: liveFeedData.stories[0]?.id,
+      dataSourceCopy: liveFeedData.dataSourceCopy,
+    };
+  }, [baseDestinationConfig, destinationMode, liveFeedData]);
   const profileTopics = React.useMemo(
-    () => Array.from(new Set(destinationConfigs.all.stories.map((story) => story.topic))).sort(),
-    []
+    () => Array.from(new Set(destinationConfig.stories.map((story) => story.topic))).sort(),
+    [destinationConfig.stories]
   );
   const profileBrands = React.useMemo(
-    () => destinationConfigs.all.sourceNotes.map((note) => note.brand),
-    []
+    () => destinationConfig.sourceNotes.map((note) => note.brand),
+    [destinationConfig.sourceNotes]
   );
   const anchorDestinationContent = React.useCallback(() => {
     window.requestAnimationFrame(() => {
@@ -5227,6 +5350,7 @@ export function HomePageTemplate({
             <LifestyleRiverHomePage
               activeFilter={activeLifestyleFilter}
               destination={destinationMode}
+              destinationConfig={destinationConfig}
               initialBrandSlug={initialBrandSlug}
               onboardingResult={onboardingResult}
               onRiverReset={anchorDestinationContent}
@@ -5285,7 +5409,7 @@ export function HomePageTemplate({
           {account ? (
             <ReaderProfileDialog
               open={profileOpen}
-              stories={destinationConfigs.all.stories}
+              stories={destinationConfig.stories}
               topics={profileTopics}
               brands={profileBrands}
               onClose={() => setProfileOpen(false)}
