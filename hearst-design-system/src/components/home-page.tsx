@@ -906,7 +906,7 @@ function UtilityBar({
       : "Lifestyle";
 
   return (
-    <div className="h-8 bg-primary text-primary-foreground text-[length:var(--text-token-4xs)] font-semibold">
+    <div className="sticky top-0 z-50 h-8 bg-primary text-primary-foreground text-[length:var(--text-token-4xs)] font-semibold">
       <PageContainer className="grid h-full grid-cols-[minmax(0,1fr)_auto] items-center gap-2 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:gap-3">
         <nav className="hidden items-center gap-3 sm:flex" aria-label="Utility navigation">
           {["Shop", "Newsletter"].map((label) => (
@@ -1539,7 +1539,7 @@ function MainNav({
     const updateMasthead = () => {
       frame = 0;
       setMastheadCompact((current) => {
-        if (window.scrollY >= 128) return true;
+        if (window.scrollY >= 96) return true;
         if (window.scrollY <= 64) return false;
         return current;
       });
@@ -1588,6 +1588,7 @@ function MainNav({
   const renderNavLinks = () => navLinks.map((link) => {
     const active = activeFilter === link;
     const destinationHref = brand.slug === "hearst-all" ? hearstDestinationNavHrefs.get(link) : undefined;
+    const useFluxDarkActiveState = brand.slug === "hearst-flux" && colorMode === "dark";
 
     return destinationHref ? (
       <LinkComponent
@@ -1621,7 +1622,9 @@ function MainNav({
         className={cn(
           "whitespace-nowrap border-b-2 border-transparent px-0.5 pb-1 text-sm font-normal transition-colors",
           active
-            ? "border-primary font-semibold text-primary"
+            ? useFluxDarkActiveState
+              ? "border-foreground font-semibold text-foreground"
+              : "border-primary font-semibold text-primary"
             : "text-foreground hover:border-primary/40 hover:text-primary"
         )}
         aria-pressed={active}
@@ -1643,7 +1646,7 @@ function MainNav({
 
   return (
     <>
-    <div className="flex h-20 border-b border-border sm:h-24">
+    <div className="flex h-20 border-b border-border bg-[var(--hp-surface)] sm:h-24">
       <PageContainer className="flex items-center justify-between">
         <div className="flex w-[var(--width-sidebar-narrow)] justify-start">
           <Button
@@ -1666,7 +1669,7 @@ function MainNav({
         </div>
       </PageContainer>
     </div>
-    <div className={cn("border-b border-border", isDestinationRiver && "sticky top-0 z-30 bg-background/95 backdrop-blur md:static md:bg-background md:backdrop-blur-none")}>
+    <div className={cn("border-b border-border", isDestinationRiver && "sticky top-8 z-30 bg-[var(--hp-surface)] md:static")}>
       <PageContainer as="nav" className="flex items-center justify-start gap-6 overflow-x-auto py-2 scrollbar-hide md:justify-center">
         {renderNavLinks()}
       </PageContainer>
@@ -1675,41 +1678,13 @@ function MainNav({
       aria-hidden={!mastheadCompact}
       inert={!mastheadCompact}
       className={cn(
-        "pointer-events-none fixed inset-x-0 top-0 z-40 hidden -translate-y-2 transform-gpu border-b border-border bg-background/98 opacity-0 transition-[opacity,transform] duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none md:block",
+        "pointer-events-none fixed inset-x-0 top-8 z-40 hidden -translate-y-2 transform-gpu border-b border-border bg-[var(--hp-surface)] opacity-0 transition-[opacity,transform] duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none md:block",
         mastheadCompact && "pointer-events-auto translate-y-0 opacity-100"
       )}
     >
-      <PageContainer className="grid h-16 grid-cols-[var(--width-sidebar-narrow)_minmax(0,1fr)_var(--width-sidebar-narrow)] items-center">
-        <div className="flex justify-start">
-          <Button
-            variant="outline"
-            size="icon-sm"
-            onClick={toggleColorMode}
-            aria-label={`Switch to ${colorMode === "dark" ? "light" : "dark"} mode`}
-            title={`Switch to ${colorMode === "dark" ? "light" : "dark"} mode`}
-          >
-            {colorMode === "dark" ? <Sun className="h-4 w-4" aria-hidden /> : <Moon className="h-4 w-4" aria-hidden />}
-          </Button>
-        </div>
-        <div
-          className={cn(
-            "text-center transition-transform duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
-            mastheadCompact ? "scale-100" : "scale-125"
-          )}
-        >
-          {renderMastheadLogo(true)}
-        </div>
-        <div className="flex justify-end">
-          <Button variant="outline" size="icon-sm" aria-label="Search" title="Search">
-            <Search className="h-3.5 w-3.5" aria-hidden />
-          </Button>
-        </div>
+      <PageContainer as="nav" className="flex items-center justify-center gap-6 overflow-x-auto py-2 scrollbar-hide">
+        {renderNavLinks()}
       </PageContainer>
-      <div className="border-t border-border">
-        <PageContainer as="nav" className="flex items-center justify-center gap-6 overflow-x-auto py-2 scrollbar-hide">
-          {renderNavLinks()}
-        </PageContainer>
-      </div>
     </div>
     </>
   );
@@ -2184,7 +2159,7 @@ function ContextualRiverAdCard({
 }) {
   return (
     <article
-      className="grid min-w-0 overflow-hidden rounded-[8px] border border-border bg-background p-4 sm:grid-cols-[176px_minmax(0,1fr)] sm:gap-4"
+      className="grid min-w-0 overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] sm:grid-cols-[176px_minmax(0,1fr)] sm:gap-4"
       aria-label={`Sponsored: ${ad.title}`}
       style={{ backgroundColor: ad.palette.background, color: ad.palette.foreground }}
     >
@@ -2390,7 +2365,7 @@ function BrandPromotionRiverModule({
 
   return (
     <section
-      className="min-w-0 overflow-hidden rounded-[8px] border border-border bg-background"
+      className="min-w-0 overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]"
       aria-label={`Brand spotlight: ${promotion.brand}`}
     >
       <div className="border-b border-border p-5 sm:p-6">
@@ -2600,7 +2575,7 @@ const lifestyleCardModelGuide: {
 
 function LifestyleCardModelGuide() {
   return (
-    <section className="mt-4 rounded-[8px] border border-border bg-background" aria-label="Lifestyle river card models">
+    <section className="mt-4 rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]" aria-label="Lifestyle river card models">
       <div className="border-b border-border p-4 sm:p-5">
         <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
           River Content Models
@@ -2679,7 +2654,7 @@ function ContextualAdLogicGuide({
   const units = contextualAdsByDestination[config.mode];
 
   return (
-    <section className="mt-4 rounded-[8px] border border-border bg-background" aria-label="Contextual ad logic">
+    <section className="mt-4 rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]" aria-label="Contextual ad logic">
       <div className="border-b border-border p-4 sm:p-5">
         <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
           Contextual Ad Logic
@@ -2926,7 +2901,7 @@ function LifestyleRiverCard({
 
   return (
     <article className={cn(
-      "min-w-0 cursor-pointer overflow-hidden rounded-[8px] border border-border bg-background transition-colors hover:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/30",
+      "min-w-0 cursor-pointer overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/30",
       isVideo
         ? "grid"
       : featured
@@ -3065,7 +3040,7 @@ function LifestyleLeadSlider({
 
   return (
     <article
-      className="group relative min-w-0 overflow-hidden rounded-[8px] border border-border bg-background shadow-sm"
+      className="group relative min-w-0 overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]"
       aria-roledescription="carousel"
       aria-label="Featured stories"
     >
@@ -3150,7 +3125,7 @@ function LifestyleLeadSlider({
         </>
       ) : null}
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border bg-background px-4 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border bg-[var(--hp-surface)] px-4 py-3">
         <div className="flex min-w-0 flex-wrap gap-1.5" aria-label="Featured story slides">
           {stories.map((story, index) => (
             <button
@@ -3522,7 +3497,7 @@ function LifestyleReaderContextRail({
     <aside className="hidden xl:block" aria-label="Contextual story recommendations">
       <div className="sticky top-20 max-h-[calc(100dvh-8.5rem)] space-y-4 overflow-y-auto overscroll-contain pb-12 pr-1">
         {modules.map((module) => (
-          <div key={module.label} className="rounded-[8px] border border-border bg-background p-4">
+          <div key={module.label} className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
             <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
               {module.label}
             </p>
@@ -3551,7 +3526,7 @@ function LifestyleReaderContextRail({
           </div>
         ))}
 
-        <div className="rounded-[8px] border border-border bg-muted/30 p-4">
+        <div className="rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-4 shadow-[var(--hp-shadow-card)]">
           <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
             Reader Intent
           </p>
@@ -3869,28 +3844,24 @@ function TodayEditDashboard({
     {
       label: "Continue Reading",
       title: continueStory.title,
-      meta: `${continueStory.brand} · ${continueStory.readTime}`,
       image: continueStory.image,
       onClick: () => onOpenStory(continueStory.id),
     },
     {
       label: "New From Your Brands",
       title: followedBrandStory.title,
-      meta: profile.followedBrands.slice(0, 2).join(", "),
       image: followedBrandStory.image,
       onClick: onShowFollowedBrands,
     },
     {
       label: "Trending Today",
       title: trendingStory.title,
-      meta: `${trendingStory.popularity} popularity · ${trendingStory.topic}`,
       image: trendingStory.image,
       onClick: () => onOpenStory(trendingStory.id),
     },
     {
       label: "Your Collections",
       title: collectionStory.title,
-      meta: `${profile.savedTags.slice(0, 3).join(", ")}`,
       image: collectionStory.image,
       onClick: () => onOpenStory(collectionStory.id),
     },
@@ -3898,22 +3869,22 @@ function TodayEditDashboard({
 
   return (
     <section
-      className="relative left-1/2 w-screen -translate-x-1/2 border-b border-border bg-background md:left-auto md:w-auto md:translate-x-0 md:rounded-b-[8px] md:border-x"
+      className="relative left-1/2 w-screen -translate-x-1/2 border-b border-border bg-[var(--hp-strip)] shadow-[var(--hp-shadow-card)]"
       aria-label="Today&apos;s edit"
     >
-      <div className="flex snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] md:grid md:grid-cols-2 md:divide-x md:divide-border md:overflow-visible md:[scrollbar-width:auto] xl:grid-cols-4 [&::-webkit-scrollbar]:hidden md:[&::-webkit-scrollbar]:block">
+      <div className="mx-auto flex w-full max-w-[var(--width-content-max)] snap-x snap-mandatory overflow-x-auto px-4 [scrollbar-width:none] md:grid md:grid-cols-2 md:divide-x md:divide-border md:overflow-visible md:px-6 md:[scrollbar-width:auto] lg:px-12 xl:grid-cols-4 [&::-webkit-scrollbar]:hidden md:[&::-webkit-scrollbar]:block">
         {modules.map((module) => (
           <button
             key={module.label}
             type="button"
             onClick={module.onClick}
-            className="group flex min-h-[190px] w-[88vw] shrink-0 snap-start scroll-ml-0 flex-col justify-between border-r border-border px-5 py-6 text-left transition-colors last:border-r-0 hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30 sm:w-[58vw] md:min-h-[144px] md:w-auto md:border-0 md:p-6 xl:min-w-0"
+            className="group flex min-h-[190px] w-[88vw] shrink-0 snap-start scroll-ml-0 flex-col border-r border-border px-5 py-6 text-left transition-colors last:border-r-0 hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30 sm:w-[58vw] md:min-h-[144px] md:w-auto md:border-0 md:p-6 xl:min-w-0"
           >
             <span>
               <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
                 {module.label}
               </span>
-              <span className="mt-3 flex min-h-[86px] items-start gap-3 md:min-h-[96px]">
+              <span className="mt-3 flex items-start gap-3">
                 {module.image ? (
                   <span
                     aria-hidden="true"
@@ -3924,9 +3895,6 @@ function TodayEditDashboard({
                 <span className="block min-w-0 text-sm font-bold leading-snug text-foreground">
                   {module.title}
                 </span>
-              </span>
-              <span className="mt-2 block text-xs leading-5 text-muted-foreground">
-                {module.meta}
               </span>
             </span>
           </button>
@@ -4245,7 +4213,7 @@ function MobileCollapsibleSidebarCard({
   const [open, setOpen] = React.useState(defaultOpen);
 
   return (
-    <section className={cn("min-w-0 overflow-hidden rounded-[8px] border border-border p-4", className)}>
+    <section className={cn("min-w-0 overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]", className)}>
       <div className="hidden lg:block">
         <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
           {title}
@@ -4324,9 +4292,27 @@ function LifestyleLeftSidebar({
 
   return (
     <aside
-      className="space-y-5 lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:self-start lg:overflow-y-auto lg:pr-1"
+      className="space-y-5 lg:sticky lg:top-[99px] lg:max-h-[calc(100dvh-123px)] lg:self-start lg:overflow-y-auto lg:pr-1"
       aria-label="Lifestyle discovery sidebar"
     >
+      <MobileCollapsibleSidebarCard
+        title="Your Daily Habit"
+        summary={topStories[0]?.title || "Top stories ready"}
+        className="hidden lg:block"
+      >
+        <div className="space-y-3">
+          {topStories.slice(0, 3).map((story) => (
+            <div key={story.id} className="border-b border-border pb-3 last:border-0 last:pb-0">
+              <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                {story.topic}
+              </p>
+              <p className="mt-1 text-sm font-bold leading-snug">{story.title}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{story.brand} · Popularity {story.popularity}</p>
+            </div>
+          ))}
+        </div>
+      </MobileCollapsibleSidebarCard>
+
       <MobileCollapsibleSidebarCard
         title="Filter Brands"
         summary={brandSummary}
@@ -4381,24 +4367,6 @@ function LifestyleLeftSidebar({
             ? `Showing ${activeBrandFilters[0]}.`
             : "All brands are included in the river."}
         </p>
-      </MobileCollapsibleSidebarCard>
-
-      <MobileCollapsibleSidebarCard
-        title="Your Daily Habit"
-        summary={topStories[0]?.title || "Top stories ready"}
-        className="hidden lg:block"
-      >
-        <div className="space-y-3">
-          {topStories.slice(0, 3).map((story) => (
-            <div key={story.id} className="border-b border-border pb-3 last:border-0 last:pb-0">
-              <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
-                {story.topic}
-              </p>
-              <p className="mt-1 text-sm font-bold leading-snug">{story.title}</p>
-              <p className="mt-1 text-xs text-muted-foreground">{story.brand} · Popularity {story.popularity}</p>
-            </div>
-          ))}
-        </div>
       </MobileCollapsibleSidebarCard>
 
       <MobileCollapsibleSidebarCard title="Follow Topics" summary={topicSummary} className="hidden lg:block">
@@ -4890,7 +4858,7 @@ function LifestyleRiverHomePage({
               </div>
             </>
           ) : (
-            <div className="rounded-[8px] border border-border bg-muted/30 p-8 text-center">
+            <div className="rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-8 text-center shadow-[var(--hp-shadow-card)]">
               <p className="headline text-2xl">No stories in {activeFilter} yet.</p>
               <p className="mt-2 text-sm text-muted-foreground">
                 Clear a brand filter or switch back to For You to keep exploring.
@@ -4899,8 +4867,8 @@ function LifestyleRiverHomePage({
           )}
         </main>
 
-        <aside className="space-y-5 lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:self-start lg:overflow-y-auto lg:pr-1">
-          <div className="rounded-[8px] border border-border p-4">
+        <aside className="space-y-5 lg:sticky lg:top-[99px] lg:max-h-[calc(100dvh-123px)] lg:self-start lg:overflow-y-auto lg:pr-1">
+          <div className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
             <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
               Trending Across Brands
             </p>
@@ -4918,7 +4886,7 @@ function LifestyleRiverHomePage({
               ))}
             </ol>
           </div>
-          <div className="rounded-[8px] border border-border bg-muted/30 p-4">
+          <div className="rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-4 shadow-[var(--hp-shadow-card)]">
             <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
               Story Source
             </p>
@@ -4930,7 +4898,7 @@ function LifestyleRiverHomePage({
               {config.dataSourceCopy}
             </p>
           </div>
-          <div className="rounded-[8px] border border-border p-4">
+          <div className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
             <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
               Why Your River Looks Like This
             </p>
@@ -5022,7 +4990,7 @@ function LifestyleRiverHomePage({
             A continuously ranked {config.productName} feed across {config.brandSummary}
           </p>
         </div>
-        <div className="rounded-[8px] border border-border bg-muted/40 p-4">
+        <div className="rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-4 shadow-[var(--hp-shadow-card)]">
           <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
             Behavior Model
           </p>
@@ -5168,6 +5136,18 @@ export function HomePageTemplate({
     () => selectedBrandTheme ? brandToCssVars(selectedBrandTheme, colorMode) : undefined,
     [colorMode, selectedBrandTheme]
   );
+  const homePageThemeCssVars = React.useMemo(
+    () => ({
+      ...selectedBrandCssVars,
+      ...(colorMode === "dark"
+        ? {
+            "--primary": "var(--brand-primary, #BDDDFC)",
+            "--primary-foreground": "#0d1014",
+          }
+        : {}),
+    }),
+    [colorMode, selectedBrandCssVars]
+  );
   const destinationContentRef = React.useRef<HTMLDivElement | null>(null);
   const isDestinationRiver = brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
   const destinationMode = getDestinationMode(selectedBrand?.slug ?? initialBrandSlug ?? brand.slug);
@@ -5216,9 +5196,10 @@ export function HomePageTemplate({
 
   return (
     <div
-      className="min-h-screen font-brand bg-background"
+      className="hearst-plus-theme min-h-screen bg-[var(--hp-background)] font-brand"
       data-filter-brand={selectedBrand?.slug}
-      style={selectedBrandCssVars as React.CSSProperties | undefined}
+      data-mode={colorMode}
+      style={homePageThemeCssVars as React.CSSProperties}
     >
       {/* Utility Bar — full width */}
       <UtilityBar
@@ -5240,7 +5221,7 @@ export function HomePageTemplate({
         {showGridOverlay && <GridOverlay />}
         <div
           ref={isDestinationRiver ? destinationContentRef : undefined}
-          className={cn("relative scroll-mt-12", isDestinationRiver ? "space-y-8" : "space-y-12 lg:space-y-16")}
+          className={cn("relative scroll-mt-[75px]", isDestinationRiver ? "space-y-8" : "space-y-12 lg:space-y-16")}
         >
           {isDestinationRiver ? (
             <LifestyleRiverHomePage

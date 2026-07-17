@@ -73,9 +73,11 @@ function useGoogleFonts(fonts: string[]) {
 export function ThemeProvider({
   children,
   defaultBrandSlug = "cosmopolitan",
+  persistColorMode = true,
 }: {
   children: React.ReactNode;
   defaultBrandSlug?: string;
+  persistColorMode?: boolean;
 }) {
   const isFluxDefault = defaultBrandSlug === "hearst-flux";
   const defaultColorMode = isFluxDefault ? "dark" : "light";
@@ -97,7 +99,7 @@ export function ThemeProvider({
   const cssVars = useMemo(() => brandToCssVars(brand, colorMode), [brand, colorMode]);
 
   useEffect(() => {
-    const storedMode = window.localStorage.getItem(colorModeStorageKey);
+    const storedMode = persistColorMode ? window.localStorage.getItem(colorModeStorageKey) : null;
     const resolvedMode = storedMode === "dark" || storedMode === "light"
       ? storedMode
       : defaultColorMode;
@@ -106,7 +108,7 @@ export function ThemeProvider({
     // Initial client preference is only available after hydration.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setColorMode(resolvedMode);
-  }, [colorModeStorageKey, defaultColorMode]);
+  }, [colorModeStorageKey, defaultColorMode, persistColorMode]);
 
   useEffect(() => {
     if (!colorModeReady.current) {
@@ -115,8 +117,10 @@ export function ThemeProvider({
     }
     document.documentElement.classList.toggle("dark", colorMode === "dark");
     document.documentElement.style.colorScheme = colorMode;
-    window.localStorage.setItem(colorModeStorageKey, colorMode);
-  }, [colorMode, colorModeStorageKey]);
+    if (persistColorMode) {
+      window.localStorage.setItem(colorModeStorageKey, colorMode);
+    }
+  }, [colorMode, colorModeStorageKey, persistColorMode]);
 
   useGoogleFonts([brand.fontDefault, brand.fontSecondary, brand.fontHeadline]);
 

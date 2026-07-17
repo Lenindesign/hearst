@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export default function HearstFluxPage() {
   return (
     <div className={newsreader.variable}>
-      <ThemeProvider defaultBrandSlug="hearst-flux">
+      <ThemeProvider defaultBrandSlug="hearst-flux" persistColorMode={false}>
         <HomePageTemplate />
       </ThemeProvider>
     </div>

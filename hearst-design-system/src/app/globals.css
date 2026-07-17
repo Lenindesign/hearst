@@ -4,9 +4,9 @@
 @import "../lib/tokens.css";
 
 .hearst-plus-theme {
-  --background: var(--palette-background-page, #ffffff);
+  --background: #F4F2EE;
   --foreground: var(--palette-content-default, #121212);
-  --card: var(--component-card-background-default, var(--palette-background-default, #ffffff));
+  --card: #ffffff;
   --card-foreground: var(--palette-content-default, #121212);
   --popover: var(--component-modal-background-primary-default, var(--card));
   --popover-foreground: var(--card-foreground);
@@ -25,13 +25,13 @@
   --hp-font-ui: "Inter", system-ui, sans-serif;
   --hp-font-headline: var(--font-hearst-plus-headline, "Newsreader", Georgia, serif);
   --hp-font-headline-weight: 700;
-  --hp-background: var(--background);
+  --hp-background: #F4F2EE;
   --hp-nav: var(--primary);
   --hp-nav-translucent: color-mix(in oklab, var(--primary) 94%, transparent);
-  --hp-strip: var(--card);
+  --hp-strip: #ffffff;
   --hp-surface-deep: var(--foreground);
-  --hp-surface-low: var(--muted);
-  --hp-surface: var(--card);
+  --hp-surface-low: #ffffff;
+  --hp-surface: #ffffff;
   --hp-control: color-mix(in oklab, var(--foreground) 4%, var(--background) 96%);
   --hp-control-hover: color-mix(in oklab, var(--foreground) 7%, var(--background) 93%);
   --hp-chip: color-mix(in oklab, var(--foreground) 3%, var(--background) 97%);
@@ -82,7 +82,7 @@
   --hp-positive-bg: color-mix(in oklab, #BDDDFC 28%, var(--background) 72%);
   --hp-radius-card: var(--radius);
   --hp-radius-pill: 999px;
-  --hp-shadow-card: none;
+  --hp-shadow-card: 0 2px 6px rgba(15, 23, 42, 0.05);
   --hp-shadow-modal: 0 8px 20px rgba(0, 0, 0, 0.3);
   --hp-motion-fast: 160ms;
   --hp-motion-standard: 240ms;
@@ -149,7 +149,7 @@
   --hp-rank-text: #BDDDFC;
   --hp-positive: #BDDDFC;
   --hp-positive-bg: color-mix(in oklab, #384959 74%, #0d1014 26%);
-  --hp-shadow-card: 0 4px 14px rgba(0, 0, 0, 0.22);
+  --hp-shadow-card: 0 2px 6px rgba(0, 0, 0, 0.18);
 }
 
 @keyframes hearstPlusArticleBackdropIn {
