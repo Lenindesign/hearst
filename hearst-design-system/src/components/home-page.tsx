@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { useTheme } from "./theme-provider";
 import { NavBar } from "./nav-bar";
@@ -33,6 +34,7 @@ import {
   ChefHat,
   EyeOff,
   ImageIcon,
+  Info,
   Mail,
   MessageCircle,
   Moon,
@@ -485,6 +487,10 @@ type DestinationConfig = {
   brandSummary: string;
   dataSourceCopy: string;
   collectionLabels: string[];
+  liveFeedStatus?: {
+    fetchedAt: string;
+    isFallback: boolean;
+  };
 };
 
 type LifestyleStoryComment = {
@@ -2527,6 +2533,33 @@ function LifestyleKindBadge({
   );
 }
 
+function LiveStoryBadge({
+  story,
+  className,
+}: {
+  story: LifestyleRiverStory;
+  className?: string;
+}) {
+  if (!story.id.startsWith("live-")) return null;
+
+  return (
+    <span
+      className={cn("block h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500 ring-1 ring-white", className)}
+      aria-label="Current feed story"
+      title="Current feed story"
+    />
+  );
+}
+
+function formatLiveFeedUpdatedAt(fetchedAt: string) {
+  return new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone: "America/Los_Angeles",
+    timeZoneName: "short",
+  }).format(new Date(fetchedAt));
+}
+
 const lifestyleCardModelGuide: {
   kind: LifestyleCardKind;
   title: string;
@@ -2885,7 +2918,6 @@ function LifestyleRiverCard({
   onOpen,
   onSave,
   onMoreLikeThis,
-  onFollowBrand,
   onHide,
   featured = false,
 }: {
@@ -2895,7 +2927,6 @@ function LifestyleRiverCard({
   onOpen: () => void;
   onSave: () => void;
   onMoreLikeThis: () => void;
-  onFollowBrand: () => void;
   onHide: () => void;
   featured?: boolean;
 }) {
@@ -2905,7 +2936,7 @@ function LifestyleRiverCard({
 
   return (
     <article className={cn(
-      "min-w-0 cursor-pointer overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/30",
+      "relative min-w-0 cursor-pointer overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/30",
       isVideo
         ? "grid"
       : featured
@@ -2967,13 +2998,13 @@ function LifestyleRiverCard({
             <MessageCircle className="mr-1.5 h-3.5 w-3.5" aria-hidden />
             {commentCount}
           </Button>
-          <Button variant="ghost" size="xs" onClick={onFollowBrand}>
-            Follow {story.brand}
-          </Button>
-          <Button variant="ghost" size="xs" onClick={onHide} className="max-[640px]:hidden">
-            <EyeOff className="mr-1.5 h-3.5 w-3.5" aria-hidden />
-            Hide
-          </Button>
+          <span className="inline-flex items-center gap-1 max-[640px]:hidden">
+            <Button variant="ghost" size="xs" onClick={onHide}>
+              <EyeOff className="mr-1.5 h-3.5 w-3.5" aria-hidden />
+              Hide
+            </Button>
+            <LiveStoryBadge story={story} />
+          </span>
         </div>
       </div>
     </article>
@@ -3159,9 +3190,12 @@ function LifestyleLeadSlider({
             <Plus className="mr-1.5 h-3.5 w-3.5" aria-hidden />
             More like this
           </Button>
-          <Button variant="ghost" size="xs" onClick={() => onFollowBrand(activeStory.brand)}>
-            Follow {activeStory.brand}
-          </Button>
+          <span className="inline-flex items-center gap-1">
+            <Button variant="ghost" size="xs" onClick={() => onFollowBrand(activeStory.brand)}>
+              Follow {activeStory.brand}
+            </Button>
+            <LiveStoryBadge story={activeStory} />
+          </span>
         </div>
       </div>
     </article>
@@ -3185,12 +3219,295 @@ type LiveArticleLoadState =
   | { status: "ready"; data: LiveArticleData }
   | { status: "error" };
 
+type FullscreenReaderImage = {
+  src: string;
+  alt: string;
+  caption?: string;
+  credit?: string;
+};
+
+type FullscreenGalleryState = {
+  story: LifestyleRiverStory;
+  images: FullscreenReaderImage[];
+  initialIndex: number;
+};
+
+function getFullscreenReaderImages(
+  story: LifestyleRiverStory,
+  liveArticle?: LiveArticleLoadState
+) {
+  const images: FullscreenReaderImage[] = [{
+    src: story.image,
+    alt: `${story.brand}: ${story.title}`,
+  }];
+
+  if (liveArticle?.status === "ready") {
+    liveArticle.data.blocks.forEach((block) => {
+      if (block.type !== "image" || images.some((image) => image.src === block.url)) return;
+      images.push({
+        src: block.url,
+        alt: block.alt,
+        caption: block.caption,
+        credit: block.credit,
+      });
+    });
+  }
+
+  return images;
+}
+
+function FullscreenImageViewer({
+  gallery,
+  saved,
+  onClose,
+  onSave,
+  onMoreLikeThis,
+}: {
+  gallery: FullscreenGalleryState;
+  saved: boolean;
+  onClose: () => void;
+  onSave: () => void;
+  onMoreLikeThis: () => void;
+}) {
+  const [activeIndex, setActiveIndex] = React.useState(gallery.initialIndex);
+  const [zoom, setZoom] = React.useState(1);
+  const [offset, setOffset] = React.useState({ x: 0, y: 0 });
+  const [controlsVisible, setControlsVisible] = React.useState(true);
+  const [captionOpen, setCaptionOpen] = React.useState(false);
+  const [playing, setPlaying] = React.useState(false);
+  const [imageVisible, setImageVisible] = React.useState(true);
+  const controlsTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const transitionTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pointerPositionsRef = React.useRef(new Map<number, { x: number; y: number }>());
+  const dragStartRef = React.useRef<{ x: number; y: number; offsetX: number; offsetY: number } | null>(null);
+  const pinchStartRef = React.useRef<{ distance: number; zoom: number } | null>(null);
+  const activeImage = gallery.images[activeIndex] ?? gallery.images[0];
+  const hasMultipleImages = gallery.images.length > 1;
+
+  const resetTransform = React.useCallback(() => {
+    setZoom(1);
+    setOffset({ x: 0, y: 0 });
+  }, []);
+
+  const selectImage = React.useCallback((nextIndex: number) => {
+    const normalizedIndex = (nextIndex + gallery.images.length) % gallery.images.length;
+    if (normalizedIndex === activeIndex) return;
+    setImageVisible(false);
+    if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
+    transitionTimerRef.current = setTimeout(() => {
+      setActiveIndex(normalizedIndex);
+      resetTransform();
+      window.requestAnimationFrame(() => setImageVisible(true));
+    }, 180);
+  }, [activeIndex, gallery.images.length, resetTransform]);
+
+  const showControls = React.useCallback(() => {
+    setControlsVisible(true);
+    if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
+    controlsTimerRef.current = setTimeout(() => {
+      if (!captionOpen) setControlsVisible(false);
+    }, 2800);
+  }, [captionOpen]);
+
+  const setClampedZoom = React.useCallback((nextZoom: number) => {
+    const clampedZoom = Math.min(4, Math.max(1, nextZoom));
+    setZoom(clampedZoom);
+    if (clampedZoom === 1) setOffset({ x: 0, y: 0 });
+  }, []);
+
+  React.useEffect(() => {
+    if (!playing) showControls();
+  }, [activeIndex, playing, showControls]);
+
+  React.useEffect(() => {
+    return () => {
+      if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
+      if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
+    };
+  }, []);
+
+  React.useEffect(() => {
+    if (!playing || !hasMultipleImages) return;
+    const intervalId = window.setInterval(() => selectImage(activeIndex + 1), 6500);
+    return () => window.clearInterval(intervalId);
+  }, [activeIndex, hasMultipleImages, playing, selectImage]);
+
+  React.useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+      if (event.key === "ArrowLeft" && hasMultipleImages) selectImage(activeIndex - 1);
+      if (event.key === "ArrowRight" && hasMultipleImages) selectImage(activeIndex + 1);
+      if (event.key === "+" || event.key === "=") setClampedZoom(zoom + 0.35);
+      if (event.key === "-") setClampedZoom(zoom - 0.35);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [activeIndex, hasMultipleImages, onClose, selectImage, setClampedZoom, zoom]);
+
+  const getPointerDistance = () => {
+    const points = Array.from(pointerPositionsRef.current.values());
+    if (points.length < 2) return 0;
+    return Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
+  };
+
+  const handlePointerDown = (event: React.PointerEvent<HTMLImageElement>) => {
+    event.currentTarget.setPointerCapture(event.pointerId);
+    pointerPositionsRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    if (pointerPositionsRef.current.size === 1) {
+      dragStartRef.current = { x: event.clientX, y: event.clientY, offsetX: offset.x, offsetY: offset.y };
+    } else if (pointerPositionsRef.current.size === 2) {
+      pinchStartRef.current = { distance: getPointerDistance(), zoom };
+    }
+  };
+
+  const handlePointerMove = (event: React.PointerEvent<HTMLImageElement>) => {
+    if (!pointerPositionsRef.current.has(event.pointerId)) return;
+    pointerPositionsRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    if (pointerPositionsRef.current.size === 2 && pinchStartRef.current) {
+      const ratio = getPointerDistance() / Math.max(1, pinchStartRef.current.distance);
+      setClampedZoom(pinchStartRef.current.zoom * ratio);
+      return;
+    }
+    if (zoom > 1 && dragStartRef.current) {
+      setOffset({
+        x: dragStartRef.current.offsetX + event.clientX - dragStartRef.current.x,
+        y: dragStartRef.current.offsetY + event.clientY - dragStartRef.current.y,
+      });
+    }
+  };
+
+  const handlePointerUp = (event: React.PointerEvent<HTMLImageElement>) => {
+    const dragStart = dragStartRef.current;
+    if (pointerPositionsRef.current.size === 1 && zoom === 1 && dragStart && hasMultipleImages) {
+      const distanceX = event.clientX - dragStart.x;
+      if (Math.abs(distanceX) > 70) selectImage(activeIndex + (distanceX < 0 ? 1 : -1));
+    }
+    pointerPositionsRef.current.delete(event.pointerId);
+    if (pointerPositionsRef.current.size < 2) pinchStartRef.current = null;
+    if (pointerPositionsRef.current.size === 0) dragStartRef.current = null;
+  };
+
+  const chromeVisible = controlsVisible || captionOpen;
+  const controlButtonClass = "inline-flex h-9 min-w-9 items-center justify-center rounded-full bg-black/35 px-3 text-sm font-semibold text-white/80 ring-1 ring-inset ring-white/15 transition-colors hover:bg-black/55 hover:text-white focus:outline-none focus:ring-2 focus:ring-white/70";
+
+  return createPortal(
+    <div
+      className="fixed inset-0 z-[140] flex touch-none items-center justify-center overflow-hidden bg-black"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Fullscreen gallery for ${gallery.story.title}`}
+      onMouseMove={showControls}
+      onClick={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
+    >
+      <img
+        key={activeImage.src}
+        src={activeImage.src}
+        alt={activeImage.alt}
+        className={cn(
+          "max-h-[100dvh] max-w-[100vw] select-none object-contain transition-opacity duration-700 ease-out motion-reduce:transition-none",
+          zoom > 1 ? "cursor-grab active:cursor-grabbing" : hasMultipleImages ? "cursor-ew-resize" : "cursor-zoom-in",
+          imageVisible ? "opacity-100" : "opacity-0"
+        )}
+        style={{ transform: `translate3d(${offset.x}px, ${offset.y}px, 0) scale(${zoom})` }}
+        draggable={false}
+        onDoubleClick={() => setClampedZoom(zoom > 1 ? 1 : 2.5)}
+        onWheel={(event) => {
+          event.preventDefault();
+          setClampedZoom(zoom + (event.deltaY < 0 ? 0.25 : -0.25));
+        }}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+      />
+
+      <div className={cn("pointer-events-none absolute inset-x-4 top-4 flex items-center justify-between gap-3 transition-opacity duration-300", chromeVisible ? "opacity-100" : "opacity-0")}>
+        <div className="pointer-events-auto inline-flex h-9 shrink-0 items-center whitespace-nowrap rounded-full bg-black/35 px-3 text-sm font-semibold text-white/80 ring-1 ring-inset ring-white/15">
+          {activeIndex + 1} of {gallery.images.length}
+        </div>
+        <div className="pointer-events-auto flex flex-wrap items-center justify-end gap-2">
+          <button type="button" className={cn(controlButtonClass, "max-sm:px-0")} onClick={onSave} aria-pressed={saved} aria-label={saved ? "Remove saved story" : "Save story"}>
+            <Bookmark className="h-4 w-4 sm:mr-1.5" aria-hidden="true" />
+            <span className="max-sm:sr-only">{saved ? "Saved" : "Save story"}</span>
+          </button>
+          <button type="button" className={cn(controlButtonClass, "max-sm:px-0")} onClick={onMoreLikeThis} aria-label="More like this">
+            <Plus className="h-4 w-4 sm:mr-1.5" aria-hidden="true" />
+            <span className="max-sm:sr-only">More like this</span>
+          </button>
+          <button type="button" className={controlButtonClass} onClick={() => setClampedZoom(zoom - 0.35)} aria-label="Zoom out">−</button>
+          <button type="button" className={controlButtonClass} onClick={() => setClampedZoom(zoom + 0.35)} aria-label="Zoom in">+</button>
+          {hasMultipleImages ? (
+            <button type="button" className={controlButtonClass} onClick={() => {
+              setPlaying((value) => !value);
+            }} aria-label={playing ? "Pause slideshow" : "Play slideshow"} aria-pressed={playing}>
+              {playing ? <Pause className="h-4 w-4" aria-hidden="true" /> : <Play className="h-4 w-4" aria-hidden="true" />}
+            </button>
+          ) : null}
+          {activeImage.caption || activeImage.credit ? (
+            <button type="button" className={controlButtonClass} onClick={() => setCaptionOpen((value) => !value)} aria-label="Show caption and credit" aria-expanded={captionOpen}>
+              <Info className="h-4 w-4" aria-hidden="true" />
+            </button>
+          ) : null}
+          <button type="button" className={controlButtonClass} onClick={onClose} aria-label="Close fullscreen gallery" autoFocus>
+            <X className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+
+      {hasMultipleImages ? (
+        <>
+          <button type="button" className={cn(controlButtonClass, "absolute left-4 top-1/2 -translate-y-1/2 px-0 transition-opacity duration-300", chromeVisible ? "opacity-100" : "pointer-events-none opacity-0")} onClick={() => selectImage(activeIndex - 1)} aria-label="Previous photo">
+            <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+          </button>
+          <button type="button" className={cn(controlButtonClass, "absolute right-4 top-1/2 -translate-y-1/2 px-0 transition-opacity duration-300", chromeVisible ? "opacity-100" : "pointer-events-none opacity-0")} onClick={() => selectImage(activeIndex + 1)} aria-label="Next photo">
+            <ChevronRight className="h-5 w-5" aria-hidden="true" />
+          </button>
+        </>
+      ) : null}
+
+      <div className={cn("pointer-events-none absolute inset-x-4 bottom-4 flex flex-col items-center gap-3 transition-opacity duration-300", chromeVisible ? "opacity-100" : "opacity-0")}>
+        {captionOpen && (activeImage.caption || activeImage.credit) ? (
+          <div className="pointer-events-auto w-full max-w-3xl bg-black/55 px-4 py-3 text-center text-sm leading-6 text-white/85 backdrop-blur-sm">
+            {activeImage.caption ? <p>{activeImage.caption}</p> : null}
+            {activeImage.credit ? <p className="mt-1 text-xs text-white/60">Photo: {activeImage.credit}</p> : null}
+          </div>
+        ) : null}
+        {hasMultipleImages ? (
+          <div className="pointer-events-auto flex max-w-full gap-2 overflow-x-auto rounded-[8px] bg-black/35 p-2 backdrop-blur-sm [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {gallery.images.map((image, index) => (
+              <button
+                key={image.src}
+                type="button"
+                className={cn("h-12 w-16 shrink-0 overflow-hidden rounded-[4px] ring-1 ring-inset transition-opacity", index === activeIndex ? "ring-white opacity-100" : "ring-white/20 opacity-55 hover:opacity-90")}
+                onClick={() => selectImage(index)}
+                aria-label={`Show photo ${index + 1}`}
+                aria-current={index === activeIndex ? "true" : undefined}
+              >
+                <img src={image.src} alt="" className="h-full w-full object-cover" loading="lazy" decoding="async" />
+              </button>
+            ))}
+          </div>
+        ) : null}
+      </div>
+    </div>,
+    document.body
+  );
+}
+
 function LifestyleReaderBody({
   story,
   liveArticle,
+  onOpenImage,
 }: {
   story: LifestyleRiverStory;
   liveArticle?: LiveArticleLoadState;
+  onOpenImage: (image: FullscreenReaderImage) => void;
 }) {
   if (story.id.startsWith("live-") && liveArticle?.status === "loading") {
     return (
@@ -3210,13 +3527,25 @@ function LifestyleReaderBody({
           if (block.type === "image") {
             return (
               <figure key={`${block.url}-${index}`} className="py-2">
-                <img
-                  src={block.url}
-                  alt={block.alt}
-                  className="max-h-[720px] w-full rounded-[4px] object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
+                <button
+                  type="button"
+                  className="group block w-full cursor-zoom-in rounded-[4px] focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  onClick={() => onOpenImage({
+                    src: block.url,
+                    alt: block.alt,
+                    caption: block.caption,
+                    credit: block.credit,
+                  })}
+                  aria-label={`View image fullscreen: ${block.alt}`}
+                >
+                  <img
+                    src={block.url}
+                    alt={block.alt}
+                    className="max-h-[720px] w-full rounded-[4px] object-cover transition-opacity group-hover:opacity-95"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
                 {block.caption || block.credit ? (
                   <figcaption className="mt-2 text-xs leading-5 text-muted-foreground">
                     {[block.caption, block.credit].filter(Boolean).join(" · ")}
@@ -3724,17 +4053,23 @@ function LifestyleStoryReaderModal({
   stories,
   openStoryId,
   productName,
+  savedIds,
   commentsByStoryId,
   onClose,
   onOpenStory,
+  onSave,
+  onMoreLikeThis,
   onAddComment,
 }: {
   stories: LifestyleRiverStory[];
   openStoryId: string | null;
   productName: string;
+  savedIds: string[];
   commentsByStoryId: Record<string, LifestyleStoryComment[]>;
   onClose: () => void;
   onOpenStory: (storyId: string) => void;
+  onSave: (story: LifestyleRiverStory) => void;
+  onMoreLikeThis: (story: LifestyleRiverStory) => void;
   onAddComment: (storyId: string, body: string) => void;
 }) {
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
@@ -3742,12 +4077,14 @@ function LifestyleStoryReaderModal({
   const openIndex = openStoryId ? stories.findIndex((story) => story.id === openStoryId) : -1;
   const [visibleReaderCount, setVisibleReaderCount] = React.useState(1);
   const [liveArticles, setLiveArticles] = React.useState<Record<string, LiveArticleLoadState>>({});
+  const [fullscreenGallery, setFullscreenGallery] = React.useState<FullscreenGalleryState | null>(null);
   const storyQueue = openIndex >= 0 ? stories.slice(openIndex) : [];
   const visibleReaderStories = storyQueue.slice(0, visibleReaderCount);
   const visibleReaderStoryIds = visibleReaderStories.map((story) => story.id).join("|");
 
   React.useEffect(() => {
     setVisibleReaderCount(1);
+    setFullscreenGallery(null);
     scrollRef.current?.scrollTo({ top: 0 });
   }, [openStoryId]);
 
@@ -3755,7 +4092,12 @@ function LifestyleStoryReaderModal({
     if (!openStoryId) return;
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key !== "Escape") return;
+      if (fullscreenGallery) {
+        setFullscreenGallery(null);
+        return;
+      }
+      onClose();
     };
 
     document.body.style.overflow = "hidden";
@@ -3765,7 +4107,7 @@ function LifestyleStoryReaderModal({
       document.body.style.overflow = "";
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [onClose, openStoryId]);
+  }, [fullscreenGallery, onClose, openStoryId]);
 
   React.useEffect(() => {
     const node = sentinelRef.current;
@@ -3806,6 +4148,22 @@ function LifestyleStoryReaderModal({
   // The ID key intentionally represents the current lazy-loaded reader queue.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visibleReaderStoryIds]);
+
+  React.useEffect(() => {
+    if (!fullscreenGallery) return;
+    const storyId = fullscreenGallery.story.id;
+    const nextImages = getFullscreenReaderImages(fullscreenGallery.story, liveArticles[storyId]);
+    const currentSignature = fullscreenGallery.images.map((image) => image.src).join("|");
+    const nextSignature = nextImages.map((image) => image.src).join("|");
+    if (currentSignature === nextSignature) return;
+
+    const activeSrc = fullscreenGallery.images[fullscreenGallery.initialIndex]?.src;
+    setFullscreenGallery((current) => current ? {
+      ...current,
+      images: nextImages,
+      initialIndex: Math.max(0, nextImages.findIndex((image) => image.src === activeSrc)),
+    } : current);
+  }, [fullscreenGallery, liveArticles]);
 
   if (!openStoryId || openIndex < 0) return null;
 
@@ -3858,11 +4216,25 @@ function LifestyleStoryReaderModal({
                   ) : null}
                   <article
                     className={cn(
-                      "border-b border-border pb-10",
+                      "relative border-b border-border pb-10",
                       story.id.startsWith("live-") && "rounded-[8px] border bg-white px-5 py-5 text-[#121212] sm:px-7 sm:py-7"
                     )}
                   >
-                    <LifestyleRiverImage story={story} className="aspect-video w-full rounded-[4px]" />
+                    <button
+                      type="button"
+                      className="group block w-full cursor-zoom-in rounded-[4px] focus:outline-none focus:ring-2 focus:ring-primary/40"
+                      onClick={() => setFullscreenGallery({
+                        story,
+                        images: getFullscreenReaderImages(story, liveArticles[story.id]),
+                        initialIndex: 0,
+                      })}
+                      aria-label={`View image fullscreen: ${story.title}`}
+                    >
+                      <LifestyleRiverImage
+                        story={story}
+                        className="aspect-video w-full rounded-[4px] transition-opacity group-hover:opacity-95"
+                      />
+                    </button>
                     <div className="mx-auto mt-6 max-w-3xl">
                       <div className="mb-3 flex flex-wrap items-center gap-2">
                         <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
@@ -3874,7 +4246,18 @@ function LifestyleStoryReaderModal({
                       <h2 className="headline text-4xl leading-tight sm:text-5xl">
                         {story.title}
                       </h2>
-                      <LifestyleReaderBody story={story} liveArticle={liveArticles[story.id]} />
+                      <LifestyleReaderBody
+                        story={story}
+                        liveArticle={liveArticles[story.id]}
+                        onOpenImage={(image) => {
+                          const images = getFullscreenReaderImages(story, liveArticles[story.id]);
+                          setFullscreenGallery({
+                            story,
+                            images,
+                            initialIndex: Math.max(0, images.findIndex((candidate) => candidate.src === image.src)),
+                          });
+                        }}
+                      />
                       <LifestyleCardModule story={story} kind={kind} />
                       <LifestyleStoryComments
                         story={story}
@@ -3904,6 +4287,15 @@ function LifestyleStoryReaderModal({
           <LifestyleReaderSidebarAd currentStory={storyQueue[0]} />
         </div>
       </div>
+      {fullscreenGallery ? (
+        <FullscreenImageViewer
+          gallery={fullscreenGallery}
+          saved={savedIds.includes(fullscreenGallery.story.id)}
+          onClose={() => setFullscreenGallery(null)}
+          onSave={() => onSave(fullscreenGallery.story)}
+          onMoreLikeThis={() => onMoreLikeThis(fullscreenGallery.story)}
+        />
+      ) : null}
     </div>
   );
 }
@@ -3949,24 +4341,28 @@ function TodayEditDashboard({
 
   const modules = [
     {
+      story: continueStory,
       label: "Continue Reading",
       title: continueStory.title,
       image: continueStory.image,
       onClick: () => onOpenStory(continueStory.id),
     },
     {
+      story: followedBrandStory,
       label: "New From Your Brands",
       title: followedBrandStory.title,
       image: followedBrandStory.image,
       onClick: onShowFollowedBrands,
     },
     {
+      story: trendingStory,
       label: "Trending Today",
       title: trendingStory.title,
       image: trendingStory.image,
       onClick: () => onOpenStory(trendingStory.id),
     },
     {
+      story: collectionStory,
       label: "Your Collections",
       title: collectionStory.title,
       image: collectionStory.image,
@@ -3985,7 +4381,7 @@ function TodayEditDashboard({
             key={module.label}
             type="button"
             onClick={module.onClick}
-            className="group flex min-h-[190px] w-[88vw] shrink-0 snap-start scroll-ml-0 flex-col border-r border-border px-5 py-6 text-left transition-colors last:border-r-0 hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30 sm:w-[58vw] md:min-h-[144px] md:w-auto md:border-0 md:p-6 xl:min-w-0"
+            className="group relative flex min-h-[190px] w-[88vw] shrink-0 snap-start scroll-ml-0 flex-col border-r border-border px-5 py-6 text-left transition-colors last:border-r-0 hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30 sm:w-[58vw] md:min-h-[144px] md:w-auto md:border-0 md:p-6 xl:min-w-0"
           >
             <span>
               <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
@@ -4931,7 +5327,6 @@ function LifestyleRiverHomePage({
                       onOpen={() => setOpenStoryId(story.id)}
                       onSave={() => toggleSaved(story)}
                       onMoreLikeThis={() => boostStory(story)}
-                      onFollowBrand={() => followBrand(story.brand)}
                       onHide={() => hideStory(story.id)}
                     />
                     {adMatch ? (
@@ -5012,6 +5407,23 @@ function LifestyleRiverHomePage({
               Why Your River Looks Like This
             </p>
             <div className="mt-4 space-y-4 text-sm">
+              {config.liveFeedStatus ? (
+                <div role="status">
+                  <p className="inline-flex items-center gap-2 font-bold">
+                    <span
+                      className={cn(
+                        "h-1.5 w-1.5 rounded-full",
+                        config.liveFeedStatus.isFallback ? "bg-amber-500" : "bg-emerald-500"
+                      )}
+                      aria-hidden="true"
+                    />
+                    {config.liveFeedStatus.isFallback ? "Cached stories" : "Current stories"}
+                  </p>
+                  <p className="mt-1 text-muted-foreground">
+                    Updated {formatLiveFeedUpdatedAt(config.liveFeedStatus.fetchedAt)}
+                  </p>
+                </div>
+              ) : null}
               <div>
                 <p className="font-bold">Demo moment</p>
                 <p className="mt-1 text-muted-foreground">
@@ -5047,9 +5459,12 @@ function LifestyleRiverHomePage({
         stories={filteredStories}
         openStoryId={openStoryId}
         productName={config.productName}
+        savedIds={profile.savedIds}
         commentsByStoryId={resolvedCommentsByStoryId}
         onClose={() => setOpenStoryId(null)}
         onOpenStory={setOpenStoryId}
+        onSave={toggleSaved}
+        onMoreLikeThis={boostStory}
         onAddComment={addStoryComment}
       />
 
@@ -5273,6 +5688,10 @@ export function HomePageTemplate({
       sourceNotes: liveFeedData.sourceNotes,
       defaultLeadStoryId: liveFeedData.stories[0]?.id,
       dataSourceCopy: liveFeedData.dataSourceCopy,
+      liveFeedStatus: {
+        fetchedAt: liveFeedData.fetchedAt,
+        isFallback: liveFeedData.isFallback,
+      },
     };
   }, [baseDestinationConfig, destinationMode, liveFeedData]);
   const profileTopics = React.useMemo(
