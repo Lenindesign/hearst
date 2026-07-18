@@ -6046,6 +6046,84 @@ function LifestyleLeftSidebar({
   );
 }
 
+type LifestyleRiverHomePageProps = {
+  activeFilter: string;
+  destination: DestinationMode;
+  destinationConfig?: DestinationConfig;
+  videoFeedData?: LiveFeedData;
+  initialBrandSlug?: string;
+  initialOpenStoryId?: string;
+  readerReturnHref?: string;
+  onboardingResult?: HearstOnboardingResult | null;
+  onRiverReset?: () => void;
+  onBrandFilterChange?: () => void;
+  onSelectedBrandChange?: (brand: { name: string; slug: string } | null) => void;
+};
+
+function LifestyleRiverLoadingState() {
+  return (
+    <div className="space-y-6" aria-busy="true" aria-live="polite" aria-label="Loading your personalized feed">
+      <span className="sr-only">Loading your personalized feed.</span>
+      <section className="grid gap-4 border-b border-border bg-[var(--hp-surface)] py-5 sm:grid-cols-2 xl:grid-cols-4" aria-hidden="true">
+        {Array.from({ length: 4 }, (_, index) => (
+          <div key={index} className="flex min-w-0 items-center gap-3 px-4 xl:border-r xl:border-border xl:last:border-r-0">
+            <span className="h-14 w-20 shrink-0 rounded-[6px] bg-muted motion-safe:animate-pulse" />
+            <span className="min-w-0 flex-1 space-y-2">
+              <span className="block h-2.5 w-24 rounded-full bg-muted motion-safe:animate-pulse" />
+              <span className="block h-3 w-full rounded-full bg-muted motion-safe:animate-pulse" />
+              <span className="block h-3 w-4/5 rounded-full bg-muted motion-safe:animate-pulse" />
+            </span>
+          </div>
+        ))}
+      </section>
+      <div className="grid min-w-0 gap-5 lg:grid-cols-[200px_minmax(0,1fr)_240px]">
+        <aside className="hidden h-[360px] rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 lg:block" aria-hidden="true">
+          <div className="h-3 w-28 rounded-full bg-muted motion-safe:animate-pulse" />
+          <div className="mt-5 space-y-4">
+            {Array.from({ length: 4 }, (_, index) => (
+              <div key={index} className="space-y-2 border-b border-border pb-4 last:border-b-0">
+                <div className="h-2.5 w-16 rounded-full bg-muted motion-safe:animate-pulse" />
+                <div className="h-3 w-full rounded-full bg-muted motion-safe:animate-pulse" />
+                <div className="h-3 w-4/5 rounded-full bg-muted motion-safe:animate-pulse" />
+              </div>
+            ))}
+          </div>
+        </aside>
+        <main className="min-w-0 overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)]" aria-hidden="true">
+          <div className="aspect-[16/10] bg-muted motion-safe:animate-pulse" />
+          <div className="space-y-3 p-4 sm:p-5">
+            <div className="h-3 w-32 rounded-full bg-muted motion-safe:animate-pulse" />
+            <div className="h-7 w-full rounded-full bg-muted motion-safe:animate-pulse" />
+            <div className="h-7 w-3/4 rounded-full bg-muted motion-safe:animate-pulse" />
+            <div className="h-3 w-5/6 rounded-full bg-muted motion-safe:animate-pulse" />
+          </div>
+        </main>
+        <aside className="hidden h-[360px] rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 lg:block" aria-hidden="true">
+          <div className="h-3 w-36 rounded-full bg-muted motion-safe:animate-pulse" />
+          <div className="mt-5 space-y-4">
+            {Array.from({ length: 5 }, (_, index) => (
+              <div key={index} className="flex gap-3">
+                <div className="h-6 w-6 shrink-0 rounded-full bg-muted motion-safe:animate-pulse" />
+                <div className="min-w-0 flex-1 space-y-2">
+                  <div className="h-3 w-full rounded-full bg-muted motion-safe:animate-pulse" />
+                  <div className="h-3 w-4/5 rounded-full bg-muted motion-safe:animate-pulse" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </aside>
+      </div>
+    </div>
+  );
+}
+
+function LifestyleRiverHydrationGate(props: LifestyleRiverHomePageProps) {
+  const { isHydrated } = useReaderAccount();
+
+  if (!isHydrated) return <LifestyleRiverLoadingState />;
+  return <LifestyleRiverHomePage {...props} />;
+}
+
 function LifestyleRiverHomePage({
   activeFilter,
   destination,
@@ -6058,19 +6136,7 @@ function LifestyleRiverHomePage({
   onRiverReset,
   onBrandFilterChange,
   onSelectedBrandChange,
-}: {
-  activeFilter: string;
-  destination: DestinationMode;
-  destinationConfig?: DestinationConfig;
-  videoFeedData?: LiveFeedData;
-  initialBrandSlug?: string;
-  initialOpenStoryId?: string;
-  readerReturnHref?: string;
-  onboardingResult?: HearstOnboardingResult | null;
-  onRiverReset?: () => void;
-  onBrandFilterChange?: () => void;
-  onSelectedBrandChange?: (brand: { name: string; slug: string } | null) => void;
-}) {
+}: LifestyleRiverHomePageProps) {
   const config = destinationConfig ?? destinationConfigs[destination];
   const { account, updatePreferences, addComment } = useReaderAccount();
   const router = useRouter();
@@ -7362,7 +7428,7 @@ export function HomePageTemplate({
           className={cn("relative scroll-mt-[75px]", isDestinationRiver ? "space-y-8" : "space-y-12 lg:space-y-16")}
         >
           {isDestinationRiver ? (
-            <LifestyleRiverHomePage
+            <LifestyleRiverHydrationGate
               activeFilter={activeLifestyleFilter}
               destination={destinationMode}
               destinationConfig={destinationConfig}
