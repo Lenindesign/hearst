@@ -1035,10 +1035,12 @@ function UtilityBar({
   selectedBrand,
   onCreateAccount,
   onOpenProfile,
+  darkMode = false,
 }: {
   selectedBrand?: { name: string; slug: string } | null;
   onCreateAccount?: () => void;
   onOpenProfile?: () => void;
+  darkMode?: boolean;
 }) {
   const { brand } = useTheme();
   const { account } = useReaderAccount();
@@ -1062,7 +1064,14 @@ function UtilityBar({
       : "Lifestyle";
 
   return (
-    <div className="sticky top-0 z-50 h-8 bg-primary text-primary-foreground text-[length:var(--text-token-4xs)] font-semibold">
+    <div
+      className={cn(
+        "sticky top-0 z-50 h-8 text-[length:var(--text-token-4xs)] font-semibold",
+        darkMode
+          ? "border-b border-white/10 bg-[#0d1014] text-[#f4f7fb]"
+          : "bg-primary text-primary-foreground"
+      )}
+    >
       <PageContainer className="grid h-full grid-cols-[minmax(0,1fr)_auto] items-center gap-2 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:gap-3">
         <nav className="hidden items-center gap-3 sm:flex" aria-label="Utility navigation">
           {["Shop", "Newsletter"].map((label) => (
@@ -1072,7 +1081,12 @@ function UtilityBar({
                 variant="neutral"
                 underline={false}
                 size="xs"
-                className="font-semibold text-primary-foreground opacity-90 hover:text-primary-foreground/80"
+                className={cn(
+                  "font-semibold opacity-90",
+                  darkMode
+                    ? "text-[#f4f7fb] hover:text-[#BDDDFC]"
+                    : "text-primary-foreground hover:text-primary-foreground/80"
+                )}
               >
                 {label}
               </LinkComponent>
@@ -1082,7 +1096,7 @@ function UtilityBar({
           className="flex min-w-0 items-center justify-start overflow-x-auto [scrollbar-width:none] sm:justify-center [&::-webkit-scrollbar]:hidden"
           aria-label="Hearst destination sections"
         >
-          <div className="flex min-w-max items-center gap-1 rounded-full bg-black/10 p-0.5">
+          <div className={cn("flex min-w-max items-center gap-1 rounded-full p-0.5", darkMode ? "bg-white/[0.06]" : "bg-black/10")}>
             {hearstDestinationSections.map((section) => (
               <LinkComponent
                 key={section.label}
@@ -1092,10 +1106,14 @@ function UtilityBar({
                 size="xs"
                 aria-current={section.label === activeDestination ? "page" : undefined}
                 className={cn(
-                  "rounded-full px-2 py-0.5 font-bold text-primary-foreground hover:text-primary-foreground",
+                  "rounded-full px-2 py-0.5 font-bold",
                   section.label === activeDestination
-                    ? "bg-white text-black hover:text-black"
-                    : "opacity-85 hover:bg-white/10 hover:opacity-100"
+                    ? darkMode
+                      ? "bg-[#BDDDFC] text-[#0d1014] hover:text-[#0d1014]"
+                      : "bg-white text-black hover:text-black"
+                    : darkMode
+                      ? "text-[#f4f7fb] opacity-85 hover:bg-white/10 hover:text-white hover:opacity-100"
+                      : "text-primary-foreground opacity-85 hover:bg-white/10 hover:text-primary-foreground hover:opacity-100"
                 )}
               >
                 {section.label}
@@ -1110,8 +1128,13 @@ function UtilityBar({
             className={cn(
               "shrink-0 text-[length:var(--text-token-4xs)] font-semibold",
               account
-                ? "gap-1.5 bg-transparent px-0.5 text-primary-foreground hover:bg-white/10 hover:text-primary-foreground sm:pr-2"
-                : "bg-white px-2 text-black hover:bg-white/90 hover:text-black sm:px-3"
+                ? cn(
+                    "gap-1.5 bg-transparent px-0.5 hover:bg-white/10 sm:pr-2",
+                    darkMode ? "text-[#f4f7fb] hover:text-white" : "text-primary-foreground hover:text-primary-foreground"
+                  )
+                : darkMode
+                  ? "bg-[#BDDDFC] px-2 text-[#0d1014] hover:bg-[#d7eaff] hover:text-[#0d1014] sm:px-3"
+                  : "bg-white px-2 text-black hover:bg-white/90 hover:text-black sm:px-3"
             )}
             aria-label={account ? "Open your profile" : "Sign up or sign in"}
             onClick={account ? onOpenProfile : onCreateAccount}
@@ -1673,6 +1696,7 @@ function MainNav({
   selectedBrand,
   navLinksOverride,
   includeVideos,
+  darkMode = false,
 }: {
   brandSlug: string;
   activeFilter?: string;
@@ -1680,6 +1704,7 @@ function MainNav({
   selectedBrand?: { name: string; slug: string } | null;
   navLinksOverride?: string[];
   includeVideos?: boolean;
+  darkMode?: boolean;
 }) {
   const { brand, colorMode, toggleColorMode } = useTheme();
   const [mastheadCompact, setMastheadCompact] = React.useState(false);
@@ -1728,6 +1753,8 @@ function MainNav({
       : colorMode === "dark"
         ? "#ffffff"
         : "#121212"
+    : darkMode
+      ? "#ffffff"
     : brand.slug === "hearst-flux" && colorMode === "dark"
       ? "#ffffff"
       : undefined;
@@ -1761,7 +1788,10 @@ function MainNav({
     const categoryHref = isDestinationRiver && !selectedBrand && link !== "Games"
       ? getHearstDestinationCategoryRoute(getDestinationMode(brand.slug), link)
       : undefined;
-    const useFluxDarkActiveState = brand.slug === "hearst-flux" && colorMode === "dark";
+    const useDarkActiveState = darkMode || (brand.slug === "hearst-flux" && colorMode === "dark");
+    const navLinkClasses = darkMode
+      ? "text-[#f4f7fb] hover:border-[#BDDDFC]/60 hover:text-[#BDDDFC]"
+      : "text-foreground hover:border-primary/40 hover:text-primary";
 
     return destinationHref ? (
       <LinkComponent
@@ -1770,7 +1800,7 @@ function MainNav({
         variant="neutral"
         underline={false}
         size="sm"
-        className="whitespace-nowrap border-b-2 border-transparent px-0.5 pb-1 font-normal text-foreground hover:border-primary/40 hover:text-primary hover:no-underline"
+        className={cn("whitespace-nowrap border-b-2 border-transparent px-0.5 pb-1 font-normal hover:no-underline", navLinkClasses)}
       >
         {link}
       </LinkComponent>
@@ -1783,10 +1813,11 @@ function MainNav({
         size="sm"
         aria-current={active ? "page" : undefined}
         className={cn(
-          "whitespace-nowrap border-b-2 border-transparent px-0.5 pb-1 font-normal text-foreground hover:border-primary/40 hover:text-primary hover:no-underline",
+          "whitespace-nowrap border-b-2 border-transparent px-0.5 pb-1 font-normal hover:no-underline",
+          navLinkClasses,
           active
-            ? useFluxDarkActiveState
-              ? "border-foreground font-semibold text-foreground"
+            ? useDarkActiveState
+              ? "border-[#BDDDFC] font-semibold text-[#BDDDFC]"
               : "border-primary font-semibold text-primary"
             : ""
         )}
@@ -1802,7 +1833,7 @@ function MainNav({
         variant="neutral"
         underline={false}
         size="sm"
-        className="whitespace-nowrap border-b-2 border-transparent px-0.5 pb-1 font-normal text-foreground hover:border-primary/40 hover:text-primary hover:no-underline"
+        className={cn("whitespace-nowrap border-b-2 border-transparent px-0.5 pb-1 font-normal hover:no-underline", navLinkClasses)}
       >
         {link}
       </LinkComponent>
@@ -1814,10 +1845,10 @@ function MainNav({
         className={cn(
           "whitespace-nowrap border-b-2 border-transparent px-0.5 pb-1 text-sm font-normal transition-colors",
           active
-            ? useFluxDarkActiveState
-              ? "border-foreground font-semibold text-foreground"
+            ? useDarkActiveState
+              ? "border-[#BDDDFC] font-semibold text-[#BDDDFC]"
               : "border-primary font-semibold text-primary"
-            : "text-foreground hover:border-primary/40 hover:text-primary"
+            : navLinkClasses
         )}
         aria-pressed={active}
       >
@@ -1838,12 +1869,13 @@ function MainNav({
 
   return (
     <>
-    <div className="flex h-20 border-b border-border bg-[var(--hp-surface)] sm:h-24">
+    <div className={cn("flex h-20 border-b sm:h-24", darkMode ? "border-white/10 bg-[#0d1014] text-[#f4f7fb]" : "border-border bg-[var(--hp-surface)]")}>
       <PageContainer className="flex items-center justify-between">
         <div className="flex w-10 shrink-0 justify-start sm:w-[var(--width-sidebar-narrow)]">
           <Button
             variant="outline"
             size="icon-sm"
+            className={darkMode ? "border-white/20 bg-white/[0.04] text-white hover:bg-white/10 hover:text-white" : undefined}
             onClick={toggleColorMode}
             aria-label={`Switch to ${colorMode === "dark" ? "light" : "dark"} mode`}
             title={`Switch to ${colorMode === "dark" ? "light" : "dark"} mode`}
@@ -1855,13 +1887,23 @@ function MainNav({
           {renderMastheadLogo(false)}
         </div>
         <div className="flex w-10 shrink-0 justify-end sm:w-[var(--width-sidebar-narrow)]">
-          <Button variant="outline" size="icon-sm" aria-label="Search" title="Search">
+          <Button
+            variant="outline"
+            size="icon-sm"
+            className={darkMode ? "border-white/20 bg-white/[0.04] text-white hover:bg-white/10 hover:text-white" : undefined}
+            aria-label="Search"
+            title="Search"
+          >
             <Search className="h-3.5 w-3.5" aria-hidden />
           </Button>
         </div>
       </PageContainer>
     </div>
-    <div className={cn("border-b border-border", isDestinationRiver && "sticky top-8 z-30 bg-[var(--hp-surface)] md:static")}>
+    <div className={cn(
+      "border-b",
+      darkMode ? "border-white/10 bg-[#0d1014]" : "border-border",
+      isDestinationRiver && (darkMode ? "sticky top-8 z-30 md:static" : "sticky top-8 z-30 bg-[var(--hp-surface)] md:static")
+    )}>
       <PageContainer as="nav" className="flex items-center justify-start gap-6 overflow-x-auto py-2 scrollbar-hide md:justify-center">
         {renderNavLinks()}
       </PageContainer>
@@ -1870,7 +1912,8 @@ function MainNav({
       aria-hidden={!mastheadCompact}
       inert={!mastheadCompact}
       className={cn(
-        "pointer-events-none fixed inset-x-0 top-8 z-40 hidden -translate-y-2 transform-gpu border-b border-border bg-[var(--hp-surface)] opacity-0 transition-[opacity,transform] duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none md:block",
+        "pointer-events-none fixed inset-x-0 top-8 z-40 hidden -translate-y-2 transform-gpu border-b opacity-0 transition-[opacity,transform] duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none md:block",
+        darkMode ? "border-white/10 bg-[#0d1014]" : "border-border bg-[var(--hp-surface)]",
         mastheadCompact && "pointer-events-auto translate-y-0 opacity-100"
       )}
     >
@@ -6953,6 +6996,7 @@ export function HomePageTemplate({
   const { brand, colorMode } = useTheme();
   const { account } = useReaderAccount();
   const router = useRouter();
+  const pathname = usePathname();
   const [activeLifestyleFilter, setActiveLifestyleFilter] = React.useState(initialFilter ?? "For You");
   const [onboardingOpen, setOnboardingOpen] = React.useState(false);
   const [onboardingResult, setOnboardingResult] = React.useState<HearstOnboardingResult | null>(null);
@@ -7111,6 +7155,9 @@ export function HomePageTemplate({
       router.push(getHearstDestinationRoute("all"), { scroll: false });
     }
   }, [router, selectedBrand?.slug]);
+  const useVideosDarkHeader = pathname.replace(/\/$/, "") === "/hearst-plus/videos"
+    && !selectedBrand
+    && activeLifestyleFilter === "Videos";
 
   return (
     <div
@@ -7124,6 +7171,7 @@ export function HomePageTemplate({
         selectedBrand={selectedBrand}
         onCreateAccount={() => setOnboardingOpen(true)}
         onOpenProfile={() => setProfileOpen(true)}
+        darkMode={useVideosDarkHeader}
       />
 
       {/* Main Nav — full width background, content constrained */}
@@ -7134,6 +7182,7 @@ export function HomePageTemplate({
         selectedBrand={selectedBrand}
         navLinksOverride={navLinksOverride}
         includeVideos={hasScopedVideoFeed}
+        darkMode={useVideosDarkHeader}
       />
 
       {/* Page Body — constrained by the shared PageContainer */}
