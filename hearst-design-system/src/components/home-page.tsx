@@ -1743,6 +1743,41 @@ function MainNav({
   }, []);
 
   const shouldUseNativeLogoColor = mastheadSlug === "car-and-driver";
+  const mobileMastheadSlug = !selectedBrand && mastheadSlug === "hearst-ew"
+    ? "hearst-eandw"
+    : !selectedBrand && mastheadSlug === "hearst-flux"
+      ? "hearst-flux-compact"
+      : mastheadSlug;
+  const usesCompactMobileDestinationMark = mobileMastheadSlug !== mastheadSlug;
+  const mastheadHearstGeometry = selectedBrand
+    ? {
+        compact: "h-[16px] max-w-[220px] sm:h-[23px] sm:max-w-[400px]",
+        regular: "h-[22px] max-w-[280px] sm:h-[34px] sm:max-w-[580px]",
+      }
+    : mastheadSlug === "hearst-all"
+      ? {
+          compact: "h-[16.057px] max-w-[220px] sm:h-[23.082px] sm:max-w-[400px]",
+          regular: "h-[22.079px] max-w-[280px] sm:h-[34.122px] sm:max-w-[580px]",
+        }
+      : mastheadSlug === "hearst-lifestyle"
+        ? {
+            compact: "h-[18.734px] max-w-[260px] sm:h-[26.929px] sm:max-w-[400px]",
+            regular: "h-[25.759px] max-w-[320px] sm:h-[39.809px] sm:max-w-[580px]",
+          }
+        : mastheadSlug === "hearst-flux"
+          ? {
+              compact: "h-[18.945px] max-w-[260px] sm:h-[27.233px] sm:max-w-[400px]",
+              regular: "h-[26.049px] max-w-[320px] sm:h-[40.257px] sm:max-w-[580px]",
+            }
+          : mastheadSlug === "hearst-ew" || mastheadSlug === "hearst-autos" || mastheadSlug === "hearst-plus"
+            ? {
+                compact: "h-[16.238px] max-w-[360px] sm:h-[23.342px] sm:max-w-[400px]",
+                regular: "h-[22.327px] max-w-[360px] sm:h-[34.506px] sm:max-w-[580px]",
+              }
+            : {
+                compact: "h-[16px] max-w-[220px] sm:h-[23px] sm:max-w-[400px]",
+                regular: "h-[22px] max-w-[280px] sm:h-[34px] sm:max-w-[580px]",
+              };
   const logoColor = selectedBrand
     ? mastheadSlug === "motortrend"
       ? "#e90c17"
@@ -1759,21 +1794,36 @@ function MainNav({
       ? "#ffffff"
       : undefined;
 
-  const renderMastheadLogo = (compact: boolean) => logo ? (
+  const mastheadLogoBaseClasses = "mx-auto w-auto items-center justify-center leading-none [&_svg]:block [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full motion-reduce:[&_svg]:transition-none";
+  const renderMastheadLogo = (compact: boolean) => logo ? usesCompactMobileDestinationMark ? (
+    <>
+      <BrandLogo
+        slug={mobileMastheadSlug}
+        color={logoColor}
+        className={cn(
+          mastheadLogoBaseClasses,
+          "flex max-w-[260px] sm:hidden",
+          compact ? "h-[16.238px]" : "h-[22.327px]"
+        )}
+      />
+      <BrandLogo
+        slug={mastheadSlug}
+        color={logoColor}
+        className={cn(
+          mastheadLogoBaseClasses,
+          "hidden sm:flex",
+          compact ? mastheadHearstGeometry.compact : mastheadHearstGeometry.regular
+        )}
+      />
+    </>
+  ) : (
     <BrandLogo
       slug={mastheadSlug}
       color={logoColor}
       className={cn(
-        "mx-auto flex w-full items-center justify-center leading-none [&_svg]:block motion-reduce:[&_svg]:transition-none",
-        isDestinationRiver
-          ? selectedBrand
-            ? compact
-              ? "[&_svg]:h-7 sm:[&_svg]:h-9 [&_svg]:max-w-[160px] sm:[&_svg]:max-w-[300px]"
-              : "[&_svg]:h-10 sm:[&_svg]:h-14 [&_svg]:max-w-[240px] sm:[&_svg]:max-w-[460px]"
-            : compact
-              ? "h-[16px] w-auto max-w-[220px] sm:h-[23px] sm:max-w-[300px] [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full"
-              : "h-[22px] w-auto max-w-[280px] sm:h-[34px] sm:max-w-[360px] [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full"
-          : "[&_svg]:h-10"
+        mastheadLogoBaseClasses,
+        "flex",
+        compact ? mastheadHearstGeometry.compact : mastheadHearstGeometry.regular
       )}
     />
   ) : (
@@ -1818,7 +1868,7 @@ function MainNav({
           active
             ? useDarkActiveState
               ? "border-[#BDDDFC] font-semibold text-[#BDDDFC]"
-              : "border-primary font-semibold text-primary"
+              : "border-primary font-semibold text-[var(--hp-section-title)]"
             : ""
         )}
       >
@@ -1847,7 +1897,7 @@ function MainNav({
           active
             ? useDarkActiveState
               ? "border-[#BDDDFC] font-semibold text-[#BDDDFC]"
-              : "border-primary font-semibold text-primary"
+              : "border-primary font-semibold text-[var(--hp-section-title)]"
             : navLinkClasses
         )}
         aria-pressed={active}
@@ -2654,7 +2704,7 @@ function BrandPromotionRiverModule({
             <span className="headline mt-2 block text-2xl leading-tight text-foreground">
               {featuredStory.title}
             </span>
-            <span className="mt-2 block text-sm leading-6 text-muted-foreground">
+            <span className="mt-2 line-clamp-3 block text-sm leading-6 text-muted-foreground">
               {featuredStory.summary}
             </span>
           </button>
@@ -3276,8 +3326,8 @@ function LifestyleRiverCard({
           {story.title}
         </h2>
         <p className={cn(
-          "text-muted-foreground",
-          featured ? "mt-3 max-w-prose text-base leading-7" : "mt-2 hidden text-sm leading-6 sm:block"
+          "line-clamp-3 text-muted-foreground",
+          featured ? "mt-3 max-w-prose text-base leading-7" : "mt-2 hidden text-sm leading-6 sm:[display:-webkit-box]"
         )}>
           {story.summary}
         </p>
@@ -3555,16 +3605,27 @@ function VideoRailCard({
   );
 }
 
-function getLeadSliderStories(
+function getPersonalizedLeadSliderStories(
   stories: LifestyleRiverStory[],
+  profile: LifestyleRiverProfile,
+  demoState: LifestyleDemoState,
+  config = destinationConfigs.lifestyle,
   count = 5,
   includeCurrentFeed = false
 ) {
   const selected: LifestyleRiverStory[] = [];
   const usedBrands = new Set<string>();
-  const editorialStories = stories.filter((story) => !isCurrentFeedStory(story));
-  const currentArticleStories = stories.filter((story) => isCurrentFeedStory(story) && !story.videoUrl);
-  const currentVideoStories = stories.filter((story) => isCurrentFeedStory(story) && Boolean(story.videoUrl));
+  const personalizedStories = stories
+    .map((story, index) => ({
+      story,
+      index,
+      score: getLifestyleScore(story, profile, demoState, config),
+    }))
+    .sort((a, b) => b.score - a.score || a.index - b.index)
+    .map(({ story }) => story);
+  const editorialStories = personalizedStories.filter((story) => !isCurrentFeedStory(story));
+  const currentArticleStories = personalizedStories.filter((story) => isCurrentFeedStory(story) && !story.videoUrl);
+  const currentVideoStories = personalizedStories.filter((story) => isCurrentFeedStory(story) && Boolean(story.videoUrl));
 
   const addStories = (candidates: LifestyleRiverStory[]) => {
     for (const story of candidates) {
@@ -4593,7 +4654,7 @@ function LifestyleArticleRecommendationsModule({
           <span className="mt-2 block font-brand-secondary text-2xl font-bold leading-tight text-foreground group-hover:text-primary">
             {featuredStory.title}
           </span>
-          <span className="mt-2 block text-sm leading-6 text-muted-foreground">
+          <span className="mt-2 line-clamp-3 block text-sm leading-6 text-muted-foreground">
             {featuredStory.summary}
           </span>
         </button>
@@ -5343,7 +5404,7 @@ function TodayEditDashboard({
             className="group relative flex min-h-[190px] w-[88vw] shrink-0 snap-start scroll-ml-0 flex-col border-r border-border px-5 py-6 text-left transition-colors last:border-r-0 hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30 sm:w-[58vw] md:min-h-[144px] md:w-[44vw] md:p-6 lg:w-[34vw] xl:w-auto xl:min-w-0 xl:border-0"
           >
             <span>
-              <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+              <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
                 {module.label}
               </span>
               <span className="mt-3 flex items-start gap-3">
@@ -5423,7 +5484,10 @@ function LifestylePersonalizationDemoPanel({
     : null;
 
   return (
-    <section className="rounded-[8px] border border-border bg-muted/25" aria-label="Personalization demo controls">
+    <section
+      className="rounded-[8px] border border-border bg-white text-[#121212] [--background:#ffffff] [--foreground:#121212] [--muted-foreground:#5f6b7a]"
+      aria-label="Personalization demo controls"
+    >
       <div className="grid gap-0 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div className="p-4 sm:p-5">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -5581,6 +5645,97 @@ function LifestylePersonalizationDemoPanel({
   );
 }
 
+function LifestylePersonalizationRulesGuide() {
+  const rules = [
+    {
+      number: "1",
+      title: "Start with eligible content",
+      body: "Use stories from the active Hearst destination and category. Remove hidden, duplicate, excluded, or unplayable items before ranking begins.",
+      proof: "Change destination, category, or brand filters.",
+    },
+    {
+      number: "2",
+      title: "Build an editorial baseline",
+      body: "Popularity, freshness, and an editor-selected starting point keep a first visit useful even when little or no reader history exists.",
+      proof: "Reset the demo to see the first-visit edition.",
+    },
+    {
+      number: "3",
+      title: "Add reader intent",
+      body: "Followed topics and brands, saved-story tags, and More Like This behavior raise relevant stories. Hides remove a story from future consideration.",
+      proof: "Apply a behavior preset, save, hide, or choose More Like This.",
+    },
+    {
+      number: "4",
+      title: "Adapt to the moment",
+      body: "Time of day and return-visit freshness change the mission. The previous lead is deliberately reduced so the experience can feel new when a reader comes back.",
+      proof: "Change the time or simulate a return visit.",
+    },
+    {
+      number: "5",
+      title: "Apply experience guardrails",
+      body: "Brand and topic diversity prevent repetition. The slideshow keeps the personalized order while balancing editorial stories, current articles, and playable videos.",
+      proof: "Compare the river and all five featured slides.",
+    },
+    {
+      number: "6",
+      title: "Explain the result",
+      body: "The score panel shows why the current lead won. The same scoring model orders the river and rescoring happens again before the slideshow applies its mix rules.",
+      proof: "Watch the score and lead update together.",
+    },
+  ];
+
+  return (
+    <section
+      className="mt-4 overflow-hidden rounded-[8px] border border-border bg-white text-[#121212] [--foreground:#121212] [--muted-foreground:#5f6b7a]"
+      aria-labelledby="personalization-rules-title"
+    >
+      <div className="border-b border-border p-4 sm:p-5">
+        <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+          How personalization works
+        </p>
+        <h2 id="personalization-rules-title" className="headline mt-1 text-2xl leading-tight">
+          One ranking model, shaped by clear editorial guardrails.
+        </h2>
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+          Personalization does not invent or rewrite content. It decides which eligible Hearst stories
+          appear first, then the content model chooses the right card treatment. Use these six rules as
+          the stakeholder talk track.
+        </p>
+      </div>
+
+      <ol className="grid md:grid-cols-2 xl:grid-cols-3">
+        {rules.map((rule) => (
+          <li
+            key={rule.number}
+            className="border-b border-border p-4 last:border-b-0 md:[&:nth-child(odd)]:border-r xl:[&:nth-child(odd)]:border-r-0 xl:[&:not(:nth-child(3n))]:border-r xl:[&:nth-last-child(-n+3)]:border-b-0"
+          >
+            <div className="flex items-start gap-3">
+              <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+                {rule.number}
+              </span>
+              <div className="min-w-0">
+                <h3 className="text-sm font-bold leading-5">{rule.title}</h3>
+                <p className="mt-1 text-xs leading-5 text-muted-foreground">{rule.body}</p>
+                <p className="mt-3 text-xs leading-5">
+                  <span className="font-bold">Show it:</span>{" "}
+                  <span className="text-muted-foreground">{rule.proof}</span>
+                </p>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <div className="border-t border-border bg-[#f5f7fa] px-4 py-3 text-xs leading-5 text-[#445064] sm:px-5">
+        <span className="font-bold text-[#121212]">Stakeholder summary:</span>{" "}
+        editorial quality sets the foundation; reader behavior and context improve relevance; diversity,
+        exclusions, and playable-media rules protect the final experience.
+      </div>
+    </section>
+  );
+}
+
 function LifestylePersonalizationDemoModal({
   open,
   onClose,
@@ -5665,6 +5820,7 @@ function LifestylePersonalizationDemoModal({
             onApplyBehaviorPreset={onApplyBehaviorPreset}
             onResetDemo={onResetDemo}
           />
+          <LifestylePersonalizationRulesGuide />
           <LifestyleCardModelGuide />
           <ContextualAdLogicGuide
             profile={profile}
@@ -6056,7 +6212,14 @@ function LifestyleRiverHomePage({
     return reorderedStories;
   }, [config.liveFeedMode, config.liveFeedStatus, filteredStories]);
   const visibleStories = displayStories.slice(0, visibleCount);
-  const heroStories = getLeadSliderStories(visibleStories, 5, config.liveFeedMode === "blend");
+  const heroStories = getPersonalizedLeadSliderStories(
+    visibleStories,
+    rankingProfile,
+    demoState,
+    config,
+    5,
+    config.liveFeedMode === "blend"
+  );
   const leadStory = heroStories[0] ?? visibleStories[0];
   const heroStoryIds = new Set(heroStories.map((story) => story.id));
   const riverStories = visibleStories.filter((story) => !heroStoryIds.has(story.id));
@@ -6709,7 +6872,7 @@ function LifestyleRiverHomePage({
 
         <aside className="min-w-0 space-y-5 lg:sticky lg:top-[112px] lg:max-h-[calc(100dvh-136px)] lg:self-start lg:overflow-y-auto lg:pr-1">
           <div className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
-            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
               Trending Across Brands
             </p>
             <ol className="mt-4 space-y-3">
@@ -6727,7 +6890,7 @@ function LifestyleRiverHomePage({
             </ol>
           </div>
           <div className="rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-4 shadow-[var(--hp-shadow-card)]">
-            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
               Story Source
             </p>
             <p className="mt-3 text-sm font-bold">
@@ -6748,7 +6911,7 @@ function LifestyleRiverHomePage({
             ) : null}
           </div>
           <div className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
-            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
               Why Your River Looks Like This
             </p>
             <div className="mt-4 space-y-4 text-sm">
@@ -7021,6 +7184,12 @@ export function HomePageTemplate({
   const homePageThemeCssVars = React.useMemo(
     () => ({
       ...selectedBrandCssVars,
+      "--hp-section-title": selectedBrand?.slug === "autoweek" ? "#242424" : "var(--primary)",
+      ...(selectedBrand?.slug === "autoweek"
+        ? {
+            "--hp-sidebar-heading": "#242424",
+          }
+        : {}),
       ...(colorMode === "dark"
         ? {
             "--primary": "var(--brand-primary, #BDDDFC)",
@@ -7028,7 +7197,7 @@ export function HomePageTemplate({
           }
         : {}),
     }),
-    [colorMode, selectedBrandCssVars]
+    [colorMode, selectedBrand?.slug, selectedBrandCssVars]
   );
   const destinationContentRef = React.useRef<HTMLDivElement | null>(null);
   const isDestinationRiver = brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";

@@ -16,6 +16,7 @@ export const brandLogos: Record<string, string> = {
   "hearst-eandw": "/logos/hearst-eandw.svg",
   "hearst-ew": "/logos/hearst-ew-official.svg",
   "hearst-flux": "/logos/hearst-fashion-luxury.svg",
+  "hearst-flux-compact": "/logos/hearst-flux.svg",
   "hearst-all": "/logos/hearst-plus.svg",
   "hearst-autos": "/logos/hearst-autos.svg",
   "hearst-plus": "/logos/hearst-autos.svg",
