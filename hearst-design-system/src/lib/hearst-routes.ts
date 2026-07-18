@@ -22,6 +22,32 @@ export const hearstDestinationRoutes: Record<HearstDestinationMode, string> = {
   ew: "/hearst-ew/",
 };
 
+export const hearstDestinationCategoryLabels: Record<HearstDestinationMode, readonly string[]> = {
+  all: ["For You", "Home", "Style", "Reviews", "Fitness", "Cars", "Videos", "Shopping", "Saved"],
+  lifestyle: ["For You", "Food", "Home", "Wellness", "Style", "Videos", "Shopping", "Family", "Entertainment", "Saved"],
+  autos: ["For You", "News", "Reviews", "Buying Guides", "EVs", "Racing", "Trucks", "Classics", "Videos", "Saved"],
+  flux: ["For You", "Style", "Beauty", "Design", "Culture", "Videos", "Shopping", "Events", "Travel", "Saved"],
+  ew: ["For You", "Fitness", "Wellness", "Gear", "Tech", "Adventure", "Nutrition", "Life", "Videos", "Saved"],
+};
+
+function getCategorySlug(label: string) {
+  return label
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+export function getHearstDestinationCategoryRoute(mode: HearstDestinationMode, label: string) {
+  const categoryLabel = hearstDestinationCategoryLabels[mode].find((candidate) => candidate === label);
+  if (!categoryLabel) return undefined;
+  return `${hearstDestinationRoutes[mode]}${getCategorySlug(categoryLabel)}/`;
+}
+
+export function getHearstDestinationCategoryLabel(mode: HearstDestinationMode, categorySlug: string) {
+  return hearstDestinationCategoryLabels[mode].find((label) => getCategorySlug(label) === categorySlug);
+}
+
 export const hearstLegacyDestinationRedirects: Record<string, string> = {
   "/hearst-all/": hearstDestinationRoutes.all,
   "/hearst-edit/": hearstDestinationRoutes.lifestyle,

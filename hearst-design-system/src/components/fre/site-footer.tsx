@@ -32,6 +32,7 @@ export function SiteFooter({
     { label: "Product blueprint", href: "/hearst-product-blueprint/" },
     { label: "Live feed", href: "/hearst-plus/live-feed/" },
     { label: "Lifestyle Live", href: "/hearst-plus/lifestyle-live/" },
+    { label: "Autos Videos", href: "/hearst-plus/motortrend-videos/" },
   ],
   className,
 }: SiteFooterProps) {

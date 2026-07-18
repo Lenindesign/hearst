@@ -7,6 +7,8 @@ import {
 const section = "flux" as const;
 type PageProps = { params: Promise<{ brandSlug: string }> };
 
+export const dynamic = "force-dynamic";
+
 export function generateStaticParams() {
   return generateSectionBrandStaticParams(section);
 }

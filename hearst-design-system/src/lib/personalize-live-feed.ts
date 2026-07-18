@@ -1,8 +1,11 @@
 import "server-only";
 
 import { autosRiverStories } from "@/components/autos-river-data";
+import { ewRiverStories } from "@/components/ew-river-data";
+import { fluxRiverStories } from "@/components/flux-river-data";
 import { lifestyleRiverStories } from "@/components/lifestyle-river-data";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
+import { filterExcludedStories, isExcludedContentTitle } from "@/lib/content-exclusions";
 import type { LiveFeedData, LiveFeedSourceNote } from "@/lib/live-feed-types";
 
 const PERSONALIZE_STAGE_URL = "https://personalize-stage.motortrend.com/recommendations";
@@ -28,7 +31,110 @@ const lifestyleLiveBrands = [
   ["cosmopolitan", "Cosmopolitan", "cosmopolitan", "Style"],
 ] as const;
 
-type SupportedPersonalizeBrand = (typeof supportedBrands)[number] | (typeof lifestyleLiveBrands)[number];
+const autosVideoFeedBrands = [
+  ["motortrend", "MotorTrend", "motortrend", "Reviews"],
+  ["caranddriver", "Car and Driver", "car-and-driver", "Reviews"],
+  ["delish", "Delish", "delish", "Food"],
+  ["cosmopolitan", "Cosmopolitan", "cosmopolitan", "Style"],
+  ["goodhousekeeping", "Good Housekeeping", "good-housekeeping", "Home"],
+  ["housebeautiful", "House Beautiful", "house-beautiful", "Home"],
+  ["hotrod", "HOT ROD", "hot-rod", "Cars"],
+  ["countryliving", "Country Living", "country-living", "Home"],
+  ["thepioneerwoman", "The Pioneer Woman", "the-pioneer-woman", "Food"],
+  ["prevention", "Prevention", "prevention", "Wellness"],
+  ["seventeen", "Seventeen", "seventeen", "Style"],
+  ["womansday", "Woman's Day", "womans-day", "Lifestyle"],
+] as const;
+
+type PersonalizeDestination = "all" | "lifestyle" | "autos" | "flux" | "ew";
+
+const videoRequestOptionsByBrand = {
+  caranddriver: {
+    size: 25,
+    useCase: "similar_items",
+  },
+  delish: {
+    size: 25,
+    useCase: "trending_now",
+  },
+  cosmopolitan: {
+    size: 25,
+    useCase: "trending_now",
+  },
+  goodhousekeeping: {
+    size: 25,
+    useCase: "trending_now",
+  },
+  housebeautiful: {
+    size: 25,
+    useCase: "trending_now",
+  },
+  hotrod: {
+    size: 25,
+    useCase: "trending_now",
+  },
+  countryliving: {
+    size: 25,
+    useCase: "trending_now",
+  },
+  thepioneerwoman: {
+    size: 25,
+    useCase: "trending_now",
+  },
+  prevention: {
+    size: 25,
+    useCase: "trending_now",
+  },
+  seventeen: {
+    size: 25,
+    useCase: "trending_now",
+  },
+  womansday: {
+    size: 25,
+    useCase: "trending_now",
+  },
+} satisfies Partial<Record<(typeof autosVideoFeedBrands)[number][0], { size: number; useCase: string }>>;
+
+const liveBrandSlugsByDestination: Record<PersonalizeDestination, readonly string[]> = {
+  all: supportedBrands.map(([, , brandSlug]) => brandSlug),
+  autos: ["car-and-driver", "motortrend", "hot-rod"],
+  lifestyle: [
+    "cosmopolitan",
+    "delish",
+    "good-housekeeping",
+    "house-beautiful",
+    "country-living",
+    "the-pioneer-woman",
+    "prevention",
+    "seventeen",
+    "womans-day",
+  ],
+  flux: ["cosmopolitan", "seventeen"],
+  ew: ["prevention"],
+};
+
+const videoBrandSlugsByDestination: Record<PersonalizeDestination, readonly string[]> = {
+  all: autosVideoFeedBrands.map(([, , brandSlug]) => brandSlug),
+  autos: ["motortrend", "car-and-driver", "hot-rod"],
+  lifestyle: [
+    "cosmopolitan",
+    "delish",
+    "good-housekeeping",
+    "house-beautiful",
+    "country-living",
+    "the-pioneer-woman",
+    "prevention",
+    "seventeen",
+    "womans-day",
+  ],
+  flux: ["cosmopolitan", "seventeen"],
+  ew: ["prevention"],
+};
+
+type SupportedPersonalizeBrand =
+  | (typeof supportedBrands)[number]
+  | (typeof lifestyleLiveBrands)[number]
+  | (typeof autosVideoFeedBrands)[number];
 
 type ApiRecommendation = {
   __typename?: string;
@@ -69,8 +175,8 @@ type ApiResponse = {
 
 const videoBrandIds = new Set(["caranddriver", "goodhousekeeping"]);
 
-function stripHtml(value = "") {
-  return value
+function stripHtml(value?: string | null) {
+  return (value ?? "")
     .replace(/<br\s*\/?\s*>/gi, " ")
     .replace(/<[^>]+>/g, " ")
     .replace(/&nbsp;/g, " ")
@@ -116,7 +222,7 @@ function mapRecommendation(
   const [, brandName, brandSlug, fallbackTopic] = brand;
   const title = stripHtml(item.title);
   const image = withProtocol(item.media?.[0]?.url ?? item.preview_image);
-  if (!item.id || !title || !image) return null;
+  if (!item.id || !title || !image || isExcludedContentTitle(title)) return null;
 
   const sourceUrl = withProtocol(item.metadata?.links?.frontend?.url);
   const publishedAt = item.publish_from ?? item.published_at;
@@ -169,7 +275,7 @@ function mapVideoRecommendation(
   const title = stripHtml(item.title);
   const image = withProtocol(item.preview_image);
   const videoUrl = withProtocol(getPreferredVideoUrl(item));
-  if (!item.id || !title || !image || !videoUrl) return null;
+  if (!item.id || !title || !image || !videoUrl || isExcludedContentTitle(title)) return null;
 
   const publishedAt = item.published_at;
   const publishedTime = publishedAt ? new Date(publishedAt).getTime() : Date.now();
@@ -200,11 +306,13 @@ function mapVideoRecommendation(
 function fallbackData({
   stories: fallbackStories = [...autosRiverStories, ...lifestyleRiverStories].slice(0, 80),
   dataSourceCopy = "the local story snapshot because the Personalize stage feed is temporarily unavailable.",
+  productName,
 }: {
   stories?: LifestyleRiverStory[];
   dataSourceCopy?: string;
+  productName?: string;
 } = {}): LiveFeedData {
-  const stories = fallbackStories;
+  const stories = filterExcludedStories(fallbackStories);
   const counts = new Map<string, LiveFeedSourceNote>();
   stories.forEach((story) => {
     const current = counts.get(story.brandSlug);
@@ -228,6 +336,7 @@ function fallbackData({
     dataSourceCopy,
     fetchedAt: new Date().toISOString(),
     isFallback: true,
+    productName,
   };
 }
 
@@ -238,6 +347,12 @@ async function loadPersonalizeFeed({
   videoBrandIds: allowedVideoBrandIds,
   dataSourceCopy,
   fallback,
+  requestType = "all",
+  useCase = "similar_items",
+  size = 10,
+  videoSize = 4,
+  productName,
+  requestOptionsByBrand,
 }: {
   apiKey?: string;
   endpoint: string;
@@ -245,6 +360,12 @@ async function loadPersonalizeFeed({
   videoBrandIds: ReadonlySet<string>;
   dataSourceCopy: string;
   fallback: () => LiveFeedData;
+  requestType?: "all" | "video";
+  useCase?: string;
+  size?: number;
+  videoSize?: number;
+  productName?: string;
+  requestOptionsByBrand?: Partial<Record<string, { categories?: string; size?: number; useCase?: string }>>;
 }): Promise<LiveFeedData> {
   if (!apiKey) return fallback();
 
@@ -253,13 +374,17 @@ async function loadPersonalizeFeed({
       brands.map(async (brand) => {
         const [apiBrand] = brand;
         try {
-          const fetchRecommendations = async (type: "all" | "video", size: number) => {
+          const fetchRecommendations = async (type: "all" | "video", requestSize: number) => {
+            const brandRequestOptions = requestOptionsByBrand?.[apiBrand];
             const url = new URL(endpoint);
             url.searchParams.set("type", type);
             url.searchParams.set("brand", apiBrand);
-            url.searchParams.set("size", String(size));
-            url.searchParams.set("useCase", "similar_items");
+            url.searchParams.set("size", String(brandRequestOptions?.size ?? requestSize));
+            url.searchParams.set("useCase", brandRequestOptions?.useCase ?? useCase);
             url.searchParams.set("version", "1");
+            if (brandRequestOptions?.categories) {
+              url.searchParams.set("categories", brandRequestOptions.categories);
+            }
 
             const response = await fetch(url, {
               headers: { accept: "application/json", "api-key": apiKey },
@@ -272,10 +397,15 @@ async function loadPersonalizeFeed({
             return payload.data?.recommendations ?? [];
           };
 
+          if (requestType === "video") {
+            const videoItems = allowedVideoBrandIds.has(apiBrand) ? await fetchRecommendations("video", size) : [];
+            return { brand, items: [], videoItems };
+          }
+
           const [items, videoItems] = await Promise.all([
-            fetchRecommendations("all", 10),
+            fetchRecommendations("all", size),
             allowedVideoBrandIds.has(apiBrand)
-              ? fetchRecommendations("video", 4).catch((error) => {
+              ? fetchRecommendations("video", videoSize).catch((error) => {
                   console.error(`Unable to load ${apiBrand} video recommendations`, error);
                   return [];
                 })
@@ -305,7 +435,7 @@ async function loadPersonalizeFeed({
       sourceNotes.push({
         brand: brand[1],
         brandSlug: brand[2],
-        feedCount: allowedVideoBrandIds.has(brand[0]) ? 2 : 1,
+        feedCount: requestType === "video" || !allowedVideoBrandIds.has(brand[0]) ? 1 : 2,
         importedCount: items.length + videoItems.length,
         selectedCount: mapped.length + mappedVideos.length,
       });
@@ -319,6 +449,7 @@ async function loadPersonalizeFeed({
       dataSourceCopy,
       fetchedAt: new Date().toISOString(),
       isFallback: false,
+      productName,
     };
   } catch (error) {
     console.error("Unable to load Personalize live feed", error);
@@ -326,14 +457,58 @@ async function loadPersonalizeFeed({
   }
 }
 
-export async function getPersonalizeLiveFeed(): Promise<LiveFeedData> {
+function getScopedLiveBrands({
+  destination = "all",
+  brandSlug,
+}: {
+  destination?: PersonalizeDestination;
+  brandSlug?: string;
+} = {}) {
+  const allowedBrandSlugs = brandSlug
+    ? [brandSlug]
+    : liveBrandSlugsByDestination[destination] ?? liveBrandSlugsByDestination.all;
+
+  return supportedBrands.filter(([, , liveBrandSlug]) => allowedBrandSlugs.includes(liveBrandSlug));
+}
+
+export async function getPersonalizeLiveFeed({
+  destination = "all",
+  brandSlug,
+}: {
+  destination?: PersonalizeDestination;
+  brandSlug?: string;
+} = {}): Promise<LiveFeedData> {
+  const brands = getScopedLiveBrands({ destination, brandSlug });
+  const fallbackStoryPool = destination === "autos"
+    ? autosRiverStories
+    : destination === "flux"
+      ? fluxRiverStories
+      : destination === "ew"
+        ? ewRiverStories
+        : destination === "lifestyle"
+          ? lifestyleRiverStories
+          : [...autosRiverStories, ...lifestyleRiverStories, ...fluxRiverStories, ...ewRiverStories];
+  const fallbackStories = brandSlug
+    ? fallbackStoryPool.filter((story) => story.brandSlug === brandSlug)
+    : fallbackStoryPool.filter((story) => brands.some(([, , liveBrandSlug]) => liveBrandSlug === story.brandSlug));
+
+  if (brands.length === 0) {
+    return fallbackData({
+      stories: [],
+      dataSourceCopy: "the Personalize stage API, with no scoped live article brands configured for this destination yet.",
+    });
+  }
+
   return loadPersonalizeFeed({
     apiKey: process.env.PERSONALIZE_API_KEY,
     endpoint: PERSONALIZE_STAGE_URL,
-    brands: supportedBrands,
+    brands,
     videoBrandIds,
-    dataSourceCopy: "the Personalize stage API, including playable Hearst video, across the currently supported Autos and Lifestyle brands.",
-    fallback: () => fallbackData(),
+    dataSourceCopy: `the Personalize stage API, scoped to ${brands.map(([, brandName]) => brandName).join(", ")} current article recommendations.`,
+    fallback: () => fallbackData({
+      stories: fallbackStories,
+      dataSourceCopy: "the local destination snapshot because the Personalize live article feed is temporarily unavailable.",
+    }),
   });
 }
 
@@ -349,4 +524,77 @@ export async function getPersonalizeLifestyleLiveFeed(): Promise<LiveFeedData> {
       dataSourceCopy: "the local Cosmopolitan lifestyle snapshot because the production Personalize feed is temporarily unavailable.",
     }),
   });
+}
+
+function getScopedVideoBrands({
+  destination = "all",
+  brandSlug,
+}: {
+  destination?: PersonalizeDestination;
+  brandSlug?: string;
+} = {}) {
+  const allowedBrandSlugs = brandSlug
+    ? [brandSlug]
+    : videoBrandSlugsByDestination[destination] ?? videoBrandSlugsByDestination.all;
+
+  return autosVideoFeedBrands.filter(([, , videoBrandSlug]) =>
+    allowedBrandSlugs.some((allowedBrandSlug) => allowedBrandSlug === videoBrandSlug)
+  );
+}
+
+export async function getPersonalizeVideoFeed({
+  destination = "all",
+  brandSlug,
+  productName,
+}: {
+  destination?: PersonalizeDestination;
+  brandSlug?: string;
+  productName?: string;
+} = {}): Promise<LiveFeedData> {
+  const brands = getScopedVideoBrands({ destination, brandSlug });
+  const fallbackBrandSlugs = brands.map(([, , videoBrandSlug]) => videoBrandSlug);
+  const localVideoFallbackStories = [
+    ...autosRiverStories,
+    ...lifestyleRiverStories,
+    ...fluxRiverStories,
+    ...ewRiverStories,
+  ]
+    .filter((story) => fallbackBrandSlugs.some((brandSlug) => brandSlug === story.brandSlug))
+    .filter((story) => story.mediaKind === "video" || Boolean(story.videoUrl))
+    .slice(0, 100);
+  const scopedProductName = productName ?? (brandSlug
+    ? `${brands[0]?.[1] ?? "Brand"} Video Feed`
+    : destination === "all"
+      ? "Hearst+ Videos"
+      : `${destination === "ew" ? "Enthusiast & Wellness" : destination === "flux" ? "Fashion & Luxury" : destination[0].toUpperCase() + destination.slice(1)} Videos`);
+
+  if (brands.length === 0) {
+    return fallbackData({
+      stories: [],
+      dataSourceCopy: "the production Personalize API, with no scoped video brands configured for this destination yet.",
+      productName: scopedProductName,
+    });
+  }
+
+  return loadPersonalizeFeed({
+    apiKey: process.env.PERSONALIZE_LIFESTYLE_API_KEY,
+    endpoint: PERSONALIZE_PRODUCTION_URL,
+    brands,
+    videoBrandIds: new Set(brands.map(([apiBrand]) => apiBrand)),
+    requestType: "video",
+    useCase: "trending_now",
+    size: 25,
+    requestOptionsByBrand: videoRequestOptionsByBrand,
+    productName: scopedProductName,
+    dataSourceCopy: `the production Personalize API, using ${brands.map(([, brandName]) => brandName).join(", ")} video recommendations.`,
+    fallback: () => fallbackData({
+      stories: localVideoFallbackStories,
+      dataSourceCopy: "the local story snapshot because the production Personalize video feed is temporarily unavailable.",
+      productName: scopedProductName,
+    }),
+  });
+}
+
+export async function getPersonalizeAutosVideoFeed(): Promise<LiveFeedData> {
+  return getPersonalizeVideoFeed({ destination: "all", productName: "Hearst+ Videos" });
 }

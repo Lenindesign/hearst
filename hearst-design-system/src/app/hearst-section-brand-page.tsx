@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { HomePageTemplate } from "@/components/home-page";
 import { ThemeProvider } from "@/components/theme-provider";
+import { getPersonalizeLiveFeed, getPersonalizeVideoFeed } from "@/lib/personalize-live-feed";
 import {
   getHearstSectionBrand,
   getHearstSectionBrandSlugs,
@@ -41,9 +42,20 @@ export async function SectionBrandRoutePage({
 
   if (!brand) notFound();
 
+  const [liveFeedData, videoFeedData] = await Promise.all([
+    getPersonalizeLiveFeed({ destination: section, brandSlug: brand.brandSlug }),
+    getPersonalizeVideoFeed({ destination: section }),
+  ]);
+
   return (
     <ThemeProvider defaultBrandSlug={hearstSectionThemeSlugs[section]}>
-      <HomePageTemplate key={brand.brandSlug} initialBrandSlug={brand.brandSlug} />
+      <HomePageTemplate
+        key={brand.brandSlug}
+        initialBrandSlug={brand.brandSlug}
+        liveFeedData={liveFeedData}
+        liveFeedMode="blend"
+        videoFeedData={videoFeedData}
+      />
     </ThemeProvider>
   );
 }

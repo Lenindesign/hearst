@@ -2,15 +2,17 @@
 
 import React from "react";
 import { createPortal } from "react-dom";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTheme } from "./theme-provider";
 import { NavBar } from "./nav-bar";
 import { BrandLogo } from "./brand-logo";
 import { brandIconLogos, brandLogos } from "@/lib/logos";
 import {
   getHearstBrandRoute,
+  getHearstDestinationCategoryRoute,
   getHearstDestinationRoute,
 } from "@/lib/hearst-routes";
+import { getHearstStoryRoute } from "@/lib/story-routes";
 import { themeOptions } from "@/lib/theme-options";
 import { brandToCssVars } from "@/lib/theme-css-vars";
 import type { BrandTheme } from "@/lib/brands";
@@ -32,6 +34,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ChefHat,
+  Clock,
   EyeOff,
   ImageIcon,
   Info,
@@ -61,6 +64,7 @@ import { fluxRiverSourceNotes, fluxRiverStories } from "./flux-river-data";
 import { lifestyleRiverSourceNotes, lifestyleRiverStories } from "./lifestyle-river-data";
 import type { LifestyleRiverProfile, LifestyleRiverStory } from "./lifestyle-river-types";
 import type { LiveArticleData, LiveFeedData } from "@/lib/live-feed-types";
+import { filterExcludedStories } from "@/lib/content-exclusions";
 import { useReaderAccount } from "./reader-account";
 import { ReaderAuthDialog, ReaderAvatar, ReaderProfileDialog } from "./reader-account-ui";
 
@@ -77,6 +81,12 @@ export interface HomePageTemplateProps {
   showGridOverlay?: boolean;
   initialBrandSlug?: string;
   liveFeedData?: LiveFeedData;
+  liveFeedMode?: "replace" | "blend";
+  videoFeedData?: LiveFeedData;
+  initialFilter?: string;
+  initialOpenStoryId?: string;
+  readerReturnHref?: string;
+  navLinksOverride?: string[];
 }
 
 const defaultFooterCols: string[][] = [
@@ -89,6 +99,32 @@ const defaultFooterCols: string[][] = [
 const selectedBrandThemeAliases: Record<string, string> = {
   "pioneer-woman": "the-pioneer-woman",
 };
+
+function normalizeReaderReturnHref(value?: string | null) {
+  if (!value) return null;
+
+  let decoded = value;
+  try {
+    decoded = decodeURIComponent(value);
+  } catch {
+    decoded = value;
+  }
+
+  if (!decoded.startsWith("/") || decoded.startsWith("//") || decoded.startsWith("/read/")) {
+    return null;
+  }
+
+  return decoded;
+}
+
+function appendReaderReturnHref(storyId: string, returnHref: string | null) {
+  const route = getHearstStoryRoute(storyId);
+  const safeReturnHref = normalizeReaderReturnHref(returnHref);
+
+  if (!safeReturnHref) return route;
+
+  return `${route}?from=${encodeURIComponent(safeReturnHref)}`;
+}
 
 const supplementalBrandProfiles: Record<string, { primary: string; secondary: string; fontDefault: string; fontHeadline: string; fontHeadlineWeight: number }> = {
   "bring-a-trailer": {
@@ -491,6 +527,7 @@ type DestinationConfig = {
     fetchedAt: string;
     isFallback: boolean;
   };
+  liveFeedMode?: "replace" | "blend";
 };
 
 type LifestyleStoryComment = {
@@ -534,8 +571,8 @@ const destinationConfigs: Record<DestinationMode, DestinationConfig> = {
     productName: "Hearst Magazines",
     riverLabel: "Personalized Hearst story river",
     storyRiverLabel: "Hearst stories",
-    filters: ["For You", "Home", "Style", "Reviews", "Fitness", "Cars", "Shopping", "Games", "Saved"],
-    stories: [...lifestyleRiverStories, ...autosRiverStories, ...fluxRiverStories, ...ewRiverStories],
+    filters: ["For You", "Home", "Style", "Reviews", "Fitness", "Cars", "Videos", "Shopping", "Games", "Saved"],
+    stories: filterExcludedStories([...lifestyleRiverStories, ...autosRiverStories, ...fluxRiverStories, ...ewRiverStories]),
     sourceNotes: [...lifestyleRiverSourceNotes, ...autosRiverSourceNotes, ...fluxRiverSourceNotes, ...ewRiverSourceNotes],
     initialProfile: initialAllProfile,
     defaultLeadStoryId: allDefaultLeadStoryId,
@@ -554,7 +591,7 @@ const destinationConfigs: Record<DestinationMode, DestinationConfig> = {
     riverLabel: "Personalized lifestyle story river",
     storyRiverLabel: "lifestyle stories",
     filters: ["For You", "Food", "Home", "Wellness", "Style", "Shopping", "Family", "Entertainment", "Saved"],
-    stories: lifestyleRiverStories,
+    stories: filterExcludedStories(lifestyleRiverStories),
     sourceNotes: lifestyleRiverSourceNotes,
     initialProfile: initialLifestyleProfile,
     defaultLeadStoryId: lifestyleDefaultLeadStoryId,
@@ -573,7 +610,7 @@ const destinationConfigs: Record<DestinationMode, DestinationConfig> = {
     riverLabel: "Personalized autos story river",
     storyRiverLabel: "autos stories",
     filters: ["For You", "News", "Reviews", "Buying Guides", "EVs", "Racing", "Trucks", "Classics", "Saved"],
-    stories: autosRiverStories,
+    stories: filterExcludedStories(autosRiverStories),
     sourceNotes: autosRiverSourceNotes,
     initialProfile: initialAutosProfile,
     dayparts: autosDemoDayparts,
@@ -590,7 +627,7 @@ const destinationConfigs: Record<DestinationMode, DestinationConfig> = {
     riverLabel: "Personalized Flux story river",
     storyRiverLabel: "Flux stories",
     filters: ["For You", "Style", "Beauty", "Design", "Culture", "Shopping", "Events", "Travel", "Saved"],
-    stories: fluxRiverStories,
+    stories: filterExcludedStories(fluxRiverStories),
     sourceNotes: fluxRiverSourceNotes,
     initialProfile: initialFluxProfile,
     dayparts: fluxDemoDayparts,
@@ -607,7 +644,7 @@ const destinationConfigs: Record<DestinationMode, DestinationConfig> = {
     riverLabel: "Personalized E&W story river",
     storyRiverLabel: "E&W stories",
     filters: ["For You", "Fitness", "Wellness", "Gear", "Tech", "Adventure", "Nutrition", "Life", "Saved"],
-    stories: ewRiverStories,
+    stories: filterExcludedStories(ewRiverStories),
     sourceNotes: ewRiverSourceNotes,
     initialProfile: initialEWProfile,
     dayparts: ewDemoDayparts,
@@ -637,7 +674,35 @@ function getStoryDestinationMode(brandSlug: string): Exclude<DestinationMode, "a
   return "lifestyle";
 }
 
-function getBrandContextualFilters(brandSlug: string) {
+function getReaderDestinationLabel(mode: Exclude<DestinationMode, "all">) {
+  if (mode === "autos") return "Autos";
+  if (mode === "flux") return "Fashion and Luxury";
+  if (mode === "ew") return "Enthusiast and Wellness";
+  return "Lifestyle";
+}
+
+function insertVideosFilter(filters: string[]) {
+  if (filters.includes("Videos")) return filters;
+
+  const carsIndex = filters.indexOf("Cars");
+  if (carsIndex >= 0) {
+    return [...filters.slice(0, carsIndex + 1), "Videos", ...filters.slice(carsIndex + 1)];
+  }
+
+  const shoppingIndex = filters.indexOf("Shopping");
+  if (shoppingIndex >= 0) {
+    return [...filters.slice(0, shoppingIndex), "Videos", ...filters.slice(shoppingIndex)];
+  }
+
+  const savedIndex = filters.indexOf("Saved");
+  if (savedIndex >= 0) {
+    return [...filters.slice(0, savedIndex), "Videos", ...filters.slice(savedIndex)];
+  }
+
+  return [...filters, "Videos"];
+}
+
+function getBrandContextualFilters(brandSlug: string, includeVideos = false) {
   const topicCounts = destinationConfigs.all.stories
     .filter((story) => story.brandSlug === brandSlug)
     .reduce<Record<string, number>>((counts, story) => {
@@ -653,7 +718,8 @@ function getBrandContextualFilters(brandSlug: string) {
     ? ["Shop New Cars", "Shop Used Cars", "Research Cars"]
     : [];
 
-  return ["For You", ...topics, ...brandSections, "Saved"];
+  const filters = ["For You", ...topics, ...brandSections, "Saved"];
+  return includeVideos ? insertVideosFilter(filters) : filters;
 }
 
 function getBrandRouteInfo(brandSlug?: string) {
@@ -828,6 +894,85 @@ function rankLifestyleRiver(
   return ranked;
 }
 
+function getStoryIdentity(story: LifestyleRiverStory) {
+  const sourceUrl = story.sourceUrl?.trim().toLowerCase();
+  if (sourceUrl) return `url:${sourceUrl}`;
+
+  return `story:${story.brandSlug}:${story.title.trim().toLowerCase().replace(/\s+/g, " ")}`;
+}
+
+function mergeUniqueStories(...storyGroups: LifestyleRiverStory[][]) {
+  const seen = new Set<string>();
+
+  return storyGroups.flat().filter((story) => {
+    const identity = getStoryIdentity(story);
+    if (seen.has(identity)) return false;
+    seen.add(identity);
+    return true;
+  });
+}
+
+function isCurrentFeedStory(story: LifestyleRiverStory) {
+  return story.id.startsWith("live-");
+}
+
+function diversifyCurrentFeedStories(stories: LifestyleRiverStory[]) {
+  const remaining = [...stories];
+  const diversified: LifestyleRiverStory[] = [];
+
+  while (remaining.length > 0) {
+    const previousWasVideo = diversified.at(-1)?.videoUrl !== undefined;
+    const differentMediaIndex = diversified.length === 0
+      ? -1
+      : remaining.findIndex((story) => Boolean(story.videoUrl) !== previousWasVideo);
+    const nextIndex = differentMediaIndex >= 0 ? differentMediaIndex : 0;
+    diversified.push(remaining.splice(nextIndex, 1)[0]);
+  }
+
+  return diversified;
+}
+
+function applyContextualFeedCadence(stories: LifestyleRiverStory[]) {
+  const editorialStories = stories.filter((story) => !isCurrentFeedStory(story));
+  const currentFeedStories = diversifyCurrentFeedStories(
+    stories.filter((story) => isCurrentFeedStory(story))
+  );
+
+  if (currentFeedStories.length === 0 || editorialStories.length < 3) return stories;
+
+  const blended: LifestyleRiverStory[] = [];
+  let editorialIndex = 0;
+  let currentIndex = 0;
+  const initialEditorialCount = Math.min(5, editorialStories.length);
+
+  blended.push(...editorialStories.slice(0, initialEditorialCount));
+  editorialIndex = initialEditorialCount;
+
+  if (currentIndex < currentFeedStories.length) {
+    blended.push(currentFeedStories[currentIndex]);
+    currentIndex += 1;
+  }
+
+  if (editorialIndex < editorialStories.length && currentIndex < currentFeedStories.length) {
+    blended.push(editorialStories[editorialIndex], currentFeedStories[currentIndex]);
+    editorialIndex += 1;
+    currentIndex += 1;
+  }
+
+  while (editorialIndex < editorialStories.length) {
+    const nextEditorialStories = editorialStories.slice(editorialIndex, editorialIndex + 3);
+    blended.push(...nextEditorialStories);
+    editorialIndex += nextEditorialStories.length;
+
+    if (nextEditorialStories.length === 3 && currentIndex < currentFeedStories.length) {
+      blended.push(currentFeedStories[currentIndex]);
+      currentIndex += 1;
+    }
+  }
+
+  return blended;
+}
+
 function getLifestyleDemoStoryPool(
   demoState: LifestyleDemoState,
   config = destinationConfigs.lifestyle
@@ -853,6 +998,7 @@ function getLifestyleDemoStoryPool(
 
 function storyMatchesLifestyleFilter(story: LifestyleRiverStory, filter: string) {
   if (filter === "For You" || filter === "Saved") return true;
+  if (filter === "Videos") return Boolean(story.videoUrl);
   if (story.brandSlug === "car-and-driver") {
     if (filter === "Shop New Cars") {
       return story.topic === "EVs" || /\b20(?:26|27|28|29)\b/.test(story.title);
@@ -1525,11 +1671,15 @@ function MainNav({
   activeFilter,
   onFilterChange,
   selectedBrand,
+  navLinksOverride,
+  includeVideos,
 }: {
   brandSlug: string;
   activeFilter?: string;
   onFilterChange?: (filter: string) => void;
   selectedBrand?: { name: string; slug: string } | null;
+  navLinksOverride?: string[];
+  includeVideos?: boolean;
 }) {
   const { brand, colorMode, toggleColorMode } = useTheme();
   const [mastheadCompact, setMastheadCompact] = React.useState(false);
@@ -1538,11 +1688,12 @@ function MainNav({
   const content = getContent(brandSlug);
   const isDestinationRiver = brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
   const destinationConfig = destinationConfigs[getDestinationMode(brand.slug)];
-  const navLinks = selectedBrand
-    ? getBrandContextualFilters(selectedBrand.slug)
+  const baseNavLinks = navLinksOverride ?? (selectedBrand
+    ? getBrandContextualFilters(selectedBrand.slug, includeVideos)
     : isDestinationRiver
       ? destinationConfig.filters
-      : content.navLinks;
+      : content.navLinks);
+  const navLinks = includeVideos ? insertVideosFilter(baseNavLinks) : baseNavLinks;
 
   React.useEffect(() => {
     let frame = 0;
@@ -1566,8 +1717,17 @@ function MainNav({
     };
   }, []);
 
+  const shouldUseNativeLogoColor = mastheadSlug === "car-and-driver";
   const logoColor = selectedBrand
-    ? colorMode === "dark" ? "#ffffff" : "#121212"
+    ? mastheadSlug === "motortrend"
+      ? "#e90c17"
+      : mastheadSlug === "hot-rod"
+      ? "#c11b17"
+      : shouldUseNativeLogoColor
+      ? undefined
+      : colorMode === "dark"
+        ? "#ffffff"
+        : "#121212"
     : brand.slug === "hearst-flux" && colorMode === "dark"
       ? "#ffffff"
       : undefined;
@@ -1598,6 +1758,9 @@ function MainNav({
   const renderNavLinks = () => navLinks.map((link) => {
     const active = activeFilter === link;
     const destinationHref = brand.slug === "hearst-all" ? hearstDestinationNavHrefs.get(link) : undefined;
+    const categoryHref = isDestinationRiver && !selectedBrand && link !== "Games"
+      ? getHearstDestinationCategoryRoute(getDestinationMode(brand.slug), link)
+      : undefined;
     const useFluxDarkActiveState = brand.slug === "hearst-flux" && colorMode === "dark";
 
     return destinationHref ? (
@@ -1608,6 +1771,25 @@ function MainNav({
         underline={false}
         size="sm"
         className="whitespace-nowrap border-b-2 border-transparent px-0.5 pb-1 font-normal text-foreground hover:border-primary/40 hover:text-primary hover:no-underline"
+      >
+        {link}
+      </LinkComponent>
+    ) : categoryHref ? (
+      <LinkComponent
+        key={link}
+        href={categoryHref}
+        variant="neutral"
+        underline={false}
+        size="sm"
+        aria-current={active ? "page" : undefined}
+        className={cn(
+          "whitespace-nowrap border-b-2 border-transparent px-0.5 pb-1 font-normal text-foreground hover:border-primary/40 hover:text-primary hover:no-underline",
+          active
+            ? useFluxDarkActiveState
+              ? "border-foreground font-semibold text-foreground"
+              : "border-primary font-semibold text-primary"
+            : ""
+        )}
       >
         {link}
       </LinkComponent>
@@ -1870,7 +2052,7 @@ function TrendingSection({ brandSlug }: { brandSlug: string }) {
   );
 }
 
-function Footer() {
+function Footer({ flushTop = false }: { flushTop?: boolean }) {
   const { brand } = useTheme();
   const logo = brandLogos[brand.slug];
 
@@ -1881,7 +2063,7 @@ function Footer() {
   );
 
   return (
-    <div className="pt-12">
+    <div className={cn(flushTop ? "pt-0" : "pt-12")}>
       <SiteFooter
         siteName={footerLogo}
         socialLinks={["YouTube", "Facebook", "Instagram", "Pinterest"]}
@@ -2467,15 +2649,18 @@ function BrandPromotionRiverModule({
 function getLifestyleCardKind(story: LifestyleRiverStory): LifestyleCardKind {
   const searchable = `${story.topic} ${story.title}`.toLowerCase();
 
-  if (story.mediaKind === "video" || story.videoUrl) return "video";
+  if (storyHasPlayableVideo(story)) return "video";
   if (story.topic.startsWith("Food")) return "recipe";
   if (isYearMakeModelStory(story)) return "recipe";
   if (/shopping|products|tested|best|buy|sale|deals|favorite|picks/.test(searchable)) return "shopping";
   if (story.topic === "Buying Guides" || story.topic === "Auctions") return "shopping";
-  if (story.topic === "Entertainment" || /watch|video|tv|show|movie|internet/.test(searchable) || story.age % 7 === 0) return "video";
   if (/photos|gallery|style|jeans|rooms|decorating|porch|garden|designers|living room|classic|collector|auction/.test(searchable) || story.age % 5 === 0) return "gallery";
 
   return "article";
+}
+
+function storyHasPlayableVideo(story: LifestyleRiverStory) {
+  return Boolean(story.videoUrl);
 }
 
 function isYearMakeModelStory(story: LifestyleRiverStory) {
@@ -2516,15 +2701,15 @@ function LifestyleKindBadge({
   kind: LifestyleCardKind;
   story: LifestyleRiverStory;
 }) {
+  if (kind === "article" || kind === "gallery") return null;
+
   const label = getLifestyleKindLabel(kind, story);
   const iconClassName = "h-3 w-3 shrink-0";
   const icon = kind === "video"
     ? <Play className={cn(iconClassName, "fill-current")} aria-hidden />
-    : kind === "gallery"
-      ? <ImageIcon className={iconClassName} aria-hidden />
-      : label === "Guide"
-        ? <ShoppingBag className={iconClassName} aria-hidden />
-        : null;
+    : label === "Guide"
+      ? <ShoppingBag className={iconClassName} aria-hidden />
+      : null;
 
   return (
     <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--hp-chip-border)] bg-[var(--hp-chip)] px-2 py-0.5 text-[length:var(--text-token-4xs)] font-semibold uppercase tracking-widest text-[var(--hp-text-chip)]">
@@ -2807,6 +2992,42 @@ function LifestyleRiverMedia({
   }
 
   if (story.videoUrl) {
+    if (!playing) {
+      return (
+        <div
+          className={cn("relative min-w-0 overflow-hidden bg-black", videoClassName)}
+          onClick={(event) => event.stopPropagation()}
+          onKeyDown={(event) => event.stopPropagation()}
+        >
+          <img
+            src={story.image}
+            alt=""
+            className="h-full w-full object-cover"
+            loading={featured ? "eager" : "lazy"}
+          />
+          <div className="absolute inset-0 bg-black/15" />
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              onTogglePlaying();
+            }}
+            className="absolute inset-0 flex items-center justify-center text-white"
+            aria-label={`Play video: ${story.title}`}
+          >
+            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-black/70 shadow-sm transition-colors hover:bg-black/85">
+              <Play className="ml-0.5 h-6 w-6 fill-current" aria-hidden />
+            </span>
+          </button>
+          {story.videoDuration ? (
+            <span className="pointer-events-none absolute right-3 top-3 rounded-full bg-black/70 px-2.5 py-1 text-xs font-bold tabular-nums text-white shadow-sm">
+              {formatVideoDuration(story.videoDuration)}
+            </span>
+          ) : null}
+        </div>
+      );
+    }
+
     return (
       <div
         className={cn("relative min-w-0 overflow-hidden bg-black", videoClassName)}
@@ -2817,6 +3038,7 @@ function LifestyleRiverMedia({
           src={story.videoUrl}
           poster={story.image}
           controls
+          autoPlay
           playsInline
           preload="metadata"
           className="h-full w-full bg-black object-contain"
@@ -2998,7 +3220,7 @@ function LifestyleRiverCard({
         isVideo ? "p-4 sm:p-5" : featured ? "flex flex-col justify-center p-5 sm:p-6 lg:p-8" : "p-4 sm:p-0"
       )}>
         <div className="mb-3 flex flex-wrap items-center gap-2">
-          <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+          <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
             {story.signal}
           </span>
           <LifestyleKindBadge kind={kind} story={story} />
@@ -3043,22 +3265,292 @@ function LifestyleRiverCard({
   );
 }
 
-function getLeadSliderStories(stories: LifestyleRiverStory[], count = 5) {
+function VideoPlaySurface({
+  story,
+  featured = false,
+}: {
+  story: LifestyleRiverStory;
+  featured?: boolean;
+}) {
+  const [playing, setPlaying] = React.useState(false);
+
+  return (
+    <div
+      className={cn(
+        "relative min-w-0 overflow-hidden bg-black",
+        featured ? "aspect-video rounded-t-[8px]" : "aspect-video rounded-[6px]"
+      )}
+      onClick={(event) => event.stopPropagation()}
+      onKeyDown={(event) => event.stopPropagation()}
+    >
+      {playing && story.videoUrl ? (
+        <video
+          src={story.videoUrl}
+          poster={story.image}
+          controls
+          autoPlay
+          playsInline
+          preload="metadata"
+          className="h-full w-full bg-black object-contain"
+          aria-label={`Play video: ${story.title}`}
+        />
+      ) : (
+        <>
+          <img
+            src={story.image}
+            alt=""
+            className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.025] motion-reduce:transition-none"
+            loading={featured ? "eager" : "lazy"}
+            decoding="async"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-black/5" />
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              setPlaying(true);
+            }}
+            className={cn(
+              "absolute inline-flex items-center justify-center rounded-full bg-white text-black shadow-sm transition-transform duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/80 motion-reduce:transition-none",
+              featured ? "bottom-5 left-5 h-14 w-14" : "left-3 top-3 h-10 w-10"
+            )}
+            aria-label={`Play video: ${story.title}`}
+          >
+            <Play className={cn("ml-0.5 fill-current", featured ? "h-6 w-6" : "h-4 w-4")} aria-hidden />
+          </button>
+        </>
+      )}
+      {story.videoDuration ? (
+        <span className="pointer-events-none absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-black/70 px-2.5 py-1 text-xs font-bold tabular-nums text-white">
+          <Clock className="h-3 w-3" aria-hidden />
+          {formatVideoDuration(story.videoDuration)}
+        </span>
+      ) : null}
+    </div>
+  );
+}
+
+function VideoFeedLeadCard({
+  story,
+  saved,
+  commentCount,
+  onOpen,
+  onSave,
+  variant = "videoIndex",
+  eyebrowLabel,
+}: {
+  story: LifestyleRiverStory;
+  saved: boolean;
+  commentCount: number;
+  onOpen: () => void;
+  onSave: () => void;
+  variant?: "videoIndex" | "hearstPlus";
+  eyebrowLabel?: string;
+}) {
+  const useHearstPlusStyle = variant === "hearstPlus";
+
+  return (
+    <article className="group overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
+      <VideoPlaySurface story={story} featured />
+      <div className="p-4 sm:p-5">
+        <div className="mb-3 flex flex-wrap items-center gap-2">
+          <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+            {eyebrowLabel ?? (useHearstPlusStyle ? "Recommended video" : "Featured video")}
+          </span>
+          <LifestyleBrandSource story={story} />
+          <LiveStoryBadge story={story} />
+        </div>
+        <button type="button" className="block text-left focus:outline-none focus:ring-2 focus:ring-primary/30" onClick={onOpen}>
+          <h2
+            className={cn(
+              "text-balance",
+              useHearstPlusStyle
+                ? "headline text-3xl font-bold leading-tight text-[var(--hp-text-headline)] sm:text-4xl"
+                : "text-3xl font-black leading-[1.02] tracking-[-0.025em] text-foreground sm:text-4xl"
+            )}
+          >
+            {story.title}
+          </h2>
+        </button>
+        <p
+          className={cn(
+            "mt-3 line-clamp-2 max-w-3xl text-base leading-7",
+            useHearstPlusStyle ? "text-[var(--hp-text-secondary)]" : "text-muted-foreground"
+          )}
+        >
+          {story.summary}
+        </p>
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
+          <div className="flex items-center gap-3 text-sm text-muted-foreground">
+            <button
+              type="button"
+              onClick={onSave}
+              aria-pressed={saved}
+              aria-label={saved ? "Remove from saved videos" : "Save video"}
+              className={cn("inline-flex items-center gap-1.5 transition-colors hover:text-primary", saved ? "text-primary" : "")}
+            >
+              <Bookmark className="h-4 w-4" weight={saved ? "fill" : "regular"} aria-hidden />
+              <span>{saved ? "Saved" : "Save"}</span>
+            </button>
+            <button type="button" onClick={onOpen} className="inline-flex items-center gap-1.5 transition-colors hover:text-primary">
+              <MessageCircle className="h-4 w-4" aria-hidden />
+              <span>{commentCount}</span>
+            </button>
+          </div>
+          <Button variant="outline" size="sm" onClick={onOpen}>
+            Open story
+          </Button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function VideoIndexCard({
+  story,
+  saved,
+  commentCount,
+  onOpen,
+  onSave,
+  onHide,
+  variant = "videoIndex",
+}: {
+  story: LifestyleRiverStory;
+  saved: boolean;
+  commentCount: number;
+  onOpen: () => void;
+  onSave: () => void;
+  onHide: () => void;
+  variant?: "videoIndex" | "hearstPlus";
+}) {
+  const useHearstPlusStyle = variant === "hearstPlus";
+
+  return (
+    <article className="group overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/50">
+      <VideoPlaySurface story={story} featured />
+      <div className="p-4 sm:p-5">
+        <div className="mb-3 flex min-w-0 flex-wrap items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+          <BrandSourceIcon brand={story.brand} brandSlug={story.brandSlug} className="h-5 w-5" />
+          <span className="truncate normal-case tracking-normal text-muted-foreground">
+            {story.brand}
+            {story.topic ? ` · ${story.topic}` : ""}
+          </span>
+          <LiveStoryBadge story={story} />
+        </div>
+        <button type="button" className="block text-left focus:outline-none focus:ring-2 focus:ring-primary/30" onClick={onOpen}>
+          <h3
+            className={cn(
+              "text-balance",
+              useHearstPlusStyle
+                ? "headline text-2xl font-bold leading-tight text-[var(--hp-text-headline)] sm:text-3xl"
+                : "text-3xl font-black leading-[1.02] tracking-[-0.025em] text-foreground sm:text-4xl"
+            )}
+          >
+            {story.title}
+          </h3>
+        </button>
+        <p
+          className={cn(
+            "mt-3 line-clamp-2 max-w-3xl text-base leading-7",
+            useHearstPlusStyle ? "text-[var(--hp-text-secondary)]" : "text-muted-foreground"
+          )}
+        >
+          {story.summary}
+        </p>
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4 text-sm text-muted-foreground">
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={onSave}
+              aria-pressed={saved}
+              aria-label={saved ? "Remove from saved videos" : "Save video"}
+              className={cn("inline-flex items-center gap-1.5 transition-colors hover:text-primary", saved ? "text-primary" : "")}
+            >
+              <Bookmark className="h-4 w-4" weight={saved ? "fill" : "regular"} aria-hidden />
+              <span>{saved ? "Saved" : "Save"}</span>
+            </button>
+            <button type="button" onClick={onOpen} className="inline-flex items-center gap-1.5 transition-colors hover:text-primary">
+              <MessageCircle className="h-4 w-4" aria-hidden />
+              <span>{commentCount}</span>
+            </button>
+            <button type="button" onClick={onHide} aria-label="Hide video" className="inline-flex items-center gap-1.5 transition-colors hover:text-primary">
+              <EyeOff className="h-4 w-4" aria-hidden />
+              <span>Hide</span>
+            </button>
+          </div>
+          <Button variant="outline" size="sm" onClick={onOpen}>
+            Open story
+          </Button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function VideoRailCard({
+  story,
+  onOpen,
+}: {
+  story: LifestyleRiverStory;
+  onOpen: () => void;
+}) {
+  return (
+    <button type="button" className="grid w-full grid-cols-[96px_minmax(0,1fr)] gap-3 text-left" onClick={onOpen}>
+      <span className="relative aspect-video overflow-hidden rounded-[6px] bg-muted">
+        <img src={story.image} alt="" className="h-full w-full object-cover" loading="lazy" decoding="async" />
+        {story.videoDuration ? (
+          <span className="absolute bottom-1 right-1 rounded-full bg-black/70 px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-white">
+            {formatVideoDuration(story.videoDuration)}
+          </span>
+        ) : null}
+      </span>
+      <span className="min-w-0">
+        <span className="block text-xs font-semibold text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">{story.brand}</span>
+        <span className="mt-1 line-clamp-3 block text-sm font-bold leading-snug text-foreground">{story.title}</span>
+      </span>
+    </button>
+  );
+}
+
+function getLeadSliderStories(
+  stories: LifestyleRiverStory[],
+  count = 5,
+  includeCurrentFeed = false
+) {
   const selected: LifestyleRiverStory[] = [];
   const usedBrands = new Set<string>();
-  const imageStories = stories.filter((story) => !story.videoUrl);
+  const editorialStories = stories.filter((story) => !isCurrentFeedStory(story));
+  const currentArticleStories = stories.filter((story) => isCurrentFeedStory(story) && !story.videoUrl);
+  const currentVideoStories = stories.filter((story) => isCurrentFeedStory(story) && Boolean(story.videoUrl));
 
-  for (const story of imageStories) {
-    if (usedBrands.has(story.brandSlug)) continue;
-    selected.push(story);
-    usedBrands.add(story.brandSlug);
-    if (selected.length === count) return selected;
+  const addStories = (candidates: LifestyleRiverStory[]) => {
+    for (const story of candidates) {
+      if (usedBrands.has(story.brandSlug)) continue;
+      selected.push(story);
+      usedBrands.add(story.brandSlug);
+      if (selected.length === count) return true;
+    }
+
+    for (const story of candidates) {
+      if (selected.some((item) => item.id === story.id)) continue;
+      selected.push(story);
+      if (selected.length === count) return true;
+    }
+
+    return false;
+  };
+
+  if (!includeCurrentFeed) {
+    if (addStories(editorialStories.filter((story) => !story.videoUrl))) return selected;
+    addStories(currentArticleStories);
+    return selected;
   }
 
-  for (const story of imageStories) {
-    if (selected.some((item) => item.id === story.id)) continue;
-    selected.push(story);
-    if (selected.length === count) break;
+  addStories(editorialStories.slice(0, Math.max(0, count - 2)));
+  if (selected.length < count) addStories(currentArticleStories.slice(0, 1));
+  if (selected.length < count) addStories(currentVideoStories.slice(0, 1));
+  if (selected.length < count) {
+    addStories([...currentArticleStories, ...currentVideoStories, ...editorialStories]);
   }
 
   return selected;
@@ -3181,7 +3673,7 @@ function LifestyleLeadSlider({
         Swipe left or right to move between featured stories.
       </p>
       <div
-        className="relative h-[min(128vw,520px)] touch-pan-y select-none overflow-hidden bg-muted sm:h-auto sm:min-h-[430px] sm:aspect-[16/11] lg:min-h-[460px]"
+        className="relative h-[min(128vw,520px)] w-full min-w-0 touch-pan-y select-none overflow-hidden bg-muted sm:h-auto sm:min-h-[430px] sm:aspect-[16/11] lg:min-h-[460px]"
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
@@ -3213,6 +3705,8 @@ function LifestyleLeadSlider({
                 aria-label={`Open story: ${story.title}`}
                 aria-hidden={index !== activeIndex}
                 tabIndex={index === activeIndex ? 0 : -1}
+                data-feed-source={isCurrentFeedStory(story) ? "current" : "editorial"}
+                data-media-kind={story.videoUrl ? "video" : "article"}
               >
                 <LifestyleRiverImage
                   story={story}
@@ -3224,6 +3718,15 @@ function LifestyleLeadSlider({
                   <div className="mb-3 flex flex-wrap items-center gap-2 text-sm font-semibold">
                     <BrandSourceIcon brand={story.brand} brandSlug={story.brandSlug} className="h-5 w-5 rounded-[4px] border-border" />
                     <span>{story.brand}</span>
+                    {story.videoUrl ? (
+                      <>
+                        <span aria-hidden>/</span>
+                        <span className="inline-flex items-center gap-1 rounded-full bg-black/55 px-2 py-1 text-xs font-bold text-white backdrop-blur">
+                          <Play className="h-3 w-3 fill-current" aria-hidden />
+                          Video{story.videoDuration ? ` · ${formatVideoDuration(story.videoDuration)}` : ""}
+                        </span>
+                      </>
+                    ) : null}
                     <span aria-hidden>/</span>
                     <span className="inline-flex items-center gap-1">
                       <MessageCircle className="h-4 w-4" aria-hidden />
@@ -3231,12 +3734,12 @@ function LifestyleLeadSlider({
                     </span>
                   </div>
                   <h2 className={cn(
-                    "headline max-w-[min(42rem,100%)] break-words text-balance text-[clamp(2rem,4.5vw,2.75rem)] sm:text-[clamp(2.25rem,3.25vw,3rem)]",
+                    "headline line-clamp-3 max-w-[min(42rem,100%)] break-words text-balance text-[clamp(2rem,4.5vw,2.75rem)] sm:text-[clamp(2.25rem,3.25vw,3rem)]",
                     story.brandSlug === "road-and-track" ? "leading-[1.12]" : "leading-[1.08]"
                   )}>
                     {story.title}
                   </h2>
-                  <p className="mt-3 max-w-2xl text-sm leading-6 text-white/85 sm:text-base">
+                  <p className="mt-3 line-clamp-2 max-w-2xl text-sm leading-6 text-white/85 sm:text-base">
                     {story.summary}
                   </p>
                 </div>
@@ -3698,18 +4201,15 @@ function LifestyleReaderBody({
   story,
   liveArticle,
   onOpenImage,
-  actions,
 }: {
   story: LifestyleRiverStory;
   liveArticle?: LiveArticleLoadState;
   onOpenImage: (image: FullscreenReaderImage) => void;
-  actions: React.ReactNode;
 }) {
   if (story.videoUrl) {
     return (
       <div className="mt-6 space-y-4 text-[18px] leading-8 text-foreground/85">
         <p>{story.summary}</p>
-        {actions}
         <p className="border-t border-border pt-4 text-sm font-semibold text-muted-foreground">
           Hearst video{story.videoDuration ? ` · ${formatVideoDuration(story.videoDuration)}` : ""}
         </p>
@@ -3724,15 +4224,11 @@ function LifestyleReaderBody({
         <div className="h-4 w-full animate-pulse rounded bg-muted motion-reduce:animate-none" />
         <div className="h-4 w-5/6 animate-pulse rounded bg-muted motion-reduce:animate-none" />
         <div className="h-4 w-4/6 animate-pulse rounded bg-muted motion-reduce:animate-none" />
-        {actions}
       </div>
     );
   }
 
   if (liveArticle?.status === "ready") {
-    const firstParagraphIndex = liveArticle.data.blocks.findIndex((block) => block.type === "paragraph");
-    const actionIndex = firstParagraphIndex >= 0 ? firstParagraphIndex : 0;
-
     return (
       <div className="mt-6 space-y-7 text-[18px] leading-8 text-foreground/85">
         {liveArticle.data.blocks.map((block, index) => {
@@ -3777,12 +4273,7 @@ function LifestyleReaderBody({
             content = <p>{block.text}</p>;
           }
 
-          return (
-            <React.Fragment key={`reader-block-${index}`}>
-              {content}
-              {index === actionIndex ? actions : null}
-            </React.Fragment>
-          );
+          return <React.Fragment key={`reader-block-${index}`}>{content}</React.Fragment>;
         })}
         <p className="border-t border-border pt-5 text-sm text-muted-foreground">
           <a href={liveArticle.data.sourceUrl} target="_blank" rel="noreferrer" className="font-bold text-primary underline underline-offset-4">
@@ -3797,12 +4288,7 @@ function LifestyleReaderBody({
 
   return (
     <div className="mt-6 space-y-5 text-base leading-8 text-foreground/80">
-      {readerParagraphs.map((paragraph, index) => (
-        <React.Fragment key={paragraph}>
-          <p>{paragraph}</p>
-          {index === 0 ? actions : null}
-        </React.Fragment>
-      ))}
+      {readerParagraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
       {story.sourceUrl ? (
         <p className="border-t border-border pt-5 text-sm text-muted-foreground">
           <a href={story.sourceUrl} target="_blank" rel="noreferrer" className="font-bold text-primary underline underline-offset-4">
@@ -4316,13 +4802,16 @@ function LifestyleStoryReaderModal({
   const [visibleReaderCount, setVisibleReaderCount] = React.useState(1);
   const [liveArticles, setLiveArticles] = React.useState<Record<string, LiveArticleLoadState>>({});
   const [fullscreenGallery, setFullscreenGallery] = React.useState<FullscreenGalleryState | null>(null);
-  const storyQueue = openIndex >= 0 ? readerStories.slice(openIndex) : [];
+  const storyQueue = openIndex >= 0
+    ? [...readerStories.slice(openIndex), ...readerStories.slice(0, openIndex)]
+    : [];
   const visibleReaderStories = storyQueue.slice(0, visibleReaderCount);
   const visibleReaderStoryIds = visibleReaderStories.map((story) => story.id).join("|");
   const readerContextStory = storyQueue[0];
   const readerDestination = readerContextStory
     ? getStoryDestinationMode(readerContextStory.brandSlug)
     : "lifestyle";
+  const readerDestinationLabel = getReaderDestinationLabel(readerDestination);
   const readerDestinationConfig = destinationConfigs[readerDestination];
   const readerColorMode = readerDestination === "flux" ? "dark" : "light";
   const readerTheme = themeOptions.find((theme) => theme.slug === readerDestinationConfig.brandSlug);
@@ -4476,7 +4965,7 @@ function LifestyleStoryReaderModal({
               </div>
               <div className="hidden min-w-0 border-l border-border pl-4 sm:block">
                 <p className="truncate text-xs font-bold text-foreground">
-                  Reading {readerContextStory?.brand}
+                  Reading {readerDestinationLabel}
                 </p>
                 <p className="mt-0.5 truncate text-xs text-muted-foreground">
                   {visibleReaderStories.length} of {storyQueue.length} stories loaded
@@ -4624,19 +5113,17 @@ function LifestyleStoryReaderModal({
                         )}>
                           {story.title}
                         </h2>
+                        <LifestyleReaderActions
+                          story={story}
+                          saved={savedIds.includes(story.id)}
+                          followed={followedBrands.includes(story.brand)}
+                          commentCount={getLifestyleCommentCount(story, commentsByStoryId[story.id]?.length ?? 0)}
+                          onSave={() => onSave(story)}
+                          onToggleFollowBrand={() => onToggleFollowBrand(story.brand)}
+                        />
                         <LifestyleReaderBody
                           story={story}
                           liveArticle={liveArticles[story.id]}
-                          actions={(
-                            <LifestyleReaderActions
-                              story={story}
-                              saved={savedIds.includes(story.id)}
-                              followed={followedBrands.includes(story.brand)}
-                              commentCount={getLifestyleCommentCount(story, commentsByStoryId[story.id]?.length ?? 0)}
-                              onSave={() => onSave(story)}
-                              onToggleFollowBrand={() => onToggleFollowBrand(story.brand)}
-                            />
-                          )}
                           onOpenImage={(image) => {
                             const images = getFullscreenReaderImages(story, liveArticles[story.id]);
                             setFullscreenGallery({
@@ -4824,7 +5311,7 @@ function TodayEditDashboard({
                     style={{ backgroundImage: `url("${module.image}")` }}
                   />
                 ) : null}
-                <span className="block min-w-0 text-sm font-bold leading-snug text-foreground">
+                <span className="line-clamp-3 min-w-0 text-sm font-bold leading-snug text-foreground">
                   {module.title}
                 </span>
               </span>
@@ -5171,7 +5658,7 @@ function MobileCollapsibleSidebarCard({
   return (
     <section className={cn("min-w-0 overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]", className)}>
       <div className="hidden lg:block">
-        <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+        <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
           {title}
         </p>
       </div>
@@ -5182,7 +5669,7 @@ function MobileCollapsibleSidebarCard({
           onClick={() => setOpen((value) => !value)}
           aria-expanded={open}
         >
-          <span className="block text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+          <span className="block text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
             {title}
           </span>
           <span className="mt-1 line-clamp-2 block max-w-full break-words text-xs font-normal normal-case tracking-normal text-muted-foreground lg:hidden">
@@ -5193,7 +5680,7 @@ function MobileCollapsibleSidebarCard({
           <button
             type="button"
             onClick={onMobileAction}
-            className="mt-0.5 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary hover:underline"
+            className="mt-0.5 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))] hover:underline"
           >
             {mobileActionLabel}
           </button>
@@ -5201,7 +5688,7 @@ function MobileCollapsibleSidebarCard({
         <button
           type="button"
           onClick={() => setOpen((value) => !value)}
-          className="shrink-0 text-primary"
+          className="shrink-0 text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]"
           aria-label={`${open ? "Collapse" : "Expand"} ${title}`}
           aria-expanded={open}
         >
@@ -5221,6 +5708,7 @@ function LifestyleLeftSidebar({
   topStories,
   topics,
   brands,
+  brandFilterTitle = "Filter Brands",
   activeBrandFilters,
   collectionLabels,
   onToggleBrandFilter,
@@ -5231,6 +5719,7 @@ function LifestyleLeftSidebar({
   topStories: LifestyleRiverStory[];
   topics: { name: string; count: number }[];
   brands: { name: string; slug: string; count: number }[];
+  brandFilterTitle?: string;
   activeBrandFilters: string[];
   collectionLabels: string[];
   onToggleBrandFilter: (brandName: string) => void;
@@ -5259,7 +5748,7 @@ function LifestyleLeftSidebar({
         <div className="space-y-3">
           {topStories.slice(0, 3).map((story) => (
             <div key={story.id} className="border-b border-border pb-3 last:border-0 last:pb-0">
-              <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+              <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
                 {story.topic}
               </p>
               <p className="mt-1 text-sm font-bold leading-snug">{story.title}</p>
@@ -5270,7 +5759,7 @@ function LifestyleLeftSidebar({
       </MobileCollapsibleSidebarCard>
 
       <MobileCollapsibleSidebarCard
-        title="Filter Brands"
+        title={brandFilterTitle}
         summary={brandSummary}
         mobileActionLabel={activeBrandFilters.length > 0 ? "Clear" : undefined}
         onMobileAction={activeBrandFilters.length > 0 ? onClearBrandFilters : undefined}
@@ -5362,7 +5851,10 @@ function LifestyleRiverHomePage({
   activeFilter,
   destination,
   destinationConfig,
+  videoFeedData,
   initialBrandSlug,
+  initialOpenStoryId,
+  readerReturnHref,
   onboardingResult,
   onRiverReset,
   onBrandFilterChange,
@@ -5371,7 +5863,10 @@ function LifestyleRiverHomePage({
   activeFilter: string;
   destination: DestinationMode;
   destinationConfig?: DestinationConfig;
+  videoFeedData?: LiveFeedData;
   initialBrandSlug?: string;
+  initialOpenStoryId?: string;
+  readerReturnHref?: string;
   onboardingResult?: HearstOnboardingResult | null;
   onRiverReset?: () => void;
   onBrandFilterChange?: () => void;
@@ -5379,19 +5874,48 @@ function LifestyleRiverHomePage({
 }) {
   const config = destinationConfig ?? destinationConfigs[destination];
   const { account, updatePreferences, addComment } = useReaderAccount();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [profile, setProfile] = React.useState<LifestyleRiverProfile>(() => account?.preferences ?? config.initialProfile);
   const [demoState, setDemoState] = React.useState<LifestyleDemoState>(initialLifestyleDemoState);
   const initialBrandName = config.sourceNotes.find((note) => note.brandSlug === initialBrandSlug)?.brand;
   const [activeBrandFilters, setActiveBrandFilters] = React.useState<string[]>(initialBrandName ? [initialBrandName] : []);
-  const [openStoryId, setOpenStoryId] = React.useState<string | null>(null);
+  const [openStoryId, setOpenStoryId] = React.useState<string | null>(initialOpenStoryId ?? null);
   const [commentsByStoryId, setCommentsByStoryId] = React.useState<Record<string, LifestyleStoryComment[]>>({});
   const [demoModalOpen, setDemoModalOpen] = React.useState(false);
   const [visibleCount, setVisibleCount] = React.useState(8);
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
+  const previousActiveFilterRef = React.useRef<string | null>(null);
   const profileRef = React.useRef(profile);
   const appliedOnboardingResultRef = React.useRef<HearstOnboardingResult | null>(null);
   const resolvedCommentsByStoryId = account?.commentsByStoryId ?? commentsByStoryId;
   const readerAccountId = account?.id;
+  const safeReaderReturnHref = React.useMemo(() => normalizeReaderReturnHref(readerReturnHref), [readerReturnHref]);
+  const currentPageReturnHref = React.useMemo(() => {
+    if (!pathname || pathname.startsWith("/read/")) return null;
+
+    const query = searchParams?.toString();
+    return `${pathname}${query ? `?${query}` : ""}`;
+  }, [pathname, searchParams]);
+  const currentReaderReturnHref = safeReaderReturnHref ?? (initialBrandSlug ? getHearstBrandRoute(initialBrandSlug) : getHearstDestinationRoute(destination));
+  const storyOpenReturnHref = safeReaderReturnHref ?? currentPageReturnHref ?? currentReaderReturnHref;
+
+  React.useEffect(() => {
+    setOpenStoryId(initialOpenStoryId ?? null);
+  }, [initialOpenStoryId]);
+
+  const openStory = React.useCallback((storyId: string) => {
+    setOpenStoryId(storyId);
+    router.push(appendReaderReturnHref(storyId, storyOpenReturnHref), { scroll: false });
+  }, [router, storyOpenReturnHref]);
+
+  const closeStory = React.useCallback(() => {
+    setOpenStoryId(null);
+    if (pathname?.startsWith("/read/")) {
+      router.push(currentReaderReturnHref, { scroll: false });
+    }
+  }, [currentReaderReturnHref, pathname, router]);
 
   const updateReaderProfile = React.useCallback((updater: React.SetStateAction<LifestyleRiverProfile>) => {
     const current = profileRef.current;
@@ -5407,31 +5931,79 @@ function LifestyleRiverHomePage({
     setProfile(next);
   }, [account?.id, account?.preferences, config.initialProfile]);
 
-  const activeStoryPool = React.useMemo(() => getLifestyleDemoStoryPool(demoState, config), [config, demoState]);
+  const videoTabStories = React.useMemo(() => {
+    return (videoFeedData?.stories ?? []).filter((story) => getLifestyleCardKind(story) === "video");
+  }, [videoFeedData?.stories]);
+  const usingVideoTabFeed = activeFilter === "Videos" && Boolean(videoFeedData);
+  const activeVideoBrandFilters = React.useMemo(() => {
+    if (!usingVideoTabFeed || activeBrandFilters.length === 0) return activeBrandFilters;
+    const availableVideoBrands = new Set(videoTabStories.map((story) => story.brand));
+    return activeBrandFilters.filter((brandName) => availableVideoBrands.has(brandName));
+  }, [activeBrandFilters, usingVideoTabFeed, videoTabStories]);
+  const effectiveBrandFilters = usingVideoTabFeed ? activeVideoBrandFilters : activeBrandFilters;
+  const activeSourceNotes = usingVideoTabFeed
+    ? videoFeedData?.sourceNotes ?? config.sourceNotes
+    : config.sourceNotes;
+  const activeDataSourceCopy = usingVideoTabFeed
+    ? videoFeedData?.dataSourceCopy ?? config.dataSourceCopy
+    : config.dataSourceCopy;
+  const activeLiveFeedStatus = usingVideoTabFeed && videoFeedData
+    ? {
+        fetchedAt: videoFeedData.fetchedAt,
+        isFallback: videoFeedData.isFallback,
+      }
+    : config.liveFeedStatus;
+  const activeStoryPool = React.useMemo(
+    () => usingVideoTabFeed ? videoTabStories : getLifestyleDemoStoryPool(demoState, config),
+    [config, demoState, usingVideoTabFeed, videoTabStories]
+  );
+
+  React.useEffect(() => {
+    if (activeFilter === "Videos" && previousActiveFilterRef.current !== "Videos") {
+      setActiveBrandFilters([]);
+    }
+    previousActiveFilterRef.current = activeFilter;
+  }, [activeFilter]);
+  const rankingProfile = React.useMemo(
+    () => usingVideoTabFeed ? { ...profile, hiddenIds: [] } : profile,
+    [profile, usingVideoTabFeed]
+  );
   const rankedStories = React.useMemo(
-    () => rankLifestyleRiver(activeStoryPool, profile, demoState, config),
-    [activeStoryPool, config, demoState, profile]
+    () => rankLifestyleRiver(activeStoryPool, rankingProfile, demoState, config),
+    [activeStoryPool, config, demoState, rankingProfile]
   );
   const filteredStories = React.useMemo(() => {
-    const brandFilteredStories = activeBrandFilters.length > 0
-      ? rankedStories.filter((story) => activeBrandFilters.includes(story.brand))
+    const brandFilteredStories = effectiveBrandFilters.length > 0
+      ? rankedStories.filter((story) => effectiveBrandFilters.includes(story.brand))
       : rankedStories;
 
     if (activeFilter === "Saved") {
       return brandFilteredStories.filter((story) => profile.savedIds.includes(story.id));
     }
 
-    return brandFilteredStories.filter((story) => storyMatchesLifestyleFilter(story, activeFilter));
-  }, [activeBrandFilters, activeFilter, profile.savedIds, rankedStories]);
+    if (usingVideoTabFeed) {
+      return brandFilteredStories;
+    }
+
+    const contextStories = brandFilteredStories.filter((story) => storyMatchesLifestyleFilter(story, activeFilter));
+    return config.liveFeedMode === "blend"
+      ? applyContextualFeedCadence(contextStories)
+      : contextStories;
+  }, [activeFilter, config.liveFeedMode, effectiveBrandFilters, profile.savedIds, rankedStories, usingVideoTabFeed]);
   const availableReaderStories = React.useMemo(() => {
-    const sourceStoryIds = new Set(config.stories.map((story) => story.id));
+    const seenStoryIds = new Set<string>();
     return [
       ...config.stories,
-      ...destinationConfigs.all.stories.filter((story) => !sourceStoryIds.has(story.id)),
-    ];
-  }, [config.stories]);
+      ...destinationConfigs.all.stories,
+      ...videoTabStories,
+    ].filter((story) => {
+      if (seenStoryIds.has(story.id)) return false;
+      seenStoryIds.add(story.id);
+      return true;
+    });
+  }, [config.stories, videoTabStories]);
   const displayStories = React.useMemo(() => {
-    if (!config.liveFeedStatus) return filteredStories;
+    if (!config.liveFeedStatus || config.liveFeedMode === "blend") return filteredStories;
     const firstVideoIndex = filteredStories.findIndex((story) => Boolean(story.videoUrl));
     if (firstVideoIndex < 0 || firstVideoIndex < 8) return filteredStories;
 
@@ -5439,9 +6011,9 @@ function LifestyleRiverHomePage({
     const [firstVideo] = reorderedStories.splice(firstVideoIndex, 1);
     reorderedStories.splice(Math.min(5, reorderedStories.length), 0, firstVideo);
     return reorderedStories;
-  }, [config.liveFeedStatus, filteredStories]);
+  }, [config.liveFeedMode, config.liveFeedStatus, filteredStories]);
   const visibleStories = displayStories.slice(0, visibleCount);
-  const heroStories = getLeadSliderStories(visibleStories, 5);
+  const heroStories = getLeadSliderStories(visibleStories, 5, config.liveFeedMode === "blend");
   const leadStory = heroStories[0] ?? visibleStories[0];
   const heroStoryIds = new Set(heroStories.map((story) => story.id));
   const riverStories = visibleStories.filter((story) => !heroStoryIds.has(story.id));
@@ -5461,23 +6033,24 @@ function LifestyleRiverHomePage({
       return acc;
     }, {});
 
-    return config.sourceNotes.map((note) => ({
+    return activeSourceNotes.map((note) => ({
       name: note.brand,
       slug: note.brandSlug,
       count: counts[note.brand] ?? 0,
     }));
-  }, [activeStoryPool, config.sourceNotes]);
+  }, [activeSourceNotes, activeStoryPool]);
 
   React.useEffect(() => {
-    const selectedBrand = activeBrandFilters.length === 1
-      ? sidebarBrands.find((brand) => brand.name === activeBrandFilters[0]) ?? null
+    if (usingVideoTabFeed) return;
+    const selectedBrand = effectiveBrandFilters.length === 1
+      ? sidebarBrands.find((brand) => brand.name === effectiveBrandFilters[0]) ?? null
       : null;
     onSelectedBrandChange?.(selectedBrand ? { name: selectedBrand.name, slug: selectedBrand.slug } : null);
-  }, [activeBrandFilters, onSelectedBrandChange, sidebarBrands]);
+  }, [effectiveBrandFilters, onSelectedBrandChange, sidebarBrands, usingVideoTabFeed]);
 
   React.useEffect(() => {
     setVisibleCount(8);
-  }, [activeBrandFilters, activeFilter, demoState.contentDay, demoState.daypart]);
+  }, [activeFilter, demoState.contentDay, demoState.daypart, effectiveBrandFilters]);
 
   React.useEffect(() => {
     if (!onboardingResult || appliedOnboardingResultRef.current === onboardingResult) return;
@@ -5736,12 +6309,241 @@ function LifestyleRiverHomePage({
     });
   };
 
+  const isVideoIndexPage = config.productName.includes("Video Feed");
+  const isVideoQueueView = isVideoIndexPage || usingVideoTabFeed;
+  const useVideoDarkMode = isVideoIndexPage || usingVideoTabFeed;
+  const videoQueueStories = usingVideoTabFeed ? filteredStories : visibleStories;
+  const videoStories = isVideoQueueView
+    ? videoQueueStories.filter((story) => getLifestyleCardKind(story) === "video")
+    : [];
+  const featuredVideo = videoStories[0] ?? leadStory;
+  const remainingVideoStories = featuredVideo
+    ? videoStories.filter((story) => story.id !== featuredVideo.id)
+    : videoStories;
+  // Scoped exception: the Videos tab uses the dark video-index treatment inside otherwise light destinations.
+  // Keep these tokens local to this wrapper so the exception does not affect the global Hearst+ theme.
+  const videoDarkModeThemeClasses =
+    "hearst-plus-theme bg-[var(--hp-background)] text-[var(--hp-text-primary)] [--background:#000000] [--foreground:#f8fbff] [--card:#181b20] [--card-foreground:#f4f7fb] [--popover:#181b20] [--popover-foreground:#f4f7fb] [--muted:#20242b] [--muted-foreground:#aab5c3] [--secondary:#20242b] [--secondary-foreground:#f4f7fb] [--accent:#232a33] [--accent-foreground:#dbe3ed] [--border:rgba(255,255,255,0.12)] [--input:rgba(255,255,255,0.16)] [--primary:#BDDDFC] [--primary-foreground:#0d1014] [--ring:#BDDDFC] [--hp-background:#000000] [--hp-surface-deep:#05070a] [--hp-surface-low:#181b20] [--hp-surface:#181b20] [--hp-control:#20242b] [--hp-control-hover:#2a3038] [--hp-chip:rgba(255,255,255,0.07)] [--hp-chip-border:rgba(255,255,255,0.08)] [--hp-border:rgba(255,255,255,0.12)] [--hp-border-strong:rgba(255,255,255,0.22)] [--hp-text-headline:#f8fbff] [--hp-text-primary:#f4f7fb] [--hp-text-ui:#dbe3ed] [--hp-text-chip:#cad5e2] [--hp-text-secondary:#aab5c3] [--hp-text-muted:#95a0ad] [--hp-sidebar-heading:#BDDDFC] [--hp-primary:#BDDDFC] [--hp-primary-soft:#253746] [--hp-friendly-accent:#253746] [--hp-friendly-accent-border:#BDDDFC] [--hp-friendly-accent-text:#BDDDFC] [--hp-focus:#BDDDFC] [--hp-signal:#BDDDFC] [--hp-action:#BDDDFC] [--hp-action-text:#0d1014] [--hp-shadow-card:0_2px_6px_rgba(0,0,0,0.18)] [--color-accent-foreground:var(--accent-foreground)] [--color-accent:var(--accent)] [--color-background:var(--background)] [--color-border:var(--border)] [--color-card-foreground:var(--card-foreground)] [--color-card:var(--card)] [--color-foreground:var(--foreground)] [--color-muted-foreground:var(--muted-foreground)] [--color-muted:var(--muted)] [--color-primary-foreground:var(--primary-foreground)] [--color-primary:var(--primary)] [--color-secondary-foreground:var(--secondary-foreground)] [--color-secondary:var(--secondary)]";
+
+  if (isVideoQueueView) {
+    return (
+      <div
+        className={cn(
+          "space-y-6",
+          useVideoDarkMode && videoDarkModeThemeClasses,
+          usingVideoTabFeed &&
+            "relative isolate bg-black py-4 before:absolute before:inset-y-0 before:left-1/2 before:-z-10 before:w-screen before:-translate-x-1/2 before:bg-black"
+        )}
+        data-mode={useVideoDarkMode ? "dark" : undefined}
+      >
+        <div
+          className={cn(
+            "grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]",
+            usingVideoTabFeed ? "mt-3 sm:mt-4" : "mt-6 sm:mt-8"
+          )}
+        >
+          <LifestyleLeftSidebar
+            profile={profile}
+            topStories={filteredStories}
+            topics={sidebarTopics}
+            brands={sidebarBrands}
+            brandFilterTitle={usingVideoTabFeed ? "Videos by brand" : undefined}
+            activeBrandFilters={effectiveBrandFilters}
+            collectionLabels={config.collectionLabels}
+            onToggleBrandFilter={toggleBrandFilter}
+            onClearBrandFilters={clearBrandFilters}
+            onFollowTopic={followTopic}
+          />
+
+          <main className={cn("min-w-0 space-y-4", usingVideoTabFeed && "lg:pt-2")} aria-label="Autos video index">
+            {featuredVideo ? (
+              <>
+                <VideoFeedLeadCard
+                  story={featuredVideo}
+                  saved={profile.savedIds.includes(featuredVideo.id)}
+                  commentCount={getLifestyleCommentCount(featuredVideo, resolvedCommentsByStoryId[featuredVideo.id]?.length ?? 0)}
+                  onOpen={() => openStory(featuredVideo.id)}
+                  onSave={() => toggleSaved(featuredVideo)}
+                  variant="videoIndex"
+                  eyebrowLabel={usingVideoTabFeed ? "Recommended video" : undefined}
+                />
+
+                <div className="flex items-center justify-between gap-3 pt-2">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">Recommended videos</p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      {filteredStories.length} videos across {activeSourceNotes.map((note) => note.brand).join(" and ")}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid gap-4">
+                  {remainingVideoStories.map((story) => (
+                    <VideoIndexCard
+                      key={story.id}
+                      story={story}
+                      saved={profile.savedIds.includes(story.id)}
+                      commentCount={getLifestyleCommentCount(story, resolvedCommentsByStoryId[story.id]?.length ?? 0)}
+                      onOpen={() => openStory(story.id)}
+                      onSave={() => toggleSaved(story)}
+                      onHide={() => hideStory(story.id)}
+                      variant="videoIndex"
+                    />
+                  ))}
+                </div>
+
+                <div ref={sentinelRef} className="flex justify-center py-6">
+                  {visibleCount < filteredStories.length ? (
+                    <Button
+                      variant="outline"
+                      onClick={() => setVisibleCount((count) => Math.min(count + 4, filteredStories.length))}
+                    >
+                      Load more videos
+                    </Button>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      You&rsquo;re caught up on this video feed.
+                    </p>
+                  )}
+                </div>
+              </>
+            ) : (
+              <div className="rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-8 text-center shadow-[var(--hp-shadow-card)]">
+                <p className="text-2xl font-black">No videos in {activeFilter} yet.</p>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Clear a brand filter or switch back to For You to keep watching.
+                </p>
+              </div>
+            )}
+          </main>
+
+          <aside className="min-w-0 space-y-5 lg:sticky lg:top-[112px] lg:max-h-[calc(100dvh-136px)] lg:self-start lg:overflow-y-auto lg:pr-1">
+            <div className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
+              <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+                Up next
+              </p>
+              <div className="mt-4 space-y-4">
+                {videoStories.slice(1, 5).map((story) => (
+                  <VideoRailCard
+                    key={story.id}
+                    story={story}
+                    onOpen={() => openStory(story.id)}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-4 shadow-[var(--hp-shadow-card)]">
+              <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+                Video source
+              </p>
+              <p className="mt-3 text-sm font-bold">
+                {activeStoryPool.length} playable videos
+              </p>
+              <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                Pulled from {activeDataSourceCopy}
+              </p>
+            </div>
+
+            <div className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
+              <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+                Why this queue
+              </p>
+              <div className="mt-4 space-y-4 text-sm">
+                {activeLiveFeedStatus ? (
+                  <div role="status">
+                    <p className="inline-flex items-center gap-2 font-bold">
+                      <span
+                        className={cn(
+                          "h-1.5 w-1.5 rounded-full",
+                          activeLiveFeedStatus.isFallback ? "bg-amber-500" : "bg-emerald-500"
+                        )}
+                        aria-hidden="true"
+                      />
+                      {activeLiveFeedStatus.isFallback ? "Cached videos" : "Current videos"}
+                    </p>
+                    <p className="mt-1 text-muted-foreground">
+                      Updated {formatLiveFeedUpdatedAt(activeLiveFeedStatus.fetchedAt)}
+                    </p>
+                  </div>
+                ) : null}
+                <div>
+                  <p className="font-bold">Active filter</p>
+                  <p className="mt-1 text-muted-foreground">{activeFilter}</p>
+                </div>
+                <div>
+                  <p className="font-bold">Brands</p>
+                  <p className="mt-1 text-muted-foreground">
+                    {effectiveBrandFilters.length > 0 ? effectiveBrandFilters.join(", ") : activeSourceNotes.map((note) => note.brand).join(", ")}
+                  </p>
+                </div>
+                <div>
+                  <p className="font-bold">Saved signals</p>
+                  <p className="mt-1 text-muted-foreground">{profile.savedTags.slice(0, 6).join(", ")}</p>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <LifestyleStoryReaderModal
+          stories={filteredStories}
+          availableStories={availableReaderStories}
+          openStoryId={openStoryId}
+          savedIds={profile.savedIds}
+          followedBrands={profile.followedBrands}
+          commentsByStoryId={resolvedCommentsByStoryId}
+          onClose={closeStory}
+          onOpenStory={openStory}
+          onSave={toggleSaved}
+          onMoreLikeThis={boostStory}
+          onToggleFollowBrand={toggleFollowBrand}
+          onAddComment={addStoryComment}
+        />
+
+        <Button
+          type="button"
+          variant="default"
+          size="icon"
+          onClick={() => setDemoModalOpen(true)}
+          className="fixed bottom-5 right-5 z-40 h-12 w-12 rounded-full shadow-lg"
+          aria-label="Open personalization demo controls"
+        >
+          <SlidersHorizontal className="h-5 w-5" aria-hidden />
+        </Button>
+
+        <LifestylePersonalizationDemoModal
+          open={demoModalOpen}
+          onClose={() => setDemoModalOpen(false)}
+          demoState={demoState}
+          profile={profile}
+          topStory={featuredVideo}
+          config={config}
+          activeFilter={activeFilter}
+          stories={visibleStories}
+          onDaypartChange={(daypart) =>
+            setDemoState((current) => ({
+              ...current,
+              daypart,
+              returnHours: demoDaypartReturnHours[daypart],
+              contentDay: "today",
+              previousLeadId: featuredVideo?.id ?? current.previousLeadId,
+            }))
+          }
+          onSimulateReturn={simulateReturn}
+          onApplyBehaviorPreset={applyBehaviorPreset}
+          onResetDemo={resetDemo}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
       <TodayEditDashboard
         stories={filteredStories}
         profile={profile}
-        onOpenStory={setOpenStoryId}
+        onOpenStory={openStory}
         onShowFollowedBrands={showFollowedBrands}
       />
 
@@ -5751,7 +6553,7 @@ function LifestyleRiverHomePage({
           topStories={filteredStories}
           topics={sidebarTopics}
           brands={sidebarBrands}
-          activeBrandFilters={activeBrandFilters}
+          activeBrandFilters={effectiveBrandFilters}
           collectionLabels={config.collectionLabels}
           onToggleBrandFilter={toggleBrandFilter}
           onClearBrandFilters={clearBrandFilters}
@@ -5765,7 +6567,7 @@ function LifestyleRiverHomePage({
                 stories={heroStories}
                 savedIds={profile.savedIds}
                 commentsByStoryId={resolvedCommentsByStoryId}
-                onOpenStory={(story) => setOpenStoryId(story.id)}
+                onOpenStory={(story) => openStory(story.id)}
                 onSave={toggleSaved}
                 onMoreLikeThis={boostStory}
                 onFollowBrand={followBrand}
@@ -5799,15 +6601,27 @@ function LifestyleRiverHomePage({
 
                 return (
                   <React.Fragment key={story.id}>
-                    <LifestyleRiverCard
-                      story={story}
-                      saved={profile.savedIds.includes(story.id)}
-                      commentCount={getLifestyleCommentCount(story, resolvedCommentsByStoryId[story.id]?.length ?? 0)}
-                      onOpen={() => setOpenStoryId(story.id)}
-                      onSave={() => toggleSaved(story)}
-                      onMoreLikeThis={() => boostStory(story)}
-                      onHide={() => hideStory(story.id)}
-                    />
+                    {getLifestyleCardKind(story) === "video" ? (
+                      <VideoIndexCard
+                        story={story}
+                        saved={profile.savedIds.includes(story.id)}
+                        commentCount={getLifestyleCommentCount(story, resolvedCommentsByStoryId[story.id]?.length ?? 0)}
+                        onOpen={() => openStory(story.id)}
+                        onSave={() => toggleSaved(story)}
+                        onHide={() => hideStory(story.id)}
+                        variant="hearstPlus"
+                      />
+                    ) : (
+                      <LifestyleRiverCard
+                        story={story}
+                        saved={profile.savedIds.includes(story.id)}
+                        commentCount={getLifestyleCommentCount(story, resolvedCommentsByStoryId[story.id]?.length ?? 0)}
+                        onOpen={() => openStory(story.id)}
+                        onSave={() => toggleSaved(story)}
+                        onMoreLikeThis={() => boostStory(story)}
+                        onHide={() => hideStory(story.id)}
+                      />
+                    )}
                     {adMatch ? (
                       <ContextualRiverAdCard
                         ad={adMatch.ad}
@@ -5818,7 +6632,7 @@ function LifestyleRiverHomePage({
                     {brandPromotion ? (
                       <BrandPromotionRiverModule
                         promotion={brandPromotion}
-                        onOpenStory={setOpenStoryId}
+                        onOpenStory={openStory}
                       />
                     ) : null}
                   </React.Fragment>
@@ -5931,7 +6745,7 @@ function LifestyleRiverHomePage({
               <div>
                 <p className="font-bold">Active brand filters</p>
                 <p className="mt-1 text-muted-foreground">
-                  {activeBrandFilters.length > 0 ? activeBrandFilters.join(", ") : "All brands"}
+                  {effectiveBrandFilters.length > 0 ? effectiveBrandFilters.join(", ") : "All brands"}
                 </p>
               </div>
               <div>
@@ -5946,12 +6760,12 @@ function LifestyleRiverHomePage({
       <LifestyleStoryReaderModal
         stories={filteredStories}
         availableStories={availableReaderStories}
-        openStoryId={openStoryId}
+          openStoryId={openStoryId}
         savedIds={profile.savedIds}
         followedBrands={profile.followedBrands}
         commentsByStoryId={resolvedCommentsByStoryId}
-        onClose={() => setOpenStoryId(null)}
-        onOpenStory={setOpenStoryId}
+        onClose={closeStory}
+        onOpenStory={openStory}
         onSave={toggleSaved}
         onMoreLikeThis={boostStory}
         onToggleFollowBrand={toggleFollowBrand}
@@ -6129,11 +6943,17 @@ export function HomePageTemplate({
   showGridOverlay = false,
   initialBrandSlug,
   liveFeedData,
+  liveFeedMode = "replace",
+  videoFeedData,
+  initialFilter,
+  initialOpenStoryId,
+  readerReturnHref,
+  navLinksOverride,
 }: HomePageTemplateProps = {}) {
   const { brand, colorMode } = useTheme();
   const { account } = useReaderAccount();
   const router = useRouter();
-  const [activeLifestyleFilter, setActiveLifestyleFilter] = React.useState("For You");
+  const [activeLifestyleFilter, setActiveLifestyleFilter] = React.useState(initialFilter ?? "For You");
   const [onboardingOpen, setOnboardingOpen] = React.useState(false);
   const [onboardingResult, setOnboardingResult] = React.useState<HearstOnboardingResult | null>(null);
   const [authOpen, setAuthOpen] = React.useState(false);
@@ -6143,6 +6963,9 @@ export function HomePageTemplate({
   const [selectedBrand, setSelectedBrand] = React.useState<{ name: string; slug: string } | null>(() =>
     getBrandRouteInfo(initialBrandSlug)
   );
+  React.useEffect(() => {
+    if (initialFilter) setActiveLifestyleFilter(initialFilter);
+  }, [initialFilter]);
   const selectedBrandTheme = React.useMemo(
     () => getSelectedBrandTheme(selectedBrand, brand),
     [brand, selectedBrand]
@@ -6167,12 +6990,35 @@ export function HomePageTemplate({
   const isDestinationRiver = brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
   const destinationMode = getDestinationMode(selectedBrand?.slug ?? initialBrandSlug ?? brand.slug);
   const baseDestinationConfig = destinationConfigs[destinationMode];
+  const hasScopedVideoFeed = React.useMemo(
+    () => Boolean(videoFeedData?.stories.some((story) => getLifestyleCardKind(story) === "video")),
+    [videoFeedData?.stories]
+  );
   const destinationConfig = React.useMemo<DestinationConfig>(() => {
     if (!liveFeedData || liveFeedData.stories.length === 0) {
       return baseDestinationConfig;
     }
 
-    const featuredFashionStory = destinationMode === "all"
+    if (liveFeedMode === "blend") {
+      const blendedStories = mergeUniqueStories(
+        baseDestinationConfig.stories,
+        liveFeedData.stories,
+        videoFeedData?.stories ?? []
+      );
+
+      return {
+        ...baseDestinationConfig,
+        stories: blendedStories,
+        dataSourceCopy: `${baseDestinationConfig.dataSourceCopy.replace(/\.$/, "")}, blended contextually with current Personalize article and playable video recommendations.`,
+        liveFeedStatus: {
+          fetchedAt: liveFeedData.fetchedAt,
+          isFallback: liveFeedData.isFallback && (videoFeedData?.isFallback ?? true),
+        },
+        liveFeedMode,
+      };
+    }
+
+    const featuredFashionStory = destinationMode === "all" && !liveFeedData.productName?.includes("Video Feed")
       ? fluxRiverStories.find(
           (story) => story.title === "The Best Dressed Celebrities at Paris Couture Week"
         )
@@ -6207,7 +7053,7 @@ export function HomePageTemplate({
 
     return {
       ...baseDestinationConfig,
-      productName: destinationMode === "lifestyle" ? "Lifestyle Live" : baseDestinationConfig.productName,
+      productName: liveFeedData.productName ?? (destinationMode === "lifestyle" ? "Lifestyle Live" : baseDestinationConfig.productName),
       stories: liveStories,
       sourceNotes: liveSourceNotes,
       brandSummary: liveSourceNotes.map((note) => note.brand).join(", "),
@@ -6219,8 +7065,9 @@ export function HomePageTemplate({
         fetchedAt: liveFeedData.fetchedAt,
         isFallback: liveFeedData.isFallback,
       },
+      liveFeedMode,
     };
-  }, [baseDestinationConfig, destinationMode, liveFeedData]);
+  }, [baseDestinationConfig, destinationMode, liveFeedData, liveFeedMode, videoFeedData]);
   const profileTopics = React.useMemo(
     () => Array.from(new Set(destinationConfig.stories.map((story) => story.topic))).sort(),
     [destinationConfig.stories]
@@ -6245,6 +7092,8 @@ export function HomePageTemplate({
     anchorDestinationContent();
   }, [anchorDestinationContent]);
   const handleSelectedBrandChange = React.useCallback((nextBrand: { name: string; slug: string } | null) => {
+    if ((selectedBrand?.slug ?? null) === (nextBrand?.slug ?? null)) return;
+
     setActiveLifestyleFilter("For You");
     setSelectedBrand(nextBrand);
 
@@ -6261,7 +7110,7 @@ export function HomePageTemplate({
     ) {
       router.push(getHearstDestinationRoute("all"), { scroll: false });
     }
-  }, [router]);
+  }, [router, selectedBrand?.slug]);
 
   return (
     <div
@@ -6283,6 +7132,8 @@ export function HomePageTemplate({
         activeFilter={activeLifestyleFilter}
         onFilterChange={handleLifestyleFilterChange}
         selectedBrand={selectedBrand}
+        navLinksOverride={navLinksOverride}
+        includeVideos={hasScopedVideoFeed}
       />
 
       {/* Page Body — constrained by the shared PageContainer */}
@@ -6297,7 +7148,10 @@ export function HomePageTemplate({
               activeFilter={activeLifestyleFilter}
               destination={destinationMode}
               destinationConfig={destinationConfig}
+              videoFeedData={videoFeedData}
               initialBrandSlug={initialBrandSlug}
+              initialOpenStoryId={initialOpenStoryId}
+              readerReturnHref={readerReturnHref}
               onboardingResult={onboardingResult}
               onRiverReset={anchorDestinationContent}
               onBrandFilterChange={anchorPageToTop}
@@ -6365,7 +7219,7 @@ export function HomePageTemplate({
       ) : null}
 
       {/* Footer — full width */}
-      <Footer />
+      <Footer flushTop={isDestinationRiver && activeLifestyleFilter === "Videos"} />
     </div>
   );
 }

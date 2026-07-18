@@ -14,6 +14,7 @@ export type LiveFeedData = {
   dataSourceCopy: string;
   fetchedAt: string;
   isFallback: boolean;
+  productName?: string;
 };
 
 export type LiveArticleBlock =
