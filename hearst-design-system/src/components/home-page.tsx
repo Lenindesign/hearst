@@ -2704,7 +2704,7 @@ function BrandPromotionRiverModule({
             <span className="headline mt-2 block text-2xl leading-tight text-foreground">
               {featuredStory.title}
             </span>
-            <span className="mt-2 line-clamp-3 block text-sm leading-6 text-muted-foreground">
+            <span className="mt-2 line-clamp-3 [display:-webkit-box] text-sm leading-6 text-muted-foreground">
               {featuredStory.summary}
             </span>
           </button>
@@ -3599,7 +3599,7 @@ function VideoRailCard({
       </span>
       <span className="min-w-0">
         <span className="block text-xs font-semibold text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">{story.brand}</span>
-        <span className="mt-1 line-clamp-3 block text-sm font-bold leading-snug text-foreground">{story.title}</span>
+        <span className="mt-1 line-clamp-3 [display:-webkit-box] text-sm font-bold leading-snug text-foreground">{story.title}</span>
       </span>
     </button>
   );
@@ -4654,7 +4654,7 @@ function LifestyleArticleRecommendationsModule({
           <span className="mt-2 block font-brand-secondary text-2xl font-bold leading-tight text-foreground group-hover:text-primary">
             {featuredStory.title}
           </span>
-          <span className="mt-2 line-clamp-3 block text-sm leading-6 text-muted-foreground">
+          <span className="mt-2 line-clamp-3 [display:-webkit-box] text-sm leading-6 text-muted-foreground">
             {featuredStory.summary}
           </span>
         </button>
