@@ -3278,6 +3278,7 @@ function BrandPromotionRiverModule({
 function getLifestyleCardKind(story: LifestyleRiverStory): LifestyleCardKind {
   const searchable = `${story.topic} ${story.title}`.toLowerCase();
 
+  if (isExplicitGalleryStory(story)) return "gallery";
   if (storyHasPlayableVideo(story)) return "video";
   if (story.topic.startsWith("Food")) return "recipe";
   if (isYearMakeModelStory(story)) return "recipe";
@@ -3286,6 +3287,18 @@ function getLifestyleCardKind(story: LifestyleRiverStory): LifestyleCardKind {
   if (/photos|gallery|style|jeans|rooms|decorating|porch|garden|designers|living room|classic|collector|auction/.test(searchable) || story.age % 5 === 0) return "gallery";
 
   return "article";
+}
+
+function isExplicitGalleryStory(story: LifestyleRiverStory) {
+  const searchable = [
+    story.id,
+    story.topic,
+    story.title,
+    story.sourceUrl ?? "",
+    ...story.tags,
+  ].join(" ").toLowerCase();
+
+  return /\b(?:photos?|photo-gallery|gallery|galleries)\b|\/photos\//.test(searchable);
 }
 
 function storyHasPlayableVideo(story: LifestyleRiverStory) {
