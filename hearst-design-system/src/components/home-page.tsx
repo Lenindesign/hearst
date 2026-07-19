@@ -939,6 +939,16 @@ function rankLifestyleRiver(
   return ranked;
 }
 
+function getDelishShortsRiverInsertIndex({
+  riverStories,
+}: {
+  riverStories: LifestyleRiverStory[];
+}) {
+  const leadingDelishStoryIndex = riverStories.findIndex((story) => story.brandSlug === "delish");
+
+  return leadingDelishStoryIndex === -1 ? -1 : leadingDelishStoryIndex + 1;
+}
+
 function getStoryIdentity(story: LifestyleRiverStory) {
   const sourceUrl = story.sourceUrl?.trim().toLowerCase();
   if (sourceUrl) return `url:${sourceUrl}`;
@@ -4377,6 +4387,7 @@ function DelishShortsImmersiveModal({
   savedIds,
   onClose,
   onSelectStory,
+  onOpenStory,
   onSave,
 }: {
   stories: LifestyleRiverStory[];
@@ -4384,6 +4395,7 @@ function DelishShortsImmersiveModal({
   savedIds: string[];
   onClose: () => void;
   onSelectStory: (storyId: string) => void;
+  onOpenStory: (storyId: string) => void;
   onSave: (story: LifestyleRiverStory) => void;
 }) {
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
@@ -4688,6 +4700,16 @@ function DelishShortsImmersiveModal({
                   >
                     {story.title}
                   </h2>
+                  <button
+                    type="button"
+                    onClick={() => onOpenStory(story.id)}
+                    tabIndex={isOutgoing ? 0 : -1}
+                    className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-[6px] text-sm font-bold text-white underline decoration-white/45 underline-offset-4 transition-colors hover:decoration-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white motion-reduce:transition-none sm:min-h-0"
+                    aria-label={`Read the full story: ${story.title}`}
+                  >
+                    <BookOpenText className="h-4 w-4" aria-hidden />
+                    Read the full story
+                  </button>
                 </div>
               </div>
             );
@@ -7928,6 +7950,85 @@ function LifestylePersonalizationRulesGuide() {
   );
 }
 
+function LifestyleTechnologyGuide() {
+  const stack = [
+    {
+      label: "Application",
+      title: "Next.js 16 + React 19",
+      body: "The experience uses the Next.js App Router for pages, server-rendered entry points, route handlers, image optimization, and React-powered interaction.",
+    },
+    {
+      label: "Language",
+      title: "TypeScript 5",
+      body: "Typed story, video, profile, and personalization models keep data contracts explicit across server and browser code.",
+    },
+    {
+      label: "Interface",
+      title: "Tailwind CSS 4 + HDS tokens",
+      body: "Tailwind handles responsive composition while Hearst Design System semantic tokens control shared surfaces, typography, color, spacing, and brand themes.",
+    },
+    {
+      label: "Components",
+      title: "shadcn conventions + Base UI",
+      body: "Reusable controls follow shadcn/ui composition conventions and use accessible Base UI primitives, with Phosphor supplying the icon set.",
+    },
+    {
+      label: "Content",
+      title: "Hearst feeds + Personalize",
+      body: "Server routes combine public Hearst RSS story metadata with playable Personalize video recommendations, then the product applies eligibility and ranking rules.",
+    },
+    {
+      label: "Delivery",
+      title: "Netlify Next.js runtime",
+      body: "Production builds and Next.js server functions are deployed through Netlify's official Next.js integration, with optimized static assets served through its CDN.",
+    },
+  ];
+
+  return (
+    <section
+      className="mt-4 overflow-hidden rounded-[8px] border border-border bg-white text-[#121212] [--foreground:#121212] [--muted-foreground:#5f6b7a]"
+      aria-labelledby="technology-guide-title"
+    >
+      <div className="border-b border-border p-4 sm:p-5">
+        <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+          Technology
+        </p>
+        <h2 id="technology-guide-title" className="headline mt-1 text-2xl leading-tight">
+          A modern web stack built on the Hearst Design System.
+        </h2>
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+          This is a working reader prototype, not a static mock. The interface, ranking behaviors,
+          responsive layouts, video playback, and route transitions run in the browser against live or
+          cached content feeds.
+        </p>
+      </div>
+
+      <dl className="grid md:grid-cols-2 xl:grid-cols-3">
+        {stack.map((item) => (
+          <div
+            key={item.label}
+            className="border-b border-border p-4 last:border-b-0 md:[&:nth-child(odd)]:border-r xl:[&:nth-child(odd)]:border-r-0 xl:[&:not(:nth-child(3n))]:border-r xl:[&:nth-last-child(-n+3)]:border-b-0"
+          >
+            <dt className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+              {item.label}
+            </dt>
+            <dd>
+              <h3 className="mt-2 text-sm font-bold leading-5">{item.title}</h3>
+              <p className="mt-1 text-xs leading-5 text-muted-foreground">{item.body}</p>
+            </dd>
+          </div>
+        ))}
+      </dl>
+
+      <div className="border-t border-border bg-[#f5f7fa] px-4 py-3 text-xs leading-5 text-[#445064] sm:px-5">
+        <span className="font-bold text-[#121212]">Executive note:</span>{" "}
+        reader preferences and comments in this prototype are browser-local demo state; production
+        identity, publishing, analytics, and consent systems are not represented as completed integrations.
+      </div>
+    </section>
+  );
+}
+
 function LifestylePersonalizationDemoModal({
   open,
   onClose,
@@ -8013,6 +8114,7 @@ function LifestylePersonalizationDemoModal({
             onResetDemo={onResetDemo}
           />
           <LifestylePersonalizationRulesGuide />
+          <LifestyleTechnologyGuide />
           <LifestyleCardModelGuide />
           <ContextualAdLogicGuide
             profile={profile}
@@ -8970,6 +9072,10 @@ function LifestyleRiverHomePage({
   const [commentsByStoryId, setCommentsByStoryId] = React.useState<Record<string, LifestyleStoryComment[]>>({});
   const [demoModalOpen, setDemoModalOpen] = React.useState(false);
   const [visibleCount, setVisibleCount] = React.useState(8);
+  const [delishShortsRiverPlacement, setDelishShortsRiverPlacement] = React.useState<{
+    scopeKey: string;
+    index: number;
+  } | null>(null);
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
   const previousActiveFilterRef = React.useRef<string | null>(null);
   const profileRef = React.useRef(profile);
@@ -9040,6 +9146,11 @@ function LifestyleRiverHomePage({
     setOpenDelishShortId(null);
     window.requestAnimationFrame(() => delishShortOpenerRef.current?.focus());
   }, []);
+
+  const openStoryFromDelishShort = React.useCallback((storyId: string) => {
+    setOpenDelishShortId(null);
+    openStory(storyId);
+  }, [openStory]);
 
   const updateReaderProfile = React.useCallback((updater: React.SetStateAction<LifestyleRiverProfile>) => {
     const current = profileRef.current;
@@ -9139,6 +9250,24 @@ function LifestyleRiverHomePage({
     return reorderedStories;
   }, [config.liveFeedMode, config.liveFeedStatus, filteredStories]);
   const visibleStories = displayStories.slice(0, visibleCount);
+  const isDelishPublicationRiver = initialBrandSlug === "delish" && !usingVideoTabFeed;
+  const delishVerticalVideoStories = videoTabStories.filter((story) =>
+    story.brandSlug === "delish"
+    && Boolean(story.videoUrl)
+    && Boolean(story.videoWidth)
+    && Boolean(story.videoHeight)
+    && (story.videoHeight ?? 0) > (story.videoWidth ?? 0)
+  );
+  const delishVerticalVideoIds = new Set(delishVerticalVideoStories.map((story) => story.id));
+  const showDelishVerticalVideoCarousel = usingVideoTabFeed
+    && (effectiveBrandFilters.length === 0 || effectiveBrandFilters.includes("Delish"));
+  const showDelishPublicationShorts = isDelishPublicationRiver && delishVerticalVideoStories.length > 0;
+  const showDelishShortsInHearstPlusRiver = destination === "all"
+    && !initialBrandSlug
+    && !usingVideoTabFeed
+    && activeFilter === "For You"
+    && delishVerticalVideoStories.length > 0
+    && (effectiveBrandFilters.length === 0 || effectiveBrandFilters.includes("Delish"));
   const heroStories = getPersonalizedLeadSliderStories(
     visibleStories,
     rankingProfile,
@@ -9149,13 +9278,63 @@ function LifestyleRiverHomePage({
   );
   const leadStory = heroStories[0] ?? visibleStories[0];
   const heroStoryIds = new Set(heroStories.map((story) => story.id));
-  const baseRiverStories = visibleStories.filter((story) => !heroStoryIds.has(story.id));
+  const completeBaseRiverStories = displayStories.filter((story) =>
+    !heroStoryIds.has(story.id)
+    && (!showDelishShortsInHearstPlusRiver || !delishVerticalVideoIds.has(story.id))
+  );
+  const completeRiverStories = ensureGallerySampleInRiver(
+    completeBaseRiverStories,
+    displayStories,
+    heroStoryIds,
+    !usingVideoTabFeed && activeFilter !== "Saved"
+  );
+  const baseRiverStories = visibleStories.filter((story) =>
+    !heroStoryIds.has(story.id)
+    && (!showDelishShortsInHearstPlusRiver || !delishVerticalVideoIds.has(story.id))
+  );
   const riverStories = ensureGallerySampleInRiver(
     baseRiverStories,
     displayStories,
     heroStoryIds,
     !usingVideoTabFeed && activeFilter !== "Saved"
   );
+  const candidateDelishShortsRiverInsertIndex = showDelishShortsInHearstPlusRiver
+    ? getDelishShortsRiverInsertIndex({
+        riverStories: completeRiverStories,
+      })
+    : -1;
+  const delishShortsRiverScopeKey = [
+    destination,
+    initialBrandSlug ?? "all-brands",
+    activeFilter,
+    effectiveBrandFilters.join(","),
+    demoState.contentDay,
+    demoState.daypart,
+    demoState.returnHours,
+  ].join(":");
+  const delishShortsRiverInsertIndex = delishShortsRiverPlacement?.scopeKey === delishShortsRiverScopeKey
+    ? delishShortsRiverPlacement.index
+    : -1;
+
+  React.useEffect(() => {
+    if (!showDelishShortsInHearstPlusRiver || candidateDelishShortsRiverInsertIndex < 0) {
+      setDelishShortsRiverPlacement(null);
+      return;
+    }
+
+    setDelishShortsRiverPlacement((currentPlacement) =>
+      currentPlacement?.scopeKey === delishShortsRiverScopeKey
+        ? currentPlacement
+        : {
+            scopeKey: delishShortsRiverScopeKey,
+            index: candidateDelishShortsRiverInsertIndex,
+          }
+    );
+  }, [
+    candidateDelishShortsRiverInsertIndex,
+    delishShortsRiverScopeKey,
+    showDelishShortsInHearstPlusRiver,
+  ]);
   const sidebarTopics = React.useMemo(() => {
     const counts = activeStoryPool.reduce<Record<string, number>>((acc, story) => {
       acc[story.topic] = (acc[story.topic] ?? 0) + 1;
@@ -9455,25 +9634,11 @@ function LifestyleRiverHomePage({
   const videoStories = isVideoQueueView
     ? videoQueueStories.filter((story) => getLifestyleCardKind(story) === "video")
     : [];
-  const isDelishPublicationRiver = initialBrandSlug === "delish" && !usingVideoTabFeed;
-  const delishVerticalVideoStories = usingVideoTabFeed || isDelishPublicationRiver
-    ? videoTabStories.filter((story) =>
-        story.brandSlug === "delish"
-        && Boolean(story.videoUrl)
-        && Boolean(story.videoWidth)
-        && Boolean(story.videoHeight)
-        && (story.videoHeight ?? 0) > (story.videoWidth ?? 0)
-      )
-    : [];
-  const delishVerticalVideoIds = new Set(delishVerticalVideoStories.map((story) => story.id));
   const standardVideoStories = videoStories.filter((story) => !delishVerticalVideoIds.has(story.id));
   const featuredVideo = standardVideoStories[0] ?? videoStories[0] ?? leadStory;
   const remainingVideoStories = featuredVideo
     ? standardVideoStories.filter((story) => story.id !== featuredVideo.id)
     : standardVideoStories;
-  const showDelishVerticalVideoCarousel = usingVideoTabFeed
-    && (effectiveBrandFilters.length === 0 || effectiveBrandFilters.includes("Delish"));
-  const showDelishPublicationShorts = isDelishPublicationRiver && delishVerticalVideoStories.length > 0;
   // Scoped exception: the Videos tab uses the dark video-index treatment inside otherwise light destinations.
   // Keep these tokens local to this wrapper so the exception does not affect the global Hearst+ theme.
   const videoDarkModeThemeClasses =
@@ -9494,14 +9659,14 @@ function LifestyleRiverHomePage({
           "space-y-6",
           useVideoDarkMode && videoDarkModeThemeClasses,
           usingVideoTabFeed &&
-            "relative isolate bg-black pb-4 before:absolute before:inset-y-0 before:left-1/2 before:-z-10 before:w-screen before:-translate-x-1/2 before:bg-black"
+            "relative isolate bg-black pb-4 pt-6 before:absolute before:inset-y-0 before:left-1/2 before:-z-10 before:w-screen before:-translate-x-1/2 before:bg-black sm:pt-8"
         )}
         data-mode={useVideoDarkMode ? "dark" : undefined}
       >
         <div
           className={cn(
             "grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]",
-            usingVideoTabFeed ? "mt-0" : "mt-6 sm:mt-8"
+            !usingVideoTabFeed && "mt-6 sm:mt-8"
           )}
         >
           <LifestyleLeftSidebar
@@ -9519,7 +9684,7 @@ function LifestyleRiverHomePage({
           />
 
           <main
-            className={cn("min-w-0 space-y-4", usingVideoTabFeed && "lg:pt-2")}
+            className="min-w-0 space-y-4"
             aria-label={usingVideoTabFeed ? "Hearst videos" : "Autos video index"}
           >
             {featuredVideo ? (
@@ -9682,6 +9847,7 @@ function LifestyleRiverHomePage({
           savedIds={profile.savedIds}
           onClose={closeDelishShort}
           onSelectStory={setOpenDelishShortId}
+          onOpenStory={openStoryFromDelishShort}
           onSave={toggleSaved}
         />
 
@@ -9796,6 +9962,13 @@ function LifestyleRiverHomePage({
 
                 return (
                   <React.Fragment key={story.id}>
+                    {index === delishShortsRiverInsertIndex ? (
+                      <DelishVerticalVideoCarousel
+                        stories={delishVerticalVideoStories}
+                        onOpen={(shortStory) => openDelishShort(shortStory.id)}
+                        theme="light"
+                      />
+                    ) : null}
                     {getLifestyleCardKind(story) === "video" ? (
                       <VideoIndexCard
                         story={story}
@@ -9833,6 +10006,14 @@ function LifestyleRiverHomePage({
                   </React.Fragment>
                 );
               })}
+
+              {delishShortsRiverInsertIndex === riverStories.length ? (
+                <DelishVerticalVideoCarousel
+                  stories={delishVerticalVideoStories}
+                  onOpen={(story) => openDelishShort(story.id)}
+                  theme="light"
+                />
+              ) : null}
 
               <div ref={sentinelRef} className="flex justify-center py-6">
                 {visibleCount < filteredStories.length ? (
@@ -9984,6 +10165,7 @@ function LifestyleRiverHomePage({
         savedIds={profile.savedIds}
         onClose={closeDelishShort}
         onSelectStory={setOpenDelishShortId}
+        onOpenStory={openStoryFromDelishShort}
         onSave={toggleSaved}
       />
 
