@@ -53,6 +53,7 @@ Before making UI changes, also read `PRODUCT.md` for product intent, `STYLE.md` 
 
 - On desktop and tablet destination pages, the Today&rsquo;s Edit rail is a distinct content module below the category navigation. Keep it inside the shared page container, aligned to the same outer width as the sidebar-and-river grid, with equal vertical spacing above and below. Its individual story modules use the same `16px` internal padding as the sidebar modules, and their content determines the rail height without an additional minimum height. Do not attach it visually to the main navigation or pull it into a full-bleed viewport strip.
 - Featured carousel headlines display a maximum of three lines at every breakpoint. Truncate longer source headlines with an ellipsis in the carousel only; preserve the full source headline in story cards and the reader.
+- House Beautiful featured-carousel headlines use a `1.12` line height plus a small bottom allowance so SangBleu Sunrise descenders remain visible inside the three-line clamp and its hidden-overflow boundary.
 - Featured carousel summaries display a maximum of two lines at every breakpoint. Truncate longer summaries with an ellipsis in the carousel only; preserve the full summary in story cards and the reader.
 - Headlines in the `Today's edit` strip display a maximum of three lines at every breakpoint, with an ellipsis when truncated. Preserve the full source headline in the destination story and reader.
 - The featured carousel supports touch swiping on mobile with visible drag feedback.

@@ -4383,7 +4383,11 @@ function LifestyleLeadSlider({
                   </div>
                   <h2 className={cn(
                     "headline line-clamp-3 max-w-[min(42rem,100%)] break-words text-balance text-[clamp(2rem,4.5vw,2.75rem)] sm:text-[clamp(2.25rem,3.25vw,3rem)]",
-                    story.brandSlug === "road-and-track" ? "leading-[1.12]" : "leading-[1.08]"
+                    story.brandSlug === "house-beautiful"
+                      ? "pb-[0.12em] leading-[1.12]"
+                      : story.brandSlug === "road-and-track"
+                        ? "leading-[1.12]"
+                        : "leading-[1.08]"
                   )}>
                     {story.title}
                   </h2>
