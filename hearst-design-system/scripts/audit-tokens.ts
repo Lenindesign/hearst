@@ -16,7 +16,7 @@
  *   - Test files
  */
 
-import { readFileSync, readdirSync, statSync, writeFileSync } from "fs";
+import { mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "fs";
 import { join, relative } from "path";
 
 const SRC_DIR = join(__dirname, "..", "src", "components");
@@ -188,7 +188,6 @@ function run() {
   };
 
   if (jsonMode) {
-    const { mkdirSync } = require("fs");
     mkdirSync(join(__dirname, "..", "reports"), { recursive: true });
     writeFileSync(OUTPUT_PATH, JSON.stringify(report, null, 2));
     console.log(`Report written to ${relative(join(__dirname, ".."), OUTPUT_PATH)}`);

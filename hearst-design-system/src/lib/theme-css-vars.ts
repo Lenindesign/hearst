@@ -45,6 +45,7 @@ const darkModeSectionPrimaryColors: Record<string, string> = {
   "hearst-plus": "#78BDE8",
   "hearst-flux": "#F2F2F2",
   "hearst-ew": "#FF7184",
+  elle: "#F2F2F2",
 };
 
 function relativeLuminance(hex: string) {
@@ -79,6 +80,17 @@ function toCssVars(tokens: Record<string, string | number>) {
       typeof value === "number" ? `${value}px` : value,
     ]),
   );
+}
+
+const runtimeFontStacks: Record<string, string> = {
+  Newsreader: 'var(--font-newsreader, "Newsreader"), Georgia, serif',
+  Livvic: 'var(--font-livvic, "Livvic"), system-ui, sans-serif',
+  Petrona: 'var(--font-petrona, "Petrona"), Georgia, serif',
+  "Knockout Condensed": 'var(--font-knockout-condensed, "Knockout Condensed", "League Gothic", "Barlow Condensed", Impact, sans-serif)',
+};
+
+function getRuntimeFontStack(fontFamily: string, fallback: string) {
+  return runtimeFontStacks[fontFamily] ?? `"${fontFamily}", ${fallback}`;
 }
 
 export function brandToCssVars(brand: BrandTheme, colorMode: "light" | "dark" = "light"): Record<string, string> {
@@ -148,9 +160,9 @@ export function brandToCssVars(brand: BrandTheme, colorMode: "light" | "dark" = 
     "--chart-3": hexToOklch(brand.colors["3"] || primary),
     "--chart-4": hexToOklch(brand.colors["4"] || primary),
     "--chart-5": hexToOklch(brand.colors["5"] || primary),
-    "--font-brand": `"${brand.fontDefault}", system-ui, sans-serif`,
-    "--font-brand-secondary": `"${brand.fontSecondary}", Georgia, serif`,
-    "--font-headline": `"${brand.fontHeadline}", system-ui, sans-serif`,
+    "--font-brand": getRuntimeFontStack(brand.fontDefault, "system-ui, sans-serif"),
+    "--font-brand-secondary": getRuntimeFontStack(brand.fontSecondary, "Georgia, serif"),
+    "--font-headline": getRuntimeFontStack(brand.fontHeadline, "system-ui, sans-serif"),
     "--font-headline-weight": `${brand.fontHeadlineWeight}`,
     "--font-headline-stretch": brand.fontHeadlineStretch || "normal",
     ...darkSurfaceVars,

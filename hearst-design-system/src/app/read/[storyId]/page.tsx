@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { HomePageTemplate } from "@/components/home-page";
 import { ThemeProvider } from "@/components/theme-provider";
+import { getHearstDestinationStaticData } from "@/lib/hearst-destination-data";
 import type { LiveFeedData } from "@/lib/live-feed-types";
 import { getHearstBrandSection, hearstSectionThemeSlugs } from "@/lib/hearst-routes";
 import {
@@ -11,9 +12,11 @@ import {
 } from "@/lib/personalize-live-feed";
 import {
   getHearstStoryReturnHref,
+} from "@/lib/story-routes";
+import {
   getStaticHearstArticleParams,
   getStaticHearstStoryById,
-} from "@/lib/story-routes";
+} from "@/lib/hearst-static-stories";
 
 type ReaderArticlePageProps = {
   params: Promise<{ storyId: string }>;
@@ -94,6 +97,7 @@ export default async function ReaderArticlePage({ params, searchParams }: Reader
   return (
     <ThemeProvider defaultBrandSlug={hearstSectionThemeSlugs[section]}>
       <HomePageTemplate
+        staticDestinationData={getHearstDestinationStaticData()}
         initialBrandSlug={hearstSectionThemeSlugs[section]}
         initialOpenStoryId={decodedStoryId}
         readerReturnHref={readerReturnHref}

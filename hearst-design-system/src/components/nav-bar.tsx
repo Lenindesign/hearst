@@ -186,10 +186,6 @@ export function NavBar() {
   );
 
   useEffect(() => {
-    setMobileOpen(false);
-  }, [pathname]);
-
-  useEffect(() => {
     if (mobileOpen) {
       document.body.style.overflow = "hidden";
       return () => { document.body.style.overflow = ""; };
@@ -279,7 +275,7 @@ export function NavBar() {
                 }`;
                 if (item.external) {
                   return (
-                    <a key={item.href} href={item.href} target="_blank" rel="noopener noreferrer" className={cls}>
+                    <a key={item.href} href={item.href} target="_blank" rel="noopener noreferrer" className={cls} onClick={() => setMobileOpen(false)}>
                       {item.label}
                       <ExternalIcon />
                     </a>
@@ -290,6 +286,7 @@ export function NavBar() {
                     key={item.href}
                     href={item.href === "/components" ? "/components/card" : item.href}
                     className={cls}
+                    onClick={() => setMobileOpen(false)}
                   >
                     {item.label}
                   </Link>
@@ -306,6 +303,7 @@ export function NavBar() {
                       <Link
                         key={item.href}
                         href={item.href}
+                        onClick={() => setMobileOpen(false)}
                         className={`px-3 py-2 text-sm rounded-md transition-colors ${
                           pathname === item.href
                             ? "font-medium text-primary bg-primary/10"

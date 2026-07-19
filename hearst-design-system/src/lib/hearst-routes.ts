@@ -1,16 +1,3 @@
-import {
-  autosRiverSourceNotes,
-} from "@/components/autos-river-data";
-import {
-  ewRiverSourceNotes,
-} from "@/components/ew-river-data";
-import {
-  fluxRiverSourceNotes,
-} from "@/components/flux-river-data";
-import {
-  lifestyleRiverSourceNotes,
-} from "@/components/lifestyle-river-data";
-
 export type HearstDestinationMode = "all" | "lifestyle" | "autos" | "flux" | "ew";
 export type HearstBrandSection = Exclude<HearstDestinationMode, "all">;
 
@@ -60,11 +47,44 @@ export const hearstSectionPrefixes: Record<HearstBrandSection, string> = {
   ew: "ew",
 };
 
-const sectionSourceNotes = {
-  lifestyle: lifestyleRiverSourceNotes,
-  autos: autosRiverSourceNotes,
-  flux: fluxRiverSourceNotes,
-  ew: ewRiverSourceNotes,
+const sectionBrands: Record<HearstBrandSection, readonly { brand: string; brandSlug: string }[]> = {
+  lifestyle: [
+    { brand: "Cosmopolitan", brandSlug: "cosmopolitan" },
+    { brand: "Country Living", brandSlug: "country-living" },
+    { brand: "Delish", brandSlug: "delish" },
+    { brand: "Good Housekeeping", brandSlug: "good-housekeeping" },
+    { brand: "House Beautiful", brandSlug: "house-beautiful" },
+    { brand: "The Pioneer Woman", brandSlug: "pioneer-woman" },
+    { brand: "Prevention", brandSlug: "prevention" },
+    { brand: "Redbook", brandSlug: "redbook" },
+    { brand: "Seventeen", brandSlug: "seventeen" },
+    { brand: "Woman's Day", brandSlug: "womans-day" },
+  ],
+  autos: [
+    { brand: "Autoweek", brandSlug: "autoweek" },
+    { brand: "Bring a Trailer", brandSlug: "bring-a-trailer" },
+    { brand: "Car and Driver", brandSlug: "car-and-driver" },
+    { brand: "HOT ROD", brandSlug: "hot-rod" },
+    { brand: "MotorTrend", brandSlug: "motortrend" },
+    { brand: "Road & Track", brandSlug: "road-and-track" },
+  ],
+  flux: [
+    { brand: "Elle", brandSlug: "elle" },
+    { brand: "Elle Décor", brandSlug: "elle-decor" },
+    { brand: "Esquire", brandSlug: "esquire" },
+    { brand: "Harper's Bazaar", brandSlug: "harpers-bazaar" },
+    { brand: "Town & Country", brandSlug: "town-and-country" },
+    { brand: "Veranda", brandSlug: "veranda" },
+  ],
+  ew: [
+    { brand: "Best Products", brandSlug: "best-products" },
+    { brand: "Bicycling", brandSlug: "bicycling" },
+    { brand: "Men's Health", brandSlug: "mens-health" },
+    { brand: "Oprah Daily", brandSlug: "oprah-daily" },
+    { brand: "Popular Mechanics", brandSlug: "popular-mechanics" },
+    { brand: "Runner's World", brandSlug: "runners-world" },
+    { brand: "Women's Health", brandSlug: "womens-health" },
+  ],
 } as const;
 
 export const hearstSectionThemeSlugs: Record<HearstBrandSection, string> = {
@@ -75,9 +95,9 @@ export const hearstSectionThemeSlugs: Record<HearstBrandSection, string> = {
 };
 
 export function getHearstBrandSection(brandSlug: string): HearstBrandSection {
-  if (sectionSourceNotes.autos.some((note) => note.brandSlug === brandSlug)) return "autos";
-  if (sectionSourceNotes.flux.some((note) => note.brandSlug === brandSlug)) return "flux";
-  if (sectionSourceNotes.ew.some((note) => note.brandSlug === brandSlug)) return "ew";
+  if (sectionBrands.autos.some((brand) => brand.brandSlug === brandSlug)) return "autos";
+  if (sectionBrands.flux.some((brand) => brand.brandSlug === brandSlug)) return "flux";
+  if (sectionBrands.ew.some((brand) => brand.brandSlug === brandSlug)) return "ew";
   return "lifestyle";
 }
 
@@ -91,13 +111,13 @@ export function getHearstDestinationRoute(mode: HearstDestinationMode) {
 }
 
 export function getHearstSectionBrandSlugs(section: HearstBrandSection) {
-  return sectionSourceNotes[section].map((note) => note.brandSlug);
+  return sectionBrands[section].map((brand) => brand.brandSlug);
 }
 
 export function getHearstSectionBrand(section: HearstBrandSection, brandSlug: string) {
-  return sectionSourceNotes[section].find((note) => note.brandSlug === brandSlug);
+  return sectionBrands[section].find((brand) => brand.brandSlug === brandSlug);
 }
 
 export function getHearstAllBrands() {
-  return Object.values(sectionSourceNotes).flat();
+  return Object.values(sectionBrands).flat();
 }

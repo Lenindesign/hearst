@@ -1,15 +1,8 @@
 import type { Metadata } from "next";
-import { Newsreader } from "next/font/google";
 import { HomePageTemplate } from "@/components/home-page";
 import { ThemeProvider } from "@/components/theme-provider";
+import { getHearstDestinationStaticData } from "@/lib/hearst-destination-data";
 import { getPersonalizeLiveFeed, getPersonalizeVideoFeed } from "@/lib/personalize-live-feed";
-
-const newsreader = Newsreader({
-  display: "swap",
-  subsets: ["latin"],
-  variable: "--font-hearst-flux-headline",
-  weight: "700",
-});
 
 export const metadata: Metadata = {
   title: "Hearst Flux",
@@ -25,10 +18,8 @@ export default async function HearstFluxPage() {
   ]);
 
   return (
-    <div className={newsreader.variable}>
-      <ThemeProvider defaultBrandSlug="hearst-flux" persistColorMode={false}>
-        <HomePageTemplate liveFeedData={liveFeedData} liveFeedMode="blend" videoFeedData={videoFeedData} />
-      </ThemeProvider>
-    </div>
+    <ThemeProvider defaultBrandSlug="hearst-flux" persistColorMode={false}>
+      <HomePageTemplate staticDestinationData={getHearstDestinationStaticData()} liveFeedData={liveFeedData} liveFeedMode="blend" videoFeedData={videoFeedData} />
+    </ThemeProvider>
   );
 }

@@ -5,6 +5,21 @@ import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { LinkComponent } from "@/components/ui/link";
 
+const socialLinkHrefs: Record<string, string> = {
+  YouTube: "https://www.youtube.com/@Hearst",
+  Facebook: "https://www.facebook.com/Hearst/",
+  Instagram: "https://www.instagram.com/hearst/",
+  Pinterest: "https://www.pinterest.com/hearst/",
+};
+
+const legalLinkHrefs: Record<string, string> = {
+  "Privacy Notice": "https://subscribe.hearstmags.com/circulation/shared/privacy.html",
+  "Terms of Use": "https://subscribe.hearstmags.com/circulation/shared/terms.html",
+  "Hearst brands": "https://www.hearst.com/magazines",
+};
+
+const hearstSubscriptionsHref = "https://subscribe.hearstmags.com/";
+
 export interface SiteFooterProps {
   siteName: React.ReactNode;
   socialLinks?: string[];
@@ -21,7 +36,7 @@ export interface SiteFooterProps {
 export function SiteFooter({
   siteName,
   socialLinks = ["YouTube", "Facebook", "Instagram", "Pinterest"],
-  legalLinks = ["Privacy Notice", "Terms of Use", "Site Map"],
+  legalLinks = ["Privacy Notice", "Terms of Use", "Hearst brands"],
   copyrightYear = new Date().getFullYear(),
   showSocialLinks = true,
   onSocialClick,
@@ -39,7 +54,7 @@ export function SiteFooter({
   return (
     <footer
       className={cn(
-        "bg-foreground text-background py-10 font-brand",
+        "bg-[var(--footer-background)] py-10 font-brand text-[var(--footer-foreground)]",
         className
       )}
     >
@@ -58,10 +73,13 @@ export function SiteFooter({
               {socialLinks.map((s) => (
                 <LinkComponent
                   key={s}
+                  href={socialLinkHrefs[s]}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   variant="neutral"
                   underline={false}
                   size="sm"
-                  className="opacity-70 text-background hover:text-background/90 font-normal"
+                  className="font-normal text-[var(--footer-foreground)] opacity-75 hover:text-[var(--footer-foreground)] hover:opacity-100"
                   onClick={() => onSocialClick?.(s)}
                 >
                   {s}
@@ -80,7 +98,7 @@ export function SiteFooter({
                 variant="neutral"
                 underline={false}
                 size="sm"
-                className="opacity-70 text-background hover:text-background/90 font-normal"
+                className="font-normal text-[var(--footer-foreground)] opacity-75 hover:text-[var(--footer-foreground)] hover:opacity-100"
               >
                 {link.label}
               </LinkComponent>
@@ -89,10 +107,13 @@ export function SiteFooter({
           <div className="flex flex-col gap-2">
             <span className="font-semibold mb-1">Other Hearst Subscriptions</span>
             <LinkComponent
+              href={hearstSubscriptionsHref}
+              target="_blank"
+              rel="noopener noreferrer"
               variant="neutral"
               underline={false}
               size="sm"
-              className="opacity-70 text-background hover:text-background/90 font-normal"
+              className="font-normal text-[var(--footer-foreground)] opacity-75 hover:text-[var(--footer-foreground)] hover:opacity-100"
               onClick={onSubscribeClick}
             >
               Subscribe
@@ -109,10 +130,13 @@ export function SiteFooter({
           {legalLinks.map((link) => (
             <LinkComponent
               key={link}
+              href={legalLinkHrefs[link]}
+              target="_blank"
+              rel="noopener noreferrer"
               variant="neutral"
               underline={false}
               size="xs"
-              className="text-background hover:text-background/80 font-normal"
+              className="font-normal text-[var(--footer-foreground)] hover:text-[var(--footer-foreground)] hover:opacity-85"
               onClick={() => onLegalClick?.(link)}
             >
               {link}
@@ -120,10 +144,10 @@ export function SiteFooter({
           ))}
         </div>
       </div>
-      <p className="mt-3 max-w-3xl text-[length:var(--text-token-4xs)] leading-relaxed text-background/55">
+      <p className="mt-3 max-w-3xl text-[length:var(--text-token-4xs)] leading-relaxed text-[var(--footer-foreground)] opacity-75">
         Personalized daily reading experiences across Hearst Magazine Media brands.
       </p>
-      <div className="text-[length:var(--text-token-4xs)] opacity-40 mt-3">
+      <div className="mt-3 text-[length:var(--text-token-4xs)] text-[var(--footer-foreground)] opacity-65">
         &copy;{copyrightYear} Hearst Magazine Media, Inc. All Rights Reserved.
       </div>
       </div>

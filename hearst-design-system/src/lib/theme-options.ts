@@ -215,9 +215,9 @@ export const ewTheme: BrandTheme = {
   ...lifestyleTheme,
   name: "Hearst E&W",
   slug: "hearst-ew",
-  fontHeadline: "Knockout Condensed",
-  fontHeadlineWeight: 900,
-  fontHeadlineStretch: "condensed",
+  fontHeadline: "Barlow Semi Condensed",
+  fontHeadlineWeight: 800,
+  fontHeadlineStretch: "normal",
   colors: {
     ...lifestyleTheme.colors,
     "1": "#E50022",

@@ -23,6 +23,8 @@
 # misc
 .DS_Store
 *.pem
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
 
 # debug
 npm-debug.log*

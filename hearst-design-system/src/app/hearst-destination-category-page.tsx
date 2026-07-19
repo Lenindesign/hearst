@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { HomePageTemplate } from "@/components/home-page";
 import { ThemeProvider } from "@/components/theme-provider";
+import { getHearstDestinationStaticData } from "@/lib/hearst-destination-data";
 import {
   getHearstDestinationCategoryLabel,
   hearstDestinationCategoryLabels,
@@ -69,6 +70,7 @@ export async function DestinationCategoryRoutePage({
   const content = (
     <ThemeProvider defaultBrandSlug={destinationThemeSlugs[destination]} persistColorMode={destination === "flux" ? false : undefined}>
       <HomePageTemplate
+        staticDestinationData={getHearstDestinationStaticData()}
         initialFilter={categoryLabel}
         liveFeedData={liveFeedData}
         liveFeedMode="blend"

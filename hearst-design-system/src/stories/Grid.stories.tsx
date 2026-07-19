@@ -261,7 +261,7 @@ export const PlacementRules: Story = {
                 <span className="font-mono">7 + 5</span>).
               </p>
               <p className="mt-2 text-muted-foreground">
-                Mobile is always <span className="font-mono">span="full"</span>{" "}
+                Mobile is always <span className="font-mono">span=&quot;full&quot;</span>{" "}
                 unless you’re doing an explicit two-up mobile pattern.
               </p>
             </>

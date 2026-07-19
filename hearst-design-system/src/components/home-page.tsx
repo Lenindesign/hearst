@@ -2,16 +2,19 @@
 
 import React from "react";
 import { createPortal } from "react-dom";
+import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTheme } from "./theme-provider";
 import { NavBar } from "./nav-bar";
 import { BrandLogo } from "./brand-logo";
 import { brandIconLogos, brandLogos } from "@/lib/logos";
 import {
+  getHearstBrandSection,
   getHearstBrandRoute,
   getHearstDestinationCategoryRoute,
   getHearstDestinationRoute,
 } from "@/lib/hearst-routes";
+import type { HearstDestinationStaticData } from "@/lib/hearst-destination-data-types";
 import { getHearstStoryRoute } from "@/lib/story-routes";
 import { themeOptions } from "@/lib/theme-options";
 import { brandToCssVars } from "@/lib/theme-css-vars";
@@ -58,18 +61,36 @@ import {
   getBaseContent,
   type BaseContentType,
 } from "./homepage-data";
-import { autosRiverSourceNotes, autosRiverStories } from "./autos-river-data";
-import { ewRiverSourceNotes, ewRiverStories } from "./ew-river-data";
-import { fluxRiverSourceNotes, fluxRiverStories } from "./flux-river-data";
-import { lifestyleRiverSourceNotes, lifestyleRiverStories } from "./lifestyle-river-data";
 import type { LifestyleRiverProfile, LifestyleRiverStory } from "./lifestyle-river-types";
 import type { LiveArticleData, LiveFeedData } from "@/lib/live-feed-types";
-import { filterExcludedStories } from "@/lib/content-exclusions";
 import { useReaderAccount } from "./reader-account";
 import { ReaderAuthDialog, ReaderAvatar, ReaderProfileDialog } from "./reader-account-ui";
 
 interface ContentType extends BaseContentType {
   footerCols: string[][];
+}
+
+const readerReturnFocusStorageKey = "hearst-reader-return-focus-label";
+const reducedMotionMediaQuery = "(prefers-reduced-motion: reduce)";
+
+function subscribeToReducedMotion(onStoreChange: () => void) {
+  if (typeof window === "undefined") return () => undefined;
+
+  const mediaQuery = window.matchMedia(reducedMotionMediaQuery);
+  mediaQuery.addEventListener("change", onStoreChange);
+  return () => mediaQuery.removeEventListener("change", onStoreChange);
+}
+
+function getReducedMotionPreference() {
+  return typeof window !== "undefined" && window.matchMedia(reducedMotionMediaQuery).matches;
+}
+
+function usePrefersReducedMotion() {
+  return React.useSyncExternalStore(
+    subscribeToReducedMotion,
+    getReducedMotionPreference,
+    () => false
+  );
 }
 
 export interface HomePageTemplateProps {
@@ -87,6 +108,7 @@ export interface HomePageTemplateProps {
   initialOpenStoryId?: string;
   readerReturnHref?: string;
   navLinksOverride?: string[];
+  staticDestinationData?: HearstDestinationStaticData;
 }
 
 const defaultFooterCols: string[][] = [
@@ -564,7 +586,7 @@ function getOnboardingSignalTags(stories: LifestyleRiverStory[], result: HearstO
   return mergeUnique(result.tags, signalTags).slice(0, 16);
 }
 
-const destinationConfigs: Record<DestinationMode, DestinationConfig> = {
+const baseDestinationConfigs: Record<DestinationMode, DestinationConfig> = {
   all: {
     mode: "all",
     brandSlug: "hearst-all",
@@ -572,8 +594,8 @@ const destinationConfigs: Record<DestinationMode, DestinationConfig> = {
     riverLabel: "Personalized Hearst story river",
     storyRiverLabel: "Hearst stories",
     filters: ["For You", "Home", "Style", "Reviews", "Fitness", "Cars", "Videos", "Shopping", "Games", "Saved"],
-    stories: filterExcludedStories([...lifestyleRiverStories, ...autosRiverStories, ...fluxRiverStories, ...ewRiverStories]),
-    sourceNotes: [...lifestyleRiverSourceNotes, ...autosRiverSourceNotes, ...fluxRiverSourceNotes, ...ewRiverSourceNotes],
+    stories: [],
+    sourceNotes: [],
     initialProfile: initialAllProfile,
     defaultLeadStoryId: allDefaultLeadStoryId,
     dayparts: lifestyleDemoDayparts,
@@ -591,8 +613,8 @@ const destinationConfigs: Record<DestinationMode, DestinationConfig> = {
     riverLabel: "Personalized lifestyle story river",
     storyRiverLabel: "lifestyle stories",
     filters: ["For You", "Food", "Home", "Wellness", "Style", "Shopping", "Family", "Entertainment", "Saved"],
-    stories: filterExcludedStories(lifestyleRiverStories),
-    sourceNotes: lifestyleRiverSourceNotes,
+    stories: [],
+    sourceNotes: [],
     initialProfile: initialLifestyleProfile,
     defaultLeadStoryId: lifestyleDefaultLeadStoryId,
     dayparts: lifestyleDemoDayparts,
@@ -610,8 +632,8 @@ const destinationConfigs: Record<DestinationMode, DestinationConfig> = {
     riverLabel: "Personalized autos story river",
     storyRiverLabel: "autos stories",
     filters: ["For You", "News", "Reviews", "Buying Guides", "EVs", "Racing", "Trucks", "Classics", "Saved"],
-    stories: filterExcludedStories(autosRiverStories),
-    sourceNotes: autosRiverSourceNotes,
+    stories: [],
+    sourceNotes: [],
     initialProfile: initialAutosProfile,
     dayparts: autosDemoDayparts,
     nextDayTopics: ["News", "Reviews", "EVs", "Performance"],
@@ -627,8 +649,8 @@ const destinationConfigs: Record<DestinationMode, DestinationConfig> = {
     riverLabel: "Personalized Flux story river",
     storyRiverLabel: "Flux stories",
     filters: ["For You", "Style", "Beauty", "Design", "Culture", "Shopping", "Events", "Travel", "Saved"],
-    stories: filterExcludedStories(fluxRiverStories),
-    sourceNotes: fluxRiverSourceNotes,
+    stories: [],
+    sourceNotes: [],
     initialProfile: initialFluxProfile,
     dayparts: fluxDemoDayparts,
     nextDayTopics: ["Style", "Culture", "Design", "Shopping"],
@@ -644,8 +666,8 @@ const destinationConfigs: Record<DestinationMode, DestinationConfig> = {
     riverLabel: "Personalized E&W story river",
     storyRiverLabel: "E&W stories",
     filters: ["For You", "Fitness", "Wellness", "Gear", "Tech", "Adventure", "Nutrition", "Life", "Saved"],
-    stories: filterExcludedStories(ewRiverStories),
-    sourceNotes: ewRiverSourceNotes,
+    stories: [],
+    sourceNotes: [],
     initialProfile: initialEWProfile,
     dayparts: ewDemoDayparts,
     nextDayTopics: ["Fitness", "Wellness", "Gear", "Tech"],
@@ -656,22 +678,33 @@ const destinationConfigs: Record<DestinationMode, DestinationConfig> = {
   },
 };
 
+const DestinationConfigsContext = React.createContext(baseDestinationConfigs);
+
+function useDestinationConfigs() {
+  return React.useContext(DestinationConfigsContext);
+}
+
+function createDestinationConfigs(staticData?: HearstDestinationStaticData) {
+  if (!staticData) return baseDestinationConfigs;
+
+  return Object.fromEntries(
+    Object.entries(baseDestinationConfigs).map(([mode, config]) => [
+      mode,
+      { ...config, ...staticData[mode as DestinationMode] },
+    ])
+  ) as Record<DestinationMode, DestinationConfig>;
+}
+
 function getDestinationMode(brandSlug: string): DestinationMode {
   if (brandSlug === "hearst-all") return "all";
   if (brandSlug === "hearst-ew") return "ew";
   if (brandSlug === "hearst-flux") return "flux";
   if (brandSlug === "hearst-plus") return "autos";
-  if (destinationConfigs.autos.sourceNotes.some((note) => note.brandSlug === brandSlug)) return "autos";
-  if (destinationConfigs.flux.sourceNotes.some((note) => note.brandSlug === brandSlug)) return "flux";
-  if (destinationConfigs.ew.sourceNotes.some((note) => note.brandSlug === brandSlug)) return "ew";
-  return "lifestyle";
+  return getHearstBrandSection(brandSlug);
 }
 
 function getStoryDestinationMode(brandSlug: string): Exclude<DestinationMode, "all"> {
-  if (destinationConfigs.autos.sourceNotes.some((note) => note.brandSlug === brandSlug)) return "autos";
-  if (destinationConfigs.flux.sourceNotes.some((note) => note.brandSlug === brandSlug)) return "flux";
-  if (destinationConfigs.ew.sourceNotes.some((note) => note.brandSlug === brandSlug)) return "ew";
-  return "lifestyle";
+  return getHearstBrandSection(brandSlug);
 }
 
 function getReaderDestinationLabel(mode: Exclude<DestinationMode, "all">) {
@@ -702,8 +735,12 @@ function insertVideosFilter(filters: string[]) {
   return [...filters, "Videos"];
 }
 
-function getBrandContextualFilters(brandSlug: string, includeVideos = false) {
-  const topicCounts = destinationConfigs.all.stories
+function getBrandContextualFilters(
+  brandSlug: string,
+  stories: LifestyleRiverStory[],
+  includeVideos = false
+) {
+  const topicCounts = stories
     .filter((story) => story.brandSlug === brandSlug)
     .reduce<Record<string, number>>((counts, story) => {
       counts[story.topic] = (counts[story.topic] ?? 0) + 1;
@@ -722,9 +759,9 @@ function getBrandContextualFilters(brandSlug: string, includeVideos = false) {
   return includeVideos ? insertVideosFilter(filters) : filters;
 }
 
-function getBrandRouteInfo(brandSlug?: string) {
+function getBrandRouteInfo(sourceNotes: readonly DestinationSourceNote[], brandSlug?: string) {
   if (!brandSlug) return null;
-  const note = destinationConfigs.all.sourceNotes.find((brand) => brand.brandSlug === brandSlug);
+  const note = sourceNotes.find((brand) => brand.brandSlug === brandSlug);
   return note ? { name: note.brand, slug: note.brandSlug } : null;
 }
 
@@ -736,7 +773,7 @@ function getContent(brandSlug: string): ContentType {
 function getLifestyleTimeOfDayScore(
   story: LifestyleRiverStory,
   demoState: LifestyleDemoState,
-  config = destinationConfigs.lifestyle
+  config = baseDestinationConfigs.lifestyle
 ) {
   const daypart = config.dayparts[demoState.daypart];
   const kind = getLifestyleCardKind(story);
@@ -760,7 +797,7 @@ function getLifestyleScoreBreakdown(
   story: LifestyleRiverStory,
   profile: LifestyleRiverProfile,
   demoState: LifestyleDemoState,
-  config = destinationConfigs.lifestyle
+  config = baseDestinationConfigs.lifestyle
 ) {
   const popularity = story.popularity;
   const isOnboardingPersonalized = profile.personalizationMode === "onboarding";
@@ -825,7 +862,7 @@ function getLifestyleScore(
   story: LifestyleRiverStory,
   profile: LifestyleRiverProfile,
   demoState: LifestyleDemoState,
-  config = destinationConfigs.lifestyle
+  config = baseDestinationConfigs.lifestyle
 ) {
   return getLifestyleScoreBreakdown(story, profile, demoState, config).total;
 }
@@ -834,7 +871,7 @@ function getLifestyleStrategyReason(
   story: LifestyleRiverStory,
   breakdown: ReturnType<typeof getLifestyleScoreBreakdown>,
   demoState: LifestyleDemoState,
-  config = destinationConfigs.lifestyle
+  config = baseDestinationConfigs.lifestyle
 ) {
   const activeDaypart = config.dayparts[demoState.daypart];
   const reasons: string[] = [];
@@ -871,7 +908,7 @@ function rankLifestyleRiver(
   stories: LifestyleRiverStory[],
   profile: LifestyleRiverProfile,
   demoState: LifestyleDemoState,
-  config = destinationConfigs.lifestyle
+  config = baseDestinationConfigs.lifestyle
 ) {
   const scored = stories
     .filter((story) => !profile.hiddenIds.includes(story.id))
@@ -975,7 +1012,7 @@ function applyContextualFeedCadence(stories: LifestyleRiverStory[]) {
 
 function getLifestyleDemoStoryPool(
   demoState: LifestyleDemoState,
-  config = destinationConfigs.lifestyle
+  config = baseDestinationConfigs.lifestyle
 ) {
   if (demoState.contentDay === "today") return config.stories;
 
@@ -1030,6 +1067,10 @@ const hearstDestinationNavHrefs = new Map(
     .map((section) => [section.label, section.href])
 );
 const hearstGamesHref = "https://motortrend-carmash.lovable.app/";
+const utilityLinks = [
+  { label: "Shop", href: "/hearst-plus/shopping/" },
+  { label: "Newsletter", href: "https://www.hearst.co.uk/newsletter" },
+] as const;
 
 function UtilityBar({
   selectedBrand,
@@ -1074,21 +1115,23 @@ function UtilityBar({
     >
       <PageContainer className="grid h-full grid-cols-[minmax(0,1fr)_auto] items-center gap-2 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:gap-3">
         <nav className="hidden items-center gap-3 sm:flex" aria-label="Utility navigation">
-          {["Shop", "Newsletter"].map((label) => (
+          {utilityLinks.map((link) => (
             <LinkComponent
-              key={label}
-              href="#"
+              key={link.label}
+              href={link.href}
+              target={link.href.startsWith("http") ? "_blank" : undefined}
+              rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
                 variant="neutral"
                 underline={false}
                 size="xs"
                 className={cn(
-                  "font-semibold opacity-90",
+                  "font-semibold",
                   darkMode
                     ? "text-[#f4f7fb] hover:text-[#BDDDFC]"
-                    : "text-primary-foreground hover:text-primary-foreground/80"
+                    : "text-primary-foreground hover:text-primary-foreground"
                 )}
               >
-                {label}
+                {link.label}
               </LinkComponent>
           ))}
         </nav>
@@ -1113,7 +1156,7 @@ function UtilityBar({
                       : "bg-white text-black hover:text-black"
                     : darkMode
                       ? "text-[#f4f7fb] opacity-85 hover:bg-white/10 hover:text-white hover:opacity-100"
-                      : "text-primary-foreground opacity-85 hover:bg-white/10 hover:text-primary-foreground hover:opacity-100"
+                      : "text-primary-foreground hover:bg-white/10 hover:text-primary-foreground"
                 )}
               >
                 {section.label}
@@ -1198,6 +1241,7 @@ function HearstOnboardingModal({
   onComplete: (result: HearstOnboardingResult) => void;
   onRequestAuthentication: (mode: "create" | "signIn", result: HearstOnboardingResult) => void;
 }) {
+  const destinationConfigs = useDestinationConfigs();
   const config = destinationConfigs[destination];
   const [step, setStep] = React.useState(0);
   const [selectedInterests, setSelectedInterests] = React.useState<string[]>([]);
@@ -1221,7 +1265,7 @@ function HearstOnboardingModal({
         brandSlug: note.brandSlug,
         count: counts[note.brand] ?? 0,
       }));
-  }, []);
+  }, [destinationConfigs.all]);
   const storyCount = config.stories.length.toLocaleString();
   const brandCount = destination === "all" ? 29 : config.sourceNotes.length;
   const proofLine = destination === "all"
@@ -1346,15 +1390,15 @@ function HearstOnboardingModal({
       >
         <div className="relative hidden h-full overflow-hidden bg-muted lg:block">
           {onboardingVisual.image ? (
-            <img
+            <Image
               src={onboardingVisual.image}
               alt=""
+              fill
+              sizes="50vw"
               className="absolute inset-0 h-full w-full object-cover outline-none ring-0"
               style={{ objectPosition: onboardingVisual.objectPosition }}
               aria-hidden
-              loading="eager"
-              fetchPriority="high"
-              decoding="async"
+              preload
             />
           ) : null}
         </div>
@@ -1377,15 +1421,16 @@ function HearstOnboardingModal({
         <div className="min-h-0 flex-1 overflow-y-auto p-5 sm:p-8">
           {onboardingVisual.image ? (
             <div className="mb-6 overflow-hidden rounded-[12px] bg-muted lg:hidden">
-              <img
+              <Image
                 src={onboardingVisual.image}
                 alt=""
+                width={1200}
+                height={600}
+                sizes="100vw"
                 className="h-48 w-full object-cover outline-none ring-0"
                 style={{ objectPosition: onboardingVisual.objectPosition }}
                 aria-hidden
-                loading="eager"
-                fetchPriority="high"
-                decoding="async"
+                preload
               />
             </div>
           ) : null}
@@ -1706,6 +1751,7 @@ function MainNav({
   includeVideos?: boolean;
   darkMode?: boolean;
 }) {
+  const destinationConfigs = useDestinationConfigs();
   const { brand, colorMode, toggleColorMode } = useTheme();
   const [mastheadCompact, setMastheadCompact] = React.useState(false);
   const mastheadSlug = selectedBrand?.slug ?? brand.slug;
@@ -1714,7 +1760,7 @@ function MainNav({
   const isDestinationRiver = brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
   const destinationConfig = destinationConfigs[getDestinationMode(brand.slug)];
   const baseNavLinks = navLinksOverride ?? (selectedBrand
-    ? getBrandContextualFilters(selectedBrand.slug, includeVideos)
+    ? getBrandContextualFilters(selectedBrand.slug, destinationConfigs.all.stories, includeVideos)
     : isDestinationRiver
       ? destinationConfig.filters
       : content.navLinks);
@@ -1850,7 +1896,7 @@ function MainNav({
         variant="neutral"
         underline={false}
         size="sm"
-        className={cn("whitespace-nowrap border-b-2 border-transparent px-0.5 pb-1 font-normal hover:no-underline", navLinkClasses)}
+        className={cn("min-h-11 whitespace-nowrap border-b-2 border-transparent px-0.5 font-normal hover:no-underline md:min-h-0 md:pb-1", navLinkClasses)}
       >
         {link}
       </LinkComponent>
@@ -1863,7 +1909,7 @@ function MainNav({
         size="sm"
         aria-current={active ? "page" : undefined}
         className={cn(
-          "whitespace-nowrap border-b-2 border-transparent px-0.5 pb-1 font-normal hover:no-underline",
+          "min-h-11 whitespace-nowrap border-b-2 border-transparent px-0.5 font-normal hover:no-underline md:min-h-0 md:pb-1",
           navLinkClasses,
           active
             ? useDarkActiveState
@@ -1883,7 +1929,7 @@ function MainNav({
         variant="neutral"
         underline={false}
         size="sm"
-        className={cn("whitespace-nowrap border-b-2 border-transparent px-0.5 pb-1 font-normal hover:no-underline", navLinkClasses)}
+        className={cn("min-h-11 whitespace-nowrap border-b-2 border-transparent px-0.5 font-normal hover:no-underline md:min-h-0 md:pb-1", navLinkClasses)}
       >
         {link}
       </LinkComponent>
@@ -1893,7 +1939,7 @@ function MainNav({
         type="button"
         onClick={() => onFilterChange?.(link)}
         className={cn(
-          "whitespace-nowrap border-b-2 border-transparent px-0.5 pb-1 text-sm font-normal transition-colors",
+          "min-h-11 whitespace-nowrap border-b-2 border-transparent px-0.5 text-sm font-normal transition-colors md:min-h-0 md:pb-1",
           active
             ? useDarkActiveState
               ? "border-[#BDDDFC] font-semibold text-[#BDDDFC]"
@@ -1910,7 +1956,7 @@ function MainNav({
         variant="neutral"
         underline={false}
         size="sm"
-        className="whitespace-nowrap font-normal"
+        className="min-h-11 whitespace-nowrap font-normal md:min-h-0"
       >
         {link}
       </LinkComponent>
@@ -1925,7 +1971,10 @@ function MainNav({
           <Button
             variant="outline"
             size="icon-sm"
-            className={darkMode ? "border-white/20 bg-white/[0.04] text-white hover:bg-white/10 hover:text-white" : undefined}
+            className={cn(
+              "h-11 w-11 sm:h-7 sm:w-7",
+              darkMode ? "border-white/20 bg-white/[0.04] text-white hover:bg-white/10 hover:text-white" : undefined
+            )}
             onClick={toggleColorMode}
             aria-label={`Switch to ${colorMode === "dark" ? "light" : "dark"} mode`}
             title={`Switch to ${colorMode === "dark" ? "light" : "dark"} mode`}
@@ -1940,7 +1989,10 @@ function MainNav({
           <Button
             variant="outline"
             size="icon-sm"
-            className={darkMode ? "border-white/20 bg-white/[0.04] text-white hover:bg-white/10 hover:text-white" : undefined}
+            className={cn(
+              "h-11 w-11 sm:h-7 sm:w-7",
+              darkMode ? "border-white/20 bg-white/[0.04] text-white hover:bg-white/10 hover:text-white" : undefined
+            )}
             aria-label="Search"
             title="Search"
           >
@@ -1952,7 +2004,8 @@ function MainNav({
     <div className={cn(
       "border-b",
       darkMode ? "border-white/10 bg-[#0d1014]" : "border-border",
-      isDestinationRiver && (darkMode ? "sticky top-8 z-30 md:static" : "sticky top-8 z-30 bg-[var(--hp-surface)] md:static")
+      isDestinationRiver && (darkMode ? "sticky top-8 z-30 md:static" : "sticky top-8 z-30 bg-[var(--hp-surface)] md:static"),
+      mastheadCompact && "md:invisible"
     )}>
       <PageContainer as="nav" className="flex items-center justify-start gap-6 overflow-x-auto py-2 scrollbar-hide md:justify-center">
         {renderNavLinks()}
@@ -2104,15 +2157,15 @@ function NewsletterPromo() {
       </div>
       <p className="text-[length:var(--text-token-4xs)] leading-relaxed text-muted-foreground">
         By signing up, I agree to the{" "}
-        <LinkComponent variant="neutral" underline size="xs" className="font-normal">Terms of Use</LinkComponent>{" "}
+        <LinkComponent href="https://subscribe.hearstmags.com/circulation/shared/terms.html" target="_blank" rel="noopener noreferrer" variant="neutral" underline size="xs" className="font-normal">Terms of Use</LinkComponent>{" "}
         (including the{" "}
-        <LinkComponent variant="neutral" underline size="xs" className="font-normal">dispute resolution procedures</LinkComponent>
+        <LinkComponent href="https://subscribe.hearstmags.com/circulation/shared/terms.html" target="_blank" rel="noopener noreferrer" variant="neutral" underline size="xs" className="font-normal">dispute resolution procedures</LinkComponent>
         ) and have reviewed the{" "}
-        <LinkComponent variant="neutral" underline size="xs" className="font-normal">Privacy Notice</LinkComponent>.
+        <LinkComponent href="https://subscribe.hearstmags.com/circulation/shared/privacy.html" target="_blank" rel="noopener noreferrer" variant="neutral" underline size="xs" className="font-normal">Privacy Notice</LinkComponent>.
         This site is protected by reCAPTCHA and the Google{" "}
-        <LinkComponent variant="neutral" underline size="xs" className="font-normal">Privacy Policy</LinkComponent>{" "}
+        <LinkComponent href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" variant="neutral" underline size="xs" className="font-normal">Privacy Policy</LinkComponent>{" "}
         and{" "}
-        <LinkComponent variant="neutral" underline size="xs" className="font-normal">Terms of Service</LinkComponent>{" "}
+        <LinkComponent href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" variant="neutral" underline size="xs" className="font-normal">Terms of Service</LinkComponent>{" "}
         apply.
       </p>
     </div>
@@ -2150,7 +2203,11 @@ function Footer({ flushTop = false }: { flushTop?: boolean }) {
   const logo = brandLogos[brand.slug];
 
   const footerLogo = logo ? (
-    <BrandLogo slug={brand.slug} className="[&_svg]:h-8 [&_svg]:w-auto" color="#fff" />
+    <BrandLogo
+      slug={brand.slug}
+      className="flex h-8 max-w-full items-center [&_svg]:h-auto [&_svg]:max-h-8 [&_svg]:w-auto [&_svg]:max-w-full"
+      color="#fff"
+    />
   ) : (
     brand.name
   );
@@ -2160,7 +2217,7 @@ function Footer({ flushTop = false }: { flushTop?: boolean }) {
       <SiteFooter
         siteName={footerLogo}
         socialLinks={["YouTube", "Facebook", "Instagram", "Pinterest"]}
-        legalLinks={["Privacy Notice", "Terms of Use", "Site Map"]}
+        legalLinks={["Privacy Notice", "Terms of Use", "Hearst brands"]}
         copyrightYear={2026}
       />
     </div>
@@ -2177,14 +2234,15 @@ function LifestyleRiverImage({
   priority?: boolean;
 }) {
   return (
-    <img
+    <Image
       src={story.image}
       alt={`${story.brand}: ${story.title}`}
+      width={1200}
+      height={675}
+      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 66vw, 640px"
       className={cn("min-w-0 bg-muted object-cover", className)}
       style={{ objectPosition: getLifestyleImagePosition(story) }}
-      loading={priority ? "eager" : "lazy"}
-      fetchPriority={priority ? "high" : "auto"}
-      decoding="async"
+      preload={priority}
     />
   );
 }
@@ -2256,7 +2314,7 @@ function LifestyleBrandSource({ story }: { story: LifestyleRiverStory }) {
       href={getHearstBrandRoute(story.brandSlug)}
       onClick={(event) => event.stopPropagation()}
       onKeyDown={(event) => event.stopPropagation()}
-      className="inline-flex min-w-0 items-center gap-1.5 rounded-[4px] text-[length:var(--text-token-4xs)] text-muted-foreground transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+      className="relative z-20 inline-flex min-w-0 items-center gap-1.5 rounded-[4px] text-[length:var(--text-token-4xs)] text-muted-foreground transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
       aria-label={`Open ${story.brand} brand page`}
     >
       <BrandSourceIcon brand={story.brand} brandSlug={story.brandSlug} />
@@ -2449,12 +2507,13 @@ function ContextualRiverAdCard({
       style={{ backgroundColor: ad.palette.background, color: ad.palette.foreground }}
     >
       <div className="relative aspect-video min-w-0 overflow-hidden rounded-[4px] sm:h-full sm:min-h-44 sm:aspect-auto">
-        <img
+        <Image
           src={ad.imageUrl}
           alt={`${ad.sponsor}: ${ad.title}`}
+          width={704}
+          height={396}
+          sizes="(max-width: 640px) 100vw, 176px"
           className="h-full w-full object-cover"
-          loading="lazy"
-          decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/20 to-black/70" />
         <div className="absolute inset-x-0 top-0 flex items-center justify-between gap-3 p-4 text-white">
@@ -2822,11 +2881,13 @@ function LiveStoryBadge({
   if (!story.id.startsWith("live-")) return null;
 
   return (
-    <span
-      className={cn("block h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500 ring-1 ring-white", className)}
-      aria-label="Current feed story"
-      title="Current feed story"
-    />
+    <span className="inline-flex shrink-0 items-center" title="Current feed story">
+      <span
+        className={cn("block h-1.5 w-1.5 rounded-full bg-emerald-500 ring-1 ring-white", className)}
+        aria-hidden="true"
+      />
+      <span className="sr-only">Current feed story</span>
+    </span>
   );
 }
 
@@ -3092,11 +3153,14 @@ function LifestyleRiverMedia({
           onClick={(event) => event.stopPropagation()}
           onKeyDown={(event) => event.stopPropagation()}
         >
-          <img
+          <Image
             src={story.image}
             alt=""
+            width={1200}
+            height={675}
+            sizes="(max-width: 1024px) 100vw, 640px"
             className="h-full w-full object-cover"
-            loading={featured ? "eager" : "lazy"}
+            preload={featured}
           />
           <div className="absolute inset-0 bg-black/15" />
           <button
@@ -3283,33 +3347,31 @@ function LifestyleRiverCard({
 
   return (
     <article className={cn(
-      "relative min-w-0 cursor-pointer overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/30",
+      "group/card relative min-w-0 cursor-pointer overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/50",
       isVideo
         ? "grid"
       : featured
         ? "grid items-stretch 2xl:grid-cols-[minmax(0,0.95fr)_minmax(320px,1fr)]"
         : "grid gap-0 sm:grid-cols-[176px_minmax(0,1fr)] sm:gap-4 sm:p-4"
     )}
-      role="button"
-      tabIndex={0}
-      onClick={onOpen}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          onOpen();
-        }
-      }}
-      aria-label={`Open story: ${story.title}`}
     >
-      <LifestyleRiverMedia
-        story={story}
-        kind={kind}
-        featured={featured}
-        playing={videoPlaying}
-        onTogglePlaying={() => setVideoPlaying((playing) => !playing)}
+      <button
+        type="button"
+        onClick={onOpen}
+        className="peer absolute inset-0 z-10 rounded-[8px] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/60"
+        aria-label={`Open story: ${story.title}`}
       />
+      <div className={cn("relative min-w-0", isVideo && "z-20")}>
+        <LifestyleRiverMedia
+          story={story}
+          kind={kind}
+          featured={featured}
+          playing={videoPlaying}
+          onTogglePlaying={() => setVideoPlaying((playing) => !playing)}
+        />
+      </div>
       <div className={cn(
-        "min-w-0",
+        "relative min-w-0",
         isVideo ? "p-4 sm:p-5" : featured ? "flex flex-col justify-center p-5 sm:p-6 lg:p-8" : "p-4 sm:p-0"
       )}>
         <div className="mb-3 flex flex-wrap items-center gap-2">
@@ -3320,7 +3382,7 @@ function LifestyleRiverCard({
           <LifestyleBrandSource story={story} />
         </div>
         <h2 className={cn(
-          "headline break-words leading-tight",
+          "headline break-words leading-tight transition-colors group-hover/card:text-primary group-focus-within/card:text-primary",
           featured ? "w-full text-3xl sm:text-[2rem] lg:text-4xl" : "text-xl sm:text-2xl"
         )}>
           {story.title}
@@ -3332,7 +3394,7 @@ function LifestyleRiverCard({
           {story.summary}
         </p>
         <LifestyleCardModule story={story} kind={kind} />
-        <div className="mt-5 flex flex-wrap gap-2" onClick={(event) => event.stopPropagation()}>
+        <div className="relative z-20 mt-5 flex flex-wrap gap-2" onClick={(event) => event.stopPropagation()}>
           <Button variant={saved ? "default" : "outline"} size="xs" onClick={onSave} aria-pressed={saved}>
             <Bookmark className="mr-1.5 h-3.5 w-3.5" aria-hidden />
             {saved ? "Saved" : "Save"}
@@ -3361,9 +3423,11 @@ function LifestyleRiverCard({
 function VideoPlaySurface({
   story,
   featured = false,
+  priority = false,
 }: {
   story: LifestyleRiverStory;
   featured?: boolean;
+  priority?: boolean;
 }) {
   const [playing, setPlaying] = React.useState(false);
 
@@ -3389,12 +3453,14 @@ function VideoPlaySurface({
         />
       ) : (
         <>
-          <img
+          <Image
             src={story.image}
             alt=""
+            width={1200}
+            height={675}
+            sizes="(max-width: 1024px) 100vw, 640px"
             className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.025] motion-reduce:transition-none"
-            loading={featured ? "eager" : "lazy"}
-            decoding="async"
+            preload={priority}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-black/5" />
           <button
@@ -3444,7 +3510,7 @@ function VideoFeedLeadCard({
 
   return (
     <article className="group overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
-      <VideoPlaySurface story={story} featured />
+      <VideoPlaySurface story={story} featured priority />
       <div className="p-4 sm:p-5">
         <div className="mb-3 flex flex-wrap items-center gap-2">
           <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
@@ -3454,7 +3520,7 @@ function VideoFeedLeadCard({
           <LiveStoryBadge story={story} />
         </div>
         <button type="button" className="block text-left focus:outline-none focus:ring-2 focus:ring-primary/30" onClick={onOpen}>
-          <h2
+          <h1
             className={cn(
               "text-balance",
               useHearstPlusStyle
@@ -3463,7 +3529,7 @@ function VideoFeedLeadCard({
             )}
           >
             {story.title}
-          </h2>
+          </h1>
         </button>
         <p
           className={cn(
@@ -3480,17 +3546,17 @@ function VideoFeedLeadCard({
               onClick={onSave}
               aria-pressed={saved}
               aria-label={saved ? "Remove from saved videos" : "Save video"}
-              className={cn("inline-flex items-center gap-1.5 transition-colors hover:text-primary", saved ? "text-primary" : "")}
+              className={cn("inline-flex min-h-11 items-center gap-1.5 transition-colors hover:text-primary sm:min-h-0", saved ? "text-primary" : "")}
             >
               <Bookmark className="h-4 w-4" weight={saved ? "fill" : "regular"} aria-hidden />
               <span>{saved ? "Saved" : "Save"}</span>
             </button>
-            <button type="button" onClick={onOpen} className="inline-flex items-center gap-1.5 transition-colors hover:text-primary">
+            <button type="button" onClick={onOpen} className="inline-flex min-h-11 items-center gap-1.5 transition-colors hover:text-primary sm:min-h-0">
               <MessageCircle className="h-4 w-4" aria-hidden />
               <span>{commentCount}</span>
             </button>
           </div>
-          <Button variant="outline" size="sm" onClick={onOpen}>
+          <Button variant="outline" size="sm" className="h-11 sm:h-7" onClick={onOpen}>
             Open story
           </Button>
         </div>
@@ -3557,21 +3623,21 @@ function VideoIndexCard({
               onClick={onSave}
               aria-pressed={saved}
               aria-label={saved ? "Remove from saved videos" : "Save video"}
-              className={cn("inline-flex items-center gap-1.5 transition-colors hover:text-primary", saved ? "text-primary" : "")}
+              className={cn("inline-flex min-h-11 items-center gap-1.5 transition-colors hover:text-primary sm:min-h-0", saved ? "text-primary" : "")}
             >
               <Bookmark className="h-4 w-4" weight={saved ? "fill" : "regular"} aria-hidden />
               <span>{saved ? "Saved" : "Save"}</span>
             </button>
-            <button type="button" onClick={onOpen} className="inline-flex items-center gap-1.5 transition-colors hover:text-primary">
+            <button type="button" onClick={onOpen} className="inline-flex min-h-11 items-center gap-1.5 transition-colors hover:text-primary sm:min-h-0">
               <MessageCircle className="h-4 w-4" aria-hidden />
               <span>{commentCount}</span>
             </button>
-            <button type="button" onClick={onHide} aria-label="Hide video" className="inline-flex items-center gap-1.5 transition-colors hover:text-primary">
+            <button type="button" onClick={onHide} aria-label="Hide video" className="inline-flex min-h-11 items-center gap-1.5 transition-colors hover:text-primary sm:min-h-0">
               <EyeOff className="h-4 w-4" aria-hidden />
               <span>Hide</span>
             </button>
           </div>
-          <Button variant="outline" size="sm" onClick={onOpen}>
+          <Button variant="outline" size="sm" className="h-11 sm:h-7" onClick={onOpen}>
             Open story
           </Button>
         </div>
@@ -3590,7 +3656,7 @@ function VideoRailCard({
   return (
     <button type="button" className="grid w-full grid-cols-[96px_minmax(0,1fr)] gap-3 text-left" onClick={onOpen}>
       <span className="relative aspect-video overflow-hidden rounded-[6px] bg-muted">
-        <img src={story.image} alt="" className="h-full w-full object-cover" loading="lazy" decoding="async" />
+        <Image src={story.image} alt="" fill sizes="96px" className="object-cover" />
         {story.videoDuration ? (
           <span className="absolute bottom-1 right-1 rounded-full bg-black/70 px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-white">
             {formatVideoDuration(story.videoDuration)}
@@ -3609,7 +3675,7 @@ function getPersonalizedLeadSliderStories(
   stories: LifestyleRiverStory[],
   profile: LifestyleRiverProfile,
   demoState: LifestyleDemoState,
-  config = destinationConfigs.lifestyle,
+  config = baseDestinationConfigs.lifestyle,
   count = 5,
   includeCurrentFeed = false
 ) {
@@ -3677,6 +3743,7 @@ function LifestyleLeadSlider({
   onMoreLikeThis: (story: LifestyleRiverStory) => void;
   onFollowBrand: (brandName: string) => void;
 }) {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [paused, setPaused] = React.useState(false);
   const [isDragging, setIsDragging] = React.useState(false);
@@ -3693,14 +3760,14 @@ function LifestyleLeadSlider({
   }, [storyIdsKey]);
 
   React.useEffect(() => {
-    if (paused || isDragging || stories.length < 2) return;
+    if (paused || prefersReducedMotion || isDragging || stories.length < 2) return;
 
     const intervalId = window.setInterval(() => {
       setActiveIndex((index) => (index + 1) % stories.length);
     }, 6500);
 
     return () => window.clearInterval(intervalId);
-  }, [isDragging, paused, stories.length]);
+  }, [isDragging, paused, prefersReducedMotion, stories.length]);
 
   if (!activeStory) return null;
 
@@ -3862,7 +3929,7 @@ function LifestyleLeadSlider({
             {stories.length > 1 ? (
               <button
                 type="button"
-                className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60 sm:h-7 sm:w-7"
                 onClick={goToPrevious}
                 aria-label="Previous featured story"
               >
@@ -3871,16 +3938,17 @@ function LifestyleLeadSlider({
             ) : null}
             <button
               type="button"
-              className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60"
-              aria-label={paused ? "Resume slider" : "Pause slider"}
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60 sm:h-7 sm:w-7"
+              aria-label={prefersReducedMotion ? "Automatic rotation disabled because reduced motion is enabled" : paused ? "Resume slider" : "Pause slider"}
               onClick={() => setPaused((value) => !value)}
+              disabled={prefersReducedMotion}
             >
-              {paused ? <Play className="h-4 w-4" aria-hidden /> : <Pause className="h-4 w-4" aria-hidden />}
+              {paused || prefersReducedMotion ? <Play className="h-4 w-4" aria-hidden /> : <Pause className="h-4 w-4" aria-hidden />}
             </button>
             {stories.length > 1 ? (
               <button
                 type="button"
-                className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60 sm:h-7 sm:w-7"
                 onClick={goToNext}
                 aria-label="Next featured story"
               >
@@ -3897,32 +3965,38 @@ function LifestyleLeadSlider({
             <button
               key={story.id}
               type="button"
-              className={cn(
-                "h-1.5 rounded-full transition-all",
-                index === activeIndex ? "w-8 bg-primary" : "w-4 bg-muted-foreground/30 hover:bg-muted-foreground/60"
-              )}
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full transition-colors hover:bg-muted/60 sm:h-6 sm:w-auto"
               onClick={() => setActiveIndex(index)}
               aria-label={`Show story ${index + 1}: ${story.title}`}
               aria-current={index === activeIndex ? "true" : undefined}
-            />
+            >
+              <span
+                aria-hidden
+                className={cn(
+                  "h-1.5 rounded-full transition-all motion-reduce:transition-none",
+                  index === activeIndex ? "w-8 bg-primary" : "w-4 bg-muted-foreground/30"
+                )}
+              />
+            </button>
           ))}
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <Button
             variant={saved ? "default" : "outline"}
             size="xs"
+            className="h-11 sm:h-6"
             onClick={() => onSave(activeStory)}
             aria-pressed={saved}
           >
             <Bookmark className="mr-1.5 h-3.5 w-3.5" aria-hidden />
             {saved ? "Saved" : "Save"}
           </Button>
-          <Button variant="outline" size="xs" onClick={() => onMoreLikeThis(activeStory)}>
+          <Button variant="outline" size="xs" className="h-11 sm:h-6" onClick={() => onMoreLikeThis(activeStory)}>
             <Plus className="mr-1.5 h-3.5 w-3.5" aria-hidden />
             More like this
           </Button>
           <span className="inline-flex items-center gap-1">
-            <Button variant="ghost" size="xs" onClick={() => onFollowBrand(activeStory.brand)}>
+            <Button variant="ghost" size="xs" className="h-11 sm:h-6" onClick={() => onFollowBrand(activeStory.brand)}>
               Follow {activeStory.brand}
             </Button>
             <LiveStoryBadge story={activeStory} />
@@ -4000,6 +4074,7 @@ function FullscreenImageViewer({
   onSave: () => void;
   onMoreLikeThis: () => void;
 }) {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [activeIndex, setActiveIndex] = React.useState(gallery.initialIndex);
   const [zoom, setZoom] = React.useState(1);
   const [offset, setOffset] = React.useState({ x: 0, y: 0 });
@@ -4023,6 +4098,12 @@ function FullscreenImageViewer({
   const selectImage = React.useCallback((nextIndex: number) => {
     const normalizedIndex = (nextIndex + gallery.images.length) % gallery.images.length;
     if (normalizedIndex === activeIndex) return;
+    if (prefersReducedMotion) {
+      setActiveIndex(normalizedIndex);
+      resetTransform();
+      setImageVisible(true);
+      return;
+    }
     setImageVisible(false);
     if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
     transitionTimerRef.current = setTimeout(() => {
@@ -4030,7 +4111,7 @@ function FullscreenImageViewer({
       resetTransform();
       window.requestAnimationFrame(() => setImageVisible(true));
     }, 180);
-  }, [activeIndex, gallery.images.length, resetTransform]);
+  }, [activeIndex, gallery.images.length, prefersReducedMotion, resetTransform]);
 
   const showControls = React.useCallback(() => {
     setControlsVisible(true);
@@ -4058,10 +4139,10 @@ function FullscreenImageViewer({
   }, []);
 
   React.useEffect(() => {
-    if (!playing || !hasMultipleImages) return;
+    if (!playing || prefersReducedMotion || !hasMultipleImages) return;
     const intervalId = window.setInterval(() => selectImage(activeIndex + 1), 6500);
     return () => window.clearInterval(intervalId);
-  }, [activeIndex, hasMultipleImages, playing, selectImage]);
+  }, [activeIndex, hasMultipleImages, playing, prefersReducedMotion, selectImage]);
 
   React.useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -4136,12 +4217,15 @@ function FullscreenImageViewer({
         if (event.target === event.currentTarget) onClose();
       }}
     >
-      <img
+      <Image
         key={activeImage.src}
         src={activeImage.src}
         alt={activeImage.alt}
+        fill
+        sizes="100vw"
+        preload
         className={cn(
-          "max-h-[100dvh] max-w-[100vw] select-none object-contain transition-opacity duration-700 ease-out motion-reduce:transition-none",
+          "select-none object-contain transition-opacity duration-700 ease-out motion-reduce:transition-none",
           zoom > 1 ? "cursor-grab active:cursor-grabbing" : hasMultipleImages ? "cursor-ew-resize" : "cursor-zoom-in",
           imageVisible ? "opacity-100" : "opacity-0"
         )}
@@ -4158,7 +4242,7 @@ function FullscreenImageViewer({
         onPointerCancel={handlePointerUp}
       />
 
-      <div className={cn("pointer-events-none absolute inset-x-4 top-4 flex items-center justify-between gap-3 transition-opacity duration-300", chromeVisible ? "opacity-100" : "opacity-0")}>
+      <div className={cn("pointer-events-none absolute inset-x-4 top-4 flex items-center justify-between gap-3 transition-opacity duration-300 motion-reduce:transition-none", chromeVisible ? "opacity-100" : "opacity-0")}>
         <div className="pointer-events-auto inline-flex h-9 shrink-0 items-center whitespace-nowrap rounded-full bg-black/35 px-3 text-sm font-semibold text-white/80 ring-1 ring-inset ring-white/15">
           {activeIndex + 1} of {gallery.images.length}
         </div>
@@ -4176,7 +4260,7 @@ function FullscreenImageViewer({
           {hasMultipleImages ? (
             <button type="button" className={controlButtonClass} onClick={() => {
               setPlaying((value) => !value);
-            }} aria-label={playing ? "Pause slideshow" : "Play slideshow"} aria-pressed={playing}>
+            }} aria-label={prefersReducedMotion ? "Slideshow disabled because reduced motion is enabled" : playing ? "Pause slideshow" : "Play slideshow"} aria-pressed={playing} disabled={prefersReducedMotion}>
               {playing ? <Pause className="h-4 w-4" aria-hidden="true" /> : <Play className="h-4 w-4" aria-hidden="true" />}
             </button>
           ) : null}
@@ -4193,16 +4277,16 @@ function FullscreenImageViewer({
 
       {hasMultipleImages ? (
         <>
-          <button type="button" className={cn(controlButtonClass, "absolute left-4 top-1/2 -translate-y-1/2 px-0 transition-opacity duration-300", chromeVisible ? "opacity-100" : "pointer-events-none opacity-0")} onClick={() => selectImage(activeIndex - 1)} aria-label="Previous photo">
+          <button type="button" className={cn(controlButtonClass, "absolute left-4 top-1/2 -translate-y-1/2 px-0 transition-opacity duration-300 motion-reduce:transition-none", chromeVisible ? "opacity-100" : "pointer-events-none opacity-0")} onClick={() => selectImage(activeIndex - 1)} aria-label="Previous photo">
             <ChevronLeft className="h-5 w-5" aria-hidden="true" />
           </button>
-          <button type="button" className={cn(controlButtonClass, "absolute right-4 top-1/2 -translate-y-1/2 px-0 transition-opacity duration-300", chromeVisible ? "opacity-100" : "pointer-events-none opacity-0")} onClick={() => selectImage(activeIndex + 1)} aria-label="Next photo">
+          <button type="button" className={cn(controlButtonClass, "absolute right-4 top-1/2 -translate-y-1/2 px-0 transition-opacity duration-300 motion-reduce:transition-none", chromeVisible ? "opacity-100" : "pointer-events-none opacity-0")} onClick={() => selectImage(activeIndex + 1)} aria-label="Next photo">
             <ChevronRight className="h-5 w-5" aria-hidden="true" />
           </button>
         </>
       ) : null}
 
-      <div className={cn("pointer-events-none absolute inset-x-4 bottom-4 flex flex-col items-center gap-3 transition-opacity duration-300", chromeVisible ? "opacity-100" : "opacity-0")}>
+      <div className={cn("pointer-events-none absolute inset-x-4 bottom-4 flex flex-col items-center gap-3 transition-opacity duration-300 motion-reduce:transition-none", chromeVisible ? "opacity-100" : "opacity-0")}>
         {captionOpen && (activeImage.caption || activeImage.credit) ? (
           <div className="pointer-events-auto w-full max-w-3xl bg-black/55 px-4 py-3 text-center text-sm leading-6 text-white/85 backdrop-blur-sm">
             {activeImage.caption ? <p>{activeImage.caption}</p> : null}
@@ -4215,12 +4299,12 @@ function FullscreenImageViewer({
               <button
                 key={image.src}
                 type="button"
-                className={cn("h-12 w-16 shrink-0 overflow-hidden rounded-[4px] ring-1 ring-inset transition-opacity", index === activeIndex ? "ring-white opacity-100" : "ring-white/20 opacity-55 hover:opacity-90")}
+                className={cn("relative h-12 w-16 shrink-0 overflow-hidden rounded-[4px] ring-1 ring-inset transition-opacity motion-reduce:transition-none", index === activeIndex ? "ring-white opacity-100" : "ring-white/20 opacity-55 hover:opacity-90")}
                 onClick={() => selectImage(index)}
                 aria-label={`Show photo ${index + 1}`}
                 aria-current={index === activeIndex ? "true" : undefined}
               >
-                <img src={image.src} alt="" className="h-full w-full object-cover" loading="lazy" decoding="async" />
+                <Image src={image.src} alt="" fill sizes="64px" className="object-cover" />
               </button>
             ))}
           </div>
@@ -4352,12 +4436,13 @@ function LifestyleReaderBody({
                   })}
                   aria-label={`View image fullscreen: ${block.alt}`}
                 >
-                  <img
+                  <Image
                     src={block.url}
                     alt={block.alt}
+                    width={1200}
+                    height={800}
+                    sizes="(max-width: 768px) 100vw, 768px"
                     className="max-h-[720px] w-full rounded-[4px] object-cover transition-opacity group-hover:opacity-95"
-                    loading="lazy"
-                    decoding="async"
                   />
                 </button>
                 {block.caption || block.credit ? (
@@ -4809,12 +4894,13 @@ function LifestyleReaderSidebarAd({ currentStory, slotIndex = 0 }: { currentStor
         style={{ backgroundColor: ad.palette.background, color: ad.palette.foreground }}
       >
         <div className="relative h-[268px] overflow-hidden border-b border-black/10">
-          <img
+          <Image
             src={ad.imageUrl}
             alt={`${ad.sponsor}: ${ad.title}`}
+            width={600}
+            height={536}
+            sizes="300px"
             className="h-full w-full object-cover"
-            loading="lazy"
-            decoding="async"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/5 to-black/45" />
           <div className="absolute inset-x-0 top-0 flex items-center justify-between p-5 text-white">
@@ -4896,8 +4982,11 @@ function LifestyleStoryReaderModal({
   onToggleFollowBrand: (brandName: string) => void;
   onAddComment: (storyId: string, body: string) => void;
 }) {
+  const destinationConfigs = useDestinationConfigs();
+  const dialogRef = React.useRef<HTMLDivElement | null>(null);
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
+  const onCloseRef = React.useRef(onClose);
   const [readerDestinationOverride, setReaderDestinationOverride] = React.useState<Exclude<DestinationMode, "all"> | null>(null);
   const readerStories = readerDestinationOverride
     ? availableStories.filter((story) => getStoryDestinationMode(story.brandSlug) === readerDestinationOverride)
@@ -4906,6 +4995,7 @@ function LifestyleStoryReaderModal({
   const [visibleReaderCount, setVisibleReaderCount] = React.useState(1);
   const [liveArticles, setLiveArticles] = React.useState<Record<string, LiveArticleLoadState>>({});
   const [fullscreenGallery, setFullscreenGallery] = React.useState<FullscreenGalleryState | null>(null);
+  const fullscreenGalleryRef = React.useRef(fullscreenGallery);
   const storyQueue = openIndex >= 0
     ? [...readerStories.slice(openIndex), ...readerStories.slice(0, openIndex)]
     : [];
@@ -4922,6 +5012,7 @@ function LifestyleStoryReaderModal({
   const readerThemeCssVars = readerTheme
     ? brandToCssVars(readerTheme, readerColorMode) as React.CSSProperties
     : undefined;
+  const isReaderOpen = Boolean(openStoryId);
   const readerSections: Array<{ label: string; mode: Exclude<DestinationMode, "all"> }> = [
     { label: "Lifestyle", mode: "lifestyle" },
     { label: "Autos", mode: "autos" },
@@ -4954,31 +5045,119 @@ function LifestyleStoryReaderModal({
   }, [openStoryId]);
 
   React.useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
+  React.useEffect(() => {
+    fullscreenGalleryRef.current = fullscreenGallery;
+  }, [fullscreenGallery]);
+
+  React.useEffect(() => {
     setVisibleReaderCount(1);
     setFullscreenGallery(null);
     scrollRef.current?.scrollTo({ top: 0 });
   }, [openStoryId]);
 
   React.useEffect(() => {
-    if (!openStoryId) return;
+    if (!isReaderOpen) return;
+
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    const returnFocusLabel = window.sessionStorage.getItem(readerReturnFocusStorageKey);
+    const previousOverflow = document.body.style.overflow;
+    const siblingStates = Array.from(dialog.parentElement?.children ?? [])
+      .filter((element): element is HTMLElement => element instanceof HTMLElement && element !== dialog)
+      .map((element) => ({
+        element,
+        inert: element.inert,
+        ariaHidden: element.getAttribute("aria-hidden"),
+      }));
+    const focusableSelector =
+      'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const getFocusableElements = () => Array.from(
+      dialog.querySelectorAll<HTMLElement>(focusableSelector)
+    ).filter((element) => element.getClientRects().length > 0 && element.getAttribute("aria-hidden") !== "true");
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") return;
-      if (fullscreenGallery) {
-        setFullscreenGallery(null);
+      if (event.key === "Escape") {
+        if (fullscreenGalleryRef.current) {
+          setFullscreenGallery(null);
+          return;
+        }
+        onCloseRef.current();
         return;
       }
-      onClose();
+
+      if (event.key !== "Tab" || fullscreenGalleryRef.current) return;
+
+      const focusableElements = getFocusableElements();
+      if (focusableElements.length === 0) {
+        event.preventDefault();
+        dialog.focus();
+        return;
+      }
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+      const activeElement = document.activeElement;
+
+      if (!dialog.contains(activeElement)) {
+        event.preventDefault();
+        (event.shiftKey ? lastElement : firstElement).focus();
+      } else if (event.shiftKey && activeElement === firstElement) {
+        event.preventDefault();
+        lastElement.focus();
+      } else if (!event.shiftKey && activeElement === lastElement) {
+        event.preventDefault();
+        firstElement.focus();
+      }
     };
 
+    siblingStates.forEach(({ element }) => {
+      element.inert = true;
+      element.setAttribute("aria-hidden", "true");
+    });
     document.body.style.overflow = "hidden";
     window.addEventListener("keydown", onKeyDown);
 
+    const focusFrame = window.requestAnimationFrame(() => {
+      dialog.querySelector<HTMLElement>("[data-reader-close]")?.focus();
+    });
+
     return () => {
-      document.body.style.overflow = "";
+      window.cancelAnimationFrame(focusFrame);
       window.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = previousOverflow;
+      siblingStates.forEach(({ element, inert, ariaHidden }) => {
+        element.inert = inert;
+        if (ariaHidden === null) element.removeAttribute("aria-hidden");
+        else element.setAttribute("aria-hidden", ariaHidden);
+      });
+      if (returnFocusLabel) {
+        let attempts = 0;
+        const restoreFocus = () => {
+          attempts += 1;
+          if (!window.location.pathname.startsWith("/read/")) {
+            const returnTarget = Array.from(document.querySelectorAll<HTMLElement>("[aria-label]"))
+              .find((element) => element.getAttribute("aria-label") === returnFocusLabel);
+            if (returnTarget) {
+              returnTarget.focus();
+              window.sessionStorage.removeItem(readerReturnFocusStorageKey);
+              return true;
+            }
+          }
+          return attempts >= 20;
+        };
+
+        if (!restoreFocus()) {
+          const restoreTimer = window.setInterval(() => {
+            if (restoreFocus()) window.clearInterval(restoreTimer);
+          }, 50);
+        }
+      }
     };
-  }, [fullscreenGallery, onClose, openStoryId]);
+  }, [isReaderOpen]);
 
   React.useEffect(() => {
     const node = sentinelRef.current;
@@ -5040,10 +5219,12 @@ function LifestyleStoryReaderModal({
 
   return (
     <div
+      ref={dialogRef}
       className="fixed inset-0 z-[100] bg-foreground/55 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
       aria-label="Story reader"
+      tabIndex={-1}
     >
       <div className="absolute inset-0" onClick={onClose} />
       <div
@@ -5100,7 +5281,13 @@ function LifestyleStoryReaderModal({
                 );
               })}
             </nav>
-            <Button variant="outline" size="icon-sm" onClick={onClose} aria-label="Close story reader">
+            <Button
+              variant="outline"
+              size="icon-sm"
+              onClick={onClose}
+              aria-label="Close story reader"
+              data-reader-close
+            >
               <X className="h-4 w-4" aria-hidden />
             </Button>
           </div>
@@ -5259,9 +5446,9 @@ function LifestyleStoryReaderModal({
 
             <div ref={sentinelRef} className="flex justify-center py-8">
               {visibleReaderCount < storyQueue.length ? (
-                <p className="text-sm text-muted-foreground">Loading the next story...</p>
+                <p className="text-sm text-[var(--hp-text-ui)]">Loading the next story...</p>
               ) : (
-                <p className="text-sm text-muted-foreground">End of this filtered story river.</p>
+                <p className="text-sm text-[var(--hp-text-ui)]">End of this filtered story river.</p>
               )}
             </div>
           </div>
@@ -5861,10 +6048,10 @@ function MobileCollapsibleSidebarCard({
           {title}
         </p>
       </div>
-      <div className="flex min-w-0 items-start gap-3 lg:hidden">
+      <div className="flex min-h-11 min-w-0 items-stretch gap-3 lg:hidden">
         <button
           type="button"
-          className="min-w-0 flex-1 overflow-hidden text-left"
+          className="min-h-11 min-w-0 flex-1 overflow-hidden text-left"
           onClick={() => setOpen((value) => !value)}
           aria-expanded={open}
         >
@@ -5879,7 +6066,7 @@ function MobileCollapsibleSidebarCard({
           <button
             type="button"
             onClick={onMobileAction}
-            className="mt-0.5 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))] hover:underline"
+            className="min-h-11 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))] transition-colors hover:text-[var(--hp-text-primary)] focus-visible:text-[var(--hp-text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
           >
             {mobileActionLabel}
           </button>
@@ -5887,7 +6074,7 @@ function MobileCollapsibleSidebarCard({
         <button
           type="button"
           onClick={() => setOpen((value) => !value)}
-          className="shrink-0 text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]"
+          className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]"
           aria-label={`${open ? "Collapse" : "Expand"} ${title}`}
           aria-expanded={open}
         >
@@ -5913,6 +6100,7 @@ function LifestyleLeftSidebar({
   onToggleBrandFilter,
   onClearBrandFilters,
   onFollowTopic,
+  onOpenStory,
 }: {
   profile: LifestyleRiverProfile;
   topStories: LifestyleRiverStory[];
@@ -5924,6 +6112,7 @@ function LifestyleLeftSidebar({
   onToggleBrandFilter: (brandName: string) => void;
   onClearBrandFilters: () => void;
   onFollowTopic: (topic: string) => void;
+  onOpenStory: (story: LifestyleRiverStory) => void;
 }) {
   const activeTopicSummary = profile.followedTopics.slice(0, 3).join(", ");
   const brandStoryCount = brands.reduce((total, brand) => total + brand.count, 0);
@@ -5946,13 +6135,21 @@ function LifestyleLeftSidebar({
       >
         <div className="space-y-3">
           {topStories.slice(0, 3).map((story) => (
-            <div key={story.id} className="border-b border-border pb-3 last:border-0 last:pb-0">
+            <button
+              key={story.id}
+              type="button"
+              onClick={() => onOpenStory(story)}
+              className="group block w-full border-b border-border pb-3 text-left last:border-0 last:pb-0 focus:outline-none focus:ring-2 focus:ring-primary/30"
+              aria-label={`Open story: ${story.title}`}
+            >
               <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
                 {story.topic}
               </p>
-              <p className="mt-1 text-sm font-bold leading-snug">{story.title}</p>
+              <p className="mt-1 text-sm font-bold leading-snug group-hover:text-primary group-focus-visible:text-primary">
+                {story.title}
+              </p>
               <p className="mt-1 text-xs text-muted-foreground">{story.brand} · Popularity {story.popularity}</p>
-            </div>
+            </button>
           ))}
         </div>
       </MobileCollapsibleSidebarCard>
@@ -6037,7 +6234,7 @@ function LifestyleLeftSidebar({
           {collectionLabels.map((label) => (
             <p key={label} className="font-bold">{label}</p>
           ))}
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-[var(--hp-text-ui)]">
             Saved stories and more-like-this actions tune these collections over time.
           </p>
         </div>
@@ -6060,9 +6257,15 @@ type LifestyleRiverHomePageProps = {
   onSelectedBrandChange?: (brand: { name: string; slug: string } | null) => void;
 };
 
-function LifestyleRiverLoadingState() {
+function getLifestyleRiverPageHeading(config: DestinationConfig, initialBrandSlug?: string) {
+  const initialBrandName = config.sourceNotes.find((note) => note.brandSlug === initialBrandSlug)?.brand;
+  return `${initialBrandName ?? config.productName} personalized story feed`;
+}
+
+function LifestyleRiverLoadingState({ pageHeading }: { pageHeading: string }) {
   return (
     <div className="space-y-6" aria-busy="true" aria-live="polite" aria-label="Loading your personalized feed">
+      <h1 className="sr-only">{pageHeading}</h1>
       <span className="sr-only">Loading your personalized feed.</span>
       <section className="grid gap-4 border-b border-border bg-[var(--hp-surface)] py-5 sm:grid-cols-2 xl:grid-cols-4" aria-hidden="true">
         {Array.from({ length: 4 }, (_, index) => (
@@ -6118,9 +6321,12 @@ function LifestyleRiverLoadingState() {
 }
 
 function LifestyleRiverHydrationGate(props: LifestyleRiverHomePageProps) {
+  const destinationConfigs = useDestinationConfigs();
   const { isHydrated } = useReaderAccount();
+  const config = props.destinationConfig ?? destinationConfigs[props.destination];
+  const pageHeading = getLifestyleRiverPageHeading(config, props.initialBrandSlug);
 
-  if (!isHydrated) return <LifestyleRiverLoadingState />;
+  if (!isHydrated) return <LifestyleRiverLoadingState pageHeading={pageHeading} />;
   return <LifestyleRiverHomePage {...props} />;
 }
 
@@ -6137,6 +6343,7 @@ function LifestyleRiverHomePage({
   onBrandFilterChange,
   onSelectedBrandChange,
 }: LifestyleRiverHomePageProps) {
+  const destinationConfigs = useDestinationConfigs();
   const config = destinationConfig ?? destinationConfigs[destination];
   const { account, updatePreferences, addComment } = useReaderAccount();
   const router = useRouter();
@@ -6157,6 +6364,7 @@ function LifestyleRiverHomePage({
   const resolvedCommentsByStoryId = account?.commentsByStoryId ?? commentsByStoryId;
   const readerAccountId = account?.id;
   const safeReaderReturnHref = React.useMemo(() => normalizeReaderReturnHref(readerReturnHref), [readerReturnHref]);
+  const pageHeading = getLifestyleRiverPageHeading(config, initialBrandSlug);
   const currentPageReturnHref = React.useMemo(() => {
     if (!pathname || pathname.startsWith("/read/")) return null;
 
@@ -6171,6 +6379,15 @@ function LifestyleRiverHomePage({
   }, [initialOpenStoryId]);
 
   const openStory = React.useCallback((storyId: string) => {
+    const activeElement = document.activeElement;
+    const returnFocusLabel = activeElement instanceof HTMLElement
+      ? activeElement.getAttribute("aria-label")
+      : null;
+    if (returnFocusLabel?.startsWith("Open story:")) {
+      window.sessionStorage.setItem(readerReturnFocusStorageKey, returnFocusLabel);
+    } else {
+      window.sessionStorage.removeItem(readerReturnFocusStorageKey);
+    }
     setOpenStoryId(storyId);
     router.push(appendReaderReturnHref(storyId, storyOpenReturnHref), { scroll: false });
   }, [router, storyOpenReturnHref]);
@@ -6266,7 +6483,7 @@ function LifestyleRiverHomePage({
       seenStoryIds.add(story.id);
       return true;
     });
-  }, [config.stories, videoTabStories]);
+  }, [config.stories, destinationConfigs.all.stories, videoTabStories]);
   const displayStories = React.useMemo(() => {
     if (!config.liveFeedStatus || config.liveFeedMode === "blend") return filteredStories;
     const firstVideoIndex = filteredStories.findIndex((story) => Boolean(story.videoUrl));
@@ -6584,7 +6801,7 @@ function LifestyleRiverHomePage({
   const isVideoIndexPage = config.productName.includes("Video Feed");
   const isVideoQueueView = isVideoIndexPage || usingVideoTabFeed;
   const useVideoDarkMode = isVideoIndexPage || usingVideoTabFeed;
-  const videoQueueStories = usingVideoTabFeed ? filteredStories : visibleStories;
+  const videoQueueStories = visibleStories;
   const videoStories = isVideoQueueView
     ? videoQueueStories.filter((story) => getLifestyleCardKind(story) === "video")
     : [];
@@ -6625,9 +6842,13 @@ function LifestyleRiverHomePage({
             onToggleBrandFilter={toggleBrandFilter}
             onClearBrandFilters={clearBrandFilters}
             onFollowTopic={followTopic}
+            onOpenStory={(story) => openStory(story.id)}
           />
 
-          <main className={cn("min-w-0 space-y-4", usingVideoTabFeed && "lg:pt-2")} aria-label="Autos video index">
+          <main
+            className={cn("min-w-0 space-y-4", usingVideoTabFeed && "lg:pt-2")}
+            aria-label={usingVideoTabFeed ? "Hearst videos" : "Autos video index"}
+          >
             {featuredVideo ? (
               <>
                 <VideoFeedLeadCard
@@ -6642,7 +6863,7 @@ function LifestyleRiverHomePage({
 
                 <div className="flex items-center justify-between gap-3 pt-2">
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">Recommended videos</p>
+                    <h2 className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">Recommended videos</h2>
                     <p className="mt-1 text-sm text-muted-foreground">
                       {filteredStories.length} videos across {activeSourceNotes.map((note) => note.brand).join(" and ")}
                     </p>
@@ -6812,6 +7033,7 @@ function LifestyleRiverHomePage({
 
   return (
     <div className="space-y-8">
+      <h1 className="sr-only">{pageHeading}</h1>
       <TodayEditDashboard
         stories={filteredStories}
         profile={profile}
@@ -6830,6 +7052,7 @@ function LifestyleRiverHomePage({
           onToggleBrandFilter={toggleBrandFilter}
           onClearBrandFilters={clearBrandFilters}
           onFollowTopic={followTopic}
+          onOpenStory={(story) => openStory(story.id)}
         />
 
         <main className="min-w-0 space-y-4" aria-label={config.riverLabel}>
@@ -6943,14 +7166,23 @@ function LifestyleRiverHomePage({
             </p>
             <ol className="mt-4 space-y-3">
               {filteredStories.slice(0, 5).map((story, index) => (
-                <li key={story.id} className="grid grid-cols-[28px_minmax(0,1fr)] gap-3 text-sm">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold leading-none text-primary-foreground">
-                    {index + 1}
-                  </span>
-                  <span>
-                    <span className="block font-bold leading-snug">{story.title}</span>
-                    <span className="text-xs text-muted-foreground">{story.brand} · {story.topic}</span>
-                  </span>
+                <li key={story.id}>
+                  <button
+                    type="button"
+                    onClick={() => openStory(story.id)}
+                    className="group grid w-full grid-cols-[28px_minmax(0,1fr)] gap-3 text-left text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    aria-label={`Open story: ${story.title}`}
+                  >
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold leading-none text-primary-foreground">
+                      {index + 1}
+                    </span>
+                    <span>
+                      <span className="block font-bold leading-snug group-hover:text-primary group-focus-visible:text-primary">
+                        {story.title}
+                      </span>
+                      <span className="text-xs text-muted-foreground">{story.brand} · {story.topic}</span>
+                    </span>
+                  </button>
                 </li>
               ))}
             </ol>
@@ -7078,15 +7310,18 @@ function LifestyleRiverHomePage({
         onResetDemo={resetDemo}
       />
 
-      <div className="grid gap-4 border-t border-border pt-8 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <section
+        className="grid gap-4 border-t border-border pt-8 lg:grid-cols-[minmax(0,1fr)_320px]"
+        aria-labelledby="personalized-river-heading"
+      >
         <div className="space-y-3">
-          <p className="text-xs font-bold uppercase tracking-[0.24em] text-primary">
+          <p className="text-xs font-bold uppercase tracking-[0.24em] text-[var(--hp-section-title)]">
             Personalized Popular River
           </p>
-          <h1 className="headline text-4xl leading-tight sm:text-6xl">
+          <h2 id="personalized-river-heading" className="headline text-4xl leading-tight sm:text-6xl">
             Most popular {config.storyRiverLabel}, tuned by what you do next.
-          </h1>
-          <p className="max-w-3xl text-base leading-7 text-muted-foreground">
+          </h2>
+          <p className="max-w-3xl text-base leading-7 text-[var(--hp-text-ui)]">
             A continuously ranked {config.productName} feed across {config.brandSummary}
           </p>
         </div>
@@ -7117,7 +7352,7 @@ function LifestyleRiverHomePage({
             activity, recency, time of day, return-visit freshness, and diversity rules.
           </p>
         </div>
-      </div>
+      </section>
     </div>
   );
 }
@@ -7221,11 +7456,16 @@ export function HomePageTemplate({
   initialOpenStoryId,
   readerReturnHref,
   navLinksOverride,
+  staticDestinationData,
 }: HomePageTemplateProps = {}) {
   const { brand, colorMode } = useTheme();
   const { account } = useReaderAccount();
   const router = useRouter();
   const pathname = usePathname();
+  const destinationConfigs = React.useMemo(
+    () => createDestinationConfigs(staticDestinationData),
+    [staticDestinationData]
+  );
   const [activeLifestyleFilter, setActiveLifestyleFilter] = React.useState(initialFilter ?? "For You");
   const [onboardingOpen, setOnboardingOpen] = React.useState(false);
   const [onboardingResult, setOnboardingResult] = React.useState<HearstOnboardingResult | null>(null);
@@ -7234,7 +7474,7 @@ export function HomePageTemplate({
   const [profileOpen, setProfileOpen] = React.useState(false);
   const [pendingOnboardingResult, setPendingOnboardingResult] = React.useState<HearstOnboardingResult | null>(null);
   const [selectedBrand, setSelectedBrand] = React.useState<{ name: string; slug: string } | null>(() =>
-    getBrandRouteInfo(initialBrandSlug)
+    getBrandRouteInfo(destinationConfigs.all.sourceNotes, initialBrandSlug)
   );
   React.useEffect(() => {
     if (initialFilter) setActiveLifestyleFilter(initialFilter);
@@ -7250,12 +7490,16 @@ export function HomePageTemplate({
   const homePageThemeCssVars = React.useMemo(
     () => ({
       ...selectedBrandCssVars,
-      "--hp-section-title": selectedBrand?.slug === "autoweek" ? "#242424" : "var(--primary)",
-      ...(selectedBrand?.slug === "autoweek"
-        ? {
-            "--hp-sidebar-heading": "#242424",
-          }
-        : {}),
+      "--hp-section-title": selectedBrand?.slug === "autoweek"
+        ? "#242424"
+        : colorMode === "dark"
+          ? "var(--primary)"
+          : "color-mix(in oklab, var(--primary) 78%, var(--foreground) 22%)",
+      "--hp-sidebar-heading": selectedBrand?.slug === "autoweek"
+        ? "#242424"
+        : colorMode === "dark"
+          ? "var(--primary)"
+          : "color-mix(in oklab, var(--primary) 78%, var(--foreground) 22%)",
       ...(colorMode === "dark"
         ? {
             "--primary": "var(--brand-primary, #BDDDFC)",
@@ -7298,7 +7542,7 @@ export function HomePageTemplate({
     }
 
     const featuredFashionStory = destinationMode === "all" && !liveFeedData.productName?.includes("Video Feed")
-      ? fluxRiverStories.find(
+      ? destinationConfigs.flux.stories.find(
           (story) => story.title === "The Best Dressed Celebrities at Paris Couture Week"
         )
       : undefined;
@@ -7346,7 +7590,7 @@ export function HomePageTemplate({
       },
       liveFeedMode,
     };
-  }, [baseDestinationConfig, destinationMode, liveFeedData, liveFeedMode, videoFeedData]);
+  }, [baseDestinationConfig, destinationConfigs.flux.stories, destinationMode, liveFeedData, liveFeedMode, videoFeedData]);
   const profileTopics = React.useMemo(
     () => Array.from(new Set(destinationConfig.stories.map((story) => story.topic))).sort(),
     [destinationConfig.stories]
@@ -7395,6 +7639,7 @@ export function HomePageTemplate({
     && activeLifestyleFilter === "Videos";
 
   return (
+    <DestinationConfigsContext.Provider value={destinationConfigs}>
     <div
       className="hearst-plus-theme min-h-screen bg-[var(--hp-background)] font-brand"
       data-filter-brand={selectedBrand?.slug}
@@ -7505,6 +7750,7 @@ export function HomePageTemplate({
       {/* Footer — full width */}
       <Footer flushTop={isDestinationRiver && activeLifestyleFilter === "Videos"} />
     </div>
+    </DestinationConfigsContext.Provider>
   );
 }
 

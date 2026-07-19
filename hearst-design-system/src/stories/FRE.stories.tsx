@@ -261,7 +261,7 @@ function BigStoryFeedColRightComponent({
             <div
               style={{
                 fontSize: 28,
-                fontWeight: "var(--font-headline-weight, 700)" as any,
+                fontWeight: "var(--font-headline-weight, 700)" as React.CSSProperties["fontWeight"],
                 fontFamily: "var(--font-headline, var(--font-brand))",
                 lineHeight: 1.2,
               }}
@@ -386,7 +386,7 @@ function BigStoryFeedStackedComponent({
               <div
                 style={{
                   fontSize: headlineFontSize,
-                  fontWeight: "var(--font-headline-weight, 700)" as any,
+                  fontWeight: "var(--font-headline-weight, 700)" as React.CSSProperties["fontWeight"],
                   fontFamily: "var(--font-headline, var(--font-brand))",
                   lineHeight: 1.3,
                 }}
@@ -487,7 +487,7 @@ function BigStoryImageRightComponent({
           <h2
             style={{
               fontSize: headlineFontSize,
-              fontWeight: "var(--font-headline-weight, 700)" as any,
+              fontWeight: "var(--font-headline-weight, 700)" as React.CSSProperties["fontWeight"],
               fontFamily: "var(--font-headline, var(--font-brand))",
               lineHeight: 1.15,
               margin: 0,
@@ -669,7 +669,7 @@ function BigStoryProductsComponent({
           <h2
             style={{
               fontSize: headlineSize,
-              fontWeight: "var(--font-headline-weight, 700)" as any,
+              fontWeight: "var(--font-headline-weight, 700)" as React.CSSProperties["fontWeight"],
               fontFamily: "var(--font-headline, var(--font-brand))",
               lineHeight: 1.1,
               margin: 0,
@@ -777,7 +777,7 @@ function BigStoryTextOnlyComponent({
         <h2
           style={{
             fontSize: headlineFontSize,
-            fontWeight: "var(--font-headline-weight, 700)" as any,
+            fontWeight: "var(--font-headline-weight, 700)" as React.CSSProperties["fontWeight"],
             fontFamily: "var(--font-headline, var(--font-brand))",
             lineHeight: 1.1,
             margin: 0,
@@ -866,7 +866,7 @@ function BigStoryFeedTextOnlyComponent({
             <div
               style={{
                 fontSize: headlineFontSize,
-                fontWeight: "var(--font-headline-weight, 700)" as any,
+                fontWeight: "var(--font-headline-weight, 700)" as React.CSSProperties["fontWeight"],
                 fontFamily: "var(--font-headline, var(--font-brand))",
                 lineHeight: 1.3,
               }}
@@ -1131,7 +1131,7 @@ function BigStoryVideoComponent({
           <h2
             style={{
               fontSize: headlineFontSize,
-              fontWeight: "var(--font-headline-weight, 700)" as any,
+              fontWeight: "var(--font-headline-weight, 700)" as React.CSSProperties["fontWeight"],
               fontFamily: "var(--font-headline, var(--font-brand))",
               lineHeight: 1.2,
               margin: "0 0 12px",

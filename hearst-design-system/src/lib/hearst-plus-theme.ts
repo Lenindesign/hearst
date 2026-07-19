@@ -23,7 +23,7 @@ export const hearstPlusLightVars: HearstPlusCssVars = {
   "--radius": "var(--border-radius-xs, 8px)",
 
   "--hp-font-ui": "\"Inter\", system-ui, sans-serif",
-  "--hp-font-headline": "var(--font-hearst-plus-headline, \"Newsreader\", Georgia, serif)",
+  "--hp-font-headline": "var(--font-newsreader, \"Newsreader\"), Georgia, serif",
   "--hp-font-headline-weight": 700,
 
   "--hp-background": "var(--background)",

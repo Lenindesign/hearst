@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { HomePageTemplate } from "@/components/home-page";
 import { ThemeProvider } from "@/components/theme-provider";
+import { getHearstDestinationStaticData } from "@/lib/hearst-destination-data";
 import { getPersonalizeLiveFeed, getPersonalizeVideoFeed } from "@/lib/personalize-live-feed";
 import {
   getHearstSectionBrand,
@@ -50,6 +51,7 @@ export async function SectionBrandRoutePage({
   return (
     <ThemeProvider defaultBrandSlug={hearstSectionThemeSlugs[section]}>
       <HomePageTemplate
+        staticDestinationData={getHearstDestinationStaticData()}
         key={brand.brandSlug}
         initialBrandSlug={brand.brandSlug}
         liveFeedData={liveFeedData}

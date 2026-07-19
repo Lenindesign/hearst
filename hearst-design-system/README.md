@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Hearst Design System and Reader Prototypes
 
-## Getting Started
+This Next.js workspace contains the Hearst Design System token pipeline, component documentation, and the Hearst+ destination and reader prototypes.
 
-First, run the development server:
+## Documentation
+
+The project root is also an Obsidian vault. Start with [`VAULT_HOME.md`](VAULT_HOME.md).
+
+- [`DESIGN-SYSTEM-SPEC.md`](DESIGN-SYSTEM-SPEC.md): HDS token architecture and component contracts
+- [`PRODUCT.md`](PRODUCT.md): product purpose and design principles
+- [`DESIGN.md`](DESIGN.md): concise design-tool context
+- [`STYLE.md`](STYLE.md): shared visual and interaction rules
+- [`BRAND_STYLES.md`](BRAND_STYLES.md): brand identity, route-theme mapping, and runtime font status
+- [`APP_RULES.md`](APP_RULES.md): personalization, content, route, reader, and scoped-exception behavior
+- [`DECISION_LOG.md`](DECISION_LOG.md): dated decision history
+
+## Local development
+
+Install dependencies and start the app:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000/hearst-plus/](http://localhost:3000/hearst-plus/) for Hearst+ or use the destination routes documented in `BRAND_STYLES.md`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Start Storybook separately when component documentation is in scope:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run storybook
+```
 
-## Learn More
+## Validation
 
-To learn more about Next.js, take a look at the following resources:
+Run checks appropriate to the files changed:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run lint
+npm run build
+npm run tokens:validate
+npm run publications:validate
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+When canonical publication tokens change, rebuild generated outputs with the repository token scripts. Do not edit `src/lib/brands.ts` or `src/lib/tokens.css` directly.
 
-## Deploy on Vercel
+## Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deployment is explicit. Ordinary documentation or interface changes do not authorize a deploy. When deployment is requested, validate the requested application or Storybook target before publishing it.

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { HomePageTemplate } from "@/components/home-page";
 import { ThemeProvider } from "@/components/theme-provider";
+import { getHearstDestinationStaticData } from "@/lib/hearst-destination-data";
 import { getPersonalizeLifestyleLiveFeed } from "@/lib/personalize-live-feed";
 
 export const dynamic = "force-dynamic";
@@ -39,7 +40,7 @@ export default async function LifestyleLivePage() {
 
   return (
     <ThemeProvider defaultBrandSlug="hearst-lifestyle">
-      <HomePageTemplate liveFeedData={liveFeedData} />
+      <HomePageTemplate staticDestinationData={getHearstDestinationStaticData()} liveFeedData={liveFeedData} />
     </ThemeProvider>
   );
 }

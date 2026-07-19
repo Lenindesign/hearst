@@ -11,8 +11,8 @@ import { execSync } from "child_process";
 const TOKENS_DIR = join(process.cwd(), "tokens");
 const BRANDS_DIR = join(TOKENS_DIR, "brands");
 
-let errors: string[] = [];
-let warnings: string[] = [];
+const errors: string[] = [];
+const warnings: string[] = [];
 
 function loadJson(path: string): Record<string, unknown> {
   return JSON.parse(readFileSync(path, "utf-8"));

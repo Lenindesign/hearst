@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useRef, useEffect } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import { Search } from "@/components/ui/icons";
 
 interface InspectorData {
@@ -49,15 +49,18 @@ function resolveTokenName(value: string, tokens: Record<string, string>): string
 }
 
 function getReactComponentName(el: HTMLElement): string | null {
-  const fiber =
-    (el as any).__reactFiber$ ||
-    Object.keys(el).find((k) => k.startsWith("__reactFiber$"));
-  if (!fiber) return null;
-  const key = typeof fiber === "string" ? (el as any)[fiber] : fiber;
-  let node = key;
+  type ReactFiberNode = {
+    type?: { displayName?: string; name?: string } | ((...args: unknown[]) => unknown);
+    return?: ReactFiberNode;
+  };
+
+  const fiberKey = Object.keys(el).find((key) => key.startsWith("__reactFiber$"));
+  if (!fiberKey) return null;
+  let node: ReactFiberNode | undefined = (el as unknown as Record<string, ReactFiberNode>)[fiberKey];
   while (node) {
     if (node.type && typeof node.type === "function") {
-      return node.type.displayName || node.type.name || null;
+      const component = node.type as typeof node.type & { displayName?: string; name?: string };
+      return component.displayName || component.name || null;
     }
     node = node.return;
   }

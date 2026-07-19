@@ -1,4 +1,14 @@
+---
+status: historical
+superseded_by:
+  - VAULT_HOME.md
+  - APP_RULES.md
+---
+
 # Hearst Lifestyle Experience POC
+
+> [!warning] Historical POC reference
+> This note records an earlier prototype state. Routes, card behavior, and product rules in this file may be outdated. Use `VAULT_HOME.md` and its canonical references for current implementation decisions.
 
 ## Purpose
 

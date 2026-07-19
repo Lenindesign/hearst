@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { HomePageTemplate } from "@/components/home-page";
 import { ThemeProvider } from "@/components/theme-provider";
+import { getHearstDestinationStaticData } from "@/lib/hearst-destination-data";
 import { getPersonalizeAutosVideoFeed } from "@/lib/personalize-live-feed";
 
 export const dynamic = "force-dynamic";
@@ -40,6 +41,7 @@ export default async function MotorTrendVideosPage() {
   return (
     <ThemeProvider defaultBrandSlug="hearst-autos">
       <HomePageTemplate
+        staticDestinationData={getHearstDestinationStaticData()}
         liveFeedData={liveFeedData}
         initialFilter="Videos"
         navLinksOverride={["For You", "Home", "Style", "Reviews", "Fitness", "Cars", "Videos", "Shopping", "Games", "Saved"]}

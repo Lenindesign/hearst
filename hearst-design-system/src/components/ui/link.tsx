@@ -15,7 +15,7 @@ const linkVariants = cva(
       },
       underline: {
         true: "underline underline-offset-2",
-        false: "no-underline hover:underline hover:underline-offset-2",
+        false: "no-underline",
       },
       size: {
         inherit: "",

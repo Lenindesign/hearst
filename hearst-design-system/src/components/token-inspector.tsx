@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Info } from "@/components/ui/icons";
 
 // ---------------------------------------------------------------------------
@@ -404,31 +404,17 @@ function TokenTooltip({
   specs: ComputedSpecs;
   layerColors: Record<string, string>;
 }) {
-  const tooltipRef = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState({ top: 0, left: 0 });
-
-  useEffect(() => {
-    if (!tooltipRef.current) return;
-    const ttRect = tooltipRef.current.getBoundingClientRect();
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-
-    let top = rect.bottom + 8;
-    let left = rect.left;
-
-    if (top + ttRect.height > vh) top = rect.top - ttRect.height - 8;
-    if (left + ttRect.width > vw) left = vw - ttRect.width - 8;
-    if (left < 8) left = 8;
-    if (top < 8) top = rect.bottom + 8;
-
-    setPos({ top, left });
-  }, [rect]);
+  const viewportWidth = typeof window === "undefined" ? 448 : window.innerWidth;
+  const viewportHeight = typeof window === "undefined" ? 800 : window.innerHeight;
+  const left = Math.max(8, Math.min(rect.left, viewportWidth - 428));
+  const verticalPosition = rect.top > viewportHeight / 2
+    ? { bottom: Math.max(8, viewportHeight - rect.top + 8) }
+    : { top: Math.max(8, rect.bottom + 8) };
 
   return (
     <div
-      ref={tooltipRef}
       className="fixed z-[99999] pointer-events-none"
-      style={{ top: pos.top, left: pos.left }}
+      style={{ ...verticalPosition, left }}
     >
       <div className="bg-gray-900 text-white rounded-lg shadow-2xl p-3 max-w-[420px] text-xs leading-relaxed">
         <div className="flex items-center justify-between gap-3 mb-2 pb-1.5 border-b border-gray-700">
@@ -620,12 +606,17 @@ export function TokenInspector({
     setHighlightRect(null);
   }, []);
 
-  useEffect(() => {
-    if (!enabled) {
+  const toggleInspector = useCallback(() => {
+    const nextEnabled = !enabled;
+    setEnabled(nextEnabled);
+    if (!nextEnabled) {
       setHovered(null);
       setHighlightRect(null);
-      return;
     }
+  }, [enabled]);
+
+  useEffect(() => {
+    if (!enabled) return;
 
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseleave", handleMouseLeave);
@@ -641,12 +632,12 @@ export function TokenInspector({
       const shiftMatch = shortcut.shift ? e.shiftKey : true;
       if (e.key === shortcut.key && metaMatch && shiftMatch) {
         e.preventDefault();
-        setEnabled((v) => !v);
+        toggleInspector();
       }
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [shortcut]);
+  }, [shortcut, toggleInspector]);
 
   const shortcutLabel = [
     shortcut.meta ? "Cmd" : "",
@@ -660,7 +651,7 @@ export function TokenInspector({
     <>
       <button
         data-token-inspector
-        onClick={() => setEnabled((v) => !v)}
+        onClick={toggleInspector}
         className="fixed bottom-4 right-4 z-[99998] flex items-center gap-2 px-3 py-2 rounded-full text-xs font-medium shadow-lg transition-all"
         style={{
           backgroundColor: enabled ? accentColor : "#1e293b",

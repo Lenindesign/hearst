@@ -2,6 +2,8 @@
 
 These rules capture durable product and interface decisions for the Hearst reader prototypes. Apply them across desktop and mobile unless a later decision explicitly replaces them.
 
+Before making UI changes, also read `PRODUCT.md` for product intent, `STYLE.md` for the shared visual and interaction rules, and `BRAND_STYLES.md` for native inheritance plus brand colors, fonts, and logos. Keep broadly reusable style decisions in `STYLE.md`; keep behavior and scoped product exceptions here.
+
 ## Theme and surfaces
 
 - The default page canvas is `#F4F2EE`; content modules use white surfaces.
@@ -10,7 +12,9 @@ These rules capture durable product and interface decisions for the Hearst reade
 - Exception: the `Videos` tab inside the Hearst+ home destination (`/hearst-plus/`) loads its feed area and complete navigation header in dark mode by default because it is a video-index experience. The utility bar, masthead, category navigation, compact sticky navigation, controls, active states, and Hearst+ logo all use the scoped dark treatment. This exception must not change non-video tabs, other destinations, RSS/story pages, or readers. This tab intentionally shows every configured video source across supported sections and brands by default.
 - Video feeds must be scoped contextually: the Hearst+ home `Videos` tab shows all configured video brands, destination pages show only video brands assigned to that destination, and brand pages keep their selected brand context while still showing the sibling video brands available inside that section. Do not let the all-destination video inventory leak into Lifestyle, Autos, Fashion & Luxury, Enthusiast & Wellness, or individual brand routes.
 - The `Videos by brand` sidebar module filters only the active video queue in place. Entering the Hearst+ home `Videos` tab clears any article-river brand filter so the default view shows all configured video brands. Brand choices made after entering the Videos tab must not navigate to a brand route or collapse the queue into an empty state. The Hearst+ home `Videos` tab is an index, so it does not suppress items with article-river `Hide` preferences; those preferences still apply to the normal article river.
-- Topic labels inside `Your Daily Habit` use the same sidebar-heading color token as the module title, including the light blue treatment on the dark Videos surface.
+- `Your Daily Habit` module titles and topic labels use the active theme primary color through the shared sidebar-heading token. AutoWeek keeps its documented dark-neutral title exception, and the dark Videos surface keeps its scoped light-blue treatment.
+- Every story row in `Your Daily Habit` and `Trending Across Brands` is an interactive story link. The complete row opens the same in-app reader used by carousel and river cards.
+- Editorial story links follow the shared hover, focus, and focus-ring treatment owned by `STYLE.md`.
 - On the dark Videos surface, all blue section titles and video-brand eyebrows use the light-blue `--hp-sidebar-heading` token; this treatment stays scoped to the Videos view and must not leak into RSS or reader pages.
 - Video feed fallbacks may only count and render stories with playable video media. Do not use article-only local fallback stories as video inventory because that creates misleading source counts and empty video queues.
 - The Hearst+ home `Videos` tab sits flush with the footer when it reaches the bottom of the page. Do not introduce a light spacer between the black video exception surface and the footer.

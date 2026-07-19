@@ -23,7 +23,7 @@
   --ring: #BDDDFC;
   --radius: var(--border-radius-xs, 8px);
   --hp-font-ui: "Inter", system-ui, sans-serif;
-  --hp-font-headline: var(--font-hearst-plus-headline, "Newsreader", Georgia, serif);
+  --hp-font-headline: var(--font-newsreader, "Newsreader"), Georgia, serif;
   --hp-font-headline-weight: 700;
   --hp-background: #F4F2EE;
   --hp-nav: var(--primary);
@@ -781,6 +781,8 @@
 
 :root {
   --font-sans: "Inter", system-ui, sans-serif;
+  --footer-background: #121212;
+  --footer-foreground: #f7f7f7;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);

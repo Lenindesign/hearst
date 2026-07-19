@@ -1832,7 +1832,7 @@ function ArticleFooter() {
       <SiteFooter
         siteName={footerLogo}
         socialLinks={["YouTube", "Facebook", "Instagram", "Pinterest"]}
-        legalLinks={["Privacy Notice", "Terms of Use", "Site Map"]}
+        legalLinks={["Privacy Notice", "Terms of Use", "Hearst brands"]}
         copyrightYear={2026}
       />
     </div>
