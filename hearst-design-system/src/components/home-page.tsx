@@ -4375,15 +4375,15 @@ function LifestyleReaderActions({
   const followBadgeForeground = getAmbientBrandForeground(followBadgeBackground);
 
   return (
-    <div className="my-6 overflow-x-auto border-y border-border py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-      <div className="flex min-w-max items-center justify-between gap-5 sm:min-w-0">
+    <div className="my-6 min-w-0 border-y border-border py-3">
+      <div className="flex w-full min-w-0 items-center justify-between gap-2 sm:gap-5">
         <button
           type="button"
           onClick={onToggleFollowBrand}
           aria-pressed={followed}
           aria-label={followed ? `Unfollow ${story.brand} brand` : `Follow ${story.brand} brand`}
           title={followed ? `Unfollow ${story.brand} brand` : `Follow ${story.brand} brand`}
-          className="inline-flex min-w-0 items-center gap-1.5 rounded-[4px] text-[length:var(--text-token-4xs)] text-muted-foreground transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+          className="inline-flex min-h-11 min-w-0 flex-1 items-center gap-1.5 rounded-[4px] text-[length:var(--text-token-4xs)] text-muted-foreground transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30 sm:min-h-0"
         >
           <BrandSourceIcon brand={story.brand} brandSlug={story.brandSlug} />
           <span className="min-w-0 truncate">
@@ -4400,7 +4400,7 @@ function LifestyleReaderActions({
             {followed ? <Check className="h-3 w-3" aria-hidden /> : <Plus className="h-3 w-3" aria-hidden />}
           </span>
         </button>
-        <div className="flex shrink-0 items-center gap-2">
+        <div className="flex shrink-0 items-center gap-1 sm:gap-2">
           {ambientReaderState ? (
             <button
               type="button"
@@ -4418,7 +4418,7 @@ function LifestyleReaderActions({
                   ? "Preparing premium reader…"
                   : "Premium reader unavailable"}
               className={cn(
-                "inline-flex h-7 w-7 shrink-0 items-center justify-center border-0 bg-transparent p-0 shadow-none outline-none ring-0 transition-colors focus-visible:ring-2 focus-visible:ring-primary/40",
+                "inline-flex h-11 w-11 shrink-0 items-center justify-center border-0 bg-transparent p-0 shadow-none outline-none ring-0 transition-colors focus-visible:ring-2 focus-visible:ring-primary/40 sm:h-7 sm:w-7",
                 ambientReaderState === "ready"
                   ? "text-muted-foreground hover:text-primary"
                   : "cursor-wait text-muted-foreground opacity-65"
@@ -4438,7 +4438,7 @@ function LifestyleReaderActions({
             aria-label={saved ? "Remove from saved stories" : "Save story"}
             title={saved ? "Remove from saved stories" : "Save story"}
             className={cn(
-              "inline-flex h-7 w-7 shrink-0 items-center justify-center border-0 bg-transparent p-0 shadow-none outline-none ring-0 transition-colors focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0",
+              "inline-flex h-11 w-11 shrink-0 items-center justify-center border-0 bg-transparent p-0 shadow-none outline-none ring-0 transition-colors focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 sm:h-7 sm:w-7",
               saved ? "text-primary" : "text-muted-foreground hover:text-primary"
             )}
           >
@@ -4448,7 +4448,7 @@ function LifestyleReaderActions({
             href={`#reader-comments-${story.id}`}
             aria-label={`Jump to ${commentCount} comments`}
             title={`${commentCount} comments`}
-            className="inline-flex h-7 shrink-0 items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+            className="inline-flex h-11 min-w-11 shrink-0 items-center justify-center gap-1 text-sm text-muted-foreground transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30 sm:h-7 sm:min-w-0"
           >
             <MessageCircle className="h-4 w-4" aria-hidden />
             <span className="tabular-nums">{commentCount}</span>
@@ -5802,7 +5802,7 @@ function LifestyleStoryReaderModal({
                     <article
                       data-reader-story-id={story.id}
                       className={cn(
-                        "relative rounded-[8px] border px-5 py-5 sm:px-7 sm:py-7",
+                        "relative min-w-0 rounded-[8px] border px-5 py-5 sm:px-7 sm:py-7",
                         readerDestination === "flux"
                           ? "border-white/15 bg-[#171b21] text-[#f7f8fa] [--border:#343b46] [--foreground:#f7f8fa] [--muted-foreground:#aeb8c5]"
                           : "border-border bg-white text-[#121212] [--foreground:#121212] [--muted-foreground:#5f6b7a]"
