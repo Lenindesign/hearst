@@ -6139,6 +6139,7 @@ function LifestyleStoryReaderModal({
   readerReturnHref,
   onClose,
   onOpenStory,
+  onSwitchReaderStory,
   onSave,
   onMoreLikeThis,
   onToggleFollowBrand,
@@ -6153,6 +6154,7 @@ function LifestyleStoryReaderModal({
   readerReturnHref?: string;
   onClose: () => void;
   onOpenStory: (storyId: string) => void;
+  onSwitchReaderStory: (storyId: string) => void;
   onSave: (story: LifestyleRiverStory) => void;
   onMoreLikeThis: (story: LifestyleRiverStory) => void;
   onToggleFollowBrand: (brandName: string) => void;
@@ -6165,13 +6167,18 @@ function LifestyleStoryReaderModal({
   const onCloseRef = React.useRef(onClose);
   const [readerDestinationOverride, setReaderDestinationOverride] = React.useState<Exclude<DestinationMode, "all"> | null>(null);
   const readerOriginBrandSlug = getReaderOriginBrandSlug(readerReturnHref);
-  const publicationStories = readerOriginBrandSlug
-    ? mergeUniqueStories(stories, availableStories).filter(
-        (story) => story.brandSlug === readerOriginBrandSlug
+  const [readerBrandOverrideSlug, setReaderBrandOverrideSlug] = React.useState<string | null>(null);
+  const [readerFetchedStories, setReaderFetchedStories] = React.useState<LifestyleRiverStory[]>([]);
+  const [loadingReaderBrandSlug, setLoadingReaderBrandSlug] = React.useState<string | null>(null);
+  const activeReaderBrandSlug = readerBrandOverrideSlug ?? readerOriginBrandSlug;
+  const readerAvailableStoryPool = mergeUniqueStories(stories, availableStories, readerFetchedStories);
+  const publicationStories = activeReaderBrandSlug
+    ? readerAvailableStoryPool.filter(
+        (story) => story.brandSlug === activeReaderBrandSlug
       )
     : [];
   const readerStories = readerDestinationOverride
-    ? availableStories.filter((story) => getStoryDestinationMode(story.brandSlug) === readerDestinationOverride)
+    ? readerAvailableStoryPool.filter((story) => getStoryDestinationMode(story.brandSlug) === readerDestinationOverride)
     : publicationStories.length > 0
       ? publicationStories
       : stories;
@@ -6245,7 +6252,7 @@ function LifestyleStoryReaderModal({
   const readerDestinationTheme = themeOptions.find((theme) => theme.slug === readerDestinationConfig.brandSlug);
   const usePublicationTheme = Boolean(
     readerContextStory
-    && readerOriginBrandSlug === readerContextStory.brandSlug
+    && activeReaderBrandSlug === readerContextStory.brandSlug
   );
   const readerTheme = readerDestinationTheme && usePublicationTheme && readerContextStory
     ? getSelectedBrandTheme(
@@ -6269,13 +6276,20 @@ function LifestyleStoryReaderModal({
     { label: "Fashion & Luxury", mode: "flux" },
     { label: "Enthusiast & Wellness", mode: "ew" },
   ];
-  const isPublicationScopedReader = Boolean(
-    usePublicationTheme
-    && readerLogoSlug !== readerDestinationConfig.brandSlug
-  );
-  const otherReaderSections = readerSections.filter((section) =>
-    section.mode !== readerDestination || isPublicationScopedReader
-  );
+  const readerSectionBrands = readerDestinationConfig.sourceNotes;
+  const readerMastheadNavItems = usePublicationTheme
+    ? readerSectionBrands.map((brand) => ({
+        type: "brand" as const,
+        key: brand.brandSlug,
+        label: brand.brand,
+        brandSlug: brand.brandSlug,
+      }))
+    : readerSections.map((section) => ({
+        type: "section" as const,
+        key: section.mode,
+        label: section.label,
+        mode: section.mode,
+      }));
   const readerActiveFilter = readerContextStory
     ? readerDestinationConfig.filters.find((filter) =>
         filter !== "For You"
@@ -6297,8 +6311,19 @@ function LifestyleStoryReaderModal({
   };
 
   React.useEffect(() => {
-    if (!openStoryId) setReaderDestinationOverride(null);
+    if (!openStoryId) {
+      setReaderDestinationOverride(null);
+      setReaderBrandOverrideSlug(null);
+      setReaderFetchedStories([]);
+      setLoadingReaderBrandSlug(null);
+    }
   }, [openStoryId]);
+
+  React.useEffect(() => {
+    setReaderBrandOverrideSlug(null);
+    setReaderFetchedStories([]);
+    setLoadingReaderBrandSlug(null);
+  }, [readerReturnHref]);
 
   React.useEffect(() => {
     onCloseRef.current = onClose;
@@ -6626,25 +6651,62 @@ function LifestyleStoryReaderModal({
               </div>
             </div>
             <nav className="ml-auto hidden shrink-0 items-center justify-end gap-5 lg:flex" aria-label="Other Hearst sections">
-              {otherReaderSections.map((section) => {
-                const nextStory = availableStories.find((story) =>
-                  getStoryDestinationMode(story.brandSlug) === section.mode
-                );
+              {readerMastheadNavItems.map((item) => {
+                const isActiveReaderSection = item.type === "section" && item.mode === readerDestination;
+                const isActiveReaderBrand = item.type === "brand" && item.brandSlug === readerContextStory?.brandSlug;
+                const isActiveNavItem = isActiveReaderSection || isActiveReaderBrand;
+                const nextStory = item.type === "brand"
+                  ? readerAvailableStoryPool.find((story) => story.brandSlug === item.brandSlug)
+                  : readerAvailableStoryPool.find((story) => getStoryDestinationMode(story.brandSlug) === item.mode);
+                const isLoadingNavItem = item.type === "brand" && loadingReaderBrandSlug === item.brandSlug;
 
                 return (
                   <button
-                    key={section.mode}
+                    key={item.key}
                     type="button"
-                    disabled={!nextStory}
-                    onClick={() => {
-                      if (!nextStory) return;
-                      setReaderDestinationOverride(section.mode);
-                      onOpenStory(nextStory.id);
+                    disabled={item.type === "section" ? !nextStory : isLoadingNavItem}
+                    onClick={async () => {
+                      if (isActiveNavItem || (item.type === "section" && !nextStory)) return;
+                      let targetStory = nextStory;
+                      if (item.type === "brand" && !targetStory) {
+                        setLoadingReaderBrandSlug(item.brandSlug);
+                        try {
+                          const searchParams = new URLSearchParams({
+                            destination: readerDestination,
+                            brandSlug: item.brandSlug,
+                            offset: "0",
+                            limit: "40",
+                          });
+                          const response = await fetch(`/api/story-feed/?${searchParams.toString()}`);
+                          if (response.ok) {
+                            const page = await response.json() as ProgressiveFeedPage;
+                            setReaderFetchedStories((currentStories) => mergeUniqueStories(currentStories, page.stories));
+                            targetStory = page.stories.find((story) => story.brandSlug === item.brandSlug);
+                          }
+                        } finally {
+                          setLoadingReaderBrandSlug(null);
+                        }
+                      }
+                      if (!targetStory) return;
+                      if (item.type === "brand") {
+                        setReaderBrandOverrideSlug(item.brandSlug);
+                        setReaderDestinationOverride(null);
+                      } else {
+                        setReaderBrandOverrideSlug(null);
+                        setReaderDestinationOverride(item.mode);
+                      }
+                      onSwitchReaderStory(targetStory.id);
                     }}
-                    className="whitespace-nowrap text-xs font-semibold text-muted-foreground transition-colors hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
-                    aria-label={`Show ${section.label} stories in reader`}
+                    className={cn(
+                      "whitespace-nowrap border-b-2 py-1 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40",
+                      isActiveNavItem
+                        ? "border-primary text-primary"
+                        : "border-transparent text-muted-foreground hover:text-primary"
+                    )}
+                    aria-label={`Show ${item.label} stories in reader`}
+                    aria-current={isActiveNavItem ? "page" : undefined}
                   >
-                    {section.label}
+                    {item.label}
                   </button>
                 );
               })}
@@ -6673,7 +6735,7 @@ function LifestyleStoryReaderModal({
                     key={filter}
                     type="button"
                     disabled={!filterStory}
-                    onClick={() => filterStory && onOpenStory(filterStory.id)}
+                    onClick={() => filterStory && onSwitchReaderStory(filterStory.id)}
                     className={cn(
                       "whitespace-nowrap border-b-2 px-0.5 py-3 text-sm transition-colors",
                       active
@@ -7656,6 +7718,7 @@ type LifestyleRiverHomePageProps = {
   destination: DestinationMode;
   destinationConfig?: DestinationConfig;
   videoFeedData?: LiveFeedData;
+  initialFeedReady?: boolean;
   initialBrandSlug?: string;
   initialOpenStoryId?: string;
   readerReturnHref?: string;
@@ -8326,10 +8389,11 @@ function LifestyleRiverHydrationGate(props: LifestyleRiverHomePageProps) {
   const config = props.destinationConfig ?? destinationConfigs[props.destination];
   const pageHeading = getLifestyleRiverPageHeading(config, props.initialBrandSlug);
   const useFlushVideoTop = props.activeFilter === "Videos" && Boolean(props.videoFeedData);
+  const initialFeedReady = props.initialFeedReady ?? true;
 
   return (
     <div className={cn("flow-root min-h-[calc(100dvh-173px)] md:min-h-[calc(100dvh-171px)]", !useFlushVideoTop && "md:pt-8")}>
-      {isHydrated
+      {isHydrated && initialFeedReady
         ? <LifestyleRiverHomePage {...props} />
         : <LifestyleRiverLoadingState pageHeading={pageHeading} />}
     </div>
@@ -8370,6 +8434,7 @@ function LifestyleRiverHomePage({
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
   const previousActiveFilterRef = React.useRef<string | null>(null);
   const profileRef = React.useRef(profile);
+  const [profileReadyKey, setProfileReadyKey] = React.useState<string | null>(null);
   const appliedOnboardingResultRef = React.useRef<HearstOnboardingResult | null>(null);
   const resolvedCommentsByStoryId = account?.commentsByStoryId ?? commentsByStoryId;
   const readerAccountId = account?.id;
@@ -8383,6 +8448,8 @@ function LifestyleRiverHomePage({
   }, [pathname, searchParams]);
   const currentReaderReturnHref = safeReaderReturnHref ?? (initialBrandSlug ? getHearstBrandRoute(initialBrandSlug) : getHearstDestinationRoute(destination));
   const storyOpenReturnHref = safeReaderReturnHref ?? currentPageReturnHref ?? currentReaderReturnHref;
+  const profileSourceKey = `${readerAccountId ?? "guest"}:${config.productName}:${initialBrandSlug ?? ""}`;
+  const profileReady = profileReadyKey === profileSourceKey;
 
   React.useEffect(() => {
     setOpenStoryId(initialOpenStoryId ?? null);
@@ -8401,6 +8468,20 @@ function LifestyleRiverHomePage({
     setOpenStoryId(storyId);
     router.push(appendReaderReturnHref(storyId, storyOpenReturnHref), { scroll: false });
   }, [router, storyOpenReturnHref]);
+
+  const switchReaderStory = React.useCallback((storyId: string) => {
+    setOpenStoryId(storyId);
+    if (typeof window !== "undefined") {
+      window.history.replaceState(
+        {
+          ...window.history.state,
+          hearstReaderStory: storyId,
+        },
+        "",
+        appendReaderReturnHref(storyId, storyOpenReturnHref)
+      );
+    }
+  }, [storyOpenReturnHref]);
 
   const closeStory = React.useCallback(() => {
     setOpenStoryId(null);
@@ -8421,7 +8502,8 @@ function LifestyleRiverHomePage({
     const next = account?.preferences ?? config.initialProfile;
     profileRef.current = next;
     setProfile(next);
-  }, [account?.id, account?.preferences, config.initialProfile]);
+    setProfileReadyKey(profileSourceKey);
+  }, [account?.id, account?.preferences, config.initialProfile, profileSourceKey]);
 
   const videoTabStories = React.useMemo(() => {
     return (videoFeedData?.stories ?? []).filter((story) => getLifestyleCardKind(story) === "video");
@@ -8486,6 +8568,7 @@ function LifestyleRiverHomePage({
     const seenStoryIds = new Set<string>();
     return [
       ...config.stories,
+      ...destinationConfigs[destination].stories,
       ...destinationConfigs.all.stories,
       ...videoTabStories,
     ].filter((story) => {
@@ -8493,7 +8576,7 @@ function LifestyleRiverHomePage({
       seenStoryIds.add(story.id);
       return true;
     });
-  }, [config.stories, destinationConfigs.all.stories, videoTabStories]);
+  }, [config.stories, destination, destinationConfigs, videoTabStories]);
   const displayStories = React.useMemo(() => {
     if (!config.liveFeedStatus || config.liveFeedMode === "blend") return filteredStories;
     const firstVideoIndex = filteredStories.findIndex((story) => Boolean(story.videoUrl));
@@ -8834,6 +8917,10 @@ function LifestyleRiverHomePage({
     return <HearstGamesIndex />;
   }
 
+  if (!profileReady) {
+    return <LifestyleRiverLoadingState pageHeading={pageHeading} />;
+  }
+
   if (isVideoQueueView) {
     return (
       <div
@@ -9009,6 +9096,7 @@ function LifestyleRiverHomePage({
           readerReturnHref={storyOpenReturnHref}
           onClose={closeStory}
           onOpenStory={openStory}
+          onSwitchReaderStory={switchReaderStory}
           onSave={toggleSaved}
           onMoreLikeThis={boostStory}
           onToggleFollowBrand={toggleFollowBrand}
@@ -9292,6 +9380,7 @@ function LifestyleRiverHomePage({
         readerReturnHref={storyOpenReturnHref}
         onClose={closeStory}
         onOpenStory={openStory}
+        onSwitchReaderStory={switchReaderStory}
         onSave={toggleSaved}
         onMoreLikeThis={boostStory}
         onToggleFollowBrand={toggleFollowBrand}
@@ -9536,6 +9625,8 @@ export function HomePageTemplate({
   const destinationMode = getDestinationMode(selectedBrand?.slug ?? initialBrandSlug ?? brand.slug);
   const progressiveFeedBrandSlug = selectedBrand?.slug ?? getReaderOriginBrandSlug(readerReturnHref);
   const [resolvedVideoFeedData, setResolvedVideoFeedData] = React.useState(videoFeedData);
+  const shouldProgressivelyLoadEditorial = activeLifestyleFilter !== "Videos" && liveFeedMode === "blend";
+  const [initialProgressiveEditorialReady, setInitialProgressiveEditorialReady] = React.useState(!shouldProgressivelyLoadEditorial);
   React.useEffect(() => {
     setResolvedVideoFeedData(videoFeedData);
   }, [destinationMode, selectedBrand?.slug, videoFeedData]);
@@ -9613,10 +9704,13 @@ export function HomePageTemplate({
   const [progressiveEditorialStories, setProgressiveEditorialStories] = React.useState<LifestyleRiverStory[]>([]);
   React.useEffect(() => {
     setProgressiveEditorialStories([]);
-  }, [destinationMode, progressiveFeedBrandSlug, staticDestinationData]);
-  const shouldProgressivelyLoadEditorial = activeLifestyleFilter !== "Videos" && liveFeedMode === "blend";
+    setInitialProgressiveEditorialReady(!shouldProgressivelyLoadEditorial);
+  }, [destinationMode, progressiveFeedBrandSlug, shouldProgressivelyLoadEditorial, staticDestinationData]);
   React.useEffect(() => {
-    if (!shouldProgressivelyLoadEditorial) return;
+    if (!shouldProgressivelyLoadEditorial) {
+      setInitialProgressiveEditorialReady(true);
+      return;
+    }
 
     const controller = new AbortController();
     let idleCallbackId: number | undefined;
@@ -9658,9 +9752,13 @@ export function HomePageTemplate({
           setProgressiveEditorialStories((currentStories) =>
             mergeUniqueStories(currentStories, page.stories)
           );
+          if (!page.hasMore) {
+            setInitialProgressiveEditorialReady(true);
+          }
           offset = page.nextOffset;
           hasMore = page.hasMore;
         } catch (error) {
+          setInitialProgressiveEditorialReady(true);
           if (!controller.signal.aborted) {
             console.warn("Unable to progressively load the remaining stories.", error);
           }
@@ -9908,6 +10006,7 @@ export function HomePageTemplate({
               destination={destinationMode}
               destinationConfig={destinationConfig}
               videoFeedData={resolvedVideoFeedData}
+              initialFeedReady={initialProgressiveEditorialReady}
               initialBrandSlug={initialBrandSlug}
               initialOpenStoryId={initialOpenStoryId}
               readerReturnHref={readerReturnHref}
