@@ -71,12 +71,12 @@ function normalizeSpace(value: string) {
 }
 
 function getNodeText(node: HearstDomNode): string {
-  if (node.type === "text") return node.data ?? "";
-  return normalizeSpace((node.children ?? []).map(getNodeText).join(" "));
+  if (node.type === "text") return htmlToText(node.data ?? "");
+  return htmlToText((node.children ?? []).map(getNodeText).join(" "));
 }
 
 function getMediaCredit(media: HearstMedia | undefined) {
-  return [media?.photographer?.name, media?.source?.title].filter(Boolean).join(" / ") || undefined;
+  return [media?.photographer?.name, media?.source?.title].filter(Boolean).map((value) => htmlToText(String(value))).join(" / ") || undefined;
 }
 
 function findMedia(node: HearstDomNode, media: HearstMedia[]) {
@@ -122,7 +122,7 @@ function buildBlocks(bodyDom: HearstDomNode, media: HearstMedia[]) {
     if (name === "image") {
       const image = findMedia(node, media);
       if (!image?.hips_url) return;
-      const caption = normalizeSpace(String(node.attribs?.caption ?? "")) || undefined;
+      const caption = htmlToText(String(node.attribs?.caption ?? "")) || undefined;
       const alt = image.image_metadata?.seo_meta_description
         || image.image_metadata?.seo_meta_title
         || caption
@@ -145,7 +145,7 @@ function buildBlocks(bodyDom: HearstDomNode, media: HearstMedia[]) {
 }
 
 function pushTextBlock(blocks: LiveArticleBlock[], type: "paragraph" | "heading", value: string | undefined) {
-  const text = normalizeSpace(value ?? "");
+  const text = htmlToText(value ?? "");
   if (
     !text
     || blocks.some((block) => block.type !== "image" && block.type !== "list" && block.text === text)
@@ -168,8 +168,8 @@ function buildIntroBlocks(pageProps: NonNullable<HearstNextData["props"]>["pageP
 }
 
 function getMediaAlt(media: HearstMedia, caption?: string) {
-  return media.image_metadata?.seo_meta_description
-    || media.image_metadata?.seo_meta_title
+  return htmlToText(media.image_metadata?.seo_meta_description ?? "")
+    || htmlToText(media.image_metadata?.seo_meta_title ?? "")
     || caption
     || "Editorial image";
 }
@@ -181,9 +181,9 @@ function buildSlideBlocks(slides: HearstMedia[]) {
   slides.forEach((slide) => {
     if (!slide.hips_url || seenImages.has(slide.hips_url)) return;
 
-    const headline = normalizeSpace(slide.metadata?.headline ?? "");
-    const caption = normalizeSpace(slide.metadata?.caption ?? "");
-    const dek = normalizeSpace(slide.metadata?.dek ?? "");
+    const headline = htmlToText(slide.metadata?.headline ?? "");
+    const caption = htmlToText(slide.metadata?.caption ?? "");
+    const dek = htmlToText(slide.metadata?.dek ?? "");
 
     if (headline) blocks.push({ type: "heading", text: headline });
     blocks.push({

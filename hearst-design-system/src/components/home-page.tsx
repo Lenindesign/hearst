@@ -5021,6 +5021,79 @@ function getAmbientReaderMinutes(story: LifestyleRiverStory, article: LiveArticl
   return Math.max(1, Number.isFinite(sourceEstimate) ? sourceEstimate : Math.ceil(wordCount / 220));
 }
 
+function getAmbientRelatedScore(
+  currentStory: LifestyleRiverStory,
+  candidateStory: LifestyleRiverStory,
+  currentIndex: number,
+  candidateIndex: number
+) {
+  const sharedTagCount = candidateStory.tags.filter((tag) => currentStory.tags.includes(tag)).length;
+  let score = 0;
+  if (candidateStory.brandSlug === currentStory.brandSlug) score += 12;
+  if (candidateStory.topic === currentStory.topic) score += 10;
+  if (getStoryDestinationMode(candidateStory.brandSlug) === getStoryDestinationMode(currentStory.brandSlug)) score += 5;
+  score += Math.min(sharedTagCount, 4) * 3;
+  score += Math.max(0, 4 - Math.abs(candidateIndex - currentIndex));
+  score += Math.min(candidateStory.popularity, 100) / 100;
+  return score;
+}
+
+function AmbientReaderImageBlock({
+  block,
+  onOpenImage,
+}: {
+  block: Extract<LiveArticleData["blocks"][number], { type: "image" }>;
+  onOpenImage: (image: FullscreenReaderImage) => void;
+}) {
+  const [naturalRatio, setNaturalRatio] = React.useState<number | null>(null);
+  const isPortrait = naturalRatio !== null && naturalRatio < 0.9;
+  const imageAspectRatio = naturalRatio ?? 1.5;
+
+  return (
+    <figure className="relative left-1/2 w-[calc(100vw-2.5rem)] max-w-[1180px] -translate-x-1/2 py-4 sm:w-[calc(100vw-4rem)] sm:py-7 lg:w-[calc(100vw-6rem)]">
+      <button
+        type="button"
+        className={cn(
+          "group relative block overflow-hidden bg-[var(--ambient-rule)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+          isPortrait ? "mx-auto w-full max-w-[min(100%,720px)]" : "w-full"
+        )}
+        style={{ aspectRatio: imageAspectRatio }}
+        onClick={() => onOpenImage({
+          src: block.url,
+          alt: block.alt,
+          caption: block.caption,
+          credit: block.credit,
+        })}
+        aria-label={`View image fullscreen: ${block.alt}`}
+      >
+        <Image
+          src={block.url}
+          alt={block.alt}
+          fill
+          sizes={isPortrait
+            ? "(max-width: 768px) calc(100vw - 2.5rem), (max-width: 1024px) min(720px, calc(100vw - 4rem)), 720px"
+            : "(max-width: 768px) calc(100vw - 2.5rem), (max-width: 1024px) calc(100vw - 4rem), 1180px"}
+          className="object-contain transition-opacity group-hover:opacity-95"
+          onLoad={(event) => {
+            const image = event.currentTarget;
+            if (image.naturalWidth > 0 && image.naturalHeight > 0) {
+              setNaturalRatio(image.naturalWidth / image.naturalHeight);
+            }
+          }}
+        />
+      </button>
+      {block.caption || block.credit ? (
+        <figcaption className={cn(
+          "mt-3 font-brand text-xs leading-5 text-[var(--ambient-muted)]",
+          isPortrait && "mx-auto max-w-[min(100%,720px)]"
+        )}>
+          {[block.caption, block.credit].filter(Boolean).join(" · ")}
+        </figcaption>
+      ) : null}
+    </figure>
+  );
+}
+
 function getAmbientBrandForeground(background: string) {
   if (!/^#[\da-f]{6}$/i.test(background)) return "#FFFFFF";
   const channels = [1, 3, 5].map((index) => {
@@ -5036,12 +5109,20 @@ function getAmbientBrandForeground(background: string) {
 function AmbientArticleReader({
   story,
   article,
+  previousStory,
+  nextStory,
+  relatedStories,
   onClose,
+  onNavigateStory,
   onOpenImage,
 }: {
   story: LifestyleRiverStory;
   article: LiveArticleData;
+  previousStory?: LifestyleRiverStory;
+  nextStory?: LifestyleRiverStory;
+  relatedStories: LifestyleRiverStory[];
   onClose: () => void;
+  onNavigateStory: (storyId: string) => void;
   onOpenImage: (image: FullscreenReaderImage) => void;
 }) {
   const destinationConfigs = useDestinationConfigs();
@@ -5066,8 +5147,11 @@ function AmbientArticleReader({
     "--ambient-rule": colorMode === "dark" ? "#333638" : "#D7D7D2",
   } as React.CSSProperties;
   const readMinutes = getAmbientReaderMinutes(story, article);
-  const brandPrimary = contextualTheme.colors["1"] ?? "#242D39";
+  const brandPrimary = story.brandSlug === "motortrend"
+    ? "#23262F"
+    : contextualTheme.colors["1"] ?? "#242D39";
   const brandForeground = getAmbientBrandForeground(brandPrimary);
+  const heroAccent = story.brandSlug === "motortrend" ? "#E90C17" : brandForeground;
   const firstParagraphIndex = article.blocks.findIndex((block) => block.type === "paragraph");
   const densityStyles: Record<AmbientReaderDensity, string> = {
     compact: "max-w-[68ch] text-[17px] leading-7 [--ambient-block-gap:1.25rem]",
@@ -5087,11 +5171,24 @@ function AmbientArticleReader({
     updateProgress();
   }, [density, updateProgress]);
 
+  React.useEffect(() => {
+    scrollRef.current?.scrollTo({ top: 0 });
+    setProgress(0);
+  }, [story.id]);
+
   const handleDialogKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === "Escape") {
       event.preventDefault();
       event.stopPropagation();
       onClose();
+      return;
+    }
+    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+      const targetStory = event.key === "ArrowLeft" ? previousStory : nextStory;
+      if (!targetStory) return;
+      event.preventDefault();
+      event.stopPropagation();
+      onNavigateStory(targetStory.id);
       return;
     }
     if (event.key !== "Tab") return;
@@ -5148,6 +5245,29 @@ function AmbientArticleReader({
             </div>
             <button
               type="button"
+              onClick={() => previousStory && onNavigateStory(previousStory.id)}
+              disabled={!previousStory}
+              className="inline-flex h-11 items-center gap-1.5 px-2 text-xs font-semibold text-[var(--ambient-muted)] transition-colors hover:text-[var(--ambient-ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 disabled:cursor-not-allowed disabled:opacity-35"
+              aria-label={previousStory ? `Previous article: ${previousStory.title}` : "Previous article unavailable"}
+              title={previousStory ? `Previous: ${previousStory.title}` : "Previous article unavailable"}
+            >
+              <ChevronLeft className="h-4 w-4" aria-hidden />
+              <span className="hidden xl:inline">Prev</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => nextStory && onNavigateStory(nextStory.id)}
+              disabled={!nextStory}
+              className="inline-flex h-11 items-center gap-1.5 px-2 text-xs font-semibold text-[var(--ambient-muted)] transition-colors hover:text-[var(--ambient-ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 disabled:cursor-not-allowed disabled:opacity-35"
+              aria-label={nextStory ? `Next article: ${nextStory.title}` : "Next article unavailable"}
+              title={nextStory ? `Next: ${nextStory.title}` : "Next article unavailable"}
+            >
+              <span className="hidden xl:inline">Next</span>
+              <ChevronRight className="h-4 w-4" aria-hidden />
+            </button>
+            <span className="mx-1 hidden h-5 w-px bg-[var(--ambient-rule)] sm:block" aria-hidden />
+            <button
+              type="button"
               onClick={() => setDensity((current) => densityOrder[(densityOrder.indexOf(current) + 1) % densityOrder.length])}
               className="inline-flex min-h-11 items-center gap-2 px-2 text-xs font-semibold capitalize text-[var(--ambient-muted)] transition-colors hover:text-[var(--ambient-ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
               aria-label={`Reading density: ${density}. Change density`}
@@ -5192,7 +5312,13 @@ function AmbientArticleReader({
               style={{ backgroundColor: brandPrimary, color: brandForeground }}
             >
               <div className="max-w-3xl">
-                <p className="mb-6 text-xs font-bold uppercase tracking-[0.18em] opacity-80">
+                <p
+                  className={cn(
+                    "mb-6 text-xs font-bold uppercase tracking-[0.18em]",
+                    story.brandSlug !== "motortrend" && "opacity-80"
+                  )}
+                  style={{ color: heroAccent }}
+                >
                   {story.topic} · {story.brand}
                 </p>
                 <h1 className="font-headline text-[clamp(2.6rem,3.7vw,4.75rem)] font-[var(--font-headline-weight)] leading-[1.08] tracking-[-0.03em] text-balance">
@@ -5201,7 +5327,15 @@ function AmbientArticleReader({
                 <p className="mt-7 max-w-xl font-brand-secondary text-xl leading-8 opacity-90 sm:text-2xl">
                   {story.summary}
                 </p>
-                <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-current/25 pt-5 text-xs font-semibold uppercase tracking-[0.12em] opacity-85">
+                <div
+                  className={cn(
+                    "mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 border-t pt-5 text-xs font-semibold uppercase tracking-[0.12em]",
+                    story.brandSlug !== "motortrend" && "border-current/25 opacity-85"
+                  )}
+                  style={story.brandSlug === "motortrend"
+                    ? { borderTopColor: heroAccent, color: heroAccent }
+                    : undefined}
+                >
                   <span>{getLifestyleByline(story)}</span>
                   <span aria-hidden>·</span>
                   <span>{readMinutes} min read</span>
@@ -5234,35 +5368,7 @@ function AmbientArticleReader({
               <div className="space-y-[var(--ambient-block-gap)]">
                 {article.blocks.map((block, index) => {
                   if (block.type === "image") {
-                    return (
-                      <figure key={`${block.url}-${index}`} className="relative left-1/2 w-[calc(100vw-2.5rem)] max-w-[1180px] -translate-x-1/2 py-4 sm:w-[calc(100vw-4rem)] sm:py-7 lg:w-[calc(100vw-6rem)]">
-                        <button
-                          type="button"
-                          className="group block w-full cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-                          onClick={() => onOpenImage({
-                            src: block.url,
-                            alt: block.alt,
-                            caption: block.caption,
-                            credit: block.credit,
-                          })}
-                          aria-label={`View image fullscreen: ${block.alt}`}
-                        >
-                          <Image
-                            src={block.url}
-                            alt={block.alt}
-                            width={1200}
-                            height={800}
-                            sizes="(max-width: 768px) calc(100vw - 2.5rem), (max-width: 1024px) calc(100vw - 4rem), 1180px"
-                            className="max-h-[780px] w-full bg-[var(--ambient-rule)] object-cover transition-opacity group-hover:opacity-95"
-                          />
-                        </button>
-                        {block.caption || block.credit ? (
-                          <figcaption className="mt-3 font-brand text-xs leading-5 text-[var(--ambient-muted)]">
-                            {[block.caption, block.credit].filter(Boolean).join(" · ")}
-                          </figcaption>
-                        ) : null}
-                      </figure>
-                    );
+                    return <AmbientReaderImageBlock key={`${block.url}-${index}`} block={block} onOpenImage={onOpenImage} />;
                   }
                   if (block.type === "heading") {
                     return <h2 key={index} className="pt-6 font-headline text-[clamp(2rem,4vw,3.5rem)] font-[var(--font-headline-weight)] leading-[1.05] tracking-[-0.025em] text-balance">{block.text}</h2>;
@@ -5288,6 +5394,51 @@ function AmbientArticleReader({
               </div>
               <footer className="mt-20 border-t border-[var(--ambient-rule)] pt-8 font-brand text-sm text-[var(--ambient-muted)]">
                 <p>End of article · {story.brand}</p>
+                {relatedStories.length > 0 ? (
+                  <section className="mt-10" aria-label="Related Ambient Reader stories">
+                    <div className="mb-4 flex items-end justify-between gap-4">
+                      <div>
+                        <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-primary">
+                          Keep reading
+                        </p>
+                        <h2 className="mt-2 font-headline text-2xl font-[var(--font-headline-weight)] leading-tight text-[var(--ambient-ink)]">
+                          Related ambient reads
+                        </h2>
+                      </div>
+                    </div>
+                    <div className="grid gap-3">
+                      {relatedStories.map((relatedStory) => (
+                        <button
+                          key={relatedStory.id}
+                          type="button"
+                          onClick={() => onNavigateStory(relatedStory.id)}
+                          className="group grid grid-cols-[88px_minmax(0,1fr)] gap-4 border-t border-[var(--ambient-rule)] py-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                        >
+                          <span className="relative block aspect-square overflow-hidden bg-[var(--ambient-rule)]">
+                            <Image
+                              src={relatedStory.image}
+                              alt=""
+                              fill
+                              sizes="88px"
+                              className="object-cover transition-transform duration-200 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+                            />
+                          </span>
+                          <span className="min-w-0 self-center">
+                            <span className="block text-[11px] font-bold uppercase tracking-[0.16em] text-primary">
+                              {relatedStory.topic} · {relatedStory.brand}
+                            </span>
+                            <span className="mt-1 block font-headline text-xl font-[var(--font-headline-weight)] leading-tight text-[var(--ambient-ink)] text-balance">
+                              {relatedStory.title}
+                            </span>
+                            <span className="mt-2 block text-xs font-semibold text-[var(--ambient-muted)]">
+                              Open in Ambient Reader
+                            </span>
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </section>
+                ) : null}
               </footer>
             </article>
           </section>
@@ -5925,6 +6076,54 @@ function LifestyleStoryReaderModal({
     : [];
   const visibleReaderStories = storyQueue.slice(0, visibleReaderCount);
   const visibleReaderStoryIds = visibleReaderStories.map((story) => story.id).join("|");
+  const ambientReaderIndex = ambientReaderStoryId
+    ? storyQueue.findIndex((story) => story.id === ambientReaderStoryId)
+    : -1;
+  const ambientCurrentStory = ambientReaderIndex >= 0 ? storyQueue[ambientReaderIndex] : undefined;
+  const ambientOrderedStories = ambientCurrentStory
+    ? storyQueue
+        .filter((story) =>
+          Boolean(story.sourceUrl)
+          && !story.videoUrl
+          && getStoryDestinationMode(story.brandSlug) === getStoryDestinationMode(ambientCurrentStory.brandSlug)
+        )
+    : [];
+  const ambientOrderedIndex = ambientReaderStoryId
+    ? ambientOrderedStories.findIndex((story) => story.id === ambientReaderStoryId)
+    : -1;
+  const ambientPreviousCandidateStories = ambientOrderedIndex > 0
+    ? ambientOrderedStories.slice(0, ambientOrderedIndex).reverse()
+    : [];
+  const ambientNextCandidateStories = ambientOrderedIndex >= 0
+    ? ambientOrderedStories.slice(ambientOrderedIndex + 1)
+    : [];
+  const ambientPreviousStory = ambientPreviousCandidateStories.find((story) => isCompleteAmbientArticle(liveArticles[story.id]));
+  const ambientNextStory = ambientNextCandidateStories.find((story) => isCompleteAmbientArticle(liveArticles[story.id]));
+  const ambientRelatedCandidateStories = ambientCurrentStory && ambientOrderedIndex >= 0
+    ? ambientOrderedStories
+        .map((story, index) => ({ story, index }))
+        .filter(({ index }) => index !== ambientOrderedIndex)
+        .sort((first, second) =>
+          (ambientCurrentStory
+            ? getAmbientRelatedScore(ambientCurrentStory, second.story, ambientOrderedIndex, second.index)
+              - getAmbientRelatedScore(ambientCurrentStory, first.story, ambientOrderedIndex, first.index)
+            : 0)
+          || Math.abs(first.index - ambientOrderedIndex) - Math.abs(second.index - ambientOrderedIndex)
+        )
+        .slice(0, 8)
+        .map(({ story }) => story)
+    : [];
+  const ambientReaderPreloadStories = [
+    ...ambientPreviousCandidateStories.slice(0, 4),
+    ...ambientNextCandidateStories.slice(0, 12),
+    ...ambientRelatedCandidateStories,
+  ].filter(
+    (story): story is LifestyleRiverStory => Boolean(story?.sourceUrl)
+  ).filter((story, index, stories) => stories.findIndex((candidate) => candidate.id === story.id) === index);
+  const ambientReaderPreloadStoryIds = ambientReaderPreloadStories.map((story) => story.id).join("|");
+  const ambientRelatedReadyStories = ambientRelatedCandidateStories
+    .filter((story) => isCompleteAmbientArticle(liveArticles[story.id]))
+    .slice(0, 3);
   const readerContextStory = storyQueue[0];
   const readerDestination = readerContextStory
     ? getStoryDestinationMode(readerContextStory.brandSlug)
@@ -6180,7 +6379,11 @@ function LifestyleStoryReaderModal({
 
   React.useEffect(() => {
     const controller = new AbortController();
-    visibleReaderStories.forEach((story) => {
+    const storiesToLoad = [...visibleReaderStories, ...ambientReaderPreloadStories];
+    const seenStoryIds = new Set<string>();
+    storiesToLoad.forEach((story) => {
+      if (seenStoryIds.has(story.id)) return;
+      seenStoryIds.add(story.id);
       if (!story.sourceUrl || liveArticles[story.id]) return;
       setLiveArticles((current) => ({ ...current, [story.id]: { status: "loading" } }));
       fetch(`/api/live-article/?url=${encodeURIComponent(story.sourceUrl)}`, { signal: controller.signal })
@@ -6197,7 +6400,7 @@ function LifestyleStoryReaderModal({
     return () => controller.abort();
   // The ID key intentionally represents the current lazy-loaded reader queue.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visibleReaderStoryIds]);
+  }, [ambientReaderPreloadStoryIds, visibleReaderStoryIds]);
 
   React.useEffect(() => {
     if (!isReaderOpen || ambientReaderStoryId || fullscreenGallery) return;
@@ -6524,7 +6727,22 @@ function LifestyleStoryReaderModal({
         <AmbientArticleReader
           story={readerStories.find((story) => story.id === ambientReaderStoryId) ?? storyQueue[0]}
           article={liveArticles[ambientReaderStoryId].data}
+          previousStory={ambientPreviousStory}
+          nextStory={ambientNextStory}
+          relatedStories={ambientRelatedReadyStories}
           onClose={() => setAmbientReaderStoryId(null)}
+          onNavigateStory={(storyId) => {
+            setAmbientReaderStoryId(storyId);
+            window.history.replaceState(
+              {
+                ...window.history.state,
+                hearstReaderStory: storyId,
+              },
+              "",
+              appendReaderReturnHref(storyId, readerReturnHref ?? null)
+            );
+            scrollRef.current?.scrollTo({ top: 0 });
+          }}
           onOpenImage={(image) => {
             const ambientStory = readerStories.find((story) => story.id === ambientReaderStoryId) ?? storyQueue[0];
             const images = getFullscreenReaderImages(ambientStory, liveArticles[ambientReaderStoryId]);
