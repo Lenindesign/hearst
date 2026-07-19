@@ -43,6 +43,7 @@ import {
   ImageIcon,
   Info,
   Mail,
+  Menu,
   MessageCircle,
   Moon,
   Pause,
@@ -1759,6 +1760,13 @@ function MainNav({
   navLinksOverride,
   includeVideos,
   darkMode = false,
+  mobileContinueStories = [],
+  mobileBrands = [],
+  searchStories = [],
+  activeBrandFilters = [],
+  onMobileStoryOpen,
+  onMobileBrandToggle,
+  onMobileBrandClear,
 }: {
   brandSlug: string;
   activeFilter?: string;
@@ -1767,10 +1775,36 @@ function MainNav({
   navLinksOverride?: string[];
   includeVideos?: boolean;
   darkMode?: boolean;
+  mobileContinueStories?: LifestyleRiverStory[];
+  mobileBrands?: { name: string; slug: string; count: number }[];
+  searchStories?: LifestyleRiverStory[];
+  activeBrandFilters?: string[];
+  onMobileStoryOpen?: (storyId: string) => void;
+  onMobileBrandToggle?: (brandName: string) => void;
+  onMobileBrandClear?: () => void;
 }) {
   const destinationConfigs = useDestinationConfigs();
   const { brand, colorMode, toggleColorMode } = useTheme();
   const [mastheadCompact, setMastheadCompact] = React.useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [searchOpen, setSearchOpen] = React.useState(false);
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const [activeSearchIndex, setActiveSearchIndex] = React.useState(0);
+  const [overlayPortalTarget, setOverlayPortalTarget] = React.useState<HTMLElement | null>(null);
+  const deferredSearchQuery = React.useDeferredValue(searchQuery);
+  const mobileMenuTriggerRef = React.useRef<HTMLButtonElement | null>(null);
+  const mobileMenuPanelRef = React.useRef<HTMLDivElement | null>(null);
+  const searchTriggerRef = React.useRef<HTMLButtonElement | null>(null);
+  const searchPanelRef = React.useRef<HTMLDivElement | null>(null);
+  const searchInputRef = React.useRef<HTMLInputElement | null>(null);
+  const closeMobileMenu = React.useCallback(() => {
+    setMobileMenuOpen(false);
+    window.requestAnimationFrame(() => mobileMenuTriggerRef.current?.focus());
+  }, [setMobileMenuOpen]);
+  const closeSearch = React.useCallback(() => {
+    setSearchOpen(false);
+    window.requestAnimationFrame(() => searchTriggerRef.current?.focus());
+  }, [setSearchOpen]);
   const mastheadSlug = selectedBrand?.slug ?? brand.slug;
   const logo = brandLogos[mastheadSlug];
   const content = getContent(brandSlug);
@@ -1782,6 +1816,50 @@ function MainNav({
       ? destinationConfig.filters
       : content.navLinks);
   const navLinks = includeVideos ? insertVideosFilter(baseNavLinks) : baseNavLinks;
+  const normalizedSearchQuery = deferredSearchQuery.trim().toLocaleLowerCase();
+  const searchResults = React.useMemo(() => {
+    if (!normalizedSearchQuery) {
+      return [...searchStories]
+        .sort((left, right) => right.popularity - left.popularity || left.title.localeCompare(right.title))
+        .slice(0, 6);
+    }
+
+    return searchStories
+      .map((story) => {
+        const title = story.title.toLocaleLowerCase();
+        const brandName = story.brand.toLocaleLowerCase();
+        const topic = story.topic.toLocaleLowerCase();
+        const tags = story.tags.map((tag) => tag.toLocaleLowerCase());
+        const score = title === normalizedSearchQuery
+          ? 100
+          : title.startsWith(normalizedSearchQuery)
+            ? 80
+            : title.includes(normalizedSearchQuery)
+              ? 60
+              : brandName.startsWith(normalizedSearchQuery)
+                ? 48
+                : brandName.includes(normalizedSearchQuery)
+                  ? 42
+                  : topic.startsWith(normalizedSearchQuery)
+                    ? 36
+                    : topic.includes(normalizedSearchQuery)
+                      ? 30
+                      : tags.some((tag) => tag.startsWith(normalizedSearchQuery))
+                        ? 24
+                        : tags.some((tag) => tag.includes(normalizedSearchQuery))
+                          ? 18
+                          : 0;
+        return { story, score };
+      })
+      .filter((result) => result.score > 0)
+      .sort((left, right) => right.score - left.score || right.story.popularity - left.story.popularity)
+      .slice(0, 8)
+      .map((result) => result.story);
+  }, [normalizedSearchQuery, searchStories]);
+
+  React.useEffect(() => {
+    setActiveSearchIndex(0);
+  }, [normalizedSearchQuery]);
 
   React.useEffect(() => {
     let frame = 0;
@@ -1804,6 +1882,84 @@ function MainNav({
       if (frame) window.cancelAnimationFrame(frame);
     };
   }, []);
+
+  React.useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const handleMenuKeyboard = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        closeMobileMenu();
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      const focusable = Array.from(
+        mobileMenuPanelRef.current?.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        ) ?? []
+      );
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (!first || !last) return;
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleMenuKeyboard);
+    window.requestAnimationFrame(() => {
+      mobileMenuPanelRef.current?.querySelector<HTMLElement>("button")?.focus();
+    });
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleMenuKeyboard);
+    };
+  }, [closeMobileMenu, mobileMenuOpen]);
+
+  React.useEffect(() => {
+    if (!searchOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const handleSearchKeyboard = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        closeSearch();
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      const focusable = Array.from(
+        searchPanelRef.current?.querySelectorAll<HTMLElement>(
+          'input, a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        ) ?? []
+      );
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (!first || !last) return;
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleSearchKeyboard);
+    window.requestAnimationFrame(() => searchInputRef.current?.focus());
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleSearchKeyboard);
+    };
+  }, [closeSearch, searchOpen]);
 
   const shouldUseNativeLogoColor = mastheadSlug === "car-and-driver";
   const mobileMastheadSlug = !selectedBrand && mastheadSlug === "hearst-ew"
@@ -1980,16 +2136,304 @@ function MainNav({
     );
   });
 
+  const showMobileDiscoveryMenu = isDestinationRiver
+    && mobileContinueStories.length > 0
+    && mobileBrands.length > 0;
+
+  const mobileMenu = mobileMenuOpen && overlayPortalTarget ? createPortal(
+    <div className="fixed inset-0 z-50 sm:hidden" role="dialog" aria-modal="true" aria-label="Hearst discovery menu">
+      <button
+        type="button"
+        className="absolute inset-0 bg-black/45"
+        onClick={closeMobileMenu}
+        aria-label="Close menu"
+      />
+      <div ref={mobileMenuPanelRef} className={cn(
+        "absolute inset-y-0 left-0 flex w-[min(91vw,400px)] flex-col overflow-hidden border-r shadow-xl",
+        darkMode ? "border-white/10 bg-[#0d1014] text-[#f4f7fb]" : "border-border bg-background text-foreground"
+      )}>
+        <div className={cn("flex min-h-20 items-center justify-between border-b px-5", darkMode ? "border-white/10" : "border-border")}>
+          <div>
+            <p className="text-sm font-black">Explore Hearst+</p>
+            <p className={cn("mt-0.5 text-xs", darkMode ? "text-white/65" : "text-muted-foreground")}>Pick up a story or filter your feed.</p>
+          </div>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            onClick={closeMobileMenu}
+            className={cn("h-11 w-11", darkMode ? "text-white hover:bg-white/10 hover:text-white" : undefined)}
+            aria-label="Close menu"
+          >
+            <X className="h-5 w-5" aria-hidden />
+          </Button>
+        </div>
+
+        <div className="min-h-0 flex-1 overflow-y-auto px-5 py-6">
+          <section aria-labelledby="mobile-continue-reading-title">
+            <div className="flex items-center justify-between gap-4">
+              <h2 id="mobile-continue-reading-title" className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
+                Continue Reading
+              </h2>
+              <span className={cn("text-xs", darkMode ? "text-white/60" : "text-muted-foreground")}>Your queue</span>
+            </div>
+            <div className="mt-4 space-y-2">
+              {mobileContinueStories.slice(0, 3).map((story) => (
+                <button
+                  key={story.id}
+                  type="button"
+                  onClick={() => {
+                    closeMobileMenu();
+                    onMobileStoryOpen?.(story.id);
+                  }}
+                  className={cn(
+                    "group flex min-h-20 w-full items-center gap-3 rounded-[8px] p-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+                    darkMode ? "hover:bg-white/[0.06]" : "hover:bg-muted/60"
+                  )}
+                  aria-label={`Open story: ${story.title}`}
+                >
+                  <span
+                    className="h-16 w-20 shrink-0 rounded-[6px] bg-muted bg-cover bg-center"
+                    style={{ backgroundImage: `url("${story.image}")` }}
+                    aria-hidden="true"
+                  />
+                  <span className="min-w-0">
+                    <span className="line-clamp-2 block text-sm font-bold leading-snug group-hover:text-primary">{story.title}</span>
+                    <span className={cn("mt-1 block text-xs", darkMode ? "text-white/60" : "text-muted-foreground")}>{story.brand}</span>
+                  </span>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section className={cn("mt-7 border-t pt-6", darkMode ? "border-white/10" : "border-border")} aria-labelledby="mobile-filter-brands-title">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <h2 id="mobile-filter-brands-title" className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
+                  Filter Brands
+                </h2>
+                <p className={cn("mt-1 text-xs", darkMode ? "text-white/60" : "text-muted-foreground")}>{mobileBrands.length} brands</p>
+              </div>
+              {activeBrandFilters.length > 0 ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    onMobileBrandClear?.();
+                    closeMobileMenu();
+                  }}
+                  className="min-h-11 px-1 text-xs font-bold text-[var(--hp-section-title)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                >
+                  Show all
+                </button>
+              ) : null}
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-2">
+              {mobileBrands.map((mobileBrand) => {
+                const active = activeBrandFilters.includes(mobileBrand.name);
+                return (
+                  <button
+                    key={mobileBrand.name}
+                    type="button"
+                    onClick={() => {
+                      onMobileBrandToggle?.(mobileBrand.name);
+                      closeMobileMenu();
+                    }}
+                    disabled={mobileBrand.count === 0}
+                    aria-pressed={active}
+                    className={cn(
+                      "flex min-h-14 min-w-0 items-center gap-2 rounded-[8px] border px-2.5 py-2 text-left text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+                      active
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : darkMode
+                          ? "border-white/15 bg-white/[0.03] text-white hover:bg-white/[0.08]"
+                          : "border-border bg-background hover:border-primary/45 hover:bg-muted/40",
+                      mobileBrand.count === 0 && "cursor-not-allowed opacity-45"
+                    )}
+                  >
+                    <BrandSourceIcon brand={mobileBrand.name} brandSlug={mobileBrand.slug} className="h-6 w-6 rounded-[4px]" />
+                    <span className="min-w-0 flex-1 truncate">{mobileBrand.name}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+        </div>
+
+        <div className={cn("border-t px-5 py-3", darkMode ? "border-white/10" : "border-border")}>
+          <button
+            type="button"
+            onClick={toggleColorMode}
+            className={cn(
+              "flex min-h-11 w-full items-center gap-3 rounded-[8px] px-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+              darkMode ? "hover:bg-white/[0.06]" : "hover:bg-muted/50"
+            )}
+          >
+            {colorMode === "dark" ? <Sun className="h-4 w-4" aria-hidden /> : <Moon className="h-4 w-4" aria-hidden />}
+            Switch to {colorMode === "dark" ? "light" : "dark"} mode
+          </button>
+        </div>
+      </div>
+    </div>,
+    overlayPortalTarget
+  ) : null;
+
+  const openSearchStory = (story: LifestyleRiverStory) => {
+    closeSearch();
+    onMobileStoryOpen?.(story.id);
+  };
+  const searchDialog = searchOpen && overlayPortalTarget ? createPortal(
+    <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-labelledby="hearst-search-title">
+      <button
+        type="button"
+        className="absolute inset-0 bg-black/50 backdrop-blur-[2px]"
+        onClick={closeSearch}
+        aria-label="Close search"
+      />
+      <div
+        ref={searchPanelRef}
+        className={cn(
+          "absolute inset-x-3 top-16 mx-auto max-h-[calc(100dvh-5rem)] w-auto max-w-2xl overflow-hidden rounded-[8px] border border-t-4 shadow-xl sm:top-24",
+          darkMode ? "border-white/15 border-t-[#BDDDFC] bg-[#0d1014] text-[#f4f7fb]" : "border-border border-t-primary bg-[var(--hp-surface)] text-foreground"
+        )}
+      >
+        <div className={cn("flex items-start justify-between gap-4 border-b px-4 py-4 sm:px-6", darkMode ? "border-white/10" : "border-border")}>
+          <div>
+            <h2 id="hearst-search-title" className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">Search Hearst+</h2>
+            <p className={cn("mt-1.5 text-sm", darkMode ? "text-white/65" : "text-muted-foreground")}>
+              Search stories by title, brand, topic, or tag.
+            </p>
+          </div>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            onClick={closeSearch}
+            className={cn("h-11 w-11 shrink-0", darkMode ? "text-white hover:bg-white/10 hover:text-white" : undefined)}
+            aria-label="Close search"
+          >
+            <X className="h-5 w-5" aria-hidden />
+          </Button>
+        </div>
+
+        <div className="px-4 pt-4 sm:px-6">
+          <Input
+            ref={searchInputRef}
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
+            onClear={() => setSearchQuery("")}
+            onKeyDown={(event) => {
+              if (event.key === "ArrowDown") {
+                event.preventDefault();
+                setActiveSearchIndex((current) => searchResults.length ? (current + 1) % searchResults.length : 0);
+              } else if (event.key === "ArrowUp") {
+                event.preventDefault();
+                setActiveSearchIndex((current) => searchResults.length ? (current - 1 + searchResults.length) % searchResults.length : 0);
+              } else if (event.key === "Enter" && searchResults[activeSearchIndex]) {
+                event.preventDefault();
+                openSearchStory(searchResults[activeSearchIndex]);
+              }
+            }}
+            leadingIcon={Search}
+            placeholder="Try ‘Goodwood’, ‘Cosmopolitan’, or ‘Fitness’"
+            aria-label="Search Hearst stories"
+            role="combobox"
+            aria-autocomplete="list"
+            aria-expanded="true"
+            aria-controls="hearst-search-results"
+            aria-activedescendant={searchResults[activeSearchIndex] ? `hearst-search-result-${activeSearchIndex}` : undefined}
+            autoComplete="off"
+            className={cn(darkMode && "[&_div]:border-white/20 [&_div]:bg-white/[0.06] [&_input]:text-white [&_input]:placeholder:text-white/45")}
+          />
+        </div>
+
+        <div className="min-h-0 overflow-y-auto px-4 pb-5 pt-4 sm:px-6 sm:pb-6">
+          <div className="flex items-center justify-between gap-4 pb-3">
+            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
+              {normalizedSearchQuery ? "Search results" : "Popular now"}
+            </p>
+            <p className={cn("text-xs", darkMode ? "text-white/60" : "text-muted-foreground")} aria-live="polite">
+              {searchResults.length} {searchResults.length === 1 ? "story" : "stories"}
+            </p>
+          </div>
+
+          {searchResults.length > 0 ? (
+            <div id="hearst-search-results" role="listbox" aria-label="Story suggestions" className={cn("divide-y", darkMode ? "divide-white/10" : "divide-border")}>
+              {searchResults.map((story, index) => (
+                <button
+                  key={story.id}
+                  id={`hearst-search-result-${index}`}
+                  type="button"
+                  role="option"
+                  aria-selected={index === activeSearchIndex}
+                  onMouseEnter={() => setActiveSearchIndex(index)}
+                  onFocus={() => setActiveSearchIndex(index)}
+                  onClick={() => openSearchStory(story)}
+                  className={cn(
+                    "group flex min-h-20 w-full items-center gap-3 border-l-2 border-l-transparent px-2 py-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/40",
+                    index === activeSearchIndex
+                      ? darkMode ? "border-l-[#BDDDFC] bg-white/[0.07]" : "border-l-primary bg-muted/40"
+                      : darkMode ? "hover:bg-white/[0.04]" : "hover:bg-muted/30"
+                  )}
+                >
+                  <span
+                    className="h-16 w-20 shrink-0 rounded-[6px] bg-muted bg-cover bg-center sm:w-24"
+                    style={{ backgroundImage: `url("${story.image}")` }}
+                    aria-hidden="true"
+                  />
+                  <span className="min-w-0 flex-1">
+                    <span className="line-clamp-2 block text-sm font-bold leading-snug group-hover:text-primary sm:text-base">{story.title}</span>
+                    <span className={cn("mt-1 block truncate text-xs", darkMode ? "text-white/60" : "text-muted-foreground")}>
+                      {story.brand} · {story.topic}
+                    </span>
+                  </span>
+                  <ChevronRight className={cn("h-4 w-4 shrink-0", darkMode ? "text-white/45" : "text-muted-foreground")} aria-hidden />
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div id="hearst-search-results" role="status" className={cn("rounded-[8px] border border-dashed px-5 py-10 text-center", darkMode ? "border-white/15" : "border-border")}>
+              <p className="font-bold">No stories match “{searchQuery.trim()}”</p>
+              <p className={cn("mt-1 text-sm", darkMode ? "text-white/60" : "text-muted-foreground")}>Try a different title, brand, topic, or tag.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>,
+    overlayPortalTarget
+  ) : null;
+
   return (
     <>
     <div className={cn("flex h-20 border-b sm:h-24", darkMode ? "border-white/10 bg-[#0d1014] text-[#f4f7fb]" : "border-border bg-[var(--hp-surface)]")}>
       <PageContainer className="flex items-center justify-between">
         <div className="flex w-10 shrink-0 justify-start sm:w-[var(--width-sidebar-narrow)]">
+          {showMobileDiscoveryMenu ? (
+            <Button
+              ref={mobileMenuTriggerRef}
+              variant="outline"
+              size="icon-sm"
+              className={cn(
+                "h-11 w-11 sm:hidden",
+                darkMode ? "border-white/20 bg-white/[0.04] text-white hover:bg-white/10 hover:text-white" : undefined
+              )}
+              onClick={(event) => {
+                setOverlayPortalTarget(event.currentTarget.closest<HTMLElement>(".hearst-plus-theme") ?? document.body);
+                setSearchOpen(false);
+                setMobileMenuOpen(true);
+              }}
+              aria-label="Open reading and brand menu"
+              aria-expanded={mobileMenuOpen}
+            >
+              <Menu className="h-5 w-5" aria-hidden />
+            </Button>
+          ) : null}
           <Button
+            ref={searchTriggerRef}
             variant="outline"
             size="icon-sm"
             className={cn(
               "h-11 w-11 sm:h-7 sm:w-7",
+              showMobileDiscoveryMenu && "hidden sm:inline-flex",
               darkMode ? "border-white/20 bg-white/[0.04] text-white hover:bg-white/10 hover:text-white" : undefined
             )}
             onClick={toggleColorMode}
@@ -2012,6 +2456,12 @@ function MainNav({
             )}
             aria-label="Search"
             title="Search"
+            aria-expanded={searchOpen}
+            onClick={(event) => {
+              setOverlayPortalTarget(event.currentTarget.closest<HTMLElement>(".hearst-plus-theme") ?? document.body);
+              setMobileMenuOpen(false);
+              setSearchOpen(true);
+            }}
           >
             <Search className="h-3.5 w-3.5" aria-hidden />
           </Button>
@@ -2041,6 +2491,8 @@ function MainNav({
         {renderNavLinks()}
       </PageContainer>
     </div>
+    {mobileMenu}
+    {searchDialog}
     </>
   );
 }
@@ -6054,12 +6506,12 @@ function TodayEditDashboard({
 
   return (
     <section
-      className="relative left-1/2 w-screen -translate-x-1/2 border-b border-border bg-[var(--hp-strip)] shadow-[var(--hp-shadow-card)]"
+      className="relative mt-8 hidden w-full overflow-hidden rounded-[8px] border border-border bg-[var(--hp-strip)] shadow-[var(--hp-shadow-card)] md:block"
       aria-label="Today&apos;s edit"
     >
       <div
         ref={carouselRef}
-        className="mx-auto flex w-full max-w-[var(--width-content-max)] snap-x snap-mandatory overflow-x-auto px-4 [scrollbar-width:none] md:px-6 lg:px-12 xl:grid xl:grid-cols-4 xl:divide-x xl:divide-border xl:overflow-visible xl:snap-none xl:[scrollbar-width:auto] [&::-webkit-scrollbar]:hidden xl:[&::-webkit-scrollbar]:block"
+        className="flex w-full snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] xl:grid xl:grid-cols-4 xl:divide-x xl:divide-border xl:overflow-visible xl:snap-none xl:[scrollbar-width:auto] [&::-webkit-scrollbar]:hidden xl:[&::-webkit-scrollbar]:block"
       >
         {modules.map((module) => (
           <button
@@ -6603,7 +7055,7 @@ function LifestyleLeftSidebar({
 
   return (
     <aside
-      className="min-w-0 space-y-5 lg:sticky lg:top-[112px] lg:max-h-[calc(100dvh-136px)] lg:self-start lg:overflow-y-auto lg:pr-1"
+      className="hidden min-w-0 space-y-5 lg:sticky lg:top-[112px] lg:block lg:max-h-[calc(100dvh-136px)] lg:self-start lg:overflow-y-auto lg:pr-1"
       aria-label="Lifestyle discovery sidebar"
     >
       <MobileCollapsibleSidebarCard
@@ -6733,6 +7185,8 @@ type LifestyleRiverHomePageProps = {
   onRiverReset?: () => void;
   onBrandFilterChange?: () => void;
   onSelectedBrandChange?: (brand: { name: string; slug: string } | null) => void;
+  activeBrandFilters?: string[];
+  onActiveBrandFiltersChange?: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 function getLifestyleRiverPageHeading(config: DestinationConfig, initialBrandSlug?: string) {
@@ -6820,6 +7274,8 @@ function LifestyleRiverHomePage({
   onRiverReset,
   onBrandFilterChange,
   onSelectedBrandChange,
+  activeBrandFilters: controlledActiveBrandFilters,
+  onActiveBrandFiltersChange,
 }: LifestyleRiverHomePageProps) {
   const destinationConfigs = useDestinationConfigs();
   const config = destinationConfig ?? destinationConfigs[destination];
@@ -6830,7 +7286,9 @@ function LifestyleRiverHomePage({
   const [profile, setProfile] = React.useState<LifestyleRiverProfile>(() => account?.preferences ?? config.initialProfile);
   const [demoState, setDemoState] = React.useState<LifestyleDemoState>(initialLifestyleDemoState);
   const initialBrandName = config.sourceNotes.find((note) => note.brandSlug === initialBrandSlug)?.brand;
-  const [activeBrandFilters, setActiveBrandFilters] = React.useState<string[]>(initialBrandName ? [initialBrandName] : []);
+  const [internalActiveBrandFilters, setInternalActiveBrandFilters] = React.useState<string[]>(initialBrandName ? [initialBrandName] : []);
+  const activeBrandFilters = controlledActiveBrandFilters ?? internalActiveBrandFilters;
+  const setActiveBrandFilters = onActiveBrandFiltersChange ?? setInternalActiveBrandFilters;
   const [openStoryId, setOpenStoryId] = React.useState<string | null>(initialOpenStoryId ?? null);
   const [commentsByStoryId, setCommentsByStoryId] = React.useState<Record<string, LifestyleStoryComment[]>>({});
   const [demoModalOpen, setDemoModalOpen] = React.useState(false);
@@ -6923,7 +7381,7 @@ function LifestyleRiverHomePage({
       setActiveBrandFilters([]);
     }
     previousActiveFilterRef.current = activeFilter;
-  }, [activeFilter]);
+  }, [activeFilter, setActiveBrandFilters]);
   const rankingProfile = React.useMemo(
     () => usingVideoTabFeed ? { ...profile, hiddenIds: [] } : profile,
     [profile, usingVideoTabFeed]
@@ -7035,7 +7493,7 @@ function LifestyleRiverHomePage({
     setDemoState(initialLifestyleDemoState);
     setActiveBrandFilters([]);
     onRiverReset?.();
-  }, [config.stories, onRiverReset, onboardingResult, updateReaderProfile]);
+  }, [config.stories, onRiverReset, onboardingResult, setActiveBrandFilters, updateReaderProfile]);
 
   const anchorRiverToTop = React.useCallback(() => {
     window.requestAnimationFrame(() => {
@@ -8224,6 +8682,42 @@ export function HomePageTemplate({
       liveFeedMode,
     };
   }, [baseDestinationConfig, destinationConfigs.flux.stories, destinationMode, liveFeedData, liveFeedMode, resolvedVideoFeedData]);
+  const initialActiveBrandName = destinationConfig.sourceNotes.find((note) => note.brandSlug === initialBrandSlug)?.brand;
+  const [activeBrandFilters, setActiveBrandFilters] = React.useState<string[]>(() => initialActiveBrandName ? [initialActiveBrandName] : []);
+  React.useEffect(() => {
+    setActiveBrandFilters(initialActiveBrandName ? [initialActiveBrandName] : []);
+  }, [initialActiveBrandName]);
+  const mobileContinueStories = React.useMemo(() => {
+    const candidates = [
+      ...destinationConfig.stories.filter((story) => getLifestyleCardKind(story) === "video"),
+      destinationConfig.stories[1],
+      destinationConfig.stories[0],
+      ...destinationConfig.stories,
+    ];
+    const seen = new Set<string>();
+    return candidates.filter((story): story is LifestyleRiverStory => {
+      if (!story || seen.has(story.id)) return false;
+      seen.add(story.id);
+      return true;
+    }).slice(0, 3);
+  }, [destinationConfig.stories]);
+  const mobileBrands = React.useMemo(() => {
+    const counts = destinationConfig.stories.reduce<Record<string, number>>((acc, story) => {
+      acc[story.brand] = (acc[story.brand] ?? 0) + 1;
+      return acc;
+    }, {});
+    return destinationConfig.sourceNotes.map((note) => ({
+      name: note.brand,
+      slug: note.brandSlug,
+      count: counts[note.brand] ?? 0,
+    }));
+  }, [destinationConfig.sourceNotes, destinationConfig.stories]);
+  const searchStories = React.useMemo(
+    () => activeBrandFilters.length > 0
+      ? destinationConfig.stories.filter((story) => activeBrandFilters.includes(story.brand))
+      : destinationConfig.stories,
+    [activeBrandFilters, destinationConfig.stories]
+  );
   const profileTopics = React.useMemo(
     () => Array.from(new Set(destinationConfig.stories.map((story) => story.topic))).sort(),
     [destinationConfig.stories]
@@ -8242,6 +8736,18 @@ export function HomePageTemplate({
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
   }, []);
+  const handleMobileBrandToggle = React.useCallback((brandName: string) => {
+    setActiveBrandFilters((current) => current.includes(brandName) ? [] : [brandName]);
+    anchorPageToTop();
+  }, [anchorPageToTop]);
+  const handleMobileBrandClear = React.useCallback(() => {
+    setActiveBrandFilters([]);
+    anchorPageToTop();
+  }, [anchorPageToTop]);
+  const handleMobileStoryOpen = React.useCallback((storyId: string) => {
+    const returnHref = readerReturnHref ?? pathname ?? getHearstDestinationRoute(destinationMode);
+    router.push(appendReaderReturnHref(storyId, returnHref), { scroll: false });
+  }, [destinationMode, pathname, readerReturnHref, router]);
   const handleLifestyleFilterChange = React.useCallback((filter: string) => {
     setActiveLifestyleFilter(filter);
 
@@ -8296,6 +8802,13 @@ export function HomePageTemplate({
         navLinksOverride={navLinksOverride}
         includeVideos={hasScopedVideoFeed}
         darkMode={useVideosDarkHeader}
+        mobileContinueStories={mobileContinueStories}
+        mobileBrands={mobileBrands}
+        searchStories={searchStories}
+        activeBrandFilters={activeBrandFilters}
+        onMobileStoryOpen={handleMobileStoryOpen}
+        onMobileBrandToggle={handleMobileBrandToggle}
+        onMobileBrandClear={handleMobileBrandClear}
       />
 
       {/* Page Body — constrained by the shared PageContainer */}
@@ -8318,6 +8831,8 @@ export function HomePageTemplate({
               onRiverReset={anchorDestinationContent}
               onBrandFilterChange={anchorPageToTop}
               onSelectedBrandChange={handleSelectedBrandChange}
+              activeBrandFilters={activeBrandFilters}
+              onActiveBrandFiltersChange={setActiveBrandFilters}
             />
           ) : layout === "overlapGrid" ? (
             <OverlapGridHomepageBody brandSlug={brand.slug} />
