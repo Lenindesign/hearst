@@ -6518,7 +6518,7 @@ function TodayEditDashboard({
             key={module.label}
             type="button"
             onClick={module.onClick}
-            className="group relative flex min-h-[190px] w-[88vw] shrink-0 snap-start scroll-ml-0 flex-col border-r border-border px-5 py-6 text-left transition-colors last:border-r-0 hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30 sm:w-[58vw] md:min-h-[144px] md:w-[44vw] md:p-6 lg:w-[34vw] xl:w-auto xl:min-w-0 xl:border-0"
+            className="group relative flex w-[88vw] shrink-0 snap-start scroll-ml-0 flex-col border-r border-border p-4 text-left transition-colors last:border-r-0 hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30 sm:w-[58vw] md:w-[44vw] lg:w-[34vw] xl:w-auto xl:min-w-0 xl:border-0"
           >
             <span>
               <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
