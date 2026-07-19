@@ -42,6 +42,7 @@ type HearstNextData = {
   props?: {
     pageProps?: {
       bodyDom?: HearstDomNode;
+      slides?: unknown[];
       data?: { content?: Array<{ media?: HearstMedia[] }> };
     };
   };
@@ -148,7 +149,7 @@ export async function getHearstLiveArticle(sourceUrl: string): Promise<LiveArtic
       accept: "text/html,application/xhtml+xml",
       "user-agent": "Mozilla/5.0 (compatible; HearstLiveFeedPrototype/1.0)",
     },
-    cache: "no-store",
+    next: { revalidate: 300 },
     redirect: "follow",
     signal: AbortSignal.timeout(10_000),
   });
@@ -162,6 +163,9 @@ export async function getHearstLiveArticle(sourceUrl: string): Promise<LiveArtic
   const bodyDom = pageProps?.bodyDom;
   const media = pageProps?.data?.content?.[0]?.media ?? [];
   if (!bodyDom) throw new Error("Article body was not found");
+  if ((pageProps?.slides?.length ?? 0) > 0) {
+    throw new Error("Slide-based article bodies are not supported as complete articles");
+  }
 
   const blocks = buildBlocks(bodyDom, media);
   if (blocks.length === 0) throw new Error("Article body was empty");

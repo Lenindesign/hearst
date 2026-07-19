@@ -50,50 +50,39 @@ type PersonalizeDestination = "all" | "lifestyle" | "autos" | "flux" | "ew";
 
 const videoRequestOptionsByBrand = {
   caranddriver: {
-    size: 25,
     useCase: "similar_items",
   },
   delish: {
-    size: 25,
     useCase: "trending_now",
   },
   cosmopolitan: {
-    size: 25,
     useCase: "trending_now",
   },
   goodhousekeeping: {
-    size: 25,
     useCase: "trending_now",
   },
   housebeautiful: {
-    size: 25,
     useCase: "trending_now",
   },
   hotrod: {
-    size: 25,
     useCase: "trending_now",
   },
   countryliving: {
-    size: 25,
     useCase: "trending_now",
   },
   thepioneerwoman: {
-    size: 25,
     useCase: "trending_now",
   },
   prevention: {
-    size: 25,
     useCase: "trending_now",
   },
   seventeen: {
-    size: 25,
     useCase: "trending_now",
   },
   womansday: {
-    size: 25,
     useCase: "trending_now",
   },
-} satisfies Partial<Record<(typeof autosVideoFeedBrands)[number][0], { size: number; useCase: string }>>;
+} satisfies Partial<Record<(typeof autosVideoFeedBrands)[number][0], { size?: number; useCase: string }>>;
 
 const liveBrandSlugsByDestination: Record<PersonalizeDestination, readonly string[]> = {
   all: supportedBrands.map(([, , brandSlug]) => brandSlug),
@@ -388,7 +377,7 @@ async function loadPersonalizeFeed({
 
             const response = await fetch(url, {
               headers: { accept: "application/json", "api-key": apiKey },
-              cache: "no-store",
+              next: { revalidate: 60 },
               signal: AbortSignal.timeout(8_000),
             });
             if (!response.ok) throw new Error(`Personalize returned ${response.status} for ${apiBrand} ${type}`);
@@ -474,9 +463,13 @@ function getScopedLiveBrands({
 export async function getPersonalizeLiveFeed({
   destination = "all",
   brandSlug,
+  sizePerBrand = 8,
+  videoSizePerBrand = 2,
 }: {
   destination?: PersonalizeDestination;
   brandSlug?: string;
+  sizePerBrand?: number;
+  videoSizePerBrand?: number;
 } = {}): Promise<LiveFeedData> {
   const brands = getScopedLiveBrands({ destination, brandSlug });
   const fallbackStoryPool = destination === "autos"
@@ -504,6 +497,8 @@ export async function getPersonalizeLiveFeed({
     endpoint: PERSONALIZE_STAGE_URL,
     brands,
     videoBrandIds,
+    size: sizePerBrand,
+    videoSize: videoSizePerBrand,
     dataSourceCopy: `the Personalize stage API, scoped to ${brands.map(([, brandName]) => brandName).join(", ")} current article recommendations.`,
     fallback: () => fallbackData({
       stories: fallbackStories,
@@ -546,10 +541,12 @@ export async function getPersonalizeVideoFeed({
   destination = "all",
   brandSlug,
   productName,
+  sizePerBrand = 6,
 }: {
   destination?: PersonalizeDestination;
   brandSlug?: string;
   productName?: string;
+  sizePerBrand?: number;
 } = {}): Promise<LiveFeedData> {
   const brands = getScopedVideoBrands({ destination, brandSlug });
   const fallbackBrandSlugs = brands.map(([, , videoBrandSlug]) => videoBrandSlug);
@@ -583,7 +580,7 @@ export async function getPersonalizeVideoFeed({
     videoBrandIds: new Set(brands.map(([apiBrand]) => apiBrand)),
     requestType: "video",
     useCase: "trending_now",
-    size: 25,
+    size: sizePerBrand,
     requestOptionsByBrand: videoRequestOptionsByBrand,
     productName: scopedProductName,
     dataSourceCopy: `the production Personalize API, using ${brands.map(([, brandName]) => brandName).join(", ")} video recommendations.`,

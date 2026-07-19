@@ -7,17 +7,23 @@ import { lifestyleRiverSourceNotes, lifestyleRiverStories } from "@/components/l
 import { filterExcludedStories } from "@/lib/content-exclusions";
 import type { HearstDestinationStaticData } from "@/lib/hearst-destination-data-types";
 
-let cachedDestinationData: HearstDestinationStaticData | undefined;
+const cachedDestinationData = new Map<number, HearstDestinationStaticData>();
 
-export function getHearstDestinationStaticData(): HearstDestinationStaticData {
-  if (cachedDestinationData) return cachedDestinationData;
+export function getHearstDestinationStaticData({
+  storyLimitPerDestination = 20,
+}: {
+  storyLimitPerDestination?: number;
+} = {}): HearstDestinationStaticData {
+  const normalizedLimit = Math.max(1, Math.floor(storyLimitPerDestination));
+  const cached = cachedDestinationData.get(normalizedLimit);
+  if (cached) return cached;
 
-  const lifestyleStories = filterExcludedStories(lifestyleRiverStories);
-  const autosStories = filterExcludedStories(autosRiverStories);
-  const fluxStories = filterExcludedStories(fluxRiverStories);
-  const ewStories = filterExcludedStories(ewRiverStories);
+  const lifestyleStories = filterExcludedStories(lifestyleRiverStories).slice(0, normalizedLimit);
+  const autosStories = filterExcludedStories(autosRiverStories).slice(0, normalizedLimit);
+  const fluxStories = filterExcludedStories(fluxRiverStories).slice(0, normalizedLimit);
+  const ewStories = filterExcludedStories(ewRiverStories).slice(0, normalizedLimit);
 
-  cachedDestinationData = {
+  const destinationData: HearstDestinationStaticData = {
     all: {
       stories: [...lifestyleStories, ...autosStories, ...fluxStories, ...ewStories],
       sourceNotes: [
@@ -33,5 +39,6 @@ export function getHearstDestinationStaticData(): HearstDestinationStaticData {
     ew: { stories: ewStories, sourceNotes: ewRiverSourceNotes },
   };
 
-  return cachedDestinationData;
+  cachedDestinationData.set(normalizedLimit, destinationData);
+  return destinationData;
 }

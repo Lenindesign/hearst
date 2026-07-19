@@ -33,6 +33,50 @@ function findLiveStory(data: LiveFeedData | undefined, storyId: string) {
   return data?.stories.find((story) => story.id === storyId);
 }
 
+const liveStoryBrandSlugs = [
+  "the-pioneer-woman",
+  "good-housekeeping",
+  "house-beautiful",
+  "country-living",
+  "car-and-driver",
+  "womans-day",
+  "cosmopolitan",
+  "popular-mechanics",
+  "harpers-bazaar",
+  "motortrend",
+  "prevention",
+  "seventeen",
+  "redbook",
+  "hot-rod",
+] as const;
+
+function getLiveStoryBrandSlug(storyId: string) {
+  const liveId = storyId
+    .replace(/^live-video-/, "")
+    .replace(/^live-/, "");
+  return liveStoryBrandSlugs.find((brandSlug) => liveId.startsWith(`${brandSlug}-`));
+}
+
+function buildStaticReaderFeed(
+  story: NonNullable<ReturnType<typeof getStaticHearstStoryById>>,
+  staticData: ReturnType<typeof getHearstDestinationStaticData>,
+): LiveFeedData {
+  const section = getHearstBrandSection(story.brandSlug);
+  const stories = [
+    story,
+    ...staticData[section].stories.filter((candidate) => candidate.id !== story.id),
+  ];
+
+  return {
+    stories,
+    sourceNotes: staticData[section].sourceNotes.map((note) => ({ ...note })),
+    dataSourceCopy: "a compact local story queue for fast reader startup.",
+    fetchedAt: new Date().toISOString(),
+    isFallback: true,
+    productName: "Hearst story reader",
+  };
+}
+
 async function safeLiveFeed(fetcher: () => Promise<LiveFeedData>) {
   try {
     return await fetcher();
@@ -76,11 +120,38 @@ export default async function ReaderArticlePage({ params, searchParams }: Reader
   const decodedStoryId = decodeURIComponent(storyId);
 
   const staticStory = getStaticHearstStoryById(decodedStoryId);
-  const [liveFeedData, lifestyleLiveFeedData, videoFeedData] = await Promise.all([
-    safeLiveFeed(getPersonalizeLiveFeed),
-    safeLiveFeed(getPersonalizeLifestyleLiveFeed),
-    safeLiveFeed(() => getPersonalizeVideoFeed({ destination: "all" })),
-  ]);
+  const staticDestinationData = getHearstDestinationStaticData({ storyLimitPerDestination: 12 });
+  const requestedBrandSlug = staticStory?.brandSlug ?? getLiveStoryBrandSlug(decodedStoryId);
+  const requestedSection = requestedBrandSlug ? getHearstBrandSection(requestedBrandSlug) : "all";
+  const isVideoStory = decodedStoryId.startsWith("live-video-");
+  let liveFeedData: LiveFeedData | undefined;
+  let lifestyleLiveFeedData: LiveFeedData | undefined;
+  let videoFeedData: LiveFeedData | undefined;
+
+  if (staticStory) {
+    liveFeedData = buildStaticReaderFeed(staticStory, staticDestinationData);
+  } else if (requestedBrandSlug && isVideoStory) {
+    videoFeedData = await safeLiveFeed(() => getPersonalizeVideoFeed({
+      destination: requestedSection,
+      brandSlug: requestedBrandSlug,
+    }));
+  } else if (requestedBrandSlug) {
+    [liveFeedData, lifestyleLiveFeedData] = await Promise.all([
+      safeLiveFeed(() => getPersonalizeLiveFeed({
+        destination: requestedSection,
+        brandSlug: requestedBrandSlug,
+      })),
+      requestedBrandSlug === "cosmopolitan"
+        ? safeLiveFeed(getPersonalizeLifestyleLiveFeed)
+        : Promise.resolve(undefined),
+    ]);
+  } else {
+    [liveFeedData, lifestyleLiveFeedData, videoFeedData] = await Promise.all([
+      safeLiveFeed(getPersonalizeLiveFeed),
+      safeLiveFeed(getPersonalizeLifestyleLiveFeed),
+      safeLiveFeed(() => getPersonalizeVideoFeed({ destination: "all" })),
+    ]);
+  }
   const story =
     staticStory ??
     findLiveStory(liveFeedData, decodedStoryId) ??
@@ -97,11 +168,12 @@ export default async function ReaderArticlePage({ params, searchParams }: Reader
   return (
     <ThemeProvider defaultBrandSlug={hearstSectionThemeSlugs[section]}>
       <HomePageTemplate
-        staticDestinationData={getHearstDestinationStaticData()}
+        staticDestinationData={staticDestinationData}
         initialBrandSlug={hearstSectionThemeSlugs[section]}
         initialOpenStoryId={decodedStoryId}
         readerReturnHref={readerReturnHref}
         liveFeedData={storyInLiveFeed ? liveFeedData : storyInLifestyleLiveFeed ? lifestyleLiveFeedData : undefined}
+        liveFeedMode="blend"
         videoFeedData={videoFeedData}
         initialFilter={story.mediaKind === "video" || story.videoUrl ? "Videos" : undefined}
       />

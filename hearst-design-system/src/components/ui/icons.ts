@@ -1,6 +1,7 @@
 export { ArrowSquareOutIcon as ExternalLink } from "@phosphor-icons/react/dist/ssr/ArrowSquareOut";
 export { BellIcon as Bell } from "@phosphor-icons/react/dist/ssr/Bell";
 export { BookmarkSimpleIcon as Bookmark } from "@phosphor-icons/react/dist/ssr/BookmarkSimple";
+export { BookOpenTextIcon as BookOpenText } from "@phosphor-icons/react/dist/ssr/BookOpenText";
 export { CalendarBlankIcon as CalendarBlank } from "@phosphor-icons/react/dist/ssr/CalendarBlank";
 export { CameraIcon as Camera } from "@phosphor-icons/react/dist/ssr/Camera";
 export { CarIcon as Car } from "@phosphor-icons/react/dist/ssr/Car";

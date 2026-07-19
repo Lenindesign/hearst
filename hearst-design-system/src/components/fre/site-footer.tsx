@@ -45,6 +45,7 @@ export function SiteFooter({
   productLinks = [
     { label: "Product story", href: "/about-hearst-magazines/" },
     { label: "Product blueprint", href: "/hearst-product-blueprint/" },
+    { label: "Complete article viewer", href: "/hearst-plus/complete-articles/" },
     { label: "Live feed", href: "/hearst-plus/live-feed/" },
     { label: "Lifestyle Live", href: "/hearst-plus/lifestyle-live/" },
     { label: "Autos Videos", href: "/hearst-plus/motortrend-videos/" },
