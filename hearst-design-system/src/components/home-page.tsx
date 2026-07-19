@@ -5885,6 +5885,7 @@ function LifestyleStoryReaderModal({
   const [fullscreenGallery, setFullscreenGallery] = React.useState<FullscreenGalleryState | null>(null);
   const [ambientReaderStoryId, setAmbientReaderStoryId] = React.useState<string | null>(null);
   const fullscreenGalleryRef = React.useRef(fullscreenGallery);
+  const activeReaderRouteStoryIdRef = React.useRef<string | null>(null);
   const storyQueue = openIndex >= 0
     ? [...readerStories.slice(openIndex), ...readerStories.slice(0, openIndex)]
     : [];
@@ -5961,6 +5962,7 @@ function LifestyleStoryReaderModal({
     setVisibleReaderCount(1);
     setFullscreenGallery(null);
     setAmbientReaderStoryId(null);
+    activeReaderRouteStoryIdRef.current = openStoryId;
     scrollRef.current?.scrollTo({ top: 0 });
   }, [openStoryId]);
 
@@ -6083,6 +6085,64 @@ function LifestyleStoryReaderModal({
     observer.observe(node);
     return () => observer.disconnect();
   }, [openStoryId, storyQueue.length, visibleReaderCount]);
+
+  React.useEffect(() => {
+    const root = scrollRef.current;
+    if (!root || !openStoryId || visibleReaderStories.length <= 1) return;
+
+    const updateActiveReaderRoute = () => {
+      const scrollerRect = root.getBoundingClientRect();
+      const readingAnchor = scrollerRect.top + Math.min(scrollerRect.height * 0.45, 420);
+      const activeArticle = Array.from(root.querySelectorAll<HTMLElement>("[data-reader-story-id]"))
+        .map((article) => {
+          const rect = article.getBoundingClientRect();
+          const visiblePixels = Math.max(
+            0,
+            Math.min(rect.bottom, scrollerRect.bottom) - Math.max(rect.top, scrollerRect.top)
+          );
+          const containsReadingAnchor = rect.top <= readingAnchor && rect.bottom >= readingAnchor;
+          const anchorDistance = containsReadingAnchor ? 0 : Math.abs(rect.top - readingAnchor);
+
+          return {
+            article,
+            visiblePixels,
+            anchorDistance,
+          };
+        })
+        .filter(({ visiblePixels }) => visiblePixels >= Math.min(240, scrollerRect.height * 0.35))
+        .sort((first, second) =>
+          first.anchorDistance - second.anchorDistance
+          || second.visiblePixels - first.visiblePixels
+        )[0]?.article;
+      const nextStoryId = activeArticle?.dataset.readerStoryId;
+
+      if (!nextStoryId || activeReaderRouteStoryIdRef.current === nextStoryId) return;
+
+      activeReaderRouteStoryIdRef.current = nextStoryId;
+      window.history.replaceState(
+        {
+          ...window.history.state,
+          hearstReaderStory: nextStoryId,
+        },
+        "",
+        appendReaderReturnHref(nextStoryId, readerReturnHref ?? null)
+      );
+    };
+
+    const observer = new IntersectionObserver(updateActiveReaderRoute, {
+      root,
+      threshold: [0, 0.25, 0.5, 0.75, 1],
+    });
+
+    root.querySelectorAll<HTMLElement>("[data-reader-story-id]").forEach((article) => observer.observe(article));
+    root.addEventListener("scroll", updateActiveReaderRoute, { passive: true });
+    updateActiveReaderRoute();
+
+    return () => {
+      observer.disconnect();
+      root.removeEventListener("scroll", updateActiveReaderRoute);
+    };
+  }, [openStoryId, readerReturnHref, visibleReaderStoryIds, visibleReaderStories.length]);
 
   React.useEffect(() => {
     const controller = new AbortController();

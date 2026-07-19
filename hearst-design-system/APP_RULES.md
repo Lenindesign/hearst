@@ -51,6 +51,7 @@ Before making UI changes, also read `PRODUCT.md` for product intent, `STYLE.md` 
 - Source-backed gallery and listicle stories that provide slide payloads resolve those slides into the same inline reader body as standard articles. Preserve the intro text, slide images, captions, and credits instead of showing a complete-article failure only because the source body is slide-based.
 - Autos Network stories that do not expose the standard Hearst `__NEXT_DATA__` body payload must fall back to their marked readable article container and extract paragraphs, section headings, and article images from that bounded container. Keep controls, video timestamps, and gallery-count chrome out of the reader body.
 - Story reader URLs use `/read/{storyId}/`. When a story is opened from an in-app page, links must append a safe same-origin `from` path and closing the reader returns to that captured entry page. Direct/shared `/read/{storyId}/` URLs without a safe `from` fall back to the story’s source brand route. Never allow external or nested `/read/` return targets.
+- As readers scroll through the continuous modal queue, the browser URL updates to the story currently nearest the reading position with `history.replaceState`. Do not remount the reader, reorder the queue, or add a new browser-history entry for every passively reached story.
 
 ## Featured carousel
 
