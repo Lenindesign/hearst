@@ -10,7 +10,7 @@ export const hearstPlusLightVars: HearstPlusCssVars = {
   "--popover": "var(--component-modal-background-primary-default, var(--card))",
   "--popover-foreground": "var(--card-foreground)",
   "--muted": "var(--palette-background-subtle, #ededed)",
-  "--muted-foreground": "var(--palette-content-subtle, #757575)",
+  "--muted-foreground": "var(--palette-content-subtle, #5F6B7A)",
   "--secondary": "var(--palette-background-subtle, #ededed)",
   "--secondary-foreground": "var(--palette-content-default, #121212)",
   "--accent": "var(--palette-background-subtle-brand, var(--muted))",

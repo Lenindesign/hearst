@@ -30,6 +30,8 @@ export interface SiteFooterProps {
   onLegalClick?: (link: string) => void;
   onSubscribeClick?: () => void;
   productLinks?: Array<{ label: string; href: string }>;
+  finePrintNote?: string;
+  socialFinePrintNote?: string;
   className?: string;
 }
 
@@ -50,6 +52,8 @@ export function SiteFooter({
     { label: "Lifestyle Live", href: "/hearst-plus/lifestyle-live/" },
     { label: "Autos Videos", href: "/hearst-plus/motortrend-videos/" },
   ],
+  finePrintNote,
+  socialFinePrintNote,
   className,
 }: SiteFooterProps) {
   return (
@@ -70,23 +74,34 @@ export function SiteFooter({
             )}
           </div>
           {showSocialLinks && (
-            <div className="flex gap-4 text-[length:var(--text-token-2xs)]">
-              {socialLinks.map((s) => (
-                <LinkComponent
-                  key={s}
-                  href={socialLinkHrefs[s]}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variant="neutral"
-                  underline={false}
-                  size="sm"
-                  className="font-normal text-[var(--footer-foreground)] opacity-75 hover:text-[var(--footer-foreground)] hover:opacity-100"
-                  onClick={() => onSocialClick?.(s)}
+            <>
+              <div className="flex gap-4 text-[length:var(--text-token-2xs)]">
+                {socialLinks.map((s) => (
+                  <LinkComponent
+                    key={s}
+                    href={socialLinkHrefs[s]}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    variant="neutral"
+                    underline={false}
+                    size="sm"
+                    className="font-normal text-[var(--footer-foreground)] opacity-75 hover:text-[var(--footer-foreground)] hover:opacity-100"
+                    onClick={() => onSocialClick?.(s)}
+                  >
+                    {s}
+                  </LinkComponent>
+                ))}
+              </div>
+              {socialFinePrintNote ? (
+                <p
+                  className="mt-5 max-w-md text-[10px] leading-4 text-[var(--footer-foreground)] opacity-50"
+                  role="note"
+                  aria-label="Video prototype note"
                 >
-                  {s}
-                </LinkComponent>
-              ))}
-            </div>
+                  {socialFinePrintNote}
+                </p>
+              ) : null}
+            </>
           )}
         </div>
         <div className="flex flex-wrap gap-8 text-[length:var(--text-token-2xs)]">
@@ -148,9 +163,20 @@ export function SiteFooter({
       <p className="mt-3 max-w-3xl text-[length:var(--text-token-4xs)] leading-relaxed text-[var(--footer-foreground)] opacity-75">
         Personalized daily reading experiences across Hearst Magazine Media brands.
       </p>
-      <div className="mt-3 text-[length:var(--text-token-4xs)] text-[var(--footer-foreground)] opacity-65">
-        &copy;{copyrightYear} Hearst Magazine Media, Inc. All Rights Reserved.
-      </div>
+      <p className="mt-3 text-[10px] leading-4 text-[var(--footer-foreground)] opacity-65">
+        <span data-footer-copyright>
+          &copy;{copyrightYear} Hearst Magazine Media, Inc. All Rights Reserved.
+        </span>
+        {finePrintNote ? (
+          <>
+            <span aria-hidden="true"> · </span>
+            <span role="note" aria-label="Prototype disclosure">
+              <span className="font-bold uppercase tracking-[0.1em]">Note:</span>{" "}
+            {finePrintNote}
+            </span>
+          </>
+        ) : null}
+      </p>
       </div>
     </footer>
   );

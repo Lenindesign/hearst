@@ -249,12 +249,12 @@ export function ReaderAuthDialog({
       </div>
       <form className="overflow-y-auto p-5 sm:p-7" onSubmit={submit} noValidate>
         <h2 id="reader-auth-title" className="text-center text-2xl font-bold leading-tight sm:text-3xl">
-          {mode === "create" ? "Create account" : "Sign in"}
+          {mode === "create" ? "Create local demo profile" : "Resume local demo profile"}
         </h2>
         <p className="mx-auto mt-3 max-w-sm text-center text-sm leading-6 text-muted-foreground">
           {mode === "create"
-            ? "Save your personalized feed, collections, comments, and reading history."
-            : "Sign in to restore your personalized feed and library."}
+            ? "Save your personalized feed, collections, comments, and reading history in this browser."
+            : "Resume the personalized feed and library saved in this browser."}
         </p>
 
         <Button
@@ -265,7 +265,7 @@ export function ReaderAuthDialog({
           onClick={submitGoogle}
         >
           <GoogleMark />
-          Continue with Google
+          Use demo Google profile
         </Button>
 
         <div className="my-6 flex items-center gap-4">
@@ -321,7 +321,7 @@ export function ReaderAuthDialog({
         ) : null}
 
         <Button className="mt-6 w-full" type="submit" disabled={submitting}>
-          {submitting ? "Please wait" : mode === "create" ? "Create Free Account" : "Sign In"}
+          {submitting ? "Please wait" : mode === "create" ? "Create Local Profile" : "Resume Local Profile"}
         </Button>
         <button
           type="button"
@@ -331,10 +331,10 @@ export function ReaderAuthDialog({
             setError("");
           }}
         >
-          {mode === "create" ? "Already have an account? Sign in" : "New to Hearst+? Create an account"}
+          {mode === "create" ? "Already have a local profile? Resume it" : "New to Hearst+? Create a local demo profile"}
         </button>
         <p className="mt-5 border-t border-border pt-4 text-xs leading-5 text-muted-foreground">
-          Prototype note: account data stays in this browser and is not sent to a server.
+          Prototype note: this is browser-local demo state, not production account storage or a live Google sign-in.
         </p>
       </form>
     </ModalFrame>
@@ -475,15 +475,15 @@ export function ReaderProfileDialog({
         <div className="min-h-0 overflow-y-auto p-5 sm:p-8">
           {tab === "overview" ? (
             <div className="max-w-3xl">
-              <p className="text-xs font-bold uppercase tracking-[0.12em] text-primary">Hearst+ account</p>
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-primary">Local demo profile</p>
               <h3 className="mt-2 text-2xl font-bold">Your reading, in one place</h3>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">Manage what shapes your feed, what you save, and how you take part in story conversations.</p>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">Manage what shapes your feed, what you save, and how you take part in story conversations in this browser.</p>
               <div className="mt-7 divide-y divide-border border-y border-border">
                 {[
                   { id: "personalization" as const, icon: Check, title: "For You preferences", detail: `${account.preferences.followedTopics.length} topics and ${account.preferences.followedBrands.length} brands shape your feed` },
                   { id: "library" as const, icon: Bookmark, title: "Library", detail: `${savedStories.length} saved ${savedStories.length === 1 ? "story" : "stories"} in ${account.collections.length} ${account.collections.length === 1 ? "collection" : "collections"}` },
                   { id: "activity" as const, icon: MessageCircle, title: "Comments", detail: comments.length === 0 ? "You have not commented yet" : `${comments.length} ${comments.length === 1 ? "comment" : "comments"}` },
-                  { id: "settings" as const, icon: Settings, title: "Account details", detail: "Name, email, sign out, and account controls" },
+                  { id: "settings" as const, icon: Settings, title: "Profile details", detail: "Name, email, sign out, and local profile controls" },
                 ].map((item) => {
                   const Icon = item.icon;
                   return (
@@ -608,8 +608,8 @@ export function ReaderProfileDialog({
 
           {tab === "settings" ? (
             <div>
-              <h3 className="text-2xl font-bold">Account details</h3>
-              <p className="mt-2 text-sm text-muted-foreground">Update the name shown across Hearst+.</p>
+              <h3 className="text-2xl font-bold">Profile details</h3>
+              <p className="mt-2 text-sm text-muted-foreground">Update the name shown across this Hearst+ demo in this browser.</p>
               <div className="mt-7 max-w-xl space-y-4">
                 <div className="grid gap-4 sm:grid-cols-2">
                   <label className="text-sm font-semibold">First name<Input className="mt-2" value={firstName} onChange={(event) => { setFirstName(event.target.value); setProfileSaved(false); }} /></label>

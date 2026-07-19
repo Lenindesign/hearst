@@ -12,6 +12,7 @@ import {
 } from "@/lib/personalize-live-feed";
 import {
   getHearstStoryReturnHref,
+  normalizeReaderReturnHref,
 } from "@/lib/story-routes";
 import {
   getStaticHearstArticleParams,
@@ -87,21 +88,7 @@ async function safeLiveFeed(fetcher: () => Promise<LiveFeedData>) {
 
 function getReaderReturnHrefFromSearchParams(searchParams?: { from?: string | string[] }) {
   const from = Array.isArray(searchParams?.from) ? searchParams?.from[0] : searchParams?.from;
-
-  if (!from) return null;
-
-  let decoded = from;
-  try {
-    decoded = decodeURIComponent(from);
-  } catch {
-    decoded = from;
-  }
-
-  if (!decoded.startsWith("/") || decoded.startsWith("//") || decoded.startsWith("/read/")) {
-    return null;
-  }
-
-  return decoded;
+  return normalizeReaderReturnHref(from);
 }
 
 export async function generateMetadata({ params }: ReaderArticlePageProps): Promise<Metadata> {

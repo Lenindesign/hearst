@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "hips.hearstapps.com" },
       { protocol: "https", hostname: "hips.hearstapps.net" },
+      { protocol: "http", hostname: "*.h-cdn.co" },
+      { protocol: "https", hostname: "*.h-cdn.co" },
       { protocol: "https", hostname: "bringatrailer.com", pathname: "/wp-content/**" },
     ],
   },

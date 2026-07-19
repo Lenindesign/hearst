@@ -15,7 +15,7 @@ import {
   getHearstDestinationRoute,
 } from "@/lib/hearst-routes";
 import type { HearstDestinationStaticData } from "@/lib/hearst-destination-data-types";
-import { getHearstStoryRoute } from "@/lib/story-routes";
+import { getHearstStoryRoute, normalizeReaderReturnHref } from "@/lib/story-routes";
 import { themeOptions } from "@/lib/theme-options";
 import { brandToCssVars } from "@/lib/theme-css-vars";
 import type { BrandTheme } from "@/lib/brands";
@@ -40,6 +40,7 @@ import {
   ChefHat,
   Clock,
   EyeOff,
+  ExternalLink,
   ImageIcon,
   Info,
   Mail,
@@ -71,6 +72,9 @@ import { ReaderAuthDialog, ReaderAvatar, ReaderProfileDialog } from "./reader-ac
 interface ContentType extends BaseContentType {
   footerCols: string[][];
 }
+
+const quietStoryActionButtonClass =
+  "border-0 bg-transparent px-0 text-muted-foreground shadow-none hover:bg-transparent hover:text-primary focus-visible:border-transparent focus-visible:ring-2 focus-visible:ring-primary/30";
 
 const readerReturnFocusStorageKey = "hearst-reader-return-focus-label";
 const reducedMotionMediaQuery = "(prefers-reduced-motion: reduce)";
@@ -130,23 +134,6 @@ const defaultFooterCols: string[][] = [
 const selectedBrandThemeAliases: Record<string, string> = {
   "pioneer-woman": "the-pioneer-woman",
 };
-
-function normalizeReaderReturnHref(value?: string | null) {
-  if (!value) return null;
-
-  let decoded = value;
-  try {
-    decoded = decodeURIComponent(value);
-  } catch {
-    decoded = value;
-  }
-
-  if (!decoded.startsWith("/") || decoded.startsWith("//") || decoded.startsWith("/read/")) {
-    return null;
-  }
-
-  return decoded;
-}
 
 function appendReaderReturnHref(storyId: string, returnHref: string | null) {
   const route = getHearstStoryRoute(storyId);
@@ -956,13 +943,22 @@ function getStoryIdentity(story: LifestyleRiverStory) {
   return `story:${story.brandSlug}:${story.title.trim().toLowerCase().replace(/\s+/g, " ")}`;
 }
 
+function getStoryVisualIdentity(story: LifestyleRiverStory) {
+  return [
+    "visual",
+    story.brandSlug,
+    story.title.trim().toLowerCase().replace(/\s+/g, " "),
+    story.image.trim().toLowerCase(),
+  ].join(":");
+}
+
 function mergeUniqueStories(...storyGroups: LifestyleRiverStory[][]) {
   const seen = new Set<string>();
 
   return storyGroups.flat().filter((story) => {
-    const identity = getStoryIdentity(story);
-    if (seen.has(identity)) return false;
-    seen.add(identity);
+    const identities = [getStoryIdentity(story), getStoryVisualIdentity(story)];
+    if (identities.some((identity) => seen.has(identity))) return false;
+    identities.forEach((identity) => seen.add(identity));
     return true;
   });
 }
@@ -1084,7 +1080,6 @@ const hearstDestinationNavHrefs = new Map(
     .filter((section) => section.label !== "All")
     .map((section) => [section.label, section.href])
 );
-const hearstGamesHref = "https://motortrend-carmash.lovable.app/";
 const utilityLinks = [
   { label: "Shop", href: "/hearst-plus/shopping/" },
   { label: "Newsletter", href: "https://www.hearst.co.uk/newsletter" },
@@ -1167,7 +1162,7 @@ function UtilityBar({
                 size="xs"
                 aria-current={section.label === activeDestination ? "page" : undefined}
                 className={cn(
-                  "rounded-full px-2 py-0.5 font-bold",
+                  "min-h-6 rounded-full px-2 py-1 font-bold",
                   section.label === activeDestination
                     ? darkMode
                       ? "bg-[#BDDDFC] text-[#0d1014] hover:text-[#0d1014]"
@@ -1197,11 +1192,11 @@ function UtilityBar({
                   ? "bg-[#BDDDFC] px-2 text-[#0d1014] hover:bg-[#d7eaff] hover:text-[#0d1014] sm:px-3"
                   : "bg-white px-2 text-black hover:bg-white/90 hover:text-black sm:px-3"
             )}
-            aria-label={account ? "Open your profile" : "Sign up or sign in"}
+            aria-label={account ? "Open your local demo profile" : "Create or resume local demo profile"}
             onClick={account ? onOpenProfile : onCreateAccount}
           >
             {account ? <ReaderAvatar account={account} size="sm" className="!size-4 ring-1 ring-white/50 [&_[data-slot=avatar-fallback]]:text-[8px]" /> : null}
-            <span className={account ? "hidden text-xs sm:inline" : "text-[10px] sm:text-xs"}>{account ? account.firstName : "Sign Up / Sign In"}</span>
+            <span className={account ? "hidden text-xs sm:inline" : "text-[10px] sm:text-xs"}>{account ? account.firstName : "Demo Profile"}</span>
           </Button>
         </div>
       </PageContainer>
@@ -1472,9 +1467,9 @@ function HearstOnboardingModal({
                 </p>
               </div>
               <div className="rounded-[12px] border border-border bg-muted/35 p-4">
-                <p className="text-xs font-bold uppercase tracking-widest text-primary">What your account saves</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-primary">What your demo profile saves</p>
                 <ul className="mt-4 space-y-3 text-sm leading-5">
-                  {["Followed topics and brands", "Saved stories and collections", "Continue reading across devices", "Comment identity and replies"].map((item) => (
+                  {["Followed topics and brands", "Saved stories and collections", "Continue reading in this browser", "Comment identity and replies"].map((item) => (
                     <li key={item} className="flex gap-2">
                       <span className="mt-1 h-1.5 w-1.5 rounded-full bg-primary" aria-hidden />
                       <span>{item}</span>
@@ -1643,10 +1638,10 @@ function HearstOnboardingModal({
                   tabIndex={-1}
                   className="headline text-3xl leading-tight outline-none sm:text-4xl"
                 >
-                  Create a free account to save your feed.
+                  Create a local demo profile to save your feed.
                 </h2>
                 <p id="hearst-onboarding-description" className="mt-3 text-sm leading-6 text-muted-foreground">
-                  Your choices can tune this session now. An account keeps them available whenever you come back.
+                  Your choices can tune this session now. A local demo profile keeps them available in this browser.
                 </p>
                 <div className="mt-5 grid gap-2 sm:grid-cols-2">
                   {[
@@ -1797,14 +1792,31 @@ function MainNav({
   const searchTriggerRef = React.useRef<HTMLButtonElement | null>(null);
   const searchPanelRef = React.useRef<HTMLDivElement | null>(null);
   const searchInputRef = React.useRef<HTMLInputElement | null>(null);
+  const restoreSearchTriggerFocus = React.useCallback(() => {
+    let attempts = 0;
+    const restore = () => {
+      attempts += 1;
+      const target = searchTriggerRef.current
+        ?? document.querySelector<HTMLButtonElement>("[data-search-trigger]");
+      if (target && document.contains(target)) {
+        target.focus();
+        return;
+      }
+      if (attempts < 4) window.setTimeout(restore, 50);
+    };
+
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(restore);
+    });
+  }, []);
   const closeMobileMenu = React.useCallback(() => {
     setMobileMenuOpen(false);
     window.requestAnimationFrame(() => mobileMenuTriggerRef.current?.focus());
   }, [setMobileMenuOpen]);
   const closeSearch = React.useCallback(() => {
     setSearchOpen(false);
-    window.requestAnimationFrame(() => searchTriggerRef.current?.focus());
-  }, [setSearchOpen]);
+    restoreSearchTriggerFocus();
+  }, [restoreSearchTriggerFocus, setSearchOpen]);
   const mastheadSlug = selectedBrand?.slug ?? brand.slug;
   const logo = brandLogos[mastheadSlug];
   const content = getContent(brandSlug);
@@ -2054,7 +2066,7 @@ function MainNav({
   const renderNavLinks = () => navLinks.map((link) => {
     const active = activeFilter === link;
     const destinationHref = brand.slug === "hearst-all" ? hearstDestinationNavHrefs.get(link) : undefined;
-    const categoryHref = isDestinationRiver && !selectedBrand && link !== "Games"
+    const categoryHref = isDestinationRiver && !selectedBrand
       ? getHearstDestinationCategoryRoute(getDestinationMode(brand.slug), link)
       : undefined;
     const useDarkActiveState = darkMode || (brand.slug === "hearst-flux" && colorMode === "dark");
@@ -2090,19 +2102,6 @@ function MainNav({
               : "border-primary font-semibold text-[var(--hp-section-title)]"
             : ""
         )}
-      >
-        {link}
-      </LinkComponent>
-    ) : link === "Games" ? (
-      <LinkComponent
-        key={link}
-        href={hearstGamesHref}
-        target="_blank"
-        rel="noopener noreferrer"
-        variant="neutral"
-        underline={false}
-        size="sm"
-        className={cn("min-h-11 whitespace-nowrap border-b-2 border-transparent px-0.5 font-normal hover:no-underline md:min-h-0 md:pb-1", navLinkClasses)}
       >
         {link}
       </LinkComponent>
@@ -2428,7 +2427,6 @@ function MainNav({
             </Button>
           ) : null}
           <Button
-            ref={searchTriggerRef}
             variant="outline"
             size="icon-sm"
             className={cn(
@@ -2448,6 +2446,8 @@ function MainNav({
         </div>
         <div className="flex w-10 shrink-0 justify-end sm:w-[var(--width-sidebar-narrow)]">
           <Button
+            ref={searchTriggerRef}
+            data-search-trigger
             variant="outline"
             size="icon-sm"
             className={cn(
@@ -2667,7 +2667,13 @@ function TrendingSection({ brandSlug }: { brandSlug: string }) {
   );
 }
 
-function Footer({ flushTop = false }: { flushTop?: boolean }) {
+function Footer({
+  flushTop = false,
+  socialFinePrintNote,
+}: {
+  flushTop?: boolean;
+  socialFinePrintNote?: string;
+}) {
   const { brand } = useTheme();
   const logo = brandLogos[brand.slug];
 
@@ -2688,6 +2694,8 @@ function Footer({ flushTop = false }: { flushTop?: boolean }) {
         socialLinks={["YouTube", "Facebook", "Instagram", "Pinterest"]}
         legalLinks={["Privacy Notice", "Terms of Use", "Hearst brands"]}
         copyrightYear={2026}
+        finePrintNote="Prototype only. Uses public story metadata and browser-local demo state; not a production account, access, or publishing surface."
+        socialFinePrintNote={socialFinePrintNote}
       />
     </div>
   );
@@ -3863,13 +3871,24 @@ function LifestyleRiverCard({
           {story.summary}
         </p>
         <LifestyleCardModule story={story} kind={kind} />
-        <div className="relative z-20 mt-5 flex flex-wrap gap-2" onClick={(event) => event.stopPropagation()}>
-          <Button variant={saved ? "default" : "outline"} size="xs" onClick={onSave} aria-pressed={saved}>
-            <Bookmark className="mr-1.5 h-3.5 w-3.5" aria-hidden />
+        <div className="relative z-20 mt-5 flex flex-wrap gap-x-5 gap-y-2" onClick={(event) => event.stopPropagation()}>
+          <Button
+            variant="ghost"
+            size="xs"
+            className={cn(quietStoryActionButtonClass, saved && "text-primary hover:text-primary")}
+            onClick={onSave}
+            aria-pressed={saved}
+          >
+            <Bookmark className="h-3.5 w-3.5" weight={saved ? "fill" : "regular"} aria-hidden />
             {saved ? "Saved" : "Save"}
           </Button>
-          <Button variant="outline" size="xs" onClick={onMoreLikeThis}>
-            <Plus className="mr-1.5 h-3.5 w-3.5" aria-hidden />
+          <Button
+            variant="ghost"
+            size="xs"
+            className={quietStoryActionButtonClass}
+            onClick={onMoreLikeThis}
+          >
+            <Plus className="h-3.5 w-3.5" aria-hidden />
             More like this
           </Button>
           <Button variant="ghost" size="xs" onClick={onOpen}>
@@ -4321,7 +4340,7 @@ function LifestyleLeadSlider({
         Swipe left or right to move between featured stories.
       </p>
       <div
-        className="relative h-[min(128vw,520px)] w-full min-w-0 touch-pan-y select-none overflow-hidden bg-muted sm:h-auto sm:min-h-[430px] sm:aspect-[16/11] lg:min-h-[460px]"
+        className="relative w-full min-w-0 touch-pan-y select-none overflow-hidden bg-black"
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
@@ -4330,7 +4349,7 @@ function LifestyleLeadSlider({
       >
         <div
           className={cn(
-            "flex h-full ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
+            "flex w-full ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
             isDragging ? "transition-none" : "transition-transform duration-500"
           )}
           style={{ transform: `translateX(calc(-${activeIndex * 100}% + ${dragOffset}px))` }}
@@ -4342,7 +4361,7 @@ function LifestyleLeadSlider({
               <button
                 key={story.id}
                 type="button"
-                className="relative h-full w-full shrink-0 text-left focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30"
+                className="relative grid w-full shrink-0 grid-rows-[auto_112px] bg-black text-left text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30 sm:grid-rows-[auto_144px]"
                 onClick={(event) => {
                   if (suppressSlideClickRef.current) {
                     event.preventDefault();
@@ -4352,17 +4371,27 @@ function LifestyleLeadSlider({
                 }}
                 aria-label={`Open story: ${story.title}`}
                 aria-hidden={index !== activeIndex}
+                inert={index !== activeIndex ? true : undefined}
                 tabIndex={index === activeIndex ? 0 : -1}
                 data-feed-source={isCurrentFeedStory(story) ? "current" : "editorial"}
                 data-media-kind={story.videoUrl ? "video" : "article"}
               >
-                <LifestyleRiverImage
-                  story={story}
-                  className="h-full w-full"
-                  priority={index === 0}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/5" />
-                <div className="absolute inset-x-0 bottom-0 p-5 text-white sm:p-7">
+                <div className="relative isolate">
+                  <div className="relative h-[min(128vw,520px)] w-full overflow-hidden sm:h-auto sm:aspect-video">
+                    <LifestyleRiverImage
+                      story={story}
+                      className="h-full w-full"
+                      priority={index === 0}
+                    />
+                    <div
+                      aria-hidden="true"
+                      data-slider-layer="gradient"
+                      className="pointer-events-none absolute inset-x-0 bottom-0 h-[180px] bg-[linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.18)_30%,rgba(0,0,0,0.78)_72%,#000_100%)] sm:h-[220px] xl:h-[240px]"
+                    />
+                  </div>
+                </div>
+                <div data-slider-layer="frame" className="bg-black" />
+                <div data-slider-content className="absolute inset-x-0 bottom-0 p-5 text-white sm:p-7">
                   <div className="mb-3 flex flex-wrap items-center gap-2 text-sm font-semibold">
                     <BrandSourceIcon brand={story.brand} brandSlug={story.brandSlug} className="h-5 w-5 rounded-[4px] border-border" />
                     <span>{story.brand}</span>
@@ -4461,24 +4490,40 @@ function LifestyleLeadSlider({
             </button>
           ))}
         </div>
-        <div className="flex shrink-0 items-center gap-2">
+        <div className="flex shrink-0 items-center gap-4">
           <Button
-            variant={saved ? "default" : "outline"}
+            variant="ghost"
             size="xs"
-            className="h-11 sm:h-6"
+            className={cn(
+              quietStoryActionButtonClass,
+              "h-11 sm:h-6",
+              saved && "text-primary hover:text-primary"
+            )}
             onClick={() => onSave(activeStory)}
             aria-pressed={saved}
           >
-            <Bookmark className="mr-1.5 h-3.5 w-3.5" aria-hidden />
+            <Bookmark className="hidden h-3.5 w-3.5 sm:block" weight={saved ? "fill" : "regular"} aria-hidden />
             {saved ? "Saved" : "Save"}
           </Button>
-          <Button variant="outline" size="xs" className="h-11 sm:h-6" onClick={() => onMoreLikeThis(activeStory)}>
-            <Plus className="mr-1.5 h-3.5 w-3.5" aria-hidden />
+          <Button
+            variant="ghost"
+            size="xs"
+            className={cn(quietStoryActionButtonClass, "h-11 sm:h-6")}
+            onClick={() => onMoreLikeThis(activeStory)}
+          >
+            <Plus className="hidden h-3.5 w-3.5 sm:block" aria-hidden />
             More like this
           </Button>
           <span className="inline-flex items-center gap-1">
-            <Button variant="ghost" size="xs" className="h-11 sm:h-6" onClick={() => onFollowBrand(activeStory.brand)}>
-              Follow {activeStory.brand}
+            <Button
+              variant="ghost"
+              size="xs"
+              className="h-11 sm:h-6"
+              onClick={() => onFollowBrand(activeStory.brand)}
+              aria-label={`Follow ${activeStory.brand}`}
+            >
+              <span className="sm:hidden">Follow</span>
+              <span className="hidden sm:inline">Follow {activeStory.brand}</span>
             </Button>
             <LiveStoryBadge story={activeStory} />
           </span>
@@ -5156,7 +5201,7 @@ function AmbientArticleReader({
                 {article.blocks.map((block, index) => {
                   if (block.type === "image") {
                     return (
-                      <figure key={`${block.url}-${index}`} className="py-4 sm:py-7">
+                      <figure key={`${block.url}-${index}`} className="relative left-1/2 w-[calc(100vw-2.5rem)] max-w-[1180px] -translate-x-1/2 py-4 sm:w-[calc(100vw-4rem)] sm:py-7 lg:w-[calc(100vw-6rem)]">
                         <button
                           type="button"
                           className="group block w-full cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
@@ -5173,7 +5218,7 @@ function AmbientArticleReader({
                             alt={block.alt}
                             width={1200}
                             height={800}
-                            sizes="(max-width: 768px) 100vw, 900px"
+                            sizes="(max-width: 768px) calc(100vw - 2.5rem), (max-width: 1024px) calc(100vw - 4rem), 1180px"
                             className="max-h-[780px] w-full bg-[var(--ambient-rule)] object-cover transition-opacity group-hover:opacity-95"
                           />
                         </button>
@@ -6138,7 +6183,7 @@ function LifestyleStoryReaderModal({
       <div className="absolute inset-0" onClick={onClose} />
       <div
         ref={scrollRef}
-        className="hearst-plus-theme absolute inset-0 mx-auto flex h-[100dvh] w-full max-w-[1360px] flex-col overflow-y-auto bg-background text-foreground shadow-2xl sm:inset-y-6 sm:h-auto sm:rounded-[8px]"
+        className="hearst-plus-theme absolute inset-0 mx-auto flex h-[100dvh] w-full max-w-[1360px] flex-col overflow-y-auto bg-background text-foreground shadow-2xl sm:inset-6 sm:h-auto sm:w-auto sm:rounded-[8px]"
         data-mode={readerColorMode}
         data-reader-destination={readerDestination}
         style={readerThemeCssVars}
@@ -6510,7 +6555,7 @@ function TodayEditDashboard({
 
   return (
     <section
-      className="relative mt-8 hidden w-full overflow-hidden rounded-[8px] border border-border bg-[var(--hp-strip)] shadow-[var(--hp-shadow-card)] md:block"
+      className="relative hidden w-full overflow-hidden rounded-[8px] border border-border bg-[var(--hp-strip)] shadow-[var(--hp-shadow-card)] md:block"
       aria-label="Today&apos;s edit"
     >
       <div
@@ -6525,7 +6570,7 @@ function TodayEditDashboard({
             className="group relative flex w-[88vw] shrink-0 snap-start scroll-ml-0 flex-col border-r border-border p-4 text-left transition-colors last:border-r-0 hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30 sm:w-[58vw] md:w-[44vw] lg:w-[34vw] xl:w-auto xl:min-w-0 xl:border-0"
           >
             <span>
-              <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
+              <span className="block text-[length:var(--text-token-4xs)] font-bold uppercase leading-none tracking-widest text-[var(--hp-section-title)]">
                 {module.label}
               </span>
               <span className="mt-3 flex items-start gap-3">
@@ -7200,22 +7245,31 @@ function getLifestyleRiverPageHeading(config: DestinationConfig, initialBrandSlu
 
 function LifestyleRiverLoadingState({ pageHeading }: { pageHeading: string }) {
   return (
-    <div className="space-y-6" aria-busy="true" aria-live="polite" aria-label="Loading your personalized feed">
-      <h1 className="sr-only">{pageHeading}</h1>
+    <div className="space-y-8" aria-busy="true" aria-live="polite" aria-label="Loading your personalized feed">
       <span className="sr-only">Loading your personalized feed.</span>
-      <section className="grid gap-4 border-b border-border bg-[var(--hp-surface)] py-5 sm:grid-cols-2 xl:grid-cols-4" aria-hidden="true">
-        {Array.from({ length: 4 }, (_, index) => (
-          <div key={index} className="flex min-w-0 items-center gap-3 px-4 xl:border-r xl:border-border xl:last:border-r-0">
-            <span className="h-14 w-20 shrink-0 rounded-[6px] bg-muted motion-safe:animate-pulse" />
-            <span className="min-w-0 flex-1 space-y-2">
-              <span className="block h-2.5 w-24 rounded-full bg-muted motion-safe:animate-pulse" />
-              <span className="block h-3 w-full rounded-full bg-muted motion-safe:animate-pulse" />
-              <span className="block h-3 w-4/5 rounded-full bg-muted motion-safe:animate-pulse" />
-            </span>
-          </div>
-        ))}
+      <section
+        className="relative hidden w-full overflow-hidden rounded-[8px] border border-border bg-[var(--hp-strip)] shadow-[var(--hp-shadow-card)] md:block"
+        aria-hidden="true"
+      >
+        <div className="flex w-full overflow-hidden xl:grid xl:grid-cols-4 xl:divide-x xl:divide-border">
+          {Array.from({ length: 4 }, (_, index) => (
+            <div
+              key={index}
+              className="flex w-[88vw] shrink-0 flex-col border-r border-border p-4 last:border-r-0 sm:w-[58vw] md:w-[44vw] lg:w-[34vw] xl:w-auto xl:min-w-0 xl:border-0"
+            >
+              <span className="block h-[11px] w-28 rounded-full bg-muted motion-safe:animate-pulse" />
+              <span className="mt-3 flex items-start gap-3">
+                <span className="mt-0.5 h-16 w-20 shrink-0 rounded-[8px] bg-muted motion-safe:animate-pulse" />
+                <span className="min-w-0 flex-1 space-y-2">
+                  <span className="block h-3 w-full rounded-full bg-muted motion-safe:animate-pulse" />
+                  <span className="block h-3 w-4/5 rounded-full bg-muted motion-safe:animate-pulse" />
+                </span>
+              </span>
+            </div>
+          ))}
+        </div>
       </section>
-      <div className="grid min-w-0 gap-5 lg:grid-cols-[200px_minmax(0,1fr)_240px]">
+      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]">
         <aside className="hidden h-[360px] rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 lg:block" aria-hidden="true">
           <div className="h-3 w-28 rounded-full bg-muted motion-safe:animate-pulse" />
           <div className="mt-5 space-y-4">
@@ -7228,13 +7282,26 @@ function LifestyleRiverLoadingState({ pageHeading }: { pageHeading: string }) {
             ))}
           </div>
         </aside>
-        <main className="min-w-0 overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)]" aria-hidden="true">
-          <div className="aspect-[16/10] bg-muted motion-safe:animate-pulse" />
-          <div className="space-y-3 p-4 sm:p-5">
-            <div className="h-3 w-32 rounded-full bg-muted motion-safe:animate-pulse" />
-            <div className="h-7 w-full rounded-full bg-muted motion-safe:animate-pulse" />
-            <div className="h-7 w-3/4 rounded-full bg-muted motion-safe:animate-pulse" />
-            <div className="h-3 w-5/6 rounded-full bg-muted motion-safe:animate-pulse" />
+        <main className="min-w-0 overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)]" aria-label={pageHeading}>
+          <h1 className="sr-only">{pageHeading}</h1>
+          <div className="relative w-full min-w-0 overflow-hidden bg-black motion-safe:animate-pulse" aria-hidden="true">
+            <div className="relative isolate">
+              <div className="relative h-[min(128vw,520px)] w-full overflow-hidden sm:h-auto sm:aspect-video">
+                <div className="absolute inset-0 bg-muted" />
+                <div className="absolute inset-x-0 bottom-0 h-[180px] bg-gradient-to-b from-transparent via-black/45 to-black sm:h-[220px] xl:h-[240px]" />
+              </div>
+            </div>
+            <div className="h-[112px] bg-black sm:h-[144px]" />
+            <div className="absolute inset-x-5 bottom-6 space-y-3 sm:inset-x-7 sm:bottom-7">
+              <div className="h-3 w-32 rounded-full bg-white/35" />
+              <div className="h-7 w-full max-w-xl rounded-full bg-white/35" />
+              <div className="h-7 w-3/4 max-w-lg rounded-full bg-white/35" />
+              <div className="h-3 w-5/6 max-w-xl rounded-full bg-white/25" />
+            </div>
+          </div>
+          <div className="flex h-[125px] items-center justify-between gap-3 border-t border-border px-4 py-3 sm:h-[49px]" aria-hidden="true">
+            <div className="h-2 w-28 rounded-full bg-muted motion-safe:animate-pulse" />
+            <div className="h-6 w-48 rounded-[6px] bg-muted motion-safe:animate-pulse" />
           </div>
         </main>
         <aside className="hidden h-[360px] rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 lg:block" aria-hidden="true">
@@ -7256,14 +7323,588 @@ function LifestyleRiverLoadingState({ pageHeading }: { pageHeading: string }) {
   );
 }
 
+const hearstGameConcepts = [
+  {
+    title: "Car Mash",
+    format: "Autos game",
+    habit: "2 to 4 min",
+    source: "Hearst Car Mash",
+    license: "External prototype",
+    href: "https://motortrend-carmash.lovable.app/",
+    externalHref: "https://motortrend-carmash.lovable.app/",
+    proof: "Existing playable autos game prototype that can validate whether quick car-choice loops belong in the Hearst+ habit layer.",
+    fit: "Forge the unholy mashup the auto industry won't build. Our AI editors deliver the full road test, invented horsepower, ruthless verdict, and a magazine-cover hero shot in under 30 seconds.",
+    status: "Playable site",
+    tone: "Autos",
+    imageUrl: "/images/games/car-mash.png",
+    imagePosition: "center",
+    playKind: "external" as const,
+  },
+  {
+    title: "Daily Mini Crossword",
+    format: "Word puzzle",
+    habit: "3 to 5 min",
+    source: "Exolve",
+    license: "MIT",
+    href: "https://github.com/viresh-ratnakar/exolve",
+    proof: "Mature open-source crossword engine with embeddable puzzle markup.",
+    fit: "Best editorial fit. Clues can be written from Hearst culture, food, style, home, auto, and wellness coverage.",
+    status: "Prototype first",
+    tone: "Editorial",
+    imageUrl: "https://hips.hearstapps.com/hmg-prod/images/amazon-asuli-bookshelf-6627efda24610.jpg?crop=1.00xw:0.570xh;0,0.375xh&resize=1200:*",
+    imagePosition: "center",
+    playKind: "mini" as const,
+  },
+  {
+    title: "Tile Merge",
+    format: "Number puzzle",
+    habit: "2 to 4 min",
+    source: "2048",
+    license: "MIT",
+    href: "https://github.com/gabrielecirulli/2048",
+    proof: "Very popular browser game repo with simple mechanics and mobile-friendly play.",
+    fit: "Fast daily repeat play. Easy to theme as recipes, products, cars, colors, or trend tiles.",
+    status: "Ready to adapt",
+    tone: "Daily",
+    imageUrl: "https://hips.hearstapps.com/hmg-prod/images/where-to-buy-squishmallows-online-1641911882.jpg?crop=0.939xw:0.939xh;0.0321xw,0.0321xh&resize=1200:*",
+    imagePosition: "center",
+    playKind: "merge" as const,
+  },
+  {
+    title: "Photo Puzzle",
+    format: "Image game",
+    habit: "4 to 7 min",
+    source: "Puzzle",
+    license: "Free HTML5 PWA",
+    href: "https://github.com/grrd01/Puzzle",
+    proof: "Lightweight browser puzzle pattern that can be driven by editorial imagery.",
+    fit: "Strongest visual brand extension. Cars, homes, fashion, food, and travel images become playable.",
+    status: "Best visual demo",
+    tone: "Visual",
+    imageUrl: "https://hips.hearstapps.com/hmg-prod/images/083af0e2-6ac9-4362-9899-ae967559c01c.jpeg",
+    imagePosition: "center",
+    playKind: "photo" as const,
+  },
+  {
+    title: "Memory Match",
+    format: "Card match",
+    habit: "2 to 5 min",
+    source: "Memory Game",
+    license: "MIT",
+    href: "https://github.com/kubowania/memory-game",
+    proof: "Simple open-source browser memory game, easy to reskin and extend.",
+    fit: "Works for product picks, celebrity looks, car badges, recipe ingredients, and home design details.",
+    status: "Low effort",
+    tone: "Collections",
+    imageUrl: "https://hips.hearstapps.com/hmg-prod/images/beautiful-family-connecting-whilst-playing-games-royalty-free-image-1717003492.jpg?crop=0.668xw:1.00xh;0.147xw,0&resize=600:*",
+    imagePosition: "center",
+    playKind: "memory" as const,
+  },
+  {
+    title: "Arcade Blocks",
+    format: "Falling blocks",
+    habit: "5 to 8 min",
+    source: "React Tetris",
+    license: "MIT",
+    href: "https://github.com/brandly/react-tetris",
+    proof: "React implementation with familiar arcade pacing and compact controls.",
+    fit: "Useful as a lightweight arcade card, but should be renamed and visually differentiated before sharing.",
+    status: "Needs reskin",
+    tone: "Arcade",
+    imageUrl: "https://hips.hearstapps.com/hmg-prod/images/ed6cffef-45ed-4c26-be13-d38bfd05ad17.jpg",
+    imagePosition: "center",
+    playKind: "blocks" as const,
+  },
+  {
+    title: "Daily Game Finder",
+    format: "Discovery index",
+    habit: "Browse",
+    source: "Dles",
+    license: "GPL-3.0",
+    href: "https://github.com/aukspot/dles",
+    proof: "Large curated directory of daily web games for market scanning.",
+    fit: "Best used as research input, not copied into the product, because the license has obligations.",
+    status: "Research only",
+    tone: "Discovery",
+    imageUrl: "https://hips.hearstapps.com/hmg-prod/images/green-tea-cookies-1550241899.jpg?crop=0.481xw:0.321xh;0.449xw,0.532xh&resize=600:*",
+    imagePosition: "center",
+    playKind: "finder" as const,
+  },
+] as const;
+
+function HearstGamesIndex() {
+  const [activeGame, setActiveGame] = React.useState<(typeof hearstGameConcepts)[number] | null>(null);
+  const playableGames = hearstGameConcepts.filter((game) => game.playKind !== "finder");
+  const researchGame = hearstGameConcepts.find((game) => game.playKind === "finder") ?? hearstGameConcepts[hearstGameConcepts.length - 1];
+  const openGame = (game: (typeof hearstGameConcepts)[number]) => {
+    const externalHref = "externalHref" in game ? game.externalHref : null;
+    if (externalHref) {
+      window.open(externalHref, "_blank", "noopener,noreferrer");
+      return;
+    }
+
+    setActiveGame(game);
+  };
+
+  return (
+    <>
+      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]">
+        <aside className="hidden min-w-0 space-y-5 lg:block">
+          <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
+            <h2 className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+              Your daily habit
+            </h2>
+            <div className="mt-4 space-y-4 text-sm">
+              {playableGames.slice(0, 3).map((game) => (
+                <button
+                  key={game.title}
+                  type="button"
+                  className="block w-full border-b border-border pb-4 text-left transition-colors last:border-b-0 last:pb-0 hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  onClick={() => openGame(game)}
+                >
+                  <span className="text-xs font-bold text-[var(--hp-section-title)]">{game.format}</span>
+                  <span className="mt-1 block font-bold leading-snug">{game.title}</span>
+                  <span className="mt-1 block text-xs text-muted-foreground">{game.habit}</span>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
+            <h2 className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+              Game types
+            </h2>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {["Words", "Photos", "Memory", "Pattern", "Arcade"].map((item) => (
+                <span key={item} className="rounded-[6px] border border-border px-2 py-1 text-xs text-muted-foreground">
+                  {item}
+                </span>
+              ))}
+            </div>
+          </section>
+        </aside>
+
+        <main className="min-w-0 space-y-4" aria-label="Hearst games river">
+          <div className="space-y-4">
+            {playableGames.map((game) => {
+              const isExternalGame = "externalHref" in game;
+
+              if (isExternalGame) {
+                return (
+                  <article
+                    key={game.title}
+                    role="link"
+                    tabIndex={0}
+                    className="group relative min-w-0 cursor-pointer overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/45 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/45"
+                    onClick={() => openGame(game)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        openGame(game);
+                      }
+                    }}
+                  >
+                    <div className="relative grid w-full grid-rows-[auto_112px] bg-black text-left text-white sm:grid-rows-[auto_144px]">
+                      <div className="relative isolate">
+                        <div className="relative h-[min(128vw,520px)] w-full overflow-hidden sm:h-auto sm:aspect-video">
+                          <Image
+                            src={game.imageUrl}
+                            alt=""
+                            fill
+                            priority
+                            sizes="(max-width: 1024px) calc(100vw - 48px), 680px"
+                            className="object-cover transition-transform duration-200 group-hover:scale-[1.02] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+                            style={{ objectPosition: game.imagePosition }}
+                          />
+                          <div
+                            aria-hidden="true"
+                            data-slider-layer="gradient"
+                            className="pointer-events-none absolute inset-x-0 bottom-0 h-[180px] bg-[linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.18)_30%,rgba(0,0,0,0.78)_72%,#000_100%)] sm:h-[220px] xl:h-[240px]"
+                          />
+                        </div>
+                      </div>
+                      <div data-slider-layer="frame" className="bg-black" />
+                    </div>
+                    <div className="absolute left-5 right-5 top-5 flex items-center justify-between gap-3">
+                      <span className="rounded-full bg-black/45 px-3 py-1 text-sm font-bold uppercase tracking-[0.08em] text-white backdrop-blur">
+                        {game.tone}
+                      </span>
+                      <span className="rounded-full bg-black/45 px-3 py-1 text-sm font-bold text-white backdrop-blur">
+                        {game.habit}
+                      </span>
+                    </div>
+                    <div data-slider-content className="absolute inset-x-0 bottom-0 p-5 text-white sm:p-7">
+                      <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-white/80">
+                        <span className="font-bold uppercase tracking-[0.14em] text-white">{game.format}</span>
+                        <span>{game.status}</span>
+                      </div>
+                      <h2 className="headline line-clamp-3 max-w-[min(42rem,100%)] break-words text-balance text-[clamp(2rem,4.5vw,2.75rem)] leading-[1.08] text-white transition-colors group-hover:text-[#BDDDFC] group-focus-visible:text-[#BDDDFC] sm:text-[clamp(2.25rem,3.25vw,3rem)]">
+                        {game.title}
+                      </h2>
+                      <p className="mt-3 line-clamp-2 max-w-2xl text-sm leading-6 text-white/85 sm:text-base">
+                        {game.fit}
+                      </p>
+                      <div className="relative z-30 mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm" onClick={(event) => event.stopPropagation()}>
+                        <Button variant="ghost" size="xs" className="border-0 bg-white px-3 text-black shadow-none hover:bg-white/90 hover:text-black focus-visible:border-transparent focus-visible:ring-2 focus-visible:ring-white/70" onClick={() => openGame(game)}>
+                          <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+                          Open Car Mash
+                        </Button>
+                        <span className="text-white/80">{game.source} · {game.license}</span>
+                      </div>
+                    </div>
+                  </article>
+                );
+              }
+
+              return (
+                <article
+                  key={game.title}
+                  role="button"
+                  tabIndex={0}
+                  className="group relative grid min-w-0 cursor-pointer gap-4 overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/45 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/45 sm:grid-cols-[176px_minmax(0,1fr)]"
+                  onClick={() => openGame(game)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      openGame(game);
+                    }
+                  }}
+                >
+                  <div className="relative aspect-video min-w-0 overflow-hidden rounded-[8px] bg-muted sm:h-full sm:min-h-36 sm:aspect-auto">
+                    <Image
+                      src={game.imageUrl}
+                      alt=""
+                      fill
+                      sizes="(max-width: 640px) calc(100vw - 48px), 176px"
+                      className="object-cover transition-transform duration-200 group-hover:scale-[1.025] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+                      style={{ objectPosition: game.imagePosition }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-transparent to-black/65" />
+                    <div className="absolute inset-x-0 top-0 p-3">
+                      <span className="rounded-full bg-black/55 px-2.5 py-1 text-xs font-bold uppercase tracking-[0.16em] text-white backdrop-blur-sm">
+                        {game.tone}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="relative z-20 min-w-0">
+                    <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                      <span className="font-bold uppercase tracking-[0.14em] text-[var(--hp-section-title)]">{game.format}</span>
+                      <span>{game.habit}</span>
+                      <span>{game.status}</span>
+                    </div>
+                    <h2 className="headline text-2xl leading-tight text-[var(--hp-text-headline)] transition-colors group-hover:text-primary group-focus-visible:text-primary">
+                      {game.title}
+                    </h2>
+                    <p className="mt-2 line-clamp-3 text-sm leading-6 text-muted-foreground">
+                      {game.fit}
+                    </p>
+                    <div className="relative z-30 mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm" onClick={(event) => event.stopPropagation()}>
+                      <Button variant="ghost" size="xs" className={quietStoryActionButtonClass} onClick={() => openGame(game)}>
+                        <Play className="h-3.5 w-3.5" aria-hidden />
+                        Play
+                      </Button>
+                      <span className="text-muted-foreground">{game.source} · {game.license}</span>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </main>
+
+        <aside className="min-w-0 space-y-5 lg:sticky lg:top-[112px] lg:self-start">
+          <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
+            <h2 className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+              Why games
+            </h2>
+            <div className="mt-4 space-y-3 text-sm leading-6 text-muted-foreground">
+              <p>They create a repeatable daily touchpoint without replacing the story river.</p>
+              <p>Each game can inherit topic and brand signals from the reader profile.</p>
+            </div>
+          </section>
+
+          <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
+            <h2 className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+              Source review
+            </h2>
+            <div className="mt-4 space-y-4 text-sm">
+              {hearstGameConcepts.map((game) => (
+                <div key={game.title} className="border-b border-border pb-3 last:border-b-0 last:pb-0">
+                  <p className="font-bold">{game.title}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">{game.source} · {game.license}</p>
+                  <LinkComponent
+                    href={game.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    variant="neutral"
+                    underline={false}
+                    size="sm"
+                    className="mt-2 inline-flex items-center gap-1.5 text-muted-foreground hover:text-primary"
+                  >
+                    View source
+                    <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+                  </LinkComponent>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
+            <h2 className="text-sm font-bold text-foreground">Research only</h2>
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">
+              {researchGame.source} is useful for market scanning, but its {researchGame.license} license means it should stay a reference unless legal approves a compliant use.
+            </p>
+          </section>
+        </aside>
+      </div>
+      <HearstGameModal game={activeGame} onClose={() => setActiveGame(null)} />
+    </>
+  );
+}
+
+function HearstGameModal({
+  game,
+  onClose,
+}: {
+  game: (typeof hearstGameConcepts)[number] | null;
+  onClose: () => void;
+}) {
+  React.useEffect(() => {
+    if (!game) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [game, onClose]);
+
+  if (!game) return null;
+
+  return createPortal(
+    <div className="fixed inset-0 z-[220] flex items-center justify-center bg-black/55 p-4" role="dialog" aria-modal="true" aria-label={`${game.title} game`}>
+      <button type="button" className="absolute inset-0" onClick={onClose} aria-label="Close game" />
+      <div className="relative max-h-[min(820px,92dvh)] w-full max-w-3xl overflow-y-auto rounded-[12px] bg-background shadow-2xl">
+        <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-border bg-background/95 px-5 py-4 backdrop-blur">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--hp-section-title)]">{game.format}</p>
+            <h2 className="headline mt-1 text-3xl leading-tight">{game.title}</h2>
+            <p className="mt-1 text-sm text-muted-foreground">{game.habit} · Prototype game</p>
+          </div>
+          <button
+            type="button"
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+            onClick={onClose}
+            aria-label="Close game"
+          >
+            <X className="h-5 w-5" aria-hidden />
+          </button>
+        </div>
+        <div className="p-5 sm:p-6">
+          <HearstGamePlayable game={game} />
+          <div className="mt-6 rounded-[8px] border border-border bg-muted/35 p-4 text-sm leading-6 text-muted-foreground">
+            <p className="font-bold text-foreground">Prototype note</p>
+            <p className="mt-1">
+              This modal uses Hearst-owned demo logic. The referenced repo remains a source and license review input before any production implementation.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+}
+
+function HearstGamePlayable({ game }: { game: (typeof hearstGameConcepts)[number] }) {
+  if (game.playKind === "mini") return <DailyMiniGame />;
+  if (game.playKind === "merge") return <TileMergeGame />;
+  if (game.playKind === "photo") return <PhotoPuzzleGame />;
+  if (game.playKind === "memory") return <MemoryMatchGame />;
+  return <ArcadeBlocksGame />;
+}
+
+function DailyMiniGame() {
+  const [answers, setAnswers] = React.useState(["", "", ""]);
+  const expected = ["style", "road", "home"];
+  const solved = answers.filter((answer, index) => answer.trim().toLowerCase() === expected[index]).length;
+
+  return (
+    <div>
+      <p className="text-sm leading-6 text-muted-foreground">
+        A tiny editorial clue set. Fill the three answers to complete today&rsquo;s mini.
+      </p>
+      <div className="mt-5 space-y-3">
+        {[
+          "Fashion and beauty coverage often starts with this five-letter section.",
+          "The autos brand pairing in Road & Track starts with this word.",
+          "Country Living and House Beautiful share this reader intent.",
+        ].map((clue, index) => (
+          <label key={clue} className="block rounded-[8px] border border-border p-3">
+            <span className="text-sm font-bold">{clue}</span>
+            <Input
+              value={answers[index]}
+              onChange={(event) => setAnswers((current) => current.map((value, answerIndex) => answerIndex === index ? event.target.value : value))}
+              className="mt-2"
+              aria-label={`Answer ${index + 1}`}
+            />
+          </label>
+        ))}
+      </div>
+      <p className="mt-4 text-sm font-bold text-[var(--hp-section-title)]">{solved} of 3 solved</p>
+    </div>
+  );
+}
+
+function TileMergeGame() {
+  const [tiles, setTiles] = React.useState([2, 2, 4, 8, 4, 16, 8, 2, 32, 4, 2, 0, 0, 0, 0, 0]);
+  const score = tiles.reduce((sum, tile) => sum + tile, 0);
+  const mergeTiles = () => {
+    setTiles((current) => {
+      const compact = current.filter(Boolean);
+      const next: number[] = [];
+      for (let index = 0; index < compact.length; index += 1) {
+        if (compact[index] === compact[index + 1]) {
+          next.push(compact[index] * 2);
+          index += 1;
+        } else {
+          next.push(compact[index]);
+        }
+      }
+      return [...next, 2, ...Array.from({ length: Math.max(0, 15 - next.length) }, () => 0)].slice(0, 16);
+    });
+  };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between gap-4">
+        <p className="text-sm text-muted-foreground">Merge matching tiles into a higher-value daily pattern.</p>
+        <p className="shrink-0 text-sm font-bold">Score {score}</p>
+      </div>
+      <div className="mt-4 grid grid-cols-4 gap-2 rounded-[8px] bg-muted p-2">
+        {tiles.map((tile, index) => (
+          <div key={`${tile}-${index}`} className="flex aspect-square items-center justify-center rounded-[6px] bg-background text-xl font-black text-[var(--hp-text-headline)]">
+            {tile || ""}
+          </div>
+        ))}
+      </div>
+      <Button className="mt-4" onClick={mergeTiles}>Merge row</Button>
+    </div>
+  );
+}
+
+function PhotoPuzzleGame() {
+  const [tiles, setTiles] = React.useState(["Home", "Style", "Cars", "Food", "Wellness", "Travel"]);
+
+  return (
+    <div>
+      <p className="text-sm leading-6 text-muted-foreground">
+        A photo puzzle would use Hearst imagery. This prototype uses topic tiles to show the interaction model.
+      </p>
+      <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+        {tiles.map((tile) => (
+          <button
+            key={tile}
+            type="button"
+            className="aspect-[4/3] rounded-[8px] border border-border bg-muted text-lg font-black transition-colors hover:border-primary hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+            onClick={() => setTiles((current) => [...current.slice(1), current[0]])}
+          >
+            {tile}
+          </button>
+        ))}
+      </div>
+      <p className="mt-3 text-xs text-muted-foreground">Tap any tile to reshuffle the editorial image board.</p>
+    </div>
+  );
+}
+
+function MemoryMatchGame() {
+  const cards = ["Car", "Car", "Home", "Home", "Style", "Style", "Food", "Food"];
+  const [revealed, setRevealed] = React.useState<number[]>([]);
+  const [matched, setMatched] = React.useState<string[]>([]);
+
+  const reveal = (index: number) => {
+    if (revealed.includes(index) || matched.includes(cards[index])) return;
+    const next = revealed.length === 2 ? [index] : [...revealed, index];
+    if (next.length === 2 && cards[next[0]] === cards[next[1]]) {
+      setMatched((current) => [...current, cards[index]]);
+      setRevealed([]);
+      return;
+    }
+    setRevealed(next);
+  };
+
+  return (
+    <div>
+      <p className="text-sm text-muted-foreground">Match reader interests to clear the board.</p>
+      <div className="mt-4 grid grid-cols-4 gap-2">
+        {cards.map((card, index) => {
+          const open = revealed.includes(index) || matched.includes(card);
+          return (
+            <button
+              key={`${card}-${index}`}
+              type="button"
+              className={cn(
+                "aspect-square rounded-[8px] border border-border text-sm font-bold transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40",
+                open ? "bg-background text-primary" : "bg-muted text-muted-foreground hover:border-primary"
+              )}
+              onClick={() => reveal(index)}
+            >
+              {open ? card : "Hearst"}
+            </button>
+          );
+        })}
+      </div>
+      <p className="mt-3 text-sm font-bold text-[var(--hp-section-title)]">{matched.length} of 4 matches</p>
+    </div>
+  );
+}
+
+function ArcadeBlocksGame() {
+  const [score, setScore] = React.useState(0);
+  const blocks = ["Style", "Cars", "Food", "Home", "Gear", "Life"];
+
+  return (
+    <div>
+      <div className="flex items-center justify-between gap-4">
+        <p className="text-sm text-muted-foreground">A renamed falling-blocks concept, shown here as a simple scoring prototype.</p>
+        <p className="text-sm font-bold">Score {score}</p>
+      </div>
+      <div className="mt-4 grid grid-cols-3 gap-2">
+        {blocks.map((block) => (
+          <button
+            key={block}
+            type="button"
+            className="h-20 rounded-[8px] border border-border bg-muted font-bold transition-colors hover:border-primary hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+            onClick={() => setScore((current) => current + 10)}
+          >
+            {block}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function LifestyleRiverHydrationGate(props: LifestyleRiverHomePageProps) {
   const destinationConfigs = useDestinationConfigs();
   const { isHydrated } = useReaderAccount();
   const config = props.destinationConfig ?? destinationConfigs[props.destination];
   const pageHeading = getLifestyleRiverPageHeading(config, props.initialBrandSlug);
+  const useFlushVideoTop = props.activeFilter === "Videos" && Boolean(props.videoFeedData);
 
-  if (!isHydrated) return <LifestyleRiverLoadingState pageHeading={pageHeading} />;
-  return <LifestyleRiverHomePage {...props} />;
+  return (
+    <div className={cn("flow-root min-h-[calc(100dvh-173px)] md:min-h-[calc(100dvh-171px)]", !useFlushVideoTop && "md:pt-8")}>
+      {isHydrated
+        ? <LifestyleRiverHomePage {...props} />
+        : <LifestyleRiverLoadingState pageHeading={pageHeading} />}
+    </div>
+  );
 }
 
 function LifestyleRiverHomePage({
@@ -7754,6 +8395,10 @@ function LifestyleRiverHomePage({
   const videoDarkModeThemeClasses =
     "hearst-plus-theme bg-[var(--hp-background)] text-[var(--hp-text-primary)] [--background:#000000] [--foreground:#f8fbff] [--card:#181b20] [--card-foreground:#f4f7fb] [--popover:#181b20] [--popover-foreground:#f4f7fb] [--muted:#20242b] [--muted-foreground:#aab5c3] [--secondary:#20242b] [--secondary-foreground:#f4f7fb] [--accent:#232a33] [--accent-foreground:#dbe3ed] [--border:rgba(255,255,255,0.12)] [--input:rgba(255,255,255,0.16)] [--primary:#BDDDFC] [--primary-foreground:#0d1014] [--ring:#BDDDFC] [--hp-background:#000000] [--hp-surface-deep:#05070a] [--hp-surface-low:#181b20] [--hp-surface:#181b20] [--hp-control:#20242b] [--hp-control-hover:#2a3038] [--hp-chip:rgba(255,255,255,0.07)] [--hp-chip-border:rgba(255,255,255,0.08)] [--hp-border:rgba(255,255,255,0.12)] [--hp-border-strong:rgba(255,255,255,0.22)] [--hp-text-headline:#f8fbff] [--hp-text-primary:#f4f7fb] [--hp-text-ui:#dbe3ed] [--hp-text-chip:#cad5e2] [--hp-text-secondary:#aab5c3] [--hp-text-muted:#95a0ad] [--hp-sidebar-heading:#BDDDFC] [--hp-primary:#BDDDFC] [--hp-primary-soft:#253746] [--hp-friendly-accent:#253746] [--hp-friendly-accent-border:#BDDDFC] [--hp-friendly-accent-text:#BDDDFC] [--hp-focus:#BDDDFC] [--hp-signal:#BDDDFC] [--hp-action:#BDDDFC] [--hp-action-text:#0d1014] [--hp-shadow-card:0_2px_6px_rgba(0,0,0,0.18)] [--color-accent-foreground:var(--accent-foreground)] [--color-accent:var(--accent)] [--color-background:var(--background)] [--color-border:var(--border)] [--color-card-foreground:var(--card-foreground)] [--color-card:var(--card)] [--color-foreground:var(--foreground)] [--color-muted-foreground:var(--muted-foreground)] [--color-muted:var(--muted)] [--color-primary-foreground:var(--primary-foreground)] [--color-primary:var(--primary)] [--color-secondary-foreground:var(--secondary-foreground)] [--color-secondary:var(--secondary)]";
 
+  if (activeFilter === "Games") {
+    return <HearstGamesIndex />;
+  }
+
   if (isVideoQueueView) {
     return (
       <div
@@ -7761,14 +8406,14 @@ function LifestyleRiverHomePage({
           "space-y-6",
           useVideoDarkMode && videoDarkModeThemeClasses,
           usingVideoTabFeed &&
-            "relative isolate bg-black py-4 before:absolute before:inset-y-0 before:left-1/2 before:-z-10 before:w-screen before:-translate-x-1/2 before:bg-black"
+            "relative isolate bg-black pb-4 before:absolute before:inset-y-0 before:left-1/2 before:-z-10 before:w-screen before:-translate-x-1/2 before:bg-black"
         )}
         data-mode={useVideoDarkMode ? "dark" : undefined}
       >
         <div
           className={cn(
             "grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]",
-            usingVideoTabFeed ? "mt-3 sm:mt-4" : "mt-6 sm:mt-8"
+            usingVideoTabFeed ? "mt-0" : "mt-6 sm:mt-8"
           )}
         >
           <LifestyleLeftSidebar
@@ -7974,7 +8619,6 @@ function LifestyleRiverHomePage({
 
   return (
     <div className="space-y-8">
-      <h1 className="sr-only">{pageHeading}</h1>
       <TodayEditDashboard
         stories={filteredStories}
         profile={profile}
@@ -7997,6 +8641,7 @@ function LifestyleRiverHomePage({
         />
 
         <main className="min-w-0 space-y-4" aria-label={config.riverLabel}>
+          <h1 className="sr-only">{pageHeading}</h1>
           {leadStory ? (
             <>
               <LifestyleLeadSlider
@@ -8900,7 +9545,14 @@ export function HomePageTemplate({
       ) : null}
 
       {/* Footer — full width */}
-      <Footer flushTop={isDestinationRiver && activeLifestyleFilter === "Videos"} />
+      <Footer
+        flushTop={isDestinationRiver && activeLifestyleFilter === "Videos"}
+        socialFinePrintNote={
+          isDestinationRiver && activeLifestyleFilter === "Videos"
+            ? "Prototype note: videos use available source media in this demo; caption and transcript coverage remains a production content requirement."
+            : undefined
+        }
+      />
     </div>
     </DestinationConfigsContext.Provider>
   );

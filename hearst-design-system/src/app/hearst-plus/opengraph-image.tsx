@@ -80,7 +80,7 @@ export default function OpenGraphImage() {
               fontWeight: 700,
             }}
           >
-            Sign Up / Sign In
+            Demo Profile
           </div>
         </div>
 

@@ -3,19 +3,33 @@ import "server-only";
 import type { LiveArticleBlock, LiveArticleData } from "@/lib/live-feed-types";
 
 const allowedHosts = new Set([
+  "www.autoweek.com",
+  "www.bestproducts.com",
+  "www.bicycling.com",
   "www.caranddriver.com",
-  "www.motortrend.com",
-  "www.hotrod.com",
-  "www.goodhousekeeping.com",
   "www.cosmopolitan.com",
   "www.countryliving.com",
   "www.delish.com",
-  "www.housebeautiful.com",
+  "www.elle.com",
+  "www.elledecor.com",
+  "www.esquire.com",
+  "www.goodhousekeeping.com",
   "www.harpersbazaar.com",
+  "www.hotrod.com",
+  "www.housebeautiful.com",
+  "www.menshealth.com",
+  "www.motortrend.com",
+  "www.oprahdaily.com",
+  "www.popularmechanics.com",
   "www.thepioneerwoman.com",
   "www.prevention.com",
   "www.redbookmag.com",
+  "www.roadandtrack.com",
+  "www.runnersworld.com",
   "www.seventeen.com",
+  "www.townandcountrymag.com",
+  "www.veranda.com",
+  "www.womenshealthmag.com",
   "www.womansday.com",
 ]);
 
@@ -32,6 +46,7 @@ type HearstMedia = {
   image_id?: string;
   media_id?: string;
   hips_url?: string;
+  metadata?: { headline?: string; dek?: string; caption?: string };
   role?: number;
   image_metadata?: { seo_meta_title?: string; seo_meta_description?: string };
   photographer?: { name?: string };
@@ -42,7 +57,10 @@ type HearstNextData = {
   props?: {
     pageProps?: {
       bodyDom?: HearstDomNode;
-      slides?: unknown[];
+      dekDom?: HearstDomNode;
+      introductoryText?: string;
+      introductoryTextDom?: HearstDomNode;
+      slides?: HearstMedia[];
       data?: { content?: Array<{ media?: HearstMedia[] }> };
     };
   };
@@ -126,10 +144,161 @@ function buildBlocks(bodyDom: HearstDomNode, media: HearstMedia[]) {
   return blocks;
 }
 
+function pushTextBlock(blocks: LiveArticleBlock[], type: "paragraph" | "heading", value: string | undefined) {
+  const text = normalizeSpace(value ?? "");
+  if (
+    !text
+    || blocks.some((block) => block.type !== "image" && block.type !== "list" && block.text === text)
+  ) return;
+  blocks.push({ type, text });
+}
+
+function buildIntroBlocks(pageProps: NonNullable<HearstNextData["props"]>["pageProps"]) {
+  const blocks: LiveArticleBlock[] = [];
+  if (!pageProps) return blocks;
+
+  pushTextBlock(blocks, "paragraph", pageProps.dekDom ? getNodeText(pageProps.dekDom) : undefined);
+  pushTextBlock(
+    blocks,
+    "paragraph",
+    pageProps.introductoryTextDom ? getNodeText(pageProps.introductoryTextDom) : pageProps.introductoryText
+  );
+
+  return blocks;
+}
+
+function getMediaAlt(media: HearstMedia, caption?: string) {
+  return media.image_metadata?.seo_meta_description
+    || media.image_metadata?.seo_meta_title
+    || caption
+    || "Editorial image";
+}
+
+function buildSlideBlocks(slides: HearstMedia[]) {
+  const blocks: LiveArticleBlock[] = [];
+  const seenImages = new Set<string>();
+
+  slides.forEach((slide) => {
+    if (!slide.hips_url || seenImages.has(slide.hips_url)) return;
+
+    const headline = normalizeSpace(slide.metadata?.headline ?? "");
+    const caption = normalizeSpace(slide.metadata?.caption ?? "");
+    const dek = normalizeSpace(slide.metadata?.dek ?? "");
+
+    if (headline) blocks.push({ type: "heading", text: headline });
+    blocks.push({
+      type: "image",
+      url: slide.hips_url,
+      alt: getMediaAlt(slide, caption || dek || headline),
+      caption: caption || dek || undefined,
+      credit: getMediaCredit(slide),
+    });
+    if (dek && dek !== caption) blocks.push({ type: "paragraph", text: dek });
+    seenImages.add(slide.hips_url);
+  });
+
+  return blocks;
+}
+
 function parseNextData(html: string) {
   const match = html.match(/<script[^>]+id=["']__NEXT_DATA__["'][^>]*>([\s\S]*?)<\/script>/i);
   if (!match?.[1]) throw new Error("Hearst article payload was not found");
   return JSON.parse(match[1]) as HearstNextData;
+}
+
+function decodeHtmlEntities(value: string) {
+  return value
+    .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)))
+    .replace(/&#x([a-f0-9]+);/gi, (_, code) => String.fromCharCode(Number.parseInt(code, 16)))
+    .replace(/&quot;/g, "\"")
+    .replace(/&#x27;/g, "'")
+    .replace(/&apos;/g, "'")
+    .replace(/&amp;/g, "&")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&ndash;/g, "–")
+    .replace(/&mdash;/g, "—")
+    .replace(/&rsquo;/g, "’")
+    .replace(/&lsquo;/g, "‘")
+    .replace(/&rdquo;/g, "”")
+    .replace(/&ldquo;/g, "“");
+}
+
+function htmlToText(value: string) {
+  return normalizeSpace(decodeHtmlEntities(value.replace(/<[^>]+>/g, " ")));
+}
+
+function getHtmlAttribute(attrs: string, name: string) {
+  const match = attrs.match(new RegExp(`\\b${name}=["']([^"']+)["']`, "i"));
+  return match?.[1] ? decodeHtmlEntities(match[1]) : undefined;
+}
+
+function getImageUrlFromAttrs(attrs: string) {
+  const source = getHtmlAttribute(attrs, "src")
+    ?? getHtmlAttribute(attrs, "data-src")
+    ?? getHtmlAttribute(attrs, "srcset")
+    ?? getHtmlAttribute(attrs, "srcSet")
+    ?? getHtmlAttribute(attrs, "imageSrcSet");
+  if (!source) return undefined;
+
+  return source.split(",")[0]?.trim().split(/\s+/)[0];
+}
+
+function shouldKeepFallbackText(text: string) {
+  if (text.length < 12) return false;
+  if (/^save$/i.test(text)) return false;
+  if (/^see all \d+ photos\d*$/i.test(text)) return false;
+  if (/^\d+:\d+\s*\/\s*\d+:\d+$/.test(text)) return false;
+  return true;
+}
+
+function getReadableArticleHtml(html: string) {
+  const readableIndex = html.indexOf("data-nitrous-content-readable=\"true\"");
+  if (readableIndex < 0) return "";
+
+  const articleHtml = html.slice(readableIndex);
+  const endCandidates = [
+    articleHtml.indexOf("data-ids=\"LayoutGridRail\""),
+    articleHtml.indexOf("<footer"),
+    articleHtml.indexOf("</main>"),
+  ].filter((index) => index > 0);
+  const endIndex = endCandidates.length > 0 ? Math.min(...endCandidates) : Math.min(articleHtml.length, 80_000);
+  return articleHtml.slice(0, endIndex);
+}
+
+function buildReadableHtmlBlocks(html: string) {
+  const articleHtml = getReadableArticleHtml(html);
+  if (!articleHtml) return [];
+
+  const blocks: LiveArticleBlock[] = [];
+  const seenImages = new Set<string>();
+  const tagPattern = /<(?:(p|h2|h3|h4)\b[^>]*>([\s\S]*?)<\/\1>|img\b([^>]*)>)/gi;
+  let match: RegExpExecArray | null;
+
+  while ((match = tagPattern.exec(articleHtml))) {
+    const [, tagName, content, imageAttrs] = match;
+    if (tagName) {
+      const text = htmlToText(content);
+      if (!shouldKeepFallbackText(text)) continue;
+      blocks.push({
+        type: tagName === "p" ? "paragraph" : "heading",
+        text,
+      });
+      continue;
+    }
+
+    if (imageAttrs) {
+      const url = getImageUrlFromAttrs(imageAttrs);
+      if (!url || seenImages.has(url)) continue;
+      blocks.push({
+        type: "image",
+        url,
+        alt: htmlToText(getHtmlAttribute(imageAttrs, "alt") ?? "") || "Editorial image",
+      });
+      seenImages.add(url);
+    }
+  }
+
+  return blocks;
 }
 
 export function isAllowedHearstArticleUrl(value: string) {
@@ -158,16 +327,25 @@ export async function getHearstLiveArticle(sourceUrl: string): Promise<LiveArtic
   const finalUrl = response.url || sourceUrl;
   if (!isAllowedHearstArticleUrl(finalUrl)) throw new Error("Article redirected to an unsupported host");
 
-  const payload = parseNextData(await response.text());
-  const pageProps = payload.props?.pageProps;
-  const bodyDom = pageProps?.bodyDom;
-  const media = pageProps?.data?.content?.[0]?.media ?? [];
-  if (!bodyDom) throw new Error("Article body was not found");
-  if ((pageProps?.slides?.length ?? 0) > 0) {
-    throw new Error("Slide-based article bodies are not supported as complete articles");
+  const html = await response.text();
+  let blocks: LiveArticleBlock[] = [];
+
+  try {
+    const payload = parseNextData(html);
+    const pageProps = payload.props?.pageProps;
+    const bodyDom = pageProps?.bodyDom;
+    const media = pageProps?.data?.content?.[0]?.media ?? [];
+    const slides = pageProps?.slides ?? [];
+
+    blocks = [
+      ...(!bodyDom && slides.length > 0 ? buildIntroBlocks(pageProps) : []),
+      ...(bodyDom ? buildBlocks(bodyDom, media) : []),
+      ...buildSlideBlocks(slides),
+    ];
+  } catch {
+    blocks = buildReadableHtmlBlocks(html);
   }
 
-  const blocks = buildBlocks(bodyDom, media);
   if (blocks.length === 0) throw new Error("Article body was empty");
   return { blocks, sourceUrl: finalUrl };
 }

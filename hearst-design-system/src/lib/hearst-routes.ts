@@ -10,7 +10,7 @@ export const hearstDestinationRoutes: Record<HearstDestinationMode, string> = {
 };
 
 export const hearstDestinationCategoryLabels: Record<HearstDestinationMode, readonly string[]> = {
-  all: ["For You", "Home", "Style", "Reviews", "Fitness", "Cars", "Videos", "Shopping", "Saved"],
+  all: ["For You", "Home", "Style", "Reviews", "Fitness", "Cars", "Videos", "Shopping", "Games", "Saved"],
   lifestyle: ["For You", "Food", "Home", "Wellness", "Style", "Videos", "Shopping", "Family", "Entertainment", "Saved"],
   autos: ["For You", "News", "Reviews", "Buying Guides", "EVs", "Racing", "Trucks", "Classics", "Videos", "Saved"],
   flux: ["For You", "Style", "Beauty", "Design", "Culture", "Videos", "Shopping", "Events", "Travel", "Saved"],

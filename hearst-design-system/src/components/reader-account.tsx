@@ -124,7 +124,7 @@ export function ReaderAccountProvider({ children }: { children: React.ReactNode 
     const email = normalizeEmail(input.email);
     const existing = readStoredAccount();
     if (existing && existing.email === email) {
-      throw new Error("An account with this email already exists. Sign in instead.");
+      throw new Error("A local demo profile with this email already exists. Resume it instead.");
     }
 
     const now = new Date().toISOString();
