@@ -4638,6 +4638,7 @@ function FullscreenImageViewer({
   const [activeIndex, setActiveIndex] = React.useState(gallery.initialIndex);
   const [zoom, setZoom] = React.useState(1);
   const [offset, setOffset] = React.useState({ x: 0, y: 0 });
+  const [zoomOrigin, setZoomOrigin] = React.useState("50% 50%");
   const [controlsVisible, setControlsVisible] = React.useState(true);
   const [captionOpen, setCaptionOpen] = React.useState(false);
   const [playing, setPlaying] = React.useState(false);
@@ -4645,14 +4646,16 @@ function FullscreenImageViewer({
   const controlsTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const transitionTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const pointerPositionsRef = React.useRef(new Map<number, { x: number; y: number }>());
-  const dragStartRef = React.useRef<{ x: number; y: number; offsetX: number; offsetY: number } | null>(null);
+  const dragStartRef = React.useRef<{ x: number; y: number; time: number; offsetX: number; offsetY: number } | null>(null);
   const pinchStartRef = React.useRef<{ distance: number; zoom: number } | null>(null);
+  const lastTapRef = React.useRef<{ x: number; y: number; time: number } | null>(null);
   const activeImage = gallery.images[activeIndex] ?? gallery.images[0];
   const hasMultipleImages = gallery.images.length > 1;
 
   const resetTransform = React.useCallback(() => {
     setZoom(1);
     setOffset({ x: 0, y: 0 });
+    setZoomOrigin("50% 50%");
   }, []);
 
   const selectImage = React.useCallback((nextIndex: number) => {
@@ -4686,6 +4689,17 @@ function FullscreenImageViewer({
     setZoom(clampedZoom);
     if (clampedZoom === 1) setOffset({ x: 0, y: 0 });
   }, []);
+
+  const toggleTapZoom = React.useCallback((clientX: number, clientY: number) => {
+    if (zoom <= 1) {
+      setZoomOrigin(`${(clientX / window.innerWidth) * 100}% ${(clientY / window.innerHeight) * 100}%`);
+    }
+    setClampedZoom(zoom > 1 ? 1 : 2.5);
+    if (zoom > 1) {
+      setOffset({ x: 0, y: 0 });
+      setZoomOrigin("50% 50%");
+    }
+  }, [setClampedZoom, zoom]);
 
   React.useEffect(() => {
     if (!playing) showControls();
@@ -4730,7 +4744,7 @@ function FullscreenImageViewer({
     event.currentTarget.setPointerCapture(event.pointerId);
     pointerPositionsRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
     if (pointerPositionsRef.current.size === 1) {
-      dragStartRef.current = { x: event.clientX, y: event.clientY, offsetX: offset.x, offsetY: offset.y };
+      dragStartRef.current = { x: event.clientX, y: event.clientY, time: event.timeStamp, offsetX: offset.x, offsetY: offset.y };
     } else if (pointerPositionsRef.current.size === 2) {
       pinchStartRef.current = { distance: getPointerDistance(), zoom };
     }
@@ -4756,7 +4770,29 @@ function FullscreenImageViewer({
     const dragStart = dragStartRef.current;
     if (pointerPositionsRef.current.size === 1 && zoom === 1 && dragStart && hasMultipleImages) {
       const distanceX = event.clientX - dragStart.x;
-      if (Math.abs(distanceX) > 70) selectImage(activeIndex + (distanceX < 0 ? 1 : -1));
+      const distanceY = event.clientY - dragStart.y;
+      if (Math.abs(distanceX) > 70 && Math.abs(distanceX) > Math.abs(distanceY) * 1.35) {
+        selectImage(activeIndex + (distanceX < 0 ? 1 : -1));
+      }
+    }
+    if (pointerPositionsRef.current.size === 1 && dragStart) {
+      const distanceX = event.clientX - dragStart.x;
+      const distanceY = event.clientY - dragStart.y;
+      const isTap = Math.hypot(distanceX, distanceY) < 12 && event.timeStamp - dragStart.time < 360;
+      const lastTap = lastTapRef.current;
+      const isDoubleTap = Boolean(
+        isTap
+        && lastTap
+        && event.timeStamp - lastTap.time < 320
+        && Math.hypot(event.clientX - lastTap.x, event.clientY - lastTap.y) < 44
+      );
+      if (isDoubleTap) {
+        toggleTapZoom(event.clientX, event.clientY);
+        lastTapRef.current = null;
+      } else if (isTap) {
+        showControls();
+        lastTapRef.current = { x: event.clientX, y: event.clientY, time: event.timeStamp };
+      }
     }
     pointerPositionsRef.current.delete(event.pointerId);
     if (pointerPositionsRef.current.size < 2) pinchStartRef.current = null;
@@ -4789,9 +4825,8 @@ function FullscreenImageViewer({
           zoom > 1 ? "cursor-grab active:cursor-grabbing" : hasMultipleImages ? "cursor-ew-resize" : "cursor-zoom-in",
           imageVisible ? "opacity-100" : "opacity-0"
         )}
-        style={{ transform: `translate3d(${offset.x}px, ${offset.y}px, 0) scale(${zoom})` }}
+        style={{ transform: `translate3d(${offset.x}px, ${offset.y}px, 0) scale(${zoom})`, transformOrigin: zoomOrigin }}
         draggable={false}
-        onDoubleClick={() => setClampedZoom(zoom > 1 ? 1 : 2.5)}
         onWheel={(event) => {
           event.preventDefault();
           setClampedZoom(zoom + (event.deltaY < 0 ? 0.25 : -0.25));
@@ -4869,6 +4904,9 @@ function FullscreenImageViewer({
             ))}
           </div>
         ) : null}
+        <p className="rounded-full bg-black/35 px-3 py-1 text-xs font-semibold text-white/65 backdrop-blur-sm">
+          {zoom > 1 ? "Drag to pan · double-tap to reset" : "Double-tap or pinch to zoom"}
+        </p>
       </div>
     </div>,
     document.body
@@ -4918,19 +4956,24 @@ function LifestyleReaderActions({
           aria-pressed={followed}
           aria-label={followed ? `Unfollow ${story.brand} brand` : `Follow ${story.brand} brand`}
           title={followed ? `Unfollow ${story.brand} brand` : `Follow ${story.brand} brand`}
-          className="inline-flex min-h-11 min-w-0 flex-1 items-center gap-1.5 rounded-[4px] text-[length:var(--text-token-4xs)] text-muted-foreground transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30 sm:min-h-0"
+          className="inline-flex min-h-11 min-w-0 flex-1 items-center gap-1.5 rounded-[4px] text-[length:var(--text-token-4xs)] text-muted-foreground transition-colors hover:text-primary focus:outline-none focus-visible:text-primary sm:min-h-0"
         >
           <BrandSourceIcon brand={story.brand} brandSlug={story.brandSlug} />
           <span className="min-w-0 truncate">
             {story.brand} · {story.topic} · {byline}
           </span>
           <span
-            className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-colors"
-            style={{
-              backgroundColor: followBadgeBackground,
-              borderColor: followBadgeBackground,
-              color: followBadgeForeground,
-            }}
+            className={cn(
+              "inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-colors",
+              followed ? "" : "border-current bg-transparent text-muted-foreground"
+            )}
+            style={followed
+              ? {
+                  backgroundColor: followBadgeBackground,
+                  borderColor: followBadgeBackground,
+                  color: followBadgeForeground,
+                }
+              : undefined}
           >
             {followed ? <Check className="h-3 w-3" aria-hidden /> : <Plus className="h-3 w-3" aria-hidden />}
           </span>
@@ -5040,9 +5083,11 @@ function getAmbientRelatedScore(
 
 function AmbientReaderImageBlock({
   block,
+  compactTop = false,
   onOpenImage,
 }: {
   block: Extract<LiveArticleData["blocks"][number], { type: "image" }>;
+  compactTop?: boolean;
   onOpenImage: (image: FullscreenReaderImage) => void;
 }) {
   const [naturalRatio, setNaturalRatio] = React.useState<number | null>(null);
@@ -5050,7 +5095,13 @@ function AmbientReaderImageBlock({
   const imageAspectRatio = naturalRatio ?? 1.5;
 
   return (
-    <figure className="relative left-1/2 w-[calc(100vw-2.5rem)] max-w-[1180px] -translate-x-1/2 py-4 sm:w-[calc(100vw-4rem)] sm:py-7 lg:w-[calc(100vw-6rem)]">
+    <figure
+      className={cn(
+        "relative left-1/2 w-[calc(100vw-2.5rem)] max-w-[1180px] -translate-x-1/2 sm:w-[calc(100vw-4rem)] lg:w-[calc(100vw-6rem)]",
+        compactTop ? "pb-4 pt-1 sm:pb-7 sm:pt-2" : "py-4 sm:py-7"
+      )}
+      style={compactTop ? { marginTop: "calc(var(--ambient-block-gap) * -0.55)" } : undefined}
+    >
       <button
         type="button"
         className={cn(
@@ -5128,9 +5179,11 @@ function AmbientArticleReader({
   const destinationConfigs = useDestinationConfigs();
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
   const dialogRef = React.useRef<HTMLDivElement | null>(null);
+  const touchStartRef = React.useRef<{ x: number; y: number; time: number } | null>(null);
   const [colorMode, setColorMode] = React.useState<"light" | "dark">("light");
   const [density, setDensity] = React.useState<AmbientReaderDensity>("airy");
   const [progress, setProgress] = React.useState(0);
+  const [heroImageRatio, setHeroImageRatio] = React.useState<number | null>(null);
   const destination = getStoryDestinationMode(story.brandSlug);
   const destinationTheme = themeOptions.find(
     (theme) => theme.slug === destinationConfigs[destination].brandSlug
@@ -5147,11 +5200,10 @@ function AmbientArticleReader({
     "--ambient-rule": colorMode === "dark" ? "#333638" : "#D7D7D2",
   } as React.CSSProperties;
   const readMinutes = getAmbientReaderMinutes(story, article);
-  const brandPrimary = story.brandSlug === "motortrend"
-    ? "#23262F"
-    : contextualTheme.colors["1"] ?? "#242D39";
+  const brandPrimary = contextualTheme.colors["1"] ?? "#242D39";
   const brandForeground = getAmbientBrandForeground(brandPrimary);
-  const heroAccent = story.brandSlug === "motortrend" ? "#E90C17" : brandForeground;
+  const heroAccent = brandForeground;
+  const hasPortraitHeroImage = heroImageRatio !== null && heroImageRatio < 0.9;
   const firstParagraphIndex = article.blocks.findIndex((block) => block.type === "paragraph");
   const densityStyles: Record<AmbientReaderDensity, string> = {
     compact: "max-w-[68ch] text-[17px] leading-7 [--ambient-block-gap:1.25rem]",
@@ -5174,6 +5226,7 @@ function AmbientArticleReader({
   React.useEffect(() => {
     scrollRef.current?.scrollTo({ top: 0 });
     setProgress(0);
+    setHeroImageRatio(null);
   }, [story.id]);
 
   const handleDialogKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -5210,6 +5263,42 @@ function AmbientArticleReader({
     }
   };
 
+  const handleReaderTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+    if (event.touches.length !== 1) {
+      touchStartRef.current = null;
+      return;
+    }
+
+    const touch = event.touches[0];
+    touchStartRef.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+      time: Date.now(),
+    };
+  };
+
+  const handleReaderTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
+    const start = touchStartRef.current;
+    touchStartRef.current = null;
+    if (!start || event.changedTouches.length !== 1) return;
+
+    const touch = event.changedTouches[0];
+    const deltaX = touch.clientX - start.x;
+    const deltaY = touch.clientY - start.y;
+    const absX = Math.abs(deltaX);
+    const absY = Math.abs(deltaY);
+    const elapsed = Date.now() - start.time;
+
+    if (elapsed > 900 || absX < 70 || absX < absY * 1.35) return;
+
+    const targetStory = deltaX < 0 ? nextStory : previousStory;
+    if (!targetStory) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    onNavigateStory(targetStory.id);
+  };
+
   return createPortal(
     <div
       ref={dialogRef}
@@ -5225,6 +5314,8 @@ function AmbientArticleReader({
         ref={scrollRef}
         className="h-[100dvh] overflow-y-auto overscroll-contain bg-[var(--ambient-paper)]"
         onScroll={updateProgress}
+        onTouchStart={handleReaderTouchStart}
+        onTouchEnd={handleReaderTouchEnd}
       >
         <header className="sticky top-0 z-50 border-b border-[var(--ambient-rule)] bg-[var(--ambient-paper)]/95 backdrop-blur-sm">
           <div className="absolute inset-x-0 bottom-0 h-0.5 bg-[var(--ambient-rule)]" aria-hidden>
@@ -5235,7 +5326,7 @@ function AmbientArticleReader({
               <div className="h-6 max-w-[180px] sm:h-7">
                 <BrandLogo
                   slug={story.brandSlug}
-                  color={colorMode === "dark" ? "#F2F2EE" : undefined}
+                  color={colorMode === "dark" ? "#F2F2EE" : story.brandSlug === "motortrend" ? "#E90C17" : undefined}
                   className="flex h-full items-center [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full"
                 />
               </div>
@@ -5306,12 +5397,19 @@ function AmbientArticleReader({
         </header>
 
         <main>
-          <section className="grid min-h-[70vh] lg:grid-cols-[minmax(420px,0.9fr)_minmax(0,1.1fr)]">
+          <section
+            className={cn(
+              "grid min-h-[70vh]",
+              hasPortraitHeroImage
+                ? "lg:grid-cols-[minmax(0,2fr)_minmax(260px,1fr)]"
+                : "lg:grid-cols-[minmax(420px,0.9fr)_minmax(0,1.1fr)]"
+            )}
+          >
             <div
-              className="flex flex-col justify-end px-6 py-12 sm:px-10 sm:py-16 lg:px-[clamp(3rem,6vw,7rem)] lg:py-20"
+              className="flex min-w-0 flex-col justify-center overflow-hidden px-6 py-12 sm:px-10 sm:py-16 lg:px-[clamp(3rem,6vw,7rem)] lg:py-20"
               style={{ backgroundColor: brandPrimary, color: brandForeground }}
             >
-              <div className="max-w-3xl">
+              <div className="max-w-full">
                 <p
                   className={cn(
                     "mb-6 text-xs font-bold uppercase tracking-[0.18em]",
@@ -5321,7 +5419,7 @@ function AmbientArticleReader({
                 >
                   {story.topic} · {story.brand}
                 </p>
-                <h1 className="font-headline text-[clamp(2.6rem,3.7vw,4.75rem)] font-[var(--font-headline-weight)] leading-[1.08] tracking-[-0.03em] text-balance">
+                <h1 className="max-w-full break-words font-headline text-[clamp(2.6rem,3.7vw,4.75rem)] font-[var(--font-headline-weight)] leading-[1.08] tracking-[-0.03em] text-balance">
                   {story.title}
                 </h1>
                 <p className="mt-7 max-w-xl font-brand-secondary text-xl leading-8 opacity-90 sm:text-2xl">
@@ -5347,9 +5445,15 @@ function AmbientArticleReader({
                 src={story.image}
                 alt={story.title}
                 fill
-                sizes="(max-width: 1024px) 100vw, 62vw"
+                sizes={hasPortraitHeroImage ? "(max-width: 1024px) 100vw, 34vw" : "(max-width: 1024px) 100vw, 62vw"}
                 className="object-cover"
                 priority
+                onLoad={(event) => {
+                  const image = event.currentTarget;
+                  if (image.naturalWidth > 0 && image.naturalHeight > 0) {
+                    setHeroImageRatio(image.naturalWidth / image.naturalHeight);
+                  }
+                }}
               />
               {story.imageCredit ? (
                 <figcaption className="absolute bottom-3 right-4 bg-black/65 px-2 py-1 text-[10px] uppercase tracking-wider text-white">
@@ -5368,7 +5472,14 @@ function AmbientArticleReader({
               <div className="space-y-[var(--ambient-block-gap)]">
                 {article.blocks.map((block, index) => {
                   if (block.type === "image") {
-                    return <AmbientReaderImageBlock key={`${block.url}-${index}`} block={block} onOpenImage={onOpenImage} />;
+                    return (
+                      <AmbientReaderImageBlock
+                        key={`${block.url}-${index}`}
+                        block={block}
+                        compactTop={article.blocks[index - 1]?.type === "heading"}
+                        onOpenImage={onOpenImage}
+                      />
+                    );
                   }
                   if (block.type === "heading") {
                     return <h2 key={index} className="pt-6 font-headline text-[clamp(2rem,4vw,3.5rem)] font-[var(--font-headline-weight)] leading-[1.05] tracking-[-0.025em] text-balance">{block.text}</h2>;
@@ -6158,7 +6269,13 @@ function LifestyleStoryReaderModal({
     { label: "Fashion & Luxury", mode: "flux" },
     { label: "Enthusiast & Wellness", mode: "ew" },
   ];
-  const otherReaderSections = readerSections.filter((section) => section.mode !== readerDestination);
+  const isPublicationScopedReader = Boolean(
+    usePublicationTheme
+    && readerLogoSlug !== readerDestinationConfig.brandSlug
+  );
+  const otherReaderSections = readerSections.filter((section) =>
+    section.mode !== readerDestination || isPublicationScopedReader
+  );
   const readerActiveFilter = readerContextStory
     ? readerDestinationConfig.filters.find((filter) =>
         filter !== "For You"
@@ -6495,7 +6612,7 @@ function LifestyleStoryReaderModal({
               >
                 <BrandLogo
                   slug={readerLogoSlug}
-                  color={readerDestination === "flux" ? "#ffffff" : undefined}
+                  color={readerDestination === "flux" ? "#ffffff" : readerLogoSlug === "motortrend" ? "#E90C17" : undefined}
                   className="flex h-full w-full items-center [&_svg]:block [&_svg]:h-full [&_svg]:w-full [&_svg]:max-w-full"
                 />
               </div>
@@ -6879,7 +6996,7 @@ function TodayEditDashboard({
             key={module.label}
             type="button"
             onClick={module.onClick}
-            className="group relative flex w-[88vw] shrink-0 snap-start scroll-ml-0 flex-col border-r border-border p-4 text-left transition-colors last:border-r-0 hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30 sm:w-[58vw] md:w-[44vw] lg:w-[34vw] xl:w-auto xl:min-w-0 xl:border-0"
+            className="group relative flex w-[88vw] shrink-0 snap-start scroll-ml-0 flex-col border-r border-border p-4 text-left transition-colors last:border-r-0 hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30 sm:w-[50vw] md:w-[38vw] lg:w-[30vw] xl:w-auto xl:min-w-0 xl:border-0"
           >
             <span>
               <span className="block text-[length:var(--text-token-4xs)] font-bold uppercase leading-none tracking-widest text-[var(--hp-section-title)]">
