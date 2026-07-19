@@ -3301,6 +3301,27 @@ function isExplicitGalleryStory(story: LifestyleRiverStory) {
   return /\b(?:photos?|photo-gallery|gallery|galleries)\b|\/photos\//.test(searchable);
 }
 
+function ensureGallerySampleInRiver(
+  riverStories: LifestyleRiverStory[],
+  displayStories: LifestyleRiverStory[],
+  heroStoryIds: Set<string>,
+  enabled: boolean
+) {
+  if (!enabled || riverStories.some(isExplicitGalleryStory)) return riverStories;
+
+  const gallerySample = displayStories.find((story) =>
+    isExplicitGalleryStory(story)
+    && !heroStoryIds.has(story.id)
+    && !riverStories.some((riverStory) => riverStory.id === story.id)
+  );
+
+  if (!gallerySample) return riverStories;
+
+  const nextStories = [...riverStories];
+  nextStories.splice(Math.min(2, nextStories.length), 0, gallerySample);
+  return nextStories;
+}
+
 function storyHasPlayableVideo(story: LifestyleRiverStory) {
   return Boolean(story.videoUrl);
 }
@@ -8159,7 +8180,13 @@ function LifestyleRiverHomePage({
   );
   const leadStory = heroStories[0] ?? visibleStories[0];
   const heroStoryIds = new Set(heroStories.map((story) => story.id));
-  const riverStories = visibleStories.filter((story) => !heroStoryIds.has(story.id));
+  const baseRiverStories = visibleStories.filter((story) => !heroStoryIds.has(story.id));
+  const riverStories = ensureGallerySampleInRiver(
+    baseRiverStories,
+    displayStories,
+    heroStoryIds,
+    !usingVideoTabFeed && activeFilter !== "Saved"
+  );
   const sidebarTopics = React.useMemo(() => {
     const counts = activeStoryPool.reduce<Record<string, number>>((acc, story) => {
       acc[story.topic] = (acc[story.topic] ?? 0) + 1;
