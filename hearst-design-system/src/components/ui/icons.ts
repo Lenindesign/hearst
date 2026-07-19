@@ -42,6 +42,8 @@ export { PlayIcon as Play } from "@phosphor-icons/react/dist/ssr/Play";
 export { PlusIcon as Plus } from "@phosphor-icons/react/dist/ssr/Plus";
 export { PlusCircleIcon as CirclePlus } from "@phosphor-icons/react/dist/ssr/PlusCircle";
 export { ShareNetworkIcon as Share2 } from "@phosphor-icons/react/dist/ssr/ShareNetwork";
+export { SpeakerHighIcon as Volume2 } from "@phosphor-icons/react/dist/ssr/SpeakerHigh";
+export { SpeakerSlashIcon as VolumeX } from "@phosphor-icons/react/dist/ssr/SpeakerSlash";
 export { ShieldIcon as Shield } from "@phosphor-icons/react/dist/ssr/Shield";
 export { SignOutIcon as LogOut } from "@phosphor-icons/react/dist/ssr/SignOut";
 export { SlidersHorizontalIcon as SlidersHorizontal } from "@phosphor-icons/react/dist/ssr/SlidersHorizontal";

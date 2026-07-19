@@ -37,6 +37,7 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
+  ChevronUpIcon,
   ChefHat,
   Clock,
   EyeOff,
@@ -57,6 +58,8 @@ import {
   Star,
   Sun,
   ThumbsUp,
+  Volume2,
+  VolumeX,
   X,
 } from "@/components/ui/icons";
 import {
@@ -4201,6 +4204,532 @@ function VideoRailCard({
   );
 }
 
+function DelishVerticalVideoCarousel({
+  stories,
+  onOpen,
+  theme = "dark",
+}: {
+  stories: LifestyleRiverStory[];
+  onOpen: (story: LifestyleRiverStory) => void;
+  theme?: "dark" | "light";
+}) {
+  const scrollRef = React.useRef<HTMLDivElement | null>(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const [canScrollBackward, setCanScrollBackward] = React.useState(false);
+  const [canScrollForward, setCanScrollForward] = React.useState(false);
+  const portraitStories = React.useMemo(
+    () => stories.filter((story) =>
+      story.brandSlug === "delish"
+      && Boolean(story.videoUrl)
+      && Boolean(story.videoWidth)
+      && Boolean(story.videoHeight)
+      && (story.videoHeight ?? 0) > (story.videoWidth ?? 0)
+    ),
+    [stories]
+  );
+
+  const updateScrollState = React.useCallback(() => {
+    const scroller = scrollRef.current;
+    if (!scroller) return;
+    setCanScrollBackward(scroller.scrollLeft > 2);
+    setCanScrollForward(scroller.scrollLeft + scroller.clientWidth < scroller.scrollWidth - 2);
+  }, []);
+
+  React.useEffect(() => {
+    const scroller = scrollRef.current;
+    if (!scroller) return;
+
+    const frame = window.requestAnimationFrame(updateScrollState);
+    const resizeObserver = new ResizeObserver(updateScrollState);
+    resizeObserver.observe(scroller);
+    scroller.addEventListener("scroll", updateScrollState, { passive: true });
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      resizeObserver.disconnect();
+      scroller.removeEventListener("scroll", updateScrollState);
+    };
+  }, [portraitStories.length, updateScrollState]);
+
+  const scrollCarousel = (direction: -1 | 1) => {
+    const scroller = scrollRef.current;
+    if (!scroller) return;
+    const firstCard = scroller.firstElementChild as HTMLElement | null;
+    const cardStep = firstCard ? firstCard.offsetWidth + 12 : Math.max(180, scroller.clientWidth * 0.75);
+    scroller.scrollBy({
+      left: direction * cardStep * 2,
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+    });
+  };
+
+  if (portraitStories.length === 0) return null;
+
+  return (
+    <section
+      className={cn(
+        theme === "light"
+          ? "rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] sm:p-5"
+          : "border-y border-white/10 py-5"
+      )}
+      aria-labelledby="delish-vertical-videos-title"
+      data-testid="delish-vertical-video-carousel"
+    >
+      <div className="mb-4 flex items-center justify-between gap-4">
+        <div className="flex min-w-0 items-center gap-3">
+          <BrandSourceIcon brand="Delish" brandSlug="delish" className="h-8 w-8 shrink-0" />
+          <div className="min-w-0">
+            <h2
+              id="delish-vertical-videos-title"
+              className={cn(
+                "text-lg font-black leading-tight sm:text-xl",
+                theme === "light" ? "text-foreground" : "text-[var(--hp-text-headline)]"
+              )}
+            >
+              Delish Shorts
+            </h2>
+            <p className={cn("mt-0.5 text-xs", theme === "light" ? "text-muted-foreground" : "text-[var(--hp-text-secondary)]")}>
+              {portraitStories.length} vertical recipe {portraitStories.length === 1 ? "video" : "videos"}
+            </p>
+          </div>
+        </div>
+
+        <div className="hidden shrink-0 items-center gap-2 sm:flex" aria-label="Delish Shorts carousel controls">
+          <button
+            type="button"
+            onClick={() => scrollCarousel(-1)}
+            disabled={!canScrollBackward}
+            className={cn(
+              "inline-flex h-9 w-9 items-center justify-center rounded-full border border-border text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-35",
+              theme === "light" ? "bg-background hover:bg-muted" : "bg-[var(--hp-control)] hover:bg-[var(--hp-control-hover)]"
+            )}
+            aria-label="Previous Delish Shorts"
+          >
+            <ChevronLeft className="h-4 w-4" aria-hidden />
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollCarousel(1)}
+            disabled={!canScrollForward}
+            className={cn(
+              "inline-flex h-9 w-9 items-center justify-center rounded-full border border-border text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-35",
+              theme === "light" ? "bg-background hover:bg-muted" : "bg-[var(--hp-control)] hover:bg-[var(--hp-control-hover)]"
+            )}
+            aria-label="Next Delish Shorts"
+          >
+            <ChevronRight className="h-4 w-4" aria-hidden />
+          </button>
+        </div>
+      </div>
+
+      <div
+        ref={scrollRef}
+        className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        role="list"
+        aria-label="Vertical videos from Delish"
+      >
+        {portraitStories.map((story) => (
+          <article key={story.id} className="w-[164px] shrink-0 snap-start sm:w-[180px]" role="listitem">
+            <button
+              type="button"
+              onClick={() => onOpen(story)}
+              className="group block w-full text-left focus-visible:outline-none"
+              aria-label={`Open Delish Short: ${story.title}`}
+            >
+              <span
+                className={cn(
+                  "relative block aspect-[9/16] overflow-hidden rounded-[8px] bg-[var(--hp-surface-low)] shadow-[var(--hp-shadow-card)] transition-transform duration-200 group-hover:-translate-y-0.5 group-focus-visible:ring-2 group-focus-visible:ring-primary/60 motion-reduce:transition-none",
+                  theme === "light" ? "border border-border" : "border border-white/10"
+                )}
+              >
+                <Image
+                  src={story.image}
+                  alt=""
+                  fill
+                  sizes="(max-width: 640px) 164px, 180px"
+                  className="object-cover transition-transform duration-300 group-hover:scale-[1.02] motion-reduce:transition-none"
+                />
+                <span className="absolute bottom-2 left-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-black shadow-sm transition-transform group-hover:scale-105" aria-hidden>
+                  <Play className="ml-0.5 h-3.5 w-3.5" weight="fill" />
+                </span>
+                {story.videoDuration ? (
+                  <span className="absolute bottom-2 right-2 rounded-full bg-black/75 px-2 py-1 text-[10px] font-bold tabular-nums text-white">
+                    {formatVideoDuration(story.videoDuration)}
+                  </span>
+                ) : null}
+              </span>
+              <span className={cn("mt-2.5 line-clamp-2 min-h-10 text-sm font-bold leading-5 transition-colors group-hover:text-primary", theme === "light" ? "text-foreground" : "text-[var(--hp-text-primary)]")}>
+                {story.title}
+              </span>
+              <span className={cn("mt-1 block text-xs font-semibold", theme === "light" ? "text-muted-foreground" : "text-[var(--hp-text-secondary)]")}>
+                Delish · {story.topic}
+              </span>
+            </button>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function DelishShortsImmersiveModal({
+  stories,
+  openStoryId,
+  savedIds,
+  onClose,
+  onSelectStory,
+  onSave,
+}: {
+  stories: LifestyleRiverStory[];
+  openStoryId: string | null;
+  savedIds: string[];
+  onClose: () => void;
+  onSelectStory: (storyId: string) => void;
+  onSave: (story: LifestyleRiverStory) => void;
+}) {
+  const videoRef = React.useRef<HTMLVideoElement | null>(null);
+  const dialogRef = React.useRef<HTMLDivElement | null>(null);
+  const swipeStartRef = React.useRef<{ x: number; y: number; time: number; pointerId: number } | null>(null);
+  const swipeLastRef = React.useRef<{ x: number; y: number } | null>(null);
+  const suppressVideoClickRef = React.useRef(false);
+  const wheelLockedRef = React.useRef(false);
+  const slideFrameRef = React.useRef<number | null>(null);
+  const slideTimerRef = React.useRef<number | null>(null);
+  const swipeInstructionsId = React.useId();
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const [playing, setPlaying] = React.useState(true);
+  const [muted, setMuted] = React.useState(true);
+  const [isSwiping, setIsSwiping] = React.useState(false);
+  const [swipeOffset, setSwipeOffset] = React.useState(0);
+  const [slideTransition, setSlideTransition] = React.useState<{
+    direction: -1 | 1;
+    toStory: LifestyleRiverStory;
+    started: boolean;
+  } | null>(null);
+  const activeIndex = stories.findIndex((story) => story.id === openStoryId);
+  const activeStory = activeIndex >= 0 ? stories[activeIndex] : null;
+  const hasPrevious = activeIndex > 0;
+  const hasNext = activeIndex >= 0 && activeIndex < stories.length - 1;
+
+  const selectRelativeStory = React.useCallback((direction: -1 | 1) => {
+    const nextIndex = activeIndex + direction;
+    const nextStory = stories[nextIndex];
+    if (!nextStory || !activeStory || slideTransition) return;
+
+    if (prefersReducedMotion) {
+      onSelectStory(nextStory.id);
+      return;
+    }
+
+    setSlideTransition({ direction, toStory: nextStory, started: false });
+    slideFrameRef.current = window.requestAnimationFrame(() => {
+      slideFrameRef.current = window.requestAnimationFrame(() => {
+        setSlideTransition((current) => current ? { ...current, started: true } : current);
+      });
+    });
+    slideTimerRef.current = window.setTimeout(() => {
+      onSelectStory(nextStory.id);
+      setSlideTransition(null);
+      slideTimerRef.current = null;
+    }, 320);
+  }, [activeIndex, activeStory, onSelectStory, prefersReducedMotion, slideTransition, stories]);
+
+  const togglePlayback = React.useCallback(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) {
+      void video.play();
+    } else {
+      video.pause();
+    }
+  }, []);
+
+  const resetSwipe = React.useCallback(() => {
+    swipeStartRef.current = null;
+    swipeLastRef.current = null;
+    setIsSwiping(false);
+    setSwipeOffset(0);
+  }, []);
+
+  const handleSwipeStart = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.button !== 0) return;
+    if (event.target instanceof Element && event.target.closest("button")) return;
+
+    swipeStartRef.current = {
+      x: event.clientX,
+      y: event.clientY,
+      time: performance.now(),
+      pointerId: event.pointerId,
+    };
+    swipeLastRef.current = { x: event.clientX, y: event.clientY };
+    setIsSwiping(true);
+  };
+
+  const handleSwipeMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const start = swipeStartRef.current;
+    if (!start || start.pointerId !== event.pointerId) return;
+
+    swipeLastRef.current = { x: event.clientX, y: event.clientY };
+    const distanceX = event.clientX - start.x;
+    const distanceY = event.clientY - start.y;
+    if (Math.abs(distanceX) > Math.abs(distanceY)) return;
+
+    if (Math.abs(distanceY) >= 8 && !event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.setPointerCapture(event.pointerId);
+    }
+
+    event.preventDefault();
+    const maxOffset = event.currentTarget.clientHeight * 0.18;
+    const atBoundary = (distanceY > 0 && !hasPrevious) || (distanceY < 0 && !hasNext);
+    const adjustedDistance = atBoundary ? distanceY * 0.28 : distanceY;
+    setSwipeOffset(Math.max(-maxOffset, Math.min(maxOffset, adjustedDistance)));
+  };
+
+  const handleSwipeEnd = (event: React.PointerEvent<HTMLDivElement>) => {
+    const start = swipeStartRef.current;
+    if (!start || start.pointerId !== event.pointerId) return;
+
+    const end = swipeLastRef.current ?? { x: event.clientX, y: event.clientY };
+    const distanceX = end.x - start.x;
+    const distanceY = end.y - start.y;
+    const elapsed = Math.max(performance.now() - start.time, 1);
+    const velocity = Math.abs(distanceY) / elapsed;
+    const threshold = Math.min(64, event.currentTarget.clientHeight * 0.1);
+    const isVerticalSwipe = Math.abs(distanceY) > Math.abs(distanceX) * 1.2
+      && (Math.abs(distanceY) >= threshold || (Math.abs(distanceY) >= 28 && velocity >= 0.45));
+
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+
+    if (isVerticalSwipe) {
+      suppressVideoClickRef.current = true;
+      selectRelativeStory(distanceY < 0 ? 1 : -1);
+      window.setTimeout(() => {
+        suppressVideoClickRef.current = false;
+      }, 0);
+    }
+
+    resetSwipe();
+  };
+
+  const handleTrackpadSwipe = (event: React.WheelEvent<HTMLDivElement>) => {
+    if (wheelLockedRef.current || Math.abs(event.deltaY) < 28 || Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+    event.preventDefault();
+    wheelLockedRef.current = true;
+    selectRelativeStory(event.deltaY > 0 ? 1 : -1);
+    window.setTimeout(() => {
+      wheelLockedRef.current = false;
+    }, 600);
+  };
+
+  React.useEffect(() => {
+    if (!activeStory) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const handleKeyboard = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (event.key === "ArrowUp") {
+        event.preventDefault();
+        selectRelativeStory(-1);
+        return;
+      }
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        selectRelativeStory(1);
+        return;
+      }
+      if (event.key === " " && !(event.target instanceof HTMLButtonElement)) {
+        event.preventDefault();
+        togglePlayback();
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      const focusable = Array.from(
+        dialogRef.current?.querySelectorAll<HTMLElement>('button:not([disabled]), [tabindex]:not([tabindex="-1"])') ?? []
+      );
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (!first || !last) return;
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyboard);
+    window.requestAnimationFrame(() => {
+      dialogRef.current?.querySelector<HTMLButtonElement>('[data-delish-short-close]')?.focus();
+    });
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyboard);
+    };
+  }, [activeStory, onClose, selectRelativeStory, togglePlayback]);
+
+  React.useEffect(() => {
+    setPlaying(true);
+  }, [openStoryId]);
+
+  React.useEffect(() => () => {
+    if (slideFrameRef.current !== null) window.cancelAnimationFrame(slideFrameRef.current);
+    if (slideTimerRef.current !== null) window.clearTimeout(slideTimerRef.current);
+  }, []);
+
+  if (!activeStory || typeof document === "undefined") return null;
+
+  const saved = savedIds.includes(activeStory.id);
+  const controlButtonClass = "inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-inset ring-white/15 transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white disabled:cursor-not-allowed disabled:opacity-30";
+
+  return createPortal(
+    <div
+      ref={dialogRef}
+      className="fixed inset-0 z-[260] overflow-hidden bg-black text-white"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="delish-short-title"
+      aria-describedby={swipeInstructionsId}
+      data-testid="delish-shorts-immersive-modal"
+    >
+      <p id={swipeInstructionsId} className="sr-only">
+        Swipe up for the next Delish Short or swipe down for the previous one. You can also use the up and down arrow keys.
+      </p>
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-30 flex items-center justify-between gap-4 p-4 sm:p-5">
+        <div className="pointer-events-auto flex min-w-0 items-center gap-2 rounded-full bg-black/70 px-3 py-2 ring-1 ring-inset ring-white/10">
+          <BrandSourceIcon brand="Delish" brandSlug="delish" className="h-6 w-6 shrink-0" />
+          <span className="truncate text-sm font-black">Delish Shorts</span>
+          <span className="text-xs text-white/60">{activeIndex + 1}/{stories.length}</span>
+        </div>
+        <button
+          type="button"
+          data-delish-short-close
+          onClick={onClose}
+          className={cn(controlButtonClass, "pointer-events-auto bg-black/70")}
+          aria-label="Close Delish Shorts viewer"
+        >
+          <X className="h-5 w-5" aria-hidden />
+        </button>
+      </div>
+
+      <div className="flex h-full items-center justify-center gap-4 px-0 sm:px-4">
+        <div
+          data-testid="delish-short-swipe-surface"
+          className={cn(
+            "relative max-h-[100dvh] touch-none select-none overflow-hidden bg-[#111] sm:max-h-[calc(100dvh-32px)] sm:rounded-[14px] sm:ring-1 sm:ring-inset sm:ring-white/10"
+          )}
+          style={{
+            width: "min(100vw, calc((100dvh - 32px) * 9 / 16))",
+            aspectRatio: "9 / 16",
+          }}
+          onPointerDown={handleSwipeStart}
+          onPointerMove={handleSwipeMove}
+          onPointerUp={handleSwipeEnd}
+          onPointerCancel={resetSwipe}
+          onWheel={handleTrackpadSwipe}
+          onDragStart={(event) => event.preventDefault()}
+        >
+          {[activeStory, ...(slideTransition ? [slideTransition.toStory] : [])].map((story) => {
+            const isOutgoing = story.id === activeStory.id;
+            const isControlTarget = story.id === (slideTransition?.toStory.id ?? activeStory.id);
+            const transform = slideTransition
+              ? isOutgoing
+                ? `translateY(${slideTransition.started ? -slideTransition.direction * 100 : 0}%)`
+                : `translateY(${slideTransition.started ? 0 : slideTransition.direction * 100}%)`
+              : `translateY(${swipeOffset}px)`;
+
+            return (
+              <div
+                key={story.id}
+                className={cn(
+                  "absolute inset-0 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                  isSwiping ? "transition-none" : "transition-transform duration-300 motion-reduce:transition-none"
+                )}
+                style={{ transform }}
+                aria-hidden={!isOutgoing}
+              >
+                <video
+                  ref={isControlTarget ? videoRef : undefined}
+                  src={story.videoUrl}
+                  poster={story.image}
+                  autoPlay
+                  muted={muted}
+                  playsInline
+                  preload="auto"
+                  className="h-full w-full cursor-pointer bg-black object-contain"
+                  aria-label={`Delish Short: ${story.title}`}
+                  onClick={(event) => {
+                    if (suppressVideoClickRef.current) {
+                      event.preventDefault();
+                      return;
+                    }
+                    togglePlayback();
+                  }}
+                  onPlay={() => isControlTarget && setPlaying(true)}
+                  onPause={() => isControlTarget && setPlaying(false)}
+                  onEnded={() => isControlTarget && selectRelativeStory(1)}
+                />
+
+                <div className="absolute bottom-0 left-0 right-0 z-20 bg-black/75 p-4 pb-5 pr-16 sm:p-5 sm:pr-5">
+                  <div className="flex items-center gap-2 text-xs font-bold text-white/75">
+                    <BrandSourceIcon brand="Delish" brandSlug="delish" className="h-5 w-5" />
+                    <span>Delish · {story.topic}</span>
+                    {story.videoDuration ? <span>· {formatVideoDuration(story.videoDuration)}</span> : null}
+                  </div>
+                  <h2
+                    id={isOutgoing ? "delish-short-title" : undefined}
+                    className="mt-2 line-clamp-2 text-lg font-black leading-tight sm:text-xl"
+                  >
+                    {story.title}
+                  </h2>
+                </div>
+              </div>
+            );
+          })}
+
+          <div className="absolute bottom-36 right-3 z-30 flex flex-col gap-3 sm:hidden">
+            <button type="button" onClick={() => onSave(activeStory)} className={controlButtonClass} aria-label={saved ? "Remove saved short" : "Save short"} aria-pressed={saved}>
+              <Bookmark className="h-5 w-5" weight={saved ? "fill" : "regular"} aria-hidden />
+            </button>
+            <button type="button" onClick={() => setMuted((value) => !value)} className={controlButtonClass} aria-label={muted ? "Unmute short" : "Mute short"} aria-pressed={!muted}>
+              {muted ? <VolumeX className="h-5 w-5" aria-hidden /> : <Volume2 className="h-5 w-5" aria-hidden />}
+            </button>
+            <button type="button" onClick={togglePlayback} className={controlButtonClass} aria-label={playing ? "Pause short" : "Play short"} aria-pressed={playing}>
+              {playing ? <Pause className="h-5 w-5" aria-hidden /> : <Play className="h-5 w-5" weight="fill" aria-hidden />}
+            </button>
+          </div>
+        </div>
+
+        <div className="hidden flex-col items-center gap-3 sm:flex" aria-label="Delish Shorts viewer controls">
+          <button type="button" onClick={() => selectRelativeStory(-1)} disabled={!hasPrevious} className={controlButtonClass} aria-label="Previous Delish Short">
+            <ChevronUpIcon className="h-5 w-5" aria-hidden />
+          </button>
+          <button type="button" onClick={() => selectRelativeStory(1)} disabled={!hasNext} className={controlButtonClass} aria-label="Next Delish Short">
+            <ChevronDown className="h-5 w-5" aria-hidden />
+          </button>
+          <span className="my-1 h-px w-7 bg-white/15" aria-hidden />
+          <button type="button" onClick={() => onSave(activeStory)} className={controlButtonClass} aria-label={saved ? "Remove saved short" : "Save short"} aria-pressed={saved}>
+            <Bookmark className="h-5 w-5" weight={saved ? "fill" : "regular"} aria-hidden />
+          </button>
+          <button type="button" onClick={() => setMuted((value) => !value)} className={controlButtonClass} aria-label={muted ? "Unmute short" : "Mute short"} aria-pressed={!muted}>
+            {muted ? <VolumeX className="h-5 w-5" aria-hidden /> : <Volume2 className="h-5 w-5" aria-hidden />}
+          </button>
+          <button type="button" onClick={togglePlayback} className={controlButtonClass} aria-label={playing ? "Pause short" : "Play short"} aria-pressed={playing}>
+            {playing ? <Pause className="h-5 w-5" aria-hidden /> : <Play className="h-5 w-5" weight="fill" aria-hidden />}
+          </button>
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+}
+
 function getPersonalizedLeadSliderStories(
   stories: LifestyleRiverStory[],
   profile: LifestyleRiverProfile,
@@ -4264,6 +4793,7 @@ function LifestyleLeadSlider({
   onSave,
   onMoreLikeThis,
   onFollowBrand,
+  indicatorPalette,
 }: {
   stories: LifestyleRiverStory[];
   savedIds: string[];
@@ -4272,6 +4802,7 @@ function LifestyleLeadSlider({
   onSave: (story: LifestyleRiverStory) => void;
   onMoreLikeThis: (story: LifestyleRiverStory) => void;
   onFollowBrand: (brandName: string) => void;
+  indicatorPalette?: readonly string[];
 }) {
   const prefersReducedMotion = usePrefersReducedMotion();
   const [activeIndex, setActiveIndex] = React.useState(0);
@@ -4516,9 +5047,13 @@ function LifestyleLeadSlider({
             >
               <span
                 aria-hidden
+                style={indicatorPalette?.length
+                  ? { backgroundColor: indicatorPalette[index % indicatorPalette.length] }
+                  : undefined}
                 className={cn(
                   "h-1.5 rounded-full transition-all motion-reduce:transition-none",
-                  index === activeIndex ? "w-8 bg-primary" : "w-4 bg-muted-foreground/30"
+                  index === activeIndex ? "w-8" : "w-4",
+                  !indicatorPalette?.length && (index === activeIndex ? "bg-primary" : "bg-muted-foreground/30")
                 )}
               />
             </button>
@@ -7726,6 +8261,7 @@ type LifestyleRiverHomePageProps = {
   onRiverReset?: () => void;
   onBrandFilterChange?: () => void;
   onSelectedBrandChange?: (brand: { name: string; slug: string } | null) => void;
+  indicatorPalette?: readonly string[];
   activeBrandFilters?: string[];
   onActiveBrandFiltersChange?: React.Dispatch<React.SetStateAction<string[]>>;
 };
@@ -8412,6 +8948,7 @@ function LifestyleRiverHomePage({
   onRiverReset,
   onBrandFilterChange,
   onSelectedBrandChange,
+  indicatorPalette,
   activeBrandFilters: controlledActiveBrandFilters,
   onActiveBrandFiltersChange,
 }: LifestyleRiverHomePageProps) {
@@ -8428,6 +8965,8 @@ function LifestyleRiverHomePage({
   const activeBrandFilters = controlledActiveBrandFilters ?? internalActiveBrandFilters;
   const setActiveBrandFilters = onActiveBrandFiltersChange ?? setInternalActiveBrandFilters;
   const [openStoryId, setOpenStoryId] = React.useState<string | null>(initialOpenStoryId ?? null);
+  const [openDelishShortId, setOpenDelishShortId] = React.useState<string | null>(null);
+  const delishShortOpenerRef = React.useRef<HTMLElement | null>(null);
   const [commentsByStoryId, setCommentsByStoryId] = React.useState<Record<string, LifestyleStoryComment[]>>({});
   const [demoModalOpen, setDemoModalOpen] = React.useState(false);
   const [visibleCount, setVisibleCount] = React.useState(8);
@@ -8489,6 +9028,18 @@ function LifestyleRiverHomePage({
       router.push(currentReaderReturnHref, { scroll: false });
     }
   }, [currentReaderReturnHref, pathname, router]);
+
+  const openDelishShort = React.useCallback((storyId: string) => {
+    delishShortOpenerRef.current = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
+    setOpenDelishShortId(storyId);
+  }, []);
+
+  const closeDelishShort = React.useCallback(() => {
+    setOpenDelishShortId(null);
+    window.requestAnimationFrame(() => delishShortOpenerRef.current?.focus());
+  }, []);
 
   const updateReaderProfile = React.useCallback((updater: React.SetStateAction<LifestyleRiverProfile>) => {
     const current = profileRef.current;
@@ -8904,10 +9455,25 @@ function LifestyleRiverHomePage({
   const videoStories = isVideoQueueView
     ? videoQueueStories.filter((story) => getLifestyleCardKind(story) === "video")
     : [];
-  const featuredVideo = videoStories[0] ?? leadStory;
+  const isDelishPublicationRiver = initialBrandSlug === "delish" && !usingVideoTabFeed;
+  const delishVerticalVideoStories = usingVideoTabFeed || isDelishPublicationRiver
+    ? videoTabStories.filter((story) =>
+        story.brandSlug === "delish"
+        && Boolean(story.videoUrl)
+        && Boolean(story.videoWidth)
+        && Boolean(story.videoHeight)
+        && (story.videoHeight ?? 0) > (story.videoWidth ?? 0)
+      )
+    : [];
+  const delishVerticalVideoIds = new Set(delishVerticalVideoStories.map((story) => story.id));
+  const standardVideoStories = videoStories.filter((story) => !delishVerticalVideoIds.has(story.id));
+  const featuredVideo = standardVideoStories[0] ?? videoStories[0] ?? leadStory;
   const remainingVideoStories = featuredVideo
-    ? videoStories.filter((story) => story.id !== featuredVideo.id)
-    : videoStories;
+    ? standardVideoStories.filter((story) => story.id !== featuredVideo.id)
+    : standardVideoStories;
+  const showDelishVerticalVideoCarousel = usingVideoTabFeed
+    && (effectiveBrandFilters.length === 0 || effectiveBrandFilters.includes("Delish"));
+  const showDelishPublicationShorts = isDelishPublicationRiver && delishVerticalVideoStories.length > 0;
   // Scoped exception: the Videos tab uses the dark video-index treatment inside otherwise light destinations.
   // Keep these tokens local to this wrapper so the exception does not affect the global Hearst+ theme.
   const videoDarkModeThemeClasses =
@@ -8967,6 +9533,13 @@ function LifestyleRiverHomePage({
                   variant="videoIndex"
                   eyebrowLabel={usingVideoTabFeed ? "Recommended video" : undefined}
                 />
+
+                {showDelishVerticalVideoCarousel ? (
+                  <DelishVerticalVideoCarousel
+                    stories={delishVerticalVideoStories}
+                    onOpen={(story) => openDelishShort(story.id)}
+                  />
+                ) : null}
 
                 <div className="flex items-center justify-between gap-3 pt-2">
                   <div>
@@ -9103,6 +9676,15 @@ function LifestyleRiverHomePage({
           onAddComment={addStoryComment}
         />
 
+        <DelishShortsImmersiveModal
+          stories={delishVerticalVideoStories}
+          openStoryId={openDelishShortId}
+          savedIds={profile.savedIds}
+          onClose={closeDelishShort}
+          onSelectStory={setOpenDelishShortId}
+          onSave={toggleSaved}
+        />
+
         <Button
           type="button"
           variant="default"
@@ -9175,7 +9757,16 @@ function LifestyleRiverHomePage({
                 onSave={toggleSaved}
                 onMoreLikeThis={boostStory}
                 onFollowBrand={followBrand}
+                indicatorPalette={indicatorPalette}
               />
+
+              {showDelishPublicationShorts ? (
+                <DelishVerticalVideoCarousel
+                  stories={delishVerticalVideoStories}
+                  onOpen={(story) => openDelishShort(story.id)}
+                  theme="light"
+                />
+              ) : null}
 
               {riverStories.map((story, index) => {
                 const storyPosition = index + heroStories.length + 1;
@@ -9385,6 +9976,15 @@ function LifestyleRiverHomePage({
         onMoreLikeThis={boostStory}
         onToggleFollowBrand={toggleFollowBrand}
         onAddComment={addStoryComment}
+      />
+
+      <DelishShortsImmersiveModal
+        stories={delishVerticalVideoStories}
+        openStoryId={openDelishShortId}
+        savedIds={profile.savedIds}
+        onClose={closeDelishShort}
+        onSelectStory={setOpenDelishShortId}
+        onSave={toggleSaved}
       />
 
       <Button
@@ -9598,6 +10198,12 @@ export function HomePageTemplate({
     () => selectedBrandTheme ? brandToCssVars(selectedBrandTheme, colorMode) : undefined,
     [colorMode, selectedBrandTheme]
   );
+  const selectedBrandIndicatorPalette = React.useMemo(
+    () => selectedBrand?.slug === "delish" && selectedBrandTheme
+      ? ["1", "2", "3", "4", "5"].map((token) => selectedBrandTheme.colors[token])
+      : undefined,
+    [selectedBrand?.slug, selectedBrandTheme]
+  );
   const homePageThemeCssVars = React.useMemo(
     () => ({
       ...selectedBrandCssVars,
@@ -9626,7 +10232,7 @@ export function HomePageTemplate({
   const progressiveFeedBrandSlug = selectedBrand?.slug ?? getReaderOriginBrandSlug(readerReturnHref);
   const [resolvedVideoFeedData, setResolvedVideoFeedData] = React.useState(videoFeedData);
   const shouldProgressivelyLoadEditorial = activeLifestyleFilter !== "Videos" && liveFeedMode === "blend";
-  const [initialProgressiveEditorialReady, setInitialProgressiveEditorialReady] = React.useState(!shouldProgressivelyLoadEditorial);
+  const [initialProgressiveEditorialReady, setInitialProgressiveEditorialReady] = React.useState(true);
   React.useEffect(() => {
     setResolvedVideoFeedData(videoFeedData);
   }, [destinationMode, selectedBrand?.slug, videoFeedData]);
@@ -9704,7 +10310,7 @@ export function HomePageTemplate({
   const [progressiveEditorialStories, setProgressiveEditorialStories] = React.useState<LifestyleRiverStory[]>([]);
   React.useEffect(() => {
     setProgressiveEditorialStories([]);
-    setInitialProgressiveEditorialReady(!shouldProgressivelyLoadEditorial);
+    setInitialProgressiveEditorialReady(true);
   }, [destinationMode, progressiveFeedBrandSlug, shouldProgressivelyLoadEditorial, staticDestinationData]);
   React.useEffect(() => {
     if (!shouldProgressivelyLoadEditorial) {
@@ -10014,6 +10620,7 @@ export function HomePageTemplate({
               onRiverReset={anchorDestinationContent}
               onBrandFilterChange={anchorPageToTop}
               onSelectedBrandChange={handleSelectedBrandChange}
+              indicatorPalette={selectedBrandIndicatorPalette}
               activeBrandFilters={activeBrandFilters}
               onActiveBrandFiltersChange={setActiveBrandFilters}
             />

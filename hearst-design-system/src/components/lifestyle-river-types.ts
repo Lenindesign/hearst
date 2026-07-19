@@ -18,6 +18,8 @@ export type LifestyleRiverStory = {
   mediaKind?: "video";
   videoUrl?: string;
   videoDuration?: number;
+  videoWidth?: number;
+  videoHeight?: number;
 };
 
 export type LifestyleRiverProfile = {

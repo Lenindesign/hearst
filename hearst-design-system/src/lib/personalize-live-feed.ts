@@ -153,7 +153,9 @@ type ApiVideoRecommendation = {
     codec?: string | null;
     display_name?: string;
     full_url?: string;
+    height?: number;
     preset_name?: string;
+    width?: number;
   }>;
 };
 
@@ -239,7 +241,7 @@ function mapRecommendation(
   };
 }
 
-function getPreferredVideoUrl(item: ApiVideoRecommendation) {
+function getPreferredVideoTranscoding(item: ApiVideoRecommendation) {
   const mp4Transcodings = (item.transcodings ?? []).filter((transcoding) =>
     transcoding.full_url?.toLowerCase().includes(".mp4")
   );
@@ -249,10 +251,10 @@ function getPreferredVideoUrl(item: ApiVideoRecommendation) {
     const match = mp4Transcodings.find((transcoding) =>
       `${transcoding.display_name ?? ""} ${transcoding.preset_name ?? ""}`.toLowerCase().includes(name)
     );
-    if (match?.full_url) return match.full_url;
+    if (match?.full_url) return match;
   }
 
-  return mp4Transcodings[0]?.full_url;
+  return mp4Transcodings[0];
 }
 
 function mapVideoRecommendation(
@@ -263,7 +265,8 @@ function mapVideoRecommendation(
   const [, brandName, brandSlug, fallbackTopic] = brand;
   const title = stripHtml(item.title);
   const image = withProtocol(item.preview_image);
-  const videoUrl = withProtocol(getPreferredVideoUrl(item));
+  const preferredTranscoding = getPreferredVideoTranscoding(item);
+  const videoUrl = withProtocol(preferredTranscoding?.full_url);
   if (!item.id || !title || !image || !videoUrl || isExcludedContentTitle(title)) return null;
 
   const publishedAt = item.published_at;
@@ -289,6 +292,8 @@ function mapVideoRecommendation(
     mediaKind: "video",
     videoUrl,
     videoDuration: duration,
+    videoWidth: preferredTranscoding?.width,
+    videoHeight: preferredTranscoding?.height,
   };
 }
 
