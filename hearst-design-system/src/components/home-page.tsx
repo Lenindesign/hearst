@@ -10534,6 +10534,8 @@ export function HomePageTemplate({
         await waitForIdleTime();
         if (controller.signal.aborted) return;
 
+        const requestedOffset = offset;
+
         const searchParams = new URLSearchParams({
           destination: destinationMode,
           offset: String(offset),
@@ -10548,6 +10550,15 @@ export function HomePageTemplate({
           if (!response.ok) throw new Error(`Progressive story feed returned ${response.status}`);
           const page = await response.json() as ProgressiveFeedPage;
           if (controller.signal.aborted) return;
+
+          if (page.hasMore && page.nextOffset <= requestedOffset) {
+            setInitialProgressiveEditorialReady(true);
+            console.warn("Progressive story feed did not advance.", {
+              requestedOffset,
+              nextOffset: page.nextOffset,
+            });
+            return;
+          }
 
           setProgressiveEditorialStories((currentStories) =>
             mergeUniqueStories(currentStories, page.stories)

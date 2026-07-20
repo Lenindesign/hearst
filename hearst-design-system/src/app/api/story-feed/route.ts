@@ -63,17 +63,10 @@ export async function GET(request: NextRequest) {
   const stories = eligibleStories.slice(offset, offset + limit);
   const nextOffset = offset + stories.length;
 
-  return NextResponse.json(
-    {
-      stories,
-      nextOffset,
-      total: eligibleStories.length,
-      hasMore: nextOffset < eligibleStories.length,
-    },
-    {
-      headers: {
-        "Cache-Control": "public, max-age=60, stale-while-revalidate=300",
-      },
-    },
-  );
+  return NextResponse.json({
+    stories,
+    nextOffset,
+    total: eligibleStories.length,
+    hasMore: nextOffset < eligibleStories.length,
+  });
 }
