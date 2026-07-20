@@ -12,6 +12,7 @@ import { brandIconLogos, brandLogos } from "@/lib/logos";
 import {
   getHearstBrandSection,
   getHearstBrandRoute,
+  getHearstDestinationCategoryLabel,
   getHearstDestinationCategoryRoute,
   getHearstDestinationRoute,
 } from "@/lib/hearst-routes";
@@ -531,6 +532,18 @@ function BrandSourceIcon({
 }
 
 type DestinationMode = "all" | "lifestyle" | "autos" | "flux" | "ew";
+
+const destinationPageNames: Record<DestinationMode, string> = {
+  all: "Hearst+",
+  lifestyle: "Hearst Lifestyle",
+  autos: "Hearst Autos",
+  flux: "Hearst Fashion & Luxury",
+  ew: "Hearst Enthusiast & Wellness",
+};
+
+function getDestinationCategoryDocumentTitle(destination: DestinationMode, filter: string) {
+  return `${filter} | ${destinationPageNames[destination]}`;
+}
 type DestinationSourceNote = {
   brand: string;
   brandSlug: string;
@@ -801,7 +814,18 @@ function getLifestyleTimeOfDayScore(
 
 function getLifestyleRecencyScore(story: LifestyleRiverStory, demoState: LifestyleDemoState) {
   const freshSinceLastVisit = demoState.returnHours > 0 && story.age <= demoState.returnHours + 2;
-  return Math.max(0, 12 - story.age) + (freshSinceLastVisit ? 12 : 0);
+  const publicationFreshness =
+    story.age <= 6
+      ? 48
+      : story.age <= 24
+        ? 36
+        : story.age <= 72
+          ? 18
+          : story.age <= 168
+            ? 8
+            : 0;
+
+  return publicationFreshness + (freshSinceLastVisit ? 12 : 0);
 }
 
 function getLifestyleScoreBreakdown(
@@ -824,7 +848,7 @@ function getLifestyleScoreBreakdown(
   const timeOfDay = getLifestyleTimeOfDayScore(story, demoState, config);
   const isFirstMorningVisit =
     demoState.contentDay === "today" && demoState.returnHours === 0 && demoState.daypart === "morning";
-  const defaultLead = !isOnboardingPersonalized && config.defaultLeadStoryId === story.id && isFirstMorningVisit ? 80 : 0;
+  const defaultLead = !isOnboardingPersonalized && config.defaultLeadStoryId === story.id && isFirstMorningVisit ? 24 : 0;
   const returnFreshness =
     demoState.returnHours > 0 && story.id !== demoState.previousLeadId && story.age <= demoState.returnHours + 4
       ? 24
@@ -2105,6 +2129,11 @@ function MainNav({
       <LinkComponent
         key={link}
         href={categoryHref}
+        onClick={(event) => {
+          if (!onFilterChange) return;
+          event.preventDefault();
+          onFilterChange(link);
+        }}
         variant="neutral"
         underline={false}
         size="sm"
@@ -8481,7 +8510,6 @@ type LifestyleRiverHomePageProps = {
   destination: DestinationMode;
   destinationConfig?: DestinationConfig;
   videoFeedData?: LiveFeedData;
-  initialFeedReady?: boolean;
   initialBrandSlug?: string;
   initialOpenStoryId?: string;
   readerReturnHref?: string;
@@ -8498,6 +8526,8 @@ function getLifestyleRiverPageHeading(config: DestinationConfig, initialBrandSlu
   const initialBrandName = config.sourceNotes.find((note) => note.brandSlug === initialBrandSlug)?.brand;
   return `${initialBrandName ?? config.productName} personalized story feed`;
 }
+
+const initialLifestyleRiverStoryCount = 13;
 
 function LifestyleRiverLoadingState({ pageHeading }: { pageHeading: string }) {
   return (
@@ -9153,11 +9183,10 @@ function LifestyleRiverHydrationGate(props: LifestyleRiverHomePageProps) {
   const config = props.destinationConfig ?? destinationConfigs[props.destination];
   const pageHeading = getLifestyleRiverPageHeading(config, props.initialBrandSlug);
   const useFlushVideoTop = props.activeFilter === "Videos" && Boolean(props.videoFeedData);
-  const initialFeedReady = props.initialFeedReady ?? true;
 
   return (
     <div className={cn("flow-root min-h-[calc(100dvh-173px)] md:min-h-[calc(100dvh-171px)]", !useFlushVideoTop && "md:pt-8")}>
-      {isHydrated && initialFeedReady
+      {isHydrated
         ? <LifestyleRiverHomePage {...props} />
         : <LifestyleRiverLoadingState pageHeading={pageHeading} />}
     </div>
@@ -9197,7 +9226,7 @@ function LifestyleRiverHomePage({
   const delishShortOpenerRef = React.useRef<HTMLElement | null>(null);
   const [commentsByStoryId, setCommentsByStoryId] = React.useState<Record<string, LifestyleStoryComment[]>>({});
   const [demoModalOpen, setDemoModalOpen] = React.useState(false);
-  const [visibleCount, setVisibleCount] = React.useState(8);
+  const [visibleCount, setVisibleCount] = React.useState(initialLifestyleRiverStoryCount);
   const [delishShortsRiverPlacement, setDelishShortsRiverPlacement] = React.useState<{
     scopeKey: string;
     index: number;
@@ -9219,7 +9248,7 @@ function LifestyleRiverHomePage({
   }, [pathname, searchParams]);
   const currentReaderReturnHref = safeReaderReturnHref ?? (initialBrandSlug ? getHearstBrandRoute(initialBrandSlug) : getHearstDestinationRoute(destination));
   const storyOpenReturnHref = safeReaderReturnHref ?? currentPageReturnHref ?? currentReaderReturnHref;
-  const profileSourceKey = `${readerAccountId ?? "guest"}:${config.productName}:${initialBrandSlug ?? ""}`;
+  const profileSourceKey = `${readerAccountId ?? "guest"}:${config.productName}:${initialBrandSlug ?? ""}:${activeFilter}`;
   const profileReady = profileReadyKey === profileSourceKey;
 
   React.useEffect(() => {
@@ -9365,7 +9394,7 @@ function LifestyleRiverHomePage({
       return true;
     });
   }, [config.stories, destination, destinationConfigs, videoTabStories]);
-  const displayStories = React.useMemo(() => {
+  const candidateDisplayStories = React.useMemo(() => {
     if (!config.liveFeedStatus || config.liveFeedMode === "blend") return filteredStories;
     const firstVideoIndex = filteredStories.findIndex((story) => Boolean(story.videoUrl));
     if (firstVideoIndex < 0 || firstVideoIndex < 8) return filteredStories;
@@ -9375,6 +9404,52 @@ function LifestyleRiverHomePage({
     reorderedStories.splice(Math.min(5, reorderedStories.length), 0, firstVideo);
     return reorderedStories;
   }, [config.liveFeedMode, config.liveFeedStatus, filteredStories]);
+  const displayOrderScopeKey = React.useMemo(() => JSON.stringify({
+    activeFilter,
+    destination,
+    effectiveBrandFilters,
+    initialBrandSlug,
+    demoState,
+    profile: rankingProfile,
+    usingVideoTabFeed,
+  }), [activeFilter, demoState, destination, effectiveBrandFilters, initialBrandSlug, rankingProfile, usingVideoTabFeed]);
+  const candidateDisplayStoryIds = React.useMemo(
+    () => candidateDisplayStories.map((story) => story.id),
+    [candidateDisplayStories]
+  );
+  const [displayOrderState, setDisplayOrderState] = React.useState<{ scopeKey: string; storyIds: string[] }>({
+    scopeKey: "",
+    storyIds: [],
+  });
+  React.useEffect(() => {
+    if (!profileReady) return;
+
+    setDisplayOrderState((current) => {
+      if (current.scopeKey !== displayOrderScopeKey) {
+        return { scopeKey: displayOrderScopeKey, storyIds: candidateDisplayStoryIds };
+      }
+
+      const retainedStoryIdSet = new Set(current.storyIds);
+      const nextStoryIds = [
+        ...current.storyIds,
+        ...candidateDisplayStoryIds.filter((storyId) => !retainedStoryIdSet.has(storyId)),
+      ];
+      const isUnchanged = nextStoryIds.length === current.storyIds.length
+        && nextStoryIds.every((storyId, index) => storyId === current.storyIds[index]);
+
+      return isUnchanged ? current : { scopeKey: displayOrderScopeKey, storyIds: nextStoryIds };
+    });
+  }, [candidateDisplayStoryIds, displayOrderScopeKey, profileReady]);
+  const displayStories = React.useMemo(() => {
+    const storiesById = new Map(candidateDisplayStories.map((story) => [story.id, story]));
+    const activeStoryIds = displayOrderState.scopeKey === displayOrderScopeKey
+      ? displayOrderState.storyIds
+      : candidateDisplayStoryIds;
+
+    return activeStoryIds
+      .map((storyId) => storiesById.get(storyId))
+      .filter((story): story is LifestyleRiverStory => Boolean(story));
+  }, [candidateDisplayStories, candidateDisplayStoryIds, displayOrderScopeKey, displayOrderState]);
   const visibleStories = displayStories.slice(0, visibleCount);
   const isDelishPublicationRiver = initialBrandSlug === "delish" && !usingVideoTabFeed;
   const delishVerticalVideoStories = videoTabStories.filter((story) =>
@@ -9495,7 +9570,7 @@ function LifestyleRiverHomePage({
   }, [effectiveBrandFilters, onSelectedBrandChange, sidebarBrands, usingVideoTabFeed]);
 
   React.useEffect(() => {
-    setVisibleCount(8);
+    setVisibleCount(initialLifestyleRiverStoryCount);
   }, [activeFilter, demoState.contentDay, demoState.daypart, effectiveBrandFilters]);
 
   React.useEffect(() => {
@@ -10507,9 +10582,6 @@ export function HomePageTemplate({
   const [selectedBrand, setSelectedBrand] = React.useState<{ name: string; slug: string } | null>(() =>
     getBrandRouteInfo(destinationConfigs.all.sourceNotes, initialBrandSlug)
   );
-  React.useEffect(() => {
-    if (initialFilter) setActiveLifestyleFilter(initialFilter);
-  }, [initialFilter]);
   const selectedBrandTheme = React.useMemo(
     () => getSelectedBrandTheme(selectedBrand, brand),
     [brand, selectedBrand]
@@ -10549,12 +10621,34 @@ export function HomePageTemplate({
   const destinationContentRef = React.useRef<HTMLDivElement | null>(null);
   const isDestinationRiver = brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
   const destinationMode = getDestinationMode(selectedBrand?.slug ?? initialBrandSlug ?? brand.slug);
+  React.useEffect(() => {
+    if (selectedBrand) return;
+
+    const syncFilterFromHistory = () => {
+      const currentPath = window.location.pathname;
+      const destinationRoot = getHearstDestinationRoute(destinationMode);
+      if (currentPath === destinationRoot || currentPath === destinationRoot.replace(/\/$/, "")) {
+        setActiveLifestyleFilter("For You");
+        document.title = destinationPageNames[destinationMode];
+        return;
+      }
+
+      const categorySlug = currentPath.split("/").filter(Boolean).at(-1);
+      const categoryLabel = categorySlug
+        ? getHearstDestinationCategoryLabel(destinationMode, categorySlug)
+        : undefined;
+      if (categoryLabel) {
+        setActiveLifestyleFilter(categoryLabel);
+        document.title = getDestinationCategoryDocumentTitle(destinationMode, categoryLabel);
+      }
+    };
+
+    window.addEventListener("popstate", syncFilterFromHistory);
+    return () => window.removeEventListener("popstate", syncFilterFromHistory);
+  }, [destinationMode, selectedBrand]);
   const progressiveFeedBrandSlug = selectedBrand?.slug ?? getReaderOriginBrandSlug(readerReturnHref);
   const [resolvedVideoFeedData, setResolvedVideoFeedData] = React.useState(videoFeedData);
   const shouldProgressivelyLoadEditorial = activeLifestyleFilter !== "Videos" && liveFeedMode === "blend";
-  const [initialProgressiveEditorialReady, setInitialProgressiveEditorialReady] = React.useState(
-    !shouldProgressivelyLoadEditorial
-  );
   React.useEffect(() => {
     setResolvedVideoFeedData(videoFeedData);
   }, [destinationMode, selectedBrand?.slug, videoFeedData]);
@@ -10632,13 +10726,9 @@ export function HomePageTemplate({
   const [progressiveEditorialStories, setProgressiveEditorialStories] = React.useState<LifestyleRiverStory[]>([]);
   React.useEffect(() => {
     setProgressiveEditorialStories([]);
-    setInitialProgressiveEditorialReady(!shouldProgressivelyLoadEditorial);
   }, [destinationMode, progressiveFeedBrandSlug, shouldProgressivelyLoadEditorial, staticDestinationData]);
   React.useEffect(() => {
-    if (!shouldProgressivelyLoadEditorial) {
-      setInitialProgressiveEditorialReady(true);
-      return;
-    }
+    if (!shouldProgressivelyLoadEditorial) return;
 
     const controller = new AbortController();
     let idleCallbackId: number | undefined;
@@ -10680,7 +10770,6 @@ export function HomePageTemplate({
           if (controller.signal.aborted) return;
 
           if (page.hasMore && page.nextOffset <= requestedOffset) {
-            setInitialProgressiveEditorialReady(true);
             console.warn("Progressive story feed did not advance.", {
               requestedOffset,
               nextOffset: page.nextOffset,
@@ -10691,13 +10780,9 @@ export function HomePageTemplate({
           setProgressiveEditorialStories((currentStories) =>
             mergeUniqueStories(currentStories, page.stories)
           );
-          if (!page.hasMore) {
-            setInitialProgressiveEditorialReady(true);
-          }
           offset = page.nextOffset;
           hasMore = page.hasMore;
         } catch (error) {
-          setInitialProgressiveEditorialReady(true);
           if (!controller.signal.aborted) {
             console.warn("Unable to progressively load the remaining stories.", error);
           }
@@ -10877,8 +10962,16 @@ export function HomePageTemplate({
   const handleLifestyleFilterChange = React.useCallback((filter: string) => {
     setActiveLifestyleFilter(filter);
 
+    if (!selectedBrand) {
+      const nextPath = getHearstDestinationCategoryRoute(destinationMode, filter);
+      if (nextPath && window.location.pathname !== nextPath) {
+        window.history.pushState(window.history.state, "", nextPath);
+        document.title = getDestinationCategoryDocumentTitle(destinationMode, filter);
+      }
+    }
+
     anchorDestinationContent();
-  }, [anchorDestinationContent]);
+  }, [anchorDestinationContent, destinationMode, selectedBrand]);
   const handleSelectedBrandChange = React.useCallback((nextBrand: { name: string; slug: string } | null) => {
     if ((selectedBrand?.slug ?? null) === (nextBrand?.slug ?? null)) return;
 
@@ -10950,7 +11043,6 @@ export function HomePageTemplate({
               destination={destinationMode}
               destinationConfig={inventoryAwareDestinationConfig}
               videoFeedData={resolvedVideoFeedData}
-              initialFeedReady={initialProgressiveEditorialReady}
               initialBrandSlug={initialBrandSlug}
               initialOpenStoryId={initialOpenStoryId}
               readerReturnHref={readerReturnHref}

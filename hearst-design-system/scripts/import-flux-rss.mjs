@@ -102,6 +102,12 @@ function makeSignal(index) {
   return ["Most Popular", "Trending", "Editor Pick", "Continue"][index % 4];
 }
 
+function getAgeInHours(publishedAt) {
+  const publishedTime = Date.parse(publishedAt ?? "");
+  if (!Number.isFinite(publishedTime)) return 168;
+  return Math.max(0, Math.floor((Date.now() - publishedTime) / 3_600_000));
+}
+
 async function fetchFeed(feedUrl) {
   const response = await fetch(feedUrl, {
     headers: { "user-agent": "Hearst Flux Storybook Prototype Importer" },
@@ -212,7 +218,7 @@ const deduped = selected.map((story, index) => ({
   popularity: Math.max(55, 100 - (index % 46)),
   signal: makeSignal(index),
   tags: makeTags(story),
-  age: index + 1,
+  age: getAgeInHours(story.publishedAt),
 }));
 
 if (deduped.length < TARGET_STORY_COUNT) {
