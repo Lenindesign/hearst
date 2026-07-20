@@ -4,6 +4,7 @@ import React from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import packageJson from "../../package.json";
 import { useTheme } from "./theme-provider";
 import { NavBar } from "./nav-bar";
 import { BrandLogo } from "./brand-logo";
@@ -7827,7 +7828,8 @@ function LifestylePersonalizationDemoPanel({
                     {topBreakdown.followedTopic +
                       topBreakdown.followedBrand +
                       topBreakdown.savedTag +
-                      topBreakdown.moreLikeThis}
+                      topBreakdown.moreLikeThis +
+                      topBreakdown.savedStory}
                   </dd>
                 </div>
                 <div className="bg-background p-2">
@@ -7841,6 +7843,14 @@ function LifestylePersonalizationDemoPanel({
                 <div className="bg-background p-2">
                   <dt className="text-muted-foreground">Repeat guard</dt>
                   <dd className="font-bold">{topBreakdown.repeatLeadPenalty}</dd>
+                </div>
+                <div className="bg-background p-2">
+                  <dt className="text-muted-foreground">Configured lead</dt>
+                  <dd className="font-bold">{topBreakdown.defaultLead}</dd>
+                </div>
+                <div className="bg-background p-2">
+                  <dt className="text-muted-foreground">Next-day novelty</dt>
+                  <dd className="font-bold">{topBreakdown.nextDayNovelty}</dd>
                 </div>
               </dl>
               {topStrategyReason ? (
@@ -7861,6 +7871,96 @@ function LifestylePersonalizationDemoPanel({
   );
 }
 
+function LifestyleEvidenceGuide({
+  stories,
+  eligibleStories,
+  scopeLabel,
+  profile,
+  config,
+  activeFilter,
+}: {
+  stories: LifestyleRiverStory[];
+  eligibleStories: LifestyleRiverStory[];
+  scopeLabel: string;
+  profile: LifestyleRiverProfile;
+  config: DestinationConfig;
+  activeFilter: string;
+}) {
+  const representedBrands = new Set(stories.map((story) => story.brandSlug)).size;
+  const playableVideos = stories.filter((story) => getLifestyleCardKind(story) === "video").length;
+  const feedState = config.liveFeedStatus
+    ? config.liveFeedStatus.isFallback
+      ? "Cached fallback"
+      : "Current feed"
+    : "Bundled RSS catalog";
+
+  const facts = [
+    {
+      label: "Current scope",
+      value: `${scopeLabel} · ${activeFilter}`,
+      detail: `${eligibleStories.length.toLocaleString()} items are currently eligible after the active route, category, brand, and reader exclusions.`,
+    },
+    {
+      label: "Loaded inventory",
+      value: `${stories.length.toLocaleString()} unique items`,
+      detail: `${representedBrands} represented brands · ${playableVideos.toLocaleString()} playable videos. The count updates as progressive pages arrive.`,
+    },
+    {
+      label: "Feed state",
+      value: feedState,
+      detail: config.liveFeedStatus
+        ? `Feed response received ${formatLiveFeedUpdatedAt(config.liveFeedStatus.fetchedAt)}.`
+        : "This view is using the deduplicated catalog bundled with the current build.",
+    },
+    {
+      label: "Reader signals",
+      value: `${profile.followedTopics.length} topics · ${profile.followedBrands.length} brands`,
+      detail: `${profile.savedIds.length} saved · ${profile.hiddenIds.length} hidden. These prototype preferences are browser-local.`,
+    },
+  ];
+
+  return (
+    <section
+      className="mt-4 overflow-hidden rounded-[8px] border border-border bg-white text-[#121212] [--foreground:#121212] [--muted-foreground:#5f6b7a]"
+      aria-labelledby="evidence-guide-title"
+    >
+      <div className="border-b border-border p-4 sm:p-5">
+        <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+          Live evidence
+        </p>
+        <h2 id="evidence-guide-title" className="headline mt-1 text-2xl leading-tight">
+          Facts from the running experience, not a static presentation.
+        </h2>
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+          Inventory, feed state, active scope, reader signals, and the score above are computed from
+          the current application state. They update when the feed, filter, profile, or demo moment changes.
+        </p>
+      </div>
+      <dl className="grid md:grid-cols-2 xl:grid-cols-4">
+        {facts.map((fact) => (
+          <div
+            key={fact.label}
+            className="border-b border-border p-4 last:border-b-0 md:[&:nth-child(odd)]:border-r xl:border-b-0 xl:[&:not(:last-child)]:border-r"
+          >
+            <dt className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+              {fact.label}
+            </dt>
+            <dd>
+              <p className="mt-2 text-sm font-bold leading-5">{fact.value}</p>
+              <p className="mt-1 text-xs leading-5 text-muted-foreground">{fact.detail}</p>
+            </dd>
+          </div>
+        ))}
+      </dl>
+      <div className="border-t border-border bg-[#f5f7fa] px-4 py-3 text-xs leading-5 text-[#445064] sm:px-5">
+        <span className="font-bold text-[#121212]">Verification boundary:</span>{" "}
+        this console describes the implemented prototype. It does not claim production identity,
+        analytics, consent, publishing, or cross-device preference storage.
+      </div>
+    </section>
+  );
+}
+
 function LifestylePersonalizationRulesGuide() {
   const rules = [
     {
@@ -7872,7 +7972,7 @@ function LifestylePersonalizationRulesGuide() {
     {
       number: "2",
       title: "Build an editorial baseline",
-      body: "Popularity, freshness, and an editor-selected starting point keep a first visit useful even when little or no reader history exists.",
+      body: "Popularity, freshness, and a configured editorial starting point keep a first visit useful even when little or no reader history exists.",
       proof: "Reset the demo to see the first-visit edition.",
     },
     {
@@ -7953,25 +8053,29 @@ function LifestylePersonalizationRulesGuide() {
 }
 
 function LifestyleTechnologyGuide() {
+  const dependencyVersion = (dependency: keyof typeof packageJson.dependencies) =>
+    packageJson.dependencies[dependency].replace(/^[^0-9]*/, "");
+  const devDependencyVersion = (dependency: keyof typeof packageJson.devDependencies) =>
+    packageJson.devDependencies[dependency].replace(/^[^0-9]*/, "");
   const stack = [
     {
       label: "Application",
-      title: "Next.js 16 + React 19",
+      title: `Next.js ${dependencyVersion("next")} + React ${dependencyVersion("react")}`,
       body: "The experience uses the Next.js App Router for pages, server-rendered entry points, route handlers, image optimization, and React-powered interaction.",
     },
     {
       label: "Language",
-      title: "TypeScript 5",
+      title: `TypeScript ${devDependencyVersion("typescript")}`,
       body: "Typed story, video, profile, and personalization models keep data contracts explicit across server and browser code.",
     },
     {
       label: "Interface",
-      title: "Tailwind CSS 4 + HDS tokens",
+      title: `Tailwind CSS ${devDependencyVersion("tailwindcss")} + HDS tokens`,
       body: "Tailwind handles responsive composition while Hearst Design System semantic tokens control shared surfaces, typography, color, spacing, and brand themes.",
     },
     {
       label: "Components",
-      title: "shadcn conventions + Base UI",
+      title: `shadcn ${dependencyVersion("shadcn")} + Base UI ${dependencyVersion("@base-ui/react")}`,
       body: "Reusable controls follow shadcn/ui composition conventions and use accessible Base UI primitives, with Phosphor supplying the icon set.",
     },
     {
@@ -7981,7 +8085,7 @@ function LifestyleTechnologyGuide() {
     },
     {
       label: "Delivery",
-      title: "Netlify Next.js runtime",
+      title: `Netlify Next.js plugin ${dependencyVersion("@netlify/plugin-nextjs")}`,
       body: "Production builds and Next.js server functions are deployed through Netlify's official Next.js integration, with optimized static assets served through its CDN.",
     },
   ];
@@ -8024,8 +8128,9 @@ function LifestyleTechnologyGuide() {
 
       <div className="border-t border-border bg-[#f5f7fa] px-4 py-3 text-xs leading-5 text-[#445064] sm:px-5">
         <span className="font-bold text-[#121212]">Executive note:</span>{" "}
-        reader preferences and comments in this prototype are browser-local demo state; production
-        identity, publishing, analytics, and consent systems are not represented as completed integrations.
+        version labels above are read from the build manifest. Reader preferences and comments in this
+        prototype are browser-local demo state; production identity, publishing, analytics, and consent
+        systems are not represented as completed integrations.
       </div>
     </section>
   );
@@ -8040,6 +8145,9 @@ function LifestylePersonalizationDemoModal({
   config,
   activeFilter,
   stories,
+  inventoryStories,
+  eligibleStories,
+  scopeLabel,
   onDaypartChange,
   onSimulateReturn,
   onApplyBehaviorPreset,
@@ -8053,6 +8161,9 @@ function LifestylePersonalizationDemoModal({
   config: DestinationConfig;
   activeFilter: string;
   stories: LifestyleRiverStory[];
+  inventoryStories: LifestyleRiverStory[];
+  eligibleStories: LifestyleRiverStory[];
+  scopeLabel: string;
   onDaypartChange: (daypart: LifestyleDemoDaypart) => void;
   onSimulateReturn: (
     hours: number,
@@ -8114,6 +8225,14 @@ function LifestylePersonalizationDemoModal({
             onSimulateReturn={onSimulateReturn}
             onApplyBehaviorPreset={onApplyBehaviorPreset}
             onResetDemo={onResetDemo}
+          />
+          <LifestyleEvidenceGuide
+            stories={inventoryStories}
+            eligibleStories={eligibleStories}
+            scopeLabel={scopeLabel}
+            profile={profile}
+            config={config}
+            activeFilter={activeFilter}
           />
           <LifestylePersonalizationRulesGuide />
           <LifestyleTechnologyGuide />
@@ -9410,6 +9529,7 @@ function LifestyleRiverHomePage({
   }, [onBrandFilterChange]);
 
   React.useEffect(() => {
+    if (!profileReady) return;
     const node = sentinelRef.current;
     if (!node || visibleCount >= filteredStories.length) return;
 
@@ -9419,12 +9539,12 @@ function LifestyleRiverHomePage({
           setVisibleCount((count) => Math.min(count + 4, filteredStories.length));
         }
       },
-      { rootMargin: "500px" }
+      { rootMargin: "800px 0px" }
     );
 
     observer.observe(node);
     return () => observer.disconnect();
-  }, [filteredStories.length, visibleCount]);
+  }, [filteredStories.length, profileReady, visibleCount]);
 
   const resetDemo = () => {
     updateReaderProfile(config.initialProfile);
@@ -9739,14 +9859,14 @@ function LifestyleRiverHomePage({
                   ))}
                 </div>
 
-                <div ref={sentinelRef} className="flex justify-center py-6">
+                <div
+                  ref={sentinelRef}
+                  className="flex justify-center py-6"
+                  data-story-river-sentinel
+                  aria-live="polite"
+                >
                   {visibleCount < filteredStories.length ? (
-                    <Button
-                      variant="outline"
-                      onClick={() => setVisibleCount((count) => Math.min(count + 4, filteredStories.length))}
-                    >
-                      Load more videos
-                    </Button>
+                    <p className="text-sm text-muted-foreground">Loading more videos...</p>
                   ) : (
                     <p className="text-sm text-muted-foreground">
                       You&rsquo;re caught up on this video feed.
@@ -9880,6 +10000,9 @@ function LifestyleRiverHomePage({
           config={config}
           activeFilter={activeFilter}
           stories={visibleStories}
+          inventoryStories={activeStoryPool}
+          eligibleStories={filteredStories}
+          scopeLabel={effectiveBrandFilters.length > 0 ? effectiveBrandFilters.join(", ") : config.productName}
           onDaypartChange={(daypart) =>
             setDemoState((current) => ({
               ...current,
@@ -10026,14 +10149,14 @@ function LifestyleRiverHomePage({
                 />
               ) : null}
 
-              <div ref={sentinelRef} className="flex justify-center py-6">
+              <div
+                ref={sentinelRef}
+                className="flex justify-center py-6"
+                data-story-river-sentinel
+                aria-live="polite"
+              >
                 {visibleCount < filteredStories.length ? (
-                  <Button
-                    variant="outline"
-                    onClick={() => setVisibleCount((count) => Math.min(count + 4, filteredStories.length))}
-                  >
-                    Load more popular stories
-                  </Button>
+                  <p className="text-sm text-muted-foreground">Loading more stories...</p>
                 ) : (
                   <p className="text-sm text-muted-foreground">
                     You&rsquo;re caught up on this river.
@@ -10200,6 +10323,9 @@ function LifestyleRiverHomePage({
         config={config}
         activeFilter={activeFilter}
         stories={visibleStories}
+        inventoryStories={activeStoryPool}
+        eligibleStories={filteredStories}
+        scopeLabel={effectiveBrandFilters.length > 0 ? effectiveBrandFilters.join(", ") : config.productName}
         onDaypartChange={(daypart) =>
           setDemoState((current) => ({
             ...current,
@@ -10426,7 +10552,9 @@ export function HomePageTemplate({
   const progressiveFeedBrandSlug = selectedBrand?.slug ?? getReaderOriginBrandSlug(readerReturnHref);
   const [resolvedVideoFeedData, setResolvedVideoFeedData] = React.useState(videoFeedData);
   const shouldProgressivelyLoadEditorial = activeLifestyleFilter !== "Videos" && liveFeedMode === "blend";
-  const [initialProgressiveEditorialReady, setInitialProgressiveEditorialReady] = React.useState(true);
+  const [initialProgressiveEditorialReady, setInitialProgressiveEditorialReady] = React.useState(
+    !shouldProgressivelyLoadEditorial
+  );
   React.useEffect(() => {
     setResolvedVideoFeedData(videoFeedData);
   }, [destinationMode, selectedBrand?.slug, videoFeedData]);
@@ -10504,7 +10632,7 @@ export function HomePageTemplate({
   const [progressiveEditorialStories, setProgressiveEditorialStories] = React.useState<LifestyleRiverStory[]>([]);
   React.useEffect(() => {
     setProgressiveEditorialStories([]);
-    setInitialProgressiveEditorialReady(true);
+    setInitialProgressiveEditorialReady(!shouldProgressivelyLoadEditorial);
   }, [destinationMode, progressiveFeedBrandSlug, shouldProgressivelyLoadEditorial, staticDestinationData]);
   React.useEffect(() => {
     if (!shouldProgressivelyLoadEditorial) {
