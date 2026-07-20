@@ -1997,8 +1997,8 @@ function MainNav({
   const usesCompactMobileDestinationMark = mobileMastheadSlug !== mastheadSlug;
   const mastheadHearstGeometry = selectedBrand
     ? {
-        compact: "h-[16px] max-w-[220px] sm:h-[23px] sm:max-w-[400px]",
-        regular: "h-[22px] max-w-[280px] sm:h-[34px] sm:max-w-[580px]",
+        compact: "h-[20px] max-w-[275px] sm:h-[28.75px] sm:max-w-[500px]",
+        regular: "h-[27.5px] max-w-[350px] sm:h-[42.5px] sm:max-w-[725px]",
       }
     : mastheadSlug === "hearst-all"
       ? {
