@@ -118,6 +118,7 @@ export interface HomePageTemplateProps {
   readerReturnHref?: string;
   navLinksOverride?: string[];
   staticDestinationData?: HearstDestinationStaticData;
+  globalBrandInventory?: Record<string, number>;
 }
 
 interface ProgressiveFeedPage {
@@ -558,6 +559,7 @@ type DestinationConfig = {
     isFallback: boolean;
   };
   liveFeedMode?: "replace" | "blend";
+  brandInventoryCounts?: Record<string, number>;
 };
 
 type LifestyleStoryComment = {
@@ -8202,6 +8204,7 @@ function LifestyleLeftSidebar({
   topics,
   brands,
   brandFilterTitle = "Filter Brands",
+  globalInventory = false,
   activeBrandFilters,
   collectionLabels,
   onToggleBrandFilter,
@@ -8214,6 +8217,7 @@ function LifestyleLeftSidebar({
   topics: { name: string; count: number }[];
   brands: { name: string; slug: string; count: number }[];
   brandFilterTitle?: string;
+  globalInventory?: boolean;
   activeBrandFilters: string[];
   collectionLabels: string[];
   onToggleBrandFilter: (brandName: string) => void;
@@ -8223,8 +8227,9 @@ function LifestyleLeftSidebar({
 }) {
   const activeTopicSummary = profile.followedTopics.slice(0, 3).join(", ");
   const brandStoryCount = brands.reduce((total, brand) => total + brand.count, 0);
-  const brandSummary =
-    activeBrandFilters.length > 0
+  const brandSummary = globalInventory
+    ? `${brands.length} brands · ${brandStoryCount} stories`
+    : activeBrandFilters.length > 0
       ? activeBrandFilters[0]
       : `All brands · ${brandStoryCount} stories`;
   const topicSummary = activeTopicSummary || `${topics.length} topics`;
@@ -8311,7 +8316,9 @@ function LifestyleLeftSidebar({
           })}
         </div>
         <p className="mt-4 text-xs leading-5 text-muted-foreground">
-          {activeBrandFilters.length > 0
+          {globalInventory
+            ? "Complete section inventory. Select a brand to open its publication."
+            : activeBrandFilters.length > 0
             ? `Showing ${activeBrandFilters[0]}.`
             : "All brands are included in the river."}
         </p>
@@ -9354,9 +9361,11 @@ function LifestyleRiverHomePage({
     return activeSourceNotes.map((note) => ({
       name: note.brand,
       slug: note.brandSlug,
-      count: counts[note.brand] ?? 0,
+      count: initialBrandSlug && !usingVideoTabFeed
+        ? config.brandInventoryCounts?.[note.brandSlug] ?? counts[note.brand] ?? 0
+        : counts[note.brand] ?? 0,
     }));
-  }, [activeSourceNotes, activeStoryPool]);
+  }, [activeSourceNotes, activeStoryPool, config.brandInventoryCounts, initialBrandSlug, usingVideoTabFeed]);
 
   React.useEffect(() => {
     if (usingVideoTabFeed) return;
@@ -9903,6 +9912,8 @@ function LifestyleRiverHomePage({
           topStories={filteredStories}
           topics={sidebarTopics}
           brands={sidebarBrands}
+          brandFilterTitle={initialBrandSlug && !usingVideoTabFeed ? "Global Story Inventory" : undefined}
+          globalInventory={Boolean(initialBrandSlug && !usingVideoTabFeed)}
           activeBrandFilters={effectiveBrandFilters}
           collectionLabels={config.collectionLabels}
           onToggleBrandFilter={toggleBrandFilter}
@@ -10350,6 +10361,7 @@ export function HomePageTemplate({
   readerReturnHref,
   navLinksOverride,
   staticDestinationData,
+  globalBrandInventory,
 }: HomePageTemplateProps = {}) {
   const { brand, colorMode } = useTheme();
   const { account } = useReaderAccount();
@@ -10652,6 +10664,11 @@ export function HomePageTemplate({
       liveFeedMode,
     };
   }, [baseDestinationConfig, destinationConfigs.flux.stories, destinationMode, liveFeedData, liveFeedMode, resolvedVideoFeedData]);
+  const inventoryAwareDestinationConfig = React.useMemo<DestinationConfig>(() => (
+    initialBrandSlug && globalBrandInventory
+      ? { ...destinationConfig, brandInventoryCounts: globalBrandInventory }
+      : destinationConfig
+  ), [destinationConfig, globalBrandInventory, initialBrandSlug]);
   const initialActiveBrandName = destinationConfig.sourceNotes.find((note) => note.brandSlug === initialBrandSlug)?.brand;
   const [activeBrandFilters, setActiveBrandFilters] = React.useState<string[]>(() => initialActiveBrandName ? [initialActiveBrandName] : []);
   React.useEffect(() => {
@@ -10672,16 +10689,16 @@ export function HomePageTemplate({
     }).slice(0, 3);
   }, [destinationConfig.stories]);
   const mobileBrands = React.useMemo(() => {
-    const counts = destinationConfig.stories.reduce<Record<string, number>>((acc, story) => {
+    const counts = inventoryAwareDestinationConfig.stories.reduce<Record<string, number>>((acc, story) => {
       acc[story.brand] = (acc[story.brand] ?? 0) + 1;
       return acc;
     }, {});
-    return destinationConfig.sourceNotes.map((note) => ({
+    return inventoryAwareDestinationConfig.sourceNotes.map((note) => ({
       name: note.brand,
       slug: note.brandSlug,
-      count: counts[note.brand] ?? 0,
+      count: inventoryAwareDestinationConfig.brandInventoryCounts?.[note.brandSlug] ?? counts[note.brand] ?? 0,
     }));
-  }, [destinationConfig.sourceNotes, destinationConfig.stories]);
+  }, [inventoryAwareDestinationConfig]);
   const searchStories = React.useMemo(
     () => activeBrandFilters.length > 0
       ? destinationConfig.stories.filter((story) => activeBrandFilters.includes(story.brand))
@@ -10792,7 +10809,7 @@ export function HomePageTemplate({
             <LifestyleRiverHydrationGate
               activeFilter={activeLifestyleFilter}
               destination={destinationMode}
-              destinationConfig={destinationConfig}
+              destinationConfig={inventoryAwareDestinationConfig}
               videoFeedData={resolvedVideoFeedData}
               initialFeedReady={initialProgressiveEditorialReady}
               initialBrandSlug={initialBrandSlug}
