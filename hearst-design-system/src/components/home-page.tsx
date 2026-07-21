@@ -5715,8 +5715,12 @@ function LifestyleReaderActions({
 type AmbientReaderDensity = "compact" | "comfortable" | "airy";
 
 function isCompleteAmbientArticle(liveArticle?: LiveArticleLoadState) {
-  return liveArticle?.status === "ready"
-    && liveArticle.data.blocks.filter((block) => block.type !== "image").length >= 4;
+  if (liveArticle?.status !== "ready") return false;
+
+  const textBlockCount = liveArticle.data.blocks.filter((block) => block.type !== "image").length;
+  const imageBlockCount = liveArticle.data.blocks.filter((block) => block.type === "image").length;
+
+  return textBlockCount >= 4 || (textBlockCount >= 2 && imageBlockCount >= 3);
 }
 
 function getAmbientReaderState(

@@ -2,6 +2,13 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-07-21: Premium reader eligibility for galleries
+
+- **Context:** Image-led source galleries can contain a complete visual story but fewer text blocks than a standard article, leaving the premium-reader action disabled even when the gallery body and images loaded successfully.
+- **Decision:** Preserve the four-text-block threshold for standard articles, and treat a source gallery as complete when it contains at least two non-image content blocks and three gallery images.
+- **Scope:** Premium Ambient Reader eligibility across source-backed Hearst galleries.
+- **Canonical rule:** `APP_RULES.md` Reader modal behavior.
+
 ## 2026-07-21: App-wide source bylines
 
 - **Context:** Writer names were available on source pages but appeared only after opening some articles, while compact story modules and refreshed catalogs fell back to publication editors.
