@@ -25,4 +25,7 @@ export type LiveArticleBlock =
 export type LiveArticleData = {
   blocks: LiveArticleBlock[];
   sourceUrl: string;
+  byline?: string;
+  publishedAt?: string;
+  updatedAt?: string;
 };

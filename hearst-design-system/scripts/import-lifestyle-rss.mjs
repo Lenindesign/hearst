@@ -180,6 +180,11 @@ function getAgeInHours(publishedAt) {
   return Math.max(0, Math.floor((Date.now() - publishedTime) / 3_600_000));
 }
 
+function toIsoDate(value) {
+  const timestamp = Date.parse(stripHtml(value));
+  return Number.isFinite(timestamp) ? new Date(timestamp).toISOString() : undefined;
+}
+
 async function fetchFeed(feedUrl) {
   const response = await fetch(feedUrl, {
     headers: { "user-agent": "Hearst Design System Storybook Prototype Importer" },
@@ -212,10 +217,15 @@ async function fetchArticleStory(entry, brand) {
     const title = getMeta(html, "property", "og:title") || getMeta(html, "name", "twitter:title");
     const summary = getMeta(html, "name", "description") || getMeta(html, "property", "og:description");
     const image = getMeta(html, "property", "og:image") || entry.image;
-    const publishedAt = getMeta(html, "property", "article:published_time") || entry.lastmod;
+    const byline = stripHtml(
+      getMeta(html, "name", "author")
+        || getMeta(html, "name", "parsely-author")
+        || getMeta(html, "property", "article:author")
+    ).replace(/^by\s+/i, "");
+    const publishedAt = toIsoDate(getMeta(html, "property", "article:published_time"));
     const topic = getTopicFromUrl(entry.sourceUrl, brand.sitemapIndex);
 
-    if (!title || !image.includes("hearstapps.com") || image.includes("placeholder")) return null;
+    if (!title || !image.includes("hearstapps.com") || image.includes("placeholder") || !publishedAt) return null;
 
     return {
       id: makeId(brand.brandSlug, entry.sourceUrl),
@@ -226,8 +236,9 @@ async function fetchArticleStory(entry, brand) {
       summary: summary || `${brand.brand} editors recommend this ${topic.toLowerCase()} story.`,
       image,
       imageCredit: "",
+      byline: byline || undefined,
       readTime: makeReadTime(summary, title),
-      publishedAt: new Date(publishedAt || Date.now()).toISOString(),
+      publishedAt,
       sourceUrl: entry.sourceUrl,
     };
   } catch {
@@ -280,10 +291,11 @@ function parseFeed(xml, feedUrl, brand) {
       const sourceUrl = stripHtml(getTag(item, "link"));
       const summary = stripHtml(getTag(item, "description"));
       const image = getMediaUrl(item);
-      const publishedAt = new Date(stripHtml(getTag(item, "pubDate")) || Date.now()).toISOString();
+      const byline = stripHtml(getTag(item, "dc:creator") || getTag(item, "author")).replace(/^by\s+/i, "");
+      const publishedAt = toIsoDate(getTag(item, "pubDate"));
       const topic = sourceUrl ? getTopicFromUrl(sourceUrl, feedUrl) : "Lifestyle";
 
-      if (!title || !sourceUrl || !image || !image.includes("hearstapps.com")) return null;
+      if (!title || !sourceUrl || !image || !image.includes("hearstapps.com") || !publishedAt) return null;
 
       return {
         id: makeId(brand.brandSlug, sourceUrl),
@@ -294,6 +306,7 @@ function parseFeed(xml, feedUrl, brand) {
         summary: summary || `${brand.brand} editors recommend this ${topic.toLowerCase()} story.`,
         image,
         imageCredit: getMediaCredit(item),
+        byline: byline || undefined,
         readTime: makeReadTime(summary, title),
         publishedAt,
         sourceUrl,

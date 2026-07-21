@@ -232,6 +232,159 @@ function getHtmlAttribute(attrs: string, name: string) {
   return match?.[1] ? decodeHtmlEntities(match[1]) : undefined;
 }
 
+function getArticleMetaDate(html: string, keys: string[]) {
+  const metaTags = html.match(/<meta\b[^>]*>/gi) ?? [];
+
+  for (const tag of metaTags) {
+    const key = getHtmlAttribute(tag, "property")
+      ?? getHtmlAttribute(tag, "name")
+      ?? getHtmlAttribute(tag, "itemprop");
+    if (!key || !keys.includes(key.toLowerCase())) continue;
+
+    const value = getHtmlAttribute(tag, "content");
+    const timestamp = Date.parse(value ?? "");
+    if (Number.isFinite(timestamp)) return new Date(timestamp).toISOString();
+  }
+
+  return undefined;
+}
+
+function getArticleMetaText(html: string, keys: string[]) {
+  const metaTags = html.match(/<meta\b[^>]*>/gi) ?? [];
+
+  for (const tag of metaTags) {
+    const key = getHtmlAttribute(tag, "property")
+      ?? getHtmlAttribute(tag, "name")
+      ?? getHtmlAttribute(tag, "itemprop");
+    if (!key || !keys.includes(key.toLowerCase())) continue;
+
+    const value = htmlToText(getHtmlAttribute(tag, "content") ?? "");
+    if (value) return value;
+  }
+
+  return undefined;
+}
+
+function getArticleJsonLdDate(html: string, keys: string[]) {
+  const normalizedKeys = new Set(keys.map((key) => key.toLowerCase()));
+  const scripts = html.match(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>/gi) ?? [];
+
+  const findDate = (value: unknown): string | undefined => {
+    if (Array.isArray(value)) {
+      for (const item of value) {
+        const date = findDate(item);
+        if (date) return date;
+      }
+      return undefined;
+    }
+
+    if (!value || typeof value !== "object") return undefined;
+
+    for (const [key, candidate] of Object.entries(value)) {
+      if (normalizedKeys.has(key.toLowerCase()) && typeof candidate === "string") {
+        const timestamp = Date.parse(candidate);
+        if (Number.isFinite(timestamp)) return new Date(timestamp).toISOString();
+      }
+    }
+
+    for (const candidate of Object.values(value)) {
+      const date = findDate(candidate);
+      if (date) return date;
+    }
+
+    return undefined;
+  };
+
+  for (const script of scripts) {
+    const payload = script
+      .replace(/^<script\b[^>]*>/i, "")
+      .replace(/<\/script>$/i, "")
+      .trim();
+    if (!payload) continue;
+
+    try {
+      const date = findDate(JSON.parse(payload));
+      if (date) return date;
+    } catch {
+      // Ignore malformed third-party structured data and continue to the next block.
+    }
+  }
+
+  return undefined;
+}
+
+function getArticleDate(html: string, metaKeys: string[], jsonLdKeys: string[]) {
+  return getArticleMetaDate(html, metaKeys) ?? getArticleJsonLdDate(html, jsonLdKeys);
+}
+
+function getArticleJsonLdAuthor(html: string) {
+  const scripts = html.match(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>/gi) ?? [];
+
+  const findAuthor = (value: unknown): string | undefined => {
+    if (Array.isArray(value)) {
+      for (const item of value) {
+        const author = findAuthor(item);
+        if (author) return author;
+      }
+      return undefined;
+    }
+
+    if (!value || typeof value !== "object") return undefined;
+
+    const entries = Object.entries(value);
+    for (const [key, candidate] of entries) {
+      if (key.toLowerCase() !== "author") continue;
+      if (typeof candidate === "string") return htmlToText(candidate);
+      const namedAuthor = findJsonLdName(candidate);
+      if (namedAuthor) return namedAuthor;
+    }
+
+    for (const candidate of Object.values(value)) {
+      const author = findAuthor(candidate);
+      if (author) return author;
+    }
+
+    return undefined;
+  };
+
+  for (const script of scripts) {
+    const payload = script
+      .replace(/^<script\b[^>]*>/i, "")
+      .replace(/<\/script>$/i, "")
+      .trim();
+    if (!payload) continue;
+
+    try {
+      const author = findAuthor(JSON.parse(payload));
+      if (author) return author;
+    } catch {
+      // Ignore malformed third-party structured data and continue to the next block.
+    }
+  }
+
+  return undefined;
+}
+
+function findJsonLdName(value: unknown): string | undefined {
+  if (Array.isArray(value)) {
+    return value.map(findJsonLdName).filter(Boolean).join(", ") || undefined;
+  }
+
+  if (!value || typeof value !== "object") return undefined;
+
+  const name = Object.entries(value).find(([key]) => key.toLowerCase() === "name")?.[1];
+  return typeof name === "string" ? htmlToText(name) : undefined;
+}
+
+function getArticleByline(html: string) {
+  return getArticleMetaText(html, [
+    "author",
+    "article:author",
+    "parsely-author",
+    "sailthru.author",
+  ]) ?? getArticleJsonLdAuthor(html);
+}
+
 function getImageUrlFromAttrs(attrs: string) {
   const source = getHtmlAttribute(attrs, "src")
     ?? getHtmlAttribute(attrs, "data-src")
@@ -347,5 +500,21 @@ export async function getHearstLiveArticle(sourceUrl: string): Promise<LiveArtic
   }
 
   if (blocks.length === 0) throw new Error("Article body was empty");
-  return { blocks, sourceUrl: finalUrl };
+  return {
+    blocks,
+    sourceUrl: finalUrl,
+    byline: getArticleByline(html),
+    publishedAt: getArticleDate(html, [
+      "article:published_time",
+      "datepublished",
+      "parsely-pub-date",
+      "sailthru.date",
+    ], ["datePublished"]),
+    updatedAt: getArticleDate(html, [
+      "article:modified_time",
+      "datemodified",
+      "last-modified",
+      "lastmod",
+    ], ["dateModified"]),
+  };
 }

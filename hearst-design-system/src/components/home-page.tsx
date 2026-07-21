@@ -491,6 +491,10 @@ function getBrandIconUrl(brandSlug: string) {
   return brandIconLogos[brandSlug] ?? lifestyleBrandFavicons[brandSlug] ?? autosBrandFavicons[brandSlug] ?? fluxBrandFavicons[brandSlug] ?? ewBrandFavicons[brandSlug] ?? brandLogos[brandSlug];
 }
 
+function usesNativePublicationLogoColor(brandSlug: string) {
+  return brandSlug === "car-and-driver";
+}
+
 function getBrandInitials(brand: string) {
   return brand
     .split(/\s+|&/)
@@ -2013,7 +2017,7 @@ function MainNav({
     };
   }, [closeSearch, searchOpen]);
 
-  const shouldUseNativeLogoColor = mastheadSlug === "car-and-driver";
+  const shouldUseNativeLogoColor = usesNativePublicationLogoColor(mastheadSlug);
   const mobileMastheadSlug = !selectedBrand && mastheadSlug === "hearst-ew"
     ? "hearst-eandw"
     : !selectedBrand && mastheadSlug === "hearst-flux"
@@ -2427,7 +2431,7 @@ function MainNav({
                   <span className="min-w-0 flex-1">
                     <span className="line-clamp-2 block text-sm font-bold leading-snug group-hover:text-primary sm:text-base">{story.title}</span>
                     <span className={cn("mt-1 block truncate text-xs", darkMode ? "text-white/60" : "text-muted-foreground")}>
-                      {story.brand} · {story.topic}
+                      {story.brand} · {story.topic} · {getLifestyleByline(story)}
                     </span>
                   </span>
                   <ChevronRight className={cn("h-4 w-4 shrink-0", darkMode ? "text-white/45" : "text-muted-foreground")} aria-hidden />
@@ -2755,16 +2759,30 @@ function LifestyleRiverImage({
   className?: string;
   priority?: boolean;
 }) {
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const [loaded, setLoaded] = React.useState(false);
+
+  React.useEffect(() => {
+    setLoaded(false);
+  }, [story.id, story.image]);
+
   return (
     <Image
+      key={`${story.id}-${story.image}`}
       src={story.image}
       alt={`${story.brand}: ${story.title}`}
       width={1200}
       height={675}
       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 66vw, 640px"
-      className={cn("min-w-0 bg-muted object-cover", className)}
+      className={cn(
+        "min-w-0 bg-muted object-cover",
+        prefersReducedMotion ? "" : "transition-opacity duration-300 ease-out",
+        loaded || priority ? "opacity-100" : "opacity-0",
+        className
+      )}
       style={{ objectPosition: getLifestyleImagePosition(story) }}
       preload={priority}
+      onLoad={() => setLoaded(true)}
     />
   );
 }
@@ -2824,8 +2842,8 @@ function getLifestyleImagePosition(story: LifestyleRiverStory) {
   return "center";
 }
 
-function getLifestyleByline(story: LifestyleRiverStory) {
-  return story.byline || `${story.brand} editors`;
+function getLifestyleByline(story: LifestyleRiverStory, article?: LiveArticleData) {
+  return article?.byline || story.byline || `${story.brand} editors`;
 }
 
 function LifestyleBrandSource({ story }: { story: LifestyleRiverStory }) {
@@ -3244,7 +3262,7 @@ function BrandPromotionRiverModule({
             >
               <BrandLogo
                 slug={promotion.brandSlug}
-                color="currentColor"
+                color={usesNativePublicationLogoColor(promotion.brandSlug) ? undefined : "currentColor"}
                 className="[&_svg]:h-9 [&_svg]:w-auto [&_svg]:max-w-[180px]"
               />
             </a>
@@ -3454,6 +3472,60 @@ function formatLiveFeedUpdatedAt(fetchedAt: string) {
     timeZone: "America/Los_Angeles",
     timeZoneName: "short",
   }).format(new Date(fetchedAt));
+}
+
+function formatReaderPublishedDate(value: string) {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "America/Los_Angeles",
+  }).format(new Date(value));
+}
+
+function formatReaderUpdatedDate(value: string) {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone: "America/Los_Angeles",
+    timeZoneName: "short",
+  }).format(new Date(value));
+}
+
+function isMeaningfulArticleUpdate(publishedAt: string | undefined, updatedAt: string | undefined) {
+  const publishedTime = Date.parse(publishedAt ?? "");
+  const updatedTime = Date.parse(updatedAt ?? "");
+  return Number.isFinite(publishedTime)
+    && Number.isFinite(updatedTime)
+    && updatedTime - publishedTime >= 15 * 60 * 1000;
+}
+
+function ReaderPublicationDates({
+  publishedAt,
+  updatedAt,
+  className,
+}: {
+  publishedAt?: string;
+  updatedAt?: string;
+  className?: string;
+}) {
+  const hasPublishedDate = Number.isFinite(Date.parse(publishedAt ?? ""));
+  const hasUpdatedDate = isMeaningfulArticleUpdate(publishedAt, updatedAt);
+  if (!hasPublishedDate) return null;
+
+  return (
+    <p className={cn("flex flex-wrap gap-x-3 gap-y-1 text-[length:var(--text-token-4xs)] leading-5 text-muted-foreground", className)}>
+      <time dateTime={publishedAt}>{formatReaderPublishedDate(publishedAt!)}</time>
+      {hasUpdatedDate ? (
+        <span>
+          Updated <time dateTime={updatedAt}>{formatReaderUpdatedDate(updatedAt!)}</time>
+        </span>
+      ) : null}
+    </p>
+  );
 }
 
 const lifestyleCardModelGuide: {
@@ -4168,6 +4240,7 @@ function VideoIndexCard({
           <span className="truncate normal-case tracking-normal text-muted-foreground">
             {story.brand}
             {story.topic ? ` · ${story.topic}` : ""}
+            {` · ${getLifestyleByline(story)}`}
           </span>
           <LiveStoryBadge story={story} />
         </div>
@@ -5173,6 +5246,10 @@ type LiveArticleLoadState =
   | { status: "ready"; data: LiveArticleData }
   | { status: "error" };
 
+function getReadyLiveArticle(liveArticle?: LiveArticleLoadState) {
+  return liveArticle?.status === "ready" ? liveArticle.data : undefined;
+}
+
 type FullscreenReaderImage = {
   src: string;
   alt: string;
@@ -5504,6 +5581,7 @@ function FullscreenImageViewer({
 
 function LifestyleReaderActions({
   story,
+  article,
   saved,
   followed,
   commentCount,
@@ -5513,6 +5591,7 @@ function LifestyleReaderActions({
   onOpenAmbientReader,
 }: {
   story: LifestyleRiverStory;
+  article?: LiveArticleData;
   saved: boolean;
   followed: boolean;
   commentCount: number;
@@ -5522,7 +5601,7 @@ function LifestyleReaderActions({
   onOpenAmbientReader?: () => void;
 }) {
   const destinationConfigs = useDestinationConfigs();
-  const byline = getLifestyleByline(story);
+  const byline = getLifestyleByline(story, article);
   const storyDestination = getStoryDestinationMode(story.brandSlug);
   const destinationTheme = themeOptions.find(
     (theme) => theme.slug === destinationConfigs[storyDestination].brandSlug
@@ -5535,39 +5614,46 @@ function LifestyleReaderActions({
     : undefined;
   const followBadgeBackground = publicationTheme?.colors["1"] ?? "#242D39";
   const followBadgeForeground = getAmbientBrandForeground(followBadgeBackground);
+  const publishedAt = article?.publishedAt ?? story.publishedAt;
 
   return (
     <div className="my-6 min-w-0 border-y border-border py-3">
-      <div className="flex w-full min-w-0 items-center justify-between gap-2 sm:gap-5">
-        <button
-          type="button"
-          onClick={onToggleFollowBrand}
-          aria-pressed={followed}
-          aria-label={followed ? `Unfollow ${story.brand} brand` : `Follow ${story.brand} brand`}
-          title={followed ? `Unfollow ${story.brand} brand` : `Follow ${story.brand} brand`}
-          className="inline-flex min-h-11 min-w-0 flex-1 items-center gap-1.5 rounded-[4px] text-[length:var(--text-token-4xs)] text-muted-foreground transition-colors hover:text-primary focus:outline-none focus-visible:text-primary sm:min-h-0"
-        >
-          <BrandSourceIcon brand={story.brand} brandSlug={story.brandSlug} />
-          <span className="min-w-0 truncate">
-            {story.brand} · {story.topic} · {byline}
-          </span>
-          <span
-            className={cn(
-              "inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-colors",
-              followed ? "" : "border-current bg-transparent text-muted-foreground"
-            )}
-            style={followed
-              ? {
-                  backgroundColor: followBadgeBackground,
-                  borderColor: followBadgeBackground,
-                  color: followBadgeForeground,
-                }
-              : undefined}
+      <div className="flex w-full min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-5">
+        <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1">
+          <button
+            type="button"
+            onClick={onToggleFollowBrand}
+            aria-pressed={followed}
+            aria-label={followed ? `Unfollow ${story.brand} brand` : `Follow ${story.brand} brand`}
+            title={followed ? `Unfollow ${story.brand} brand` : `Follow ${story.brand} brand`}
+            className="inline-flex min-h-11 max-w-full min-w-0 items-center gap-1.5 rounded-[4px] text-[length:var(--text-token-4xs)] text-muted-foreground transition-colors hover:text-primary focus:outline-none focus-visible:text-primary sm:min-h-0"
           >
-            {followed ? <Check className="h-3 w-3" aria-hidden /> : <Plus className="h-3 w-3" aria-hidden />}
-          </span>
-        </button>
-        <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+            <span className="min-w-0 truncate">
+              {story.topic} · By {byline}
+            </span>
+            <span
+              className={cn(
+                "inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-colors",
+                followed ? "" : "border-current bg-transparent text-muted-foreground"
+              )}
+              style={followed
+                ? {
+                    backgroundColor: followBadgeBackground,
+                    borderColor: followBadgeBackground,
+                    color: followBadgeForeground,
+                  }
+                : undefined}
+            >
+              {followed ? <Check className="h-3 w-3" aria-hidden /> : <Plus className="h-3 w-3" aria-hidden />}
+            </span>
+          </button>
+          <ReaderPublicationDates
+            publishedAt={publishedAt}
+            updatedAt={article?.updatedAt}
+            className="shrink-0"
+          />
+        </div>
+        <div className="flex shrink-0 items-center gap-1 self-end sm:self-auto sm:gap-2">
           {ambientReaderState ? (
             <button
               type="button"
@@ -5789,6 +5875,8 @@ function AmbientArticleReader({
     "--ambient-rule": colorMode === "dark" ? "#333638" : "#D7D7D2",
   } as React.CSSProperties;
   const readMinutes = getAmbientReaderMinutes(story, article);
+  const ambientPublishedAt = article.publishedAt ?? story.publishedAt;
+  const hasAmbientPublishedDate = Number.isFinite(Date.parse(ambientPublishedAt ?? ""));
   const brandPrimary = contextualTheme.colors["1"] ?? "#242D39";
   const brandForeground = getAmbientBrandForeground(brandPrimary);
   const heroAccent = brandForeground;
@@ -6023,10 +6111,19 @@ function AmbientArticleReader({
                     ? { borderTopColor: heroAccent, color: heroAccent }
                     : undefined}
                 >
-                  <span>{getLifestyleByline(story)}</span>
-                  <span aria-hidden>·</span>
-                  <span>{readMinutes} min read</span>
+                  <span>{getLifestyleByline(story, article)}</span>
+                  {hasAmbientPublishedDate ? (
+                    <>
+                      <span aria-hidden>·</span>
+                      <time dateTime={ambientPublishedAt}>{formatReaderPublishedDate(ambientPublishedAt!)}</time>
+                    </>
+                  ) : null}
                 </div>
+                {isMeaningfulArticleUpdate(ambientPublishedAt, article.updatedAt) ? (
+                  <p className="mt-3 text-xs font-semibold uppercase tracking-[0.12em] opacity-75">
+                    Updated <time dateTime={article.updatedAt}>{formatReaderUpdatedDate(article.updatedAt!)}</time>
+                  </p>
+                ) : null}
               </div>
             </div>
             <figure className="relative min-h-[42vh] overflow-hidden bg-black lg:min-h-[70vh]">
@@ -6598,7 +6695,7 @@ function LifestyleReaderContextRail({
                     {story.title}
                   </span>
                   <span className="mt-1 block text-xs text-muted-foreground">
-                    {story.brand} · Popularity {story.popularity}
+                    {story.brand} · {getLifestyleByline(story)} · Popularity {story.popularity}
                   </span>
                 </button>
               ))}
@@ -6781,6 +6878,10 @@ function LifestyleStoryReaderModal({
   const storyQueue = openIndex >= 0
     ? [...readerStories.slice(openIndex), ...readerStories.slice(0, openIndex)]
     : [];
+  const nextReaderImagePreloadKey = storyQueue
+    .slice(1, 3)
+    .map((story) => story.image)
+    .join("|");
   const visibleReaderStories = storyQueue.slice(0, visibleReaderCount);
   const visibleReaderStoryIds = visibleReaderStories.map((story) => story.id).join("|");
   const ambientReaderIndex = ambientReaderStoryId
@@ -6929,6 +7030,23 @@ function LifestyleStoryReaderModal({
     activeReaderRouteStoryIdRef.current = openStoryId;
     scrollRef.current?.scrollTo({ top: 0 });
   }, [openStoryId]);
+
+  React.useEffect(() => {
+    if (!openStoryId || typeof window === "undefined") return;
+
+    storyQueue.slice(1, 3).forEach((story) => {
+      if (!story.image) return;
+      const image = new window.Image();
+      image.decoding = "async";
+      image.src = `/_next/image/?${new URLSearchParams({
+        url: story.image,
+        w: "640",
+        q: "75",
+      }).toString()}`;
+    });
+  // The key intentionally represents only the next two story hero images.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openStoryId, nextReaderImagePreloadKey]);
 
   React.useEffect(() => {
     if (!isReaderOpen) return;
@@ -7412,15 +7530,18 @@ function LifestyleStoryReaderModal({
                         >
                           <LifestyleRiverImage
                             story={story}
-                            className="aspect-video w-full rounded-[4px] transition-opacity group-hover:opacity-95"
+                            className="aspect-video w-full rounded-[4px]"
                           />
                         </button>
                       )}
                       <div className="mx-auto mt-6 max-w-3xl">
-                        <div className="mb-3 flex flex-wrap items-center gap-2">
-                          <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
-                            {story.signal}
+                        <div className="mb-3 flex flex-wrap items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                          <span className="inline-flex items-center gap-1.5">
+                            <BrandSourceIcon brand={story.brand} brandSlug={story.brandSlug} />
+                            <span>{story.brand}</span>
                           </span>
+                          <span aria-hidden>·</span>
+                          <span>{story.signal}</span>
                         </div>
                         <h2 className={cn(
                           "headline text-4xl sm:text-5xl",
@@ -7430,6 +7551,7 @@ function LifestyleStoryReaderModal({
                         </h2>
                         <LifestyleReaderActions
                           story={story}
+                          article={getReadyLiveArticle(liveArticles[story.id])}
                           saved={savedIds.includes(story.id)}
                           followed={followedBrands.includes(story.brand)}
                           commentCount={getLifestyleCommentCount(story, commentsByStoryId[story.id]?.length ?? 0)}
@@ -8408,7 +8530,7 @@ function LifestyleLeftSidebar({
               <p className="mt-1 text-sm font-bold leading-snug group-hover:text-primary group-focus-visible:text-primary">
                 {story.title}
               </p>
-              <p className="mt-1 text-xs text-muted-foreground">{story.brand} · Popularity {story.popularity}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{story.brand} · {getLifestyleByline(story)} · Popularity {story.popularity}</p>
             </button>
           ))}
         </div>
@@ -10270,7 +10392,7 @@ function LifestyleRiverHomePage({
                       <span className="block font-bold leading-snug group-hover:text-primary group-focus-visible:text-primary">
                         {story.title}
                       </span>
-                      <span className="text-xs text-muted-foreground">{story.brand} · {story.topic}</span>
+                      <span className="text-xs text-muted-foreground">{story.brand} · {story.topic} · {getLifestyleByline(story)}</span>
                     </span>
                   </button>
                 </li>

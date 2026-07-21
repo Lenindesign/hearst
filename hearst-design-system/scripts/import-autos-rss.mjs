@@ -146,6 +146,11 @@ function getAgeInHours(publishedAt) {
   return Math.max(0, Math.floor((Date.now() - publishedTime) / 3_600_000));
 }
 
+function toIsoDate(value) {
+  const timestamp = Date.parse(stripHtml(value));
+  return Number.isFinite(timestamp) ? new Date(timestamp).toISOString() : undefined;
+}
+
 async function fetchText(url) {
   const response = await fetch(url, {
     headers: { "user-agent": "Hearst Autos Storybook Prototype Importer" },
@@ -162,10 +167,11 @@ function parseFeed(xml, feedUrl, brand) {
       const sourceUrl = stripHtml(getTag(item, "link"));
       const summary = stripHtml(getTag(item, "description"));
       const image = getMediaUrl(item);
-      const publishedAt = new Date(stripHtml(getTag(item, "pubDate")) || Date.now()).toISOString();
+      const byline = stripHtml(getTag(item, "dc:creator") || getTag(item, "author")).replace(/^by\s+/i, "");
+      const publishedAt = toIsoDate(getTag(item, "pubDate"));
       const topic = sourceUrl ? getTopicFromUrl(sourceUrl, feedUrl) : "News";
 
-      if (!title || !sourceUrl || !image) return null;
+      if (!title || !sourceUrl || !image || !publishedAt) return null;
 
       return {
         id: makeId(brand.brandSlug, sourceUrl),
@@ -176,6 +182,7 @@ function parseFeed(xml, feedUrl, brand) {
         summary: summary || `${brand.brand} editors recommend this ${topic.toLowerCase()} story.`,
         image,
         imageCredit: getMediaCredit(item),
+        byline: byline || undefined,
         readTime: makeReadTime(summary, title),
         publishedAt,
         sourceUrl,
@@ -207,9 +214,14 @@ async function parseArticlePage(url, brand) {
     stripHtml(html.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1] ?? "");
   const summary = getMetaContent(html, "og:description");
   const image = getMetaContent(html, "og:image");
-  const publishedAt = getMetaContent(html, "article:published_time") || new Date().toISOString();
+  const byline = stripHtml(
+    getMetaContent(html, "author")
+      || getMetaContent(html, "parsely-author")
+      || getMetaContent(html, "article:author")
+  ).replace(/^by\s+/i, "");
+  const publishedAt = toIsoDate(getMetaContent(html, "article:published_time"));
 
-  if (!title || !image) return null;
+  if (!title || !image || !publishedAt) return null;
 
   return {
     id: makeId(brand.brandSlug, url),
@@ -220,8 +232,9 @@ async function parseArticlePage(url, brand) {
     summary: summary || `${brand.brand} editors recommend this autos story.`,
     image,
     imageCredit: brand.brand,
+    byline: byline || undefined,
     readTime: makeReadTime(summary, title),
-    publishedAt: new Date(publishedAt || Date.now()).toISOString(),
+    publishedAt,
     sourceUrl: url,
   };
 }

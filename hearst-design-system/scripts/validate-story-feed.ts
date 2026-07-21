@@ -13,6 +13,8 @@ const feeds = [
 
 const now = Date.now();
 const maximumNewestStoryAgeMs = 72 * 60 * 60 * 1000;
+const maximumFutureSkewMs = 15 * 60 * 1000;
+const minimumBylineCoverage = 0.75;
 
 function assertValidStory(story: LifestyleRiverStory, feedName: string) {
   if (!story.id || !story.title || !story.brandSlug || !story.sourceUrl || !story.image) {
@@ -21,6 +23,10 @@ function assertValidStory(story: LifestyleRiverStory, feedName: string) {
 
   if (!story.publishedAt || !Number.isFinite(Date.parse(story.publishedAt))) {
     throw new Error(`${feedName} story ${story.id} has no valid publication date`);
+  }
+
+  if (Date.parse(story.publishedAt) > now + maximumFutureSkewMs) {
+    throw new Error(`${feedName} story ${story.id} has a publication date more than 15 minutes in the future`);
   }
 
   if (!Number.isFinite(story.age) || story.age < 0) {
@@ -48,7 +54,13 @@ for (const feed of feeds) {
     throw new Error(`${feed.name}'s newest story is more than 72 hours old`);
   }
 
-  console.log(`${feed.name}: ${feed.stories.length} valid stories; newest ${new Date(newestPublishedAt).toISOString()}`);
+  const bylineCount = feed.stories.filter((story) => story.byline?.trim()).length;
+  const bylineCoverage = bylineCount / feed.stories.length;
+  if (bylineCoverage < minimumBylineCoverage) {
+    throw new Error(`${feed.name} has source bylines for only ${bylineCount}/${feed.stories.length} stories`);
+  }
+
+  console.log(`${feed.name}: ${feed.stories.length} valid stories; ${bylineCount} source bylines; newest ${new Date(newestPublishedAt).toISOString()}`);
 }
 
 console.log(`Validated ${feeds.reduce((total, feed) => total + feed.stories.length, 0)} real-image stories.`);
