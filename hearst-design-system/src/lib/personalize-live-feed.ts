@@ -242,19 +242,29 @@ function mapRecommendation(
 }
 
 function getPreferredVideoTranscoding(item: ApiVideoRecommendation) {
-  const mp4Transcodings = (item.transcodings ?? []).filter((transcoding) =>
-    transcoding.full_url?.toLowerCase().includes(".mp4")
+  const transcodings = item.transcodings ?? [];
+  const mp4Transcodings = transcodings.filter((transcoding) =>
+    /\.mp4(?:$|\?)/i.test(transcoding.full_url ?? "")
+  );
+  const h264Transcodings = mp4Transcodings.filter((transcoding) =>
+    /(?:h264|h\.264|avc1|avc)/i.test(
+      `${transcoding.codec ?? ""} ${transcoding.display_name ?? ""} ${transcoding.preset_name ?? ""} ${transcoding.full_url ?? ""}`,
+    )
   );
   const preferredNames = ["720p", "480p", "360p", "1080p", "240p"];
 
   for (const name of preferredNames) {
-    const match = mp4Transcodings.find((transcoding) =>
+    const match = h264Transcodings.find((transcoding) =>
       `${transcoding.display_name ?? ""} ${transcoding.preset_name ?? ""}`.toLowerCase().includes(name)
     );
     if (match?.full_url) return match;
   }
 
-  return mp4Transcodings[0];
+  return (
+    h264Transcodings[0] ??
+    transcodings.find((transcoding) => /\.m3u8(?:$|\?)/i.test(transcoding.full_url ?? "")) ??
+    mp4Transcodings[0]
+  );
 }
 
 function mapVideoRecommendation(
@@ -268,6 +278,11 @@ function mapVideoRecommendation(
   const preferredTranscoding = getPreferredVideoTranscoding(item);
   const videoUrl = withProtocol(preferredTranscoding?.full_url);
   if (!item.id || !title || !image || !videoUrl || isExcludedContentTitle(title)) return null;
+  const dimensionTranscoding = preferredTranscoding?.width && preferredTranscoding.height
+    ? preferredTranscoding
+    : (item.transcodings ?? []).find((transcoding) =>
+        Boolean(transcoding.width) && Boolean(transcoding.height)
+      );
 
   const publishedAt = item.published_at;
   const publishedTime = publishedAt ? new Date(publishedAt).getTime() : Date.now();
@@ -292,8 +307,8 @@ function mapVideoRecommendation(
     mediaKind: "video",
     videoUrl,
     videoDuration: duration,
-    videoWidth: preferredTranscoding?.width,
-    videoHeight: preferredTranscoding?.height,
+    videoWidth: dimensionTranscoding?.width,
+    videoHeight: dimensionTranscoding?.height,
   };
 }
 

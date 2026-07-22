@@ -73,6 +73,7 @@ import type { LifestyleRiverProfile, LifestyleRiverStory } from "./lifestyle-riv
 import type { LiveArticleData, LiveFeedData } from "@/lib/live-feed-types";
 import { useReaderAccount } from "./reader-account";
 import { ReaderAuthDialog, ReaderAvatar, ReaderProfileDialog } from "./reader-account-ui";
+import { AdaptiveVideo } from "./adaptive-video";
 
 interface ContentType extends BaseContentType {
   footerCols: string[][];
@@ -3819,7 +3820,7 @@ function LifestyleRiverMedia({
         onClick={(event) => event.stopPropagation()}
         onKeyDown={(event) => event.stopPropagation()}
       >
-        <video
+        <AdaptiveVideo
           src={story.videoUrl}
           poster={story.image}
           controls
@@ -4080,7 +4081,7 @@ function VideoPlaySurface({
       onKeyDown={(event) => event.stopPropagation()}
     >
       {playing && story.videoUrl ? (
-        <video
+        <AdaptiveVideo
           src={story.videoUrl}
           poster={story.image}
           controls
@@ -4771,7 +4772,7 @@ function DelishShortsImmersiveModal({
                 style={{ transform }}
                 aria-hidden={!isOutgoing}
               >
-                <video
+                <AdaptiveVideo
                   ref={isControlTarget ? videoRef : undefined}
                   src={story.videoUrl}
                   poster={story.image}
@@ -7506,7 +7507,7 @@ function LifestyleStoryReaderModal({
                     >
                       {story.videoUrl ? (
                         <div className="relative aspect-video w-full overflow-hidden rounded-[4px] bg-black">
-                          <video
+                          <AdaptiveVideo
                             src={story.videoUrl}
                             poster={story.image}
                             controls

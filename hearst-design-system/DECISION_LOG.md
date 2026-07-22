@@ -2,6 +2,13 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-07-21: Cross-device video playback
+
+- **Context:** Some Personalize videos played on desktop but failed on phones because resolution-first selection could choose HEVC while H.264 was available, and HLS URLs containing an earlier `.mp4` path segment were misclassified as direct MP4 files.
+- **Decision:** Prefer direct H.264/AVC MP4 transcodings, identify media by the final URL extension, and route every video surface through one adaptive player. Use native HLS where supported, `hls.js` elsewhere, bounded recovery for network or media failures, and a visible retry state when playback cannot recover. When a selected HLS master omits dimensions, retain orientation from a dimension-bearing alternate transcoding so portrait collections remain complete.
+- **Scope:** Featured, river, reader, and immersive Delish Shorts video playback across desktop and mobile.
+- **Canonical rule:** `APP_RULES.md` video-feed behavior.
+
 ## 2026-07-21: Premium reader eligibility for galleries
 
 - **Context:** Image-led source galleries can contain a complete visual story but fewer text blocks than a standard article, leaving the premium-reader action disabled even when the gallery body and images loaded successfully.
