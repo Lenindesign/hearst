@@ -56,27 +56,37 @@ export const AdaptiveVideo = React.forwardRef<HTMLVideoElement, AdaptiveVideoPro
         if (!disposed) setPlaybackError(true);
       };
 
+      const canPlayNativeHls = Boolean(
+        video.canPlayType("application/vnd.apple.mpegurl")
+        || video.canPlayType("application/x-mpegURL")
+      );
+
+      const loadNativeSource = () => {
+        video.src = src;
+        video.load();
+        tryAutoplay();
+      };
+
       if (!isHlsSource(src)) {
-        video.src = src;
-        video.load();
-        tryAutoplay();
-      } else if (
-        video.canPlayType("application/vnd.apple.mpegurl") ||
-        video.canPlayType("application/x-mpegURL")
-      ) {
-        video.src = src;
-        video.load();
-        tryAutoplay();
+        loadNativeSource();
       } else {
         void import("hls.js")
           .then(({ default: Hls }) => {
             if (disposed) return;
             if (!Hls.isSupported()) {
-              failPlayback();
+              if (canPlayNativeHls) {
+                loadNativeSource();
+              } else {
+                failPlayback();
+              }
               return;
             }
 
-            const hls = new Hls({ enableWorker: true });
+            const hls = new Hls({
+              enableWorker: true,
+              backBufferLength: 30,
+              maxBufferLength: 30,
+            });
             let networkRecoveryAttempts = 0;
             let mediaRecoveryAttempts = 0;
 
@@ -103,7 +113,14 @@ export const AdaptiveVideo = React.forwardRef<HTMLVideoElement, AdaptiveVideoPro
               hls.destroy();
             });
           })
-          .catch(failPlayback);
+          .catch(() => {
+            if (disposed) return;
+            if (canPlayNativeHls) {
+              loadNativeSource();
+            } else {
+              failPlayback();
+            }
+          });
       }
 
       return () => {

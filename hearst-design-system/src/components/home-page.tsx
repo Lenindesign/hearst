@@ -2761,15 +2761,13 @@ function LifestyleRiverImage({
   priority?: boolean;
 }) {
   const prefersReducedMotion = usePrefersReducedMotion();
-  const [loaded, setLoaded] = React.useState(false);
-
-  React.useEffect(() => {
-    setLoaded(false);
-  }, [story.id, story.image]);
+  const imageKey = `${story.id}-${story.image}`;
+  const [loadedImageKey, setLoadedImageKey] = React.useState<string | null>(null);
+  const loaded = loadedImageKey === imageKey;
 
   return (
     <Image
-      key={`${story.id}-${story.image}`}
+      key={imageKey}
       src={story.image}
       alt={`${story.brand}: ${story.title}`}
       width={1200}
@@ -2783,7 +2781,7 @@ function LifestyleRiverImage({
       )}
       style={{ objectPosition: getLifestyleImagePosition(story) }}
       preload={priority}
-      onLoad={() => setLoaded(true)}
+      onLoad={() => setLoadedImageKey(imageKey)}
     />
   );
 }
@@ -4298,14 +4296,26 @@ function VideoIndexCard({
 function VideoRailCard({
   story,
   onOpen,
+  rank,
 }: {
   story: LifestyleRiverStory;
   onOpen: () => void;
+  rank?: number;
 }) {
   return (
-    <button type="button" className="grid w-full grid-cols-[96px_minmax(0,1fr)] gap-3 text-left" onClick={onOpen}>
+    <button
+      type="button"
+      className="group grid w-full grid-cols-[96px_minmax(0,1fr)] gap-3 text-left focus:outline-none focus:ring-2 focus:ring-primary/40"
+      onClick={onOpen}
+      aria-label={rank ? `Trending video ${rank}: ${story.title}` : `Open video: ${story.title}`}
+    >
       <span className="relative aspect-video overflow-hidden rounded-[6px] bg-muted">
         <Image src={story.image} alt="" fill sizes="96px" className="object-cover" />
+        {rank ? (
+          <span className="absolute left-1 top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-black tabular-nums text-primary-foreground shadow-sm">
+            {rank}
+          </span>
+        ) : null}
         {story.videoDuration ? (
           <span className="absolute bottom-1 right-1 rounded-full bg-black/70 px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-white">
             {formatVideoDuration(story.videoDuration)}
@@ -9970,6 +9980,14 @@ function LifestyleRiverHomePage({
   const remainingVideoStories = featuredVideo
     ? standardVideoStories.filter((story) => story.id !== featuredVideo.id)
     : standardVideoStories;
+  const trendingVideoStories = videoStories
+    .filter((story) => story.id !== featuredVideo?.id)
+    .sort((left, right) =>
+      right.popularity - left.popularity
+      || Date.parse(right.publishedAt ?? "") - Date.parse(left.publishedAt ?? "")
+      || left.title.localeCompare(right.title)
+    )
+    .slice(0, 4);
   // Scoped exception: the Videos tab uses the dark video-index treatment inside otherwise light destinations.
   // Keep these tokens local to this wrapper so the exception does not affect the global Hearst+ theme.
   const videoDarkModeThemeClasses =
@@ -10089,14 +10107,15 @@ function LifestyleRiverHomePage({
           <aside className="min-w-0 space-y-5 lg:sticky lg:top-[112px] lg:max-h-[calc(100dvh-136px)] lg:self-start lg:overflow-y-auto lg:pr-1">
             <div className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
               <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
-                Up next
+                Trending videos
               </p>
               <div className="mt-4 space-y-4">
-                {videoStories.slice(1, 5).map((story) => (
+                {trendingVideoStories.map((story, index) => (
                   <VideoRailCard
                     key={story.id}
                     story={story}
                     onOpen={() => openStory(story.id)}
+                    rank={index + 1}
                   />
                 ))}
               </div>
