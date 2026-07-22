@@ -4,24 +4,28 @@ import {
   HomePageTemplate,
   type HomePageTemplateProps,
 } from "@/components/home-page";
+import { ThemeProvider } from "@/components/theme-provider";
 import { VisualInspector } from "@/components/visual-inspector";
+import { hearstPlusStoryData } from "./hearst-plus-story-data";
 
 function HomePageWrapper(props: HomePageTemplateProps) {
   return (
     <div style={{ margin: "-2rem", minHeight: "100vh" }}>
-      <HomePageTemplate {...props} />
+      <ThemeProvider defaultBrandSlug="hearst-all" persistColorMode={false}>
+        <HomePageTemplate staticDestinationData={hearstPlusStoryData} {...props} />
+      </ThemeProvider>
     </div>
   );
 }
 
 const meta: Meta = {
-  title: "Templates/Home Page",
+  title: "Hearst Plus/Templates/Feed",
   parameters: {
     layout: "fullscreen",
     docs: {
       description: {
         component:
-          "Full-page brand home page template. Switch brands via the toolbar to see how the same layout adapts to each brand's colors, fonts, and tokens. The responsive examples use Tailwind's default breakpoint prefixes: base/mobile, `sm` (640px), `md` (768px), `lg` (1024px), `xl` (1280px), and `2xl` (1536px).",
+          "The current Hearst+ feed template rendered with React, Tailwind CSS 4, HDS semantic tokens, and shared shadcn-style primitives. These stories show the same responsive reader experience used by the product; no retired homepage layout variants are included.",
       },
     },
   },
@@ -32,27 +36,17 @@ type Story = StoryObj;
 
 export const Default: Story = {
   name: "Full Page",
-  render: () => <HomePageWrapper />,
-};
-
-export const LifestyleCurator: Story = {
-  name: "Lifestyle Curator",
-  render: () => <HomePageWrapper layout="overlapGrid" />,
   globals: {
-    brand: "hearst-lifestyle",
+    brand: "hearst-all",
   },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Lifestyle destination homepage shell using the aggregate Lifestyle brand mode. The page renders an infinite-style popular story river across Phase 1 lifestyle brands, with local behavior controls that re-rank the feed and explain why each story appears.",
-      },
-    },
-  },
+  render: () => <HomePageWrapper />,
 };
 
 export const WithInspector: Story = {
   name: "Visual Inspector",
+  globals: {
+    brand: "hearst-all",
+  },
   render: () => (
     <VisualInspector>
       <HomePageWrapper />
@@ -60,72 +54,51 @@ export const WithInspector: Story = {
   ),
 };
 
-export const OverlapGrid: Story = {
-  name: "Overlap Grid",
-  render: () => (
-    <HomePageWrapper layout="overlapGrid" showGridOverlay />
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Uses Tailwind breakpoint utilities to move from a 4-column mobile grid to 8 columns at `md` and 12 columns at `lg`. The collection module intentionally overlaps the hero at tablet and desktop sizes so the grid behavior is visible.",
-      },
-    },
+export const Mobile: Story = {
+  name: "Responsive: Mobile",
+  globals: {
+    brand: "hearst-all",
   },
-};
-
-export const BreakpointSamples: Story = {
-  name: "Breakpoint Guide",
-  render: () => (
-    <HomePageWrapper layout="overlapGrid" showGridOverlay />
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Use the Storybook viewport toolbar to test this story at mobile, tablet, and desktop widths. Tailwind breakpoints are viewport-based, so nested fixed-width frames do not trigger `md` or `lg` behavior reliably.",
-      },
-    },
-  },
-};
-
-export const MobileBreakpoint: Story = {
-  name: "Breakpoint: Mobile",
-  render: () => <HomePageWrapper layout="overlapGrid" showGridOverlay />,
+  render: () => <HomePageWrapper />,
   parameters: {
     viewport: { defaultViewport: "mobile1" },
     docs: {
       description: {
         story:
-          "Mobile uses the base 4-column grid. Modules stack vertically and the overlap is removed so the reading order stays clear.",
+          "The current Hearst+ feed at the Storybook mobile viewport. Modules follow the production reading order and collapse to the supported single-column experience.",
       },
     },
   },
 };
 
-export const TabletBreakpoint: Story = {
-  name: "Breakpoint: Tablet",
-  render: () => <HomePageWrapper layout="overlapGrid" showGridOverlay />,
+export const Tablet: Story = {
+  name: "Responsive: Tablet",
+  globals: {
+    brand: "hearst-all",
+  },
+  render: () => <HomePageWrapper />,
   parameters: {
     viewport: { defaultViewport: "tablet" },
     docs: {
       description: {
         story:
-          "`md` switches to an 8-column grid and lets the collection card overlap the lower-right side of the hero.",
+          "The current Hearst+ feed at the Storybook tablet viewport, using the same responsive Tailwind composition and HDS tokens as the application.",
       },
     },
   },
 };
 
-export const DesktopBreakpoint: Story = {
-  name: "Breakpoint: Desktop",
-  render: () => <HomePageWrapper layout="overlapGrid" showGridOverlay />,
+export const Desktop: Story = {
+  name: "Responsive: Desktop",
+  globals: {
+    brand: "hearst-all",
+  },
+  render: () => <HomePageWrapper />,
   parameters: {
     docs: {
       description: {
         story:
-          "`lg` and wider use a 12-column grid: hero spans 7 columns, the collection card overlaps columns 7-9, and the right rail starts at column 10.",
+          "The current desktop Hearst+ feed with its personalized river, supporting rails, and production component hierarchy.",
       },
     },
   },

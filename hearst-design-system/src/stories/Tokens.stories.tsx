@@ -180,7 +180,7 @@ function TokenMap() {
 }
 
 const meta: Meta = {
-  title: "Foundation/Tokens",
+  title: "Hearst Plus/Foundation/Tokens",
 };
 
 export default meta;

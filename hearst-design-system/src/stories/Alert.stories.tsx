@@ -20,11 +20,11 @@ function AlertRenderer({ variant, title, description }: AlertStoryProps) {
 }
 
 const meta: Meta = {
-  title: "Components/Alert",
+  title: "Hearst Plus/HDS Primitives/Alert",
   args: {
     variant: "default",
-    title: "New article published",
-    description: "Your article has been published and is now visible to readers.",
+    title: "Story saved",
+    description: "This story was added to your Read Later collection.",
   },
   argTypes: {
     variant: {
@@ -60,8 +60,8 @@ type Story = StoryObj;
 export const Default: Story = {
   args: {
     variant: "default",
-    title: "New article published",
-    description: "Your article has been published and is now visible to readers.",
+    title: "Story saved",
+    description: "This story was added to your Read Later collection.",
   },
   render: (args) => <AlertRenderer {...(args as AlertStoryProps)} />,
 };
@@ -69,8 +69,8 @@ export const Default: Story = {
 export const Destructive: Story = {
   args: {
     variant: "destructive",
-    title: "Error saving draft",
-    description: "There was a problem saving your draft. Please try again.",
+    title: "Couldn’t update your preferences",
+    description: "Your feed was not changed. Please try again.",
   },
   render: (args) => <AlertRenderer {...(args as AlertStoryProps)} />,
 };
@@ -78,8 +78,8 @@ export const Destructive: Story = {
 export const AllVariants: Story = {
   render: (args) => (
     <div className="w-[480px] space-y-4">
-      <AlertRenderer {...(args as AlertStoryProps)} variant="default" title="Default Alert" description="This is a default informational alert." />
-      <AlertRenderer {...(args as AlertStoryProps)} variant="destructive" title="Destructive Alert" description="This indicates an error or destructive action." />
+      <AlertRenderer {...(args as AlertStoryProps)} variant="default" title="Story saved" description="This story was added to your Read Later collection." />
+      <AlertRenderer {...(args as AlertStoryProps)} variant="destructive" title="Couldn’t update your preferences" description="Your feed was not changed. Please try again." />
     </div>
   ),
 };

@@ -5,7 +5,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
 const meta: Meta<typeof Switch> = {
-  title: "Components/Switch",
+  title: "Hearst Plus/HDS Primitives/Switch",
   component: Switch,
   args: {
     onCheckedChange: fn(),

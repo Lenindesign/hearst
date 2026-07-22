@@ -204,7 +204,7 @@ function HeadlineVsBody() {
 }
 
 const meta: Meta = {
-  title: "Foundation/Typography",
+  title: "Hearst Plus/Foundation/Typography",
 };
 
 export default meta;

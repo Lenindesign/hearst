@@ -3,10 +3,10 @@ import { fn } from "@storybook/test";
 import { Badge } from "@/components/ui/badge";
 
 const meta: Meta<typeof Badge> = {
-  title: "Components/Badge",
+  title: "Hearst Plus/HDS Primitives/Badge",
   component: Badge,
   args: {
-    children: "Badge",
+    children: "Recommended",
     onClick: fn(),
   },
   argTypes: {

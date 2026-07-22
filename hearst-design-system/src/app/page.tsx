@@ -1,12 +1,5 @@
-import { ThemeProvider } from "@/components/theme-provider";
-import { Showcase } from "@/components/showcase";
-import { TokenInspector } from "@/components/token-inspector";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return (
-    <ThemeProvider>
-      <Showcase />
-      <TokenInspector />
-    </ThemeProvider>
-  );
+  redirect("/hearst-plus/");
 }

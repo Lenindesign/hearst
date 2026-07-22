@@ -3,7 +3,7 @@ import { fn } from "@storybook/test";
 import { Input } from "@/components/ui/input";
 
 const meta: Meta<typeof Input> = {
-  title: "Components/Input",
+  title: "Hearst Plus/HDS Primitives/Input",
   component: Input,
   args: {
     onChange: fn(),

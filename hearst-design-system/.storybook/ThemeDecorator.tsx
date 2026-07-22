@@ -1,5 +1,6 @@
 import React, { useMemo, useEffect } from "react";
 import type { Decorator } from "@storybook/react";
+import { ReaderAccountProvider } from "../src/components/reader-account";
 import { ThemeContext } from "../src/components/theme-provider";
 import { brandToCssVars } from "../src/lib/theme-css-vars";
 import { themeOptions } from "../src/lib/theme-options";
@@ -52,7 +53,7 @@ function useGoogleFonts(fonts: string[]) {
 }
 
 export const ThemeDecorator: Decorator = (Story, context) => {
-  const brandSlug = context.globals.brand || "cosmopolitan";
+  const brandSlug = context.globals.brand || "hearst-all";
   const brand = useMemo(
     () => themeOptions.find((b) => b.slug === brandSlug) || themeOptions[0],
     [brandSlug]
@@ -75,7 +76,9 @@ export const ThemeDecorator: Decorator = (Story, context) => {
           padding: "2rem",
         } as React.CSSProperties}
       >
-        <Story />
+        <ReaderAccountProvider>
+          <Story />
+        </ReaderAccountProvider>
       </div>
     </ThemeContext.Provider>
   );

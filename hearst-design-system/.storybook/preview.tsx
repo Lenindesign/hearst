@@ -1,6 +1,7 @@
 import type { Preview } from "@storybook/react";
 import { themeOptions } from "../src/lib/theme-options";
 import { ThemeDecorator } from "./ThemeDecorator";
+import { hearstPlusStorybookTheme } from "./swiss-theme";
 import "../src/app/globals.css";
 
 const brandOptions = themeOptions.reduce(
@@ -12,7 +13,7 @@ const preview: Preview = {
   globalTypes: {
     brand: {
       name: "Brand",
-      description: "Hearst brand theme",
+      description: "Hearst publication theme",
       toolbar: {
         icon: "paintbrush",
         items: Object.keys(brandOptions).map((name) => ({
@@ -24,38 +25,32 @@ const preview: Preview = {
     },
   },
   initialGlobals: {
-    brand: "cosmopolitan",
+    brand: "hearst-all",
   },
   decorators: [ThemeDecorator],
   parameters: {
     layout: "centered",
     controls: { matchers: { color: /(background|color)$/i, date: /Date$/i } },
     backgrounds: { disable: true },
+    docs: {
+      theme: hearstPlusStorybookTheme,
+    },
     options: {
       storySort: {
         order: [
-          "Welcome",
-          "How It Works",
-          "The Designer's Manifesto",
-          "The Toolbox",
-          "Workflow Setup",
-          "AI Agents",
-          "Token Naming Guide",
-          "Typography Token Strategy",
-          "Breakpoints vs Modes",
-          "Token Workflow",
-          "QA and Jira",
-          "Figma Integration",
-          "Pencil Integration",
-          "Apps",
-          ["Hearst Plus"],
-          "Foundation",
-          ["Grid System", "Colors", "Typography", "Tokens"],
-          "Docs",
-          ["Homepage Layout Strategy", "Editorial Modes", "Template Tokens"],
-          "Templates",
-          "FRE Components",
-          "Components",
+          "Hearst Plus",
+          [
+            "Start",
+            ["Overview", "Architecture", "Component Architecture", "Technology Stack", "Designer Principles"],
+            "Product",
+            ["For You Feed", "Onboarding Journey"],
+            "Foundation",
+            ["Grid System", "Colors", "Typography", "Tokens", "Token Naming", "Token Usage"],
+            "HDS Primitives",
+            "Templates",
+            "Delivery",
+            ["Workflow", "Token Workflow", "Figma", "Pencil", "Quality"],
+          ],
         ],
       },
     },

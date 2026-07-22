@@ -3,10 +3,10 @@ import { fn } from "@storybook/test";
 import { Button } from "@/components/ui/button";
 
 const meta: Meta<typeof Button> = {
-  title: "Components/Button",
+  title: "Hearst Plus/HDS Primitives/Button",
   component: Button,
   args: {
-    children: "Button",
+    children: "Save story",
     onClick: fn(),
   },
   argTypes: {

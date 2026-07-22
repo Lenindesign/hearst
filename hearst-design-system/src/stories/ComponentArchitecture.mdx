@@ -1,0 +1,127 @@
+import { Meta } from "@storybook/blocks";
+import { HearstPlusDocScope, SpecTable } from "./hearst-plus-docs";
+
+<Meta title="Hearst Plus/Start/Component Architecture" />
+
+# Hearst+ component architecture
+
+## HDS ownership, shadcn conventions, Base UI behavior, and Tailwind styling
+
+Hearst+ does not ship a generic component library unchanged. Its reusable controls are **Hearst-owned React components** that combine HDS semantic tokens, Tailwind CSS utilities, shadcn/ui composition conventions, and Base UI interaction primitives.
+
+<HearstPlusDocScope owner="Engineering" source="components.json, src/components/ui/, src/app/globals.css, src/lib/tokens.css">
+  This page documents the component layers used by the current Hearst+ implementation. It distinguishes source ownership from the libraries that help implement behavior and styling.
+</HearstPlusDocScope>
+
+## The architecture in one view
+
+```text
+Hearst+ product experiences
+HomePageTemplate, article readers, video surfaces, onboarding
+                         |
+                         v
+Hearst-owned components and patterns
+Button, Input, Tabs, ArticleCard, Grid, navigation, story modules
+                         |
+              +----------+----------+
+              |                     |
+              v                     v
+shadcn/ui conventions          Base UI primitives
+local source structure,        accessible state, focus,
+variants, slots, aliases        keyboard and interaction behavior
+              |                     |
+              +----------+----------+
+                         |
+                         v
+Tailwind CSS 4 composition
+responsive layout, states, spacing, typography, utility styling
+                         |
+                         v
+HDS semantic tokens
+brand themes, colors, type, spacing, borders, radius, motion
+```
+
+## What each layer owns
+
+<SpecTable rows={[
+  { label: "Hearst Design System", value: "Defines semantic decisions and brand inheritance. HDS owns the visual contract, not a third-party preset.", evidence: <code>tokens/, src/lib/tokens.css, src/app/globals.css</code> },
+  { label: "Hearst+ components", value: "Own the local React API, product variants, editorial behavior, and source code used by the application.", evidence: <code>src/components/ui/, src/components/home-page.tsx</code> },
+  { label: "shadcn/ui", value: "Supplies composition conventions, local-source organization, CSS-variable conventions, and the base-nova configuration. It is not a hosted runtime design system.", evidence: <code>components.json</code> },
+  { label: "Base UI", value: "Supplies headless behavior for controls that require robust state, focus, keyboard, and accessibility mechanics.", evidence: <code>@base-ui/react imports in src/components/ui/</code> },
+  { label: "Tailwind CSS 4", value: "Composes responsive layout, interaction states, and token-backed visual rules directly in component source.", evidence: <code>@import "tailwindcss" in src/app/globals.css</code> },
+  { label: "React + Next.js", value: "Compose primitives into working reader journeys, routes, data boundaries, and interactive product surfaces.", evidence: <code>src/app/, src/components/</code> },
+]}/>
+
+## Are the HDS primitives shadcn components?
+
+**They are Hearst-owned components built with shadcn/ui conventions.** The source is checked into this repository under `src/components/ui/`, where it is adapted to HDS tokens and Hearst+ requirements. Updating shadcn does not automatically replace the product components.
+
+For controls such as Button, Switch, and Tabs:
+
+1. Base UI provides the accessible headless primitive.
+2. The local component defines its public React API and variants.
+3. Tailwind classes compose layout, interaction states, and responsive behavior.
+4. HDS semantic CSS variables supply the active Hearst+ or publication theme.
+
+```tsx
+<Button
+  variant="outline"
+  className="border-border bg-background text-foreground hover:bg-muted"
+>
+  Save story
+</Button>
+```
+
+The class names express the component treatment, while `border`, `background`, `foreground`, and `muted` resolve through the active HDS theme rather than fixed brand colors.
+
+## Primitive and product boundaries
+
+| Layer | Examples | Reuse expectation |
+|---|---|---|
+| HDS primitive | Button, Input, Switch, Tabs, Badge, Avatar, Divider | Reuse before creating another control with the same responsibility |
+| Editorial component | ArticleCard, ArticleByline, ArticleHero, Grid, media treatments | Reuse across feed and reader contexts when the content contract matches |
+| Hearst+ product module | Story river, Daily Habit, Trending, Delish Shorts, personalization console | Product-specific composition built from primitives, tokens, and editorial components |
+| Page template | HomePageTemplate and article-reader templates | Integrated product behavior, providers, routing, and responsive composition |
+
+Not every visual element must be a Base UI primitive. Static editorial composition can use semantic React markup and Tailwind directly. Interactive controls should reuse the local HDS primitive when one already owns the required behavior.
+
+## Token flow
+
+```text
+HDS token JSON
+  -> Style Dictionary output
+  -> generated CSS variables
+  -> Hearst+ and publication theme aliases
+  -> Tailwind semantic utilities or arbitrary variable utilities
+  -> local component and product-module styles
+```
+
+Use semantic classes such as `bg-background`, `text-foreground`, and `border-border` for shared UI meaning. Use scoped Hearst+ variables such as `var(--hp-surface)` only when the product contract is specifically owned by Hearst+. Do not hard-code a publication color into a reusable primitive.
+
+## Developer decision guide
+
+1. **Start with an existing HDS primitive.** Check `src/components/ui/` before adding a new control.
+2. **Use Base UI for complex interaction.** Prefer a headless primitive for focus, keyboard, selection, disclosure, or modal behavior.
+3. **Style with Tailwind.** Keep responsive and state styling close to the component.
+4. **Resolve appearance through HDS tokens.** Shared components must inherit destination and publication themes.
+5. **Compose product behavior above the primitive layer.** Ranking, feeds, readers, and video behavior do not belong inside Button, Badge, or Tabs.
+6. **Document and verify states in Storybook.** Cover default, hover, focus, disabled, selected, dark mode, and relevant responsive ranges.
+
+## Source examples
+
+<SpecTable rows={[
+  { label: "Button", value: "Base UI button behavior with CVA variants, Tailwind utilities, and semantic color tokens", evidence: <code>src/components/ui/button.tsx</code> },
+  { label: "Switch", value: "Base UI root and thumb styled through Tailwind data-state selectors", evidence: <code>src/components/ui/switch.tsx</code> },
+  { label: "Tabs", value: "Base UI tab semantics with local variants and token-backed active states", evidence: <code>src/components/ui/tabs.tsx</code> },
+  { label: "Class composition", value: "clsx plus tailwind-merge keeps conditional utilities deterministic", evidence: <code>src/lib/utils.ts</code> },
+  { label: "Theme bridge", value: "Hearst+ aliases map HDS semantic decisions into component-facing variables", evidence: <code>.hearst-plus-theme in src/app/globals.css</code> },
+  { label: "Integrated use", value: "The feed and article templates reuse local primitives alongside custom editorial modules", evidence: <code>src/components/home-page.tsx, src/components/article-page.tsx</code> },
+]}/>
+
+## Accuracy rule
+
+Describe the stack as:
+
+> **Hearst-owned components built with shadcn/ui conventions, Base UI accessibility, Tailwind CSS 4, and HDS semantic tokens.**
+
+Do not describe the primitives as generic shadcn components, and do not imply that Tailwind or Base UI owns the Hearst visual system.

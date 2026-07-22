@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/grid";
 
 const meta: Meta = {
-  title: "Foundation/Grid System",
+  title: "Hearst Plus/Foundation/Grid System",
   parameters: {
     layout: "fullscreen",
     docs: {

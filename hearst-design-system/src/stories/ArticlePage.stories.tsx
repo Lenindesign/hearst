@@ -217,7 +217,7 @@ export const WithGridOverlay: Story = {
     docs: {
       description: {
         story:
-          "Same as **Full Page** here — the canvas toggle starts with the guide on. Compare with **Templates / Home Page → Overlap Grid**. Use a **tablet or desktop** viewport (`sm+`) so `GridOverlay` is not hidden.",
+          "Same as **Full Page** here — the canvas toggle starts with the guide on. Use a **tablet or desktop** viewport (`sm+`) so `GridOverlay` is not hidden, and compare responsive behavior with **Hearst Plus / Templates / Feed**.",
       },
     },
   },

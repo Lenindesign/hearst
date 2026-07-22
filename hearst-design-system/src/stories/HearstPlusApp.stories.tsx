@@ -1,28 +1,40 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
-import { HearstPlusApp } from "@/components/hearst-plus-app";
+import { HomePageTemplate } from "@/components/home-page";
+import { ThemeProvider } from "@/components/theme-provider";
+import { hearstPlusStoryData } from "./hearst-plus-story-data";
 
-const meta: Meta<typeof HearstPlusApp> = {
-  title: "Apps/AUTOS",
-  component: HearstPlusApp,
+function HearstPlusStory() {
+  return (
+    <div style={{ margin: "-2rem", minHeight: "100vh" }}>
+      <ThemeProvider defaultBrandSlug="hearst-all" persistColorMode={false}>
+        <HomePageTemplate staticDestinationData={hearstPlusStoryData} />
+      </ThemeProvider>
+    </div>
+  );
+}
+
+const meta: Meta<typeof HearstPlusStory> = {
+  title: "Hearst Plus/Product/For You Feed",
+  component: HearstPlusStory,
   parameters: {
     layout: "fullscreen",
     docs: {
       description: {
         component:
-          "AUTOS is a focused daily destination prototype for Autoweek, MotorTrend, Car and Driver, Road & Track, and Hot Rod. It ranks auto stories around user intent, followed topics, saved collections, and a personalized feed.",
+          "The integrated React and Next.js Hearst+ reader used by `/hearst-plus/`. This Storybook version uses the current checked-in Lifestyle, Autos, Fashion & Luxury, and Enthusiast & Wellness catalogs, the HDS token bridge, and browser-local demo personalization.",
       },
     },
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof HearstPlusApp>;
+type Story = StoryObj<typeof HearstPlusStory>;
 
-export const DailyDestination: Story = {
-  name: "Daily Destination",
+export const ForYouFeed: Story = {
+  name: "For You Feed",
   globals: {
-    brand: "hearst-plus",
+    brand: "hearst-all",
   },
-  render: () => <HearstPlusApp />,
+  render: () => <HearstPlusStory />,
 };

@@ -209,7 +209,7 @@ function AllBrandsOverview() {
 }
 
 const meta: Meta = {
-  title: "Foundation/Colors",
+  title: "Hearst Plus/Foundation/Colors",
 };
 
 export default meta;

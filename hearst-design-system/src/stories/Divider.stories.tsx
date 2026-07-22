@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Divider } from "@/components/ui/divider";
 
 const meta: Meta<typeof Divider> = {
-  title: "Components/Divider",
+  title: "Hearst Plus/HDS Primitives/Divider",
   component: Divider,
   argTypes: {
     variant: {

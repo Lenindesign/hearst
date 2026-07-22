@@ -29,7 +29,7 @@ function AvatarRenderer({ size, src, fallback, showBadge, onClick }: AvatarStory
 }
 
 const meta: Meta = {
-  title: "Components/Avatar",
+  title: "Hearst Plus/HDS Primitives/Avatar",
   args: {
     size: "default",
     src: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face",

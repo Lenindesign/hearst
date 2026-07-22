@@ -3,10 +3,10 @@ import { fn } from "@storybook/test";
 import { Chip } from "@/components/ui/chip";
 
 const meta: Meta<typeof Chip> = {
-  title: "Components/Chip",
+  title: "Hearst Plus/HDS Primitives/Chip",
   component: Chip,
   args: {
-    children: "Chip",
+    children: "Home",
     onClick: fn(),
   },
   argTypes: {

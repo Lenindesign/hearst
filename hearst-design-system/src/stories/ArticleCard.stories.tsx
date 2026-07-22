@@ -162,7 +162,7 @@ function BrandLargeCard(props: Partial<ArticleCardStoryProps>) {
 }
 
 const meta: Meta = {
-  title: "Components/ArticleCard",
+  title: "Hearst Plus/HDS Primitives/Article Card",
   args: {
     layout: "vertical",
     size: "default",

@@ -3,10 +3,10 @@ import { fn } from "@storybook/test";
 import { LinkComponent } from "@/components/ui/link";
 
 const meta: Meta<typeof LinkComponent> = {
-  title: "Components/Link",
+  title: "Hearst Plus/HDS Primitives/Link",
   component: LinkComponent,
   args: {
-    children: "Link Text",
+    children: "Open story",
     href: "#",
     onClick: fn(),
   },

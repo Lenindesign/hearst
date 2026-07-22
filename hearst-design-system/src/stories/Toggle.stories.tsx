@@ -3,7 +3,7 @@ import { fn } from "@storybook/test";
 import { Toggle } from "@/components/ui/toggle";
 
 const meta: Meta<typeof Toggle> = {
-  title: "Components/Toggle",
+  title: "Hearst Plus/HDS Primitives/Toggle",
   component: Toggle,
   args: {
     children: "B",
