@@ -3949,6 +3949,243 @@ function LifestyleCardModule({
   return null;
 }
 
+type GalleryPreviewState =
+  | { status: "loading" }
+  | { status: "ready"; images: FullscreenReaderImage[] }
+  | { status: "unavailable" };
+
+const richGalleryImageMinimum = 5;
+const galleryPreviewCache = new Map<string, GalleryPreviewState>();
+const galleryPreviewRequests = new Map<string, Promise<GalleryPreviewState>>();
+
+function getGalleryPreviewImages(story: LifestyleRiverStory, article: LiveArticleData) {
+  const images: FullscreenReaderImage[] = [{
+    src: story.image,
+    alt: `${story.brand}: ${story.title}`,
+  }];
+
+  article.blocks.forEach((block) => {
+    if (block.type !== "image" || images.some((image) => image.src === block.url)) return;
+    images.push({
+      src: block.url,
+      alt: block.alt,
+      caption: block.caption,
+      credit: block.credit,
+    });
+  });
+
+  return images;
+}
+
+function loadGalleryPreview(story: LifestyleRiverStory) {
+  const cached = galleryPreviewCache.get(story.id);
+  if (cached) return Promise.resolve(cached);
+
+  const activeRequest = galleryPreviewRequests.get(story.id);
+  if (activeRequest) return activeRequest;
+
+  if (!story.sourceUrl) {
+    const unavailable = { status: "unavailable" } satisfies GalleryPreviewState;
+    galleryPreviewCache.set(story.id, unavailable);
+    return Promise.resolve(unavailable);
+  }
+
+  const request = fetch(`/api/live-article/?url=${encodeURIComponent(story.sourceUrl)}`)
+    .then(async (response) => {
+      if (!response.ok) throw new Error(`Gallery preview request failed with ${response.status}`);
+      const article = await response.json() as LiveArticleData;
+      const images = getGalleryPreviewImages(story, article);
+      return images.length >= richGalleryImageMinimum
+        ? { status: "ready", images } satisfies GalleryPreviewState
+        : { status: "unavailable" } satisfies GalleryPreviewState;
+    })
+    .catch(() => ({ status: "unavailable" }) satisfies GalleryPreviewState)
+    .then((result) => {
+      galleryPreviewCache.set(story.id, result);
+      galleryPreviewRequests.delete(story.id);
+      return result;
+    });
+
+  galleryPreviewRequests.set(story.id, request);
+  return request;
+}
+
+function useGalleryPreview(story: LifestyleRiverStory, enabled: boolean) {
+  const [preview, setPreview] = React.useState<GalleryPreviewState>(() =>
+    galleryPreviewCache.get(story.id) ?? (enabled ? { status: "loading" } : { status: "unavailable" })
+  );
+
+  React.useEffect(() => {
+    let active = true;
+
+    if (!enabled) {
+      setPreview({ status: "unavailable" });
+      return () => {
+        active = false;
+      };
+    }
+
+    setPreview(galleryPreviewCache.get(story.id) ?? { status: "loading" });
+    void loadGalleryPreview(story).then((result) => {
+      if (active) setPreview(result);
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [enabled, story]);
+
+  return preview;
+}
+
+function LifestyleStoryActions({
+  story,
+  saved,
+  commentCount,
+  onOpen,
+  onSave,
+  onMoreLikeThis,
+  onHide,
+}: {
+  story: LifestyleRiverStory;
+  saved: boolean;
+  commentCount: number;
+  onOpen: () => void;
+  onSave: () => void;
+  onMoreLikeThis: () => void;
+  onHide: () => void;
+}) {
+  return (
+    <div className="relative z-20 mt-5 flex flex-wrap gap-x-5 gap-y-2" onClick={(event) => event.stopPropagation()}>
+      <Button
+        variant="ghost"
+        size="xs"
+        className={cn(quietStoryActionButtonClass, saved && "text-primary hover:text-primary")}
+        onClick={onSave}
+        aria-pressed={saved}
+      >
+        <Bookmark className="h-3.5 w-3.5" weight={saved ? "fill" : "regular"} aria-hidden />
+        {saved ? "Saved" : "Save"}
+      </Button>
+      <Button
+        variant="ghost"
+        size="xs"
+        className={quietStoryActionButtonClass}
+        onClick={onMoreLikeThis}
+      >
+        <Plus className="h-3.5 w-3.5" aria-hidden />
+        More like this
+      </Button>
+      <Button variant="ghost" size="xs" onClick={onOpen}>
+        <MessageCircle className="mr-1.5 h-3.5 w-3.5" aria-hidden />
+        {commentCount}
+      </Button>
+      <span className="inline-flex items-center gap-1 max-[640px]:hidden">
+        <Button variant="ghost" size="xs" onClick={onHide}>
+          <EyeOff className="mr-1.5 h-3.5 w-3.5" aria-hidden />
+          Hide
+        </Button>
+        <LiveStoryBadge story={story} />
+      </span>
+    </div>
+  );
+}
+
+function RichPhotoGalleryCard({
+  story,
+  images,
+  saved,
+  commentCount,
+  onOpen,
+  onSave,
+  onMoreLikeThis,
+  onHide,
+}: {
+  story: LifestyleRiverStory;
+  images: FullscreenReaderImage[];
+  saved: boolean;
+  commentCount: number;
+  onOpen: () => void;
+  onSave: () => void;
+  onMoreLikeThis: () => void;
+  onHide: () => void;
+}) {
+  const visibleImages = images.slice(0, richGalleryImageMinimum);
+  const remainingImageCount = Math.max(0, images.length - visibleImages.length);
+
+  return (
+    <article className="group/card relative min-w-0 cursor-pointer overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/50">
+      <button
+        type="button"
+        onClick={onOpen}
+        className="peer absolute inset-0 z-10 rounded-[8px] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/60"
+        aria-label={`Open photo gallery: ${story.title}`}
+      />
+
+      <div className="relative min-w-0 p-4 sm:p-5">
+        <div className="mb-3 flex flex-wrap items-center gap-2">
+          <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+            {story.signal}
+          </span>
+          <LifestyleBrandSource story={story} />
+          <span className="inline-flex items-center gap-1 text-[length:var(--text-token-4xs)] font-semibold text-muted-foreground">
+            <Camera className="h-3.5 w-3.5" aria-hidden />
+            {images.length} photos
+          </span>
+        </div>
+        <h2 className="headline break-words text-2xl leading-tight transition-colors group-hover/card:text-primary group-focus-within/card:text-primary sm:text-3xl">
+          {story.title}
+        </h2>
+        <p className="mt-2 line-clamp-3 text-sm leading-6 text-muted-foreground">
+          {story.summary}
+        </p>
+      </div>
+
+      <div
+        className="grid h-[300px] min-w-0 grid-cols-6 grid-rows-[minmax(0,1.35fr)_minmax(0,1fr)] gap-px bg-border sm:h-[440px]"
+        aria-label={`${images.length} photos from ${story.title}`}
+      >
+        {visibleImages.map((image, index) => (
+          <div
+            key={image.src}
+            className={cn(
+              "relative min-w-0 overflow-hidden bg-muted",
+              index < 2 ? "col-span-3" : "col-span-2"
+            )}
+          >
+            <Image
+              src={image.src}
+              alt={image.alt}
+              fill
+              sizes={index < 2
+                ? "(max-width: 640px) 50vw, (max-width: 1024px) 34vw, 320px"
+                : "(max-width: 640px) 33vw, (max-width: 1024px) 22vw, 220px"}
+              className="object-cover transition-transform duration-300 group-hover/card:scale-[1.01]"
+            />
+            {index === visibleImages.length - 1 && remainingImageCount > 0 ? (
+              <span className="absolute inset-0 flex items-center justify-center bg-black/50 text-3xl font-bold text-white sm:text-4xl">
+                +{remainingImageCount}
+              </span>
+            ) : null}
+          </div>
+        ))}
+      </div>
+
+      <div className="relative min-w-0 px-4 pb-4 sm:px-5 sm:pb-5">
+        <LifestyleStoryActions
+          story={story}
+          saved={saved}
+          commentCount={commentCount}
+          onOpen={onOpen}
+          onSave={onSave}
+          onMoreLikeThis={onMoreLikeThis}
+          onHide={onHide}
+        />
+      </div>
+    </article>
+  );
+}
+
 function LifestyleRiverCard({
   story,
   saved,
@@ -3971,6 +4208,22 @@ function LifestyleRiverCard({
   const kind = getLifestyleCardKind(story);
   const [videoPlaying, setVideoPlaying] = React.useState(false);
   const isVideo = kind === "video";
+  const galleryPreview = useGalleryPreview(story, kind === "gallery" && isExplicitGalleryStory(story));
+
+  if (galleryPreview.status === "ready") {
+    return (
+      <RichPhotoGalleryCard
+        story={story}
+        images={galleryPreview.images}
+        saved={saved}
+        commentCount={commentCount}
+        onOpen={onOpen}
+        onSave={onSave}
+        onMoreLikeThis={onMoreLikeThis}
+        onHide={onHide}
+      />
+    );
+  }
 
   return (
     <article className={cn(
@@ -4021,38 +4274,15 @@ function LifestyleRiverCard({
           {story.summary}
         </p>
         <LifestyleCardModule story={story} kind={kind} />
-        <div className="relative z-20 mt-5 flex flex-wrap gap-x-5 gap-y-2" onClick={(event) => event.stopPropagation()}>
-          <Button
-            variant="ghost"
-            size="xs"
-            className={cn(quietStoryActionButtonClass, saved && "text-primary hover:text-primary")}
-            onClick={onSave}
-            aria-pressed={saved}
-          >
-            <Bookmark className="h-3.5 w-3.5" weight={saved ? "fill" : "regular"} aria-hidden />
-            {saved ? "Saved" : "Save"}
-          </Button>
-          <Button
-            variant="ghost"
-            size="xs"
-            className={quietStoryActionButtonClass}
-            onClick={onMoreLikeThis}
-          >
-            <Plus className="h-3.5 w-3.5" aria-hidden />
-            More like this
-          </Button>
-          <Button variant="ghost" size="xs" onClick={onOpen}>
-            <MessageCircle className="mr-1.5 h-3.5 w-3.5" aria-hidden />
-            {commentCount}
-          </Button>
-          <span className="inline-flex items-center gap-1 max-[640px]:hidden">
-            <Button variant="ghost" size="xs" onClick={onHide}>
-              <EyeOff className="mr-1.5 h-3.5 w-3.5" aria-hidden />
-              Hide
-            </Button>
-            <LiveStoryBadge story={story} />
-          </span>
-        </div>
+        <LifestyleStoryActions
+          story={story}
+          saved={saved}
+          commentCount={commentCount}
+          onOpen={onOpen}
+          onSave={onSave}
+          onMoreLikeThis={onMoreLikeThis}
+          onHide={onHide}
+        />
       </div>
     </article>
   );
