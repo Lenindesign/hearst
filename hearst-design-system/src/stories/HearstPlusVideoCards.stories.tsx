@@ -11,13 +11,19 @@ import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { themeOptions } from "@/lib/theme-options";
 import { getComponentStoriesForBrand, getComponentStoryForBrand } from "./hearst-plus-component-fixtures";
 
+const STORYBOOK_VIDEO_FIXTURE = "/storybook-video-fixture.mp4";
+const STORYBOOK_VERTICAL_VIDEO_FIXTURE = "/storybook-vertical-video-fixture.mp4";
+
 function getVideoStory(brandSlug: string): LifestyleRiverStory {
   const sourceStory = getComponentStoryForBrand(brandSlug);
   return {
     ...sourceStory,
     id: `storybook-video-${sourceStory.id}`,
     mediaKind: "video",
-    videoDuration: 93,
+    videoUrl: STORYBOOK_VIDEO_FIXTURE,
+    videoDuration: 5,
+    videoWidth: 960,
+    videoHeight: 540,
     signal: "Editor Pick",
   };
 }
@@ -30,10 +36,10 @@ function getPortraitVideoStories(brandSlug: string) {
       ...story,
       id: `storybook-short-${index}-${story.id}`,
       mediaKind: "video",
-      videoUrl: "/storybook-video-placeholder.mp4",
-      videoDuration: 24 + index * 7,
-      videoWidth: 720,
-      videoHeight: 1280,
+      videoUrl: STORYBOOK_VERTICAL_VIDEO_FIXTURE,
+      videoDuration: 5,
+      videoWidth: 540,
+      videoHeight: 960,
     } satisfies LifestyleRiverStory;
   });
 }
@@ -62,7 +68,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "The production video-card family used by Hearst+ feeds, video indexes, trending rails, and publication-aware vertical video carousels. Poster-state stories intentionally avoid a fake playable URL. The vertical-carousel example uses a checked-in demo clip with current story metadata to demonstrate controls and layout; it is not presented as live feed playback.",
+          "The production video-card family used by Hearst+ feeds, video indexes, trending rails, and publication-aware vertical video carousels. Interactive stories use a checked-in CC0 video fixture so playback, controls, loading, and responsive behavior can be tested deterministically. Publication metadata and poster images come from the generated Hearst fixture set; the demo clip is not presented as live feed content.",
       },
     },
   },

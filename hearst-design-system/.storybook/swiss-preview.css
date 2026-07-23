@@ -1,0 +1,32 @@
+/*
+ * Storybook documentation chrome follows a restrained Swiss specification:
+ * square geometry, flat surfaces, and rules instead of decorative cards.
+ *
+ * Keep this scoped to Storybook-owned documentation surfaces. Components
+ * rendered inside a story canvas retain their production border-radius tokens.
+ */
+.sbdocs-wrapper,
+.sbdocs-content,
+.sbdocs-preview,
+.docs-story,
+.docblock-source,
+.docblock-argstable,
+.sbdocs-content :where(aside, blockquote, table, pre, code):not(.docs-story *) {
+  border-radius: 0 !important;
+}
+
+.sbdocs-preview,
+.docblock-source,
+.docblock-argstable,
+.sbdocs-content :where(aside, blockquote, table, pre):not(.docs-story *) {
+  box-shadow: none !important;
+}
+
+/* Flatten legacy inline MDX treatments without changing real component demos. */
+.sbdocs-content [style*="border-radius"]:not(.docs-story *) {
+  border-radius: 0 !important;
+}
+
+.sbdocs-content :where(aside, blockquote):not(.docs-story *) {
+  border-color: #c9c9c4 !important;
+}

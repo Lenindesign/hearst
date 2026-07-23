@@ -2569,7 +2569,7 @@ function CollectionList({
         <h3 className="text-xl uppercase headline text-primary">
           {content.collectionTitle}
         </h3>
-        <Divider variant="default" size="lg" className="bg-primary" />
+        <Divider variant="default" size="sm" className="bg-primary" />
       </div>
       <BigStoryFeedStacked
         items={feedItems}

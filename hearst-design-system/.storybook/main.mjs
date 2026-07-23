@@ -9,7 +9,7 @@ const storybookDirectory = path.dirname(fileURLToPath(import.meta.url));
 const config = {
   stories: [
     "../src/stories/{AgenticArchitecture,ComponentArchitecture,DesignersManifesto,FigmaIntegration,GridSystem,HearstOnboardingJourney}.mdx",
-    "../src/stories/{HearstPlusComponentInventory,PencilIntegration,QAProcess,TailwindShadcn,TemplateTokens,TokenNaming}.mdx",
+    "../src/stories/{HearstPlusComponentInventory,HearstPlusSiteMap,PencilIntegration,QAProcess,TailwindShadcn,TemplateTokens,TokenNaming}.mdx",
     "../src/stories/{TokenWorkflow,Toolbox,Welcome,WorkflowSetup}.mdx",
     "../src/stories/{Alert,ArticleCard,Avatar,Badge,Button,Chip,Colors,Divider,Grid}.stories.@(ts|tsx)",
     "../src/stories/{HDSHPModules,HearstPlusApp,HearstPlusEditorialCards,HearstPlusNavigation,HearstPlusReaderOverlays,HearstPlusVideoCards}.stories.@(ts|tsx)",

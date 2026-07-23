@@ -3,6 +3,7 @@ import { themeOptions } from "../src/lib/theme-options";
 import { ThemeDecorator } from "./ThemeDecorator";
 import { hearstPlusStorybookTheme } from "./swiss-theme";
 import "../src/app/globals.css";
+import "./swiss-preview.css";
 
 declare global {
   interface Window {
@@ -106,7 +107,7 @@ const preview: Preview = {
           "Hearst Plus",
           [
             "Start",
-            ["Overview", "Architecture", "Component Architecture", "Technology Stack", "Designer Principles"],
+            ["Overview", "Site Map", "Architecture", "Component Architecture", "Technology Stack", "Designer Principles"],
             "Product",
             ["For You Feed", "Onboarding Journey"],
             "Components",

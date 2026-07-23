@@ -1,13 +1,6 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { useContext } from "react";
-import { brands } from "@/lib/brands";
-
-function useBrand() {
-  const el = document.querySelector("[data-brand]");
-  const slug = el?.getAttribute("data-brand") || "cosmopolitan";
-  return brands.find((b) => b.slug === slug) || brands[0];
-}
+import { useTheme } from "@/components/theme-provider";
 
 function FontSpecimen({
   label,
@@ -58,7 +51,7 @@ function FontSpecimen({
 }
 
 function TypographyShowcase() {
-  const brand = useBrand();
+  const { brand } = useTheme();
 
   const sansWeights = [
     { weight: 400, name: "Regular" },
@@ -71,7 +64,9 @@ function TypographyShowcase() {
   return (
     <div className="w-full max-w-[720px] min-w-0 space-y-12">
       <div>
-        <h2 className="text-2xl font-bold tracking-tight mb-1">{brand.name}</h2>
+        <h2 className="mb-1 text-4xl font-bold leading-none tracking-tight sm:text-[64px]">
+          {brand.name}
+        </h2>
         <p className="text-sm text-muted-foreground">
           Primary: <strong>{brand.fontDefault}</strong> · Secondary:{" "}
           <strong>{brand.fontSecondary}</strong> · Headline:{" "}
@@ -109,7 +104,6 @@ function TypographyShowcase() {
 }
 
 function TypeScale() {
-  const brand = useBrand();
   const sizes = [
     { name: "Display", class: "text-6xl", px: "60px" },
     { name: "H1", class: "text-5xl", px: "48px" },
@@ -142,7 +136,7 @@ function TypeScale() {
 }
 
 function HeadlineVsBody() {
-  const brand = useBrand();
+  const { brand } = useTheme();
 
   return (
     <div className="w-full max-w-[720px] min-w-0 space-y-8">

@@ -12,10 +12,11 @@ export function HearstPlusDocScope({ owner, source, children }: HearstPlusDocSco
       style={{
         margin: "20px 0 32px",
         padding: "16px 18px",
-        border: "1px solid #d6d3d1",
-        borderRadius: "6px",
-        background: "#fafaf9",
-        color: "#1c1917",
+        border: "1px solid #c9c9c4",
+        borderLeft: "4px solid #111111",
+        borderRadius: 0,
+        background: "#f2f2ef",
+        color: "#111111",
       }}
     >
       <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "8px" }}>
