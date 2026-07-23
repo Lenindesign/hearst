@@ -10,6 +10,30 @@ interface BrandLogoProps {
   variant?: "logo" | "icon";
 }
 
+function applySvgColor(markup: string, color: string) {
+  const recoloredMarkup = markup
+    .replace(/\b(fill|stroke)=(["'])([^"']*)\2/gi, (match, property, quote, value) =>
+      value.trim().toLowerCase() === "none"
+        ? match
+        : `${property}=${quote}${color}${quote}`
+    )
+    .replace(/\b(fill|stroke)\s*:\s*([^;"}]+)/gi, (match, property, value) =>
+      value.trim().toLowerCase() === "none"
+        ? match
+        : `${property}:${color}`
+    );
+
+  return recoloredMarkup.replace(/<svg\b[^>]*>/i, (svgTag) => {
+    const withColor = /\bcolor=(["'])/i.test(svgTag)
+      ? svgTag.replace(/\bcolor=(["'])[^"']*\1/i, `color="${color}"`)
+      : svgTag.replace("<svg", `<svg color="${color}"`);
+
+    return /\bfill=(["'])/i.test(withColor)
+      ? withColor
+      : withColor.replace("<svg", `<svg fill="${color}"`);
+  });
+}
+
 export function BrandLogo({ slug, className = "", color, variant = "logo" }: BrandLogoProps) {
   const [loadedSvg, setLoadedSvg] = useState<{ src: string; markup: string } | null>(null);
   const src = getBrandLogoSrc(slug, variant);
@@ -31,14 +55,7 @@ export function BrandLogo({ slug, className = "", color, variant = "logo" }: Bra
 
   if (!src || loadedSvg?.src !== src) return null;
 
-  let html = loadedSvg.markup;
-  if (color) {
-    html = html
-      .replace(/fill="[^"]*"/g, `fill="${color}"`)
-      .replace(/style="[^"]*fill:\s*[^;"]*;?/g, (m) =>
-        m.replace(/fill:\s*[^;"]*/, `fill:${color}`)
-      );
-  }
+  const html = color ? applySvgColor(loadedSvg.markup, color) : loadedSvg.markup;
 
   return (
     <span

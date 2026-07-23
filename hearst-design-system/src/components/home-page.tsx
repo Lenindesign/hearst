@@ -2054,7 +2054,9 @@ export function MainNav({
                 compact: "h-[16px] max-w-[220px] sm:h-[23px] sm:max-w-[400px]",
                 regular: "h-[22px] max-w-[280px] sm:h-[34px] sm:max-w-[580px]",
               };
-  const logoColor = selectedBrand
+  const logoColor = darkMode
+    ? "#ffffff"
+    : selectedBrand
     ? mastheadSlug === "motortrend"
       ? "#e90c17"
       : mastheadSlug === "hot-rod"
@@ -2064,8 +2066,6 @@ export function MainNav({
       : colorMode === "dark"
         ? "#ffffff"
         : "#121212"
-    : darkMode
-      ? "#ffffff"
     : brand.slug === "hearst-flux" && colorMode === "dark"
       ? "#ffffff"
       : undefined;
