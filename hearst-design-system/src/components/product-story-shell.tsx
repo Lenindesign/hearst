@@ -9,39 +9,61 @@ import { themeOptions } from "@/lib/theme-options";
 
 export const productImage = "https://hips.hearstapps.com/hmg-prod/images/jimmy-tatro-and-zoey-deutch-attend-the-2025-lacma-art-film-news-photo-1762180233.pjpeg";
 
-export function ProductHeader({ current }: { current: "story" | "blueprint" }) {
+const productPages = [
+  { id: "story", label: "Product story", mobileLabel: "Story", href: "/about-hearst-magazines/" },
+  { id: "value", label: "Why Hearst+", mobileLabel: "Why Hearst+", href: "/why-hearst-plus/" },
+  { id: "blueprint", label: "Blueprint", mobileLabel: "Blueprint", href: "/hearst-product-blueprint/" },
+] as const;
+
+export function ProductHeader({ current }: { current: "story" | "value" | "blueprint" }) {
   return (
     <header className="border-b border-slate-200 bg-white">
       <div className="mx-auto flex max-w-[1360px] items-center justify-between gap-5 px-5 py-4 md:px-10">
         <Link href={getHearstDestinationRoute("all")} className="flex items-center" aria-label="Hearst Magazines">
-          <LogoMark slug="hearst-all" name="Hearst Magazines" color="#2D75B9" className="h-6 w-40" />
+          <LogoMark slug="hearst-all" name="Hearst Magazines" color="#2D75B9" className="h-6 w-32 sm:w-40" />
         </Link>
         <nav aria-label="Product pages" className="hidden items-center gap-6 text-sm font-semibold md:flex">
-          <Link className={current === "story" ? "text-[#2D75B9]" : "text-slate-600 hover:text-slate-950"} href="/about-hearst-magazines/">Product story</Link>
-          <Link className={current === "blueprint" ? "text-[#2D75B9]" : "text-slate-600 hover:text-slate-950"} href="/hearst-product-blueprint/">Blueprint</Link>
+          {productPages.map((page) => (
+            <Link
+              key={page.id}
+              className={current === page.id ? "text-[#2D75B9]" : "text-slate-600 hover:text-slate-950"}
+              href={page.href}
+            >
+              {page.label}
+            </Link>
+          ))}
           <Link className="text-slate-600 hover:text-slate-950" href={getHearstDestinationRoute("all")}>Open prototype</Link>
         </nav>
-        <Link href={current === "story" ? "/hearst-product-blueprint/" : "/about-hearst-magazines/"} className="text-sm font-bold text-[#2D75B9] md:hidden">{current === "story" ? "Blueprint" : "Story"}</Link>
+        <nav aria-label="Related product pages" className="flex items-center gap-3 text-[11px] font-bold text-[#2D75B9] sm:gap-4 sm:text-xs md:hidden">
+          {productPages.filter((page) => page.id !== current).map((page) => (
+            <Link key={page.id} href={page.href}>{page.mobileLabel}</Link>
+          ))}
+        </nav>
       </div>
     </header>
   );
 }
 
 export function ProductFooter() {
-  return <SiteFooter siteName={<span className="text-lg font-black tracking-[0.24em]">HEARST <span className="font-serif font-normal italic tracking-normal">Magazines</span></span>} copyrightYear={2026} />;
+  return (
+    <SiteFooter
+      siteName={<LogoMark slug="hearst-all" name="Hearst+" color="#F2F2F2" className="h-6 w-48" />}
+      copyrightYear={2026}
+    />
+  );
 }
 
 export const streams = [
   { name: "Lifestyle", color: "#7A2E57", copy: "Home, food, style, wellness and entertainment" },
   { name: "Autos", color: "#1B5F8A", copy: "Reviews, EVs, ownership and enthusiast culture" },
-  { name: "Flux", color: "#121212", copy: "Fashion, design, culture, travel and ideas" },
-  { name: "E&W", color: "#E50022", copy: "Fitness, health, gear and active living" },
+  { name: "Fashion & Luxury", color: "#121212", copy: "Fashion, design, culture, travel and ideas" },
+  { name: "Enthusiast & Wellness", color: "#E50022", copy: "Fitness, health, gear and active living" },
 ];
 
 export const prototypeStats = [
-  { value: "859", label: "real-image stories", copy: "Current prototype inventory from public Hearst RSS metadata and canonical image URLs." },
+  { value: "859", label: "validated stories", copy: "The current RSS snapshot contains source dates, canonical URLs and real Hearst image metadata." },
   { value: "29", label: "represented brands", copy: "Each brand keeps its own logo, route, color, typography and contextual navigation." },
-  { value: "4", label: "portfolio destinations", copy: "Unified, Lifestyle, Autos, Flux and E&W views organize the same system around reader intent." },
+  { value: "4", label: "editorial destinations", copy: "Four destination catalogs also feed one unified Hearst+ reader view." },
 ];
 
 export const brandSections = [
@@ -80,7 +102,7 @@ export const brandSections = [
     ],
   },
   {
-    name: "Flux",
+    name: "Fashion & Luxury",
     logoSlug: "hearst-flux",
     route: getHearstDestinationRoute("flux"),
     count: 200,
@@ -95,7 +117,7 @@ export const brandSections = [
     ],
   },
   {
-    name: "E&W",
+    name: "Enthusiast & Wellness",
     logoSlug: "hearst-ew",
     route: getHearstDestinationRoute("ew"),
     count: 200,
@@ -123,27 +145,27 @@ export const portfolioBrands = brandSections.flatMap((section) =>
 
 export const journeys = [
   { title: "Discover", copy: "A useful morning briefing brings together trusted stories across brands without asking readers to hunt site by site." },
-  { title: "Deepen intent", copy: "Every save, follow, hide and open sharpens the mix while contextual controls keep the reader in charge." },
+  { title: "Deepen intent", copy: "Every save, follow, hide and More Like This action sharpens the mix while visible controls keep the reader in charge." },
   { title: "Build a habit", copy: "Freshness, continuity and remembered interests make the river worth returning to throughout the day." },
 ];
 
 export const valueProps = [
   { title: "For readers", copy: "Less searching, more signal and a single relationship with the brands they already trust. A Good Housekeeping reader can discover Country Living, Delish or Prevention when the intent overlaps." },
   { title: "For editorial", copy: "A new distribution surface that preserves brand authority while creating cross-brand discovery. Logos, voice, color and typography keep every brand legible inside the shared river." },
-  { title: "For the business", copy: "More qualified sessions, deeper engagement and relevant commercial moments without breaking trust. Portfolio context creates more inventory without asking readers to start over." },
-  { title: "For product teams", copy: "One composable system for sections, brands, cards, signals, ranking and experimentation. The same model powers the unified river and every brand destination." },
+  { title: "For the business", copy: "A credible environment for evaluating return behavior, cross-brand discovery and future commercial opportunities without presenting unbuilt integrations as complete." },
+  { title: "For product teams", copy: "One composable system for destinations, brands, cards, signals and ranking. The same model powers the unified river and publication routes." },
 ];
 
 export function DemoNav() {
   return (
     <div className="overflow-hidden border border-slate-200 bg-white shadow-[0_20px_70px_rgba(16,42,67,0.12)]">
       <div className="flex items-center justify-between bg-[#2D75B9] px-4 py-2 text-[11px] font-semibold text-white">
-        <span>Shop &nbsp; Newsletter &nbsp; Sign In</span><span>All &nbsp; Lifestyle &nbsp; Autos &nbsp; Flux &nbsp; E&amp;W</span><span>Subscribe</span>
+        <span>Shop &nbsp; Newsletter &nbsp; Sign In</span><span>All &nbsp; Lifestyle &nbsp; Autos &nbsp; Fashion &amp; Luxury &nbsp; Enthusiast &amp; Wellness</span><span>Subscribe</span>
       </div>
       <div className="flex items-center justify-between px-5 py-5">
-        <span className="text-xs text-slate-400">Mode</span><strong className="text-sm tracking-[0.28em] text-[#2D75B9]">HEARST <span className="font-serif font-normal italic tracking-normal">Magazines</span></strong><span className="text-xs text-slate-400">Search</span>
+        <span className="text-xs text-slate-400">Mode</span><LogoMark slug="hearst-all" name="Hearst+" color="#2D75B9" className="h-5 w-44" position="center" /><span className="text-xs text-slate-400">Search</span>
       </div>
-      <div className="flex gap-5 overflow-hidden border-y border-slate-200 px-5 py-3 text-xs font-semibold"><span className="text-[#2D75B9]">For You</span><span>Lifestyle</span><span>Autos</span><span>Flux</span><span>E&amp;W</span><span>Saved</span></div>
+      <div className="flex gap-5 overflow-hidden border-y border-slate-200 px-5 py-3 text-xs font-semibold"><span className="text-[#2D75B9]">For You</span><span>Lifestyle</span><span>Autos</span><span>Fashion &amp; Luxury</span><span>Enthusiast &amp; Wellness</span><span>Saved</span></div>
       <div className="grid gap-0 md:grid-cols-[1.3fr_1fr]">
         <div
           className="min-h-64 bg-[#E9F2FA] bg-contain bg-center bg-no-repeat"
@@ -162,19 +184,19 @@ export function DemoNav() {
 export function StoryCard({ ad = false }: { ad?: boolean }) {
   return (
     <article className={`border-t-4 bg-white p-5 shadow-sm ${ad ? "border-[#7A2E57]" : "border-[#2D75B9]"}`}>
-      <div className="mb-4 flex items-center justify-between text-[10px] font-black uppercase tracking-[0.14em] text-slate-500"><span>{ad ? "Contextual ad" : "Editor pick"}</span><span>{ad ? "Matched to intent" : "Country Living · Home"}</span></div>
+      <div className="mb-4 flex items-center justify-between text-[10px] font-black uppercase tracking-[0.14em] text-slate-500"><span>{ad ? "Commercial concept" : "Editor pick"}</span><span>{ad ? "Not integrated" : "Country Living · Home"}</span></div>
       <h3 className="font-serif text-2xl leading-tight text-[#102A43]">{ad ? "Summer home refresh" : "The ideas worth making time for today"}</h3>
-      <p className="mt-3 text-sm leading-6 text-slate-600">{ad ? "Commercial utility appears when it adds value to the reader's current mission." : "A complete content model carries brand, topic, format, freshness and trust signals."}</p>
-      <div className="mt-5 flex gap-2 text-xs font-bold"><span className="border border-slate-200 px-3 py-2">{ad ? "Shop the edit" : "Save"}</span><span className="border border-slate-200 px-3 py-2">{ad ? "Why this ad" : "More like this"}</span></div>
+      <p className="mt-3 text-sm leading-6 text-slate-600">{ad ? "A future evaluation pattern for disclosed commercial utility, not a completed campaign integration." : "A complete content model carries brand, topic, format, freshness and source signals."}</p>
+      <div className="mt-5 flex gap-2 text-xs font-bold"><span className="border border-slate-200 px-3 py-2">{ad ? "Concept CTA" : "Save"}</span><span className="border border-slate-200 px-3 py-2">{ad ? "Disclosure" : "More like this"}</span></div>
     </article>
   );
 }
 
 export const systemSteps = [
-  { title: "Ingest", copy: "Stories, brands, metadata, commerce and campaigns" },
-  { title: "Understand", copy: "Topics, format, quality, freshness and reader signals" },
-  { title: "Rank", copy: "Relevance + recency + affinity + utility" },
-  { title: "Re-rank", copy: "Diversity, brand balance, safety and business rules" },
+  { title: "Ingest", copy: "Validated RSS snapshots and current Personalize recommendations" },
+  { title: "Normalize", copy: "Source dates, bylines, canonical URLs, media, topics and brands" },
+  { title: "Score", copy: "Popularity, freshness, reader signals, daypart and return context" },
+  { title: "Guard", copy: "Hidden items, repetition, diversity and playable-media eligibility" },
 ];
 
 export function MobileMenuIcon() { return <span aria-hidden="true" className="block h-3 w-5 border-y-2 border-current" />; }
@@ -287,14 +309,14 @@ export function JourneyMatrix() {
 
 export function RankingExample() {
   const factors = [
-    ["Popularity", "18.5", "Strong engagement today"],
-    ["Followed topic", "15.1", "Home and design interest"],
-    ["Followed brand", "13.4", "House Beautiful affinity"],
-    ["Saved tags", "10.1", "Kitchen and small spaces"],
-    ["More like this", "8.6", "Similar stories saved"],
-    ["Recency", "6.3", "Published recently"],
-    ["Daypart", "6.1", "Evening reader session"],
-    ["Diversity", "5.1", "Mix across brands"],
+    ["Popularity", "82", "Uses the story's source popularity signal"],
+    ["Recency", "+48", "Published within the freshest six-hour window"],
+    ["Followed topic", "+18", "Matches a topic the reader follows"],
+    ["Followed brand", "+16", "Matches a publication the reader follows"],
+    ["Saved tags", "+14", "Shares a tag with saved content"],
+    ["More Like This", "+22", "Matches a reader-boosted tag"],
+    ["Daypart", "+16", "Fits the active morning topic mix"],
+    ["Return freshness", "+24", "Fresh since the previous visit"],
   ];
 
   return (
@@ -304,22 +326,25 @@ export function RankingExample() {
         <div className="flex items-start justify-between gap-5 border-b border-slate-200 pb-5">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.16em] text-[#2D75B9]">Why this ranked here</p>
-            <h3 className="mt-3 font-serif text-3xl leading-none">Score breakdown example</h3>
+            <h3 className="mt-3 font-serif text-3xl leading-none">Implemented score inputs</h3>
           </div>
-          <strong className="font-serif text-4xl leading-none text-[#2D75B9]">84</strong>
+          <strong className="text-right text-xs font-bold uppercase tracking-[0.12em] text-[#2D75B9]">Additive<br />points</strong>
         </div>
         <div className="mt-5 space-y-4">
           {factors.map(([name, score, reason]) => (
-            <div key={name} className="grid gap-3 sm:grid-cols-[9rem_1fr_3rem] sm:items-center">
+            <div key={name} className="grid gap-3 border-b border-slate-100 pb-3 last:border-b-0 sm:grid-cols-[9rem_1fr_4rem] sm:items-center">
               <div>
                 <strong className="text-sm">{name}</strong>
                 <p className="mt-1 text-xs text-slate-500">{reason}</p>
               </div>
-              <div className="h-2 bg-slate-100"><div className="h-2 bg-[#2D75B9]" style={{ width: `${Number(score) * 4}%` }} /></div>
+              <div className="h-px bg-slate-200" />
               <span className="text-right text-xs font-bold text-slate-500">{score}</span>
             </div>
           ))}
         </div>
+        <p className="mt-5 border-t border-slate-200 pt-4 text-xs leading-5 text-slate-500">
+          Exact points vary by story and profile mode. Hidden items receive an exclusion penalty, a previous lead is suppressed on return, and the final pass prevents the same brand or topic from occupying three consecutive positions.
+        </p>
       </div>
     </div>
   );
@@ -327,11 +352,11 @@ export function RankingExample() {
 
 export function ArchitectureFlow() {
   const columns = [
-    ["Sources", "Public feeds, CMS metadata, images, commerce and campaign payloads"],
-    ["Normalize", "Brand, topic, format, freshness, media, canonical URL and eligibility"],
-    ["Understand", "Entities, intent, quality, reader profile and session context"],
-    ["Decide", "Score, diversify, cap repetition, explain and select modules"],
-    ["Deliver", "Render routes, cards, controls, analytics and experiments"],
+    ["Sources", "Validated public RSS snapshots and current Personalize recommendations"],
+    ["Normalize", "Brand, topic, format, source date, byline, media and canonical URL"],
+    ["Eligibility", "Real imagery, playable video, active scope, exclusions and deduplication"],
+    ["Decide", "Additive score, return context, diversity pass and explanation"],
+    ["Deliver", "Server entry payload, cached pages, lazy river and in-app readers"],
   ];
 
   return (
@@ -346,9 +371,9 @@ export function ArchitectureFlow() {
         ))}
       </div>
       <div className="mt-5 grid gap-3 text-xs leading-5 text-slate-600 md:grid-cols-3">
-        <p><strong className="text-[#102A43]">Server:</strong> ingestion, authentication, rate limits and decision orchestration.</p>
-        <p><strong className="text-[#102A43]">Static:</strong> marketing pages, brand assets, logos, images and fonts.</p>
-        <p><strong className="text-[#102A43]">Client:</strong> rendering, controls, session signals, accessibility and state.</p>
+        <p><strong className="text-[#102A43]">Server:</strong> Next.js route handlers combine the latest valid catalog with read-only recommendation APIs.</p>
+        <p><strong className="text-[#102A43]">Catalog:</strong> validated RSS story data, brand assets, semantic tokens, logos and fonts.</p>
+        <p><strong className="text-[#102A43]">Browser:</strong> progressive rendering, accessible controls, ranking interaction and local demo state.</p>
       </div>
     </div>
   );
@@ -360,8 +385,8 @@ export function PaletteSystem() {
     ["Deep Ink", "#102A43", "#F2F2F2"],
     ["Lifestyle", "#7A2E57", "#FE8CBC"],
     ["Autos", "#1B5F8A", "#78BDE8"],
-    ["Flux", "#121212", "#F2F2F2"],
-    ["E&W", "#E50022", "#FF7184"],
+    ["Fashion & Luxury", "#121212", "#F2F2F2"],
+    ["Enthusiast & Wellness", "#E50022", "#FF7184"],
   ];
 
   return (

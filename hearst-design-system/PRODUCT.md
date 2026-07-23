@@ -23,6 +23,12 @@ Hearst readers who want one daily destination for useful editorial content acros
 
 Hearst+ is a personalized cross-brand discovery app. It should combine the editorial quality of Hearst brands with the habit loop of a daily feed: morning brief, continuing reads, saved collections, trending stories, and recommendations that become more useful as the reader interacts with content.
 
+## Current Prototype Truth
+
+Hearst+ is a working reader prototype. It combines a validated snapshot of public Hearst RSS story metadata with read-only Personalize article and video recommendations, then applies implemented eligibility, additive ranking, diversity, progressive delivery, reader-overlay, gallery, and adaptive-video behavior.
+
+Reader profile, preference, and stakeholder-control state is browser-local demo data. Production identity, cross-device sync, consent, CMS publishing, analytics, and experimentation are not completed integrations. The RSS catalog changes only after the import, byline-enrichment, and validation workflow succeeds; production delivery requires that workflow to be scheduled and monitored before each daily morning edition.
+
 ## Design System Architecture
 
 This application is built on top of the Hearst Design System. Hearst+ and the destination prototypes are an application layer that composes Hearst Design System components, foundations, semantic tokens, typography roles, icons, and brand themes. The application may add product-specific patterns and documented surface exceptions, but it must not create a parallel or competing design system.

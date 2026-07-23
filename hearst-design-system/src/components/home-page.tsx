@@ -6115,6 +6115,286 @@ function getAmbientBrandForeground(background: string) {
   return blackContrast >= whiteContrast ? "#111111" : "#FFFFFF";
 }
 
+type AmbientReaderDestination = Exclude<DestinationMode, "all">;
+
+function AmbientReaderHeroImage({
+  story,
+  hasPortraitHeroImage,
+  className,
+  imageClassName,
+  sizes,
+  onLoad,
+}: {
+  story: LifestyleRiverStory;
+  hasPortraitHeroImage: boolean;
+  className: string;
+  imageClassName?: string;
+  sizes?: string;
+  onLoad: (ratio: number) => void;
+}) {
+  return (
+    <figure className={cn("relative overflow-hidden bg-black", className)}>
+      <Image
+        src={story.image}
+        alt={story.title}
+        fill
+        sizes={sizes ?? (hasPortraitHeroImage
+          ? "(max-width: 1024px) 100vw, 34vw"
+          : "(max-width: 1024px) 100vw, 62vw")}
+        className={cn("object-cover", imageClassName)}
+        priority
+        onLoad={(event) => {
+          const image = event.currentTarget;
+          if (image.naturalWidth > 0 && image.naturalHeight > 0) {
+            onLoad(image.naturalWidth / image.naturalHeight);
+          }
+        }}
+      />
+      {story.imageCredit ? (
+        <figcaption className="absolute bottom-3 right-4 bg-black/70 px-2 py-1 text-[10px] uppercase tracking-wider text-white">
+          {story.imageCredit}
+        </figcaption>
+      ) : null}
+    </figure>
+  );
+}
+
+function AmbientReaderHeroMeta({
+  story,
+  article,
+  ambientPublishedAt,
+  hasAmbientPublishedDate,
+  className,
+}: {
+  story: LifestyleRiverStory;
+  article: LiveArticleData;
+  ambientPublishedAt?: string;
+  hasAmbientPublishedDate: boolean;
+  className?: string;
+}) {
+  return (
+    <>
+      <div className={cn(
+        "mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-current/25 pt-5 text-xs font-semibold uppercase tracking-[0.12em]",
+        className
+      )}>
+        <span>{getLifestyleByline(story, article)}</span>
+        {hasAmbientPublishedDate ? (
+          <>
+            <span aria-hidden>·</span>
+            <time dateTime={ambientPublishedAt}>{formatReaderPublishedDate(ambientPublishedAt!)}</time>
+          </>
+        ) : null}
+      </div>
+      {isMeaningfulArticleUpdate(ambientPublishedAt, article.updatedAt) ? (
+        <p className="mt-3 text-xs font-semibold uppercase tracking-[0.12em] opacity-75">
+          Updated <time dateTime={article.updatedAt}>{formatReaderUpdatedDate(article.updatedAt!)}</time>
+        </p>
+      ) : null}
+    </>
+  );
+}
+
+function AmbientReaderHero({
+  story,
+  article,
+  destination,
+  brandPrimary,
+  brandForeground,
+  hasPortraitHeroImage,
+  ambientPublishedAt,
+  hasAmbientPublishedDate,
+  onHeroImageRatio,
+}: {
+  story: LifestyleRiverStory;
+  article: LiveArticleData;
+  destination: AmbientReaderDestination;
+  brandPrimary: string;
+  brandForeground: string;
+  hasPortraitHeroImage: boolean;
+  ambientPublishedAt?: string;
+  hasAmbientPublishedDate: boolean;
+  onHeroImageRatio: (ratio: number) => void;
+}) {
+  const metaProps = {
+    story,
+    article,
+    ambientPublishedAt,
+    hasAmbientPublishedDate,
+  };
+  const isMotorTrend = story.brandSlug === "motortrend";
+  const usesBuzzHeadline = story.brandSlug === "road-and-track";
+
+  if (destination === "autos") {
+    return (
+      <section
+        className="min-h-[78vh] bg-[#0B1014] text-white"
+        data-ambient-layout="autos"
+        aria-label="Autos article opening"
+      >
+        <AmbientReaderHeroImage
+          story={story}
+          hasPortraitHeroImage={hasPortraitHeroImage}
+          className="min-h-[48vh] border-b border-white/25 sm:min-h-[56vh] lg:min-h-[62vh]"
+          sizes="100vw"
+          onLoad={onHeroImageRatio}
+        />
+        <div
+          className={cn(
+            "mx-auto grid max-w-[1600px] gap-8 px-6 py-9 sm:px-10 sm:py-12 lg:grid-cols-[minmax(0,1.45fr)_minmax(300px,0.55fr)] lg:gap-16 lg:px-[clamp(3rem,6vw,7rem)]",
+            isMotorTrend && "max-w-none"
+          )}
+          style={isMotorTrend ? { backgroundColor: brandPrimary, color: brandForeground } : undefined}
+        >
+          <div className="min-w-0">
+            <p className={cn(
+              "mb-5 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.18em]",
+              !isMotorTrend && "text-white/70"
+            )}>
+              <span
+                className="h-2.5 w-10"
+                style={{ backgroundColor: isMotorTrend ? brandForeground : brandPrimary }}
+                aria-hidden
+              />
+              {story.topic} · {story.brand}
+            </p>
+            <h1
+              className={cn(
+                "max-w-[20ch] break-words font-headline text-[clamp(2.8rem,5.2vw,5.8rem)] font-[var(--font-headline-weight)] tracking-[-0.025em] text-balance",
+                usesBuzzHeadline ? "leading-[1.06]" : "leading-[0.95]"
+              )}
+            >
+              {story.title}
+            </h1>
+          </div>
+          <div className="self-end border-t border-current/25 pt-6 lg:border-t-0 lg:pt-0">
+            <p className={cn(
+              "max-w-xl font-brand-secondary text-lg leading-7 sm:text-xl sm:leading-8",
+              !isMotorTrend && "text-white/80"
+            )}>
+              {story.summary}
+            </p>
+            <AmbientReaderHeroMeta
+              {...metaProps}
+              className={isMotorTrend ? undefined : "text-white/75"}
+            />
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (destination === "ew") {
+    return (
+      <section
+        className="grid min-h-[78vh] bg-black lg:grid-cols-[minmax(0,1.08fr)_minmax(420px,0.92fr)]"
+        data-ambient-layout="enthusiast-wellness"
+        aria-label="Enthusiast and Wellness article opening"
+      >
+        <AmbientReaderHeroImage
+          story={story}
+          hasPortraitHeroImage={hasPortraitHeroImage}
+          className="min-h-[48vh] border-b-4 border-black lg:min-h-[78vh] lg:border-b-0 lg:border-r-4"
+          imageClassName={story.brandSlug === "oprah-daily"
+            ? "lg:origin-top lg:scale-[1.12]"
+            : undefined}
+          onLoad={onHeroImageRatio}
+        />
+        <div
+          className="flex min-w-0 flex-col justify-center px-6 py-12 sm:px-10 sm:py-16 lg:px-[clamp(3rem,5vw,6rem)] lg:py-20"
+          style={{ backgroundColor: brandPrimary, color: brandForeground }}
+        >
+          <p className="mb-7 border-y border-current/30 py-3 text-xs font-bold uppercase tracking-[0.2em]">
+            {story.topic} · {story.brand}
+          </p>
+          <h1 className="max-w-full break-words font-headline text-[clamp(2.6rem,4.2vw,4.8rem)] font-[var(--font-headline-weight)] uppercase leading-[0.94] tracking-[-0.025em] text-balance">
+            {story.title}
+          </h1>
+          <p className="mt-8 max-w-xl font-brand-secondary text-xl leading-8 opacity-90 sm:text-2xl">
+            {story.summary}
+          </p>
+          <AmbientReaderHeroMeta {...metaProps} />
+        </div>
+      </section>
+    );
+  }
+
+  if (destination === "lifestyle") {
+    return (
+      <section
+        className="relative bg-[var(--ambient-paper)]"
+        data-ambient-layout="lifestyle"
+        aria-label="Lifestyle article opening"
+      >
+        <div className="grid min-h-[calc(100dvh-4rem)] w-full overflow-hidden bg-[var(--ambient-paper)] lg:grid-cols-[minmax(360px,0.8fr)_minmax(0,1.2fr)]">
+          <div className="flex min-w-0 flex-col justify-center px-6 py-12 sm:px-10 sm:py-16 lg:px-[clamp(3rem,5vw,6.5rem)] lg:py-20">
+            <p className="mb-7 text-xs font-bold uppercase tracking-[0.18em]" style={{ color: brandPrimary }}>
+              {story.topic} · {story.brand}
+            </p>
+            <h1 className="max-w-full break-words font-headline text-[clamp(2.65rem,4.2vw,5.2rem)] font-[var(--font-headline-weight)] leading-[1.02] tracking-[-0.025em] text-balance">
+              {story.title}
+            </h1>
+            <p className="mt-8 max-w-xl font-brand-secondary text-xl leading-8 text-[var(--ambient-muted)] sm:text-2xl">
+              {story.summary}
+            </p>
+            <AmbientReaderHeroMeta {...metaProps} className="text-[var(--ambient-muted)]" />
+          </div>
+          <AmbientReaderHeroImage
+            story={story}
+            hasPortraitHeroImage={hasPortraitHeroImage}
+            className="min-h-[48vh] h-full lg:min-h-[calc(100dvh-4rem)]"
+            onLoad={onHeroImageRatio}
+          />
+        </div>
+        <a
+          href="#ambient-article-body"
+          className="group absolute left-1/2 top-[calc(100dvh-7rem)] z-10 inline-flex -translate-x-1/2 items-center gap-2 bg-[var(--ambient-paper)]/90 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--ambient-ink)] backdrop-blur-sm transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 lg:bottom-5 lg:top-auto"
+        >
+          Continue reading
+          <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:translate-y-0.5" aria-hidden />
+        </a>
+      </section>
+    );
+  }
+
+  return (
+    <section
+      className={cn(
+        "grid min-h-[70vh]",
+        hasPortraitHeroImage
+          ? "lg:grid-cols-[minmax(0,2fr)_minmax(260px,1fr)]"
+          : "lg:grid-cols-[minmax(420px,0.9fr)_minmax(0,1.1fr)]"
+      )}
+      data-ambient-layout="fashion-luxury"
+      aria-label="Fashion and Luxury article opening"
+    >
+      <div
+        className="flex min-w-0 flex-col justify-center overflow-hidden px-6 py-12 sm:px-10 sm:py-16 lg:px-[clamp(3rem,6vw,7rem)] lg:py-20"
+        style={{ backgroundColor: brandPrimary, color: brandForeground }}
+      >
+        <div className="max-w-full">
+          <p className="mb-6 text-xs font-bold uppercase tracking-[0.18em] opacity-80">
+            {story.topic} · {story.brand}
+          </p>
+          <h1 className="max-w-full break-words font-headline text-[clamp(2.6rem,3.7vw,4.75rem)] font-[var(--font-headline-weight)] leading-[1.08] tracking-[-0.03em] text-balance">
+            {story.title}
+          </h1>
+          <p className="mt-7 max-w-xl font-brand-secondary text-xl leading-8 opacity-90 sm:text-2xl">
+            {story.summary}
+          </p>
+          <AmbientReaderHeroMeta {...metaProps} />
+        </div>
+      </div>
+      <AmbientReaderHeroImage
+        story={story}
+        hasPortraitHeroImage={hasPortraitHeroImage}
+        className="min-h-[42vh] lg:min-h-[70vh]"
+        onLoad={onHeroImageRatio}
+      />
+    </section>
+  );
+}
+
 function AmbientArticleReader({
   story,
   article,
@@ -6162,7 +6442,6 @@ function AmbientArticleReader({
   const hasAmbientPublishedDate = Number.isFinite(Date.parse(ambientPublishedAt ?? ""));
   const brandPrimary = contextualTheme.colors["1"] ?? "#242D39";
   const brandForeground = getAmbientBrandForeground(brandPrimary);
-  const heroAccent = brandForeground;
   const hasPortraitHeroImage = heroImageRatio !== null && heroImageRatio < 0.9;
   const firstParagraphIndex = article.blocks.findIndex((block) => block.type === "paragraph");
   const densityStyles: Record<AmbientReaderDensity, string> = {
@@ -6357,86 +6636,37 @@ function AmbientArticleReader({
         </header>
 
         <main>
-          <section
-            className={cn(
-              "grid min-h-[70vh]",
-              hasPortraitHeroImage
-                ? "lg:grid-cols-[minmax(0,2fr)_minmax(260px,1fr)]"
-                : "lg:grid-cols-[minmax(420px,0.9fr)_minmax(0,1.1fr)]"
-            )}
-          >
-            <div
-              className="flex min-w-0 flex-col justify-center overflow-hidden px-6 py-12 sm:px-10 sm:py-16 lg:px-[clamp(3rem,6vw,7rem)] lg:py-20"
-              style={{ backgroundColor: brandPrimary, color: brandForeground }}
-            >
-              <div className="max-w-full">
-                <p
-                  className={cn(
-                    "mb-6 text-xs font-bold uppercase tracking-[0.18em]",
-                    story.brandSlug !== "motortrend" && "opacity-80"
-                  )}
-                  style={{ color: heroAccent }}
-                >
-                  {story.topic} · {story.brand}
-                </p>
-                <h1 className="max-w-full break-words font-headline text-[clamp(2.6rem,3.7vw,4.75rem)] font-[var(--font-headline-weight)] leading-[1.08] tracking-[-0.03em] text-balance">
-                  {story.title}
-                </h1>
-                <p className="mt-7 max-w-xl font-brand-secondary text-xl leading-8 opacity-90 sm:text-2xl">
-                  {story.summary}
-                </p>
-                <div
-                  className={cn(
-                    "mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 border-t pt-5 text-xs font-semibold uppercase tracking-[0.12em]",
-                    story.brandSlug !== "motortrend" && "border-current/25 opacity-85"
-                  )}
-                  style={story.brandSlug === "motortrend"
-                    ? { borderTopColor: heroAccent, color: heroAccent }
-                    : undefined}
-                >
-                  <span>{getLifestyleByline(story, article)}</span>
-                  {hasAmbientPublishedDate ? (
-                    <>
-                      <span aria-hidden>·</span>
-                      <time dateTime={ambientPublishedAt}>{formatReaderPublishedDate(ambientPublishedAt!)}</time>
-                    </>
-                  ) : null}
-                </div>
-                {isMeaningfulArticleUpdate(ambientPublishedAt, article.updatedAt) ? (
-                  <p className="mt-3 text-xs font-semibold uppercase tracking-[0.12em] opacity-75">
-                    Updated <time dateTime={article.updatedAt}>{formatReaderUpdatedDate(article.updatedAt!)}</time>
-                  </p>
-                ) : null}
-              </div>
-            </div>
-            <figure className="relative min-h-[42vh] overflow-hidden bg-black lg:min-h-[70vh]">
-              <Image
-                src={story.image}
-                alt={story.title}
-                fill
-                sizes={hasPortraitHeroImage ? "(max-width: 1024px) 100vw, 34vw" : "(max-width: 1024px) 100vw, 62vw"}
-                className="object-cover"
-                priority
-                onLoad={(event) => {
-                  const image = event.currentTarget;
-                  if (image.naturalWidth > 0 && image.naturalHeight > 0) {
-                    setHeroImageRatio(image.naturalWidth / image.naturalHeight);
-                  }
-                }}
-              />
-              {story.imageCredit ? (
-                <figcaption className="absolute bottom-3 right-4 bg-black/65 px-2 py-1 text-[10px] uppercase tracking-wider text-white">
-                  {story.imageCredit}
-                </figcaption>
-              ) : null}
-            </figure>
-          </section>
+          <AmbientReaderHero
+            story={story}
+            article={article}
+            destination={destination}
+            brandPrimary={brandPrimary}
+            brandForeground={brandForeground}
+            hasPortraitHeroImage={hasPortraitHeroImage}
+            ambientPublishedAt={ambientPublishedAt}
+            hasAmbientPublishedDate={hasAmbientPublishedDate}
+            onHeroImageRatio={setHeroImageRatio}
+          />
 
-          <section className="relative mx-auto max-w-[1440px] px-5 py-16 sm:px-8 sm:py-24 lg:px-12 lg:py-32">
-            <div className="pointer-events-none absolute left-8 top-28 hidden text-xs font-semibold tabular-nums text-[var(--ambient-muted)] xl:block">
-              01
-              <span className="mt-3 block h-px w-8 bg-[var(--ambient-rule)]" />
-            </div>
+          <section
+            id="ambient-article-body"
+            className={cn(
+              "relative mx-auto max-w-[1440px] scroll-mt-16 px-5 sm:px-8 lg:px-12",
+              destination === "lifestyle"
+                ? "py-12 sm:py-14 lg:py-16"
+                : destination === "autos"
+                  ? "pt-12 pb-16 sm:pt-14 sm:pb-24 lg:pt-16 lg:pb-32"
+                : "py-16 sm:py-24 lg:py-32",
+              destination === "autos" && "border-t-4 border-primary"
+            )}
+            data-ambient-body={destination}
+          >
+            {destination === "flux" ? (
+              <div className="pointer-events-none absolute left-8 top-28 hidden text-xs font-semibold tabular-nums text-[var(--ambient-muted)] xl:block">
+                01
+                <span className="mt-3 block h-px w-8 bg-[var(--ambient-rule)]" />
+              </div>
+            ) : null}
             <article className={cn("mx-auto font-brand-secondary text-[var(--ambient-ink)]", densityStyles[density])}>
               <div className="space-y-[var(--ambient-block-gap)]">
                 {article.blocks.map((block, index) => {

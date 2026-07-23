@@ -46,6 +46,7 @@ export function SiteFooter({
   onSubscribeClick,
   productLinks = [
     { label: "Product story", href: "/about-hearst-magazines/" },
+    { label: "Why Hearst+", href: "/why-hearst-plus/" },
     { label: "Product blueprint", href: "/hearst-product-blueprint/" },
     { label: "Complete article viewer", href: "/hearst-plus/complete-articles/" },
     { label: "Live feed", href: "/hearst-plus/live-feed/" },

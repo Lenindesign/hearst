@@ -1,23 +1,62 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import packageJson from "../../../package.json";
 import { ArchitectureFlow, BrandLogoMarquee, BrandPortfolioGrid, BrandStyleGuide, DestinationConvergence, JourneyMatrix, PaletteSystem, ProductFooter, ProductHeader, RankingExample, StoryCard, prototypeStats, systemSteps } from "@/components/product-story-shell";
 
 export const metadata: Metadata = {
   title: "Hearst Magazines Product Blueprint",
-  description: "Architecture, personalization, content models, routes and measurement for the Hearst Magazines destination.",
+  description: "The implemented architecture, product boundaries and production requirements behind Hearst+.",
 };
 
 const contents = [
-  ["01", "Prototype scope", "scope"],
-  ["02", "System map", "system"],
-  ["03", "Ranking logic", "ranking"],
-  ["04", "Content models", "models"],
+  ["01", "Prototype truth", "scope"],
+  ["02", "Feed architecture", "system"],
+  ["03", "Eligibility & ranking", "ranking"],
+  ["04", "Content treatments", "models"],
   ["05", "Routes & navigation", "routes"],
   ["06", "Experience map", "journeys"],
-  ["07", "Color system", "color"],
-  ["08", "Brand style guides", "style-guides"],
-  ["09", "Measurement", "measurement"],
-  ["10", "Delivery principles", "delivery"],
+  ["07", "Design system", "design-system"],
+  ["08", "Technology", "technology"],
+  ["09", "Success framework", "measurement"],
+  ["10", "Production readiness", "delivery"],
+];
+
+const dependencyVersion = (dependency: keyof typeof packageJson.dependencies) =>
+  packageJson.dependencies[dependency].replace(/^[^0-9]*/, "");
+const devDependencyVersion = (dependency: keyof typeof packageJson.devDependencies) =>
+  packageJson.devDependencies[dependency].replace(/^[^0-9]*/, "");
+
+const technology = [
+  {
+    label: "Application",
+    title: `Next.js ${dependencyVersion("next")} + React ${dependencyVersion("react")}`,
+    copy: "App Router pages, server-rendered entry points, route handlers, image optimization and React interaction.",
+  },
+  {
+    label: "Language",
+    title: `TypeScript ${devDependencyVersion("typescript")}`,
+    copy: "Typed story, video, profile and personalization contracts across server and browser code.",
+  },
+  {
+    label: "Interface",
+    title: `Tailwind CSS ${devDependencyVersion("tailwindcss")} + HDS tokens`,
+    copy: "Responsive composition from Tailwind with Hearst semantic surfaces, typography, spacing and brand themes.",
+  },
+  {
+    label: "Components",
+    title: `shadcn ${dependencyVersion("shadcn")} + Base UI ${dependencyVersion("@base-ui/react")}`,
+    copy: "Reusable controls follow shadcn composition conventions and accessible Base UI primitives.",
+  },
+  {
+    label: "Content",
+    title: "Hearst RSS + Personalize",
+    copy: "Validated public story metadata is combined with current read-only Personalize recommendations.",
+  },
+  {
+    label: "Delivery",
+    title: `Netlify Next.js plugin ${dependencyVersion("@netlify/plugin-nextjs")}`,
+    copy: "The official integration packages Next.js server functions and optimized static assets for Netlify.",
+  },
 ];
 
 export default function BlueprintPage() {
@@ -27,12 +66,15 @@ export default function BlueprintPage() {
       <main>
         <section className="border-b border-slate-200 bg-[#102A43] text-white">
           <div className="mx-auto max-w-[1360px] px-5 py-20 md:px-10 lg:py-28">
-            <p className="text-xs font-black uppercase tracking-[.22em] text-sky-300">Product & engineering blueprint</p>
+            <p className="text-xs font-black uppercase tracking-[.22em] text-sky-300">Product and engineering blueprint</p>
             <h1 className="mt-6 max-w-5xl font-serif text-6xl leading-[.94] tracking-[-.04em] md:text-8xl">The personalized front door to Hearst Magazines.</h1>
             <div className="mt-10 grid gap-8 border-t border-white/20 pt-8 md:grid-cols-[1fr_1fr]">
-              <p className="max-w-xl text-lg leading-8 text-slate-300">A working reference for product managers, designers, editors, data teams and engineers: what the destination does, how its decisions are made, and how the system evolves safely.</p>
-              <div className="flex flex-wrap gap-2 self-start">{["Destination-driven", "Explainable ranking", "Cross-brand", "Composable", "Reader controlled"].map((x) => <span key={x} className="border border-white/25 px-3 py-2 text-xs font-bold">{x}</span>)}</div>
+              <p className="max-w-xl text-lg leading-8 text-slate-300">A source-of-truth reference for product managers, designers, editors and engineers. It documents what works today, how decisions are made, and what still requires production integration.</p>
+              <div className="flex flex-wrap gap-2 self-start">{["Working prototype", "Explainable ranking", "Cross-brand", "Progressive delivery", "Reader controlled"].map((x) => <span key={x} className="border border-white/25 px-3 py-2 text-xs font-bold">{x}</span>)}</div>
             </div>
+            <p className="mt-8 max-w-4xl border-t border-white/20 pt-5 text-sm leading-6 text-slate-300">
+              Prototype boundary: public story metadata and read-only recommendations power the content experience. Reader identity, preferences and stakeholder controls are browser-local demo state. Production identity, publishing, consent, analytics and experimentation are not represented as completed integrations.
+            </p>
             <BrandLogoMarquee />
           </div>
         </section>
@@ -50,7 +92,7 @@ export default function BlueprintPage() {
 
           <div className="min-w-0 space-y-24">
             <section id="scope" className="scroll-mt-8">
-              <SectionHead label="01 · Prototype scope" title="Realistic enough for product, editorial and stakeholder decisions" copy="The prototype currently models 859 real-image stories across 29 represented brands. It uses public RSS metadata, brand-level routes, SVG logo assets, color and type tokens, and topic-specific destinations so teams can evaluate the product as a system rather than a static concept." />
+              <SectionHead label="01 · Prototype truth" title="A working reader product, not a static presentation" copy="The current catalog contains 859 validated stories across 29 publication brands and four editorial destinations. The interface, ranking, progressive river, readers, galleries, short-form video and route transitions are implemented. Browser-local identity and unscheduled catalog refresh remain explicit prototype boundaries." />
               <div className="mt-10 grid gap-px bg-slate-200 md:grid-cols-3">
                 {prototypeStats.map((stat) => (
                   <article key={stat.label} className="bg-white p-6">
@@ -60,14 +102,26 @@ export default function BlueprintPage() {
                   </article>
                 ))}
               </div>
+              <div className="mt-6 grid gap-px bg-slate-200 md:grid-cols-3">
+                {[
+                  ["Implemented", "Ranking, route transitions, responsive layouts, progressive loading, in-app readers and adaptive video playback."],
+                  ["Current data", "A validated RSS snapshot plus read-only Personalize article and video recommendations through server routes."],
+                  ["Not yet integrated", "Production identity, cross-device preference sync, consent, CMS publishing, live analytics and experiments."],
+                ].map(([title, copy]) => (
+                  <article key={title} className="bg-white p-5">
+                    <h3 className="text-sm font-bold">{title}</h3>
+                    <p className="mt-2 text-xs leading-5 text-slate-600">{copy}</p>
+                  </article>
+                ))}
+              </div>
               <div className="mt-8"><BrandPortfolioGrid compact /></div>
             </section>
 
             <section id="system" className="scroll-mt-8">
-              <SectionHead label="02 · System map" title="From many sources to one useful river" copy="The system separates content understanding, reader understanding and presentation. That makes the product easier to explain, test and evolve without coupling every decision to the interface." />
+              <SectionHead label="02 · Feed architecture" title="Validated catalogs enter once; stories arrive progressively" copy="The system separates source validation, eligibility, ranking and rendering. A compact server payload starts each route quickly, cached catalog pages append during browser idle time, and the river sentinel mounts ranked cards in small batches until every eligible story is available." />
               <div className="mt-10 grid gap-3 md:grid-cols-4">
                 {systemSteps.map((s, i) => (
-                  <article key={s.title} className="border-t-4 border-[#2D75B9] bg-white p-5 shadow-sm">
+                  <article key={s.title} className="border border-slate-200 bg-white p-5">
                     <span className="font-mono text-xs text-slate-400">0{i + 1}</span>
                     <h3 className="mt-10 font-bold">{s.title}</h3>
                     <p className="mt-2 text-xs leading-5 text-slate-600">{s.copy}</p>
@@ -75,33 +129,35 @@ export default function BlueprintPage() {
                 ))}
               </div>
               <div className="mt-6"><ArchitectureFlow /></div>
+              <p className="mt-5 max-w-3xl text-sm leading-6 text-slate-600">
+                Freshness has two clocks. Personalize recommendations are requested through dynamic server routes with short cache revalidation. The larger RSS catalog changes only after the import, byline enrichment and validation workflow succeeds. A production scheduler for the daily morning refresh remains required.
+              </p>
             </section>
 
             <section id="ranking" className="scroll-mt-8">
-              <SectionHead label="03 · Ranking logic" title="Relevant, fresh, trusted and never monotonous" copy="Ranking is a transparent weighted decision, followed by editorial and experience constraints. The goal is useful variety, not maximum clicks at any cost." />
+              <SectionHead label="03 · Eligibility and ranking" title="An additive score, followed by an explicit diversity pass" copy="The app does not use the percentage formula previously shown here. It filters ineligible and hidden items, adds implemented point signals, orders candidates by total score, and then prevents the same brand or topic from occupying three consecutive positions." />
               <div className="mt-10 grid gap-8 lg:grid-cols-[1.1fr_.9fr]">
                 <div className="bg-[#102A43] p-6 text-white">
-                  <code className="text-xs text-sky-300">story_score =</code>
-                  <div className="mt-6 space-y-5">
+                  <code className="text-xs text-sky-300">story_score = additive points</code>
+                  <div className="mt-6 divide-y divide-white/15">
                     {[
-                      ["Affinity", "35%", "What the reader follows, saves and spends time with"],
-                      ["Freshness", "25%", "How timely the item is for its content type"],
-                      ["Editorial value", "20%", "Quality, authority and priority signals"],
-                      ["Context & utility", "15%", "Fit for session, time, destination and current intent"],
-                      ["Exploration", "5%", "A controlled chance to discover something new"],
-                    ].map(([n, p, c]) => (
-                      <div key={n}>
-                        <div className="flex justify-between text-sm font-bold"><span>{n}</span><span>{p}</span></div>
-                        <div className="mt-2 h-1 bg-white/15"><div className="h-1 bg-sky-300" style={{ width: p }} /></div>
-                        <p className="mt-2 text-xs text-slate-400">{c}</p>
+                      ["Base signals", "Source popularity plus publication recency."],
+                      ["Reader signals", "Followed topic, followed brand, saved tags, saved story and More Like This tags."],
+                      ["Context", "Morning, afternoon, evening or late-night fit; return freshness; next-day novelty."],
+                      ["Editorial baseline", "A modest first-morning lead boost when the profile has not yet personalized the edition."],
+                      ["Exclusions", "Hidden items are removed; the previous lead receives a strong return-visit penalty."],
+                    ].map(([name, copy]) => (
+                      <div key={name} className="grid gap-2 py-4 first:pt-0 sm:grid-cols-[9rem_minmax(0,1fr)]">
+                        <strong className="text-sm">{name}</strong>
+                        <p className="text-xs leading-5 text-slate-300">{copy}</p>
                       </div>
                     ))}
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-sm font-black uppercase tracking-[.16em] text-[#2D75B9]">Then re-rank with guardrails</h3>
+                  <h3 className="text-sm font-black uppercase tracking-[.16em] text-[#2D75B9]">Eligibility and final pass</h3>
                   <div className="mt-5 space-y-3">
-                    {["No single brand dominates a view", "Avoid repeated topics and near-duplicate stories", "Respect hides, sensitivity and content eligibility", "Reserve editorial and commercial placements intentionally", "Explain the strongest reason for every recommendation"].map((x, i) => (
+                    {["Respect the active destination and brand scope", "Require real imagery for editorial cards and playable media for video cards", "Remove hidden, duplicate and explicitly excluded items", "Prevent three consecutive cards from sharing one brand or topic", "Explain the strongest implemented reasons for the current lead"].map((x, i) => (
                       <div key={x} className="grid grid-cols-[2rem_minmax(0,1fr)] border-b border-slate-200 pb-3 text-sm"><span className="font-mono text-xs text-[#2D75B9]">0{i + 1}</span>{x}</div>
                     ))}
                   </div>
@@ -111,18 +167,18 @@ export default function BlueprintPage() {
             </section>
 
             <section id="models" className="scroll-mt-8">
-              <SectionHead label="04 · Content models" title="Cards are views of structured decisions" copy="Editorial stories and commercial units use distinct models and disclosure, while sharing layout primitives, topic metadata, interaction events and accessibility requirements." />
-              <div className="mt-10 grid gap-5 md:grid-cols-2"><StoryCard /><StoryCard ad /></div>
+              <SectionHead label="04 · Content treatments" title="One editorial contract supports several reader treatments" copy="Shared story metadata carries source identity, topic, writer, publication date, canonical URL and media eligibility. The renderer chooses a treatment without changing the source story or its ranked position." />
+              <div className="mt-10"><StoryCard /></div>
               <div className="mt-6 overflow-x-auto">
                 <table className="w-full min-w-[680px] border-collapse text-left text-sm">
-                  <thead><tr className="border-b-2 border-[#102A43]"><th className="py-3">Field</th><th>Editorial content</th><th>Contextual ad</th><th>Used by</th></tr></thead>
+                  <thead><tr className="border-b-2 border-[#102A43]"><th className="py-3">Treatment</th><th>Eligibility</th><th>Reader behavior</th><th>Shared contract</th></tr></thead>
                   <tbody>
                     {[
-                      ["Identity", "story_id, brand, logo, canonical URL", "campaign_id, advertiser, disclosure", "routing, analytics"],
-                      ["Meaning", "topics, format, entities, intent", "categories, offer, eligibility", "candidate generation"],
-                      ["Quality", "editorial priority, trust, freshness", "creative quality, policy status", "ranking + safety"],
-                      ["Actions", "open, save, follow, hide", "click, dismiss, why this ad", "learning loop"],
-                      ["Presentation", "headline, dek, image, badge", "headline, image, CTA, label", "card renderer"],
+                      ["Article river card", "Valid story, source image and active scope", "Open, save, hide, More Like This", "Brand, topic, writer, date, URL and image"],
+                      ["Featured story", "Top ranked eligible story in the active edition", "Swipe, save, follow and More Like This", "Same source story with a lead presentation"],
+                      ["Rich photo gallery", "Explicit gallery with at least five distinct source images", "Open the in-app gallery reader", "Story metadata plus resolved gallery images"],
+                      ["Video card", "Direct or adaptive playable media passes compatibility rules", "Play or open the in-app reader", "Story metadata plus duration and transcodings"],
+                      ["Vertical video carousel", "Portrait media in an eligible brand context", "Swipe vertically in the immersive viewer", "Video contract plus orientation metadata"],
                     ].map((r) => (
                       <tr key={r[0]} className="border-b border-slate-200">{r.map((c, i) => <td key={c} className={`py-4 pr-5 ${i === 0 ? "font-bold" : "text-slate-600"}`}>{c}</td>)}</tr>
                     ))}
@@ -135,17 +191,18 @@ export default function BlueprintPage() {
               <SectionHead label="05 · Routes & navigation" title="Destination first, brand fluent" copy="Top-level sections answer broad intent. Brand pages retain their identity, SVG logo, color, typography and contextual subnavigation. The same content can be discovered through either mental model." />
               <div className="mt-10"><DestinationConvergence /></div>
               <div className="mt-8 border-l-2 border-[#2D75B9] pl-6">
-                <RouteRow route="/hearst-plus/" title="Unified personalized river" items={["/hearst-lifestyle/  Lifestyle", "/hearst-autos/  Autos", "/hearst-flux/  Flux", "/hearst-ew/  E&W"]} />
-                <RouteRow route="/lifestyle/[brandSlug]/ · /autos/[brandSlug]/" title="Brand-specific destination" items={["Contextual brand categories", "Single active brand filter", "Brand logo, color and type system"]} />
+                <RouteRow route="/hearst-plus/" title="Unified personalized river" items={["/hearst-lifestyle/  Lifestyle", "/hearst-autos/  Autos", "/hearst-flux/  Fashion & Luxury", "/hearst-ew/  Enthusiast & Wellness"]} />
+                <RouteRow route="/lifestyle/[brandSlug]/ · /autos/[brandSlug]/ · /flux/[brandSlug]/ · /ew/[brandSlug]/" title="Publication destination" items={["Contextual publication categories", "Publication-scoped story inventory", "Brand logo, color and type system"]} />
                 <RouteRow route="/about-hearst-magazines/" title="Stakeholder product story" />
+                <RouteRow route="/why-hearst-plus/" title="Value proposition and validation case" />
                 <RouteRow route="/hearst-product-blueprint/" title="PM and engineering reference" />
               </div>
               <div className="mt-8 grid gap-4 md:grid-cols-3">
                 {[
                   ["Global nav", "Move among the four destinations without losing the portfolio context"],
                   ["Contextual subnav", "Adapt categories to the active destination or brand"],
-                  ["Filter & state", "One brand at a time, clearable, route-addressable and visible"],
-                ].map(([a, b]) => <div key={a} className="border-t-4 border-[#2D75B9] bg-white p-5"><strong>{a}</strong><p className="mt-2 text-xs leading-5 text-slate-600">{b}</p></div>)}
+                  ["Filter and state", "Active destination, publication and topic context stays visible and clearable"],
+                ].map(([a, b]) => <div key={a} className="border border-slate-200 bg-white p-5"><strong>{a}</strong><p className="mt-2 text-xs leading-5 text-slate-600">{b}</p></div>)}
               </div>
             </section>
 
@@ -154,35 +211,46 @@ export default function BlueprintPage() {
               <div className="mt-10"><JourneyMatrix /></div>
             </section>
 
-            <section id="color" className="scroll-mt-8">
-              <SectionHead label="07 · Color and theming" title="Brand color stays useful in light and dark surfaces" copy="The design system keeps the main destination colors, then maps each one to a contrast-safe companion for dark-mode contexts and section-specific pages." />
+            <section id="design-system" className="scroll-mt-8">
+              <SectionHead label="07 · Design system" title="One HDS application layer, many recognizable publications" copy="Hearst+ composes HDS semantic tokens, typography roles, icons and brand themes with product-specific reader patterns. It does not create a parallel design system. Destination themes establish context; publication tokens preserve logo, color and headline voice." />
               <div className="mt-10"><PaletteSystem /></div>
-            </section>
-
-            <section id="style-guides" className="scroll-mt-8">
-              <SectionHead label="08 · Brand style guides" title="Each brand keeps its own logo, color and type behavior" copy="These samples show the section themes and the individual brand themes used by the prototype. The guide makes clear which brands have dedicated theme tokens and which currently inherit the section treatment." />
               <div className="mt-10"><BrandStyleGuide /></div>
             </section>
 
+            <section id="technology" className="scroll-mt-8">
+              <SectionHead label="08 · Technology" title="A modern web stack grounded in the installed build" copy="Version labels below are read from the project manifest so the blueprint remains precise. The stack supports the working prototype; it does not imply that production identity, publishing, analytics or consent systems are connected." />
+              <dl className="mt-10 grid gap-px bg-slate-200 md:grid-cols-2 xl:grid-cols-3">
+                {technology.map((item) => (
+                  <div key={item.label} className="bg-white p-5">
+                    <dt className="text-xs font-bold uppercase tracking-[0.12em] text-[#2D75B9]">{item.label}</dt>
+                    <dd>
+                      <h3 className="mt-3 text-sm font-bold">{item.title}</h3>
+                      <p className="mt-2 text-xs leading-5 text-slate-600">{item.copy}</p>
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+
             <section id="measurement" className="scroll-mt-8">
-              <SectionHead label="09 · Measurement" title="Optimize for durable reader value" copy="A daily destination succeeds when readers return because it reliably saves time and expands discovery, not because a single session was artificially prolonged." />
+              <SectionHead label="09 · Success framework" title="Define durable reader value before connecting telemetry" copy="The prototype does not currently report production analytics. These are proposed evaluation measures for a future instrumented release, included so product, editorial and engineering can agree on success before implementation." />
               <div className="mt-10 grid gap-px bg-slate-200 md:grid-cols-3">
                 {[
-                  ["North star", "Weekly useful sessions", "A session with a meaningful open, save, follow or qualified commercial action"],
-                  ["Leading signals", "Return rate · saves · follows", "Measure habit formation and depth by cohort and destination"],
-                  ["Guardrails", "Diversity · hides · trust", "Watch repetition, brand concentration, ad load, latency and accessibility"],
+                  ["North star", "Weekly useful sessions", "A proposed session definition based on a meaningful read, save, follow or successful return."],
+                  ["Leading signals", "Return rate · saves · follows", "Proposed cohort measures for habit formation, discovery and destination usefulness."],
+                  ["Guardrails", "Diversity · hides · trust", "Proposed checks for repetition, brand concentration, latency and accessibility."],
                 ].map(([a, b, c]) => <div key={a} className="bg-white p-6"><span className="text-xs font-black uppercase tracking-[.14em] text-[#2D75B9]">{a}</span><h3 className="mt-5 text-xl font-bold">{b}</h3><p className="mt-3 text-xs leading-5 text-slate-600">{c}</p></div>)}
               </div>
             </section>
 
             <section id="delivery" className="scroll-mt-8">
-              <SectionHead label="10 · Delivery principles" title="Build the trust contract into the platform" copy="The experience should remain fast, accessible, inspectable and reversible as its intelligence grows." />
+              <SectionHead label="10 · Production readiness" title="Keep prototype truth separate from production requirements" copy="The working prototype proves the reader experience and architecture. A production release still needs durable services, operational monitoring and a governed data contract." />
               <div className="mt-10 grid gap-6 md:grid-cols-2">
                 {[
-                  ["Privacy by design", "Prefer first-party behavioral signals, make controls obvious, and define retention deliberately."],
-                  ["Reader agency", "Save, follow, hide, clear and explanation controls are product primitives, not settings afterthoughts."],
-                  ["Observable decisions", "Log candidates, score components, constraints and outcomes so teams can debug the whole funnel."],
-                  ["Progressive delivery", "Feature flags, holdouts and cohort experiments let the team validate value before broad rollout."],
+                  ["Schedule and monitor refresh", "Run the validated RSS import before each morning edition, monitor staleness and keep the last valid catalog when a refresh fails."],
+                  ["Connect identity and consent", "Move browser-local profile state into an authenticated, consent-aware service with clear retention and cross-device behavior."],
+                  ["Instrument decisions", "Log eligible candidates, score components, diversity constraints, outcomes and failures without exposing private reader data."],
+                  ["Release safely", "Add feature flags, holdouts, accessibility regression checks, media monitoring and rollback paths before broad rollout."],
                 ].map(([t, c], i) => <article key={t} className="border-t border-slate-300 pt-5"><span className="font-mono text-xs text-[#2D75B9]">0{i + 1}</span><h3 className="mt-8 font-bold">{t}</h3><p className="mt-2 text-sm leading-6 text-slate-600">{c}</p></article>)}
               </div>
               <div className="mt-14 flex flex-col justify-between gap-6 bg-[#2D75B9] p-7 text-white md:flex-row md:items-center">
