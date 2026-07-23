@@ -39,7 +39,7 @@ Seven specialized AI agents power the Hearst Design System workflow. Each agent 
     Stored in <code style={{ background: '#e2e8f0', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>.cursor/skills/</code>
   </span>
   <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', background: '#f1f5f9', color: '#334155', borderRadius: '8px', fontSize: '13px' }}>
-    Auto-discovered by Cursor
+    Loaded by the configured AI-enabled IDE
   </span>
 </div>
 
@@ -49,9 +49,9 @@ Seven specialized AI agents power the Hearst Design System workflow. Each agent 
 
 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '16px', marginBottom: '40px' }}>
   <AgentCard
-    icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></svg>}
+    icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#334155" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></svg>}
     name="Token Architect"
-    scope="Manages the tokens/ directory -- the single source of truth. Edits core, semantic, and brand JSON files. Runs build-tokens to generate brands.ts and tokens.css. Also guides designers making direct token value edits in Cursor (branch workflow, validation, PR)."
+    scope="Manages the tokens/ directory -- the single source of truth. Edits core, semantic, and brand JSON files. Runs build-tokens to generate brands.ts and tokens.css. Also guides designers making direct token value edits in an IDE (branch workflow, validation, PR)."
     triggers={["edit tokens", "add brand", "change colors", "change fonts", "build-tokens", "designer token edit"]}
   />
   <AgentCard
@@ -67,25 +67,25 @@ Seven specialized AI agents power the Hearst Design System workflow. Each agent 
     triggers={[".pen files", "push-pencil", "component handoff", "annotations", "Pencil variables"]}
   />
   <AgentCard
-    icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m7 8-4 4 4 4"/><path d="m17 8 4 4-4 4"/><path d="m14 4-4 16"/></svg>}
+    icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#334155" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m7 8-4 4 4 4"/><path d="m17 8 4 4-4 4"/><path d="m14 4-4 16"/></svg>}
     name="Frontend Component"
     scope="Builds React components using Next.js 16, Tailwind 4, and Shadcn. Consumes tokens via CSS variables and Tailwind utilities. Ensures brand theming works across all 29 brands."
     triggers={["build component", "fix layout", "fix styling", "implement design", "React", "Tailwind"]}
   />
   <AgentCard
-    icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e11d48" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/></svg>}
+    icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#334155" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/></svg>}
     name="Storybook Docs"
     scope="Creates stories and MDX documentation pages. Configures decorators, Next.js mocks, and brand theming. Manages the Storybook sidebar structure and story sort order."
     triggers={["add story", "Storybook", "MDX", "document component", "story configuration"]}
   />
   <AgentCard
-    icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>}
+    icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#334155" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>}
     name="DevOps / Deploy"
     scope="Deploys to Netlify: the Next.js app and the Token Dashboard (Vite SPA). Storybook is local-only (npm run storybook). Manages Git operations and the build pipeline."
     triggers={["deploy", "Netlify", "build", "Git commit", "CI/CD", "fix build"]}
   />
   <AgentCard
-    icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12h.01M15 12h.01M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><circle cx="12" cy="12" r="10"/></svg>}
+    icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#334155" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12h.01M15 12h.01M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><circle cx="12" cy="12" r="10"/></svg>}
     name="QA / Review"
     scope="Verifies brand colors, fonts, and layouts across all 29 brands. Validates token consistency, checks accessibility, and audits visual regression after changes."
     triggers={["verify brands", "check colors", "check fonts", "accessibility", "visual regression"]}
@@ -181,7 +181,7 @@ Each agent owns specific files and scripts. This prevents conflicts and ensures 
 
 ## Skill File Structure
 
-Each agent is defined as a Cursor skill in the project:
+Each agent is defined as an IDE skill in the project:
 
 ```
 .cursor/skills/
@@ -194,7 +194,7 @@ Each agent is defined as a Cursor skill in the project:
   hearst-qa-review/SKILL.md            (113 lines)
 ```
 
-Skills are **auto-discovered** by Cursor based on their `description` field. When you ask a question or request a task, the matching agent's knowledge is automatically loaded into context.
+Skills are **loaded by compatible IDE tooling** based on their `description` field. When you ask a question or request a task, the matching agent's knowledge is loaded into context.
 
 ### What Each Skill Contains
 

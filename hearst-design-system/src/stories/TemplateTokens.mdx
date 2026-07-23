@@ -2,8 +2,8 @@ import { Meta } from "@storybook/blocks";
 
 <Meta title="Hearst Plus/Foundation/Token Usage" />
 
-export const Zone = ({ label, color = "#6d28d9" }) => (
-  <span style={{ display: 'inline-flex', alignItems: 'center', padding: '4px 12px', background: color, color: '#fff', borderRadius: '6px', fontSize: '11px', fontWeight: 700, fontFamily: 'monospace', letterSpacing: '0.5px', textTransform: 'uppercase' }}>{label}</span>
+export const Zone = ({ label }) => (
+  <span style={{ display: 'inline-flex', alignItems: 'center', padding: '4px 10px', background: 'transparent', color: '#334155', border: '1px solid #cbd5e1', borderRadius: '2px', fontSize: '11px', fontWeight: 700, fontFamily: 'monospace', letterSpacing: '0.5px', textTransform: 'uppercase' }}>{label}</span>
 );
 
 export const SectionCard = ({ title, icon, children }) => (
@@ -26,11 +26,11 @@ export const Th = ({ children, width }) => (
 );
 
 export const Td = ({ children, bold, mono }) => (
-  <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9', verticalAlign: 'top', fontWeight: bold ? 600 : 400, fontFamily: mono ? 'monospace' : 'inherit', fontSize: mono ? '12px' : '13px', color: mono ? '#6d28d9' : '#334155' }}>{children}</td>
+  <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9', verticalAlign: 'top', fontWeight: bold ? 600 : 400, fontFamily: mono ? 'monospace' : 'inherit', fontSize: mono ? '12px' : '13px', color: '#334155' }}>{children}</td>
 );
 
 export const VarTd = ({ children }) => (
-  <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9', verticalAlign: 'top', fontFamily: 'monospace', fontSize: '11px', color: '#0369a1', whiteSpace: 'nowrap' }}>{children}</td>
+  <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9', verticalAlign: 'top', fontFamily: 'monospace', fontSize: '11px', color: '#1e293b', whiteSpace: 'nowrap' }}>{children}</td>
 );
 
 export const DefTd = ({ children }) => (
@@ -63,11 +63,11 @@ export const RefHeader = ({ title, color }) => (
 How the **Home Page** and **Article Page** templates consume design tokens — and why each choice was made. This is the reference for anyone building new templates or auditing existing ones for token compliance.
 
 <div style={{ display: 'flex', gap: '12px', marginBottom: '32px', flexWrap: 'wrap' }}>
-  <Zone label="Typography" color="#6d28d9" />
-  <Zone label="Spacing" color="#0369a1" />
-  <Zone label="Layout" color="#16a34a" />
-  <Zone label="Color" color="#dc2626" />
-  <Zone label="Font" color="#d97706" />
+  <Zone label="Typography" />
+  <Zone label="Spacing" />
+  <Zone label="Layout" />
+  <Zone label="Color" />
+  <Zone label="Font" />
 </div>
 
 ---
@@ -348,12 +348,12 @@ The `.headline` class applies `font-family: var(--font-headline)` with the brand
     <tr><Th width="160px">Dimension</Th><Th>Home Page</Th><Th>Article Page</Th></tr>
   </thead>
   <tbody>
-    <tr><Td bold>Body text size</Td><Td>N/A (no body text)</Td><Td><code style={{ color: '#6d28d9' }}>--text-token-md</code> (18px)</Td></tr>
-    <tr><Td bold>Smallest text</Td><Td><code style={{ color: '#6d28d9' }}>--text-token-4xs</code> (11px)</Td><Td><code style={{ color: '#6d28d9' }}>--text-token-4xs</code> (11px)</Td></tr>
-    <tr><Td bold>Largest text</Td><Td><code style={{ color: '#6d28d9' }}>--text-token-7xl</code> (40px)</Td><Td><code style={{ color: '#6d28d9' }}>--text-token-7xl</code> (40px)</Td></tr>
-    <tr><Td bold>Section spacing</Td><Td><code style={{ color: '#6d28d9' }}>--space-lg</code> (20px)</Td><Td><code style={{ color: '#6d28d9' }}>--spacing-token-2xl</code> (32px)</Td></tr>
-    <tr><Td bold>Content max-width</Td><Td><code style={{ color: '#6d28d9' }}>--width-content-max</code> (1360px)</Td><Td><code style={{ color: '#6d28d9' }}>--width-content-max</code> (1360px)</Td></tr>
-    <tr><Td bold>Sidebar width</Td><Td><code style={{ color: '#6d28d9' }}>--width-sidebar</code> (320px)</Td><Td><code style={{ color: '#6d28d9' }}>--width-sidebar</code> (320px)</Td></tr>
+    <tr><Td bold>Body text size</Td><Td>N/A (no body text)</Td><Td><code style={{ color: '#334155' }}>--text-token-md</code> (18px)</Td></tr>
+    <tr><Td bold>Smallest text</Td><Td><code style={{ color: '#334155' }}>--text-token-4xs</code> (11px)</Td><Td><code style={{ color: '#334155' }}>--text-token-4xs</code> (11px)</Td></tr>
+    <tr><Td bold>Largest text</Td><Td><code style={{ color: '#334155' }}>--text-token-7xl</code> (40px)</Td><Td><code style={{ color: '#334155' }}>--text-token-7xl</code> (40px)</Td></tr>
+    <tr><Td bold>Section spacing</Td><Td><code style={{ color: '#334155' }}>--space-lg</code> (20px)</Td><Td><code style={{ color: '#334155' }}>--spacing-token-2xl</code> (32px)</Td></tr>
+    <tr><Td bold>Content max-width</Td><Td><code style={{ color: '#334155' }}>--width-content-max</code> (1360px)</Td><Td><code style={{ color: '#334155' }}>--width-content-max</code> (1360px)</Td></tr>
+    <tr><Td bold>Sidebar width</Td><Td><code style={{ color: '#334155' }}>--width-sidebar</code> (320px)</Td><Td><code style={{ color: '#334155' }}>--width-sidebar</code> (320px)</Td></tr>
     <tr><Td bold>Unique components</Td><Td>HeroCard, FourAcrossGrid, BigStoryFeedStacked, NewsletterPromo</Td><Td>ArticleHero, ArticleBody, PullQuote, ArticleByline, AdPlaceholder, RelatedArticles</Td></tr>
   </tbody>
 </TableWrap>

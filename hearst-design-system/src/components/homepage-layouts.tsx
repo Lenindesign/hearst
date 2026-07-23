@@ -267,6 +267,7 @@ function StickyNewsletterBar({ brandName }: { brandName: string }) {
         <div className="flex items-center gap-2 shrink-0">
           <Input
             placeholder="Email address"
+            aria-label={`Email address for ${brandName}'s newsletter`}
             className="w-48 h-8 text-sm bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 [&>div]:h-8"
           />
           <Button
@@ -313,6 +314,7 @@ function InlineNewsletter({
         <div className="flex gap-0">
           <Input
             placeholder="Enter your email"
+            aria-label={`Email address for ${brandName}'s newsletter`}
             className="flex-1 [&>div]:rounded-none [&>div]:rounded-l-sm [&>div]:border-border"
           />
           <Button
@@ -344,6 +346,7 @@ function InlineNewsletter({
           <Input
             size="xl"
             placeholder="Enter your email here."
+            aria-label={`Email address for ${brandName}'s newsletter`}
             leadingIcon={Mail}
             className="flex-1 h-14 [&>div]:h-14 [&>div]:rounded-none [&>div]:sm:rounded-l-sm [&>div]:border-primary-foreground/20 bg-primary-foreground/10 text-primary-foreground placeholder:text-primary-foreground/50"
           />
@@ -835,6 +838,7 @@ export function LayoutMosaic(props: HomepageLayoutProps = {}) {
                   <Input
                     size="xl"
                     placeholder="Enter your email"
+                    aria-label={`Email address for ${brand.name}'s newsletter`}
                     leadingIcon={Mail}
                     className="flex-1 [&>div]:rounded-none [&>div]:sm:rounded-l-sm [&>div]:border-border"
                   />

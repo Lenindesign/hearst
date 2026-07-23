@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
+import { expect, fn, within } from "@storybook/test";
 import { Input } from "@/components/ui/input";
 
 const meta: Meta<typeof Input> = {
@@ -80,6 +80,14 @@ export const WithHelp: Story = {
 
 export const WithError: Story = {
   args: { placeholder: "Enter text...", label: "Username", error: "Username is already taken" },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("textbox", { name: "Username" });
+    const error = canvas.getByRole("alert");
+    await expect(input).toHaveAttribute("aria-invalid", "true");
+    await expect(input).toHaveAttribute("aria-describedby", error.id);
+    await expect(error).toHaveTextContent("Username is already taken");
+  },
 };
 
 export const Required: Story = {
@@ -92,7 +100,7 @@ export const Disabled: Story = {
 
 export const AllSizes: Story = {
   render: (args) => (
-    <div className="space-y-4 w-80">
+    <div className="w-full max-w-80 space-y-4">
       <Input {...args} size="md" label="Medium" placeholder="Medium input" />
       <Input {...args} size="lg" label="Large" placeholder="Large input" />
       <Input {...args} size="xl" label="Extra Large" placeholder="Extra large input" />

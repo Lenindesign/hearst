@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
-import { HomePageTemplate } from "@/components/home-page";
+import { HomePageTemplate } from "@/components/hearst-plus";
 import { ThemeProvider } from "@/components/theme-provider";
 import { hearstPlusStoryData } from "./hearst-plus-story-data";
 
 function HearstPlusStory() {
   return (
-    <div style={{ margin: "-2rem", minHeight: "100vh" }}>
+    <div style={{ minHeight: "100vh" }}>
       <ThemeProvider defaultBrandSlug="hearst-all" persistColorMode={false}>
         <HomePageTemplate staticDestinationData={hearstPlusStoryData} />
       </ThemeProvider>

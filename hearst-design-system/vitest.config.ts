@@ -3,15 +3,16 @@ import { fileURLToPath } from 'node:url';
 
 import { defineConfig } from 'vitest/config';
 
-import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
-
-import { playwright } from '@vitest/browser-playwright';
+import { storybookTest } from '@storybook/experimental-addon-test/vitest-plugin';
 
 const dirname =
   typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
-// More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
+// Storybook 8 uses the experimental test addon to run every CSF story in Chromium.
 export default defineConfig({
+  optimizeDeps: {
+    include: ['react/jsx-dev-runtime'],
+  },
   test: {
     projects: [
       {
@@ -26,7 +27,7 @@ export default defineConfig({
           browser: {
             enabled: true,
             headless: true,
-            provider: playwright({}),
+            provider: 'playwright',
             instances: [{ browser: 'chromium' }],
           },
           setupFiles: ['.storybook/vitest.setup.ts'],

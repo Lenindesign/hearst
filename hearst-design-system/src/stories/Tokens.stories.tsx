@@ -17,7 +17,7 @@ function SpacingScale() {
   ];
 
   return (
-    <div className="w-[720px] space-y-6">
+    <div className="w-full max-w-[720px] min-w-0 space-y-6">
       <h2 className="text-2xl font-bold tracking-tight">Spacing Scale</h2>
       <div className="space-y-3">
         {spaces.map(({ name, value, tw }) => (
@@ -53,7 +53,7 @@ function BorderRadius() {
   ];
 
   return (
-    <div className="w-[720px] space-y-6">
+    <div className="w-full max-w-[720px] min-w-0 space-y-6">
       <h2 className="text-2xl font-bold tracking-tight">Border Radius</h2>
       <div className="flex flex-wrap gap-6">
         {radii.map(({ name, value }) => (
@@ -82,7 +82,7 @@ function Elevation() {
   ];
 
   return (
-    <div className="w-[720px] space-y-6">
+    <div className="w-full max-w-[720px] min-w-0 space-y-6">
       <h2 className="text-2xl font-bold tracking-tight">Elevation</h2>
       <div className="flex flex-wrap gap-6">
         {levels.map(({ name, class: cls }) => (
@@ -163,7 +163,7 @@ function TokenMap() {
                 <td className="py-2 pr-4 font-mono text-xs text-muted-foreground">
                   {r.css}
                 </td>
-                <td className="py-2 pr-4 font-mono text-xs text-purple-600">
+                <td className="py-2 pr-4 font-mono text-xs text-slate-700">
                   {r.pencil}
                 </td>
                 <td className="py-2 pr-4 font-mono text-xs text-blue-600">

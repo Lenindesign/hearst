@@ -54,6 +54,7 @@ function useGoogleFonts(fonts: string[]) {
 
 export const ThemeDecorator: Decorator = (Story, context) => {
   const brandSlug = context.globals.brand || "hearst-all";
+  const fullscreen = context.parameters.layout === "fullscreen";
   const brand = useMemo(
     () => themeOptions.find((b) => b.slug === brandSlug) || themeOptions[0],
     [brandSlug]
@@ -73,7 +74,10 @@ export const ThemeDecorator: Decorator = (Story, context) => {
         style={{
           ...cssVars,
           fontFamily: `"${brand.fontDefault}", system-ui, sans-serif`,
-          padding: "2rem",
+          boxSizing: "border-box",
+          minWidth: 0,
+          width: "100%",
+          padding: fullscreen ? 0 : "clamp(0.75rem, 3vw, 2rem)",
         } as React.CSSProperties}
       >
         <ReaderAccountProvider>

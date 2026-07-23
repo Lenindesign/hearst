@@ -1,0 +1,95 @@
+import { Meta } from "@storybook/blocks";
+import { HearstPlusDocScope, SpecTable } from "./hearst-plus-docs";
+
+<Meta title="Hearst Plus/Components/Inventory" />
+
+# Hearst+ component inventory
+
+<HearstPlusDocScope owner="Cross-functional" source="src/components/home-page.tsx; src/components/ui/; APP_RULES.md; STYLE.md">
+  This inventory separates the components that developers should reuse from the page orchestration that should remain in templates. The examples in this Storybook render production React components rather than parallel mock implementations.
+</HearstPlusDocScope>
+
+## Architecture
+
+Hearst+ uses four layers. A component should live at the lowest layer that fully owns its behavior.
+
+<SpecTable rows={[
+  {
+    label: "HDS primitives",
+    value: "Accessible controls and low-level content anatomy.",
+    evidence: <><code>src/components/ui/</code>: Button, Badge, Avatar, Card, Carousel, Tabs, Input, Switch, and ArticleCard.</>,
+  },
+  {
+    label: "Editorial patterns",
+    value: "Reusable story treatments that preserve article, gallery, and video meaning.",
+    evidence: "LifestyleRiverCard, RichPhotoGalleryCard, VideoFeedLeadCard, VideoIndexCard, and VideoRailCard.",
+  },
+  {
+    label: "Product modules",
+    value: "Reader-facing combinations with Hearst+ behavior and context.",
+    evidence: "MainNav, VerticalVideoCarousel, LifestyleStoryActions, sidebars, and reader overlays.",
+  },
+  {
+    label: "Templates",
+    value: "Destination routing, personalization, lazy delivery, reader queues, and full-page composition.",
+    evidence: "HomePageTemplate and the integrated For You Feed story.",
+  },
+]} />
+
+## Recommended Storybook library
+
+Use the **Brand** toolbar to review shared components in another Hearst publication. Editorial cards, video cards, vertical-video carousels, navigation, and the reader modal update their HDS tokens and publication fixture together.
+
+The catalog uses a compact generated fixture instead of importing every production river into the browser. Run `npm run storybook:fixtures` after changing checked-in feed modules; `npm run feed:refresh` already performs this step. Production routes continue to use the full inventories.
+
+| Priority | Component family | What to document | Coverage |
+|---|---|---|---|
+| P0 | Navigation | Light destination navigation, Videos dark exception, mobile menu, search, active state | Added in **Components / Navigation** |
+| P0 | Editorial cards | Standard river card, featured card, rich photo mosaic, saved and focus states | Added in **Components / Editorial Cards** |
+| P0 | Video cards | Lead, feed, trending rail, poster/error states | Added in **Components / Video Cards** |
+| P0 | Reader overlays | Open content reader with real destination context and focus restoration | Added in **Components / Reader Overlays** |
+| P1 | Story actions | Save, More like this, comments, Hide, and live status across breakpoints | Covered inside editorial cards; add an isolated state matrix when the API stabilizes |
+| P1 | Vertical video carousel | Publication title and icon, light and dark rail, portrait inventory, immersive viewer, swipe directions | Brand-aware light rail added; keep the immersive viewer as an integrated interaction story |
+| P1 | Sidebars | Daily Habit, Global Story Inventory, Trending Across Brands, Trending Videos | Add after the sidebar modules are extracted from the page file |
+| P1 | Today’s Edit | Ranked module, brand spotlight, responsive card composition | Keep integrated until its ranking inputs have a stable public contract |
+
+## Keep these integrated
+
+- **Personalization console:** it explains and manipulates page-level ranking state.
+- **Infinite river orchestration:** it coordinates hydration, ranked batches, the sentinel, and cross-destination feeds.
+- **Games and destination pages:** they are templates made from reusable components, not library primitives.
+- **Reader modal internals:** the modal depends on routes, focus restoration, source-article loading, related-story queues, and theme switching. Document it as an integrated story until those boundaries are extracted deliberately.
+
+## Technical audit
+
+| Area | Score | Evidence and next action |
+|---|---:|---|
+| Accessibility | 4 / 4 | Storybook runs axe checks as test failures. Input labeling and error relationships are explicit, and focused interaction tests verify button activation, save state, and brand output. Expand the keyboard matrix as new interactive components are extracted. |
+| Performance | 3 / 4 | The compact generated Storybook fixture replaces the full river imports and roughly halves the largest feed-data payload. The page orchestrator, HLS runtime, and accessibility runtime remain intentionally substantial. |
+| Responsive | 4 / 4 | Representative navigation, editorial-card, vertical-video, reader, and integrated-feed stories were exercised at 320px and 390px. Shared examples contain themselves without document-level horizontal overflow. |
+| Theming | 4 / 4 | Semantic HDS variables, keyed theme remounting, and a toolbar interaction check make publication changes visible after one selection. Light publication themes and the scoped Videos dark exception remain separate contracts. |
+| Maintainability | 3 / 4 | Storybook now imports through <code>src/components/hearst-plus/index.ts</code> and consumes generated representative fixtures. Several patterns still live inside <code>home-page.tsx</code>; extract them only alongside their production import sites. |
+
+**Current score: 18 / 20 — release-ready documentation and verification, with the remaining opportunity concentrated in production module boundaries and runtime weight.**
+
+## Verified quality gate
+
+Run these checks before publishing Storybook or changing a shared component:
+
+```bash
+npx tsc --noEmit
+npm run test-storybook
+npm run build-storybook
+npm run build
+```
+
+The browser suite covers 98 stories and treats accessibility violations as failures. The production build remains a separate gate because Storybook deliberately uses compact static fixtures and blocks same-origin Next.js API calls instead of pretending its catalog is a live application server.
+
+## Definition of done for a shared story
+
+1. Imports the production component; it does not recreate the markup.
+2. Uses current checked-in Hearst metadata from the generated fixture, or clearly labels an explicit interaction-state fixture.
+3. Exposes meaningful behavior such as save, open, hide, carousel, or navigation state.
+4. Works with the brand toolbar through semantic HDS tokens.
+5. Covers keyboard focus and a 320px or 390px viewport when interaction is responsive.
+6. Documents scoped exceptions instead of turning them into global variants.

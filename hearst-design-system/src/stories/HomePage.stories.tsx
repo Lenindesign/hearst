@@ -3,7 +3,7 @@ import React from "react";
 import {
   HomePageTemplate,
   type HomePageTemplateProps,
-} from "@/components/home-page";
+} from "@/components/hearst-plus";
 import { ThemeProvider } from "@/components/theme-provider";
 import { VisualInspector } from "@/components/visual-inspector";
 import { hearstPlusStoryData } from "./hearst-plus-story-data";

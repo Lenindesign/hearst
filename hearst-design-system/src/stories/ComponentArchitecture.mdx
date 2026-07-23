@@ -45,7 +45,7 @@ brand themes, colors, type, spacing, borders, radius, motion
 
 <SpecTable rows={[
   { label: "Hearst Design System", value: "Defines semantic decisions and brand inheritance. HDS owns the visual contract, not a third-party preset.", evidence: <code>tokens/, src/lib/tokens.css, src/app/globals.css</code> },
-  { label: "Hearst+ components", value: "Own the local React API, product variants, editorial behavior, and source code used by the application.", evidence: <code>src/components/ui/, src/components/home-page.tsx</code> },
+  { label: "Hearst+ components", value: "Own the local React API, product variants, editorial behavior, and source code used by the application.", evidence: <code>src/components/ui/, src/components/hearst-plus/index.ts, src/components/home-page.tsx</code> },
   { label: "shadcn/ui", value: "Supplies composition conventions, local-source organization, CSS-variable conventions, and the base-nova configuration. It is not a hosted runtime design system.", evidence: <code>components.json</code> },
   { label: "Base UI", value: "Supplies headless behavior for controls that require robust state, focus, keyboard, and accessibility mechanics.", evidence: <code>@base-ui/react imports in src/components/ui/</code> },
   { label: "Tailwind CSS 4", value: "Composes responsive layout, interaction states, and token-backed visual rules directly in component source.", evidence: <code>@import "tailwindcss" in src/app/globals.css</code> },
@@ -115,6 +115,7 @@ Use semantic classes such as `bg-background`, `text-foreground`, and `border-bor
   { label: "Tabs", value: "Base UI tab semantics with local variants and token-backed active states", evidence: <code>src/components/ui/tabs.tsx</code> },
   { label: "Class composition", value: "clsx plus tailwind-merge keeps conditional utilities deterministic", evidence: <code>src/lib/utils.ts</code> },
   { label: "Theme bridge", value: "Hearst+ aliases map HDS semantic decisions into component-facing variables", evidence: <code>.hearst-plus-theme in src/app/globals.css</code> },
+  { label: "Public product boundary", value: "Storybook and new consumers import supported Hearst+ modules from one explicit entry point", evidence: <code>src/components/hearst-plus/index.ts</code> },
   { label: "Integrated use", value: "The feed and article templates reuse local primitives alongside custom editorial modules", evidence: <code>src/components/home-page.tsx, src/components/article-page.tsx</code> },
 ]}/>
 

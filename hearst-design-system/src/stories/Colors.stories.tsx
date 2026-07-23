@@ -1,10 +1,9 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
+import { expect, within } from "@storybook/test";
 import { brands } from "@/lib/brands";
 
-function useBrand() {
-  const el = document.querySelector("[data-brand]");
-  const slug = el?.getAttribute("data-brand") || "cosmopolitan";
+function getBrand(slug = "hearst-all") {
   return brands.find((b) => b.slug === slug) || brands[0];
 }
 
@@ -60,8 +59,8 @@ function CssVarSwatch({
   );
 }
 
-function BrandPalette() {
-  const brand = useBrand();
+function BrandPalette({ brandSlug }: { brandSlug?: string }) {
+  const brand = getBrand(brandSlug);
   const sorted = Object.entries(brand.colors)
     .sort((a, b) => {
       const an = parseInt(a[0]),
@@ -72,7 +71,7 @@ function BrandPalette() {
     .filter(([, hex]) => hex.toLowerCase() !== "#ffffff");
 
   return (
-    <div className="w-[720px] space-y-8">
+    <div className="w-full max-w-[720px] min-w-0 space-y-8">
       <div>
         <h2 className="text-2xl font-bold tracking-tight mb-1">
           {brand.name} — Brand Palette
@@ -117,7 +116,7 @@ function SemanticColors() {
   ];
 
   return (
-    <div className="w-[720px] space-y-10">
+    <div className="w-full max-w-[720px] min-w-0 space-y-10">
       <div>
         <h3 className="text-lg font-semibold mb-4">Content Colors</h3>
         <div className="flex flex-wrap gap-4">
@@ -154,9 +153,9 @@ function NeutralScale() {
   ];
 
   return (
-    <div className="w-[720px] space-y-6">
+    <div className="w-full max-w-[720px] min-w-0 space-y-6">
       <h3 className="text-lg font-semibold">Neutral Scale</h3>
-      <div className="flex gap-1">
+      <div className="grid grid-cols-4 gap-1 sm:grid-cols-6 lg:grid-cols-11">
         {neutrals.map(({ shade, fb }) => (
           <div key={shade} className="flex-1 space-y-1.5">
             <div
@@ -178,7 +177,7 @@ function NeutralScale() {
 
 function AllBrandsOverview() {
   return (
-    <div className="w-[720px] space-y-6">
+    <div className="w-full max-w-[720px] min-w-0 space-y-6">
       <h2 className="text-2xl font-bold tracking-tight">All 29 Brands</h2>
       <div className="space-y-2">
         {brands.map((brand) => {
@@ -186,8 +185,8 @@ function AllBrandsOverview() {
             ([, hex]) => hex.toLowerCase() !== "#ffffff"
           );
           return (
-            <div key={brand.slug} className="flex items-center gap-3">
-              <span className="w-40 text-sm font-medium truncate">
+            <div key={brand.slug} className="flex min-w-0 flex-wrap items-center gap-3 sm:flex-nowrap">
+              <span className="w-full text-sm font-medium sm:w-40 sm:truncate">
                 {brand.name}
               </span>
               <div className="flex gap-1">
@@ -216,7 +215,16 @@ export default meta;
 type Story = StoryObj;
 
 export const BrandColors: Story = {
-  render: () => <BrandPalette />,
+  render: (_args, context) => (
+    <BrandPalette key={context.globals.brand} brandSlug={context.globals.brand} />
+  ),
+  play: async ({ canvasElement, globals }) => {
+    const brand = getBrand(globals.brand);
+    const canvas = within(canvasElement);
+    await expect(
+      canvas.getByRole("heading", { name: `${brand.name} — Brand Palette` })
+    ).toBeVisible();
+  },
 };
 
 export const Semantic: Story = {

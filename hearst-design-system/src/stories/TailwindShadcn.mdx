@@ -1,0 +1,178 @@
+import { Meta } from "@storybook/blocks";
+import { HearstPlusDocScope, SpecTable } from "./hearst-plus-docs";
+
+<Meta title="Hearst Plus/Foundation/Tailwind + shadcn" />
+
+# Tailwind + shadcn in Hearst+
+
+## How utility styling, accessible primitives, and HDS tokens work together
+
+Hearst+ uses **Tailwind CSS 4** to compose layouts and states, and **shadcn/ui conventions** to organize reusable component source. Neither one defines the brand. The **Hearst Design System semantic tokens** remain the visual source of truth.
+
+<HearstPlusDocScope owner="Engineering" source="package.json, postcss.config.mjs, components.json, src/app/globals.css, src/lib/utils.ts, src/components/ui/" />
+
+## The implementation
+
+<SpecTable rows={[
+  { label: "Tailwind", value: "Tailwind CSS 4 composes responsive layout, interaction states, spacing, typography, and utility styling.", evidence: <code>tailwindcss ^4 and @tailwindcss/postcss ^4</code> },
+  { label: "CSS entry", value: "The application imports Tailwind and the shadcn stylesheet from the global CSS entry point.", evidence: <code>@import &quot;tailwindcss&quot;; @import &quot;shadcn/tailwind.css&quot;;</code> },
+  { label: "Theme bridge", value: "Tailwind's CSS-first theme maps HDS and shadcn semantic variables to component-facing utilities.", evidence: <code>@theme inline in src/app/globals.css</code> },
+  { label: "shadcn", value: "shadcn 4 supplies local-source composition conventions and the base-nova configuration. It is not a hosted runtime component library.", evidence: <code>components.json and shadcn ^4.0.2</code> },
+  { label: "Behavior", value: "Accessible interaction behavior comes from Base UI where a control needs focus, keyboard, selection, disclosure, or modal state.", evidence: <code>@base-ui/react ^1.2.0</code> },
+  { label: "Variants", value: "CVA defines typed visual variants; cn() combines conditional classes and resolves Tailwind conflicts.", evidence: <code>class-variance-authority, clsx, tailwind-merge</code> },
+]}/>
+
+There is no separate `tailwind.config` file in this setup. Tailwind 4 reads the CSS-first theme in `src/app/globals.css`; `components.json` intentionally leaves its Tailwind config field empty.
+
+## Architecture
+
+```text
+HDS token JSON
+      |
+      v
+generated CSS variables and publication themes
+      |
+      v
+semantic aliases + @theme inline
+      |
+      v
+Tailwind utilities in local React components
+      ^
+      |
+shadcn conventions + Base UI behavior + CVA variants
+      |
+      v
+Hearst+ reader modules and routes
+```
+
+### What each layer owns
+
+| Layer | Owns | Does not own |
+|---|---|---|
+| HDS tokens | Brand colors, semantic roles, typography, spacing, radius, and theme inheritance | Component behavior |
+| Tailwind CSS | Layout composition, responsive rules, states, and token-backed utility application | Publication-specific design decisions |
+| shadcn conventions | Local component structure, aliases, CSS-variable conventions, and composition patterns | A remote runtime or an immutable component package |
+| Base UI | Headless interaction, focus, keyboard behavior, and accessibility mechanics | Hearst visual styling |
+| Hearst+ components | Public React APIs, editorial variants, product behavior, and final source ownership | Generic third-party defaults |
+
+## Choose classes in this order
+
+1. **Reuse an existing HDS primitive** from `src/components/ui/` before creating a new control.
+2. **Use semantic Tailwind utilities** such as `bg-background`, `bg-card`, `text-foreground`, `text-muted-foreground`, `border-border`, and `bg-primary`.
+3. **Use HDS token variables for exact design-system scales** such as `text-[length:var(--text-token-md)]` and `gap-[var(--spacing-token-lg)]`.
+4. **Add responsive and state variants** such as `md:grid-cols-8`, `hover:bg-muted`, `focus-visible:ring-ring`, and `data-[selected]:bg-primary`.
+5. **Use arbitrary values only when they reference an owned token or a genuinely local layout constraint.** Do not recreate the token system with one-off pixels and hex values.
+
+## Pattern: token-backed editorial card
+
+```tsx
+<article className="rounded-lg border border-border bg-card p-[var(--spacing-token-md)] text-card-foreground">
+  <p className="text-[length:var(--text-token-xs)] text-muted-foreground">
+    Car and Driver · Reviews
+  </p>
+  <h2 className="headline mt-[var(--spacing-token-xs)] text-[length:var(--text-token-2xl)]">
+    The story headline
+  </h2>
+</article>
+```
+
+The classes describe the role of the surface. The active Hearst+ or publication theme supplies the actual values.
+
+## Pattern: responsive composition
+
+```tsx
+<div className="grid min-w-0 grid-cols-1 gap-[var(--spacing-token-lg)] md:grid-cols-8">
+  <main className="min-w-0 md:col-span-6">...</main>
+  <aside className="min-w-0 md:col-span-2">...</aside>
+</div>
+```
+
+Use responsive variants for CSS layout changes. Use JavaScript only when behavior or data must change, not to duplicate a breakpoint that CSS already owns.
+
+## Pattern: shadcn-style local component
+
+```tsx
+import { Button as ButtonPrimitive } from "@base-ui/react/button";
+import { cva } from "class-variance-authority";
+import { cn } from "@/lib/utils";
+
+const buttonVariants = cva(
+  "inline-flex items-center justify-center rounded-md focus-visible:ring-2 focus-visible:ring-ring",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        outline: "border border-border bg-background hover:bg-muted",
+      },
+    },
+    defaultVariants: { variant: "default" },
+  },
+);
+
+export function Button({ className, variant, ...props }) {
+  return (
+    <ButtonPrimitive
+      className={cn(buttonVariants({ variant }), className)}
+      {...props}
+    />
+  );
+}
+```
+
+This is the operating model: behavior from Base UI, variants from CVA, deterministic class composition from `cn()`, visual decisions from Tailwind utilities, and final values from HDS tokens.
+
+## Adding a shadcn component
+
+shadcn generates source into the repository; it does not add a black-box UI dependency. When adding a component:
+
+1. Generate the component using the repository's `components.json` configuration.
+2. Review every generated file and keep only the source required by Hearst+.
+3. Replace default visual decisions with HDS semantic utilities and tokens.
+4. Preserve Base UI behavior and accessible states where the component uses them.
+5. Add Hearst+ variants deliberately with CVA rather than scattered conditional strings.
+6. Document default, hover, focus, disabled, selected, dark, and responsive states in Storybook.
+
+## Use / avoid
+
+| Use | Avoid | Reason |
+|---|---|---|
+| `bg-primary text-primary-foreground` | `bg-[#d70000] text-white` | Semantic roles inherit the active publication theme |
+| `border-border bg-card` | One-off neutral hex values | Shared surfaces stay consistent across modes and brands |
+| `gap-[var(--spacing-token-lg)]` | `gap-[17px]` | HDS owns the spacing scale |
+| `text-[length:var(--text-token-md)]` | `text-[18px]` | Typography remains traceable to the token contract |
+| `cn(base, selected && active, className)` | Manual string concatenation | `clsx` and `tailwind-merge` handle conditions and conflicts predictably |
+| Local `Button`, `Input`, `Switch`, or `Tabs` | A new raw interactive control | Existing primitives already own accessibility and product states |
+| `md:grid-cols-8` | A resize listener for layout-only changes | CSS is the responsive source of truth |
+
+## When regular CSS is appropriate
+
+Keep these concerns in CSS rather than forcing them into long utility strings:
+
+- `@font-face`, resets, and global theme definitions
+- `@theme inline` semantic mappings
+- Keyframes and shared motion definitions
+- Publication and Hearst+ theme scopes
+- Complex selectors shared by many components
+
+Component-specific layout and state styling should remain close to the React component through Tailwind utilities.
+
+## Review checklist
+
+- The component reuses a local HDS primitive where one exists.
+- Shared colors use semantic utilities, not publication hex values.
+- Typography and spacing resolve through HDS tokens.
+- Responsive behavior works without a JavaScript-only breakpoint duplicate.
+- Focus, keyboard, disabled, selected, loading, and dark states are covered when relevant.
+- `cn()` and CVA are used for conditional classes and variants.
+- Storybook demonstrates the states developers, designers, and product managers need to review.
+
+## Source references
+
+<SpecTable rows={[
+  { label: "Tailwind entry and theme", value: "Imports Tailwind and shadcn CSS, then exposes semantic theme variables and HDS scales.", evidence: <code>src/app/globals.css</code> },
+  { label: "PostCSS", value: "Runs the official Tailwind PostCSS integration.", evidence: <code>postcss.config.mjs</code> },
+  { label: "shadcn configuration", value: "Defines base-nova style, TypeScript, RSC, CSS variables, aliases, and the global CSS path.", evidence: <code>components.json</code> },
+  { label: "Class composition", value: "Combines clsx with tailwind-merge.", evidence: <code>src/lib/utils.ts</code> },
+  { label: "Primitive example", value: "Combines Base UI behavior, CVA variants, semantic Tailwind utilities, and cn().", evidence: <code>src/components/ui/button.tsx</code> },
+  { label: "Editorial example", value: "Uses local variants, semantic surfaces, group state, and responsive media treatments.", evidence: <code>src/components/ui/article-card.tsx</code> },
+]}/>

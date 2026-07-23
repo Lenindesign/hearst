@@ -1,8 +1,12 @@
-import { autosRiverSourceNotes, autosRiverStories } from "@/components/autos-river-data";
-import { ewRiverSourceNotes, ewRiverStories } from "@/components/ew-river-data";
-import { fluxRiverSourceNotes, fluxRiverStories } from "@/components/flux-river-data";
-import { lifestyleRiverSourceNotes, lifestyleRiverStories } from "@/components/lifestyle-river-data";
 import type { HearstDestinationStaticData } from "@/lib/hearst-destination-data-types";
+import { storybookFixtureData } from "./generated/hearst-plus-fixtures";
+
+const {
+  lifestyle: { stories: lifestyleRiverStories, sourceNotes: lifestyleRiverSourceNotes },
+  autos: { stories: autosRiverStories, sourceNotes: autosRiverSourceNotes },
+  flux: { stories: fluxRiverStories, sourceNotes: fluxRiverSourceNotes },
+  ew: { stories: ewRiverStories, sourceNotes: ewRiverSourceNotes },
+} = storybookFixtureData;
 
 const storyLimitPerDestination = 20;
 

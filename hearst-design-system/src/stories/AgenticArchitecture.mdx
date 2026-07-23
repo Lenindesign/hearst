@@ -29,7 +29,7 @@ Next.js route
   { label: "Reader context", value: "ReaderAccountProvider stores demo profile, preferences, saves, collections, and comments in localStorage", evidence: <code>src/components/reader-account.tsx</code> },
   { label: "Feed template", value: "HomePageTemplate composes the app shell, content modules, ranking behavior, and readers", evidence: <code>src/components/home-page.tsx</code> },
   { label: "Static inventory", value: "Generated destination data modules are committed build inputs", evidence: <code>src/components/*-river-data.ts</code> },
-  { label: "Refresh pipeline", value: "RSS imports run first, author enrichment follows, then feed validation", evidence: <code>npm run feed:refresh</code> },
+  { label: "Refresh pipeline", value: "RSS imports run first, author enrichment follows, feeds are validated, and the compact Storybook fixture is regenerated", evidence: <code>npm run feed:refresh</code> },
 ]}/>
 
 ## Source-of-truth order
@@ -43,7 +43,7 @@ Next.js route
 
 ## Data flow
 
-The checked-in river data files make the Storybook and production build deterministic. `npm run feed:refresh` updates those inputs from public Hearst RSS metadata, enriches writer bylines, and validates the result. Deployment is a separate, explicitly authorized operation. Storybook does not call the production content API by itself.
+The checked-in river data files make production builds deterministic. `npm run feed:refresh` updates those inputs from public Hearst RSS metadata, enriches writer bylines, validates the result, and regenerates a compact representative Storybook fixture. Storybook imports that generated fixture rather than bundling the full production inventories, and it does not call the production content API by itself. Deployment remains a separate, explicitly authorized operation.
 
 ## Personalization boundary
 

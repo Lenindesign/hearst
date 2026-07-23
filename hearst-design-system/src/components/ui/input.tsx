@@ -45,22 +45,31 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       onClear,
       disabled,
       value,
+      id,
+      "aria-describedby": ariaDescribedBy,
       ...props
     },
     ref
   ) => {
+    const generatedId = React.useId();
+    const inputId = id ?? generatedId;
+    const helpId = `${inputId}-help`;
+    const errorId = `${inputId}-error`;
     const hasValue = value !== undefined && value !== "";
     const showClear = onClear && hasValue && !disabled;
+    const describedBy = [ariaDescribedBy, error ? errorId : helpText ? helpId : undefined]
+      .filter(Boolean)
+      .join(" ") || undefined;
 
     return (
       <div className={cn("flex flex-col gap-1.5 w-full", className)}>
         {label && (
           <div className="flex items-center gap-1">
-            <label className="text-sm font-semibold text-foreground">
+            <label htmlFor={inputId} className="text-sm font-semibold text-foreground">
               {label}
             </label>
             {required && (
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-600" />
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-600" aria-hidden />
             )}
           </div>
         )}
@@ -78,8 +87,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           )}
           <input
             ref={ref}
+            id={inputId}
             disabled={disabled}
             value={value}
+            aria-describedby={describedBy}
+            aria-invalid={error ? true : undefined}
             className={cn(
               "flex-1 bg-transparent outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed",
               size === "md" ? "text-sm" : size === "lg" ? "text-sm" : "text-base"
@@ -92,6 +104,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               onClick={onClear}
               className="shrink-0 text-muted-foreground hover:text-foreground transition-colors"
               tabIndex={-1}
+              aria-label="Clear input"
             >
               <X className="size-4" />
             </button>
@@ -99,12 +112,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         </div>
 
         {error ? (
-          <p className="flex items-center gap-1 text-xs text-red-700">
+          <p id={errorId} role="alert" className="flex items-center gap-1 text-xs text-red-700">
             <TriangleAlert className="size-3.5 shrink-0" aria-hidden />
             {error}
           </p>
         ) : helpText ? (
-          <p className="flex items-center gap-1 text-xs text-muted-foreground">
+          <p id={helpId} className="flex items-center gap-1 text-xs text-muted-foreground">
             <Info className="size-3.5 shrink-0" aria-hidden />
             {helpText}
           </p>

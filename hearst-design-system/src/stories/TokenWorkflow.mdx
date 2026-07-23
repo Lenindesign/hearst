@@ -33,9 +33,9 @@ Token work flows in one of three directions. Each direction has a clear initiato
     <div style={{ fontSize: '13px', color: '#1e40af', fontWeight: 600 }}>Designer initiates, Developer delivers</div>
   </div>
   <div style={{ border: '2px solid #d97706', borderRadius: '12px', padding: '24px', background: '#fffbeb' }}>
-    <h3 style={{ margin: '0 0 8px', color: '#d97706', fontSize: '16px' }}>Designer Edits in Cursor</h3>
+    <h3 style={{ margin: '0 0 8px', color: '#d97706', fontSize: '16px' }}>Designer Edits in an IDE</h3>
     <p style={{ margin: '0 0 12px', fontSize: '13px', color: '#475569' }}>
-      For simple value changes (colors, spacing, fonts), the designer edits token JSON directly in Cursor with AI assistance. Always on a branch, always with a PR.
+      For simple value changes (colors, spacing, fonts), the designer edits token JSON directly in an AI-enabled IDE. Always on a branch, always with a PR.
     </p>
     <div style={{ fontSize: '13px', color: '#92400e', fontWeight: 600 }}>Designer self-serves, Developer reviews</div>
   </div>
@@ -68,7 +68,7 @@ Each role has specific tools for specific tasks. Using the right tool at the rig
   <tbody>
     <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
       <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Change a token value</td>
-      <td style={{ padding: '10px 16px' }}>Cursor (with AI)</td>
+      <td style={{ padding: '10px 16px' }}>AI-enabled IDE</td>
       <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Edit the JSON value directly — AI creates a branch, runs validation, opens a PR</td>
     </tr>
     <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
@@ -119,7 +119,7 @@ Each role has specific tools for specific tasks. Using the right tool at the rig
   <tbody>
     <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
       <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Create or edit a token</td>
-      <td style={{ padding: '10px 16px' }}>VS Code / Cursor</td>
+      <td style={{ padding: '10px 16px' }}>IDE</td>
       <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Edit the JSON file directly in <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens/</code></td>
     </tr>
     <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
@@ -194,7 +194,7 @@ The more detail the designer provides, the faster the developer can create the t
 
 ### Step 3 -- Developer creates the token
 
-The developer opens the JSON file in VS Code / Cursor and adds:
+The developer opens the JSON file in their IDE and adds:
 
 ```json
 {
@@ -250,11 +250,11 @@ The designer opens Figma or Pencil, searches for the token name, and confirms it
 
 ---
 
-## Flow 2: Designer Edits Tokens in Cursor
+## Flow 2: Designer Edits Tokens in an IDE
 
 <div style={{ background: '#fffbeb', border: '2px solid #d97706', borderRadius: '12px', padding: '24px', margin: '24px 0' }}>
 
-For simple value changes — updating a color, adjusting spacing, changing a font — designers can edit tokens directly in Cursor with AI assistance. The AI enforces safety guardrails automatically.
+For simple value changes — updating a color, adjusting spacing, changing a font — designers can edit tokens directly in an AI-enabled IDE. The AI enforces safety guardrails automatically.
 
 ### What designers CAN change
 
@@ -327,7 +327,7 @@ For simple value changes — updating a color, adjusting spacing, changing a fon
 - Files outside `tokens/` — never
 - Semantic aliases — requires developer understanding
 
-### Step 1 — Open Cursor and describe the change
+### Step 1 — Open your IDE and describe the change
 
 Tell the AI what you want in natural language:
 - "Change Cosmopolitan's brand-1 color to #cc0000"
@@ -531,7 +531,7 @@ DESIGNER                          DEVELOPER                         DESIGNER
 
 Path A: Request                                                     
 1. Identify need            2. Create token in JSON          7. Verify in Figma
-   (Figma / Pencil)            (VS Code / Cursor)              (Variables panel)
+   (Figma / Pencil)                  (IDE)                     (Variables panel)
         │                           │
         │  Request via              │  npm run build-tokens    8. Verify in Pencil
         │  Jira / Slack             │  npm run tokens:check       ($token-name)
@@ -541,7 +541,7 @@ Path A: Request
                                     │
                                4. Open PR
 Path B: Self-serve                  │
-1. Open Cursor              5. Merge to main
+1. Open your IDE            5. Merge to main
 2. Ask AI to change value      (GitHub)
 3. AI creates branch,           │
    edits JSON, validates    6. Sync to design tools
@@ -608,7 +608,7 @@ Use this when notifying designers that new tokens are available.
   <tbody>
     <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
       <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Change a token value</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Edits in Cursor (AI creates branch + PR)</td>
+      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Edits in an IDE (AI creates branch + PR)</td>
       <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Reviews and merges the PR</td>
     </tr>
     <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
@@ -634,7 +634,7 @@ Use this when notifying designers that new tokens are available.
     <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
       <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Build and validate</td>
       <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
-        AI runs <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>build-tokens</code> + <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens:check</code> (in Cursor)
+        AI runs <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>build-tokens</code> + <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens:check</code> (in the IDE)
       </td>
       <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>
         Runs <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>build-tokens</code> and <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens:validate</code>
@@ -686,7 +686,7 @@ Use this when notifying designers that new tokens are available.
     <h4 style={{ margin: '0 0 12px 0', color: '#16a34a' }}>DO</h4>
     <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '14px', lineHeight: '1.8', color: '#334155' }}>
       <li>Always create tokens in <strong>Git first</strong></li>
-      <li>Designers: use Cursor for simple value changes (on a branch)</li>
+      <li>Designers: use an IDE for simple value changes (on a branch)</li>
       <li>Run <code style={{ background: '#e2e8f0', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>build-tokens</code> + <code style={{ background: '#e2e8f0', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>tokens:check</code> after every edit</li>
       <li>Run <code style={{ background: '#e2e8f0', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>push-figma</code> + <code style={{ background: '#e2e8f0', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>push-pencil</code> after merging</li>
       <li>Notify designers with the canonical name</li>

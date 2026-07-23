@@ -33,17 +33,17 @@ type Story = StoryObj<typeof Divider>;
 
 export const Default: Story = {
   args: { variant: "default", size: "md" },
-  decorators: [(Story) => <div className="w-80"><Story /></div>],
+  decorators: [(Story) => <div className="w-full max-w-80"><Story /></div>],
 };
 
 export const Subtle: Story = {
   args: { variant: "subtle", size: "md" },
-  decorators: [(Story) => <div className="w-80"><Story /></div>],
+  decorators: [(Story) => <div className="w-full max-w-80"><Story /></div>],
 };
 
 export const AllSizes: Story = {
   render: (args) => (
-    <div className="w-80 space-y-6">
+    <div className="w-full max-w-80 space-y-6">
       {(["sm", "md", "lg"] as const).map((s) => (
         <div key={s}>
           <p className="text-xs text-muted-foreground mb-2 capitalize">{s}</p>

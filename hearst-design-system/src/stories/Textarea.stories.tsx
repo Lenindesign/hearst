@@ -53,7 +53,7 @@ type Story = StoryObj<typeof Textarea>;
 export const Default: Story = {
   args: { placeholder: "Tell us about yourself..." },
   render: (args) => (
-    <div className="w-[400px] space-y-2">
+    <div className="w-full max-w-[400px] min-w-0 space-y-2">
       <Label htmlFor="bio">Bio</Label>
       <Textarea id="bio" {...args} />
     </div>
@@ -63,7 +63,7 @@ export const Default: Story = {
 export const WithValue: Story = {
   args: { defaultValue: "This is a great article! I especially loved the section about emerging trends." },
   render: (args) => (
-    <div className="w-[400px] space-y-2">
+    <div className="w-full max-w-[400px] min-w-0 space-y-2">
       <Label htmlFor="comment">Comment</Label>
       <Textarea id="comment" {...args} />
     </div>
@@ -73,7 +73,7 @@ export const WithValue: Story = {
 export const Disabled: Story = {
   args: { defaultValue: "This field is disabled.", disabled: true },
   render: (args) => (
-    <div className="w-[400px] space-y-2">
+    <div className="w-full max-w-[400px] min-w-0 space-y-2">
       <Label htmlFor="disabled">Disabled</Label>
       <Textarea id="disabled" {...args} />
     </div>
@@ -84,7 +84,7 @@ export const Tall: Story = {
   name: "Custom Rows",
   args: { placeholder: "Write your article...", rows: 10 },
   render: (args) => (
-    <div className="w-[400px] space-y-2">
+    <div className="w-full max-w-[400px] min-w-0 space-y-2">
       <Label htmlFor="article">Article Body</Label>
       <Textarea id="article" {...args} />
     </div>

@@ -10,7 +10,7 @@ interface AlertStoryProps {
 
 function AlertRenderer({ variant, title, description }: AlertStoryProps) {
   return (
-    <div className="w-[480px]">
+    <div className="w-full max-w-[480px] min-w-0">
       <Alert variant={variant}>
         <AlertTitle>{title}</AlertTitle>
         <AlertDescription>{description}</AlertDescription>
@@ -77,7 +77,7 @@ export const Destructive: Story = {
 
 export const AllVariants: Story = {
   render: (args) => (
-    <div className="w-[480px] space-y-4">
+    <div className="w-full max-w-[480px] min-w-0 space-y-4">
       <AlertRenderer {...(args as AlertStoryProps)} variant="default" title="Story saved" description="This story was added to your Read Later collection." />
       <AlertRenderer {...(args as AlertStoryProps)} variant="destructive" title="Couldn’t update your preferences" description="Your feed was not changed. Please try again." />
     </div>

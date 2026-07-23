@@ -80,7 +80,7 @@ export const External: Story = {
 
 export const AllSizes: Story = {
   render: (args) => (
-    <div className="flex items-end gap-4">
+    <div className="flex flex-wrap items-end gap-4">
       {(["xs", "sm", "base", "lg", "xl", "2xl"] as const).map((s) => (
         <LinkComponent key={s} {...args} size={s}>
           {s}

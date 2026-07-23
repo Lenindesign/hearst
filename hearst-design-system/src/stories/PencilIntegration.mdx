@@ -52,7 +52,7 @@ Get approval             production tokens          token values
       </tr>
       <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
         <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Developers can’t read Figma programmatically</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Pencil is readable via <strong>MCP tools</strong> in Cursor</td>
+        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Pencil is readable via <strong>MCP tools</strong> in an IDE</td>
       </tr>
       <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
         <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>LLMs can’t inspect Figma designs</td>
@@ -340,7 +340,7 @@ Component/{Category}/{Name}
 
 ## MCP Tools Reference
 
-Pencil is accessed programmatically through MCP (Model Context Protocol) tools in Cursor. These tools let developers and LLMs read specs, inspect designs, and push updates.
+Pencil is accessed programmatically through MCP (Model Context Protocol) tools in an IDE. These tools let developers and AI assistants read specs, inspect designs, and push updates.
 
 ### Reading tools
 
@@ -506,7 +506,7 @@ Pencil is accessed programmatically through MCP (Model Context Protocol) tools i
 
 ### Reading component specs (example)
 
-To inspect a component in Pencil from Cursor:
+To inspect a component in Pencil from an IDE:
 
 ```
 // Read the component structure
@@ -535,7 +535,7 @@ batch_get({ patterns: ["Component/Button/Primary"] })
 
 ## LLM Workflow with Pencil
 
-When an LLM (Cursor, Claude, etc.) needs to make design system changes:
+When an AI assistant in the IDE needs to make design system changes:
 
 <div style={{ overflowX: 'auto', margin: '24px 0' }}>
   <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
@@ -601,9 +601,9 @@ When an LLM (Cursor, Claude, etc.) needs to make design system changes:
 
 ### Editing token values (designer self-serve)
 
-Designers can also edit token values directly in Cursor with AI assistance:
+Designers can also edit token values directly in an IDE with AI assistance:
 
-1. Open Cursor and describe the change (e.g. "Change Cosmo's brand-1 to #cc0000")
+1. Open your IDE and describe the change (e.g. "Change Cosmo's brand-1 to #cc0000")
 2. The AI creates a branch, edits the JSON value, runs `build-tokens` + `tokens:check`
 3. The AI opens a PR for developer review
 4. After merge, developer runs `push-pencil` to sync Pencil

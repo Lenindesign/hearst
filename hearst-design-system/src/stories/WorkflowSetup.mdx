@@ -177,7 +177,7 @@ After a merge to `main`, a developer runs `build-tokens` (for the app) and, when
 1. **Access**
    - Figma: edit access to the Hearst tokens file (ask your team lead).
    - **Pencil:** installed and signed in; open `hearst-brands.pen` from this repo when you work on handoff.
-   - **Cursor** (optional but recommended): clone the repo so you can edit `tokens/` on a branch with AI assistance, or pair with a developer.
+   - **AI-enabled IDE** (optional but recommended): clone the repo so you can edit `tokens/` on a branch with AI assistance, or pair with a developer.
 
 2. **Learn the names**
    - Read [Token Naming Guide](?path=/docs/token-naming-guide--docs) for canonical paths.
@@ -186,7 +186,7 @@ After a merge to `main`, a developer runs `build-tokens` (for the app) and, when
 3. **Daily workflow**
    - **Ideate** in Figma using variables from the synced collection; switch **modes** to preview brands.
    - **Lock approved specs** in Pencil using `$variable-name` — never hardcode hex for production tokens.
-   - **Change a value:** either file a request for a developer, or edit JSON in Cursor on a branch and open a PR (see Token Workflow).
+   - **Change a value:** either file a request for a developer, or edit JSON in an IDE on a branch and open a PR (see Token Workflow).
 
 4. **Verify a sync**
    - In Figma: Variables panel → find the name the team agreed on; check the mode matches your brand.
@@ -243,7 +243,7 @@ After a merge to `main`, a developer runs `build-tokens` (for the app) and, when
    npm run push-pencil
    ```
 
-   Pencil MCP in Cursor is used to read/edit `.pen` content; the script syncs variables from Git. Details: [Pencil Integration](?path=/docs/pencil-integration--docs)
+   Pencil MCP in the IDE is used to read/edit `.pen` content; the script syncs variables from Git. Details: [Pencil Integration](?path=/docs/pencil-integration--docs)
 
 7. **Do not edit generated files**
    - Do not hand-edit `tokens.css` or generated `brands.ts` — always change `tokens/` and run `build-tokens`.

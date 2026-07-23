@@ -310,6 +310,7 @@ function ArticleNewsletter({ brandName }: { brandName: string }) {
         <Input
           size="xl"
           placeholder="Enter your email here."
+          aria-label={`Email address for ${brandName}'s newsletter`}
           leadingIcon={Mail}
           className="flex-1 [&>div]:rounded-none [&>div]:sm:rounded-l-sm [&>div]:border-border"
         />

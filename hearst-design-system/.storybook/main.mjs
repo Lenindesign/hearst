@@ -8,12 +8,18 @@ const storybookDirectory = path.dirname(fileURLToPath(import.meta.url));
 
 const config = {
   stories: [
-    "../src/stories/{AgenticArchitecture,ComponentArchitecture,DesignersManifesto,FigmaIntegration,GridSystem,HearstOnboardingJourney,PencilIntegration,QAProcess,TemplateTokens,TokenNaming,TokenWorkflow,Toolbox,Welcome,WorkflowSetup}.mdx",
-    "../src/stories/{Alert,ArticleCard,Avatar,Badge,Button,Chip,Colors,Divider,Grid,HearstPlusApp,HomePage,Input,Link,Switch,Textarea,Toggle,Tokens,Typography}.stories.@(ts|tsx)",
+    "../src/stories/{AgenticArchitecture,ComponentArchitecture,DesignersManifesto,FigmaIntegration,GridSystem,HearstOnboardingJourney}.mdx",
+    "../src/stories/{HearstPlusComponentInventory,PencilIntegration,QAProcess,TailwindShadcn,TemplateTokens,TokenNaming}.mdx",
+    "../src/stories/{TokenWorkflow,Toolbox,Welcome,WorkflowSetup}.mdx",
+    "../src/stories/{Alert,ArticleCard,Avatar,Badge,Button,Chip,Colors,Divider,Grid}.stories.@(ts|tsx)",
+    "../src/stories/{HDSHPModules,HearstPlusApp,HearstPlusEditorialCards,HearstPlusNavigation,HearstPlusReaderOverlays,HearstPlusVideoCards}.stories.@(ts|tsx)",
+    "../src/stories/{HomePage,Input,Link,Switch,Textarea,Toggle,Tokens,Typography}.stories.@(ts|tsx)",
   ],
   addons: [
     "@storybook/addon-essentials",
     "@storybook/addon-themes",
+    "@storybook/addon-a11y",
+    "@storybook/experimental-addon-test",
     {
       name: "@storybook/addon-docs",
       options: {

@@ -69,7 +69,7 @@ function TypographyShowcase() {
   ];
 
   return (
-    <div className="w-[720px] space-y-12">
+    <div className="w-full max-w-[720px] min-w-0 space-y-12">
       <div>
         <h2 className="text-2xl font-bold tracking-tight mb-1">{brand.name}</h2>
         <p className="text-sm text-muted-foreground">
@@ -124,7 +124,7 @@ function TypeScale() {
   ];
 
   return (
-    <div className="w-[720px] space-y-6">
+    <div className="w-full max-w-[720px] min-w-0 space-y-6">
       {sizes.map(({ name, class: cls, px }) => (
         <div key={name} className="flex items-baseline gap-4">
           <span className="w-20 shrink-0 text-xs font-mono text-muted-foreground text-right">
@@ -145,7 +145,7 @@ function HeadlineVsBody() {
   const brand = useBrand();
 
   return (
-    <div className="w-[720px] space-y-8">
+    <div className="w-full max-w-[720px] min-w-0 space-y-8">
       <div className="space-y-2">
         <p className="text-xs font-mono text-muted-foreground uppercase tracking-widest">
           Headline + Body Pairing

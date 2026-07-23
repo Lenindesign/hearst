@@ -2,14 +2,14 @@ import { Meta } from "@storybook/blocks";
 
 <Meta title="Hearst Plus/Foundation/Token Naming" />
 
-export const Segment = ({ label, color }) => (
-  <span style={{ display: 'inline-flex', alignItems: 'center', padding: '3px 10px', background: color, color: '#fff', borderRadius: '6px', fontSize: '12px', fontWeight: 600, fontFamily: 'monospace' }}>{label}</span>
+export const Segment = ({ label }) => (
+  <span style={{ display: 'inline-flex', alignItems: 'center', padding: '3px 10px', background: '#f1f5f9', color: '#334155', border: '1px solid #cbd5e1', borderRadius: '3px', fontSize: '12px', fontWeight: 600, fontFamily: 'monospace' }}>{label}</span>
 );
 
 export const TokenCard = ({ title, pattern, type, examples, description }) => (
   <div style={{ border: '1px solid #e2e8f0', borderRadius: '12px', padding: '20px', background: '#fafbfc' }}>
     <h4 style={{ margin: '0 0 4px', fontSize: '15px' }}>{title}</h4>
-    <code style={{ fontSize: '13px', color: '#6d28d9', background: '#f5f3ff', padding: '2px 8px', borderRadius: '4px' }}>{pattern}</code>
+    <code style={{ fontSize: '13px', color: '#334155', background: '#f1f5f9', padding: '2px 8px', borderRadius: '4px' }}>{pattern}</code>
     <span style={{ fontSize: '11px', color: '#64748b', marginLeft: '8px' }}>Type: {type}</span>
     {description && <p style={{ margin: '8px 0 0', fontSize: '13px', color: '#475569' }}>{description}</p>}
     <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '3px' }}>
@@ -22,14 +22,14 @@ export const TokenCard = ({ title, pattern, type, examples, description }) => (
 
 export const DoItem = ({ children }) => (
   <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', padding: '6px 0' }}>
-    <span style={{ color: '#16a34a', fontWeight: 700, fontSize: '14px', flexShrink: 0 }}>DO</span>
+    <span style={{ color: '#334155', fontWeight: 700, fontSize: '14px', flexShrink: 0 }}>DO</span>
     <span style={{ fontSize: '14px' }}>{children}</span>
   </div>
 );
 
 export const DontItem = ({ children }) => (
   <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', padding: '6px 0' }}>
-    <span style={{ color: '#dc2626', fontWeight: 700, fontSize: '14px', flexShrink: 0 }}>DON'T</span>
+    <span style={{ color: '#334155', fontWeight: 700, fontSize: '14px', flexShrink: 0 }}>DON'T</span>
     <span style={{ fontSize: '14px' }}>{children}</span>
   </div>
 );
@@ -58,7 +58,7 @@ Designers and developers only need to know **one name** for each token -- the **
 
 <div style={{ background: '#1e293b', borderRadius: '12px', padding: '24px', margin: '24px 0' }}>
   <div style={{ fontFamily: 'monospace', fontSize: '15px', color: '#e2e8f0', textAlign: 'center', marginBottom: '16px' }}>
-    <span style={{ color: '#fcd34d', fontWeight: 700 }}>brand-1</span>
+    <span style={{ color: '#f8fafc', fontWeight: 700 }}>brand-1</span>
     <span style={{ color: '#64748b' }}> is the canonical name</span>
   </div>
   <div style={{ fontFamily: 'monospace', fontSize: '13px', color: '#94a3b8', lineHeight: '2.2', maxWidth: '480px', margin: '0 auto' }}>
@@ -68,19 +68,19 @@ Designers and developers only need to know **one name** for each token -- the **
     </div>
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
       <span>CSS</span>
-      <code style={{ color: '#86efac' }}>--brand-1</code>
+      <code style={{ color: '#e2e8f0' }}>--brand-1</code>
     </div>
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
       <span>Pencil</span>
-      <code style={{ color: '#c4b5fd' }}>$brand-1</code>
+      <code style={{ color: '#e2e8f0' }}>$brand-1</code>
     </div>
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
       <span>Figma</span>
-      <code style={{ color: '#93c5fd' }}>brand-1</code>
+      <code style={{ color: '#e2e8f0' }}>brand-1</code>
     </div>
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
       <span>JS / React</span>
-      <code style={{ color: '#fca5a5' }}>var(--brand-1)</code>
+      <code style={{ color: '#e2e8f0' }}>var(--brand-1)</code>
     </div>
   </div>
 </div>
@@ -235,38 +235,38 @@ When creating a new token, assemble the canonical name using only the segments t
 Every token lives in one of three layers. Each layer has a specific purpose and a specific file.
 
 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', margin: '24px 0' }}>
-  <div style={{ border: '2px solid #7c3aed', borderRadius: '12px', padding: '20px', background: '#faf5ff' }}>
-    <h4 style={{ margin: '0 0 8px', color: '#7c3aed' }}>Core</h4>
+  <div style={{ border: '1px solid #cbd5e1', borderRadius: '12px', padding: '20px', background: '#f8fafc' }}>
+    <h4 style={{ margin: '0 0 8px', color: '#1e293b' }}>Core</h4>
     <p style={{ margin: '0 0 8px', fontSize: '13px', color: '#475569' }}>Raw values shared by all brands. The foundation everything else builds on.</p>
-    <code style={{ fontSize: '12px', color: '#7c3aed' }}>tokens/core/global.json</code>
+    <code style={{ fontSize: '12px', color: '#334155' }}>tokens/core/global.json</code>
     <div style={{ marginTop: '10px', display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
-      <code style={{ fontSize: '11px', background: '#ede9fe', padding: '2px 6px', borderRadius: '4px', color: '#6d28d9' }}>{"palette-*"}</code>
-      <code style={{ fontSize: '11px', background: '#ede9fe', padding: '2px 6px', borderRadius: '4px', color: '#6d28d9' }}>{"space-*"}</code>
-      <code style={{ fontSize: '11px', background: '#ede9fe', padding: '2px 6px', borderRadius: '4px', color: '#6d28d9' }}>{"border-*"}</code>
-      <code style={{ fontSize: '11px', background: '#ede9fe', padding: '2px 6px', borderRadius: '4px', color: '#6d28d9' }}>{"elevation-*"}</code>
-      <code style={{ fontSize: '11px', background: '#ede9fe', padding: '2px 6px', borderRadius: '4px', color: '#6d28d9' }}>{"font-size-*"}</code>
-      <code style={{ fontSize: '11px', background: '#ede9fe', padding: '2px 6px', borderRadius: '4px', color: '#6d28d9' }}>{"layout-*"}</code>
+      <code style={{ fontSize: '11px', background: '#e2e8f0', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{"palette-*"}</code>
+      <code style={{ fontSize: '11px', background: '#e2e8f0', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{"space-*"}</code>
+      <code style={{ fontSize: '11px', background: '#e2e8f0', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{"border-*"}</code>
+      <code style={{ fontSize: '11px', background: '#e2e8f0', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{"elevation-*"}</code>
+      <code style={{ fontSize: '11px', background: '#e2e8f0', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{"font-size-*"}</code>
+      <code style={{ fontSize: '11px', background: '#e2e8f0', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{"layout-*"}</code>
     </div>
   </div>
-  <div style={{ border: '2px solid #2563eb', borderRadius: '12px', padding: '20px', background: '#eff6ff' }}>
-    <h4 style={{ margin: '0 0 8px', color: '#2563eb' }}>Semantic</h4>
+  <div style={{ border: '1px solid #cbd5e1', borderRadius: '12px', padding: '20px', background: '#f8fafc' }}>
+    <h4 style={{ margin: '0 0 8px', color: '#1e293b' }}>Semantic</h4>
     <p style={{ margin: '0 0 8px', fontSize: '13px', color: '#475569' }}>Purpose-driven aliases that reference brand tokens via <code>$brand-1</code>.</p>
-    <code style={{ fontSize: '12px', color: '#2563eb' }}>tokens/semantic/aliases.json</code>
+    <code style={{ fontSize: '12px', color: '#334155' }}>tokens/semantic/aliases.json</code>
     <div style={{ marginTop: '10px', display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
-      <code style={{ fontSize: '11px', background: '#dbeafe', padding: '2px 6px', borderRadius: '4px', color: '#1d4ed8' }}>background-brand</code>
-      <code style={{ fontSize: '11px', background: '#dbeafe', padding: '2px 6px', borderRadius: '4px', color: '#1d4ed8' }}>content-brand</code>
+      <code style={{ fontSize: '11px', background: '#e2e8f0', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>background-brand</code>
+      <code style={{ fontSize: '11px', background: '#e2e8f0', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>content-brand</code>
     </div>
   </div>
-  <div style={{ border: '2px solid #059669', borderRadius: '12px', padding: '20px', background: '#ecfdf5' }}>
-    <h4 style={{ margin: '0 0 8px', color: '#059669' }}>Brand</h4>
+  <div style={{ border: '1px solid #cbd5e1', borderRadius: '12px', padding: '20px', background: '#f8fafc' }}>
+    <h4 style={{ margin: '0 0 8px', color: '#1e293b' }}>Brand</h4>
     <p style={{ margin: '0 0 8px', fontSize: '13px', color: '#475569' }}>Per-brand overrides. 29 files, one per brand. Values that make each brand unique.</p>
-    <code style={{ fontSize: '12px', color: '#059669' }}>tokens/brands/&#123;slug&#125;.json</code>
+    <code style={{ fontSize: '12px', color: '#334155' }}>tokens/brands/&#123;slug&#125;.json</code>
     <div style={{ marginTop: '10px', display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
-      <code style={{ fontSize: '11px', background: '#d1fae5', padding: '2px 6px', borderRadius: '4px', color: '#047857' }}>brand-1..14</code>
-      <code style={{ fontSize: '11px', background: '#d1fae5', padding: '2px 6px', borderRadius: '4px', color: '#047857' }}>{"palette-brand-*"}</code>
-      <code style={{ fontSize: '11px', background: '#d1fae5', padding: '2px 6px', borderRadius: '4px', color: '#047857' }}>{"component-*"}</code>
-      <code style={{ fontSize: '11px', background: '#d1fae5', padding: '2px 6px', borderRadius: '4px', color: '#047857' }}>{"font-family-*"}</code>
-      <code style={{ fontSize: '11px', background: '#d1fae5', padding: '2px 6px', borderRadius: '4px', color: '#047857' }}>{"typography-*"}</code>
+      <code style={{ fontSize: '11px', background: '#e2e8f0', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>brand-1..14</code>
+      <code style={{ fontSize: '11px', background: '#e2e8f0', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{"palette-brand-*"}</code>
+      <code style={{ fontSize: '11px', background: '#e2e8f0', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{"component-*"}</code>
+      <code style={{ fontSize: '11px', background: '#e2e8f0', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{"font-family-*"}</code>
+      <code style={{ fontSize: '11px', background: '#e2e8f0', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{"typography-*"}</code>
     </div>
   </div>
 </div>
@@ -292,26 +292,26 @@ Every token follows a consistent pattern. Not every segment is required -- use o
 
 <div style={{ background: '#1e293b', borderRadius: '12px', padding: '24px', margin: '24px 0', overflowX: 'auto' }}>
   <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginBottom: '16px' }}>
-    <Segment label="layer" color="#7c3aed" />
+    <Segment label="layer" />
     <span style={{ color: '#64748b', fontSize: '18px' }}>-</span>
-    <Segment label="category" color="#2563eb" />
+    <Segment label="category" />
     <span style={{ color: '#64748b', fontSize: '18px' }}>-</span>
-    <Segment label="element" color="#0891b2" />
+    <Segment label="element" />
     <span style={{ color: '#64748b', fontSize: '18px' }}>-</span>
-    <Segment label="variant" color="#d97706" />
+    <Segment label="variant" />
     <span style={{ color: '#64748b', fontSize: '18px' }}>-</span>
-    <Segment label="style" color="#be185d" />
+    <Segment label="style" />
     <span style={{ color: '#64748b', fontSize: '18px' }}>-</span>
-    <Segment label="state" color="#dc2626" />
+    <Segment label="state" />
     <span style={{ color: '#64748b', fontSize: '18px' }}>-</span>
-    <Segment label="size" color="#059669" />
+    <Segment label="size" />
   </div>
   <div style={{ fontFamily: 'monospace', fontSize: '13px', color: '#94a3b8', lineHeight: '2' }}>
-    <div><span style={{ color: '#c4b5fd' }}>component</span>-<span style={{ color: '#93c5fd' }}>button</span>-<span style={{ color: '#67e8f9' }}>background</span>-<span style={{ color: '#fcd34d' }}>primary</span>-<span style={{ color: '#f9a8d4' }}>solid</span>-<span style={{ color: '#fca5a5' }}>default</span></div>
-    <div><span style={{ color: '#c4b5fd' }}>component</span>-<span style={{ color: '#93c5fd' }}>card</span>-<span style={{ color: '#67e8f9' }}>gap</span>-<span style={{ color: '#fcd34d' }}>column</span>-<span style={{ color: '#86efac' }}>lg</span></div>
-    <div><span style={{ color: '#93c5fd' }}>palette</span>-<span style={{ color: '#67e8f9' }}>neutral</span>-<span style={{ color: '#86efac' }}>200</span></div>
-    <div><span style={{ color: '#93c5fd' }}>space</span>-<span style={{ color: '#86efac' }}>md</span></div>
-    <div><span style={{ color: '#93c5fd' }}>font</span>-<span style={{ color: '#67e8f9' }}>size</span>-<span style={{ color: '#86efac' }}>2xl</span></div>
+    <div style={{ color: '#e2e8f0' }}>component-button-background-primary-solid-default</div>
+    <div style={{ color: '#e2e8f0' }}>component-card-gap-column-lg</div>
+    <div style={{ color: '#e2e8f0' }}>palette-neutral-200</div>
+    <div style={{ color: '#e2e8f0' }}>space-md</div>
+    <div style={{ color: '#e2e8f0' }}>font-size-2xl</div>
   </div>
 </div>
 
@@ -504,10 +504,10 @@ component-button-radius-default                        0
 
 <div style={{ background: '#1e293b', borderRadius: '12px', padding: '24px', margin: '16px 0', fontFamily: 'monospace', fontSize: '14px', overflowX: 'auto' }}>
   <div style={{ color: '#e2e8f0', marginBottom: '8px' }}>
-    <span style={{ color: '#c4b5fd' }}>component</span> - <span style={{ color: '#93c5fd' }}>button</span> - <span style={{ color: '#67e8f9' }}>background</span> - <span style={{ color: '#fcd34d' }}>primary</span> - <span style={{ color: '#f9a8d4' }}>solid</span> - <span style={{ color: '#fca5a5' }}>default</span>
+    <span style={{ color: '#e2e8f0' }}>component - button - background - primary - solid - default</span>
   </div>
   <div style={{ color: '#64748b', fontSize: '12px' }}>
-    <span style={{ color: '#c4b5fd' }}>layer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> &nbsp; <span style={{ color: '#93c5fd' }}>name&nbsp;&nbsp;</span> &nbsp; <span style={{ color: '#67e8f9' }}>element&nbsp;&nbsp;&nbsp;</span> &nbsp; <span style={{ color: '#fcd34d' }}>variant</span> &nbsp; <span style={{ color: '#f9a8d4' }}>style</span> &nbsp; <span style={{ color: '#fca5a5' }}>state</span>
+    <span style={{ color: '#94a3b8' }}>layer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name&nbsp;&nbsp;&nbsp;&nbsp; element&nbsp;&nbsp;&nbsp;&nbsp; variant&nbsp;&nbsp; style&nbsp;&nbsp; state</span>
   </div>
 </div>
 
@@ -609,10 +609,10 @@ typography-component-{component-path}-{size}
 
 <div style={{ background: '#1e293b', borderRadius: '12px', padding: '24px', margin: '16px 0', fontFamily: 'monospace', fontSize: '13px', overflowX: 'auto' }}>
   <div style={{ color: '#e2e8f0', marginBottom: '4px' }}>
-    <span style={{ color: '#c4b5fd' }}>typography</span>-<span style={{ color: '#93c5fd' }}>component</span>-<span style={{ color: '#67e8f9' }}>card-core-content-title</span>-<span style={{ color: '#fcd34d' }}>default</span>-<span style={{ color: '#86efac' }}>lg</span>
+    <span style={{ color: '#e2e8f0' }}>typography-component-card-core-content-title-default-lg</span>
   </div>
   <div style={{ color: '#64748b', fontSize: '11px' }}>
-    <span style={{ color: '#c4b5fd' }}>prefix&nbsp;&nbsp;&nbsp;&nbsp;</span> &nbsp;<span style={{ color: '#93c5fd' }}>scope&nbsp;&nbsp;&nbsp;&nbsp;</span> &nbsp;<span style={{ color: '#67e8f9' }}>component path&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> &nbsp;<span style={{ color: '#fcd34d' }}>variant</span> &nbsp;<span style={{ color: '#86efac' }}>size</span>
+    <span style={{ color: '#94a3b8' }}>prefix&nbsp;&nbsp;&nbsp;&nbsp; scope&nbsp;&nbsp;&nbsp;&nbsp; component path&nbsp;&nbsp;&nbsp;&nbsp; variant&nbsp;&nbsp; size</span>
   </div>
 </div>
 
@@ -657,20 +657,20 @@ Follow this flowchart when you need to create a new token.
 **Step 1: What kind of value is it?**
 
 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px', margin: '16px 0' }}>
-  <div style={{ background: '#faf5ff', border: '1px solid #ddd6fe', borderRadius: '8px', padding: '12px' }}>
+  <div style={{ background: '#fff', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '12px' }}>
     <strong style={{ fontSize: '13px' }}>Raw value</strong>
     <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#64748b' }}>A color, number, or string that does not change per brand</p>
-    <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#7c3aed' }}>Add to <code>core/global.json</code></p>
+    <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#334155' }}>Add to <code>core/global.json</code></p>
   </div>
-  <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '8px', padding: '12px' }}>
+  <div style={{ background: '#fff', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '12px' }}>
     <strong style={{ fontSize: '13px' }}>Brand reference</strong>
     <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#64748b' }}>A value that should resolve to a brand color</p>
-    <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#2563eb' }}>Add to <code>semantic/aliases.json</code> with <code>$brand-N</code></p>
+    <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#334155' }}>Add to <code>semantic/aliases.json</code> with <code>$brand-N</code></p>
   </div>
-  <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', borderRadius: '8px', padding: '12px' }}>
+  <div style={{ background: '#fff', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '12px' }}>
     <strong style={{ fontSize: '13px' }}>Brand-specific value</strong>
     <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#64748b' }}>A value that differs for each brand</p>
-    <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#059669' }}>Add to each <code>brands/slug.json</code></p>
+    <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#334155' }}>Add to each <code>brands/slug.json</code></p>
   </div>
 </div>
 
@@ -735,8 +735,8 @@ Only include segments that are needed. Skip segments that don't apply.
 ## 7. Naming Checklist
 
 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '24px', margin: '24px 0' }}>
-  <div style={{ border: '1px solid #bbf7d0', borderRadius: '12px', padding: '20px', background: '#f0fdf4' }}>
-    <h4 style={{ margin: '0 0 12px', color: '#16a34a' }}>DO</h4>
+  <div style={{ border: '1px solid #cbd5e1', borderRadius: '12px', padding: '20px', background: '#f8fafc' }}>
+    <h4 style={{ margin: '0 0 12px', color: '#1e293b' }}>DO</h4>
     <DoItem>Use <strong>kebab-case</strong> for all token names</DoItem>
     <DoItem>Follow the segment order: layer - category - element - variant - style - state - size</DoItem>
     <DoItem>Use existing size names: <code>xs, sm, md, lg, xl, 2xl, 3xl, 4xl, 6xl</code></DoItem>
@@ -746,8 +746,8 @@ Only include segments that are needed. Skip segments that don't apply.
     <DoItem>Run <code>build-tokens</code> after every edit</DoItem>
     <DoItem>Check at least 3 brands after adding tokens</DoItem>
   </div>
-  <div style={{ border: '1px solid #fecaca', borderRadius: '12px', padding: '20px', background: '#fef2f2' }}>
-    <h4 style={{ margin: '0 0 12px', color: '#dc2626' }}>DON'T</h4>
+  <div style={{ border: '1px solid #cbd5e1', borderRadius: '12px', padding: '20px', background: '#f8fafc' }}>
+    <h4 style={{ margin: '0 0 12px', color: '#1e293b' }}>DON'T</h4>
     <DontItem>Invent new size names (use the established scale)</DontItem>
     <DontItem>Use camelCase or PascalCase (<code>buttonBackground</code>)</DontItem>
     <DontItem>Hardcode brand-specific hex values in <code>core/global.json</code></DontItem>

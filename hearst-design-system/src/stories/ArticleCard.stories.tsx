@@ -79,7 +79,7 @@ function BrandVerticalCard(props: Partial<ArticleCardStoryProps>) {
 
   const width = layout === "horizontal" ? 600 : size === "sm" ? 260 : 340;
   return (
-    <div style={{ width }} onClick={props.onClick} className="cursor-pointer">
+    <div style={{ width: "100%", maxWidth: width }} onClick={props.onClick} className="min-w-0 cursor-pointer">
       <ArticleCard layout={layout} size={size}>
         <ArticleCardImage src={image} alt={title} aspectRatio={aspectRatio} />
         <ArticleCardContent>

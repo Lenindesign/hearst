@@ -1792,7 +1792,7 @@ function HearstOnboardingModal({
   );
 }
 
-function MainNav({
+export function MainNav({
   brandSlug,
   activeFilter,
   onFilterChange,
@@ -2667,6 +2667,7 @@ function NewsletterPromo() {
         <Input
           size="xl"
           placeholder="Enter your email here."
+          aria-label={`Email address for ${brand.name}'s newsletter`}
           leadingIcon={Mail}
           className="flex-1 [&>div]:rounded-none [&>div]:sm:rounded-l-sm [&>div]:border-border"
         />
@@ -4038,7 +4039,7 @@ function useGalleryPreview(story: LifestyleRiverStory, enabled: boolean) {
   return preview;
 }
 
-function LifestyleStoryActions({
+export function LifestyleStoryActions({
   story,
   saved,
   commentCount,
@@ -4091,7 +4092,7 @@ function LifestyleStoryActions({
   );
 }
 
-function RichPhotoGalleryCard({
+export function RichPhotoGalleryCard({
   story,
   images,
   saved,
@@ -4186,7 +4187,7 @@ function RichPhotoGalleryCard({
   );
 }
 
-function LifestyleRiverCard({
+export function LifestyleRiverCard({
   story,
   saved,
   commentCount,
@@ -4288,7 +4289,7 @@ function LifestyleRiverCard({
   );
 }
 
-function VideoPlaySurface({
+export function VideoPlaySurface({
   story,
   featured = false,
   priority = false,
@@ -4365,7 +4366,7 @@ function VideoPlaySurface({
   );
 }
 
-function VideoFeedLeadCard({
+export function VideoFeedLeadCard({
   story,
   saved,
   commentCount,
@@ -4441,7 +4442,7 @@ function VideoFeedLeadCard({
   );
 }
 
-function VideoIndexCard({
+export function VideoIndexCard({
   story,
   saved,
   commentCount,
@@ -4523,7 +4524,7 @@ function VideoIndexCard({
   );
 }
 
-function VideoRailCard({
+export function VideoRailCard({
   story,
   onOpen,
   rank,
@@ -4560,29 +4561,46 @@ function VideoRailCard({
   );
 }
 
-function DelishVerticalVideoCarousel({
-  stories,
-  onOpen,
-  theme = "dark",
-}: {
+type VerticalVideoCarouselProps = {
   stories: LifestyleRiverStory[];
   onOpen: (story: LifestyleRiverStory) => void;
   theme?: "dark" | "light";
-}) {
+  brandName?: string;
+  brandSlug?: string;
+  title?: string;
+  summaryLabel?: string;
+  filterBrandSlug?: string;
+};
+
+export function VerticalVideoCarousel({
+  stories,
+  onOpen,
+  theme = "dark",
+  brandName,
+  brandSlug,
+  title,
+  summaryLabel = "vertical",
+  filterBrandSlug,
+}: VerticalVideoCarouselProps) {
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
+  const titleId = React.useId();
   const prefersReducedMotion = usePrefersReducedMotion();
   const [canScrollBackward, setCanScrollBackward] = React.useState(false);
   const [canScrollForward, setCanScrollForward] = React.useState(false);
   const portraitStories = React.useMemo(
     () => stories.filter((story) =>
-      story.brandSlug === "delish"
+      (!filterBrandSlug || story.brandSlug === filterBrandSlug)
       && Boolean(story.videoUrl)
       && Boolean(story.videoWidth)
       && Boolean(story.videoHeight)
       && (story.videoHeight ?? 0) > (story.videoWidth ?? 0)
     ),
-    [stories]
+    [filterBrandSlug, stories]
   );
+  const firstStory = portraitStories[0];
+  const displayBrandName = brandName ?? firstStory?.brand ?? "Hearst";
+  const displayBrandSlug = brandSlug ?? firstStory?.brandSlug ?? "hearst-all";
+  const displayTitle = title ?? `${displayBrandName} Shorts`;
 
   const updateScrollState = React.useCallback(() => {
     const scroller = scrollRef.current;
@@ -4627,29 +4645,30 @@ function DelishVerticalVideoCarousel({
           ? "rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] sm:p-5"
           : "border-y border-white/10 py-5"
       )}
-      aria-labelledby="delish-vertical-videos-title"
-      data-testid="delish-vertical-video-carousel"
+      aria-labelledby={titleId}
+      data-testid="vertical-video-carousel"
+      data-publication={displayBrandSlug}
     >
       <div className="mb-4 flex items-center justify-between gap-4">
         <div className="flex min-w-0 items-center gap-3">
-          <BrandSourceIcon brand="Delish" brandSlug="delish" className="h-8 w-8 shrink-0" />
+          <BrandSourceIcon brand={displayBrandName} brandSlug={displayBrandSlug} className="h-8 w-8 shrink-0" />
           <div className="min-w-0">
             <h2
-              id="delish-vertical-videos-title"
+              id={titleId}
               className={cn(
                 "text-lg font-black leading-tight sm:text-xl",
                 theme === "light" ? "text-foreground" : "text-[var(--hp-text-headline)]"
               )}
             >
-              Delish Shorts
+              {displayTitle}
             </h2>
             <p className={cn("mt-0.5 text-xs", theme === "light" ? "text-muted-foreground" : "text-[var(--hp-text-secondary)]")}>
-              {portraitStories.length} vertical recipe {portraitStories.length === 1 ? "video" : "videos"}
+              {portraitStories.length} {summaryLabel} {portraitStories.length === 1 ? "video" : "videos"}
             </p>
           </div>
         </div>
 
-        <div className="hidden shrink-0 items-center gap-2 sm:flex" aria-label="Delish Shorts carousel controls">
+        <div className="hidden shrink-0 items-center gap-2 sm:flex" aria-label={`${displayTitle} carousel controls`}>
           <button
             type="button"
             onClick={() => scrollCarousel(-1)}
@@ -4658,7 +4677,7 @@ function DelishVerticalVideoCarousel({
               "inline-flex h-9 w-9 items-center justify-center rounded-full border border-border text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-35",
               theme === "light" ? "bg-background hover:bg-muted" : "bg-[var(--hp-control)] hover:bg-[var(--hp-control-hover)]"
             )}
-            aria-label="Previous Delish Shorts"
+            aria-label={`Previous ${displayTitle}`}
           >
             <ChevronLeft className="h-4 w-4" aria-hidden />
           </button>
@@ -4670,7 +4689,7 @@ function DelishVerticalVideoCarousel({
               "inline-flex h-9 w-9 items-center justify-center rounded-full border border-border text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-35",
               theme === "light" ? "bg-background hover:bg-muted" : "bg-[var(--hp-control)] hover:bg-[var(--hp-control-hover)]"
             )}
-            aria-label="Next Delish Shorts"
+            aria-label={`Next ${displayTitle}`}
           >
             <ChevronRight className="h-4 w-4" aria-hidden />
           </button>
@@ -4681,7 +4700,7 @@ function DelishVerticalVideoCarousel({
         ref={scrollRef}
         className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         role="list"
-        aria-label="Vertical videos from Delish"
+        aria-label={`Vertical videos from ${displayBrandName}`}
       >
         {portraitStories.map((story) => (
           <article key={story.id} className="w-[164px] shrink-0 snap-start sm:w-[180px]" role="listitem">
@@ -4689,7 +4708,7 @@ function DelishVerticalVideoCarousel({
               type="button"
               onClick={() => onOpen(story)}
               className="group block w-full text-left focus-visible:outline-none"
-              aria-label={`Open Delish Short: ${story.title}`}
+              aria-label={`Open ${story.brand} short: ${story.title}`}
             >
               <span
                 className={cn(
@@ -4717,13 +4736,32 @@ function DelishVerticalVideoCarousel({
                 {story.title}
               </span>
               <span className={cn("mt-1 block text-xs font-semibold", theme === "light" ? "text-muted-foreground" : "text-[var(--hp-text-secondary)]")}>
-                Delish · {story.topic}
+                {story.brand} · {story.topic}
               </span>
             </button>
           </article>
         ))}
       </div>
     </section>
+  );
+}
+
+export function DelishVerticalVideoCarousel({
+  stories,
+  onOpen,
+  theme = "dark",
+}: Pick<VerticalVideoCarouselProps, "stories" | "onOpen" | "theme">) {
+  return (
+    <VerticalVideoCarousel
+      stories={stories}
+      onOpen={onOpen}
+      theme={theme}
+      brandName="Delish"
+      brandSlug="delish"
+      title="Delish Shorts"
+      summaryLabel="vertical recipe"
+      filterBrandSlug="delish"
+    />
   );
 }
 
@@ -5491,7 +5529,7 @@ function getReadyLiveArticle(liveArticle?: LiveArticleLoadState) {
   return liveArticle?.status === "ready" ? liveArticle.data : undefined;
 }
 
-type FullscreenReaderImage = {
+export type FullscreenReaderImage = {
   src: string;
   alt: string;
   caption?: string;

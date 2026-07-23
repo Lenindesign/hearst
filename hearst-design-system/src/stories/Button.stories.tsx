@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
+import { expect, fn, userEvent, within } from "@storybook/test";
 import { Button } from "@/components/ui/button";
 
 const meta: Meta<typeof Button> = {
@@ -42,7 +42,7 @@ const meta: Meta<typeof Button> = {
     docs: {
       description: {
         component:
-          "Primary interactive element for user actions. Adapts to the active brand theme via `--brand-primary` and `--font-brand` tokens. Maps to the Resin `component-button-*` token group.",
+          "Primary interactive element for user actions. The local Hearst component combines Base UI behavior, CVA variants, Tailwind utilities, and HDS semantic component tokens so it inherits the active publication theme.",
       },
     },
   },
@@ -53,6 +53,11 @@ type Story = StoryObj<typeof Button>;
 
 export const Default: Story = {
   args: { children: "Button", variant: "default", size: "default" },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("button", { name: "Button" }));
+    await expect(args.onClick).toHaveBeenCalled();
+  },
 };
 
 export const Outline: Story = {
