@@ -6093,7 +6093,7 @@ function LifestyleReaderActions({
           />
         </div>
         <div className="flex shrink-0 items-center gap-1 self-end sm:self-auto sm:gap-2">
-          {ambientReaderState ? (
+          {ambientReaderState === "ready" || ambientReaderState === "loading" ? (
             <button
               type="button"
               onClick={onOpenAmbientReader}
