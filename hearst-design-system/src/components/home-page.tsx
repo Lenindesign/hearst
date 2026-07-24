@@ -8348,8 +8348,21 @@ function TodayEditDashboard({
   onContinueOpen?: (storyId: string) => void;
 }) {
   const carouselRef = React.useRef<HTMLDivElement | null>(null);
+  const previousCarouselWidthRef = React.useRef(0);
   const [canScrollLeft, setCanScrollLeft] = React.useState(false);
   const [canScrollRight, setCanScrollRight] = React.useState(false);
+  const {
+    continueStory,
+    followedBrandStory,
+    trendingStory,
+    collectionStory,
+  } = selection;
+  const carouselStoryKey = [
+    continueStory?.id,
+    followedBrandStory?.id,
+    trendingStory?.id,
+    collectionStory?.id,
+  ].filter(Boolean).join(":");
   const updateCarouselControls = React.useCallback(() => {
     const carousel = carouselRef.current;
     if (!carousel) return;
@@ -8363,9 +8376,18 @@ function TodayEditDashboard({
     const carousel = carouselRef.current;
     if (!carousel) return;
 
-    updateCarouselControls();
+    const resetForWidthChange = () => {
+      const nextWidth = Math.round(carousel.getBoundingClientRect().width);
+      if (nextWidth !== previousCarouselWidthRef.current) {
+        previousCarouselWidthRef.current = nextWidth;
+        carousel.scrollLeft = 0;
+      }
+      updateCarouselControls();
+    };
+
+    resetForWidthChange();
     carousel.addEventListener("scroll", updateCarouselControls, { passive: true });
-    const resizeObserver = new ResizeObserver(updateCarouselControls);
+    const resizeObserver = new ResizeObserver(resetForWidthChange);
     resizeObserver.observe(carousel);
 
     return () => {
@@ -8374,12 +8396,13 @@ function TodayEditDashboard({
     };
   }, [updateCarouselControls]);
 
-  const {
-    continueStory,
-    followedBrandStory,
-    trendingStory,
-    collectionStory,
-  } = selection;
+  React.useLayoutEffect(() => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+
+    carousel.scrollLeft = 0;
+    updateCarouselControls();
+  }, [carouselStoryKey, updateCarouselControls]);
 
   React.useEffect(() => {
     if (

@@ -13,9 +13,10 @@ const productPages = [
   { id: "story", label: "Product story", mobileLabel: "Story", href: "/about-hearst-magazines/" },
   { id: "value", label: "Why Hearst+", mobileLabel: "Why Hearst+", href: "/why-hearst-plus/" },
   { id: "blueprint", label: "Blueprint", mobileLabel: "Blueprint", href: "/hearst-product-blueprint/" },
+  { id: "tokens", label: "Token architecture", mobileLabel: "Tokens", href: "/token-architecture/" },
 ] as const;
 
-export function ProductHeader({ current }: { current: "story" | "value" | "blueprint" }) {
+export function ProductHeader({ current }: { current: "story" | "value" | "blueprint" | "tokens" }) {
   return (
     <header className="border-b border-slate-200 bg-white">
       <div className="mx-auto flex max-w-[1360px] items-center justify-between gap-5 px-5 py-4 md:px-10">
