@@ -9261,10 +9261,12 @@ function LifestyleRiverLoadingState({ pageHeading }: { pageHeading: string }) {
         </div>
       </section>
       <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]">
-        <aside className="hidden h-[360px] rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 lg:block" aria-hidden="true">
-          <div className="h-3 w-28 rounded-full bg-muted motion-safe:animate-pulse" />
+        <aside className="hidden min-h-[360px] rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 lg:block" aria-hidden="true">
+          <div className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+            Your Daily Habit
+          </div>
           <div className="mt-5 space-y-4">
-            {Array.from({ length: 4 }, (_, index) => (
+            {Array.from({ length: 3 }, (_, index) => (
               <div key={index} className="space-y-2 border-b border-border pb-4 last:border-b-0">
                 <div className="h-2.5 w-16 rounded-full bg-muted motion-safe:animate-pulse" />
                 <div className="h-3 w-full rounded-full bg-muted motion-safe:animate-pulse" />

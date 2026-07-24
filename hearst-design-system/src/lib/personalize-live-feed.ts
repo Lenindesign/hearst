@@ -11,6 +11,20 @@ import type { LiveFeedData, LiveFeedSourceNote } from "@/lib/live-feed-types";
 const PERSONALIZE_STAGE_URL = "https://personalize-stage.motortrend.com/recommendations";
 const PERSONALIZE_PRODUCTION_URL = "https://personalize.motortrend.com/recommendations";
 
+// The public route keeps the shorter Pioneer Woman slug, while Personalize
+// identifies the same publication as `the-pioneer-woman`.
+const personalizeBrandSlugAliases: Record<string, string> = {
+  "pioneer-woman": "the-pioneer-woman",
+};
+
+function getPersonalizeBrandSlug(brandSlug?: string) {
+  return brandSlug ? personalizeBrandSlugAliases[brandSlug] ?? brandSlug : undefined;
+}
+
+function getLocalBrandSlug(brandSlug?: string) {
+  return brandSlug === "the-pioneer-woman" ? "pioneer-woman" : brandSlug;
+}
+
 const supportedBrands = [
   ["caranddriver", "Car and Driver", "car-and-driver", "Cars"],
   ["motortrend", "MotorTrend", "motortrend", "Cars"],
@@ -473,8 +487,9 @@ function getScopedLiveBrands({
   destination?: PersonalizeDestination;
   brandSlug?: string;
 } = {}) {
-  const allowedBrandSlugs = brandSlug
-    ? [brandSlug]
+  const personalizeBrandSlug = getPersonalizeBrandSlug(brandSlug);
+  const allowedBrandSlugs = personalizeBrandSlug
+    ? [personalizeBrandSlug]
     : liveBrandSlugsByDestination[destination] ?? liveBrandSlugsByDestination.all;
 
   return supportedBrands.filter(([, , liveBrandSlug]) => allowedBrandSlugs.includes(liveBrandSlug));
@@ -491,7 +506,8 @@ export async function getPersonalizeLiveFeed({
   sizePerBrand?: number;
   videoSizePerBrand?: number;
 } = {}): Promise<LiveFeedData> {
-  const brands = getScopedLiveBrands({ destination, brandSlug });
+  const personalizeBrandSlug = getPersonalizeBrandSlug(brandSlug);
+  const brands = getScopedLiveBrands({ destination, brandSlug: personalizeBrandSlug });
   const fallbackStoryPool = destination === "autos"
     ? autosRiverStories
     : destination === "flux"
@@ -501,8 +517,9 @@ export async function getPersonalizeLiveFeed({
         : destination === "lifestyle"
           ? lifestyleRiverStories
           : [...autosRiverStories, ...lifestyleRiverStories, ...fluxRiverStories, ...ewRiverStories];
-  const fallbackStories = brandSlug
-    ? fallbackStoryPool.filter((story) => story.brandSlug === brandSlug)
+  const localBrandSlug = getLocalBrandSlug(personalizeBrandSlug);
+  const fallbackStories = localBrandSlug
+    ? fallbackStoryPool.filter((story) => story.brandSlug === localBrandSlug)
     : fallbackStoryPool.filter((story) => brands.some(([, , liveBrandSlug]) => liveBrandSlug === story.brandSlug));
 
   if (brands.length === 0) {
@@ -548,8 +565,9 @@ function getScopedVideoBrands({
   destination?: PersonalizeDestination;
   brandSlug?: string;
 } = {}) {
-  const allowedBrandSlugs = brandSlug
-    ? [brandSlug]
+  const personalizeBrandSlug = getPersonalizeBrandSlug(brandSlug);
+  const allowedBrandSlugs = personalizeBrandSlug
+    ? [personalizeBrandSlug]
     : videoBrandSlugsByDestination[destination] ?? videoBrandSlugsByDestination.all;
 
   return autosVideoFeedBrands.filter(([, , videoBrandSlug]) =>
@@ -568,7 +586,7 @@ export async function getPersonalizeVideoFeed({
   productName?: string;
   sizePerBrand?: number;
 } = {}): Promise<LiveFeedData> {
-  const brands = getScopedVideoBrands({ destination, brandSlug });
+  const brands = getScopedVideoBrands({ destination, brandSlug: getPersonalizeBrandSlug(brandSlug) });
   const fallbackBrandSlugs = brands.map(([, , videoBrandSlug]) => videoBrandSlug);
   const localVideoFallbackStories = [
     ...autosRiverStories,

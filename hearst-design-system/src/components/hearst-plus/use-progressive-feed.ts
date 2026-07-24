@@ -154,6 +154,15 @@ export function useProgressiveFeed<Story>({
     }
   }, [brandSlug, destination, enabled, endpoint, getIdentity, pageSize]);
 
+  // Publication routes need their first scoped page immediately. The shared
+  // destination feed can stay demand-driven, but waiting for its sentinel on
+  // a brand route leaves the river empty because the compact initial payload
+  // may not contain that publication yet.
+  React.useEffect(() => {
+    if (!enabled || !brandSlug) return;
+    void loadNextPage();
+  }, [brandSlug, enabled, loadNextPage]);
+
   return {
     ...state,
     isLoading: state.status === "loading",

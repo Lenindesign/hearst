@@ -53,7 +53,9 @@ export async function SectionBrandRoutePage({
   return (
     <ThemeProvider defaultBrandSlug={hearstSectionThemeSlugs[section]}>
       <HomePageTemplate
-        staticDestinationData={getHearstDestinationStaticData()}
+        // Seed publication routes with their full local inventory so the river
+        // is useful before the progressive live-feed request completes.
+        staticDestinationData={getHearstDestinationStaticData({ includeBrandSlug: brand.brandSlug })}
         key={brand.brandSlug}
         initialBrandSlug={brand.brandSlug}
         liveFeedData={liveFeedData}
