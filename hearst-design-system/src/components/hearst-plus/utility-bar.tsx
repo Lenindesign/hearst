@@ -131,11 +131,11 @@ export function UtilityBar({
                   ? "bg-[#BDDDFC] px-2 text-[#0d1014] hover:bg-[#d7eaff] hover:text-[#0d1014] sm:px-3"
                   : "bg-white px-2 text-black hover:bg-white/90 hover:text-black sm:px-3"
             )}
-            aria-label={account ? "Open your local demo profile" : "Create or resume local demo profile"}
+            aria-label={account ? "Open your local demo profile" : "Personalize your feed"}
             onClick={account ? onOpenProfile : onCreateAccount}
           >
             {account ? <ReaderAvatar account={account} size="sm" className="!size-4 ring-1 ring-white/50 [&_[data-slot=avatar-fallback]]:text-[8px]" /> : null}
-            <span className={account ? "hidden text-xs sm:inline" : "text-[10px] sm:text-xs"}>{account ? account.firstName : "Demo Profile"}</span>
+            <span className={account ? "hidden text-xs sm:inline" : "text-[10px] sm:text-xs"}>{account ? account.firstName : "Personalize"}</span>
           </Button>
         </div>
       </PageContainer>

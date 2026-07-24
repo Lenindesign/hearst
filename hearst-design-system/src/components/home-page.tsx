@@ -72,7 +72,7 @@ import type { LifestyleRiverProfile, LifestyleRiverStory } from "./lifestyle-riv
 import type { LiveArticleData, LiveFeedData } from "@/lib/live-feed-types";
 import { loadLiveArticle } from "@/lib/live-article-client-cache";
 import { useReaderAccount } from "./reader-account";
-import { ReaderAuthDialog, ReaderProfileDialog } from "./reader-account-ui";
+import { ReaderProfileDialog } from "./reader-account-ui";
 import { AdaptiveVideo } from "./adaptive-video";
 import { useProgressiveFeed } from "./hearst-plus/use-progressive-feed";
 import {
@@ -87,6 +87,39 @@ import {
   searchLifestyleStories,
 } from "@/lib/story-search";
 import { mergeStableStoryOrder } from "@/lib/stable-story-order";
+import {
+  getContinueReadingStoryIds,
+  readReadingHistory,
+  readingHistoryChangedEvent,
+  readingHistoryStorageKey,
+  recordStoryOpened,
+  recordStoryProgress,
+  type ReadingHistoryEntry,
+} from "@/lib/reading-history";
+import {
+  getLocalEditionDate,
+  readDailyEditionRecords,
+  resolveDailyEdition,
+  writeDailyEditionRecords,
+} from "@/lib/daily-edition";
+import {
+  readVisitRecords,
+  resolveVisitContext,
+  upsertVisitRecord,
+  writeVisitRecords,
+  type VisitDaypart,
+} from "@/lib/visit-context";
+import {
+  getReturnWindow,
+  markUsefulSession,
+  trackProductEvent,
+  trackProductEventOnce,
+} from "@/lib/product-analytics";
+import { getRecommendationReason } from "@/lib/recommendation-reason";
+import {
+  allocateStoryModules,
+  type TodayEditStorySelection,
+} from "@/lib/story-module-allocation";
 
 interface ContentType extends BaseContentType {
   footerCols: string[][];
@@ -115,6 +148,76 @@ function usePrefersReducedMotion() {
     subscribeToReducedMotion,
     getReducedMotionPreference,
     () => false
+  );
+}
+
+function useReadingHistoryEntries() {
+  const [entries, setEntries] = React.useState<ReadingHistoryEntry[]>([]);
+
+  React.useEffect(() => {
+    const syncReadingHistory = () => {
+      setEntries(readReadingHistory());
+    };
+    const syncStorageEvent = (event: StorageEvent) => {
+      if (event.key === readingHistoryStorageKey) syncReadingHistory();
+    };
+
+    syncReadingHistory();
+    window.addEventListener(readingHistoryChangedEvent, syncReadingHistory);
+    window.addEventListener("storage", syncStorageEvent);
+    return () => {
+      window.removeEventListener(readingHistoryChangedEvent, syncReadingHistory);
+      window.removeEventListener("storage", syncStorageEvent);
+    };
+  }, []);
+
+  return entries;
+}
+
+function useContinueReadingStoryIds() {
+  const entries = useReadingHistoryEntries();
+  return React.useMemo(() => getContinueReadingStoryIds(entries), [entries]);
+}
+
+function useDailyEditionStories(
+  editionKey: string,
+  stories: LifestyleRiverStory[],
+  editionSize = 6
+) {
+  const storyIdentityKey = stories.slice(0, 40).map((story) => story.id).join("|");
+  const [storyIds, setStoryIds] = React.useState<string[]>([]);
+
+  React.useEffect(() => {
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (cancelled) return;
+      if (!editionKey || stories.length === 0) {
+        setStoryIds([]);
+        return;
+      }
+
+      const records = resolveDailyEdition(
+        readDailyEditionRecords(),
+        editionKey,
+        stories,
+        Date.now(),
+        editionSize
+      );
+      writeDailyEditionRecords(records);
+      setStoryIds(records.find((record) => record.editionKey === editionKey)?.storyIds ?? []);
+    });
+    return () => {
+      cancelled = true;
+    };
+  // The bounded identity key intentionally tracks the ranked candidates that can seed the edition.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editionKey, editionSize, storyIdentityKey]);
+
+  return React.useMemo(
+    () => storyIds
+      .map((storyId) => stories.find((story) => story.id === storyId))
+      .filter((story): story is LifestyleRiverStory => Boolean(story)),
+    [stories, storyIds]
   );
 }
 
@@ -163,6 +266,13 @@ function appendReaderReturnHref(storyId: string, returnHref: string | null) {
   if (!safeReturnHref) return route;
 
   return `${route}?from=${encodeURIComponent(safeReturnHref)}`;
+}
+
+function appendStakeholderDemoMode(path: string, enabled: boolean) {
+  if (!enabled) return path;
+  const url = new URL(path, "https://hearst.local");
+  url.searchParams.set("demo", "1");
+  return `${url.pathname}${url.search}${url.hash}`;
 }
 
 function getReaderOriginBrandSlug(returnHref?: string | null) {
@@ -289,19 +399,14 @@ const lifestyleDefaultLeadStoryId =
 const allDefaultLeadStoryId =
   "country-living-home-design-decorating-ideas-a71717114-joydrenching-kitchen-trend-2026";
 
-type LifestyleDemoDaypart = "morning" | "afternoon" | "evening" | "lateNight";
+type LifestyleDemoDaypart = VisitDaypart;
 
 type LifestyleDemoState = {
   daypart: LifestyleDemoDaypart;
   returnHours: number;
   contentDay: "today" | "nextDay";
   previousLeadId?: string;
-};
-
-const initialLifestyleDemoState: LifestyleDemoState = {
-  daypart: "morning",
-  returnHours: 0,
-  contentDay: "today",
+  isSimulated: boolean;
 };
 
 const demoDaypartReturnHours: Record<LifestyleDemoDaypart, number> = {
@@ -958,6 +1063,28 @@ function getLifestyleStrategyReason(
   return reasons.slice(0, 3).join(", ");
 }
 
+function getLifestyleRecommendationReason(
+  story: LifestyleRiverStory,
+  profile: LifestyleRiverProfile,
+  demoState: LifestyleDemoState,
+  config = baseDestinationConfigs.lifestyle
+) {
+  const breakdown = getLifestyleScoreBreakdown(story, profile, demoState, config);
+  const followedTopic = profile.followedTopics.find(
+    (topic) => story.topic === topic || story.topic.startsWith(`${topic} `)
+  );
+  const followedBrand = profile.followedBrands.includes(story.brand) ? story.brand : undefined;
+
+  return getRecommendationReason({
+    freshSinceLastVisit: breakdown.returnFreshness > 0,
+    newEdition: breakdown.nextDayNovelty > 0,
+    followedTopic,
+    followedBrand,
+    daypart: breakdown.timeOfDay > 0 ? demoState.daypart : undefined,
+    editorSelected: breakdown.defaultLead > 0,
+  });
+}
+
 function rankLifestyleRiver(
   stories: LifestyleRiverStory[],
   profile: LifestyleRiverProfile,
@@ -1087,7 +1214,7 @@ function getLifestyleDemoStoryPool(
   demoState: LifestyleDemoState,
   config = baseDestinationConfigs.lifestyle
 ) {
-  if (demoState.contentDay === "today") return config.stories;
+  if (demoState.contentDay === "today" || !demoState.isSimulated) return config.stories;
 
   const nextDayStories = config.stories
     .filter((story, index) => index % 2 === 1 || config.nextDayTopics.includes(story.topic))
@@ -1174,23 +1301,22 @@ function HearstOnboardingModal({
   brandInventory,
   onClose,
   onComplete,
-  onRequestAuthentication,
 }: {
   open: boolean;
   destination: DestinationMode;
   brandInventory?: Record<string, number>;
   onClose: () => void;
   onComplete: (result: HearstOnboardingResult) => void;
-  onRequestAuthentication: (mode: "create" | "signIn", result: HearstOnboardingResult) => void;
 }) {
   const destinationConfigs = useDestinationConfigs();
   const config = destinationConfigs[destination];
-  const [step, setStep] = React.useState(0);
+  const [step] = React.useState(1);
   const [selectedInterests, setSelectedInterests] = React.useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = React.useState<string[]>([]);
   const [brandPage, setBrandPage] = React.useState(0);
   const portalTarget = useBodyPortalTarget();
   const dialogRef = React.useRef<HTMLElement | null>(null);
+  const contentScrollRef = React.useRef<HTMLDivElement | null>(null);
   const headingRef = React.useRef<HTMLHeadingElement | null>(null);
   const restoreFocusRef = React.useRef<HTMLElement | null>(null);
   const interestOptions = React.useMemo(() => getOnboardingInterestOptions(config), [config]);
@@ -1221,8 +1347,9 @@ function HearstOnboardingModal({
     restoreFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
 
     return () => {
-      restoreFocusRef.current?.focus();
+      const restoreTarget = restoreFocusRef.current;
       restoreFocusRef.current = null;
+      window.requestAnimationFrame(() => restoreTarget?.focus());
     };
   }, [open]);
 
@@ -1235,6 +1362,19 @@ function HearstOnboardingModal({
 
     return () => window.cancelAnimationFrame(frame);
   }, [open, step]);
+
+  React.useEffect(() => {
+    if (!open) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      const contentScroller = contentScrollRef.current;
+      if (contentScroller && contentScroller.scrollTop < 96) {
+        contentScroller.scrollTop = 0;
+      }
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [open, selectedInterests]);
 
   React.useEffect(() => {
     if (!open) return;
@@ -1286,7 +1426,9 @@ function HearstOnboardingModal({
     setSelectedInterests((current) =>
       current.includes(interest)
         ? current.filter((item) => item !== interest)
-        : [...current, interest]
+        : current.length < 2
+          ? [...current, interest]
+          : current
     );
   };
   const toggleBrand = (brandName: string) => {
@@ -1304,11 +1446,30 @@ function HearstOnboardingModal({
       brands: selectedBrands,
       tags: selectedInterests.map((interest) => interest.toLowerCase()),
     });
-  const canContinueInterests = selectedInterests.length >= 3;
-  const canContinueBrands = selectedBrands.length >= 2;
-  const stepCount = 5;
-  const interestSelectionLabel = `${selectedInterests.length} selected`;
+  const canContinueInterests = selectedInterests.length >= 1;
+  const interestSelectionLabel = `${selectedInterests.length} of 2 selected`;
   const brandSelectionLabel = `${selectedBrands.length} selected`;
+  const normalizedSelectedInterests = selectedInterests.map((interest) => interest.toLowerCase());
+  const previewStories = normalizedSelectedInterests.length > 0
+    ? (() => {
+        const matchingStories = config.stories.filter((story) => {
+          const searchableStory = [
+            story.title,
+            story.topic,
+            story.brand,
+            ...story.tags,
+          ].join(" ").toLowerCase();
+
+          return normalizedSelectedInterests.some((interest) => searchableStory.includes(interest));
+        });
+        const matchingStoryIds = new Set(matchingStories.map((story) => story.id));
+
+        return [
+          ...matchingStories,
+          ...config.stories.filter((story) => !matchingStoryIds.has(story.id)),
+        ].slice(0, 3);
+      })()
+    : [];
   const brandsPerPage = 12;
   const brandPageCount = Math.max(1, Math.ceil(brandOptions.length / brandsPerPage));
   const currentBrandPage = Math.min(brandPage, brandPageCount - 1);
@@ -1346,10 +1507,7 @@ function HearstOnboardingModal({
           <div className="flex items-center justify-between border-b border-border px-5 py-4">
             <div>
               <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
-                Create Account
-              </p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Step {step + 1} of {stepCount}
+                Personalize your feed
               </p>
             </div>
             <Button variant="outline" size="icon-sm" onClick={onClose} aria-label="Close onboarding">
@@ -1357,23 +1515,7 @@ function HearstOnboardingModal({
             </Button>
           </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto p-5 sm:p-8">
-          {onboardingVisual.image ? (
-            <div className="mb-6 overflow-hidden rounded-[12px] bg-muted lg:hidden">
-              <Image
-                src={onboardingVisual.image}
-                alt=""
-                width={1200}
-                height={600}
-                sizes="100vw"
-                className="h-48 w-full object-cover outline-none ring-0"
-                style={{ objectPosition: onboardingVisual.objectPosition }}
-                aria-hidden
-                preload
-              />
-            </div>
-          ) : null}
-
+        <div ref={contentScrollRef} className="min-h-0 flex-1 overflow-y-auto p-5 [overflow-anchor:none] sm:p-8">
           {step === 0 ? (
             <div className="space-y-6">
               <div>
@@ -1416,26 +1558,29 @@ function HearstOnboardingModal({
                     tabIndex={-1}
                     className="headline text-3xl leading-tight outline-none sm:text-4xl"
                   >
-                    What should your feed learn first?
+                    Pick what you want to see more often.
                   </h2>
                   <p id="hearst-onboarding-description" className="mt-3 text-sm leading-6 text-muted-foreground">
-                    Choose at least 3 interests. These shape the first version of your For You page.
+                    Choose one or two interests. Your preview updates immediately.
                   </p>
                 </div>
                 <p className="inline-flex h-8 shrink-0 items-center rounded-full bg-muted px-3 text-xs font-bold text-foreground">
                   {interestSelectionLabel}
                 </p>
               </div>
-              <div className="mt-6 flex flex-wrap gap-2">
+              <div className="mt-6 flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] sm:flex-wrap sm:overflow-visible sm:pb-0 [&::-webkit-scrollbar]:hidden">
                 {interestOptions.map((interest) => {
                   const active = selectedInterests.includes(interest);
+                  const selectionLimitReached = selectedInterests.length >= 2 && !active;
                   return (
                     <button
                       key={interest}
                       type="button"
                       onClick={() => toggleInterest(interest)}
+                      disabled={selectionLimitReached}
                       className={cn(
-                        "inline-flex min-h-10 items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+                        "inline-flex min-h-10 shrink-0 items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+                        selectionLimitReached && "cursor-not-allowed opacity-45",
                         active
                           ? "border-primary bg-primary text-primary-foreground"
                           : "border-border bg-background text-foreground hover:border-primary/50 hover:bg-muted"
@@ -1447,6 +1592,46 @@ function HearstOnboardingModal({
                     </button>
                   );
                 })}
+              </div>
+              <div className="mt-7 border-t border-border pt-6" aria-live="polite" aria-atomic="true">
+                <p className="text-xs font-bold uppercase tracking-widest text-primary">
+                  Your feed preview
+                </p>
+                {previewStories.length > 0 ? (
+                  <div className="mt-3 space-y-3">
+                    {previewStories.map((story) => (
+                      <article
+                        key={story.id}
+                        className="grid grid-cols-[72px_minmax(0,1fr)] gap-3 rounded-[8px] border border-border bg-muted/25 p-2.5"
+                      >
+                        <div className="relative aspect-square overflow-hidden rounded-[6px] bg-muted">
+                          <Image
+                            src={story.image}
+                            alt=""
+                            fill
+                            sizes="72px"
+                            className="object-cover"
+                          />
+                        </div>
+                        <div className="min-w-0 self-center">
+                          <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-wider text-primary">
+                            {story.brand} · {story.topic}
+                          </p>
+                          <h3 className="mt-1 line-clamp-2 text-sm font-bold leading-5">
+                            {story.title}
+                          </h3>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="mt-3 rounded-[8px] border border-dashed border-border bg-muted/20 px-4 py-5">
+                    <p className="text-sm font-semibold">Choose an interest to preview your feed.</p>
+                    <p className="mt-1 text-sm leading-5 text-muted-foreground">
+                      You can change these choices later from your profile.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           ) : null}
@@ -1630,51 +1815,19 @@ function HearstOnboardingModal({
             onClick={onClose}
             className="whitespace-nowrap text-sm font-semibold text-muted-foreground hover:text-foreground"
           >
-            {step === 4 ? "Close" : "Skip for now"}
+            Not now
           </button>
           <div className="flex flex-wrap justify-end gap-2">
-            {step > 0 && step < 4 ? (
-              <Button variant="outline" size="sm" onClick={() => setStep((current) => current - 1)}>
-                Back
-              </Button>
-            ) : null}
-            {step === 0 ? (
-              <Button size="sm" onClick={() => setStep(1)}>Personalize My Feed</Button>
-            ) : null}
             {step === 1 ? (
-              <Button size="sm" onClick={() => setStep(2)} disabled={!canContinueInterests}>
-                Continue
-              </Button>
-            ) : null}
-            {step === 2 ? (
-              <Button size="sm" onClick={() => setStep(3)} disabled={!canContinueBrands}>
-                Follow Selected
-              </Button>
-            ) : null}
-            {step === 3 ? (
-              <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    onComplete(getResult());
-                    setStep(4);
-                  }}
-                  className="whitespace-nowrap"
-                >
-                  Continue without account
-                </Button>
-                <Button variant="ghost" size="sm" onClick={() => onRequestAuthentication("signIn", getResult())}>
-                  Sign In
-                </Button>
-                <Button size="sm" onClick={() => onRequestAuthentication("create", getResult())} className="whitespace-nowrap">
-                  Create Free Account
-                </Button>
-              </>
-            ) : null}
-            {step === 4 ? (
-              <Button size="sm" onClick={onClose}>
-                Start Reading
+              <Button
+                size="sm"
+                onClick={() => {
+                  onComplete(getResult());
+                  onClose();
+                }}
+                disabled={!canContinueInterests}
+              >
+                Use this feed
               </Button>
             ) : null}
           </div>
@@ -1769,6 +1922,7 @@ export function MainNav({
       ? destinationConfig.filters
       : content.navLinks);
   const navLinks = includeVideos ? insertVideosFilter(baseNavLinks) : baseNavLinks;
+  const pinSavedOnMobile = isDestinationRiver && navLinks.includes("Saved");
   const normalizedSearchQuery = normalizeStorySearchText(deferredSearchQuery);
   const searchResults = React.useMemo(() => {
     return searchLifestyleStories(searchStories, deferredSearchQuery);
@@ -1965,6 +2119,7 @@ export function MainNav({
 
   const renderNavLinks = () => navLinks.map((link) => {
     const active = activeFilter === link;
+    const hidePinnedSavedOnMobile = pinSavedOnMobile && link === "Saved";
     const destinationHref = brand.slug === "hearst-all" ? hearstDestinationNavHrefs.get(link) : undefined;
     const categoryHref = isDestinationRiver && !selectedBrand
       ? getHearstDestinationCategoryRoute(getDestinationMode(brand.slug), link)
@@ -1981,7 +2136,11 @@ export function MainNav({
         variant="neutral"
         underline={false}
         size="sm"
-        className={cn("min-h-11 whitespace-nowrap border-b-2 border-transparent px-0.5 font-normal hover:no-underline md:min-h-0 md:pb-1", navLinkClasses)}
+        className={cn(
+          "min-h-11 whitespace-nowrap border-b-2 border-transparent px-0.5 font-normal hover:no-underline md:min-h-0 md:pb-1",
+          navLinkClasses,
+          hidePinnedSavedOnMobile && "max-md:hidden"
+        )}
       >
         {link}
       </LinkComponent>
@@ -2005,7 +2164,8 @@ export function MainNav({
             ? useDarkActiveState
               ? "border-[#BDDDFC] font-semibold text-[#BDDDFC]"
               : "border-primary font-semibold text-[var(--hp-section-title)]"
-            : ""
+            : "",
+          hidePinnedSavedOnMobile && "max-md:hidden"
         )}
       >
         {link}
@@ -2021,7 +2181,8 @@ export function MainNav({
             ? useDarkActiveState
               ? "border-[#BDDDFC] font-semibold text-[#BDDDFC]"
               : "border-primary font-semibold text-[var(--hp-section-title)]"
-            : navLinkClasses
+            : navLinkClasses,
+          hidePinnedSavedOnMobile && "max-md:hidden"
         )}
         aria-pressed={active}
       >
@@ -2033,16 +2194,17 @@ export function MainNav({
         variant="neutral"
         underline={false}
         size="sm"
-        className="min-h-11 whitespace-nowrap font-normal md:min-h-0"
+        className={cn(
+          "min-h-11 whitespace-nowrap font-normal md:min-h-0",
+          hidePinnedSavedOnMobile && "max-md:hidden"
+        )}
       >
         {link}
       </LinkComponent>
     );
   });
 
-  const showMobileDiscoveryMenu = isDestinationRiver
-    && mobileContinueStories.length > 0
-    && mobileBrands.length > 0;
+  const showMobileDiscoveryMenu = isDestinationRiver && mobileBrands.length > 0;
 
   const mobileMenu = mobileMenuOpen && overlayPortalTarget ? createPortal(
     <div ref={mobileMenuDialogRef} className="fixed inset-0 z-50 sm:hidden" role="dialog" aria-modal="true" aria-label="Hearst discovery menu">
@@ -2081,7 +2243,7 @@ export function MainNav({
               <span className={cn("text-xs", darkMode ? "text-white/60" : "text-muted-foreground")}>Your queue</span>
             </div>
             <div className="mt-4 space-y-2">
-              {mobileContinueStories.slice(0, 3).map((story) => (
+              {mobileContinueStories.length > 0 ? mobileContinueStories.slice(0, 3).map((story) => (
                 <button
                   key={story.id}
                   type="button"
@@ -2105,7 +2267,14 @@ export function MainNav({
                     <span className={cn("mt-1 block text-xs", darkMode ? "text-white/60" : "text-muted-foreground")}>{story.brand}</span>
                   </span>
                 </button>
-              ))}
+              )) : (
+                <p className={cn(
+                  "rounded-[8px] border px-3 py-4 text-sm leading-relaxed",
+                  darkMode ? "border-white/10 bg-white/[0.03] text-white/65" : "border-border bg-muted/35 text-muted-foreground"
+                )}>
+                  Stories you open will appear here until you finish them.
+                </p>
+              )}
             </div>
           </section>
 
@@ -2187,20 +2356,30 @@ export function MainNav({
   const searchDialog = searchOpen && overlayPortalTarget ? createPortal(
     <div ref={searchDialogRef} className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-labelledby="hearst-search-title">
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-[2px]"
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
         onClick={closeSearch}
         aria-hidden="true"
+        data-search-backdrop
       />
       <div
         ref={searchPanelRef}
+        data-search-panel
         className={cn(
           "absolute inset-x-3 top-16 mx-auto max-h-[calc(100dvh-5rem)] w-auto max-w-2xl overflow-hidden rounded-[8px] border border-t-4 shadow-xl sm:top-24",
-          darkMode ? "border-white/15 border-t-[#BDDDFC] bg-[#0d1014] text-[#f4f7fb]" : "border-border border-t-primary bg-[var(--hp-surface)] text-foreground"
+          darkMode ? "border-white/15 border-t-[#BDDDFC] bg-[#0d1014] text-[#f4f7fb]" : "border-border border-t-primary bg-background text-foreground"
         )}
       >
         <div className={cn("flex items-start justify-between gap-4 border-b px-4 py-4 sm:px-6", darkMode ? "border-white/10" : "border-border")}>
           <div>
-            <h2 id="hearst-search-title" className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">Search Hearst+</h2>
+            <h2
+              id="hearst-search-title"
+              className={cn(
+                "text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest",
+                darkMode ? "text-[#BDDDFC]" : "text-primary"
+              )}
+            >
+              Search Hearst+
+            </h2>
             <p className={cn("mt-1.5 text-sm", darkMode ? "text-white/65" : "text-muted-foreground")}>
               Search stories by title, brand, topic, or tag.
             </p>
@@ -2256,7 +2435,10 @@ export function MainNav({
 
         <div className="min-h-0 overflow-y-auto px-4 pb-5 pt-4 sm:px-6 sm:pb-6">
           <div className="flex items-center justify-between gap-4 pb-3">
-            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
+            <p className={cn(
+              "text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest",
+              darkMode ? "text-[#BDDDFC]" : "text-primary"
+            )}>
               {normalizedSearchQuery ? "Search results" : "Popular now"}
             </p>
             <p className={cn("text-xs", darkMode ? "text-white/60" : "text-muted-foreground")} aria-live="polite">
@@ -2383,8 +2565,27 @@ export function MainNav({
       isDestinationRiver && (darkMode ? "sticky top-8 z-30 md:static" : "sticky top-8 z-30 bg-[var(--hp-surface)] md:static"),
       mastheadCompact && "md:invisible"
     )}>
-      <PageContainer as="nav" className="flex items-center justify-start gap-6 overflow-x-auto py-2 scrollbar-hide md:justify-center">
-        {renderNavLinks()}
+      <PageContainer as="nav" className="flex items-center gap-3 py-2 md:justify-center">
+        <div className="flex min-w-0 flex-1 items-center gap-6 overflow-x-auto scrollbar-hide md:flex-none md:justify-center">
+          {renderNavLinks()}
+        </div>
+        {pinSavedOnMobile ? (
+          <button
+            type="button"
+            onClick={() => onFilterChange?.("Saved")}
+            className={cn(
+              "inline-flex min-h-11 shrink-0 items-center gap-1.5 border-l pl-3 text-sm font-semibold transition-colors md:hidden",
+              darkMode
+                ? "border-white/15 text-white hover:text-[#BDDDFC]"
+                : "border-border text-foreground hover:text-primary",
+              activeFilter === "Saved" && (darkMode ? "text-[#BDDDFC]" : "text-[var(--hp-section-title)]")
+            )}
+            aria-current={activeFilter === "Saved" ? "page" : undefined}
+          >
+            <Bookmark className="h-4 w-4" aria-hidden />
+            Saved
+          </button>
+        ) : null}
       </PageContainer>
     </div>
     <div
@@ -3226,14 +3427,14 @@ function isExplicitGalleryStory(story: LifestyleRiverStory) {
 function ensureGallerySampleInRiver(
   riverStories: LifestyleRiverStory[],
   displayStories: LifestyleRiverStory[],
-  heroStoryIds: Set<string>,
+  excludedStoryIds: Set<string>,
   enabled: boolean
 ) {
   if (!enabled || riverStories.some(isExplicitGalleryStory)) return riverStories;
 
   const gallerySample = displayStories.find((story) =>
     isExplicitGalleryStory(story)
-    && !heroStoryIds.has(story.id)
+    && !excludedStoryIds.has(story.id)
     && !riverStories.some((riverStory) => riverStory.id === story.id)
   );
 
@@ -3948,9 +4149,20 @@ export function LifestyleStoryActions({
   );
 }
 
+function LifestyleRecommendationReason({ reason }: { reason?: string }) {
+  if (!reason) return null;
+
+  return (
+    <p className="mt-2 text-xs font-semibold leading-5 text-muted-foreground">
+      {reason}
+    </p>
+  );
+}
+
 export function RichPhotoGalleryCard({
   story,
   images,
+  recommendationReason,
   saved,
   commentCount,
   onOpen,
@@ -3960,6 +4172,7 @@ export function RichPhotoGalleryCard({
 }: {
   story: LifestyleRiverStory;
   images: FullscreenReaderImage[];
+  recommendationReason?: string;
   saved: boolean;
   commentCount: number;
   onOpen: () => void;
@@ -3971,7 +4184,11 @@ export function RichPhotoGalleryCard({
   const remainingImageCount = Math.max(0, images.length - visibleImages.length);
 
   return (
-    <article className="group/card relative min-w-0 cursor-pointer overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/50">
+    <article
+      className="group/card relative min-w-0 cursor-pointer overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/50"
+      data-story-module="river"
+      data-story-id={story.id}
+    >
       <button
         type="button"
         onClick={onOpen}
@@ -3996,6 +4213,7 @@ export function RichPhotoGalleryCard({
         <p className="mt-2 line-clamp-3 text-sm leading-6 text-muted-foreground">
           {story.summary}
         </p>
+        <LifestyleRecommendationReason reason={recommendationReason} />
       </div>
 
       <div
@@ -4045,6 +4263,7 @@ export function RichPhotoGalleryCard({
 
 export function LifestyleRiverCard({
   story,
+  recommendationReason,
   saved,
   commentCount,
   onOpen,
@@ -4054,6 +4273,7 @@ export function LifestyleRiverCard({
   featured = false,
 }: {
   story: LifestyleRiverStory;
+  recommendationReason?: string;
   saved: boolean;
   commentCount: number;
   onOpen: () => void;
@@ -4072,6 +4292,7 @@ export function LifestyleRiverCard({
       <RichPhotoGalleryCard
         story={story}
         images={galleryPreview.images}
+        recommendationReason={recommendationReason}
         saved={saved}
         commentCount={commentCount}
         onOpen={onOpen}
@@ -4083,14 +4304,17 @@ export function LifestyleRiverCard({
   }
 
   return (
-    <article className={cn(
-      "group/card relative min-w-0 cursor-pointer overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/50",
-      isVideo
-        ? "grid"
-      : featured
-        ? "grid items-stretch 2xl:grid-cols-[minmax(0,0.95fr)_minmax(320px,1fr)]"
-        : "grid gap-0 sm:grid-cols-[176px_minmax(0,1fr)] sm:gap-4 sm:p-4"
-    )}
+    <article
+      className={cn(
+        "group/card relative min-w-0 cursor-pointer overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/50",
+        isVideo
+          ? "grid"
+        : featured
+          ? "grid items-stretch 2xl:grid-cols-[minmax(0,0.95fr)_minmax(320px,1fr)]"
+          : "grid gap-0 sm:grid-cols-[176px_minmax(0,1fr)] sm:gap-4 sm:p-4"
+      )}
+      data-story-module="river"
+      data-story-id={story.id}
     >
       <button
         type="button"
@@ -4130,6 +4354,7 @@ export function LifestyleRiverCard({
         )}>
           {story.summary}
         </p>
+        <LifestyleRecommendationReason reason={recommendationReason} />
         <LifestyleCardModule story={story} kind={kind} />
         <LifestyleStoryActions
           story={story}
@@ -4300,6 +4525,7 @@ export function VideoFeedLeadCard({
 
 export function VideoIndexCard({
   story,
+  recommendationReason,
   saved,
   commentCount,
   onOpen,
@@ -4308,6 +4534,7 @@ export function VideoIndexCard({
   variant = "videoIndex",
 }: {
   story: LifestyleRiverStory;
+  recommendationReason?: string;
   saved: boolean;
   commentCount: number;
   onOpen: () => void;
@@ -4318,7 +4545,11 @@ export function VideoIndexCard({
   const useHearstPlusStyle = variant === "hearstPlus";
 
   return (
-    <article className="group overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/50">
+    <article
+      className="group overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/50"
+      data-story-module="river"
+      data-story-id={story.id}
+    >
       <VideoPlaySurface story={story} featured />
       <div className="p-4 sm:p-5">
         <div className="mb-3 flex min-w-0 flex-wrap items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
@@ -4350,6 +4581,7 @@ export function VideoIndexCard({
         >
           {story.summary}
         </p>
+        <LifestyleRecommendationReason reason={recommendationReason} />
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-3">
             <button
@@ -5045,25 +5277,38 @@ function getPersonalizedLeadSliderStories(
 
 function LifestyleLeadSlider({
   stories,
+  editionLabel,
+  initialStoryId,
   savedIds,
   commentsByStoryId,
   onOpenStory,
   onSave,
   onMoreLikeThis,
   onFollowBrand,
+  onEditionImpression,
+  onEditionStoryOpen,
   indicatorPalette,
 }: {
   stories: LifestyleRiverStory[];
+  editionLabel?: string;
+  initialStoryId?: string;
   savedIds: string[];
   commentsByStoryId: Record<string, LifestyleStoryComment[]>;
   onOpenStory: (story: LifestyleRiverStory) => void;
   onSave: (story: LifestyleRiverStory) => void;
   onMoreLikeThis: (story: LifestyleRiverStory) => void;
   onFollowBrand: (brandName: string) => void;
+  onEditionImpression?: () => void;
+  onEditionStoryOpen?: (story: LifestyleRiverStory, position: number) => void;
   indicatorPalette?: readonly string[];
 }) {
   const prefersReducedMotion = usePrefersReducedMotion();
-  const [activeIndex, setActiveIndex] = React.useState(0);
+  const [activeIndex, setActiveIndex] = React.useState(() => {
+    const initialIndex = initialStoryId
+      ? stories.findIndex((story) => story.id === initialStoryId)
+      : 0;
+    return Math.max(0, initialIndex);
+  });
   const [paused, setPaused] = React.useState(false);
   const [isDragging, setIsDragging] = React.useState(false);
   const [dragOffset, setDragOffset] = React.useState(0);
@@ -5072,6 +5317,9 @@ function LifestyleLeadSlider({
   const suppressSlideClickRef = React.useRef(false);
   const swipeInstructionsId = React.useId();
   const activeStory = stories[activeIndex] ?? stories[0];
+  React.useEffect(() => {
+    if (editionLabel) onEditionImpression?.();
+  }, [editionLabel, onEditionImpression]);
   React.useEffect(() => {
     if (paused || prefersReducedMotion || isDragging || stories.length < 2) return;
 
@@ -5150,11 +5398,12 @@ function LifestyleLeadSlider({
     <article
       className="group relative min-w-0 overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]"
       aria-roledescription="carousel"
-      aria-label="Featured stories"
+      aria-label={editionLabel ?? "Featured stories"}
       aria-describedby={swipeInstructionsId}
+      data-story-module={editionLabel ? "todays-picks" : "featured"}
     >
       <p id={swipeInstructionsId} className="sr-only">
-        Swipe left or right to move between featured stories.
+        Swipe left or right to move between {editionLabel ? editionLabel : "featured stories"}.
       </p>
       <div
         className="relative w-full min-w-0 touch-pan-y select-none overflow-hidden bg-black"
@@ -5184,6 +5433,7 @@ function LifestyleLeadSlider({
                     event.preventDefault();
                     return;
                   }
+                  onEditionStoryOpen?.(story, index + 1);
                   onOpenStory(story);
                 }}
                 aria-label={`Open story: ${story.title}`}
@@ -5192,6 +5442,7 @@ function LifestyleLeadSlider({
                 tabIndex={index === activeIndex ? 0 : -1}
                 data-feed-source={isCurrentFeedStory(story) ? "current" : "editorial"}
                 data-media-kind={story.videoUrl ? "video" : "article"}
+                data-story-id={story.id}
               >
                 <div className="relative isolate">
                   <div className="relative h-[min(128vw,520px)] w-full overflow-hidden sm:h-auto sm:aspect-video">
@@ -5246,8 +5497,19 @@ function LifestyleLeadSlider({
           })}
         </div>
         <div className="absolute left-5 right-5 top-5 flex items-center justify-between gap-3">
-          <span className="rounded-full bg-black/45 px-3 py-1 text-sm font-bold text-white backdrop-blur">
-            {activeIndex + 1} of {stories.length}
+          <span
+            className="inline-flex items-center gap-1.5 rounded-full bg-black/45 px-3 py-1 text-sm font-bold text-white backdrop-blur"
+            aria-label={editionLabel
+              ? `${editionLabel}, story ${activeIndex + 1} of ${stories.length}`
+              : `Story ${activeIndex + 1} of ${stories.length}`}
+          >
+            {editionLabel ? (
+              <>
+                <span>{editionLabel}</span>
+                <span aria-hidden>·</span>
+              </>
+            ) : null}
+            <span>{activeIndex + 1} of {stories.length}</span>
           </span>
           <div
             className="flex items-center gap-1.5"
@@ -5256,7 +5518,7 @@ function LifestyleLeadSlider({
             {stories.length > 1 ? (
               <button
                 type="button"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60 sm:h-7 sm:w-7"
+                className="hidden h-7 w-7 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60 sm:inline-flex"
                 onClick={goToPrevious}
                 aria-label="Previous featured story"
               >
@@ -5275,7 +5537,7 @@ function LifestyleLeadSlider({
             {stories.length > 1 ? (
               <button
                 type="button"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60 sm:h-7 sm:w-7"
+                className="hidden h-7 w-7 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60 sm:inline-flex"
                 onClick={goToNext}
                 aria-label="Next featured story"
               >
@@ -7378,6 +7640,10 @@ function LifestyleStoryReaderModal({
     onCloseRef.current = onClose;
   }, [onClose]);
 
+  React.useEffect(() => {
+    if (openStoryId) recordStoryOpened(openStoryId);
+  }, [openStoryId]);
+
   useModalIsolation(isReaderOpen && Boolean(portalTarget), dialogRef);
 
   React.useEffect(() => {
@@ -7573,6 +7839,36 @@ function LifestyleStoryReaderModal({
       root.removeEventListener("scroll", updateActiveReaderRoute);
     };
   }, [openStoryId, readerReturnHref, visibleReaderStoryIds, visibleReaderStories.length]);
+
+  React.useEffect(() => {
+    const root = scrollRef.current;
+    if (!root || !openStoryId) return;
+
+    let animationFrame = 0;
+    const updateReadingProgress = () => {
+      window.cancelAnimationFrame(animationFrame);
+      animationFrame = window.requestAnimationFrame(() => {
+        const activeStoryId = activeReaderRouteStoryIdRef.current ?? openStoryId;
+        const activeArticle = Array.from(
+          root.querySelectorAll<HTMLElement>("[data-reader-story-id]")
+        ).find((article) => article.dataset.readerStoryId === activeStoryId);
+        if (!activeArticle) return;
+
+        const scrollerRect = root.getBoundingClientRect();
+        const articleRect = activeArticle.getBoundingClientRect();
+        const readingAnchor = scrollerRect.top + scrollerRect.height * 0.65;
+        const readPixels = Math.min(articleRect.height, Math.max(0, readingAnchor - articleRect.top));
+        recordStoryProgress(activeStoryId, articleRect.height > 0 ? readPixels / articleRect.height : 0);
+      });
+    };
+
+    root.addEventListener("scroll", updateReadingProgress, { passive: true });
+    updateReadingProgress();
+    return () => {
+      window.cancelAnimationFrame(animationFrame);
+      root.removeEventListener("scroll", updateReadingProgress);
+    };
+  }, [openStoryId, visibleReaderStoryIds]);
 
   React.useEffect(() => {
     let active = true;
@@ -7992,15 +8288,17 @@ function LifestyleStoryReaderModal({
 }
 
 function TodayEditDashboard({
-  stories,
-  profile,
+  selection,
+  measurementEnabled = true,
   onOpenStory,
-  onShowFollowedBrands,
+  onContinueImpression,
+  onContinueOpen,
 }: {
-  stories: LifestyleRiverStory[];
-  profile: LifestyleRiverProfile;
+  selection: TodayEditStorySelection<LifestyleRiverStory>;
+  measurementEnabled?: boolean;
   onOpenStory: (storyId: string) => void;
-  onShowFollowedBrands: () => void;
+  onContinueImpression?: (storyId: string) => void;
+  onContinueOpen?: (storyId: string) => void;
 }) {
   const carouselRef = React.useRef<HTMLDivElement | null>(null);
   const [canScrollLeft, setCanScrollLeft] = React.useState(false);
@@ -8029,33 +8327,23 @@ function TodayEditDashboard({
     };
   }, [updateCarouselControls]);
 
-  const usedStoryIds = new Set<string>();
-  const compactStories = (items: Array<LifestyleRiverStory | undefined>) =>
-    items.filter((story): story is LifestyleRiverStory => Boolean(story));
-  const takeUnusedStory = (candidates: LifestyleRiverStory[]) => {
-    const story = candidates.find((candidate) => !usedStoryIds.has(candidate.id))
-      || stories.find((candidate) => !usedStoryIds.has(candidate.id));
+  const {
+    continueStory,
+    followedBrandStory,
+    trendingStory,
+    collectionStory,
+  } = selection;
 
-    if (story) usedStoryIds.add(story.id);
-    return story;
-  };
+  React.useEffect(() => {
+    if (
+      !measurementEnabled
+      || !continueStory
+      || !window.matchMedia("(min-width: 768px)").matches
+    ) return;
+    onContinueImpression?.(continueStory.id);
+  }, [continueStory, measurementEnabled, onContinueImpression]);
 
-  const continueStory = takeUnusedStory(compactStories([
-    ...stories.filter((story) => getLifestyleCardKind(story) === "video"),
-    stories[1],
-    stories[0],
-  ]));
-  const followedBrandStory = takeUnusedStory([
-    ...stories.filter((story) => profile.followedBrands.includes(story.brand)),
-    ...stories,
-  ]);
-  const trendingStory = takeUnusedStory([...stories].sort((a, b) => b.popularity - a.popularity));
-  const collectionStory = takeUnusedStory([
-    ...stories.filter((story) => story.tags.some((tag) => profile.savedTags.includes(tag))),
-    ...stories,
-  ]);
-
-  if (!continueStory || !followedBrandStory || !trendingStory || !collectionStory) return null;
+  if (!followedBrandStory || !trendingStory || !collectionStory) return null;
 
   const scrollCarousel = (direction: -1 | 1) => {
     const carousel = carouselRef.current;
@@ -8068,19 +8356,22 @@ function TodayEditDashboard({
   };
 
   const modules = [
-    {
+    ...(continueStory ? [{
       story: continueStory,
       label: "Continue Reading",
       title: continueStory.title,
       image: continueStory.image,
-      onClick: () => onOpenStory(continueStory.id),
-    },
+      onClick: () => {
+        onContinueOpen?.(continueStory.id);
+        onOpenStory(continueStory.id);
+      },
+    }] : []),
     {
       story: followedBrandStory,
       label: "New From Your Brands",
       title: followedBrandStory.title,
       image: followedBrandStory.image,
-      onClick: onShowFollowedBrands,
+      onClick: () => onOpenStory(followedBrandStory.id),
     },
     {
       story: trendingStory,
@@ -8102,16 +8393,21 @@ function TodayEditDashboard({
     <section
       className="relative hidden w-full overflow-hidden rounded-[8px] border border-border bg-[var(--hp-strip)] shadow-[var(--hp-shadow-card)] md:block"
       aria-label="Today&apos;s edit"
+      data-story-module="todays-edit"
     >
       <div
         ref={carouselRef}
-        className="flex w-full snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] xl:grid xl:grid-cols-4 xl:divide-x xl:divide-border xl:overflow-visible xl:snap-none xl:[scrollbar-width:auto] [&::-webkit-scrollbar]:hidden xl:[&::-webkit-scrollbar]:block"
+        className={cn(
+          "flex w-full snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] xl:grid xl:divide-x xl:divide-border xl:overflow-visible xl:snap-none xl:[scrollbar-width:auto] [&::-webkit-scrollbar]:hidden xl:[&::-webkit-scrollbar]:block",
+          modules.length === 4 ? "xl:grid-cols-4" : "xl:grid-cols-3"
+        )}
       >
         {modules.map((module) => (
           <button
             key={module.label}
             type="button"
             onClick={module.onClick}
+            data-story-id={module.story.id}
             className="group relative flex w-[88vw] shrink-0 snap-start scroll-ml-0 flex-col border-r border-border p-4 text-left transition-colors last:border-r-0 hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30 sm:w-[50vw] md:w-[38vw] lg:w-[30vw] xl:w-auto xl:min-w-0 xl:border-0"
           >
             <span>
@@ -8689,6 +8985,8 @@ function LifestyleLeftSidebar({
               key={story.id}
               type="button"
               onClick={() => onOpenStory(story)}
+              data-story-module="daily-habit"
+              data-story-id={story.id}
               className="group block w-full border-b border-border pb-3 text-left last:border-0 last:pb-0 focus:outline-none focus:ring-2 focus:ring-primary/30"
               aria-label={`Open story: ${story.title}`}
             >
@@ -8803,7 +9101,9 @@ type LifestyleRiverHomePageProps = {
   initialBrandSlug?: string;
   initialOpenStoryId?: string;
   readerReturnHref?: string;
+  showStakeholderTools?: boolean;
   onboardingResult?: HearstOnboardingResult | null;
+  onFilterChange?: (filter: string) => void;
   onRiverReset?: () => void;
   onBrandFilterChange?: () => void;
   onSelectedBrandChange?: (brand: { name: string; slug: string } | null) => void;
@@ -9536,7 +9836,9 @@ function LifestyleRiverHomePage({
   initialBrandSlug,
   initialOpenStoryId,
   readerReturnHref,
+  showStakeholderTools = false,
   onboardingResult,
+  onFilterChange,
   onRiverReset,
   onBrandFilterChange,
   onSelectedBrandChange,
@@ -9554,7 +9856,24 @@ function LifestyleRiverHomePage({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [demoState, setDemoState] = React.useState<LifestyleDemoState>(initialLifestyleDemoState);
+  const readingHistory = useReadingHistoryEntries();
+  const continueReadingStoryIds = React.useMemo(
+    () => getContinueReadingStoryIds(readingHistory),
+    [readingHistory]
+  );
+  const [visitStartedAt] = React.useState(() => Date.now());
+  const [editionDate] = React.useState(() => getLocalEditionDate(new Date(visitStartedAt)));
+  const visitScopeKey = `${destination}:${initialBrandSlug ?? "all-brands"}`;
+  const [demoState, setDemoState] = React.useState<LifestyleDemoState>(() => ({
+    ...resolveVisitContext(
+      readVisitRecords(),
+      visitScopeKey,
+      editionDate,
+      new Date(visitStartedAt)
+    ),
+    isSimulated: false,
+  }));
+  const recordedVisitScopeRef = React.useRef<string | null>(null);
   const initialBrandName = config.sourceNotes.find((note) => note.brandSlug === initialBrandSlug)?.brand;
   const [internalActiveBrandFilters, setInternalActiveBrandFilters] = React.useState<string[]>(initialBrandName ? [initialBrandName] : []);
   const activeBrandFilters = controlledActiveBrandFilters ?? internalActiveBrandFilters;
@@ -9616,6 +9935,13 @@ function LifestyleRiverHomePage({
   }, [pathname, searchParams]);
   const currentReaderReturnHref = safeReaderReturnHref ?? (initialBrandSlug ? getHearstBrandRoute(initialBrandSlug) : getHearstDestinationRoute(destination));
   const storyOpenReturnHref = safeReaderReturnHref ?? currentPageReturnHref ?? currentReaderReturnHref;
+  const restoreCurrentVisitContext = React.useCallback(() => {
+    const now = new Date();
+    setDemoState({
+      ...resolveVisitContext(readVisitRecords(), visitScopeKey, editionDate, now),
+      isSimulated: false,
+    });
+  }, [editionDate, visitScopeKey]);
 
   const openStory = React.useCallback((storyId: string) => {
     const activeElement = document.activeElement;
@@ -9627,11 +9953,13 @@ function LifestyleRiverHomePage({
     } else {
       window.sessionStorage.removeItem(readerReturnFocusStorageKey);
     }
+    recordStoryOpened(storyId);
     setOpenStoryId(storyId);
     router.push(appendReaderReturnHref(storyId, storyOpenReturnHref), { scroll: false });
   }, [router, setOpenStoryId, storyOpenReturnHref]);
 
   const switchReaderStory = React.useCallback((storyId: string) => {
+    recordStoryOpened(storyId);
     setOpenStoryId(storyId);
     if (typeof window !== "undefined") {
       window.history.replaceState(
@@ -9756,6 +10084,47 @@ function LifestyleRiverHomePage({
       ? applyContextualFeedCadence(contextStories)
       : contextStories;
   }, [activeFilter, config.liveFeedMode, effectiveBrandFilters, profile.savedIds, rankedStories, usingVideoTabFeed]);
+  const savedSuggestionCandidates = React.useMemo(
+    () => rankedStories.filter((story) =>
+      !profile.savedIds.includes(story.id)
+      && !profile.hiddenIds.includes(story.id)
+      && (effectiveBrandFilters.length === 0 || effectiveBrandFilters.includes(story.brand))
+    ),
+    [effectiveBrandFilters, profile.hiddenIds, profile.savedIds, rankedStories]
+  );
+  const savedSuggestionStories = activeFilter === "Saved"
+    ? getPersonalizedLeadSliderStories(
+        savedSuggestionCandidates,
+        rankingProfile,
+        demoState,
+        config,
+        3,
+        config.liveFeedMode === "blend"
+      )
+    : [];
+  React.useEffect(() => {
+    if (activeFilter !== "Saved" || profile.savedIds.length > 0) return;
+    trackProductEventOnce(
+      `saved-empty:${destination}:${initialBrandSlug ?? "all-brands"}`,
+      "saved_empty_view",
+      {
+        destination,
+        active_filter_count: effectiveBrandFilters.length,
+        suggestion_count: savedSuggestionStories.length,
+      }
+    );
+  }, [
+    activeFilter,
+    destination,
+    effectiveBrandFilters.length,
+    initialBrandSlug,
+    profile.savedIds.length,
+    savedSuggestionStories.length,
+  ]);
+  const shouldUseTodaysPicks = activeFilter === "For You"
+    && !initialBrandSlug
+    && effectiveBrandFilters.length === 0
+    && !usingVideoTabFeed;
   const availableReaderStories = React.useMemo(() => {
     const seenStoryIds = new Set<string>();
     return [
@@ -9853,7 +10222,7 @@ function LifestyleRiverHomePage({
     && activeFilter === "For You"
     && delishVerticalVideoStories.length > 0
     && (effectiveBrandFilters.length === 0 || effectiveBrandFilters.includes("Delish"));
-  const heroStories = getPersonalizedLeadSliderStories(
+  const personalizedHeroStories = getPersonalizedLeadSliderStories(
     visibleStories,
     rankingProfile,
     demoState,
@@ -9861,26 +10230,133 @@ function LifestyleRiverHomePage({
     5,
     config.liveFeedMode === "blend"
   );
-  const leadStory = heroStories[0] ?? visibleStories[0];
+  const dailyEditionKey = shouldUseTodaysPicks
+    ? `${editionDate}:${destination}:todays-picks`
+    : "";
+  const dailyEditionStories = useDailyEditionStories(
+    dailyEditionKey,
+    personalizedHeroStories,
+    5
+  );
+  const heroStories = shouldUseTodaysPicks && dailyEditionStories.length > 0
+    ? dailyEditionStories
+    : personalizedHeroStories;
+  const leadStory = (
+    demoState.returnHours > 0 && demoState.previousLeadId
+      ? heroStories.find((story) => story.id !== demoState.previousLeadId)
+      : heroStories[0]
+  ) ?? heroStories[0] ?? visibleStories[0];
+  React.useEffect(() => {
+    if (demoState.isSimulated || initialOpenStoryId) return;
+    trackProductEventOnce(`return-session:${visitScopeKey}`, "return_session", {
+      destination,
+      edition_id: editionDate,
+      daypart: demoState.daypart,
+      returning: demoState.returnHours > 0,
+      return_hours: demoState.returnHours,
+      return_window: getReturnWindow(demoState.returnHours),
+      unfinished_count: continueReadingStoryIds.length,
+    });
+  }, [
+    continueReadingStoryIds.length,
+    demoState.daypart,
+    demoState.isSimulated,
+    demoState.returnHours,
+    destination,
+    editionDate,
+    initialOpenStoryId,
+    visitScopeKey,
+  ]);
+  const trackTodaysPicksImpression = React.useCallback(() => {
+    if (!shouldUseTodaysPicks || demoState.isSimulated || initialOpenStoryId) return;
+    trackProductEventOnce(`edition-impression:${dailyEditionKey}`, "edition_impression", {
+      destination,
+      edition_id: dailyEditionKey,
+      story_count: heroStories.length,
+      daypart: demoState.daypart,
+    });
+  }, [
+    dailyEditionKey,
+    demoState.daypart,
+    demoState.isSimulated,
+    destination,
+    heroStories.length,
+    initialOpenStoryId,
+    shouldUseTodaysPicks,
+  ]);
+  const trackTodaysPickOpen = React.useCallback((
+    story: LifestyleRiverStory,
+    position: number
+  ) => {
+    if (!shouldUseTodaysPicks || demoState.isSimulated) return;
+    trackProductEvent("edition_story_open", {
+      destination,
+      edition_id: dailyEditionKey,
+      story_id: story.id,
+      position,
+      format: story.videoUrl ? "video" : "article",
+      brand: story.brand,
+      topic: story.topic,
+    });
+  }, [dailyEditionKey, demoState.isSimulated, destination, shouldUseTodaysPicks]);
+  React.useEffect(() => {
+    if (
+      demoState.isSimulated
+      || !shouldUseTodaysPicks
+      || !leadStory
+      || recordedVisitScopeRef.current === visitScopeKey
+    ) return;
+
+    writeVisitRecords(upsertVisitRecord(readVisitRecords(), {
+      scopeKey: visitScopeKey,
+      visitedAt: visitStartedAt,
+      editionId: editionDate,
+      leadStoryId: leadStory.id,
+    }));
+    recordedVisitScopeRef.current = visitScopeKey;
+  }, [
+    demoState.isSimulated,
+    editionDate,
+    leadStory,
+    shouldUseTodaysPicks,
+    visitScopeKey,
+    visitStartedAt,
+  ]);
   const heroStoryIds = new Set(heroStories.map((story) => story.id));
-  const completeBaseRiverStories = displayStories.filter((story) =>
-    !heroStoryIds.has(story.id)
-    && (!showDelishShortsInHearstPlusRiver || !delishVerticalVideoIds.has(story.id))
+  const moduleAllocation = allocateStoryModules({
+    stories: displayStories,
+    heroStoryIds,
+    continueStoryIds: continueReadingStoryIds,
+    followedBrands: profile.followedBrands,
+    savedTags: profile.savedTags,
+  });
+  const moduleReservedStoryIds = new Set([
+    ...heroStoryIds,
+    ...Object.values(moduleAllocation.todayEdit)
+      .filter((story): story is LifestyleRiverStory => Boolean(story))
+      .map((story) => story.id),
+    ...moduleAllocation.dailyHabitStories.map((story) => story.id),
+    ...moduleAllocation.trendingStories.map((story) => story.id),
+  ]);
+  const completeBaseRiverStories = moduleAllocation.riverStories.filter(
+    (story) => !showDelishShortsInHearstPlusRiver || !delishVerticalVideoIds.has(story.id)
   );
   const completeRiverStories = ensureGallerySampleInRiver(
     completeBaseRiverStories,
     displayStories,
-    heroStoryIds,
+    moduleReservedStoryIds,
     !usingVideoTabFeed && activeFilter !== "Saved"
   );
-  const baseRiverStories = visibleStories.filter((story) =>
-    !heroStoryIds.has(story.id)
-    && (!showDelishShortsInHearstPlusRiver || !delishVerticalVideoIds.has(story.id))
-  );
+  const visibleRiverStoryCount = Math.max(0, visibleCount - heroStories.length);
+  const baseRiverStories = moduleAllocation.riverStories
+    .slice(0, visibleRiverStoryCount)
+    .filter(
+      (story) => !showDelishShortsInHearstPlusRiver || !delishVerticalVideoIds.has(story.id)
+    );
   const riverStories = ensureGallerySampleInRiver(
     baseRiverStories,
     displayStories,
-    heroStoryIds,
+    moduleReservedStoryIds,
     !usingVideoTabFeed && activeFilter !== "Saved"
   );
   const candidateDelishShortsRiverInsertIndex = showDelishShortsInHearstPlusRiver
@@ -9973,10 +10449,17 @@ function LifestyleRiverHomePage({
       boostedTags: signalTags,
       personalizationMode: "onboarding",
     }));
-    setDemoState(initialLifestyleDemoState);
+    restoreCurrentVisitContext();
     setActiveBrandFilters([]);
     onRiverReset?.();
-  }, [config.stories, onRiverReset, onboardingResult, setActiveBrandFilters, updateReaderProfile]);
+  }, [
+    config.stories,
+    onRiverReset,
+    onboardingResult,
+    restoreCurrentVisitContext,
+    setActiveBrandFilters,
+    updateReaderProfile,
+  ]);
 
   const anchorRiverToTop = React.useCallback(() => {
     window.requestAnimationFrame(() => {
@@ -10029,7 +10512,7 @@ function LifestyleRiverHomePage({
 
   const resetDemo = () => {
     updateReaderProfile(config.initialProfile);
-    setDemoState(initialLifestyleDemoState);
+    restoreCurrentVisitContext();
     setActiveBrandFilters([]);
     setOpenStoryId(null);
     setCommentsByStoryId({});
@@ -10041,7 +10524,13 @@ function LifestyleRiverHomePage({
     contentDay: LifestyleDemoState["contentDay"] = "today",
     previousLeadId?: string
   ) => {
-    setDemoState({ returnHours, daypart, contentDay, previousLeadId });
+    setDemoState({
+      returnHours,
+      daypart,
+      contentDay,
+      previousLeadId,
+      isSimulated: true,
+    });
   };
 
   const applyBehaviorPreset = (preset: "homeCook" | "shoppingBrowser" | "wellnessReader") => {
@@ -10138,8 +10627,15 @@ function LifestyleRiverHomePage({
   };
 
   const toggleSaved = (story: LifestyleRiverStory) => {
+    const saved = profile.savedIds.includes(story.id);
+    trackProductEvent("story_save_toggle", {
+      destination,
+      story_id: story.id,
+      state: saved ? "unsaved" : "saved",
+      surface: activeFilter === "Saved" ? "saved" : "river",
+    });
+    if (!saved) markUsefulSession(destination, "story_save", story.id);
     updateReaderProfile((current) => {
-      const saved = current.savedIds.includes(story.id);
       return {
         ...current,
         savedIds: saved
@@ -10151,6 +10647,12 @@ function LifestyleRiverHomePage({
   };
 
   const boostStory = (story: LifestyleRiverStory) => {
+    trackProductEvent("more_like_this", {
+      destination,
+      story_id: story.id,
+      surface: activeFilter === "Saved" ? "saved" : "river",
+    });
+    markUsefulSession(destination, "more_like_this", story.id);
     updateReaderProfile((current) => ({
       ...current,
       boostedTags: mergeUnique(current.boostedTags, story.tags),
@@ -10181,6 +10683,11 @@ function LifestyleRiverHomePage({
     setActiveBrandFilters([]);
     anchorBrandToTop();
   };
+  const browseForYou = () => {
+    trackProductEvent("saved_browse_for_you", { destination });
+    setActiveBrandFilters([]);
+    onFilterChange?.("For You");
+  };
 
   const followBrand = (brandName: string) => {
     updateReaderProfile((current) => ({
@@ -10198,16 +10705,12 @@ function LifestyleRiverHomePage({
     }));
   };
 
-  const showFollowedBrands = () => {
-    const availableFollowedBrands = sidebarBrands
-      .filter((brand) => brand.count > 0 && profile.followedBrands.includes(brand.name))
-      .map((brand) => brand.name);
-
-    setActiveBrandFilters(availableFollowedBrands.slice(0, 1));
-    anchorBrandToTop();
-  };
-
   const hideStory = (id: string) => {
+    trackProductEvent("story_hide", {
+      destination,
+      story_id: id,
+      surface: activeFilter === "Videos" ? "video_river" : "river",
+    });
     updateReaderProfile((current) => ({
       ...current,
       hiddenIds: mergeUnique(current.hiddenIds, [id]),
@@ -10387,56 +10890,60 @@ function LifestyleRiverHomePage({
               </div>
             </div>
 
-            <div className="rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-4 shadow-[var(--hp-shadow-card)]">
-              <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
-                Video source
-              </p>
-              <p className="mt-3 text-sm font-bold">
-                {activeStoryPool.length} playable videos
-              </p>
-              <p className="mt-2 text-xs leading-5 text-muted-foreground">
-                Pulled from {activeDataSourceCopy}
-              </p>
-            </div>
-
-            <div className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
-              <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
-                Why this queue
-              </p>
-              <div className="mt-4 space-y-4 text-sm">
-                {activeLiveFeedStatus ? (
-                  <div role="status">
-                    <p className="inline-flex items-center gap-2 font-bold">
-                      <span
-                        className={cn(
-                          "h-1.5 w-1.5 rounded-full",
-                          activeLiveFeedStatus.isFallback ? "bg-amber-500" : "bg-emerald-500"
-                        )}
-                        aria-hidden="true"
-                      />
-                      {activeLiveFeedStatus.isFallback ? "Cached videos" : "Current videos"}
-                    </p>
-                    <p className="mt-1 text-muted-foreground">
-                      Updated {formatLiveFeedUpdatedAt(activeLiveFeedStatus.fetchedAt)}
-                    </p>
-                  </div>
-                ) : null}
-                <div>
-                  <p className="font-bold">Active filter</p>
-                  <p className="mt-1 text-muted-foreground">{activeFilter}</p>
-                </div>
-                <div>
-                  <p className="font-bold">Brands</p>
-                  <p className="mt-1 text-muted-foreground">
-                    {effectiveBrandFilters.length > 0 ? effectiveBrandFilters.join(", ") : activeSourceNotes.map((note) => note.brand).join(", ")}
+            {showStakeholderTools ? (
+              <>
+                <div className="rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-4 shadow-[var(--hp-shadow-card)]">
+                  <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+                    Video source
+                  </p>
+                  <p className="mt-3 text-sm font-bold">
+                    {activeStoryPool.length} playable videos
+                  </p>
+                  <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                    Pulled from {activeDataSourceCopy}
                   </p>
                 </div>
-                <div>
-                  <p className="font-bold">Saved signals</p>
-                  <p className="mt-1 text-muted-foreground">{profile.savedTags.slice(0, 6).join(", ")}</p>
+
+                <div className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
+                  <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+                    Why this queue
+                  </p>
+                  <div className="mt-4 space-y-4 text-sm">
+                    {activeLiveFeedStatus ? (
+                      <div role="status">
+                        <p className="inline-flex items-center gap-2 font-bold">
+                          <span
+                            className={cn(
+                              "h-1.5 w-1.5 rounded-full",
+                              activeLiveFeedStatus.isFallback ? "bg-amber-500" : "bg-emerald-500"
+                            )}
+                            aria-hidden="true"
+                          />
+                          {activeLiveFeedStatus.isFallback ? "Cached videos" : "Current videos"}
+                        </p>
+                        <p className="mt-1 text-muted-foreground">
+                          Updated {formatLiveFeedUpdatedAt(activeLiveFeedStatus.fetchedAt)}
+                        </p>
+                      </div>
+                    ) : null}
+                    <div>
+                      <p className="font-bold">Active filter</p>
+                      <p className="mt-1 text-muted-foreground">{activeFilter}</p>
+                    </div>
+                    <div>
+                      <p className="font-bold">Brands</p>
+                      <p className="mt-1 text-muted-foreground">
+                        {effectiveBrandFilters.length > 0 ? effectiveBrandFilters.join(", ") : activeSourceNotes.map((note) => note.brand).join(", ")}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="font-bold">Saved signals</p>
+                      <p className="mt-1 text-muted-foreground">{profile.savedTags.slice(0, 6).join(", ")}</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+              </>
+            ) : null}
           </aside>
         </div>
 
@@ -10471,42 +10978,47 @@ function LifestyleRiverHomePage({
           onSave={toggleSaved}
         />
 
-        <Button
-          type="button"
-          variant="default"
-          size="icon"
-          onClick={() => setDemoModalOpen(true)}
-          className="fixed bottom-5 right-5 z-40 h-12 w-12 rounded-full shadow-lg"
-          aria-label="Open personalization demo controls"
-        >
-          <SlidersHorizontal className="h-5 w-5" aria-hidden />
-        </Button>
+        {showStakeholderTools ? (
+          <>
+            <Button
+              type="button"
+              variant="default"
+              size="icon"
+              onClick={() => setDemoModalOpen(true)}
+              className="fixed bottom-5 right-5 z-40 h-12 w-12 rounded-full shadow-lg"
+              aria-label="Open personalization demo controls"
+            >
+              <SlidersHorizontal className="h-5 w-5" aria-hidden />
+            </Button>
 
-        <LifestylePersonalizationDemoModal
-          open={demoModalOpen}
-          onClose={() => setDemoModalOpen(false)}
-          demoState={demoState}
-          profile={profile}
-          topStory={featuredVideo}
-          config={config}
-          activeFilter={activeFilter}
-          stories={visibleStories}
-          inventoryStories={activeStoryPool}
-          eligibleStories={filteredStories}
-          scopeLabel={effectiveBrandFilters.length > 0 ? effectiveBrandFilters.join(", ") : config.productName}
-          onDaypartChange={(daypart) =>
-            setDemoState((current) => ({
-              ...current,
-              daypart,
-              returnHours: demoDaypartReturnHours[daypart],
-              contentDay: "today",
-              previousLeadId: featuredVideo?.id ?? current.previousLeadId,
-            }))
-          }
-          onSimulateReturn={simulateReturn}
-          onApplyBehaviorPreset={applyBehaviorPreset}
-          onResetDemo={resetDemo}
-        />
+            <LifestylePersonalizationDemoModal
+              open={demoModalOpen}
+              onClose={() => setDemoModalOpen(false)}
+              demoState={demoState}
+              profile={profile}
+              topStory={featuredVideo}
+              config={config}
+              activeFilter={activeFilter}
+              stories={visibleStories}
+              inventoryStories={activeStoryPool}
+              eligibleStories={filteredStories}
+              scopeLabel={effectiveBrandFilters.length > 0 ? effectiveBrandFilters.join(", ") : config.productName}
+              onDaypartChange={(daypart) =>
+                setDemoState((current) => ({
+                  ...current,
+                  daypart,
+                  returnHours: demoDaypartReturnHours[daypart],
+                  contentDay: "today",
+                  previousLeadId: featuredVideo?.id ?? current.previousLeadId,
+                  isSimulated: true,
+                }))
+              }
+              onSimulateReturn={simulateReturn}
+              onApplyBehaviorPreset={applyBehaviorPreset}
+              onResetDemo={resetDemo}
+            />
+          </>
+        ) : null}
       </div>
     );
   }
@@ -10514,16 +11026,33 @@ function LifestyleRiverHomePage({
   return (
     <div className="space-y-8">
       <TodayEditDashboard
-        stories={filteredStories}
-        profile={profile}
+        selection={moduleAllocation.todayEdit}
+        measurementEnabled={!openStoryId}
         onOpenStory={openStory}
-        onShowFollowedBrands={showFollowedBrands}
+        onContinueImpression={(storyId) => {
+          trackProductEventOnce(
+            `resume-impression:desktop:${storyId}`,
+            "resume_impression",
+            {
+              destination,
+              story_id: storyId,
+              entry_point: "desktop_edit",
+            }
+          );
+        }}
+        onContinueOpen={(storyId) => {
+          trackProductEvent("story_resume", {
+            destination,
+            story_id: storyId,
+            entry_point: "desktop_edit",
+          });
+        }}
       />
 
       <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]">
         <LifestyleLeftSidebar
           profile={profile}
-          topStories={filteredStories}
+          topStories={moduleAllocation.dailyHabitStories}
           topics={sidebarTopics}
           brands={sidebarBrands}
           brandFilterTitle={initialBrandSlug && !usingVideoTabFeed ? "Global Story Inventory" : undefined}
@@ -10536,19 +11065,23 @@ function LifestyleRiverHomePage({
           onOpenStory={(story) => openStory(story.id)}
         />
 
-        <main className="min-w-0 space-y-4" aria-label={config.riverLabel}>
+        <main id="hearst-story-river" className="min-w-0 scroll-mt-28 space-y-4" aria-label={config.riverLabel}>
           <h1 className="sr-only">{pageHeading}</h1>
           {leadStory ? (
             <>
               <LifestyleLeadSlider
-                key={heroStories.map((story) => story.id).join("|")}
+                key={`${leadStory.id}:${heroStories.map((story) => story.id).join("|")}`}
                 stories={heroStories}
+                editionLabel={shouldUseTodaysPicks ? "Today’s Picks" : undefined}
+                initialStoryId={leadStory.id}
                 savedIds={profile.savedIds}
                 commentsByStoryId={resolvedCommentsByStoryId}
                 onOpenStory={(story) => openStory(story.id)}
                 onSave={toggleSaved}
                 onMoreLikeThis={boostStory}
                 onFollowBrand={followBrand}
+                onEditionImpression={trackTodaysPicksImpression}
+                onEditionStoryOpen={trackTodaysPickOpen}
                 indicatorPalette={indicatorPalette}
               />
 
@@ -10585,6 +11118,9 @@ function LifestyleRiverHomePage({
                       stories: visibleStories,
                     })
                   : null;
+                const recommendationReason = activeFilter === "For You"
+                  ? getLifestyleRecommendationReason(story, rankingProfile, demoState, config)
+                  : undefined;
 
                 return (
                   <React.Fragment key={story.id}>
@@ -10598,6 +11134,7 @@ function LifestyleRiverHomePage({
                     {getLifestyleCardKind(story) === "video" ? (
                       <VideoIndexCard
                         story={story}
+                        recommendationReason={recommendationReason}
                         saved={profile.savedIds.includes(story.id)}
                         commentCount={getLifestyleCommentCount(story, resolvedCommentsByStoryId[story.id]?.length ?? 0)}
                         onOpen={() => openStory(story.id)}
@@ -10608,6 +11145,7 @@ function LifestyleRiverHomePage({
                     ) : (
                       <LifestyleRiverCard
                         story={story}
+                        recommendationReason={recommendationReason}
                         saved={profile.savedIds.includes(story.id)}
                         commentCount={getLifestyleCommentCount(story, resolvedCommentsByStoryId[story.id]?.length ?? 0)}
                         onOpen={() => openStory(story.id)}
@@ -10658,26 +11196,125 @@ function LifestyleRiverHomePage({
               </div>
             </>
           ) : (
-            <div className="rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-8 text-center shadow-[var(--hp-shadow-card)]">
-              <p className="headline text-2xl">No stories in {activeFilter} yet.</p>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Clear a brand filter or switch back to For You to keep exploring.
-              </p>
-            </div>
+            activeFilter === "Saved" ? (
+              <section
+                className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-5 shadow-[var(--hp-shadow-card)] sm:p-6"
+                aria-labelledby="saved-empty-title"
+              >
+                <div className="max-w-xl">
+                  <h2 id="saved-empty-title" className="headline text-2xl leading-tight sm:text-3xl">
+                    {profile.savedIds.length === 0
+                      ? "Save stories to build your reading list."
+                      : "No saved stories match this view."}
+                  </h2>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                    {profile.savedIds.length === 0
+                      ? "Keep articles, videos, and ideas here so they’re easy to find when you’re ready to return."
+                      : "Browse all recommendations or clear the current brand filter to find the stories you saved."}
+                  </p>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <Button type="button" onClick={browseForYou}>
+                      Browse For You
+                    </Button>
+                    {effectiveBrandFilters.length > 0 ? (
+                      <Button type="button" variant="outline" onClick={clearBrandFilters}>
+                        Clear brand filter
+                      </Button>
+                    ) : null}
+                  </div>
+                </div>
+
+                {profile.savedIds.length === 0 && savedSuggestionStories.length > 0 ? (
+                  <div className="mt-7 border-t border-border pt-5">
+                    <h3 className="text-sm font-bold text-[var(--hp-section-title)]">
+                      Suggested for you
+                    </h3>
+                    <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                      {savedSuggestionStories.map((story) => (
+                        <article
+                          key={story.id}
+                          className="flex min-w-0 flex-col overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface-low)]"
+                        >
+                          <button
+                            type="button"
+                            onClick={() => {
+                              trackProductEvent("saved_suggestion_open", {
+                                destination,
+                                story_id: story.id,
+                                position: savedSuggestionStories.indexOf(story) + 1,
+                              });
+                              openStory(story.id);
+                            }}
+                            className="group min-w-0 flex-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/40"
+                            aria-label={`Open suggested story: ${story.title}`}
+                          >
+                            <span
+                              className="block aspect-[16/9] w-full bg-muted bg-cover bg-center"
+                              style={{ backgroundImage: `url("${story.image}")` }}
+                              aria-hidden="true"
+                            />
+                            <span className="block p-3">
+                              <span className="block text-xs font-bold text-[var(--hp-section-title)]">
+                                {story.brand} · {story.topic}
+                              </span>
+                              <span className="mt-1 line-clamp-3 block text-sm font-bold leading-snug group-hover:text-primary group-focus-visible:text-primary">
+                                {story.title}
+                              </span>
+                            </span>
+                          </button>
+                          <div className="border-t border-border px-3 py-2">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="xs"
+                              className="w-full justify-center"
+                              onClick={() => {
+                                trackProductEvent("saved_suggestion_save", {
+                                  destination,
+                                  story_id: story.id,
+                                  position: savedSuggestionStories.indexOf(story) + 1,
+                                });
+                                toggleSaved(story);
+                              }}
+                              aria-label={`Save suggested story: ${story.title}`}
+                            >
+                              <Bookmark className="h-4 w-4" aria-hidden />
+                              Save story
+                            </Button>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+              </section>
+            ) : (
+              <div className="rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-8 text-center shadow-[var(--hp-shadow-card)]">
+                <p className="headline text-2xl">No stories in {activeFilter} yet.</p>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Clear a brand filter or switch back to For You to keep exploring.
+                </p>
+              </div>
+            )
           )}
         </main>
 
         <aside className="min-w-0 space-y-5 lg:sticky lg:top-[112px] lg:max-h-[calc(100dvh-136px)] lg:self-start lg:overflow-y-auto lg:pr-1">
-          <div className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
+          {moduleAllocation.trendingStories.length > 0 ? (
+          <div
+            className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]"
+            data-story-module="trending"
+          >
             <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
               Trending Across Brands
             </p>
             <ol className="mt-4 space-y-3">
-              {filteredStories.slice(0, 5).map((story, index) => (
+              {moduleAllocation.trendingStories.map((story, index) => (
                 <li key={story.id}>
                   <button
                     type="button"
                     onClick={() => openStory(story.id)}
+                    data-story-id={story.id}
                     className="group grid w-full grid-cols-[28px_minmax(0,1fr)] gap-3 text-left text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
                     aria-label={`Open story: ${story.title}`}
                   >
@@ -10695,77 +11332,83 @@ function LifestyleRiverHomePage({
               ))}
             </ol>
           </div>
-          <div className="rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-4 shadow-[var(--hp-shadow-card)]">
-            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
-              Story Source
-            </p>
-            <p className="mt-3 text-sm font-bold">
-              {activeStoryPool.length} real-image stories
-            </p>
-            <p className="mt-2 text-xs leading-5 text-muted-foreground">
-              {demoState.contentDay === "nextDay" ? "Next-day demo edition generated from " : "Pulled from "}
-              {config.dataSourceCopy}
-            </p>
-            {destination === "all" && !config.liveFeedStatus ? (
-              <LinkComponent
-                href="/hearst-plus/live-feed/"
-                size="xs"
-                className="mt-3 font-bold"
-              >
-                View live feed demo
-              </LinkComponent>
-            ) : null}
-          </div>
-          <div className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
-            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
-              Why Your River Looks Like This
-            </p>
-            <div className="mt-4 space-y-4 text-sm">
-              {config.liveFeedStatus ? (
-                <div role="status">
-                  <p className="inline-flex items-center gap-2 font-bold">
-                    <span
-                      className={cn(
-                        "h-1.5 w-1.5 rounded-full",
-                        config.liveFeedStatus.isFallback ? "bg-amber-500" : "bg-emerald-500"
-                      )}
-                      aria-hidden="true"
-                    />
-                    {config.liveFeedStatus.isFallback ? "Cached stories" : "Current stories"}
-                  </p>
-                  <p className="mt-1 text-muted-foreground">
-                    Updated {formatLiveFeedUpdatedAt(config.liveFeedStatus.fetchedAt)}
-                  </p>
+          ) : null}
+          {showStakeholderTools ? (
+            <>
+              <div className="rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-4 shadow-[var(--hp-shadow-card)]">
+                <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
+                  Story Source
+                </p>
+                <p className="mt-3 text-sm font-bold">
+                  {activeStoryPool.length} real-image stories
+                </p>
+                <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                  {demoState.contentDay === "nextDay" ? "Next-day demo edition generated from " : "Pulled from "}
+                  {config.dataSourceCopy}
+                </p>
+                {destination === "all" && !config.liveFeedStatus ? (
+                  <LinkComponent
+                    href="/hearst-plus/live-feed/"
+                    size="xs"
+                    className="mt-3 font-bold"
+                  >
+                    View live feed demo
+                  </LinkComponent>
+                ) : null}
+              </div>
+              <div className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
+                <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
+                  Why Your River Looks Like This
+                </p>
+                <div className="mt-4 space-y-4 text-sm">
+                  {config.liveFeedStatus ? (
+                    <div role="status">
+                      <p className="inline-flex items-center gap-2 font-bold">
+                        <span
+                          className={cn(
+                            "h-1.5 w-1.5 rounded-full",
+                            config.liveFeedStatus.isFallback ? "bg-amber-500" : "bg-emerald-500"
+                          )}
+                          aria-hidden="true"
+                        />
+                        {config.liveFeedStatus.isFallback ? "Cached stories" : "Current stories"}
+                      </p>
+                      <p className="mt-1 text-muted-foreground">
+                        Updated {formatLiveFeedUpdatedAt(config.liveFeedStatus.fetchedAt)}
+                      </p>
+                    </div>
+                  ) : null}
+                  <div>
+                    <p className="font-bold">Visit context</p>
+                    <p className="mt-1 text-muted-foreground">
+                      {demoState.isSimulated ? "Simulation · " : "Local visit · "}
+                      {demoState.contentDay === "nextDay" ? "Next day edition · " : ""}
+                      {config.dayparts[demoState.daypart].label}
+                      {demoState.returnHours > 0 ? ` · back after ${demoState.returnHours} hours` : " · first visit"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-bold">Followed topics</p>
+                    <p className="mt-1 text-muted-foreground">{profile.followedTopics.join(", ")}</p>
+                  </div>
+                  <div>
+                    <p className="font-bold">Followed brands</p>
+                    <p className="mt-1 text-muted-foreground">{profile.followedBrands.join(", ")}</p>
+                  </div>
+                  <div>
+                    <p className="font-bold">Active brand filters</p>
+                    <p className="mt-1 text-muted-foreground">
+                      {effectiveBrandFilters.length > 0 ? effectiveBrandFilters.join(", ") : "All brands"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-bold">Saved signals</p>
+                    <p className="mt-1 text-muted-foreground">{profile.savedTags.slice(0, 6).join(", ")}</p>
+                  </div>
                 </div>
-              ) : null}
-              <div>
-                <p className="font-bold">Demo moment</p>
-                <p className="mt-1 text-muted-foreground">
-                  {demoState.contentDay === "nextDay" ? "Next day edition · " : ""}
-                  {config.dayparts[demoState.daypart].label}
-                  {demoState.returnHours > 0 ? ` · back after ${demoState.returnHours} hours` : " · first visit"}
-                </p>
               </div>
-              <div>
-                <p className="font-bold">Followed topics</p>
-                <p className="mt-1 text-muted-foreground">{profile.followedTopics.join(", ")}</p>
-              </div>
-              <div>
-                <p className="font-bold">Followed brands</p>
-                <p className="mt-1 text-muted-foreground">{profile.followedBrands.join(", ")}</p>
-              </div>
-              <div>
-                <p className="font-bold">Active brand filters</p>
-                <p className="mt-1 text-muted-foreground">
-                  {effectiveBrandFilters.length > 0 ? effectiveBrandFilters.join(", ") : "All brands"}
-                </p>
-              </div>
-              <div>
-                <p className="font-bold">Saved signals</p>
-                <p className="mt-1 text-muted-foreground">{profile.savedTags.slice(0, 6).join(", ")}</p>
-              </div>
-            </div>
-          </div>
+            </>
+          ) : null}
         </aside>
       </div>
 
@@ -10800,86 +11443,91 @@ function LifestyleRiverHomePage({
         onSave={toggleSaved}
       />
 
-      <Button
-        type="button"
-        variant="default"
-        size="icon"
-        onClick={() => setDemoModalOpen(true)}
-        className="fixed bottom-5 right-5 z-40 h-12 w-12 rounded-full shadow-lg"
-        aria-label="Open personalization demo controls"
-      >
-        <SlidersHorizontal className="h-5 w-5" aria-hidden />
-      </Button>
+      {showStakeholderTools ? (
+        <>
+          <Button
+            type="button"
+            variant="default"
+            size="icon"
+            onClick={() => setDemoModalOpen(true)}
+            className="fixed bottom-5 right-5 z-40 h-12 w-12 rounded-full shadow-lg"
+            aria-label="Open personalization demo controls"
+          >
+            <SlidersHorizontal className="h-5 w-5" aria-hidden />
+          </Button>
 
-      <LifestylePersonalizationDemoModal
-        open={demoModalOpen}
-        onClose={() => setDemoModalOpen(false)}
-        demoState={demoState}
-        profile={profile}
-        topStory={leadStory}
-        config={config}
-        activeFilter={activeFilter}
-        stories={visibleStories}
-        inventoryStories={activeStoryPool}
-        eligibleStories={filteredStories}
-        scopeLabel={effectiveBrandFilters.length > 0 ? effectiveBrandFilters.join(", ") : config.productName}
-        onDaypartChange={(daypart) =>
-          setDemoState((current) => ({
-            ...current,
-            daypart,
-            returnHours: demoDaypartReturnHours[daypart],
-            contentDay: "today",
-            previousLeadId: leadStory?.id ?? current.previousLeadId,
-          }))
-        }
-        onSimulateReturn={simulateReturn}
-        onApplyBehaviorPreset={applyBehaviorPreset}
-        onResetDemo={resetDemo}
-      />
+          <LifestylePersonalizationDemoModal
+            open={demoModalOpen}
+            onClose={() => setDemoModalOpen(false)}
+            demoState={demoState}
+            profile={profile}
+            topStory={leadStory}
+            config={config}
+            activeFilter={activeFilter}
+            stories={visibleStories}
+            inventoryStories={activeStoryPool}
+            eligibleStories={filteredStories}
+            scopeLabel={effectiveBrandFilters.length > 0 ? effectiveBrandFilters.join(", ") : config.productName}
+            onDaypartChange={(daypart) =>
+              setDemoState((current) => ({
+                ...current,
+                daypart,
+                returnHours: demoDaypartReturnHours[daypart],
+                contentDay: "today",
+                previousLeadId: leadStory?.id ?? current.previousLeadId,
+                isSimulated: true,
+              }))
+            }
+            onSimulateReturn={simulateReturn}
+            onApplyBehaviorPreset={applyBehaviorPreset}
+            onResetDemo={resetDemo}
+          />
 
-      <section
-        className="grid gap-4 border-t border-border pt-8 lg:grid-cols-[minmax(0,1fr)_320px]"
-        aria-labelledby="personalized-river-heading"
-      >
-        <div className="space-y-3">
-          <p className="text-xs font-bold uppercase tracking-[0.24em] text-[var(--hp-section-title)]">
-            Personalized Popular River
-          </p>
-          <h2 id="personalized-river-heading" className="headline text-4xl leading-tight sm:text-6xl">
-            Most popular {config.storyRiverLabel}, tuned by what you do next.
-          </h2>
-          <p className="max-w-3xl text-base leading-7 text-[var(--hp-text-ui)]">
-            A continuously ranked {config.productName} feed across {config.brandSummary}
-          </p>
-        </div>
-        <div className="rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-4 shadow-[var(--hp-shadow-card)]">
-          <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
-            Behavior Model
-          </p>
-          <dl className="mt-3 grid grid-cols-2 gap-3 text-sm">
-            <div>
-              <dt className="text-muted-foreground">Saved</dt>
-              <dd className="font-bold">{profile.savedIds.length}</dd>
+          <section
+            className="grid gap-4 border-t border-border pt-8 lg:grid-cols-[minmax(0,1fr)_320px]"
+            aria-labelledby="personalized-river-heading"
+          >
+            <div className="space-y-3">
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-[var(--hp-section-title)]">
+                Personalized Popular River
+              </p>
+              <h2 id="personalized-river-heading" className="headline text-4xl leading-tight sm:text-6xl">
+                Most popular {config.storyRiverLabel}, tuned by what you do next.
+              </h2>
+              <p className="max-w-3xl text-base leading-7 text-[var(--hp-text-ui)]">
+                A continuously ranked {config.productName} feed across {config.brandSummary}
+              </p>
             </div>
-            <div>
-              <dt className="text-muted-foreground">Hidden</dt>
-              <dd className="font-bold">{profile.hiddenIds.length}</dd>
+            <div className="rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-4 shadow-[var(--hp-shadow-card)]">
+              <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                Behavior Model
+              </p>
+              <dl className="mt-3 grid grid-cols-2 gap-3 text-sm">
+                <div>
+                  <dt className="text-muted-foreground">Saved</dt>
+                  <dd className="font-bold">{profile.savedIds.length}</dd>
+                </div>
+                <div>
+                  <dt className="text-muted-foreground">Hidden</dt>
+                  <dd className="font-bold">{profile.hiddenIds.length}</dd>
+                </div>
+                <div>
+                  <dt className="text-muted-foreground">Topics</dt>
+                  <dd className="font-bold">{profile.followedTopics.length}</dd>
+                </div>
+                <div>
+                  <dt className="text-muted-foreground">Brands</dt>
+                  <dd className="font-bold">{profile.followedBrands.length}</dd>
+                </div>
+              </dl>
+              <p className="mt-4 text-xs leading-5 text-muted-foreground">
+                Ranking uses popularity, followed topics, followed brands, saved tags, more-like-this
+                activity, recency, time of day, return-visit freshness, and diversity rules.
+              </p>
             </div>
-            <div>
-              <dt className="text-muted-foreground">Topics</dt>
-              <dd className="font-bold">{profile.followedTopics.length}</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground">Brands</dt>
-              <dd className="font-bold">{profile.followedBrands.length}</dd>
-            </div>
-          </dl>
-          <p className="mt-4 text-xs leading-5 text-muted-foreground">
-            Ranking uses popularity, followed topics, followed brands, saved tags, more-like-this
-            activity, recency, time of day, return-visit freshness, and diversity rules.
-          </p>
-        </div>
-      </section>
+          </section>
+        </>
+      ) : null}
     </div>
   );
 }
@@ -10991,6 +11639,11 @@ export function HomePageTemplate({
   const { account } = useReaderAccount();
   const router = useRouter();
   const pathname = usePathname();
+  const pageSearchParams = useSearchParams();
+  const pageSearchQuery = pageSearchParams?.toString();
+  const showStakeholderTools = pageSearchParams?.get("demo") === "1"
+    || process.env.NEXT_PUBLIC_HEARST_STAKEHOLDER_TOOLS === "true";
+  const continueReadingStoryIds = useContinueReadingStoryIds();
   const destinationConfigs = React.useMemo(
     () => createDestinationConfigs(staticDestinationData),
     [staticDestinationData]
@@ -10998,10 +11651,7 @@ export function HomePageTemplate({
   const [activeLifestyleFilter, setActiveLifestyleFilter] = React.useState(initialFilter ?? "For You");
   const [onboardingOpen, setOnboardingOpen] = React.useState(false);
   const [onboardingResult, setOnboardingResult] = React.useState<HearstOnboardingResult | null>(null);
-  const [authOpen, setAuthOpen] = React.useState(false);
-  const [authMode, setAuthMode] = React.useState<"create" | "signIn">("signIn");
   const [profileOpen, setProfileOpen] = React.useState(false);
-  const [pendingOnboardingResult, setPendingOnboardingResult] = React.useState<HearstOnboardingResult | null>(null);
   const [selectedBrand, setSelectedBrand] = React.useState<{ name: string; slug: string } | null>(() =>
     getBrandRouteInfo(destinationConfigs.all.sourceNotes, initialBrandSlug)
   );
@@ -11213,19 +11863,28 @@ export function HomePageTemplate({
     });
   }, [initialActiveBrandFilters, initialActiveBrandName]);
   const mobileContinueStories = React.useMemo(() => {
-    const candidates = [
-      ...destinationConfig.stories.filter((story) => getLifestyleCardKind(story) === "video"),
-      destinationConfig.stories[1],
-      destinationConfig.stories[0],
-      ...destinationConfig.stories,
-    ];
-    const seen = new Set<string>();
-    return candidates.filter((story): story is LifestyleRiverStory => {
-      if (!story || seen.has(story.id)) return false;
-      seen.add(story.id);
-      return true;
-    }).slice(0, 3);
-  }, [destinationConfig.stories]);
+    return continueReadingStoryIds
+      .map((storyId) => destinationConfig.stories.find((story) => story.id === storyId))
+      .filter((story): story is LifestyleRiverStory => Boolean(story))
+      .slice(0, 3);
+  }, [continueReadingStoryIds, destinationConfig.stories]);
+  React.useEffect(() => {
+    const story = mobileContinueStories[0];
+    if (
+      initialOpenStoryId
+      || !story
+      || !window.matchMedia("(max-width: 767px)").matches
+    ) return;
+    trackProductEventOnce(
+      `resume-impression:mobile:${story.id}`,
+      "resume_impression",
+      {
+        destination: destinationMode,
+        story_id: story.id,
+        entry_point: "mobile_strip",
+      }
+    );
+  }, [destinationMode, initialOpenStoryId, mobileContinueStories]);
   const mobileBrands = React.useMemo(() => {
     const counts = inventoryAwareDestinationConfig.stories.reduce<Record<string, number>>((acc, story) => {
       acc[story.brand] = (acc[story.brand] ?? 0) + 1;
@@ -11270,22 +11929,29 @@ export function HomePageTemplate({
     anchorPageToTop();
   }, [anchorPageToTop, setActiveBrandFilters]);
   const handleMobileStoryOpen = React.useCallback((storyId: string) => {
-    const returnHref = readerReturnHref ?? pathname ?? getHearstDestinationRoute(destinationMode);
+    const currentPageHref = pathname
+      ? `${pathname}${pageSearchQuery ? `?${pageSearchQuery}` : ""}`
+      : null;
+    const returnHref = readerReturnHref ?? currentPageHref ?? getHearstDestinationRoute(destinationMode);
+    recordStoryOpened(storyId);
     router.push(appendReaderReturnHref(storyId, returnHref), { scroll: false });
-  }, [destinationMode, pathname, readerReturnHref, router]);
+  }, [destinationMode, pageSearchQuery, pathname, readerReturnHref, router]);
   const handleLifestyleFilterChange = React.useCallback((filter: string) => {
     setActiveLifestyleFilter(filter);
 
     if (!selectedBrand) {
       const nextPath = getHearstDestinationCategoryRoute(destinationMode, filter);
-      if (nextPath && window.location.pathname !== nextPath) {
-        window.history.pushState(window.history.state, "", nextPath);
+      const nextRoute = nextPath
+        ? appendStakeholderDemoMode(nextPath, showStakeholderTools)
+        : undefined;
+      if (nextRoute && `${window.location.pathname}${window.location.search}` !== nextRoute) {
+        window.history.pushState(window.history.state, "", nextRoute);
         document.title = getDestinationCategoryDocumentTitle(destinationMode, filter);
       }
     }
 
     anchorDestinationContent();
-  }, [anchorDestinationContent, destinationMode, selectedBrand]);
+  }, [anchorDestinationContent, destinationMode, selectedBrand, showStakeholderTools]);
   const handleSelectedBrandChange = React.useCallback((nextBrand: { name: string; slug: string } | null) => {
     if ((selectedBrand?.slug ?? null) === (nextBrand?.slug ?? null)) return;
 
@@ -11294,7 +11960,10 @@ export function HomePageTemplate({
 
     const currentPath = window.location.pathname;
     if (nextBrand) {
-      const nextPath = getHearstBrandRoute(nextBrand.slug);
+      const nextPath = appendStakeholderDemoMode(
+        getHearstBrandRoute(nextBrand.slug),
+        showStakeholderTools
+      );
       if (currentPath !== nextPath) router.push(nextPath, { scroll: false });
     } else if (
       currentPath.startsWith("/brands/")
@@ -11303,9 +11972,12 @@ export function HomePageTemplate({
       || currentPath.startsWith("/flux/")
       || currentPath.startsWith("/ew/")
     ) {
-      router.push(getHearstDestinationRoute("all"), { scroll: false });
+      router.push(
+        appendStakeholderDemoMode(getHearstDestinationRoute("all"), showStakeholderTools),
+        { scroll: false }
+      );
     }
-  }, [router, selectedBrand?.slug]);
+  }, [router, selectedBrand?.slug, showStakeholderTools]);
   const useVideosDarkHeader = pathname.replace(/\/$/, "") === "/hearst-plus/videos"
     && !selectedBrand
     && activeLifestyleFilter === "Videos";
@@ -11344,6 +12016,50 @@ export function HomePageTemplate({
         onMobileBrandClear={handleMobileBrandClear}
       />
 
+      {isDestinationRiver && mobileContinueStories[0] ? (
+        <PageContainer className="py-3 md:hidden">
+          <button
+            type="button"
+            onClick={() => {
+              trackProductEvent("story_resume", {
+                destination: destinationMode,
+                story_id: mobileContinueStories[0].id,
+                entry_point: "mobile_strip",
+              });
+              handleMobileStoryOpen(mobileContinueStories[0].id);
+            }}
+            className={cn(
+              "group flex min-h-16 w-full items-center gap-3 rounded-[8px] border px-2.5 py-2 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+              useVideosDarkHeader
+                ? "border-white/15 bg-[#0d1014] text-white"
+                : "border-border bg-[var(--hp-surface)] text-foreground"
+            )}
+            aria-label={`Continue reading: ${mobileContinueStories[0].title}`}
+          >
+            <span
+              className="h-12 w-16 shrink-0 rounded-[6px] bg-muted bg-cover bg-center"
+              style={{ backgroundImage: `url("${mobileContinueStories[0].image}")` }}
+              aria-hidden="true"
+            />
+            <span className="min-w-0 flex-1">
+              <span className="block text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
+                Continue Reading
+              </span>
+              <span className="mt-1 line-clamp-1 text-sm font-bold leading-snug group-hover:text-primary">
+                {mobileContinueStories[0].title}
+              </span>
+            </span>
+            <ChevronRight
+              className={cn(
+                "h-4 w-4 shrink-0",
+                useVideosDarkHeader ? "text-white/60" : "text-muted-foreground"
+              )}
+              aria-hidden
+            />
+          </button>
+        </PageContainer>
+      ) : null}
+
       {/* Page Body — constrained by the shared PageContainer */}
       <PageContainer className={cn("relative", isDestinationRiver ? "pt-0" : "pt-8 lg:pt-12")}>
         {showGridOverlay && <GridOverlay />}
@@ -11360,7 +12076,9 @@ export function HomePageTemplate({
               initialBrandSlug={initialBrandSlug}
               initialOpenStoryId={initialOpenStoryId}
               readerReturnHref={readerReturnHref}
+              showStakeholderTools={showStakeholderTools}
               onboardingResult={onboardingResult}
+              onFilterChange={handleLifestyleFilterChange}
               onRiverReset={anchorDestinationContent}
               onBrandFilterChange={anchorPageToTop}
               onSelectedBrandChange={handleSelectedBrandChange}
@@ -11400,38 +12118,11 @@ export function HomePageTemplate({
             setOnboardingResult(result);
             anchorDestinationContent();
           }}
-          onRequestAuthentication={(mode, result) => {
-            setPendingOnboardingResult(result);
-            setOnboardingOpen(false);
-            setAuthMode(mode);
-            setAuthOpen(true);
-          }}
         />
       ) : null}
 
       {isDestinationRiver ? (
         <>
-          {authOpen ? <ReaderAuthDialog
-            key={authMode}
-            open
-            initialMode={authMode}
-            defaultPreferences={pendingOnboardingResult ? {
-              ...destinationConfig.initialProfile,
-              followedTopics: pendingOnboardingResult.interests,
-              followedBrands: pendingOnboardingResult.brands,
-              savedTags: pendingOnboardingResult.tags,
-              boostedTags: pendingOnboardingResult.tags,
-              personalizationMode: "onboarding",
-            } : destinationConfig.initialProfile}
-            onClose={() => { setAuthOpen(false); setPendingOnboardingResult(null); }}
-            onAuthenticated={() => {
-              if (pendingOnboardingResult) {
-                setOnboardingResult(pendingOnboardingResult);
-                setActiveLifestyleFilter("For You");
-                anchorDestinationContent();
-              }
-            }}
-          /> : null}
           {account && profileOpen ? (
             <ReaderProfileDialog
               key={account.id}

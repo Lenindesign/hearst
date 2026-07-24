@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "test:unit": "node --import tsx --test src/lib/*.test.ts",
+    "test:a11y:carousel": "node scripts/test-featured-carousel-a11y.mjs",
     "feed:refresh": "node scripts/import-lifestyle-rss.mjs && node scripts/import-autos-rss.mjs && node scripts/import-flux-rss.mjs && node scripts/import-ew-rss.mjs && node scripts/enrich-river-bylines.mjs && npm run feed:validate && npm run storybook:fixtures",
     "feed:bylines": "node scripts/enrich-river-bylines.mjs",
     "feed:validate": "node --import tsx scripts/validate-story-feed.ts",

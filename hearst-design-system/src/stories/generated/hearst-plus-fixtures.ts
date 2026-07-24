@@ -42,7 +42,7 @@ export const storybookFixtureData = {
           "star",
           "josh"
         ],
-        "age": 4
+        "age": 8
       },
       {
         "id": "cosmopolitan-style-beauty-beauty-a73247301-classic-manicure-ideas",
@@ -67,7 +67,7 @@ export const storybookFixtureData = {
           "from",
           "soap"
         ],
-        "age": 5
+        "age": 9
       },
       {
         "id": "cosmopolitan-style-beauty-beauty-a73231148-la-roche-posay-uvair-sunscreen-review",
@@ -92,7 +92,7 @@ export const storybookFixtureData = {
           "tried",
           "every"
         ],
-        "age": 5
+        "age": 9
       },
       {
         "id": "country-living-shopping-editor-favorite-products-a73219095-amazon-pergola-swings",
@@ -117,7 +117,7 @@ export const storybookFixtureData = {
           "pergola",
           "swing"
         ],
-        "age": 7
+        "age": 11
       },
       {
         "id": "country-living-food-drinks-a71900260-pork-chops-with-salsa-verde",
@@ -141,7 +141,7 @@ export const storybookFixtureData = {
           "pork",
           "chops"
         ],
-        "age": 8
+        "age": 12
       },
       {
         "id": "country-living-gardening-garden-ideas-a72015927-coleus-growing-guide",
@@ -166,7 +166,7 @@ export const storybookFixtureData = {
           "brilliant",
           "color"
         ],
-        "age": 9
+        "age": 13
       },
       {
         "id": "delish-food-news-a73249470-baby-fruit-pouches-recall",
@@ -191,7 +191,7 @@ export const storybookFixtureData = {
           "popular",
           "baby"
         ],
-        "age": 6
+        "age": 10
       },
       {
         "id": "delish-food-news-a73249158-egg-recall-salmonella-risk",
@@ -216,7 +216,7 @@ export const storybookFixtureData = {
           "more",
           "than"
         ],
-        "age": 6
+        "age": 10
       },
       {
         "id": "delish-kitchen-tools-cookware-reviews-a73196247-challenger-bread-pan-review",
@@ -241,7 +241,7 @@ export const storybookFixtureData = {
           "tried",
           "this"
         ],
-        "age": 7
+        "age": 11
       },
       {
         "id": "good-housekeeping-home-decorating-ideas-g73251197-kitchen-flooring-idea",
@@ -266,7 +266,7 @@ export const storybookFixtureData = {
           "kitchen",
           "flooring"
         ],
-        "age": 3
+        "age": 7
       },
       {
         "id": "good-housekeeping-home-decorating-ideas-g73248444-coastal-bedroom-idea",
@@ -291,7 +291,7 @@ export const storybookFixtureData = {
           "ideas",
           "that"
         ],
-        "age": 4
+        "age": 8
       },
       {
         "id": "good-housekeeping-childrens-products-toy-reviews-a71934600-best-shark-toys",
@@ -316,7 +316,7 @@ export const storybookFixtureData = {
           "shark",
           "toys"
         ],
-        "age": 5
+        "age": 9
       },
       {
         "id": "house-beautiful-shopping-furniture-a73193707-designer-approved-ikea-products",
@@ -341,7 +341,7 @@ export const storybookFixtureData = {
           "products",
           "keep"
         ],
-        "age": 6
+        "age": 10
       },
       {
         "id": "house-beautiful-design-inspiration-a73194908-glass-block-design-trend",
@@ -366,7 +366,7 @@ export const storybookFixtureData = {
           "divisive",
           "design"
         ],
-        "age": 8
+        "age": 12
       },
       {
         "id": "house-beautiful-lifestyle-entertainment-a73232128-gilmore-girls-house-sale",
@@ -391,7 +391,7 @@ export const storybookFixtureData = {
           "girls",
           "house"
         ],
-        "age": 8
+        "age": 12
       },
       {
         "id": "pioneer-woman-ree-drummond-life-a73249556-alex-drummond-husband-salmon-bowls-recipe",
@@ -416,7 +416,7 @@ export const storybookFixtureData = {
           "alex",
           "husband"
         ],
-        "age": 5
+        "age": 9
       },
       {
         "id": "pioneer-woman-food-cooking-meals-menus-a73202814-vacation-house-dinner-ideas",
@@ -441,7 +441,7 @@ export const storybookFixtureData = {
           "best",
           "vacation"
         ],
-        "age": 5
+        "age": 9
       },
       {
         "id": "pioneer-woman-food-cooking-meals-menus-a73190581-easy-marshmallow-desserts",
@@ -466,7 +466,7 @@ export const storybookFixtureData = {
           "easy",
           "desserts"
         ],
-        "age": 6
+        "age": 9
       },
       {
         "id": "prevention-health-health-conditions-a73250620-doctors-explain-arthritis-in-hands",
@@ -491,7 +491,7 @@ export const storybookFixtureData = {
           "everything",
           "know"
         ],
-        "age": 5
+        "age": 9
       },
       {
         "id": "prevention-beauty-skin-care-a35169934-best-deodorant-for-sensitive-skin",
@@ -516,7 +516,7 @@ export const storybookFixtureData = {
           "sensitive",
           "skin"
         ],
-        "age": 7
+        "age": 11
       },
       {
         "id": "prevention-food-nutrition-a73246591-top-food-that-spikes-your-blood-sugar",
@@ -541,7 +541,7 @@ export const storybookFixtureData = {
           "dietitians",
           "reveal"
         ],
-        "age": 12
+        "age": 16
       },
       {
         "id": "redbook-life-charity-g4632-funny-animal-pictures",
@@ -566,7 +566,7 @@ export const storybookFixtureData = {
           "animal",
           "photos"
         ],
-        "age": 42970
+        "age": 42974
       },
       {
         "id": "redbook-life-charity-g60982152-odd-day-off-activities",
@@ -590,7 +590,7 @@ export const storybookFixtureData = {
           "activities",
           "refreshing"
         ],
-        "age": 17725
+        "age": 17729
       },
       {
         "id": "redbook-body-health-fitness-g61444461-best-manuka-honey-tips",
@@ -615,7 +615,7 @@ export const storybookFixtureData = {
           "know",
           "about"
         ],
-        "age": 17725
+        "age": 17729
       },
       {
         "id": "seventeen-celebrity-a71506957-seventeen-fandoms-2026-cover-interviews",
@@ -640,7 +640,7 @@ export const storybookFixtureData = {
           "have",
           "entered"
         ],
-        "age": 903
+        "age": 907
       },
       {
         "id": "seventeen-fashion-trends-a42829074-swimsuit-trends-2023",
@@ -665,7 +665,7 @@ export const storybookFixtureData = {
           "trends",
           "want"
         ],
-        "age": 26933
+        "age": 26937
       },
       {
         "id": "seventeen-fashion-celeb-fashion-a42778095-kylie-jenner-tiny-bedazzled-neon-bikini",
@@ -690,7 +690,7 @@ export const storybookFixtureData = {
           "bedazzled",
           "neon"
         ],
-        "age": 30321
+        "age": 30325
       },
       {
         "id": "womans-day-home-a72119919-shared-teen-bedroom-makeover-ideas-from-pottery-barn-teen",
@@ -715,7 +715,7 @@ export const storybookFixtureData = {
           "bedroom",
           "makeover"
         ],
-        "age": 195
+        "age": 199
       },
       {
         "id": "womans-day-life-a71887734-roller-rabbits-new-pajama-collection-is-giving-peak-summer-energy",
@@ -740,7 +740,7 @@ export const storybookFixtureData = {
           "pajama",
           "collection"
         ],
-        "age": 342
+        "age": 346
       },
       {
         "id": "womans-day-life-a71775081-i-tried-sharks-new-powerdetect-transformer-vacuum-before-it-launchesheres-why-im-genuinely-impressed",
@@ -765,7 +765,7 @@ export const storybookFixtureData = {
           "powerdetect",
           "transformer"
         ],
-        "age": 566
+        "age": 570
       }
     ],
     "sourceNotes": [
@@ -865,7 +865,7 @@ export const storybookFixtureData = {
           "2027",
           "mercedes-maybach"
         ],
-        "age": 60
+        "age": 64
       },
       {
         "id": "autoweek-news-a73252160-fords-30000-ev-truck-integrated-apple-maps",
@@ -892,7 +892,7 @@ export const storybookFixtureData = {
           "vehicle",
           "with"
         ],
-        "age": 0
+        "age": 4
       },
       {
         "id": "autoweek-news-a73250059-ev-owners-love-cars-says-jd-powers",
@@ -919,7 +919,7 @@ export const storybookFixtureData = {
           "power",
           "latest"
         ],
-        "age": 0
+        "age": 4
       },
       {
         "id": "bring-a-trailer-listing-1989-porsche-911-speedster-103",
@@ -946,7 +946,7 @@ export const storybookFixtureData = {
           "metallic",
           "1989"
         ],
-        "age": 3
+        "age": 7
       },
       {
         "id": "bring-a-trailer-listing-2017-ferrari-488-spider-37",
@@ -973,7 +973,7 @@ export const storybookFixtureData = {
           "ferrari",
           "spider"
         ],
-        "age": 3
+        "age": 7
       },
       {
         "id": "bring-a-trailer-listing-1961-porsche-356b-roadster-20",
@@ -1000,7 +1000,7 @@ export const storybookFixtureData = {
           "porsche",
           "356b"
         ],
-        "age": 3
+        "age": 7
       },
       {
         "id": "car-and-driver-photos-a73248775-2027-toyota-sequoia-trailhunter-revealed-interior-gallery",
@@ -1026,7 +1026,7 @@ export const storybookFixtureData = {
           "2027",
           "toyota"
         ],
-        "age": 8
+        "age": 12
       },
       {
         "id": "car-and-driver-news-a73249953-2027-toyota-crown-update-details",
@@ -1053,7 +1053,7 @@ export const storybookFixtureData = {
           "crown",
           "2027"
         ],
-        "age": 6
+        "age": 10
       },
       {
         "id": "car-and-driver-photos-a73248100-2027-toyota-sequoia-trailhunter-revealed-exterior-gallery",
@@ -1079,7 +1079,7 @@ export const storybookFixtureData = {
           "2027",
           "toyota"
         ],
-        "age": 8
+        "age": 12
       },
       {
         "id": "hot-rod-events-rhinebeck-antique-car-show-swap-meet-2026-gallery",
@@ -1106,7 +1106,7 @@ export const storybookFixtureData = {
           "biggest",
           "spring"
         ],
-        "age": 201
+        "age": 205
       },
       {
         "id": "hot-rod-how-to-repair-rusted-oe-1968-camaro-fender-aftermarket-patch-panel",
@@ -1133,7 +1133,7 @@ export const storybookFixtureData = {
           "aftermarket",
           "patch"
         ],
-        "age": 7
+        "age": 11
       },
       {
         "id": "hot-rod-features-1927-model-t-1934-ford-traditional-hot-rod-drivers",
@@ -1160,7 +1160,7 @@ export const storybookFixtureData = {
           "traditional",
           "rods"
         ],
-        "age": 8
+        "age": 12
       },
       {
         "id": "motortrend-news-honda-confirms-no-more-manuals-civic-si-integra-a-spec",
@@ -1186,7 +1186,7 @@ export const storybookFixtureData = {
           "pausing",
           "manuals"
         ],
-        "age": 8
+        "age": 12
       },
       {
         "id": "motortrend-news-honda-ridgeline-next-generation-truck-official",
@@ -1212,7 +1212,7 @@ export const storybookFixtureData = {
           "officially",
           "coming"
         ],
-        "age": 11
+        "age": 15
       },
       {
         "id": "motortrend-features-2027-tesla-suv-truck-lineup-updates-model-y-cybertruck",
@@ -1238,7 +1238,7 @@ export const storybookFixtureData = {
           "lineup",
           "every"
         ],
-        "age": 13
+        "age": 17
       },
       {
         "id": "road-and-track-photos-g71918591-see-more-photos-of-the-2026-bmw-m2-cs",
@@ -1264,7 +1264,7 @@ export const storybookFixtureData = {
           "from",
           "every"
         ],
-        "age": 11
+        "age": 15
       },
       {
         "id": "road-and-track-gear-g65863141-best-car-wheel-cleaners-tested",
@@ -1291,7 +1291,7 @@ export const storybookFixtureData = {
           "cleaners",
           "tested"
         ],
-        "age": 0
+        "age": 4
       },
       {
         "id": "road-and-track-news-a73250217-nascars-best-team-may-suddenly-have-an-open-seat",
@@ -1318,7 +1318,7 @@ export const storybookFixtureData = {
           "nascar",
           "best"
         ],
-        "age": 6
+        "age": 10
       }
     ],
     "sourceNotes": [
@@ -1381,8 +1381,8 @@ export const storybookFixtureData = {
         "readTime": "4 min read",
         "publishedAt": "2026-07-23T22:00:00.000Z",
         "sourceUrl": "https://www.elle.com/culture/celebrities/a73249848/meghan-markle-archie-lilibet-european-vacation-photos/",
-        "popularity": 100,
-        "signal": "Most Popular",
+        "popularity": 94,
+        "signal": "Editor Pick",
         "tags": [
           "culture",
           "elle",
@@ -1392,7 +1392,31 @@ export const storybookFixtureData = {
           "shared",
           "rare"
         ],
-        "age": 5
+        "age": 9
+      },
+      {
+        "id": "elle-horoscopes-daily-a108-pisces-daily-horoscope",
+        "brand": "Elle",
+        "brandSlug": "elle",
+        "topic": "Horoscopes",
+        "title": "Pisces Daily Horoscope",
+        "summary": "(February 19 - March 20)",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/pisces-final-65c5440b949f5.jpg",
+        "imageCredit": "Spiros Halaris",
+        "byline": "The AstroTwins",
+        "readTime": "3 min read",
+        "publishedAt": "2026-07-24T07:00:08.000Z",
+        "sourceUrl": "https://www.elle.com/horoscopes/daily/a108/pisces-daily-horoscope/",
+        "popularity": 100,
+        "signal": "Most Popular",
+        "tags": [
+          "horoscopes",
+          "elle",
+          "pisces",
+          "daily",
+          "horoscope"
+        ],
+        "age": 0
       },
       {
         "id": "elle-culture-celebrities-a73247816-selena-gomez-benny-blanco-italy-birthday-tribute-video-response",
@@ -1407,8 +1431,8 @@ export const storybookFixtureData = {
         "readTime": "4 min read",
         "publishedAt": "2026-07-23T21:15:53.000Z",
         "sourceUrl": "https://www.elle.com/culture/celebrities/a73247816/selena-gomez-benny-blanco-italy-birthday-tribute-video-response/",
-        "popularity": 94,
-        "signal": "Editor Pick",
+        "popularity": 88,
+        "signal": "Most Popular",
         "tags": [
           "culture",
           "elle",
@@ -1418,33 +1442,7 @@ export const storybookFixtureData = {
           "3-word",
           "response"
         ],
-        "age": 6
-      },
-      {
-        "id": "elle-culture-celebrities-a73249245-kendall-jenner-in-love-jacob-elordi-feeling-details",
-        "brand": "Elle",
-        "brandSlug": "elle",
-        "topic": "Culture",
-        "title": "Kendall Jenner Is Reportedly ‘In Love’ With Jacob Elordi",
-        "summary": "Elle editors recommend this culture story.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/6334d9e3-0dec-4b0a-ae1f-6337018976a2.jpg",
-        "imageCredit": "Vittorio Zunino Celotto",
-        "byline": "Alyssa Bailey",
-        "readTime": "3 min read",
-        "publishedAt": "2026-07-23T20:52:04.000Z",
-        "sourceUrl": "https://www.elle.com/culture/celebrities/a73249245/kendall-jenner-in-love-jacob-elordi-feeling-details/",
-        "popularity": 88,
-        "signal": "Most Popular",
-        "tags": [
-          "culture",
-          "elle",
-          "kendall",
-          "jenner",
-          "reportedly",
-          "love",
-          "with"
-        ],
-        "age": 6
+        "age": 10
       },
       {
         "id": "elle-decor-life-culture-a71897515-buckingham-palace-picture-gallery-rehang",
@@ -1471,7 +1469,7 @@ export const storybookFixtureData = {
           "biggest",
           "picture"
         ],
-        "age": 273
+        "age": 277
       },
       {
         "id": "elle-decor-life-culture-a73246521-frank-gehry-icehenge-desk-auction-record",
@@ -1498,7 +1496,7 @@ export const storybookFixtureData = {
           "desk",
           "weighs"
         ],
-        "age": 10
+        "age": 13
       },
       {
         "id": "elle-decor-celebrity-style-celebrity-homes-a73246574-diane-keaton-pinterest-dream-home-sold",
@@ -1525,7 +1523,7 @@ export const storybookFixtureData = {
           "house",
           "that"
         ],
-        "age": 11
+        "age": 15
       },
       {
         "id": "esquire-news-politics-politics-a73250480-wildfires-america-trump-administration-climate-change",
@@ -1551,7 +1549,7 @@ export const storybookFixtureData = {
           "doubt",
           "president"
         ],
-        "age": 5
+        "age": 9
       },
       {
         "id": "esquire-style-mens-accessories-g73249757-best-new-modern-classic-watches-2026",
@@ -1577,7 +1575,7 @@ export const storybookFixtureData = {
           "stand",
           "test"
         ],
-        "age": 6
+        "age": 10
       },
       {
         "id": "esquire-style-grooming-g73246043-best-spicy-colognes-men",
@@ -1602,7 +1600,7 @@ export const storybookFixtureData = {
           "colognes",
           "right"
         ],
-        "age": 7
+        "age": 11
       },
       {
         "id": "harpers-bazaar-celebrity-latest-a73247606-katie-holmes-boyfriend-jason-bard-yarmosky-couple-style-nyc-shopping-date-photos",
@@ -1629,7 +1627,7 @@ export const storybookFixtureData = {
           "beau",
           "jason"
         ],
-        "age": 10
+        "age": 14
       },
       {
         "id": "harpers-bazaar-culture-art-books-music-a73248700-tori-amos-in-times-dragons-interview",
@@ -1656,7 +1654,7 @@ export const storybookFixtureData = {
           "trump",
           "menopause"
         ],
-        "age": 6
+        "age": 10
       },
       {
         "id": "harpers-bazaar-fashion-a73249906-matieres-fecales-red-carpet-trend-zendaya",
@@ -1683,7 +1681,7 @@ export const storybookFixtureData = {
           "said",
           "polite"
         ],
-        "age": 6
+        "age": 10
       },
       {
         "id": "town-and-country-society-tradition-a73249229-meghan-markle-family-vacation-photos-july-2026",
@@ -1710,7 +1708,7 @@ export const storybookFixtureData = {
           "shares",
           "rare"
         ],
-        "age": 7
+        "age": 11
       },
       {
         "id": "town-and-country-leisure-travel-guide-a27505783-visit-princess-diana-childhood-home-althorp",
@@ -1737,7 +1735,7 @@ export const storybookFixtureData = {
           "diana",
           "childhood"
         ],
-        "age": 6
+        "age": 9
       },
       {
         "id": "town-and-country-society-tradition-a73250233-meghan-markle-prince-harry-kids-althorp-princess-diana",
@@ -1764,7 +1762,7 @@ export const storybookFixtureData = {
           "just",
           "subtly"
         ],
-        "age": 6
+        "age": 10
       },
       {
         "id": "veranda-luxury-lifestyle-a71126475-rent-broadway-set",
@@ -1790,7 +1788,7 @@ export const storybookFixtureData = {
           "village",
           "run-down"
         ],
-        "age": 7
+        "age": 11
       },
       {
         "id": "veranda-shopping-furniture-g65078835-best-outdoor-patio-umbrellas",
@@ -1816,7 +1814,7 @@ export const storybookFixtureData = {
           "recommend",
           "more"
         ],
-        "age": 29
+        "age": 33
       },
       {
         "id": "veranda-shopping-home-accessories-g60552714-best-outdoor-rug",
@@ -1842,7 +1840,7 @@ export const storybookFixtureData = {
           "will",
           "instantly"
         ],
-        "age": 29
+        "age": 33
       }
     ],
     "sourceNotes": [
@@ -1917,7 +1915,7 @@ export const storybookFixtureData = {
           "towable",
           "cabin"
         ],
-        "age": 55
+        "age": 59
       },
       {
         "id": "best-products-parenting-g32631135-hiking-baby-carriers",
@@ -1944,7 +1942,7 @@ export const storybookFixtureData = {
           "baby",
           "carriers"
         ],
-        "age": 120
+        "age": 124
       },
       {
         "id": "best-products-lifestyle-g39503267-best-travel-toys",
@@ -1970,7 +1968,7 @@ export const storybookFixtureData = {
           "toys",
           "keep"
         ],
-        "age": 127
+        "age": 131
       },
       {
         "id": "bicycling-health-nutrition-a73249604-the-biggest-mistake-youre-making-with-wide-tires-tbsab-ep-112",
@@ -1996,7 +1994,7 @@ export const storybookFixtureData = {
           "with",
           "wide"
         ],
-        "age": 6
+        "age": 10
       },
       {
         "id": "bicycling-tour-de-france-a71773200-tour-de-france-2026-stage-18-results",
@@ -2022,7 +2020,7 @@ export const storybookFixtureData = {
           "tour",
           "france"
         ],
-        "age": 8
+        "age": 12
       },
       {
         "id": "bicycling-training-a73247831-best-way-to-rest-tired-legs",
@@ -2048,7 +2046,7 @@ export const storybookFixtureData = {
           "after",
           "your"
         ],
-        "age": 10
+        "age": 14
       },
       {
         "id": "mens-health-entertainment-a73247146-best-historical-epic-movies-like-the-odyssey",
@@ -2075,7 +2073,7 @@ export const storybookFixtureData = {
           "these",
           "historical"
         ],
-        "age": 6
+        "age": 10
       },
       {
         "id": "mens-health-fitness-a65088573-knee-friendly-leg-exercises",
@@ -2101,7 +2099,7 @@ export const storybookFixtureData = {
           "knee-friendly",
           "workouts"
         ],
-        "age": 10
+        "age": 14
       },
       {
         "id": "mens-health-technology-gear-a73231879-ryan-fox-adidas-golf-shoes-open-championship-2026",
@@ -2128,7 +2126,7 @@ export const storybookFixtureData = {
           "major",
           "winner"
         ],
-        "age": 11
+        "age": 15
       },
       {
         "id": "oprah-daily-entertainment-a73191745-selena-gomez-benny-blanco-taylor-swift-wedding-photos",
@@ -2155,7 +2153,7 @@ export const storybookFixtureData = {
           "shares",
           "personal"
         ],
-        "age": 84
+        "age": 88
       },
       {
         "id": "oprah-daily-entertainment-a73249303-jason-kelce-talks-impact-of-travis-taylor-swift-relationship-fame",
@@ -2182,7 +2180,7 @@ export const storybookFixtureData = {
           "gets",
           "candid"
         ],
-        "age": 7
+        "age": 11
       },
       {
         "id": "oprah-daily-life-health-a73248866-peptide-injections-longevity-safety",
@@ -2209,7 +2207,7 @@ export const storybookFixtureData = {
           "about",
           "peptide"
         ],
-        "age": 8
+        "age": 12
       },
       {
         "id": "popular-mechanics-home-a73246171-eufy-smart-lock-c30-review",
@@ -2236,7 +2234,7 @@ export const storybookFixtureData = {
           "lock",
           "review"
         ],
-        "age": 6
+        "age": 10
       },
       {
         "id": "popular-mechanics-home-a73228964-bosch-12v-max-two-speed-pocket-drill-driver-review",
@@ -2263,7 +2261,7 @@ export const storybookFixtureData = {
           "pocket",
           "drill"
         ],
-        "age": 8
+        "age": 11
       },
       {
         "id": "popular-mechanics-technology-gear-g37245409-best-record-players",
@@ -2290,7 +2288,7 @@ export const storybookFixtureData = {
           "players",
           "vinyl"
         ],
-        "age": 8
+        "age": 12
       },
       {
         "id": "runners-world-about-a73249212-track-field-broadcasting-guidelines-critics-misconceptions",
@@ -2317,7 +2315,7 @@ export const storybookFixtureData = {
           "race",
           "briefs"
         ],
-        "age": 5
+        "age": 9
       },
       {
         "id": "runners-world-news-a73248832-marathon-training-busy-schedule",
@@ -2344,7 +2342,7 @@ export const storybookFixtureData = {
           "would",
           "hurt"
         ],
-        "age": 6
+        "age": 10
       },
       {
         "id": "runners-world-news-a73221060-josh-kerr-watch-amazfit",
@@ -2371,7 +2369,7 @@ export const storybookFixtureData = {
           "wore",
           "custom"
         ],
-        "age": 7
+        "age": 11
       },
       {
         "id": "womens-health-beauty-a73246754-irestore-elite-red-light-therapy-sale-july-2026",
@@ -2398,7 +2396,7 @@ export const storybookFixtureData = {
           "swears",
           "light"
         ],
-        "age": 7
+        "age": 11
       },
       {
         "id": "womens-health-life-a73247478-alex-morgan-post-retirement-the-huddle",
@@ -2425,7 +2423,7 @@ export const storybookFixtureData = {
           "alex",
           "morgan"
         ],
-        "age": 8
+        "age": 12
       },
       {
         "id": "womens-health-food-g45629459-foods-for-hair-growth",
@@ -2452,7 +2450,7 @@ export const storybookFixtureData = {
           "healthy",
           "hair"
         ],
-        "age": 8
+        "age": 12
       }
     ],
     "sourceNotes": [
@@ -3090,6 +3088,11 @@ export const storybookGalleryImagesByBrand: Record<string, StorybookGalleryImage
       "credit": "Instagram"
     },
     {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/pisces-final-65c5440b949f5.jpg",
+      "alt": "Pisces Daily Horoscope",
+      "credit": "Spiros Halaris"
+    },
+    {
       "src": "https://hips.hearstapps.com/hmg-prod/images/7a02babe-3b42-4146-bc50-3ca9405409d3.jpg",
       "alt": "Selena Gomez Left a 3-Word Response on Benny Blanco’s Italy Birthday Tribute",
       "credit": "Instagram"
@@ -3108,11 +3111,6 @@ export const storybookGalleryImagesByBrand: Record<string, StorybookGalleryImage
       "src": "https://hips.hearstapps.com/hmg-prod/images/b2e7eec3-b5ec-48a5-bc90-52af85849d61.jpeg",
       "alt": "The Morning Show Season 5: Everything We Know So Far",
       "credit": "Erin Simkin"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/c314210e-69d7-413d-a069-37afedac5f72.jpg",
-      "alt": "Safe Word: The Best Jewelry Launches of July 2026",
-      "credit": "Pandora"
     }
   ],
   "elle-decor": [
