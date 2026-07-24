@@ -6564,6 +6564,9 @@ function AmbientArticleReader({
   onClose,
   onNavigateStory,
   onOpenImage,
+  showInterstitialAd,
+  interstitialAdvertiser,
+  onDismissInterstitialAd,
 }: {
   story: LifestyleRiverStory;
   article: LiveArticleData;
@@ -6573,6 +6576,9 @@ function AmbientArticleReader({
   onClose: () => void;
   onNavigateStory: (storyId: string) => void;
   onOpenImage: (image: FullscreenReaderImage) => void;
+  showInterstitialAd: boolean;
+  interstitialAdvertiser: AmbientInterstitialAdvertiser;
+  onDismissInterstitialAd: () => void;
 }) {
   const destinationConfigs = useDestinationConfigs();
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
@@ -6627,7 +6633,8 @@ function AmbientArticleReader({
     if (event.key === "Escape") {
       event.preventDefault();
       event.stopPropagation();
-      onClose();
+      if (showInterstitialAd) onDismissInterstitialAd();
+      else onClose();
       return;
     }
     if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
@@ -6909,8 +6916,221 @@ function AmbientArticleReader({
           </section>
         </main>
       </div>
+      {showInterstitialAd ? (
+        <AmbientReaderInterstitialAd advertiser={interstitialAdvertiser} onDismiss={onDismissInterstitialAd} />
+      ) : null}
     </div>,
     document.body
+  );
+}
+
+const vanCleefSnowflakeUrl = "https://www.vancleefarpels.com/us/en/collections/high-jewelry/classic-high-jewelry/snowflake.html?category=all";
+const vanCleefLogoUrl = "https://upload.wikimedia.org/wikipedia/commons/0/06/Van_Cleef_Arpels_logo.svg";
+const vanCleefCampaignImageUrl = "https://www.vancleefarpels.com/content/dam/vancleefarpels/collections/high-jewelry/classic-high-jewelry/univers-corpo-2024/van-cleef-arpels-classic-high-jewelry-1-snowflake-cover-1328x747.jpg";
+
+type AmbientInterstitialAdvertiser = "van-cleef" | "blancpain" | "lexus" | "marriott" | "porsche" | "princess";
+
+function AmbientReaderInterstitialAd({ advertiser, onDismiss }: { advertiser: AmbientInterstitialAdvertiser; onDismiss: () => void }) {
+  if (advertiser === "blancpain") {
+    return <BlancpainInterstitialAd onDismiss={onDismiss} />;
+  }
+  if (advertiser === "lexus") {
+    return <LexusInterstitialAd onDismiss={onDismiss} />;
+  }
+  if (advertiser === "marriott") {
+    return <MarriottInterstitialAd onDismiss={onDismiss} />;
+  }
+  if (advertiser === "porsche") {
+    return <PorscheInterstitialAd onDismiss={onDismiss} />;
+  }
+  if (advertiser === "princess") {
+    return <PrincessInterstitialAd onDismiss={onDismiss} />;
+  }
+
+  return (
+    <div className="fixed inset-0 z-[260] bg-[#101b2e]" role="dialog" aria-modal="true" aria-labelledby="ambient-ad-title" aria-describedby="ambient-ad-description">
+      <div className="relative grid h-full w-full bg-[#101b2e] text-[#f4f5f7] lg:grid-cols-[0.82fr_1.18fr]">
+        <button type="button" onClick={onDismiss} autoFocus className="absolute right-6 top-6 z-30 inline-flex h-11 items-center border border-[#f4f5f7]/55 bg-[#101b2e]/40 px-4 text-[10px] font-semibold uppercase tracking-[0.2em] backdrop-blur-sm transition-colors hover:bg-[#f4f5f7] hover:text-[#101b2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f4f5f7] sm:right-10 sm:top-10" aria-label="Close advertisement">Close</button>
+        <div className="relative z-10 flex flex-col justify-between p-7 sm:p-12 lg:p-16">
+          <div className="flex items-center justify-between gap-4">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={vanCleefLogoUrl} alt="Van Cleef & Arpels" className="h-auto w-[min(17rem,76%)] brightness-0 invert" />
+          </div>
+          <div className="max-w-xl py-14">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#b8c7df]">Advertisement · High jewelry</p>
+            <h2 id="ambient-ad-title" className="mt-6 font-serif text-[clamp(3rem,6vw,6.5rem)] leading-[0.92] tracking-[-0.04em]">Snowflake</h2>
+            <p id="ambient-ad-description" className="mt-7 max-w-md font-serif text-xl leading-8 text-[#d8e0ee] sm:text-2xl">Discover a constellation of diamonds and the savoir-faire of Van Cleef &amp; Arpels.</p>
+          </div>
+          <a href={vanCleefSnowflakeUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-12 w-fit items-center bg-[#f4f5f7] px-6 text-xs font-bold uppercase tracking-[0.16em] text-[#101b2e] transition-colors hover:bg-[#cbd8ed] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f4f5f7]">Explore the collection</a>
+        </div>
+        <div className="relative min-h-64 overflow-hidden bg-[#203b62] lg:min-h-full">
+          {/* The official campaign asset is used as a still because the public collection page does not expose a stable embeddable video URL. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={vanCleefCampaignImageUrl} alt="Van Cleef & Arpels Snowflake high jewelry" className="absolute inset-0 h-full w-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#101b2e]/55 via-transparent to-[#101b2e]/10" aria-hidden />
+          <p className="absolute bottom-6 left-7 text-[10px] font-semibold uppercase tracking-[0.22em] text-white sm:left-10">Van Cleef &amp; Arpels · Snowflake</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const blancpainUrl = "https://www.blancpain.com/en-us";
+const blancpainHeroVideoUrl = "https://assets.blancpain.com/asset/6e1cc3cd-1b01-4aef-b28f-b28b79af9d61/WebUrl/Villeret_F_16-9_4k.mp4";
+
+function BlancpainInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
+  return (
+    <div className="fixed inset-0 z-[260] bg-[#111]" role="dialog" aria-modal="true" aria-labelledby="blancpain-ad-title" aria-describedby="blancpain-ad-description">
+      <div className="relative grid h-full w-full bg-[#f4f2ed] text-[#171717] lg:grid-cols-[0.82fr_1.18fr]">
+        <button type="button" onClick={onDismiss} autoFocus className="absolute right-6 top-6 z-30 inline-flex h-11 items-center border border-[#171717]/45 bg-[#f4f2ed]/70 px-4 text-[10px] font-semibold uppercase tracking-[0.2em] backdrop-blur-sm transition-colors hover:bg-[#171717] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#171717] sm:right-10 sm:top-10" aria-label="Close advertisement">Close</button>
+        <div className="relative z-10 flex flex-col justify-between p-7 sm:p-12 lg:p-16">
+          <div className="flex items-center justify-between gap-4">
+            <div className="font-serif text-xl tracking-[0.28em] sm:text-2xl" aria-label="Blancpain logo">BLANCPAIN <span className="text-[0.55em] tracking-[0.18em]">1735</span></div>
+          </div>
+          <div className="max-w-xl py-14">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#5f665f]">Advertisement · Fine watchmaking</p>
+            <h2 id="blancpain-ad-title" className="mt-6 font-serif text-[clamp(3rem,6vw,6.5rem)] leading-[0.92] tracking-[-0.04em]">The Thinnest Argument</h2>
+            <p id="blancpain-ad-description" className="mt-7 max-w-md font-serif text-xl leading-8 text-[#4f514e] sm:text-2xl">Discover Blancpain’s latest timepieces, where watchmaking excellence becomes a way of life.</p>
+          </div>
+          <a href={blancpainUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-12 w-fit items-center bg-[#171717] px-6 text-xs font-bold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#38443e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#171717]">Discover Blancpain</a>
+        </div>
+        <div className="relative min-h-64 overflow-hidden bg-[#26342f] lg:min-h-full">
+          <video className="absolute inset-0 h-full w-full object-cover" src={blancpainHeroVideoUrl} autoPlay muted loop playsInline preload="metadata" aria-label="Blancpain timepiece film" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#111]/45 via-transparent to-transparent" aria-hidden />
+          <p className="absolute bottom-6 left-7 text-[10px] font-semibold uppercase tracking-[0.22em] text-white sm:left-10">Blancpain · Villeret</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const lexusRxOffersUrl = "https://www.lexus.com/models/RX-hybrid/offers?showOffers=current&zip=92656&cid=FT%3Acy26_na-market_national_retail_new-car_model-sustain_as_na-model_na-trim_cv_feb%3AP3C3CD9%3A19289%3A287222%3A10419950%3A5016352%3A38953306&trim=rxh-1";
+const lexusRxVideoUrl = "https://s3.amazonaws.com/toyota-cms-media/toyota-videos/2025_RX_500h_FSPORT_Performance_AWD_Copper_BROLL.mp4";
+const lexusRxVideoPosterUrl = "https://lexus-cms-media.s3.us-east-2.amazonaws.com/wp-content/uploads/2024/08/2025_RX_500h_FSPORT_Performance_AWD_Copper_BROLL-1000x600.png";
+const lexusRxHighResolutionImageUrl = "https://www.the360mag.com/wp-content/uploads/2022/06/lexus-rx-scaled.jpg";
+
+function LexusInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
+  const [videoFailed, setVideoFailed] = React.useState(false);
+
+  return (
+    <div className="fixed inset-0 z-[260] bg-[#111]" role="dialog" aria-modal="true" aria-labelledby="lexus-ad-title" aria-describedby="lexus-ad-description">
+      <div className="relative grid h-full w-full bg-[#e9e9e7] text-[#161616] lg:grid-cols-[0.82fr_1.18fr]">
+        <button type="button" onClick={onDismiss} autoFocus className="absolute right-6 top-6 z-30 inline-flex h-11 items-center border border-[#161616]/45 bg-[#e9e9e7]/75 px-4 text-[10px] font-semibold uppercase tracking-[0.2em] backdrop-blur-sm transition-colors hover:bg-[#161616] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#161616] sm:right-10 sm:top-10" aria-label="Close advertisement">Close</button>
+        <div className="relative z-10 flex flex-col justify-between p-7 sm:p-12 lg:p-16">
+          <div className="font-sans text-2xl font-semibold tracking-[0.34em]" aria-label="Lexus logo">LEXUS</div>
+          <div className="max-w-xl py-14">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#5b5e5e]">Advertisement · Luxury hybrid</p>
+            <h2 id="lexus-ad-title" className="mt-6 font-sans text-[clamp(3rem,6vw,6.5rem)] font-light leading-[0.92] tracking-[-0.04em]">The RX Hybrid</h2>
+            <p id="lexus-ad-description" className="mt-7 max-w-md font-sans text-xl font-light leading-8 text-[#444847] sm:text-2xl">Experience the refined balance of electrified performance and considered luxury.</p>
+          </div>
+          <a href={lexusRxOffersUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-12 w-fit items-center bg-[#161616] px-6 text-xs font-bold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#3b3f3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#161616]">Explore RX Hybrid offers</a>
+        </div>
+        <div className="relative min-h-64 overflow-hidden bg-[#28302f] lg:min-h-full">
+          {/* Keep the official product image visible while video loads and as a resilient fallback if playback is blocked. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={lexusRxHighResolutionImageUrl} alt="Lexus vehicle" className="absolute inset-0 h-full w-full object-cover" />
+          {!videoFailed ? (
+            <video className="absolute inset-0 h-full w-full object-cover" src={lexusRxVideoUrl} poster={lexusRxVideoPosterUrl} autoPlay muted loop playsInline preload="auto" onError={() => setVideoFailed(true)} aria-label="Lexus RX performance film" />
+          ) : null}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#111]/55 via-transparent to-transparent" aria-hidden />
+          <p className="absolute bottom-6 left-7 text-[10px] font-semibold uppercase tracking-[0.22em] text-white sm:left-10">Lexus · RX Hybrid</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const marriottLuxuryUrl = "https://www.marriott.com/luxury";
+const marriottLuxuryImageUrl = "https://cache.marriott.com/is/image/marriotts7prod/rz-miakb-lobby-ocean-views-39643?wid=1800";
+
+function MarriottInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
+  return (
+    <div className="fixed inset-0 z-[260] bg-[#111]" role="dialog" aria-modal="true" aria-labelledby="marriott-ad-title" aria-describedby="marriott-ad-description">
+      <div className="relative grid h-full w-full bg-[#f1eee8] text-[#20252a] lg:grid-cols-[0.82fr_1.18fr]">
+        <button type="button" onClick={onDismiss} autoFocus className="absolute right-6 top-6 z-30 inline-flex h-11 items-center border border-[#20252a]/45 bg-[#f1eee8]/75 px-4 text-[10px] font-semibold uppercase tracking-[0.2em] backdrop-blur-sm transition-colors hover:bg-[#20252a] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#20252a] sm:right-10 sm:top-10" aria-label="Close advertisement">Close</button>
+        <div className="relative z-10 flex flex-col justify-between p-7 sm:p-12 lg:p-16">
+          <div className="font-sans text-xl font-semibold uppercase tracking-[0.28em]" aria-label="Marriott Luxury Group">Marriott <span className="font-serif normal-case tracking-normal">Luxury</span></div>
+          <div className="max-w-xl py-14">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#667078]">Advertisement · Luxury travel</p>
+            <h2 id="marriott-ad-title" className="mt-6 font-serif text-[clamp(3rem,6vw,6.5rem)] leading-[0.92] tracking-[-0.04em]">An Invitation to the Extraordinary</h2>
+            <p id="marriott-ad-description" className="mt-7 max-w-md font-serif text-xl leading-8 text-[#4a5157] sm:text-2xl">Discover stays shaped by beauty, belonging, and the moments that linger long after you return home.</p>
+          </div>
+          <a href={marriottLuxuryUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-12 w-fit items-center bg-[#20252a] px-6 text-xs font-bold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#46515a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#20252a]">Explore luxury stays</a>
+        </div>
+        <div className="relative min-h-64 overflow-hidden bg-[#30424b] lg:min-h-full">
+          {/* The official Marriott Luxury page exposes campaign stills but no stable embeddable video asset. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={marriottLuxuryImageUrl} alt="Luxury Marriott resort overlooking the ocean" className="absolute inset-0 h-full w-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#111]/55 via-transparent to-transparent" aria-hidden />
+          <p className="absolute bottom-6 left-7 text-[10px] font-semibold uppercase tracking-[0.22em] text-white sm:left-10">Marriott Luxury · Extraordinary stays</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const porscheUsaUrl = "https://www.porsche.com/usa/";
+const porscheLogoUrl = "/logos/porsche.svg";
+const porscheHeroImageUrl = "https://images.porsche.com/f/338913/3840x2880/9cb0f564b9/04-macan-electric.jpg/m/2560x1920/filters%3Aformat%28webp%29%3Aquality%2880%29";
+const porscheHeroVideoUrl = "https://newstv.porsche.com/porschevideos/197318_en_3000000.mp4";
+
+function PorscheInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
+  return (
+    <div className="fixed inset-0 z-[260] bg-[#0b0b0b]" role="dialog" aria-modal="true" aria-labelledby="porsche-ad-title" aria-describedby="porsche-ad-description">
+      <div className="relative grid h-full w-full bg-[#f4f3f0] text-[#171717] lg:grid-cols-[0.82fr_1.18fr]">
+        <button type="button" onClick={onDismiss} autoFocus className="absolute right-6 top-6 z-30 inline-flex h-11 items-center border border-[#171717]/45 bg-[#f4f3f0]/75 px-4 text-[10px] font-semibold uppercase tracking-[0.2em] backdrop-blur-sm transition-colors hover:bg-[#171717] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#171717] sm:right-10 sm:top-10" aria-label="Close advertisement">Close</button>
+        <div className="relative z-10 flex flex-col justify-between p-7 sm:p-12 lg:p-16">
+          {/* Official Porsche crest supplied by the user. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={porscheLogoUrl} alt="Porsche" className="h-auto w-40 max-w-full object-contain object-left sm:w-48" />
+          <div className="max-w-xl py-14">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#6c6c68]">Advertisement · Performance automotive</p>
+            <h2 id="porsche-ad-title" className="mt-6 font-sans text-[clamp(3rem,6vw,6.5rem)] font-light leading-[0.92] tracking-[-0.05em]">Your Porsche Journey Starts Now</h2>
+            <p id="porsche-ad-description" className="mt-7 max-w-md font-sans text-xl font-light leading-8 text-[#4d4d49] sm:text-2xl">Discover iconic sports cars, electric performance, and the freedom to choose your next Porsche.</p>
+          </div>
+          <a href={porscheUsaUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-12 w-fit items-center bg-[#171717] px-6 text-xs font-bold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#444] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#171717]">Explore Porsche</a>
+        </div>
+        <div className="relative min-h-64 overflow-hidden bg-[#303332] lg:min-h-full">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={porscheHeroImageUrl} alt="Porsche Macan Electric driving through the city" className="absolute inset-0 h-full w-full object-cover" />
+          <video className="absolute inset-0 h-full w-full object-cover" src={porscheHeroVideoUrl} autoPlay muted loop playsInline preload="metadata" aria-label="Porsche performance film" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0b0b0b]/55 via-transparent to-transparent" aria-hidden />
+          <p className="absolute bottom-6 left-7 text-[10px] font-semibold uppercase tracking-[0.22em] text-white sm:left-10">Porsche · Macan Electric</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const princessUrl = "https://www.princess.com/";
+const princessLogoUrl = "https://upload.wikimedia.org/wikipedia/it/1/14/Princess_Cruises_logo.svg?utm_source=it.wikipedia.org&utm_campaign=index&utm_content=original";
+const princessHeroImageUrl = "https://www.princess.com/content/dam/princess/promos-deals/denali-national-park-1220x686.jpg";
+
+function PrincessInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
+  return (
+    <div className="fixed inset-0 z-[260] bg-[#101a2a]" role="dialog" aria-modal="true" aria-labelledby="princess-ad-title" aria-describedby="princess-ad-description">
+      <div className="relative grid h-full w-full bg-[#eaf1f3] text-[#102338] lg:grid-cols-[0.82fr_1.18fr]">
+        <button type="button" onClick={onDismiss} autoFocus className="absolute right-6 top-6 z-30 inline-flex h-11 items-center border border-[#102338]/45 bg-[#eaf1f3]/75 px-4 text-[10px] font-semibold uppercase tracking-[0.2em] backdrop-blur-sm transition-colors hover:bg-[#102338] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#102338] sm:right-10 sm:top-10" aria-label="Close advertisement">Close</button>
+        <div className="relative z-10 flex flex-col justify-between p-7 sm:p-12 lg:p-16">
+          {/* Official Princess Cruises logo supplied by the user. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={princessLogoUrl} alt="Princess Cruises" className="h-auto w-40 max-w-full object-contain object-left sm:w-48" />
+          <div className="max-w-xl py-14">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#5e7487]">Advertisement · Cruise travel</p>
+            <h2 id="princess-ad-title" className="mt-6 font-serif text-[clamp(3rem,6vw,6.5rem)] leading-[0.92] tracking-[-0.04em]">Sail Into the Extraordinary</h2>
+            <p id="princess-ad-description" className="mt-7 max-w-md font-sans text-xl font-light leading-8 text-[#41566b] sm:text-2xl">Experience glaciers, coastlines, and unforgettable moments with Princess.</p>
+          </div>
+          <a href={princessUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-12 w-fit items-center bg-[#102338] px-6 text-xs font-bold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#39546b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#102338]">Explore Princess</a>
+        </div>
+        <div className="relative min-h-64 overflow-hidden bg-[#31546d] lg:min-h-full">
+          {/* Official Princess campaign imagery is used as the reliable creative for this placement. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={princessHeroImageUrl} alt="Princess cruise destination near Denali National Park" className="absolute inset-0 h-full w-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#101a2a]/55 via-transparent to-transparent" aria-hidden />
+          <p className="absolute bottom-6 left-7 text-[10px] font-semibold uppercase tracking-[0.22em] text-white sm:left-10">Princess · Alaska</p>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -7523,6 +7743,10 @@ function LifestyleStoryReaderModal({
   const [loadingReaderBrandSlug, setLoadingReaderBrandSlug] = React.useState<string | null>(null);
   const activeReaderBrandSlug = readerBrandOverrideSlug ?? readerOriginBrandSlug;
   const readerAvailableStoryPool = mergeUniqueStories(stories, availableStories, readerFetchedStories);
+  const readerAvailableStoryPoolRef = React.useRef(readerAvailableStoryPool);
+  React.useEffect(() => {
+    readerAvailableStoryPoolRef.current = readerAvailableStoryPool;
+  }, [readerAvailableStoryPool]);
   const publicationStories = activeReaderBrandSlug
     ? readerAvailableStoryPool.filter(
         (story) => story.brandSlug === activeReaderBrandSlug
@@ -7538,6 +7762,10 @@ function LifestyleStoryReaderModal({
   const [liveArticles, setLiveArticles] = React.useState<Record<string, LiveArticleLoadState>>({});
   const [fullscreenGallery, setFullscreenGallery] = React.useState<FullscreenGalleryState | null>(null);
   const [ambientReaderStoryId, setAmbientReaderStoryId] = React.useState<string | null>(null);
+  const [interstitialAdvertiser, setInterstitialAdvertiser] = React.useState<AmbientInterstitialAdvertiser>("van-cleef");
+  const [showAmbientInterstitialAd, setShowAmbientInterstitialAd] = React.useState(false);
+  const ambientOpenedStoryIdsRef = React.useRef<Set<string>>(new Set());
+  const ambientArticleVisitCountRef = React.useRef(0);
   const fullscreenGalleryRef = React.useRef(fullscreenGallery);
   const activeReaderRouteStoryIdRef = React.useRef<string | null>(openStoryId);
   const resolvedFullscreenGallery = React.useMemo(() => {
@@ -7710,6 +7938,36 @@ function LifestyleStoryReaderModal({
     setFullscreenGallery,
     setVisibleReaderCount,
   ]);
+
+  const openAmbientReader = React.useCallback((storyId: string) => {
+    setAmbientReaderStoryId(storyId);
+    if (!ambientOpenedStoryIdsRef.current.has(storyId)) {
+      ambientOpenedStoryIdsRef.current.add(storyId);
+      ambientArticleVisitCountRef.current += 1;
+      const shouldShowAd = ambientArticleVisitCountRef.current % 3 === 0;
+      if (shouldShowAd) {
+        const openedStory = readerAvailableStoryPoolRef.current.find((story) => story.id === storyId);
+        const isEsquireReader = openedStory?.brandSlug === "esquire";
+        const isHarpersBazaarReader = openedStory?.brandSlug === "harpers-bazaar";
+        const isAutosReader = openedStory ? getStoryDestinationMode(openedStory.brandSlug) === "autos" : false;
+        const isEnthusiastWellnessReader = openedStory ? getStoryDestinationMode(openedStory.brandSlug) === "ew" : false;
+        setInterstitialAdvertiser(
+          isEnthusiastWellnessReader
+            ? "princess"
+            : isAutosReader
+              ? "porsche"
+            : isHarpersBazaarReader
+              ? "marriott"
+              : isEsquireReader
+                ? "lexus"
+            : ambientArticleVisitCountRef.current % 6 === 0
+              ? "blancpain"
+              : "van-cleef"
+        );
+      }
+      setShowAmbientInterstitialAd(shouldShowAd);
+    }
+  }, [setAmbientReaderStoryId, setShowAmbientInterstitialAd]);
 
   React.useEffect(() => {
     if (!openStoryId || typeof window === "undefined") return;
@@ -8242,7 +8500,7 @@ function LifestyleStoryReaderModal({
                           onToggleFollowBrand={() => onToggleFollowBrand(story.brand)}
                           ambientReaderState={getAmbientReaderState(story, liveArticles[story.id])}
                           onOpenAmbientReader={isCompleteAmbientArticle(liveArticles[story.id])
-                            ? () => setAmbientReaderStoryId(story.id)
+                            ? () => openAmbientReader(story.id)
                             : undefined}
                         />
                         <LifestyleReaderBody
@@ -8307,7 +8565,7 @@ function LifestyleStoryReaderModal({
           relatedStories={ambientRelatedReadyStories}
           onClose={() => setAmbientReaderStoryId(null)}
           onNavigateStory={(storyId) => {
-            setAmbientReaderStoryId(storyId);
+            openAmbientReader(storyId);
             window.history.replaceState(
               {
                 ...window.history.state,
@@ -8318,6 +8576,9 @@ function LifestyleStoryReaderModal({
             );
             scrollRef.current?.scrollTo({ top: 0 });
           }}
+          showInterstitialAd={showAmbientInterstitialAd}
+          interstitialAdvertiser={interstitialAdvertiser}
+          onDismissInterstitialAd={() => setShowAmbientInterstitialAd(false)}
           onOpenImage={(image) => {
             const ambientStory = readerStories.find((story) => story.id === ambientReaderStoryId) ?? storyQueue[0];
             const images = getFullscreenReaderImages(ambientStory, liveArticles[ambientReaderStoryId]);
