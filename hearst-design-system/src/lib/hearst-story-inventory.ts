@@ -57,3 +57,20 @@ const getCachedHearstStoryInventory = unstable_cache(
 export function getHearstGlobalStoryInventory(section: HearstBrandSection) {
   return getCachedHearstStoryInventory(section);
 }
+
+export function getHearstAllStoryInventory() {
+  const staticData = getHearstDestinationStaticData({
+    storyLimitPerDestination: fullCatalogLimitPerDestination,
+  });
+  const stories = mergeUniqueStories(
+    staticData.lifestyle.stories,
+    staticData.autos.stories,
+    staticData.flux.stories,
+    staticData.ew.stories,
+  );
+
+  return stories.reduce<Record<string, number>>((counts, story) => {
+    counts[story.brandSlug] = (counts[story.brandSlug] ?? 0) + 1;
+    return counts;
+  }, {});
+}

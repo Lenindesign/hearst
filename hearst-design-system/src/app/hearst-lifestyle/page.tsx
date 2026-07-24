@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { HomePageTemplate } from "@/components/home-page";
 import { ThemeProvider } from "@/components/theme-provider";
 import { getHearstDestinationStaticData } from "@/lib/hearst-destination-data";
+import { getHearstAllStoryInventory } from "@/lib/hearst-story-inventory";
 import { getPersonalizeLiveFeed, getPersonalizeVideoFeed } from "@/lib/personalize-live-feed";
 
 export const metadata: Metadata = {
@@ -20,7 +21,7 @@ export default async function HearstLifestylePage() {
 
   return (
     <ThemeProvider defaultBrandSlug="hearst-lifestyle">
-      <HomePageTemplate staticDestinationData={getHearstDestinationStaticData()} liveFeedData={liveFeedData} liveFeedMode="blend" videoFeedData={videoFeedData} />
+      <HomePageTemplate staticDestinationData={getHearstDestinationStaticData()} liveFeedData={liveFeedData} liveFeedMode="blend" videoFeedData={videoFeedData} onboardingBrandInventory={getHearstAllStoryInventory()} />
     </ThemeProvider>
   );
 }

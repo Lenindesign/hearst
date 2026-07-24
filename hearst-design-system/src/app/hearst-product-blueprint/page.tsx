@@ -118,7 +118,7 @@ export default function BlueprintPage() {
             </section>
 
             <section id="system" className="scroll-mt-8">
-              <SectionHead label="02 · Feed architecture" title="Validated catalogs enter once; stories arrive progressively" copy="The system separates source validation, eligibility, ranking and rendering. A compact server payload starts each route quickly, cached catalog pages append during browser idle time, and the river sentinel mounts ranked cards in small batches until every eligible story is available." />
+              <SectionHead label="02 · Feed architecture" title="Validated catalogs enter once; stories arrive progressively" copy="The system separates source validation, eligibility, ranking and rendering. A compact server payload starts each route quickly, and the river requests another cached catalog page only when the reader approaches the end of the loaded buffer. Ranked cards continue to mount in small batches." />
               <div className="mt-10 grid gap-3 md:grid-cols-4">
                 {systemSteps.map((s, i) => (
                   <article key={s.title} className="border border-slate-200 bg-white p-5">

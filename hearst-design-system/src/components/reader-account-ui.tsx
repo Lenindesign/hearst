@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+import { createPortal } from "react-dom";
+import Image from "next/image";
 import {
   Bookmark,
   Check,
@@ -18,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { brandIconLogos } from "@/lib/logos";
+import { useBodyPortalTarget, useModalIsolation } from "@/components/ui/use-modal-isolation";
 import { BrandLogo } from "./brand-logo";
 import type { LifestyleRiverProfile, LifestyleRiverStory } from "./lifestyle-river-types";
 import { useReaderAccount, type ReaderAccount } from "./reader-account";
@@ -69,10 +72,13 @@ function ModalFrame({
 }) {
   const dialogRef = React.useRef<HTMLElement>(null);
   const onCloseRef = React.useRef(onClose);
+  const portalTarget = useBodyPortalTarget();
 
   React.useEffect(() => {
     onCloseRef.current = onClose;
   }, [onClose]);
+
+  useModalIsolation(open && Boolean(portalTarget), dialogRef);
 
   React.useEffect(() => {
     if (!open) return;
@@ -102,21 +108,19 @@ function ModalFrame({
         first.focus();
       }
     };
-    document.body.style.overflow = "hidden";
     window.addEventListener("keydown", onKeyDown);
     window.requestAnimationFrame(() => {
       dialog?.querySelector<HTMLElement>("[data-modal-close]")?.focus();
     });
     return () => {
-      document.body.style.overflow = "";
       window.removeEventListener("keydown", onKeyDown);
       previouslyFocused?.focus();
     };
   }, [open]);
 
-  if (!open) return null;
+  if (!open || !portalTarget) return null;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-[130] flex items-center justify-center bg-foreground/55 p-4 backdrop-blur-sm sm:p-6">
       <div className="absolute inset-0" onClick={onClose} aria-hidden="true" />
       <section
@@ -132,7 +136,8 @@ function ModalFrame({
       >
         {children}
       </section>
-    </div>
+    </div>,
+    portalTarget
   );
 }
 
@@ -159,18 +164,6 @@ export function ReaderAuthDialog({
   const [acceptedTerms, setAcceptedTerms] = React.useState(false);
   const [error, setError] = React.useState("");
   const [submitting, setSubmitting] = React.useState(false);
-
-  React.useEffect(() => {
-    if (!open) return;
-    setMode(initialMode);
-    setFirstName("");
-    setLastName("");
-    setEmail("");
-    setPassword("");
-    setConfirmPassword("");
-    setAcceptedTerms(false);
-    setError("");
-  }, [initialMode, open]);
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -395,29 +388,12 @@ export function ReaderProfileDialog({
     toggleStoryInCollection,
   } = useReaderAccount();
   const [tab, setTab] = React.useState<ProfileTab>("overview");
-  const [firstName, setFirstName] = React.useState("");
-  const [lastName, setLastName] = React.useState("");
+  const [firstName, setFirstName] = React.useState(() => account?.firstName ?? "");
+  const [lastName, setLastName] = React.useState(() => account?.lastName ?? "");
   const [collectionName, setCollectionName] = React.useState("");
   const [profileSaved, setProfileSaved] = React.useState(false);
   const customCollections = account?.collections.filter((collection) => collection.name !== "Read Later") ?? [];
   const [confirmDelete, setConfirmDelete] = React.useState(false);
-  const accountId = account?.id;
-  const accountFirstName = account?.firstName;
-  const accountLastName = account?.lastName;
-
-  React.useEffect(() => {
-    if (!open || !accountId) return;
-    setTab("overview");
-    setCollectionName("");
-    setConfirmDelete(false);
-    setProfileSaved(false);
-  }, [accountId, open]);
-
-  React.useEffect(() => {
-    if (!open || !accountId) return;
-    setFirstName(accountFirstName ?? "");
-    setLastName(accountLastName ?? "");
-  }, [accountFirstName, accountId, accountLastName, open]);
 
   if (!account) return null;
 
@@ -555,7 +531,7 @@ export function ReaderProfileDialog({
                         const story = storyById.get(id);
                         return (
                           <div key={id} className="flex items-center gap-3">
-                            {story ? <img src={story.image} alt="" className="h-11 w-16 shrink-0 rounded-[4px] object-cover" /> : null}
+                            {story ? <Image unoptimized src={story.image} alt="" width={64} height={44} className="h-11 w-16 shrink-0 rounded-[4px] object-cover" /> : null}
                             <p className="line-clamp-2 text-sm font-semibold">{story?.title ?? "Saved story"}</p>
                           </div>
                         );
@@ -573,7 +549,7 @@ export function ReaderProfileDialog({
                     {savedStories.map((story) => (
                       <div key={story.id} className="grid gap-3 py-4 sm:grid-cols-[minmax(0,1fr)_180px] sm:items-center">
                         <div className="flex min-w-0 items-center gap-3">
-                          <img src={story.image} alt="" className="h-14 w-20 shrink-0 rounded-[4px] object-cover" />
+                          <Image unoptimized src={story.image} alt="" width={80} height={56} className="h-14 w-20 shrink-0 rounded-[4px] object-cover" />
                           <div className="min-w-0"><p className="line-clamp-2 font-bold">{story.title}</p><p className="mt-1 text-xs text-muted-foreground">{story.brand} · {story.readTime}</p></div>
                         </div>
                         <select className="h-10 rounded-[8px] border border-border bg-background px-3 text-sm" value="" disabled={customCollections.length === 0} onChange={(event) => { if (event.target.value) toggleStoryInCollection(event.target.value, story.id); }} aria-label={`Add ${story.title} to a custom collection`}>

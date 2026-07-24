@@ -2,6 +2,37 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-07-23: Capability-based HomePageTemplate extraction
+
+- **Context:** `home-page.tsx` reached 503,880 bytes and Babel deoptimized code generation above its 500 KB threshold. Moving arbitrary constants would silence the warning without improving ownership.
+- **Decision:** Begin the monolith reduction with low-coupling, behavior-preserving capability boundaries. Utility navigation now owns its destination/account presentation and the stakeholder personalization/technology guides own their static explanation and package-version presentation. Keep the existing public props and visible behavior unchanged.
+- **Measured result:** `home-page.tsx` is 489,984 bytes and 11,439 lines. The repeated ESLint path no longer emits Babel’s deoptimization warning; TypeScript, extracted-module lint, focused tests, the production build, and responsive browser journeys pass.
+- **Scope:** First architectural extraction only. Search, onboarding, reader, gallery, video, games, and river remain in the client module and require separate tested extractions.
+- **Regression boundary:** Preserve utility active-destination behavior across general and publication routes, and keep stakeholder guide content available inside the personalization dialog.
+
+## 2026-07-23: Accessible overlay stack, reader chrome, search, and onboarding inventory
+
+- **Context:** Search, onboarding, account, and reader overlays did not consistently isolate background semantics; nested reader layers could expose the layer beneath them; mobile reader chrome duplicated the app navigation; substring search produced false positives; and onboarding counted a capped preview instead of the eligible catalog.
+- **Decision:** Portal audited overlays to direct body-level layers and use one nested isolation stack so only the top layer remains operable. Make the standard reader flush to the mobile viewport while preserving the inset desktop surface. Search normalized Unicode word tokens with deterministic field ranking and bounded long-prefix matching. Compute onboarding brand counts from the full generated catalog without additional feed requests, disable true zero-inventory choices, and retain 24px pagination targets.
+- **Scope:** Search, mobile menu, onboarding, account/profile, standard reader, Ambient Reader, fullscreen gallery, featured carousel verification, and onboarding across Hearst destination/category/publication routes.
+- **Regression boundary:** Delish Shorts, games, and future overlay surfaces must adopt the shared isolation primitive before being considered part of the unified modal system.
+- **Canonical rule:** `APP_RULES.md` onboarding/search/modal rules, Reader modal behavior, and Featured carousel behavior.
+
+## 2026-07-23: Shared client article requests
+
+- **Context:** Rich-gallery preview loading and the reader queue independently requested the same complete article, causing two `/api/live-article/` calls when a previewed story opened.
+- **Decision:** Use one canonical source-URL cache for gallery previews, the standard reader, reader preloads, and Ambient Reader. Share in-flight promises and resolved articles, evict least-recently-used results beyond the bounded limit, and remove failed requests so later consumers can retry. Consumers ignore results after unmount rather than canceling shared work.
+- **Scope:** Client-side complete-article loading across Hearst+ reader and gallery surfaces. Server extraction and source freshness behavior are unchanged.
+- **Canonical rule:** `APP_RULES.md` Reader modal behavior.
+
+## 2026-07-23: Demand-driven catalog pagination
+
+- **Context:** Browser-idle pagination fetched the full editorial and video catalogs on every visit, producing 22 background requests even when the active Saved view was empty.
+- **Decision:** Keep the compact initial catalog, but request subsequent editorial or video pages only when the shared river sentinel is approached and its loaded buffer is nearly exhausted. Allow one in-flight request, require an advancing cursor, abort stale/hidden/offline work, and show retry feedback for partial-feed failures. Do not paginate videos outside the Videos experience unless a visible module explicitly requests them.
+- **Scope:** Hearst+ destination, category, publication, and Videos rivers. Targeted reader brand switching retains its separate bounded request.
+- **Supersedes:** The background full-catalog merge portion of the 2026-07-19 complete-lazy-rivers decision. The compact initial render and four-card DOM batches remain.
+- **Canonical rule:** `APP_RULES.md` progressive river behavior.
+
 ## 2026-07-21: Cross-device video playback
 
 - **Context:** Some Personalize videos played on desktop but failed on phones because resolution-first selection could choose HEVC while H.264 was available, and HLS URLs containing an earlier `.mp4` path segment were misclassified as direct MP4 files.
@@ -37,6 +68,14 @@ Use this file for concise, dated context behind product and design decisions. Du
 - **Decision:** On publication routes, reuse the shared sidebar module as a cached, section-wide story inventory. Count each sibling brand from the deduplicated full editorial, current article, and playable-video catalog, while retaining canonical brand navigation and the active publication state.
 - **Scope:** Every Lifestyle, Autos, Fashion & Luxury, and Enthusiast & Wellness publication route. Destination-wide filters and the Videos index keep their contextual count behavior.
 - **Canonical rule:** `APP_RULES.md` publication-river behavior.
+
+## 2026-07-23: Scoped UI state and executable unit tests
+
+- **Context:** Focused lint exposed cascading renders caused by synchronously copying props and route state inside effects, while application utility tests existed but were not discoverable through a package command.
+- **Decision:** Reset transient dialog sessions through keyed remount boundaries, derive route/account/filter state from explicit scope keys, and preserve progressively loaded feed order through a pure tested merge. Expose all current utility tests through `npm run test:unit`; do not suppress React lint rules.
+- **Scope:** Hearst+ onboarding, authentication/profile dialogs, reader and gallery state, search selection, carousel and Shorts sessions, brand filters, visible-feed pagination, article cache, story search, and feed ordering.
+- **Exceptions:** Unsaved authentication/profile drafts are intentionally discarded when their dialog closes. Component and route-level browser suites remain follow-up coverage.
+- **Canonical rule:** `APP_RULES.md` modal, reader, and progressive-river behavior.
 
 ## 2026-07-19: Delish indicator palette exception and complete lazy rivers
 

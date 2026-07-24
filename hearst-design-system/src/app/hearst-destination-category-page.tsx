@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { HomePageTemplate } from "@/components/home-page";
 import { ThemeProvider } from "@/components/theme-provider";
 import { getHearstDestinationStaticData } from "@/lib/hearst-destination-data";
+import { getHearstAllStoryInventory } from "@/lib/hearst-story-inventory";
 import {
   getHearstDestinationCategoryLabel,
   hearstDestinationCategoryLabels,
@@ -75,6 +76,7 @@ export async function DestinationCategoryRoutePage({
         liveFeedData={liveFeedData}
         liveFeedMode="blend"
         videoFeedData={videoFeedData}
+        onboardingBrandInventory={getHearstAllStoryInventory()}
       />
     </ThemeProvider>
   );

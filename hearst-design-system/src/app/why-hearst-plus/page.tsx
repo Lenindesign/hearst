@@ -108,8 +108,8 @@ const prototypeEvidence = [
   ],
   [
     "Progressive delivery",
-    "Routes start with a compact payload and append catalog pages while the river mounts ranked cards in batches.",
-    "A large portfolio can remain navigable without loading every card at once.",
+    "Routes start with a compact payload and request another catalog page only when the reader approaches the loaded river’s end.",
+    "A large portfolio can remain navigable without downloading the full catalog for every visit.",
     "Real-user performance, failure recovery and operating cost still require production measurement.",
   ],
 ];

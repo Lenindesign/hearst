@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { HomePageTemplate } from "@/components/home-page";
 import { ThemeProvider } from "@/components/theme-provider";
 import { getHearstDestinationStaticData } from "@/lib/hearst-destination-data";
-import { getHearstGlobalStoryInventory } from "@/lib/hearst-story-inventory";
+import { getHearstAllStoryInventory, getHearstGlobalStoryInventory } from "@/lib/hearst-story-inventory";
 import { getPersonalizeLiveFeed, getPersonalizeVideoFeed } from "@/lib/personalize-live-feed";
 import {
   getHearstSectionBrand,
@@ -60,6 +60,7 @@ export async function SectionBrandRoutePage({
         liveFeedMode="blend"
         videoFeedData={videoFeedData}
         globalBrandInventory={globalBrandInventory}
+        onboardingBrandInventory={getHearstAllStoryInventory()}
       />
     </ThemeProvider>
   );
