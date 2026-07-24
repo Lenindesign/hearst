@@ -39,6 +39,30 @@ const habitSteps = [
   },
 ];
 
+const principles = [
+  {
+    number: "01",
+    title: "Acquire & understand",
+    copy: "Earn the first return with a useful daily edition, then let readers shape it through interests, follows, saves, and quiet feedback.",
+    evidence: "Signals: first-edition completion, interest choices, follows, saves, and return timing.",
+    color: "#6D45D8",
+  },
+  {
+    number: "02",
+    title: "Activate & engage",
+    copy: "Turn portfolio breadth into an easy next read. Keep source brands visible while recommendations connect the moment a reader is in with what could help next.",
+    evidence: "Signals: useful sessions, story starts, cross-brand discovery, completion, and More Like This feedback.",
+    color: "#169DB4",
+  },
+  {
+    number: "03",
+    title: "Learn & expand",
+    copy: "Use explicit reader choices and aggregate outcomes to improve relevance, editorial surfaces, and the value of the portfolio over time.",
+    evidence: "Signals: repeat visits, recommendation quality, destination depth, retention, and calibrated experiments.",
+    color: "#70B52C",
+  },
+];
+
 const destinationPromises = [
   {
     name: "Lifestyle",
@@ -237,6 +261,44 @@ export default function WhyHearstPlusPage() {
                   </li>
                 ))}
               </ol>
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-slate-200 bg-[#F7F8FC]">
+          <div className="mx-auto max-w-[1360px] px-5 py-20 md:px-10 lg:py-28">
+            <div className="grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:items-end">
+              <div>
+                <p className="text-xs font-black uppercase tracking-[0.2em] text-[#2D75B9]">The Hearst+ principles</p>
+                <h2 className="mt-5 max-w-xl text-balance font-serif text-5xl leading-none tracking-[-0.03em]">
+                  A relationship that compounds, not a feed that forgets.
+                </h2>
+              </div>
+              <p className="max-w-[70ch] text-pretty leading-7 text-slate-600">
+                Hearst+ turns a reader&apos;s first useful visit into a measurable, reader-controlled loop. Each principle protects the experience: value before data collection, engagement without pressure, and learning that improves the whole portfolio without flattening its brands.
+              </p>
+            </div>
+            <div className="relative mt-12 grid gap-px bg-slate-200 md:grid-cols-3">
+              {principles.map((principle) => (
+                <article key={principle.number} className="relative bg-white p-7 sm:p-8">
+                  <div className="flex items-center justify-between gap-4">
+                    <span
+                      aria-hidden="true"
+                      className="grid h-12 w-12 place-items-center rounded-full text-sm font-black text-white"
+                      style={{ backgroundColor: principle.color }}
+                    >
+                      {principle.number}
+                    </span>
+                    <span aria-hidden="true" className="hidden h-px flex-1 bg-slate-200 md:block" />
+                  </div>
+                  <h3 className="mt-8 max-w-[14ch] font-serif text-3xl leading-[0.98] tracking-[-0.02em]">{principle.title}</h3>
+                  <p className="mt-5 text-sm leading-6 text-slate-600">{principle.copy}</p>
+                  <p className="mt-7 border-t border-slate-200 pt-4 text-xs font-semibold leading-5 text-slate-500">{principle.evidence}</p>
+                </article>
+              ))}
+            </div>
+            <div className="mt-6 border-l-4 border-[#2D75B9] bg-white px-6 py-5 text-sm leading-6 text-slate-700 shadow-sm">
+              <strong className="text-[#102A43]">The guardrail:</strong> Hearst+ should become more useful because readers choose to return—not because the product creates pressure, hides control, or treats every interaction as a conversion.
             </div>
           </div>
         </section>
