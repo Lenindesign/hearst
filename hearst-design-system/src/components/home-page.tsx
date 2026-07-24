@@ -97,6 +97,7 @@ import {
   type ReadingHistoryEntry,
 } from "@/lib/reading-history";
 import {
+  currentDailyEditionSelectionVersion,
   getLocalEditionDate,
   readDailyEditionRecords,
   resolveDailyEdition,
@@ -201,7 +202,8 @@ function useDailyEditionStories(
         editionKey,
         stories,
         Date.now(),
-        editionSize
+        editionSize,
+        currentDailyEditionSelectionVersion
       );
       writeDailyEditionRecords(records);
       setStoryIds(records.find((record) => record.editionKey === editionKey)?.storyIds ?? []);
@@ -2063,7 +2065,7 @@ export function MainNav({
                 compact: "h-[16px] max-w-[220px] sm:h-[23px] sm:max-w-[400px]",
                 regular: "h-[22px] max-w-[280px] sm:h-[34px] sm:max-w-[580px]",
               };
-  const logoColor = darkMode
+  const logoColor = darkMode || (selectedBrand && colorMode === "dark")
     ? "#ffffff"
     : selectedBrand
     ? mastheadSlug === "motortrend"
@@ -2072,9 +2074,7 @@ export function MainNav({
       ? "#c11b17"
       : shouldUseNativeLogoColor
       ? undefined
-      : colorMode === "dark"
-        ? "#ffffff"
-        : "#121212"
+      : "#121212"
     : brand.slug === "hearst-flux" && colorMode === "dark"
       ? "#ffffff"
       : undefined;
@@ -4670,25 +4670,66 @@ export function VerticalVideoCarousel({
   summaryLabel = "vertical",
   filterBrandSlug,
 }: VerticalVideoCarouselProps) {
+  const sectionRef = React.useRef<HTMLElement | null>(null);
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
+  const supplementalRequestRef = React.useRef<string | null>(null);
   const titleId = React.useId();
   const prefersReducedMotion = usePrefersReducedMotion();
   const [canScrollBackward, setCanScrollBackward] = React.useState(false);
   const [canScrollForward, setCanScrollForward] = React.useState(false);
+  const [supplementalStories, setSupplementalStories] = React.useState<LifestyleRiverStory[]>([]);
+  const requestedBrandSlug = filterBrandSlug;
+  const availableStories = React.useMemo(
+    () => mergeUniqueStories(stories, supplementalStories),
+    [stories, supplementalStories]
+  );
   const portraitStories = React.useMemo(
-    () => stories.filter((story) =>
+    () => availableStories.filter((story) =>
       (!filterBrandSlug || story.brandSlug === filterBrandSlug)
       && Boolean(story.videoUrl)
       && Boolean(story.videoWidth)
       && Boolean(story.videoHeight)
       && (story.videoHeight ?? 0) > (story.videoWidth ?? 0)
     ),
-    [filterBrandSlug, stories]
+    [availableStories, filterBrandSlug]
   );
   const firstStory = portraitStories[0];
   const displayBrandName = brandName ?? firstStory?.brand ?? "Hearst";
   const displayBrandSlug = brandSlug ?? firstStory?.brandSlug ?? "hearst-all";
   const displayTitle = title ?? `${displayBrandName} Shorts`;
+
+  React.useEffect(() => {
+    const section = sectionRef.current;
+    if (!section || !requestedBrandSlug || supplementalRequestRef.current === requestedBrandSlug) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      observer.disconnect();
+      supplementalRequestRef.current = requestedBrandSlug;
+
+      const params = new URLSearchParams({
+        destination: "all",
+        brandSlug: requestedBrandSlug,
+        offset: "0",
+        limit: "48",
+      });
+
+      void fetch(`/api/video-feed/?${params.toString()}`)
+        .then((response) => {
+          if (!response.ok) throw new Error(`Video feed returned ${response.status}`);
+          return response.json() as Promise<{ stories?: LifestyleRiverStory[] }>;
+        })
+        .then((payload) => {
+          setSupplementalStories(Array.isArray(payload.stories) ? payload.stories : []);
+        })
+        .catch(() => {
+          supplementalRequestRef.current = null;
+        });
+    }, { rootMargin: "240px 0px" });
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, [requestedBrandSlug]);
 
   const updateScrollState = React.useCallback(() => {
     const scroller = scrollRef.current;
@@ -4728,6 +4769,7 @@ export function VerticalVideoCarousel({
 
   return (
     <section
+      ref={sectionRef}
       className={cn(
         theme === "light"
           ? "rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] sm:p-5"
@@ -4750,7 +4792,11 @@ export function VerticalVideoCarousel({
             >
               {displayTitle}
             </h2>
-            <p className={cn("mt-0.5 text-xs", theme === "light" ? "text-muted-foreground" : "text-[var(--hp-text-secondary)]")}>
+            <p
+              className={cn("mt-0.5 text-xs", theme === "light" ? "text-muted-foreground" : "text-[var(--hp-text-secondary)]")}
+              role="status"
+              aria-live="polite"
+            >
               {portraitStories.length} {summaryLabel} {portraitStories.length === 1 ? "video" : "videos"}
             </p>
           </div>
@@ -5231,6 +5277,7 @@ function getPersonalizedLeadSliderStories(
   const selected: LifestyleRiverStory[] = [];
   const usedBrands = new Set<string>();
   const personalizedStories = stories
+    .filter((story) => !/\.(?:mov|mp4|m4v|webm)$/i.test(story.title.trim()))
     .map((story, index) => ({
       story,
       index,
@@ -9914,7 +9961,8 @@ function LifestyleRiverHomePage({
     index: number;
   } | null>(null);
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
-  const sentinelInRangeRef = React.useRef(false);
+  const sentinelLastDemandScrollYRef = React.useRef(Number.NEGATIVE_INFINITY);
+  const sentinelLastDemandAtRef = React.useRef(0);
   const feedDemandRef = React.useRef({
     feedHasMore,
     feedLoading,
@@ -10227,7 +10275,7 @@ function LifestyleRiverHomePage({
     rankingProfile,
     demoState,
     config,
-    5,
+    shouldUseTodaysPicks ? 15 : 5,
     config.liveFeedMode === "blend"
   );
   const dailyEditionKey = shouldUseTodaysPicks
@@ -10240,7 +10288,7 @@ function LifestyleRiverHomePage({
   );
   const heroStories = shouldUseTodaysPicks && dailyEditionStories.length > 0
     ? dailyEditionStories
-    : personalizedHeroStories;
+    : personalizedHeroStories.slice(0, 5);
   const leadStory = (
     demoState.returnHours > 0 && demoState.previousLeadId
       ? heroStories.find((story) => story.id !== demoState.previousLeadId)
@@ -10477,27 +10525,53 @@ function LifestyleRiverHomePage({
     const node = sentinelRef.current;
     if (!node) return;
 
+    const requestMoreStories = () => {
+      const sentinelBounds = node.getBoundingClientRect();
+      const isNearViewport = sentinelBounds.top <= window.innerHeight + 800
+        && sentinelBounds.bottom >= -800;
+      if (!isNearViewport) {
+        sentinelLastDemandScrollYRef.current = Number.NEGATIVE_INFINITY;
+        return;
+      }
+
+      const now = window.performance.now();
+      const scrollDistance = window.scrollY - sentinelLastDemandScrollYRef.current;
+      if (scrollDistance < 24 || now - sentinelLastDemandAtRef.current < 300) return;
+
+      sentinelLastDemandScrollYRef.current = window.scrollY;
+      sentinelLastDemandAtRef.current = now;
+      const demand = feedDemandRef.current;
+      if (demand.visibleCount < demand.filteredStoryCount) {
+        setVisibleCount((count) => Math.min(count + 12, demand.filteredStoryCount));
+      }
+
+      const remainingLoadedStories = demand.filteredStoryCount - demand.visibleCount;
+      if (
+        remainingLoadedStories <= 8
+        && demand.feedHasMore
+        && !demand.feedLoading
+      ) {
+        demand.onRequestNextFeedPage?.();
+      }
+    };
+
+    let demandInterval: number | null = null;
+    const stopDemandChecks = () => {
+      if (demandInterval === null) return;
+      window.clearInterval(demandInterval);
+      demandInterval = null;
+    };
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) {
-          sentinelInRangeRef.current = false;
+          sentinelLastDemandScrollYRef.current = Number.NEGATIVE_INFINITY;
+          stopDemandChecks();
           return;
         }
-        if (sentinelInRangeRef.current) return;
-        sentinelInRangeRef.current = true;
 
-        const demand = feedDemandRef.current;
-        if (demand.visibleCount < demand.filteredStoryCount) {
-          setVisibleCount((count) => Math.min(count + 4, demand.filteredStoryCount));
-        }
-
-        const remainingLoadedStories = demand.filteredStoryCount - demand.visibleCount;
-        if (
-          remainingLoadedStories <= 8
-          && demand.feedHasMore
-          && !demand.feedLoading
-        ) {
-          demand.onRequestNextFeedPage?.();
+        requestMoreStories();
+        if (demandInterval === null) {
+          demandInterval = window.setInterval(requestMoreStories, 350);
         }
       },
       { rootMargin: "800px 0px" }
@@ -10505,7 +10579,8 @@ function LifestyleRiverHomePage({
 
     observer.observe(node);
     return () => {
-      sentinelInRangeRef.current = false;
+      sentinelLastDemandScrollYRef.current = Number.NEGATIVE_INFINITY;
+      stopDemandChecks();
       observer.disconnect();
     };
   }, [displayOrderScopeKey, setVisibleCount]);

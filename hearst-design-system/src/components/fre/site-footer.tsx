@@ -46,7 +46,7 @@ export function SiteFooter({
   onSubscribeClick,
   productLinks = [
     { label: "Product story", href: "/about-hearst-magazines/" },
-    { label: "Why Hearst+", href: "/why-hearst-plus/" },
+    { label: "Explore Hearst+", href: "/why-hearst-plus/" },
     { label: "Product blueprint", href: "/hearst-product-blueprint/" },
     { label: "Complete article viewer", href: "/hearst-plus/complete-articles/" },
     { label: "Live feed", href: "/hearst-plus/live-feed/" },
@@ -76,7 +76,7 @@ export function SiteFooter({
           </div>
           {showSocialLinks && (
             <>
-              <div className="flex gap-4 text-[length:var(--text-token-2xs)]">
+              <div className="flex flex-wrap gap-x-4 gap-y-2 text-[length:var(--text-token-2xs)]">
                 {socialLinks.map((s) => (
                   <LinkComponent
                     key={s}

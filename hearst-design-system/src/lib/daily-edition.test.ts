@@ -15,6 +15,9 @@ const stories = [
   { id: "cars", brand: "Car and Driver", topic: "Reviews" },
   { id: "food", brand: "Delish", topic: "Food" },
   { id: "wellness", brand: "Prevention", topic: "Wellness" },
+  { id: "travel", brand: "Town & Country", topic: "Travel" },
+  { id: "design", brand: "Elle Decor", topic: "Design" },
+  { id: "beauty", brand: "Cosmopolitan", topic: "Beauty" },
 ];
 
 test("builds a bounded edition that keeps the lead and favors brand and topic variety", () => {
@@ -55,6 +58,29 @@ test("resolves one record per edition key and preserves its creation time", () =
     editionKey: "2026-07-23:all",
     storyIds: ["food", "lead", "home"],
     createdAt: 10,
+  });
+});
+
+test("refreshes a versioned edition with stories outside the prior edition", () => {
+  const records = resolveDailyEdition(
+    [{
+      editionKey: "2026-07-24:all:todays-picks",
+      storyIds: ["lead", "home", "fitness", "cars", "food"],
+      createdAt: 10,
+      selectionVersion: 1,
+    }],
+    "2026-07-24:all:todays-picks",
+    stories,
+    20,
+    5,
+    2
+  );
+
+  assert.deepEqual(records[0], {
+    editionKey: "2026-07-24:all:todays-picks",
+    storyIds: ["lead", "wellness", "travel", "design", "beauty"],
+    createdAt: 20,
+    selectionVersion: 2,
   });
 });
 

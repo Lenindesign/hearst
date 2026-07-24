@@ -121,7 +121,7 @@ export function DraggableBrandLogoMarquee({ brands }: { brands: MarqueeBrand[] }
   };
 
   return (
-    <div className="relative mt-12 overflow-hidden border-y border-white/15 py-5 before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:z-10 before:w-20 before:bg-gradient-to-r before:from-[#102A43] before:to-transparent after:pointer-events-none after:absolute after:inset-y-0 after:right-0 after:z-10 after:w-20 after:bg-gradient-to-l after:from-[#102A43] after:to-transparent">
+    <div className="relative mt-12 overflow-hidden border-y border-white/15 bg-[#102A43] py-5 before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:z-10 before:w-20 before:bg-gradient-to-r before:from-[#102A43] before:to-transparent after:pointer-events-none after:absolute after:inset-y-0 after:right-0 after:z-10 after:w-20 after:bg-gradient-to-l after:from-[#102A43] after:to-transparent">
       <div
         aria-label="Brand logo carousel. Drag horizontally or choose a logo to open that brand in the prototype."
         className="cursor-grab overflow-visible active:cursor-grabbing"

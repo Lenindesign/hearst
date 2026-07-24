@@ -7,7 +7,7 @@ import { getHearstBrandRoute, getHearstDestinationRoute } from "@/lib/hearst-rou
 import { brandLogos } from "@/lib/logos";
 import { themeOptions } from "@/lib/theme-options";
 
-export const productImage = "https://hips.hearstapps.com/hmg-prod/images/jimmy-tatro-and-zoey-deutch-attend-the-2025-lacma-art-film-news-photo-1762180233.pjpeg";
+export const productImage = "https://hips.hearstapps.com/hmg-prod/images/4cf6b4aa-4f88-469f-a235-545368381794.jpeg";
 
 const productPages = [
   { id: "story", label: "Product story", mobileLabel: "Story", href: "/about-hearst-magazines/" },
@@ -168,7 +168,7 @@ export function DemoNav() {
       <div className="flex gap-5 overflow-hidden border-y border-slate-200 px-5 py-3 text-xs font-semibold"><span className="text-[#2D75B9]">For You</span><span>Lifestyle</span><span>Autos</span><span>Fashion &amp; Luxury</span><span>Enthusiast &amp; Wellness</span><span>Saved</span></div>
       <div className="grid gap-0 md:grid-cols-[1.3fr_1fr]">
         <div
-          className="min-h-64 bg-[#E9F2FA] bg-contain bg-center bg-no-repeat"
+          className="min-h-64 bg-[#E9F2FA] bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${productImage})` }}
         />
         <div className="flex flex-col justify-center p-6">
@@ -203,9 +203,9 @@ export function MobileMenuIcon() { return <span aria-hidden="true" className="bl
 
 export function BrandPortfolioGrid({ compact = false }: { compact?: boolean }) {
   return (
-    <div className="grid gap-4">
+    <div className="grid min-w-0 gap-4">
       {brandSections.map((section) => (
-        <article key={section.name} className="border border-slate-200 bg-white p-5">
+        <article key={section.name} className="min-w-0 overflow-hidden border border-slate-200 bg-white p-5">
           <Link href={section.route} className="group flex flex-wrap items-end justify-between gap-3">
             <div>
               <LogoMark slug={section.logoSlug} name={section.name} color={section.color} className="h-8 w-44" />
@@ -221,9 +221,9 @@ export function BrandPortfolioGrid({ compact = false }: { compact?: boolean }) {
                 href={getHearstBrandRoute(slug)}
                 className="group flex min-h-16 items-center justify-between gap-3 border border-slate-200 bg-[#F8FAFC] px-3 py-3 hover:border-slate-400"
               >
-                <span className="flex min-w-0 items-center gap-3">
-                  <LogoMark slug={slug} name={name} color={section.color} />
-                  <span className="truncate text-xs font-semibold text-slate-500 group-hover:text-slate-700">{name}</span>
+                <span className="flex min-w-0 flex-1 items-center gap-3">
+                  <LogoMark slug={slug} name={name} color={section.color} className="h-6 w-20 shrink-0 sm:w-28" />
+                  <span className="min-w-0 flex-1 truncate text-xs font-semibold text-slate-500 group-hover:text-slate-700">{name}</span>
                 </span>
                 <span className="shrink-0 text-xs font-semibold text-slate-500">{count}</span>
               </Link>

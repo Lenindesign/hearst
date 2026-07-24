@@ -8,9 +8,11 @@ export type DailyEditionRecord = {
   editionKey: string;
   storyIds: string[];
   createdAt: number;
+  selectionVersion?: number;
 };
 
 export const dailyEditionStorageKey = "hearst-daily-editions-v1";
+export const currentDailyEditionSelectionVersion = 2;
 
 const maximumStoredEditions = 14;
 
@@ -39,6 +41,9 @@ export function normalizeDailyEditionRecords(value: unknown): DailyEditionRecord
       createdAt: typeof record.createdAt === "number" && Number.isFinite(record.createdAt)
         ? record.createdAt
         : 0,
+      ...(typeof record.selectionVersion === "number" && Number.isFinite(record.selectionVersion)
+        ? { selectionVersion: record.selectionVersion }
+        : {}),
     }))
     .filter((record) => {
       if (!record.editionKey || seenEditionKeys.has(record.editionKey)) return false;
@@ -52,7 +57,8 @@ export function normalizeDailyEditionRecords(value: unknown): DailyEditionRecord
 export function selectDailyEditionStoryIds(
   stories: DailyEditionStory[],
   existingStoryIds: string[] = [],
-  editionSize = 6
+  editionSize = 6,
+  deprioritizedStoryIds: string[] = []
 ) {
   if (editionSize <= 0) return [];
 
@@ -68,11 +74,19 @@ export function selectDailyEditionStoryIds(
   const selectedIds = new Set(selectedStories.map((story) => story.id));
   const selectedBrands = new Set(selectedStories.map((story) => story.brand));
   const selectedTopics = new Set(selectedStories.map((story) => story.topic));
+  const deprioritizedIds = new Set(deprioritizedStoryIds);
 
-  const addMatchingStories = (matches: (story: DailyEditionStory) => boolean) => {
+  const addMatchingStories = (
+    matches: (story: DailyEditionStory) => boolean,
+    includeDeprioritized = false
+  ) => {
     for (const story of availableStories) {
       if (selectedStories.length >= editionSize) break;
-      if (selectedIds.has(story.id) || !matches(story)) continue;
+      if (
+        selectedIds.has(story.id)
+        || (!includeDeprioritized && deprioritizedIds.has(story.id))
+        || !matches(story)
+      ) continue;
       selectedStories.push(story);
       selectedIds.add(story.id);
       selectedBrands.add(story.brand);
@@ -92,6 +106,7 @@ export function selectDailyEditionStoryIds(
   addMatchingStories((story) => !selectedBrands.has(story.brand));
   addMatchingStories((story) => !selectedTopics.has(story.topic));
   addMatchingStories(() => true);
+  addMatchingStories(() => true, true);
 
   return selectedStories.map((story) => story.id);
 }
@@ -101,15 +116,36 @@ export function resolveDailyEdition(
   editionKey: string,
   stories: DailyEditionStory[],
   createdAt: number,
-  editionSize = 6
+  editionSize = 6,
+  selectionVersion?: number
 ) {
   const normalizedRecords = normalizeDailyEditionRecords(records);
-  const existingRecord = normalizedRecords.find((record) => record.editionKey === editionKey);
-  const storyIds = selectDailyEditionStoryIds(stories, existingRecord?.storyIds, editionSize);
+  const existingRecord = normalizedRecords.find((record) =>
+    record.editionKey === editionKey
+    && (selectionVersion === undefined || record.selectionVersion === selectionVersion)
+  );
+  const editionScope = editionKey.includes(":")
+    ? editionKey.slice(editionKey.indexOf(":") + 1)
+    : editionKey;
+  const previousRecord = existingRecord
+    ? undefined
+    : normalizedRecords.find((record) => {
+        const recordScope = record.editionKey.includes(":")
+          ? record.editionKey.slice(record.editionKey.indexOf(":") + 1)
+          : record.editionKey;
+        return recordScope === editionScope;
+      });
+  const storyIds = selectDailyEditionStoryIds(
+    stories,
+    existingRecord?.storyIds,
+    editionSize,
+    previousRecord?.storyIds
+  );
   const nextRecord = {
     editionKey,
     storyIds,
     createdAt: existingRecord?.createdAt ?? createdAt,
+    ...(selectionVersion === undefined ? {} : { selectionVersion }),
   };
 
   return normalizeDailyEditionRecords([
