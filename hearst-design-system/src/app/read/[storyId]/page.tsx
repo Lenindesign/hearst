@@ -98,6 +98,17 @@ export async function generateMetadata({ params }: ReaderArticlePageProps): Prom
   return {
     title: story ? `${story.title} | Hearst+` : "Hearst story",
     description: story?.summary ?? "A Hearst personalized reader story.",
+    openGraph: {
+      title: story ? `${story.title} | Hearst+` : "Hearst story",
+      description: story?.summary ?? "A Hearst personalized reader story.",
+      images: [{ url: `/read/${encodeURIComponent(storyId)}/opengraph-image/`, width: 1200, height: 630, alt: story?.title ?? "Hearst story" }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: story ? `${story.title} | Hearst+` : "Hearst story",
+      description: story?.summary ?? "A Hearst personalized reader story.",
+      images: [`/read/${encodeURIComponent(storyId)}/opengraph-image/`],
+    },
   };
 }
 

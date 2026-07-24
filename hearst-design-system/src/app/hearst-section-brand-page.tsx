@@ -8,9 +8,11 @@ import { getPersonalizeLiveFeed, getPersonalizeVideoFeed } from "@/lib/personali
 import {
   getHearstSectionBrand,
   getHearstSectionBrandSlugs,
+  hearstSectionPrefixes,
   hearstSectionThemeSlugs,
   type HearstBrandSection,
 } from "@/lib/hearst-routes";
+import { socialGraphMetadata } from "@/lib/social-graph-image";
 
 type SectionBrandPageProps = {
   params: Promise<{ brandSlug: string }>;
@@ -29,10 +31,9 @@ export async function generateSectionBrandMetadata(
 
   if (!brand) return {};
 
-  return {
-    title: `${brand.brand} | Hearst ${section === "ew" ? "Enthusiast & Wellness" : section === "flux" ? "Fashion & Luxury" : section}`,
-    description: `A personalized ${brand.brand} story feed within the Hearst ${section} destination.`,
-  };
+  const title = `${brand.brand} | Hearst ${section === "ew" ? "Enthusiast & Wellness" : section === "flux" ? "Fashion & Luxury" : section}`;
+  const description = `A personalized ${brand.brand} story feed within the Hearst ${section} destination.`;
+  return { title, description, ...socialGraphMetadata(`/${hearstSectionPrefixes[section]}/${brandSlug}/opengraph-image/`, title, description) };
 }
 
 export async function SectionBrandRoutePage({

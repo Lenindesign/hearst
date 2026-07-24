@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Livvic, Newsreader, Petrona } from "next/font/google";
 import { ReaderAccountProvider } from "@/components/reader-account";
+import { socialGraphMetadata } from "@/lib/social-graph-image";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -44,6 +45,7 @@ export const metadata: Metadata = {
   title: "Hearst Design System",
   description:
     "Brand themes and component showcase for Hearst brands, built with shadcn/ui",
+  ...socialGraphMetadata("/opengraph-image/", "Hearst+", "A reader-first daily destination across the Hearst portfolio."),
 };
 
 export default function RootLayout({

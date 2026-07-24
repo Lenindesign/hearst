@@ -7,9 +7,11 @@ import { getHearstAllStoryInventory } from "@/lib/hearst-story-inventory";
 import {
   getHearstDestinationCategoryLabel,
   hearstDestinationCategoryLabels,
+  hearstDestinationRoutes,
   type HearstDestinationMode,
 } from "@/lib/hearst-routes";
 import { getPersonalizeLiveFeed, getPersonalizeVideoFeed } from "@/lib/personalize-live-feed";
+import { socialGraphMetadata } from "@/lib/social-graph-image";
 
 export type DestinationCategoryPageProps = {
   params: Promise<{ categorySlug: string }>;
@@ -45,10 +47,9 @@ export async function generateDestinationCategoryMetadata(
   const categoryLabel = getHearstDestinationCategoryLabel(destination, categorySlug);
   if (!categoryLabel) return {};
 
-  return {
-    title: `${categoryLabel} | ${destinationNames[destination]}`,
-    description: `${categoryLabel} stories personalized for the ${destinationNames[destination]} destination.`,
-  };
+  const title = `${categoryLabel} | ${destinationNames[destination]}`;
+  const description = `${categoryLabel} stories personalized for the ${destinationNames[destination]} destination.`;
+  return { title, description, ...socialGraphMetadata(`${hearstDestinationRoutes[destination]}${categorySlug}/opengraph-image/`, title, description) };
 }
 
 export async function DestinationCategoryRoutePage({

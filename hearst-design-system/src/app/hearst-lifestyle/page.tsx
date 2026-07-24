@@ -4,11 +4,13 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { getHearstDestinationStaticData } from "@/lib/hearst-destination-data";
 import { getHearstAllStoryInventory } from "@/lib/hearst-story-inventory";
 import { getPersonalizeLiveFeed, getPersonalizeVideoFeed } from "@/lib/personalize-live-feed";
+import { socialGraphMetadata } from "@/lib/social-graph-image";
 
 export const metadata: Metadata = {
   title: "Hearst Lifestyle",
   description:
     "A personalized Hearst lifestyle destination prototype powered by cross-brand editorial signals.",
+  ...socialGraphMetadata("/hearst-lifestyle/opengraph-image/", "Hearst Lifestyle", "A personalized Hearst lifestyle destination powered by cross-brand editorial signals."),
 };
 
 export const dynamic = "force-dynamic";
