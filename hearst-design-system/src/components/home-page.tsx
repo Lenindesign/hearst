@@ -7040,13 +7040,9 @@ function BlancpainInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
 
 const lexusRxOffersUrl = "https://www.lexus.com/models/RX-hybrid/offers?showOffers=current&zip=92656&cid=FT%3Acy26_na-market_national_retail_new-car_model-sustain_as_na-model_na-trim_cv_feb%3AP3C3CD9%3A19289%3A287222%3A10419950%3A5016352%3A38953306&trim=rxh-1";
 const lexusLogoUrl = "/logos/lexus.svg";
-const lexusRxVideoUrl = "https://s3.amazonaws.com/toyota-cms-media/toyota-videos/2025_RX_500h_FSPORT_Performance_AWD_Copper_BROLL.mp4";
-const lexusRxVideoPosterUrl = "https://lexus-cms-media.s3.us-east-2.amazonaws.com/wp-content/uploads/2024/08/2025_RX_500h_FSPORT_Performance_AWD_Copper_BROLL-1000x600.png";
 const lexusRxHighResolutionImageUrl = "https://www.the360mag.com/wp-content/uploads/2022/06/lexus-rx-scaled.jpg";
 
 function LexusInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
-  const [videoFailed, setVideoFailed] = React.useState(false);
-
   return (
     <div className="fixed inset-0 z-[260] bg-[#111]" role="dialog" aria-modal="true" aria-labelledby="lexus-ad-title" aria-describedby="lexus-ad-description">
       <div className="relative grid h-full w-full bg-[#e9e9e7] text-[#161616] lg:grid-cols-[0.82fr_1.18fr]">
@@ -7057,18 +7053,15 @@ function LexusInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
           <img src={lexusLogoUrl} alt="Lexus" className="h-12 w-20 max-w-full object-contain object-left sm:h-14 sm:w-24" />
           <div className="max-w-xl py-14">
             <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#5b5e5e]">Advertisement · Luxury hybrid</p>
-            <h2 id="lexus-ad-title" className="mt-6 font-sans text-[clamp(3rem,6vw,6.5rem)] font-light leading-[0.92] tracking-[-0.04em]">The RX Hybrid</h2>
+            <h2 id="lexus-ad-title" className="mt-6 font-sans text-[clamp(3rem,6vw,6.5rem)] font-medium leading-[0.92] tracking-[-0.04em]">The RX Hybrid</h2>
             <p id="lexus-ad-description" className="mt-7 max-w-md font-sans text-xl font-light leading-8 text-[#444847] sm:text-2xl">Experience the refined balance of electrified performance and considered luxury.</p>
           </div>
           <a href={lexusRxOffersUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-12 w-fit items-center bg-[#161616] px-6 text-xs font-bold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#3b3f3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#161616]">Explore RX Hybrid offers</a>
         </div>
         <div className="relative min-h-64 overflow-hidden bg-[#28302f] lg:min-h-full">
-          {/* Keep the official product image visible while video loads and as a resilient fallback if playback is blocked. */}
+          {/* Keep the product image stable until Lexus exposes a direct, lightweight RX Hybrid video asset suitable for background playback. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={lexusRxHighResolutionImageUrl} alt="Lexus vehicle" className="absolute inset-0 h-full w-full object-cover" />
-          {!videoFailed ? (
-            <video className="absolute inset-0 h-full w-full object-cover" src={lexusRxVideoUrl} poster={lexusRxVideoPosterUrl} autoPlay muted loop playsInline preload="auto" onError={() => setVideoFailed(true)} aria-label="Lexus RX performance film" />
-          ) : null}
           <div className="absolute inset-0 bg-gradient-to-t from-[#111]/55 via-transparent to-transparent" aria-hidden />
           <p className="absolute bottom-6 left-7 text-[10px] font-semibold uppercase tracking-[0.22em] text-white sm:left-10">Lexus · RX Hybrid</p>
         </div>
