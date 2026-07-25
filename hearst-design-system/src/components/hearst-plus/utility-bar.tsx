@@ -1,21 +1,37 @@
 "use client";
 
+import React from "react";
 import { ReaderAvatar } from "@/components/reader-account-ui";
 import { useReaderAccount } from "@/components/reader-account";
 import { Button } from "@/components/ui/button";
 import { LinkComponent } from "@/components/ui/link";
 import { PageContainer } from "@/components/ui/grid";
-import { getHearstBrandSection, getHearstDestinationRoute } from "@/lib/hearst-routes";
+import {
+  getHearstBrandRoute,
+  getHearstBrandSection,
+  getHearstDestinationRoute,
+  getHearstSectionBrands,
+  type HearstBrandSection,
+  type HearstDestinationMode,
+} from "@/lib/hearst-routes";
+import { getBrandLogoSrc } from "@/lib/logos";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 
 export const hearstDestinationSections = [
-  { label: "All", href: getHearstDestinationRoute("all") },
-  { label: "Lifestyle", href: getHearstDestinationRoute("lifestyle") },
-  { label: "Autos", href: getHearstDestinationRoute("autos") },
-  { label: "Fashion & Luxury", href: getHearstDestinationRoute("flux") },
-  { label: "Enthusiast & Wellness", href: getHearstDestinationRoute("ew") },
-];
+  { mode: "all", label: "All", href: getHearstDestinationRoute("all") },
+  { mode: "lifestyle", label: "Lifestyle", href: getHearstDestinationRoute("lifestyle") },
+  { mode: "autos", label: "Autos", href: getHearstDestinationRoute("autos") },
+  { mode: "flux", label: "Fashion & Luxury", href: getHearstDestinationRoute("flux") },
+  { mode: "ew", label: "Enthusiast & Wellness", href: getHearstDestinationRoute("ew") },
+] satisfies { mode: HearstDestinationMode; label: string; href: string }[];
+
+const brandMenuSections = [
+  { mode: "lifestyle", label: "Lifestyle" },
+  { mode: "autos", label: "Autos" },
+  { mode: "flux", label: "Fashion & Luxury" },
+  { mode: "ew", label: "Enthusiast & Wellness" },
+] satisfies { mode: HearstBrandSection; label: string }[];
 
 const utilityLinks = [
   { label: "Shop", href: "/hearst-plus/shopping/" },
@@ -35,6 +51,8 @@ export function UtilityBar({
 }) {
   const { brand } = useTheme();
   const { account } = useReaderAccount();
+  const utilityBarRef = React.useRef<HTMLDivElement>(null);
+  const [openDestinationMenu, setOpenDestinationMenu] = React.useState<HearstDestinationMode | null>(null);
   const selectedDestination = selectedBrand
     ? getHearstBrandSection(selectedBrand.slug)
     : null;
@@ -55,9 +73,35 @@ export function UtilityBar({
                 : brand.slug === "hearst-ew"
                   ? "Enthusiast & Wellness"
                   : "Lifestyle";
+  const openSection = hearstDestinationSections.find((section) => section.mode === openDestinationMenu);
+  const visibleBrandSections = openDestinationMenu === "all"
+    ? brandMenuSections
+    : brandMenuSections.filter((section) => section.mode === openDestinationMenu);
+
+  React.useEffect(() => {
+    if (!openDestinationMenu) return;
+
+    const closeOnOutsidePress = (event: PointerEvent) => {
+      if (event.target instanceof Node && !utilityBarRef.current?.contains(event.target)) {
+        setOpenDestinationMenu(null);
+      }
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpenDestinationMenu(null);
+    };
+
+    document.addEventListener("pointerdown", closeOnOutsidePress);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOnOutsidePress);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [openDestinationMenu]);
 
   return (
     <div
+      ref={utilityBarRef}
+      onMouseLeave={() => setOpenDestinationMenu(null)}
       className={cn(
         "sticky top-0 z-50 h-8 text-[length:var(--text-token-4xs)] font-semibold",
         darkMode
@@ -92,17 +136,26 @@ export function UtilityBar({
           aria-label="Hearst destination sections"
         >
           <div className={cn("flex min-w-max items-center gap-1 rounded-full p-0.5", darkMode ? "bg-white/[0.06]" : "bg-black/10")}>
-            {hearstDestinationSections.map((section) => (
+            {hearstDestinationSections.map((section) => {
+              const isActive = section.label === activeDestination;
+              const isOpen = section.mode === openDestinationMenu;
+
+              return (
               <LinkComponent
                 key={section.label}
                 href={section.href}
                 variant="neutral"
                 underline={false}
                 size="xs"
-                aria-current={section.label === activeDestination ? "page" : undefined}
+                aria-haspopup="menu"
+                aria-expanded={isOpen}
+                aria-controls={isOpen ? "hearst-brand-menu" : undefined}
+                aria-current={isActive ? "page" : undefined}
+                onMouseEnter={() => setOpenDestinationMenu(section.mode)}
+                onFocus={() => setOpenDestinationMenu(section.mode)}
                 className={cn(
-                  "min-h-6 rounded-full px-2 py-1 font-bold",
-                  section.label === activeDestination
+                  "inline-flex min-h-6 cursor-pointer items-center rounded-full px-2 py-1 text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80",
+                  isActive
                     ? darkMode
                       ? "bg-[#BDDDFC] text-[#0d1014] hover:text-[#0d1014]"
                       : "bg-white text-black hover:text-black"
@@ -113,7 +166,8 @@ export function UtilityBar({
               >
                 {section.label}
               </LinkComponent>
-            ))}
+              );
+            })}
           </div>
         </nav>
         <div className="flex shrink-0 items-center gap-2">
@@ -139,6 +193,88 @@ export function UtilityBar({
           </Button>
         </div>
       </PageContainer>
+      {openSection ? (
+        <div
+          onMouseLeave={() => setOpenDestinationMenu(null)}
+          className={cn(
+            "absolute left-1/2 top-full w-[calc(100%-1.5rem)] -translate-x-1/2 pt-2 sm:w-[calc(100%-3rem)]",
+            openDestinationMenu === "all" ? "max-w-5xl" : "max-w-sm"
+          )}
+        >
+          <div
+            id="hearst-brand-menu"
+            role="menu"
+            aria-label={`${openSection.label} brands`}
+            className={cn(
+              "max-h-[min(70dvh,520px)] w-full overflow-y-auto rounded-xl border p-4 shadow-2xl sm:p-5",
+              darkMode
+                ? "border-white/15 bg-[#151a21] text-[#f4f7fb]"
+                : "border-border bg-background text-foreground"
+            )}
+          >
+            <div className={cn("mb-4 border-b pb-3", darkMode ? "border-white/15" : "border-border")}>
+              <p className="text-sm font-bold">
+                {openDestinationMenu === "all" ? "Browse brands by destination" : `${openSection.label} brands`}
+              </p>
+            </div>
+            <div className={cn("grid gap-5", openDestinationMenu === "all" && "sm:grid-cols-2 lg:grid-cols-4")}>
+              {visibleBrandSections.map((section) => (
+                <section key={section.mode} aria-labelledby={`hearst-brand-menu-${section.mode}`}>
+                  <div className="mb-2">
+                    <p id={`hearst-brand-menu-${section.mode}`} className={cn("text-[11px] font-bold uppercase tracking-[0.12em]", darkMode ? "text-[#BDDDFC]" : "text-primary")}>
+                      {section.label}
+                    </p>
+                  </div>
+                  <div className="grid gap-1">
+                    {getHearstSectionBrands(section.mode).map((menuBrand) => {
+                      const isSelectedBrand = selectedBrand?.slug === menuBrand.brandSlug;
+
+                      return (
+                        <LinkComponent
+                          key={menuBrand.brandSlug}
+                          href={getHearstBrandRoute(menuBrand.brandSlug)}
+                          variant="neutral"
+                          underline={false}
+                          size="sm"
+                          role="menuitem"
+                          aria-current={isSelectedBrand ? "page" : undefined}
+                          onClick={() => setOpenDestinationMenu(null)}
+                          className={cn(
+                            "min-h-9 w-full justify-between rounded-lg px-3 py-2 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+                            darkMode
+                              ? "text-[#f4f7fb] hover:bg-white/10 hover:text-white"
+                              : "text-foreground hover:bg-muted hover:text-foreground",
+                            isSelectedBrand && (
+                              darkMode
+                                ? "bg-white/[0.08]"
+                                : "bg-primary/10 hover:bg-primary/15"
+                            )
+                          )}
+                        >
+                          <span className="flex min-w-0 items-center gap-2.5">
+                            <span
+                              aria-hidden
+                              className="size-6 shrink-0 rounded-md border border-black/10 bg-white"
+                              style={{
+                                backgroundImage: `url("${getBrandLogoSrc(menuBrand.brandSlug, "icon")}")`,
+                                backgroundPosition: "center",
+                                backgroundRepeat: "no-repeat",
+                                backgroundSize: "85% auto",
+                              }}
+                            />
+                            <span className="truncate">{menuBrand.brand}</span>
+                          </span>
+                          {isSelectedBrand ? <span className="text-[10px] uppercase tracking-wide">Current</span> : null}
+                        </LinkComponent>
+                      );
+                    })}
+                  </div>
+                </section>
+              ))}
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

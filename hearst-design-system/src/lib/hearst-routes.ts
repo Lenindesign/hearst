@@ -118,6 +118,10 @@ export function getHearstSectionBrand(section: HearstBrandSection, brandSlug: st
   return sectionBrands[section].find((brand) => brand.brandSlug === brandSlug);
 }
 
+export function getHearstSectionBrands(section: HearstBrandSection) {
+  return sectionBrands[section];
+}
+
 export function getHearstAllBrands() {
   return Object.values(sectionBrands).flat();
 }
