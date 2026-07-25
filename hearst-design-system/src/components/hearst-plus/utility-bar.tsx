@@ -198,7 +198,7 @@ export function UtilityBar({
           onMouseLeave={() => setOpenDestinationMenu(null)}
           className={cn(
             "absolute left-1/2 top-full w-[calc(100%-1.5rem)] -translate-x-1/2 pt-2 sm:w-[calc(100%-3rem)]",
-            openDestinationMenu === "all" ? "max-w-5xl" : "max-w-sm"
+            openDestinationMenu === "all" ? "max-w-5xl" : "max-w-xs"
           )}
         >
           <div

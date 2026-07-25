@@ -31,6 +31,8 @@ type AuthMode = "create" | "signIn";
 
 type GoogleCredentialResponse = { credential: string };
 
+const compactAuthInputClass = "mt-1.5 [&>div]:h-10";
+
 function getLibraryStoryHref(story: Pick<LifestyleRiverStory, "id">) {
   return `${getHearstStoryRoute(story)}?from=${encodeURIComponent("/hearst-plus/")}`;
 }
@@ -349,7 +351,7 @@ export function ReaderAuthDialog({
       open={open}
       onClose={onClose}
       titleId="reader-auth-title"
-      className="h-[min(760px,calc(100dvh-2rem))] max-w-5xl sm:h-[min(760px,calc(100dvh-3rem))] lg:grid lg:grid-cols-[minmax(320px,0.95fr)_minmax(0,1.05fr)]"
+      className="h-[min(700px,calc(100dvh-2rem))] max-w-4xl sm:h-[min(700px,calc(100dvh-3rem))] lg:grid lg:grid-cols-[minmax(300px,0.9fr)_minmax(0,1.1fr)]"
     >
       <div className="relative hidden h-full overflow-hidden bg-muted lg:block">
         <Image
@@ -362,7 +364,7 @@ export function ReaderAuthDialog({
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" aria-hidden />
-        <div className="absolute inset-x-0 bottom-0 p-8 text-white">
+        <div className="absolute inset-x-0 bottom-0 p-7 text-white">
           <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-white/80">
             Your daily Hearst+
           </p>
@@ -373,73 +375,72 @@ export function ReaderAuthDialog({
       </div>
 
       <div className="flex min-h-0 flex-col overflow-hidden">
-        <div className="flex items-center justify-between border-b border-border px-5 py-4 sm:px-7">
+        <div className="flex items-center justify-between border-b border-border px-5 py-3 sm:px-6">
           <BrandLogo
             slug="hearst-all"
-            className="[&_svg]:h-7 [&_svg]:w-auto [&_svg]:max-w-[190px]"
+            className="[&_svg]:h-6 [&_svg]:w-auto [&_svg]:max-w-[175px]"
             color="var(--color-primary)"
           />
-          <Button data-modal-close variant="outline" size="icon-sm" className="size-11" onClick={onClose} aria-label="Close account dialog">
+          <Button data-modal-close variant="outline" size="icon-lg" onClick={onClose} aria-label="Close account dialog">
             <X className="h-4 w-4" aria-hidden />
           </Button>
         </div>
-        <form className="min-h-0 flex-1 overflow-y-auto p-5 sm:p-8" onSubmit={submit} noValidate>
-          <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
-            Sign in / Sign up
-          </p>
-          <h2 id="reader-auth-title" className="headline mt-3 text-3xl leading-tight outline-none sm:text-4xl">
+        <form className="min-h-0 flex-1 overflow-y-auto p-5 sm:px-6 sm:py-5" onSubmit={submit} noValidate>
+          <h2 id="reader-auth-title" className="headline text-3xl leading-tight outline-none">
             {mode === "create" ? "Create your Hearst+ profile." : "Welcome back to Hearst+."}
           </h2>
-          <p className="mt-3 max-w-md text-sm leading-6 text-muted-foreground">
+          <p className="mt-2 max-w-md text-sm leading-5 text-muted-foreground">
             {mode === "create"
-              ? "Save your personalized feed, collections, comments, and reading history in this browser."
-              : "Sign in to resume the personalized feed and library saved in this browser."}
+              ? "Save your feed, collections, comments, and reading history in this browser."
+              : "Resume the feed and library saved in this browser."}
           </p>
 
           {googleClientId ? (
             <>
               <div
-                className="mt-6 flex min-h-11 w-full [&_.S9gUrf-YoZ4jf]:!w-full [&_.S9gUrf-YoZ4jf>div]:!w-full [&_[role=button]]:!w-full [&_[role=button]]:!max-w-none"
+                className="mt-4 flex min-h-10 w-full [&_.S9gUrf-YoZ4jf]:!w-full [&_.S9gUrf-YoZ4jf>div]:!w-full [&_[role=button]]:!w-full [&_[role=button]]:!max-w-none"
                 ref={googleButtonRef}
                 aria-label="Continue with Google"
               />
-              {submitting ? <p className="mt-3 text-sm font-semibold text-muted-foreground">Verifying Google sign-in...</p> : null}
-              <div className="my-6 flex items-center gap-4">
+              {submitting ? <p className="mt-2 text-sm font-semibold text-muted-foreground">Verifying Google sign-in...</p> : null}
+              <div className="my-4 flex items-center gap-3">
                 <span className="h-px flex-1 bg-border" />
-                <span className="text-sm font-bold text-muted-foreground">Or use email</span>
+                <span className="text-xs font-bold text-muted-foreground">Or use email</span>
                 <span className="h-px flex-1 bg-border" />
               </div>
             </>
           ) : null}
 
-          <div className="space-y-4">
+          <div className="space-y-3">
             {mode === "create" ? (
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-3 sm:grid-cols-2">
                 <label className="text-sm font-semibold">
                   First name
-                  <Input className="mt-2" value={firstName} onChange={(event) => setFirstName(event.target.value)} autoComplete="given-name" />
+                  <Input size="lg" className={compactAuthInputClass} value={firstName} onChange={(event) => setFirstName(event.target.value)} autoComplete="given-name" />
                 </label>
                 <label className="text-sm font-semibold">
                   Last name
-                  <Input className="mt-2" value={lastName} onChange={(event) => setLastName(event.target.value)} autoComplete="family-name" />
+                  <Input size="lg" className={compactAuthInputClass} value={lastName} onChange={(event) => setLastName(event.target.value)} autoComplete="family-name" />
                 </label>
               </div>
             ) : null}
             <label className="block text-sm font-semibold">
               Email
-              <Input className="mt-2" type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" />
-            </label>
-            <label className="block text-sm font-semibold">
-              Password
-              <Input className="mt-2" type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete={mode === "create" ? "new-password" : "current-password"} />
+              <Input size="lg" className={compactAuthInputClass} type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" />
             </label>
             {mode === "create" ? (
               <>
-                <label className="block text-sm font-semibold">
-                  Confirm password
-                  <Input className="mt-2" type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} autoComplete="new-password" />
-                </label>
-                <label className="flex items-start gap-3 text-sm leading-5">
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <label className="text-sm font-semibold">
+                    Password
+                    <Input size="lg" className={compactAuthInputClass} type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete="new-password" />
+                  </label>
+                  <label className="text-sm font-semibold">
+                    Confirm password
+                    <Input size="lg" className={compactAuthInputClass} type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} autoComplete="new-password" />
+                  </label>
+                </div>
+                <label className="flex items-start gap-2 text-sm leading-5">
                   <input
                     type="checkbox"
                     checked={acceptedTerms}
@@ -449,21 +450,26 @@ export function ReaderAuthDialog({
                   <span>I agree to the Terms of Use and acknowledge the Privacy Notice.</span>
                 </label>
               </>
-            ) : null}
+            ) : (
+              <label className="block text-sm font-semibold">
+                Password
+                <Input size="lg" className={compactAuthInputClass} type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete="current-password" />
+              </label>
+            )}
           </div>
 
           {error ? (
-            <p role="alert" className="mt-4 rounded-[8px] bg-destructive/10 px-3 py-2 text-sm font-semibold text-destructive">
+            <p role="alert" className="mt-3 rounded-[8px] bg-destructive/10 px-3 py-2 text-sm font-semibold text-destructive">
               {error}
             </p>
           ) : null}
 
-          <Button className="mt-6 w-full" type="submit" disabled={submitting}>
+          <Button className="mt-4 w-full" type="submit" disabled={submitting}>
             {submitting ? "Please wait" : mode === "create" ? "Create Local Profile" : "Sign In"}
           </Button>
           <button
             type="button"
-            className="mt-4 w-full text-center text-sm font-semibold text-primary hover:underline"
+            className="mt-3 w-full text-center text-sm font-semibold text-primary hover:underline"
             onClick={() => {
               setMode((current) => current === "create" ? "signIn" : "create");
               setError("");
@@ -471,8 +477,8 @@ export function ReaderAuthDialog({
           >
             {mode === "create" ? "Already have a local profile? Sign in" : "New to Hearst+? Create a local demo profile"}
           </button>
-          <p className="mt-5 border-t border-border pt-4 text-xs leading-5 text-muted-foreground">
-            Prototype note: Google sign-in verifies identity and syncs this prototype profile across signed-in devices. Local email profiles stay in this browser.
+          <p className="mt-4 border-t border-border pt-3 text-xs leading-4 text-muted-foreground">
+            Google profiles sync across signed-in devices. Email profiles stay in this browser.
           </p>
         </form>
       </div>

@@ -914,6 +914,23 @@ function getOnboardingSignalTags(stories: LifestyleRiverStory[], result: HearstO
   return mergeUnique(result.tags, signalTags).slice(0, 16);
 }
 
+function applyOnboardingPreferences(
+  profile: LifestyleRiverProfile,
+  stories: LifestyleRiverStory[],
+  result: HearstOnboardingResult
+): LifestyleRiverProfile {
+  const signalTags = getOnboardingSignalTags(stories, result);
+
+  return {
+    ...profile,
+    followedTopics: result.interests.length > 0 ? result.interests : profile.followedTopics,
+    followedBrands: result.brands.length > 0 ? result.brands : profile.followedBrands,
+    savedTags: signalTags,
+    boostedTags: signalTags,
+    personalizationMode: "onboarding",
+  };
+}
+
 const baseDestinationConfigs: Record<DestinationMode, DestinationConfig> = {
   all: {
     mode: "all",
@@ -1489,24 +1506,30 @@ function HearstOnboardingModal({
   brandInventory,
   onClose,
   onComplete,
+  onCreateProfile,
+  onSignIn,
 }: {
   open: boolean;
   destination: DestinationMode;
   brandInventory?: Record<string, number>;
   onClose: () => void;
   onComplete: (result: HearstOnboardingResult) => void;
+  onCreateProfile: (result: HearstOnboardingResult) => void;
+  onSignIn: () => void;
 }) {
   const destinationConfigs = useDestinationConfigs();
   const config = destinationConfigs[destination];
   const [step, setStep] = React.useState<1 | 2 | 3>(1);
   const [selectedInterests, setSelectedInterests] = React.useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = React.useState<string[]>([]);
-  const [brandPage, setBrandPage] = React.useState(0);
+  const [completedResult, setCompletedResult] = React.useState<HearstOnboardingResult | null>(null);
+  const [brandListAtEnd, setBrandListAtEnd] = React.useState(false);
   const portalTarget = useBodyPortalTarget();
   const dialogRef = React.useRef<HTMLElement | null>(null);
   const contentScrollRef = React.useRef<HTMLDivElement | null>(null);
   const headingRef = React.useRef<HTMLHeadingElement | null>(null);
   const restoreFocusRef = React.useRef<HTMLElement | null>(null);
+  const skipFocusRestoreRef = React.useRef(false);
   const interestOptions = React.useMemo(() => getOnboardingInterestOptions(config), [config]);
   const onboardingVisual = React.useMemo(() => getOnboardingVisual(config), [config]);
   const brandOptions = React.useMemo(() => {
@@ -1531,7 +1554,9 @@ function HearstOnboardingModal({
     return () => {
       const restoreTarget = restoreFocusRef.current;
       restoreFocusRef.current = null;
-      window.requestAnimationFrame(() => restoreTarget?.focus());
+      if (!skipFocusRestoreRef.current) {
+        window.requestAnimationFrame(() => restoreTarget?.focus());
+      }
     };
   }, [open]);
 
@@ -1652,13 +1677,6 @@ function HearstOnboardingModal({
         ].slice(0, 3);
       })()
     : [];
-  const brandsPerPage = 12;
-  const brandPageCount = Math.max(1, Math.ceil(brandOptions.length / brandsPerPage));
-  const currentBrandPage = Math.min(brandPage, brandPageCount - 1);
-  const visibleBrandOptions = brandOptions.slice(
-    currentBrandPage * brandsPerPage,
-    currentBrandPage * brandsPerPage + brandsPerPage
-  );
   return createPortal(
     <div className="fixed inset-0 z-[120] flex items-center justify-center bg-foreground/50 p-4 backdrop-blur-sm sm:p-6">
       <div className="absolute inset-0" onClick={onClose} aria-hidden="true" />
@@ -1806,99 +1824,68 @@ function HearstOnboardingModal({
                   {brandSelectionLabel}
                 </p>
               </div>
-              <div className="mt-6 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                {visibleBrandOptions.map((brandOption) => {
-                  const active = selectedBrands.includes(brandOption.brand);
-                  const unavailable = brandOption.count <= 0;
-                  return (
-                    <button
-                      key={brandOption.brandSlug}
-                      type="button"
-                      onClick={() => toggleBrand(brandOption.brand)}
-                      disabled={unavailable}
-                      className={cn(
-                        "flex min-h-[64px] min-w-0 items-center gap-3 rounded-[8px] border p-3 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
-                        unavailable && "cursor-not-allowed opacity-55",
-                        active
-                          ? "border-primary bg-primary/10 text-foreground"
-                          : "border-border bg-background hover:border-primary/50 hover:bg-muted"
-                      )}
-                      aria-pressed={active}
-                    >
-                      <BrandSourceIcon brand={brandOption.brand} brandSlug={brandOption.brandSlug} className="h-8 w-8 rounded-[6px]" />
-                      <span className="min-w-0">
-                        <span className="block truncate text-sm font-bold">{brandOption.brand}</span>
-                        <span className="mt-0.5 block text-xs text-muted-foreground">
-                          {unavailable ? "Unavailable in this demo" : `${brandOption.count} stories`}
-                        </span>
-                      </span>
-                      {active ? (
-                        <span className="ml-auto flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                          <Check className="h-3 w-3" aria-hidden />
-                        </span>
-                      ) : null}
-                    </button>
-                  );
-                })}
-                {Array.from({ length: brandsPerPage - visibleBrandOptions.length }).map((_, index) => (
-                  <div
-                    key={`brand-picker-placeholder-${index}`}
-                    className="hidden min-h-[64px] rounded-[8px] border border-transparent lg:block"
-                    aria-hidden="true"
-                  />
-                ))}
-              </div>
-              {brandPageCount > 1 ? (
-                <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <p className="text-xs font-semibold text-muted-foreground">
-                    Showing {currentBrandPage * brandsPerPage + 1}-{Math.min((currentBrandPage + 1) * brandsPerPage, brandOptions.length)} of {brandOptions.length} brands
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="icon-sm"
-                      onClick={() => setBrandPage((current) => (current - 1 + brandPageCount) % brandPageCount)}
-                      aria-label="Show previous brands"
-                    >
-                      <ChevronLeft className="h-4 w-4" aria-hidden />
-                    </Button>
-                    <div className="flex items-center gap-1" aria-label="Brand pages">
-                      {Array.from({ length: brandPageCount }).map((_, index) => (
+              <p className="mb-2 mt-6 text-xs font-semibold text-muted-foreground">
+                Scroll to browse all {brandOptions.length} brands
+              </p>
+              <div className="relative">
+                <div
+                  role="region"
+                  aria-label={`Choose from ${brandOptions.length} Hearst brands`}
+                  tabIndex={0}
+                  onScroll={(event) => {
+                    const scroller = event.currentTarget;
+                    setBrandListAtEnd(scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 8);
+                  }}
+                  className="max-h-[min(42dvh,340px)] overflow-y-scroll overscroll-contain pr-1 [scrollbar-gutter:stable] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                >
+                  <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                    {brandOptions.map((brandOption) => {
+                      const active = selectedBrands.includes(brandOption.brand);
+                      const unavailable = brandOption.count <= 0;
+                      return (
                         <button
-                          key={`brand-page-${index}`}
+                          key={brandOption.brandSlug}
                           type="button"
-                          onClick={() => setBrandPage(index)}
+                          onClick={() => toggleBrand(brandOption.brand)}
+                          disabled={unavailable}
                           className={cn(
-                            "inline-flex h-6 w-6 items-center justify-center rounded-full transition-colors hover:bg-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                            "flex min-h-[64px] min-w-0 items-center gap-3 rounded-[8px] border p-3 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+                            unavailable && "cursor-not-allowed opacity-55",
+                            active
+                              ? "border-primary bg-primary/10 text-foreground"
+                              : "border-border bg-background hover:border-primary/50 hover:bg-muted"
                           )}
-                          aria-label={`Show brand page ${index + 1}`}
-                          aria-current={index === currentBrandPage ? "page" : undefined}
+                          aria-pressed={active}
                         >
-                          <span
-                            aria-hidden="true"
-                            className={cn(
-                              "h-2 rounded-full transition-all",
-                              index === currentBrandPage
-                                ? "w-4 bg-primary"
-                                : "w-2 bg-muted-foreground/30"
-                            )}
-                          />
+                          <BrandSourceIcon brand={brandOption.brand} brandSlug={brandOption.brandSlug} className="h-8 w-8 rounded-[6px]" />
+                          <span className="min-w-0">
+                            <span className="block truncate text-sm font-bold">{brandOption.brand}</span>
+                            <span className="mt-0.5 block text-xs text-muted-foreground">
+                              {unavailable ? "Unavailable in this demo" : `${brandOption.count} stories`}
+                            </span>
+                          </span>
+                          {active ? (
+                            <span className="ml-auto flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                              <Check className="h-3 w-3" aria-hidden />
+                            </span>
+                          ) : null}
                         </button>
-                      ))}
-                    </div>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="icon-sm"
-                      onClick={() => setBrandPage((current) => (current + 1) % brandPageCount)}
-                      aria-label="Show next brands"
-                    >
-                      <ChevronRight className="h-4 w-4" aria-hidden />
-                    </Button>
+                      );
+                    })}
                   </div>
                 </div>
-              ) : null}
+                {!brandListAtEnd ? (
+                  <div
+                    className="pointer-events-none absolute inset-x-0 bottom-0 flex h-10 items-end justify-center bg-gradient-to-t from-background via-background/90 to-transparent pb-1"
+                    aria-hidden="true"
+                  >
+                    <span className="inline-flex items-center gap-1 rounded-full bg-background px-2 py-1 text-xs font-semibold text-foreground">
+                      More brands below
+                      <ChevronDown className="h-3.5 w-3.5" />
+                    </span>
+                  </div>
+                ) : null}
+              </div>
             </div>
           ) : null}
 
@@ -1916,7 +1903,7 @@ function HearstOnboardingModal({
                 Your feed is ready.
               </h2>
               <p id="hearst-onboarding-description" className="mx-auto mt-3 max-w-xl text-sm leading-6 text-muted-foreground">
-                Your For You page now reflects your selected interests and brands. You can tune it again any time from your profile.
+                Your For You page now reflects your selected interests and brands. Save it to a profile for access across devices, or keep reading with these choices in this browser.
               </p>
             </div>
           ) : null}
@@ -1924,13 +1911,25 @@ function HearstOnboardingModal({
 
         <div className="flex flex-col gap-3 border-t border-border px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
           {step === 1 ? (
-            <button
-              type="button"
-              onClick={onClose}
-              className="whitespace-nowrap text-sm font-semibold text-muted-foreground hover:text-foreground"
-            >
-              Not now
-            </button>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <button
+                type="button"
+                onClick={onClose}
+                className="whitespace-nowrap text-sm font-semibold text-muted-foreground hover:text-foreground"
+              >
+                Not now
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  skipFocusRestoreRef.current = true;
+                  onSignIn();
+                }}
+                className="whitespace-nowrap text-sm font-semibold text-primary hover:underline"
+              >
+                Already have a profile? Sign in
+              </button>
+            </div>
           ) : step === 2 ? (
             <button
               type="button"
@@ -1939,7 +1938,15 @@ function HearstOnboardingModal({
             >
               Back
             </button>
-          ) : <span aria-hidden="true" />}
+          ) : (
+            <button
+              type="button"
+              onClick={onClose}
+              className="whitespace-nowrap text-sm font-semibold text-muted-foreground hover:text-foreground"
+            >
+              Continue without an account
+            </button>
+          )}
           <div className="flex flex-wrap justify-end gap-2">
             {step === 1 ? (
               <Button
@@ -1954,14 +1961,28 @@ function HearstOnboardingModal({
               <Button
                 size="sm"
                 onClick={() => {
-                  onComplete(getResult());
+                  const result = getResult();
+                  setCompletedResult(result);
+                  onComplete(result);
                   setStep(3);
                 }}
               >
                 Use this feed
               </Button>
             ) : null}
-            {step === 3 ? <Button size="sm" onClick={onClose}>Start reading</Button> : null}
+            {step === 3 ? (
+              <Button
+                size="sm"
+                onClick={() => {
+                  if (!completedResult) return;
+                  skipFocusRestoreRef.current = true;
+                  onCreateProfile(completedResult);
+                }}
+                disabled={!completedResult}
+              >
+                Save my feed
+              </Button>
+            ) : null}
           </div>
         </div>
         </div>
@@ -11088,15 +11109,7 @@ function LifestyleRiverHomePage({
     if (!onboardingResult || appliedOnboardingResultRef.current === onboardingResult) return;
     appliedOnboardingResultRef.current = onboardingResult;
 
-    const signalTags = getOnboardingSignalTags(config.stories, onboardingResult);
-    updateReaderProfile((current) => ({
-      ...current,
-      followedTopics: onboardingResult.interests.length > 0 ? onboardingResult.interests : current.followedTopics,
-      followedBrands: onboardingResult.brands.length > 0 ? onboardingResult.brands : current.followedBrands,
-      savedTags: signalTags,
-      boostedTags: signalTags,
-      personalizationMode: "onboarding",
-    }));
+    updateReaderProfile((current) => applyOnboardingPreferences(current, config.stories, onboardingResult));
     restoreCurrentVisitContext();
     setActiveBrandFilters([]);
     onRiverReset?.();
@@ -12336,6 +12349,7 @@ export function HomePageTemplate({
   const [onboardingOpen, setOnboardingOpen] = React.useState(false);
   const [onboardingResult, setOnboardingResult] = React.useState<HearstOnboardingResult | null>(null);
   const [authDialogOpen, setAuthDialogOpen] = React.useState(false);
+  const [authDialogMode, setAuthDialogMode] = React.useState<"create" | "signIn">("create");
   const [profileOpen, setProfileOpen] = React.useState(false);
   const [selectedBrand, setSelectedBrand] = React.useState<{ name: string; slug: string } | null>(() =>
     getBrandRouteInfo(destinationConfigs.all.sourceNotes, initialBrandSlug)
@@ -12384,7 +12398,7 @@ export function HomePageTemplate({
       setProfileOpen(true);
       return;
     }
-    setAuthDialogOpen(true);
+    setOnboardingOpen(true);
   }, [account]);
   React.useEffect(() => {
     if (selectedBrand) return;
@@ -12812,14 +12826,34 @@ export function HomePageTemplate({
             setOnboardingResult(result);
             anchorDestinationContent();
           }}
+          onCreateProfile={(result) => {
+            setOnboardingResult(result);
+            setOnboardingOpen(false);
+            setAuthDialogMode("create");
+            setAuthDialogOpen(true);
+          }}
+          onSignIn={() => {
+            setOnboardingOpen(false);
+            setAuthDialogMode("signIn");
+            setAuthDialogOpen(true);
+          }}
         />
       ) : null}
 
       {isDestinationRiver ? (
         <ReaderAuthDialog
+          key={`${destinationMode}-${authDialogMode}`}
           open={authDialogOpen}
-          initialMode="create"
-          defaultPreferences={destinationConfigs[destinationMode].initialProfile}
+          initialMode={authDialogMode}
+          defaultPreferences={
+            onboardingResult
+              ? applyOnboardingPreferences(
+                  destinationConfigs[destinationMode].initialProfile,
+                  destinationConfigs[destinationMode].stories,
+                  onboardingResult
+                )
+              : destinationConfigs[destinationMode].initialProfile
+          }
           onClose={() => setAuthDialogOpen(false)}
           onAuthenticated={() => {
             setAuthDialogOpen(false);
