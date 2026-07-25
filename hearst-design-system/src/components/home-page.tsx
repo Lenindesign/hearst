@@ -7109,7 +7109,7 @@ function MarriottInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
 const porscheUsaUrl = "https://www.porsche.com/usa/";
 const porscheLogoUrl = "/logos/porsche.svg";
 const porscheHeroImageUrl = "https://images.porsche.com/f/338913/3840x2880/9cb0f564b9/04-macan-electric.jpg/m/2560x1920/filters%3Aformat%28webp%29%3Aquality%2880%29";
-const porscheHeroVideoUrl = "https://newstv.porsche.com/porschevideos/197318_en_3000000.mp4";
+const porscheHeroVideoUrl = "https://newstv.porsche.com/porschevideos/newstv.porsche.com_296175_en.mp4";
 
 function PorscheInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
   return (
@@ -8235,8 +8235,8 @@ function LifestyleStoryReaderModal({
     ) return;
 
     initialAmbientReaderRequestRef.current = null;
-    setAmbientReaderStoryId(requestedStoryId);
-  }, [ambientReaderStoryId, liveArticles, openStoryId]);
+    openAmbientReader(requestedStoryId);
+  }, [ambientReaderStoryId, liveArticles, openAmbientReader, openStoryId]);
 
   React.useEffect(() => {
     let active = true;
@@ -8305,12 +8305,12 @@ function LifestyleStoryReaderModal({
       if (!activeStoryId || !isCompleteAmbientArticle(liveArticles[activeStoryId])) return;
 
       event.preventDefault();
-      setAmbientReaderStoryId(activeStoryId);
+      openAmbientReader(activeStoryId);
     };
 
     window.addEventListener("keydown", openPremiumReaderFromKeyboard);
     return () => window.removeEventListener("keydown", openPremiumReaderFromKeyboard);
-  }, [ambientReaderStoryId, fullscreenGallery, isReaderOpen, liveArticles, visibleReaderStoryIds]);
+  }, [ambientReaderStoryId, fullscreenGallery, isReaderOpen, liveArticles, openAmbientReader, visibleReaderStoryIds]);
 
   if (!openStoryId || openIndex < 0 || !portalTarget) return null;
 
@@ -8629,10 +8629,6 @@ function LifestyleStoryReaderModal({
           onClose={() => setAmbientReaderStoryId(null)}
           onNavigateStory={(storyId) => {
             openAmbientReader(storyId);
-            // Navigation owns the visible reader state. If an interstitial is open,
-            // dismiss it after selecting the article so it cannot mask the new view
-            // or immediately reopen for the destination story.
-            setShowAmbientInterstitialAd(false);
             window.history.replaceState(
               {
                 ...window.history.state,
