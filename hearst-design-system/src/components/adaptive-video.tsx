@@ -12,6 +12,8 @@ function isHlsSource(src: string) {
   return /\.m3u8(?:$|\?)/i.test(src);
 }
 
+const STALLED_START_TIMEOUT_MS = 4500;
+
 function setForwardedRef(
   ref: React.ForwardedRef<HTMLVideoElement>,
   value: HTMLVideoElement | null,
@@ -29,6 +31,7 @@ export const AdaptiveVideo = React.forwardRef<HTMLVideoElement, AdaptiveVideoPro
     forwardedRef,
   ) {
     const videoRef = React.useRef<HTMLVideoElement | null>(null);
+    const stalledStartTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
     const [retryKey, setRetryKey] = React.useState(0);
     const [playbackError, setPlaybackError] = React.useState(false);
 
@@ -48,12 +51,31 @@ export const AdaptiveVideo = React.forwardRef<HTMLVideoElement, AdaptiveVideoPro
       let destroyHls: (() => void) | undefined;
       setPlaybackError(false);
 
-      const tryAutoplay = () => {
-        if (autoPlay) void video.play().catch(() => undefined);
+      const clearStalledStartTimer = () => {
+        if (!stalledStartTimerRef.current) return;
+        clearTimeout(stalledStartTimerRef.current);
+        stalledStartTimerRef.current = null;
       };
 
       const failPlayback = () => {
+        clearStalledStartTimer();
         if (!disposed) setPlaybackError(true);
+      };
+
+      const verifyPlaybackStarted = () => {
+        clearStalledStartTimer();
+        stalledStartTimerRef.current = setTimeout(() => {
+          if (disposed) return;
+          const hasStarted = !video.paused && video.currentTime > 0;
+          const hasEnoughData = video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA;
+          if (!hasStarted && !hasEnoughData) failPlayback();
+        }, STALLED_START_TIMEOUT_MS);
+      };
+
+      const tryAutoplay = () => {
+        if (!autoPlay) return;
+        verifyPlaybackStarted();
+        void video.play().catch(failPlayback);
       };
 
       const canPlayNativeHls = Boolean(
@@ -125,6 +147,7 @@ export const AdaptiveVideo = React.forwardRef<HTMLVideoElement, AdaptiveVideoPro
 
       return () => {
         disposed = true;
+        clearStalledStartTimer();
         destroyHls?.();
         video.pause();
         video.removeAttribute("src");
@@ -139,9 +162,51 @@ export const AdaptiveVideo = React.forwardRef<HTMLVideoElement, AdaptiveVideoPro
           ref={assignVideoRef}
           autoPlay={autoPlay}
           className={className}
+          onCanPlay={(event) => {
+            videoProps.onCanPlay?.(event);
+            setPlaybackError(false);
+          }}
           onError={(event) => {
             onError?.(event);
             if (!isHlsSource(src ?? "")) setPlaybackError(true);
+          }}
+          onPlay={(event) => {
+            videoProps.onPlay?.(event);
+            if ((event.currentTarget.currentTime ?? 0) < 0.25) {
+              if (stalledStartTimerRef.current) {
+                clearTimeout(stalledStartTimerRef.current);
+              }
+              stalledStartTimerRef.current = setTimeout(() => {
+                const video = videoRef.current;
+                if (!video) return;
+                const hasStarted = !video.paused && video.currentTime > 0;
+                const hasEnoughData = video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA;
+                if (!hasStarted && !hasEnoughData) setPlaybackError(true);
+              }, STALLED_START_TIMEOUT_MS);
+            }
+          }}
+          onPlaying={(event) => {
+            videoProps.onPlaying?.(event);
+            if (stalledStartTimerRef.current) {
+              clearTimeout(stalledStartTimerRef.current);
+              stalledStartTimerRef.current = null;
+            }
+            setPlaybackError(false);
+          }}
+          onStalled={(event) => {
+            videoProps.onStalled?.(event);
+            if ((event.currentTarget.currentTime ?? 0) < 0.25) {
+              if (stalledStartTimerRef.current) {
+                clearTimeout(stalledStartTimerRef.current);
+              }
+              stalledStartTimerRef.current = setTimeout(() => {
+                const video = videoRef.current;
+                if (!video) return;
+                if (video.currentTime < 0.25 && video.readyState < HTMLMediaElement.HAVE_FUTURE_DATA) {
+                  setPlaybackError(true);
+                }
+              }, STALLED_START_TIMEOUT_MS);
+            }
           }}
         />
         {playbackError ? (

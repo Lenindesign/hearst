@@ -257,27 +257,51 @@ function mapRecommendation(
 
 function getPreferredVideoTranscoding(item: ApiVideoRecommendation) {
   const transcodings = item.transcodings ?? [];
-  const mp4Transcodings = transcodings.filter((transcoding) =>
-    /\.mp4(?:$|\?)/i.test(transcoding.full_url ?? "")
-  );
-  const h264Transcodings = mp4Transcodings.filter((transcoding) =>
-    /(?:h264|h\.264|avc1|avc)/i.test(
-      `${transcoding.codec ?? ""} ${transcoding.display_name ?? ""} ${transcoding.preset_name ?? ""} ${transcoding.full_url ?? ""}`,
-    )
-  );
   const preferredNames = ["720p", "480p", "360p", "1080p", "240p"];
+  type VideoTranscoding = typeof transcodings[number];
+  const getDescriptor = (transcoding: VideoTranscoding) =>
+    [
+      transcoding.codec,
+      transcoding.display_name,
+      transcoding.preset_name,
+      transcoding.full_url,
+    ]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+  const isDirectMp4 = (transcoding: VideoTranscoding) =>
+    /\.mp4(?:$|\?)/i.test(transcoding.full_url ?? "");
+  const hasUnsupportedCodecSignal = (transcoding: VideoTranscoding) =>
+    /(?:hevc|h\.265|h265|hev1|hvc1|vp9|av1|webm|dash|mpeg-dash|prores)/i.test(
+      getDescriptor(transcoding),
+    );
+  const hasH264Signal = (transcoding: VideoTranscoding) =>
+    /(?:h264|h\.264|avc1|avc)/i.test(getDescriptor(transcoding));
+  const matchesPreferredName =
+    (name: string) => (transcoding: VideoTranscoding) =>
+      `${transcoding.display_name ?? ""} ${transcoding.preset_name ?? ""}`.toLowerCase().includes(name);
+
+  const mp4Transcodings = transcodings.filter((transcoding) =>
+    isDirectMp4(transcoding) && !hasUnsupportedCodecSignal(transcoding)
+  );
+  const h264Transcodings = mp4Transcodings.filter(hasH264Signal);
 
   for (const name of preferredNames) {
-    const match = h264Transcodings.find((transcoding) =>
-      `${transcoding.display_name ?? ""} ${transcoding.preset_name ?? ""}`.toLowerCase().includes(name)
-    );
+    const match = h264Transcodings.find(matchesPreferredName(name));
+    if (match?.full_url) return match;
+  }
+
+  for (const name of preferredNames) {
+    const match = mp4Transcodings.find(matchesPreferredName(name));
     if (match?.full_url) return match;
   }
 
   return (
     h264Transcodings[0] ??
-    transcodings.find((transcoding) => /\.m3u8(?:$|\?)/i.test(transcoding.full_url ?? "")) ??
-    mp4Transcodings[0]
+    mp4Transcodings[0] ??
+    transcodings.find((transcoding) =>
+      /\.m3u8(?:$|\?)/i.test(transcoding.full_url ?? "") && !hasUnsupportedCodecSignal(transcoding)
+    )
   );
 }
 

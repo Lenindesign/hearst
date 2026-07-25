@@ -157,12 +157,15 @@ function usePrefersReducedMotion() {
   );
 }
 
-function useReadingHistoryEntries() {
-  const [entries, setEntries] = React.useState<ReadingHistoryEntry[]>([]);
+function useReadingHistoryState() {
+  const [state, setState] = React.useState<{
+    entries: ReadingHistoryEntry[];
+    hydrated: boolean;
+  }>({ entries: [], hydrated: false });
 
   React.useEffect(() => {
     const syncReadingHistory = () => {
-      setEntries(readReadingHistory());
+      setState({ entries: readReadingHistory(), hydrated: true });
     };
     const syncStorageEvent = (event: StorageEvent) => {
       if (event.key === readingHistoryStorageKey) syncReadingHistory();
@@ -177,7 +180,11 @@ function useReadingHistoryEntries() {
     };
   }, []);
 
-  return entries;
+  return state;
+}
+
+function useReadingHistoryEntries() {
+  return useReadingHistoryState().entries;
 }
 
 function useContinueReadingStoryIds() {
@@ -274,6 +281,171 @@ function appendReaderReturnHref(storyId: string, returnHref: string | null) {
   if (!safeReturnHref) return route;
 
   return `${route}?from=${encodeURIComponent(safeReturnHref)}`;
+}
+
+const readerReturnScrollStoragePrefix = "hearst-plus-reader-return-scroll:";
+const readerRiverAllocationStoragePrefix = "hearst-plus-river-allocation:";
+
+function getSessionContinueReadingStoryIds(scopeKey: string, editionDate: string) {
+  const initialStoryIds = getContinueReadingStoryIds(readReadingHistory());
+
+  if (typeof window === "undefined") return initialStoryIds;
+
+  const storageKey = `${readerRiverAllocationStoragePrefix}${editionDate}:${scopeKey}`;
+
+  try {
+    const storedValue = window.sessionStorage.getItem(storageKey);
+    if (storedValue) {
+      const parsed = JSON.parse(storedValue);
+      if (Array.isArray(parsed)) {
+        const storedStoryIds = parsed.filter((storyId): storyId is string => typeof storyId === "string");
+        // Preserve the current visit's stable allocation, while allowing a
+        // story opened since the allocation was created to enter the queue.
+        return [
+          ...initialStoryIds.filter((storyId) => !storedStoryIds.includes(storyId)),
+          ...storedStoryIds,
+        ];
+      }
+    }
+
+    window.sessionStorage.setItem(storageKey, JSON.stringify(initialStoryIds));
+  } catch {
+    // The river remains usable when session storage is unavailable.
+  }
+
+  return initialStoryIds;
+}
+
+interface ReaderReturnScrollSnapshot {
+  href: string;
+  scrollX: number;
+  scrollY: number;
+  storyId: string;
+  storyIds: string[];
+  createdAt: number;
+}
+
+function getReaderReturnScrollStorageKey(returnHref: string | null) {
+  const safeReturnHref = normalizeReaderReturnHref(returnHref);
+
+  if (!safeReturnHref) return null;
+
+  return `${readerReturnScrollStoragePrefix}${safeReturnHref}`;
+}
+
+function saveReaderReturnScrollSnapshot(storyId: string, returnHref: string | null, storyIds: string[] = []) {
+  if (typeof window === "undefined") return;
+
+  const safeReturnHref = normalizeReaderReturnHref(returnHref);
+  const storageKey = getReaderReturnScrollStorageKey(safeReturnHref);
+
+  if (!safeReturnHref || !storageKey) return;
+
+  const snapshot: ReaderReturnScrollSnapshot = {
+    href: safeReturnHref,
+    scrollX: window.scrollX,
+    scrollY: window.scrollY,
+    storyId,
+    storyIds,
+    createdAt: Date.now(),
+  };
+
+  window.sessionStorage.setItem(storageKey, JSON.stringify(snapshot));
+}
+
+function readReaderReturnScrollSnapshot(returnHref: string | null): ReaderReturnScrollSnapshot | null {
+  if (typeof window === "undefined") return null;
+
+  const storageKey = getReaderReturnScrollStorageKey(returnHref);
+  if (!storageKey) return null;
+
+  try {
+    const rawSnapshot = window.sessionStorage.getItem(storageKey);
+    if (!rawSnapshot) return null;
+
+    const snapshot = JSON.parse(rawSnapshot) as Partial<ReaderReturnScrollSnapshot>;
+    const href = snapshot.href;
+    const scrollX = snapshot.scrollX;
+    const scrollY = snapshot.scrollY;
+    const createdAt = snapshot.createdAt;
+    const isValidSnapshot =
+      typeof href === "string"
+      && typeof scrollX === "number"
+      && typeof scrollY === "number"
+      && typeof createdAt === "number";
+
+    if (!isValidSnapshot) {
+      window.sessionStorage.removeItem(storageKey);
+      return null;
+    }
+
+    const isStale = Date.now() - createdAt > 30 * 60 * 1000;
+    if (isStale) {
+      window.sessionStorage.removeItem(storageKey);
+      return null;
+    }
+
+    return {
+      href,
+      scrollX,
+      scrollY,
+      storyId: snapshot.storyId ?? "",
+      storyIds: Array.isArray(snapshot.storyIds)
+        ? snapshot.storyIds.filter((storyId): storyId is string => typeof storyId === "string")
+        : [],
+      createdAt,
+    };
+  } catch {
+    window.sessionStorage.removeItem(storageKey);
+    return null;
+  }
+}
+
+function restoreReaderReturnScrollSnapshot(returnHref: string | null) {
+  if (typeof window === "undefined") return;
+
+  const snapshot = readReaderReturnScrollSnapshot(returnHref);
+  const storageKey = getReaderReturnScrollStorageKey(returnHref);
+
+  if (!snapshot) return;
+
+  let attemptCount = 0;
+  const attemptDelays = [0, 80, 200, 420];
+
+  const restore = () => {
+    const currentHref = `${window.location.pathname}${window.location.search}`;
+    const isReturnPageVisible = currentHref === snapshot.href;
+    const isFinalAttempt = attemptCount >= attemptDelays.length - 1;
+
+    if (isReturnPageVisible || isFinalAttempt) {
+      window.scrollTo(snapshot.scrollX, snapshot.scrollY);
+      if (storageKey && isReturnPageVisible) {
+        window.setTimeout(() => window.sessionStorage.removeItem(storageKey), 2000);
+      }
+      return;
+    }
+
+    attemptCount += 1;
+    window.setTimeout(restore, attemptDelays[attemptCount]);
+  };
+
+  window.requestAnimationFrame(() => {
+    window.requestAnimationFrame(restore);
+  });
+}
+
+function applyReaderReturnStoryOrder(returnHref: string | null, candidateStoryIds: string[]) {
+  const snapshot = readReaderReturnScrollSnapshot(returnHref);
+  if (!snapshot?.storyIds.length) return candidateStoryIds;
+
+  const candidateStoryIdSet = new Set(candidateStoryIds);
+  const retainedStoryIds = snapshot.storyIds.filter((storyId) => candidateStoryIdSet.has(storyId));
+  if (!retainedStoryIds.includes(snapshot.storyId)) return candidateStoryIds;
+
+  const retainedStoryIdSet = new Set(retainedStoryIds);
+  const appendedStoryIds = candidateStoryIds.filter((storyId) => !retainedStoryIdSet.has(storyId));
+
+  return [...retainedStoryIds, ...appendedStoryIds];
 }
 
 function appendStakeholderDemoMode(path: string, enabled: boolean) {
@@ -1157,6 +1329,14 @@ function mergeUniqueStories(...storyGroups: LifestyleRiverStory[][]) {
   });
 }
 
+function isDelishPortraitShort(story: LifestyleRiverStory) {
+  return story.brandSlug === "delish"
+    && Boolean(story.videoUrl)
+    && Boolean(story.videoWidth)
+    && Boolean(story.videoHeight)
+    && (story.videoHeight ?? 0) > (story.videoWidth ?? 0);
+}
+
 function isCurrentFeedStory(story: LifestyleRiverStory) {
   return story.id.startsWith("live-");
 }
@@ -2022,6 +2202,8 @@ export function MainNav({
       ? "#e90c17"
       : mastheadSlug === "hot-rod"
       ? "#c11b17"
+      : mastheadSlug === "cosmopolitan"
+      ? "#d70000"
       : shouldUseNativeLogoColor
       ? undefined
       : "#121212"
@@ -4602,6 +4784,7 @@ export function VideoRailCard({
 type VerticalVideoCarouselProps = {
   stories: LifestyleRiverStory[];
   onOpen: (story: LifestyleRiverStory) => void;
+  onSupplementalStories?: (stories: LifestyleRiverStory[]) => void;
   theme?: "dark" | "light";
   brandName?: string;
   brandSlug?: string;
@@ -4613,6 +4796,7 @@ type VerticalVideoCarouselProps = {
 export function VerticalVideoCarousel({
   stories,
   onOpen,
+  onSupplementalStories,
   theme = "dark",
   brandName,
   brandSlug,
@@ -4670,7 +4854,9 @@ export function VerticalVideoCarousel({
           return response.json() as Promise<{ stories?: LifestyleRiverStory[] }>;
         })
         .then((payload) => {
-          setSupplementalStories(Array.isArray(payload.stories) ? payload.stories : []);
+          const nextStories = Array.isArray(payload.stories) ? payload.stories : [];
+          setSupplementalStories(nextStories);
+          onSupplementalStories?.(nextStories);
         })
         .catch(() => {
           supplementalRequestRef.current = null;
@@ -4679,7 +4865,7 @@ export function VerticalVideoCarousel({
 
     observer.observe(section);
     return () => observer.disconnect();
-  }, [requestedBrandSlug]);
+  }, [onSupplementalStories, requestedBrandSlug]);
 
   const updateScrollState = React.useCallback(() => {
     const scroller = scrollRef.current;
@@ -4833,12 +5019,14 @@ export function VerticalVideoCarousel({
 export function DelishVerticalVideoCarousel({
   stories,
   onOpen,
+  onSupplementalStories,
   theme = "dark",
-}: Pick<VerticalVideoCarouselProps, "stories" | "onOpen" | "theme">) {
+}: Pick<VerticalVideoCarouselProps, "stories" | "onOpen" | "onSupplementalStories" | "theme">) {
   return (
     <VerticalVideoCarousel
       stories={stories}
       onOpen={onOpen}
+      onSupplementalStories={onSupplementalStories}
       theme={theme}
       brandName="Delish"
       brandSlug="delish"
@@ -4868,50 +5056,36 @@ function DelishShortsImmersiveModal({
 }) {
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
   const dialogRef = React.useRef<HTMLDivElement | null>(null);
-  const swipeStartRef = React.useRef<{ x: number; y: number; time: number; pointerId: number } | null>(null);
-  const swipeLastRef = React.useRef<{ x: number; y: number } | null>(null);
-  const suppressVideoClickRef = React.useRef(false);
-  const wheelLockedRef = React.useRef(false);
-  const slideFrameRef = React.useRef<number | null>(null);
-  const slideTimerRef = React.useRef<number | null>(null);
+  const shortsScrollerRef = React.useRef<HTMLDivElement | null>(null);
+  const scrollFrameRef = React.useRef<number | null>(null);
+  const scrollSelectionSourceRef = React.useRef<"scroll" | "programmatic" | null>(null);
   const swipeInstructionsId = React.useId();
-  const prefersReducedMotion = usePrefersReducedMotion();
   const [playing, setPlaying] = React.useState(true);
   const [muted, setMuted] = React.useState(true);
-  const [isSwiping, setIsSwiping] = React.useState(false);
-  const [swipeOffset, setSwipeOffset] = React.useState(0);
-  const [slideTransition, setSlideTransition] = React.useState<{
-    direction: -1 | 1;
-    toStory: LifestyleRiverStory;
-    started: boolean;
-  } | null>(null);
   const activeIndex = stories.findIndex((story) => story.id === openStoryId);
   const activeStory = activeIndex >= 0 ? stories[activeIndex] : null;
   const hasPrevious = activeIndex > 0;
   const hasNext = activeIndex >= 0 && activeIndex < stories.length - 1;
 
-  const selectRelativeStory = React.useCallback((direction: -1 | 1) => {
-    const nextIndex = activeIndex + direction;
+  const selectStoryAtIndex = React.useCallback((nextIndex: number, behavior: ScrollBehavior = "smooth") => {
     const nextStory = stories[nextIndex];
-    if (!nextStory || !activeStory || slideTransition) return;
+    if (!nextStory) return;
 
-    if (prefersReducedMotion) {
-      onSelectStory(nextStory.id);
-      return;
-    }
-
-    setSlideTransition({ direction, toStory: nextStory, started: false });
-    slideFrameRef.current = window.requestAnimationFrame(() => {
-      slideFrameRef.current = window.requestAnimationFrame(() => {
-        setSlideTransition((current) => current ? { ...current, started: true } : current);
+    scrollSelectionSourceRef.current = "programmatic";
+    setPlaying(true);
+    onSelectStory(nextStory.id);
+    const scroller = shortsScrollerRef.current;
+    if (scroller) {
+      scroller.scrollTo({
+        top: nextIndex * scroller.clientHeight,
+        behavior,
       });
-    });
-    slideTimerRef.current = window.setTimeout(() => {
-      onSelectStory(nextStory.id);
-      setSlideTransition(null);
-      slideTimerRef.current = null;
-    }, 320);
-  }, [activeIndex, activeStory, onSelectStory, prefersReducedMotion, slideTransition, stories]);
+    }
+  }, [onSelectStory, stories]);
+
+  const selectRelativeStory = React.useCallback((direction: -1 | 1) => {
+    selectStoryAtIndex(activeIndex + direction);
+  }, [activeIndex, selectStoryAtIndex]);
 
   const togglePlayback = React.useCallback(() => {
     const video = videoRef.current;
@@ -4923,84 +5097,40 @@ function DelishShortsImmersiveModal({
     }
   }, []);
 
-  const resetSwipe = React.useCallback(() => {
-    swipeStartRef.current = null;
-    swipeLastRef.current = null;
-    setIsSwiping(false);
-    setSwipeOffset(0);
-  }, []);
+  const handleShortsScroll = React.useCallback(() => {
+    if (scrollFrameRef.current !== null) return;
 
-  const handleSwipeStart = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (event.button !== 0) return;
-    if (event.target instanceof Element && event.target.closest("button")) return;
+    scrollFrameRef.current = window.requestAnimationFrame(() => {
+      scrollFrameRef.current = null;
+      const scroller = shortsScrollerRef.current;
+      if (!scroller) return;
 
-    swipeStartRef.current = {
-      x: event.clientX,
-      y: event.clientY,
-      time: performance.now(),
-      pointerId: event.pointerId,
-    };
-    swipeLastRef.current = { x: event.clientX, y: event.clientY };
-    setIsSwiping(true);
-  };
+      const itemHeight = Math.max(scroller.clientHeight, 1);
+      const nextIndex = Math.max(0, Math.min(stories.length - 1, Math.round(scroller.scrollTop / itemHeight)));
+      const nextStory = stories[nextIndex];
+      if (!nextStory || nextStory.id === openStoryId) return;
 
-  const handleSwipeMove = (event: React.PointerEvent<HTMLDivElement>) => {
-    const start = swipeStartRef.current;
-    if (!start || start.pointerId !== event.pointerId) return;
+      scrollSelectionSourceRef.current = "scroll";
+      setPlaying(true);
+      onSelectStory(nextStory.id);
+    });
+  }, [onSelectStory, openStoryId, stories]);
 
-    swipeLastRef.current = { x: event.clientX, y: event.clientY };
-    const distanceX = event.clientX - start.x;
-    const distanceY = event.clientY - start.y;
-    if (Math.abs(distanceX) > Math.abs(distanceY)) return;
+  React.useEffect(() => {
+    const scroller = shortsScrollerRef.current;
+    if (!scroller || activeIndex < 0) return;
 
-    if (Math.abs(distanceY) >= 8 && !event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.setPointerCapture(event.pointerId);
+    if (scrollSelectionSourceRef.current === "scroll") {
+      scrollSelectionSourceRef.current = null;
+      return;
     }
 
-    event.preventDefault();
-    const maxOffset = event.currentTarget.clientHeight * 0.18;
-    const atBoundary = (distanceY > 0 && !hasPrevious) || (distanceY < 0 && !hasNext);
-    const adjustedDistance = atBoundary ? distanceY * 0.28 : distanceY;
-    setSwipeOffset(Math.max(-maxOffset, Math.min(maxOffset, adjustedDistance)));
-  };
-
-  const handleSwipeEnd = (event: React.PointerEvent<HTMLDivElement>) => {
-    const start = swipeStartRef.current;
-    if (!start || start.pointerId !== event.pointerId) return;
-
-    const end = swipeLastRef.current ?? { x: event.clientX, y: event.clientY };
-    const distanceX = end.x - start.x;
-    const distanceY = end.y - start.y;
-    const elapsed = Math.max(performance.now() - start.time, 1);
-    const velocity = Math.abs(distanceY) / elapsed;
-    const threshold = Math.min(64, event.currentTarget.clientHeight * 0.1);
-    const isVerticalSwipe = Math.abs(distanceY) > Math.abs(distanceX) * 1.2
-      && (Math.abs(distanceY) >= threshold || (Math.abs(distanceY) >= 28 && velocity >= 0.45));
-
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-    }
-
-    if (isVerticalSwipe) {
-      suppressVideoClickRef.current = true;
-      selectRelativeStory(distanceY < 0 ? 1 : -1);
-      window.setTimeout(() => {
-        suppressVideoClickRef.current = false;
-      }, 0);
-    }
-
-    resetSwipe();
-  };
-
-  const handleTrackpadSwipe = (event: React.WheelEvent<HTMLDivElement>) => {
-    if (wheelLockedRef.current || Math.abs(event.deltaY) < 28 || Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
-    event.preventDefault();
-    wheelLockedRef.current = true;
-    selectRelativeStory(event.deltaY > 0 ? 1 : -1);
-    window.setTimeout(() => {
-      wheelLockedRef.current = false;
-    }, 600);
-  };
+    scroller.scrollTo({
+      top: activeIndex * scroller.clientHeight,
+      behavior: "auto",
+    });
+    scrollSelectionSourceRef.current = null;
+  }, [activeIndex, stories.length]);
 
   React.useEffect(() => {
     if (!activeStory) return;
@@ -5055,8 +5185,7 @@ function DelishShortsImmersiveModal({
   }, [activeStory, onClose, selectRelativeStory, togglePlayback]);
 
   React.useEffect(() => () => {
-    if (slideFrameRef.current !== null) window.cancelAnimationFrame(slideFrameRef.current);
-    if (slideTimerRef.current !== null) window.clearTimeout(slideTimerRef.current);
+    if (scrollFrameRef.current !== null) window.cancelAnimationFrame(scrollFrameRef.current);
   }, []);
 
   if (!activeStory || typeof document === "undefined") return null;
@@ -5098,86 +5227,84 @@ function DelishShortsImmersiveModal({
         <div
           data-testid="delish-short-swipe-surface"
           className={cn(
-            "relative max-h-[100dvh] touch-none select-none overflow-hidden bg-[#111] sm:max-h-[calc(100dvh-32px)] sm:rounded-[14px] sm:ring-1 sm:ring-inset sm:ring-white/10"
+            "relative max-h-[100dvh] select-none overflow-hidden bg-[#111] sm:max-h-[calc(100dvh-32px)] sm:rounded-[14px] sm:ring-1 sm:ring-inset sm:ring-white/10"
           )}
           style={{
             width: "min(100vw, calc((100dvh - 32px) * 9 / 16))",
             aspectRatio: "9 / 16",
           }}
-          onPointerDown={handleSwipeStart}
-          onPointerMove={handleSwipeMove}
-          onPointerUp={handleSwipeEnd}
-          onPointerCancel={resetSwipe}
-          onWheel={handleTrackpadSwipe}
           onDragStart={(event) => event.preventDefault()}
         >
-          {[activeStory, ...(slideTransition ? [slideTransition.toStory] : [])].map((story) => {
-            const isOutgoing = story.id === activeStory.id;
-            const isControlTarget = story.id === (slideTransition?.toStory.id ?? activeStory.id);
-            const transform = slideTransition
-              ? isOutgoing
-                ? `translateY(${slideTransition.started ? -slideTransition.direction * 100 : 0}%)`
-                : `translateY(${slideTransition.started ? 0 : slideTransition.direction * 100}%)`
-              : `translateY(${swipeOffset}px)`;
+          <div
+            ref={shortsScrollerRef}
+            data-testid="delish-short-scroll-snap-track"
+            className="h-full snap-y snap-mandatory overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            onScroll={handleShortsScroll}
+          >
+            {stories.map((story, index) => {
+              const isActive = index === activeIndex;
+              const shouldRenderVideo = Math.abs(index - activeIndex) <= 1;
 
-            return (
-              <div
-                key={story.id}
-                className={cn(
-                  "absolute inset-0 ease-[cubic-bezier(0.22,1,0.36,1)]",
-                  isSwiping ? "transition-none" : "transition-transform duration-300 motion-reduce:transition-none"
-                )}
-                style={{ transform }}
-                aria-hidden={!isOutgoing}
-              >
-                <AdaptiveVideo
-                  ref={isControlTarget ? videoRef : undefined}
-                  src={story.videoUrl}
-                  poster={story.image}
-                  autoPlay
-                  muted={muted}
-                  playsInline
-                  preload="auto"
-                  className="h-full w-full cursor-pointer bg-black object-contain"
-                  aria-label={`Delish Short: ${story.title}`}
-                  onClick={(event) => {
-                    if (suppressVideoClickRef.current) {
-                      event.preventDefault();
-                      return;
-                    }
-                    togglePlayback();
-                  }}
-                  onPlay={() => isControlTarget && setPlaying(true)}
-                  onPause={() => isControlTarget && setPlaying(false)}
-                  onEnded={() => isControlTarget && selectRelativeStory(1)}
-                />
+              return (
+                <div
+                  key={story.id}
+                  className="relative h-full snap-start snap-always overflow-hidden"
+                  aria-hidden={!isActive}
+                >
+                  {shouldRenderVideo ? (
+                    <AdaptiveVideo
+                      ref={isActive ? videoRef : undefined}
+                      src={story.videoUrl}
+                      poster={story.image}
+                      autoPlay={isActive && playing}
+                      muted={muted}
+                      playsInline
+                      preload="auto"
+                      className="h-full w-full cursor-pointer bg-black object-contain"
+                      aria-label={`Delish Short: ${story.title}`}
+                      onClick={() => isActive && togglePlayback()}
+                      onPlay={() => isActive && setPlaying(true)}
+                      onPause={() => isActive && setPlaying(false)}
+                      onEnded={() => isActive && selectRelativeStory(1)}
+                    />
+                  ) : (
+                    <Image
+                      src={story.image}
+                      alt=""
+                      fill
+                      sizes="min(100vw, 56vh)"
+                      className="object-contain"
+                      aria-hidden="true"
+                    />
+                  )}
 
-                <div className="absolute bottom-0 left-0 right-0 z-20 bg-black/75 p-4 pb-5 pr-16 sm:p-5 sm:pr-5">
-                  <div className="flex items-center gap-2 text-xs font-bold text-white/75">
-                    <BrandSourceIcon brand="Delish" brandSlug="delish" className="h-5 w-5" />
-                    <span>Delish · {story.topic}</span>
-                    {story.videoDuration ? <span>· {formatVideoDuration(story.videoDuration)}</span> : null}
+                  <div className="absolute bottom-0 left-0 right-0 z-20 bg-black/75 p-4 pb-5 pr-16 sm:p-5 sm:pr-5">
+                    <div className="flex items-center gap-2 text-xs font-bold text-white/75">
+                      <BrandSourceIcon brand="Delish" brandSlug="delish" className="h-5 w-5" />
+                      <span>Delish · {story.topic}</span>
+                      {story.videoDuration ? <span>· {formatVideoDuration(story.videoDuration)}</span> : null}
+                    </div>
+                    <h2
+                      id={isActive ? "delish-short-title" : undefined}
+                      className="mt-2 line-clamp-2 text-lg font-black leading-tight sm:text-xl"
+                    >
+                      {story.title}
+                    </h2>
+                    <button
+                      type="button"
+                      onClick={() => onOpenStory(story.id)}
+                      tabIndex={isActive ? 0 : -1}
+                      className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-[6px] text-sm font-bold text-white underline decoration-white/45 underline-offset-4 transition-colors hover:decoration-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white motion-reduce:transition-none sm:min-h-0"
+                      aria-label={`Read the full story: ${story.title}`}
+                    >
+                      <BookOpenText className="h-4 w-4" aria-hidden />
+                      Read the full story
+                    </button>
                   </div>
-                  <h2
-                    id={isOutgoing ? "delish-short-title" : undefined}
-                    className="mt-2 line-clamp-2 text-lg font-black leading-tight sm:text-xl"
-                  >
-                    {story.title}
-                  </h2>
-                  <button
-                    type="button"
-                    onClick={() => onOpenStory(story.id)}
-                    tabIndex={isOutgoing ? 0 : -1}
-                    className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-[6px] text-sm font-bold text-white underline decoration-white/45 underline-offset-4 transition-colors hover:decoration-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white motion-reduce:transition-none sm:min-h-0"
-                    aria-label={`Read the full story: ${story.title}`}
-                  >
-                    <BookOpenText className="h-4 w-4" aria-hidden />
-                    Read the full story
-                  </button>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
 
           <div className="absolute bottom-36 right-3 z-30 flex flex-col gap-3 sm:hidden">
             <button type="button" onClick={() => onSave(activeStory)} className={controlButtonClass} aria-label={saved ? "Remove saved short" : "Save short"} aria-pressed={saved}>
@@ -5972,37 +6099,20 @@ function LifestyleReaderActions({
   story,
   article,
   saved,
-  followed,
   commentCount,
   onSave,
-  onToggleFollowBrand,
   ambientReaderState,
   onOpenAmbientReader,
 }: {
   story: LifestyleRiverStory;
   article?: LiveArticleData;
   saved: boolean;
-  followed: boolean;
   commentCount: number;
   onSave: () => void;
-  onToggleFollowBrand: () => void;
   ambientReaderState?: "loading" | "ready" | "unavailable";
   onOpenAmbientReader?: () => void;
 }) {
-  const destinationConfigs = useDestinationConfigs();
   const byline = getLifestyleByline(story, article);
-  const storyDestination = getStoryDestinationMode(story.brandSlug);
-  const destinationTheme = themeOptions.find(
-    (theme) => theme.slug === destinationConfigs[storyDestination].brandSlug
-  );
-  const publicationTheme = destinationTheme
-    ? getSelectedBrandTheme(
-        { name: story.brand, slug: story.brandSlug },
-        destinationTheme
-      ) ?? destinationTheme
-    : undefined;
-  const followBadgeBackground = publicationTheme?.colors["1"] ?? "#242D39";
-  const followBadgeForeground = getAmbientBrandForeground(followBadgeBackground);
   const publishedAt = article?.publishedAt ?? story.publishedAt;
   const authorAvatarUrl = article?.authorAvatarUrl;
   const authorInitials = byline
@@ -6017,14 +6127,7 @@ function LifestyleReaderActions({
     <div className="my-6 min-w-0 border-y border-border py-3">
       <div className="flex w-full min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-5">
         <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1">
-          <button
-            type="button"
-            onClick={onToggleFollowBrand}
-            aria-pressed={followed}
-            aria-label={followed ? `Unfollow ${story.brand} brand` : `Follow ${story.brand} brand`}
-            title={followed ? `Unfollow ${story.brand} brand` : `Follow ${story.brand} brand`}
-            className="inline-flex min-h-11 max-w-full min-w-0 items-center gap-1.5 rounded-[4px] text-[length:var(--text-token-4xs)] text-muted-foreground transition-colors hover:text-primary focus:outline-none focus-visible:text-primary sm:min-h-0"
-          >
+          <div className="inline-flex min-h-11 max-w-full min-w-0 items-center gap-1.5 text-[length:var(--text-token-4xs)] text-muted-foreground sm:min-h-0">
             <Avatar size="default" className="size-7" aria-hidden>
               {authorAvatarUrl ? <AvatarImage src={authorAvatarUrl} alt="" referrerPolicy="no-referrer" /> : null}
               <AvatarFallback>{authorInitials || "H+"}</AvatarFallback>
@@ -6032,22 +6135,7 @@ function LifestyleReaderActions({
             <span className="min-w-0 truncate">
               By {byline} · {story.topic}
             </span>
-            <span
-              className={cn(
-                "inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-colors",
-                followed ? "" : "border-current bg-transparent text-muted-foreground"
-              )}
-              style={followed
-                ? {
-                    backgroundColor: followBadgeBackground,
-                    borderColor: followBadgeBackground,
-                    color: followBadgeForeground,
-                  }
-                : undefined}
-            >
-              {followed ? <Check className="h-3 w-3" aria-hidden /> : <Plus className="h-3 w-3" aria-hidden />}
-            </span>
-          </button>
+          </div>
           <ReaderPublicationDates
             publishedAt={publishedAt}
             updatedAt={article?.updatedAt}
@@ -6110,6 +6198,57 @@ function LifestyleReaderActions({
         </div>
       </div>
     </div>
+  );
+}
+
+function ReaderBrandFollowButton({
+  story,
+  followed,
+  onToggleFollowBrand,
+}: {
+  story: LifestyleRiverStory;
+  followed: boolean;
+  onToggleFollowBrand: () => void;
+}) {
+  const destinationConfigs = useDestinationConfigs();
+  const storyDestination = getStoryDestinationMode(story.brandSlug);
+  const destinationTheme = themeOptions.find(
+    (theme) => theme.slug === destinationConfigs[storyDestination].brandSlug
+  );
+  const publicationTheme = destinationTheme
+    ? getSelectedBrandTheme(
+        { name: story.brand, slug: story.brandSlug },
+        destinationTheme
+      ) ?? destinationTheme
+    : undefined;
+  const followBadgeBackground = publicationTheme?.colors["1"] ?? "#242D39";
+  const followBadgeForeground = getAmbientBrandForeground(followBadgeBackground);
+
+  return (
+    <button
+      type="button"
+      onClick={onToggleFollowBrand}
+      aria-pressed={followed}
+      aria-label={followed ? `Unfollow ${story.brand} brand` : `Follow ${story.brand} brand`}
+      title={followed ? `Unfollow ${story.brand} brand` : `Follow ${story.brand} brand`}
+      className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-primary transition-colors hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+    >
+      <span
+        className={cn(
+          "inline-flex h-4 w-4 items-center justify-center rounded-full border transition-colors",
+          followed ? "" : "border-current bg-transparent text-current"
+        )}
+        style={followed
+          ? {
+              backgroundColor: followBadgeBackground,
+              borderColor: followBadgeBackground,
+              color: followBadgeForeground,
+            }
+          : undefined}
+      >
+        {followed ? <Check className="h-2.5 w-2.5" aria-hidden /> : <Plus className="h-2.5 w-2.5" aria-hidden />}
+      </span>
+    </button>
   );
 }
 
@@ -6246,6 +6385,8 @@ function AmbientReaderHeroImage({
   imageClassName,
   sizes,
   onLoad,
+  onOpenImage,
+  galleryImageCount = 1,
 }: {
   story: LifestyleRiverStory;
   hasPortraitHeroImage: boolean;
@@ -6253,27 +6394,51 @@ function AmbientReaderHeroImage({
   imageClassName?: string;
   sizes?: string;
   onLoad: (ratio: number) => void;
+  onOpenImage?: (image: FullscreenReaderImage) => void;
+  galleryImageCount?: number;
 }) {
+  const image = (
+    <Image
+      src={story.image}
+      alt={story.title}
+      fill
+      sizes={sizes ?? (hasPortraitHeroImage
+        ? "(max-width: 1024px) 100vw, 34vw"
+        : "(max-width: 1024px) 100vw, 62vw")}
+      className={cn("object-cover", imageClassName)}
+      priority
+      onLoad={(event) => {
+        const loadedImage = event.currentTarget;
+        if (loadedImage.naturalWidth > 0 && loadedImage.naturalHeight > 0) {
+          onLoad(loadedImage.naturalWidth / loadedImage.naturalHeight);
+        }
+      }}
+    />
+  );
+
   return (
     <figure className={cn("relative overflow-hidden bg-black", className)}>
-      <Image
-        src={story.image}
-        alt={story.title}
-        fill
-        sizes={sizes ?? (hasPortraitHeroImage
-          ? "(max-width: 1024px) 100vw, 34vw"
-          : "(max-width: 1024px) 100vw, 62vw")}
-        className={cn("object-cover", imageClassName)}
-        priority
-        onLoad={(event) => {
-          const image = event.currentTarget;
-          if (image.naturalWidth > 0 && image.naturalHeight > 0) {
-            onLoad(image.naturalWidth / image.naturalHeight);
-          }
-        }}
-      />
+      {onOpenImage ? (
+        <button
+          type="button"
+          className="group absolute inset-0 cursor-zoom-in overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/60"
+          onClick={() => onOpenImage({
+            src: story.image,
+            alt: story.title,
+            credit: story.imageCredit,
+          })}
+          aria-label={galleryImageCount > 1
+            ? `Open photo gallery for ${story.title}`
+            : `Open image viewer for ${story.title}`}
+        >
+          {image}
+          <span className="absolute left-4 top-4 rounded-full bg-black/70 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+            {galleryImageCount > 1 ? `View ${galleryImageCount} photos` : "View image"}
+          </span>
+        </button>
+      ) : image}
       {story.imageCredit ? (
-        <figcaption className="absolute bottom-3 right-4 bg-black/70 px-2 py-1 text-[10px] uppercase tracking-wider text-white">
+        <figcaption className="pointer-events-none absolute bottom-3 right-4 bg-black/70 px-2 py-1 text-[10px] uppercase tracking-wider text-white">
           {story.imageCredit}
         </figcaption>
       ) : null}
@@ -6327,6 +6492,7 @@ function AmbientReaderHero({
   ambientPublishedAt,
   hasAmbientPublishedDate,
   onHeroImageRatio,
+  onOpenImage,
 }: {
   story: LifestyleRiverStory;
   article: LiveArticleData;
@@ -6337,6 +6503,7 @@ function AmbientReaderHero({
   ambientPublishedAt?: string;
   hasAmbientPublishedDate: boolean;
   onHeroImageRatio: (ratio: number) => void;
+  onOpenImage: (image: FullscreenReaderImage) => void;
 }) {
   const metaProps = {
     story,
@@ -6344,6 +6511,13 @@ function AmbientReaderHero({
     ambientPublishedAt,
     hasAmbientPublishedDate,
   };
+  const heroGalleryImageCount = 1 + new Set(
+    article.blocks
+      .filter((block): block is Extract<LiveArticleData["blocks"][number], { type: "image" }> => (
+        block.type === "image" && block.url !== story.image
+      ))
+      .map((block) => block.url)
+  ).size;
   const isMotorTrend = story.brandSlug === "motortrend";
   const usesBuzzHeadline = story.brandSlug === "road-and-track";
 
@@ -6360,6 +6534,8 @@ function AmbientReaderHero({
           className="min-h-[48vh] border-b border-white/25 sm:min-h-[56vh] lg:min-h-[62vh]"
           sizes="100vw"
           onLoad={onHeroImageRatio}
+          onOpenImage={onOpenImage}
+          galleryImageCount={heroGalleryImageCount}
         />
         <div
           className={cn(
@@ -6421,6 +6597,8 @@ function AmbientReaderHero({
             ? "lg:origin-top lg:scale-[1.12]"
             : undefined}
           onLoad={onHeroImageRatio}
+          onOpenImage={onOpenImage}
+          galleryImageCount={heroGalleryImageCount}
         />
         <div
           className="flex min-w-0 flex-col justify-center px-6 py-12 sm:px-10 sm:py-16 lg:px-[clamp(3rem,5vw,6rem)] lg:py-20"
@@ -6466,6 +6644,8 @@ function AmbientReaderHero({
             hasPortraitHeroImage={hasPortraitHeroImage}
             className="min-h-[48vh] h-full lg:min-h-[calc(100dvh-4rem)]"
             onLoad={onHeroImageRatio}
+            onOpenImage={onOpenImage}
+            galleryImageCount={heroGalleryImageCount}
           />
         </div>
         <a
@@ -6512,6 +6692,8 @@ function AmbientReaderHero({
         hasPortraitHeroImage={hasPortraitHeroImage}
         className="min-h-[42vh] lg:min-h-[70vh]"
         onLoad={onHeroImageRatio}
+        onOpenImage={onOpenImage}
+        galleryImageCount={heroGalleryImageCount}
       />
     </section>
   );
@@ -6841,6 +7023,7 @@ function AmbientArticleReader({
             ambientPublishedAt={ambientPublishedAt}
             hasAmbientPublishedDate={hasAmbientPublishedDate}
             onHeroImageRatio={setHeroImageRatio}
+            onOpenImage={onOpenImage}
           />
 
           <section
@@ -7784,11 +7967,21 @@ function LifestyleStoryReaderModal({
         (story) => story.brandSlug === activeReaderBrandSlug
       )
     : [];
-  const readerStories = readerDestinationOverride
+  const baseReaderStories = readerDestinationOverride
     ? readerAvailableStoryPool.filter((story) => getStoryDestinationMode(story.brandSlug) === readerDestinationOverride)
     : publicationStories.length > 0
       ? publicationStories
       : stories;
+  // Continue Reading and discovery modules can surface a story that is outside
+  // the currently rendered river window. Keep that selected story in the reader
+  // queue so the click always opens the requested article instead of rendering
+  // nothing when openIndex would otherwise be -1.
+  const readerStories = openStoryId && !baseReaderStories.some((story) => story.id === openStoryId)
+    ? [
+        ...baseReaderStories,
+        ...readerAvailableStoryPool.filter((story) => story.id === openStoryId),
+      ]
+    : baseReaderStories;
   const openIndex = openStoryId ? readerStories.findIndex((story) => story.id === openStoryId) : -1;
   const [visibleReaderCount, setVisibleReaderCount] = React.useState(1);
   const [liveArticles, setLiveArticles] = React.useState<Record<string, LiveArticleLoadState>>({});
@@ -8537,8 +8730,11 @@ function LifestyleStoryReaderModal({
                             <BrandSourceIcon brand={story.brand} brandSlug={story.brandSlug} />
                             <span>{story.brand}</span>
                           </span>
-                          <span aria-hidden>·</span>
-                          <span>{story.signal}</span>
+                          <ReaderBrandFollowButton
+                            story={story}
+                            followed={followedBrands.includes(story.brand)}
+                            onToggleFollowBrand={() => onToggleFollowBrand(story.brand)}
+                          />
                         </div>
                         <h2 className={cn(
                           "headline text-4xl sm:text-5xl",
@@ -8550,10 +8746,8 @@ function LifestyleStoryReaderModal({
                           story={story}
                           article={getReadyLiveArticle(liveArticles[story.id])}
                           saved={savedIds.includes(story.id)}
-                          followed={followedBrands.includes(story.brand)}
                           commentCount={getLifestyleCommentCount(story, commentsByStoryId[story.id]?.length ?? 0)}
                           onSave={() => onSave(story)}
-                          onToggleFollowBrand={() => onToggleFollowBrand(story.brand)}
                           ambientReaderState={getAmbientReaderState(story, liveArticles[story.id])}
                           onOpenAmbientReader={isCompleteAmbientArticle(liveArticles[story.id])
                             ? () => openAmbientReader(story.id)
@@ -10247,7 +10441,7 @@ function LifestyleRiverHomePage({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const readingHistory = useReadingHistoryEntries();
+  const { entries: readingHistory } = useReadingHistoryState();
   const continueReadingStoryIds = React.useMemo(
     () => getContinueReadingStoryIds(readingHistory),
     [readingHistory]
@@ -10255,6 +10449,16 @@ function LifestyleRiverHomePage({
   const [visitStartedAt] = React.useState(() => Date.now());
   const [editionDate] = React.useState(() => getLocalEditionDate(new Date(visitStartedAt)));
   const visitScopeKey = `${destination}:${initialBrandSlug ?? "all-brands"}`;
+  const [sessionContinueReadingState, setSessionContinueReadingState] = React.useState<{
+    scopeKey: string;
+    storyIds: string[];
+  }>(() => ({
+    scopeKey: visitScopeKey,
+    storyIds: getSessionContinueReadingStoryIds(visitScopeKey, editionDate),
+  }));
+  const sessionContinueReadingStoryIds = sessionContinueReadingState.scopeKey === visitScopeKey
+    ? sessionContinueReadingState.storyIds
+    : continueReadingStoryIds;
   const [demoState, setDemoState] = React.useState<LifestyleDemoState>(() => ({
     ...resolveVisitContext(
       readVisitRecords(),
@@ -10297,7 +10501,10 @@ function LifestyleRiverHomePage({
     setOpenStoryState({ sourceStoryId: initialOpenStoryId, value });
   }, [initialOpenStoryId, setOpenStoryState]);
   const [openDelishShortId, setOpenDelishShortId] = React.useState<string | null>(null);
+  const [openDelishShortStory, setOpenDelishShortStory] = React.useState<LifestyleRiverStory | null>(null);
+  const [delishSupplementalStories, setDelishSupplementalStories] = React.useState<LifestyleRiverStory[]>([]);
   const delishShortOpenerRef = React.useRef<HTMLElement | null>(null);
+  const displayStoryIdsRef = React.useRef<string[]>([]);
   const [commentsByStoryId, setCommentsByStoryId] = React.useState<Record<string, LifestyleStoryComment[]>>({});
   const [demoModalOpen, setDemoModalOpen] = React.useState(false);
   const [delishShortsRiverPlacement, setDelishShortsRiverPlacement] = React.useState<{
@@ -10327,6 +10534,24 @@ function LifestyleRiverHomePage({
   }, [pathname, searchParams]);
   const currentReaderReturnHref = safeReaderReturnHref ?? (initialBrandSlug ? getHearstBrandRoute(initialBrandSlug) : getHearstDestinationRoute(destination));
   const storyOpenReturnHref = safeReaderReturnHref ?? currentPageReturnHref ?? currentReaderReturnHref;
+  const rememberSessionContinueReadingStory = React.useCallback((storyId: string) => {
+    setSessionContinueReadingState((current) => {
+      if (current.scopeKey !== visitScopeKey || current.storyIds.includes(storyId)) return current;
+
+      const storyIds = [storyId, ...current.storyIds];
+      if (typeof window !== "undefined") {
+        try {
+          window.sessionStorage.setItem(
+            `${readerRiverAllocationStoragePrefix}${editionDate}:${visitScopeKey}`,
+            JSON.stringify(storyIds)
+          );
+        } catch {
+          // The river remains usable when session storage is unavailable.
+        }
+      }
+      return { ...current, storyIds };
+    });
+  }, [editionDate, visitScopeKey]);
   const restoreCurrentVisitContext = React.useCallback(() => {
     const now = new Date();
     setDemoState({
@@ -10346,12 +10571,15 @@ function LifestyleRiverHomePage({
       window.sessionStorage.removeItem(readerReturnFocusStorageKey);
     }
     recordStoryOpened(storyId);
+    rememberSessionContinueReadingStory(storyId);
     setOpenStoryId(storyId);
+    saveReaderReturnScrollSnapshot(storyId, storyOpenReturnHref, displayStoryIdsRef.current);
     router.push(appendReaderReturnHref(storyId, storyOpenReturnHref), { scroll: false });
-  }, [router, setOpenStoryId, storyOpenReturnHref]);
+  }, [rememberSessionContinueReadingStory, router, setOpenStoryId, storyOpenReturnHref]);
 
   const switchReaderStory = React.useCallback((storyId: string) => {
     recordStoryOpened(storyId);
+    rememberSessionContinueReadingStory(storyId);
     setOpenStoryId(storyId);
     if (typeof window !== "undefined") {
       window.history.replaceState(
@@ -10363,29 +10591,33 @@ function LifestyleRiverHomePage({
         appendReaderReturnHref(storyId, storyOpenReturnHref)
       );
     }
-  }, [setOpenStoryId, storyOpenReturnHref]);
+  }, [rememberSessionContinueReadingStory, setOpenStoryId, storyOpenReturnHref]);
 
   const closeStory = React.useCallback(() => {
     setOpenStoryId(null);
     if (pathname?.startsWith("/read/")) {
       router.push(currentReaderReturnHref, { scroll: false });
+      restoreReaderReturnScrollSnapshot(currentReaderReturnHref);
     }
   }, [currentReaderReturnHref, pathname, router, setOpenStoryId]);
 
-  const openDelishShort = React.useCallback((storyId: string) => {
+  const openDelishShort = React.useCallback((story: LifestyleRiverStory) => {
     delishShortOpenerRef.current = document.activeElement instanceof HTMLElement
       ? document.activeElement
       : null;
-    setOpenDelishShortId(storyId);
+    setOpenDelishShortStory(story);
+    setOpenDelishShortId(story.id);
   }, []);
 
   const closeDelishShort = React.useCallback(() => {
     setOpenDelishShortId(null);
+    setOpenDelishShortStory(null);
     window.requestAnimationFrame(() => delishShortOpenerRef.current?.focus());
   }, []);
 
   const openStoryFromDelishShort = React.useCallback((storyId: string) => {
     setOpenDelishShortId(null);
+    setOpenDelishShortStory(null);
     openStory(storyId);
   }, [openStory]);
 
@@ -10550,8 +10782,11 @@ function LifestyleRiverHomePage({
     usingVideoTabFeed,
   }), [activeFilter, demoState, destination, effectiveBrandFilters, initialBrandSlug, rankingProfile, usingVideoTabFeed]);
   const candidateDisplayStoryIds = React.useMemo(
-    () => candidateDisplayStories.map((story) => story.id),
-    [candidateDisplayStories]
+    () => applyReaderReturnStoryOrder(
+      storyOpenReturnHref,
+      candidateDisplayStories.map((story) => story.id)
+    ),
+    [candidateDisplayStories, storyOpenReturnHref]
   );
   const [displayOrderState, setDisplayOrderState] = React.useState<{ scopeKey: string; storyIds: string[] }>({
     scopeKey: "",
@@ -10580,6 +10815,9 @@ function LifestyleRiverHomePage({
       .map((storyId) => storiesById.get(storyId))
       .filter((story): story is LifestyleRiverStory => Boolean(story));
   }, [candidateDisplayStories, candidateDisplayStoryIds, displayOrderScopeKey, displayOrderState]);
+  React.useEffect(() => {
+    displayStoryIdsRef.current = displayStories.map((story) => story.id);
+  }, [displayStories]);
   const visibleStories = displayStories.slice(0, visibleCount);
   React.useEffect(() => {
     feedDemandRef.current = {
@@ -10596,15 +10834,33 @@ function LifestyleRiverHomePage({
     onRequestNextFeedPage,
     visibleCount,
   ]);
-  const isDelishPublicationRiver = initialBrandSlug === "delish" && !usingVideoTabFeed;
-  const delishVerticalVideoStories = videoTabStories.filter((story) =>
-    story.brandSlug === "delish"
-    && Boolean(story.videoUrl)
-    && Boolean(story.videoWidth)
-    && Boolean(story.videoHeight)
-    && (story.videoHeight ?? 0) > (story.videoWidth ?? 0)
+  const currentDelishVerticalVideoStories = React.useMemo(
+    () => videoTabStories.filter(isDelishPortraitShort),
+    [videoTabStories]
   );
+  const delishVerticalVideoStories = React.useMemo(() => {
+    const catalogVerticalVideoStories = config.stories.filter(isDelishPortraitShort);
+    const supplementalVerticalVideoStories = delishSupplementalStories.filter(isDelishPortraitShort);
+
+    // Keep one portrait-only inventory for both the carousel and immersive
+    // viewer. Feed refreshes may replace either source, so merge all sources
+    // here and never let the two surfaces count different subsets.
+    return mergeUniqueStories(currentDelishVerticalVideoStories, catalogVerticalVideoStories, supplementalVerticalVideoStories);
+  }, [config.stories, currentDelishVerticalVideoStories, delishSupplementalStories]);
+  const handleDelishSupplementalStories = React.useCallback((stories: LifestyleRiverStory[]) => {
+    setDelishSupplementalStories((current) => mergeUniqueStories(current, stories));
+  }, []);
+  const delishShortModalStories = React.useMemo(() => {
+    if (!openDelishShortStory || delishVerticalVideoStories.some((story) => story.id === openDelishShortStory.id)) {
+      return delishVerticalVideoStories;
+    }
+
+    // Keep the clicked card available if a progressive feed refresh replaces
+    // the source array before the immersive viewer renders.
+    return mergeUniqueStories(delishVerticalVideoStories, [openDelishShortStory]);
+  }, [delishVerticalVideoStories, openDelishShortStory]);
   const delishVerticalVideoIds = new Set(delishVerticalVideoStories.map((story) => story.id));
+  const isDelishPublicationRiver = initialBrandSlug === "delish" && !usingVideoTabFeed;
   const showDelishVerticalVideoCarousel = usingVideoTabFeed
     && (effectiveBrandFilters.length === 0 || effectiveBrandFilters.includes("Delish"));
   const showDelishPublicationShorts = isDelishPublicationRiver && delishVerticalVideoStories.length > 0;
@@ -10647,10 +10903,10 @@ function LifestyleRiverHomePage({
       returning: demoState.returnHours > 0,
       return_hours: demoState.returnHours,
       return_window: getReturnWindow(demoState.returnHours),
-      unfinished_count: continueReadingStoryIds.length,
+      unfinished_count: sessionContinueReadingStoryIds.length,
     });
   }, [
-    continueReadingStoryIds.length,
+    sessionContinueReadingStoryIds.length,
     demoState.daypart,
     demoState.isSimulated,
     demoState.returnHours,
@@ -10718,7 +10974,7 @@ function LifestyleRiverHomePage({
   const moduleAllocation = allocateStoryModules({
     stories: displayStories,
     heroStoryIds,
-    continueStoryIds: continueReadingStoryIds,
+    continueStoryIds: sessionContinueReadingStoryIds,
     followedBrands: profile.followedBrands,
     savedTags: profile.savedTags,
   });
@@ -11238,7 +11494,8 @@ function LifestyleRiverHomePage({
                 {showDelishVerticalVideoCarousel ? (
                   <DelishVerticalVideoCarousel
                     stories={delishVerticalVideoStories}
-                    onOpen={(story) => openDelishShort(story.id)}
+                    onOpen={openDelishShort}
+                    onSupplementalStories={handleDelishSupplementalStories}
                   />
                 ) : null}
 
@@ -11388,8 +11645,7 @@ function LifestyleRiverHomePage({
         ) : null}
 
         <DelishShortsImmersiveModal
-          key={openDelishShortId}
-          stories={delishVerticalVideoStories}
+          stories={delishShortModalStories}
           openStoryId={openDelishShortId}
           savedIds={profile.savedIds}
           onClose={closeDelishShort}
@@ -11508,7 +11764,8 @@ function LifestyleRiverHomePage({
               {showDelishPublicationShorts ? (
                 <DelishVerticalVideoCarousel
                   stories={delishVerticalVideoStories}
-                  onOpen={(story) => openDelishShort(story.id)}
+                  onOpen={openDelishShort}
+                  onSupplementalStories={handleDelishSupplementalStories}
                   theme="light"
                 />
               ) : null}
@@ -11547,7 +11804,8 @@ function LifestyleRiverHomePage({
                     {index === delishShortsRiverInsertIndex ? (
                       <DelishVerticalVideoCarousel
                         stories={delishVerticalVideoStories}
-                        onOpen={(shortStory) => openDelishShort(shortStory.id)}
+                        onOpen={openDelishShort}
+                        onSupplementalStories={handleDelishSupplementalStories}
                         theme="light"
                       />
                     ) : null}
@@ -11594,7 +11852,8 @@ function LifestyleRiverHomePage({
               {delishShortsRiverInsertIndex === riverStories.length ? (
                 <DelishVerticalVideoCarousel
                   stories={delishVerticalVideoStories}
-                  onOpen={(story) => openDelishShort(story.id)}
+                  onOpen={openDelishShort}
+                  onSupplementalStories={handleDelishSupplementalStories}
                   theme="light"
                 />
               ) : null}
@@ -11665,14 +11924,18 @@ function LifestyleRiverHomePage({
                               });
                               openStory(story.id);
                             }}
-                            className="group min-w-0 flex-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/40"
+                            className="group flex min-w-0 flex-1 flex-col text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/40"
                             aria-label={`Open suggested story: ${story.title}`}
                           >
-                            <span
-                              className="block aspect-[16/9] w-full bg-muted bg-cover bg-center"
-                              style={{ backgroundImage: `url("${story.image}")` }}
-                              aria-hidden="true"
-                            />
+                            <span className="block aspect-[16/9] w-full shrink-0 overflow-hidden bg-muted" aria-hidden="true">
+                              <img
+                                src={story.image}
+                                alt=""
+                                loading="lazy"
+                                className="h-full w-full object-cover object-top"
+                                style={{ objectPosition: "center top" }}
+                              />
+                            </span>
                             <span className="block p-3">
                               <span className="block text-xs font-bold text-[var(--hp-section-title)]">
                                 {story.brand} · {story.topic}
@@ -11854,8 +12117,7 @@ function LifestyleRiverHomePage({
       ) : null}
 
       <DelishShortsImmersiveModal
-        key={openDelishShortId}
-        stories={delishVerticalVideoStories}
+        stories={delishShortModalStories}
         openStoryId={openDelishShortId}
         savedIds={profile.savedIds}
         onClose={closeDelishShort}
@@ -12364,6 +12626,7 @@ export function HomePageTemplate({
       : null;
     const returnHref = readerReturnHref ?? currentPageHref ?? getHearstDestinationRoute(destinationMode);
     recordStoryOpened(storyId);
+    saveReaderReturnScrollSnapshot(storyId, returnHref);
     router.push(appendReaderReturnHref(storyId, returnHref), { scroll: false });
   }, [destinationMode, pageSearchQuery, pathname, readerReturnHref, router]);
   const handleLifestyleFilterChange = React.useCallback((filter: string) => {
