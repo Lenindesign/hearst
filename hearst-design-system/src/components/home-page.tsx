@@ -6015,7 +6015,7 @@ function LifestyleReaderActions({
 
   return (
     <div className="my-6 min-w-0 border-y border-border py-3">
-      <div className="flex w-full min-w-0 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-5">
+      <div className="flex w-full min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-5">
         <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1">
           <button
             type="button"
@@ -6054,7 +6054,7 @@ function LifestyleReaderActions({
             className="shrink-0"
           />
         </div>
-        <div className="flex w-full shrink-0 items-center justify-end gap-1 sm:w-auto sm:self-auto sm:gap-2">
+        <div className="flex w-full shrink-0 items-center justify-center gap-1 sm:w-auto sm:justify-end sm:self-auto sm:gap-2">
           {ambientReaderState === "ready" || ambientReaderState === "loading" ? (
             <button
               type="button"
