@@ -2,6 +2,14 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+# 2026-07-25: Durable cross-device reader libraries
+
+- **Context:** Reader profiles stored only saved story IDs, so refreshed catalogs produced anonymous unavailable rows. Google profile writes also replaced the complete server record, allowing one device to overwrite another device's newer saves or removals.
+- **Decision:** Save a bounded editorial snapshot and canonical source URL with each library item, reconcile legacy IDs against the complete portfolio inventory, and show one explicit cleanup action for IDs that cannot be recovered. Google profile writes now send the device's prior and next state so the server can apply field and collection deltas to the current profile; signed-in devices refresh the server profile on load and focus.
+- **Scope:** Reader account persistence, Google profile sync, saved-story and collection reconciliation, and the Profile Library and account-status copy.
+- **Regression boundary:** Browser-local email profiles remain intentionally limited to one browser. The Google credential remains verified server-side and is never persisted.
+- **Canonical rule:** `APP_RULES.md` account and identity behavior.
+
 ## 2026-07-23: Capability-based HomePageTemplate extraction
 
 - **Context:** `home-page.tsx` reached 503,880 bytes and Babel deoptimized code generation above its 500 KB threshold. Moving arbitrary constants would silence the warning without improving ownership.

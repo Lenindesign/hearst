@@ -530,14 +530,18 @@ export function ReaderProfileDialog({
 }) {
   const {
     account,
+    syncState,
     updateAccount,
     updatePreferences,
+    reconcileStorySnapshots,
     signOut,
     deleteAccount,
     deleteComment,
     createCollection,
     deleteCollection,
     toggleStoryInCollection,
+    removeStoriesFromCollection,
+    retrySync,
   } = useReaderAccount();
   const [tab, setTab] = React.useState<ProfileTab>("overview");
   const [firstName, setFirstName] = React.useState(() => account?.firstName ?? "");
@@ -549,10 +553,28 @@ export function ReaderProfileDialog({
   const customCollections = account?.collections.filter((collection) => collection.name !== "Read Later") ?? [];
   const [confirmDelete, setConfirmDelete] = React.useState(false);
 
+  React.useEffect(() => {
+    if (account) reconcileStorySnapshots(stories);
+  }, [account, reconcileStorySnapshots, stories]);
+
   if (!account) return null;
 
   const storyById = new Map(stories.map((story) => [story.id, story]));
-  const savedStories = account.preferences.savedIds.map((id) => storyById.get(id)).filter(Boolean) as LifestyleRiverStory[];
+  const storyBySourceUrl = new Map(
+    stories.flatMap((story) => story.sourceUrl ? [[story.sourceUrl, story] as const] : [])
+  );
+  const resolveStory = (id: string) => {
+    const snapshot = account.storySnapshots[id];
+    return storyById.get(id)
+      ?? (snapshot?.sourceUrl ? storyBySourceUrl.get(snapshot.sourceUrl) : undefined)
+      ?? snapshot;
+  };
+  const isCurrentStory = (id: string) => {
+    const snapshot = account.storySnapshots[id];
+    return storyById.has(id) || Boolean(snapshot?.sourceUrl && storyBySourceUrl.has(snapshot.sourceUrl));
+  };
+  const savedStories = account.preferences.savedIds.map(resolveStory).filter(Boolean) as LifestyleRiverStory[];
+  const unresolvedSavedIds = account.preferences.savedIds.filter((id) => !resolveStory(id));
   const comments = Object.values(account.commentsByStoryId).flat().sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   const toggleTopic = (topic: string) => {
     const followedTopics = account.preferences.followedTopics.includes(topic)
@@ -572,9 +594,9 @@ export function ReaderProfileDialog({
     setCollectionName("");
     setCollectionStatus(`Created ${collection.name}.`);
   };
-  const toggleSavedStoryCollection = (story: LifestyleRiverStory, collection: ReaderCollection) => {
-    const containsStory = collection.storyIds.includes(story.id);
-    toggleStoryInCollection(collection.id, story.id);
+  const toggleSavedStoryCollection = (story: LifestyleRiverStory, collection: ReaderCollection, storyId = story.id) => {
+    const containsStory = collection.storyIds.includes(storyId);
+    toggleStoryInCollection(collection.id, storyId);
     setCollectionStatus(`${containsStory ? "Removed from" : "Added to"} ${collection.name}.`);
   };
 
@@ -616,15 +638,38 @@ export function ReaderProfileDialog({
         <div className="min-h-0 overflow-y-auto p-5 sm:p-8">
           {tab === "overview" ? (
             <div className="max-w-3xl">
-              <p className="text-xs font-bold uppercase tracking-[0.12em] text-primary">Local demo profile</p>
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-primary">
+                {account.syncId ? "Google-synced prototype profile" : "Browser-local demo profile"}
+              </p>
               <h3 className="mt-2 text-2xl font-bold">Your reading, in one place</h3>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">Manage what shapes your feed, what you save, and how you take part in story conversations in this browser.</p>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+                {account.syncId
+                  ? "Your preferences, library, and comments follow this Google profile across signed-in devices."
+                  : "Your preferences, library, and comments are saved only in this browser."}
+              </p>
+              {account.syncId && syncState !== "synced" ? (
+                <div className="mt-4 flex flex-wrap items-center gap-3 rounded-[8px] bg-muted px-3 py-2 text-sm" role={syncState === "error" ? "alert" : "status"}>
+                  <span className="font-semibold">
+                    {syncState === "syncing" ? "Saving changes across devices…" : "Cross-device sync is paused. Your changes remain on this device."}
+                  </span>
+                  {syncState === "error" ? (
+                    <Button type="button" variant="outline" size="sm" onClick={retrySync}>Retry sync</Button>
+                  ) : null}
+                </div>
+              ) : null}
               <div className="mt-7 divide-y divide-border border-y border-border">
                 {[
                   { id: "personalization" as const, icon: Check, title: "For You preferences", detail: `${account.preferences.followedTopics.length} topics and ${account.preferences.followedBrands.length} brands shape your feed` },
                   { id: "library" as const, icon: Bookmark, title: "Library", detail: `${savedStories.length} saved ${savedStories.length === 1 ? "story" : "stories"} in ${account.collections.length} ${account.collections.length === 1 ? "collection" : "collections"}` },
                   { id: "activity" as const, icon: MessageCircle, title: "Comments", detail: comments.length === 0 ? "You have not commented yet" : `${comments.length} ${comments.length === 1 ? "comment" : "comments"}` },
-                  { id: "settings" as const, icon: Settings, title: "Profile details", detail: "Name, email, sign out, and local profile controls" },
+                  {
+                    id: "settings" as const,
+                    icon: Settings,
+                    title: "Profile details",
+                    detail: account.syncId
+                      ? "Name, email, sign out, and cross-device sync status"
+                      : "Name, email, sign out, and browser-local profile controls",
+                  },
                 ].map((item) => {
                   const Icon = item.icon;
                   return (
@@ -684,28 +729,57 @@ export function ReaderProfileDialog({
               </form>
               {collectionStatus ? <p role="status" className="mt-3 text-sm font-semibold text-muted-foreground">{collectionStatus}</p> : null}
               <div className="mt-7 divide-y divide-border border-y border-border">
-                {account.collections.map((collection) => (
-                  <section key={collection.id} className="py-4">
+                {account.collections.map((collection) => {
+                  const availableStories = collection.storyIds
+                    .map((id) => ({ id, story: resolveStory(id) }))
+                    .filter((item): item is { id: string; story: LifestyleRiverStory } => Boolean(item.story));
+                  const unavailableIds = collection.storyIds.filter((id) => !resolveStory(id));
+
+                  return (
+                    <section key={collection.id} className="py-4">
                     <div className="flex items-start justify-between gap-3">
-                      <div><h4 className="font-bold">{collection.name}</h4><p className="mt-1 text-xs text-muted-foreground">{collection.storyIds.length} stories</p></div>
+                      <div>
+                        <h4 className="font-bold">{collection.name}</h4>
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          {availableStories.length} {availableStories.length === 1 ? "story" : "stories"}
+                          {unavailableIds.length > 0 ? ` · ${unavailableIds.length} older ${unavailableIds.length === 1 ? "save needs" : "saves need"} cleanup` : ""}
+                        </p>
+                      </div>
                       {collection.name !== "Read Later" ? (
                         <Button variant="ghost" size="icon-sm" onClick={() => deleteCollection(collection.id)} aria-label={`Delete ${collection.name}`}><Trash2 className="h-4 w-4" aria-hidden /></Button>
                       ) : null}
                     </div>
                     <div className="mt-3 space-y-2">
-                      {collection.storyIds.length === 0 ? <p className="text-sm text-muted-foreground">Add a saved story below.</p> : collection.storyIds.slice(0, 4).map((id) => {
-                        const story = storyById.get(id);
-                        if (!story) return <p key={id} className="text-sm font-semibold text-muted-foreground">Saved story unavailable</p>;
+                      {collection.storyIds.length === 0 ? <p className="text-sm text-muted-foreground">Add a saved story below.</p> : availableStories.slice(0, 4).map(({ id, story }) => {
+                        const archived = !isCurrentStory(id);
+                        const href = archived && story.sourceUrl ? story.sourceUrl : getLibraryStoryHref(story);
                         return (
-                          <Link key={id} href={getLibraryStoryHref(story)} onClick={onClose} className="group flex min-h-12 items-center gap-3 rounded-[8px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label={`Open ${story.title}`}>
+                          <Link key={id} href={href} target={archived && story.sourceUrl ? "_blank" : undefined} rel={archived && story.sourceUrl ? "noreferrer" : undefined} onClick={onClose} className="group flex min-h-12 items-center gap-3 rounded-[8px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label={`Open ${story.title}`}>
                             <Image unoptimized src={story.image} alt="" width={64} height={44} className="h-11 w-16 shrink-0 rounded-[4px] object-cover" />
-                            <p className="line-clamp-2 text-sm font-semibold group-hover:text-primary">{story.title}</p>
+                            <div className="min-w-0">
+                              <p className="line-clamp-2 text-sm font-semibold group-hover:text-primary">{story.title}</p>
+                              {archived ? <p className="mt-0.5 text-xs text-muted-foreground">Open original on {story.brand}</p> : null}
+                            </div>
                           </Link>
                         );
                       })}
+                      {unavailableIds.length > 0 ? (
+                        <div className="flex flex-wrap items-center justify-between gap-3 rounded-[8px] bg-muted px-3 py-2.5">
+                          <p className="text-sm text-muted-foreground">
+                            {unavailableIds.length} {unavailableIds.length === 1 ? "older save has" : "older saves have"} no retained story details.
+                          </p>
+                          <Button type="button" variant="outline" size="sm" onClick={() => {
+                            removeStoriesFromCollection(collection.id, unavailableIds);
+                            setCollectionStatus(`Removed ${unavailableIds.length} unavailable ${unavailableIds.length === 1 ? "save" : "saves"} from ${collection.name}.`);
+                          }}>
+                            Remove unavailable
+                          </Button>
+                        </div>
+                      ) : null}
                     </div>
                   </section>
-                ))}
+                  );
+                })}
               </div>
               <section className="mt-8">
                 <h4 className="font-bold">Saved stories</h4>
@@ -713,16 +787,26 @@ export function ReaderProfileDialog({
                   <p className="mt-3 border-y border-border py-5 text-sm text-muted-foreground">Save a story from the feed and it will appear here.</p>
                 ) : (
                   <div className="mt-3 divide-y divide-border border-y border-border">
-                    {savedStories.map((story) => (
-                      <div key={story.id} className="grid gap-3 py-4 sm:grid-cols-[minmax(0,1fr)_220px] sm:items-center">
+                    {account.preferences.savedIds.flatMap((savedId) => {
+                      const story = resolveStory(savedId);
+                      if (!story) return [];
+                      const archived = !isCurrentStory(savedId);
+                      const href = archived && story.sourceUrl ? story.sourceUrl : getLibraryStoryHref(story);
+                      return [(
+                      <div key={savedId} className="grid gap-3 py-4 sm:grid-cols-[minmax(0,1fr)_220px] sm:items-center">
                         <Link
-                          href={getLibraryStoryHref(story)}
+                          href={href}
+                          target={archived && story.sourceUrl ? "_blank" : undefined}
+                          rel={archived && story.sourceUrl ? "noreferrer" : undefined}
                           onClick={onClose}
                           className="group flex min-h-16 min-w-0 items-center gap-3 rounded-[8px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                           aria-label={`Open ${story.title}`}
                         >
                           <Image unoptimized src={story.image} alt="" width={80} height={56} className="h-14 w-20 shrink-0 rounded-[4px] object-cover" />
-                          <div className="min-w-0"><p className="line-clamp-2 font-bold group-hover:text-primary">{story.title}</p><p className="mt-1 text-xs text-muted-foreground">{story.brand} · {story.readTime}</p></div>
+                          <div className="min-w-0">
+                            <p className="line-clamp-2 font-bold group-hover:text-primary">{story.title}</p>
+                            <p className="mt-1 text-xs text-muted-foreground">{story.brand} · {story.readTime}{archived ? " · Opens original" : ""}</p>
+                          </div>
                         </Link>
                         {customCollections.length === 0 ? (
                           <button
@@ -738,22 +822,28 @@ export function ReaderProfileDialog({
                             value=""
                             onChange={(event) => {
                               const collection = customCollections.find((item) => item.id === event.target.value);
-                              if (collection) toggleSavedStoryCollection(story, collection);
+                              if (collection) toggleSavedStoryCollection(story, collection, savedId);
                             }}
                             aria-label={`Add or remove ${story.title} from a custom collection`}
                           >
                             <option value="">Add or remove</option>
                             {customCollections.map((collection) => (
                               <option key={collection.id} value={collection.id}>
-                                {collection.storyIds.includes(story.id) ? `In ${collection.name} - remove` : `Add to ${collection.name}`}
+                                {collection.storyIds.includes(savedId) ? `In ${collection.name} - remove` : `Add to ${collection.name}`}
                               </option>
                             ))}
                           </select>
                         )}
                       </div>
-                    ))}
+                      )];
+                    })}
                   </div>
                 )}
+                {unresolvedSavedIds.length > 0 ? (
+                  <p className="mt-3 text-sm text-muted-foreground">
+                    Clean up the older unavailable saves in Read Later to make this list match across devices.
+                  </p>
+                ) : null}
               </section>
             </div>
           ) : null}
@@ -779,7 +869,11 @@ export function ReaderProfileDialog({
           {tab === "settings" ? (
             <div>
               <h3 className="text-2xl font-bold">Profile details</h3>
-              <p className="mt-2 text-sm text-muted-foreground">Update the name shown across this Hearst+ demo in this browser.</p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                {account.syncId
+                  ? "Update the name shown on every device signed in with this Google profile."
+                  : "Update the name shown in this browser-local Hearst+ profile."}
+              </p>
               <div className="mt-7 max-w-xl space-y-4">
                 <div className="grid gap-4 sm:grid-cols-2">
                   <label className="text-sm font-semibold">First name<Input className="mt-2" value={firstName} onChange={(event) => { setFirstName(event.target.value); setProfileSaved(false); }} /></label>
@@ -792,7 +886,11 @@ export function ReaderProfileDialog({
                 <Button variant="outline" className="min-h-11" onClick={() => { signOut(); onClose(); }}><LogOut className="mr-2 h-4 w-4" aria-hidden />Sign out</Button>
                 <div className="mt-8 border-t border-border pt-6">
                   <h4 className="font-bold text-destructive">Delete account</h4>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">This removes the prototype account, saved stories, collections, comments, and preferences from this browser.</p>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                    {account.syncId
+                      ? "This currently removes the signed-in copy from this browser. The synced prototype profile remains available when you sign in with Google again."
+                      : "This removes the prototype account, saved stories, collections, comments, and preferences from this browser."}
+                  </p>
                   {confirmDelete ? (
                     <div className="mt-4 flex flex-wrap gap-2"><Button className="min-h-11" variant="destructive" onClick={() => { deleteAccount(); onClose(); }}>Delete account</Button><Button className="min-h-11" variant="outline" onClick={() => setConfirmDelete(false)}>Cancel</Button></div>
                   ) : <Button variant="outline" className="mt-4 min-h-11 text-destructive" onClick={() => setConfirmDelete(true)}>Delete account</Button>}

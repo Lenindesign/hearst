@@ -84,6 +84,7 @@ The complete brand registry is documented in `BRAND_STYLES.md`. Canonical HDS pu
 
 - The reader action bar appears directly under the headline and story identity metadata.
 - Reader theme follows the active article section by default. Brand-origin entries inherit the active publication's registered logo, colors, headline font, body font, and semantic controls while preserving the shared reader structure.
+- In the desktop reader masthead, align every active publication logo to the left edge of the shared brand slot while preserving its natural aspect ratio and normalized visual height.
 - Ambient Reader composes the shared reader behavior as a premium full-screen publication layer: immersive branded opening spread, calm long-form column, publication typography and color through semantic brand variables, neutral accessible reading surfaces, visible progress, and compact shared controls. It must not replace or restyle the standard reader underneath it.
 - Ambient Reader opening spreads are destination-aware without becoming separate readers: Fashion & Luxury uses a split cover, Autos uses a cinematic image-first deck, Enthusiast & Wellness uses a reverse kinetic split, and Lifestyle uses a spacious inset-image spread. The publication theme remains the identity layer inside each composition.
 - Reader recommendation links follow the same color-only hover behavior used by destination story links.

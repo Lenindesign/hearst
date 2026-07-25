@@ -49,7 +49,7 @@ When canonical publication tokens change, rebuild generated outputs with the rep
 Deployment is explicit. Ordinary documentation or interface changes do not authorize a deploy. When deployment is requested, validate the requested application or Storybook target before publishing it.
 ## Google One Tap (optional)
 
-The Personalize dialog can use real Google One Tap while keeping reader preferences and saved stories browser-local for this prototype. Configure a Google OAuth web client with the local and deployed JavaScript origins, then set matching values before starting the app:
+The Personalize dialog can use real Google One Tap. Browser-local email profiles remain on one device, while verified Google profiles sync preferences, saved stories, collections, and comments through the prototype profile store. Configure a Google OAuth web client with the local and deployed JavaScript origins, then set matching values before starting the app:
 
 ```bash
 NEXT_PUBLIC_GOOGLE_CLIENT_ID=your-web-client-id.apps.googleusercontent.com

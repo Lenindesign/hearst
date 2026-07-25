@@ -8555,7 +8555,7 @@ function LifestyleStoryReaderModal({
                 <BrandLogo
                   slug={readerLogoSlug}
                   color={readerDestination === "flux" ? "#ffffff" : readerLogoSlug === "motortrend" ? "#E90C17" : undefined}
-                  className="flex h-full w-full items-center [&_svg]:block [&_svg]:h-full [&_svg]:w-full [&_svg]:max-w-full"
+                  className="flex h-full w-full items-center justify-start [&_svg]:block [&_svg]:h-full [&_svg]:w-full [&_svg]:max-w-full lg:[&_svg]:w-auto"
                 />
               </div>
               <div className="hidden min-w-0 border-l border-border pl-4 sm:block">
@@ -10504,9 +10504,11 @@ function LifestyleRiverHomePage({
     sourceKey: profileSourceKey,
     value: sourceProfile,
   }));
-  const profile = profileState.sourceKey === profileSourceKey
-    ? profileState.value
-    : sourceProfile;
+  const profile = readerAccountId
+    ? sourceProfile
+    : profileState.sourceKey === profileSourceKey
+      ? profileState.value
+      : sourceProfile;
   const initialOpenStoryValue = initialOpenStoryId ?? null;
   const [openStoryState, setOpenStoryState] = React.useState<{
     sourceStoryId?: string;
@@ -10642,10 +10644,16 @@ function LifestyleRiverHomePage({
     openStory(storyId);
   }, [openStory]);
 
-  const updateReaderProfile = React.useCallback((updater: React.SetStateAction<LifestyleRiverProfile>) => {
+  const updateReaderProfile = React.useCallback((
+    updater: React.SetStateAction<LifestyleRiverProfile>,
+    savedStory?: LifestyleRiverStory
+  ) => {
     const next = typeof updater === "function" ? updater(profile) : updater;
-    setProfileState({ sourceKey: profileSourceKey, value: next });
-    if (readerAccountId) updatePreferences(next);
+    if (readerAccountId) {
+      updatePreferences(next, savedStory ? [savedStory] : []);
+    } else {
+      setProfileState({ sourceKey: profileSourceKey, value: next });
+    }
   }, [profile, profileSourceKey, readerAccountId, updatePreferences]);
 
   const videoTabStories = React.useMemo(() => {
@@ -11331,7 +11339,7 @@ function LifestyleRiverHomePage({
           : [...current.savedIds, story.id],
         savedTags: saved ? current.savedTags : mergeUnique(current.savedTags, story.tags.slice(0, 2)),
       };
-    });
+    }, story);
   };
 
   const boostStory = (story: LifestyleRiverStory) => {
@@ -12616,6 +12624,14 @@ export function HomePageTemplate({
     () => destinationConfig.sourceNotes.map((note) => note.brand),
     [destinationConfig.sourceNotes]
   );
+  const accountStoryInventory = React.useMemo(
+    () => mergeUniqueStories(
+      destinationConfigs.all.stories,
+      destinationConfig.stories,
+      resolvedVideoFeedData?.stories ?? []
+    ),
+    [destinationConfig.stories, destinationConfigs.all.stories, resolvedVideoFeedData?.stories]
+  );
   const anchorDestinationContent = React.useCallback(() => {
     window.requestAnimationFrame(() => {
       destinationContentRef.current?.scrollIntoView({ block: "start", behavior: "smooth" });
@@ -12868,7 +12884,7 @@ export function HomePageTemplate({
             <ReaderProfileDialog
               key={account.id}
               open
-              stories={destinationConfig.stories}
+              stories={accountStoryInventory}
               topics={profileTopics}
               brands={profileBrands}
               onClose={() => setProfileOpen(false)}
