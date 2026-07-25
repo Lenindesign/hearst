@@ -273,8 +273,9 @@ export function ReaderAuthDialog({
         firstName?: string;
         lastName?: string;
         avatarUrl?: string;
+        syncId?: string;
       };
-      if (!response.ok || !payload.email || !payload.firstName) {
+      if (!response.ok || !payload.email || !payload.firstName || !payload.syncId) {
         throw new Error(payload.error ?? "Google could not verify this sign-in.");
       }
 
@@ -283,6 +284,7 @@ export function ReaderAuthDialog({
         lastName: payload.lastName ?? "",
         email: payload.email,
         avatarUrl: payload.avatarUrl,
+        syncId: payload.syncId,
         preferences: defaultPreferences,
       });
       onAuthenticated?.();
@@ -466,7 +468,7 @@ export function ReaderAuthDialog({
             {mode === "create" ? "Already have a local profile? Sign in" : "New to Hearst+? Create a local demo profile"}
           </button>
           <p className="mt-5 border-t border-border pt-4 text-xs leading-5 text-muted-foreground">
-            Prototype note: feed data and profile settings stay in this browser. When Google One Tap is configured, its identity credential is verified before this local profile is created or resumed.
+            Prototype note: Google sign-in verifies identity and syncs this prototype profile across signed-in devices. Local email profiles stay in this browser.
           </p>
         </form>
       </div>

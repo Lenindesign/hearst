@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createHash } from "node:crypto";
 
 export const dynamic = "force-dynamic";
 
@@ -12,6 +13,12 @@ type GoogleTokenInfo = {
   picture?: string;
   sub?: string;
 };
+
+function createProfileSyncId(subject: string) {
+  return createHash("sha256")
+    .update(`hearst-plus-reader-profile:${subject}`)
+    .digest("hex");
+}
 
 function jsonError(error: string, status: number) {
   return NextResponse.json({ error }, {
@@ -57,6 +64,7 @@ export async function POST(request: NextRequest) {
       firstName: token.given_name,
       lastName: token.family_name ?? "",
       avatarUrl: token.picture,
+      syncId: createProfileSyncId(token.sub),
     }, {
       headers: { "Cache-Control": "no-store" },
     });

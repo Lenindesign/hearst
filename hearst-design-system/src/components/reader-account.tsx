@@ -29,6 +29,7 @@ export type ReaderCollection = {
 
 export type ReaderAccount = {
   id: string;
+  syncId?: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -53,6 +54,7 @@ type CreateAccountInput = {
 
 type GoogleAccountInput = Omit<CreateAccountInput, "password"> & {
   avatarUrl?: string;
+  syncId: string;
 };
 
 type ReaderAccountContextValue = {
@@ -105,6 +107,54 @@ function publicAccount(account: StoredReaderAccount): ReaderAccount {
   return readerAccount as ReaderAccount;
 }
 
+function mergeUniqueValues(...lists: Array<string[] | undefined>) {
+  return Array.from(new Set(lists.flatMap((list) => list ?? [])));
+}
+
+function mergeProfiles(primary: LifestyleRiverProfile, secondary: LifestyleRiverProfile): LifestyleRiverProfile {
+  return {
+    followedTopics: mergeUniqueValues(primary.followedTopics, secondary.followedTopics),
+    followedBrands: mergeUniqueValues(primary.followedBrands, secondary.followedBrands),
+    savedTags: mergeUniqueValues(primary.savedTags, secondary.savedTags),
+    boostedTags: mergeUniqueValues(primary.boostedTags, secondary.boostedTags),
+    savedIds: mergeUniqueValues(primary.savedIds, secondary.savedIds),
+    hiddenIds: mergeUniqueValues(primary.hiddenIds, secondary.hiddenIds),
+    personalizationMode: primary.personalizationMode ?? secondary.personalizationMode,
+  };
+}
+
+function mergeCollections(primary: ReaderCollection[], secondary: ReaderCollection[]) {
+  const collectionsByName = new Map<string, ReaderCollection>();
+  [...secondary, ...primary].forEach((collection) => {
+    const existing = collectionsByName.get(collection.name);
+    collectionsByName.set(collection.name, existing ? {
+      ...existing,
+      storyIds: mergeUniqueValues(existing.storyIds, collection.storyIds),
+      updatedAt: collection.updatedAt > existing.updatedAt ? collection.updatedAt : existing.updatedAt,
+    } : collection);
+  });
+  return Array.from(collectionsByName.values());
+}
+
+async function readSyncedAccount(syncId: string) {
+  const response = await fetch(`/api/reader-profile?syncId=${encodeURIComponent(syncId)}`, { cache: "no-store" });
+  if (!response.ok) throw new Error("The synced profile could not be loaded.");
+  const payload = await response.json() as { profile?: ReaderAccount | null };
+  return payload.profile ?? null;
+}
+
+function syncAccountToServer(account: StoredReaderAccount) {
+  if (!account.syncId) return;
+  const profile = publicAccount(account);
+  void fetch("/api/reader-profile", {
+    method: "PUT",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ syncId: account.syncId, profile }),
+  }).catch(() => {
+    // Keep local-first behavior if the prototype sync endpoint is temporarily unavailable.
+  });
+}
+
 export function ReaderAccountProvider({ children }: { children: React.ReactNode }) {
   const [storedAccount, setStoredAccount] = React.useState<StoredReaderAccount | null>(null);
   const [isSignedIn, setIsSignedIn] = React.useState(false);
@@ -128,6 +178,7 @@ export function ReaderAccountProvider({ children }: { children: React.ReactNode 
   const persist = React.useCallback((next: StoredReaderAccount) => {
     setStoredAccount(next);
     writeStoredAccount(next);
+    syncAccountToServer(next);
   }, []);
 
   const createAccount = React.useCallback(async (input: CreateAccountInput) => {
@@ -167,15 +218,26 @@ export function ReaderAccountProvider({ children }: { children: React.ReactNode 
   const continueWithGoogle = React.useCallback(async (input: GoogleAccountInput) => {
     const email = normalizeEmail(input.email);
     const existing = readStoredAccount();
+    const syncedAccount = await readSyncedAccount(input.syncId).catch(() => null);
     if (existing && existing.email === email) {
-      const next = {
+      const next: StoredReaderAccount = {
         ...existing,
-        firstName: input.firstName.trim() || existing.firstName,
-        lastName: input.lastName?.trim() ?? existing.lastName,
-        avatarUrl: input.avatarUrl ?? existing.avatarUrl,
+        ...syncedAccount,
+        syncId: input.syncId,
+        firstName: input.firstName.trim() || syncedAccount?.firstName || existing.firstName,
+        lastName: input.lastName?.trim() ?? syncedAccount?.lastName ?? existing.lastName,
+        email,
+        avatarUrl: input.avatarUrl ?? syncedAccount?.avatarUrl ?? existing.avatarUrl,
+        preferences: syncedAccount ? mergeProfiles(syncedAccount.preferences, existing.preferences) : existing.preferences,
+        commentsByStoryId: {
+          ...(syncedAccount?.commentsByStoryId ?? {}),
+          ...existing.commentsByStoryId,
+        },
+        collections: syncedAccount ? mergeCollections(syncedAccount.collections, existing.collections) : existing.collections,
+        passwordHash: existing.passwordHash,
       };
       persist(next);
-      window.localStorage.setItem(sessionStorageKey, existing.id);
+      window.localStorage.setItem(sessionStorageKey, next.id);
       setIsSignedIn(true);
       return publicAccount(next);
     }
@@ -183,6 +245,7 @@ export function ReaderAccountProvider({ children }: { children: React.ReactNode 
     const now = new Date().toISOString();
     const next: StoredReaderAccount = {
       id: `reader-google-${Date.now()}`,
+      syncId: input.syncId,
       firstName: input.firstName.trim(),
       lastName: input.lastName?.trim() ?? "",
       email,
@@ -201,6 +264,16 @@ export function ReaderAccountProvider({ children }: { children: React.ReactNode 
       ],
       passwordHash: await hashPassword(`google:${email}`),
     };
+    if (syncedAccount) {
+      next.id = syncedAccount.id;
+      next.firstName = input.firstName.trim() || syncedAccount.firstName;
+      next.lastName = input.lastName?.trim() ?? syncedAccount.lastName;
+      next.avatarUrl = input.avatarUrl ?? syncedAccount.avatarUrl;
+      next.createdAt = syncedAccount.createdAt;
+      next.preferences = mergeProfiles(syncedAccount.preferences, input.preferences);
+      next.commentsByStoryId = syncedAccount.commentsByStoryId;
+      next.collections = syncedAccount.collections;
+    }
 
     persist(next);
     window.localStorage.setItem(sessionStorageKey, next.id);
@@ -231,6 +304,7 @@ export function ReaderAccountProvider({ children }: { children: React.ReactNode 
       if (!current) return current;
       const next = updater(current);
       writeStoredAccount(next);
+      syncAccountToServer(next);
       return next;
     });
   }, []);
