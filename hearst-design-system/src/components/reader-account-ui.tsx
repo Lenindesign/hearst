@@ -398,7 +398,11 @@ export function ReaderAuthDialog({
 
           {googleClientId ? (
             <>
-              <div className="mt-6 flex min-h-11 justify-start" ref={googleButtonRef} aria-label="Continue with Google" />
+              <div
+                className="mt-6 flex min-h-11 w-full [&_.S9gUrf-YoZ4jf]:!w-full [&_.S9gUrf-YoZ4jf>div]:!w-full [&_[role=button]]:!w-full [&_[role=button]]:!max-w-none"
+                ref={googleButtonRef}
+                aria-label="Continue with Google"
+              />
               {submitting ? <p className="mt-3 text-sm font-semibold text-muted-foreground">Verifying Google sign-in...</p> : null}
               <div className="my-6 flex items-center gap-4">
                 <span className="h-px flex-1 bg-border" />
