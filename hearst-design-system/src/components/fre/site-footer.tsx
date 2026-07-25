@@ -48,6 +48,7 @@ export function SiteFooter({
     { label: "Product story", href: "/about-hearst-magazines/" },
     { label: "Explore Hearst+", href: "/why-hearst-plus/" },
     { label: "Product blueprint", href: "/hearst-product-blueprint/" },
+    { label: "Shop the stories", href: "/hearst-plus/shop/" },
     { label: "Token architecture", href: "/token-architecture/" },
     { label: "Complete article viewer", href: "/hearst-plus/complete-articles/" },
     { label: "Live feed", href: "/hearst-plus/live-feed/" },

@@ -4,14 +4,23 @@ import { autosRiverStories } from "@/components/autos-river-data";
 import { ewRiverStories } from "@/components/ew-river-data";
 import { fluxRiverStories } from "@/components/flux-river-data";
 import { lifestyleRiverStories } from "@/components/lifestyle-river-data";
+import { getAmbientCommerceStories } from "@/lib/ambient-commerce-stories";
 import { filterExcludedStories } from "@/lib/content-exclusions";
 
-const staticHearstStories = filterExcludedStories([
+const currentFeedStories = filterExcludedStories([
   ...lifestyleRiverStories,
   ...autosRiverStories,
   ...fluxRiverStories,
   ...ewRiverStories,
 ]);
+
+// Verified commerce guides retain a snapshot after natural RSS rotation so a
+// reader can still open a guide that remains in Shop the stories.
+const staticHearstStories = Array.from(
+  new Map(
+    [...currentFeedStories, ...getAmbientCommerceStories()].map((story) => [story.id, story]),
+  ).values(),
+);
 
 export function getStaticHearstStoryById(storyId: string) {
   const decodedStoryId = decodeURIComponent(storyId);

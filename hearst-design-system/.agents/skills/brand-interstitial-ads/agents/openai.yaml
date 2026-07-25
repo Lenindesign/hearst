@@ -1,0 +1,4 @@
+interface:
+  display_name: "Brand interstitial ads"
+  short_description: "Create full-screen branded ads from official brand assets"
+  default_prompt: "Create a full-screen branded interstitial ad using the official brand website, with a video-first background and an accessible split layout."

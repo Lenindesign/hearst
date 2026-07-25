@@ -118,6 +118,10 @@ import {
 } from "@/lib/product-analytics";
 import { getRecommendationReason } from "@/lib/recommendation-reason";
 import {
+  verifiedAmbientCommerceCollections,
+  type VerifiedAmbientCommerceCollection,
+} from "@/lib/ambient-commerce-catalog.generated";
+import {
   allocateStoryModules,
   type TodayEditStorySelection,
 } from "@/lib/story-module-allocation";
@@ -6555,6 +6559,76 @@ function AmbientReaderHero({
   );
 }
 
+function isCanonicalAmazonProductUrl(url: string) {
+  return /^https:\/\/www\.amazon\.com\/dp\/[A-Z0-9]{10}$/.test(url);
+}
+
+function isVerifiedAmbientCommerceCollection(collection: VerifiedAmbientCommerceCollection) {
+  return collection.products.length > 0
+    && collection.products.every((product) => (
+      Boolean(product.name)
+      && Boolean(product.imageUrl)
+      && Boolean(product.sourceUrl)
+      && isCanonicalAmazonProductUrl(product.amazonUrl)
+    ));
+}
+
+function getAmbientCommerceConfig(story: LifestyleRiverStory): VerifiedAmbientCommerceCollection | null {
+  return verifiedAmbientCommerceCollections.find((collection) => {
+    const isEligibleBrand = !collection.brandSlugs || collection.brandSlugs.includes(story.brandSlug);
+    return isEligibleBrand
+      && collection.storyIds.includes(story.id)
+      && isVerifiedAmbientCommerceCollection(collection);
+  }) ?? null;
+}
+
+function AmbientCommerceModule({ config }: { config: VerifiedAmbientCommerceCollection }) {
+  return (
+    <section
+      aria-labelledby="ambient-commerce-title"
+      className="mt-16 border-y border-[var(--ambient-rule)] py-8 sm:py-10"
+      data-ambient-commerce="amazon-prototype"
+    >
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
+        <div>
+          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--ambient-ink)]">{config.eyebrow}</p>
+          <h2 id="ambient-commerce-title" className="mt-2 font-headline text-3xl font-[var(--font-headline-weight)] leading-tight text-[var(--ambient-ink)]">
+            {config.title}
+          </h2>
+        </div>
+        <p className="max-w-sm text-sm leading-6 text-[var(--ambient-muted)]">
+          {config.description}
+        </p>
+      </div>
+      <div className={`mt-7 grid gap-3 ${config.products.length === 2 ? "sm:grid-cols-2" : "sm:grid-cols-3"}`}>
+        {config.products.map((product) => (
+          <article key={product.name} className="flex min-h-44 flex-col border border-[var(--ambient-rule)] p-4 sm:p-5">
+            <div className="mb-4 flex h-32 items-center justify-center overflow-hidden bg-white p-3">
+              {/* Product images are sourced from the brands' public product pages. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={product.imageUrl} alt="" className="h-full w-full object-contain" loading="lazy" />
+            </div>
+            <h3 className="font-brand text-base font-bold leading-snug text-[var(--ambient-ink)]">{product.name}</h3>
+            <p className="mt-3 text-sm leading-6 text-[var(--ambient-muted)]">{product.context}</p>
+            <a
+              href={product.amazonUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-auto inline-flex min-h-10 items-center pt-5 text-xs font-bold uppercase tracking-[0.12em] text-[var(--ambient-ink)] underline decoration-[var(--ambient-ink)]/50 underline-offset-4 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+            >
+              View on Amazon
+              <span className="sr-only"> for {product.name}</span>
+            </a>
+          </article>
+        ))}
+      </div>
+      <p className="mt-5 text-xs leading-5 text-[var(--ambient-muted)]">
+        Prototype commerce links. We do not earn a commission from these Amazon links; prices, sellers, and availability may change.
+      </p>
+    </section>
+  );
+}
+
 function AmbientArticleReader({
   story,
   article,
@@ -6611,6 +6685,7 @@ function AmbientArticleReader({
   const brandForeground = getAmbientBrandForeground(brandPrimary);
   const hasPortraitHeroImage = heroImageRatio !== null && heroImageRatio < 0.9;
   const firstParagraphIndex = article.blocks.findIndex((block) => block.type === "paragraph");
+  const commerceConfig = getAmbientCommerceConfig(story);
   const densityStyles: Record<AmbientReaderDensity, string> = {
     compact: "max-w-[68ch] text-[17px] leading-7 [--ambient-block-gap:1.25rem]",
     comfortable: "max-w-[62ch] text-[19px] leading-8 [--ambient-block-gap:1.75rem]",
@@ -6864,6 +6939,7 @@ function AmbientArticleReader({
                   );
                 })}
               </div>
+              {commerceConfig ? <AmbientCommerceModule config={commerceConfig} /> : null}
               <footer className="mt-20 border-t border-[var(--ambient-rule)] pt-8 font-brand text-sm text-[var(--ambient-muted)]">
                 <p>End of article · {story.brand}</p>
                 {relatedStories.length > 0 ? (
@@ -7005,6 +7081,7 @@ function BlancpainInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
 }
 
 const lexusRxOffersUrl = "https://www.lexus.com/models/RX-hybrid/offers?showOffers=current&zip=92656&cid=FT%3Acy26_na-market_national_retail_new-car_model-sustain_as_na-model_na-trim_cv_feb%3AP3C3CD9%3A19289%3A287222%3A10419950%3A5016352%3A38953306&trim=rxh-1";
+const lexusLogoUrl = "/logos/lexus.svg";
 const lexusRxVideoUrl = "https://s3.amazonaws.com/toyota-cms-media/toyota-videos/2025_RX_500h_FSPORT_Performance_AWD_Copper_BROLL.mp4";
 const lexusRxVideoPosterUrl = "https://lexus-cms-media.s3.us-east-2.amazonaws.com/wp-content/uploads/2024/08/2025_RX_500h_FSPORT_Performance_AWD_Copper_BROLL-1000x600.png";
 const lexusRxHighResolutionImageUrl = "https://www.the360mag.com/wp-content/uploads/2022/06/lexus-rx-scaled.jpg";
@@ -7017,7 +7094,9 @@ function LexusInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
       <div className="relative grid h-full w-full bg-[#e9e9e7] text-[#161616] lg:grid-cols-[0.82fr_1.18fr]">
         <button type="button" onClick={onDismiss} autoFocus className="absolute right-6 top-6 z-30 inline-flex h-11 items-center border border-[#161616]/45 bg-[#e9e9e7]/75 px-4 text-[10px] font-semibold uppercase tracking-[0.2em] backdrop-blur-sm transition-colors hover:bg-[#161616] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#161616] sm:right-10 sm:top-10" aria-label="Close advertisement">Close</button>
         <div className="relative z-10 flex flex-col justify-between p-7 sm:p-12 lg:p-16">
-          <div className="font-sans text-2xl font-semibold tracking-[0.34em]" aria-label="Lexus logo">LEXUS</div>
+          {/* Official Lexus emblem supplied by the user. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={lexusLogoUrl} alt="Lexus" className="h-12 w-20 max-w-full object-contain object-left sm:h-14 sm:w-24" />
           <div className="max-w-xl py-14">
             <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#5b5e5e]">Advertisement · Luxury hybrid</p>
             <h2 id="lexus-ad-title" className="mt-6 font-sans text-[clamp(3rem,6vw,6.5rem)] font-light leading-[0.92] tracking-[-0.04em]">The RX Hybrid</h2>
@@ -7955,7 +8034,9 @@ function LifestyleStoryReaderModal({
           isEnthusiastWellnessReader
             ? "princess"
             : isAutosReader
-              ? "porsche"
+              ? ambientArticleVisitCountRef.current % 6 === 0
+                ? "lexus"
+                : "porsche"
             : isHarpersBazaarReader
               ? "marriott"
               : isEsquireReader
@@ -8566,6 +8647,10 @@ function LifestyleStoryReaderModal({
           onClose={() => setAmbientReaderStoryId(null)}
           onNavigateStory={(storyId) => {
             openAmbientReader(storyId);
+            // Navigation owns the visible reader state. If an interstitial is open,
+            // dismiss it after selecting the article so it cannot mask the new view
+            // or immediately reopen for the destination story.
+            setShowAmbientInterstitialAd(false);
             window.history.replaceState(
               {
                 ...window.history.state,
