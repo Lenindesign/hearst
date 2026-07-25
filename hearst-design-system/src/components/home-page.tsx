@@ -241,6 +241,7 @@ export interface HomePageTemplateProps {
   videoFeedData?: LiveFeedData;
   initialFilter?: string;
   initialOpenStoryId?: string;
+  initialOpenAmbientReader?: boolean;
   readerReturnHref?: string;
   navLinksOverride?: string[];
   staticDestinationData?: HearstDestinationStaticData;
@@ -7743,6 +7744,7 @@ function LifestyleStoryReaderModal({
   followedBrands,
   commentsByStoryId,
   readerReturnHref,
+  initialOpenAmbientReader = false,
   onClose,
   onOpenStory,
   onSwitchReaderStory,
@@ -7758,6 +7760,7 @@ function LifestyleStoryReaderModal({
   followedBrands: string[];
   commentsByStoryId: Record<string, LifestyleStoryComment[]>;
   readerReturnHref?: string;
+  initialOpenAmbientReader?: boolean;
   onClose: () => void;
   onOpenStory: (storyId: string) => void;
   onSwitchReaderStory: (storyId: string) => void;
@@ -7798,6 +7801,9 @@ function LifestyleStoryReaderModal({
   const [liveArticles, setLiveArticles] = React.useState<Record<string, LiveArticleLoadState>>({});
   const [fullscreenGallery, setFullscreenGallery] = React.useState<FullscreenGalleryState | null>(null);
   const [ambientReaderStoryId, setAmbientReaderStoryId] = React.useState<string | null>(null);
+  const initialAmbientReaderRequestRef = React.useRef<string | null>(
+    initialOpenAmbientReader && openStoryId ? openStoryId : null
+  );
   const [interstitialAdvertiser, setInterstitialAdvertiser] = React.useState<AmbientInterstitialAdvertiser>("van-cleef");
   const [showAmbientInterstitialAd, setShowAmbientInterstitialAd] = React.useState(false);
   const ambientOpenedStoryIdsRef = React.useRef<Set<string>>(new Set());
@@ -8212,6 +8218,25 @@ function LifestyleStoryReaderModal({
       root.removeEventListener("scroll", updateReadingProgress);
     };
   }, [openStoryId, visibleReaderStoryIds]);
+
+  React.useEffect(() => {
+    if (initialOpenAmbientReader && openStoryId) {
+      initialAmbientReaderRequestRef.current = openStoryId;
+    }
+  }, [initialOpenAmbientReader, openStoryId]);
+
+  React.useEffect(() => {
+    const requestedStoryId = initialAmbientReaderRequestRef.current;
+    if (
+      !requestedStoryId
+      || ambientReaderStoryId
+      || requestedStoryId !== openStoryId
+      || !isCompleteAmbientArticle(liveArticles[requestedStoryId])
+    ) return;
+
+    initialAmbientReaderRequestRef.current = null;
+    setAmbientReaderStoryId(requestedStoryId);
+  }, [ambientReaderStoryId, liveArticles, openStoryId]);
 
   React.useEffect(() => {
     let active = true;
@@ -9473,6 +9498,7 @@ type LifestyleRiverHomePageProps = {
   videoFeedData?: LiveFeedData;
   initialBrandSlug?: string;
   initialOpenStoryId?: string;
+  initialOpenAmbientReader?: boolean;
   readerReturnHref?: string;
   showStakeholderTools?: boolean;
   onboardingResult?: HearstOnboardingResult | null;
@@ -10210,6 +10236,7 @@ function LifestyleRiverHomePage({
   videoFeedData,
   initialBrandSlug,
   initialOpenStoryId,
+  initialOpenAmbientReader = false,
   readerReturnHref,
   showStakeholderTools = false,
   onboardingResult,
@@ -11360,6 +11387,7 @@ function LifestyleRiverHomePage({
             followedBrands={profile.followedBrands}
             commentsByStoryId={resolvedCommentsByStoryId}
             readerReturnHref={storyOpenReturnHref}
+            initialOpenAmbientReader={initialOpenAmbientReader}
             onClose={closeStory}
             onOpenStory={openStory}
             onSwitchReaderStory={switchReaderStory}
@@ -11825,6 +11853,7 @@ function LifestyleRiverHomePage({
           followedBrands={profile.followedBrands}
           commentsByStoryId={resolvedCommentsByStoryId}
           readerReturnHref={storyOpenReturnHref}
+          initialOpenAmbientReader={initialOpenAmbientReader}
           onClose={closeStory}
           onOpenStory={openStory}
           onSwitchReaderStory={switchReaderStory}
@@ -12032,6 +12061,7 @@ export function HomePageTemplate({
   videoFeedData,
   initialFilter,
   initialOpenStoryId,
+  initialOpenAmbientReader,
   readerReturnHref,
   navLinksOverride,
   staticDestinationData,
@@ -12486,6 +12516,7 @@ export function HomePageTemplate({
               videoFeedData={resolvedVideoFeedData}
               initialBrandSlug={initialBrandSlug}
               initialOpenStoryId={initialOpenStoryId}
+              initialOpenAmbientReader={initialOpenAmbientReader}
               readerReturnHref={readerReturnHref}
               showStakeholderTools={showStakeholderTools}
               onboardingResult={onboardingResult}

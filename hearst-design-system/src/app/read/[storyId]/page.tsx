@@ -21,7 +21,7 @@ import {
 
 type ReaderArticlePageProps = {
   params: Promise<{ storyId: string }>;
-  searchParams?: Promise<{ from?: string | string[] }>;
+  searchParams?: Promise<{ ambient?: string | string[]; from?: string | string[] }>;
 };
 
 export const dynamic = "force-dynamic";
@@ -89,6 +89,11 @@ async function safeLiveFeed(fetcher: () => Promise<LiveFeedData>) {
 function getReaderReturnHrefFromSearchParams(searchParams?: { from?: string | string[] }) {
   const from = Array.isArray(searchParams?.from) ? searchParams?.from[0] : searchParams?.from;
   return normalizeReaderReturnHref(from);
+}
+
+function shouldOpenAmbientReaderFromSearchParams(searchParams?: { ambient?: string | string[] }) {
+  const ambient = Array.isArray(searchParams?.ambient) ? searchParams?.ambient[0] : searchParams?.ambient;
+  return ambient === "1" || ambient === "true";
 }
 
 export async function generateMetadata({ params }: ReaderArticlePageProps): Promise<Metadata> {
@@ -162,6 +167,7 @@ export default async function ReaderArticlePage({ params, searchParams }: Reader
   const storyInLiveFeed = findLiveStory(liveFeedData, decodedStoryId);
   const storyInLifestyleLiveFeed = findLiveStory(lifestyleLiveFeedData, decodedStoryId);
   const readerReturnHref = getReaderReturnHrefFromSearchParams(resolvedSearchParams) ?? getHearstStoryReturnHref(story);
+  const initialOpenAmbientReader = shouldOpenAmbientReaderFromSearchParams(resolvedSearchParams);
 
   return (
     <ThemeProvider defaultBrandSlug={hearstSectionThemeSlugs[section]}>
@@ -169,6 +175,7 @@ export default async function ReaderArticlePage({ params, searchParams }: Reader
         staticDestinationData={staticDestinationData}
         initialBrandSlug={hearstSectionThemeSlugs[section]}
         initialOpenStoryId={decodedStoryId}
+        initialOpenAmbientReader={initialOpenAmbientReader}
         readerReturnHref={readerReturnHref}
         liveFeedData={storyInLiveFeed ? liveFeedData : storyInLifestyleLiveFeed ? lifestyleLiveFeedData : undefined}
         liveFeedMode="blend"

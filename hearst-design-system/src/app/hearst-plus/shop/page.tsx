@@ -23,7 +23,12 @@ export const metadata: Metadata = {
 };
 
 function getReaderHref(storyId: string) {
-  return `${getHearstStoryRoute(storyId)}?from=${encodeURIComponent("/hearst-plus/shop/")}`;
+  const searchParams = new URLSearchParams({
+    from: "/hearst-plus/shop/",
+    ambient: "1",
+  });
+
+  return `${getHearstStoryRoute(storyId)}?${searchParams.toString()}`;
 }
 
 export default function HearstPlusShopPage() {

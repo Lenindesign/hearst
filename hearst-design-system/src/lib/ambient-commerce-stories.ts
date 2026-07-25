@@ -41,7 +41,12 @@ export function getAmbientCommerceStories(): AmbientCommerceStory[] {
     const story = refreshedStory ?? collection.story;
     const identity = getStoryIdentity(story);
 
-    if (seen.has(identity) || filterExcludedStories([story]).length === 0) return [];
+    if (
+      seen.has(identity)
+      || !story.sourceUrl
+      || story.videoUrl
+      || filterExcludedStories([story]).length === 0
+    ) return [];
 
     seen.add(identity);
     return [{ ...story, commerceCollection: collection }];
