@@ -3,6 +3,7 @@
 import React from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
+import Link from "next/link";
 import {
   Bookmark,
   Check,
@@ -17,24 +18,66 @@ import {
 } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { brandIconLogos } from "@/lib/logos";
+import { getHearstStoryRoute } from "@/lib/story-routes";
 import { useBodyPortalTarget, useModalIsolation } from "@/components/ui/use-modal-isolation";
 import { BrandLogo } from "./brand-logo";
 import type { LifestyleRiverProfile, LifestyleRiverStory } from "./lifestyle-river-types";
-import { useReaderAccount, type ReaderAccount } from "./reader-account";
+import { useReaderAccount, type ReaderAccount, type ReaderCollection } from "./reader-account";
 
 type AuthMode = "create" | "signIn";
 
-function GoogleMark() {
-  return (
-    <span className="grid size-5 place-items-center text-base font-bold" aria-hidden>
-      <span>
-        <span className="text-[#4285F4]">G</span>
-      </span>
-    </span>
-  );
+type GoogleCredentialResponse = { credential: string };
+
+function getLibraryStoryHref(story: Pick<LifestyleRiverStory, "id">) {
+  return `${getHearstStoryRoute(story)}?from=${encodeURIComponent("/hearst-plus/")}`;
+}
+
+declare global {
+  interface Window {
+    google?: {
+      accounts: {
+        id: {
+          initialize: (config: {
+            client_id: string;
+            callback: (response: GoogleCredentialResponse) => void;
+            auto_select?: boolean;
+            cancel_on_tap_outside?: boolean;
+            context?: "signin" | "signup" | "use";
+          }) => void;
+          prompt: () => void;
+          renderButton: (parent: HTMLElement, options: Record<string, string | number>) => void;
+        };
+      };
+    };
+  }
+}
+
+function loadGoogleIdentityServices() {
+  return new Promise<void>((resolve, reject) => {
+    if (window.google?.accounts.id) {
+      resolve();
+      return;
+    }
+
+    const existing = document.getElementById("google-identity-services");
+    if (existing) {
+      existing.addEventListener("load", () => resolve(), { once: true });
+      existing.addEventListener("error", () => reject(new Error("Google sign-in could not load.")), { once: true });
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.id = "google-identity-services";
+    script.src = "https://accounts.google.com/gsi/client";
+    script.async = true;
+    script.defer = true;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error("Google sign-in could not load."));
+    document.head.appendChild(script);
+  });
 }
 
 export function ReaderAvatar({
@@ -42,7 +85,7 @@ export function ReaderAvatar({
   size = "default",
   className,
 }: {
-  account: Pick<ReaderAccount, "firstName" | "lastName">;
+  account: Pick<ReaderAccount, "firstName" | "lastName" | "avatarUrl">;
   size?: "default" | "sm" | "lg";
   className?: string;
 }) {
@@ -50,6 +93,7 @@ export function ReaderAvatar({
 
   return (
     <Avatar size={size} className={className} aria-hidden>
+      {account.avatarUrl ? <AvatarImage src={account.avatarUrl} alt="" referrerPolicy="no-referrer" /> : null}
       <AvatarFallback className="bg-muted font-bold text-foreground">
         {initials || "H+"}
       </AvatarFallback>
@@ -155,6 +199,7 @@ export function ReaderAuthDialog({
   onAuthenticated?: () => void;
 }) {
   const { createAccount, continueWithGoogle, signIn } = useReaderAccount();
+  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
   const [mode, setMode] = React.useState<AuthMode>(initialMode);
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
@@ -164,6 +209,10 @@ export function ReaderAuthDialog({
   const [acceptedTerms, setAcceptedTerms] = React.useState(false);
   const [error, setError] = React.useState("");
   const [submitting, setSubmitting] = React.useState(false);
+  const googleButtonRef = React.useRef<HTMLDivElement>(null);
+  const googleCredentialHandlerRef = React.useRef<(credential: string) => void>(() => {});
+  const googleInitializedRef = React.useRef(false);
+  const [googleReady, setGoogleReady] = React.useState(false);
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -209,14 +258,31 @@ export function ReaderAuthDialog({
     }
   };
 
-  const submitGoogle = async () => {
+  const submitGoogleCredential = React.useCallback(async (credential: string) => {
     setError("");
     setSubmitting(true);
     try {
+      const response = await fetch("/api/auth/google", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ credential }),
+      });
+      const payload = await response.json() as {
+        error?: string;
+        email?: string;
+        firstName?: string;
+        lastName?: string;
+        avatarUrl?: string;
+      };
+      if (!response.ok || !payload.email || !payload.firstName) {
+        throw new Error(payload.error ?? "Google could not verify this sign-in.");
+      }
+
       await continueWithGoogle({
-        firstName: "Lenin",
-        lastName: "Aviles",
-        email: "lenin.google@hearstplus.local",
+        firstName: payload.firstName,
+        lastName: payload.lastName ?? "",
+        email: payload.email,
+        avatarUrl: payload.avatarUrl,
         preferences: defaultPreferences,
       });
       onAuthenticated?.();
@@ -226,110 +292,184 @@ export function ReaderAuthDialog({
     } finally {
       setSubmitting(false);
     }
-  };
+  }, [continueWithGoogle, defaultPreferences, onAuthenticated, onClose]);
+
+  React.useEffect(() => {
+    googleCredentialHandlerRef.current = (credential) => {
+      void submitGoogleCredential(credential);
+    };
+  }, [submitGoogleCredential]);
+
+  React.useEffect(() => {
+    if (!open || !googleClientId) return;
+
+    let cancelled = false;
+    loadGoogleIdentityServices()
+      .then(() => {
+        if (cancelled || !window.google?.accounts.id) return;
+        if (!googleInitializedRef.current) {
+          window.google.accounts.id.initialize({
+            client_id: googleClientId,
+            callback: ({ credential }) => googleCredentialHandlerRef.current(credential),
+            auto_select: false,
+            cancel_on_tap_outside: true,
+            context: initialMode === "create" ? "signup" : "signin",
+          });
+          googleInitializedRef.current = true;
+        }
+        setGoogleReady(true);
+      })
+      .catch((loadError) => {
+        if (!cancelled) setError(loadError instanceof Error ? loadError.message : "Google sign-in could not load.");
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [googleClientId, initialMode, open]);
+
+  React.useEffect(() => {
+    if (!open || !googleClientId || !googleReady || !window.google?.accounts.id || !googleButtonRef.current) return;
+    googleButtonRef.current.replaceChildren();
+    window.google.accounts.id.renderButton(googleButtonRef.current, {
+      type: "standard",
+      theme: "outline",
+      size: "large",
+      text: mode === "create" ? "signup_with" : "signin_with",
+      shape: "rectangular",
+      width: 400,
+    });
+    window.google.accounts.id.prompt();
+  }, [googleClientId, googleReady, mode, open]);
 
   return (
-    <ModalFrame open={open} onClose={onClose} titleId="reader-auth-title" className="max-w-lg">
-      <div className="flex items-center justify-between border-b border-border px-5 py-4 sm:px-7">
-        <BrandLogo
-          slug="hearst-all"
-          className="[&_svg]:h-7 [&_svg]:w-auto [&_svg]:max-w-[190px]"
-          color="var(--color-primary)"
+    <ModalFrame
+      open={open}
+      onClose={onClose}
+      titleId="reader-auth-title"
+      className="h-[min(760px,calc(100dvh-2rem))] max-w-5xl sm:h-[min(760px,calc(100dvh-3rem))] lg:grid lg:grid-cols-[minmax(320px,0.95fr)_minmax(0,1.05fr)]"
+    >
+      <div className="relative hidden h-full overflow-hidden bg-muted lg:block">
+        <Image
+          src="/images/hearst-plus-onboarding.png"
+          alt=""
+          fill
+          sizes="50vw"
+          className="absolute inset-0 h-full w-full object-cover"
+          aria-hidden
+          priority
         />
-        <Button data-modal-close variant="outline" size="icon-sm" className="size-11" onClick={onClose} aria-label="Close account dialog">
-          <X className="h-4 w-4" aria-hidden />
-        </Button>
-      </div>
-      <form className="overflow-y-auto p-5 sm:p-7" onSubmit={submit} noValidate>
-        <h2 id="reader-auth-title" className="text-center text-2xl font-bold leading-tight sm:text-3xl">
-          {mode === "create" ? "Create local demo profile" : "Resume local demo profile"}
-        </h2>
-        <p className="mx-auto mt-3 max-w-sm text-center text-sm leading-6 text-muted-foreground">
-          {mode === "create"
-            ? "Save your personalized feed, collections, comments, and reading history in this browser."
-            : "Resume the personalized feed and library saved in this browser."}
-        </p>
-
-        <Button
-          type="button"
-          variant="outline"
-          className="mt-6 h-11 w-full gap-3 text-base font-bold"
-          disabled={submitting}
-          onClick={submitGoogle}
-        >
-          <GoogleMark />
-          Use demo Google profile
-        </Button>
-
-        <div className="my-6 flex items-center gap-4">
-          <span className="h-px flex-1 bg-border" />
-          <span className="text-sm font-bold text-muted-foreground">Or</span>
-          <span className="h-px flex-1 bg-border" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" aria-hidden />
+        <div className="absolute inset-x-0 bottom-0 p-8 text-white">
+          <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-white/80">
+            Your daily Hearst+
+          </p>
+          <p className="headline mt-3 max-w-sm text-4xl leading-tight">
+            Save the feed that feels built for you.
+          </p>
         </div>
+      </div>
 
-        <div className="space-y-4">
-          {mode === "create" ? (
-            <div className="grid gap-4 sm:grid-cols-2">
-              <label className="text-sm font-semibold">
-                First name
-                <Input className="mt-2" value={firstName} onChange={(event) => setFirstName(event.target.value)} autoComplete="given-name" />
-              </label>
-              <label className="text-sm font-semibold">
-                Last name
-                <Input className="mt-2" value={lastName} onChange={(event) => setLastName(event.target.value)} autoComplete="family-name" />
-              </label>
-            </div>
-          ) : null}
-          <label className="block text-sm font-semibold">
-            Email
-            <Input className="mt-2" type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" />
-          </label>
-          <label className="block text-sm font-semibold">
-            Password
-            <Input className="mt-2" type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete={mode === "create" ? "new-password" : "current-password"} />
-          </label>
-          {mode === "create" ? (
+      <div className="flex min-h-0 flex-col overflow-hidden">
+        <div className="flex items-center justify-between border-b border-border px-5 py-4 sm:px-7">
+          <BrandLogo
+            slug="hearst-all"
+            className="[&_svg]:h-7 [&_svg]:w-auto [&_svg]:max-w-[190px]"
+            color="var(--color-primary)"
+          />
+          <Button data-modal-close variant="outline" size="icon-sm" className="size-11" onClick={onClose} aria-label="Close account dialog">
+            <X className="h-4 w-4" aria-hidden />
+          </Button>
+        </div>
+        <form className="min-h-0 flex-1 overflow-y-auto p-5 sm:p-8" onSubmit={submit} noValidate>
+          <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+            Sign in / Sign up
+          </p>
+          <h2 id="reader-auth-title" className="headline mt-3 text-3xl leading-tight outline-none sm:text-4xl">
+            {mode === "create" ? "Create your Hearst+ profile." : "Welcome back to Hearst+."}
+          </h2>
+          <p className="mt-3 max-w-md text-sm leading-6 text-muted-foreground">
+            {mode === "create"
+              ? "Save your personalized feed, collections, comments, and reading history in this browser."
+              : "Sign in to resume the personalized feed and library saved in this browser."}
+          </p>
+
+          {googleClientId ? (
             <>
-              <label className="block text-sm font-semibold">
-                Confirm password
-                <Input className="mt-2" type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} autoComplete="new-password" />
-              </label>
-              <label className="flex items-start gap-3 text-sm leading-5">
-                <input
-                  type="checkbox"
-                  checked={acceptedTerms}
-                  onChange={(event) => setAcceptedTerms(event.target.checked)}
-                  className="mt-0.5 h-4 w-4 accent-[var(--color-primary)]"
-                />
-                <span>I agree to the Terms of Use and acknowledge the Privacy Notice.</span>
-              </label>
+              <div className="mt-6 flex min-h-11 justify-start" ref={googleButtonRef} aria-label="Continue with Google" />
+              {submitting ? <p className="mt-3 text-sm font-semibold text-muted-foreground">Verifying Google sign-in...</p> : null}
+              <div className="my-6 flex items-center gap-4">
+                <span className="h-px flex-1 bg-border" />
+                <span className="text-sm font-bold text-muted-foreground">Or use email</span>
+                <span className="h-px flex-1 bg-border" />
+              </div>
             </>
           ) : null}
-        </div>
 
-        {error ? (
-          <p role="alert" className="mt-4 rounded-[8px] bg-destructive/10 px-3 py-2 text-sm font-semibold text-destructive">
-            {error}
+          <div className="space-y-4">
+            {mode === "create" ? (
+              <div className="grid gap-4 sm:grid-cols-2">
+                <label className="text-sm font-semibold">
+                  First name
+                  <Input className="mt-2" value={firstName} onChange={(event) => setFirstName(event.target.value)} autoComplete="given-name" />
+                </label>
+                <label className="text-sm font-semibold">
+                  Last name
+                  <Input className="mt-2" value={lastName} onChange={(event) => setLastName(event.target.value)} autoComplete="family-name" />
+                </label>
+              </div>
+            ) : null}
+            <label className="block text-sm font-semibold">
+              Email
+              <Input className="mt-2" type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" />
+            </label>
+            <label className="block text-sm font-semibold">
+              Password
+              <Input className="mt-2" type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete={mode === "create" ? "new-password" : "current-password"} />
+            </label>
+            {mode === "create" ? (
+              <>
+                <label className="block text-sm font-semibold">
+                  Confirm password
+                  <Input className="mt-2" type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} autoComplete="new-password" />
+                </label>
+                <label className="flex items-start gap-3 text-sm leading-5">
+                  <input
+                    type="checkbox"
+                    checked={acceptedTerms}
+                    onChange={(event) => setAcceptedTerms(event.target.checked)}
+                    className="mt-0.5 h-4 w-4 accent-[var(--color-primary)]"
+                  />
+                  <span>I agree to the Terms of Use and acknowledge the Privacy Notice.</span>
+                </label>
+              </>
+            ) : null}
+          </div>
+
+          {error ? (
+            <p role="alert" className="mt-4 rounded-[8px] bg-destructive/10 px-3 py-2 text-sm font-semibold text-destructive">
+              {error}
+            </p>
+          ) : null}
+
+          <Button className="mt-6 w-full" type="submit" disabled={submitting}>
+            {submitting ? "Please wait" : mode === "create" ? "Create Local Profile" : "Sign In"}
+          </Button>
+          <button
+            type="button"
+            className="mt-4 w-full text-center text-sm font-semibold text-primary hover:underline"
+            onClick={() => {
+              setMode((current) => current === "create" ? "signIn" : "create");
+              setError("");
+            }}
+          >
+            {mode === "create" ? "Already have a local profile? Sign in" : "New to Hearst+? Create a local demo profile"}
+          </button>
+          <p className="mt-5 border-t border-border pt-4 text-xs leading-5 text-muted-foreground">
+            Prototype note: feed data and profile settings stay in this browser. When Google One Tap is configured, its identity credential is verified before this local profile is created or resumed.
           </p>
-        ) : null}
-
-        <Button className="mt-6 w-full" type="submit" disabled={submitting}>
-          {submitting ? "Please wait" : mode === "create" ? "Create Local Profile" : "Resume Local Profile"}
-        </Button>
-        <button
-          type="button"
-          className="mt-4 w-full text-center text-sm font-semibold text-primary hover:underline"
-          onClick={() => {
-            setMode((current) => current === "create" ? "signIn" : "create");
-            setError("");
-          }}
-        >
-          {mode === "create" ? "Already have a local profile? Resume it" : "New to Hearst+? Create a local demo profile"}
-        </button>
-        <p className="mt-5 border-t border-border pt-4 text-xs leading-5 text-muted-foreground">
-          Prototype note: this is browser-local demo state, not production account storage or a live Google sign-in.
-        </p>
-      </form>
+        </form>
+      </div>
     </ModalFrame>
   );
 }
@@ -391,6 +531,8 @@ export function ReaderProfileDialog({
   const [firstName, setFirstName] = React.useState(() => account?.firstName ?? "");
   const [lastName, setLastName] = React.useState(() => account?.lastName ?? "");
   const [collectionName, setCollectionName] = React.useState("");
+  const [collectionStatus, setCollectionStatus] = React.useState("");
+  const collectionNameRef = React.useRef<HTMLInputElement>(null);
   const [profileSaved, setProfileSaved] = React.useState(false);
   const customCollections = account?.collections.filter((collection) => collection.name !== "Read Later") ?? [];
   const [confirmDelete, setConfirmDelete] = React.useState(false);
@@ -411,6 +553,17 @@ export function ReaderProfileDialog({
       ? account.preferences.followedBrands.filter((item) => item !== brand)
       : [...account.preferences.followedBrands, brand];
     updatePreferences({ ...account.preferences, followedBrands });
+  };
+  const createNamedCollection = () => {
+    const collection = createCollection(collectionName);
+    if (!collection) return;
+    setCollectionName("");
+    setCollectionStatus(`Created ${collection.name}.`);
+  };
+  const toggleSavedStoryCollection = (story: LifestyleRiverStory, collection: ReaderCollection) => {
+    const containsStory = collection.storyIds.includes(story.id);
+    toggleStoryInCollection(collection.id, story.id);
+    setCollectionStatus(`${containsStory ? "Removed from" : "Added to"} ${collection.name}.`);
   };
 
   return (
@@ -513,10 +666,11 @@ export function ReaderProfileDialog({
             <div>
               <h3 className="text-2xl font-bold">Your library</h3>
               <p className="mt-2 text-sm text-muted-foreground">Keep stories together for meals, projects, trips, and anything you want to revisit.</p>
-              <form className="mt-6 flex items-start gap-2" onSubmit={(event) => { event.preventDefault(); if (createCollection(collectionName)) setCollectionName(""); }}>
-                <Input className="min-w-0 flex-1" value={collectionName} onChange={(event) => setCollectionName(event.target.value)} placeholder="New collection name" aria-label="New collection name" />
+              <form className="mt-6 flex items-start gap-2" onSubmit={(event) => { event.preventDefault(); createNamedCollection(); }}>
+                <Input ref={collectionNameRef} className="min-w-0 flex-1" value={collectionName} onChange={(event) => setCollectionName(event.target.value)} placeholder="New collection name" aria-label="New collection name" />
                 <Button className="h-12 shrink-0" type="submit" disabled={!collectionName.trim()}><FolderPlus className="mr-2 h-4 w-4" aria-hidden />Create</Button>
               </form>
+              {collectionStatus ? <p role="status" className="mt-3 text-sm font-semibold text-muted-foreground">{collectionStatus}</p> : null}
               <div className="mt-7 divide-y divide-border border-y border-border">
                 {account.collections.map((collection) => (
                   <section key={collection.id} className="py-4">
@@ -529,11 +683,12 @@ export function ReaderProfileDialog({
                     <div className="mt-3 space-y-2">
                       {collection.storyIds.length === 0 ? <p className="text-sm text-muted-foreground">Add a saved story below.</p> : collection.storyIds.slice(0, 4).map((id) => {
                         const story = storyById.get(id);
+                        if (!story) return <p key={id} className="text-sm font-semibold text-muted-foreground">Saved story unavailable</p>;
                         return (
-                          <div key={id} className="flex items-center gap-3">
-                            {story ? <Image unoptimized src={story.image} alt="" width={64} height={44} className="h-11 w-16 shrink-0 rounded-[4px] object-cover" /> : null}
-                            <p className="line-clamp-2 text-sm font-semibold">{story?.title ?? "Saved story"}</p>
-                          </div>
+                          <Link key={id} href={getLibraryStoryHref(story)} onClick={onClose} className="group flex min-h-12 items-center gap-3 rounded-[8px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label={`Open ${story.title}`}>
+                            <Image unoptimized src={story.image} alt="" width={64} height={44} className="h-11 w-16 shrink-0 rounded-[4px] object-cover" />
+                            <p className="line-clamp-2 text-sm font-semibold group-hover:text-primary">{story.title}</p>
+                          </Link>
                         );
                       })}
                     </div>
@@ -547,15 +702,42 @@ export function ReaderProfileDialog({
                 ) : (
                   <div className="mt-3 divide-y divide-border border-y border-border">
                     {savedStories.map((story) => (
-                      <div key={story.id} className="grid gap-3 py-4 sm:grid-cols-[minmax(0,1fr)_180px] sm:items-center">
-                        <div className="flex min-w-0 items-center gap-3">
+                      <div key={story.id} className="grid gap-3 py-4 sm:grid-cols-[minmax(0,1fr)_220px] sm:items-center">
+                        <Link
+                          href={getLibraryStoryHref(story)}
+                          onClick={onClose}
+                          className="group flex min-h-16 min-w-0 items-center gap-3 rounded-[8px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                          aria-label={`Open ${story.title}`}
+                        >
                           <Image unoptimized src={story.image} alt="" width={80} height={56} className="h-14 w-20 shrink-0 rounded-[4px] object-cover" />
-                          <div className="min-w-0"><p className="line-clamp-2 font-bold">{story.title}</p><p className="mt-1 text-xs text-muted-foreground">{story.brand} · {story.readTime}</p></div>
-                        </div>
-                        <select className="h-10 rounded-[8px] border border-border bg-background px-3 text-sm" value="" disabled={customCollections.length === 0} onChange={(event) => { if (event.target.value) toggleStoryInCollection(event.target.value, story.id); }} aria-label={`Add ${story.title} to a custom collection`}>
-                          <option value="">{customCollections.length === 0 ? "Create a collection above" : "Add to collection"}</option>
-                          {customCollections.map((collection) => <option key={collection.id} value={collection.id}>{collection.storyIds.includes(story.id) ? `Remove from ${collection.name}` : collection.name}</option>)}
-                        </select>
+                          <div className="min-w-0"><p className="line-clamp-2 font-bold group-hover:text-primary">{story.title}</p><p className="mt-1 text-xs text-muted-foreground">{story.brand} · {story.readTime}</p></div>
+                        </Link>
+                        {customCollections.length === 0 ? (
+                          <button
+                            type="button"
+                            className="min-h-10 rounded-[8px] border border-dashed border-border px-3 text-left text-sm font-semibold text-muted-foreground hover:border-primary/50 hover:text-primary"
+                            onClick={() => collectionNameRef.current?.focus()}
+                          >
+                            Create a collection first
+                          </button>
+                        ) : (
+                          <select
+                            className="h-10 rounded-[8px] border border-border bg-background px-3 text-sm font-semibold"
+                            value=""
+                            onChange={(event) => {
+                              const collection = customCollections.find((item) => item.id === event.target.value);
+                              if (collection) toggleSavedStoryCollection(story, collection);
+                            }}
+                            aria-label={`Add or remove ${story.title} from a custom collection`}
+                          >
+                            <option value="">Add or remove</option>
+                            {customCollections.map((collection) => (
+                              <option key={collection.id} value={collection.id}>
+                                {collection.storyIds.includes(story.id) ? `In ${collection.name} - remove` : `Add to ${collection.name}`}
+                              </option>
+                            ))}
+                          </select>
+                        )}
                       </div>
                     ))}
                   </div>

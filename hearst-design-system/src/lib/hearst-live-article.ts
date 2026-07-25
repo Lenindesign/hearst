@@ -396,6 +396,57 @@ function getImageUrlFromAttrs(attrs: string) {
   return source.split(",")[0]?.trim().split(/\s+/)[0];
 }
 
+function normalizeAuthorName(value: string) {
+  return htmlToText(value)
+    .toLowerCase()
+    .replace(/\bby\b/g, " ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+function isAllowedAuthorAvatarUrl(value: string) {
+  try {
+    const url = new URL(value, "https://www.cosmopolitan.com");
+    return url.protocol === "https:" && url.hostname === "hips.hearstapps.com";
+  } catch {
+    return false;
+  }
+}
+
+function getArticleAuthorAvatarUrl(html: string, byline?: string) {
+  const bylineNames = byline
+    ? byline.split(/\s*,\s*|\s+and\s+/).map(normalizeAuthorName).filter(Boolean)
+    : [];
+  const imageTags = html.match(/<img\b[^>]*>/gi) ?? [];
+  const candidates = imageTags
+    .map((tag) => {
+      const src = getImageUrlFromAttrs(tag);
+      if (!src || !isAllowedAuthorAvatarUrl(src)) return null;
+
+      const label = [
+        getHtmlAttribute(tag, "alt"),
+        getHtmlAttribute(tag, "title"),
+        getHtmlAttribute(tag, "aria-label"),
+      ].filter(Boolean).join(" ");
+      const normalizedLabel = normalizeAuthorName(label);
+      const isProfilePhoto = src.includes("/rover/profile_photos/") || /headshot|author|editor|profile/.test(normalizedLabel);
+      const bylineMatch = bylineNames.some((name) => normalizedLabel.includes(name) || name.includes(normalizedLabel));
+
+      return {
+        src,
+        score: (src.includes("/rover/profile_photos/") ? 4 : 0)
+          + (bylineMatch ? 4 : 0)
+          + (/headshot|author|editor|profile/.test(normalizedLabel) ? 2 : 0)
+          + (isProfilePhoto ? 1 : 0),
+      };
+    })
+    .filter((candidate): candidate is { src: string; score: number } => Boolean(candidate))
+    .sort((a, b) => b.score - a.score);
+
+  const bestCandidate = candidates.find((candidate) => candidate.score >= (bylineNames.length > 0 ? 4 : 5));
+  return bestCandidate?.src;
+}
+
 function shouldKeepFallbackText(text: string) {
   if (text.length < 12) return false;
   if (/^save$/i.test(text)) return false;
@@ -500,10 +551,13 @@ export async function getHearstLiveArticle(sourceUrl: string): Promise<LiveArtic
   }
 
   if (blocks.length === 0) throw new Error("Article body was empty");
+  const byline = getArticleByline(html);
+
   return {
     blocks,
     sourceUrl: finalUrl,
-    byline: getArticleByline(html),
+    byline,
+    authorAvatarUrl: getArticleAuthorAvatarUrl(html, byline),
     publishedAt: getArticleDate(html, [
       "article:published_time",
       "datepublished",

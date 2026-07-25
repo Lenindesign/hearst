@@ -32,6 +32,7 @@ export type ReaderAccount = {
   firstName: string;
   lastName: string;
   email: string;
+  avatarUrl?: string;
   createdAt: string;
   preferences: LifestyleRiverProfile;
   commentsByStoryId: Record<string, ReaderComment[]>;
@@ -50,7 +51,9 @@ type CreateAccountInput = {
   preferences: LifestyleRiverProfile;
 };
 
-type GoogleAccountInput = Omit<CreateAccountInput, "password">;
+type GoogleAccountInput = Omit<CreateAccountInput, "password"> & {
+  avatarUrl?: string;
+};
 
 type ReaderAccountContextValue = {
   account: ReaderAccount | null;
@@ -108,11 +111,18 @@ export function ReaderAccountProvider({ children }: { children: React.ReactNode 
   const [isHydrated, setIsHydrated] = React.useState(false);
 
   React.useEffect(() => {
-    const nextStoredAccount = readStoredAccount();
-    const activeSessionId = window.localStorage.getItem(sessionStorageKey);
-    setStoredAccount(nextStoredAccount);
-    setIsSignedIn(Boolean(nextStoredAccount && activeSessionId === nextStoredAccount.id));
-    setIsHydrated(true);
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (cancelled) return;
+      const nextStoredAccount = readStoredAccount();
+      const activeSessionId = window.localStorage.getItem(sessionStorageKey);
+      setStoredAccount(nextStoredAccount);
+      setIsSignedIn(Boolean(nextStoredAccount && activeSessionId === nextStoredAccount.id));
+      setIsHydrated(true);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const persist = React.useCallback((next: StoredReaderAccount) => {
@@ -158,10 +168,16 @@ export function ReaderAccountProvider({ children }: { children: React.ReactNode 
     const email = normalizeEmail(input.email);
     const existing = readStoredAccount();
     if (existing && existing.email === email) {
-      setStoredAccount(existing);
+      const next = {
+        ...existing,
+        firstName: input.firstName.trim() || existing.firstName,
+        lastName: input.lastName?.trim() ?? existing.lastName,
+        avatarUrl: input.avatarUrl ?? existing.avatarUrl,
+      };
+      persist(next);
       window.localStorage.setItem(sessionStorageKey, existing.id);
       setIsSignedIn(true);
-      return publicAccount(existing);
+      return publicAccount(next);
     }
 
     const now = new Date().toISOString();
@@ -170,6 +186,7 @@ export function ReaderAccountProvider({ children }: { children: React.ReactNode 
       firstName: input.firstName.trim(),
       lastName: input.lastName?.trim() ?? "",
       email,
+      avatarUrl: input.avatarUrl,
       createdAt: now,
       preferences: input.preferences,
       commentsByStoryId: {},

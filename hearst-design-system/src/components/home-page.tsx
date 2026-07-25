@@ -23,6 +23,7 @@ import type { BrandTheme } from "@/lib/brands";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Divider } from "@/components/ui/divider";
 import { LinkComponent } from "@/components/ui/link";
 import { Col, Grid, GridOverlay, PageContainer } from "@/components/ui/grid";
@@ -72,7 +73,7 @@ import type { LifestyleRiverProfile, LifestyleRiverStory } from "./lifestyle-riv
 import type { LiveArticleData, LiveFeedData } from "@/lib/live-feed-types";
 import { loadLiveArticle } from "@/lib/live-article-client-cache";
 import { useReaderAccount } from "./reader-account";
-import { ReaderProfileDialog } from "./reader-account-ui";
+import { ReaderAuthDialog, ReaderProfileDialog } from "./reader-account-ui";
 import { AdaptiveVideo } from "./adaptive-video";
 import { useProgressiveFeed } from "./hearst-plus/use-progressive-feed";
 import {
@@ -1316,7 +1317,7 @@ function HearstOnboardingModal({
 }) {
   const destinationConfigs = useDestinationConfigs();
   const config = destinationConfigs[destination];
-  const [step] = React.useState(1);
+  const [step, setStep] = React.useState<1 | 2 | 3>(1);
   const [selectedInterests, setSelectedInterests] = React.useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = React.useState<string[]>([]);
   const [brandPage, setBrandPage] = React.useState(0);
@@ -1341,12 +1342,6 @@ function HearstOnboardingModal({
         count: brandInventory?.[note.brandSlug] ?? counts[note.brand] ?? 0,
       }));
   }, [brandInventory, destinationConfigs.all]);
-  const storyCount = config.stories.length.toLocaleString();
-  const brandCount = destination === "all" ? 29 : config.sourceNotes.length;
-  const proofLine = destination === "all"
-    ? `Thousands of stories from ${brandCount} trusted Hearst brands, organized around your interests in one place.`
-    : `${storyCount}+ stories from ${brandCount} trusted Hearst brands, organized around your interests in one place.`;
-
   React.useEffect(() => {
     if (!open) return;
 
@@ -1522,38 +1517,6 @@ function HearstOnboardingModal({
           </div>
 
         <div ref={contentScrollRef} className="min-h-0 flex-1 overflow-y-auto p-5 [overflow-anchor:none] sm:p-8">
-          {step === 0 ? (
-            <div className="space-y-6">
-              <div>
-                <h2
-                  ref={headingRef}
-                  id="hearst-onboarding-title"
-                  tabIndex={-1}
-                  className="headline text-4xl leading-tight outline-none"
-                >
-                  Your daily Hearst feed, tuned to you.
-                </h2>
-                <p id="hearst-onboarding-description" className="mt-4 max-w-xl text-base leading-7 text-muted-foreground">
-                  Tell us what you care about. We&apos;ll build your daily feed from across Hearst.
-                </p>
-                <p className="mt-4 max-w-xl text-sm leading-6 text-muted-foreground">
-                  {proofLine}
-                </p>
-              </div>
-              <div className="rounded-[12px] border border-border bg-muted/35 p-4">
-                <p className="text-xs font-bold uppercase tracking-widest text-primary">What your demo profile saves</p>
-                <ul className="mt-4 space-y-3 text-sm leading-5">
-                  {["Followed topics and brands", "Saved stories and collections", "Continue reading in this browser", "Comment identity and replies"].map((item) => (
-                    <li key={item} className="flex gap-2">
-                      <span className="mt-1 h-1.5 w-1.5 rounded-full bg-primary" aria-hidden />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          ) : null}
-
           {step === 1 ? (
             <div>
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -1655,7 +1618,7 @@ function HearstOnboardingModal({
                     Follow brands you trust.
                   </h2>
                   <p id="hearst-onboarding-description" className="mt-3 text-sm leading-6 text-muted-foreground">
-                    Pick at least 2. Your feed will still discover across all Hearst brands, but these voices get a stronger signal.
+                    Optional: choose the publications you return to most. Your feed will still discover across Hearst, while these voices get a stronger signal.
                   </p>
                 </div>
                 <p className="inline-flex h-8 shrink-0 items-center rounded-full bg-muted px-3 text-xs font-bold text-foreground">
@@ -1759,43 +1722,6 @@ function HearstOnboardingModal({
           ) : null}
 
           {step === 3 ? (
-            <div className="space-y-5">
-              <div>
-                <h2
-                  ref={headingRef}
-                  id="hearst-onboarding-title"
-                  tabIndex={-1}
-                  className="headline text-3xl leading-tight outline-none sm:text-4xl"
-                >
-                  Create a local demo profile to save your feed.
-                </h2>
-                <p id="hearst-onboarding-description" className="mt-3 text-sm leading-6 text-muted-foreground">
-                  Your choices can tune this session now. A local demo profile keeps them available in this browser.
-                </p>
-                <div className="mt-5 grid gap-2 sm:grid-cols-2">
-                  {[
-                    "Personalized Daily Brief",
-                    "Saved stories",
-                    "Followed topics",
-                    "Comment history",
-                  ].map((benefit) => (
-                    <div key={benefit} className="rounded-[8px] border border-border bg-muted/30 px-3 py-2 text-sm font-semibold">
-                      {benefit}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="rounded-[12px] border border-border bg-muted/35 p-4">
-                <p className="text-xs font-bold uppercase tracking-widest text-primary">Your selections</p>
-                <p className="mt-4 text-sm font-bold">Interests</p>
-                <p className="mt-1 text-sm leading-6 text-muted-foreground">{selectedInterests.join(", ")}</p>
-                <p className="mt-4 text-sm font-bold">Brands</p>
-                <p className="mt-1 text-sm leading-6 text-muted-foreground">{selectedBrands.join(", ")}</p>
-              </div>
-            </div>
-          ) : null}
-
-          {step === 4 ? (
             <div className="text-center">
               <p className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary text-lg font-bold text-primary-foreground">
                 <Check className="h-5 w-5" aria-hidden />
@@ -1809,33 +1735,52 @@ function HearstOnboardingModal({
                 Your feed is ready.
               </h2>
               <p id="hearst-onboarding-description" className="mx-auto mt-3 max-w-xl text-sm leading-6 text-muted-foreground">
-                Your For You page now starts with your selected interests and brands. The more you read, save, and follow, the sharper it gets.
+                Your For You page now reflects your selected interests and brands. You can tune it again any time from your profile.
               </p>
             </div>
           ) : null}
         </div>
 
         <div className="flex flex-col gap-3 border-t border-border px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <button
-            type="button"
-            onClick={onClose}
-            className="whitespace-nowrap text-sm font-semibold text-muted-foreground hover:text-foreground"
-          >
-            Not now
-          </button>
+          {step === 1 ? (
+            <button
+              type="button"
+              onClick={onClose}
+              className="whitespace-nowrap text-sm font-semibold text-muted-foreground hover:text-foreground"
+            >
+              Not now
+            </button>
+          ) : step === 2 ? (
+            <button
+              type="button"
+              onClick={() => setStep(1)}
+              className="whitespace-nowrap text-sm font-semibold text-muted-foreground hover:text-foreground"
+            >
+              Back
+            </button>
+          ) : <span aria-hidden="true" />}
           <div className="flex flex-wrap justify-end gap-2">
             {step === 1 ? (
               <Button
                 size="sm"
+                onClick={() => setStep(2)}
+                disabled={!canContinueInterests}
+              >
+                Continue
+              </Button>
+            ) : null}
+            {step === 2 ? (
+              <Button
+                size="sm"
                 onClick={() => {
                   onComplete(getResult());
-                  onClose();
+                  setStep(3);
                 }}
-                disabled={!canContinueInterests}
               >
                 Use this feed
               </Button>
             ) : null}
+            {step === 3 ? <Button size="sm" onClick={onClose}>Start reading</Button> : null}
           </div>
         </div>
         </div>
@@ -6058,6 +6003,14 @@ function LifestyleReaderActions({
   const followBadgeBackground = publicationTheme?.colors["1"] ?? "#242D39";
   const followBadgeForeground = getAmbientBrandForeground(followBadgeBackground);
   const publishedAt = article?.publishedAt ?? story.publishedAt;
+  const authorAvatarUrl = article?.authorAvatarUrl;
+  const authorInitials = byline
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part.slice(0, 1))
+    .join("")
+    .toUpperCase();
 
   return (
     <div className="my-6 min-w-0 border-y border-border py-3">
@@ -6071,8 +6024,12 @@ function LifestyleReaderActions({
             title={followed ? `Unfollow ${story.brand} brand` : `Follow ${story.brand} brand`}
             className="inline-flex min-h-11 max-w-full min-w-0 items-center gap-1.5 rounded-[4px] text-[length:var(--text-token-4xs)] text-muted-foreground transition-colors hover:text-primary focus:outline-none focus-visible:text-primary sm:min-h-0"
           >
+            <Avatar size="default" className="size-7" aria-hidden>
+              {authorAvatarUrl ? <AvatarImage src={authorAvatarUrl} alt="" referrerPolicy="no-referrer" /> : null}
+              <AvatarFallback>{authorInitials || "H+"}</AvatarFallback>
+            </Avatar>
             <span className="min-w-0 truncate">
-              {story.topic} · By {byline}
+              By {byline} · {story.topic}
             </span>
             <span
               className={cn(
@@ -12097,6 +12054,7 @@ export function HomePageTemplate({
   const [activeLifestyleFilter, setActiveLifestyleFilter] = React.useState(initialFilter ?? "For You");
   const [onboardingOpen, setOnboardingOpen] = React.useState(false);
   const [onboardingResult, setOnboardingResult] = React.useState<HearstOnboardingResult | null>(null);
+  const [authDialogOpen, setAuthDialogOpen] = React.useState(false);
   const [profileOpen, setProfileOpen] = React.useState(false);
   const [selectedBrand, setSelectedBrand] = React.useState<{ name: string; slug: string } | null>(() =>
     getBrandRouteInfo(destinationConfigs.all.sourceNotes, initialBrandSlug)
@@ -12140,6 +12098,13 @@ export function HomePageTemplate({
   const destinationContentRef = React.useRef<HTMLDivElement | null>(null);
   const isDestinationRiver = brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
   const destinationMode = getDestinationMode(selectedBrand?.slug ?? initialBrandSlug ?? brand.slug);
+  const openPersonalization = React.useCallback(() => {
+    if (account) {
+      setProfileOpen(true);
+      return;
+    }
+    setAuthDialogOpen(true);
+  }, [account]);
   React.useEffect(() => {
     if (selectedBrand) return;
 
@@ -12439,7 +12404,7 @@ export function HomePageTemplate({
       {/* Utility Bar — full width */}
       <UtilityBar
         selectedBrand={selectedBrand}
-        onCreateAccount={() => setOnboardingOpen(true)}
+        onCreateAccount={openPersonalization}
         onOpenProfile={() => setProfileOpen(true)}
         darkMode={useVideosDarkHeader}
       />
@@ -12563,6 +12528,19 @@ export function HomePageTemplate({
             setActiveLifestyleFilter("For You");
             setOnboardingResult(result);
             anchorDestinationContent();
+          }}
+        />
+      ) : null}
+
+      {isDestinationRiver ? (
+        <ReaderAuthDialog
+          open={authDialogOpen}
+          initialMode="create"
+          defaultPreferences={destinationConfigs[destinationMode].initialProfile}
+          onClose={() => setAuthDialogOpen(false)}
+          onAuthenticated={() => {
+            setAuthDialogOpen(false);
+            setProfileOpen(true);
           }}
         />
       ) : null}
