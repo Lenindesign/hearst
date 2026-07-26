@@ -550,6 +550,7 @@ export function ReaderProfileDialog({
   const [collectionStatus, setCollectionStatus] = React.useState("");
   const collectionNameRef = React.useRef<HTMLInputElement>(null);
   const [profileSaved, setProfileSaved] = React.useState(false);
+  const readLaterCollection = account?.collections.find((collection) => collection.name === "Read Later");
   const customCollections = account?.collections.filter((collection) => collection.name !== "Read Later") ?? [];
   const [confirmDelete, setConfirmDelete] = React.useState(false);
 
@@ -660,7 +661,12 @@ export function ReaderProfileDialog({
               <div className="mt-7 divide-y divide-border border-y border-border">
                 {[
                   { id: "personalization" as const, icon: Check, title: "For You preferences", detail: `${account.preferences.followedTopics.length} topics and ${account.preferences.followedBrands.length} brands shape your feed` },
-                  { id: "library" as const, icon: Bookmark, title: "Library", detail: `${savedStories.length} saved ${savedStories.length === 1 ? "story" : "stories"} in ${account.collections.length} ${account.collections.length === 1 ? "collection" : "collections"}` },
+                  {
+                    id: "library" as const,
+                    icon: Bookmark,
+                    title: "Library",
+                    detail: `${savedStories.length} saved ${savedStories.length === 1 ? "story" : "stories"} · ${customCollections.length === 0 ? "No custom collections" : `${customCollections.length} custom ${customCollections.length === 1 ? "collection" : "collections"}`}`,
+                  },
                   { id: "activity" as const, icon: MessageCircle, title: "Comments", detail: comments.length === 0 ? "You have not commented yet" : `${comments.length} ${comments.length === 1 ? "comment" : "comments"}` },
                   {
                     id: "settings" as const,
@@ -723,13 +729,15 @@ export function ReaderProfileDialog({
             <div>
               <h3 className="text-2xl font-bold">Your library</h3>
               <p className="mt-2 text-sm text-muted-foreground">Keep stories together for meals, projects, trips, and anything you want to revisit.</p>
-              <form className="mt-6 flex items-start gap-2" onSubmit={(event) => { event.preventDefault(); createNamedCollection(); }}>
+              <h4 className="mt-7 font-bold">Collections</h4>
+              <form className="mt-3 flex items-start gap-2" onSubmit={(event) => { event.preventDefault(); createNamedCollection(); }}>
                 <Input ref={collectionNameRef} className="min-w-0 flex-1" value={collectionName} onChange={(event) => setCollectionName(event.target.value)} placeholder="New collection name" aria-label="New collection name" />
                 <Button className="h-12 shrink-0" type="submit" disabled={!collectionName.trim()}><FolderPlus className="mr-2 h-4 w-4" aria-hidden />Create</Button>
               </form>
               {collectionStatus ? <p role="status" className="mt-3 text-sm font-semibold text-muted-foreground">{collectionStatus}</p> : null}
-              <div className="mt-7 divide-y divide-border border-y border-border">
-                {account.collections.map((collection) => {
+              {customCollections.length > 0 ? (
+                <div className="mt-5 divide-y divide-border border-y border-border">
+                {customCollections.map((collection) => {
                   const availableStories = collection.storyIds
                     .map((id) => ({ id, story: resolveStory(id) }))
                     .filter((item): item is { id: string; story: LifestyleRiverStory } => Boolean(item.story));
@@ -745,9 +753,7 @@ export function ReaderProfileDialog({
                           {unavailableIds.length > 0 ? ` · ${unavailableIds.length} older ${unavailableIds.length === 1 ? "save needs" : "saves need"} cleanup` : ""}
                         </p>
                       </div>
-                      {collection.name !== "Read Later" ? (
-                        <Button variant="ghost" size="icon-sm" onClick={() => deleteCollection(collection.id)} aria-label={`Delete ${collection.name}`}><Trash2 className="h-4 w-4" aria-hidden /></Button>
-                      ) : null}
+                      <Button variant="ghost" size="icon-sm" onClick={() => deleteCollection(collection.id)} aria-label={`Delete ${collection.name}`}><Trash2 className="h-4 w-4" aria-hidden /></Button>
                     </div>
                     <div className="mt-3 space-y-2">
                       {collection.storyIds.length === 0 ? <p className="text-sm text-muted-foreground">Add a saved story below.</p> : availableStories.slice(0, 4).map(({ id, story }) => {
@@ -780,7 +786,8 @@ export function ReaderProfileDialog({
                   </section>
                   );
                 })}
-              </div>
+                </div>
+              ) : null}
               <section className="mt-8">
                 <h4 className="font-bold">Saved stories</h4>
                 {savedStories.length === 0 ? (
@@ -839,10 +846,23 @@ export function ReaderProfileDialog({
                     })}
                   </div>
                 )}
-                {unresolvedSavedIds.length > 0 ? (
-                  <p className="mt-3 text-sm text-muted-foreground">
-                    Clean up the older unavailable saves in Read Later to make this list match across devices.
-                  </p>
+                {unresolvedSavedIds.length > 0 && readLaterCollection ? (
+                  <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-[8px] bg-muted px-3 py-2.5">
+                    <p className="text-sm text-muted-foreground">
+                      {unresolvedSavedIds.length} older {unresolvedSavedIds.length === 1 ? "save is" : "saves are"} missing story details.
+                    </p>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        removeStoriesFromCollection(readLaterCollection.id, unresolvedSavedIds);
+                        setCollectionStatus(`Removed ${unresolvedSavedIds.length} unavailable ${unresolvedSavedIds.length === 1 ? "save" : "saves"}.`);
+                      }}
+                    >
+                      Remove unavailable
+                    </Button>
+                  </div>
                 ) : null}
               </section>
             </div>

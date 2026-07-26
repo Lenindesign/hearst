@@ -815,7 +815,7 @@ function AppHeader() {
           </span>
         </div>
         <nav className="hidden justify-center gap-1 md:flex">
-          {["For You", "Morning Brief", "Trending", "Saved", "Following"].map((item, index) => (
+          {["For You", "Morning Brief", "Trending", "Following"].map((item, index) => (
             <button
               key={item}
               type="button"

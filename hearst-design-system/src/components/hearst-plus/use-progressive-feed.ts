@@ -16,12 +16,14 @@ type UseProgressiveFeedOptions<Story> = {
   endpoint: string;
   destination: string;
   brandSlug?: string | null;
+  category?: string | null;
   pageSize: number;
   getIdentity: (story: Story) => string;
 };
 
 type ProgressiveFeedState<Story> = {
   stories: Story[];
+  total: number | null;
   hasMore: boolean;
   status: ProgressiveFeedStatus;
   error: string | null;
@@ -29,6 +31,7 @@ type ProgressiveFeedState<Story> = {
 
 const initialState = <Story,>(enabled: boolean): ProgressiveFeedState<Story> => ({
   stories: [],
+  total: null,
   hasMore: enabled,
   status: "idle",
   error: null,
@@ -39,6 +42,7 @@ export function useProgressiveFeed<Story>({
   endpoint,
   destination,
   brandSlug,
+  category,
   pageSize,
   getIdentity,
 }: UseProgressiveFeedOptions<Story>) {
@@ -48,8 +52,10 @@ export function useProgressiveFeed<Story>({
   const nextOffsetRef = React.useRef(0);
   const hasMoreRef = React.useRef(enabled);
   const loadingRef = React.useRef(false);
+  const offlineRef = React.useRef(false);
+  const resumeRequestedRef = React.useRef(false);
   const controllerRef = React.useRef<AbortController | null>(null);
-  const scopeKey = `${endpoint}:${destination}:${brandSlug ?? "all"}:${enabled ? "enabled" : "disabled"}`;
+  const scopeKey = `${endpoint}:${destination}:${brandSlug ?? "all"}:${category ?? "all"}:${enabled ? "enabled" : "disabled"}`;
 
   React.useEffect(() => {
     controllerRef.current?.abort();
@@ -57,16 +63,19 @@ export function useProgressiveFeed<Story>({
     nextOffsetRef.current = 0;
     hasMoreRef.current = enabled;
     loadingRef.current = false;
+    resumeRequestedRef.current = false;
     setState(initialState<Story>(enabled));
 
     return () => controllerRef.current?.abort();
   }, [enabled, scopeKey]);
 
   React.useEffect(() => {
-    const pauseRequest = () => {
-      const shouldPause = document.visibilityState === "hidden" || !navigator.onLine;
+    const pauseRequest = (event: Event) => {
+      if (event.type === "offline") offlineRef.current = true;
+      const shouldPause = document.visibilityState === "hidden" || offlineRef.current;
       if (!shouldPause) return;
 
+      if (loadingRef.current) resumeRequestedRef.current = true;
       controllerRef.current?.abort();
       controllerRef.current = null;
       loadingRef.current = false;
@@ -88,9 +97,11 @@ export function useProgressiveFeed<Story>({
       !enabled
       || loadingRef.current
       || !hasMoreRef.current
-      || document.visibilityState === "hidden"
-      || !navigator.onLine
     ) {
+      return;
+    }
+    if (document.visibilityState === "hidden" || offlineRef.current) {
+      resumeRequestedRef.current = true;
       return;
     }
 
@@ -99,6 +110,7 @@ export function useProgressiveFeed<Story>({
     controllerRef.current?.abort();
     controllerRef.current = controller;
     loadingRef.current = true;
+    resumeRequestedRef.current = false;
     setState((current) => ({ ...current, status: "loading", error: null }));
 
     const searchParams = new URLSearchParams({
@@ -107,6 +119,7 @@ export function useProgressiveFeed<Story>({
       limit: String(pageSize),
     });
     if (brandSlug) searchParams.set("brandSlug", brandSlug);
+    if (category) searchParams.set("category", category);
 
     try {
       const response = await fetch(`${endpoint}?${searchParams.toString()}`, {
@@ -135,6 +148,7 @@ export function useProgressiveFeed<Story>({
 
         return {
           stories: nextStories,
+          total: page.total,
           hasMore: page.hasMore,
           status: page.hasMore ? "idle" : "complete",
           error: null,
@@ -152,19 +166,39 @@ export function useProgressiveFeed<Story>({
       if (controllerRef.current === controller) controllerRef.current = null;
       loadingRef.current = false;
     }
-  }, [brandSlug, destination, enabled, endpoint, getIdentity, pageSize]);
+  }, [brandSlug, category, destination, enabled, endpoint, getIdentity, pageSize]);
 
-  // Publication routes need their first scoped page immediately. The shared
-  // destination feed can stay demand-driven, but waiting for its sentinel on
-  // a brand route leaves the river empty because the compact initial payload
-  // may not contain that publication yet.
   React.useEffect(() => {
-    if (!enabled || !brandSlug) return;
+    const resumePendingRequest = () => {
+      offlineRef.current = false;
+      if (
+        !resumeRequestedRef.current
+        || document.visibilityState === "hidden"
+      ) {
+        return;
+      }
+      void loadNextPage();
+    };
+
+    document.addEventListener("visibilitychange", resumePendingRequest);
+    window.addEventListener("online", resumePendingRequest);
+    return () => {
+      document.removeEventListener("visibilitychange", resumePendingRequest);
+      window.removeEventListener("online", resumePendingRequest);
+    };
+  }, [loadNextPage]);
+
+  // Every river gets one capped page immediately. This keeps the first rendered
+  // batch useful without downloading the full catalog; later pages remain
+  // strictly sentinel-driven.
+  React.useEffect(() => {
+    if (!enabled) return;
     void loadNextPage();
-  }, [brandSlug, enabled, loadNextPage]);
+  }, [enabled, loadNextPage]);
 
   return {
     ...state,
+    loadedCount: state.stories.length,
     isLoading: state.status === "loading",
     loadNextPage,
   };

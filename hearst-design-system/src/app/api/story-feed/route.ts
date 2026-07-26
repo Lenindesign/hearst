@@ -3,6 +3,7 @@ import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { getHearstDestinationStaticData } from "@/lib/hearst-destination-data";
 import type { HearstDestinationMode } from "@/lib/hearst-routes";
 import { getPersonalizeLiveFeed } from "@/lib/personalize-live-feed";
+import { storyMatchesLifestyleFilter } from "@/lib/story-feed-filter";
 
 export const dynamic = "force-dynamic";
 
@@ -40,6 +41,7 @@ export async function GET(request: NextRequest) {
     ? requestedDestination as HearstDestinationMode
     : "all";
   const brandSlug = request.nextUrl.searchParams.get("brandSlug") || undefined;
+  const category = request.nextUrl.searchParams.get("category") || undefined;
   const offset = parsePositiveInteger(request.nextUrl.searchParams.get("offset"), 0);
   const limit = Math.min(
     maximumPageSize,
@@ -59,7 +61,10 @@ export async function GET(request: NextRequest) {
   const staticStories = brandSlug
     ? fullCatalog[destination].stories.filter((story) => story.brandSlug === brandSlug)
     : fullCatalog[destination].stories;
-  const eligibleStories = mergeUniqueStories(staticStories, expandedLiveFeed.stories);
+  const mergedStories = mergeUniqueStories(staticStories, expandedLiveFeed.stories);
+  const eligibleStories = category
+    ? mergedStories.filter((story) => storyMatchesLifestyleFilter(story, category))
+    : mergedStories;
   const stories = eligibleStories.slice(offset, offset + limit);
   const nextOffset = offset + stories.length;
 

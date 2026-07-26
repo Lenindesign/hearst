@@ -87,6 +87,7 @@ import {
   normalizeStorySearchText,
   searchLifestyleStories,
 } from "@/lib/story-search";
+import { storyMatchesLifestyleFilter } from "@/lib/story-feed-filter";
 import { mergeStableStoryOrder } from "@/lib/stable-story-order";
 import {
   getContinueReadingStoryIds,
@@ -775,6 +776,72 @@ const autosBrandFavicons: Record<string, string> = {
   "road-and-track": "https://www.roadandtrack.com/_assets/design-tokens/roadandtrack/static/images/apple-touch-icon.dda61a5.png",
 };
 
+type AutosOemLogoFilter = {
+  name: string;
+  logo: string;
+  aliases: string[];
+};
+
+type AutosOemFilterOption = {
+  name: string;
+  logo: string;
+  count: number;
+};
+
+const autosOemLogoFilters: AutosOemLogoFilter[] = [
+  { name: "Buick", logo: "/logos/oem/buick.svg", aliases: ["buick"] },
+  { name: "Canoo", logo: "/logos/oem/canoo.svg", aliases: ["canoo"] },
+  { name: "Chevrolet", logo: "/logos/oem/chevrolet.svg", aliases: ["chevrolet", "chevy"] },
+  { name: "Daewoo", logo: "/logos/oem/daewoo.svg", aliases: ["daewoo"] },
+  { name: "Dodge", logo: "/logos/oem/dodge.svg", aliases: ["dodge"] },
+  { name: "Eagle", logo: "/logos/oem/eagle.svg", aliases: ["eagle"] },
+  { name: "Genesis", logo: "/logos/oem/genesis.svg", aliases: ["genesis"] },
+  { name: "GMC", logo: "/logos/oem/gmc.svg", aliases: ["gmc"] },
+  { name: "Hummer", logo: "/logos/oem/hummer.svg", aliases: ["hummer"] },
+  { name: "Infiniti", logo: "/logos/oem/infiniti.svg", aliases: ["infiniti"] },
+  { name: "Jeep", logo: "/logos/oem/jeep.svg", aliases: ["jeep"] },
+  { name: "Kia", logo: "/logos/oem/kia.svg", aliases: ["kia"] },
+  { name: "Lordstown", logo: "/logos/oem/lordstown.svg", aliases: ["lordstown"] },
+  { name: "Mercury", logo: "/logos/oem/mercury.svg", aliases: ["mercury"] },
+  { name: "Nissan", logo: "/logos/oem/nissan.svg", aliases: ["nissan"] },
+  { name: "Oldsmobile", logo: "/logos/oem/oldsmobile.svg", aliases: ["oldsmobile"] },
+  { name: "Polestar", logo: "/logos/oem/polestar.svg", aliases: ["polestar"] },
+  { name: "Ram", logo: "/logos/oem/ram.svg", aliases: ["ram"] },
+  { name: "Saab", logo: "/logos/oem/saab.svg", aliases: ["saab"] },
+  { name: "VinFast", logo: "/logos/oem/vinfast.svg", aliases: ["vinfast"] },
+];
+
+function getAutosOemStoryTokens(story: LifestyleRiverStory) {
+  return new Set(
+    [
+      story.title,
+      story.summary,
+      story.topic,
+      story.brand,
+      ...story.tags,
+    ]
+      .join(" ")
+      .toLowerCase()
+      .split(/[^a-z0-9]+/)
+      .filter(Boolean)
+  );
+}
+
+function getAutosOemMatchesForStory(story: LifestyleRiverStory) {
+  const tokens = getAutosOemStoryTokens(story);
+  return autosOemLogoFilters
+    .filter((make) =>
+      make.aliases.some((alias) =>
+        alias
+          .toLowerCase()
+          .split(/[^a-z0-9]+/)
+          .filter(Boolean)
+          .every((token) => tokens.has(token))
+      )
+    )
+    .map((make) => make.name);
+}
+
 const fluxBrandFavicons: Record<string, string> = {
   elle: "https://www.elle.com/_assets/design-tokens/elle/static/images/apple-touch-icon.0dd915e.png",
   "elle-decor": "https://www.elledecor.com/_assets/design-tokens/elledecor/static/images/apple-touch-icon.c51311f.png",
@@ -945,7 +1012,7 @@ const baseDestinationConfigs: Record<DestinationMode, DestinationConfig> = {
     productName: "Hearst Magazines",
     riverLabel: "Personalized Hearst story river",
     storyRiverLabel: "Hearst stories",
-    filters: ["For You", "Home", "Style", "Reviews", "Fitness", "Cars", "Videos", "Shopping", "Games", "Saved"],
+    filters: ["For You", "Home", "Style", "Reviews", "Fitness", "Cars", "Videos", "Shopping", "Games"],
     stories: [],
     sourceNotes: [],
     initialProfile: initialAllProfile,
@@ -964,7 +1031,7 @@ const baseDestinationConfigs: Record<DestinationMode, DestinationConfig> = {
     productName: "Hearst Lifestyle",
     riverLabel: "Personalized lifestyle story river",
     storyRiverLabel: "lifestyle stories",
-    filters: ["For You", "Food", "Home", "Wellness", "Style", "Shopping", "Family", "Entertainment", "Saved"],
+    filters: ["For You", "Food", "Home", "Wellness", "Style", "Shopping", "Family", "Entertainment"],
     stories: [],
     sourceNotes: [],
     initialProfile: initialLifestyleProfile,
@@ -983,7 +1050,7 @@ const baseDestinationConfigs: Record<DestinationMode, DestinationConfig> = {
     productName: "Hearst Autos",
     riverLabel: "Personalized autos story river",
     storyRiverLabel: "autos stories",
-    filters: ["For You", "News", "Reviews", "Buying Guides", "EVs", "Racing", "Trucks", "Classics", "Saved"],
+    filters: ["For You", "News", "Reviews", "Buying Guides", "EVs", "Racing", "Trucks", "Classics"],
     stories: [],
     sourceNotes: [],
     initialProfile: initialAutosProfile,
@@ -1000,7 +1067,7 @@ const baseDestinationConfigs: Record<DestinationMode, DestinationConfig> = {
     productName: "Hearst Flux",
     riverLabel: "Personalized Flux story river",
     storyRiverLabel: "Flux stories",
-    filters: ["For You", "Style", "Beauty", "Design", "Culture", "Shopping", "Events", "Travel", "Saved"],
+    filters: ["For You", "Style", "Beauty", "Design", "Culture", "Shopping", "Events", "Travel"],
     stories: [],
     sourceNotes: [],
     initialProfile: initialFluxProfile,
@@ -1017,7 +1084,7 @@ const baseDestinationConfigs: Record<DestinationMode, DestinationConfig> = {
     productName: "Hearst E&W",
     riverLabel: "Personalized E&W story river",
     storyRiverLabel: "E&W stories",
-    filters: ["For You", "Fitness", "Wellness", "Gear", "Tech", "Adventure", "Nutrition", "Life", "Saved"],
+    filters: ["For You", "Fitness", "Wellness", "Gear", "Tech", "Adventure", "Nutrition", "Life"],
     stories: [],
     sourceNotes: [],
     initialProfile: initialEWProfile,
@@ -1087,11 +1154,25 @@ function insertVideosFilter(filters: string[]) {
   return [...filters, "Videos"];
 }
 
+const hotRodGlobalNavLinks = [
+  "For You",
+  "EVs",
+  "Performance",
+  "Reviews",
+  "Trucks",
+  "Racing",
+  "Buying Guides",
+  "Events",
+  "Videos",
+];
+
 function getBrandContextualFilters(
   brandSlug: string,
   stories: LifestyleRiverStory[],
   includeVideos = false
 ) {
+  if (brandSlug === "hot-rod") return hotRodGlobalNavLinks;
+
   const topicCounts = stories
     .filter((story) => story.brandSlug === brandSlug)
     .reduce<Record<string, number>>((counts, story) => {
@@ -1106,8 +1187,7 @@ function getBrandContextualFilters(
   const brandSections = brandSlug === "car-and-driver"
     ? ["Shop New Cars", "Shop Used Cars", "Research Cars"]
     : [];
-
-  const filters = ["For You", ...topics, ...brandSections, "Saved"];
+  const filters = ["For You", ...topics, ...brandSections];
   return includeVideos ? insertVideosFilter(filters) : filters;
 }
 
@@ -1441,26 +1521,6 @@ function getLifestyleDemoStoryPool(
     } satisfies LifestyleRiverStory));
 
   return nextDayStories.length >= 80 ? nextDayStories : config.stories;
-}
-
-function storyMatchesLifestyleFilter(story: LifestyleRiverStory, filter: string) {
-  if (filter === "For You" || filter === "Saved") return true;
-  if (filter === "Videos") return Boolean(story.videoUrl);
-  if (story.brandSlug === "car-and-driver") {
-    if (filter === "Shop New Cars") {
-      return story.topic === "EVs" || /\b20(?:26|27|28|29)\b/.test(story.title);
-    }
-    if (filter === "Shop Used Cars") {
-      return /\b(?:19\d{2}|20(?:0\d|1\d|2[0-5]))\b/.test(story.title);
-    }
-    if (filter === "Research Cars") return true;
-  }
-  if (filter === "Lifestyle") return getStoryDestinationMode(story.brandSlug) === "lifestyle";
-  if (filter === "Autos") return getStoryDestinationMode(story.brandSlug) === "autos";
-  if (filter === "Cars") return getStoryDestinationMode(story.brandSlug) === "autos";
-  if (filter === "Fashion & Luxury") return getStoryDestinationMode(story.brandSlug) === "flux";
-  if (filter === "Enthusiast & Wellness") return getStoryDestinationMode(story.brandSlug) === "ew";
-  return story.topic === filter || story.topic.startsWith(`${filter} `);
 }
 
 const hearstDestinationNavHrefs = new Map(
@@ -2040,6 +2100,7 @@ export function MainNav({
   const mobileMenuTriggerRef = React.useRef<HTMLButtonElement | null>(null);
   const mobileMenuPanelRef = React.useRef<HTMLDivElement | null>(null);
   const mobileMenuDialogRef = React.useRef<HTMLDivElement | null>(null);
+  const navScrollRef = React.useRef<HTMLDivElement | null>(null);
   const searchTriggerRef = React.useRef<HTMLButtonElement | null>(null);
   const searchPanelRef = React.useRef<HTMLDivElement | null>(null);
   const searchDialogRef = React.useRef<HTMLDivElement | null>(null);
@@ -2080,7 +2141,6 @@ export function MainNav({
       ? destinationConfig.filters
       : content.navLinks);
   const navLinks = includeVideos ? insertVideosFilter(baseNavLinks) : baseNavLinks;
-  const pinSavedOnMobile = isDestinationRiver && navLinks.includes("Saved");
   const normalizedSearchQuery = normalizeStorySearchText(deferredSearchQuery);
   const searchResults = React.useMemo(() => {
     return searchLifestyleStories(searchStories, deferredSearchQuery);
@@ -2090,6 +2150,32 @@ export function MainNav({
     : 0;
   useModalIsolation(mobileMenuOpen && Boolean(overlayPortalTarget), mobileMenuDialogRef);
   useModalIsolation(searchOpen && Boolean(overlayPortalTarget), searchDialogRef);
+
+  React.useEffect(() => {
+    let frame = 0;
+    const alignActiveItem = () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        const scroller = navScrollRef.current;
+        const activeItem = scroller?.querySelector<HTMLElement>(
+          '[aria-current="page"], [aria-pressed="true"]'
+        );
+        if (!scroller || !activeItem || scroller.scrollWidth <= scroller.clientWidth) return;
+
+        const itemCenter = activeItem.offsetLeft + activeItem.offsetWidth / 2;
+        const nextScrollLeft = Math.max(0, itemCenter - scroller.clientWidth / 2);
+        scroller.scrollTo({ left: nextScrollLeft, behavior: "auto" });
+      });
+    };
+
+    alignActiveItem();
+    window.addEventListener("resize", alignActiveItem);
+    return () => {
+      window.removeEventListener("resize", alignActiveItem);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, [activeFilter, selectedBrand?.slug]);
 
   React.useEffect(() => {
     let frame = 0;
@@ -2277,8 +2363,10 @@ export function MainNav({
 
   const renderNavLinks = () => navLinks.map((link) => {
     const active = activeFilter === link;
-    const hidePinnedSavedOnMobile = pinSavedOnMobile && link === "Saved";
     const destinationHref = brand.slug === "hearst-all" ? hearstDestinationNavHrefs.get(link) : undefined;
+    const publicationHref = selectedBrand?.slug === "hot-rod" && link === "Events"
+      ? "/autos/hot-rod/events/"
+      : undefined;
     const categoryHref = isDestinationRiver && !selectedBrand
       ? getHearstDestinationCategoryRoute(getDestinationMode(brand.slug), link)
       : undefined;
@@ -2287,17 +2375,22 @@ export function MainNav({
       ? "text-[#f4f7fb] hover:border-[#BDDDFC]/60 hover:text-[#BDDDFC]"
       : "text-foreground hover:border-primary/40 hover:text-primary";
 
-    return destinationHref ? (
+    return destinationHref || publicationHref ? (
       <LinkComponent
         key={link}
-        href={destinationHref}
+        href={destinationHref ?? publicationHref}
         variant="neutral"
         underline={false}
         size="sm"
+        aria-current={publicationHref && active ? "page" : undefined}
         className={cn(
           "min-h-11 whitespace-nowrap border-b-2 border-transparent px-0.5 font-normal hover:no-underline md:min-h-0 md:pb-1",
           navLinkClasses,
-          hidePinnedSavedOnMobile && "max-md:hidden"
+          publicationHref && active && (
+            useDarkActiveState
+              ? "border-[#BDDDFC] font-semibold text-[#BDDDFC]"
+              : "border-primary font-semibold text-[var(--hp-section-title)]"
+          )
         )}
       >
         {link}
@@ -2322,8 +2415,7 @@ export function MainNav({
             ? useDarkActiveState
               ? "border-[#BDDDFC] font-semibold text-[#BDDDFC]"
               : "border-primary font-semibold text-[var(--hp-section-title)]"
-            : "",
-          hidePinnedSavedOnMobile && "max-md:hidden"
+            : ""
         )}
       >
         {link}
@@ -2339,8 +2431,7 @@ export function MainNav({
             ? useDarkActiveState
               ? "border-[#BDDDFC] font-semibold text-[#BDDDFC]"
               : "border-primary font-semibold text-[var(--hp-section-title)]"
-            : navLinkClasses,
-          hidePinnedSavedOnMobile && "max-md:hidden"
+            : navLinkClasses
         )}
         aria-pressed={active}
       >
@@ -2352,10 +2443,7 @@ export function MainNav({
         variant="neutral"
         underline={false}
         size="sm"
-        className={cn(
-          "min-h-11 whitespace-nowrap font-normal md:min-h-0",
-          hidePinnedSavedOnMobile && "max-md:hidden"
-        )}
+        className="min-h-11 whitespace-nowrap font-normal md:min-h-0"
       >
         {link}
       </LinkComponent>
@@ -2724,26 +2812,12 @@ export function MainNav({
       mastheadCompact && "md:invisible"
     )}>
       <PageContainer as="nav" className="flex items-center gap-3 py-2 md:justify-center">
-        <div className="flex min-w-0 flex-1 items-center gap-6 overflow-x-auto scrollbar-hide md:flex-none md:justify-center">
+        <div
+          ref={navScrollRef}
+          className="flex min-w-0 flex-1 items-center gap-6 overflow-x-auto scrollbar-hide md:flex-none md:justify-center"
+        >
           {renderNavLinks()}
         </div>
-        {pinSavedOnMobile ? (
-          <button
-            type="button"
-            onClick={() => onFilterChange?.("Saved")}
-            className={cn(
-              "inline-flex min-h-11 shrink-0 items-center gap-1.5 border-l pl-3 text-sm font-semibold transition-colors md:hidden",
-              darkMode
-                ? "border-white/15 text-white hover:text-[#BDDDFC]"
-                : "border-border text-foreground hover:text-primary",
-              activeFilter === "Saved" && (darkMode ? "text-[#BDDDFC]" : "text-[var(--hp-section-title)]")
-            )}
-            aria-current={activeFilter === "Saved" ? "page" : undefined}
-          >
-            <Bookmark className="h-4 w-4" aria-hidden />
-            Saved
-          </button>
-        ) : null}
       </PageContainer>
     </div>
     <div
@@ -8258,6 +8332,9 @@ function LifestyleStoryReaderModal({
   const readerContextLabel = usePublicationTheme && readerContextStory
     ? readerContextStory.brand
     : readerDestinationLabel;
+  const readerLogoHref = usePublicationTheme && readerContextStory
+    ? getHearstBrandRoute(readerContextStory.brandSlug)
+    : getHearstDestinationRoute(readerDestination);
   const readerThemeCssVars = readerTheme
     ? brandToCssVars(readerTheme, readerColorMode) as React.CSSProperties
     : undefined;
@@ -8689,17 +8766,20 @@ function LifestyleStoryReaderModal({
         <div className="sticky top-0 z-[110] border-b border-border bg-background/95 backdrop-blur">
           <div className="flex min-h-16 items-center justify-between gap-4 border-b border-border/70 px-4 py-3 sm:px-6">
             <div className="flex min-w-0 flex-1 items-center gap-4">
-              <div
-                className="flex h-6 min-w-0 max-w-[230px] flex-1 items-center sm:h-7 sm:flex-none sm:basis-[230px]"
-                role="img"
-                aria-label={readerContextLabel}
+              <LinkComponent
+                href={readerLogoHref}
+                variant="neutral"
+                underline={false}
+                className="flex h-6 min-w-0 max-w-[230px] flex-1 items-center rounded-sm transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:h-7 sm:flex-none sm:basis-[230px]"
+                aria-label={`Go to ${readerContextLabel} homepage`}
+                data-reader-logo-link
               >
                 <BrandLogo
                   slug={readerLogoSlug}
                   color={readerDestination === "flux" ? "#ffffff" : readerLogoSlug === "motortrend" ? "#E90C17" : undefined}
                   className="flex h-full w-full items-center justify-start [&_svg]:block [&_svg]:h-full [&_svg]:w-full [&_svg]:max-w-full lg:[&_svg]:w-auto"
                 />
-              </div>
+              </LinkComponent>
               <div className="hidden min-w-0 border-l border-border pl-4 sm:block">
                 <p className="truncate text-xs font-bold text-foreground">
                   Reading {readerContextLabel}
@@ -9029,13 +9109,13 @@ function TodayEditDashboard({
     continueStory,
     followedBrandStory,
     trendingStory,
-    collectionStory,
+    horoscopeStory,
   } = selection;
   const carouselStoryKey = [
+    horoscopeStory?.id,
     continueStory?.id,
     followedBrandStory?.id,
     trendingStory?.id,
-    collectionStory?.id,
   ].filter(Boolean).join(":");
   const updateCarouselControls = React.useCallback(() => {
     const carousel = carouselRef.current;
@@ -9087,7 +9167,7 @@ function TodayEditDashboard({
     onContinueImpression?.(continueStory.id);
   }, [continueStory, measurementEnabled, onContinueImpression]);
 
-  if (!followedBrandStory || !trendingStory || !collectionStory) return null;
+  if (!followedBrandStory || !trendingStory) return null;
 
   const scrollCarousel = (direction: -1 | 1) => {
     const carousel = carouselRef.current;
@@ -9100,6 +9180,13 @@ function TodayEditDashboard({
   };
 
   const modules = [
+    ...(horoscopeStory ? [{
+      story: horoscopeStory,
+      label: "Horoscope",
+      title: horoscopeStory.title,
+      image: horoscopeStory.image,
+      onClick: () => onOpenStory(horoscopeStory.id),
+    }] : []),
     ...(continueStory ? [{
       story: continueStory,
       label: "Continue Reading",
@@ -9123,13 +9210,6 @@ function TodayEditDashboard({
       title: trendingStory.title,
       image: trendingStory.image,
       onClick: () => onOpenStory(trendingStory.id),
-    },
-    {
-      story: collectionStory,
-      label: "Your Collections",
-      title: collectionStory.title,
-      image: collectionStory.image,
-      onClick: () => onOpenStory(collectionStory.id),
     },
   ];
 
@@ -9686,9 +9766,13 @@ function LifestyleLeftSidebar({
   showBrandCounts = true,
   globalInventory = false,
   activeBrandFilters,
+  autosOemOptions = [],
+  activeAutosOemFilters = [],
   collectionLabels,
   onToggleBrandFilter,
   onClearBrandFilters,
+  onToggleAutosOemFilter,
+  onClearAutosOemFilters,
   onFollowTopic,
   onOpenStory,
 }: {
@@ -9701,9 +9785,13 @@ function LifestyleLeftSidebar({
   showBrandCounts?: boolean;
   globalInventory?: boolean;
   activeBrandFilters: string[];
+  autosOemOptions?: AutosOemFilterOption[];
+  activeAutosOemFilters?: string[];
   collectionLabels: string[];
   onToggleBrandFilter: (brandName: string) => void;
   onClearBrandFilters: () => void;
+  onToggleAutosOemFilter?: (makeName: string) => void;
+  onClearAutosOemFilters?: () => void;
   onFollowTopic: (topic: string) => void;
   onOpenStory: (story: LifestyleRiverStory) => void;
 }) {
@@ -9718,6 +9806,10 @@ function LifestyleLeftSidebar({
       : `All brands · ${brandStoryCount} stories`;
   const topicSummary = activeTopicSummary || `${topics.length} topics`;
   const collectionSummary = `${collectionLabels.length} collections`;
+  const autosOemStoryCount = autosOemOptions.reduce((total, make) => total + make.count, 0);
+  const autosOemSummary = activeAutosOemFilters.length > 0
+    ? activeAutosOemFilters.join(", ")
+    : `${autosOemOptions.length} makes · ${autosOemStoryCount} stories`;
 
   const dailyHabitModule = (
     <MobileCollapsibleSidebarCard
@@ -9811,6 +9903,64 @@ function LifestyleLeftSidebar({
     </MobileCollapsibleSidebarCard>
   );
 
+  const autosOemFilterModule = autosOemOptions.length > 0 && onToggleAutosOemFilter ? (
+    <MobileCollapsibleSidebarCard
+      title="Filter by make"
+      summary={autosOemSummary}
+      mobileActionLabel={activeAutosOemFilters.length > 0 ? "Clear" : undefined}
+      onMobileAction={activeAutosOemFilters.length > 0 ? onClearAutosOemFilters : undefined}
+    >
+      {activeAutosOemFilters.length > 0 && onClearAutosOemFilters ? (
+        <div className="-mt-1 flex items-center justify-end">
+          <button
+            type="button"
+            onClick={onClearAutosOemFilters}
+            className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-muted-foreground hover:text-primary"
+          >
+            Clear
+          </button>
+        </div>
+      ) : null}
+      <div className="mt-4 grid grid-cols-2 gap-2">
+        {autosOemOptions.map((make) => {
+          const active = activeAutosOemFilters.includes(make.name);
+          return (
+            <button
+              key={make.name}
+              type="button"
+              onClick={() => onToggleAutosOemFilter(make.name)}
+              className={cn(
+                "group rounded-lg border border-border bg-background p-2 text-left transition-colors hover:border-primary/60 hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-primary/30",
+                active && "border-primary bg-primary/10 text-primary ring-2 ring-primary/20"
+              )}
+              aria-pressed={active}
+              aria-label={`Filter Autos stories by ${make.name}`}
+            >
+              <span className="relative flex h-12 items-center justify-center rounded-md bg-card">
+                <Image
+                  src={make.logo}
+                  alt=""
+                  width={96}
+                  height={32}
+                  className="h-auto max-h-7 w-auto max-w-[86px] object-contain"
+                  loading="lazy"
+                  unoptimized
+                />
+              </span>
+              <span className="mt-2 flex items-center justify-between gap-2 text-xs font-bold">
+                <span className="min-w-0 truncate">{make.name}</span>
+                <span className="text-muted-foreground">{make.count}</span>
+              </span>
+            </button>
+          );
+        })}
+      </div>
+      <p className="mt-4 text-xs leading-5 text-muted-foreground">
+        Uses makes detected in the current Autos story inventory. Publication filters still control the story source.
+      </p>
+    </MobileCollapsibleSidebarCard>
+  ) : null;
+
   return (
     <aside
       className="hidden min-w-0 space-y-5 lg:sticky lg:top-[112px] lg:block lg:max-h-[calc(100dvh-136px)] lg:self-start lg:overflow-y-auto lg:pr-1"
@@ -9818,6 +9968,7 @@ function LifestyleLeftSidebar({
     >
       {brandFilterFirst ? brandFilterModule : dailyHabitModule}
       {brandFilterFirst ? dailyHabitModule : brandFilterModule}
+      {autosOemFilterModule}
 
       <MobileCollapsibleSidebarCard title="Follow Topics" summary={topicSummary} className="hidden lg:block">
         <div className="flex flex-wrap gap-2">
@@ -9870,6 +10021,8 @@ type LifestyleRiverHomePageProps = {
   indicatorPalette?: readonly string[];
   activeBrandFilters?: string[];
   onActiveBrandFiltersChange?: React.Dispatch<React.SetStateAction<string[]>>;
+  feedTotal?: number | null;
+  feedLoadedCount?: number;
   feedHasMore?: boolean;
   feedLoading?: boolean;
   feedError?: string | null;
@@ -9881,7 +10034,10 @@ function getLifestyleRiverPageHeading(config: DestinationConfig, initialBrandSlu
   return `${initialBrandName ?? config.productName} personalized story feed`;
 }
 
-const initialLifestyleRiverStoryCount = 13;
+const lifestyleHeroStoryCount = 5;
+const initialLifestyleRiverCardCount = 16;
+const progressiveRiverRevealCount = 4;
+const progressiveRiverLoadedBuffer = 12;
 
 function ProgressiveFeedSentinelStatus({
   error,
@@ -9902,19 +10058,21 @@ function ProgressiveFeedSentinelStatus({
     return (
       <div className="flex flex-wrap items-center justify-center gap-3 text-sm text-muted-foreground">
         <span>More {noun} could not be loaded.</span>
-        <Button variant="outline" size="sm" onClick={onRetry}>
-          Retry
-        </Button>
+        {onRetry ? (
+          <Button variant="outline" size="sm" onClick={onRetry}>
+            Retry
+          </Button>
+        ) : null}
       </div>
     );
   }
 
   if (isLoading) {
-    return <p className="text-sm text-muted-foreground">Loading more {noun}...</p>;
+    return <p className="sr-only">Loading more {noun}...</p>;
   }
 
   if (hasLoadedStories || hasMore) {
-    return <p className="text-sm text-muted-foreground">More {noun} load as you continue.</p>;
+    return null;
   }
 
   return (
@@ -10608,6 +10766,8 @@ function LifestyleRiverHomePage({
   indicatorPalette,
   activeBrandFilters: controlledActiveBrandFilters,
   onActiveBrandFiltersChange,
+  feedTotal = null,
+  feedLoadedCount = 0,
   feedHasMore = false,
   feedLoading = false,
   feedError = null,
@@ -10651,6 +10811,7 @@ function LifestyleRiverHomePage({
   const [internalActiveBrandFilters, setInternalActiveBrandFilters] = React.useState<string[]>(initialBrandName ? [initialBrandName] : []);
   const activeBrandFilters = controlledActiveBrandFilters ?? internalActiveBrandFilters;
   const setActiveBrandFilters = onActiveBrandFiltersChange ?? setInternalActiveBrandFilters;
+  const [activeAutosOemFilters, setActiveAutosOemFilters] = React.useState<string[]>([]);
   const readerAccountId = account?.id;
   const profileSourceKey = `${readerAccountId ?? "guest"}:${config.productName}:${initialBrandSlug ?? ""}:${activeFilter}`;
   const sourceProfile = account?.preferences ?? config.initialProfile;
@@ -10692,14 +10853,13 @@ function LifestyleRiverHomePage({
     index: number;
   } | null>(null);
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
-  const sentinelLastDemandScrollYRef = React.useRef(Number.NEGATIVE_INFINITY);
-  const sentinelLastDemandAtRef = React.useRef(0);
   const feedDemandRef = React.useRef({
+    feedReady: feedTotal !== null,
     feedHasMore,
     feedLoading,
     filteredStoryCount: 0,
     onRequestNextFeedPage,
-    visibleCount: initialLifestyleRiverStoryCount,
+    visibleCount: initialLifestyleRiverCardCount,
   });
   const previousActiveFilterRef = React.useRef<string | null>(null);
   const appliedOnboardingResultRef = React.useRef<HearstOnboardingResult | null>(null);
@@ -10823,6 +10983,7 @@ function LifestyleRiverHomePage({
     return activeBrandFilters.filter((brandName) => availableVideoBrands.has(brandName));
   }, [activeBrandFilters, usingVideoTabFeed, videoTabStories]);
   const effectiveBrandFilters = usingVideoTabFeed ? activeVideoBrandFilters : activeBrandFilters;
+  const showAutosOemFilter = destination === "autos" && !initialBrandSlug && !usingVideoTabFeed;
   const activeSourceNotes = usingVideoTabFeed
     ? videoFeedData?.sourceNotes ?? config.sourceNotes
     : config.sourceNotes;
@@ -10840,19 +11001,20 @@ function LifestyleRiverHomePage({
     demoState.contentDay,
     demoState.daypart,
     effectiveBrandFilters.join(","),
+    showAutosOemFilter ? activeAutosOemFilters.join(",") : "",
   ].join(":");
   const [visibleStoryState, setVisibleStoryState] = React.useState({
     scopeKey: visibleStoryScopeKey,
-    count: initialLifestyleRiverStoryCount,
+    count: initialLifestyleRiverCardCount,
   });
-  const visibleCount = visibleStoryState.scopeKey === visibleStoryScopeKey
+  const visibleRiverCount = visibleStoryState.scopeKey === visibleStoryScopeKey
     ? visibleStoryState.count
-    : initialLifestyleRiverStoryCount;
-  const setVisibleCount = React.useCallback<React.Dispatch<React.SetStateAction<number>>>((updater) => {
+    : initialLifestyleRiverCardCount;
+  const setVisibleRiverCount = React.useCallback<React.Dispatch<React.SetStateAction<number>>>((updater) => {
     setVisibleStoryState((current) => {
       const currentCount = current.scopeKey === visibleStoryScopeKey
         ? current.count
-        : initialLifestyleRiverStoryCount;
+        : initialLifestyleRiverCardCount;
       const nextCount = typeof updater === "function" ? updater(currentCount) : updater;
       return { scopeKey: visibleStoryScopeKey, count: nextCount };
     });
@@ -10880,27 +11042,46 @@ function LifestyleRiverHomePage({
     const brandFilteredStories = effectiveBrandFilters.length > 0
       ? rankedStories.filter((story) => effectiveBrandFilters.includes(story.brand))
       : rankedStories;
+    const oemFilteredStories = showAutosOemFilter && activeAutosOemFilters.length > 0
+      ? brandFilteredStories.filter((story) =>
+          getAutosOemMatchesForStory(story).some((make) => activeAutosOemFilters.includes(make))
+        )
+      : brandFilteredStories;
 
     if (activeFilter === "Saved") {
-      return brandFilteredStories.filter((story) => profile.savedIds.includes(story.id));
+      return oemFilteredStories.filter((story) => profile.savedIds.includes(story.id));
     }
 
     if (usingVideoTabFeed) {
-      return brandFilteredStories;
+      return oemFilteredStories;
     }
 
-    const contextStories = brandFilteredStories.filter((story) => storyMatchesLifestyleFilter(story, activeFilter));
+    const contextStories = oemFilteredStories.filter((story) => storyMatchesLifestyleFilter(story, activeFilter));
     return config.liveFeedMode === "blend"
       ? applyContextualFeedCadence(contextStories)
       : contextStories;
-  }, [activeFilter, config.liveFeedMode, effectiveBrandFilters, profile.savedIds, rankedStories, usingVideoTabFeed]);
+  }, [
+    activeAutosOemFilters,
+    activeFilter,
+    config.liveFeedMode,
+    effectiveBrandFilters,
+    profile.savedIds,
+    rankedStories,
+    showAutosOemFilter,
+    usingVideoTabFeed,
+  ]);
   const savedSuggestionCandidates = React.useMemo(
     () => rankedStories.filter((story) =>
       !profile.savedIds.includes(story.id)
       && !profile.hiddenIds.includes(story.id)
       && (effectiveBrandFilters.length === 0 || effectiveBrandFilters.includes(story.brand))
+      && (
+        !showAutosOemFilter
+        || activeAutosOemFilters.length === 0
+        || getAutosOemMatchesForStory(story).some((make) => activeAutosOemFilters.includes(make))
+      )
     ),
-    [effectiveBrandFilters, profile.hiddenIds, profile.savedIds, rankedStories]
+    [activeAutosOemFilters, effectiveBrandFilters, profile.hiddenIds, profile.savedIds, rankedStories, showAutosOemFilter]
   );
   const savedSuggestionStories = activeFilter === "Saved"
     ? getPersonalizedLeadSliderStories(
@@ -11004,22 +11185,10 @@ function LifestyleRiverHomePage({
   React.useEffect(() => {
     displayStoryIdsRef.current = displayStories.map((story) => story.id);
   }, [displayStories]);
-  const visibleStories = displayStories.slice(0, visibleCount);
-  React.useEffect(() => {
-    feedDemandRef.current = {
-      feedHasMore,
-      feedLoading,
-      filteredStoryCount: filteredStories.length,
-      onRequestNextFeedPage,
-      visibleCount,
-    };
-  }, [
-    feedHasMore,
-    feedLoading,
-    filteredStories.length,
-    onRequestNextFeedPage,
-    visibleCount,
-  ]);
+  const visibleStories = displayStories.slice(
+    0,
+    visibleRiverCount + lifestyleHeroStoryCount
+  );
   const currentDelishVerticalVideoStories = React.useMemo(
     () => videoTabStories.filter(isDelishPortraitShort),
     [videoTabStories]
@@ -11157,12 +11326,15 @@ function LifestyleRiverHomePage({
     visitStartedAt,
   ]);
   const heroStoryIds = new Set(heroStories.map((story) => story.id));
+  const showTodayEdit = destination === "all"
+    && !initialBrandSlug
+    && activeFilter === "For You";
   const moduleAllocation = allocateStoryModules({
     stories: displayStories,
     heroStoryIds,
     continueStoryIds: sessionContinueReadingStoryIds,
     followedBrands: profile.followedBrands,
-    savedTags: profile.savedTags,
+    includeTodayEdit: showTodayEdit,
   });
   const moduleReservedStoryIds = new Set([
     ...heroStoryIds,
@@ -11181,18 +11353,54 @@ function LifestyleRiverHomePage({
     moduleReservedStoryIds,
     !usingVideoTabFeed && activeFilter !== "Saved"
   );
-  const visibleRiverStoryCount = Math.max(0, visibleCount - heroStories.length);
-  const baseRiverStories = moduleAllocation.riverStories
-    .slice(0, visibleRiverStoryCount)
-    .filter(
-      (story) => !showDelishShortsInHearstPlusRiver || !delishVerticalVideoIds.has(story.id)
-    );
+  const baseRiverStories = completeBaseRiverStories.slice(0, visibleRiverCount);
   const riverStories = ensureGallerySampleInRiver(
     baseRiverStories,
     displayStories,
     moduleReservedStoryIds,
     !usingVideoTabFeed && activeFilter !== "Saved"
   );
+  const loadMoreVisibleStories = React.useCallback(() => {
+    const demand = feedDemandRef.current;
+    if (!demand.feedReady) return;
+
+    const nextVisibleCount = Math.min(
+      demand.visibleCount + progressiveRiverRevealCount,
+      demand.filteredStoryCount
+    );
+
+    if (demand.visibleCount < demand.filteredStoryCount) {
+      setVisibleRiverCount(nextVisibleCount);
+    }
+
+    const remainingLoadedStories = demand.filteredStoryCount - nextVisibleCount;
+    if (
+      (remainingLoadedStories <= progressiveRiverLoadedBuffer
+        || demand.visibleCount >= demand.filteredStoryCount)
+      && demand.feedHasMore
+      && !demand.feedLoading
+    ) {
+      demand.onRequestNextFeedPage?.();
+    }
+  }, [setVisibleRiverCount]);
+
+  React.useEffect(() => {
+    feedDemandRef.current = {
+      feedReady: feedTotal !== null,
+      feedHasMore,
+      feedLoading,
+      filteredStoryCount: completeRiverStories.length,
+      onRequestNextFeedPage,
+      visibleCount: visibleRiverCount,
+    };
+  }, [
+    completeRiverStories.length,
+    feedTotal,
+    feedHasMore,
+    feedLoading,
+    onRequestNextFeedPage,
+    visibleRiverCount,
+  ]);
   const candidateDelishShortsRiverInsertIndex = showDelishShortsInHearstPlusRiver
     ? getDelishShortsRiverInsertIndex({
         riverStories: completeRiverStories,
@@ -11261,6 +11469,30 @@ function LifestyleRiverHomePage({
         : counts[note.brand] ?? 0,
     }));
   }, [activeSourceNotes, activeStoryPool, config.brandInventoryCounts, initialBrandSlug, usingVideoTabFeed]);
+  const autosOemOptions = React.useMemo<AutosOemFilterOption[]>(() => {
+    if (!showAutosOemFilter) return [];
+
+    const sourceStories = effectiveBrandFilters.length > 0
+      ? rankedStories.filter((story) => effectiveBrandFilters.includes(story.brand))
+      : rankedStories;
+    const counts = new Map<string, number>();
+
+    sourceStories.forEach((story) => {
+      getAutosOemMatchesForStory(story).forEach((makeName) => {
+        counts.set(makeName, (counts.get(makeName) ?? 0) + 1);
+      });
+    });
+
+    return autosOemLogoFilters
+      .map(({ name, logo }) => ({
+        name,
+        logo,
+        count: counts.get(name) ?? 0,
+      }))
+      .filter((make) => make.count > 0 || activeAutosOemFilters.includes(make.name))
+      .sort((left, right) => right.count - left.count || left.name.localeCompare(right.name))
+      .slice(0, 12);
+  }, [activeAutosOemFilters, effectiveBrandFilters, rankedStories, showAutosOemFilter]);
 
   React.useEffect(() => {
     if (usingVideoTabFeed) return;
@@ -11277,6 +11509,7 @@ function LifestyleRiverHomePage({
     updateReaderProfile((current) => applyOnboardingPreferences(current, config.stories, onboardingResult));
     restoreCurrentVisitContext();
     setActiveBrandFilters([]);
+    setActiveAutosOemFilters([]);
     onRiverReset?.();
   }, [
     config.stories,
@@ -11303,65 +11536,47 @@ function LifestyleRiverHomePage({
     const node = sentinelRef.current;
     if (!node) return;
 
+    const preloadMargin = Math.max(1200, Math.ceil(window.innerHeight * 1.75));
+    let requestedForCurrentRender = false;
+    const isWithinPreloadZone = () => {
+      const bounds = node.getBoundingClientRect();
+      return bounds.top <= window.innerHeight + preloadMargin
+        && bounds.bottom >= -preloadMargin;
+    };
     const requestMoreStories = () => {
-      const sentinelBounds = node.getBoundingClientRect();
-      const isNearViewport = sentinelBounds.top <= window.innerHeight + 800
-        && sentinelBounds.bottom >= -800;
-      if (!isNearViewport) {
-        sentinelLastDemandScrollYRef.current = Number.NEGATIVE_INFINITY;
-        return;
-      }
-
-      const now = window.performance.now();
-      const scrollDistance = window.scrollY - sentinelLastDemandScrollYRef.current;
-      if (scrollDistance < 24 || now - sentinelLastDemandAtRef.current < 300) return;
-
-      sentinelLastDemandScrollYRef.current = window.scrollY;
-      sentinelLastDemandAtRef.current = now;
-      const demand = feedDemandRef.current;
-      if (demand.visibleCount < demand.filteredStoryCount) {
-        setVisibleCount((count) => Math.min(count + 12, demand.filteredStoryCount));
-      }
-
-      const remainingLoadedStories = demand.filteredStoryCount - demand.visibleCount;
+      const pageCanScroll = document.documentElement.scrollHeight > window.innerHeight;
       if (
-        remainingLoadedStories <= 8
-        && demand.feedHasMore
-        && !demand.feedLoading
-      ) {
-        demand.onRequestNextFeedPage?.();
-      }
+        requestedForCurrentRender
+        || !isWithinPreloadZone()
+        || (pageCanScroll && window.scrollY <= 0)
+      ) return;
+      requestedForCurrentRender = true;
+      loadMoreVisibleStories();
     };
-
-    let demandInterval: number | null = null;
-    const stopDemandChecks = () => {
-      if (demandInterval === null) return;
-      window.clearInterval(demandInterval);
-      demandInterval = null;
+    const checkPreloadZone = () => {
+      requestMoreStories();
     };
+    const preloadCheckFrame = window.requestAnimationFrame(checkPreloadZone);
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry.isIntersecting) {
-          sentinelLastDemandScrollYRef.current = Number.NEGATIVE_INFINITY;
-          stopDemandChecks();
-          return;
-        }
-
-        requestMoreStories();
-        if (demandInterval === null) {
-          demandInterval = window.setInterval(requestMoreStories, 350);
-        }
+        if (entry.isIntersecting) requestMoreStories();
       },
-      { rootMargin: "800px 0px" }
+      { rootMargin: `${preloadMargin}px 0px` }
     );
 
     observer.observe(node);
     return () => {
-      sentinelLastDemandScrollYRef.current = Number.NEGATIVE_INFINITY;
-      stopDemandChecks();
+      window.cancelAnimationFrame(preloadCheckFrame);
       observer.disconnect();
     };
-  }, [displayOrderScopeKey, setVisibleCount]);
+  }, [
+    displayOrderScopeKey,
+    displayStories.length,
+    feedHasMore,
+    feedLoading,
+    loadMoreVisibleStories,
+    visibleRiverCount,
+  ]);
 
   const resetDemo = () => {
     updateReaderProfile(config.initialProfile);
@@ -11536,9 +11751,24 @@ function LifestyleRiverHomePage({
     setActiveBrandFilters([]);
     anchorBrandToTop();
   };
+  const toggleAutosOemFilter = (makeName: string) => {
+    setActiveAutosOemFilters((current) =>
+      current.includes(makeName)
+        ? current.filter((item) => item !== makeName)
+        : [...current, makeName]
+    );
+    anchorBrandToTop();
+  };
+
+  const clearAutosOemFilters = () => {
+    setActiveAutosOemFilters([]);
+    anchorBrandToTop();
+  };
+
   const browseForYou = () => {
     trackProductEvent("saved_browse_for_you", { destination });
     setActiveBrandFilters([]);
+    setActiveAutosOemFilters([]);
     onFilterChange?.("For You");
   };
 
@@ -11648,9 +11878,13 @@ function LifestyleRiverHomePage({
             brandFilterFirst={usingVideoTabFeed}
             showBrandCounts={!usingVideoTabFeed}
             activeBrandFilters={effectiveBrandFilters}
+            autosOemOptions={autosOemOptions}
+            activeAutosOemFilters={activeAutosOemFilters}
             collectionLabels={config.collectionLabels}
             onToggleBrandFilter={toggleBrandFilter}
             onClearBrandFilters={clearBrandFilters}
+            onToggleAutosOemFilter={showAutosOemFilter ? toggleAutosOemFilter : undefined}
+            onClearAutosOemFilters={showAutosOemFilter ? clearAutosOemFilters : undefined}
             onFollowTopic={followTopic}
             onOpenStory={(story) => openStory(story.id)}
           />
@@ -11711,7 +11945,7 @@ function LifestyleRiverHomePage({
                 >
                   <ProgressiveFeedSentinelStatus
                     error={feedError}
-                    hasLoadedStories={visibleCount < filteredStories.length}
+                    hasLoadedStories={visibleRiverCount < completeRiverStories.length}
                     hasMore={feedHasMore}
                     isLoading={feedLoading}
                     noun="videos"
@@ -11881,29 +12115,31 @@ function LifestyleRiverHomePage({
 
   return (
     <div className="space-y-8">
-      <TodayEditDashboard
-        selection={moduleAllocation.todayEdit}
-        measurementEnabled={!openStoryId}
-        onOpenStory={openStory}
-        onContinueImpression={(storyId) => {
-          trackProductEventOnce(
-            `resume-impression:desktop:${storyId}`,
-            "resume_impression",
-            {
+      {showTodayEdit ? (
+        <TodayEditDashboard
+          selection={moduleAllocation.todayEdit}
+          measurementEnabled={!openStoryId}
+          onOpenStory={openStory}
+          onContinueImpression={(storyId) => {
+            trackProductEventOnce(
+              `resume-impression:desktop:${storyId}`,
+              "resume_impression",
+              {
+                destination,
+                story_id: storyId,
+                entry_point: "desktop_edit",
+              }
+            );
+          }}
+          onContinueOpen={(storyId) => {
+            trackProductEvent("story_resume", {
               destination,
               story_id: storyId,
               entry_point: "desktop_edit",
-            }
-          );
-        }}
-        onContinueOpen={(storyId) => {
-          trackProductEvent("story_resume", {
-            destination,
-            story_id: storyId,
-            entry_point: "desktop_edit",
-          });
-        }}
-      />
+            });
+          }}
+        />
+      ) : null}
 
       <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]">
         <LifestyleLeftSidebar
@@ -11915,9 +12151,13 @@ function LifestyleRiverHomePage({
           globalInventory={Boolean(initialBrandSlug && !usingVideoTabFeed)}
           showBrandCounts={Boolean(initialBrandSlug && !usingVideoTabFeed)}
           activeBrandFilters={effectiveBrandFilters}
+          autosOemOptions={autosOemOptions}
+          activeAutosOemFilters={activeAutosOemFilters}
           collectionLabels={config.collectionLabels}
           onToggleBrandFilter={toggleBrandFilter}
           onClearBrandFilters={clearBrandFilters}
+          onToggleAutosOemFilter={showAutosOemFilter ? toggleAutosOemFilter : undefined}
+          onClearAutosOemFilters={showAutosOemFilter ? clearAutosOemFilters : undefined}
           onFollowTopic={followTopic}
           onOpenStory={(story) => openStory(story.id)}
         />
@@ -12047,7 +12287,7 @@ function LifestyleRiverHomePage({
               >
                 <ProgressiveFeedSentinelStatus
                   error={feedError}
-                  hasLoadedStories={visibleCount < filteredStories.length}
+                  hasLoadedStories={visibleRiverCount < completeRiverStories.length}
                   hasMore={feedHasMore}
                   isLoading={feedLoading}
                   noun="stories"
@@ -12109,12 +12349,15 @@ function LifestyleRiverHomePage({
                             aria-label={`Open suggested story: ${story.title}`}
                           >
                             <span className="block aspect-[16/9] w-full shrink-0 overflow-hidden bg-muted" aria-hidden="true">
-                              <img
+                              <Image
                                 src={story.image}
                                 alt=""
+                                fill
+                                sizes="(min-width: 1024px) 180px, 33vw"
                                 loading="lazy"
                                 className="h-full w-full object-cover object-top"
                                 style={{ objectPosition: "center top" }}
+                                unoptimized
                               />
                             </span>
                             <span className="block p-3">
@@ -12204,9 +12447,15 @@ function LifestyleRiverHomePage({
                   Story Source
                 </p>
                 <p className="mt-3 text-sm font-bold">
-                  {activeStoryPool.length} real-image stories
+                  {feedTotal === null
+                    ? "Total available pending the first catalog page"
+                    : `${feedTotal.toLocaleString()} total available stories`}
+                </p>
+                <p className="mt-1 text-sm font-bold">
+                  {filteredStories.length.toLocaleString()} currently loaded, image-ready stories
                 </p>
                 <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                  {feedLoadedCount.toLocaleString()} stories have arrived through progressive catalog pages.{" "}
                   {demoState.contentDay === "nextDay" ? "Next-day demo edition generated from " : "Pulled from "}
                   {config.dataSourceCopy}
                 </p>
@@ -12594,6 +12843,11 @@ export function HomePageTemplate({
     return () => window.removeEventListener("popstate", syncFilterFromHistory);
   }, [destinationMode, selectedBrand]);
   const progressiveFeedBrandSlug = selectedBrand?.slug ?? getReaderOriginBrandSlug(readerReturnHref);
+  const progressiveFeedCategory = activeLifestyleFilter !== "For You"
+    && activeLifestyleFilter !== "Videos"
+    && activeLifestyleFilter !== "Saved"
+    ? activeLifestyleFilter
+    : undefined;
   const shouldProgressivelyLoadEditorial = activeLifestyleFilter !== "Videos"
     && activeLifestyleFilter !== "Saved"
     && liveFeedMode === "blend";
@@ -12605,7 +12859,8 @@ export function HomePageTemplate({
     endpoint: "/api/story-feed/",
     destination: destinationMode,
     brandSlug: progressiveFeedBrandSlug,
-    pageSize: 80,
+    category: progressiveFeedCategory,
+    pageSize: 32,
     getIdentity: getStoryIdentity,
   });
   const progressiveVideoFeed = useProgressiveFeed<LifestyleRiverStory>({
@@ -12969,6 +13224,12 @@ export function HomePageTemplate({
               indicatorPalette={selectedBrandIndicatorPalette}
               activeBrandFilters={activeBrandFilters}
               onActiveBrandFiltersChange={setActiveBrandFilters}
+              feedTotal={activeLifestyleFilter === "Videos"
+                ? progressiveVideoFeed.total
+                : progressiveEditorialFeed.total}
+              feedLoadedCount={activeLifestyleFilter === "Videos"
+                ? progressiveVideoFeed.loadedCount
+                : progressiveEditorialFeed.loadedCount}
               feedHasMore={activeLifestyleFilter === "Videos"
                 ? progressiveVideoFeed.hasMore
                 : progressiveEditorialFeed.hasMore}

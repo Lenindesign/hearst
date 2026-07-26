@@ -3,13 +3,14 @@ export type StoryModuleCandidate = {
   brand: string;
   popularity: number;
   tags: string[];
+  title?: string;
 };
 
 export type TodayEditStorySelection<T extends StoryModuleCandidate> = {
   continueStory?: T;
   followedBrandStory?: T;
   trendingStory?: T;
-  collectionStory?: T;
+  horoscopeStory?: T;
 };
 
 export type StoryModuleAllocation<T extends StoryModuleCandidate> = {
@@ -24,7 +25,7 @@ type StoryModuleAllocationOptions<T extends StoryModuleCandidate> = {
   heroStoryIds: Iterable<string>;
   continueStoryIds: string[];
   followedBrands: string[];
-  savedTags: string[];
+  includeTodayEdit?: boolean;
   dailyHabitCount?: number;
   trendingCount?: number;
   minimumRiverStories?: number;
@@ -35,7 +36,7 @@ export function allocateStoryModules<T extends StoryModuleCandidate>({
   heroStoryIds,
   continueStoryIds,
   followedBrands,
-  savedTags,
+  includeTodayEdit = true,
   dailyHabitCount = 3,
   trendingCount = 5,
   minimumRiverStories = 4,
@@ -54,22 +55,30 @@ export function allocateStoryModules<T extends StoryModuleCandidate>({
     return story;
   };
 
-  const continueCandidates = continueStoryIds
-    .map((storyId) => storiesById.get(storyId))
-    .filter((story): story is T => Boolean(story));
-  const continueStory = takeUnused(continueCandidates, false) ?? continueCandidates[0];
-  const followedBrandStory = takeUnused([
-    ...stories.filter((story) => followedBrands.includes(story.brand)),
-    ...stories,
-  ]);
+  const continueCandidates = includeTodayEdit
+    ? continueStoryIds
+      .map((storyId) => storiesById.get(storyId))
+      .filter((story): story is T => Boolean(story))
+    : [];
+  const continueStory = includeTodayEdit
+    ? takeUnused(continueCandidates, false) ?? continueCandidates[0]
+    : undefined;
+  const followedBrandStory = includeTodayEdit
+    ? takeUnused([
+        ...stories.filter((story) => followedBrands.includes(story.brand)),
+        ...stories,
+      ])
+    : undefined;
   const popularityOrder = [...stories].sort(
     (first, second) => second.popularity - first.popularity
   );
-  const trendingStory = takeUnused(popularityOrder);
-  const collectionStory = takeUnused([
-    ...stories.filter((story) => story.tags.some((tag) => savedTags.includes(tag))),
-    ...stories,
-  ]);
+  const trendingStory = includeTodayEdit ? takeUnused(popularityOrder) : undefined;
+  const horoscopeStory = includeTodayEdit
+    ? takeUnused(stories.filter((story) => {
+        const searchableText = [story.title, ...story.tags].filter(Boolean).join(" ").toLowerCase();
+        return searchableText.includes("horoscope") || searchableText.includes("zodiac");
+      }))
+    : undefined;
 
   const dailyHabitStories: T[] = [];
   for (const story of stories) {
@@ -103,7 +112,7 @@ export function allocateStoryModules<T extends StoryModuleCandidate>({
       continueStory,
       followedBrandStory,
       trendingStory,
-      collectionStory,
+      horoscopeStory,
     },
     dailyHabitStories,
     trendingStories,

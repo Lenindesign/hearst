@@ -152,6 +152,13 @@ The registry is split into narrower identity and typography tables so it remains
 - AutoWeek keeps the dark-neutral editorial-title exception documented in `STYLE.md` and `APP_RULES.md`.
 - Hearst+ Videos keeps its scoped light-blue and white-logo exception documented in `STYLE.md` and `APP_RULES.md`.
 
+### HOT ROD Events scoped composition
+
+- `/autos/hot-rod/events/` and its event-series routes inherit the Hearst Autos 4/8/12 grid, component anatomy, body typography, utility navigation, focus treatment, and footer.
+- The event surface may apply a tightly scoped HOT ROD editorial composition using red `#C8101E`, track black `#111111`, asphalt `#242424`, route cream `#F3EBDD`, and white. These values must stay inside the HOT ROD Events route root and must not alter shared Autos components or sibling publications.
+- HOT ROD Events uses the existing Autos condensed headline role and neutral UI/body role. It does not introduce a separate font or component system.
+- The route-line motif, dark photographic hero, and warm roadbook surface are editorial compositions. Controls, links, status labels, grids, and responsive behavior continue to use shared Hearst Design System foundations.
+
 ## Maintenance rule
 
 When a brand color, font, logo, or icon changes:

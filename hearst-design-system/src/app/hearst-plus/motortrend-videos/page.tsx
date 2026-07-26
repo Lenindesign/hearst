@@ -44,7 +44,7 @@ export default async function MotorTrendVideosPage() {
         staticDestinationData={getHearstDestinationStaticData()}
         liveFeedData={liveFeedData}
         initialFilter="Videos"
-        navLinksOverride={["For You", "Home", "Style", "Reviews", "Fitness", "Cars", "Videos", "Shopping", "Games", "Saved"]}
+        navLinksOverride={["For You", "Home", "Style", "Reviews", "Fitness", "Cars", "Videos", "Shopping", "Games"]}
       />
     </ThemeProvider>
   );

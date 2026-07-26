@@ -768,7 +768,7 @@ export const BRAND_CONTENT: Partial<Record<string, Partial<BaseContentType>>> = 
       title: "Your Lifestyle Daily Brief",
       desc: "A personalized edit from Hearst food, home, wellness, style, shopping, and family editors.",
     },
-    navLinks: ["For You", "Food", "Home", "Wellness", "Style", "Shopping", "Family", "Entertainment", "Saved"],
+    navLinks: ["For You", "Food", "Home", "Wellness", "Style", "Shopping", "Family", "Entertainment"],
   },
   cosmopolitan: {
     collectionTitle: "What's Hot",

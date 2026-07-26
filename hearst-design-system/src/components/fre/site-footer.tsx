@@ -54,6 +54,7 @@ export function SiteFooter({
     { label: "Live feed", href: "/hearst-plus/live-feed/" },
     { label: "Lifestyle Live", href: "/hearst-plus/lifestyle-live/" },
     { label: "Autos Videos", href: "/hearst-plus/motortrend-videos/" },
+    { label: "HOT ROD Events", href: "/autos/hot-rod/events/" },
   ],
   finePrintNote,
   socialFinePrintNote,
