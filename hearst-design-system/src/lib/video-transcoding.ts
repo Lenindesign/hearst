@@ -3,6 +3,7 @@ export type VideoTranscoding = {
   display_name?: string;
   full_url?: string;
   height?: number;
+  mapped_preset_name?: string;
   preset_name?: string;
   width?: number;
 };
@@ -13,12 +14,36 @@ function getDescriptor(transcoding: VideoTranscoding) {
   return [
     transcoding.codec,
     transcoding.display_name,
+    transcoding.mapped_preset_name,
     transcoding.preset_name,
     transcoding.full_url,
   ]
     .filter(Boolean)
     .join(" ")
     .toLowerCase();
+}
+
+export function getVideoTranscodingDimensions(
+  transcodings: VideoTranscoding[],
+) {
+  const explicitDimensions = transcodings.find(
+    ({ width, height }) => Boolean(width) && Boolean(height),
+  );
+  if (explicitDimensions?.width && explicitDimensions.height) {
+    return {
+      width: explicitDimensions.width,
+      height: explicitDimensions.height,
+    };
+  }
+
+  const descriptor = transcodings.map(getDescriptor).join(" ");
+  if (/(?:^|[^0-9])16\s*[x:_-]\s*9(?:[^0-9]|$)/i.test(descriptor)) {
+    return { width: 16, height: 9 };
+  }
+  if (/(?:^|[^0-9])9\s*[x:_-]\s*16(?:[^0-9]|$)/i.test(descriptor)) {
+    return { width: 9, height: 16 };
+  }
+  return undefined;
 }
 
 function isDirectMp4(transcoding: VideoTranscoding) {

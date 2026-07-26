@@ -9,8 +9,10 @@ import { filterExcludedStories, isExcludedContentTitle } from "@/lib/content-exc
 import type { LiveFeedData, LiveFeedSourceNote } from "@/lib/live-feed-types";
 import {
   getPreferredVideoTranscoding,
+  getVideoTranscodingDimensions,
   type VideoTranscoding,
 } from "@/lib/video-transcoding";
+import { selectVideoAspectRatioQuotas } from "@/lib/video-feed-selection";
 
 const PERSONALIZE_STAGE_URL = "https://personalize-stage.motortrend.com/recommendations";
 const PERSONALIZE_PRODUCTION_URL = "https://personalize.motortrend.com/recommendations";
@@ -60,6 +62,7 @@ const autosVideoFeedBrands = [
   ["countryliving", "Country Living", "country-living", "Home"],
   ["thepioneerwoman", "The Pioneer Woman", "the-pioneer-woman", "Food"],
   ["prevention", "Prevention", "prevention", "Wellness"],
+  ["redbookmag", "Redbook", "redbook", "Lifestyle"],
   ["seventeen", "Seventeen", "seventeen", "Style"],
   ["womansday", "Woman's Day", "womans-day", "Lifestyle"],
 ] as const;
@@ -92,6 +95,9 @@ const videoRequestOptionsByBrand = {
     useCase: "trending_now",
   },
   prevention: {
+    useCase: "trending_now",
+  },
+  redbookmag: {
     useCase: "trending_now",
   },
   seventeen: {
@@ -131,6 +137,7 @@ const videoBrandSlugsByDestination: Record<PersonalizeDestination, readonly stri
     "country-living",
     "the-pioneer-woman",
     "prevention",
+    "redbook",
     "seventeen",
     "womans-day",
   ],
@@ -263,11 +270,7 @@ function mapVideoRecommendation(
   const preferredTranscoding = getPreferredVideoTranscoding(item.transcodings ?? []);
   const videoUrl = withProtocol(preferredTranscoding?.full_url);
   if (!item.id || !title || !image || !videoUrl || isExcludedContentTitle(title)) return null;
-  const dimensionTranscoding = preferredTranscoding?.width && preferredTranscoding.height
-    ? preferredTranscoding
-    : (item.transcodings ?? []).find((transcoding) =>
-        Boolean(transcoding.width) && Boolean(transcoding.height)
-      );
+  const dimensions = getVideoTranscodingDimensions(item.transcodings ?? []);
 
   const publishedAt = item.published_at;
   const publishedTime = publishedAt ? new Date(publishedAt).getTime() : Date.now();
@@ -292,8 +295,8 @@ function mapVideoRecommendation(
     mediaKind: "video",
     videoUrl,
     videoDuration: duration,
-    videoWidth: dimensionTranscoding?.width,
-    videoHeight: dimensionTranscoding?.height,
+    videoWidth: dimensions?.width,
+    videoHeight: dimensions?.height,
   };
 }
 
@@ -425,13 +428,16 @@ async function loadPersonalizeFeed({
         .filter((item) => Array.isArray(item.transcodings))
         .map((item, itemIndex) => mapVideoRecommendation(item, brand, brandIndex * 10 + itemIndex))
         .filter((story): story is LifestyleRiverStory => Boolean(story));
-      stories.push(...mapped, ...mappedVideos);
+      const selectedVideos = requestType === "video"
+        ? selectVideoAspectRatioQuotas(mappedVideos)
+        : mappedVideos;
+      stories.push(...mapped, ...selectedVideos);
       sourceNotes.push({
         brand: brand[1],
         brandSlug: brand[2],
         feedCount: requestType === "video" || !allowedVideoBrandIds.has(brand[0]) ? 1 : 2,
         importedCount: items.length + videoItems.length,
-        selectedCount: mapped.length + mappedVideos.length,
+        selectedCount: mapped.length + selectedVideos.length,
       });
     });
 

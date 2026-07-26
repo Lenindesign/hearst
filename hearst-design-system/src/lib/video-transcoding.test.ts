@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { getPreferredVideoTranscoding } from "./video-transcoding";
+import {
+  getPreferredVideoTranscoding,
+  getVideoTranscodingDimensions,
+} from "./video-transcoding";
 
 test("rejects underscore-form H.265 and selects an H.264 MP4", () => {
   const selected = getPreferredVideoTranscoding([
@@ -42,4 +45,37 @@ test("does not mistake an HLS manifest for a direct MP4", () => {
   ]);
 
   assert.match(selected?.full_url ?? "", /\.m3u8$/);
+});
+
+test("uses explicit transcoding dimensions when available", () => {
+  assert.deepEqual(
+    getVideoTranscodingDimensions([
+      { preset_name: "original", width: 360, height: 640 },
+      { mapped_preset_name: "rover_16x9_720p_hd" },
+    ]),
+    { width: 360, height: 640 },
+  );
+});
+
+test("infers exact aspect-ratio dimensions from a dimensionless HLS preset", () => {
+  assert.deepEqual(
+    getVideoTranscodingDimensions([
+      { preset_name: "apple_m3u8" },
+      { mapped_preset_name: "rover_16x9_720p_hd" },
+    ]),
+    { width: 16, height: 9 },
+  );
+  assert.deepEqual(
+    getVideoTranscodingDimensions([
+      { display_name: "social_9x16_1080p" },
+    ]),
+    { width: 9, height: 16 },
+  );
+});
+
+test("does not infer unsupported aspect ratios", () => {
+  assert.equal(
+    getVideoTranscodingDimensions([{ preset_name: "social_4x5_1080p" }]),
+    undefined,
+  );
 });

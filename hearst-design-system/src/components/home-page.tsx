@@ -119,6 +119,13 @@ import {
 } from "@/lib/product-analytics";
 import { getRecommendationReason } from "@/lib/recommendation-reason";
 import {
+  getSettledShortIndex,
+  getShortPreloadIndexes,
+  isActiveShortEvent,
+  shouldAutoplayActivatedShort,
+} from "@/lib/shorts-playback";
+import { getExactVideoAspectRatio } from "@/lib/video-feed-selection";
+import {
   verifiedAmbientCommerceCollections,
   type VerifiedAmbientCommerceCollection,
 } from "@/lib/ambient-commerce-catalog.generated";
@@ -1349,9 +1356,7 @@ function mergeUniqueStories(...storyGroups: LifestyleRiverStory[][]) {
 function isDelishPortraitShort(story: LifestyleRiverStory) {
   return story.brandSlug === "delish"
     && Boolean(story.videoUrl)
-    && Boolean(story.videoWidth)
-    && Boolean(story.videoHeight)
-    && (story.videoHeight ?? 0) > (story.videoWidth ?? 0);
+    && getExactVideoAspectRatio(story) === "9:16";
 }
 
 function isCurrentFeedStory(story: LifestyleRiverStory) {
@@ -4842,9 +4847,7 @@ export function VerticalVideoCarousel({
     () => availableStories.filter((story) =>
       (!filterBrandSlug || story.brandSlug === filterBrandSlug)
       && Boolean(story.videoUrl)
-      && Boolean(story.videoWidth)
-      && Boolean(story.videoHeight)
-      && (story.videoHeight ?? 0) > (story.videoWidth ?? 0)
+      && getExactVideoAspectRatio(story) === "9:16"
     ),
     [availableStories, filterBrandSlug]
   );
@@ -5075,26 +5078,51 @@ function DelishShortsImmersiveModal({
   onOpenStory: (storyId: string) => void;
   onSave: (story: LifestyleRiverStory) => void;
 }) {
-  const videoRef = React.useRef<HTMLVideoElement | null>(null);
+  const videoRefsRef = React.useRef(new Map<string, HTMLVideoElement>());
   const dialogRef = React.useRef<HTMLDivElement | null>(null);
   const shortsScrollerRef = React.useRef<HTMLDivElement | null>(null);
   const scrollFrameRef = React.useRef<number | null>(null);
+  const scrollSettleTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const shortChromeTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const shortChromeAutoPhaseRef = React.useRef(true);
   const scrollSelectionSourceRef = React.useRef<"scroll" | "programmatic" | null>(null);
+  const lastActivatedStoryIdRef = React.useRef<string | null>(null);
   const swipeInstructionsId = React.useId();
   const [playing, setPlaying] = React.useState(true);
   const [muted, setMuted] = React.useState(true);
+  const [shortChromeVisible, setShortChromeVisible] = React.useState(true);
   const activeIndex = stories.findIndex((story) => story.id === openStoryId);
   const activeStory = activeIndex >= 0 ? stories[activeIndex] : null;
+  const [preloadedStoryIds, setPreloadedStoryIds] = React.useState<Set<string>>(() => {
+    const initialIndex = Math.max(0, stories.findIndex((story) => story.id === openStoryId));
+    return new Set(getShortPreloadIndexes(initialIndex, stories.length).map((index) => stories[index].id));
+  });
   const hasPrevious = activeIndex > 0;
   const hasNext = activeIndex >= 0 && activeIndex < stories.length - 1;
+
+  const showShortChromeTemporarily = React.useCallback(() => {
+    if (shortChromeTimerRef.current) clearTimeout(shortChromeTimerRef.current);
+    shortChromeAutoPhaseRef.current = true;
+    setShortChromeVisible(true);
+    shortChromeTimerRef.current = setTimeout(() => {
+      shortChromeTimerRef.current = null;
+      shortChromeAutoPhaseRef.current = false;
+      setShortChromeVisible(false);
+    }, 3000);
+  }, []);
 
   const selectStoryAtIndex = React.useCallback((nextIndex: number, behavior: ScrollBehavior = "smooth") => {
     const nextStory = stories[nextIndex];
     if (!nextStory) return;
 
     scrollSelectionSourceRef.current = "programmatic";
-    setPlaying(true);
-    onSelectStory(nextStory.id);
+    setPreloadedStoryIds((currentIds) => {
+      const nextIds = new Set(currentIds);
+      getShortPreloadIndexes(nextIndex, stories.length).forEach((index) => {
+        nextIds.add(stories[index].id);
+      });
+      return nextIds;
+    });
     const scroller = shortsScrollerRef.current;
     if (scroller) {
       scroller.scrollTo({
@@ -5102,21 +5130,21 @@ function DelishShortsImmersiveModal({
         behavior,
       });
     }
-  }, [onSelectStory, stories]);
+  }, [stories]);
 
   const selectRelativeStory = React.useCallback((direction: -1 | 1) => {
     selectStoryAtIndex(activeIndex + direction);
   }, [activeIndex, selectStoryAtIndex]);
 
   const togglePlayback = React.useCallback(() => {
-    const video = videoRef.current;
+    const video = activeStory ? videoRefsRef.current.get(activeStory.id) : null;
     if (!video) return;
     if (video.paused) {
-      void video.play();
+      void video.play().catch(() => setPlaying(false));
     } else {
       video.pause();
     }
-  }, []);
+  }, [activeStory]);
 
   const handleShortsScroll = React.useCallback(() => {
     if (scrollFrameRef.current !== null) return;
@@ -5126,16 +5154,72 @@ function DelishShortsImmersiveModal({
       const scroller = shortsScrollerRef.current;
       if (!scroller) return;
 
-      const itemHeight = Math.max(scroller.clientHeight, 1);
-      const nextIndex = Math.max(0, Math.min(stories.length - 1, Math.round(scroller.scrollTop / itemHeight)));
-      const nextStory = stories[nextIndex];
-      if (!nextStory || nextStory.id === openStoryId) return;
+      if (scrollSettleTimerRef.current) clearTimeout(scrollSettleTimerRef.current);
+      scrollSettleTimerRef.current = setTimeout(() => {
+        scrollSettleTimerRef.current = null;
+        const settledScroller = shortsScrollerRef.current;
+        if (!settledScroller) return;
 
-      scrollSelectionSourceRef.current = "scroll";
-      setPlaying(true);
-      onSelectStory(nextStory.id);
+        const nextIndex = getSettledShortIndex(
+          settledScroller.scrollTop,
+          settledScroller.clientHeight,
+          stories.length,
+        );
+        const nextStory = stories[nextIndex];
+        if (!nextStory || nextStory.id === openStoryId) return;
+
+        if (scrollSelectionSourceRef.current !== "programmatic") {
+          scrollSelectionSourceRef.current = "scroll";
+        }
+        setPreloadedStoryIds((currentIds) => {
+          const nextIds = new Set(currentIds);
+          getShortPreloadIndexes(nextIndex, stories.length).forEach((index) => {
+            nextIds.add(stories[index].id);
+          });
+          return nextIds;
+        });
+        setPlaying(muted);
+        showShortChromeTemporarily();
+        onSelectStory(nextStory.id);
+      }, 120);
     });
-  }, [onSelectStory, openStoryId, stories]);
+  }, [muted, onSelectStory, openStoryId, showShortChromeTemporarily, stories]);
+
+  React.useEffect(() => {
+    if (!activeStory) return;
+
+    const activeVideo = videoRefsRef.current.get(activeStory.id);
+    const activeStoryChanged = lastActivatedStoryIdRef.current !== activeStory.id;
+    lastActivatedStoryIdRef.current = activeStory.id;
+
+    videoRefsRef.current.forEach((video, storyId) => {
+      if (storyId !== activeStory.id && !video.paused) video.pause();
+    });
+
+    if (!activeVideo) return;
+    const shouldAutoplay = shouldAutoplayActivatedShort({
+      muted,
+      playingRequested: playing,
+      storyChanged: activeStoryChanged,
+    });
+    if (!shouldAutoplay) {
+      activeVideo.pause();
+      if (activeStoryChanged && playing && !muted) setPlaying(false);
+      return;
+    }
+
+    let secondFrame: number | null = null;
+    const firstFrame = window.requestAnimationFrame(() => {
+      secondFrame = window.requestAnimationFrame(() => {
+        void activeVideo.play().catch(() => setPlaying(false));
+      });
+    });
+
+    return () => {
+      window.cancelAnimationFrame(firstFrame);
+      if (secondFrame !== null) window.cancelAnimationFrame(secondFrame);
+    };
+  }, [activeStory, muted, playing, preloadedStoryIds]);
 
   React.useEffect(() => {
     const scroller = shortsScrollerRef.current;
@@ -5152,6 +5236,19 @@ function DelishShortsImmersiveModal({
     });
     scrollSelectionSourceRef.current = null;
   }, [activeIndex, stories.length]);
+
+  React.useEffect(() => {
+    if (!activeStory) return;
+
+    const revealFrame = window.requestAnimationFrame(() => {
+      showShortChromeTemporarily();
+    });
+
+    return () => {
+      window.cancelAnimationFrame(revealFrame);
+      if (shortChromeTimerRef.current) clearTimeout(shortChromeTimerRef.current);
+    };
+  }, [activeStory, showShortChromeTemporarily]);
 
   React.useEffect(() => {
     if (!activeStory) return;
@@ -5207,6 +5304,8 @@ function DelishShortsImmersiveModal({
 
   React.useEffect(() => () => {
     if (scrollFrameRef.current !== null) window.cancelAnimationFrame(scrollFrameRef.current);
+    if (scrollSettleTimerRef.current) clearTimeout(scrollSettleTimerRef.current);
+    if (shortChromeTimerRef.current) clearTimeout(shortChromeTimerRef.current);
   }, []);
 
   if (!activeStory || typeof document === "undefined") return null;
@@ -5255,6 +5354,29 @@ function DelishShortsImmersiveModal({
             aspectRatio: "9 / 16",
           }}
           onDragStart={(event) => event.preventDefault()}
+          onPointerEnter={(event) => {
+            if (event.pointerType === "mouse" && !shortChromeAutoPhaseRef.current) {
+              setShortChromeVisible(true);
+            }
+          }}
+          onPointerLeave={(event) => {
+            if (event.pointerType === "mouse" && !shortChromeAutoPhaseRef.current) {
+              setShortChromeVisible(false);
+            }
+          }}
+          onPointerDown={(event) => {
+            if (event.pointerType === "touch") showShortChromeTemporarily();
+          }}
+          onFocusCapture={() => {
+            if (shortChromeTimerRef.current) clearTimeout(shortChromeTimerRef.current);
+            shortChromeAutoPhaseRef.current = false;
+            setShortChromeVisible(true);
+          }}
+          onBlurCapture={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget)) {
+              setShortChromeVisible(false);
+            }
+          }}
         >
           <div
             ref={shortsScrollerRef}
@@ -5264,7 +5386,7 @@ function DelishShortsImmersiveModal({
           >
             {stories.map((story, index) => {
               const isActive = index === activeIndex;
-              const shouldRenderVideo = Math.abs(index - activeIndex) <= 1;
+              const shouldRenderVideo = preloadedStoryIds.has(story.id);
 
               return (
                 <div
@@ -5274,19 +5396,31 @@ function DelishShortsImmersiveModal({
                 >
                   {shouldRenderVideo ? (
                     <AdaptiveVideo
-                      ref={isActive ? videoRef : undefined}
+                      ref={(video) => {
+                        if (video) {
+                          videoRefsRef.current.set(story.id, video);
+                        } else {
+                          videoRefsRef.current.delete(story.id);
+                        }
+                      }}
                       src={story.videoUrl}
                       poster={story.image}
-                      autoPlay={isActive && playing}
+                      autoPlay={false}
                       muted={muted}
                       playsInline
-                      preload="auto"
+                      preload={Math.abs(index - activeIndex) <= 1 ? "auto" : "metadata"}
                       className="h-full w-full cursor-pointer bg-black object-contain"
                       aria-label={`Delish Short: ${story.title}`}
                       onClick={() => isActive && togglePlayback()}
-                      onPlay={() => isActive && setPlaying(true)}
-                      onPause={() => isActive && setPlaying(false)}
-                      onEnded={() => isActive && selectRelativeStory(1)}
+                      onPlay={() => {
+                        if (isActiveShortEvent(story.id, openStoryId)) setPlaying(true);
+                      }}
+                      onPause={() => {
+                        if (isActiveShortEvent(story.id, openStoryId)) setPlaying(false);
+                      }}
+                      onEnded={() => {
+                        if (isActiveShortEvent(story.id, openStoryId)) selectRelativeStory(1);
+                      }}
                     />
                   ) : (
                     <Image
@@ -5299,15 +5433,23 @@ function DelishShortsImmersiveModal({
                     />
                   )}
 
-                  <div className="absolute bottom-0 left-0 right-0 z-20 bg-black/75 p-4 pb-5 pr-16 sm:p-5 sm:pr-5">
-                    <div className="flex items-center gap-2 text-xs font-bold text-white/75">
-                      <BrandSourceIcon brand="Delish" brandSlug="delish" className="h-5 w-5" />
+                  <div
+                    data-testid={isActive ? "delish-short-story-chrome" : undefined}
+                    className={cn(
+                      "absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-black/90 via-black/55 to-transparent px-4 pb-4 pr-16 pt-12 transition-[opacity,transform] duration-200 ease-out motion-reduce:transform-none motion-reduce:transition-none sm:px-5 sm:pb-5 sm:pr-5 sm:pt-14",
+                      isActive && shortChromeVisible
+                        ? "pointer-events-auto translate-y-0 opacity-100"
+                        : "pointer-events-none translate-y-3 opacity-0"
+                    )}
+                  >
+                    <div className="flex items-center gap-1.5 text-[11px] font-medium text-white/65">
+                      <BrandSourceIcon brand="Delish" brandSlug="delish" className="h-4 w-4" />
                       <span>Delish · {story.topic}</span>
                       {story.videoDuration ? <span>· {formatVideoDuration(story.videoDuration)}</span> : null}
                     </div>
                     <h2
                       id={isActive ? "delish-short-title" : undefined}
-                      className="mt-2 line-clamp-2 text-lg font-black leading-tight sm:text-xl"
+                      className="mt-1 line-clamp-2 text-base font-semibold leading-snug text-white/95 sm:text-lg"
                     >
                       {story.title}
                     </h2>
@@ -5315,11 +5457,11 @@ function DelishShortsImmersiveModal({
                       type="button"
                       onClick={() => onOpenStory(story.id)}
                       tabIndex={isActive ? 0 : -1}
-                      className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-[6px] text-sm font-bold text-white underline decoration-white/45 underline-offset-4 transition-colors hover:decoration-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white motion-reduce:transition-none sm:min-h-0"
+                      className="mt-1 inline-flex min-h-10 items-center gap-1.5 rounded-[6px] text-xs font-semibold text-white/75 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white motion-reduce:transition-none sm:min-h-9"
                       aria-label={`Read the full story: ${story.title}`}
                     >
-                      <BookOpenText className="h-4 w-4" aria-hidden />
-                      Read the full story
+                      <BookOpenText className="h-3.5 w-3.5" aria-hidden />
+                      Read story
                     </button>
                   </div>
                 </div>
@@ -5327,7 +5469,7 @@ function DelishShortsImmersiveModal({
             })}
           </div>
 
-          <div className="absolute bottom-36 right-3 z-30 flex flex-col gap-3 sm:hidden">
+          <div className="absolute bottom-28 right-3 z-30 flex flex-col gap-3 sm:hidden">
             <button type="button" onClick={() => onSave(activeStory)} className={controlButtonClass} aria-label={saved ? "Remove saved short" : "Save short"} aria-pressed={saved}>
               <Bookmark className="h-5 w-5" weight={saved ? "fill" : "regular"} aria-hidden />
             </button>
@@ -9540,6 +9682,8 @@ function LifestyleLeftSidebar({
   topics,
   brands,
   brandFilterTitle = "Filter Brands",
+  brandFilterFirst = false,
+  showBrandCounts = true,
   globalInventory = false,
   activeBrandFilters,
   collectionLabels,
@@ -9553,6 +9697,8 @@ function LifestyleLeftSidebar({
   topics: { name: string; count: number }[];
   brands: { name: string; slug: string; count: number }[];
   brandFilterTitle?: string;
+  brandFilterFirst?: boolean;
+  showBrandCounts?: boolean;
   globalInventory?: boolean;
   activeBrandFilters: string[];
   collectionLabels: string[];
@@ -9563,7 +9709,9 @@ function LifestyleLeftSidebar({
 }) {
   const activeTopicSummary = profile.followedTopics.slice(0, 3).join(", ");
   const brandStoryCount = brands.reduce((total, brand) => total + brand.count, 0);
-  const brandSummary = globalInventory
+  const brandSummary = !showBrandCounts
+    ? `${brands.length} brands`
+    : globalInventory
     ? `${brands.length} brands · ${brandStoryCount} stories`
     : activeBrandFilters.length > 0
       ? activeBrandFilters[0]
@@ -9571,96 +9719,105 @@ function LifestyleLeftSidebar({
   const topicSummary = activeTopicSummary || `${topics.length} topics`;
   const collectionSummary = `${collectionLabels.length} collections`;
 
+  const dailyHabitModule = (
+    <MobileCollapsibleSidebarCard
+      title="Your Daily Habit"
+      summary={topStories[0]?.title || "Top stories ready"}
+      className="hidden lg:block"
+    >
+      <div className="space-y-3">
+        {topStories.slice(0, 3).map((story) => (
+          <button
+            key={story.id}
+            type="button"
+            onClick={() => onOpenStory(story)}
+            data-story-module="daily-habit"
+            data-story-id={story.id}
+            className="group block w-full border-b border-border pb-3 text-left last:border-0 last:pb-0 focus:outline-none focus:ring-2 focus:ring-primary/30"
+            aria-label={`Open story: ${story.title}`}
+          >
+            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+              {story.topic}
+            </p>
+            <p className="mt-1 text-sm font-bold leading-snug group-hover:text-primary group-focus-visible:text-primary">
+              {story.title}
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">{story.brand} · {getLifestyleByline(story)} · Popularity {story.popularity}</p>
+          </button>
+        ))}
+      </div>
+    </MobileCollapsibleSidebarCard>
+  );
+
+  const brandFilterModule = (
+    <MobileCollapsibleSidebarCard
+      title={brandFilterTitle}
+      summary={brandSummary}
+      mobileActionLabel={activeBrandFilters.length > 0 ? "Clear" : undefined}
+      onMobileAction={activeBrandFilters.length > 0 ? onClearBrandFilters : undefined}
+    >
+      {activeBrandFilters.length > 0 ? (
+        <div className="-mt-1 flex items-center justify-end">
+          <button
+            type="button"
+            onClick={onClearBrandFilters}
+            className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-muted-foreground hover:text-primary"
+          >
+            Clear
+          </button>
+        </div>
+      ) : null}
+      <div className="mt-4 space-y-3">
+        {brands.map((brand) => {
+          const active = activeBrandFilters.includes(brand.name);
+          return (
+            <button
+              key={brand.name}
+              type="button"
+              onClick={() => onToggleBrandFilter(brand.name)}
+              disabled={brand.count === 0}
+              className={cn(
+                "flex w-full min-w-0 items-center justify-between gap-3 border-b border-border pb-2 text-left text-sm transition-colors last:border-0 last:pb-0",
+                active && "font-bold text-primary",
+                brand.count === 0 && "cursor-not-allowed text-muted-foreground opacity-70"
+              )}
+              aria-pressed={active}
+            >
+              <span className="flex min-w-0 items-center gap-2">
+                <BrandSourceIcon
+                  brand={brand.name}
+                  brandSlug={brand.slug}
+                  className={cn(
+                    "h-5 w-5 rounded-[4px]",
+                    active ? "border-primary ring-2 ring-primary/20" : "border-border"
+                  )}
+                />
+                <span className="min-w-0 truncate">{brand.name}</span>
+              </span>
+              {showBrandCounts ? (
+                <span className="text-xs text-muted-foreground">{brand.count}</span>
+              ) : null}
+            </button>
+          );
+        })}
+      </div>
+      <p className="mt-4 text-xs leading-5 text-muted-foreground">
+        {globalInventory
+          ? "Complete section inventory. Select a brand to open its publication."
+          : activeBrandFilters.length > 0
+          ? `Showing ${activeBrandFilters[0]}.`
+          : "All brands are included in the river."}
+      </p>
+    </MobileCollapsibleSidebarCard>
+  );
+
   return (
     <aside
       className="hidden min-w-0 space-y-5 lg:sticky lg:top-[112px] lg:block lg:max-h-[calc(100dvh-136px)] lg:self-start lg:overflow-y-auto lg:pr-1"
       aria-label="Lifestyle discovery sidebar"
     >
-      <MobileCollapsibleSidebarCard
-        title="Your Daily Habit"
-        summary={topStories[0]?.title || "Top stories ready"}
-        className="hidden lg:block"
-      >
-        <div className="space-y-3">
-          {topStories.slice(0, 3).map((story) => (
-            <button
-              key={story.id}
-              type="button"
-              onClick={() => onOpenStory(story)}
-              data-story-module="daily-habit"
-              data-story-id={story.id}
-              className="group block w-full border-b border-border pb-3 text-left last:border-0 last:pb-0 focus:outline-none focus:ring-2 focus:ring-primary/30"
-              aria-label={`Open story: ${story.title}`}
-            >
-              <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
-                {story.topic}
-              </p>
-              <p className="mt-1 text-sm font-bold leading-snug group-hover:text-primary group-focus-visible:text-primary">
-                {story.title}
-              </p>
-              <p className="mt-1 text-xs text-muted-foreground">{story.brand} · {getLifestyleByline(story)} · Popularity {story.popularity}</p>
-            </button>
-          ))}
-        </div>
-      </MobileCollapsibleSidebarCard>
-
-      <MobileCollapsibleSidebarCard
-        title={brandFilterTitle}
-        summary={brandSummary}
-        mobileActionLabel={activeBrandFilters.length > 0 ? "Clear" : undefined}
-        onMobileAction={activeBrandFilters.length > 0 ? onClearBrandFilters : undefined}
-      >
-        {activeBrandFilters.length > 0 ? (
-          <div className="-mt-1 flex items-center justify-end">
-            <button
-              type="button"
-              onClick={onClearBrandFilters}
-              className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-muted-foreground hover:text-primary"
-            >
-              Clear
-            </button>
-          </div>
-        ) : null}
-        <div className="mt-4 space-y-3">
-          {brands.map((brand) => {
-            const active = activeBrandFilters.includes(brand.name);
-            return (
-              <button
-                key={brand.name}
-                type="button"
-                onClick={() => onToggleBrandFilter(brand.name)}
-                disabled={brand.count === 0}
-                className={cn(
-                  "flex w-full min-w-0 items-center justify-between gap-3 border-b border-border pb-2 text-left text-sm transition-colors last:border-0 last:pb-0",
-                  active && "font-bold text-primary",
-                  brand.count === 0 && "cursor-not-allowed text-muted-foreground opacity-70"
-                )}
-                aria-pressed={active}
-              >
-                <span className="flex min-w-0 items-center gap-2">
-                  <BrandSourceIcon
-                    brand={brand.name}
-                    brandSlug={brand.slug}
-                    className={cn(
-                      "h-5 w-5 rounded-[4px]",
-                      active ? "border-primary ring-2 ring-primary/20" : "border-border"
-                    )}
-                  />
-                  <span className="min-w-0 truncate">{brand.name}</span>
-                </span>
-                <span className="text-xs text-muted-foreground">{brand.count}</span>
-              </button>
-            );
-          })}
-        </div>
-        <p className="mt-4 text-xs leading-5 text-muted-foreground">
-          {globalInventory
-            ? "Complete section inventory. Select a brand to open its publication."
-            : activeBrandFilters.length > 0
-            ? `Showing ${activeBrandFilters[0]}.`
-            : "All brands are included in the river."}
-        </p>
-      </MobileCollapsibleSidebarCard>
+      {brandFilterFirst ? brandFilterModule : dailyHabitModule}
+      {brandFilterFirst ? dailyHabitModule : brandFilterModule}
 
       <MobileCollapsibleSidebarCard title="Follow Topics" summary={topicSummary} className="hidden lg:block">
         <div className="flex flex-wrap gap-2">
@@ -11488,6 +11645,8 @@ function LifestyleRiverHomePage({
             topics={sidebarTopics}
             brands={sidebarBrands}
             brandFilterTitle={usingVideoTabFeed ? "Videos by brand" : undefined}
+            brandFilterFirst={usingVideoTabFeed}
+            showBrandCounts={!usingVideoTabFeed}
             activeBrandFilters={effectiveBrandFilters}
             collectionLabels={config.collectionLabels}
             onToggleBrandFilter={toggleBrandFilter}
@@ -11754,6 +11913,7 @@ function LifestyleRiverHomePage({
           brands={sidebarBrands}
           brandFilterTitle={initialBrandSlug && !usingVideoTabFeed ? "Global Story Inventory" : undefined}
           globalInventory={Boolean(initialBrandSlug && !usingVideoTabFeed)}
+          showBrandCounts={Boolean(initialBrandSlug && !usingVideoTabFeed)}
           activeBrandFilters={effectiveBrandFilters}
           collectionLabels={config.collectionLabels}
           onToggleBrandFilter={toggleBrandFilter}

@@ -2,6 +2,13 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-07-25: Add Redbook to the video index
+
+- **Context:** The Personalize video service accepts `redbookmag` and returns 20 readable exact `16:9` videos, but Redbook was not included in the configured video-brand registry.
+- **Decision:** Add Redbook to the all-brand and Lifestyle video scopes, using the existing `redbook` publication slug and `trending_now` recommendation request. This makes Redbook available in the `Videos by brand` filter and the unfiltered global video feed without creating a separate presentation pattern.
+- **Scope:** Hearst+ global Videos tab, Lifestyle video feeds, and Redbook video brand filtering.
+- **Canonical rule:** `APP_RULES.md` video-feed behavior.
+
 # 2026-07-25: Durable cross-device reader libraries
 
 - **Context:** Reader profiles stored only saved story IDs, so refreshed catalogs produced anonymous unavailable rows. Google profile writes also replaced the complete server record, allowing one device to overwrite another device's newer saves or removals.
@@ -9,6 +16,20 @@ Use this file for concise, dated context behind product and design decisions. Du
 - **Scope:** Reader account persistence, Google profile sync, saved-story and collection reconciliation, and the Profile Library and account-status copy.
 - **Regression boundary:** Browser-local email profiles remain intentionally limited to one browser. The Google credential remains verified server-side and is never persisted.
 - **Canonical rule:** `APP_RULES.md` account and identity behavior.
+
+## 2026-07-25: Complete landscape and portrait video inventory within the supported response
+
+- **Context:** Accepting every taller-than-wide frame allowed square-adjacent and `4:5` media into a viewer designed for `9:16`. Personalize rejects request sizes above 25 with HTTP 400, and common pagination parameters return the same first 25 IDs.
+- **Decision:** Request the supported maximum of 25 current video recommendations per configured brand, preserve recommendation order, and retain every exact `16:9` and exact `9:16` video in that response. Exclude all other aspect ratios from the dedicated video feed, and revisit a larger inventory when upstream pagination exists.
+- **Scope:** Production Personalize video-feed pagination and the portrait-video carousel eligibility check. Article feeds and standard source-page media are unchanged.
+- **Canonical rule:** `APP_RULES.md` video-feed behavior.
+
+## 2026-07-25: Stable Shorts snap playback
+
+- **Context:** Changing the selected Short during an in-progress snap also changed the adaptive player's autoplay prop, which tore down the outgoing source and could let its pause event overwrite the incoming player's state. Mobile browsers then produced inconsistent autoplay across otherwise compatible portrait videos.
+- **Decision:** Keep preloaded Shorts media elements mounted for the viewer session, commit selection only after the native snap settles, pause outgoing players without accepting their media events as active state, and autoplay a newly active Short only while the viewer is muted. Show story metadata briefly when a Short becomes active, then let it recede until hover, touch, or keyboard focus requests it again.
+- **Scope:** The full-screen Delish Shorts viewer on phone and desktop. Standard landscape video cards and story-reader playback are unchanged.
+- **Canonical rule:** `APP_RULES.md` Delish Shorts behavior.
 
 ## 2026-07-23: Capability-based HomePageTemplate extraction
 
