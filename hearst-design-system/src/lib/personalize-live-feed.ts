@@ -7,6 +7,10 @@ import { lifestyleRiverStories } from "@/components/lifestyle-river-data";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { filterExcludedStories, isExcludedContentTitle } from "@/lib/content-exclusions";
 import type { LiveFeedData, LiveFeedSourceNote } from "@/lib/live-feed-types";
+import {
+  getPreferredVideoTranscoding,
+  type VideoTranscoding,
+} from "@/lib/video-transcoding";
 
 const PERSONALIZE_STAGE_URL = "https://personalize-stage.motortrend.com/recommendations";
 const PERSONALIZE_PRODUCTION_URL = "https://personalize.motortrend.com/recommendations";
@@ -163,14 +167,7 @@ type ApiVideoRecommendation = {
   published_at?: string;
   slug?: string;
   title?: string;
-  transcodings?: Array<{
-    codec?: string | null;
-    display_name?: string;
-    full_url?: string;
-    height?: number;
-    preset_name?: string;
-    width?: number;
-  }>;
+  transcodings?: VideoTranscoding[];
 };
 
 type ApiResponse = {
@@ -255,56 +252,6 @@ function mapRecommendation(
   };
 }
 
-function getPreferredVideoTranscoding(item: ApiVideoRecommendation) {
-  const transcodings = item.transcodings ?? [];
-  const preferredNames = ["720p", "480p", "360p", "1080p", "240p"];
-  type VideoTranscoding = typeof transcodings[number];
-  const getDescriptor = (transcoding: VideoTranscoding) =>
-    [
-      transcoding.codec,
-      transcoding.display_name,
-      transcoding.preset_name,
-      transcoding.full_url,
-    ]
-      .filter(Boolean)
-      .join(" ")
-      .toLowerCase();
-  const isDirectMp4 = (transcoding: VideoTranscoding) =>
-    /\.mp4(?:$|\?)/i.test(transcoding.full_url ?? "");
-  const hasUnsupportedCodecSignal = (transcoding: VideoTranscoding) =>
-    /(?:hevc|h\.265|h265|hev1|hvc1|vp9|av1|webm|dash|mpeg-dash|prores)/i.test(
-      getDescriptor(transcoding),
-    );
-  const hasH264Signal = (transcoding: VideoTranscoding) =>
-    /(?:h264|h\.264|avc1|avc)/i.test(getDescriptor(transcoding));
-  const matchesPreferredName =
-    (name: string) => (transcoding: VideoTranscoding) =>
-      `${transcoding.display_name ?? ""} ${transcoding.preset_name ?? ""}`.toLowerCase().includes(name);
-
-  const mp4Transcodings = transcodings.filter((transcoding) =>
-    isDirectMp4(transcoding) && !hasUnsupportedCodecSignal(transcoding)
-  );
-  const h264Transcodings = mp4Transcodings.filter(hasH264Signal);
-
-  for (const name of preferredNames) {
-    const match = h264Transcodings.find(matchesPreferredName(name));
-    if (match?.full_url) return match;
-  }
-
-  for (const name of preferredNames) {
-    const match = mp4Transcodings.find(matchesPreferredName(name));
-    if (match?.full_url) return match;
-  }
-
-  return (
-    h264Transcodings[0] ??
-    mp4Transcodings[0] ??
-    transcodings.find((transcoding) =>
-      /\.m3u8(?:$|\?)/i.test(transcoding.full_url ?? "") && !hasUnsupportedCodecSignal(transcoding)
-    )
-  );
-}
-
 function mapVideoRecommendation(
   item: ApiVideoRecommendation,
   brand: SupportedPersonalizeBrand,
@@ -313,7 +260,7 @@ function mapVideoRecommendation(
   const [, brandName, brandSlug, fallbackTopic] = brand;
   const title = stripHtml(item.title);
   const image = withProtocol(item.preview_image);
-  const preferredTranscoding = getPreferredVideoTranscoding(item);
+  const preferredTranscoding = getPreferredVideoTranscoding(item.transcodings ?? []);
   const videoUrl = withProtocol(preferredTranscoding?.full_url);
   if (!item.id || !title || !image || !videoUrl || isExcludedContentTitle(title)) return null;
   const dimensionTranscoding = preferredTranscoding?.width && preferredTranscoding.height
