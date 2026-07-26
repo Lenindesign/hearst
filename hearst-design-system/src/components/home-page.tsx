@@ -6781,7 +6781,7 @@ function AmbientReaderHero({
         <AmbientReaderHeroImage
           story={story}
           hasPortraitHeroImage={hasPortraitHeroImage}
-          className="min-h-[48vh] border-b border-white/25 sm:min-h-[56vh] lg:min-h-[62vh]"
+          className="min-h-[42vh] border-b border-white/25 sm:min-h-[56vh] lg:min-h-[62vh]"
           sizes="100vw"
           onLoad={onHeroImageRatio}
           onOpenImage={onOpenImage}
@@ -7634,19 +7634,19 @@ function AmbientReaderInterstitialAd({ advertiser, onDismiss }: { advertiser: Am
 
   return (
     <div className="relative h-full w-full bg-[#101b2e]" role="region" aria-roledescription="advertisement" aria-labelledby="ambient-ad-title" aria-describedby="ambient-ad-description">
-      <div className="relative grid h-full w-full bg-[#101b2e] text-[#f4f5f7] lg:grid-cols-[0.82fr_1.18fr]">
-        <button type="button" onClick={onDismiss} autoFocus className="absolute right-6 top-6 z-30 inline-flex h-11 items-center border border-[#f4f5f7]/55 bg-[#101b2e]/40 px-4 text-[10px] font-semibold uppercase tracking-[0.2em] backdrop-blur-sm transition-colors hover:bg-[#f4f5f7] hover:text-[#101b2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f4f5f7] sm:right-10 sm:top-10" aria-label="Close advertisement">Close</button>
-        <div className="relative z-10 flex flex-col justify-between p-7 sm:p-12 lg:p-16">
+      <div className="relative grid h-full w-full grid-rows-[minmax(0,11fr)_minmax(15rem,9fr)] bg-[#101b2e] text-[#f4f5f7] lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-1">
+        <button type="button" onClick={onDismiss} autoFocus className="absolute right-4 top-4 z-30 inline-flex h-11 items-center border border-[#f4f5f7]/55 bg-[#101b2e]/40 px-3 text-[9px] font-semibold uppercase tracking-[0.18em] backdrop-blur-sm transition-colors hover:bg-[#f4f5f7] hover:text-[#101b2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f4f5f7] sm:right-8 sm:top-8 sm:px-4 sm:text-[10px] lg:right-10 lg:top-10" aria-label="Close advertisement">Close</button>
+        <div className="relative z-10 flex min-h-0 flex-col justify-between p-5 sm:p-8 lg:p-16">
           <div className="flex items-center justify-between gap-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={vanCleefLogoUrl} alt="Van Cleef & Arpels" className="h-auto w-[min(17rem,76%)] brightness-0 invert" />
+            <img src={vanCleefLogoUrl} alt="Van Cleef & Arpels" className="h-auto w-[min(11rem,62%)] brightness-0 invert sm:w-[min(14rem,68%)] lg:w-[min(17rem,76%)]" />
           </div>
-          <div className="max-w-xl py-14">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#b8c7df]">Advertisement · High jewelry</p>
-            <h2 id="ambient-ad-title" className="mt-6 font-serif text-[clamp(3rem,6vw,6.5rem)] leading-[0.92] tracking-[-0.04em]">Snowflake</h2>
-            <p id="ambient-ad-description" className="mt-7 max-w-md font-serif text-xl leading-8 text-[#d8e0ee] sm:text-2xl">Discover a constellation of diamonds and the savoir-faire of Van Cleef &amp; Arpels.</p>
+          <div className="max-w-xl py-3 sm:py-6 lg:py-14">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[#b8c7df] sm:text-[10px] sm:tracking-[0.28em]">Advertisement · High jewelry</p>
+            <h2 id="ambient-ad-title" className="mt-3 font-serif text-[clamp(2.25rem,10vw,3.25rem)] leading-[0.94] tracking-[-0.04em] sm:mt-4 lg:mt-6 lg:text-[clamp(3rem,6vw,6.5rem)] lg:leading-[0.92]">Snowflake</h2>
+            <p id="ambient-ad-description" className="mt-3 max-w-md font-serif text-base leading-6 text-[#d8e0ee] sm:mt-4 sm:text-lg sm:leading-7 lg:mt-7 lg:text-2xl lg:leading-8">Discover a constellation of diamonds and the savoir-faire of Van Cleef &amp; Arpels.</p>
           </div>
-          <a href={vanCleefSnowflakeUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-12 w-fit items-center bg-[#f4f5f7] px-6 text-xs font-bold uppercase tracking-[0.16em] text-[#101b2e] transition-colors hover:bg-[#cbd8ed] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f4f5f7]">Explore the collection</a>
+          <a href={vanCleefSnowflakeUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-11 w-fit items-center bg-[#f4f5f7] px-5 text-[10px] font-bold uppercase tracking-[0.14em] text-[#101b2e] transition-colors hover:bg-[#cbd8ed] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f4f5f7] sm:min-h-12 sm:px-6 sm:text-xs sm:tracking-[0.16em]">Explore the collection</a>
         </div>
         <div className="relative min-h-64 overflow-hidden bg-[#203b62] lg:min-h-full">
           {/* The official campaign asset is used as a still because the public collection page does not expose a stable embeddable video URL. */}
@@ -7666,18 +7666,18 @@ const blancpainHeroVideoUrl = "https://assets.blancpain.com/asset/6e1cc3cd-1b01-
 function BlancpainInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
   return (
     <div className="relative h-full w-full bg-[#111]" role="region" aria-roledescription="advertisement" aria-labelledby="blancpain-ad-title" aria-describedby="blancpain-ad-description">
-      <div className="relative grid h-full w-full bg-[#f4f2ed] text-[#171717] lg:grid-cols-[0.82fr_1.18fr]">
-        <button type="button" onClick={onDismiss} autoFocus className="absolute right-6 top-6 z-30 inline-flex h-11 items-center border border-[#171717]/45 bg-[#f4f2ed]/70 px-4 text-[10px] font-semibold uppercase tracking-[0.2em] backdrop-blur-sm transition-colors hover:bg-[#171717] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#171717] sm:right-10 sm:top-10" aria-label="Close advertisement">Close</button>
-        <div className="relative z-10 flex flex-col justify-between p-7 sm:p-12 lg:p-16">
+      <div className="relative grid h-full w-full grid-rows-[minmax(0,11fr)_minmax(15rem,9fr)] bg-[#f4f2ed] text-[#171717] lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-1">
+        <button type="button" onClick={onDismiss} autoFocus className="absolute right-4 top-4 z-30 inline-flex h-11 items-center border border-[#171717]/45 bg-[#f4f2ed]/70 px-3 text-[9px] font-semibold uppercase tracking-[0.18em] backdrop-blur-sm transition-colors hover:bg-[#171717] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#171717] sm:right-8 sm:top-8 sm:px-4 sm:text-[10px] lg:right-10 lg:top-10" aria-label="Close advertisement">Close</button>
+        <div className="relative z-10 flex min-h-0 flex-col justify-between p-5 sm:p-8 lg:p-16">
           <div className="flex items-center justify-between gap-4">
-            <div className="font-serif text-xl tracking-[0.28em] sm:text-2xl" aria-label="Blancpain logo">BLANCPAIN <span className="text-[0.55em] tracking-[0.18em]">1735</span></div>
+            <div className="font-serif text-base tracking-[0.24em] sm:text-xl sm:tracking-[0.28em] lg:text-2xl" aria-label="Blancpain logo">BLANCPAIN <span className="text-[0.55em] tracking-[0.18em]">1735</span></div>
           </div>
-          <div className="max-w-xl py-14">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#5f665f]">Advertisement · Fine watchmaking</p>
-            <h2 id="blancpain-ad-title" className="mt-6 font-serif text-[clamp(3rem,6vw,6.5rem)] leading-[0.92] tracking-[-0.04em]">The Thinnest Argument</h2>
-            <p id="blancpain-ad-description" className="mt-7 max-w-md font-serif text-xl leading-8 text-[#4f514e] sm:text-2xl">Discover Blancpain’s latest timepieces, where watchmaking excellence becomes a way of life.</p>
+          <div className="max-w-xl py-3 sm:py-6 lg:py-14">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[#5f665f] sm:text-[10px] sm:tracking-[0.28em]">Advertisement · Fine watchmaking</p>
+            <h2 id="blancpain-ad-title" className="mt-3 font-serif text-[clamp(2.25rem,10vw,3.25rem)] leading-[0.94] tracking-[-0.04em] sm:mt-4 lg:mt-6 lg:text-[clamp(3rem,6vw,6.5rem)] lg:leading-[0.92]">The Thinnest Argument</h2>
+            <p id="blancpain-ad-description" className="mt-3 max-w-md font-serif text-base leading-6 text-[#4f514e] sm:mt-4 sm:text-lg sm:leading-7 lg:mt-7 lg:text-2xl lg:leading-8">Discover Blancpain’s latest timepieces, where watchmaking excellence becomes a way of life.</p>
           </div>
-          <a href={blancpainUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-12 w-fit items-center bg-[#171717] px-6 text-xs font-bold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#38443e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#171717]">Discover Blancpain</a>
+          <a href={blancpainUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-11 w-fit items-center bg-[#171717] px-5 text-[10px] font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-[#38443e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#171717] sm:min-h-12 sm:px-6 sm:text-xs sm:tracking-[0.16em]">Discover Blancpain</a>
         </div>
         <div className="relative min-h-64 overflow-hidden bg-[#26342f] lg:min-h-full">
           <video className="absolute inset-0 h-full w-full object-cover" src={blancpainHeroVideoUrl} autoPlay muted loop playsInline preload="metadata" aria-label="Blancpain timepiece film" />
@@ -7696,18 +7696,18 @@ const lexusRxHighResolutionImageUrl = "https://www.the360mag.com/wp-content/uplo
 function LexusInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
   return (
     <div className="relative h-full w-full bg-[#111]" role="region" aria-roledescription="advertisement" aria-labelledby="lexus-ad-title" aria-describedby="lexus-ad-description">
-      <div className="relative grid h-full w-full bg-[#e9e9e7] text-[#161616] lg:grid-cols-[0.82fr_1.18fr]">
-        <button type="button" onClick={onDismiss} autoFocus className="absolute right-6 top-6 z-30 inline-flex h-11 items-center border border-[#161616]/45 bg-[#e9e9e7]/75 px-4 text-[10px] font-semibold uppercase tracking-[0.2em] backdrop-blur-sm transition-colors hover:bg-[#161616] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#161616] sm:right-10 sm:top-10" aria-label="Close advertisement">Close</button>
-        <div className="relative z-10 flex flex-col justify-between p-7 sm:p-12 lg:p-16">
+      <div className="relative grid h-full w-full grid-rows-[minmax(0,11fr)_minmax(15rem,9fr)] bg-[#e9e9e7] text-[#161616] lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-1">
+        <button type="button" onClick={onDismiss} autoFocus className="absolute right-4 top-4 z-30 inline-flex h-11 items-center border border-[#161616]/45 bg-[#e9e9e7]/75 px-3 text-[9px] font-semibold uppercase tracking-[0.18em] backdrop-blur-sm transition-colors hover:bg-[#161616] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#161616] sm:right-8 sm:top-8 sm:px-4 sm:text-[10px] lg:right-10 lg:top-10" aria-label="Close advertisement">Close</button>
+        <div className="relative z-10 flex min-h-0 flex-col justify-between p-5 sm:p-8 lg:p-16">
           {/* Official Lexus emblem supplied by the user. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={lexusLogoUrl} alt="Lexus" className="h-12 w-20 max-w-full object-contain object-left sm:h-14 sm:w-24" />
-          <div className="max-w-xl py-14">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#5b5e5e]">Advertisement · Luxury hybrid</p>
-            <h2 id="lexus-ad-title" className="mt-6 font-sans text-[clamp(3rem,6vw,6.5rem)] font-medium leading-[0.92] tracking-[-0.04em]">The RX Hybrid</h2>
-            <p id="lexus-ad-description" className="mt-7 max-w-md font-sans text-xl font-light leading-8 text-[#444847] sm:text-2xl">Experience the refined balance of electrified performance and considered luxury.</p>
+          <img src={lexusLogoUrl} alt="Lexus" className="h-9 w-16 max-w-full object-contain object-left sm:h-12 sm:w-20 lg:h-14 lg:w-24" />
+          <div className="max-w-xl py-3 sm:py-6 lg:py-14">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[#5b5e5e] sm:text-[10px] sm:tracking-[0.28em]">Advertisement · Luxury hybrid</p>
+            <h2 id="lexus-ad-title" className="mt-3 font-sans text-[clamp(2.25rem,10vw,3.25rem)] font-medium leading-[0.94] tracking-[-0.04em] sm:mt-4 lg:mt-6 lg:text-[clamp(3rem,6vw,6.5rem)] lg:leading-[0.92]">The RX Hybrid</h2>
+            <p id="lexus-ad-description" className="mt-3 max-w-md font-sans text-base font-light leading-6 text-[#444847] sm:mt-4 sm:text-lg sm:leading-7 lg:mt-7 lg:text-2xl lg:leading-8">Experience the refined balance of electrified performance and considered luxury.</p>
           </div>
-          <a href={lexusRxOffersUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-12 w-fit items-center bg-[#161616] px-6 text-xs font-bold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#3b3f3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#161616]">Explore RX Hybrid offers</a>
+          <a href={lexusRxOffersUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-11 w-fit items-center bg-[#161616] px-5 text-[10px] font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-[#3b3f3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#161616] sm:min-h-12 sm:px-6 sm:text-xs sm:tracking-[0.16em]">Explore RX Hybrid offers</a>
         </div>
         <div className="relative min-h-64 overflow-hidden bg-[#28302f] lg:min-h-full">
           {/* Keep the product image stable until Lexus exposes a direct, lightweight RX Hybrid video asset suitable for background playback. */}
@@ -7728,21 +7728,21 @@ const marriottLogoUrl = "/logos/marriott-international.svg";
 function MarriottInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
   return (
     <div className="relative h-full w-full bg-[#111]" role="region" aria-roledescription="advertisement" aria-labelledby="marriott-ad-title" aria-describedby="marriott-ad-description">
-      <div className="relative grid h-full w-full bg-[#f1eee8] text-[#20252a] lg:grid-cols-[0.82fr_1.18fr]">
-        <button type="button" onClick={onDismiss} autoFocus className="absolute right-6 top-6 z-30 inline-flex h-11 items-center border border-[#20252a]/45 bg-[#f1eee8]/75 px-4 text-[10px] font-semibold uppercase tracking-[0.2em] backdrop-blur-sm transition-colors hover:bg-[#20252a] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#20252a] sm:right-10 sm:top-10" aria-label="Close advertisement">Close</button>
-        <div className="relative z-10 flex flex-col justify-between p-7 sm:p-12 lg:p-16">
+      <div className="relative grid h-full w-full grid-rows-[minmax(0,11fr)_minmax(15rem,9fr)] bg-[#f1eee8] text-[#20252a] lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-1">
+        <button type="button" onClick={onDismiss} autoFocus className="absolute right-4 top-4 z-30 inline-flex h-11 items-center border border-[#20252a]/45 bg-[#f1eee8]/75 px-3 text-[9px] font-semibold uppercase tracking-[0.18em] backdrop-blur-sm transition-colors hover:bg-[#20252a] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#20252a] sm:right-8 sm:top-8 sm:px-4 sm:text-[10px] lg:right-10 lg:top-10" aria-label="Close advertisement">Close</button>
+        <div className="relative z-10 flex min-h-0 flex-col justify-between p-5 sm:p-8 lg:p-16">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={marriottLogoUrl}
             alt="Marriott International"
-            className="h-auto w-[220px] max-w-[60vw] sm:w-[280px]"
+            className="h-auto w-[160px] max-w-[52vw] sm:w-[220px] lg:w-[280px]"
           />
-          <div className="max-w-xl py-14">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#667078]">Advertisement · Luxury travel</p>
-            <h2 id="marriott-ad-title" className="mt-6 font-serif text-[clamp(3rem,6vw,6.5rem)] leading-[0.92] tracking-[-0.04em]">An Invitation to the Extraordinary</h2>
-            <p id="marriott-ad-description" className="mt-7 max-w-md font-serif text-xl leading-8 text-[#4a5157] sm:text-2xl">Discover stays shaped by beauty, belonging, and the moments that linger long after you return home.</p>
+          <div className="max-w-xl py-3 sm:py-6 lg:py-14">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[#667078] sm:text-[10px] sm:tracking-[0.28em]">Advertisement · Luxury travel</p>
+            <h2 id="marriott-ad-title" className="mt-3 font-serif text-[clamp(2.25rem,10vw,3.25rem)] leading-[0.94] tracking-[-0.04em] sm:mt-4 lg:mt-6 lg:text-[clamp(3rem,6vw,6.5rem)] lg:leading-[0.92]">An Invitation to the Extraordinary</h2>
+            <p id="marriott-ad-description" className="mt-3 max-w-md font-serif text-base leading-6 text-[#4a5157] sm:mt-4 sm:text-lg sm:leading-7 lg:mt-7 lg:text-2xl lg:leading-8">Discover stays shaped by beauty, belonging, and the moments that linger long after you return home.</p>
           </div>
-          <a href={marriottLuxuryUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-12 w-fit items-center bg-[#20252a] px-6 text-xs font-bold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#46515a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#20252a]">Explore luxury stays</a>
+          <a href={marriottLuxuryUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-11 w-fit items-center bg-[#20252a] px-5 text-[10px] font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-[#46515a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#20252a] sm:min-h-12 sm:px-6 sm:text-xs sm:tracking-[0.16em]">Explore luxury stays</a>
         </div>
         <div className="relative min-h-64 overflow-hidden bg-[#30424b] lg:min-h-full">
           {/* The official Marriott Luxury page exposes campaign stills but no stable embeddable video asset. */}
@@ -7764,18 +7764,18 @@ const porscheHeroVideoUrl = "https://newstv.porsche.com/porschevideos/newstv.por
 function PorscheInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
   return (
     <div className="relative h-full w-full bg-[#0b0b0b]" role="region" aria-roledescription="advertisement" aria-labelledby="porsche-ad-title" aria-describedby="porsche-ad-description">
-      <div className="relative grid h-full w-full bg-[#f4f3f0] text-[#171717] lg:grid-cols-[0.82fr_1.18fr]">
-        <button type="button" onClick={onDismiss} autoFocus className="absolute right-6 top-6 z-30 inline-flex h-11 items-center border border-[#171717]/45 bg-[#f4f3f0]/75 px-4 text-[10px] font-semibold uppercase tracking-[0.2em] backdrop-blur-sm transition-colors hover:bg-[#171717] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#171717] sm:right-10 sm:top-10" aria-label="Close advertisement">Close</button>
-        <div className="relative z-10 flex flex-col justify-between p-7 sm:p-12 lg:p-16">
+      <div className="relative grid h-full w-full grid-rows-[minmax(0,11fr)_minmax(15rem,9fr)] bg-[#f4f3f0] text-[#171717] lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-1">
+        <button type="button" onClick={onDismiss} autoFocus className="absolute right-4 top-4 z-30 inline-flex h-11 items-center border border-[#171717]/45 bg-[#f4f3f0]/75 px-3 text-[9px] font-semibold uppercase tracking-[0.18em] backdrop-blur-sm transition-colors hover:bg-[#171717] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#171717] sm:right-8 sm:top-8 sm:px-4 sm:text-[10px] lg:right-10 lg:top-10" aria-label="Close advertisement">Close</button>
+        <div className="relative z-10 flex min-h-0 flex-col justify-between p-5 sm:p-8 lg:p-16">
           {/* Official Porsche crest supplied by the user. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={porscheLogoUrl} alt="Porsche" className="h-auto w-40 max-w-full object-contain object-left sm:w-48" />
-          <div className="max-w-xl py-14">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#6c6c68]">Advertisement · Performance automotive</p>
-            <h2 id="porsche-ad-title" className="mt-6 font-sans text-[clamp(3rem,6vw,6.5rem)] font-light leading-[0.92] tracking-[-0.05em]">Your Porsche Journey Starts Now</h2>
-            <p id="porsche-ad-description" className="mt-7 max-w-md font-sans text-xl font-light leading-8 text-[#4d4d49] sm:text-2xl">Discover iconic sports cars, electric performance, and the freedom to choose your next Porsche.</p>
+          <img src={porscheLogoUrl} alt="Porsche" className="h-auto w-28 max-w-full object-contain object-left sm:w-36 lg:w-48" />
+          <div className="max-w-xl py-3 sm:py-6 lg:py-14">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[#6c6c68] sm:text-[10px] sm:tracking-[0.28em]">Advertisement · Performance automotive</p>
+            <h2 id="porsche-ad-title" className="mt-3 font-sans text-[clamp(2.25rem,10vw,3.25rem)] font-light leading-[0.94] tracking-[-0.05em] sm:mt-4 lg:mt-6 lg:text-[clamp(3rem,6vw,6.5rem)] lg:leading-[0.92]">Your Porsche Journey Starts Now</h2>
+            <p id="porsche-ad-description" className="mt-3 max-w-md font-sans text-base font-light leading-6 text-[#4d4d49] sm:mt-4 sm:text-lg sm:leading-7 lg:mt-7 lg:text-2xl lg:leading-8">Discover iconic sports cars, electric performance, and the freedom to choose your next Porsche.</p>
           </div>
-          <a href={porscheUsaUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-12 w-fit items-center bg-[#171717] px-6 text-xs font-bold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#444] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#171717]">Explore Porsche</a>
+          <a href={porscheUsaUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-11 w-fit items-center bg-[#171717] px-5 text-[10px] font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-[#444] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#171717] sm:min-h-12 sm:px-6 sm:text-xs sm:tracking-[0.16em]">Explore Porsche</a>
         </div>
         <div className="relative min-h-64 overflow-hidden bg-[#303332] lg:min-h-full">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -7796,18 +7796,18 @@ const princessHeroImageUrl = "https://www.princess.com/content/dam/princess/prom
 function PrincessInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
   return (
     <div className="relative h-full w-full bg-[#101a2a]" role="region" aria-roledescription="advertisement" aria-labelledby="princess-ad-title" aria-describedby="princess-ad-description">
-      <div className="relative grid h-full w-full bg-[#eaf1f3] text-[#102338] lg:grid-cols-[0.82fr_1.18fr]">
-        <button type="button" onClick={onDismiss} autoFocus className="absolute right-6 top-6 z-30 inline-flex h-11 items-center border border-[#102338]/45 bg-[#eaf1f3]/75 px-4 text-[10px] font-semibold uppercase tracking-[0.2em] backdrop-blur-sm transition-colors hover:bg-[#102338] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#102338] sm:right-10 sm:top-10" aria-label="Close advertisement">Close</button>
-        <div className="relative z-10 flex flex-col justify-between p-7 sm:p-12 lg:p-16">
+      <div className="relative grid h-full w-full grid-rows-[minmax(0,11fr)_minmax(15rem,9fr)] bg-[#eaf1f3] text-[#102338] lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-1">
+        <button type="button" onClick={onDismiss} autoFocus className="absolute right-4 top-4 z-30 inline-flex h-11 items-center border border-[#102338]/45 bg-[#eaf1f3]/75 px-3 text-[9px] font-semibold uppercase tracking-[0.18em] backdrop-blur-sm transition-colors hover:bg-[#102338] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#102338] sm:right-8 sm:top-8 sm:px-4 sm:text-[10px] lg:right-10 lg:top-10" aria-label="Close advertisement">Close</button>
+        <div className="relative z-10 flex min-h-0 flex-col justify-between p-5 sm:p-8 lg:p-16">
           {/* Official Princess Cruises logo supplied by the user. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={princessLogoUrl} alt="Princess Cruises" className="h-auto w-40 max-w-full object-contain object-left sm:w-48" />
-          <div className="max-w-xl py-14">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#5e7487]">Advertisement · Cruise travel</p>
-            <h2 id="princess-ad-title" className="mt-6 font-serif text-[clamp(3rem,6vw,6.5rem)] leading-[0.92] tracking-[-0.04em]">Sail Into the Extraordinary</h2>
-            <p id="princess-ad-description" className="mt-7 max-w-md font-sans text-xl font-light leading-8 text-[#41566b] sm:text-2xl">Experience glaciers, coastlines, and unforgettable moments with Princess.</p>
+          <img src={princessLogoUrl} alt="Princess Cruises" className="h-auto w-28 max-w-full object-contain object-left sm:w-36 lg:w-48" />
+          <div className="max-w-xl py-3 sm:py-6 lg:py-14">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[#5e7487] sm:text-[10px] sm:tracking-[0.28em]">Advertisement · Cruise travel</p>
+            <h2 id="princess-ad-title" className="mt-3 font-serif text-[clamp(2.25rem,10vw,3.25rem)] leading-[0.94] tracking-[-0.04em] sm:mt-4 lg:mt-6 lg:text-[clamp(3rem,6vw,6.5rem)] lg:leading-[0.92]">Sail Into the Extraordinary</h2>
+            <p id="princess-ad-description" className="mt-3 max-w-md font-sans text-base font-light leading-6 text-[#41566b] sm:mt-4 sm:text-lg sm:leading-7 lg:mt-7 lg:text-2xl lg:leading-8">Experience glaciers, coastlines, and unforgettable moments with Princess.</p>
           </div>
-          <a href={princessUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-12 w-fit items-center bg-[#102338] px-6 text-xs font-bold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#39546b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#102338]">Explore Princess</a>
+          <a href={princessUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-11 w-fit items-center bg-[#102338] px-5 text-[10px] font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-[#39546b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#102338] sm:min-h-12 sm:px-6 sm:text-xs sm:tracking-[0.16em]">Explore Princess</a>
         </div>
         <div className="relative min-h-64 overflow-hidden bg-[#31546d] lg:min-h-full">
           {/* Official Princess campaign imagery is used as the reliable creative for this placement. */}
