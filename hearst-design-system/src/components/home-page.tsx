@@ -125,6 +125,19 @@ import {
   isActiveShortEvent,
   shouldAutoplayActivatedShort,
 } from "@/lib/shorts-playback";
+import {
+  ambientReaderCenterSurfaceIndex,
+  getSettledAmbientSurfaceIndex,
+  shouldInsertAmbientInterstitial,
+} from "@/lib/ambient-reader-snap";
+import {
+  ambientReaderDiscoveryBatchSize,
+  ambientReaderDiscoveryBuffer,
+  appendAmbientReaderDiscoveryStoryIds,
+  getAmbientReaderDiscoveryScopes,
+  getAmbientReaderDiscoveryTier,
+  rankAmbientReaderDiscoveryStories,
+} from "@/lib/ambient-reader-discovery";
 import { getExactVideoAspectRatio } from "@/lib/video-feed-selection";
 import {
   verifiedAmbientCommerceCollections,
@@ -7006,11 +7019,100 @@ function AmbientCommerceModule({ config }: { config: VerifiedAmbientCommerceColl
   );
 }
 
+function AmbientReaderSwipeArticleSurface({
+  story,
+  article,
+  colorMode,
+}: {
+  story: LifestyleRiverStory;
+  article: LiveArticleData;
+  colorMode: "light" | "dark";
+}) {
+  const destinationConfigs = useDestinationConfigs();
+  const destination = getStoryDestinationMode(story.brandSlug);
+  const destinationTheme = themeOptions.find(
+    (theme) => theme.slug === destinationConfigs[destination].brandSlug
+  ) ?? themeOptions[0];
+  const contextualTheme = getSelectedBrandTheme(
+    { name: story.brand, slug: story.brandSlug },
+    destinationTheme
+  ) ?? destinationTheme;
+  const themeCssVars = {
+    ...brandToCssVars(contextualTheme, colorMode),
+    "--ambient-paper": colorMode === "dark" ? "#151719" : "#F7F7F5",
+    "--ambient-ink": colorMode === "dark" ? "#F2F2EE" : "#171717",
+    "--ambient-muted": colorMode === "dark" ? "#A7AAA8" : "#5D5D59",
+    "--ambient-rule": colorMode === "dark" ? "#333638" : "#D7D7D2",
+  } as React.CSSProperties;
+  const publishedAt = article.publishedAt ?? story.publishedAt;
+  const hasPublishedDate = Number.isFinite(Date.parse(publishedAt ?? ""));
+  const brandPrimary = contextualTheme.colors["1"] ?? "#242D39";
+  const previewBlocks = article.blocks
+    .filter((block): block is { type: "paragraph" | "heading"; text: string } =>
+      block.type === "paragraph" || block.type === "heading"
+    )
+    .slice(0, 4);
+
+  return (
+    <div
+      className="hearst-plus-theme h-full overflow-hidden bg-[var(--ambient-paper)] text-[var(--ambient-ink)]"
+      data-mode={colorMode}
+      data-testid="ambient-reader-preloaded-article"
+      style={themeCssVars}
+    >
+      <header className="relative z-10 border-b border-[var(--ambient-rule)] bg-[var(--ambient-paper)]/95 backdrop-blur-sm">
+        <div className="mx-auto flex min-h-16 max-w-[1600px] items-center gap-3 px-4 sm:px-6 lg:px-10">
+          <div className="h-6 max-w-[180px] sm:h-7">
+            <BrandLogo
+              slug={story.brandSlug}
+              color={colorMode === "dark" ? "#F2F2EE" : story.brandSlug === "motortrend" ? "#E90C17" : undefined}
+              className="flex h-full items-center [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full"
+            />
+          </div>
+          <span className="hidden truncate text-xs font-semibold text-[var(--ambient-muted)] md:inline">
+            Ambient Reader
+          </span>
+        </div>
+      </header>
+      <div className="h-[calc(100dvh-4rem)] overflow-hidden">
+        <AmbientReaderHero
+          story={story}
+          article={article}
+          destination={destination}
+          brandPrimary={brandPrimary}
+          brandForeground={getAmbientBrandForeground(brandPrimary)}
+          hasPortraitHeroImage={false}
+          ambientPublishedAt={publishedAt}
+          hasAmbientPublishedDate={hasPublishedDate}
+          onHeroImageRatio={() => undefined}
+          onOpenImage={() => undefined}
+        />
+        <section className="mx-auto max-w-[68ch] space-y-5 px-5 py-10 font-brand-secondary text-lg leading-8 sm:px-8">
+          {previewBlocks.map((block, index) => block.type === "heading" ? (
+            <h2 key={index} className="font-headline text-3xl font-[var(--font-headline-weight)] leading-tight">
+              {block.text}
+            </h2>
+          ) : (
+            <p key={index}>{block.text}</p>
+          ))}
+        </section>
+      </div>
+    </div>
+  );
+}
+
 function AmbientArticleReader({
   story,
   article,
   previousStory,
   nextStory,
+  previousArticle,
+  nextArticle,
+  previousInterstitialAdvertiser,
+  nextInterstitialAdvertiser,
+  discoveryStatus,
+  discoveryScope,
+  discoveryCount,
   relatedStories,
   onClose,
   onNavigateStory,
@@ -7023,6 +7125,13 @@ function AmbientArticleReader({
   article: LiveArticleData;
   previousStory?: LifestyleRiverStory;
   nextStory?: LifestyleRiverStory;
+  previousArticle?: LiveArticleData;
+  nextArticle?: LiveArticleData;
+  previousInterstitialAdvertiser?: AmbientInterstitialAdvertiser | null;
+  nextInterstitialAdvertiser?: AmbientInterstitialAdvertiser | null;
+  discoveryStatus: "idle" | "loading" | "error" | "complete";
+  discoveryScope: string;
+  discoveryCount: number;
   relatedStories: LifestyleRiverStory[];
   onClose: () => void;
   onNavigateStory: (storyId: string) => void;
@@ -7033,12 +7142,15 @@ function AmbientArticleReader({
 }) {
   const destinationConfigs = useDestinationConfigs();
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
+  const trackRef = React.useRef<HTMLDivElement | null>(null);
   const dialogRef = React.useRef<HTMLDivElement | null>(null);
-  const touchStartRef = React.useRef<{ x: number; y: number; time: number } | null>(null);
+  const trackFrameRef = React.useRef<number | null>(null);
+  const trackSettleTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const trackNavigationPendingRef = React.useRef(false);
   const [colorMode, setColorMode] = React.useState<"light" | "dark">("light");
   const [density, setDensity] = React.useState<AmbientReaderDensity>("airy");
   const [progress, setProgress] = React.useState(0);
-  const [heroImageRatio, setHeroImageRatio] = React.useState<number | null>(null);
+  const [heroImageRatios, setHeroImageRatios] = React.useState<Record<string, number>>({});
   useModalIsolation(true, dialogRef);
   const destination = getStoryDestinationMode(story.brandSlug);
   const destinationTheme = themeOptions.find(
@@ -7060,6 +7172,7 @@ function AmbientArticleReader({
   const hasAmbientPublishedDate = Number.isFinite(Date.parse(ambientPublishedAt ?? ""));
   const brandPrimary = contextualTheme.colors["1"] ?? "#242D39";
   const brandForeground = getAmbientBrandForeground(brandPrimary);
+  const heroImageRatio = heroImageRatios[story.id] ?? null;
   const hasPortraitHeroImage = heroImageRatio !== null && heroImageRatio < 0.9;
   const firstParagraphIndex = article.blocks.findIndex((block) => block.type === "paragraph");
   const commerceConfig = getAmbientCommerceConfig(story);
@@ -7078,8 +7191,92 @@ function AmbientArticleReader({
   }, []);
 
   React.useEffect(() => {
+    scrollRef.current?.scrollTo({ top: 0 });
     updateProgress();
-  }, [density, updateProgress]);
+  }, [density, showInterstitialAd, story.id, updateProgress]);
+
+  const scrollToReaderSurface = React.useCallback((direction: -1 | 1) => {
+    const track = trackRef.current;
+    const targetStory = direction < 0 ? previousStory : nextStory;
+    const canRevealCurrentArticle = showInterstitialAd && direction > 0;
+    if (!track || (!targetStory && !canRevealCurrentArticle)) return;
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    track.scrollTo({
+      left: (ambientReaderCenterSurfaceIndex + direction) * track.clientWidth,
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+    });
+  }, [nextStory, previousStory, showInterstitialAd]);
+
+  const settleReaderSurface = React.useCallback(() => {
+    const track = trackRef.current;
+    if (!track || trackNavigationPendingRef.current) return;
+
+    const settledIndex = getSettledAmbientSurfaceIndex(track.scrollLeft, track.clientWidth);
+    if (settledIndex === ambientReaderCenterSurfaceIndex) return;
+
+    const direction = settledIndex < ambientReaderCenterSurfaceIndex ? -1 : 1;
+    if (showInterstitialAd) {
+      trackNavigationPendingRef.current = true;
+      onDismissInterstitialAd();
+      if (direction < 0 && previousStory) onNavigateStory(previousStory.id);
+      return;
+    }
+
+    const targetStory = direction < 0 ? previousStory : nextStory;
+    if (!targetStory) {
+      track.scrollTo({
+        left: ambientReaderCenterSurfaceIndex * track.clientWidth,
+        behavior: "smooth",
+      });
+      return;
+    }
+
+    trackNavigationPendingRef.current = true;
+    onNavigateStory(targetStory.id);
+  }, [
+    nextStory,
+    onDismissInterstitialAd,
+    onNavigateStory,
+    previousStory,
+    showInterstitialAd,
+  ]);
+
+  const handleTrackScroll = React.useCallback(() => {
+    if (trackFrameRef.current !== null) window.cancelAnimationFrame(trackFrameRef.current);
+    trackFrameRef.current = window.requestAnimationFrame(() => {
+      trackFrameRef.current = null;
+      if (trackSettleTimerRef.current) clearTimeout(trackSettleTimerRef.current);
+      trackSettleTimerRef.current = setTimeout(settleReaderSurface, 140);
+    });
+  }, [settleReaderSurface]);
+
+  React.useLayoutEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    track.scrollTo({
+      left: ambientReaderCenterSurfaceIndex * track.clientWidth,
+      behavior: "auto",
+    });
+    trackNavigationPendingRef.current = false;
+  }, [nextStory?.id, previousStory?.id, showInterstitialAd, story.id]);
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      const track = trackRef.current;
+      if (!track) return;
+      track.scrollTo({
+        left: ambientReaderCenterSurfaceIndex * track.clientWidth,
+        behavior: "auto",
+      });
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      if (trackFrameRef.current !== null) window.cancelAnimationFrame(trackFrameRef.current);
+      if (trackSettleTimerRef.current) clearTimeout(trackSettleTimerRef.current);
+    };
+  }, []);
 
   const handleDialogKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === "Escape") {
@@ -7090,11 +7287,9 @@ function AmbientArticleReader({
       return;
     }
     if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
-      const targetStory = event.key === "ArrowLeft" ? previousStory : nextStory;
-      if (!targetStory) return;
       event.preventDefault();
       event.stopPropagation();
-      onNavigateStory(targetStory.id);
+      scrollToReaderSurface(event.key === "ArrowLeft" ? -1 : 1);
       return;
     }
     if (event.key !== "Tab") return;
@@ -7116,41 +7311,22 @@ function AmbientArticleReader({
     }
   };
 
-  const handleReaderTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
-    if (event.touches.length !== 1) {
-      touchStartRef.current = null;
-      return;
-    }
-
-    const touch = event.touches[0];
-    touchStartRef.current = {
-      x: touch.clientX,
-      y: touch.clientY,
-      time: Date.now(),
-    };
-  };
-
-  const handleReaderTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
-    const start = touchStartRef.current;
-    touchStartRef.current = null;
-    if (!start || event.changedTouches.length !== 1) return;
-
-    const touch = event.changedTouches[0];
-    const deltaX = touch.clientX - start.x;
-    const deltaY = touch.clientY - start.y;
-    const absX = Math.abs(deltaX);
-    const absY = Math.abs(deltaY);
-    const elapsed = Date.now() - start.time;
-
-    if (elapsed > 900 || absX < 70 || absX < absY * 1.35) return;
-
-    const targetStory = deltaX < 0 ? nextStory : previousStory;
-    if (!targetStory) return;
-
-    event.preventDefault();
-    event.stopPropagation();
-    onNavigateStory(targetStory.id);
-  };
+  const previousSurface = showInterstitialAd
+    ? previousStory && previousArticle
+      ? <AmbientReaderSwipeArticleSurface story={previousStory} article={previousArticle} colorMode={colorMode} />
+      : null
+    : previousInterstitialAdvertiser
+      ? <AmbientReaderInterstitialAd advertiser={previousInterstitialAdvertiser} onDismiss={() => undefined} />
+      : previousStory && previousArticle
+        ? <AmbientReaderSwipeArticleSurface story={previousStory} article={previousArticle} colorMode={colorMode} />
+        : null;
+  const nextSurface = showInterstitialAd
+    ? <AmbientReaderSwipeArticleSurface story={story} article={article} colorMode={colorMode} />
+    : nextInterstitialAdvertiser
+      ? <AmbientReaderInterstitialAd advertiser={nextInterstitialAdvertiser} onDismiss={() => undefined} />
+      : nextStory && nextArticle
+        ? <AmbientReaderSwipeArticleSurface story={nextStory} article={nextArticle} colorMode={colorMode} />
+        : null;
 
   return createPortal(
     <div
@@ -7163,13 +7339,44 @@ function AmbientArticleReader({
       aria-label={`Ambient Reader: ${story.title}`}
       onKeyDown={handleDialogKeyDown}
     >
+      <p className="sr-only">
+        Swipe horizontally or use the previous and next controls to move between articles and advertisements.
+      </p>
+      <p className="sr-only" role="status" aria-live="polite">
+        {discoveryStatus === "loading" ? "Loading more relevant articles." : ""}
+      </p>
       <div
-        ref={scrollRef}
-        className="h-[100dvh] overflow-y-auto overscroll-contain bg-[var(--ambient-paper)]"
-        onScroll={updateProgress}
-        onTouchStart={handleReaderTouchStart}
-        onTouchEnd={handleReaderTouchEnd}
+        ref={trackRef}
+        className="flex h-[100dvh] w-full snap-x snap-mandatory overflow-x-auto overflow-y-hidden overscroll-x-contain"
+        data-testid="ambient-reader-scroll-snap-track"
+        data-ambient-discovery-status={discoveryStatus}
+        data-ambient-discovery-scope={discoveryScope}
+        data-ambient-discovery-count={discoveryCount}
+        data-ambient-current-brand={story.brandSlug}
+        data-ambient-current-section={destination}
+        data-ambient-current-category={story.topic}
+        onScroll={handleTrackScroll}
       >
+        <section
+          className="h-[100dvh] w-full shrink-0 snap-center snap-always overflow-hidden bg-[var(--ambient-paper)]"
+          data-ambient-reader-surface="previous"
+          aria-hidden="true"
+          inert
+        >
+          {previousSurface}
+        </section>
+        <section
+          className="h-[100dvh] w-full shrink-0 snap-center snap-always overflow-hidden bg-[var(--ambient-paper)]"
+          data-ambient-reader-surface="current"
+        >
+          {showInterstitialAd ? (
+            <AmbientReaderInterstitialAd advertiser={interstitialAdvertiser} onDismiss={onDismissInterstitialAd} />
+          ) : (
+          <div
+            ref={scrollRef}
+            className="h-[100dvh] overflow-x-clip overflow-y-auto overscroll-y-contain bg-[var(--ambient-paper)]"
+            onScroll={updateProgress}
+          >
         <header className="sticky top-0 z-50 border-b border-[var(--ambient-rule)] bg-[var(--ambient-paper)]/95 backdrop-blur-sm">
           <div className="absolute inset-x-0 bottom-0 h-0.5 bg-[var(--ambient-rule)]" aria-hidden>
             <div className="h-full bg-primary transition-[width] duration-150 motion-reduce:transition-none" style={{ width: `${progress}%` }} />
@@ -7189,7 +7396,7 @@ function AmbientArticleReader({
             </div>
             <button
               type="button"
-              onClick={() => previousStory && onNavigateStory(previousStory.id)}
+              onClick={() => scrollToReaderSurface(-1)}
               disabled={!previousStory}
               className="inline-flex h-11 items-center gap-1.5 px-2 text-xs font-semibold text-[var(--ambient-muted)] transition-colors hover:text-[var(--ambient-ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 disabled:cursor-not-allowed disabled:opacity-35"
               aria-label={previousStory ? `Previous article: ${previousStory.title}` : "Previous article unavailable"}
@@ -7200,7 +7407,7 @@ function AmbientArticleReader({
             </button>
             <button
               type="button"
-              onClick={() => nextStory && onNavigateStory(nextStory.id)}
+              onClick={() => scrollToReaderSurface(1)}
               disabled={!nextStory}
               className="inline-flex h-11 items-center gap-1.5 px-2 text-xs font-semibold text-[var(--ambient-muted)] transition-colors hover:text-[var(--ambient-ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 disabled:cursor-not-allowed disabled:opacity-35"
               aria-label={nextStory ? `Next article: ${nextStory.title}` : "Next article unavailable"}
@@ -7259,7 +7466,11 @@ function AmbientArticleReader({
             hasPortraitHeroImage={hasPortraitHeroImage}
             ambientPublishedAt={ambientPublishedAt}
             hasAmbientPublishedDate={hasAmbientPublishedDate}
-            onHeroImageRatio={setHeroImageRatio}
+            onHeroImageRatio={(ratio) => setHeroImageRatios((current) =>
+              current[story.id] === ratio
+                ? current
+                : { ...current, [story.id]: ratio }
+            )}
             onOpenImage={onOpenImage}
           />
 
@@ -7369,10 +7580,18 @@ function AmbientArticleReader({
             </article>
           </section>
         </main>
+          </div>
+          )}
+        </section>
+        <section
+          className="h-[100dvh] w-full shrink-0 snap-center snap-always overflow-hidden bg-[var(--ambient-paper)]"
+          data-ambient-reader-surface="next"
+          aria-hidden="true"
+          inert
+        >
+          {nextSurface}
+        </section>
       </div>
-      {showInterstitialAd ? (
-        <AmbientReaderInterstitialAd advertiser={interstitialAdvertiser} onDismiss={onDismissInterstitialAd} />
-      ) : null}
     </div>,
     document.body
   );
@@ -7383,6 +7602,18 @@ const vanCleefLogoUrl = "https://upload.wikimedia.org/wikipedia/commons/0/06/Van
 const vanCleefCampaignImageUrl = "https://www.vancleefarpels.com/content/dam/vancleefarpels/collections/high-jewelry/classic-high-jewelry/univers-corpo-2024/van-cleef-arpels-classic-high-jewelry-1-snowflake-cover-1328x747.jpg";
 
 type AmbientInterstitialAdvertiser = "van-cleef" | "blancpain" | "lexus" | "marriott" | "porsche" | "princess";
+
+function getAmbientInterstitialAdvertiser(
+  story: LifestyleRiverStory | undefined,
+  visitNumber: number,
+): AmbientInterstitialAdvertiser {
+  const destination = story ? getStoryDestinationMode(story.brandSlug) : "lifestyle";
+  if (destination === "ew") return "princess";
+  if (destination === "autos") return visitNumber % 6 === 0 ? "lexus" : "porsche";
+  if (story?.brandSlug === "harpers-bazaar") return "marriott";
+  if (story?.brandSlug === "esquire") return "lexus";
+  return visitNumber % 6 === 0 ? "blancpain" : "van-cleef";
+}
 
 function AmbientReaderInterstitialAd({ advertiser, onDismiss }: { advertiser: AmbientInterstitialAdvertiser; onDismiss: () => void }) {
   if (advertiser === "blancpain") {
@@ -7402,7 +7633,7 @@ function AmbientReaderInterstitialAd({ advertiser, onDismiss }: { advertiser: Am
   }
 
   return (
-    <div className="fixed inset-0 z-[260] bg-[#101b2e]" role="dialog" aria-modal="true" aria-labelledby="ambient-ad-title" aria-describedby="ambient-ad-description">
+    <div className="relative h-full w-full bg-[#101b2e]" role="region" aria-roledescription="advertisement" aria-labelledby="ambient-ad-title" aria-describedby="ambient-ad-description">
       <div className="relative grid h-full w-full bg-[#101b2e] text-[#f4f5f7] lg:grid-cols-[0.82fr_1.18fr]">
         <button type="button" onClick={onDismiss} autoFocus className="absolute right-6 top-6 z-30 inline-flex h-11 items-center border border-[#f4f5f7]/55 bg-[#101b2e]/40 px-4 text-[10px] font-semibold uppercase tracking-[0.2em] backdrop-blur-sm transition-colors hover:bg-[#f4f5f7] hover:text-[#101b2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f4f5f7] sm:right-10 sm:top-10" aria-label="Close advertisement">Close</button>
         <div className="relative z-10 flex flex-col justify-between p-7 sm:p-12 lg:p-16">
@@ -7434,7 +7665,7 @@ const blancpainHeroVideoUrl = "https://assets.blancpain.com/asset/6e1cc3cd-1b01-
 
 function BlancpainInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
   return (
-    <div className="fixed inset-0 z-[260] bg-[#111]" role="dialog" aria-modal="true" aria-labelledby="blancpain-ad-title" aria-describedby="blancpain-ad-description">
+    <div className="relative h-full w-full bg-[#111]" role="region" aria-roledescription="advertisement" aria-labelledby="blancpain-ad-title" aria-describedby="blancpain-ad-description">
       <div className="relative grid h-full w-full bg-[#f4f2ed] text-[#171717] lg:grid-cols-[0.82fr_1.18fr]">
         <button type="button" onClick={onDismiss} autoFocus className="absolute right-6 top-6 z-30 inline-flex h-11 items-center border border-[#171717]/45 bg-[#f4f2ed]/70 px-4 text-[10px] font-semibold uppercase tracking-[0.2em] backdrop-blur-sm transition-colors hover:bg-[#171717] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#171717] sm:right-10 sm:top-10" aria-label="Close advertisement">Close</button>
         <div className="relative z-10 flex flex-col justify-between p-7 sm:p-12 lg:p-16">
@@ -7464,7 +7695,7 @@ const lexusRxHighResolutionImageUrl = "https://www.the360mag.com/wp-content/uplo
 
 function LexusInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
   return (
-    <div className="fixed inset-0 z-[260] bg-[#111]" role="dialog" aria-modal="true" aria-labelledby="lexus-ad-title" aria-describedby="lexus-ad-description">
+    <div className="relative h-full w-full bg-[#111]" role="region" aria-roledescription="advertisement" aria-labelledby="lexus-ad-title" aria-describedby="lexus-ad-description">
       <div className="relative grid h-full w-full bg-[#e9e9e7] text-[#161616] lg:grid-cols-[0.82fr_1.18fr]">
         <button type="button" onClick={onDismiss} autoFocus className="absolute right-6 top-6 z-30 inline-flex h-11 items-center border border-[#161616]/45 bg-[#e9e9e7]/75 px-4 text-[10px] font-semibold uppercase tracking-[0.2em] backdrop-blur-sm transition-colors hover:bg-[#161616] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#161616] sm:right-10 sm:top-10" aria-label="Close advertisement">Close</button>
         <div className="relative z-10 flex flex-col justify-between p-7 sm:p-12 lg:p-16">
@@ -7492,14 +7723,20 @@ function LexusInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
 
 const marriottLuxuryUrl = "https://www.marriott.com/luxury";
 const marriottLuxuryImageUrl = "https://cache.marriott.com/is/image/marriotts7prod/rz-miakb-lobby-ocean-views-39643?wid=1800";
+const marriottLogoUrl = "/logos/marriott-international.svg";
 
 function MarriottInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
   return (
-    <div className="fixed inset-0 z-[260] bg-[#111]" role="dialog" aria-modal="true" aria-labelledby="marriott-ad-title" aria-describedby="marriott-ad-description">
+    <div className="relative h-full w-full bg-[#111]" role="region" aria-roledescription="advertisement" aria-labelledby="marriott-ad-title" aria-describedby="marriott-ad-description">
       <div className="relative grid h-full w-full bg-[#f1eee8] text-[#20252a] lg:grid-cols-[0.82fr_1.18fr]">
         <button type="button" onClick={onDismiss} autoFocus className="absolute right-6 top-6 z-30 inline-flex h-11 items-center border border-[#20252a]/45 bg-[#f1eee8]/75 px-4 text-[10px] font-semibold uppercase tracking-[0.2em] backdrop-blur-sm transition-colors hover:bg-[#20252a] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#20252a] sm:right-10 sm:top-10" aria-label="Close advertisement">Close</button>
         <div className="relative z-10 flex flex-col justify-between p-7 sm:p-12 lg:p-16">
-          <div className="font-sans text-xl font-semibold uppercase tracking-[0.28em]" aria-label="Marriott Luxury Group">Marriott <span className="font-serif normal-case tracking-normal">Luxury</span></div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={marriottLogoUrl}
+            alt="Marriott International"
+            className="h-auto w-[220px] max-w-[60vw] sm:w-[280px]"
+          />
           <div className="max-w-xl py-14">
             <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#667078]">Advertisement · Luxury travel</p>
             <h2 id="marriott-ad-title" className="mt-6 font-serif text-[clamp(3rem,6vw,6.5rem)] leading-[0.92] tracking-[-0.04em]">An Invitation to the Extraordinary</h2>
@@ -7526,7 +7763,7 @@ const porscheHeroVideoUrl = "https://newstv.porsche.com/porschevideos/newstv.por
 
 function PorscheInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
   return (
-    <div className="fixed inset-0 z-[260] bg-[#0b0b0b]" role="dialog" aria-modal="true" aria-labelledby="porsche-ad-title" aria-describedby="porsche-ad-description">
+    <div className="relative h-full w-full bg-[#0b0b0b]" role="region" aria-roledescription="advertisement" aria-labelledby="porsche-ad-title" aria-describedby="porsche-ad-description">
       <div className="relative grid h-full w-full bg-[#f4f3f0] text-[#171717] lg:grid-cols-[0.82fr_1.18fr]">
         <button type="button" onClick={onDismiss} autoFocus className="absolute right-6 top-6 z-30 inline-flex h-11 items-center border border-[#171717]/45 bg-[#f4f3f0]/75 px-4 text-[10px] font-semibold uppercase tracking-[0.2em] backdrop-blur-sm transition-colors hover:bg-[#171717] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#171717] sm:right-10 sm:top-10" aria-label="Close advertisement">Close</button>
         <div className="relative z-10 flex flex-col justify-between p-7 sm:p-12 lg:p-16">
@@ -7558,7 +7795,7 @@ const princessHeroImageUrl = "https://www.princess.com/content/dam/princess/prom
 
 function PrincessInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
   return (
-    <div className="fixed inset-0 z-[260] bg-[#101a2a]" role="dialog" aria-modal="true" aria-labelledby="princess-ad-title" aria-describedby="princess-ad-description">
+    <div className="relative h-full w-full bg-[#101a2a]" role="region" aria-roledescription="advertisement" aria-labelledby="princess-ad-title" aria-describedby="princess-ad-description">
       <div className="relative grid h-full w-full bg-[#eaf1f3] text-[#102338] lg:grid-cols-[0.82fr_1.18fr]">
         <button type="button" onClick={onDismiss} autoFocus className="absolute right-6 top-6 z-30 inline-flex h-11 items-center border border-[#102338]/45 bg-[#eaf1f3]/75 px-4 text-[10px] font-semibold uppercase tracking-[0.2em] backdrop-blur-sm transition-colors hover:bg-[#102338] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#102338] sm:right-10 sm:top-10" aria-label="Close advertisement">Close</button>
         <div className="relative z-10 flex flex-col justify-between p-7 sm:p-12 lg:p-16">
@@ -8194,7 +8431,10 @@ function LifestyleStoryReaderModal({
   const [readerFetchedStories, setReaderFetchedStories] = React.useState<LifestyleRiverStory[]>([]);
   const [loadingReaderBrandSlug, setLoadingReaderBrandSlug] = React.useState<string | null>(null);
   const activeReaderBrandSlug = readerBrandOverrideSlug ?? readerOriginBrandSlug;
-  const readerAvailableStoryPool = mergeUniqueStories(stories, availableStories, readerFetchedStories);
+  const readerAvailableStoryPool = React.useMemo(
+    () => mergeUniqueStories(stories, availableStories, readerFetchedStories),
+    [availableStories, readerFetchedStories, stories]
+  );
   const readerAvailableStoryPoolRef = React.useRef(readerAvailableStoryPool);
   React.useEffect(() => {
     readerAvailableStoryPoolRef.current = readerAvailableStoryPool;
@@ -8229,8 +8469,26 @@ function LifestyleStoryReaderModal({
   );
   const [interstitialAdvertiser, setInterstitialAdvertiser] = React.useState<AmbientInterstitialAdvertiser>("van-cleef");
   const [showAmbientInterstitialAd, setShowAmbientInterstitialAd] = React.useState(false);
-  const ambientOpenedStoryIdsRef = React.useRef<Set<string>>(new Set());
-  const ambientArticleVisitCountRef = React.useRef(0);
+  const [ambientNavigationState, setAmbientNavigationState] = React.useState({
+    openedStoryIds: new Set<string>(),
+    articleVisitCount: 0,
+  });
+  const [ambientDiscoveryAnchorId, setAmbientDiscoveryAnchorId] = React.useState<string | null>(null);
+  const [ambientDiscoveryStoryIds, setAmbientDiscoveryStoryIds] = React.useState<string[]>([]);
+  const ambientDiscoveryStoryIdsRef = React.useRef<string[]>([]);
+  const [ambientDiscoveryStatus, setAmbientDiscoveryStatus] = React.useState<"idle" | "loading" | "error" | "complete">("idle");
+  const [ambientDiscoveryScopeKey, setAmbientDiscoveryScopeKey] = React.useState("brand-category");
+  const ambientDiscoveryCursorRef = React.useRef<{
+    anchorId: string | null;
+    ringIndex: number;
+    offsets: Record<string, number>;
+  }>({
+    anchorId: null,
+    ringIndex: 0,
+    offsets: {},
+  });
+  const ambientDiscoveryLoadingRef = React.useRef(false);
+  const ambientDiscoveryControllerRef = React.useRef<AbortController | null>(null);
   const fullscreenGalleryRef = React.useRef(fullscreenGallery);
   const activeReaderRouteStoryIdRef = React.useRef<string | null>(openStoryId);
   const resolvedFullscreenGallery = React.useMemo(() => {
@@ -8260,18 +8518,12 @@ function LifestyleStoryReaderModal({
     .join("|");
   const visibleReaderStories = storyQueue.slice(0, visibleReaderCount);
   const visibleReaderStoryIds = visibleReaderStories.map((story) => story.id).join("|");
-  const ambientReaderIndex = ambientReaderStoryId
-    ? storyQueue.findIndex((story) => story.id === ambientReaderStoryId)
-    : -1;
-  const ambientCurrentStory = ambientReaderIndex >= 0 ? storyQueue[ambientReaderIndex] : undefined;
-  const ambientOrderedStories = ambientCurrentStory
-    ? storyQueue
-        .filter((story) =>
-          Boolean(story.sourceUrl)
-          && !story.videoUrl
-          && getStoryDestinationMode(story.brandSlug) === getStoryDestinationMode(ambientCurrentStory.brandSlug)
-        )
-    : [];
+  const ambientCurrentStory = ambientReaderStoryId
+    ? readerAvailableStoryPool.find((story) => story.id === ambientReaderStoryId)
+    : undefined;
+  const ambientOrderedStories = ambientDiscoveryStoryIds
+    .map((storyId) => readerAvailableStoryPool.find((story) => story.id === storyId))
+    .filter((story): story is LifestyleRiverStory => Boolean(story?.sourceUrl) && !story?.videoUrl);
   const ambientOrderedIndex = ambientReaderStoryId
     ? ambientOrderedStories.findIndex((story) => story.id === ambientReaderStoryId)
     : -1;
@@ -8283,6 +8535,28 @@ function LifestyleStoryReaderModal({
     : [];
   const ambientPreviousStory = ambientPreviousCandidateStories.find((story) => isCompleteAmbientArticle(liveArticles[story.id]));
   const ambientNextStory = ambientNextCandidateStories.find((story) => isCompleteAmbientArticle(liveArticles[story.id]));
+  const ambientPreviousArticleState = ambientPreviousStory
+    ? liveArticles[ambientPreviousStory.id]
+    : undefined;
+  const ambientNextArticleState = ambientNextStory
+    ? liveArticles[ambientNextStory.id]
+    : undefined;
+  const ambientPreviousArticle = ambientPreviousArticleState?.status === "ready"
+    ? ambientPreviousArticleState.data
+    : undefined;
+  const ambientNextArticle = ambientNextArticleState?.status === "ready"
+    ? ambientNextArticleState.data
+    : undefined;
+  const getPredictedAmbientInterstitial = (candidate: LifestyleRiverStory | undefined) => {
+    if (!candidate) return null;
+    const { articleVisitCount, openedStoryIds } = ambientNavigationState;
+    const alreadyOpened = openedStoryIds.has(candidate.id);
+    return shouldInsertAmbientInterstitial({ alreadyOpened, articleVisitCount })
+      ? getAmbientInterstitialAdvertiser(candidate, articleVisitCount + 1)
+      : null;
+  };
+  const ambientPreviousInterstitialAdvertiser = getPredictedAmbientInterstitial(ambientPreviousStory);
+  const ambientNextInterstitialAdvertiser = getPredictedAmbientInterstitial(ambientNextStory);
   const ambientRelatedCandidateStories = ambientCurrentStory && ambientOrderedIndex >= 0
     ? ambientOrderedStories
         .map((story, index) => ({ story, index }))
@@ -8393,51 +8667,230 @@ function LifestyleStoryReaderModal({
     fullscreenGalleryRef.current = resolvedFullscreenGallery;
   }, [resolvedFullscreenGallery]);
 
+  const resetAmbientDiscovery = React.useCallback(() => {
+    ambientDiscoveryControllerRef.current?.abort();
+    ambientDiscoveryControllerRef.current = null;
+    ambientDiscoveryLoadingRef.current = false;
+    ambientDiscoveryCursorRef.current = {
+      anchorId: null,
+      ringIndex: 0,
+      offsets: {},
+    };
+    setAmbientDiscoveryAnchorId(null);
+    setAmbientDiscoveryStoryIds([]);
+    ambientDiscoveryStoryIdsRef.current = [];
+    setAmbientDiscoveryScopeKey("brand-category");
+    setAmbientDiscoveryStatus("idle");
+  }, []);
+
+  React.useEffect(() => () => {
+    ambientDiscoveryControllerRef.current?.abort();
+  }, []);
+
   const selectReaderStory = React.useCallback((storyId: string) => {
     setVisibleReaderCount(1);
     setFullscreenGallery(null);
     setAmbientReaderStoryId(null);
+    resetAmbientDiscovery();
     activeReaderRouteStoryIdRef.current = storyId;
     scrollRef.current?.scrollTo({ top: 0 });
     onSwitchReaderStory(storyId);
   }, [
     onSwitchReaderStory,
+    resetAmbientDiscovery,
     setAmbientReaderStoryId,
     setFullscreenGallery,
     setVisibleReaderCount,
   ]);
 
-  const openAmbientReader = React.useCallback((storyId: string) => {
-    setAmbientReaderStoryId(storyId);
-    if (!ambientOpenedStoryIdsRef.current.has(storyId)) {
-      ambientOpenedStoryIdsRef.current.add(storyId);
-      ambientArticleVisitCountRef.current += 1;
-      const shouldShowAd = ambientArticleVisitCountRef.current % 3 === 0;
-      if (shouldShowAd) {
-        const openedStory = readerAvailableStoryPoolRef.current.find((story) => story.id === storyId);
-        const isEsquireReader = openedStory?.brandSlug === "esquire";
-        const isHarpersBazaarReader = openedStory?.brandSlug === "harpers-bazaar";
-        const isAutosReader = openedStory ? getStoryDestinationMode(openedStory.brandSlug) === "autos" : false;
-        const isEnthusiastWellnessReader = openedStory ? getStoryDestinationMode(openedStory.brandSlug) === "ew" : false;
-        setInterstitialAdvertiser(
-          isEnthusiastWellnessReader
-            ? "princess"
-            : isAutosReader
-              ? ambientArticleVisitCountRef.current % 6 === 0
-                ? "lexus"
-                : "porsche"
-            : isHarpersBazaarReader
-              ? "marriott"
-              : isEsquireReader
-                ? "lexus"
-            : ambientArticleVisitCountRef.current % 6 === 0
-              ? "blancpain"
-              : "van-cleef"
+  const loadAmbientDiscoveryBatch = React.useCallback(async () => {
+    if (
+      !ambientDiscoveryAnchorId
+      || ambientDiscoveryLoadingRef.current
+      || ambientDiscoveryStatus === "complete"
+    ) return;
+
+    const anchor = readerAvailableStoryPoolRef.current.find(
+      (story) => story.id === ambientDiscoveryAnchorId
+    );
+    if (!anchor) return;
+
+    const scopes = getAmbientReaderDiscoveryScopes(anchor);
+    const cursor = ambientDiscoveryCursorRef.current;
+    if (cursor.anchorId !== anchor.id) return;
+
+    const currentIds = ambientDiscoveryStoryIdsRef.current;
+    const controller = new AbortController();
+    ambientDiscoveryControllerRef.current?.abort();
+    ambientDiscoveryControllerRef.current = controller;
+    ambientDiscoveryLoadingRef.current = true;
+    setAmbientDiscoveryStatus("loading");
+
+    const queuedStories = currentIds
+      .map((storyId) =>
+        readerAvailableStoryPoolRef.current.find((story) => story.id === storyId)
+      )
+      .filter((story): story is LifestyleRiverStory => Boolean(story));
+    const seenIdentities = new Set(queuedStories.map(getStoryIdentity));
+    const discoveredStories: LifestyleRiverStory[] = [];
+    let requestCount = 0;
+
+    try {
+      while (
+        discoveredStories.length < ambientReaderDiscoveryBatchSize
+        && cursor.ringIndex < scopes.length
+        && requestCount < 10
+      ) {
+        const scope = scopes[cursor.ringIndex];
+        setAmbientDiscoveryScopeKey(scope.key);
+
+        rankAmbientReaderDiscoveryStories(
+          anchor,
+          readerAvailableStoryPoolRef.current,
+        )
+          .filter((story) =>
+            getAmbientReaderDiscoveryTier(anchor, story) === cursor.ringIndex
+          )
+          .forEach((story) => {
+            if (discoveredStories.length >= ambientReaderDiscoveryBatchSize) return;
+            const identity = getStoryIdentity(story);
+            if (seenIdentities.has(identity)) return;
+            seenIdentities.add(identity);
+            discoveredStories.push(story);
+          });
+        if (discoveredStories.length >= ambientReaderDiscoveryBatchSize) break;
+
+        const requestedOffset = cursor.offsets[scope.key] ?? 0;
+        const searchParams = new URLSearchParams({
+          destination: scope.destination,
+          offset: String(requestedOffset),
+          limit: String(ambientReaderDiscoveryBatchSize),
+        });
+        if (scope.brandSlug) searchParams.set("brandSlug", scope.brandSlug);
+        if (scope.category) searchParams.set("category", scope.category);
+
+        requestCount += 1;
+        const response = await fetch(`/api/story-feed/?${searchParams.toString()}`, {
+          signal: controller.signal,
+        });
+        if (!response.ok) throw new Error(`Ambient discovery returned ${response.status}`);
+
+        const page = await response.json() as ProgressiveFeedPage;
+        if (page.hasMore && page.nextOffset <= requestedOffset) {
+          throw new Error("Ambient discovery pagination did not advance");
+        }
+
+        cursor.offsets[scope.key] = page.nextOffset;
+        rankAmbientReaderDiscoveryStories(anchor, page.stories).forEach((story) => {
+          if (discoveredStories.length >= ambientReaderDiscoveryBatchSize) return;
+          const identity = getStoryIdentity(story);
+          if (seenIdentities.has(identity)) return;
+          seenIdentities.add(identity);
+          discoveredStories.push(story);
+        });
+
+        if (!page.hasMore) {
+          cursor.ringIndex += 1;
+        }
+      }
+
+      if (ambientDiscoveryCursorRef.current.anchorId !== anchor.id) return;
+      if (discoveredStories.length > 0) {
+        setReaderFetchedStories((currentStories) =>
+          mergeUniqueStories(currentStories, discoveredStories)
         );
+        const nextIds = appendAmbientReaderDiscoveryStoryIds(
+          ambientDiscoveryStoryIdsRef.current,
+          anchor,
+          discoveredStories,
+        );
+        ambientDiscoveryStoryIdsRef.current = nextIds;
+        setAmbientDiscoveryStoryIds(nextIds);
+      }
+
+      const isComplete = cursor.ringIndex >= scopes.length;
+      setAmbientDiscoveryScopeKey(
+        scopes[Math.min(cursor.ringIndex, scopes.length - 1)]?.key ?? "all-sections"
+      );
+      setAmbientDiscoveryStatus(isComplete ? "complete" : "idle");
+    } catch {
+      if (!controller.signal.aborted) setAmbientDiscoveryStatus("error");
+    } finally {
+      if (ambientDiscoveryControllerRef.current === controller) {
+        ambientDiscoveryControllerRef.current = null;
+      }
+      ambientDiscoveryLoadingRef.current = false;
+    }
+  }, [ambientDiscoveryAnchorId, ambientDiscoveryStatus]);
+
+  React.useEffect(() => {
+    if (
+      !ambientReaderStoryId
+      || ambientDiscoveryStatus !== "idle"
+      || ambientNextCandidateStories.length > ambientReaderDiscoveryBuffer
+    ) return;
+
+    void loadAmbientDiscoveryBatch();
+  }, [
+    ambientDiscoveryStatus,
+    ambientNextCandidateStories.length,
+    ambientReaderStoryId,
+    loadAmbientDiscoveryBatch,
+  ]);
+
+  const openAmbientReader = React.useCallback((storyId: string) => {
+    if (!ambientDiscoveryAnchorId) {
+      const anchor = readerAvailableStoryPoolRef.current.find((story) => story.id === storyId);
+      ambientDiscoveryControllerRef.current?.abort();
+      ambientDiscoveryCursorRef.current = {
+        anchorId: storyId,
+        ringIndex: 0,
+        offsets: {},
+      };
+      setAmbientDiscoveryAnchorId(storyId);
+      const initialIds = anchor
+        ? [
+            storyId,
+            ...rankAmbientReaderDiscoveryStories(
+              anchor,
+              readerAvailableStoryPoolRef.current,
+            )
+              .filter((story) =>
+                story.id !== storyId
+                && getAmbientReaderDiscoveryTier(anchor, story) === 0
+              )
+              .slice(0, ambientReaderDiscoveryBatchSize - 1)
+              .map((story) => story.id),
+          ]
+        : [storyId];
+      ambientDiscoveryStoryIdsRef.current = initialIds;
+      setAmbientDiscoveryStoryIds(initialIds);
+      setAmbientDiscoveryScopeKey("brand-category");
+      setAmbientDiscoveryStatus("idle");
+    }
+    setAmbientReaderStoryId(storyId);
+    if (!ambientNavigationState.openedStoryIds.has(storyId)) {
+      const openedStory = readerAvailableStoryPoolRef.current.find((story) => story.id === storyId);
+      const { articleVisitCount } = ambientNavigationState;
+      const shouldShowAd = shouldInsertAmbientInterstitial({
+        alreadyOpened: false,
+        articleVisitCount,
+      });
+      setAmbientNavigationState((current) => ({
+        openedStoryIds: new Set(current.openedStoryIds).add(storyId),
+        articleVisitCount: current.articleVisitCount + 1,
+      }));
+      if (shouldShowAd) {
+        setInterstitialAdvertiser(getAmbientInterstitialAdvertiser(openedStory, articleVisitCount + 1));
       }
       setShowAmbientInterstitialAd(shouldShowAd);
     }
-  }, [setAmbientReaderStoryId, setShowAmbientInterstitialAd]);
+  }, [
+    ambientDiscoveryAnchorId,
+    ambientNavigationState,
+    setAmbientReaderStoryId,
+    setShowAmbientInterstitialAd,
+  ]);
 
   React.useEffect(() => {
     if (!openStoryId || typeof window === "undefined") return;
@@ -9050,13 +9503,22 @@ function LifestyleStoryReaderModal({
       ) : null}
       {ambientReaderStoryId && liveArticles[ambientReaderStoryId]?.status === "ready" ? (
         <AmbientArticleReader
-          key={ambientReaderStoryId}
-          story={readerStories.find((story) => story.id === ambientReaderStoryId) ?? storyQueue[0]}
+          story={readerAvailableStoryPool.find((story) => story.id === ambientReaderStoryId) ?? storyQueue[0]}
           article={liveArticles[ambientReaderStoryId].data}
           previousStory={ambientPreviousStory}
           nextStory={ambientNextStory}
+          previousArticle={ambientPreviousArticle}
+          nextArticle={ambientNextArticle}
+          previousInterstitialAdvertiser={ambientPreviousInterstitialAdvertiser}
+          nextInterstitialAdvertiser={ambientNextInterstitialAdvertiser}
+          discoveryStatus={ambientDiscoveryStatus}
+          discoveryScope={ambientDiscoveryScopeKey}
+          discoveryCount={ambientOrderedStories.length}
           relatedStories={ambientRelatedReadyStories}
-          onClose={() => setAmbientReaderStoryId(null)}
+          onClose={() => {
+            setAmbientReaderStoryId(null);
+            resetAmbientDiscovery();
+          }}
           onNavigateStory={(storyId) => {
             openAmbientReader(storyId);
             window.history.replaceState(
@@ -9073,7 +9535,7 @@ function LifestyleStoryReaderModal({
           interstitialAdvertiser={interstitialAdvertiser}
           onDismissInterstitialAd={() => setShowAmbientInterstitialAd(false)}
           onOpenImage={(image) => {
-            const ambientStory = readerStories.find((story) => story.id === ambientReaderStoryId) ?? storyQueue[0];
+            const ambientStory = readerAvailableStoryPool.find((story) => story.id === ambientReaderStoryId) ?? storyQueue[0];
             const images = getFullscreenReaderImages(ambientStory, liveArticles[ambientReaderStoryId]);
             setFullscreenGallery({
               story: ambientStory,
