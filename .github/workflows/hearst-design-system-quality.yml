@@ -22,7 +22,10 @@ concurrency:
 
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    # The checked-in visual baselines are reviewed macOS Chromium captures.
+    # Keep CI on the same rendering platform so font rasterization and page
+    # metrics remain deterministic instead of comparing Linux pixels to macOS.
+    runs-on: macos-14
     timeout-minutes: 30
     defaults:
       run:
@@ -43,7 +46,7 @@ jobs:
         run: npm ci
 
       - name: Install Chromium
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install chromium
 
       - name: Run token, unit, Storybook, carousel, and visual checks
         run: npm run quality
