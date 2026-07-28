@@ -328,14 +328,16 @@ export const fluxRiverStories: LifestyleRiverStory[] = [
     "popularity": 90,
     "signal": "Editor Pick",
     "tags": [
-      "events",
+      "education college",
       "town & country",
+      "education",
+      "college",
       "town",
       "country",
       "jackie",
       "remembered"
     ],
-    "age": 0
+    "age": 16
   },
   {
     "id": "veranda-decorating-ideas-g61422604-screened-in-porch-ideas",
@@ -1884,7 +1886,7 @@ export const fluxRiverStories: LifestyleRiverStory[] = [
       "products",
       "under"
     ],
-    "age": 23
+    "age": 22
   },
   {
     "id": "town-and-country-society-tradition-a73273525-queen-maxima-amsterdam-pride-2026-photos",
@@ -2692,7 +2694,7 @@ export const fluxRiverStories: LifestyleRiverStory[] = [
     "popularity": 92,
     "signal": "Most Popular",
     "tags": [
-      "culture",
+      "style",
       "town & country",
       "town",
       "country",
@@ -3019,7 +3021,7 @@ export const fluxRiverStories: LifestyleRiverStory[] = [
       "capri",
       "leggings"
     ],
-    "age": 48
+    "age": 46
   },
   {
     "id": "veranda-decorating-ideas-a73229905-this-distinctive-new-furniture-line-will-transform-every-room",
@@ -4064,10 +4066,10 @@ export const fluxRiverStories: LifestyleRiverStory[] = [
       "movies",
       "time"
     ],
-    "age": 92
+    "age": 91
   },
   {
-    "id": "harpers-bazaar-celebrity-latest-a73259585-hunter-schafer-citrus-dressing-2026-san-diego-comic-con-marc-jacobs-outfit",
+    "id": "harpers-bazaar-celebrity-latest-a73262334-selena-gomez-italy-photo-dump",
     "brand": "Harper's Bazaar",
     "brandSlug": "harpers-bazaar",
     "topic": "Culture",
@@ -4086,10 +4088,10 @@ export const fluxRiverStories: LifestyleRiverStory[] = [
       "harper's bazaar",
       "harper",
       "bazaar",
-      "hunter",
-      "schafer",
-      "brings",
-      "citrus"
+      "selena",
+      "gomez",
+      "seaside",
+      "photo"
     ],
     "age": 87
   },
@@ -4223,7 +4225,7 @@ export const fluxRiverStories: LifestyleRiverStory[] = [
       "trying",
       "change"
     ],
-    "age": 94
+    "age": 110
   },
   {
     "id": "harpers-bazaar-beauty-health-a73247387-perfumes-for-leo-zodiac-sign",

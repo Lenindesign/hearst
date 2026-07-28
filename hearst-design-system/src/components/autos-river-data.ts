@@ -118,7 +118,7 @@ export const autosRiverStories: LifestyleRiverStory[] = [
     "popularity": 98,
     "signal": "Editor Pick",
     "tags": [
-      "reviews",
+      "evs",
       "car and driver",
       "driver",
       "2029",
@@ -570,6 +570,59 @@ export const autosRiverStories: LifestyleRiverStory[] = [
     "signal": "Continue",
     "tags": [
       "classics",
+      "road & track",
+      "road",
+      "track",
+      "shaq",
+      "unique",
+      "lucid",
+      "coupe"
+    ],
+    "age": 15
+  },
+  {
+    "id": "autoweek-news-a73275152-ai-traffic-cameras-watching-drivers",
+    "brand": "Autoweek",
+    "brandSlug": "autoweek",
+    "topic": "Reviews",
+    "title": "AI Traffic Cameras Are Watching Drivers Like Never Before",
+    "summary": "From automated speed enforcement to license plate readers, cities are embracing camera technology that promises safer roads but raises growing privacy concerns.",
+    "image": "https://hips.hearstapps.com/hmg-prod/images/725959b5-e5a8-4d54-93eb-91fdca30b5e5.jpg",
+    "imageCredit": "Jim Motavalli",
+    "byline": "Jim Motavalli",
+    "readTime": "4 min read",
+    "publishedAt": "2026-07-27T18:23:42.000Z",
+    "sourceUrl": "https://www.autoweek.com/news/a73275152/ai-traffic-cameras-watching-drivers/",
+    "popularity": 88,
+    "signal": "Most Popular",
+    "tags": [
+      "reviews",
+      "autoweek",
+      "traffic",
+      "cameras",
+      "watching",
+      "drivers",
+      "like"
+    ],
+    "age": 17
+  },
+  {
+    "id": "bring-a-trailer-listing-2025-lamborghini-revuelto-9",
+    "brand": "Bring a Trailer",
+    "brandSlug": "bring-a-trailer",
+    "topic": "EVs",
+    "title": "2025 Lamborghini Revuelto",
+    "summary": "This 2025 Lamborghini Revuelto was specified with Arancio paintwork, a ~$13k option, and it is powered by a naturally aspirated 6.5-liter V12 linked to an eight-speed dual-clutch automatic transmission as well as a trio of electric motors fed by a 3.8-kWh lithium-ion battery located in the central tunnel. Its heated and power-adjustable seats are trimmed in Nero Ade and orange upholstery, and the car features carbon-fiber body panels complemented by aluminum scissor doors and an active rear wing. Riding on 21\" and 22\" Altanero wheels, it has 1,700 miles and is further equipped with carbon-ceramic brake discs, rear-axle steering, Q-Cintura stitching, the Parking Pack, carbon-fiber interior trim, a Sonus Faber sound system, the Style Package, a passenger display, and navigation. This Revuelto was acquired by the selling dealer in 2026 and is now offered with a window sticker, the owner's manual, a car cover, a cleaning kit, a clean Carfax report, and a California title.",
+    "image": "https://bringatrailer.com/wp-content/uploads/2026/07/T7_2862-scaled-62138.jpg?w=940",
+    "imageCredit": "",
+    "byline": "bringatrailer",
+    "readTime": "7 min read",
+    "publishedAt": "2026-07-27T23:56:00.000Z",
+    "sourceUrl": "https://bringatrailer.com/listing/2025-lamborghini-revuelto-9/",
+    "popularity": 87,
+    "signal": "Trending",
+    "tags": [
+      "evs",
       "bring a trailer",
       "bring",
       "trailer",
@@ -578,7 +631,7 @@ export const autosRiverStories: LifestyleRiverStory[] = [
       "2019",
       "porsche"
     ],
-    "age": 0
+    "age": 12
   },
   {
     "id": "car-and-driver-news-a73276744-land-rover-discovery-sport-discontinued",
@@ -659,7 +712,7 @@ export const autosRiverStories: LifestyleRiverStory[] = [
       "package",
       "brings"
     ],
-    "age": 3
+    "age": 2
   },
   {
     "id": "road-and-track-news-a73272572-nhtsa-new-car-door-safety-rule-plans-tesla",
@@ -1050,7 +1103,7 @@ export const autosRiverStories: LifestyleRiverStory[] = [
     "popularity": 63,
     "signal": "Trending",
     "tags": [
-      "classics",
+      "evs",
       "bring a trailer",
       "bring",
       "trailer",
@@ -1159,6 +1212,8 @@ export const autosRiverStories: LifestyleRiverStory[] = [
     "tags": [
       "news",
       "road & track",
+      "buying",
+      "guides",
       "road",
       "track",
       "ford",
@@ -1636,7 +1691,7 @@ export const autosRiverStories: LifestyleRiverStory[] = [
     "popularity": 87,
     "signal": "Continue",
     "tags": [
-      "racing",
+      "news",
       "road & track",
       "road",
       "track",
@@ -1849,7 +1904,7 @@ export const autosRiverStories: LifestyleRiverStory[] = [
     "popularity": 79,
     "signal": "Continue",
     "tags": [
-      "classics",
+      "evs",
       "bring a trailer",
       "bring",
       "trailer",
@@ -2115,7 +2170,7 @@ export const autosRiverStories: LifestyleRiverStory[] = [
     "popularity": 69,
     "signal": "Trending",
     "tags": [
-      "news",
+      "racing",
       "road & track",
       "road",
       "track",
@@ -2594,7 +2649,7 @@ export const autosRiverStories: LifestyleRiverStory[] = [
     "popularity": 97,
     "signal": "Continue",
     "tags": [
-      "news",
+      "reviews",
       "road & track",
       "road",
       "track",
@@ -2683,7 +2738,7 @@ export const autosRiverStories: LifestyleRiverStory[] = [
       "japanese",
       "tuner"
     ],
-    "age": 73
+    "age": 72
   },
   {
     "id": "hot-rod-events-2026-carlisle-ford-nationals-3538-show-cars-60000-fans",
@@ -2897,7 +2952,7 @@ export const autosRiverStories: LifestyleRiverStory[] = [
       "bill",
       "targets"
     ],
-    "age": 94
+    "age": 93
   },
   {
     "id": "road-and-track-news-a73256433-porsche-builds-the-cars-owners-love-most",
@@ -4010,7 +4065,7 @@ export const autosRiverStories: LifestyleRiverStory[] = [
     "popularity": 89,
     "signal": "Trending",
     "tags": [
-      "news",
+      "evs",
       "road & track",
       "road",
       "track",
@@ -4165,7 +4220,7 @@ export const autosRiverStories: LifestyleRiverStory[] = [
     "popularity": 83,
     "signal": "Continue",
     "tags": [
-      "racing",
+      "evs",
       "autoweek",
       "mercedes",
       "believes",
@@ -4529,6 +4584,31 @@ export const autosRiverStories: LifestyleRiverStory[] = [
     "signal": "Trending",
     "tags": [
       "news",
+      "motortrend",
+      "2027",
+      "volkswagen",
+      "atlas",
+      "msrps",
+      "announced"
+    ],
+    "age": 162
+  },
+  {
+    "id": "road-and-track-reviews-a71918371-how-bmws-first-sebring-win-led-to-a-stellar-new-m2-cs",
+    "brand": "Road & Track",
+    "brandSlug": "road-and-track",
+    "topic": "EVs",
+    "title": "How BMW's First Sebring Win Led to a Stellar New M2 CS",
+    "summary": "Past and present meet at a foundational site for BMW performance.",
+    "image": "https://hips.hearstapps.com/hmg-prod/images/878d6385-36c4-4a90-a7f6-96b1aa51ac3a.jpg",
+    "imageCredit": "Paul King",
+    "readTime": "4 min read",
+    "publishedAt": "2026-07-23T16:28:00.000Z",
+    "sourceUrl": "https://www.roadandtrack.com/reviews/a71918371/how-bmws-first-sebring-win-led-to-a-stellar-new-m2-cs/",
+    "popularity": 74,
+    "signal": "Most Popular",
+    "tags": [
+      "evs",
       "road & track",
       "road",
       "track",
@@ -4779,15 +4859,15 @@ export const autosRiverStories: LifestyleRiverStory[] = [
     "age": 169
   },
   {
-    "id": "road-and-track-news-a73246237-honda-is-pausing-civic-si-production",
+    "id": "road-and-track-news-a71705808-next-gen-honda-ridgeline-will-arrive-with-a-rugged-redesign-by-2028",
     "brand": "Road & Track",
     "brandSlug": "road-and-track",
     "topic": "News",
-    "title": "Honda Is Pausing Civic Si Production",
-    "summary": "The company says it plans to get both the manual Civic and its Integra A-Spec sibling back in production at some point.",
-    "image": "https://hips.hearstapps.com/hmg-prod/images/img-2561-66e92777cb322.jpg",
-    "imageCredit": "",
-    "byline": "Fred Smith",
+    "title": "Next-Gen Honda Ridgeline Will Arrive With a Rugged Redesign by 2028",
+    "summary": "The third-gen mid-sizer will be a tougher-looking offering than the outgoing machine.",
+    "image": "https://hips.hearstapps.com/hmg-prod/images/f5ad4422-e9ac-4df1-a979-55563acf23e2.jpg",
+    "imageCredit": "Honda",
+    "byline": "Lucas Bell",
     "readTime": "4 min read",
     "publishedAt": "2026-07-23T15:55:56.000Z",
     "sourceUrl": "https://www.roadandtrack.com/news/a73246237/honda-is-pausing-civic-si-production/",
@@ -4798,23 +4878,23 @@ export const autosRiverStories: LifestyleRiverStory[] = [
       "road & track",
       "road",
       "track",
+      "next-gen",
       "honda",
-      "pausing",
-      "civic",
-      "production"
+      "ridgeline",
+      "will"
     ],
     "age": 117
   },
   {
-    "id": "autoweek-news-a73224942-range-rover-ev-suv-teaser",
+    "id": "autoweek-racing-indycar-a73231702-dreyer-reinbold-racing-purchase-of-rahal-letterman-lanigan-charter",
     "brand": "Autoweek",
     "brandSlug": "autoweek",
-    "topic": "EVs",
-    "title": "Range Rover Teases New Electric GT",
-    "summary": "Disregard the disco-ball lizard wrap, underneath is a new EV GT, the brand’s fifth model. It promises the most car-like driving experience in the brand’s history while introducing a sleek new EV shape.",
-    "image": "https://hips.hearstapps.com/hmg-prod/images/dc980ed5-6eec-4174-99c2-e7f467333b79.jpg",
-    "imageCredit": "Range Rover",
-    "byline": "Mark Vaughn",
+    "topic": "Racing",
+    "title": "Dreyer & Reinbold Racing’s Purchase of Rahal Letterman Lanigan Charter Raises Questions",
+    "summary": "DRR’s purchase of a Rahal Letterman Lanigan charter returns the team to full-time competition in 2027 while leaving both organizations with key lineup decisions.",
+    "image": "https://hips.hearstapps.com/hmg-prod/images/15914e35-7316-4aa1-8bd0-39acbe4b5e57.jpeg",
+    "imageCredit": "Geoff Miller",
+    "byline": "Susan Wade",
     "readTime": "4 min read",
     "publishedAt": "2026-07-22T15:02:37.000Z",
     "sourceUrl": "https://www.autoweek.com/news/a73224942/range-rover-ev-suv-teaser/",
@@ -5058,7 +5138,33 @@ export const autosRiverStories: LifestyleRiverStory[] = [
     "popularity": 95,
     "signal": "Trending",
     "tags": [
-      "news",
+      "features",
+      "motortrend",
+      "2027",
+      "rivian",
+      "lineup",
+      "finally",
+      "here"
+    ],
+    "age": 193
+  },
+  {
+    "id": "road-and-track-news-a73246062-waymo-driverless-cars-crash-less-than-humans-report",
+    "brand": "Road & Track",
+    "brandSlug": "road-and-track",
+    "topic": "Reviews",
+    "title": "Waymo’s Driverless Cars Have a Better Crash Record Than Humans, IIHS Says",
+    "summary": "Per vehicle mile traveled, Waymo’s driverless vehicles were involved in fewer crashes than human drivers.",
+    "image": "https://hips.hearstapps.com/hmg-prod/images/8ff94be0-184f-4d39-8e0c-f2a5fadbb80b.jpeg",
+    "imageCredit": "Heather Diehl",
+    "byline": "Emmet White",
+    "readTime": "4 min read",
+    "publishedAt": "2026-07-23T14:59:58.000Z",
+    "sourceUrl": "https://www.roadandtrack.com/news/a73246062/waymo-driverless-cars-crash-less-than-humans-report/",
+    "popularity": 100,
+    "signal": "Most Popular",
+    "tags": [
+      "reviews",
       "road & track",
       "road",
       "track",
@@ -5067,7 +5173,7 @@ export const autosRiverStories: LifestyleRiverStory[] = [
       "trailhunter",
       "off-road-ready"
     ],
-    "age": 121
+    "age": 117
   },
   {
     "id": "autoweek-racing-nascar-a73222191-hamlin-has-one-more-nascar-cup-box-to-check",
@@ -5217,7 +5323,7 @@ export const autosRiverStories: LifestyleRiverStory[] = [
     "popularity": 89,
     "signal": "Continue",
     "tags": [
-      "trucks",
+      "racing",
       "autoweek",
       "acura",
       "biggest",

@@ -360,7 +360,7 @@ export const ewRiverStories: LifestyleRiverStory[] = [
     "popularity": 89,
     "signal": "Continue",
     "tags": [
-      "tech",
+      "gear",
       "popular mechanics",
       "popular",
       "mechanics",
@@ -547,7 +547,7 @@ export const ewRiverStories: LifestyleRiverStory[] = [
     "popularity": 82,
     "signal": "Editor Pick",
     "tags": [
-      "tech",
+      "gear",
       "popular mechanics",
       "popular",
       "mechanics",
@@ -1357,7 +1357,7 @@ export const ewRiverStories: LifestyleRiverStory[] = [
       "coffee",
       "drinkers"
     ],
-    "age": 74
+    "age": 73
   },
   {
     "id": "best-products-parenting-baby-g22061442-cool-baby-gadgets",
@@ -2106,7 +2106,7 @@ export const ewRiverStories: LifestyleRiverStory[] = [
       "sneaker",
       "review"
     ],
-    "age": 93
+    "age": 92
   },
   {
     "id": "best-products-home-outdoor-g1576-lawn-games-for-adults",
@@ -2692,7 +2692,7 @@ export const ewRiverStories: LifestyleRiverStory[] = [
       "viral",
       "tiktok"
     ],
-    "age": 285
+    "age": 284
   },
   {
     "id": "bicycling-tour-de-france-a73258875-continental-grand-prix-tires",
@@ -3908,7 +3908,7 @@ export const ewRiverStories: LifestyleRiverStory[] = [
     "popularity": 94,
     "signal": "Most Popular",
     "tags": [
-      "gear",
+      "adventure",
       "popular mechanics",
       "popular",
       "mechanics",
@@ -4611,7 +4611,7 @@ export const ewRiverStories: LifestyleRiverStory[] = [
       "feet",
       "aren"
     ],
-    "age": 144
+    "age": 143
   },
   {
     "id": "oprah-daily-life-a71918613-best-travel-jewelry-organizers",
@@ -4843,7 +4843,7 @@ export const ewRiverStories: LifestyleRiverStory[] = [
     "popularity": 59,
     "signal": "Continue",
     "tags": [
-      "gear",
+      "tech",
       "popular mechanics",
       "popular",
       "mechanics",
