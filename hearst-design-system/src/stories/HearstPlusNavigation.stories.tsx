@@ -1,6 +1,6 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
+import { expect, fireEvent, fn, userEvent, waitFor, within } from "@storybook/test";
 import { MainNav } from "@/components/hearst-plus";
 import { themeOptions } from "@/lib/theme-options";
 import { hearstPlusStoryData } from "./hearst-plus-story-data";
@@ -15,16 +15,28 @@ const mobileBrands = [
 
 const destinationThemeSlugs = new Set(["hearst-all", "hearst-plus", "hearst-lifestyle", "hearst-flux", "hearst-ew"]);
 
-function NavigationExample({ brandSlug, darkMode = false }: { brandSlug: string; darkMode?: boolean }) {
-  const [activeFilter, setActiveFilter] = React.useState("For You");
+function NavigationExample({
+  brandSlug,
+  darkMode = false,
+  initialActiveFilter = "For You",
+  selectedBrandOverride,
+}: {
+  brandSlug: string;
+  darkMode?: boolean;
+  initialActiveFilter?: string;
+  selectedBrandOverride?: { name: string; slug: string };
+}) {
+  const [activeFilter, setActiveFilter] = React.useState(initialActiveFilter);
   const selectedTheme = themeOptions.find((theme) => theme.slug === brandSlug);
-  const selectedBrand = selectedTheme && !destinationThemeSlugs.has(brandSlug) && brandSlug !== "white-label"
-    ? { name: selectedTheme.name, slug: selectedTheme.slug }
-    : null;
+  const selectedBrand = selectedBrandOverride ?? (
+    selectedTheme && !destinationThemeSlugs.has(brandSlug) && brandSlug !== "white-label"
+      ? { name: selectedTheme.name, slug: selectedTheme.slug }
+      : null
+  );
   const searchStories = getComponentStoriesForBrand(brandSlug);
 
   return (
-    <div className={darkMode ? "dark min-h-[260px] bg-black" : "min-h-[260px] bg-[var(--hp-page)]"}>
+    <div className={darkMode ? "dark min-h-screen bg-black" : "min-h-screen bg-[var(--hp-page)]"}>
       <MainNav
         brandSlug={brandSlug}
         activeFilter={activeFilter}
@@ -51,7 +63,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "The shared Hearst+ utility bar, masthead, destination navigation, search, and responsive menu. The dark story covers the scoped Videos exception without changing other destinations.",
+          "The production `MainNav` masthead, topic navigation, search, and responsive menu. The application-level destination switcher is specified separately in Navigation / Utility Bar. The dark story covers the scoped Videos exception without changing other destinations.",
       },
     },
   },
@@ -68,6 +80,87 @@ export const DestinationNavigation: Story = {
 export const VideosNavigation: Story = {
   name: "Videos dark navigation",
   render: (_args, context) => (
-    <NavigationExample key={context.globals.brand} brandSlug={context.globals.brand} darkMode />
+    <NavigationExample
+      key={context.globals.brand}
+      brandSlug={context.globals.brand}
+      darkMode
+      initialActiveFilter="Videos"
+    />
   ),
+};
+
+export const MobilePublicationNavigation: Story = {
+  name: "Responsive: Mobile publication sections",
+  render: () => (
+    <div className="w-[320px] max-w-full overflow-hidden">
+      <NavigationExample
+        brandSlug="hot-rod"
+        initialActiveFilter="Events"
+        selectedBrandOverride={{ name: "HOT ROD", slug: "hot-rod" }}
+      />
+    </div>
+  ),
+  parameters: {
+    viewport: { defaultViewport: "mobile1" },
+    docs: {
+      description: {
+        story:
+          "The production publication rail with a later active section. The rail reveals the complete preceding label instead of opening on clipped text, keeps the active Events link visible, and retains horizontal access to every section.",
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const sectionNav = canvas.getByRole("navigation", {
+      name: "HOT ROD sections",
+    });
+    const eventsLink = within(sectionNav).getByRole("link", { name: "Events" });
+    const scroller = sectionNav.querySelector<HTMLElement>(
+      "[data-topic-navigation-scroll]"
+    );
+    const previousItem = eventsLink.previousElementSibling as HTMLElement | null;
+    const leftOverflowCue = sectionNav.querySelector<HTMLElement>(
+      '[data-navigation-overflow="left"]'
+    );
+
+    await expect(scroller).not.toBeNull();
+    await expect(previousItem).not.toBeNull();
+    await expect(leftOverflowCue).not.toBeNull();
+    await waitFor(() => {
+      const scrollerRect = scroller!.getBoundingClientRect();
+      const previousRect = previousItem!.getBoundingClientRect();
+      const eventsRect = eventsLink.getBoundingClientRect();
+
+      expect(previousRect.left).toBeGreaterThanOrEqual(scrollerRect.left);
+      expect(eventsRect.right).toBeLessThanOrEqual(scrollerRect.right);
+      expect(leftOverflowCue).toHaveAttribute("data-visible", "true");
+    });
+  },
+};
+
+export const EmptySearchResults: Story = {
+  name: "Empty: Search results",
+  render: (_args, context) => (
+    <NavigationExample key={context.globals.brand} brandSlug={context.globals.brand} />
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const page = within(canvasElement.ownerDocument.body);
+    const searchTrigger = canvas.getByRole("button", { name: "Search" });
+
+    await userEvent.click(searchTrigger);
+    const dialog = await page.findByRole("dialog", { name: "Search Hearst+" });
+    const searchInput = within(dialog).getByRole("combobox", { name: "Search Hearst stories" });
+    await waitFor(() => expect(searchInput).toHaveFocus());
+
+    fireEvent.change(searchInput, { target: { value: "no matching hearst story" } });
+    await waitFor(() =>
+      expect(within(dialog).getByRole("status")).toHaveTextContent(
+        "No stories match “no matching hearst story”",
+      ),
+    );
+
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => expect(searchTrigger).toHaveFocus());
+  },
 };

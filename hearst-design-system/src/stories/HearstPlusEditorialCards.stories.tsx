@@ -38,7 +38,10 @@ const handlers = {
 
 function CardFrame({ children, width = 760 }: { children: React.ReactNode; width?: number }) {
   return (
-    <div className="hearst-plus-theme w-full min-w-0" style={{ maxWidth: width }}>
+    <div
+      className="hearst-plus-theme mx-auto my-4 min-w-0"
+      style={{ width: `min(${width}px, calc(100vw - 2rem))` }}
+    >
       {children}
     </div>
   );
@@ -69,7 +72,7 @@ function InteractiveArticleCard({ story, featured = false }: { story: LifestyleR
 const meta = {
   title: "Hearst Plus/Components/Editorial Cards",
   parameters: {
-    layout: "centered",
+    layout: "fullscreen",
     docs: {
       description: {
         component:
@@ -84,21 +87,29 @@ type Story = StoryObj<typeof meta>;
 
 export const ArticleRiverCard: Story = {
   name: "Article river card",
+  globals: {
+    brand: "hearst-lifestyle",
+  },
   render: (_args, context) => (
     <InteractiveArticleCard key={context.globals.brand} story={getArticleStory(context.globals.brand)} />
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const saveButton = canvas.getByRole("button", { name: /^save$/i });
+    const saveButton = canvas.getByRole("button", { name: "Save story" });
     await expect(saveButton).toHaveAttribute("aria-pressed", "false");
     await userEvent.click(saveButton);
-    await expect(saveButton).toHaveAttribute("aria-pressed", "true");
+    await expect(
+      canvas.getByRole("button", { name: "Remove from saved stories" })
+    ).toHaveAttribute("aria-pressed", "true");
     await expect(handlers.onSave).toHaveBeenCalled();
   },
 };
 
 export const FeaturedArticleCard: Story = {
   name: "Featured article card",
+  globals: {
+    brand: "hearst-lifestyle",
+  },
   render: (_args, context) => (
     <InteractiveArticleCard key={context.globals.brand} story={getArticleStory(context.globals.brand)} featured />
   ),
@@ -106,6 +117,9 @@ export const FeaturedArticleCard: Story = {
 
 export const RichPhotoGallery: Story = {
   name: "Rich photo gallery",
+  globals: {
+    brand: "hearst-lifestyle",
+  },
   render: (_args, context) => {
     const { story, images } = getGalleryFixture(context.globals.brand);
     const GalleryExample = () => {

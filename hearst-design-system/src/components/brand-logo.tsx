@@ -1,13 +1,66 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getBrandLogoSrc } from "@/lib/logos";
+import { getBrandLogoLabel, getBrandLogoSrc } from "@/lib/logos";
 
-interface BrandLogoProps {
+export interface BrandLogoProps {
   slug: string;
   className?: string;
   color?: string;
-  variant?: "logo" | "icon";
+  /** Overrides the canonical publication or destination name. */
+  label?: string;
+  /** Hides the logo from assistive technology when nearby text already names it. */
+  decorative?: boolean;
+}
+
+const logoMarkupCache = new Map<string, Promise<string>>();
+
+function loadLogoMarkup(src: string) {
+  const cached = logoMarkupCache.get(src);
+  if (cached) return cached;
+
+  const request = fetch(src)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Unable to load logo: ${response.status}`);
+      }
+      return response.text();
+    })
+    .then((markup) => {
+      const cleaned = markup
+        .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
+        .replace(/var\(--primary\s*,\s*([^)]+)\)/g, "$1")
+        .replace(/<(script|foreignObject|iframe|object|embed)\b[^>]*>[\s\S]*?<\/\1>/gi, "")
+        .replace(/\son[a-z]+\s*=\s*(["'])[\s\S]*?\1/gi, "")
+        .replace(/<title\b[^>]*>[\s\S]*?<\/title>/gi, "")
+        .replace(/<desc\b[^>]*>[\s\S]*?<\/desc>/gi, "");
+
+      const svgStart = cleaned.search(/<svg\b/i);
+      const svgEnd = cleaned.toLowerCase().lastIndexOf("</svg>");
+      if (svgStart < 0 || svgEnd < svgStart) {
+        throw new Error("Brand logo asset is not an SVG");
+      }
+
+      return cleaned
+        .slice(svgStart, svgEnd + "</svg>".length)
+        .replace(/<svg\b[^>]*>/i, (svgTag) => {
+        const withoutOwnedSemantics = svgTag
+          .replace(/\s(?:role|aria-label|aria-labelledby|aria-describedby|focusable)=(["'])[^"']*\1/gi, "")
+          .replace(/\saria-hidden(?:=(["'])[^"']*\1)?/gi, "");
+
+        return withoutOwnedSemantics.replace(
+          "<svg",
+          '<svg aria-hidden="true" focusable="false"',
+        );
+        });
+    })
+    .catch((error) => {
+      logoMarkupCache.delete(src);
+      throw error;
+    });
+
+  logoMarkupCache.set(src, request);
+  return request;
 }
 
 function applySvgColor(markup: string, color: string) {
@@ -34,33 +87,63 @@ function applySvgColor(markup: string, color: string) {
   });
 }
 
-export function BrandLogo({ slug, className = "", color, variant = "logo" }: BrandLogoProps) {
-  const [loadedSvg, setLoadedSvg] = useState<{ src: string; markup: string } | null>(null);
-  const src = getBrandLogoSrc(slug, variant);
+export function BrandLogo({
+  slug,
+  className = "",
+  color,
+  label,
+  decorative = false,
+}: BrandLogoProps) {
+  const [loadResult, setLoadResult] = useState<
+    | { src: string; status: "ready"; markup: string }
+    | { src: string; status: "error" }
+    | null
+  >(null);
+  const src = getBrandLogoSrc(slug);
+  const accessibleName = label ?? getBrandLogoLabel(slug);
 
   useEffect(() => {
     if (!src) return;
-    fetch(src)
-      .then((r) => {
-        if (!r.ok) throw new Error(`Unable to load logo: ${r.status}`);
-        return r.text();
+
+    let active = true;
+
+    loadLogoMarkup(src)
+      .then((markup) => {
+        if (active) setLoadResult({ src, status: "ready", markup });
       })
-      .then((text) => {
-        let cleaned = text.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "");
-        cleaned = cleaned.replace(/var\(--primary\s*,\s*([^)]+)\)/g, "$1");
-        setLoadedSvg({ src, markup: cleaned });
-      })
-      .catch(() => setLoadedSvg(null));
+      .catch(() => {
+        if (!active) return;
+        setLoadResult({ src, status: "error" });
+      });
+
+    return () => {
+      active = false;
+    };
   }, [src]);
 
-  if (!src || loadedSvg?.src !== src) return null;
+  if (!src || !accessibleName) return null;
 
-  const html = color ? applySvgColor(loadedSvg.markup, color) : loadedSvg.markup;
+  const ready = loadResult?.src === src && loadResult.status === "ready";
+  const failed = loadResult?.src === src && loadResult.status === "error";
+  const html = ready
+    ? color
+      ? applySvgColor(loadResult.markup, color)
+      : loadResult.markup
+    : "";
 
   return (
     <span
       className={className}
-      dangerouslySetInnerHTML={{ __html: html }}
+      data-brand-logo={slug}
+      data-state={ready ? "ready" : failed ? "error" : "loading"}
+      {...(decorative
+        ? { "aria-hidden": true }
+        : {
+            role: "img",
+            "aria-label": accessibleName,
+            "aria-busy": ready ? undefined : true,
+          })}
+      {...(ready ? { dangerouslySetInnerHTML: { __html: html } } : {})}
     />
   );
 }

@@ -68,11 +68,29 @@ function parseRuntimeLogos(): Record<string, string> {
   if (!existsSync(LOGOS_TS_PATH)) return {};
 
   const source = readFileSync(LOGOS_TS_PATH, "utf-8");
+  const brandLogosStart = source.indexOf("export const brandLogos");
+  const brandLogoLabelsStart = source.indexOf("export const brandLogoLabels");
+  const brandIconLogosStart = source.indexOf("export const brandIconLogos");
+
+  if (brandLogosStart === -1) return {};
+
+  // Only validate the canonical masthead map. The later accessible-name and
+  // compact-icon maps intentionally reuse publication slugs and would
+  // otherwise overwrite the asset paths while parsing.
+  const laterRegistryStarts = [brandLogoLabelsStart, brandIconLogosStart]
+    .filter((index) => index > brandLogosStart);
+  const brandLogosEnd = laterRegistryStarts.length > 0
+    ? Math.min(...laterRegistryStarts)
+    : source.length;
+  const brandLogoSource = source.slice(
+    brandLogosStart,
+    brandLogosEnd,
+  );
   const logos: Record<string, string> = {};
   const entry = /["']([^"']+)["']:\s*["']([^"']+)["']/g;
   let match: RegExpExecArray | null;
 
-  while ((match = entry.exec(source)) !== null) {
+  while ((match = entry.exec(brandLogoSource)) !== null) {
     logos[match[1]] = match[2];
   }
 

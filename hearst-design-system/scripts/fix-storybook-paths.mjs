@@ -3,9 +3,12 @@
  * so they resolve correctly when served from /_next/static/sb/.
  */
 import { readFileSync, writeFileSync, readdirSync, existsSync } from "fs";
-import { join } from "path";
+import { execFileSync } from "node:child_process";
+import { join, resolve } from "path";
 
-const SB_DIR = join(process.cwd(), ".next", "static", "sb");
+const SB_DIR = process.env.STORYBOOK_OUTPUT_DIR
+  ? resolve(process.cwd(), process.env.STORYBOOK_OUTPUT_DIR)
+  : join(process.cwd(), ".next", "static", "sb");
 const BASE = "/_next/static/sb/";
 /** Public Storybook path on Netlify (rewrites to SB_DIR). Fixes relative index.json when URL is /storybook without trailing slash. */
 const STORYBOOK_PUBLIC_BASE = "/storybook/";
@@ -59,6 +62,52 @@ function fixAssetFile(filePath) {
   }
 }
 
+function readGitValue(args) {
+  try {
+    return execFileSync("git", args, {
+      cwd: process.cwd(),
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim();
+  } catch {
+    return "";
+  }
+}
+
+function writeBuildInfo() {
+  const indexPath = join(SB_DIR, "index.json");
+  if (!existsSync(indexPath)) {
+    throw new Error("Storybook index.json is missing; build provenance cannot be generated.");
+  }
+
+  const index = JSON.parse(readFileSync(indexPath, "utf8"));
+  const entries = Object.values(index.entries ?? {});
+  const sourceRevision = process.env.COMMIT_REF || readGitValue(["rev-parse", "HEAD"]) || "unknown";
+  const localDirty = process.env.COMMIT_REF
+    ? false
+    : Boolean(readGitValue(["status", "--porcelain", "--untracked-files=no"]));
+  const buildInfo = {
+    schemaVersion: 1,
+    sourceRevision: localDirty ? `${sourceRevision}+dirty` : sourceRevision,
+    buildContext: process.env.CONTEXT || "local",
+    builtAt: new Date().toISOString(),
+    catalog: {
+      entries: entries.length,
+      stories: entries.filter((entry) => entry.type === "story").length,
+      docs: entries.filter((entry) => entry.type === "docs").length,
+      groups: new Set(entries.map((entry) => entry.title)).size,
+    },
+  };
+
+  writeFileSync(
+    join(SB_DIR, "build-info.json"),
+    `${JSON.stringify(buildInfo, null, 2)}\n`,
+  );
+  console.log(
+    `Wrote Storybook build provenance for ${buildInfo.sourceRevision} (${buildInfo.catalog.stories} stories)`,
+  );
+}
+
 // Fix root-level HTML and JS files
 const rootFiles = readdirSync(SB_DIR).filter(
   (f) => f.endsWith(".html") || f.endsWith(".js")
@@ -96,3 +145,5 @@ if (existsSync(sbManagerDir)) {
   }
   console.log(`Processed ${managerFiles.length} sb-manager file(s)`);
 }
+
+writeBuildInfo();

@@ -5,14 +5,21 @@ import {
   type HomePageTemplateProps,
 } from "@/components/hearst-plus";
 import { ThemeProvider } from "@/components/theme-provider";
-import { VisualInspector } from "@/components/visual-inspector";
-import { hearstPlusStoryData } from "./hearst-plus-story-data";
+import { VisualInspector } from "./support/visual-inspector";
+import {
+  hearstPlusStoryData,
+  hearstPlusVideoStoryData,
+} from "./hearst-plus-story-data";
 
 function HomePageWrapper(props: HomePageTemplateProps) {
   return (
-    <div style={{ margin: "-2rem", minHeight: "100vh" }}>
+    <div className="min-h-screen">
       <ThemeProvider defaultBrandSlug="hearst-all" persistColorMode={false}>
-        <HomePageTemplate staticDestinationData={hearstPlusStoryData} {...props} />
+        <HomePageTemplate
+          staticDestinationData={hearstPlusStoryData}
+          videoFeedData={hearstPlusVideoStoryData.all}
+          {...props}
+        />
       </ThemeProvider>
     </div>
   );
@@ -25,7 +32,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          "The current Hearst+ feed template rendered with React, Tailwind CSS 4, HDS semantic tokens, and shared shadcn-style primitives. These stories show the same responsive reader experience used by the product; no retired homepage layout variants are included.",
+          "The current Hearst+ feed template rendered with React, Tailwind CSS 4, HDS semantic tokens, and shared shadcn-style primitives. These stories show the same responsive reader experience used by the product; no retired homepage layout variants are included. Editorial metadata and posters use the generated production-aligned fixture, while playable video uses the labeled deterministic Storybook clip.",
       },
     },
   },

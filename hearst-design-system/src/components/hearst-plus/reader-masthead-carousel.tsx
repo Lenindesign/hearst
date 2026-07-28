@@ -7,12 +7,14 @@ import { cn } from "@/lib/utils";
 
 interface ReaderMastheadCarouselProps {
   activeKey?: string;
+  ariaLabel: string;
   children: React.ReactNode;
   className?: string;
 }
 
 export function ReaderMastheadCarousel({
   activeKey,
+  ariaLabel,
   children,
   className,
 }: ReaderMastheadCarouselProps) {
@@ -93,7 +95,7 @@ export function ReaderMastheadCarousel({
   return (
     <nav
       className={cn("ml-auto hidden min-w-0 flex-1 items-center gap-1 lg:flex", className)}
-      aria-label="Other Hearst sections"
+      aria-label={ariaLabel}
     >
       <Button
         type="button"

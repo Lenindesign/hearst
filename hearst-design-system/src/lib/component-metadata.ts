@@ -9,6 +9,20 @@
  */
 
 export type AtomicLevel = "atom" | "molecule" | "organism" | "template";
+export type StorybookSpecificationKind = "direct" | "integrated" | "infrastructure";
+
+export interface StorybookSpecification {
+  /**
+   * direct: the story imports the public component export.
+   * integrated: the component is only meaningful inside its shipped composition.
+   * infrastructure: the module has no visual surface to render.
+   */
+  kind: StorybookSpecificationKind;
+  /** Indexed story files that prove the contract. Empty only for infrastructure. */
+  stories: string[];
+  /** Why this evidence level is the faithful production specification. */
+  rationale: string;
+}
 
 export interface TokenReference {
   /** CSS variable name, e.g. "--font-brand" or "--palette-brand-1" */
@@ -62,6 +76,12 @@ export interface ComponentMetadata {
 
   /** Known issues or limitations */
   caveats?: string[];
+
+  /**
+   * Optional explicit Storybook evidence classification.
+   * Direct coverage is also derived from story imports by the component indexer.
+   */
+  storybook?: StorybookSpecification;
 
   /** Hardcoded values that should be tokenized (audit flag) */
   violations?: {

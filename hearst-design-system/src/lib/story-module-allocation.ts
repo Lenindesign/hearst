@@ -63,6 +63,12 @@ export function allocateStoryModules<T extends StoryModuleCandidate>({
   const continueStory = includeTodayEdit
     ? takeUnused(continueCandidates, false) ?? continueCandidates[0]
     : undefined;
+  const horoscopeStory = includeTodayEdit
+    ? takeUnused(stories.filter((story) => {
+        const searchableText = [story.title, ...story.tags].filter(Boolean).join(" ").toLowerCase();
+        return searchableText.includes("horoscope") || searchableText.includes("zodiac");
+      }))
+    : undefined;
   const followedBrandStory = includeTodayEdit
     ? takeUnused([
         ...stories.filter((story) => followedBrands.includes(story.brand)),
@@ -73,12 +79,6 @@ export function allocateStoryModules<T extends StoryModuleCandidate>({
     (first, second) => second.popularity - first.popularity
   );
   const trendingStory = includeTodayEdit ? takeUnused(popularityOrder) : undefined;
-  const horoscopeStory = includeTodayEdit
-    ? takeUnused(stories.filter((story) => {
-        const searchableText = [story.title, ...story.tags].filter(Boolean).join(" ").toLowerCase();
-        return searchableText.includes("horoscope") || searchableText.includes("zodiac");
-      }))
-    : undefined;
 
   const dailyHabitStories: T[] = [];
   for (const story of stories) {

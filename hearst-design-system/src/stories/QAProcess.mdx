@@ -1,637 +1,188 @@
 import { Meta } from "@storybook/blocks";
+import { HearstPlusDocScope, SpecTable } from "./hearst-plus-docs";
 
 <Meta title="Hearst Plus/Delivery/Quality" />
 
-# QA and Jira
+# Quality and release evidence
 
-How quality assurance and project tracking integrate into the Hearst Design System token pipeline.
+<HearstPlusDocScope owner="Cross-functional" source="package.json; ../.github/workflows/hearst-design-system-quality.yml; CONTRIBUTING.md; CHANGELOG.md; scripts/test-storybook-*.mjs; scripts/push-to-figma.ts; scripts/push-to-pencil.ts">
+  This page documents the quality checks and delivery evidence that the current repository implements. Product components and routes remain the production authority; Storybook verifies their isolated specifications and does not turn an example into a production release.
+</HearstPlusDocScope>
 
-<div style={{ display: 'flex', gap: '12px', marginBottom: '32px', flexWrap: 'wrap' }}>
-  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', background: '#f1f5f9', color: '#334155', borderRadius: '8px', fontWeight: 600, fontSize: '13px' }}>
-    Jira Tracking
-  </span>
-  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', background: '#f1f5f9', color: '#334155', borderRadius: '8px', fontWeight: 600, fontSize: '13px' }}>
-    QA Checkpoints
-  </span>
-  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', background: '#f1f5f9', color: '#334155', borderRadius: '8px', fontSize: '13px' }}>
-    PR Review + Post-Merge Verification
-  </span>
-</div>
+## Current enforcement
 
----
+<SpecTable rows={[
+  {
+    label: "Repository quality workflow",
+    value: "Implemented",
+    evidence: <><code>../.github/workflows/hearst-design-system-quality.yml</code> runs on matching pull requests, main-branch pushes, and manual dispatch.</>,
+  },
+  {
+    label: "Local quality gate",
+    value: "Implemented",
+    evidence: <><code>npm run quality</code> runs token integrity, publication validation, unit, Storybook interaction/accessibility, carousel keyboard, visual, responsive, and documentation checks.</>,
+  },
+  {
+    label: "Application build",
+    value: "Implemented as a separate CI step",
+    evidence: <><code>npm run build</code> runs after the quality command in the repository workflow.</>,
+  },
+  {
+    label: "Required reviewer identities",
+    value: "Documented, not repository-enforced",
+    evidence: <><code>CONTRIBUTING.md</code> defines accountable roles; no <code>CODEOWNERS</code> file maps them to real GitHub identities.</>,
+  },
+  {
+    label: "Jira workflow and transitions",
+    value: "Not evidenced in this repository",
+    evidence: "Use an issue link when a team process requires one, but do not claim automatic transitions or required Jira statuses without workspace configuration evidence.",
+  },
+  {
+    label: "Published Storybook verification",
+    value: "Artifact gate implemented; deployment state still requires a live check",
+    evidence: <><code>scripts/fix-storybook-paths.mjs</code> writes the source revision and catalog counts into <code>build-info.json</code>. <code>npm run verify:storybook:deployment</code> compares that record with the deployed index and expected revision.</>,
+  },
+]} />
 
-## Jira: Token Lifecycle Tracking
+## Pull-request checkpoint
 
-Every token change -- whether requested by a designer or initiated by a developer -- is tracked as a Jira ticket. This gives both roles a shared view of what's been requested, what's in progress, and what's available.
+Before merge, the changed production component, token, or route and its Storybook specification must agree.
 
-### Jira Statuses
+### Required automated evidence
 
-A token ticket moves through six statuses. Each status has a clear owner and exit criteria.
+Run:
 
-<div style={{ overflowX: 'auto', margin: '24px 0' }}>
-<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
-  <thead>
-    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Status</th>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Owner</th>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>What's happening</th>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Exit criteria</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px' }}><strong style={{ display: 'inline-block', fontSize: '12px', fontWeight: 700, color: '#111' }}>Requested</strong></td>
-      <td style={{ padding: '10px 16px', color: '#334155' }}>Designer</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Designer has filed the request — or for simple value changes, designer edits directly in an IDE</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Developer picks up the ticket, or designer opens a PR from the IDE</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-      <td style={{ padding: '10px 16px' }}><strong style={{ display: 'inline-block', fontSize: '12px', fontWeight: 700, color: '#111' }}>In Progress</strong></td>
-      <td style={{ padding: '10px 16px', color: '#334155' }}>Developer or Designer</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Token is being created/edited in a Git branch (by developer or designer in an IDE)</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>PR is opened</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px' }}><strong style={{ display: 'inline-block', fontSize: '12px', fontWeight: 700, color: '#111' }}>In Review</strong></td>
-      <td style={{ padding: '10px 16px', color: '#334155' }}>Developer + QA</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>PR is open; QA reviews naming, values, and visual output</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>PR approved and merged</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-      <td style={{ padding: '10px 16px' }}><strong style={{ display: 'inline-block', fontSize: '12px', fontWeight: 700, color: '#111' }}>Merged</strong></td>
-      <td style={{ padding: '10px 16px', color: '#334155' }}>Developer</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Token is in the <code style={{ background: '#f1f5f9', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>main</code> branch; Netlify auto-deploys</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Developer runs push-figma + push-pencil</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px' }}><strong style={{ display: 'inline-block', fontSize: '12px', fontWeight: 700, color: '#111' }}>Synced</strong></td>
-      <td style={{ padding: '10px 16px', color: '#334155' }}>Developer</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Token is available in Figma variables and Pencil variables</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Designer verifies the token in Figma/Pencil</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-      <td style={{ padding: '10px 16px' }}><strong style={{ display: 'inline-block', fontSize: '12px', fontWeight: 700, color: '#111' }}>Done</strong></td>
-      <td style={{ padding: '10px 16px', color: '#334155' }}>Designer</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Designer confirmed the token is correct and usable</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Ticket closed</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-### Status Flow
-
-```
-Designer                Developer              QA                    Designer
-────────                ─────────              ──                    ────────
-
-Requested ──────────► In Progress ──────► In Review ──────► Merged
-(or self-serve          (branch — by          (PR open)        (main)
- via an IDE)             dev or designer)
-                                                                │
-                                                          push-figma
-                                                          push-pencil
-                                                                │
-                                                                ▼
-                                                            Synced ──────► Done
-                                                          (Figma+Pencil)   (verified)
+```bash
+npm run quality
+npm run build
 ```
 
-### Jira Ticket Template
+`npm run quality` currently covers:
 
-Use this as the description template for token-related Jira tickets.
+- canonical-token structure, validation, and no-regression hard-coded-style auditing;
+- publication metadata validation;
+- unit tests for shared models;
+- all indexed Storybook interaction and automated accessibility scenarios;
+- the Featured Carousel keyboard traversal;
+- reviewed visual-regression cases;
+- every indexed story at 320, 390, 768, and 1,280px for render errors and horizontal page overflow;
+- every indexed documentation page at 390 and 1,280px for headings, render errors, browser errors, and horizontal page overflow.
 
-<div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '24px', margin: '24px 0' }}>
-<div style={{ fontSize: '13px', lineHeight: '2', color: '#334155' }}>
-  <div style={{ fontWeight: 700, fontSize: '15px', marginBottom: '12px', color: '#334155' }}>Jira Ticket Fields</div>
-  <div><strong>Type:</strong> Task (or Sub-task under a component epic)</div>
-  <div><strong>Summary:</strong> [Token] Add component-tooltip-background tokens</div>
-  <div><strong>Labels:</strong> <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>design-token</code></div>
-  <div><strong>Component:</strong> Design System</div>
-  <div style={{ marginTop: '12px', fontWeight: 700 }}>Description:</div>
-  <div style={{ paddingLeft: '16px', borderLeft: '3px solid #e2e8f0', marginTop: '8px' }}>
-    <div><strong>What:</strong> Background color tokens for the Tooltip component</div>
-    <div><strong>Purpose:</strong> Fill color behind tooltip text, with semantic variants</div>
-    <div><strong>Values:</strong></div>
-    <div style={{ paddingLeft: '16px' }}>default: #1c1c1c</div>
-    <div style={{ paddingLeft: '16px' }}>informational: #0d58c9</div>
-    <div style={{ paddingLeft: '16px' }}>warning: #d06d16</div>
-    <div style={{ paddingLeft: '16px' }}>error: #cc2828</div>
-    <div><strong>Brands:</strong> Same for all brands</div>
-    <div><strong>File:</strong> tokens/core/global.json</div>
-    <div><strong>Figma reference:</strong> [link to frame]</div>
-  </div>
-  <div style={{ marginTop: '12px' }}><strong>Acceptance criteria:</strong></div>
-  <div style={{ paddingLeft: '16px' }}>1. Tokens exist in Git with correct names and values</div>
-  <div style={{ paddingLeft: '16px' }}>2. build-tokens passes without errors</div>
-  <div style={{ paddingLeft: '16px' }}>3. Tokens visible in Figma variables panel</div>
-  <div style={{ paddingLeft: '16px' }}>4. Tokens visible in Pencil as $variable</div>
-  <div style={{ paddingLeft: '16px' }}>5. Storybook renders correctly for 3+ brands</div>
-</div>
-</div>
+Automated checks are a floor. They do not prove complete screen-reader usability, 200% zoom, forced-colors behavior, touch behavior, or correctness against an external production deployment.
 
-### Linking Jira to GitHub
+### Required review evidence
 
-When the developer opens a PR, they should:
+- Name the production component, route, or canonical token file.
+- Link the corresponding Storybook story or documentation page.
+- Attach numbered before/after screenshots for stable visual changes.
+- List the publication themes and required states reviewed.
+- Record keyboard, screen-reader, zoom, reduced-motion, and touch checks applicable to the change.
+- Classify public API changes as patch, minor, or major.
+- Include migration and rollback guidance when compatibility changes.
+- Record any unavailable evidence as an explicit limitation.
 
-1. Include the Jira ticket ID in the PR title (e.g., `DS-142: Add tooltip background tokens`)
-2. Add the Jira ticket link in the PR description
-3. If using the GitHub + Jira integration app, the ticket auto-transitions to **In Review** when the PR is opened and to **Merged** when it's merged
+## Production-parity review
 
----
+Storybook is a specification of production-owned interfaces, not an independent design proposal.
 
-## QA: Two Checkpoints
+| Review | Pass criteria |
+|---|---|
+| **Component source** | The story imports the same production component or composition used by the routed application. |
+| **Behavior** | Production owns state transitions, focus, keyboard behavior, and responsive logic; the story does not recreate them. |
+| **Content fixture** | Checked-in fixture content is current, deterministic, and representative; any synthetic interaction state is labeled. |
+| **Themes** | Destination foundation tokens load before publication overrides, matching the routed application. |
+| **Responsive** | Required widths render without page overflow; component-specific reflow and touch behavior are reviewed. |
+| **Accessibility** | Automated findings fail the test suite, and changed journeys receive manual keyboard and assistive-technology review. |
+| **External production** | When an external deployed app is part of the release, compare the exact route, state, viewport, and source revision before claiming parity. |
 
-QA happens at two distinct moments in the pipeline. Each checkpoint has different goals and different tools.
+Unverified work belongs in `src/storybook-candidates`, which Storybook intentionally does not index.
 
-<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px', margin: '24px 0' }}>
-  <div style={{ border: '1px solid #cbd5e1', borderRadius: '12px', padding: '24px', background: '#f8fafc' }}>
-    <h3 style={{ margin: '0 0 8px', color: '#1e293b', fontSize: '16px' }}>Checkpoint 1: PR Review</h3>
-    <p style={{ margin: '0 0 8px', fontSize: '13px', color: '#475569' }}>Before merge. Catches naming errors, wrong values, and missing brands.</p>
-    <div style={{ fontSize: '13px', color: '#475569', fontWeight: 600 }}>Gate: PR cannot merge until QA approves</div>
-  </div>
-  <div style={{ border: '1px solid #cbd5e1', borderRadius: '12px', padding: '24px', background: '#f8fafc' }}>
-    <h3 style={{ margin: '0 0 8px', color: '#1e293b', fontSize: '16px' }}>Checkpoint 2: Post-Sync Verification</h3>
-    <p style={{ margin: '0 0 8px', fontSize: '13px', color: '#475569' }}>After merge and sync. Confirms tokens arrived correctly in Figma, Pencil, and production.</p>
-    <div style={{ fontSize: '13px', color: '#475569', fontWeight: 600 }}>Gate: Jira ticket cannot move to Done until verified</div>
-  </div>
-</div>
+## Token-change checkpoint
 
----
+Canonical token JSON under `tokens/` is the editing surface. Generated CSS, TypeScript, Figma payloads, and Pencil payloads are delivery outputs.
 
-## Checkpoint 1: PR Review
+1. Update the smallest canonical token that owns the design decision.
+2. Run `npm run build-tokens`.
+3. Run `npm run quality` and `npm run build`.
+4. Review affected production components in Storybook across the relevant publication themes.
+5. Generate external-tool payloads only after the Git change is approved.
+6. Verify the actual external write in the destination tool; payload generation alone is not synchronization.
 
-When a PR touches files in `tokens/`, QA reviews it before merge. Here is the checklist.
+### External design-tool delivery
 
-### Naming Review
+<SpecTable rows={[
+  {
+    label: "Figma payload",
+    value: <code>npm run push-figma</code>,
+    evidence: <><code>scripts/push-to-figma.ts</code> reads canonical tokens and prints a Variables API payload. Despite the command name, the script does not perform the external write by itself.</>,
+  },
+  {
+    label: "Pencil payload",
+    value: <code>npm run push-pencil</code>,
+    evidence: <><code>scripts/push-to-pencil.ts</code> reads canonical tokens and prints a variable payload. An authorized Pencil tool call is still required.</>,
+  },
+  {
+    label: "Successful synchronization",
+    value: "Destination evidence required",
+    evidence: "Confirm canonical names, brand modes or themes, resolved values, and the destination revision after the write completes.",
+  },
+]} />
 
-<div style={{ overflowX: 'auto', margin: '24px 0' }}>
-<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
-  <thead>
-    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Check</th>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>How to verify</th>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Pass criteria</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Follows naming convention</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Read the token key in the JSON</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Matches <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>layer-category-element-variant-state</code> pattern</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Uses existing segment values</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Compare against Token Naming Guide</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Uses established sizes, states, and variants</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>No typos</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Visual inspection</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Spelling is correct (check the Known Typos list)</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>No duplicates</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Search the JSON file for similar names</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>No existing token with the same purpose</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Correct prefix</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Check if component-scoped</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Component tokens start with <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-</code></td>
-    </tr>
-  </tbody>
-</table>
-</div>
+Do not place credentials, access tokens, or private file identifiers in Storybook, screenshots, logs, or pull-request descriptions.
 
-### Value Review
+## Visual-regression checkpoint
 
-<div style={{ overflowX: 'auto', margin: '24px 0' }}>
-<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
-  <thead>
-    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Check</th>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>How to verify</th>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Pass criteria</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Color values are valid hex</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Inspect the value</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>6-digit hex with <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>#</code> prefix</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Numbers are reasonable</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Compare to existing scale</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Spacing, radius, and sizes fit the established scale</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Font names are correct</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Cross-reference with <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'_meta.json'}</code></td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Matches a font available in the system</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Brand-specific values differ</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Compare across brand files</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Each brand has an appropriate override</td>
-    </tr>
-  </tbody>
-</table>
-</div>
+Stable production-backed states have reviewed PNG baselines.
 
-### File Placement Review
+- Run `npm run test:visual` to compare current output with reviewed baselines.
+- Use `npm run test:visual:update` only after comparing the changed component with the production authority.
+- Never refresh a baseline solely to make the gate pass.
+- Keep interaction stories separate from stable visual stories when an interaction changes state while capture is in progress.
+- A green baseline proves stability against that reviewed image, not correctness for every publication or content combination.
 
-<div style={{ overflowX: 'auto', margin: '24px 0' }}>
-<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
-  <thead>
-    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Check</th>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>How to verify</th>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Pass criteria</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Global tokens in <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>core/global.json</code></td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Check file path</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Tokens that are the same across all brands</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Brand tokens in <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'brands/{slug}.json'}</code></td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Check file path</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Tokens that differ per brand</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Semantic aliases in <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>semantic/aliases.json</code></td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Check file path</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Aliases that reference <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'$brand-N'}</code></td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Font overrides in <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'_meta.json'}</code></td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Check file path</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Headline/secondary font overrides</td>
-    </tr>
-  </tbody>
-</table>
-</div>
+## Release checkpoint
 
-### Visual Review
+The project does not currently define a formal versioned package release. Until one is established, changes remain under **Unreleased** in `CHANGELOG.md`.
 
-<div style={{ overflowX: 'auto', margin: '24px 0' }}>
-<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
-  <thead>
-    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Check</th>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>How to verify</th>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Pass criteria</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Component renders correctly</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Run <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>npm run dev</code> or <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>npm run storybook</code></td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>No visual breaks</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Works across 3+ brands</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Switch brands in Storybook toolbar</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Colors, fonts, and spacing adapt correctly</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>No regressions</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Compare existing components</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Other components still look correct</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Build passes</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Run <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>npm run build-tokens</code></td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>No errors in terminal</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Validation passes</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Run <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>npm run tokens:validate</code></td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>No reference errors</td>
-    </tr>
-  </tbody>
-</table>
-</div>
+Before describing a change as released:
 
-### PR Review Template
+1. Complete the repository quality workflow and application build.
+2. Obtain the accountable reviews defined in **Delivery / Governance**.
+3. Record consumer impact and compatibility in `CHANGELOG.md`.
+4. Publish through the authorized release or deployment process.
+5. Verify the resulting artifact, route, and exact source revision.
+6. Record deployment-specific smoke tests and remaining limitations.
 
-QA can paste this checklist into the PR review comment:
+A local build, a passing Storybook suite, a merge to `main`, or a generated Figma/Pencil payload is not by itself proof of a production release.
 
-<div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '24px', margin: '24px 0' }}>
-<div style={{ fontFamily: 'monospace', fontSize: '13px', lineHeight: '2.2', color: '#334155' }}>
-  <div style={{ fontWeight: 700, fontSize: '14px', fontFamily: 'sans-serif', marginBottom: '8px' }}>QA Review Checklist</div>
-  <div>[ ] Token names follow naming convention</div>
-  <div>[ ] No typos or duplicates</div>
-  <div>[ ] Values are correct (hex, numbers, strings)</div>
-  <div>[ ] Tokens are in the correct JSON file</div>
-  <div>[ ] build-tokens runs without errors</div>
-  <div>[ ] tokens:validate passes</div>
-  <div>[ ] Renders correctly in Storybook (3+ brands)</div>
-  <div>[ ] No visual regressions in existing components</div>
-  <div>[ ] PR description lists all new/changed token names</div>
-  <div>[ ] Jira ticket linked</div>
-</div>
-</div>
+### Published Storybook verification
 
----
+The static Storybook artifact includes `build-info.json` with its exact source
+revision, build context, build time, and catalog counts. After the authorized
+deployment is complete, run:
 
-## Checkpoint 2: Post-Sync Verification
-
-After the PR is merged and the developer runs `push-figma` + `push-pencil`, QA (or the designer) verifies the tokens arrived correctly.
-
-### Figma Verification
-
-<div style={{ overflowX: 'auto', margin: '24px 0' }}>
-<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
-  <thead>
-    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Check</th>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>How to verify</th>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Pass criteria</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Token exists</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Open Variables panel, search by canonical name</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>{'Token appears in the "Hearst Design System" collection'}</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Correct value per brand</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Switch between brand modes</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Each mode shows the expected value</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>codeSyntax.WEB is set</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Inspect the variable</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Shows the corresponding <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'--token-name'}</code> CSS variable</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-### Pencil Verification
-
-<div style={{ overflowX: 'auto', margin: '24px 0' }}>
-<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
-  <thead>
-    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Check</th>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>How to verify</th>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Pass criteria</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Variable exists</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Search variables in Pencil or use MCP <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>get_variables</code></td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Variable appears with the canonical name</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Correct value per theme</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Switch brand themes in Pencil</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Each theme resolves to the expected value</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>No stale duplicates</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Check variable count</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>No duplicate entries for the same brand</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-### Production Verification
-
-<div style={{ overflowX: 'auto', margin: '24px 0' }}>
-<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
-  <thead>
-    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Check</th>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>How to verify</th>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Pass criteria</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Storybook is deployed</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Visit the production Storybook URL</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>New component/changes are visible</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Component renders correctly</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Switch brands in the toolbar</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>All brands render as expected</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Token values match Git</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Compare Storybook output to JSON values</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>CSS variables resolve to the correct values</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-### Post-Sync Checklist
-
-<div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '24px', margin: '24px 0' }}>
-<div style={{ fontFamily: 'monospace', fontSize: '13px', lineHeight: '2.2', color: '#334155' }}>
-  <div style={{ fontWeight: 700, fontSize: '14px', fontFamily: 'sans-serif', marginBottom: '8px' }}>Post-Sync Verification Checklist</div>
-  <div>[ ] Tokens appear in Figma Variables panel</div>
-  <div>[ ] Figma values are correct per brand mode</div>
-  <div>[ ] Tokens appear in Pencil as $variable</div>
-  <div>[ ] Pencil values are correct per brand theme</div>
-  <div>[ ] Storybook is deployed and accessible</div>
-  <div>[ ] Component renders correctly on production</div>
-  <div>[ ] Jira ticket moved to Done</div>
-</div>
-</div>
-
----
-
-## QA Tools Summary
-
-<div style={{ overflowX: 'auto', margin: '24px 0' }}>
-<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
-  <thead>
-    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Tool</th>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>QA Use</th>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>When</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>GitHub PR</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Review JSON changes, naming, values, file placement</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Checkpoint 1</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Terminal</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>npm run build-tokens</code> and <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>npm run tokens:validate</code></td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Checkpoint 1</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Storybook (local)</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Visual review across brands, regression testing</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Checkpoint 1</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Figma</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Verify tokens in Variables panel, check brand modes</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Checkpoint 2</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Pencil</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Verify variables exist and resolve correctly per theme</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Checkpoint 2</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Pencil MCP</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>get_variables</code> for programmatic verification of all values</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Checkpoint 2</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Storybook (production)</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Final visual verification on the deployed site</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Checkpoint 2</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Jira</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Track status, link PRs, record verification results</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Both checkpoints</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
----
-
-## Future Automation
-
-These are optional improvements that can be added over time. None are required to start.
-
-### GitHub Actions (CI)
-
-<div style={{ overflowX: 'auto', margin: '24px 0' }}>
-<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
-  <thead>
-    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Automation</th>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Trigger</th>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>What it does</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Token validation</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>PR opened/updated that touches <code style={{ background: '#f1f5f9', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>tokens/</code></td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Runs <code style={{ background: '#f1f5f9', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>build-tokens</code> + <code style={{ background: '#f1f5f9', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>tokens:validate</code>; blocks merge on failure</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Storybook preview</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>PR opened/updated</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Deploys a Storybook preview URL for visual review without running locally</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Token diff comment</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>PR opened/updated that touches <code style={{ background: '#f1f5f9', padding: '2px 4px', borderRadius: '3px', color: '#334155' }}>tokens/</code></td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Posts a PR comment listing all added/changed/removed tokens with before/after values</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-### Jira + GitHub Integration
-
-<div style={{ overflowX: 'auto', margin: '24px 0' }}>
-<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
-  <thead>
-    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Automation</th>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Trigger</th>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>What it does</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Auto-transition to In Review</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>PR opened with Jira ticket ID in title</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Jira ticket moves from In Progress to In Review</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Auto-transition to Merged</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>PR merged</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Jira ticket moves from In Review to Merged</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-### Slack Notifications
-
-<div style={{ overflowX: 'auto', margin: '24px 0' }}>
-<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
-  <thead>
-    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Automation</th>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Trigger</th>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>What it does</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Token sync notification</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Developer runs push-figma + push-pencil</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Posts to #design-system channel: "New tokens synced: [list of canonical names]"</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Deploy notification</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Netlify deploy succeeds</td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Posts to #design-system channel with Storybook URL</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
----
-
-## The Full Picture
-
-```
-                    JIRA                          GITHUB                    TOOLS
-                    ────                          ──────                    ─────
-
-Designer files ──► Requested                                               Figma
-ticket (or edits      │                                                    (reference)
-in an IDE)            │  Developer or designer picks up
-                      ▼
-                  In Progress ──────────────► Branch created              VS Code
-                      │                       Token JSON edited             IDE
-                      │                       build-tokens + tokens:check
-                      ▼                            │
-                  In Review ◄──────────────── PR opened ◄──── QA         Storybook
-                      │                       QA reviews                  (local)
-                      │                       naming, values,
-                      │                       visual output
-                      ▼                            │
-                   Merged ◄─────────────────  PR merged                  Netlify
-                      │                       auto-deploy                (auto)
-                      │
-                      │  push-figma
-                      │  push-pencil
-                      ▼
-                   Synced ──────────────────────────────────── QA         Figma
-                      │                                       verifies   Pencil
-                      │  Designer confirms                               Storybook
-                      ▼                                                  (production)
-                    Done
+```bash
+STORYBOOK_URL=https://hearst-design-system.netlify.app/storybook/ EXPECTED_REVISION=<full-commit-sha> npm run verify:storybook:deployment
 ```
 
----
+The command fails when the provenance file is missing, the deployed revision is
+not the reviewed revision, the built and published catalog counts disagree, or
+the endpoint does not respond within the bounded verification timeout.
 
-*Start with the manual process. Add automation as the team grows and the volume of token changes increases.*
+## Current gaps
+
+| Gap | Impact | Recommended evidence |
+|---|---|---|
+| No `CODEOWNERS` mapping | Documented review roles are not automatically requested or enforced | Add real team/user mappings after repository administrators confirm ownership |
+| No repository evidence for Jira automation | Status transitions and ticket gates cannot be treated as system behavior | Link the authoritative Jira workflow or configure and test the integration |
+| No repository-owned Storybook preview workflow | Pull-request preview availability cannot be promised | Add and verify a preview workflow, then document its URL and revision contract |
+| External token writes are manual | Payload generation can be mistaken for successful synchronization | Add destination verification output and retain a non-secret sync record |
+| No formal versioned package release | Deprecation timing and semantic versions cannot yet be measured against published versions | Establish the package artifact, registry, version source, and release workflow |
+| Manual accessibility evidence is not stored consistently | Automated success may be mistaken for conformance | Add a compact review template for screen reader, zoom, forced colors, reduced motion, and touch |
+
+## Related specifications
+
+- **Delivery / Governance** — ownership, change classification, deprecation, and release policy.
+- **Delivery / Token Workflow** — canonical token lifecycle.
+- **Foundation / Token Usage** — implementation rules for CSS variables and Tailwind.
+- **Components / Inventory** — component coverage and remaining audit depth.

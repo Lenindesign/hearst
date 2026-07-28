@@ -1,9 +1,17 @@
-import React, { useMemo, useEffect } from "react";
+import React, { useCallback, useMemo, useEffect, useState } from "react";
 import type { Decorator } from "@storybook/react";
 import { ReaderAccountProvider } from "../src/components/reader-account";
-import { ThemeContext } from "../src/components/theme-provider";
+import {
+  ThemeContext,
+  type ThemeColorMode,
+  type ThemeContextType,
+} from "../src/components/theme-provider";
 import { brandToCssVars } from "../src/lib/theme-css-vars";
 import { themeOptions } from "../src/lib/theme-options";
+import {
+  getHearstBrandSection,
+  hearstSectionThemeSlugs,
+} from "../src/lib/hearst-routes";
 
 const GOOGLE_FONTS: Record<string, string> = {
   "Inter": "Inter:wght@300;400;500;600;700;800;900",
@@ -55,22 +63,65 @@ function useGoogleFonts(fonts: string[]) {
 export const ThemeDecorator: Decorator = (Story, context) => {
   const brandSlug = context.globals.brand || "hearst-all";
   const fullscreen = context.parameters.layout === "fullscreen";
+  const syncDocumentColorMode = context.parameters.themeRootSync !== false;
+  const [colorMode, setColorMode] = useState<ThemeColorMode>("light");
+  const [runtimeBrandSlug, setRuntimeBrandSlug] = useState(brandSlug);
+
+  useEffect(() => {
+    setRuntimeBrandSlug(brandSlug);
+  }, [brandSlug]);
+
   const brand = useMemo(
-    () => themeOptions.find((b) => b.slug === brandSlug) || themeOptions[0],
-    [brandSlug]
+    () => themeOptions.find((b) => b.slug === runtimeBrandSlug) || themeOptions[0],
+    [runtimeBrandSlug]
   );
-  const cssVars = useMemo(() => brandToCssVars(brand), [brand]);
-  const themeCtx = useMemo(
-    () => ({ brand, setBrand: () => {} }),
-    [brand]
+  const baseBrand = useMemo(() => {
+    if (
+      brand.slug.startsWith("hearst-")
+      || brand.slug === "white-label"
+      || brand.slug === "fre"
+    ) {
+      return brand;
+    }
+
+    const section = getHearstBrandSection(brand.slug);
+    const baseSlug = hearstSectionThemeSlugs[section];
+    return themeOptions.find((candidate) => candidate.slug === baseSlug) || themeOptions[0];
+  }, [brand]);
+  const cssVars = useMemo(
+    () => ({
+      ...brandToCssVars(baseBrand, colorMode),
+      ...brandToCssVars(brand, colorMode),
+    }),
+    [baseBrand, brand, colorMode]
+  );
+  const toggleColorMode = useCallback(
+    () => setColorMode((current) => current === "dark" ? "light" : "dark"),
+    []
+  );
+  const themeCtx = useMemo<ThemeContextType>(
+    () => ({
+      brand,
+      setBrand: setRuntimeBrandSlug,
+      colorMode,
+      toggleColorMode,
+    }),
+    [brand, colorMode, toggleColorMode]
   );
 
   useGoogleFonts([brand.fontDefault, brand.fontSecondary, brand.fontHeadline]);
 
+  useEffect(() => {
+    if (!syncDocumentColorMode) return;
+    document.documentElement.classList.toggle("dark", colorMode === "dark");
+    document.documentElement.style.colorScheme = colorMode;
+  }, [colorMode, syncDocumentColorMode]);
+
   return (
     <ThemeContext.Provider value={themeCtx}>
       <div
-        data-brand={brand.slug}
+        data-brand={baseBrand.slug}
+        data-storybook-brand={brand.slug}
         style={{
           ...cssVars,
           fontFamily: `"${brand.fontDefault}", system-ui, sans-serif`,

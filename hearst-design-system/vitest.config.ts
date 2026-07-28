@@ -24,6 +24,10 @@ export default defineConfig({
         ],
         test: {
           name: 'storybook',
+          // Stories exercise shared browser state such as focus, localStorage,
+          // and document-level theme attributes. Run files sequentially so
+          // those production contracts cannot interfere across story files.
+          fileParallelism: false,
           browser: {
             enabled: true,
             headless: true,

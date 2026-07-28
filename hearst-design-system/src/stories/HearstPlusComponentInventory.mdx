@@ -1,13 +1,78 @@
 import { Meta } from "@storybook/blocks";
-import { HearstPlusDocScope, SpecTable } from "./hearst-plus-docs";
+import componentIndex from "../../reports/component-index.json";
+import { HearstPlusDocScope, SpecTable, StorybookCatalogStatus } from "./hearst-plus-docs";
 
 <Meta title="Hearst Plus/Components/Inventory" />
 
 # Hearst+ component inventory
 
-<HearstPlusDocScope owner="Cross-functional" source="src/components/home-page.tsx; src/components/ui/; APP_RULES.md; STYLE.md">
+<HearstPlusDocScope owner="Cross-functional" source="src/components/home-page.tsx; src/components/hearst-plus/; src/components/ui/; APP_RULES.md; STYLE.md">
   This inventory separates the components that developers should reuse from the page orchestration that should remain in templates. The examples in this Storybook render production React components rather than parallel mock implementations.
 </HearstPlusDocScope>
+
+## Current catalog evidence
+
+<StorybookCatalogStatus />
+
+The live values above come from this running Storybook’s `/index.json`; they are not hand-maintained totals. The implementation registry below is generated from the current checkout by `npm run index` before Storybook starts or builds.
+
+<SpecTable rows={[
+  {
+    label: "Implementation modules",
+    value: <strong>{componentIndex.totalComponents}</strong>,
+    evidence: <><code>reports/component-index.json</code> scans production <code>src/components/**/*.tsx</code> files. This is an implementation count, not a claim that every file is a reusable public component.</>,
+  },
+  {
+    label: "Hearst+ modules",
+    value: <strong>{componentIndex.byNamespace["hearst-plus"] ?? 0}</strong>,
+    evidence: "Production modules under src/components/hearst-plus/. Direct Storybook stories import their public production exports; templates keep routing and orchestration integrated.",
+  },
+  {
+    label: "Structured metadata",
+    value: <strong>{componentIndex.metadataCoverage.componentsWithMetadata} of {componentIndex.totalComponents} ({componentIndex.metadataCoverage.coveragePercent}%)</strong>,
+    evidence: <><code>*.metadata.ts</code> files beside current implementation modules. Missing metadata is reported as a gap, not silently treated as complete documentation.</>,
+  },
+  {
+    label: "Validated metadata",
+    value: <strong>{componentIndex.metadataCoverage.validMetadata} of {componentIndex.metadataCoverage.componentsWithMetadata}</strong>,
+    evidence: <>The component index checks each metadata path, public export, component dependency, and current implementation consumer against source. <code>npm run index:check</code> fails when a record drifts.</>,
+  },
+  {
+    label: "Directly specified components",
+    value: <strong>{componentIndex.storyCoverage.directlySpecifiedComponents} of {componentIndex.totalComponents}</strong>,
+    evidence: <>Production component exports mapped to at least one indexed <code>*.stories.ts(x)</code> file. The indexer resolves direct imports and named re-exports through component barrels rather than counting an unrelated file import.</>,
+  },
+  {
+    label: "Production specifications",
+    value: <strong>{componentIndex.storyCoverage.specifiedComponents} of {componentIndex.totalComponents}</strong>,
+    evidence: <>Direct specifications plus validated integrated specifications for components that are only meaningful inside their shipped composition. Integrated evidence must name a current indexed story file and explain why isolation would reduce production fidelity.</>,
+  },
+  {
+    label: "Integrated specifications",
+    value: <strong>{componentIndex.storyCoverage.integratedSpecifiedComponents}</strong>,
+    evidence: <>Current production boundaries whose sibling metadata declares validated <code>storybook.kind = "integrated"</code> evidence. This is not inferred from transitive imports.</>,
+  },
+  {
+    label: "Infrastructure classifications",
+    value: <strong>{componentIndex.storyCoverage.infrastructureClassifiedComponents}</strong>,
+    evidence: <>Non-visual providers or state modules explicitly documented as infrastructure. These classifications require metadata and do not count as visual specifications.</>,
+  },
+  {
+    label: "Needs ownership classification",
+    value: <strong>{componentIndex.storyCoverage.productionUsedWithoutStorybookSpecification}</strong>,
+    evidence: <>Production-referenced modules without a mapped direct story, validated integrated specification, or explicit infrastructure classification. This is a review queue, not an automatic missing-component count: routes, page orchestrators, providers, and integrated-only boundaries still require source-backed classification.</>,
+  },
+]} />
+
+**Registry limit:** rendering in Storybook does not make a component production-owned. A production claim requires the shipped React source plus an application import site; the story supplies an executable specification of that same boundary. The generated registry inventories code, metadata, direct application import sites, direct story mappings, and validated explicit integrated or infrastructure classifications; `/index.json` inventories the running catalog. The ownership-classification queue still requires human review of whether a module is a reusable component, an integrated boundary, a route/template, or internal support code.
+
+## Design-system tooling boundary
+
+The routed design-system documentation site is also production software, but its shell is not a Hearst+ reader component. `NavBar` is therefore specified under **Design System Tooling / Navigation**, outside the Hearst+ hierarchy. Four direct stories use the exact `DesignSystemNavBar` renderer to cover the documentation-home state, component subnavigation, the mobile-open disclosure, and keyboard dismissal with focus restoration. The live wrapper supplies only the current Next.js pathname and environment-aware Storybook URL.
+
+This separation prevents the internal tool header from being offered as product navigation. The tooling specification still enforces one page-level heading, named navigation regions, a named brand-preview selector, current-page semantics, 44px phone controls, Escape dismissal, no horizontal clipping at the reviewed desktop width, and automated color contrast.
+
+`ProductStoryShell` is the second explicit tooling boundary. It supplies the shared stakeholder modules used by the routed Product Story, Why Hearst+, Product Blueprint, and Token Architecture pages; it is not a reader-facing Hearst+ shell. Nine stories under **Design System Tooling / Product Specification Modules** import the exact production exports for the shared header, illustrative navigation and story concepts, current portfolio facts, journey/ranking diagrams, architecture/palette references, publication style guide, and portfolio marquee. Static diagrams are identified as figures rather than interactive product controls, illustrative cards say so in their accessible names, and the shared navigation preserves one visible current-page state, 44px targets, and page-level overflow containment from 320px through desktop.
 
 ## Architecture
 
@@ -17,17 +82,17 @@ Hearst+ uses four layers. A component should live at the lowest layer that fully
   {
     label: "HDS primitives",
     value: "Accessible controls and low-level content anatomy.",
-    evidence: <><code>src/components/ui/</code>: Button, Badge, Avatar, Card, Carousel, Tabs, Input, Switch, and ArticleCard.</>,
+    evidence: <><code>src/components/ui/</code> contains the implementation layer. Direct Storybook specifications cover Button, Badge, Avatar, Input, ArticleCard, Accordion, Card, Carousel, Chip, Divider, Separator, Link, Pagination, and Tabs. Alert, Select, Switch, Textarea, and Toggle remain outside the indexed catalog because they have no current application route or application import site.</>,
   },
   {
     label: "Editorial patterns",
     value: "Reusable story treatments that preserve article, gallery, and video meaning.",
-    evidence: "LifestyleRiverCard, RichPhotoGalleryCard, VideoFeedLeadCard, VideoIndexCard, and VideoRailCard.",
+    evidence: "LifestyleRiverCard, RichPhotoGalleryCard, VideoFeedLeadCard, VideoIndexCard, VideoRailCard, and the shared StoryPresentation resolver.",
   },
   {
     label: "Product modules",
     value: "Reader-facing combinations with Hearst+ behavior and context.",
-    evidence: "MainNav, VerticalVideoCarousel, LifestyleStoryActions, sidebars, and reader overlays.",
+    evidence: "UtilityBar, MainNav, ReaderAccountUI, BrandSourceIcon, StoryMetadata, AdaptiveVideo, VerticalVideoCarousel, DelishShortsImmersiveViewer, LifestyleDiscoverySidebar, ContentReaderDialogShell, ContentReaderMasthead, ReaderActionBar, ReaderArticleBody, ReaderQueueModel, ReaderNavigationContract, LifestyleStoryActions, and reader overlays.",
   },
   {
     label: "Templates",
@@ -38,7 +103,7 @@ Hearst+ uses four layers. A component should live at the lowest layer that fully
 
 ## Recommended Storybook library
 
-Use the **Brand** toolbar to review shared components in another Hearst publication. Editorial cards, video cards, vertical-video carousels, navigation, and the reader modal update their HDS tokens and publication fixture together.
+Use the **Brand** toolbar to review shared components in another Hearst publication. Editorial cards, video cards, vertical-video carousels, navigation, reader controls, and the reader modal update their HDS tokens and publication fixture together. The direct **Reader Masthead / Publication scope** specification also follows this toolbar; it must not lock a fixture brand because the selected publication controls its logo, canonical route, sibling publications, and current section.
 
 The catalog uses a compact generated fixture instead of importing every production river into the browser. Run `npm run storybook:fixtures` after changing checked-in feed modules; `npm run feed:refresh` already performs this step. Production routes continue to use the full inventories.
 
@@ -47,30 +112,67 @@ The catalog uses a compact generated fixture instead of importing every producti
 | P0 | Navigation | Light destination navigation, Videos dark exception, mobile menu, search, active state | Added in **Components / Navigation** |
 | P0 | Editorial cards | Standard river card, featured card, rich photo mosaic, saved and focus states | Added in **Components / Editorial Cards** |
 | P0 | Video cards | Lead, feed, trending rail, poster/error states | Added in **Components / Video Cards** |
-| P0 | Reader overlays | Open content reader with real destination context and focus restoration | Added in **Components / Reader Overlays** |
-| P1 | Story actions | Save, More like this, comments, Hide, and live status across breakpoints | Covered inside editorial cards; add an isolated state matrix when the API stabilizes |
-| P1 | Vertical video carousel | Publication title and icon, light and dark rail, portrait inventory, immersive viewer, swipe directions | Brand-aware light rail added; keep the immersive viewer as an integrated interaction story |
-| P1 | Sidebars | Daily Habit, Global Story Inventory, Trending Across Brands, Trending Videos | Add after the sidebar modules are extracted from the page file |
-| P1 | Today’s Edit | Ranked module, brand spotlight, responsive card composition | Keep integrated until its ranking inputs have a stable public contract |
+| P0 | Adaptive video playback | Direct MP4, portrait sizing, HLS delegation, native playback attributes, announced retryable failure, 44px retry target, and missing-source omission | **Components / Adaptive Video** directly specifies the exact player shared by production feed video, video cards, and Delish Shorts; local reviewed MP4 fixtures keep Storybook deterministic |
+| P0 | Reader account presentation | Browser-local sign in and creation, optional verified Google sync, avatar fallback, validation, profile overview, selected preferences, populated and empty library/comments, retryable sync error, confirmed destructive actions, focus restoration, and 44px phone controls | **Components / Reader Account** directly specifies the exact `ReaderAuthDialog`, `ReaderProfileDialog`, and `ReaderAvatar` production exports; `ReaderAccountProvider` remains infrastructure and the static catalog explicitly mocks unavailable Next.js account routes |
+| P0 | Featured carousel | Five-story Today’s Picks edition, mixed article/video inventory, active-slide semantics, save and preference actions, mobile targets, publication treatment, single-story fallback, and empty allocation | **Components / Featured Carousel** now specifies the extracted production carousel directly |
+| P0 | Reader masthead | Publication and destination identity, canonical homepage links, loaded-story status, ordered and explicitly labelled scope navigation, contextual filters, sibling-loading feedback, dark Fashion & Luxury treatment, and responsive dismissal | **Components / Reader Masthead** has four direct specifications using the exact production component, route definitions, generated fixtures, official Phosphor loading icon, live Brand toolbar, and the same publication- or destination-scope names exposed by production |
+| P0 | Reader overlays | Publication- and destination-origin identity, deterministic queue selection, canonical URLs, return-position continuity, initial focus, forward and reverse focus wrapping, Escape dismissal, nested gallery and Ambient Reader isolation, exact opener restoration, error handling, comments, related-content ranking, and explicit publication/destination navigation names | **Components / Reader Overlays** now has five integrated production specifications using the extracted ContentReaderDialogShell; the queue and content-reader models each have five unit specifications, and navigation has six |
+| P0 | Reader controls | Author and date metadata, saved state, comments, premium-ready, premium-loading, and premium-unavailable | Added in **Components / Reader Controls** |
+| P0 | Reader body | Video summary, live loading, structured article blocks, load failure, and deterministic fallback | Added in **Components / Reader Body** using the production component |
+| P0 | Reader comments | Story-specific seeded discussion, current-session comments, disabled blank submission, newest-first posting, clear composer reset, labelled comment actions, and 44px phone controls | **Components / Reader Comments** now specifies the extracted production component directly; production intentionally always supplies deterministic seeded discussion, so there is no empty visual state |
+| P0 | Reader recommendations | Ranked topic, brand, tag, freshness, and reader-intent matches; same-reader navigation; concise accessible names; phone targets; and the no-eligible-story fallback | **Components / Reader Recommendations** now specifies the exact extracted production boundary with ranked and intentionally omitted states |
+| P0 | Reader context rail | Desktop-only intent, publication, and topic groups; unique story allocation; active-article context; concise accessible names; reader-intent fallback; and intentional phone omission | **Components / Reader Context Rail** now specifies the exact extracted production boundary with ranked unique groups, the fallback-only state, and the below-desktop omission contract |
+| P0 | Reader advertisement | Destination-scoped selection, visible and semantic disclosure, verified campaign destinations, unavailable prototype CTA, 44px action target, no-eligible inventory, and intentional phone/tablet omission | **Components / Reader Advertisement** now specifies the exact extracted production boundary with prototype, verified-link, responsive-omission, and no-ad states; three unit specifications lock destination scoping and ranking |
+| P0 | River advertisement | Inline advertising disclosure, sponsor and campaign identity, verified campaign destinations, unavailable prototype CTA, decorative repeated imagery, hidden targeting diagnostics, 44px action target, no-eligible inventory, and phone reflow | **Components / River Advertisement** now specifies the exact extracted production boundary with prototype, verified-link, responsive-phone, and no-ad states |
+| P0 | Brand Spotlight | Deterministic three- or four-story publication selection, active-publication exclusion, concise editorial copy, canonical publication navigation, meaningful format labels, concise story actions, ineligible omission, and phone reflow | **Components / Brand Spotlight** now specifies the exact extracted production boundary with editorial, publication-link, responsive-phone, and no-eligible-publication states; three unit specifications lock eligibility, ranking, deduplication, exclusion, and rotation |
+| P0 | Reader image viewer | Gallery and single-image modes, keyboard, focus, swipe, zoom, slideshow, caption/credit, save, and related-story actions | Added in **Components / Reader Image Viewer** using the production component |
+| P0 | Ambient Reader | Publication article, discovery status, related stories, keyboard navigation, theme and density preferences, focus restoration, 44px phone controls, and sponsored interstitial | Added in **Components / Ambient Reader** using the exported production component and the exact Esquire production story |
+| P0 | Story presentation | One production classification contract for Article, Gallery, Watch, Recipe, Specs, Shop, and Guide; reviewed image crops; and recipe, vehicle, shopping, and guide metadata | **Components / Story Presentation** renders seven current production-aligned specimens through the exact resolver and modules used by the feed |
+| P0 | Onboarding | One or two interests, live preview, optional trusted publications, complete 29-publication inventory, completion/account handoff, modal keyboard behavior, focus restoration, 44px targets, and phone reflow | **Product / Onboarding** now specifies the exact extracted production component through four direct executable stories; the journey docs embed those states rather than duplicating them |
+| P1 | Story actions | Save, More like this, comments, Hide, and current-feed status across breakpoints | **Components / Story Actions** now specifies the extracted production action group, saved state, action feedback, current-feed status, 44px phone controls, and adjacent-card focus after Hide |
+| P1 | Story source and metadata | All 29 publication icons, failed-asset initials fallback, canonical publication links, 44px phone targets, live versus standard status, recommendation omission, and live/story/fallback byline precedence | **Components / Story Metadata** directly specifies `BrandSourceIcon` and the shared metadata utilities used by eleven production modules; both now use the canonical `lib/logos.ts` source registry |
+| P1 | Vertical video carousel and viewer | Publication title and icon, light and dark rail, portrait inventory, scroll-snap viewer, swipe and keyboard directions, save/mute/playback, Read story, modal isolation, focus restoration, reduced motion, and one-short boundary | **Components / Video Cards** specifies the production rail; **Components / Delish Shorts Viewer** specifies the extracted production viewer and its complete interaction contract |
+| P1 | Sidebars | Daily Habit, Global Story Inventory, source and OEM filters, followed topics, collections, Trending Across Brands, Trending Videos | **Components / Discovery Sidebar** specifies the extracted production left rail; **Components / Trending Rails** now specifies the production article and video right rails, publication scoping, interactions, and omitted empty allocation |
+| P1 | Stakeholder personalization console | Live score evidence, daypart and return simulation, behavior presets, reset, production-rule guides, no-eligible-story evidence, modal isolation, focus restoration, and phone reflow | **Product / Stakeholder Personalization Console** specifies the extracted production renderer directly through ranked, empty-score, and 320px executable stories; production still supplies the live ranking model and route-specific guide content |
+| P1 | Foundation surface primitives | Card anatomy and density; Carousel horizontal, vertical, responsive, keyboard, and single-slide states; Tabs default, line, vertical, disabled, and keyboard states | **HDS Primitives / Card**, **Carousel**, and **Tabs** now specify their exact production components and current application contracts |
+| P1 | Brand wordmarks | Complete local destination and publication registry, canonical accessible names, intrinsic aspect ratios, monochrome light-on-dark treatment, decorative usage, loading/error diagnostics, and unregistered-asset omission | **Foundation / Brand Logos** directly specifies the exact production `BrandLogo` renderer. The component and `lib/logos.ts` now own one shared asset/name contract across production and Storybook; compact source icons remain a separate `BrandSourceIcon` responsibility |
+
+## Quarantined candidates
+
+The following source files are not listed as production components:
+
+- `src/components/ui/alert.tsx` — no application route or application import;
+- `src/components/ui/select.tsx` — no application route or application import;
+- `src/components/ui/switch.tsx` — no application route or application import;
+- `src/components/ui/textarea.tsx` — no application route or application import;
+- `src/components/ui/toggle.tsx` — imported only by the currently unused ToggleGroup primitive.
+
+Their exploratory specifications remain in the explicitly non-indexed `src/storybook-candidates/` directory. Promoting one into the official catalog requires a real production use, confirmed API ownership, a direct story, interaction and accessibility coverage, responsive evidence, and validated structured metadata in the same change. A complete-looking Storybook demo alone is not sufficient.
 
 ## Keep these integrated
 
-- **Personalization console:** it explains and manipulates page-level ranking state.
+- **Theme runtime:** the global toolbar adapter now implements the complete production `ThemeContext` contract, while **Foundation / Theme Runtime** mounts the exact production `ThemeProvider` to verify publication switching, generated variables, Hearst Flux dark default, mode toggling, document synchronization, and disabled persistence. Keep adapter behavior and exact-provider evidence distinct; a toolbar preview alone is not proof of the production runtime.
+- **Reader account provider:** `ReaderAccountProvider` is explicitly classified as non-visual application infrastructure. The root application layout and the global Storybook decorator mount the same provider; account presentation remains in the production `ReaderAccountUI` stories, while pure normalization and merge behavior stay in `reader-account-model` tests. Its metadata records the real prototype boundary: browser-local credential state, sync-id profile access without a production server session, no production consent or retention contract, and local-only deletion. A standalone provider card would invent UI and duplicate the real account surfaces.
+- **Product specification shell:** keep the exact stakeholder modules under **Design System Tooling**, not under reader Components or Templates. The four routed specification pages remain the production consumers; direct stories specify the reusable module boundary while route content and editorial claims stay owned by those pages.
+- **Legacy FRE article primitives:** `ArticleHero`, `ArticleByline`, `ArticleBody`, `RelatedArticles`, and `AdPlaceholder` are exported through the FRE barrel but currently terminate in the unrouted `ArticlePageTemplate` or design-system layout examples. The shipped `/read/[storyId]/` experience uses the separate Hearst+ reader boundaries. Keep these modules in the ownership-classification queue until a routed production consumer exists; do not promote the quarantined Article Page story as evidence.
+- **Personalization orchestration:** the routed page owns live ranking inputs, visit history, simulation overrides, and the score model supplied to the extracted stakeholder console renderer.
 - **Infinite river orchestration:** it coordinates hydration, ranked batches, the sentinel, and cross-destination feeds.
 - **Games and destination pages:** they are templates made from reusable components, not library primitives.
-- **Reader modal internals:** the modal depends on routes, focus restoration, source-article loading, related-story queues, and theme switching. Document it as an integrated story until those boundaries are extracted deliberately.
+- **Reader modal and river orchestration:** the dialog shell, responsive masthead, queue selection, navigation/return contract, source readiness, comments, contextual recommendations, desktop context rail, desktop reader advertisement, inline river advertisement, Brand Spotlight rendering and selection, action bar, article-body rendering, fullscreen image viewer, and Ambient Reader are extracted production boundaries. Four direct masthead stories specify publication, destination, loading, dark-theme, and phone behavior; two direct comment stories specify deterministic discussion, session posting, disabled submission, accessible action names, and phone targets; two direct recommendation stories specify ranking, navigation, concise accessible names, phone targets, and intentional omission without eligible stories; three direct context-rail stories specify unique group allocation, active-story context, concise accessible names, its fallback, and intentional omission below desktop; four direct reader-advertisement stories specify destination-ready and unavailable campaign treatment, disclosure, its no-ad state, and intentional omission below desktop; four river-advertisement stories specify disclosure, verified and unavailable campaign treatment, hidden targeting diagnostics, phone reflow, and no eligible inventory; four Brand Spotlight stories specify editorial copy, publication navigation, concise story actions, phone reflow, and ineligible omission; five integrated stories specify the production shell, modal identity, source loading, route continuity, deterministic reader content, nested-overlay isolation, and exact focus restoration. The remaining page boundary still coordinates story delivery, ranking, and content composition; extract it only with its existing production import site.
 
 ## Technical audit
 
-| Area | Score | Evidence and next action |
-|---|---:|---|
-| Accessibility | 4 / 4 | Storybook runs axe checks as test failures. Input labeling and error relationships are explicit, and focused interaction tests verify button activation, save state, and brand output. Expand the keyboard matrix as new interactive components are extracted. |
-| Performance | 3 / 4 | The compact generated Storybook fixture replaces the full river imports and roughly halves the largest feed-data payload. The page orchestrator, HLS runtime, and accessibility runtime remain intentionally substantial. |
-| Responsive | 4 / 4 | Representative navigation, editorial-card, vertical-video, reader, and integrated-feed stories were exercised at 320px and 390px. Shared examples contain themselves without document-level horizontal overflow. |
-| Theming | 4 / 4 | Semantic HDS variables, keyed theme remounting, and a toolbar interaction check make publication changes visible after one selection. Light publication themes and the scoped Videos dark exception remain separate contracts. |
-| Maintainability | 3 / 4 | Storybook now imports through <code>src/components/hearst-plus/index.ts</code> and consumes generated representative fixtures. Several patterns still live inside <code>home-page.tsx</code>; extract them only alongside their production import sites. |
+| Area | Status | Evidence and next action |
+|---|---|---|
+| Accessibility | Partial | Storybook treats automated axe findings as test failures, and interaction tests cover selected controls, reader initial focus, forward and reverse focus wrapping, Escape dismissal, nested-layer isolation, exact opener restoration, masthead link/current-state semantics, polite loading status, labelled comment composition and actions, concise recommendation, context-rail, Brand Spotlight actions, and the separate design-system tool navigation’s named regions, current-page semantics, phone targets, Escape dismissal, and focus restoration. The product-specification tooling also distinguishes static diagrams from controls, names illustrative concepts, and verifies one visible current-page state plus 44px navigation targets. Specific reader- and river-advertisement names and disclosures, intentional context-rail/reader-advertisement omission below desktop, river-ad and Brand Spotlight phone reflow, and 44px phone Close/comment/recommendation plus campaign and publication targets are also covered. This is not a WCAG-conformance result: complete screen-reader, zoom, forced-colors, motion, and touch-target coverage remains open. |
+| Performance | Partial | The compact generated fixture keeps the catalog smaller than the production inventories. No performance budget or repeatable runtime measurement currently gates Storybook. |
+| Responsive | Strong automated baseline | Every indexed story is checked for rendering and horizontal page overflow at 320, 390, 768, and 1280 pixels. Pixel baselines include production-backed desktop and phone stakeholder-console cases; zoom/touch behavior still needs dedicated evidence. |
+| Theming | Production runtime specified | The Brand toolbar inherits destination foundation tokens before applying publication overrides and now implements the complete production context shape. Direct Theme Runtime stories mount the exact provider and verify publication switching, generated variables, Hearst Flux dark default, mode toggling, and document synchronization. A broader cross-brand visual-regression matrix remains open. |
+| Maintainability | Improving | Storybook imports through <code>src/components/hearst-plus/index.ts</code> and consumes generated representative fixtures. The Brand Logo registry/renderer, story-presentation resolver and modules, content-reader model, dialog shell, masthead, comments, recommendations, context rail, reader advertisement, river advertisement, Brand Spotlight renderer and selector, stakeholder personalization console, Delish Shorts viewer, story actions, featured carousel, discovery sidebar, article and video trending rails, Ambient Reader, reader body, reader controls, image viewer, queue model, navigation contract, video cards, and feed states are production-owned modules; the product-specification shell is separately classified and directly specified as design-system tooling. Remaining page orchestration should be extracted only alongside its production import sites. |
 
-**Current score: 18 / 20 — release-ready documentation and verification, with the remaining opportunity concentrated in production module boundaries and runtime weight.**
+**Current status: the automated Storybook suite is green, including the all-story responsive matrix. Component-state depth, cross-brand visual coverage, zoom, and assistive-technology evidence remain incomplete. Do not use this page as a release-readiness score.**
+
+The structured metadata convention is also incomplete: only **{componentIndex.metadataCoverage.componentsWithMetadata} of {componentIndex.totalComponents}** implementation modules currently have sibling metadata files, and **{componentIndex.metadataCoverage.validMetadata} of {componentIndex.metadataCoverage.componentsWithMetadata}** pass the source-graph validator. Metadata coverage should be expanded first for public primitives and production-owned Hearst+ modules; generated filenames or inferred atomic levels are discovery aids, not ownership evidence.
 
 ## Verified quality gate
 
@@ -78,12 +180,14 @@ Run these checks before publishing Storybook or changing a shared component:
 
 ```bash
 npx tsc --noEmit
+npm run test:unit
 npm run test-storybook
+npm run test:storybook:responsive
 npm run build-storybook
 npm run build
 ```
 
-The browser suite covers 98 stories and treats accessibility violations as failures. The production build remains a separate gate because Storybook deliberately uses compact static fixtures and blocks same-origin Next.js API calls instead of pretending its catalog is a live application server.
+The browser suite covers every indexed story and reports the exact current count during each run. The responsive suite covers all indexed stories at the four required widths and writes `reports/storybook-responsive.json`. Automated accessibility violations in rendered stories fail the browser suite, but the result does not replace manual assistive-technology, zoom, or touch testing. The production build remains a separate gate because Storybook deliberately uses compact static fixtures and blocks same-origin Next.js API calls instead of pretending its catalog is a live application server.
 
 ## Definition of done for a shared story
 

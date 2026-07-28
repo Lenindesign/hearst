@@ -1,20 +1,16 @@
 /**
- * Push Git Tokens → Figma Variables
+ * Generate Git Tokens → Figma Variables payload
  *
- * Reads the canonical token JSON files in tokens/ and pushes them
- * to a Figma file as Figma Variables via the Figma REST API.
+ * Reads the canonical token JSON files in tokens/ and prints a Figma
+ * Variables API payload. This script does not perform an external write.
  *
  * This keeps Figma in sync with the git source of truth, so designers
  * can use the correct tokens directly in the Figma variable picker.
  *
  * Usage: npm run push-figma
  *
- * Requires:
- *   FIGMA_FILE_KEY  — the Figma file key (from the URL)
- *   FIGMA_TOKEN     — a Figma personal access token with file:write scope
- *
- * The script outputs the Figma API payload to stdout.
- * When run via MCP, the agent can use the `postvariables` tool directly.
+ * The script outputs the Figma API payload to stdout. An authorized API or
+ * tool call, followed by destination-side verification, is still required.
  *
  * Architecture:
  *   - One variable collection: "Hearst Design System"
@@ -269,10 +265,10 @@ function main() {
   console.error(`  ${varCount} variables`);
   console.error(`  ${variableModeValues.length} mode values`);
   console.error("");
-  console.error("To push to Figma:");
-  console.error("  1. Set FIGMA_FILE_KEY and FIGMA_TOKEN environment variables");
-  console.error("  2. Use the Figma MCP postvariables tool with file_key and this payload");
-  console.error("  3. Or: npx tsx scripts/push-to-figma.ts > figma-payload.json");
+  console.error("To write these variables to Figma:");
+  console.error("  1. Save the payload: npx tsx scripts/push-to-figma.ts > figma-payload.json");
+  console.error("  2. Use an authorized Figma Variables API or tool call");
+  console.error("  3. Verify names, modes, values, and the destination revision");
 
   console.log(JSON.stringify(payload, null, 2));
 }

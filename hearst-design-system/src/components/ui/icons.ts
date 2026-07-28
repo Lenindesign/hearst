@@ -48,6 +48,7 @@ export { ShieldIcon as Shield } from "@phosphor-icons/react/dist/ssr/Shield";
 export { SignOutIcon as LogOut } from "@phosphor-icons/react/dist/ssr/SignOut";
 export { SlidersHorizontalIcon as SlidersHorizontal } from "@phosphor-icons/react/dist/ssr/SlidersHorizontal";
 export { SparkleIcon as Sparkles } from "@phosphor-icons/react/dist/ssr/Sparkle";
+export { SpinnerGapIcon as SpinnerGap } from "@phosphor-icons/react/dist/ssr/SpinnerGap";
 export { StarIcon as Star } from "@phosphor-icons/react/dist/ssr/Star";
 export { SunIcon as Sun } from "@phosphor-icons/react/dist/ssr/Sun";
 export { TagIcon as Tag } from "@phosphor-icons/react/dist/ssr/Tag";

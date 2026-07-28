@@ -82,8 +82,8 @@ shadcn is not a hosted runtime dependency or a second design system. It provides
   { label: "Git token JSON", value: "Canonical HDS token values", evidence: <code>tokens/core, tokens/semantic, tokens/brands</code> },
   { label: "Style Dictionary 5.3.3", value: "Token transformation and platform output", evidence: <code>style-dictionary.config.mjs</code> },
   { label: "Generated CSS and TypeScript", value: "Runtime variables and brand metadata consumed by React", evidence: <code>src/lib/tokens.css, src/lib/brands.ts</code> },
-  { label: "Figma", value: "Design exploration and variable consumption, not the production source of token values", evidence: <code>npm run push-figma</code> },
-  { label: "Pencil", value: "Token-aligned handoff and specification layer", evidence: <code>npm run push-pencil</code> },
+  { label: "Figma", value: "Optional downstream variable consumer, not the production source of token values", evidence: <><code>npm run push-figma</code> prints a payload only.</> },
+  { label: "Pencil", value: "Optional downstream variable or bounded handoff consumer", evidence: <><code>npm run push-pencil</code> prints a payload only.</> },
 ]}/>
 
 ## Documentation and verification

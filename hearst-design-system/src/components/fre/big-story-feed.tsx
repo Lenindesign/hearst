@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import {
   ArticleCard,
@@ -40,13 +41,15 @@ export function BigStoryFeedColRight({
     <div className={cn("grid grid-cols-[1fr_var(--width-sidebar)] gap-6", className)}>
       <div
         className="relative overflow-hidden rounded-lg cursor-pointer"
+        style={{ height: heroHeight }}
         onClick={onHeroClick}
       >
-        <img
+        <Image
           src={heroImage}
           alt="Hero"
-          className="w-full object-cover block"
-          style={{ height: heroHeight }}
+          fill
+          sizes="(max-width: 1024px) 100vw, 70vw"
+          className="object-cover"
         />
         <div className="absolute inset-x-0 bottom-0 px-6 pb-6 pt-8 bg-gradient-to-t from-foreground/75 to-transparent text-background">
           <h2 className="text-[length:var(--text-token-3xl)] leading-tight headline">{heroTitle}</h2>
@@ -60,6 +63,7 @@ export function BigStoryFeedColRight({
             size="sm"
             className="cursor-pointer ring-0 hover:ring-0 rounded-none bg-transparent"
             onClick={() => onSidebarClick?.(item.title)}
+            aria-label={onSidebarClick ? `Open story: ${item.title}` : undefined}
           >
             <ArticleCardImage src={item.image} aspectRatio="4/3" className="!w-[100px] !min-h-[72px]" />
             <ArticleCardContent>
@@ -106,6 +110,7 @@ export function BigStoryFeedStacked({
             size="sm"
             className="cursor-pointer ring-0 hover:ring-0 rounded-none bg-transparent"
             onClick={() => onArticleClick?.(item.title)}
+            aria-label={onArticleClick ? `Open story: ${item.title}` : undefined}
           >
             <ArticleCardImage
               src={item.image}

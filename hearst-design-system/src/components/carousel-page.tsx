@@ -9,7 +9,6 @@ import {
   CarouselPrevious,
   CarouselNext,
   useCarousel,
-  type CarouselApi,
 } from "@/components/ui/carousel";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -71,9 +70,21 @@ function DotIndicators() {
 
   React.useEffect(() => {
     if (!api) return;
-    setCount(api.scrollSnapList().length);
-    setCurrent(api.selectedScrollSnap());
-    api.on("select", () => setCurrent(api.selectedScrollSnap()));
+
+    const updateSelection = () => {
+      setCount(api.scrollSnapList().length);
+      setCurrent(api.selectedScrollSnap());
+    };
+    const initialUpdate = requestAnimationFrame(updateSelection);
+
+    api.on("reInit", updateSelection);
+    api.on("select", updateSelection);
+
+    return () => {
+      cancelAnimationFrame(initialUpdate);
+      api.off("reInit", updateSelection);
+      api.off("select", updateSelection);
+    };
   }, [api]);
 
   if (count === 0) return null;
@@ -123,11 +134,11 @@ const API_PROPS = [
 ];
 
 const SLIDE_COLORS = [
-  "bg-rose-100 text-rose-700",
-  "bg-sky-100 text-sky-700",
-  "bg-amber-100 text-amber-700",
-  "bg-emerald-100 text-emerald-700",
-  "bg-violet-100 text-violet-700",
+  "bg-[var(--component-badge-background-danger)] text-[var(--component-badge-content-danger)]",
+  "bg-primary/10 text-primary",
+  "bg-[var(--component-badge-background-warning)] text-[var(--component-badge-content-warning)]",
+  "bg-[var(--component-badge-background-success)] text-[var(--component-badge-content-success)]",
+  "bg-muted text-foreground",
 ];
 
 function SlideCard({ index, className }: { index: number; className?: string }) {

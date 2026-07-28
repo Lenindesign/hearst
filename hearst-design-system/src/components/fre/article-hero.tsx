@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 export interface ArticleHeroProps {
@@ -10,6 +11,8 @@ export interface ArticleHeroProps {
   image: string;
   imageAlt?: string;
   imageCredit?: string;
+  imageWidth?: number;
+  imageHeight?: number;
   className?: string;
 }
 
@@ -20,6 +23,8 @@ export function ArticleHero({
   image,
   imageAlt,
   imageCredit,
+  imageWidth = 1600,
+  imageHeight = 900,
   className,
 }: ArticleHeroProps) {
   return (
@@ -49,9 +54,12 @@ export function ArticleHero({
 
       <figure className="space-y-[var(--spacing-token-xs)]">
         <div className="relative w-full overflow-hidden rounded-lg">
-          <img
+          <Image
             src={image}
             alt={imageAlt || headline}
+            width={imageWidth}
+            height={imageHeight}
+            sizes="(max-width: 1024px) 100vw, 1200px"
             className="w-full h-auto object-cover"
           />
         </div>

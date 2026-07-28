@@ -30,16 +30,6 @@ interface PencilVariable {
   value: unknown;
 }
 
-interface BrandOutput {
-  name: string;
-  slug: string;
-  colors: Record<string, string>;
-  fontDefault: string;
-  fontSecondary: string;
-  semanticColors: Record<string, string>;
-  componentTokens: Record<string, string | number>;
-}
-
 // ── Helpers ────────────────────────────────────────────────────────────
 
 function slugify(name: string): string {
@@ -371,7 +361,6 @@ function generateBrandsTs(
       .join(", ");
 
     const compEntries = Object.entries(componentTokens)
-      .slice(0, 50)
       .map(([k, v]) => (typeof v === "number" ? `"${k}": ${v}` : `"${k}": "${v}"`))
       .join(", ");
 

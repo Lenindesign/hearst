@@ -3,7 +3,7 @@ import type { ComponentMetadata } from "@/lib/component-metadata";
 const metadata: ComponentMetadata = {
   name: "ContentCarousel",
   description:
-    "Horizontal scrolling card carousel with pill-shaped navigation buttons and optional dot indicators. Ported from Pencil spec carousel.pen node C2n6G.",
+    "Horizontal editorial-card carousel with previous and next controls plus optional position indicators.",
   level: "organism",
   path: "content-carousel.tsx",
   exports: ["ContentCarousel", "CarouselCard"],
@@ -32,16 +32,16 @@ const metadata: ComponentMetadata = {
     other: [],
   },
 
-  dependencies: ["ui/carousel"],
+  dependencies: ["ui/carousel", "ui/icons"],
   usedBy: [],
   brandAware: true,
   responsive: true,
   variants: [],
   slots: [],
   caveats: [
-    "Card width is fixed at 255px to match Pencil spec — may need responsive adjustment",
-    "Image aspect ratio is portrait (255×341) per the automotive/editorial Pencil template",
-    "Uses Embla Carousel under the hood via ui/carousel primitives",
+    "The current 255px by 341px card treatment is a fixed presentation contract and requires explicit mobile and content-length review before broader production reuse.",
+    "The component owns presentation and controls only; a consuming product module must own editorial ranking, empty state, and destination behavior.",
+    "Uses the shared Embla-backed ui/carousel track.",
   ],
 };
 

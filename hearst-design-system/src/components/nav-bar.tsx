@@ -9,17 +9,17 @@ import {
   useCallback,
   useMemo,
   useSyncExternalStore,
+  useId,
 } from "react";
 import { useTheme } from "./theme-provider";
 import { BrandSwitcher } from "./brand-switcher";
 import { BrandLogo } from "./brand-logo";
 import { brandLogos } from "@/lib/logos";
+import {
+  LOCAL_STORYBOOK_URL,
+  PROD_STORYBOOK_URL,
+} from "@/lib/storybook-links";
 import { ExternalLink, Menu, X } from "@/components/ui/icons";
-
-const LOCAL_STORYBOOK_URL =
-  "http://localhost:6006/?path=/docs/welcome--docs";
-const PROD_STORYBOOK_URL =
-  "https://hearst-design-system.netlify.app/storybook/?path=/docs/welcome--docs";
 
 type NavItem = { label: string; href: string; external?: boolean };
 
@@ -38,7 +38,9 @@ function useStorybookHref(): string {
   return useSyncExternalStore(
     () => () => {},
     () => {
-      const env = process.env.NEXT_PUBLIC_STORYBOOK_URL;
+      const env = typeof process !== "undefined"
+        ? process.env.NEXT_PUBLIC_STORYBOOK_URL
+        : undefined;
       if (typeof env === "string" && env.length > 0) return env;
       if (typeof window === "undefined") return PROD_STORYBOOK_URL;
       const { hostname, port } = window.location;
@@ -163,20 +165,32 @@ function NavLink({
 
   const resolvedHref = href === "/components" ? "/components/card" : href;
   return (
-    <Link href={resolvedHref} className={baseClass}>
+    <Link
+      href={resolvedHref}
+      className={baseClass}
+      aria-current={isActive ? (href === "/components" ? "location" : "page") : undefined}
+    >
       {label}
     </Link>
   );
 }
 
-export function NavBar() {
-  const pathname = usePathname();
+export interface DesignSystemNavBarProps {
+  pathname: string;
+  storybookHref: string;
+}
+
+export function DesignSystemNavBar({
+  pathname,
+  storybookHref,
+}: DesignSystemNavBarProps) {
   const { brand } = useTheme();
   const primary = brand.colors["1"] || Object.values(brand.colors)[0];
   const logo = brandLogos[brand.slug];
   const isComponents = pathname.startsWith("/components");
   const [mobileOpen, setMobileOpen] = useState(false);
-  const storybookHref = useStorybookHref();
+  const mobileMenuId = useId();
+  const mobileToggleRef = useRef<HTMLButtonElement>(null);
   const mainNav = useMemo<NavItem[]>(
     () => [
       ...BASE_MAIN_NAV,
@@ -186,10 +200,15 @@ export function NavBar() {
   );
 
   useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = "hidden";
-      return () => { document.body.style.overflow = ""; };
-    }
+    if (!mobileOpen) return;
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setMobileOpen(false);
+      requestAnimationFrame(() => mobileToggleRef.current?.focus());
+    };
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
   }, [mobileOpen]);
 
   function isActive(href: string) {
@@ -202,33 +221,53 @@ export function NavBar() {
         {/* Top bar */}
         <div className="h-14 flex items-center gap-3 overflow-hidden">
           {/* Logo + title — fixed width left anchor */}
-          <Link href="/" className="flex items-center gap-2 shrink-0">
+          <Link
+            href="/"
+            className="flex items-center gap-2 shrink-0"
+            aria-label={`Hearst Design System home, ${brand.name} preview`}
+          >
             {logo ? (
-              <BrandLogo slug={brand.slug} className="[&_svg]:h-5 [&_svg]:w-auto shrink-0" />
+              <BrandLogo
+                slug={brand.slug}
+                className="[&_svg]:h-5 [&_svg]:w-auto shrink-0"
+              />
             ) : (
-              <div className="w-7 h-7 rounded-md shrink-0" style={{ backgroundColor: primary || "#000" }} />
+              <div
+                className="w-7 h-7 rounded-md shrink-0"
+                style={{ backgroundColor: primary || "var(--foreground)" }}
+              />
             )}
-            <div className="min-w-0 hidden lg:block">
-              <h1 className="text-sm font-semibold leading-none truncate">Hearst Design System</h1>
+            <div className="min-w-0 hidden 2xl:block">
+              <span className="block text-sm font-semibold leading-none truncate">
+                Hearst Design System
+              </span>
               <p className="text-[11px] text-muted-foreground mt-0.5 truncate">{brand.name}</p>
             </div>
           </Link>
 
           {/* Desktop nav — scrollable, takes all remaining space */}
-          <ScrollableNav className="hidden md:block flex-1 min-w-0">
-            {mainNav.map((item) => (
-              <NavLink key={item.href} href={item.href} label={item.label} isActive={isActive(item.href)} external={item.external} />
-            ))}
-          </ScrollableNav>
+          <nav
+            aria-label="Design system navigation"
+            className="hidden md:block flex-1 min-w-0"
+          >
+            <ScrollableNav>
+              {mainNav.map((item) => (
+                <NavLink key={item.href} href={item.href} label={item.label} isActive={isActive(item.href)} external={item.external} />
+              ))}
+            </ScrollableNav>
+          </nav>
 
           {/* Right side: brand switcher (always) + mobile toggle (below md) */}
           <div className="flex items-center gap-2 shrink-0 ml-auto">
             <BrandSwitcher />
             <button
+              ref={mobileToggleRef}
+              type="button"
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
-              aria-label="Toggle menu"
+              className="md:hidden inline-flex min-h-11 min-w-11 items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+              aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={mobileOpen}
+              aria-controls={mobileMenuId}
             >
               {mobileOpen ? <CloseIcon /> : <HamburgerIcon />}
             </button>
@@ -237,38 +276,39 @@ export function NavBar() {
 
         {/* Component sub-nav — scrollable on all sizes */}
         {isComponents && !mobileOpen && (
-          <ScrollableNav className="-mb-px pb-2">
-            {componentNav.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`px-3 py-1 text-xs rounded-md transition-colors whitespace-nowrap shrink-0 ${
-                  pathname === item.href
-                    ? "font-medium text-primary bg-primary/10"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </ScrollableNav>
+          <nav aria-label="Component navigation" className="-mb-px pb-2">
+            <ScrollableNav>
+              {componentNav.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  aria-current={pathname === item.href ? "page" : undefined}
+                  className={`px-3 py-1 text-xs rounded-md transition-colors whitespace-nowrap shrink-0 ${
+                    pathname === item.href
+                      ? "font-medium text-foreground bg-primary/10"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </ScrollableNav>
+          </nav>
         )}
       </div>
 
       {/* Mobile / Tablet slide-down drawer */}
       {mobileOpen && (
-        <>
-          <div
-            className="fixed inset-0 top-[57px] bg-black/20 z-40 md:hidden"
-            onClick={() => setMobileOpen(false)}
-            aria-hidden
-          />
-          <nav className="md:hidden absolute left-0 right-0 top-[57px] z-50 bg-background border-b shadow-lg max-h-[calc(100dvh-57px)] overflow-y-auto">
-            <div className="mx-auto px-4 sm:px-6 py-3 space-y-1">
+        <nav
+          id={mobileMenuId}
+          aria-label="Mobile design system navigation"
+          className="md:hidden absolute left-0 right-0 top-[57px] z-50 bg-background border-b shadow-lg max-h-[calc(100dvh-57px)] overflow-y-auto"
+        >
+          <div className="mx-auto px-4 sm:px-6 py-3 space-y-1">
               {/* Main navigation */}
               <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider px-3 pt-1">Navigation</p>
               {mainNav.map((item) => {
-                const cls = `flex items-center gap-3 px-3 py-2.5 text-sm rounded-md transition-colors ${
+                const cls = `flex min-h-11 items-center gap-3 px-3 py-2.5 text-sm rounded-md transition-colors ${
                   isActive(item.href)
                     ? "font-medium text-foreground bg-muted"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
@@ -285,6 +325,7 @@ export function NavBar() {
                   <Link
                     key={item.href}
                     href={item.href === "/components" ? "/components/card" : item.href}
+                    aria-current={isActive(item.href) ? (item.href === "/components" ? "location" : "page") : undefined}
                     className={cls}
                     onClick={() => setMobileOpen(false)}
                   >
@@ -304,9 +345,10 @@ export function NavBar() {
                         key={item.href}
                         href={item.href}
                         onClick={() => setMobileOpen(false)}
-                        className={`px-3 py-2 text-sm rounded-md transition-colors ${
+                        aria-current={pathname === item.href ? "page" : undefined}
+                        className={`flex min-h-11 items-center px-3 py-2 text-sm rounded-md transition-colors ${
                           pathname === item.href
-                            ? "font-medium text-primary bg-primary/10"
+                            ? "font-medium text-foreground bg-primary/10"
                             : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                         }`}
                       >
@@ -316,10 +358,15 @@ export function NavBar() {
                   </div>
                 </>
               )}
-            </div>
-          </nav>
-        </>
+          </div>
+        </nav>
       )}
     </header>
   );
+}
+
+export function NavBar() {
+  const pathname = usePathname();
+  const storybookHref = useStorybookHref();
+  return <DesignSystemNavBar pathname={pathname} storybookHref={storybookHref} />;
 }

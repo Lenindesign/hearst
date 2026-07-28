@@ -78,6 +78,25 @@ test("reserves a distinct horoscope story for Today's Edit", () => {
   ), false);
 });
 
+test("reserves the only horoscope before general followed and trending slots", () => {
+  const horoscopeStory = {
+    ...stories[0],
+    title: "Your Capricorn Monthly Horoscope",
+    tags: ["horoscope"],
+  };
+  const catalog = [horoscopeStory, ...stories.slice(1)];
+  const allocation = allocateStoryModules({
+    stories: catalog,
+    heroStoryIds: [],
+    continueStoryIds: [],
+    followedBrands: [horoscopeStory.brand],
+  });
+
+  assert.equal(allocation.todayEdit.horoscopeStory?.id, horoscopeStory.id);
+  assert.notEqual(allocation.todayEdit.followedBrandStory?.id, horoscopeStory.id);
+  assert.notEqual(allocation.todayEdit.trendingStory?.id, horoscopeStory.id);
+});
+
 test("keeps a useful river when the scoped inventory is small", () => {
   const smallCatalog = stories.slice(0, 9);
   const allocation = allocateStoryModules({

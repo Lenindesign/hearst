@@ -139,9 +139,9 @@ function TokenTable({
 
 function ResolvedTokensForBrand() {
   const { brand } = useTheme();
-  const primary = brand.colors["1"] || Object.values(brand.colors)[0] || "#000";
+  const primary = brand.colors["1"] || Object.values(brand.colors)[0] || "black";
   const meaningful = Object.entries(brand.colors).filter(
-    ([, v]) => v.toLowerCase() !== "#ffffff"
+    ([, value]) => !/^#f{3}(?:f{3})?$/i.test(value)
   );
 
   return (

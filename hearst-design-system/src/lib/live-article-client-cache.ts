@@ -69,6 +69,13 @@ export function loadLiveArticle(
   return request;
 }
 
+export function primeLiveArticleClientCache(
+  sourceUrl: string,
+  article: LiveArticleData,
+) {
+  cacheResolvedArticle(getCanonicalLiveArticleUrl(sourceUrl), article);
+}
+
 export function clearLiveArticleClientCache() {
   resolvedArticles.clear();
   activeArticleRequests.clear();

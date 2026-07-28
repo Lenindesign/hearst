@@ -8,12 +8,8 @@ const storybookDirectory = path.dirname(fileURLToPath(import.meta.url));
 
 const config = {
   stories: [
-    "../src/stories/{AgenticArchitecture,ComponentArchitecture,DesignersManifesto,FigmaIntegration,GridSystem,HearstOnboardingJourney}.mdx",
-    "../src/stories/{HearstPlusComponentInventory,HearstPlusSiteMap,PencilIntegration,QAProcess,TailwindShadcn,TemplateTokens,TokenNaming}.mdx",
-    "../src/stories/{TokenWorkflow,Toolbox,Welcome,WorkflowSetup}.mdx",
-    "../src/stories/{Alert,ArticleCard,Avatar,Badge,Button,Chip,Colors,Divider,Grid}.stories.@(ts|tsx)",
-    "../src/stories/{HDSHPModules,HearstPlusApp,HearstPlusEditorialCards,HearstPlusNavigation,HearstPlusReaderOverlays,HearstPlusVideoCards}.stories.@(ts|tsx)",
-    "../src/stories/{HomePage,Input,Link,Switch,Textarea,Toggle,Tokens,Typography}.stories.@(ts|tsx)",
+    "../src/stories/**/*.mdx",
+    "../src/stories/**/*.stories.@(ts|tsx)",
   ],
   addons: [
     "@storybook/addon-essentials",
@@ -44,6 +40,28 @@ const config = {
       "next/link": path.resolve(storybookDirectory, "mocks/next-link.tsx"),
       "next/navigation": path.resolve(storybookDirectory, "mocks/next-navigation.ts"),
     };
+
+    viteConfig.define = {
+      ...viteConfig.define,
+      "process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID": JSON.stringify(
+        process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? ""
+      ),
+      "process.env.NEXT_PUBLIC_HEARST_STAKEHOLDER_TOOLS": JSON.stringify(
+        process.env.NEXT_PUBLIC_HEARST_STAKEHOLDER_TOOLS ?? ""
+      ),
+      "process.env.NEXT_PUBLIC_STORYBOOK_URL": JSON.stringify(
+        process.env.NEXT_PUBLIC_STORYBOOK_URL ?? ""
+      ),
+    };
+
+    viteConfig.optimizeDeps ||= {};
+    viteConfig.optimizeDeps.include = [
+      ...(viteConfig.optimizeDeps.include ?? []),
+      "@base-ui/react/accordion",
+      "@base-ui/react/select",
+      "@base-ui/react/tabs",
+      "embla-carousel-react",
+    ];
 
     viteConfig.css ||= {};
     viteConfig.css.postcss = path.resolve(storybookDirectory, "..");

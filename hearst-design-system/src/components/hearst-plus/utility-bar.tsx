@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { BrandSourceIcon } from "@/components/hearst-plus/brand-source-icon";
 import { ReaderAvatar } from "@/components/reader-account-ui";
 import { useReaderAccount } from "@/components/reader-account";
 import { Button } from "@/components/ui/button";
@@ -14,7 +15,6 @@ import {
   type HearstBrandSection,
   type HearstDestinationMode,
 } from "@/lib/hearst-routes";
-import { getBrandLogoSrc } from "@/lib/logos";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 
@@ -38,17 +38,19 @@ const utilityLinks = [
   { label: "Newsletter", href: "https://www.hearst.co.uk/newsletter" },
 ] as const;
 
+export interface UtilityBarProps {
+  selectedBrand?: { name: string; slug: string } | null;
+  onCreateAccount?: () => void;
+  onOpenProfile?: () => void;
+  darkMode?: boolean;
+}
+
 export function UtilityBar({
   selectedBrand,
   onCreateAccount,
   onOpenProfile,
   darkMode = false,
-}: {
-  selectedBrand?: { name: string; slug: string } | null;
-  onCreateAccount?: () => void;
-  onOpenProfile?: () => void;
-  darkMode?: boolean;
-}) {
+}: UtilityBarProps) {
   const { brand } = useTheme();
   const { account } = useReaderAccount();
   const utilityBarRef = React.useRef<HTMLDivElement>(null);
@@ -103,9 +105,9 @@ export function UtilityBar({
       ref={utilityBarRef}
       onMouseLeave={() => setOpenDestinationMenu(null)}
       className={cn(
-        "sticky top-0 z-50 h-8 text-[length:var(--text-token-4xs)] font-semibold",
+        "sticky top-0 z-50 h-11 text-[length:var(--text-token-4xs)] font-semibold sm:h-8",
         darkMode
-          ? "border-b border-white/10 bg-[#0d1014] text-[#f4f7fb]"
+          ? "border-b border-white/10 bg-[var(--component-navigation-utility-background-knockout)] text-[var(--component-navigation-utility-content-knockout)]"
           : "bg-primary text-primary-foreground"
       )}
     >
@@ -123,7 +125,7 @@ export function UtilityBar({
               className={cn(
                 "font-semibold",
                 darkMode
-                  ? "text-[#f4f7fb] hover:text-[#BDDDFC]"
+                  ? "text-[var(--component-navigation-utility-content-knockout)] hover:text-[var(--component-navigation-utility-content-accent)]"
                   : "text-primary-foreground hover:text-primary-foreground"
               )}
             >
@@ -135,7 +137,7 @@ export function UtilityBar({
           className="flex min-w-0 items-center justify-start overflow-x-auto [scrollbar-width:none] sm:justify-center [&::-webkit-scrollbar]:hidden"
           aria-label="Hearst destination sections"
         >
-          <div className={cn("flex min-w-max items-center gap-1 rounded-full p-0.5", darkMode ? "bg-white/[0.06]" : "bg-black/10")}>
+          <div className={cn("flex min-w-max items-center gap-1 rounded-full px-0.5 sm:p-0.5", darkMode ? "bg-white/[0.06]" : "bg-black/10")}>
             {hearstDestinationSections.map((section) => {
               const isActive = section.label === activeDestination;
               const isOpen = section.mode === openDestinationMenu;
@@ -154,13 +156,13 @@ export function UtilityBar({
                 onMouseEnter={() => setOpenDestinationMenu(section.mode)}
                 onFocus={() => setOpenDestinationMenu(section.mode)}
                 className={cn(
-                  "inline-flex min-h-6 cursor-pointer items-center rounded-full px-2 py-1 text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80",
+                  "inline-flex min-h-11 min-w-11 cursor-pointer items-center rounded-full px-2 py-1 text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:min-h-6 sm:min-w-0",
                   isActive
                     ? darkMode
-                      ? "bg-[#BDDDFC] text-[#0d1014] hover:text-[#0d1014]"
+                      ? "bg-[var(--component-navigation-utility-content-accent)] text-[var(--component-navigation-utility-background-knockout)] hover:text-[var(--component-navigation-utility-background-knockout)]"
                       : "bg-white text-black hover:text-black"
                     : darkMode
-                      ? "text-[#f4f7fb] opacity-85 hover:bg-white/10 hover:text-white hover:opacity-100"
+                      ? "text-[var(--component-navigation-utility-content-knockout)] opacity-85 hover:bg-white/10 hover:text-white hover:opacity-100"
                       : "text-primary-foreground hover:bg-white/10 hover:text-primary-foreground"
                 )}
               >
@@ -175,14 +177,14 @@ export function UtilityBar({
             variant="secondary"
             size="xs"
             className={cn(
-              "shrink-0 text-[length:var(--text-token-4xs)] font-semibold",
+              "min-h-11 min-w-11 shrink-0 text-[length:var(--text-token-4xs)] font-semibold sm:min-h-6 sm:min-w-0",
               account
                 ? cn(
                     "gap-1.5 bg-transparent px-0.5 hover:bg-white/10 sm:pr-2",
-                    darkMode ? "text-[#f4f7fb] hover:text-white" : "text-primary-foreground hover:text-primary-foreground"
+                    darkMode ? "text-[var(--component-navigation-utility-content-knockout)] hover:text-white" : "text-primary-foreground hover:text-primary-foreground"
                   )
                 : darkMode
-                  ? "bg-[#BDDDFC] px-2 text-[#0d1014] hover:bg-[#d7eaff] hover:text-[#0d1014] sm:px-3"
+                  ? "bg-[var(--component-navigation-utility-content-accent)] px-2 text-[var(--component-navigation-utility-background-knockout)] hover:bg-[var(--component-navigation-utility-content-accent-hover)] hover:text-[var(--component-navigation-utility-background-knockout)] sm:px-3"
                   : "bg-white px-2 text-black hover:bg-white/90 hover:text-black sm:px-3"
             )}
             aria-label={account ? "Open your local demo profile" : "Sign in or sign up"}
@@ -208,7 +210,7 @@ export function UtilityBar({
             className={cn(
               "max-h-[min(70dvh,520px)] w-full overflow-y-auto rounded-xl border p-4 shadow-2xl sm:p-5",
               darkMode
-                ? "border-white/15 bg-[#151a21] text-[#f4f7fb]"
+                ? "border-white/15 bg-[var(--component-navigation-utility-megamenu-background-knockout)] text-[var(--component-navigation-utility-content-knockout)]"
                 : "border-border bg-background text-foreground"
             )}
           >
@@ -221,7 +223,7 @@ export function UtilityBar({
               {visibleBrandSections.map((section) => (
                 <section key={section.mode} aria-labelledby={`hearst-brand-menu-${section.mode}`}>
                   <div className="mb-2">
-                    <p id={`hearst-brand-menu-${section.mode}`} className={cn("text-[11px] font-bold uppercase tracking-[0.12em]", darkMode ? "text-[#BDDDFC]" : "text-primary")}>
+                    <p id={`hearst-brand-menu-${section.mode}`} className={cn("text-[11px] font-bold uppercase tracking-[0.12em]", darkMode ? "text-[var(--component-navigation-utility-content-accent)]" : "text-primary")}>
                       {section.label}
                     </p>
                   </div>
@@ -242,7 +244,7 @@ export function UtilityBar({
                           className={cn(
                             "min-h-9 w-full justify-between rounded-lg px-3 py-2 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
                             darkMode
-                              ? "text-[#f4f7fb] hover:bg-white/10 hover:text-white"
+                              ? "text-[var(--component-navigation-utility-content-knockout)] hover:bg-white/10 hover:text-white"
                               : "text-foreground hover:bg-muted hover:text-foreground",
                             isSelectedBrand && (
                               darkMode
@@ -252,15 +254,10 @@ export function UtilityBar({
                           )}
                         >
                           <span className="flex min-w-0 items-center gap-2.5">
-                            <span
-                              aria-hidden
-                              className="size-6 shrink-0 rounded-md border border-black/10 bg-white"
-                              style={{
-                                backgroundImage: `url("${getBrandLogoSrc(menuBrand.brandSlug, "icon")}")`,
-                                backgroundPosition: "center",
-                                backgroundRepeat: "no-repeat",
-                                backgroundSize: "85% auto",
-                              }}
+                            <BrandSourceIcon
+                              brand={menuBrand.brand}
+                              brandSlug={menuBrand.brandSlug}
+                              className="size-6 rounded-md border-black/10 bg-white"
                             />
                             <span className="truncate">{menuBrand.brand}</span>
                           </span>

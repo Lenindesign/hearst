@@ -23,7 +23,7 @@
     "type": "color",
     "value": "#ededed"
   },
-  "border-netural-light": {
+  "border-neutral-light": {
     "type": "string",
     "value": "{\"width\":\"1px\",\"color\":\"#d6d6d6\",\"style\":\"solid\"}"
   },
@@ -87,11 +87,11 @@
     "type": "color",
     "value": "#ffffff"
   },
-  "component-badge-content-dager": {
+  "component-badge-content-danger": {
     "type": "color",
     "value": "#580a09"
   },
-  "component-badge-content-kockout": {
+  "component-badge-content-knockout": {
     "type": "color",
     "value": "#ffffff"
   },
@@ -107,7 +107,7 @@
     "type": "color",
     "value": "#580a09"
   },
-  "component-badge-icon-kockout": {
+  "component-badge-icon-knockout": {
     "type": "color",
     "value": "#ffffff"
   },
@@ -515,7 +515,7 @@
     "type": "number",
     "value": 4
   },
-  "component-card-core-content-title-backgroud-default": {
+  "component-card-core-content-title-background-default": {
     "type": "color",
     "value": "transparent"
   },
@@ -662,6 +662,142 @@
   "component-navigation-footer-content-hover": {
     "type": "color",
     "value": "#3b3b3b"
+  },
+  "component-navigation-utility-background-knockout": {
+    "type": "color",
+    "value": "#0d1014"
+  },
+  "component-navigation-utility-content-knockout": {
+    "type": "color",
+    "value": "#f4f7fb"
+  },
+  "component-navigation-utility-content-accent": {
+    "type": "color",
+    "value": "#BDDDFC"
+  },
+  "component-navigation-utility-content-accent-hover": {
+    "type": "color",
+    "value": "#d7eaff"
+  },
+  "component-navigation-utility-megamenu-background-knockout": {
+    "type": "color",
+    "value": "#151a21"
+  },
+  "component-video-feed-background-default": {
+    "type": "color",
+    "value": "#000000"
+  },
+  "component-video-feed-surface-deep": {
+    "type": "color",
+    "value": "#05070a"
+  },
+  "component-video-feed-surface-default": {
+    "type": "color",
+    "value": "#181b20"
+  },
+  "component-video-feed-control-default": {
+    "type": "color",
+    "value": "#20242b"
+  },
+  "component-video-feed-control-hover": {
+    "type": "color",
+    "value": "#2a3038"
+  },
+  "component-video-feed-accent-default": {
+    "type": "color",
+    "value": "#232a33"
+  },
+  "component-video-feed-chip-default": {
+    "type": "color",
+    "value": "#ffffff12"
+  },
+  "component-video-feed-chip-border": {
+    "type": "color",
+    "value": "#ffffff14"
+  },
+  "component-video-feed-input-border": {
+    "type": "color",
+    "value": "#ffffff29"
+  },
+  "component-video-feed-border-default": {
+    "type": "color",
+    "value": "#ffffff1f"
+  },
+  "component-video-feed-border-strong": {
+    "type": "color",
+    "value": "#ffffff38"
+  },
+  "component-video-feed-content-headline": {
+    "type": "color",
+    "value": "#f8fbff"
+  },
+  "component-video-feed-content-primary": {
+    "type": "color",
+    "value": "#f4f7fb"
+  },
+  "component-video-feed-content-ui": {
+    "type": "color",
+    "value": "#dbe3ed"
+  },
+  "component-video-feed-content-chip": {
+    "type": "color",
+    "value": "#cad5e2"
+  },
+  "component-video-feed-content-secondary": {
+    "type": "color",
+    "value": "#aab5c3"
+  },
+  "component-video-feed-content-muted": {
+    "type": "color",
+    "value": "#95a0ad"
+  },
+  "component-video-feed-accent-soft": {
+    "type": "color",
+    "value": "#253746"
+  },
+  "component-video-feed-action-content": {
+    "type": "color",
+    "value": "#0d1014"
+  },
+  "component-video-feed-shadow-card": {
+    "type": "string",
+    "value": "0 2px 6px rgba(0, 0, 0, 0.18)"
+  },
+  "component-special-offers-background-start": {
+    "type": "color",
+    "value": "#022c22cc"
+  },
+  "component-special-offers-background-end": {
+    "type": "color",
+    "value": "#022c2266"
+  },
+  "component-special-offers-border-default": {
+    "type": "color",
+    "value": "#04785799"
+  },
+  "component-special-offers-title-content-default": {
+    "type": "color",
+    "value": "#34d39999"
+  },
+  "component-special-offers-pill-background-default": {
+    "type": "color",
+    "value": "#022c22e6"
+  },
+  "component-special-offers-pill-border-default": {
+    "type": "color",
+    "value": "#065f4666"
+  },
+  "component-special-offers-icon-background-default": {
+    "type": "color",
+    "value": "#10b981"
+  },
+  "component-special-offers-content-default": {
+    "type": "color",
+    "value": "#ffffff"
+  },
+  "component-special-offers-expiration-content-default": {
+    "type": "color",
+    "value": "#6ee7b780"
   },
   "component-navigation-megamenu-background-default": {
     "type": "color",

@@ -1,11 +1,12 @@
 import * as React from "react";
+import Image from "next/image";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 import { ImageIcon } from "@/components/ui/icons";
 
 const articleCardVariants = cva(
-  "group/article-card flex overflow-hidden rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 transition-shadow hover:ring-foreground/20",
+  "group/article-card flex overflow-hidden rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 transition-shadow hover:ring-foreground/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
   {
     variants: {
       layout: {
@@ -35,14 +36,36 @@ function ArticleCard({
   className,
   layout = "vertical",
   size = "default",
+  onClick,
+  onKeyDown,
+  role,
+  tabIndex,
   ...props
 }: ArticleCardProps) {
+  const interactive = typeof onClick === "function";
+
   return (
     <article
       data-slot="article-card"
       data-layout={layout}
       data-size={size}
+      role={role ?? (interactive ? "button" : undefined)}
+      tabIndex={tabIndex ?? (interactive ? 0 : undefined)}
       className={cn(articleCardVariants({ layout, size }), className)}
+      onClick={onClick}
+      onKeyDown={(event) => {
+        onKeyDown?.(event);
+        if (
+          event.defaultPrevented ||
+          !interactive ||
+          event.target !== event.currentTarget ||
+          (event.key !== "Enter" && event.key !== " ")
+        ) {
+          return;
+        }
+        event.preventDefault();
+        event.currentTarget.click();
+      }}
       {...props}
     />
   );
@@ -85,10 +108,12 @@ function ArticleCardImage({
       {...props}
     >
       {src ? (
-        <img
+        <Image
           src={src}
           alt={alt || ""}
-          className={cn("absolute inset-0 h-full w-full", imageFit === "contain" ? "object-contain" : "object-cover")}
+          fill
+          sizes="(max-width: 768px) 100vw, 480px"
+          className={imageFit === "contain" ? "object-contain" : "object-cover"}
           style={imagePosition ? { objectPosition: imagePosition } : undefined}
         />
       ) : (

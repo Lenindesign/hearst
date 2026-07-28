@@ -19,7 +19,7 @@ function AccordionRenderer({
   width = "w-96",
 }: AccordionStoryProps) {
   return (
-    <div className={width}>
+    <div className={`mx-auto my-4 max-w-[calc(100vw-2rem)] ${width}`}>
       {headline ? (
         <h2 className="mb-4 text-2xl font-bold tracking-tight text-foreground headline">
           {headline}
@@ -40,7 +40,7 @@ function AccordionRenderer({
 }
 
 const meta: Meta = {
-  title: "Components/Accordion",
+  title: "Hearst Plus/HDS Primitives/Accordion",
   args: {
     items: [
       {
@@ -82,6 +82,7 @@ const meta: Meta = {
     },
   },
   parameters: {
+    layout: "fullscreen",
     docs: {
       description: {
         component:

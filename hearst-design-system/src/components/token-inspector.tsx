@@ -32,7 +32,7 @@ export interface TokenInspectorConfig {
 // ---------------------------------------------------------------------------
 
 const HEARST_LAYERS: Record<string, TokenLayer> = {
-  brand: { prefixes: ["brand-", "palette-brand"], color: "#e91e63" },
+  brand: { prefixes: ["brand-", "palette-brand"], color: "var(--chart-1)" },
   semantic: {
     prefixes: [
       "palette-content",
@@ -40,13 +40,13 @@ const HEARST_LAYERS: Record<string, TokenLayer> = {
       "palette-alert",
       "palette-primary",
     ],
-    color: "#2196f3",
+    color: "var(--chart-2)",
   },
-  core: { prefixes: ["palette-neutral"], color: "#607d8b" },
-  component: { prefixes: ["component-"], color: "#ff9800" },
-  typography: { prefixes: ["font-", "typography-"], color: "#9c27b0" },
-  layout: { prefixes: ["layout-", "space-"], color: "#4caf50" },
-  border: { prefixes: ["border-"], color: "#795548" },
+  core: { prefixes: ["palette-neutral"], color: "var(--muted-foreground)" },
+  component: { prefixes: ["component-"], color: "var(--chart-3)" },
+  typography: { prefixes: ["font-", "typography-"], color: "var(--chart-4)" },
+  layout: { prefixes: ["layout-", "space-"], color: "var(--chart-5)" },
+  border: { prefixes: ["border-"], color: "var(--foreground)" },
 };
 
 const HEARST_CLASS_TOKENS: ClassTokenMapping[] = [
@@ -249,7 +249,7 @@ function getComputedSpecs(el: HTMLElement): ComputedSpecs {
     colorHex: rgbToHex(cs.color),
     backgroundColor: cs.backgroundColor,
     backgroundColorHex:
-      cs.backgroundColor === "rgba(0, 0, 0, 0)"
+      /,\s*0\)$/.test(cs.backgroundColor)
         ? "transparent"
         : rgbToHex(cs.backgroundColor),
     width: `${Math.round(rect.width)}px`,
@@ -278,7 +278,7 @@ function classifyToken(
 }
 
 function buildLayerColors(layers: Record<string, TokenLayer>): Record<string, string> {
-  const colors: Record<string, string> = { other: "#9e9e9e" };
+  const colors: Record<string, string> = { other: "var(--muted-foreground)" };
   for (const [layer, { color }] of Object.entries(layers)) {
     colors[layer] = color;
   }
@@ -375,7 +375,7 @@ function SpecRow({
     return null;
   return (
     <div className="flex items-center justify-between gap-3">
-      <span className="text-gray-500 shrink-0">{label}</span>
+      <span className="text-background/55 shrink-0">{label}</span>
       <div className="flex items-center gap-1.5 min-w-0">
         {color && color !== "transparent" && (
           <span
@@ -383,7 +383,7 @@ function SpecRow({
             style={{ backgroundColor: color }}
           />
         )}
-        <span className="text-gray-300 font-mono text-[10px] truncate">
+        <span className="text-background/80 font-mono text-[10px] truncate">
           {value}
         </span>
       </div>
@@ -416,21 +416,21 @@ function TokenTooltip({
       className="fixed z-[99999] pointer-events-none"
       style={{ ...verticalPosition, left }}
     >
-      <div className="bg-gray-900 text-white rounded-lg shadow-2xl p-3 max-w-[420px] text-xs leading-relaxed">
-        <div className="flex items-center justify-between gap-3 mb-2 pb-1.5 border-b border-gray-700">
+      <div className="bg-foreground text-background rounded-lg shadow-2xl p-3 max-w-[420px] text-xs leading-relaxed">
+        <div className="flex items-center justify-between gap-3 mb-2 pb-1.5 border-b border-background/25">
           {component && (
-            <span className="text-[10px] uppercase tracking-wider text-gray-400">
+            <span className="text-[10px] uppercase tracking-wider text-background/65">
               {component}
             </span>
           )}
-          <span className="text-[10px] font-mono text-gray-600">
+          <span className="text-[10px] font-mono text-background/45">
             &lt;{specs.tag}&gt; {specs.width} x {specs.height}
           </span>
         </div>
 
         {specs.isText && (
-          <div className="mb-2 pb-2 border-b border-gray-800 space-y-1">
-            <div className="text-[9px] uppercase tracking-wider text-purple-400 mb-1">
+          <div className="mb-2 pb-2 border-b border-background/20 space-y-1">
+            <div className="text-[9px] uppercase tracking-wider text-[var(--chart-4)] mb-1">
               Typography
             </div>
             <SpecRow label="Font" value={specs.fontFamilyShort} />
@@ -452,8 +452,8 @@ function TokenTooltip({
         {(specs.padding !== "0" ||
           specs.gap !== "0" ||
           specs.borderRadius !== "0") && (
-          <div className="mb-2 pb-2 border-b border-gray-800 space-y-1">
-            <div className="text-[9px] uppercase tracking-wider text-green-400 mb-1">
+          <div className="mb-2 pb-2 border-b border-background/20 space-y-1">
+            <div className="text-[9px] uppercase tracking-wider text-[var(--chart-3)] mb-1">
               Layout
             </div>
             <SpecRow label="Padding" value={specs.padding} />
@@ -476,8 +476,8 @@ function TokenTooltip({
           specs.padding === "0" &&
           specs.gap === "0" &&
           specs.borderRadius === "0" && (
-            <div className="mb-2 pb-2 border-b border-gray-800 space-y-1">
-              <div className="text-[9px] uppercase tracking-wider text-blue-400 mb-1">
+            <div className="mb-2 pb-2 border-b border-background/20 space-y-1">
+              <div className="text-[9px] uppercase tracking-wider text-[var(--chart-2)] mb-1">
                 Visual
               </div>
               <SpecRow
@@ -490,21 +490,21 @@ function TokenTooltip({
 
         {tokens.length > 0 && (
           <div className="space-y-2">
-            <div className="text-[9px] uppercase tracking-wider text-emerald-400 mb-1">
+            <div className="text-[9px] uppercase tracking-wider text-[var(--chart-3)] mb-1">
               Design Tokens
             </div>
             {tokens.map((t, i) => (
               <div key={i} className="flex items-start gap-2">
                 <span
                   className="inline-block w-2 h-2 rounded-full mt-1 shrink-0"
-                  style={{ backgroundColor: layerColors[t.layer] || "#9e9e9e" }}
+                  style={{ backgroundColor: layerColors[t.layer] || "var(--muted-foreground)" }}
                 />
                 <div className="min-w-0">
                   <div className="flex items-center gap-1.5 flex-wrap">
-                    <code className="font-mono text-[11px] text-emerald-400">
+                    <code className="font-mono text-[11px] text-[var(--chart-3)]">
                       {t.variable}
                     </code>
-                    <span className="text-gray-500">{t.property}</span>
+                    <span className="text-background/55">{t.property}</span>
                   </div>
                   <div className="flex items-center gap-1.5 mt-0.5">
                     {t.resolved &&
@@ -514,7 +514,7 @@ function TokenTooltip({
                           style={{ backgroundColor: t.resolved }}
                         />
                       )}
-                    <span className="text-gray-400 font-mono text-[10px]">
+                    <span className="text-background/65 font-mono text-[10px]">
                       {t.resolved || t.fallback}
                     </span>
                   </div>
@@ -525,17 +525,17 @@ function TokenTooltip({
         )}
 
         {tokens.length > 0 && (
-          <div className="mt-2 pt-1.5 border-t border-gray-700 flex gap-2 flex-wrap">
+          <div className="mt-2 pt-1.5 border-t border-background/25 flex gap-2 flex-wrap">
             {[...new Set(tokens.map((t) => t.layer))].map((layer) => (
               <span
                 key={layer}
                 className="inline-flex items-center gap-1 text-[9px] uppercase tracking-wider"
-                style={{ color: layerColors[layer] || "#9e9e9e" }}
+                style={{ color: layerColors[layer] || "var(--muted-foreground)" }}
               >
                 <span
                   className="w-1.5 h-1.5 rounded-full"
                   style={{
-                    backgroundColor: layerColors[layer] || "#9e9e9e",
+                    backgroundColor: layerColors[layer] || "var(--muted-foreground)",
                   }}
                 />
                 {layer}
@@ -557,7 +557,7 @@ export function TokenInspector({
   classTokens,
   componentDetector,
   title = "Visual Dictionary",
-  accentColor = "#e91e63",
+  accentColor = "var(--primary)",
   shortcut = { key: "i", meta: true, shift: true },
 }: TokenInspectorConfig = {}) {
   const resolvedLayers = layers ?? HEARST_LAYERS;
@@ -654,8 +654,8 @@ export function TokenInspector({
         onClick={toggleInspector}
         className="fixed bottom-4 right-4 z-[99998] flex items-center gap-2 px-3 py-2 rounded-full text-xs font-medium shadow-lg transition-all"
         style={{
-          backgroundColor: enabled ? accentColor : "#1e293b",
-          color: "#fff",
+          backgroundColor: enabled ? accentColor : "var(--foreground)",
+          color: "var(--background)",
         }}
         title={`Toggle ${title} (${shortcutLabel})`}
       >
@@ -678,7 +678,7 @@ export function TokenInspector({
         >
           <span
             className="absolute -top-4 left-0 text-[9px] font-mono px-1 rounded-sm"
-            style={{ backgroundColor: accentColor, color: "#fff" }}
+            style={{ backgroundColor: accentColor, color: "var(--primary-foreground)" }}
           >
             {Math.round(highlightRect.width)}
           </span>
@@ -686,7 +686,7 @@ export function TokenInspector({
             className="absolute top-0 -right-4 text-[9px] font-mono px-1 rounded-sm"
             style={{
               backgroundColor: accentColor,
-              color: "#fff",
+              color: "var(--primary-foreground)",
               writingMode: "vertical-lr",
             }}
           >
@@ -708,7 +708,7 @@ export function TokenInspector({
       {enabled && (
         <div
           data-token-inspector
-          className="fixed top-4 left-1/2 -translate-x-1/2 z-[99998] bg-gray-900 text-white px-4 py-2 rounded-full text-xs shadow-lg flex items-center gap-3"
+          className="fixed top-4 left-1/2 -translate-x-1/2 z-[99998] bg-foreground text-background px-4 py-2 rounded-full text-xs shadow-lg flex items-center gap-3"
         >
           <span className="flex items-center gap-1.5">
             <span
@@ -717,8 +717,8 @@ export function TokenInspector({
             />
             {title} Active
           </span>
-          <span className="text-gray-500">Hover any element for specs</span>
-          <span className="text-gray-600">{shortcutLabel} to toggle</span>
+          <span className="text-background/55">Hover any element for specs</span>
+          <span className="text-background/45">{shortcutLabel} to toggle</span>
         </div>
       )}
     </>

@@ -66,6 +66,7 @@ export function BigStoryImageRight({
       )}
       style={style}
       onClick={onArticleClick}
+      aria-label={onArticleClick ? `Open story: ${headline}` : undefined}
     >
       {isTop && (
         <ArticleCardImage
@@ -148,6 +149,7 @@ export function BigStoryTextOnly({
       )}
       style={style}
       onClick={onArticleClick}
+      aria-label={onArticleClick ? `Open story: ${headline}` : undefined}
     >
       <ArticleCardContent className="px-0">
         <ArticleCardEyebrow>{label}</ArticleCardEyebrow>

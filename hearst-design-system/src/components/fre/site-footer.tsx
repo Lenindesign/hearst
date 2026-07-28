@@ -89,7 +89,7 @@ export function SiteFooter({
                     variant="neutral"
                     underline={false}
                     size="sm"
-                    className="font-normal text-[var(--footer-foreground)] opacity-75 hover:text-[var(--footer-foreground)] hover:opacity-100"
+                    className="min-h-11 font-normal text-[var(--footer-foreground)] opacity-75 hover:text-[var(--footer-foreground)] hover:opacity-100 md:min-h-0"
                     onClick={() => onSocialClick?.(s)}
                   >
                     {s}
@@ -118,7 +118,7 @@ export function SiteFooter({
                 variant="neutral"
                 underline={false}
                 size="sm"
-                className="font-normal text-[var(--footer-foreground)] opacity-75 hover:text-[var(--footer-foreground)] hover:opacity-100"
+                className="min-h-11 font-normal text-[var(--footer-foreground)] opacity-75 hover:text-[var(--footer-foreground)] hover:opacity-100 md:min-h-0"
               >
                 {link.label}
               </LinkComponent>
@@ -133,7 +133,7 @@ export function SiteFooter({
               variant="neutral"
               underline={false}
               size="sm"
-              className="font-normal text-[var(--footer-foreground)] opacity-75 hover:text-[var(--footer-foreground)] hover:opacity-100"
+              className="min-h-11 font-normal text-[var(--footer-foreground)] opacity-75 hover:text-[var(--footer-foreground)] hover:opacity-100 md:min-h-0"
               onClick={onSubscribeClick}
             >
               Subscribe
@@ -152,11 +152,10 @@ export function SiteFooter({
               key={link}
               href={legalLinkHrefs[link]}
               target="_blank"
-              rel="noopener noreferrer"
               variant="neutral"
               underline={false}
               size="xs"
-              className="font-normal text-[var(--footer-foreground)] hover:text-[var(--footer-foreground)] hover:opacity-85"
+              className="min-h-11 font-normal text-[var(--footer-foreground)] hover:text-[var(--footer-foreground)] hover:opacity-85 md:min-h-0"
               onClick={() => onLegalClick?.(link)}
             >
               {link}

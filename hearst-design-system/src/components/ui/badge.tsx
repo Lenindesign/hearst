@@ -20,17 +20,17 @@ const badgeVariants = cva(
           "hover:bg-muted hover:text-muted-foreground dark:hover:bg-muted/50",
         link: "text-primary underline-offset-4 hover:underline",
         success:
-          "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400",
+          "bg-[var(--component-badge-background-success)] text-[var(--component-badge-content-success)]",
         warning:
-          "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400",
+          "bg-[var(--component-badge-background-warning)] text-[var(--component-badge-content-warning)]",
         highlight:
-          "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
+          "bg-[var(--component-badge-background-warning)] text-[var(--component-badge-content-warning)]",
         danger:
-          "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
+          "bg-[var(--component-badge-background-danger)] text-[var(--component-badge-content-danger)]",
         "neutral-dark":
-          "bg-slate-800/15 text-slate-800 dark:bg-slate-300/20 dark:text-slate-300",
+          "bg-muted text-foreground",
         "neutral-light":
-          "bg-slate-400/10 text-slate-600 dark:bg-slate-400/15 dark:text-slate-400",
+          "bg-muted/60 text-muted-foreground",
       },
     },
     defaultVariants: {

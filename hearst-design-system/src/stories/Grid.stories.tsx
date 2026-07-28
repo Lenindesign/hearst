@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
+import { expect } from "@storybook/test";
 import {
   BREAKPOINTS,
   Col,
@@ -75,14 +76,14 @@ function StoryCheatSheet({
         {intro}
       </div>
 
-      <div className="mt-4 grid gap-3 md:grid-cols-2">
-        <div className="rounded-lg border border-border bg-muted/40 p-4">
+      <div className="mt-4 grid min-w-0 grid-cols-[minmax(0,1fr)] gap-3 md:grid-cols-2">
+        <div className="min-w-0 rounded-lg border border-border bg-muted/40 p-4">
           <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
             {leftTitle}
           </p>
           <div className="mt-2 text-sm text-foreground">{leftBody}</div>
         </div>
-        <div className="rounded-lg border border-border bg-muted/40 p-4">
+        <div className="min-w-0 rounded-lg border border-border bg-muted/40 p-4">
           <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
             {rightTitle}
           </p>
@@ -139,13 +140,13 @@ export const Anatomy: Story = {
                   <p className="font-semibold text-foreground">
                     Full-bleed section
                   </p>
-                  <pre className="mt-1 overflow-x-auto rounded-md border border-border bg-background p-2 text-[11px] leading-relaxed text-foreground">
+                  <pre className="mt-1 max-w-full overflow-x-auto rounded-md border border-border bg-background p-2 text-[11px] leading-relaxed text-foreground">
                     <code>{`<Col span="full">...</Col>`}</code>
                   </pre>
                 </div>
                 <div>
                   <p className="font-semibold text-foreground">Two-up (50/50)</p>
-                  <pre className="mt-1 overflow-x-auto rounded-md border border-border bg-background p-2 text-[11px] leading-relaxed text-foreground">
+                  <pre className="mt-1 max-w-full overflow-x-auto rounded-md border border-border bg-background p-2 text-[11px] leading-relaxed text-foreground">
                     <code>{`<Col span={2} spanMd={4} spanLg={6}>Left</Col>
 <Col span={2} spanMd={4} spanLg={6}>Right</Col>`}</code>
                   </pre>
@@ -154,7 +155,7 @@ export const Anatomy: Story = {
                   <p className="font-semibold text-foreground">
                     Three cards (stack → 3-up)
                   </p>
-                  <pre className="mt-1 overflow-x-auto rounded-md border border-border bg-background p-2 text-[11px] leading-relaxed text-foreground">
+                  <pre className="mt-1 max-w-full overflow-x-auto rounded-md border border-border bg-background p-2 text-[11px] leading-relaxed text-foreground">
                     <code>{`<Col span="full" spanMd={4} spanLg={4}>Card</Col>
 <Col span="full" spanMd={4} spanLg={4}>Card</Col>
 <Col span="full" spanMd={8} spanLg={4}>Card</Col>`}</code>
@@ -478,6 +479,67 @@ export const ResponsiveBehavior: Story = {
         </PageContainer>
       </div>
     );
+  },
+};
+
+export const FixedColumnOverride: Story = {
+  name: "5 · Fixed Column Override",
+  render: () => (
+    <div className="bg-background py-12">
+      <PageContainer>
+        <StoryCheatSheet
+          kicker="Explicit override"
+          title="One count means the same count everywhere"
+          intro={
+            <>
+              The default page grid remains 4 / 8 / 12. Pass one supported
+              number only when the layout intentionally needs a fixed track
+              count from mobile through desktop.
+            </>
+          }
+          leftTitle="Contract"
+          leftBody={
+            <>
+              <span className="font-mono">columns={"{5}"}</span> produces five
+              tracks at base, <span className="font-mono">md</span>, and{" "}
+              <span className="font-mono">lg</span>.
+            </>
+          }
+          rightTitle="Use sparingly"
+          rightBody={
+            <>
+              Prefer the default grid or breakpoint object for page
+              composition. Fixed counts are for bounded patterns whose content
+              remains usable at the narrowest supported width.
+            </>
+          }
+        />
+        <Grid columns={5} data-grid-contract="fixed-five">
+          {Array.from({ length: 5 }, (_, index) => (
+            <Block key={index}>{index + 1}</Block>
+          ))}
+        </Grid>
+      </PageContainer>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const grid = canvasElement.querySelector(
+      '[data-grid-contract="fixed-five"]',
+    );
+    await expect(grid).not.toBeNull();
+    await expect(grid!).toHaveClass(
+      "grid-cols-5",
+      "md:grid-cols-5",
+      "lg:grid-cols-5",
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "A numeric `columns` override accepts only 1–12 and applies that exact count at base, `md`, and `lg`. Use the responsive object when the track count should change by breakpoint.",
+      },
+    },
   },
 };
 

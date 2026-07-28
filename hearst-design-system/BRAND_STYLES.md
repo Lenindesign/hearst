@@ -18,6 +18,11 @@ The brand layer extends the Hearst Design System foundation used by the applicat
 - Canonical publication registry metadata: `tokens/brands/_meta.json`
 - Generated outputs, never edit directly: `src/lib/brands.ts` and `src/lib/tokens.css`
 - App-only destination theme compositions: `src/lib/theme-options.ts`
+- Scoped cinematic editorial palettes: `src/lib/article-editorial-themes.ts`
+- Scoped Ambient Reader campaign palettes: `src/lib/ambient-interstitial-themes.ts`
+- Scoped Ambient Reader reading surfaces: `src/lib/ambient-reader-theme.ts`
+- Scoped production content-reader surfaces: `src/lib/content-reader-theme.ts`
+- Scoped HOT ROD Events composition: `src/lib/hot-rod-events.ts`
 - Semantic CSS mapping, font aliases, and dark-mode derivation: `src/lib/theme-css-vars.ts`
 - Masthead logos and compact brand icons: `src/lib/logos.ts`
 - Font loading and font-face declarations: `src/app/layout.tsx` and `src/app/globals.css`
@@ -144,6 +149,7 @@ The registry is split into narrower identity and typography tables so it remains
 ## Brand application rules
 
 - The primary and secondary values above feed semantic tokens. Components must use semantic roles rather than referencing the raw hex values.
+- Editorial or advertiser-specific art direction that is not a reusable brand token must live in its named scoped configuration. Rendering components consume that configuration through local semantic CSS variables; they do not carry raw palette values or promote one campaign color into the shared system.
 - Headline weight is part of the brand identity and must travel with the headline family.
 - Use registered masthead SVGs at their intrinsic aspect ratio. Never constrain different wordmarks to the same width.
 - Normalize masthead wordmarks by visual cap height and baseline. Destination qualifiers may extend the width without shrinking the Hearst wordmark.
@@ -156,6 +162,7 @@ The registry is split into narrower identity and typography tables so it remains
 
 - `/autos/hot-rod/events/` and its event-series routes inherit the Hearst Autos 4/8/12 grid, component anatomy, body typography, utility navigation, focus treatment, and footer.
 - The event surface may apply a tightly scoped HOT ROD editorial composition using red `#C8101E`, track black `#111111`, asphalt `#242424`, route cream `#F3EBDD`, and white. These values must stay inside the HOT ROD Events route root and must not alter shared Autos components or sibling publications.
+- `src/lib/hot-rod-events.ts` owns those route values; `src/components/hot-rod-events-page.tsx` consumes them through scoped variables rather than duplicating the palette.
 - HOT ROD Events uses the existing Autos condensed headline role and neutral UI/body role. It does not introduce a separate font or component system.
 - The route-line motif, dark photographic hero, and warm roadbook surface are editorial compositions. Controls, links, status labels, grids, and responsive behavior continue to use shared Hearst Design System foundations.
 

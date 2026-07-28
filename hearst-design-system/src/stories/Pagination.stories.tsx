@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
 import { Pagination } from "@/components/ui/pagination";
 
 const meta: Meta<typeof Pagination> = {
-  title: "Components/Pagination",
+  title: "Hearst Plus/HDS Primitives/Pagination",
   component: Pagination,
   argTypes: {
     size: {

@@ -40,6 +40,54 @@ export const brandLogos: Record<string, string> = {
   "womens-health": "/logos/womenshealth.svg",
 };
 
+/**
+ * Reader-facing names for every registered wordmark.
+ *
+ * Keep this beside the asset registry so a logo has one canonical source and
+ * one canonical accessible name across the application and Storybook.
+ */
+export const brandLogoLabels: Record<keyof typeof brandLogos, string> = {
+  "autoweek": "Autoweek",
+  "best-products": "Best Products",
+  "bicycling": "Bicycling",
+  "biography": "Biography",
+  "bring-a-trailer": "Bring a Trailer",
+  "car-and-driver": "Car and Driver",
+  "cosmopolitan": "Cosmopolitan",
+  "country-living": "Country Living",
+  "delish": "Delish",
+  "elle": "ELLE",
+  "elle-decor": "ELLE Decor",
+  "esquire": "Esquire",
+  "good-housekeeping": "Good Housekeeping",
+  "harpers-bazaar": "Harper's BAZAAR",
+  "hearst-eandw": "Hearst Enthusiast & Wellness",
+  "hearst-ew": "Hearst Enthusiast & Wellness",
+  "hearst-flux": "Hearst Fashion & Luxury",
+  "hearst-flux-compact": "Hearst Fashion & Luxury",
+  "hearst-all": "Hearst+",
+  "hearst-autos": "Hearst Autos",
+  "hearst-plus": "Hearst Autos",
+  "hearst-lifestyle": "Hearst Lifestyle",
+  "house-beautiful": "House Beautiful",
+  "hot-rod": "HOT ROD",
+  "mens-health": "Men's Health",
+  "motortrend": "MotorTrend",
+  "oprah-daily": "Oprah Daily",
+  "popular-mechanics": "Popular Mechanics",
+  "prevention": "Prevention",
+  "redbook": "Redbook",
+  "road-and-track": "Road & Track",
+  "runners-world": "Runner's World",
+  "seventeen": "Seventeen",
+  "the-pioneer-woman": "The Pioneer Woman",
+  "pioneer-woman": "The Pioneer Woman",
+  "town-and-country": "Town & Country",
+  "veranda": "Veranda",
+  "womans-day": "Woman's Day",
+  "womens-health": "Women's Health",
+};
+
 export const brandIconLogos: Partial<Record<string, string>> = {
   "cosmopolitan": "https://www.cosmopolitan.com/_assets/design-tokens/cosmopolitan/static/images/apple-touch-icon.b887080.png",
   "country-living": "https://www.countryliving.com/_assets/design-tokens/countryliving/static/images/apple-touch-icon.d0a32c5.png",
@@ -74,4 +122,8 @@ export const brandIconLogos: Partial<Record<string, string>> = {
 
 export function getBrandLogoSrc(slug: string, variant: "logo" | "icon" = "logo") {
   return variant === "icon" ? brandIconLogos[slug] ?? brandLogos[slug] : brandLogos[slug];
+}
+
+export function getBrandLogoLabel(slug: string) {
+  return brandLogoLabels[slug];
 }

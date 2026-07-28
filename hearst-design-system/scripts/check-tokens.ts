@@ -13,20 +13,34 @@ const BRANDS_DIR = join(TOKENS_DIR, "brands");
 
 const errors: string[] = [];
 const warnings: string[] = [];
+const KNOWN_TYPOS: Record<string, string> = {
+  backgroud: "background",
+  dager: "danger",
+  kockout: "knockout",
+  netural: "neutral",
+  defualt: "default",
+  primay: "primary",
+  seconday: "secondary",
+  boarder: "border",
+  heigth: "height",
+  widht: "width",
+};
 
 function loadJson(path: string): Record<string, unknown> {
   return JSON.parse(readFileSync(path, "utf-8"));
+}
+
+function normalizeKnownTypos(key: string) {
+  return Object.entries(KNOWN_TYPOS).reduce(
+    (normalized, [typo, correction]) => normalized.replaceAll(typo, correction),
+    key
+  );
 }
 
 // 1. Check that no tokens were removed compared to the last commit
 function checkNoRemovals() {
   try {
     const diff = execSync("git diff HEAD -- tokens/", { encoding: "utf-8" });
-    const removedLines = diff
-      .split("\n")
-      .filter((line) => line.startsWith("-") && !line.startsWith("---"))
-      .filter((line) => line.includes('"type"') || line.includes('"value"'));
-
     const removedKeys = diff
       .split("\n")
       .filter((line) => line.startsWith("-") && !line.startsWith("---"))
@@ -35,7 +49,7 @@ function checkNoRemovals() {
         const match = line.match(/"([^"]+)"/);
         return match ? match[1] : null;
       })
-      .filter(Boolean);
+      .filter((key): key is string => Boolean(key));
 
     const addedKeys = diff
       .split("\n")
@@ -45,10 +59,11 @@ function checkNoRemovals() {
         const match = line.match(/"([^"]+)"/);
         return match ? match[1] : null;
       })
-      .filter(Boolean);
+      .filter((key): key is string => Boolean(key));
 
+    const normalizedAddedKeys = new Set(addedKeys.map(normalizeKnownTypos));
     const actuallyRemoved = removedKeys.filter(
-      (key) => !addedKeys.includes(key)
+      (key) => !normalizedAddedKeys.has(normalizeKnownTypos(key))
     );
     if (actuallyRemoved.length > 0) {
       errors.push(
@@ -64,8 +79,19 @@ function checkNoRemovals() {
 
 // 2. Check all brand files have the same set of keys
 function checkBrandConsistency() {
+  const publications = loadJson(join(TOKENS_DIR, "publications.json")) as {
+    publications: Array<{ kind: string; tokenFile: string }>;
+  };
+  const systemTokenFiles = new Set(
+    publications.publications
+      .filter((publication) => publication.kind === "system")
+      .map((publication) => publication.tokenFile.split("/").pop())
+  );
   const brandFiles = readdirSync(BRANDS_DIR).filter(
-    (f) => f.endsWith(".json") && f !== "_meta.json"
+    (file) =>
+      file.endsWith(".json")
+      && file !== "_meta.json"
+      && !systemTokenFiles.has(file)
   );
 
   if (brandFiles.length === 0) {
@@ -88,12 +114,12 @@ function checkBrandConsistency() {
     const extra = [...currentKeys].filter((k) => !referenceKeys.has(k));
 
     if (missing.length > 0) {
-      warnings.push(
+      errors.push(
         `${file} is missing keys present in ${reference}: ${missing.slice(0, 5).join(", ")}${missing.length > 5 ? ` (+${missing.length - 5} more)` : ""}`
       );
     }
     if (extra.length > 0) {
-      warnings.push(
+      errors.push(
         `${file} has extra keys not in ${reference}: ${extra.slice(0, 5).join(", ")}${extra.length > 5 ? ` (+${extra.length - 5} more)` : ""}`
       );
     }
@@ -140,18 +166,6 @@ function checkHexColors() {
 
 // 4. Check for common typos in token names
 function checkTypos() {
-  const knownTypos: Record<string, string> = {
-    backgroud: "background",
-    dager: "danger",
-    kockout: "knockout",
-    defualt: "default",
-    primay: "primary",
-    seconday: "secondary",
-    boarder: "border",
-    heigth: "height",
-    widht: "width",
-  };
-
   const allFiles = [
     join(TOKENS_DIR, "core", "global.json"),
     ...readdirSync(BRANDS_DIR)
@@ -163,9 +177,9 @@ function checkTypos() {
     try {
       const data = loadJson(file);
       for (const key of Object.keys(data)) {
-        for (const [typo, correct] of Object.entries(knownTypos)) {
+        for (const [typo, correct] of Object.entries(KNOWN_TYPOS)) {
           if (key.includes(typo)) {
-            warnings.push(
+            errors.push(
               `Possible typo in ${file.split("/").pop()}: "${key}" contains "${typo}" (did you mean "${correct}"?)`
             );
           }

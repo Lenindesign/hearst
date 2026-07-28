@@ -21,7 +21,7 @@ const FormLabel = React.forwardRef<HTMLLabelElement, FormLabelProps>(
         >
           {children}
           {required && (
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-600 shrink-0" />
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--component-badge-content-warning)] shrink-0" />
           )}
         </label>
         {helpText && !error && (
@@ -31,7 +31,7 @@ const FormLabel = React.forwardRef<HTMLLabelElement, FormLabelProps>(
           </p>
         )}
         {error && (
-          <p className="flex items-center gap-1 text-xs text-red-700 dark:text-red-400">
+          <p className="flex items-center gap-1 text-xs text-[var(--content-error)]">
             <TriangleAlert className="size-3.5 shrink-0" />
             {error}
           </p>

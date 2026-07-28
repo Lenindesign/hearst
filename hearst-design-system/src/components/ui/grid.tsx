@@ -35,6 +35,19 @@ export const BREAKPOINTS = {
 } as const;
 
 export type Breakpoint = keyof typeof BREAKPOINTS;
+export type GridColumnCount =
+  | 1
+  | 2
+  | 3
+  | 4
+  | 5
+  | 6
+  | 7
+  | 8
+  | 9
+  | 10
+  | 11
+  | 12;
 
 /**
  * The grid only changes column count at three breakpoints. We ignore `sm`
@@ -80,7 +93,7 @@ export function PageContainer({
     <Component
       data-slot="page-container"
       className={cn(
-        "mx-auto w-full",
+        "mx-auto box-border w-full",
         widthClass[width],
         !bleed && "px-4 md:px-6 lg:px-12",
         className,
@@ -97,10 +110,10 @@ export interface GridProps extends React.HTMLAttributes<HTMLDivElement> {
   as?: keyof React.JSX.IntrinsicElements;
   /**
    * Override the column count at each breakpoint. Defaults to 4 / 8 / 12.
-   * Pass a single number to use the same count everywhere.
+   * Pass a single supported count to use it at every breakpoint.
    */
   columns?:
-    | number
+    | GridColumnCount
     | {
         base?: 1 | 2 | 3 | 4;
         md?: 4 | 6 | 8;
@@ -137,6 +150,51 @@ const lgColsClass: Record<8 | 10 | 12, string> = {
   12: "lg:grid-cols-12",
 };
 
+const fixedColsClass: Record<GridColumnCount, string> = {
+  1: "grid-cols-1",
+  2: "grid-cols-2",
+  3: "grid-cols-3",
+  4: "grid-cols-4",
+  5: "grid-cols-5",
+  6: "grid-cols-6",
+  7: "grid-cols-7",
+  8: "grid-cols-8",
+  9: "grid-cols-9",
+  10: "grid-cols-10",
+  11: "grid-cols-11",
+  12: "grid-cols-12",
+};
+
+const fixedMdColsClass: Record<GridColumnCount, string> = {
+  1: "md:grid-cols-1",
+  2: "md:grid-cols-2",
+  3: "md:grid-cols-3",
+  4: "md:grid-cols-4",
+  5: "md:grid-cols-5",
+  6: "md:grid-cols-6",
+  7: "md:grid-cols-7",
+  8: "md:grid-cols-8",
+  9: "md:grid-cols-9",
+  10: "md:grid-cols-10",
+  11: "md:grid-cols-11",
+  12: "md:grid-cols-12",
+};
+
+const fixedLgColsClass: Record<GridColumnCount, string> = {
+  1: "lg:grid-cols-1",
+  2: "lg:grid-cols-2",
+  3: "lg:grid-cols-3",
+  4: "lg:grid-cols-4",
+  5: "lg:grid-cols-5",
+  6: "lg:grid-cols-6",
+  7: "lg:grid-cols-7",
+  8: "lg:grid-cols-8",
+  9: "lg:grid-cols-9",
+  10: "lg:grid-cols-10",
+  11: "lg:grid-cols-11",
+  12: "lg:grid-cols-12",
+};
+
 const gapClass: Record<NonNullable<GridProps["gap"]>, string> = {
   default: "gap-4 md:gap-5 lg:gap-6",
   tight: "gap-2 md:gap-3 lg:gap-4",
@@ -146,14 +204,11 @@ const gapClass: Record<NonNullable<GridProps["gap"]>, string> = {
 
 function resolveColumns(columns: GridProps["columns"]) {
   if (typeof columns === "number") {
-    const n = Math.min(Math.max(columns, 1), 12);
-    if (n <= 4) {
-      return cn(baseColsClass[n as 1 | 2 | 3 | 4], "md:grid-cols-none lg:grid-cols-none");
-    }
-    if (n <= 8) {
-      return cn("grid-cols-4", mdColsClass[n as 4 | 6 | 8]);
-    }
-    return cn("grid-cols-4", "md:grid-cols-8", lgColsClass[n as 10 | 12]);
+    return cn(
+      fixedColsClass[columns],
+      fixedMdColsClass[columns],
+      fixedLgColsClass[columns],
+    );
   }
 
   const base = (columns?.base ?? 4) as 1 | 2 | 3 | 4;

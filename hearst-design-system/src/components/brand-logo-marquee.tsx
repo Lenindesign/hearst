@@ -121,7 +121,7 @@ export function DraggableBrandLogoMarquee({ brands }: { brands: MarqueeBrand[] }
   };
 
   return (
-    <div className="relative mt-12 overflow-hidden border-y border-white/15 bg-[#102A43] py-5 before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:z-10 before:w-20 before:bg-gradient-to-r before:from-[#102A43] before:to-transparent after:pointer-events-none after:absolute after:inset-y-0 after:right-0 after:z-10 after:w-20 after:bg-gradient-to-l after:from-[#102A43] after:to-transparent">
+    <div className="relative mt-12 overflow-hidden border-y border-white/15 bg-[var(--component-navigation-utility-background-knockout)] py-5 before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:z-10 before:w-20 before:bg-gradient-to-r before:from-[var(--component-navigation-utility-background-knockout)] before:to-transparent after:pointer-events-none after:absolute after:inset-y-0 after:right-0 after:z-10 after:w-20 after:bg-gradient-to-l after:from-[var(--component-navigation-utility-background-knockout)] after:to-transparent">
       <div
         aria-label="Brand logo carousel. Drag horizontally or choose a logo to open that brand in the prototype."
         className="cursor-grab overflow-visible active:cursor-grabbing"
@@ -152,7 +152,7 @@ export function DraggableBrandLogoMarquee({ brands }: { brands: MarqueeBrand[] }
               className="group flex h-12 w-36 shrink-0 items-center justify-center border border-white/15 bg-white/[0.04] px-4 transition hover:border-white/45 hover:bg-white/[0.1]"
               aria-label={`${brand.name} brand page`}
             >
-              <LogoMark slug={brand.slug} name={brand.name} color="#ffffff" className="h-6 w-28" position="center center" />
+              <LogoMark slug={brand.slug} name={brand.name} color="var(--palette-content-knockout, white)" className="h-6 w-28" position="center center" />
             </a>
           ))}
         </div>
@@ -161,7 +161,7 @@ export function DraggableBrandLogoMarquee({ brands }: { brands: MarqueeBrand[] }
   );
 }
 
-function LogoMark({ slug, name, className = "h-8 w-32", color = "#111111", position = "left center" }: { slug: string; name: string; className?: string; color?: string; position?: string }) {
+function LogoMark({ slug, name, className = "h-8 w-32", color = "var(--foreground)", position = "left center" }: { slug: string; name: string; className?: string; color?: string; position?: string }) {
   const src = brandLogos[slug];
   if (!src || src.startsWith("http")) {
     return <span className="w-32 shrink-0 text-sm font-black uppercase tracking-[0.08em]" style={{ color }}>{name}</span>;

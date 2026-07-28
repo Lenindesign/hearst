@@ -47,15 +47,24 @@ const metadata: ComponentMetadata = {
     spacing: [],
     borders: [
       { variable: "--foreground", via: "tailwind", usage: "ring-foreground/10" },
+      { variable: "--ring", via: "tailwind", usage: "focus-visible:ring-ring" },
     ],
     other: [],
   },
 
-  dependencies: [],
-  usedBy: ["card-page", "home-page", "article-page"],
+  dependencies: ["ui/icons"],
+  usedBy: [
+    "article-page",
+    "card-page",
+    "big-story-feed",
+    "big-story",
+    "four-across-grid",
+    "related-articles",
+    "homepage-layouts",
+  ],
   brandAware: true,
   responsive: true,
-  variants: ["vertical", "horizontal", "featured"],
+  variants: ["vertical", "horizontal", "default", "sm", "lg"],
   slots: ["image", "content", "meta", "footer"],
 };
 

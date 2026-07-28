@@ -13,6 +13,8 @@ The project root is also an Obsidian vault. Start with [`VAULT_HOME.md`](VAULT_H
 - [`BRAND_STYLES.md`](BRAND_STYLES.md): brand identity, route-theme mapping, and runtime font status
 - [`APP_RULES.md`](APP_RULES.md): personalization, content, route, reader, and scoped-exception behavior
 - [`DECISION_LOG.md`](DECISION_LOG.md): dated decision history
+- [`CONTRIBUTING.md`](CONTRIBUTING.md): ownership, story acceptance, review, and deprecation policy
+- [`CHANGELOG.md`](CHANGELOG.md): release-facing changes and release checklist
 
 ## Local development
 
@@ -33,13 +35,12 @@ npm run storybook
 
 ## Validation
 
-Run checks appropriate to the files changed:
+Run the complete local quality gate:
 
 ```bash
-npm run lint
+npm run quality
+npm run build-storybook
 npm run build
-npm run tokens:validate
-npm run publications:validate
 ```
 
 When canonical publication tokens change, rebuild generated outputs with the repository token scripts. Do not edit `src/lib/brands.ts` or `src/lib/tokens.css` directly.

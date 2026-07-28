@@ -1,9 +1,15 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { useTheme } from "./theme-provider";
 import { BrandLogo } from "./brand-logo";
 import { cn } from "@/lib/utils";
+import {
+  getEditorialMood,
+  getEditorialThemePalette,
+  type EditorialMood,
+} from "@/lib/article-editorial-themes";
 import { brandLogos } from "@/lib/logos";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -147,7 +153,10 @@ function ArticleNav({ navLinks }: { navLinks: string[] }) {
         <div className="w-10 shrink-0 md:w-[var(--width-sidebar-narrow)]" />
         <div className="min-w-0 flex-1 text-center md:flex-none">
           {logo ? (
-            <BrandLogo slug={brand.slug} className="[&_svg]:h-10 [&_svg]:w-auto mx-auto" />
+            <BrandLogo
+              slug={brand.slug}
+              className="mx-auto block max-w-full [&_svg]:h-auto [&_svg]:max-h-10 [&_svg]:w-auto [&_svg]:max-w-full"
+            />
           ) : (
             <h1 className="text-[length:var(--text-token-2xl)] tracking-widest uppercase headline">
               {brand.name}
@@ -331,12 +340,14 @@ function ArticleNewsletter({ brandName }: { brandName: string }) {
 function ImmersiveHero({ content }: { content: ImmersiveArticleContent }) {
   return (
     <header className="relative left-1/2 min-h-[calc(100vh-4rem)] w-screen -translate-x-1/2 overflow-hidden bg-foreground text-background">
-      <img
+      <Image
         src={content.heroImage}
         alt={content.heroImageAlt || content.headline}
+        fill
+        sizes="100vw"
         className="absolute inset-0 h-full w-full object-cover"
       />
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,.82)_0%,rgba(0,0,0,.58)_42%,rgba(0,0,0,.12)_100%)]" />
+      <div className="absolute inset-0 bg-gradient-to-r from-foreground/80 via-foreground/60 to-foreground/10" />
       <PageContainer className="relative z-10 flex min-h-[calc(100vh-4rem)] flex-col justify-end pb-[var(--spacing-token-3xl)] pt-[var(--spacing-token-3xl)]">
         <div className="max-w-[920px] space-y-[var(--spacing-token-lg)]">
           {content.breadcrumbs.length > 0 && (
@@ -452,12 +463,14 @@ function ImmersiveSceneBand({
             scene.align === "right" && "lg:order-2"
           )}
         >
-          <img
+          <Image
             src={scene.image}
             alt={scene.imageAlt || scene.title}
+            fill
+            sizes="100vw"
             className="absolute inset-0 h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.18)_0%,rgba(0,0,0,0)_48%,rgba(0,0,0,.42)_100%)]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-foreground/20 via-transparent to-foreground/40" />
           {scene.imageCredit && (
             <figcaption className="absolute bottom-[var(--spacing-token-sm)] right-[var(--spacing-token-sm)] text-[length:var(--text-token-4xs)] text-background/70">
               {scene.imageCredit}
@@ -503,9 +516,11 @@ function ImmersiveMediaPair({ media }: { media: ImmersiveArticleMediaItem[] }) {
         {media.map((item, i) => (
           <figure key={`${item.src}-${i}`} className="space-y-[var(--spacing-token-xs)]">
             <div className="relative aspect-[4/5] overflow-hidden bg-muted">
-              <img
+              <Image
                 src={item.src}
                 alt={item.alt || ""}
+                fill
+                sizes="(max-width: 768px) 100vw, 33vw"
                 className="h-full w-full object-cover"
               />
             </div>
@@ -624,9 +639,11 @@ function EditorialBeforeAfterFrame({
 }) {
   return (
     <div className={cn("relative aspect-[2/1] overflow-hidden bg-muted", className)}>
-      <img
+      <Image
         src={src}
         alt={alt || ""}
+        fill
+        sizes="(max-width: 768px) 100vw, 50vw"
         className={cn("h-full w-full object-contain", imageClassName)}
       />
     </div>
@@ -646,9 +663,11 @@ function EditorialProductFrame({
 }) {
   return (
     <div className={cn("relative aspect-[4/3] overflow-hidden bg-muted", className)}>
-      <img
+      <Image
         src={src}
         alt={alt || ""}
+        fill
+        sizes="(max-width: 768px) 100vw, 50vw"
         className={cn("h-full w-full object-contain", imageClassName)}
       />
     </div>
@@ -678,18 +697,6 @@ function EditorialFullBleedSection({
   );
 }
 
-type EditorialMood = "architecture" | "road" | "ranch" | "ride" | "food" | "profile" | "default";
-
-function getEditorialMood(brandSlug: string): EditorialMood {
-  if (["autoweek", "car-and-driver", "popular-mechanics", "road-and-track"].includes(brandSlug)) return "road";
-  if (["country-living"].includes(brandSlug)) return "ranch";
-  if (["bicycling", "mens-health", "runners-world", "womens-health"].includes(brandSlug)) return "ride";
-  if (["delish", "the-pioneer-woman", "womans-day"].includes(brandSlug)) return "food";
-  if (["biography", "esquire", "harpers-bazaar", "redbook", "seventeen", "town-and-country"].includes(brandSlug)) return "profile";
-  if (["elle", "elle-decor", "house-beautiful", "veranda"].includes(brandSlug)) return "architecture";
-  return "default";
-}
-
 type CinematicEditorialStyle = {
   shell: string;
   paper: string;
@@ -698,124 +705,120 @@ type CinematicEditorialStyle = {
   accentText: string;
   accentBg: string;
   accentBorder: string;
-  heroOverlay: string;
   heroObject: string;
   titleClass: string;
   labelClass: string;
   bodyText: string;
-  invertedAccent: string;
 };
 
 const cinematicEditorialStyles: Record<EditorialMood, CinematicEditorialStyle> = {
   architecture: {
-    shell: "bg-[#f1eee8]",
-    paper: "bg-[#f8f6f1]",
-    wash: "bg-[#e6e0d7]",
-    dark: "bg-[#232334]",
-    accentText: "text-[#6f6d98]",
-    accentBg: "bg-[#6f6d98]",
-    accentBorder: "border-[#6f6d98]",
-    heroOverlay: "bg-gradient-to-b from-[#111321]/6 via-[#111321]/8 to-[#111321]/48",
+    shell: "bg-[var(--editorial-shell)]",
+    paper: "bg-[var(--editorial-paper)]",
+    wash: "bg-[var(--editorial-wash)]",
+    dark: "bg-[var(--editorial-dark)]",
+    accentText: "text-[var(--editorial-accent)]",
+    accentBg: "bg-[var(--editorial-accent)]",
+    accentBorder: "border-[var(--editorial-accent)]",
     heroObject: "object-[center_52%]",
     titleClass: "headline text-[length:var(--text-token-2xl)] leading-[0.94] md:text-[length:var(--text-token-4xl)] lg:text-[4.65rem]",
     labelClass: "font-brand-secondary",
     bodyText: "text-foreground/72",
-    invertedAccent: "text-[#d9d5ff]",
   },
   road: {
-    shell: "bg-[#eef3f4]",
-    paper: "bg-[#f5f8f8]",
-    wash: "bg-[#dceaf0]",
-    dark: "bg-[#081314]",
-    accentText: "text-[#1f6386]",
-    accentBg: "bg-[#1f6386]",
-    accentBorder: "border-[#1f6386]",
-    heroOverlay: "bg-gradient-to-b from-[#061113]/0 via-[#061113]/12 to-[#061113]/58",
+    shell: "bg-[var(--editorial-shell)]",
+    paper: "bg-[var(--editorial-paper)]",
+    wash: "bg-[var(--editorial-wash)]",
+    dark: "bg-[var(--editorial-dark)]",
+    accentText: "text-[var(--editorial-accent)]",
+    accentBg: "bg-[var(--editorial-accent)]",
+    accentBorder: "border-[var(--editorial-accent)]",
     heroObject: "object-center",
     titleClass: "[font-family:Inter,system-ui,sans-serif] text-[length:var(--text-token-2xl)] font-extrabold leading-[0.94] md:text-[length:var(--text-token-4xl)] lg:text-[4.65rem]",
     labelClass: "[font-family:Inter,system-ui,sans-serif]",
     bodyText: "text-foreground/76",
-    invertedAccent: "text-[#8ed0ed]",
   },
   ranch: {
-    shell: "bg-[#f6efe6]",
-    paper: "bg-[#fbf7ef]",
-    wash: "bg-[#eadbc8]",
-    dark: "bg-[#211711]",
-    accentText: "text-[#8b5a2f]",
-    accentBg: "bg-[#8b5a2f]",
-    accentBorder: "border-[#8b5a2f]",
-    heroOverlay: "bg-gradient-to-b from-[#211711]/0 via-[#211711]/12 to-[#211711]/58",
+    shell: "bg-[var(--editorial-shell)]",
+    paper: "bg-[var(--editorial-paper)]",
+    wash: "bg-[var(--editorial-wash)]",
+    dark: "bg-[var(--editorial-dark)]",
+    accentText: "text-[var(--editorial-accent)]",
+    accentBg: "bg-[var(--editorial-accent)]",
+    accentBorder: "border-[var(--editorial-accent)]",
     heroObject: "object-[center_40%]",
     titleClass: "headline text-[length:var(--text-token-2xl)] leading-[0.94] md:text-[length:var(--text-token-4xl)] lg:text-[4.65rem]",
     labelClass: "font-brand-secondary",
     bodyText: "text-foreground/73",
-    invertedAccent: "text-[#f4d29a]",
   },
   ride: {
-    shell: "bg-[#eef8fb]",
-    paper: "bg-[#f8fcfd]",
-    wash: "bg-[#d8f0f6]",
-    dark: "bg-[#062634]",
-    accentText: "text-[#0f88ac]",
-    accentBg: "bg-[#0f88ac]",
-    accentBorder: "border-[#0f88ac]",
-    heroOverlay: "bg-gradient-to-b from-[#062634]/0 via-[#062634]/10 to-[#062634]/58",
+    shell: "bg-[var(--editorial-shell)]",
+    paper: "bg-[var(--editorial-paper)]",
+    wash: "bg-[var(--editorial-wash)]",
+    dark: "bg-[var(--editorial-dark)]",
+    accentText: "text-[var(--editorial-accent)]",
+    accentBg: "bg-[var(--editorial-accent)]",
+    accentBorder: "border-[var(--editorial-accent)]",
     heroObject: "object-center",
     titleClass: "headline text-[length:var(--text-token-2xl)] leading-[0.94] md:text-[length:var(--text-token-4xl)] lg:text-[4.65rem]",
     labelClass: "font-brand-secondary",
     bodyText: "text-foreground/72",
-    invertedAccent: "text-[#8bd9ee]",
   },
   food: {
-    shell: "bg-[#fff4cf]",
-    paper: "bg-[#fffaf0]",
-    wash: "bg-[#ffe8a8]",
-    dark: "bg-[#35150f]",
-    accentText: "text-[#d44f1e]",
-    accentBg: "bg-[#d44f1e]",
-    accentBorder: "border-[#d44f1e]",
-    heroOverlay: "bg-gradient-to-b from-[#35150f]/0 via-[#35150f]/14 to-[#35150f]/64",
+    shell: "bg-[var(--editorial-shell)]",
+    paper: "bg-[var(--editorial-paper)]",
+    wash: "bg-[var(--editorial-wash)]",
+    dark: "bg-[var(--editorial-dark)]",
+    accentText: "text-[var(--editorial-accent)]",
+    accentBg: "bg-[var(--editorial-accent)]",
+    accentBorder: "border-[var(--editorial-accent)]",
     heroObject: "object-center",
     titleClass: "[font-family:Inter,system-ui,sans-serif] text-[length:var(--text-token-2xl)] font-extrabold leading-[0.94] md:text-[length:var(--text-token-4xl)] lg:text-[4.65rem]",
     labelClass: "[font-family:Inter,system-ui,sans-serif]",
     bodyText: "text-foreground/76",
-    invertedAccent: "text-[#ffe167]",
   },
   profile: {
-    shell: "bg-[#f2efec]",
-    paper: "bg-[#f8f5f2]",
-    wash: "bg-[#201a19]",
-    dark: "bg-[#050505]",
-    accentText: "text-[#c93326]",
-    accentBg: "bg-[#c93326]",
-    accentBorder: "border-[#c93326]",
-    heroOverlay: "bg-gradient-to-b from-[#050505]/0 via-[#050505]/14 to-[#050505]/68",
+    shell: "bg-[var(--editorial-shell)]",
+    paper: "bg-[var(--editorial-paper)]",
+    wash: "bg-[var(--editorial-wash)]",
+    dark: "bg-[var(--editorial-dark)]",
+    accentText: "text-[var(--editorial-accent)]",
+    accentBg: "bg-[var(--editorial-accent)]",
+    accentBorder: "border-[var(--editorial-accent)]",
     heroObject: "object-[center_20%]",
     titleClass: "[font-family:Inter,system-ui,sans-serif] text-[length:var(--text-token-2xl)] font-extrabold uppercase leading-[0.94] md:text-[length:var(--text-token-4xl)] lg:text-[4.65rem]",
     labelClass: "[font-family:Inter,system-ui,sans-serif]",
     bodyText: "text-foreground/72",
-    invertedAccent: "text-[#f04a3a]",
   },
   default: {
-    shell: "bg-[#fff2f4]",
-    paper: "bg-[#fff8f9]",
-    wash: "bg-[#f5e7e9]",
-    dark: "bg-[#13080a]",
-    accentText: "text-primary",
-    accentBg: "bg-primary",
-    accentBorder: "border-primary",
-    heroOverlay: "bg-gradient-to-b from-[#13080a]/0 via-[#13080a]/10 to-[#13080a]/62",
+    shell: "bg-[var(--editorial-shell)]",
+    paper: "bg-[var(--editorial-paper)]",
+    wash: "bg-[var(--editorial-wash)]",
+    dark: "bg-[var(--editorial-dark)]",
+    accentText: "text-[var(--editorial-accent)]",
+    accentBg: "bg-[var(--editorial-accent)]",
+    accentBorder: "border-[var(--editorial-accent)]",
     heroObject: "object-[center_24%]",
     titleClass: "headline text-[length:var(--text-token-2xl)] leading-[0.94] md:text-[length:var(--text-token-4xl)] lg:text-[4.65rem]",
     labelClass: "font-brand-secondary",
     bodyText: "text-foreground/72",
-    invertedAccent: "text-primary",
   },
 };
 
 function getCinematicEditorialStyle(brandSlug: string) {
   return cinematicEditorialStyles[getEditorialMood(brandSlug)];
+}
+
+function getCinematicEditorialCssVars(brandSlug: string): React.CSSProperties {
+  const palette = getEditorialThemePalette(brandSlug);
+  return {
+    "--editorial-shell": palette.shell,
+    "--editorial-paper": palette.paper,
+    "--editorial-wash": palette.wash,
+    "--editorial-dark": palette.dark,
+    "--editorial-accent": palette.accent,
+    "--editorial-inverted-accent": palette.invertedAccent,
+  } as React.CSSProperties;
 }
 
 function EditorialProductReviewList({
@@ -837,7 +840,7 @@ function EditorialProductReviewList({
       <h4
         className={cn(
           "headline text-[length:var(--text-token-xl)] leading-none lg:text-[length:var(--text-token-2xl)]",
-          positive ? "text-[#0f7a3b]" : "text-[#d72622]",
+          positive ? "text-[var(--component-badge-content-success)]" : "text-[var(--content-error)]",
         )}
       >
         {title}
@@ -852,7 +855,7 @@ function EditorialProductReviewList({
               aria-hidden="true"
               className={cn(
                 "mt-0.5 size-4",
-                positive ? "text-[#0f7a3b]" : "text-[#d72622]",
+                positive ? "text-[var(--component-badge-content-success)]" : "text-[var(--content-error)]",
               )}
             />
             <span>{item}</span>
@@ -903,16 +906,18 @@ function EditorialProductReviewModule({
       )}
     >
       <div className="grid lg:grid-cols-[minmax(260px,1.05fr)_minmax(260px,0.82fr)]">
-        <div className="relative min-h-[300px] border-b border-foreground/10 bg-white lg:min-h-[380px] lg:border-b-0 lg:border-r">
-          <img
+        <div className="relative min-h-[300px] border-b border-foreground/10 bg-card lg:min-h-[380px] lg:border-b-0 lg:border-r">
+          <Image
             src={image}
             alt={alt || title}
+            fill
+            sizes="(max-width: 1024px) 100vw, 55vw"
             className="absolute inset-0 h-full w-full object-contain p-[var(--spacing-token-lg)] lg:p-[var(--spacing-token-xl)]"
           />
         </div>
-        <div className="flex flex-col justify-center gap-[var(--spacing-token-sm)] bg-[#f8fcfd] p-[var(--spacing-token-md)] lg:p-[var(--spacing-token-lg)]">
+        <div className="flex flex-col justify-center gap-[var(--spacing-token-sm)] bg-muted/30 p-[var(--spacing-token-md)] lg:p-[var(--spacing-token-lg)]">
           {review.award && (
-            <p className={cn("inline-flex w-fit bg-[#ffd51f] px-[var(--spacing-token-sm)] py-[var(--spacing-token-2xs)] text-[length:var(--text-token-2xs)] font-extrabold uppercase tracking-[0.18em] text-foreground", style.labelClass)}>
+            <p className={cn("inline-flex w-fit bg-[var(--component-badge-background-warning)] px-[var(--spacing-token-sm)] py-[var(--spacing-token-2xs)] text-[length:var(--text-token-2xs)] font-extrabold uppercase tracking-[0.18em] text-[var(--component-badge-content-warning)]", style.labelClass)}>
               {review.award}
             </p>
           )}
@@ -946,7 +951,7 @@ function EditorialProductReviewModule({
         </div>
       </div>
       {hasReviewGrid && (
-        <div className={cn("grid border-t border-foreground/10 bg-white", hasPros && hasCons && "md:grid-cols-2")}>
+        <div className={cn("grid border-t border-foreground/10 bg-card", hasPros && hasCons && "md:grid-cols-2")}>
           {hasPros && (
             <EditorialProductReviewList title="Pros" items={review.pros} tone="positive" />
           )}
@@ -1093,17 +1098,23 @@ function CinematicEditorialHero({
     <header className="relative left-1/2 w-screen -translate-x-1/2 overflow-hidden text-background">
       <figure ref={figureRef} className="relative min-h-[820px] overflow-hidden bg-muted md:min-h-[880px] lg:min-h-[960px]">
         {containHero && (
-          <img
+          <Image
             src={content.heroImage}
             alt=""
             aria-hidden="true"
+            width={1600}
+            height={1000}
+            sizes="100vw"
             className={cn("absolute inset-x-0 top-[-12%] h-[124%] w-full scale-110 object-cover opacity-50 blur-xl saturate-75", style.heroObject)}
           />
         )}
-        <img
+        <Image
           ref={imageRef}
           src={content.heroImage}
           alt={content.heroImageAlt || content.headline}
+          width={1600}
+          height={1000}
+          sizes="100vw"
           style={heroImageStyle}
           className={cn(
             containHero ? "absolute inset-x-0 top-[11%] h-[54%] w-full drop-shadow-2xl will-change-transform" : "absolute inset-x-0 top-[-12%] h-[124%] w-full object-cover will-change-transform",
@@ -1118,7 +1129,7 @@ function CinematicEditorialHero({
               {logo ? (
                 <BrandLogo
                   slug={brand.slug}
-                  color="#fff"
+                  color="var(--palette-content-knockout)"
                   className="[&_svg]:h-11 [&_svg]:w-auto md:[&_svg]:h-16 lg:[&_svg]:h-20"
                 />
               ) : (
@@ -1308,9 +1319,11 @@ function CinematicSceneChapter({
       >
         <figure className="relative">
           <div className="relative min-h-[620px] overflow-hidden bg-muted md:min-h-[760px] lg:min-h-[860px]">
-            <img
+            <Image
               src={scene.image}
               alt={scene.imageAlt || scene.title}
+              fill
+              sizes="100vw"
               className={cn(
                 "absolute inset-0 h-full w-full",
                 scene.imageFit === "contain" ? "object-contain" : cn("object-cover", style.heroObject),
@@ -1411,9 +1424,11 @@ function CinematicSceneChapter({
               )
             ) : (
               <div className="relative min-h-[560px] overflow-hidden bg-muted lg:min-h-[720px]">
-                <img
+                <Image
                   src={scene.image}
                   alt={scene.imageAlt || scene.title}
+                  fill
+                  sizes="100vw"
                   className={cn(
                     "absolute inset-0 h-full w-full",
                     scene.imageFit === "contain" ? "object-contain" : cn("object-cover", style.heroObject),
@@ -1537,9 +1552,12 @@ function CinematicVisualEssay({
                   )}
                   style={{ marginLeft: "calc(50% - 50vw)", width: "100vw" }}
                 >
-                  <img
+                  <Image
                     src={featured.src}
                     alt={featured.alt || ""}
+                    width={1600}
+                    height={1000}
+                    sizes="100vw"
                     className={cn(
                       featuredIsFramed ? "h-full w-full" : "absolute inset-0 h-full w-full",
                       featured.fit === "contain" ? "object-contain" : cn("object-cover", style.heroObject),
@@ -1578,9 +1596,12 @@ function CinematicVisualEssay({
                     !item.treatment && "aspect-[4/5]",
                   )}
                 >
-                  <img
+                  <Image
                     src={item.src}
                     alt={item.alt || ""}
+                    width={1200}
+                    height={900}
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className={cn(
                       "h-full w-full",
                       item.fit === "contain" ? "object-contain" : cn("object-cover", style.heroObject),
@@ -1660,9 +1681,12 @@ function EditorialPhotoGalleryFigure({
         className="relative border-y border-border bg-muted/40"
         style={{ marginLeft: "calc(50% - 50vw)", width: "100vw" }}
       >
-        <img
+        <Image
           src={src}
           alt={alt || ""}
+          width={1600}
+          height={900}
+          sizes="100vw"
           className="block h-auto w-full"
         />
       </div>
@@ -1686,7 +1710,10 @@ function EditorialPhotoGalleryArticleTemplate({
   const intro = content.immersiveIntro ?? (content.dek ? <p>{content.dek}</p> : null);
 
   return (
-    <div className={cn("min-h-screen bg-background font-brand", style.paper)}>
+    <div
+      className={cn("min-h-screen bg-background font-brand", style.paper)}
+      style={getCinematicEditorialCssVars(brand.slug)}
+    >
       <CinematicEditorialHero content={content} brandSlug={brand.slug} />
 
       <main className="relative z-10">
@@ -1786,7 +1813,10 @@ function BrandEditorialFeatureTemplate({
   }
 
   return (
-    <div className={cn("min-h-screen font-brand", style.paper)}>
+    <div
+      className={cn("min-h-screen font-brand", style.paper)}
+      style={getCinematicEditorialCssVars(brand.slug)}
+    >
       <PageContainer className="relative">
         {showGridOverlay && <GridOverlay />}
         <div className="relative z-10">
@@ -1823,7 +1853,7 @@ function ArticleFooter() {
   const logo = brandLogos[brand.slug];
 
   const footerLogo = logo ? (
-    <BrandLogo slug={brand.slug} className="[&_svg]:h-8 [&_svg]:w-auto" color="#fff" />
+    <BrandLogo slug={brand.slug} className="[&_svg]:h-8 [&_svg]:w-auto" color="var(--palette-content-knockout)" />
   ) : (
     brand.name
   );

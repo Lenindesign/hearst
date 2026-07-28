@@ -19,30 +19,32 @@ const metadata: ComponentMetadata = {
   ],
 
   tokens: {
-    colors: [],
+    colors: [
+      { variable: "--component-special-offers-background-start", via: "tailwind", usage: "from-[var(--component-special-offers-background-start)]" },
+      { variable: "--component-special-offers-background-end", via: "tailwind", usage: "to-[var(--component-special-offers-background-end)]" },
+      { variable: "--component-special-offers-border-default", via: "tailwind", usage: "border-[var(--component-special-offers-border-default)]" },
+      { variable: "--component-special-offers-title-content-default", via: "tailwind", usage: "text-[var(--component-special-offers-title-content-default)]" },
+      { variable: "--component-special-offers-pill-background-default", via: "tailwind", usage: "bg-[var(--component-special-offers-pill-background-default)]" },
+      { variable: "--component-special-offers-pill-border-default", via: "tailwind", usage: "border-[var(--component-special-offers-pill-border-default)]" },
+      { variable: "--component-special-offers-icon-background-default", via: "tailwind", usage: "bg-[var(--component-special-offers-icon-background-default)]" },
+      { variable: "--component-special-offers-content-default", via: "tailwind", usage: "text-[var(--component-special-offers-content-default)]" },
+      { variable: "--component-special-offers-expiration-content-default", via: "tailwind", usage: "text-[var(--component-special-offers-expiration-content-default)]" },
+    ],
     typography: [],
     spacing: [],
     borders: [],
     other: [],
   },
 
-  dependencies: [],
+  dependencies: ["ui/icons"],
   usedBy: [],
   brandAware: false,
   responsive: true,
 
-  violations: [
-    {
-      type: "non-semantic-tailwind",
-      value: "border-emerald-700, bg-emerald-950, text-emerald-400, bg-emerald-500, text-emerald-300",
-      location: "special-offers.tsx lines 25-56",
-      severity: "warning",
-    },
-  ],
+  violations: [],
 
   caveats: [
-    "Currently uses hardcoded emerald Tailwind colors — should be tokenized to support brand theming",
-    "Not brand-aware yet: all brands get the same green treatment",
+    "The semantic offer palette is intentionally shared across brands; publication-specific promotion themes require an approved token override.",
   ],
 };
 

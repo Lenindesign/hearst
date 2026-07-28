@@ -1,429 +1,121 @@
 import { Meta } from "@storybook/blocks";
+import { HearstPlusDocScope, SpecTable } from "./hearst-plus-docs";
 
 <Meta title="Hearst Plus/Delivery/Figma" />
 
-# Figma Integration
+# Figma delivery
 
-How Figma connects to the Hearst Design System and stays in sync with production tokens.
+<HearstPlusDocScope owner="Design" source="tokens/; scripts/push-to-figma.ts; scripts/build-from-tokens.ts; src/lib/tokens.css; src/lib/brands.ts">
+  Figma is a downstream design consumer. Canonical values are reviewed in Git, production consumes generated application output, and an authorized Figma write must be verified before the file is described as synchronized.
+</HearstPlusDocScope>
 
-<a href="https://www.figma.com/design/XFDMnMs6TI0uvAwyJnDZA1/Hearst-Tokens?node-id=0-1" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: '#0d99ff', color: '#fff', borderRadius: '8px', fontWeight: 600, fontSize: '14px', textDecoration: 'none', marginBottom: '32px' }}>
-  Open Figma File — Hearst Tokens ↗
-</a>
+## Current contract
 
----
+<SpecTable rows={[
+  {
+    label: "Authority",
+    value: <code>tokens/</code>,
+    evidence: "Figma variables do not override canonical Git tokens or shipped production behavior.",
+  },
+  {
+    label: "Payload generator",
+    value: <code>npm run push-figma</code>,
+    evidence: <><code>scripts/push-to-figma.ts</code> prints JSON to standard output; it does not call the Figma API.</>,
+  },
+  {
+    label: "Current payload shape",
+    value: "One collection and 29 publication modes",
+    evidence: "Current verified output contains 774 variables and 22,432 mode values.",
+  },
+  {
+    label: "External write",
+    value: "Separate authorized action",
+    evidence: "Use an approved Figma Variables API or connected tool; do not expose credentials or private file identifiers.",
+  },
+  {
+    label: "Successful delivery",
+    value: "Destination verification",
+    evidence: "Confirm names, modes, resolved values, scopes, code syntax, and destination revision after the write.",
+  },
+]} />
 
-## How It Works
-
-Figma is a **consumer** of the design system, not the source of truth.
-All token values live in Git (`tokens/` directory) and are **pushed** to Figma as variables.
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                                                                 │
-│   Git  tokens/              npm run push-figma                  │
-│   ★ SOURCE OF TRUTH ★  ──────────────────────►  Figma File     │
-│                                                                 │
-│   core/global.json                               Collection:    │
-│   brands/{slug}.json                             "Hearst        │
-│   brands/_meta.json                               Design        │
-│                                                   System"       │
-│                                                                 │
-│                                                  29 Modes       │
-│                                                  (one per       │
-│                                                   brand)        │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-### The sync flow
-
-<div style={{ overflowX: 'auto', margin: '24px 0' }}>
-  <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
-    <thead>
-      <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
-        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Step</th>
-        <th style={{ padding: '10px 16px', fontWeight: 600 }}>What happens</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>1</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Developer edits a token JSON file in <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens/</code></td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>2</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Runs <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>npm run build-tokens</code> to generate CSS + TypeScript</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>3</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Commits and merges to <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>main</code></td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>4</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Runs <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>npm run push-figma</code></td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>5</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Script reads all token files, builds a Figma API payload</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>6</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Pushes variables to the Figma file via the REST API</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>7</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Designers see updated variables immediately in Figma</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
----
-
-## Figma File Structure
-
-### One collection, many modes
-
-The Figma file contains a single variable collection called **"Hearst Design System"** with **29 modes** — one for each brand.
-
-<div style={{ overflowX: 'auto', margin: '24px 0' }}>
-  <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
-    <thead>
-      <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
-        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Mode</th>
-        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Brand</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Mode 1</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>White Label</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Mode 2</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Autoweek</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Mode 3</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Best Products</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Mode 4</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Bicycling</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Mode 5</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Car and Driver</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Mode 6</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Cosmopolitan</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>...</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>...</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Mode 29</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Women's Health</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-Designers switch between brands by changing the mode in the Variables panel.
-
-### Variable categories
-
-<div style={{ overflowX: 'auto', margin: '24px 0' }}>
-  <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
-    <thead>
-      <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
-        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Category</th>
-        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Examples</th>
-        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Count</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Brand colors</strong></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>brand/1</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>brand/2</code> ... <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>brand/14</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>14 per brand</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Palette brand</strong></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette/brand-1</code> ... <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette/brand-14</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>14 per brand</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Palette neutral</strong></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette/neutral-100</code> ... <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette/neutral-900</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>~15</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Palette alert</strong></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette/alert-danger-100</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette/alert-success-100</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>~20</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Content</strong></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette/content-default</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette/content-brand</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>~10</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Background</strong></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette/background-subtle-brand</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>~10</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Spacing</strong></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>space/xs</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>space/md</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>space/2xl</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>11</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Border</strong></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>border/radius-2xs</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>border/width-sm</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>~8</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Font</strong></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>font/primary</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>font/secondary</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>font/headline</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>4</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Component</strong></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component/button-background-primary-solid-default</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>~200+</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-### codeSyntax.WEB
-
-Every variable includes a `codeSyntax.WEB` property so developers can see the corresponding CSS variable name directly in Figma's inspect panel.
-
-<div style={{ overflowX: 'auto', margin: '24px 0' }}>
-  <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
-    <thead>
-      <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
-        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Figma variable</th>
-        <th style={{ padding: '10px 16px', fontWeight: 600 }}>codeSyntax.WEB</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>brand/1</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>--brand-1</code></td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette/neutral-200</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>--palette-neutral-200</code></td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>space/md</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>--space-md</code></td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>font/primary</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>--font-brand</code></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
----
-
-## What Designers Can Do
-
-### Use variables in designs
-
-1. Select a layer in Figma
-2. Click the variable icon next to any color, spacing, or corner radius property
-3. Pick from the "Hearst Design System" collection
-4. Switch modes to preview different brands
-
-### Switch brands
-
-1. Select a frame or component
-2. Open the Variables panel
-3. Change the mode from one brand to another
-4. All bound variables update instantly
-
-### Reference token names
-
-When inspecting a design, the **codeSyntax.WEB** value tells developers exactly which CSS variable to use in code.
-
----
-
-## What Designers Should NOT Do
-
-<div style={{ overflowX: 'auto', margin: '24px 0' }}>
-  <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
-    <thead>
-      <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
-        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Don't</th>
-        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Why</th>
-        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Instead</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Edit Figma Variables directly</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>They'll be overwritten on next <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>push-figma</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Edit the token value in an IDE (on a branch) or request via the team</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Define new token values in Figma</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>They won't reach production</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>For value changes: edit in an IDE. For new tokens: file a request — developer adds to <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens/</code></td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Use Figma inspect hex values as source of truth</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Inspect shows resolved values, not token references</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Use the variable name / codeSyntax.WEB</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>Detach variables from components</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Breaks the token binding</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Keep variables attached</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
----
-
-## Font Variables — Known Limitation
-
-Figma `STRING` variables **cannot** directly control the `fontFamily` property in the UI.
-Font variables (`font/primary`, `font/secondary`, `font/headline`) are visible in the Variables panel
-and useful as a reference, but they cannot be applied to a text layer's font family dropdown.
-
-**Workaround for designers:**
-- Reference the font variable value in the Variables panel to see which font to use
-- Apply the font manually from the font picker
-- Use Text Styles or Component Variants for consistent font application
-
----
-
-## The Push Script
-
-The `push-figma` script (`scripts/push-to-figma.ts`) does the following:
-
-1. Reads all token JSON files from `tokens/`
-2. Maps token names to Figma variable paths (e.g. `brand-1` → `brand/1`)
-3. Converts hex colors to Figma's `{r, g, b, a}` format
-4. Creates the variable collection and modes if they don't exist
-5. Sets `codeSyntax.WEB` on each variable
-6. Pushes values for all 29 brand modes via the Figma REST API
-
-### Running the sync
+## Generate the payload
 
 ```bash
-# From hearst-design-system/
-npm run push-figma
+npm run push-figma > figma-payload.json
 ```
 
-This requires a Figma personal access token configured in the environment.
+The generator:
 
----
+1. reads `tokens/core/global.json` and the 29 `tokens/brands/*.json` files;
+2. creates one Variables collection;
+3. creates publication modes, including the collection's initial mode;
+4. converts supported colors, numbers, and strings to Figma values;
+5. skips unresolved composite and reference values;
+6. converts canonical hyphenated names to slash-grouped Figma names;
+7. adds `codeSyntax.WEB` as `var(--canonical-token-name)`;
+8. prints create actions and mode values as JSON.
 
-## Figma ↔ Code Mapping
+The command does not inspect a destination file, update existing variable IDs, submit an API request, or confirm the result.
 
-How Figma variables map to what developers use in code:
+## Authorized write and verification
 
-<div style={{ overflowX: 'auto', margin: '24px 0' }}>
-  <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
-    <thead>
-      <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
-        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Figma Variable</th>
-        <th style={{ padding: '10px 16px', fontWeight: 600 }}>CSS Variable</th>
-        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Tailwind / Utility</th>
-        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Usage</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>brand/1</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>var(--brand-primary)</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>—</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Brand accent color</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette/neutral-200</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>var(--palette-neutral-200)</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>—</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Light backgrounds</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>palette/content-default</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>var(--palette-content-default)</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>—</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Body text</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>font/primary</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>var(--font-brand)</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>font-brand</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Body font family</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>font/secondary</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>var(--font-brand-secondary)</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>font-brand-secondary</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Eyebrow font</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>font/headline</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>var(--font-headline)</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>.headline</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Headline font</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>space/md</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>var(--space-md)</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>gap-4</code> (16px)</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Medium spacing</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>border/radius-2xs</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>var(--border-radius-2xs)</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>rounded-sm</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Small radius</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+The external write must be performed through a team-approved Figma Variables API client or connected tool with the minimum required access.
 
----
+After the write:
 
-## Keeping Everything in Sync
+| Check | Pass criteria |
+|---|---|
+| **Destination identity** | The intended Figma file and collection revision are recorded without exposing credentials. |
+| **Variable identity** | Canonical names map to the expected slash-grouped names without duplicates. |
+| **Modes** | All expected publication modes exist and are named correctly. |
+| **Values** | A representative core, semantic, component, color, number, and typography sample matches canonical Git values. |
+| **Scopes** | Fill, text, stroke, spacing, radius, typography, and general scopes are appropriate for the token purpose. |
+| **Code syntax** | The WEB syntax resolves to the canonical CSS variable name. |
+| **Failures** | Unsupported values, API errors, skipped tokens, and partial writes are recorded. |
 
-```
-                    ┌─────────────────────────────────────────┐
-                    │                                         │
-  Developer edits   │         Git  tokens/                    │
-  token JSON ──────►│         (source of truth)               │
-                    │              │                           │
-                    │              ├── build-tokens            │
-                    │              │   ├── brands.ts  (React)  │
-                    │              │   └── tokens.css (CSS)    │
-                    │              │                           │
-                    │              ├── push-figma              │
-                    │              │   └── Figma Variables     │
-                    │              │       (designers see it)  │
-                    │              │                           │
-                    │              └── push-pencil             │
-                    │                  └── .pen file           │
-                    │                      (handoff specs)     │
-                    │                                         │
-                    └─────────────────────────────────────────┘
-```
+Payload generation is **Generated**. Only a completed destination check is **Verified in destination**.
 
-All three outputs — **code**, **Figma**, and **Pencil** — are always derived from the same token JSON files.
-When a token changes in Git, running the three scripts ensures every tool sees the same values.
+## Designer usage
 
----
+- Apply published variables instead of copying resolved hex, spacing, or typography values.
+- Switch publication modes to review brand behavior.
+- Use canonical names when discussing implementation.
+- Compare component behavior and responsive states in Storybook and the routed application.
+- File a canonical token change when a variable is missing or incorrect.
 
-*Figma file: [Hearst Tokens](https://www.figma.com/design/XFDMnMs6TI0uvAwyJnDZA1/Hearst-Tokens?node-id=0-1)*
+Do not edit Figma variables and assume the change will reach production. A Figma-only value is unshipped and can be overwritten by a later authorized delivery.
+
+## Developer mapping
+
+| Canonical Git name | Figma name | Production CSS |
+|---|---|---|
+| `palette-background-page` | `palette/background/page` | `var(--palette-background-page)` |
+| `component-button-background-primary-solid-default` | `component/button/background/primary/solid/default` | `var(--component-button-background-primary-solid-default)` |
+| `space-md` | `space/md` | `var(--space-md)` |
+| `font-family-default` | `font/family/default` | `var(--font-family-default)` |
+
+Figma grouping is a navigation aid. The canonical JSON key remains the cross-tool identity.
+
+## Typography limitation
+
+String variables can document font-family names and code syntax, but they do not prove that the font asset is installed, licensed, loaded, or applied correctly in Figma or production. Typography review must compare the actual publication font asset and rendered production component.
+
+## Current gaps
+
+- The generator creates payload objects with synthetic IDs; it does not reconcile them with an existing destination file.
+- The repository does not store a non-secret receipt for the last successful Figma write.
+- No automated round-trip comparison currently proves that every destination mode value matches canonical Git.
+- Unsupported composite or reference values are skipped and require explicit coverage evidence.
+- The Storybook page cannot confirm the current external Figma file or its revision without a connected, authorized read.
+
+## Release rule
+
+Figma delivery is not a production release. A token is production-ready only after canonical review, generated application output, quality gates, production component review, authorized publication, and exact-revision verification.
+
+## Related specifications
+
+- **Delivery / Token Workflow** — end-to-end authority and status vocabulary.
+- **Foundation / Token Naming** — canonical naming.
+- **Foundation / Token Usage** — implementation consumption.
+- **Delivery / Quality** — required evidence and current automation.

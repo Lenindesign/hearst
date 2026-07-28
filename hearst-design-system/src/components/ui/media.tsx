@@ -112,7 +112,7 @@ const Media = React.forwardRef<HTMLDivElement, MediaProps>(
             className={cn(
               "rounded-full flex items-center justify-center shadow-sm",
               isLight
-                ? "bg-white/90 text-gray-900"
+                ? "bg-white/90 text-foreground"
                 : "bg-black/70 text-white"
             )}
             style={{ width: iconSize, height: iconSize }}

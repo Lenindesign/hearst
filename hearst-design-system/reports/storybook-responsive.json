@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "stories": 271,
+  "checks": 1084,
+  "viewports": [
+    320,
+    390,
+    768,
+    1280
+  ],
+  "recoveredRetries": [],
+  "failures": []
+}

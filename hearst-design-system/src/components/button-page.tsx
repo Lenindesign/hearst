@@ -80,21 +80,28 @@ const VARIANT_CODE = `<Button>Primary</Button>
 const SIZE_CODE = `<Button size="xs">Extra Small</Button>
 <Button size="sm">Small</Button>
 <Button size="default">Default</Button>
-<Button size="lg">Large</Button>`;
+<Button size="lg">Large</Button>
+<Button size="touch">Touch-safe</Button>`;
 
 const ICON_CODE = `<Button>
   <CirclePlus data-icon="inline-start" />
   With Icon
 </Button>
 
-<Button size="icon">
+<Button size="icon" aria-label="Favorite story">
+  <Heart aria-hidden />
+</Button>
+
+<Button size="icon-touch" aria-label="Save story">
   <Heart />
 </Button>`;
 
 const API_PROPS = [
   { name: "variant", type: '"default" | "secondary" | "outline" | "ghost" | "destructive" | "link"', default: '"default"', desc: "Visual style variant" },
-  { name: "size", type: '"default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg"', default: '"default"', desc: "Button size" },
+  { name: "size", type: '"default" | "xs" | "sm" | "lg" | "touch" | "icon" | "icon-xs" | "icon-sm" | "icon-lg" | "icon-touch"', default: '"default"', desc: "Dense or touch-safe size" },
   { name: "disabled", type: "boolean", default: "false", desc: "Disables interaction" },
+  { name: "loading", type: "boolean", default: "false", desc: "Shows the busy state and disables activation" },
+  { name: "loadingText", type: "ReactNode", default: "—", desc: "Optional temporary busy-state label" },
 ];
 
 export function ButtonPage() {
@@ -109,9 +116,10 @@ export function ButtonPage() {
         </p>
         <h1 className="text-4xl tracking-tight headline">Button</h1>
         <p className="text-base text-muted-foreground mt-3 max-w-2xl leading-relaxed">
-          Buttons trigger actions or navigate users. They adapt to each brand
-          through design tokens for color, typography, and border radius. Six
-          variants and four sizes cover all interaction patterns.
+          Buttons trigger actions. Navigation uses the Link component so URL,
+          history, and browser behavior stay intact. Six variants, dense and
+          touch-safe sizes, and explicit loading behavior consume each brand&apos;s
+          registered button tokens.
         </p>
       </div>
 
@@ -150,11 +158,11 @@ export function ButtonPage() {
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
           {[
             { variant: "default" as const, label: "Primary", desc: "High emphasis. Brand color fill with white text. Use for primary actions." },
-            { variant: "secondary" as const, label: "Secondary", desc: "Medium emphasis. White fill with brand color border and text." },
+            { variant: "secondary" as const, label: "Secondary", desc: "Medium emphasis. Uses the brand's registered secondary-solid state tokens." },
             { variant: "outline" as const, label: "Outline", desc: "Neutral emphasis. Gray border with dark text. Use alongside primary buttons." },
             { variant: "ghost" as const, label: "Ghost", desc: "Minimal emphasis. No fill or border. Use for tertiary actions." },
             { variant: "destructive" as const, label: "Destructive", desc: "Danger emphasis. Red tint fill with red text. For delete or destructive actions." },
-            { variant: "link" as const, label: "Link", desc: "Text-only with underline on hover. For inline navigation." },
+            { variant: "link" as const, label: "Link action", desc: "Text-only action with underline on hover. Use Link—not Button—for navigation." },
           ].map((v) => (
             <div key={v.variant} className="space-y-1.5">
               <p className="text-sm font-semibold">{v.label}</p>
@@ -191,7 +199,7 @@ export function ButtonPage() {
             <AnatomyItem
               number={2}
               title="Label"
-              description="Button text. Uses Inter at semibold (600) weight. Letter-spacing 0.4px."
+              description="Visible action name. Uses the active brand UI font at medium (500) weight."
             />
             <AnatomyItem
               number={3}
@@ -208,7 +216,7 @@ export function ButtonPage() {
       <section className="space-y-6">
         <SectionHeader
           title="Sizes"
-          description="Four sizes to fit different contexts, from compact toolbars to prominent CTAs."
+          description="Dense sizes support compact desktop tools. Touch and icon-touch provide the 44px minimum used by phone actions and critical controls."
         />
         <Tabs defaultValue="text">
           <TabsList>
@@ -234,6 +242,10 @@ export function ButtonPage() {
                 <Button size="lg">Large</Button>
                 <p className="text-[10px] text-muted-foreground">lg</p>
               </div>
+              <div className="space-y-1 text-center">
+                <Button size="touch">Touch-safe</Button>
+                <p className="text-[10px] text-muted-foreground">touch · 44px min</p>
+              </div>
             </div>
             <CodeBlock>{SIZE_CODE}</CodeBlock>
           </TabsContent>
@@ -241,28 +253,34 @@ export function ButtonPage() {
           <TabsContent value="icon" className="mt-6 space-y-4">
             <div className="flex flex-wrap items-center gap-3">
               <div className="space-y-1 text-center">
-                <Button size="icon-xs">
-                  <Heart />
+                <Button size="icon-xs" aria-label="Favorite, extra-small dense example">
+                  <Heart aria-hidden />
                 </Button>
                 <p className="text-[10px] text-muted-foreground">icon-xs</p>
               </div>
               <div className="space-y-1 text-center">
-                <Button size="icon-sm">
-                  <Heart />
+                <Button size="icon-sm" aria-label="Favorite, small dense example">
+                  <Heart aria-hidden />
                 </Button>
                 <p className="text-[10px] text-muted-foreground">icon-sm</p>
               </div>
               <div className="space-y-1 text-center">
-                <Button size="icon">
-                  <Heart />
+                <Button size="icon" aria-label="Favorite, default dense example">
+                  <Heart aria-hidden />
                 </Button>
                 <p className="text-[10px] text-muted-foreground">icon</p>
               </div>
               <div className="space-y-1 text-center">
-                <Button size="icon-lg">
-                  <Heart />
+                <Button size="icon-lg" aria-label="Favorite, large dense example">
+                  <Heart aria-hidden />
                 </Button>
                 <p className="text-[10px] text-muted-foreground">icon-lg</p>
+              </div>
+              <div className="space-y-1 text-center">
+                <Button size="icon-touch" aria-label="Favorite story">
+                  <Heart aria-hidden />
+                </Button>
+                <p className="text-[10px] text-muted-foreground">icon-touch · 44px</p>
               </div>
             </div>
             <CodeBlock>{ICON_CODE}</CodeBlock>
@@ -283,7 +301,7 @@ export function ButtonPage() {
             <CardContent className="pt-6 space-y-4">
               <p className="text-sm font-semibold">Form Actions</p>
               <div className="flex gap-2">
-                <Button>
+                <Button type="submit">
                   <Send data-icon="inline-start" />
                   Submit
                 </Button>
@@ -337,21 +355,24 @@ export function ButtonPage() {
 
           <Card>
             <CardContent className="pt-6 space-y-4">
-              <p className="text-sm font-semibold">External Link</p>
-              <Button variant="link">
-                View on Figma
+              <p className="text-sm font-semibold">Low-emphasis Action</p>
+              <Button variant="link" onClick={() => {}}>
+                Show implementation details
                 <ExternalLink data-icon="inline-end" />
               </Button>
+              <p className="text-xs leading-relaxed text-muted-foreground">
+                Use the Link component when the destination has a URL.
+              </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardContent className="pt-6 space-y-4">
-              <p className="text-sm font-semibold">Disabled State</p>
+              <p className="text-sm font-semibold">Unavailable and Loading</p>
               <div className="flex gap-2">
                 <Button disabled>Disabled</Button>
-                <Button variant="outline" disabled>
-                  Disabled
+                <Button variant="outline" loading loadingText="Saving">
+                  Save
                 </Button>
               </div>
             </CardContent>
@@ -406,15 +427,45 @@ export function ButtonPage() {
         <div className="border rounded-lg overflow-hidden">
           <div className="grid grid-cols-3 bg-muted px-4 py-2.5 text-xs font-semibold">
             <span>Token</span>
-            <span>Used By</span>
+            <span>State</span>
             <span>Current Value ({brand.name})</span>
           </div>
           {[
-            { token: "--primary", usedBy: "Primary fill, Secondary text/border", value: brand.colors["1"] || "—" },
-            { token: "--primary-foreground", usedBy: "Primary text color", value: "#ffffff" },
-            { token: "--destructive", usedBy: "Destructive variant", value: "oklch(0.58 0.22 27)" },
-            { token: "--border", usedBy: "Outline variant border", value: "oklch(0.922 0 0)" },
-            { token: "--muted", usedBy: "Ghost hover background", value: "oklch(0.97 0 0)" },
+            {
+              token: "--component-button-background-primary-solid-default",
+              usedBy: "Primary · default",
+              value: brand.componentTokens["component-button-background-primary-solid-default"] ?? "—",
+            },
+            {
+              token: "--component-button-background-primary-solid-hover",
+              usedBy: "Primary · hover",
+              value: brand.componentTokens["component-button-background-primary-solid-hover"] ?? "—",
+            },
+            {
+              token: "--component-button-background-primary-solid-active",
+              usedBy: "Primary · active",
+              value: brand.componentTokens["component-button-background-primary-solid-active"] ?? "—",
+            },
+            {
+              token: "--component-button-content-primary-solid-default",
+              usedBy: "Primary content · default",
+              value: brand.componentTokens["component-button-content-primary-solid-default"] ?? "—",
+            },
+            {
+              token: "--component-button-background-secondary-solid-default",
+              usedBy: "Secondary · default",
+              value: brand.componentTokens["component-button-background-secondary-solid-default"] ?? "—",
+            },
+            {
+              token: "--component-button-background-neutral-outlined-default",
+              usedBy: "Outline · default",
+              value: brand.componentTokens["component-button-background-neutral-outlined-default"] ?? "—",
+            },
+            {
+              token: "--component-button-radius-default",
+              usedBy: "All variants · radius",
+              value: `${brand.componentTokens["component-button-radius-default"] ?? "—"}px`,
+            },
           ].map((row, i) => (
             <div key={i} className="grid grid-cols-3 px-4 py-2.5 text-xs border-t">
               <code className="font-mono font-medium">{row.token}</code>
@@ -433,14 +484,26 @@ export function ButtonPage() {
               {brand.name}
             </Badge>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Buttons use{" "}
+              Primary buttons use{" "}
               <span
                 className="font-mono font-semibold"
-                style={{ color: brand.colors["1"] || Object.values(brand.colors)[0] }}
+                style={{
+                  color: String(
+                    brand.componentTokens["component-button-background-primary-solid-default"]
+                      ?? brand.colors["1"]
+                      ?? Object.values(brand.colors)[0],
+                  ),
+                }}
               >
-                {brand.colors["1"] || Object.values(brand.colors)[0]}
+                {String(
+                  brand.componentTokens["component-button-background-primary-solid-default"]
+                    ?? brand.colors["1"]
+                    ?? Object.values(brand.colors)[0],
+                )}
               </span>{" "}
-              as the primary color. Switch brands in the header to see buttons adapt.
+              for the default state, with separate registered values for hover,
+              active, border, content, and radius. Switch brands in the header
+              to review that complete state family.
             </p>
           </div>
         </CardContent>

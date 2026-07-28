@@ -1,26 +1,25 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
+import { expect, fn, userEvent, within } from "@storybook/test";
+import { useTheme } from "@/components/theme-provider";
+import { BigStoryFeedStacked } from "@/components/fre/big-story-feed";
+import { BigStoryImageRight } from "@/components/fre/big-story";
+import { FourAcrossGrid } from "@/components/fre/four-across-grid";
 import {
   ArticleCard,
-  ArticleCardImage,
-  ArticleCardContent,
-  ArticleCardEyebrow,
-  ArticleCardTitle,
-  ArticleCardDescription,
-  ArticleCardMeta,
-  ArticleCardMetaItem,
-  ArticleCardMetaDot,
   ArticleCardAuthor,
+  ArticleCardContent,
+  ArticleCardDescription,
+  ArticleCardEyebrow,
+  ArticleCardFooter,
+  ArticleCardImage,
+  ArticleCardMeta,
+  ArticleCardMetaDot,
+  ArticleCardMetaItem,
+  ArticleCardTitle,
 } from "@/components/ui/article-card";
-import { useTheme } from "@/components/theme-provider";
 import { BRAND_ARTICLES } from "./article-data";
 import { getBrandImages } from "@/components/homepage-data";
-
-const H = "https://hips.hearstapps.com/hmg-prod/images/";
-function cardImg(id: string) {
-  return `${H}${id}?crop=0.666xw:1xh;center,top&resize=600:*`;
-}
 
 interface BrandCardContent {
   eyebrow: string;
@@ -53,49 +52,57 @@ function useBrandCardContent(): BrandCardContent {
 }
 
 interface ArticleCardStoryProps {
-  layout: "vertical" | "horizontal";
-  size: "default" | "sm" | "lg";
-  eyebrow: string;
-  title: string;
-  description: string;
-  author: string;
-  date: string;
-  image: string;
-  aspectRatio: "16/9" | "4/3" | "1/1" | "3/2";
   onClick: () => void;
 }
 
-function BrandVerticalCard(props: Partial<ArticleCardStoryProps>) {
+function PrimitiveArticleCard({
+  layout = "vertical",
+  size = "default",
+  image = true,
+  onClick,
+}: Partial<ArticleCardStoryProps> & {
+  layout?: "vertical" | "horizontal";
+  size?: "default" | "sm" | "lg";
+  image?: boolean;
+}) {
   const brand = useBrandCardContent();
-  const layout = props.layout ?? "vertical";
-  const size = props.size ?? "default";
-  const eyebrow = props.eyebrow || brand.eyebrow;
-  const title = props.title || brand.title;
-  const description = props.description ?? brand.description;
-  const author = props.author || brand.author;
-  const date = props.date || brand.date;
-  const image = props.image || brand.image;
-  const aspectRatio = props.aspectRatio ?? "16/9";
 
-  const width = layout === "horizontal" ? 600 : size === "sm" ? 260 : 340;
   return (
-    <div style={{ width: "100%", maxWidth: width }} onClick={props.onClick} className="min-w-0 cursor-pointer">
-      <ArticleCard layout={layout} size={size}>
-        <ArticleCardImage src={image} alt={title} aspectRatio={aspectRatio} />
+    <div
+      className={
+        layout === "horizontal"
+          ? "mx-auto my-4 w-[calc(100%-2rem)] max-w-[680px]"
+          : "mx-auto my-4 w-[calc(100%-2rem)] max-w-[360px]"
+      }
+    >
+      <ArticleCard
+        layout={layout}
+        size={size}
+        onClick={onClick}
+        aria-label={onClick ? `Open story: ${brand.title}` : undefined}
+        className={onClick ? "cursor-pointer" : undefined}
+      >
+        <ArticleCardImage
+          src={image ? brand.image : undefined}
+          alt={image ? "" : undefined}
+          aspectRatio={layout === "horizontal" ? "4/3" : "3/2"}
+        />
         <ArticleCardContent>
-          <ArticleCardEyebrow>{eyebrow}</ArticleCardEyebrow>
-          <ArticleCardTitle>{title}</ArticleCardTitle>
-          {description && <ArticleCardDescription>{description}</ArticleCardDescription>}
+          <ArticleCardEyebrow>{brand.eyebrow}</ArticleCardEyebrow>
+          <ArticleCardTitle>{brand.title}</ArticleCardTitle>
+          <ArticleCardDescription>{brand.description}</ArticleCardDescription>
           <ArticleCardMeta>
-            <ArticleCardMetaItem>{date}</ArticleCardMetaItem>
-            {author && (
-              <>
-                <ArticleCardMetaDot />
-                <ArticleCardAuthor>{author}</ArticleCardAuthor>
-              </>
-            )}
+            <ArticleCardAuthor>By {brand.author}</ArticleCardAuthor>
+            <ArticleCardMetaDot />
+            <ArticleCardMetaItem>5 Min Read</ArticleCardMetaItem>
           </ArticleCardMeta>
         </ArticleCardContent>
+        {layout === "vertical" && (
+          <ArticleCardFooter>
+            <span className="text-xs text-muted-foreground">Editorial feature</span>
+            <span className="text-xs font-semibold text-primary">Read story</span>
+          </ArticleCardFooter>
+        )}
       </ArticleCard>
     </div>
   );
@@ -107,18 +114,23 @@ function BrandHorizontalCard(props: Partial<ArticleCardStoryProps>) {
   const sidebar = data.content.sidebarItems?.[0];
 
   return (
-    <BrandVerticalCard
-      layout="horizontal"
-      size={props.size ?? "default"}
-      eyebrow={sidebar?.eyebrow || brand.eyebrow}
-      title={sidebar?.title || brand.title}
-      description=""
-      author={brand.author}
-      date="5 Min Read"
-      image={brand.sidebarImage}
-      aspectRatio="4/3"
-      onClick={props.onClick}
-    />
+    <div className="mx-auto my-4 w-[calc(100%-2rem)] max-w-[680px]">
+      <BigStoryFeedStacked
+        items={[
+          {
+            eyebrow: sidebar?.eyebrow ?? brand.eyebrow,
+            title: sidebar?.title ?? brand.title,
+            author: brand.author,
+            date: "5 Min Read",
+            image: brand.sidebarImage,
+          },
+        ]}
+        thumbnailWidth={200}
+        thumbnailHeight={140}
+        showDividers={false}
+        onArticleClick={() => props.onClick?.()}
+      />
+    </div>
   );
 }
 
@@ -128,102 +140,50 @@ function BrandSmallCard(props: Partial<ArticleCardStoryProps>) {
   const sidebar = data.content.sidebarItems?.[1];
 
   return (
-    <BrandVerticalCard
-      layout="vertical"
-      size="sm"
-      eyebrow={sidebar?.eyebrow || brand.eyebrow}
-      title={sidebar?.title || "Latest Story"}
-      description=""
-      author=""
-      date="3 Min Read"
-      image={sidebar?.image || brand.secondaryImage}
-      aspectRatio="1/1"
-      onClick={props.onClick}
-    />
+    <div className="mx-auto my-4 w-[calc(100%-2rem)] max-w-[320px]">
+      <FourAcrossGrid
+        items={[
+          {
+            title: sidebar?.title ?? "Latest Story",
+            subtitle: "3 Min Read",
+            image: sidebar?.image ?? brand.secondaryImage,
+          },
+        ]}
+        columns={1}
+        aspectRatio="3/2"
+        responsive={false}
+        onCardClick={() => props.onClick?.()}
+      />
+    </div>
   );
 }
 
 function BrandLargeCard(props: Partial<ArticleCardStoryProps>) {
   const brand = useBrandCardContent();
   return (
-    <BrandVerticalCard
-      layout="vertical"
-      size="lg"
-      eyebrow={brand.eyebrow}
-      title={brand.title}
-      description={brand.description}
-      author={brand.author}
-      date={brand.date}
-      image={brand.image}
-      aspectRatio="3/2"
-      onClick={props.onClick}
-    />
+    <div className="mx-auto my-4 w-[calc(100%-2rem)] max-w-[720px]">
+      <BigStoryImageRight
+        label={brand.eyebrow}
+        headline={brand.title}
+        description={brand.description}
+        author={brand.author}
+        date={brand.date}
+        image={brand.image}
+        imagePosition="top"
+        aspectRatio="3/2"
+        onArticleClick={() => props.onClick?.()}
+      />
+    </div>
   );
 }
 
 const meta: Meta = {
   title: "Hearst Plus/HDS Primitives/Article Card",
+  component: ArticleCard,
   args: {
-    layout: "vertical",
-    size: "default",
-    eyebrow: "",
-    title: "",
-    description: "",
-    author: "",
-    date: "",
-    image: "",
-    aspectRatio: "16/9",
     onClick: fn(),
   },
   argTypes: {
-    layout: {
-      control: "select",
-      options: ["vertical", "horizontal"],
-      description: "Card layout direction. Use `vertical` in grids, `horizontal` in feeds.",
-      table: { category: "Appearance", defaultValue: { summary: "vertical" } },
-    },
-    size: {
-      control: "select",
-      options: ["default", "sm", "lg"],
-      description: "Card size preset. Affects padding and font sizes.",
-      table: { category: "Appearance", defaultValue: { summary: "default" } },
-    },
-    eyebrow: {
-      control: "text",
-      description: "Category label above the headline. Leave empty to use brand default.",
-      table: { category: "Content" },
-    },
-    title: {
-      control: "text",
-      description: "Article headline. Leave empty to use brand default.",
-      table: { category: "Content" },
-    },
-    description: {
-      control: "text",
-      description: "Article dek / summary. Leave empty to use brand default.",
-      table: { category: "Content" },
-    },
-    author: {
-      control: "text",
-      description: "Author name. Leave empty to use brand default.",
-      table: { category: "Content" },
-    },
-    date: {
-      control: "text",
-      description: "Publish date or read time. Leave empty to use brand default.",
-      table: { category: "Content" },
-    },
-    image: {
-      control: "text",
-      description: "Article image URL. Leave empty to use brand default.",
-      table: { category: "Content" },
-    },
-    aspectRatio: {
-      control: "select",
-      options: ["1/1", "4/3", "3/2", "16/9"],
-      description: "Image aspect ratio.",
-      table: { category: "Appearance", defaultValue: { summary: "16/9" } },
-    },
     onClick: {
       action: "card-click",
       description: "Fires when the card is clicked (navigate to article).",
@@ -231,12 +191,12 @@ const meta: Meta = {
     },
   },
   parameters: {
+    layout: "fullscreen",
     docs: {
       description: {
         component:
-          "Primary content card used across all Hearst editorial feeds. Supports vertical (grid) and horizontal (feed) layouts. " +
-          "Content and images automatically adapt to the selected brand — switch brands via the toolbar to see Car and Driver show auto news, Delish show recipes, Elle show fashion, etc. " +
-          "Override any field via the controls panel.",
+          "Composable article-card primitives used by production editorial modules. These stories render the same production compositions used by the application rather than parallel showcase markup. " +
+          "Content and images adapt to the selected brand; switch brands via the toolbar to verify the production token inheritance.",
       },
     },
   },
@@ -245,22 +205,98 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Vertical: Story = {
-  args: { layout: "vertical", size: "default" },
-  render: (args) => <BrandVerticalCard {...(args as Partial<ArticleCardStoryProps>)} />,
+export const CompleteAnatomy: Story = {
+  name: "Primitive: Complete anatomy",
+  render: (args) => (
+    <PrimitiveArticleCard {...(args as Partial<ArticleCardStoryProps>)} />
+  ),
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    const card = canvas.getByRole("button");
+    await expect(card).toHaveAttribute("aria-label");
+    card.focus();
+    await userEvent.keyboard("{Enter}");
+    await expect(
+      (args as ArticleCardStoryProps).onClick,
+    ).toHaveBeenCalledTimes(1);
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "The exact production compound primitive with image, eyebrow, headline, description, author metadata, and footer. Enter activates the same shared click contract used by production FRE compositions.",
+      },
+    },
+  },
+};
+
+export const HorizontalPrimitive: Story = {
+  name: "Primitive: Horizontal compact",
+  render: (args) => (
+    <PrimitiveArticleCard
+      {...(args as Partial<ArticleCardStoryProps>)}
+      layout="horizontal"
+      size="sm"
+    />
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "The compact horizontal primitive used underneath production river and sidebar compositions. The thumbnail remains capped so the text retains the majority of the row.",
+      },
+    },
+  },
+};
+
+export const ImageFallback: Story = {
+  name: "Primitive: Missing image",
+  render: () => <PrimitiveArticleCard image={false} />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "The production missing-image boundary renders the official Phosphor image placeholder without making a non-interactive article focusable.",
+      },
+    },
+  },
 };
 
 export const Horizontal: Story = {
-  args: { layout: "horizontal" },
+  name: "Production River",
   render: (args) => <BrandHorizontalCard {...(args as Partial<ArticleCardStoryProps>)} />,
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story: "Renders the production `BigStoryFeedStacked` component used by Hearst destination collections and rails.",
+      },
+    },
+  },
 };
 
 export const Small: Story = {
-  args: { size: "sm" },
+  name: "Production Compact Grid",
   render: (args) => <BrandSmallCard {...(args as Partial<ArticleCardStoryProps>)} />,
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story: "Renders the production `FourAcrossGrid` composition: transparent surface, no card ring, rounded image, and compact metadata.",
+      },
+    },
+  },
 };
 
 export const Large: Story = {
-  args: { size: "lg" },
+  name: "Production Feature",
   render: (args) => <BrandLargeCard {...(args as Partial<ArticleCardStoryProps>)} />,
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story: "Renders the production `BigStoryImageRight` feature composition used by brand homepages.",
+      },
+    },
+  },
 };

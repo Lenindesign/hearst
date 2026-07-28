@@ -84,6 +84,9 @@
   --hp-radius-pill: 999px;
   --hp-shadow-card: 0 2px 6px rgba(15, 23, 42, 0.05);
   --hp-shadow-modal: 0 8px 20px rgba(0, 0, 0, 0.3);
+  --hp-image-scrim-soft: color-mix(in srgb, black 18%, transparent);
+  --hp-image-scrim-strong: color-mix(in srgb, black 78%, transparent);
+  --hp-image-scrim-solid: black;
   --hp-motion-fast: 160ms;
   --hp-motion-standard: 240ms;
 }
@@ -99,6 +102,8 @@
   --secondary-foreground: #f4f7fb;
   --accent: #232a33;
   --accent-foreground: #dbe3ed;
+  --primary: #BDDDFC;
+  --primary-foreground: #384959;
   --border: rgba(255, 255, 255, 0.1);
   --input: rgba(255, 255, 255, 0.15);
   --ring: #BDDDFC;
@@ -150,6 +155,53 @@
   --hp-positive: #BDDDFC;
   --hp-positive-bg: color-mix(in oklab, #384959 74%, #0d1014 26%);
   --hp-shadow-card: 0 2px 6px rgba(0, 0, 0, 0.18);
+}
+
+.hearst-plus-theme.hearst-plus-video-theme[data-mode="dark"] {
+  --background: var(--component-video-feed-background-default);
+  --foreground: var(--component-video-feed-content-headline);
+  --card: var(--component-video-feed-surface-default);
+  --card-foreground: var(--component-video-feed-content-primary);
+  --popover: var(--component-video-feed-surface-default);
+  --popover-foreground: var(--component-video-feed-content-primary);
+  --muted: var(--component-video-feed-control-default);
+  --muted-foreground: var(--component-video-feed-content-secondary);
+  --secondary: var(--component-video-feed-control-default);
+  --secondary-foreground: var(--component-video-feed-content-primary);
+  --accent: var(--component-video-feed-accent-default);
+  --accent-foreground: var(--component-video-feed-content-ui);
+  --border: var(--component-video-feed-border-default);
+  --input: var(--component-video-feed-input-border);
+  --primary: var(--component-navigation-utility-content-accent);
+  --primary-foreground: var(--component-video-feed-action-content);
+  --ring: var(--component-navigation-utility-content-accent);
+  --hp-background: var(--component-video-feed-background-default);
+  --hp-surface-deep: var(--component-video-feed-surface-deep);
+  --hp-surface-low: var(--component-video-feed-surface-default);
+  --hp-surface: var(--component-video-feed-surface-default);
+  --hp-control: var(--component-video-feed-control-default);
+  --hp-control-hover: var(--component-video-feed-control-hover);
+  --hp-chip: var(--component-video-feed-chip-default);
+  --hp-chip-border: var(--component-video-feed-chip-border);
+  --hp-border: var(--component-video-feed-border-default);
+  --hp-border-strong: var(--component-video-feed-border-strong);
+  --hp-text-headline: var(--component-video-feed-content-headline);
+  --hp-text-primary: var(--component-video-feed-content-primary);
+  --hp-text-ui: var(--component-video-feed-content-ui);
+  --hp-text-chip: var(--component-video-feed-content-chip);
+  --hp-text-secondary: var(--component-video-feed-content-secondary);
+  --hp-text-muted: var(--component-video-feed-content-muted);
+  --hp-sidebar-heading: var(--component-navigation-utility-content-accent);
+  --hp-primary: var(--component-navigation-utility-content-accent);
+  --hp-primary-soft: var(--component-video-feed-accent-soft);
+  --hp-friendly-accent: var(--component-video-feed-accent-soft);
+  --hp-friendly-accent-border: var(--component-navigation-utility-content-accent);
+  --hp-friendly-accent-text: var(--component-navigation-utility-content-accent);
+  --hp-focus: var(--component-navigation-utility-content-accent);
+  --hp-signal: var(--component-navigation-utility-content-accent);
+  --hp-action: var(--component-navigation-utility-content-accent);
+  --hp-action-text: var(--component-video-feed-action-content);
+  --hp-shadow-card: var(--component-video-feed-shadow-card);
 }
 
 @keyframes hearstPlusArticleBackdropIn {
@@ -860,6 +912,101 @@
   }
   html {
     @apply font-sans;
+  }
+}
+
+@layer components {
+  [data-slot="button"][data-variant="default"] {
+    border-color: var(--component-button-border-primary-solid-default);
+    background-color: var(--component-button-background-primary-solid-default);
+    color: var(--component-button-content-primary-solid-default);
+  }
+  [data-slot="button"][data-variant="default"]:hover:not(:disabled),
+  [data-slot="button"][data-variant="default"][data-preview-state="hover"] {
+    border-color: var(--component-button-border-primary-solid-hover);
+    background-color: var(--component-button-background-primary-solid-hover);
+    color: var(--component-button-content-primary-solid-hover);
+  }
+  [data-slot="button"][data-variant="default"]:active:not(:disabled),
+  [data-slot="button"][data-variant="default"][data-preview-state="active"] {
+    border-color: var(--component-button-border-primary-solid-active);
+    background-color: var(--component-button-background-primary-solid-active);
+    color: var(--component-button-content-primary-solid-active);
+  }
+
+  [data-slot="button"][data-variant="secondary"] {
+    border-color: var(--component-button-border-secondary-solid-default);
+    background-color: var(--component-button-background-secondary-solid-default);
+    color: var(--component-button-content-secondary-solid-default);
+  }
+  [data-slot="button"][data-variant="secondary"]:hover:not(:disabled),
+  [data-slot="button"][data-variant="secondary"][data-preview-state="hover"] {
+    border-color: var(--component-button-border-secondary-solid-hover);
+    background-color: var(--component-button-background-secondary-solid-hover);
+    color: var(--component-button-content-secondary-solid-hover);
+  }
+  [data-slot="button"][data-variant="secondary"]:active:not(:disabled),
+  [data-slot="button"][data-variant="secondary"][aria-expanded="true"],
+  [data-slot="button"][data-variant="secondary"][data-preview-state="active"] {
+    border-color: var(--component-button-border-secondary-solid-active);
+    background-color: var(--component-button-background-secondary-solid-active);
+    color: var(--component-button-content-secondary-solid-active);
+  }
+
+  [data-slot="button"][data-variant="outline"] {
+    border-color: var(--component-button-border-neutral-outlined-default);
+    background-color: var(--component-button-background-neutral-outlined-default);
+    color: var(--component-button-content-neutral-outlined-default);
+  }
+  [data-slot="button"][data-variant="outline"]:hover:not(:disabled),
+  [data-slot="button"][data-variant="outline"][data-preview-state="hover"] {
+    border-color: var(--component-button-border-neutral-outlined-hover);
+    background-color: var(--component-button-background-neutral-outlined-hover);
+    color: var(--component-button-content-neutral-outlined-hover);
+  }
+  [data-slot="button"][data-variant="outline"]:active:not(:disabled),
+  [data-slot="button"][data-variant="outline"][aria-expanded="true"],
+  [data-slot="button"][data-variant="outline"][data-preview-state="active"] {
+    border-color: var(--component-button-border-neutral-outlined-active);
+    background-color: var(--component-button-background-neutral-outlined-active);
+    color: var(--component-button-content-neutral-outlined-active);
+  }
+
+  [data-slot="button"][data-variant="ghost"] {
+    border-color: var(--component-button-border-neutral-transparent-default);
+    background-color: var(--component-button-background-neutral-transparent-default);
+    color: var(--component-button-content-neutral-transparent-default);
+  }
+  [data-slot="button"][data-variant="ghost"]:hover:not(:disabled),
+  [data-slot="button"][data-variant="ghost"][data-preview-state="hover"] {
+    border-color: var(--component-button-border-neutral-transparent-hover);
+    background-color: var(--component-button-background-neutral-transparent-hover);
+    color: var(--component-button-content-neutral-transparent-hover);
+  }
+  [data-slot="button"][data-variant="ghost"]:active:not(:disabled),
+  [data-slot="button"][data-variant="ghost"][aria-expanded="true"],
+  [data-slot="button"][data-variant="ghost"][data-preview-state="active"] {
+    border-color: var(--component-button-border-neutral-transparent-active);
+    background-color: var(--component-button-background-neutral-transparent-active);
+    color: var(--component-button-content-neutral-transparent-active);
+  }
+
+  [data-slot="button"][data-variant="link"] {
+    border-color: var(--component-button-border-primary-transparent-default);
+    background-color: var(--component-button-background-primary-transparent-default);
+    color: var(--component-button-content-primary-transparent-default);
+  }
+  [data-slot="button"][data-variant="link"]:hover:not(:disabled),
+  [data-slot="button"][data-variant="link"][data-preview-state="hover"] {
+    border-color: var(--component-button-border-primary-transparent-hover);
+    background-color: var(--component-button-background-primary-transparent-hover);
+    color: var(--component-button-content-primary-transparent-hover);
+  }
+  [data-slot="button"][data-variant="link"]:active:not(:disabled),
+  [data-slot="button"][data-variant="link"][data-preview-state="active"] {
+    border-color: var(--component-button-border-primary-transparent-active);
+    background-color: var(--component-button-background-primary-transparent-active);
+    color: var(--component-button-content-primary-transparent-active);
   }
 }
 

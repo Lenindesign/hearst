@@ -2,7 +2,10 @@
 /**
  * Token Auditor — scans component files for hardcoded values and token violations.
  *
- * Usage:  npx tsx scripts/audit-tokens.ts [--json] [--fix-suggestions]
+ * Usage:
+ *   npx tsx scripts/audit-tokens.ts [--json]
+ *   npx tsx scripts/audit-tokens.ts --ci
+ *   npx tsx scripts/audit-tokens.ts --write-baseline
  *
  * Checks:
  *   1. Hardcoded hex colors (#xxx, #xxxxxx, #xxxxxxxx)
@@ -16,11 +19,19 @@
  *   - Test files
  */
 
-import { mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  statSync,
+  writeFileSync,
+} from "fs";
 import { join, relative } from "path";
 
 const SRC_DIR = join(__dirname, "..", "src", "components");
 const OUTPUT_PATH = join(__dirname, "..", "reports", "token-audit.json");
+const BASELINE_PATH = join(__dirname, "..", "reports", "token-audit-baseline.json");
 
 interface Violation {
   file: string;
@@ -43,19 +54,18 @@ interface AuditReport {
   violations: Violation[];
 }
 
+interface AuditBaseline {
+  version: 1;
+  generatedAt: string;
+  totalViolations: number;
+  fingerprints: Record<string, number>;
+}
+
 const HEX_PATTERN = /#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b/g;
 
 const RAW_COLOR_FN = /(?:rgb|rgba|hsl|hsla)\s*\([^)]+\)/g;
 
 const NON_SEMANTIC_TW = /(?:^|\s)(?:text|bg|border|ring|from|to|via|fill|stroke)-(?:red|green|blue|yellow|orange|purple|pink|emerald|amber|teal|cyan|indigo|violet|fuchsia|rose|lime|sky|slate|gray|zinc|neutral|stone)-\d{2,3}/g;
-
-const HARDCODED_PX_INLINE = /:\s*['"]?\d+px['"]?/g;
-
-const IGNORE_PATTERNS = [
-  /\/\/.*/,       // single-line comments
-  /\/\*[\s\S]*?\*\//,  // block comments
-  /className.*muted-foreground/,  // semantic classes are fine
-];
 
 const SKIP_FILES = ["brands.ts", "tokens.css"];
 
@@ -157,9 +167,31 @@ function auditFile(filePath: string): Violation[] {
   return violations;
 }
 
+function violationFingerprint(violation: Violation): string {
+  return [
+    violation.file,
+    violation.severity,
+    violation.type,
+    violation.value,
+  ].join("|");
+}
+
+function countFingerprints(violations: Violation[]): Record<string, number> {
+  const fingerprints: Record<string, number> = {};
+  for (const violation of violations) {
+    const fingerprint = violationFingerprint(violation);
+    fingerprints[fingerprint] = (fingerprints[fingerprint] || 0) + 1;
+  }
+  return Object.fromEntries(
+    Object.entries(fingerprints).sort(([a], [b]) => a.localeCompare(b)),
+  );
+}
+
 function run() {
   const args = process.argv.slice(2);
   const jsonMode = args.includes("--json");
+  const ciMode = args.includes("--ci");
+  const writeBaseline = args.includes("--write-baseline");
   const files = collectFiles(SRC_DIR);
   const allViolations: Violation[] = [];
 
@@ -187,11 +219,25 @@ function run() {
     violations: allViolations,
   };
 
+  if (writeBaseline) {
+    const baseline: AuditBaseline = {
+      version: 1,
+      generatedAt: new Date().toISOString(),
+      totalViolations: allViolations.length,
+      fingerprints: countFingerprints(allViolations),
+    };
+    mkdirSync(join(__dirname, "..", "reports"), { recursive: true });
+    writeFileSync(BASELINE_PATH, `${JSON.stringify(baseline, null, 2)}\n`);
+    console.log(
+      `Baseline written to ${relative(join(__dirname, ".."), BASELINE_PATH)} (${baseline.totalViolations} known violations)`,
+    );
+  }
+
   if (jsonMode) {
     mkdirSync(join(__dirname, "..", "reports"), { recursive: true });
     writeFileSync(OUTPUT_PATH, JSON.stringify(report, null, 2));
     console.log(`Report written to ${relative(join(__dirname, ".."), OUTPUT_PATH)}`);
-  } else {
+  } else if (!ciMode && !writeBaseline) {
     console.log("\n╔══════════════════════════════════════════╗");
     console.log("║         TOKEN AUDIT REPORT               ║");
     console.log("╚══════════════════════════════════════════╝\n");
@@ -224,6 +270,55 @@ function run() {
     }
 
     console.log(`\n  Run with --json to save full report to reports/token-audit.json\n`);
+  }
+
+  if (ciMode) {
+    if (!existsSync(BASELINE_PATH)) {
+      console.error(
+        `Token audit baseline is missing: ${relative(join(__dirname, ".."), BASELINE_PATH)}`,
+      );
+      process.exitCode = 1;
+      return;
+    }
+
+    const baseline = JSON.parse(
+      readFileSync(BASELINE_PATH, "utf-8"),
+    ) as AuditBaseline;
+    const currentFingerprints = countFingerprints(allViolations);
+    const regressions = Object.entries(currentFingerprints)
+      .map(([fingerprint, count]) => ({
+        fingerprint,
+        count,
+        allowed: baseline.fingerprints[fingerprint] || 0,
+      }))
+      .filter(({ count, allowed }) => count > allowed);
+
+    if (regressions.length > 0) {
+      console.error(
+        `\nToken audit failed: ${regressions.length} new or increased violation fingerprint(s).\n`,
+      );
+      for (const regression of regressions.slice(0, 25)) {
+        console.error(
+          `  ${regression.fingerprint} (${regression.count}; baseline ${regression.allowed})`,
+        );
+      }
+      if (regressions.length > 25) {
+        console.error(`  ...and ${regressions.length - 25} more`);
+      }
+      console.error(
+        "\nReplace new hard-coded styling with semantic tokens. Only refresh the baseline after reducing or deliberately reclassifying existing debt.\n",
+      );
+      process.exitCode = 1;
+      return;
+    }
+
+    const resolved = Math.max(
+      0,
+      baseline.totalViolations - allViolations.length,
+    );
+    console.log(
+      `Token audit gate passed: ${allViolations.length} known violations, ${resolved} resolved since baseline, 0 regressions.`,
+    );
   }
 }
 

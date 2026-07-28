@@ -189,7 +189,7 @@ function DailyEditionPreview() {
 
 export default function WhyHearstPlusPage() {
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-[#102A43]">
+    <div className="min-h-screen overflow-x-clip bg-[#F8FAFC] text-[#102A43]">
       <ProductHeader current="value" />
       <main>
         <section className="overflow-hidden bg-[#102A43] text-white">

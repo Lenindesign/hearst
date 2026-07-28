@@ -22,6 +22,7 @@ import {
   dragWeek2026,
   getHotRodEventStatusLabel,
   hotRodEvents,
+  hotRodEventTheme,
   hotRodEventYears,
   powerTour2026,
   type HotRodEvent,
@@ -100,12 +101,14 @@ function Hero({ detailMode }: { detailMode: boolean }) {
         src={powerTour2026.image}
         alt="Cars completing the 2026 HOT ROD Power Tour"
         fill
-        priority
+        preload
+        loading="eager"
         sizes="100vw"
         className="object-cover object-center"
       />
       <div
-        className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,0.93)_0%,rgba(0,0,0,0.7)_42%,rgba(0,0,0,0.13)_76%),linear-gradient(0deg,rgba(0,0,0,0.68)_0%,transparent_50%)]"
+        className="absolute inset-0"
+        style={{ backgroundImage: hotRodEventTheme.heroOverlay }}
         aria-hidden
       />
       <PageContainer className="relative z-10 min-h-[530px] md:min-h-[610px] lg:min-h-[650px]">
@@ -518,12 +521,14 @@ function DragWeekHero() {
         src={dragWeek2026.image}
         alt="The Blasphemi gasser launches with its front wheels raised at HOT ROD Drag Week"
         fill
-        priority
+        preload
+        loading="eager"
         sizes="100vw"
         className="object-cover object-center"
       />
       <div
-        className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,0.94)_0%,rgba(0,0,0,0.72)_44%,rgba(0,0,0,0.12)_78%),linear-gradient(0deg,rgba(0,0,0,0.72)_0%,transparent_52%)]"
+        className="absolute inset-0"
+        style={{ backgroundImage: hotRodEventTheme.dragWeekOverlay }}
         aria-hidden
       />
       <PageContainer className="relative z-10 min-h-[530px] md:min-h-[610px] lg:min-h-[650px]">
@@ -792,18 +797,18 @@ export function HotRodEventsPage({ detailMode = false }: { detailMode?: boolean 
       className="hearst-plus-theme min-h-screen bg-[var(--hp-background)] font-brand text-foreground"
       data-mode={colorMode}
       style={{
-        "--primary": "#c11b17",
-        "--primary-foreground": "#ffffff",
-        "--brand-primary": "#c11b17",
-        "--hp-section-title": "#c11b17",
+        "--primary": hotRodEventTheme.primary,
+        "--primary-foreground": hotRodEventTheme.primaryForeground,
+        "--brand-primary": hotRodEventTheme.primary,
+        "--hp-section-title": hotRodEventTheme.primary,
         "--font-brand": "Geist, sans-serif",
         "--font-headline": "\"Barlow Condensed\", sans-serif",
-        "--hot-rod-events-red": "#c8101e",
-        "--hot-rod-events-red-dark": "#991019",
-        "--hot-rod-events-red-light": "#ff6a73",
-        "--hot-rod-events-black": "#111111",
-        "--hot-rod-events-asphalt": "#242424",
-        "--hot-rod-events-cream": "#f3ebdd",
+        "--hot-rod-events-red": hotRodEventTheme.red,
+        "--hot-rod-events-red-dark": hotRodEventTheme.redDark,
+        "--hot-rod-events-red-light": hotRodEventTheme.redLight,
+        "--hot-rod-events-black": hotRodEventTheme.black,
+        "--hot-rod-events-asphalt": hotRodEventTheme.asphalt,
+        "--hot-rod-events-cream": hotRodEventTheme.cream,
       } as React.CSSProperties}
     >
       <HotRodEventsHeader />
@@ -833,7 +838,7 @@ export function HotRodEventsPage({ detailMode = false }: { detailMode?: boolean 
         siteName={
           <BrandLogo
             slug="hot-rod"
-            color="#ffffff"
+            color="var(--palette-content-knockout, white)"
             className="flex h-8 max-w-full items-center [&_svg]:h-full [&_svg]:w-auto"
           />
         }
@@ -852,18 +857,18 @@ export function HotRodDragWeekPage() {
       className="hearst-plus-theme min-h-screen bg-[var(--hp-background)] font-brand text-foreground"
       data-mode={colorMode}
       style={{
-        "--primary": "#c11b17",
-        "--primary-foreground": "#ffffff",
-        "--brand-primary": "#c11b17",
-        "--hp-section-title": "#c11b17",
+        "--primary": hotRodEventTheme.primary,
+        "--primary-foreground": hotRodEventTheme.primaryForeground,
+        "--brand-primary": hotRodEventTheme.primary,
+        "--hp-section-title": hotRodEventTheme.primary,
         "--font-brand": "Geist, sans-serif",
         "--font-headline": "\"Barlow Condensed\", sans-serif",
-        "--hot-rod-events-red": "#c8101e",
-        "--hot-rod-events-red-dark": "#991019",
-        "--hot-rod-events-red-light": "#ff6a73",
-        "--hot-rod-events-black": "#111111",
-        "--hot-rod-events-asphalt": "#242424",
-        "--hot-rod-events-cream": "#f3ebdd",
+        "--hot-rod-events-red": hotRodEventTheme.red,
+        "--hot-rod-events-red-dark": hotRodEventTheme.redDark,
+        "--hot-rod-events-red-light": hotRodEventTheme.redLight,
+        "--hot-rod-events-black": hotRodEventTheme.black,
+        "--hot-rod-events-asphalt": hotRodEventTheme.asphalt,
+        "--hot-rod-events-cream": hotRodEventTheme.cream,
       } as React.CSSProperties}
     >
       <HotRodEventsHeader />
@@ -894,7 +899,7 @@ export function HotRodDragWeekPage() {
         siteName={
           <BrandLogo
             slug="hot-rod"
-            color="#ffffff"
+            color="var(--palette-content-knockout, white)"
             className="flex h-8 max-w-full items-center [&_svg]:h-full [&_svg]:w-auto"
           />
         }

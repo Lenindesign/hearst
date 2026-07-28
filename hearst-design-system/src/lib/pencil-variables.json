@@ -343,7 +343,7 @@
     "type": "color",
     "value": "#ffffff"
   },
-  "component-badge-content-kockout": {
+  "component-badge-content-knockout": {
     "type": "color",
     "value": "#ffffff"
   },
@@ -351,7 +351,7 @@
     "type": "color",
     "value": "#063221"
   },
-  "component-badge-content-dager": {
+  "component-badge-content-danger": {
     "type": "color",
     "value": "#580a09"
   },
@@ -367,7 +367,7 @@
     "type": "color",
     "value": "#ffffff"
   },
-  "component-badge-icon-kockout": {
+  "component-badge-icon-knockout": {
     "type": "color",
     "value": "#ffffff"
   },
@@ -463,7 +463,7 @@
     "type": "color",
     "value": "#bdbdbd"
   },
-  "component-card-core-content-title-backgroud-default": {
+  "component-card-core-content-title-background-default": {
     "type": "color",
     "value": "transparent"
   },
@@ -1367,7 +1367,7 @@
     "type": "string",
     "value": "{\"width\":\"0px\",\"color\":\"transparent\",\"style\":\"solid\"}"
   },
-  "border-netural-light": {
+  "border-neutral-light": {
     "type": "string",
     "value": "{\"width\":\"1px\",\"color\":\"#d6d6d6\",\"style\":\"solid\"}"
   },
@@ -42367,7 +42367,7 @@
       }
     ]
   },
-  "component-card-core-content-eyebrow-backgroud-default": {
+  "component-card-core-content-eyebrow-background-default": {
     "type": "color",
     "value": [
       {

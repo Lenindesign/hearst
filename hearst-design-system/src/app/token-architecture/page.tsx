@@ -200,14 +200,14 @@ function SectionIntro({ eyebrow, title, children }: { eyebrow?: string; title: s
 
 export default function TokenArchitecturePage() {
   return (
-    <div className="min-h-screen bg-white font-sans text-[#102A43]">
+    <div className="min-h-screen overflow-x-clip bg-white font-sans text-[#102A43]">
       <ProductHeader current="tokens" />
       <main>
         <section className="overflow-hidden bg-[#102A43] text-white">
           <div className="mx-auto grid max-w-[1360px] gap-14 px-5 py-20 md:px-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:py-28">
-            <div>
+            <div className="min-w-0">
               <p className="text-sm font-bold text-sky-300">Hearst+ implementation guide</p>
-              <h1 className="mt-5 max-w-3xl text-balance text-5xl font-bold leading-[0.98] tracking-[-0.035em] sm:text-6xl lg:text-7xl">
+              <h1 className="mt-5 max-w-3xl text-balance text-5xl font-bold leading-[0.98] tracking-[-0.035em] sm:text-6xl 2xl:text-7xl">
                 From one token source to every Hearst+ brand in production.
               </h1>
               <p className="mt-7 max-w-[68ch] text-pretty text-lg leading-8 text-slate-300">
@@ -303,8 +303,8 @@ export default function TokenArchitecturePage() {
                 </tbody>
               </table>
             </div>
-            <div className="mt-10 grid gap-px bg-slate-300 lg:grid-cols-2">
-              <div className="bg-[#102A43] p-7 text-white">
+            <div className="mt-10 grid min-w-0 gap-px bg-slate-300 lg:grid-cols-2">
+              <div className="min-w-0 bg-[#102A43] p-5 text-white sm:p-7">
                 <p className="text-xs font-bold text-sky-300">SOURCE EXAMPLE</p>
                 <pre className="mt-5 overflow-x-auto whitespace-pre-wrap font-mono text-sm leading-7 text-slate-200">{`// tokens/brands/cosmopolitan.json
 "palette-brand-1": {
@@ -312,7 +312,7 @@ export default function TokenArchitecturePage() {
   "value": "#E40046"
 }`}</pre>
               </div>
-              <div className="bg-[#F8FAFC] p-7">
+              <div className="min-w-0 bg-[#F8FAFC] p-5 sm:p-7">
                 <h3 className="text-xl font-bold">What does not become the source</h3>
                 <ul className="mt-5 space-y-3 text-sm leading-6 text-slate-600">
                   <CheckItem>Figma inspection values pasted into JSX</CheckItem>

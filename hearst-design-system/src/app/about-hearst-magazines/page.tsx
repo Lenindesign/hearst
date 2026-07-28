@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default function ProductStoryPage() {
-  return <div className="min-h-screen bg-[#F8FAFC] text-[#102A43]">
+  return <div className="min-h-screen overflow-x-clip bg-[#F8FAFC] text-[#102A43]">
     <ProductHeader current="story" />
     <main>
       <section className="overflow-hidden border-b border-slate-200 bg-white">

@@ -1355,7 +1355,7 @@ export const autosRiverStories: LifestyleRiverStory[] = [
     "brand": "Bring a Trailer",
     "brandSlug": "bring-a-trailer",
     "topic": "Classics",
-    "title": "Weber 40 DCNF Carburetors, Intake Manifolds, &#038; Air Box for Ferrari at No Reserve",
+    "title": "Weber 40 DCNF Carburetors, Intake Manifolds, &amp; Air Box for Ferrari at No Reserve",
     "summary": "This induction setup was removed from a 1978 Ferrari 308 and, according to the seller, the four Weber 40 DCNF carburetors were refurbished by Gordon Raymond. The carburetors are mounted on intake manifolds and fitted with modified velocity stacks and screens; a factory airbox and related parts are also included. The parts are offered at no reserve in Carmel, Indiana.",
     "image": "https://bringatrailer.com/wp-content/uploads/2026/07/IMG_3001-copy-2026-07-27-iew-65279.jpeg?w=940",
     "imageCredit": "",

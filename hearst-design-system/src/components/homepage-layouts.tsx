@@ -1,14 +1,13 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { useTheme } from "./theme-provider";
-import { NavBar } from "./nav-bar";
 import { BrandLogo } from "./brand-logo";
 import { brandLogos } from "@/lib/logos";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Divider } from "@/components/ui/divider";
 import { LinkComponent } from "@/components/ui/link";
 import { Separator } from "@/components/ui/separator";
 import { Chip } from "@/components/ui/chip";
@@ -210,14 +209,14 @@ function MainNav({ brandSlug }: { brandSlug: string }) {
   );
 }
 
-function FooterSection({ brandSlug }: { brandSlug: string }) {
+function FooterSection() {
   const { brand } = useTheme();
   const logo = brandLogos[brand.slug];
   const footerLogo = logo ? (
     <BrandLogo
       slug={brand.slug}
       className="[&_svg]:h-8 [&_svg]:w-auto"
-      color="#fff"
+      color="var(--palette-content-knockout, white)"
     />
   ) : (
     brand.name
@@ -451,9 +450,12 @@ export function LayoutCurator(props: HomepageLayoutProps = {}) {
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 lg:items-stretch">
           <div className="lg:w-[60%]">
             <div className="relative overflow-hidden rounded-lg cursor-pointer group h-full">
-              <img
+              <Image
                 src={images.hero}
                 alt={content.hero.title}
+                width={1600}
+                height={1000}
+                sizes="(max-width: 1024px) 100vw, 60vw"
                 className="w-full h-[300px] lg:h-full lg:min-h-[480px] object-cover object-[center_20%] transition-transform duration-500 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
@@ -490,9 +492,12 @@ export function LayoutCurator(props: HomepageLayoutProps = {}) {
                         {story.date}
                       </p>
                     </div>
-                    <img
+                    <Image
                       src={story.image}
                       alt=""
+                      width={64}
+                      height={64}
+                      sizes="64px"
                       className="w-16 h-16 rounded object-cover object-[center_20%] shrink-0"
                     />
                   </div>
@@ -582,7 +587,7 @@ export function LayoutCurator(props: HomepageLayoutProps = {}) {
         </div>
       )}
 
-      {p.showFooter && <FooterSection brandSlug={brand.slug} />}
+      {p.showFooter && <FooterSection />}
       {p.showStickyNewsletter && <StickyNewsletterBar brandName={brand.name} />}
     </div>
   );
@@ -654,9 +659,12 @@ export function LayoutMosaic(props: HomepageLayoutProps = {}) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2 gap-3 lg:h-[520px]">
           {/* Feature Story: 2x2 */}
           <div className="md:col-span-2 lg:col-span-2 lg:row-span-2 relative overflow-hidden rounded-lg cursor-pointer group">
-            <img
+            <Image
               src={images.hero}
               alt={content.hero.title}
+              width={1200}
+              height={900}
+              sizes="(max-width: 768px) 100vw, 50vw"
               className="w-full h-[300px] lg:h-full object-cover object-[center_20%] transition-transform duration-500 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -675,9 +683,12 @@ export function LayoutMosaic(props: HomepageLayoutProps = {}) {
 
           {/* Secondary Story 1: 1x2 */}
           <div className="md:col-span-1 lg:col-span-1 lg:row-span-2 relative overflow-hidden rounded-lg cursor-pointer group">
-            <img
+            <Image
               src={images.trending[1]}
               alt={content.articles[0]?.title}
+              width={600}
+              height={800}
+              sizes="(max-width: 768px) 100vw, 25vw"
               className="w-full h-[200px] lg:h-full object-cover object-[center_25%] transition-transform duration-500 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -693,9 +704,12 @@ export function LayoutMosaic(props: HomepageLayoutProps = {}) {
 
           {/* Secondary Story 2: 1x1 */}
           <div className="relative overflow-hidden rounded-lg cursor-pointer group">
-            <img
+            <Image
               src={images.trending[2]}
               alt={content.articles[1]?.title}
+              width={600}
+              height={450}
+              sizes="(max-width: 768px) 100vw, 25vw"
               className="w-full h-[200px] lg:h-full object-cover object-[center_25%] transition-transform duration-500 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -708,9 +722,12 @@ export function LayoutMosaic(props: HomepageLayoutProps = {}) {
 
           {/* Secondary Story 3: 1x1 */}
           <div className="relative overflow-hidden rounded-lg cursor-pointer group">
-            <img
+            <Image
               src={images.trending[3]}
               alt={content.articles[2]?.title}
+              width={600}
+              height={450}
+              sizes="(max-width: 768px) 100vw, 25vw"
               className="w-full h-[200px] lg:h-full object-cover object-[center_25%] transition-transform duration-500 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -802,9 +819,12 @@ export function LayoutMosaic(props: HomepageLayoutProps = {}) {
               className="shrink-0 w-[200px] cursor-pointer group"
             >
               <div className="relative overflow-hidden rounded-lg mb-2">
-                <img
+                <Image
                   src={pick.image}
                   alt={pick.title}
+                  width={640}
+                  height={360}
+                  sizes="(max-width: 768px) 50vw, 25vw"
                   className="w-full aspect-video object-cover object-[center_25%] transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
@@ -889,7 +909,7 @@ export function LayoutMosaic(props: HomepageLayoutProps = {}) {
         </Button>
       </div>
 
-      {p.showFooter && <FooterSection brandSlug={brand.slug} />}
+      {p.showFooter && <FooterSection />}
     </div>
   );
 }
@@ -898,7 +918,7 @@ export function LayoutMosaic(props: HomepageLayoutProps = {}) {
 // LAYOUT C: "The Stream" — Mobile-first engagement feed
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-function StickyCompactNav({ brandSlug }: { brandSlug: string }) {
+function StickyCompactNav() {
   const { brand } = useTheme();
   const logo = brandLogos[brand.slug];
 
@@ -999,13 +1019,16 @@ export function LayoutStream(props: HomepageLayoutProps = {}) {
 
   return (
     <div className="min-h-screen font-brand bg-background">
-      <StickyCompactNav brandSlug={brand.slug} />
+      <StickyCompactNav />
 
       {/* Full-Width Hero */}
       <div className="relative cursor-pointer group max-w-[var(--width-content-max)] mx-auto">
-        <img
+        <Image
           src={images.hero}
           alt={content.hero.title}
+          width={1920}
+          height={1080}
+          sizes="100vw"
           className="w-full h-[70vh] min-h-[500px] max-h-[750px] object-cover object-[center_30%]"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
@@ -1055,9 +1078,12 @@ export function LayoutStream(props: HomepageLayoutProps = {}) {
         {/* Stream Card 2: Full-Width Image Overlay */}
         <div className="py-6 border-b border-border">
           <div className="relative overflow-hidden rounded-lg cursor-pointer group">
-            <img
+            <Image
               src={images.trending[1]}
               alt={content.articles[1]?.title}
+              width={1280}
+              height={720}
+              sizes="(max-width: 768px) 100vw, 50vw"
               className="w-full aspect-video object-cover object-[center_25%] transition-transform duration-500 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
@@ -1129,9 +1155,12 @@ export function LayoutStream(props: HomepageLayoutProps = {}) {
         <h2 className="text-2xl headline mb-6">Watch Now</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="relative overflow-hidden rounded-lg cursor-pointer group md:col-span-2">
-            <img
+            <Image
               src={images.trending[0]}
               alt="Featured video"
+              width={1280}
+              height={720}
+              sizes="(max-width: 768px) 100vw, 50vw"
               className="w-full aspect-video object-cover object-[center_30%]"
             />
             <div className="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/50 transition-colors">
@@ -1150,9 +1179,12 @@ export function LayoutStream(props: HomepageLayoutProps = {}) {
               key={i}
               className="relative overflow-hidden rounded-lg cursor-pointer group"
             >
-              <img
+              <Image
                 src={img}
                 alt=""
+                width={640}
+                height={360}
+                sizes="(max-width: 768px) 50vw, 25vw"
                 className="w-full aspect-video object-cover object-[center_25%]"
               />
               <div className="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/40 transition-colors">
@@ -1184,9 +1216,12 @@ export function LayoutStream(props: HomepageLayoutProps = {}) {
                 className="shrink-0 w-[160px] cursor-pointer group"
               >
                 <div className="relative overflow-hidden rounded-lg mb-2">
-                  <img
+                  <Image
                     src={images.articles[i % images.articles.length]}
                     alt={article.title}
+                    width={640}
+                    height={400}
+                    sizes="(max-width: 768px) 50vw, 25vw"
                     className="w-full h-[160px] object-cover object-[center_25%] transition-transform duration-300 group-hover:scale-105"
                   />
                 </div>
@@ -1243,7 +1278,7 @@ export function LayoutStream(props: HomepageLayoutProps = {}) {
         </Button>
       </div>
 
-      {p.showFooter && <FooterSection brandSlug={brand.slug} />}
+      {p.showFooter && <FooterSection />}
       {p.showStickyNewsletter && <FloatingSubscribeCTA brandName={brand.name} />}
     </div>
   );
@@ -1308,9 +1343,12 @@ export function LayoutEditorial(props: HomepageLayoutProps = {}) {
         <div className="flex flex-col lg:flex-row lg:gap-[48px]">
           <div className="lg:w-[46.8%] shrink-0 cursor-pointer group">
             <div className="overflow-hidden">
-              <img
+              <Image
                 src={images.hero}
                 alt={content.hero.title}
+                width={528}
+                height={660}
+                sizes="(max-width: 1024px) 100vw, 47vw"
                 className="w-full aspect-[528/660] object-cover object-[center_20%] transition-transform duration-500 group-hover:scale-105"
               />
             </div>
@@ -1342,9 +1380,12 @@ export function LayoutEditorial(props: HomepageLayoutProps = {}) {
               >
                 {/* Card image — left half, square-ish (265×331) */}
                 <div className="sm:w-[48%] shrink-0 overflow-hidden">
-                  <img
+                  <Image
                     src={article.image}
                     alt={article.title}
+                    width={265}
+                    height={331}
+                    sizes="(max-width: 640px) 100vw, 24vw"
                     className="w-full aspect-[265/331] object-cover object-[center_25%] transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
@@ -1410,7 +1451,7 @@ export function LayoutEditorial(props: HomepageLayoutProps = {}) {
         </div>
       )}
 
-      {p.showFooter && <FooterSection brandSlug={brand.slug} />}
+      {p.showFooter && <FooterSection />}
       {p.showStickyNewsletter && <StickyNewsletterBar brandName={brand.name} />}
     </div>
   );

@@ -20,18 +20,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-import { brandIconLogos } from "@/lib/logos";
 import { getHearstStoryRoute } from "@/lib/story-routes";
 import { useBodyPortalTarget, useModalIsolation } from "@/components/ui/use-modal-isolation";
+import { BrandSourceIcon } from "./hearst-plus/brand-source-icon";
 import { BrandLogo } from "./brand-logo";
 import type { LifestyleRiverProfile, LifestyleRiverStory } from "./lifestyle-river-types";
 import { useReaderAccount, type ReaderAccount, type ReaderCollection } from "./reader-account";
 
-type AuthMode = "create" | "signIn";
+export type ReaderAuthMode = "create" | "signIn";
 
 type GoogleCredentialResponse = { credential: string };
 
-const compactAuthInputClass = "mt-1.5 [&>div]:h-10";
+const compactAuthInputClass = "mt-1.5 [&>div]:h-11";
 
 function getLibraryStoryHref(story: Pick<LifestyleRiverStory, "id">) {
   return `${getHearstStoryRoute(story)}?from=${encodeURIComponent("/hearst-plus/")}`;
@@ -82,15 +82,17 @@ function loadGoogleIdentityServices() {
   });
 }
 
+export interface ReaderAvatarProps {
+  account: Pick<ReaderAccount, "firstName" | "lastName" | "avatarUrl">;
+  size?: "default" | "sm" | "lg";
+  className?: string;
+}
+
 export function ReaderAvatar({
   account,
   size = "default",
   className,
-}: {
-  account: Pick<ReaderAccount, "firstName" | "lastName" | "avatarUrl">;
-  size?: "default" | "sm" | "lg";
-  className?: string;
-}) {
+}: ReaderAvatarProps) {
   const initials = `${account.firstName.slice(0, 1)}${account.lastName.slice(0, 1)}`.toUpperCase();
 
   return (
@@ -134,11 +136,13 @@ function ModalFrame({
       'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
+        event.preventDefault();
         onCloseRef.current();
         return;
       }
       if (event.key !== "Tab" || !dialog) return;
-      const focusable = Array.from(dialog.querySelectorAll<HTMLElement>(focusableSelector));
+      const focusable = Array.from(dialog.querySelectorAll<HTMLElement>(focusableSelector))
+        .filter((element) => element.getClientRects().length > 0);
       if (focusable.length === 0) {
         event.preventDefault();
         dialog.focus();
@@ -146,10 +150,16 @@ function ModalFrame({
       }
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
+      const activeIndex = document.activeElement instanceof HTMLElement
+        ? focusable.indexOf(document.activeElement)
+        : -1;
+      if (!dialog.contains(document.activeElement) || activeIndex === -1) {
+        event.preventDefault();
+        (event.shiftKey ? last : first).focus();
+      } else if (event.shiftKey && activeIndex === 0) {
         event.preventDefault();
         last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
+      } else if (!event.shiftKey && activeIndex === focusable.length - 1) {
         event.preventDefault();
         first.focus();
       }
@@ -187,22 +197,26 @@ function ModalFrame({
   );
 }
 
+export interface ReaderAuthDialogProps {
+  open: boolean;
+  initialMode?: ReaderAuthMode;
+  defaultPreferences: LifestyleRiverProfile;
+  onClose: () => void;
+  onAuthenticated?: () => void;
+}
+
 export function ReaderAuthDialog({
   open,
   initialMode = "signIn",
   defaultPreferences,
   onClose,
   onAuthenticated,
-}: {
-  open: boolean;
-  initialMode?: AuthMode;
-  defaultPreferences: LifestyleRiverProfile;
-  onClose: () => void;
-  onAuthenticated?: () => void;
-}) {
+}: ReaderAuthDialogProps) {
   const { createAccount, continueWithGoogle, signIn } = useReaderAccount();
-  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-  const [mode, setMode] = React.useState<AuthMode>(initialMode);
+  const googleClientId = typeof process !== "undefined"
+    ? process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
+    : undefined;
+  const [mode, setMode] = React.useState<ReaderAuthMode>(initialMode);
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -381,7 +395,7 @@ export function ReaderAuthDialog({
             className="[&_svg]:h-6 [&_svg]:w-auto [&_svg]:max-w-[175px]"
             color="var(--color-primary)"
           />
-          <Button data-modal-close variant="outline" size="icon-lg" onClick={onClose} aria-label="Close account dialog">
+          <Button data-modal-close variant="outline" size="icon-lg" className="size-11" onClick={onClose} aria-label="Close account dialog">
             <X className="h-4 w-4" aria-hidden />
           </Button>
         </div>
@@ -398,7 +412,7 @@ export function ReaderAuthDialog({
           {googleClientId ? (
             <>
               <div
-                className="mt-4 flex min-h-10 w-full [&_.S9gUrf-YoZ4jf]:!w-full [&_.S9gUrf-YoZ4jf>div]:!w-full [&_[role=button]]:!w-full [&_[role=button]]:!max-w-none"
+                className="mt-4 flex min-h-11 w-full [&_.S9gUrf-YoZ4jf]:!w-full [&_.S9gUrf-YoZ4jf>div]:!w-full [&_[role=button]]:!min-h-11 [&_[role=button]]:!w-full [&_[role=button]]:!max-w-none"
                 ref={googleButtonRef}
                 aria-label="Continue with Google"
               />
@@ -440,7 +454,7 @@ export function ReaderAuthDialog({
                     <Input size="lg" className={compactAuthInputClass} type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} autoComplete="new-password" />
                   </label>
                 </div>
-                <label className="flex items-start gap-2 text-sm leading-5">
+                <label className="flex min-h-11 items-start gap-2 py-0.5 text-sm leading-5">
                   <input
                     type="checkbox"
                     checked={acceptedTerms}
@@ -464,12 +478,12 @@ export function ReaderAuthDialog({
             </p>
           ) : null}
 
-          <Button className="mt-4 w-full" type="submit" disabled={submitting}>
+          <Button className="mt-4 min-h-11 w-full" type="submit" disabled={submitting}>
             {submitting ? "Please wait" : mode === "create" ? "Create Local Profile" : "Sign In"}
           </Button>
           <button
             type="button"
-            className="mt-3 w-full text-center text-sm font-semibold text-primary hover:underline"
+            className="mt-3 min-h-11 w-full rounded-[8px] text-center text-sm font-semibold text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             onClick={() => {
               setMode((current) => current === "create" ? "signIn" : "create");
               setError("");
@@ -498,21 +512,21 @@ const profileTabs: { id: ProfileTab; label: string; icon: React.ComponentType<{ 
 
 function BrandMark({ brand, stories }: { brand: string; stories: LifestyleRiverStory[] }) {
   const brandSlug = stories.find((story) => story.brand === brand)?.brandSlug;
-  const source = brandSlug ? brandIconLogos[brandSlug] : undefined;
   return (
-    <span
-      className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-[4px] border border-border bg-white text-[10px] font-bold text-foreground"
-      aria-hidden
-      style={source ? {
-        backgroundImage: `url("${source}")`,
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-      } : undefined}
-    >
-      {source ? null : brand.slice(0, 2).toUpperCase()}
-    </span>
+    <BrandSourceIcon
+      brand={brand}
+      brandSlug={brandSlug ?? ""}
+      className="size-8 rounded-[4px] bg-white"
+    />
   );
+}
+
+export interface ReaderProfileDialogProps {
+  open: boolean;
+  stories: LifestyleRiverStory[];
+  topics: string[];
+  brands: string[];
+  onClose: () => void;
 }
 
 export function ReaderProfileDialog({
@@ -521,13 +535,7 @@ export function ReaderProfileDialog({
   topics,
   brands,
   onClose,
-}: {
-  open: boolean;
-  stories: LifestyleRiverStory[];
-  topics: string[];
-  brands: string[];
-  onClose: () => void;
-}) {
+}: ReaderProfileDialogProps) {
   const {
     account,
     syncState,
@@ -553,6 +561,11 @@ export function ReaderProfileDialog({
   const readLaterCollection = account?.collections.find((collection) => collection.name === "Read Later");
   const customCollections = account?.collections.filter((collection) => collection.name !== "Read Later") ?? [];
   const [confirmDelete, setConfirmDelete] = React.useState(false);
+  const [pendingCollectionDeleteId, setPendingCollectionDeleteId] = React.useState<string>();
+  const [pendingCommentDeleteId, setPendingCommentDeleteId] = React.useState<string>();
+  const [commentStatus, setCommentStatus] = React.useState("");
+  const libraryHeadingRef = React.useRef<HTMLHeadingElement>(null);
+  const commentsHeadingRef = React.useRef<HTMLHeadingElement>(null);
 
   React.useEffect(() => {
     if (account) reconcileStorySnapshots(stories);
@@ -654,7 +667,7 @@ export function ReaderProfileDialog({
                     {syncState === "syncing" ? "Saving changes across devices…" : "Cross-device sync is paused. Your changes remain on this device."}
                   </span>
                   {syncState === "error" ? (
-                    <Button type="button" variant="outline" size="sm" onClick={retrySync}>Retry sync</Button>
+                    <Button type="button" variant="outline" size="sm" className="min-h-11" onClick={retrySync}>Retry sync</Button>
                   ) : null}
                 </div>
               ) : null}
@@ -715,7 +728,7 @@ export function ReaderProfileDialog({
                     return (
                       <button key={brand} type="button" onClick={() => toggleBrand(brand)} aria-pressed={active} className={cn("flex min-h-14 items-center gap-3 rounded-[8px] px-2.5 text-left text-sm font-semibold hover:bg-muted", active && "bg-muted")}>
                         <BrandMark brand={brand} stories={stories} />
-                        <span className="min-w-0 flex-1 truncate">{brand}</span>
+                        <span className="min-w-0 flex-1 break-words">{brand}</span>
                         <span className={cn("flex size-5 items-center justify-center rounded-[4px] border", active ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background")}>{active ? <Check className="h-3.5 w-3.5" aria-hidden /> : null}</span>
                       </button>
                     );
@@ -727,7 +740,7 @@ export function ReaderProfileDialog({
 
           {tab === "library" ? (
             <div>
-              <h3 className="text-2xl font-bold">Your library</h3>
+              <h3 ref={libraryHeadingRef} tabIndex={-1} className="text-2xl font-bold outline-none">Your library</h3>
               <p className="mt-2 text-sm text-muted-foreground">Keep stories together for meals, projects, trips, and anything you want to revisit.</p>
               <h4 className="mt-7 font-bold">Collections</h4>
               <form className="mt-3 flex items-start gap-2" onSubmit={(event) => { event.preventDefault(); createNamedCollection(); }}>
@@ -753,7 +766,46 @@ export function ReaderProfileDialog({
                           {unavailableIds.length > 0 ? ` · ${unavailableIds.length} older ${unavailableIds.length === 1 ? "save needs" : "saves need"} cleanup` : ""}
                         </p>
                       </div>
-                      <Button variant="ghost" size="icon-sm" onClick={() => deleteCollection(collection.id)} aria-label={`Delete ${collection.name}`}><Trash2 className="h-4 w-4" aria-hidden /></Button>
+                      <div className="flex flex-wrap justify-end gap-2">
+                        <Button
+                          type="button"
+                          variant={pendingCollectionDeleteId === collection.id ? "destructive" : "ghost"}
+                          size={pendingCollectionDeleteId === collection.id ? "default" : "icon-sm"}
+                          className={pendingCollectionDeleteId === collection.id ? "min-h-11" : "size-11"}
+                          aria-label={pendingCollectionDeleteId === collection.id
+                            ? `Confirm delete ${collection.name}`
+                            : `Delete ${collection.name}`}
+                          aria-expanded={pendingCollectionDeleteId === collection.id}
+                          onClick={() => {
+                            if (pendingCollectionDeleteId !== collection.id) {
+                              setPendingCollectionDeleteId(collection.id);
+                              return;
+                            }
+                            deleteCollection(collection.id);
+                            setPendingCollectionDeleteId(undefined);
+                            setCollectionStatus(`Deleted ${collection.name}.`);
+                            window.requestAnimationFrame(() => libraryHeadingRef.current?.focus());
+                          }}
+                        >
+                          {pendingCollectionDeleteId === collection.id
+                            ? `Delete ${collection.name}`
+                            : <Trash2 className="h-4 w-4" aria-hidden />}
+                        </Button>
+                        {pendingCollectionDeleteId === collection.id ? (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            className="min-h-11"
+                            onClick={(event) => {
+                              const deleteButton = event.currentTarget.previousElementSibling as HTMLElement | null;
+                              setPendingCollectionDeleteId(undefined);
+                              window.requestAnimationFrame(() => deleteButton?.focus());
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                        ) : null}
+                      </div>
                     </div>
                     <div className="mt-3 space-y-2">
                       {collection.storyIds.length === 0 ? <p className="text-sm text-muted-foreground">Add a saved story below.</p> : availableStories.slice(0, 4).map(({ id, story }) => {
@@ -774,7 +826,7 @@ export function ReaderProfileDialog({
                           <p className="text-sm text-muted-foreground">
                             {unavailableIds.length} {unavailableIds.length === 1 ? "older save has" : "older saves have"} no retained story details.
                           </p>
-                          <Button type="button" variant="outline" size="sm" onClick={() => {
+                          <Button type="button" variant="outline" size="sm" className="min-h-11" onClick={() => {
                             removeStoriesFromCollection(collection.id, unavailableIds);
                             setCollectionStatus(`Removed ${unavailableIds.length} unavailable ${unavailableIds.length === 1 ? "save" : "saves"} from ${collection.name}.`);
                           }}>
@@ -818,14 +870,14 @@ export function ReaderProfileDialog({
                         {customCollections.length === 0 ? (
                           <button
                             type="button"
-                            className="min-h-10 rounded-[8px] border border-dashed border-border px-3 text-left text-sm font-semibold text-muted-foreground hover:border-primary/50 hover:text-primary"
+                            className="min-h-11 rounded-[8px] border border-dashed border-border px-3 text-left text-sm font-semibold text-muted-foreground hover:border-primary/50 hover:text-primary"
                             onClick={() => collectionNameRef.current?.focus()}
                           >
                             Create a collection first
                           </button>
                         ) : (
                           <select
-                            className="h-10 rounded-[8px] border border-border bg-background px-3 text-sm font-semibold"
+                            className="h-11 rounded-[8px] border border-border bg-background px-3 text-sm font-semibold"
                             value=""
                             onChange={(event) => {
                               const collection = customCollections.find((item) => item.id === event.target.value);
@@ -855,6 +907,7 @@ export function ReaderProfileDialog({
                       type="button"
                       variant="outline"
                       size="sm"
+                      className="min-h-11"
                       onClick={() => {
                         removeStoriesFromCollection(readLaterCollection.id, unresolvedSavedIds);
                         setCollectionStatus(`Removed ${unresolvedSavedIds.length} unavailable ${unresolvedSavedIds.length === 1 ? "save" : "saves"}.`);
@@ -870,15 +923,59 @@ export function ReaderProfileDialog({
 
           {tab === "activity" ? (
             <div>
-              <h3 className="text-2xl font-bold">Your comments</h3>
+              <h3 ref={commentsHeadingRef} tabIndex={-1} className="text-2xl font-bold outline-none">Your comments</h3>
               <p className="mt-2 text-sm text-muted-foreground">Review or remove the comments you have added to stories.</p>
+              {commentStatus ? <p role="status" className="mt-3 text-sm font-semibold text-muted-foreground">{commentStatus}</p> : null}
               {comments.length === 0 ? (
                 <div className="mt-6 flex items-center gap-3 border-y border-border py-5 text-sm text-muted-foreground"><MessageCircle className="h-5 w-5" aria-hidden />Join a story conversation and your comments will appear here.</div>
               ) : (
                 <div className="mt-6 divide-y divide-border border-y border-border">
                   {comments.map((comment) => (
                     <article key={comment.id} className="py-4">
-                      <div className="flex items-start justify-between gap-4"><div><p className="text-xs font-semibold text-muted-foreground">{comment.storyTitle}</p><p className="mt-2 text-sm leading-6">{comment.body}</p></div><Button variant="ghost" size="icon-sm" onClick={() => deleteComment(comment.storyId, comment.id)} aria-label="Delete comment"><Trash2 className="h-4 w-4" aria-hidden /></Button></div>
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <p className="text-xs font-semibold text-muted-foreground">{comment.storyTitle}</p>
+                          <p className="mt-2 text-sm leading-6">{comment.body}</p>
+                        </div>
+                        <div className="flex flex-wrap justify-end gap-2">
+                          <Button
+                            type="button"
+                            variant={pendingCommentDeleteId === comment.id ? "destructive" : "ghost"}
+                            size={pendingCommentDeleteId === comment.id ? "default" : "icon-sm"}
+                            className={pendingCommentDeleteId === comment.id ? "min-h-11" : "size-11"}
+                            aria-label={pendingCommentDeleteId === comment.id ? "Confirm delete comment" : "Delete comment"}
+                            aria-expanded={pendingCommentDeleteId === comment.id}
+                            onClick={() => {
+                              if (pendingCommentDeleteId !== comment.id) {
+                                setPendingCommentDeleteId(comment.id);
+                                return;
+                              }
+                              deleteComment(comment.storyId, comment.id);
+                              setPendingCommentDeleteId(undefined);
+                              setCommentStatus("Comment deleted.");
+                              window.requestAnimationFrame(() => commentsHeadingRef.current?.focus());
+                            }}
+                          >
+                            {pendingCommentDeleteId === comment.id
+                              ? "Delete comment"
+                              : <Trash2 className="h-4 w-4" aria-hidden />}
+                          </Button>
+                          {pendingCommentDeleteId === comment.id ? (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              className="min-h-11"
+                              onClick={(event) => {
+                                const deleteButton = event.currentTarget.previousElementSibling as HTMLElement | null;
+                                setPendingCommentDeleteId(undefined);
+                                window.requestAnimationFrame(() => deleteButton?.focus());
+                              }}
+                            >
+                              Cancel
+                            </Button>
+                          ) : null}
+                        </div>
+                      </div>
                     </article>
                   ))}
                 </div>
@@ -911,9 +1008,38 @@ export function ReaderProfileDialog({
                       ? "This currently removes the signed-in copy from this browser. The synced prototype profile remains available when you sign in with Google again."
                       : "This removes the prototype account, saved stories, collections, comments, and preferences from this browser."}
                   </p>
-                  {confirmDelete ? (
-                    <div className="mt-4 flex flex-wrap gap-2"><Button className="min-h-11" variant="destructive" onClick={() => { deleteAccount(); onClose(); }}>Delete account</Button><Button className="min-h-11" variant="outline" onClick={() => setConfirmDelete(false)}>Cancel</Button></div>
-                  ) : <Button variant="outline" className="mt-4 min-h-11 text-destructive" onClick={() => setConfirmDelete(true)}>Delete account</Button>}
+                  <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="Account deletion">
+                    <Button
+                      type="button"
+                      variant={confirmDelete ? "destructive" : "outline"}
+                      className={cn("min-h-11", !confirmDelete && "text-destructive")}
+                      aria-expanded={confirmDelete}
+                      onClick={() => {
+                        if (!confirmDelete) {
+                          setConfirmDelete(true);
+                          return;
+                        }
+                        deleteAccount();
+                        onClose();
+                      }}
+                    >
+                      {confirmDelete ? "Confirm delete account" : "Delete account"}
+                    </Button>
+                    {confirmDelete ? (
+                      <Button
+                        type="button"
+                        className="min-h-11"
+                        variant="outline"
+                        onClick={(event) => {
+                          const deleteButton = event.currentTarget.previousElementSibling as HTMLElement | null;
+                          setConfirmDelete(false);
+                          window.requestAnimationFrame(() => deleteButton?.focus());
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    ) : null}
+                  </div>
                 </div>
               </div>
             </div>

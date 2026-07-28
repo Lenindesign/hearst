@@ -1,13 +1,12 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselPrevious,
-  CarouselNext,
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { ChevronLeft, ChevronRight } from "@/components/ui/icons";
@@ -36,9 +35,21 @@ export function ContentCarousel({
 
   React.useEffect(() => {
     if (!api) return;
-    setCount(api.scrollSnapList().length);
-    setCurrent(api.selectedScrollSnap());
-    api.on("select", () => setCurrent(api.selectedScrollSnap()));
+
+    const updateSelection = () => {
+      setCount(api.scrollSnapList().length);
+      setCurrent(api.selectedScrollSnap());
+    };
+    const initialUpdate = requestAnimationFrame(updateSelection);
+
+    api.on("reInit", updateSelection);
+    api.on("select", updateSelection);
+
+    return () => {
+      cancelAnimationFrame(initialUpdate);
+      api.off("reInit", updateSelection);
+      api.off("select", updateSelection);
+    };
   }, [api]);
 
   return (
@@ -113,12 +124,14 @@ function CardSlide({ card }: { card: CarouselCard }) {
   return (
     <div className="flex flex-col gap-2.5 w-[255px]">
       {/* Image — Pencil: 255×341, $color.surface.placeholder fallback */}
-      <div className="w-[255px] h-[341px] bg-muted overflow-hidden rounded-sm">
+      <div className="relative w-[255px] h-[341px] bg-muted overflow-hidden rounded-sm">
         {card.image ? (
-          <img
+          <Image
             src={card.image}
             alt={card.title}
-            className="h-full w-full object-cover"
+            fill
+            sizes="255px"
+            className="object-cover"
           />
         ) : (
           <div className="h-full w-full bg-muted" />

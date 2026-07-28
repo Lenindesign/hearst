@@ -5,10 +5,12 @@ import { type BrandTheme } from "@/lib/brands";
 import { brandToCssVars } from "@/lib/theme-css-vars";
 import { themeOptions } from "@/lib/theme-options";
 
-interface ThemeContextType {
+export type ThemeColorMode = "light" | "dark";
+
+export interface ThemeContextType {
   brand: BrandTheme;
   setBrand: (slug: string) => void;
-  colorMode: "light" | "dark";
+  colorMode: ThemeColorMode;
   toggleColorMode: () => void;
 }
 
@@ -83,7 +85,7 @@ export function ThemeProvider({
   const defaultColorMode = isFluxDefault ? "dark" : "light";
   const colorModeStorageKey = `hearst-color-mode:${defaultBrandSlug}`;
   const [brandSlug, setBrandSlug] = useState(defaultBrandSlug);
-  const [colorMode, setColorMode] = useState<"light" | "dark">(defaultColorMode);
+  const [colorMode, setColorMode] = useState<ThemeColorMode>(defaultColorMode);
   const colorModeReady = useRef(false);
 
   const brand = useMemo(

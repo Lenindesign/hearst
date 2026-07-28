@@ -266,6 +266,21 @@ export const hotRodEvents: HotRodEvent[] = [
 
 export const hotRodEventYears = ["2027", "2026", "2025", "2024"] as const;
 
+export const hotRodEventTheme = {
+  primary: "#c11b17",
+  primaryForeground: "#ffffff",
+  red: "#c8101e",
+  redDark: "#991019",
+  redLight: "#ff6a73",
+  black: "#111111",
+  asphalt: "#242424",
+  cream: "#f3ebdd",
+  heroOverlay:
+    "linear-gradient(90deg,rgba(0,0,0,0.93) 0%,rgba(0,0,0,0.7) 42%,rgba(0,0,0,0.13) 76%),linear-gradient(0deg,rgba(0,0,0,0.68) 0%,transparent 50%)",
+  dragWeekOverlay:
+    "linear-gradient(90deg,rgba(0,0,0,0.94) 0%,rgba(0,0,0,0.72) 44%,rgba(0,0,0,0.12) 78%),linear-gradient(0deg,rgba(0,0,0,0.72) 0%,transparent 52%)",
+} as const;
+
 export function getHotRodEventStatusLabel(status: HotRodEventStatus) {
   return {
     "coming-soon": "Coming soon",

@@ -7,7 +7,7 @@
  *   npx style-dictionary build --config style-dictionary.config.mjs
  */
 
-import { readFileSync, readdirSync } from "fs";
+import { readdirSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 

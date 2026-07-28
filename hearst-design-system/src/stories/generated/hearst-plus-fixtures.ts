@@ -3550,3 +3550,29 @@ export const storybookGalleryImagesByBrand: Record<string, StorybookGalleryImage
     }
   ]
 };
+
+export const storybookTodayEditHoroscopeStory: LifestyleRiverStory = {
+  "id": "cosmopolitan-lifestyle-a73176505-weekly-horoscope-july-26-2026",
+  "brand": "Cosmopolitan",
+  "brandSlug": "cosmopolitan",
+  "topic": "Lifestyle",
+  "title": "Your Horoscope for the Week of July 26",
+  "summary": "Prepare for a vibe shift.",
+  "image": "https://hips.hearstapps.com/hmg-prod/images/9c2e94b0-732d-416b-b245-c9fe71c55187.jpg",
+  "imageCredit": "Khadija Horton / Getty Images",
+  "byline": "Erika W. Smith",
+  "readTime": "3 min read",
+  "publishedAt": "2026-07-26T12:00:00.000Z",
+  "sourceUrl": "https://www.cosmopolitan.com/lifestyle/a73176505/weekly-horoscope-july-26-2026/",
+  "popularity": 74,
+  "signal": "Editor Pick",
+  "tags": [
+    "lifestyle",
+    "cosmopolitan",
+    "your",
+    "horoscope",
+    "week",
+    "july"
+  ],
+  "age": 30
+};

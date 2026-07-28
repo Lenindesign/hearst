@@ -134,9 +134,10 @@ Each tool enforces its own syntax. The **canonical name stays the same** -- only
 </table>
 </div>
 
-### You never write the prefixed versions
+### Generated representations
 
-The build scripts handle all transformations automatically:
+Canonical JSON keys remain the editing surface. Generators derive each
+consumer representation without changing the Git source:
 
 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px', margin: '24px 0' }}>
   <div style={{ border: '1px solid #e2e8f0', borderRadius: '10px', padding: '16px', background: '#fafbfc', textAlign: 'center' }}>
@@ -146,13 +147,13 @@ The build scripts handle all transformations automatically:
   </div>
   <div style={{ border: '1px solid #e2e8f0', borderRadius: '10px', padding: '16px', background: '#fafbfc', textAlign: 'center' }}>
     <code style={{ fontSize: '12px', color: '#64748b' }}>push-pencil</code>
-    <div style={{ fontSize: '13px', fontWeight: 600, marginTop: '6px' }}>JSON to Pencil</div>
-    <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>Adds <code>$</code> prefix</div>
+    <div style={{ fontSize: '13px', fontWeight: 600, marginTop: '6px' }}>JSON to Pencil payload</div>
+    <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>Preserves the canonical key; does not write a file</div>
   </div>
   <div style={{ border: '1px solid #e2e8f0', borderRadius: '10px', padding: '16px', background: '#fafbfc', textAlign: 'center' }}>
     <code style={{ fontSize: '12px', color: '#64748b' }}>push-figma</code>
-    <div style={{ fontSize: '13px', fontWeight: 600, marginTop: '6px' }}>JSON to Figma</div>
-    <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>No prefix needed</div>
+    <div style={{ fontSize: '13px', fontWeight: 600, marginTop: '6px' }}>JSON to Figma payload</div>
+    <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>Uses slash-grouped display names and canonical CSS code syntax</div>
   </div>
 </div>
 
@@ -887,54 +888,18 @@ typography-component-tooltip-content-lg
 ```bash
 npm run build-tokens        # Regenerate brands.ts + tokens.css
 npm run dev                 # Verify in browser
-npm run push-figma          # After merge: sync to Figma
-npm run push-pencil         # After merge: sync to Pencil
+npm run push-figma          # Generate a Figma Variables API payload
+npm run push-pencil         # Generate a Pencil variables payload
 ```
+
+The last two commands print JSON only. An authorized destination write and
+destination-side verification are separate steps.
 
 ---
 
-## 9. Known Typos to Avoid
+## 9. Token-name spelling
 
-These typos exist in the current token set. Do not repeat them when creating new tokens.
-
-<div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '20px', margin: '24px 0' }}>
-
-<div style={{ overflowX: 'auto', margin: '24px 0' }}>
-<table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
-  <thead>
-    <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Current Name (typo)</th>
-      <th style={{ padding: '10px 16px', fontWeight: 600 }}>Correct Spelling</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>border-netural-light</code></td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>border-neutral-light</code></td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-badge-content-dager</code></td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-badge-content-danger</code></td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-badge-content-kockout</code></td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-badge-content-knockout</code></td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-badge-icon-kockout</code></td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-badge-icon-knockout</code></td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-      <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-card-core-content-title-backgroud-default</code></td>
-      <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>component-card-core-content-title-background-default</code></td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-These will be corrected in a future cleanup. For now, reference them by their current (typo) names in code, but use the correct spelling for any new tokens.
-
-</div>
+Historical `netural`, `dager`, `kockout`, and `backgroud` token names have been corrected in the canonical token files. `npm run tokens:check` rejects those misspellings if they are introduced again. Use `neutral`, `danger`, `knockout`, and `background` in every new token name.
 
 ---
 

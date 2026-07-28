@@ -320,4 +320,37 @@ export const hearstAllTheme: BrandTheme = {
   },
 };
 
+export const supplementalBrandProfiles: Record<
+  string,
+  {
+    primary: string;
+    secondary: string;
+    fontDefault: string;
+    fontHeadline: string;
+    fontHeadlineWeight: number;
+  }
+> = {
+  "bring-a-trailer": {
+    primary: "#f40217",
+    secondary: "#f5f5f5",
+    fontDefault: "Open Sans",
+    fontHeadline: "Open Sans",
+    fontHeadlineWeight: 700,
+  },
+  "hot-rod": {
+    primary: "#c11b17",
+    secondary: "#141416",
+    fontDefault: "Geist",
+    fontHeadline: "Barlow Condensed",
+    fontHeadlineWeight: 700,
+  },
+  motortrend: {
+    primary: "#e90c17",
+    secondary: "#141416",
+    fontDefault: "Poppins",
+    fontHeadline: "Poppins",
+    fontHeadlineWeight: 700,
+  },
+};
+
 export const themeOptions: BrandTheme[] = [hearstAllTheme, hearstPlusTheme, lifestyleTheme, fluxTheme, ewTheme, ...brands];

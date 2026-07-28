@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 export interface ArticleInlineImage {
@@ -9,6 +10,8 @@ export interface ArticleInlineImage {
   credit?: string;
   caption?: string;
   variant?: "default" | "wide";
+  width?: number;
+  height?: number;
 }
 
 export interface ArticleBodyProps {
@@ -38,6 +41,8 @@ export function ArticleInlineImage({
   credit,
   caption,
   variant = "default",
+  width = 1600,
+  height = 900,
 }: ArticleInlineImage) {
   const isWide = variant === "wide";
 
@@ -48,9 +53,12 @@ export function ArticleInlineImage({
         isWide && "relative left-1/2 w-screen max-w-none -translate-x-1/2 py-[var(--spacing-token-xl)]",
       )}
     >
-      <img
+      <Image
         src={src}
         alt={alt || ""}
+        width={width}
+        height={height}
+        sizes={isWide ? "100vw" : "(max-width: 768px) 100vw, 760px"}
         className={cn(
           "h-auto w-full object-cover",
           isWide ? "max-h-[78vh] rounded-none" : "rounded-lg",

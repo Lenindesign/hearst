@@ -28,14 +28,15 @@ const Image = React.forwardRef<HTMLImageElement, StorybookImageProps>(
   (
     {
       src,
+      alt = "",
       fill,
       preload,
       priority,
-      quality: _quality,
-      placeholder: _placeholder,
-      blurDataURL: _blurDataURL,
-      unoptimized: _unoptimized,
-      loader: _loader,
+      quality,
+      placeholder,
+      blurDataURL,
+      unoptimized,
+      loader,
       onLoad,
       onLoadingComplete,
       style,
@@ -43,6 +44,12 @@ const Image = React.forwardRef<HTMLImageElement, StorybookImageProps>(
     },
     ref,
   ) => {
+    void quality;
+    void placeholder;
+    void blurDataURL;
+    void unoptimized;
+    void loader;
+
     const resolvedSrc = typeof src === "string" ? src : src.src;
     const fillStyle = fill
       ? {
@@ -62,6 +69,7 @@ const Image = React.forwardRef<HTMLImageElement, StorybookImageProps>(
       // eslint-disable-next-line @next/next/no-img-element
       <img
         {...props}
+        alt={alt}
         ref={ref}
         src={resolvedSrc}
         loading={priority || preload ? "eager" : props.loading}

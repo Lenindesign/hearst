@@ -241,6 +241,7 @@ function generateBrandsTs(brands: BrandData[]): string {
     "  fontSecondary: string;",
     "  fontHeadline: string;",
     "  fontHeadlineWeight: number;",
+    "  fontHeadlineStretch?: string;",
     "  semanticColors: Record<string, string>;",
     "  componentTokens: Record<string, string | number>;",
     "}",
@@ -259,7 +260,6 @@ function generateBrandsTs(brands: BrandData[]): string {
       .join(", ");
 
     const compEntries = Object.entries(b.componentTokens)
-      .slice(0, 50)
       .map(([k, v]) => (typeof v === "number" ? `"${k}": ${v}` : `"${k}": "${v}"`))
       .join(", ");
 

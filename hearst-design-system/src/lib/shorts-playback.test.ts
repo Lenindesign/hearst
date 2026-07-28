@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   getSettledShortIndex,
   getShortPreloadIndexes,
+  getShortScrollBehavior,
   isActiveShortEvent,
   shouldAutoplayActivatedShort,
 } from "./shorts-playback";
@@ -19,6 +20,11 @@ test("preloads the active short and its bounded neighbors", () => {
   assert.deepEqual(getShortPreloadIndexes(0, 5), [0, 1]);
   assert.deepEqual(getShortPreloadIndexes(2, 5), [1, 2, 3]);
   assert.deepEqual(getShortPreloadIndexes(4, 5), [3, 4]);
+});
+
+test("removes animated reel navigation when reduced motion is requested", () => {
+  assert.equal(getShortScrollBehavior(false), "smooth");
+  assert.equal(getShortScrollBehavior(true), "auto");
 });
 
 test("autoplays a newly active short only while muted", () => {

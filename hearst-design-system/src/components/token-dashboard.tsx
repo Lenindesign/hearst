@@ -3,7 +3,6 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { NavBar } from "./nav-bar";
 import { useTheme } from "./theme-provider";
-import { brands } from "@/lib/brands";
 import {
   Card,
   CardContent,
@@ -100,13 +99,6 @@ function isColor(value: string): boolean {
   return /^#[0-9a-f]{3,8}$/i.test(String(value));
 }
 
-function slugify(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-}
-
 // ---------------------------------------------------------------------------
 // Sub-components
 // ---------------------------------------------------------------------------
@@ -164,17 +156,17 @@ function TokenTypeChart({ counts }: { counts: Record<string, number> }) {
   const max = sorted[0]?.[1] || 1;
 
   const typeColors: Record<string, string> = {
-    color: "#3b82f6",
-    typography: "#8b5cf6",
-    number: "#10b981",
-    fontSizes: "#f59e0b",
-    fontFamilies: "#ec4899",
-    fontWeights: "#6366f1",
-    lineHeights: "#14b8a6",
-    letterSpacing: "#f97316",
-    dimension: "#06b6d4",
-    other: "#64748b",
-    textCase: "#a855f7",
+    color: "var(--chart-1)",
+    typography: "var(--chart-2)",
+    number: "var(--chart-3)",
+    fontSizes: "var(--chart-4)",
+    fontFamilies: "var(--chart-5)",
+    fontWeights: "var(--chart-1)",
+    lineHeights: "var(--chart-2)",
+    letterSpacing: "var(--chart-3)",
+    dimension: "var(--chart-4)",
+    other: "var(--muted-foreground)",
+    textCase: "var(--chart-5)",
   };
 
   return (
@@ -189,7 +181,7 @@ function TokenTypeChart({ counts }: { counts: Record<string, number> }) {
               className="h-full rounded-full transition-all duration-500"
               style={{
                 width: `${(count / max) * 100}%`,
-                backgroundColor: typeColors[type] || "#64748b",
+                backgroundColor: typeColors[type] || "var(--muted-foreground)",
               }}
             />
           </div>
@@ -330,7 +322,7 @@ function TokenTree({
             <div
               key={fullPath}
               className={`flex items-center gap-2 py-1.5 text-xs group ${
-                isDiff ? "bg-amber-50 dark:bg-amber-950/20 -mx-2 px-2 rounded" : ""
+                isDiff ? "bg-[var(--component-badge-background-warning)]/35 -mx-2 px-2 rounded" : ""
               }`}
             >
               {showColor && (
@@ -352,7 +344,7 @@ function TokenTree({
               <code
                 className={`font-mono text-[11px] truncate max-w-[200px] ${
                   isRef
-                    ? "text-blue-600 dark:text-blue-400"
+                    ? "text-primary"
                     : "text-muted-foreground"
                 }`}
                 title={valueStr}
@@ -370,7 +362,7 @@ function TokenTree({
                       style={{ backgroundColor: compareValue }}
                     />
                   )}
-                  <code className="font-mono text-[10px] text-amber-600 dark:text-amber-400 truncate max-w-[120px]">
+                  <code className="font-mono text-[10px] text-[var(--component-badge-content-warning)] truncate max-w-[120px]">
                     {compareValue.startsWith("{")
                       ? resolveReference(compareValue)
                       : compareValue}
@@ -633,7 +625,7 @@ function BrandComparisonTable({
                 <code
                   className={`font-mono ${
                     r.isRef
-                      ? "text-blue-600 dark:text-blue-400"
+                      ? "text-primary"
                       : "text-muted-foreground"
                   }`}
                 >
@@ -922,7 +914,7 @@ export function TokenDashboard() {
                     />
                   </div>
                   {compareSet && (
-                    <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
+                    <p className="text-xs text-[var(--component-badge-content-warning)] mt-1">
                       Highlighting differences with{" "}
                       {compareSet.replace("Alias/", "")}
                     </p>

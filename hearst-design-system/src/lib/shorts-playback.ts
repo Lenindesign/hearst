@@ -25,6 +25,10 @@ export function getShortPreloadIndexes(activeIndex: number, storyCount: number) 
   return indexes;
 }
 
+export function getShortScrollBehavior(prefersReducedMotion: boolean): ScrollBehavior {
+  return prefersReducedMotion ? "auto" : "smooth";
+}
+
 export function shouldAutoplayActivatedShort({
   muted,
   playingRequested,

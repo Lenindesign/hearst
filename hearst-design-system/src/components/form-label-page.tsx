@@ -233,7 +233,7 @@ export function FormLabelPage() {
                   <input
                     id="password"
                     type="password"
-                    className="mt-1.5 w-full h-9 px-3 text-sm border border-red-300 rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                    className="mt-1.5 w-full h-9 px-3 text-sm border border-[var(--component-input-border-color-primary-outlined-error)] rounded-lg bg-[var(--component-input-background-primary-outlined-error)] focus:outline-none focus:ring-2 focus:ring-[var(--content-error)]/30"
                   />
                 </div>
               </div>

@@ -57,7 +57,7 @@
       "type": "border",
       "description": "0px "
     },
-    "netural-light": {
+    "neutral-light": {
       "value": {
         "width": "{width.xs}",
         "color": "{palette.neutral.300}",

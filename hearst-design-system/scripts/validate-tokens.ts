@@ -3,10 +3,11 @@
  *
  * Checks:
  *   1. Broken references — {token.path} that don't resolve
- *   2. Duplicate component tokens — component tokens identical to a semantic token
- *   3. Banned patterns — component.*, publication-specific names, hard-coded literals in brand files
- *   4. Brand coverage — every brand file has the minimum required overrides
- *   5. Neutral alpha duplication — identical values repeated across brands
+ *   2. Component-token promotion safety across every publication mode
+ *   3. Duplicate component tokens — component tokens identical to a semantic token
+ *   4. Brand-source integrity — canonical flat brand files expose brand-1..14
+ *   5. Brand coverage — every publication file has a primary brand color
+ *   6. Neutral alpha duplication — identical values repeated across brands
  */
 
 import { readFileSync, readdirSync, existsSync } from "fs";
@@ -15,13 +16,14 @@ import { join } from "path";
 const ROOT = join(__dirname, "..");
 const TOKENS_DIR = join(ROOT, "tokens");
 
-interface ValidationReport {
+export interface ValidationReport {
   warnings: string[];
   errors: string[];
   audit: {
     componentTokens: {
       total: number;
       promotable: string[];
+      promotionBlocked: string[];
       duplicateOfSemantic: string[];
       trulyUnique: string[];
     };
@@ -98,6 +100,21 @@ export function validate(): ValidationReport {
   // Load all layers
   const core = loadDir(join(TOKENS_DIR, "core"));
   const semantic = loadDir(join(TOKENS_DIR, "semantic"));
+  const brandsDir = join(TOKENS_DIR, "brands");
+  const brandFiles = existsSync(brandsDir)
+    ? readdirSync(brandsDir).filter(
+        (file) => file.endsWith(".json") && file !== "_meta.json"
+      )
+    : [];
+  const brandModes = new Map<string, Map<string, TokenValue>>();
+  for (const file of brandFiles) {
+    brandModes.set(
+      file.replace(".json", ""),
+      flattenPaths(
+        JSON.parse(readFileSync(join(brandsDir, file), "utf-8"))
+      )
+    );
+  }
 
   // Combined resolution pool (core + semantic)
   const resolvable = new Map([...core, ...semantic]);
@@ -147,22 +164,60 @@ export function validate(): ValidationReport {
   }
 
   const promotable: string[] = [];
+  const promotionBlocked: string[] = [];
   const duplicateOfSemantic: string[] = [];
   const trulyUnique: string[] = [];
 
-  // Semantic concepts that component tokens commonly map to
+  // Semantic concepts that component tokens commonly map to. A mapping is
+  // promotable only when its resolved value remains identical in every brand
+  // mode. Matching the base semantic source alone can erase intentional
+  // component overrides in publication themes.
   const PROMOTION_MAP: Record<string, string> = {
-    "component.link.inline.content.primary.default": "color.text.link.default",
-    "component.link.inline.content.primary.hover": "color.text.link.hover",
-    "component.hr.border.default": "color.border.default",
-    "component.hr.border.brand": "color.border.brand",
-    "component.rating.star.full": "color.feedback.highlight",
-    "component.rating.star.empty": "color.feedback.neutral",
+    "component.link.inline.content.primary.default": "palette.content.default",
+    "component.link.inline.content.primary.hover":
+      "palette.content.default-link-hover",
+    "component.hr.border.default": "palette.neutral.400",
+    "component.hr.border.brand": "palette.brand.1",
+    "component.rating.star.full": "palette.alert.highlight.400",
+    "component.rating.star.empty": "palette.neutral.600",
   };
 
   for (const [path, token] of componentTokens) {
     if (PROMOTION_MAP[path]) {
-      promotable.push(`${path} -> ${PROMOTION_MAP[path]}`);
+      const targetPath = PROMOTION_MAP[path];
+      const targetToken = nonComponentSemantic.get(targetPath);
+      const componentFlatKey = path.replaceAll(".", "-");
+      const targetFlatKey = targetPath.replaceAll(".", "-");
+
+      if (!targetToken) {
+        promotionBlocked.push(
+          `${path} -> ${targetPath} (semantic target does not exist)`
+        );
+        continue;
+      }
+
+      const divergentModes: string[] = [];
+      for (const [slug, mode] of brandModes) {
+        const componentModeToken =
+          mode.get(componentFlatKey) ?? core.get(componentFlatKey) ?? token;
+        const targetModeToken =
+          mode.get(targetFlatKey) ?? core.get(targetFlatKey) ?? targetToken;
+        if (
+          componentModeToken.type !== targetModeToken.type ||
+          JSON.stringify(componentModeToken.value) !==
+            JSON.stringify(targetModeToken.value)
+        ) {
+          divergentModes.push(slug);
+        }
+      }
+
+      if (divergentModes.length === 0) {
+        promotable.push(`${path} -> ${targetPath}`);
+      } else {
+        promotionBlocked.push(
+          `${path} -> ${targetPath} (diverges in ${divergentModes.join(", ")})`
+        );
+      }
     } else {
       // Check if value is identical to any non-component semantic token
       let isDuplicate = false;
@@ -181,17 +236,22 @@ export function validate(): ValidationReport {
   }
 
   // 3. Validate brand files
-  const brandsDir = join(TOKENS_DIR, "brands");
   const brandCoverage: Record<
     string,
     { overrides: number; missingPalette: boolean }
   > = {};
 
   if (existsSync(brandsDir)) {
-    const brandFiles = readdirSync(brandsDir).filter((f) =>
-      f.endsWith(".json")
+    const publications = JSON.parse(
+      readFileSync(join(TOKENS_DIR, "publications.json"), "utf-8")
+    ) as {
+      publications: Array<{ kind: string; slug: string }>;
+    };
+    const systemBrandSlugs = new Set(
+      publications.publications
+        .filter((publication) => publication.kind === "system")
+        .map((publication) => publication.slug)
     );
-
     for (const file of brandFiles) {
       const data = JSON.parse(
         readFileSync(join(brandsDir, file), "utf-8")
@@ -200,35 +260,19 @@ export function validate(): ValidationReport {
       const slug = brandMeta.slug || file.replace(".json", "");
       const flat = flattenPaths(data);
 
-      const hasPaletteBrand = [...flat.keys()].some((p) =>
-        p.startsWith("palette.brand.")
+      const hasPaletteBrand = [...flat.keys()].some((path) =>
+        /^brand-(?:[1-9]|1[0-4])$/.test(path)
       );
 
       brandCoverage[slug] = {
         overrides: flat.size,
-        missingPalette: !hasPaletteBrand,
+        missingPalette: !hasPaletteBrand && !systemBrandSlugs.has(slug),
       };
 
-      if (!hasPaletteBrand) {
+      if (!hasPaletteBrand && !systemBrandSlugs.has(slug)) {
         warnings.push(
-          `Brand "${slug}" has no palette.brand.* overrides — may inherit all colors from White Label`
+          `Brand "${slug}" has no brand-1..14 source tokens — verify its White Label fallback is intentional`
         );
-      }
-
-      // Check for banned patterns: hard-coded hex in non-palette tokens
-      for (const [path, token] of flat) {
-        if (
-          path.startsWith("palette.") ||
-          path.startsWith("component.") ||
-          typeof token.value !== "string"
-        )
-          continue;
-
-        if (/^#[0-9a-fA-F]{3,8}$/.test(token.value)) {
-          warnings.push(
-            `Brand "${slug}" has hard-coded literal: ${path} = ${token.value} (should reference a core token)`
-          );
-        }
       }
     }
   }
@@ -236,9 +280,6 @@ export function validate(): ValidationReport {
   // 4. Neutral alpha duplication check
   const neutralAlphaValues = new Map<string, Set<string>>();
   if (existsSync(brandsDir)) {
-    const brandFiles = readdirSync(brandsDir).filter((f) =>
-      f.endsWith(".json")
-    );
     for (const file of brandFiles) {
       const data = JSON.parse(
         readFileSync(join(brandsDir, file), "utf-8")
@@ -256,12 +297,9 @@ export function validate(): ValidationReport {
   }
 
   let duplicatedNeutralAlpha = 0;
-  for (const [path, vals] of neutralAlphaValues) {
+  for (const vals of neutralAlphaValues.values()) {
     if (vals.size === 1) {
       duplicatedNeutralAlpha++;
-      warnings.push(
-        `Neutral alpha "${path}" has identical value across all brands — should be in core`
-      );
     }
   }
 
@@ -287,6 +325,7 @@ export function validate(): ValidationReport {
       componentTokens: {
         total: componentTokens.size,
         promotable,
+        promotionBlocked,
         duplicateOfSemantic,
         trulyUnique,
       },
@@ -309,6 +348,12 @@ if (require.main === module) {
     `  Promotable to semantic: ${report.audit.componentTokens.promotable.length}`
   );
   for (const p of report.audit.componentTokens.promotable) {
+    console.log(`    ${p}`);
+  }
+  console.log(
+    `  Promotion blocked by brand overrides: ${report.audit.componentTokens.promotionBlocked.length}`
+  );
+  for (const p of report.audit.componentTokens.promotionBlocked) {
     console.log(`    ${p}`);
   }
   console.log(

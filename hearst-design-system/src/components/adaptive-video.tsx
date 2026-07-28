@@ -4,7 +4,7 @@ import React from "react";
 
 import { Button } from "@/components/ui/button";
 
-type AdaptiveVideoProps = Omit<React.VideoHTMLAttributes<HTMLVideoElement>, "src"> & {
+export type AdaptiveVideoProps = Omit<React.VideoHTMLAttributes<HTMLVideoElement>, "src"> & {
   src?: string;
 };
 
@@ -155,8 +155,14 @@ export const AdaptiveVideo = React.forwardRef<HTMLVideoElement, AdaptiveVideoPro
       };
     }, [autoPlay, retryKey, src]);
 
+    const unavailable = !src;
+    const showFallback = unavailable || playbackError;
+
     return (
-      <div className="relative h-full w-full bg-black">
+      <div
+        className="relative h-full w-full bg-black"
+        data-video-state={showFallback ? (unavailable ? "unavailable" : "error") : "ready"}
+      >
         <video
           {...videoProps}
           ref={assignVideoRef}
@@ -209,20 +215,29 @@ export const AdaptiveVideo = React.forwardRef<HTMLVideoElement, AdaptiveVideoPro
             }
           }}
         />
-        {playbackError ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/85 p-5 text-center text-white">
-            <p className="text-sm font-semibold">This video could not play on this device.</p>
-            <Button
-              type="button"
-              variant="outline"
-              className="min-h-11 border-white/50 bg-black/40 text-white hover:bg-white hover:text-black"
-              onClick={(event) => {
-                event.stopPropagation();
-                setRetryKey((value) => value + 1);
-              }}
-            >
-              Try again
-            </Button>
+        {showFallback ? (
+          <div
+            role={unavailable ? "status" : "alert"}
+            className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/85 p-5 text-center text-white"
+          >
+            <p className="text-sm font-semibold">
+              {unavailable
+                ? "No video source is available."
+                : "This video could not play on this device."}
+            </p>
+            {!unavailable && (
+              <Button
+                type="button"
+                variant="outline"
+                className="min-h-11 border-white/50 bg-black/40 text-white hover:bg-white hover:text-black"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setRetryKey((value) => value + 1);
+                }}
+              >
+                Try again
+              </Button>
+            )}
           </div>
         ) : null}
       </div>

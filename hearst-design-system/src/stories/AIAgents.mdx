@@ -1,258 +1,427 @@
 import { Meta } from "@storybook/blocks";
+import {
+  BookOpenText,
+  CheckCircle2,
+  FolderPlus,
+  ImageIcon,
+  Settings,
+  Shield,
+  Sparkles,
+  Wrench,
+} from "@/components/ui/icons";
 
-<Meta title="AI Agents" />
+<Meta title="Hearst Plus/Delivery/AI Workflows" />
 
-export const AgentCard = ({ icon, name, scope, triggers }) => (
-  <div style={{ border: '1px solid #e2e8f0', borderRadius: '12px', padding: '24px', background: '#fafbfc', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-      <span style={{ fontSize: '24px', width: '40px', height: '40px', borderRadius: '10px', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{icon}</span>
-      <h3 style={{ margin: 0, fontSize: '16px' }}>{name}</h3>
+export const Stat = ({ label, value }) => (
+  <div
+    style={{
+      minWidth: 0,
+      padding: "16px",
+      border: "1px solid #d6d3d1",
+      background: "#ffffff",
+    }}
+  >
+    <div
+      style={{
+        marginBottom: "5px",
+        color: "#57534e",
+        fontSize: "11px",
+        fontWeight: 700,
+        letterSpacing: "0.08em",
+        textTransform: "uppercase",
+      }}
+    >
+      {label}
     </div>
-    <p style={{ margin: 0, fontSize: '13px', color: '#475569', lineHeight: '1.6' }}>{scope}</p>
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-      {triggers.map((t, i) => (
-        <span key={i} style={{ padding: '3px 10px', background: '#e2e8f0', borderRadius: '6px', fontSize: '11px', color: '#334155', fontWeight: 500 }}>{t}</span>
+    <div style={{ color: "#111111", fontSize: "16px", fontWeight: 700 }}>
+      {value}
+    </div>
+  </div>
+);
+
+export const SkillRow = ({ icon: Icon, name, description, path, scope }) => (
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "44px minmax(0, 1fr)",
+      gap: "16px",
+      padding: "20px 0",
+      borderTop: "1px solid #d6d3d1",
+    }}
+  >
+    <div
+      aria-hidden="true"
+      style={{
+        display: "flex",
+        width: "44px",
+        height: "44px",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "#f2f2ef",
+        color: "#111111",
+      }}
+    >
+      <Icon size={22} />
+    </div>
+    <div style={{ minWidth: 0 }}>
+      <h3 style={{ margin: "0 0 6px", fontSize: "17px" }}>{name}</h3>
+      <p
+        style={{
+          maxWidth: "68ch",
+          margin: "0 0 10px",
+          color: "#44403c",
+          fontSize: "14px",
+          lineHeight: 1.65,
+        }}
+      >
+        {description}
+      </p>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "8px",
+          alignItems: "center",
+          fontSize: "12px",
+        }}
+      >
+        <span
+          style={{
+            maxWidth: "100%",
+            overflowWrap: "anywhere",
+            whiteSpace: "normal",
+            wordBreak: "break-all",
+            padding: "3px 7px",
+            background: "#f2f2ef",
+            color: "#1c1917",
+            fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+          }}
+        >
+          {path}
+        </span>
+        <span style={{ color: "#57534e" }}>{scope}</span>
+      </div>
+    </div>
+  </div>
+);
+
+# AI-assisted workflows
+
+This repository does **not** define seven autonomous Hearst Design System agents.
+It currently defines project-wide instructions, two reusable project skills, and
+two narrow helper-agent configurations. Token work, external-tool payload
+generation, implementation, Storybook, QA, and release verification are workflow
+areas performed by the active contributor; they are not separately installed
+agents.
+
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+    gap: "8px",
+    margin: "24px 0 36px",
+  }}
+>
+  <Stat label="Project skills" value="2" />
+  <Stat label="Internal helper agents" value="2" />
+  <Stat label="Project instructions" value="AGENTS.md" />
+</div>
+
+> **Source boundary:** This page documents files committed to this repository.
+> Tools and skills installed in an individual IDE or Codex session can change
+> independently and are not counted as project capabilities.
+
+---
+
+## What is actually configured
+
+<div style={{ maxWidth: "100%", overflowX: "auto", margin: "20px 0 36px" }}>
+  <table
+    style={{
+      width: "100%",
+      minWidth: "720px",
+      borderCollapse: "collapse",
+      fontSize: "14px",
+    }}
+  >
+    <thead>
+      <tr style={{ borderBottom: "2px solid #a8a29e", textAlign: "left" }}>
+        <th style={{ padding: "10px 12px" }}>Layer</th>
+        <th style={{ padding: "10px 12px" }}>Current implementation</th>
+        <th style={{ padding: "10px 12px" }}>Source of truth</th>
+        <th style={{ padding: "10px 12px" }}>Count</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style={{ borderBottom: "1px solid #e7e5e4" }}>
+        <th style={{ padding: "12px", textAlign: "left", verticalAlign: "top" }}>
+          Project instructions
+        </th>
+        <td style={{ padding: "12px", verticalAlign: "top" }}>
+          Required reading order, rule ownership, and guardrails
+        </td>
+        <td style={{ padding: "12px", verticalAlign: "top" }}>
+          <code>AGENTS.md</code>
+        </td>
+        <td style={{ padding: "12px", verticalAlign: "top" }}>1</td>
+      </tr>
+      <tr style={{ borderBottom: "1px solid #e7e5e4" }}>
+        <th style={{ padding: "12px", textAlign: "left", verticalAlign: "top" }}>
+          Reusable skills
+        </th>
+        <td style={{ padding: "12px", verticalAlign: "top" }}>
+          Task-specific instructions selected when a request matches
+        </td>
+        <td style={{ padding: "12px", verticalAlign: "top" }}>
+          <code>.agents/skills/*/SKILL.md</code>
+        </td>
+        <td style={{ padding: "12px", verticalAlign: "top" }}>2</td>
+      </tr>
+      <tr style={{ borderBottom: "1px solid #e7e5e4" }}>
+        <th style={{ padding: "12px", textAlign: "left", verticalAlign: "top" }}>
+          Helper agents
+        </th>
+        <td style={{ padding: "12px", verticalAlign: "top" }}>
+          Narrow executors used internally by one skill
+        </td>
+        <td style={{ padding: "12px", verticalAlign: "top" }}>
+          <code>.agents/skills/impeccable/agents/*.toml</code>
+        </td>
+        <td style={{ padding: "12px", verticalAlign: "top" }}>2</td>
+      </tr>
+      <tr style={{ borderBottom: "1px solid #e7e5e4" }}>
+        <th style={{ padding: "12px", textAlign: "left", verticalAlign: "top" }}>
+          Workflow tooling
+        </th>
+        <td style={{ padding: "12px", verticalAlign: "top" }}>
+          Token, design-tool, test, build, and deployment commands
+        </td>
+        <td style={{ padding: "12px", verticalAlign: "top" }}>
+          <code>package.json</code>, <code>scripts/</code>, <code>../netlify.toml</code>
+        </td>
+        <td style={{ padding: "12px", verticalAlign: "top" }}>Not agents</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+---
+
+## Reusable project skills
+
+<SkillRow
+  icon={Sparkles}
+  name="Impeccable"
+  description="Designs, critiques, audits, and improves frontend interfaces. It supplies the structured product-design workflow used for responsive behavior, accessibility, visual hierarchy, interaction quality, and design-system work."
+  path=".agents/skills/impeccable/SKILL.md"
+  scope="Frontend and product-design work"
+/>
+
+<SkillRow
+  icon={ImageIcon}
+  name="Brand interstitial ads"
+  description="Creates or updates full-screen Ambient Reader advertisements using verified official brand assets while preserving the shared template, accessibility behavior, focus handling, and responsive layout."
+  path=".agents/skills/brand-interstitial-ads/SKILL.md"
+  scope="Advertiser interstitial work"
+/>
+
+---
+
+## Internal helper agents
+
+These are real agent configurations, but they are implementation details of the
+Impeccable skill—not general Hearst Design System owners.
+
+<SkillRow
+  icon={ImageIcon}
+  name="Impeccable asset producer"
+  description="Produces clean reusable raster assets from an approved design reference. It preserves the selected direction and does not independently redesign the interface."
+  path=".agents/skills/impeccable/agents/impeccable_asset_producer.toml"
+  scope="Invoked only by the parent design workflow"
+/>
+
+<SkillRow
+  icon={BookOpenText}
+  name="Impeccable manual edit applier"
+  description="Applies explicitly approved live copy-edit batches to source files. It is intentionally narrow and cannot stage, commit, deploy, or broaden the requested edit."
+  path=".agents/skills/impeccable/agents/impeccable_manual_edit_applier.toml"
+  scope="Invoked only by the parent live-edit workflow"
+/>
+
+---
+
+## Workflow areas—not separate agents
+
+The following responsibilities are real, but their implementation is code,
+scripts, tests, or documentation. The active contributor owns the end-to-end
+result.
+
+<div style={{ maxWidth: "100%", overflowX: "auto", margin: "20px 0 36px" }}>
+  <table
+    style={{
+      width: "100%",
+      minWidth: "760px",
+      borderCollapse: "collapse",
+      fontSize: "14px",
+    }}
+  >
+    <thead>
+      <tr style={{ borderBottom: "2px solid #a8a29e", textAlign: "left" }}>
+        <th style={{ padding: "10px 12px" }}>Workflow</th>
+        <th style={{ padding: "10px 12px" }}>Evidence</th>
+        <th style={{ padding: "10px 12px" }}>Current commands</th>
+        <th style={{ padding: "10px 12px" }}>Important boundary</th>
+      </tr>
+    </thead>
+    <tbody>
+      {[
+        [
+          "Tokens",
+          "tokens/, DESIGN-SYSTEM-SPEC.md",
+          "build-tokens, tokens:check, tokens:validate",
+          "Git JSON is canonical; generated outputs are not edited directly.",
+        ],
+        [
+          "Figma payload",
+          "scripts/push-to-figma.ts",
+          "push-figma",
+          "Prints a Variables API payload. It does not perform or verify the external write.",
+        ],
+        [
+          "Pencil payload",
+          "scripts/push-to-pencil.ts",
+          "push-pencil",
+          "Prints a variables payload. The separate sync-pencil path is legacy and is not canonical.",
+        ],
+        [
+          "Frontend implementation",
+          "src/components/, src/lib/",
+          "dev, build",
+          "Must follow AGENTS.md and the canonical product/design documents.",
+        ],
+        [
+          "Storybook documentation",
+          "src/stories/, .storybook/",
+          "storybook, build-storybook, test-storybook",
+          "Stories are specifications and executable component examples.",
+        ],
+        [
+          "Quality assurance",
+          "tests/, visual baselines, Storybook play tests",
+          "quality",
+          "Includes token, unit, interaction, accessibility, and visual checks.",
+        ],
+        [
+          "Release",
+          "../netlify.toml, ../.github/workflows/hearst-design-system-quality.yml",
+          "build, build-storybook",
+          "The repository verifies builds but does not define a release command. Publication requires external evidence.",
+        ],
+      ].map(([workflow, evidence, commands, boundary]) => (
+        <tr key={workflow} style={{ borderBottom: "1px solid #e7e5e4" }}>
+          <th style={{ padding: "12px", textAlign: "left", verticalAlign: "top" }}>
+            {workflow}
+          </th>
+          <td style={{ padding: "12px", verticalAlign: "top" }}>
+            <code>{evidence}</code>
+          </td>
+          <td style={{ padding: "12px", verticalAlign: "top" }}>
+            <code>{commands}</code>
+          </td>
+          <td style={{ padding: "12px", color: "#44403c", verticalAlign: "top" }}>
+            {boundary}
+          </td>
+        </tr>
       ))}
-    </div>
-  </div>
-);
-
-export const FlowStep = ({ num, label, agent }) => (
-  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-    <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#e2e8f0', color: '#334155', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 700, flexShrink: 0 }}>{num}</span>
-    <div>
-      <div style={{ fontSize: '14px', fontWeight: 600 }}>{label}</div>
-      <div style={{ fontSize: '12px', color: '#64748b' }}>{agent}</div>
-    </div>
-  </div>
-);
-
-# AI Agents
-
-Seven specialized AI agents power the Hearst Design System workflow. Each agent has deep knowledge of its domain -- the right files, scripts, conventions, and known issues.
-
-<div style={{ display: 'flex', gap: '12px', marginBottom: '32px', flexWrap: 'wrap' }}>
-  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', background: '#f1f5f9', color: '#334155', borderRadius: '8px', fontWeight: 600, fontSize: '13px' }}>
-    7 Agents
-  </span>
-  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', background: '#f1f5f9', color: '#334155', borderRadius: '8px', fontSize: '13px' }}>
-    Stored in <code style={{ background: '#e2e8f0', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>.cursor/skills/</code>
-  </span>
-  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', background: '#f1f5f9', color: '#334155', borderRadius: '8px', fontSize: '13px' }}>
-    Loaded by the configured AI-enabled IDE
-  </span>
-</div>
-
----
-
-## The Agents
-
-<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '16px', marginBottom: '40px' }}>
-  <AgentCard
-    icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#334155" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></svg>}
-    name="Token Architect"
-    scope="Manages the tokens/ directory -- the single source of truth. Edits core, semantic, and brand JSON files. Runs build-tokens to generate brands.ts and tokens.css. Also guides designers making direct token value edits in an IDE (branch workflow, validation, PR)."
-    triggers={["edit tokens", "add brand", "change colors", "change fonts", "build-tokens", "designer token edit"]}
-  />
-  <AgentCard
-    icon={<svg width="20" height="20" viewBox="0 0 38 57" fill="none"><path d="M19 28.5a9.5 9.5 0 1 1 19 0 9.5 9.5 0 0 1-19 0z" fill="#1ABCFE"/><path d="M0 47.5A9.5 9.5 0 0 1 9.5 38H19v9.5a9.5 9.5 0 1 1-19 0z" fill="#0ACF83"/><path d="M19 0v19h9.5a9.5 9.5 0 1 0 0-19H19z" fill="#FF7262"/><path d="M0 9.5A9.5 9.5 0 0 0 9.5 19H19V0H9.5A9.5 9.5 0 0 0 0 9.5z" fill="#F24E1E"/><path d="M0 28.5A9.5 9.5 0 0 0 9.5 38H19V19H9.5A9.5 9.5 0 0 0 0 28.5z" fill="#A259FF"/></svg>}
-    name="Figma Sync"
-    scope="Pushes Git tokens to Figma variables. Manages the Hearst Design System collection with 29 brand modes. Handles API batching and variable scopes."
-    triggers={["push-figma", "Figma variables", "sync to Figma", "variable scopes"]}
-  />
-  <AgentCard
-    icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>}
-    name="Pencil Design"
-    scope="Manages .pen files for component handoff and documentation. Uses MCP tools to insert, update, and annotate design specs. Syncs tokens via push-pencil."
-    triggers={[".pen files", "push-pencil", "component handoff", "annotations", "Pencil variables"]}
-  />
-  <AgentCard
-    icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#334155" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m7 8-4 4 4 4"/><path d="m17 8 4 4-4 4"/><path d="m14 4-4 16"/></svg>}
-    name="Frontend Component"
-    scope="Builds React components using Next.js 16, Tailwind 4, and Shadcn. Consumes tokens via CSS variables and Tailwind utilities. Ensures brand theming works across all 29 brands."
-    triggers={["build component", "fix layout", "fix styling", "implement design", "React", "Tailwind"]}
-  />
-  <AgentCard
-    icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#334155" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/></svg>}
-    name="Storybook Docs"
-    scope="Creates stories and MDX documentation pages. Configures decorators, Next.js mocks, and brand theming. Manages the Storybook sidebar structure and story sort order."
-    triggers={["add story", "Storybook", "MDX", "document component", "story configuration"]}
-  />
-  <AgentCard
-    icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#334155" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>}
-    name="DevOps / Deploy"
-    scope="Deploys to Netlify: the Next.js app and the Token Dashboard (Vite SPA). Storybook is local-only (npm run storybook). Manages Git operations and the build pipeline."
-    triggers={["deploy", "Netlify", "build", "Git commit", "CI/CD", "fix build"]}
-  />
-  <AgentCard
-    icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#334155" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12h.01M15 12h.01M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><circle cx="12" cy="12" r="10"/></svg>}
-    name="QA / Review"
-    scope="Verifies brand colors, fonts, and layouts across all 29 brands. Validates token consistency, checks accessibility, and audits visual regression after changes."
-    triggers={["verify brands", "check colors", "check fonts", "accessibility", "visual regression"]}
-  />
-</div>
-
----
-
-## How They Work Together
-
-A typical workflow touches multiple agents in sequence. Here is the flow for a common task -- updating a brand's primary color:
-
-<div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '40px', maxWidth: '600px' }}>
-  <FlowStep num="1" label="Edit brand-1 value in tokens/brands/{slug}.json" agent="Token Architect" />
-  <div style={{ display: 'flex', justifyContent: 'center' }}><span style={{ color: '#94a3b8', fontSize: '18px' }}>|</span></div>
-  <FlowStep num="2" label="Run npm run build-tokens" agent="Token Architect" />
-  <div style={{ display: 'flex', justifyContent: 'center' }}><span style={{ color: '#94a3b8', fontSize: '18px' }}>|</span></div>
-  <FlowStep num="3" label="Build and verify the React component" agent="Frontend Component" />
-  <div style={{ display: 'flex', justifyContent: 'center' }}><span style={{ color: '#94a3b8', fontSize: '18px' }}>|</span></div>
-  <FlowStep num="4" label="Add or update a Storybook story" agent="Storybook Docs" />
-  <div style={{ display: 'flex', justifyContent: 'center' }}><span style={{ color: '#94a3b8', fontSize: '18px' }}>|</span></div>
-  <FlowStep num="5" label="Verify rendering across 3+ brands" agent="QA / Review" />
-  <div style={{ display: 'flex', justifyContent: 'center' }}><span style={{ color: '#94a3b8', fontSize: '18px' }}>|</span></div>
-  <FlowStep num="6" label="Commit, push, deploy to Netlify" agent="DevOps / Deploy" />
-  <div style={{ display: 'flex', justifyContent: 'center' }}><span style={{ color: '#94a3b8', fontSize: '18px' }}>|</span></div>
-  <FlowStep num="7" label="Sync tokens to Figma and Pencil" agent="Figma Sync + Pencil Design" />
-</div>
-
----
-
-## Agent Scope Map
-
-Each agent owns specific files and scripts. This prevents conflicts and ensures the right knowledge is applied.
-
-<div style={{ overflowX: 'auto', margin: '24px 0' }}>
-  <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
-    <thead>
-      <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
-        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Agent</th>
-        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Files</th>
-        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Scripts</th>
-        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Key Knowledge</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Token Architect</strong></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'tokens/**/*.json'}</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>build-tokens</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens:validate</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens:check</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>3-layer architecture, naming conventions, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>$brand-1</code> references, designer branch workflow</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Figma Sync</strong></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>scripts/push-to-figma.ts</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>scripts/push-figma-batches.ts</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>push-figma</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Figma REST API, variable scopes, 29 brand modes, payload batching</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Pencil Design</strong></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'*.pen'}</code> files</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>push-pencil</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>sync-pencil</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>MCP tools, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>$variable</code> syntax, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>batch_design</code> operations</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Frontend Component</strong></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'src/components/**'}</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'src/lib/**'}</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>dev</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>build</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>ThemeProvider, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>useTheme()</code>, CSS variables, Tailwind utilities</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>Storybook Docs</strong></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'src/stories/**'}</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>{'.storybook/**'}</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>storybook</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>build-storybook</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>ThemeDecorator, Next.js mocks, MDX, story sort order</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>DevOps / Deploy</strong></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>netlify.toml</code>, <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>token-dashboard/</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>build</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Netlify deploy (Next.js app only; Storybook is not hosted), <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>@netlify/plugin-nextjs</code></td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}><strong>QA / Review</strong></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>All components, all brands</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}><code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#334155' }}>tokens:validate</code></td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Brand colors, font overrides, accessibility, visual regression</td>
-      </tr>
     </tbody>
   </table>
 </div>
 
 ---
 
-## Skill File Structure
+## How the pieces work together
 
-Each agent is defined as an IDE skill in the project:
-
-```
-.cursor/skills/
-  hearst-token-architect/SKILL.md      (67 lines)
-  hearst-figma-sync/SKILL.md           (77 lines)
-  hearst-pencil-design/SKILL.md        (90 lines)
-  hearst-frontend-component/SKILL.md   (81 lines)
-  hearst-storybook-docs/SKILL.md       (100 lines)
-  hearst-devops-deploy/SKILL.md        (86 lines)
-  hearst-qa-review/SKILL.md            (113 lines)
-```
-
-Skills are **loaded by compatible IDE tooling** based on their `description` field. When you ask a question or request a task, the matching agent's knowledge is loaded into context.
-
-### What Each Skill Contains
-
-- **Frontmatter** -- `name` and `description` (triggers auto-discovery)
-- **File paths** -- Exact files the agent owns and operates on
-- **Scripts** -- npm commands and their purpose
-- **Conventions** -- Naming rules, patterns, known issues
-- **Rules** -- Guardrails to prevent mistakes (e.g. "never edit generated files")
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+    gap: "1px",
+    margin: "20px 0 36px",
+    padding: "1px",
+    background: "#d6d3d1",
+  }}
+>
+  {[
+    [BookOpenText, "1. Read the rules", "AGENTS.md routes work to the canonical product, design, brand, and application documents."],
+    [Sparkles, "2. Select a skill", "A matching project or environment skill supplies task-specific instructions when one exists."],
+    [Wrench, "3. Perform the workflow", "The active contributor uses the relevant components, scripts, integrations, and tests."],
+    [CheckCircle2, "4. Verify the result", "Evidence comes from the current checkout, focused checks, responsive browser review, and the quality gate."],
+  ].map(([Icon, title, text]) => (
+    <div key={title} style={{ minWidth: 0, padding: "20px", background: "#ffffff" }}>
+      <Icon size={22} aria-hidden="true" />
+      <h3 style={{ margin: "14px 0 7px", fontSize: "16px" }}>{title}</h3>
+      <p style={{ margin: 0, color: "#44403c", fontSize: "13px", lineHeight: 1.65 }}>
+        {text}
+      </p>
+    </div>
+  ))}
+</div>
 
 ---
 
-## When to Use Which Agent
+## Production and tooling boundaries
 
-<div style={{ overflowX: 'auto', margin: '24px 0' }}>
-  <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
-    <thead>
-      <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
-        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Task</th>
-        <th style={{ padding: '10px 16px', fontWeight: 600 }}>Agent</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>&quot;Change Cosmopolitan&apos;s primary color&quot;</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Token Architect (designer or developer)</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>&quot;Push tokens to Figma&quot;</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Figma Sync</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>&quot;Update the homepage spec in Pencil&quot;</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Pencil Design</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>&quot;Build a newsletter component&quot;</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Frontend Component</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>&quot;Add a story for the Button component&quot;</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Storybook Docs</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>&quot;Deploy to production&quot;</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>DevOps / Deploy</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>&quot;Check if all brands render correctly&quot;</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>QA / Review</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>&quot;Add a new brand to the system&quot;</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>Token Architect + Figma Sync + Pencil Design</td>
-      </tr>
-      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#334155' }}>&quot;End-to-end: design to production&quot;</td>
-        <td style={{ padding: '10px 16px', fontSize: '13px', color: '#64748b' }}>All agents in sequence</td>
-      </tr>
-    </tbody>
-  </table>
+<div style={{ display: "grid", gap: "12px", margin: "20px 0 36px" }}>
+  {[
+    [
+      Shield,
+      "Repository truth",
+      "Only committed instruction, skill, and agent-configuration files are documented as project capabilities. An individual contributor's installed plugins or IDE features are environment-specific.",
+    ],
+    [
+      Settings,
+      "External integrations",
+      "Figma and Pencil commands in package.json generate local payloads without credentials. An authorized destination write requires separate tooling, access, and destination-side verification.",
+    ],
+    [
+      FolderPlus,
+      "Storybook delivery",
+      "Storybook runs locally during development and is also built into the production Next.js output. The published route is /storybook/.",
+    ],
+  ].map(([Icon, title, text]) => (
+    <div
+      key={title}
+      style={{
+        display: "grid",
+        gridTemplateColumns: "32px minmax(0, 1fr)",
+        gap: "12px",
+        padding: "16px",
+        border: "1px solid #d6d3d1",
+        background: "#f2f2ef",
+      }}
+    >
+      <Icon size={20} aria-hidden="true" />
+      <div>
+        <h3 style={{ margin: "0 0 5px", fontSize: "15px" }}>{title}</h3>
+        <p style={{ maxWidth: "72ch", margin: 0, color: "#44403c", fontSize: "13px", lineHeight: 1.65 }}>
+          {text}
+        </p>
+      </div>
+    </div>
+  ))}
 </div>
+
+---
+
+## Adding a project capability
+
+1. Confirm the responsibility cannot be covered by `AGENTS.md`, an existing
+   skill, or an existing script.
+2. Add a narrowly scoped `.agents/skills/{name}/SKILL.md` with clear trigger
+   language, inputs, guardrails, verification, and output expectations.
+3. Add `.agents/skills/{name}/agents/openai.yaml` only when the skill needs
+   discoverable interface metadata.
+4. Add a helper-agent configuration only for a bounded task that can be safely
+   delegated from the parent workflow.
+5. Update this page from the committed files. Do not document an agent or skill
+   before its configuration exists.

@@ -30,3 +30,51 @@
 .sbdocs-content :where(aside, blockquote):not(.docs-story *) {
   border-color: #c9c9c4 !important;
 }
+
+/* Documentation must remain usable at the same phone widths as the product.
+ * Keep wide reference material locally scrollable and let long paths or token
+ * names wrap instead of widening the entire Storybook page. */
+.sbdocs-content {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.sbdocs-content :where(pre, table):not(.docs-story *) {
+  display: block;
+  max-width: 100%;
+  min-width: 0 !important;
+  overflow-x: auto;
+}
+
+.sbdocs-content
+  :where(p, li):not(.docs-story *) {
+  max-width: 100%;
+  overflow-wrap: anywhere !important;
+  word-break: break-word;
+}
+
+.sbdocs-content code:not(pre code):not(.docs-story *) {
+  max-width: 100%;
+  overflow-wrap: anywhere !important;
+  word-break: break-word;
+  white-space: normal !important;
+}
+
+/* The onboarding journey uses inline styles so it can carry its theme tokens
+ * into MDX. These classes provide its missing narrow-screen contract. */
+@media (max-width: 767px) {
+  .hp-onboarding-shell {
+    padding: 16px !important;
+  }
+
+  .hp-onboarding-intro,
+  .hp-onboarding-step {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .hp-onboarding-headline {
+    font-size: clamp(2rem, 10vw, 2.625rem) !important;
+    overflow-wrap: anywhere;
+  }
+}

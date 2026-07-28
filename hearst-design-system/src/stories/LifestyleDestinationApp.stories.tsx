@@ -1,98 +1,89 @@
-import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
+import type { Meta, StoryObj } from "@storybook/react";
+import { expect, within } from "@storybook/test";
+import { HomePageTemplate } from "@/components/hearst-plus";
+import { ThemeProvider } from "@/components/theme-provider";
 import {
-  LifestyleDestinationApp,
-  type LifestyleDestinationProps,
-} from "@/components/lifestyle-destination-app";
+  hearstPlusStoryData,
+  hearstPlusVideoStoryData,
+} from "./hearst-plus-story-data";
 
-const meta: Meta<LifestyleDestinationProps> = {
-  title: "Apps/Lifestyle Destination",
-  component: LifestyleDestinationApp,
-  args: {
-    readerMode: "morning",
-    topicFocus: "For You",
-    showPersonalization: true,
-  },
-  argTypes: {
-    readerMode: {
-      control: { type: "inline-radio" },
-      options: ["morning", "weekend", "shopping"],
-      description: "Preset reader behavior profile for the mock ranking model.",
-    },
-    topicFocus: {
-      control: { type: "select" },
-      options: [
-        "For You",
-        "Dinner",
-        "Home",
-        "Wellness",
-        "Style",
-        "Shopping",
-        "Family",
-        "Entertainment",
-        "Trending",
-      ],
-      description: "Initial topic chip used to bias the deterministic prototype ranking.",
-    },
-    showPersonalization: {
-      control: "boolean",
-      description: "Show or hide the visible recommendation explanations on story cards.",
-    },
-  },
+function LifestyleDestinationStory({ initialFilter }: { initialFilter?: string }) {
+  return (
+    <ThemeProvider defaultBrandSlug="hearst-lifestyle" persistColorMode={false}>
+      <HomePageTemplate
+        initialFilter={initialFilter}
+        readerReturnHref="/hearst-lifestyle/"
+        staticDestinationData={hearstPlusStoryData}
+        videoFeedData={hearstPlusVideoStoryData.lifestyle}
+      />
+    </ThemeProvider>
+  );
+}
+
+const meta = {
+  id: "apps-lifestyle-destination",
+  title: "Hearst Plus/Product/Lifestyle Destination",
+  component: LifestyleDestinationStory,
   parameters: {
     layout: "fullscreen",
+    controls: { disable: true },
     docs: {
       description: {
         component:
-          "Storybook-first prototype for a personalized Hearst lifestyle destination. It aggregates Cosmopolitan, Country Living, Delish, Good Housekeeping, House Beautiful, The Pioneer Woman, Prevention, Redbook, Seventeen, and Woman's Day into an editorial feed with visible recommendation reasons and local interaction state.",
+          "The production `HomePageTemplate` composition used by `/hearst-lifestyle/`, rendered with the generated production-aligned destination fixture. The production Videos destination remains present using the labeled deterministic Storybook clip. The former parallel lifestyle prototype and mock ranking controls were removed so this catalog has one production source.",
       },
     },
   },
   globals: {
     brand: "hearst-lifestyle",
   },
-};
+} satisfies Meta<typeof LifestyleDestinationStory>;
 
 export default meta;
-type Story = StoryObj<LifestyleDestinationProps>;
+type Story = StoryObj<typeof meta>;
 
 export const DailyHome: Story = {
-  name: "Daily Home",
-  render: (args) => <LifestyleDestinationApp {...args} />,
-};
+  name: "Home",
+  render: () => <LifestyleDestinationStory />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
 
-export const DestinationHomepagePlan: Story = {
-  name: "Destination Homepage Plan",
-  args: {
-    readerMode: "morning",
-    topicFocus: "For You",
-    showPersonalization: true,
+    const brandFilterHeadings = await canvas.findAllByText("Filter Brands");
+    const brandFilterDescriptions = await canvas.findAllByText(
+      "All brands are included in the river.",
+    );
+
+    await expect(brandFilterHeadings.length).toBeGreaterThan(0);
+    await expect(brandFilterDescriptions.length).toBeGreaterThan(0);
+    await expect(
+      canvas.queryByText("Global Story Inventory"),
+    ).not.toBeInTheDocument();
   },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Canonical plan prototype for the Lifestyle destination homepage: brand-neutral product shell, Phase 1 lifestyle sources, ranked hero stack, personalized feed, right rail, and visible recommendation reasons.",
-      },
-    },
-  },
-  render: (args) => <LifestyleDestinationApp {...args} />,
 };
 
 export const WeekendDiscovery: Story = {
-  name: "Weekend Discovery",
-  args: {
-    readerMode: "weekend",
-    topicFocus: "Home",
-  },
-  render: (args) => <LifestyleDestinationApp {...args} />,
+  name: "Home filter",
+  render: () => <LifestyleDestinationStory initialFilter="Home" />,
 };
 
 export const ShoppingMode: Story = {
-  name: "Shopping Mode",
-  args: {
-    readerMode: "shopping",
-    topicFocus: "Shopping",
+  name: "Shopping filter",
+  render: () => <LifestyleDestinationStory initialFilter="Shopping" />,
+};
+
+export const Mobile: Story = {
+  name: "Responsive: Mobile",
+  render: () => <LifestyleDestinationStory />,
+  parameters: {
+    viewport: { defaultViewport: "mobile1" },
   },
-  render: (args) => <LifestyleDestinationApp {...args} />,
+};
+
+export const Tablet: Story = {
+  name: "Responsive: Tablet",
+  render: () => <LifestyleDestinationStory />,
+  parameters: {
+    viewport: { defaultViewport: "tablet" },
+  },
 };

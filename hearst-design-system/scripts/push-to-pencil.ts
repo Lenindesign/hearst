@@ -1,17 +1,18 @@
 /**
- * Push Git Tokens → Pencil
+ * Generate Git Tokens → Pencil variables payload
  *
- * Reads the canonical token JSON files in tokens/ and writes them
- * to the Pencil .pen file via MCP set_variables.
+ * Reads the canonical token JSON files in tokens/ and prints a
+ * Pencil-compatible variables payload. This script does not write a .pen file
+ * or invoke an external tool.
  *
- * This keeps Pencil in sync with the git source of truth.
- * Run this after modifying token JSON files.
+ * This prepares a payload from the Git source of truth.
+ * Run this after an approved token change, then perform and verify the
+ * destination write separately.
  *
  * Usage: npm run push-pencil
  *
- * NOTE: This script outputs the variable payload to stdout as JSON.
- * The actual MCP call must be done by an LLM agent using set_variables.
- * This script prepares the data; the agent executes the push.
+ * An authorized Pencil tool call and destination-side verification are still
+ * required after generating the payload.
  */
 
 import * as fs from "fs";
@@ -123,8 +124,10 @@ function main() {
   console.error(`Prepared ${globalCount} global + ${themedCount} themed = ${globalCount + themedCount} variables`);
   console.error(`For ${brandFiles.length} brands`);
   console.error("");
-  console.error("To push to Pencil, use the MCP set_variables tool with the JSON below.");
-  console.error("Or pipe this output: npx tsx scripts/push-to-pencil.ts > pencil-payload.json");
+  console.error("To write these variables to Pencil:");
+  console.error("  1. Save the payload: npx tsx scripts/push-to-pencil.ts > pencil-payload.json");
+  console.error("  2. Use an authorized Pencil variables tool call");
+  console.error("  3. Verify names, themes, values, and the destination file");
 
   // Output the payload
   console.log(JSON.stringify(variables, null, 2));

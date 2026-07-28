@@ -69,7 +69,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               {label}
             </label>
             {required && (
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-600" aria-hidden />
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--component-badge-content-warning)]" aria-hidden />
             )}
           </div>
         )}
@@ -78,7 +78,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           className={cn(
             inputFieldVariants({ size }),
             error &&
-              "border-red-700 bg-red-50 focus-within:border-red-700 dark:bg-red-950/20",
+              "border-[var(--component-input-border-color-primary-outlined-error)] bg-[var(--component-input-background-primary-outlined-error)] focus-within:border-[var(--component-input-border-color-primary-outlined-error)]",
             disabled && "opacity-50 cursor-not-allowed"
           )}
         >
@@ -112,7 +112,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         </div>
 
         {error ? (
-          <p id={errorId} role="alert" className="flex items-center gap-1 text-xs text-red-700">
+          <p id={errorId} role="alert" className="flex items-center gap-1 text-xs text-[var(--content-error)]">
             <TriangleAlert className="size-3.5 shrink-0" aria-hidden />
             {error}
           </p>

@@ -1,6 +1,6 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
+import { expect, fn, userEvent, within } from "@storybook/test";
 import {
   VerticalVideoCarousel,
   VideoFeedLeadCard,
@@ -118,6 +118,21 @@ export const FeedVideo: Story = {
       />
     </VideoFrame>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const playButton = canvas.getByRole("button", {
+      name: /^Play video:/,
+    });
+    const playTarget = playButton.getBoundingClientRect();
+
+    await expect(playTarget.width).toBeGreaterThanOrEqual(44);
+    await expect(playTarget.height).toBeGreaterThanOrEqual(44);
+    playButton.focus();
+    await userEvent.keyboard("{Enter}");
+    await expect(
+      canvas.getByLabelText(/^Play video:/),
+    ).toHaveAttribute("playsinline");
+  },
 };
 
 export const TrendingVideo: Story = {
@@ -153,5 +168,17 @@ export const DelishShorts: Story = {
         />
       </VideoFrame>
     );
+  },
+  play: async ({ canvasElement }) => {
+    handlers.onOpen.mockClear();
+    const canvas = within(canvasElement);
+    const carousel = canvas.getByTestId("vertical-video-carousel");
+    const stories = within(carousel).getAllByRole("listitem");
+    const firstStoryButton = within(stories[0]).getByRole("button");
+
+    await expect(carousel).toHaveAttribute("data-publication");
+    await expect(stories).toHaveLength(6);
+    await userEvent.click(firstStoryButton);
+    await expect(handlers.onOpen).toHaveBeenCalledTimes(1);
   },
 };

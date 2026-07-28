@@ -26,6 +26,12 @@
   force = true
 
 [[redirects]]
+  from = "/storybook/build-info.json"
+  to = "/_next/static/sb/build-info.json"
+  status = 200
+  force = true
+
+[[redirects]]
   from = "/storybook"
   to = "/_next/static/sb/index.html"
   status = 200
@@ -67,5 +73,10 @@
 
 [[headers]]
   for = "/_next/static/sb/iframe.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/_next/static/sb/build-info.json"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"

@@ -94,6 +94,20 @@ export const hearstSectionThemeSlugs: Record<HearstBrandSection, string> = {
   ew: "hearst-ew",
 };
 
+export const hearstReaderSectionLabels: Record<HearstBrandSection, string> = {
+  lifestyle: "Lifestyle",
+  autos: "Autos",
+  flux: "Fashion & Luxury",
+  ew: "Enthusiast & Wellness",
+};
+
+export const hearstReaderSections = (
+  ["lifestyle", "autos", "flux", "ew"] as const
+).map((mode) => ({
+  mode,
+  label: hearstReaderSectionLabels[mode],
+}));
+
 export function getHearstBrandSection(brandSlug: string): HearstBrandSection {
   if (sectionBrands.autos.some((brand) => brand.brandSlug === brandSlug)) return "autos";
   if (sectionBrands.flux.some((brand) => brand.brandSlug === brandSlug)) return "flux";

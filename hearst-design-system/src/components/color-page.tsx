@@ -99,7 +99,7 @@ const SEMANTIC_COLORS = [
 
 export function ColorPage() {
   const { brand } = useTheme();
-  const primary = brand.colors["1"] || Object.values(brand.colors)[0] || "#000";
+  const primary = brand.colors["1"] || Object.values(brand.colors)[0] || "black";
 
   return (
     <main className="max-w-6xl mx-auto px-6 py-10 space-y-12">

@@ -1,0 +1,138 @@
+"use client";
+
+import React from "react";
+import { BrandLogo } from "@/components/brand-logo";
+import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
+import { getHearstBrandRoute } from "@/lib/hearst-routes";
+import { BrandSourceIcon } from "./brand-source-icon";
+import type { BrandPromotionMatch } from "./brand-promotion-model";
+import {
+  getLifestyleCardKind,
+  getLifestyleKindLabel,
+  LifestyleRiverImage,
+} from "./story-presentation";
+import { getLifestyleByline } from "./story-metadata";
+
+function getEditorialFormatLabel(story: LifestyleRiverStory) {
+  const kind = getLifestyleCardKind(story);
+  if (kind === "article" || kind === "gallery" || kind === "video") return null;
+  return getLifestyleKindLabel(kind, story);
+}
+
+export type BrandPromotionRiverModuleProps = {
+  promotion?: BrandPromotionMatch | null;
+  onOpenStory: (storyId: string) => void;
+};
+
+export function BrandPromotionRiverModule({
+  promotion,
+  onOpenStory,
+}: BrandPromotionRiverModuleProps) {
+  const [featuredStory, ...secondaryStories] = promotion?.stories ?? [];
+
+  if (!promotion || !featuredStory) return null;
+
+  const headingId = `brand-spotlight-${promotion.brandSlug}`;
+  const topicSummary = new Intl.ListFormat("en", {
+    style: "long",
+    type: "conjunction",
+  }).format(promotion.topics.slice(0, 3));
+  const description = topicSummary
+    ? `Explore ${topicSummary} from ${promotion.brand}.`
+    : `Explore more from ${promotion.brand}.`;
+
+  const renderFormatLabel = (story: LifestyleRiverStory) => {
+    const formatLabel = getEditorialFormatLabel(story);
+    if (!formatLabel) return null;
+
+    return (
+      <span className="flex items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+        <BrandSourceIcon brand={story.brand} brandSlug={story.brandSlug} />
+        {formatLabel}
+      </span>
+    );
+  };
+
+  return (
+    <section
+      className="min-w-0 overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]"
+      aria-labelledby={headingId}
+    >
+      <div className="border-b border-border p-5 sm:p-6">
+        <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
+          <a
+            href={getHearstBrandRoute(promotion.brandSlug)}
+            className="flex min-h-11 shrink-0 items-center text-foreground transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+            aria-label={`Open ${promotion.brand} publication`}
+          >
+            <BrandLogo
+              slug={promotion.brandSlug}
+              color={promotion.brandSlug === "car-and-driver" ? undefined : "currentColor"}
+              className="[&_svg]:h-9 [&_svg]:w-auto [&_svg]:max-w-[180px]"
+            />
+          </a>
+          <span className="hidden h-10 w-px shrink-0 bg-border sm:block" aria-hidden />
+          <div className="min-w-0">
+            <h2
+              id={headingId}
+              aria-label={`Brand spotlight: ${promotion.brand}`}
+              className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary"
+            >
+              Brand spotlight
+            </h2>
+            <p className="mt-1 text-sm leading-6 text-muted-foreground">
+              {description}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="min-w-0 p-5 sm:p-6">
+        <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1fr)]">
+          <button
+            type="button"
+            onClick={() => onOpenStory(featuredStory.id)}
+            className="group min-w-0 self-start text-left focus:outline-none focus:ring-2 focus:ring-primary/30"
+            aria-label={`Open story: ${featuredStory.title}`}
+            data-brand-promotion-story
+          >
+            <LifestyleRiverImage story={featuredStory} className="aspect-[4/3] w-full rounded-[8px]" />
+            <span className="mt-4 block">
+              {renderFormatLabel(featuredStory)}
+              <span className="headline mt-2 block text-2xl leading-tight text-foreground">
+                {featuredStory.title}
+              </span>
+              <span className="mt-2 line-clamp-3 [display:-webkit-box] text-sm leading-6 text-muted-foreground">
+                {featuredStory.summary}
+              </span>
+            </span>
+          </button>
+
+          <div className="@container divide-y divide-border">
+            {secondaryStories.map((story) => (
+              <button
+                key={story.id}
+                type="button"
+                onClick={() => onOpenStory(story.id)}
+                className="group grid w-full grid-cols-[88px_minmax(0,1fr)] gap-4 py-4 text-left first:pt-0 last:pb-0 focus:outline-none focus:ring-2 focus:ring-primary/30 @max-[119px]:grid-cols-1 @max-[119px]:gap-3 sm:grid-cols-[112px_minmax(0,1fr)]"
+                aria-label={`Open story: ${story.title}`}
+                data-brand-promotion-story
+              >
+                <LifestyleRiverImage story={story} className="aspect-square w-full rounded-[8px]" />
+                <span className="min-w-0">
+                  {renderFormatLabel(story)}
+                  <span className="headline mt-1 block text-lg leading-tight text-foreground">
+                    {story.title}
+                  </span>
+                  <span className="mt-1 block text-xs leading-5 text-muted-foreground">
+                    {story.topic} · {getLifestyleByline(story)}
+                  </span>
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

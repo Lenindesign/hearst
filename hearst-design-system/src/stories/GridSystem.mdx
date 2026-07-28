@@ -8,8 +8,6 @@ The grid is the **spatial contract** every page in the design system obeys. It g
 
 > One number to remember: **4 / 8 / 12** — mobile / tablet / desktop columns.
 
-**IDE / AI assistants:** This page includes **[IDE agents and skills](#ide-agents-and-skills)** (repo file `.cursor/skills/hearst-grid-system/SKILL.md`) — the same rules used for automated grid work.
-
 ---
 
 ## Breakpoints
@@ -61,7 +59,7 @@ The 4 / 8 / 12 grid track. Renders a CSS grid with the responsive gutter applied
 
 | Prop | Default | Purpose |
 |------|---------|---------|
-| `columns` | `{ base: 4, md: 8, lg: 12 }` | Override the column count. Pass a single number to fix it across breakpoints. |
+| `columns` | `{ base: 4, md: 8, lg: 12 }` | Override the column count. A single integer from 1–12 applies that exact count at every breakpoint. |
 | `gap`     | `"default"`                  | `"tight"`, `"default"`, `"loose"`, or `"none"`. |
 | `alignStart` | `false`                   | Items align to the top instead of stretching. Required for overlap layouts. |
 
@@ -112,41 +110,34 @@ Components belong to one of four atomic levels. Each level has different rules a
 
 ---
 
-<h2 id="ide-agents-and-skills">IDE agents and skills</h2>
+## Contributor contract
 
-This design system ships **IDE agent skills** in the repo — structured instructions so assistants follow the same grid rules as this doc. The canonical automation brief for layout work is:
+This repository does not contain a dedicated grid agent or a
+`.cursor/skills/hearst-grid-system/SKILL.md` file. Human contributors and
+AI-assisted tools use the same committed sources:
 
-**`.cursor/skills/hearst-grid-system/SKILL.md`**
+| Source | Authority |
+|---|---|
+| `src/components/ui/grid.tsx` | Executable component API, literal Tailwind lookups, breakpoints, and responsive behavior |
+| `src/app/globals.css` | Layout tokens such as `--width-content-max`, `--breakpoint-*`, `--grid-gutter-*`, and `--grid-margin-*` |
+| `src/components/ui/grid.metadata.ts` | Component inventory metadata and API caveats |
+| `src/stories/Grid.stories.tsx` | Runnable production-backed examples and interaction evidence |
+| This page | Stakeholder-facing usage guidance |
 
-### What the skill encodes
+Tools or skills installed in an individual IDE or Codex session are
+environment-specific. They are not design-system capabilities and must not
+override the sources above.
 
-| Topic | Intent |
-|-------|--------|
-| **Triggers** | Work that mentions grid, columns, `PageContainer`, layout system, **4 / 8 / 12**, overlap, Foundation → Grid System, spatial contract, or full-width vs content width should load **`hearst-grid-system`**. |
-| **Primitives** | Prefer **`PageContainer` → `Grid` → `Col`** for templates; use **`GridOverlay`** inside a `relative` parent for debugging alignment; treat **`useBreakpoint`** as rare (docs / overlays / edge cases only). |
-| **Tailwind** | Span and start values stay **literal** in code — extend lookup tables in `grid.tsx` instead of building class names with variables (e.g. concatenating `col-span-` with a number). |
-| **Tokens** | Grid spacing aligns with **`globals.css`** (`--width-content-max`, `--breakpoint-*`, `--grid-gutter-*`, `--grid-margin-*`). No one-off pixel grids. |
-| **Scope** | Grid primitives are **not** brand-themed; brand color and type live on **children**. Component-internal layout uses local flex/grid — not every molecule gets a `PageContainer`. |
-
-### Implementation checklist (agents + humans)
+### Implementation checklist
 
 Use this before merging layout-heavy PRs:
 
 1. **`PageContainer`** — correct `width` and `bleed` for the template (article vs marketing vs full bleed).
 2. **`Grid`** — `gap` matches density (`default` vs `tight` vs `none` for mosaics).
-3. **`Col`** — literals per breakpoint; overlap uses `offsetY*` / `raised` / `rowStart` as in the overlap story.
-4. **Column math** — stay on **4 / 8 / 12** unless `resolveColumns` in `grid.tsx` is intentionally extended and covered in Storybook.
+3. **`Col`** — literals per breakpoint; overlap uses `offsetY*`, `raised`, and the applicable `rowStart*` prop as in the overlap story.
+4. **Column math** — use **4 / 8 / 12** for the page grid. Use a fixed 1–12 override only for a bounded pattern that remains usable at 320px and is covered in Storybook.
 
-### Related skills
-
-| Skill | Role |
-|-------|------|
-| **`hearst-frontend-component`** | React components, ThemeProvider, tokens on **content inside** grid cells. |
-| **`adapt`** | Viewport and breakpoint behavior beyond default grid responsiveness. |
-| **`layout`** | Composition, hierarchy, and rhythm — pairs with grid **column math**. |
-| **`hearst-storybook-docs`** | Adding or changing Grid stories and MDX in Storybook. |
-
-**Storybook entry points:** this page (**Overview**), **`src/stories/Grid.stories.tsx`**, and **`src/components/ui/grid.metadata.ts`** for component-index metadata. Local preview: `npm run storybook` → Foundation → Grid System.
+**Storybook entry points:** this page (**Overview**), the Anatomy, Placement Rules, Overlap Pattern, Responsive Behavior, and Fixed Column Override stories in **`src/stories/Grid.stories.tsx`**, and **`src/components/ui/grid.metadata.ts`** for component-index metadata. Local preview: `npm run storybook` → Foundation → Grid System.
 
 ---
 

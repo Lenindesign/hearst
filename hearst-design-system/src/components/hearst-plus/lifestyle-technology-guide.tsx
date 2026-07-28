@@ -42,7 +42,7 @@ export function LifestylePersonalizationRulesGuide() {
 
   return (
     <section
-      className="mt-4 overflow-hidden rounded-[8px] border border-border bg-white text-[#121212] [--foreground:#121212] [--muted-foreground:#5f6b7a]"
+      className="mt-4 overflow-hidden rounded-[8px] border border-border bg-card text-foreground"
       aria-labelledby="personalization-rules-title"
     >
       <div className="border-b border-border p-4 sm:p-5">
@@ -82,8 +82,8 @@ export function LifestylePersonalizationRulesGuide() {
         ))}
       </ol>
 
-      <div className="border-t border-border bg-[#f5f7fa] px-4 py-3 text-xs leading-5 text-[#445064] sm:px-5">
-        <span className="font-bold text-[#121212]">Stakeholder summary:</span>{" "}
+      <div className="border-t border-border bg-muted/50 px-4 py-3 text-xs leading-5 text-muted-foreground sm:px-5">
+        <span className="font-bold text-foreground">Stakeholder summary:</span>{" "}
         editorial quality sets the foundation; reader behavior and context improve relevance; diversity,
         exclusions, and playable-media rules protect the final experience.
       </div>
@@ -131,7 +131,7 @@ export function LifestyleTechnologyGuide() {
 
   return (
     <section
-      className="mt-4 overflow-hidden rounded-[8px] border border-border bg-white text-[#121212] [--foreground:#121212] [--muted-foreground:#5f6b7a]"
+      className="mt-4 overflow-hidden rounded-[8px] border border-border bg-card text-foreground"
       aria-labelledby="technology-guide-title"
     >
       <div className="border-b border-border p-4 sm:p-5">
@@ -165,8 +165,8 @@ export function LifestyleTechnologyGuide() {
         ))}
       </dl>
 
-      <div className="border-t border-border bg-[#f5f7fa] px-4 py-3 text-xs leading-5 text-[#445064] sm:px-5">
-        <span className="font-bold text-[#121212]">Executive note:</span>{" "}
+      <div className="border-t border-border bg-muted/50 px-4 py-3 text-xs leading-5 text-muted-foreground sm:px-5">
+        <span className="font-bold text-foreground">Executive note:</span>{" "}
         version labels above are read from the build manifest. Reader preferences and comments in this
         prototype are browser-local demo state; production identity, publishing, analytics, and consent
         systems are not represented as completed integrations.

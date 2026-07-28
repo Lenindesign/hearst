@@ -7,6 +7,7 @@ import {
   getCanonicalLiveArticleUrl,
   getLiveArticleClientCacheStats,
   loadLiveArticle,
+  primeLiveArticleClientCache,
   type LiveArticleFetcher,
 } from "./live-article-client-cache";
 
@@ -72,6 +73,24 @@ test("does not cache failed requests so a later consumer can retry", async () =>
 
   assert.equal(requestCount, 2);
   assert.equal(retriedArticle, article);
+});
+
+test("can prime a deterministic article before a reader opens", async () => {
+  const sourceUrl = "https://www.example.com/preview/?b=2&a=1";
+  const article = createArticle(sourceUrl);
+  let requestCount = 0;
+
+  primeLiveArticleClientCache(`${sourceUrl}#story`, article);
+  const resolvedArticle = await loadLiveArticle(
+    "https://www.example.com/preview/?a=1&b=2",
+    async () => {
+      requestCount += 1;
+      return createResponse(article);
+    },
+  );
+
+  assert.equal(requestCount, 0);
+  assert.equal(resolvedArticle, article);
 });
 
 test("bounds resolved article memory with least-recently-used eviction", async () => {

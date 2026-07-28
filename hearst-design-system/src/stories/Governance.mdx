@@ -1,0 +1,121 @@
+import { Meta } from "@storybook/blocks";
+import { HearstPlusDocScope, SpecTable, StorybookReleaseStatus } from "./hearst-plus-docs";
+
+<Meta title="Hearst Plus/Delivery/Governance" />
+
+# Governance and releases
+
+<HearstPlusDocScope owner="Cross-functional" source="CONTRIBUTING.md; CHANGELOG.md; DECISION_LOG.md; package.json; ../.github/workflows/hearst-design-system-quality.yml">
+  This page makes the repository's current contribution, review, deprecation, and release rules visible inside the design-system specification. It records verified policy and current automation; it does not claim an approval or publishing system that the repository does not yet enforce.
+</HearstPlusDocScope>
+
+## Authority and ownership
+
+Production React components, application routes, and canonical token files are the source of truth. Storybook organizes those shipped interfaces into reviewable specifications; a Storybook example does not make an unshipped component production-ready.
+
+<SpecTable rows={[
+  {
+    label: "Canonical tokens and publication themes",
+    value: "Design-system design and design-system engineering review",
+    evidence: <><code>tokens/</code> is canonical; generated CSS and TypeScript are outputs.</>,
+  },
+  {
+    label: "Shared components and public exports",
+    value: "Design-system engineering review",
+    evidence: <><code>src/components/hearst-plus/</code> owns the public component boundary.</>,
+  },
+  {
+    label: "Hearst+ journeys and editorial fixtures",
+    value: "Hearst+ product design and Hearst+ engineering review",
+    evidence: <><code>src/app/hearst-plus/</code>, production components, and generated story fixtures.</>,
+  },
+  {
+    label: "Accessibility behavior or exceptions",
+    value: "Accessibility review",
+    evidence: "Automated checks are a floor; changed journeys still require keyboard and screen-reader review.",
+  },
+  {
+    label: "Storybook configuration and quality gates",
+    value: "Design-system engineering review",
+    evidence: <><code>.storybook/</code>, <code>scripts/test-storybook-*.mjs</code>, and the repository workflow.</>,
+  },
+]} />
+
+> **Current enforcement gap:** these are accountable review roles, not resolved GitHub identities. The repository has no `CODEOWNERS` file. Administrators must map the roles to real teams or users before required review can be enforced automatically.
+
+## Change classification
+
+| Change | Use when | Required evidence |
+|---|---|---|
+| **Patch** | Compatible bug fix, documentation correction, or token correction | Updated Storybook specification and focused regression evidence |
+| **Minor** | Backward-compatible component, prop, token, or variant | New states and API guidance, responsive and accessibility evidence, changelog entry |
+| **Major** | Removed or renamed export, prop, behavior, story ID, or canonical token | Migration example, deprecation history, announced removal, major release |
+
+## Deprecation contract
+
+A public component, prop, story ID, or canonical token is not removed in the same release that deprecates it.
+
+1. Mark the API deprecated in its TypeScript documentation and Storybook page.
+2. Name the replacement and provide a copyable migration example.
+3. Record the change in `CHANGELOG.md`.
+4. Preserve compatibility for at least one minor release and 30 days, except for security or data-integrity emergencies.
+5. Announce the removal release in advance and remove the compatibility path only in a major release.
+
+## Contribution evidence
+
+Every shared change should identify:
+
+- the issue and reader or consumer impact;
+- affected components, tokens, routes, and publication themes;
+- the production source and the Storybook specification that represents it;
+- numbered screenshots or Storybook links for the changed states;
+- keyboard, screen-reader, zoom, touch-target, and viewport checks performed;
+- automated quality and application-build results;
+- migration and rollback notes when the public API changes.
+
+The complete state and responsive acceptance criteria live in `CONTRIBUTING.md`. Exploratory or unverified work belongs in `src/storybook-candidates`, which Storybook intentionally does not index.
+
+## Current release status
+
+<StorybookReleaseStatus />
+
+<SpecTable rows={[
+  {
+    label: "Versioned package release",
+    value: "Not established",
+    evidence: <><code>CHANGELOG.md</code> keeps current work under <strong>Unreleased</strong>; a passing Storybook build is not a production release.</>,
+  },
+  {
+    label: "Automated repository gate",
+    value: "Configured for pull requests, main-branch pushes, and manual runs",
+    evidence: <><code>../.github/workflows/hearst-design-system-quality.yml</code> installs dependencies and Chromium, runs <code>npm run quality</code>, then builds the application.</>,
+  },
+  {
+    label: "Local quality command",
+    value: "Token, unit, Storybook, accessibility, visual, responsive, and docs checks",
+    evidence: <><code>npm run quality</code> in <code>package.json</code>.</>,
+  },
+  {
+    label: "Publication confirmation",
+    value: "Manual and provider-specific",
+    evidence: "The release checklist requires verification of the published artifact and its exact source revision before completion.",
+  },
+]} />
+
+## Release checklist
+
+1. Move the relevant `Unreleased` entries into a dated version heading.
+2. Confirm patch, minor, or major impact from public API and canonical-token changes.
+3. Run `npm run quality` and `npm run build`.
+4. Attach Storybook, responsive, accessibility, and visual evidence to the release review.
+5. Obtain the accountable reviews defined above.
+6. Verify the published artifact and its exact source revision before declaring the release complete.
+7. Run `STORYBOOK_URL=https://hearst-design-system.netlify.app/storybook/ EXPECTED_REVISION=<full-commit-sha> npm run verify:storybook:deployment` and confirm that the published revision and catalog counts match the reviewed artifact.
+
+## Canonical references
+
+- `CONTRIBUTING.md` — ownership roles, acceptance criteria, public API changes, deprecation, and pull-request evidence.
+- `CHANGELOG.md` — current release-facing changes and release checklist.
+- `DECISION_LOG.md` — dated product and design-system decisions.
+- `PRODUCT.md`, `DESIGN.md`, `STYLE.md`, `BRAND_STYLES.md`, and `APP_RULES.md` — product, visual, token, brand, and interaction rules.
+- `package.json` and `../.github/workflows/hearst-design-system-quality.yml` — commands and current automated enforcement.

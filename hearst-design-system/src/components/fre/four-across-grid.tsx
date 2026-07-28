@@ -6,7 +6,6 @@ import {
   ArticleCard,
   ArticleCardImage,
   ArticleCardContent,
-  ArticleCardTitle,
   ArticleCardMeta,
   ArticleCardMetaItem,
 } from "@/components/ui/article-card";
@@ -59,6 +58,7 @@ export function FourAcrossGrid({
           size="sm"
           className="cursor-pointer ring-0 hover:ring-0 rounded-none bg-transparent"
           onClick={() => onCardClick?.(item.title)}
+          aria-label={onCardClick ? `Open story: ${item.title}` : undefined}
         >
           <div className="relative">
             <ArticleCardImage src={item.image} aspectRatio={aspectRatio} className="rounded-lg" />
