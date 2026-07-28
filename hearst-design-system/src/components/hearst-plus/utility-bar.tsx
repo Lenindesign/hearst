@@ -54,6 +54,7 @@ export function UtilityBar({
   const { brand } = useTheme();
   const { account } = useReaderAccount();
   const utilityBarRef = React.useRef<HTMLDivElement>(null);
+  const destinationNavRef = React.useRef<HTMLElement>(null);
   const [openDestinationMenu, setOpenDestinationMenu] = React.useState<HearstDestinationMode | null>(null);
   const selectedDestination = selectedBrand
     ? getHearstBrandSection(selectedBrand.slug)
@@ -100,12 +101,16 @@ export function UtilityBar({
     };
   }, [openDestinationMenu]);
 
+  React.useEffect(() => {
+    destinationNavRef.current?.scrollTo({ left: 0 });
+  }, [activeDestination]);
+
   return (
     <div
       ref={utilityBarRef}
       onMouseLeave={() => setOpenDestinationMenu(null)}
       className={cn(
-        "sticky top-0 z-50 h-11 text-[length:var(--text-token-4xs)] font-semibold sm:h-8",
+        "sticky top-0 z-50 h-8 text-[length:var(--text-token-4xs)] font-semibold sm:h-8",
         darkMode
           ? "border-b border-white/10 bg-[var(--component-navigation-utility-background-knockout)] text-[var(--component-navigation-utility-content-knockout)]"
           : "bg-primary text-primary-foreground"
@@ -134,6 +139,7 @@ export function UtilityBar({
           ))}
         </nav>
         <nav
+          ref={destinationNavRef}
           className="flex min-w-0 items-center justify-start overflow-x-auto [scrollbar-width:none] sm:justify-center [&::-webkit-scrollbar]:hidden"
           aria-label="Hearst destination sections"
         >
@@ -153,10 +159,10 @@ export function UtilityBar({
                 aria-expanded={isOpen}
                 aria-controls={isOpen ? "hearst-brand-menu" : undefined}
                 aria-current={isActive ? "page" : undefined}
-                onMouseEnter={() => setOpenDestinationMenu(section.mode)}
-                onFocus={() => setOpenDestinationMenu(section.mode)}
-                className={cn(
-                  "inline-flex min-h-11 min-w-11 cursor-pointer items-center rounded-full px-2 py-1 text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:min-h-6 sm:min-w-0",
+	                onMouseEnter={() => setOpenDestinationMenu(section.mode)}
+	                onFocus={() => setOpenDestinationMenu(section.mode)}
+	                className={cn(
+	                  "inline-flex min-h-7 min-w-7 cursor-pointer items-center justify-center rounded-full px-2 py-1 text-[11px] font-bold leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:min-h-6 sm:min-w-0 sm:text-xs",
                   isActive
                     ? darkMode
                       ? "bg-[var(--component-navigation-utility-content-accent)] text-[var(--component-navigation-utility-background-knockout)] hover:text-[var(--component-navigation-utility-background-knockout)]"
@@ -177,7 +183,7 @@ export function UtilityBar({
             variant="secondary"
             size="xs"
             className={cn(
-              "min-h-11 min-w-11 shrink-0 text-[length:var(--text-token-4xs)] font-semibold sm:min-h-6 sm:min-w-0",
+              "min-h-7 min-w-7 shrink-0 text-[length:var(--text-token-4xs)] font-semibold leading-none sm:min-h-6 sm:min-w-0",
               account
                 ? cn(
                     "gap-1.5 bg-transparent px-0.5 hover:bg-white/10 sm:pr-2",

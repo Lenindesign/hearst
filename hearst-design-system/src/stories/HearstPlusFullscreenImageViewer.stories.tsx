@@ -1,6 +1,6 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { expect, userEvent, waitFor, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, waitFor, within } from "@storybook/test";
 
 import {
   FullscreenImageViewer,
@@ -128,6 +128,10 @@ export const GalleryInteraction: Story = {
 
     await userEvent.keyboard("{ArrowRight}");
     await expect(await body.findByText("2 of 4")).toBeVisible();
+    await userEvent.click(body.getByRole("button", { name: "Next photo" }));
+    await expect(await body.findByText("3 of 4")).toBeVisible();
+    await userEvent.click(body.getByRole("button", { name: "Previous photo" }));
+    await expect(await body.findByText("2 of 4")).toBeVisible();
     await userEvent.click(body.getByRole("button", { name: "Show caption and credit" }));
     await expect(body.getByText(/^Photo:/)).toBeVisible();
 
@@ -136,6 +140,35 @@ export const GalleryInteraction: Story = {
     const reopenButton = body.getByRole("button", { name: "Open image viewer" });
     await userEvent.click(reopenButton);
     await expect(await body.findByText("1 of 4")).toBeVisible();
+    const track = body.getByTestId("fullscreen-image-track");
+    fireEvent.pointerDown(track, {
+      pointerId: 1,
+      pointerType: "touch",
+      clientX: 760,
+      clientY: 420,
+      buttons: 1,
+    });
+    fireEvent.pointerMove(track, {
+      pointerId: 1,
+      pointerType: "touch",
+      clientX: 560,
+      clientY: 430,
+      buttons: 1,
+    });
+    fireEvent.pointerUp(track, {
+      pointerId: 1,
+      pointerType: "touch",
+      clientX: 560,
+      clientY: 430,
+      buttons: 0,
+    });
+    await expect(await body.findByText("2 of 4")).toBeVisible();
+    fireEvent.wheel(track, {
+      deltaX: 180,
+      deltaY: 6,
+      deltaMode: 0,
+    });
+    await expect(await body.findByText("3 of 4")).toBeVisible();
     await userEvent.keyboard("{Escape}");
     await waitFor(() => expect(reopenButton).toHaveFocus());
   },

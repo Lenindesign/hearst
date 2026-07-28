@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-28T01:54:23.038Z",
+  "generatedAt": "2026-07-28T16:04:49.035Z",
   "totalComponents": 101,
   "byLevel": {
     "template": 20,
@@ -340,7 +340,7 @@
     ],
     "trending-rail": [
       "lifestyle-river-types",
-      "hearst-plus/story-metadata",
+      "hearst-plus/brand-source-icon",
       "hearst-plus/video-cards"
     ],
     "utility-bar": [
@@ -916,7 +916,6 @@
       "featured-story-carousel",
       "reader-action-bar",
       "story-actions",
-      "trending-rail",
       "video-cards",
       "home-page"
     ],
@@ -929,6 +928,7 @@
       "featured-story-carousel",
       "onboarding-modal",
       "story-metadata",
+      "trending-rail",
       "utility-bar",
       "vertical-video-carousel",
       "video-cards",
@@ -2379,6 +2379,7 @@
         "src/components/hearst-plus/featured-story-carousel.tsx",
         "src/components/hearst-plus/onboarding-modal.tsx",
         "src/components/hearst-plus/story-metadata.tsx",
+        "src/components/hearst-plus/trending-rail.tsx",
         "src/components/hearst-plus/utility-bar.tsx",
         "src/components/hearst-plus/vertical-video-carousel.tsx",
         "src/components/hearst-plus/video-cards.tsx",
@@ -2902,7 +2903,7 @@
         "src/stories/HearstPlusFullscreenImageViewer.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 444
+      "lineCount": 663
     },
     {
       "name": "hearst-games-index",
@@ -3292,7 +3293,6 @@
         "src/components/hearst-plus/featured-story-carousel.tsx",
         "src/components/hearst-plus/reader-action-bar.tsx",
         "src/components/hearst-plus/story-actions.tsx",
-        "src/components/hearst-plus/trending-rail.tsx",
         "src/components/hearst-plus/video-cards.tsx",
         "src/components/home-page.tsx"
       ],
@@ -3403,7 +3403,7 @@
       "level": "organism",
       "dependencies": [
         "lifestyle-river-types",
-        "hearst-plus/story-metadata",
+        "hearst-plus/brand-source-icon",
         "hearst-plus/video-cards"
       ],
       "tokens": {
@@ -3436,7 +3436,7 @@
         "src/stories/HearstPlusTrendingRails.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 112
+      "lineCount": 117
     },
     {
       "name": "utility-bar",
@@ -3484,7 +3484,7 @@
         "src/stories/HearstPlusUtilityBar.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 278
+      "lineCount": 284
     },
     {
       "name": "vertical-video-carousel",
@@ -3588,7 +3588,7 @@
         "src/stories/HearstPlusVideoCards.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 378
+      "lineCount": 374
     },
     {
       "name": "home-page",
@@ -3749,7 +3749,7 @@
         "src/stories/LifestyleDestinationApp.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 6036
+      "lineCount": 6021
     },
     {
       "name": "homepage-layouts",

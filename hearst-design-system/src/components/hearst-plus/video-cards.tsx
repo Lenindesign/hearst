@@ -16,7 +16,6 @@ import { BrandSourceIcon } from "@/components/hearst-plus/brand-source-icon";
 import {
   getLifestyleByline,
   LifestyleBrandSource,
-  LifestyleRecommendationReason,
   LiveStoryBadge,
 } from "@/components/hearst-plus/story-metadata";
 import { formatVideoDuration } from "@/components/hearst-plus/video-format";
@@ -207,7 +206,6 @@ export function VideoFeedLeadCard({
 
 export function VideoIndexCard({
   story,
-  recommendationReason,
   saved,
   commentCount,
   onOpen,
@@ -216,7 +214,6 @@ export function VideoIndexCard({
   variant = "videoIndex",
 }: {
   story: LifestyleRiverStory;
-  recommendationReason?: string;
   saved: boolean;
   commentCount: number;
   onOpen: () => void;
@@ -273,7 +270,6 @@ export function VideoIndexCard({
         >
           {story.summary}
         </p>
-        <LifestyleRecommendationReason reason={recommendationReason} />
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-3">
             <button

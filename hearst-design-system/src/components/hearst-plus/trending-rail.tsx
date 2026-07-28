@@ -2,7 +2,7 @@
 
 import React from "react";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
-import { getLifestyleByline } from "@/components/hearst-plus/story-metadata";
+import { BrandSourceIcon } from "@/components/hearst-plus/brand-source-icon";
 import { VideoRailCard } from "@/components/hearst-plus/video-cards";
 import { cn } from "@/lib/utils";
 
@@ -46,18 +46,23 @@ export function TrendingStoryRail({
               type="button"
               onClick={() => onOpenStory(story)}
               data-story-id={story.id}
-              className="group grid min-h-11 w-full grid-cols-[28px_minmax(0,1fr)] items-center gap-3 text-left text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+              className="group grid min-h-11 w-full grid-cols-[28px_minmax(0,1fr)] items-start gap-3 text-left text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
               aria-label={`Open story: ${story.title}`}
             >
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold leading-none text-primary-foreground">
+              <span className="mt-1 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold leading-none text-primary-foreground">
                 {index + 1}
               </span>
-              <span>
+              <span className="min-w-0">
                 <span className="block font-bold leading-snug group-hover:text-primary group-focus-visible:text-primary">
                   {story.title}
                 </span>
-                <span className="text-xs text-muted-foreground">
-                  {story.brand} · {story.topic} · {getLifestyleByline(story)}
+                <span className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground">
+                  <BrandSourceIcon
+                    brand={story.brand}
+                    brandSlug={story.brandSlug}
+                    className="h-3.5 w-3.5"
+                  />
+                  <span>{story.brand}</span>
                 </span>
               </span>
             </button>

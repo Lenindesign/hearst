@@ -76,7 +76,6 @@ import { BrandSourceIcon } from "./hearst-plus/brand-source-icon";
 import {
   getLifestyleByline,
   LifestyleBrandSource,
-  LifestyleRecommendationReason,
 } from "./hearst-plus/story-metadata";
 import { LifestyleStoryActions } from "./hearst-plus/story-actions";
 import {
@@ -204,7 +203,6 @@ import {
   getDestinationCategoryDocumentTitle,
   getDestinationMode,
   getLifestyleDemoStoryPool,
-  getLifestyleRecommendationReason,
   getLifestyleScore,
   getLifestyleScoreBreakdown,
   getLifestyleStrategyReason,
@@ -667,7 +665,7 @@ export function MainNav({
         size="sm"
         aria-current={publicationHref && active ? "page" : undefined}
         className={cn(
-          "min-h-11 min-w-11 whitespace-nowrap border-b-2 border-transparent px-0.5 font-normal hover:no-underline md:min-h-0 md:min-w-0 md:pb-1",
+          "min-h-8 min-w-max whitespace-nowrap border-b-2 border-transparent px-0.5 font-normal hover:no-underline md:min-h-0 md:min-w-0 md:pb-1",
           navLinkClasses,
           publicationHref && active && (
             useDarkActiveState
@@ -692,7 +690,7 @@ export function MainNav({
         size="sm"
         aria-current={active ? "page" : undefined}
         className={cn(
-          "min-h-11 min-w-11 whitespace-nowrap border-b-2 border-transparent px-0.5 font-normal hover:no-underline md:min-h-0 md:min-w-0 md:pb-1",
+          "min-h-8 min-w-max whitespace-nowrap border-b-2 border-transparent px-0.5 font-normal hover:no-underline md:min-h-0 md:min-w-0 md:pb-1",
           navLinkClasses,
           active
             ? useDarkActiveState
@@ -709,7 +707,7 @@ export function MainNav({
         type="button"
         onClick={() => onFilterChange?.(link)}
         className={cn(
-          "min-h-11 min-w-11 whitespace-nowrap border-b-2 border-transparent px-0.5 text-sm font-normal transition-colors md:min-h-0 md:min-w-0 md:pb-1",
+          "min-h-8 min-w-max whitespace-nowrap border-b-2 border-transparent px-0.5 text-sm font-normal transition-colors md:min-h-0 md:min-w-0 md:pb-1",
           active
             ? useDarkActiveState
               ? "border-[var(--component-navigation-utility-content-accent)] font-semibold text-[var(--component-navigation-utility-content-accent)]"
@@ -726,7 +724,7 @@ export function MainNav({
         variant="neutral"
         underline={false}
         size="sm"
-        className="min-h-11 min-w-11 whitespace-nowrap font-normal md:min-h-0 md:min-w-0"
+	        className="min-h-8 min-w-max whitespace-nowrap font-normal md:min-h-0 md:min-w-0"
       >
         {link}
       </LinkComponent>
@@ -1097,12 +1095,12 @@ export function MainNav({
       <PageContainer
         as="nav"
         aria-label={selectedBrand ? `${selectedBrand.name} sections` : `${brand.name} sections`}
-        className="relative flex items-center gap-3 py-2 md:justify-center"
+	        className="relative flex items-center gap-3 py-1 md:justify-center md:py-2"
       >
         <div
           ref={navScrollRef}
           data-topic-navigation-scroll
-          className="flex min-w-0 flex-1 scroll-px-4 items-center gap-6 overflow-x-auto scrollbar-hide md:flex-none md:justify-center"
+	          className="flex min-w-0 flex-1 scroll-px-4 items-center gap-6 overflow-x-auto scrollbar-hide md:flex-none md:justify-center"
         >
           {renderNavLinks()}
         </div>
@@ -1983,7 +1981,6 @@ function useGalleryPreview(story: LifestyleRiverStory, enabled: boolean) {
 export function RichPhotoGalleryCard({
   story,
   images,
-  recommendationReason,
   saved,
   commentCount,
   onOpen,
@@ -1993,7 +1990,6 @@ export function RichPhotoGalleryCard({
 }: {
   story: LifestyleRiverStory;
   images: FullscreenReaderImage[];
-  recommendationReason?: string;
   saved: boolean;
   commentCount: number;
   onOpen: () => void;
@@ -2034,7 +2030,6 @@ export function RichPhotoGalleryCard({
         <p className="mt-2 line-clamp-3 text-sm leading-6 text-muted-foreground">
           {story.summary}
         </p>
-        <LifestyleRecommendationReason reason={recommendationReason} />
       </div>
 
       <div
@@ -2084,7 +2079,6 @@ export function RichPhotoGalleryCard({
 
 export function LifestyleRiverCard({
   story,
-  recommendationReason,
   saved,
   commentCount,
   onOpen,
@@ -2094,7 +2088,6 @@ export function LifestyleRiverCard({
   featured = false,
 }: {
   story: LifestyleRiverStory;
-  recommendationReason?: string;
   saved: boolean;
   commentCount: number;
   onOpen: () => void;
@@ -2113,7 +2106,6 @@ export function LifestyleRiverCard({
       <RichPhotoGalleryCard
         story={story}
         images={galleryPreview.images}
-        recommendationReason={recommendationReason}
         saved={saved}
         commentCount={commentCount}
         onOpen={onOpen}
@@ -2175,7 +2167,6 @@ export function LifestyleRiverCard({
         )}>
           {story.summary}
         </p>
-        <LifestyleRecommendationReason reason={recommendationReason} />
         <LifestyleCardModule story={story} kind={kind} />
         <LifestyleStoryActions
           story={story}
@@ -4908,10 +4899,6 @@ function LifestyleRiverHomePage({
                       stories: visibleStories,
                     })
                   : null;
-                const recommendationReason = activeFilter === "For You"
-                  ? getLifestyleRecommendationReason(story, rankingProfile, demoState, config)
-                  : undefined;
-
                 return (
                   <React.Fragment key={story.id}>
                     {index === delishShortsRiverInsertIndex ? (
@@ -4925,7 +4912,6 @@ function LifestyleRiverHomePage({
                     {getLifestyleCardKind(story) === "video" ? (
                       <VideoIndexCard
                         story={story}
-                        recommendationReason={recommendationReason}
                         saved={profile.savedIds.includes(story.id)}
                         commentCount={getLifestyleCommentCount(story, resolvedCommentsByStoryId[story.id]?.length ?? 0)}
                         onOpen={() => openStory(story.id)}
@@ -4936,7 +4922,6 @@ function LifestyleRiverHomePage({
                     ) : (
                       <LifestyleRiverCard
                         story={story}
-                        recommendationReason={recommendationReason}
                         saved={profile.savedIds.includes(story.id)}
                         commentCount={getLifestyleCommentCount(story, resolvedCommentsByStoryId[story.id]?.length ?? 0)}
                         onOpen={() => openStory(story.id)}

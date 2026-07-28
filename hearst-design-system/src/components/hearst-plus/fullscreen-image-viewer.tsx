@@ -51,6 +51,17 @@ export interface FullscreenImageViewerProps {
   onMoreLikeThis: () => void;
 }
 
+type SwipeStartState = {
+  x: number;
+  y: number;
+  time: number;
+};
+
+type DragStartState = SwipeStartState & {
+  offsetX: number;
+  offsetY: number;
+};
+
 export function FullscreenImageViewer({
   gallery,
   saved,
@@ -69,28 +80,36 @@ export function FullscreenImageViewer({
   });
   const prefersReducedMotion = usePrefersReducedMotion();
   const dialogRef = React.useRef<HTMLDivElement | null>(null);
+  const wheelStageRef = React.useRef<HTMLDivElement | null>(null);
   const [activeIndex, setActiveIndex] = React.useState(gallery.initialIndex);
+  const [isDragging, setIsDragging] = React.useState(false);
+  const [dragOffset, setDragOffset] = React.useState(0);
   const [zoom, setZoom] = React.useState(1);
   const [offset, setOffset] = React.useState({ x: 0, y: 0 });
   const [zoomOrigin, setZoomOrigin] = React.useState("50% 50%");
   const [controlsVisible, setControlsVisible] = React.useState(true);
   const [captionOpen, setCaptionOpen] = React.useState(false);
   const [playing, setPlaying] = React.useState(false);
-  const [imageVisible, setImageVisible] = React.useState(true);
   const controlsTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-  const transitionTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const pointerPositionsRef = React.useRef(new Map<number, { x: number; y: number }>());
-  const dragStartRef = React.useRef<{
-    x: number;
-    y: number;
-    time: number;
-    offsetX: number;
-    offsetY: number;
-  } | null>(null);
+  const swipeStartRef = React.useRef<SwipeStartState | null>(null);
+  const swipeLastRef = React.useRef<{ x: number; y: number } | null>(null);
+  const dragStartRef = React.useRef<DragStartState | null>(null);
   const pinchStartRef = React.useRef<{ distance: number; zoom: number } | null>(null);
   const lastTapRef = React.useRef<{ x: number; y: number; time: number } | null>(null);
+  const wheelGestureRef = React.useRef<{ offsetX: number; lastTime: number } | null>(null);
+  const wheelResetTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const wheelCooldownUntilRef = React.useRef(0);
   const activeImage = gallery.images[activeIndex] ?? gallery.images[0];
   const hasMultipleImages = gallery.images.length > 1;
+  const adjacentPreloadSources = React.useMemo(() => {
+    if (!hasMultipleImages) return [];
+
+    return [
+      gallery.images[activeIndex - 1]?.src,
+      gallery.images[activeIndex + 1]?.src,
+    ].filter((src): src is string => Boolean(src));
+  }, [activeIndex, gallery.images, hasMultipleImages]);
   useModalIsolation(true, dialogRef);
 
   const resetTransform = React.useCallback(() => {
@@ -99,23 +118,27 @@ export function FullscreenImageViewer({
     setZoomOrigin("50% 50%");
   }, []);
 
+  const resetSwipe = React.useCallback(() => {
+    swipeStartRef.current = null;
+    swipeLastRef.current = null;
+    dragStartRef.current = null;
+    pinchStartRef.current = null;
+    wheelGestureRef.current = null;
+    if (wheelResetTimerRef.current) {
+      clearTimeout(wheelResetTimerRef.current);
+      wheelResetTimerRef.current = null;
+    }
+    setIsDragging(false);
+    setDragOffset(0);
+  }, []);
+
   const selectImage = React.useCallback((nextIndex: number) => {
     const normalizedIndex = (nextIndex + gallery.images.length) % gallery.images.length;
     if (normalizedIndex === activeIndex) return;
-    if (prefersReducedMotion) {
-      setActiveIndex(normalizedIndex);
-      resetTransform();
-      setImageVisible(true);
-      return;
-    }
-    setImageVisible(false);
-    if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
-    transitionTimerRef.current = setTimeout(() => {
-      setActiveIndex(normalizedIndex);
-      resetTransform();
-      window.requestAnimationFrame(() => setImageVisible(true));
-    }, 180);
-  }, [activeIndex, gallery.images.length, prefersReducedMotion, resetTransform]);
+    setActiveIndex(normalizedIndex);
+    resetSwipe();
+    resetTransform();
+  }, [activeIndex, gallery.images.length, resetSwipe, resetTransform]);
 
   const showControls = React.useCallback(() => {
     setControlsVisible(true);
@@ -151,7 +174,7 @@ export function FullscreenImageViewer({
   React.useEffect(() => {
     return () => {
       if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
-      if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
+      if (wheelResetTimerRef.current) clearTimeout(wheelResetTimerRef.current);
     };
   }, []);
 
@@ -176,6 +199,192 @@ export function FullscreenImageViewer({
   }, [activeIndex, hasMultipleImages, playing, prefersReducedMotion, selectImage]);
 
   React.useEffect(() => {
+    if (typeof window === "undefined" || adjacentPreloadSources.length === 0) return;
+
+    adjacentPreloadSources.forEach((src) => {
+      const preloadImage = new window.Image();
+      preloadImage.decoding = "async";
+      preloadImage.src = src;
+    });
+  }, [adjacentPreloadSources]);
+
+  const getPointerDistance = React.useCallback(() => {
+    const points = Array.from(pointerPositionsRef.current.values());
+    if (points.length < 2) return 0;
+    return Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
+  }, []);
+
+  const handlePointerDown = React.useCallback((event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.button !== 0) return;
+
+    showControls();
+    if (event.currentTarget.setPointerCapture) {
+      event.currentTarget.setPointerCapture(event.pointerId);
+    }
+    pointerPositionsRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    swipeLastRef.current = { x: event.clientX, y: event.clientY };
+
+    if (pointerPositionsRef.current.size === 1) {
+      if (zoom > 1) {
+        dragStartRef.current = {
+          x: event.clientX,
+          y: event.clientY,
+          time: event.timeStamp,
+          offsetX: offset.x,
+          offsetY: offset.y,
+        };
+      } else {
+        swipeStartRef.current = {
+          x: event.clientX,
+          y: event.clientY,
+          time: event.timeStamp,
+        };
+        setIsDragging(true);
+      }
+    } else if (pointerPositionsRef.current.size === 2) {
+      pinchStartRef.current = { distance: getPointerDistance(), zoom };
+    }
+  }, [getPointerDistance, offset.x, offset.y, showControls, zoom]);
+
+  const handlePointerMove = React.useCallback((event: React.PointerEvent<HTMLDivElement>) => {
+    if (!pointerPositionsRef.current.has(event.pointerId)) return;
+    pointerPositionsRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    swipeLastRef.current = { x: event.clientX, y: event.clientY };
+
+    if (pointerPositionsRef.current.size === 2 && pinchStartRef.current) {
+      const ratio = getPointerDistance() / Math.max(1, pinchStartRef.current.distance);
+      setClampedZoom(pinchStartRef.current.zoom * ratio);
+      return;
+    }
+
+    if (zoom > 1 && dragStartRef.current) {
+      event.preventDefault();
+      setOffset({
+        x: dragStartRef.current.offsetX + (event.clientX - dragStartRef.current.x),
+        y: dragStartRef.current.offsetY + (event.clientY - dragStartRef.current.y),
+      });
+      return;
+    }
+
+    const start = swipeStartRef.current;
+    if (!start) return;
+
+    const deltaX = event.clientX - start.x;
+    const deltaY = event.clientY - start.y;
+    if (Math.abs(deltaY) > Math.abs(deltaX) * 1.15) return;
+
+    event.preventDefault();
+    const maxOffset = event.currentTarget.clientWidth * 0.22;
+    setDragOffset(Math.max(-maxOffset, Math.min(maxOffset, deltaX)));
+  }, [getPointerDistance, setClampedZoom, zoom]);
+
+  const handlePointerUp = React.useCallback((event: React.PointerEvent<HTMLDivElement>) => {
+    const start = swipeStartRef.current;
+    const dragStart = dragStartRef.current;
+    const end = swipeLastRef.current ?? {
+      x: event.clientX,
+      y: event.clientY,
+    };
+    const origin = start ?? dragStart;
+
+    if (!origin) {
+      if (event.currentTarget.releasePointerCapture) {
+        try {
+          event.currentTarget.releasePointerCapture(event.pointerId);
+        } catch {
+          // Ignore release errors from unsupported test environments.
+        }
+      }
+      pointerPositionsRef.current.delete(event.pointerId);
+      if (pointerPositionsRef.current.size < 2) pinchStartRef.current = null;
+      if (pointerPositionsRef.current.size === 0) swipeStartRef.current = null;
+      return;
+    }
+
+    const deltaX = end.x - origin.x;
+    const deltaY = end.y - origin.y;
+    const elapsed = Math.max(event.timeStamp - origin.time, 1);
+
+    if (zoom > 1 && dragStart) {
+      const isTap = Math.hypot(deltaX, deltaY) < 12 && elapsed < 360;
+      if (isTap) {
+        const lastTap = lastTapRef.current;
+        const isDoubleTap = Boolean(
+          lastTap
+          && event.timeStamp - lastTap.time < 320
+          && Math.hypot(event.clientX - lastTap.x, event.clientY - lastTap.y) < 44,
+        );
+        if (isDoubleTap) {
+          toggleTapZoom(event.clientX, event.clientY);
+          lastTapRef.current = null;
+        } else {
+          showControls();
+          lastTapRef.current = { x: event.clientX, y: event.clientY, time: event.timeStamp };
+        }
+      }
+    } else if (start) {
+      const velocity = Math.abs(deltaX) / elapsed;
+      const threshold = Math.min(64, event.currentTarget.clientWidth * 0.14);
+      const isHorizontalSwipe =
+        Math.abs(deltaX) > Math.abs(deltaY) * 1.2 &&
+        (Math.abs(deltaX) >= threshold ||
+          (Math.abs(deltaX) >= 24 && velocity >= 0.45));
+
+      if (isHorizontalSwipe && hasMultipleImages) {
+        selectImage(activeIndex + (deltaX < 0 ? 1 : -1));
+      } else {
+        const isTap = Math.hypot(deltaX, deltaY) < 12 && elapsed < 360;
+        if (isTap) {
+          const lastTap = lastTapRef.current;
+          const isDoubleTap = Boolean(
+            lastTap
+            && event.timeStamp - lastTap.time < 320
+            && Math.hypot(event.clientX - lastTap.x, event.clientY - lastTap.y) < 44,
+          );
+          if (isDoubleTap) {
+            toggleTapZoom(event.clientX, event.clientY);
+            lastTapRef.current = null;
+          } else {
+            showControls();
+            lastTapRef.current = { x: event.clientX, y: event.clientY, time: event.timeStamp };
+          }
+        }
+      }
+      setDragOffset(0);
+      setIsDragging(false);
+    }
+
+    if (event.currentTarget.releasePointerCapture) {
+      try {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      } catch {
+        // Ignore release errors from unsupported test environments.
+      }
+    }
+    pointerPositionsRef.current.delete(event.pointerId);
+    if (pointerPositionsRef.current.size < 2) pinchStartRef.current = null;
+    if (pointerPositionsRef.current.size === 0) {
+      swipeStartRef.current = null;
+      dragStartRef.current = null;
+    }
+  }, [activeIndex, hasMultipleImages, selectImage, showControls, toggleTapZoom, zoom]);
+
+  const handlePointerCancel = React.useCallback((event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.currentTarget.releasePointerCapture) {
+      try {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      } catch {
+        // Ignore release errors from unsupported test environments.
+      }
+    }
+    pointerPositionsRef.current.delete(event.pointerId);
+    if (pointerPositionsRef.current.size < 2) pinchStartRef.current = null;
+    if (pointerPositionsRef.current.size === 0) {
+      resetSwipe();
+    }
+  }, [resetSwipe]);
+
+  React.useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
@@ -191,80 +400,69 @@ export function FullscreenImageViewer({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [activeIndex, hasMultipleImages, onClose, selectImage, setClampedZoom, zoom]);
 
-  const getPointerDistance = () => {
-    const points = Array.from(pointerPositionsRef.current.values());
-    if (points.length < 2) return 0;
-    return Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
-  };
+  const handleWheel = React.useCallback((event: WheelEvent) => {
+    const width = wheelStageRef.current?.clientWidth ?? window.innerWidth;
+    const deltaScale = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? width : 1;
+    const deltaX = event.deltaX * deltaScale;
+    const deltaY = event.deltaY * deltaScale;
+    const isHorizontalGesture = Math.abs(deltaX) > Math.abs(deltaY) * 1.2 && Math.abs(deltaX) > 4;
 
-  const handlePointerDown = (event: React.PointerEvent<HTMLImageElement>) => {
-    event.currentTarget.setPointerCapture(event.pointerId);
-    pointerPositionsRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
-    if (pointerPositionsRef.current.size === 1) {
-      dragStartRef.current = {
-        x: event.clientX,
-        y: event.clientY,
-        time: event.timeStamp,
-        offsetX: offset.x,
-        offsetY: offset.y,
-      };
-    } else if (pointerPositionsRef.current.size === 2) {
-      pinchStartRef.current = { distance: getPointerDistance(), zoom };
-    }
-  };
-
-  const handlePointerMove = (event: React.PointerEvent<HTMLImageElement>) => {
-    if (!pointerPositionsRef.current.has(event.pointerId)) return;
-    pointerPositionsRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
-    if (pointerPositionsRef.current.size === 2 && pinchStartRef.current) {
-      const ratio = getPointerDistance() / Math.max(1, pinchStartRef.current.distance);
-      setClampedZoom(pinchStartRef.current.zoom * ratio);
+    if (!isHorizontalGesture || zoom > 1 || !hasMultipleImages) {
+      event.preventDefault();
+      setClampedZoom(zoom + (event.deltaY < 0 ? 0.25 : -0.25));
       return;
     }
-    if (zoom > 1 && dragStartRef.current) {
-      setOffset({
-        x: dragStartRef.current.offsetX + event.clientX - dragStartRef.current.x,
-        y: dragStartRef.current.offsetY + event.clientY - dragStartRef.current.y,
-      });
-    }
-  };
 
-  const handlePointerUp = (event: React.PointerEvent<HTMLImageElement>) => {
-    const dragStart = dragStartRef.current;
-    if (pointerPositionsRef.current.size === 1 && zoom === 1 && dragStart && hasMultipleImages) {
-      const distanceX = event.clientX - dragStart.x;
-      const distanceY = event.clientY - dragStart.y;
-      if (Math.abs(distanceX) > 70 && Math.abs(distanceX) > Math.abs(distanceY) * 1.35) {
-        selectImage(activeIndex + (distanceX < 0 ? 1 : -1));
-      }
+    event.preventDefault();
+    showControls();
+
+    const now = performance.now();
+    if (now < wheelCooldownUntilRef.current) return;
+
+    if (!wheelGestureRef.current || now - wheelGestureRef.current.lastTime > 240) {
+      wheelGestureRef.current = { offsetX: 0, lastTime: now };
     }
-    if (pointerPositionsRef.current.size === 1 && dragStart) {
-      const distanceX = event.clientX - dragStart.x;
-      const distanceY = event.clientY - dragStart.y;
-      const isTap = Math.hypot(distanceX, distanceY) < 12 && event.timeStamp - dragStart.time < 360;
-      const lastTap = lastTapRef.current;
-      const isDoubleTap = Boolean(
-        isTap
-        && lastTap
-        && event.timeStamp - lastTap.time < 320
-        && Math.hypot(event.clientX - lastTap.x, event.clientY - lastTap.y) < 44
-      );
-      if (isDoubleTap) {
-        toggleTapZoom(event.clientX, event.clientY);
-        lastTapRef.current = null;
-      } else if (isTap) {
-        showControls();
-        lastTapRef.current = { x: event.clientX, y: event.clientY, time: event.timeStamp };
-      }
+
+    wheelGestureRef.current.offsetX += deltaX;
+    wheelGestureRef.current.lastTime = now;
+
+    const threshold = Math.min(64, width * 0.14);
+    const maxOffset = width * 0.22;
+    const visualOffset = Math.max(-maxOffset, Math.min(maxOffset, -wheelGestureRef.current.offsetX));
+    setIsDragging(true);
+    setDragOffset(visualOffset);
+
+    if (Math.abs(wheelGestureRef.current.offsetX) >= threshold) {
+      const direction = wheelGestureRef.current.offsetX > 0 ? 1 : -1;
+      wheelCooldownUntilRef.current = now + 650;
+      selectImage(activeIndex + direction);
+      return;
     }
-    pointerPositionsRef.current.delete(event.pointerId);
-    if (pointerPositionsRef.current.size < 2) pinchStartRef.current = null;
-    if (pointerPositionsRef.current.size === 0) dragStartRef.current = null;
-  };
+
+    if (wheelResetTimerRef.current) clearTimeout(wheelResetTimerRef.current);
+    wheelResetTimerRef.current = setTimeout(() => {
+      wheelGestureRef.current = null;
+      wheelResetTimerRef.current = null;
+      setIsDragging(false);
+      setDragOffset(0);
+    }, 180);
+  }, [activeIndex, hasMultipleImages, selectImage, setClampedZoom, showControls, zoom]);
+
+  React.useEffect(() => {
+    const stage = wheelStageRef.current;
+    if (!stage) return;
+
+    stage.addEventListener("wheel", handleWheel, { passive: false });
+    return () => stage.removeEventListener("wheel", handleWheel);
+  }, [handleWheel]);
 
   const chromeVisible = controlsVisible || captionOpen;
   const controlButtonClass =
     "inline-flex h-11 min-w-11 items-center justify-center rounded-full bg-black/35 px-3 text-sm font-semibold text-white/80 ring-1 ring-inset ring-white/15 transition-colors hover:bg-black/55 hover:text-white focus:outline-none focus:ring-2 focus:ring-white/70 sm:h-9 sm:min-w-9";
+  const slideTransitionClass = isDragging || zoom > 1
+    ? "transition-none"
+    : "transition-transform duration-300 ease-out motion-reduce:transition-none";
+  const trackTransform = `translate3d(calc(-${activeIndex * 100}% + ${dragOffset}px), 0, 0)`;
 
   return createPortal(
     <div
@@ -278,32 +476,53 @@ export function FullscreenImageViewer({
         if (event.target === event.currentTarget) onClose();
       }}
     >
-      <Image
-        key={activeImage.src}
-        src={activeImage.src}
-        alt={activeImage.alt}
-        fill
-        sizes="100vw"
-        preload
-        className={cn(
-          "select-none object-contain transition-opacity duration-700 ease-out motion-reduce:transition-none",
-          zoom > 1 ? "cursor-grab active:cursor-grabbing" : hasMultipleImages ? "cursor-ew-resize" : "cursor-zoom-in",
-          imageVisible ? "opacity-100" : "opacity-0",
-        )}
-        style={{
-          transform: `translate3d(${offset.x}px, ${offset.y}px, 0) scale(${zoom})`,
-          transformOrigin: zoomOrigin,
-        }}
-        draggable={false}
-        onWheel={(event) => {
-          event.preventDefault();
-          setClampedZoom(zoom + (event.deltaY < 0 ? 0.25 : -0.25));
-        }}
+      <div
+        ref={wheelStageRef}
+        data-testid="fullscreen-image-track"
+        className="absolute inset-0 h-full w-full overflow-hidden"
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
-        onPointerCancel={handlePointerUp}
-      />
+        onPointerCancel={handlePointerCancel}
+      >
+        <div
+          className={cn(
+            "flex h-full w-full",
+            slideTransitionClass,
+          )}
+          style={{ transform: trackTransform }}
+        >
+          {gallery.images.map((image, index) => {
+            const isActive = index === activeIndex;
+            return (
+              <div
+                key={image.src}
+                className="relative h-full w-full shrink-0 overflow-hidden"
+                aria-hidden={!isActive}
+              >
+                <Image
+                  src={image.src}
+                  alt={isActive ? image.alt : ""}
+                  fill
+                  sizes="100vw"
+                  preload={isActive}
+                  className={cn(
+                    "select-none object-contain",
+                    isActive && (zoom > 1 ? "cursor-grab active:cursor-grabbing" : hasMultipleImages ? "cursor-ew-resize" : "cursor-zoom-in"),
+                  )}
+                  style={{
+                    transform: isActive
+                      ? `translate3d(${offset.x}px, ${offset.y}px, 0) scale(${zoom})`
+                      : undefined,
+                    transformOrigin: zoomOrigin,
+                  }}
+                  draggable={false}
+                />
+              </div>
+            );
+          })}
+        </div>
+      </div>
 
       <div className={cn(
         "pointer-events-none absolute inset-x-4 top-4 flex items-center justify-between gap-3 transition-opacity duration-300 motion-reduce:transition-none",
@@ -415,13 +634,13 @@ export function FullscreenImageViewer({
           </div>
         ) : null}
         {hasMultipleImages ? (
-          <div className="pointer-events-auto flex max-w-full gap-2 overflow-x-auto rounded-[8px] bg-black/35 p-2 backdrop-blur-sm [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="pointer-events-auto flex max-w-full snap-x snap-mandatory gap-2 overflow-x-auto rounded-[8px] bg-black/35 p-2 backdrop-blur-sm [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {gallery.images.map((image, index) => (
               <button
                 key={image.src}
                 type="button"
                 className={cn(
-                  "relative h-12 w-16 shrink-0 overflow-hidden rounded-[4px] ring-1 ring-inset transition-opacity motion-reduce:transition-none",
+                  "relative h-12 w-16 shrink-0 snap-start overflow-hidden rounded-[4px] ring-1 ring-inset transition-opacity motion-reduce:transition-none",
                   index === activeIndex ? "ring-white opacity-100" : "ring-white/20 opacity-55 hover:opacity-90",
                 )}
                 onClick={() => selectImage(index)}

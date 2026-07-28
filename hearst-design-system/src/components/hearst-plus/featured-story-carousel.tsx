@@ -398,16 +398,16 @@ export function FeaturedStoryCarousel({
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border bg-[var(--hp-surface)] px-4 py-3">
+      <div className="flex flex-col items-center justify-center gap-1 border-t border-border bg-[var(--hp-surface)] px-4 py-1.5 sm:flex-row sm:justify-between sm:gap-3 sm:py-3">
         <div
-          className="flex min-w-0 flex-wrap gap-1.5"
+          className="flex min-w-0 flex-wrap justify-center gap-1 sm:justify-start sm:gap-1.5"
           aria-label="Featured story slides"
         >
           {stories.map((story, index) => (
             <button
               key={story.id}
               type="button"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full transition-colors hover:bg-muted/60 sm:h-6 sm:w-auto"
+              className="inline-flex h-6 w-9 items-center justify-center rounded-full transition-colors hover:bg-muted/60 sm:w-auto"
               onClick={() => setActiveIndex(index)}
               aria-label={`Show story ${index + 1}: ${story.title}`}
               aria-current={index === activeIndex ? "true" : undefined}
@@ -434,13 +434,13 @@ export function FeaturedStoryCarousel({
             </button>
           ))}
         </div>
-        <div className="flex shrink-0 items-center gap-4">
+        <div className="flex shrink-0 items-center justify-center gap-2 sm:gap-4">
           <Button
             variant="ghost"
             size="xs"
             className={cn(
               quietStoryActionButtonClass,
-              "h-11 sm:h-6",
+	              "!h-7 !min-h-7 px-2 text-xs sm:!h-6 sm:!min-h-6 sm:px-0",
               saved && "text-primary hover:text-primary",
             )}
             onClick={() => onSave(activeStory)}
@@ -456,7 +456,7 @@ export function FeaturedStoryCarousel({
           <Button
             variant="ghost"
             size="xs"
-            className={cn(quietStoryActionButtonClass, "h-11 sm:h-6")}
+            className={cn(quietStoryActionButtonClass, "!h-7 !min-h-7 px-2 text-xs sm:!h-6 sm:!min-h-6 sm:px-0")}
             onClick={() => onMoreLikeThis(activeStory)}
           >
             <Plus className="hidden h-3.5 w-3.5 sm:block" aria-hidden />
@@ -466,7 +466,7 @@ export function FeaturedStoryCarousel({
             <Button
               variant="ghost"
               size="xs"
-              className="h-11 sm:h-6"
+	              className="h-7 border border-border px-2 text-xs sm:h-6 sm:border-0 sm:px-0"
               onClick={() => onFollowBrand(activeStory.brand)}
               aria-label={`Follow ${activeStory.brand}`}
             >

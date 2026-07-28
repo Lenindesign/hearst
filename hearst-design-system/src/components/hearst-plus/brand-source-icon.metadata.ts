@@ -39,6 +39,7 @@ const metadata: ComponentMetadata = {
     "onboarding-modal",
     "reader-account-ui",
     "story-metadata",
+    "trending-rail",
     "utility-bar",
     "vertical-video-carousel",
     "video-cards",

@@ -179,14 +179,17 @@ export const PublicationScopedArticles: Story = {
     const storyButtons = canvas.getAllByRole("button", {
       name: /^Open story:/,
     });
+    const brandIcons = canvasElement.querySelectorAll("[data-brand-source-icon]");
 
     await expect(storyButtons).toHaveLength(publicationStories.length);
     publicationStories.forEach((story) => {
       expect(story.brand).toBe("Cosmopolitan");
     });
-    await expect(canvas.getAllByText(/Cosmopolitan ·/)).toHaveLength(
+    await expect(canvas.getAllByText("Cosmopolitan", { exact: true })).toHaveLength(
       publicationStories.length,
     );
+    await expect(brandIcons).toHaveLength(publicationStories.length);
+    await expect(canvas.queryByText(/Cosmopolitan ·/)).not.toBeInTheDocument();
   },
 };
 

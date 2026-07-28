@@ -59,7 +59,6 @@ const metadata: ComponentMetadata = {
     "featured-story-carousel",
     "reader-action-bar",
     "story-actions",
-    "trending-rail",
     "video-cards",
     "home-page",
   ],
