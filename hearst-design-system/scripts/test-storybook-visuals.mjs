@@ -386,6 +386,7 @@ async function captureCase(browser, origin, visualCase) {
   const context = await browser.newContext({
     viewport: visualCase.viewport,
     deviceScaleFactor: 1,
+    timezoneId: "America/Los_Angeles",
   });
   const page = await context.newPage();
   // Production personalization is daypart-aware. Pin the review clock to the
