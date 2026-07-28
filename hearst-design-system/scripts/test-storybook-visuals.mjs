@@ -402,6 +402,7 @@ async function captureCase(browser, origin, visualCase) {
   const storyUrl = new URL("/iframe.html", origin);
   storyUrl.searchParams.set("id", visualCase.id);
   storyUrl.searchParams.set("viewMode", viewMode);
+  if (viewMode === "story") storyUrl.searchParams.set("instrument", "true");
   if (visualCase.globals) storyUrl.searchParams.set("globals", visualCase.globals);
   await page.goto(storyUrl.toString(), {
     waitUntil: "domcontentloaded",
@@ -410,6 +411,15 @@ async function captureCase(browser, origin, visualCase) {
   const rootSelector = viewMode === "docs" ? "#storybook-docs" : "#storybook-root";
   await page.locator(rootSelector).waitFor({ state: "visible", timeout: 30_000 });
   await page.locator(`${rootSelector} > *`).first().waitFor({ state: "visible", timeout: 30_000 });
+  if (viewMode === "story") {
+    await page.waitForFunction(
+      (storyId) =>
+        globalThis.__STORYBOOK_ADDON_INTERACTIONS_INSTRUMENTER_STATE__?.[storyId]
+          ?.renderPhase === "finished",
+      visualCase.id,
+      { timeout: 30_000 },
+    );
+  }
   if (visualCase.readySelector) {
     await page.locator(visualCase.readySelector).waitFor({
       state: "visible",
