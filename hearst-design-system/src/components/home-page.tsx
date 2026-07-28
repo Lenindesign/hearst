@@ -18,9 +18,11 @@ import {
 import type { HearstDestinationStaticData } from "@/lib/hearst-destination-data-types";
 import { normalizeReaderReturnHref } from "@/lib/story-routes";
 import {
+  appendAmbientReaderHref,
   appendReaderReturnHref,
   applyReaderReturnStoryOrder,
   getReaderOriginBrandSlug,
+  removeAmbientReaderHref,
   restoreReaderReturnScrollSnapshot,
   saveReaderReturnScrollSnapshot,
 } from "@/lib/reader-navigation";
@@ -2803,6 +2805,19 @@ function LifestyleStoryReaderModal({
     setShowAmbientInterstitialAd,
   ]);
 
+  const openAmbientReaderWithRoute = React.useCallback((storyId: string) => {
+    openAmbientReader(storyId);
+    window.history.replaceState(
+      {
+        ...window.history.state,
+        hearstReaderStory: storyId,
+        hearstReaderMode: "ambient",
+      },
+      "",
+      appendAmbientReaderHref(storyId, readerReturnHref ?? null)
+    );
+  }, [openAmbientReader, readerReturnHref]);
+
   React.useEffect(() => {
     if (!openStoryId || typeof window === "undefined") return;
 
@@ -3017,12 +3032,12 @@ function LifestyleStoryReaderModal({
       if (!activeStoryId || !isCompleteAmbientArticle(liveArticles[activeStoryId])) return;
 
       event.preventDefault();
-      openAmbientReader(activeStoryId);
+      openAmbientReaderWithRoute(activeStoryId);
     };
 
     window.addEventListener("keydown", openPremiumReaderFromKeyboard);
     return () => window.removeEventListener("keydown", openPremiumReaderFromKeyboard);
-  }, [ambientReaderStoryId, fullscreenGallery, isReaderOpen, liveArticles, openAmbientReader, visibleReaderStoryIds]);
+  }, [ambientReaderStoryId, fullscreenGallery, isReaderOpen, liveArticles, openAmbientReaderWithRoute, visibleReaderStoryIds]);
 
   if (!openStoryId || readerQueueModel.openIndex < 0) return null;
 
@@ -3181,8 +3196,6 @@ function LifestyleStoryReaderModal({
                           : "border-border bg-card text-foreground"
                       )}
                       style={{
-                        contentVisibility: "auto",
-                        containIntrinsicSize: "1200px",
                         ...(useRoadAndTrackHeadline ? {
                           "--font-headline": '"Buzz", "Barlow Condensed", system-ui, sans-serif',
                           "--font-headline-weight": "900",
@@ -3249,7 +3262,7 @@ function LifestyleStoryReaderModal({
                           onSave={() => onSave(story)}
                           premiumReaderState={getAmbientReaderState(story, liveArticles[story.id])}
                           onOpenPremiumReader={isCompleteAmbientArticle(liveArticles[story.id])
-                            ? () => openAmbientReader(story.id)
+                            ? () => openAmbientReaderWithRoute(story.id)
                             : undefined}
                         />
                         <ReaderArticleBody
@@ -3330,6 +3343,14 @@ function LifestyleStoryReaderModal({
           onClose={() => {
             setAmbientReaderStoryId(null);
             resetAmbientDiscovery();
+            window.history.replaceState(
+              {
+                ...window.history.state,
+                hearstReaderMode: undefined,
+              },
+              "",
+              removeAmbientReaderHref(window.location.href)
+            );
           }}
           onNavigateStory={(storyId) => {
             openAmbientReader(storyId);
@@ -3337,9 +3358,10 @@ function LifestyleStoryReaderModal({
               {
                 ...window.history.state,
                 hearstReaderStory: storyId,
+                hearstReaderMode: "ambient",
               },
               "",
-              appendReaderReturnHref(storyId, readerReturnHref ?? null)
+              appendAmbientReaderHref(storyId, readerReturnHref ?? null)
             );
             scrollRef.current?.scrollTo({ top: 0 });
           }}

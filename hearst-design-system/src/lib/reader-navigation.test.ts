@@ -2,11 +2,13 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  appendAmbientReaderHref,
   appendReaderReturnHref,
   getReaderOriginBrandSlug,
   getReaderReturnScrollStorageKey,
   orderReaderReturnStories,
   parseReaderReturnScrollSnapshot,
+  removeAmbientReaderHref,
   type ReaderReturnScrollSnapshot,
 } from "./reader-navigation";
 
@@ -34,6 +36,25 @@ test("builds canonical reader URLs with only safe return routes", () => {
   );
   assert.equal(appendReaderReturnHref("story-one", "https://example.com"), "/read/story-one/");
   assert.equal(appendReaderReturnHref("story-one", "/read/story-two/"), "/read/story-one/");
+});
+
+test("builds and removes premium reader mode URLs without changing the article route", () => {
+  assert.equal(
+    appendAmbientReaderHref("story / one", returnHref),
+    "/read/story%20%2F%20one/?from=%2Flifestyle%2Felle%2F%3Ffilter%3Dstyle%23latest&ambient=1",
+  );
+  assert.equal(
+    appendAmbientReaderHref("story-one", null),
+    "/read/story-one/?ambient=1",
+  );
+  assert.equal(
+    removeAmbientReaderHref("/read/story-one/?from=%2Fhearst-plus%2F&ambient=1"),
+    "/read/story-one/?from=%2Fhearst-plus%2F",
+  );
+  assert.equal(
+    removeAmbientReaderHref("/read/story-one/?ambient=1"),
+    "/read/story-one/",
+  );
 });
 
 test("scopes scroll snapshots to a normalized return URL", () => {

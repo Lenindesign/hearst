@@ -21,6 +21,21 @@ export function appendReaderReturnHref(storyId: string, returnHref: string | nul
   return `${route}?from=${encodeURIComponent(safeReturnHref)}`;
 }
 
+export function appendAmbientReaderHref(storyId: string, returnHref: string | null) {
+  const href = appendReaderReturnHref(storyId, returnHref);
+  const url = new URL(href, "https://hearst.local");
+  url.searchParams.set("ambient", "1");
+
+  return `${url.pathname}${url.search}${url.hash}`;
+}
+
+export function removeAmbientReaderHref(href: string) {
+  const url = new URL(href, "https://hearst.local");
+  url.searchParams.delete("ambient");
+
+  return `${url.pathname}${url.search}${url.hash}`;
+}
+
 export function getReaderReturnScrollStorageKey(returnHref: string | null) {
   const safeReturnHref = normalizeReaderReturnHref(returnHref);
 

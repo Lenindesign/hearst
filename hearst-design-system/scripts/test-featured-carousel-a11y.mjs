@@ -76,6 +76,12 @@ async function readSlideState(carousel) {
   );
 }
 
+async function readActiveSlideIndex(carousel) {
+  return carousel.locator('button[aria-label^="Open story:"]').evaluateAll((slides) =>
+    slides.findIndex((slide) => slide.getAttribute("aria-hidden") === "false")
+  );
+}
+
 async function verifyViewport(browser, width) {
   const context = await browser.newContext({
     viewport: { width, height: width <= 390 ? 780 : 900 },
@@ -147,11 +153,100 @@ async function verifyViewport(browser, width) {
     );
   }
 
+  await indicators.first().focus();
+  await page.keyboard.press("Enter");
+  await page.waitForFunction(
+    (selector) => {
+      const root = document.querySelector(selector);
+      const firstSlide = root?.querySelector('button[aria-label^="Open story:"]');
+      return firstSlide?.getAttribute("aria-hidden") === "false";
+    },
+    'article[aria-roledescription="carousel"][aria-label="Today’s Picks"]'
+  );
+
+  const swipeStage = carousel.getByTestId("featured-story-track");
+  const swipeBox = await swipeStage.boundingBox();
+  assert.ok(swipeBox, `${width}px should expose the featured-story swipe track.`);
+  await page.mouse.move(swipeBox.x + swipeBox.width * 0.78, swipeBox.y + swipeBox.height * 0.45);
+  await page.mouse.down();
+  await page.mouse.move(swipeBox.x + swipeBox.width * 0.22, swipeBox.y + swipeBox.height * 0.45, {
+    steps: 8,
+  });
+  await page.mouse.up();
+  await page.waitForFunction(
+    (selector) => {
+      const root = document.querySelector(selector);
+      const secondSlide = root?.querySelectorAll('button[aria-label^="Open story:"]')[1];
+      return secondSlide?.getAttribute("aria-hidden") === "false";
+    },
+    'article[aria-roledescription="carousel"][aria-label="Today’s Picks"]'
+  );
+  assert.equal(
+    await readActiveSlideIndex(carousel),
+    1,
+    `${width}px horizontal drag should snap to the next featured story.`
+  );
+  await swipeStage.dispatchEvent("pointerdown", {
+    pointerId: 7,
+    pointerType: "touch",
+    isPrimary: true,
+    clientX: swipeBox.x + swipeBox.width * 0.78,
+    clientY: swipeBox.y + swipeBox.height * 0.45,
+    button: 0,
+    buttons: 1,
+  });
+  await swipeStage.dispatchEvent("pointermove", {
+    pointerId: 7,
+    pointerType: "touch",
+    isPrimary: true,
+    clientX: swipeBox.x + swipeBox.width * 0.2,
+    clientY: swipeBox.y + swipeBox.height * 0.45,
+    button: 0,
+    buttons: 1,
+  });
+  await swipeStage.dispatchEvent("pointerup", {
+    pointerId: 7,
+    pointerType: "touch",
+    isPrimary: true,
+    clientX: swipeBox.x + swipeBox.width * 0.2,
+    clientY: swipeBox.y + swipeBox.height * 0.45,
+    button: 0,
+    buttons: 0,
+  });
+  await page.waitForFunction(
+    (selector) => {
+      const root = document.querySelector(selector);
+      const thirdSlide = root?.querySelectorAll('button[aria-label^="Open story:"]')[2];
+      return thirdSlide?.getAttribute("aria-hidden") === "false";
+    },
+    'article[aria-roledescription="carousel"][aria-label="Today’s Picks"]'
+  );
+  assert.equal(
+    await readActiveSlideIndex(carousel),
+    2,
+    `${width}px touch-pointer swipe should snap to the next featured story without activating the slide.`
+  );
+  await page.mouse.move(swipeBox.x + swipeBox.width * 0.5, swipeBox.y + swipeBox.height * 0.45);
+  await page.mouse.wheel(-220, 0);
+  await page.waitForFunction(
+    (selector) => {
+      const root = document.querySelector(selector);
+      const secondSlide = root?.querySelectorAll('button[aria-label^="Open story:"]')[1];
+      return secondSlide?.getAttribute("aria-hidden") === "false";
+    },
+    'article[aria-roledescription="carousel"][aria-label="Today’s Picks"]'
+  );
+  assert.equal(
+    await readActiveSlideIndex(carousel),
+    1,
+    `${width}px reverse horizontal wheel should move to the previous featured story instead of escaping the carousel.`
+  );
+
   const documentWidth = await page.evaluate(() => document.documentElement.scrollWidth);
   assert.equal(documentWidth, width, `${width}px should not introduce horizontal page overflow.`);
   await context.close();
 
-  return { width, slideCount, transitionsChecked: slideCount };
+  return { width, slideCount, transitionsChecked: slideCount, swipeChecked: true, touchPointerChecked: true, reverseWheelChecked: true };
 }
 
 try {

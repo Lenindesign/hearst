@@ -79,6 +79,7 @@ export function FeaturedStoryCarousel({
   const [hoverPaused, setHoverPaused] = React.useState(false);
   const [isDragging, setIsDragging] = React.useState(false);
   const [dragOffset, setDragOffset] = React.useState(0);
+  const swipeStageRef = React.useRef<HTMLDivElement | null>(null);
   const swipeStartRef = React.useRef<{
     x: number;
     y: number;
@@ -86,8 +87,24 @@ export function FeaturedStoryCarousel({
   } | null>(null);
   const swipeLastRef = React.useRef<{ x: number; y: number } | null>(null);
   const suppressSlideClickRef = React.useRef(false);
+  const wheelGestureRef = React.useRef<{ offsetX: number; lastTime: number } | null>(
+    null,
+  );
+  const wheelResetTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
+  const wheelCooldownUntilRef = React.useRef(0);
   const swipeInstructionsId = React.useId();
   const activeStory = stories[activeIndex] ?? stories[0];
+  const hasMultipleStories = stories.length > 1;
+  const adjacentPreloadSources = React.useMemo(() => {
+    if (!hasMultipleStories) return [];
+
+    return [
+      stories[activeIndex - 1]?.image,
+      stories[activeIndex + 1]?.image,
+    ].filter((src): src is string => Boolean(src));
+  }, [activeIndex, hasMultipleStories, stories]);
 
   React.useEffect(() => {
     if (editionLabel && stories.length > 0) onEditionImpression?.();
@@ -104,7 +121,7 @@ export function FeaturedStoryCarousel({
       hoverPaused ||
       prefersReducedMotion ||
       isDragging ||
-      stories.length < 2
+      !hasMultipleStories
     ) {
       return;
     }
@@ -114,25 +131,55 @@ export function FeaturedStoryCarousel({
     }, 6500);
 
     return () => window.clearInterval(intervalId);
-  }, [hoverPaused, isDragging, paused, prefersReducedMotion, stories.length]);
+  }, [hasMultipleStories, hoverPaused, isDragging, paused, prefersReducedMotion, stories.length]);
 
-  if (!activeStory) return null;
+  React.useEffect(() => {
+    if (typeof window === "undefined" || adjacentPreloadSources.length === 0) {
+      return;
+    }
 
-  const saved = savedIds.includes(activeStory.id);
-  const goToPrevious = () => {
+    adjacentPreloadSources.forEach((src) => {
+      const preloadImage = new window.Image();
+      preloadImage.decoding = "async";
+      preloadImage.src = src;
+    });
+  }, [adjacentPreloadSources]);
+
+  React.useEffect(() => {
+    return () => {
+      if (wheelResetTimerRef.current) {
+        clearTimeout(wheelResetTimerRef.current);
+      }
+    };
+  }, []);
+
+  const goToPrevious = React.useCallback(() => {
     setActiveIndex((index) => (index - 1 + stories.length) % stories.length);
-  };
-  const goToNext = () => {
+  }, [stories.length]);
+  const goToNext = React.useCallback(() => {
     setActiveIndex((index) => (index + 1) % stories.length);
-  };
-  const resetSwipe = () => {
+  }, [stories.length]);
+  const resetSwipe = React.useCallback(() => {
     swipeStartRef.current = null;
     swipeLastRef.current = null;
+    wheelGestureRef.current = null;
+    if (wheelResetTimerRef.current) {
+      clearTimeout(wheelResetTimerRef.current);
+      wheelResetTimerRef.current = null;
+    }
     setIsDragging(false);
     setDragOffset(0);
-  };
+  }, []);
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (stories.length < 2 || event.button !== 0) return;
+    if (!hasMultipleStories || event.button !== 0) return;
+
+    if (event.currentTarget.setPointerCapture) {
+      try {
+        event.currentTarget.setPointerCapture(event.pointerId);
+      } catch {
+        // Ignore synthetic pointer events from test environments.
+      }
+    }
 
     swipeStartRef.current = {
       x: event.clientX,
@@ -149,14 +196,7 @@ export function FeaturedStoryCarousel({
     swipeLastRef.current = { x: event.clientX, y: event.clientY };
     const deltaX = event.clientX - start.x;
     const deltaY = event.clientY - start.y;
-    if (Math.abs(deltaY) >= Math.abs(deltaX)) return;
-
-    if (
-      Math.abs(deltaX) >= 8 &&
-      !event.currentTarget.hasPointerCapture(event.pointerId)
-    ) {
-      event.currentTarget.setPointerCapture(event.pointerId);
-    }
+    if (Math.abs(deltaY) > Math.abs(deltaX) * 1.15) return;
 
     event.preventDefault();
     const maxOffset = event.currentTarget.clientWidth * 0.22;
@@ -181,7 +221,11 @@ export function FeaturedStoryCarousel({
         (Math.abs(deltaX) >= 24 && velocity >= 0.45));
 
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
+      try {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      } catch {
+        // Ignore release errors from unsupported test environments.
+      }
     }
 
     if (isHorizontalSwipe) {
@@ -195,10 +239,84 @@ export function FeaturedStoryCarousel({
 
     resetSwipe();
   };
+  const handleWheel = React.useCallback((event: WheelEvent) => {
+    const stage = swipeStageRef.current;
+    if (!stage || !hasMultipleStories) return;
+
+    const width = stage.clientWidth || window.innerWidth;
+    const deltaScale =
+      event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? width : 1;
+    const deltaX = event.deltaX * deltaScale;
+    const deltaY = event.deltaY * deltaScale;
+    const isHorizontalGesture =
+      Math.abs(deltaX) > Math.abs(deltaY) * 1.15 && Math.abs(deltaX) > 1;
+
+    if (!isHorizontalGesture) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    setHoverPaused(true);
+
+    const now = performance.now();
+    if (now < wheelCooldownUntilRef.current) return;
+
+    if (
+      !wheelGestureRef.current ||
+      now - wheelGestureRef.current.lastTime > 240
+    ) {
+      wheelGestureRef.current = { offsetX: 0, lastTime: now };
+    }
+
+    wheelGestureRef.current.offsetX += deltaX;
+    wheelGestureRef.current.lastTime = now;
+
+    const threshold = Math.min(64, width * 0.14);
+    const maxOffset = width * 0.22;
+    const visualOffset = Math.max(
+      -maxOffset,
+      Math.min(maxOffset, -wheelGestureRef.current.offsetX),
+    );
+    setIsDragging(true);
+    setDragOffset(visualOffset);
+
+    if (Math.abs(wheelGestureRef.current.offsetX) >= threshold) {
+      const direction = wheelGestureRef.current.offsetX > 0 ? 1 : -1;
+      wheelCooldownUntilRef.current = now + 650;
+      if (direction > 0) goToNext();
+      else goToPrevious();
+      resetSwipe();
+      return;
+    }
+
+    if (wheelResetTimerRef.current) clearTimeout(wheelResetTimerRef.current);
+    wheelResetTimerRef.current = setTimeout(() => {
+      wheelGestureRef.current = null;
+      wheelResetTimerRef.current = null;
+      setIsDragging(false);
+      setDragOffset(0);
+    }, 180);
+  }, [goToNext, goToPrevious, hasMultipleStories, resetSwipe]);
+
+  React.useEffect(() => {
+    const stage = swipeStageRef.current;
+    if (!stage) return;
+
+    stage.addEventListener("wheel", handleWheel, {
+      capture: true,
+      passive: false,
+    });
+    return () => {
+      stage.removeEventListener("wheel", handleWheel, { capture: true });
+    };
+  }, [handleWheel]);
+
+  if (!activeStory) return null;
+
+  const saved = savedIds.includes(activeStory.id);
 
   return (
     <article
-      className="group relative min-w-0 overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]"
+      className="group relative min-w-0 overscroll-x-contain overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]"
       aria-roledescription="carousel"
       aria-label={editionLabel ?? "Featured stories"}
       aria-describedby={swipeInstructionsId}
@@ -230,7 +348,9 @@ export function FeaturedStoryCarousel({
         Story {activeIndex + 1} of {stories.length}: {activeStory.title}
       </p>
       <div
-        className="relative w-full min-w-0 touch-pan-y select-none overflow-hidden bg-black"
+        ref={swipeStageRef}
+        data-testid="featured-story-track"
+        className="relative w-full min-w-0 touch-pan-y overscroll-x-contain select-none overflow-hidden bg-black"
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
@@ -245,7 +365,7 @@ export function FeaturedStoryCarousel({
               : "transition-transform duration-500",
           )}
           style={{
-            transform: `translateX(calc(-${activeIndex * 100}% + ${dragOffset}px))`,
+            transform: `translate3d(calc(-${activeIndex * 100}% + ${dragOffset}px), 0, 0)`,
           }}
         >
           {stories.map((story, index) => {
@@ -440,7 +560,7 @@ export function FeaturedStoryCarousel({
             size="xs"
             className={cn(
               quietStoryActionButtonClass,
-	              "!h-7 !min-h-7 px-2 text-xs sm:!h-6 sm:!min-h-6 sm:px-0",
+              "!h-7 !min-h-7 px-2 text-xs sm:!h-6 sm:!min-h-6 sm:px-0",
               saved && "text-primary hover:text-primary",
             )}
             onClick={() => onSave(activeStory)}
@@ -456,7 +576,10 @@ export function FeaturedStoryCarousel({
           <Button
             variant="ghost"
             size="xs"
-            className={cn(quietStoryActionButtonClass, "!h-7 !min-h-7 px-2 text-xs sm:!h-6 sm:!min-h-6 sm:px-0")}
+            className={cn(
+              quietStoryActionButtonClass,
+              "!h-7 !min-h-7 px-2 text-xs sm:!h-6 sm:!min-h-6 sm:px-0",
+            )}
             onClick={() => onMoreLikeThis(activeStory)}
           >
             <Plus className="hidden h-3.5 w-3.5 sm:block" aria-hidden />
@@ -466,7 +589,7 @@ export function FeaturedStoryCarousel({
             <Button
               variant="ghost"
               size="xs"
-	              className="h-7 border border-border px-2 text-xs sm:h-6 sm:border-0 sm:px-0"
+              className="h-7 border border-border px-2 text-xs sm:h-6 sm:border-0 sm:px-0"
               onClick={() => onFollowBrand(activeStory.brand)}
               aria-label={`Follow ${activeStory.brand}`}
             >
