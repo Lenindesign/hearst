@@ -43,7 +43,7 @@ function LogoSpecimen({
       <div className="flex min-w-0 items-center justify-center p-6">
         <BrandLogo
           slug={slug}
-          className="flex max-w-full items-center justify-center [&_svg]:max-h-16 [&_svg]:w-auto [&_svg]:max-w-full"
+          className="flex max-w-full items-center justify-center [&_svg]:h-16 [&_svg]:w-auto [&_svg]:max-w-full"
           color={light ? "currentColor" : undefined}
         />
       </div>

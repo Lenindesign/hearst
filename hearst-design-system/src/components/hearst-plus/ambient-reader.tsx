@@ -54,6 +54,12 @@ import { getLifestyleByline } from "./story-metadata";
 
 export type AmbientReaderDensity = "compact" | "comfortable" | "airy";
 
+const ambientReaderDensityStyles: Record<AmbientReaderDensity, string> = {
+  compact: "max-w-[68ch] text-[17px] leading-7 [--ambient-block-gap:1.25rem]",
+  comfortable: "max-w-[62ch] text-[19px] leading-8 [--ambient-block-gap:1.75rem]",
+  airy: "max-w-[58ch] text-[21px] leading-9 [--ambient-block-gap:2.25rem]",
+};
+
 export function isCompleteAmbientArticle(liveArticle?: ReaderArticleLoadState) {
   if (liveArticle?.status !== "ready") return false;
 
@@ -81,6 +87,71 @@ function getAmbientReaderMinutes(story: LifestyleRiverStory, article: LiveArticl
   }, 0);
   const sourceEstimate = Number.parseInt(story.readTime, 10);
   return Math.max(1, Number.isFinite(sourceEstimate) ? sourceEstimate : Math.ceil(wordCount / 220));
+}
+
+function splitAmbientDropCapText(text: string) {
+  const leadingWhitespace = text.match(/^\s*/)?.[0] ?? "";
+  const body = text.slice(leadingWhitespace.length);
+  const match = body.match(/^([“"‘'(\[]*)(\S)([\s\S]*)$/u);
+
+  if (!match) {
+    return {
+      leadingWhitespace,
+      dropCap: "",
+      remainder: body,
+    };
+  }
+
+  return {
+    leadingWhitespace,
+    dropCap: `${match[1]}${match[2]}`,
+    remainder: match[3],
+  };
+}
+
+function isAmbientDropCapCandidate(text: string) {
+  const normalized = text.trim().replace(/\s+/g, " ");
+  const letterMatches = normalized.match(/\p{L}/gu) ?? [];
+  const lowercaseLetterCount = letterMatches.filter((letter) => (
+    letter.toLocaleLowerCase() === letter
+      && letter.toLocaleUpperCase() !== letter
+  )).length;
+
+  return normalized.length >= 40 && lowercaseLetterCount >= 4;
+}
+
+function AmbientReaderParagraph({
+  text,
+  dropCap = false,
+}: {
+  text: string;
+  dropCap?: boolean;
+}) {
+  if (!dropCap) return <p className="text-pretty">{text}</p>;
+
+  const { leadingWhitespace, dropCap: dropCapText, remainder } =
+    splitAmbientDropCapText(text);
+
+  if (!dropCapText) return <p className="text-pretty">{text}</p>;
+
+  return (
+    <p className="text-pretty" data-ambient-drop-cap="true">
+      {leadingWhitespace}
+      <span
+        className="float-left mr-5 font-headline text-[6.2em] font-[var(--font-headline-weight)] leading-[0.82] text-primary"
+        data-ambient-drop-cap-letter="true"
+      >
+        {dropCapText}
+      </span>
+      {remainder}
+    </p>
+  );
+}
+
+function getAmbientFirstDropCapBlockIndex(article: LiveArticleData) {
+  return article.blocks.findIndex((block) => (
+    block.type === "paragraph" && isAmbientDropCapCandidate(block.text)
+  ));
 }
 
 export function getAmbientRelatedScore(
@@ -622,11 +693,8 @@ function AmbientReaderSwipeArticleSurface({
   const publishedAt = article.publishedAt ?? story.publishedAt;
   const hasPublishedDate = Number.isFinite(Date.parse(publishedAt ?? ""));
   const brandPrimary = contextualTheme.colors["1"] ?? ambientReaderTheme.fallbackBrandPrimary;
-  const previewBlocks = article.blocks
-    .filter((block): block is { type: "paragraph" | "heading"; text: string } =>
-      block.type === "paragraph" || block.type === "heading"
-    )
-    .slice(0, 4);
+  const firstParagraphIndex = getAmbientFirstDropCapBlockIndex(article);
+  const densityStyles = ambientReaderDensityStyles.airy;
 
   return (
     <div
@@ -666,16 +734,69 @@ function AmbientReaderSwipeArticleSurface({
           onHeroImageRatio={() => undefined}
           onOpenImage={() => undefined}
         />
-        <section className="mx-auto max-w-[68ch] space-y-5 px-5 py-10 font-brand-secondary text-lg leading-8 sm:px-8">
-          {previewBlocks.map((block, index) => block.type === "heading" ? (
-            <h2 key={index} className="font-headline text-3xl font-[var(--font-headline-weight)] leading-tight">
-              {block.text}
-            </h2>
-          ) : (
-            <p key={index}>{block.text}</p>
-          ))}
+        <section
+          className="relative mx-auto max-w-[1440px] px-5 py-16 sm:px-8 sm:py-24 lg:px-12 lg:py-32"
+          data-ambient-body={destination}
+          data-ambient-preloaded-body="true"
+        >
+          {destination === "flux" ? (
+            <div className="pointer-events-none absolute left-8 top-28 hidden text-xs font-semibold tabular-nums text-[var(--ambient-muted)] xl:block">
+              01
+              <span className="mt-3 block h-px w-8 bg-[var(--ambient-rule)]" />
+            </div>
+          ) : null}
+          <article className={cn("mx-auto font-brand-secondary text-[var(--ambient-ink)]", densityStyles)}>
+            <AmbientReaderArticleBlocks
+              article={article}
+              firstParagraphIndex={firstParagraphIndex}
+              onOpenImage={() => undefined}
+            />
+          </article>
         </section>
       </div>
+    </div>
+  );
+}
+
+function AmbientReaderArticleBlocks({
+  article,
+  firstParagraphIndex,
+  onOpenImage,
+}: {
+  article: LiveArticleData;
+  firstParagraphIndex: number;
+  onOpenImage: (image: FullscreenReaderImage) => void;
+}) {
+  return (
+    <div className="space-y-[var(--ambient-block-gap)]">
+      {article.blocks.map((block, index) => {
+        if (block.type === "image") {
+          return (
+            <AmbientReaderImageBlock
+              key={`${block.url}-${index}`}
+              block={block}
+              compactTop={article.blocks[index - 1]?.type === "heading"}
+              onOpenImage={onOpenImage}
+            />
+          );
+        }
+        if (block.type === "heading") {
+          return <h2 key={index} className="pt-6 font-headline text-[clamp(2rem,4vw,3.5rem)] font-[var(--font-headline-weight)] leading-[1.05] tracking-[-0.025em] text-balance">{block.text}</h2>;
+        }
+        if (block.type === "quote") {
+          return <blockquote key={index} className="my-12 border-y border-[var(--ambient-rule)] py-8 font-headline text-[clamp(1.75rem,3.5vw,3rem)] font-[var(--font-headline-weight)] leading-tight text-balance">“{block.text}”</blockquote>;
+        }
+        if (block.type === "list") {
+          return <ul key={index} className="list-disc space-y-3 pl-6">{block.items.map((item) => <li key={item}>{item}</li>)}</ul>;
+        }
+        return (
+          <AmbientReaderParagraph
+            key={index}
+            text={block.text}
+            dropCap={index === firstParagraphIndex}
+          />
+        );
+      })}
     </div>
   );
 }
@@ -761,13 +882,8 @@ export function AmbientArticleReader({
   const brandForeground = getAmbientBrandForeground(brandPrimary);
   const heroImageRatio = heroImageRatios[story.id] ?? null;
   const hasPortraitHeroImage = heroImageRatio !== null && heroImageRatio < 0.9;
-  const firstParagraphIndex = article.blocks.findIndex((block) => block.type === "paragraph");
+  const firstParagraphIndex = getAmbientFirstDropCapBlockIndex(article);
   const commerceConfig = getAmbientCommerceConfig(story);
-  const densityStyles: Record<AmbientReaderDensity, string> = {
-    compact: "max-w-[68ch] text-[17px] leading-7 [--ambient-block-gap:1.25rem]",
-    comfortable: "max-w-[62ch] text-[19px] leading-8 [--ambient-block-gap:1.75rem]",
-    airy: "max-w-[58ch] text-[21px] leading-9 [--ambient-block-gap:2.25rem]",
-  };
   const densityOrder: AmbientReaderDensity[] = ["compact", "comfortable", "airy"];
 
   React.useEffect(() => {
@@ -1093,41 +1209,12 @@ export function AmbientArticleReader({
                 <span className="mt-3 block h-px w-8 bg-[var(--ambient-rule)]" />
               </div>
             ) : null}
-            <article className={cn("mx-auto font-brand-secondary text-[var(--ambient-ink)]", densityStyles[density])}>
-              <div className="space-y-[var(--ambient-block-gap)]">
-                {article.blocks.map((block, index) => {
-                  if (block.type === "image") {
-                    return (
-                      <AmbientReaderImageBlock
-                        key={`${block.url}-${index}`}
-                        block={block}
-                        compactTop={article.blocks[index - 1]?.type === "heading"}
-                        onOpenImage={onOpenImage}
-                      />
-                    );
-                  }
-                  if (block.type === "heading") {
-                    return <h2 key={index} className="pt-6 font-headline text-[clamp(2rem,4vw,3.5rem)] font-[var(--font-headline-weight)] leading-[1.05] tracking-[-0.025em] text-balance">{block.text}</h2>;
-                  }
-                  if (block.type === "quote") {
-                    return <blockquote key={index} className="my-12 border-y border-[var(--ambient-rule)] py-8 font-headline text-[clamp(1.75rem,3.5vw,3rem)] font-[var(--font-headline-weight)] leading-tight text-balance">“{block.text}”</blockquote>;
-                  }
-                  if (block.type === "list") {
-                    return <ul key={index} className="list-disc space-y-3 pl-6">{block.items.map((item) => <li key={item}>{item}</li>)}</ul>;
-                  }
-                  return (
-                    <p
-                      key={index}
-                      className={cn(
-                        "text-pretty",
-                        index === firstParagraphIndex && "first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:font-headline first-letter:text-[4.8em] first-letter:font-[var(--font-headline-weight)] first-letter:leading-[0.78] first-letter:text-primary"
-                      )}
-                    >
-                      {block.text}
-                    </p>
-                  );
-                })}
-              </div>
+            <article className={cn("mx-auto font-brand-secondary text-[var(--ambient-ink)]", ambientReaderDensityStyles[density])}>
+              <AmbientReaderArticleBlocks
+                article={article}
+                firstParagraphIndex={firstParagraphIndex}
+                onOpenImage={onOpenImage}
+              />
               {commerceConfig ? <AmbientCommerceModule config={commerceConfig} /> : null}
               <footer className="mt-20 border-t border-[var(--ambient-rule)] pt-8 font-brand text-sm text-[var(--ambient-muted)]">
                 <p>End of article · {story.brand}</p>

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-28T16:04:49.035Z",
+  "generatedAt": "2026-07-29T10:36:39.772Z",
   "totalComponents": 101,
   "byLevel": {
     "template": 20,
@@ -2262,12 +2262,12 @@
       ],
       "tokens": {
         "cssVariables": [
+          "--font-headline-weight",
           "--ambient-block-gap",
           "--ambient-rule",
           "--ambient-muted",
           "--ambient-autos-surface",
           "--ambient-dark-ink",
-          "--font-headline-weight",
           "--ambient-paper",
           "--ambient-ink",
           "--ambient-ad-shell",
@@ -2282,9 +2282,9 @@
           "--ambient-ad-overlay"
         ],
         "tailwindSemantics": [
+          "text-primary",
           "bg-primary",
-          "border-primary",
-          "text-primary"
+          "border-primary"
         ],
         "classes": [
           "font-brand"
@@ -2302,7 +2302,7 @@
         "src/stories/HearstPlusAmbientReader.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 1439
+      "lineCount": 1526
     },
     {
       "name": "brand-promotion-river-module",
@@ -2823,7 +2823,7 @@
         ],
         "rationale": "Seven direct stories import the production component and specify mixed article/video allocation, active-slide semantics, reader actions, mobile targets, saved state, publication treatment, single-story fallback, empty allocation, and reduced-motion behavior."
       },
-      "lineCount": 485
+      "lineCount": 616
     },
     {
       "name": "feed-states",
@@ -3749,7 +3749,7 @@
         "src/stories/LifestyleDestinationApp.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 6021
+      "lineCount": 6119
     },
     {
       "name": "homepage-layouts",

@@ -189,6 +189,25 @@ export const Default: Story = {
       brandSlug={context.globals.brand}
     />
   ),
+  play: async ({ canvasElement }) => {
+    const page = within(canvasElement.ownerDocument.body);
+    const dialog = await page.findByRole("dialog", { name: /^Ambient Reader:/ });
+    const dropCapParagraph = dialog.querySelector("[data-ambient-drop-cap='true']");
+    const dropCapLetter = dialog.querySelector("[data-ambient-drop-cap-letter='true']");
+
+    await expect(dropCapParagraph).toBeInTheDocument();
+    await expect(dropCapLetter).toBeInTheDocument();
+    await expect(dropCapLetter).toHaveTextContent(/^\S+/);
+    await expect(dropCapParagraph?.textContent?.trim().replace(/\s+/g, " ").length ?? 0).toBeGreaterThanOrEqual(40);
+    await expect(dropCapParagraph).not.toHaveClass(/first-letter:/);
+    await expect(dropCapLetter).not.toHaveClass(/mt-1/);
+    await expect(dropCapLetter).not.toHaveClass(/translate-y-/);
+    await expect(dropCapLetter).not.toHaveClass(/pt-/);
+    await expect(dropCapLetter).not.toHaveClass(/h-\[/);
+    await expect(dropCapLetter).not.toHaveClass(/overflow-hidden/);
+    await expect(dropCapLetter).toHaveClass(/text-\[6\.2em\]/);
+    await expect(dropCapLetter).toHaveClass(/leading-\[0\.82\]/);
+  },
 };
 
 export const KeyboardAndPreferences: Story = {

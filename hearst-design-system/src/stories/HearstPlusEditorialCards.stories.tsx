@@ -87,9 +87,6 @@ type Story = StoryObj<typeof meta>;
 
 export const ArticleRiverCard: Story = {
   name: "Article river card",
-  globals: {
-    brand: "hearst-lifestyle",
-  },
   render: (_args, context) => (
     <InteractiveArticleCard key={context.globals.brand} story={getArticleStory(context.globals.brand)} />
   ),
@@ -107,9 +104,6 @@ export const ArticleRiverCard: Story = {
 
 export const FeaturedArticleCard: Story = {
   name: "Featured article card",
-  globals: {
-    brand: "hearst-lifestyle",
-  },
   render: (_args, context) => (
     <InteractiveArticleCard key={context.globals.brand} story={getArticleStory(context.globals.brand)} featured />
   ),
@@ -117,9 +111,6 @@ export const FeaturedArticleCard: Story = {
 
 export const RichPhotoGallery: Story = {
   name: "Rich photo gallery",
-  globals: {
-    brand: "hearst-lifestyle",
-  },
   render: (_args, context) => {
     const { story, images } = getGalleryFixture(context.globals.brand);
     const GalleryExample = () => {

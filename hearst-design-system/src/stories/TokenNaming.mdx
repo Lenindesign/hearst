@@ -75,8 +75,12 @@ Designers and developers only need to know **one name** for each token -- the **
       <code style={{ color: '#e2e8f0' }}>$brand-1</code>
     </div>
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-      <span>Figma</span>
-      <code style={{ color: '#e2e8f0' }}>brand-1</code>
+      <span>Figma display</span>
+      <code style={{ color: '#e2e8f0' }}>brand/1</code>
+    </div>
+    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <span>Figma WEB syntax</span>
+      <code style={{ color: '#e2e8f0' }}>var(--brand-1)</code>
     </div>
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
       <span>JS / React</span>
@@ -87,7 +91,7 @@ Designers and developers only need to know **one name** for each token -- the **
 
 ### Why does the name look different in each tool?
 
-Each tool enforces its own syntax. The **canonical name stays the same** -- only the prefix changes.
+Each tool enforces its own syntax. The **canonical name stays the same** in Git and implementation references. CSS and Pencil add syntax, while Figma uses slash-grouped display names plus WEB code syntax that points back to the canonical CSS variable.
 
 <div style={{ overflowX: 'auto', margin: '24px 0' }}>
 <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
@@ -120,9 +124,9 @@ Each tool enforces its own syntax. The **canonical name stays the same** -- only
     </tr>
     <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fafbfc' }}>
       <td style={{ padding: '10px 16px', fontWeight: 600 }}>Figma</td>
-      <td style={{ padding: '10px 16px' }}><code>name</code></td>
-      <td style={{ padding: '10px 16px' }}><code>brand-1</code></td>
-      <td style={{ padding: '10px 16px', color: '#64748b', fontSize: '13px' }}>Figma variables use the plain name, no prefix needed</td>
+      <td style={{ padding: '10px 16px' }}><code>slash/grouped/name</code> + WEB code syntax</td>
+      <td style={{ padding: '10px 16px' }}><code>brand/1</code><br /><code>var(--brand-1)</code></td>
+      <td style={{ padding: '10px 16px', color: '#64748b', fontSize: '13px' }}>Figma display names are grouped for navigation; the WEB code syntax preserves the canonical CSS reference</td>
     </tr>
     <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
       <td style={{ padding: '10px 16px', fontWeight: 600 }}>JS / React</td>

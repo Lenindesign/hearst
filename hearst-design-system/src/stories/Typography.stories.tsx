@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { BrandLogo } from "@/components/brand-logo";
 import { BigStoryImageRight } from "@/components/fre/big-story";
 import { useTheme } from "@/components/theme-provider";
-import { BRAND_ARTICLES } from "./article-data";
+import { getComponentStoryForBrand } from "./hearst-plus-component-fixtures";
 
 const WEIGHT_NAMES: Record<number, string> = {
   100: "Thin",
@@ -186,7 +186,7 @@ function TechnicalSpecimen({
 
 function TypographyShowcase() {
   const { brand } = useTheme();
-  const articleData = BRAND_ARTICLES[brand.slug] ?? BRAND_ARTICLES.cosmopolitan;
+  const productionStory = getComponentStoryForBrand(brand.slug);
   const fontFamilies = useMemo(
     () => Array.from(new Set([brand.fontDefault, brand.fontSecondary, brand.fontHeadline])),
     [brand.fontDefault, brand.fontHeadline, brand.fontSecondary],
@@ -248,17 +248,17 @@ function TypographyShowcase() {
               </h2>
               <p className="mt-3 max-w-[58ch] text-sm leading-relaxed text-muted-foreground">
                 This is the shipped editorial module using the selected brand
-                theme and current production-aligned story fixture.
+                theme and a checked-in Hearst+ story fixture from the app catalog.
               </p>
             </div>
             <div className="min-w-0 border border-border bg-background p-4 sm:p-6">
               <BigStoryImageRight
-                label={articleData.content.breadcrumbs.at(-1)?.label ?? "Feature"}
-                headline={articleData.content.headline}
-                description={articleData.content.dek ?? ""}
-                author={articleData.content.author}
-                date={articleData.content.publishedDate}
-                image={articleData.content.heroImage}
+                label={`${productionStory.brand} · ${productionStory.topic}`}
+                headline={productionStory.title}
+                description={productionStory.summary}
+                author={productionStory.byline ?? `${productionStory.brand} editors`}
+                date={productionStory.publishedAt ?? productionStory.readTime}
+                image={productionStory.image}
                 imagePosition="top"
                 aspectRatio="3/2"
                 className="cursor-default"

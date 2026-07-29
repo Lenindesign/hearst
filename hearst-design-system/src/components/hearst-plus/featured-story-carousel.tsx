@@ -86,6 +86,7 @@ export function FeaturedStoryCarousel({
     time: number;
   } | null>(null);
   const swipeLastRef = React.useRef<{ x: number; y: number } | null>(null);
+  const hasSwipeIntentRef = React.useRef(false);
   const suppressSlideClickRef = React.useRef(false);
   const wheelGestureRef = React.useRef<{ offsetX: number; lastTime: number } | null>(
     null,
@@ -162,6 +163,7 @@ export function FeaturedStoryCarousel({
   const resetSwipe = React.useCallback(() => {
     swipeStartRef.current = null;
     swipeLastRef.current = null;
+    hasSwipeIntentRef.current = false;
     wheelGestureRef.current = null;
     if (wheelResetTimerRef.current) {
       clearTimeout(wheelResetTimerRef.current);
@@ -173,21 +175,12 @@ export function FeaturedStoryCarousel({
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     if (!hasMultipleStories || event.button !== 0) return;
 
-    if (event.currentTarget.setPointerCapture) {
-      try {
-        event.currentTarget.setPointerCapture(event.pointerId);
-      } catch {
-        // Ignore synthetic pointer events from test environments.
-      }
-    }
-
     swipeStartRef.current = {
       x: event.clientX,
       y: event.clientY,
       time: performance.now(),
     };
     swipeLastRef.current = { x: event.clientX, y: event.clientY };
-    setIsDragging(true);
   };
   const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
     const start = swipeStartRef.current;
@@ -197,6 +190,21 @@ export function FeaturedStoryCarousel({
     const deltaX = event.clientX - start.x;
     const deltaY = event.clientY - start.y;
     if (Math.abs(deltaY) > Math.abs(deltaX) * 1.15) return;
+    if (Math.abs(deltaX) < 6 && !hasSwipeIntentRef.current) return;
+
+    hasSwipeIntentRef.current = true;
+    setIsDragging(true);
+
+    if (
+      event.currentTarget.setPointerCapture &&
+      !event.currentTarget.hasPointerCapture(event.pointerId)
+    ) {
+      try {
+        event.currentTarget.setPointerCapture(event.pointerId);
+      } catch {
+        // Ignore synthetic pointer events from test environments.
+      }
+    }
 
     event.preventDefault();
     const maxOffset = event.currentTarget.clientWidth * 0.22;

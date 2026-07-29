@@ -241,6 +241,21 @@ async function verifyViewport(browser, width) {
     1,
     `${width}px reverse horizontal wheel should move to the previous featured story instead of escaping the carousel.`
   );
+  const beforeClickUrl = page.url();
+  await slides.nth(1).click({
+    position: {
+      x: Math.max(24, swipeBox.width * 0.45),
+      y: Math.max(24, swipeBox.height * 0.45),
+    },
+  });
+  await page.waitForFunction(
+    (url) => window.location.href !== url || Boolean(document.querySelector('[role="dialog"]')),
+    beforeClickUrl
+  );
+  assert.ok(
+    page.url() !== beforeClickUrl || await page.locator('[role="dialog"]').count() > 0,
+    `${width}px tap/click on the active featured story should open the story instead of being swallowed by swipe handling.`
+  );
 
   const documentWidth = await page.evaluate(() => document.documentElement.scrollWidth);
   assert.equal(documentWidth, width, `${width}px should not introduce horizontal page overflow.`);
