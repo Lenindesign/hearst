@@ -22,6 +22,7 @@ import {
   appendReaderReturnHref,
   applyReaderReturnStoryOrder,
   getReaderOriginBrandSlug,
+  readReaderReturnScrollSnapshot,
   removeAmbientReaderHref,
   restoreReaderReturnScrollSnapshot,
   saveReaderReturnScrollSnapshot,
@@ -1516,15 +1517,36 @@ function ensureGallerySampleInRiver(
   riverStories: LifestyleRiverStory[],
   displayStories: LifestyleRiverStory[],
   excludedStoryIds: Set<string>,
-  enabled: boolean
+  enabled: boolean,
+  preferredStoryId?: string | null
 ) {
-  if (!enabled || riverStories.some(isExplicitGalleryStory)) return riverStories;
+  if (!enabled) return riverStories;
 
-  const gallerySample = displayStories.find((story) =>
+  const canUseGallerySample = (story: LifestyleRiverStory) =>
     isExplicitGalleryStory(story)
     && !excludedStoryIds.has(story.id)
-    && !riverStories.some((riverStory) => riverStory.id === story.id)
-  );
+    && !riverStories.some((riverStory) => riverStory.id === story.id);
+  const canUsePreferredGallerySample = (story: LifestyleRiverStory) =>
+    isExplicitGalleryStory(story)
+    && !riverStories.some((riverStory) => riverStory.id === story.id);
+  const preferredGallerySample = preferredStoryId
+    ? displayStories.find((story) => story.id === preferredStoryId && canUsePreferredGallerySample(story))
+    : undefined;
+
+  if (preferredGallerySample) {
+    const nextStories = [...riverStories];
+    const replaceIndex = nextStories.findIndex(isExplicitGalleryStory);
+    if (replaceIndex >= 0) {
+      nextStories.splice(replaceIndex, 1, preferredGallerySample);
+    } else {
+      nextStories.splice(Math.min(2, nextStories.length), 0, preferredGallerySample);
+    }
+    return nextStories;
+  }
+
+  if (riverStories.some(isExplicitGalleryStory)) return riverStories;
+
+  const gallerySample = displayStories.find(canUseGallerySample);
 
   if (!gallerySample) return riverStories;
 
@@ -3547,6 +3569,7 @@ function LifestyleRiverHomePage({
   const [delishSupplementalStories, setDelishSupplementalStories] = React.useState<LifestyleRiverStory[]>([]);
   const readerReturnFocusElementRef = React.useRef<HTMLElement | null>(null);
   const readerRiverReturnContextRef = React.useRef<ReaderRiverReturnContext | null>(null);
+  const [readerReturnAnchorStoryId, setReaderReturnAnchorStoryId] = React.useState<string | null>(null);
   const visibleStoryScopeKeyRef = React.useRef("");
   const delishShortOpenerRef = React.useRef<HTMLElement | null>(null);
   const displayStoryIdsRef = React.useRef<string[]>([]);
@@ -3574,10 +3597,12 @@ function LifestyleRiverHomePage({
     if (!pathname || pathname.startsWith("/read/")) return null;
 
     const query = searchParams?.toString();
-    return `${pathname}${query ? `?${query}` : ""}`;
+    return normalizeReaderReturnHref(`${pathname}${query ? `?${query}` : ""}`);
   }, [pathname, searchParams]);
   const currentReaderReturnHref = safeReaderReturnHref ?? (initialBrandSlug ? getHearstBrandRoute(initialBrandSlug) : getHearstDestinationRoute(destination));
   const storyOpenReturnHref = safeReaderReturnHref ?? currentPageReturnHref ?? currentReaderReturnHref;
+  const snapshotReaderReturnStoryId = readReaderReturnScrollSnapshot(currentReaderReturnHref)?.storyId ?? null;
+  const preferredReaderRiverStoryId = readerReturnAnchorStoryId ?? snapshotReaderReturnStoryId;
   const rememberSessionContinueReadingStory = React.useCallback((storyId: string) => {
     setSessionContinueReadingState((current) => {
       if (current.scopeKey !== visitScopeKey || current.storyIds.includes(storyId)) return current;
@@ -3614,6 +3639,7 @@ function LifestyleRiverHomePage({
       scrollX: window.scrollX,
       scrollY: window.scrollY,
     };
+    setReaderReturnAnchorStoryId(storyId);
   }, []);
 
   const restoreReaderRiverReturnContext = React.useCallback((storyId: string | null) => {
@@ -3657,7 +3683,11 @@ function LifestyleRiverHomePage({
     recordStoryOpened(storyId);
     rememberSessionContinueReadingStory(storyId);
     setOpenStoryId(storyId);
-    saveReaderReturnScrollSnapshot(storyId, storyOpenReturnHref, displayStoryIdsRef.current);
+    saveReaderReturnScrollSnapshot(
+      storyId,
+      storyOpenReturnHref,
+      readerRiverReturnContextRef.current?.storyIds ?? displayStoryIdsRef.current
+    );
     router.push(appendReaderReturnHref(storyId, storyOpenReturnHref), { scroll: false });
   }, [rememberReaderRiverReturnContext, rememberSessionContinueReadingStory, router, setOpenStoryId, storyOpenReturnHref]);
 
@@ -3754,6 +3784,7 @@ function LifestyleRiverHomePage({
     visibleStoryScopeKeyRef.current = visibleStoryScopeKey;
     if (readerRiverReturnContextRef.current?.scopeKey !== visibleStoryScopeKey) {
       readerRiverReturnContextRef.current = null;
+      setReaderReturnAnchorStoryId(null);
     }
   }, [visibleStoryScopeKey]);
   const [visibleStoryState, setVisibleStoryState] = React.useState({
@@ -4104,14 +4135,16 @@ function LifestyleRiverHomePage({
     completeBaseRiverStories,
     displayStories,
     moduleReservedStoryIds,
-    !usingVideoTabFeed && activeFilter !== "Saved"
+    !usingVideoTabFeed && activeFilter !== "Saved",
+    preferredReaderRiverStoryId
   );
   const baseRiverStories = completeBaseRiverStories.slice(0, visibleRiverCount);
   const riverStories = ensureGallerySampleInRiver(
     baseRiverStories,
     displayStories,
     moduleReservedStoryIds,
-    !usingVideoTabFeed && activeFilter !== "Saved"
+    !usingVideoTabFeed && activeFilter !== "Saved",
+    preferredReaderRiverStoryId
   );
   const loadMoreVisibleStories = React.useCallback(() => {
     const demand = feedDemandRef.current;

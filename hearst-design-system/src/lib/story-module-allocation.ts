@@ -42,6 +42,7 @@ export function allocateStoryModules<T extends StoryModuleCandidate>({
   minimumRiverStories = 4,
 }: StoryModuleAllocationOptions<T>): StoryModuleAllocation<T> {
   const usedStoryIds = new Set(heroStoryIds);
+  const continueStoryIdSet = new Set(continueStoryIds);
   const storiesById = new Map(stories.map((story) => [story.id, story]));
   const unusedStoryCount = () => stories.reduce(
     (count, story) => count + (usedStoryIds.has(story.id) ? 0 : 1),
@@ -50,7 +51,10 @@ export function allocateStoryModules<T extends StoryModuleCandidate>({
 
   const takeUnused = (candidates: T[], preserveRiver = true) => {
     if (preserveRiver && unusedStoryCount() <= minimumRiverStories) return undefined;
-    const story = candidates.find((candidate) => !usedStoryIds.has(candidate.id));
+    const story = candidates.find((candidate) =>
+      !usedStoryIds.has(candidate.id)
+      && !continueStoryIdSet.has(candidate.id)
+    );
     if (story) usedStoryIds.add(story.id);
     return story;
   };
@@ -84,7 +88,7 @@ export function allocateStoryModules<T extends StoryModuleCandidate>({
   for (const story of stories) {
     if (dailyHabitStories.length >= dailyHabitCount) break;
     if (unusedStoryCount() <= minimumRiverStories) break;
-    if (usedStoryIds.has(story.id)) continue;
+    if (usedStoryIds.has(story.id) || continueStoryIdSet.has(story.id)) continue;
     usedStoryIds.add(story.id);
     dailyHabitStories.push(story);
   }
@@ -96,6 +100,7 @@ export function allocateStoryModules<T extends StoryModuleCandidate>({
       trendingStories.length >= trendingCount
       || unusedStoryCount() <= minimumRiverStories
       || usedStoryIds.has(story.id)
+      || continueStoryIdSet.has(story.id)
     ) return;
     usedStoryIds.add(story.id);
     trendingBrands.add(story.brand);

@@ -51,6 +51,27 @@ test("does not remove an unfinished story from the river when Continue Reading r
   assert.equal(allocation.riverStories.some((story) => story.id === continueStory.id), true);
 });
 
+test("keeps a Continue Reading story out of other reserving modules", () => {
+  const continueStory = stories[5];
+  const allocation = allocateStoryModules({
+    stories,
+    heroStoryIds: stories.slice(0, 5).map((story) => story.id),
+    continueStoryIds: [continueStory.id],
+    followedBrands: [continueStory.brand],
+  });
+  const reservingModuleIds = [
+    allocation.todayEdit.followedBrandStory?.id,
+    allocation.todayEdit.trendingStory?.id,
+    allocation.todayEdit.horoscopeStory?.id,
+    ...allocation.dailyHabitStories.map((story) => story.id),
+    ...allocation.trendingStories.map((story) => story.id),
+  ].filter(Boolean);
+
+  assert.equal(allocation.todayEdit.continueStory?.id, continueStory.id);
+  assert.equal(reservingModuleIds.includes(continueStory.id), false);
+  assert.equal(allocation.riverStories.some((story) => story.id === continueStory.id), true);
+});
+
 test("can reference a hero story for Continue Reading without changing hero or river allocation", () => {
   const heroStory = stories[0];
   const allocation = allocateStoryModules({

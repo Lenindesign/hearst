@@ -302,7 +302,7 @@ export const Mobile: Story = {
     for (const selector of carouselCanvas.getAllByRole("button", {
       name: /^Show story /,
     })) {
-      await expect(selector).toHaveClass("h-11", "w-11");
+      await expect(selector).toHaveClass("h-6", "w-9");
     }
     await expect(document.documentElement.scrollWidth).toBe(
       document.documentElement.clientWidth,

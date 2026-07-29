@@ -20,6 +20,7 @@ export function ReaderAccountStoryBoundary({
   const [ready, setReady] = React.useState(false);
 
   React.useLayoutEffect(() => {
+    let active = true;
     if (account) {
       window.localStorage.setItem(accountStorageKey, JSON.stringify(account));
       window.localStorage.setItem(sessionStorageKey, account.id);
@@ -27,9 +28,12 @@ export function ReaderAccountStoryBoundary({
       window.localStorage.removeItem(accountStorageKey);
       window.localStorage.removeItem(sessionStorageKey);
     }
-    setReady(true);
+    window.queueMicrotask(() => {
+      if (active) setReady(true);
+    });
 
     return () => {
+      active = false;
       window.localStorage.removeItem(accountStorageKey);
       window.localStorage.removeItem(sessionStorageKey);
     };

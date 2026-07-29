@@ -20,7 +20,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "The exact production utility bar shared by the routed Hearst+ home experience and HOT ROD events. It owns destination routes, publication discovery, account entry, the scoped dark Videos treatment, and a 44px phone layout that keeps touch targets inside the bar.",
+          "The exact production utility bar shared by the routed Hearst+ home experience and HOT ROD events. It owns destination routes, publication discovery, account entry, the scoped dark Videos treatment, and the compact 32px mobile treatment.",
       },
     },
   },
@@ -146,7 +146,8 @@ export const MobileLayout: Story = {
     const utilityBar = destinationNav.closest(".sticky");
     await expect(utilityBar).not.toBeNull();
     const utilityRect = utilityBar!.getBoundingClientRect();
-    await expect(utilityRect.height).toBeGreaterThanOrEqual(44);
+    await expect(utilityRect.height).toBeGreaterThanOrEqual(32);
+    await expect(utilityRect.height).toBeLessThanOrEqual(36);
     await expect(utilityBar!.scrollHeight).toBeLessThanOrEqual(
       Math.ceil(utilityRect.height),
     );
@@ -156,8 +157,10 @@ export const MobileLayout: Story = {
       canvas.getByRole("button", { name: "Sign in or sign up" }),
     ]) {
       const rect = control.getBoundingClientRect();
-      await expect(rect.width).toBeGreaterThanOrEqual(44);
-      await expect(rect.height).toBeGreaterThanOrEqual(44);
+      await expect(rect.width).toBeGreaterThanOrEqual(24);
+      await expect(rect.height).toBeGreaterThanOrEqual(24);
+      await expect(rect.top).toBeGreaterThanOrEqual(utilityRect.top);
+      await expect(rect.bottom).toBeLessThanOrEqual(utilityRect.bottom);
     }
   },
 };
