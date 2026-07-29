@@ -374,10 +374,12 @@ export function MainNav({
   const mobileMenuPanelRef = React.useRef<HTMLDivElement | null>(null);
   const mobileMenuDialogRef = React.useRef<HTMLDivElement | null>(null);
   const navScrollRef = React.useRef<HTMLDivElement | null>(null);
+  const compactNavScrollRef = React.useRef<HTMLElement | null>(null);
   const searchTriggerRef = React.useRef<HTMLButtonElement | null>(null);
   const searchPanelRef = React.useRef<HTMLDivElement | null>(null);
   const searchDialogRef = React.useRef<HTMLDivElement | null>(null);
   const searchInputRef = React.useRef<HTMLInputElement | null>(null);
+  const frozenNavScrollLeftRef = React.useRef<number | null>(null);
   const restoreSearchTriggerFocus = React.useCallback(() => {
     let attempts = 0;
     const restore = () => {
@@ -453,7 +455,10 @@ export function MainNav({
         const previousItem = activeItem.previousElementSibling as HTMLElement | null;
         const preferredStart = previousItem?.offsetLeft ?? itemStart;
         let nextScrollLeft = Math.max(0, preferredStart - safeInset);
-        if (itemEnd > nextScrollLeft + scroller.clientWidth - safeInset) {
+        if (frozenNavScrollLeftRef.current !== null) {
+          nextScrollLeft = frozenNavScrollLeftRef.current;
+          frozenNavScrollLeftRef.current = null;
+        } else if (itemEnd > nextScrollLeft + scroller.clientWidth - safeInset) {
           nextScrollLeft = Math.max(0, itemEnd - scroller.clientWidth + safeInset);
         }
         scroller.scrollTo({ left: nextScrollLeft, behavior: "auto" });
@@ -470,6 +475,32 @@ export function MainNav({
       if (frame) window.cancelAnimationFrame(frame);
     };
   }, [activeFilter, selectedBrand?.slug]);
+  const handleNavigationWheel = (event: React.WheelEvent<HTMLElement>) => {
+    const isHorizontalIntent =
+      Math.abs(event.deltaX) > Math.abs(event.deltaY) * 1.15 && Math.abs(event.deltaX) > 1;
+
+    if (!isHorizontalIntent) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const scroller = navScrollRef.current;
+    if (scroller) {
+      frozenNavScrollLeftRef.current = scroller.scrollLeft;
+      window.requestAnimationFrame(() => {
+        if (frozenNavScrollLeftRef.current === null) return;
+        scroller.scrollLeft = frozenNavScrollLeftRef.current;
+      });
+    }
+
+    const compactScroller = compactNavScrollRef.current;
+    if (compactScroller) {
+      const compactScrollLeft = compactScroller.scrollLeft;
+      window.requestAnimationFrame(() => {
+        compactScroller.scrollLeft = compactScrollLeft;
+      });
+    }
+  };
 
   React.useEffect(() => {
     let frame = 0;
@@ -1113,6 +1144,7 @@ export function MainNav({
           ref={navScrollRef}
           data-topic-navigation-scroll
 	          className="flex min-w-0 flex-1 scroll-px-4 items-center gap-6 overflow-x-auto scrollbar-hide md:flex-none md:justify-center"
+          onWheelCapture={handleNavigationWheel}
         >
           {renderNavLinks()}
         </div>
@@ -1149,8 +1181,10 @@ export function MainNav({
     >
       <PageContainer
         as="nav"
+        ref={compactNavScrollRef}
         aria-label={selectedBrand ? `${selectedBrand.name} compact sections` : `${brand.name} compact sections`}
         className="flex items-center justify-center gap-6 overflow-x-auto py-2 scrollbar-hide"
+        onWheelCapture={handleNavigationWheel}
       >
         {renderNavLinks()}
       </PageContainer>
@@ -2374,9 +2408,33 @@ function LifestyleStoryReaderModal({
   const destinationConfigs = useDestinationConfigs();
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
+  const readerSwipeStageRef = React.useRef<HTMLDivElement | null>(null);
+  const readerSwipeStartRef = React.useRef<{
+    x: number;
+    y: number;
+    time: number;
+  } | null>(null);
+  const readerSwipeLastRef = React.useRef<{ x: number; y: number } | null>(null);
+  const readerSwipeLockedRef = React.useRef(false);
+  const readerSwipeIntentRef = React.useRef(false);
+  const readerSuppressClickRef = React.useRef(false);
+  const readerSwipeWheelRef = React.useRef<{ offsetX: number; lastTime: number } | null>(
+    null,
+  );
+  const readerSwipeWheelResetTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
+  const readerSwipeUnlockTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
+  const [readerSwipeOffset, setReaderSwipeOffset] = React.useState(0);
+  const [readerSwipeDragging, setReaderSwipeDragging] = React.useState(false);
+  const [readerSwipeTransitionEnabled, setReaderSwipeTransitionEnabled] =
+    React.useState(true);
   const [readerDestinationOverride, setReaderDestinationOverride] = React.useState<Exclude<DestinationMode, "all"> | null>(null);
   const readerOriginBrandSlug = getReaderOriginBrandSlug(readerReturnHref);
   const [readerBrandOverrideSlug, setReaderBrandOverrideSlug] = React.useState<string | null>(null);
+  const [readerFilterOverride, setReaderFilterOverride] = React.useState<string | null>(null);
   const [readerFetchedStories, setReaderFetchedStories] = React.useState<LifestyleRiverStory[]>([]);
   const [loadingReaderBrandSlug, setLoadingReaderBrandSlug] = React.useState<string | null>(null);
   const activeReaderBrandSlug = readerBrandOverrideSlug ?? readerOriginBrandSlug;
@@ -2583,17 +2641,23 @@ function LifestyleStoryReaderModal({
         label: section.label,
         mode: section.mode,
       }));
-  const readerActiveFilter = readerContextStory
+  const derivedReaderActiveFilter = readerContextStory
     ? readerDestinationConfig.filters.find((filter) =>
         filter !== "For You"
         && filter !== "Saved"
         && storyMatchesLifestyleFilter(readerContextStory, filter)
       ) ?? "For You"
     : "For You";
+  const readerActiveFilter = readerFilterOverride ?? derivedReaderActiveFilter;
 
   const getReaderFilterStory = (filter: string) => {
     if (!readerContextStory) return undefined;
-    if (filter === "For You") return readerContextStory;
+    if (filter === "For You") {
+      return readerStories.find((story) =>
+        story.id !== readerContextStory.id
+        && getStoryDestinationMode(story.brandSlug) === readerDestination
+      ) ?? readerContextStory;
+    }
 
     return readerStories.find((story) =>
       getStoryDestinationMode(story.brandSlug) === readerDestination
@@ -2602,6 +2666,40 @@ function LifestyleStoryReaderModal({
         : storyMatchesLifestyleFilter(story, filter))
     );
   };
+  const contentReaderFilterItems = readerDestinationConfig.filters.map((filter) => ({
+    label: filter,
+    active: filter === readerActiveFilter,
+    disabled: !getReaderFilterStory(filter),
+  }));
+  const readerSwipeFilterLabels = contentReaderFilterItems
+    .filter((filter) => !filter.disabled)
+    .map((filter) => filter.label);
+  const readerSwipeFilterIndex = Math.max(
+    0,
+    readerSwipeFilterLabels.indexOf(readerActiveFilter),
+  );
+  const hasMultipleReaderSwipeFilters = readerSwipeFilterLabels.length > 1;
+  const previousReaderSwipeFilter = hasMultipleReaderSwipeFilters
+    ? readerSwipeFilterLabels[
+        (readerSwipeFilterIndex - 1 + readerSwipeFilterLabels.length)
+        % readerSwipeFilterLabels.length
+      ]
+    : undefined;
+  const nextReaderSwipeFilter = hasMultipleReaderSwipeFilters
+    ? readerSwipeFilterLabels[
+        (readerSwipeFilterIndex + 1) % readerSwipeFilterLabels.length
+      ]
+    : undefined;
+  const readerCategoryPreloadStories = [
+    previousReaderSwipeFilter ? getReaderFilterStory(previousReaderSwipeFilter) : undefined,
+    nextReaderSwipeFilter ? getReaderFilterStory(nextReaderSwipeFilter) : undefined,
+  ].filter((story): story is LifestyleRiverStory => Boolean(story));
+  const readerCategoryPreloadStoryIds = readerCategoryPreloadStories
+    .map((story) => story.id)
+    .join("|");
+  const readerCategoryImagePreloadKey = readerCategoryPreloadStories
+    .map((story) => story.image)
+    .join("|");
 
   React.useEffect(() => {
     if (openStoryId) recordStoryOpened(openStoryId);
@@ -2625,12 +2723,19 @@ function LifestyleStoryReaderModal({
 
   React.useEffect(() => () => {
     ambientDiscoveryControllerRef.current?.abort();
+    if (readerSwipeUnlockTimerRef.current) {
+      clearTimeout(readerSwipeUnlockTimerRef.current);
+    }
+    if (readerSwipeWheelResetTimerRef.current) {
+      clearTimeout(readerSwipeWheelResetTimerRef.current);
+    }
   }, []);
 
-  const selectReaderStory = React.useCallback((storyId: string) => {
+  const selectReaderStory = React.useCallback((storyId: string, options?: { activeFilter?: string }) => {
     setVisibleReaderCount(1);
     setFullscreenGallery(null);
     setAmbientReaderStoryId(null);
+    setReaderFilterOverride(options?.activeFilter ?? null);
     resetAmbientDiscovery();
     activeReaderRouteStoryIdRef.current = storyId;
     setActiveReaderContext({
@@ -2642,7 +2747,6 @@ function LifestyleStoryReaderModal({
   }, [
     onSwitchReaderStory,
     resetAmbientDiscovery,
-    setAmbientReaderStoryId,
     setFullscreenGallery,
     setVisibleReaderCount,
   ]);
@@ -2852,7 +2956,10 @@ function LifestyleStoryReaderModal({
   React.useEffect(() => {
     if (!openStoryId || typeof window === "undefined") return;
 
-    storyQueue.slice(1, 3).forEach((story) => {
+    [
+      ...storyQueue.slice(1, 3),
+      ...readerCategoryPreloadStories,
+    ].forEach((story) => {
       if (!story.image) return;
       const image = new window.Image();
       image.decoding = "async";
@@ -2862,9 +2969,9 @@ function LifestyleStoryReaderModal({
         q: "75",
       }).toString()}`;
     });
-  // The key intentionally represents only the next two story hero images.
+  // The keys intentionally represent the next reader stories and adjacent category heroes.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openStoryId, nextReaderImagePreloadKey]);
+  }, [openStoryId, nextReaderImagePreloadKey, readerCategoryImagePreloadKey]);
 
   React.useEffect(() => {
     const node = sentinelRef.current;
@@ -2998,7 +3105,11 @@ function LifestyleStoryReaderModal({
 
   React.useEffect(() => {
     let active = true;
-    const storiesToLoad = [...visibleReaderStories, ...ambientReaderPreloadStories];
+    const storiesToLoad = [
+      ...visibleReaderStories,
+      ...readerCategoryPreloadStories,
+      ...ambientReaderPreloadStories,
+    ];
     const seenStoryIds = new Set<string>();
     storiesToLoad.forEach((story) => {
       if (seenStoryIds.has(story.id)) return;
@@ -3020,7 +3131,7 @@ function LifestyleStoryReaderModal({
     };
   // The ID key intentionally represents the current lazy-loaded reader queue.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ambientReaderPreloadStoryIds, visibleReaderStoryIds]);
+  }, [ambientReaderPreloadStoryIds, readerCategoryPreloadStoryIds, visibleReaderStoryIds]);
 
   React.useEffect(() => {
     if (!isReaderOpen || ambientReaderStoryId || fullscreenGallery) return;
@@ -3099,11 +3210,6 @@ function LifestyleStoryReaderModal({
         && loadingReaderBrandSlug === item.brandSlug,
     };
   });
-  const contentReaderFilterItems = readerDestinationConfig.filters.map((filter) => ({
-    label: filter,
-    active: filter === readerActiveFilter,
-    disabled: !getReaderFilterStory(filter),
-  }));
   const selectReaderMastheadItem = async (key: string) => {
     const item = readerMastheadNavItems.find((candidate) => candidate.key === key);
     if (!item) return;
@@ -3154,7 +3260,193 @@ function LifestyleStoryReaderModal({
   };
   const selectReaderFilter = (filter: string) => {
     const filterStory = getReaderFilterStory(filter);
-    if (filterStory) selectReaderStory(filterStory.id);
+    if (filterStory) selectReaderStory(filterStory.id, { activeFilter: filter });
+  };
+  const resetReaderCategorySwipe = () => {
+    readerSwipeStartRef.current = null;
+    readerSwipeLastRef.current = null;
+    readerSwipeIntentRef.current = false;
+    readerSwipeWheelRef.current = null;
+    if (readerSwipeWheelResetTimerRef.current) {
+      clearTimeout(readerSwipeWheelResetTimerRef.current);
+      readerSwipeWheelResetTimerRef.current = null;
+    }
+    setReaderSwipeDragging(false);
+    setReaderSwipeTransitionEnabled(true);
+    setReaderSwipeOffset(0);
+  };
+  const unlockReaderCategorySwipe = () => {
+    readerSwipeLockedRef.current = false;
+    if (readerSwipeUnlockTimerRef.current) {
+      clearTimeout(readerSwipeUnlockTimerRef.current);
+      readerSwipeUnlockTimerRef.current = null;
+    }
+  };
+  const commitReaderCategorySwipe = (direction: "previous" | "next") => {
+    const targetFilter = direction === "next"
+      ? nextReaderSwipeFilter
+      : previousReaderSwipeFilter;
+    const stageWidth = readerSwipeStageRef.current?.clientWidth ?? 0;
+
+    if (!targetFilter || !stageWidth || readerSwipeLockedRef.current) {
+      resetReaderCategorySwipe();
+      return;
+    }
+
+    readerSwipeLockedRef.current = true;
+    if (readerSwipeUnlockTimerRef.current) {
+      clearTimeout(readerSwipeUnlockTimerRef.current);
+    }
+    readerSwipeWheelRef.current = null;
+    if (readerSwipeWheelResetTimerRef.current) {
+      clearTimeout(readerSwipeWheelResetTimerRef.current);
+      readerSwipeWheelResetTimerRef.current = null;
+    }
+
+    const exitOffset = direction === "next" ? -stageWidth : stageWidth;
+    const enterOffset = direction === "next" ? stageWidth : -stageWidth;
+    setReaderSwipeDragging(false);
+    setReaderSwipeTransitionEnabled(true);
+    setReaderSwipeOffset(exitOffset);
+
+    window.setTimeout(() => {
+      setReaderSwipeTransitionEnabled(false);
+      selectReaderFilter(targetFilter);
+      setReaderSwipeOffset(enterOffset);
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          setReaderSwipeTransitionEnabled(true);
+          setReaderSwipeOffset(0);
+        });
+      });
+    }, 220);
+
+    readerSwipeUnlockTimerRef.current = setTimeout(() => {
+      unlockReaderCategorySwipe();
+    }, 620);
+  };
+  const handleReaderCategoryPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.button !== 0 || readerSwipeLockedRef.current) return;
+    readerSwipeStartRef.current = {
+      x: event.clientX,
+      y: event.clientY,
+      time: performance.now(),
+    };
+    readerSwipeLastRef.current = { x: event.clientX, y: event.clientY };
+  };
+  const handleReaderCategoryPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const start = readerSwipeStartRef.current;
+    if (!start || readerSwipeLockedRef.current) return;
+
+    const deltaX = event.clientX - start.x;
+    const deltaY = event.clientY - start.y;
+    readerSwipeLastRef.current = { x: event.clientX, y: event.clientY };
+
+    if (Math.abs(deltaY) > Math.abs(deltaX) * 1.2) return;
+    if (Math.abs(deltaX) < 8 && !readerSwipeIntentRef.current) return;
+    if (deltaX < 0 && !nextReaderSwipeFilter) return;
+    if (deltaX > 0 && !previousReaderSwipeFilter) return;
+
+    readerSwipeIntentRef.current = true;
+    readerSuppressClickRef.current = true;
+    setReaderSwipeDragging(true);
+    setReaderSwipeTransitionEnabled(false);
+
+    if (
+      event.currentTarget.setPointerCapture &&
+      !event.currentTarget.hasPointerCapture(event.pointerId)
+    ) {
+      try {
+        event.currentTarget.setPointerCapture(event.pointerId);
+      } catch {
+        // Test environments may not support pointer capture for synthetic events.
+      }
+    }
+
+    event.preventDefault();
+    const maxOffset = event.currentTarget.clientWidth * 0.28;
+    setReaderSwipeOffset(Math.max(-maxOffset, Math.min(maxOffset, deltaX)));
+  };
+  const handleReaderCategoryPointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
+    const start = readerSwipeStartRef.current;
+    if (!start) return;
+
+    const end = readerSwipeLastRef.current ?? {
+      x: event.clientX,
+      y: event.clientY,
+    };
+    const deltaX = end.x - start.x;
+    const deltaY = end.y - start.y;
+    const elapsed = Math.max(performance.now() - start.time, 1);
+    const velocity = Math.abs(deltaX) / elapsed;
+    const threshold = Math.min(96, event.currentTarget.clientWidth * 0.16);
+    const isHorizontalSwipe =
+      Math.abs(deltaX) > Math.abs(deltaY) * 1.25 &&
+      (Math.abs(deltaX) >= threshold ||
+        (Math.abs(deltaX) >= 32 && velocity >= 0.55));
+
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      try {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      } catch {
+        // Ignore release errors from unsupported test environments.
+      }
+    }
+
+    if (isHorizontalSwipe) {
+      commitReaderCategorySwipe(deltaX < 0 ? "next" : "previous");
+    } else {
+      resetReaderCategorySwipe();
+    }
+
+    window.setTimeout(() => {
+      readerSuppressClickRef.current = false;
+    }, 0);
+  };
+  const handleReaderCategoryWheel = (event: React.WheelEvent<HTMLDivElement>) => {
+    if (!hasMultipleReaderSwipeFilters || readerSwipeLockedRef.current) return;
+
+    const stageWidth = readerSwipeStageRef.current?.clientWidth ?? event.currentTarget.clientWidth;
+    if (!stageWidth) return;
+
+    const deltaScale = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? stageWidth : 1;
+    const deltaX = event.deltaX * deltaScale;
+    const deltaY = event.deltaY * deltaScale;
+    const isHorizontalIntent =
+      Math.abs(deltaX) > Math.abs(deltaY) * 1.15 && Math.abs(deltaX) > 1;
+
+    if (!isHorizontalIntent) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const now = performance.now();
+    const previousWheel = readerSwipeWheelRef.current;
+    const nextOffsetX =
+      previousWheel && now - previousWheel.lastTime < 220
+        ? previousWheel.offsetX + deltaX
+        : deltaX;
+    readerSwipeWheelRef.current = { offsetX: nextOffsetX, lastTime: now };
+
+    if (readerSwipeWheelResetTimerRef.current) {
+      clearTimeout(readerSwipeWheelResetTimerRef.current);
+    }
+
+    const maxOffset = stageWidth * 0.28;
+    const visualOffset = Math.max(-maxOffset, Math.min(maxOffset, -nextOffsetX));
+    setReaderSwipeDragging(true);
+    setReaderSwipeTransitionEnabled(false);
+    setReaderSwipeOffset(visualOffset);
+
+    const threshold = Math.min(96, stageWidth * 0.16);
+    if (Math.abs(nextOffsetX) >= threshold) {
+      commitReaderCategorySwipe(nextOffsetX > 0 ? "next" : "previous");
+      return;
+    }
+
+    readerSwipeWheelResetTimerRef.current = setTimeout(() => {
+      resetReaderCategorySwipe();
+    }, 160);
   };
 
   return (
@@ -3195,7 +3487,30 @@ function LifestyleStoryReaderModal({
           onClose={onClose}
         />
 
-        <div className="grid gap-8 px-4 py-6 sm:px-8 lg:px-10 xl:grid-cols-[220px_minmax(0,1fr)]">
+        <div
+          ref={readerSwipeStageRef}
+          className={cn(
+            "grid touch-pan-y gap-8 overscroll-x-contain px-4 py-6 sm:px-8 lg:px-10 xl:grid-cols-[220px_minmax(0,1fr)]",
+            readerSwipeTransitionEnabled && "transition-transform duration-[250ms] ease-out",
+            readerSwipeDragging && "cursor-grabbing select-none transition-none",
+          )}
+          data-reader-category-swipe-container
+          data-reader-category-swipe-stage
+          data-reader-category-filter={readerActiveFilter}
+          onPointerDown={handleReaderCategoryPointerDown}
+          onPointerMove={handleReaderCategoryPointerMove}
+          onPointerUp={handleReaderCategoryPointerUp}
+          onPointerCancel={resetReaderCategorySwipe}
+          onClickCapture={(event) => {
+            if (!readerSuppressClickRef.current) return;
+            event.preventDefault();
+            event.stopPropagation();
+          }}
+          onWheelCapture={handleReaderCategoryWheel}
+          style={{
+            transform: `translate3d(${readerSwipeOffset}px, 0, 0)`,
+          }}
+        >
           <ContentReaderContextRail
             currentStory={activeReaderContextStory}
             stories={readerStories}
@@ -3449,6 +3764,11 @@ const lifestyleHeroStoryCount = 5;
 const initialLifestyleRiverCardCount = 16;
 const progressiveRiverRevealCount = 4;
 const progressiveRiverLoadedBuffer = 12;
+
+function isHoroscopeStory(story: LifestyleRiverStory) {
+  const searchableText = [story.title, ...story.tags].filter(Boolean).join(" ").toLowerCase();
+  return searchableText.includes("horoscope") || searchableText.includes("zodiac");
+}
 
 export {
   LifestyleRiverLoadingState,
@@ -4109,7 +4429,10 @@ function LifestyleRiverHomePage({
     visitScopeKey,
     visitStartedAt,
   ]);
-  const heroStoryIds = new Set(heroStories.map((story) => story.id));
+  const heroStoryIds = React.useMemo(
+    () => new Set(heroStories.map((story) => story.id)),
+    [heroStories]
+  );
   const showTodayEdit = destination === "all"
     && !initialBrandSlug
     && activeFilter === "For You";
@@ -4120,9 +4443,28 @@ function LifestyleRiverHomePage({
     followedBrands: profile.followedBrands,
     includeTodayEdit: showTodayEdit,
   });
+  const todayEditSelection = React.useMemo(() => {
+    if (!showTodayEdit || moduleAllocation.todayEdit.horoscopeStory) {
+      return moduleAllocation.todayEdit;
+    }
+
+    const usedStoryIds = new Set([
+      ...heroStoryIds,
+      moduleAllocation.todayEdit.continueStory?.id,
+      moduleAllocation.todayEdit.followedBrandStory?.id,
+      moduleAllocation.todayEdit.trendingStory?.id,
+    ].filter((storyId): storyId is string => Boolean(storyId)));
+    const fallbackHoroscopeStory = destinationConfigs.all.stories.find((story) =>
+      isHoroscopeStory(story) && !usedStoryIds.has(story.id)
+    );
+
+    return fallbackHoroscopeStory
+      ? { ...moduleAllocation.todayEdit, horoscopeStory: fallbackHoroscopeStory }
+      : moduleAllocation.todayEdit;
+  }, [destinationConfigs.all.stories, heroStoryIds, moduleAllocation.todayEdit, showTodayEdit]);
   const moduleReservedStoryIds = new Set([
     ...heroStoryIds,
-    ...Object.values(moduleAllocation.todayEdit)
+    ...Object.values(todayEditSelection)
       .filter((story): story is LifestyleRiverStory => Boolean(story))
       .map((story) => story.id),
     ...moduleAllocation.dailyHabitStories.map((story) => story.id),
@@ -4918,7 +5260,7 @@ function LifestyleRiverHomePage({
     <div className="space-y-8">
       {showTodayEdit ? (
         <TodayEditStrip
-          selection={moduleAllocation.todayEdit}
+          selection={todayEditSelection}
           measurementEnabled={!openStoryId}
           onOpenStory={openStory}
           onContinueImpression={(storyId) => {
@@ -5216,6 +5558,7 @@ function LifestyleRiverHomePage({
           <TrendingStoryRail
             stories={moduleAllocation.trendingStories}
             onOpenStory={(story) => openStory(story.id)}
+            title={initialBrandName ? `Trending in ${initialBrandName}` : undefined}
           />
           {showStakeholderTools ? (
             <>

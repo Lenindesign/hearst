@@ -10,6 +10,7 @@ interface ReaderMastheadCarouselProps {
   ariaLabel: string;
   children: React.ReactNode;
   className?: string;
+  onWheelCapture?: (event: React.WheelEvent<HTMLElement>) => void;
 }
 
 export function ReaderMastheadCarousel({
@@ -17,6 +18,7 @@ export function ReaderMastheadCarousel({
   ariaLabel,
   children,
   className,
+  onWheelCapture,
 }: ReaderMastheadCarouselProps) {
   const viewportRef = React.useRef<HTMLDivElement>(null);
   const [scrollState, setScrollState] = React.useState({
@@ -96,6 +98,7 @@ export function ReaderMastheadCarousel({
     <nav
       className={cn("ml-auto hidden min-w-0 flex-1 items-center gap-1 lg:flex", className)}
       aria-label={ariaLabel}
+      onWheelCapture={onWheelCapture}
     >
       <Button
         type="button"
@@ -111,6 +114,8 @@ export function ReaderMastheadCarousel({
       <div
         ref={viewportRef}
         className="min-w-0 flex-1 overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        data-reader-masthead-navigation
+        onWheelCapture={onWheelCapture}
       >
         <div className="flex min-w-max items-center gap-5 px-1">
           {children}

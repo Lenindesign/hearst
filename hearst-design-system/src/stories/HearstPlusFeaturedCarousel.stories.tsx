@@ -46,6 +46,14 @@ const delishPalette = [
   "var(--palette-brand-5)",
 ];
 
+function getTranslateX(element: Element) {
+  const transform = window.getComputedStyle(element).transform;
+  if (!transform || transform === "none") return 0;
+
+  const matrix = new DOMMatrixReadOnly(transform);
+  return matrix.m41;
+}
+
 function StoryImage({
   story,
   active,
@@ -188,7 +196,7 @@ export const TodaysPicks: Story = {
     const canvas = within(canvasElement);
     const carousel = canvas.getByRole("article", { name: "Today’s Picks" });
     const slides = carousel.querySelectorAll(
-      'button[aria-label^="Open story:"]',
+      'button[aria-label^="Open story:"]:not([data-carousel-clone="true"])',
     );
     const selectors = within(carousel).getAllByRole("button", {
       name: /^Show story /,
@@ -337,6 +345,139 @@ export const PublicationFeaturedStories: Story = {
     await expect(
       within(carousel).getAllByRole("button", { name: /^Show story / }),
     ).toHaveLength(5);
+  },
+};
+
+export const WrapSwipe: Story = {
+  name: "Swipe: cyclic wrap settles without rebound",
+  globals: { brand: "hearst-all" },
+  render: () => (
+    <FeaturedCarouselExample initialStoryId={mixedStories[4].id} />
+  ),
+  play: async ({ canvasElement }) => {
+    const carousel = within(canvasElement).getByRole("article", {
+      name: "Today’s Picks",
+    });
+    const track = carousel.querySelector(
+      '[data-testid="featured-story-track"]',
+    );
+    const rail = track?.querySelector("[data-carousel-track-index]");
+
+    if (!(track instanceof HTMLElement) || !(rail instanceof HTMLElement)) {
+      throw new Error("Featured carousel track was not rendered.");
+    }
+
+    await waitFor(() => {
+      expect(rail.dataset.carouselTrackIndex).toBe("5");
+    });
+
+    const rect = track.getBoundingClientRect();
+    const startX = rect.left + rect.width * 0.55;
+    const endX = rect.left + rect.width * 0.22;
+    const y = rect.top + rect.height / 2;
+    const swipeForward = (pointerId: number) => {
+      track.dispatchEvent(
+        new PointerEvent("pointerdown", {
+          bubbles: true,
+          cancelable: true,
+          pointerId,
+          pointerType: "touch",
+          button: 0,
+          clientX: startX,
+          clientY: y,
+        }),
+      );
+      track.dispatchEvent(
+        new PointerEvent("pointermove", {
+          bubbles: true,
+          cancelable: true,
+          pointerId,
+          pointerType: "touch",
+          button: 0,
+          clientX: endX,
+          clientY: y,
+        }),
+      );
+      track.dispatchEvent(
+        new PointerEvent("pointerup", {
+          bubbles: true,
+          cancelable: true,
+          pointerId,
+          pointerType: "touch",
+          button: 0,
+          clientX: endX,
+          clientY: y,
+        }),
+      );
+    };
+
+    track.dispatchEvent(
+      new PointerEvent("pointerdown", {
+        bubbles: true,
+        cancelable: true,
+        pointerId: 42,
+        pointerType: "touch",
+        button: 0,
+        clientX: startX,
+        clientY: y,
+      }),
+    );
+    track.dispatchEvent(
+      new PointerEvent("pointermove", {
+        bubbles: true,
+        cancelable: true,
+        pointerId: 42,
+        pointerType: "touch",
+        button: 0,
+        clientX: endX,
+        clientY: y,
+      }),
+    );
+
+    const beforeReleaseX = getTranslateX(rail);
+    track.dispatchEvent(
+      new PointerEvent("pointerup", {
+        bubbles: true,
+        cancelable: true,
+        pointerId: 42,
+        pointerType: "touch",
+        button: 0,
+        clientX: endX,
+        clientY: y,
+      }),
+    );
+
+    await waitFor(() => {
+      expect(rail.dataset.carouselTrackIndex).toBe("6");
+    });
+    const afterReleaseX = getTranslateX(rail);
+    await expect(afterReleaseX).toBeLessThanOrEqual(beforeReleaseX);
+    await waitFor(
+      () => {
+        expect(rail.dataset.carouselTrackIndex).toBe("1");
+      },
+      { timeout: 1200 },
+    );
+    await expect(
+      within(carousel).getByRole("status", {
+        name: "Featured story status",
+      }),
+    ).toHaveTextContent(`Story 1 of 5: ${mixedStories[0].title}`);
+
+    swipeForward(43);
+    swipeForward(44);
+
+    await waitFor(
+      () => {
+        expect(rail.dataset.carouselTrackIndex).toBe("2");
+      },
+      { timeout: 1200 },
+    );
+    await expect(
+      within(carousel).getByRole("status", {
+        name: "Featured story status",
+      }),
+    ).toHaveTextContent(`Story 2 of 5: ${mixedStories[1].title}`);
   },
 };
 

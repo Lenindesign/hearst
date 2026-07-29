@@ -11,6 +11,7 @@ import {
   EyeOff,
   MessageCircle,
   Play,
+  X,
 } from "@/components/ui/icons";
 import { BrandSourceIcon } from "@/components/hearst-plus/brand-source-icon";
 import {
@@ -21,6 +22,16 @@ import {
 import { formatVideoDuration } from "@/components/hearst-plus/video-format";
 import { cn } from "@/lib/utils";
 
+const videoPlaybackRequestedEvent = "hearst-plus-video-playback-requested";
+
+function requestExclusiveVideoPlayback(surfaceId: string) {
+  if (typeof window === "undefined") return;
+
+  window.dispatchEvent(new CustomEvent(videoPlaybackRequestedEvent, {
+    detail: { surfaceId },
+  }));
+}
+
 export function VideoPlaySurface({
   story,
   featured = false,
@@ -30,76 +41,186 @@ export function VideoPlaySurface({
   featured?: boolean;
   priority?: boolean;
 }) {
+  const surfaceId = React.useId();
   const [playing, setPlaying] = React.useState(false);
+  const [docked, setDocked] = React.useState(false);
+  const [dockDismissed, setDockDismissed] = React.useState(false);
+  const [videoOrientation, setVideoOrientation] = React.useState<"landscape" | "portrait">("landscape");
+  const surfaceRef = React.useRef<HTMLDivElement | null>(null);
+  const videoRef = React.useRef<HTMLVideoElement | null>(null);
+
+  React.useEffect(() => {
+    if (!playing) return;
+
+    const surface = surfaceRef.current;
+    if (!surface) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (dockDismissed) {
+          setDocked(false);
+          return;
+        }
+
+        if (entry.intersectionRatio < 0.22) {
+          setDocked(true);
+        } else if (entry.intersectionRatio > 0.72) {
+          setDocked(false);
+        }
+      },
+      { threshold: [0, 0.22, 0.72, 1] },
+    );
+
+    observer.observe(surface);
+    return () => observer.disconnect();
+  }, [dockDismissed, playing]);
+
+  React.useEffect(() => {
+    const stopIfAnotherVideoStarts = (event: Event) => {
+      const requestedSurfaceId =
+        event instanceof CustomEvent &&
+        typeof event.detail?.surfaceId === "string"
+          ? event.detail.surfaceId
+          : null;
+
+      if (requestedSurfaceId === surfaceId) return;
+
+      videoRef.current?.pause();
+      setDocked(false);
+      setDockDismissed(false);
+      setPlaying(false);
+    };
+
+    window.addEventListener(videoPlaybackRequestedEvent, stopIfAnotherVideoStarts);
+    return () => {
+      window.removeEventListener(videoPlaybackRequestedEvent, stopIfAnotherVideoStarts);
+    };
+  }, [surfaceId]);
+
+  const stopDockedVideo = () => {
+    videoRef.current?.pause();
+    setDockDismissed(true);
+    setDocked(false);
+    setPlaying(false);
+  };
+  const updateVideoOrientation = (video: HTMLVideoElement) => {
+    if (!video.videoWidth || !video.videoHeight) return;
+    setVideoOrientation(video.videoHeight > video.videoWidth ? "portrait" : "landscape");
+  };
 
   return (
     <div
+      ref={surfaceRef}
       className={cn(
-        "relative min-w-0 overflow-hidden bg-black",
+        "relative min-w-0 bg-black",
         featured ? "aspect-video rounded-t-[8px]" : "aspect-video rounded-[6px]"
       )}
       onClick={(event) => event.stopPropagation()}
       onKeyDown={(event) => event.stopPropagation()}
+      data-video-play-surface
+      data-video-docked={docked ? "true" : undefined}
     >
-      {playing && story.videoUrl ? (
-        <AdaptiveVideo
-          src={story.videoUrl}
-          poster={story.image}
-          controls
-          autoPlay
-          playsInline
-          preload="metadata"
-          className="h-full w-full bg-black object-contain"
-          aria-label={`Play video: ${story.title}`}
-        />
-      ) : (
-        <>
-          <Image
-            src={story.image}
-            alt=""
-            fill
-            sizes="(max-width: 1024px) 100vw, 640px"
-            className="scale-110 object-cover opacity-60 blur-xl"
-            aria-hidden
+      <div
+        className={cn(
+          "overflow-hidden bg-black transition-[border-radius,box-shadow,transform] duration-300 ease-out motion-reduce:transition-none",
+          docked
+            ? cn(
+                "fixed bottom-4 right-4 z-50 h-auto rounded-[10px] shadow-2xl ring-1 ring-white/20 sm:bottom-6 sm:right-6",
+                videoOrientation === "portrait"
+                  ? "aspect-[9/16] w-[min(220px,calc(100vw-2rem))]"
+                  : "aspect-video w-[min(360px,calc(100vw-2rem))] sm:w-[380px]"
+              )
+            : cn("absolute inset-0", featured ? "rounded-t-[8px]" : "rounded-[6px]")
+        )}
+        data-video-orientation={videoOrientation}
+        data-video-dock-surface={docked ? "floating" : "inline"}
+      >
+        {playing && story.videoUrl ? (
+          <AdaptiveVideo
+            ref={videoRef}
+            src={story.videoUrl}
+            poster={story.image}
+            controls
+            autoPlay
+            playsInline
+            preload="metadata"
+            className="h-full w-full bg-black object-contain"
+            aria-label={`Play video: ${story.title}`}
+            onLoadedMetadata={(event) => updateVideoOrientation(event.currentTarget)}
+            onPlay={() => requestExclusiveVideoPlayback(surfaceId)}
+            onPause={() => {
+              setDocked(false);
+              setPlaying(false);
+            }}
+            onEnded={() => {
+              setDocked(false);
+              setPlaying(false);
+            }}
           />
-          <Image
-            src={story.image}
-            alt=""
-            width={1200}
-            height={675}
-            sizes="(max-width: 1024px) 100vw, 640px"
-            className="relative z-10 h-full w-full object-contain"
-            preload={priority}
-          />
-          <div className="absolute inset-0 z-20 bg-gradient-to-t from-black/75 via-black/15 to-black/5" />
+        ) : (
+          <>
+            <Image
+              src={story.image}
+              alt=""
+              fill
+              sizes="(max-width: 1024px) 100vw, 640px"
+              className="scale-110 object-cover opacity-60 blur-xl"
+              aria-hidden
+            />
+            <Image
+              src={story.image}
+              alt=""
+              width={1200}
+              height={675}
+              sizes="(max-width: 1024px) 100vw, 640px"
+              className="relative z-10 h-full w-full object-contain"
+              preload={priority}
+            />
+            <div className="absolute inset-0 z-20 bg-gradient-to-t from-black/75 via-black/15 to-black/5" />
+            <button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                requestExclusiveVideoPlayback(surfaceId);
+                setDockDismissed(false);
+                setPlaying(true);
+              }}
+              className={cn(
+                "absolute z-30 inline-flex items-center justify-center rounded-full bg-white text-black shadow-sm transition-transform duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/80 motion-reduce:transition-none",
+                featured ? "bottom-5 left-5 h-14 w-14" : "left-3 top-3 h-11 w-11"
+              )}
+              aria-label={`Play video: ${story.title}`}
+            >
+              <Play
+                className={cn(
+                  "ml-0.5 fill-current",
+                  featured ? "h-6 w-6" : "h-4 w-4"
+                )}
+                aria-hidden
+              />
+            </button>
+          </>
+        )}
+        {story.videoDuration ? (
+          <span className="pointer-events-none absolute right-3 top-3 z-30 inline-flex items-center gap-1 rounded-full bg-black/70 px-2.5 py-1 text-xs font-bold tabular-nums text-white">
+            <Clock className="h-3 w-3" aria-hidden />
+            {formatVideoDuration(story.videoDuration)}
+          </span>
+        ) : null}
+        {docked ? (
           <button
             type="button"
             onClick={(event) => {
               event.stopPropagation();
-              setPlaying(true);
+              stopDockedVideo();
             }}
-            className={cn(
-              "absolute z-30 inline-flex items-center justify-center rounded-full bg-white text-black shadow-sm transition-transform duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/80 motion-reduce:transition-none",
-              featured ? "bottom-5 left-5 h-14 w-14" : "left-3 top-3 h-11 w-11"
-            )}
-            aria-label={`Play video: ${story.title}`}
+            className="absolute right-2 top-2 z-40 inline-flex h-11 w-11 items-center justify-center rounded-full bg-black/75 text-white shadow-sm transition-colors hover:bg-black focus:outline-none focus:ring-2 focus:ring-white/80"
+            aria-label={`Close mini player for ${story.title}`}
           >
-            <Play
-              className={cn(
-                "ml-0.5 fill-current",
-                featured ? "h-6 w-6" : "h-4 w-4"
-              )}
-              aria-hidden
-            />
+            <X className="h-4 w-4" aria-hidden />
           </button>
-        </>
-      )}
-      {story.videoDuration ? (
-        <span className="pointer-events-none absolute right-3 top-3 z-30 inline-flex items-center gap-1 rounded-full bg-black/70 px-2.5 py-1 text-xs font-bold tabular-nums text-white">
-          <Clock className="h-3 w-3" aria-hidden />
-          {formatVideoDuration(story.videoDuration)}
-        </span>
-      ) : null}
+        ) : null}
+      </div>
     </div>
   );
 }

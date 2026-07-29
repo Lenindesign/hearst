@@ -55,8 +55,26 @@ export function ContentReaderMasthead({
   onSelectFilter,
   onClose,
 }: ContentReaderMastheadProps) {
+  const handleStaticNavigationWheel = React.useCallback(
+    (event: React.WheelEvent<HTMLElement>) => {
+      const isHorizontalIntent =
+        Math.abs(event.deltaX) > Math.abs(event.deltaY) * 1.15
+        && Math.abs(event.deltaX) > 1;
+
+      if (!isHorizontalIntent) return;
+
+      const scrollLeft = event.currentTarget.scrollLeft;
+      event.preventDefault();
+      event.stopPropagation();
+      window.requestAnimationFrame(() => {
+        event.currentTarget.scrollLeft = scrollLeft;
+      });
+    },
+    [],
+  );
+
   return (
-    <div className="sticky top-0 z-[110] border-b border-border bg-background/95 backdrop-blur">
+    <div className="sticky top-0 z-[110] border-b border-border bg-background">
       <div className="flex min-h-16 items-center justify-between gap-4 border-b border-border/70 px-4 py-3 sm:px-6">
         <div className="flex min-w-0 flex-1 items-center gap-4">
           <LinkComponent
@@ -85,6 +103,7 @@ export function ContentReaderMasthead({
         <ReaderMastheadCarousel
           activeKey={activeMastheadKey}
           ariaLabel={mastheadNavigationLabel}
+          onWheelCapture={handleStaticNavigationWheel}
         >
           {mastheadItems.map((item) => (
             <button
@@ -136,6 +155,8 @@ export function ContentReaderMasthead({
       <nav
         className="overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         aria-label={`${sectionLabel} reader sections`}
+        data-reader-filter-navigation
+        onWheelCapture={handleStaticNavigationWheel}
       >
         <div className="mx-auto flex min-w-max items-center gap-6 px-4 sm:justify-center sm:px-6">
           {filterItems.map((filter) => (
@@ -145,9 +166,9 @@ export function ContentReaderMasthead({
               disabled={filter.disabled}
               onClick={() => onSelectFilter(filter.label)}
               className={cn(
-                "whitespace-nowrap border-b-2 px-0.5 py-3 text-sm transition-colors",
+                "whitespace-nowrap border-b-2 px-0.5 py-3 text-sm font-semibold transition-colors",
                 filter.active
-                  ? "border-primary font-semibold text-primary"
+                  ? "border-primary text-primary"
                   : "border-transparent text-foreground hover:border-primary/40 hover:text-primary",
                 filter.disabled && "cursor-not-allowed opacity-40",
               )}

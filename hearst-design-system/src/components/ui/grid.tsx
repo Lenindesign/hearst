@@ -81,27 +81,30 @@ const widthClass: Record<NonNullable<PageContainerProps["width"]>, string> = {
   full: "max-w-none",
 };
 
-export function PageContainer({
-  as: Tag = "div",
-  className,
-  bleed = false,
-  width = "content",
-  ...rest
-}: PageContainerProps) {
-  const Component = Tag as React.ElementType;
-  return (
-    <Component
-      data-slot="page-container"
-      className={cn(
-        "mx-auto box-border w-full",
-        widthClass[width],
-        !bleed && "px-4 md:px-6 lg:px-12",
-        className,
-      )}
-      {...rest}
-    />
-  );
-}
+export const PageContainer = React.forwardRef<HTMLElement, PageContainerProps>(
+  function PageContainer({
+    as: Tag = "div",
+    className,
+    bleed = false,
+    width = "content",
+    ...rest
+  }, ref) {
+    const Component = Tag as React.ElementType;
+    return (
+      <Component
+        ref={ref}
+        data-slot="page-container"
+        className={cn(
+          "mx-auto box-border w-full",
+          widthClass[width],
+          !bleed && "px-4 md:px-6 lg:px-12",
+          className,
+        )}
+        {...rest}
+      />
+    );
+  }
+);
 
 // ─── Grid ────────────────────────────────────────────────────────────────────
 

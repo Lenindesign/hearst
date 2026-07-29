@@ -6,6 +6,8 @@ const defaultPort = 3111;
 const externalBaseUrl = process.env.HEARST_APP_URL?.replace(/\/$/, "");
 let baseUrl = externalBaseUrl ?? `http://127.0.0.1:${defaultPort}`;
 let appProcess;
+const carouselSelector = 'article[aria-roledescription="carousel"][aria-label="Today’s Picks"]';
+const realSlideSelector = 'button[aria-label^="Open story:"]:not([data-carousel-clone="true"])';
 
 async function waitForApp(url, timeoutMs = 60_000) {
   const startedAt = Date.now();
@@ -67,7 +69,7 @@ async function startAppIfNeeded() {
 }
 
 async function readSlideState(carousel) {
-  return carousel.locator('button[aria-label^="Open story:"]').evaluateAll((slides) =>
+  return carousel.locator(realSlideSelector).evaluateAll((slides) =>
     slides.map((slide) => ({
       ariaHidden: slide.getAttribute("aria-hidden"),
       inert: slide.hasAttribute("inert"),
@@ -77,7 +79,7 @@ async function readSlideState(carousel) {
 }
 
 async function readActiveSlideIndex(carousel) {
-  return carousel.locator('button[aria-label^="Open story:"]').evaluateAll((slides) =>
+  return carousel.locator(realSlideSelector).evaluateAll((slides) =>
     slides.findIndex((slide) => slide.getAttribute("aria-hidden") === "false")
   );
 }
@@ -93,12 +95,10 @@ async function verifyViewport(browser, width) {
     timeout: 60_000,
   });
 
-  const carousel = page.locator(
-    'article[aria-roledescription="carousel"][aria-label="Today’s Picks"]'
-  );
+  const carousel = page.locator(carouselSelector);
   await carousel.waitFor({ state: "visible" });
 
-  const slides = carousel.locator('button[aria-label^="Open story:"]');
+  const slides = carousel.locator(realSlideSelector);
   const indicators = carousel.locator('button[aria-label^="Show story "]');
   const slideCount = await slides.count();
   assert.equal(slideCount, 5, `${width}px should render five Today’s Picks slides.`);
@@ -112,13 +112,14 @@ async function verifyViewport(browser, width) {
     await indicators.nth(index).focus();
     await page.keyboard.press("Enter");
     await page.waitForFunction(
-      ({ selector, activeIndex }) => {
+      ({ selector, slideSelector, activeIndex }) => {
         const root = document.querySelector(selector);
-        const activeSlide = root?.querySelectorAll('button[aria-label^="Open story:"]')[activeIndex];
+        const activeSlide = root?.querySelectorAll(slideSelector)[activeIndex];
         return activeSlide?.getAttribute("aria-hidden") === "false";
       },
       {
-        selector: 'article[aria-roledescription="carousel"][aria-label="Today’s Picks"]',
+        selector: carouselSelector,
+        slideSelector: realSlideSelector,
         activeIndex: index,
       }
     );
@@ -156,12 +157,12 @@ async function verifyViewport(browser, width) {
   await indicators.first().focus();
   await page.keyboard.press("Enter");
   await page.waitForFunction(
-    (selector) => {
+    ({ selector, slideSelector }) => {
       const root = document.querySelector(selector);
-      const firstSlide = root?.querySelector('button[aria-label^="Open story:"]');
+      const firstSlide = root?.querySelector(slideSelector);
       return firstSlide?.getAttribute("aria-hidden") === "false";
     },
-    'article[aria-roledescription="carousel"][aria-label="Today’s Picks"]'
+    { selector: carouselSelector, slideSelector: realSlideSelector }
   );
 
   const swipeStage = carousel.getByTestId("featured-story-track");
@@ -174,18 +175,19 @@ async function verifyViewport(browser, width) {
   });
   await page.mouse.up();
   await page.waitForFunction(
-    (selector) => {
+    ({ selector, slideSelector }) => {
       const root = document.querySelector(selector);
-      const secondSlide = root?.querySelectorAll('button[aria-label^="Open story:"]')[1];
+      const secondSlide = root?.querySelectorAll(slideSelector)[1];
       return secondSlide?.getAttribute("aria-hidden") === "false";
     },
-    'article[aria-roledescription="carousel"][aria-label="Today’s Picks"]'
+    { selector: carouselSelector, slideSelector: realSlideSelector }
   );
   assert.equal(
     await readActiveSlideIndex(carousel),
     1,
     `${width}px horizontal drag should snap to the next featured story.`
   );
+  await page.waitForTimeout(620);
   await swipeStage.dispatchEvent("pointerdown", {
     pointerId: 7,
     pointerType: "touch",
@@ -214,27 +216,28 @@ async function verifyViewport(browser, width) {
     buttons: 0,
   });
   await page.waitForFunction(
-    (selector) => {
+    ({ selector, slideSelector }) => {
       const root = document.querySelector(selector);
-      const thirdSlide = root?.querySelectorAll('button[aria-label^="Open story:"]')[2];
+      const thirdSlide = root?.querySelectorAll(slideSelector)[2];
       return thirdSlide?.getAttribute("aria-hidden") === "false";
     },
-    'article[aria-roledescription="carousel"][aria-label="Today’s Picks"]'
+    { selector: carouselSelector, slideSelector: realSlideSelector }
   );
   assert.equal(
     await readActiveSlideIndex(carousel),
     2,
     `${width}px touch-pointer swipe should snap to the next featured story without activating the slide.`
   );
+  await page.waitForTimeout(620);
   await page.mouse.move(swipeBox.x + swipeBox.width * 0.5, swipeBox.y + swipeBox.height * 0.45);
   await page.mouse.wheel(-220, 0);
   await page.waitForFunction(
-    (selector) => {
+    ({ selector, slideSelector }) => {
       const root = document.querySelector(selector);
-      const secondSlide = root?.querySelectorAll('button[aria-label^="Open story:"]')[1];
+      const secondSlide = root?.querySelectorAll(slideSelector)[1];
       return secondSlide?.getAttribute("aria-hidden") === "false";
     },
-    'article[aria-roledescription="carousel"][aria-label="Today’s Picks"]'
+    { selector: carouselSelector, slideSelector: realSlideSelector }
   );
   assert.equal(
     await readActiveSlideIndex(carousel),

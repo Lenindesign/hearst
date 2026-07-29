@@ -69,12 +69,18 @@ export function FeaturedStoryCarousel({
   indicatorPalette,
 }: FeaturedStoryCarouselProps) {
   const prefersReducedMotion = usePrefersReducedMotion();
-  const [activeIndex, setActiveIndex] = React.useState(() => {
+  const initialActualIndex = React.useMemo(() => {
     const initialIndex = initialStoryId
       ? stories.findIndex((story) => story.id === initialStoryId)
       : 0;
     return Math.max(0, initialIndex);
-  });
+  }, [initialStoryId, stories]);
+  const [activeIndex, setActiveIndex] = React.useState(initialActualIndex);
+  const [trackIndex, setTrackIndex] = React.useState(() =>
+    stories.length > 1 ? initialActualIndex + 1 : 0,
+  );
+  const [trackTransitionEnabled, setTrackTransitionEnabled] =
+    React.useState(true);
   const [paused, setPaused] = React.useState(false);
   const [hoverPaused, setHoverPaused] = React.useState(false);
   const [isDragging, setIsDragging] = React.useState(false);
@@ -88,6 +94,10 @@ export function FeaturedStoryCarousel({
   const swipeLastRef = React.useRef<{ x: number; y: number } | null>(null);
   const hasSwipeIntentRef = React.useRef(false);
   const suppressSlideClickRef = React.useRef(false);
+  const gestureLockedRef = React.useRef(false);
+  const gestureUnlockTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
   const wheelGestureRef = React.useRef<{ offsetX: number; lastTime: number } | null>(
     null,
   );
@@ -98,12 +108,24 @@ export function FeaturedStoryCarousel({
   const swipeInstructionsId = React.useId();
   const activeStory = stories[activeIndex] ?? stories[0];
   const hasMultipleStories = stories.length > 1;
+  const visualStories = React.useMemo(() => {
+    if (!hasMultipleStories) return stories;
+    const firstStory = stories[0];
+    const lastStory = stories[stories.length - 1];
+    return [lastStory, ...stories, firstStory].filter(
+      (story): story is LifestyleRiverStory => Boolean(story),
+    );
+  }, [hasMultipleStories, stories]);
   const adjacentPreloadSources = React.useMemo(() => {
     if (!hasMultipleStories) return [];
 
+    const previousIndex =
+      (activeIndex - 1 + stories.length) % stories.length;
+    const nextIndex = (activeIndex + 1) % stories.length;
+
     return [
-      stories[activeIndex - 1]?.image,
-      stories[activeIndex + 1]?.image,
+      stories[previousIndex]?.image,
+      stories[nextIndex]?.image,
     ].filter((src): src is string => Boolean(src));
   }, [activeIndex, hasMultipleStories, stories]);
 
@@ -117,22 +139,15 @@ export function FeaturedStoryCarousel({
   }, [activeIndex, activeStory, onActiveStoryChange]);
 
   React.useEffect(() => {
-    if (
-      paused ||
-      hoverPaused ||
-      prefersReducedMotion ||
-      isDragging ||
-      !hasMultipleStories
-    ) {
-      return;
-    }
-
-    const intervalId = window.setInterval(() => {
-      setActiveIndex((index) => (index + 1) % stories.length);
-    }, 6500);
-
-    return () => window.clearInterval(intervalId);
-  }, [hasMultipleStories, hoverPaused, isDragging, paused, prefersReducedMotion, stories.length]);
+    if (stories.length === 0) return;
+    queueMicrotask(() => {
+      setActiveIndex((index) => Math.min(index, stories.length - 1));
+      setTrackIndex((index) => {
+        if (stories.length <= 1) return 0;
+        return Math.min(Math.max(index, 1), stories.length);
+      });
+    });
+  }, [stories.length]);
 
   React.useEffect(() => {
     if (typeof window === "undefined" || adjacentPreloadSources.length === 0) {
@@ -151,15 +166,73 @@ export function FeaturedStoryCarousel({
       if (wheelResetTimerRef.current) {
         clearTimeout(wheelResetTimerRef.current);
       }
+      if (gestureUnlockTimerRef.current) {
+        clearTimeout(gestureUnlockTimerRef.current);
+      }
     };
   }, []);
 
+  const settleVisualIndex = React.useCallback((nextIndex: number) => {
+    if (stories.length <= 1) {
+      setActiveIndex(0);
+      setTrackIndex(0);
+      return;
+    }
+
+    const normalizedIndex =
+      ((nextIndex % stories.length) + stories.length) % stories.length;
+    gestureLockedRef.current = true;
+    if (gestureUnlockTimerRef.current) {
+      clearTimeout(gestureUnlockTimerRef.current);
+    }
+    gestureUnlockTimerRef.current = setTimeout(() => {
+      gestureLockedRef.current = false;
+      gestureUnlockTimerRef.current = null;
+    }, 620);
+    setActiveIndex(normalizedIndex);
+    setTrackIndex(nextIndex + 1);
+  }, [stories.length]);
+  const selectStory = React.useCallback((index: number) => {
+    if (stories.length <= 1) {
+      setActiveIndex(0);
+      setTrackIndex(0);
+      return;
+    }
+
+    setActiveIndex(index);
+    setTrackIndex(index + 1);
+  }, [stories.length]);
   const goToPrevious = React.useCallback(() => {
-    setActiveIndex((index) => (index - 1 + stories.length) % stories.length);
-  }, [stories.length]);
+    settleVisualIndex(activeIndex - 1);
+  }, [activeIndex, settleVisualIndex]);
   const goToNext = React.useCallback(() => {
-    setActiveIndex((index) => (index + 1) % stories.length);
-  }, [stories.length]);
+    settleVisualIndex(activeIndex + 1);
+  }, [activeIndex, settleVisualIndex]);
+  React.useEffect(() => {
+    if (
+      paused ||
+      hoverPaused ||
+      prefersReducedMotion ||
+      isDragging ||
+      !hasMultipleStories
+    ) {
+      return;
+    }
+
+    const intervalId = window.setInterval(() => {
+      settleVisualIndex(activeIndex + 1);
+    }, 6500);
+
+    return () => window.clearInterval(intervalId);
+  }, [
+    activeIndex,
+    hasMultipleStories,
+    hoverPaused,
+    isDragging,
+    paused,
+    prefersReducedMotion,
+    settleVisualIndex,
+  ]);
   const resetSwipe = React.useCallback(() => {
     swipeStartRef.current = null;
     swipeLastRef.current = null;
@@ -173,7 +246,9 @@ export function FeaturedStoryCarousel({
     setDragOffset(0);
   }, []);
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (!hasMultipleStories || event.button !== 0) return;
+    if (!hasMultipleStories || event.button !== 0 || gestureLockedRef.current) {
+      return;
+    }
 
     swipeStartRef.current = {
       x: event.clientX,
@@ -266,7 +341,7 @@ export function FeaturedStoryCarousel({
     setHoverPaused(true);
 
     const now = performance.now();
-    if (now < wheelCooldownUntilRef.current) return;
+    if (now < wheelCooldownUntilRef.current || gestureLockedRef.current) return;
 
     if (
       !wheelGestureRef.current ||
@@ -304,6 +379,28 @@ export function FeaturedStoryCarousel({
       setDragOffset(0);
     }, 180);
   }, [goToNext, goToPrevious, hasMultipleStories, resetSwipe]);
+
+  const handleTrackTransitionEnd = (
+    event: React.TransitionEvent<HTMLDivElement>,
+  ) => {
+    if (event.propertyName !== "transform" || stories.length <= 1) return;
+
+    gestureLockedRef.current = false;
+    if (gestureUnlockTimerRef.current) {
+      clearTimeout(gestureUnlockTimerRef.current);
+      gestureUnlockTimerRef.current = null;
+    }
+
+    if (trackIndex === 0 || trackIndex === stories.length + 1) {
+      setTrackTransitionEnabled(false);
+      setTrackIndex(trackIndex === 0 ? stories.length : 1);
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          setTrackTransitionEnabled(true);
+        });
+      });
+    }
+  };
 
   React.useEffect(() => {
     const stage = swipeStageRef.current;
@@ -368,20 +465,28 @@ export function FeaturedStoryCarousel({
         <div
           className={cn(
             "flex w-full ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
-            isDragging
+            isDragging || !trackTransitionEnabled
               ? "transition-none"
               : "transition-transform duration-500",
           )}
+          data-carousel-track-index={trackIndex}
+          onTransitionEnd={handleTrackTransitionEnd}
           style={{
-            transform: `translate3d(calc(-${activeIndex * 100}% + ${dragOffset}px), 0, 0)`,
+            transform: `translate3d(calc(-${trackIndex * 100}% + ${dragOffset}px), 0, 0)`,
           }}
         >
-          {stories.map((story, index) => {
+          {visualStories.map((story, visualIndex) => {
+            const index = hasMultipleStories
+              ? (visualIndex - 1 + stories.length) % stories.length
+              : visualIndex;
+            const isClone =
+              hasMultipleStories &&
+              (visualIndex === 0 || visualIndex === visualStories.length - 1);
             const slideCommentCount = getCommentCount(story);
 
             return (
               <button
-                key={story.id}
+                key={`${isClone ? "clone" : "story"}-${visualIndex}-${story.id}`}
                 type="button"
                 className="relative grid w-full shrink-0 grid-rows-[auto_112px] bg-black text-left text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30 sm:grid-rows-[auto_144px]"
                 onClick={(event) => {
@@ -393,12 +498,13 @@ export function FeaturedStoryCarousel({
                   onOpenStory(story);
                 }}
                 aria-label={`Open story: ${story.title}`}
-                aria-hidden={index !== activeIndex}
-                inert={index !== activeIndex ? true : undefined}
-                tabIndex={index === activeIndex ? 0 : -1}
+                aria-hidden={isClone || index !== activeIndex}
+                inert={isClone || index !== activeIndex ? true : undefined}
+                tabIndex={!isClone && index === activeIndex ? 0 : -1}
                 data-feed-source={
                   isCurrentStory(story) ? "current" : "editorial"
                 }
+                data-carousel-clone={isClone ? "true" : undefined}
                 data-media-kind={story.videoUrl ? "video" : "article"}
                 data-story-id={story.id}
               >
@@ -536,7 +642,7 @@ export function FeaturedStoryCarousel({
               key={story.id}
               type="button"
               className="inline-flex h-6 w-9 items-center justify-center rounded-full transition-colors hover:bg-muted/60 sm:w-auto"
-              onClick={() => setActiveIndex(index)}
+              onClick={() => selectStory(index)}
               aria-label={`Show story ${index + 1}: ${story.title}`}
               aria-current={index === activeIndex ? "true" : undefined}
             >
