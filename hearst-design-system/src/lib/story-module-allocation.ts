@@ -61,7 +61,7 @@ export function allocateStoryModules<T extends StoryModuleCandidate>({
       .filter((story): story is T => Boolean(story))
     : [];
   const continueStory = includeTodayEdit
-    ? takeUnused(continueCandidates, false) ?? continueCandidates[0]
+    ? continueCandidates.find((candidate) => !usedStoryIds.has(candidate.id)) ?? continueCandidates[0]
     : undefined;
   const horoscopeStory = includeTodayEdit
     ? takeUnused(stories.filter((story) => {

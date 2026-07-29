@@ -257,6 +257,15 @@ import {
   usesNativePublicationLogoColor,
 } from "@/lib/home-page-feed-model";
 
+type ReaderRiverReturnContext = {
+  storyId: string;
+  storyIds: string[];
+  scopeKey: string;
+  viewportTop: number;
+  scrollX: number;
+  scrollY: number;
+};
+
 interface ContentType extends BaseContentType {
   footerCols: string[][];
 }
@@ -3537,6 +3546,8 @@ function LifestyleRiverHomePage({
   const [openDelishShortStory, setOpenDelishShortStory] = React.useState<LifestyleRiverStory | null>(null);
   const [delishSupplementalStories, setDelishSupplementalStories] = React.useState<LifestyleRiverStory[]>([]);
   const readerReturnFocusElementRef = React.useRef<HTMLElement | null>(null);
+  const readerRiverReturnContextRef = React.useRef<ReaderRiverReturnContext | null>(null);
+  const visibleStoryScopeKeyRef = React.useRef("");
   const delishShortOpenerRef = React.useRef<HTMLElement | null>(null);
   const displayStoryIdsRef = React.useRef<string[]>([]);
   const [commentsByStoryId, setCommentsByStoryId] = React.useState<Record<string, LifestyleStoryComment[]>>({});
@@ -3584,16 +3595,71 @@ function LifestyleRiverHomePage({
     });
   }, [editionDate, visitScopeKey]);
 
+  const rememberReaderRiverReturnContext = React.useCallback((storyId: string) => {
+    if (typeof document === "undefined" || typeof window === "undefined") return;
+
+    const riverCards = Array.from(
+      document.querySelectorAll<HTMLElement>("#hearst-story-river [data-story-id]")
+    );
+    const storyElement = riverCards.find((element) => element.dataset.storyId === storyId);
+    if (!storyElement) return;
+
+    readerRiverReturnContextRef.current = {
+      storyId,
+      storyIds: riverCards
+        .map((element) => element.dataset.storyId)
+        .filter((candidateId): candidateId is string => Boolean(candidateId)),
+      scopeKey: visibleStoryScopeKeyRef.current,
+      viewportTop: storyElement.getBoundingClientRect().top,
+      scrollX: window.scrollX,
+      scrollY: window.scrollY,
+    };
+  }, []);
+
+  const restoreReaderRiverReturnContext = React.useCallback((storyId: string | null) => {
+    if (typeof document === "undefined" || typeof window === "undefined") return;
+
+    const context = readerRiverReturnContextRef.current;
+    if (!context || (storyId && context.storyId !== storyId)) return;
+    const attemptDelays = [0, 80, 200, 420, 800];
+
+    const restore = (attemptIndex = 0) => {
+      const storyElement = Array.from(
+        document.querySelectorAll<HTMLElement>("#hearst-story-river [data-story-id]")
+      ).find((element) => element.dataset.storyId === context.storyId);
+
+      if (!storyElement) {
+        if (attemptIndex >= attemptDelays.length - 1) {
+          window.scrollTo(context.scrollX, context.scrollY);
+          return;
+        }
+        window.setTimeout(() => restore(attemptIndex + 1), attemptDelays[attemptIndex + 1]);
+        return;
+      }
+
+      const nextScrollY = Math.max(
+        0,
+        window.scrollY + storyElement.getBoundingClientRect().top - context.viewportTop
+      );
+      window.scrollTo(context.scrollX, nextScrollY);
+    };
+
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => restore());
+    });
+  }, []);
+
   const openStory = React.useCallback((storyId: string) => {
     readerReturnFocusElementRef.current = rememberContentReaderReturnFocus(
       document.activeElement,
     );
+    rememberReaderRiverReturnContext(storyId);
     recordStoryOpened(storyId);
     rememberSessionContinueReadingStory(storyId);
     setOpenStoryId(storyId);
     saveReaderReturnScrollSnapshot(storyId, storyOpenReturnHref, displayStoryIdsRef.current);
     router.push(appendReaderReturnHref(storyId, storyOpenReturnHref), { scroll: false });
-  }, [rememberSessionContinueReadingStory, router, setOpenStoryId, storyOpenReturnHref]);
+  }, [rememberReaderRiverReturnContext, rememberSessionContinueReadingStory, router, setOpenStoryId, storyOpenReturnHref]);
 
   const switchReaderStory = React.useCallback((storyId: string) => {
     recordStoryOpened(storyId);
@@ -3612,12 +3678,16 @@ function LifestyleRiverHomePage({
   }, [rememberSessionContinueReadingStory, setOpenStoryId, storyOpenReturnHref]);
 
   const closeStory = React.useCallback(() => {
+    const closingStoryId = openStoryId;
     setOpenStoryId(null);
     if (pathname?.startsWith("/read/")) {
       router.push(currentReaderReturnHref, { scroll: false });
       restoreReaderReturnScrollSnapshot(currentReaderReturnHref);
+      restoreReaderRiverReturnContext(closingStoryId);
+    } else {
+      restoreReaderRiverReturnContext(closingStoryId);
     }
-  }, [currentReaderReturnHref, pathname, router, setOpenStoryId]);
+  }, [currentReaderReturnHref, openStoryId, pathname, restoreReaderRiverReturnContext, router, setOpenStoryId]);
 
   const openDelishShort = React.useCallback((story: LifestyleRiverStory) => {
     delishShortOpenerRef.current = document.activeElement instanceof HTMLElement
@@ -3680,6 +3750,12 @@ function LifestyleRiverHomePage({
     effectiveBrandFilters.join(","),
     showAutosOemFilter ? activeAutosOemFilters.join(",") : "",
   ].join(":");
+  React.useEffect(() => {
+    visibleStoryScopeKeyRef.current = visibleStoryScopeKey;
+    if (readerRiverReturnContextRef.current?.scopeKey !== visibleStoryScopeKey) {
+      readerRiverReturnContextRef.current = null;
+    }
+  }, [visibleStoryScopeKey]);
   const [visibleStoryState, setVisibleStoryState] = React.useState({
     scopeKey: visibleStoryScopeKey,
     count: initialLifestyleRiverCardCount,

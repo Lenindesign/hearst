@@ -116,6 +116,61 @@ export const SavedCarouselReaderFocus: Story = {
   },
 };
 
+export const RiverReaderReturnContext: Story = {
+  name: "River reader return context",
+  globals: {
+    brand: "hearst-all",
+  },
+  render: () => <HearstPlusStory />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await canvas.findByRole("main", { name: /Hearst/ });
+
+    const getRiverCards = () =>
+      Array.from(
+        canvasElement.querySelectorAll<HTMLElement>(
+          "#hearst-story-river article[data-story-id]"
+        )
+      );
+    await waitFor(() => expect(getRiverCards().length).toBeGreaterThan(2));
+
+    const targetCard = getRiverCards()[2];
+    const targetStoryId = targetCard.dataset.storyId;
+    const opener = targetCard.querySelector<HTMLButtonElement>(
+      'button[aria-label^="Open story:"], button[aria-label^="Open photo gallery:"]'
+    );
+
+    await expect(targetStoryId).toBeTruthy();
+    await expect(opener).not.toBeNull();
+    targetCard.scrollIntoView({ block: "center" });
+    const beforeTop = Math.round(targetCard.getBoundingClientRect().top);
+    const beforeIndex = getRiverCards().findIndex(
+      (card) => card.dataset.storyId === targetStoryId
+    );
+
+    await userEvent.click(opener!);
+    const reader = await within(document.body).findByRole("dialog", {
+      name: "Story reader",
+    });
+    await userEvent.click(
+      within(reader).getByRole("button", { name: "Close story reader" })
+    );
+
+    await waitFor(() => {
+      const returnedCards = getRiverCards();
+      const returnedCard = returnedCards.find(
+        (card) => card.dataset.storyId === targetStoryId
+      );
+      expect(returnedCard).toBeTruthy();
+      expect(returnedCards.findIndex((card) => card.dataset.storyId === targetStoryId))
+        .toBe(beforeIndex);
+      expect(Math.abs(Math.round(returnedCard!.getBoundingClientRect().top) - beforeTop))
+        .toBeLessThanOrEqual(2);
+      expect(opener!).toHaveFocus();
+    }, { timeout: 3500 });
+  },
+};
+
 export const VideosFeed: Story = {
   name: "Videos Feed",
   globals: {

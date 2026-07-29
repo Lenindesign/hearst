@@ -9,16 +9,18 @@ const stories = Array.from({ length: 24 }, (_, index) => ({
   tags: index % 2 === 0 ? ["home"] : ["style"],
 }));
 
-test("gives each high-value module distinct inventory before the river", () => {
+test("gives reserving modules distinct inventory before the river", () => {
   const allocation = allocateStoryModules({
     stories,
     heroStoryIds: stories.slice(0, 5).map((story) => story.id),
     continueStoryIds: [stories[5].id],
     followedBrands: ["Brand 1"],
   });
-  const todayEditIds = Object.values(allocation.todayEdit)
-    .filter(Boolean)
-    .map((story) => story.id);
+  const todayEditIds = [
+    allocation.todayEdit.followedBrandStory,
+    allocation.todayEdit.trendingStory,
+    allocation.todayEdit.horoscopeStory,
+  ].filter(Boolean).map((story) => story.id);
   const allocatedIds = [
     ...stories.slice(0, 5).map((story) => story.id),
     ...todayEditIds,
@@ -32,7 +34,24 @@ test("gives each high-value module distinct inventory before the river", () => {
   assert.equal(allocation.trendingStories.length, 5);
 });
 
-test("uses a hero story for Continue Reading only when no unused unfinished story exists", () => {
+test("does not remove an unfinished story from the river when Continue Reading references it", () => {
+  const continueStory = stories[5];
+  const allocation = allocateStoryModules({
+    stories,
+    heroStoryIds: stories.slice(0, 5).map((story) => story.id),
+    continueStoryIds: [continueStory.id],
+    followedBrands: [],
+    includeTodayEdit: true,
+    dailyHabitCount: 0,
+    minimumRiverStories: stories.length,
+    trendingCount: 0,
+  });
+
+  assert.equal(allocation.todayEdit.continueStory?.id, continueStory.id);
+  assert.equal(allocation.riverStories.some((story) => story.id === continueStory.id), true);
+});
+
+test("can reference a hero story for Continue Reading without changing hero or river allocation", () => {
   const heroStory = stories[0];
   const allocation = allocateStoryModules({
     stories,
