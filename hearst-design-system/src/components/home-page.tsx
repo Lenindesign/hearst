@@ -6413,7 +6413,7 @@ export function HomePageTemplate({
   ]);
   const shouldIgnorePageCategorySwipeTarget = React.useCallback((target: EventTarget | null) => (
     target instanceof HTMLElement
-      && Boolean(target.closest("input, textarea, select, option, [contenteditable='true'], video, audio"))
+      && Boolean(target.closest("input, textarea, select, option, [contenteditable='true'], video, audio, [data-page-category-swipe-exempt]"))
   ), []);
   const handlePageCategoryPointerDown = React.useCallback((event: React.PointerEvent<HTMLDivElement>) => {
     if (
@@ -6496,7 +6496,11 @@ export function HomePageTemplate({
     }, 0);
   }, [commitPageCategorySwipe, resetPageCategorySwipe]);
   const handlePageCategoryWheel = React.useCallback((event: React.WheelEvent<HTMLDivElement>) => {
-    if (!hasMultiplePageCategorySwipeFilters || pageCategorySwipeLockedRef.current) return;
+    if (
+      !hasMultiplePageCategorySwipeFilters
+      || pageCategorySwipeLockedRef.current
+      || shouldIgnorePageCategorySwipeTarget(event.target)
+    ) return;
 
     const stageWidth = pageCategorySwipeStageRef.current?.clientWidth ?? event.currentTarget.clientWidth;
     if (!stageWidth) return;
@@ -6543,6 +6547,7 @@ export function HomePageTemplate({
     commitPageCategorySwipe,
     hasMultiplePageCategorySwipeFilters,
     resetPageCategorySwipe,
+    shouldIgnorePageCategorySwipeTarget,
   ]);
   React.useEffect(() => () => {
     if (pageCategorySwipeWheelResetTimerRef.current) {
@@ -6687,9 +6692,9 @@ export function HomePageTemplate({
                 event.stopPropagation();
               }}
               onWheelCapture={handlePageCategoryWheel}
-              style={{
+              style={pageCategorySwipeOffset !== 0 ? {
                 transform: `translate3d(${pageCategorySwipeOffset}px, 0, 0)`,
-              }}
+              } : undefined}
             >
               <LifestyleRiverHydrationGate
                 activeFilter={activeLifestyleFilter}

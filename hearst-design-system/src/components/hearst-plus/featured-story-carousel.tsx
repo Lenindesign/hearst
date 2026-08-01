@@ -454,6 +454,7 @@ export function FeaturedStoryCarousel({
       </p>
       <div
         ref={swipeStageRef}
+        data-page-category-swipe-exempt
         data-testid="featured-story-track"
         className="relative w-full min-w-0 touch-pan-y overscroll-x-contain select-none overflow-hidden bg-black"
         onPointerDown={handlePointerDown}

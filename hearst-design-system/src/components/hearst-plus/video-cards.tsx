@@ -54,25 +54,54 @@ export function VideoPlaySurface({
 
     const surface = surfaceRef.current;
     if (!surface) return;
+    let dockFrame: number | null = null;
+
+    const updateDockedState = (visibleRatio: number) => {
+      if (dockDismissed) {
+        setDocked(false);
+        return;
+      }
+
+      if (visibleRatio < 0.22) {
+        setDocked(true);
+      } else if (visibleRatio > 0.72) {
+        setDocked(false);
+      }
+    };
+
+    const measureDockState = () => {
+      dockFrame = null;
+      const rect = surface.getBoundingClientRect();
+      const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+      const visibleWidth = Math.max(0, Math.min(rect.right, viewportWidth) - Math.max(rect.left, 0));
+      const visibleHeight = Math.max(0, Math.min(rect.bottom, viewportHeight) - Math.max(rect.top, 0));
+      const totalArea = Math.max(1, rect.width * rect.height);
+      updateDockedState((visibleWidth * visibleHeight) / totalArea);
+    };
+
+    const scheduleDockMeasurement = () => {
+      if (dockFrame !== null) return;
+      dockFrame = window.requestAnimationFrame(measureDockState);
+    };
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (dockDismissed) {
-          setDocked(false);
-          return;
-        }
-
-        if (entry.intersectionRatio < 0.22) {
-          setDocked(true);
-        } else if (entry.intersectionRatio > 0.72) {
-          setDocked(false);
-        }
+        updateDockedState(entry.intersectionRatio);
       },
       { threshold: [0, 0.22, 0.72, 1] },
     );
 
     observer.observe(surface);
-    return () => observer.disconnect();
+    scheduleDockMeasurement();
+    document.addEventListener("scroll", scheduleDockMeasurement, { capture: true, passive: true });
+    window.addEventListener("resize", scheduleDockMeasurement);
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("scroll", scheduleDockMeasurement, { capture: true });
+      window.removeEventListener("resize", scheduleDockMeasurement);
+      if (dockFrame !== null) window.cancelAnimationFrame(dockFrame);
+    };
   }, [dockDismissed, playing]);
 
   React.useEffect(() => {
