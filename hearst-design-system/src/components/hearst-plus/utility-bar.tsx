@@ -186,7 +186,7 @@ export function UtilityBar({
               "min-h-7 min-w-7 shrink-0 text-[length:var(--text-token-4xs)] font-semibold leading-none sm:min-h-6 sm:min-w-0",
               account
                 ? cn(
-                    "gap-1.5 bg-transparent px-0.5 hover:bg-white/10 sm:pr-2",
+                    "gap-1.5 rounded-full border-0 bg-transparent px-1.5 shadow-none hover:bg-white/10 sm:pr-2",
                     darkMode ? "text-[var(--component-navigation-utility-content-knockout)] hover:text-white" : "text-primary-foreground hover:text-primary-foreground"
                   )
                 : darkMode

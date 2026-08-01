@@ -284,6 +284,7 @@ export interface HomePageTemplateProps {
   videoFeedData?: LiveFeedData;
   initialFilter?: string;
   initialOpenStoryId?: string;
+  initialLiveArticle?: LiveArticleData;
   initialOpenAmbientReader?: boolean;
   readerReturnHref?: string;
   navLinksOverride?: string[];
@@ -2378,6 +2379,7 @@ function LifestyleStoryReaderModal({
   followedBrands,
   commentsByStoryId,
   readerReturnHref,
+  initialLiveArticle,
   returnFocusElementRef,
   initialOpenAmbientReader = false,
   onClose,
@@ -2395,6 +2397,7 @@ function LifestyleStoryReaderModal({
   followedBrands: string[];
   commentsByStoryId: Record<string, LifestyleStoryComment[]>;
   readerReturnHref?: string;
+  initialLiveArticle?: LiveArticleData;
   returnFocusElementRef: React.RefObject<HTMLElement | null>;
   initialOpenAmbientReader?: boolean;
   onClose: () => void;
@@ -2464,7 +2467,14 @@ function LifestyleStoryReaderModal({
   }, [readerAvailableStoryPool]);
   const readerStories = readerQueueModel.stories;
   const [visibleReaderCount, setVisibleReaderCount] = React.useState(1);
-  const [liveArticles, setLiveArticles] = React.useState<Record<string, ReaderArticleLoadState>>({});
+  const [liveArticles, setLiveArticles] = React.useState<Record<string, ReaderArticleLoadState>>(() => (
+    openStoryId && initialLiveArticle
+      ? { [openStoryId]: { status: "ready", data: initialLiveArticle } }
+      : {}
+  ));
+  const liveArticlesRef = React.useRef(liveArticles);
+  const liveArticleMountedRef = React.useRef(true);
+  const liveArticleRequestIdsRef = React.useRef<Record<string, number>>({});
   const [fullscreenGallery, setFullscreenGallery] = React.useState<FullscreenGalleryState | null>(null);
   const [ambientReaderStoryId, setAmbientReaderStoryId] = React.useState<string | null>(null);
   const initialAmbientReaderRequestRef = React.useRef<string | null>(
@@ -2490,6 +2500,52 @@ function LifestyleStoryReaderModal({
     ringIndex: 0,
     offsets: {},
   });
+
+  React.useEffect(() => {
+    liveArticlesRef.current = liveArticles;
+  }, [liveArticles]);
+
+  React.useEffect(() => {
+    // React Strict Mode replays effects in development. Restore the mounted
+    // flag during setup so the replayed cleanup cannot permanently suppress
+    // completed article requests.
+    liveArticleMountedRef.current = true;
+    return () => {
+      liveArticleMountedRef.current = false;
+    };
+  }, []);
+
+  const requestLiveArticle = React.useCallback((story: LifestyleRiverStory, options?: { force?: boolean }) => {
+    if (!story.sourceUrl) return;
+
+    const currentState = liveArticlesRef.current[story.id];
+    if (!options?.force && (currentState?.status === "ready" || currentState?.status === "loading")) return;
+
+    const requestId = (liveArticleRequestIdsRef.current[story.id] ?? 0) + 1;
+    const requestedAt = Date.now();
+    liveArticleRequestIdsRef.current[story.id] = requestId;
+    setLiveArticles((current) => {
+      const nextState = current[story.id];
+      if (!options?.force && (nextState?.status === "ready" || nextState?.status === "loading")) return current;
+      return { ...current, [story.id]: { status: "loading", requestedAt } };
+    });
+
+    void loadLiveArticle(story.sourceUrl)
+      .then((data) => {
+        if (
+          !liveArticleMountedRef.current
+          || liveArticleRequestIdsRef.current[story.id] !== requestId
+        ) return;
+        setLiveArticles((current) => ({ ...current, [story.id]: { status: "ready", data } }));
+      })
+      .catch(() => {
+        if (
+          !liveArticleMountedRef.current
+          || liveArticleRequestIdsRef.current[story.id] !== requestId
+        ) return;
+        setLiveArticles((current) => ({ ...current, [story.id]: { status: "error" } }));
+      });
+  }, []);
   const ambientDiscoveryLoadingRef = React.useRef(false);
   const ambientDiscoveryControllerRef = React.useRef<AbortController | null>(null);
   const activeReaderRouteStoryIdRef = React.useRef<string | null>(openStoryId);
@@ -3104,7 +3160,6 @@ function LifestyleStoryReaderModal({
   }, [ambientReaderStoryId, liveArticles, openAmbientReader, openStoryId]);
 
   React.useEffect(() => {
-    let active = true;
     const storiesToLoad = [
       ...visibleReaderStories,
       ...readerCategoryPreloadStories,
@@ -3114,24 +3169,11 @@ function LifestyleStoryReaderModal({
     storiesToLoad.forEach((story) => {
       if (seenStoryIds.has(story.id)) return;
       seenStoryIds.add(story.id);
-      if (!story.sourceUrl || liveArticles[story.id]) return;
-      setLiveArticles((current) => ({ ...current, [story.id]: { status: "loading" } }));
-      void loadLiveArticle(story.sourceUrl)
-        .then((data) => {
-          if (!active) return;
-          setLiveArticles((current) => ({ ...current, [story.id]: { status: "ready", data } }));
-        })
-        .catch(() => {
-          if (!active) return;
-          setLiveArticles((current) => ({ ...current, [story.id]: { status: "error" } }));
-        });
+      requestLiveArticle(story);
     });
-    return () => {
-      active = false;
-    };
   // The ID key intentionally represents the current lazy-loaded reader queue.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ambientReaderPreloadStoryIds, readerCategoryPreloadStoryIds, visibleReaderStoryIds]);
+  }, [ambientReaderPreloadStoryIds, readerCategoryPreloadStoryIds, requestLiveArticle, visibleReaderStoryIds]);
 
   React.useEffect(() => {
     if (!isReaderOpen || ambientReaderStoryId || fullscreenGallery) return;
@@ -3622,6 +3664,7 @@ function LifestyleStoryReaderModal({
                               initialIndex: Math.max(0, images.findIndex((candidate) => candidate.src === image.src)),
                             });
                           }}
+                          onRetry={() => requestLiveArticle(story, { force: true })}
                         />
                         <LifestyleCardModule story={story} kind={kind} />
                         <ContentReaderComments
@@ -3736,6 +3779,7 @@ type LifestyleRiverHomePageProps = {
   videoFeedData?: LiveFeedData;
   initialBrandSlug?: string;
   initialOpenStoryId?: string;
+  initialLiveArticle?: LiveArticleData;
   initialOpenAmbientReader?: boolean;
   readerReturnHref?: string;
   showStakeholderTools?: boolean;
@@ -3798,6 +3842,7 @@ function LifestyleRiverHomePage({
   videoFeedData,
   initialBrandSlug,
   initialOpenStoryId,
+  initialLiveArticle,
   initialOpenAmbientReader = false,
   readerReturnHref,
   showStakeholderTools = false,
@@ -5154,6 +5199,7 @@ function LifestyleRiverHomePage({
             followedBrands={profile.followedBrands}
             commentsByStoryId={resolvedCommentsByStoryId}
             readerReturnHref={storyOpenReturnHref}
+            initialLiveArticle={openStoryId === initialOpenStoryId ? initialLiveArticle : undefined}
             returnFocusElementRef={readerReturnFocusElementRef}
             initialOpenAmbientReader={initialOpenAmbientReader}
             onClose={closeStory}
@@ -5655,6 +5701,7 @@ function LifestyleRiverHomePage({
           followedBrands={profile.followedBrands}
           commentsByStoryId={resolvedCommentsByStoryId}
           readerReturnHref={storyOpenReturnHref}
+          initialLiveArticle={openStoryId === initialOpenStoryId ? initialLiveArticle : undefined}
           returnFocusElementRef={readerReturnFocusElementRef}
           initialOpenAmbientReader={initialOpenAmbientReader}
           onClose={closeStory}
@@ -5898,6 +5945,7 @@ export function HomePageTemplate({
   videoFeedData,
   initialFilter,
   initialOpenStoryId,
+  initialLiveArticle,
   initialOpenAmbientReader,
   readerReturnHref,
   navLinksOverride,
@@ -5922,6 +5970,22 @@ export function HomePageTemplate({
     [staticDestinationData]
   );
   const [activeLifestyleFilter, setActiveLifestyleFilter] = React.useState(initialFilter ?? "For You");
+  const pageCategorySwipeStageRef = React.useRef<HTMLDivElement | null>(null);
+  const pageCategorySwipeStartRef = React.useRef<{
+    x: number;
+    y: number;
+    time: number;
+  } | null>(null);
+  const pageCategorySwipeLastRef = React.useRef<{ x: number; y: number } | null>(null);
+  const pageCategorySwipeIntentRef = React.useRef(false);
+  const pageCategorySwipeLockedRef = React.useRef(false);
+  const pageCategorySwipeSuppressClickRef = React.useRef(false);
+  const pageCategorySwipeWheelRef = React.useRef<{ offsetX: number; lastTime: number } | null>(null);
+  const pageCategorySwipeWheelResetTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pageCategorySwipeUnlockTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [pageCategorySwipeOffset, setPageCategorySwipeOffset] = React.useState(0);
+  const [pageCategorySwipeDragging, setPageCategorySwipeDragging] = React.useState(false);
+  const [pageCategorySwipeTransitionEnabled, setPageCategorySwipeTransitionEnabled] = React.useState(true);
   const [onboardingOpen, setOnboardingOpen] = React.useState(false);
   const [onboardingResult, setOnboardingResult] = React.useState<HearstOnboardingResult | null>(null);
   const [authDialogOpen, setAuthDialogOpen] = React.useState(false);
@@ -6245,6 +6309,249 @@ export function HomePageTemplate({
 
     anchorDestinationContent();
   }, [anchorDestinationContent, destinationMode, selectedBrand, showStakeholderTools]);
+  const pageCategorySwipeFilters = React.useMemo(() => {
+    const baseFilters = selectedBrand
+      ? getBrandContextualFilters(
+          selectedBrand.slug,
+          destinationConfigs.all.stories,
+          hasScopedVideoFeed,
+        )
+      : inventoryAwareDestinationConfig.filters;
+    return !selectedBrand && hasScopedVideoFeed
+      ? insertVideosFilter(baseFilters)
+      : baseFilters;
+  }, [
+    destinationConfigs.all.stories,
+    hasScopedVideoFeed,
+    inventoryAwareDestinationConfig.filters,
+    selectedBrand,
+  ]);
+  const pageCategorySwipeIndex = Math.max(
+    0,
+    pageCategorySwipeFilters.indexOf(activeLifestyleFilter),
+  );
+  const hasMultiplePageCategorySwipeFilters = pageCategorySwipeFilters.length > 1;
+  const previousPageCategorySwipeFilter = hasMultiplePageCategorySwipeFilters
+    ? pageCategorySwipeFilters[
+        (pageCategorySwipeIndex - 1 + pageCategorySwipeFilters.length)
+        % pageCategorySwipeFilters.length
+      ]
+    : undefined;
+  const nextPageCategorySwipeFilter = hasMultiplePageCategorySwipeFilters
+    ? pageCategorySwipeFilters[
+        (pageCategorySwipeIndex + 1) % pageCategorySwipeFilters.length
+      ]
+    : undefined;
+  const resetPageCategorySwipe = React.useCallback(() => {
+    pageCategorySwipeStartRef.current = null;
+    pageCategorySwipeLastRef.current = null;
+    pageCategorySwipeIntentRef.current = false;
+    pageCategorySwipeWheelRef.current = null;
+    if (pageCategorySwipeWheelResetTimerRef.current) {
+      clearTimeout(pageCategorySwipeWheelResetTimerRef.current);
+      pageCategorySwipeWheelResetTimerRef.current = null;
+    }
+    setPageCategorySwipeDragging(false);
+    setPageCategorySwipeTransitionEnabled(true);
+    setPageCategorySwipeOffset(0);
+  }, []);
+  const unlockPageCategorySwipe = React.useCallback(() => {
+    pageCategorySwipeLockedRef.current = false;
+    if (pageCategorySwipeUnlockTimerRef.current) {
+      clearTimeout(pageCategorySwipeUnlockTimerRef.current);
+      pageCategorySwipeUnlockTimerRef.current = null;
+    }
+  }, []);
+  const commitPageCategorySwipe = React.useCallback((direction: "previous" | "next") => {
+    const targetFilter = direction === "next"
+      ? nextPageCategorySwipeFilter
+      : previousPageCategorySwipeFilter;
+    const stageWidth = pageCategorySwipeStageRef.current?.clientWidth ?? 0;
+
+    if (!targetFilter || !stageWidth || pageCategorySwipeLockedRef.current) {
+      resetPageCategorySwipe();
+      return;
+    }
+
+    pageCategorySwipeLockedRef.current = true;
+    if (pageCategorySwipeUnlockTimerRef.current) {
+      clearTimeout(pageCategorySwipeUnlockTimerRef.current);
+    }
+    pageCategorySwipeWheelRef.current = null;
+    if (pageCategorySwipeWheelResetTimerRef.current) {
+      clearTimeout(pageCategorySwipeWheelResetTimerRef.current);
+      pageCategorySwipeWheelResetTimerRef.current = null;
+    }
+
+    const exitOffset = direction === "next" ? -stageWidth : stageWidth;
+    const enterOffset = direction === "next" ? stageWidth : -stageWidth;
+    setPageCategorySwipeDragging(false);
+    setPageCategorySwipeTransitionEnabled(true);
+    setPageCategorySwipeOffset(exitOffset);
+
+    window.setTimeout(() => {
+      setPageCategorySwipeTransitionEnabled(false);
+      handleLifestyleFilterChange(targetFilter);
+      setPageCategorySwipeOffset(enterOffset);
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          setPageCategorySwipeTransitionEnabled(true);
+          setPageCategorySwipeOffset(0);
+        });
+      });
+    }, 220);
+
+    pageCategorySwipeUnlockTimerRef.current = setTimeout(() => {
+      unlockPageCategorySwipe();
+    }, 620);
+  }, [
+    handleLifestyleFilterChange,
+    nextPageCategorySwipeFilter,
+    previousPageCategorySwipeFilter,
+    resetPageCategorySwipe,
+    unlockPageCategorySwipe,
+  ]);
+  const shouldIgnorePageCategorySwipeTarget = React.useCallback((target: EventTarget | null) => (
+    target instanceof HTMLElement
+      && Boolean(target.closest("input, textarea, select, option, [contenteditable='true'], video, audio"))
+  ), []);
+  const handlePageCategoryPointerDown = React.useCallback((event: React.PointerEvent<HTMLDivElement>) => {
+    if (
+      event.button !== 0
+      || pageCategorySwipeLockedRef.current
+      || shouldIgnorePageCategorySwipeTarget(event.target)
+    ) return;
+    pageCategorySwipeStartRef.current = {
+      x: event.clientX,
+      y: event.clientY,
+      time: performance.now(),
+    };
+    pageCategorySwipeLastRef.current = { x: event.clientX, y: event.clientY };
+  }, [shouldIgnorePageCategorySwipeTarget]);
+  const handlePageCategoryPointerMove = React.useCallback((event: React.PointerEvent<HTMLDivElement>) => {
+    const start = pageCategorySwipeStartRef.current;
+    if (!start || pageCategorySwipeLockedRef.current) return;
+
+    const deltaX = event.clientX - start.x;
+    const deltaY = event.clientY - start.y;
+    pageCategorySwipeLastRef.current = { x: event.clientX, y: event.clientY };
+
+    if (Math.abs(deltaY) > Math.abs(deltaX) * 1.2) return;
+    if (Math.abs(deltaX) < 8 && !pageCategorySwipeIntentRef.current) return;
+
+    pageCategorySwipeIntentRef.current = true;
+    pageCategorySwipeSuppressClickRef.current = true;
+    setPageCategorySwipeDragging(true);
+    setPageCategorySwipeTransitionEnabled(false);
+
+    if (
+      event.currentTarget.setPointerCapture &&
+      !event.currentTarget.hasPointerCapture(event.pointerId)
+    ) {
+      try {
+        event.currentTarget.setPointerCapture(event.pointerId);
+      } catch {
+        // Test environments may not support pointer capture for synthetic events.
+      }
+    }
+
+    event.preventDefault();
+    const maxOffset = event.currentTarget.clientWidth * 0.28;
+    setPageCategorySwipeOffset(Math.max(-maxOffset, Math.min(maxOffset, deltaX)));
+  }, []);
+  const handlePageCategoryPointerUp = React.useCallback((event: React.PointerEvent<HTMLDivElement>) => {
+    const start = pageCategorySwipeStartRef.current;
+    if (!start) return;
+
+    const end = pageCategorySwipeLastRef.current ?? {
+      x: event.clientX,
+      y: event.clientY,
+    };
+    const deltaX = end.x - start.x;
+    const deltaY = end.y - start.y;
+    const elapsed = Math.max(performance.now() - start.time, 1);
+    const velocity = Math.abs(deltaX) / elapsed;
+    const threshold = Math.min(96, event.currentTarget.clientWidth * 0.16);
+    const isHorizontalSwipe =
+      Math.abs(deltaX) > Math.abs(deltaY) * 1.25 &&
+      (Math.abs(deltaX) >= threshold ||
+        (Math.abs(deltaX) >= 32 && velocity >= 0.55));
+
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      try {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      } catch {
+        // Ignore release errors from unsupported test environments.
+      }
+    }
+
+    if (isHorizontalSwipe) {
+      commitPageCategorySwipe(deltaX < 0 ? "next" : "previous");
+    } else {
+      resetPageCategorySwipe();
+    }
+
+    window.setTimeout(() => {
+      pageCategorySwipeSuppressClickRef.current = false;
+    }, 0);
+  }, [commitPageCategorySwipe, resetPageCategorySwipe]);
+  const handlePageCategoryWheel = React.useCallback((event: React.WheelEvent<HTMLDivElement>) => {
+    if (!hasMultiplePageCategorySwipeFilters || pageCategorySwipeLockedRef.current) return;
+
+    const stageWidth = pageCategorySwipeStageRef.current?.clientWidth ?? event.currentTarget.clientWidth;
+    if (!stageWidth) return;
+
+    const deltaScale = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? stageWidth : 1;
+    const deltaX = event.deltaX * deltaScale;
+    const deltaY = event.deltaY * deltaScale;
+    const isHorizontalIntent =
+      Math.abs(deltaX) > Math.abs(deltaY) * 1.15 && Math.abs(deltaX) > 1;
+
+    if (!isHorizontalIntent) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const now = performance.now();
+    const previousWheel = pageCategorySwipeWheelRef.current;
+    const nextOffsetX =
+      previousWheel && now - previousWheel.lastTime < 220
+        ? previousWheel.offsetX + deltaX
+        : deltaX;
+    pageCategorySwipeWheelRef.current = { offsetX: nextOffsetX, lastTime: now };
+
+    if (pageCategorySwipeWheelResetTimerRef.current) {
+      clearTimeout(pageCategorySwipeWheelResetTimerRef.current);
+    }
+
+    const maxOffset = stageWidth * 0.28;
+    const visualOffset = Math.max(-maxOffset, Math.min(maxOffset, -nextOffsetX));
+    setPageCategorySwipeDragging(true);
+    setPageCategorySwipeTransitionEnabled(false);
+    setPageCategorySwipeOffset(visualOffset);
+
+    const threshold = Math.min(96, stageWidth * 0.16);
+    if (Math.abs(nextOffsetX) >= threshold) {
+      commitPageCategorySwipe(nextOffsetX > 0 ? "next" : "previous");
+      return;
+    }
+
+    pageCategorySwipeWheelResetTimerRef.current = setTimeout(() => {
+      resetPageCategorySwipe();
+    }, 160);
+  }, [
+    commitPageCategorySwipe,
+    hasMultiplePageCategorySwipeFilters,
+    resetPageCategorySwipe,
+  ]);
+  React.useEffect(() => () => {
+    if (pageCategorySwipeWheelResetTimerRef.current) {
+      clearTimeout(pageCategorySwipeWheelResetTimerRef.current);
+    }
+    if (pageCategorySwipeUnlockTimerRef.current) {
+      clearTimeout(pageCategorySwipeUnlockTimerRef.current);
+    }
+  }, []);
   const handleSelectedBrandChange = React.useCallback((nextBrand: { name: string; slug: string } | null) => {
     if ((selectedBrand?.slug ?? null) === (nextBrand?.slug ?? null)) return;
 
@@ -6361,43 +6668,68 @@ export function HomePageTemplate({
           className={cn("relative scroll-mt-[75px]", isDestinationRiver ? "space-y-8" : "space-y-12 lg:space-y-16")}
         >
           {isDestinationRiver ? (
-            <LifestyleRiverHydrationGate
-              activeFilter={activeLifestyleFilter}
-              destination={destinationMode}
-              destinationConfig={inventoryAwareDestinationConfig}
-              videoFeedData={resolvedVideoFeedData}
-              initialBrandSlug={initialBrandSlug}
-              initialOpenStoryId={initialOpenStoryId}
-              initialOpenAmbientReader={initialOpenAmbientReader}
-              readerReturnHref={readerReturnHref}
-              showStakeholderTools={showStakeholderTools}
-              onboardingResult={onboardingResult}
-              onFilterChange={handleLifestyleFilterChange}
-              onRiverReset={anchorDestinationContent}
-              onBrandFilterChange={anchorPageToTop}
-              onSelectedBrandChange={handleSelectedBrandChange}
-              indicatorPalette={selectedBrandIndicatorPalette}
-              activeBrandFilters={activeBrandFilters}
-              onActiveBrandFiltersChange={setActiveBrandFilters}
-              feedTotal={activeLifestyleFilter === "Videos"
-                ? progressiveVideoFeed.total
-                : progressiveEditorialFeed.total}
-              feedLoadedCount={activeLifestyleFilter === "Videos"
-                ? progressiveVideoFeed.loadedCount
-                : progressiveEditorialFeed.loadedCount}
-              feedHasMore={activeLifestyleFilter === "Videos"
-                ? progressiveVideoFeed.hasMore
-                : progressiveEditorialFeed.hasMore}
-              feedLoading={activeLifestyleFilter === "Videos"
-                ? progressiveVideoFeed.isLoading
-                : progressiveEditorialFeed.isLoading}
-              feedError={activeLifestyleFilter === "Videos"
-                ? progressiveVideoFeed.error
-                : progressiveEditorialFeed.error}
-              onRequestNextFeedPage={activeLifestyleFilter === "Videos"
-                ? progressiveVideoFeed.loadNextPage
-                : progressiveEditorialFeed.loadNextPage}
-            />
+            <div
+              ref={pageCategorySwipeStageRef}
+              className={cn(
+                "touch-pan-y overscroll-x-contain",
+                pageCategorySwipeTransitionEnabled && "transition-transform duration-[250ms] ease-out",
+                pageCategorySwipeDragging && "cursor-grabbing select-none transition-none",
+              )}
+              data-page-category-swipe-stage
+              data-page-category-filter={activeLifestyleFilter}
+              onPointerDown={handlePageCategoryPointerDown}
+              onPointerMove={handlePageCategoryPointerMove}
+              onPointerUp={handlePageCategoryPointerUp}
+              onPointerCancel={resetPageCategorySwipe}
+              onClickCapture={(event) => {
+                if (!pageCategorySwipeSuppressClickRef.current) return;
+                event.preventDefault();
+                event.stopPropagation();
+              }}
+              onWheelCapture={handlePageCategoryWheel}
+              style={{
+                transform: `translate3d(${pageCategorySwipeOffset}px, 0, 0)`,
+              }}
+            >
+              <LifestyleRiverHydrationGate
+                activeFilter={activeLifestyleFilter}
+                destination={destinationMode}
+                destinationConfig={inventoryAwareDestinationConfig}
+                videoFeedData={resolvedVideoFeedData}
+                initialBrandSlug={initialBrandSlug}
+                initialOpenStoryId={initialOpenStoryId}
+                initialLiveArticle={initialLiveArticle}
+                initialOpenAmbientReader={initialOpenAmbientReader}
+                readerReturnHref={readerReturnHref}
+                showStakeholderTools={showStakeholderTools}
+                onboardingResult={onboardingResult}
+                onFilterChange={handleLifestyleFilterChange}
+                onRiverReset={anchorDestinationContent}
+                onBrandFilterChange={anchorPageToTop}
+                onSelectedBrandChange={handleSelectedBrandChange}
+                indicatorPalette={selectedBrandIndicatorPalette}
+                activeBrandFilters={activeBrandFilters}
+                onActiveBrandFiltersChange={setActiveBrandFilters}
+                feedTotal={activeLifestyleFilter === "Videos"
+                  ? progressiveVideoFeed.total
+                  : progressiveEditorialFeed.total}
+                feedLoadedCount={activeLifestyleFilter === "Videos"
+                  ? progressiveVideoFeed.loadedCount
+                  : progressiveEditorialFeed.loadedCount}
+                feedHasMore={activeLifestyleFilter === "Videos"
+                  ? progressiveVideoFeed.hasMore
+                  : progressiveEditorialFeed.hasMore}
+                feedLoading={activeLifestyleFilter === "Videos"
+                  ? progressiveVideoFeed.isLoading
+                  : progressiveEditorialFeed.isLoading}
+                feedError={activeLifestyleFilter === "Videos"
+                  ? progressiveVideoFeed.error
+                  : progressiveEditorialFeed.error}
+                onRequestNextFeedPage={activeLifestyleFilter === "Videos"
+                  ? progressiveVideoFeed.loadNextPage
+                  : progressiveEditorialFeed.loadNextPage}
+              />
+            </div>
           ) : layout === "overlapGrid" ? (
             <OverlapGridHomepageBody brandSlug={brand.slug} />
           ) : (

@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { HomePageTemplate } from "@/components/home-page";
 import { ThemeProvider } from "@/components/theme-provider";
 import { getHearstDestinationStaticData } from "@/lib/hearst-destination-data";
-import type { LiveFeedData } from "@/lib/live-feed-types";
+import { getHearstLiveArticle } from "@/lib/hearst-live-article";
+import type { LiveArticleData, LiveFeedData } from "@/lib/live-feed-types";
 import { getHearstBrandSection, hearstSectionThemeSlugs } from "@/lib/hearst-routes";
 import {
   getPersonalizeLifestyleLiveFeed,
@@ -81,6 +82,16 @@ function buildStaticReaderFeed(
 async function safeLiveFeed(fetcher: () => Promise<LiveFeedData>) {
   try {
     return await fetcher();
+  } catch {
+    return undefined;
+  }
+}
+
+async function safeLiveArticle(sourceUrl: string | undefined): Promise<LiveArticleData | undefined> {
+  if (!sourceUrl) return undefined;
+
+  try {
+    return await getHearstLiveArticle(sourceUrl);
   } catch {
     return undefined;
   }
@@ -168,6 +179,7 @@ export default async function ReaderArticlePage({ params, searchParams }: Reader
   const storyInLifestyleLiveFeed = findLiveStory(lifestyleLiveFeedData, decodedStoryId);
   const readerReturnHref = getReaderReturnHrefFromSearchParams(resolvedSearchParams) ?? getHearstStoryReturnHref(story);
   const initialOpenAmbientReader = shouldOpenAmbientReaderFromSearchParams(resolvedSearchParams);
+  const initialLiveArticle = await safeLiveArticle(story.sourceUrl);
 
   return (
     <ThemeProvider defaultBrandSlug={hearstSectionThemeSlugs[section]}>
@@ -175,6 +187,7 @@ export default async function ReaderArticlePage({ params, searchParams }: Reader
         staticDestinationData={staticDestinationData}
         initialBrandSlug={hearstSectionThemeSlugs[section]}
         initialOpenStoryId={decodedStoryId}
+        initialLiveArticle={initialLiveArticle}
         initialOpenAmbientReader={initialOpenAmbientReader}
         readerReturnHref={readerReturnHref}
         liveFeedData={storyInLiveFeed ? liveFeedData : storyInLifestyleLiveFeed ? lifestyleLiveFeedData : undefined}

@@ -7,6 +7,7 @@ const allowedHosts = new Set([
   "www.bestproducts.com",
   "www.bicycling.com",
   "www.caranddriver.com",
+  "sex.cosmopolitan.com",
   "www.cosmopolitan.com",
   "www.countryliving.com",
   "www.delish.com",

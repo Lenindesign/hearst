@@ -6,9 +6,10 @@ type LiveArticleResponse = {
   json: () => Promise<unknown>;
 };
 
-export type LiveArticleFetcher = (input: string) => Promise<LiveArticleResponse>;
+export type LiveArticleFetcher = (input: string, init?: RequestInit) => Promise<LiveArticleResponse>;
 
 const maximumResolvedArticles = 32;
+const liveArticleRequestTimeoutMs = 12_000;
 const resolvedArticles = new Map<string, LiveArticleData>();
 const activeArticleRequests = new Map<string, Promise<LiveArticleData>>();
 
@@ -41,7 +42,8 @@ function cacheResolvedArticle(cacheKey: string, article: LiveArticleData) {
 
 export function loadLiveArticle(
   sourceUrl: string,
-  fetcher: LiveArticleFetcher = fetch
+  fetcher: LiveArticleFetcher = fetch,
+  options: { timeoutMs?: number } = {}
 ) {
   const cacheKey = getCanonicalLiveArticleUrl(sourceUrl);
   const cachedArticle = getResolvedArticle(cacheKey);
@@ -50,8 +52,16 @@ export function loadLiveArticle(
   const activeRequest = activeArticleRequests.get(cacheKey);
   if (activeRequest) return activeRequest;
 
+  const abortController = new AbortController();
+  const timeout = globalThis.setTimeout(
+    () => abortController.abort(),
+    options.timeoutMs ?? liveArticleRequestTimeoutMs
+  );
   const request = Promise.resolve()
-    .then(() => fetcher(`/api/live-article/?url=${encodeURIComponent(cacheKey)}`))
+    .then(() => fetcher(
+      `/api/live-article/?url=${encodeURIComponent(cacheKey)}`,
+      { signal: abortController.signal }
+    ))
     .then(async (response) => {
       if (!response.ok) {
         throw new Error(`Article request failed with ${response.status}`);
@@ -61,7 +71,17 @@ export function loadLiveArticle(
       cacheResolvedArticle(cacheKey, article);
       return article;
     })
+    .catch((error: unknown) => {
+      if (
+        error instanceof DOMException && error.name === "AbortError"
+        || error instanceof Error && error.name === "AbortError"
+      ) {
+        throw new Error("Article request timed out");
+      }
+      throw error;
+    })
     .finally(() => {
+      globalThis.clearTimeout(timeout);
       activeArticleRequests.delete(cacheKey);
     });
 

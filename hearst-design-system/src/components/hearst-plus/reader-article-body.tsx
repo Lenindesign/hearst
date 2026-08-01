@@ -8,7 +8,7 @@ import type { LiveArticleData } from "@/lib/live-feed-types";
 import { formatVideoDuration } from "./video-format";
 
 export type ReaderArticleLoadState =
-  | { status: "loading" }
+  | { status: "loading"; requestedAt?: number }
   | { status: "ready"; data: LiveArticleData }
   | { status: "error" };
 
@@ -19,26 +19,64 @@ export type ReaderArticleImage = {
   credit?: string;
 };
 
-function getReaderFixtureParagraphs(story: LifestyleRiverStory) {
-  const topicPhrase = story.topic.toLowerCase();
-  const tagPhrase = story.tags.slice(0, 3).join(", ");
+function ReaderArticleLoadStatus({
+  liveArticle,
+  onRetry,
+}: {
+  liveArticle?: ReaderArticleLoadState;
+  onRetry?: () => void;
+}) {
+  const fullArticleFailed = liveArticle?.status === "error";
 
-  return [
-    story.summary,
-    `${story.brand} editors frame this ${topicPhrase} story around the signals readers are acting on right now: ${tagPhrase}.`,
-    `In the full experience, this reader would continue into the original ${story.brand} article with inline media, related service modules, and commerce or recipe utilities when they are relevant.`,
-    "The reader view keeps the session moving: open a story from the river, keep reading, and let the next ranked story load into the same flow.",
-  ];
+  return (
+    <div className="mt-6 text-base leading-8 text-foreground/80">
+      {!fullArticleFailed ? (
+        <div className="rounded-[8px] border border-border bg-muted/20 p-4" aria-live="polite">
+          <p className="text-sm font-semibold text-muted-foreground">
+            Loading the full article and photos…
+          </p>
+          <div className="mt-3 space-y-2" aria-hidden>
+            <div className="h-3 w-full animate-pulse rounded bg-muted motion-reduce:animate-none" />
+            <div className="h-3 w-5/6 animate-pulse rounded bg-muted motion-reduce:animate-none" />
+          </div>
+        </div>
+      ) : null}
+
+      {fullArticleFailed ? (
+        <div
+          className="rounded-[8px] border border-border bg-muted/25 p-5"
+          role="status"
+        >
+          <p className="font-bold text-foreground">
+            The full source article could not be loaded.
+          </p>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">Please try loading it again.</p>
+          {onRetry ? (
+            <button
+              type="button"
+              className="mt-4 inline-flex min-h-10 items-center justify-center rounded-full bg-primary px-4 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+              onClick={onRetry}
+            >
+              Try full article again
+            </button>
+          ) : null}
+        </div>
+      ) : null}
+
+    </div>
+  );
 }
 
 export function ReaderArticleBody({
   story,
   liveArticle,
   onOpenImage,
+  onRetry,
 }: {
   story: LifestyleRiverStory;
   liveArticle?: ReaderArticleLoadState;
   onOpenImage: (image: ReaderArticleImage) => void;
+  onRetry?: () => void;
 }) {
   if (story.videoUrl) {
     return (
@@ -50,19 +88,6 @@ export function ReaderArticleBody({
             ? ` · ${formatVideoDuration(story.videoDuration)}`
             : ""}
         </p>
-      </div>
-    );
-  }
-
-  if (story.sourceUrl && (!liveArticle || liveArticle.status === "loading")) {
-    return (
-      <div className="mt-6 space-y-3" aria-live="polite">
-        <p className="text-sm font-semibold text-muted-foreground">
-          Loading the full article and photos...
-        </p>
-        <div className="h-4 w-full animate-pulse rounded bg-muted motion-reduce:animate-none" />
-        <div className="h-4 w-5/6 animate-pulse rounded bg-muted motion-reduce:animate-none" />
-        <div className="h-4 w-4/6 animate-pulse rounded bg-muted motion-reduce:animate-none" />
       </div>
     );
   }
@@ -139,29 +164,5 @@ export function ReaderArticleBody({
     );
   }
 
-  if (story.sourceUrl && liveArticle?.status === "error") {
-    return (
-      <div
-        className="mt-6 rounded-[8px] border border-border bg-muted/25 p-5"
-        role="status"
-      >
-        <p className="font-bold text-foreground">
-          This complete article could not be loaded.
-        </p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Try reopening the story to refresh the executive POC reader.
-        </p>
-      </div>
-    );
-  }
-
-  const readerParagraphs = getReaderFixtureParagraphs(story);
-
-  return (
-    <div className="mt-6 space-y-5 text-base leading-8 text-foreground/80">
-      {readerParagraphs.map((paragraph) => (
-        <p key={paragraph}>{paragraph}</p>
-      ))}
-    </div>
-  );
+  return <ReaderArticleLoadStatus liveArticle={liveArticle} onRetry={onRetry} />;
 }

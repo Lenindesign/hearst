@@ -75,6 +75,33 @@ test("does not cache failed requests so a later consumer can retry", async () =>
   assert.equal(retriedArticle, article);
 });
 
+test("times out stalled requests so a later consumer can retry", async () => {
+  const sourceUrl = "https://www.example.com/stalled/";
+  const article = createArticle(sourceUrl);
+  let requestCount = 0;
+  const fetcher: LiveArticleFetcher = async (_input, init) => {
+    requestCount += 1;
+
+    if (requestCount === 1) {
+      return new Promise((_resolve, reject) => {
+        init?.signal?.addEventListener("abort", () => {
+          const error = new Error("Request aborted");
+          error.name = "AbortError";
+          reject(error);
+        });
+      });
+    }
+
+    return createResponse(article);
+  };
+
+  await assert.rejects(() => loadLiveArticle(sourceUrl, fetcher, { timeoutMs: 5 }), /timed out/);
+  const retriedArticle = await loadLiveArticle(sourceUrl, fetcher, { timeoutMs: 5 });
+
+  assert.equal(requestCount, 2);
+  assert.equal(retriedArticle, article);
+});
+
 test("can prime a deterministic article before a reader opens", async () => {
   const sourceUrl = "https://www.example.com/preview/?b=2&a=1";
   const article = createArticle(sourceUrl);
