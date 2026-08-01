@@ -5126,7 +5126,7 @@ function LifestyleRiverHomePage({
             )}
           </main>
 
-          <aside className="min-w-0 space-y-5 lg:sticky lg:top-[112px] lg:max-h-[calc(100dvh-136px)] lg:self-start lg:overflow-y-auto lg:pr-1">
+          <aside className="min-w-0 space-y-5 lg:sticky lg:top-[108px] lg:max-h-[calc(100dvh-132px)] lg:self-start lg:overflow-y-auto lg:pr-1">
             <TrendingVideoRail
               stories={trendingVideoStories}
               onOpenStory={(story) => openStory(story.id)}
@@ -5600,7 +5600,7 @@ function LifestyleRiverHomePage({
           )}
         </main>
 
-        <aside className="min-w-0 space-y-5 lg:sticky lg:top-[112px] lg:max-h-[calc(100dvh-136px)] lg:self-start lg:overflow-y-auto lg:pr-1">
+        <aside className="min-w-0 space-y-5 lg:sticky lg:top-[108px] lg:max-h-[calc(100dvh-132px)] lg:self-start lg:overflow-y-auto lg:pr-1">
           <TrendingStoryRail
             stories={moduleAllocation.trendingStories}
             onOpenStory={(story) => openStory(story.id)}
@@ -6331,6 +6331,24 @@ export function HomePageTemplate({
     pageCategorySwipeFilters.indexOf(activeLifestyleFilter),
   );
   const hasMultiplePageCategorySwipeFilters = pageCategorySwipeFilters.length > 1;
+  React.useEffect(() => {
+    if (!isDestinationRiver || !hasMultiplePageCategorySwipeFilters) return;
+
+    const previousHtmlOverscrollBehaviorX =
+      document.documentElement.style.overscrollBehaviorX;
+    const previousBodyOverscrollBehaviorX =
+      document.body.style.overscrollBehaviorX;
+
+    document.documentElement.style.overscrollBehaviorX = "none";
+    document.body.style.overscrollBehaviorX = "none";
+
+    return () => {
+      document.documentElement.style.overscrollBehaviorX =
+        previousHtmlOverscrollBehaviorX;
+      document.body.style.overscrollBehaviorX =
+        previousBodyOverscrollBehaviorX;
+    };
+  }, [hasMultiplePageCategorySwipeFilters, isDestinationRiver]);
   const previousPageCategorySwipeFilter = hasMultiplePageCategorySwipeFilters
     ? pageCategorySwipeFilters[
         (pageCategorySwipeIndex - 1 + pageCategorySwipeFilters.length)

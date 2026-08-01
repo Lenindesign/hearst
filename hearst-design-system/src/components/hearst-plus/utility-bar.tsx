@@ -206,7 +206,7 @@ export function UtilityBar({
           onMouseLeave={() => setOpenDestinationMenu(null)}
           className={cn(
             "absolute left-1/2 top-full w-[calc(100%-1.5rem)] -translate-x-1/2 pt-2 sm:w-[calc(100%-3rem)]",
-            openDestinationMenu === "all" ? "max-w-5xl" : "max-w-xs"
+            openDestinationMenu === "all" ? "max-w-6xl" : "max-w-sm"
           )}
         >
           <div
@@ -214,7 +214,7 @@ export function UtilityBar({
             role="menu"
             aria-label={`${openSection.label} brands`}
             className={cn(
-              "max-h-[min(70dvh,520px)] w-full overflow-y-auto rounded-xl border p-4 shadow-2xl sm:p-5",
+              "max-h-[min(calc(100dvh-3rem),680px)] w-full overscroll-contain overflow-y-auto rounded-xl border p-4 shadow-2xl sm:max-h-[min(calc(100dvh-3.5rem),720px)] sm:p-5",
               darkMode
                 ? "border-white/15 bg-[var(--component-navigation-utility-megamenu-background-knockout)] text-[var(--component-navigation-utility-content-knockout)]"
                 : "border-border bg-background text-foreground"
@@ -248,7 +248,7 @@ export function UtilityBar({
                           aria-current={isSelectedBrand ? "page" : undefined}
                           onClick={() => setOpenDestinationMenu(null)}
                           className={cn(
-                            "min-h-9 w-full justify-between rounded-lg px-3 py-2 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+                            "min-h-8 w-full justify-between rounded-lg px-3 py-1.5 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
                             darkMode
                               ? "text-[var(--component-navigation-utility-content-knockout)] hover:bg-white/10 hover:text-white"
                               : "text-foreground hover:bg-muted hover:text-foreground",

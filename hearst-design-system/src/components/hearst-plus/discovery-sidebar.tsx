@@ -325,7 +325,7 @@ export function LifestyleDiscoverySidebar({
 
   return (
     <aside
-      className="hidden min-w-0 space-y-5 lg:sticky lg:top-[112px] lg:block lg:max-h-[calc(100dvh-136px)] lg:self-start lg:overflow-y-auto lg:pr-1"
+      className="hidden min-w-0 space-y-5 lg:sticky lg:top-[108px] lg:block lg:max-h-[calc(100dvh-132px)] lg:self-start lg:overflow-y-auto lg:pr-1"
       aria-label="Lifestyle discovery sidebar"
     >
       {brandFilterFirst ? brandFilterModule : dailyHabitModule}

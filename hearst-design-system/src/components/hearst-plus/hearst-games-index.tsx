@@ -300,7 +300,7 @@ export function HearstGamesIndex() {
           </div>
         </main>
 
-        <aside className="min-w-0 space-y-5 lg:sticky lg:top-[112px] lg:self-start">
+        <aside className="min-w-0 space-y-5 lg:sticky lg:top-[108px] lg:self-start">
           <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
             <h2 className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
               Why games
