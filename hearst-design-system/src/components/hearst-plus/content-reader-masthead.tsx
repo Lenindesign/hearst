@@ -114,7 +114,7 @@ export function ContentReaderMasthead({
               className={cn(
                 "inline-flex items-center gap-1.5 whitespace-nowrap border-b-2 py-1 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40",
                 item.active
-                  ? "border-primary text-primary"
+                  ? "border-primary text-[var(--content-reader-active-label,var(--primary))]"
                   : "border-transparent text-muted-foreground hover:text-primary",
               )}
               aria-label={
@@ -168,7 +168,7 @@ export function ContentReaderMasthead({
               className={cn(
                 "whitespace-nowrap border-b-2 px-0.5 py-3 text-sm font-semibold transition-colors",
                 filter.active
-                  ? "border-primary text-primary"
+                  ? "border-primary text-[var(--content-reader-active-label,var(--primary))]"
                   : "border-transparent text-foreground hover:border-primary/40 hover:text-primary",
                 filter.disabled && "cursor-not-allowed opacity-40",
               )}

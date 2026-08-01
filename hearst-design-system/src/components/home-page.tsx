@@ -2676,10 +2676,16 @@ function LifestyleStoryReaderModal({
   const readerLogoHref = usePublicationTheme && readerContextStory
     ? getHearstBrandRoute(readerContextStory.brandSlug)
     : getHearstDestinationRoute(readerDestination);
+  const autoWeekReaderTheme = readerContextStory?.brandSlug === "autoweek" && readerDestinationTheme
+    ? getSelectedBrandTheme({ name: "Autoweek", slug: "autoweek" }, readerDestinationTheme)
+    : null;
   const readerThemeCssVars = readerTheme
     ? {
         ...brandToCssVars(readerTheme, readerColorMode),
         "--content-reader-article-surface": contentReaderTheme.fluxArticleSurface,
+        ...(autoWeekReaderTheme
+          ? { "--content-reader-active-label": autoWeekReaderTheme.colors["11"] }
+          : {}),
       } as React.CSSProperties
     : undefined;
   const isReaderOpen = Boolean(openStoryId);
@@ -3369,6 +3375,7 @@ function LifestyleStoryReaderModal({
   };
   const handleReaderCategoryPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     if (event.button !== 0 || readerSwipeLockedRef.current) return;
+    event.stopPropagation();
     readerSwipeStartRef.current = {
       x: event.clientX,
       y: event.clientY,
@@ -3379,6 +3386,7 @@ function LifestyleStoryReaderModal({
   const handleReaderCategoryPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
     const start = readerSwipeStartRef.current;
     if (!start || readerSwipeLockedRef.current) return;
+    event.stopPropagation();
 
     const deltaX = event.clientX - start.x;
     const deltaY = event.clientY - start.y;
@@ -3412,6 +3420,7 @@ function LifestyleStoryReaderModal({
   const handleReaderCategoryPointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
     const start = readerSwipeStartRef.current;
     if (!start) return;
+    event.stopPropagation();
 
     const end = readerSwipeLastRef.current ?? {
       x: event.clientX,
@@ -3447,6 +3456,7 @@ function LifestyleStoryReaderModal({
   };
   const handleReaderCategoryWheel = (event: React.WheelEvent<HTMLDivElement>) => {
     if (!hasMultipleReaderSwipeFilters || readerSwipeLockedRef.current) return;
+    event.stopPropagation();
 
     const stageWidth = readerSwipeStageRef.current?.clientWidth ?? event.currentTarget.clientWidth;
     if (!stageWidth) return;
@@ -6431,7 +6441,7 @@ export function HomePageTemplate({
   ]);
   const shouldIgnorePageCategorySwipeTarget = React.useCallback((target: EventTarget | null) => (
     target instanceof HTMLElement
-      && Boolean(target.closest("input, textarea, select, option, [contenteditable='true'], video, audio, [data-page-category-swipe-exempt]"))
+      && Boolean(target.closest("input, textarea, select, option, [contenteditable='true'], video, audio, [role='dialog'], [data-reader-category-swipe-container], [data-page-category-swipe-exempt]"))
   ), []);
   const handlePageCategoryPointerDown = React.useCallback((event: React.PointerEvent<HTMLDivElement>) => {
     if (
