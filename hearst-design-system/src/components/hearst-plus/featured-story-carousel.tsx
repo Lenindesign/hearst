@@ -559,9 +559,6 @@ export function FeaturedStoryCarousel({
                   >
                     {story.title}
                   </h2>
-                  <p className="mt-3 line-clamp-2 max-w-2xl text-sm leading-6 text-white/85 sm:text-base">
-                    {story.summary}
-                  </p>
                 </div>
               </button>
             );
