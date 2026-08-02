@@ -25,6 +25,7 @@ const productPages = [
   { id: "story", label: "Product story", mobileLabel: "Story", href: "/about-hearst-magazines/" },
   { id: "value", label: "Why Hearst+", mobileLabel: "Why Hearst+", href: "/why-hearst-plus/" },
   { id: "blueprint", label: "Blueprint", mobileLabel: "Blueprint", href: "/hearst-product-blueprint/" },
+  { id: "articles", label: "Article system", mobileLabel: "Articles", href: "/hearst-article-blueprint/" },
   { id: "tokens", label: "Token architecture", mobileLabel: "Tokens", href: "/token-architecture/" },
 ] as const;
 
@@ -36,7 +37,7 @@ const productLinkFocus =
 export function ProductHeader({ current }: { current: ProductPageId }) {
   return (
     <header className="border-b border-border bg-card">
-      <div className="mx-auto flex max-w-[1360px] flex-col gap-2 px-5 py-3 md:flex-row md:items-center md:justify-between md:gap-5 md:px-10">
+      <div className="mx-auto flex max-w-[1360px] flex-col gap-2 px-5 py-3 md:px-10 lg:flex-row lg:items-center lg:justify-between lg:gap-5">
         <Link
           href={getHearstDestinationRoute("all")}
           className={`flex min-h-11 items-center self-start ${productLinkFocus}`}
@@ -44,7 +45,7 @@ export function ProductHeader({ current }: { current: ProductPageId }) {
         >
           <LogoMark slug="hearst-all" name="Hearst Magazines" color={hearstPrimaryColor} className="h-6 w-32 sm:w-40" />
         </Link>
-        <nav aria-label="Product pages" className="hidden items-center gap-2 text-sm font-semibold md:flex">
+        <nav aria-label="Product pages" className="hidden items-center gap-2 text-sm font-semibold lg:flex">
           {productPages.map((page) => (
             <Link
               key={page.id}
@@ -68,7 +69,7 @@ export function ProductHeader({ current }: { current: ProductPageId }) {
         </nav>
         <nav
           aria-label="Product pages"
-          className="-mx-5 flex min-w-0 overflow-x-auto border-t border-border px-5 text-xs font-bold md:hidden"
+          className="-mx-5 flex min-w-0 overflow-x-auto border-t border-border px-5 text-xs font-bold md:-mx-10 md:px-10 lg:hidden"
           style={{ scrollbarWidth: "none" }}
         >
           {productPages.map((page) => (

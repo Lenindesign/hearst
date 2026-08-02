@@ -32,7 +32,7 @@ const metadata: ComponentMetadata = {
     other: [],
   },
   dependencies: ["ui/icons"],
-  usedBy: ["accordion-page"],
+  usedBy: ["accordion-page", "reader-account-ui"],
   brandAware: true,
   responsive: false,
   variants: ["single", "multiple", "indicator-start", "indicator-end"],

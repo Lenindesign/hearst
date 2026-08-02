@@ -54,6 +54,7 @@ type ReaderAccountContextValue = {
   createCollection: (name: string) => ReaderCollection | null;
   deleteCollection: (collectionId: string) => void;
   toggleStoryInCollection: (collectionId: string, storyId: string) => void;
+  removeSavedStory: (storyId: string) => void;
   removeStoriesFromCollection: (collectionId: string, storyIds: string[]) => void;
   retrySync: () => void;
   deleteAccount: () => void;
@@ -519,6 +520,38 @@ export function ReaderAccountProvider({ children }: { children: React.ReactNode 
     }));
   }, [updateStoredAccount]);
 
+  const removeSavedStory = React.useCallback((storyId: string) => {
+    updateStoredAccount((current) => {
+      const isSaved = current.preferences.savedIds.includes(storyId);
+      const isCollected = current.collections.some((collection) => collection.storyIds.includes(storyId));
+      if (!isSaved && !isCollected) return current;
+
+      const now = new Date().toISOString();
+      const nextSavedIds = current.preferences.savedIds.filter((id) => id !== storyId);
+      const nextCollections = current.collections.map((collection) => {
+        if (!collection.storyIds.includes(storyId)) return collection;
+        return {
+          ...collection,
+          storyIds: collection.storyIds.filter((id) => id !== storyId),
+          updatedAt: now,
+        };
+      });
+      const retainedIds = new Set([
+        ...nextSavedIds,
+        ...nextCollections.flatMap((collection) => collection.storyIds),
+      ]);
+
+      return {
+        ...current,
+        preferences: { ...current.preferences, savedIds: nextSavedIds },
+        collections: nextCollections,
+        storySnapshots: Object.fromEntries(
+          Object.entries(current.storySnapshots).filter(([id]) => retainedIds.has(id))
+        ),
+      };
+    });
+  }, [updateStoredAccount]);
+
   const removeStoriesFromCollection = React.useCallback((collectionId: string, storyIds: string[]) => {
     const removedIds = new Set(storyIds);
     updateStoredAccount((current) => {
@@ -580,6 +613,7 @@ export function ReaderAccountProvider({ children }: { children: React.ReactNode 
     createCollection,
     deleteCollection,
     toggleStoryInCollection,
+    removeSavedStory,
     removeStoriesFromCollection,
     retrySync,
     deleteAccount,
@@ -594,6 +628,7 @@ export function ReaderAccountProvider({ children }: { children: React.ReactNode 
     isHydrated,
     isSignedIn,
     reconcileStorySnapshots,
+    removeSavedStory,
     removeStoriesFromCollection,
     retrySync,
     signIn,

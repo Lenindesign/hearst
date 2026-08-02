@@ -12,6 +12,7 @@ import {
   LogOut,
   MessageCircle,
   Settings,
+  Sparkles,
   Trash2,
   User,
   X,
@@ -26,6 +27,13 @@ import { BrandSourceIcon } from "./hearst-plus/brand-source-icon";
 import { BrandLogo } from "./brand-logo";
 import type { LifestyleRiverProfile, LifestyleRiverStory } from "./lifestyle-river-types";
 import { useReaderAccount, type ReaderAccount, type ReaderCollection } from "./reader-account";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  getReaderProfileRecommendationReason,
+  getReaderProfileRecommendations,
+  profileOptionPreviewLimit,
+  rankReaderProfileOptions,
+} from "@/lib/reader-profile-recommendations";
 
 export type ReaderAuthMode = "create" | "signIn";
 
@@ -500,11 +508,12 @@ export function ReaderAuthDialog({
   );
 }
 
-type ProfileTab = "overview" | "personalization" | "library" | "activity" | "settings";
+type ProfileTab = "overview" | "personalization" | "recommendations" | "library" | "activity" | "settings";
 
 const profileTabs: { id: ProfileTab; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: "overview", label: "Profile", icon: User },
-  { id: "personalization", label: "For You", icon: Check },
+  { id: "personalization", label: "Tune For You", icon: Check },
+  { id: "recommendations", label: "Recommended", icon: Sparkles },
   { id: "library", label: "Library", icon: Bookmark },
   { id: "activity", label: "Comments", icon: MessageCircle },
   { id: "settings", label: "Account", icon: Settings },
@@ -548,6 +557,7 @@ export function ReaderProfileDialog({
     createCollection,
     deleteCollection,
     toggleStoryInCollection,
+    removeSavedStory,
     removeStoriesFromCollection,
     retrySync,
   } = useReaderAccount();
@@ -565,6 +575,8 @@ export function ReaderProfileDialog({
   const [pendingCommentDeleteId, setPendingCommentDeleteId] = React.useState<string>();
   const [commentStatus, setCommentStatus] = React.useState("");
   const libraryHeadingRef = React.useRef<HTMLHeadingElement>(null);
+  const savedStoriesHeadingRef = React.useRef<HTMLHeadingElement>(null);
+  const savedStoryRemoveButtonRefs = React.useRef(new Map<string, HTMLButtonElement>());
   const commentsHeadingRef = React.useRef<HTMLHeadingElement>(null);
 
   React.useEffect(() => {
@@ -590,6 +602,13 @@ export function ReaderProfileDialog({
   const savedStories = account.preferences.savedIds.map(resolveStory).filter(Boolean) as LifestyleRiverStory[];
   const unresolvedSavedIds = account.preferences.savedIds.filter((id) => !resolveStory(id));
   const comments = Object.values(account.commentsByStoryId).flat().sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  const rankedTopics = rankReaderProfileOptions(topics, stories, "topic");
+  const featuredTopics = rankedTopics.slice(0, profileOptionPreviewLimit);
+  const additionalTopics = rankedTopics.slice(profileOptionPreviewLimit);
+  const rankedBrands = rankReaderProfileOptions(brands, stories, "brand");
+  const featuredBrands = rankedBrands.slice(0, profileOptionPreviewLimit);
+  const additionalBrands = rankedBrands.slice(profileOptionPreviewLimit);
+  const recommendedStories = getReaderProfileRecommendations(stories, account.preferences);
   const toggleTopic = (topic: string) => {
     const followedTopics = account.preferences.followedTopics.includes(topic)
       ? account.preferences.followedTopics.filter((item) => item !== topic)
@@ -612,6 +631,22 @@ export function ReaderProfileDialog({
     const containsStory = collection.storyIds.includes(storyId);
     toggleStoryInCollection(collection.id, storyId);
     setCollectionStatus(`${containsStory ? "Removed from" : "Added to"} ${collection.name}.`);
+  };
+  const removeSavedStoryFromLibrary = (savedId: string, storyTitle: string) => {
+    const renderedSavedIds = account.preferences.savedIds.filter((id) => Boolean(resolveStory(id)));
+    const removedIndex = renderedSavedIds.indexOf(savedId);
+    const remainingSavedIds = renderedSavedIds.filter((id) => id !== savedId);
+    const nextFocusId = remainingSavedIds[Math.min(removedIndex, remainingSavedIds.length - 1)];
+
+    removeSavedStory(savedId);
+    setCollectionStatus(`Removed ${storyTitle} from saved stories and collections.`);
+    window.requestAnimationFrame(() => {
+      if (nextFocusId) {
+        savedStoryRemoveButtonRefs.current.get(nextFocusId)?.focus();
+        return;
+      }
+      savedStoriesHeadingRef.current?.focus();
+    });
   };
 
   return (
@@ -674,6 +709,7 @@ export function ReaderProfileDialog({
               <div className="mt-7 divide-y divide-border border-y border-border">
                 {[
                   { id: "personalization" as const, icon: Check, title: "For You preferences", detail: `${account.preferences.followedTopics.length} topics and ${account.preferences.followedBrands.length} brands shape your feed` },
+                  { id: "recommendations" as const, icon: Sparkles, title: "Recommended", detail: `${recommendedStories.length} fresh ${recommendedStories.length === 1 ? "story" : "stories"} based on your current preferences` },
                   {
                     id: "library" as const,
                     icon: Bookmark,
@@ -709,8 +745,8 @@ export function ReaderProfileDialog({
               <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">Choose the topics and brands you want to see more often. Your feed updates as you make changes.</p>
               <section className="mt-7">
                 <h4 className="font-bold">Interests</h4>
-                <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                  {topics.map((topic) => {
+                <div data-profile-options-primary="interests" className="mt-3 grid gap-2 sm:grid-cols-2">
+                  {featuredTopics.map((topic) => {
                     const active = account.preferences.followedTopics.includes(topic);
                     return (
                       <button key={topic} type="button" onClick={() => toggleTopic(topic)} aria-pressed={active} className={cn("flex min-h-11 items-center gap-3 rounded-[8px] px-3 text-left text-sm font-semibold hover:bg-muted", active && "bg-muted")}>
@@ -719,11 +755,37 @@ export function ReaderProfileDialog({
                     );
                   })}
                 </div>
+                {additionalTopics.length > 0 ? (
+                  <Accordion className="mt-2">
+                    <AccordionItem value="more-interests" className="border-0">
+                      <AccordionTrigger className="min-h-11 px-3 hover:no-underline">
+                        <span className="flex min-w-0 flex-1 items-center justify-between gap-3 pr-2">
+                          <span>Show all interests</span>
+                          <span className="text-xs font-normal text-muted-foreground">
+                            {additionalTopics.filter((topic) => account.preferences.followedTopics.includes(topic)).length} selected
+                          </span>
+                        </span>
+                      </AccordionTrigger>
+                      <AccordionContent className="pb-0">
+                        <div className="grid gap-2 sm:grid-cols-2">
+                          {additionalTopics.map((topic) => {
+                            const active = account.preferences.followedTopics.includes(topic);
+                            return (
+                              <button key={topic} type="button" onClick={() => toggleTopic(topic)} aria-pressed={active} className={cn("flex min-h-11 items-center gap-3 rounded-[8px] px-3 text-left text-sm font-semibold hover:bg-muted", active && "bg-muted")}>
+                                <span className={cn("flex size-5 items-center justify-center rounded-[4px] border", active ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background")}>{active ? <Check className="h-3.5 w-3.5" aria-hidden /> : null}</span>{topic}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                ) : null}
               </section>
               <section className="mt-8">
                 <h4 className="font-bold">Brands</h4>
-                <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                  {brands.map((brand) => {
+                <div data-profile-options-primary="brands" className="mt-3 grid gap-2 sm:grid-cols-2">
+                  {featuredBrands.map((brand) => {
                     const active = account.preferences.followedBrands.includes(brand);
                     return (
                       <button key={brand} type="button" onClick={() => toggleBrand(brand)} aria-pressed={active} className={cn("flex min-h-14 items-center gap-3 rounded-[8px] px-2.5 text-left text-sm font-semibold hover:bg-muted", active && "bg-muted")}>
@@ -734,7 +796,70 @@ export function ReaderProfileDialog({
                     );
                   })}
                 </div>
+                {additionalBrands.length > 0 ? (
+                  <Accordion className="mt-2">
+                    <AccordionItem value="more-brands" className="border-0">
+                      <AccordionTrigger className="min-h-11 px-3 hover:no-underline">
+                        <span className="flex min-w-0 flex-1 items-center justify-between gap-3 pr-2">
+                          <span>Show all brands</span>
+                          <span className="text-xs font-normal text-muted-foreground">
+                            {additionalBrands.filter((brand) => account.preferences.followedBrands.includes(brand)).length} selected
+                          </span>
+                        </span>
+                      </AccordionTrigger>
+                      <AccordionContent className="pb-0">
+                        <div className="grid gap-2 sm:grid-cols-2">
+                          {additionalBrands.map((brand) => {
+                            const active = account.preferences.followedBrands.includes(brand);
+                            return (
+                              <button key={brand} type="button" onClick={() => toggleBrand(brand)} aria-pressed={active} className={cn("flex min-h-14 items-center gap-3 rounded-[8px] px-2.5 text-left text-sm font-semibold hover:bg-muted", active && "bg-muted")}>
+                                <BrandMark brand={brand} stories={stories} />
+                                <span className="min-w-0 flex-1 break-words">{brand}</span>
+                                <span className={cn("flex size-5 items-center justify-center rounded-[4px] border", active ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background")}>{active ? <Check className="h-3.5 w-3.5" aria-hidden /> : null}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                ) : null}
               </section>
+            </div>
+          ) : null}
+
+          {tab === "recommendations" ? (
+            <div>
+              <h3 className="text-2xl font-bold">Fresh for you</h3>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+                Recent stories ranked from the interests and brands you follow.
+              </p>
+              {recommendedStories.length === 0 ? (
+                <p className="mt-6 border-y border-border py-5 text-sm text-muted-foreground">
+                  No new recommendations yet. Check back as the feed refreshes.
+                </p>
+              ) : (
+                <div className="mt-5 divide-y divide-border border-y border-border">
+                  {recommendedStories.map((story) => (
+                    <Link
+                      key={story.id}
+                      href={getLibraryStoryHref(story)}
+                      onClick={onClose}
+                      className="group grid min-h-24 grid-cols-[88px_minmax(0,1fr)] items-center gap-3 py-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:grid-cols-[112px_minmax(0,1fr)]"
+                      aria-label={`Open recommended story ${story.title}`}
+                    >
+                      <Image unoptimized src={story.image} alt="" width={112} height={72} className="h-16 w-[88px] rounded-[4px] object-cover sm:h-[72px] sm:w-28" />
+                      <span className="min-w-0">
+                        <span className="block text-xs font-semibold text-primary">
+                          {getReaderProfileRecommendationReason(story, account.preferences)}
+                        </span>
+                        <span className="mt-1 line-clamp-2 block font-bold leading-5 group-hover:text-primary">{story.title}</span>
+                        <span className="mt-1 block text-xs text-muted-foreground">{story.brand} · {story.readTime}</span>
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
           ) : null}
 
@@ -841,7 +966,7 @@ export function ReaderProfileDialog({
                 </div>
               ) : null}
               <section className="mt-8">
-                <h4 className="font-bold">Saved stories</h4>
+                <h4 ref={savedStoriesHeadingRef} tabIndex={-1} className="font-bold outline-none">Saved stories</h4>
                 {savedStories.length === 0 ? (
                   <p className="mt-3 border-y border-border py-5 text-sm text-muted-foreground">Save a story from the feed and it will appear here.</p>
                 ) : (
@@ -852,7 +977,7 @@ export function ReaderProfileDialog({
                       const archived = !isCurrentStory(savedId);
                       const href = archived && story.sourceUrl ? story.sourceUrl : getLibraryStoryHref(story);
                       return [(
-                      <div key={savedId} className="grid gap-3 py-4 sm:grid-cols-[minmax(0,1fr)_220px] sm:items-center">
+                      <div key={savedId} className="grid gap-3 py-4 sm:grid-cols-[minmax(0,1fr)_260px] sm:items-center">
                         <Link
                           href={href}
                           target={archived && story.sourceUrl ? "_blank" : undefined}
@@ -867,32 +992,48 @@ export function ReaderProfileDialog({
                             <p className="mt-1 text-xs text-muted-foreground">{story.brand} · {story.readTime}{archived ? " · Opens original" : ""}</p>
                           </div>
                         </Link>
-                        {customCollections.length === 0 ? (
-                          <button
-                            type="button"
-                            className="min-h-11 rounded-[8px] border border-dashed border-border px-3 text-left text-sm font-semibold text-muted-foreground hover:border-primary/50 hover:text-primary"
-                            onClick={() => collectionNameRef.current?.focus()}
-                          >
-                            Create a collection first
-                          </button>
-                        ) : (
-                          <select
-                            className="h-11 rounded-[8px] border border-border bg-background px-3 text-sm font-semibold"
-                            value=""
-                            onChange={(event) => {
-                              const collection = customCollections.find((item) => item.id === event.target.value);
-                              if (collection) toggleSavedStoryCollection(story, collection, savedId);
+                        <div className="flex flex-wrap items-center justify-end gap-2">
+                          {customCollections.length === 0 ? (
+                            <button
+                              type="button"
+                              className="min-h-11 min-w-[150px] flex-1 rounded-[8px] border border-dashed border-border px-3 text-left text-sm font-semibold text-muted-foreground hover:border-primary/50 hover:text-primary"
+                              onClick={() => collectionNameRef.current?.focus()}
+                            >
+                              Create a collection first
+                            </button>
+                          ) : (
+                            <select
+                              className="h-11 min-w-[150px] flex-1 rounded-[8px] border border-border bg-background px-3 text-sm font-semibold"
+                              value=""
+                              onChange={(event) => {
+                                const collection = customCollections.find((item) => item.id === event.target.value);
+                                if (collection) toggleSavedStoryCollection(story, collection, savedId);
+                              }}
+                              aria-label={`Add or remove ${story.title} from a custom collection`}
+                            >
+                              <option value="">Add or remove</option>
+                              {customCollections.map((collection) => (
+                                <option key={collection.id} value={collection.id}>
+                                  {collection.storyIds.includes(savedId) ? `In ${collection.name} - remove` : `Add to ${collection.name}`}
+                                </option>
+                              ))}
+                            </select>
+                          )}
+                          <Button
+                            ref={(node) => {
+                              if (node) savedStoryRemoveButtonRefs.current.set(savedId, node);
+                              else savedStoryRemoveButtonRefs.current.delete(savedId);
                             }}
-                            aria-label={`Add or remove ${story.title} from a custom collection`}
+                            type="button"
+                            variant="ghost"
+                            className="min-h-11 shrink-0 px-3"
+                            aria-label={`Remove ${story.title} from saved stories`}
+                            onClick={() => removeSavedStoryFromLibrary(savedId, story.title)}
                           >
-                            <option value="">Add or remove</option>
-                            {customCollections.map((collection) => (
-                              <option key={collection.id} value={collection.id}>
-                                {collection.storyIds.includes(savedId) ? `In ${collection.name} - remove` : `Add to ${collection.name}`}
-                              </option>
-                            ))}
-                          </select>
-                        )}
+                            <Bookmark className="mr-2 h-4 w-4 fill-current" aria-hidden />
+                            Remove
+                          </Button>
+                        </div>
                       </div>
                       )];
                     })}

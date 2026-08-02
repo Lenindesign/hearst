@@ -20,6 +20,39 @@ const legalLinkHrefs: Record<string, string> = {
 
 const hearstSubscriptionsHref = "https://subscribe.hearstmags.com/";
 
+export type SiteFooterLink = { label: string; href: string };
+export type SiteFooterLinkGroup = { title: string; links: SiteFooterLink[] };
+
+const defaultProductLinkGroups: SiteFooterLinkGroup[] = [
+  {
+    title: "Discover Hearst+",
+    links: [
+      { label: "Open Hearst+", href: "/hearst-plus/" },
+      { label: "Shop the stories", href: "/hearst-plus/shop/" },
+      { label: "Complete article viewer", href: "/hearst-plus/complete-articles/" },
+    ],
+  },
+  {
+    title: "Product strategy",
+    links: [
+      { label: "Product story", href: "/about-hearst-magazines/" },
+      { label: "Why Hearst+", href: "/why-hearst-plus/" },
+      { label: "Product blueprint", href: "/hearst-product-blueprint/" },
+      { label: "Article system", href: "/hearst-article-blueprint/" },
+      { label: "Token architecture", href: "/token-architecture/" },
+    ],
+  },
+  {
+    title: "Prototype experiences",
+    links: [
+      { label: "Live feed", href: "/hearst-plus/live-feed/" },
+      { label: "Lifestyle Live", href: "/hearst-plus/lifestyle-live/" },
+      { label: "Autos Videos", href: "/hearst-plus/motortrend-videos/" },
+      { label: "HOT ROD Events", href: "/autos/hot-rod/events/" },
+    ],
+  },
+];
+
 export interface SiteFooterProps {
   siteName: React.ReactNode;
   socialLinks?: string[];
@@ -29,7 +62,8 @@ export interface SiteFooterProps {
   onSocialClick?: (platform: string) => void;
   onLegalClick?: (link: string) => void;
   onSubscribeClick?: () => void;
-  productLinks?: Array<{ label: string; href: string }>;
+  productLinks?: SiteFooterLink[];
+  productLinkGroups?: SiteFooterLinkGroup[];
   finePrintNote?: string;
   socialFinePrintNote?: string;
   className?: string;
@@ -44,22 +78,15 @@ export function SiteFooter({
   onSocialClick,
   onLegalClick,
   onSubscribeClick,
-  productLinks = [
-    { label: "Product story", href: "/about-hearst-magazines/" },
-    { label: "Explore Hearst+", href: "/why-hearst-plus/" },
-    { label: "Product blueprint", href: "/hearst-product-blueprint/" },
-    { label: "Shop the stories", href: "/hearst-plus/shop/" },
-    { label: "Token architecture", href: "/token-architecture/" },
-    { label: "Complete article viewer", href: "/hearst-plus/complete-articles/" },
-    { label: "Live feed", href: "/hearst-plus/live-feed/" },
-    { label: "Lifestyle Live", href: "/hearst-plus/lifestyle-live/" },
-    { label: "Autos Videos", href: "/hearst-plus/motortrend-videos/" },
-    { label: "HOT ROD Events", href: "/autos/hot-rod/events/" },
-  ],
+  productLinks,
+  productLinkGroups,
   finePrintNote,
   socialFinePrintNote,
   className,
 }: SiteFooterProps) {
+  const resolvedProductLinkGroups = productLinkGroups
+    ?? (productLinks ? [{ title: "Explore the product", links: productLinks }] : defaultProductLinkGroups);
+
   return (
     <footer
       className={cn(
@@ -68,7 +95,7 @@ export function SiteFooter({
       )}
     >
       <div className="max-w-[var(--width-content-max,1360px)] mx-auto px-6">
-      <div className="flex flex-col justify-between gap-8 mb-8 md:flex-row md:items-start">
+      <div className="mb-8 grid gap-10 lg:grid-cols-[minmax(12rem,.55fr)_minmax(0,1.45fr)]">
         <div>
           <div className="mb-4">
             {typeof siteName === "string" ? (
@@ -108,24 +135,26 @@ export function SiteFooter({
             </>
           )}
         </div>
-        <div className="flex flex-wrap gap-8 text-[length:var(--text-token-2xs)]">
+        <div className="grid gap-8 text-[length:var(--text-token-2xs)] sm:grid-cols-2 xl:grid-cols-4">
+          {resolvedProductLinkGroups.map((group) => (
+            <nav key={group.title} aria-label={group.title} className="flex flex-col gap-2">
+              <span className="mb-1 font-semibold">{group.title}</span>
+              {group.links.map((link) => (
+                <LinkComponent
+                  key={link.href}
+                  href={link.href}
+                  variant="neutral"
+                  underline={false}
+                  size="sm"
+                  className="min-h-11 font-normal text-[var(--footer-foreground)] opacity-75 hover:text-[var(--footer-foreground)] hover:opacity-100 md:min-h-0"
+                >
+                  {link.label}
+                </LinkComponent>
+              ))}
+            </nav>
+          ))}
           <div className="flex flex-col gap-2">
-            <span className="font-semibold mb-1">Explore the product</span>
-            {productLinks.map((link) => (
-              <LinkComponent
-                key={link.href}
-                href={link.href}
-                variant="neutral"
-                underline={false}
-                size="sm"
-                className="min-h-11 font-normal text-[var(--footer-foreground)] opacity-75 hover:text-[var(--footer-foreground)] hover:opacity-100 md:min-h-0"
-              >
-                {link.label}
-              </LinkComponent>
-            ))}
-          </div>
-          <div className="flex flex-col gap-2">
-            <span className="font-semibold mb-1">Other Hearst Subscriptions</span>
+            <span className="mb-1 font-semibold">Subscriptions</span>
             <LinkComponent
               href={hearstSubscriptionsHref}
               target="_blank"

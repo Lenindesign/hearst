@@ -48,9 +48,11 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.2.0",
+    "@dagrejs/dagre": "^3.0.0",
     "@netlify/blobs": "^10.7.10",
     "@netlify/plugin-nextjs": "^5.15.8",
     "@phosphor-icons/react": "^2.1.10",
+    "@xyflow/react": "^12.11.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.6.0",

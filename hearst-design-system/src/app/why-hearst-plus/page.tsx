@@ -9,6 +9,7 @@ import {
   ProductHeader,
   brandSections,
 } from "@/components/product-story-shell";
+import { hearstGrowthPrinciples } from "@/lib/hearst-growth-principles";
 
 export const metadata: Metadata = {
   title: "Hearst+ | A Daily Reading Habit Across Hearst",
@@ -39,29 +40,12 @@ const habitSteps = [
   },
 ];
 
-const principles = [
-  {
-    number: "01",
-    title: "Acquire & understand",
-    copy: "Earn the first return with a useful daily edition, then let readers shape it through interests, follows, saves, and quiet feedback.",
-    evidence: "Signals: first-edition completion, interest choices, follows, saves, and return timing.",
-    color: "#6D45D8",
-  },
-  {
-    number: "02",
-    title: "Activate & engage",
-    copy: "Turn portfolio breadth into an easy next read. Keep source brands visible while recommendations connect the moment a reader is in with what could help next.",
-    evidence: "Signals: useful sessions, story starts, cross-brand discovery, completion, and More Like This feedback.",
-    color: "#169DB4",
-  },
-  {
-    number: "03",
-    title: "Learn & expand",
-    copy: "Use explicit reader choices and aggregate outcomes to improve relevance, editorial surfaces, and the value of the portfolio over time.",
-    evidence: "Signals: repeat visits, recommendation quality, destination depth, retention, and calibrated experiments.",
-    color: "#70B52C",
-  },
-];
+const principleColors = ["#6D45D8", "#169DB4", "#70B52C"] as const;
+const principles = hearstGrowthPrinciples.map((principle, index) => ({
+  ...principle,
+  evidence: `Signals: ${principle.signals.charAt(0).toLowerCase()}${principle.signals.slice(1)}`,
+  color: principleColors[index],
+}));
 
 const destinationPromises = [
   {

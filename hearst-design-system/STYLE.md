@@ -23,6 +23,7 @@ The complete brand registry is documented in `BRAND_STYLES.md`. Canonical HDS pu
 - A theme exception must not leak into another tab, destination, RSS/story page, or reader.
 - Body copy and metadata must meet WCAG AA contrast. In the Hearst+ light shell, primary text accents and muted metadata must clear 4.5:1 against `#F4F2EE`; use `#2B6FAF` for the shared blue accent and `#5F6B7A` for subtle text fallbacks unless a brand-specific token is independently verified.
 - Compact mobile utility controls may stay visually small, but their interactive box must be at least 24px high at 320px and 390px viewport widths.
+- Executive and product-reference status labels use restrained Hearst navy, Hearst blue, and neutral slate with unboxed inline markers. Do not use pastel success, warning, or information badges, and do not use traffic-light color semantics for documentation status. Authored interface and strategy copy does not use em dashes; use a colon, comma, semicolon, or sentence break instead. Preserve source punctuation only when reproducing published editorial content outside a strategy-document sample.
 
 ## Native foundation and brand inheritance
 

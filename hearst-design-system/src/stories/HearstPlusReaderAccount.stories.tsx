@@ -283,7 +283,7 @@ export const ProfilePreferences: Story = {
   play: async ({ canvasElement }) => {
     const { dialog } = await openDialog(canvasElement, "Open reader profile");
     const scope = within(dialog);
-    await userEvent.click(scope.getByRole("button", { name: "For You" }));
+    await userEvent.click(scope.getByRole("button", { name: "Tune For You" }));
     await expect(scope.getByRole("button", { name: "Home" })).toHaveAttribute("aria-pressed", "true");
     const countryLiving = scope.getByRole("button", { name: /Country Living/ });
     await expect(countryLiving).toHaveAttribute("aria-pressed", "true");
@@ -321,6 +321,38 @@ export const ProfileLibrary: Story = {
     await userEvent.click(scope.getByRole("button", { name: "Cancel" }));
     await waitFor(() =>
       expect(scope.getByRole("button", { name: "Delete Weekend reads" })).toHaveFocus(),
+    );
+
+    const removeSavedStory = scope.getByRole("button", {
+      name: `Remove ${savedStory.title} from saved stories`,
+    });
+    await expect(removeSavedStory.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
+  },
+};
+
+export const ProfileLibraryUnsave: Story = {
+  name: "Profile: unsave from library",
+  globals: {
+    viewport: "mobile2",
+  },
+  parameters: {
+    viewport: { defaultViewport: "mobile2" },
+  },
+  render: () => <ProfileLauncher />,
+  play: async ({ canvasElement }) => {
+    const { dialog } = await openDialog(canvasElement, "Open reader profile");
+    const scope = within(dialog);
+    await userEvent.click(scope.getByRole("button", { name: "Library" }));
+    const removeSavedStory = scope.getByRole("button", {
+      name: `Remove ${savedStory.title} from saved stories`,
+    });
+    await userEvent.click(removeSavedStory);
+    await expect(scope.queryByRole("link", { name: `Open ${savedStory.title}` })).not.toBeInTheDocument();
+    await expect(scope.getByRole("status")).toHaveTextContent(
+      `Removed ${savedStory.title} from saved stories and collections.`,
+    );
+    await waitFor(() =>
+      expect(scope.getByRole("heading", { name: "Saved stories" })).toHaveFocus(),
     );
   },
 };

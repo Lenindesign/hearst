@@ -81,6 +81,7 @@ const brands = [
       "https://www.womansday.com/rss/all.xml",
       "https://www.womansday.com/rss/life.xml",
     ],
+    sitemapIndex: "https://www.womansday.com/sitemap_index.xml",
   },
 ];
 

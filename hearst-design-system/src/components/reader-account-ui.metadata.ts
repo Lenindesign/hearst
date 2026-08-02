@@ -47,6 +47,7 @@ const metadata: ComponentMetadata = {
     "hearst-plus/brand-source-icon",
     "lifestyle-river-types",
     "reader-account",
+    "ui/accordion",
     "ui/avatar",
     "ui/button",
     "ui/icons",

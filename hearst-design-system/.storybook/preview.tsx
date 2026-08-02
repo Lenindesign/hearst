@@ -133,7 +133,7 @@ const preview: Preview = {
               "Ambient Reader",
             ],
             "Foundation",
-            ["Grid System", "Colors", "Typography", "Icons", "Tokens", "Tailwind + shadcn", "Token Naming", "Token Usage"],
+            ["Grid System", "Colors", "Typography", "Icons", "Tokens", "Token Relationships", "Tailwind + shadcn", "Token Naming", "Token Usage"],
             "HDS Primitives",
             "Templates",
             "Delivery",

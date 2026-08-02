@@ -2,6 +2,27 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-08-02: Restrained product-document status language
+
+- **Context:** Pastel green, blue, and amber status badges made the Article Experience Blueprint read like a generic generated dashboard instead of a Hearst executive reference.
+- **Decision:** Product-reference pages use unboxed inline status markers in Hearst navy, Hearst blue, and neutral slate. They do not use traffic-light status palettes or em dashes in authored interface and strategy copy. Strategy-document samples normalize source-title em dashes to colons while canonical story routes and source content remain unchanged.
+- **Scope:** Hearst executive narratives, product blueprints, architecture references, and their embedded presentation samples.
+- **Canonical rule:** `STYLE.md` Theme and color.
+
+## 2026-08-02: Library unsave behavior
+
+- **Context:** The account Library exposed collection assignment for saved stories but no direct way to unsave one from the master list.
+- **Decision:** Give every saved-story row a visible Remove action. One removal atomically clears the story from saved preferences, the internal Read Later collection, every reader-created collection, and retained snapshots when no other reference remains. After removal, focus moves to the next available Remove action or the Saved stories heading.
+- **Scope:** Hearst+ account Library for browser-local and Google-synced prototype profiles.
+- **Canonical rule:** `APP_RULES.md` navigation and branding behavior.
+
+## 2026-08-02: Compact profile preferences and fresh recommendations
+
+- **Context:** The account For You settings rendered every topic and brand at once, which made the modal difficult to scan and pushed useful content below the first viewport.
+- **Decision:** Show six options per preference group using current catalog popularity and freshness signals, then place the remaining options in accessible disclosures that retain selection state. Add a Recommended account section with up to six recent, unsaved, non-hidden stories ranked from the reader's actual followed topics and brands.
+- **Scope:** Hearst+ account Profile and For You settings across destinations.
+- **Canonical rule:** `APP_RULES.md` navigation and branding behavior.
+
 ## 2026-07-25: Add Redbook to the video index
 
 - **Context:** The Personalize video service accepts `redbookmag` and returns 20 readable exact `16:9` videos, but Redbook was not included in the configured video-brand registry.

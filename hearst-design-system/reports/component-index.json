@@ -1,15 +1,16 @@
 {
-  "generatedAt": "2026-07-29T11:01:24.672Z",
-  "totalComponents": 101,
+  "generatedAt": "2026-08-02T23:22:02.229Z",
+  "totalComponents": 104,
   "byLevel": {
     "template": 20,
-    "molecule": 32,
+    "molecule": 35,
     "organism": 24,
     "atom": 25
   },
   "byNamespace": {
     "accordion-page.tsx": 1,
     "adaptive-video.tsx": 1,
+    "article-blueprint-experience.tsx": 1,
     "article-page.tsx": 1,
     "badge-page.tsx": 1,
     "brand-logo-marquee.tsx": 1,
@@ -24,7 +25,7 @@
     "divider-page.tsx": 1,
     "form-label-page.tsx": 1,
     "fre": 12,
-    "hearst-plus": 30,
+    "hearst-plus": 31,
     "home-page.tsx": 1,
     "homepage-layouts.tsx": 1,
     "hot-rod-events-page.tsx": 1,
@@ -42,14 +43,15 @@
     "theme-provider.tsx": 1,
     "token-dashboard.tsx": 1,
     "token-inspector.tsx": 1,
+    "token-relationship-graph.tsx": 1,
     "tokens-page.tsx": 1,
     "typography-page.tsx": 1,
     "ui": 25
   },
   "metadataCoverage": {
     "componentsWithMetadata": 28,
-    "componentsWithoutMetadata": 73,
-    "coveragePercent": 27.7,
+    "componentsWithoutMetadata": 76,
+    "coveragePercent": 26.9,
     "validMetadata": 28,
     "invalidMetadata": 0
   },
@@ -58,12 +60,12 @@
     "errors": []
   },
   "storyCoverage": {
-    "directlySpecifiedComponents": 55,
-    "productionUsedWithoutDirectStory": 39,
+    "directlySpecifiedComponents": 56,
+    "productionUsedWithoutDirectStory": 41,
     "integratedSpecifiedComponents": 1,
     "infrastructureClassifiedComponents": 1,
-    "specifiedComponents": 56,
-    "productionUsedWithoutStorybookSpecification": 37
+    "specifiedComponents": 57,
+    "productionUsedWithoutStorybookSpecification": 39
   },
   "dependencyGraph": {
     "accordion-page": [
@@ -76,6 +78,7 @@
     "adaptive-video": [
       "ui/button"
     ],
+    "article-blueprint-experience": [],
     "article-page": [
       "theme-provider",
       "brand-logo",
@@ -203,6 +206,7 @@
       "hearst-plus/fullscreen-image-viewer",
       "hearst-plus/story-metadata"
     ],
+    "amplitude-analytics-bridge": [],
     "brand-promotion-river-module": [
       "brand-logo",
       "lifestyle-river-types",
@@ -515,7 +519,8 @@
       "hearst-plus/brand-source-icon",
       "brand-logo",
       "lifestyle-river-types",
-      "reader-account"
+      "reader-account",
+      "ui/accordion"
     ],
     "reader-account": [
       "lifestyle-river-types"
@@ -536,6 +541,7 @@
     "token-inspector": [
       "ui/icons"
     ],
+    "token-relationship-graph": [],
     "tokens-page": [
       "theme-provider",
       "nav-bar",
@@ -630,7 +636,8 @@
       "typography-page"
     ],
     "accordion": [
-      "accordion-page"
+      "accordion-page",
+      "reader-account-ui"
     ],
     "badge": [
       "accordion-page",
@@ -1188,6 +1195,34 @@
       ],
       "storybookSpecification": null,
       "lineCount": 247
+    },
+    {
+      "name": "article-blueprint-experience",
+      "path": "src/components/article-blueprint-experience.tsx",
+      "exports": [
+        "ExecutiveJourney",
+        "PersonalizationDecisionDemo",
+        "AmbientVariantExplorer",
+        "ContinuationSequenceDemo",
+        "ArticleBlueprintVariant"
+      ],
+      "level": "molecule",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/app/hearst-article-blueprint/page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 250
     },
     {
       "name": "article-page",
@@ -2159,6 +2194,8 @@
       "path": "src/components/fre/site-footer.tsx",
       "exports": [
         "SiteFooter",
+        "SiteFooterLink",
+        "SiteFooterLinkGroup",
         "SiteFooterProps"
       ],
       "level": "molecule",
@@ -2196,7 +2233,7 @@
         "src/stories/FRE.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 187
+      "lineCount": 216
     },
     {
       "name": "site-header",
@@ -2303,6 +2340,30 @@
       ],
       "storybookSpecification": null,
       "lineCount": 1526
+    },
+    {
+      "name": "amplitude-analytics-bridge",
+      "path": "src/components/hearst-plus/amplitude-analytics-bridge.tsx",
+      "exports": [
+        "AmplitudeAnalyticsBridge"
+      ],
+      "level": "molecule",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/app/layout.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 64
     },
     {
       "name": "brand-promotion-river-module",
@@ -2577,14 +2638,15 @@
       ],
       "tokens": {
         "cssVariables": [
-          "--hp-text-ui"
+          "--hp-text-ui",
+          "--content-reader-active-label",
+          "--primary"
         ],
         "tailwindSemantics": [
           "border-border",
-          "bg-background/95",
+          "bg-background",
           "border-border/70",
           "text-foreground",
-          "text-primary",
           "text-muted-foreground"
         ],
         "classes": []
@@ -2601,7 +2663,7 @@
         "src/stories/HearstPlusContentReaderMasthead.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 164
+      "lineCount": 185
     },
     {
       "name": "content-reader-recommendations",
@@ -2823,7 +2885,7 @@
         ],
         "rationale": "Seven direct stories import the production component and specify mixed article/video allocation, active-slide semantics, reader actions, mobile targets, saved state, publication treatment, single-story fallback, empty allocation, and reduced-motion behavior."
       },
-      "lineCount": 616
+      "lineCount": 720
     },
     {
       "name": "feed-states",
@@ -3111,19 +3173,22 @@
       "tokens": {
         "cssVariables": [],
         "tailwindSemantics": [
-          "text-foreground/85",
+          "text-foreground/80",
           "border-border",
+          "bg-muted/20",
           "text-muted-foreground",
           "bg-muted",
-          "text-foreground",
           "bg-muted/25",
-          "text-foreground/80"
+          "text-foreground",
+          "bg-primary",
+          "text-primary-foreground",
+          "text-foreground/85"
         ],
         "classes": [
           "font-brand"
         ]
       },
-      "brandAware": false,
+      "brandAware": true,
       "responsive": true,
       "hasHardcodedColors": false,
       "metadataPath": null,
@@ -3138,7 +3203,7 @@
         "src/stories/HearstPlusReaderBody.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 168
+      "lineCount": 169
     },
     {
       "name": "reader-masthead-carousel",
@@ -3165,7 +3230,7 @@
       ],
       "storybookStories": [],
       "storybookSpecification": null,
-      "lineCount": 133
+      "lineCount": 138
     },
     {
       "name": "stakeholder-personalization-console",
@@ -3588,7 +3653,7 @@
         "src/stories/HearstPlusVideoCards.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 374
+      "lineCount": 524
     },
     {
       "name": "home-page",
@@ -3749,7 +3814,7 @@
         "src/stories/LifestyleDestinationApp.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 6152
+      "lineCount": 6860
     },
     {
       "name": "homepage-layouts",
@@ -4249,6 +4314,7 @@
       "metadataPath": "src/components/product-story-shell.metadata.ts",
       "applicationUseSites": [
         "src/app/about-hearst-magazines/page.tsx",
+        "src/app/hearst-article-blueprint/page.tsx",
         "src/app/hearst-product-blueprint/page.tsx",
         "src/app/token-architecture/page.tsx",
         "src/app/why-hearst-plus/page.tsx"
@@ -4263,7 +4329,7 @@
         ],
         "rationale": "The direct stories import the exact routed exports and separate them from reader-facing components. They specify desktop and phone navigation, current-page semantics, 44px targets, the non-interactive diagram boundary, both story-card concepts, portfolio and destination maps, journey/ranking evidence, architecture/palette guidance, brand style tiles, marquee behavior, and the shared footer."
       },
-      "lineCount": 612
+      "lineCount": 613
     },
     {
       "name": "reader-account-ui",
@@ -4287,7 +4353,8 @@
         "hearst-plus/brand-source-icon",
         "brand-logo",
         "lifestyle-river-types",
-        "reader-account"
+        "reader-account",
+        "ui/accordion"
       ],
       "tokens": {
         "cssVariables": [
@@ -4322,7 +4389,7 @@
         "src/stories/HearstPlusReaderAccount.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 1052
+      "lineCount": 1193
     },
     {
       "name": "reader-account",
@@ -4356,7 +4423,7 @@
         "stories": [],
         "rationale": "ReaderAccountProvider has no visual output. The official Reader Account stories directly specify the production ReaderAuthDialog, ReaderProfileDialog, and ReaderAvatar consumers, while provider normalization and merge rules are exercised in reader-account-model tests. A standalone provider story would manufacture UI and duplicate the real account surfaces."
       },
-      "lineCount": 616
+      "lineCount": 651
     },
     {
       "name": "special-offers",
@@ -4617,6 +4684,32 @@
       "lineCount": 727
     },
     {
+      "name": "token-relationship-graph",
+      "path": "src/components/token-relationship-graph.tsx",
+      "exports": [
+        "TokenRelationshipGraph",
+        "TokenGraphBrand",
+        "TokenRelationshipGraphProps"
+      ],
+      "level": "molecule",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": true,
+      "metadataPath": null,
+      "applicationUseSites": [],
+      "storybookStories": [
+        "src/stories/TokenRelationships.stories.tsx"
+      ],
+      "storybookSpecification": null,
+      "lineCount": 279
+    },
+    {
       "name": "tokens-page",
       "path": "src/components/tokens-page.tsx",
       "exports": [
@@ -4723,7 +4816,8 @@
       "hasHardcodedColors": false,
       "metadataPath": "src/components/ui/accordion.metadata.ts",
       "applicationUseSites": [
-        "src/components/accordion-page.tsx"
+        "src/components/accordion-page.tsx",
+        "src/components/reader-account-ui.tsx"
       ],
       "storybookStories": [
         "src/stories/Accordion.stories.tsx"
@@ -5204,13 +5298,13 @@
       "name": "grid",
       "path": "src/components/ui/grid.tsx",
       "exports": [
-        "PageContainer",
         "Grid",
         "Col",
         "GridOverlay",
         "useBreakpoint",
         "BREAKPOINTS",
         "GRID_COLUMNS",
+        "PageContainer",
         "Breakpoint",
         "GridColumnCount",
         "PageContainerProps",
@@ -5246,7 +5340,7 @@
         "src/stories/Grid.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 506
+      "lineCount": 509
     },
     {
       "name": "input",
