@@ -1,4 +1,12 @@
+---
+status: historical
+snapshot_date: 2026-07-23
+superseded_by: APP_RULES.md, PRODUCT.md, STYLE.md
+---
+
 # Hearst+ Application Audit
+
+> Historical audit snapshot. Findings reflect the implementation and environment on the snapshot date. Revalidate against current code before acting on them.
 
 Audit date: 2026-07-23
 

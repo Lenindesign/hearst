@@ -107,7 +107,7 @@ const preview: Preview = {
           "Hearst Plus",
           [
             "Start",
-            ["Overview", "Site Map", "Architecture", "Component Architecture", "Technology Stack"],
+            ["Overview", "Site Map", "Architecture", "Component Architecture", "Technology Stack", "Repository Docs"],
             "Product",
             ["For You Feed", "Lifestyle Destination", "HOT ROD Events", "Onboarding Journey"],
             "Components",

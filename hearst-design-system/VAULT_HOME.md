@@ -8,23 +8,27 @@ This project directory is an Obsidian vault and the canonical knowledge base for
 
 - [[DESIGN-SYSTEM-SPEC]]: canonical HDS token architecture, generated outputs, component contracts, and publication pipeline.
 - [[PRODUCT]]: product purpose, audience, personality, and design principles.
-- [[DESIGN]]: concise design-tool context and the Hearst Design System inheritance model.
+- [[DESIGN]]: concise design-tool bridge that routes work to canonical owners.
 - [[STYLE]]: native visual foundation, responsive behavior, interaction rules, and cross-theme styling.
 - [[BRAND_STYLES]]: destination and publication colors, fonts, logos, and brand inheritance.
 - [[APP_RULES]]: personalization, feeds, readers, content behavior, and scoped exceptions.
 - [[DECISION_LOG]]: dated product and design decisions that may later graduate into a canonical rule file.
 
-## Source-of-truth order
+## Canonical ownership
 
 1. HDS foundation and token architecture: `DESIGN-SYSTEM-SPEC.md`
 2. Product intent: `PRODUCT.md`
-3. Design-tool context: `DESIGN.md` (summary bridge, not a competing source)
+3. Design-tool routing: `DESIGN.md` (summary bridge, not a competing source)
 4. Shared visual behavior: `STYLE.md`
 5. Brand identity: `BRAND_STYLES.md`
 6. Product behavior and exceptions: `APP_RULES.md`
 7. Decision history: `DECISION_LOG.md`
 
 Do not create duplicate notes for rules already covered by these files. Update the canonical file and add a short dated entry to the decision log when the change needs historical context.
+
+## Efficient reading path
+
+Read `PRODUCT.md` first. Then read only the sections owned by the task: `DESIGN-SYSTEM-SPEC.md` for HDS architecture, `STYLE.md` for shared presentation, `BRAND_STYLES.md` for brand identity, and `APP_RULES.md` for product behavior. Use `DESIGN.md` as an automatically loaded routing bridge and `DECISION_LOG.md` only for historical rationale.
 
 ## Working agreements
 
@@ -47,6 +51,10 @@ Open `/Users/leninaviles/Projects/hearst/hearst-design-system` as a vault in Obs
 
 - [[QA_AUDIT_REPORT]]: historical QA snapshot tied to its dated commit and environment.
 - [[HEARST_LIFESTYLE_EXPERIENCE]]: historical Lifestyle POC description; current routes and rules live in the canonical files above.
+- [[notes/archive/APP_AUDIT|Application audit]]: July 23, 2026 application audit and implementation record.
+- [[notes/archive/DAILY_HABIT_AUDIT|Daily habit audit]]: July 23, 2026 product audit and implementation record.
+- [[notes/archive/IMPROVEMENT_PLAN|Improvement plan]]: historical plan based on the dated application audit.
+- [[notes/archive/design-qa|Design QA record]]: dated visual QA evidence through July 21, 2026.
 - `README.md`: operational repository setup, validation, and deployment orientation.
 
 Historical notes provide context only. They never override a canonical rule or current implementation source.

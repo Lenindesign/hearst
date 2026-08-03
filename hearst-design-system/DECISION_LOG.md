@@ -30,7 +30,7 @@ Use this file for concise, dated context behind product and design decisions. Du
 - **Scope:** Hearst+ global Videos tab, Lifestyle video feeds, and Redbook video brand filtering.
 - **Canonical rule:** `APP_RULES.md` video-feed behavior.
 
-# 2026-07-25: Durable cross-device reader libraries
+## 2026-07-25: Durable cross-device reader libraries
 
 - **Context:** Reader profiles stored only saved story IDs, so refreshed catalogs produced anonymous unavailable rows. Google profile writes also replaced the complete server record, allowing one device to overwrite another device's newer saves or removals.
 - **Decision:** Save a bounded editorial snapshot and canonical source URL with each library item, reconcile legacy IDs against the complete portfolio inventory, and show one explicit cleanup action for IDs that cannot be recovered. Google profile writes now send the device's prior and next state so the server can apply field and collection deltas to the current profile; signed-in devices refresh the server profile on load and focus.
@@ -51,6 +51,14 @@ Use this file for concise, dated context behind product and design decisions. Du
 - **Decision:** Keep preloaded Shorts media elements mounted for the viewer session, commit selection only after the native snap settles, pause outgoing players without accepting their media events as active state, and autoplay a newly active Short only while the viewer is muted. Show story metadata briefly when a Short becomes active, then let it recede until hover, touch, or keyboard focus requests it again.
 - **Scope:** The full-screen Delish Shorts viewer on phone and desktop. Standard landscape video cards and story-reader playback are unchanged.
 - **Canonical rule:** `APP_RULES.md` Delish Shorts behavior.
+
+## 2026-07-23: Scoped UI state and executable unit tests
+
+- **Context:** Focused lint exposed cascading renders caused by synchronously copying props and route state inside effects, while application utility tests existed but were not discoverable through a package command.
+- **Decision:** Reset transient dialog sessions through keyed remount boundaries, derive route/account/filter state from explicit scope keys, and preserve progressively loaded feed order through a pure tested merge. Expose all current utility tests through `npm run test:unit`; do not suppress React lint rules.
+- **Scope:** Hearst+ onboarding, authentication/profile dialogs, reader and gallery state, search selection, carousel and Shorts sessions, brand filters, visible-feed pagination, article cache, story search, and feed ordering.
+- **Exceptions:** Unsaved authentication/profile drafts are intentionally discarded when their dialog closes. Component and route-level browser suites remain follow-up coverage.
+- **Canonical rule:** `APP_RULES.md` modal, reader, and progressive-river behavior.
 
 ## 2026-07-23: Capability-based HomePageTemplate extraction
 
@@ -118,14 +126,6 @@ Use this file for concise, dated context behind product and design decisions. Du
 - **Decision:** On publication routes, reuse the shared sidebar module as a cached, section-wide story inventory. Count each sibling brand from the deduplicated full editorial, current article, and playable-video catalog, while retaining canonical brand navigation and the active publication state.
 - **Scope:** Every Lifestyle, Autos, Fashion & Luxury, and Enthusiast & Wellness publication route. Destination-wide filters and the Videos index keep their contextual count behavior.
 - **Canonical rule:** `APP_RULES.md` publication-river behavior.
-
-## 2026-07-23: Scoped UI state and executable unit tests
-
-- **Context:** Focused lint exposed cascading renders caused by synchronously copying props and route state inside effects, while application utility tests existed but were not discoverable through a package command.
-- **Decision:** Reset transient dialog sessions through keyed remount boundaries, derive route/account/filter state from explicit scope keys, and preserve progressively loaded feed order through a pure tested merge. Expose all current utility tests through `npm run test:unit`; do not suppress React lint rules.
-- **Scope:** Hearst+ onboarding, authentication/profile dialogs, reader and gallery state, search selection, carousel and Shorts sessions, brand filters, visible-feed pagination, article cache, story search, and feed ordering.
-- **Exceptions:** Unsaved authentication/profile drafts are intentionally discarded when their dialog closes. Component and route-level browser suites remain follow-up coverage.
-- **Canonical rule:** `APP_RULES.md` modal, reader, and progressive-river behavior.
 
 ## 2026-07-19: Delish indicator palette exception and complete lazy rivers
 

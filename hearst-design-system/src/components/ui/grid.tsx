@@ -9,8 +9,9 @@
  *   Tablet  (md ≥768) : 8 columns,  20px gutter, 24px outer padding
  *   Desktop (lg ≥1024): 12 columns, 24px gutter, up to 48px outer padding
  *
- * Use these primitives instead of hand-rolling `grid grid-cols-*` per layout.
- * They guarantee that every page obeys the same spatial contract.
+ * Use these primitives for layouts that follow the reusable HDS page-grid
+ * contract. Application-specific editorial compositions may use explicit CSS
+ * grid tracks inside the shared PageContainer boundary.
  *
  * - `PageContainer` constrains content to `--width-content-max` and applies the
  *   responsive outer padding.
@@ -51,7 +52,7 @@ export type GridColumnCount =
 
 /**
  * The grid only changes column count at three breakpoints. We ignore `sm`
- * intentionally: jumping from 4 → 8 columns at 640px is too jittery on
+ * intentionally: jumping from 4 to 8 columns at 640px is too jittery on
  * landscape phones, so the grid stays at 4 until `md`.
  */
 export const GRID_COLUMNS: Record<"mobile" | "tablet" | "desktop", number> = {
@@ -426,13 +427,13 @@ export function Col({
 export interface GridOverlayProps {
   /** Visually highlight the grid columns. Renders inside a `relative` parent. */
   className?: string;
-  /** Hide on mobile (recommended — overlay is a tablet/desktop guide). */
+  /** Hide on mobile (recommended because the overlay is a tablet/desktop guide). */
   hideOnMobile?: boolean;
 }
 
 /**
  * Renders 12 columns layered behind content. Use inside a `relative` parent
- * — typically a `PageContainer`. Columns 5-8 appear at `md`, 9-12 at `lg`.
+ * such as a `PageContainer`. Columns 5-8 appear at `md`, 9-12 at `lg`.
  * Aria-hidden so it never reaches assistive tech.
  */
 export function GridOverlay({
@@ -472,7 +473,7 @@ export function GridOverlay({
 // ─── useBreakpoint hook ──────────────────────────────────────────────────────
 
 /**
- * Returns the active breakpoint based on `window.matchMedia`. Use sparingly —
+ * Returns the active breakpoint based on `window.matchMedia`. Use sparingly
  * for documentation, debug overlays, or behavior that genuinely cannot be
  * expressed in CSS. Prefer Tailwind's responsive prefixes for layout.
  */

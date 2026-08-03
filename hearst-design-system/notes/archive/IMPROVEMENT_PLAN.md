@@ -1,4 +1,12 @@
+---
+status: historical
+snapshot_date: 2026-07-23
+superseded_by: APP_RULES.md, DECISION_LOG.md
+---
+
 # Hearst+ Prioritized Improvement Plan
+
+> Historical plan based on the dated application audit. It is not a current backlog or authorization to implement.
 
 This plan is based on `APP_AUDIT.md`. It does not authorize implementation or deployment. P0 work should begin only after product/security/accessibility owners agree on the intended prototype boundary. Large and architectural work requires approval.
 

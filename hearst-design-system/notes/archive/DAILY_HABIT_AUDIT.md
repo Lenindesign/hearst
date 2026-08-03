@@ -1,4 +1,12 @@
+---
+status: historical
+snapshot_date: 2026-07-23
+superseded_by: PRODUCT.md, APP_RULES.md
+---
+
 # Hearst+ Daily Habit Audit
+
+> Historical product audit and implementation record. Current product intent and behavior live in the canonical files listed above.
 
 Date: July 23, 2026
 Scope: `/hearst-plus/`, onboarding, mobile navigation, search, Saved, article reader, personalization behavior, account persistence, feed refresh, analytics readiness, and implementation risk.

@@ -1,8 +1,8 @@
 # Hearst Prototype App Rules
 
-These rules capture durable product and interface decisions for the Hearst reader prototypes. Apply them across desktop and mobile unless a later decision explicitly replaces them.
+This file owns durable product behavior for the Hearst reader prototypes: feeds, personalization, readers, navigation, state, content eligibility, loading, measurement, and scoped workflow exceptions. Apply these rules across desktop and mobile unless a later canonical decision explicitly replaces them.
 
-Before making UI changes, also read `PRODUCT.md` for product intent, `STYLE.md` for the shared visual and interaction rules, and `BRAND_STYLES.md` for native inheritance plus brand colors, fonts, and logos. Keep broadly reusable style decisions in `STYLE.md`; keep behavior and scoped product exceptions here.
+Read `PRODUCT.md` for intent. Open the relevant section of `STYLE.md` only when presentation changes, and the relevant section of `BRAND_STYLES.md` only when brand identity changes. Broadly reusable visual rules do not belong here.
 
 ## Theme and surfaces
 

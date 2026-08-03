@@ -6,14 +6,17 @@ This application is built on top of the Hearst Design System. Prefer existing He
 
 Before changing any destination, brand page, carousel, river, sidebar, card, video index, masthead, or reader:
 
-1. Read `VAULT_HOME.md` for the knowledge map and source-of-truth order.
-2. Read `DESIGN-SYSTEM-SPEC.md` before changing HDS foundations, tokens, typography roles, components, or generated theme outputs.
-3. Read `PRODUCT.md` for product purpose and design principles.
-4. Read `DESIGN.md` for the concise design-tool context and Hearst Design System inheritance model.
-5. Read the relevant sections of `STYLE.md` for shared visual, responsive, theme, and interaction rules.
-6. Read `BRAND_STYLES.md` when colors, fonts, logos, icons, mastheads, or brand inheritance are involved.
-7. Read `APP_RULES.md` for personalization, content, feed, reader, route, and scoped-exception behavior.
-8. Check `DECISION_LOG.md` when the reason or history behind a rule matters.
+1. Read `PRODUCT.md` for product purpose and design principles.
+2. Read `DESIGN.md` when a design workflow loads it or when the correct canonical owner is unclear.
+3. Read only the relevant canonical sections for the task:
+   - `DESIGN-SYSTEM-SPEC.md` for HDS foundations, tokens, typography roles, components, or generated theme outputs.
+   - `STYLE.md` for shared visual, responsive, accessibility, theme, or interaction styling.
+   - `BRAND_STYLES.md` for colors, fonts, logos, icons, mastheads, routes, or brand inheritance.
+   - `APP_RULES.md` for personalization, content, feeds, readers, navigation, state, eligibility, loading, or scoped product behavior.
+4. Read `VAULT_HOME.md` when broader repository context or the complete knowledge map is needed.
+5. Check `DECISION_LOG.md` only when the reason or history behind a current rule matters.
+
+Do not load every canonical document for a narrowly scoped change.
 
 Keep rule ownership clear:
 

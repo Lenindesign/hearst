@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-02T23:22:02.229Z",
+  "generatedAt": "2026-08-03T03:05:01.764Z",
   "totalComponents": 104,
   "byLevel": {
     "template": 20,
@@ -5340,7 +5340,7 @@
         "src/stories/Grid.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 509
+      "lineCount": 510
     },
     {
       "name": "input",

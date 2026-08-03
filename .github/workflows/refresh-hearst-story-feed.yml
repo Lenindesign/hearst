@@ -56,7 +56,8 @@ jobs:
             src/components/lifestyle-river-data.ts \
             src/components/autos-river-data.ts \
             src/components/flux-river-data.ts \
-            src/components/ew-river-data.ts
+            src/components/ew-river-data.ts \
+            src/stories/generated/hearst-plus-fixtures.ts
           if git diff --cached --quiet; then
             echo "No story changes to publish."
             exit 0

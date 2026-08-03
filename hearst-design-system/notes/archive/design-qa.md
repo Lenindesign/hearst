@@ -1,4 +1,12 @@
+---
+status: historical
+coverage_end: 2026-07-21
+superseded_by: STYLE.md, APP_RULES.md
+---
+
 # Hearst+ Slider and Reader Inset Design QA
+
+> Historical visual QA evidence. Screenshot paths and findings belong to the dated implementation and must be revalidated before reuse.
 
 ## Comparison Target
 

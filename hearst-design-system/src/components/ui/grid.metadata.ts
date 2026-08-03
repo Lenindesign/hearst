@@ -3,7 +3,7 @@ import type { ComponentMetadata } from "@/lib/component-metadata";
 export const gridMetadata: ComponentMetadata = {
   name: "Grid System",
   description:
-    "Responsive 4 / 8 / 12 column grid with PageContainer, Grid, and Col primitives.",
+    "Reusable HDS 4 / 8 / 12 page-grid primitive with PageContainer, Grid, and Col.",
   level: "atom",
   path: "ui/grid.tsx",
   exports: [
@@ -22,13 +22,14 @@ export const gridMetadata: ComponentMetadata = {
     "GridOverlayProps",
   ],
   whenToUse: [
-    "As the spatial foundation for every page or template.",
+    "As the default reusable spatial foundation for pages and templates.",
     "When laying out content that should align with sibling pages.",
     "When you need declarative span/start props instead of hand-rolled grid utilities.",
   ],
   whenNotToUse: [
     "For tightly coupled component-internal layouts (use flex/grid locally).",
-    "Below the level of an organism — atoms and molecules should not own a PageContainer.",
+    "For application compositions with intentional fixed side rails and a fluid center, such as the Hearst+ story river.",
+    "Below the level of an organism. Atoms and molecules should not own a PageContainer.",
   ],
   tokens: {
     colors: [],
@@ -61,7 +62,8 @@ export const gridMetadata: ComponentMetadata = {
   variants: ["PageContainer.width", "Grid.columns", "Grid.gap", "Col.span/spanMd/spanLg"],
   slots: ["children"],
   caveats: [
-    "All span/start values are restricted to literals so Tailwind can detect them at build time. Do not pass dynamic numbers — extend the lookup tables in grid.tsx instead.",
+    "All span/start values are restricted to literals so Tailwind can detect them at build time. Do not pass dynamic numbers. Extend the lookup tables in grid.tsx instead.",
+    "A full Col spans the current Grid tracks. It does not remove PageContainer padding or create viewport bleed.",
     "Grid.columns defaults to the responsive 4 / 8 / 12 contract. A single integer from 1 through 12 intentionally fixes that count at base, md, and lg.",
     "useBreakpoint is for documentation and edge cases; layout should stay in CSS.",
   ],

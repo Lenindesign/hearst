@@ -21,8 +21,11 @@ handles.
 
 ## Change workflow
 
-1. Read `PRODUCT.md`, `DESIGN.md`, `STYLE.md`, `BRAND_STYLES.md`, and the
-   relevant rules in `APP_RULES.md`.
+1. Read `PRODUCT.md`, then only the canonical owner for the affected surface:
+   `DESIGN-SYSTEM-SPEC.md` for HDS foundations, `STYLE.md` for shared
+   presentation, `BRAND_STYLES.md` for brand identity, or `APP_RULES.md` for
+   product behavior. Use `DESIGN.md` only as a routing bridge when ownership is
+   unclear.
 2. Change the smallest reusable component or token that owns the behavior.
 3. Add or update Storybook stories in the same pull request.
 4. Run `npm run quality` and `npm run build`.

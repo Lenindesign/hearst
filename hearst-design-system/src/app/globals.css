@@ -802,7 +802,7 @@
   --width-sidebar-narrow: 180px;
 
   /* ─── Responsive Grid System ───
-   * The grid is the spatial contract every layout obeys.
+   * Shared tokens for the reusable HDS page grid and application layouts.
    * - 4 columns on mobile (base)
    * - 8 columns at md (>= 768px)
    * - 12 columns at lg (>= 1024px)

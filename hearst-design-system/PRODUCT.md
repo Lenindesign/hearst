@@ -1,15 +1,19 @@
 # Product
 
-## Required Implementation References
+## Rule ownership and task routing
 
-Before changing the interface, read this file together with:
+This file owns the audience, purpose, prototype boundary, personality, and product principles. Read it first, then open only the canonical references required by the task:
 
-- `VAULT_HOME.md` for the project knowledge map and source-of-truth order.
-- `DESIGN-SYSTEM-SPEC.md` for canonical HDS token architecture, generated outputs, and component contracts.
-- `DESIGN.md` for the concise design-tool context and Hearst Design System inheritance model.
-- `STYLE.md` for visual hierarchy, theming, responsive behavior, and interaction rules.
-- `BRAND_STYLES.md` for native-style inheritance and each destination or publication's colors, fonts, and logos.
-- `APP_RULES.md` for personalization, feeds, readers, content behavior, and scoped exceptions.
+| Task | Read next |
+| --- | --- |
+| Tokens, components, generated outputs, or delivery | `DESIGN-SYSTEM-SPEC.md` |
+| Shared visual, responsive, accessibility, or interaction styling | Relevant section of `STYLE.md` |
+| Brand colors, typography, logos, routes, or inheritance | Relevant section of `BRAND_STYLES.md` plus `STYLE.md` when presentation changes |
+| Feeds, personalization, readers, navigation, state, eligibility, or product behavior | Relevant section of `APP_RULES.md` |
+| Design-tool context | `DESIGN.md`, which routes to the same canonical owners |
+| Prior rationale | `DECISION_LOG.md`, after checking the current canonical rule |
+
+`VAULT_HOME.md` remains the complete project knowledge map. Do not read every reference for a narrowly scoped change.
 
 ## Register
 

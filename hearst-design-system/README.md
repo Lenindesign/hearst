@@ -8,7 +8,7 @@ The project root is also an Obsidian vault. Start with [`VAULT_HOME.md`](VAULT_H
 
 - [`DESIGN-SYSTEM-SPEC.md`](DESIGN-SYSTEM-SPEC.md): HDS token architecture and component contracts
 - [`PRODUCT.md`](PRODUCT.md): product purpose and design principles
-- [`DESIGN.md`](DESIGN.md): concise design-tool context
+- [`DESIGN.md`](DESIGN.md): concise design-tool routing bridge
 - [`STYLE.md`](STYLE.md): shared visual and interaction rules
 - [`BRAND_STYLES.md`](BRAND_STYLES.md): brand identity, route-theme mapping, and runtime font status
 - [`APP_RULES.md`](APP_RULES.md): personalization, content, route, reader, and scoped-exception behavior

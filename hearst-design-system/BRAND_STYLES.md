@@ -1,6 +1,6 @@
 # Hearst Brand Style Registry
 
-This registry documents the brand layer used by the Hearst reader prototypes. Read it with `DESIGN-SYSTEM-SPEC.md`, `PRODUCT.md`, `STYLE.md`, and `APP_RULES.md` before changing brand colors, fonts, logos, mastheads, or theme behavior.
+This registry owns brand identity values, inheritance, routes, colors, typography, logos, and named brand exceptions for the Hearst reader prototypes. It does not own shared component styling or product behavior. Use `STYLE.md` for shared presentation rules and `APP_RULES.md` for behavior.
 
 ## Inheritance model
 

@@ -1,49 +1,22 @@
 # Hearst Prototype Design Context
 
-This file is the design-context bridge for Impeccable and other design tooling. It is intentionally concise. The detailed canonical rules live in the linked vault documents.
+This file is the concise design-tool bridge for Impeccable and other automatically loaded design workflows. It routes work to canonical documents and does not own detailed product or interface rules.
 
 ## Foundation
 
-This application is built on top of the Hearst Design System. Hearst+ and the destination prototypes compose existing Hearst Design System foundations, components, semantic tokens, typography roles, icons, variants, and responsive conventions.
+Hearst+ and the destination prototypes compose the Hearst Design System. Reuse its components, semantic tokens, typography, icons, variants, and responsive conventions before adding an application-specific primitive.
 
-Do not create a parallel component or token system. Before introducing an app-specific primitive, confirm that the need cannot be handled through an existing Hearst Design System component, variant, composition, or semantic token.
+## Canonical owners
 
-## Required design references
+- `PRODUCT.md`: audience, purpose, prototype boundary, personality, and principles.
+- `DESIGN-SYSTEM-SPEC.md`: HDS tokens, generated outputs, component contracts, and delivery evidence.
+- `STYLE.md`: shared visual hierarchy, responsive presentation, accessibility, and interaction styling.
+- `BRAND_STYLES.md`: brand identity, inheritance, routes, colors, typography, and logos.
+- `APP_RULES.md`: feeds, personalization, readers, navigation, state, content eligibility, and product behavior.
+- `DECISION_LOG.md`: historical context, not the current source of truth.
 
-- `DESIGN-SYSTEM-SPEC.md`: canonical HDS token architecture, generated outputs, and component contracts.
-- `STYLE.md`: shared visual hierarchy, interaction behavior, responsive rules, masthead normalization, text clamps, and theme exceptions.
-- `BRAND_STYLES.md`: native inheritance plus each destination and publication's colors, typography, and logo assets.
-- `APP_RULES.md`: product behavior, personalization, feeds, readers, and scoped exceptions that affect design.
-- `DECISION_LOG.md`: historical context for approved design decisions.
+Read `PRODUCT.md`, then only the canonical sections required by the task. When this bridge conflicts with a canonical owner, follow the canonical owner and correct this file.
 
-Read the relevant sections before changing a destination, brand page, carousel, river, sidebar, card, video index, masthead, or reader.
+## Verification
 
-This file is an automatically loaded design-tool bridge. When its summary conflicts with a detailed reference, update and follow the canonical owner identified in `VAULT_HOME.md`.
-
-## Inheritance order
-
-1. Hearst Design System foundation.
-2. Destination or publication brand theme.
-3. Hearst+ application composition.
-4. Explicitly documented surface exception.
-
-An exception applies only to its named surface and cannot leak into another destination, tab, RSS/story page, or reader.
-
-## Essential interaction rules
-
-- Editorial links change to the active theme primary color without underlines.
-- Keyboard interactions retain a visible focus ring.
-- Complete story rows are clickable, not only their headline text.
-- Shared components keep consistent behavior across light, dark, and brand themes.
-
-## Essential visual rules
-
-- Use semantic tokens instead of hardcoded publication colors or fonts in shared components.
-- Normalize destination masthead wordmarks by visual height, not total width.
-- Carousel headlines use a maximum of three lines; carousel summaries use a maximum of two.
-- River-card summaries use a maximum of three lines.
-- Hearst+ Videos dark mode and AutoWeek title color are documented exceptions, not global defaults.
-
-## Verification expectation
-
-For shared UI changes, verify the normal light destination, the relevant brand theme, keyboard focus, responsive behavior, and any affected scoped exception. Confirm that the change does not leak into readers or unrelated destinations.
+Verify the changed surface at the relevant desktop and mobile widths, with keyboard focus, the applicable brand theme, and any named exception. Confirm that the change does not leak into unrelated destinations or readers.

@@ -1,6 +1,6 @@
 # Hearst Prototype Style Rules
 
-This file is the durable visual and interaction reference for the Hearst reader prototypes. Read it with `PRODUCT.md` and `APP_RULES.md` before changing a destination, brand page, carousel, river, sidebar, video index, or reader.
+This file owns durable shared visual hierarchy, responsive presentation, accessibility, and interaction styling for the Hearst reader prototypes. It does not own content eligibility, ranking, navigation state, data loading, or reader workflow behavior; those belong in `APP_RULES.md`.
 
 Use semantic design-system tokens and shared components wherever possible. Do not solve a local styling problem with a one-off value when an existing theme token represents the intended role.
 
@@ -11,6 +11,8 @@ The complete brand registry is documented in `BRAND_STYLES.md`. Canonical HDS pu
 - `PRODUCT.md` defines the product purpose, audience, and design principles.
 - `STYLE.md` defines visual hierarchy, responsive behavior, interaction styling, and theme consistency.
 - `APP_RULES.md` defines product behavior, personalization, content rules, readers, feeds, and scoped exceptions.
+- `BRAND_STYLES.md` defines brand identity values, inheritance, routes, typography, and logo assets.
+- `DESIGN.md` is a short tooling bridge and is not a canonical rule owner.
 - If two rules conflict, follow the more specific rule. A documented exception must remain scoped to the surface named by that exception.
 
 ## Theme and color
@@ -42,7 +44,7 @@ The complete brand registry is documented in `BRAND_STYLES.md`. Canonical HDS pu
 - Do not underline editorial story links on hover or focus.
 - Keep the existing visible focus ring for keyboard accessibility.
 - When a story appears as a row, make the complete row the click target rather than linking only the headline.
-- `Your Daily Habit`, `Trending Across Brands`, reader recommendation rails, carousel slides, and river cards all open the same in-app reader behavior for their active destination context.
+- Equivalent story rows use the same complete-row visual and focus treatment. `APP_RULES.md` owns their reader destination behavior.
 - Utility links may retain an underline when the underline is required to distinguish inline text from surrounding prose. This exception does not apply to editorial headlines or story rows.
 
 ## Masthead logos
@@ -60,18 +62,16 @@ The complete brand registry is documented in `BRAND_STYLES.md`. Canonical HDS pu
 - The carousel must remain responsive without clipping text at supported breakpoints.
 - Mixed-format carousels may contain contextual articles and playable API videos, following the eligibility and personalization rules in `APP_RULES.md`.
 - Video controls, duration, and play affordances remain visible and distinct from headline metadata.
-- The Delish Shorts rail uses true `9:16` portrait cards sourced from video dimensions, horizontal touch scrolling with snap points, and compact desktop previous/next controls. On the Hearst+ Videos view, keep the dark canvas visible between cards instead of enclosing the rail in a dashboard-style panel. On the Delish publication river, use the same anatomy inside a light token-driven card directly below the lead story. In the general Hearst+ `For You` river, render that light variant immediately after the highest-ranked Delish editorial story, keep that ranked position stable as lazy-loaded stories join the river, and hide the module when no Delish story qualifies. Opening any variant uses a route-preserving, full-viewport black viewer with one centered `9:16` video and adjacent desktop actions; on phones the video and controls use the viewport edge-to-edge. Keep the temporary story chrome visually secondary to the video: use a compact bottom fade, quiet source metadata, a restrained two-line headline, and a short story action instead of a solid caption panel. Next navigation must move the current video out through the top while the incoming video rises from below; previous navigation mirrors that transition. Preserve visible close, save, mute, play/pause, and next/previous controls plus vertical swipe and keyboard navigation, with instant replacement when reduced motion is requested. Do not apply this immersive viewer to landscape or standard video cards.
+- Delish Shorts use portrait `9:16` cards, horizontal snap scrolling, and compact desktop controls. The Videos view keeps the dark canvas visible between cards; river variants use light semantic surfaces. The fullscreen viewer keeps story chrome secondary through a compact bottom fade, quiet metadata, and a restrained two-line headline. `APP_RULES.md` owns eligibility, placement, playback, and navigation behavior.
 
 ## Cards and river modules
 
 - Delish featured-story indicators map in order to Delish palette colors 1–5. Changing the active story changes only the indicator width; it does not move the colors between positions. All other brands and destination-wide rivers retain the shared primary/muted indicator treatment.
-- Publication story rivers begin with a compact rendered batch and progressively append ranked cards as the sentinel approaches the viewport. Preserve the visible card anatomy and spacing while new items enter; do not block the initial river on completion of the full editorial catalog fetch.
-
 - River-card summaries display no more than three lines with an ellipsis. Shorter existing limits may remain.
 - Do not show generic `Article`, `Gallery`, or `Watch` chips on river cards.
 - Video cards place the source brand icon immediately before the brand and topic metadata.
 - Preserve source-specific formats such as galleries and videos through imagery and interaction, not generic type labels.
-- Explicit photo-gallery stories with at least five distinct source images use a rich river-card mosaic: story identity, headline, and summary lead; two larger images sit above three smaller images; and the final tile shows the number of additional source photos. Resolve this treatment lazily from the source gallery payload, retain the standard card when the source has fewer than five images or cannot be resolved, and preserve the shared river actions, focus treatment, semantic surfaces, typography, and brand theme.
+- Rich photo-gallery river cards place story identity, headline, and summary before a two-large and three-small image mosaic. The final tile shows the remaining photo count. Preserve shared actions, focus treatment, semantic surfaces, typography, and brand theme. `APP_RULES.md` owns gallery eligibility and loading behavior.
 - Use consistent hover, focus, save, comment, hide, and open-reader behavior across card variants.
 
 ## Sidebars and rankings
@@ -89,17 +89,16 @@ The complete brand registry is documented in `BRAND_STYLES.md`. Canonical HDS pu
 - Ambient Reader composes the shared reader behavior as a premium full-screen publication layer: immersive branded opening spread, calm long-form column, publication typography and color through semantic brand variables, neutral accessible reading surfaces, visible progress, and compact shared controls. It must not replace or restyle the standard reader underneath it.
 - Ambient Reader opening spreads are destination-aware without becoming separate readers: Fashion & Luxury uses a split cover, Autos uses a cinematic image-first deck, Enthusiast & Wellness uses a reverse kinetic split, and Lifestyle uses a spacious inset-image spread. The publication theme remains the identity layer inside each composition.
 - On phones, Ambient Reader interstitial ads keep the complete branded creative inside one swipe page: the compact copy panel occupies roughly 55% of the viewport and the image or video remains visible in the lower 45%. Tighten the logo, headline, supporting copy, and CTA rhythm without reducing close or CTA touch targets below 44px; desktop retains the spacious side-by-side composition.
-- Standard-reader advertisements use the fixed 300px complementary desktop rail, preserve visible disclosure and sponsor identity, and disappear below the desktop breakpoint. Verified campaign links retain a 44px minimum target; prototype creative without a verified destination uses an explicit non-interactive availability notice.
-- River advertisements retain the production story-card width and stack below 640px. Use one clear Advertisement disclosure, sponsor, campaign title, summary, and creative label; do not expose targeting topics, slot numbers, matching language, or intent scores in the reader surface. Verified campaign links retain a 44px minimum target, while prototype creative uses an explicit non-interactive availability notice.
-- Brand Spotlight retains the production river-card width. Its header pairs the publication logo with one Brand Spotlight label and one concise topic sentence; do not add a second ranking header or diagnostic explanation. At large widths, use one featured story beside the secondary-story stack; below the large breakpoint, stack the featured and secondary stories in reading order. Keep the publication link at least 44px tall, story buttons fluid inside the card, summaries clamped to three lines, and the 320px document free of horizontal overflow. Use editorial format labels only when they add meaning; omit generic Article, Gallery, and Watch labels.
+- Standard-reader advertisements use the fixed 300px complementary desktop rail, preserve visible disclosure and sponsor identity, and disappear below the desktop breakpoint. River advertisements retain the story-card width and stack below 640px. Links keep a 44px minimum target. `APP_RULES.md` owns campaign eligibility, destination, and disclosure behavior.
+- Brand Spotlight retains the river-card width. Its header pairs the publication logo with one label and one concise topic sentence. At large widths, place one featured story beside the secondary stack; below the large breakpoint, stack them in reading order. Keep the publication link at least 44px tall, story buttons fluid, summaries clamped to three lines, and the 320px document free of horizontal overflow. `APP_RULES.md` owns selection and ranking behavior.
 - Reader recommendation links follow the same color-only hover behavior used by destination story links.
 - Keep article prose unclamped. Line limits apply to discovery surfaces, not the full reader story.
 
 ## Responsive behavior
 
 - Treat responsive behavior structurally: stack or collapse columns, preserve readable widths, and keep interaction targets accessible.
-- The stakeholder personalization console is a full-screen diagnostic overlay, not a reader-facing card. At phone widths, its control groups stack in document order, the content scrolls inside the dialog, and every close, daypart, return, behavior-preset, evidence, and reset control remains at least 44px. Opening the overlay moves focus into it; focus cannot reach the page behind it until dismissal.
-- Personalization onboarding uses the production editorial image-and-form split only at desktop widths and omits the decorative image on smaller screens. Keep the interest picker horizontally scrollable on phones, the publication picker in a bounded two-column grid from the small breakpoint upward, and publication names wrapped in full rather than truncated. Close, interest, brand, footer, and primary actions must retain at least a 44px target, and the modal must not create page-level horizontal overflow at 320px or 390px.
+- The stakeholder personalization console is a full-screen diagnostic overlay. At phone widths, its control groups stack in document order, content scrolls inside the dialog, and controls remain at least 44px. `APP_RULES.md` owns its state, focus, and availability behavior.
+- Personalization onboarding uses the editorial image-and-form split only at desktop widths and omits the decorative image on smaller screens. Keep the phone interest picker horizontally scrollable, the publication picker in a bounded grid, publication names visible in full, and controls at least 44px. The modal must not create horizontal overflow at 320px or 390px. `APP_RULES.md` owns onboarding steps, limits, state, and focus behavior.
 - Never allow headline or summary text to crop because a card or carousel uses a fixed height without a matching line clamp.
 - Preserve a minimum comfortable touch target for buttons and complete-row links.
 - Test desktop and mobile when changing shared mastheads, carousels, sidebars, cards, or readers.

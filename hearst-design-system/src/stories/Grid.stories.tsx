@@ -17,7 +17,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          "The grid is the spatial contract every page obeys. Use the Storybook viewport toolbar to step through `mobile1` (320), `mobile2` (414), `tablet` (768), and the default desktop viewport. The blue tinted columns are the grid overlay; gray boxes are content placeholders.",
+          "The HDS page-grid primitive and the Hearst+ production river solve different layout needs. Use the Storybook viewport toolbar to compare `mobile1` (320), `mobile2` (414), `tablet` (768), and the default desktop viewport.",
       },
     },
   },
@@ -97,15 +97,15 @@ function StoryCheatSheet({
 // ─── Stories ────────────────────────────────────────────────────────────────
 
 export const Anatomy: Story = {
-  name: "1 · Anatomy",
+  name: "1 · HDS Page Grid Primitive",
   render: () => (
     <div className="bg-background py-12">
       <PageContainer className="relative">
         <GridOverlay hideOnMobile={false} />
         <div className="relative z-10">
           <StoryCheatSheet
-            kicker="Grid Anatomy (4 / 8 / 12)"
-            title="How to read what’s on screen"
+            kicker="HDS page grid primitive"
+            title="The reusable 4 / 8 / 12 foundation"
             intro={
               <>
                 <span className="font-medium text-foreground">PageContainer</span>{" "}
@@ -122,11 +122,12 @@ export const Anatomy: Story = {
             leftBody={
               <>
                 <p>
-                  At each breakpoint, a row should{" "}
-                  <span className="font-semibold">sum to the column total</span>
-                  : 4 (mobile), 8 (md), 12 (lg).
+                  For a simple filled row, spans usually add to 4 (mobile), 8
+                  (md), or 12 (lg).
                 </p>
                 <p className="mt-2 text-muted-foreground">
+                  Partial rows, explicit starts, and intentional overlaps are
+                  valid when their placement is clear.{" "}
                   Labels use <span className="font-mono">mobile / md / lg</span>
                   . Example: <span className="font-semibold">2 / 4 / 6</span>{" "}
                   means span 2 of 4, then 4 of 8, then 6 of 12.
@@ -138,7 +139,7 @@ export const Anatomy: Story = {
               <div className="space-y-3 text-xs">
                 <div>
                   <p className="font-semibold text-foreground">
-                    Full-bleed section
+                    Full grid width
                   </p>
                   <pre className="mt-1 max-w-full overflow-x-auto rounded-md border border-border bg-background p-2 text-[11px] leading-relaxed text-foreground">
                     <code>{`<Col span="full">...</Col>`}</code>
@@ -153,7 +154,7 @@ export const Anatomy: Story = {
                 </div>
                 <div>
                   <p className="font-semibold text-foreground">
-                    Three cards (stack → 3-up)
+                    Three cards (stack, then 3-up)
                   </p>
                   <pre className="mt-1 max-w-full overflow-x-auto rounded-md border border-border bg-background p-2 text-[11px] leading-relaxed text-foreground">
                     <code>{`<Col span="full" spanMd={4} spanLg={4}>Card</Col>
@@ -167,7 +168,7 @@ export const Anatomy: Story = {
 
           <Grid>
             <Col span="full">
-              <Block tone="brand">Full bleed (col-span-full)</Block>
+              <Block tone="brand">Full grid width (col-span-full)</Block>
             </Col>
             <Col span={2} spanMd={4} spanLg={6}>
               <Block>2 / 4 / 6</Block>
@@ -194,7 +195,7 @@ export const Anatomy: Story = {
       description: {
         story:
           [
-            "This page is the **mental model** for the Hearst grid.",
+            "This page documents the reusable **HDS page-grid primitive**. It is one layout tool, not a claim that every production page uses 12 equal tracks.",
             "",
             "### What you’re looking at",
             "- **`PageContainer`**: applies the outer padding (page margins) and caps content at `--width-content-max`.",
@@ -202,14 +203,14 @@ export const Anatomy: Story = {
             "- **`Grid`**: the column system itself (4 / 8 / 12).",
             "- **`Col`**: a single “slot” on the grid; its span changes per breakpoint via `span`, `spanMd`, `spanLg`.",
             "",
-            "### The one rule that prevents chaos",
-            "At each breakpoint, a row should **sum to the column count**:",
+            "### Filled-row convention",
+            "For a simple filled row, spans usually add to the column count:",
             "- mobile: **4** columns total",
             "- tablet (`md` ≥ 768): **8** columns total",
             "- desktop (`lg` ≥ 1024): **12** columns total",
             "",
             "### Practical examples (copy/paste patterns)",
-            "**Full-bleed section** (always):",
+            "**Full grid width** (inside the current PageContainer):",
             "```tsx",
             '<Col span=\"full\">...</Col>',
             "```",
@@ -237,8 +238,90 @@ export const Anatomy: Story = {
   },
 };
 
+export const ProductionLayoutAnatomy: Story = {
+  name: "2 · Hearst+ Production Layout Anatomy",
+  render: () => (
+    <div className="bg-background py-12">
+      <PageContainer>
+        <StoryCheatSheet
+          kicker="Hearst+ production composition"
+          title="Fixed side rails, fluid story river"
+          intro={
+            <>
+              The main Hearst+ feed uses <span className="font-medium text-foreground">PageContainer</span>{" "}
+              for shared outer width and padding, then applies a purpose-built
+              editorial grid. It does not use equal <span className="font-mono">Col</span>{" "}
+              spans for this composition.
+            </>
+          }
+          leftTitle="Production tracks"
+          leftBody={
+            <div className="space-y-2">
+              <p><span className="font-semibold">Mobile and tablet:</span> one fluid track.</p>
+              <p><span className="font-semibold">Desktop:</span> 200px / fluid / 260px.</p>
+              <p><span className="font-semibold">Wide desktop:</span> 220px / fluid / 280px.</p>
+            </div>
+          }
+          rightTitle="Why it is different"
+          rightBody={
+            <p>
+              The sidebars need stable reading widths while the story river
+              absorbs the remaining space. A 24px gap keeps all three regions
+              aligned without forcing them into equal tracks.
+            </p>
+          }
+        />
+
+        <div
+          data-production-grid-contract="hearst-plus-river"
+          className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]"
+        >
+          <Block>Discovery sidebar<br />200px / 220px</Block>
+          <Block tone="brand">Story river<br />minmax(0, 1fr)</Block>
+          <Block>Trending rail<br />260px / 280px</Block>
+        </div>
+
+        <div className="mt-6 border-t border-border pt-4">
+          <p className="text-sm font-semibold text-foreground">Current production class</p>
+          <pre className="mt-2 max-w-full overflow-x-auto rounded-md border border-border bg-muted/40 p-3 text-xs leading-relaxed text-foreground">
+            <code>{`grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6
+lg:grid-cols-[200px_minmax(0,1fr)_260px]
+xl:grid-cols-[220px_minmax(0,1fr)_280px]`}</code>
+          </pre>
+          <p className="mt-3 text-sm text-muted-foreground">
+            At widths below <span className="font-mono">lg</span>, the regions
+            enter one track and follow the production responsive behavior. Use
+            the app template stories to validate what is shown or hidden in
+            each region.
+          </p>
+        </div>
+      </PageContainer>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const grid = canvasElement.querySelector(
+      '[data-production-grid-contract="hearst-plus-river"]',
+    );
+    await expect(grid).not.toBeNull();
+    await expect(grid!).toHaveClass(
+      "grid-cols-[minmax(0,1fr)]",
+      "gap-6",
+      "lg:grid-cols-[200px_minmax(0,1fr)_260px]",
+      "xl:grid-cols-[220px_minmax(0,1fr)_280px]",
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "This story mirrors the inner grid used by the main Hearst+ story river in `home-page.tsx`. `PageContainer` still owns the shared outer width and padding, while the application composition uses fixed side rails around a fluid center track.",
+      },
+    },
+  },
+};
+
 export const PlacementRules: Story = {
-  name: "2 · Placement Rules",
+  name: "3 · Placement Rules",
   render: () => (
     <div className="bg-background py-12 space-y-12">
       <PageContainer>
@@ -288,10 +371,10 @@ export const PlacementRules: Story = {
         </h3>
         <Grid>
           <Col span="full" spanLg={8}>
-            <Block tone="brand">Hero — span 8 on lg</Block>
+            <Block tone="brand">Hero: span 8 on lg</Block>
           </Col>
           <Col span="full" spanLg={4}>
-            <Block>Sidebar — span 4 on lg</Block>
+            <Block>Sidebar: span 4 on lg</Block>
           </Col>
         </Grid>
       </PageContainer>
@@ -339,7 +422,7 @@ export const PlacementRules: Story = {
 };
 
 export const OverlapPattern: Story = {
-  name: "3 · Overlap Pattern",
+  name: "4 · Overlap Pattern",
   render: () => (
     <div className="bg-background py-12">
       <PageContainer className="relative">
@@ -384,7 +467,7 @@ export const OverlapPattern: Story = {
                 </p>
                 <p className="mt-2 text-muted-foreground">
                   If you need overlap, prefer using these props over negative
-                  margins—everything stays in the grid system.
+                  margins. Everything stays in the grid system.
                 </p>
               </>
             }
@@ -423,7 +506,7 @@ export const OverlapPattern: Story = {
 };
 
 export const ResponsiveBehavior: Story = {
-  name: "4 · Responsive Behavior",
+  name: "5 · Responsive Behavior",
   render: () => {
     return (
       <div className="bg-background py-12">
@@ -470,7 +553,7 @@ export const ResponsiveBehavior: Story = {
           />
           <ActiveBreakpoint />
           <p className="mt-4 text-sm text-muted-foreground">
-            Resize the canvas — the badge above updates from <code>base</code>{" "}
+            Resize the canvas. The badge above updates from <code>base</code>{" "}
             (&lt;640) → <code>sm</code> (640) → <code>md</code> (768) →{" "}
             <code>lg</code> (1024) → <code>xl</code> (1280) → <code>2xl</code>{" "}
             (1536). The grid only changes column count at <code>md</code> and{" "}
@@ -483,7 +566,7 @@ export const ResponsiveBehavior: Story = {
 };
 
 export const FixedColumnOverride: Story = {
-  name: "5 · Fixed Column Override",
+  name: "6 · Fixed Column Override",
   render: () => (
     <div className="bg-background py-12">
       <PageContainer>

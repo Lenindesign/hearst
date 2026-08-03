@@ -2,17 +2,22 @@ import { Meta } from "@storybook/blocks";
 
 <Meta title="Hearst Plus/Foundation/Grid System/Overview" />
 
-# Grid System
+# Grid Layouts
 
-The grid is the **spatial contract** every page in the design system obeys. It governs how content is arranged, how components share horizontal space, and where overlap is allowed. It is intentionally small: three breakpoints, three column counts, three primitives.
+This section documents two related layout contracts:
 
-> One number to remember: **4 / 8 / 12** — mobile / tablet / desktop columns.
+1. The reusable **HDS page-grid primitive**, built from `PageContainer`, `Grid`, and `Col`.
+2. The **Hearst+ production layout**, which combines shared outer spacing with application-specific editorial tracks.
+
+The 4 / 8 / 12 grid is the default reusable page composition. It is not a claim that every production surface uses equal column tracks.
+
+> HDS page-grid primitive: **4 / 8 / 12** for mobile / tablet / desktop.
 
 ---
 
 ## Breakpoints
 
-We adopt the Tailwind v4 default breakpoints. They are exposed as both Tailwind prefixes (`md:`, `lg:`, …) and CSS variables (`--breakpoint-md`, …) so design and engineering use identical numbers.
+We adopt the Tailwind v4 default breakpoints. They are exposed as both Tailwind prefixes (`md:`, `lg:`, and others) and CSS variables (`--breakpoint-md` and others) so design and engineering use identical numbers.
 
 | Token | Min width | Tailwind prefix | Grid columns | Outer padding | Gutter |
 |-------|-----------|------------------|--------------|---------------|--------|
@@ -23,7 +28,7 @@ We adopt the Tailwind v4 default breakpoints. They are exposed as both Tailwind 
 | `xl`              | 1280 px   | `xl:`           | 12 | 48 px | 24 px |
 | `2xl`             | 1536 px   | `2xl:`          | 12 | 48 px | 24 px |
 
-We deliberately do **not** change the column count at `sm`. Jumping from 4 → 8 columns at 640 px is jittery on landscape phones; the layout reads better when 4 columns hold until proper tablet width.
+We deliberately do **not** change the column count at `sm`. Jumping from 4 to 8 columns at 640 px is jittery on landscape phones; the layout reads better when 4 columns hold until proper tablet width.
 
 The maximum content width is `--width-content-max` (1360 px). Everything wider lives inside `PageContainer`'s outer padding and never touches the viewport edge above `lg`.
 
@@ -73,10 +78,10 @@ A grid cell with declarative span/start/offset.
 | `spanLg`   | 1–12 or `"full"` | Span at desktop. |
 | `startMd` / `startLg` | 1–8 / 1–12 | Explicit column start (use for asymmetric rows or overlap). |
 | `rowStart` | 1–4 | Explicit row, lets two cells share the same row for overlap. |
-| `offsetYMd` / `offsetYLg` | -2 to 2 | Vertical translation in steps of the grid gutter — only for **intentional** overlap. |
+| `offsetYMd` / `offsetYLg` | -2 to 2 | Vertical translation in steps of the grid gutter, only for **intentional** overlap. |
 | `raised`   | bool | Adds `relative z-10` so an overlapping cell sits above its siblings. |
 
-Spans are restricted to literal values so Tailwind can detect every possible class at build time. **Do not pass dynamic numbers** — extend the lookup tables in `grid.tsx` instead.
+Spans are restricted to literal values so Tailwind can detect every possible class at build time. **Do not pass dynamic numbers.** Extend the lookup tables in `grid.tsx` instead.
 
 ---
 
@@ -89,15 +94,15 @@ Components belong to one of four atomic levels. Each level has different rules a
 | **Atom**     | No  | Local flex / grid only. Never reads breakpoint props. | `Button`, `Input`, `Chip` |
 | **Molecule** | No  | Local layout. Sets `min-w-0` so it can be placed in any `Col`. | `ArticleCard`, `BigStoryImageRight` |
 | **Organism** | Sometimes | May render an internal `Grid` for its own children (e.g. `FourAcrossGrid`). | `NavBar`, `SiteFooter`, `TrendingSection` |
-| **Template** | Yes | Owns `PageContainer` and the top-level `Grid`. Decides span values. | `HomePageTemplate`, `LayoutCurator` |
+| **Template** | When appropriate | Owns `PageContainer` and the page-layout contract. It may use the HDS `Grid` or documented application tracks. | `HomePageTemplate`, `LayoutCurator` |
 
 ### Rules of the road
 
-1. **Templates own the grid.** Atoms and molecules never wrap themselves in a `PageContainer`.
+1. **Templates own page composition.** Atoms and molecules never wrap themselves in a `PageContainer`. A template may use the HDS `Grid` or a documented application grid when the content requires different tracks.
 2. **Children stretch to their `Col`.** Components must set `min-w-0` and `w-full` on their root so they fit any span.
-3. **Use `span="full"` as the default.** Mobile is the source of truth — explicit span values opt in to wider screens.
-4. **Spans add up to the breakpoint total.** A row at `lg` should sum to 12. If it does not, set `startLg` so the alignment is intentional.
-5. **Overlap is opt-in.** It requires `rowStart` (so two cells share a row), `offsetY*` for displacement, and `raised` for stacking. Do not overlap on mobile — the reading order has to stay clear.
+3. **Use `span="full"` as the default.** Mobile is the source of truth. Explicit span values opt in to wider screens.
+4. **Make placement intentional.** Simple filled rows usually add up to 4, 8, or 12. Partial rows, explicit starts, and overlaps are also valid when their placement is clear.
+5. **Overlap is opt-in.** It requires `rowStart` (so two cells share a row), `offsetY*` for displacement, and `raised` for stacking. Do not overlap on mobile. The reading order has to stay clear.
 6. **Container queries beat viewport queries inside a `Col`.** A card living in a 4-column `Col` at desktop is visually narrower than the viewport. Use `@container` for component-level responsiveness, not `lg:` prefixes.
 7. **Never re-implement breakpoints.** If a component needs a number, read `--breakpoint-md` etc. from CSS or `BREAKPOINTS` in JS. No magic numbers.
 
@@ -132,12 +137,30 @@ override the sources above.
 
 Use this before merging layout-heavy PRs:
 
-1. **`PageContainer`** — correct `width` and `bleed` for the template (article vs marketing vs full bleed).
-2. **`Grid`** — `gap` matches density (`default` vs `tight` vs `none` for mosaics).
-3. **`Col`** — literals per breakpoint; overlap uses `offsetY*`, `raised`, and the applicable `rowStart*` prop as in the overlap story.
-4. **Column math** — use **4 / 8 / 12** for the page grid. Use a fixed 1–12 override only for a bounded pattern that remains usable at 320px and is covered in Storybook.
+1. **`PageContainer`:** correct `width` and `bleed` for the template (article vs marketing vs full bleed).
+2. **`Grid`:** `gap` matches density (`default` vs `tight` vs `none` for mosaics).
+3. **`Col`:** literals per breakpoint; overlap uses `offsetY*`, `raised`, and the applicable `rowStart*` prop as in the overlap story.
+4. **Column math:** use **4 / 8 / 12** for the HDS page grid. Use a fixed 1 to 12 override only for a bounded pattern that remains usable at 320px and is covered in Storybook.
 
-**Storybook entry points:** this page (**Overview**), the Anatomy, Placement Rules, Overlap Pattern, Responsive Behavior, and Fixed Column Override stories in **`src/stories/Grid.stories.tsx`**, and **`src/components/ui/grid.metadata.ts`** for component-index metadata. Local preview: `npm run storybook` → Foundation → Grid System.
+**Storybook entry points:** this page (**Overview**), HDS Page Grid Primitive, Hearst+ Production Layout Anatomy, Placement Rules, Overlap Pattern, Responsive Behavior, and Fixed Column Override in **`src/stories/Grid.stories.tsx`**. Component-index metadata lives in **`src/components/ui/grid.metadata.ts`**. Local preview: run `npm run storybook`, then open Foundation and Grid System.
+
+---
+
+## Hearst+ Production Layout
+
+The main Hearst+ feed uses `PageContainer` for the shared maximum width and responsive outer padding. Inside that boundary, the application uses a purpose-built editorial grid:
+
+```tsx
+<div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]">
+  <DiscoverySidebar />
+  <StoryRiver />
+  <TrendingRail />
+</div>
+```
+
+Below `lg`, the composition uses one fluid track. At `lg`, it becomes 200px / fluid / 260px. At `xl`, it becomes 220px / fluid / 280px. The center track uses `minmax(0, 1fr)` so long editorial content cannot force the page wider than its container.
+
+This is a documented application composition, not a second design system. It uses the same spacing, tokens, responsive conventions, and `PageContainer` foundation while choosing track widths that fit the editorial job.
 
 ---
 
@@ -149,7 +172,7 @@ Use this before merging layout-heavy PRs:
 - **`gap` over margins** for siblings inside a `Grid`. No margin collapse, no cleanup hacks.
 - **`min-w-0` on every `Col`.** Without it, long children (e.g. headlines, tables) will blow out the cell. The `Col` primitive sets it for you.
 - **Container queries for components.** Use `@container` inside organisms when you want them to respond to their host cell, not the viewport.
-- **No fixed pixel widths above `md`.** Components must scale or claim a span. Anything else breaks the grid.
+- **Fixed tracks need an application contract.** Components inside the HDS page grid should scale or claim a span. A template may use fixed editorial rails only when the responsive behavior is explicit and verified, as in the Hearst+ production layout.
 
 ---
 
@@ -157,8 +180,8 @@ Use this before merging layout-heavy PRs:
 
 Three things to check before a layout is considered correct:
 
-1. **Each row sums to the breakpoint total.** Use the `GridOverlay` story to make this visible.
+1. **Placement is intentional.** Filled rows usually add to the breakpoint total. Use `GridOverlay` to check spans, starts, partial rows, and overlaps.
 2. **The mobile order is the reading order.** Resize down to 375 px and read top-to-bottom; the result should make narrative sense.
 3. **The component fits its smallest cell.** The narrowest `Col` it can land in (e.g. a 3-column desktop sidebar) should still render without overflow.
 
-> See `Foundation / Grid System / 1 · Anatomy` and the other Grid stories for runnable examples. Use `Hearst Plus / Templates / Feed` responsive stories to validate the current production composition at mobile, tablet, and desktop widths.
+> See `Foundation / Grid System / 1 · HDS Page Grid Primitive` and `2 · Hearst+ Production Layout Anatomy` for runnable examples. Use `Hearst Plus / Templates / Feed` responsive stories to validate the complete production composition at mobile, tablet, and desktop widths.

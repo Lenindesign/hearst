@@ -1,0 +1,106 @@
+import { Meta } from "@storybook/blocks";
+import { HearstPlusDocScope, SpecTable } from "./hearst-plus-docs";
+
+<Meta title="Hearst Plus/Start/Repository Docs" />
+
+# Repository docs
+
+The Markdown files in this repository are the working memory for the Hearst+ prototype. They help stakeholders understand what the product is, what is already implemented, where decisions live, and which source to use before requesting a change.
+
+<HearstPlusDocScope owner="Cross-functional" source="PRODUCT.md; DESIGN.md; DESIGN-SYSTEM-SPEC.md; STYLE.md; BRAND_STYLES.md; APP_RULES.md; VAULT_HOME.md; DECISION_LOG.md; CONTRIBUTING.md; notes/README.md">
+  Use this page as the plain-language map for repository documentation. The Markdown files guide decisions, but the routed Next.js prototype, production React components, canonical token files, and Storybook stories remain the evidence that a rule is applied.
+</HearstPlusDocScope>
+
+## The simple rule
+
+Start with `PRODUCT.md`. Then open only the file that owns the question in front of you.
+
+Do not read every document for every change. The docs are organized by ownership so product, design, engineering, and leadership can move quickly without duplicating rules or carrying stale context.
+
+## Canonical files
+
+<SpecTable rows={[
+  {
+    label: "PRODUCT.md",
+    value: "The product promise, audience, prototype boundary, personality, and principles.",
+    evidence: "Use it when judging whether a change still feels like a reader-facing daily habit, not a dashboard or publisher directory.",
+  },
+  {
+    label: "APP_RULES.md",
+    value: "The behavior of feeds, personalization, readers, navigation, state, eligibility, loading, and measurement.",
+    evidence: "Use it for questions about the For You feed, reader modal, Ambient Reader, saved stories, account state, video behavior, and content rules.",
+  },
+  {
+    label: "STYLE.md",
+    value: "Shared visual hierarchy, responsive behavior, accessibility, theme usage, and interaction styling.",
+    evidence: "Use it when the question is about layout alignment, text clamps, color contrast, hover states, focus, mobile behavior, or shared presentation.",
+  },
+  {
+    label: "BRAND_STYLES.md",
+    value: "Publication and destination identity: colors, fonts, logos, theme slugs, routes, inheritance, and brand exceptions.",
+    evidence: "Use it when checking whether AutoWeek, Cosmopolitan, Delish, Hearst Autos, Lifestyle, Fashion & Luxury, or another brand is applied correctly.",
+  },
+  {
+    label: "DESIGN-SYSTEM-SPEC.md",
+    value: "HDS token architecture, generated outputs, component contracts, Storybook role, and delivery evidence.",
+    evidence: "Use it for tokens, component APIs, generated CSS, Storybook contracts, and design-system delivery.",
+  },
+  {
+    label: "DESIGN.md",
+    value: "A short bridge for design tools and design workflows.",
+    evidence: "Use it when a design workflow loads a single context file. It routes to the canonical owners above and should stay concise.",
+  },
+]} />
+
+## Reference files
+
+| File | What it is for | How to use it |
+|---|---|---|
+| `VAULT_HOME.md` | Complete knowledge map | Open it when you need the broad repo map or cannot find the right owner. |
+| `CONTRIBUTING.md` | Practical contribution workflow | Use it for local setup, verification expectations, and how to avoid stale documentation. |
+| `DECISION_LOG.md` | Historical rationale | Use it only after checking the current canonical rule. History explains why, but it does not override current behavior. |
+| `notes/README.md` | Notes and archive policy | Use it to understand which audits, plans, and QA notes are historical context. |
+| `CHANGELOG.md` | Release notes | Use it to summarize shipped changes, not to define future product behavior. |
+| `README.md` | Repository entry point | Use it for setup and orientation. It should point people to the deeper owners, not repeat them. |
+
+## How this applies to the prototype
+
+<SpecTable rows={[
+  {
+    label: "Reader strategy",
+    value: <><code>PRODUCT.md</code> plus <code>APP_RULES.md</code></>,
+    evidence: "The working app applies this through the Hearst+ routes, destination feeds, reader modal, Ambient Reader, account library, onboarding, and personalization model.",
+  },
+  {
+    label: "Visual decisions",
+    value: <><code>STYLE.md</code> plus <code>BRAND_STYLES.md</code></>,
+    evidence: "The working app applies this through semantic tokens, destination themes, publication logos, responsive layouts, focus states, and scoped exceptions.",
+  },
+  {
+    label: "Design system decisions",
+    value: <code>DESIGN-SYSTEM-SPEC.md</code>,
+    evidence: "The working app applies this through canonical token JSON, generated CSS, local HDS primitives, production-backed Storybook stories, and build checks.",
+  },
+  {
+    label: "Stakeholder explanation",
+    value: <><code>VAULT_HOME.md</code>, Storybook Start docs, and product blueprint pages</>,
+    evidence: "These pages make the work legible for review, but they point back to the canonical owners when a rule needs to change.",
+  },
+]} />
+
+## Decision path
+
+| Stakeholder question | Read first | Then verify in |
+|---|---|---|
+| What is Hearst+ trying to become? | `PRODUCT.md` | `/hearst-plus/` and `Hearst Plus / Product / For You Feed` |
+| Why did this story appear for a reader? | `APP_RULES.md` | For You river cards, reader recommendations, and account personalization |
+| Is this layout or interaction correct? | `STYLE.md` | The routed page and the matching Storybook story at desktop and mobile widths |
+| Is this brand treatment correct? | `BRAND_STYLES.md` | The destination, publication route, and reader opened from that route |
+| Is this token or component contract correct? | `DESIGN-SYSTEM-SPEC.md` | Token files, generated outputs, and production-backed Storybook stories |
+| Where did this decision come from? | Current canonical owner | `DECISION_LOG.md` only for background |
+
+## Maintenance rule
+
+When a rule changes, update the canonical owner first. Then update any Storybook doc, blueprint page, README, or archive note only if it helps people find or understand the rule.
+
+Archived audits and plans are context, not marching orders. Treat them as old snapshots until current code, Storybook, or a canonical document confirms the rule still applies.
