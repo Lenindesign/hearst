@@ -27,6 +27,7 @@ const productPages = [
   { id: "blueprint", label: "Blueprint", mobileLabel: "Blueprint", href: "/hearst-product-blueprint/" },
   { id: "articles", label: "Article system", mobileLabel: "Articles", href: "/hearst-article-blueprint/" },
   { id: "tokens", label: "Token architecture", mobileLabel: "Tokens", href: "/token-architecture/" },
+  { id: "hds", label: "HDS framework", mobileLabel: "HDS", href: "/hds-brand-framework/" },
 ] as const;
 
 export type ProductPageId = (typeof productPages)[number]["id"];

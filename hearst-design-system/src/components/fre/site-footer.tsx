@@ -40,6 +40,7 @@ const defaultProductLinkGroups: SiteFooterLinkGroup[] = [
       { label: "Product blueprint", href: "/hearst-product-blueprint/" },
       { label: "Article system", href: "/hearst-article-blueprint/" },
       { label: "Token architecture", href: "/token-architecture/" },
+      { label: "HDS brand framework", href: "/hds-brand-framework/" },
     ],
   },
   {
