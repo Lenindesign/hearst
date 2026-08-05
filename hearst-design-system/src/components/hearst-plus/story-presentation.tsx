@@ -27,10 +27,12 @@ export function LifestyleRiverImage({
   story,
   className,
   priority = false,
+  alt,
 }: {
   story: LifestyleRiverStory;
   className?: string;
   priority?: boolean;
+  alt?: string;
 }) {
   const prefersReducedMotion = usePrefersReducedMotion();
   const imageKey = `${story.id}-${story.image}`;
@@ -41,7 +43,7 @@ export function LifestyleRiverImage({
     <Image
       key={imageKey}
       src={story.image}
-      alt={`${story.brand}: ${story.title}`}
+      alt={alt ?? `${story.brand}: ${story.title}`}
       width={1200}
       height={675}
       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 66vw, 640px"

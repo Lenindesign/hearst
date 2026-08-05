@@ -3,6 +3,7 @@
 import React from "react";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { BrandSourceIcon } from "@/components/hearst-plus/brand-source-icon";
+import { LifestyleRiverImage } from "@/components/hearst-plus/story-presentation";
 import { VideoRailCard } from "@/components/hearst-plus/video-cards";
 import { cn } from "@/lib/utils";
 
@@ -39,21 +40,30 @@ export function TrendingStoryRail({
       >
         {title}
       </h2>
-      <ol className="mt-4 space-y-3">
+      <ol className="-mb-3 mt-3 divide-y divide-border/70">
         {stories.map((story, index) => (
           <li key={story.id}>
             <button
               type="button"
               onClick={() => onOpenStory(story)}
               data-story-id={story.id}
-              className="group grid min-h-11 w-full grid-cols-[28px_minmax(0,1fr)] items-start gap-3 text-left text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+              className="group grid min-h-20 w-full grid-cols-[56px_minmax(0,1fr)] items-start gap-3 rounded-[6px] py-3 text-left text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
               aria-label={`Open story: ${story.title}`}
             >
-              <span className="mt-1 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold leading-none text-primary-foreground">
-                {index + 1}
+              <span className="relative block h-14 w-14 overflow-hidden rounded-[6px] border border-border bg-muted">
+                <LifestyleRiverImage
+                  story={story}
+                  alt=""
+                  className="h-full w-full transition-transform duration-200 ease-out group-hover:scale-105 motion-reduce:transition-none"
+                />
+                <span className="absolute left-1 top-1 grid h-5 w-5 place-items-center rounded-full bg-[var(--hp-surface)] text-[11px] font-bold leading-none text-primary ring-1 ring-border">
+                  <span className="translate-y-px tabular-nums leading-none">
+                    {index + 1}
+                  </span>
+                </span>
               </span>
               <span className="min-w-0">
-                <span className="block font-bold leading-snug group-hover:text-primary group-focus-visible:text-primary">
+                <span className="line-clamp-3 block font-bold leading-snug group-hover:text-primary group-focus-visible:text-primary">
                   {story.title}
                 </span>
                 <span className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground">
