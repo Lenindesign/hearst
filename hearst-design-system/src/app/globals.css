@@ -971,6 +971,25 @@
     background-color: var(--component-button-background-neutral-outlined-active);
     color: var(--component-button-content-neutral-outlined-active);
   }
+  [data-slot="button"][data-variant="outline"].hearst-plus-dark-header-icon-button,
+  [data-slot="button"][data-variant="outline"].hearst-plus-dark-header-icon-button:hover:not(:disabled),
+  [data-slot="button"][data-variant="outline"].hearst-plus-dark-header-icon-button:focus-visible {
+    border-color: rgb(255 255 255 / 0.2);
+    background-color: rgb(255 255 255 / 0.05);
+    color: rgb(255 255 255);
+  }
+  [data-slot="button"][data-variant="outline"].hearst-plus-dark-header-icon-button:hover:not(:disabled) {
+    background-color: rgb(255 255 255 / 0.12);
+  }
+  [data-slot="button"][data-variant="outline"].hearst-plus-dark-header-icon-button:active:not(:disabled),
+  [data-slot="button"][data-variant="outline"].hearst-plus-dark-header-icon-button[aria-expanded="true"] {
+    border-color: rgb(255 255 255 / 0.26);
+    background-color: rgb(255 255 255 / 0.16);
+    color: rgb(255 255 255);
+  }
+  [data-slot="button"][data-variant="outline"].hearst-plus-dark-header-icon-button svg {
+    color: currentColor;
+  }
 
   [data-slot="button"][data-variant="ghost"] {
     border-color: var(--component-button-border-neutral-transparent-default);

@@ -29,6 +29,7 @@ const contents = [
   ["Brand samples", "samples"],
   ["Portfolio", "portfolio"],
   ["Governance", "governance"],
+  ["Agentic layer", "agentic"],
   ["Pilot plan", "pilot"],
 ] as const;
 
@@ -114,6 +115,30 @@ const governanceSteps = [
     owner: "HDS release owner",
   },
 ];
+
+const agentRoles = [
+  ["Token Architect", "Changes source tokens and rebuilds generated outputs", "Token checks and a scoped source diff", "Generated files by hand"],
+  ["Publication Stylist", "Translates brand direction into supported system choices", "Cross-brand visual comparison", "Shared component forks"],
+  ["Component Builder", "Builds shared behavior, variants, and metadata", "Stories, states, and responsive coverage", "Hardcoded brand logic"],
+  ["Storybook Documenter", "Makes the production contract visible and reviewable", "Production-backed examples", "Storybook-only implementations"],
+  ["QA Reviewer", "Checks accessibility, visual parity, and unaffected brands", "A reviewable evidence report", "Approval without visible output"],
+  ["Release Agent", "Packages approved changes and verifies delivery", "Exact revision and production checks", "Deployment without authorization"],
+] as const;
+
+const agenticWorkflow = [
+  ["Route", "Identify the AutoWeek brand token and select the Token Architect workflow."],
+  ["Change", "Edit the smallest source value, rebuild generated outputs, and leave unrelated brands untouched."],
+  ["Prove", "Render AutoWeek, Car and Driver, and Cosmopolitan; check contrast, focus, and responsive behavior."],
+  ["Approve", "Present the proposal and evidence to a designer. Release only after explicit human approval."],
+] as const;
+
+const agenticArtifacts = [
+  ["DESIGN.md", "Routes intent to the correct source of truth"],
+  ["AGENTS.md and runbooks", "Define permissions, required checks, and forbidden actions"],
+  ["Tokens and publication manifest", "Give agents structured brand data"],
+  ["Component metadata", "Explains purpose, variants, dependencies, and accessibility"],
+  ["Storybook and reports", "Provide visible evidence for review"],
+] as const;
 
 function getTheme(slug: string) {
   return themeOptions.find((theme) => theme.slug === slug);
@@ -471,8 +496,112 @@ export default function HdsBrandFrameworkPage() {
             </section>
 
             <section>
+              <SectionHeading id="agentic" title="Agents make the system easier to operate. People keep authority.">
+                The agentic layer turns an approved design request into a narrow workflow. It reads the system contract, chooses the correct specialist, changes only the owned source, produces evidence, and pauses for human approval before release.
+              </SectionHeading>
+
+              <div className="mt-10 overflow-hidden bg-[#102A43] text-white">
+                <div className="grid lg:grid-cols-[0.82fr_1.18fr]">
+                  <div className="border-b border-white/20 p-6 md:p-8 lg:border-b-0 lg:border-r">
+                    <p className="text-sm font-bold text-sky-300">Example design request</p>
+                    <blockquote className="mt-5 text-balance text-3xl font-bold leading-tight md:text-4xl">
+                      “Make the AutoWeek primary action easier to read without changing its yellow brand identity.”
+                    </blockquote>
+                    <p className="mt-6 max-w-[56ch] text-sm leading-6 text-slate-300">
+                      The request describes the desired outcome. The agent must discover the correct token and workflow instead of inventing a local fix.
+                    </p>
+                  </div>
+                  <ol>
+                    {agenticWorkflow.map(([title, detail], index) => (
+                      <li key={title} className="grid gap-3 border-b border-white/15 p-6 last:border-b-0 sm:grid-cols-[2rem_7rem_1fr] sm:items-start md:px-8">
+                        <span className="font-mono text-sm font-bold text-sky-300">{index + 1}</span>
+                        <h3 className="font-bold text-white">{title}</h3>
+                        <p className="text-sm leading-6 text-slate-300">{detail}</p>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              </div>
+
+              <div className="mt-10">
+                <h3 className="text-2xl font-bold">Specialists work inside narrow boundaries.</h3>
+                <p className="mt-3 max-w-[70ch] text-sm leading-6 text-slate-600">
+                  No single agent owns the whole system. Each role has a defined responsibility, required evidence, and a clear prohibition.
+                </p>
+                <div
+                  aria-label="Agent roles and responsibilities"
+                  className="mt-6 overflow-x-auto border-y border-slate-300 bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2D75B9]"
+                  role="region"
+                  tabIndex={0}
+                >
+                  <table className="w-full min-w-[900px] border-collapse text-left text-sm">
+                    <thead>
+                      <tr className="border-b border-slate-300">
+                        <th className="p-4 text-[#2D75B9]">Agent</th>
+                        <th className="p-4 text-[#2D75B9]">Responsibility</th>
+                        <th className="p-4 text-[#2D75B9]">Required evidence</th>
+                        <th className="p-4 text-[#2D75B9]">Never does</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {agentRoles.map((row) => (
+                        <tr key={row[0]} className="border-b border-slate-200 last:border-b-0">
+                          {row.map((cell, index) => (
+                            <td key={cell} className={`p-4 align-top leading-6 ${index === 0 ? "font-bold text-[#102A43]" : "text-slate-600"}`}>
+                              {cell}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div className="mt-10 grid gap-px bg-slate-200 md:grid-cols-2">
+                <div className="bg-white p-6 md:p-8">
+                  <h3 className="text-2xl font-bold">People decide</h3>
+                  <ul className="mt-5 space-y-3 text-sm leading-6 text-slate-600">
+                    <li>Brand direction and editorial taste</li>
+                    <li>Whether a proposal represents the publication</li>
+                    <li>Whether a new shared pattern is worth supporting</li>
+                    <li>Approval, prioritization, and release authority</li>
+                  </ul>
+                </div>
+                <div className="bg-[#E9F2FA] p-6 md:p-8">
+                  <h3 className="text-2xl font-bold">Agents execute</h3>
+                  <ul className="mt-5 space-y-3 text-sm leading-6 text-slate-700">
+                    <li>System discovery and workflow selection</li>
+                    <li>Scoped token, component, or documentation changes</li>
+                    <li>Builds, cross-brand previews, and accessibility checks</li>
+                    <li>Review evidence and release verification</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="mt-10 border-y border-slate-300 py-8">
+                <h3 className="text-2xl font-bold">The system must be readable by people and machines.</h3>
+                <dl className="mt-6 divide-y divide-slate-200">
+                  {agenticArtifacts.map(([artifact, purpose]) => (
+                    <div key={artifact} className="grid gap-2 py-4 sm:grid-cols-[14rem_1fr] sm:gap-6">
+                      <dt className="font-mono text-sm font-bold text-[#2D75B9]">{artifact}</dt>
+                      <dd className="text-sm leading-6 text-slate-600">{purpose}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+
+              <div className="mt-8">
+                <h3 className="text-xl font-bold">Leadership measures whether the layer is helping.</h3>
+                <p className="mt-3 max-w-[72ch] text-sm leading-6 text-slate-600">
+                  Track time to an approved change, shared-component reuse, publication forks, defects caught before release, drift between Git and design tools, and the percentage of agent proposals accepted by human reviewers.
+                </p>
+              </div>
+            </section>
+
+            <section>
               <SectionHeading id="pilot" title="Prove the model with three deliberately different brands.">
-                Start with a lifestyle publication, an automotive publication, and a fashion or entertainment publication. If the same components preserve all three identities without forks, the architecture is ready to expand.
+                Start with a lifestyle publication, an automotive publication, and a fashion or entertainment publication. Use the same governed agent workflow for each. If the components preserve all three identities without forks, the architecture and operating model are ready to expand.
               </SectionHeading>
               <div className="mt-10 grid gap-px bg-slate-200 md:grid-cols-3">
                 {[
@@ -490,7 +619,7 @@ export default function HdsBrandFrameworkPage() {
                 <div>
                   <p className="text-sm font-bold text-sky-300">Recommended decision</p>
                   <h3 className="mt-3 max-w-3xl text-balance text-3xl font-bold leading-tight md:text-4xl">
-                    Approve one shared HDS core, brand themes, governed variants, and a three-brand pilot.
+                    Approve one shared HDS core, brand themes, governed variants, specialist agents, and a three-brand pilot.
                   </h3>
                 </div>
                 <Link href="/token-architecture/" className="mt-6 inline-flex min-h-11 shrink-0 items-center border border-white/50 px-5 py-3 text-sm font-bold text-white hover:bg-white/10 md:mt-0">

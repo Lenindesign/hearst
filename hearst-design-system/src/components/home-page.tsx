@@ -167,6 +167,12 @@ import {
   HearstOnboardingModal,
   type HearstOnboardingResult,
 } from "./hearst-plus/onboarding-modal";
+import {
+  DelishOnboardingModal,
+} from "./hearst-plus/delish-onboarding-modal";
+import {
+  MotorTrendOnboardingModal,
+} from "./hearst-plus/motortrend-onboarding-modal";
 import { StakeholderPersonalizationConsole } from "./hearst-plus/stakeholder-personalization-console";
 import { hearstDestinationSections, UtilityBar } from "./hearst-plus/utility-bar";
 import { useModalIsolation } from "./ui/use-modal-isolation";
@@ -1067,6 +1073,9 @@ export function MainNav({
     </div>,
     overlayPortalTarget
   ) : null;
+  const useDarkHeaderIconButtons = darkMode || colorMode === "dark";
+  const darkHeaderIconButtonClass =
+    "hearst-plus-dark-header-icon-button";
 
   return (
     <>
@@ -1080,7 +1089,7 @@ export function MainNav({
               size="icon-sm"
               className={cn(
                 "h-11 w-11 sm:hidden",
-                darkMode ? "border-white/20 bg-white/[0.04] text-white hover:bg-white/10 hover:text-white" : undefined
+                useDarkHeaderIconButtons ? darkHeaderIconButtonClass : undefined
               )}
               onClick={() => {
                 setOverlayPortalTarget(document.body);
@@ -1099,7 +1108,7 @@ export function MainNav({
             className={cn(
               "h-11 w-11 sm:h-7 sm:w-7",
               showMobileDiscoveryMenu && "hidden sm:inline-flex",
-              darkMode ? "border-white/20 bg-white/[0.04] text-white hover:bg-white/10 hover:text-white" : undefined
+              useDarkHeaderIconButtons ? darkHeaderIconButtonClass : undefined
             )}
             onClick={toggleColorMode}
             aria-label={`Switch to ${colorMode === "dark" ? "light" : "dark"} mode`}
@@ -1119,7 +1128,7 @@ export function MainNav({
             size="icon-sm"
             className={cn(
               "h-11 w-11 sm:h-7 sm:w-7",
-              darkMode ? "border-white/20 bg-white/[0.04] text-white hover:bg-white/10 hover:text-white" : undefined
+              useDarkHeaderIconButtons ? darkHeaderIconButtonClass : undefined
             )}
             aria-label="Search"
             title="Search"
@@ -6002,6 +6011,8 @@ export function HomePageTemplate({
   const [pageCategorySwipeDragging, setPageCategorySwipeDragging] = React.useState(false);
   const [pageCategorySwipeTransitionEnabled, setPageCategorySwipeTransitionEnabled] = React.useState(true);
   const [onboardingOpen, setOnboardingOpen] = React.useState(false);
+  const [delishOnboardingOpen, setDelishOnboardingOpen] = React.useState(false);
+  const [motorTrendOnboardingOpen, setMotorTrendOnboardingOpen] = React.useState(false);
   const [onboardingResult, setOnboardingResult] = React.useState<HearstOnboardingResult | null>(null);
   const [authDialogOpen, setAuthDialogOpen] = React.useState(false);
   const [authDialogMode, setAuthDialogMode] = React.useState<"create" | "signIn">("create");
@@ -6047,14 +6058,27 @@ export function HomePageTemplate({
   );
   const destinationContentRef = React.useRef<HTMLDivElement | null>(null);
   const isDestinationRiver = brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
+  const isDelishOnboardingRoute = selectedBrand?.slug === "delish";
+  const isMotorTrendOnboardingRoute = selectedBrand?.slug === "motortrend";
+  const canUseReaderAccountDialogs = isDestinationRiver || isDelishOnboardingRoute || isMotorTrendOnboardingRoute;
   const destinationMode = getDestinationMode(selectedBrand?.slug ?? initialBrandSlug ?? brand.slug);
   const openPersonalization = React.useCallback(() => {
     if (account) {
       setProfileOpen(true);
       return;
     }
+    if (isDelishOnboardingRoute) {
+      setAuthDialogOpen(false);
+      setDelishOnboardingOpen(true);
+      return;
+    }
+    if (isMotorTrendOnboardingRoute) {
+      setAuthDialogOpen(false);
+      setMotorTrendOnboardingOpen(true);
+      return;
+    }
     setOnboardingOpen(true);
-  }, [account]);
+  }, [account, isDelishOnboardingRoute, isMotorTrendOnboardingRoute]);
   React.useEffect(() => {
     if (selectedBrand) return;
 
@@ -6809,7 +6833,55 @@ export function HomePageTemplate({
         />
       ) : null}
 
-      {isDestinationRiver ? (
+      {isDelishOnboardingRoute && delishOnboardingOpen ? (
+        <DelishOnboardingModal
+          open={delishOnboardingOpen}
+          onClose={() => setDelishOnboardingOpen(false)}
+          onComplete={(result) => {
+            setActiveLifestyleFilter("For You");
+            setOnboardingResult(result);
+            setDelishOnboardingOpen(false);
+            anchorDestinationContent();
+          }}
+          onCreateProfile={(result) => {
+            setOnboardingResult(result);
+            setDelishOnboardingOpen(false);
+            setAuthDialogMode("create");
+            setAuthDialogOpen(true);
+          }}
+          onSignIn={() => {
+            setDelishOnboardingOpen(false);
+            setAuthDialogMode("signIn");
+            setAuthDialogOpen(true);
+          }}
+        />
+      ) : null}
+
+      {isMotorTrendOnboardingRoute && motorTrendOnboardingOpen ? (
+        <MotorTrendOnboardingModal
+          open={motorTrendOnboardingOpen}
+          onClose={() => setMotorTrendOnboardingOpen(false)}
+          onComplete={(result) => {
+            setActiveLifestyleFilter("For You");
+            setOnboardingResult(result);
+            setMotorTrendOnboardingOpen(false);
+            anchorDestinationContent();
+          }}
+          onCreateProfile={(result) => {
+            setOnboardingResult(result);
+            setMotorTrendOnboardingOpen(false);
+            setAuthDialogMode("create");
+            setAuthDialogOpen(true);
+          }}
+          onSignIn={() => {
+            setMotorTrendOnboardingOpen(false);
+            setAuthDialogMode("signIn");
+            setAuthDialogOpen(true);
+          }}
+        />
+      ) : null}
+
+      {canUseReaderAccountDialogs ? (
         <ReaderAuthDialog
           key={`${destinationMode}-${authDialogMode}`}
           open={authDialogOpen}
@@ -6831,7 +6903,7 @@ export function HomePageTemplate({
         />
       ) : null}
 
-      {isDestinationRiver ? (
+      {canUseReaderAccountDialogs ? (
         <>
           {account && profileOpen ? (
             <ReaderProfileDialog
