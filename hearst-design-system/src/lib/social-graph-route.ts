@@ -1,5 +1,6 @@
 import { getHearstDestinationStaticData } from "@/lib/hearst-destination-data";
 import {
+  getHearstDestinationCategoryDisplayLabel,
   getHearstDestinationCategoryLabel,
   getHearstSectionBrand,
   type HearstBrandSection,
@@ -22,7 +23,11 @@ export function getCategoryPosterData(destination: HearstDestinationMode, catego
     return searchable.includes(category) || category.split(" ").some((term) => term.length > 3 && searchable.includes(term));
   }) ?? stories[0];
 
-  return { categoryLabel, story, config: socialGraphDestinationConfig[destination] };
+  return {
+    categoryLabel: getHearstDestinationCategoryDisplayLabel(destination, categoryLabel),
+    story,
+    config: socialGraphDestinationConfig[destination],
+  };
 }
 
 export function getBrandPosterData(section: HearstBrandSection, brandSlug: string) {

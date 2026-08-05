@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { getHearstDestinationStaticData } from "@/lib/hearst-destination-data";
 import { getHearstAllStoryInventory } from "@/lib/hearst-story-inventory";
 import {
+  getHearstDestinationCategoryDisplayLabel,
   getHearstDestinationCategoryLabel,
   hearstDestinationCategoryLabels,
   hearstDestinationRoutes,
@@ -47,8 +48,9 @@ export async function generateDestinationCategoryMetadata(
   const categoryLabel = getHearstDestinationCategoryLabel(destination, categorySlug);
   if (!categoryLabel) return {};
 
-  const title = `${categoryLabel} | ${destinationNames[destination]}`;
-  const description = `${categoryLabel} stories personalized for the ${destinationNames[destination]} destination.`;
+  const displayLabel = getHearstDestinationCategoryDisplayLabel(destination, categoryLabel);
+  const title = `${displayLabel} | ${destinationNames[destination]}`;
+  const description = `${displayLabel} stories personalized for the ${destinationNames[destination]} destination.`;
   return { title, description, ...socialGraphMetadata(`${hearstDestinationRoutes[destination]}${categorySlug}/opengraph-image/`, title, description) };
 }
 

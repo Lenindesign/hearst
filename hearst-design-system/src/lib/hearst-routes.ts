@@ -10,11 +10,18 @@ export const hearstDestinationRoutes: Record<HearstDestinationMode, string> = {
 };
 
 export const hearstDestinationCategoryLabels: Record<HearstDestinationMode, readonly string[]> = {
-  all: ["For You", "Home", "Style", "Reviews", "Fitness", "Cars", "Videos", "Shopping", "Games", "Saved"],
+  all: ["For You", "Style", "Reviews", "Fitness", "Cars", "Home", "Videos", "Shopping", "Games", "Saved"],
   lifestyle: ["For You", "Food", "Home", "Wellness", "Style", "Videos", "Shopping", "Family", "Entertainment", "Saved"],
   autos: ["For You", "News", "Reviews", "Buying Guides", "EVs", "Racing", "Trucks", "Classics", "Videos", "Saved"],
   flux: ["For You", "Style", "Beauty", "Design", "Culture", "Videos", "Shopping", "Events", "Travel", "Saved"],
   ew: ["For You", "Fitness", "Wellness", "Gear", "Tech", "Adventure", "Nutrition", "Life", "Videos", "Saved"],
+};
+
+const hearstDestinationCategoryDisplayLabels: Partial<
+  Record<HearstDestinationMode, Partial<Record<string, string>>>
+> = {
+  all: { Home: "House & Garden" },
+  lifestyle: { Home: "House & Garden" },
 };
 
 function getCategorySlug(label: string) {
@@ -33,6 +40,10 @@ export function getHearstDestinationCategoryRoute(mode: HearstDestinationMode, l
 
 export function getHearstDestinationCategoryLabel(mode: HearstDestinationMode, categorySlug: string) {
   return hearstDestinationCategoryLabels[mode].find((label) => getCategorySlug(label) === categorySlug);
+}
+
+export function getHearstDestinationCategoryDisplayLabel(mode: HearstDestinationMode, label: string) {
+  return hearstDestinationCategoryDisplayLabels[mode]?.[label] ?? label;
 }
 
 export const hearstLegacyDestinationRedirects: Record<string, string> = {

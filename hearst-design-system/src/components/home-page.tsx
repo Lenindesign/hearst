@@ -10,6 +10,7 @@ import { BrandLogo } from "./brand-logo";
 import { brandLogos } from "@/lib/logos";
 import {
   getHearstBrandRoute,
+  getHearstDestinationCategoryDisplayLabel,
   getHearstDestinationCategoryLabel,
   getHearstDestinationCategoryRoute,
   getHearstDestinationRoute,
@@ -688,12 +689,16 @@ export function MainNav({
 
   const renderNavLinks = () => navLinks.map((link) => {
     const active = activeFilter === link;
+    const destinationMode = getDestinationMode(brand.slug);
+    const displayLabel = isDestinationRiver && !selectedBrand
+      ? getHearstDestinationCategoryDisplayLabel(destinationMode, link)
+      : link;
     const destinationHref = brand.slug === "hearst-all" ? hearstDestinationNavHrefs.get(link) : undefined;
     const publicationHref = selectedBrand?.slug === "hot-rod" && link === "Events"
       ? "/autos/hot-rod/events/"
       : undefined;
     const categoryHref = isDestinationRiver && !selectedBrand
-      ? getHearstDestinationCategoryRoute(getDestinationMode(brand.slug), link)
+      ? getHearstDestinationCategoryRoute(destinationMode, link)
       : undefined;
     const useDarkActiveState = darkMode || (brand.slug === "hearst-flux" && colorMode === "dark");
     const navLinkClasses = darkMode
@@ -718,7 +723,7 @@ export function MainNav({
           )
         )}
       >
-        {link}
+        {displayLabel}
       </LinkComponent>
     ) : categoryHref ? (
       <LinkComponent
@@ -743,7 +748,7 @@ export function MainNav({
             : ""
         )}
       >
-        {link}
+        {displayLabel}
       </LinkComponent>
     ) : isDestinationRiver ? (
       <button
@@ -760,7 +765,7 @@ export function MainNav({
         )}
         aria-pressed={active}
       >
-        {link}
+        {displayLabel}
       </button>
     ) : (
       <LinkComponent
@@ -770,7 +775,7 @@ export function MainNav({
         size="sm"
 	        className="min-h-8 min-w-max whitespace-nowrap font-normal md:min-h-0 md:min-w-0"
       >
-        {link}
+        {displayLabel}
       </LinkComponent>
     );
   });
@@ -6068,7 +6073,10 @@ export function HomePageTemplate({
         : undefined;
       if (categoryLabel) {
         setActiveLifestyleFilter(categoryLabel);
-        document.title = getDestinationCategoryDocumentTitle(destinationMode, categoryLabel);
+        document.title = getDestinationCategoryDocumentTitle(
+          destinationMode,
+          getHearstDestinationCategoryDisplayLabel(destinationMode, categoryLabel),
+        );
       }
     };
 
@@ -6313,7 +6321,10 @@ export function HomePageTemplate({
         : undefined;
       if (nextRoute && `${window.location.pathname}${window.location.search}` !== nextRoute) {
         window.history.pushState(window.history.state, "", nextRoute);
-        document.title = getDestinationCategoryDocumentTitle(destinationMode, filter);
+        document.title = getDestinationCategoryDocumentTitle(
+          destinationMode,
+          getHearstDestinationCategoryDisplayLabel(destinationMode, filter),
+        );
       }
     }
 
