@@ -6,14 +6,17 @@ import { BrandLogo } from "@/components/brand-logo";
 import type { HearstOnboardingResult } from "@/components/hearst-plus/onboarding-modal";
 import { Button } from "@/components/ui/button";
 import {
+  CalendarBlank,
   Check,
-  ChefHat,
+  CheckCircle2,
   ChevronLeft,
   ChevronRight,
-  Clock,
   Heart,
+  Lock,
   MapPin,
-  Search,
+  Shield,
+  Sparkles,
+  User,
   X,
 } from "@/components/ui/icons";
 import { useBodyPortalTarget, useModalIsolation } from "@/components/ui/use-modal-isolation";
@@ -29,7 +32,10 @@ type DelishOnboardingAnswers = {
   cookStyle: CookStyle | null;
   recipeInterests: string[];
   foodPreferences: string[];
+  foodFavorites: string[];
+  foodDiscoveries: string[];
   favoriteRecipe: string;
+  newsletterSubscriptions: string[];
 };
 
 type DelishOnboardingModalProps = {
@@ -43,21 +49,21 @@ type DelishOnboardingModalProps = {
 const cookStyles = [
   {
     id: "weeknight",
-    title: "Weeknight cook",
-    description: "Fast recipes and fewer dishes",
-    Icon: Clock,
+    title: "Everyday Cook",
+    description: "I love practical recipes that fit into my daily life.",
+    imageSrc: "/images/delish-cook-everyday.png",
   },
   {
     id: "project",
-    title: "Weekend cook",
-    description: "New techniques and satisfying projects",
-    Icon: ChefHat,
+    title: "Food Explorer",
+    description: "I enjoy discovering new recipes, flavors, and cooking ideas.",
+    imageSrc: "/images/delish-cook-explorer.png",
   },
   {
     id: "baker",
-    title: "Baker",
-    description: "Cakes, cookies, breads, and desserts",
-    Icon: Heart,
+    title: "Both",
+    description: "I cook every day and love trying something new.",
+    imageSrc: "/images/delish-cook-both.png",
   },
 ] as const;
 
@@ -79,19 +85,51 @@ const foodPreferences = [
   "Family-friendly",
 ] as const;
 
-const favoriteRecipeSuggestions = [
-  "One-pan baked feta gnocchi",
-  "Classic chicken meatballs",
-  "Italian pasta night",
-  "Chocolate sheet cake",
-  "French onion chicken meatballs",
-  "Creamy Tuscan chicken",
-  "Crispy air fryer salmon",
-  "Lemon blueberry loaf cake",
-  "Sheet-pan chicken fajitas",
-  "Marry me pasta",
-  "No-bake cheesecake bars",
-  "Smash burger tacos",
+const foodFavoriteOptions = [
+  { label: "Italian", icon: "🍝" },
+  { label: "Mexican", icon: "🌮" },
+  { label: "Chinese", icon: "🥡" },
+  { label: "Japanese", icon: "🍣" },
+  { label: "Pizza", icon: "🍕" },
+  { label: "Pasta", icon: "🍜" },
+  { label: "Chicken", icon: "🍗" },
+  { label: "BBQ", icon: "🍖" },
+  { label: "Healthy Meals", icon: "🥗" },
+  { label: "Baking", icon: "🥣" },
+] as const;
+
+const foodDiscoveryOptions = [
+  { label: "Mediterranean", icon: "🥘" },
+  { label: "Risotto", icon: "🍚" },
+  { label: "Homemade Pasta", icon: "🍝" },
+  { label: "Tapas", icon: "🍢" },
+  { label: "Thai", icon: "🍲" },
+  { label: "Korean BBQ", icon: "🥩" },
+  { label: "Indian Curry", icon: "🍛" },
+  { label: "Fresh Herbs & Spices", icon: "🌿" },
+  { label: "Plant-Based Meals", icon: "🥗" },
+  { label: "Global Street Food", icon: "🌯" },
+] as const;
+
+const newsletterOptions = [
+  {
+    id: "delish-daily",
+    title: "Delish Daily",
+    description: "Your daily dose of easy, delicious recipes, food news, and cooking tips.",
+    imageSrc: "/images/delish-newsletter-daily.png",
+  },
+  {
+    id: "delish-unlimited",
+    title: "Delish Unlimited",
+    description: "Get exclusive recipes, in-depth guides, and premium content.",
+    imageSrc: "/images/delish-newsletter-unlimited.png",
+  },
+  {
+    id: "delish-summer-hosting",
+    title: "Delish Summer Hosting",
+    description: "Seasonal recipes, entertaining ideas, and hosting inspiration all summer long.",
+    imageSrc: "/images/delish-newsletter-hosting.png",
+  },
 ] as const;
 
 const delishHeadlineFont = '"TT Commons Pro", system-ui, sans-serif';
@@ -111,7 +149,10 @@ export function buildDelishOnboardingResult(
     ...(cookStyle ? [cookStyle.title] : []),
     ...answers.recipeInterests,
     ...meaningfulPreferences,
+    ...answers.foodFavorites,
+    ...answers.foodDiscoveries,
     answers.favoriteRecipe,
+    ...answers.newsletterSubscriptions,
   ]);
 
   return {
@@ -163,8 +204,11 @@ function DelishOnboardingModalContent({
   const [selectedPreferences, setSelectedPreferences] = React.useState<string[]>([
     "No preference",
   ]);
-  const [favoriteRecipe, setFavoriteRecipe] = React.useState("");
-  const [activeRecipeIndex, setActiveRecipeIndex] = React.useState(0);
+  const [selectedFoodFavorites, setSelectedFoodFavorites] = React.useState<string[]>([]);
+  const [selectedFoodDiscoveries, setSelectedFoodDiscoveries] = React.useState<string[]>([]);
+  const [selectedNewsletterSubscriptions, setSelectedNewsletterSubscriptions] = React.useState<string[]>([
+    "delish-daily",
+  ]);
   const dialogRef = React.useRef<HTMLElement | null>(null);
   const headingRef = React.useRef<HTMLHeadingElement | null>(null);
   const restoreFocusRef = React.useRef<HTMLElement | null>(null);
@@ -252,44 +296,26 @@ function DelishOnboardingModalContent({
     });
   };
 
-  const filteredFavoriteRecipes = React.useMemo(() => {
-    const query = favoriteRecipe.trim().toLowerCase();
-    if (!query) return favoriteRecipeSuggestions;
-
-    return favoriteRecipeSuggestions.filter((recipe) =>
-      recipe.toLowerCase().includes(query),
+  const toggleLimitedSelection = (
+    value: string,
+    setValue: React.Dispatch<React.SetStateAction<string[]>>,
+    limit = 5,
+  ) => {
+    setValue((current) =>
+      current.includes(value)
+        ? current.filter((item) => item !== value)
+        : current.length < limit
+          ? [...current, value]
+          : current,
     );
-  }, [favoriteRecipe]);
-
-  const recipeAutocompleteOptions = React.useMemo(() => {
-    const trimmedRecipe = favoriteRecipe.trim();
-    if (filteredFavoriteRecipes.length > 0) return filteredFavoriteRecipes;
-    return trimmedRecipe ? [`Use “${trimmedRecipe}”`] : favoriteRecipeSuggestions;
-  }, [favoriteRecipe, filteredFavoriteRecipes]);
-
-  const selectFavoriteRecipe = (recipe: string) => {
-    const customMatch = recipe.match(/^Use “(.+)”$/);
-    setFavoriteRecipe(customMatch?.[1] ?? recipe);
-    setActiveRecipeIndex(0);
   };
 
-  const handleFavoriteRecipeKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "ArrowDown") {
-      event.preventDefault();
-      setActiveRecipeIndex((current) =>
-        Math.min(recipeAutocompleteOptions.length - 1, current + 1),
-      );
-    } else if (event.key === "ArrowUp") {
-      event.preventDefault();
-      setActiveRecipeIndex((current) => Math.max(0, current - 1));
-    } else if (event.key === "Enter") {
-      const activeRecipe = recipeAutocompleteOptions[activeRecipeIndex];
-      if (!activeRecipe) return;
-      event.preventDefault();
-      selectFavoriteRecipe(activeRecipe);
-    } else if (event.key === "Escape") {
-      event.currentTarget.blur();
-    }
+  const toggleNewsletterSubscription = (id: string) => {
+    setSelectedNewsletterSubscriptions((current) =>
+      current.includes(id)
+        ? current.filter((item) => item !== id)
+        : [...current, id],
+    );
   };
 
   const detectLocation = async () => {
@@ -360,7 +386,11 @@ function DelishOnboardingModalContent({
     cookStyle,
     recipeInterests: selectedRecipes,
     foodPreferences: selectedPreferences,
-    favoriteRecipe: favoriteRecipe.trim(),
+    foodFavorites: selectedFoodFavorites,
+    foodDiscoveries: selectedFoodDiscoveries,
+    favoriteRecipe:
+      selectedFoodFavorites[0] ?? selectedFoodDiscoveries[0] ?? "",
+    newsletterSubscriptions: selectedNewsletterSubscriptions,
   });
 
   const saveAnswers = (result: HearstOnboardingResult) => {
@@ -377,12 +407,11 @@ function DelishOnboardingModalContent({
   const finish = (createProfile: boolean) => {
     const result = buildDelishOnboardingResult(getAnswers());
     saveAnswers(result);
-    skipFocusRestoreRef.current = createProfile;
+    skipFocusRestoreRef.current = true;
     if (createProfile) {
       onCreateProfile(result);
     } else {
       onComplete(result);
-      onClose();
     }
   };
 
@@ -395,23 +424,23 @@ function DelishOnboardingModalContent({
     : step === 2
       ? Boolean(cookStyle)
       : step === 3
-        ? selectedRecipes.length > 0
-        : favoriteRecipe.trim().length > 0;
+        ? selectedFoodFavorites.length + selectedFoodDiscoveries.length > 0
+        : selectedNewsletterSubscriptions.length > 0;
 
   const heading = step === 1
-    ? "Start your kitchen"
+    ? "Let’s Get Cooking"
     : step === 2
       ? "What kind of cook are you?"
       : step === 3
-        ? "What do you want to cook more often?"
-        : "Find your favorite recipe";
+        ? "Tell Us What’s on Your Plate"
+        : "Let’s Keep In Touch";
   const description = step === 1
-    ? "Let's get to know each other."
+    ? "Tell me about yourself"
     : step === 2
       ? "Choose the answer that feels most like you."
       : step === 3
-        ? "Pick up to three, then add any food preferences."
-        : "Start with one recipe you would love to see more often.";
+        ? "Choose the foods you already love and the ones you’d like to discover."
+        : "With personalized recipes and inspiration";
   const selectedCookStyleTitle =
     cookStyles.find((option) => option.id === cookStyle)?.title ?? "Delish Cook";
   const welcomeName = readerName.trim().split(/\s+/)[0] || "there";
@@ -431,7 +460,7 @@ function DelishOnboardingModalContent({
           data-modal-close
           variant="outline"
           size="icon-lg"
-          className="absolute right-4 top-4 z-20 size-10 rounded-full border-[#AEB7C3] bg-white text-[#1F222A] hover:bg-[#FFF5D8] sm:right-5 sm:top-5"
+          className="absolute right-4 top-4 z-20 size-10 rounded-full border-[#EF3B35] bg-white text-[#1F222A] hover:bg-[#FFF5D8] sm:right-5 sm:top-5"
           onClick={onClose}
           aria-label="Close Delish onboarding"
         >
@@ -444,7 +473,13 @@ function DelishOnboardingModalContent({
             cardName={readerName.trim() || "Delish Reader"}
             location={readerLocation.trim() || "Your Kitchen"}
             cookStyle={selectedCookStyleTitle}
-            favoriteRecipe={favoriteRecipe.trim() || "Choose a favorite recipe"}
+            favoriteRecipe={
+              selectedFoodFavorites[0]
+              ?? selectedFoodDiscoveries[0]
+              ?? "Choose a favorite recipe"
+            }
+            favoriteFoods={selectedFoodFavorites}
+            foodsToExplore={selectedFoodDiscoveries}
             headingRef={headingRef}
             onBack={() => setShowWelcome(false)}
             onClose={() => finish(false)}
@@ -453,14 +488,14 @@ function DelishOnboardingModalContent({
           <>
         <div className="min-h-0 flex-1 overflow-y-auto px-5 py-6 sm:px-8 sm:py-8">
           <div className="mx-auto flex max-w-[560px] flex-col items-center">
-            <StepBadge step={step} />
+            <DelishStepMarker step={step} />
 
-            <div className="mt-4 text-center">
+            <div className="mt-5 text-center">
               <h2
                 ref={headingRef}
                 id="delish-onboarding-title"
                 tabIndex={-1}
-                className="text-balance text-[2rem] font-black leading-[0.98] tracking-normal text-[#004685] outline-none sm:text-[2.25rem]"
+                className="text-balance text-[2rem] font-black leading-[0.98] tracking-normal text-[#101828] outline-none sm:text-[2.25rem]"
                 style={{ fontFamily: delishHeadlineFont }}
               >
                 {heading}
@@ -479,7 +514,7 @@ function DelishOnboardingModalContent({
                   What is your name?
                   <input
                     className="mt-2 h-12 w-full rounded-[10px] border border-[#AEB7C3] bg-white px-4 text-base font-medium text-[#101828] outline-none transition-colors placeholder:text-[#AEB7C3] focus:border-[#E31837] focus:ring-4 focus:ring-[#E31837]/10"
-                    placeholder="Name"
+                    placeholder="Your name"
                     value={readerName}
                     onChange={(event) => setReaderName(event.target.value)}
                     autoComplete="given-name"
@@ -490,7 +525,7 @@ function DelishOnboardingModalContent({
                   <span className="relative mt-2 block">
                     <input
                       className="h-12 w-full rounded-[10px] border border-[#AEB7C3] bg-white px-4 pr-12 text-base font-medium text-[#101828] outline-none transition-colors placeholder:text-[#AEB7C3] focus:border-[#E31837] focus:ring-4 focus:ring-[#E31837]/10"
-                      placeholder="Current Location"
+                      placeholder="Current location"
                       value={readerLocation}
                       onChange={(event) => {
                         setReaderLocation(event.target.value);
@@ -526,8 +561,8 @@ function DelishOnboardingModalContent({
             ) : null}
 
             {step === 2 ? (
-              <div className="mt-6 grid w-full gap-3 sm:grid-cols-3">
-                {cookStyles.map(({ id, title, description: optionDescription, Icon }) => {
+              <div className="mt-6 grid w-full gap-4 sm:grid-cols-3">
+                {cookStyles.map(({ id, title, description: optionDescription, imageSrc }) => {
                   const selected = cookStyle === id;
                   return (
                     <button
@@ -536,26 +571,36 @@ function DelishOnboardingModalContent({
                       aria-pressed={selected}
                       onClick={() => setCookStyle(id)}
                       className={cn(
-                        "group flex min-h-[84px] flex-row items-center justify-start gap-3 rounded-[12px] border p-4 text-left shadow-[0_8px_16px_rgba(16,24,40,0.05)] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E31837] motion-reduce:transition-none sm:min-h-[132px] sm:flex-col sm:justify-center sm:gap-0 sm:p-4 sm:text-center",
+                        "group flex min-h-[156px] flex-col items-center justify-between rounded-[12px] border bg-white px-5 py-6 text-center shadow-[0_10px_20px_rgba(16,24,40,0.04)] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E31837] motion-reduce:transition-none sm:min-h-[218px]",
                         selected
-                          ? "border-[#E31837] bg-[#E31837] text-white"
-                          : "border-[#D6DDE6] bg-white text-[#101828] hover:bg-[#FFF5D8]",
+                          ? "border-[#E31837] text-[#101828] ring-2 ring-[#E31837]/15"
+                          : "border-[#D6DDE6] text-[#101828] hover:border-[#AEB7C3]",
                       )}
                     >
-                      <span className={cn(
-                        "flex size-10 shrink-0 items-center justify-center rounded-full",
-                        selected ? "bg-white text-[#E31837]" : "bg-[#E5EAF0] text-[#343944]",
-                      )}>
-                        <Icon className="size-5" aria-hidden />
-                      </span>
-                      <span className="min-w-0 sm:mt-4">
-                        <span className="block text-base font-bold">{title}</span>
-                        <span className={cn(
-                          "mt-1 block text-sm leading-5",
-                          selected ? "text-white/85" : "text-[#5A6472]",
-                        )}>
+                      <span className="flex flex-col items-center">
+                        <img
+                          src={imageSrc}
+                          alt=""
+                          className="size-20 object-contain sm:size-24"
+                          aria-hidden="true"
+                        />
+                        <span className="mt-4 block text-lg font-bold leading-tight">
+                          {title}
+                        </span>
+                        <span className="mt-3 block max-w-[15rem] text-sm leading-6 text-[#5A6472]">
                           {optionDescription}
                         </span>
+                      </span>
+                      <span
+                        className={cn(
+                          "mt-5 flex size-8 items-center justify-center rounded-full border-2 transition-colors",
+                          selected
+                            ? "border-[#E31837] bg-[#E31837]"
+                            : "border-[#AEB7C3] bg-white",
+                        )}
+                        aria-hidden="true"
+                      >
+                        {selected ? <Check className="size-4 text-white" /> : null}
                       </span>
                     </button>
                   );
@@ -564,110 +609,57 @@ function DelishOnboardingModalContent({
             ) : null}
 
             {step === 3 ? (
-              <div className="mt-6 grid w-full gap-4 lg:grid-cols-[1fr_0.85fr]">
-                <section className="rounded-[12px] bg-white p-4 shadow-[0_16px_36px_rgba(16,24,40,0.08)] sm:p-5">
-                  <p className="text-sm font-black uppercase tracking-[0.14em] text-[#E31837]">
-                    Recipes
-                  </p>
-                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                    {recipeInterests.map((recipe) => {
-                      const selected = selectedRecipes.includes(recipe);
-                      const limitReached = selectedRecipes.length >= 3 && !selected;
-                      return (
-                        <SelectionButton
-                          key={recipe}
-                          selected={selected}
-                          disabled={limitReached}
-                          onClick={() => toggleRecipe(recipe)}
-                        >
-                          {recipe}
-                        </SelectionButton>
-                      );
-                    })}
-                  </div>
-                  <p className="mt-4 text-sm font-semibold text-[#5A6472]" aria-live="polite">
-                    {selectedRecipes.length} of 3 selected
-                  </p>
-                </section>
-                <section className="rounded-[12px] bg-white p-4 shadow-[0_16px_36px_rgba(16,24,40,0.08)] sm:p-5">
-                  <p className="text-sm font-black uppercase tracking-[0.14em] text-[#E31837]">
-                    Preferences
-                  </p>
-                  <div className="mt-4 grid gap-3">
-                    {foodPreferences.map((preference) => (
-                      <SelectionButton
-                        key={preference}
-                        selected={selectedPreferences.includes(preference)}
-                        onClick={() => togglePreference(preference)}
-                      >
-                        {preference}
-                      </SelectionButton>
-                    ))}
-                  </div>
-                </section>
+              <div className="mt-6 grid w-full gap-4 lg:grid-cols-2">
+                <FoodPlateSection
+                  title="Your favorites"
+                  subtitle="Choose up to 5"
+                  marker="♥"
+                  options={foodFavoriteOptions}
+                  selected={selectedFoodFavorites}
+                  onToggle={(label) =>
+                    toggleLimitedSelection(label, setSelectedFoodFavorites)
+                  }
+                />
+                <FoodPlateSection
+                  title="Discover next"
+                  subtitle="Choose up to 5"
+                  marker="✦"
+                  options={foodDiscoveryOptions}
+                  selected={selectedFoodDiscoveries}
+                  onToggle={(label) =>
+                    toggleLimitedSelection(label, setSelectedFoodDiscoveries)
+                  }
+                />
               </div>
             ) : null}
 
             {step === 4 ? (
-              <div className="mt-6 w-full max-w-[480px]">
-                <section className="rounded-[12px] bg-white p-4 shadow-[0_16px_36px_rgba(16,24,40,0.08)] sm:p-5">
-                  <label className="block text-base font-black text-[#101828]">
-                    Search for a recipe
-                    <span className="relative mt-3 block">
-                      <input
-                        role="combobox"
-                        aria-autocomplete="list"
-                        aria-expanded="true"
-                        aria-controls="delish-popular-recipes"
-                        aria-activedescendant={`delish-popular-recipe-${activeRecipeIndex}`}
-                        className="h-12 w-full rounded-[10px] border border-[#AEB7C3] bg-white px-4 pr-12 text-base font-semibold text-[#101828] outline-none transition-colors placeholder:text-[#AEB7C3] focus:border-[#E31837] focus:ring-4 focus:ring-[#E31837]/10"
-                        placeholder="Start typing to search..."
-                        value={favoriteRecipe}
-                        onChange={(event) => {
-                          setFavoriteRecipe(event.target.value);
-                          setActiveRecipeIndex(0);
-                        }}
-                        onKeyDown={handleFavoriteRecipeKeyDown}
-                      />
-                      <Search className="pointer-events-none absolute right-4 top-1/2 size-6 -translate-y-1/2 text-[#5A6472]" aria-hidden />
-                    </span>
-                  </label>
-                  <p className="mt-4 text-xs font-bold uppercase tracking-[0.12em] text-[#5A6472]">
-                    Popular recipes
-                  </p>
-                  <div
-                    id="delish-popular-recipes"
-                    role="listbox"
-                    className="mt-3 max-h-[190px] overflow-y-auto rounded-[10px] border border-[#D6DDE6] bg-white"
-                  >
-                    {recipeAutocompleteOptions.map((recipe, index) => {
-                      const selected = favoriteRecipe === recipe;
-                      const active = activeRecipeIndex === index;
-                      return (
-                      <button
-                        key={recipe}
-                        id={`delish-popular-recipe-${index}`}
-                        type="button"
-                        role="option"
-                        aria-selected={selected || active}
-                        onMouseEnter={() => setActiveRecipeIndex(index)}
-                        onClick={() => selectFavoriteRecipe(recipe)}
-                        className={cn(
-                          "flex min-h-11 w-full items-center justify-between border-b border-[#D6DDE6] px-3 text-left text-sm font-bold transition-colors last:border-b-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#E31837]",
-                          selected
-                            ? "bg-[#FFF5D8] text-[#101828]"
-                            : active
-                              ? "bg-[#F4F7FA] text-[#101828]"
-                              : "bg-white text-[#343944] hover:bg-[#F4F7FA]",
-                        )}
-                      >
-                        {recipe}
-                        {selected ? <Check className="ml-3 size-4 shrink-0 text-[#E31837]" aria-hidden /> : null}
-                      </button>
-                    );
-                    })}
+              <div className="mt-6 w-full space-y-3">
+                {newsletterOptions.map((option) => (
+                  <DelishNewsletterOption
+                    key={option.id}
+                    title={option.title}
+                    description={option.description}
+                    imageSrc={option.imageSrc}
+                    selected={selectedNewsletterSubscriptions.includes(option.id)}
+                    onToggle={() => toggleNewsletterSubscription(option.id)}
+                  />
+                ))}
+
+                <div className="flex items-center gap-4 rounded-[12px] bg-white px-5 py-4 text-left shadow-[0_12px_28px_rgba(16,24,40,0.06)]">
+                  <span className="relative flex size-14 shrink-0 items-center justify-center text-[#EF3B35]">
+                    <Shield className="size-12" weight="regular" aria-hidden />
+                    <Lock className="absolute size-5" weight="fill" aria-hidden />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-base font-black text-[#101828]">
+                      Your privacy matters
+                    </p>
+                    <p className="mt-1 text-sm leading-5 text-[#5A6472]">
+                      We will never share your email address. You can unsubscribe at any time with one click.
+                    </p>
                   </div>
-                </section>
+                </div>
               </div>
             ) : null}
           </div>
@@ -675,16 +667,19 @@ function DelishOnboardingModalContent({
 
         <footer className="bg-[#F8F9FB] px-5 pb-6 pt-1 sm:px-8">
           <div className="mx-auto grid max-w-[560px] grid-cols-2 items-center gap-3 sm:grid-cols-[132px_1fr_132px]">
-            <Button
-              type="button"
-              variant="outline"
-              className="min-h-12 w-full rounded-[4px] border-[#AEB7C3] bg-white text-base font-black text-[#6B7280] hover:bg-white hover:text-[#101828]"
-              onClick={goToPreviousStep}
-              disabled={step === 1}
-            >
-              <ChevronLeft className="mr-2 size-5" aria-hidden />
-              Back
-            </Button>
+            {step > 1 ? (
+              <Button
+                type="button"
+                variant="outline"
+                className="min-h-12 w-full rounded-[4px] border-[#EF3B35] bg-white text-base font-black text-[#EF3B35] hover:bg-[#FFF5F4] hover:text-[#D92731]"
+                onClick={goToPreviousStep}
+              >
+                <ChevronLeft className="mr-2 size-5" aria-hidden />
+                Back
+              </Button>
+            ) : (
+              <div className="hidden sm:block" aria-hidden="true" />
+            )}
 
             <button
               type="button"
@@ -702,7 +697,7 @@ function DelishOnboardingModalContent({
 
             <Button
               type="button"
-              className="min-h-12 w-full rounded-[4px] bg-[#242832] px-5 text-base font-black text-white hover:bg-[#E31837] sm:col-start-3"
+              className="min-h-12 w-full rounded-[4px] bg-[#EF3B35] px-5 text-base font-black text-white hover:bg-[#D92731] disabled:bg-[#9CA3AF] sm:col-start-3"
               disabled={!canContinue}
               onClick={() => {
                 if (step < 4) {
@@ -723,7 +718,7 @@ function DelishOnboardingModalContent({
                 skipFocusRestoreRef.current = true;
                 onSignIn();
               }}
-              className="mx-auto mt-4 flex min-h-10 items-center justify-center border-0 border-[#808080] text-sm font-medium text-black hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#808080]"
+              className="mx-auto mt-4 flex min-h-10 items-center justify-center border-0 border-[#808080] text-xs font-medium text-black hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#808080]"
             >
               Already have a profile? Sign in
             </button>
@@ -737,31 +732,168 @@ function DelishOnboardingModalContent({
   );
 }
 
-function StepBadge({ step }: { step: 1 | 2 | 3 | 4 }) {
-  const stepColors = ["#00589C", "#FFC835", "#FF563F", "#9BD31B"] as const;
+function DelishStepMarker({ step }: { step: 1 | 2 | 3 | 4 }) {
+  const markerIconSrc =
+    step === 4
+      ? "/images/delish-top-logo-step-4-logo-only-cropped.png"
+      : step === 3
+        ? "/images/delish-top-logo-step-3-logo-only-cropped.png"
+        : step === 2
+          ? "/images/delish-top-logo-step-2-logo-only-cropped.png"
+          : "/images/delish-top-logo-step-1-logo-only-cropped.png";
 
   return (
-    <div className="w-full max-w-[440px] pr-12 sm:pr-0" aria-label={`Step ${step} of 4`}>
-      <div className="flex items-center gap-2.5">
-        <div className="grid min-w-0 flex-1 grid-cols-4 gap-2" aria-hidden="true">
-          {stepColors.map((color, index) => {
-            const progressStep = index + 1;
-            const completed = progressStep <= step;
-
-            return (
-              <span
-                key={color}
-                className="h-1.5 rounded-full transition-colors motion-reduce:transition-none"
-                style={{ backgroundColor: completed ? color : "#D6E3EC" }}
-              />
-            );
-          })}
-        </div>
-        <span className="shrink-0 text-base font-medium text-[#425466]">
-          {step} of 4
+    <div
+      className="flex flex-col items-center"
+      aria-label={`Step ${step} of 4`}
+    >
+      <div className="relative h-[112px] w-[132px]" aria-hidden="true">
+        <img
+          src={markerIconSrc}
+          alt=""
+          className="absolute left-1/2 top-0 h-[92px] w-auto -translate-x-1/2 object-contain"
+        />
+        <span className="absolute left-1/2 top-[72px] flex size-8 -translate-x-1/2 items-center justify-center rounded-full bg-[#EF3B35] text-[0.7rem] font-black leading-none text-white shadow-[0_8px_18px_rgba(239,59,53,0.24)]">
+          {step}/4
         </span>
       </div>
+      <p className="-mt-1 text-sm font-semibold uppercase tracking-[0.18em] text-[#101828]">
+        Step {step}
+      </p>
     </div>
+  );
+}
+
+function FoodPlateSection({
+  title,
+  subtitle,
+  marker,
+  options,
+  selected,
+  onToggle,
+}: {
+  title: string;
+  subtitle: string;
+  marker: string;
+  options: readonly { label: string; icon: string }[];
+  selected: string[];
+  onToggle: (label: string) => void;
+}) {
+  return (
+    <section className="rounded-[12px] border border-[#FFB7B5] bg-white/95 p-4 shadow-[0_12px_26px_rgba(239,59,53,0.05)] sm:p-5">
+      <div className="flex items-start gap-3">
+        <span
+          className="mt-0.5 text-2xl font-black leading-none text-[#EF3B35]"
+          aria-hidden="true"
+        >
+          {marker}
+        </span>
+        <div className="min-w-0 text-left">
+          <p className="text-sm font-black uppercase tracking-[0.18em] text-[#EF3B35]">
+            {title}
+          </p>
+          <p className="mt-1 text-sm font-medium text-[#5A6472]">{subtitle}</p>
+        </div>
+      </div>
+      <div className="mt-4 grid gap-2">
+        {options.map(({ label, icon }) => {
+          const isSelected = selected.includes(label);
+          const limitReached = selected.length >= 5 && !isSelected;
+
+          return (
+            <button
+              key={label}
+              type="button"
+              disabled={limitReached}
+              aria-pressed={isSelected}
+              onClick={() => onToggle(label)}
+              className={cn(
+                "flex min-h-10 items-center gap-3 rounded-[9px] border bg-white px-3 py-2 text-left text-sm font-bold text-[#101828] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EF3B35] disabled:cursor-not-allowed disabled:opacity-45 motion-reduce:transition-none",
+                isSelected
+                  ? "border-[#EF3B35] bg-[#FFF5D8]"
+                  : "border-[#D6DDE6] hover:border-[#AEB7C3]",
+              )}
+            >
+              <span
+                className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#F4F7FA] text-lg"
+                aria-hidden="true"
+              >
+                {icon}
+              </span>
+              <span className="min-w-0 flex-1">{label}</span>
+              <span
+                className={cn(
+                  "flex size-6 shrink-0 items-center justify-center rounded-full border-2",
+                  isSelected
+                    ? "border-[#EF3B35] bg-[#EF3B35]"
+                    : "border-[#AEB7C3] bg-white",
+                )}
+                aria-hidden="true"
+              >
+                {isSelected ? <Check className="size-3.5 text-white" /> : null}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+      <p className="mt-3 text-sm font-semibold text-[#5A6472]" aria-live="polite">
+        {selected.length} of 5 selected
+      </p>
+    </section>
+  );
+}
+
+function DelishNewsletterOption({
+  title,
+  description,
+  imageSrc,
+  selected,
+  onToggle,
+}: {
+  title: string;
+  description: string;
+  imageSrc: string;
+  selected: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      aria-pressed={selected}
+      onClick={onToggle}
+      className={cn(
+        "flex w-full items-center gap-4 rounded-[12px] border bg-white px-5 py-4 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EF3B35] motion-reduce:transition-none",
+        selected
+          ? "border-[#EF3B35] bg-[#FFF5D8]"
+          : "border-[#D6DDE6] hover:border-[#AEB7C3]",
+      )}
+    >
+      <img
+        src={imageSrc}
+        alt=""
+        className="size-16 shrink-0 object-contain"
+        aria-hidden="true"
+      />
+      <span
+        className={cn(
+          "flex size-9 shrink-0 items-center justify-center rounded-[6px] border-2 transition-colors",
+          selected
+            ? "border-[#EF3B35] bg-[#EF3B35] text-white"
+            : "border-[#AEB7C3] bg-white text-transparent",
+        )}
+        aria-hidden="true"
+      >
+        <Check className="size-5" />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-xl font-black leading-tight text-[#101828]">
+          {title}
+        </span>
+        <span className="mt-1 block max-w-[38ch] text-base leading-6 text-[#5A6472]">
+          {description}
+        </span>
+      </span>
+    </button>
   );
 }
 
@@ -771,6 +903,8 @@ function DelishWelcomeStep({
   location,
   cookStyle,
   favoriteRecipe,
+  favoriteFoods,
+  foodsToExplore,
   headingRef,
   onBack,
   onClose,
@@ -780,6 +914,8 @@ function DelishWelcomeStep({
   location: string;
   cookStyle: string;
   favoriteRecipe: string;
+  favoriteFoods: string[];
+  foodsToExplore: string[];
   headingRef: React.RefObject<HTMLHeadingElement | null>;
   onBack: () => void;
   onClose: () => void;
@@ -801,20 +937,22 @@ function DelishWelcomeStep({
             className="mt-6 text-balance text-[2rem] font-black leading-[1.02] tracking-normal text-[#101828] outline-none sm:text-[2.5rem]"
             style={{ fontFamily: delishHeadlineFont }}
           >
-            Welcome to Delish, {name}!
+            Your Table is Ready
           </h2>
           <p
             id="delish-onboarding-description"
             className="mt-3 text-lg leading-7 text-[#5A6472] sm:text-xl"
           >
-            Enjoy your Delish member benefits.
+            Enjoy your personalized recipes, inspiration, and community.
           </p>
-          <div className="mt-7 w-full max-w-[520px]">
+          <div className="mt-7 w-full max-w-[620px]">
             <DelishMembershipCard
               name={cardName}
               location={location}
               cookStyle={cookStyle}
               favoriteRecipe={favoriteRecipe}
+              favoriteFoods={favoriteFoods}
+              foodsToExplore={foodsToExplore}
             />
           </div>
         </div>
@@ -835,7 +973,8 @@ function DelishWelcomeStep({
             className="min-h-12 rounded-[4px] bg-[#242832] px-5 text-base font-black text-white hover:bg-[#E31837]"
             onClick={onClose}
           >
-            Close
+            Let’s Go!
+            <ChevronRight className="ml-2 size-5" aria-hidden />
           </Button>
         </div>
       </footer>
@@ -886,19 +1025,41 @@ function DelishMembershipCard({
   location,
   cookStyle,
   favoriteRecipe,
+  favoriteFoods,
+  foodsToExplore,
 }: {
   name: string;
   location: string;
   cookStyle: string;
   favoriteRecipe: string;
+  favoriteFoods: string[];
+  foodsToExplore: string[];
 }) {
+  const memberSince = React.useMemo(
+    () =>
+      new Intl.DateTimeFormat("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      }).format(new Date()),
+    [],
+  );
+  const favoriteFoodItems = favoriteFoods.length > 0
+    ? favoriteFoods
+    : favoriteRecipe
+      ? [favoriteRecipe]
+      : ["Recipes"];
+  const exploreItems = foodsToExplore.length > 0
+    ? foodsToExplore
+    : ["New ideas"];
+
   return (
-    <section className="relative min-h-[300px] overflow-hidden rounded-[16px] bg-[#101010] p-6 text-white shadow-[0_14px_32px_rgba(0,0,0,0.28)] sm:min-h-[330px] sm:p-7">
-      <div className="absolute -right-14 -top-14 size-44 rounded-full bg-[#E31837]/45" aria-hidden />
-      <div className="absolute -bottom-20 left-8 size-52 rounded-full bg-[#FFC835]/20" aria-hidden />
+    <section className="relative overflow-hidden rounded-[22px] bg-[#081017] p-6 text-white shadow-[0_18px_40px_rgba(0,0,0,0.28)] sm:p-8">
+      <div className="absolute -right-12 -top-14 size-44 rounded-full bg-[#E31837]" aria-hidden />
+      <div className="absolute -bottom-20 -left-12 size-56 rounded-full bg-[#D7A726]/85" aria-hidden />
       <div className="relative z-10 flex h-full flex-col">
         <div className="flex items-center gap-4">
-          <div className="flex size-16 shrink-0 items-center justify-center rounded-[12px] bg-white text-[2.8rem] font-black leading-none text-[#101010]">
+          <div className="flex size-16 shrink-0 items-center justify-center rounded-[10px] bg-white text-[2.8rem] font-black leading-none text-[#E31837]">
             d
           </div>
           <div className="min-w-0 text-left">
@@ -906,35 +1067,109 @@ function DelishMembershipCard({
               Delish
             </p>
             <h3
-              className="mt-1 text-3xl font-black leading-none"
+              className="mt-1 text-3xl font-black leading-none sm:text-[2rem]"
               style={{ fontFamily: delishHeadlineFont }}
             >
               Membership Card
             </h3>
           </div>
         </div>
-        <div className="mt-12 grid gap-5 text-left sm:mt-20 sm:grid-cols-2">
-          <CardDetail label="Name" value={name} />
-          <CardDetail label="Home kitchen" value={location} />
-          <CardDetail label="Cook style" value={cookStyle} />
-          <CardDetail label="Favorite recipe" value={favoriteRecipe} />
+
+        <div className="mt-9 grid gap-6 border-b border-t border-white/14 py-6 text-left sm:grid-cols-2 sm:gap-8">
+          <CardProfileBlock
+            icon={<User className="size-9 text-[#EF3B35]" weight="regular" aria-hidden />}
+            label="Member name"
+            value={name}
+          />
+          <CardProfileBlock
+            icon={<CheckCircle2 className="size-9 text-[#EF3B35]" weight="regular" aria-hidden />}
+            label="You selected"
+            value={cookStyle}
+          />
+        </div>
+
+        <div className="grid gap-6 border-b border-white/14 py-6 text-left sm:grid-cols-2 sm:gap-8">
+          <CardChipBlock
+            icon={<Heart className="size-9 text-[#EF3B35]" weight="regular" aria-hidden />}
+            label="Favorite foods"
+            items={favoriteFoodItems}
+          />
+          <CardChipBlock
+            icon={<Sparkles className="size-9 text-[#EF3B35]" weight="regular" aria-hidden />}
+            label="Foods to explore"
+            items={exploreItems}
+          />
+        </div>
+
+        <div className="grid gap-6 pt-6 text-left sm:grid-cols-2 sm:gap-8">
+          <CardProfileBlock
+            icon={<CalendarBlank className="size-9 text-[#EF3B35]" weight="regular" aria-hidden />}
+            label="Member since"
+            value={memberSince}
+          />
+          <div className="flex gap-4">
+            <Heart className="mt-1 size-8 shrink-0 text-[#EF3B35]" weight="regular" aria-hidden />
+            <p className="text-base font-normal leading-6 text-white">
+              Thanks for joining our community. We can’t wait to cook with you.
+            </p>
+          </div>
         </div>
         <BrandLogo
           slug="delish"
           decorative
           color="rgba(255, 255, 255, 0.14)"
-          className="pointer-events-none absolute bottom-0 right-0 w-[220px] translate-x-8 translate-y-2 [&_svg]:h-auto [&_svg]:w-full"
+          className="pointer-events-none absolute bottom-8 right-0 w-[220px] translate-x-10 translate-y-2 [&_svg]:h-auto [&_svg]:w-full"
         />
       </div>
     </section>
   );
 }
 
-function CardDetail({ label, value }: { label: string; value: string }) {
+function CardProfileBlock({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}) {
   return (
-    <div className="min-w-0 text-left">
-      <p className="text-xs font-bold text-white/55">{label}</p>
-      <p className="mt-1 break-words text-base font-normal leading-tight text-white">{value}</p>
+    <div className="flex min-w-0 gap-4">
+      <span className="shrink-0">{icon}</span>
+      <div className="min-w-0">
+        <p className="text-xs font-black uppercase tracking-[0.08em] text-white/55">{label}</p>
+        <p className="mt-1 break-words text-xl font-normal leading-tight text-white">{value}</p>
+      </div>
+    </div>
+  );
+}
+
+function CardChipBlock({
+  icon,
+  label,
+  items,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  items: string[];
+}) {
+  return (
+    <div className="flex min-w-0 gap-4">
+      <span className="shrink-0">{icon}</span>
+      <div className="min-w-0">
+        <p className="text-xs font-black uppercase tracking-[0.08em] text-white/55">{label}</p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {items.slice(0, 5).map((item) => (
+            <span
+              key={item}
+              className="rounded-[8px] bg-white/12 px-3 py-2 text-sm font-medium leading-none text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+            >
+              {item}
+            </span>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

@@ -4712,8 +4712,9 @@ function LifestyleRiverHomePage({
     const selectedBrand = effectiveBrandFilters.length === 1
       ? sidebarBrands.find((brand) => brand.name === effectiveBrandFilters[0]) ?? null
       : null;
+    if (initialBrandSlug && !selectedBrand) return;
     onSelectedBrandChange?.(selectedBrand ? { name: selectedBrand.name, slug: selectedBrand.slug } : null);
-  }, [effectiveBrandFilters, onSelectedBrandChange, sidebarBrands, usingVideoTabFeed]);
+  }, [effectiveBrandFilters, initialBrandSlug, onSelectedBrandChange, sidebarBrands, usingVideoTabFeed]);
 
   React.useEffect(() => {
     if (!onboardingResult || appliedOnboardingResultRef.current === onboardingResult) return;
@@ -6082,6 +6083,7 @@ export function HomePageTemplate({
   const isElleOnboardingRoute = selectedBrand?.slug === "elle";
   const canUseReaderAccountDialogs = isDestinationRiver || isDelishOnboardingRoute || isMotorTrendOnboardingRoute || isGoodHousekeepingOnboardingRoute || isElleOnboardingRoute;
   const destinationMode = getDestinationMode(selectedBrand?.slug ?? initialBrandSlug ?? brand.slug);
+  const delishBrandRoute = getHearstBrandRoute("delish");
   const openPersonalization = React.useCallback(() => {
     if (account) {
       setProfileOpen(true);
@@ -6868,8 +6870,14 @@ export function HomePageTemplate({
           open={delishOnboardingOpen}
           onClose={() => setDelishOnboardingOpen(false)}
           onComplete={(result) => {
+            setActiveLifestyleFilter("For You");
+            setActiveBrandFilters(["Delish"]);
+            setSelectedBrand({ name: "Delish", slug: "delish" });
             setOnboardingResult(result);
             setDelishOnboardingOpen(false);
+            if (window.location.pathname !== delishBrandRoute) {
+              router.replace(delishBrandRoute, { scroll: false });
+            }
           }}
           onCreateProfile={(result) => {
             setOnboardingResult(result);
