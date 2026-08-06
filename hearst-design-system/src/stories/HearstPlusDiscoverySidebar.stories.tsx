@@ -159,10 +159,6 @@ function DiscoverySidebarExample({
             activeAutosOemFilters={activeMakes}
             collectionLabels={["Dinner ideas", "Weekend projects", "Sleep better"]}
             onToggleBrandFilter={toggleBrand}
-            onClearBrandFilters={() => {
-              setActiveBrands([]);
-              setLastAction("Cleared brand filter");
-            }}
             onToggleAutosOemFilter={mode === "autos" ? toggleMake : undefined}
             onClearAutosOemFilters={
               mode === "autos"

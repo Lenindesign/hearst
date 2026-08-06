@@ -173,6 +173,12 @@ import {
 import {
   MotorTrendOnboardingModal,
 } from "./hearst-plus/motortrend-onboarding-modal";
+import {
+  GoodHousekeepingOnboardingModal,
+} from "./hearst-plus/good-housekeeping-onboarding-modal";
+import {
+  ElleOnboardingModal,
+} from "./hearst-plus/elle-onboarding-modal";
 import { StakeholderPersonalizationConsole } from "./hearst-plus/stakeholder-personalization-console";
 import { hearstDestinationSections, UtilityBar } from "./hearst-plus/utility-bar";
 import { useModalIsolation } from "./ui/use-modal-isolation";
@@ -423,7 +429,14 @@ export function MainNav({
     : isDestinationRiver
       ? destinationConfig.filters
       : content.navLinks);
-  const navLinks = includeVideos ? insertVideosFilter(baseNavLinks) : baseNavLinks;
+  const uncappedNavLinks = includeVideos ? insertVideosFilter(baseNavLinks) : baseNavLinks;
+  const navLinks = selectedBrand?.slug === "good-housekeeping" && uncappedNavLinks.length > 7
+    ? (() => {
+        const visibleLinks = uncappedNavLinks.slice(0, 7);
+        if (!activeFilter || visibleLinks.includes(activeFilter)) return visibleLinks;
+        return [...visibleLinks.slice(0, 6), activeFilter];
+      })()
+    : uncappedNavLinks;
   const normalizedSearchQuery = normalizeStorySearchText(deferredSearchQuery);
   const searchResults = React.useMemo(() => {
     return searchLifestyleStories(searchStories, deferredSearchQuery);
@@ -656,6 +669,9 @@ export function MainNav({
       : undefined;
 
   const mastheadLogoBaseClasses = "mx-auto w-auto items-center justify-center leading-none [&_svg]:block [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full motion-reduce:[&_svg]:transition-none";
+  const goodHousekeepingMastheadScaleClasses = mastheadSlug === "good-housekeeping"
+    ? "[&_svg]:scale-[1.2] [&_svg]:origin-center"
+    : "";
   const renderMastheadLogo = (compact: boolean) => logo ? usesCompactMobileDestinationMark ? (
     <>
       <BrandLogo
@@ -672,6 +688,7 @@ export function MainNav({
         color={logoColor}
         className={cn(
           mastheadLogoBaseClasses,
+          goodHousekeepingMastheadScaleClasses,
           "hidden sm:flex",
           compact ? mastheadHearstGeometry.compact : mastheadHearstGeometry.regular
         )}
@@ -683,6 +700,7 @@ export function MainNav({
       color={logoColor}
       className={cn(
         mastheadLogoBaseClasses,
+        goodHousekeepingMastheadScaleClasses,
         "flex",
         compact ? mastheadHearstGeometry.compact : mastheadHearstGeometry.regular
       )}
@@ -5069,7 +5087,6 @@ function LifestyleRiverHomePage({
             activeAutosOemFilters={activeAutosOemFilters}
             collectionLabels={config.collectionLabels}
             onToggleBrandFilter={toggleBrandFilter}
-            onClearBrandFilters={clearBrandFilters}
             onToggleAutosOemFilter={showAutosOemFilter ? toggleAutosOemFilter : undefined}
             onClearAutosOemFilters={showAutosOemFilter ? clearAutosOemFilters : undefined}
             onFollowTopic={followTopic}
@@ -5368,7 +5385,6 @@ function LifestyleRiverHomePage({
           activeAutosOemFilters={activeAutosOemFilters}
           collectionLabels={config.collectionLabels}
           onToggleBrandFilter={toggleBrandFilter}
-          onClearBrandFilters={clearBrandFilters}
           onToggleAutosOemFilter={showAutosOemFilter ? toggleAutosOemFilter : undefined}
           onClearAutosOemFilters={showAutosOemFilter ? clearAutosOemFilters : undefined}
           onFollowTopic={followTopic}
@@ -6013,6 +6029,8 @@ export function HomePageTemplate({
   const [onboardingOpen, setOnboardingOpen] = React.useState(false);
   const [delishOnboardingOpen, setDelishOnboardingOpen] = React.useState(false);
   const [motorTrendOnboardingOpen, setMotorTrendOnboardingOpen] = React.useState(false);
+  const [goodHousekeepingOnboardingOpen, setGoodHousekeepingOnboardingOpen] = React.useState(false);
+  const [elleOnboardingOpen, setElleOnboardingOpen] = React.useState(false);
   const [onboardingResult, setOnboardingResult] = React.useState<HearstOnboardingResult | null>(null);
   const [authDialogOpen, setAuthDialogOpen] = React.useState(false);
   const [authDialogMode, setAuthDialogMode] = React.useState<"create" | "signIn">("create");
@@ -6060,7 +6078,9 @@ export function HomePageTemplate({
   const isDestinationRiver = brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
   const isDelishOnboardingRoute = selectedBrand?.slug === "delish";
   const isMotorTrendOnboardingRoute = selectedBrand?.slug === "motortrend";
-  const canUseReaderAccountDialogs = isDestinationRiver || isDelishOnboardingRoute || isMotorTrendOnboardingRoute;
+  const isGoodHousekeepingOnboardingRoute = selectedBrand?.slug === "good-housekeeping";
+  const isElleOnboardingRoute = selectedBrand?.slug === "elle";
+  const canUseReaderAccountDialogs = isDestinationRiver || isDelishOnboardingRoute || isMotorTrendOnboardingRoute || isGoodHousekeepingOnboardingRoute || isElleOnboardingRoute;
   const destinationMode = getDestinationMode(selectedBrand?.slug ?? initialBrandSlug ?? brand.slug);
   const openPersonalization = React.useCallback(() => {
     if (account) {
@@ -6077,8 +6097,18 @@ export function HomePageTemplate({
       setMotorTrendOnboardingOpen(true);
       return;
     }
+    if (isGoodHousekeepingOnboardingRoute) {
+      setAuthDialogOpen(false);
+      setGoodHousekeepingOnboardingOpen(true);
+      return;
+    }
+    if (isElleOnboardingRoute) {
+      setAuthDialogOpen(false);
+      setElleOnboardingOpen(true);
+      return;
+    }
     setOnboardingOpen(true);
-  }, [account, isDelishOnboardingRoute, isMotorTrendOnboardingRoute]);
+  }, [account, isDelishOnboardingRoute, isElleOnboardingRoute, isGoodHousekeepingOnboardingRoute, isMotorTrendOnboardingRoute]);
   React.useEffect(() => {
     if (selectedBrand) return;
 
@@ -6838,10 +6868,8 @@ export function HomePageTemplate({
           open={delishOnboardingOpen}
           onClose={() => setDelishOnboardingOpen(false)}
           onComplete={(result) => {
-            setActiveLifestyleFilter("For You");
             setOnboardingResult(result);
             setDelishOnboardingOpen(false);
-            anchorDestinationContent();
           }}
           onCreateProfile={(result) => {
             setOnboardingResult(result);
@@ -6875,6 +6903,54 @@ export function HomePageTemplate({
           }}
           onSignIn={() => {
             setMotorTrendOnboardingOpen(false);
+            setAuthDialogMode("signIn");
+            setAuthDialogOpen(true);
+          }}
+        />
+      ) : null}
+
+      {isGoodHousekeepingOnboardingRoute && goodHousekeepingOnboardingOpen ? (
+        <GoodHousekeepingOnboardingModal
+          open={goodHousekeepingOnboardingOpen}
+          onClose={() => setGoodHousekeepingOnboardingOpen(false)}
+          onComplete={(result) => {
+            setActiveLifestyleFilter("For You");
+            setOnboardingResult(result);
+            setGoodHousekeepingOnboardingOpen(false);
+            anchorDestinationContent();
+          }}
+          onCreateProfile={(result) => {
+            setOnboardingResult(result);
+            setGoodHousekeepingOnboardingOpen(false);
+            setAuthDialogMode("create");
+            setAuthDialogOpen(true);
+          }}
+          onSignIn={() => {
+            setGoodHousekeepingOnboardingOpen(false);
+            setAuthDialogMode("signIn");
+            setAuthDialogOpen(true);
+          }}
+        />
+      ) : null}
+
+      {isElleOnboardingRoute && elleOnboardingOpen ? (
+        <ElleOnboardingModal
+          open={elleOnboardingOpen}
+          onClose={() => setElleOnboardingOpen(false)}
+          onComplete={(result) => {
+            setActiveLifestyleFilter("For You");
+            setOnboardingResult(result);
+            setElleOnboardingOpen(false);
+            anchorDestinationContent();
+          }}
+          onCreateProfile={(result) => {
+            setOnboardingResult(result);
+            setElleOnboardingOpen(false);
+            setAuthDialogMode("create");
+            setAuthDialogOpen(true);
+          }}
+          onSignIn={() => {
+            setElleOnboardingOpen(false);
             setAuthDialogMode("signIn");
             setAuthDialogOpen(true);
           }}

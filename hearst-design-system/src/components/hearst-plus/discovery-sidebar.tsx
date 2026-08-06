@@ -32,7 +32,6 @@ export interface LifestyleDiscoverySidebarProps {
   activeAutosOemFilters?: string[];
   collectionLabels: string[];
   onToggleBrandFilter: (brandName: string) => void;
-  onClearBrandFilters: () => void;
   onToggleAutosOemFilter?: (makeName: string) => void;
   onClearAutosOemFilters?: () => void;
   onFollowTopic: (topic: string) => void;
@@ -144,7 +143,6 @@ export function LifestyleDiscoverySidebar({
   activeAutosOemFilters = [],
   collectionLabels,
   onToggleBrandFilter,
-  onClearBrandFilters,
   onToggleAutosOemFilter,
   onClearAutosOemFilters,
   onFollowTopic,
@@ -203,20 +201,7 @@ export function LifestyleDiscoverySidebar({
     <DiscoverySidebarCard
       title={brandFilterTitle}
       summary={brandSummary}
-      mobileActionLabel={activeBrandFilters.length > 0 ? "Clear" : undefined}
-      onMobileAction={activeBrandFilters.length > 0 ? onClearBrandFilters : undefined}
     >
-      {activeBrandFilters.length > 0 ? (
-        <div className="-mt-1 flex items-center justify-end">
-          <button
-            type="button"
-            onClick={onClearBrandFilters}
-            className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-muted-foreground hover:text-primary"
-          >
-            Clear
-          </button>
-        </div>
-      ) : null}
       <div className="mt-4 space-y-3">
         {brands.map((brand) => {
           const active = activeBrandFilters.includes(brand.name);

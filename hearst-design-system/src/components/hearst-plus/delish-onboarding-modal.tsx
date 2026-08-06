@@ -425,13 +425,13 @@ function DelishOnboardingModalContent({
         aria-modal="true"
         aria-labelledby="delish-onboarding-title"
         aria-describedby="delish-onboarding-description"
-        className="relative z-10 flex max-h-[calc(100dvh-1.5rem)] w-full max-w-[820px] flex-col overflow-hidden rounded-[12px] bg-[#F8F9FB] text-[#121722] shadow-2xl sm:max-h-[calc(100dvh-3rem)]"
+        className="relative z-10 flex max-h-[calc(100dvh-1.5rem)] w-full max-w-[680px] flex-col overflow-hidden rounded-[12px] bg-[#F8F9FB] text-[#121722] shadow-2xl sm:max-h-[calc(100dvh-3rem)]"
       >
         <Button
           data-modal-close
           variant="outline"
           size="icon-lg"
-          className="absolute right-4 top-4 z-20 size-12 rounded-full border-[#AEB7C3] bg-white text-[#1F222A] hover:bg-[#FFF5D8] sm:right-6 sm:top-6"
+          className="absolute right-4 top-4 z-20 size-10 rounded-full border-[#AEB7C3] bg-white text-[#1F222A] hover:bg-[#FFF5D8] sm:right-5 sm:top-5"
           onClick={onClose}
           aria-label="Close Delish onboarding"
         >
@@ -451,45 +451,45 @@ function DelishOnboardingModalContent({
           />
         ) : (
           <>
-        <div className="min-h-0 flex-1 overflow-y-auto px-5 py-8 sm:px-10 sm:py-12">
-          <div className="mx-auto flex max-w-[660px] flex-col items-center">
+        <div className="min-h-0 flex-1 overflow-y-auto px-5 py-6 sm:px-8 sm:py-8">
+          <div className="mx-auto flex max-w-[560px] flex-col items-center">
             <StepBadge step={step} />
 
-            <div className="mt-6 text-center">
+            <div className="mt-4 text-center">
               <h2
                 ref={headingRef}
                 id="delish-onboarding-title"
                 tabIndex={-1}
-                className="text-balance text-[2.4rem] font-black leading-[0.98] tracking-normal text-[#101828] outline-none sm:text-[2.625rem]"
+                className="text-balance text-[2rem] font-black leading-[0.98] tracking-normal text-[#004685] outline-none sm:text-[2.25rem]"
                 style={{ fontFamily: delishHeadlineFont }}
               >
                 {heading}
               </h2>
               <p
                 id="delish-onboarding-description"
-                className="mx-auto mt-4 max-w-[42ch] text-lg leading-7 text-[#5A6472] sm:text-xl"
+                className="mx-auto mt-3 max-w-[42ch] text-base leading-6 text-[#5A6472] sm:text-lg"
               >
                 {description}
               </p>
             </div>
 
             {step === 1 ? (
-              <div className="mt-8 w-full rounded-[12px] bg-white px-5 py-6 shadow-[0_22px_55px_rgba(16,24,40,0.08)] sm:px-7">
-                <label className="block text-xl font-medium text-[#343944]">
+              <div className="mt-6 w-full rounded-[12px] bg-white px-4 py-5 shadow-[0_16px_36px_rgba(16,24,40,0.08)] sm:px-5">
+                <label className="block text-base font-medium text-[#343944]">
                   What is your name?
                   <input
-                    className="mt-3 h-16 w-full rounded-[10px] border border-[#AEB7C3] bg-white px-5 text-2xl font-medium text-[#101828] outline-none transition-colors placeholder:text-[#AEB7C3] focus:border-[#E31837] focus:ring-4 focus:ring-[#E31837]/10"
+                    className="mt-2 h-12 w-full rounded-[10px] border border-[#AEB7C3] bg-white px-4 text-base font-medium text-[#101828] outline-none transition-colors placeholder:text-[#AEB7C3] focus:border-[#E31837] focus:ring-4 focus:ring-[#E31837]/10"
                     placeholder="Name"
                     value={readerName}
                     onChange={(event) => setReaderName(event.target.value)}
                     autoComplete="given-name"
                   />
                 </label>
-                <label className="mt-6 block text-xl font-medium text-[#343944]">
+                <label className="mt-4 block text-base font-medium text-[#343944]">
                   Where are you located? <span className="text-[#5A6472]">(Optional)</span>
-                  <span className="relative mt-3 block">
+                  <span className="relative mt-2 block">
                     <input
-                      className="h-16 w-full rounded-[10px] border border-[#AEB7C3] bg-white px-5 pr-14 text-2xl font-medium text-[#101828] outline-none transition-colors placeholder:text-[#AEB7C3] focus:border-[#E31837] focus:ring-4 focus:ring-[#E31837]/10"
+                      className="h-12 w-full rounded-[10px] border border-[#AEB7C3] bg-white px-4 pr-12 text-base font-medium text-[#101828] outline-none transition-colors placeholder:text-[#AEB7C3] focus:border-[#E31837] focus:ring-4 focus:ring-[#E31837]/10"
                       placeholder="Current Location"
                       value={readerLocation}
                       onChange={(event) => {
@@ -500,7 +500,7 @@ function DelishOnboardingModalContent({
                     />
                     <button
                       type="button"
-                      className="absolute right-3 top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-full text-[#242832] transition-colors hover:bg-[#FFF5D8] active:bg-[#FFC835]/35 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E31837] disabled:cursor-wait disabled:opacity-60"
+                      className="absolute right-3 top-1/2 flex size-9 -translate-y-1/2 items-center justify-center rounded-full text-[#242832] transition-colors hover:bg-[#FFF5D8] active:bg-[#FFC835]/35 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E31837] disabled:cursor-wait disabled:opacity-60"
                       onClick={detectLocation}
                       disabled={isDetectingLocation}
                       aria-label={isDetectingLocation ? "Detecting location" : "Auto-detect location"}
@@ -509,7 +509,7 @@ function DelishOnboardingModalContent({
                     >
                       <MapPin
                         className={cn(
-                          "size-8",
+                          "size-6",
                           isDetectingLocation && "animate-pulse text-[#E31837]",
                         )}
                         aria-hidden
@@ -526,7 +526,7 @@ function DelishOnboardingModalContent({
             ) : null}
 
             {step === 2 ? (
-              <div className="mt-8 grid w-full gap-3 sm:grid-cols-3">
+              <div className="mt-6 grid w-full gap-3 sm:grid-cols-3">
                 {cookStyles.map(({ id, title, description: optionDescription, Icon }) => {
                   const selected = cookStyle === id;
                   return (
@@ -536,20 +536,20 @@ function DelishOnboardingModalContent({
                       aria-pressed={selected}
                       onClick={() => setCookStyle(id)}
                       className={cn(
-                        "group flex min-h-[92px] flex-row items-center justify-start gap-4 rounded-[12px] border p-4 text-left shadow-[0_8px_16px_rgba(16,24,40,0.05)] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E31837] motion-reduce:transition-none sm:min-h-[174px] sm:flex-col sm:justify-center sm:gap-0 sm:p-5 sm:text-center",
+                        "group flex min-h-[84px] flex-row items-center justify-start gap-3 rounded-[12px] border p-4 text-left shadow-[0_8px_16px_rgba(16,24,40,0.05)] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E31837] motion-reduce:transition-none sm:min-h-[132px] sm:flex-col sm:justify-center sm:gap-0 sm:p-4 sm:text-center",
                         selected
                           ? "border-[#E31837] bg-[#E31837] text-white"
                           : "border-[#D6DDE6] bg-white text-[#101828] hover:bg-[#FFF5D8]",
                       )}
                     >
                       <span className={cn(
-                        "flex size-11 shrink-0 items-center justify-center rounded-full sm:size-12",
+                        "flex size-10 shrink-0 items-center justify-center rounded-full",
                         selected ? "bg-white text-[#E31837]" : "bg-[#E5EAF0] text-[#343944]",
                       )}>
-                        <Icon className="size-6" aria-hidden />
+                        <Icon className="size-5" aria-hidden />
                       </span>
                       <span className="min-w-0 sm:mt-4">
-                        <span className="block text-lg font-black">{title}</span>
+                        <span className="block text-base font-bold">{title}</span>
                         <span className={cn(
                           "mt-1 block text-sm leading-5",
                           selected ? "text-white/85" : "text-[#5A6472]",
@@ -564,8 +564,8 @@ function DelishOnboardingModalContent({
             ) : null}
 
             {step === 3 ? (
-              <div className="mt-8 grid w-full gap-6 lg:grid-cols-[1fr_0.85fr]">
-                <section className="rounded-[12px] bg-white p-5 shadow-[0_22px_55px_rgba(16,24,40,0.08)] sm:p-6">
+              <div className="mt-6 grid w-full gap-4 lg:grid-cols-[1fr_0.85fr]">
+                <section className="rounded-[12px] bg-white p-4 shadow-[0_16px_36px_rgba(16,24,40,0.08)] sm:p-5">
                   <p className="text-sm font-black uppercase tracking-[0.14em] text-[#E31837]">
                     Recipes
                   </p>
@@ -589,7 +589,7 @@ function DelishOnboardingModalContent({
                     {selectedRecipes.length} of 3 selected
                   </p>
                 </section>
-                <section className="rounded-[12px] bg-white p-5 shadow-[0_22px_55px_rgba(16,24,40,0.08)] sm:p-6">
+                <section className="rounded-[12px] bg-white p-4 shadow-[0_16px_36px_rgba(16,24,40,0.08)] sm:p-5">
                   <p className="text-sm font-black uppercase tracking-[0.14em] text-[#E31837]">
                     Preferences
                   </p>
@@ -609,9 +609,9 @@ function DelishOnboardingModalContent({
             ) : null}
 
             {step === 4 ? (
-              <div className="mt-8 w-full max-w-[520px]">
-                <section className="rounded-[12px] bg-white p-5 shadow-[0_22px_55px_rgba(16,24,40,0.08)] sm:p-6">
-                  <label className="block text-lg font-black text-[#101828]">
+              <div className="mt-6 w-full max-w-[480px]">
+                <section className="rounded-[12px] bg-white p-4 shadow-[0_16px_36px_rgba(16,24,40,0.08)] sm:p-5">
+                  <label className="block text-base font-black text-[#101828]">
                     Search for a recipe
                     <span className="relative mt-3 block">
                       <input
@@ -620,7 +620,7 @@ function DelishOnboardingModalContent({
                         aria-expanded="true"
                         aria-controls="delish-popular-recipes"
                         aria-activedescendant={`delish-popular-recipe-${activeRecipeIndex}`}
-                        className="h-14 w-full rounded-[10px] border border-[#AEB7C3] bg-white px-4 pr-12 text-lg font-semibold text-[#101828] outline-none transition-colors placeholder:text-[#AEB7C3] focus:border-[#E31837] focus:ring-4 focus:ring-[#E31837]/10"
+                        className="h-12 w-full rounded-[10px] border border-[#AEB7C3] bg-white px-4 pr-12 text-base font-semibold text-[#101828] outline-none transition-colors placeholder:text-[#AEB7C3] focus:border-[#E31837] focus:ring-4 focus:ring-[#E31837]/10"
                         placeholder="Start typing to search..."
                         value={favoriteRecipe}
                         onChange={(event) => {
@@ -638,7 +638,7 @@ function DelishOnboardingModalContent({
                   <div
                     id="delish-popular-recipes"
                     role="listbox"
-                    className="mt-3 max-h-[230px] overflow-y-auto rounded-[10px] border border-[#D6DDE6] bg-white"
+                    className="mt-3 max-h-[190px] overflow-y-auto rounded-[10px] border border-[#D6DDE6] bg-white"
                   >
                     {recipeAutocompleteOptions.map((recipe, index) => {
                       const selected = favoriteRecipe === recipe;
@@ -673,12 +673,12 @@ function DelishOnboardingModalContent({
           </div>
         </div>
 
-        <footer className="bg-[#F8F9FB] px-5 pb-8 pt-2 sm:px-10">
-          <div className="mx-auto grid max-w-[660px] grid-cols-2 items-center gap-3 sm:grid-cols-[150px_1fr_150px]">
+        <footer className="bg-[#F8F9FB] px-5 pb-6 pt-1 sm:px-8">
+          <div className="mx-auto grid max-w-[560px] grid-cols-2 items-center gap-3 sm:grid-cols-[132px_1fr_132px]">
             <Button
               type="button"
               variant="outline"
-              className="min-h-14 w-full border-[#AEB7C3] bg-white text-lg font-black text-[#6B7280] hover:bg-white hover:text-[#101828]"
+              className="min-h-12 w-full rounded-[4px] border-[#AEB7C3] bg-white text-base font-black text-[#6B7280] hover:bg-white hover:text-[#101828]"
               onClick={goToPreviousStep}
               disabled={step === 1}
             >
@@ -688,7 +688,7 @@ function DelishOnboardingModalContent({
 
             <button
               type="button"
-              className="col-span-2 row-start-2 min-h-11 justify-self-center px-2 text-base font-bold text-[#6B7280] underline underline-offset-2 hover:text-[#101828] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E31837] sm:col-span-1 sm:col-start-2 sm:row-start-1"
+              className="col-span-2 row-start-2 min-h-10 justify-self-center px-2 text-sm font-bold text-[#6B7280] underline underline-offset-2 hover:text-[#101828] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E31837] sm:col-span-1 sm:col-start-2 sm:row-start-1"
               onClick={() => {
                 if (step < 4) {
                   goToNextStep();
@@ -702,7 +702,7 @@ function DelishOnboardingModalContent({
 
             <Button
               type="button"
-              className="min-h-14 w-full bg-[#242832] px-6 text-lg font-black text-white hover:bg-[#E31837] sm:col-start-3"
+              className="min-h-12 w-full rounded-[4px] bg-[#242832] px-5 text-base font-black text-white hover:bg-[#E31837] sm:col-start-3"
               disabled={!canContinue}
               onClick={() => {
                 if (step < 4) {
@@ -741,9 +741,9 @@ function StepBadge({ step }: { step: 1 | 2 | 3 | 4 }) {
   const stepColors = ["#00589C", "#FFC835", "#FF563F", "#9BD31B"] as const;
 
   return (
-    <div className="w-full pr-14 sm:pr-0" aria-label={`Step ${step} of 4`}>
-      <div className="flex items-center gap-4">
-        <div className="grid min-w-0 flex-1 grid-cols-4 gap-3" aria-hidden="true">
+    <div className="w-full max-w-[440px] pr-12 sm:pr-0" aria-label={`Step ${step} of 4`}>
+      <div className="flex items-center gap-2.5">
+        <div className="grid min-w-0 flex-1 grid-cols-4 gap-2" aria-hidden="true">
           {stepColors.map((color, index) => {
             const progressStep = index + 1;
             const completed = progressStep <= step;
@@ -751,13 +751,13 @@ function StepBadge({ step }: { step: 1 | 2 | 3 | 4 }) {
             return (
               <span
                 key={color}
-                className="h-3 rounded-full transition-colors motion-reduce:transition-none"
+                className="h-1.5 rounded-full transition-colors motion-reduce:transition-none"
                 style={{ backgroundColor: completed ? color : "#D6E3EC" }}
               />
             );
           })}
         </div>
-        <span className="shrink-0 text-sm font-medium text-[#425466]">
+        <span className="shrink-0 text-base font-medium text-[#425466]">
           {step} of 4
         </span>
       </div>
@@ -786,30 +786,30 @@ function DelishWelcomeStep({
 }) {
   return (
     <>
-      <div className="min-h-0 flex-1 overflow-y-auto px-5 py-10 sm:px-10 sm:py-12">
-        <div className="mx-auto flex max-w-[720px] flex-col items-center text-center">
+      <div className="min-h-0 flex-1 overflow-y-auto px-5 py-8 sm:px-8 sm:py-9">
+        <div className="mx-auto flex max-w-[620px] flex-col items-center text-center">
           <BrandLogo
             slug="delish"
             color="#E31837"
             decorative
-            className="w-[190px] [&_svg]:h-auto [&_svg]:w-full sm:w-[240px]"
+            className="w-[170px] [&_svg]:h-auto [&_svg]:w-full sm:w-[210px]"
           />
           <h2
             ref={headingRef}
             id="delish-onboarding-title"
             tabIndex={-1}
-            className="mt-8 text-balance text-[2.4rem] font-black leading-[1.02] tracking-normal text-[#101828] outline-none sm:text-[3.2rem]"
+            className="mt-6 text-balance text-[2rem] font-black leading-[1.02] tracking-normal text-[#101828] outline-none sm:text-[2.5rem]"
             style={{ fontFamily: delishHeadlineFont }}
           >
             Welcome to Delish, {name}!
           </h2>
           <p
             id="delish-onboarding-description"
-            className="mt-4 text-xl leading-7 text-[#5A6472] sm:text-2xl"
+            className="mt-3 text-lg leading-7 text-[#5A6472] sm:text-xl"
           >
             Enjoy your Delish member benefits.
           </p>
-          <div className="mt-9 w-full max-w-[580px]">
+          <div className="mt-7 w-full max-w-[520px]">
             <DelishMembershipCard
               name={cardName}
               location={location}
@@ -819,12 +819,12 @@ function DelishWelcomeStep({
           </div>
         </div>
       </div>
-      <footer className="bg-[#F8F9FB] px-5 pb-8 pt-2 sm:px-10">
-        <div className="mx-auto grid max-w-[900px] grid-cols-2 gap-5">
+      <footer className="bg-[#F8F9FB] px-5 pb-6 pt-1 sm:px-8">
+        <div className="mx-auto grid max-w-[620px] grid-cols-2 gap-4">
           <Button
             type="button"
             variant="outline"
-            className="min-h-14 border-[#AEB7C3] bg-white text-lg font-black text-[#6B7280] hover:bg-white hover:text-[#101828]"
+            className="min-h-12 rounded-[4px] border-[#AEB7C3] bg-white text-base font-black text-[#6B7280] hover:bg-white hover:text-[#101828]"
             onClick={onBack}
           >
             <ChevronLeft className="mr-2 size-5" aria-hidden />
@@ -832,7 +832,7 @@ function DelishWelcomeStep({
           </Button>
           <Button
             type="button"
-            className="min-h-14 bg-[#242832] px-6 text-lg font-black text-white hover:bg-[#E31837]"
+            className="min-h-12 rounded-[4px] bg-[#242832] px-5 text-base font-black text-white hover:bg-[#E31837]"
             onClick={onClose}
           >
             Close
@@ -901,8 +901,8 @@ function DelishMembershipCard({
           <div className="flex size-16 shrink-0 items-center justify-center rounded-[12px] bg-white text-[2.8rem] font-black leading-none text-[#101010]">
             d
           </div>
-          <div>
-            <p className="text-sm font-black uppercase tracking-[0.16em] text-[#FFC835]">
+          <div className="min-w-0 text-left">
+            <p className="w-full text-left text-sm font-black uppercase tracking-[0.16em] text-[#FFC835]">
               Delish
             </p>
             <h3
@@ -934,7 +934,7 @@ function CardDetail({ label, value }: { label: string; value: string }) {
   return (
     <div className="min-w-0 text-left">
       <p className="text-xs font-bold text-white/55">{label}</p>
-      <p className="mt-1 break-words text-base font-black leading-tight text-white">{value}</p>
+      <p className="mt-1 break-words text-base font-normal leading-tight text-white">{value}</p>
     </div>
   );
 }

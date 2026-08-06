@@ -426,7 +426,7 @@ function MotorTrendOnboardingModalContent({
         aria-labelledby="motortrend-onboarding-title"
         className={cn(
           "relative z-10 max-h-[calc(100dvh-32px)] w-full overflow-y-auto rounded-[12px] bg-[#F8F9FB] shadow-[0_26px_70px_rgba(0,0,0,0.38)]",
-          showWelcome ? "max-w-[820px]" : "max-w-[760px]",
+          showWelcome ? "max-w-[680px]" : "max-w-[680px]",
         )}
       >
         {showWelcome ? (
@@ -447,7 +447,7 @@ function MotorTrendOnboardingModalContent({
               <X aria-hidden className="h-5 w-5" />
             </button>
 
-            <div className="mx-auto flex w-full max-w-[640px] flex-col items-center px-5 py-7 sm:px-8 sm:py-8">
+            <div className="mx-auto flex w-full max-w-[560px] flex-col items-center px-5 py-6 sm:px-8 sm:py-7">
               <div className="flex w-full flex-col items-center gap-1">
                 <img
                   src={stepIllustrations[step]}
@@ -502,13 +502,13 @@ function MotorTrendOnboardingModalContent({
                 />
               ) : null}
 
-              <footer className="mt-6 grid w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3">
+              <footer className="mt-5 grid w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={goBack}
                   disabled={step === 1}
-                  className="h-12 rounded-[9px] border-[#ADB5C2] bg-transparent text-sm font-semibold text-[#343944] disabled:opacity-40"
+                  className="h-11 rounded-[4px] border-[#ADB5C2] bg-transparent text-sm font-semibold text-[#343944] disabled:opacity-40"
                 >
                   <ChevronLeft aria-hidden className="mr-3 h-5 w-5" />
                   Back
@@ -526,7 +526,7 @@ function MotorTrendOnboardingModalContent({
                   type="button"
                   onClick={goNext}
                   disabled={nextDisabled}
-                  className="h-12 justify-self-end rounded-[9px] bg-[#20242E] px-7 text-sm font-semibold text-white hover:bg-[#111318] disabled:bg-[#90949B]"
+                  className="h-11 justify-self-end rounded-[4px] bg-[#20242E] px-6 text-sm font-semibold text-white hover:bg-[#111318] disabled:bg-[#90949B]"
                 >
                   {step === 4 ? "Complete" : "Next"}
                   <ChevronRight aria-hidden className="ml-3 h-5 w-5" />
@@ -598,13 +598,13 @@ function StepOne({
         </p>
       </div>
 
-      <div className="mt-6 w-full rounded-[10px] bg-white p-5 shadow-[0_10px_24px_rgba(16,24,40,0.07)]">
+      <div className="mt-5 w-full rounded-[10px] bg-white p-4 shadow-[0_10px_24px_rgba(16,24,40,0.07)] sm:p-5">
         <label className="block text-base font-normal text-[#343944]">
           What is Your Name?
           <input
             value={readerName}
             onChange={(event) => setReaderName(event.target.value)}
-            className="mt-2 h-[52px] w-full rounded-[9px] border border-[#ADB5C2] bg-white px-5 text-base font-normal text-[#101828] outline-none transition placeholder:text-[#A7AFBE] focus:border-[#20242E] focus:ring-2 focus:ring-[#20242E]/15"
+            className="mt-2 h-12 w-full rounded-[9px] border border-[#ADB5C2] bg-white px-4 text-base font-normal text-[#101828] outline-none transition placeholder:text-[#A7AFBE] focus:border-[#20242E] focus:ring-2 focus:ring-[#20242E]/15"
             placeholder="Name"
           />
         </label>
@@ -615,7 +615,7 @@ function StepOne({
             <input
               value={readerLocation}
               onChange={(event) => setReaderLocation(event.target.value)}
-              className="h-[52px] w-full rounded-[9px] border border-[#ADB5C2] bg-white px-5 pr-[52px] text-base font-normal text-[#101828] outline-none transition placeholder:text-[#A7AFBE] focus:border-[#20242E] focus:ring-2 focus:ring-[#20242E]/15"
+              className="h-12 w-full rounded-[9px] border border-[#ADB5C2] bg-white px-4 pr-[48px] text-base font-normal text-[#101828] outline-none transition placeholder:text-[#A7AFBE] focus:border-[#20242E] focus:ring-2 focus:ring-[#20242E]/15"
               placeholder="Current Location"
             />
             <button
@@ -664,7 +664,7 @@ function StepTwo({
         </p>
       </div>
 
-      <div className="mt-6 grid w-full grid-cols-1 gap-3 sm:grid-cols-3">
+      <div className="mt-5 grid w-full grid-cols-1 gap-3 sm:grid-cols-3">
         {userTypeOptions.map((option) => {
           const selected = selectedUserType === option.id;
           return (
@@ -673,7 +673,7 @@ function StepTwo({
               type="button"
               onClick={() => setSelectedUserType(option.id)}
               className={cn(
-                "flex min-h-[204px] flex-col items-center rounded-[12px] border-2 p-4 text-center transition",
+                "flex min-h-[132px] flex-col items-center rounded-[12px] border-2 p-3 text-center transition",
                 selected
                   ? "border-[#20242E] bg-[#20242E] text-white shadow-[0_10px_28px_rgba(16,24,40,0.18)]"
                   : "border-[#D5DBE5] bg-white text-[#20242E] hover:-translate-y-0.5 hover:border-[#AAB3C2] hover:shadow-[0_8px_22px_rgba(16,24,40,0.08)]",
@@ -683,11 +683,11 @@ function StepTwo({
                 src={option.image}
                 alt=""
                 className={cn(
-                  "h-[88px] w-full rounded-[9px] border object-contain",
+                  "h-[58px] w-full rounded-[9px] border object-cover",
                   selected ? "border-[#ED1C24]" : "border-[#20242E]",
                 )}
               />
-              <span className="mt-4 text-lg font-semibold leading-tight">{option.title}</span>
+              <span className="mt-3 text-base font-semibold leading-tight">{option.title}</span>
               <span className={cn("mt-1.5 text-sm leading-snug", selected ? "text-white/85" : "text-[#586172]")}>
                 {option.description}
               </span>
@@ -736,7 +736,7 @@ function StepThree({
         </p>
       </div>
 
-      <div className="mt-6 w-full rounded-[10px] bg-white p-5 shadow-[0_10px_24px_rgba(16,24,40,0.07)]">
+      <div className="mt-5 w-full rounded-[10px] bg-white p-4 shadow-[0_10px_24px_rgba(16,24,40,0.07)] sm:p-5">
         <label className="block text-base font-semibold text-[#20242E]" htmlFor="motortrend-vehicle-search">
           {selectedVehicles.length ? "Add Another Vehicle" : "Search for a vehicle"}
         </label>
@@ -760,7 +760,7 @@ function StepThree({
                 onAddVehicle(filteredVehicles[activeVehicleIndex] ?? vehicleQuery);
               }
             }}
-            className="h-[52px] w-full rounded-[9px] border border-[#ADB5C2] bg-white px-4 pr-11 text-lg text-[#101828] outline-none transition placeholder:text-[#A7AFBE] focus:border-[#20242E] focus:ring-2 focus:ring-[#20242E]/15"
+            className="h-12 w-full rounded-[9px] border border-[#ADB5C2] bg-white px-4 pr-11 text-base text-[#101828] outline-none transition placeholder:text-[#A7AFBE] focus:border-[#20242E] focus:ring-2 focus:ring-[#20242E]/15"
             placeholder="Start typing to search..."
             role="combobox"
             aria-expanded="true"
@@ -882,7 +882,7 @@ function StepFour({
         </p>
       </div>
 
-      <div className="mt-6 grid w-full gap-2.5">
+      <div className="mt-5 grid w-full gap-2.5">
         {newsletterOptions.map((newsletter) => {
           const selected = selectedNewsletters.includes(newsletter.id);
           return (
@@ -897,14 +897,14 @@ function StepFour({
                 );
               }}
               className={cn(
-                "flex items-center gap-4 rounded-[12px] border-2 bg-white p-4 text-left transition hover:-translate-y-0.5 hover:shadow-[0_8px_22px_rgba(16,24,40,0.08)]",
+                "flex items-center gap-3 rounded-[12px] border-2 bg-white p-3 text-left transition hover:-translate-y-0.5 hover:shadow-[0_8px_22px_rgba(16,24,40,0.08)]",
                 selected ? "border-[#20242E]" : "border-[#D5DBE5]",
               )}
             >
               <img
                 src={newsletter.image}
                 alt=""
-                className="h-14 w-14 shrink-0 rounded-[8px] object-cover"
+                className="h-12 w-12 shrink-0 rounded-[8px] object-cover"
               />
               <span className="min-w-0 flex-1">
                 <span className="flex items-center gap-3">
@@ -957,11 +957,11 @@ function WelcomeStep({
     : "None";
 
   return (
-    <div className="mx-auto flex w-full max-w-[820px] flex-col items-center px-6 py-12 sm:px-12">
+    <div className="mx-auto flex w-full max-w-[620px] flex-col items-center px-5 py-8 sm:px-8 sm:py-9">
       <button
         type="button"
         onClick={onClose}
-        className="absolute right-6 top-6 inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[#B9C0CC] bg-white text-[#20242E] transition hover:border-[#20242E] hover:bg-[#F3F4F6]"
+        className="absolute right-5 top-5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#B9C0CC] bg-white text-[#20242E] transition hover:border-[#20242E] hover:bg-[#F3F4F6]"
         aria-label="Close MotorTrend onboarding"
       >
         <X aria-hidden className="h-5 w-5" />
@@ -970,26 +970,26 @@ function WelcomeStep({
       <img
         src={motorTrendLogo}
         alt="MotorTrend"
-        className="h-auto w-[280px] max-w-full object-contain"
+        className="h-auto w-[220px] max-w-full object-contain"
       />
 
-      <div className="mt-9 text-center">
+      <div className="mt-6 text-center">
         <h2
           id="motortrend-onboarding-title"
           ref={headingRef}
           tabIndex={-1}
-          className="text-[2.75rem] font-semibold leading-tight tracking-[-0.035em] text-[#101318] outline-none"
+          className="text-[2rem] font-semibold leading-tight tracking-[-0.035em] text-[#101318] outline-none sm:text-[2.5rem]"
         >
           Welcome to the Club, {firstName}!
         </h2>
-        <p className="mt-4 text-2xl font-normal leading-snug text-[#586172]">
+        <p className="mt-3 text-lg font-normal leading-snug text-[#586172] sm:text-xl">
           Enjoy your MotorTrend member benefits.
         </p>
       </div>
 
       <section
         aria-label="MotorTrend Membership Card"
-        className="relative mt-10 flex aspect-[1.6/1] w-full max-w-[600px] flex-col overflow-hidden rounded-[20px] bg-[linear-gradient(145deg,#3A3A3C_0%,#2C2C2E_30%,#1C1C1E_70%,#141416_100%)] p-8 text-white shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5),0_12px_24px_-8px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.1)]"
+        className="relative mt-7 flex aspect-[1.6/1] w-full max-w-[520px] flex-col overflow-hidden rounded-[16px] bg-[linear-gradient(145deg,#3A3A3C_0%,#2C2C2E_30%,#1C1C1E_70%,#141416_100%)] p-6 text-white shadow-[0_18px_38px_-12px_rgba(0,0,0,0.5),0_10px_20px_-8px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.1)] sm:p-7"
       >
         <img
           src="https://d2kde5ohu8qb21.cloudfront.net/files/6929d1a44c063a0002bb760d/union.svg"
@@ -1001,19 +1001,19 @@ function WelcomeStep({
             <img
               src="https://d2kde5ohu8qb21.cloudfront.net/files/68fabbe380bc4f00028943ef/mt40.svg"
               alt=""
-              className="h-[88px] w-[88px] shrink-0"
+              className="h-16 w-16 shrink-0 sm:h-20 sm:w-20"
             />
             <div>
-              <p className="text-[2rem] font-semibold leading-tight tracking-[-0.02em]">
+              <p className="text-[1.5rem] font-semibold leading-tight tracking-[-0.02em] sm:text-[1.75rem]">
                 Membership Card
               </p>
-              <p className="mt-1 text-lg leading-snug text-[#B7BCC6]">
+              <p className="mt-1 text-base leading-snug text-[#B7BCC6]">
                 MotorTrend Member
               </p>
             </div>
           </div>
 
-          <div className="mt-auto grid grid-cols-2 gap-x-12 gap-y-6">
+          <div className="mt-auto grid grid-cols-2 gap-x-8 gap-y-4">
             <CardDetail label="Member Since" value={currentJoinDate()} />
             <CardDetail label="Name" value={firstName} />
             <CardDetail label="My Car" value={selectedCar} />
@@ -1022,12 +1022,12 @@ function WelcomeStep({
         </div>
       </section>
 
-      <footer className="mt-12 grid w-full grid-cols-2 gap-6">
+      <footer className="mt-8 grid w-full grid-cols-2 gap-4">
         <Button
           type="button"
           variant="outline"
           onClick={onBack}
-          className="h-16 rounded-[10px] border-[#ADB5C2] bg-transparent text-lg font-semibold text-[#343944]"
+          className="h-12 rounded-[4px] border-[#ADB5C2] bg-transparent text-base font-semibold text-[#343944]"
         >
           <ChevronLeft aria-hidden className="mr-3 h-5 w-5" />
           Back
@@ -1035,7 +1035,7 @@ function WelcomeStep({
         <Button
           type="button"
           onClick={onClose}
-          className="h-16 rounded-[10px] bg-[#20242E] text-lg font-semibold text-white hover:bg-[#111318]"
+          className="h-12 rounded-[4px] bg-[#20242E] text-base font-semibold text-white hover:bg-[#111318]"
         >
           Close
         </Button>
