@@ -179,6 +179,11 @@ import {
 import {
   ElleOnboardingModal,
 } from "./hearst-plus/elle-onboarding-modal";
+import {
+  isPublicationOnboardingBrandSlug,
+  PublicationOnboardingModal,
+  publicationOnboardingConfigs,
+} from "./hearst-plus/publication-onboarding-modal";
 import { StakeholderPersonalizationConsole } from "./hearst-plus/stakeholder-personalization-console";
 import { hearstDestinationSections, UtilityBar } from "./hearst-plus/utility-bar";
 import { useModalIsolation } from "./ui/use-modal-isolation";
@@ -6032,6 +6037,7 @@ export function HomePageTemplate({
   const [motorTrendOnboardingOpen, setMotorTrendOnboardingOpen] = React.useState(false);
   const [goodHousekeepingOnboardingOpen, setGoodHousekeepingOnboardingOpen] = React.useState(false);
   const [elleOnboardingOpen, setElleOnboardingOpen] = React.useState(false);
+  const [publicationOnboardingOpen, setPublicationOnboardingOpen] = React.useState(false);
   const [onboardingResult, setOnboardingResult] = React.useState<HearstOnboardingResult | null>(null);
   const [authDialogOpen, setAuthDialogOpen] = React.useState(false);
   const [authDialogMode, setAuthDialogMode] = React.useState<"create" | "signIn">("create");
@@ -6081,9 +6087,35 @@ export function HomePageTemplate({
   const isMotorTrendOnboardingRoute = selectedBrand?.slug === "motortrend";
   const isGoodHousekeepingOnboardingRoute = selectedBrand?.slug === "good-housekeeping";
   const isElleOnboardingRoute = selectedBrand?.slug === "elle";
-  const canUseReaderAccountDialogs = isDestinationRiver || isDelishOnboardingRoute || isMotorTrendOnboardingRoute || isGoodHousekeepingOnboardingRoute || isElleOnboardingRoute;
+  const publicationOnboardingBrandSlug = isPublicationOnboardingBrandSlug(selectedBrand?.slug)
+    ? selectedBrand.slug
+    : null;
+  const publicationOnboardingConfig = publicationOnboardingBrandSlug
+    ? publicationOnboardingConfigs[publicationOnboardingBrandSlug]
+    : null;
+  const isPublicationOnboardingRoute = Boolean(publicationOnboardingBrandSlug);
+  const canUseReaderAccountDialogs = isDestinationRiver
+    || isDelishOnboardingRoute
+    || isMotorTrendOnboardingRoute
+    || isGoodHousekeepingOnboardingRoute
+    || isElleOnboardingRoute
+    || isPublicationOnboardingRoute;
   const destinationMode = getDestinationMode(selectedBrand?.slug ?? initialBrandSlug ?? brand.slug);
   const delishBrandRoute = getHearstBrandRoute("delish");
+  const keepDelishRoute = React.useCallback(() => {
+    const targetRoute = appendStakeholderDemoMode(delishBrandRoute, showStakeholderTools);
+    const currentRoute = `${window.location.pathname}${window.location.search}`;
+    if (currentRoute !== targetRoute) {
+      router.replace(targetRoute, { scroll: false });
+    }
+  }, [delishBrandRoute, router, showStakeholderTools]);
+  const keepPublicationRoute = React.useCallback((brandSlug: string) => {
+    const targetRoute = appendStakeholderDemoMode(getHearstBrandRoute(brandSlug), showStakeholderTools);
+    const currentRoute = `${window.location.pathname}${window.location.search}`;
+    if (currentRoute !== targetRoute) {
+      router.replace(targetRoute, { scroll: false });
+    }
+  }, [router, showStakeholderTools]);
   const openPersonalization = React.useCallback(() => {
     if (account) {
       setProfileOpen(true);
@@ -6109,8 +6141,20 @@ export function HomePageTemplate({
       setElleOnboardingOpen(true);
       return;
     }
+    if (isPublicationOnboardingRoute) {
+      setAuthDialogOpen(false);
+      setPublicationOnboardingOpen(true);
+      return;
+    }
     setOnboardingOpen(true);
-  }, [account, isDelishOnboardingRoute, isElleOnboardingRoute, isGoodHousekeepingOnboardingRoute, isMotorTrendOnboardingRoute]);
+  }, [
+    account,
+    isDelishOnboardingRoute,
+    isElleOnboardingRoute,
+    isGoodHousekeepingOnboardingRoute,
+    isMotorTrendOnboardingRoute,
+    isPublicationOnboardingRoute,
+  ]);
   React.useEffect(() => {
     if (selectedBrand) return;
 
@@ -6875,18 +6919,18 @@ export function HomePageTemplate({
             setSelectedBrand({ name: "Delish", slug: "delish" });
             setOnboardingResult(result);
             setDelishOnboardingOpen(false);
-            if (window.location.pathname !== delishBrandRoute) {
-              router.replace(delishBrandRoute, { scroll: false });
-            }
+            keepDelishRoute();
           }}
           onCreateProfile={(result) => {
             setOnboardingResult(result);
             setDelishOnboardingOpen(false);
+            keepDelishRoute();
             setAuthDialogMode("create");
             setAuthDialogOpen(true);
           }}
           onSignIn={() => {
             setDelishOnboardingOpen(false);
+            keepDelishRoute();
             setAuthDialogMode("signIn");
             setAuthDialogOpen(true);
           }}
@@ -6959,6 +7003,39 @@ export function HomePageTemplate({
           }}
           onSignIn={() => {
             setElleOnboardingOpen(false);
+            setAuthDialogMode("signIn");
+            setAuthDialogOpen(true);
+          }}
+        />
+      ) : null}
+
+      {publicationOnboardingBrandSlug && publicationOnboardingConfig && publicationOnboardingOpen ? (
+        <PublicationOnboardingModal
+          key={publicationOnboardingBrandSlug}
+          open={publicationOnboardingOpen}
+          brandSlug={publicationOnboardingBrandSlug}
+          onClose={() => setPublicationOnboardingOpen(false)}
+          onComplete={(result) => {
+            setActiveLifestyleFilter("For You");
+            setActiveBrandFilters([publicationOnboardingConfig.brandName]);
+            setSelectedBrand({
+              name: publicationOnboardingConfig.brandName,
+              slug: publicationOnboardingBrandSlug,
+            });
+            setOnboardingResult(result);
+            setPublicationOnboardingOpen(false);
+            keepPublicationRoute(publicationOnboardingBrandSlug);
+          }}
+          onCreateProfile={(result) => {
+            setOnboardingResult(result);
+            setPublicationOnboardingOpen(false);
+            keepPublicationRoute(publicationOnboardingBrandSlug);
+            setAuthDialogMode("create");
+            setAuthDialogOpen(true);
+          }}
+          onSignIn={() => {
+            setPublicationOnboardingOpen(false);
+            keepPublicationRoute(publicationOnboardingBrandSlug);
             setAuthDialogMode("signIn");
             setAuthDialogOpen(true);
           }}
