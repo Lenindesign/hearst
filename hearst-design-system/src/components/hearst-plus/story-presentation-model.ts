@@ -26,6 +26,7 @@ export function getLifestyleImagePosition(story: LifestyleRiverStory) {
     "Culture",
     "Entertainment",
     "Events",
+    "Food News",
     "Lifestyle",
     "Pleasure",
     "Relationships",
@@ -51,9 +52,17 @@ export function getLifestyleImagePosition(story: LifestyleRiverStory) {
     "taylor swift",
     "wedding",
   ];
+  const peopleForwardCredits = [
+    "dave benett",
+    "getty images",
+    "gc images",
+    "wireimage",
+  ];
   const title = story.title.toLowerCase();
+  const imageCredit = story.imageCredit?.toLowerCase() ?? "";
 
   if (story.id === lifestyleDefaultLeadStoryId) return "center 22%";
+  if (story.id === "delish-food-news-a73359231-meg-stalter-knorr") return "center 14%";
   if (
     story.title
     === "Is Dee Valladares Joining BB28? Here’s Why Fans Are Convinced She’s Another ‘Survivor’ Alum-Turned-Houseguest"
@@ -75,6 +84,12 @@ export function getLifestyleImagePosition(story: LifestyleRiverStory) {
   }
   if (
     peopleForwardBrands.has(story.brandSlug)
+    && peopleForwardTopics.has(story.topic)
+  ) {
+    return "center 16%";
+  }
+  if (
+    peopleForwardCredits.some((credit) => imageCredit.includes(credit))
     && peopleForwardTopics.has(story.topic)
   ) {
     return "center 16%";

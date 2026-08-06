@@ -104,3 +104,30 @@ test("keeps reviewed portrait crops stable for the lead and people-forward stori
     "center 16%",
   );
 });
+
+test("biases people-led event photos upward in featured crops", () => {
+  assert.equal(
+    getLifestyleImagePosition(makeStory({
+      brand: "Delish",
+      brandSlug: "delish",
+      topic: "Food News",
+      title: "Meg Stalter Paid Way Too Much For The Saddest Mushroom Entrée",
+      imageCredit: "Dave Benett",
+    })),
+    "center 16%",
+  );
+});
+
+test("keeps the reviewed Meg Stalter crop stable", () => {
+  assert.equal(
+    getLifestyleImagePosition(makeStory({
+      id: "delish-food-news-a73359231-meg-stalter-knorr",
+      brand: "Delish",
+      brandSlug: "delish",
+      topic: "Food News",
+      title: "Meg Stalter Paid Way Too Much For The Saddest Mushroom Entrée",
+      imageCredit: "Dave Benett",
+    })),
+    "center 14%",
+  );
+});
