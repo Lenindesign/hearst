@@ -174,12 +174,6 @@ import {
   MotorTrendOnboardingModal,
 } from "./hearst-plus/motortrend-onboarding-modal";
 import {
-  GoodHousekeepingOnboardingModal,
-} from "./hearst-plus/good-housekeeping-onboarding-modal";
-import {
-  ElleOnboardingModal,
-} from "./hearst-plus/elle-onboarding-modal";
-import {
   isPublicationOnboardingBrandSlug,
   PublicationOnboardingModal,
   publicationOnboardingConfigs,
@@ -6035,8 +6029,6 @@ export function HomePageTemplate({
   const [onboardingOpen, setOnboardingOpen] = React.useState(false);
   const [delishOnboardingOpen, setDelishOnboardingOpen] = React.useState(false);
   const [motorTrendOnboardingOpen, setMotorTrendOnboardingOpen] = React.useState(false);
-  const [goodHousekeepingOnboardingOpen, setGoodHousekeepingOnboardingOpen] = React.useState(false);
-  const [elleOnboardingOpen, setElleOnboardingOpen] = React.useState(false);
   const [publicationOnboardingOpen, setPublicationOnboardingOpen] = React.useState(false);
   const [onboardingResult, setOnboardingResult] = React.useState<HearstOnboardingResult | null>(null);
   const [authDialogOpen, setAuthDialogOpen] = React.useState(false);
@@ -6085,8 +6077,6 @@ export function HomePageTemplate({
   const isDestinationRiver = brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
   const isDelishOnboardingRoute = selectedBrand?.slug === "delish";
   const isMotorTrendOnboardingRoute = selectedBrand?.slug === "motortrend";
-  const isGoodHousekeepingOnboardingRoute = selectedBrand?.slug === "good-housekeeping";
-  const isElleOnboardingRoute = selectedBrand?.slug === "elle";
   const publicationOnboardingBrandSlug = isPublicationOnboardingBrandSlug(selectedBrand?.slug)
     ? selectedBrand.slug
     : null;
@@ -6097,8 +6087,6 @@ export function HomePageTemplate({
   const canUseReaderAccountDialogs = isDestinationRiver
     || isDelishOnboardingRoute
     || isMotorTrendOnboardingRoute
-    || isGoodHousekeepingOnboardingRoute
-    || isElleOnboardingRoute
     || isPublicationOnboardingRoute;
   const destinationMode = getDestinationMode(selectedBrand?.slug ?? initialBrandSlug ?? brand.slug);
   const delishBrandRoute = getHearstBrandRoute("delish");
@@ -6131,16 +6119,6 @@ export function HomePageTemplate({
       setMotorTrendOnboardingOpen(true);
       return;
     }
-    if (isGoodHousekeepingOnboardingRoute) {
-      setAuthDialogOpen(false);
-      setGoodHousekeepingOnboardingOpen(true);
-      return;
-    }
-    if (isElleOnboardingRoute) {
-      setAuthDialogOpen(false);
-      setElleOnboardingOpen(true);
-      return;
-    }
     if (isPublicationOnboardingRoute) {
       setAuthDialogOpen(false);
       setPublicationOnboardingOpen(true);
@@ -6150,8 +6128,6 @@ export function HomePageTemplate({
   }, [
     account,
     isDelishOnboardingRoute,
-    isElleOnboardingRoute,
-    isGoodHousekeepingOnboardingRoute,
     isMotorTrendOnboardingRoute,
     isPublicationOnboardingRoute,
   ]);
@@ -6955,54 +6931,6 @@ export function HomePageTemplate({
           }}
           onSignIn={() => {
             setMotorTrendOnboardingOpen(false);
-            setAuthDialogMode("signIn");
-            setAuthDialogOpen(true);
-          }}
-        />
-      ) : null}
-
-      {isGoodHousekeepingOnboardingRoute && goodHousekeepingOnboardingOpen ? (
-        <GoodHousekeepingOnboardingModal
-          open={goodHousekeepingOnboardingOpen}
-          onClose={() => setGoodHousekeepingOnboardingOpen(false)}
-          onComplete={(result) => {
-            setActiveLifestyleFilter("For You");
-            setOnboardingResult(result);
-            setGoodHousekeepingOnboardingOpen(false);
-            anchorDestinationContent();
-          }}
-          onCreateProfile={(result) => {
-            setOnboardingResult(result);
-            setGoodHousekeepingOnboardingOpen(false);
-            setAuthDialogMode("create");
-            setAuthDialogOpen(true);
-          }}
-          onSignIn={() => {
-            setGoodHousekeepingOnboardingOpen(false);
-            setAuthDialogMode("signIn");
-            setAuthDialogOpen(true);
-          }}
-        />
-      ) : null}
-
-      {isElleOnboardingRoute && elleOnboardingOpen ? (
-        <ElleOnboardingModal
-          open={elleOnboardingOpen}
-          onClose={() => setElleOnboardingOpen(false)}
-          onComplete={(result) => {
-            setActiveLifestyleFilter("For You");
-            setOnboardingResult(result);
-            setElleOnboardingOpen(false);
-            anchorDestinationContent();
-          }}
-          onCreateProfile={(result) => {
-            setOnboardingResult(result);
-            setElleOnboardingOpen(false);
-            setAuthDialogMode("create");
-            setAuthDialogOpen(true);
-          }}
-          onSignIn={() => {
-            setElleOnboardingOpen(false);
             setAuthDialogMode("signIn");
             setAuthDialogOpen(true);
           }}

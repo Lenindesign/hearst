@@ -24,6 +24,7 @@ export const publicationOnboardingBrandSlugs = [
   "womens-health",
   "oprah-daily",
   "house-beautiful",
+  "good-housekeeping",
   "pioneer-woman",
   "prevention",
   "redbook",
@@ -33,6 +34,7 @@ export const publicationOnboardingBrandSlugs = [
   "bring-a-trailer",
   "hot-rod",
   "road-and-track",
+  "elle",
   "elle-decor",
   "esquire",
   "harpers-bazaar",
@@ -56,6 +58,7 @@ const publicationIconColors = {
   "womens-health": "#1D4ED8",
   "oprah-daily": "#E61957",
   "house-beautiful": "#242D39",
+  "good-housekeeping": "#198294",
   "pioneer-woman": "#8B376C",
   prevention: "#168C91",
   redbook: "#D30C4F",
@@ -65,6 +68,7 @@ const publicationIconColors = {
   "bring-a-trailer": "#D40013",
   "hot-rod": "#C11B17",
   "road-and-track": "#434343",
+  elle: "#111827",
   "elle-decor": "#3777BC",
   esquire: "#D42D25",
   "harpers-bazaar": "#000000",
@@ -82,6 +86,7 @@ const carDriverIcon = publicationIconColors["car-and-driver"];
 const womensHealthIcon = publicationIconColors["womens-health"];
 const oprahIcon = publicationIconColors["oprah-daily"];
 const houseBeautifulIcon = publicationIconColors["house-beautiful"];
+const goodHousekeepingIcon = publicationIconColors["good-housekeeping"];
 const pioneerWomanIcon = publicationIconColors["pioneer-woman"];
 const preventionIcon = publicationIconColors.prevention;
 const redbookIcon = publicationIconColors.redbook;
@@ -91,6 +96,7 @@ const autoweekIcon = publicationIconColors.autoweek;
 const bringATrailerIcon = publicationIconColors["bring-a-trailer"];
 const hotRodIcon = publicationIconColors["hot-rod"];
 const roadAndTrackIcon = publicationIconColors["road-and-track"];
+const elleIcon = publicationIconColors.elle;
 const elleDecorIcon = publicationIconColors["elle-decor"];
 const esquireIcon = publicationIconColors.esquire;
 const harpersBazaarIcon = publicationIconColors["harpers-bazaar"];
@@ -686,6 +692,60 @@ export const publicationOnboardingConfigs: Record<
     fallbackLocation: "Your space",
     fallbackPriority: "Design and decorating ideas",
   }),
+  "good-housekeeping": publicationConfig({
+    slug: "good-housekeeping",
+    brandName: "Good Housekeeping",
+    cardTitle: "Home Edit",
+    primary: goodHousekeepingIcon,
+    secondary: "#D6F0EF",
+    ink: "#101828",
+    muted: "#5A6472",
+    line: "#B9CDD0",
+    surface: "#F5FAFA",
+    pale: "#E3F5F4",
+    headlineFont: '"Barlow Semi Condensed", system-ui, sans-serif',
+    bodyFont: "Inter, system-ui, sans-serif",
+    introIllustrationSrc: iconifyHuge("house-heart", goodHousekeepingIcon),
+    stepIllustrationSrc: iconifyHuge("checkmark-badge-02", goodHousekeepingIcon),
+    cardIllustrationSrc: iconifyHuge("shield-check", goodHousekeepingIcon),
+    intro: "Build a helpful edition for tested products, cleaning, organizing, recipes, wellness, and routines that make home easier.",
+    stepLabels: ["Set your home base", "Pick your GH mode", "Choose your helpful mix", "Pick your newsletters"],
+    stepDescriptions: [
+      "A little context helps Good Housekeeping bring practical home ideas forward.",
+      "Choose the kind of everyday help you want first.",
+      "Choose what you already use and what you want to discover next.",
+      "Pick the Good Housekeeping newsletters for your home edit.",
+    ],
+    paths: [
+      ["first", "Efficient home", "Cleaning, organizing, laundry, and time-saving routines.", "house-heart"],
+      ["second", "Tested shopper", "Lab-backed products, appliances, deals, and buys worth trusting.", "shield-check"],
+      ["third", "Family rhythm", "Food, wellness, holidays, kids, and everyday support.", "user-group-03"],
+    ],
+    favorites: [
+      ["Cleaning", "cleaning-bucket"],
+      ["Organizing", "clipboard"],
+      ["Recipes", "cook-book"],
+      ["Product tests", "shield-check"],
+      ["Beauty", "dressing-table-02"],
+      ["Wellness", "wellness"],
+    ],
+    discoveries: [
+      ["Quick wins", "stop-watch"],
+      ["Budget finds", "money-saving-jar"],
+      ["Family ideas", "user-group-03"],
+      ["Small spaces", "house-03"],
+      ["Lab picks", "checkmark-badge-02"],
+      ["Holiday help", "calendar-love-02"],
+    ],
+    newsletters: [
+      ["gh-daily", "Good Housekeeping Daily", "Tested products, practical home ideas, recipes, cleaning tips, and wellness guidance.", "mail-open"],
+      ["gh-home", "The Home Edit", "Cleaning, organizing, laundry, small-space ideas, and routines that make home easier.", "house-heart"],
+      ["gh-tested", "GH Tested", "Lab-backed appliances, beauty, gear, and product picks before you buy.", "shield-check"],
+    ],
+    baseTags: ["good housekeeping", "home", "cleaning", "recipes", "product tests"],
+    fallbackLocation: "Your home base",
+    fallbackPriority: "Practical home ideas",
+  }),
   "pioneer-woman": publicationConfig({
     slug: "pioneer-woman",
     brandName: "The Pioneer Woman",
@@ -1153,6 +1213,58 @@ export const publicationOnboardingConfigs: Record<
     baseTags: ["road and track", "autos", "performance", "motorsport", "reviews"],
     fallbackLocation: "Your road",
     fallbackPriority: "Driver-focused car stories",
+  }),
+  elle: publicationConfig({
+    slug: "elle",
+    brandName: "ELLE",
+    cardTitle: "Style Edit",
+    primary: elleIcon,
+    secondary: "#E7E8EC",
+    ink: "#111827",
+    surface: "#F7F7F8",
+    pale: "#ECEEF2",
+    headlineFont: '"Modern MT Pro", Georgia, serif',
+    bodyFont: '"Neue Haas Unica Pro", Inter, system-ui, sans-serif',
+    introIllustrationSrc: iconifyHuge("dress-03", elleIcon),
+    stepIllustrationSrc: iconifyHuge("sparkles", elleIcon),
+    cardIllustrationSrc: iconifyHuge("shopping-bag-favorite", elleIcon),
+    intro: "Create a sharp ELLE edition for fashion, beauty, culture, celebrity, shopping, and the stories setting the mood.",
+    stepLabels: ["Set your style lane", "Pick your ELLE mode", "Choose your edit", "Pick your newsletters"],
+    stepDescriptions: [
+      "A little context helps ELLE shape fashion, beauty, and culture around your taste.",
+      "Choose the kind of story you want ELLE to lead with first.",
+      "Choose what you follow now and what you want to discover next.",
+      "Pick the ELLE newsletters for your style edit.",
+    ],
+    paths: [
+      ["first", "Fashion first", "Runway, trends, outfits, shopping, and pieces worth saving.", "dress-03"],
+      ["second", "Beauty mood", "Skin, makeup, hair, fragrance, and editor-tested routines.", "dressing-table-02"],
+      ["third", "Culture radar", "Celebrity, film, books, music, and the conversations shaping style.", "camera-video"],
+    ],
+    favorites: [
+      ["Fashion", "dress-03"],
+      ["Beauty", "dressing-table-02"],
+      ["Shopping", "shopping-bag-favorite"],
+      ["Celebrity", "camera-smile-02"],
+      ["Culture", "camera-video"],
+      ["Runway", "sparkles"],
+    ],
+    discoveries: [
+      ["Editor picks", "checkmark-badge-02"],
+      ["New designers", "star-award-02"],
+      ["Fragrance", "perfume"],
+      ["Red carpet", "dress-03"],
+      ["Long reads", "book-open-02"],
+      ["Weekend plans", "calendar-03"],
+    ],
+    newsletters: [
+      ["elle-daily", "ELLE Daily", "Fashion, beauty, celebrity, culture, and the stories everyone is talking about.", "mail-open"],
+      ["elle-style", "The Style Edit", "Trends, shopping finds, runway notes, and pieces worth adding to your list.", "shopping-bag-favorite"],
+      ["elle-beauty", "Beauty Brief", "Skin, makeup, hair, fragrance, and editor-tested routines.", "dressing-table-02"],
+    ],
+    baseTags: ["elle", "fashion", "beauty", "culture", "celebrity"],
+    fallbackLocation: "Your style lane",
+    fallbackPriority: "Fashion, beauty, and culture",
   }),
   "elle-decor": publicationConfig({
     slug: "elle-decor",
