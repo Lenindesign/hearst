@@ -1970,7 +1970,7 @@ function PublicationOnboardingModalContent({
         aria-modal="true"
         aria-labelledby={`${config.slug}-onboarding-title`}
         aria-describedby={`${config.slug}-onboarding-description`}
-        className="relative z-10 flex max-h-[calc(100dvh-1.5rem)] w-full max-w-[720px] flex-col overflow-hidden rounded-[12px] bg-[var(--publication-surface)] text-[var(--publication-ink)] shadow-2xl sm:max-h-[calc(100dvh-3rem)]"
+        className="relative z-10 flex max-h-[calc(100dvh-1rem)] w-full max-w-[640px] flex-col overflow-hidden rounded-[12px] bg-[var(--publication-surface)] text-[var(--publication-ink)] shadow-2xl sm:max-h-[calc(100dvh-2rem)]"
         style={{
           "--publication-primary": config.primary,
           "--publication-secondary": config.secondary,
@@ -1986,7 +1986,7 @@ function PublicationOnboardingModalContent({
           data-modal-close
           variant="outline"
           size="icon-lg"
-          className="absolute right-4 top-4 z-20 size-10 rounded-full border-[var(--publication-line)] bg-white text-[var(--publication-ink)] hover:bg-[var(--publication-pale)] sm:right-5 sm:top-5"
+          className="absolute right-3 top-3 z-20 size-9 rounded-full border-[var(--publication-line)] bg-white text-[var(--publication-ink)] hover:bg-[var(--publication-pale)] sm:right-4 sm:top-4"
           onClick={onClose}
           aria-label={`Close ${config.brandName} onboarding`}
         >
@@ -2009,8 +2009,8 @@ function PublicationOnboardingModalContent({
           />
         ) : (
           <>
-            <div className="min-h-0 flex-1 overflow-y-auto px-5 py-6 sm:px-8 sm:py-8">
-              <div className="mx-auto flex max-w-[590px] flex-col items-center">
+            <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4 sm:px-6 sm:py-5">
+              <div className="mx-auto flex max-w-[560px] flex-col items-center">
                 <PublicationStepMarker
                   config={config}
                   step={step}
@@ -2021,32 +2021,32 @@ function PublicationOnboardingModalContent({
                   }
                 />
 
-                <div className="mt-5 text-center">
+                <div className="mt-3 text-center">
                   <h2
                     ref={headingRef}
                     id={`${config.slug}-onboarding-title`}
                     tabIndex={-1}
-                    className="text-balance text-[2rem] font-black leading-[1.05] tracking-normal text-[var(--publication-primary)] outline-none sm:text-[2.35rem]"
+                    className="text-balance text-[1.65rem] font-black leading-[1.05] tracking-normal text-[var(--publication-primary)] outline-none sm:text-[2rem]"
                     style={{ fontFamily: config.headlineFont }}
                   >
                     {heading}
                   </h2>
                   <p
                     id={`${config.slug}-onboarding-description`}
-                    className="mx-auto mt-3 max-w-[46ch] text-base leading-6 text-[var(--publication-muted)] sm:text-lg"
+                    className="mx-auto mt-2 max-w-[44ch] text-sm leading-5 text-[var(--publication-muted)] sm:text-base sm:leading-6"
                   >
                     {description}
                   </p>
                 </div>
 
                 {step === 1 ? (
-                  <div className="mt-6 w-full rounded-[12px] bg-white px-4 py-5 shadow-[0_12px_28px_rgba(16,24,40,0.08)] sm:px-5">
-                    <div className="mb-5 flex items-center gap-4 rounded-[12px] bg-[var(--publication-pale)] px-4 py-4 text-left">
-                      <span className="flex size-14 shrink-0 items-center justify-center rounded-full bg-white text-[var(--publication-primary)] shadow-[0_8px_18px_rgba(16,24,40,0.08)]">
+                  <div className="mt-4 w-full rounded-[12px] bg-white px-4 py-4 shadow-[0_10px_22px_rgba(16,24,40,0.07)]">
+                    <div className="mb-4 flex items-center gap-3 rounded-[10px] bg-[var(--publication-pale)] px-3 py-3 text-left">
+                      <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white text-[var(--publication-primary)] shadow-[0_6px_14px_rgba(16,24,40,0.07)]">
                         <img
                           src={config.introIllustrationSrc}
                           alt=""
-                          className="size-10 object-contain"
+                          className="size-8 object-contain"
                           aria-hidden="true"
                         />
                       </span>
@@ -2054,21 +2054,21 @@ function PublicationOnboardingModalContent({
                         {config.intro}
                       </p>
                     </div>
-                    <label className="block text-base font-semibold text-[var(--publication-ink)]">
+                    <label className="block text-sm font-semibold text-[var(--publication-ink)]">
                       What is your name?
                       <input
-                        className="mt-2 h-12 w-full rounded-[10px] border border-[var(--publication-line)] bg-white px-4 text-base font-medium text-[var(--publication-ink)] outline-none transition-colors placeholder:text-[#7A828C] focus:border-[var(--publication-primary)] focus:ring-4 focus:ring-[var(--publication-secondary)]/35"
+                        className="mt-2 h-11 w-full rounded-[9px] border border-[var(--publication-line)] bg-white px-3 text-base font-medium text-[var(--publication-ink)] outline-none transition-colors placeholder:text-[#7A828C] focus:border-[var(--publication-primary)] focus:ring-4 focus:ring-[var(--publication-secondary)]/35"
                         placeholder="Name"
                         value={readerName}
                         onChange={(event) => setReaderName(event.target.value)}
                         autoComplete="given-name"
                       />
                     </label>
-                    <label className="mt-5 block text-base font-semibold text-[var(--publication-ink)]">
+                    <label className="mt-4 block text-sm font-semibold text-[var(--publication-ink)]">
                       Where should we anchor your edition? <span className="text-[var(--publication-muted)]">(Optional)</span>
                       <span className="relative mt-2 block">
                         <input
-                          className="h-12 w-full rounded-[10px] border border-[var(--publication-line)] bg-white px-4 pr-12 text-base font-medium text-[var(--publication-ink)] outline-none transition-colors placeholder:text-[#7A828C] focus:border-[var(--publication-primary)] focus:ring-4 focus:ring-[var(--publication-secondary)]/35"
+                          className="h-11 w-full rounded-[9px] border border-[var(--publication-line)] bg-white px-3 pr-11 text-base font-medium text-[var(--publication-ink)] outline-none transition-colors placeholder:text-[#7A828C] focus:border-[var(--publication-primary)] focus:ring-4 focus:ring-[var(--publication-secondary)]/35"
                           placeholder="City, region, or routine"
                           value={readerLocation}
                           onChange={(event) => {
@@ -2079,13 +2079,13 @@ function PublicationOnboardingModalContent({
                         />
                         <button
                           type="button"
-                          className="absolute right-3 top-1/2 flex size-9 -translate-y-1/2 items-center justify-center rounded-full text-[var(--publication-ink)] transition-colors hover:bg-[var(--publication-pale)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--publication-primary)] disabled:cursor-wait disabled:opacity-60"
+                          className="absolute right-2 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-full text-[var(--publication-ink)] transition-colors hover:bg-[var(--publication-pale)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--publication-primary)] disabled:cursor-wait disabled:opacity-60"
                           onClick={detectLocation}
                           disabled={isDetectingLocation}
                           aria-label={isDetectingLocation ? "Detecting location" : "Auto-detect location"}
                         >
                           <MapPin
-                            className={cn("size-6", isDetectingLocation && "animate-pulse text-[var(--publication-primary)]")}
+                            className={cn("size-5", isDetectingLocation && "animate-pulse text-[var(--publication-primary)]")}
                             aria-hidden
                           />
                         </button>
@@ -2100,7 +2100,7 @@ function PublicationOnboardingModalContent({
                 ) : null}
 
                 {step === 2 ? (
-                  <div className="mt-6 grid w-full gap-4 sm:grid-cols-3">
+                  <div className="mt-4 grid w-full gap-3 sm:grid-cols-3">
                     {config.paths.map(({ id, title, description: optionDescription, illustrationSrc }) => {
                       const selected = selectedPath === id;
                       return (
@@ -2110,7 +2110,7 @@ function PublicationOnboardingModalContent({
                           aria-pressed={selected}
                           onClick={() => setSelectedPath(id)}
                           className={cn(
-                            "group flex min-h-[132px] flex-row items-center justify-start gap-4 rounded-[12px] border bg-white p-4 text-left shadow-[0_10px_20px_rgba(16,24,40,0.04)] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--publication-primary)] motion-reduce:transition-none sm:min-h-[218px] sm:flex-col sm:justify-between sm:px-5 sm:py-6 sm:text-center",
+                            "group flex min-h-[112px] flex-row items-center justify-start gap-3 rounded-[10px] border bg-white p-3 text-left shadow-[0_8px_16px_rgba(16,24,40,0.04)] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--publication-primary)] motion-reduce:transition-none sm:min-h-[178px] sm:flex-col sm:justify-between sm:px-4 sm:py-4 sm:text-center",
                             selected
                               ? "border-[var(--publication-primary)] text-[var(--publication-ink)] ring-2 ring-[var(--publication-primary)]/15"
                               : "border-[var(--publication-line)] text-[var(--publication-ink)] hover:border-[var(--publication-primary)]",
@@ -2118,7 +2118,7 @@ function PublicationOnboardingModalContent({
                         >
                           <span className="flex min-w-0 flex-1 items-center gap-4 sm:flex-col sm:gap-0">
                             <span className={cn(
-                              "flex size-20 shrink-0 items-center justify-center rounded-[18px] border text-[var(--publication-primary)] transition-colors sm:size-24",
+                              "flex size-16 shrink-0 items-center justify-center rounded-[14px] border text-[var(--publication-primary)] transition-colors sm:size-20",
                               selected
                                 ? "border-[var(--publication-primary)] bg-[var(--publication-pale)]"
                                 : "border-[var(--publication-line)] bg-[var(--publication-surface)] group-hover:bg-[var(--publication-pale)]",
@@ -2126,27 +2126,27 @@ function PublicationOnboardingModalContent({
                               <img
                                 src={illustrationSrc}
                                 alt=""
-                                className="size-14 object-contain sm:size-16"
+                                className="size-11 object-contain sm:size-14"
                                 aria-hidden="true"
                               />
                             </span>
-                            <span className="min-w-0 sm:mt-4">
+                            <span className="min-w-0 sm:mt-3">
                             <span className="block text-base font-black">{title}</span>
-                            <span className="mt-2 block text-sm leading-5 text-[var(--publication-muted)]">
+                            <span className="mt-1.5 block text-sm leading-5 text-[var(--publication-muted)]">
                               {optionDescription}
                             </span>
                           </span>
                           </span>
                           <span
                             className={cn(
-                              "flex size-8 shrink-0 items-center justify-center rounded-full border-2 transition-colors sm:mt-5",
+                              "flex size-7 shrink-0 items-center justify-center rounded-full border-2 transition-colors sm:mt-3",
                               selected
                                 ? "border-[var(--publication-primary)] bg-[var(--publication-primary)] text-white"
                                 : "border-[var(--publication-line)] bg-white text-transparent",
                             )}
                             aria-hidden="true"
                           >
-                            <Check className="size-4" />
+                            <Check className="size-3.5" />
                           </span>
                         </button>
                       );
@@ -2155,7 +2155,7 @@ function PublicationOnboardingModalContent({
                 ) : null}
 
                 {step === 3 ? (
-                  <div className="mt-6 grid w-full gap-4 lg:grid-cols-2">
+                  <div className="mt-4 grid w-full gap-3 lg:grid-cols-2">
                     <PublicationPlateSection
                       title="Your favorites"
                       subtitle="Choose up to 5"
@@ -2180,7 +2180,7 @@ function PublicationOnboardingModalContent({
                 ) : null}
 
                 {step === 4 ? (
-                  <div className="mt-6 w-full space-y-3">
+                  <div className="mt-4 w-full space-y-2.5">
                     {config.newsletters.map((newsletterOption) => (
                       <PublicationNewsletterOption
                         key={newsletterOption.id}
@@ -2190,20 +2190,20 @@ function PublicationOnboardingModalContent({
                       />
                     ))}
 
-                    <div className="flex items-center gap-4 rounded-[12px] bg-white px-5 py-4 text-left shadow-[0_12px_28px_rgba(16,24,40,0.06)]">
-                      <span className="flex size-14 shrink-0 items-center justify-center rounded-full bg-[var(--publication-pale)]">
+                    <div className="flex items-center gap-3 rounded-[10px] bg-white px-4 py-3 text-left shadow-[0_8px_18px_rgba(16,24,40,0.05)]">
+                      <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-[var(--publication-pale)]">
                         <img
                           src={config.cardIllustrationSrc}
                           alt=""
-                          className="size-10 object-contain"
+                          className="size-7 object-contain"
                           aria-hidden="true"
                         />
                       </span>
                       <div className="min-w-0">
-                        <p className="text-base font-black text-[var(--publication-ink)]">
+                        <p className="text-sm font-black text-[var(--publication-ink)]">
                           Your choices stay in this prototype
                         </p>
-                        <p className="mt-1 text-sm leading-5 text-[var(--publication-muted)]">
+                        <p className="mt-0.5 text-sm leading-5 text-[var(--publication-muted)]">
                           Newsletters personalize this demo flow and keep the brand experience contextual.
                         </p>
                       </div>
@@ -2213,16 +2213,16 @@ function PublicationOnboardingModalContent({
               </div>
             </div>
 
-            <footer className="bg-[var(--publication-surface)] px-5 pb-6 pt-1 sm:px-8">
-              <div className="mx-auto grid max-w-[590px] grid-cols-2 items-center gap-3 sm:grid-cols-[150px_1fr_150px]">
+            <footer className="bg-[var(--publication-surface)] px-4 pb-4 pt-1 sm:px-6">
+              <div className="mx-auto grid max-w-[560px] grid-cols-2 items-center gap-3 sm:grid-cols-[140px_1fr_140px]">
                 {step > 1 ? (
                   <Button
                     type="button"
                     variant="outline"
-                    className="min-h-12 w-full rounded-[4px] border-[var(--publication-primary)] bg-white text-base font-black text-[var(--publication-primary)] hover:bg-[var(--publication-pale)] hover:text-[var(--publication-primary)]"
+                    className="min-h-11 w-full rounded-[4px] border-[var(--publication-primary)] bg-white text-sm font-black text-[var(--publication-primary)] hover:bg-[var(--publication-pale)] hover:text-[var(--publication-primary)]"
                     onClick={goToPreviousStep}
                   >
-                    <ChevronLeft className="mr-2 size-5" aria-hidden />
+                    <ChevronLeft className="mr-2 size-4" aria-hidden />
                     Back
                   </Button>
                 ) : (
@@ -2231,7 +2231,7 @@ function PublicationOnboardingModalContent({
 
                 <button
                   type="button"
-                  className="col-span-2 row-start-2 min-h-10 justify-self-center px-2 text-sm font-bold text-[var(--publication-muted)] underline underline-offset-2 hover:text-[var(--publication-ink)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--publication-primary)] sm:col-span-1 sm:col-start-2 sm:row-start-1"
+                  className="col-span-2 row-start-2 min-h-9 justify-self-center px-2 text-sm font-bold text-[var(--publication-muted)] underline underline-offset-2 hover:text-[var(--publication-ink)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--publication-primary)] sm:col-span-1 sm:col-start-2 sm:row-start-1"
                   onClick={() => {
                     if (step < 4) goToNextStep();
                     else setShowWelcome(true);
@@ -2242,7 +2242,7 @@ function PublicationOnboardingModalContent({
 
                 <Button
                   type="button"
-                  className="min-h-12 w-full rounded-[4px] bg-[var(--publication-ink)] px-5 text-base font-black text-white hover:bg-[var(--publication-primary)] sm:col-start-3"
+                  className="min-h-11 w-full rounded-[4px] bg-[var(--publication-ink)] px-4 text-sm font-black text-white hover:bg-[var(--publication-primary)] sm:col-start-3"
                   disabled={!canContinue}
                   onClick={() => {
                     if (step < 4) goToNextStep();
@@ -2250,7 +2250,7 @@ function PublicationOnboardingModalContent({
                   }}
                 >
                   {step === 4 ? "Complete" : "Next"}
-                  <ChevronRight className="ml-2 size-5" aria-hidden />
+                  <ChevronRight className="ml-2 size-4" aria-hidden />
                 </Button>
               </div>
               {step === 1 ? (
@@ -2260,7 +2260,7 @@ function PublicationOnboardingModalContent({
                     skipFocusRestoreRef.current = true;
                     onSignIn();
                   }}
-                  className="mx-auto mt-4 flex min-h-10 items-center justify-center text-sm font-medium text-[var(--publication-ink)] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--publication-primary)]"
+                  className="mx-auto mt-3 flex min-h-9 items-center justify-center text-sm font-medium text-[var(--publication-ink)] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--publication-primary)]"
                 >
                   Already have a profile? Sign in
                 </button>
@@ -2298,21 +2298,21 @@ function PublicationStepMarker({
       className="flex flex-col items-center"
       aria-label={`Step ${step} of 4`}
     >
-      <div className="relative h-[112px] w-[132px]" aria-hidden="true">
-        <span className="absolute left-1/2 top-0 flex size-[92px] -translate-x-1/2 items-center justify-center rounded-[22px] border border-[var(--publication-line)] bg-white text-[var(--publication-primary)] shadow-[0_14px_28px_rgba(16,24,40,0.08)]">
-          <span className="absolute inset-2 rounded-[16px] bg-[var(--publication-pale)]" aria-hidden="true" />
+      <div className="relative h-[92px] w-[108px]" aria-hidden="true">
+        <span className="absolute left-1/2 top-0 flex size-[70px] -translate-x-1/2 items-center justify-center rounded-[18px] border border-[var(--publication-line)] bg-white text-[var(--publication-primary)] shadow-[0_10px_22px_rgba(16,24,40,0.07)]">
+          <span className="absolute inset-1.5 rounded-[13px] bg-[var(--publication-pale)]" aria-hidden="true" />
           <img
             src={illustrationSrc}
             alt=""
-            className="relative z-10 size-16 object-contain"
+            className="relative z-10 size-12 object-contain"
             aria-hidden="true"
           />
         </span>
-        <span className="absolute left-1/2 top-[72px] flex size-8 -translate-x-1/2 items-center justify-center rounded-full bg-[var(--publication-primary)] text-[0.7rem] font-black leading-none text-white shadow-[0_8px_18px_rgba(16,24,40,0.18)]">
+        <span className="absolute left-1/2 top-[54px] flex size-7 -translate-x-1/2 items-center justify-center rounded-full bg-[var(--publication-primary)] text-[0.62rem] font-black leading-none text-white shadow-[0_6px_14px_rgba(16,24,40,0.16)]">
           {step}/4
         </span>
       </div>
-      <p className="-mt-1 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--publication-ink)]">
+      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--publication-ink)]">
         Step {step}
       </p>
     </div>
@@ -2335,27 +2335,27 @@ function PublicationPlateSection({
   onToggle: (label: string) => void;
 }) {
   return (
-    <section className="rounded-[12px] border border-[var(--publication-line)] bg-white/95 p-4 shadow-[0_12px_26px_rgba(16,24,40,0.06)] sm:p-5">
-      <div className="flex items-start gap-3">
+    <section className="rounded-[10px] border border-[var(--publication-line)] bg-white/95 p-3 shadow-[0_8px_18px_rgba(16,24,40,0.05)] sm:p-4">
+      <div className="flex items-start gap-2.5">
         <span
-          className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[var(--publication-pale)]"
+          className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[var(--publication-pale)]"
           aria-hidden="true"
         >
           <img
             src={markerIllustrationSrc}
             alt=""
-            className="size-7 object-contain"
+            className="size-6 object-contain"
             aria-hidden="true"
           />
         </span>
         <div className="min-w-0 text-left">
-          <p className="text-sm font-black uppercase tracking-[0.18em] text-[var(--publication-primary)]">
+          <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--publication-primary)]">
             {title}
           </p>
-          <p className="mt-1 text-sm font-medium text-[var(--publication-muted)]">{subtitle}</p>
+          <p className="mt-0.5 text-xs font-medium text-[var(--publication-muted)]">{subtitle}</p>
         </div>
       </div>
-      <div className="mt-4 grid gap-2">
+      <div className="mt-3 grid gap-2">
         {options.map(({ label, illustrationSrc }) => {
           const isSelected = selected.includes(label);
           const limitReached = selected.length >= 5 && !isSelected;
@@ -2368,40 +2368,40 @@ function PublicationPlateSection({
               aria-pressed={isSelected}
               onClick={() => onToggle(label)}
               className={cn(
-                "flex min-h-12 items-center gap-3 rounded-[9px] border bg-white px-3 py-2 text-left text-sm font-bold text-[var(--publication-ink)] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--publication-primary)] disabled:cursor-not-allowed disabled:opacity-45 motion-reduce:transition-none",
+                "flex min-h-10 items-center gap-2.5 rounded-[8px] border bg-white px-3 py-2 text-left text-sm font-bold text-[var(--publication-ink)] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--publication-primary)] disabled:cursor-not-allowed disabled:opacity-45 motion-reduce:transition-none",
                 isSelected
                   ? "border-[var(--publication-primary)] bg-[var(--publication-pale)]"
                   : "border-[var(--publication-line)] hover:border-[var(--publication-primary)]",
               )}
             >
               <span
-                className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[var(--publication-surface)]"
+                className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[var(--publication-surface)]"
                 aria-hidden="true"
               >
                 <img
                   src={illustrationSrc}
                   alt=""
-                  className="size-7 object-contain"
+                  className="size-5.5 object-contain"
                   aria-hidden="true"
                 />
               </span>
               <span className="min-w-0 flex-1">{label}</span>
               <span
                 className={cn(
-                  "flex size-6 shrink-0 items-center justify-center rounded-full border-2",
+                  "flex size-5.5 shrink-0 items-center justify-center rounded-full border-2",
                   isSelected
                     ? "border-[var(--publication-primary)] bg-[var(--publication-primary)]"
                     : "border-[var(--publication-line)] bg-white",
                 )}
                 aria-hidden="true"
               >
-                {isSelected ? <Check className="size-3.5 text-white" /> : null}
+                {isSelected ? <Check className="size-3 text-white" /> : null}
               </span>
             </button>
           );
         })}
       </div>
-      <p className="mt-3 text-sm font-semibold text-[var(--publication-muted)]" aria-live="polite">
+      <p className="mt-2 text-xs font-semibold text-[var(--publication-muted)]" aria-live="polite">
         {selected.length} of 5 selected
       </p>
     </section>
@@ -2423,7 +2423,7 @@ function PublicationNewsletterOption({
       aria-pressed={selected}
       onClick={onToggle}
       className={cn(
-        "flex w-full items-center gap-4 rounded-[12px] border bg-white px-5 py-4 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--publication-primary)] motion-reduce:transition-none",
+        "flex w-full items-center gap-3 rounded-[10px] border bg-white px-4 py-3 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--publication-primary)] motion-reduce:transition-none",
         selected
           ? "border-[var(--publication-primary)] bg-[var(--publication-pale)]"
           : "border-[var(--publication-line)] hover:border-[var(--publication-primary)]",
@@ -2432,25 +2432,25 @@ function PublicationNewsletterOption({
       <img
         src={option.illustrationSrc}
         alt=""
-        className="size-16 shrink-0 object-contain"
+        className="size-12 shrink-0 object-contain sm:size-[52px]"
         aria-hidden="true"
       />
       <span
         className={cn(
-          "flex size-9 shrink-0 items-center justify-center rounded-[6px] border-2 transition-colors",
+          "flex size-8 shrink-0 items-center justify-center rounded-[6px] border-2 transition-colors",
           selected
             ? "border-[var(--publication-primary)] bg-[var(--publication-primary)] text-white"
             : "border-[var(--publication-line)] bg-white text-transparent",
         )}
         aria-hidden="true"
       >
-        <Check className="size-5" />
+        <Check className="size-4" />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block text-xl font-black leading-tight text-[var(--publication-ink)]">
+        <span className="block text-base font-black leading-tight text-[var(--publication-ink)] sm:text-lg">
           {option.title}
         </span>
-        <span className="mt-1 block max-w-[38ch] text-base leading-6 text-[var(--publication-muted)]">
+        <span className="mt-1 block max-w-[42ch] text-sm leading-5 text-[var(--publication-muted)]">
           {option.description}
         </span>
       </span>
@@ -2485,30 +2485,30 @@ function PublicationWelcomeStep({
 }) {
   return (
     <>
-      <div className="min-h-0 flex-1 overflow-y-auto px-5 py-8 sm:px-8 sm:py-9">
-        <div className="mx-auto flex max-w-[620px] flex-col items-center text-center">
+      <div className="min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6 sm:py-6">
+        <div className="mx-auto flex max-w-[560px] flex-col items-center text-center">
           <BrandLogo
             slug={config.slug}
             color={config.ink}
             decorative
-            className="w-[190px] max-w-[70%] [&_svg]:h-auto [&_svg]:w-full sm:w-[235px]"
+            className="w-[150px] max-w-[64%] [&_svg]:h-auto [&_svg]:w-full sm:w-[190px]"
           />
           <h2
             ref={headingRef}
             id={`${config.slug}-onboarding-title`}
             tabIndex={-1}
-            className="mt-6 text-balance text-[2.35rem] font-black leading-[1.03] tracking-normal text-[var(--publication-ink)] outline-none sm:text-[3rem]"
+            className="mt-4 text-balance text-[1.9rem] font-black leading-[1.03] tracking-normal text-[var(--publication-ink)] outline-none sm:text-[2.4rem]"
             style={{ fontFamily: config.headlineFont }}
           >
             Welcome, {name}.
           </h2>
           <p
             id={`${config.slug}-onboarding-description`}
-            className="mt-3 text-lg leading-7 text-[var(--publication-muted)] sm:text-xl"
+            className="mt-2 text-base leading-6 text-[var(--publication-muted)] sm:text-lg"
           >
             Your {config.brandName} edition is ready.
           </p>
-          <div className="mt-7 w-full max-w-[540px]">
+          <div className="mt-5 w-full max-w-[500px]">
             <PublicationMembershipCard
               config={config}
               name={cardName}
@@ -2521,20 +2521,20 @@ function PublicationWelcomeStep({
           </div>
         </div>
       </div>
-      <footer className="bg-[var(--publication-surface)] px-5 pb-6 pt-1 sm:px-8">
-        <div className="mx-auto grid max-w-[620px] grid-cols-2 gap-4">
+      <footer className="bg-[var(--publication-surface)] px-4 pb-4 pt-1 sm:px-6">
+        <div className="mx-auto grid max-w-[560px] grid-cols-2 gap-3">
           <Button
             type="button"
             variant="outline"
-            className="min-h-12 rounded-[4px] border-[var(--publication-line)] bg-white text-base font-black text-[var(--publication-muted)] hover:bg-white hover:text-[var(--publication-ink)]"
+            className="min-h-11 rounded-[4px] border-[var(--publication-line)] bg-white text-sm font-black text-[var(--publication-muted)] hover:bg-white hover:text-[var(--publication-ink)]"
             onClick={onBack}
           >
-            <ChevronLeft className="mr-2 size-5" aria-hidden />
+            <ChevronLeft className="mr-2 size-4" aria-hidden />
             Back
           </Button>
           <Button
             type="button"
-            className="min-h-12 rounded-[4px] bg-[var(--publication-ink)] px-5 text-base font-black text-white hover:bg-[var(--publication-primary)]"
+            className="min-h-11 rounded-[4px] bg-[var(--publication-ink)] px-4 text-sm font-black text-white hover:bg-[var(--publication-primary)]"
             onClick={onClose}
           >
             Close
@@ -2567,12 +2567,12 @@ function PublicationMembershipCard({
   const firstNewsletters = newsletters.length > 0 ? newsletters.join(", ") : config.fallbackPriority;
 
   return (
-    <section className="relative min-h-[300px] overflow-hidden rounded-[16px] bg-[var(--publication-ink)] p-6 text-white shadow-[0_14px_32px_rgba(0,0,0,0.28)] sm:min-h-[330px] sm:p-7">
-      <div className="absolute -right-14 -top-14 size-44 rounded-full bg-[var(--publication-primary)]/65" aria-hidden />
-      <div className="absolute -bottom-20 left-8 size-52 rounded-full bg-[var(--publication-secondary)]/25" aria-hidden />
+    <section className="relative min-h-[250px] overflow-hidden rounded-[14px] bg-[var(--publication-ink)] p-5 text-white shadow-[0_12px_26px_rgba(0,0,0,0.24)] sm:min-h-[280px] sm:p-6">
+      <div className="absolute -right-12 -top-12 size-36 rounded-full bg-[var(--publication-primary)]/65" aria-hidden />
+      <div className="absolute -bottom-16 left-8 size-44 rounded-full bg-[var(--publication-secondary)]/25" aria-hidden />
       <div className="relative z-10 flex h-full flex-col">
         <div className="flex items-center gap-3">
-          <div className="flex size-16 shrink-0 items-center justify-center rounded-[12px] bg-white text-[1.6rem] font-black leading-none text-[var(--publication-ink)]">
+          <div className="flex size-[52px] shrink-0 items-center justify-center rounded-[10px] bg-white text-[1.25rem] font-black leading-none text-[var(--publication-ink)] sm:size-14">
             {config.brandName
               .split(/\s+/)
               .map((word) => word[0])
@@ -2580,18 +2580,18 @@ function PublicationMembershipCard({
               .slice(0, 3)}
           </div>
           <div className="text-left">
-            <p className="text-sm font-black uppercase tracking-[0.16em] text-[var(--publication-secondary)]">
+            <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--publication-secondary)]">
               {config.brandName}
             </p>
             <h3
-              className="mt-1 text-3xl font-black leading-none text-white"
+              className="mt-1 text-2xl font-black leading-none text-white sm:text-[1.75rem]"
               style={{ fontFamily: config.headlineFont }}
             >
               {config.cardTitle}
             </h3>
           </div>
         </div>
-        <div className="mt-12 grid gap-5 text-left sm:mt-20 sm:grid-cols-2">
+        <div className="mt-8 grid gap-4 text-left sm:mt-12 sm:grid-cols-2">
           <CardDetail label="Name" value={name} />
           <CardDetail label="Anchor" value={location} />
           <CardDetail label="Reader mode" value={path} />
@@ -2602,7 +2602,7 @@ function PublicationMembershipCard({
         <img
           src={config.cardIllustrationSrc}
           alt=""
-          className="pointer-events-none absolute bottom-5 right-5 size-24 object-contain opacity-15"
+          className="pointer-events-none absolute bottom-4 right-4 size-20 object-contain opacity-15"
           aria-hidden="true"
         />
       </div>
