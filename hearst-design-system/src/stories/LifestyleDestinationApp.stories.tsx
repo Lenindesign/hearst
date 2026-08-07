@@ -8,7 +8,11 @@ import {
   hearstPlusVideoStoryData,
 } from "./hearst-plus-story-data";
 
-function LifestyleDestinationStory({ initialFilter }: { initialFilter?: string }) {
+function LifestyleDestinationStory({
+  initialFilter,
+}: {
+  initialFilter?: string;
+}) {
   return (
     <ThemeProvider defaultBrandSlug="hearst-lifestyle" persistColorMode={false}>
       <HomePageTemplate
@@ -49,9 +53,9 @@ export const DailyHome: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    const brandFilterHeadings = await canvas.findAllByText("Filter Brands");
+    const brandFilterHeadings = await canvas.findAllByText("Join Communities");
     const brandFilterDescriptions = await canvas.findAllByText(
-      "All brands are included in the river.",
+      "Join a brand community to tune your feed and unlock its forum.",
     );
 
     await expect(brandFilterHeadings.length).toBeGreaterThan(0);

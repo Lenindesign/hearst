@@ -117,7 +117,9 @@ export function DiscoverySidebarCard({
           />
         </button>
       </div>
-      <div className={cn("mt-4 lg:block", open ? "block" : "hidden")}>{children}</div>
+      <div className={cn("mt-4 lg:block", open ? "block" : "hidden")}>
+        {children}
+      </div>
     </section>
   );
 }
@@ -134,7 +136,7 @@ export function LifestyleDiscoverySidebar({
   topStories,
   topics,
   brands,
-  brandFilterTitle = "Filter Brands",
+  brandFilterTitle = "Join Communities",
   brandFilterFirst = false,
   showBrandCounts = true,
   globalInventory = false,
@@ -149,17 +151,28 @@ export function LifestyleDiscoverySidebar({
   onOpenStory,
 }: LifestyleDiscoverySidebarProps) {
   const activeTopicSummary = profile.followedTopics.slice(0, 3).join(", ");
-  const brandStoryCount = brands.reduce((total, brand) => total + brand.count, 0);
-  const brandSummary = !showBrandCounts
-    ? `${brands.length} brands`
-    : globalInventory
-      ? `${brands.length} brands · ${brandStoryCount} stories`
-      : activeBrandFilters.length > 0
-        ? activeBrandFilters[0]
-        : `All brands · ${brandStoryCount} stories`;
+  const brandStoryCount = brands.reduce(
+    (total, brand) => total + brand.count,
+    0,
+  );
+  const isBrandCommunityModule = brandFilterTitle === "Join Communities";
+  const brandSummary = isBrandCommunityModule
+    ? activeBrandFilters.length > 0
+      ? `${activeBrandFilters.length} joined`
+      : `${brands.length} brand communities`
+    : !showBrandCounts
+      ? `${brands.length} brands`
+      : globalInventory
+        ? `${brands.length} brands · ${brandStoryCount} stories`
+        : activeBrandFilters.length > 0
+          ? activeBrandFilters[0]
+          : `All brands · ${brandStoryCount} stories`;
   const topicSummary = activeTopicSummary || `${topics.length} topics`;
   const collectionSummary = `${collectionLabels.length} collections`;
-  const autosOemStoryCount = autosOemOptions.reduce((total, make) => total + make.count, 0);
+  const autosOemStoryCount = autosOemOptions.reduce(
+    (total, make) => total + make.count,
+    0,
+  );
   const autosOemSummary =
     activeAutosOemFilters.length > 0
       ? activeAutosOemFilters.join(", ")
@@ -189,7 +202,8 @@ export function LifestyleDiscoverySidebar({
               {story.title}
             </p>
             <p className="mt-1 text-xs text-muted-foreground">
-              {story.brand} · {getLifestyleByline(story)} · Popularity {story.popularity}
+              {story.brand} · {getLifestyleByline(story)} · Popularity{" "}
+              {story.popularity}
             </p>
           </button>
         ))}
@@ -198,11 +212,19 @@ export function LifestyleDiscoverySidebar({
   );
 
   const brandFilterModule = (
-    <DiscoverySidebarCard
-      title={brandFilterTitle}
-      summary={brandSummary}
-    >
-      <div className="mt-4 space-y-3">
+    <DiscoverySidebarCard title={brandFilterTitle} summary={brandSummary}>
+      {isBrandCommunityModule ? (
+        <p className="mt-4 text-xs leading-5 text-muted-foreground">
+          Pick the brand communities you want in your feed. Joined brands become
+          the path into their forums.
+        </p>
+      ) : null}
+      <div
+        className={cn(
+          "mt-4",
+          isBrandCommunityModule ? "space-y-2" : "space-y-3",
+        )}
+      >
         {brands.map((brand) => {
           const active = activeBrandFilters.includes(brand.name);
           return (
@@ -212,11 +234,18 @@ export function LifestyleDiscoverySidebar({
               onClick={() => onToggleBrandFilter(brand.name)}
               disabled={brand.count === 0}
               className={cn(
-                "flex w-full min-w-0 items-center justify-between gap-3 border-b border-border pb-2 text-left text-sm transition-colors last:border-0 last:pb-0",
-                active && "font-bold text-primary",
-                brand.count === 0 && "cursor-not-allowed text-muted-foreground opacity-70",
+                isBrandCommunityModule
+                  ? "flex min-h-11 w-full min-w-0 items-center justify-between gap-3 rounded-[8px] border border-border bg-background px-3 py-2 text-left text-sm transition-colors hover:border-primary/45 hover:bg-muted/40"
+                  : "flex w-full min-w-0 items-center justify-between gap-3 border-b border-border pb-2 text-left text-sm transition-colors last:border-0 last:pb-0",
+                active &&
+                  (isBrandCommunityModule
+                    ? "border-primary bg-primary/10 font-bold text-primary ring-2 ring-primary/15"
+                    : "font-bold text-primary"),
+                brand.count === 0 &&
+                  "cursor-not-allowed text-muted-foreground opacity-70",
               )}
               aria-pressed={active}
+              aria-label={`${active ? "Leave" : "Join"} ${brand.name} community`}
             >
               <span className="flex min-w-0 items-center gap-2">
                 <BrandSourceIcon
@@ -224,24 +253,41 @@ export function LifestyleDiscoverySidebar({
                   brandSlug={brand.slug}
                   className={cn(
                     "h-5 w-5 rounded-[4px]",
-                    active ? "border-primary ring-2 ring-primary/20" : "border-border",
+                    active
+                      ? "border-primary ring-2 ring-primary/20"
+                      : "border-border",
                   )}
                 />
                 <span className="min-w-0 truncate">{brand.name}</span>
               </span>
-              {showBrandCounts ? (
-                <span className="text-xs text-muted-foreground">{brand.count}</span>
+              {isBrandCommunityModule ? (
+                <span
+                  className={cn(
+                    "shrink-0 text-xs font-bold",
+                    active ? "text-primary" : "text-muted-foreground",
+                  )}
+                >
+                  {active ? "Joined" : "Join"}
+                </span>
+              ) : showBrandCounts ? (
+                <span className="text-xs text-muted-foreground">
+                  {brand.count}
+                </span>
               ) : null}
             </button>
           );
         })}
       </div>
       <p className="mt-4 text-xs leading-5 text-muted-foreground">
-        {globalInventory
-          ? "Complete section inventory. Select a brand to open its publication."
-          : activeBrandFilters.length > 0
-            ? `Showing ${activeBrandFilters[0]}.`
-            : "All brands are included in the river."}
+        {isBrandCommunityModule
+          ? activeBrandFilters.length > 0
+            ? `You joined ${activeBrandFilters[0]}. Open its brand page to enter the forum.`
+            : "Join a brand community to tune your feed and unlock its forum."
+          : globalInventory
+            ? "Complete section inventory. Select a brand to open its publication."
+            : activeBrandFilters.length > 0
+              ? `Showing ${activeBrandFilters[0]}.`
+              : "All brands are included in the river."}
       </p>
     </DiscoverySidebarCard>
   );
@@ -251,7 +297,9 @@ export function LifestyleDiscoverySidebar({
       <DiscoverySidebarCard
         title="Filter by make"
         summary={autosOemSummary}
-        mobileActionLabel={activeAutosOemFilters.length > 0 ? "Clear" : undefined}
+        mobileActionLabel={
+          activeAutosOemFilters.length > 0 ? "Clear" : undefined
+        }
         onMobileAction={
           activeAutosOemFilters.length > 0 ? onClearAutosOemFilters : undefined
         }
@@ -277,7 +325,8 @@ export function LifestyleDiscoverySidebar({
                 onClick={() => onToggleAutosOemFilter(make.name)}
                 className={cn(
                   "group rounded-lg border border-border bg-background p-2 text-left transition-colors hover:border-primary/60 hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-primary/30",
-                  active && "border-primary bg-primary/10 text-primary ring-2 ring-primary/20",
+                  active &&
+                    "border-primary bg-primary/10 text-primary ring-2 ring-primary/20",
                 )}
                 aria-pressed={active}
                 aria-label={`Filter Autos stories by ${make.name}`}
@@ -302,8 +351,8 @@ export function LifestyleDiscoverySidebar({
           })}
         </div>
         <p className="mt-4 text-xs leading-5 text-muted-foreground">
-          Uses makes detected in the current Autos story inventory. Publication filters still
-          control the story source.
+          Uses makes detected in the current Autos story inventory. Publication
+          filters still control the story source.
         </p>
       </DiscoverySidebarCard>
     ) : null;
@@ -352,7 +401,8 @@ export function LifestyleDiscoverySidebar({
             </p>
           ))}
           <p className="text-xs text-[var(--hp-text-ui)]">
-            Saved stories and more-like-this actions tune these collections over time.
+            Saved stories and more-like-this actions tune these collections over
+            time.
           </p>
         </div>
       </DiscoverySidebarCard>

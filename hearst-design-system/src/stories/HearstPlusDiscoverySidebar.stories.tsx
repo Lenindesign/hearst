@@ -145,11 +145,7 @@ function DiscoverySidebarExample({
             topics={lifestyleTopics}
             brands={brands}
             brandFilterTitle={
-              mode === "publication"
-                ? "Global Story Inventory"
-                : mode === "videos"
-                  ? "Videos by brand"
-                  : undefined
+              mode === "videos" ? "Videos by brand" : undefined
             }
             brandFilterFirst={mode === "videos"}
             showBrandCounts={mode !== "videos"}
@@ -225,15 +221,15 @@ export const DestinationDiscovery: Story = {
     await userEvent.click(firstStory);
     await expect(canvas.getByRole("status")).toHaveTextContent(/^Opened /);
 
-    await userEvent.click(canvas.getByRole("button", { name: "Country Living 57" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Join Country Living community" }));
     await expect(
-      canvas.getByRole("button", { name: "Country Living 57" }),
+      canvas.getByRole("button", { name: "Leave Country Living community" }),
     ).toHaveAttribute("aria-pressed", "true");
   },
 };
 
 export const PublicationInventory: Story = {
-  name: "Publication: Global Story Inventory",
+  name: "Publication: Join Communities",
   globals: {
     brand: "cosmopolitan",
   },
@@ -241,7 +237,7 @@ export const PublicationInventory: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(
-      canvas.getByRole("button", { name: "House Beautiful 62" }),
+      canvas.getByRole("button", { name: "Join House Beautiful community" }),
     ).toBeInTheDocument();
   },
 };
@@ -254,12 +250,14 @@ export const PublicationInventoryInteractions: Story = {
   render: () => <DiscoverySidebarExample mode="publication" />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const selectedBrand = canvas.getByRole("button", { name: "Cosmopolitan 61" });
+    const selectedBrand = canvas.getByRole("button", { name: "Leave Cosmopolitan community" });
     await expect(selectedBrand).toHaveAttribute("aria-pressed", "true");
 
-    await userEvent.click(canvas.getByRole("button", { name: "Clear" }));
-    await expect(selectedBrand).toHaveAttribute("aria-pressed", "false");
-    await expect(canvas.getByRole("status")).toHaveTextContent("Cleared brand filter");
+    await userEvent.click(selectedBrand);
+    await expect(
+      canvas.getByRole("button", { name: "Join Cosmopolitan community" }),
+    ).toHaveAttribute("aria-pressed", "false");
+    await expect(canvas.getByRole("status")).toHaveTextContent("Selected Cosmopolitan");
   },
 };
 

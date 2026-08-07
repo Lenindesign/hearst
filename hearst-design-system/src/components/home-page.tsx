@@ -882,9 +882,11 @@ export function MainNav({
             <div className="flex items-center justify-between gap-4">
               <div>
                 <h2 id="mobile-filter-brands-title" className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
-                  Filter Brands
+                  Join Communities
                 </h2>
-                <p className={cn("mt-1 text-xs", darkMode ? "text-white/60" : "text-muted-foreground")}>{mobileBrands.length} brands</p>
+                <p className={cn("mt-1 text-xs", darkMode ? "text-white/60" : "text-muted-foreground")}>
+                  {activeBrandFilters.length > 0 ? `${activeBrandFilters.length} joined` : `${mobileBrands.length} brand communities`}
+                </p>
               </div>
               {activeBrandFilters.length > 0 ? (
                 <button
@@ -895,7 +897,7 @@ export function MainNav({
                   }}
                   className="min-h-11 px-1 text-xs font-bold text-[var(--hp-section-title)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
                 >
-                  Show all
+                  Leave all
                 </button>
               ) : null}
             </div>
@@ -924,6 +926,7 @@ export function MainNav({
                   >
                     <BrandSourceIcon brand={mobileBrand.name} brandSlug={mobileBrand.slug} className="h-6 w-6 rounded-[4px]" />
                     <span className="min-w-0 flex-1 truncate">{mobileBrand.name}</span>
+                    <span className="shrink-0 text-[0.7rem] font-bold">{active ? "Joined" : "Join"}</span>
                   </button>
                 );
               })}
@@ -5381,9 +5384,9 @@ function LifestyleRiverHomePage({
           topStories={moduleAllocation.dailyHabitStories}
           topics={sidebarTopics}
           brands={sidebarBrands}
-          brandFilterTitle={initialBrandSlug && !usingVideoTabFeed ? "Global Story Inventory" : undefined}
+          brandFilterTitle={usingVideoTabFeed ? "Videos by brand" : undefined}
           globalInventory={Boolean(initialBrandSlug && !usingVideoTabFeed)}
-          showBrandCounts={Boolean(initialBrandSlug && !usingVideoTabFeed)}
+          showBrandCounts={usingVideoTabFeed ? false : Boolean(initialBrandSlug && !usingVideoTabFeed)}
           activeBrandFilters={effectiveBrandFilters}
           autosOemOptions={autosOemOptions}
           activeAutosOemFilters={activeAutosOemFilters}
