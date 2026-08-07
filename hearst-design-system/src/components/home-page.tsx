@@ -724,6 +724,9 @@ export function MainNav({
     const publicationHref = selectedBrand?.slug === "hot-rod" && link === "Events"
       ? "/autos/hot-rod/events/"
       : undefined;
+    const communityHref = selectedBrand && link === "Community"
+      ? `/communities/${selectedBrand.slug}/`
+      : undefined;
     const categoryHref = isDestinationRiver && !selectedBrand
       ? getHearstDestinationCategoryRoute(destinationMode, link)
       : undefined;
@@ -732,10 +735,10 @@ export function MainNav({
       ? "text-[var(--component-navigation-utility-content-knockout)] hover:border-[var(--component-navigation-utility-content-accent)]/60 hover:text-[var(--component-navigation-utility-content-accent)]"
       : "text-foreground hover:border-primary/40 hover:text-primary";
 
-    return destinationHref || publicationHref ? (
+    return destinationHref || publicationHref || communityHref ? (
       <LinkComponent
         key={link}
-        href={destinationHref ?? publicationHref}
+        href={destinationHref ?? publicationHref ?? communityHref}
         variant="neutral"
         underline={false}
         size="sm"

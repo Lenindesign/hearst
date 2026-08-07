@@ -72,7 +72,7 @@ const featuredCommunitySeeds = [
   {
     brandSlug: "delish",
     name: "Italian Weeknights",
-    description: "Pantry pastas, red sauce questions, and low-stress dinners.",
+    description: "A Delish group for pantry pastas, red sauce questions, and low-stress dinners.",
     icon: ChefHat,
     members: "18.4K cooks",
     prompt: "What sauce saves dinner when time is short?",
@@ -80,7 +80,7 @@ const featuredCommunitySeeds = [
   {
     brandSlug: "cosmopolitan",
     name: "Cosmo Watch Party",
-    description: "Celeb reads, dating debates, entertainment reactions.",
+    description: "A Cosmo group for celeb reads, dating debates, and entertainment reactions.",
     icon: Star,
     members: "22.8K readers",
     prompt: "What story should everyone be talking about today?",
@@ -89,7 +89,7 @@ const featuredCommunitySeeds = [
     brandSlug: "good-housekeeping",
     name: "Home Fix Club",
     description:
-      "Tested routines, cleaning saves, meal prep, and family systems.",
+      "A Good Housekeeping group for tested routines, cleaning saves, meal prep, and family systems.",
     icon: Heart,
     members: "31.2K members",
     prompt: "What household fix actually worked this week?",
@@ -97,7 +97,7 @@ const featuredCommunitySeeds = [
   {
     brandSlug: "car-and-driver",
     name: "Garage Talk",
-    description: "Buying advice, road tests, EV notes, and weekend drives.",
+    description: "A Car and Driver group for buying advice, road tests, EV notes, and weekend drives.",
     icon: Flame,
     members: "16.5K drivers",
     prompt: "What would you test before buying?",
@@ -106,7 +106,7 @@ const featuredCommunitySeeds = [
 
 const kindLabels: Record<CommunityThread["kind"], string> = {
   story: "Story comments",
-  forum: "Forum thread",
+  forum: "Group post",
   challenge: "Challenge",
   recipe: "Recipe share",
   writer: "Writer thread",
@@ -251,11 +251,11 @@ function makeThreads(
         brandSlug: seed.brandSlug,
         title: seed.prompt,
         body: seed.description,
-        meta: `${seed.name} · ${seed.members}`,
+        meta: `${seed.name} group · ${seed.members}`,
         kind: index % 2 === 0 ? ("forum" as const) : ("challenge" as const),
         replies: 18 + index * 7,
         author: brand?.brand ?? "Hearst+",
-        action: "Open thread",
+        action: "Open discussion",
         href: `/communities/${seed.brandSlug}/threads/seed-${seed.brandSlug}/`,
       };
     });
@@ -347,10 +347,7 @@ export function CommunityForumsPage({
     .filter(
       (item) => !activeBrandSlug || item?.brand.brandSlug === activeBrandSlug,
     );
-  const totalStories = visibleBrands.reduce(
-    (total, brand) => total + brand.stories.length,
-    0,
-  );
+  const totalThreads = threads.length;
   const totalBrands = visibleBrands.length;
   const topBrands = [...brands].sort(
     (a, b) => b.stories.length - a.stories.length,
@@ -365,39 +362,39 @@ export function CommunityForumsPage({
     : topBrands;
   const sectionSummary = activeBrand
     ? sectionLabels[activeBrand.section]
-    : "All sections";
+    : "All groups";
   const heroTitle = activeThread
     ? activeThread.title
     : activeBrand
-      ? `${activeBrand.brand} community`
-      : "Talk through what you are reading";
+      ? `${activeBrand.brand} group`
+      : "Join groups around what you read";
   const heroDescription = activeThread
-    ? "Join the conversation, follow the thread, or open the original story for full context."
-    : "Story comments, writer prompts, reader questions, and forum threads share one community layer. Follow a brand, continue a story conversation, or start a topic people can come back to later.";
+    ? "Reply to the discussion, follow the thread, or open the original story for full context."
+    : "Follow brand groups, join story discussions, ask readers for advice, and hear directly from writers. Each group keeps posts useful, specific, and connected to Hearst stories.";
   const selectedBrandForUtility = activeBrand
     ? { name: activeBrand.brand, slug: activeBrand.brandSlug }
     : null;
   const createActions =
     activeBrand?.section === "autos"
       ? [
-          { label: "Ask buying advice", icon: MessageCircle },
+          { label: "Ask the group", icon: MessageCircle },
           { label: "Share a garage note", icon: Camera },
           { label: "Start a weekend challenge", icon: Star },
         ]
       : activeBrand?.section === "flux"
         ? [
-            { label: "Ask a style question", icon: MessageCircle },
+            { label: "Ask the group", icon: MessageCircle },
             { label: "Share a moodboard", icon: Camera },
-            { label: "Start a culture thread", icon: Star },
+            { label: "Start a culture post", icon: Star },
           ]
         : activeBrand?.section === "ew"
           ? [
-              { label: "Ask for advice", icon: MessageCircle },
+              { label: "Ask the group", icon: MessageCircle },
               { label: "Share a gear note", icon: Camera },
               { label: "Start a challenge", icon: Star },
             ]
           : [
-              { label: "Ask a question", icon: MessageCircle },
+              { label: "Ask the group", icon: MessageCircle },
               {
                 label:
                   activeBrand?.brandSlug === "delish"
@@ -488,16 +485,16 @@ export function CommunityForumsPage({
 
               <div className="rounded-[8px] border border-primary/15 bg-[#eef7ff] p-4">
                 <p className="text-sm font-bold text-[var(--hp-text-primary)]">
-                  Community is not a separate product.
+                  Groups keep the community organized.
                 </p>
                 <p className="hearst-community-copy mt-2 text-sm leading-6 text-[var(--hp-text-ui)]">
-                  Comments stay with articles. Writers and readers can also
-                  start threads worth revisiting.
+                  Comments stay with articles, while brand groups give readers
+                  and writers a place to keep the conversation going.
                 </p>
                 <div className="mt-4 grid grid-cols-3 gap-2 text-center">
                   {[
-                    { label: "Brands", value: totalBrands },
-                    { label: "Stories", value: totalStories },
+                    { label: "Groups", value: totalBrands },
+                    { label: "Posts", value: totalThreads },
                     { label: "Mode", value: activeBrand ? "Brand" : "All" },
                   ].map((item) => (
                     <div
@@ -539,8 +536,8 @@ export function CommunityForumsPage({
                   className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-[var(--component-button-radius-default)] border border-[var(--hp-border)] bg-[var(--hp-surface)] px-4 text-sm font-medium transition-colors hover:bg-[var(--hp-control-hover)] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
                 >
                   {activeThread
-                    ? `Back to ${activeBrand.brand}`
-                    : "View all communities"}
+                    ? `Back to ${activeBrand.brand} group`
+                    : "View all groups"}
                 </Link>
               ) : null}
             </div>
@@ -552,7 +549,7 @@ export function CommunityForumsPage({
             <section className="rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
               <div className="flex items-center justify-between gap-3">
                 <h2 className="hearst-community-display text-xl font-bold leading-tight">
-                  Browse brands
+                  Browse groups
                 </h2>
                 <Link
                   href="/communities/"
@@ -581,7 +578,7 @@ export function CommunityForumsPage({
                     <span className="min-w-0 flex-1">
                       <span className="block truncate">{brand.brand}</span>
                       <span className="mt-0.5 block text-xs font-semibold text-[var(--hp-text-secondary)]">
-                        {sectionLabels[brand.section]}
+                        {sectionLabels[brand.section]} group
                       </span>
                     </span>
                     <span className="shrink-0 text-xs text-[var(--hp-text-secondary)]">
@@ -603,11 +600,11 @@ export function CommunityForumsPage({
                   id="community-feed-title"
                   className="hearst-community-display text-3xl font-bold leading-tight"
                 >
-                  Latest conversations
+                  Group posts
                 </h2>
                 <p className="hearst-community-copy mt-1 text-sm leading-6 text-[var(--hp-text-secondary)]">
-                  A mix of article comments, writer prompts, reader questions,
-                  and club threads.
+                  Story discussions, writer prompts, reader questions, and
+                  group posts in one feed.
                 </p>
               </div>
               <Link
@@ -616,7 +613,7 @@ export function CommunityForumsPage({
                 aria-controls={activeThread ? "reply-thread" : "start-thread"}
               >
                 <MessageCircle className="size-4" aria-hidden />
-                {activeThread ? "Reply to thread" : "Start a thread"}
+                {activeThread ? "Reply to thread" : "Start a post"}
               </Link>
             </div>
 
@@ -631,7 +628,7 @@ export function CommunityForumsPage({
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2 text-xs font-bold text-[var(--hp-text-secondary)]">
                         <span className="text-primary">
-                          c/{activeThread.brand}
+                          In {activeThread.brand} group
                         </span>
                         <span aria-hidden>·</span>
                         <span>{activeThread.author}</span>
@@ -648,9 +645,8 @@ export function CommunityForumsPage({
                       </h3>
                       {activeThread.storyHref ? (
                         <p className="hearst-community-copy mt-2 max-w-2xl text-sm leading-6 text-[var(--hp-text-secondary)]">
-                          This started from a story, but the conversation lives
-                          here. Read the article for context, then add your
-                          take.
+                          This started from a story, then moved into the group.
+                          Read the article for context, then add your take.
                         </p>
                       ) : null}
                     </div>
@@ -686,7 +682,7 @@ export function CommunityForumsPage({
                             className="size-4 text-primary"
                             aria-hidden
                           />
-                          {activeThread.replies} comments
+                          {activeThread.replies} replies
                         </span>
                         <button
                           type="button"
@@ -842,7 +838,7 @@ export function CommunityForumsPage({
                         Join the conversation
                       </h4>
                       <p className="hearst-community-copy mt-1 text-sm leading-6 text-[var(--hp-text-secondary)]">
-                        Reply as a reader, or sign in to keep your thread
+                        Reply as a reader, or sign in to keep your group
                         history across devices.
                       </p>
                     </div>
@@ -860,7 +856,7 @@ export function CommunityForumsPage({
                   </label>
                   <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
                     <p className="hearst-community-copy text-xs leading-5 text-[var(--hp-text-secondary)]">
-                      Keep it useful, kind, and specific to this thread.
+                      Keep it useful, kind, and specific to this group.
                     </p>
                     <div className="flex flex-wrap gap-2">
                       <Button type="button" variant="outline" size="sm">
@@ -887,15 +883,15 @@ export function CommunityForumsPage({
                         id="start-thread-title"
                         className="hearst-community-display text-2xl font-bold leading-tight"
                       >
-                        Start a thread
+                        Start a post
                       </h3>
                       <p className="hearst-community-copy mt-1 text-sm leading-6 text-[var(--hp-text-secondary)]">
                         Ask a question, invite writer input, or share something
-                        other readers can answer.
+                        the group can answer.
                       </p>
                     </div>
                     <span className="rounded-[8px] bg-[var(--hp-control)] px-3 py-1.5 text-xs font-bold text-[var(--hp-text-secondary)]">
-                      Reader started
+                      Reader post
                     </span>
                   </div>
 
@@ -904,12 +900,12 @@ export function CommunityForumsPage({
                       htmlFor="community-thread-title"
                       className="grid gap-1.5 text-sm font-bold text-[var(--hp-text-primary)]"
                     >
-                      Thread title
+                      Post title
                       <input
                         id="community-thread-title"
                         name="title"
                         type="text"
-                        placeholder="What do you want to ask or share?"
+                        placeholder="What do you want to ask the group?"
                         className="hearst-community-copy min-h-11 rounded-[8px] border border-primary/15 bg-[#eef7ff] px-3 text-sm font-normal text-[var(--hp-text-primary)] outline-none transition-colors placeholder:text-[var(--hp-text-secondary)] focus-visible:border-primary focus-visible:bg-white focus-visible:ring-3 focus-visible:ring-ring/50"
                       />
                     </label>
@@ -919,7 +915,7 @@ export function CommunityForumsPage({
                         htmlFor="community-thread-body"
                         className="grid gap-1.5 text-sm font-bold text-[var(--hp-text-primary)]"
                       >
-                        Opening post
+                        Post
                         <Textarea
                           id="community-thread-body"
                           name="body"
@@ -931,7 +927,7 @@ export function CommunityForumsPage({
                         htmlFor="community-thread-type"
                         className="grid content-start gap-1.5 text-sm font-bold text-[var(--hp-text-primary)]"
                       >
-                        Thread type
+                        Post type
                         <select
                           id="community-thread-type"
                           name="type"
@@ -940,7 +936,7 @@ export function CommunityForumsPage({
                         >
                           <option value="reader">Reader question</option>
                           <option value="writer">Ask the writers</option>
-                          <option value="forum">Open discussion</option>
+                          <option value="forum">Group discussion</option>
                           <option value="challenge">Community challenge</option>
                         </select>
                       </label>
@@ -961,7 +957,7 @@ export function CommunityForumsPage({
                         className="text-primary-foreground"
                       >
                         <Send className="size-4" aria-hidden />
-                        Publish thread
+                        Publish post
                       </Button>
                     </div>
                   </div>
@@ -1030,7 +1026,7 @@ export function CommunityForumsPage({
                               className="inline-flex min-h-9 items-center gap-1.5 text-primary transition-colors hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
                             >
                               <ThumbsUp className="size-4" aria-hidden />
-                              Follow
+                              Follow post
                             </button>
                             <Link
                               href={thread.href}
@@ -1058,8 +1054,47 @@ export function CommunityForumsPage({
 
           <aside className="space-y-5 lg:sticky lg:top-28 lg:self-start">
             <section className="rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="hearst-community-display text-xl font-bold leading-tight">
+                  Your groups
+                </h2>
+                <span className="rounded-[8px] bg-[#eef7ff] px-2.5 py-1 text-xs font-bold text-primary">
+                  Joined
+                </span>
+              </div>
+              <div className="mt-4 space-y-2">
+                {featuredCommunities
+                  .slice(0, activeBrand ? 1 : 3)
+                  .map((item) => {
+                    if (!item) return null;
+                    return (
+                      <Link
+                        key={`joined-${item.brand.brandSlug}`}
+                        href={`/communities/${item.brand.brandSlug}/`}
+                        className="flex min-h-12 items-center gap-3 rounded-[8px] border border-primary/15 bg-[#eef7ff] px-3 py-2 transition-colors hover:border-primary/45 hover:bg-[#e4f2ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+                      >
+                        <BrandSourceIcon
+                          brand={item.brand.brand}
+                          brandSlug={item.brand.brandSlug}
+                          className="h-8 w-8 rounded-[8px]"
+                        />
+                        <span className="min-w-0 flex-1">
+                          <span className="block truncate text-sm font-bold text-[var(--hp-text-primary)]">
+                            {item.name}
+                          </span>
+                          <span className="block text-xs font-semibold text-[var(--hp-text-secondary)]">
+                            {item.members}
+                          </span>
+                        </span>
+                      </Link>
+                    );
+                  })}
+              </div>
+            </section>
+
+            <section className="rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
               <h2 className="hearst-community-display text-xl font-bold leading-tight">
-                Featured clubs
+                Featured groups
               </h2>
               <div className="mt-4 space-y-3">
                 {featuredCommunities.map((item) => {
@@ -1095,29 +1130,29 @@ export function CommunityForumsPage({
 
             <section className="rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
               <h2 className="hearst-community-display text-xl font-bold leading-tight">
-                Community model
+                How groups work
               </h2>
               <div className="mt-4 space-y-3 text-sm leading-6 text-[var(--hp-text-ui)]">
                 {[
                   {
                     icon: Newspaper,
-                    title: "Article comments",
-                    body: "Attached to a story and surfaced again in the community feed.",
+                    title: "Story discussions",
+                    body: "Article comments remain attached to the story and also appear inside the related group.",
                   },
                   {
                     icon: Star,
-                    title: "Writer prompts",
+                    title: "Writer participation",
                     body: "Editors and contributors can ask readers what to cover, test, or explain next.",
                   },
                   {
                     icon: MessageCircle,
-                    title: "Reader threads",
-                    body: "Readers can ask questions, swap advice, and return to conversations by brand.",
+                    title: "Reader posts",
+                    body: "Readers can ask questions, swap advice, and return to conversations by group.",
                   },
                   {
                     icon: Shield,
                     title: "Shared rules",
-                    body: "One account, moderation, reporting, and saved-thread layer.",
+                    body: "One account, moderation, reporting, and saved-post layer across Hearst+.",
                   },
                 ].map((item) => {
                   const Icon = item.icon;
@@ -1146,7 +1181,7 @@ export function CommunityForumsPage({
 
             <section className="rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
               <h2 className="hearst-community-display text-xl font-bold leading-tight">
-                Create
+                Post to a group
               </h2>
               <div className="mt-4 grid gap-2">
                 {createActions.map((item) => {
@@ -1183,7 +1218,7 @@ export function CommunityForumsPage({
           {
             title: "Community",
             links: [
-              { label: "Delish clubs", href: "/communities/delish/" },
+              { label: "Delish group", href: "/communities/delish/" },
               {
                 label: "Car and Driver garage",
                 href: "/communities/car-and-driver/",

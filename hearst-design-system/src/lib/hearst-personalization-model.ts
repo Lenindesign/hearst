@@ -501,12 +501,27 @@ const hotRodGlobalNavLinks = [
   "Videos",
 ];
 
+function appendCommunityFilter(filters: string[]) {
+  if (filters.includes("Community")) return filters;
+
+  const videosIndex = filters.indexOf("Videos");
+  if (videosIndex >= 0) {
+    return [
+      ...filters.slice(0, videosIndex + 1),
+      "Community",
+      ...filters.slice(videosIndex + 1),
+    ];
+  }
+
+  return [...filters, "Community"];
+}
+
 export function getBrandContextualFilters(
   brandSlug: string,
   stories: LifestyleRiverStory[],
   includeVideos = false,
 ) {
-  if (brandSlug === "hot-rod") return hotRodGlobalNavLinks;
+  if (brandSlug === "hot-rod") return appendCommunityFilter(hotRodGlobalNavLinks);
 
   const topicCounts = stories
     .filter((story) => story.brandSlug === brandSlug)
@@ -524,7 +539,7 @@ export function getBrandContextualFilters(
       ? ["Shop New Cars", "Shop Used Cars", "Research Cars"]
       : [];
   const filters = ["For You", ...topics, ...brandSections];
-  return includeVideos ? insertVideosFilter(filters) : filters;
+  return appendCommunityFilter(includeVideos ? insertVideosFilter(filters) : filters);
 }
 
 export function getBrandRouteInfo(

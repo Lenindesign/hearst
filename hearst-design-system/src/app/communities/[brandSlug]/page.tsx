@@ -21,8 +21,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const brand = getHearstAllBrands().find((candidate) => candidate.brandSlug === brandSlug);
   if (!brand) return {};
 
-  const title = `${brand.brand} Community | Hearst+`;
-  const description = `Forum threads, story comments, and community prompts for ${brand.brand}.`;
+  const title = `${brand.brand} Group | Hearst+`;
+  const description = `Group posts, story discussions, and writer prompts for ${brand.brand}.`;
   return {
     title,
     description,

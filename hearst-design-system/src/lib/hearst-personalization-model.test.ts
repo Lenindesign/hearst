@@ -85,7 +85,7 @@ test("builds publication navigation from actual topic inventory", () => {
 
   assert.deepEqual(
     getBrandContextualFilters("country-living", stories, true),
-    ["For You", "Home", "Food", "Videos"],
+    ["For You", "Home", "Food", "Videos", "Community"],
   );
   assert.deepEqual(
     getBrandContextualFilters("hot-rod", stories),
@@ -99,6 +99,7 @@ test("builds publication navigation from actual topic inventory", () => {
       "Buying Guides",
       "Events",
       "Videos",
+      "Community",
     ],
   );
 });

@@ -5,11 +5,11 @@ import { socialGraphMetadata } from "@/lib/social-graph-image";
 
 export const metadata: Metadata = {
   title: "Communities | Hearst+",
-  description: "A shared Hearst+ forums and comments destination across brands.",
+  description: "Hearst+ groups for story discussions, writer prompts, and reader posts across brands.",
   ...socialGraphMetadata(
     "/hearst-plus/opengraph-image/",
     "Communities | Hearst+",
-    "A shared Hearst+ forums and comments destination across brands.",
+    "Hearst+ groups for story discussions, writer prompts, and reader posts across brands.",
   ),
 };
 

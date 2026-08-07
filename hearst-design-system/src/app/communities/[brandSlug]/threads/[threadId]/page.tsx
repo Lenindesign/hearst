@@ -40,11 +40,11 @@ export async function generateMetadata({
   if (!brand) return {};
 
   const title = story
-    ? `${story.title} | ${brand.brand} Community`
-    : `${brand.brand} Community Thread | Hearst+`;
+    ? `${story.title} | ${brand.brand} Group`
+    : `${brand.brand} Group Discussion | Hearst+`;
   const description = story
-    ? `Community thread for ${story.title}.`
-    : `Writer prompts, reader questions, and forum conversations for ${brand.brand}.`;
+    ? `Group discussion for ${story.title}.`
+    : `Writer prompts, reader questions, and group discussions for ${brand.brand}.`;
   return {
     title,
     description,
