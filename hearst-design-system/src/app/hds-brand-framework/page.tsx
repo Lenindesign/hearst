@@ -18,9 +18,9 @@ import type { BrandTheme } from "@/lib/brands";
 import { themeOptions } from "@/lib/theme-options";
 
 export const metadata: Metadata = {
-  title: "HDS Brand Framework | One System, 29 Brands",
+  title: "HDS Brand Framework | One System, Many Publication Experiences",
   description:
-    "A leadership proposal for how the Hearst Design System can support 29 distinct editorial brands through one shared component and token contract.",
+    "A leadership proposal for how the Hearst Design System can support publication experiences through one shared component, token, and governance contract.",
 };
 
 const contents = [
@@ -140,7 +140,7 @@ const techStack = [
     layer: "Delivery",
     name: "GitHub Actions, Docker, S3, DeepCLI, Kubernetes",
     owner: "FRE release platform",
-    detail: "FRE-style delivery: CI builds Docker images, publishes static assets to S3, orchestrates releases through DeepCLI, and runs services on Kubernetes.",
+    detail: "Recommended FRE-style delivery: CI builds Docker images, publishes static assets to S3, orchestrates releases through DeepCLI, and runs services on Kubernetes.",
     evidence: "Media-Platforms/fre workflows and k8s/fre",
   },
 ] as const;
@@ -175,7 +175,7 @@ const tokenSourceRows = [
   {
     source: "Token build",
     authority: "Style Dictionary and token scripts",
-    output: "dist/css/brands, src/lib/tokens.css, src/lib/brands.ts",
+    output: "src/lib/tokens.css, src/lib/brands.ts, plus dist/css/* when Style Dictionary runs",
     rule: "Build and validate after token changes.",
   },
   {
@@ -197,7 +197,7 @@ const tokenFlow = [
   ["2", "Source", "The owned source changes: canonical docs for rules, tokens for values, components for behavior, product code for journeys."],
   ["3", "Build", "Token scripts and application builds regenerate outputs. Generated CSS and TypeScript are reviewed but not hand-authored."],
   ["4", "Prove", "Storybook, route checks, accessibility, responsive coverage, and brand comparisons show the result."],
-  ["5", "Release", "A human approves scope, the release is deployed, the exact revision is verified, and exceptions are recorded."],
+  ["5", "Release", "A human approves scope, an authorized release is published, the exact revision is verified, and exceptions are recorded."],
 ] as const;
 
 const operatingDocs = [
@@ -372,12 +372,12 @@ const governanceSteps = [
   },
   {
     title: "Prove",
-    detail: "The change is reviewed in Figma and Storybook across representative brands, breakpoints, states, and accessibility conditions.",
+    detail: "The change is reviewed in Storybook and production routes, with Figma review or payloads only when that destination is part of the requested workflow.",
     owner: "Design, engineering, accessibility",
   },
   {
     title: "Release",
-    detail: "Versioned tokens and components ship together with migration notes, ownership, and a clear deprecation path when needed.",
+    detail: "Approved tokens and components ship together with migration notes, ownership, and a clear deprecation path when needed. Formal package versioning is still a documented gap.",
     owner: "HDS release owner",
   },
 ];
@@ -411,7 +411,7 @@ const agenticWorkflow = [
 
 const agenticArtifacts = [
   ["DESIGN.md", "Routes intent to the correct source of truth"],
-  ["AGENTS.md and runbooks", "Define permissions, required checks, and forbidden actions"],
+  ["AGENTS.md and skills", "Define permissions, repeatable workflows, required checks, and forbidden actions"],
   ["Tokens and publication manifest", "Give agents structured brand data"],
   ["Component metadata", "Explains purpose, variants, dependencies, and accessibility"],
   ["Storybook and reports", "Provide visible evidence for review"],
@@ -615,7 +615,7 @@ export default function HdsBrandFrameworkPage() {
               <div>
                 <p className="text-sm font-bold text-sky-300">HDS leadership proposal</p>
                 <h1 className="mt-5 max-w-4xl text-balance text-5xl font-bold leading-[0.98] tracking-[-0.035em] sm:text-6xl lg:text-7xl">
-                  One system. 29 distinct editorial brands.
+                  One system. Many distinct editorial brands.
                 </h1>
                 <p className="mt-7 max-w-[68ch] text-pretty text-lg leading-8 text-slate-300">
                   HDS should provide the shared design contract. Each publication should express its identity through governed themes and approved variants, without copying components or creating a separate system.
@@ -669,7 +669,7 @@ export default function HdsBrandFrameworkPage() {
                 ))}
               </div>
               <blockquote className="mt-8 border-y border-[#102A43] py-8 text-balance text-3xl font-bold leading-tight text-[#102A43] md:text-4xl">
-                “One grammar, 29 voices.”
+                “One grammar, many voices.”
               </blockquote>
             </section>
 
@@ -750,7 +750,7 @@ export default function HdsBrandFrameworkPage() {
 
             <section>
               <SectionHeading id="tech-stack" title="The stack separates ownership from implementation.">
-                FRE composes reader experiences and gives us the deployment model. HDS defines the system contract. Base UI, shadcn conventions, Style Dictionary, and Tailwind support that contract without becoming competing design systems.
+                FRE provides the target reader-experience and release architecture. HDS defines the system contract. Base UI, shadcn conventions, Style Dictionary, and Tailwind support that contract without becoming competing design systems.
               </SectionHeading>
               <div className="mt-10 grid gap-px bg-slate-200 md:grid-cols-2 xl:grid-cols-3">
                 {techStack.map((item) => (
@@ -772,7 +772,7 @@ export default function HdsBrandFrameworkPage() {
               <div className="mt-8 grid gap-4 bg-[#102A43] p-6 text-white md:grid-cols-[0.75fr_1.25fr] md:items-start md:p-8">
                 <h3 className="text-2xl font-bold">How to read the stack</h3>
                 <p className="text-sm leading-6 text-slate-300">
-                  HDS owns the reusable decisions: tokens, components, accessibility, and brand themes. FRE owns the product composition and production delivery pattern that turns those pieces into a reader journey. Tailwind is the authoring layer, Style Dictionary is the token compiler, shadcn is the local component convention, and Base UI supplies accessible headless behavior.
+                  HDS owns the reusable decisions: tokens, components, accessibility, and brand themes. FRE should own the product composition and production delivery pattern that turns those pieces into a reader journey. Tailwind is the authoring layer, Style Dictionary is the token compiler, shadcn is the local component convention, and Base UI supplies accessible headless behavior.
                 </p>
               </div>
               <div className="mt-8 bg-white p-6 md:p-8">
@@ -785,7 +785,7 @@ export default function HdsBrandFrameworkPage() {
                       Use the FRE release architecture
                     </h3>
                     <p className="mt-4 text-sm leading-6 text-slate-600">
-                      The system should follow the FRE production path: GitHub Actions for automation, Docker for deployable images, S3 for static assets, DeepCLI for release orchestration, and Kubernetes for runtime. Vercel can exist as configuration, but it is not the primary production deployment model.
+                      The long-term system should follow the FRE production path: GitHub Actions for automation, Docker for deployable images, S3 for static assets, DeepCLI for release orchestration, and Kubernetes for runtime. This prototype still has Netlify build configuration, so FRE should be presented as the target architecture, not proof of the current HDS prototype deployment.
                     </p>
                   </div>
                   <dl className="grid gap-px bg-slate-200 sm:grid-cols-2">
@@ -996,7 +996,7 @@ export default function HdsBrandFrameworkPage() {
 
             <section>
               <SectionHeading id="portfolio" title="The model must work across the full portfolio.">
-                Hearst+ currently represents 29 publication brands across four editorial destinations. This is useful proof that one component system can preserve publication identity inside a shared experience, but HDS must remain independent from Hearst+ product logic.
+                Hearst+ currently represents 29 publication brands across four editorial destinations, while the token registry contains 29 publication-theme files including fallback and platform themes. Those are related but not identical inventories, so HDS must stay independent from Hearst+ product logic.
               </SectionHeading>
               <div className="mt-10">
                 <BrandPortfolioGrid compact />
@@ -1159,7 +1159,7 @@ export default function HdsBrandFrameworkPage() {
 
             <section>
               <SectionHeading id="pilot" title="A realistic plan is twelve weeks from alignment to launch decision.">
-                Start with a lifestyle publication, an automotive publication, and a fashion or entertainment publication. Use the same governed component, token, Storybook, and agent workflow for each. If the components preserve all three identities without forks, the architecture and operating model are ready to expand.
+                Start with a lifestyle publication, an automotive publication, and a fashion or entertainment publication. Use the same governed component, token, Storybook, and agent workflow for each. If the components preserve all three identities without forks, leadership has the evidence needed to expand deliberately.
               </SectionHeading>
               <ol className="mt-10 border-t-2 border-[#2D75B9]">
                 {implementationPlan.map((item) => (
