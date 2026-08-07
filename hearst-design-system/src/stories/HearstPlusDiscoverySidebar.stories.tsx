@@ -221,15 +221,15 @@ export const DestinationDiscovery: Story = {
     await userEvent.click(firstStory);
     await expect(canvas.getByRole("status")).toHaveTextContent(/^Opened /);
 
-    await userEvent.click(canvas.getByRole("button", { name: "Join Country Living community" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Join Country Living group" }));
     await expect(
-      canvas.getByRole("button", { name: "Leave Country Living community" }),
+      canvas.getByRole("button", { name: "Leave Country Living group" }),
     ).toHaveAttribute("aria-pressed", "true");
   },
 };
 
 export const PublicationInventory: Story = {
-  name: "Publication: Join Communities",
+  name: "Publication: Join Groups",
   globals: {
     brand: "cosmopolitan",
   },
@@ -237,7 +237,7 @@ export const PublicationInventory: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(
-      canvas.getByRole("button", { name: "Join House Beautiful community" }),
+      canvas.getByRole("button", { name: "Join House Beautiful group" }),
     ).toBeInTheDocument();
   },
 };
@@ -250,12 +250,12 @@ export const PublicationInventoryInteractions: Story = {
   render: () => <DiscoverySidebarExample mode="publication" />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const selectedBrand = canvas.getByRole("button", { name: "Leave Cosmopolitan community" });
+    const selectedBrand = canvas.getByRole("button", { name: "Leave Cosmopolitan group" });
     await expect(selectedBrand).toHaveAttribute("aria-pressed", "true");
 
     await userEvent.click(selectedBrand);
     await expect(
-      canvas.getByRole("button", { name: "Join Cosmopolitan community" }),
+      canvas.getByRole("button", { name: "Join Cosmopolitan group" }),
     ).toHaveAttribute("aria-pressed", "false");
     await expect(canvas.getByRole("status")).toHaveTextContent("Selected Cosmopolitan");
   },

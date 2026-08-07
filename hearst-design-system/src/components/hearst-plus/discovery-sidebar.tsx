@@ -137,7 +137,7 @@ export function LifestyleDiscoverySidebar({
   topStories,
   topics,
   brands,
-  brandFilterTitle = "Join Communities",
+  brandFilterTitle = "Join Groups",
   brandFilterFirst = false,
   showBrandCounts = true,
   globalInventory = false,
@@ -156,11 +156,12 @@ export function LifestyleDiscoverySidebar({
     (total, brand) => total + brand.count,
     0,
   );
-  const isBrandCommunityModule = brandFilterTitle === "Join Communities";
+  const isBrandCommunityModule =
+    brandFilterTitle === "Join Groups" || brandFilterTitle === "Join Communities";
   const brandSummary = isBrandCommunityModule
     ? activeBrandFilters.length > 0
       ? `${activeBrandFilters.length} joined`
-      : `${brands.length} brand communities`
+      : `${brands.length} brand groups`
     : !showBrandCounts
       ? `${brands.length} brands`
       : globalInventory
@@ -170,9 +171,9 @@ export function LifestyleDiscoverySidebar({
           : `All brands · ${brandStoryCount} stories`;
   const topicSummary = activeTopicSummary || `${topics.length} topics`;
   const collectionSummary = `${collectionLabels.length} collections`;
-  const activeCommunityBrand = activeBrandFilters.length > 0
-    ? brands.find((brand) => brand.name === activeBrandFilters[0])
-    : undefined;
+  const activeCommunityBrands = isBrandCommunityModule
+    ? brands.filter((brand) => activeBrandFilters.includes(brand.name))
+    : [];
   const autosOemStoryCount = autosOemOptions.reduce(
     (total, make) => total + make.count,
     0,
@@ -219,8 +220,8 @@ export function LifestyleDiscoverySidebar({
     <DiscoverySidebarCard title={brandFilterTitle} summary={brandSummary}>
       {isBrandCommunityModule ? (
         <p className="mt-4 text-xs leading-5 text-muted-foreground">
-          Pick the brand communities you want in your feed, then open their
-          forum when you want the full discussion.
+          Pick the brand groups you want in your feed, then open the group
+          when you want the full discussion.
         </p>
       ) : null}
       <div
@@ -249,7 +250,7 @@ export function LifestyleDiscoverySidebar({
                   "cursor-not-allowed text-muted-foreground opacity-70",
               )}
               aria-pressed={active}
-              aria-label={`${active ? "Leave" : "Join"} ${brand.name} community`}
+              aria-label={`${active ? "Leave" : "Join"} ${brand.name} group`}
             >
               <span className="flex min-w-0 items-center gap-2">
                 <BrandSourceIcon
@@ -285,8 +286,10 @@ export function LifestyleDiscoverySidebar({
       <p className="mt-4 text-xs leading-5 text-muted-foreground">
         {isBrandCommunityModule
           ? activeBrandFilters.length > 0
-            ? `You joined ${activeBrandFilters[0]}.`
-            : "Join a brand community to tune your feed and unlock its forum."
+            ? activeBrandFilters.length === 1
+              ? `You joined the ${activeBrandFilters[0]} group.`
+              : `You joined ${activeBrandFilters.length} brand groups.`
+            : "Join a brand group to tune your feed and open its discussions."
           : globalInventory
             ? "Complete section inventory. Select a brand to open its publication."
             : activeBrandFilters.length > 0
@@ -297,8 +300,8 @@ export function LifestyleDiscoverySidebar({
         <div className="mt-3">
           <Link
             href={
-              activeCommunityBrand
-                ? `/communities/${activeCommunityBrand.slug}/`
+              activeCommunityBrands.length === 1
+                ? `/communities/${activeCommunityBrands[0].slug}/`
                 : "/communities/"
             }
             className={buttonVariants({
@@ -307,7 +310,7 @@ export function LifestyleDiscoverySidebar({
               className: "w-full",
             })}
           >
-            {activeBrandFilters.length > 0 ? "Open forum" : "Browse communities"}
+            {activeCommunityBrands.length === 1 ? "Open group" : "Browse groups"}
           </Link>
         </div>
       ) : null}

@@ -16,6 +16,10 @@ import {
   getHearstDestinationRoute,
   hearstReaderSections,
 } from "@/lib/hearst-routes";
+import {
+  joinedBrandGroupsChangeEvent,
+  joinedBrandGroupsStorageKey,
+} from "@/lib/community-groups";
 import type { HearstDestinationStaticData } from "@/lib/hearst-destination-data-types";
 import { normalizeReaderReturnHref } from "@/lib/story-routes";
 import {
@@ -328,9 +332,66 @@ function appendStakeholderDemoMode(path: string, enabled: boolean) {
 }
 
 const DestinationConfigsContext = React.createContext(baseDestinationConfigs);
+const emptyJoinedBrandGroups: string[] = [];
+let joinedBrandGroupsSnapshotRaw: string | null = null;
+let joinedBrandGroupsSnapshot: string[] = emptyJoinedBrandGroups;
 
 function useDestinationConfigs() {
   return React.useContext(DestinationConfigsContext);
+}
+
+function normalizeJoinedBrandGroups(value: unknown) {
+  if (!Array.isArray(value)) return [];
+  return Array.from(
+    new Set(value.filter((item): item is string => typeof item === "string" && item.trim().length > 0)),
+  );
+}
+
+function readJoinedBrandGroups() {
+  if (typeof window === "undefined") return emptyJoinedBrandGroups;
+
+  try {
+    const rawValue = window.localStorage.getItem(joinedBrandGroupsStorageKey) ?? "[]";
+    if (rawValue === joinedBrandGroupsSnapshotRaw) return joinedBrandGroupsSnapshot;
+
+    joinedBrandGroupsSnapshotRaw = rawValue;
+    joinedBrandGroupsSnapshot = normalizeJoinedBrandGroups(JSON.parse(rawValue));
+    return joinedBrandGroupsSnapshot;
+  } catch {
+    joinedBrandGroupsSnapshotRaw = null;
+    joinedBrandGroupsSnapshot = emptyJoinedBrandGroups;
+    return joinedBrandGroupsSnapshot;
+  }
+}
+
+function writeJoinedBrandGroups(groups: string[]) {
+  if (typeof window === "undefined") return;
+  const nextGroups = normalizeJoinedBrandGroups(groups);
+  const rawValue = JSON.stringify(nextGroups);
+  joinedBrandGroupsSnapshotRaw = rawValue;
+  joinedBrandGroupsSnapshot = nextGroups;
+  window.localStorage.setItem(joinedBrandGroupsStorageKey, rawValue);
+  window.dispatchEvent(new Event(joinedBrandGroupsChangeEvent));
+}
+
+function subscribeJoinedBrandGroups(onStoreChange: () => void) {
+  if (typeof window === "undefined") return () => {};
+
+  const handleStorage = (event: StorageEvent) => {
+    if (event.key === joinedBrandGroupsStorageKey) onStoreChange();
+  };
+  const handleSameWindowChange = () => onStoreChange();
+
+  window.addEventListener("storage", handleStorage);
+  window.addEventListener(joinedBrandGroupsChangeEvent, handleSameWindowChange);
+  return () => {
+    window.removeEventListener("storage", handleStorage);
+    window.removeEventListener(joinedBrandGroupsChangeEvent, handleSameWindowChange);
+  };
+}
+
+function getJoinedBrandGroupsServerSnapshot() {
+  return emptyJoinedBrandGroups;
 }
 
 function getContent(brandSlug: string): ContentType {
@@ -888,10 +949,10 @@ export function MainNav({
             <div className="flex items-center justify-between gap-4">
               <div>
                 <h2 id="mobile-filter-brands-title" className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
-                  Join Communities
+                  Join Groups
                 </h2>
                 <p className={cn("mt-1 text-xs", darkMode ? "text-white/60" : "text-muted-foreground")}>
-                  {activeBrandFilters.length > 0 ? `${activeBrandFilters.length} joined` : `${mobileBrands.length} brand communities`}
+                  {activeBrandFilters.length > 0 ? `${activeBrandFilters.length} joined` : `${mobileBrands.length} brand groups`}
                 </p>
               </div>
               {activeBrandFilters.length > 0 ? (
@@ -3841,6 +3902,8 @@ type LifestyleRiverHomePageProps = {
   indicatorPalette?: readonly string[];
   activeBrandFilters?: string[];
   onActiveBrandFiltersChange?: React.Dispatch<React.SetStateAction<string[]>>;
+  joinedBrandGroups?: string[];
+  onJoinedBrandGroupsChange?: React.Dispatch<React.SetStateAction<string[]>>;
   onGuestSavePrompt?: () => void;
   feedTotal?: number | null;
   feedLoadedCount?: number;
@@ -3905,6 +3968,8 @@ function LifestyleRiverHomePage({
   indicatorPalette,
   activeBrandFilters: controlledActiveBrandFilters,
   onActiveBrandFiltersChange,
+  joinedBrandGroups: controlledJoinedBrandGroups,
+  onJoinedBrandGroupsChange,
   onGuestSavePrompt,
   feedTotal = null,
   feedLoadedCount = 0,
@@ -3951,6 +4016,8 @@ function LifestyleRiverHomePage({
   const [internalActiveBrandFilters, setInternalActiveBrandFilters] = React.useState<string[]>(initialBrandName ? [initialBrandName] : []);
   const activeBrandFilters = controlledActiveBrandFilters ?? internalActiveBrandFilters;
   const setActiveBrandFilters = onActiveBrandFiltersChange ?? setInternalActiveBrandFilters;
+  const joinedBrandGroups = controlledJoinedBrandGroups ?? activeBrandFilters;
+  const setJoinedBrandGroups = onJoinedBrandGroupsChange ?? setActiveBrandFilters;
   const [activeAutosOemFilters, setActiveAutosOemFilters] = React.useState<string[]>([]);
   const readerAccountId = account?.id;
   const profileSourceKey = `${readerAccountId ?? "guest"}:${config.productName}:${initialBrandSlug ?? ""}:${activeFilter}`;
@@ -4967,10 +5034,18 @@ function LifestyleRiverHomePage({
   const toggleBrandFilter = (brandName: string) => {
     setActiveBrandFilters((current) =>
       current.includes(brandName)
-        ? []
-        : [brandName]
+        ? current.filter((item) => item !== brandName)
+        : [...current, brandName]
     );
     anchorBrandToTop();
+  };
+
+  const toggleJoinedBrandGroup = (brandName: string) => {
+    setJoinedBrandGroups((current) =>
+      current.includes(brandName)
+        ? current.filter((item) => item !== brandName)
+        : [...current, brandName]
+    );
   };
 
   const clearBrandFilters = () => {
@@ -5095,11 +5170,11 @@ function LifestyleRiverHomePage({
             brandFilterTitle={usingVideoTabFeed ? "Videos by brand" : undefined}
             brandFilterFirst={usingVideoTabFeed}
             showBrandCounts={!usingVideoTabFeed}
-            activeBrandFilters={effectiveBrandFilters}
+            activeBrandFilters={usingVideoTabFeed ? effectiveBrandFilters : joinedBrandGroups}
             autosOemOptions={autosOemOptions}
             activeAutosOemFilters={activeAutosOemFilters}
             collectionLabels={config.collectionLabels}
-            onToggleBrandFilter={toggleBrandFilter}
+            onToggleBrandFilter={usingVideoTabFeed ? toggleBrandFilter : toggleJoinedBrandGroup}
             onToggleAutosOemFilter={showAutosOemFilter ? toggleAutosOemFilter : undefined}
             onClearAutosOemFilters={showAutosOemFilter ? clearAutosOemFilters : undefined}
             onFollowTopic={followTopic}
@@ -5393,11 +5468,11 @@ function LifestyleRiverHomePage({
           brandFilterTitle={usingVideoTabFeed ? "Videos by brand" : undefined}
           globalInventory={Boolean(initialBrandSlug && !usingVideoTabFeed)}
           showBrandCounts={usingVideoTabFeed ? false : Boolean(initialBrandSlug && !usingVideoTabFeed)}
-          activeBrandFilters={effectiveBrandFilters}
+          activeBrandFilters={usingVideoTabFeed ? effectiveBrandFilters : joinedBrandGroups}
           autosOemOptions={autosOemOptions}
           activeAutosOemFilters={activeAutosOemFilters}
           collectionLabels={config.collectionLabels}
-          onToggleBrandFilter={toggleBrandFilter}
+          onToggleBrandFilter={usingVideoTabFeed ? toggleBrandFilter : toggleJoinedBrandGroup}
           onToggleAutosOemFilter={showAutosOemFilter ? toggleAutosOemFilter : undefined}
           onClearAutosOemFilters={showAutosOemFilter ? clearAutosOemFilters : undefined}
           onFollowTopic={followTopic}
@@ -6328,6 +6403,18 @@ export function HomePageTemplate({
       return { sourceBrandName: initialActiveBrandName, value: nextFilters };
     });
   }, [initialActiveBrandFilters, initialActiveBrandName]);
+  const joinedBrandGroups = React.useSyncExternalStore(
+    subscribeJoinedBrandGroups,
+    readJoinedBrandGroups,
+    getJoinedBrandGroupsServerSnapshot,
+  );
+  const setJoinedBrandGroups = React.useCallback<React.Dispatch<React.SetStateAction<string[]>>>((updater) => {
+    const current = readJoinedBrandGroups();
+    const nextGroups = normalizeJoinedBrandGroups(
+      typeof updater === "function" ? updater(current) : updater,
+    );
+    writeJoinedBrandGroups(nextGroups);
+  }, []);
   const mobileContinueStories = React.useMemo(() => {
     return continueReadingStoryIds
       .map((storyId) => destinationConfig.stories.find((story) => story.id === storyId))
@@ -6395,13 +6482,17 @@ export function HomePageTemplate({
     });
   }, []);
   const handleMobileBrandToggle = React.useCallback((brandName: string) => {
-    setActiveBrandFilters((current) => current.includes(brandName) ? [] : [brandName]);
+    setJoinedBrandGroups((current) =>
+      current.includes(brandName)
+        ? current.filter((item) => item !== brandName)
+        : [...current, brandName]
+    );
     anchorPageToTop();
-  }, [anchorPageToTop, setActiveBrandFilters]);
+  }, [anchorPageToTop, setJoinedBrandGroups]);
   const handleMobileBrandClear = React.useCallback(() => {
-    setActiveBrandFilters([]);
+    setJoinedBrandGroups([]);
     anchorPageToTop();
-  }, [anchorPageToTop, setActiveBrandFilters]);
+  }, [anchorPageToTop, setJoinedBrandGroups]);
   const handleMobileStoryOpen = React.useCallback((storyId: string) => {
     const currentPageHref = pathname
       ? `${pathname}${pageSearchQuery ? `?${pageSearchQuery}` : ""}`
@@ -6754,7 +6845,7 @@ export function HomePageTemplate({
         mobileContinueStories={mobileContinueStories}
         mobileBrands={mobileBrands}
         searchStories={searchStories}
-        activeBrandFilters={activeBrandFilters}
+        activeBrandFilters={joinedBrandGroups}
         onMobileStoryOpen={handleMobileStoryOpen}
         onMobileBrandToggle={handleMobileBrandToggle}
         onMobileBrandClear={handleMobileBrandClear}
@@ -6854,6 +6945,8 @@ export function HomePageTemplate({
                 indicatorPalette={selectedBrandIndicatorPalette}
                 activeBrandFilters={activeBrandFilters}
                 onActiveBrandFiltersChange={setActiveBrandFilters}
+                joinedBrandGroups={joinedBrandGroups}
+                onJoinedBrandGroupsChange={setJoinedBrandGroups}
                 onGuestSavePrompt={openSaveAcrossDevicesPrompt}
                 feedTotal={activeLifestyleFilter === "Videos"
                   ? progressiveVideoFeed.total

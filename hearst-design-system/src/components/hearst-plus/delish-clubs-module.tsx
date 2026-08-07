@@ -1,7 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -53,6 +54,12 @@ type DelishClubState = {
 };
 
 const delishClubStateKey = "hearst-delish-clubs-v1";
+
+function getDelishGroupHref(clubId: string) {
+  return clubId === "italian-weeknights"
+    ? "/communities/delish/groups/italian-weeknights/"
+    : "/communities/delish/";
+}
 
 const delishClubs: DelishClub[] = [
   {
@@ -308,7 +315,7 @@ export function DelishClubsModule({
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--delish-club-red)]">
-                Delish Clubs
+                Delish Groups
               </p>
               <h2
                 id="delish-clubs-title"
@@ -317,20 +324,33 @@ export function DelishClubsModule({
                 Pull up a kitchen table.
               </h2>
               <p className="mt-2 max-w-xl text-sm leading-6 text-[var(--delish-club-muted)]">
-                Based on your Delish picks, start with one table and keep the
-                rest close by.
+                Based on your Delish picks, join a group and keep the rest
+                close by.
               </p>
             </div>
-            <Button
-              type="button"
-              size="sm"
-              variant={recipeFormOpen ? "secondary" : "outline"}
-              onClick={() => setRecipeFormOpen((open) => !open)}
-              className="border-[var(--delish-club-red)] bg-white text-[var(--delish-club-red)] hover:bg-[#FFF5F4] hover:text-[var(--delish-club-red-dark)]"
-            >
-              <Camera className="size-4" aria-hidden />
-              Share recipe
-            </Button>
+            <div className="flex flex-wrap items-center gap-2">
+              <Link
+                href={getDelishGroupHref(featuredClub.id)}
+                className={buttonVariants({
+                  variant: "outline",
+                  size: "sm",
+                  className:
+                    "border-[var(--delish-club-red)] bg-white text-[var(--delish-club-red)] hover:bg-[#FFF5F4] hover:text-[var(--delish-club-red-dark)]",
+                })}
+              >
+                Open Delish group
+              </Link>
+              <Button
+                type="button"
+                size="sm"
+                variant={recipeFormOpen ? "secondary" : "outline"}
+                onClick={() => setRecipeFormOpen((open) => !open)}
+                className="border-[var(--delish-club-red)] bg-white text-[var(--delish-club-red)] hover:bg-[#FFF5F4] hover:text-[var(--delish-club-red-dark)]"
+              >
+                <Camera className="size-4" aria-hidden />
+                Share recipe
+              </Button>
+            </div>
           </div>
 
           <div
@@ -588,26 +608,39 @@ export function DelishClubsModule({
               </span>
               <div className="min-w-0">
                 <p className="text-xs font-bold uppercase tracking-widest text-[var(--delish-club-red)]">
-                  Club table
+                  Group preview
                 </p>
                 <h3 className="mt-0.5 truncate text-base font-black leading-tight text-[var(--delish-club-ink)]">
                   {activeClub.name}
                 </h3>
                 <p className="mt-1 line-clamp-1 text-xs leading-5 text-[var(--delish-club-muted)]">
-                  Discussions, recipes, and challenges for the clubs you joined.
+                  Discussions, recipes, and challenges for the groups you joined.
                 </p>
               </div>
             </div>
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              onClick={() => setClubTableOpen((open) => !open)}
-              className="border-[var(--delish-club-red)] bg-white text-[var(--delish-club-red)] hover:bg-[#FFF5F4] hover:text-[var(--delish-club-red-dark)]"
-              aria-expanded={clubTableOpen}
-            >
-              {clubTableOpen ? "Hide club table" : "Open club table"}
-            </Button>
+            <div className="flex flex-wrap items-center gap-2">
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={() => setClubTableOpen((open) => !open)}
+                className="border-[var(--delish-club-red)] bg-white text-[var(--delish-club-red)] hover:bg-[#FFF5F4] hover:text-[var(--delish-club-red-dark)]"
+                aria-expanded={clubTableOpen}
+              >
+                {clubTableOpen ? "Hide preview" : "Preview group"}
+              </Button>
+              <Link
+                href={getDelishGroupHref(activeClub.id)}
+                className={buttonVariants({
+                  variant: "outline",
+                  size: "sm",
+                  className:
+                    "border-[var(--delish-club-red)] bg-white text-[var(--delish-club-red)] hover:bg-[#FFF5F4] hover:text-[var(--delish-club-red-dark)]",
+                })}
+              >
+                Open Delish group
+              </Link>
+            </div>
           </div>
 
           {clubTableOpen ? (
@@ -615,7 +648,7 @@ export function DelishClubsModule({
               <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
                 <div className="max-w-2xl">
                   <p className="text-sm leading-6 text-[var(--delish-club-muted)]">
-                    A starter forum for the cooks in this club: prompts, recipe
+                    A starter group preview for cooks: prompts, recipe
                     ideas, and small weekly challenges.
                   </p>
                 </div>
@@ -725,7 +758,7 @@ export function DelishClubsModule({
                           Recipe board
                         </p>
                         <h4 className="mt-1 text-lg font-black leading-tight text-[var(--delish-club-ink)]">
-                          Saved ideas from the club
+                          Saved ideas from the group
                         </h4>
                       </div>
                       {[
@@ -817,7 +850,7 @@ export function DelishClubsModule({
                     disabled={!postDraft.trim()}
                     onClick={() => setPostDraft("")}
                   >
-                    Post to club
+                    Post to group
                   </Button>
                 </aside>
               </div>
