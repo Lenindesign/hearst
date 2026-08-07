@@ -1,8 +1,11 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element -- Decorative onboarding artwork uses external Fluent Emoji and local prototype image assets. */
+
 import React from "react";
 import { createPortal } from "react-dom";
 import { BrandLogo } from "@/components/brand-logo";
+import { fluentEmojiPng } from "@/components/hearst-plus/fluent-emoji-art";
 import type { HearstOnboardingResult } from "@/components/hearst-plus/onboarding-modal";
 import { Button } from "@/components/ui/button";
 import {
@@ -86,29 +89,29 @@ const foodPreferences = [
 ] as const;
 
 const foodFavoriteOptions = [
-  { label: "Italian", icon: "🍝" },
-  { label: "Mexican", icon: "🌮" },
-  { label: "Chinese", icon: "🥡" },
-  { label: "Japanese", icon: "🍣" },
-  { label: "Pizza", icon: "🍕" },
-  { label: "Pasta", icon: "🍜" },
-  { label: "Chicken", icon: "🍗" },
-  { label: "BBQ", icon: "🍖" },
-  { label: "Healthy Meals", icon: "🥗" },
-  { label: "Baking", icon: "🥣" },
+  { label: "Italian", iconSrc: fluentEmojiPng("Spaghetti") },
+  { label: "Mexican", iconSrc: fluentEmojiPng("Taco") },
+  { label: "Chinese", iconSrc: fluentEmojiPng("Takeout box") },
+  { label: "Japanese", iconSrc: fluentEmojiPng("Sushi") },
+  { label: "Pizza", iconSrc: fluentEmojiPng("Pizza") },
+  { label: "Pasta", iconSrc: fluentEmojiPng("Steaming bowl") },
+  { label: "Chicken", iconSrc: fluentEmojiPng("Poultry leg") },
+  { label: "BBQ", iconSrc: fluentEmojiPng("Cut of meat") },
+  { label: "Healthy Meals", iconSrc: fluentEmojiPng("Green salad") },
+  { label: "Baking", iconSrc: fluentEmojiPng("Bowl with spoon") },
 ] as const;
 
 const foodDiscoveryOptions = [
-  { label: "Mediterranean", icon: "🥘" },
-  { label: "Risotto", icon: "🍚" },
-  { label: "Homemade Pasta", icon: "🍝" },
-  { label: "Tapas", icon: "🍢" },
-  { label: "Thai", icon: "🍲" },
-  { label: "Korean BBQ", icon: "🥩" },
-  { label: "Indian Curry", icon: "🍛" },
-  { label: "Fresh Herbs & Spices", icon: "🌿" },
-  { label: "Plant-Based Meals", icon: "🥗" },
-  { label: "Global Street Food", icon: "🌯" },
+  { label: "Mediterranean", iconSrc: fluentEmojiPng("Shallow pan of food") },
+  { label: "Risotto", iconSrc: fluentEmojiPng("Cooked rice") },
+  { label: "Homemade Pasta", iconSrc: fluentEmojiPng("Spaghetti") },
+  { label: "Tapas", iconSrc: fluentEmojiPng("Fork and knife with plate") },
+  { label: "Thai", iconSrc: fluentEmojiPng("Pot of food") },
+  { label: "Korean BBQ", iconSrc: fluentEmojiPng("Cut of meat") },
+  { label: "Indian Curry", iconSrc: fluentEmojiPng("Curry rice") },
+  { label: "Fresh Herbs & Spices", iconSrc: fluentEmojiPng("Herb") },
+  { label: "Plant-Based Meals", iconSrc: fluentEmojiPng("Green salad") },
+  { label: "Global Street Food", iconSrc: fluentEmojiPng("Burrito") },
 ] as const;
 
 const newsletterOptions = [
@@ -464,7 +467,7 @@ function DelishOnboardingModalContent({
           onClick={onClose}
           aria-label="Close Delish onboarding"
         >
-          <X className="size-4" aria-hidden />
+          <X className="size-4 text-[#EF3B35]" aria-hidden />
         </Button>
 
         {showWelcome ? (
@@ -535,7 +538,7 @@ function DelishOnboardingModalContent({
                     />
                     <button
                       type="button"
-                      className="absolute right-3 top-1/2 flex size-9 -translate-y-1/2 items-center justify-center rounded-full text-[#242832] transition-colors hover:bg-[#FFF5D8] active:bg-[#FFC835]/35 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E31837] disabled:cursor-wait disabled:opacity-60"
+                      className="absolute right-3 top-1/2 flex size-9 -translate-y-1/2 items-center justify-center rounded-full text-[#EF3B35] transition-colors hover:bg-[#FFF5D8] active:bg-[#FFC835]/35 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E31837] disabled:cursor-wait disabled:opacity-60"
                       onClick={detectLocation}
                       disabled={isDetectingLocation}
                       aria-label={isDetectingLocation ? "Detecting location" : "Auto-detect location"}
@@ -613,7 +616,7 @@ function DelishOnboardingModalContent({
                 <FoodPlateSection
                   title="Your favorites"
                   subtitle="Choose up to 5"
-                  marker="♥"
+                  markerSrc={fluentEmojiPng("Red heart")}
                   options={foodFavoriteOptions}
                   selected={selectedFoodFavorites}
                   onToggle={(label) =>
@@ -623,7 +626,7 @@ function DelishOnboardingModalContent({
                 <FoodPlateSection
                   title="Discover next"
                   subtitle="Choose up to 5"
-                  marker="✦"
+                  markerSrc={fluentEmojiPng("Sparkles")}
                   options={foodDiscoveryOptions}
                   selected={selectedFoodDiscoveries}
                   onToggle={(label) =>
@@ -767,15 +770,15 @@ function DelishStepMarker({ step }: { step: 1 | 2 | 3 | 4 }) {
 function FoodPlateSection({
   title,
   subtitle,
-  marker,
+  markerSrc,
   options,
   selected,
   onToggle,
 }: {
   title: string;
   subtitle: string;
-  marker: string;
-  options: readonly { label: string; icon: string }[];
+  markerSrc: string;
+  options: readonly { label: string; iconSrc: string }[];
   selected: string[];
   onToggle: (label: string) => void;
 }) {
@@ -783,10 +786,15 @@ function FoodPlateSection({
     <section className="rounded-[12px] border border-[#FFB7B5] bg-white/95 p-4 shadow-[0_12px_26px_rgba(239,59,53,0.05)] sm:p-5">
       <div className="flex items-start gap-3">
         <span
-          className="mt-0.5 text-2xl font-black leading-none text-[#EF3B35]"
+          className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#FFF5D8]"
           aria-hidden="true"
         >
-          {marker}
+          <img
+            src={markerSrc}
+            alt=""
+            className="size-6 object-contain"
+            aria-hidden="true"
+          />
         </span>
         <div className="min-w-0 text-left">
           <p className="text-sm font-black uppercase tracking-[0.18em] text-[#EF3B35]">
@@ -796,7 +804,7 @@ function FoodPlateSection({
         </div>
       </div>
       <div className="mt-4 grid gap-2">
-        {options.map(({ label, icon }) => {
+        {options.map(({ label, iconSrc }) => {
           const isSelected = selected.includes(label);
           const limitReached = selected.length >= 5 && !isSelected;
 
@@ -815,10 +823,15 @@ function FoodPlateSection({
               )}
             >
               <span
-                className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#F4F7FA] text-lg"
+                className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#F4F7FA]"
                 aria-hidden="true"
               >
-                {icon}
+                <img
+                  src={iconSrc}
+                  alt=""
+                  className="size-6 object-contain"
+                  aria-hidden="true"
+                />
               </span>
               <span className="min-w-0 flex-1">{label}</span>
               <span
@@ -965,7 +978,7 @@ function DelishWelcomeStep({
             className="min-h-12 rounded-[4px] border-[#AEB7C3] bg-white text-base font-black text-[#6B7280] hover:bg-white hover:text-[#101828]"
             onClick={onBack}
           >
-            <ChevronLeft className="mr-2 size-5" aria-hidden />
+            <ChevronLeft className="mr-2 size-5 text-[#EF3B35]" aria-hidden />
             Back
           </Button>
           <Button
@@ -974,7 +987,7 @@ function DelishWelcomeStep({
             onClick={onClose}
           >
             Let’s Go!
-            <ChevronRight className="ml-2 size-5" aria-hidden />
+            <ChevronRight className="ml-2 size-5 text-[#EF3B35]" aria-hidden />
           </Button>
         </div>
       </footer>

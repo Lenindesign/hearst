@@ -2,6 +2,7 @@ import type { CSSProperties, ReactNode } from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import packageJson from "../../../package.json";
 import { BrandLogo } from "@/components/brand-logo";
 import { autosRiverStories } from "@/components/autos-river-data";
 import { ewRiverStories } from "@/components/ew-river-data";
@@ -25,11 +26,16 @@ export const metadata: Metadata = {
 const contents = [
   ["The decision", "decision"],
   ["System model", "model"],
+  ["Token source", "token-source"],
+  ["Tech stack", "tech-stack"],
+  ["Component build", "component-build"],
+  ["Operating guide", "operating-guide"],
+  ["Prompted playbook", "prompted-playbook"],
   ["Ownership", "ownership"],
   ["Brand samples", "samples"],
   ["Portfolio", "portfolio"],
   ["Governance", "governance"],
-  ["Agentic layer", "agentic"],
+  ["Agents and skills", "agentic"],
   ["Pilot plan", "pilot"],
 ] as const;
 
@@ -60,6 +66,266 @@ const sharedLayers = [
     detail: "Content, journeys, ranking, commerce, subscriptions, and product-specific composition.",
   },
 ];
+
+const dependencyVersion = (dependency: keyof typeof packageJson.dependencies) =>
+  packageJson.dependencies[dependency].replace(/^[^0-9]*/, "");
+const devDependencyVersion = (dependency: keyof typeof packageJson.devDependencies) =>
+  packageJson.devDependencies[dependency].replace(/^[^0-9]*/, "");
+
+const techStack = [
+  {
+    layer: "Runtime",
+    name: `Next.js ${dependencyVersion("next")}`,
+    owner: "Application platform",
+    detail: "Routes, server rendering, static generation, middleware, metadata, and production application builds.",
+    evidence: "src/app",
+  },
+  {
+    layer: "Runtime",
+    name: `React ${dependencyVersion("react")}`,
+    owner: "UI runtime",
+    detail: "Component composition, state, portals, hooks, accessibility behavior, and product interaction surfaces.",
+    evidence: "react",
+  },
+  {
+    layer: "Experience",
+    name: "FRE",
+    owner: "Hearst product",
+    detail: "Reader-facing page shell, editorial routes, footer, product-story pages, and publication composition patterns.",
+    evidence: "src/components/fre",
+  },
+  {
+    layer: "System",
+    name: "HDS",
+    owner: "Design system",
+    detail: "Shared components, semantic tokens, brand themes, accessibility rules, and Storybook review surfaces.",
+    evidence: "src/components/ui",
+  },
+  {
+    layer: "Primitives",
+    name: `Base UI ${dependencyVersion("@base-ui/react")}`,
+    owner: "Interaction foundation",
+    detail: "Headless behavior for controls that need robust state, focus, keyboard, and accessibility mechanics.",
+    evidence: "@base-ui/react",
+  },
+  {
+    layer: "Component conventions",
+    name: `shadcn ${dependencyVersion("shadcn")}`,
+    owner: "Local source pattern",
+    detail: "Composition conventions, aliases, and CSS-variable patterns adapted into Hearst-owned components.",
+    evidence: "components.json",
+  },
+  {
+    layer: "Token pipeline",
+    name: `Style Dictionary ${devDependencyVersion("style-dictionary")}`,
+    owner: "Token build",
+    detail: "The design dictionary layer that transforms canonical token JSON into platform output consumed by CSS variables and themed components.",
+    evidence: "style-dictionary.config.mjs",
+  },
+  {
+    layer: "Styling",
+    name: `Tailwind CSS ${devDependencyVersion("tailwindcss")}`,
+    owner: "Implementation",
+    detail: "Responsive layout and state composition while HDS semantic variables carry design decisions.",
+    evidence: "src/app/globals.css",
+  },
+  {
+    layer: "Review",
+    name: `Storybook ${devDependencyVersion("@storybook/react")}`,
+    owner: "System documentation",
+    detail: "Production-backed component examples, states, accessibility checks, responsive review, and stakeholder signoff.",
+    evidence: "src/stories",
+  },
+  {
+    layer: "Delivery",
+    name: "GitHub Actions, Docker, S3, DeepCLI, Kubernetes",
+    owner: "FRE release platform",
+    detail: "FRE-style delivery: CI builds Docker images, publishes static assets to S3, orchestrates releases through DeepCLI, and runs services on Kubernetes.",
+    evidence: "Media-Platforms/fre workflows and k8s/fre",
+  },
+] as const;
+
+const deploymentArchitecture = [
+  ["GitHub Actions", "Owns pull request, main, and release workflows for build, release, and verification."],
+  ["Docker", "Packages FRE runtime images so the same deployable artifact can move through environments."],
+  ["AWS S3", "Stores and promotes static assets from development paths into production release paths."],
+  ["DeepCLI", "Creates releases, runs deployment commands, coordinates environment promotion, and supports operational checks."],
+  ["Kubernetes", "Runs the FRE service using manifests, health checks, startup probes, environment config, and rolling updates."],
+] as const;
+
+const tokenSourceRows = [
+  {
+    source: "Design intent",
+    authority: "Head of design, HDS design, brand design",
+    output: "Approved principle, brand need, or component decision",
+    rule: "Capture the decision before changing values.",
+  },
+  {
+    source: "Canonical docs",
+    authority: "Repository Markdown",
+    output: "PRODUCT.md, DESIGN.md, DESIGN-SYSTEM-SPEC.md, STYLE.md, BRAND_STYLES.md, APP_RULES.md",
+    rule: "Each durable rule has one owner document.",
+  },
+  {
+    source: "Canonical tokens",
+    authority: "tokens/",
+    output: "Core, semantic, component, typography, and publication JSON",
+    rule: "Edit source tokens only. Generated outputs are not editing surfaces.",
+  },
+  {
+    source: "Token build",
+    authority: "Style Dictionary and token scripts",
+    output: "dist/css/brands, src/lib/tokens.css, src/lib/brands.ts",
+    rule: "Build and validate after token changes.",
+  },
+  {
+    source: "Components",
+    authority: "Production React",
+    output: "Accessible anatomy, behavior, variants, states, and responsive rules",
+    rule: "Shared behavior belongs in shared components.",
+  },
+  {
+    source: "Evidence",
+    authority: "Storybook, tests, production routes",
+    output: "Reviewable examples, checks, and deployment verification",
+    rule: "A change is not done until the evidence is visible.",
+  },
+] as const;
+
+const tokenFlow = [
+  ["1", "Decision", "Leadership and HDS agree whether the change is a core rule, semantic role, component variant, brand token, or exception."],
+  ["2", "Source", "The owned source changes: canonical docs for rules, tokens for values, components for behavior, product code for journeys."],
+  ["3", "Build", "Token scripts and application builds regenerate outputs. Generated CSS and TypeScript are reviewed but not hand-authored."],
+  ["4", "Prove", "Storybook, route checks, accessibility, responsive coverage, and brand comparisons show the result."],
+  ["5", "Release", "A human approves scope, the release is deployed, the exact revision is verified, and exceptions are recorded."],
+] as const;
+
+const operatingDocs = [
+  ["PRODUCT.md", "Product purpose and the reader-facing principles the system must support."],
+  ["DESIGN.md", "A routing bridge that tells designers and agents which canonical source owns a question."],
+  ["DESIGN-SYSTEM-SPEC.md", "HDS authority, token architecture, component contract, Storybook role, and delivery evidence."],
+  ["STYLE.md", "Shared visual, responsive, accessibility, theme, and interaction styling rules."],
+  ["BRAND_STYLES.md", "Brand identity, inheritance, routes, colors, typography, logos, and scoped brand exceptions."],
+  ["APP_RULES.md", "Product behavior: personalization, feeds, reader rules, navigation, state, loading, and exceptions."],
+  ["AGENTS.md", "How agents read the repo, choose the right source, preserve scope, and avoid parallel systems."],
+  ["CONTRIBUTING.md", "Contribution process, versioning, quality checks, release notes, and pull request expectations."],
+] as const;
+
+const componentBuildSteps = [
+  {
+    step: "Need",
+    owner: "Product, brand, or HDS",
+    title: "Define the user need and system level",
+    detail: "Decide whether this is a new primitive, a shared HDS component, a variant, a brand theme value, or product-only composition.",
+  },
+  {
+    step: "Contract",
+    owner: "HDS",
+    title: "Write the component contract",
+    detail: "Name anatomy, states, accessibility requirements, responsive behavior, token roles, slots, variants, and unsupported uses.",
+  },
+  {
+    step: "Behavior",
+    owner: "Base UI when needed",
+    title: "Use headless primitives for complex interactions",
+    detail: "Reach for Base UI when focus management, keyboard control, popovers, menus, dialogs, tabs, or selection state need proven accessibility mechanics.",
+  },
+  {
+    step: "Composition",
+    owner: "shadcn-style local source",
+    title: "Own the source code pattern",
+    detail: "Use shadcn conventions for composable props, variants, class merging, CSS variables, and local ownership. Do not treat shadcn as an external design system.",
+  },
+  {
+    step: "Styling",
+    owner: "Tailwind plus HDS tokens",
+    title: "Implement layout with semantic design decisions",
+    detail: "Tailwind handles spacing, layout, breakpoints, and state selectors. HDS tokens carry color, type, surface, border, motion, and brand meaning.",
+  },
+  {
+    step: "Proof",
+    owner: "Storybook and tests",
+    title: "Document, test, and release with evidence",
+    detail: "Ship stories for states and brands, verify keyboard and responsive behavior, run token and build checks, then release only after review.",
+  },
+] as const;
+
+const componentStackRoles = [
+  ["HDS", "Owns the component contract: anatomy, accessibility, states, variants, tokens, brand expression, and quality bar."],
+  ["Base UI", "Supplies headless behavior for complex controls. It is interaction infrastructure, not visual styling."],
+  ["shadcn", "Provides the local composition vocabulary: source-owned components, variant patterns, class merging, and CSS-variable conventions."],
+  ["Tailwind", "Authors implementation detail: layout, responsive rules, spacing, states, and utility composition."],
+  ["Design Dictionary", "Compiles token decisions into runtime outputs that components consume through semantic variables."],
+  ["Storybook", "Makes the contract reviewable across states, brands, breakpoints, accessibility, and product examples."],
+] as const;
+
+const promptedPlaybookRows = [
+  {
+    audience: "Designers",
+    prompt: "Audit a component for brand expression",
+    when: "A component works functionally but does not feel distinct enough for a publication.",
+    inputs: "Brand, component, route or Storybook story, reference states, and relevant brand tokens.",
+    output: "Brand-fit notes, token recommendations, variant request, and screenshots to review.",
+    guardrail: "Do not request a component fork until token and supported-variant options are exhausted.",
+  },
+  {
+    audience: "Designers",
+    prompt: "Prepare a variant request",
+    when: "A repeated brand or editorial need cannot be met by existing variants.",
+    inputs: "Reader need, affected component, brands affected, examples, accessibility constraints, and expiry if it is an exception.",
+    output: "Variant brief with anatomy, states, token roles, sample brands, and acceptance criteria.",
+    guardrail: "Do not describe only visual taste. Tie the request to a reusable reader or brand need.",
+  },
+  {
+    audience: "Product managers",
+    prompt: "Write a component brief",
+    when: "A product journey needs a new shared pattern or a change to an existing one.",
+    inputs: "User goal, business goal, affected routes, success metric, constraints, risks, and target date.",
+    output: "Brief with scope, non-goals, owners, pilot brands, decision gates, and launch evidence.",
+    guardrail: "Do not collapse product behavior, brand identity, and component behavior into one request.",
+  },
+  {
+    audience: "Product managers",
+    prompt: "Prepare leadership decision notes",
+    when: "A tradeoff needs approval from design, product, engineering, or brand leadership.",
+    inputs: "Decision needed, options, impact, timeline, cost, risks, and recommended path.",
+    output: "One-page decision note with recommendation, alternatives, evidence, and unresolved questions.",
+    guardrail: "Do not ask leadership to approve implementation detail without stating the system impact.",
+  },
+  {
+    audience: "Developers",
+    prompt: "Find the source of truth",
+    when: "A request could belong to tokens, components, brand config, route composition, or documentation.",
+    inputs: "User request, affected UI, route, component names, and any browser evidence.",
+    output: "Owned source path, files to inspect, expected validation, and out-of-scope files.",
+    guardrail: "Do not edit generated token outputs or unrelated brand files.",
+  },
+  {
+    audience: "Developers",
+    prompt: "Implement a governed component change",
+    when: "A shared component or variant has been approved.",
+    inputs: "Component contract, token roles, Base UI needs, supported states, Storybook coverage, and acceptance criteria.",
+    output: "Scoped code change, stories or tests, responsive checks, accessibility notes, and diff summary.",
+    guardrail: "Do not hardcode a publication value in a shared component.",
+  },
+  {
+    audience: "Agents",
+    prompt: "Run a scoped system workflow",
+    when: "A designer, PM, or developer wants repeatable execution with evidence.",
+    inputs: "Goal, source-of-truth docs, allowed files, forbidden actions, validation commands, and release authority.",
+    output: "Narrow diff, checks run, evidence, risks, and handoff-ready summary.",
+    guardrail: "Do not deploy, broaden scope, or rewrite ownership rules without explicit approval.",
+  },
+] as const;
+
+const playbookTemplate = [
+  ["Purpose", "What decision or workflow this prompt supports."],
+  ["Use when", "The exact situation where the prompt is appropriate."],
+  ["Inputs", "Routes, components, brand, screenshots, docs, tokens, constraints, and success criteria."],
+  ["Output", "The shape of the answer: brief, audit, variant request, implementation plan, or evidence report."],
+  ["Guardrails", "What the prompt must not do, including forbidden files, scope expansion, and release authority."],
+  ["Checks", "What proof is required before the work can be considered ready."],
+] as const;
 
 const ownershipRows = [
   ["Accessibility", "Defines the minimum standard and tests it", "Cannot override the standard", "Applies it to every journey"],
@@ -125,6 +391,17 @@ const agentRoles = [
   ["Release Agent", "Packages approved changes and verifies delivery", "Exact revision and production checks", "Deployment without authorization"],
 ] as const;
 
+const skillRows = [
+  ["$impeccable audit", "Run technical quality checks across accessibility, performance, theming, responsive behavior, and anti-patterns.", "Prioritized P0-P3 report with evidence."],
+  ["$impeccable shape", "Plan a new system pattern before implementation.", "Decision model, component anatomy, constraints, and acceptance criteria."],
+  ["$impeccable polish", "Tighten a built surface after the main architecture is correct.", "Focused UI fixes with build and visual evidence."],
+  ["$impeccable document", "Turn implementation into durable design-system documentation.", "Updated docs that point to canonical source files."],
+  ["$figma", "Sync or inspect one brand token branch without broad token churn.", "Scoped token JSON diff and validation."],
+  ["$playwright", "Verify real routes, keyboard behavior, responsive states, and interaction flows.", "Screenshots, DOM evidence, and route assertions."],
+  ["$deploy", "Release approved changes only after explicit authorization.", "Commit, push, deploy, exact revision verification, and smoke tests."],
+  ["handoff", "Prepare continuation context when another agent or session needs to pick up the work.", "Compact summary of goals, constraints, files, checks, and next steps."],
+] as const;
+
 const agenticWorkflow = [
   ["Route", "Identify the AutoWeek brand token and select the Token Architect workflow."],
   ["Change", "Edit the smallest source value, rebuild generated outputs, and leave unrelated brands untouched."],
@@ -138,6 +415,60 @@ const agenticArtifacts = [
   ["Tokens and publication manifest", "Give agents structured brand data"],
   ["Component metadata", "Explains purpose, variants, dependencies, and accessibility"],
   ["Storybook and reports", "Provide visible evidence for review"],
+] as const;
+
+const implementationPlan = [
+  {
+    phase: "Phase 0",
+    timing: "1 week",
+    title: "Leadership alignment",
+    work: "Confirm the system decision, name accountable owners, agree on the pilot brands, and approve the exception policy.",
+    evidence: "Signed decision, pilot scope, owner map, and meeting-ready guide.",
+  },
+  {
+    phase: "Phase 1",
+    timing: "2 weeks",
+    title: "Source-of-truth cleanup",
+    work: "Audit canonical docs, token layers, brand files, generated outputs, Storybook coverage, and known exceptions.",
+    evidence: "Gap report, token health report, component inventory, and prioritized backlog.",
+  },
+  {
+    phase: "Phase 2",
+    timing: "3 weeks",
+    title: "Three-brand pilot",
+    work: "Theme one lifestyle, one automotive, and one fashion or entertainment brand across the selected component set.",
+    evidence: "Figma review, Storybook examples, route screenshots, responsive checks, and accessibility notes.",
+  },
+  {
+    phase: "Phase 3",
+    timing: "3 weeks",
+    title: "Governed rollout",
+    work: "Resolve pilot gaps, document supported variants, add quality gates, and migrate the next group of brands.",
+    evidence: "Versioned components, migration notes, tests, and exception register.",
+  },
+  {
+    phase: "Phase 4",
+    timing: "2 weeks",
+    title: "Organization enablement",
+    work: "Publish the guide, train brand and product partners, establish office hours, and formalize agent workflows.",
+    evidence: "Published docs, training recording, contribution templates, and release checklist.",
+  },
+  {
+    phase: "Phase 5",
+    timing: "1 week",
+    title: "Launch decision",
+    work: "Review metrics, confirm remaining risks, approve the broader portfolio plan, and set the next quarterly roadmap.",
+    evidence: "Executive readout, adoption metrics, risk log, and funded roadmap.",
+  },
+] as const;
+
+const guideMetrics = [
+  ["Reuse", "Percentage of publication surfaces using shared HDS components instead of local forks."],
+  ["Brand fidelity", "Design approval rate for themed components across the pilot brands."],
+  ["Quality", "Accessibility, responsive, visual, and token checks passing before release."],
+  ["Speed", "Median time from approved request to reviewed Storybook evidence."],
+  ["Drift", "Number of undocumented token, component, Figma, and production mismatches."],
+  ["Exceptions", "Open exceptions by owner, expiry date, and migration path."],
 ] as const;
 
 function getTheme(slug: string) {
@@ -305,22 +636,6 @@ export default function HdsBrandFrameworkPage() {
           </div>
         </section>
 
-        <section className="border-b border-slate-200 bg-white">
-          <div className="mx-auto grid max-w-[1360px] gap-px bg-slate-200 md:grid-cols-4">
-            {[
-              ["3 min", "Agree on the decision"],
-              ["8 min", "Review the system model"],
-              ["12 min", "Discuss brand samples"],
-              ["7 min", "Choose the pilot and owners"],
-            ].map(([time, task]) => (
-              <div key={time} className="bg-white px-5 py-6 md:px-7">
-                <strong className="text-2xl text-[#2D75B9]">{time}</strong>
-                <p className="mt-2 text-sm font-semibold text-slate-600">{task}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
         <div className="mx-auto grid max-w-[1360px] gap-10 px-5 py-16 md:px-10 lg:grid-cols-[220px_minmax(0,1fr)] lg:py-24">
           <aside className="self-start lg:sticky lg:top-6">
             <p className="mb-4 text-sm font-bold text-[#2D75B9]">In this proposal</p>
@@ -387,6 +702,231 @@ export default function HdsBrandFrameworkPage() {
                   <strong>Reader experience</strong>
                   <p className="mt-2 text-sm leading-6 text-slate-600">A distinct publication built from supported parts</p>
                 </div>
+              </div>
+            </section>
+
+            <section>
+              <SectionHeading id="token-source" title="Tokens are the single source of truth for system values.">
+                The source of truth is not a slide, a screenshot, or a generated CSS file. Durable decisions live in canonical docs, canonical values live in token JSON, behavior lives in production components, and evidence lives in Storybook, tests, and verified routes.
+              </SectionHeading>
+              <div className="mt-10 overflow-x-auto border-y border-slate-300 bg-white" role="region" tabIndex={0} aria-label="Token source of truth architecture">
+                <table className="w-full min-w-[920px] border-collapse text-left text-sm">
+                  <thead>
+                    <tr className="border-b border-slate-300">
+                      <th className="p-4 text-[#2D75B9]">Layer</th>
+                      <th className="p-4 text-[#2D75B9]">Authority</th>
+                      <th className="p-4 text-[#2D75B9]">Output</th>
+                      <th className="p-4 text-[#2D75B9]">Rule</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tokenSourceRows.map((row) => (
+                      <tr key={row.source} className="border-b border-slate-200 last:border-b-0">
+                        <td className="p-4 align-top font-bold text-[#102A43]">{row.source}</td>
+                        <td className="p-4 align-top leading-6 text-slate-600">{row.authority}</td>
+                        <td className="p-4 align-top font-mono text-xs leading-6 text-slate-600">{row.output}</td>
+                        <td className="p-4 align-top leading-6 text-slate-600">{row.rule}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <ol className="mt-8 grid gap-px bg-slate-200 lg:grid-cols-5">
+                {tokenFlow.map(([number, title, detail]) => (
+                  <li key={title} className="bg-white p-5">
+                    <span className="font-mono text-sm font-bold text-[#2D75B9]">{number}</span>
+                    <h3 className="mt-3 text-lg font-bold">{title}</h3>
+                    <p className="mt-3 text-sm leading-6 text-slate-600">{detail}</p>
+                  </li>
+                ))}
+              </ol>
+              <div className="mt-8 bg-[#E9F2FA] p-6 md:p-8">
+                <h3 className="text-2xl font-bold">The practical rule</h3>
+                <p className="mt-3 max-w-[80ch] text-sm leading-6 text-slate-700">
+                  Edit `tokens/` for values, `src/components/ui/` for shared component behavior, route/product files for product composition, and canonical Markdown for durable rules. Do not hand-edit generated token outputs, and do not solve a brand need by forking a shared component when a token or supported variant can carry it.
+                </p>
+              </div>
+            </section>
+
+            <section>
+              <SectionHeading id="tech-stack" title="The stack separates ownership from implementation.">
+                FRE composes reader experiences and gives us the deployment model. HDS defines the system contract. Base UI, shadcn conventions, Style Dictionary, and Tailwind support that contract without becoming competing design systems.
+              </SectionHeading>
+              <div className="mt-10 grid gap-px bg-slate-200 md:grid-cols-2 xl:grid-cols-3">
+                {techStack.map((item) => (
+                  <article key={item.name} className="bg-white p-6">
+                    <p className="text-xs font-black uppercase tracking-[0.16em] text-[#2D75B9]">
+                      {item.layer}
+                    </p>
+                    <h3 className="mt-4 text-2xl font-bold tracking-[-0.02em] text-[#102A43]">
+                      {item.name}
+                    </h3>
+                    <p className="mt-2 text-sm font-bold text-slate-500">{item.owner}</p>
+                    <p className="mt-4 text-sm leading-6 text-slate-600">{item.detail}</p>
+                    <p className="mt-5 border-t border-slate-200 pt-4 font-mono text-xs font-bold text-slate-500">
+                      {item.evidence}
+                    </p>
+                  </article>
+                ))}
+              </div>
+              <div className="mt-8 grid gap-4 bg-[#102A43] p-6 text-white md:grid-cols-[0.75fr_1.25fr] md:items-start md:p-8">
+                <h3 className="text-2xl font-bold">How to read the stack</h3>
+                <p className="text-sm leading-6 text-slate-300">
+                  HDS owns the reusable decisions: tokens, components, accessibility, and brand themes. FRE owns the product composition and production delivery pattern that turns those pieces into a reader journey. Tailwind is the authoring layer, Style Dictionary is the token compiler, shadcn is the local component convention, and Base UI supplies accessible headless behavior.
+                </p>
+              </div>
+              <div className="mt-8 bg-white p-6 md:p-8">
+                <div className="grid gap-6 lg:grid-cols-[0.7fr_1.3fr] lg:items-start">
+                  <div>
+                    <p className="text-xs font-black uppercase tracking-[0.16em] text-[#2D75B9]">
+                      Recommended delivery model
+                    </p>
+                    <h3 className="mt-3 text-2xl font-bold tracking-[-0.02em] text-[#102A43]">
+                      Use the FRE release architecture
+                    </h3>
+                    <p className="mt-4 text-sm leading-6 text-slate-600">
+                      The system should follow the FRE production path: GitHub Actions for automation, Docker for deployable images, S3 for static assets, DeepCLI for release orchestration, and Kubernetes for runtime. Vercel can exist as configuration, but it is not the primary production deployment model.
+                    </p>
+                  </div>
+                  <dl className="grid gap-px bg-slate-200 sm:grid-cols-2">
+                    {deploymentArchitecture.map(([name, detail]) => (
+                      <div key={name} className="bg-slate-50 p-5">
+                        <dt className="font-bold text-[#102A43]">{name}</dt>
+                        <dd className="mt-2 text-sm leading-6 text-slate-600">{detail}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <SectionHeading id="component-build" title="How an HDS component is made.">
+                A component starts with a user need and ends as a governed contract. HDS decides what the component means, Base UI supplies behavior when the interaction is complex, shadcn conventions shape the source pattern, Tailwind handles implementation detail, and tokens carry brand expression.
+              </SectionHeading>
+              <ol className="mt-10 border-t-2 border-[#2D75B9]">
+                {componentBuildSteps.map((item, index) => (
+                  <li key={item.step} className="grid gap-3 border-b border-slate-200 py-6 md:grid-cols-[3rem_0.55fr_0.75fr_1.7fr] md:items-start">
+                    <span className="font-mono text-sm font-bold text-[#2D75B9]">{String(index + 1).padStart(2, "0")}</span>
+                    <div>
+                      <h3 className="text-lg font-bold">{item.step}</h3>
+                      <p className="mt-1 text-xs font-bold uppercase tracking-[0.14em] text-slate-500">{item.owner}</p>
+                    </div>
+                    <p className="text-base font-bold text-[#102A43]">{item.title}</p>
+                    <p className="text-sm leading-6 text-slate-600">{item.detail}</p>
+                  </li>
+                ))}
+              </ol>
+              <div className="mt-8 grid gap-px bg-slate-200 md:grid-cols-2 xl:grid-cols-3">
+                {componentStackRoles.map(([name, detail]) => (
+                  <article key={name} className="bg-white p-6">
+                    <h3 className="text-2xl font-bold tracking-[-0.02em] text-[#102A43]">{name}</h3>
+                    <p className="mt-4 text-sm leading-6 text-slate-600">{detail}</p>
+                  </article>
+                ))}
+              </div>
+              <div className="mt-8 bg-[#102A43] p-6 text-white md:p-8">
+                <h3 className="text-2xl font-bold">Example: a dropdown or menu</h3>
+                <p className="mt-3 max-w-[80ch] text-sm leading-6 text-slate-300">
+                  HDS defines anatomy, states, density, token roles, and when the pattern should be used. Base UI handles focus, escape behavior, keyboard navigation, and ARIA. The shadcn-style wrapper gives Hearst-owned props and variants. Tailwind composes layout and state classes. Tokens theme the surface, border, text, focus, and brand accent. Storybook proves default, hover, focus, selected, disabled, mobile, and brand-themed states.
+                </p>
+              </div>
+            </section>
+
+            <section>
+              <SectionHeading id="operating-guide" title="The guide needs durable operating documents.">
+                Leadership should share the story, but teams need the working map. The repo already separates product intent, design-system architecture, visual rules, brand identity, app behavior, agent rules, and contribution process into specific documents.
+              </SectionHeading>
+              <dl className="mt-10 divide-y divide-slate-200 border-y border-slate-300 bg-white">
+                {operatingDocs.map(([documentName, purpose]) => (
+                  <div key={documentName} className="grid gap-2 p-5 sm:grid-cols-[15rem_1fr] sm:gap-6">
+                    <dt className="font-mono text-sm font-bold text-[#2D75B9]">{documentName}</dt>
+                    <dd className="text-sm leading-6 text-slate-600">{purpose}</dd>
+                  </div>
+                ))}
+              </dl>
+              <div className="mt-8 grid gap-6 bg-white p-6 md:grid-cols-3 md:p-8">
+                <div>
+                  <h3 className="text-xl font-bold">For designers</h3>
+                  <p className="mt-3 text-sm leading-6 text-slate-600">Start with the decision model, brand identity rules, token roles, and Storybook evidence before requesting a new variant.</p>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold">For engineers</h3>
+                  <p className="mt-3 text-sm leading-6 text-slate-600">Change the lowest owned layer, preserve generated outputs as outputs, and validate routes, states, breakpoints, and accessibility.</p>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold">For agents</h3>
+                  <p className="mt-3 text-sm leading-6 text-slate-600">Read the canonical owner, make the narrow change, produce evidence, and stop before release unless deployment is explicitly authorized.</p>
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <SectionHeading id="prompted-playbook" title="The prompted operating playbook makes the system usable.">
+                Prompts should be reusable workflows, not casual snippets. Each prompt needs a clear audience, required inputs, expected output, source-of-truth rules, and guardrails so designers, product managers, developers, and agents make compatible decisions.
+              </SectionHeading>
+              <div className="mt-10 grid gap-6 lg:grid-cols-[0.75fr_1.25fr]">
+                <div className="bg-[#102A43] p-6 text-white md:p-8">
+                  <h3 className="text-2xl font-bold">Every prompt follows one template</h3>
+                  <dl className="mt-6 divide-y divide-white/15">
+                    {playbookTemplate.map(([term, detail]) => (
+                      <div key={term} className="grid gap-2 py-3 sm:grid-cols-[7rem_1fr]">
+                        <dt className="font-mono text-xs font-bold text-sky-300">{term}</dt>
+                        <dd className="text-sm leading-6 text-slate-300">{detail}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
+                <div className="bg-white p-6 md:p-8">
+                  <h3 className="text-2xl font-bold">The operating rule</h3>
+                  <p className="mt-4 text-sm leading-6 text-slate-600">
+                    A reusable prompt must point to the same system architecture as the code. It should tell someone what to read, what to provide, what output to expect, what evidence is required, and where authority stops.
+                  </p>
+                  <div className="mt-6 border-y border-slate-200 py-5">
+                    <p className="text-sm font-bold text-[#2D75B9]">Recommended storage</p>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                      Keep the playbook in the HDS documentation set, then mirror selected prompts into team tools only as copies that link back to the canonical source.
+                    </p>
+                  </div>
+                  <p className="mt-5 text-sm leading-6 text-slate-600">
+                    This prevents teams from reusing stale prompts that reference old token names, old governance, or outdated release rules.
+                  </p>
+                </div>
+              </div>
+              <div className="mt-10 grid gap-px bg-slate-200 xl:grid-cols-2">
+                {promptedPlaybookRows.map((item) => (
+                  <article key={`${item.audience}-${item.prompt}`} className="bg-white p-6">
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <p className="text-xs font-black uppercase tracking-[0.16em] text-[#2D75B9]">
+                        {item.audience}
+                      </p>
+                      <span className="border border-slate-200 px-2 py-1 text-xs font-bold text-slate-500">
+                        Reusable prompt
+                      </span>
+                    </div>
+                    <h3 className="mt-4 text-2xl font-bold tracking-[-0.02em] text-[#102A43]">
+                      {item.prompt}
+                    </h3>
+                    <dl className="mt-5 divide-y divide-slate-200 text-sm">
+                      <div className="grid gap-2 py-3 sm:grid-cols-[7rem_1fr]">
+                        <dt className="font-bold text-[#102A43]">Use when</dt>
+                        <dd className="leading-6 text-slate-600">{item.when}</dd>
+                      </div>
+                      <div className="grid gap-2 py-3 sm:grid-cols-[7rem_1fr]">
+                        <dt className="font-bold text-[#102A43]">Inputs</dt>
+                        <dd className="leading-6 text-slate-600">{item.inputs}</dd>
+                      </div>
+                      <div className="grid gap-2 py-3 sm:grid-cols-[7rem_1fr]">
+                        <dt className="font-bold text-[#102A43]">Output</dt>
+                        <dd className="leading-6 text-slate-600">{item.output}</dd>
+                      </div>
+                      <div className="grid gap-2 py-3 sm:grid-cols-[7rem_1fr]">
+                        <dt className="font-bold text-[#102A43]">Guardrail</dt>
+                        <dd className="leading-6 text-slate-600">{item.guardrail}</dd>
+                      </div>
+                    </dl>
+                  </article>
+                ))}
               </div>
             </section>
 
@@ -558,6 +1098,24 @@ export default function HdsBrandFrameworkPage() {
                 </div>
               </div>
 
+              <div className="mt-10">
+                <h3 className="text-2xl font-bold">Skills are the repeatable runbooks.</h3>
+                <p className="mt-3 max-w-[72ch] text-sm leading-6 text-slate-600">
+                  A skill is a named workflow with rules, checks, and boundaries. The point is not to replace design judgment; it is to make common system work repeatable, scoped, and reviewable.
+                </p>
+                <div className="mt-6 grid gap-px bg-slate-200 md:grid-cols-2">
+                  {skillRows.map(([skill, purpose, output]) => (
+                    <article key={skill} className="bg-white p-5">
+                      <h4 className="font-mono text-sm font-bold text-[#2D75B9]">{skill}</h4>
+                      <p className="mt-3 text-sm leading-6 text-slate-600">{purpose}</p>
+                      <p className="mt-4 border-t border-slate-200 pt-3 text-xs font-bold text-slate-500">
+                        Output: {output}
+                      </p>
+                    </article>
+                  ))}
+                </div>
+              </div>
+
               <div className="mt-10 grid gap-px bg-slate-200 md:grid-cols-2">
                 <div className="bg-white p-6 md:p-8">
                   <h3 className="text-2xl font-bold">People decide</h3>
@@ -600,14 +1158,40 @@ export default function HdsBrandFrameworkPage() {
             </section>
 
             <section>
-              <SectionHeading id="pilot" title="Prove the model with three deliberately different brands.">
-                Start with a lifestyle publication, an automotive publication, and a fashion or entertainment publication. Use the same governed agent workflow for each. If the components preserve all three identities without forks, the architecture and operating model are ready to expand.
+              <SectionHeading id="pilot" title="A realistic plan is twelve weeks from alignment to launch decision.">
+                Start with a lifestyle publication, an automotive publication, and a fashion or entertainment publication. Use the same governed component, token, Storybook, and agent workflow for each. If the components preserve all three identities without forks, the architecture and operating model are ready to expand.
               </SectionHeading>
-              <div className="mt-10 grid gap-px bg-slate-200 md:grid-cols-3">
+              <ol className="mt-10 border-t-2 border-[#2D75B9]">
+                {implementationPlan.map((item) => (
+                  <li key={item.phase} className="grid gap-3 border-b border-slate-200 py-6 md:grid-cols-[6rem_6rem_0.9fr_1.7fr] md:items-start">
+                    <div>
+                      <p className="font-mono text-sm font-bold text-[#2D75B9]">{item.phase}</p>
+                      <p className="mt-1 text-xs font-bold uppercase tracking-[0.14em] text-slate-500">{item.timing}</p>
+                    </div>
+                    <h3 className="text-lg font-bold md:col-span-1">{item.title}</h3>
+                    <p className="text-sm leading-6 text-slate-600">{item.work}</p>
+                    <p className="text-sm leading-6 text-slate-600">
+                      <strong className="text-[#102A43]">Evidence:</strong> {item.evidence}
+                    </p>
+                  </li>
+                ))}
+              </ol>
+              <div className="mt-8">
+                <h3 className="text-2xl font-bold">What leadership should measure</h3>
+                <dl className="mt-6 grid gap-px bg-slate-200 md:grid-cols-2 lg:grid-cols-3">
+                  {guideMetrics.map(([metric, detail]) => (
+                    <div key={metric} className="bg-white p-5">
+                      <dt className="font-bold text-[#2D75B9]">{metric}</dt>
+                      <dd className="mt-2 text-sm leading-6 text-slate-600">{detail}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+              <div className="mt-8 grid gap-px bg-slate-200 md:grid-cols-3">
                 {[
-                  ["First 30 days", "Agree on ownership, audit the current token layers, select pilot brands, and document the shared component contract."],
-                  ["Days 31 to 60", "Theme a focused component set in Figma and code, then review brand fidelity, responsive behavior, and accessibility in Storybook."],
-                  ["Days 61 to 90", "Resolve gaps, publish contribution rules, measure exceptions, and decide whether the model is ready for the remaining publications."],
+                  ["Pilot component set", "Card, button, link, form control, navigation item, modal, carousel, newsletter/onboarding panel, and one editorial media treatment."],
+                  ["Pilot brands", "One lifestyle brand, one automotive brand, and one fashion or entertainment brand with meaningfully different typography and color needs."],
+                  ["Decision gates", "End of Phase 1: architecture gaps. End of Phase 2: brand fidelity. End of Phase 5: scale or pause."],
                 ].map(([title, copy]) => (
                   <article key={title} className="bg-white p-6">
                     <h3 className="text-lg font-bold">{title}</h3>

@@ -1,19 +1,19 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element -- Decorative onboarding artwork uses external Fluent Emoji library assets. */
+
 import React from "react";
 import { createPortal } from "react-dom";
 import { BrandLogo } from "@/components/brand-logo";
+import { fluentEmojiPng } from "@/components/hearst-plus/fluent-emoji-art";
 import type { HearstOnboardingResult } from "@/components/hearst-plus/onboarding-modal";
 import { Button } from "@/components/ui/button";
 import {
   Check,
   ChevronLeft,
   ChevronRight,
-  Clock,
-  Heart,
   MapPin,
   Search,
-  Shield,
   Sparkles,
   X,
 } from "@/components/ui/icons";
@@ -58,19 +58,19 @@ const homeStyles = [
     id: "efficient-home",
     title: "Efficient home",
     description: "Cleaning, organizing, and time-saving routines",
-    Icon: Clock,
+    imageSrc: fluentEmojiPng("House with garden"),
   },
   {
     id: "family-helper",
     title: "Family helper",
     description: "Food, health, holidays, kids, and everyday support",
-    Icon: Heart,
+    imageSrc: fluentEmojiPng("Fork and knife with plate"),
   },
   {
     id: "tested-shopper",
     title: "Tested shopper",
     description: "Lab-backed products before you buy",
-    Icon: Shield,
+    imageSrc: fluentEmojiPng("Shield"),
   },
 ] as const;
 
@@ -502,7 +502,7 @@ function GoodHousekeepingOnboardingModalContent({
 
                 {step === 2 ? (
                   <div className="mt-6 grid w-full gap-3 sm:grid-cols-3">
-                    {homeStyles.map(({ id, title, description: optionDescription, Icon }) => {
+                    {homeStyles.map(({ id, title, description: optionDescription, imageSrc }) => {
                       const selected = homeStyle === id;
                       return (
                         <button
@@ -519,9 +519,14 @@ function GoodHousekeepingOnboardingModalContent({
                         >
                           <span className={cn(
                             "flex size-10 shrink-0 items-center justify-center rounded-full",
-                            selected ? "bg-white text-[#198294]" : "bg-[#E5EAF0] text-[#343944]",
+                            selected ? "bg-white" : "bg-[#E5EAF0]",
                           )}>
-                            <Icon className="size-5" aria-hidden />
+                            <img
+                              src={imageSrc}
+                              alt=""
+                              className="size-7 object-contain"
+                              aria-hidden="true"
+                            />
                           </span>
                           <span className="min-w-0 sm:mt-4">
                             <span className="block text-base font-bold">{title}</span>

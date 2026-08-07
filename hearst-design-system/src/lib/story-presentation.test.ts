@@ -128,6 +128,6 @@ test("keeps the reviewed Meg Stalter crop stable", () => {
       title: "Meg Stalter Paid Way Too Much For The Saddest Mushroom Entrée",
       imageCredit: "Dave Benett",
     })),
-    "center 14%",
+    "center 5%",
   );
 });

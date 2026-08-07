@@ -1,16 +1,17 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element -- Decorative onboarding artwork uses external Fluent Emoji library assets. */
+
 import React from "react";
 import { createPortal } from "react-dom";
 import { BrandLogo } from "@/components/brand-logo";
+import { fluentEmojiPng } from "@/components/hearst-plus/fluent-emoji-art";
 import type { HearstOnboardingResult } from "@/components/hearst-plus/onboarding-modal";
 import { Button } from "@/components/ui/button";
 import {
   Check,
   ChevronLeft,
   ChevronRight,
-  Clock,
-  Heart,
   MapPin,
   Search,
   Sparkles,
@@ -58,19 +59,19 @@ const homeStyles = [
     id: "efficient-home",
     title: "Style seeker",
     description: "Fashion ideas, outfit direction, and shopping edits",
-    Icon: Sparkles,
+    imageSrc: fluentEmojiPng("Dress"),
   },
   {
     id: "family-helper",
     title: "Culture reader",
     description: "Film, books, profiles, and conversations worth following",
-    Icon: Heart,
+    imageSrc: fluentEmojiPng("Movie camera"),
   },
   {
     id: "tested-shopper",
     title: "Beauty editor",
     description: "Skin, makeup, hair, and practical product guidance",
-    Icon: Clock,
+    imageSrc: fluentEmojiPng("Lipstick"),
   },
 ] as const;
 
@@ -506,7 +507,7 @@ function ElleOnboardingModalContent({
 
                 {step === 2 ? (
                   <div className="mt-6 grid w-full gap-3 sm:grid-cols-3">
-                    {homeStyles.map(({ id, title, description: optionDescription, Icon }) => {
+                    {homeStyles.map(({ id, title, description: optionDescription, imageSrc }) => {
                       const selected = homeStyle === id;
                       return (
                         <button
@@ -523,9 +524,14 @@ function ElleOnboardingModalContent({
                         >
                           <span className={cn(
                             "flex size-10 shrink-0 items-center justify-center rounded-full",
-                            selected ? "bg-white text-black" : "bg-[#E5E5E2] text-[#343944]",
+                            selected ? "bg-white" : "bg-[#E5E5E2]",
                           )}>
-                            <Icon className="size-5" aria-hidden />
+                            <img
+                              src={imageSrc}
+                              alt=""
+                              className="size-7 object-contain"
+                              aria-hidden="true"
+                            />
                           </span>
                           <span className="min-w-0 sm:mt-4">
                             <span className="block text-base font-black">{title}</span>

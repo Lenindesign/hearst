@@ -62,7 +62,7 @@ export function getLifestyleImagePosition(story: LifestyleRiverStory) {
   const imageCredit = story.imageCredit?.toLowerCase() ?? "";
 
   if (story.id === lifestyleDefaultLeadStoryId) return "center 22%";
-  if (story.id === "delish-food-news-a73359231-meg-stalter-knorr") return "center 14%";
+  if (story.id === "delish-food-news-a73359231-meg-stalter-knorr") return "center 5%";
   if (
     story.title
     === "Is Dee Valladares Joining BB28? Here’s Why Fans Are Convinced She’s Another ‘Survivor’ Alum-Turned-Houseguest"

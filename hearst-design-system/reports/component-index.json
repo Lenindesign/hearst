@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-08-03T03:05:01.764Z",
-  "totalComponents": 104,
+  "generatedAt": "2026-08-06T19:04:37.793Z",
+  "totalComponents": 108,
   "byLevel": {
     "template": 20,
     "molecule": 35,
-    "organism": 24,
+    "organism": 28,
     "atom": 25
   },
   "byNamespace": {
@@ -25,7 +25,7 @@
     "divider-page.tsx": 1,
     "form-label-page.tsx": 1,
     "fre": 12,
-    "hearst-plus": 31,
+    "hearst-plus": 35,
     "home-page.tsx": 1,
     "homepage-layouts.tsx": 1,
     "hot-rod-events-page.tsx": 1,
@@ -50,22 +50,37 @@
   },
   "metadataCoverage": {
     "componentsWithMetadata": 28,
-    "componentsWithoutMetadata": 76,
-    "coveragePercent": 26.9,
-    "validMetadata": 28,
-    "invalidMetadata": 0
+    "componentsWithoutMetadata": 80,
+    "coveragePercent": 25.9,
+    "validMetadata": 26,
+    "invalidMetadata": 2
   },
   "metadataValidation": {
-    "valid": true,
-    "errors": []
+    "valid": false,
+    "errors": [
+      {
+        "component": "brand-logo",
+        "metadataPath": "src/components/brand-logo.metadata.ts",
+        "issues": [
+          "usedBy missing current values: delish-onboarding-modal, elle-onboarding-modal, good-housekeeping-onboarding-modal"
+        ]
+      },
+      {
+        "component": "button",
+        "metadataPath": "src/components/ui/button.metadata.ts",
+        "issues": [
+          "usedBy missing current values: delish-onboarding-modal, elle-onboarding-modal, good-housekeeping-onboarding-modal, motortrend-onboarding-modal"
+        ]
+      }
+    ]
   },
   "storyCoverage": {
     "directlySpecifiedComponents": 56,
-    "productionUsedWithoutDirectStory": 41,
+    "productionUsedWithoutDirectStory": 45,
     "integratedSpecifiedComponents": 1,
     "infrastructureClassifiedComponents": 1,
     "specifiedComponents": 57,
-    "productionUsedWithoutStorybookSpecification": 39
+    "productionUsedWithoutStorybookSpecification": 43
   },
   "dependencyGraph": {
     "accordion-page": [
@@ -252,6 +267,13 @@
     "contextual-river-advertisement": [
       "hearst-plus/content-reader-advertisement"
     ],
+    "delish-onboarding-modal": [
+      "brand-logo",
+      "hearst-plus/onboarding-modal",
+      "ui/button",
+      "ui/icons",
+      "ui/use-modal-isolation"
+    ],
     "delish-shorts-viewer": [
       "adaptive-video",
       "hearst-plus/brand-source-icon",
@@ -267,6 +289,13 @@
       "lifestyle-river-types",
       "hearst-plus/brand-source-icon",
       "hearst-plus/story-metadata"
+    ],
+    "elle-onboarding-modal": [
+      "brand-logo",
+      "hearst-plus/onboarding-modal",
+      "ui/button",
+      "ui/icons",
+      "ui/use-modal-isolation"
     ],
     "featured-story-carousel": [
       "ui/icons",
@@ -287,6 +316,13 @@
       "hearst-plus/reader-article-body",
       "hearst-plus/use-prefers-reduced-motion"
     ],
+    "good-housekeeping-onboarding-modal": [
+      "brand-logo",
+      "hearst-plus/onboarding-modal",
+      "ui/button",
+      "ui/icons",
+      "ui/use-modal-isolation"
+    ],
     "hearst-games-index": [
       "ui/button",
       "ui/input",
@@ -295,6 +331,12 @@
       "hearst-plus/story-actions"
     ],
     "lifestyle-technology-guide": [],
+    "motortrend-onboarding-modal": [
+      "hearst-plus/onboarding-modal",
+      "ui/button",
+      "ui/icons",
+      "ui/use-modal-isolation"
+    ],
     "onboarding-modal": [
       "lifestyle-river-types",
       "ui/button",
@@ -345,6 +387,7 @@
     "trending-rail": [
       "lifestyle-river-types",
       "hearst-plus/brand-source-icon",
+      "hearst-plus/story-presentation",
       "hearst-plus/video-cards"
     ],
     "utility-bar": [
@@ -425,6 +468,10 @@
       "hearst-plus/brand-promotion-river-module",
       "hearst-plus/brand-promotion-model",
       "hearst-plus/onboarding-modal",
+      "hearst-plus/delish-onboarding-modal",
+      "hearst-plus/motortrend-onboarding-modal",
+      "hearst-plus/good-housekeeping-onboarding-modal",
+      "hearst-plus/elle-onboarding-modal",
       "hearst-plus/stakeholder-personalization-console",
       "hearst-plus/utility-bar",
       "ui/use-modal-isolation",
@@ -713,10 +760,14 @@
       "site-header",
       "content-reader-comments",
       "content-reader-masthead",
+      "delish-onboarding-modal",
       "discovery-sidebar",
+      "elle-onboarding-modal",
       "featured-story-carousel",
       "feed-states",
+      "good-housekeeping-onboarding-modal",
       "hearst-games-index",
+      "motortrend-onboarding-modal",
       "onboarding-modal",
       "reader-masthead-carousel",
       "stakeholder-personalization-console",
@@ -734,6 +785,9 @@
       "ambient-reader",
       "brand-promotion-river-module",
       "content-reader-masthead",
+      "delish-onboarding-modal",
+      "elle-onboarding-modal",
+      "good-housekeeping-onboarding-modal",
       "home-page",
       "homepage-layouts",
       "hot-rod-events-page",
@@ -806,11 +860,15 @@
       "ambient-reader",
       "content-reader-comments",
       "content-reader-masthead",
+      "delish-onboarding-modal",
       "delish-shorts-viewer",
       "discovery-sidebar",
+      "elle-onboarding-modal",
       "featured-story-carousel",
       "fullscreen-image-viewer",
+      "good-housekeeping-onboarding-modal",
       "hearst-games-index",
+      "motortrend-onboarding-modal",
       "onboarding-modal",
       "reader-action-bar",
       "reader-masthead-carousel",
@@ -890,8 +948,12 @@
     "use-modal-isolation": [
       "ambient-reader",
       "content-reader-dialog-shell",
+      "delish-onboarding-modal",
       "delish-shorts-viewer",
+      "elle-onboarding-modal",
       "fullscreen-image-viewer",
+      "good-housekeeping-onboarding-modal",
+      "motortrend-onboarding-modal",
       "onboarding-modal",
       "stakeholder-personalization-console",
       "home-page",
@@ -951,6 +1013,7 @@
       "content-reader-context-rail",
       "content-reader-recommendations",
       "stakeholder-personalization-console",
+      "trending-rail",
       "home-page"
     ],
     "content-reader-model": [
@@ -964,6 +1027,13 @@
     ],
     "content-reader-advertisement": [
       "contextual-river-advertisement",
+      "home-page"
+    ],
+    "onboarding-modal": [
+      "delish-onboarding-modal",
+      "elle-onboarding-modal",
+      "good-housekeeping-onboarding-modal",
+      "motortrend-onboarding-modal",
       "home-page"
     ],
     "adaptive-video": [
@@ -1089,7 +1159,16 @@
     "brand-promotion-river-module": [
       "home-page"
     ],
-    "onboarding-modal": [
+    "delish-onboarding-modal": [
+      "home-page"
+    ],
+    "motortrend-onboarding-modal": [
+      "home-page"
+    ],
+    "good-housekeeping-onboarding-modal": [
+      "home-page"
+    ],
+    "elle-onboarding-modal": [
       "home-page"
     ],
     "stakeholder-personalization-console": [
@@ -1444,11 +1523,15 @@
       "hasHardcodedColors": false,
       "metadataPath": "src/components/brand-logo.metadata.ts",
       "applicationUseSites": [
+        "src/app/hds-brand-framework/page.tsx",
         "src/app/hearst-plus/shop/page.tsx",
         "src/components/article-page.tsx",
         "src/components/hearst-plus/ambient-reader.tsx",
         "src/components/hearst-plus/brand-promotion-river-module.tsx",
         "src/components/hearst-plus/content-reader-masthead.tsx",
+        "src/components/hearst-plus/delish-onboarding-modal.tsx",
+        "src/components/hearst-plus/elle-onboarding-modal.tsx",
+        "src/components/hearst-plus/good-housekeeping-onboarding-modal.tsx",
         "src/components/home-page.tsx",
         "src/components/homepage-layouts.tsx",
         "src/components/hot-rod-events-page.tsx",
@@ -2233,7 +2316,7 @@
         "src/stories/FRE.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 216
+      "lineCount": 217
     },
     {
       "name": "site-header",
@@ -2745,6 +2828,38 @@
       "lineCount": 111
     },
     {
+      "name": "delish-onboarding-modal",
+      "path": "src/components/hearst-plus/delish-onboarding-modal.tsx",
+      "exports": [
+        "buildDelishOnboardingResult",
+        "DelishOnboardingModal",
+        "delishOnboardingStorageKey"
+      ],
+      "level": "organism",
+      "dependencies": [
+        "brand-logo",
+        "hearst-plus/onboarding-modal",
+        "ui/button",
+        "ui/icons",
+        "ui/use-modal-isolation"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/components/home-page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 1176
+    },
+    {
       "name": "delish-shorts-viewer",
       "path": "src/components/hearst-plus/delish-shorts-viewer.tsx",
       "exports": [
@@ -2834,7 +2949,38 @@
         "src/stories/HearstPlusDiscoverySidebar.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 377
+      "lineCount": 362
+    },
+    {
+      "name": "elle-onboarding-modal",
+      "path": "src/components/hearst-plus/elle-onboarding-modal.tsx",
+      "exports": [
+        "ElleOnboardingModal",
+        "elleOnboardingStorageKey"
+      ],
+      "level": "organism",
+      "dependencies": [
+        "brand-logo",
+        "hearst-plus/onboarding-modal",
+        "ui/button",
+        "ui/icons",
+        "ui/use-modal-isolation"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/components/home-page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 901
     },
     {
       "name": "featured-story-carousel",
@@ -2968,6 +3114,37 @@
       "lineCount": 663
     },
     {
+      "name": "good-housekeeping-onboarding-modal",
+      "path": "src/components/hearst-plus/good-housekeeping-onboarding-modal.tsx",
+      "exports": [
+        "GoodHousekeepingOnboardingModal",
+        "goodHousekeepingOnboardingStorageKey"
+      ],
+      "level": "organism",
+      "dependencies": [
+        "brand-logo",
+        "hearst-plus/onboarding-modal",
+        "ui/button",
+        "ui/icons",
+        "ui/use-modal-isolation"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/components/home-page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 897
+    },
+    {
       "name": "hearst-games-index",
       "path": "src/components/hearst-plus/hearst-games-index.tsx",
       "exports": [
@@ -3058,6 +3235,36 @@
       "lineCount": 177
     },
     {
+      "name": "motortrend-onboarding-modal",
+      "path": "src/components/hearst-plus/motortrend-onboarding-modal.tsx",
+      "exports": [
+        "MotorTrendOnboardingModal",
+        "motorTrendOnboardingStorageKey"
+      ],
+      "level": "organism",
+      "dependencies": [
+        "hearst-plus/onboarding-modal",
+        "ui/button",
+        "ui/icons",
+        "ui/use-modal-isolation"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/components/home-page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 1055
+    },
+    {
       "name": "onboarding-modal",
       "path": "src/components/hearst-plus/onboarding-modal.tsx",
       "exports": [
@@ -3103,7 +3310,11 @@
       "hasHardcodedColors": false,
       "metadataPath": null,
       "applicationUseSites": [
+        "src/components/hearst-plus/delish-onboarding-modal.tsx",
+        "src/components/hearst-plus/elle-onboarding-modal.tsx",
+        "src/components/hearst-plus/good-housekeeping-onboarding-modal.tsx",
         "src/components/hearst-plus/index.ts",
+        "src/components/hearst-plus/motortrend-onboarding-modal.tsx",
         "src/components/home-page.tsx"
       ],
       "storybookStories": [
@@ -3409,13 +3620,14 @@
         "src/components/hearst-plus/content-reader-recommendations.tsx",
         "src/components/hearst-plus/index.ts",
         "src/components/hearst-plus/stakeholder-personalization-console.tsx",
+        "src/components/hearst-plus/trending-rail.tsx",
         "src/components/home-page.tsx"
       ],
       "storybookStories": [
         "src/stories/HearstPlusStoryPresentation.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 134
+      "lineCount": 136
     },
     {
       "name": "today-edit-strip",
@@ -3469,6 +3681,7 @@
       "dependencies": [
         "lifestyle-river-types",
         "hearst-plus/brand-source-icon",
+        "hearst-plus/story-presentation",
         "hearst-plus/video-cards"
       ],
       "tokens": {
@@ -3483,13 +3696,14 @@
         ],
         "tailwindSemantics": [
           "border-border",
-          "bg-primary",
-          "text-primary-foreground",
+          "bg-muted",
+          "text-primary",
+          "ring-border",
           "text-muted-foreground"
         ],
         "classes": []
       },
-      "brandAware": true,
+      "brandAware": false,
       "responsive": false,
       "hasHardcodedColors": false,
       "metadataPath": null,
@@ -3501,7 +3715,7 @@
         "src/stories/HearstPlusTrendingRails.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 117
+      "lineCount": 127
     },
     {
       "name": "utility-bar",
@@ -3724,6 +3938,10 @@
         "hearst-plus/brand-promotion-river-module",
         "hearst-plus/brand-promotion-model",
         "hearst-plus/onboarding-modal",
+        "hearst-plus/delish-onboarding-modal",
+        "hearst-plus/motortrend-onboarding-modal",
+        "hearst-plus/good-housekeeping-onboarding-modal",
+        "hearst-plus/elle-onboarding-modal",
         "hearst-plus/stakeholder-personalization-console",
         "hearst-plus/utility-bar",
         "ui/use-modal-isolation",
@@ -3814,7 +4032,7 @@
         "src/stories/LifestyleDestinationApp.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 6860
+      "lineCount": 7034
     },
     {
       "name": "homepage-layouts",
@@ -4314,6 +4532,7 @@
       "metadataPath": "src/components/product-story-shell.metadata.ts",
       "applicationUseSites": [
         "src/app/about-hearst-magazines/page.tsx",
+        "src/app/hds-brand-framework/page.tsx",
         "src/app/hearst-article-blueprint/page.tsx",
         "src/app/hearst-product-blueprint/page.tsx",
         "src/app/token-architecture/page.tsx",
@@ -4329,7 +4548,7 @@
         ],
         "rationale": "The direct stories import the exact routed exports and separate them from reader-facing components. They specify desktop and phone navigation, current-page semantics, 44px targets, the non-interactive diagram boundary, both story-card concepts, portfolio and destination maps, journey/ranking evidence, architecture/palette guidance, brand style tiles, marquee behavior, and the shared footer."
       },
-      "lineCount": 613
+      "lineCount": 614
     },
     {
       "name": "reader-account-ui",
@@ -5072,10 +5291,14 @@
         "src/components/fre/site-header.tsx",
         "src/components/hearst-plus/content-reader-comments.tsx",
         "src/components/hearst-plus/content-reader-masthead.tsx",
+        "src/components/hearst-plus/delish-onboarding-modal.tsx",
         "src/components/hearst-plus/discovery-sidebar.tsx",
+        "src/components/hearst-plus/elle-onboarding-modal.tsx",
         "src/components/hearst-plus/featured-story-carousel.tsx",
         "src/components/hearst-plus/feed-states.tsx",
+        "src/components/hearst-plus/good-housekeeping-onboarding-modal.tsx",
         "src/components/hearst-plus/hearst-games-index.tsx",
+        "src/components/hearst-plus/motortrend-onboarding-modal.tsx",
         "src/components/hearst-plus/onboarding-modal.tsx",
         "src/components/hearst-plus/reader-masthead-carousel.tsx",
         "src/components/hearst-plus/stakeholder-personalization-console.tsx",

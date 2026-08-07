@@ -1,7 +1,10 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element -- Decorative onboarding artwork uses external Fluent Emoji and prototype image assets. */
+
 import React from "react";
 import { createPortal } from "react-dom";
+import { fluentEmojiPng } from "@/components/hearst-plus/fluent-emoji-art";
 import type { HearstOnboardingResult } from "@/components/hearst-plus/onboarding-modal";
 import { Button } from "@/components/ui/button";
 import {
@@ -45,10 +48,10 @@ const motorTrendLogo =
   "https://d2kde5ohu8qb21.cloudfront.net/files/68f3fc9ccfecd100026f4650/mtlogo.png";
 
 const stepIllustrations = {
-  1: "https://d2kde5ohu8qb21.cloudfront.net/files/68f56011a481f700027e1857/group1318348097.svg",
-  2: "https://d2kde5ohu8qb21.cloudfront.net/files/68f56010a481f700027e1855/group1318348098.svg",
-  3: "https://d2kde5ohu8qb21.cloudfront.net/files/68f56010a481f700027e1853/group1318348095.svg",
-  4: "https://d2kde5ohu8qb21.cloudfront.net/files/68f5600ea481f700027e1851/group1318348096.svg",
+  1: fluentEmojiPng("Racing car"),
+  2: fluentEmojiPng("Automobile"),
+  3: fluentEmojiPng("Wheel"),
+  4: fluentEmojiPng("Envelope"),
 } as const;
 
 const userTypeOptions = [
@@ -56,19 +59,19 @@ const userTypeOptions = [
     id: "buyer",
     title: "Buyer",
     description: "Shopping for a new or used car",
-    image: "https://d2kde5ohu8qb21.cloudfront.net/files/69101763c398630002aedb21/buyer.svg",
+    image: fluentEmojiPng("Automobile"),
   },
   {
     id: "enthusiast",
     title: "Enthusiast",
     description: "Love cars, reviews, and auto culture",
-    image: "https://d2kde5ohu8qb21.cloudfront.net/files/691017650e4b090002079ec0/enthusiast.svg",
+    image: fluentEmojiPng("Racing car"),
   },
   {
     id: "both",
     title: "Both",
     description: "Car lover always eyeing the next ride",
-    image: "https://d2kde5ohu8qb21.cloudfront.net/files/691017670e4b090002079ec2/both.svg",
+    image: fluentEmojiPng("Wheel"),
   },
 ] as const;
 
@@ -77,19 +80,19 @@ const newsletterOptions = [
     id: "motortrend",
     title: "Subscribe to MotorTrend Newsletter",
     description: "Trust MotorTrend for the best car reviews, news, car rankings, and much more",
-    image: "https://d2kde5ohu8qb21.cloudfront.net/files/68f64a2ae852a20002f9bc03/mt-nl.svg",
+    image: fluentEmojiPng("Automobile"),
   },
   {
     id: "hotrod",
     title: "Subscribe to HOT ROD Newsletter",
     description: "Get the latest automotive news and insights delivered to your inbox",
-    image: "https://d2kde5ohu8qb21.cloudfront.net/files/68f64aa7e852a20002f9bc04/hr-nl.svg",
+    image: fluentEmojiPng("Gear"),
   },
   {
     id: "events",
     title: "Subscribe to Our Events Newsletter",
     description: "Stay informed on our epic car events!",
-    image: "https://d2kde5ohu8qb21.cloudfront.net/files/69040ce5e09a72000286cf1d/event.png",
+    image: fluentEmojiPng("Calendar"),
   },
 ] as const;
 
@@ -452,7 +455,7 @@ function MotorTrendOnboardingModalContent({
                 <img
                   src={stepIllustrations[step]}
                   alt=""
-                  className="h-[101px] w-auto max-w-[210px] object-contain"
+                  className="h-[101px] w-auto max-w-[150px] object-contain"
                 />
                 <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-[#101318]">
                   Step {step}/4
@@ -683,8 +686,8 @@ function StepTwo({
                 src={option.image}
                 alt=""
                 className={cn(
-                  "h-[58px] w-full rounded-[9px] border object-cover",
-                  selected ? "border-[#ED1C24]" : "border-[#20242E]",
+                  "h-[58px] w-full rounded-[9px] object-contain p-1.5",
+                  selected ? "bg-white/95" : "bg-[#F3F4F6]",
                 )}
               />
               <span className="mt-3 text-base font-semibold leading-tight">{option.title}</span>
@@ -904,7 +907,7 @@ function StepFour({
               <img
                 src={newsletter.image}
                 alt=""
-                className="h-12 w-12 shrink-0 rounded-[8px] object-cover"
+                className="h-12 w-12 shrink-0 rounded-[8px] bg-[#F3F4F6] object-contain p-1"
               />
               <span className="min-w-0 flex-1">
                 <span className="flex items-center gap-3">

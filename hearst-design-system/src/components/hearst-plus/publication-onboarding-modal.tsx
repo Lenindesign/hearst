@@ -1,10 +1,11 @@
 "use client";
 
-/* eslint-disable @next/next/no-img-element -- Decorative onboarding artwork uses external Iconify library assets. */
+/* eslint-disable @next/next/no-img-element -- Decorative onboarding artwork uses external Fluent Emoji library assets. */
 
 import React from "react";
 import { createPortal } from "react-dom";
 import { BrandLogo } from "@/components/brand-logo";
+import { fluentEmojiPngForIcon } from "@/components/hearst-plus/fluent-emoji-art";
 import type { HearstOnboardingResult } from "@/components/hearst-plus/onboarding-modal";
 import { Button } from "@/components/ui/button";
 import {
@@ -176,8 +177,10 @@ type PublicationOnboardingConfig = {
   fallbackPriority: string;
 };
 
-const iconifyHuge = (name: string, color: string) =>
-  `https://api.iconify.design/hugeicons:${name}.svg?color=${encodeURIComponent(color)}`;
+const iconifyHuge = (name: string, color: string) => {
+  void color;
+  return fluentEmojiPngForIcon(name);
+};
 
 const choice = (label: string, iconName: string, color: string): PublicationChoiceOption => ({
   label,
