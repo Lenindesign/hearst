@@ -25,13 +25,12 @@ const meta = {
     docs: {
       description: {
         component:
-          "The production related-content boundary used at the end of a Hearst+ article. It ranks the shared production-aligned story inventory by topic, brand, tags, freshness, and reader intent; opens the selected story in the existing reader; and renders nothing when no eligible related story exists.",
+          "The production recommendations boundary used at the end of a Hearst+ article. It ranks the shared production-aligned story inventory by topic, brand, tags, freshness, and reader intent; opens the selected story in the existing reader; and renders nothing when no eligible recommendation exists.",
       },
     },
   },
   args: {
     ...defaultFixture,
-    productName: "Hearst+",
     onOpenStory: fn(),
   },
 } satisfies Meta<typeof ContentReaderRecommendations>;
@@ -57,7 +56,7 @@ export const RankedRelatedStories: Story = {
       fixture.stories,
     );
     const region = canvas.getByRole("region", {
-      name: `More in ${fixture.currentStory.topic}`,
+      name: "Recommended For You",
     });
     const relatedStoryButtons = within(region).getAllByRole("button", {
       name: /^Open related story:/,

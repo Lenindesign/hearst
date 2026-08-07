@@ -24,6 +24,7 @@ export { EyeSlashIcon as EyeOff } from "@phosphor-icons/react/dist/ssr/EyeSlash"
 export { FireIcon as Flame } from "@phosphor-icons/react/dist/ssr/Fire";
 export { FolderPlusIcon as FolderPlus } from "@phosphor-icons/react/dist/ssr/FolderPlus";
 export { GearIcon as Settings } from "@phosphor-icons/react/dist/ssr/Gear";
+export { GlobeHemisphereEastIcon as GlobeHemisphereEast } from "@phosphor-icons/react/dist/ssr/GlobeHemisphereEast";
 export { HandbagIcon as ShoppingBag } from "@phosphor-icons/react/dist/ssr/Handbag";
 export { HeadphonesIcon as Headphones } from "@phosphor-icons/react/dist/ssr/Headphones";
 export { HeartIcon as Heart } from "@phosphor-icons/react/dist/ssr/Heart";

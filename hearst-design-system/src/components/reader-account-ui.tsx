@@ -185,7 +185,7 @@ function ModalFrame({
   if (!open || !portalTarget) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-[130] flex items-center justify-center bg-foreground/55 p-4 backdrop-blur-sm sm:p-6">
+    <div className="fixed inset-0 z-[280] flex items-center justify-center bg-foreground/55 p-4 backdrop-blur-sm sm:p-6">
       <div className="absolute inset-0" onClick={onClose} aria-hidden="true" />
       <section
         ref={dialogRef}
@@ -202,6 +202,70 @@ function ModalFrame({
       </section>
     </div>,
     portalTarget
+  );
+}
+
+export interface SaveAcrossDevicesDialogProps {
+  open: boolean;
+  onClose: () => void;
+  onSignIn: () => void;
+  onCreateProfile: () => void;
+}
+
+export function SaveAcrossDevicesDialog({
+  open,
+  onClose,
+  onSignIn,
+  onCreateProfile,
+}: SaveAcrossDevicesDialogProps) {
+  return (
+    <ModalFrame
+      open={open}
+      titleId="save-across-devices-title"
+      onClose={onClose}
+      className="max-w-[24rem] bg-background"
+    >
+      <div className="flex items-start justify-between gap-4 border-b border-border px-5 py-4 sm:px-6">
+        <div className="flex min-w-0 items-center gap-3">
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-[8px] bg-primary/10 text-primary">
+            <Check className="size-5" aria-hidden />
+          </span>
+          <div className="min-w-0">
+            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+              Saved on this device
+            </p>
+            <h2 id="save-across-devices-title" className="mt-1 text-lg font-bold leading-tight text-foreground">
+              Save Across Devices
+            </h2>
+          </div>
+        </div>
+        <button
+          type="button"
+          data-modal-close
+          onClick={onClose}
+          className="inline-flex size-9 shrink-0 items-center justify-center rounded-[var(--component-button-radius-default)] text-muted-foreground transition hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 motion-reduce:transition-none"
+          aria-label="Close save prompt"
+        >
+          <X className="size-4" aria-hidden />
+        </button>
+      </div>
+      <div className="px-5 py-5 sm:px-6">
+        <p className="text-sm leading-6 text-muted-foreground">
+          Your story is saved here. Sign in or create a profile to keep your saved stories on every device.
+        </p>
+        <div className="mt-5 grid gap-2.5">
+          <Button type="button" size="touch" onClick={onSignIn} className="w-full font-bold">
+            Sign in
+          </Button>
+          <Button type="button" size="touch" variant="outline" onClick={onCreateProfile} className="w-full">
+            Create profile
+          </Button>
+          <Button type="button" size="sm" variant="ghost" onClick={onClose} className="mx-auto mt-1 w-fit px-3 text-muted-foreground">
+            Not now
+          </Button>
+        </div>
+      </div>
+    </ModalFrame>
   );
 }
 

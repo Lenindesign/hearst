@@ -69,7 +69,7 @@ import type { LifestyleRiverProfile, LifestyleRiverStory } from "./lifestyle-riv
 import type { LiveArticleData, LiveFeedData } from "@/lib/live-feed-types";
 import { loadLiveArticle } from "@/lib/live-article-client-cache";
 import { useReaderAccount } from "./reader-account";
-import { ReaderAuthDialog, ReaderProfileDialog } from "./reader-account-ui";
+import { ReaderAuthDialog, ReaderProfileDialog, SaveAcrossDevicesDialog } from "./reader-account-ui";
 import { AdaptiveVideo } from "./adaptive-video";
 import { useProgressiveFeed } from "./hearst-plus/use-progressive-feed";
 import {
@@ -170,6 +170,7 @@ import {
 import {
   DelishOnboardingModal,
 } from "./hearst-plus/delish-onboarding-modal";
+import { DelishClubsModule } from "./hearst-plus/delish-clubs-module";
 import {
   MotorTrendOnboardingModal,
 } from "./hearst-plus/motortrend-onboarding-modal";
@@ -3717,7 +3718,6 @@ function LifestyleStoryReaderModal({
                         <ContentReaderRecommendations
                           currentStory={story}
                           stories={readerStories}
-                          productName={destinationConfigs[getStoryDestinationMode(story.brandSlug)].productName}
                           onOpenStory={onOpenStory}
                         />
                       </div>
@@ -3832,6 +3832,7 @@ type LifestyleRiverHomePageProps = {
   indicatorPalette?: readonly string[];
   activeBrandFilters?: string[];
   onActiveBrandFiltersChange?: React.Dispatch<React.SetStateAction<string[]>>;
+  onGuestSavePrompt?: () => void;
   feedTotal?: number | null;
   feedLoadedCount?: number;
   feedHasMore?: boolean;
@@ -3895,6 +3896,7 @@ function LifestyleRiverHomePage({
   indicatorPalette,
   activeBrandFilters: controlledActiveBrandFilters,
   onActiveBrandFiltersChange,
+  onGuestSavePrompt,
   feedTotal = null,
   feedLoadedCount = 0,
   feedHasMore = false,
@@ -4409,6 +4411,7 @@ function LifestyleRiverHomePage({
   const showDelishVerticalVideoCarousel = usingVideoTabFeed
     && (effectiveBrandFilters.length === 0 || effectiveBrandFilters.includes("Delish"));
   const showDelishPublicationShorts = isDelishPublicationRiver && delishVerticalVideoStories.length > 0;
+  const showDelishClubsModule = isDelishPublicationRiver && activeFilter === "For You";
   const showDelishShortsInHearstPlusRiver = destination === "all"
     && !initialBrandSlug
     && !usingVideoTabFeed
@@ -4925,6 +4928,7 @@ function LifestyleRiverHomePage({
         savedTags: saved ? current.savedTags : mergeUnique(current.savedTags, story.tags.slice(0, 2)),
       };
     }, story);
+    if (!saved && !account) onGuestSavePrompt?.();
   };
 
   const boostStory = (story: LifestyleRiverStory) => {
@@ -5430,6 +5434,13 @@ function LifestyleRiverHomePage({
                   onOpen={openDelishShort}
                   onSupplementalStories={handleDelishSupplementalStories}
                   theme="light"
+                />
+              ) : null}
+
+              {showDelishClubsModule ? (
+                <DelishClubsModule
+                  profile={profile}
+                  onboardingResult={onboardingResult}
                 />
               ) : null}
 
@@ -6034,6 +6045,7 @@ export function HomePageTemplate({
   const [authDialogOpen, setAuthDialogOpen] = React.useState(false);
   const [authDialogMode, setAuthDialogMode] = React.useState<"create" | "signIn">("create");
   const [profileOpen, setProfileOpen] = React.useState(false);
+  const [saveAcrossDevicesOpen, setSaveAcrossDevicesOpen] = React.useState(false);
   const [selectedBrand, setSelectedBrand] = React.useState<{ name: string; slug: string } | null>(() =>
     getBrandRouteInfo(destinationConfigs.all.sourceNotes, initialBrandSlug)
   );
@@ -6131,6 +6143,9 @@ export function HomePageTemplate({
     isMotorTrendOnboardingRoute,
     isPublicationOnboardingRoute,
   ]);
+  const openSaveAcrossDevicesPrompt = React.useCallback(() => {
+    if (!account) setSaveAcrossDevicesOpen(true);
+  }, [account]);
   React.useEffect(() => {
     if (selectedBrand) return;
 
@@ -6830,6 +6845,7 @@ export function HomePageTemplate({
                 indicatorPalette={selectedBrandIndicatorPalette}
                 activeBrandFilters={activeBrandFilters}
                 onActiveBrandFiltersChange={setActiveBrandFilters}
+                onGuestSavePrompt={openSaveAcrossDevicesPrompt}
                 feedTotal={activeLifestyleFilter === "Videos"
                   ? progressiveVideoFeed.total
                   : progressiveEditorialFeed.total}
@@ -6965,6 +6981,23 @@ export function HomePageTemplate({
             setPublicationOnboardingOpen(false);
             keepPublicationRoute(publicationOnboardingBrandSlug);
             setAuthDialogMode("signIn");
+            setAuthDialogOpen(true);
+          }}
+        />
+      ) : null}
+
+      {canUseReaderAccountDialogs ? (
+        <SaveAcrossDevicesDialog
+          open={saveAcrossDevicesOpen}
+          onClose={() => setSaveAcrossDevicesOpen(false)}
+          onSignIn={() => {
+            setSaveAcrossDevicesOpen(false);
+            setAuthDialogMode("signIn");
+            setAuthDialogOpen(true);
+          }}
+          onCreateProfile={() => {
+            setSaveAcrossDevicesOpen(false);
+            setAuthDialogMode("create");
             setAuthDialogOpen(true);
           }}
         />

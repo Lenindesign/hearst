@@ -13,14 +13,12 @@ import { getLifestyleByline } from "./story-metadata";
 export type ContentReaderRecommendationsProps = {
   currentStory: LifestyleRiverStory;
   stories: LifestyleRiverStory[];
-  productName: string;
   onOpenStory: (storyId: string) => void;
 };
 
 export function ContentReaderRecommendations({
   currentStory,
   stories,
-  productName,
   onOpenStory,
 }: ContentReaderRecommendationsProps) {
   const recommendations = getLifestyleArticleRecommendations(currentStory, stories);
@@ -31,15 +29,11 @@ export function ContentReaderRecommendations({
   return (
     <section
       className="mt-8 border-t border-border py-6"
-      aria-label={`More in ${currentStory.topic}`}
+      aria-label="Recommended For You"
     >
       <div className="mb-5">
         <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
-          More in {currentStory.topic}
-        </p>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-          Related picks from {productName}, ranked from this article&apos;s
-          topic, brand, tags, freshness, and reader intent.
+          Recommended For You
         </p>
       </div>
 
