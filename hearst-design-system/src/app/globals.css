@@ -91,6 +91,19 @@
   --hp-motion-standard: 240ms;
 }
 
+.hearst-community-page {
+  font-family: var(--community-font-ui);
+}
+
+.hearst-community-display {
+  font-family: var(--community-font-display);
+  font-optical-sizing: auto;
+}
+
+.hearst-community-copy {
+  font-family: var(--community-font-copy);
+}
+
 .hearst-plus-theme[data-mode="dark"] {
   --background: #0d1014;
   --foreground: #f8fbff;

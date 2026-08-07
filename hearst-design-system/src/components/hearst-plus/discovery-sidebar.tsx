@@ -2,8 +2,9 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ChevronDown } from "@/components/ui/icons";
-import { Button } from "@/components/ui/button";
+import { buttonVariants, Button } from "@/components/ui/button";
 import type {
   LifestyleRiverProfile,
   LifestyleRiverStory,
@@ -169,6 +170,9 @@ export function LifestyleDiscoverySidebar({
           : `All brands · ${brandStoryCount} stories`;
   const topicSummary = activeTopicSummary || `${topics.length} topics`;
   const collectionSummary = `${collectionLabels.length} collections`;
+  const activeCommunityBrand = activeBrandFilters.length > 0
+    ? brands.find((brand) => brand.name === activeBrandFilters[0])
+    : undefined;
   const autosOemStoryCount = autosOemOptions.reduce(
     (total, make) => total + make.count,
     0,
@@ -215,8 +219,8 @@ export function LifestyleDiscoverySidebar({
     <DiscoverySidebarCard title={brandFilterTitle} summary={brandSummary}>
       {isBrandCommunityModule ? (
         <p className="mt-4 text-xs leading-5 text-muted-foreground">
-          Pick the brand communities you want in your feed. Joined brands become
-          the path into their forums.
+          Pick the brand communities you want in your feed, then open their
+          forum when you want the full discussion.
         </p>
       ) : null}
       <div
@@ -281,7 +285,7 @@ export function LifestyleDiscoverySidebar({
       <p className="mt-4 text-xs leading-5 text-muted-foreground">
         {isBrandCommunityModule
           ? activeBrandFilters.length > 0
-            ? `You joined ${activeBrandFilters[0]}. Open its brand page to enter the forum.`
+            ? `You joined ${activeBrandFilters[0]}.`
             : "Join a brand community to tune your feed and unlock its forum."
           : globalInventory
             ? "Complete section inventory. Select a brand to open its publication."
@@ -289,6 +293,24 @@ export function LifestyleDiscoverySidebar({
               ? `Showing ${activeBrandFilters[0]}.`
               : "All brands are included in the river."}
       </p>
+      {isBrandCommunityModule ? (
+        <div className="mt-3">
+          <Link
+            href={
+              activeCommunityBrand
+                ? `/communities/${activeCommunityBrand.slug}/`
+                : "/communities/"
+            }
+            className={buttonVariants({
+              variant: "outline",
+              size: "sm",
+              className: "w-full",
+            })}
+          >
+            {activeBrandFilters.length > 0 ? "Open forum" : "Browse communities"}
+          </Link>
+        </div>
+      ) : null}
     </DiscoverySidebarCard>
   );
 
