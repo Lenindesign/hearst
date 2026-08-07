@@ -62,6 +62,15 @@ test("resolves destination and publication slugs to the production destination",
   assert.equal(getDestinationMode("bicycling"), "ew");
 });
 
+test("surfaces communities in the combined Hearst+ navigation", () => {
+  assert.deepEqual(baseDestinationConfigs.all.filters.slice(5, 9), [
+    "Home",
+    "Videos",
+    "Communities",
+    "Shopping",
+  ]);
+});
+
 test("builds publication navigation from actual topic inventory", () => {
   const stories = [
     makeStory("home-1"),

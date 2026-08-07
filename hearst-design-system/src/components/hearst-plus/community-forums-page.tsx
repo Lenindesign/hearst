@@ -169,8 +169,6 @@ const participationThreadSeeds = [
 const communityNavLinks = [
   { label: "For You", href: "/hearst-plus/", active: false },
   { label: "Communities", href: "/communities/", active: true },
-  { label: "Saved", href: "/hearst-plus/saved/", active: false },
-  { label: "Shop", href: "/hearst-plus/shop/", active: false },
 ] as const;
 
 const communityTypographyStyle = {
@@ -644,7 +642,7 @@ export function CommunityForumsPage({
                       </div>
                       <h3
                         id="thread-starter-title"
-                        className="mt-2 max-w-2xl text-2xl font-black leading-tight text-[var(--hp-text-primary)] md:text-3xl"
+                        className="hearst-community-display mt-2 max-w-2xl text-2xl font-bold leading-tight text-[var(--hp-text-primary)] md:text-3xl"
                       >
                         {activeThread.title}
                       </h3>

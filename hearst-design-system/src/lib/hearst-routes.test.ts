@@ -25,6 +25,11 @@ test("places the house category after Cars in the combined Hearst+ navigation", 
   ]);
 });
 
+test("keeps communities out of generated destination category routes", () => {
+  assert.equal(getHearstDestinationCategoryRoute("all", "Communities"), undefined);
+  assert.equal(getHearstDestinationCategoryLabel("all", "communities"), undefined);
+});
+
 test("uses the clearer house category label in Lifestyle without changing other categories", () => {
   assert.equal(getHearstDestinationCategoryDisplayLabel("lifestyle", "Home"), "House & Garden");
   assert.equal(getHearstDestinationCategoryDisplayLabel("all", "Style"), "Style");

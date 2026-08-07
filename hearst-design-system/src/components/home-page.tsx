@@ -339,9 +339,12 @@ function getContent(brandSlug: string): ContentType {
 }
 
 const hearstDestinationNavHrefs = new Map(
-  hearstDestinationSections
-    .filter((section) => section.label !== "All")
-    .map((section) => [section.label, section.href])
+  [
+    ...hearstDestinationSections
+      .filter((section) => section.label !== "All")
+      .map((section) => [section.label, section.href] as const),
+    ["Communities", "/communities/"] as const,
+  ]
 );
 export function MainNav({
   brandSlug,
