@@ -18,13 +18,21 @@ import {
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 
+type HearstDestinationSection = {
+  mode: HearstDestinationMode | "local-news";
+  label: string;
+  href: string;
+  hasBrandMenu?: boolean;
+};
+
 export const hearstDestinationSections = [
-  { mode: "all", label: "All", href: getHearstDestinationRoute("all") },
-  { mode: "lifestyle", label: "Lifestyle", href: getHearstDestinationRoute("lifestyle") },
-  { mode: "autos", label: "Autos", href: getHearstDestinationRoute("autos") },
-  { mode: "flux", label: "Fashion & Luxury", href: getHearstDestinationRoute("flux") },
-  { mode: "ew", label: "Enthusiast & Wellness", href: getHearstDestinationRoute("ew") },
-] satisfies { mode: HearstDestinationMode; label: string; href: string }[];
+  { mode: "all", label: "All", href: getHearstDestinationRoute("all"), hasBrandMenu: true },
+  { mode: "lifestyle", label: "Lifestyle", href: getHearstDestinationRoute("lifestyle"), hasBrandMenu: true },
+  { mode: "autos", label: "Autos", href: getHearstDestinationRoute("autos"), hasBrandMenu: true },
+  { mode: "flux", label: "Fashion & Luxury", href: getHearstDestinationRoute("flux"), hasBrandMenu: true },
+  { mode: "ew", label: "Enthusiast & Wellness", href: getHearstDestinationRoute("ew"), hasBrandMenu: true },
+  { mode: "local-news", label: "Local News", href: "/hearst-plus/local-news/" },
+] satisfies HearstDestinationSection[];
 
 const brandMenuSections = [
   { mode: "lifestyle", label: "Lifestyle" },
@@ -42,6 +50,8 @@ export interface UtilityBarProps {
   selectedBrand?: { name: string; slug: string } | null;
   onCreateAccount?: () => void;
   onOpenProfile?: () => void;
+  onLocalNewsSelect?: () => void;
+  activeDestinationOverride?: string;
   darkMode?: boolean;
 }
 
@@ -49,6 +59,8 @@ export function UtilityBar({
   selectedBrand,
   onCreateAccount,
   onOpenProfile,
+  onLocalNewsSelect,
+  activeDestinationOverride,
   darkMode = false,
 }: UtilityBarProps) {
   const { brand } = useTheme();
@@ -76,6 +88,7 @@ export function UtilityBar({
                 : brand.slug === "hearst-ew"
                   ? "Enthusiast & Wellness"
                   : "Lifestyle";
+  const activeDestinationLabel = activeDestinationOverride ?? activeDestination;
   const openSection = hearstDestinationSections.find((section) => section.mode === openDestinationMenu);
   const visibleBrandSections = openDestinationMenu === "all"
     ? brandMenuSections
@@ -103,7 +116,7 @@ export function UtilityBar({
 
   React.useEffect(() => {
     destinationNavRef.current?.scrollTo({ left: 0 });
-  }, [activeDestination]);
+  }, [activeDestinationLabel]);
 
   return (
     <div
@@ -145,35 +158,41 @@ export function UtilityBar({
         >
           <div className={cn("flex min-w-max items-center gap-1 rounded-full px-0.5 sm:p-0.5", darkMode ? "bg-white/[0.06]" : "bg-black/10")}>
             {hearstDestinationSections.map((section) => {
-              const isActive = section.label === activeDestination;
+              const isActive = section.label === activeDestinationLabel;
               const isOpen = section.mode === openDestinationMenu;
+              const menuMode = section.hasBrandMenu ? section.mode as HearstDestinationMode : null;
 
               return (
-              <LinkComponent
-                key={section.label}
-                href={section.href}
-                variant="neutral"
-                underline={false}
-                size="xs"
-                aria-haspopup="menu"
-                aria-expanded={isOpen}
-                aria-controls={isOpen ? "hearst-brand-menu" : undefined}
-                aria-current={isActive ? "page" : undefined}
-	                onMouseEnter={() => setOpenDestinationMenu(section.mode)}
-	                onFocus={() => setOpenDestinationMenu(section.mode)}
-	                className={cn(
-	                  "inline-flex min-h-7 min-w-7 cursor-pointer items-center justify-center rounded-full px-2 py-1 text-[11px] font-bold leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:min-h-6 sm:min-w-0 sm:text-xs",
-                  isActive
-                    ? darkMode
-                      ? "bg-[var(--component-navigation-utility-content-accent)] text-[var(--component-navigation-utility-background-knockout)] hover:text-[var(--component-navigation-utility-background-knockout)]"
-                      : "bg-white text-black hover:text-black"
-                    : darkMode
-                      ? "text-[var(--component-navigation-utility-content-knockout)] opacity-85 hover:bg-white/10 hover:text-white hover:opacity-100"
-                      : "text-primary-foreground hover:bg-white/10 hover:text-primary-foreground"
-                )}
-              >
-                {section.label}
-              </LinkComponent>
+                <LinkComponent
+                  key={section.label}
+                  href={section.href}
+                  variant="neutral"
+                  underline={false}
+                  size="xs"
+                  aria-haspopup={menuMode ? "menu" : undefined}
+                  aria-expanded={menuMode ? isOpen : undefined}
+                  aria-controls={menuMode && isOpen ? "hearst-brand-menu" : undefined}
+                  aria-current={isActive ? "page" : undefined}
+                  onClick={section.mode === "local-news" && onLocalNewsSelect ? (event) => {
+                    event.preventDefault();
+                    setOpenDestinationMenu(null);
+                    onLocalNewsSelect();
+                  } : undefined}
+                  onMouseEnter={() => setOpenDestinationMenu(menuMode)}
+                  onFocus={() => setOpenDestinationMenu(menuMode)}
+                  className={cn(
+                    "inline-flex min-h-7 min-w-7 cursor-pointer items-center justify-center rounded-full px-2 py-1 text-[11px] font-bold leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:min-h-6 sm:min-w-0 sm:text-xs",
+                    isActive
+                      ? darkMode
+                        ? "bg-[var(--component-navigation-utility-content-accent)] text-[var(--component-navigation-utility-background-knockout)] hover:text-[var(--component-navigation-utility-background-knockout)]"
+                        : "bg-white text-black hover:text-black"
+                      : darkMode
+                        ? "text-[var(--component-navigation-utility-content-knockout)] opacity-85 hover:bg-white/10 hover:text-white hover:opacity-100"
+                        : "text-primary-foreground hover:bg-white/10 hover:text-primary-foreground"
+                  )}
+                >
+                  {section.label}
+                </LinkComponent>
               );
             })}
           </div>

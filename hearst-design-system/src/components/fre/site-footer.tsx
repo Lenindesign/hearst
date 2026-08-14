@@ -28,6 +28,7 @@ const defaultProductLinkGroups: SiteFooterLinkGroup[] = [
     title: "Discover Hearst+",
     links: [
       { label: "Open Hearst+", href: "/hearst-plus/" },
+      { label: "Local News", href: "/hearst-plus/local-news/" },
       { label: "Shop the stories", href: "/hearst-plus/shop/" },
       { label: "Complete article viewer", href: "/hearst-plus/complete-articles/" },
     ],
@@ -37,6 +38,7 @@ const defaultProductLinkGroups: SiteFooterLinkGroup[] = [
     links: [
       { label: "Product story", href: "/about-hearst-magazines/" },
       { label: "Why Hearst+", href: "/why-hearst-plus/" },
+      { label: "Accessibility and AI", href: "/hearst-plus/accessibility-ai/" },
       { label: "Product blueprint", href: "/hearst-product-blueprint/" },
       { label: "Article system", href: "/hearst-article-blueprint/" },
       { label: "Token architecture", href: "/token-architecture/" },
@@ -47,6 +49,7 @@ const defaultProductLinkGroups: SiteFooterLinkGroup[] = [
     title: "Prototype experiences",
     links: [
       { label: "Live feed", href: "/hearst-plus/live-feed/" },
+      { label: "Local News feed admin", href: "/hearst-plus/local-news/admin/" },
       { label: "Lifestyle Live", href: "/hearst-plus/lifestyle-live/" },
       { label: "Autos Videos", href: "/hearst-plus/motortrend-videos/" },
       { label: "HOT ROD Events", href: "/autos/hot-rod/events/" },
