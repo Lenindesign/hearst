@@ -191,7 +191,7 @@ function parseRssItems(xml: string, channelSlug: EntertainmentWebsiteStory["chan
   return [...xml.matchAll(/<item\b[\s\S]*?<\/item>/gi)].map((match) => {
     const itemXml = match[0];
     const description = stripHtml(getTagValue(itemXml, "description"));
-    const title = getTagValue(itemXml, "title");
+    const title = stripHtml(getTagValue(itemXml, "title"));
     const link = getTagValue(itemXml, "link");
     const guid = getTagValue(itemXml, "guid") || link || title;
     const publishedAt = getTagValue(itemXml, "pubDate") || getTagValue(itemXml, "dc:date") || null;
@@ -318,7 +318,7 @@ function getAttribute(xml: string, tagName: string, attributeName: string) {
 }
 
 function stripHtml(value: string) {
-  return value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  return decodeXml(value).replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 }
 
 function decodeXml(value: string) {

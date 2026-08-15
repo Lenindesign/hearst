@@ -521,6 +521,11 @@ export function FeaturedStoryCarousel({
                 </div>
                 <div data-slider-layer="frame" className="bg-black" />
                 <div
+                  aria-hidden="true"
+                  data-slider-layer="bottom-scrim"
+                  className="pointer-events-none absolute inset-x-0 bottom-0 h-[min(72%,430px)] bg-[linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.34)_32%,rgba(0,0,0,0.86)_62%,#000_100%)]"
+                />
+                <div
                   data-slider-content
                   className="absolute inset-x-0 bottom-0 p-5 text-white sm:p-7"
                 >

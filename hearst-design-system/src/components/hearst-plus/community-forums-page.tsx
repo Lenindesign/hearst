@@ -30,7 +30,6 @@ import { getHearstDestinationStaticData } from "@/lib/hearst-destination-data";
 import {
   getHearstAllBrands,
   getHearstBrandSection,
-  getHearstBrandRoute,
   type HearstBrandSection,
 } from "@/lib/hearst-routes";
 import {
@@ -263,7 +262,6 @@ export function CommunityForumsPage({
 }: CommunityForumsPageProps) {
   const brands = getCommunityBrands();
   const activeBrand = getActiveBrand(brands, activeBrandSlug);
-  const visibleBrands = activeBrand ? [activeBrand] : brands;
   const activeGroupSeed = activeBrandSlug && activeGroupSlug
     ? getCommunityGroup(activeBrandSlug, activeGroupSlug)
     : undefined;
@@ -307,8 +305,6 @@ export function CommunityForumsPage({
   const activeGroup = activeGroupSeed
     ? featuredCommunities.find((item) => item?.groupSlug === activeGroupSeed.groupSlug)
     : undefined;
-  const totalThreads = threads.length;
-  const totalBrands = activeGroup ? 1 : visibleBrands.length;
   const topBrands = [...brands].sort(
     (a, b) => b.stories.length - a.stories.length,
   );
@@ -320,21 +316,6 @@ export function CommunityForumsPage({
         ),
       ]
     : topBrands;
-  const sectionSummary = activeBrand
-    ? sectionLabels[activeBrand.section]
-    : "All groups";
-  const heroTitle = activeGroup
-    ? activeGroup.name
-    : activeThread
-    ? activeThread.title
-    : activeBrand
-      ? `${activeBrand.brand} group`
-      : "Join groups around what you read";
-  const heroDescription = activeGroup
-    ? activeGroup.description
-    : activeThread
-    ? "Reply to the discussion, follow the thread, or open the original story for full context."
-    : "Follow brand groups, join story discussions, ask readers for advice, and hear directly from writers. Each group keeps posts useful, specific, and connected to Hearst stories.";
   const selectedBrandForUtility = activeBrand
     ? { name: activeBrand.brand, slug: activeBrand.brandSlug }
     : null;
@@ -415,106 +396,6 @@ export function CommunityForumsPage({
       </header>
 
       <main>
-        <section className="border-b border-[var(--hp-border)] bg-[var(--hp-surface)]">
-          <div className="mx-auto max-w-[1360px] px-5 py-8 md:px-10 lg:py-10">
-            <div className="grid gap-7 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.46fr)] lg:items-end">
-              <div>
-                <div className="flex flex-wrap items-center gap-2 text-sm font-bold text-[var(--hp-text-secondary)]">
-                  <Link href="/hearst-plus/" className="hover:text-primary">
-                    Hearst+
-                  </Link>
-                  <span aria-hidden>/</span>
-                  <Link href="/communities/" className="hover:text-primary">
-                    Communities
-                  </Link>
-                  {activeBrand ? (
-                    <>
-                      <span aria-hidden>/</span>
-                      <span>{activeBrand.brand}</span>
-                    </>
-                  ) : null}
-                </div>
-                <div className="mt-6">
-                  <p className="text-sm font-bold text-primary">
-                    {sectionSummary}
-                  </p>
-                  <h1 className="hearst-community-display mt-2 max-w-3xl text-4xl font-extrabold leading-[1.06] tracking-normal text-balance md:text-5xl">
-                    {heroTitle}
-                  </h1>
-                  <p className="hearst-community-copy mt-4 max-w-2xl text-base leading-7 text-[var(--hp-text-ui)] md:text-lg">
-                    {heroDescription}
-                  </p>
-                </div>
-              </div>
-
-              <div className="rounded-[8px] border border-primary/15 bg-[var(--community-surface-soft)] p-4">
-                <p className="text-sm font-bold text-[var(--hp-text-primary)]">
-                  Groups keep the community organized.
-                </p>
-                <p className="hearst-community-copy mt-2 text-sm leading-6 text-[var(--hp-text-ui)]">
-                  Comments stay with articles, while brand groups give readers
-                  and writers a place to keep the conversation going.
-                </p>
-                <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-                  {[
-                    { label: "Groups", value: totalBrands },
-                    { label: "Posts", value: totalThreads },
-                    { label: "Mode", value: activeBrand ? "Brand" : "All" },
-                  ].map((item) => (
-                    <div
-                      key={item.label}
-                      className="rounded-[8px] bg-[var(--hp-surface)] px-2 py-3"
-                    >
-                      <p className="hearst-community-display text-xl font-bold leading-none">
-                        {item.value}
-                      </p>
-                      <p className="mt-1 text-xs font-bold text-[var(--hp-text-secondary)]">
-                        {item.label}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-7 flex flex-wrap gap-3">
-              <Link
-                href={
-                  activeBrand
-                    ? getHearstBrandRoute(activeBrand.brandSlug)
-                    : "/hearst-plus/"
-                }
-                className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-[var(--component-button-radius-default)] border border-transparent bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
-              >
-                {activeBrand
-                  ? `Back to ${activeBrand.brand}`
-                  : "Back to Hearst+"}
-              </Link>
-              {activeBrand ? (
-                <Link
-                  href={
-                    activeThread
-                      ? `/communities/${activeBrand.brandSlug}/`
-                      : "/communities/"
-                  }
-                  className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-[var(--component-button-radius-default)] border border-[var(--hp-border)] bg-[var(--hp-surface)] px-4 text-sm font-medium transition-colors hover:bg-[var(--hp-control-hover)] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
-                >
-                  {activeThread
-                    ? `Back to ${activeBrand.brand} group`
-                    : "View all groups"}
-                </Link>
-              ) : null}
-              <Link
-                href="#suggest-group"
-                className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-[var(--component-button-radius-default)] border border-[var(--hp-border)] bg-[var(--hp-surface)] px-4 text-sm font-medium transition-colors hover:bg-[var(--hp-control-hover)] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
-              >
-                <MessageCircle className="size-4" aria-hidden />
-                Suggest a group
-              </Link>
-            </div>
-          </div>
-        </section>
-
         <div className="mx-auto grid max-w-[1360px] gap-6 bg-[var(--hp-background)] px-5 py-8 md:px-10 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.58fr)_minmax(280px,0.7fr)]">
           <aside className="min-w-0 lg:sticky lg:top-28 lg:self-start">
             <section className="rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
@@ -563,32 +444,8 @@ export function CommunityForumsPage({
 
           <section
             className="min-w-0 space-y-4"
-            aria-labelledby="community-feed-title"
+            aria-label={activeGroup ? `${activeGroup.name} posts` : "Group posts"}
           >
-            <div className="flex flex-wrap items-end justify-between gap-4 border-b border-[var(--hp-border)] pb-4">
-              <div>
-                <h2
-                  id="community-feed-title"
-                  className="hearst-community-display text-3xl font-bold leading-tight"
-                >
-                  {activeGroup ? `${activeGroup.name} posts` : "Group posts"}
-                </h2>
-                <p className="hearst-community-copy mt-1 text-sm leading-6 text-[var(--hp-text-secondary)]">
-                  {activeGroup
-                    ? `Discussions, reader questions, and prompts inside ${activeGroup.name}.`
-                    : "Story discussions, writer prompts, reader questions, and group posts in one feed."}
-                </p>
-              </div>
-              <Link
-                href={activeThread ? "#reply-thread" : "#start-thread"}
-                className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-[var(--component-button-radius-default)] border border-[var(--hp-border)] bg-[var(--hp-surface)] px-4 text-sm font-medium transition-colors hover:bg-[var(--hp-control-hover)] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
-                aria-controls={activeThread ? "reply-thread" : "start-thread"}
-              >
-                <MessageCircle className="size-4" aria-hidden />
-                {activeThread ? "Reply to thread" : "Start a post"}
-              </Link>
-            </div>
-
             {activeThread ? (
               <article className="overflow-hidden rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
                 <section

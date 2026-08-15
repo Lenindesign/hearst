@@ -642,7 +642,7 @@ export function EntertainmentWatchPage({
         "--component-navigation-utility-content-accent-hover": "#FFE0A0",
       } as React.CSSProperties}
     >
-      <UtilityBar activeDestinationOverride="Entertainment" darkMode />
+      <UtilityBar activeDestinationOverride="A&E Family" darkMode />
       <MainNav
         brandSlug="hearst-all"
         selectedBrand={{ name: "A&E", slug: "hearst-entertainment" }}

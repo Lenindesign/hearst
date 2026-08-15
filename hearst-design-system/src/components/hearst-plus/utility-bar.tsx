@@ -37,7 +37,7 @@ export const hearstDestinationSections = [
   { mode: "flux", label: "Fashion & Luxury", href: getHearstDestinationRoute("flux"), hasBrandMenu: true },
   { mode: "ew", label: "Enthusiast & Wellness", href: getHearstDestinationRoute("ew"), hasBrandMenu: true },
   { mode: "local-news", label: "Local News", href: "/hearst-plus/local-news/", hasBrandMenu: true },
-  { mode: "entertainment-culture", label: "Entertainment", href: "/hearst-plus/entertainment/", hasBrandMenu: true },
+  { mode: "entertainment-culture", label: "A&E Family", href: "/hearst-plus/entertainment/", hasBrandMenu: true },
 ] satisfies HearstDestinationSection[];
 
 const brandMenuSections = [
@@ -278,7 +278,7 @@ export function UtilityBar({
                   : isLocalNewsMenu
                     ? "Local News"
                     : isEntertainmentCultureMenu
-                    ? "Entertainment & Culture brands"
+                    ? "A&E Family brands"
                     : `${openSection.label} brands`}
               </p>
             </div>
