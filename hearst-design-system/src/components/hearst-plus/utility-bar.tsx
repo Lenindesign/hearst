@@ -52,13 +52,13 @@ const utilityLinks = [
 ] as const;
 
 const entertainmentCultureBrands = [
-  { brand: "A&E", shortLabel: "A&E", href: "https://www.aetv.com/", favicon: "https://www.aetv.com/favicon.ico" },
-  { brand: "HISTORY", shortLabel: "H", href: "https://www.history.com/", favicon: "https://www.history.com/favicon.ico" },
-  { brand: "Lifetime", shortLabel: "LT", href: "https://www.mylifetime.com/", favicon: "https://www.mylifetime.com/favicon.ico" },
-  { brand: "LMN", shortLabel: "LMN", href: "https://www.mylifetime.com/lmn", favicon: "https://www.mylifetime.com/favicon.ico" },
-  { brand: "FYI", shortLabel: "FYI", href: "https://www.fyi.tv/", favicon: "https://www.fyi.tv/favicon.ico" },
-  { brand: "VICE TV", shortLabel: "Vice", href: "https://www.vicetv.com/", favicon: "https://www.vicetv.com/favicon.ico" },
-  { brand: "BIOGRAPHY", shortLabel: "Bio", href: "https://www.biography.com/", favicon: "https://www.biography.com/favicon.ico" },
+  { brand: "A&E", shortLabel: "A&E", href: "/hearst-plus/entertainment/a-e/", favicon: "https://www.aetv.com/favicon.ico" },
+  { brand: "HISTORY", shortLabel: "H", href: "/hearst-plus/entertainment/history/", favicon: "https://www.history.com/favicon.ico" },
+  { brand: "Lifetime", shortLabel: "LT", href: "/hearst-plus/entertainment/lifetime/", favicon: "https://www.mylifetime.com/favicon.ico" },
+  { brand: "LMN", shortLabel: "LMN", href: "/hearst-plus/entertainment/lmn/", favicon: "https://www.mylifetime.com/favicon.ico" },
+  { brand: "FYI", shortLabel: "FYI", href: "/hearst-plus/entertainment/fyi/", favicon: "https://www.fyi.tv/favicon.ico" },
+  { brand: "VICE TV", shortLabel: "Vice", href: "/hearst-plus/entertainment/vice-tv/", favicon: "https://www.vicetv.com/favicon.ico" },
+  { brand: "BIOGRAPHY", shortLabel: "Bio", href: "/hearst-plus/entertainment/biography/", favicon: "https://www.biography.com/favicon.ico" },
 ] as const;
 
 const localNewsOptions = [
@@ -462,7 +462,6 @@ export function UtilityBar({
                       <LinkComponent
                         key={menuBrand.brand}
                         href={menuBrand.href}
-                        external
                         variant="neutral"
                         underline={false}
                         size="sm"

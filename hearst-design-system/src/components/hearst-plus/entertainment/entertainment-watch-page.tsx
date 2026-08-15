@@ -569,9 +569,9 @@ const channelLogoAssets: Record<
   },
 };
 
-const mastheadLogoAssets: Record<EntertainmentChannel, { src: string; label: string }> = {
+const mastheadLogoAssets: Record<EntertainmentChannel, { src: string; label: string; className?: string }> = {
   "A&E": { src: "/logos/aande.svg", label: "A&E" },
-  HISTORY: { src: "/logos/history.svg", label: "HISTORY" },
+  HISTORY: { src: "/logos/history.svg", label: "HISTORY", className: "h-[56px] max-w-[400px]" },
   Lifetime: { src: "/logos/lifetime.svg", label: "Lifetime" },
   LMN: { src: "/logos/lmn.svg", label: "LMN" },
   FYI: { src: "/logos/fyi.svg", label: "FYI" },

@@ -435,7 +435,7 @@ export function MainNav({
   navLinksOverride?: string[];
   navLinkHrefOverrides?: Partial<Record<string, string>>;
   navCarouselMode?: "default" | "compact";
-  mastheadLogoOverride?: { src: string; label: string; surface?: "default" | "station"; tone?: "normal" | "white" } | null;
+  mastheadLogoOverride?: { src: string; label: string; surface?: "default" | "station"; tone?: "normal" | "white"; className?: string } | null;
   includeVideos?: boolean;
   darkMode?: boolean;
   mobileContinueStories?: LifestyleRiverStory[];
@@ -777,7 +777,8 @@ export function MainNav({
         alt={mastheadLogoOverride.label}
         className={cn(
           "mx-auto w-auto object-contain",
-          compact ? "h-[28px] max-w-[220px]" : "h-[44px] max-w-[360px]"
+          compact ? "h-[28px] max-w-[220px]" : "h-[44px] max-w-[360px]",
+          mastheadLogoOverride.className,
         )}
         style={mastheadLogoOverride.tone === "white" ? { filter: "brightness(0) invert(1)" } : undefined}
       />

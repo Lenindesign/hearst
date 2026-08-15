@@ -47,8 +47,7 @@ function isConfiguredFeed(feed: StoredFeed) {
 
 function isConnectedFeed(feed: StoredFeed) {
   return isConfiguredFeed(feed)
-    && feed.status === "connected"
-    && (feed.id === "kcra-primary-feed" || Boolean(feed.lastSuccessfulFetch));
+    && feed.status === "connected";
 }
 
 export function HearstTVFeedExperience({ mode }: { mode: ViewMode }) {
@@ -1208,7 +1207,7 @@ function mergeStoredFeeds(stored: StoredFeed[]) {
   const merged = hearstTVFeeds.map((feed) => {
     const storedFeed = storedById.get(feed.id);
     if (!storedFeed) return feed;
-    if (feed.id === "kcra-primary-feed" && storedFeed.feedUrl === "Feed URL TBD") return feed;
+    if (feed.feedUrl !== feedUrlTbd && storedFeed.feedUrl === feedUrlTbd) return feed;
     return storedFeed;
   });
   const custom = stored.filter((feed) => !hearstTVFeeds.some((seed) => seed.id === feed.id));

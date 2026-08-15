@@ -99,17 +99,46 @@ export const hearstTVStations: HearstTVStation[] = [
   { id: "kitv", stationName: "KITV Island News", callSign: "KITV", market: "Honolulu", state: "HI", network: "ABC", logo: null, homepageUrl: "https://www.kitv.com/", enabled: false, category: "Hearst TV", geo: { latitude: 21.3099, longitude: -157.8581 } },
 ];
 
+export const verifiedHearstTVRssFeeds: Partial<Record<string, string>> = {
+  wcvb: "https://www.wcvb.com/topstories-rss",
+  wmur: "https://www.wmur.com/topstories-rss",
+  wmtw: "https://www.wmtw.com/topstories-rss",
+  wptz: "https://www.mynbc5.com/topstories-rss",
+  wtae: "https://www.wtae.com/topstories-rss",
+  wgal: "https://www.wgal.com/topstories-rss",
+  wbal: "https://www.wbaltv.com/topstories-rss",
+  wxii: "https://www.wxii12.com/topstories-rss",
+  wyff: "https://www.wyff4.com/topstories-rss",
+  wesh: "https://www.wesh.com/topstories-rss",
+  wpbf: "https://www.wpbf.com/topstories-rss",
+  wdsu: "https://www.wdsu.com/topstories-rss",
+  wjcl: "https://www.wjcl.com/topstories-rss",
+  wvtm: "https://www.wvtm13.com/topstories-rss",
+  wapt: "https://www.wapt.com/topstories-rss",
+  wlky: "https://www.wlky.com/topstories-rss",
+  wlwt: "https://www.wlwt.com/topstories-rss",
+  wisn: "https://www.wisn.com/topstories-rss",
+  kcci: "https://www.kcci.com/topstories-rss",
+  kmbc: "https://www.kmbc.com/topstories-rss",
+  ketv: "https://www.ketv.com/topstories-rss",
+  koco: "https://www.koco.com/topstories-rss",
+  "khbs-khog": "https://www.4029tv.com/topstories-rss",
+  koat: "https://www.koat.com/topstories-rss",
+  kcra: kcraTopStoriesFeedUrl,
+  ksbw: "https://www.ksbw.com/topstories-rss",
+};
+
 export const hearstTVFeeds: HearstTVFeed[] = hearstTVStations.map((station) => ({
   id: `${station.id}-primary-feed`,
   stationId: station.id,
   feedName: `${station.callSign} local news`,
-  feedUrl: station.id === "kcra" ? kcraTopStoriesFeedUrl : feedUrlTbd,
-  feedType: station.id === "kcra" ? "RSS" : "TBD",
-  enabled: station.id === "kcra",
-  status: station.id === "kcra" ? "connected" : "pending",
+  feedUrl: verifiedHearstTVRssFeeds[station.id] ?? feedUrlTbd,
+  feedType: verifiedHearstTVRssFeeds[station.id] ? "RSS" : "TBD",
+  enabled: Boolean(verifiedHearstTVRssFeeds[station.id]),
+  status: verifiedHearstTVRssFeeds[station.id] ? "connected" : "pending",
   lastSuccessfulFetch: null,
   lastRefreshTimestamp: null,
-  lastError: station.id === "kcra" ? null : "Feed URL TBD. Add a verified RSS or MRSS endpoint to activate.",
+  lastError: verifiedHearstTVRssFeeds[station.id] ? null : "Feed URL TBD. Add a verified RSS or MRSS endpoint to activate.",
 }));
 
 export const hearstTVSampleContent: HearstTVContent[] = hearstTVStations.flatMap((station, index) => {
