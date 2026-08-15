@@ -2,7 +2,7 @@ import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import { BrandLogo } from "@/components/brand-logo";
 import { SiteFooter } from "@/components/fre/site-footer";
-import { HearstTVLocalNewsRiver } from "@/components/hearst-plus/hearst-tv-feed-experience";
+import { HearstTVLocalNewsReaderExperience } from "@/components/hearst-plus/hearst-tv-feed-experience";
 import { LocalNewsGlobalHeader } from "@/components/hearst-plus/local-news-global-header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { socialGraphMetadata } from "@/lib/social-graph-image";
@@ -32,10 +32,10 @@ export default function LocalNewsPage() {
       >
         <LocalNewsGlobalHeader />
         <section id="tv-stations" className="mx-auto max-w-[1360px] scroll-mt-20 px-5 py-8 md:px-8">
-          <HearstTVLocalNewsRiver />
+          <HearstTVLocalNewsReaderExperience />
         </section>
         <SiteFooter
-          siteName={<BrandLogo slug="hearst-local-news" className="h-8 max-w-[16rem] [&_svg]:h-full [&_svg]:w-auto" color="#fff" />}
+          siteName={<BrandLogo slug="hearst-local-news" className="h-5 max-w-[11rem] [&_svg]:h-full [&_svg]:w-auto" color="#fff" />}
           copyrightYear={2026}
           finePrintNote="Prototype only. Local News feed URLs remain disabled until a verified RSS or MRSS endpoint is configured."
         />

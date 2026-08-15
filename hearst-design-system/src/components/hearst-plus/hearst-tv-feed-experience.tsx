@@ -1,7 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type RefObject } from "react";
 import Link from "next/link";
+import { ContentReaderDialogShell, rememberContentReaderReturnFocus } from "@/components/hearst-plus/content-reader-dialog-shell";
+import { ContentReaderMasthead } from "@/components/hearst-plus/content-reader-masthead";
+import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import type { FeedStatus, FeedType, HearstTVContentType, HearstTVFeed } from "@/lib/hearst-tv-feed-framework";
 import {
   dedupeHearstTVContent,
@@ -172,7 +175,15 @@ export function HearstTVFeedExperience({ mode }: { mode: ViewMode }) {
   );
 }
 
-export function HearstTVLocalNewsRiver() {
+type HearstTVLocalNewsRiverProps = {
+  onOpenStory?: (storyId: string) => void;
+  onStoriesChange?: (stories: LifestyleRiverStory[]) => void;
+};
+
+export function HearstTVLocalNewsRiver({
+  onOpenStory,
+  onStoriesChange,
+}: HearstTVLocalNewsRiverProps = {}) {
   const [feeds] = useState<StoredFeed[]>(() => {
     if (typeof window === "undefined") return hearstTVFeeds;
     try {
@@ -291,6 +302,22 @@ export function HearstTVLocalNewsRiver() {
         hasConfiguredFeed: configuredStationIds.has(item.stationId),
       }));
   }, [configuredStationIds, liveContent, selectedContentType, selectedState, selectedStation]);
+  const readerStories = useMemo(
+    () => filteredContent.map((item) => mapLocalNewsContentToReaderStory(item)),
+    [filteredContent],
+  );
+  const readerStoryById = useMemo(
+    () => new Map(readerStories.map((story) => [story.id, story])),
+    [readerStories],
+  );
+
+  useEffect(() => {
+    onStoriesChange?.(readerStories);
+  }, [onStoriesChange, readerStories]);
+
+  useEffect(() => {
+    return () => onStoriesChange?.([]);
+  }, [onStoriesChange]);
 
   function useCurrentLocation() {
     if (!navigator.geolocation) {
@@ -411,15 +438,25 @@ export function HearstTVLocalNewsRiver() {
           {filteredContent.map((item) => {
             const station = getHearstTVStationById(item.stationId);
             const feed = feeds.find((candidate) => candidate.id === item.feedId) ?? getHearstTVFeedById(item.feedId);
+            const readerStory = readerStoryById.get(item.id);
             if (!station || !feed) return null;
 
             return (
               <article key={item.id} className="group/card relative min-w-0 overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/50" data-story-module="river" data-story-id={item.id}>
-                <a
-                  href={item.url}
-                  target={item.url === "#" ? undefined : "_blank"}
-                  rel={item.url === "#" ? undefined : "noreferrer"}
-                  className="grid min-w-0 gap-0 text-left no-underline sm:grid-cols-[176px_minmax(0,1fr)] sm:gap-4 sm:p-4"
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (readerStory && onOpenStory) {
+                      onOpenStory(readerStory.id);
+                      return;
+                    }
+
+                    if (item.url && item.url !== "#") {
+                      window.open(item.url, "_blank", "noopener,noreferrer");
+                    }
+                  }}
+                  className="grid w-full min-w-0 gap-0 text-left no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50 sm:grid-cols-[176px_minmax(0,1fr)] sm:gap-4 sm:p-4"
+                  aria-label={`Open story: ${item.title}`}
                 >
                   <span className="relative grid aspect-[16/9] min-h-0 place-items-center overflow-hidden rounded-[6px] bg-[var(--hp-surface-low)] text-center text-sm font-bold text-primary sm:aspect-[4/3]" aria-hidden="true">
                     {item.imageUrl ? (
@@ -450,7 +487,7 @@ export function HearstTVLocalNewsRiver() {
                       <span>{item.hasConfiguredFeed ? "RSS connected" : "Feed URL TBD"}</span>
                     </span>
                   </span>
-                </a>
+                </button>
               </article>
             );
           })}
@@ -474,6 +511,207 @@ export function HearstTVLocalNewsRiver() {
       </div>
     </div>
   );
+}
+
+export function HearstTVLocalNewsReaderExperience() {
+  const [readerStories, setReaderStories] = useState<LifestyleRiverStory[]>([]);
+  const [openStoryId, setOpenStoryId] = useState<string | null>(null);
+  const returnFocusElementRef = useRef<HTMLElement | null>(null);
+
+  const openStory = (storyId: string) => {
+    returnFocusElementRef.current = rememberContentReaderReturnFocus(document.activeElement);
+    setOpenStoryId(storyId);
+  };
+
+  return (
+    <>
+      <HearstTVLocalNewsRiver
+        onOpenStory={openStory}
+        onStoriesChange={setReaderStories}
+      />
+      {openStoryId ? (
+        <LocalNewsReaderModal
+          key={openStoryId}
+          stories={readerStories}
+          openStoryId={openStoryId}
+          returnFocusElementRef={returnFocusElementRef}
+          onClose={() => setOpenStoryId(null)}
+        />
+      ) : null}
+    </>
+  );
+}
+
+function LocalNewsReaderModal({
+  stories,
+  openStoryId,
+  returnFocusElementRef,
+  onClose,
+}: {
+  stories: LifestyleRiverStory[];
+  openStoryId: string;
+  returnFocusElementRef: RefObject<HTMLElement | null>;
+  onClose: () => void;
+}) {
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const [visibleCount, setVisibleCount] = useState(1);
+  const openIndex = Math.max(0, stories.findIndex((story) => story.id === openStoryId));
+  const queue = stories.length > 0
+    ? [...stories.slice(openIndex), ...stories.slice(0, openIndex)]
+    : [];
+  const visibleStories = queue.slice(0, visibleCount);
+
+  useEffect(() => {
+    contentRef.current?.scrollTo({ top: 0 });
+  }, [openStoryId]);
+
+  useEffect(() => {
+    const root = contentRef.current;
+    const node = sentinelRef.current;
+    if (!root || !node || visibleCount >= queue.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setVisibleCount((count) => Math.min(count + 1, queue.length));
+        }
+      },
+      { root, rootMargin: "600px 0px" },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [queue.length, visibleCount]);
+
+  return (
+    <ContentReaderDialogShell
+      contentRef={contentRef}
+      destination="local-news"
+      mode="light"
+      onClose={onClose}
+      returnFocusElementRef={returnFocusElementRef}
+      style={{
+        "--primary": "#00874D",
+        "--hp-primary": "#00874D",
+        "--hp-section-title": "#00874D",
+        "--hp-sidebar-heading": "#00874D",
+      } as CSSProperties}
+    >
+      <ContentReaderMasthead
+        logoHref="/hearst-plus/local-news/"
+        contextLabel="Hearst Local News"
+        logoSlug="hearst-local-news"
+        visibleStoryCount={visibleStories.length}
+        storyCount={queue.length}
+        activeMastheadKey="local-news"
+        mastheadItems={[{ key: "local-news", label: "Local News", active: true, disabled: true }]}
+        mastheadNavigationLabel="Local News"
+        filterItems={[{ label: "TV Stations", active: true, disabled: true }]}
+        sectionLabel="Local News"
+        onSelectMastheadItem={() => undefined}
+        onSelectFilter={() => undefined}
+        onClose={onClose}
+      />
+      <div className="grid gap-8 px-4 py-6 sm:px-8 lg:px-10">
+        <div className="mx-auto w-full max-w-3xl space-y-10">
+          {visibleStories.map((story, index) => (
+            <article
+              key={story.id}
+              data-reader-story-id={story.id}
+              className="rounded-[8px] border border-border bg-card px-5 py-5 text-foreground sm:px-7 sm:py-7"
+            >
+              {index > 0 ? (
+                <div className="mb-8 flex items-center gap-4" aria-label="Up next">
+                  <span className="h-px flex-1 bg-border" aria-hidden="true" />
+                  <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                    Up next
+                  </span>
+                  <span className="h-px flex-1 bg-border" aria-hidden="true" />
+                </div>
+              ) : null}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={story.image}
+                alt=""
+                className="aspect-video w-full rounded-[4px] bg-[var(--hp-surface-low)] object-cover"
+              />
+              <div className="mx-auto mt-6 max-w-3xl">
+                <div className="mb-3 flex flex-wrap items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                  <span>{story.signal}</span>
+                  <span>{story.brand}</span>
+                  <span>{story.topic}</span>
+                </div>
+                <h2 className="headline text-4xl leading-[1.05] sm:text-5xl">
+                  {story.title}
+                </h2>
+                <div className="mt-4 flex flex-wrap items-center gap-3 border-y border-border py-3 text-sm text-muted-foreground">
+                  <span>{story.byline}</span>
+                  {story.publishedAt ? <span>{formatDate(story.publishedAt)}</span> : null}
+                  {story.sourceUrl ? (
+                    <a
+                      href={story.sourceUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="font-bold text-primary underline underline-offset-4"
+                    >
+                      Original station story
+                    </a>
+                  ) : null}
+                </div>
+                <div className="mt-6 space-y-4 text-[18px] leading-8 text-foreground/85">
+                  <p>{story.summary}</p>
+                  <p>
+                    This local-news item is normalized from the configured Hearst TV RSS feed and keeps the original station attribution, timestamp, image, and source link.
+                  </p>
+                </div>
+              </div>
+            </article>
+          ))}
+          <div ref={sentinelRef} className="flex justify-center py-8">
+            {visibleCount < queue.length ? (
+              <p className="text-sm text-muted-foreground">Loading the next local story...</p>
+            ) : (
+              <p className="text-sm text-muted-foreground">End of this local-news river.</p>
+            )}
+          </div>
+        </div>
+      </div>
+    </ContentReaderDialogShell>
+  );
+}
+
+function mapLocalNewsContentToReaderStory(
+  item: HearstTVContent & { hasConfiguredFeed?: boolean },
+): LifestyleRiverStory {
+  const station = getHearstTVStationById(item.stationId);
+  const publishedAt = Date.parse(item.publishedAt);
+  const age = Number.isNaN(publishedAt)
+    ? 0
+    : Math.max(0, Math.round((Date.now() - publishedAt) / 36e5));
+
+  return {
+    id: item.id,
+    brand: station?.stationName ?? "Hearst TV",
+    brandSlug: "hearst-local-news",
+    topic: "Local News",
+    title: item.title,
+    summary: item.description || `${station?.stationName ?? "Hearst TV"} local news update.`,
+    image: item.imageUrl || station?.logo || "/logos/hearst-local-news.svg",
+    byline: station ? `${station.callSign} local news` : "Hearst TV local news",
+    readTime: item.contentType === "video" ? "Watch" : "2 min read",
+    popularity: item.hasConfiguredFeed ? 92 : 58,
+    signal: item.isMock ? "Editor Pick" : "Trending",
+    tags: [
+      "Local News",
+      station?.market,
+      station?.state,
+      item.contentType === "video" ? "Video" : "News",
+    ].filter((tag): tag is string => Boolean(tag)),
+    age,
+    publishedAt: item.publishedAt,
+    sourceUrl: item.url === "#" ? undefined : item.url,
+    mediaKind: item.contentType === "video" ? "video" : undefined,
+  };
 }
 
 function ReaderView({
@@ -954,7 +1192,7 @@ function StationLogo({
   return (
     <span
       aria-hidden="true"
-      className={`relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-[4px] border border-border bg-background font-black leading-none text-primary ${small ? "size-4 text-[7px]" : "size-10 text-[10px]"}`}
+      className={`relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-[4px] border border-border bg-background font-black leading-none text-primary ${small ? "h-4 w-9 text-[7px]" : "h-12 w-28 text-[10px]"}`}
     >
       <span>{initials}</span>
       {!failed && logoUrl ? (

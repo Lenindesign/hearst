@@ -1,6 +1,6 @@
 [build]
   base = "hearst-design-system"
-  command = "npm run build && npx storybook build -o .next/static/sb --quiet && node scripts/fix-storybook-paths.mjs"
+  command = "npm run build && npx storybook build -o \"$PWD/.next/static/sb\" --quiet && node scripts/fix-storybook-paths.mjs"
   publish = ".next"
 
 [[plugins]]

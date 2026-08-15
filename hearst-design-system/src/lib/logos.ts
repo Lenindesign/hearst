@@ -1,6 +1,6 @@
 export const brandLogos: Record<string, string> = {
   "autoweek": "/logos/autoweek.svg",
-  "hearst-entertainment": "/logos/aande.svg",
+  "hearst-entertainment": "/logos/entertainment.svg",
   "best-products": "/logos/bestproducts.svg",
   "bicycling": "/logos/bicycling.svg",
   "biography": "/logos/biography.svg",

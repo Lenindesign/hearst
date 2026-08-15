@@ -61,7 +61,7 @@ export type NormalizedFeedItemInput = {
 const directorySource = "Hearst Television station directory seed";
 export const feedUrlTbd = "Feed URL TBD";
 export const kcraTopStoriesFeedUrl = "https://www.kcra.com/topstories-rss";
-export const kcraLogoUrl = "https://www.kcra.com/favicon.ico";
+export const kcraLogoUrl = "/logos/kcra-3.svg";
 
 export const hearstTVStations: HearstTVStation[] = [
   { id: "wcvb", stationName: "WCVB Channel 5", callSign: "WCVB-TV", market: "Boston", state: "MA", network: "ABC", logo: null, homepageUrl: "https://www.wcvb.com/", enabled: false, category: "Hearst TV", geo: { latitude: 42.3601, longitude: -71.0589 } },

@@ -692,7 +692,12 @@ export function MainNav({
       ? "hearst-flux-compact"
       : mastheadSlug;
   const usesCompactMobileDestinationMark = mobileMastheadSlug !== mastheadSlug;
-  const mastheadHearstGeometry = selectedBrand
+  const mastheadHearstGeometry = mastheadSlug === "hearst-entertainment"
+    ? {
+        compact: "h-[15px] max-w-[230px] sm:h-[21.5px] sm:max-w-[360px]",
+        regular: "h-[20px] max-w-[300px] sm:h-[32px] sm:max-w-[500px]",
+      }
+    : selectedBrand
     ? {
         compact: "h-[20px] max-w-[275px] sm:h-[28.75px] sm:max-w-[500px]",
         regular: "h-[27.5px] max-w-[350px] sm:h-[42.5px] sm:max-w-[725px]",
@@ -4060,6 +4065,7 @@ function LifestyleRiverHomePage({
   const delishShortOpenerRef = React.useRef<HTMLElement | null>(null);
   const displayStoryIdsRef = React.useRef<string[]>([]);
   const [commentsByStoryId, setCommentsByStoryId] = React.useState<Record<string, LifestyleStoryComment[]>>({});
+  const [localNewsReaderStories, setLocalNewsReaderStories] = React.useState<LifestyleRiverStory[]>([]);
   const [demoModalOpen, setDemoModalOpen] = React.useState(false);
   const [delishShortsRiverPlacement, setDelishShortsRiverPlacement] = React.useState<{
     scopeKey: string;
@@ -4308,7 +4314,12 @@ function LifestyleRiverHomePage({
     () => rankLifestyleRiver(activeStoryPool, rankingProfile, demoState, config),
     [activeStoryPool, config, demoState, rankingProfile]
   );
+  const useLocalNewsMode = activeFilter === localNewsFilter && destination === "all" && !initialBrandSlug;
   const filteredStories = React.useMemo(() => {
+    if (useLocalNewsMode) {
+      return localNewsReaderStories;
+    }
+
     const brandFilteredStories = effectiveBrandFilters.length > 0
       ? rankedStories.filter((story) => effectiveBrandFilters.includes(story.brand))
       : rankedStories;
@@ -4335,9 +4346,11 @@ function LifestyleRiverHomePage({
     activeFilter,
     config.liveFeedMode,
     effectiveBrandFilters,
+    localNewsReaderStories,
     profile.savedIds,
     rankedStories,
     showAutosOemFilter,
+    useLocalNewsMode,
     usingVideoTabFeed,
   ]);
   const savedSuggestionCandidates = React.useMemo(
@@ -4393,12 +4406,13 @@ function LifestyleRiverHomePage({
       ...destinationConfigs[destination].stories,
       ...destinationConfigs.all.stories,
       ...videoTabStories,
+      ...localNewsReaderStories,
     ].filter((story) => {
       if (seenStoryIds.has(story.id)) return false;
       seenStoryIds.add(story.id);
       return true;
     });
-  }, [config.stories, destination, destinationConfigs, videoTabStories]);
+  }, [config.stories, destination, destinationConfigs, localNewsReaderStories, videoTabStories]);
   const candidateDisplayStories = React.useMemo(() => {
     if (!config.liveFeedStatus || config.liveFeedMode === "blend") return filteredStories;
     const firstVideoIndex = filteredStories.findIndex((story) => Boolean(story.videoUrl));
@@ -5142,6 +5156,40 @@ function LifestyleRiverHomePage({
   // The exact production palette lives in component tokens and is applied only to this wrapper.
   const videoDarkModeThemeClasses =
     "hearst-plus-theme hearst-plus-video-theme bg-[var(--hp-background)] text-[var(--hp-text-primary)]";
+
+  if (useLocalNewsMode) {
+    return (
+      <div className="space-y-8">
+        <HearstTVLocalNewsRiver
+          onOpenStory={openStory}
+          onStoriesChange={setLocalNewsReaderStories}
+        />
+
+        {openStoryId ? (
+          <LifestyleStoryReaderModal
+            key={storyOpenReturnHref}
+            stories={filteredStories}
+            availableStories={availableReaderStories}
+            openStoryId={openStoryId}
+            savedIds={profile.savedIds}
+            followedBrands={profile.followedBrands}
+            commentsByStoryId={resolvedCommentsByStoryId}
+            readerReturnHref={storyOpenReturnHref}
+            initialLiveArticle={openStoryId === initialOpenStoryId ? initialLiveArticle : undefined}
+            returnFocusElementRef={readerReturnFocusElementRef}
+            initialOpenAmbientReader={initialOpenAmbientReader}
+            onClose={closeStory}
+            onOpenStory={openStory}
+            onSwitchReaderStory={switchReaderStory}
+            onSave={toggleSaved}
+            onMoreLikeThis={boostStory}
+            onToggleFollowBrand={toggleFollowBrand}
+            onAddComment={addStoryComment}
+          />
+        ) : null}
+      </div>
+    );
+  }
 
   if (activeFilter === "Games") {
     return <HearstGamesIndex />;
@@ -6942,51 +6990,47 @@ export function HomePageTemplate({
                 transform: `translate3d(${pageCategorySwipeOffset}px, 0, 0)`,
               } : undefined}
             >
-              {useLocalNewsRiver ? (
-                <HearstTVLocalNewsRiver />
-              ) : (
-                <LifestyleRiverHydrationGate
-                  activeFilter={activeLifestyleFilter}
-                  destination={destinationMode}
-                  destinationConfig={inventoryAwareDestinationConfig}
-                  videoFeedData={resolvedVideoFeedData}
-                  initialBrandSlug={initialBrandSlug}
-                  initialOpenStoryId={initialOpenStoryId}
-                  initialLiveArticle={initialLiveArticle}
-                  initialOpenAmbientReader={initialOpenAmbientReader}
-                  readerReturnHref={readerReturnHref}
-                  showStakeholderTools={showStakeholderTools}
-                  onboardingResult={onboardingResult}
-                  onFilterChange={handleLifestyleFilterChange}
-                  onRiverReset={anchorDestinationContent}
-                  onBrandFilterChange={anchorPageToTop}
-                  onSelectedBrandChange={handleSelectedBrandChange}
-                  indicatorPalette={selectedBrandIndicatorPalette}
-                  activeBrandFilters={activeBrandFilters}
-                  onActiveBrandFiltersChange={setActiveBrandFilters}
-                  joinedBrandGroups={joinedBrandGroups}
-                  onJoinedBrandGroupsChange={setJoinedBrandGroups}
-                  onGuestSavePrompt={openSaveAcrossDevicesPrompt}
-                  feedTotal={activeLifestyleFilter === "Videos"
-                    ? progressiveVideoFeed.total
-                    : progressiveEditorialFeed.total}
-                  feedLoadedCount={activeLifestyleFilter === "Videos"
-                    ? progressiveVideoFeed.loadedCount
-                    : progressiveEditorialFeed.loadedCount}
-                  feedHasMore={activeLifestyleFilter === "Videos"
-                    ? progressiveVideoFeed.hasMore
-                    : progressiveEditorialFeed.hasMore}
-                  feedLoading={activeLifestyleFilter === "Videos"
-                    ? progressiveVideoFeed.isLoading
-                    : progressiveEditorialFeed.isLoading}
-                  feedError={activeLifestyleFilter === "Videos"
-                    ? progressiveVideoFeed.error
-                    : progressiveEditorialFeed.error}
-                  onRequestNextFeedPage={activeLifestyleFilter === "Videos"
-                    ? progressiveVideoFeed.loadNextPage
-                    : progressiveEditorialFeed.loadNextPage}
-                />
-              )}
+              <LifestyleRiverHydrationGate
+                activeFilter={activeLifestyleFilter}
+                destination={destinationMode}
+                destinationConfig={inventoryAwareDestinationConfig}
+                videoFeedData={resolvedVideoFeedData}
+                initialBrandSlug={initialBrandSlug}
+                initialOpenStoryId={initialOpenStoryId}
+                initialLiveArticle={initialLiveArticle}
+                initialOpenAmbientReader={initialOpenAmbientReader}
+                readerReturnHref={readerReturnHref}
+                showStakeholderTools={showStakeholderTools}
+                onboardingResult={onboardingResult}
+                onFilterChange={handleLifestyleFilterChange}
+                onRiverReset={anchorDestinationContent}
+                onBrandFilterChange={anchorPageToTop}
+                onSelectedBrandChange={handleSelectedBrandChange}
+                indicatorPalette={selectedBrandIndicatorPalette}
+                activeBrandFilters={activeBrandFilters}
+                onActiveBrandFiltersChange={setActiveBrandFilters}
+                joinedBrandGroups={joinedBrandGroups}
+                onJoinedBrandGroupsChange={setJoinedBrandGroups}
+                onGuestSavePrompt={openSaveAcrossDevicesPrompt}
+                feedTotal={activeLifestyleFilter === "Videos"
+                  ? progressiveVideoFeed.total
+                  : progressiveEditorialFeed.total}
+                feedLoadedCount={activeLifestyleFilter === "Videos"
+                  ? progressiveVideoFeed.loadedCount
+                  : progressiveEditorialFeed.loadedCount}
+                feedHasMore={activeLifestyleFilter === "Videos"
+                  ? progressiveVideoFeed.hasMore
+                  : progressiveEditorialFeed.hasMore}
+                feedLoading={activeLifestyleFilter === "Videos"
+                  ? progressiveVideoFeed.isLoading
+                  : progressiveEditorialFeed.isLoading}
+                feedError={activeLifestyleFilter === "Videos"
+                  ? progressiveVideoFeed.error
+                  : progressiveEditorialFeed.error}
+                onRequestNextFeedPage={activeLifestyleFilter === "Videos"
+                  ? progressiveVideoFeed.loadNextPage
+                  : progressiveEditorialFeed.loadNextPage}
+              />
             </div>
           ) : layout === "overlapGrid" ? (
             <OverlapGridHomepageBody brandSlug={brand.slug} />

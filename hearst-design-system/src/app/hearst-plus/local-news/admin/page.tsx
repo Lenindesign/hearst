@@ -17,7 +17,7 @@ export default function LocalNewsAdminPage() {
         <LocalNewsGlobalHeader />
         <HearstTVFeedExperience mode="admin" />
         <SiteFooter
-          siteName={<BrandLogo slug="hearst-local-news" className="h-8 max-w-[16rem] [&_svg]:h-full [&_svg]:w-auto" color="#fff" />}
+          siteName={<BrandLogo slug="hearst-local-news" className="h-5 max-w-[11rem] [&_svg]:h-full [&_svg]:w-auto" color="#fff" />}
           copyrightYear={2026}
           finePrintNote="Prototype only. Feed configuration edits are stored in the current browser until a production feed-management service is connected."
         />
