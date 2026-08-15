@@ -438,6 +438,7 @@ export function createDestinationConfigs(
 
 export function getDestinationMode(brandSlug: string): DestinationMode {
   if (brandSlug === "hearst-all") return "all";
+  if (brandSlug === "hearst-local-news") return "ew";
   if (brandSlug === "hearst-ew") return "ew";
   if (brandSlug === "hearst-flux") return "flux";
   if (brandSlug === "hearst-plus") return "autos";

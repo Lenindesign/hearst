@@ -19,11 +19,13 @@ import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 
 type HearstDestinationSection = {
-  mode: HearstDestinationMode | "local-news";
+  mode: UtilityDestinationMode;
   label: string;
   href: string;
   hasBrandMenu?: boolean;
 };
+
+type UtilityDestinationMode = HearstDestinationMode | "local-news" | "entertainment-culture";
 
 export const hearstDestinationSections = [
   { mode: "all", label: "All", href: getHearstDestinationRoute("all"), hasBrandMenu: true },
@@ -31,7 +33,8 @@ export const hearstDestinationSections = [
   { mode: "autos", label: "Autos", href: getHearstDestinationRoute("autos"), hasBrandMenu: true },
   { mode: "flux", label: "Fashion & Luxury", href: getHearstDestinationRoute("flux"), hasBrandMenu: true },
   { mode: "ew", label: "Enthusiast & Wellness", href: getHearstDestinationRoute("ew"), hasBrandMenu: true },
-  { mode: "local-news", label: "Local News", href: "/hearst-plus/local-news/" },
+  { mode: "local-news", label: "Local News", href: "/hearst-plus/local-news/", hasBrandMenu: true },
+  { mode: "entertainment-culture", label: "Entertainment", href: "/hearst-plus/entertainment/", hasBrandMenu: true },
 ] satisfies HearstDestinationSection[];
 
 const brandMenuSections = [
@@ -44,6 +47,21 @@ const brandMenuSections = [
 const utilityLinks = [
   { label: "Shop", href: "/hearst-plus/shopping/" },
   { label: "Newsletter", href: "https://www.hearst.co.uk/newsletter" },
+] as const;
+
+const entertainmentCultureBrands = [
+  { brand: "A&E", shortLabel: "A&E", href: "https://www.aetv.com/", favicon: "https://www.aetv.com/favicon.ico" },
+  { brand: "HISTORY", shortLabel: "H", href: "https://www.history.com/", favicon: "https://www.history.com/favicon.ico" },
+  { brand: "Lifetime", shortLabel: "LT", href: "https://www.mylifetime.com/", favicon: "https://www.mylifetime.com/favicon.ico" },
+  { brand: "LMN", shortLabel: "LMN", href: "https://www.mylifetime.com/lmn", favicon: "https://www.mylifetime.com/favicon.ico" },
+  { brand: "FYI", shortLabel: "FYI", href: "https://www.fyi.tv/", favicon: "https://www.fyi.tv/favicon.ico" },
+  { brand: "VICE TV", shortLabel: "Vice", href: "https://www.vicetv.com/", favicon: "https://www.vicetv.com/favicon.ico" },
+  { brand: "BIOGRAPHY", shortLabel: "Bio", href: "https://www.biography.com/", favicon: "https://www.biography.com/favicon.ico" },
+] as const;
+
+const localNewsOptions = [
+  { label: "TV Stations", href: "/hearst-plus/local-news/#tv-stations", description: "Hearst Television feeds" },
+  { label: "Newspapers", href: "/hearst-plus/local-news/newspapers/", description: "Local newspaper feeds" },
 ] as const;
 
 export interface UtilityBarProps {
@@ -59,7 +77,6 @@ export function UtilityBar({
   selectedBrand,
   onCreateAccount,
   onOpenProfile,
-  onLocalNewsSelect,
   activeDestinationOverride,
   darkMode = false,
 }: UtilityBarProps) {
@@ -67,7 +84,7 @@ export function UtilityBar({
   const { account } = useReaderAccount();
   const utilityBarRef = React.useRef<HTMLDivElement>(null);
   const destinationNavRef = React.useRef<HTMLElement>(null);
-  const [openDestinationMenu, setOpenDestinationMenu] = React.useState<HearstDestinationMode | null>(null);
+  const [openDestinationMenu, setOpenDestinationMenu] = React.useState<UtilityDestinationMode | null>(null);
   const selectedDestination = selectedBrand
     ? getHearstBrandSection(selectedBrand.slug)
     : null;
@@ -93,6 +110,8 @@ export function UtilityBar({
   const visibleBrandSections = openDestinationMenu === "all"
     ? brandMenuSections
     : brandMenuSections.filter((section) => section.mode === openDestinationMenu);
+  const isLocalNewsMenu = openDestinationMenu === "local-news";
+  const isEntertainmentCultureMenu = openDestinationMenu === "entertainment-culture";
 
   React.useEffect(() => {
     if (!openDestinationMenu) return;
@@ -160,7 +179,7 @@ export function UtilityBar({
             {hearstDestinationSections.map((section) => {
               const isActive = section.label === activeDestinationLabel;
               const isOpen = section.mode === openDestinationMenu;
-              const menuMode = section.hasBrandMenu ? section.mode as HearstDestinationMode : null;
+              const menuMode = section.hasBrandMenu ? section.mode : null;
 
               return (
                 <LinkComponent
@@ -173,11 +192,14 @@ export function UtilityBar({
                   aria-expanded={menuMode ? isOpen : undefined}
                   aria-controls={menuMode && isOpen ? "hearst-brand-menu" : undefined}
                   aria-current={isActive ? "page" : undefined}
-                  onClick={section.mode === "local-news" && onLocalNewsSelect ? (event) => {
-                    event.preventDefault();
-                    setOpenDestinationMenu(null);
-                    onLocalNewsSelect();
-                  } : undefined}
+                  onClick={(event) => {
+                    if (section.mode === "local-news") {
+                      event.preventDefault();
+                      setOpenDestinationMenu(section.mode);
+                      return;
+                    }
+
+                  }}
                   onMouseEnter={() => setOpenDestinationMenu(menuMode)}
                   onFocus={() => setOpenDestinationMenu(menuMode)}
                   className={cn(
@@ -223,17 +245,15 @@ export function UtilityBar({
       {openSection ? (
         <div
           onMouseLeave={() => setOpenDestinationMenu(null)}
-          className={cn(
-            "absolute left-1/2 top-full w-[calc(100%-1.5rem)] -translate-x-1/2 pt-2 sm:w-[calc(100%-3rem)]",
-            openDestinationMenu === "all" ? "max-w-6xl" : "max-w-sm"
-          )}
+          className="absolute left-1/2 top-full w-[calc(100%-1.5rem)] max-w-6xl -translate-x-1/2 pt-2 sm:w-[calc(100%-3rem)]"
         >
           <div
             id="hearst-brand-menu"
             role="menu"
-            aria-label={`${openSection.label} brands`}
+            aria-label={`${openSection.label} menu`}
             className={cn(
               "max-h-[min(calc(100dvh-3rem),680px)] w-full overscroll-contain overflow-y-auto rounded-xl border p-4 shadow-2xl sm:max-h-[min(calc(100dvh-3.5rem),720px)] sm:p-5",
+              openDestinationMenu !== "all" && "mx-auto max-w-sm",
               darkMode
                 ? "border-white/15 bg-[var(--component-navigation-utility-megamenu-background-knockout)] text-[var(--component-navigation-utility-content-knockout)]"
                 : "border-border bg-background text-foreground"
@@ -241,10 +261,107 @@ export function UtilityBar({
           >
             <div className={cn("mb-4 border-b pb-3", darkMode ? "border-white/15" : "border-border")}>
               <p className="text-sm font-bold">
-                {openDestinationMenu === "all" ? "Browse brands by destination" : `${openSection.label} brands`}
+                {openDestinationMenu === "all"
+                  ? "Browse brands by destination"
+                  : isLocalNewsMenu
+                    ? "Local News"
+                    : isEntertainmentCultureMenu
+                    ? "Entertainment & Culture brands"
+                    : `${openSection.label} brands`}
               </p>
             </div>
             <div className={cn("grid gap-5", openDestinationMenu === "all" && "sm:grid-cols-2 lg:grid-cols-4")}>
+              {isLocalNewsMenu ? (
+                <section aria-labelledby="hearst-brand-menu-local-news">
+                  <div className="mb-2">
+                    <p id="hearst-brand-menu-local-news" className={cn("text-[11px] font-bold uppercase tracking-[0.12em]", darkMode ? "text-[var(--component-navigation-utility-content-accent)]" : "text-primary")}>
+                      Sources
+                    </p>
+                  </div>
+                  <div className="grid gap-1">
+                    {localNewsOptions.map((option) => (
+                      <LinkComponent
+                        key={option.label}
+                        href={option.href}
+                        variant="neutral"
+                        underline={false}
+                        size="sm"
+                        role="menuitem"
+                        onClick={() => {
+                          setOpenDestinationMenu(null);
+                        }}
+                        className={cn(
+                          "min-h-10 w-full justify-between rounded-lg px-3 py-2 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+                          darkMode
+                            ? "text-[var(--component-navigation-utility-content-knockout)] hover:bg-white/10 hover:text-white"
+                            : "text-foreground hover:bg-muted hover:text-foreground"
+                        )}
+                      >
+                        <span className="grid min-w-0 gap-0.5 text-left">
+                          <span className="truncate">{option.label}</span>
+                          <span className={cn("truncate text-[11px] font-medium", darkMode ? "text-white/65" : "text-muted-foreground")}>
+                            {option.description}
+                          </span>
+                        </span>
+                      </LinkComponent>
+                    ))}
+                  </div>
+                </section>
+              ) : null}
+              {isEntertainmentCultureMenu ? (
+                <section aria-labelledby="hearst-brand-menu-entertainment-culture">
+                  <div className="mb-2">
+                    <p id="hearst-brand-menu-entertainment-culture" className={cn("text-[11px] font-bold uppercase tracking-[0.12em]", darkMode ? "text-[var(--component-navigation-utility-content-accent)]" : "text-primary")}>
+                      A&E family
+                    </p>
+                  </div>
+                  <div className="grid gap-1">
+                    {entertainmentCultureBrands.map((menuBrand) => (
+                      <LinkComponent
+                        key={menuBrand.brand}
+                        href={menuBrand.href}
+                        external
+                        variant="neutral"
+                        underline={false}
+                        size="sm"
+                        role="menuitem"
+                        onClick={() => setOpenDestinationMenu(null)}
+                        className={cn(
+                          "min-h-8 w-full justify-between rounded-lg px-3 py-1.5 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+                          darkMode
+                            ? "text-[var(--component-navigation-utility-content-knockout)] hover:bg-white/10 hover:text-white"
+                            : "text-foreground hover:bg-muted hover:text-foreground"
+                        )}
+                      >
+                        <span className="flex min-w-0 items-center gap-2.5">
+                          <span
+                            aria-hidden="true"
+                            className={cn(
+                              "relative flex size-6 shrink-0 items-center justify-center overflow-hidden rounded-md border text-[9px] font-black uppercase leading-none",
+                              darkMode
+                                ? "border-white/15 bg-white/10 text-white"
+                                : "border-black/10 bg-muted text-foreground"
+                            )}
+                          >
+                            <span>{menuBrand.shortLabel}</span>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={menuBrand.favicon}
+                              alt=""
+                              loading="lazy"
+                              onError={(event) => {
+                                event.currentTarget.style.display = "none";
+                              }}
+                              className="absolute inset-0 size-full bg-white object-contain p-0.5"
+                            />
+                          </span>
+                          <span className="truncate">{menuBrand.brand}</span>
+                        </span>
+                      </LinkComponent>
+                    ))}
+                  </div>
+                </section>
+              ) : null}
               {visibleBrandSections.map((section) => (
                 <section key={section.mode} aria-labelledby={`hearst-brand-menu-${section.mode}`}>
                   <div className="mb-2">

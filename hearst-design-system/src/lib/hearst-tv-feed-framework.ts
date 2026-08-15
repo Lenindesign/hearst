@@ -59,7 +59,9 @@ export type NormalizedFeedItemInput = {
 };
 
 const directorySource = "Hearst Television station directory seed";
-const feedUrlTbd = "Feed URL TBD";
+export const feedUrlTbd = "Feed URL TBD";
+export const kcraTopStoriesFeedUrl = "https://www.kcra.com/topstories-rss";
+export const kcraLogoUrl = "https://www.kcra.com/favicon.ico";
 
 export const hearstTVStations: HearstTVStation[] = [
   { id: "wcvb", stationName: "WCVB Channel 5", callSign: "WCVB-TV", market: "Boston", state: "MA", network: "ABC", logo: null, homepageUrl: "https://www.wcvb.com/", enabled: false, category: "Hearst TV", geo: { latitude: 42.3601, longitude: -71.0589 } },
@@ -90,7 +92,7 @@ export const hearstTVStations: HearstTVStation[] = [
   { id: "koco", stationName: "KOCO 5", callSign: "KOCO-TV", market: "Oklahoma City", state: "OK", network: "ABC", logo: null, homepageUrl: "https://www.koco.com/", enabled: false, category: "Hearst TV", geo: { latitude: 35.4676, longitude: -97.5164 } },
   { id: "khbs-khog", stationName: "40/29 News", callSign: "KHBS/KHOG-TV", market: "Fort Smith/Fayetteville", state: "AR", network: "ABC/CW", logo: null, homepageUrl: "https://www.4029tv.com/", enabled: false, category: "Hearst TV", geo: { latitude: 36.0626, longitude: -94.1574 } },
   { id: "koat", stationName: "KOAT 7", callSign: "KOAT-TV", market: "Albuquerque/Santa Fe", state: "NM", network: "ABC", logo: null, homepageUrl: "https://www.koat.com/", enabled: false, category: "Hearst TV", geo: { latitude: 35.0844, longitude: -106.6504 } },
-  { id: "kcra", stationName: "KCRA 3", callSign: "KCRA-TV", market: "Sacramento", state: "CA", network: "NBC", logo: null, homepageUrl: "https://www.kcra.com/", enabled: false, category: "Hearst TV", geo: { latitude: 38.5816, longitude: -121.4944 } },
+  { id: "kcra", stationName: "KCRA 3", callSign: "KCRA-TV", market: "Sacramento", state: "CA", network: "NBC", logo: kcraLogoUrl, homepageUrl: "https://www.kcra.com/", enabled: true, category: "Hearst TV", geo: { latitude: 38.5816, longitude: -121.4944 } },
   { id: "kqca", stationName: "KQCA My58", callSign: "KQCA", market: "Sacramento", state: "CA", network: "MyNetworkTV", logo: null, homepageUrl: null, enabled: false, category: "Hearst TV", geo: { latitude: 38.5816, longitude: -121.4944 } },
   { id: "ksbw", stationName: "KSBW 8", callSign: "KSBW", market: "Monterey/Salinas", state: "CA", network: "NBC/ABC", logo: null, homepageUrl: "https://www.ksbw.com/", enabled: false, category: "Hearst TV", geo: { latitude: 36.6002, longitude: -121.8947 } },
   { id: "kitv", stationName: "KITV Island News", callSign: "KITV", market: "Honolulu", state: "HI", network: "ABC", logo: null, homepageUrl: "https://www.kitv.com/", enabled: false, category: "Hearst TV", geo: { latitude: 21.3099, longitude: -157.8581 } },
@@ -100,13 +102,13 @@ export const hearstTVFeeds: HearstTVFeed[] = hearstTVStations.map((station) => (
   id: `${station.id}-primary-feed`,
   stationId: station.id,
   feedName: `${station.callSign} local news`,
-  feedUrl: feedUrlTbd,
-  feedType: "TBD",
-  enabled: false,
-  status: "pending",
+  feedUrl: station.id === "kcra" ? kcraTopStoriesFeedUrl : feedUrlTbd,
+  feedType: station.id === "kcra" ? "RSS" : "TBD",
+  enabled: station.id === "kcra",
+  status: station.id === "kcra" ? "connected" : "pending",
   lastSuccessfulFetch: null,
   lastRefreshTimestamp: null,
-  lastError: "Feed URL TBD. Add a verified RSS or MRSS endpoint to activate.",
+  lastError: station.id === "kcra" ? null : "Feed URL TBD. Add a verified RSS or MRSS endpoint to activate.",
 }));
 
 export const hearstTVSampleContent: HearstTVContent[] = hearstTVStations.flatMap((station, index) => {

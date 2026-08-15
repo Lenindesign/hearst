@@ -487,7 +487,7 @@ export function MainNav({
   const mastheadSlug = selectedBrand?.slug ?? brand.slug;
   const logo = brandLogos[mastheadSlug];
   const content = getContent(brandSlug);
-  const isDestinationRiver = brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
+  const isDestinationRiver = brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew" || brand.slug === "hearst-local-news";
   const destinationConfig = destinationConfigs[getDestinationMode(brand.slug)];
   const baseNavLinks = navLinksOverride ?? (selectedBrand
     ? getBrandContextualFilters(selectedBrand.slug, destinationConfigs.all.stories, includeVideos)

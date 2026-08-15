@@ -5,19 +5,47 @@ import Link from "next/link";
 import type { FeedStatus, FeedType, HearstTVContentType, HearstTVFeed } from "@/lib/hearst-tv-feed-framework";
 import {
   dedupeHearstTVContent,
+  feedUrlTbd,
   findNearestHearstTVStation,
   getHearstTVFeedById,
   getHearstTVStationById,
   hearstTVFeeds,
   hearstTVSampleContent,
   hearstTVStations,
+  type HearstTVContent,
+  type HearstTVStation,
 } from "@/lib/hearst-tv-feed-framework";
 
 type ViewMode = "reader" | "admin";
 type StoredFeed = HearstTVFeed;
+type LocalNewsFeedResponse = {
+  stories: HearstTVContent[];
+  status: FeedStatus;
+  fallback?: boolean;
+  error?: string;
+  feed?: {
+    id: string;
+    stationId: string;
+    feedName: string;
+    feedUrl: string;
+    feedType: FeedType;
+    lastSuccessfulFetch: string | null;
+  };
+};
 
 const feedStorageKey = "hearst-tv-feed-admin-config:v1";
 const allValue = "all";
+const defaultLocalNewsStation = "kcra";
+
+function isConfiguredFeed(feed: StoredFeed) {
+  return feed.enabled && feed.feedUrl !== feedUrlTbd;
+}
+
+function isConnectedFeed(feed: StoredFeed) {
+  return isConfiguredFeed(feed)
+    && feed.status === "connected"
+    && (feed.id === "kcra-primary-feed" || Boolean(feed.lastSuccessfulFetch));
+}
 
 export function HearstTVFeedExperience({ mode }: { mode: ViewMode }) {
   const [feeds, setFeeds] = useState<StoredFeed[]>(() => {
@@ -43,13 +71,13 @@ export function HearstTVFeedExperience({ mode }: { mode: ViewMode }) {
   }, [feeds]);
 
   const states = useMemo(() => [...new Set(hearstTVStations.map((station) => station.state))].sort(), []);
-  const enabledFeedCount = feeds.filter((feed) => feed.enabled && feed.feedUrl !== "Feed URL TBD").length;
-  const connectedFeedCount = feeds.filter((feed) => feed.status === "connected").length;
+  const enabledFeedCount = feeds.filter(isConfiguredFeed).length;
+  const connectedFeedCount = feeds.filter(isConnectedFeed).length;
 
   const filteredContent = useMemo(() => {
     const stationIdsWithConfiguredFeeds = new Set(
       feeds
-        .filter((feed) => feed.enabled && feed.feedUrl !== "Feed URL TBD")
+        .filter(isConfiguredFeed)
         .map((feed) => feed.stationId),
     );
     return dedupeHearstTVContent(hearstTVSampleContent)
@@ -154,21 +182,101 @@ export function HearstTVLocalNewsRiver() {
       return hearstTVFeeds;
     }
   });
-  const [selectedStation, setSelectedStation] = useState(allValue);
+  const [selectedStation, setSelectedStation] = useState(defaultLocalNewsStation);
   const [selectedState, setSelectedState] = useState(allValue);
   const [selectedContentType, setSelectedContentType] = useState<"all" | HearstTVContentType>("all");
-  const [geoMessage, setGeoMessage] = useState("Use location to update this river with the nearest Hearst TV market.");
+  const [geoMessage, setGeoMessage] = useState("KCRA 3 is the active local-news feed for this Hearst+ river. Use location to switch markets.");
+  const [liveContent, setLiveContent] = useState<HearstTVContent[]>([]);
+  const [liveFeedStatus, setLiveFeedStatus] = useState<FeedStatus>("pending");
+  const [liveFeedError, setLiveFeedError] = useState<string | null>(null);
+  const [usingFallback, setUsingFallback] = useState(false);
 
   const states = useMemo(() => [...new Set(hearstTVStations.map((station) => station.state))].sort(), []);
   const selectedStationRecord = selectedStation === allValue ? null : getHearstTVStationById(selectedStation);
-  const filteredContent = useMemo(() => {
-    const stationIdsWithConfiguredFeeds = new Set(
-      feeds
-        .filter((feed) => feed.enabled && feed.feedUrl !== "Feed URL TBD")
-        .map((feed) => feed.stationId),
-    );
+  const configuredStationIds = useMemo(
+    () => new Set(feeds.filter(isConfiguredFeed).map((feed) => feed.stationId)),
+    [feeds],
+  );
+  const activeFeed = useMemo(() => {
+    const selectedFeed = selectedStation !== allValue
+      ? feeds.find((feed) => feed.stationId === selectedStation && isConfiguredFeed(feed))
+      : null;
+    if (selectedStation !== allValue) return selectedFeed ?? null;
+    return feeds.find((feed) => feed.stationId === defaultLocalNewsStation && isConfiguredFeed(feed)) ?? null;
+  }, [feeds, selectedStation]);
+  const activeFeedStation = activeFeed ? getHearstTVStationById(activeFeed.stationId) : null;
+  const selectedStationFeed = selectedStationRecord
+    ? feeds.find((feed) => feed.stationId === selectedStationRecord.id)
+    : null;
+  const heroFeed = selectedStationFeed ?? activeFeed;
+  const heroStation = selectedStationRecord ?? activeFeedStation;
+  const heroStationTitle = heroStation ? `${heroStation.stationName} Local News` : "Hearst TV Local News";
+  const heroFeedLabel = heroFeed && heroFeed.feedUrl !== feedUrlTbd
+    ? `${heroFeed.feedType} · ${formatFeedUrl(heroFeed.feedUrl)}`
+    : "Feed URL TBD";
+  const heroFeedStatus = heroFeed?.id === activeFeed?.id
+    ? liveFeedStatus
+    : heroFeed && isConnectedFeed(heroFeed)
+      ? "connected"
+      : heroFeed?.status ?? liveFeedStatus;
 
-    return dedupeHearstTVContent(hearstTVSampleContent)
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadLocalNews() {
+      if (!activeFeed || !activeFeedStation) {
+        setLiveContent([]);
+        setLiveFeedStatus("pending");
+        setLiveFeedError("Feed URL TBD. Add a verified RSS or MRSS endpoint to activate this station.");
+        setUsingFallback(false);
+        return;
+      }
+
+      setLiveFeedStatus("pending");
+      setLiveFeedError(null);
+
+      try {
+        const params = new URLSearchParams({
+          stationId: activeFeed.stationId,
+          feedId: activeFeed.id,
+          feedUrl: activeFeed.feedUrl,
+          feedType: activeFeed.feedType,
+        });
+        const response = await fetch(`/api/hearst-tv/local-news?${params.toString()}`, { cache: "no-store" });
+        if (!response.ok) throw new Error(`Local news feed returned ${response.status}`);
+        const payload = await response.json() as LocalNewsFeedResponse;
+
+        if (cancelled) return;
+        setLiveContent(payload.stories ?? []);
+        setLiveFeedStatus(payload.status);
+        setLiveFeedError(payload.error ?? null);
+        setUsingFallback(Boolean(payload.fallback));
+      } catch (error) {
+        if (cancelled) return;
+        setLiveContent([]);
+        setLiveFeedStatus("error");
+        setLiveFeedError(error instanceof Error ? error.message : "Local news feed failed.");
+        setUsingFallback(true);
+      }
+    }
+
+    void loadLocalNews();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeFeed, activeFeedStation]);
+
+  const filteredContent = useMemo(() => {
+    const liveStationIds = new Set(liveContent.map((item) => item.stationId));
+    const sampleContent = hearstTVSampleContent.filter((item) => !liveStationIds.has(item.stationId));
+    const contentPool = selectedStation === allValue
+      ? [...liveContent, ...sampleContent]
+      : liveContent.some((item) => item.stationId === selectedStation)
+        ? liveContent
+        : hearstTVSampleContent.filter((item) => item.stationId === selectedStation);
+
+    return dedupeHearstTVContent(contentPool)
       .filter((item) => {
         const station = getHearstTVStationById(item.stationId);
         if (!station) return false;
@@ -180,9 +288,9 @@ export function HearstTVLocalNewsRiver() {
       .sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt))
       .map((item) => ({
         ...item,
-        hasConfiguredFeed: stationIdsWithConfiguredFeeds.has(item.stationId),
+        hasConfiguredFeed: configuredStationIds.has(item.stationId),
       }));
-  }, [feeds, selectedContentType, selectedState, selectedStation]);
+  }, [configuredStationIds, liveContent, selectedContentType, selectedState, selectedStation]);
 
   function useCurrentLocation() {
     if (!navigator.geolocation) {
@@ -211,7 +319,7 @@ export function HearstTVLocalNewsRiver() {
   }
 
   return (
-    <div className="space-y-6 md:pt-8" data-hearst-plus-local-news-river>
+    <div className="space-y-6" data-hearst-plus-local-news-river>
       <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]">
         <aside className="min-w-0 space-y-4 lg:sticky lg:top-[108px] lg:max-h-[calc(100dvh-132px)] lg:self-start lg:overflow-y-auto lg:pr-1">
           <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]" aria-labelledby="local-news-filter-title">
@@ -235,7 +343,7 @@ export function HearstTVLocalNewsRiver() {
                 options={[
                   { label: "All stations", value: allValue },
                   ...hearstTVStations.map((station) => ({
-                    label: `${station.callSign} · ${station.market}`,
+                    label: formatStationOptionLabel(station, configuredStationIds.has(station.id)),
                     value: station.id,
                   })),
                 ]}
@@ -274,17 +382,30 @@ export function HearstTVLocalNewsRiver() {
 
         <main id="hearst-story-river" className="min-w-0 scroll-mt-28 space-y-4" aria-label="Hearst TV local news river">
           <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-5 shadow-[var(--hp-shadow-card)]">
-            <p className="text-sm font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
-              {selectedStationRecord ? `${selectedStationRecord.callSign} · ${selectedStationRecord.market}` : "All Hearst TV markets"}
-            </p>
-            <h1 className="mt-2 headline text-4xl leading-tight sm:text-6xl">Local News river</h1>
+            <div className="flex min-w-0 items-center gap-3">
+              <StationLogo stationName={heroStation?.stationName ?? "Hearst TV"} logoUrl={heroStation?.logo} />
+              <div className="min-w-0">
+                <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
+                  {heroStation ? `${heroStation.callSign} · ${heroStation.market}` : "Hearst TV local news"}
+                </p>
+                <h1 className="headline mt-1 text-3xl leading-tight sm:text-4xl">{heroStationTitle}</h1>
+              </div>
+            </div>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
-              The Hearst+ river is now scoped to local station content. Live RSS and MRSS feeds stay disabled until a verified endpoint is configured; prototype items remain labeled as mock data.
+              {heroFeed && heroFeed.feedUrl !== feedUrlTbd
+                ? `Top stories from the configured ${heroStation?.callSign ?? "Hearst TV"} RSS feed, normalized into the same Hearst+ river model with station attribution, timestamps, imagery, and click-throughs.`
+                : `${heroStation?.stationName ?? "This station"} does not have a verified RSS or MRSS endpoint yet. Prototype sample content keeps the river demonstrable until a real feed is added.`}
             </p>
             <div className="mt-4 flex flex-wrap gap-2 text-xs font-bold text-muted-foreground">
               <span className="rounded-full bg-[var(--hp-surface-low)] px-3 py-1">{filteredContent.length} river items</span>
-              <span className="rounded-full bg-[var(--hp-surface-low)] px-3 py-1">Feed URL TBD until verified</span>
+              <span className="rounded-full bg-[var(--hp-surface-low)] px-3 py-1">{heroFeedLabel}</span>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--hp-surface-low)] px-3 py-1">
+                {heroFeedStatus === "connected" ? <span className="size-2 rounded-full bg-[#00874D]" aria-hidden="true" /> : null}
+                {formatFeedStatus(heroFeedStatus)}
+              </span>
+              {usingFallback && heroFeed?.id === activeFeed?.id ? <span className="rounded-full bg-[var(--hp-surface-low)] px-3 py-1">Fallback sample</span> : null}
             </div>
+            {liveFeedError && heroFeed?.feedUrl !== feedUrlTbd ? <p className="mt-3 text-xs leading-5 text-muted-foreground">{liveFeedError}</p> : null}
           </section>
 
           {filteredContent.map((item) => {
@@ -293,14 +414,14 @@ export function HearstTVLocalNewsRiver() {
             if (!station || !feed) return null;
 
             return (
-              <article key={item.id} className="overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
+              <article key={item.id} className="group/card relative min-w-0 overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/50" data-story-module="river" data-story-id={item.id}>
                 <a
                   href={item.url}
                   target={item.url === "#" ? undefined : "_blank"}
                   rel={item.url === "#" ? undefined : "noreferrer"}
-                  className="group grid min-w-0 gap-0 text-left no-underline md:grid-cols-[12rem_minmax(0,1fr)]"
+                  className="grid min-w-0 gap-0 text-left no-underline sm:grid-cols-[176px_minmax(0,1fr)] sm:gap-4 sm:p-4"
                 >
-                  <span className="grid aspect-[16/9] place-items-center bg-[var(--hp-surface-low)] text-center text-sm font-bold text-primary md:aspect-auto" aria-hidden="true">
+                  <span className="relative grid aspect-[16/9] min-h-0 place-items-center overflow-hidden rounded-[6px] bg-[var(--hp-surface-low)] text-center text-sm font-bold text-primary sm:aspect-[4/3]" aria-hidden="true">
                     {item.imageUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={item.imageUrl} alt="" className="h-full w-full object-cover" loading="lazy" />
@@ -308,21 +429,25 @@ export function HearstTVLocalNewsRiver() {
                       station.callSign
                     )}
                   </span>
-                  <span className="block min-w-0 p-5">
-                    <span className="flex flex-wrap items-center gap-2 text-xs font-bold text-muted-foreground">
-                      <span>{station.stationName}</span>
-                      <span aria-hidden="true">·</span>
-                      <span>{station.market}, {station.state}</span>
+                  <span className="block min-w-0 p-4 sm:p-0">
+                    <span className="mb-3 flex flex-wrap items-center gap-2">
+                      <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+                        {item.isMock ? "Fallback" : "Latest"}
+                      </span>
+                      <span className="inline-flex min-h-7 items-center gap-1.5 rounded-[4px] text-[length:var(--text-token-4xs)] text-muted-foreground sm:min-h-0">
+                        <StationLogo stationName={station.stationName} logoUrl={station.logo} small />
+                        <span className="min-w-0 truncate">{station.stationName} · {station.market}</span>
+                      </span>
                       <span className="rounded-full bg-[var(--hp-surface-low)] px-2 py-1 text-primary">{formatContentType(item.contentType)}</span>
                     </span>
-                    <span className="mt-3 block text-balance text-2xl font-bold leading-tight text-foreground group-hover:text-primary">
+                    <span className="headline block break-words text-xl leading-tight text-foreground transition-colors group-hover/card:text-primary sm:text-2xl">
                       {item.title}
                     </span>
                     <span className="mt-3 line-clamp-3 block text-sm leading-6 text-muted-foreground">{item.description}</span>
                     <span className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4 text-xs text-muted-foreground">
                       <span>{formatDate(item.publishedAt)}</span>
                       <span>{item.isMock ? "Mock sample" : feed.feedName}</span>
-                      <span>{item.hasConfiguredFeed ? "Feed configured" : "Feed URL TBD"}</span>
+                      <span>{item.hasConfiguredFeed ? "RSS connected" : "Feed URL TBD"}</span>
                     </span>
                   </span>
                 </a>
@@ -338,11 +463,11 @@ export function HearstTVLocalNewsRiver() {
             </h2>
             <div className="mt-4 space-y-3 text-sm">
               <p><span className="font-bold">{hearstTVStations.length}</span> Hearst TV stations</p>
-              <p><span className="font-bold">{feeds.filter((feed) => feed.enabled && feed.feedUrl !== "Feed URL TBD").length}</span> configured feeds</p>
-              <p><span className="font-bold">{feeds.filter((feed) => feed.status === "connected").length}</span> connected</p>
+              <p><span className="font-bold">{feeds.filter(isConfiguredFeed).length}</span> configured feeds</p>
+              <p><span className="font-bold">{feeds.filter(isConnectedFeed).length}</span> connected</p>
             </div>
             <p className="mt-4 text-xs leading-5 text-muted-foreground">
-              Station records remain pending until a real RSS or MRSS endpoint is added in feed admin.
+              Stations with a green dot have a real RSS or MRSS URL configured. TBD station records use prototype content until a verified endpoint is added in feed admin.
             </p>
           </section>
         </aside>
@@ -552,10 +677,10 @@ function AdminView({ feeds, setFeeds }: { feeds: StoredFeed[]; setFeeds: (feeds:
     setFeedType("RSS");
   }
 
-  function refreshFeed(feedId: string) {
+  async function refreshFeed(feedId: string) {
     const feed = feeds.find((candidate) => candidate.id === feedId);
     if (!feed) return;
-    if (feed.feedUrl === "Feed URL TBD" || !feed.enabled) {
+    if (feed.feedUrl === feedUrlTbd || !feed.enabled) {
       updateFeed(feedId, {
         status: "pending",
         lastRefreshTimestamp: new Date().toISOString(),
@@ -563,12 +688,39 @@ function AdminView({ feeds, setFeeds }: { feeds: StoredFeed[]; setFeeds: (feeds:
       });
       return;
     }
+    const refreshStartedAt = new Date().toISOString();
     updateFeed(feedId, {
-      status: "connected",
-      lastSuccessfulFetch: new Date().toISOString(),
-      lastRefreshTimestamp: new Date().toISOString(),
+      status: "pending",
+      lastRefreshTimestamp: refreshStartedAt,
       lastError: null,
     });
+
+    try {
+      const params = new URLSearchParams({
+        stationId: feed.stationId,
+        feedId: feed.id,
+        feedUrl: feed.feedUrl,
+        feedType: feed.feedType,
+      });
+      const response = await fetch(`/api/hearst-tv/local-news?${params.toString()}`, { cache: "no-store" });
+      if (!response.ok) throw new Error(`Feed check returned ${response.status}`);
+      const payload = await response.json() as LocalNewsFeedResponse;
+      if (payload.status !== "connected") {
+        throw new Error(payload.error || "Feed did not return a connected status.");
+      }
+      updateFeed(feedId, {
+        status: "connected",
+        lastSuccessfulFetch: payload.feed?.lastSuccessfulFetch ?? new Date().toISOString(),
+        lastRefreshTimestamp: new Date().toISOString(),
+        lastError: null,
+      });
+    } catch (error) {
+      updateFeed(feedId, {
+        status: "error",
+        lastRefreshTimestamp: new Date().toISOString(),
+        lastError: error instanceof Error ? error.message : "Feed refresh failed.",
+      });
+    }
   }
 
   return (
@@ -681,7 +833,9 @@ function AdminView({ feeds, setFeeds }: { feeds: StoredFeed[]; setFeeds: (feeds:
                   <div className="flex flex-wrap gap-2 lg:justify-end">
                     <button
                       type="button"
-                      onClick={() => refreshFeed(feed.id)}
+                      onClick={() => {
+                        void refreshFeed(feed.id);
+                      }}
                       className="inline-flex min-h-11 items-center bg-[var(--hp-action)] px-3 text-sm font-bold text-[var(--hp-action-text)] hover:bg-[var(--hp-action-hover)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--hp-focus)]"
                     >
                       Refresh
@@ -779,6 +933,63 @@ function StatusBadge({ status }: { status: FeedStatus }) {
   );
 }
 
+function StationLogo({
+  logoUrl,
+  small = false,
+  stationName,
+}: {
+  logoUrl?: string | null;
+  small?: boolean;
+  stationName: string;
+}) {
+  const [failed, setFailed] = useState(false);
+  const initials = stationName
+    .split(/\s+|-/)
+    .filter(Boolean)
+    .map((word) => word[0])
+    .join("")
+    .slice(0, 3)
+    .toUpperCase();
+
+  return (
+    <span
+      aria-hidden="true"
+      className={`relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-[4px] border border-border bg-background font-black leading-none text-primary ${small ? "size-4 text-[7px]" : "size-10 text-[10px]"}`}
+    >
+      <span>{initials}</span>
+      {!failed && logoUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={logoUrl}
+          alt=""
+          loading="lazy"
+          className="absolute inset-0 h-full w-full bg-white object-contain p-0.5"
+          onError={() => setFailed(true)}
+        />
+      ) : null}
+    </span>
+  );
+}
+
+function formatFeedStatus(status: FeedStatus) {
+  if (status === "connected") return "Connected";
+  if (status === "error") return "Feed error";
+  return "Pending";
+}
+
+function formatStationOptionLabel(station: HearstTVStation, configured: boolean) {
+  return `${configured ? "🟢 " : ""}${station.callSign} · ${station.market}`;
+}
+
+function formatFeedUrl(value: string) {
+  try {
+    const url = new URL(value);
+    return `${url.hostname.replace(/^www\./, "")}${url.pathname}`;
+  } catch {
+    return value;
+  }
+}
+
 function formatContentType(type: HearstTVContentType) {
   if (type === "news") return "News";
   if (type === "video") return "Video";
@@ -794,7 +1005,12 @@ function formatDate(value: string) {
 
 function mergeStoredFeeds(stored: StoredFeed[]) {
   const storedById = new Map(stored.map((feed) => [feed.id, feed]));
-  const merged = hearstTVFeeds.map((feed) => storedById.get(feed.id) ?? feed);
+  const merged = hearstTVFeeds.map((feed) => {
+    const storedFeed = storedById.get(feed.id);
+    if (!storedFeed) return feed;
+    if (feed.id === "kcra-primary-feed" && storedFeed.feedUrl === "Feed URL TBD") return feed;
+    return storedFeed;
+  });
   const custom = stored.filter((feed) => !hearstTVFeeds.some((seed) => seed.id === feed.id));
   return [...merged, ...custom];
 }

@@ -320,6 +320,57 @@ export const hearstAllTheme: BrandTheme = {
   },
 };
 
+export const localNewsTheme: BrandTheme = {
+  ...hearstAllTheme,
+  name: "Hearst Local News",
+  slug: "hearst-local-news",
+  colors: {
+    ...hearstAllTheme.colors,
+    "1": "#00874D",
+    "2": "#DDF3E9",
+    "3": "#005F37",
+    "4": "#A8DEC6",
+    "5": "#F3FAF7",
+    "6": "#EAF6F0",
+    "7": "#153A2A",
+    "9": "#007243",
+    "10": "#5A9378",
+  },
+  semanticColors: {
+    ...hearstAllTheme.semanticColors,
+    "palette-background-brand": "#00874D",
+    "palette-background-brand-active": "#005F37",
+    "palette-background-brand-hover": "#007243",
+    "palette-background-default-link": "#00874D",
+    "palette-background-default-link-hover": "#005F37",
+    "palette-background-page": "#F3FAF7",
+    "palette-background-subtle": "#EAF6F0",
+    "palette-background-subtle-brand": "#DDF3E9",
+    "palette-background-utility": "#DDF3E9",
+    "palette-content-brand": "#00874D",
+    "palette-content-brand-active": "#005F37",
+    "palette-content-brand-hover": "#007243",
+    "palette-content-default-link": "#00874D",
+    "palette-content-default-link-hover": "#005F37",
+  },
+  componentTokens: {
+    ...hearstAllTheme.componentTokens,
+    "component-card-background-neutral": "#F3FAF7",
+    "component-card-border-default": "#B8DACB",
+    "component-button-background-primary-solid-default": "#00874D",
+    "component-button-background-primary-solid-hover": "#007243",
+    "component-button-background-primary-solid-active": "#005F37",
+    "component-button-background-primary-outlined-hover": "#DDF3E9",
+    "component-chip-background-neutral-hover": "#F3FAF7",
+    "component-chip-background-neutral-selected": "#DDF3E9",
+    "component-chip-border-neutral-hover": "#00874D",
+    "component-chip-border-neutral-selected": "#00874D",
+    "component-chip-content-neutral-selected": "#00874D",
+    "component-input-border-color-primary-outlined-default": "#5A9378",
+    "component-badge-background-primary": "#00874D",
+  },
+};
+
 export const supplementalBrandProfiles: Record<
   string,
   {
@@ -353,4 +404,4 @@ export const supplementalBrandProfiles: Record<
   },
 };
 
-export const themeOptions: BrandTheme[] = [hearstAllTheme, hearstPlusTheme, lifestyleTheme, fluxTheme, ewTheme, ...brands];
+export const themeOptions: BrandTheme[] = [hearstAllTheme, hearstPlusTheme, localNewsTheme, lifestyleTheme, fluxTheme, ewTheme, ...brands];
