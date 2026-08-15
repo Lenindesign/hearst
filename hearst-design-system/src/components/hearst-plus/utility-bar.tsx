@@ -7,6 +7,7 @@ import { useReaderAccount } from "@/components/reader-account";
 import { Button } from "@/components/ui/button";
 import { LinkComponent } from "@/components/ui/link";
 import { PageContainer } from "@/components/ui/grid";
+import { entertainmentWebsiteFeedConfigs } from "@/lib/hearst-entertainment-story-feeds";
 import { hearstNewspaperPublications } from "@/lib/hearst-newspaper-feed-framework";
 import { hearstTVStations } from "@/lib/hearst-tv-feed-framework";
 import {
@@ -49,16 +50,6 @@ const brandMenuSections = [
 const utilityLinks = [
   { label: "Shop", href: "/hearst-plus/shopping/" },
   { label: "Newsletter", href: "https://www.hearst.co.uk/newsletter" },
-] as const;
-
-const entertainmentCultureBrands = [
-  { brand: "A&E", shortLabel: "A&E", href: "/hearst-plus/entertainment/a-e/", favicon: "https://www.aetv.com/favicon.ico" },
-  { brand: "HISTORY", shortLabel: "H", href: "/hearst-plus/entertainment/history/", favicon: "https://www.history.com/favicon.ico" },
-  { brand: "Lifetime", shortLabel: "LT", href: "/hearst-plus/entertainment/lifetime/", favicon: "https://www.mylifetime.com/favicon.ico" },
-  { brand: "LMN", shortLabel: "LMN", href: "/hearst-plus/entertainment/lmn/", favicon: "https://www.mylifetime.com/favicon.ico" },
-  { brand: "FYI", shortLabel: "FYI", href: "/hearst-plus/entertainment/fyi/", favicon: "https://www.fyi.tv/favicon.ico" },
-  { brand: "VICE TV", shortLabel: "Vice", href: "/hearst-plus/entertainment/vice-tv/", favicon: "https://www.vicetv.com/favicon.ico" },
-  { brand: "BIOGRAPHY", shortLabel: "Bio", href: "/hearst-plus/entertainment/biography/", favicon: "https://www.biography.com/favicon.ico" },
 ] as const;
 
 const localNewsOptions = [
@@ -452,54 +443,47 @@ export function UtilityBar({
               ) : null}
               {isEntertainmentCultureMenu ? (
                 <section aria-labelledby="hearst-brand-menu-entertainment-culture">
-                  <div className="mb-2">
-                    <p id="hearst-brand-menu-entertainment-culture" className={cn("text-[11px] font-bold uppercase tracking-[0.12em]", darkMode ? "text-[var(--component-navigation-utility-content-accent)]" : "text-primary")}>
-                      A&E family
-                    </p>
-                  </div>
-                  <div className="grid gap-1">
-                    {entertainmentCultureBrands.map((menuBrand) => (
-                      <LinkComponent
-                        key={menuBrand.brand}
-                        href={menuBrand.href}
-                        variant="neutral"
-                        underline={false}
-                        size="sm"
-                        role="menuitem"
-                        onClick={() => setOpenDestinationMenu(null)}
-                        className={cn(
-                          "min-h-8 w-full justify-between rounded-lg px-3 py-1.5 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
-                          darkMode
-                            ? "text-[var(--component-navigation-utility-content-knockout)] hover:bg-white/10 hover:text-white"
-                            : "text-foreground hover:bg-muted hover:text-foreground"
-                        )}
-                      >
-                        <span className="flex min-w-0 items-center gap-2.5">
-                          <span
-                            aria-hidden="true"
-                            className={cn(
-                              "relative flex size-6 shrink-0 items-center justify-center overflow-hidden rounded-md border text-[9px] font-black uppercase leading-none",
-                              darkMode
-                                ? "border-white/15 bg-white/10 text-white"
-                                : "border-black/10 bg-muted text-foreground"
-                            )}
-                          >
-                            <span>{menuBrand.shortLabel}</span>
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              src={menuBrand.favicon}
-                              alt=""
-                              loading="lazy"
-                              onError={(event) => {
-                                event.currentTarget.style.display = "none";
-                              }}
-                              className="absolute inset-0 size-full bg-white object-contain p-0.5"
-                            />
-                          </span>
-                          <span className="truncate">{menuBrand.brand}</span>
-                        </span>
-                      </LinkComponent>
-                    ))}
+                  <div className="grid gap-5 md:grid-cols-2">
+                    <div>
+                      <div className="mb-2">
+                        <p id="hearst-brand-menu-entertainment-culture" className={cn("text-[11px] font-bold uppercase tracking-[0.12em]", darkMode ? "text-[var(--component-navigation-utility-content-accent)]" : "text-primary")}>
+                          Shows
+                        </p>
+                      </div>
+                      <div className="grid gap-1">
+                        {entertainmentWebsiteFeedConfigs.map((menuBrand) => (
+                          <EntertainmentMenuLink
+                            key={`shows-${menuBrand.slug}`}
+                            darkMode={darkMode}
+                            href={menuBrand.showHref}
+                            label={menuBrand.brand}
+                            favicon={menuBrand.favicon}
+                            shortLabel={menuBrand.shortLabel}
+                            onClick={() => setOpenDestinationMenu(null)}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="mb-2">
+                        <p className={cn("text-[11px] font-bold uppercase tracking-[0.12em]", darkMode ? "text-[var(--component-navigation-utility-content-accent)]" : "text-primary")}>
+                          Stories
+                        </p>
+                      </div>
+                      <div className="grid gap-1">
+                        {entertainmentWebsiteFeedConfigs.map((menuBrand) => (
+                          <EntertainmentMenuLink
+                            key={`stories-${menuBrand.slug}`}
+                            darkMode={darkMode}
+                            href={menuBrand.storyHref}
+                            label={menuBrand.brand}
+                            favicon={menuBrand.favicon}
+                            shortLabel={menuBrand.shortLabel}
+                            onClick={() => setOpenDestinationMenu(null)}
+                          />
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </section>
               ) : null}
@@ -556,5 +540,63 @@ export function UtilityBar({
         </div>
       ) : null}
     </div>
+  );
+}
+
+function EntertainmentMenuLink({
+  darkMode,
+  href,
+  label,
+  favicon,
+  shortLabel,
+  onClick,
+}: {
+  darkMode: boolean;
+  href: string;
+  label: string;
+  favicon: string;
+  shortLabel: string;
+  onClick: () => void;
+}) {
+  return (
+    <LinkComponent
+      href={href}
+      variant="neutral"
+      underline={false}
+      size="sm"
+      role="menuitem"
+      onClick={onClick}
+      className={cn(
+        "min-h-8 w-full justify-between rounded-lg px-3 py-1.5 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+        darkMode
+          ? "text-[var(--component-navigation-utility-content-knockout)] hover:bg-white/10 hover:text-white"
+          : "text-foreground hover:bg-muted hover:text-foreground"
+      )}
+    >
+      <span className="flex min-w-0 items-center gap-2.5">
+        <span
+          aria-hidden="true"
+          className={cn(
+            "relative flex size-6 shrink-0 items-center justify-center overflow-hidden rounded-md border text-[9px] font-black uppercase leading-none",
+            darkMode
+              ? "border-white/15 bg-white/10 text-white"
+              : "border-black/10 bg-muted text-foreground"
+          )}
+        >
+          <span>{shortLabel}</span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={favicon}
+            alt=""
+            loading="lazy"
+            onError={(event) => {
+              event.currentTarget.style.display = "none";
+            }}
+            className="absolute inset-0 size-full bg-white object-contain p-0.5"
+          />
+        </span>
+        <span className="truncate">{label}</span>
+      </span>
+    </LinkComponent>
   );
 }
