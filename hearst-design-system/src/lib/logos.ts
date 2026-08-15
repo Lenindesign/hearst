@@ -1,5 +1,6 @@
 export const brandLogos: Record<string, string> = {
   "autoweek": "/logos/autoweek.svg",
+  "hearst-entertainment": "/logos/aande.svg",
   "best-products": "/logos/bestproducts.svg",
   "bicycling": "/logos/bicycling.svg",
   "biography": "/logos/biography.svg",
@@ -49,6 +50,7 @@ export const brandLogos: Record<string, string> = {
  */
 export const brandLogoLabels: Record<keyof typeof brandLogos, string> = {
   "autoweek": "Autoweek",
+  "hearst-entertainment": "A&E",
   "best-products": "Best Products",
   "bicycling": "Bicycling",
   "biography": "Biography",

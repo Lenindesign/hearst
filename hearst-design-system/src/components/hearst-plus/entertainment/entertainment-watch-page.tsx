@@ -298,6 +298,7 @@ export function EntertainmentWatchPage() {
       <UtilityBar activeDestinationOverride="Entertainment" darkMode />
       <MainNav
         brandSlug="hearst-all"
+        selectedBrand={{ name: "A&E", slug: "hearst-entertainment" }}
         activeFilter="Featured"
         navLinksOverride={entertainmentNavLinks}
         darkMode
