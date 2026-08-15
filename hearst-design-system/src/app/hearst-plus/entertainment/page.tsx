@@ -13,10 +13,29 @@ export const metadata: Metadata = {
   ),
 };
 
-export default function HearstPlusEntertainmentPage() {
+type EntertainmentPageProps = {
+  searchParams?: Promise<{ channel?: string }>;
+};
+
+const channelSlugToBrand = {
+  "a-e": "A&E",
+  history: "HISTORY",
+  lifetime: "Lifetime",
+  lmn: "LMN",
+  fyi: "FYI",
+  "vice-tv": "VICE TV",
+  biography: "BIOGRAPHY",
+} as const;
+
+export default async function HearstPlusEntertainmentPage({ searchParams }: EntertainmentPageProps) {
+  const params = await searchParams;
+  const activeChannel = params?.channel
+    ? channelSlugToBrand[params.channel as keyof typeof channelSlugToBrand]
+    : undefined;
+
   return (
     <ThemeProvider defaultBrandSlug="hearst-all">
-      <EntertainmentWatchPage />
+      <EntertainmentWatchPage activeChannel={activeChannel} />
     </ThemeProvider>
   );
 }

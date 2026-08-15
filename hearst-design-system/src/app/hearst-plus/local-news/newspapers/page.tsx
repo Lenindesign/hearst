@@ -1,9 +1,9 @@
-import type { CSSProperties } from "react";
+import { Suspense, type CSSProperties } from "react";
 import type { Metadata } from "next";
 import { BrandLogo } from "@/components/brand-logo";
 import { SiteFooter } from "@/components/fre/site-footer";
 import { LocalNewsGlobalHeader } from "@/components/hearst-plus/local-news-global-header";
-import { NewspaperFeedsSection } from "@/components/hearst-plus/newspaper-feeds-section";
+import { NewspaperFeedsReaderExperience } from "@/components/hearst-plus/newspaper-feeds-section";
 import { ThemeProvider } from "@/components/theme-provider";
 import { socialGraphMetadata } from "@/lib/social-graph-image";
 
@@ -32,7 +32,9 @@ export default function LocalNewsNewspapersPage() {
       >
         <LocalNewsGlobalHeader />
         <section id="newspapers" className="mx-auto max-w-[1360px] scroll-mt-20 px-5 py-8 md:px-8">
-          <NewspaperFeedsSection />
+          <Suspense fallback={null}>
+            <NewspaperFeedsReaderExperience />
+          </Suspense>
         </section>
         <SiteFooter
           siteName={<BrandLogo slug="hearst-local-news" className="h-5 max-w-[11rem] [&_svg]:h-full [&_svg]:w-auto" color="#fff" />}

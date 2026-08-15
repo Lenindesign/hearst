@@ -1,6 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type RefObject } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ContentReaderDialogShell, rememberContentReaderReturnFocus } from "@/components/hearst-plus/content-reader-dialog-shell";
+import { ContentReaderMasthead } from "@/components/hearst-plus/content-reader-masthead";
+import { FeaturedStoryCarousel } from "@/components/hearst-plus/featured-story-carousel";
 import {
   getHearstNewspaperFeedById,
   getHearstNewspaperPublicationById,
@@ -12,6 +16,8 @@ import {
   type HearstNewspaperContent,
   type HearstNewspaperPublication,
 } from "@/lib/hearst-newspaper-feed-framework";
+import { LocalNewsSourceToggle } from "@/components/hearst-plus/local-news-source-toggle";
+import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 
 const allValue = "all";
 const defaultNewspaperPublication = "sfgate";
@@ -20,6 +26,11 @@ type NewspaperFeedResponse = {
   stories: HearstNewspaperContent[];
   status: "connected" | "pending" | "error";
   error?: string;
+};
+
+type NewspaperFeedsSectionProps = {
+  onOpenStory?: (storyId: string) => void;
+  onStoriesChange?: (stories: LifestyleRiverStory[]) => void;
 };
 
 function isConnectedFeed(feed: (typeof hearstNewspaperFeeds)[number]) {
@@ -50,36 +61,37 @@ function formatDate(value: string) {
   return new Intl.DateTimeFormat("en", { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
 }
 
-export function NewspaperFeedsSection() {
+export function NewspaperFeedsSection({
+  onOpenStory,
+  onStoriesChange,
+}: NewspaperFeedsSectionProps = {}) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const requestedPublication = searchParams.get("publication");
+  const routedPublication = requestedPublication && getHearstNewspaperPublicationById(requestedPublication)
+    ? requestedPublication
+    : null;
   const connectedFeeds = hearstNewspaperFeeds.filter(isConnectedFeed);
   const connectedPublicationIds = useMemo(
     () => new Set(connectedFeeds.map((feed) => feed.publicationId)),
     [connectedFeeds],
   );
   const states = useMemo(() => [...new Set(hearstNewspaperPublications.map((publication) => publication.state))].sort(), []);
-  const [selectedPublication, setSelectedPublication] = useState(defaultNewspaperPublication);
+  const [manualSelectedPublication, setManualSelectedPublication] = useState(defaultNewspaperPublication);
+  const selectedPublication = routedPublication ?? manualSelectedPublication;
   const [selectedState, setSelectedState] = useState(allValue);
   const [selectedContentType, setSelectedContentType] = useState<"all" | HearstNewspaperContentType>("all");
   const [liveContent, setLiveContent] = useState<HearstNewspaperContent[]>([]);
-  const [liveStatus, setLiveStatus] = useState<"connected" | "pending" | "error">("pending");
-  const [liveError, setLiveError] = useState<string | null>(null);
 
   const defaultPublicationRecord = getHearstNewspaperPublicationById(defaultNewspaperPublication);
   const selectedPublicationRecord = selectedPublication === allValue
     ? null
     : getHearstNewspaperPublicationById(selectedPublication);
   const activePublicationRecord = selectedPublicationRecord ?? defaultPublicationRecord;
-  const selectedPublicationFeed = selectedPublicationRecord
-    ? hearstNewspaperFeeds.find((feed) => feed.publicationId === selectedPublicationRecord.id)
-    : null;
   const activePublicationFeed = activePublicationRecord
     ? hearstNewspaperFeeds.find((feed) => feed.publicationId === activePublicationRecord.id)
     : null;
   const activeFeed = activePublicationFeed && isConnectedFeed(activePublicationFeed) ? activePublicationFeed : null;
-  const heroFeed = selectedPublicationFeed ?? activeFeed;
-  const heroFeedLabel = heroFeed && heroFeed.feedUrl !== newspaperFeedUrlTbd
-    ? `RSS · ${heroFeed.feedUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")}`
-    : "Feed URL TBD";
 
   useEffect(() => {
     let cancelled = false;
@@ -87,13 +99,8 @@ export function NewspaperFeedsSection() {
     async function loadNewspaperFeed() {
       if (!activeFeed || !activePublicationRecord) {
         setLiveContent([]);
-        setLiveStatus("pending");
-        setLiveError(null);
         return;
       }
-
-      setLiveStatus("pending");
-      setLiveError(null);
 
       try {
         const params = new URLSearchParams({
@@ -106,13 +113,9 @@ export function NewspaperFeedsSection() {
         const payload = await response.json() as NewspaperFeedResponse;
         if (cancelled) return;
         setLiveContent(payload.stories ?? []);
-        setLiveStatus(payload.status);
-        setLiveError(payload.error ?? null);
-      } catch (error) {
+      } catch {
         if (cancelled) return;
         setLiveContent([]);
-        setLiveStatus("error");
-        setLiveError(error instanceof Error ? error.message : "Newspaper feed failed.");
       }
     }
 
@@ -143,13 +146,40 @@ export function NewspaperFeedsSection() {
       })
       .sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt));
   }, [liveContent, selectedContentType, selectedPublication, selectedState]);
+  const readerStories = useMemo(
+    () => filteredContent.map(mapNewspaperItemToCarouselStory),
+    [filteredContent],
+  );
+  const readerStoryById = useMemo(
+    () => new Map(readerStories.map((story) => [story.id, story])),
+    [readerStories],
+  );
+  const heroItems = filteredContent.slice(0, 3);
+  const riverItems = filteredContent.slice(heroItems.length, heroItems.length + 12);
+
+  useEffect(() => {
+    onStoriesChange?.(readerStories);
+  }, [onStoriesChange, readerStories]);
+
+  useEffect(() => {
+    return () => onStoriesChange?.([]);
+  }, [onStoriesChange]);
+
+  function handlePublicationChange(value: string) {
+    setManualSelectedPublication(value);
+    const target = value === allValue
+      ? "/hearst-plus/local-news/newspapers/#newspapers"
+      : `/hearst-plus/local-news/newspapers/?publication=${encodeURIComponent(value)}#newspapers`;
+    router.replace(target, { scroll: false });
+  }
 
   return (
     <div className="space-y-6" data-hearst-plus-newspaper-river aria-labelledby="newspaper-feeds-title">
       <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]">
         <aside className="min-w-0 space-y-4 lg:sticky lg:top-[108px] lg:max-h-[calc(100dvh-132px)] lg:self-start lg:overflow-y-auto lg:pr-1">
           <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]" aria-labelledby="newspaper-filter-title">
-            <h2 id="newspaper-filter-title" className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">Newspapers</h2>
+            <LocalNewsSourceToggle activeSource="newspapers" />
+            <h2 id="newspaper-filter-title" className="mt-5 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">Newspapers</h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
               Select a Hearst newspaper feed. Green dots mark publications with a verified RSS endpoint.
             </p>
@@ -158,7 +188,7 @@ export function NewspaperFeedsSection() {
                 id="inline-newspaper-publication-filter"
                 label="Newspaper"
                 value={selectedPublication}
-                onChange={setSelectedPublication}
+                onChange={handlePublicationChange}
                 options={[
                   { label: "All newspapers", value: allValue },
                   ...hearstNewspaperPublications.map((publication) => ({
@@ -194,40 +224,49 @@ export function NewspaperFeedsSection() {
         </aside>
 
         <main id="hearst-story-river" className="min-w-0 scroll-mt-28 space-y-4" aria-label="Hearst Newspapers RSS feeds">
-          <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-5 shadow-[var(--hp-shadow-card)]">
-            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
-              {selectedPublicationRecord ? `${selectedPublicationRecord.publicationName} · ${selectedPublicationRecord.market}` : "Hearst Newspapers"}
-            </p>
-            <h1 id="newspaper-feeds-title" className="headline mt-1 text-3xl leading-tight text-[var(--hp-text-headline)] sm:text-4xl">
-              {selectedPublicationRecord ? `${selectedPublicationRecord.publicationName} Local News` : "Newspapers"}
-            </h1>
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
-              {heroFeed && heroFeed.feedUrl !== newspaperFeedUrlTbd
-                ? `${selectedPublicationRecord ? selectedPublicationRecord.publicationName : activePublicationRecord?.publicationName ?? "The default publication"} is hydrated from a verified RSS endpoint and normalized into the same Hearst+ river model with publication attribution, timestamps, imagery, and click-throughs.`
-                : "Unknown endpoints remain labeled as Feed URL TBD rather than treated as live content."}
-            </p>
-            <div className="mt-4 flex flex-wrap gap-2 text-xs font-bold text-muted-foreground">
-              <span className="rounded-full bg-[var(--hp-surface-low)] px-3 py-1">{filteredContent.length} river items</span>
-              <span className="rounded-full bg-[var(--hp-surface-low)] px-3 py-1">{heroFeedLabel}</span>
-              {heroFeed ? (
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--hp-surface-low)] px-3 py-1">
-                  {liveStatus === "connected" && heroFeed.id === activeFeed?.id ? <span className="size-2 rounded-full bg-[#00874D]" aria-hidden="true" /> : null}
-                  {liveStatus === "connected" ? "Connected" : liveStatus === "error" ? "Feed error" : "Connecting"}
-                </span>
-              ) : null}
-            </div>
-            {liveError ? <p className="mt-3 text-xs leading-5 text-muted-foreground">{liveError}</p> : null}
-          </section>
+          {heroItems.length > 0 ? (
+            <NewspaperFeaturedCarousel
+              key={heroItems.map((item) => item.id).join("|")}
+              items={heroItems}
+              onOpenStory={(story) => {
+                if (onOpenStory) {
+                  onOpenStory(story.id);
+                  return;
+                }
 
-          {filteredContent.slice(0, 12).map((item) => {
+                if (story.sourceUrl) window.open(story.sourceUrl, "_blank", "noopener,noreferrer");
+              }}
+            />
+          ) : (
+            <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-6 text-sm leading-6 text-muted-foreground shadow-[var(--hp-shadow-card)]">
+              No newspaper items match the current filters. Clear the newspaper, state, or content-type filter to restore the river.
+            </section>
+          )}
+
+          {riverItems.map((item) => {
             const publication = getHearstNewspaperPublicationById(item.publicationId);
             const feed = getHearstNewspaperFeedById(item.feedId);
             if (!publication || !feed) return null;
             const connected = isConnectedFeed(feed);
+            const readerStory = readerStoryById.get(item.id);
 
             return (
               <article key={item.id} className="group/card relative min-w-0 overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/50">
-                <a href={item.url} target="_blank" rel="noreferrer" className="grid min-w-0 gap-0 text-left no-underline sm:grid-cols-[176px_minmax(0,1fr)] sm:gap-4 sm:p-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (readerStory && onOpenStory) {
+                      onOpenStory(readerStory.id);
+                      return;
+                    }
+
+                    if (item.url && item.url !== "#") {
+                      window.open(item.url, "_blank", "noopener,noreferrer");
+                    }
+                  }}
+                  className="grid w-full min-w-0 gap-0 text-left no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50 sm:grid-cols-[176px_minmax(0,1fr)] sm:gap-4 sm:p-4"
+                  aria-label={`Open story: ${item.title}`}
+                >
                   <span className="relative grid aspect-[16/9] min-h-0 place-items-center overflow-hidden rounded-[6px] bg-[var(--hp-surface-low)] text-center text-sm font-bold text-primary sm:aspect-[4/3]" aria-hidden="true">
                     {item.imageUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -252,14 +291,14 @@ export function NewspaperFeedsSection() {
                       <span>{connected ? "RSS connected" : "Feed URL TBD"}</span>
                     </span>
                   </span>
-                </a>
+                </button>
               </article>
             );
           })}
-          {filteredContent.length === 0 ? (
-            <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-6 text-sm leading-6 text-muted-foreground shadow-[var(--hp-shadow-card)]">
-              No newspaper items match the current filters. Clear the newspaper, state, or content-type filter to restore the river.
-            </section>
+          {filteredContent.length > 0 && riverItems.length === 0 ? (
+            <p className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 text-sm leading-6 text-muted-foreground shadow-[var(--hp-shadow-card)]">
+              More newspaper stories will appear here as additional feed items match the current filters.
+            </p>
           ) : null}
         </main>
 
@@ -279,6 +318,238 @@ export function NewspaperFeedsSection() {
       </div>
     </div>
   );
+}
+
+function NewspaperFeaturedCarousel({
+  items,
+  onOpenStory,
+}: {
+  items: HearstNewspaperContent[];
+  onOpenStory: (story: LifestyleRiverStory) => void;
+}) {
+  const stories = useMemo(() => items.map(mapNewspaperItemToCarouselStory), [items]);
+
+  return (
+    <FeaturedStoryCarousel
+      stories={stories}
+      editionLabel="Latest Local News"
+      renderImage={(story, _index, active) => (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={story.image}
+          alt=""
+          className="h-full w-full object-cover"
+          loading={active ? "eager" : "lazy"}
+        />
+      )}
+      getCommentCount={() => 0}
+      isCurrentStory={() => true}
+      onOpenStory={onOpenStory}
+      onSave={() => undefined}
+      onMoreLikeThis={() => undefined}
+      onFollowBrand={() => undefined}
+      indicatorPalette={["#00874D", "#41A86F", "#89CDA5"]}
+    />
+  );
+}
+
+export function NewspaperFeedsReaderExperience() {
+  const [readerStories, setReaderStories] = useState<LifestyleRiverStory[]>([]);
+  const [openStoryId, setOpenStoryId] = useState<string | null>(null);
+  const returnFocusElementRef = useRef<HTMLElement | null>(null);
+
+  const openStory = (storyId: string) => {
+    returnFocusElementRef.current = rememberContentReaderReturnFocus(document.activeElement);
+    setOpenStoryId(storyId);
+  };
+
+  return (
+    <>
+      <NewspaperFeedsSection
+        onOpenStory={openStory}
+        onStoriesChange={setReaderStories}
+      />
+      {openStoryId ? (
+        <NewspaperReaderModal
+          key={openStoryId}
+          stories={readerStories}
+          openStoryId={openStoryId}
+          returnFocusElementRef={returnFocusElementRef}
+          onClose={() => setOpenStoryId(null)}
+        />
+      ) : null}
+    </>
+  );
+}
+
+function NewspaperReaderModal({
+  stories,
+  openStoryId,
+  returnFocusElementRef,
+  onClose,
+}: {
+  stories: LifestyleRiverStory[];
+  openStoryId: string;
+  returnFocusElementRef: RefObject<HTMLElement | null>;
+  onClose: () => void;
+}) {
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const [visibleCount, setVisibleCount] = useState(1);
+  const openIndex = Math.max(0, stories.findIndex((story) => story.id === openStoryId));
+  const queue = stories.length > 0
+    ? [...stories.slice(openIndex), ...stories.slice(0, openIndex)]
+    : [];
+  const visibleStories = queue.slice(0, visibleCount);
+
+  useEffect(() => {
+    contentRef.current?.scrollTo({ top: 0 });
+  }, [openStoryId]);
+
+  useEffect(() => {
+    const root = contentRef.current;
+    const node = sentinelRef.current;
+    if (!root || !node || visibleCount >= queue.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setVisibleCount((count) => Math.min(count + 1, queue.length));
+        }
+      },
+      { root, rootMargin: "600px 0px" },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [queue.length, visibleCount]);
+
+  return (
+    <ContentReaderDialogShell
+      contentRef={contentRef}
+      destination="local-news"
+      mode="light"
+      onClose={onClose}
+      returnFocusElementRef={returnFocusElementRef}
+      style={{
+        "--primary": "#00874D",
+        "--hp-primary": "#00874D",
+        "--hp-section-title": "#00874D",
+        "--hp-sidebar-heading": "#00874D",
+      } as CSSProperties}
+    >
+      <ContentReaderMasthead
+        logoHref="/hearst-plus/local-news/newspapers/"
+        contextLabel="Hearst Local News"
+        logoSlug="hearst-local-news"
+        visibleStoryCount={visibleStories.length}
+        storyCount={queue.length}
+        activeMastheadKey="local-news"
+        mastheadItems={[{ key: "local-news", label: "Local News", active: true, disabled: true }]}
+        mastheadNavigationLabel="Local News"
+        filterItems={[{ label: "Newspapers", active: true, disabled: true }]}
+        sectionLabel="Newspapers"
+        onSelectMastheadItem={() => undefined}
+        onSelectFilter={() => undefined}
+        onClose={onClose}
+      />
+      <div className="grid gap-8 px-4 py-6 sm:px-8 lg:px-10">
+        <div className="mx-auto w-full max-w-3xl space-y-10">
+          {visibleStories.map((story, index) => (
+            <article
+              key={story.id}
+              data-reader-story-id={story.id}
+              className="rounded-[8px] border border-border bg-card px-5 py-5 text-foreground sm:px-7 sm:py-7"
+            >
+              {index > 0 ? (
+                <div className="mb-8 flex items-center gap-4" aria-label="Up next">
+                  <span className="h-px flex-1 bg-border" aria-hidden="true" />
+                  <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                    Up next
+                  </span>
+                  <span className="h-px flex-1 bg-border" aria-hidden="true" />
+                </div>
+              ) : null}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={story.image}
+                alt=""
+                className="aspect-video w-full rounded-[4px] bg-[var(--hp-surface-low)] object-cover"
+              />
+              <div className="mx-auto mt-6 max-w-3xl">
+                <div className="mb-3 flex flex-wrap items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                  <span>{story.signal}</span>
+                  <span>{story.brand}</span>
+                  <span>{story.topic}</span>
+                </div>
+                <h2 className="headline text-4xl leading-[1.05] sm:text-5xl">
+                  {story.title}
+                </h2>
+                <div className="mt-4 flex flex-wrap items-center gap-3 border-y border-border py-3 text-sm text-muted-foreground">
+                  <span>{story.byline}</span>
+                  {story.publishedAt ? <span>{formatDate(story.publishedAt)}</span> : null}
+                  {story.sourceUrl ? (
+                    <a
+                      href={story.sourceUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="font-bold text-primary underline underline-offset-4"
+                    >
+                      Original newspaper story
+                    </a>
+                  ) : null}
+                </div>
+                <div className="mt-6 space-y-4 text-[18px] leading-8 text-foreground/85">
+                  <p>{story.summary}</p>
+                  <p>
+                    This local-news item is normalized from the configured Hearst newspaper RSS feed and keeps the original publication attribution, timestamp, image, and source link.
+                  </p>
+                </div>
+              </div>
+            </article>
+          ))}
+          <div ref={sentinelRef} className="flex justify-center py-8">
+            {visibleCount < queue.length ? (
+              <p className="text-sm text-muted-foreground">Loading the next newspaper story...</p>
+            ) : (
+              <p className="text-sm text-muted-foreground">End of this newspaper river.</p>
+            )}
+          </div>
+        </div>
+      </div>
+    </ContentReaderDialogShell>
+  );
+}
+
+function mapNewspaperItemToCarouselStory(item: HearstNewspaperContent): LifestyleRiverStory {
+  const publication = getHearstNewspaperPublicationById(item.publicationId);
+  const publicationName = publication?.publicationName ?? "Hearst Newspapers";
+  const publishedAt = Date.parse(item.publishedAt);
+  const age = Number.isNaN(publishedAt)
+    ? 0
+    : Math.max(0, Math.round((Date.now() - publishedAt) / 36e5));
+
+  return {
+    id: item.id,
+    brand: publicationName,
+    brandSlug: "hearst-local-news",
+    topic: formatContentType(item.contentType),
+    title: item.title,
+    summary: item.description,
+    image: item.imageUrl || "/logos/hearst-local-news.svg",
+    byline: `${publicationName} local news`,
+    readTime: item.isMock ? "Sample" : "RSS",
+    popularity: item.isMock ? 35 : 80,
+    signal: item.isMock ? "Editor Pick" : "Trending",
+    tags: [
+      publicationName,
+      publication?.market,
+      publication?.state,
+      formatContentType(item.contentType),
+    ].filter((tag): tag is string => Boolean(tag)),
+    age,
+    publishedAt: item.publishedAt,
+    sourceUrl: item.url === "#" ? undefined : item.url,
+  };
 }
 
 function FilterSelect({

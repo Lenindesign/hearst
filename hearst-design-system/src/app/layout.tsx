@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Livvic, Newsreader, Petrona } from "next/font/google";
 import { AmplitudeAnalyticsBridge } from "@/components/hearst-plus/amplitude-analytics-bridge";
+import { EntertainmentRouteFallback } from "@/components/hearst-plus/entertainment-route-fallback";
 import { ReaderAccountProvider } from "@/components/reader-account";
 import { socialGraphMetadata } from "@/lib/social-graph-image";
 import "./globals.css";
@@ -60,6 +61,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} ${livvic.variable} ${petrona.variable} antialiased`}
       >
         <AmplitudeAnalyticsBridge />
+        <EntertainmentRouteFallback />
         <ReaderAccountProvider>{children}</ReaderAccountProvider>
       </body>
     </html>

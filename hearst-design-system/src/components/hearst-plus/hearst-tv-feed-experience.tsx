@@ -2,14 +2,16 @@
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type RefObject } from "react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ContentReaderDialogShell, rememberContentReaderReturnFocus } from "@/components/hearst-plus/content-reader-dialog-shell";
 import { ContentReaderMasthead } from "@/components/hearst-plus/content-reader-masthead";
+import { FeaturedStoryCarousel } from "@/components/hearst-plus/featured-story-carousel";
+import { LocalNewsSourceToggle } from "@/components/hearst-plus/local-news-source-toggle";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import type { FeedStatus, FeedType, HearstTVContentType, HearstTVFeed } from "@/lib/hearst-tv-feed-framework";
 import {
   dedupeHearstTVContent,
   feedUrlTbd,
-  findNearestHearstTVStation,
   getHearstTVFeedById,
   getHearstTVStationById,
   hearstTVFeeds,
@@ -38,7 +40,6 @@ type LocalNewsFeedResponse = {
 
 const feedStorageKey = "hearst-tv-feed-admin-config:v1";
 const allValue = "all";
-const defaultLocalNewsStation = "kcra";
 
 function isConfiguredFeed(feed: StoredFeed) {
   return feed.enabled && feed.feedUrl !== feedUrlTbd;
@@ -63,7 +64,7 @@ export function HearstTVFeedExperience({ mode }: { mode: ViewMode }) {
   const [selectedStation, setSelectedStation] = useState(allValue);
   const [selectedState, setSelectedState] = useState(allValue);
   const [selectedContentType, setSelectedContentType] = useState<"all" | HearstTVContentType>("all");
-  const [geoMessage, setGeoMessage] = useState("Use location to prioritize the nearest Hearst TV market.");
+  const filterMessage = "Use the filters to choose a Hearst TV market, state, or content type.";
 
   useEffect(() => {
     try {
@@ -100,32 +101,6 @@ export function HearstTVFeedExperience({ mode }: { mode: ViewMode }) {
   }, [feeds, selectedContentType, selectedState, selectedStation]);
   const selectedStationRecord = selectedStation === allValue ? null : getHearstTVStationById(selectedStation);
 
-  function useCurrentLocation() {
-    if (!navigator.geolocation) {
-      setGeoMessage("Geolocation is not available in this browser. Use the market or state filters.");
-      return;
-    }
-
-    setGeoMessage("Checking your nearest Hearst TV market...");
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const match = findNearestHearstTVStation(position.coords.latitude, position.coords.longitude);
-        if (!match) {
-          setGeoMessage("No nearby Hearst TV market could be resolved. Use filters to choose a market.");
-          return;
-        }
-
-        setSelectedStation(match.station.id);
-        setSelectedState(allValue);
-        setGeoMessage(`Showing the nearest prototype market: ${match.station.market} (${match.station.callSign}).`);
-      },
-      () => {
-        setGeoMessage("Location access was not available. Use filters to choose a market.");
-      },
-      { enableHighAccuracy: false, timeout: 8000, maximumAge: 600000 },
-    );
-  }
-
   return (
     <div className="hearst-plus-theme min-h-screen bg-[var(--hp-background)] text-[var(--hp-text-primary)]">
       <section className="border-b border-[var(--hp-border)] bg-[var(--hp-surface)]">
@@ -157,14 +132,13 @@ export function HearstTVFeedExperience({ mode }: { mode: ViewMode }) {
         <ReaderView
           feeds={feeds}
           filteredContent={filteredContent}
-          geoMessage={geoMessage}
+          filterMessage={filterMessage}
           selectedContentType={selectedContentType}
           selectedState={selectedState}
           selectedStation={selectedStation}
           selectedStationRecord={selectedStationRecord}
           states={states}
           onContentTypeChange={setSelectedContentType}
-          onLocationRequest={useCurrentLocation}
           onStateChange={setSelectedState}
           onStationChange={setSelectedStation}
         />
@@ -184,6 +158,12 @@ export function HearstTVLocalNewsRiver({
   onOpenStory,
   onStoriesChange,
 }: HearstTVLocalNewsRiverProps = {}) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const requestedStation = searchParams.get("station");
+  const routedStation = requestedStation && getHearstTVStationById(requestedStation)
+    ? requestedStation
+    : null;
   const [feeds] = useState<StoredFeed[]>(() => {
     if (typeof window === "undefined") return hearstTVFeeds;
     try {
@@ -193,81 +173,73 @@ export function HearstTVLocalNewsRiver({
       return hearstTVFeeds;
     }
   });
-  const [selectedStation, setSelectedStation] = useState(defaultLocalNewsStation);
+  const [manualSelectedStation, setManualSelectedStation] = useState(allValue);
+  const selectedStation = routedStation ?? manualSelectedStation;
   const [selectedState, setSelectedState] = useState(allValue);
   const [selectedContentType, setSelectedContentType] = useState<"all" | HearstTVContentType>("all");
-  const [geoMessage, setGeoMessage] = useState("KCRA 3 is the active local-news feed for this Hearst+ river. Use location to switch markets.");
+  const filterMessage = "Use the filters to choose a Hearst TV market, state, or content type.";
   const [liveContent, setLiveContent] = useState<HearstTVContent[]>([]);
-  const [liveFeedStatus, setLiveFeedStatus] = useState<FeedStatus>("pending");
   const [liveFeedError, setLiveFeedError] = useState<string | null>(null);
-  const [usingFallback, setUsingFallback] = useState(false);
 
   const states = useMemo(() => [...new Set(hearstTVStations.map((station) => station.state))].sort(), []);
-  const selectedStationRecord = selectedStation === allValue ? null : getHearstTVStationById(selectedStation);
   const configuredStationIds = useMemo(
     () => new Set(feeds.filter(isConfiguredFeed).map((feed) => feed.stationId)),
     [feeds],
   );
-  const activeFeed = useMemo(() => {
-    const selectedFeed = selectedStation !== allValue
-      ? feeds.find((feed) => feed.stationId === selectedStation && isConfiguredFeed(feed))
-      : null;
-    if (selectedStation !== allValue) return selectedFeed ?? null;
-    return feeds.find((feed) => feed.stationId === defaultLocalNewsStation && isConfiguredFeed(feed)) ?? null;
+  const activeFeeds = useMemo(() => {
+    if (selectedStation !== allValue) {
+      const selectedFeed = feeds.find((feed) => feed.stationId === selectedStation && isConfiguredFeed(feed));
+      return selectedFeed ? [selectedFeed] : [];
+    }
+
+    return feeds.filter(isConfiguredFeed);
   }, [feeds, selectedStation]);
-  const activeFeedStation = activeFeed ? getHearstTVStationById(activeFeed.stationId) : null;
-  const selectedStationFeed = selectedStationRecord
-    ? feeds.find((feed) => feed.stationId === selectedStationRecord.id)
-    : null;
-  const heroFeed = selectedStationFeed ?? activeFeed;
-  const heroStation = selectedStationRecord ?? activeFeedStation;
-  const heroStationTitle = heroStation ? `${heroStation.stationName} Local News` : "Hearst TV Local News";
-  const heroFeedLabel = heroFeed && heroFeed.feedUrl !== feedUrlTbd
-    ? `${heroFeed.feedType} · ${formatFeedUrl(heroFeed.feedUrl)}`
-    : "Feed URL TBD";
-  const heroFeedStatus = heroFeed?.id === activeFeed?.id
-    ? liveFeedStatus
-    : heroFeed && isConnectedFeed(heroFeed)
-      ? "connected"
-      : heroFeed?.status ?? liveFeedStatus;
 
   useEffect(() => {
     let cancelled = false;
 
     async function loadLocalNews() {
-      if (!activeFeed || !activeFeedStation) {
+      if (activeFeeds.length === 0) {
         setLiveContent([]);
-        setLiveFeedStatus("pending");
-        setLiveFeedError("Feed URL TBD. Add a verified RSS or MRSS endpoint to activate this station.");
-        setUsingFallback(false);
+        setLiveFeedError(
+          selectedStation === allValue
+            ? null
+            : "Feed URL TBD. Add a verified RSS or MRSS endpoint to activate this station.",
+        );
         return;
       }
 
-      setLiveFeedStatus("pending");
       setLiveFeedError(null);
 
-      try {
+      const results = await Promise.allSettled(activeFeeds.map(async (feed) => {
+        const station = getHearstTVStationById(feed.stationId);
+        if (!station) return { stories: [], error: null };
         const params = new URLSearchParams({
-          stationId: activeFeed.stationId,
-          feedId: activeFeed.id,
-          feedUrl: activeFeed.feedUrl,
-          feedType: activeFeed.feedType,
+          stationId: feed.stationId,
+          feedId: feed.id,
+          feedUrl: feed.feedUrl,
+          feedType: feed.feedType,
         });
         const response = await fetch(`/api/hearst-tv/local-news?${params.toString()}`, { cache: "no-store" });
         if (!response.ok) throw new Error(`Local news feed returned ${response.status}`);
-        const payload = await response.json() as LocalNewsFeedResponse;
+        return await response.json() as LocalNewsFeedResponse;
+      }));
 
-        if (cancelled) return;
-        setLiveContent(payload.stories ?? []);
-        setLiveFeedStatus(payload.status);
-        setLiveFeedError(payload.error ?? null);
-        setUsingFallback(Boolean(payload.fallback));
-      } catch (error) {
-        if (cancelled) return;
-        setLiveContent([]);
-        setLiveFeedStatus("error");
-        setLiveFeedError(error instanceof Error ? error.message : "Local news feed failed.");
-        setUsingFallback(true);
+      if (cancelled) return;
+
+      const stories = results.flatMap((result) => (
+        result.status === "fulfilled" ? (result.value.stories ?? []) : []
+      ));
+      const errors = results.flatMap((result) => {
+        if (result.status === "fulfilled") return result.value.error ? [result.value.error] : [];
+        return [result.reason instanceof Error ? result.reason.message : "Local news feed failed."];
+      });
+
+      setLiveContent(stories);
+      if (selectedStation === allValue) {
+        setLiveFeedError(stories.length > 0 ? null : errors[0] ?? null);
+      } else {
+        setLiveFeedError(errors[0] ?? null);
       }
     }
 
@@ -276,7 +248,7 @@ export function HearstTVLocalNewsRiver({
     return () => {
       cancelled = true;
     };
-  }, [activeFeed, activeFeedStation]);
+  }, [activeFeeds, selectedStation]);
 
   const filteredContent = useMemo(() => {
     const liveStationIds = new Set(liveContent.map((item) => item.stationId));
@@ -310,6 +282,8 @@ export function HearstTVLocalNewsRiver({
     () => new Map(readerStories.map((story) => [story.id, story])),
     [readerStories],
   );
+  const heroItems = filteredContent.slice(0, 3);
+  const riverItems = filteredContent.slice(heroItems.length, heroItems.length + 12);
 
   useEffect(() => {
     onStoriesChange?.(readerStories);
@@ -319,30 +293,12 @@ export function HearstTVLocalNewsRiver({
     return () => onStoriesChange?.([]);
   }, [onStoriesChange]);
 
-  function useCurrentLocation() {
-    if (!navigator.geolocation) {
-      setGeoMessage("Geolocation is not available in this browser. Use the market or state filters.");
-      return;
-    }
-
-    setGeoMessage("Checking your nearest Hearst TV market...");
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const match = findNearestHearstTVStation(position.coords.latitude, position.coords.longitude);
-        if (!match) {
-          setGeoMessage("No nearby Hearst TV market could be resolved. Use filters to choose a market.");
-          return;
-        }
-
-        setSelectedStation(match.station.id);
-        setSelectedState(allValue);
-        setGeoMessage(`Showing the nearest prototype market: ${match.station.market} (${match.station.callSign}).`);
-      },
-      () => {
-        setGeoMessage("Location access was not available. Use filters to choose a market.");
-      },
-      { enableHighAccuracy: false, timeout: 8000, maximumAge: 600000 },
-    );
+  function handleStationChange(value: string) {
+    setManualSelectedStation(value);
+    const target = value === allValue
+      ? "/hearst-plus/local-news/#tv-stations"
+      : `/hearst-plus/local-news/?station=${encodeURIComponent(value)}#tv-stations`;
+    router.replace(target, { scroll: false });
   }
 
   return (
@@ -350,23 +306,17 @@ export function HearstTVLocalNewsRiver({
       <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]">
         <aside className="min-w-0 space-y-4 lg:sticky lg:top-[108px] lg:max-h-[calc(100dvh-132px)] lg:self-start lg:overflow-y-auto lg:pr-1">
           <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]" aria-labelledby="local-news-filter-title">
-            <h2 id="local-news-filter-title" className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+            <LocalNewsSourceToggle activeSource="tv" />
+            <h2 id="local-news-filter-title" className="mt-5 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
               Local News
             </h2>
-            <p className="mt-3 text-sm leading-6 text-muted-foreground">{geoMessage}</p>
-            <button
-              type="button"
-              onClick={useCurrentLocation}
-              className="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-[6px] bg-primary px-4 text-sm font-bold text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-            >
-              Use my location
-            </button>
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">{filterMessage}</p>
             <div className="mt-4 grid gap-4">
               <FilterSelect
                 id="inline-local-station-filter"
                 label="Station"
                 value={selectedStation}
-                onChange={setSelectedStation}
+                onChange={handleStationChange}
                 options={[
                   { label: "All stations", value: allValue },
                   ...hearstTVStations.map((station) => ({
@@ -408,34 +358,32 @@ export function HearstTVLocalNewsRiver({
         </aside>
 
         <main id="hearst-story-river" className="min-w-0 scroll-mt-28 space-y-4" aria-label="Hearst TV local news river">
-          <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-5 shadow-[var(--hp-shadow-card)]">
-            <div className="flex min-w-0 items-center gap-3">
-              <StationLogo stationName={heroStation?.stationName ?? "Hearst TV"} logoUrl={heroStation?.logo} />
-              <div className="min-w-0">
-                <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
-                  {heroStation ? `${heroStation.callSign} · ${heroStation.market}` : "Hearst TV local news"}
-                </p>
-                <h1 className="headline mt-1 text-3xl leading-tight sm:text-4xl">{heroStationTitle}</h1>
-              </div>
-            </div>
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
-              {heroFeed && heroFeed.feedUrl !== feedUrlTbd
-                ? `Top stories from the configured ${heroStation?.callSign ?? "Hearst TV"} RSS feed, normalized into the same Hearst+ river model with station attribution, timestamps, imagery, and click-throughs.`
-                : `${heroStation?.stationName ?? "This station"} does not have a verified RSS or MRSS endpoint yet. Prototype sample content keeps the river demonstrable until a real feed is added.`}
-            </p>
-            <div className="mt-4 flex flex-wrap gap-2 text-xs font-bold text-muted-foreground">
-              <span className="rounded-full bg-[var(--hp-surface-low)] px-3 py-1">{filteredContent.length} river items</span>
-              <span className="rounded-full bg-[var(--hp-surface-low)] px-3 py-1">{heroFeedLabel}</span>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--hp-surface-low)] px-3 py-1">
-                {heroFeedStatus === "connected" ? <span className="size-2 rounded-full bg-[#00874D]" aria-hidden="true" /> : null}
-                {formatFeedStatus(heroFeedStatus)}
-              </span>
-              {usingFallback && heroFeed?.id === activeFeed?.id ? <span className="rounded-full bg-[var(--hp-surface-low)] px-3 py-1">Fallback sample</span> : null}
-            </div>
-            {liveFeedError && heroFeed?.feedUrl !== feedUrlTbd ? <p className="mt-3 text-xs leading-5 text-muted-foreground">{liveFeedError}</p> : null}
-          </section>
+          {heroItems.length > 0 ? (
+            <LocalNewsFeaturedCarousel
+              key={heroItems.map((item) => item.id).join("|")}
+              items={heroItems}
+              onOpenStory={(story) => {
+                if (onOpenStory) {
+                  onOpenStory(story.id);
+                  return;
+                }
 
-          {filteredContent.map((item) => {
+                if (story.sourceUrl) window.open(story.sourceUrl, "_blank", "noopener,noreferrer");
+              }}
+            />
+          ) : (
+            <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-6 text-sm leading-6 text-muted-foreground shadow-[var(--hp-shadow-card)]">
+              No TV station items match the current filters. Clear the station, state, or content-type filter to restore the river.
+            </section>
+          )}
+
+          {liveFeedError ? (
+            <p className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 text-xs leading-5 text-muted-foreground shadow-[var(--hp-shadow-card)]">
+              {liveFeedError}
+            </p>
+          ) : null}
+
+          {riverItems.map((item) => {
             const station = getHearstTVStationById(item.stationId);
             const feed = feeds.find((candidate) => candidate.id === item.feedId) ?? getHearstTVFeedById(item.feedId);
             const readerStory = readerStoryById.get(item.id);
@@ -491,6 +439,11 @@ export function HearstTVLocalNewsRiver({
               </article>
             );
           })}
+          {filteredContent.length > 0 && riverItems.length === 0 ? (
+            <p className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 text-sm leading-6 text-muted-foreground shadow-[var(--hp-shadow-card)]">
+              More TV station stories will appear here as additional feed items match the current filters.
+            </p>
+          ) : null}
         </main>
 
         <aside className="min-w-0 space-y-4 lg:sticky lg:top-[108px] lg:max-h-[calc(100dvh-132px)] lg:self-start lg:overflow-y-auto lg:pr-1">
@@ -510,6 +463,39 @@ export function HearstTVLocalNewsRiver({
         </aside>
       </div>
     </div>
+  );
+}
+
+function LocalNewsFeaturedCarousel({
+  items,
+  onOpenStory,
+}: {
+  items: Array<HearstTVContent & { hasConfiguredFeed?: boolean }>;
+  onOpenStory: (story: LifestyleRiverStory) => void;
+}) {
+  const stories = useMemo(() => items.map((item) => mapLocalNewsContentToReaderStory(item)), [items]);
+
+  return (
+    <FeaturedStoryCarousel
+      stories={stories}
+      editionLabel="Latest Local News"
+      renderImage={(story, _index, active) => (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={story.image}
+          alt=""
+          className="h-full w-full object-cover"
+          loading={active ? "eager" : "lazy"}
+        />
+      )}
+      getCommentCount={() => 0}
+      isCurrentStory={() => true}
+      onOpenStory={onOpenStory}
+      onSave={() => undefined}
+      onMoreLikeThis={() => undefined}
+      onFollowBrand={() => undefined}
+      indicatorPalette={["#00874D", "#41A86F", "#89CDA5"]}
+    />
   );
 }
 
@@ -717,27 +703,25 @@ function mapLocalNewsContentToReaderStory(
 function ReaderView({
   feeds,
   filteredContent,
-  geoMessage,
+  filterMessage,
   selectedContentType,
   selectedState,
   selectedStation,
   selectedStationRecord,
   states,
   onContentTypeChange,
-  onLocationRequest,
   onStateChange,
   onStationChange,
 }: {
   feeds: StoredFeed[];
   filteredContent: Array<(typeof hearstTVSampleContent)[number] & { hasConfiguredFeed: boolean }>;
-  geoMessage: string;
+  filterMessage: string;
   selectedContentType: "all" | HearstTVContentType;
   selectedState: string;
   selectedStation: string;
   selectedStationRecord: ReturnType<typeof getHearstTVStationById> | null;
   states: string[];
   onContentTypeChange: (value: "all" | HearstTVContentType) => void;
-  onLocationRequest: () => void;
   onStateChange: (value: string) => void;
   onStationChange: (value: string) => void;
 }) {
@@ -750,17 +734,10 @@ function ReaderView({
               <h2 id="local-news-controls" className="text-lg font-bold text-[var(--hp-text-headline)]">
                 Local feed controls
               </h2>
-              <p className="mt-2 text-sm leading-6 text-[var(--hp-text-secondary)]">{geoMessage}</p>
+              <p className="mt-2 text-sm leading-6 text-[var(--hp-text-secondary)]">{filterMessage}</p>
             </div>
           </div>
           <div className="mt-5 grid gap-4">
-            <button
-              type="button"
-              onClick={onLocationRequest}
-              className="inline-flex min-h-11 items-center justify-center bg-[var(--hp-action)] px-4 text-sm font-bold text-[var(--hp-action-text)] hover:bg-[var(--hp-action-hover)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--hp-focus)]"
-            >
-              Use my location
-            </button>
             <FilterSelect
               id="station-filter"
               label="Station"
@@ -815,7 +792,7 @@ function ReaderView({
                 Local News river
               </h2>
               <p className="mt-2 text-sm text-[var(--hp-text-secondary)]">
-                Sorted newest first. The river updates to the nearest station when geolocation is allowed, or to the selected station, state, and content type.
+                Sorted newest first. The river updates from the selected station, state, and content type.
               </p>
             </div>
             <span className="bg-[var(--hp-control)] px-3 py-2 text-xs font-bold text-[var(--hp-primary)]">
@@ -1209,23 +1186,8 @@ function StationLogo({
   );
 }
 
-function formatFeedStatus(status: FeedStatus) {
-  if (status === "connected") return "Connected";
-  if (status === "error") return "Feed error";
-  return "Pending";
-}
-
 function formatStationOptionLabel(station: HearstTVStation, configured: boolean) {
   return `${configured ? "🟢 " : ""}${station.callSign} · ${station.market}`;
-}
-
-function formatFeedUrl(value: string) {
-  try {
-    const url = new URL(value);
-    return `${url.hostname.replace(/^www\./, "")}${url.pathname}`;
-  } catch {
-    return value;
-  }
 }
 
 function formatContentType(type: HearstTVContentType) {

@@ -7,6 +7,7 @@ export type HearstNewspaperPublication = {
   state: string;
   homepageUrl: string;
   logo: string | null;
+  mastheadLogo?: string | null;
   enabled: boolean;
   category: "Hearst Newspapers";
 };
@@ -52,32 +53,32 @@ export type NormalizedNewspaperFeedItemInput = {
 export const newspaperFeedUrlTbd = "Feed URL TBD";
 
 export const hearstNewspaperPublications: HearstNewspaperPublication[] = [
-  { id: "houston-chronicle", publicationName: "Houston Chronicle", market: "Houston", state: "TX", homepageUrl: "https://www.houstonchronicle.com/", logo: null, enabled: false, category: "Hearst Newspapers" },
-  { id: "san-francisco-chronicle", publicationName: "San Francisco Chronicle", market: "San Francisco", state: "CA", homepageUrl: "https://www.sfchronicle.com/", logo: null, enabled: false, category: "Hearst Newspapers" },
-  { id: "sfgate", publicationName: "SFGATE", market: "San Francisco Bay Area", state: "CA", homepageUrl: "https://www.sfgate.com/", logo: null, enabled: true, category: "Hearst Newspapers" },
-  { id: "san-antonio-express-news", publicationName: "San Antonio Express-News", market: "San Antonio", state: "TX", homepageUrl: "https://www.expressnews.com/", logo: null, enabled: false, category: "Hearst Newspapers" },
-  { id: "austin-american-statesman", publicationName: "Austin American-Statesman", market: "Austin", state: "TX", homepageUrl: "https://www.statesman.com/", logo: null, enabled: false, category: "Hearst Newspapers" },
-  { id: "times-union", publicationName: "Times Union", market: "Albany", state: "NY", homepageUrl: "https://www.timesunion.com/", logo: null, enabled: false, category: "Hearst Newspapers" },
-  { id: "ct-insider", publicationName: "CT Insider", market: "Connecticut", state: "CT", homepageUrl: "https://www.ctinsider.com/", logo: null, enabled: false, category: "Hearst Newspapers" },
+  { id: "houston-chronicle", publicationName: "Houston Chronicle", market: "Houston", state: "TX", homepageUrl: "https://www.houstonchronicle.com/", logo: "/logos/newspapers/houston-chronicle.jpg", mastheadLogo: "/logos/newspapers/houston-chronicle-masthead.svg", enabled: false, category: "Hearst Newspapers" },
+  { id: "san-francisco-chronicle", publicationName: "San Francisco Chronicle", market: "San Francisco", state: "CA", homepageUrl: "https://www.sfchronicle.com/", logo: "/logos/newspapers/san-francisco-chronicle.png", mastheadLogo: "/logos/newspapers/san-francisco-chronicle-masthead.svg", enabled: false, category: "Hearst Newspapers" },
+  { id: "sfgate", publicationName: "SFGATE", market: "San Francisco Bay Area", state: "CA", homepageUrl: "https://www.sfgate.com/", logo: "/logos/newspapers/sfgate.png", mastheadLogo: "/logos/newspapers/sfgate-masthead.svg", enabled: true, category: "Hearst Newspapers" },
+  { id: "san-antonio-express-news", publicationName: "San Antonio Express-News", market: "San Antonio", state: "TX", homepageUrl: "https://www.expressnews.com/", logo: "/logos/newspapers/san-antonio-express-news.png", mastheadLogo: "/logos/newspapers/san-antonio-express-news-masthead.svg", enabled: false, category: "Hearst Newspapers" },
+  { id: "austin-american-statesman", publicationName: "Austin American-Statesman", market: "Austin", state: "TX", homepageUrl: "https://www.statesman.com/", logo: "/logos/newspapers/austin-american-statesman.png", enabled: false, category: "Hearst Newspapers" },
+  { id: "times-union", publicationName: "Times Union", market: "Albany", state: "NY", homepageUrl: "https://www.timesunion.com/", logo: "/logos/newspapers/times-union.png", mastheadLogo: "/logos/newspapers/times-union-masthead.svg", enabled: false, category: "Hearst Newspapers" },
+  { id: "ct-insider", publicationName: "CT Insider", market: "Connecticut", state: "CT", homepageUrl: "https://www.ctinsider.com/", logo: "/logos/newspapers/ct-insider.jpg", enabled: false, category: "Hearst Newspapers" },
   { id: "connecticut-post", publicationName: "Connecticut Post", market: "Bridgeport", state: "CT", homepageUrl: "https://www.ctpost.com/", logo: null, enabled: false, category: "Hearst Newspapers" },
-  { id: "new-haven-register", publicationName: "New Haven Register", market: "New Haven", state: "CT", homepageUrl: "https://www.nhregister.com/", logo: null, enabled: false, category: "Hearst Newspapers" },
-  { id: "stamford-advocate", publicationName: "Stamford Advocate", market: "Stamford", state: "CT", homepageUrl: "https://www.stamfordadvocate.com/", logo: null, enabled: false, category: "Hearst Newspapers" },
+  { id: "new-haven-register", publicationName: "New Haven Register", market: "New Haven", state: "CT", homepageUrl: "https://www.nhregister.com/", logo: "/logos/newspapers/new-haven-register.png", enabled: false, category: "Hearst Newspapers" },
+  { id: "stamford-advocate", publicationName: "Stamford Advocate", market: "Stamford", state: "CT", homepageUrl: "https://www.stamfordadvocate.com/", logo: "/logos/newspapers/stamford-advocate.png", enabled: false, category: "Hearst Newspapers" },
   { id: "greenwich-time", publicationName: "Greenwich Time", market: "Greenwich", state: "CT", homepageUrl: "https://www.greenwichtime.com/", logo: null, enabled: false, category: "Hearst Newspapers" },
   { id: "news-times", publicationName: "The News-Times", market: "Danbury", state: "CT", homepageUrl: "https://www.newstimes.com/", logo: null, enabled: false, category: "Hearst Newspapers" },
-  { id: "the-hour", publicationName: "The Hour", market: "Norwalk", state: "CT", homepageUrl: "https://www.thehour.com/", logo: null, enabled: false, category: "Hearst Newspapers" },
-  { id: "middletown-press", publicationName: "The Middletown Press", market: "Middletown", state: "CT", homepageUrl: "https://www.middletownpress.com/", logo: null, enabled: false, category: "Hearst Newspapers" },
+  { id: "the-hour", publicationName: "The Hour", market: "Norwalk", state: "CT", homepageUrl: "https://www.thehour.com/", logo: "/logos/newspapers/the-hour.png", enabled: false, category: "Hearst Newspapers" },
+  { id: "middletown-press", publicationName: "The Middletown Press", market: "Middletown", state: "CT", homepageUrl: "https://www.middletownpress.com/", logo: "/logos/newspapers/middletown-press.png", enabled: false, category: "Hearst Newspapers" },
   { id: "register-citizen", publicationName: "The Register Citizen", market: "Torrington", state: "CT", homepageUrl: "https://www.registercitizen.com/", logo: null, enabled: false, category: "Hearst Newspapers" },
   { id: "beaumont-enterprise", publicationName: "Beaumont Enterprise", market: "Beaumont", state: "TX", homepageUrl: "https://www.beaumontenterprise.com/", logo: null, enabled: false, category: "Hearst Newspapers" },
-  { id: "laredo-morning-times", publicationName: "Laredo Morning Times", market: "Laredo", state: "TX", homepageUrl: "https://www.lmtonline.com/", logo: null, enabled: false, category: "Hearst Newspapers" },
-  { id: "midland-reporter-telegram", publicationName: "Midland Reporter-Telegram", market: "Midland", state: "TX", homepageUrl: "https://www.mrt.com/", logo: null, enabled: false, category: "Hearst Newspapers" },
+  { id: "laredo-morning-times", publicationName: "Laredo Morning Times", market: "Laredo", state: "TX", homepageUrl: "https://www.lmtonline.com/", logo: "/logos/newspapers/laredo-morning-times.png", enabled: false, category: "Hearst Newspapers" },
+  { id: "midland-reporter-telegram", publicationName: "Midland Reporter-Telegram", market: "Midland", state: "TX", homepageUrl: "https://www.mrt.com/", logo: "/logos/newspapers/midland-reporter-telegram.png", enabled: false, category: "Hearst Newspapers" },
   { id: "plainview-herald", publicationName: "Plainview Herald", market: "Plainview", state: "TX", homepageUrl: "https://www.myplainview.com/", logo: null, enabled: false, category: "Hearst Newspapers" },
   { id: "midland-daily-news", publicationName: "Midland Daily News", market: "Midland", state: "MI", homepageUrl: "https://www.ourmidland.com/", logo: null, enabled: false, category: "Hearst Newspapers" },
-  { id: "huron-daily-tribune", publicationName: "Huron Daily Tribune", market: "Bad Axe", state: "MI", homepageUrl: "https://www.michigansthumb.com/", logo: null, enabled: false, category: "Hearst Newspapers" },
+  { id: "huron-daily-tribune", publicationName: "Huron Daily Tribune", market: "Bad Axe", state: "MI", homepageUrl: "https://www.michigansthumb.com/", logo: "/logos/newspapers/huron-daily-tribune.png", enabled: false, category: "Hearst Newspapers" },
   { id: "manistee-news-advocate", publicationName: "Manistee News Advocate", market: "Manistee", state: "MI", homepageUrl: "https://www.manisteenews.com/", logo: null, enabled: false, category: "Hearst Newspapers" },
   { id: "pioneer", publicationName: "Pioneer", market: "Big Rapids", state: "MI", homepageUrl: "https://www.bigrapidsnews.com/", logo: null, enabled: false, category: "Hearst Newspapers" },
   { id: "benzie-county-record-patriot", publicationName: "Benzie County Record Patriot", market: "Benzie County", state: "MI", homepageUrl: "https://www.recordpatriot.com/", logo: null, enabled: false, category: "Hearst Newspapers" },
-  { id: "jacksonville-journal-courier", publicationName: "Jacksonville Journal-Courier", market: "Jacksonville", state: "IL", homepageUrl: "https://www.myjournalcourier.com/", logo: null, enabled: false, category: "Hearst Newspapers" },
-  { id: "the-telegraph", publicationName: "The Telegraph", market: "Alton", state: "IL", homepageUrl: "https://www.thetelegraph.com/", logo: null, enabled: false, category: "Hearst Newspapers" },
+  { id: "jacksonville-journal-courier", publicationName: "Jacksonville Journal-Courier", market: "Jacksonville", state: "IL", homepageUrl: "https://www.myjournalcourier.com/", logo: "/logos/newspapers/jacksonville-journal-courier.png", enabled: false, category: "Hearst Newspapers" },
+  { id: "the-telegraph", publicationName: "The Telegraph", market: "Alton", state: "IL", homepageUrl: "https://www.thetelegraph.com/", logo: "/logos/newspapers/the-telegraph.png", enabled: false, category: "Hearst Newspapers" },
   { id: "edwardsville-intelligencer", publicationName: "Edwardsville Intelligencer", market: "Edwardsville", state: "IL", homepageUrl: "https://www.theintelligencer.com/", logo: null, enabled: false, category: "Hearst Newspapers" },
 ];
 

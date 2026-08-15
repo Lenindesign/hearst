@@ -15,21 +15,25 @@ test("keeps the house category route canonical while rendering a clearer label",
 
 test("places the house category after Cars in the combined Hearst+ navigation", async () => {
   const { hearstDestinationCategoryLabels } = await import("./hearst-routes");
-  assert.deepEqual(hearstDestinationCategoryLabels.all.slice(0, 6), [
+  assert.deepEqual(hearstDestinationCategoryLabels.all, [
     "For You",
     "Style",
     "Reviews",
     "Fitness",
     "Cars",
     "Home",
+    "Videos",
+    "Community",
+    "Shopping",
+    "Streaming",
+    "Events",
+    "Games",
   ]);
 });
 
-test("keeps communities out of generated destination category routes", () => {
+test("keeps the legacy plural communities label out of generated destination category routes", () => {
   assert.equal(getHearstDestinationCategoryRoute("all", "Communities"), undefined);
-  assert.equal(getHearstDestinationCategoryRoute("all", "Community"), undefined);
   assert.equal(getHearstDestinationCategoryLabel("all", "communities"), undefined);
-  assert.equal(getHearstDestinationCategoryLabel("all", "community"), undefined);
 });
 
 test("uses the clearer house category label in Lifestyle without changing other categories", () => {

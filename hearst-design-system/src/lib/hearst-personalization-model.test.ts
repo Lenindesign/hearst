@@ -63,11 +63,19 @@ test("resolves destination and publication slugs to the production destination",
 });
 
 test("surfaces communities in the combined Hearst+ navigation", () => {
-  assert.deepEqual(baseDestinationConfigs.all.filters.slice(5, 9), [
+  assert.deepEqual(baseDestinationConfigs.all.filters, [
+    "For You",
+    "Style",
+    "Reviews",
+    "Fitness",
+    "Cars",
     "Home",
     "Videos",
-    "Communities",
+    "Community",
     "Shopping",
+    "Streaming",
+    "Events",
+    "Games",
   ]);
 });
 

@@ -405,6 +405,7 @@ const hearstDestinationNavHrefs = new Map(
     ...hearstDestinationSections
       .filter((section) => section.label !== "All")
       .map((section) => [section.label, section.href] as const),
+    ["Community", "/communities/"] as const,
     ["Communities", "/communities/"] as const,
   ]
 );
@@ -414,6 +415,9 @@ export function MainNav({
   onFilterChange,
   selectedBrand,
   navLinksOverride,
+  navLinkHrefOverrides,
+  navCarouselMode = "default",
+  mastheadLogoOverride,
   includeVideos,
   darkMode = false,
   mobileContinueStories = [],
@@ -429,6 +433,9 @@ export function MainNav({
   onFilterChange?: (filter: string) => void;
   selectedBrand?: { name: string; slug: string } | null;
   navLinksOverride?: string[];
+  navLinkHrefOverrides?: Partial<Record<string, string>>;
+  navCarouselMode?: "default" | "compact";
+  mastheadLogoOverride?: { src: string; label: string; surface?: "default" | "station"; tone?: "normal" | "white" } | null;
   includeVideos?: boolean;
   darkMode?: boolean;
   mobileContinueStories?: LifestyleRiverStory[];
@@ -742,7 +749,40 @@ export function MainNav({
   const goodHousekeepingMastheadScaleClasses = mastheadSlug === "good-housekeeping"
     ? "[&_svg]:scale-[1.2] [&_svg]:origin-center"
     : "";
-  const renderMastheadLogo = (compact: boolean) => logo ? usesCompactMobileDestinationMark ? (
+  const renderMastheadLogo = (compact: boolean) => mastheadLogoOverride ? (
+    mastheadLogoOverride.surface === "station" ? (
+      <span
+        className={cn(
+          "mx-auto inline-flex items-center justify-center",
+          compact ? "h-[38px]" : "h-[58px]"
+        )}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={mastheadLogoOverride.src}
+          alt={mastheadLogoOverride.label}
+          className={cn(
+            "w-auto object-contain",
+            compact ? "h-[30px] max-w-[230px]" : "h-[50px] max-w-[420px]"
+          )}
+          style={{
+            filter: "drop-shadow(0 0 1px rgba(255,255,255,0.95)) drop-shadow(0 0 1px rgba(0,0,0,0.9)) drop-shadow(0 1px 2px rgba(0,0,0,0.45))",
+          }}
+        />
+      </span>
+    ) : (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={mastheadLogoOverride.src}
+        alt={mastheadLogoOverride.label}
+        className={cn(
+          "mx-auto w-auto object-contain",
+          compact ? "h-[28px] max-w-[220px]" : "h-[44px] max-w-[360px]"
+        )}
+        style={mastheadLogoOverride.tone === "white" ? { filter: "brightness(0) invert(1)" } : undefined}
+      />
+    )
+  ) : logo ? usesCompactMobileDestinationMark ? (
     <>
       <BrandLogo
         slug={mobileMastheadSlug}
@@ -784,6 +824,7 @@ export function MainNav({
   const renderNavLinks = () => navLinks.map((link) => {
     const active = activeFilter === link;
     const destinationMode = getDestinationMode(brand.slug);
+    const showHearstPlusTopicSeparator = brand.slug === "hearst-all" && !selectedBrand && link === "Videos";
     const displayLabel = isDestinationRiver && !selectedBrand
       ? getHearstDestinationCategoryDisplayLabel(destinationMode, link)
       : link;
@@ -794,6 +835,7 @@ export function MainNav({
     const communityHref = selectedBrand && link === "Community"
       ? `/communities/${selectedBrand.slug}/`
       : undefined;
+    const overrideHref = navLinkHrefOverrides?.[link];
     const categoryHref = isDestinationRiver && !selectedBrand
       ? getHearstDestinationCategoryRoute(destinationMode, link)
       : undefined;
@@ -802,18 +844,18 @@ export function MainNav({
       ? "text-[var(--component-navigation-utility-content-knockout)] hover:border-[var(--component-navigation-utility-content-accent)]/60 hover:text-[var(--component-navigation-utility-content-accent)]"
       : "text-foreground hover:border-primary/40 hover:text-primary";
 
-    return destinationHref || publicationHref || communityHref ? (
+    const navItem = destinationHref || publicationHref || communityHref || overrideHref ? (
       <LinkComponent
-        key={link}
-        href={destinationHref ?? publicationHref ?? communityHref}
+        href={destinationHref ?? publicationHref ?? communityHref ?? overrideHref}
         variant="neutral"
         underline={false}
         size="sm"
-        aria-current={publicationHref && active ? "page" : undefined}
+        aria-current={(publicationHref || overrideHref) && active ? "page" : undefined}
         className={cn(
-          "min-h-8 min-w-max whitespace-nowrap border-b-2 border-transparent px-0.5 font-normal hover:no-underline md:min-h-0 md:min-w-0 md:pb-1",
+          "min-h-8 min-w-max whitespace-nowrap border-b-2 border-transparent font-normal hover:no-underline md:min-h-0 md:pb-1",
+          navCarouselMode === "compact" ? "px-2 text-xs md:min-w-max md:text-sm" : "px-0.5 md:min-w-0",
           navLinkClasses,
-          publicationHref && active && (
+          (publicationHref || overrideHref) && active && (
             useDarkActiveState
               ? "border-[var(--component-navigation-utility-content-accent)] font-semibold text-[var(--component-navigation-utility-content-accent)]"
               : "border-primary font-semibold text-[var(--hp-section-title)]"
@@ -824,7 +866,6 @@ export function MainNav({
       </LinkComponent>
     ) : categoryHref ? (
       <LinkComponent
-        key={link}
         href={categoryHref}
         onClick={(event) => {
           if (!onFilterChange) return;
@@ -836,7 +877,8 @@ export function MainNav({
         size="sm"
         aria-current={active ? "page" : undefined}
         className={cn(
-          "min-h-8 min-w-max whitespace-nowrap border-b-2 border-transparent px-0.5 font-normal hover:no-underline md:min-h-0 md:min-w-0 md:pb-1",
+          "min-h-8 min-w-max whitespace-nowrap border-b-2 border-transparent font-normal hover:no-underline md:min-h-0 md:pb-1",
+          navCarouselMode === "compact" ? "px-2 text-xs md:min-w-max md:text-sm" : "px-0.5 md:min-w-0",
           navLinkClasses,
           active
             ? useDarkActiveState
@@ -849,11 +891,11 @@ export function MainNav({
       </LinkComponent>
     ) : isDestinationRiver ? (
       <button
-        key={link}
         type="button"
         onClick={() => onFilterChange?.(link)}
         className={cn(
-          "min-h-8 min-w-max whitespace-nowrap border-b-2 border-transparent px-0.5 text-sm font-normal transition-colors md:min-h-0 md:min-w-0 md:pb-1",
+          "min-h-8 min-w-max whitespace-nowrap border-b-2 border-transparent text-sm font-normal transition-colors md:min-h-0 md:pb-1",
+          navCarouselMode === "compact" ? "px-2 text-xs md:min-w-max md:text-sm" : "px-0.5 md:min-w-0",
           active
             ? useDarkActiveState
               ? "border-[var(--component-navigation-utility-content-accent)] font-semibold text-[var(--component-navigation-utility-content-accent)]"
@@ -866,14 +908,25 @@ export function MainNav({
       </button>
     ) : (
       <LinkComponent
-        key={link}
         variant="neutral"
         underline={false}
         size="sm"
-	        className="min-h-8 min-w-max whitespace-nowrap font-normal md:min-h-0 md:min-w-0"
+	        className={cn(
+            "min-h-8 min-w-max whitespace-nowrap font-normal md:min-h-0",
+            navCarouselMode === "compact" ? "px-2 text-xs md:min-w-max md:text-sm" : "md:min-w-0"
+          )}
       >
         {displayLabel}
       </LinkComponent>
+    );
+
+    return (
+      <React.Fragment key={link}>
+        {navItem}
+        {showHearstPlusTopicSeparator ? (
+          <span aria-hidden="true" className="h-4 w-px shrink-0 bg-border" />
+        ) : null}
+      </React.Fragment>
     );
   });
 
@@ -1247,12 +1300,18 @@ export function MainNav({
       <PageContainer
         as="nav"
         aria-label={selectedBrand ? `${selectedBrand.name} sections` : `${brand.name} sections`}
-	        className="relative flex items-center gap-3 py-1 md:justify-center md:py-2"
+	        className={cn(
+            "relative flex items-center gap-3 py-1 md:py-2",
+            navCarouselMode === "compact" ? "md:justify-start" : "md:justify-center"
+          )}
       >
         <div
           ref={navScrollRef}
           data-topic-navigation-scroll
-	          className="flex min-w-0 flex-1 scroll-px-4 items-center gap-6 overflow-x-auto scrollbar-hide md:flex-none md:justify-center"
+	          className={cn(
+            "flex min-w-0 flex-1 scroll-px-4 items-center overflow-x-auto scrollbar-hide",
+            navCarouselMode === "compact" ? "gap-3 md:justify-start" : "gap-6 md:flex-none md:justify-center"
+          )}
           onWheelCapture={handleNavigationWheel}
         >
           {renderNavLinks()}

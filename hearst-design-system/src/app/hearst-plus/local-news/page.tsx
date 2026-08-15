@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import { Suspense, type CSSProperties } from "react";
 import type { Metadata } from "next";
 import { BrandLogo } from "@/components/brand-logo";
 import { SiteFooter } from "@/components/fre/site-footer";
@@ -32,7 +32,9 @@ export default function LocalNewsPage() {
       >
         <LocalNewsGlobalHeader />
         <section id="tv-stations" className="mx-auto max-w-[1360px] scroll-mt-20 px-5 py-8 md:px-8">
-          <HearstTVLocalNewsReaderExperience />
+          <Suspense fallback={null}>
+            <HearstTVLocalNewsReaderExperience />
+          </Suspense>
         </section>
         <SiteFooter
           siteName={<BrandLogo slug="hearst-local-news" className="h-5 max-w-[11rem] [&_svg]:h-full [&_svg]:w-auto" color="#fff" />}

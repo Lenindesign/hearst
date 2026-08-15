@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { BrandLogo } from "@/components/brand-logo";
 import { SiteFooter } from "@/components/fre/site-footer";
 import { MainNav } from "@/components/home-page";
 import { UtilityBar } from "@/components/hearst-plus/utility-bar";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { ChevronRight, Play } from "@/components/ui/icons";
+import { useBodyPortalTarget, useModalIsolation } from "@/components/ui/use-modal-isolation";
+import { ChevronRight, ExternalLink, Play, X } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 type EntertainmentShow = {
@@ -17,7 +19,11 @@ type EntertainmentShow = {
   href: string;
   imageUrl?: string;
   meta: string;
+  playUrl?: string;
+  previewEmbedUrl?: string;
 };
+
+type EntertainmentChannel = EntertainmentShow["brand"];
 
 const entertainmentNavLinks = [
   "Featured",
@@ -30,33 +36,47 @@ const entertainmentNavLinks = [
   "BIOGRAPHY",
 ];
 
+const entertainmentNavHrefs: Partial<Record<string, string>> = {
+  Featured: "/hearst-plus/entertainment/",
+  "A&E": "/hearst-plus/entertainment/?channel=a-e",
+  HISTORY: "/hearst-plus/entertainment/?channel=history",
+  Lifetime: "/hearst-plus/entertainment/?channel=lifetime",
+  LMN: "/hearst-plus/entertainment/?channel=lmn",
+  FYI: "/hearst-plus/entertainment/?channel=fyi",
+  "VICE TV": "/hearst-plus/entertainment/?channel=vice-tv",
+  BIOGRAPHY: "/hearst-plus/entertainment/?channel=biography",
+};
+
 const heroShows: EntertainmentShow[] = [
   {
     title: "Alone",
     brand: "HISTORY",
     eyebrow: "New episodes",
-    description: "A survival competition built for a premium, cinematic lead slot with big photography and a direct path to the show.",
+    description: "Ten elite survivalists self-document life deep inside the Arctic Circle, building shelter, finding food, and enduring isolation for the $500,000 prize.",
     href: "https://www.history.com/shows/alone",
     imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/2/2026/04/alone-s13-3000x3000-primary-1x1-1.jpg?w=1180",
     meta: "13 seasons",
+    previewEmbedUrl: "https://www.youtube.com/embed/h5J1sGmoSMA",
   },
   {
     title: "The First 48",
     brand: "A&E",
     eyebrow: "Featured crime",
-    description: "A&E's long-running homicide series anchors the Entertainment surface with urgency, recognizability, and strong key art.",
+    description: "Homicide detectives race against the clock because the odds of solving a case fall sharply after the first 48 hours.",
     href: "https://www.aetv.com/shows/the-first-48",
     imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/4/2015/09/the-first-48-s29-3000x3000-primary-1x1-1.jpg?w=1180",
     meta: "30 seasons",
+    previewEmbedUrl: "https://www.youtube.com/embed/5IiDOAmMZ4g",
   },
   {
     title: "Married at First Sight",
     brand: "Lifetime",
     eyebrow: "Relationship reality",
-    description: "Lifetime programming gives the hero a social, character-driven counterpoint to HISTORY and A&E franchises.",
+    description: "Singles meet their new spouses at the altar, enter legally binding marriages, and later decide whether to stay together or divorce.",
     href: "https://www.mylifetime.com/shows/married-at-first-sight",
     imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/5/2017/03/mafs-s18-3000x3000-primary-1x1-1.jpg?w=1180",
     meta: "18 seasons",
+    previewEmbedUrl: "https://www.youtube.com/embed/xK4rg1f8xkY",
   },
 ];
 
@@ -70,45 +90,50 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         title: "Storage Wars",
         brand: "A&E",
         eyebrow: "Reality",
-        description: "Buyers compete for abandoned storage lockers, chasing the next unlikely treasure.",
+        description: "Teams of bidders compete for abandoned and repossessed storage units, betting on whether each locker hides trash or treasure.",
         href: "https://www.aetv.com/shows/storage-wars",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/4/2015/09/storage-wars-s16-3000x3000-primary-1x1-1.jpg?w=1180",
+        previewEmbedUrl: "https://www.youtube.com/embed/Nt6Z_F9gf8Y",
         meta: "18 seasons",
       },
       {
         title: "Court Cam",
         brand: "A&E",
         eyebrow: "Crime",
-        description: "Raw courtroom moments and legal drama built for quick discovery.",
-        href: "https://www.aetv.com/shows",
+        description: "Court Cam examines stunning and emotional courtroom moments caught on camera, from outbursts to heated exchanges with judges.",
+        href: "https://www.aetv.com/shows/court-cam",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/4/2019/01/court-cam-s9-2048x1152-promo-16x9-1.jpg",
+        previewEmbedUrl: "https://www.youtube.com/embed/6oBrVBQmYEw",
         meta: "A&E shows",
       },
       {
         title: "Intervention",
         brand: "A&E",
         eyebrow: "Docuseries",
-        description: "A long-running documentary series centered on recovery and family intervention.",
+        description: "The Emmy-winning series profiles people whose addiction or compulsive behavior has devastated their family and friends.",
         href: "https://www.aetv.com/shows/intervention",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/4/2015/09/intervention-s25-primary-2x3-1-scaled.jpg",
+        previewEmbedUrl: "https://www.youtube.com/embed/E0dIXLR9_wQ",
         meta: "25 seasons",
       },
       {
         title: "60 Days In",
         brand: "A&E",
         eyebrow: "Crime",
-        description: "Volunteer participants go inside county jails for an undercover look at the system.",
+        description: "Volunteer participants go undercover in jail to expose drugs, contraband, gang activity, and other issues for facility leaders.",
         href: "https://www.aetv.com/shows/60-days-in",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/4/2024/05/60-days-in-s9-primary-2x3-1-scaled.jpg",
+        previewEmbedUrl: "https://www.youtube.com/embed/9DxUnd8QK74",
         meta: "9 seasons",
       },
       {
         title: "Hoarders",
         brand: "A&E",
         eyebrow: "Reality",
-        description: "A&E's home and human-behavior franchise about extreme clutter and recovery.",
+        description: "People struggling with hoarding tendencies work with experts, friends, and family to clean their homes and reclaim balance.",
         href: "https://www.aetv.com/shows/hoarders",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/4/2015/09/hoarders-s15-primary-2x3-1-scaled.jpg",
+        previewEmbedUrl: "https://www.youtube.com/embed/95AycNj4_3U",
         meta: "15 seasons",
       },
     ],
@@ -122,9 +147,10 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         title: "Ancient Aliens",
         brand: "HISTORY",
         eyebrow: "Documentary",
-        description: "A long-running paranormal history franchise with deep episode inventory.",
+        description: "Ancient Aliens examines claims of alien evidence on Earth, from ancient civilizations and cave drawings to modern mass sightings.",
         href: "https://www.history.com/shows/ancient-aliens",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/2/2025/07/ancient-aliens-s21-3000x3000-primary-1x1-1.jpg?w=1180",
+        previewEmbedUrl: "https://www.youtube.com/embed/ypHNy2-JC-Q",
         meta: "22 seasons",
       },
       {
@@ -134,33 +160,37 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "A HISTORY discovery lane for unexplained events, oddities, and speculative stories.",
         href: "https://www.history.com/shows",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/2/2025/08/the-unxplained-s8-2048x1152-promo-16x9-1.jpg",
+        previewEmbedUrl: "https://www.youtube.com/embed/WmAr_uRv-bw",
         meta: "HISTORY shows",
       },
       {
         title: "The Secret of Skinwalker Ranch",
         brand: "HISTORY",
         eyebrow: "Mystery",
-        description: "An investigation into unexplained activity on one of America's most studied ranches.",
+        description: "Researchers investigate Utah's Skinwalker Ranch, a site associated with paranormal and UFO activity for more than 200 years.",
         href: "https://www.history.com/shows/the-secret-of-skinwalker-ranch",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/2/2019/02/the-secret-of-skinwalker-ranch-s7-primary-2x3-1.jpg",
+        previewEmbedUrl: "https://www.youtube.com/embed/O8OXOycxAAA",
         meta: "7 seasons",
       },
       {
         title: "Mountain Men",
         brand: "HISTORY",
         eyebrow: "Adventure",
-        description: "Remote-living stories with a survival and self-reliance spine.",
+        description: "Self-reliant men and women live off the land, using hunting, trapping, and traditional skills to survive harsh winters.",
         href: "https://www.history.com/shows/mountain-men",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/2/2025/09/mountain-men-primary-2x3-fix.jpg",
+        previewEmbedUrl: "https://www.youtube.com/embed/sHTPO2T599o",
         meta: "HISTORY shows",
       },
       {
         title: "Forged in Fire",
         brand: "HISTORY",
         eyebrow: "Competition",
-        description: "Bladesmiths compete through craft, pressure, and historical weapon challenges.",
+        description: "Bladed weapon makers compete in timed challenges to forge historical weapons and earn the title Forged in Fire Champion.",
         href: "https://www.history.com/shows/forged-in-fire",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/2/2026/02/forged-in-fire-s11-primary-2x3-1.jpg",
+        previewEmbedUrl: "https://www.youtube.com/embed/Tdk36YF5wPU",
         meta: "11 seasons",
       },
     ],
@@ -177,6 +207,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "Competitive dance and family pressure in a compact binge row.",
         href: "https://www.mylifetime.com/shows/dance-moms",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/5/2015/05/dance-moms-s3-3000x3000-primary-1x1-1.jpg?w=1180",
+        previewEmbedUrl: "https://www.youtube.com/embed/4Gw6pWCinLE",
         meta: "9 seasons",
       },
       {
@@ -186,6 +217,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "A direct lane into Lifetime's movie-first programming.",
         href: "https://www.mylifetime.com/movies",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/5/2026/06/the-daughter-she-left-behind-2048x1152-priority-feature-16x9-1.jpg",
+        previewEmbedUrl: "https://www.youtube.com/embed/9iknMmT8PAE",
         meta: "Movies",
       },
       {
@@ -195,6 +227,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "A family-led reality series from Lifetime's unscripted slate.",
         href: "https://www.mylifetime.com/shows/the-chrisleys-back-to-reality",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/5/2025/08/the-chrisleys-back-to-reality-primary-2x3-1.jpg",
+        previewEmbedUrl: "https://www.youtube.com/embed/UcqHAG5cwGM",
         meta: "Lifetime",
       },
       {
@@ -204,6 +237,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "Medical transformation stories with Lifetime's character-driven unscripted lens.",
         href: "https://www.mylifetime.com/shows/dr-pimple-popper-breaking-out",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/5/2025/03/dr-pimple-popper-breaking-out-s2-primary-2x3-1.jpg",
+        previewEmbedUrl: "https://www.youtube.com/embed/NbNDFCJqImY",
         meta: "2 seasons",
       },
       {
@@ -213,6 +247,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "Competitive dance-team stories from the Lifetime archive.",
         href: "https://www.mylifetime.com/shows/bring-it",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/5/2015/05/bring-it-s3-primary-2x3-1.jpg",
+        previewEmbedUrl: "https://www.youtube.com/embed/IdSq6VHWgFw",
         meta: "5 seasons",
       },
     ],
@@ -228,6 +263,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "A dedicated movie shelf for suspense, thrillers, and weekend programming.",
         href: "https://www.mylifetime.com/lmn",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/11/2025/08/my-amish-double-life-2048x1152-promo-16x9-1.jpg",
+        previewEmbedUrl: "https://www.youtube.com/embed/9iknMmT8PAE",
         meta: "LMN",
       },
       {
@@ -237,6 +273,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "Subscription movie discovery from the Lifetime ecosystem.",
         href: "https://www.lifetimemovieclub.com/",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/11/2026/02/the-chrisleys-back-to-reality-2048x1152-promo-16x9-1.jpg",
+        previewEmbedUrl: "https://www.youtube.com/embed/fxZKmgkgzWw",
         meta: "Movie club",
       },
       {
@@ -246,6 +283,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "A broader movie collection for the shared Lifetime and LMN audience.",
         href: "https://www.mylifetime.com/movies",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/11/2026/03/toni-braxton-he-wasnt-man-enough-2048x1152-promo-16x9-1.jpg",
+        previewEmbedUrl: "https://www.youtube.com/embed/9iknMmT8PAE",
         meta: "Movies",
       },
       {
@@ -255,6 +293,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "A suspense and true-crime lane from the Lifetime Movie Club catalog.",
         href: "https://www.lifetimemovieclub.com/",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/11/2025/03/TextMeWhenYouGetHome-2048x1152-promo-16x9-1.jpg",
+        previewEmbedUrl: "https://www.youtube.com/embed/XEE4rDCHWCk",
         meta: "Movie club",
       },
       {
@@ -264,6 +303,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "Stranger-than-fiction home-intruder stories built for the LMN lane.",
         href: "https://www.lifetimemovieclub.com/",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/11/2025/01/phrogging-hider-in-my-house-2048x1152-promo-16x9-1.jpg",
+        previewEmbedUrl: "https://www.youtube.com/embed/_NaMT7uyUpU",
         meta: "Movie club",
       },
       {
@@ -273,6 +313,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "A Lifetime movie title presented as part of the suspense-focused carousel.",
         href: "https://www.lifetimemovieclub.com/",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/11/2021/08/Girl-in-the-Basement-2048x1152-promo-16x9-1.jpg",
+        previewEmbedUrl: "https://www.youtube.com/embed/a7VGn_0Vsx8",
         meta: "Movie",
       },
     ],
@@ -288,6 +329,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "Small-space renovation stories and ingenious homes from FYI.",
         href: "https://www.fyi.tv/shows/tiny-house-nation",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/3/2017/01/watch-desktop-hero-tiny-house-nation-s4.jpg?w=1024",
+        previewEmbedUrl: "https://www.youtube.com/embed/FxpS-P_Ilxc",
         meta: "5 seasons",
       },
       {
@@ -306,6 +348,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "Destination real-estate browsing for lean-back discovery.",
         href: "https://www.fyi.tv/shows/tiny-house-nation",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/3/2024/11/Find-My-Country-House-primary-2x3-1.jpg",
+        previewEmbedUrl: "https://www.youtube.com/embed/x-y766gZSaI",
         meta: "FYI",
       },
       {
@@ -315,6 +358,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "Home staging and sales stories from FYI's real-estate library.",
         href: "https://www.fyi.tv/shows/sell-this-house",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/3/2015/04/Sell_This_House_S11_1920x2880-scaled.jpg",
+        previewEmbedUrl: "https://www.youtube.com/embed/fckrpxcqBsY",
         meta: "11 seasons",
       },
       {
@@ -324,6 +368,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "Food, travel, and home cooking with a bright FYI lifestyle angle.",
         href: "https://www.fyi.tv/shows/rachael-ray-in-tuscany",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/3/2024/06/Rachael-Ray-in-Tuscany-primary-2x3-1-scaled.jpg",
+        previewEmbedUrl: "https://www.youtube.com/embed/MOvpF9ydOIY",
         meta: "FYI",
       },
       {
@@ -348,6 +393,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "Investigative wrestling stories from VICE TV.",
         href: "https://www.vicetv.com/en_us/show/dark-side-of-the-ring",
         imageUrl: "https://video-images.vice.com/shows/5a8df22cf1cdb37df5514be1/card/1783437037854-darksideoftherings72000x3000.jpeg",
+        previewEmbedUrl: "https://www.youtube.com/embed/3TAUzyHSjSQ",
         meta: "Season 6",
       },
       {
@@ -357,6 +403,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "A panel-format companion for the Dark Side franchise.",
         href: "https://www.vicetv.com/en_us/show/dark-side-of-the-ring-after-dark",
         imageUrl: "https://video-images.vice.com/test-uploads/shows/5e73aeddae634b2a6e7087fa/card/1585093344023-SHOW_POSTER_2000X3000.jpeg",
+        previewEmbedUrl: "https://www.youtube.com/embed/VxvcZHQQiwg",
         meta: "VICE TV",
       },
       {
@@ -366,6 +413,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "Wrestling territory history and culture reporting.",
         href: "https://www.vicetv.com/en_us/topic/dark-side-of-the-ring",
         imageUrl: "https://video-images.vice.com/shows/620d4f03e415fb23d861a573/card/1670523406512-verticalshowposter2000x3000.jpeg",
+        previewEmbedUrl: "https://www.youtube.com/embed/INfYgaRQgUw",
         meta: "VICE TV",
       },
       {
@@ -375,6 +423,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "Science, culture, and reporting around psychoactive substances.",
         href: "https://www.vicetv.com/en_us/show/hamiltons-pharmacopeia",
         imageUrl: "https://video-images.vice.com/shows/57a204098cb727dec794c709/card/1607109629494-hamiltons3showposter2000x3000line.jpeg",
+        previewEmbedUrl: "https://www.youtube.com/embed/6Y2xfxaRV0M",
         meta: "VICE TV",
       },
       {
@@ -384,6 +433,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "A VICE TV docuseries examining extremism and fringe movements.",
         href: "https://www.vicetv.com/en_us/show/hate-thy-neighbor",
         imageUrl: "https://video-images.vice.com/shows/58332b2d9bcbe27abce22a4d/card/1575585297110-HTN_S2_KEY_ART.jpeg",
+        previewEmbedUrl: "https://www.youtube.com/embed/Gdd_AYSqckU",
         meta: "VICE TV",
       },
       {
@@ -393,6 +443,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "A culture and luxury curiosity series from VICE TV.",
         href: "https://www.vicetv.com/en_us/show/most-expensivest",
         imageUrl: "https://video-images.vice.com/shows/59de61601b07f8307db8c829/card/1676387681676-mostexpensivests42000x3000.jpeg",
+        previewEmbedUrl: "https://www.youtube.com/embed/U3s4O7ZHZyc",
         meta: "VICE TV",
       },
     ],
@@ -408,6 +459,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "A people-first channel row for evergreen life stories and notable figures.",
         href: "https://www.biography.com/",
         imageUrl: "https://hips.hearstapps.com/hmg-prod/images/dc53a38c-3156-4379-93ab-574303a58eb1.jpeg?crop=0.708xw:1xh;center,top",
+        previewEmbedUrl: "https://www.youtube.com/embed/6HaAL2HXLGc",
         meta: "Profiles",
       },
       {
@@ -417,6 +469,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "A profile slot for figures with cultural impact and long-tail interest.",
         href: "https://www.biography.com/",
         imageUrl: "https://hips.hearstapps.com/hmg-prod/images/cc90dc8d-0f12-4072-b779-31d7ae364514.jpeg?crop=1xw:0.764xh;0xw,0.04xh&resize=1120:*",
+        previewEmbedUrl: "https://www.youtube.com/embed/6HaAL2HXLGc",
         meta: "Biography",
       },
       {
@@ -426,6 +479,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "A compact row item for biography-led archive discovery.",
         href: "https://www.biography.com/",
         imageUrl: "https://hips.hearstapps.com/hmg-prod/images/e3a10926-6f85-49f1-98ba-191e7de95ad6.jpeg?crop=0.666333333333xw:1xh;center,top&resize=360:*",
+        previewEmbedUrl: "https://www.youtube.com/embed/6HaAL2HXLGc",
         meta: "Biography",
       },
       {
@@ -435,6 +489,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "Evergreen profile discovery for notable builders, makers, and inventors.",
         href: "https://www.biography.com/",
         imageUrl: "https://hips.hearstapps.com/hmg-prod/images/bio-famous-inventors-65e20470ce112.jpg?crop=0.579xw:1.00xh;0.212xw,0&resize=360:*",
+        previewEmbedUrl: "https://www.youtube.com/embed/XjcJG0YQSds",
         meta: "Biography",
       },
       {
@@ -444,6 +499,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "A high-recognition musician profile from the Biography archive.",
         href: "https://www.biography.com/musicians/elvis-presley",
         imageUrl: "https://hips.hearstapps.com/hmg-prod/images/elvis-presley-poses-for-the-camera-during-his-military-service-at-a-us-base-in-germany-photo-by-vittoriano-rastellicorbis-via-getty-images1.jpg?crop=0.739xw:0.942xh;0.0342xw,0.0581xh&resize=360:*",
+        previewEmbedUrl: "https://www.youtube.com/embed/iOK-1K-4hYA",
         meta: "Biography",
       },
       {
@@ -478,39 +534,57 @@ const channelLogoAssets: Record<
   }
 > = {
   "A&E": {
-    src: "https://www.mylifetime.com/assets/images/aetv/logo.svg",
+    src: "/logos/aande.svg",
     className: "h-7 w-auto md:h-8",
   },
   HISTORY: {
-    src: "https://www.mylifetime.com/assets/images/history/logo-black-rtm.svg",
+    src: "/logos/history.svg",
     className: "h-9 w-auto md:h-11",
     invert: true,
   },
   Lifetime: {
-    src: "https://www.mylifetime.com/assets/images/lifetime/logo-black-rtm.svg",
+    src: "/logos/lifetime.svg",
     className: "h-8 w-auto md:h-10",
     invert: true,
   },
   LMN: {
-    src: "https://www.mylifetime.com/assets/images/lmn/logo-black-rtm.svg",
+    src: "/logos/lmn.svg",
     className: "h-7 w-auto md:h-8",
     invert: true,
   },
   FYI: {
-    src: "https://www.mylifetime.com/assets/images/fyi/logo-black-rtm.svg",
+    src: "/logos/fyi.svg",
     className: "h-7 w-auto md:h-8",
     invert: true,
   },
   "VICE TV": {
-    src: "https://www.mylifetime.com/assets/images/vicetv/logo-black.svg",
+    src: "/logos/vice-tv.svg",
     className: "h-7 w-auto md:h-8",
     invert: true,
   },
   BIOGRAPHY: {
-    src: "https://www.mylifetime.com/assets/images/biography/logo-black-rtm.svg",
+    src: "/logos/biography.svg",
     className: "h-7 w-auto md:h-8",
     invert: true,
   },
+};
+
+const mastheadLogoAssets: Record<EntertainmentChannel, { src: string; label: string }> = {
+  "A&E": { src: "/logos/aande.svg", label: "A&E" },
+  HISTORY: { src: "/logos/history.svg", label: "HISTORY" },
+  Lifetime: { src: "/logos/lifetime.svg", label: "Lifetime" },
+  LMN: { src: "/logos/lmn.svg", label: "LMN" },
+  FYI: { src: "/logos/fyi.svg", label: "FYI" },
+  "VICE TV": { src: "/logos/vice-tv.svg", label: "VICE TV" },
+  BIOGRAPHY: { src: "/logos/biography.svg", label: "BIOGRAPHY" },
+};
+
+const brandFaviconAssets: Partial<Record<EntertainmentShow["brand"], string>> = {
+  "A&E": "https://www.aetv.com/favicon.ico",
+  HISTORY: "https://www.history.com/favicon.ico",
+  Lifetime: "https://www.mylifetime.com/favicon.ico",
+  LMN: "https://www.mylifetime.com/favicon.ico",
+  FYI: "https://www.fyi.tv/favicon.ico",
 };
 
 function formatBrandInitials(brand: EntertainmentShow["brand"]) {
@@ -521,9 +595,36 @@ function formatBrandInitials(brand: EntertainmentShow["brand"]) {
   return brand;
 }
 
-export function EntertainmentWatchPage() {
+export function EntertainmentWatchPage({
+  activeChannel,
+}: {
+  activeChannel?: EntertainmentChannel;
+} = {}) {
   const [activeHeroIndex, setActiveHeroIndex] = useState(0);
-  const activeHero = heroShows[activeHeroIndex] ?? heroShows[0];
+  const [activeShow, setActiveShow] = useState<EntertainmentShow | null>(null);
+  const showModalReturnFocusRef = useRef<HTMLElement | null>(null);
+  const openShowModal = (show: EntertainmentShow, opener?: HTMLElement | null) => {
+    showModalReturnFocusRef.current = opener ?? null;
+    setActiveShow(show);
+  };
+  const closeShowModal = () => {
+    setActiveShow(null);
+    window.requestAnimationFrame(() => showModalReturnFocusRef.current?.focus());
+  };
+  const mastheadLogo = activeChannel ? mastheadLogoAssets[activeChannel] : null;
+  const visibleRows = useMemo(
+    () => activeChannel
+      ? channelRows.filter((row) => row.brand === activeChannel)
+      : channelRows,
+    [activeChannel],
+  );
+  const heroPool = useMemo(() => {
+    if (!activeChannel) return heroShows;
+    const channelShows = visibleRows[0]?.shows ?? [];
+    return channelShows.slice(0, 3);
+  }, [activeChannel, visibleRows]);
+  const activeHero = heroPool[activeHeroIndex] ?? heroPool[0] ?? heroShows[0];
+  const activeFilter = activeChannel ?? "Featured";
 
   return (
     <div
@@ -545,8 +646,10 @@ export function EntertainmentWatchPage() {
       <MainNav
         brandSlug="hearst-all"
         selectedBrand={{ name: "A&E", slug: "hearst-entertainment" }}
-        activeFilter="Featured"
+        activeFilter={activeFilter}
         navLinksOverride={entertainmentNavLinks}
+        navLinkHrefOverrides={entertainmentNavHrefs}
+        mastheadLogoOverride={mastheadLogo ? { ...mastheadLogo, tone: "white" } : null}
         darkMode
       />
       <main className="overflow-hidden bg-[#050608]">
@@ -572,8 +675,10 @@ export function EntertainmentWatchPage() {
               <div className="mt-7 flex flex-wrap items-center gap-3">
                 <a
                   href={activeHero.href}
-                  target="_blank"
-                  rel="noreferrer"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    openShowModal(activeHero, event.currentTarget);
+                  }}
                   className="inline-flex min-h-11 items-center gap-2 rounded-[6px] bg-white px-5 text-sm font-bold text-black no-underline transition-colors hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
                 >
                   <Play className="size-4" aria-hidden="true" />
@@ -582,7 +687,7 @@ export function EntertainmentWatchPage() {
                 <span className="text-sm font-semibold text-white/70">{activeHero.meta}</span>
               </div>
               <div className="mt-8 flex items-center gap-2">
-                {heroShows.map((show, index) => (
+                {heroPool.map((show, index) => (
                   <button
                     key={show.title}
                     type="button"
@@ -602,13 +707,14 @@ export function EntertainmentWatchPage() {
 
         <section className="relative z-10 -mt-24 px-5 pb-16 md:-mt-32 md:px-8 lg:px-10">
           <div className="mx-auto max-w-[1440px] space-y-9">
-            <HeroShelf activeHeroIndex={activeHeroIndex} onSelectHero={setActiveHeroIndex} />
-            {channelRows.map((row) => (
-              <ChannelRow key={row.brand} row={row} />
+            <HeroShelf activeHeroIndex={activeHeroIndex} onOpenShow={openShowModal} onSelectHero={setActiveHeroIndex} shows={heroPool} />
+            {visibleRows.map((row) => (
+              <ChannelRow key={row.brand} onOpenShow={openShowModal} row={row} />
             ))}
           </div>
         </section>
       </main>
+      <ShowDetailModal show={activeShow} onClose={closeShowModal} />
       <SiteFooter
         siteName={<BrandLogo slug="hearst-all" className="h-8 max-w-[16rem] [&_svg]:h-full [&_svg]:w-auto" color="#fff" />}
         copyrightYear={2026}
@@ -620,10 +726,14 @@ export function EntertainmentWatchPage() {
 
 function HeroShelf({
   activeHeroIndex,
+  onOpenShow,
   onSelectHero,
+  shows = heroShows,
 }: {
   activeHeroIndex: number;
+  onOpenShow: (show: EntertainmentShow, opener?: HTMLElement | null) => void;
   onSelectHero: (index: number) => void;
+  shows?: EntertainmentShow[];
 }) {
   return (
     <section aria-labelledby="featured-entertainment-row">
@@ -631,11 +741,14 @@ function HeroShelf({
         <h2 id="featured-entertainment-row" className="text-xl font-bold text-white md:text-2xl">Featured</h2>
       </div>
       <div className="grid auto-cols-[minmax(16rem,24rem)] grid-flow-col gap-3 overflow-x-auto pb-4 [scrollbar-color:rgba(255,255,255,0.28)_transparent] md:auto-cols-[minmax(22rem,32rem)] md:gap-4">
-        {heroShows.map((show, index) => (
+        {shows.map((show, index) => (
           <button
             key={show.title}
             type="button"
-            onClick={() => onSelectHero(index)}
+            onClick={(event) => {
+              onSelectHero(index);
+              onOpenShow(show, event.currentTarget);
+            }}
             aria-label={`Feature ${show.title}`}
             aria-current={index === activeHeroIndex ? "true" : undefined}
             className="group min-w-0 rounded-[8px] text-left text-white transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
@@ -648,7 +761,13 @@ function HeroShelf({
   );
 }
 
-function ChannelRow({ row }: { row: (typeof channelRows)[number] }) {
+function ChannelRow({
+  onOpenShow,
+  row,
+}: {
+  onOpenShow: (show: EntertainmentShow, opener?: HTMLElement | null) => void;
+  row: (typeof channelRows)[number];
+}) {
   return (
     <section aria-labelledby={`entertainment-${row.brand.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}`}>
       <div className="mb-3 flex items-center justify-between gap-4">
@@ -663,14 +782,20 @@ function ChannelRow({ row }: { row: (typeof channelRows)[number] }) {
           <ChevronRight className="size-4" aria-hidden="true" />
         </a>
       </div>
-      <Carousel opts={{ align: "start", dragFree: true }} className="group/channel">
-        <CarouselContent className="-ml-3 pb-4 pt-1 md:-ml-4">
+      <Carousel
+        opts={{ align: "start", containScroll: "trimSnaps", dragFree: true }}
+        className="group/channel"
+      >
+        <CarouselContent
+          viewportClassName="cursor-grab touch-pan-y select-none active:cursor-grabbing"
+          className="-ml-3 pb-4 pt-1 md:-ml-4"
+        >
           {row.shows.map((show) => (
             <CarouselItem
               key={show.title}
               className="basis-[58%] pl-3 sm:basis-[42%] md:basis-1/3 md:pl-4 lg:basis-1/4"
             >
-              <ShowCard show={show} />
+              <ShowCard onOpenShow={onOpenShow} show={show} />
             </CarouselItem>
           ))}
         </CarouselContent>
@@ -712,21 +837,41 @@ function ChannelLogoHeading({ brand }: { brand: EntertainmentShow["brand"] }) {
   );
 }
 
-function ShowCard({ show }: { show: EntertainmentShow }) {
+function ShowCard({
+  onOpenShow,
+  show,
+}: {
+  onOpenShow: (show: EntertainmentShow, opener?: HTMLElement | null) => void;
+  show: EntertainmentShow;
+}) {
   return (
-    <article className="group min-w-0 transition-transform hover:-translate-y-1">
-      <a href={show.href} target="_blank" rel="noreferrer" className="block h-full min-w-0 text-white no-underline">
-        <ShowPoster show={show} />
+    <article className="group min-w-0 cursor-grab transition-transform hover:-translate-y-1 active:cursor-grabbing">
+      <button
+        type="button"
+        onClick={(event) => onOpenShow(show, event.currentTarget)}
+        draggable={false}
+        className="block h-full w-full min-w-0 text-left text-white"
+        aria-label={`Open ${show.title} details`}
+      >
+        <ShowPoster show={show} showTitleOverlay={false} />
         <span className="block pt-3">
           <span className="line-clamp-1 block text-base font-bold leading-tight transition-colors group-hover:text-[#F6D48A] md:text-lg">{show.title}</span>
           <span className="mt-1 block text-xs font-semibold text-white/48">{show.meta}</span>
         </span>
-      </a>
+      </button>
     </article>
   );
 }
 
-function ShowPoster({ show, active = false }: { show: EntertainmentShow; active?: boolean }) {
+function ShowPoster({
+  show,
+  active = false,
+  showTitleOverlay = true,
+}: {
+  show: EntertainmentShow;
+  active?: boolean;
+  showTitleOverlay?: boolean;
+}) {
   return (
     <span
       className={cn(
@@ -736,7 +881,7 @@ function ShowPoster({ show, active = false }: { show: EntertainmentShow; active?
     >
       {show.imageUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={show.imageUrl} alt={`Show artwork for ${show.title}`} loading="lazy" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.04]" />
+        <img src={show.imageUrl} alt={`Show artwork for ${show.title}`} loading="lazy" draggable={false} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.04]" />
       ) : (
         <span className="grid h-full w-full place-items-center bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.18),transparent_35%),linear-gradient(135deg,rgba(255,255,255,0.12),rgba(255,255,255,0.02))] p-6 text-center">
           <span className="text-3xl font-black tracking-tight" style={{ color: brandAccent[show.brand] }}>{formatBrandInitials(show.brand)}</span>
@@ -746,7 +891,9 @@ function ShowPoster({ show, active = false }: { show: EntertainmentShow; active?
       <span className="absolute bottom-3 left-3 right-3 flex items-end justify-between gap-3">
         <span>
           <span className="block text-[11px] font-bold uppercase tracking-[0.16em] text-white/58">{show.eyebrow}</span>
-          <span className="mt-1 line-clamp-1 block text-lg font-bold leading-tight text-white">{show.title}</span>
+          {showTitleOverlay ? (
+            <span className="mt-1 line-clamp-1 block text-lg font-bold leading-tight text-white">{show.title}</span>
+          ) : null}
         </span>
         <BrandPill brand={show.brand} compact />
       </span>
@@ -754,15 +901,207 @@ function ShowPoster({ show, active = false }: { show: EntertainmentShow; active?
   );
 }
 
+const brandPlayShowBases: Partial<Record<EntertainmentChannel, string>> = {
+  "A&E": "https://play.aetv.com/shows/",
+  HISTORY: "https://play.history.com/shows/",
+  Lifetime: "https://play.mylifetime.com/shows/",
+  LMN: "https://play.mylifetime.com/shows/",
+};
+
+function getShowPreviewEmbedUrl(show: EntertainmentShow) {
+  return show.previewEmbedUrl ?? null;
+}
+
+function getShowSlugFromHref(href: string) {
+  const match = href.match(/\/shows\/([^/?#]+)/);
+  return match?.[1] ?? null;
+}
+
+function getShowPageUrl(show: EntertainmentShow) {
+  const playBase = brandPlayShowBases[show.brand];
+  const showSlug = getShowSlugFromHref(show.href);
+
+  if (show.playUrl) return show.playUrl;
+  if (playBase && showSlug) return `${playBase}${showSlug}`;
+
+  return show.href;
+}
+
+function getShowSeasonCount(show: EntertainmentShow) {
+  const match = show.meta.match(/\d+/);
+  return match?.[0] ?? (show.brand === "A&E" ? "Multiple" : "Featured");
+}
+
+function getShowEpisodeSamples(show: EntertainmentShow) {
+  return [
+    {
+      title: `${show.title}: Latest full episodes`,
+      detail: `Open the official ${show.brand} play page for full episodes and current provider access.`,
+    },
+    {
+      title: `${show.title}: Clips and extras`,
+      detail: "Short-form previews, bonus moments, and featured scenes can live in this rail.",
+    },
+    {
+      title: `${show.title}: Season guide`,
+      detail: `${getShowSeasonCount(show)} ${Number(getShowSeasonCount(show)) === 1 ? "season" : "seasons"} listed from the show metadata.`,
+    },
+  ];
+}
+
+function ShowDetailModal({
+  onClose,
+  show,
+}: {
+  onClose: () => void;
+  show: EntertainmentShow | null;
+}) {
+  const portalTarget = useBodyPortalTarget();
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+
+  useModalIsolation(Boolean(show && portalTarget), dialogRef);
+
+  React.useEffect(() => {
+    if (!show) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      onClose();
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [onClose, show]);
+
+  if (!show || !portalTarget) return null;
+
+  const showPageUrl = getShowPageUrl(show);
+  const episodeSamples = getShowEpisodeSamples(show);
+  const seasonCount = getShowSeasonCount(show);
+  const previewEmbedUrl = getShowPreviewEmbedUrl(show);
+
+  return createPortal(
+    <div
+      ref={dialogRef}
+      className="fixed inset-0 z-[200] bg-black/74 text-white backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="entertainment-show-modal-title"
+    >
+      <div className="absolute inset-0" onClick={onClose} />
+      <div className="absolute inset-0 mx-auto flex h-dvh w-full max-w-[1380px] flex-col overflow-hidden bg-[#050608] shadow-2xl sm:inset-6 sm:h-auto sm:w-auto sm:rounded-[8px] sm:ring-1 sm:ring-white/14">
+        <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-5 py-3 md:px-6">
+          <div className="flex min-w-0 items-center gap-3">
+            <BrandPill brand={show.brand} compact />
+            <span className="truncate text-sm font-semibold text-white/58">Show details</span>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="grid size-10 shrink-0 place-items-center rounded-full text-white/72 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
+            aria-label="Close show details"
+          >
+            <X className="size-5" aria-hidden="true" />
+          </button>
+        </div>
+        <div className="grid min-h-0 flex-1 overflow-y-auto lg:grid-cols-[minmax(0,1.35fr)_minmax(340px,0.65fr)]">
+          <section className="min-w-0 border-b border-white/10 lg:border-b-0 lg:border-r">
+            <div className="relative aspect-video min-h-[240px] overflow-hidden bg-black">
+              {previewEmbedUrl ? (
+                <iframe
+                  title={`${show.title} preview`}
+                  src={previewEmbedUrl}
+                  className="absolute inset-0 h-full w-full border-0 bg-black"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              ) : (
+                <>
+                  {show.imageUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={show.imageUrl} alt={`Poster artwork for ${show.title}`} className="absolute inset-0 h-full w-full object-cover" />
+                  ) : null}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/78 via-black/18 to-black/12" />
+                  <div className="absolute inset-x-0 bottom-0 p-5 md:p-8">
+                    <span className="inline-flex items-center gap-2 rounded-full bg-black/62 px-3 py-1.5 text-xs font-bold text-white ring-1 ring-white/16">
+                      <Play className="size-4" aria-hidden="true" />
+                      Preview
+                    </span>
+                    <h3 className="mt-4 max-w-3xl text-balance text-4xl font-black leading-none md:text-6xl">{show.title}</h3>
+                    <p className="mt-3 max-w-2xl text-sm leading-6 text-white/72 md:text-base md:leading-7">{show.description}</p>
+                  </div>
+                </>
+              )}
+            </div>
+            <div className="border-t border-white/10 p-5 md:p-6">
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#F6D48A]">{show.eyebrow}</span>
+              <h2 id="entertainment-show-modal-title" className="mt-2 text-balance text-4xl font-black leading-none md:text-5xl">
+                {show.title}
+              </h2>
+              <p className="mt-3 max-w-3xl text-pretty text-base leading-7 text-white/72">{show.description}</p>
+            </div>
+          </section>
+          <aside className="min-w-0 overflow-y-auto p-5 md:p-6">
+            <div className="grid grid-cols-3 gap-2">
+              {[
+                ["Network", show.brand],
+                ["Seasons", seasonCount],
+                ["Format", show.eyebrow],
+              ].map(([label, value]) => (
+                <div key={label} className="rounded-[6px] border border-white/10 bg-white/[0.04] p-3">
+                  <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-white/38">{label}</span>
+                  <span className="mt-1 block truncate text-sm font-bold text-white">{value}</span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a
+                href={showPageUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex min-h-11 items-center gap-2 rounded-[6px] bg-white px-5 text-sm font-bold text-black no-underline transition-colors hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
+              >
+                Show page
+                <ExternalLink className="size-4" aria-hidden="true" />
+              </a>
+            </div>
+            <section className="mt-8" aria-labelledby="entertainment-show-episodes">
+              <h3 id="entertainment-show-episodes" className="text-sm font-bold uppercase tracking-[0.16em] text-white/48">
+                Episodes and extras
+              </h3>
+              <div className="mt-3 space-y-2">
+                {episodeSamples.map((episode, index) => (
+                  <article key={episode.title} className="rounded-[6px] border border-white/10 bg-white/[0.035] p-4">
+                    <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#F6D48A]">Episode {index + 1}</span>
+                    <h4 className="mt-1 text-base font-bold text-white">{episode.title}</h4>
+                    <p className="mt-1 text-sm leading-6 text-white/58">{episode.detail}</p>
+                  </article>
+                ))}
+              </div>
+            </section>
+          </aside>
+        </div>
+      </div>
+    </div>,
+    portalTarget,
+  );
+}
+
 function BrandPill({ brand, compact = false }: { brand: EntertainmentShow["brand"]; compact?: boolean }) {
+  const faviconSrc = brandFaviconAssets[brand];
+
   return (
     <span className={cn("inline-flex items-center gap-2 rounded-full bg-black/55 ring-1 ring-white/14", compact ? "px-2 py-1" : "px-3 py-1.5")}>
       <span
         aria-hidden="true"
-        className={cn("grid shrink-0 place-items-center rounded-[4px] bg-white text-[9px] font-black leading-none text-black", compact ? "size-5" : "size-6")}
+        className={cn("grid shrink-0 place-items-center overflow-hidden rounded-[4px] bg-white p-0.5 text-[9px] font-black leading-none text-black", compact ? "size-5" : "size-6")}
         style={{ color: brand === "VICE TV" ? "#050608" : brandAccent[brand] }}
       >
-        {formatBrandInitials(brand)}
+        {faviconSrc ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={faviconSrc} alt="" loading="lazy" className="size-full object-contain" />
+        ) : (
+          formatBrandInitials(brand)
+        )}
       </span>
       <span className={cn("font-bold leading-none text-white", compact ? "text-[11px]" : "text-xs")}>{brand}</span>
     </span>

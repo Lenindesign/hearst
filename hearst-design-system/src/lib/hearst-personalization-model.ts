@@ -337,7 +337,7 @@ export const baseDestinationConfigs: Record<DestinationMode, DestinationConfig> 
     productName: "Hearst Magazines",
     riverLabel: "Personalized Hearst story river",
     storyRiverLabel: "Hearst stories",
-    filters: ["For You", "Style", "Reviews", "Fitness", "Cars", "Home", "Videos", "Communities", "Shopping", "Games"],
+    filters: ["For You", "Style", "Reviews", "Fitness", "Cars", "Home", "Videos", "Community", "Shopping", "Streaming", "Events", "Games"],
     stories: [],
     sourceNotes: [],
     initialProfile: initialAllProfile,
