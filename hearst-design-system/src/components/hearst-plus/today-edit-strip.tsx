@@ -17,8 +17,22 @@ export type TodayEditSelection<T extends TodayEditStory = TodayEditStory> = {
   horoscopeStory?: T;
 };
 
+export type TodayEditDestinationModule = {
+  id: string;
+  label: string;
+  title: string;
+  href?: string;
+  storyId?: string;
+  ctaHref?: string;
+  image?: string | null;
+  imageFit?: "cover" | "contain";
+  ctaLabel?: string;
+};
+
 export type TodayEditStripProps<T extends TodayEditStory = TodayEditStory> = {
   selection: TodayEditSelection<T>;
+  localNewsModule?: TodayEditDestinationModule;
+  entertainmentModule?: TodayEditDestinationModule;
   measurementEnabled?: boolean;
   onOpenStory: (storyId: string) => void;
   onContinueImpression?: (storyId: string) => void;
@@ -28,6 +42,8 @@ export type TodayEditStripProps<T extends TodayEditStory = TodayEditStory> = {
 
 export function TodayEditStrip<T extends TodayEditStory>({
   selection,
+  localNewsModule,
+  entertainmentModule,
   measurementEnabled = true,
   onOpenStory,
   onContinueImpression,
@@ -134,28 +150,60 @@ export function TodayEditStrip<T extends TodayEditStory>({
 
   const modules = [
     ...(horoscopeStory ? [{
-      story: horoscopeStory,
+      key: "horoscope",
       label: "Horoscope",
+      title: horoscopeStory.title,
+      image: horoscopeStory.image,
       onClick: () => onOpenStory(horoscopeStory.id),
     }] : []),
     ...(continueStory ? [{
-      story: continueStory,
+      key: "continue",
       label: "Continue Reading",
+      title: continueStory.title,
+      image: continueStory.image,
       onClick: () => {
         onContinueOpen?.(continueStory.id);
         onOpenStory(continueStory.id);
       },
     }] : []),
-    {
-      story: followedBrandStory,
-      label: "New From Your Brands",
-      onClick: () => onOpenStory(followedBrandStory.id),
-    },
-    {
-      story: trendingStory,
-      label: "Trending Today",
-      onClick: () => onOpenStory(trendingStory.id),
-    },
+    localNewsModule
+      ? {
+          key: localNewsModule.id,
+          label: localNewsModule.label,
+          title: localNewsModule.title,
+          image: localNewsModule.image,
+          imageFit: localNewsModule.imageFit,
+          href: localNewsModule.href,
+          storyId: localNewsModule.storyId,
+          ctaHref: localNewsModule.ctaHref,
+          ctaLabel: localNewsModule.ctaLabel,
+        }
+      : {
+          key: "followed-brand",
+          label: "New From Your Brands",
+          title: followedBrandStory.title,
+          image: followedBrandStory.image,
+          onClick: () => onOpenStory(followedBrandStory.id),
+        },
+    entertainmentModule
+      ? {
+          key: entertainmentModule.id,
+          label: entertainmentModule.label,
+          title: entertainmentModule.title,
+          image: entertainmentModule.image,
+          imageFit: entertainmentModule.imageFit,
+          href: entertainmentModule.href,
+          storyId: entertainmentModule.storyId,
+          ctaHref: entertainmentModule.ctaHref,
+          ctaLabel: entertainmentModule.ctaLabel,
+        }
+      : {
+          key: "trending",
+          label: "Trending Today",
+          title: trendingStory.title,
+          image: trendingStory.image,
+          onClick: () => onOpenStory(trendingStory.id),
+        },
   ];
 
   return (
@@ -179,33 +227,100 @@ export function TodayEditStrip<T extends TodayEditStory>({
               : "xl:grid-cols-2",
         )}
       >
-        {modules.map((module) => (
-          <button
-            key={module.label}
-            type="button"
-            onClick={module.onClick}
-            data-story-id={module.story.id}
-            className="group relative flex w-[88vw] shrink-0 snap-start scroll-ml-0 flex-col border-r border-border p-4 text-left transition-colors last:border-r-0 hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30 sm:w-[50vw] md:w-[38vw] lg:w-[30vw] xl:w-auto xl:min-w-0 xl:border-0"
-          >
-            <span>
-              <span className="block text-[length:var(--text-token-4xs)] font-bold uppercase leading-none tracking-widest text-[var(--hp-section-title)]">
-                {module.label}
-              </span>
-              <span className="mt-3 flex items-start gap-3">
-                {module.story.image ? (
-                  <span
-                    aria-hidden="true"
-                    className="mt-0.5 block h-16 w-20 shrink-0 rounded-[8px] bg-muted bg-cover bg-center"
-                    style={{ backgroundImage: `url("${module.story.image}")` }}
-                  />
-                ) : null}
-                <span className="line-clamp-3 min-w-0 text-sm font-bold leading-snug text-foreground">
-                  {module.story.title}
+        {modules.map((module) => {
+          const labelHref = module.ctaHref ?? module.href;
+          const labelClassName = "block w-fit text-[length:var(--text-token-4xs)] font-bold uppercase leading-none tracking-widest text-[var(--hp-section-title)] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30";
+          const labelContent = labelHref ? (
+            <a
+              href={labelHref}
+              className={cn(labelClassName, "hover:underline")}
+            >
+              {module.label}
+            </a>
+          ) : (
+            <span className={labelClassName}>
+              {module.label}
+            </span>
+          );
+          const mediaTitleContent = (
+            <span className="mt-3 flex items-start gap-3">
+              {module.image ? (
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    "mt-0.5 block h-16 w-20 shrink-0 rounded-[8px] bg-muted bg-center",
+                    module.imageFit === "contain"
+                      ? "bg-contain bg-no-repeat"
+                      : "bg-cover",
+                  )}
+                  style={{ backgroundImage: `url("${module.image}")` }}
+                />
+              ) : null}
+              <span className="min-w-0">
+                <span className="line-clamp-3 block text-sm font-bold leading-snug text-foreground">
+                  {module.title}
                 </span>
               </span>
             </span>
-          </button>
-        ))}
+          );
+          const fullContent = (
+            <>
+              <span className="block text-[length:var(--text-token-4xs)] font-bold uppercase leading-none tracking-widest text-[var(--hp-section-title)]">
+                {module.label}
+              </span>
+              {mediaTitleContent}
+            </>
+          );
+          const cta = module.ctaLabel ? (
+            <a
+              href={module.ctaHref ?? module.href}
+              className="mt-2 inline-flex w-fit text-xs font-bold text-[var(--hp-section-title)] hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+            >
+              {module.ctaLabel}
+            </a>
+          ) : null;
+          const className = "group relative flex w-[88vw] shrink-0 snap-start scroll-ml-0 flex-col border-r border-border p-4 text-left transition-colors last:border-r-0 hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30 sm:w-[50vw] md:w-[38vw] lg:w-[30vw] xl:w-auto xl:min-w-0 xl:border-0";
+          const storyId = module.storyId;
+
+          if (storyId && module.ctaHref) {
+            return (
+              <div key={module.key} className={className}>
+                {labelContent}
+                <button
+                  type="button"
+                  onClick={() => onOpenStory(storyId)}
+                  data-story-id={storyId}
+                  className="group/story text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+                >
+                  {mediaTitleContent}
+                </button>
+                {cta}
+              </div>
+            );
+          }
+
+          return module.href ? (
+            <a
+              key={module.key}
+              href={module.href}
+              data-destination-module={module.key}
+              className={className}
+            >
+              {fullContent}
+              {cta}
+            </a>
+          ) : (
+            <button
+              key={module.key}
+              type="button"
+              onClick={module.onClick}
+              data-story-id={module.key}
+              className={className}
+            >
+              {fullContent}
+            </button>
+          );
+        })}
       </div>
       {canScrollLeft || canScrollRight ? (
         <div className="absolute right-3 top-3 hidden items-center gap-1.5 sm:flex xl:hidden">

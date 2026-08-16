@@ -6,6 +6,7 @@ import { fluxRiverStories } from "@/components/flux-river-data";
 import { lifestyleRiverStories } from "@/components/lifestyle-river-data";
 import { getAmbientCommerceStories } from "@/lib/ambient-commerce-stories";
 import { filterExcludedStories } from "@/lib/content-exclusions";
+import { todayEditLocalNewsStory } from "@/lib/hearst-plus-today-edit-stories";
 
 const currentFeedStories = filterExcludedStories([
   ...lifestyleRiverStories,
@@ -18,7 +19,7 @@ const currentFeedStories = filterExcludedStories([
 // reader can still open a guide that remains in Shop the stories.
 const staticHearstStories = Array.from(
   new Map(
-    [...currentFeedStories, ...getAmbientCommerceStories()].map((story) => [story.id, story]),
+    [...currentFeedStories, ...getAmbientCommerceStories(), todayEditLocalNewsStory].map((story) => [story.id, story]),
   ).values(),
 );
 

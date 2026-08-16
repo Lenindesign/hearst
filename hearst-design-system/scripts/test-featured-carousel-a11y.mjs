@@ -174,6 +174,7 @@ async function verifyViewport(browser, width) {
     steps: 8,
   });
   await page.mouse.up();
+  await page.waitForTimeout(60);
   await page.waitForFunction(
     ({ selector, slideSelector }) => {
       const root = document.querySelector(selector);
@@ -187,7 +188,6 @@ async function verifyViewport(browser, width) {
     1,
     `${width}px horizontal drag should snap to the next featured story.`
   );
-  await page.waitForTimeout(620);
   await swipeStage.dispatchEvent("pointerdown", {
     pointerId: 7,
     pointerType: "touch",
@@ -226,7 +226,7 @@ async function verifyViewport(browser, width) {
   assert.equal(
     await readActiveSlideIndex(carousel),
     2,
-    `${width}px touch-pointer swipe should snap to the next featured story without activating the slide.`
+    `${width}px fast touch-pointer swipe should queue one next slide without activating the slide.`
   );
   await page.waitForTimeout(620);
   await page.mouse.move(swipeBox.x + swipeBox.width * 0.5, swipeBox.y + swipeBox.height * 0.45);

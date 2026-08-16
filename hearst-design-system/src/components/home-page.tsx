@@ -21,6 +21,7 @@ import {
   joinedBrandGroupsStorageKey,
 } from "@/lib/community-groups";
 import type { HearstDestinationStaticData } from "@/lib/hearst-destination-data-types";
+import { todayEditLocalNewsStory } from "@/lib/hearst-plus-today-edit-stories";
 import { normalizeReaderReturnHref } from "@/lib/story-routes";
 import {
   appendAmbientReaderHref,
@@ -1598,6 +1599,7 @@ const contextualAdCatalog = {
     ["lifestyle-cozy-collection", "Pioneer Woman Picks", "Cozy Kitchen Collection", "Cookware, table linens, and colorful prep tools aligned with recipe and home-commerce behavior.", "Explore picks", ["Food", "Home", "Shopping"], ["cookware", "recipe", "products", "home"], "Kitchen", "https://hips.hearstapps.com/hmg-prod/images/72849786-d2ce-4cfe-8e54-2aea79b0db5c.jpeg"],
   ],
   autos: [
+    ["autos-cd-deal-score", "Car and Driver Marketplace", "Know the Best Price to Buy", "An AI-powered Deal Score evaluates the full vehicle offer against incentives, inventory, price trends, demand, and local market signals.", "Check my deal", ["Buying Guides", "Reviews"], ["buying", "reviews", "used", "shopping", "marketplace", "deal"], "Deal Score", "https://hips.hearstapps.com/mtg-prod/68f7e39e42ad0d0002a0414e/003-2026-honda-crv-hybrid-sport-touring.jpg"],
     ["autos-ev-home-charge", "ChargePoint", "EV Charging, Matched to Your Garage", "A contextual offer for readers comparing EVs, range, charging speed, and home setup decisions.", "Estimate charging", ["EVs", "Buying Guides"], ["evs", "electric", "buying", "reviews"], "EV", "https://hips.hearstapps.com/hmg-prod/images/2025-chevrolet-equinox-rs-awd-132-67110e2133505.jpg"],
     ["autos-tire-finder", "Michelin Garage", "Find the Right Performance Tire", "Tire and handling recommendations for readers deep in reviews, performance, and track-day content.", "Match tires", ["Reviews", "Performance", "Racing"], ["performance", "drive", "racing", "reviews"], "Grip", "https://hips.hearstapps.com/hmg-prod/images/d91a8038-0b16-435e-9cc3-e5629f2c0d81.jpeg"],
     ["autos-auction-alert", "Collector Watch", "Auction Watchlist", "Collector-car alerts aligned to classics, Bring a Trailer behavior, and save-for-later browsing.", "Track listings", ["Classics", "Auctions"], ["auction", "classic", "collector", "used"], "Bid", "https://hips.hearstapps.com/hmg-prod/images/92a52d3f-3d3c-4e38-b3bd-7f82dc8b7146.jpg"],
@@ -4316,6 +4318,10 @@ function LifestyleRiverHomePage({
   }, [activeBrandFilters, usingVideoTabFeed, videoTabStories]);
   const effectiveBrandFilters = usingVideoTabFeed ? activeVideoBrandFilters : activeBrandFilters;
   const showAutosOemFilter = destination === "autos" && !initialBrandSlug && !usingVideoTabFeed;
+  const showAutosDealScoreCard = false;
+  const autosDealScoreAd = showAutosDealScoreCard && destination === "autos" && !initialBrandSlug
+    ? contextualAdsByDestination.autos.find((ad) => ad.id === "autos-cd-deal-score")
+    : null;
   const activeSourceNotes = usingVideoTabFeed
     ? videoFeedData?.sourceNotes ?? config.sourceNotes
     : config.sourceNotes;
@@ -4470,6 +4476,7 @@ function LifestyleRiverHomePage({
       ...destinationConfigs.all.stories,
       ...videoTabStories,
       ...localNewsReaderStories,
+      todayEditLocalNewsStory,
     ].filter((story) => {
       if (seenStoryIds.has(story.id)) return false;
       seenStoryIds.add(story.id);
@@ -4706,6 +4713,20 @@ function LifestyleRiverHomePage({
       ? { ...moduleAllocation.todayEdit, horoscopeStory: fallbackHoroscopeStory }
       : moduleAllocation.todayEdit;
   }, [destinationConfigs.all.stories, heroStoryIds, moduleAllocation.todayEdit, showTodayEdit]);
+  const todayEditLocalNewsModule = React.useMemo(() => ({
+    id: "today-edit-local-news",
+    label: "Local News",
+    title: todayEditLocalNewsStory.title,
+    href: "/hearst-plus/local-news/",
+    image: todayEditLocalNewsStory.image,
+  }), []);
+  const todayEditEntertainmentModule = React.useMemo(() => ({
+    id: "today-edit-ae-family",
+    label: "A&E Family",
+    title: "Storage Wars and more shows from the A&E family",
+    href: "/hearst-plus/entertainment/",
+    image: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/4/2015/09/storage-wars-s16-3000x3000-primary-1x1-1.jpg?w=1180",
+  }), []);
   const moduleReservedStoryIds = new Set([
     ...heroStoryIds,
     ...Object.values(todayEditSelection)
@@ -5549,6 +5570,8 @@ function LifestyleRiverHomePage({
       {showTodayEdit ? (
         <TodayEditStrip
           selection={todayEditSelection}
+          localNewsModule={todayEditLocalNewsModule}
+          entertainmentModule={todayEditEntertainmentModule}
           measurementEnabled={!openStoryId}
           onOpenStory={openStory}
           onContinueImpression={(storyId) => {
@@ -5634,6 +5657,10 @@ function LifestyleRiverHomePage({
                 />
               ) : null}
 
+              {autosDealScoreAd ? (
+                <ContextualRiverAdvertisement ad={autosDealScoreAd} />
+              ) : null}
+
               {showDelishClubsModule ? (
                 <DelishClubsModule
                   profile={profile}
@@ -5697,7 +5724,7 @@ function LifestyleRiverHomePage({
                         onHide={() => hideStory(story.id)}
                       />
                     )}
-                    {adMatch ? (
+                    {adMatch && adMatch.ad.id !== "autos-cd-deal-score" ? (
                       <ContextualRiverAdvertisement
                         ad={adMatch.ad}
                       />
