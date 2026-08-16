@@ -7,6 +7,7 @@ import { ContentReaderDialogShell, rememberContentReaderReturnFocus } from "@/co
 import { ContentReaderMasthead } from "@/components/hearst-plus/content-reader-masthead";
 import { FeaturedStoryCarousel } from "@/components/hearst-plus/featured-story-carousel";
 import { LocalNewsSourceToggle } from "@/components/hearst-plus/local-news-source-toggle";
+import { LifestyleRiverImage } from "@/components/hearst-plus/story-presentation";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import type { FeedStatus, FeedType, HearstTVContentType, HearstTVFeed } from "@/lib/hearst-tv-feed-framework";
 import {
@@ -365,18 +366,23 @@ export function HearstTVLocalNewsRiver({
                       window.open(item.url, "_blank", "noopener,noreferrer");
                     }
                   }}
-                  className="grid w-full min-w-0 gap-0 text-left no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50 sm:grid-cols-[176px_minmax(0,1fr)] sm:gap-4 sm:p-4"
+                  className="block w-full min-w-0 text-left no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50"
                   aria-label={`Open story: ${item.title}`}
                 >
-                  <span className="relative grid aspect-[16/9] min-h-0 place-items-center overflow-hidden rounded-[6px] bg-[var(--hp-surface-low)] text-center text-sm font-bold text-primary sm:aspect-[4/3]" aria-hidden="true">
-                    {item.imageUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={item.imageUrl} alt="" className="h-full w-full object-cover" loading="lazy" />
+                  <span className="relative grid aspect-video min-h-0 w-full place-items-center overflow-hidden bg-[var(--hp-surface-low)] text-center text-sm font-bold text-primary" aria-hidden="true">
+                    {item.imageUrl && readerStory ? (
+                      <LifestyleRiverImage
+                        story={readerStory}
+                        alt=""
+                        className="h-full w-full"
+                        sizes="(max-width: 1024px) 100vw, 640px"
+                        unoptimized
+                      />
                     ) : (
                       station.callSign
                     )}
                   </span>
-                  <span className="block min-w-0 p-4 sm:p-0">
+                  <span className="block min-w-0 p-4 sm:p-5">
                     <span className="mb-3 flex flex-wrap items-center gap-2">
                       <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
                         {item.isMock ? "Fallback" : "Latest"}
@@ -387,7 +393,7 @@ export function HearstTVLocalNewsRiver({
                       </span>
                       <span className="rounded-full bg-[var(--hp-surface-low)] px-2 py-1 text-primary">{formatContentType(item.contentType)}</span>
                     </span>
-                    <span className="headline block break-words text-xl leading-tight text-foreground transition-colors group-hover/card:text-primary sm:text-2xl">
+                    <span className="headline block break-words text-2xl leading-tight text-foreground transition-colors group-hover/card:text-primary sm:text-[1.7rem]">
                       {item.title}
                     </span>
                     <span className="mt-3 line-clamp-3 block text-sm leading-6 text-muted-foreground">{item.description}</span>

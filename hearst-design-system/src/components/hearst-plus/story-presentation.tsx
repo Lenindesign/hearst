@@ -28,11 +28,15 @@ export function LifestyleRiverImage({
   className,
   priority = false,
   alt,
+  sizes = "(max-width: 640px) 100vw, (max-width: 1024px) 66vw, 640px",
+  unoptimized = false,
 }: {
   story: LifestyleRiverStory;
   className?: string;
   priority?: boolean;
   alt?: string;
+  sizes?: string;
+  unoptimized?: boolean;
 }) {
   const prefersReducedMotion = usePrefersReducedMotion();
   const imageKey = `${story.id}-${story.image}`;
@@ -46,7 +50,7 @@ export function LifestyleRiverImage({
       alt={alt ?? `${story.brand}: ${story.title}`}
       width={1200}
       height={675}
-      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 66vw, 640px"
+      sizes={sizes}
       className={cn(
         "min-w-0 bg-muted object-cover",
         prefersReducedMotion ? "" : "transition-opacity duration-300 ease-out",
@@ -55,6 +59,7 @@ export function LifestyleRiverImage({
       )}
       style={{ objectPosition: getLifestyleImagePosition(story) }}
       preload={priority}
+      unoptimized={unoptimized}
       onLoad={() => setLoadedImageKey(imageKey)}
     />
   );

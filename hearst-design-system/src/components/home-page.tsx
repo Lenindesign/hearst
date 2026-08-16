@@ -2031,7 +2031,7 @@ function LifestyleRiverMedia({
 }) {
   const imageClassName = featured
     ? "aspect-video w-full"
-    : "aspect-video w-full self-start sm:h-full sm:min-h-44 sm:aspect-auto sm:rounded-[4px]";
+    : "aspect-video w-full";
   const videoClassName = featured
     ? "aspect-video w-full 2xl:self-center"
     : "aspect-video w-full self-start rounded-[4px]";
@@ -2363,7 +2363,7 @@ export function LifestyleRiverCard({
           ? "grid"
         : featured
           ? "grid items-stretch 2xl:grid-cols-[minmax(0,0.95fr)_minmax(320px,1fr)]"
-          : "grid gap-0 sm:grid-cols-[176px_minmax(0,1fr)] sm:gap-4 sm:p-4"
+          : "grid"
       )}
       data-story-module="river"
       data-story-id={story.id}
@@ -2385,7 +2385,7 @@ export function LifestyleRiverCard({
       </div>
       <div className={cn(
         "relative min-w-0",
-        isVideo ? "p-4 sm:p-5" : featured ? "flex flex-col justify-center p-5 sm:p-6 lg:p-8" : "p-4 sm:p-0"
+        isVideo ? "p-4 sm:p-5" : featured ? "flex flex-col justify-center p-5 sm:p-6 lg:p-8" : "p-4 sm:p-5"
       )}>
         <div className="mb-3 flex flex-wrap items-center gap-2">
           <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
@@ -2396,13 +2396,13 @@ export function LifestyleRiverCard({
         </div>
         <h2 className={cn(
           "headline break-words leading-tight transition-colors group-hover/card:text-primary group-focus-within/card:text-primary",
-          featured ? "w-full text-3xl sm:text-[2rem] lg:text-4xl" : "text-xl sm:text-2xl"
+          featured ? "w-full text-3xl sm:text-[2rem] lg:text-4xl" : "text-2xl sm:text-[1.7rem]"
         )}>
           {story.title}
         </h2>
         <p className={cn(
           "line-clamp-3 text-muted-foreground",
-          featured ? "mt-3 max-w-prose text-base leading-7" : "mt-2 hidden text-sm leading-6 sm:[display:-webkit-box]"
+          featured ? "mt-3 max-w-prose text-base leading-7" : "mt-2 text-sm leading-6 sm:text-[0.95rem]"
         )}>
           {story.summary}
         </p>

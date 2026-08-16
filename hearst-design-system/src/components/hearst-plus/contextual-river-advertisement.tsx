@@ -15,24 +15,24 @@ export function ContextualRiverAdvertisement({
 
   return (
     <article
-      className="grid min-w-0 overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] sm:grid-cols-[176px_minmax(0,1fr)] sm:gap-4"
+      className="grid min-w-0 overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]"
       aria-label={`Advertisement: ${ad.sponsor} — ${ad.title}`}
       style={{
         backgroundColor: ad.palette.background,
         color: ad.palette.foreground,
       }}
     >
-      <div className="relative aspect-video min-w-0 overflow-hidden rounded-[4px] sm:h-full sm:min-h-44 sm:aspect-auto">
+      <div className="relative aspect-video min-w-0 overflow-hidden">
         <Image
           src={ad.imageUrl}
           alt=""
           width={704}
           height={396}
-          sizes="(max-width: 640px) 100vw, 176px"
+          sizes="(max-width: 1024px) 100vw, 640px"
           className="h-full w-full object-cover"
         />
         <div
-          className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/20 to-black/70"
+          className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/10 to-black/75"
           aria-hidden="true"
         />
         <div className="absolute inset-x-0 top-0 flex items-center justify-between gap-3 p-4 text-white">
@@ -52,7 +52,7 @@ export function ContextualRiverAdvertisement({
         </p>
       </div>
 
-      <div className="flex min-w-0 flex-col justify-between pt-4 sm:pt-0">
+      <div className="flex min-w-0 flex-col justify-between p-4 sm:p-5">
         <div>
           <div className="flex flex-wrap items-center gap-2">
             <span
@@ -62,7 +62,7 @@ export function ContextualRiverAdvertisement({
               {ad.sponsor}
             </span>
           </div>
-          <h2 className="headline mt-3 text-2xl leading-tight sm:text-3xl">
+          <h2 className="headline mt-3 break-words text-2xl leading-tight sm:text-[1.7rem]">
             {ad.title}
           </h2>
           <p className="mt-3 text-sm leading-6 opacity-80">{ad.summary}</p>

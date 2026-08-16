@@ -9,34 +9,56 @@ import {
   ProductHeader,
   brandSections,
 } from "@/components/product-story-shell";
+import { entertainmentWebsiteFeedConfigs } from "@/lib/hearst-entertainment-story-feeds";
+import { hearstNewspaperPublications } from "@/lib/hearst-newspaper-feed-framework";
+import { hearstTVStations } from "@/lib/hearst-tv-feed-framework";
 import { hearstGrowthPrinciples } from "@/lib/hearst-growth-principles";
 
 export const metadata: Metadata = {
   title: "Hearst+ | A Daily Reading Habit Across Hearst",
   description:
-    "See how Hearst+ combines trusted editorial brands, a personalized daily edition, reusable technology, and transparent reader controls.",
+    "See how Hearst+ combines magazine brands, TV stations, newspapers, entertainment channels, a personalized daily edition, reusable technology, and transparent reader controls.",
 };
 
 const totalStories = brandSections.reduce((sum, destination) => sum + destination.count, 0);
 const totalBrands = brandSections.reduce((sum, destination) => sum + destination.brands.length, 0);
+const totalTVStations = hearstTVStations.length;
+const totalNewspapers = hearstNewspaperPublications.length;
+const totalEntertainmentChannels = entertainmentWebsiteFeedConfigs.length;
+const totalEntertainmentShows = 42;
 const dailyEditionPreviewImage = "https://hips.hearstapps.com/hmg-prod/images/457d25d9-6587-43a2-bf62-c9269692f6e7.jpg";
+
+const heroStrategy = [
+  {
+    label: "Problem",
+    copy: "Search, social, and AI answers are weakening anonymous referral traffic. Hearst needs a direct reader relationship across magazines, local news, newspapers, and A&E Family.",
+  },
+  {
+    label: "MVP proof",
+    copy: "The first product test is daily return behavior: can one compact edition make a large Hearst portfolio feel personal enough to become a repeat habit?",
+  },
+  {
+    label: "Commercial path",
+    copy: "Keep discovery open, use registration for follows, saves, local preferences, and show interests, then reserve membership for premium depth and utility.",
+  },
+] as const;
 
 const habitSteps = [
   {
     title: "Return to a fresh edition",
-    copy: "Today’s Picks stays stable for the day, then makes room for a genuinely new edition tomorrow.",
+    copy: "Today’s Picks can mix magazine stories, local headlines, channel stories, and show-led entertainment into a stable daily edition.",
   },
   {
     title: "Find value quickly",
-    copy: "Five useful stories lead the experience. Continue Reading, Saved, and destination rails preserve momentum.",
+    copy: "A concise lead package helps readers scan across lifestyle, autos, fashion, wellness, local news, and A&E Family without hunting site by site.",
   },
   {
     title: "Shape what comes next",
-    copy: "Save, follow, hide, and More Like This give readers direct control over future recommendations.",
+    copy: "Save, follow, hide, More Like This, station preferences, newspaper choices, and show interests give readers direct control over future recommendations.",
   },
   {
     title: "Build continuity",
-    copy: "The next visit remembers unfinished stories, interests, and what changed since the reader last returned.",
+    copy: "The next visit remembers unfinished stories, followed sources, preferred local markets, entertainment channels, and what changed since the reader last returned.",
   },
 ];
 
@@ -46,6 +68,10 @@ const principles = hearstGrowthPrinciples.map((principle, index) => ({
   evidence: `Signals: ${principle.signals.charAt(0).toLowerCase()}${principle.signals.slice(1)}`,
   color: principleColors[index],
 }));
+
+function formatPrincipleNumber(number: string) {
+  return String(Number(number));
+}
 
 const destinationPromises = [
   {
@@ -68,12 +94,22 @@ const destinationPromises = [
     color: "#E50022",
     copy: "Health, fitness, gear, science, active living, and practical expertise.",
   },
+  {
+    name: "Local News",
+    color: "#087A68",
+    copy: `${totalTVStations} Hearst TV stations and ${totalNewspapers} newspaper publications organized around local source choice.`,
+  },
+  {
+    name: "A&E Family",
+    color: "#B9913F",
+    copy: `${totalEntertainmentChannels} entertainment channels with show pages, channel stories, and ${totalEntertainmentShows} promoted show entries.`,
+  },
 ];
 
 const stack = [
   ["Experience", "Next.js 16, React 19, TypeScript, and Tailwind CSS 4"],
   ["Design system", "Hearst Design System foundations, semantic tokens, publication themes, and shared components"],
-  ["Editorial supply", "Validated public RSS snapshots with canonical URLs, source dates, images, and enriched bylines"],
+  ["Editorial supply", "Validated magazine RSS snapshots, TV and newspaper feed frameworks, entertainment channel-story sources, canonical URLs, source dates, images, and enriched bylines"],
   ["Recommendations", "Read-only Personalize article and video candidates with explainable additive ranking"],
   ["Media", "Responsive editorial images, galleries, native HLS, and an hls.js fallback for adaptive video"],
   ["Delivery", "Progressive server payloads, demand-driven catalog pages, cached article resolution, and Netlify"],
@@ -84,18 +120,18 @@ const stack = [
 const stakeholderValue = [
   {
     audience: "Readers",
-    value: "One dependable place for useful stories across the interests they already have.",
-    evidence: "Return behavior, useful sessions, saves, follows, hides, completion, and recommendation feedback.",
+    value: "One dependable place for useful stories, local updates, shows, and communities across the interests they already have.",
+    evidence: "Return behavior, useful sessions, saves, follows, station and newspaper choices, show opens, completion, and recommendation feedback.",
   },
   {
     audience: "Editorial brands",
-    value: "Qualified discovery from adjacent intent while the source logo, voice, byline, and route remain visible.",
-    evidence: "Cross-brand discovery, brand follows, downstream reading, and repeat engagement by source.",
+    value: "Qualified discovery from adjacent intent while each magazine, station, newspaper, and channel keeps visible source authority.",
+    evidence: "Cross-source discovery, follows, downstream reading, local source selection, show-page opens, and repeat engagement by source.",
   },
   {
     audience: "Hearst",
-    value: "A direct portfolio relationship organized around reader needs rather than isolated publication visits.",
-    evidence: "Destination breadth, retained readers, portfolio depth, and incremental value versus existing traffic.",
+    value: "A direct portfolio relationship organized around reader needs rather than isolated publication, station, newspaper, or channel visits.",
+    evidence: "Source breadth, retained readers, portfolio depth, registrations, membership conversion, and incremental value versus existing traffic.",
   },
   {
     audience: "Product teams",
@@ -109,8 +145,9 @@ const prototypeTruth = [
     title: "Working now",
     items: [
       `${totalStories} validated real-image stories across ${totalBrands} publication brands`,
+      `${totalTVStations} Hearst TV stations, ${totalNewspapers} newspaper publications, ${totalEntertainmentChannels} entertainment channels, and ${totalEntertainmentShows} promoted show entries`,
       "Responsive destination, publication, Saved, search, video, gallery, and in-app reader experiences",
-      "Stable daily picks, reading continuity, explainable recommendations, and progressive delivery",
+      "Stable daily picks, reading continuity, local-source selection, entertainment show surfaces, explainable recommendations, and progressive delivery",
       "A typed browser event contract for measuring explicit value actions without sending personal data",
     ],
   },
@@ -118,9 +155,9 @@ const prototypeTruth = [
     title: "Required for production",
     items: [
       "Production identity, consent, retention, deletion, and cross-device preference services",
-      "Scheduled ingestion with freshness monitoring, incident ownership, and rollback controls",
-      "Production analytics collection, experiments, dashboards, and calibrated ranking outcomes",
-      "Editorial governance, brand-owner review, abuse controls, and a proven commercial model",
+      "Scheduled magazine, TV, newspaper, and channel-story ingestion with freshness monitoring, incident ownership, and rollback controls",
+      "Production analytics collection, experiments, dashboards, and calibrated ranking outcomes across sources, local markets, and shows",
+      "Editorial governance, brand-owner review, local-news review, abuse controls, rights checks, and a proven commercial model",
     ],
   },
 ];
@@ -150,10 +187,10 @@ function DailyEditionPreview() {
         <div className="absolute inset-x-0 bottom-0 p-5 text-white sm:p-7">
           <p className="text-xs font-bold text-blue-100">Entertainment · Editor selected</p>
           <h2 className="mt-3 max-w-xl text-balance font-serif text-4xl leading-[0.98] tracking-[-0.03em] sm:text-5xl">
-            Five stories worth making time for today.
+            Stories, headlines, and shows worth making time for today.
           </h2>
           <p className="mt-4 max-w-lg text-sm leading-6 text-slate-200">
-            A concise daily mix that balances relevance, freshness, trusted sources, and useful discovery.
+            A concise daily mix that balances relevance, freshness, trusted sources, local utility, and useful discovery.
           </p>
         </div>
       </div>
@@ -171,6 +208,116 @@ function DailyEditionPreview() {
   );
 }
 
+function PrincipleCycle() {
+  return (
+    <div className="grid gap-8 bg-white p-5 shadow-sm lg:grid-cols-[0.86fr_1.14fr] lg:p-8">
+      <div className="bg-[#102A43] p-5 text-white sm:p-7">
+        <div
+          className="relative mx-auto aspect-square max-w-[430px]"
+          aria-label="Hearst+ principle loop: acquire and understand, activate and engage, learn and expand, then repeat"
+        >
+          <svg
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full"
+            viewBox="0 0 420 420"
+          >
+            <circle
+              cx="210"
+              cy="210"
+              fill="none"
+              r="135"
+              stroke="rgba(255,255,255,0.16)"
+              strokeWidth="2"
+            />
+            <path
+              d="M210 75 A135 135 0 0 1 327 277"
+              fill="none"
+              stroke="#6D45D8"
+              strokeLinecap="round"
+              strokeWidth="12"
+            />
+            <path
+              d="M327 277 A135 135 0 0 1 93 277"
+              fill="none"
+              stroke="#169DB4"
+              strokeLinecap="round"
+              strokeWidth="12"
+            />
+            <path
+              d="M93 277 A135 135 0 0 1 210 75"
+              fill="none"
+              stroke="#70B52C"
+              strokeLinecap="round"
+              strokeWidth="12"
+            />
+          </svg>
+          {principles.map((principle, index) => {
+            const positions = [
+              "left-1/2 top-[12%] -translate-x-1/2",
+              "right-[15%] top-[66%] -translate-y-1/2",
+              "left-[15%] top-[66%] -translate-y-1/2",
+            ];
+            return (
+              <div key={principle.number} className={`absolute z-10 ${positions[index]}`}>
+                <span
+                  className="grid h-16 w-16 place-items-center rounded-full border-4 border-[#102A43] text-base font-black text-white shadow-lg"
+                  style={{ backgroundColor: principle.color }}
+                >
+                  {formatPrincipleNumber(principle.number)}
+                </span>
+              </div>
+            );
+          })}
+          <div className="absolute left-1/2 top-1/2 grid h-40 w-40 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-white/15 bg-white/10 p-5 text-center shadow-[0_18px_50px_rgba(0,0,0,0.22)] backdrop-blur-sm">
+            <div>
+              <span className="block text-[11px] font-black uppercase tracking-[0.18em] text-sky-200">
+                Reader loop
+              </span>
+              <p className="mt-2 text-sm font-bold leading-5 text-white">
+                1 to 2 to 3, then back smarter.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="mt-5 grid gap-px bg-white/15 sm:grid-cols-3">
+          {principles.map((principle) => (
+            <div key={principle.number} className="bg-white/10 p-3">
+              <span className="block text-xs font-black text-white">
+                {formatPrincipleNumber(principle.number)}
+              </span>
+              <span className="mt-1 block text-[11px] font-bold uppercase leading-4 tracking-[0.1em] text-slate-200">
+                {principle.title}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <ol className="grid gap-px bg-slate-200">
+        {principles.map((principle) => (
+          <li key={principle.number} className="bg-[#F8FAFC] p-5 sm:p-6">
+            <div className="flex items-start gap-4">
+              <span
+                aria-hidden="true"
+                className="grid h-10 w-10 shrink-0 place-items-center rounded-full text-xs font-black text-white"
+                style={{ backgroundColor: principle.color }}
+              >
+                {formatPrincipleNumber(principle.number)}
+              </span>
+              <div className="min-w-0">
+                <h3 className="font-serif text-2xl leading-none">{principle.title}</h3>
+                <p className="mt-3 text-sm leading-6 text-slate-600">{principle.copy}</p>
+                <p className="mt-4 border-t border-slate-200 pt-3 text-xs font-semibold leading-5 text-slate-500">
+                  {principle.evidence}
+                </p>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
 export default function WhyHearstPlusPage() {
   return (
     <div className="min-h-screen overflow-x-clip bg-[#F8FAFC] text-[#102A43]">
@@ -180,14 +327,36 @@ export default function WhyHearstPlusPage() {
           <div className="mx-auto grid max-w-[1360px] gap-12 px-5 py-16 md:px-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:py-24">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.2em] text-sky-300">
-                One portfolio. One useful daily relationship.
+                Direct relationship. Daily habit. Paid upgrade path.
               </p>
               <h1 className="mt-6 max-w-3xl text-balance font-serif text-5xl leading-[0.95] tracking-[-0.035em] sm:text-6xl lg:text-7xl">
-                Make the depth of Hearst worth returning to every day.
+                Turn Hearst&apos;s portfolio into a daily reader relationship.
               </h1>
               <p className="mt-7 max-w-2xl text-pretty text-lg leading-8 text-slate-300">
-                Hearst+ brings trusted stories from across the portfolio into a personal daily edition. Readers get relevance, continuity, and control. Every publication keeps its identity and authority.
+                Hearst+ should prove that readers will come back directly when trusted brands, local sources, shows, communities, and shopping guidance are organized into one useful daily edition. Habit comes first. Registration makes it personal. Membership becomes the upgrade for premium depth and convenience.
               </p>
+              <div className="mt-8 grid gap-px bg-white/15 sm:grid-cols-3">
+                {heroStrategy.map((item) => (
+                  <article key={item.label} className="bg-[#123A5A] p-4">
+                    <h2 className="text-[11px] font-black uppercase tracking-[0.16em] text-sky-300">
+                      {item.label}
+                    </h2>
+                    <p className="mt-3 text-sm leading-6 text-slate-200">{item.copy}</p>
+                  </article>
+                ))}
+              </div>
+              <div className="mt-4 grid gap-px bg-white/15 sm:grid-cols-3">
+                {[
+                  ["Free", "Open discovery and sampling"],
+                  ["Registered", "For You, saves, follows, local preferences"],
+                  ["Member", "Premium collections, ad-light reading, perks"],
+                ].map(([tier, value]) => (
+                  <div key={tier} className="bg-white/10 px-4 py-3">
+                    <span className="block text-sm font-bold text-white">{tier}</span>
+                    <span className="mt-1 block text-xs leading-5 text-slate-300">{value}</span>
+                  </div>
+                ))}
+              </div>
               <div className="mt-9 flex flex-wrap gap-3">
                 <Link
                   href="/hearst-plus/"
@@ -202,19 +371,6 @@ export default function WhyHearstPlusPage() {
                   See how it works
                 </Link>
               </div>
-              <dl className="mt-12 grid grid-cols-2 gap-x-8 gap-y-6 border-t border-white/20 pt-7 sm:grid-cols-4">
-                {[
-                  [String(totalStories), "validated stories"],
-                  [String(totalBrands), "publication brands"],
-                  [String(brandSections.length), "destinations"],
-                  ["1", "shared reader"],
-                ].map(([value, label]) => (
-                  <div key={label}>
-                    <dt className="text-xs text-slate-400">{label}</dt>
-                    <dd className="mt-1 text-2xl font-bold">{value}</dd>
-                  </div>
-                ))}
-              </dl>
             </div>
             <div className="border border-white/15 bg-white/5 p-3 sm:p-5">
               <DailyEditionPreview />
@@ -259,27 +415,11 @@ export default function WhyHearstPlusPage() {
                 </h2>
               </div>
               <p className="max-w-[70ch] text-pretty leading-7 text-slate-600">
-                Hearst+ turns a reader&apos;s first useful visit into a measurable, reader-controlled loop. Each principle protects the experience: value before data collection, engagement without pressure, and learning that improves the whole portfolio without flattening its brands.
+                Hearst+ turns a reader&apos;s first useful visit into a measurable, reader-controlled loop. Each principle protects the experience: value before data collection, engagement without pressure, and learning that improves the whole portfolio without flattening magazine brands, local sources, newspapers, or entertainment channels.
               </p>
             </div>
-            <div className="relative mt-12 grid gap-px bg-slate-200 md:grid-cols-3">
-              {principles.map((principle) => (
-                <article key={principle.number} className="relative bg-white p-7 sm:p-8">
-                  <div className="flex items-center justify-between gap-4">
-                    <span
-                      aria-hidden="true"
-                      className="grid h-12 w-12 place-items-center rounded-full text-sm font-black text-white"
-                      style={{ backgroundColor: principle.color }}
-                    >
-                      {principle.number}
-                    </span>
-                    <span aria-hidden="true" className="hidden h-px flex-1 bg-slate-200 md:block" />
-                  </div>
-                  <h3 className="mt-8 max-w-[14ch] font-serif text-3xl leading-[0.98] tracking-[-0.02em]">{principle.title}</h3>
-                  <p className="mt-5 text-sm leading-6 text-slate-600">{principle.copy}</p>
-                  <p className="mt-7 border-t border-slate-200 pt-4 text-xs font-semibold leading-5 text-slate-500">{principle.evidence}</p>
-                </article>
-              ))}
+            <div className="mt-12">
+              <PrincipleCycle />
             </div>
             <div className="mt-6 border-l-4 border-[#2D75B9] bg-white px-6 py-5 text-sm leading-6 text-slate-700 shadow-sm">
               <strong className="text-[#102A43]">The guardrail:</strong> Hearst+ should become more useful because readers choose to return—not because the product creates pressure, hides control, or treats every interaction as a conversion.
@@ -291,13 +431,13 @@ export default function WhyHearstPlusPage() {
           <div className="mx-auto max-w-[1360px] px-5 py-20 md:px-10 lg:py-28">
             <div className="max-w-4xl">
               <h2 className="text-balance font-serif text-5xl leading-none tracking-[-0.03em]">
-                Interests cross publication lines. Hearst has the depth to follow them.
+                Interests cross publication, local, and entertainment lines. Hearst has the depth to follow them.
               </h2>
               <p className="mt-6 max-w-[70ch] text-pretty leading-7 text-slate-700">
-                A reader planning dinner may also need shopping advice, wellness guidance, or a home idea. Hearst+ organizes that breadth around the reader while keeping every source publication unmistakable.
+                A reader planning dinner may also need shopping advice, wellness guidance, a local update, or a show to watch tonight. Hearst+ organizes that breadth around the reader while keeping every source unmistakable.
               </p>
             </div>
-            <div className="mt-12 grid gap-px bg-slate-300 md:grid-cols-2 xl:grid-cols-4">
+            <div className="mt-12 grid gap-px bg-slate-300 md:grid-cols-2 xl:grid-cols-3">
               {destinationPromises.map((destination) => (
                 <article key={destination.name} className="bg-white p-6">
                   <span className="block h-2 w-12" style={{ backgroundColor: destination.color }} />
@@ -314,14 +454,27 @@ export default function WhyHearstPlusPage() {
           <div className="mx-auto max-w-[1360px] px-5 py-20 md:px-10 lg:py-28">
             <div className="grid gap-8 lg:grid-cols-[0.7fr_1.3fr] lg:items-end">
               <h2 className="text-balance font-serif text-5xl leading-none tracking-[-0.03em]">
-                29 brands stay visible inside one system.
+                Magazine brands, local sources, newspapers, and channels stay visible inside one system.
               </h2>
               <p className="max-w-[70ch] text-pretty leading-7 text-slate-600">
-                Shared product infrastructure does not require generic presentation. Logos, typography, colors, routes, bylines, contextual navigation, and source links preserve the trust each publication has earned.
+                Shared product infrastructure does not require generic presentation. Logos, typography, colors, routes, bylines, station identity, newspaper mastheads, channel branding, show pages, and source links preserve the trust each source has earned.
               </p>
             </div>
             <div className="mt-12">
               <BrandPortfolioGrid compact />
+            </div>
+            <div className="mt-8 grid gap-px bg-slate-200 md:grid-cols-4">
+              {[
+                [`${totalBrands}`, "magazine brands"],
+                [`${totalTVStations}`, "TV stations"],
+                [`${totalNewspapers}`, "newspapers"],
+                [`${totalEntertainmentChannels}`, "entertainment channels"],
+              ].map(([value, label]) => (
+                <div key={label} className="bg-[#F8FAFC] p-5">
+                  <strong className="font-serif text-4xl leading-none">{value}</strong>
+                  <p className="mt-2 text-xs font-black uppercase tracking-[0.14em] text-[#2D75B9]">{label}</p>
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -333,7 +486,7 @@ export default function WhyHearstPlusPage() {
                 A working reader product, built on reusable foundations.
               </h2>
               <p className="mt-6 max-w-[72ch] text-pretty leading-7 text-slate-600">
-                The prototype combines a validated content catalog, current recommendation candidates, explainable ranking, progressive delivery, accessible interaction patterns, and publication-aware theming. The architecture is designed to improve once across the portfolio.
+                The prototype combines a validated magazine catalog, local TV and newspaper feed frameworks, entertainment channel-story sources, current recommendation candidates, explainable ranking, progressive delivery, accessible interaction patterns, and source-aware theming. The architecture is designed to improve once across the portfolio.
               </p>
             </div>
             <div className="mt-12">
@@ -358,7 +511,7 @@ export default function WhyHearstPlusPage() {
                   What stakeholders can evaluate.
                 </h2>
                 <p className="mt-6 max-w-[62ch] text-pretty leading-7 text-slate-600">
-                  The strongest case begins with reader value. Portfolio, editorial, and platform benefits should follow from a destination people choose to use.
+                  The strongest case begins with reader value. Portfolio, editorial, local-news, entertainment, and platform benefits should follow from a destination people choose to use.
                 </p>
               </div>
               <div className="border-t-2 border-[#102A43]">
@@ -415,7 +568,7 @@ export default function WhyHearstPlusPage() {
                 See the daily habit in the product.
               </h2>
               <p className="mt-6 max-w-[68ch] text-pretty leading-7 text-blue-50">
-                Open Hearst+ to explore Today&apos;s Picks, return continuity, personalized recommendations, the full brand portfolio, and the stakeholder demo tools.
+                Open Hearst+ to explore Today&apos;s Picks, return continuity, personalized recommendations, magazine brands, local TV stations, newspapers, A&E Family shows, and the stakeholder demo tools.
               </p>
             </div>
             <div className="flex flex-wrap gap-3 lg:justify-end">
