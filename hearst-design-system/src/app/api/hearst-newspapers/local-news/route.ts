@@ -13,12 +13,15 @@ export const dynamic = "force-dynamic";
 
 const feedFetchTimeoutMs = 8000;
 const articleImageFetchTimeoutMs = 3500;
+const defaultStoryLimit = 15;
+const maxStoryLimit = 30;
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const publicationId = url.searchParams.get("publicationId");
   const requestedFeedId = url.searchParams.get("feedId");
   const requestedFeedUrl = url.searchParams.get("feedUrl")?.trim();
+  const storyLimit = parseStoryLimit(url.searchParams.get("limit"));
 
   if (!publicationId) {
     return NextResponse.json(
@@ -65,7 +68,7 @@ export async function GET(request: Request) {
     }
 
     const xml = await response.text();
-    const enrichedItems = await hydrateMissingArticleImages(parseRssItems(xml).slice(0, 15));
+    const enrichedItems = await hydrateMissingArticleImages(parseRssItems(xml).slice(0, storyLimit));
     const stories = enrichedItems
       .map((item) => normalizeHearstNewspaperFeedItem(item, publication, feed))
       .sort(sortNewestFirst);
@@ -86,6 +89,12 @@ export async function GET(request: Request) {
       error: error instanceof Error ? error.message : `${publication.publicationName} RSS fetch failed.`,
     });
   }
+}
+
+function parseStoryLimit(value: string | null) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return defaultStoryLimit;
+  return Math.max(1, Math.min(maxStoryLimit, Math.trunc(parsed)));
 }
 
 function isFetchableFeedUrl(value: string) {

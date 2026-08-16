@@ -9,6 +9,7 @@ import { FeaturedStoryCarousel } from "@/components/hearst-plus/featured-story-c
 import { LocalNewsSourceToggle } from "@/components/hearst-plus/local-news-source-toggle";
 import { LifestyleRiverImage } from "@/components/hearst-plus/story-presentation";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { FeedStatus, FeedType, HearstTVContentType, HearstTVFeed } from "@/lib/hearst-tv-feed-framework";
 import {
   dedupeHearstTVContent,
@@ -168,6 +169,7 @@ export function HearstTVLocalNewsRiver({
   const filterMessage = "Use the station filter to choose a Hearst TV market.";
   const [liveContent, setLiveContent] = useState<HearstTVContent[]>([]);
   const [liveFeedError, setLiveFeedError] = useState<string | null>(null);
+  const [liveFeedLoading, setLiveFeedLoading] = useState(false);
 
   const configuredStationIds = useMemo(
     () => new Set(feeds.filter(isConfiguredFeed).map((feed) => feed.stationId)),
@@ -187,6 +189,7 @@ export function HearstTVLocalNewsRiver({
 
     async function loadLocalNews() {
       if (activeFeeds.length === 0) {
+        setLiveFeedLoading(false);
         setLiveContent([]);
         setLiveFeedError(
           selectedStation === allValue
@@ -197,6 +200,7 @@ export function HearstTVLocalNewsRiver({
       }
 
       setLiveFeedError(null);
+      setLiveFeedLoading(true);
 
       const results = await Promise.allSettled(activeFeeds.map(async (feed) => {
         const station = getHearstTVStationById(feed.stationId);
@@ -207,7 +211,10 @@ export function HearstTVLocalNewsRiver({
           feedUrl: feed.feedUrl,
           feedType: feed.feedType,
         });
-        const response = await fetch(`/api/hearst-tv/local-news?${params.toString()}`, { cache: "no-store" });
+        const response = await fetch(`/api/hearst-tv/local-news?${params.toString()}`, {
+          cache: "no-store",
+          signal: AbortSignal.timeout(7000),
+        });
         if (!response.ok) throw new Error(`Local news feed returned ${response.status}`);
         return await response.json() as LocalNewsFeedResponse;
       }));
@@ -223,6 +230,7 @@ export function HearstTVLocalNewsRiver({
       });
 
       setLiveContent(stories);
+      setLiveFeedLoading(false);
       if (selectedStation === allValue) {
         setLiveFeedError(stories.length > 0 ? null : errors[0] ?? null);
       } else {
@@ -238,6 +246,8 @@ export function HearstTVLocalNewsRiver({
   }, [activeFeeds, selectedStation]);
 
   const filteredContent = useMemo(() => {
+    if (liveFeedLoading && activeFeeds.length > 0) return [];
+
     const liveStationIds = new Set(liveContent.map((item) => item.stationId));
     const sampleContent = hearstTVSampleContent.filter((item) => !liveStationIds.has(item.stationId));
     const contentPool = selectedStation === allValue
@@ -258,7 +268,7 @@ export function HearstTVLocalNewsRiver({
         ...item,
         hasConfiguredFeed: configuredStationIds.has(item.stationId),
       }));
-  }, [configuredStationIds, liveContent, selectedStation]);
+  }, [activeFeeds.length, configuredStationIds, liveContent, liveFeedLoading, selectedStation]);
   const readerStories = useMemo(
     () => filteredContent.map((item) => mapLocalNewsContentToReaderStory(item)),
     [filteredContent],
@@ -321,7 +331,9 @@ export function HearstTVLocalNewsRiver({
         </aside>
 
         <main id="hearst-story-river" className="min-w-0 scroll-mt-28 space-y-4" aria-label="Hearst TV local news river">
-          {heroItems.length > 0 ? (
+          {liveFeedLoading && activeFeeds.length > 0 ? (
+            <LocalNewsRiverSkeleton />
+          ) : heroItems.length > 0 ? (
             <LocalNewsFeaturedCarousel
               key={heroItems.map((item) => item.id).join("|")}
               items={heroItems}
@@ -340,7 +352,7 @@ export function HearstTVLocalNewsRiver({
             </section>
           )}
 
-          {liveFeedError ? (
+          {!liveFeedLoading && liveFeedError ? (
             <p className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 text-xs leading-5 text-muted-foreground shadow-[var(--hp-shadow-card)]">
               {liveFeedError}
             </p>
@@ -407,7 +419,7 @@ export function HearstTVLocalNewsRiver({
               </article>
             );
           })}
-          {filteredContent.length > 0 && riverItems.length === 0 ? (
+          {!liveFeedLoading && filteredContent.length > 0 && riverItems.length === 0 ? (
             <p className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 text-sm leading-6 text-muted-foreground shadow-[var(--hp-shadow-card)]">
               More TV station stories will appear here as additional feed items match the selected station.
             </p>
@@ -434,6 +446,56 @@ export function HearstTVLocalNewsRiver({
   );
 }
 
+function LocalNewsRiverSkeleton() {
+  return (
+    <div className="space-y-4" aria-label="Loading local news stories" aria-busy="true">
+      <section className="overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
+        <div className="relative aspect-[16/9] min-h-[360px] overflow-hidden bg-[var(--hp-surface-low)]">
+          <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-[var(--hp-surface-low)] via-white/80 to-[var(--hp-surface-low)]" />
+          <div className="absolute left-6 top-6 h-8 w-48 animate-pulse rounded-full bg-white/80" />
+          <div className="absolute inset-x-6 bottom-8 space-y-4">
+            <div className="h-4 w-36 animate-pulse rounded-full bg-white/80" />
+            <div className="h-10 w-3/4 animate-pulse rounded-full bg-white/90" />
+            <div className="h-10 w-1/2 animate-pulse rounded-full bg-white/80" />
+          </div>
+        </div>
+        <div className="flex items-center justify-between gap-4 border-t border-border px-4 py-3">
+          <div className="flex gap-2">
+            <span className="h-2 w-8 animate-pulse rounded-full bg-primary/35" />
+            <span className="h-2 w-8 animate-pulse rounded-full bg-primary/20" />
+            <span className="h-2 w-5 animate-pulse rounded-full bg-primary/20" />
+          </div>
+          <div className="hidden gap-3 sm:flex">
+            <span className="h-4 w-12 animate-pulse rounded-full bg-[var(--hp-surface-low)]" />
+            <span className="h-4 w-24 animate-pulse rounded-full bg-[var(--hp-surface-low)]" />
+            <span className="h-4 w-20 animate-pulse rounded-full bg-[var(--hp-surface-low)]" />
+          </div>
+        </div>
+      </section>
+      {Array.from({ length: 3 }).map((_, index) => (
+        <article key={index} className="overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
+          <div className="aspect-video animate-pulse bg-[var(--hp-surface-low)]" />
+          <div className="space-y-4 p-5">
+            <div className="flex flex-wrap gap-2">
+              <span className="h-4 w-16 animate-pulse rounded-full bg-[var(--hp-surface-low)]" />
+              <span className="h-4 w-40 animate-pulse rounded-full bg-[var(--hp-surface-low)]" />
+              <span className="h-4 w-20 animate-pulse rounded-full bg-[var(--hp-surface-low)]" />
+            </div>
+            <div className="space-y-3">
+              <div className="h-7 w-11/12 animate-pulse rounded-full bg-[var(--hp-surface-low)]" />
+              <div className="h-7 w-2/3 animate-pulse rounded-full bg-[var(--hp-surface-low)]" />
+            </div>
+            <div className="space-y-2">
+              <div className="h-4 w-full animate-pulse rounded-full bg-[var(--hp-surface-low)]" />
+              <div className="h-4 w-4/5 animate-pulse rounded-full bg-[var(--hp-surface-low)]" />
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+
 function LocalNewsFeaturedCarousel({
   items,
   onOpenStory,
@@ -442,20 +504,32 @@ function LocalNewsFeaturedCarousel({
   onOpenStory: (story: LifestyleRiverStory) => void;
 }) {
   const stories = useMemo(() => items.map((item) => mapLocalNewsContentToReaderStory(item)), [items]);
+  const imageByStoryId = useMemo(
+    () => new Map(items.map((item) => [item.id, item.imageUrl])),
+    [items],
+  );
 
   return (
     <FeaturedStoryCarousel
       stories={stories}
       editionLabel="Latest Local News"
-      renderImage={(story, _index, active) => (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={story.image}
-          alt=""
-          className="h-full w-full object-cover"
-          loading={active ? "eager" : "lazy"}
-        />
-      )}
+      renderImage={(story, _index, active) => {
+        const imageUrl = imageByStoryId.get(story.id);
+
+        if (!imageUrl) {
+          return <LocalNewsImagePlaceholder />;
+        }
+
+        return (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={imageUrl}
+            alt=""
+            className="h-full w-full object-cover"
+            loading={active ? "eager" : "lazy"}
+          />
+        );
+      }}
       getCommentCount={() => 0}
       isCurrentStory={() => true}
       onOpenStory={onOpenStory}
@@ -464,6 +538,14 @@ function LocalNewsFeaturedCarousel({
       onFollowBrand={() => undefined}
       indicatorPalette={["#087A68", "#3EA391", "#91CFC2"]}
     />
+  );
+}
+
+function LocalNewsImagePlaceholder() {
+  return (
+    <div className="h-full w-full bg-[var(--hp-surface-low)]">
+      <div className="h-full w-full animate-pulse bg-[linear-gradient(135deg,var(--hp-surface-low)_0%,rgba(255,255,255,0.82)_48%,var(--hp-surface-low)_100%)]" />
+    </div>
   );
 }
 
@@ -583,12 +665,18 @@ function LocalNewsReaderModal({
                   <span className="h-px flex-1 bg-border" aria-hidden="true" />
                 </div>
               ) : null}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={story.image}
-                alt=""
-                className="aspect-video w-full rounded-[4px] bg-[var(--hp-surface-low)] object-cover"
-              />
+              <div className="aspect-video w-full overflow-hidden rounded-[4px] bg-[var(--hp-surface-low)]">
+                {story.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={story.image}
+                    alt=""
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <LocalNewsImagePlaceholder />
+                )}
+              </div>
               <div className="mx-auto mt-6 max-w-3xl">
                 <div className="mb-3 flex flex-wrap items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
                   <span>{story.signal}</span>
@@ -650,7 +738,7 @@ function mapLocalNewsContentToReaderStory(
     topic: "Local News",
     title: item.title,
     summary: item.description || `${station?.stationName ?? "Hearst TV"} local news update.`,
-    image: item.imageUrl || station?.logo || "/logos/hearst-local-news.svg",
+    image: item.imageUrl || "",
     byline: station ? `${station.callSign} local news` : "Hearst TV local news",
     readTime: item.contentType === "video" ? "Watch" : "2 min read",
     popularity: item.hasConfiguredFeed ? 92 : 58,
@@ -1023,19 +1111,34 @@ function FilterSelect({
   value: string;
 }) {
   return (
-    <label htmlFor={id} className="block text-sm font-semibold text-[var(--hp-text-headline)]">
-      {label}
-      <select
-        id={id}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        className="mt-2 min-h-11 w-full border border-[var(--hp-border)] bg-[var(--hp-surface)] px-3 text-sm text-[var(--hp-text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--hp-focus)]"
-      >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>{option.label}</option>
-        ))}
-      </select>
-    </label>
+    <div className="block text-sm font-semibold text-[var(--hp-text-headline)]">
+      <label htmlFor={id}>{label}</label>
+      <Select value={value} onValueChange={(nextValue) => {
+        if (nextValue) onChange(nextValue);
+      }}>
+        <SelectTrigger
+          id={id}
+          className="mt-2 h-11 min-h-11 w-full rounded-lg border-input bg-background px-3 text-left text-sm font-semibold text-foreground shadow-xs"
+        >
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent
+          align="start"
+          alignItemWithTrigger={false}
+          className="max-h-[min(420px,var(--available-height))] rounded-lg border border-border bg-popover p-1 shadow-xl ring-1 ring-foreground/10"
+        >
+          {options.map((option) => (
+            <SelectItem
+              key={option.value}
+              value={option.value}
+              className="min-h-10 px-3 pr-9 text-sm font-semibold text-popover-foreground focus:bg-[var(--hp-control-hover)] focus:text-foreground"
+            >
+              {option.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
   );
 }
 

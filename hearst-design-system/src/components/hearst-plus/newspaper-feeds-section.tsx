@@ -6,6 +6,7 @@ import { ContentReaderDialogShell, rememberContentReaderReturnFocus } from "@/co
 import { ContentReaderMasthead } from "@/components/hearst-plus/content-reader-masthead";
 import { FeaturedStoryCarousel } from "@/components/hearst-plus/featured-story-carousel";
 import { LifestyleRiverImage } from "@/components/hearst-plus/story-presentation";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   getHearstNewspaperFeedById,
   getHearstNewspaperPublicationById,
@@ -21,6 +22,8 @@ import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 
 const allValue = "all";
 const defaultNewspaperPublication = "sfgate";
+const newspaperHeroStoryLimit = 3;
+const newspaperRiverStoryLimit = 15;
 
 type NewspaperFeedResponse = {
   stories: HearstNewspaperContent[];
@@ -79,6 +82,8 @@ export function NewspaperFeedsSection({
   const [manualSelectedPublication, setManualSelectedPublication] = useState(defaultNewspaperPublication);
   const selectedPublication = routedPublication ?? manualSelectedPublication;
   const [liveContent, setLiveContent] = useState<HearstNewspaperContent[]>([]);
+  const [liveFeedLoading, setLiveFeedLoading] = useState(false);
+  const [liveRiverLoading, setLiveRiverLoading] = useState(false);
 
   const defaultPublicationRecord = getHearstNewspaperPublicationById(defaultNewspaperPublication);
   const selectedPublicationRecord = selectedPublication === allValue
@@ -95,23 +100,48 @@ export function NewspaperFeedsSection({
 
     async function loadNewspaperFeed() {
       if (!activeFeed || !activePublicationRecord) {
+        setLiveFeedLoading(false);
+        setLiveRiverLoading(false);
         setLiveContent([]);
         return;
       }
 
       try {
+        setLiveFeedLoading(true);
+        setLiveRiverLoading(false);
+        setLiveContent([]);
+
         const params = new URLSearchParams({
           publicationId: activeFeed.publicationId,
           feedId: activeFeed.id,
           feedUrl: activeFeed.feedUrl,
+          limit: String(newspaperHeroStoryLimit),
         });
         const response = await fetch(`/api/hearst-newspapers/local-news?${params.toString()}`, { cache: "no-store" });
         if (!response.ok) throw new Error(`Newspaper feed returned ${response.status}`);
         const payload = await response.json() as NewspaperFeedResponse;
         if (cancelled) return;
-        setLiveContent(payload.stories ?? []);
+        const heroStories = payload.stories ?? [];
+        setLiveContent(heroStories);
+        setLiveFeedLoading(false);
+
+        if (payload.status !== "connected") return;
+
+        setLiveRiverLoading(true);
+        try {
+          params.set("limit", String(newspaperRiverStoryLimit));
+          const riverResponse = await fetch(`/api/hearst-newspapers/local-news?${params.toString()}`, { cache: "no-store" });
+          if (!riverResponse.ok) throw new Error(`Newspaper feed returned ${riverResponse.status}`);
+          const riverPayload = await riverResponse.json() as NewspaperFeedResponse;
+          if (cancelled) return;
+          setLiveContent(riverPayload.stories?.length ? riverPayload.stories : heroStories);
+        } finally {
+          if (!cancelled) setLiveRiverLoading(false);
+        }
       } catch {
         if (cancelled) return;
+        setLiveFeedLoading(false);
+        setLiveRiverLoading(false);
         setLiveContent([]);
       }
     }
@@ -124,6 +154,8 @@ export function NewspaperFeedsSection({
   }, [activeFeed, activePublicationRecord]);
 
   const filteredContent = useMemo(() => {
+    if (liveFeedLoading && activeFeed) return [];
+
     const livePublicationIds = new Set(liveContent.map((item) => item.publicationId));
     const sampleContent = hearstNewspaperSampleContent.filter((item) => !livePublicationIds.has(item.publicationId));
     const contentPool = selectedPublication === allValue
@@ -140,7 +172,7 @@ export function NewspaperFeedsSection({
         return true;
       })
       .sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt));
-  }, [liveContent, selectedPublication]);
+  }, [activeFeed, liveContent, liveFeedLoading, selectedPublication]);
   const readerStories = useMemo(
     () => filteredContent.map(mapNewspaperItemToCarouselStory),
     [filteredContent],
@@ -197,7 +229,9 @@ export function NewspaperFeedsSection({
         </aside>
 
         <main id="hearst-story-river" className="min-w-0 scroll-mt-28 space-y-4" aria-label="Hearst Newspapers RSS feeds">
-          {heroItems.length > 0 ? (
+          {liveFeedLoading && activeFeed ? (
+            <NewspaperFeaturedSkeleton />
+          ) : heroItems.length > 0 ? (
             <NewspaperFeaturedCarousel
               key={heroItems.map((item) => item.id).join("|")}
               items={heroItems}
@@ -273,7 +307,8 @@ export function NewspaperFeedsSection({
               </article>
             );
           })}
-          {filteredContent.length > 0 && riverItems.length === 0 ? (
+          {liveRiverLoading && activeFeed ? <NewspaperRiverStorySkeletons /> : null}
+          {!liveFeedLoading && !liveRiverLoading && filteredContent.length > 0 && riverItems.length === 0 ? (
             <p className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 text-sm leading-6 text-muted-foreground shadow-[var(--hp-shadow-card)]">
               More newspaper stories will appear here as additional feed items match the selected newspaper.
             </p>
@@ -306,20 +341,32 @@ function NewspaperFeaturedCarousel({
   onOpenStory: (story: LifestyleRiverStory) => void;
 }) {
   const stories = useMemo(() => items.map(mapNewspaperItemToCarouselStory), [items]);
+  const imageByStoryId = useMemo(
+    () => new Map(items.map((item) => [item.id, item.imageUrl])),
+    [items],
+  );
 
   return (
     <FeaturedStoryCarousel
       stories={stories}
       editionLabel="Latest Local News"
-      renderImage={(story, _index, active) => (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={story.image}
-          alt=""
-          className="h-full w-full object-cover"
-          loading={active ? "eager" : "lazy"}
-        />
-      )}
+      renderImage={(story, _index, active) => {
+        const imageUrl = imageByStoryId.get(story.id);
+
+        if (!imageUrl) {
+          return <NewspaperImagePlaceholder />;
+        }
+
+        return (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={imageUrl}
+            alt=""
+            className="h-full w-full object-cover"
+            loading={active ? "eager" : "lazy"}
+          />
+        );
+      }}
       getCommentCount={() => 0}
       isCurrentStory={() => true}
       onOpenStory={onOpenStory}
@@ -328,6 +375,71 @@ function NewspaperFeaturedCarousel({
       onFollowBrand={() => undefined}
       indicatorPalette={["#087A68", "#3EA391", "#91CFC2"]}
     />
+  );
+}
+
+function NewspaperImagePlaceholder() {
+  return (
+    <div className="h-full w-full bg-[var(--hp-surface-low)]">
+      <div className="h-full w-full animate-pulse bg-[linear-gradient(135deg,var(--hp-surface-low)_0%,rgba(255,255,255,0.82)_48%,var(--hp-surface-low)_100%)]" />
+    </div>
+  );
+}
+
+function NewspaperFeaturedSkeleton() {
+  return (
+    <section
+      className="overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]"
+      aria-label="Loading newspaper stories"
+      aria-busy="true"
+    >
+      <div className="relative aspect-[16/9] min-h-[360px] overflow-hidden bg-[var(--hp-surface-low)]">
+        <div className="absolute inset-0 animate-pulse bg-[linear-gradient(135deg,var(--hp-surface-low)_0%,rgba(255,255,255,0.82)_48%,var(--hp-surface-low)_100%)]" />
+        <div className="absolute left-6 top-6 h-8 w-44 animate-pulse rounded-full bg-white/80" />
+        <div className="absolute inset-x-6 bottom-8 space-y-4">
+          <div className="h-4 w-32 animate-pulse rounded-full bg-white/80" />
+          <div className="h-10 w-4/5 animate-pulse rounded-full bg-white/90" />
+          <div className="h-10 w-2/3 animate-pulse rounded-full bg-white/80" />
+        </div>
+      </div>
+      <div className="flex items-center justify-between gap-4 border-t border-border px-4 py-3">
+        <div className="flex gap-2">
+          <span className="h-2 w-8 animate-pulse rounded-full bg-primary/35" />
+          <span className="h-2 w-8 animate-pulse rounded-full bg-primary/20" />
+          <span className="h-2 w-5 animate-pulse rounded-full bg-primary/20" />
+        </div>
+        <span className="hidden h-4 w-36 animate-pulse rounded-full bg-[var(--hp-surface-low)] sm:block" />
+      </div>
+    </section>
+  );
+}
+
+function NewspaperRiverStorySkeletons() {
+  return (
+    <div className="space-y-4" aria-label="Loading more newspaper stories" aria-busy="true">
+      {Array.from({ length: 3 }).map((_, index) => (
+        <article
+          key={index}
+          className="overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]"
+        >
+          <div className="aspect-video animate-pulse bg-[var(--hp-surface-low)]" />
+          <div className="space-y-4 p-5">
+            <div className="flex flex-wrap gap-2">
+              <span className="h-4 w-16 animate-pulse rounded-full bg-[var(--hp-surface-low)]" />
+              <span className="h-4 w-44 animate-pulse rounded-full bg-[var(--hp-surface-low)]" />
+            </div>
+            <div className="space-y-3">
+              <div className="h-7 w-11/12 animate-pulse rounded-full bg-[var(--hp-surface-low)]" />
+              <div className="h-7 w-2/3 animate-pulse rounded-full bg-[var(--hp-surface-low)]" />
+            </div>
+            <div className="space-y-2">
+              <div className="h-4 w-full animate-pulse rounded-full bg-[var(--hp-surface-low)]" />
+              <div className="h-4 w-4/5 animate-pulse rounded-full bg-[var(--hp-surface-low)]" />
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
   );
 }
 
@@ -447,12 +559,18 @@ function NewspaperReaderModal({
                   <span className="h-px flex-1 bg-border" aria-hidden="true" />
                 </div>
               ) : null}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={story.image}
-                alt=""
-                className="aspect-video w-full rounded-[4px] bg-[var(--hp-surface-low)] object-cover"
-              />
+              <div className="aspect-video w-full overflow-hidden rounded-[4px] bg-[var(--hp-surface-low)]">
+                {story.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={story.image}
+                    alt=""
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <NewspaperImagePlaceholder />
+                )}
+              </div>
               <div className="mx-auto mt-6 max-w-3xl">
                 <div className="mb-3 flex flex-wrap items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
                   <span>{story.signal}</span>
@@ -513,7 +631,7 @@ function mapNewspaperItemToCarouselStory(item: HearstNewspaperContent): Lifestyl
     topic: formatContentType(item.contentType),
     title: item.title,
     summary: item.description,
-    image: item.imageUrl || "/logos/hearst-local-news.svg",
+    image: item.imageUrl || "",
     byline: `${publicationName} local news`,
     readTime: item.isMock ? "Sample" : "RSS",
     popularity: item.isMock ? 35 : 80,
@@ -544,18 +662,33 @@ function FilterSelect({
   value: string;
 }) {
   return (
-    <label htmlFor={id} className="block text-sm font-semibold text-[var(--hp-text-headline)]">
-      {label}
-      <select
-        id={id}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        className="mt-2 min-h-11 w-full border border-[var(--hp-border)] bg-[var(--hp-surface)] px-3 text-sm text-[var(--hp-text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--hp-focus)]"
-      >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>{option.label}</option>
-        ))}
-      </select>
-    </label>
+    <div className="block text-sm font-semibold text-[var(--hp-text-headline)]">
+      <label htmlFor={id}>{label}</label>
+      <Select value={value} onValueChange={(nextValue) => {
+        if (nextValue) onChange(nextValue);
+      }}>
+        <SelectTrigger
+          id={id}
+          className="mt-2 h-11 min-h-11 w-full rounded-lg border-input bg-background px-3 text-left text-sm font-semibold text-foreground shadow-xs"
+        >
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent
+          align="start"
+          alignItemWithTrigger={false}
+          className="max-h-[min(420px,var(--available-height))] rounded-lg border border-border bg-popover p-1 shadow-xl ring-1 ring-foreground/10"
+        >
+          {options.map((option) => (
+            <SelectItem
+              key={option.value}
+              value={option.value}
+              className="min-h-10 px-3 pr-9 text-sm font-semibold text-popover-foreground focus:bg-[var(--hp-control-hover)] focus:text-foreground"
+            >
+              {option.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
   );
 }

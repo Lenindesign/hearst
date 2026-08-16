@@ -2,11 +2,10 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { RealAppCardSamples, type ArticleBlueprintCardSample } from "@/components/article-blueprint-card-samples";
 import {
-  AmbientVariantExplorer,
   ExecutiveJourney,
   PersonalizationDecisionDemo,
-  type ArticleBlueprintVariant,
 } from "@/components/article-blueprint-experience";
 import { autosRiverStories } from "@/components/autos-river-data";
 import { ewRiverStories } from "@/components/ew-river-data";
@@ -63,22 +62,15 @@ function normalizeBlueprintCopy(copy: string) {
   return copy.replace(/\s*\u2014\s*/g, ": ");
 }
 
-function buildVariant(
-  id: ArticleBlueprintVariant["id"],
-  destination: string,
-  story: LifestyleRiverStory,
-  style: Pick<ArticleBlueprintVariant, "accent" | "surface" | "treatment">,
-): ArticleBlueprintVariant {
+function toCardSample(label: string, story: LifestyleRiverStory): ArticleBlueprintCardSample {
   return {
-    id,
-    destination,
-    publication: story.brand,
+    id: story.id,
+    label,
+    brand: story.brand,
     topic: story.topic,
-    title: normalizeBlueprintCopy(story.title),
-    summary: normalizeBlueprintCopy(story.summary),
+    title: story.title,
+    summary: story.summary,
     image: story.image,
-    ...style,
-    status: "Working today",
   };
 }
 
@@ -88,11 +80,29 @@ export default function HearstArticleBlueprintPage() {
   const fluxStory = findStory(fluxRiverStories, ["elle", "harpers-bazaar"]);
   const ewStory = findStory(ewRiverStories, ["runners-world", "womens-health"]);
   const commerceStory = getAmbientCommerceStories()[0];
-  const ambientVariants = [
-    buildVariant("lifestyle", "Lifestyle", lifestyleStory, { accent: "#7B2F5F", surface: "#F7F4F0", treatment: "Spacious magazine story" }),
-    buildVariant("autos", "Autos", autosStory, { accent: "#D7A900", surface: "#111820", treatment: "Cinematic story" }),
-    buildVariant("flux", "Fashion & Luxury", fluxStory, { accent: "#351E2C", surface: "#F3E8EC", treatment: "Immersive cover story" }),
-    buildVariant("ew", "Enthusiast & Wellness", ewStory, { accent: "#123D35", surface: "#DCEBE3", treatment: "High-energy story" }),
+  const appCardSamples = [
+    toCardSample("Lifestyle", lifestyleStory),
+    toCardSample("Autos", autosStory),
+    toCardSample("Fashion & Luxury", fluxStory),
+    toCardSample("Enthusiast & Wellness", ewStory),
+    {
+      id: "local-wbal-weather-alerts",
+      label: "Local News",
+      brand: "WBAL-TV 11",
+      topic: "Baltimore",
+      title: "Here's how to get severe weather alerts to your phone",
+      summary: "A local-news card keeps station attribution, market context and the original source path inside the same reader-facing system.",
+      image: "https://hips.hearstapps.com/hmg-prod/images/457d25d9-6587-43a2-bf62-c9269692f6e7.jpg",
+    },
+    {
+      id: "entertainment-first-48",
+      label: "A&E Family",
+      brand: "A&E",
+      topic: "Crime",
+      title: "The First 48",
+      summary: "Entertainment cards use the same source-aware presentation for show discovery, previews, channel pages and story feeds.",
+      image: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/4/2015/09/the-first-48-s29-3000x3000-primary-1x1-1.jpg?w=1180",
+    },
   ];
 
   return (
@@ -144,20 +154,8 @@ export default function HearstArticleBlueprintPage() {
             </section>
 
             <section id="reading-modes" className="scroll-mt-8">
-              <SectionHead label="Two ways to read" title="A dependable article and an immersive reader" copy="Most stories use the standard article. Ambient Reader gives each destination a more expressive opening while keeping the same content, controls, and recommendations." />
-              <div className="mt-10 overflow-hidden border border-slate-300 bg-white">
-                <div className="flex min-h-14 items-center justify-between border-b border-slate-300 px-5 text-sm font-semibold"><span className="font-black tracking-[0.08em] text-[#2D75B9]">HEARST</span><span>Standard article</span><Status>Working today</Status></div>
-                <div className="grid lg:grid-cols-[minmax(0,1fr)_15rem]">
-                  <article className="min-w-0 p-5 sm:p-8">
-                    <div className="relative aspect-[16/8] overflow-hidden bg-slate-100"><Image src={autosStory.image} alt="" fill sizes="(min-width: 1024px) 55vw, 100vw" className="object-cover" /></div>
-                    <p className="mt-6 text-sm font-semibold text-[#2D75B9]">{autosStory.brand} · {autosStory.topic}</p>
-                    <h3 className="mt-3 text-balance font-serif text-4xl leading-[1.02] sm:text-5xl">{normalizeBlueprintCopy(autosStory.title)}</h3>
-                    <p className="mt-5 max-w-[65ch] text-base leading-7 text-slate-600">{normalizeBlueprintCopy(autosStory.summary)}</p>
-                  </article>
-                  <aside className="hidden border-l border-slate-300 bg-[#EEF3F7] p-5 lg:block"><p className="text-sm font-bold">Useful context</p><p className="mt-3 text-sm leading-6 text-slate-600">Related stories and a clearly labeled ad stay available without interrupting the article.</p></aside>
-                </div>
-              </div>
-              <div className="mt-8"><AmbientVariantExplorer variants={ambientVariants} /></div>
+              <SectionHead label="Story cards" title="One reusable river card across every section" copy="Each tab shows the same card pattern with a different source, image, headline and section context. The blueprint should represent how stories actually load in the Hearst+ river." />
+              <div className="mt-10"><RealAppCardSamples stories={appCardSamples} /></div>
             </section>
 
             <section id="revenue" className="scroll-mt-8">

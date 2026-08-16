@@ -2,8 +2,11 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import { DraggableBrandLogoMarquee } from "@/components/brand-logo-marquee";
 import { SiteFooter } from "@/components/fre/site-footer";
+import { entertainmentWebsiteFeedConfigs } from "@/lib/hearst-entertainment-story-feeds";
+import { hearstNewspaperPublications } from "@/lib/hearst-newspaper-feed-framework";
 import type { BrandTheme } from "@/lib/brands";
 import { getHearstBrandRoute, getHearstDestinationRoute } from "@/lib/hearst-routes";
+import { hearstTVStations } from "@/lib/hearst-tv-feed-framework";
 import { brandLogos } from "@/lib/logos";
 import { themeOptions } from "@/lib/theme-options";
 
@@ -18,6 +21,8 @@ const lifestylePrimaryColor = getThemeColor("hearst-lifestyle", "1", "var(--prim
 const autosPrimaryColor = getThemeColor("hearst-plus", "1", "var(--primary)");
 const fluxPrimaryColor = getThemeColor("hearst-flux", "1", "var(--foreground)");
 const wellnessPrimaryColor = getThemeColor("hearst-ew", "1", "var(--primary)");
+const localNewsPrimaryColor = "#087A68";
+const entertainmentPrimaryColor = "#B9913F";
 const knockoutContentColor = "var(--palette-content-knockout, white)";
 const neutralAccentColor = "var(--muted)";
 
@@ -113,12 +118,8 @@ export const streams = [
   { name: "Autos", color: autosPrimaryColor, copy: "Reviews, EVs, ownership and enthusiast culture" },
   { name: "Fashion & Luxury", color: fluxPrimaryColor, copy: "Fashion, design, culture, travel and ideas" },
   { name: "Enthusiast & Wellness", color: wellnessPrimaryColor, copy: "Fitness, health, gear and active living" },
-];
-
-export const prototypeStats = [
-  { value: "859", label: "validated stories", copy: "The current RSS snapshot contains source dates, canonical URLs and real Hearst image metadata." },
-  { value: "29", label: "represented brands", copy: "Each brand keeps its own logo, route, color, typography and contextual navigation." },
-  { value: "4", label: "editorial destinations", copy: "Four destination catalogs also feed one unified Hearst+ reader view." },
+  { name: "Local News", color: localNewsPrimaryColor, copy: "Hearst TV stations, newspapers and local source choice" },
+  { name: "A&E Family", color: entertainmentPrimaryColor, copy: "Channel stories, show pages, previews and video discovery" },
 ];
 
 export const brandSections = [
@@ -198,20 +199,39 @@ export const portfolioBrands = brandSections.flatMap((section) =>
   }))
 );
 
+export const totalMagazineStories = brandSections.reduce((sum, destination) => sum + destination.count, 0);
+export const totalMagazineBrands = brandSections.reduce((sum, destination) => sum + destination.brands.length, 0);
+export const totalTVStations = hearstTVStations.length;
+export const totalNewspapers = hearstNewspaperPublications.length;
+export const totalEntertainmentChannels = entertainmentWebsiteFeedConfigs.length;
+export const totalEntertainmentShows = 42;
+export const totalPortfolioSources =
+  totalMagazineBrands + totalTVStations + totalNewspapers + totalEntertainmentChannels;
+
+export const prototypeStats = [
+  { value: String(totalMagazineStories), label: "magazine catalog", copy: "Validated stories with source dates, canonical URLs and real Hearst image metadata." },
+  { value: String(totalPortfolioSources), label: "portfolio sources", copy: "Magazine brands, TV stations, newspapers and entertainment channels represented in one product frame." },
+  { value: String(streams.length), label: "reader sections", copy: "Lifestyle, Autos, Fashion & Luxury, Enthusiast & Wellness, Local News and A&E Family." },
+  { value: String(totalEntertainmentShows), label: "show surfaces", copy: "Promoted show entries extend discovery beyond article feeds into entertainment intent." },
+];
+
 export const journeys = [
-  { title: "Discover", copy: "A useful morning briefing brings together trusted stories across brands without asking readers to hunt site by site." },
-  { title: "Deepen intent", copy: "Every save, follow, hide and More Like This action sharpens the mix while visible controls keep the reader in charge." },
-  { title: "Build a habit", copy: "Freshness, continuity and remembered interests make the river worth returning to throughout the day." },
+  { title: "Discover", copy: "A useful daily edition brings together magazine stories, local headlines, show-led entertainment and video without asking readers to hunt site by site." },
+  { title: "Deepen intent", copy: "Every save, follow, hide, local-source choice, show interest and More Like This action sharpens the mix while visible controls keep the reader in charge." },
+  { title: "Build a habit", copy: "Freshness, continuity and remembered interests make Hearst+ worth returning to throughout the day." },
 ];
 
 export const valueProps = [
-  { title: "For readers", copy: "Less searching, more signal and a single relationship with the brands they already trust. A Good Housekeeping reader can discover Country Living, Delish or Prevention when the intent overlaps." },
-  { title: "For editorial", copy: "A new distribution surface that preserves brand authority while creating cross-brand discovery. Logos, voice, color and typography keep every brand legible inside the shared river." },
-  { title: "For the business", copy: "A credible environment for evaluating return behavior, cross-brand discovery and future commercial opportunities without presenting unbuilt integrations as complete." },
-  { title: "For product teams", copy: "One composable system for destinations, brands, cards, signals and ranking. The same model powers the unified river and publication routes." },
+  { title: "For readers", copy: "Less searching, more signal and one useful relationship with the brands, local sources, shows and communities they already care about." },
+  { title: "For editorial", copy: "A new distribution surface that preserves magazine, station, newspaper and channel authority while creating discovery across adjacent reader intent." },
+  { title: "For the business", copy: "A credible environment for evaluating direct return behavior, registration value, cross-source discovery and future paid membership paths." },
+  { title: "For product teams", copy: "One composable system for destinations, sources, cards, readers, signals and ranking. The same model can power magazines, local news and entertainment." },
 ];
 
 export function DemoNav() {
+  const navItems = ["All", "Lifestyle", "Autos", "Fashion & Luxury", "Enthusiast & Wellness", "Local News", "A&E Family"];
+  const storyTabs = ["For You", "Today", "Local", "Shows", "Saved"];
+
   return (
     <figure
       aria-label="Illustrative Hearst+ navigation and story treatment"
@@ -220,22 +240,52 @@ export function DemoNav() {
       <figcaption className="sr-only">
         Static stakeholder diagram showing the intended Hearst+ navigation hierarchy and a sample editorial story. This is not an interactive product component.
       </figcaption>
-      <div className="flex items-center justify-between bg-primary px-4 py-2 text-[11px] font-semibold text-white">
-        <span>Shop &nbsp; Newsletter &nbsp; Sign In</span><span>All &nbsp; Lifestyle &nbsp; Autos &nbsp; Fashion &amp; Luxury &nbsp; Enthusiast &amp; Wellness</span><span>Subscribe</span>
+      <div className="grid h-8 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 bg-[#111827] px-4 text-[11px] font-semibold text-white">
+        <span className="hidden items-center gap-3 sm:flex"><span>Shop</span><span>Newsletter</span></span>
+        <div className="flex min-w-0 justify-center overflow-hidden">
+          <div className="flex min-w-max items-center gap-1 rounded-full bg-white/[0.08] p-0.5">
+            {navItems.map((item) => (
+              <span key={item} className={`inline-flex min-h-6 items-center rounded-full px-2 text-[10px] font-bold leading-none ${item === "All" ? "bg-white text-black" : "text-white/85"}`}>
+                {item}
+              </span>
+            ))}
+          </div>
+        </div>
+        <span className="rounded-full bg-[#B9913F] px-3 py-1 text-[10px] font-black text-[#111827]">Sign in</span>
       </div>
-      <div className="flex items-center justify-between px-5 py-5">
-        <span className="text-xs text-muted-foreground">Mode</span><LogoMark slug="hearst-all" name="Hearst+" color={hearstPrimaryColor} className="h-5 w-44" position="center" /><span className="text-xs text-muted-foreground">Search</span>
+      <div className="flex h-20 items-center justify-between px-5">
+        <span className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">Edition</span>
+        <LogoMark slug="hearst-all" name="Hearst+" color={hearstPrimaryColor} className="h-6 w-48" position="center" />
+        <span className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">Search</span>
       </div>
-      <div className="flex gap-5 overflow-hidden border-y border-border px-5 py-3 text-xs font-semibold"><span className="text-primary">For You</span><span>Lifestyle</span><span>Autos</span><span>Fashion &amp; Luxury</span><span>Enthusiast &amp; Wellness</span><span>Saved</span></div>
-      <div className="grid gap-0 md:grid-cols-[1.3fr_1fr]">
-        <div
-          className="min-h-64 bg-secondary bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${productImage})` }}
-        />
-        <div className="flex flex-col justify-center p-6">
-          <span className="mb-3 text-[11px] font-black uppercase tracking-[0.16em] text-primary">Most popular · Culture</span>
-          <h3 className="font-serif text-3xl leading-[1.02] text-foreground">A river built around what matters to you now.</h3>
-          <p className="mt-4 text-sm leading-6 text-muted-foreground">Trusted reporting, useful context and relevant discoveries, ranked across the Hearst portfolio.</p>
+      <div className="flex gap-2 overflow-hidden border-y border-border px-5 py-3 text-xs font-semibold">
+        {storyTabs.map((item) => (
+          <span key={item} className={`shrink-0 rounded-full px-3 py-1.5 ${item === "For You" ? "bg-primary text-white" : "bg-muted text-muted-foreground"}`}>{item}</span>
+        ))}
+      </div>
+      <div className="grid gap-0 bg-[#F8FAFC] p-4 md:grid-cols-[1.25fr_.95fr]">
+        <div className="relative min-h-72 overflow-hidden bg-secondary">
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: `url(${productImage})` }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 p-5 text-white">
+            <span className="text-[11px] font-black uppercase tracking-[0.16em] text-white/80">Today&apos;s edit</span>
+            <h3 className="mt-3 max-w-md font-serif text-4xl leading-[0.98]">A daily river across every Hearst interest.</h3>
+          </div>
+        </div>
+        <div className="grid content-between border border-l-0 border-border bg-card p-5">
+          <div>
+            <span className="mb-3 block text-[11px] font-black uppercase tracking-[0.16em] text-primary">Recommended next</span>
+            <h3 className="font-serif text-3xl leading-[1.02] text-foreground">Stories, local updates and shows in one place.</h3>
+            <p className="mt-4 text-sm leading-6 text-muted-foreground">The real app connects destination navigation, source menus, reader controls and a shared story-card system.</p>
+          </div>
+          <div className="mt-6 grid gap-2 text-xs font-bold text-muted-foreground sm:grid-cols-3">
+            <span className="border border-border px-3 py-2">Save</span>
+            <span className="border border-border px-3 py-2">Follow</span>
+            <span className="border border-border px-3 py-2">More like this</span>
+          </div>
         </div>
       </div>
     </figure>
@@ -296,6 +346,114 @@ export function BrandPortfolioGrid({ compact = false }: { compact?: boolean }) {
           </div>
         </article>
       ))}
+      <article className="min-w-0 overflow-hidden border border-border bg-card p-5">
+        <Link href="/hearst-plus/local-news/" className="group flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <LogoMark slug="hearst-local-news" name="Local News" color={localNewsPrimaryColor} className="h-8 w-44" />
+            <p className="sr-only">Local News</p>
+            <span className="mt-1 block text-sm font-bold text-muted-foreground group-hover:text-foreground">{totalTVStations} TV stations and {totalNewspapers} newspapers</span>
+          </div>
+          <span className="text-xs font-semibold text-muted-foreground">{totalTVStations + totalNewspapers} sources</span>
+        </Link>
+        <div className="mt-5 grid gap-5 xl:grid-cols-2">
+          <div className="min-w-0">
+            <Link href="/hearst-plus/local-news/#tv-stations" className="text-xs font-black uppercase tracking-[0.14em] text-muted-foreground hover:text-foreground">
+              TV Stations
+            </Link>
+            <div className={`mt-3 grid gap-3 ${compact ? "sm:grid-cols-2" : "sm:grid-cols-2"}`}>
+              {hearstTVStations.map((station) => (
+                <Link
+                  key={station.id}
+                  href={`/hearst-plus/local-news/?station=${encodeURIComponent(station.id)}#tv-stations`}
+                  className="group flex min-h-16 items-center justify-between gap-3 border border-border bg-muted/35 px-3 py-3 hover:border-primary/45"
+                >
+                  <span className="flex min-w-0 flex-1 items-center gap-3">
+                    <span className="flex h-8 w-12 shrink-0 items-center justify-center overflow-hidden bg-white text-[10px] font-black uppercase text-foreground">
+                      {station.logo ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={station.logo} alt="" loading="lazy" className="h-full w-full object-contain p-1" />
+                      ) : (
+                        station.callSign.replace(/[^a-z0-9]/gi, "").slice(0, 4)
+                      )}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-xs font-semibold text-muted-foreground group-hover:text-foreground">{station.callSign}</span>
+                      <span className="mt-0.5 block truncate text-[11px] text-muted-foreground">{station.market}</span>
+                    </span>
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+          <div className="min-w-0">
+            <Link href="/hearst-plus/local-news/newspapers/#newspapers" className="text-xs font-black uppercase tracking-[0.14em] text-muted-foreground hover:text-foreground">
+              Newspapers
+            </Link>
+            <div className={`mt-3 grid gap-3 ${compact ? "sm:grid-cols-2" : "sm:grid-cols-2"}`}>
+              {hearstNewspaperPublications.map((publication) => {
+                const logo = publication.mastheadLogo || publication.logo;
+                return (
+                  <Link
+                    key={publication.id}
+                    href={`/hearst-plus/local-news/newspapers/?publication=${encodeURIComponent(publication.id)}#newspapers`}
+                    className="group flex min-h-16 items-center justify-between gap-3 border border-border bg-muted/35 px-3 py-3 hover:border-primary/45"
+                  >
+                    <span className="flex min-w-0 flex-1 items-center gap-3">
+                      <span className="flex h-8 w-20 shrink-0 items-center justify-center overflow-hidden bg-white text-[10px] font-black uppercase text-foreground">
+                        {logo ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={logo} alt="" loading="lazy" className="h-full w-full object-contain p-1" />
+                        ) : (
+                          publication.publicationName.replace(/[^a-z0-9]/gi, "").slice(0, 4)
+                        )}
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-xs font-semibold text-muted-foreground group-hover:text-foreground">{publication.publicationName}</span>
+                        <span className="mt-0.5 block truncate text-[11px] text-muted-foreground">{publication.market}</span>
+                      </span>
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </article>
+      <article className="min-w-0 overflow-hidden border border-border bg-card p-5">
+        <Link href="/hearst-plus/entertainment/" className="group flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <span className="block text-sm font-black uppercase tracking-[0.16em]" style={{ color: entertainmentPrimaryColor }}>A&amp;E Family</span>
+            <span className="mt-1 block text-sm font-bold text-muted-foreground group-hover:text-foreground">{totalEntertainmentChannels} channels with show pages and story feeds</span>
+          </div>
+          <span className="text-xs font-semibold text-muted-foreground">{totalEntertainmentShows} show entries</span>
+        </Link>
+        <div className={`mt-5 grid gap-3 ${compact ? "sm:grid-cols-2" : "sm:grid-cols-2 xl:grid-cols-3"}`}>
+          {entertainmentWebsiteFeedConfigs.map((channel) => (
+            <Link
+              key={channel.slug}
+              href={channel.showHref}
+              className="group flex min-h-16 items-center justify-between gap-3 border border-border bg-muted/35 px-3 py-3 hover:border-primary/45"
+            >
+              <span className="flex min-w-0 flex-1 items-center gap-3">
+                <span className="flex h-8 w-20 shrink-0 items-center justify-center overflow-hidden bg-white text-[10px] font-black uppercase text-foreground">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={channel.logo}
+                    alt=""
+                    loading="lazy"
+                    className={`h-full w-full object-contain p-1.5 ${channel.slug === "a-e" || channel.slug === "biography" ? "brightness-0" : ""}`}
+                  />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-xs font-semibold text-muted-foreground group-hover:text-foreground">{channel.brand}</span>
+                  <span className="mt-0.5 block truncate text-[11px] text-muted-foreground">Shows + stories</span>
+                </span>
+              </span>
+              <span className="shrink-0 text-xs font-semibold text-muted-foreground">Open</span>
+            </Link>
+          ))}
+        </div>
+      </article>
     </div>
   );
 }
@@ -310,8 +468,8 @@ export function DestinationConvergence() {
       <div className="grid gap-0 lg:grid-cols-[0.9fr_1.1fr]">
         <div className="border-b border-border p-6 lg:border-b-0 lg:border-r">
           <p className="text-xs font-black uppercase tracking-[0.16em] text-primary">Destination logic</p>
-          <h3 className="mt-4 font-serif text-4xl leading-none">One personalized river, four clear entry points.</h3>
-          <p className="mt-5 text-sm leading-6 text-muted-foreground">Readers can enter through a broad destination, a specific brand, a saved habit, or a topic. The product keeps those paths connected so intent can move across the portfolio without losing brand trust.</p>
+          <h3 className="mt-4 font-serif text-4xl leading-none">One personalized river, six clear sections.</h3>
+          <p className="mt-5 text-sm leading-6 text-muted-foreground">Readers can enter through a destination, brand, local market, publication, channel, show or topic. The product keeps those paths connected so intent can move across the portfolio without losing source trust.</p>
         </div>
         <div className="p-6">
           <div className="grid min-w-0 gap-4 2xl:grid-cols-[minmax(0,1fr)_4rem_minmax(0,1fr)] 2xl:items-center">
@@ -325,12 +483,26 @@ export function DestinationConvergence() {
                   <span className="text-xs font-bold text-muted-foreground group-hover:text-foreground">{section.count} stories</span>
                 </Link>
               ))}
+              <Link href="/hearst-plus/local-news/" className="group flex items-center justify-between gap-4 border border-border bg-muted/35 p-4 hover:border-primary/45">
+                <span className="min-w-0">
+                  <span className="block text-sm font-black uppercase tracking-[0.14em]" style={{ color: localNewsPrimaryColor }}>Local News</span>
+                  <span className="mt-1 block text-xs text-muted-foreground">{totalTVStations} TV stations + {totalNewspapers} newspapers</span>
+                </span>
+                <span className="text-xs font-bold text-muted-foreground group-hover:text-foreground">source choice</span>
+              </Link>
+              <Link href="/hearst-plus/entertainment/" className="group flex items-center justify-between gap-4 border border-border bg-muted/35 p-4 hover:border-primary/45">
+                <span className="min-w-0">
+                  <span className="block text-sm font-black uppercase tracking-[0.14em]" style={{ color: entertainmentPrimaryColor }}>A&amp;E Family</span>
+                  <span className="mt-1 block text-xs text-muted-foreground">{totalEntertainmentChannels} channels + {totalEntertainmentShows} show entries</span>
+                </span>
+                <span className="text-xs font-bold text-muted-foreground group-hover:text-foreground">shows + stories</span>
+              </Link>
             </div>
             <div className="hidden h-px w-full bg-primary 2xl:block" />
             <Link href={getHearstDestinationRoute("all")} className="flex min-h-56 min-w-0 flex-col justify-center bg-foreground p-6 text-white hover:bg-foreground/90">
               <span className="text-xs font-black uppercase tracking-[0.16em] text-[var(--component-navigation-utility-content-accent)]">Unified river</span>
               <strong className="mt-4 max-w-sm text-wrap font-serif text-3xl leading-none sm:text-4xl">Personalized daily briefing</strong>
-              <span className="mt-5 text-sm leading-6 text-white/75">A ranked mix that blends followed brands, current intent, freshness, utility and controlled discovery.</span>
+              <span className="mt-5 text-sm leading-6 text-white/75">A ranked mix that blends followed sources, current intent, local context, shows, freshness, utility and controlled discovery.</span>
             </Link>
           </div>
         </div>
@@ -341,9 +513,10 @@ export function DestinationConvergence() {
 
 export function JourneyMatrix() {
   const rows = [
-    ["Morning brief", "Open the river", "Scan useful highlights", "Save or follow what matters", "Briefed and ready"],
-    ["Intent deepening", "Search or tap a topic", "Explore multi-brand coverage", "Ask for more like this", "Topic mastered"],
-    ["Return habit", "Resume where you left off", "See what changed", "Engage and save again", "Habit reinforced"],
+    ["Daily edition", "Open the river", "Scan useful highlights", "Save, follow or continue", "A reason to return"],
+    ["Local source check", "Choose a station or newspaper", "Read market-specific updates", "Set a preferred source", "Local utility remembered"],
+    ["Show discovery", "Enter A&E Family", "Explore channels, stories and shows", "Open a preview or show page", "Entertainment intent captured"],
+    ["Community return", "Open a group or thread", "See what readers are discussing", "Join, reply or save", "Habit reinforced"],
   ];
 
   return (

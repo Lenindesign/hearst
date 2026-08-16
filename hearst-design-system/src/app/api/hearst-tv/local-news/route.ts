@@ -14,6 +14,7 @@ import {
 export const dynamic = "force-dynamic";
 
 const kcraStationId = "kcra";
+const feedFetchTimeoutMs = 6000;
 
 const fallbackItems: NormalizedFeedItemInput[] = [
   {
@@ -79,6 +80,7 @@ export async function GET(request: Request) {
   try {
     const response = await fetch(feed.feedUrl, {
       cache: "no-store",
+      signal: AbortSignal.timeout(feedFetchTimeoutMs),
       headers: {
         accept: "application/rss+xml, application/xml, text/xml;q=0.9, */*;q=0.8",
       },

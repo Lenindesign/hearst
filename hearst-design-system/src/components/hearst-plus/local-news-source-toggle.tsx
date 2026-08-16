@@ -31,7 +31,7 @@ export function LocalNewsSourceToggle({ activeSource }: { activeSource: LocalNew
       <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
         Sources
       </p>
-      <div className="grid grid-cols-2 gap-1 rounded-[8px] bg-[var(--hp-surface-low)] p-1">
+      <div className="grid grid-cols-2 gap-1 rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-1">
         {sourceItems.map((item) => {
           const active = item.value === activeSource;
 
@@ -43,7 +43,7 @@ export function LocalNewsSourceToggle({ activeSource }: { activeSource: LocalNew
               className={cn(
                 "grid min-h-11 place-items-center rounded-[6px] px-2 text-center text-xs font-bold no-underline transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
                 active
-                  ? "bg-[var(--hp-surface)] text-[var(--hp-text-headline)] shadow-[var(--hp-shadow-card)]"
+                  ? "bg-primary text-primary-foreground shadow-[var(--hp-shadow-card)] ring-1 ring-primary/25"
                   : "text-muted-foreground hover:bg-[var(--hp-surface)] hover:text-[var(--hp-text-headline)]",
               )}
               title={item.description}
