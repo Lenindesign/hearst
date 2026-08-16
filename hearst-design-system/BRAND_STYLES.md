@@ -40,6 +40,8 @@ The route names and internal theme slugs are intentionally different in two plac
 | `/hearst-autos/` | Autos | `hearst-plus` |
 | `/hearst-flux/` | Fashion & Luxury | `hearst-flux` |
 | `/hearst-ew/` | Enthusiast & Wellness | `hearst-ew` |
+| `/hearst-plus/local-news/` | Local News | `hearst-local-news` |
+| `/hearst-plus/entertainment/` | A&E Family | `hearst-entertainment` |
 
 ## Native default style guide
 
@@ -59,10 +61,12 @@ The **HDS page token** is the theme's published background value. The prototype 
 | Theme | Slug | Primary | Secondary | HDS page token | Logo |
 |---|---|---:|---:|---:|---|
 | Hearst Magazines / Hearst+ | `hearst-all` | `#2D75B9` | `#DCEBFA` | `#F4F8FC` | `/logos/hearst-plus.svg` |
-| Hearst Autos | `hearst-plus` | `#1B5F8A` | `#D8EAF4` | `#F3F7FA` | `/logos/hearst-autos.svg` |
-| Hearst Lifestyle | `hearst-lifestyle` | `#7A2E57` | `#F7C6D9` | `#F7EFE7` | `/logos/hearst-lifestyle.svg` |
-| Hearst Fashion & Luxury | `hearst-flux` | `#000000` | `#EDEDED` | `#F7F7F7` | `/logos/hearst-fashion-luxury.svg` |
-| Hearst Enthusiast & Wellness | `hearst-ew` | `#E50022` | `#FFE0E4` | `#FFF5F6` | `/logos/hearst-ew-official.svg` |
+| Hearst Autos | `hearst-plus` | `#245F86` | `#D8EAF4` | `#F3F7FA` | `/logos/hearst-autos.svg` |
+| Hearst Lifestyle | `hearst-lifestyle` | `#7A2E5D` | `#F7C6D9` | `#F7EFE7` | `/logos/hearst-lifestyle.svg` |
+| Hearst Fashion & Luxury | `hearst-flux` | `#292625` | `#EDEDED` | `#F7F7F7` | `/logos/hearst-fashion-luxury.svg` |
+| Hearst Enthusiast & Wellness | `hearst-ew` | `#C94B3B` | `#FFE0E4` | `#FFF5F6` | `/logos/hearst-ew-official.svg` |
+| Hearst Local News | `hearst-local-news` | `#087A68` | `#DDF3E9` | `#F3FAF7` | `/logos/hearst-local-news.svg` |
+| A&E Family | `hearst-entertainment` | `#B9913F` | `#F2DEAE` | `#FBF8EF` | `/logos/aande-family.svg` |
 
 ### Typography
 

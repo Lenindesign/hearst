@@ -18,6 +18,8 @@ type EntertainmentShow = {
   description: string;
   href: string;
   imageUrl?: string;
+  heroImagePosition?: string;
+  titleLogoUrl?: string;
   meta: string;
   playUrl?: string;
   previewEmbedUrl?: string;
@@ -55,6 +57,7 @@ const heroShows: EntertainmentShow[] = [
     description: "Ten elite survivalists self-document life deep inside the Arctic Circle, building shelter, finding food, and enduring isolation for the $500,000 prize.",
     href: "https://www.history.com/shows/alone",
     imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/2/2026/04/alone-s13-3000x3000-primary-1x1-1.jpg?w=1180",
+    titleLogoUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/2/2026/04/alone-s13-logo.png?w=640",
     meta: "13 seasons",
     previewEmbedUrl: "https://www.youtube.com/embed/h5J1sGmoSMA",
   },
@@ -65,6 +68,7 @@ const heroShows: EntertainmentShow[] = [
     description: "Homicide detectives race against the clock because the odds of solving a case fall sharply after the first 48 hours.",
     href: "https://www.aetv.com/shows/the-first-48",
     imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/4/2015/09/the-first-48-s29-3000x3000-primary-1x1-1.jpg?w=1180",
+    titleLogoUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/4/2015/09/the-first-48-s29-logo.png?w=640",
     meta: "30 seasons",
     previewEmbedUrl: "https://www.youtube.com/embed/5IiDOAmMZ4g",
   },
@@ -75,6 +79,7 @@ const heroShows: EntertainmentShow[] = [
     description: "Singles meet their new spouses at the altar, enter legally binding marriages, and later decide whether to stay together or divorce.",
     href: "https://www.mylifetime.com/shows/married-at-first-sight",
     imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/5/2017/03/mafs-s18-3000x3000-primary-1x1-1.jpg?w=1180",
+    titleLogoUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/5/2017/03/mafs-s18-logo.png?w=640",
     meta: "18 seasons",
     previewEmbedUrl: "https://www.youtube.com/embed/xK4rg1f8xkY",
   },
@@ -93,6 +98,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "Teams of bidders compete for abandoned and repossessed storage units, betting on whether each locker hides trash or treasure.",
         href: "https://www.aetv.com/shows/storage-wars",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/4/2015/09/storage-wars-s16-3000x3000-primary-1x1-1.jpg?w=1180",
+        titleLogoUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/4/2015/09/storage-wars-s16-logo.png?w=640",
         previewEmbedUrl: "https://www.youtube.com/embed/Nt6Z_F9gf8Y",
         meta: "18 seasons",
       },
@@ -103,6 +109,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "Court Cam examines stunning and emotional courtroom moments caught on camera, from outbursts to heated exchanges with judges.",
         href: "https://www.aetv.com/shows/court-cam",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/4/2019/01/court-cam-s9-2048x1152-promo-16x9-1.jpg",
+        titleLogoUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/4/2019/01/court-cam-s9-logo.png?w=640",
         previewEmbedUrl: "https://www.youtube.com/embed/6oBrVBQmYEw",
         meta: "A&E shows",
       },
@@ -150,6 +157,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "Ancient Aliens examines claims of alien evidence on Earth, from ancient civilizations and cave drawings to modern mass sightings.",
         href: "https://www.history.com/shows/ancient-aliens",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/2/2025/07/ancient-aliens-s21-3000x3000-primary-1x1-1.jpg?w=1180",
+        titleLogoUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/2/2025/07/ancient-aliens-s21-logo.png?w=640",
         previewEmbedUrl: "https://www.youtube.com/embed/ypHNy2-JC-Q",
         meta: "22 seasons",
       },
@@ -160,6 +168,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "A HISTORY discovery lane for unexplained events, oddities, and speculative stories.",
         href: "https://www.history.com/shows",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/2/2025/08/the-unxplained-s8-2048x1152-promo-16x9-1.jpg",
+        titleLogoUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/2/2025/08/the-unxplained-s8-logo.png?w=640",
         previewEmbedUrl: "https://www.youtube.com/embed/WmAr_uRv-bw",
         meta: "HISTORY shows",
       },
@@ -207,6 +216,8 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "Competitive dance and family pressure in a compact binge row.",
         href: "https://www.mylifetime.com/shows/dance-moms",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/5/2015/05/dance-moms-s3-3000x3000-primary-1x1-1.jpg?w=1180",
+        heroImagePosition: "center 18%",
+        titleLogoUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/5/2015/05/dance-moms-s3-logo.png?w=640",
         previewEmbedUrl: "https://www.youtube.com/embed/4Gw6pWCinLE",
         meta: "9 seasons",
       },
@@ -257,24 +268,26 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
     description: "Suspense and movie-night programming for the Lifetime Movie Network lane.",
     shows: [
       {
-        title: "LMN Movies",
+        title: "My Amish Double Life",
         brand: "LMN",
-        eyebrow: "Movie network",
-        description: "A dedicated movie shelf for suspense, thrillers, and weekend programming.",
+        eyebrow: "Movie",
+        description: "A young Amish woman is pulled between the life she knows and the hidden world she has been keeping from everyone around her.",
         href: "https://www.mylifetime.com/lmn",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/11/2025/08/my-amish-double-life-2048x1152-promo-16x9-1.jpg",
+        titleLogoUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/11/2025/08/my-amish-double-life-logo.png?w=640",
         previewEmbedUrl: "https://www.youtube.com/embed/9iknMmT8PAE",
-        meta: "LMN",
+        meta: "Movie",
       },
       {
-        title: "Lifetime Movie Club",
+        title: "The Chrisleys: Back to Reality",
         brand: "LMN",
-        eyebrow: "Streaming",
-        description: "Subscription movie discovery from the Lifetime ecosystem.",
-        href: "https://www.lifetimemovieclub.com/",
+        eyebrow: "Reality",
+        description: "The Chrisley family returns with a new reality chapter following their life after a very public family upheaval.",
+        href: "https://www.mylifetime.com/shows/the-chrisleys-back-to-reality",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/11/2026/02/the-chrisleys-back-to-reality-2048x1152-promo-16x9-1.jpg",
+        titleLogoUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/11/2026/02/the-chrisleys-back-to-reality-logo.png?w=640",
         previewEmbedUrl: "https://www.youtube.com/embed/fxZKmgkgzWw",
-        meta: "Movie club",
+        meta: "Streaming",
       },
       {
         title: "Lifetime Movies",
@@ -339,6 +352,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
         description: "Property hunting with a regional travel lens.",
         href: "https://www.fyi.tv/shows/tiny-house-nation",
         imageUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/3/2024/05/Find_My_Country_House_AUSTRALIA_HORZ_3840x2160_FIN-scaled.jpg",
+        titleLogoUrl: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/3/2024/05/find-my-country-house-australia-logo.png?w=640",
         meta: "FYI",
       },
       {
@@ -517,7 +531,7 @@ const channelRows: Array<{ brand: EntertainmentShow["brand"]; description: strin
 
 const brandAccent: Record<EntertainmentShow["brand"], string> = {
   "A&E": "#2B78D0",
-  HISTORY: "#E4AA33",
+  HISTORY: "#B9913F",
   Lifetime: "#F52A68",
   LMN: "#E51D50",
   FYI: "#00A982",
@@ -630,16 +644,16 @@ export function EntertainmentWatchPage({
     <div
       className="min-h-screen bg-[#050608] text-white"
       style={{
-        "--primary": "#E4AA33",
-        "--hp-primary": "#E4AA33",
-        "--hp-nav": "#E4AA33",
-        "--hp-section-title": "#F6D48A",
-        "--hp-sidebar-heading": "#F6D48A",
+        "--primary": "#B9913F",
+        "--hp-primary": "#B9913F",
+        "--hp-nav": "#B9913F",
+        "--hp-section-title": "#B9913F",
+        "--hp-sidebar-heading": "#B9913F",
         "--component-navigation-utility-background-knockout": "#050608",
         "--component-navigation-utility-megamenu-background-knockout": "#101216",
         "--component-navigation-utility-content-knockout": "#FFFFFF",
-        "--component-navigation-utility-content-accent": "#F6D48A",
-        "--component-navigation-utility-content-accent-hover": "#FFE0A0",
+        "--component-navigation-utility-content-accent": "#B9913F",
+        "--component-navigation-utility-content-accent-hover": "#D5B869",
       } as React.CSSProperties}
     >
       <UtilityBar activeDestinationOverride="A&E Family" darkMode />
@@ -656,7 +670,12 @@ export function EntertainmentWatchPage({
         <section className="relative min-h-[calc(100svh-112px)] overflow-hidden md:min-h-[min(82vh,820px)]">
           {activeHero.imageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={activeHero.imageUrl} alt="" className="absolute inset-0 h-full w-full scale-[1.01] object-cover" />
+            <img
+              src={activeHero.imageUrl}
+              alt=""
+              className="absolute inset-0 h-full w-full scale-[1.01] object-cover"
+              style={{ objectPosition: activeHero.heroImagePosition ?? "center center" }}
+            />
           ) : null}
           <div className="absolute inset-0 bg-[linear-gradient(90deg,#050608_0%,rgba(5,6,8,0.96)_24%,rgba(5,6,8,0.55)_58%,rgba(5,6,8,0.2)_100%)]" />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,6,8,0.08)_0%,rgba(5,6,8,0.18)_48%,#050608_100%)]" />
@@ -666,9 +685,21 @@ export function EntertainmentWatchPage({
                 <BrandPill brand={activeHero.brand} />
                 <span className="text-xs font-bold uppercase tracking-[0.18em] text-white/70">{activeHero.eyebrow}</span>
               </div>
-              <h1 className="headline max-w-3xl text-balance text-5xl leading-none md:text-7xl lg:text-8xl">
-                {activeHero.title}
-              </h1>
+              {activeHero.titleLogoUrl ? (
+                <h1 aria-label={activeHero.title} className="max-w-3xl">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={activeHero.titleLogoUrl}
+                    alt=""
+                    className="h-auto max-h-[150px] w-auto max-w-full object-contain drop-shadow-[0_3px_14px_rgba(0,0,0,0.55)] md:max-h-[184px]"
+                    loading="eager"
+                  />
+                </h1>
+              ) : (
+                <h1 className="headline max-w-3xl text-balance text-5xl leading-none md:text-7xl lg:text-8xl">
+                  {activeHero.title}
+                </h1>
+              )}
               <p className="mt-5 max-w-2xl text-pretty text-base leading-7 text-white/78 md:text-lg md:leading-8">
                 {activeHero.description}
               </p>
@@ -802,11 +833,11 @@ function ChannelRow({
         <span className="pointer-events-none absolute inset-y-1 right-0 z-10 hidden w-20 bg-gradient-to-l from-[#050608] to-transparent md:block" aria-hidden="true" />
         <CarouselPrevious
           size="icon-touch"
-          className="left-3 z-20 hidden border-white bg-white text-black shadow-[0_10px_30px_rgba(0,0,0,0.35)] hover:bg-[#F6D48A] disabled:opacity-0 md:inline-flex"
+          className="left-3 z-20 hidden border-white bg-white text-black shadow-[0_10px_30px_rgba(0,0,0,0.35)] hover:bg-[#B9913F] disabled:opacity-0 md:inline-flex"
         />
         <CarouselNext
           size="icon-touch"
-          className="right-3 z-20 hidden border-white bg-white text-black shadow-[0_10px_30px_rgba(0,0,0,0.35)] hover:bg-[#F6D48A] disabled:opacity-0 md:inline-flex"
+          className="right-3 z-20 hidden border-white bg-white text-black shadow-[0_10px_30px_rgba(0,0,0,0.35)] hover:bg-[#B9913F] disabled:opacity-0 md:inline-flex"
         />
       </Carousel>
     </section>
@@ -855,7 +886,7 @@ function ShowCard({
       >
         <ShowPoster show={show} showTitleOverlay={false} />
         <span className="block pt-3">
-          <span className="line-clamp-1 block text-base font-bold leading-tight transition-colors group-hover:text-[#F6D48A] md:text-lg">{show.title}</span>
+          <span className="line-clamp-1 block text-base font-bold leading-tight transition-colors group-hover:text-[#B9913F] md:text-lg">{show.title}</span>
           <span className="mt-1 block text-xs font-semibold text-white/48">{show.meta}</span>
         </span>
       </button>
@@ -876,7 +907,7 @@ function ShowPoster({
     <span
       className={cn(
         "relative grid aspect-video min-w-0 place-items-center overflow-hidden rounded-[6px] bg-white/[0.07] ring-1 ring-inset ring-white/10 transition-shadow group-hover:ring-white/28",
-        active && "ring-2 ring-[#F6D48A]",
+        active && "ring-2 ring-[#B9913F]",
       )}
     >
       {show.imageUrl ? (
@@ -1033,7 +1064,7 @@ function ShowDetailModal({
               )}
             </div>
             <div className="border-t border-white/10 p-5 md:p-6">
-              <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#F6D48A]">{show.eyebrow}</span>
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#B9913F]">{show.eyebrow}</span>
               <h2 id="entertainment-show-modal-title" className="mt-2 text-balance text-4xl font-black leading-none md:text-5xl">
                 {show.title}
               </h2>
@@ -1071,7 +1102,7 @@ function ShowDetailModal({
               <div className="mt-3 space-y-2">
                 {episodeSamples.map((episode, index) => (
                   <article key={episode.title} className="rounded-[6px] border border-white/10 bg-white/[0.035] p-4">
-                    <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#F6D48A]">Episode {index + 1}</span>
+                    <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#B9913F]">Episode {index + 1}</span>
                     <h4 className="mt-1 text-base font-bold text-white">{episode.title}</h4>
                     <p className="mt-1 text-sm leading-6 text-white/58">{episode.detail}</p>
                   </article>

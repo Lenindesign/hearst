@@ -12,7 +12,6 @@ import {
   hearstNewspaperPublications,
   hearstNewspaperSampleContent,
   newspaperFeedUrlTbd,
-  type HearstNewspaperContentType,
   type HearstNewspaperContent,
   type HearstNewspaperPublication,
 } from "@/lib/hearst-newspaper-feed-framework";
@@ -41,7 +40,7 @@ function formatPublicationOption(publication: HearstNewspaperPublication, connec
   return `${connectedPublicationIds.has(publication.id) ? "🟢 " : ""}${publication.publicationName} · ${publication.market}`;
 }
 
-function formatContentType(type: HearstNewspaperContentType) {
+function formatContentType(type: HearstNewspaperContent["contentType"]) {
   if (type === "news") return "News";
   if (type === "opinion") return "Opinion";
   return "Other";
@@ -76,11 +75,8 @@ export function NewspaperFeedsSection({
     () => new Set(connectedFeeds.map((feed) => feed.publicationId)),
     [connectedFeeds],
   );
-  const states = useMemo(() => [...new Set(hearstNewspaperPublications.map((publication) => publication.state))].sort(), []);
   const [manualSelectedPublication, setManualSelectedPublication] = useState(defaultNewspaperPublication);
   const selectedPublication = routedPublication ?? manualSelectedPublication;
-  const [selectedState, setSelectedState] = useState(allValue);
-  const [selectedContentType, setSelectedContentType] = useState<"all" | HearstNewspaperContentType>("all");
   const [liveContent, setLiveContent] = useState<HearstNewspaperContent[]>([]);
 
   const defaultPublicationRecord = getHearstNewspaperPublicationById(defaultNewspaperPublication);
@@ -140,12 +136,10 @@ export function NewspaperFeedsSection({
         const publication = getHearstNewspaperPublicationById(item.publicationId);
         if (!publication) return false;
         if (selectedPublication !== allValue && item.publicationId !== selectedPublication) return false;
-        if (selectedState !== allValue && publication.state !== selectedState) return false;
-        if (selectedContentType !== "all" && item.contentType !== selectedContentType) return false;
         return true;
       })
       .sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt));
-  }, [liveContent, selectedContentType, selectedPublication, selectedState]);
+  }, [liveContent, selectedPublication]);
   const readerStories = useMemo(
     () => filteredContent.map(mapNewspaperItemToCarouselStory),
     [filteredContent],
@@ -197,28 +191,6 @@ export function NewspaperFeedsSection({
                   })),
                 ]}
               />
-              <FilterSelect
-                id="inline-newspaper-state-filter"
-                label="State"
-                value={selectedState}
-                onChange={setSelectedState}
-                options={[
-                  { label: "All states", value: allValue },
-                  ...states.map((state) => ({ label: state, value: state })),
-                ]}
-              />
-              <FilterSelect
-                id="inline-newspaper-content-type-filter"
-                label="Content type"
-                value={selectedContentType}
-                onChange={(value) => setSelectedContentType(value as "all" | HearstNewspaperContentType)}
-                options={[
-                  { label: "News, opinion, and other", value: "all" },
-                  { label: "News", value: "news" },
-                  { label: "Opinion", value: "opinion" },
-                  { label: "Other", value: "other" },
-                ]}
-              />
             </div>
           </section>
         </aside>
@@ -239,7 +211,7 @@ export function NewspaperFeedsSection({
             />
           ) : (
             <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-6 text-sm leading-6 text-muted-foreground shadow-[var(--hp-shadow-card)]">
-              No newspaper items match the current filters. Clear the newspaper, state, or content-type filter to restore the river.
+              No newspaper items match the current newspaper. Clear the newspaper filter to restore the river.
             </section>
           )}
 
@@ -297,7 +269,7 @@ export function NewspaperFeedsSection({
           })}
           {filteredContent.length > 0 && riverItems.length === 0 ? (
             <p className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 text-sm leading-6 text-muted-foreground shadow-[var(--hp-shadow-card)]">
-              More newspaper stories will appear here as additional feed items match the current filters.
+              More newspaper stories will appear here as additional feed items match the selected newspaper.
             </p>
           ) : null}
         </main>
@@ -348,7 +320,7 @@ function NewspaperFeaturedCarousel({
       onSave={() => undefined}
       onMoreLikeThis={() => undefined}
       onFollowBrand={() => undefined}
-      indicatorPalette={["#00874D", "#41A86F", "#89CDA5"]}
+      indicatorPalette={["#087A68", "#3EA391", "#91CFC2"]}
     />
   );
 }
@@ -431,10 +403,10 @@ function NewspaperReaderModal({
       onClose={onClose}
       returnFocusElementRef={returnFocusElementRef}
       style={{
-        "--primary": "#00874D",
-        "--hp-primary": "#00874D",
-        "--hp-section-title": "#00874D",
-        "--hp-sidebar-heading": "#00874D",
+        "--primary": "#087A68",
+        "--hp-primary": "#087A68",
+        "--hp-section-title": "#087A68",
+        "--hp-sidebar-heading": "#087A68",
       } as CSSProperties}
     >
       <ContentReaderMasthead

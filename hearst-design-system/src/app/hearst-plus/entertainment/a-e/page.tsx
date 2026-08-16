@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function HearstPlusAandEPage() {
   return (
-    <ThemeProvider defaultBrandSlug="hearst-all">
+    <ThemeProvider defaultBrandSlug="hearst-entertainment">
       <EntertainmentWatchPage activeChannel="A&E" />
     </ThemeProvider>
   );

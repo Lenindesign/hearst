@@ -84,16 +84,16 @@ export function EntertainmentChannelStoriesPage({
     <div
       className="min-h-screen bg-[#050608] text-white"
       style={{
-        "--primary": "#E4AA33",
-        "--hp-primary": "#E4AA33",
-        "--hp-nav": "#E4AA33",
-        "--hp-section-title": "#F6D48A",
-        "--hp-sidebar-heading": "#F6D48A",
+        "--primary": "#B9913F",
+        "--hp-primary": "#B9913F",
+        "--hp-nav": "#B9913F",
+        "--hp-section-title": "#B9913F",
+        "--hp-sidebar-heading": "#B9913F",
         "--component-navigation-utility-background-knockout": "#050608",
         "--component-navigation-utility-megamenu-background-knockout": "#101216",
         "--component-navigation-utility-content-knockout": "#FFFFFF",
-        "--component-navigation-utility-content-accent": "#F6D48A",
-        "--component-navigation-utility-content-accent-hover": "#FFE0A0",
+        "--component-navigation-utility-content-accent": "#B9913F",
+        "--component-navigation-utility-content-accent-hover": "#D5B869",
       } as React.CSSProperties}
     >
       <UtilityBar activeDestinationOverride="A&E Family" darkMode />
@@ -114,14 +114,14 @@ export function EntertainmentChannelStoriesPage({
         <section className="mx-auto grid max-w-[1440px] min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[220px_minmax(0,1fr)_280px]">
           <aside className="min-w-0 space-y-4 lg:sticky lg:top-[108px] lg:max-h-[calc(100dvh-132px)] lg:self-start lg:overflow-y-auto lg:pr-1">
             <section className="rounded-[8px] border border-white/15 bg-white/[0.04] p-4 shadow-[0_18px_48px_rgba(0,0,0,0.28)]" aria-labelledby="entertainment-story-controls">
-              <h2 id="entertainment-story-controls" className="text-xs font-bold uppercase tracking-[0.16em] text-[#F6D48A]">
+              <h2 id="entertainment-story-controls" className="text-xs font-bold uppercase tracking-[0.16em] text-[#B9913F]">
                 Entertainment
               </h2>
               <div className="mt-4 grid grid-cols-2 gap-2">
                 <a href={config.showHref} className="inline-flex min-h-10 items-center justify-center rounded-[6px] border border-white/15 px-3 text-sm font-bold text-white no-underline hover:bg-white/10">
                   Shows
                 </a>
-                <a href={config.storyHref} aria-current="page" className="inline-flex min-h-10 items-center justify-center rounded-[6px] bg-[#F6D48A] px-3 text-sm font-bold text-black no-underline hover:bg-[#FFE0A0]">
+                <a href={config.storyHref} aria-current="page" className="inline-flex min-h-10 items-center justify-center rounded-[6px] bg-[#B9913F] px-3 text-sm font-bold text-black no-underline hover:bg-[#D5B869]">
                   Stories
                 </a>
               </div>
@@ -163,9 +163,9 @@ export function EntertainmentChannelStoriesPage({
             ) : null}
 
             {riverItems.map((story) => (
-              <article key={story.id} className="group/card relative min-w-0 overflow-hidden rounded-[8px] border border-white/15 bg-white/[0.04] shadow-[0_18px_48px_rgba(0,0,0,0.28)] transition-colors hover:border-[#F6D48A]/60">
-                <button type="button" onClick={() => openStory(story.id)} className="grid w-full min-w-0 gap-0 text-left text-white no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#F6D48A]/60 sm:grid-cols-[176px_minmax(0,1fr)] sm:gap-4 sm:p-4" aria-label={`Open story: ${story.title}`}>
-                  <span className="relative grid aspect-[16/9] min-h-0 place-items-center overflow-hidden rounded-[6px] bg-white/10 text-center text-sm font-bold text-[#F6D48A] sm:aspect-[4/3]" aria-hidden="true">
+              <article key={story.id} className="group/card relative min-w-0 overflow-hidden rounded-[8px] border border-white/15 bg-white/[0.04] shadow-[0_18px_48px_rgba(0,0,0,0.28)] transition-colors hover:border-[#B9913F]/60">
+                <button type="button" onClick={() => openStory(story.id)} className="grid w-full min-w-0 gap-0 text-left text-white no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#B9913F]/60 sm:grid-cols-[176px_minmax(0,1fr)] sm:gap-4 sm:p-4" aria-label={`Open story: ${story.title}`}>
+                  <span className="relative grid aspect-[16/9] min-h-0 place-items-center overflow-hidden rounded-[6px] bg-white/10 text-center text-sm font-bold text-[#B9913F] sm:aspect-[4/3]" aria-hidden="true">
                     {story.imageUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={story.imageUrl} alt="" className="h-full w-full object-cover" loading="lazy" />
@@ -176,11 +176,11 @@ export function EntertainmentChannelStoriesPage({
                   </span>
                   <span className="block min-w-0 p-4 sm:p-0">
                     <span className="mb-3 flex flex-wrap items-center gap-2">
-                      <span className="text-xs font-bold uppercase tracking-[0.14em] text-[#F6D48A]">{status === "connected" ? "Latest" : "Pending"}</span>
+                      <span className="text-xs font-bold uppercase tracking-[0.14em] text-[#B9913F]">{status === "connected" ? "Latest" : "Pending"}</span>
                       <span className="text-xs text-white/54">{config.brand}</span>
-                      <span className="rounded-full bg-white/10 px-2 py-1 text-xs text-[#F6D48A]">{feedMode}</span>
+                      <span className="rounded-full bg-white/10 px-2 py-1 text-xs text-[#B9913F]">{feedMode}</span>
                     </span>
-                    <span className="headline block break-words text-xl leading-tight text-white transition-colors group-hover/card:text-[#F6D48A] sm:text-2xl">
+                    <span className="headline block break-words text-xl leading-tight text-white transition-colors group-hover/card:text-[#B9913F] sm:text-2xl">
                       {story.title}
                     </span>
                     <span className="mt-3 line-clamp-3 block text-sm leading-6 text-white/64">{story.description}</span>
@@ -199,7 +199,7 @@ export function EntertainmentChannelStoriesPage({
 
           <aside className="min-w-0 space-y-4 lg:sticky lg:top-[108px] lg:max-h-[calc(100dvh-132px)] lg:self-start lg:overflow-y-auto lg:pr-1">
             <section className="rounded-[8px] border border-white/15 bg-white/[0.04] p-4 shadow-[0_18px_48px_rgba(0,0,0,0.28)]">
-              <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-[#F6D48A]">Feed Status</h2>
+              <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-[#B9913F]">Feed Status</h2>
               <div className="mt-4 space-y-3 text-sm text-white/72">
                 <p><span className="font-bold text-white">{entertainmentWebsiteFeedConfigs.length}</span> channel websites</p>
                 <p><span className="font-bold text-white">{entertainmentWebsiteFeedConfigs.filter((item) => item.rssUrl).length}</span> RSS endpoints</p>
@@ -212,7 +212,7 @@ export function EntertainmentChannelStoriesPage({
               </p>
             </section>
             <section className="rounded-[8px] border border-white/15 bg-white/[0.04] p-4 shadow-[0_18px_48px_rgba(0,0,0,0.28)]">
-              <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-[#F6D48A]">Current Source</h2>
+              <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-[#B9913F]">Current Source</h2>
               <div className="mt-4 space-y-3 text-sm text-white/72">
                 <p><span className="font-bold text-white">{config.brand}</span></p>
                 <p>{feedMode === "Pending" ? "Feed source pending" : `${feedMode} source`}</p>
@@ -293,11 +293,11 @@ function EntertainmentStoryReaderModal({
       onClose={onClose}
       returnFocusElementRef={returnFocusElementRef}
       style={{
-        "--primary": "#E4AA33",
-        "--hp-primary": "#E4AA33",
-        "--hp-section-title": "#F6D48A",
-        "--hp-sidebar-heading": "#F6D48A",
-        "--content-reader-active-label": "#E4AA33",
+        "--primary": "#B9913F",
+        "--hp-primary": "#B9913F",
+        "--hp-section-title": "#B9913F",
+        "--hp-sidebar-heading": "#B9913F",
+        "--content-reader-active-label": "#B9913F",
       } as React.CSSProperties}
     >
       <ContentReaderMasthead
@@ -327,7 +327,7 @@ function EntertainmentStoryReaderModal({
               {index > 0 ? (
                 <div className="mb-8 flex items-center gap-4" aria-label="Up next">
                   <span className="h-px flex-1 bg-white/15" aria-hidden="true" />
-                  <span className="text-xs font-bold uppercase tracking-[0.16em] text-[#F6D48A]">
+                  <span className="text-xs font-bold uppercase tracking-[0.16em] text-[#B9913F]">
                     Up next
                   </span>
                   <span className="h-px flex-1 bg-white/15" aria-hidden="true" />
@@ -340,7 +340,7 @@ function EntertainmentStoryReaderModal({
                 className="aspect-video w-full rounded-[4px] bg-white/10 object-cover"
               />
               <div className="mx-auto mt-6 max-w-3xl">
-                <div className="mb-3 flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-[#F6D48A]">
+                <div className="mb-3 flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-[#B9913F]">
                   <span>{story.signal}</span>
                   <span>{story.brand}</span>
                   <span>{story.topic}</span>
@@ -356,7 +356,7 @@ function EntertainmentStoryReaderModal({
                       href={story.sourceUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="font-bold text-[#F6D48A] underline underline-offset-4"
+                      className="font-bold text-[#B9913F] underline underline-offset-4"
                     >
                       Original story
                     </a>
@@ -410,7 +410,7 @@ function EntertainmentStoryHeroCarousel({
       onSave={() => undefined}
       onMoreLikeThis={() => undefined}
       onFollowBrand={() => undefined}
-      indicatorPalette={["#F6D48A", "#E4AA33", "#FFE0A0"]}
+      indicatorPalette={["#B9913F", "#80652C", "#D5B869"]}
     />
   );
 }

@@ -38,7 +38,7 @@ export default async function EntertainmentStoriesChannelPage({ params }: Entert
   if (!channel) notFound();
 
   return (
-    <ThemeProvider defaultBrandSlug="hearst-all">
+    <ThemeProvider defaultBrandSlug="hearst-entertainment">
       <EntertainmentChannelStoriesPage channelSlug={channel.slug as EntertainmentWebsiteChannelSlug} />
     </ThemeProvider>
   );

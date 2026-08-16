@@ -34,7 +34,7 @@ export default async function HearstPlusEntertainmentPage({ searchParams }: Ente
     : undefined;
 
   return (
-    <ThemeProvider defaultBrandSlug="hearst-all">
+    <ThemeProvider defaultBrandSlug="hearst-entertainment">
       <EntertainmentWatchPage activeChannel={activeChannel} />
     </ThemeProvider>
   );

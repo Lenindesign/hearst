@@ -61,9 +61,7 @@ export function HearstTVFeedExperience({ mode }: { mode: ViewMode }) {
     }
   });
   const [selectedStation, setSelectedStation] = useState(allValue);
-  const [selectedState, setSelectedState] = useState(allValue);
-  const [selectedContentType, setSelectedContentType] = useState<"all" | HearstTVContentType>("all");
-  const filterMessage = "Use the filters to choose a Hearst TV market, state, or content type.";
+  const filterMessage = "Use the station filter to choose a Hearst TV market.";
 
   useEffect(() => {
     try {
@@ -73,7 +71,6 @@ export function HearstTVFeedExperience({ mode }: { mode: ViewMode }) {
     }
   }, [feeds]);
 
-  const states = useMemo(() => [...new Set(hearstTVStations.map((station) => station.state))].sort(), []);
   const enabledFeedCount = feeds.filter(isConfiguredFeed).length;
   const connectedFeedCount = feeds.filter(isConnectedFeed).length;
 
@@ -88,8 +85,6 @@ export function HearstTVFeedExperience({ mode }: { mode: ViewMode }) {
         const station = getHearstTVStationById(item.stationId);
         if (!station) return false;
         if (selectedStation !== allValue && item.stationId !== selectedStation) return false;
-        if (selectedState !== allValue && station.state !== selectedState) return false;
-        if (selectedContentType !== "all" && item.contentType !== selectedContentType) return false;
         return true;
       })
       .sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt))
@@ -97,7 +92,7 @@ export function HearstTVFeedExperience({ mode }: { mode: ViewMode }) {
         ...item,
         hasConfiguredFeed: stationIdsWithConfiguredFeeds.has(item.stationId),
       }));
-  }, [feeds, selectedContentType, selectedState, selectedStation]);
+  }, [feeds, selectedStation]);
   const selectedStationRecord = selectedStation === allValue ? null : getHearstTVStationById(selectedStation);
 
   return (
@@ -132,13 +127,8 @@ export function HearstTVFeedExperience({ mode }: { mode: ViewMode }) {
           feeds={feeds}
           filteredContent={filteredContent}
           filterMessage={filterMessage}
-          selectedContentType={selectedContentType}
-          selectedState={selectedState}
           selectedStation={selectedStation}
           selectedStationRecord={selectedStationRecord}
-          states={states}
-          onContentTypeChange={setSelectedContentType}
-          onStateChange={setSelectedState}
           onStationChange={setSelectedStation}
         />
       ) : (
@@ -174,13 +164,10 @@ export function HearstTVLocalNewsRiver({
   });
   const [manualSelectedStation, setManualSelectedStation] = useState(allValue);
   const selectedStation = routedStation ?? manualSelectedStation;
-  const [selectedState, setSelectedState] = useState(allValue);
-  const [selectedContentType, setSelectedContentType] = useState<"all" | HearstTVContentType>("all");
-  const filterMessage = "Use the filters to choose a Hearst TV market, state, or content type.";
+  const filterMessage = "Use the station filter to choose a Hearst TV market.";
   const [liveContent, setLiveContent] = useState<HearstTVContent[]>([]);
   const [liveFeedError, setLiveFeedError] = useState<string | null>(null);
 
-  const states = useMemo(() => [...new Set(hearstTVStations.map((station) => station.state))].sort(), []);
   const configuredStationIds = useMemo(
     () => new Set(feeds.filter(isConfiguredFeed).map((feed) => feed.stationId)),
     [feeds],
@@ -263,8 +250,6 @@ export function HearstTVLocalNewsRiver({
         const station = getHearstTVStationById(item.stationId);
         if (!station) return false;
         if (selectedStation !== allValue && item.stationId !== selectedStation) return false;
-        if (selectedState !== allValue && station.state !== selectedState) return false;
-        if (selectedContentType !== "all" && item.contentType !== selectedContentType) return false;
         return true;
       })
       .sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt))
@@ -272,7 +257,7 @@ export function HearstTVLocalNewsRiver({
         ...item,
         hasConfiguredFeed: configuredStationIds.has(item.stationId),
       }));
-  }, [configuredStationIds, liveContent, selectedContentType, selectedState, selectedStation]);
+  }, [configuredStationIds, liveContent, selectedStation]);
   const readerStories = useMemo(
     () => filteredContent.map((item) => mapLocalNewsContentToReaderStory(item)),
     [filteredContent],
@@ -324,28 +309,6 @@ export function HearstTVLocalNewsRiver({
                   })),
                 ]}
               />
-              <FilterSelect
-                id="inline-local-state-filter"
-                label="State"
-                value={selectedState}
-                onChange={setSelectedState}
-                options={[
-                  { label: "All states", value: allValue },
-                  ...states.map((state) => ({ label: state, value: state })),
-                ]}
-              />
-              <FilterSelect
-                id="inline-local-content-type-filter"
-                label="Content type"
-                value={selectedContentType}
-                onChange={(value) => setSelectedContentType(value as "all" | HearstTVContentType)}
-                options={[
-                  { label: "News, video, and other", value: "all" },
-                  { label: "News", value: "news" },
-                  { label: "Video", value: "video" },
-                  { label: "Other", value: "other" },
-                ]}
-              />
             </div>
             <Link
               href="/hearst-plus/local-news/admin/"
@@ -372,7 +335,7 @@ export function HearstTVLocalNewsRiver({
             />
           ) : (
             <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-6 text-sm leading-6 text-muted-foreground shadow-[var(--hp-shadow-card)]">
-              No TV station items match the current filters. Clear the station, state, or content-type filter to restore the river.
+              No TV station items match the current station. Clear the station filter to restore the river.
             </section>
           )}
 
@@ -440,7 +403,7 @@ export function HearstTVLocalNewsRiver({
           })}
           {filteredContent.length > 0 && riverItems.length === 0 ? (
             <p className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 text-sm leading-6 text-muted-foreground shadow-[var(--hp-shadow-card)]">
-              More TV station stories will appear here as additional feed items match the current filters.
+              More TV station stories will appear here as additional feed items match the selected station.
             </p>
           ) : null}
         </main>
@@ -493,7 +456,7 @@ function LocalNewsFeaturedCarousel({
       onSave={() => undefined}
       onMoreLikeThis={() => undefined}
       onFollowBrand={() => undefined}
-      indicatorPalette={["#00874D", "#41A86F", "#89CDA5"]}
+      indicatorPalette={["#087A68", "#3EA391", "#91CFC2"]}
     />
   );
 }
@@ -576,10 +539,10 @@ function LocalNewsReaderModal({
       onClose={onClose}
       returnFocusElementRef={returnFocusElementRef}
       style={{
-        "--primary": "#00874D",
-        "--hp-primary": "#00874D",
-        "--hp-section-title": "#00874D",
-        "--hp-sidebar-heading": "#00874D",
+        "--primary": "#087A68",
+        "--hp-primary": "#087A68",
+        "--hp-section-title": "#087A68",
+        "--hp-sidebar-heading": "#087A68",
       } as CSSProperties}
     >
       <ContentReaderMasthead
@@ -703,25 +666,15 @@ function ReaderView({
   feeds,
   filteredContent,
   filterMessage,
-  selectedContentType,
-  selectedState,
   selectedStation,
   selectedStationRecord,
-  states,
-  onContentTypeChange,
-  onStateChange,
   onStationChange,
 }: {
   feeds: StoredFeed[];
   filteredContent: Array<(typeof hearstTVSampleContent)[number] & { hasConfiguredFeed: boolean }>;
   filterMessage: string;
-  selectedContentType: "all" | HearstTVContentType;
-  selectedState: string;
   selectedStation: string;
   selectedStationRecord: ReturnType<typeof getHearstTVStationById> | null;
-  states: string[];
-  onContentTypeChange: (value: "all" | HearstTVContentType) => void;
-  onStateChange: (value: string) => void;
   onStationChange: (value: string) => void;
 }) {
   return (
@@ -750,28 +703,6 @@ function ReaderView({
                 })),
               ]}
             />
-            <FilterSelect
-              id="state-filter"
-              label="State"
-              value={selectedState}
-              onChange={(value) => onStateChange(value)}
-              options={[
-                { label: "All states", value: allValue },
-                ...states.map((state) => ({ label: state, value: state })),
-              ]}
-            />
-            <FilterSelect
-              id="content-type-filter"
-              label="Content type"
-              value={selectedContentType}
-              onChange={(value) => onContentTypeChange(value as "all" | HearstTVContentType)}
-              options={[
-                { label: "News, video, and other", value: "all" },
-                { label: "News", value: "news" },
-                { label: "Video", value: "video" },
-                { label: "Other", value: "other" },
-              ]}
-            />
           </div>
           <Link
             href="/hearst-plus/local-news/admin/"
@@ -791,7 +722,7 @@ function ReaderView({
                 Local News river
               </h2>
               <p className="mt-2 text-sm text-[var(--hp-text-secondary)]">
-                Sorted newest first. The river updates from the selected station, state, and content type.
+                Sorted newest first. The river updates from the selected station.
               </p>
             </div>
             <span className="bg-[var(--hp-control)] px-3 py-2 text-xs font-bold text-[var(--hp-primary)]">
@@ -844,7 +775,7 @@ function ReaderView({
             })}
             {filteredContent.length === 0 ? (
               <div className="bg-[var(--hp-surface)] p-6 text-sm leading-6 text-[var(--hp-text-secondary)]">
-                No local items match the current filters. Clear the station, state, or content-type filter to restore the river.
+                No local items match the current station. Clear the station filter to restore the river.
               </div>
             ) : null}
           </div>

@@ -52,6 +52,9 @@ The complete brand registry is documented in `BRAND_STYLES.md`. Canonical HDS pu
 - Normalize the visual height of the `HEARST` wordmark across Hearst+, Lifestyle, Fashion & Luxury, Enthusiast & Wellness, and Autos mastheads.
 - Qualifiers such as `Lifestyle`, `Fashion & Luxury`, `Enthusiast & Wellness`, and `Autos` may vary in width, but they must not scale down the Hearst wordmark.
 - Align wordmark cap height and baseline consistently across destination mastheads.
+- Generated Hearst destination masthead logos use the active destination primary color on light surfaces.
+- The generated A&E Family destination masthead uses the A&E Family primary color on the dark entertainment landing masthead.
+- Publication, station, newspaper, and channel mastheads preserve official/native logo coloring unless a dark-surface white treatment is explicitly scoped.
 - Preserve theme-specific logo colors. Dark surfaces use the documented white logo treatment.
 - Publication-brand masthead logos render 25% larger than their previous shared regular and compact sizes. This scale applies only when a publication brand is active; destination and section mastheads retain their normalized dimensions.
 

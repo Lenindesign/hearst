@@ -733,7 +733,10 @@ export function MainNav({
                 compact: "h-[16px] max-w-[220px] sm:h-[23px] sm:max-w-[400px]",
                 regular: "h-[22px] max-w-[280px] sm:h-[34px] sm:max-w-[580px]",
               };
-  const logoColor = darkMode || (selectedBrand && colorMode === "dark")
+  const shouldUsePrimaryEntertainmentMasthead = mastheadSlug === "hearst-entertainment" && !mastheadLogoOverride;
+  const logoColor = shouldUsePrimaryEntertainmentMasthead
+    ? "var(--hp-primary, var(--primary, #B9913F))"
+    : darkMode || (selectedBrand && colorMode === "dark")
     ? "var(--palette-content-knockout, white)"
     : selectedBrand
     ? mastheadSlug === "motortrend" || mastheadSlug === "hot-rod" || mastheadSlug === "cosmopolitan"
@@ -743,7 +746,7 @@ export function MainNav({
       : "var(--foreground)"
     : brand.slug === "hearst-flux" && colorMode === "dark"
       ? "var(--palette-content-knockout, white)"
-      : undefined;
+      : "var(--palette-content-brand, var(--primary))";
 
   const mastheadLogoBaseClasses = "mx-auto w-auto items-center justify-center leading-none [&_svg]:block [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full motion-reduce:[&_svg]:transition-none";
   const goodHousekeepingMastheadScaleClasses = mastheadSlug === "good-housekeeping"
@@ -754,7 +757,7 @@ export function MainNav({
       <span
         className={cn(
           "mx-auto inline-flex items-center justify-center",
-          compact ? "h-[38px]" : "h-[58px]"
+          compact ? "h-[46px]" : "h-[72px]"
         )}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -763,7 +766,7 @@ export function MainNav({
           alt={mastheadLogoOverride.label}
           className={cn(
             "w-auto object-contain",
-            compact ? "h-[30px] max-w-[230px]" : "h-[50px] max-w-[420px]"
+            compact ? "h-[38px] max-w-[280px]" : "h-[64px] max-w-[520px]"
           )}
           style={{
             filter: "drop-shadow(0 0 1px rgba(255,255,255,0.95)) drop-shadow(0 0 1px rgba(0,0,0,0.9)) drop-shadow(0 1px 2px rgba(0,0,0,0.45))",

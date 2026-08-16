@@ -44,7 +44,9 @@ const darkModeSectionPrimaryColors: Record<string, string> = {
   "hearst-lifestyle": "#EE8CBC",
   "hearst-plus": "#78BDE8",
   "hearst-flux": "#F2F2F2",
-  "hearst-ew": "#FF7184",
+  "hearst-ew": "#F08F82",
+  "hearst-local-news": "#61CDBD",
+  "hearst-entertainment": "#D5B869",
   elle: "#F2F2F2",
 };
 

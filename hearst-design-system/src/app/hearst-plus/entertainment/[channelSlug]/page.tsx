@@ -54,7 +54,7 @@ export default async function HearstPlusEntertainmentChannelPage({ params }: Ent
   if (!channel) notFound();
 
   return (
-    <ThemeProvider defaultBrandSlug="hearst-all">
+    <ThemeProvider defaultBrandSlug="hearst-entertainment">
       <EntertainmentWatchPage activeChannel={channel} />
     </ThemeProvider>
   );
