@@ -25,6 +25,7 @@ export interface LifestyleDiscoverySidebarProps {
   topics: { name: string; count: number }[];
   brands: { name: string; slug: string; count: number }[];
   brandFilterTitle?: string;
+  communityBrandSlug?: string;
   brandFilterFirst?: boolean;
   showBrandCounts?: boolean;
   globalInventory?: boolean;
@@ -138,6 +139,7 @@ export function LifestyleDiscoverySidebar({
   topics,
   brands,
   brandFilterTitle = "Join Groups",
+  communityBrandSlug,
   brandFilterFirst = false,
   showBrandCounts = true,
   globalInventory = false,
@@ -158,7 +160,24 @@ export function LifestyleDiscoverySidebar({
   );
   const isBrandCommunityModule =
     brandFilterTitle === "Join Groups" || brandFilterTitle === "Join Communities";
-  const brandSummary = isBrandCommunityModule
+  const communityBrand = communityBrandSlug
+    ? brands.find((brand) => brand.slug === communityBrandSlug)
+    : undefined;
+  const isSingleBrandCommunityModule =
+    isBrandCommunityModule && Boolean(communityBrand);
+  const visibleBrands = isSingleBrandCommunityModule
+    ? communityBrand
+      ? [communityBrand]
+      : []
+    : brands;
+  const effectiveBrandFilterTitle = isSingleBrandCommunityModule
+    ? `${communityBrand?.name ?? "Brand"} Community`
+    : brandFilterTitle;
+  const brandSummary = isSingleBrandCommunityModule
+    ? activeBrandFilters.includes(communityBrand?.name ?? "")
+      ? "Joined"
+      : "One brand community"
+    : isBrandCommunityModule
     ? activeBrandFilters.length > 0
       ? `${activeBrandFilters.length} joined`
       : `${brands.length} brand groups`
@@ -172,7 +191,7 @@ export function LifestyleDiscoverySidebar({
   const topicSummary = activeTopicSummary || `${topics.length} topics`;
   const collectionSummary = `${collectionLabels.length} collections`;
   const activeCommunityBrands = isBrandCommunityModule
-    ? brands.filter((brand) => activeBrandFilters.includes(brand.name))
+    ? visibleBrands.filter((brand) => activeBrandFilters.includes(brand.name))
     : [];
   const autosOemStoryCount = autosOemOptions.reduce(
     (total, make) => total + make.count,
@@ -217,11 +236,15 @@ export function LifestyleDiscoverySidebar({
   );
 
   const brandFilterModule = (
-    <DiscoverySidebarCard title={brandFilterTitle} summary={brandSummary}>
+    <DiscoverySidebarCard
+      title={effectiveBrandFilterTitle}
+      summary={brandSummary}
+    >
       {isBrandCommunityModule ? (
         <p className="mt-4 text-xs leading-5 text-muted-foreground">
-          Pick the brand groups you want in your feed, then open the group
-          when you want the full discussion.
+          {isSingleBrandCommunityModule
+            ? `Join the ${communityBrand?.name ?? "brand"} community, then open the group when you want the full discussion.`
+            : "Pick the brand groups you want in your feed, then open the group when you want the full discussion."}
         </p>
       ) : null}
       <div
@@ -230,7 +253,7 @@ export function LifestyleDiscoverySidebar({
           isBrandCommunityModule ? "space-y-2" : "space-y-3",
         )}
       >
-        {brands.map((brand) => {
+        {visibleBrands.map((brand) => {
           const active = activeBrandFilters.includes(brand.name);
           return (
             <button
@@ -285,11 +308,15 @@ export function LifestyleDiscoverySidebar({
       </div>
       <p className="mt-4 text-xs leading-5 text-muted-foreground">
         {isBrandCommunityModule
-          ? activeBrandFilters.length > 0
-            ? activeBrandFilters.length === 1
-              ? `You joined the ${activeBrandFilters[0]} group.`
-              : `You joined ${activeBrandFilters.length} brand groups.`
-            : "Join a brand group to tune your feed and open its discussions."
+          ? isSingleBrandCommunityModule
+            ? activeBrandFilters.includes(communityBrand?.name ?? "")
+              ? `You joined the ${communityBrand?.name ?? "brand"} group.`
+              : `Join the ${communityBrand?.name ?? "brand"} group to open its discussions.`
+            : activeBrandFilters.length > 0
+              ? activeBrandFilters.length === 1
+                ? `You joined the ${activeBrandFilters[0]} group.`
+                : `You joined ${activeBrandFilters.length} brand groups.`
+              : "Join a brand group to tune your feed and open its discussions."
           : globalInventory
             ? "Complete section inventory. Select a brand to open its publication."
             : activeBrandFilters.length > 0

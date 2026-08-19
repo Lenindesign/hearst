@@ -4543,6 +4543,15 @@ function LifestyleRiverHomePage({
     0,
     visibleRiverCount + lifestyleHeroStoryCount
   );
+  const rightRailAd = getContextualAdForSlot({
+    destination,
+    slotIndex: 0,
+    profile,
+    demoState,
+    config,
+    activeFilter,
+    stories: visibleStories,
+  })?.ad ?? null;
   const delishVerticalVideoStories = React.useMemo(() => {
     // Keep one portrait-only inventory for both the carousel and immersive
     // viewer. Feed refreshes may replace either source, so merge all sources
@@ -5301,6 +5310,7 @@ function LifestyleRiverHomePage({
             topStories={filteredStories}
             topics={sidebarTopics}
             brands={sidebarBrands}
+            communityBrandSlug={initialBrandSlug === "elle" ? "elle" : undefined}
             brandFilterTitle={usingVideoTabFeed ? "Videos by brand" : undefined}
             brandFilterFirst={usingVideoTabFeed}
             showBrandCounts={!usingVideoTabFeed}
@@ -5601,6 +5611,7 @@ function LifestyleRiverHomePage({
           topStories={moduleAllocation.dailyHabitStories}
           topics={sidebarTopics}
           brands={sidebarBrands}
+          communityBrandSlug={initialBrandSlug === "elle" ? "elle" : undefined}
           brandFilterTitle={usingVideoTabFeed ? "Videos by brand" : undefined}
           globalInventory={Boolean(initialBrandSlug && !usingVideoTabFeed)}
           showBrandCounts={usingVideoTabFeed ? false : Boolean(initialBrandSlug && !usingVideoTabFeed)}
@@ -5881,6 +5892,7 @@ function LifestyleRiverHomePage({
             onOpenStory={(story) => openStory(story.id)}
             title={initialBrandName ? `Trending in ${initialBrandName}` : undefined}
           />
+          <ContextualRiverAdvertisement ad={rightRailAd} />
           {showStakeholderTools ? (
             <>
               <div className="rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-4 shadow-[var(--hp-shadow-card)]">

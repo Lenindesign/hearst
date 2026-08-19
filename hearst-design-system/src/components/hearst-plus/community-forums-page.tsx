@@ -541,7 +541,7 @@ export function CommunityForumsPage({
                         <BrandSourceIcon
                           brand={item.brand.brand}
                           brandSlug={item.brand.brandSlug}
-                          className="size-9 shrink-0 rounded-full"
+                          className="size-7 shrink-0 rounded-full"
                           imageClassName="object-cover p-0"
                         />
                         <span className="min-w-0 flex-1">
@@ -592,13 +592,13 @@ export function CommunityForumsPage({
                       <BrandSourceIcon
                         brand={brand.brand}
                         brandSlug={brand.brandSlug}
-                        className="size-9 shrink-0 rounded-full"
+                        className="size-7 shrink-0 rounded-full"
                         imageClassName="object-cover p-0"
                       />
                       <span className="min-w-0 flex-1 truncate text-base font-bold">
                         c/{brand.brand}
                       </span>
-                      <span className="inline-flex min-h-9 shrink-0 items-center rounded-full bg-[var(--hp-text-primary)] px-4 text-sm font-black text-[var(--hp-surface)]">
+                        <span className="inline-flex min-h-8 shrink-0 items-center rounded-full bg-[var(--hp-text-primary)] px-3 text-xs font-black text-[var(--hp-surface)]">
                         Join
                       </span>
                     </Link>
@@ -625,13 +625,13 @@ export function CommunityForumsPage({
                       <BrandSourceIcon
                         brand={brand.brand}
                         brandSlug={brand.brandSlug}
-                        className="size-9 shrink-0 rounded-full"
+                        className="size-7 shrink-0 rounded-full"
                         imageClassName="object-cover p-0"
                       />
                       <span className="min-w-0 flex-1 truncate text-base font-bold">
                         c/{brand.brand}
                       </span>
-                      <span className="inline-flex min-h-9 shrink-0 items-center rounded-full bg-[var(--hp-text-primary)] px-4 text-sm font-black text-[var(--hp-surface)]">
+                        <span className="inline-flex min-h-8 shrink-0 items-center rounded-full bg-[var(--hp-text-primary)] px-3 text-xs font-black text-[var(--hp-surface)]">
                         Join
                       </span>
                     </Link>
@@ -1006,7 +1006,7 @@ export function CommunityForumsPage({
                             <BrandSourceIcon
                               brand={thread.brand}
                               brandSlug={thread.brandSlug}
-                              className="size-11 shrink-0 rounded-full"
+                              className="size-9 shrink-0 rounded-full"
                               imageClassName="object-cover p-0"
                             />
                             <span className="min-w-0 flex-1">
