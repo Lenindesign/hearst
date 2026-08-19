@@ -72,7 +72,6 @@ test("surfaces communities in the combined Hearst+ navigation", () => {
     "Home",
     "Videos",
     "Community",
-    "Shopping",
     "Streaming",
     "Events",
     "Games",

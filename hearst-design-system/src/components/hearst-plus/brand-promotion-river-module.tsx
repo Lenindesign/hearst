@@ -121,7 +121,7 @@ export function BrandPromotionRiverModule({
                 <LifestyleRiverImage story={story} className="aspect-square w-full rounded-[8px]" />
                 <span className="min-w-0">
                   {renderFormatLabel(story)}
-                  <span className="headline mt-1 block text-lg leading-tight text-foreground">
+                  <span className="headline mt-1 block text-base leading-tight text-foreground">
                     {story.title}
                   </span>
                   <span className="mt-1 block text-xs leading-5 text-muted-foreground">

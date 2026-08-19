@@ -18,10 +18,12 @@ export function BrandSourceIcon({
   brand,
   brandSlug,
   className,
+  imageClassName,
 }: {
   brand: string;
   brandSlug: string;
   className?: string;
+  imageClassName?: string;
 }) {
   const iconUrl = getBrandLogoSrc(brandSlug, "icon");
   const [failedUrl, setFailedUrl] = useState<string>();
@@ -44,7 +46,10 @@ export function BrandSourceIcon({
           src={iconUrl}
           alt=""
           aria-hidden
-          className="absolute inset-0 h-full w-full bg-background object-contain p-0.5"
+          className={cn(
+            "absolute inset-0 h-full w-full bg-background object-contain p-0.5",
+            imageClassName,
+          )}
           onError={() => setFailedUrl(iconUrl)}
         />
       )}

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { CommunityForumsPage } from "@/components/hearst-plus/community-forums-page";
+import {
+  CommunityForumsPage,
+  getCommunitySort,
+} from "@/components/hearst-plus/community-forums-page";
 import { ThemeProvider } from "@/components/theme-provider";
 import {
   getCommunityGroup,
@@ -11,6 +14,7 @@ import { socialGraphMetadata } from "@/lib/social-graph-image";
 
 type PageProps = {
   params: Promise<{ brandSlug: string; groupSlug: string }>;
+  searchParams?: Promise<{ sort?: string | string[] }>;
 };
 
 export function generateStaticParams() {
@@ -43,8 +47,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page({ params }: PageProps) {
+export default async function Page({ params, searchParams }: PageProps) {
   const { brandSlug, groupSlug } = await params;
+  const resolvedSearchParams = await searchParams;
   const brand = getHearstAllBrands().find(
     (candidate) => candidate.brandSlug === brandSlug,
   );
@@ -56,6 +61,7 @@ export default async function Page({ params }: PageProps) {
       <CommunityForumsPage
         activeBrandSlug={brandSlug}
         activeGroupSlug={groupSlug}
+        sortBy={getCommunitySort(resolvedSearchParams?.sort)}
       />
     </ThemeProvider>
   );

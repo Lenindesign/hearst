@@ -42,6 +42,8 @@ type LocalNewsFeedResponse = {
 
 const feedStorageKey = "hearst-tv-feed-admin-config:v1";
 const allValue = "all";
+const localNewsHeroStoryLimit = 3;
+const localNewsRiverStoryLimit = 12;
 
 function isConfiguredFeed(feed: StoredFeed) {
   return feed.enabled && feed.feedUrl !== feedUrlTbd;
@@ -170,6 +172,7 @@ export function HearstTVLocalNewsRiver({
   const [liveContent, setLiveContent] = useState<HearstTVContent[]>([]);
   const [liveFeedError, setLiveFeedError] = useState<string | null>(null);
   const [liveFeedLoading, setLiveFeedLoading] = useState(false);
+  const [liveRiverLoading, setLiveRiverLoading] = useState(false);
 
   const configuredStationIds = useMemo(
     () => new Set(feeds.filter(isConfiguredFeed).map((feed) => feed.stationId)),
@@ -190,6 +193,7 @@ export function HearstTVLocalNewsRiver({
     async function loadLocalNews() {
       if (activeFeeds.length === 0) {
         setLiveFeedLoading(false);
+        setLiveRiverLoading(false);
         setLiveContent([]);
         setLiveFeedError(
           selectedStation === allValue
@@ -201,8 +205,10 @@ export function HearstTVLocalNewsRiver({
 
       setLiveFeedError(null);
       setLiveFeedLoading(true);
+      setLiveRiverLoading(false);
+      setLiveContent([]);
 
-      const results = await Promise.allSettled(activeFeeds.map(async (feed) => {
+      const fetchFeedSlice = async (feed: StoredFeed, offset: number, limit: number) => {
         const station = getHearstTVStationById(feed.stationId);
         if (!station) return { stories: [], error: null };
         const params = new URLSearchParams({
@@ -210,31 +216,53 @@ export function HearstTVLocalNewsRiver({
           feedId: feed.id,
           feedUrl: feed.feedUrl,
           feedType: feed.feedType,
+          offset: String(offset),
+          limit: String(limit),
         });
         const response = await fetch(`/api/hearst-tv/local-news?${params.toString()}`, {
-          cache: "no-store",
           signal: AbortSignal.timeout(7000),
         });
         if (!response.ok) throw new Error(`Local news feed returned ${response.status}`);
         return await response.json() as LocalNewsFeedResponse;
-      }));
+      };
+
+      const heroResults = await Promise.allSettled(
+        activeFeeds.map((feed) => fetchFeedSlice(feed, 0, localNewsHeroStoryLimit)),
+      );
 
       if (cancelled) return;
 
-      const stories = results.flatMap((result) => (
+      const heroStories = heroResults.flatMap((result) => (
         result.status === "fulfilled" ? (result.value.stories ?? []) : []
       ));
-      const errors = results.flatMap((result) => {
+      const heroErrors = heroResults.flatMap((result) => {
         if (result.status === "fulfilled") return result.value.error ? [result.value.error] : [];
         return [result.reason instanceof Error ? result.reason.message : "Local news feed failed."];
       });
 
-      setLiveContent(stories);
+      setLiveContent(heroStories);
       setLiveFeedLoading(false);
       if (selectedStation === allValue) {
-        setLiveFeedError(stories.length > 0 ? null : errors[0] ?? null);
+        setLiveFeedError(heroStories.length > 0 ? null : heroErrors[0] ?? null);
       } else {
-        setLiveFeedError(errors[0] ?? null);
+        setLiveFeedError(heroErrors[0] ?? null);
+      }
+
+      setLiveRiverLoading(true);
+      const riverResults = await Promise.allSettled(
+        activeFeeds.map((feed) => fetchFeedSlice(feed, localNewsHeroStoryLimit, localNewsRiverStoryLimit)),
+      );
+
+      if (cancelled) return;
+
+      const riverStories = riverResults.flatMap((result) => (
+        result.status === "fulfilled" ? (result.value.stories ?? []) : []
+      ));
+
+      setLiveContent(dedupeHearstTVContent([...heroStories, ...riverStories]));
+      setLiveRiverLoading(false);
+      if (selectedStation === allValue && heroStories.length === 0 && riverStories.length > 0) {
+        setLiveFeedError(null);
       }
     }
 
@@ -419,7 +447,8 @@ export function HearstTVLocalNewsRiver({
               </article>
             );
           })}
-          {!liveFeedLoading && filteredContent.length > 0 && riverItems.length === 0 ? (
+          {liveRiverLoading && activeFeeds.length > 0 ? <LocalNewsRiverStorySkeletons /> : null}
+          {!liveFeedLoading && !liveRiverLoading && filteredContent.length > 0 && riverItems.length === 0 ? (
             <p className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 text-sm leading-6 text-muted-foreground shadow-[var(--hp-shadow-card)]">
               More TV station stories will appear here as additional feed items match the selected station.
             </p>
@@ -472,6 +501,33 @@ function LocalNewsRiverSkeleton() {
           </div>
         </div>
       </section>
+      {Array.from({ length: 3 }).map((_, index) => (
+        <article key={index} className="overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
+          <div className="aspect-video animate-pulse bg-[var(--hp-surface-low)]" />
+          <div className="space-y-4 p-5">
+            <div className="flex flex-wrap gap-2">
+              <span className="h-4 w-16 animate-pulse rounded-full bg-[var(--hp-surface-low)]" />
+              <span className="h-4 w-40 animate-pulse rounded-full bg-[var(--hp-surface-low)]" />
+              <span className="h-4 w-20 animate-pulse rounded-full bg-[var(--hp-surface-low)]" />
+            </div>
+            <div className="space-y-3">
+              <div className="h-7 w-11/12 animate-pulse rounded-full bg-[var(--hp-surface-low)]" />
+              <div className="h-7 w-2/3 animate-pulse rounded-full bg-[var(--hp-surface-low)]" />
+            </div>
+            <div className="space-y-2">
+              <div className="h-4 w-full animate-pulse rounded-full bg-[var(--hp-surface-low)]" />
+              <div className="h-4 w-4/5 animate-pulse rounded-full bg-[var(--hp-surface-low)]" />
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+function LocalNewsRiverStorySkeletons() {
+  return (
+    <div className="space-y-4" aria-label="Loading more local news stories" aria-busy="true">
       {Array.from({ length: 3 }).map((_, index) => (
         <article key={index} className="overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
           <div className="aspect-video animate-pulse bg-[var(--hp-surface-low)]" />

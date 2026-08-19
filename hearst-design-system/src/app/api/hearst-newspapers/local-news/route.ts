@@ -15,6 +15,9 @@ const feedFetchTimeoutMs = 8000;
 const articleImageFetchTimeoutMs = 3500;
 const defaultStoryLimit = 15;
 const maxStoryLimit = 30;
+const edgeCacheHeaders = {
+  "Cache-Control": "public, s-maxage=300, stale-while-revalidate=900",
+};
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -22,6 +25,8 @@ export async function GET(request: Request) {
   const requestedFeedId = url.searchParams.get("feedId");
   const requestedFeedUrl = url.searchParams.get("feedUrl")?.trim();
   const storyLimit = parseStoryLimit(url.searchParams.get("limit"));
+  const storyOffset = parseStoryOffset(url.searchParams.get("offset"));
+  const hydrateImages = url.searchParams.get("hydrateImages") !== "false";
 
   if (!publicationId) {
     return NextResponse.json(
@@ -51,12 +56,12 @@ export async function GET(request: Request) {
       feed: formatResponseFeed(feed, publication.id, null),
       fallback: false,
       error: "Feed URL TBD. Add a verified RSS endpoint to activate this newspaper.",
-    });
+    }, { headers: edgeCacheHeaders });
   }
 
   try {
     const response = await fetch(feed.feedUrl, {
-      cache: "no-store",
+      next: { revalidate: 300 },
       signal: AbortSignal.timeout(feedFetchTimeoutMs),
       headers: {
         accept: "application/rss+xml, application/xml, text/xml;q=0.9, */*;q=0.8",
@@ -68,8 +73,9 @@ export async function GET(request: Request) {
     }
 
     const xml = await response.text();
-    const enrichedItems = await hydrateMissingArticleImages(parseRssItems(xml).slice(0, storyLimit));
-    const stories = enrichedItems
+    const feedItems = parseRssItems(xml).slice(storyOffset, storyOffset + storyLimit);
+    const normalizedItems = hydrateImages ? await hydrateMissingArticleImages(feedItems) : feedItems;
+    const stories = normalizedItems
       .map((item) => normalizeHearstNewspaperFeedItem(item, publication, feed))
       .sort(sortNewestFirst);
     const lastSuccessfulFetch = new Date().toISOString();
@@ -79,7 +85,7 @@ export async function GET(request: Request) {
       status: "connected",
       feed: formatResponseFeed(feed, publication.id, lastSuccessfulFetch),
       fallback: false,
-    });
+    }, { headers: edgeCacheHeaders });
   } catch (error) {
     return NextResponse.json({
       stories: [],
@@ -87,7 +93,7 @@ export async function GET(request: Request) {
       feed: formatResponseFeed(feed, publication.id, null),
       fallback: false,
       error: error instanceof Error ? error.message : `${publication.publicationName} RSS fetch failed.`,
-    });
+    }, { headers: edgeCacheHeaders });
   }
 }
 
@@ -95,6 +101,12 @@ function parseStoryLimit(value: string | null) {
   const parsed = Number(value);
   if (!Number.isFinite(parsed)) return defaultStoryLimit;
   return Math.max(1, Math.min(maxStoryLimit, Math.trunc(parsed)));
+}
+
+function parseStoryOffset(value: string | null) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return 0;
+  return Math.max(0, Math.trunc(parsed));
 }
 
 function isFetchableFeedUrl(value: string) {

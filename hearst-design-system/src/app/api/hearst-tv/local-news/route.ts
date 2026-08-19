@@ -15,6 +15,11 @@ export const dynamic = "force-dynamic";
 
 const kcraStationId = "kcra";
 const feedFetchTimeoutMs = 6000;
+const defaultStoryLimit = 15;
+const maxStoryLimit = 30;
+const edgeCacheHeaders = {
+  "Cache-Control": "public, s-maxage=300, stale-while-revalidate=900",
+};
 
 const fallbackItems: NormalizedFeedItemInput[] = [
   {
@@ -52,6 +57,8 @@ export async function GET(request: Request) {
   const requestedFeedId = url.searchParams.get("feedId");
   const requestedFeedUrl = url.searchParams.get("feedUrl")?.trim();
   const requestedFeedType = normalizeFeedType(url.searchParams.get("feedType"));
+  const storyLimit = parseStoryLimit(url.searchParams.get("limit"));
+  const storyOffset = parseStoryOffset(url.searchParams.get("offset"));
   const station = getHearstTVStationById(stationId);
   const seedFeed = getHearstTVFeedById(requestedFeedId || `${stationId}-primary-feed`);
   const feed = seedFeed ? {
@@ -74,12 +81,12 @@ export async function GET(request: Request) {
       feed: formatResponseFeed(feed, station.id, null),
       fallback: false,
       error: "Feed URL TBD. Add a verified RSS or MRSS endpoint to activate this station.",
-    });
+    }, { headers: edgeCacheHeaders });
   }
 
   try {
     const response = await fetch(feed.feedUrl, {
-      cache: "no-store",
+      next: { revalidate: 300 },
       signal: AbortSignal.timeout(feedFetchTimeoutMs),
       headers: {
         accept: "application/rss+xml, application/xml, text/xml;q=0.9, */*;q=0.8",
@@ -92,6 +99,7 @@ export async function GET(request: Request) {
 
     const xml = await response.text();
     const stories = parseRssItems(xml)
+      .slice(storyOffset, storyOffset + storyLimit)
       .map((item) => normalizeHearstTVFeedItem(item, station, feed))
       .sort(sortNewestFirst);
     const lastSuccessfulFetch = new Date().toISOString();
@@ -101,7 +109,7 @@ export async function GET(request: Request) {
       status: "connected",
       feed: formatResponseFeed(feed, station.id, lastSuccessfulFetch),
       fallback: false,
-    });
+    }, { headers: edgeCacheHeaders });
   } catch (error) {
     const stories = station.id === kcraStationId
       ? fallbackItems
@@ -116,13 +124,25 @@ export async function GET(request: Request) {
       feed: formatResponseFeed(feed, station.id, null),
       fallback: station.id === kcraStationId,
       error: error instanceof Error ? error.message : `${station.callSign} RSS fetch failed.`,
-    });
+    }, { headers: edgeCacheHeaders });
   }
 }
 
 function normalizeFeedType(value: string | null): FeedType | null {
   if (value === "RSS" || value === "MRSS" || value === "TBD") return value;
   return null;
+}
+
+function parseStoryLimit(value: string | null) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return defaultStoryLimit;
+  return Math.max(1, Math.min(maxStoryLimit, Math.trunc(parsed)));
+}
+
+function parseStoryOffset(value: string | null) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return 0;
+  return Math.max(0, Math.trunc(parsed));
 }
 
 function isFetchableFeedUrl(value: string) {

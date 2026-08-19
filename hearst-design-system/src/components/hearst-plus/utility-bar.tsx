@@ -48,7 +48,6 @@ const brandMenuSections = [
 ] satisfies { mode: HearstBrandSection; label: string }[];
 
 const utilityLinks = [
-  { label: "Shop", href: "/hearst-plus/shopping/" },
   { label: "Newsletter", href: "https://www.hearst.co.uk/newsletter" },
 ] as const;
 

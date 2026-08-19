@@ -1314,7 +1314,7 @@ export function MainNav({
           ref={navScrollRef}
           data-topic-navigation-scroll
 	          className={cn(
-            "flex min-w-0 flex-1 scroll-px-4 items-center overflow-x-auto scrollbar-hide",
+            "flex min-w-0 flex-1 scroll-px-4 items-center overflow-x-auto text-sm scrollbar-hide",
             navCarouselMode === "compact" ? "gap-3 md:justify-start" : "gap-6 md:flex-none md:justify-center"
           )}
           onWheelCapture={handleNavigationWheel}

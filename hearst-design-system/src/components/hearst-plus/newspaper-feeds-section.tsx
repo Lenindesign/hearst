@@ -23,7 +23,7 @@ import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 const allValue = "all";
 const defaultNewspaperPublication = "sfgate";
 const newspaperHeroStoryLimit = 3;
-const newspaperRiverStoryLimit = 15;
+const newspaperRiverStoryLimit = 12;
 
 type NewspaperFeedResponse = {
   stories: HearstNewspaperContent[];
@@ -116,8 +116,9 @@ export function NewspaperFeedsSection({
           feedId: activeFeed.id,
           feedUrl: activeFeed.feedUrl,
           limit: String(newspaperHeroStoryLimit),
+          hydrateImages: "true",
         });
-        const response = await fetch(`/api/hearst-newspapers/local-news?${params.toString()}`, { cache: "no-store" });
+        const response = await fetch(`/api/hearst-newspapers/local-news?${params.toString()}`);
         if (!response.ok) throw new Error(`Newspaper feed returned ${response.status}`);
         const payload = await response.json() as NewspaperFeedResponse;
         if (cancelled) return;
@@ -130,11 +131,13 @@ export function NewspaperFeedsSection({
         setLiveRiverLoading(true);
         try {
           params.set("limit", String(newspaperRiverStoryLimit));
-          const riverResponse = await fetch(`/api/hearst-newspapers/local-news?${params.toString()}`, { cache: "no-store" });
+          params.set("offset", String(newspaperHeroStoryLimit));
+          params.set("hydrateImages", "false");
+          const riverResponse = await fetch(`/api/hearst-newspapers/local-news?${params.toString()}`);
           if (!riverResponse.ok) throw new Error(`Newspaper feed returned ${riverResponse.status}`);
           const riverPayload = await riverResponse.json() as NewspaperFeedResponse;
           if (cancelled) return;
-          setLiveContent(riverPayload.stories?.length ? riverPayload.stories : heroStories);
+          setLiveContent(dedupeNewspaperContent([...heroStories, ...(riverPayload.stories ?? [])]));
         } finally {
           if (!cancelled) setLiveRiverLoading(false);
         }
@@ -331,6 +334,15 @@ export function NewspaperFeedsSection({
       </div>
     </div>
   );
+}
+
+function dedupeNewspaperContent(items: HearstNewspaperContent[]) {
+  const seen = new Set<string>();
+  return items.filter((item) => {
+    if (seen.has(item.id)) return false;
+    seen.add(item.id);
+    return true;
+  });
 }
 
 function NewspaperFeaturedCarousel({

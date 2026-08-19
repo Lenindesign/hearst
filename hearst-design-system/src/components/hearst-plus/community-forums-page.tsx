@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { CSSProperties } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -6,18 +7,25 @@ import {
   Bookmark,
   Camera,
   ChefHat,
+  CheckCircle2,
   ChevronDown,
   ChevronUpIcon,
+  CircleUserRound,
+  Compass,
   DotsThree,
   Flame,
   Heart,
+  ImageIcon,
   MessageCircle,
   Newspaper,
+  Plus,
+  Search,
   Send,
   Share2,
   Shield,
   Star,
   ThumbsUp,
+  TrendingUp,
 } from "@/components/ui/icons";
 import { BrandLogo } from "@/components/brand-logo";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
@@ -47,7 +55,17 @@ type CommunityForumsPageProps = {
   activeBrandSlug?: string;
   activeGroupSlug?: string;
   activeThreadId?: string;
+  sortBy?: CommunitySort;
 };
+
+export type CommunitySort = "hot" | "new" | "top";
+
+export function getCommunitySort(
+  value: string | string[] | undefined,
+): CommunitySort {
+  const sort = Array.isArray(value) ? value[0] : value;
+  return sort === "new" || sort === "top" ? sort : "hot";
+}
 
 type CommunityBrand = {
   brand: string;
@@ -71,13 +89,8 @@ type CommunityThread = {
   action: string;
   href: string;
   storyHref?: string;
-};
-
-const sectionLabels: Record<HearstBrandSection, string> = {
-  lifestyle: "Lifestyle",
-  autos: "Autos",
-  flux: "Fashion & Luxury",
-  ew: "Enthusiast & Wellness",
+  posterImage?: string;
+  posterAlt?: string;
 };
 
 const communityIconMap: Record<CommunityGroupIconKey, typeof ChefHat> = {
@@ -99,6 +112,33 @@ const kindLabels: Record<CommunityThread["kind"], string> = {
 const communityNavLinks = [
   { label: "For You", href: "/hearst-plus/", active: false },
   { label: "Communities", href: "/communities/", active: true },
+] as const;
+
+const communityFeedShortcuts = [
+  {
+    id: "home",
+    label: "Home",
+    href: "/communities/",
+    icon: Compass,
+  },
+  {
+    id: "popular",
+    label: "Popular",
+    href: "/communities/#popular",
+    icon: TrendingUp,
+  },
+  {
+    id: "create",
+    label: "Create community",
+    href: "#suggest-group",
+    icon: Plus,
+  },
+] as const;
+
+const communitySortTabs = [
+  { label: "Hot", value: "hot", icon: Flame },
+  { label: "New", value: "new", icon: Newspaper },
+  { label: "Top", value: "top", icon: TrendingUp },
 ] as const;
 
 const communityTypographyStyle = {
@@ -152,6 +192,8 @@ function makeStoryThread(
     action: "Open thread",
     href: `/communities/${story.brandSlug}/threads/${story.id}/`,
     storyHref: `/read/${story.id}/?from=${encodeURIComponent(readerReturnPath)}`,
+    posterImage: story.image,
+    posterAlt: story.title,
   };
 }
 
@@ -159,6 +201,7 @@ function makeThreads(
   brands: CommunityBrand[],
   activeBrandSlug?: string,
   activeGroupSlug?: string,
+  sortBy: CommunitySort = "hot",
 ): CommunityThread[] {
   const selectedBrands = activeBrandSlug
     ? brands.filter((brand) => brand.brandSlug === activeBrandSlug)
@@ -181,6 +224,9 @@ function makeThreads(
       const brand = brands.find(
         (candidate) => candidate.brandSlug === seed.brandSlug,
       );
+      const posterStory = brand
+        ? getTopStories(brand.stories, 1)[0]
+        : undefined;
       return {
         id: seed.starterPostSlug,
         brand: brand?.brand ?? seed.name,
@@ -195,6 +241,8 @@ function makeThreads(
         author: brand?.brand ?? "Hearst+",
         action: "Open discussion",
         href: getCommunityGroupPostHref(seed),
+        posterImage: posterStory?.image,
+        posterAlt: posterStory?.title,
       };
     });
 
@@ -205,6 +253,9 @@ function makeThreads(
       const brand = brands.find(
         (candidate) => candidate.brandSlug === seed.brandSlug,
       );
+      const posterStory = brand
+        ? getTopStories(brand.stories, 1)[0]
+        : undefined;
       return {
         id: seed.id,
         brand: brand?.brand ?? seed.author,
@@ -217,12 +268,28 @@ function makeThreads(
         author: seed.author,
         action: "Open thread",
         href: `/communities/${seed.brandSlug}/threads/${seed.id}/`,
+        posterImage: posterStory?.image,
+        posterAlt: posterStory?.title,
       };
     });
 
-  return [...participationThreads, ...seededThreads, ...storyThreads]
-    .sort((a, b) => b.replies - a.replies)
-    .slice(0, activeBrandSlug ? 14 : 16);
+  const allThreads = [
+    ...participationThreads,
+    ...seededThreads,
+    ...storyThreads,
+  ];
+  const sortedThreads =
+    sortBy === "new"
+      ? allThreads
+      : [...allThreads].sort((a, b) =>
+          sortBy === "top"
+            ? b.replies - a.replies
+            : b.replies +
+              (b.kind === "story" ? 8 : 0) -
+              (a.replies + (a.kind === "story" ? 8 : 0)),
+        );
+
+  return sortedThreads.slice(0, activeBrandSlug ? 14 : 16);
 }
 
 function getActiveBrand(brands: CommunityBrand[], activeBrandSlug?: string) {
@@ -259,13 +326,15 @@ export function CommunityForumsPage({
   activeBrandSlug,
   activeGroupSlug,
   activeThreadId,
+  sortBy = "hot",
 }: CommunityForumsPageProps) {
   const brands = getCommunityBrands();
   const activeBrand = getActiveBrand(brands, activeBrandSlug);
-  const activeGroupSeed = activeBrandSlug && activeGroupSlug
-    ? getCommunityGroup(activeBrandSlug, activeGroupSlug)
-    : undefined;
-  const threads = makeThreads(brands, activeBrandSlug, activeGroupSlug);
+  const activeGroupSeed =
+    activeBrandSlug && activeGroupSlug
+      ? getCommunityGroup(activeBrandSlug, activeGroupSlug)
+      : undefined;
+  const threads = makeThreads(brands, activeBrandSlug, activeGroupSlug, sortBy);
   const activeThreadStory = activeThreadId
     ? activeBrand?.stories.find((story) => story.id === activeThreadId)
     : undefined;
@@ -303,8 +372,25 @@ export function CommunityForumsPage({
       : [],
   );
   const activeGroup = activeGroupSeed
-    ? featuredCommunities.find((item) => item?.groupSlug === activeGroupSeed.groupSlug)
+    ? featuredCommunities.find(
+        (item) => item?.groupSlug === activeGroupSeed.groupSlug,
+      )
     : undefined;
+  const activeCommunityName =
+    activeGroup?.name ?? activeBrand?.brand ?? "Hearst+ communities";
+  const activeCommunityDescription =
+    activeGroup?.description ??
+    (activeBrand
+      ? `Discuss ${activeBrand.brand} stories, ask readers for advice, and follow writer prompts from the group.`
+      : "Follow groups, browse reader posts, and keep up with conversations from across Hearst+.");
+  const recommendedThreads = threads
+    .filter((thread) => thread.replies >= 30)
+    .slice(0, 5);
+  const feedPath = activeGroup
+    ? `/communities/${activeGroup.brand.brandSlug}/groups/${activeGroup.groupSlug}/`
+    : activeBrand
+      ? `/communities/${activeBrand.brandSlug}/`
+      : "/communities/";
   const topBrands = [...brands].sort(
     (a, b) => b.stories.length - a.stories.length,
   );
@@ -316,6 +402,8 @@ export function CommunityForumsPage({
         ),
       ]
     : topBrands;
+  const primaryExploreBrands = browseBrands.slice(0, 4);
+  const hearstExploreBrands = browseBrands.slice(4, 8);
   const selectedBrandForUtility = activeBrand
     ? { name: activeBrand.brand, slug: activeBrand.brandSlug }
     : null;
@@ -399,52 +487,165 @@ export function CommunityForumsPage({
         <div className="mx-auto grid max-w-[1360px] gap-6 bg-[var(--hp-background)] px-5 py-8 md:px-10 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.58fr)_minmax(280px,0.7fr)]">
           <aside className="min-w-0 lg:sticky lg:top-28 lg:self-start">
             <section className="rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
-              <div className="flex items-center justify-between gap-3">
-                <h2 className="hearst-community-display text-xl font-bold leading-tight">
-                  Browse groups
-                </h2>
-                <Link
-                  href="/communities/"
-                  className="text-sm font-bold text-primary"
-                >
-                  All
-                </Link>
+              <h2 className="hearst-community-display text-xl font-bold leading-tight">
+                Communities
+              </h2>
+
+              <nav className="mt-4 grid gap-1" aria-label="Community feeds">
+                {communityFeedShortcuts.map((item) => {
+                  const Icon = item.icon;
+                  const isActive =
+                    item.id === "home" && !activeBrandSlug && !activeGroupSlug;
+                  return (
+                    <Link
+                      key={item.id}
+                      href={item.href}
+                      aria-current={isActive ? "page" : undefined}
+                      className={cn(
+                        "flex min-h-11 items-center gap-3 rounded-[8px] px-3 text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35",
+                        isActive
+                          ? "bg-[var(--hp-action-soft)] text-[var(--hp-action-soft-text)]"
+                          : "text-[var(--hp-text-secondary)] hover:bg-[var(--community-surface-soft)] hover:text-[var(--hp-text-primary)]",
+                      )}
+                    >
+                      <Icon className="size-4 shrink-0" aria-hidden />
+                      {item.label}
+                    </Link>
+                  );
+                })}
+              </nav>
+
+              <div className="mt-6 border-t border-[var(--hp-border)] pt-4">
+                <h3 className="text-xs font-black uppercase tracking-[0.08em] text-[var(--hp-text-secondary)]">
+                  My communities
+                </h3>
+                <div className="mt-3 grid gap-1">
+                  {featuredCommunities.slice(0, 4).map((item) => {
+                    if (!item) return null;
+                    const isActive =
+                      activeGroup?.groupSlug === item.groupSlug ||
+                      (!activeGroup &&
+                        activeBrand?.brandSlug === item.brand.brandSlug);
+                    return (
+                      <Link
+                        key={`${item.brand.brandSlug}-${item.groupSlug}`}
+                        href={getCommunityGroupHref(item)}
+                        aria-current={isActive ? "page" : undefined}
+                        className={cn(
+                          "flex min-h-14 min-w-0 items-center gap-3 rounded-[8px] px-1.5 py-2 text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35",
+                          isActive
+                            ? "bg-[var(--community-surface-soft)] text-[var(--hp-text-primary)]"
+                            : "text-[var(--hp-text-secondary)] hover:bg-[var(--community-surface-soft)] hover:text-[var(--hp-text-primary)]",
+                        )}
+                      >
+                        <BrandSourceIcon
+                          brand={item.brand.brand}
+                          brandSlug={item.brand.brandSlug}
+                          className="size-9 shrink-0 rounded-full"
+                          imageClassName="object-cover p-0"
+                        />
+                        <span className="min-w-0 flex-1">
+                          <span className="block truncate text-base font-bold">
+                            c/{item.name}
+                          </span>
+                        </span>
+                        <CheckCircle2
+                          className="size-5 shrink-0 text-primary"
+                          aria-label="Joined"
+                        />
+                      </Link>
+                    );
+                  })}
+                </div>
               </div>
-              <div className="mt-4 grid max-h-[60vh] gap-2 overflow-y-auto pr-1">
-                {browseBrands.map((brand) => (
-                  <Link
-                    key={brand.brandSlug}
-                    href={`/communities/${brand.brandSlug}/`}
-                    className={cn(
-                      "flex min-h-12 min-w-0 items-center gap-3 rounded-[8px] border px-3 py-2 text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35",
-                      activeBrand?.brandSlug === brand.brandSlug
-                        ? "border-primary bg-[var(--hp-action-soft)] text-[var(--hp-action-soft-text)]"
-                        : "border-primary/15 bg-[var(--community-surface-soft)] text-[var(--hp-text-primary)] hover:border-primary/45 hover:bg-[var(--community-surface-soft-hover)]",
-                    )}
-                  >
-                    <BrandSourceIcon
-                      brand={brand.brand}
-                      brandSlug={brand.brandSlug}
-                      className="h-7 w-7 rounded-[6px]"
-                    />
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate">{brand.brand}</span>
-                      <span className="mt-0.5 block text-xs font-semibold text-[var(--hp-text-secondary)]">
-                        {sectionLabels[brand.section]} group
+
+              <div className="mt-6 border-t border-[var(--hp-border)] pt-4">
+                <h3 className="text-xs font-black uppercase tracking-[0.08em] text-[var(--hp-text-secondary)]">
+                  Explore
+                </h3>
+                <div className="relative mt-4">
+                  <Search
+                    className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[var(--hp-text-secondary)]"
+                    aria-hidden
+                  />
+                  <input
+                    type="search"
+                    name="community-search"
+                    placeholder="Search communities..."
+                    className="hearst-community-copy min-h-11 w-full rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] py-2 pl-10 pr-3 text-sm font-normal text-[var(--hp-text-primary)] outline-none transition-colors placeholder:text-[var(--hp-text-secondary)] focus-visible:border-primary focus-visible:ring-3 focus-visible:ring-ring/50"
+                    aria-label="Search communities"
+                  />
+                </div>
+                <div className="mt-3 grid max-h-[42vh] gap-1 overflow-y-auto pr-1">
+                  {primaryExploreBrands.map((brand) => (
+                    <Link
+                      key={brand.brandSlug}
+                      href={`/communities/${brand.brandSlug}/`}
+                      className={cn(
+                        "flex min-h-14 min-w-0 items-center gap-3 rounded-[8px] px-1.5 py-2 text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35",
+                        activeBrand?.brandSlug === brand.brandSlug &&
+                          !activeGroup
+                          ? "bg-[var(--community-surface-soft)] text-[var(--hp-text-primary)]"
+                          : "text-[var(--hp-text-secondary)] hover:bg-[var(--community-surface-soft)] hover:text-[var(--hp-text-primary)]",
+                      )}
+                    >
+                      <BrandSourceIcon
+                        brand={brand.brand}
+                        brandSlug={brand.brandSlug}
+                        className="size-9 shrink-0 rounded-full"
+                        imageClassName="object-cover p-0"
+                      />
+                      <span className="min-w-0 flex-1 truncate text-base font-bold">
+                        c/{brand.brand}
                       </span>
-                    </span>
-                    <span className="shrink-0 text-xs text-[var(--hp-text-secondary)]">
-                      {brand.stories.length}
-                    </span>
-                  </Link>
-                ))}
+                      <span className="inline-flex min-h-9 shrink-0 items-center rounded-full bg-[var(--hp-text-primary)] px-4 text-sm font-black text-[var(--hp-surface)]">
+                        Join
+                      </span>
+                    </Link>
+                  ))}
+
+                  {hearstExploreBrands.length > 0 ? (
+                    <h4 className="mt-5 px-1.5 text-xs font-black uppercase tracking-[0.08em] text-[var(--hp-text-secondary)]">
+                      Hearst
+                    </h4>
+                  ) : null}
+
+                  {hearstExploreBrands.map((brand) => (
+                    <Link
+                      key={brand.brandSlug}
+                      href={`/communities/${brand.brandSlug}/`}
+                      className={cn(
+                        "flex min-h-14 min-w-0 items-center gap-3 rounded-[8px] px-1.5 py-2 text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35",
+                        activeBrand?.brandSlug === brand.brandSlug &&
+                          !activeGroup
+                          ? "bg-[var(--community-surface-soft)] text-[var(--hp-text-primary)]"
+                          : "text-[var(--hp-text-secondary)] hover:bg-[var(--community-surface-soft)] hover:text-[var(--hp-text-primary)]",
+                      )}
+                    >
+                      <BrandSourceIcon
+                        brand={brand.brand}
+                        brandSlug={brand.brandSlug}
+                        className="size-9 shrink-0 rounded-full"
+                        imageClassName="object-cover p-0"
+                      />
+                      <span className="min-w-0 flex-1 truncate text-base font-bold">
+                        c/{brand.brand}
+                      </span>
+                      <span className="inline-flex min-h-9 shrink-0 items-center rounded-full bg-[var(--hp-text-primary)] px-4 text-sm font-black text-[var(--hp-surface)]">
+                        Join
+                      </span>
+                    </Link>
+                  ))}
+                </div>
               </div>
             </section>
           </aside>
 
           <section
             className="min-w-0 space-y-4"
-            aria-label={activeGroup ? `${activeGroup.name} posts` : "Group posts"}
+            aria-label={
+              activeGroup ? `${activeGroup.name} posts` : "Group posts"
+            }
           >
             {activeThread ? (
               <article className="overflow-hidden rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
@@ -491,7 +692,8 @@ export function CommunityForumsPage({
                         <BrandSourceIcon
                           brand={activeThread.brand}
                           brandSlug={activeThread.brandSlug}
-                          className="h-9 w-9 rounded-[8px]"
+                          className="size-9 rounded-full"
+                          imageClassName="object-cover p-0"
                         />
                         <div className="min-w-0">
                           <p className="text-sm font-black text-[var(--hp-text-primary)]">
@@ -667,8 +869,8 @@ export function CommunityForumsPage({
                         Join the conversation
                       </h4>
                       <p className="hearst-community-copy mt-1 text-sm leading-6 text-[var(--hp-text-secondary)]">
-                        Reply as a reader, or sign in to keep your group
-                        history across devices.
+                        Reply as a reader, or sign in to keep your group history
+                        across devices.
                       </p>
                     </div>
                     <span className="rounded-[8px] bg-[var(--community-surface-soft)] px-3 py-1.5 text-xs font-bold text-[var(--hp-text-secondary)]">
@@ -705,96 +907,77 @@ export function CommunityForumsPage({
               </article>
             ) : (
               <>
-                <form
-                  id="start-thread"
-                  className="scroll-mt-28 rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]"
+                <section
+                  className="overflow-hidden rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]"
                   aria-labelledby="start-thread-title"
                 >
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div>
-                      <h3
+                  <div className="border-b border-[var(--hp-border)] p-4">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-[var(--community-surface-soft)] text-primary">
+                        <CircleUserRound className="size-6" aria-hidden />
+                      </span>
+                      <Link
                         id="start-thread-title"
-                        className="hearst-community-display text-2xl font-bold leading-tight"
+                        href="#post-to-group"
+                        className="hearst-community-copy flex min-h-11 min-w-0 flex-1 items-center rounded-[8px] border border-primary/15 bg-[var(--community-surface-soft)] px-3 text-left text-sm font-semibold text-[var(--hp-text-secondary)] transition-colors hover:border-primary/45 hover:bg-[var(--community-surface-soft-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
                       >
-                        Start a post
-                      </h3>
-                      <p className="hearst-community-copy mt-1 text-sm leading-6 text-[var(--hp-text-secondary)]">
-                        Ask a question, invite writer input, or share something
-                        the group can answer.
-                      </p>
-                    </div>
-                    <span className="rounded-[8px] bg-[var(--community-surface-soft)] px-3 py-1.5 text-xs font-bold text-[var(--hp-text-secondary)]">
-                      Reader post
-                    </span>
-                  </div>
-
-                  <div className="mt-4 grid gap-3">
-                    <label
-                      htmlFor="community-thread-title"
-                      className="grid gap-1.5 text-sm font-bold text-[var(--hp-text-primary)]"
-                    >
-                      Post title
-                      <input
-                        id="community-thread-title"
-                        name="title"
-                        type="text"
-                        placeholder="What do you want to ask the group?"
-                        className="hearst-community-copy min-h-11 rounded-[8px] border border-primary/15 bg-[var(--community-surface-soft)] px-3 text-sm font-normal text-[var(--hp-text-primary)] outline-none transition-colors placeholder:text-[var(--hp-text-secondary)] focus-visible:border-primary focus-visible:bg-white focus-visible:ring-3 focus-visible:ring-ring/50"
-                      />
-                    </label>
-
-                    <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(180px,0.42fr)]">
-                      <label
-                        htmlFor="community-thread-body"
-                        className="grid gap-1.5 text-sm font-bold text-[var(--hp-text-primary)]"
+                        Start a post in {activeCommunityName}
+                      </Link>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="icon"
+                        className="shrink-0"
+                        aria-label="Add media to a post"
                       >
-                        Post
-                        <Textarea
-                          id="community-thread-body"
-                          name="body"
-                          placeholder="Give people enough context to reply."
-                          className="hearst-community-copy min-h-28 resize-y border-primary/15 bg-[var(--community-surface-soft)] text-sm font-normal leading-6 focus-visible:bg-white"
-                        />
-                      </label>
-                      <label
-                        htmlFor="community-thread-type"
-                        className="grid content-start gap-1.5 text-sm font-bold text-[var(--hp-text-primary)]"
-                      >
-                        Post type
-                        <select
-                          id="community-thread-type"
-                          name="type"
-                          className="hearst-community-copy min-h-11 rounded-[8px] border border-primary/15 bg-[var(--community-surface-soft)] px-3 text-sm font-normal text-[var(--hp-text-primary)] outline-none transition-colors focus-visible:border-primary focus-visible:bg-white focus-visible:ring-3 focus-visible:ring-ring/50"
-                          defaultValue="reader"
-                        >
-                          <option value="reader">Reader question</option>
-                          <option value="writer">Ask the writers</option>
-                          <option value="post">Group discussion</option>
-                          <option value="challenge">Community challenge</option>
-                        </select>
-                      </label>
-                    </div>
-                  </div>
-
-                  <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-                    <p className="hearst-community-copy text-xs leading-5 text-[var(--hp-text-secondary)]">
-                      Sign in to publish across devices. Drafts can start here.
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      <Button type="button" variant="outline" size="sm">
-                        Save draft
+                        <ImageIcon className="size-4" aria-hidden />
                       </Button>
                       <Button
                         type="button"
-                        size="sm"
-                        className="text-primary-foreground"
+                        variant="outline"
+                        size="icon"
+                        className="hidden shrink-0 sm:inline-flex"
+                        aria-label="Open community profile"
                       >
-                        <Send className="size-4" aria-hidden />
-                        Publish post
+                        <CircleUserRound className="size-4" aria-hidden />
                       </Button>
                     </div>
                   </div>
-                </form>
+
+                  <div
+                    id="popular"
+                    className="flex flex-wrap items-center justify-between gap-3 p-3"
+                  >
+                    <nav
+                      aria-label="Sort community posts"
+                      className="flex items-center gap-1 rounded-[8px] border border-primary/15 bg-[var(--community-surface-soft)] p-1"
+                    >
+                      {communitySortTabs.map((item) => {
+                        const Icon = item.icon;
+                        const isActive = sortBy === item.value;
+                        return (
+                          <Link
+                            key={item.label}
+                            href={`${feedPath}?sort=${item.value}#popular`}
+                            aria-current={isActive ? "page" : undefined}
+                            className={cn(
+                              "inline-flex min-h-9 items-center gap-1.5 rounded-[6px] px-3 text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35",
+                              isActive
+                                ? "bg-[var(--hp-surface)] text-primary"
+                                : "text-[var(--hp-text-secondary)] hover:bg-[var(--hp-control-hover)] hover:text-[var(--hp-text-primary)]",
+                            )}
+                          >
+                            <Icon className="size-4" aria-hidden />
+                            {item.label}
+                          </Link>
+                        );
+                      })}
+                    </nav>
+                    <p className="hearst-community-copy text-xs leading-5 text-[var(--hp-text-secondary)]">
+                      {threads.length} active posts
+                    </p>
+                  </div>
+                </section>
 
                 <div
                   role="feed"
@@ -812,7 +995,8 @@ export function CommunityForumsPage({
                       aria-setsize={threads.length}
                       className="group p-4 transition-colors hover:bg-[var(--community-surface-soft)] sm:p-5"
                     >
-                      <div className="flex items-start gap-4">
+                      <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+                        <ThreadVoteRail score={thread.replies + 12 + index} />
                         <div className="min-w-0 flex-1">
                           <Link
                             href={thread.href}
@@ -822,7 +1006,8 @@ export function CommunityForumsPage({
                             <BrandSourceIcon
                               brand={thread.brand}
                               brandSlug={thread.brandSlug}
-                              className="h-11 w-11 shrink-0 rounded-[8px]"
+                              className="size-11 shrink-0 rounded-full"
+                              imageClassName="object-cover p-0"
                             />
                             <span className="min-w-0 flex-1">
                               <span className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-bold text-[var(--hp-text-secondary)]">
@@ -834,7 +1019,7 @@ export function CommunityForumsPage({
                               </span>
                               <h3
                                 id={`thread-${thread.id}-title`}
-                                className="hearst-community-display mt-2 text-2xl font-bold leading-snug transition-colors group-hover:text-primary"
+                                className="hearst-community-display mt-2 text-xl font-bold leading-snug transition-colors group-hover:text-primary md:text-2xl"
                               >
                                 {thread.title}
                               </h3>
@@ -845,7 +1030,33 @@ export function CommunityForumsPage({
                                 {thread.body}
                               </span>
                             </span>
+                            {thread.posterImage ? (
+                              <span className="relative hidden aspect-[4/3] w-28 shrink-0 overflow-hidden rounded-[8px] border border-[var(--hp-border)] bg-[var(--community-surface-soft)] sm:block md:w-32">
+                                <Image
+                                  src={thread.posterImage}
+                                  alt={thread.posterAlt ?? thread.title}
+                                  fill
+                                  sizes="(max-width: 1024px) 112px, 128px"
+                                  className="object-cover transition-transform duration-200 group-hover:scale-[1.03]"
+                                />
+                              </span>
+                            ) : null}
                           </Link>
+                          {thread.posterImage ? (
+                            <Link
+                              href={thread.href}
+                              className="relative mt-3 block aspect-[16/9] overflow-hidden rounded-[8px] border border-[var(--hp-border)] bg-[var(--community-surface-soft)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 sm:hidden"
+                              aria-label={`Open thread image: ${thread.title}`}
+                            >
+                              <Image
+                                src={thread.posterImage}
+                                alt={thread.posterAlt ?? thread.title}
+                                fill
+                                sizes="100vw"
+                                className="object-cover"
+                              />
+                            </Link>
+                          ) : null}
                           <div className="mt-4 flex flex-wrap items-center gap-4 text-sm font-bold text-[var(--hp-text-secondary)]">
                             <span className="inline-flex items-center gap-1.5">
                               <MessageCircle
@@ -859,7 +1070,7 @@ export function CommunityForumsPage({
                               className="inline-flex min-h-9 items-center gap-1.5 text-primary transition-colors hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
                             >
                               <ThumbsUp className="size-4" aria-hidden />
-                              Follow post
+                              Save
                             </button>
                             <Link
                               href={thread.href}
@@ -886,9 +1097,82 @@ export function CommunityForumsPage({
           </section>
 
           <aside className="space-y-5 lg:sticky lg:top-28 lg:self-start">
+            <section className="rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
+              {activeBrand || activeGroup ? (
+                <>
+                  <h2 className="hearst-community-display text-xl font-bold leading-tight">
+                    About {activeCommunityName}
+                  </h2>
+                  <p className="hearst-community-copy mt-2 text-sm leading-6 text-[var(--hp-text-secondary)]">
+                    {activeCommunityDescription}
+                  </p>
+                  <div className="mt-4 grid grid-cols-2 gap-2 border-y border-[var(--hp-border)] py-3">
+                    <div>
+                      <p className="text-xl font-black leading-tight text-[var(--hp-text-primary)]">
+                        {activeGroup?.members ??
+                          `${activeBrand?.stories.length ?? threads.length}`}
+                      </p>
+                      <p className="mt-1 text-xs font-bold text-[var(--hp-text-secondary)]">
+                        {activeGroup ? "Members" : "Stories"}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xl font-black leading-tight text-[var(--hp-text-primary)]">
+                        {threads.length}
+                      </p>
+                      <p className="mt-1 text-xs font-bold text-[var(--hp-text-secondary)]">
+                        Posts
+                      </p>
+                    </div>
+                  </div>
+                  <Link
+                    href="#post-to-group"
+                    className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-[var(--component-button-radius-default)] border bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+                  >
+                    <Plus className="size-4" aria-hidden />
+                    Create post
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <h2 className="hearst-community-display text-xl font-bold leading-tight">
+                    Recommended for you
+                  </h2>
+                  <div className="mt-4 space-y-3">
+                    {recommendedThreads.map((thread) => (
+                      <Link
+                        key={`${thread.kind}-${thread.id}-recommended`}
+                        href={thread.href}
+                        className="block rounded-[8px] border border-primary/15 bg-[var(--community-surface-soft)] p-3 transition-colors hover:border-primary/45 hover:bg-[var(--community-surface-soft-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+                      >
+                        <div className="flex items-center gap-2 text-xs font-bold text-[var(--hp-text-secondary)]">
+                          <BrandSourceIcon
+                            brand={thread.brand}
+                            brandSlug={thread.brandSlug}
+                            className="size-5 rounded-full"
+                            imageClassName="object-cover p-0"
+                          />
+                          <span className="truncate">{thread.brand}</span>
+                        </div>
+                        <h3 className="hearst-community-display mt-2 line-clamp-2 text-base font-bold leading-snug text-[var(--hp-text-primary)]">
+                          {thread.title}
+                        </h3>
+                        <p className="mt-2 text-xs font-bold text-primary">
+                          {thread.replies} replies
+                        </p>
+                      </Link>
+                    ))}
+                  </div>
+                </>
+              )}
+            </section>
+
             <CommunityJoinedGroupsCard groups={joinedGroupItems} />
 
-            <section className="rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
+            <section
+              id="post-to-group"
+              className="scroll-mt-28 rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]"
+            >
               <h2 className="hearst-community-display text-xl font-bold leading-tight">
                 Featured groups
               </h2>
@@ -951,7 +1235,9 @@ export function CommunityForumsPage({
                     name="groupName"
                     type="text"
                     placeholder={
-                      activeBrand ? `${activeBrand.brand} owners` : "Weekend cooking"
+                      activeBrand
+                        ? `${activeBrand.brand} owners`
+                        : "Weekend cooking"
                     }
                     className="hearst-community-copy min-h-11 rounded-[8px] border border-primary/15 bg-[var(--community-surface-soft)] px-3 text-sm font-normal text-[var(--hp-text-primary)] outline-none transition-colors placeholder:text-[var(--hp-text-secondary)] focus-visible:border-primary focus-visible:bg-white focus-visible:ring-3 focus-visible:ring-ring/50"
                   />
