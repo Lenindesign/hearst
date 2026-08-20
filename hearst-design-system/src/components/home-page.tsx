@@ -502,7 +502,9 @@ export function MainNav({
     : isDestinationRiver
       ? destinationConfig.filters
       : content.navLinks);
-  const uncappedNavLinks = includeVideos ? insertVideosFilter(baseNavLinks) : baseNavLinks;
+  const uncappedNavLinks = (includeVideos ? insertVideosFilter(baseNavLinks) : baseNavLinks)
+    .filter((link) => !((brand.slug === "hearst-all" || brand.slug === "hearst-plus")
+      && (link === "Streaming" || link === "Events")));
   const navLinks = selectedBrand?.slug === "good-housekeeping" && uncappedNavLinks.length > 7
     ? (() => {
         const visibleLinks = uncappedNavLinks.slice(0, 7);

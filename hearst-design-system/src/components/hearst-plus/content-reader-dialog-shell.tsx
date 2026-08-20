@@ -232,7 +232,7 @@ export function ContentReaderDialogShell({
       <div
         ref={contentRef}
         className={cn(
-          "hearst-plus-theme absolute inset-0 isolate mx-auto flex h-[100dvh] w-full max-w-[1360px] transform-gpu flex-col overflow-x-hidden overflow-y-auto overscroll-contain bg-background text-foreground shadow-2xl [scrollbar-gutter:stable] [will-change:scroll-position]",
+          "hearst-plus-theme absolute inset-0 isolate mx-auto flex h-[100dvh] w-full max-w-[1360px] flex-col overflow-x-hidden overflow-y-auto overscroll-contain bg-background text-foreground shadow-2xl [scrollbar-gutter:stable]",
           "sm:inset-6 sm:h-auto sm:w-auto sm:rounded-[8px]",
         )}
         data-mode={mode}

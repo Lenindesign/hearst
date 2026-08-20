@@ -545,12 +545,7 @@ export function UtilityBar({
                 </section>
               ) : null}
               {isInternationalMenu ? (
-                <section aria-labelledby="hearst-brand-menu-international">
-                  <div className="mb-2">
-                    <p id="hearst-brand-menu-international" className={cn("text-[11px] font-bold uppercase tracking-[0.12em]", darkMode ? "text-[var(--component-navigation-utility-content-accent)]" : "text-primary")}>
-                      International feeds
-                    </p>
-                  </div>
+                <section aria-label="International editions">
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     {hearstInternationalFeedCountries.map((country) => (
                       <div key={country} className="min-w-0">
