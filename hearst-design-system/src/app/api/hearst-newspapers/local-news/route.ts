@@ -141,7 +141,7 @@ function parseRssItems(xml: string): NormalizedNewspaperFeedItemInput[] {
       link: getTagValue(itemXml, "link"),
       publishedAt: getTagValue(itemXml, "pubDate") || getTagValue(itemXml, "dc:date"),
       guid: getTagValue(itemXml, "guid"),
-      imageUrl: getMediaUrl(itemXml) || getImageFromDescription(description),
+      imageUrl: normalizeImageUrl(getMediaUrl(itemXml) || getImageFromDescription(description)),
       rawSource: itemXml,
     };
   });
@@ -163,7 +163,7 @@ async function hydrateMissingArticleImages(items: NormalizedNewspaperFeedItemInp
       if (!response.ok) return item;
       const html = await response.text();
       const imageUrl = getArticleImage(html);
-      return imageUrl ? { ...item, imageUrl } : item;
+      return imageUrl ? { ...item, imageUrl: normalizeImageUrl(imageUrl) } : item;
     } catch {
       return item;
     }
@@ -209,6 +209,11 @@ function getAttribute(xml: string, tagName: string, attributeName: string) {
 function getImageFromDescription(description: string) {
   const match = description.match(/<img\b[^>]*\bsrc=["']([^"']+)["']/i);
   return decodeXml(match?.[1] ?? "");
+}
+
+function normalizeImageUrl(value: string) {
+  if (value.startsWith("//")) return `https:${value}`;
+  return value.trim();
 }
 
 function stripHtml(value: string) {

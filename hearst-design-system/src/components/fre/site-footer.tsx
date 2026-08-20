@@ -39,6 +39,7 @@ const defaultProductLinkGroups: SiteFooterLinkGroup[] = [
       { label: "Product story", href: "/about-hearst-magazines/" },
       { label: "Why Hearst+", href: "/why-hearst-plus/" },
       { label: "Accessibility and AI", href: "/hearst-plus/accessibility-ai/" },
+      { label: "Ad logic", href: "/ad-logic/" },
       { label: "Product blueprint", href: "/hearst-product-blueprint/" },
       { label: "Article system", href: "/hearst-article-blueprint/" },
       { label: "Token architecture", href: "/token-architecture/" },

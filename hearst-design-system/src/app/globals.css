@@ -268,6 +268,22 @@
   }
 }
 
+@keyframes hearstPlusReaderCommentsTarget {
+  0% {
+    box-shadow: 0 0 0 0 rgba(45, 117, 185, 0);
+  }
+  35% {
+    box-shadow: 0 0 0 6px rgba(45, 117, 185, 0.24);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(45, 117, 185, 0);
+  }
+}
+
+.hearst-plus-reader-comments-target:target {
+  animation: hearstPlusReaderCommentsTarget 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 .hearst-plus-article-backdrop {
   animation: hearstPlusArticleBackdropIn 180ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -294,7 +310,8 @@
   .hearst-plus-article-backdrop-out,
   .hearst-plus-article-dialog,
   .hearst-plus-article-dialog-out,
-  .hearst-plus-article-image {
+  .hearst-plus-article-image,
+  .hearst-plus-reader-comments-target:target {
     animation-duration: 1ms;
     transition-duration: 1ms;
   }

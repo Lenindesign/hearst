@@ -278,7 +278,9 @@ export function HearstTVLocalNewsRiver({
 
     const liveStationIds = new Set(liveContent.map((item) => item.stationId));
     const sampleContent = hearstTVSampleContent.filter((item) => !liveStationIds.has(item.stationId));
-    const contentPool = selectedStation === allValue
+    const contentPool = selectedStation !== allValue && activeFeeds.length > 0
+      ? liveContent
+      : selectedStation === allValue
       ? [...liveContent, ...sampleContent]
       : liveContent.some((item) => item.stationId === selectedStation)
         ? liveContent

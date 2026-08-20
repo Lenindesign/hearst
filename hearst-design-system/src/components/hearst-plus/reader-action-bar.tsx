@@ -196,9 +196,9 @@ export function ReaderActionBar({
             href={`#reader-comments-${story.id}`}
             aria-label={`Jump to ${commentCount} comments`}
             title={`${commentCount} comments`}
-            className="inline-flex h-11 min-w-11 shrink-0 items-center justify-center gap-1 text-sm text-muted-foreground transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30 sm:h-7 sm:min-w-0"
+            className="group inline-flex h-11 min-w-11 shrink-0 items-center justify-center gap-1 text-sm text-muted-foreground transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30 sm:h-7 sm:min-w-0"
           >
-            <MessageCircle className="h-4 w-4" aria-hidden />
+            <MessageCircle className="h-4 w-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-focus-visible:-translate-y-0.5" aria-hidden />
             <span className="tabular-nums">{commentCount}</span>
           </a>
         </div>

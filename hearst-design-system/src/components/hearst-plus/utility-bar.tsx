@@ -5,11 +5,18 @@ import { BrandSourceIcon } from "@/components/hearst-plus/brand-source-icon";
 import { ReaderAvatar } from "@/components/reader-account-ui";
 import { useReaderAccount } from "@/components/reader-account";
 import { Button } from "@/components/ui/button";
+import { GlobeHemisphereEast } from "@/components/ui/icons";
 import { LinkComponent } from "@/components/ui/link";
 import { PageContainer } from "@/components/ui/grid";
 import { entertainmentWebsiteFeedConfigs } from "@/lib/hearst-entertainment-story-feeds";
-import { hearstNewspaperPublications } from "@/lib/hearst-newspaper-feed-framework";
-import { hearstTVStations } from "@/lib/hearst-tv-feed-framework";
+import {
+  hearstInternationalCountryNames,
+  hearstInternationalFeedCountries,
+  hearstInternationalFeeds,
+  getHearstInternationalFeedFaviconUrl,
+} from "@/lib/hearst-international-feeds";
+import { hearstNewspaperFeeds, hearstNewspaperPublications, newspaperFeedUrlTbd } from "@/lib/hearst-newspaper-feed-framework";
+import { feedUrlTbd, hearstTVFeeds, hearstTVStations } from "@/lib/hearst-tv-feed-framework";
 import {
   getHearstBrandRoute,
   getHearstBrandSection,
@@ -28,7 +35,7 @@ type HearstDestinationSection = {
   hasBrandMenu?: boolean;
 };
 
-type UtilityDestinationMode = HearstDestinationMode | "local-news" | "entertainment-culture";
+type UtilityDestinationMode = HearstDestinationMode | "local-news" | "entertainment-culture" | "international";
 
 export const hearstDestinationSections = [
   { mode: "all", label: "All", href: getHearstDestinationRoute("all"), hasBrandMenu: true },
@@ -38,6 +45,7 @@ export const hearstDestinationSections = [
   { mode: "ew", label: "Enthusiast & Wellness", href: getHearstDestinationRoute("ew"), hasBrandMenu: true },
   { mode: "local-news", label: "Local News", href: "/hearst-plus/local-news/", hasBrandMenu: true },
   { mode: "entertainment-culture", label: "A&E Family", href: "/hearst-plus/entertainment/", hasBrandMenu: true },
+  { mode: "international", label: "International", href: "/hearst-plus/", hasBrandMenu: true },
 ] satisfies HearstDestinationSection[];
 
 const brandMenuSections = [
@@ -60,6 +68,12 @@ const localNewsNewspaperLogos = hearstNewspaperPublications.filter(
   (publication): publication is typeof publication & { logo: string } => Boolean(publication.logo),
 );
 
+const connectedNewspaperPublicationIds = new Set(
+  hearstNewspaperFeeds
+    .filter((feed) => feed.enabled && feed.status === "connected" && feed.feedUrl !== newspaperFeedUrlTbd)
+    .map((feed) => feed.publicationId),
+);
+
 const tvStationFaviconFolders: Partial<Record<string, string>> = {
   "khbs-khog": "khbs",
 };
@@ -70,6 +84,20 @@ const localNewsTVStationFavicons = hearstTVStations
     ...station,
     favicon: `https://htv-prod-media.s3.amazonaws.com/htv_default_image/${tvStationFaviconFolders[station.id] ?? station.id}/favicon.png`,
   }));
+
+const connectedTVStationIds = new Set(
+  hearstTVFeeds
+    .filter((feed) => feed.enabled && feed.status === "connected" && feed.feedUrl !== feedUrlTbd)
+    .map((feed) => feed.stationId),
+);
+
+const internationalFeedsByCountry = hearstInternationalFeedCountries.reduce<Record<string, typeof hearstInternationalFeeds>>(
+  (groups, country) => {
+    groups[country] = hearstInternationalFeeds.filter((feed) => feed.country === country);
+    return groups;
+  },
+  {},
+);
 
 export interface UtilityBarProps {
   selectedBrand?: { name: string; slug: string } | null;
@@ -119,6 +147,7 @@ export function UtilityBar({
     : brandMenuSections.filter((section) => section.mode === openDestinationMenu);
   const isLocalNewsMenu = openDestinationMenu === "local-news";
   const isEntertainmentCultureMenu = openDestinationMenu === "entertainment-culture";
+  const isInternationalMenu = openDestinationMenu === "international";
 
   React.useEffect(() => {
     if (!openDestinationMenu) return;
@@ -222,7 +251,13 @@ export function UtilityBar({
                           : "text-primary-foreground hover:bg-white/10 hover:text-primary-foreground"
                     )}
                   >
-                    {section.label}
+                    {section.mode === "international" ? (
+                      <>
+                        <GlobeHemisphereEast aria-hidden="true" weight="regular" className="size-4" />
+                        <span className="sr-only">{section.label}</span>
+                      </>
+                    ) : null}
+                    {section.mode === "international" ? null : section.label}
                   </LinkComponent>
                 </React.Fragment>
               );
@@ -263,8 +298,10 @@ export function UtilityBar({
             aria-label={`${openSection.label} menu`}
             className={cn(
               "max-h-[min(calc(100dvh-3rem),680px)] w-full overscroll-contain overflow-y-auto rounded-xl border p-4 shadow-2xl sm:max-h-[min(calc(100dvh-3.5rem),720px)] sm:p-5",
-              openDestinationMenu !== "all" && !isLocalNewsMenu && "mx-auto max-w-sm",
+              openDestinationMenu !== "all" && !isLocalNewsMenu && !isEntertainmentCultureMenu && !isInternationalMenu && "mx-auto max-w-sm",
               isLocalNewsMenu && "mx-auto max-w-5xl",
+              isEntertainmentCultureMenu && "mx-auto max-w-2xl",
+              isInternationalMenu && "mx-auto max-w-6xl",
               darkMode
                 ? "border-white/15 bg-[var(--component-navigation-utility-megamenu-background-knockout)] text-[var(--component-navigation-utility-content-knockout)]"
                 : "border-border bg-background text-foreground"
@@ -278,6 +315,8 @@ export function UtilityBar({
                     ? "Local News"
                     : isEntertainmentCultureMenu
                     ? "A&E Family brands"
+                    : isInternationalMenu
+                    ? "International editions"
                     : `${openSection.label} brands`}
               </p>
             </div>
@@ -325,7 +364,7 @@ export function UtilityBar({
                                 underline={false}
                                 size="sm"
                                 role="menuitem"
-                                aria-label={`Show ${station.callSign} local-news river`}
+                                aria-label={`Show ${station.callSign} local-news river${connectedTVStationIds.has(station.id) ? " · RSS feed available" : ""}`}
                                 onClick={() => setOpenDestinationMenu(null)}
                                 className={cn(
                                   "min-h-8 w-full justify-between rounded-lg px-3 py-1.5 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
@@ -357,7 +396,18 @@ export function UtilityBar({
                                       className="absolute inset-0 size-full bg-white object-contain p-0.5"
                                     />
                                   </span>
-                                  <span className="truncate">{station.callSign} · {station.market}</span>
+                                  <span className="flex min-w-0 items-center gap-1.5 truncate">
+                                    <span className="truncate">{station.callSign} · {station.market}</span>
+                                    {connectedTVStationIds.has(station.id) ? (
+                                      <>
+                                        <span
+                                          aria-hidden="true"
+                                          className="size-1.5 shrink-0 rounded-full bg-emerald-500/80"
+                                        />
+                                        <span className="sr-only">RSS feed available</span>
+                                      </>
+                                    ) : null}
+                                  </span>
                                 </span>
                               </LinkComponent>
                             ))}
@@ -400,7 +450,7 @@ export function UtilityBar({
                                 underline={false}
                                 size="sm"
                                 role="menuitem"
-                                aria-label={`Show ${publication.publicationName} local-news river`}
+                                aria-label={`Show ${publication.publicationName} local-news river${connectedNewspaperPublicationIds.has(publication.id) ? " · RSS feed available" : ""}`}
                                 onClick={() => setOpenDestinationMenu(null)}
                                 className={cn(
                                   "min-h-8 w-full justify-between rounded-lg px-3 py-1.5 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
@@ -429,7 +479,15 @@ export function UtilityBar({
                                       className="absolute inset-0 size-full bg-white object-contain p-0.5"
                                     />
                                   </span>
-                                  <span className="truncate">{publication.publicationName}</span>
+                                  <span className="flex min-w-0 items-center gap-1.5 truncate">
+                                    <span className="truncate">{publication.publicationName}</span>
+                                    {connectedNewspaperPublicationIds.has(publication.id) ? (
+                                      <>
+                                        <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-emerald-500/80" />
+                                        <span className="sr-only">RSS feed available</span>
+                                      </>
+                                    ) : null}
+                                  </span>
                                 </span>
                               </LinkComponent>
                             ))}
@@ -483,6 +541,34 @@ export function UtilityBar({
                         ))}
                       </div>
                     </div>
+                  </div>
+                </section>
+              ) : null}
+              {isInternationalMenu ? (
+                <section aria-labelledby="hearst-brand-menu-international">
+                  <div className="mb-2">
+                    <p id="hearst-brand-menu-international" className={cn("text-[11px] font-bold uppercase tracking-[0.12em]", darkMode ? "text-[var(--component-navigation-utility-content-accent)]" : "text-primary")}>
+                      International feeds
+                    </p>
+                  </div>
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    {hearstInternationalFeedCountries.map((country) => (
+                      <div key={country} className="min-w-0">
+                        <p className={cn("mb-1 text-[10px] font-bold tracking-[0.12em]", darkMode ? "text-white/60" : "text-muted-foreground")}>
+                          {hearstInternationalCountryNames[country] ?? country}
+                        </p>
+                            <div className="grid gap-1">
+                              {internationalFeedsByCountry[country].map((feed) => (
+                                <InternationalFeedLink
+                                  key={`${country}-${feed.name}`}
+                                  feed={feed}
+                                  darkMode={darkMode}
+                                  onClick={() => setOpenDestinationMenu(null)}
+                                />
+                              ))}
+                            </div>
+                      </div>
+                    ))}
                   </div>
                 </section>
               ) : null}
@@ -596,6 +682,65 @@ function EntertainmentMenuLink({
         </span>
         <span className="truncate">{label}</span>
       </span>
+    </LinkComponent>
+  );
+}
+
+function InternationalFeedLink({
+  feed,
+  darkMode,
+  onClick,
+}: {
+  feed: (typeof hearstInternationalFeeds)[number];
+  darkMode: boolean;
+  onClick: () => void;
+}) {
+  const [faviconFailed, setFaviconFailed] = React.useState(false);
+  const faviconUrl = getHearstInternationalFeedFaviconUrl(feed);
+  const fallbackLabel = feed.name
+    .replace(/[^a-z0-9 ]/gi, "")
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((word) => word[0])
+    .join("")
+    .slice(0, 3)
+    .toUpperCase();
+
+  return (
+    <LinkComponent
+      href={`/hearst-plus/international/?feed=${encodeURIComponent(feed.url)}`}
+      variant="neutral"
+      underline={false}
+      size="sm"
+      role="menuitem"
+      onClick={onClick}
+      className={cn(
+        "min-h-8 w-full justify-start gap-2 rounded-lg px-2 py-1.5 text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+        darkMode
+          ? "text-[var(--component-navigation-utility-content-knockout)] hover:bg-white/10 hover:text-white"
+          : "text-foreground hover:bg-muted hover:text-foreground",
+      )}
+    >
+      <span
+        aria-hidden="true"
+        className={cn(
+          "relative flex size-5 shrink-0 items-center justify-center overflow-hidden rounded border text-[7px] font-black leading-none",
+          darkMode ? "border-white/15 bg-white/10 text-white" : "border-black/10 bg-muted text-foreground",
+        )}
+      >
+        <span>{fallbackLabel}</span>
+        {!faviconFailed ? (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img
+            src={faviconUrl}
+            alt=""
+            loading="lazy"
+            onError={() => setFaviconFailed(true)}
+            className="absolute inset-0 size-full bg-white object-contain p-0.5"
+          />
+        ) : null}
+      </span>
+      <span className="truncate">{feed.name}</span>
     </LinkComponent>
   );
 }

@@ -18,6 +18,7 @@
     "feed:refresh": "node scripts/import-lifestyle-rss.mjs && node scripts/import-autos-rss.mjs && node scripts/import-flux-rss.mjs && node scripts/import-ew-rss.mjs && node scripts/enrich-river-bylines.mjs && npm run feed:validate && npm run storybook:fixtures",
     "feed:bylines": "node scripts/enrich-river-bylines.mjs",
     "feed:validate": "node --import tsx scripts/validate-story-feed.ts",
+    "feed:check:local-news": "node --import tsx scripts/check-local-news-feeds.ts",
     "build-tokens": "tsx scripts/build-from-tokens.ts",
     "push-pencil": "tsx scripts/push-to-pencil.ts",
     "push-figma": "tsx scripts/push-to-figma.ts",

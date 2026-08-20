@@ -37,7 +37,7 @@ export default function LocalNewsPage() {
           </Suspense>
         </section>
         <SiteFooter
-          siteName={<BrandLogo slug="hearst-local-news" className="h-5 max-w-[11rem] [&_svg]:h-full [&_svg]:w-auto" color="#fff" />}
+          siteName={<BrandLogo slug="hearst-local-news" className="block h-4 w-28 [&_svg]:h-full [&_svg]:w-auto" color="#fff" />}
           copyrightYear={2026}
           finePrintNote="Prototype only. Local News uses checked-in verified RSS defaults; feed admin edits remain browser-local until a production feed-management service is connected."
         />

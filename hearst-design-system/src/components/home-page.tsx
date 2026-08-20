@@ -156,7 +156,6 @@ import {
   type LifestyleStoryComment,
 } from "./hearst-plus/content-reader-model";
 import { ContentReaderComments } from "./hearst-plus/content-reader-comments";
-import { ContentReaderRecommendations } from "./hearst-plus/content-reader-recommendations";
 import { ContentReaderContextRail } from "./hearst-plus/content-reader-context-rail";
 import {
   ContentReaderAdvertisement,
@@ -307,6 +306,7 @@ export interface HomePageTemplateProps {
   initialOpenAmbientReader?: boolean;
   readerReturnHref?: string;
   navLinksOverride?: string[];
+  mastheadLogoOverride?: { src: string; label: string; surface?: "default" | "station"; tone?: "normal" | "white"; className?: string } | null;
   staticDestinationData?: HearstDestinationStaticData;
   globalBrandInventory?: Record<string, number>;
   onboardingBrandInventory?: Record<string, number>;
@@ -1700,6 +1700,7 @@ function getContextualAdForSlot({
   config,
   activeFilter,
   stories,
+  excludeAdIds = [],
 }: {
   destination: DestinationMode;
   slotIndex: number;
@@ -1708,9 +1709,11 @@ function getContextualAdForSlot({
   config: DestinationConfig;
   activeFilter: string;
   stories: LifestyleRiverStory[];
+  excludeAdIds?: string[];
 }) {
   const surroundingStories = stories.slice(Math.max(0, slotIndex - 2), Math.min(stories.length, slotIndex + 3));
   const rankedAds = contextualAdsByDestination[destination]
+    .filter((ad) => !excludeAdIds.includes(ad.id))
     .map((ad) => ({
       ad,
       score: scoreContextualAd(ad, profile, demoState, config, activeFilter, surroundingStories),
@@ -3856,11 +3859,6 @@ function LifestyleStoryReaderModal({
                           comments={commentsByStoryId[story.id] ?? []}
                           onAddComment={(body) => onAddComment(story.id, body)}
                         />
-                        <ContentReaderRecommendations
-                          currentStory={story}
-                          stories={readerStories}
-                          onOpenStory={onOpenStory}
-                        />
                       </div>
                     </article>
                     <ContentReaderAdvertisement
@@ -4240,6 +4238,10 @@ function LifestyleRiverHomePage({
     recordStoryOpened(storyId);
     rememberSessionContinueReadingStory(storyId);
     setOpenStoryId(storyId);
+
+    if (storyId.startsWith("international-")) {
+      return;
+    }
     saveReaderReturnScrollSnapshot(
       storyId,
       storyOpenReturnHref,
@@ -4551,6 +4553,7 @@ function LifestyleRiverHomePage({
     config,
     activeFilter,
     stories: visibleStories,
+    excludeAdIds: ["autos-cd-deal-score"],
   })?.ad ?? null;
   const delishVerticalVideoStories = React.useMemo(() => {
     // Keep one portrait-only inventory for both the carousel and immersive
@@ -6236,6 +6239,7 @@ export function HomePageTemplate({
   initialOpenAmbientReader,
   readerReturnHref,
   navLinksOverride,
+  mastheadLogoOverride,
   staticDestinationData,
   globalBrandInventory,
   onboardingBrandInventory,
@@ -7006,6 +7010,7 @@ export function HomePageTemplate({
         onFilterChange={handleLifestyleFilterChange}
         selectedBrand={selectedBrand}
         navLinksOverride={navLinksOverride}
+        mastheadLogoOverride={mastheadLogoOverride}
         includeVideos={hasScopedVideoFeed}
         darkMode={useVideosDarkHeader}
         mobileContinueStories={mobileContinueStories}

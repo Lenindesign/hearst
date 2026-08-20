@@ -4,6 +4,9 @@ import Link from "next/link";
 import React from "react";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import {
+  communityParticipationThreads,
+  getCommunityGroupHref,
+  getCommunityGroupsForBrand,
   joinedBrandGroupsChangeEvent,
   joinedBrandGroupsStorageKey,
 } from "@/lib/community-groups";
@@ -26,6 +29,10 @@ function ReaderCommunityModule({
   brandSlug,
 }: Pick<LifestyleRiverStory, "brand" | "brandSlug">) {
   const [joined, setJoined] = React.useState(false);
+  const featuredGroup = getCommunityGroupsForBrand(brandSlug)[0];
+  const activeThread = communityParticipationThreads.find(
+    (thread) => thread.brandSlug === brandSlug,
+  );
 
   React.useEffect(() => {
     const readMembership = () => {
@@ -73,11 +80,12 @@ function ReaderCommunityModule({
   return (
     <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
       <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
-        Join Groups
+        {joined ? "Your Groups" : "Join Groups"}
       </p>
       <p className="mt-2 text-xs leading-5 text-muted-foreground">
-        Join the {brand} group to tune your feed, then open the group when you
-        want the full discussion.
+        {joined
+          ? `Your ${brand} group, featured conversations, and reader notes.`
+          : `Join the ${brand} group to tune your feed, then open the group when you want the full discussion.`}
       </p>
       <div className="mt-4 space-y-2">
         <button
@@ -105,11 +113,37 @@ function ReaderCommunityModule({
           ? `You joined the ${brand} group.`
           : `Join the ${brand} group to open its discussions.`}
       </p>
+      {joined && featuredGroup ? (
+        <Link
+          href={getCommunityGroupHref(featuredGroup)}
+          className="mt-3 block rounded-[6px] border border-border bg-background px-3 py-2 transition-colors hover:border-primary/45 hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+        >
+          <span className="block text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+            Featured group
+          </span>
+          <span className="mt-1 block text-sm font-bold text-[var(--hp-text-primary)]">
+            {featuredGroup.name}
+          </span>
+        </Link>
+      ) : null}
+      {joined && activeThread ? (
+        <Link
+          href={`/communities/${activeThread.brandSlug}/threads/${activeThread.id}/`}
+          className="mt-2 block rounded-[6px] border border-border bg-background px-3 py-2 transition-colors hover:border-primary/45 hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+        >
+          <span className="block text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+            Active thread · {activeThread.replies} replies
+          </span>
+          <span className="mt-1 block text-sm font-bold leading-5 text-[var(--hp-text-primary)]">
+            {activeThread.title}
+          </span>
+        </Link>
+      ) : null}
       <Link
         href={`/communities/${brandSlug}/`}
         className="mt-3 flex min-h-9 w-full items-center justify-center rounded-[4px] border border-border px-3 text-xs font-bold text-[var(--hp-text-primary)] transition-colors hover:border-primary/45 hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
       >
-        Browse groups
+        {joined ? "Open community" : "Browse groups"}
       </Link>
     </section>
   );

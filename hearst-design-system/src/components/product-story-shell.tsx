@@ -30,6 +30,7 @@ const productPages = [
   { id: "story", label: "Product story", mobileLabel: "Story", href: "/about-hearst-magazines/" },
   { id: "value", label: "Why Hearst+", mobileLabel: "Why Hearst+", href: "/why-hearst-plus/" },
   { id: "blueprint", label: "Blueprint", mobileLabel: "Blueprint", href: "/hearst-product-blueprint/" },
+  { id: "ads", label: "Ad logic", mobileLabel: "Ads", href: "/ad-logic/" },
   { id: "articles", label: "Article system", mobileLabel: "Articles", href: "/hearst-article-blueprint/" },
   { id: "tokens", label: "Token architecture", mobileLabel: "Tokens", href: "/token-architecture/" },
   { id: "hds", label: "HDS framework", mobileLabel: "HDS", href: "/hds-brand-framework/" },

@@ -43,7 +43,7 @@ export function ContentReaderComments({
   return (
     <section
       id={`reader-comments-${story.id}`}
-      className="mt-8 scroll-mt-32 rounded-[8px] border border-border bg-muted/25 p-4 sm:p-5"
+      className="hearst-plus-reader-comments-target mt-8 scroll-mt-32 rounded-[8px] border border-border bg-muted/25 p-4 sm:p-5"
       aria-label={`Comments for ${story.title}`}
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">

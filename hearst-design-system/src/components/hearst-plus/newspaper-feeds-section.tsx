@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type RefObject } from "react";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ContentReaderDialogShell, rememberContentReaderReturnFocus } from "@/components/hearst-plus/content-reader-dialog-shell";
 import { ContentReaderMasthead } from "@/components/hearst-plus/content-reader-masthead";
 import { FeaturedStoryCarousel } from "@/components/hearst-plus/featured-story-carousel";
-import { LifestyleRiverImage } from "@/components/hearst-plus/story-presentation";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   getHearstNewspaperFeedById,
@@ -84,6 +84,7 @@ export function NewspaperFeedsSection({
   const [liveContent, setLiveContent] = useState<HearstNewspaperContent[]>([]);
   const [liveFeedLoading, setLiveFeedLoading] = useState(false);
   const [liveRiverLoading, setLiveRiverLoading] = useState(false);
+  const [liveFeedError, setLiveFeedError] = useState<string | null>(null);
 
   const defaultPublicationRecord = getHearstNewspaperPublicationById(defaultNewspaperPublication);
   const selectedPublicationRecord = selectedPublication === allValue
@@ -103,6 +104,7 @@ export function NewspaperFeedsSection({
         setLiveFeedLoading(false);
         setLiveRiverLoading(false);
         setLiveContent([]);
+        setLiveFeedError(null);
         return;
       }
 
@@ -110,6 +112,7 @@ export function NewspaperFeedsSection({
         setLiveFeedLoading(true);
         setLiveRiverLoading(false);
         setLiveContent([]);
+        setLiveFeedError(null);
 
         const params = new URLSearchParams({
           publicationId: activeFeed.publicationId,
@@ -125,14 +128,18 @@ export function NewspaperFeedsSection({
         const heroStories = payload.stories ?? [];
         setLiveContent(heroStories);
         setLiveFeedLoading(false);
-
-        if (payload.status !== "connected") return;
+        if (payload.status !== "connected") {
+          setLiveFeedError(payload.error ?? "Newspaper feed is not connected.");
+          return;
+        }
 
         setLiveRiverLoading(true);
         try {
           params.set("limit", String(newspaperRiverStoryLimit));
           params.set("offset", String(newspaperHeroStoryLimit));
-          params.set("hydrateImages", "false");
+          // River items need the same article-image hydration as the hero.
+          // Many RSS entries omit media:content but expose an og:image on the article page.
+          params.set("hydrateImages", "true");
           const riverResponse = await fetch(`/api/hearst-newspapers/local-news?${params.toString()}`);
           if (!riverResponse.ok) throw new Error(`Newspaper feed returned ${riverResponse.status}`);
           const riverPayload = await riverResponse.json() as NewspaperFeedResponse;
@@ -146,6 +153,7 @@ export function NewspaperFeedsSection({
         setLiveFeedLoading(false);
         setLiveRiverLoading(false);
         setLiveContent([]);
+        setLiveFeedError("Newspaper feed could not be reached. Try again later.");
       }
     }
 
@@ -161,7 +169,9 @@ export function NewspaperFeedsSection({
 
     const livePublicationIds = new Set(liveContent.map((item) => item.publicationId));
     const sampleContent = hearstNewspaperSampleContent.filter((item) => !livePublicationIds.has(item.publicationId));
-    const contentPool = selectedPublication === allValue
+    const contentPool = selectedPublication !== allValue && activeFeed
+      ? liveContent
+      : selectedPublication === allValue
       ? [...liveContent, ...sampleContent]
       : liveContent.some((item) => item.publicationId === selectedPublication)
         ? liveContent
@@ -234,6 +244,11 @@ export function NewspaperFeedsSection({
         <main id="hearst-story-river" className="min-w-0 scroll-mt-28 space-y-4" aria-label="Hearst Newspapers RSS feeds">
           {liveFeedLoading && activeFeed ? (
             <NewspaperFeaturedSkeleton />
+          ) : liveFeedError && selectedPublication !== allValue ? (
+            <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-6 text-sm leading-6 text-muted-foreground shadow-[var(--hp-shadow-card)]" role="status">
+              <p className="font-bold text-foreground">This newspaper feed is temporarily unavailable.</p>
+              <p className="mt-2">{liveFeedError}</p>
+            </section>
           ) : heroItems.length > 0 ? (
             <NewspaperFeaturedCarousel
               key={heroItems.map((item) => item.id).join("|")}
@@ -279,16 +294,14 @@ export function NewspaperFeedsSection({
                 >
                   <span className="relative grid aspect-video min-h-0 w-full place-items-center overflow-hidden bg-[var(--hp-surface-low)] text-center text-sm font-bold text-primary" aria-hidden="true">
                     {item.imageUrl && readerStory ? (
-                      <LifestyleRiverImage
-                        story={readerStory}
+                      <NewspaperStoryImage
+                        src={item.imageUrl}
                         alt=""
+                        fallbackLabel={publicationInitials(publication.publicationName)}
                         className="h-full w-full"
                         sizes="(max-width: 1024px) 100vw, 640px"
-                        unoptimized
                       />
-                    ) : (
-                      publicationInitials(publication.publicationName)
-                    )}
+                    ) : publicationInitials(publication.publicationName)}
                   </span>
                   <span className="block min-w-0 p-4 sm:p-5">
                     <span className="mb-3 flex flex-wrap items-center gap-2">
@@ -365,16 +378,12 @@ function NewspaperFeaturedCarousel({
       renderImage={(story, _index, active) => {
         const imageUrl = imageByStoryId.get(story.id);
 
-        if (!imageUrl) {
-          return <NewspaperImagePlaceholder />;
-        }
-
         return (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <NewspaperStoryImage
             src={imageUrl}
             alt=""
-            className="h-full w-full object-cover"
+            fallbackLabel={publicationInitials(story.brand)}
+            className="h-full w-full"
             loading={active ? "eager" : "lazy"}
           />
         );
@@ -390,11 +399,43 @@ function NewspaperFeaturedCarousel({
   );
 }
 
-function NewspaperImagePlaceholder() {
+function NewspaperStoryImage({
+  src,
+  alt,
+  fallbackLabel,
+  className,
+  loading = "lazy",
+  sizes,
+}: {
+  src?: string | null;
+  alt?: string;
+  fallbackLabel: string;
+  className?: string;
+  loading?: "eager" | "lazy";
+  sizes?: string;
+}) {
+  const [failed, setFailed] = useState(!src);
+
+  if (failed || !src) {
+    return (
+      <span className="grid h-full w-full place-items-center bg-[var(--hp-surface-low)] text-lg font-bold tracking-[0.18em] text-primary" aria-label="Image unavailable">
+        {fallbackLabel}
+      </span>
+    );
+  }
+
   return (
-    <div className="h-full w-full bg-[var(--hp-surface-low)]">
-      <div className="h-full w-full animate-pulse bg-[linear-gradient(135deg,var(--hp-surface-low)_0%,rgba(255,255,255,0.82)_48%,var(--hp-surface-low)_100%)]" />
-    </div>
+    <Image
+      src={src}
+      alt={alt ?? ""}
+      width={1200}
+      height={675}
+      sizes={sizes ?? "(max-width: 1024px) 100vw, 640px"}
+      className={`h-full w-full object-cover ${className ?? ""}`}
+      loading={loading}
+      unoptimized
+      onError={() => setFailed(true)}
+    />
   );
 }
 
@@ -572,16 +613,11 @@ function NewspaperReaderModal({
                 </div>
               ) : null}
               <div className="aspect-video w-full overflow-hidden rounded-[4px] bg-[var(--hp-surface-low)]">
-                {story.image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={story.image}
-                    alt=""
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <NewspaperImagePlaceholder />
-                )}
+                <NewspaperStoryImage
+                  src={story.image}
+                  alt=""
+                  fallbackLabel={publicationInitials(story.brand)}
+                />
               </div>
               <div className="mx-auto mt-6 max-w-3xl">
                 <div className="mb-3 flex flex-wrap items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
