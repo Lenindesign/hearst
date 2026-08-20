@@ -16,7 +16,7 @@ const articleImageFetchTimeoutMs = 3500;
 const defaultStoryLimit = 15;
 const maxStoryLimit = 30;
 const edgeCacheHeaders = {
-  "Cache-Control": "public, s-maxage=300, stale-while-revalidate=900",
+  "Cache-Control": "no-store, max-age=0",
 };
 
 export async function GET(request: Request) {
@@ -61,7 +61,7 @@ export async function GET(request: Request) {
 
   try {
     const response = await fetch(feed.feedUrl, {
-      next: { revalidate: 300 },
+      cache: "no-store",
       signal: AbortSignal.timeout(feedFetchTimeoutMs),
       headers: {
         accept: "application/rss+xml, application/xml, text/xml;q=0.9, */*;q=0.8",

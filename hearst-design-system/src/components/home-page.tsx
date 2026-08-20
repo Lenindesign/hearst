@@ -339,7 +339,7 @@ const aandeBrandPromotion: BrandPromotionMatch = {
       signal: "Editor Pick",
       tags: ["crime", "television"],
       age: 1,
-      sourceUrl: "https://www.aetv.com/shows/the-first-48",
+      sourceUrl: "/hearst-plus/entertainment/a-e/",
     },
     {
       id: "aande-promotion-storage-wars",
@@ -354,7 +354,7 @@ const aandeBrandPromotion: BrandPromotionMatch = {
       signal: "Trending",
       tags: ["reality", "television"],
       age: 2,
-      sourceUrl: "https://www.aetv.com/shows/storage-wars",
+      sourceUrl: "/hearst-plus/entertainment/a-e/",
     },
     {
       id: "aande-promotion-intervention",
@@ -369,7 +369,7 @@ const aandeBrandPromotion: BrandPromotionMatch = {
       signal: "Editor Pick",
       tags: ["documentary", "television"],
       age: 3,
-      sourceUrl: "https://www.aetv.com/shows/intervention",
+      sourceUrl: "/hearst-plus/entertainment/a-e/",
     },
     {
       id: "aande-promotion-60-days-in",
@@ -384,7 +384,7 @@ const aandeBrandPromotion: BrandPromotionMatch = {
       signal: "Trending",
       tags: ["reality", "television"],
       age: 4,
-      sourceUrl: "https://www.aetv.com/shows/60-days-in",
+      sourceUrl: "/hearst-plus/entertainment/a-e/",
     },
   ],
 };
@@ -4496,6 +4496,13 @@ function LifestyleRiverHomePage({
     useLocalNewsMode,
     usingVideoTabFeed,
   ]);
+  const savedStoryInventory = React.useMemo(() => {
+    const storiesById = new Map(
+      baseDestinationConfigs.all.stories.map((story) => [story.id, story]),
+    );
+    filteredStories.forEach((story) => storiesById.set(story.id, story));
+    return Array.from(storiesById.values());
+  }, [filteredStories]);
   const savedSuggestionCandidates = React.useMemo(
     () => rankedStories.filter((story) =>
       !profile.savedIds.includes(story.id)
@@ -5390,7 +5397,7 @@ function LifestyleRiverHomePage({
           <LifestyleDiscoverySidebar
             profile={profile}
             topStories={filteredStories}
-            savedStories={filteredStories}
+            savedStories={savedStoryInventory}
             topics={sidebarTopics}
             brands={sidebarBrands}
             communityBrandSlug={initialBrandSlug === "elle" ? "elle" : undefined}
@@ -5692,7 +5699,7 @@ function LifestyleRiverHomePage({
         <LifestyleDiscoverySidebar
           profile={profile}
           topStories={moduleAllocation.dailyHabitStories}
-          savedStories={filteredStories}
+          savedStories={savedStoryInventory}
           trendingStories={moduleAllocation.trendingStories}
           topics={sidebarTopics}
           brands={sidebarBrands}

@@ -36,7 +36,7 @@ export function TrendingStoryRail({
     >
       <h2
         id={titleId}
-        className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]"
+        className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-text-primary)]"
       >
         {title}
       </h2>
@@ -56,8 +56,8 @@ export function TrendingStoryRail({
                   alt=""
                   className="h-full w-full transition-transform duration-200 ease-out group-hover:scale-105 motion-reduce:transition-none"
                 />
-                <span className="absolute left-1 top-1 grid h-5 w-5 place-items-center rounded-full bg-[var(--hp-surface)] text-[11px] font-bold leading-none text-primary ring-1 ring-border">
-                  <span className="translate-y-px tabular-nums leading-none">
+                <span className="absolute left-1 top-1 grid h-5 w-5 place-items-center rounded-full bg-[var(--hp-surface)] text-[11px] font-bold leading-none text-[var(--hp-text-primary)] ring-1 ring-border">
+                  <span className="translate-y-px tabular-nums leading-none text-[var(--hp-text-primary)]">
                     {index + 1}
                   </span>
                 </span>

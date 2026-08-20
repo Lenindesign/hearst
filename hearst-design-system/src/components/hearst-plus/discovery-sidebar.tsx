@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import { ChevronDown } from "@/components/ui/icons";
 import type {
   LifestyleRiverProfile,
@@ -150,11 +149,7 @@ export function LifestyleDiscoverySidebar({
   showBrandCounts = true,
   globalInventory = false,
   activeBrandFilters,
-  autosOemOptions = [],
-  activeAutosOemFilters = [],
   onToggleBrandFilter,
-  onToggleAutosOemFilter,
-  onClearAutosOemFilters,
   onOpenStory,
 }: LifestyleDiscoverySidebarProps) {
   const brandStoryCount = brands.reduce(
@@ -206,15 +201,6 @@ export function LifestyleDiscoverySidebar({
   const savedStories = savedStoryInventory
     .filter((story) => profile.savedIds.includes(story.id))
     .slice(0, 3);
-  const autosOemStoryCount = autosOemOptions.reduce(
-    (total, make) => total + make.count,
-    0,
-  );
-  const autosOemSummary =
-    activeAutosOemFilters.length > 0
-      ? activeAutosOemFilters.join(", ")
-      : `${autosOemOptions.length} makes · ${autosOemStoryCount} stories`;
-
   const dailyHabitModule = trendingStories ? (
     <TrendingStoryRail
       stories={trendingStories.slice(0, 3)}
@@ -331,71 +317,6 @@ export function LifestyleDiscoverySidebar({
     </DiscoverySidebarCard>
   );
 
-  const autosOemFilterModule =
-    autosOemOptions.length > 0 && onToggleAutosOemFilter ? (
-      <DiscoverySidebarCard
-        title="Filter by make"
-        summary={autosOemSummary}
-        mobileActionLabel={
-          activeAutosOemFilters.length > 0 ? "Clear" : undefined
-        }
-        onMobileAction={
-          activeAutosOemFilters.length > 0 ? onClearAutosOemFilters : undefined
-        }
-      >
-        {activeAutosOemFilters.length > 0 && onClearAutosOemFilters ? (
-          <div className="-mt-1 flex items-center justify-end">
-            <button
-              type="button"
-              onClick={onClearAutosOemFilters}
-              className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-muted-foreground hover:text-primary"
-            >
-              Clear
-            </button>
-          </div>
-        ) : null}
-        <div className="mt-4 grid grid-cols-2 gap-2">
-          {autosOemOptions.map((make) => {
-            const active = activeAutosOemFilters.includes(make.name);
-            return (
-              <button
-                key={make.name}
-                type="button"
-                onClick={() => onToggleAutosOemFilter(make.name)}
-                className={cn(
-                  "group rounded-lg border border-border bg-background p-2 text-left transition-colors hover:border-primary/60 hover:bg-muted/40 focus:outline-none focus:ring-2 focus:ring-primary/30",
-                  active &&
-                    "border-primary bg-primary/10 text-primary ring-2 ring-primary/20",
-                )}
-                aria-pressed={active}
-                aria-label={`Filter Autos stories by ${make.name}`}
-              >
-                <span className="relative flex h-12 items-center justify-center rounded-md bg-card">
-                  <Image
-                    src={make.logo}
-                    alt=""
-                    width={96}
-                    height={32}
-                    className="h-auto max-h-7 w-auto max-w-[86px] object-contain"
-                    loading="lazy"
-                    unoptimized
-                  />
-                </span>
-                <span className="mt-2 flex items-center justify-between gap-2 text-xs font-bold">
-                  <span className="min-w-0 truncate">{make.name}</span>
-                  <span className="text-muted-foreground">{make.count}</span>
-                </span>
-              </button>
-            );
-          })}
-        </div>
-        <p className="mt-4 text-xs leading-5 text-muted-foreground">
-          Uses makes detected in the current Autos story inventory. Publication
-          filters still control the story source.
-        </p>
-      </DiscoverySidebarCard>
-    ) : null;
-
   return (
     <aside
       className="hidden min-w-0 space-y-5 lg:sticky lg:top-[108px] lg:block lg:max-h-[calc(100dvh-132px)] lg:self-start lg:overflow-y-auto lg:pr-1"
@@ -404,7 +325,6 @@ export function LifestyleDiscoverySidebar({
       {brandFilterFirst ? brandFilterModule : dailyHabitModule}
       {brandFilterFirst ? dailyHabitModule : brandFilterModule}
       {savedItemsModule}
-      {autosOemFilterModule}
     </aside>
   );
 }

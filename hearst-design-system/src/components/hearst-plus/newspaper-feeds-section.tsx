@@ -121,7 +121,7 @@ export function NewspaperFeedsSection({
           limit: String(newspaperHeroStoryLimit),
           hydrateImages: "true",
         });
-        const response = await fetch(`/api/hearst-newspapers/local-news?${params.toString()}`);
+        const response = await fetch(`/api/hearst-newspapers/local-news/?${params.toString()}`, { cache: "no-store" });
         if (!response.ok) throw new Error(`Newspaper feed returned ${response.status}`);
         const payload = await response.json() as NewspaperFeedResponse;
         if (cancelled) return;
@@ -140,7 +140,7 @@ export function NewspaperFeedsSection({
           // River items need the same article-image hydration as the hero.
           // Many RSS entries omit media:content but expose an og:image on the article page.
           params.set("hydrateImages", "true");
-          const riverResponse = await fetch(`/api/hearst-newspapers/local-news?${params.toString()}`);
+          const riverResponse = await fetch(`/api/hearst-newspapers/local-news/?${params.toString()}`, { cache: "no-store" });
           if (!riverResponse.ok) throw new Error(`Newspaper feed returned ${riverResponse.status}`);
           const riverPayload = await riverResponse.json() as NewspaperFeedResponse;
           if (cancelled) return;
