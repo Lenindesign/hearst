@@ -219,7 +219,7 @@ export function HearstTVLocalNewsRiver({
           offset: String(offset),
           limit: String(limit),
         });
-        const response = await fetch(`/api/hearst-tv/local-news?${params.toString()}`, {
+        const response = await fetch(`/api/hearst-tv/local-news/?${params.toString()}`, {
           signal: AbortSignal.timeout(7000),
         });
         if (!response.ok) throw new Error(`Local news feed returned ${response.status}`);
@@ -999,7 +999,7 @@ function AdminView({ feeds, setFeeds }: { feeds: StoredFeed[]; setFeeds: (feeds:
         feedUrl: feed.feedUrl,
         feedType: feed.feedType,
       });
-      const response = await fetch(`/api/hearst-tv/local-news?${params.toString()}`, { cache: "no-store" });
+      const response = await fetch(`/api/hearst-tv/local-news/?${params.toString()}`, { cache: "no-store" });
       if (!response.ok) throw new Error(`Feed check returned ${response.status}`);
       const payload = await response.json() as LocalNewsFeedResponse;
       if (payload.status !== "connected") {

@@ -3,6 +3,7 @@ import {
   feedUrlTbd,
   getHearstTVFeedById,
   getHearstTVStationById,
+  hearstTVSampleContent,
   kcraLogoUrl,
   normalizeHearstTVFeedItem,
   type FeedType,
@@ -18,7 +19,7 @@ const feedFetchTimeoutMs = 6000;
 const defaultStoryLimit = 15;
 const maxStoryLimit = 30;
 const edgeCacheHeaders = {
-  "Cache-Control": "public, s-maxage=300, stale-while-revalidate=900",
+  "Cache-Control": "no-store, max-age=0",
 };
 
 const fallbackItems: NormalizedFeedItemInput[] = [
@@ -86,7 +87,7 @@ export async function GET(request: Request) {
 
   try {
     const response = await fetch(feed.feedUrl, {
-      next: { revalidate: 300 },
+      cache: "no-store",
       signal: AbortSignal.timeout(feedFetchTimeoutMs),
       headers: {
         accept: "application/rss+xml, application/xml, text/xml;q=0.9, */*;q=0.8",
@@ -111,18 +112,19 @@ export async function GET(request: Request) {
       fallback: false,
     }, { headers: edgeCacheHeaders });
   } catch (error) {
-    const stories = station.id === kcraStationId
-      ? fallbackItems
-        .map((item) => normalizeHearstTVFeedItem(item, station, feed))
-        .map((item): HearstTVContent => ({ ...item, isMock: true }))
-        .sort(sortNewestFirst)
-      : [];
+    const fallbackStories = station.id === kcraStationId
+      ? fallbackItems.map((item) => normalizeHearstTVFeedItem(item, station, feed))
+      : hearstTVSampleContent.filter((item) => item.stationId === station.id);
+    const stories = fallbackStories
+      .map((item): HearstTVContent => ({ ...item, isMock: true }))
+      .sort(sortNewestFirst)
+      .slice(storyOffset, storyOffset + storyLimit);
 
     return NextResponse.json({
       stories,
       status: "error",
       feed: formatResponseFeed(feed, station.id, null),
-      fallback: station.id === kcraStationId,
+      fallback: true,
       error: error instanceof Error ? error.message : `${station.callSign} RSS fetch failed.`,
     }, { headers: edgeCacheHeaders });
   }
