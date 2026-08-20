@@ -4698,9 +4698,7 @@ function LifestyleRiverHomePage({
     () => new Set(heroStories.map((story) => story.id)),
     [heroStories]
   );
-  const showTodayEdit = destination === "all"
-    && !initialBrandSlug
-    && activeFilter === "For You";
+  const showTodayEdit = false;
   const moduleAllocation = allocateStoryModules({
     stories: displayStories,
     heroStoryIds,

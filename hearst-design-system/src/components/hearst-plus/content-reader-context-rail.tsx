@@ -16,7 +16,6 @@ import {
   getLifestyleCardKind,
   getLifestyleKindLabel,
 } from "./story-presentation";
-import { getLifestyleByline } from "./story-metadata";
 
 export type ContentReaderContextRailProps = {
   currentStory: LifestyleRiverStory;
@@ -169,7 +168,7 @@ export function ContentReaderContextRail({
       aria-label="Contextual story recommendations"
     >
       <div className="sticky top-32 max-h-[calc(100dvh-10rem)] space-y-4 overflow-y-auto overscroll-contain pb-12 pr-1">
-        {modules.map((module, index) => (
+        {modules.map((module) => (
           <React.Fragment key={module.label}>
             <div className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
               <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
@@ -199,10 +198,6 @@ export function ContentReaderContextRail({
                     </span>
                     <span className="mt-1 block text-sm font-bold leading-5 group-hover:text-primary">
                       {story.title}
-                    </span>
-                    <span className="mt-1 block text-xs text-muted-foreground">
-                      {story.brand} · {getLifestyleByline(story)} · Popularity{" "}
-                      {story.popularity}
                     </span>
                   </button>
                 ))}

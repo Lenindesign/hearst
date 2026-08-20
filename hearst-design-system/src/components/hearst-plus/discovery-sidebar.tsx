@@ -223,10 +223,9 @@ export function LifestyleDiscoverySidebar({
 
   const dailyHabitModule = trendingStories ? (
     <TrendingStoryRail
-      stories={trendingStories}
+      stories={trendingStories.slice(0, 3)}
       onOpenStory={onOpenStory}
       title="Trending Across Brands"
-      variant="contextual"
       className="hidden lg:block"
     />
   ) : (
