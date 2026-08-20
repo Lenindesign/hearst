@@ -24,6 +24,43 @@ export type BrandPromotionRiverModuleProps = {
   onOpenStory: (storyId: string) => void;
 };
 
+function PromotionStoryAction({
+  story,
+  onOpenStory,
+  className,
+  children,
+}: {
+  story: LifestyleRiverStory;
+  onOpenStory: (storyId: string) => void;
+  className: string;
+  children: React.ReactNode;
+}) {
+  if (story.sourceUrl) {
+    return (
+      <a
+        href={story.sourceUrl}
+        target="_blank"
+        rel="noreferrer"
+        className={className}
+        aria-label={`Open story: ${story.title}`}
+      >
+        {children}
+      </a>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={() => onOpenStory(story.id)}
+      className={className}
+      aria-label={`Open story: ${story.title}`}
+    >
+      {children}
+    </button>
+  );
+}
+
 export function BrandPromotionRiverModule({
   promotion,
   onOpenStory,
@@ -40,6 +77,7 @@ export function BrandPromotionRiverModule({
   const description = topicSummary
     ? `Explore ${topicSummary} from ${promotion.brand}.`
     : `Explore more from ${promotion.brand}.`;
+  const brandHref = promotion.href ?? getHearstBrandRoute(promotion.brandSlug);
 
   const renderFormatLabel = (story: LifestyleRiverStory) => {
     const formatLabel = getEditorialFormatLabel(story);
@@ -61,7 +99,7 @@ export function BrandPromotionRiverModule({
       <div className="border-b border-border p-5 sm:p-6">
         <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
           <a
-            href={getHearstBrandRoute(promotion.brandSlug)}
+            href={brandHref}
             className="flex min-h-11 shrink-0 items-center text-foreground transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
             aria-label={`Open ${promotion.brand} publication`}
           >
@@ -89,12 +127,10 @@ export function BrandPromotionRiverModule({
 
       <div className="min-w-0 p-5 sm:p-6">
         <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1fr)]">
-          <button
-            type="button"
-            onClick={() => onOpenStory(featuredStory.id)}
+          <PromotionStoryAction
+            story={featuredStory}
+            onOpenStory={onOpenStory}
             className="group min-w-0 self-start text-left focus:outline-none focus:ring-2 focus:ring-primary/30"
-            aria-label={`Open story: ${featuredStory.title}`}
-            data-brand-promotion-story
           >
             <LifestyleRiverImage story={featuredStory} className="aspect-[4/3] w-full rounded-[8px]" />
             <span className="mt-4 block">
@@ -106,17 +142,15 @@ export function BrandPromotionRiverModule({
                 {featuredStory.summary}
               </span>
             </span>
-          </button>
+          </PromotionStoryAction>
 
           <div className="@container divide-y divide-border">
             {secondaryStories.map((story) => (
-              <button
+              <PromotionStoryAction
                 key={story.id}
-                type="button"
-                onClick={() => onOpenStory(story.id)}
+                story={story}
+                onOpenStory={onOpenStory}
                 className="group grid w-full grid-cols-[88px_minmax(0,1fr)] gap-4 py-4 text-left first:pt-0 last:pb-0 focus:outline-none focus:ring-2 focus:ring-primary/30 @max-[119px]:grid-cols-1 @max-[119px]:gap-3 sm:grid-cols-[112px_minmax(0,1fr)]"
-                aria-label={`Open story: ${story.title}`}
-                data-brand-promotion-story
               >
                 <LifestyleRiverImage story={story} className="aspect-square w-full rounded-[8px]" />
                 <span className="min-w-0">
@@ -128,7 +162,7 @@ export function BrandPromotionRiverModule({
                     {story.topic} · {getLifestyleByline(story)}
                   </span>
                 </span>
-              </button>
+              </PromotionStoryAction>
             ))}
           </div>
         </div>

@@ -131,7 +131,6 @@ import {
   type AutosOemFilterOption,
 } from "./hearst-plus/discovery-sidebar";
 import {
-  TrendingStoryRail,
   TrendingVideoRail,
 } from "./hearst-plus/trending-rail";
 import { TodayEditStrip } from "./hearst-plus/today-edit-strip";
@@ -163,9 +162,11 @@ import {
   type ContextualAdUnit,
 } from "./hearst-plus/content-reader-advertisement";
 import { ContextualRiverAdvertisement } from "./hearst-plus/contextual-river-advertisement";
+import { LocalNewsRail } from "./hearst-plus/local-news-rail";
 import { BrandPromotionRiverModule } from "./hearst-plus/brand-promotion-river-module";
 import {
   getBrandPromotionForSlot,
+  type BrandPromotionMatch,
 } from "./hearst-plus/brand-promotion-model";
 import {
   HearstOnboardingModal,
@@ -318,6 +319,75 @@ interface ProgressiveFeedPage {
   total: number;
   hasMore: boolean;
 }
+
+const aandeBrandPromotion: BrandPromotionMatch = {
+  brand: "A&E",
+  brandSlug: "a-e",
+  href: "/hearst-plus/entertainment/",
+  topics: ["Crime", "Reality", "Documentary"],
+  stories: [
+    {
+      id: "aande-promotion-first-48",
+      brand: "A&E",
+      brandSlug: "a-e",
+      topic: "Crime",
+      title: "The First 48",
+      summary: "Homicide detectives race against the clock in A&E's long-running crime series.",
+      image: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/4/2015/09/the-first-48-s29-3000x3000-primary-1x1-1.jpg?w=1180",
+      readTime: "Watch",
+      popularity: 100,
+      signal: "Editor Pick",
+      tags: ["crime", "television"],
+      age: 1,
+      sourceUrl: "https://www.aetv.com/shows/the-first-48",
+    },
+    {
+      id: "aande-promotion-storage-wars",
+      brand: "A&E",
+      brandSlug: "a-e",
+      topic: "Reality",
+      title: "Storage Wars",
+      summary: "Bidders compete for abandoned storage units and whatever surprises they hold.",
+      image: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/4/2015/09/storage-wars-s16-3000x3000-primary-1x1-1.jpg?w=1180",
+      readTime: "Watch",
+      popularity: 96,
+      signal: "Trending",
+      tags: ["reality", "television"],
+      age: 2,
+      sourceUrl: "https://www.aetv.com/shows/storage-wars",
+    },
+    {
+      id: "aande-promotion-intervention",
+      brand: "A&E",
+      brandSlug: "a-e",
+      topic: "Documentary",
+      title: "Intervention",
+      summary: "Families and experts work together through stories of addiction and recovery.",
+      image: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/4/2015/09/intervention-s25-primary-2x3-1-scaled.jpg",
+      readTime: "Watch",
+      popularity: 93,
+      signal: "Editor Pick",
+      tags: ["documentary", "television"],
+      age: 3,
+      sourceUrl: "https://www.aetv.com/shows/intervention",
+    },
+    {
+      id: "aande-promotion-60-days-in",
+      brand: "A&E",
+      brandSlug: "a-e",
+      topic: "Reality",
+      title: "60 Days In",
+      summary: "Volunteers go undercover in jail to expose problems from the inside.",
+      image: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/4/2024/05/60-days-in-s9-primary-2x3-1-scaled.jpg",
+      readTime: "Watch",
+      popularity: 91,
+      signal: "Trending",
+      tags: ["reality", "television"],
+      age: 4,
+      sourceUrl: "https://www.aetv.com/shows/60-days-in",
+    },
+  ],
+};
 
 const defaultFooterCols: string[][] = [
   ["News", "Features", "Culture", "Lifestyle", "Opinion", "Wellness", "Travel"],
@@ -1242,7 +1312,7 @@ export function MainNav({
               variant="outline"
               size="icon-sm"
               className={cn(
-                "h-11 w-11 sm:hidden",
+                "h-11 w-11 rounded-[4px] sm:hidden",
                 useDarkHeaderIconButtons ? darkHeaderIconButtonClass : undefined
               )}
               onClick={() => {
@@ -1260,7 +1330,7 @@ export function MainNav({
             variant="outline"
             size="icon-sm"
             className={cn(
-              "h-11 w-11 sm:h-7 sm:w-7",
+              "h-11 w-11 rounded-[4px] sm:h-7 sm:w-7",
               showMobileDiscoveryMenu && "hidden sm:inline-flex",
               useDarkHeaderIconButtons ? darkHeaderIconButtonClass : undefined
             )}
@@ -1281,7 +1351,7 @@ export function MainNav({
             variant="outline"
             size="icon-sm"
             className={cn(
-              "h-11 w-11 sm:h-7 sm:w-7",
+              "h-11 w-11 rounded-[4px] sm:h-7 sm:w-7",
               useDarkHeaderIconButtons ? darkHeaderIconButtonClass : undefined
             )}
             aria-label="Search"
@@ -4547,9 +4617,18 @@ function LifestyleRiverHomePage({
     0,
     visibleRiverCount + lifestyleHeroStoryCount
   );
+  const [rightRailAdRotation, setRightRailAdRotation] = React.useState(0);
+  React.useEffect(() => {
+    const updateAdRotation = () => {
+      setRightRailAdRotation(Math.floor(window.scrollY / 2000));
+    };
+    updateAdRotation();
+    window.addEventListener("scroll", updateAdRotation, { passive: true });
+    return () => window.removeEventListener("scroll", updateAdRotation);
+  }, []);
   const rightRailAd = getContextualAdForSlot({
     destination,
-    slotIndex: 0,
+    slotIndex: rightRailAdRotation,
     profile,
     demoState,
     config,
@@ -5311,6 +5390,7 @@ function LifestyleRiverHomePage({
           <LifestyleDiscoverySidebar
             profile={profile}
             topStories={filteredStories}
+            savedStories={filteredStories}
             topics={sidebarTopics}
             brands={sidebarBrands}
             communityBrandSlug={initialBrandSlug === "elle" ? "elle" : undefined}
@@ -5612,7 +5692,8 @@ function LifestyleRiverHomePage({
         <LifestyleDiscoverySidebar
           profile={profile}
           topStories={moduleAllocation.dailyHabitStories}
-          trendingStories={destination === "all" && !initialBrandSlug ? moduleAllocation.trendingStories : undefined}
+          savedStories={filteredStories}
+          trendingStories={moduleAllocation.trendingStories}
           topics={sidebarTopics}
           brands={sidebarBrands}
           communityBrandSlug={initialBrandSlug === "elle" ? "elle" : undefined}
@@ -5689,13 +5770,15 @@ function LifestyleRiverHomePage({
                 const moduleSlotNumber = storyPosition / 5;
                 const shouldShowBrandPromotion = shouldShowFeedModule && moduleSlotNumber % 2 === 0;
                 const brandPromotion = shouldShowBrandPromotion
-                  ? getBrandPromotionForSlot({
-                      stories: filteredStories,
-                      fallbackStories: rankedStories,
-                      activeFilter,
-                      slotNumber: moduleSlotNumber,
-                      excludedBrandSlug: initialBrandSlug,
-                    })
+                  ? destination === "all" && !initialBrandSlug
+                    ? aandeBrandPromotion
+                    : getBrandPromotionForSlot({
+                        stories: filteredStories,
+                        fallbackStories: rankedStories,
+                        activeFilter,
+                        slotNumber: moduleSlotNumber,
+                        excludedBrandSlug: initialBrandSlug,
+                      })
                   : null;
                 const adMatch = shouldShowFeedModule && !shouldShowBrandPromotion
                   ? getContextualAdForSlot({
@@ -5891,14 +5974,8 @@ function LifestyleRiverHomePage({
         </main>
 
         <aside className="min-w-0 space-y-5 lg:sticky lg:top-[108px] lg:max-h-[calc(100dvh-132px)] lg:self-start lg:overflow-y-auto lg:pr-1">
-          {destination === "all" && !initialBrandSlug ? null : (
-            <TrendingStoryRail
-              stories={moduleAllocation.trendingStories}
-              onOpenStory={(story) => openStory(story.id)}
-              title={initialBrandName ? `Trending in ${initialBrandName}` : undefined}
-            />
-          )}
           <ContextualRiverAdvertisement ad={rightRailAd} />
+          <LocalNewsRail />
           {showStakeholderTools ? (
             <>
               <div className="rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-4 shadow-[var(--hp-shadow-card)]">

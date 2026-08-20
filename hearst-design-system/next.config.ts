@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "*.h-cdn.co" },
       { protocol: "https", hostname: "kubrick.htvapps.com", pathname: "/htv-prod-media.s3.amazonaws.com/**" },
       { protocol: "https", hostname: "bringatrailer.com", pathname: "/wp-content/**" },
+      { protocol: "https", hostname: "cropper.watch.aetnd.com", pathname: "/cdn.watch.aetnd.com/**" },
     ],
   },
 };

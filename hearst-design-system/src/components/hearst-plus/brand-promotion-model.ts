@@ -24,6 +24,7 @@ const brandPromotionPriority = [
 export type BrandPromotionMatch = {
   brand: string;
   brandSlug: string;
+  href?: string;
   topics: string[];
   stories: LifestyleRiverStory[];
 };

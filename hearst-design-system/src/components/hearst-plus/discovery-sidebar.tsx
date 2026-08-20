@@ -2,20 +2,18 @@
 
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { ChevronDown } from "@/components/ui/icons";
-import { buttonVariants, Button } from "@/components/ui/button";
 import type {
   LifestyleRiverProfile,
   LifestyleRiverStory,
 } from "@/components/lifestyle-river-types";
 import { cn } from "@/lib/utils";
 import { BrandSourceIcon } from "./brand-source-icon";
+import { CommunityJoinedGroupsCard } from "./community-joined-groups-card";
 import { getLifestyleByline } from "./story-metadata";
 import { TrendingStoryRail } from "./trending-rail";
 import {
   communityGroups,
-  communityParticipationThreads,
 } from "@/lib/community-groups";
 
 export type AutosOemFilterOption = {
@@ -27,6 +25,7 @@ export type AutosOemFilterOption = {
 export interface LifestyleDiscoverySidebarProps {
   profile: LifestyleRiverProfile;
   topStories: LifestyleRiverStory[];
+  savedStories?: LifestyleRiverStory[];
   trendingStories?: LifestyleRiverStory[];
   topics: { name: string; count: number }[];
   brands: { name: string; slug: string; count: number }[];
@@ -142,8 +141,8 @@ export function DiscoverySidebarCard({
 export function LifestyleDiscoverySidebar({
   profile,
   topStories,
+  savedStories: savedStoryInventory = topStories,
   trendingStories,
-  topics,
   brands,
   brandFilterTitle = "Join Groups",
   communityBrandSlug,
@@ -153,14 +152,11 @@ export function LifestyleDiscoverySidebar({
   activeBrandFilters,
   autosOemOptions = [],
   activeAutosOemFilters = [],
-  collectionLabels,
   onToggleBrandFilter,
   onToggleAutosOemFilter,
   onClearAutosOemFilters,
-  onFollowTopic,
   onOpenStory,
 }: LifestyleDiscoverySidebarProps) {
-  const activeTopicSummary = profile.followedTopics.slice(0, 3).join(", ");
   const brandStoryCount = brands.reduce(
     (total, brand) => total + brand.count,
     0,
@@ -177,11 +173,6 @@ export function LifestyleDiscoverySidebar({
       ? [communityBrand]
       : []
     : brands;
-  const effectiveBrandFilterTitle = isBrandCommunityModule && activeBrandFilters.length > 0
-    ? "Your Groups"
-    : isSingleBrandCommunityModule
-      ? `${communityBrand?.name ?? "Brand"} Community`
-      : brandFilterTitle;
   const brandSummary = isSingleBrandCommunityModule
     ? activeBrandFilters.includes(communityBrand?.name ?? "")
       ? "Joined"
@@ -197,21 +188,24 @@ export function LifestyleDiscoverySidebar({
         : activeBrandFilters.length > 0
           ? activeBrandFilters[0]
           : `All brands · ${brandStoryCount} stories`;
-  const topicSummary = activeTopicSummary || `${topics.length} topics`;
-  const collectionSummary = `${collectionLabels.length} collections`;
-  const activeCommunityBrands = isBrandCommunityModule
-    ? visibleBrands.filter((brand) => activeBrandFilters.includes(brand.name))
-    : [];
-  const joinedCommunityBrands = isBrandCommunityModule
-    ? brands.filter((brand) => activeBrandFilters.includes(brand.name))
-    : [];
-  const joinedCommunityBrandSlugs = new Set(joinedCommunityBrands.map((brand) => brand.slug));
-  const joinedCommunityGroups = communityGroups.filter((group) =>
-    joinedCommunityBrandSlugs.has(group.brandSlug),
-  );
-  const joinedCommunityThreads = communityParticipationThreads.filter((thread) =>
-    joinedCommunityBrandSlugs.has(thread.brandSlug),
-  );
+  const communityGroupItems = communityGroups
+    .flatMap((group) => {
+      if (communityBrandSlug && group.brandSlug !== communityBrandSlug) return [];
+      const brand = brands.find((item) => item.slug === group.brandSlug);
+      return brand
+        ? [{
+            brand: brand.name,
+            brandSlug: group.brandSlug,
+            groupSlug: group.groupSlug,
+            name: group.name,
+            members: group.members,
+          }]
+        : [];
+    })
+    .slice(0, 3);
+  const savedStories = savedStoryInventory
+    .filter((story) => profile.savedIds.includes(story.id))
+    .slice(0, 3);
   const autosOemStoryCount = autosOemOptions.reduce(
     (total, make) => total + make.count,
     0,
@@ -261,67 +255,19 @@ export function LifestyleDiscoverySidebar({
     </DiscoverySidebarCard>
   );
 
-  const brandFilterModule = (
+  const brandFilterModule = isBrandCommunityModule ? (
+    <CommunityJoinedGroupsCard groups={communityGroupItems} />
+  ) : (
     <DiscoverySidebarCard
-      title={effectiveBrandFilterTitle}
+      title={brandFilterTitle}
       summary={brandSummary}
     >
-      {isBrandCommunityModule && activeBrandFilters.length === 0 ? (
-        <p className="mt-4 text-xs leading-5 text-muted-foreground">
-          {isSingleBrandCommunityModule
-            ? `Join the ${communityBrand?.name ?? "brand"} community, then open the group when you want the full discussion.`
-            : "Pick the brand groups you want in your feed, then open the group when you want the full discussion."}
-        </p>
-      ) : null}
       <div
         className={cn(
           "mt-4",
-          isBrandCommunityModule ? "space-y-2" : "space-y-3",
+          "space-y-3",
         )}
-      >{isBrandCommunityModule && activeBrandFilters.length > 0 ? (
-        <>
-          {joinedCommunityGroups.map((group) => {
-            const brand = joinedCommunityBrands.find((item) => item.slug === group.brandSlug);
-            if (!brand) return null;
-            return (
-              <Link
-                key={`${group.brandSlug}-${group.groupSlug}`}
-                href={`/communities/${group.brandSlug}/`}
-                className="flex min-h-11 w-full min-w-0 items-center gap-2 rounded-[8px] border border-primary/20 bg-primary/5 px-3 py-2 transition-colors hover:border-primary/45 hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
-              >
-                <BrandSourceIcon brand={brand.name} brandSlug={brand.slug} className="h-5 w-5 rounded-[4px]" />
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate text-sm font-bold">{group.name}</span>
-                  <span className="block truncate text-xs text-muted-foreground">Featured group · {group.members}</span>
-                </span>
-              </Link>
-            );
-          })}
-          {joinedCommunityThreads.slice(0, 3).map((thread) => (
-            <Link
-              key={thread.id}
-              href={`/communities/${thread.brandSlug}/threads/${thread.id}/`}
-              className="block rounded-[8px] border border-border bg-background px-3 py-2 transition-colors hover:border-primary/45 hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
-            >
-              <span className="block text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
-                Active thread · {thread.replies} replies
-              </span>
-              <span className="mt-1 block text-sm font-bold leading-5">{thread.title}</span>
-            </Link>
-          ))}
-          {joinedCommunityBrands.filter((brand) => !joinedCommunityGroups.some((group) => group.brandSlug === brand.slug)).map((brand) => (
-            <Link
-              key={`condensed-${brand.slug}`}
-              href={`/communities/${brand.slug}/`}
-              className="flex min-h-10 w-full min-w-0 items-center gap-2 rounded-[8px] border border-border bg-background px-3 py-2 text-sm font-semibold transition-colors hover:border-primary/45 hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
-            >
-              <BrandSourceIcon brand={brand.name} brandSlug={brand.slug} className="h-5 w-5 rounded-[4px]" />
-              <span className="min-w-0 flex-1 truncate">{brand.name}</span>
-              <span className="shrink-0 text-xs font-bold text-muted-foreground">Joined</span>
-            </Link>
-          ))}
-        </>
-      ) : visibleBrands.map((brand) => {
+      >{visibleBrands.map((brand) => {
           const active = activeBrandFilters.includes(brand.name);
           return (
             <button
@@ -330,13 +276,9 @@ export function LifestyleDiscoverySidebar({
               onClick={() => onToggleBrandFilter(brand.name)}
               disabled={brand.count === 0}
               className={cn(
-                isBrandCommunityModule
-                  ? "flex min-h-11 w-full min-w-0 items-center justify-between gap-3 rounded-[8px] border border-border bg-background px-3 py-2 text-left text-sm transition-colors hover:border-primary/45 hover:bg-muted/40"
-                  : "flex w-full min-w-0 items-center justify-between gap-3 border-b border-border pb-2 text-left text-sm transition-colors last:border-0 last:pb-0",
+                "flex w-full min-w-0 items-center justify-between gap-3 border-b border-border pb-2 text-left text-sm transition-colors last:border-0 last:pb-0",
                 active &&
-                  (isBrandCommunityModule
-                    ? "border-primary bg-primary/10 font-bold text-primary ring-2 ring-primary/15"
-                    : "font-bold text-primary"),
+                  "font-bold text-primary",
                 brand.count === 0 &&
                   "cursor-not-allowed text-muted-foreground opacity-70",
               )}
@@ -356,16 +298,7 @@ export function LifestyleDiscoverySidebar({
                 />
                 <span className="min-w-0 truncate">{brand.name}</span>
               </span>
-              {isBrandCommunityModule ? (
-                <span
-                  className={cn(
-                    "shrink-0 text-xs font-bold",
-                    active ? "text-primary" : "text-muted-foreground",
-                  )}
-                >
-                  {active ? "Joined" : "Join"}
-                </span>
-              ) : showBrandCounts ? (
+              {showBrandCounts ? (
                 <span className="text-xs text-muted-foreground">
                   {brand.count}
                 </span>
@@ -375,42 +308,26 @@ export function LifestyleDiscoverySidebar({
         })}
       </div>
       <p className="mt-4 text-xs leading-5 text-muted-foreground">
-        {isBrandCommunityModule
-          ? isSingleBrandCommunityModule
-            ? activeBrandFilters.includes(communityBrand?.name ?? "")
-              ? `You joined the ${communityBrand?.name ?? "brand"} group.`
-              : `Join the ${communityBrand?.name ?? "brand"} group to open its discussions.`
-            : activeBrandFilters.length > 0
-              ? activeBrandFilters.length === 1
-                ? `You joined the ${activeBrandFilters[0]} group.`
-                : `You joined ${activeBrandFilters.length} brand groups.`
-              : "Join a brand group to tune your feed and open its discussions."
-          : globalInventory
+        {globalInventory
             ? "Complete section inventory. Select a brand to open its publication."
             : activeBrandFilters.length > 0
               ? `Showing ${activeBrandFilters[0]}.`
               : "All brands are included in the river."}
       </p>
-      {isBrandCommunityModule ? (
-        <div className="mt-3">
-          <Link
-            href={
-              activeBrandFilters.length > 0 && activeCommunityBrands.length === 1
-                ? `/communities/${activeCommunityBrands[0].slug}/`
-                : activeBrandFilters.length > 0
-                  ? "/communities/"
-                  : "/communities/"
-            }
-            className={buttonVariants({
-              variant: "outline",
-              size: "sm",
-              className: "w-full",
-            })}
-          >
-            {activeBrandFilters.length > 0 ? "Open community" : "Browse groups"}
-          </Link>
-        </div>
-      ) : null}
+    </DiscoverySidebarCard>
+  );
+
+  const savedItemsModule = savedStories.length > 0 ? (
+    <TrendingStoryRail
+      stories={savedStories}
+      onOpenStory={onOpenStory}
+      title="Saved items"
+    />
+  ) : (
+    <DiscoverySidebarCard title="Saved items" summary="Your saved stories">
+      <p className="text-sm leading-6 text-muted-foreground">
+        Save stories as you browse and they will appear here.
+      </p>
     </DiscoverySidebarCard>
   );
 
@@ -486,48 +403,8 @@ export function LifestyleDiscoverySidebar({
     >
       {brandFilterFirst ? brandFilterModule : dailyHabitModule}
       {brandFilterFirst ? dailyHabitModule : brandFilterModule}
+      {savedItemsModule}
       {autosOemFilterModule}
-
-      <DiscoverySidebarCard
-        title="Follow Topics"
-        summary={topicSummary}
-        className="hidden lg:block"
-      >
-        <div className="flex flex-wrap gap-2">
-          {topics.map((topic) => {
-            const active = profile.followedTopics.includes(topic.name);
-            return (
-              <Button
-                key={topic.name}
-                variant={active ? "default" : "outline"}
-                size="xs"
-                onClick={() => onFollowTopic(topic.name)}
-                aria-pressed={active}
-              >
-                {topic.name}
-              </Button>
-            );
-          })}
-        </div>
-      </DiscoverySidebarCard>
-
-      <DiscoverySidebarCard
-        title="Collections"
-        summary={collectionSummary}
-        className="hidden bg-muted/30 lg:block"
-      >
-        <div className="space-y-2 text-sm">
-          {collectionLabels.map((label) => (
-            <p key={label} className="font-bold">
-              {label}
-            </p>
-          ))}
-          <p className="text-xs text-[var(--hp-text-ui)]">
-            Saved stories and more-like-this actions tune these collections over
-            time.
-          </p>
-        </div>
-      </DiscoverySidebarCard>
     </aside>
   );
 }
