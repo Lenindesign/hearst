@@ -504,7 +504,7 @@ export function MainNav({
       : content.navLinks);
   const uncappedNavLinks = (includeVideos ? insertVideosFilter(baseNavLinks) : baseNavLinks)
     .filter((link) => !((brand.slug === "hearst-all" || brand.slug === "hearst-plus")
-      && (link === "Streaming" || link === "Events")));
+      && (link === "For You" || link === "Streaming" || link === "Events")));
   const navLinks = selectedBrand?.slug === "good-housekeeping" && uncappedNavLinks.length > 7
     ? (() => {
         const visibleLinks = uncappedNavLinks.slice(0, 7);
@@ -5614,6 +5614,7 @@ function LifestyleRiverHomePage({
         <LifestyleDiscoverySidebar
           profile={profile}
           topStories={moduleAllocation.dailyHabitStories}
+          trendingStories={destination === "all" && !initialBrandSlug ? moduleAllocation.trendingStories : undefined}
           topics={sidebarTopics}
           brands={sidebarBrands}
           communityBrandSlug={initialBrandSlug === "elle" ? "elle" : undefined}
@@ -5892,11 +5893,13 @@ function LifestyleRiverHomePage({
         </main>
 
         <aside className="min-w-0 space-y-5 lg:sticky lg:top-[108px] lg:max-h-[calc(100dvh-132px)] lg:self-start lg:overflow-y-auto lg:pr-1">
-          <TrendingStoryRail
-            stories={moduleAllocation.trendingStories}
-            onOpenStory={(story) => openStory(story.id)}
-            title={initialBrandName ? `Trending in ${initialBrandName}` : undefined}
-          />
+          {destination === "all" && !initialBrandSlug ? null : (
+            <TrendingStoryRail
+              stories={moduleAllocation.trendingStories}
+              onOpenStory={(story) => openStory(story.id)}
+              title={initialBrandName ? `Trending in ${initialBrandName}` : undefined}
+            />
+          )}
           <ContextualRiverAdvertisement ad={rightRailAd} />
           {showStakeholderTools ? (
             <>
