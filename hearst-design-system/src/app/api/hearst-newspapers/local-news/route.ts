@@ -147,33 +147,57 @@ function parseRssItems(xml: string): NormalizedNewspaperFeedItemInput[] {
   });
 }
 
+const articleImageCache = new Map<string, string | null>();
+
 async function hydrateMissingArticleImages(items: NormalizedNewspaperFeedItemInput[]) {
   return Promise.all(items.map(async (item) => {
     if (item.imageUrl || !item.link || !isFetchableFeedUrl(item.link)) return item;
 
+    if (articleImageCache.has(item.link)) {
+      const cachedUrl = articleImageCache.get(item.link);
+      return cachedUrl ? { ...item, imageUrl: cachedUrl } : item;
+    }
+
     try {
-      const response = await fetch(item.link, {
-        cache: "no-store",
-        signal: AbortSignal.timeout(articleImageFetchTimeoutMs),
-        headers: {
-          accept: "text/html,application/xhtml+xml;q=0.9,*/*;q=0.8",
-          "user-agent": "Mozilla/5.0",
-        },
-      });
-      if (!response.ok) return item;
-      const html = await response.text();
-      const imageUrl = getArticleImage(html);
-      return imageUrl ? { ...item, imageUrl: normalizeImageUrl(imageUrl) } : item;
+      const imageUrl = await extractArticleImageFromUrl(item.link);
+      const normalized = imageUrl ? normalizeImageUrl(imageUrl) : null;
+      if (normalized) {
+        articleImageCache.set(item.link, normalized);
+      }
+      return normalized ? { ...item, imageUrl: normalized } : item;
     } catch {
       return item;
     }
   }));
 }
 
+async function extractArticleImageFromUrl(url: string): Promise<string | null> {
+  try {
+    const response = await fetch(url, {
+      cache: "no-store",
+      signal: AbortSignal.timeout(6000),
+      headers: {
+        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+        accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "accept-language": "en-US,en;q=0.9",
+      },
+    });
+
+    if (!response.ok) return null;
+
+    const html = await response.text();
+    const imageUrl = getArticleImage(html);
+    return imageUrl ? decodeXml(imageUrl) : null;
+  } catch {
+    return null;
+  }
+}
+
 function getArticleImage(html: string) {
   return getMetaContent(html, "property", "og:image")
     || getMetaContent(html, "name", "twitter:image")
-    || getMetaContent(html, "property", "twitter:image");
+    || getMetaContent(html, "property", "twitter:image")
+    || getMetaContent(html, "name", "og:image");
 }
 
 function getMetaContent(html: string, attributeName: string, attributeValue: string) {

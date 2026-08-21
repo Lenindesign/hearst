@@ -747,7 +747,7 @@ export function EntertainmentWatchPage({
       </main>
       <ShowDetailModal show={activeShow} onClose={closeShowModal} />
       <SiteFooter
-        siteName={<BrandLogo slug="hearst-all" className="h-8 max-w-[16rem] [&_svg]:h-full [&_svg]:w-auto" color="#fff" />}
+        siteName={<BrandLogo slug="hearst-all" className="h-5 w-36 max-w-[9rem] [&_svg]:h-full [&_svg]:w-full" color="#fff" />}
         copyrightYear={2026}
         finePrintNote="Prototype only. Entertainment artwork and show links are sourced from the public A&E family websites where available."
       />

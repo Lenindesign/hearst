@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type RefObject } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type RefObject } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ContentReaderDialogShell, rememberContentReaderReturnFocus } from "@/components/hearst-plus/content-reader-dialog-shell";
@@ -608,20 +608,34 @@ function LocalNewsImagePlaceholder() {
 }
 
 export function HearstTVLocalNewsReaderExperience() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [readerStories, setReaderStories] = useState<LifestyleRiverStory[]>([]);
   const [openStoryId, setOpenStoryId] = useState<string | null>(null);
   const returnFocusElementRef = useRef<HTMLElement | null>(null);
+  const requestedStoryId = searchParams.get("story");
 
   const openStory = (storyId: string) => {
     returnFocusElementRef.current = rememberContentReaderReturnFocus(document.activeElement);
     setOpenStoryId(storyId);
   };
 
+  const handleStoriesChange = useCallback((stories: LifestyleRiverStory[]) => {
+    setReaderStories(stories);
+    if (!requestedStoryId || openStoryId === requestedStoryId || !stories.some((story) => story.id === requestedStoryId)) return;
+
+    openStory(requestedStoryId);
+    const nextParams = new URLSearchParams(searchParams.toString());
+    nextParams.delete("story");
+    const nextQuery = nextParams.toString();
+    router.replace(`/hearst-plus/local-news/${nextQuery ? `?${nextQuery}` : ""}#tv-stations`, { scroll: false });
+  }, [openStoryId, requestedStoryId, router, searchParams]);
+
   return (
     <>
       <HearstTVLocalNewsRiver
         onOpenStory={openStory}
-        onStoriesChange={setReaderStories}
+        onStoriesChange={handleStoriesChange}
       />
       {openStoryId ? (
         <LocalNewsReaderModal

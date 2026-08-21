@@ -46,17 +46,20 @@ export function getBrandPromotionForSlot({
   activeFilter,
   slotNumber,
   excludedBrandSlug,
+  excludedBrandSlugs = [],
 }: {
   stories: LifestyleRiverStory[];
   fallbackStories: LifestyleRiverStory[];
   activeFilter: string;
   slotNumber: number;
   excludedBrandSlug?: string;
+  excludedBrandSlugs?: string[];
 }): BrandPromotionMatch | null {
   const groups = new Map<string, BrandPromotionMatch>();
-  const candidateStories = excludedBrandSlug
-    ? fallbackStories.filter((story) => story.brandSlug !== excludedBrandSlug)
-    : stories;
+  const excluded = new Set(excludedBrandSlugs);
+  if (excludedBrandSlug) excluded.add(excludedBrandSlug);
+  const candidateStories = (excluded.size > 0 ? fallbackStories : stories)
+    .filter((story) => !excluded.has(story.brandSlug));
 
   candidateStories.forEach((story) => {
     const existing = groups.get(story.brandSlug);

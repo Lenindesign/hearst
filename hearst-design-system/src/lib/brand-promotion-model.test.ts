@@ -98,3 +98,22 @@ test("excludes the active publication and rotates eligible priority brands", () 
   assert.equal(promotion.brandSlug, "delish");
   assert.ok(promotion.stories.every((story) => story.brandSlug !== "elle"));
 });
+
+test("excludes brands already used by earlier promotion modules", () => {
+  const stories = [
+    ...Array.from({ length: 3 }, (_, index) => makeStory(`elle-${index}`, "Elle", "elle")),
+    ...Array.from({ length: 3 }, (_, index) => makeStory(`cd-${index}`, "Car and Driver", "car-and-driver")),
+    ...Array.from({ length: 3 }, (_, index) => makeStory(`delish-${index}`, "Delish", "delish")),
+  ];
+
+  const promotion = getBrandPromotionForSlot({
+    stories,
+    fallbackStories: stories,
+    activeFilter: "For You",
+    slotNumber: 4,
+    excludedBrandSlugs: ["elle", "car-and-driver"],
+  });
+
+  assert.ok(promotion);
+  assert.equal(promotion.brandSlug, "delish");
+});

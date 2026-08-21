@@ -5771,13 +5771,20 @@ function LifestyleRiverHomePage({
                 />
               ) : null}
 
-              {riverStories.map((story, index) => {
+              {(() => {
+                const usedPromotionBrandSlugs = new Set<string>();
+
+                return riverStories.map((story, index) => {
                 const storyPosition = index + heroStories.length + 1;
                 const shouldShowFeedModule = storyPosition % 5 === 0;
                 const moduleSlotNumber = storyPosition / 5;
                 const shouldShowBrandPromotion = shouldShowFeedModule && moduleSlotNumber % 2 === 0;
+                const shouldUseAEFamilyPromotion = shouldShowBrandPromotion
+                  && destination === "all"
+                  && !initialBrandSlug
+                  && usedPromotionBrandSlugs.size === 0;
                 const brandPromotion = shouldShowBrandPromotion
-                  ? destination === "all" && !initialBrandSlug
+                  ? shouldUseAEFamilyPromotion
                     ? aandeBrandPromotion
                     : getBrandPromotionForSlot({
                         stories: filteredStories,
@@ -5785,8 +5792,10 @@ function LifestyleRiverHomePage({
                         activeFilter,
                         slotNumber: moduleSlotNumber,
                         excludedBrandSlug: initialBrandSlug,
+                        excludedBrandSlugs: [...usedPromotionBrandSlugs],
                       })
                   : null;
+                if (brandPromotion) usedPromotionBrandSlugs.add(brandPromotion.brandSlug);
                 const adMatch = shouldShowFeedModule && !shouldShowBrandPromotion
                   ? getContextualAdForSlot({
                       destination,
@@ -5842,7 +5851,8 @@ function LifestyleRiverHomePage({
                     ) : null}
                   </React.Fragment>
                 );
-              })}
+                });
+              })()}
 
               {delishShortsRiverInsertIndex === riverStories.length ? (
                 <DelishVerticalVideoCarousel

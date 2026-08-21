@@ -48,13 +48,11 @@ export function LocalNewsRail() {
           return (
             <li key={story.id}>
               <a
-                href={story.url}
-                target="_blank"
-                rel="noreferrer"
-                className="group grid min-h-20 w-full grid-cols-[56px_minmax(0,1fr)] items-start gap-3 rounded-[6px] py-3 text-left text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                href={`/hearst-plus/local-news/?story=${encodeURIComponent(story.id)}#tv-stations`}
+                className="group grid min-h-20 w-full grid-cols-[48px_minmax(0,1fr)] items-start gap-3 rounded-[6px] py-3 text-left focus:outline-none focus:ring-2 focus:ring-primary/30"
               >
                 <span
-                  className="relative block h-14 w-14 overflow-hidden rounded-[6px] border border-border bg-muted bg-cover bg-center"
+                  className="relative block h-12 w-12 overflow-hidden rounded-[6px] border border-border bg-muted bg-cover bg-center"
                   style={story.imageUrl ? { backgroundImage: `url(${story.imageUrl})` } : undefined}
                   role={story.imageUrl ? "img" : undefined}
                   aria-label={story.imageUrl ? "" : undefined}
@@ -65,7 +63,7 @@ export function LocalNewsRail() {
                   </span>
                 </span>
                 <span className="min-w-0">
-                  <span className="line-clamp-3 block font-bold leading-snug group-hover:text-primary group-focus-visible:text-primary">
+                  <span className="line-clamp-4 block text-[12px] font-bold leading-[1.35] group-hover:text-primary group-focus-visible:text-primary">
                     {story.title}
                   </span>
                   <span className="mt-1 block truncate text-xs text-muted-foreground">

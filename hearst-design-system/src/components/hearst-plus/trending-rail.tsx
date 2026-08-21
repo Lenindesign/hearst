@@ -47,10 +47,10 @@ export function TrendingStoryRail({
               type="button"
               onClick={() => onOpenStory(story)}
               data-story-id={story.id}
-              className="group grid min-h-20 w-full grid-cols-[56px_minmax(0,1fr)] items-start gap-3 rounded-[6px] py-3 text-left text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+              className="group grid min-h-20 w-full grid-cols-[48px_minmax(0,1fr)] items-start gap-3 rounded-[6px] py-3 text-left focus:outline-none focus:ring-2 focus:ring-primary/30"
               aria-label={`Open story: ${story.title}`}
             >
-              <span className="relative block h-14 w-14 overflow-hidden rounded-[6px] border border-border bg-muted">
+              <span className="relative block h-12 w-12 overflow-hidden rounded-[6px] border border-border bg-muted">
                 <LifestyleRiverImage
                   story={story}
                   alt=""
@@ -63,7 +63,7 @@ export function TrendingStoryRail({
                 </span>
               </span>
               <span className="min-w-0">
-                <span className="line-clamp-3 block font-bold leading-snug group-hover:text-primary group-focus-visible:text-primary">
+                <span className="line-clamp-4 text-[12px] font-bold leading-[1.35] group-hover:text-primary group-focus-visible:text-primary">
                   {story.title}
                 </span>
                 <span className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground">

@@ -224,7 +224,7 @@ export function EntertainmentChannelStoriesPage({
       </main>
 
       <SiteFooter
-        siteName={<BrandLogo slug="hearst-all" className="h-8 max-w-[16rem] [&_svg]:h-full [&_svg]:w-auto" color="#fff" />}
+        siteName={<BrandLogo slug="hearst-all" className="h-5 w-36 max-w-[9rem] [&_svg]:h-full [&_svg]:w-full" color="#fff" />}
         copyrightYear={2026}
         finePrintNote="Prototype only. Entertainment story feeds use checked-in channel website RSS configuration when a verified endpoint is available."
       />

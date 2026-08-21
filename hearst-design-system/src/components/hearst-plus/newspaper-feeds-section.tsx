@@ -293,15 +293,14 @@ export function NewspaperFeedsSection({
                   aria-label={`Open story: ${item.title}`}
                 >
                   <span className="relative grid aspect-video min-h-0 w-full place-items-center overflow-hidden bg-[var(--hp-surface-low)] text-center text-sm font-bold text-primary" aria-hidden="true">
-                    {item.imageUrl && readerStory ? (
-                      <NewspaperStoryImage
-                        src={item.imageUrl}
-                        alt=""
-                        fallbackLabel={publicationInitials(publication.publicationName)}
-                        className="h-full w-full"
-                        sizes="(max-width: 1024px) 100vw, 640px"
-                      />
-                    ) : publicationInitials(publication.publicationName)}
+                    <NewspaperStoryImage
+                      src={item.imageUrl}
+                      articleUrl={item.url}
+                      alt=""
+                      fallbackLabel={publicationInitials(publication.publicationName)}
+                      className="h-full w-full"
+                      sizes="(max-width: 1024px) 100vw, 640px"
+                    />
                   </span>
                   <span className="block min-w-0 p-4 sm:p-5">
                     <span className="mb-3 flex flex-wrap items-center gap-2">
@@ -381,6 +380,7 @@ function NewspaperFeaturedCarousel({
         return (
           <NewspaperStoryImage
             src={imageUrl}
+            articleUrl={story.sourceUrl}
             alt=""
             fallbackLabel={publicationInitials(story.brand)}
             className="h-full w-full"
@@ -400,7 +400,8 @@ function NewspaperFeaturedCarousel({
 }
 
 function NewspaperStoryImage({
-  src,
+  src: initialSrc,
+  articleUrl,
   alt,
   fallbackLabel,
   className,
@@ -408,18 +409,53 @@ function NewspaperStoryImage({
   sizes,
 }: {
   src?: string | null;
+  articleUrl?: string | null;
   alt?: string;
   fallbackLabel: string;
   className?: string;
   loading?: "eager" | "lazy";
   sizes?: string;
 }) {
-  const [failed, setFailed] = useState(!src);
+  const [src, setSrc] = useState<string | null>(initialSrc ?? null);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    if (src || failed || !articleUrl || typeof window === "undefined") return;
+
+    let cancelled = false;
+    fetch(articleUrl, { mode: "cors" })
+      .then((res) => (res.ok ? res.text() : null))
+      .then((html) => {
+        if (cancelled || !html) return;
+        const ogMatch = html.match(/<meta\b[^>]*\b(?:property|name)=["'](?:og:image|twitter:image)["'][^>]*>/i);
+        const contentMatch = ogMatch?.[0]?.match(/content=["']([^"']+)["']/i);
+        const extracted = contentMatch?.[1]?.trim();
+        if (extracted) {
+          const finalUrl = extracted.startsWith("//") ? `https:${extracted}` : extracted;
+          setSrc(finalUrl);
+        }
+      })
+      .catch(() => {
+        // Silently preserve publication branding fallback
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [src, failed, articleUrl]);
 
   if (failed || !src) {
     return (
-      <span className="grid h-full w-full place-items-center bg-[var(--hp-surface-low)] text-lg font-bold tracking-[0.18em] text-primary" aria-label="Image unavailable">
-        {fallbackLabel}
+      <span
+        className="grid h-full w-full place-items-center bg-[linear-gradient(135deg,var(--hp-surface-low)_0%,var(--hp-surface)_100%)] text-lg font-bold tracking-[0.18em] text-primary"
+        aria-label="Newspaper story"
+      >
+        <span className="flex flex-col items-center justify-center gap-1.5 p-4 text-center">
+          <span className="rounded-full bg-primary/10 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-primary">
+            {fallbackLabel}
+          </span>
+          <span className="text-[11px] font-semibold text-muted-foreground">Hearst Local News</span>
+        </span>
       </span>
     );
   }
@@ -615,6 +651,7 @@ function NewspaperReaderModal({
               <div className="aspect-video w-full overflow-hidden rounded-[4px] bg-[var(--hp-surface-low)]">
                 <NewspaperStoryImage
                   src={story.image}
+                  articleUrl={story.sourceUrl}
                   alt=""
                   fallbackLabel={publicationInitials(story.brand)}
                 />
