@@ -27,7 +27,7 @@ import {
   ThumbsUp,
   TrendingUp,
 } from "@/components/ui/icons";
-import { BrandLogo } from "@/components/brand-logo";
+import { MainNav } from "@/components/home-page";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { CommunityJoinedGroupsCard } from "@/components/hearst-plus/community-joined-groups-card";
 import { BrandSourceIcon } from "@/components/hearst-plus/brand-source-icon";
@@ -110,8 +110,12 @@ const kindLabels: Record<CommunityThread["kind"], string> = {
 };
 
 const communityNavLinks = [
-  { label: "For You", href: "/hearst-plus/", active: false },
   { label: "Communities", href: "/communities/", active: true },
+  { label: "Popular", href: "/communities/#popular", active: false },
+  { label: "New", href: "/communities/?sort=new#popular", active: false },
+  { label: "Top", href: "/communities/?sort=top#popular", active: false },
+  { label: "Groups", href: "/communities/#suggest-group", active: false },
+  { label: "Create", href: "/communities/#post-to-group", active: false },
 ] as const;
 
 const communityFeedShortcuts = [
@@ -444,50 +448,22 @@ export function CommunityForumsPage({
       style={communityTypographyStyle}
     >
       <UtilityBar selectedBrand={selectedBrandForUtility} />
-
-      <header className="sticky top-8 z-40 border-b border-[var(--hp-border)] bg-[var(--hp-surface)]/95 backdrop-blur supports-[backdrop-filter]:bg-[var(--hp-surface)]/88">
-        <div className="mx-auto flex max-w-[1360px] items-center justify-between gap-4 px-5 py-4 md:px-10">
-          <Link
-            href="/hearst-plus/"
-            className="flex shrink-0 items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
-            aria-label="Hearst+"
-          >
-            <BrandLogo
-              slug="hearst-all"
-              decorative
-              className="flex h-[22.079px] max-w-[280px] items-center [&_svg]:block [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full"
-            />
-          </Link>
-          <nav
-            aria-label="Community navigation"
-            className="flex min-w-0 flex-1 justify-end overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          >
-            <div className="flex min-w-max items-center gap-1 rounded-[8px] border border-primary/15 bg-[var(--community-surface-soft)] p-1">
-              {communityNavLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  aria-current={link.active ? "page" : undefined}
-                  className={cn(
-                    "inline-flex min-h-9 items-center rounded-[6px] px-3 text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35",
-                    link.active
-                      ? "bg-primary text-primary-foreground"
-                      : "text-[var(--hp-text-secondary)] hover:bg-[var(--community-surface-soft-hover)] hover:text-[var(--hp-text-primary)]",
-                  )}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-          </nav>
-        </div>
-      </header>
+      <MainNav
+        brandSlug="hearst-all"
+        activeFilter="Communities"
+        navLinksOverride={communityNavLinks.map((link) => link.label)}
+        navLinkHrefOverrides={Object.fromEntries(communityNavLinks.map((link) => [link.label, link.href]))}
+        mastheadLogoOverride={{
+          src: "/logos/h-communities.svg",
+          label: "Hearst+ Communities",
+        }}
+      />
 
       <main>
         <div className="mx-auto grid max-w-[1360px] gap-6 bg-[var(--hp-background)] px-5 py-8 md:px-10 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.58fr)_minmax(280px,0.7fr)]">
           <aside className="min-w-0 lg:sticky lg:top-28 lg:self-start">
             <section className="rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
-              <h2 className="hearst-community-display text-xl font-bold leading-tight">
+              <h2 className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-text-primary)]">
                 Communities
               </h2>
 
@@ -516,7 +492,7 @@ export function CommunityForumsPage({
               </nav>
 
               <div className="mt-6 border-t border-[var(--hp-border)] pt-4">
-                <h3 className="text-xs font-black uppercase tracking-[0.08em] text-[var(--hp-text-secondary)]">
+                <h3 className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-text-primary)]">
                   My communities
                 </h3>
                 <div className="mt-3 grid gap-1">
@@ -560,7 +536,7 @@ export function CommunityForumsPage({
               </div>
 
               <div className="mt-6 border-t border-[var(--hp-border)] pt-4">
-                <h3 className="text-xs font-black uppercase tracking-[0.08em] text-[var(--hp-text-secondary)]">
+                <h3 className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-text-primary)]">
                   Explore
                 </h3>
                 <div className="relative mt-4">
@@ -605,7 +581,7 @@ export function CommunityForumsPage({
                   ))}
 
                   {hearstExploreBrands.length > 0 ? (
-                    <h4 className="mt-5 px-1.5 text-xs font-black uppercase tracking-[0.08em] text-[var(--hp-text-secondary)]">
+                    <h4 className="mt-5 px-1.5 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-text-primary)]">
                       Hearst
                     </h4>
                   ) : null}
@@ -1000,63 +976,48 @@ export function CommunityForumsPage({
                         <div className="min-w-0 flex-1">
                           <Link
                             href={thread.href}
-                            className="flex min-w-0 items-start gap-4 rounded-[8px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+                            className="block min-w-0 rounded-[8px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
                             aria-label={`Open thread: ${thread.title}`}
                           >
-                            <BrandSourceIcon
-                              brand={thread.brand}
-                              brandSlug={thread.brandSlug}
-                              className="size-9 shrink-0 rounded-full"
-                              imageClassName="object-cover p-0"
-                            />
-                            <span className="min-w-0 flex-1">
-                              <span className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-bold text-[var(--hp-text-secondary)]">
+                            <span className="flex min-w-0 items-center gap-2 overflow-hidden text-[11px] font-bold leading-4 text-[var(--hp-text-secondary)]">
+                              <BrandSourceIcon
+                                brand={thread.brand}
+                                brandSlug={thread.brandSlug}
+                                className="size-8 shrink-0 rounded-full"
+                                imageClassName="object-cover p-0"
+                              />
+                              <span className="flex min-w-0 items-center gap-1.5 overflow-hidden whitespace-nowrap">
                                 <span>{thread.author}</span>
                                 <span aria-hidden>·</span>
                                 <span>{kindLabels[thread.kind]}</span>
                                 <span aria-hidden>·</span>
-                                <span>{thread.meta}</span>
-                              </span>
-                              <h3
-                                id={`thread-${thread.id}-title`}
-                                className="hearst-community-display mt-2 text-xl font-bold leading-snug transition-colors group-hover:text-primary md:text-2xl"
-                              >
-                                {thread.title}
-                              </h3>
-                              <span
-                                id={`thread-${thread.id}-summary`}
-                                className="hearst-community-copy mt-2 block line-clamp-2 text-sm leading-6 text-[var(--hp-text-ui)]"
-                              >
-                                {thread.body}
+                                <span className="truncate">{thread.meta}</span>
                               </span>
                             </span>
+                            <h3
+                              id={`thread-${thread.id}-title`}
+                              className="hearst-community-display mt-2 text-xl font-bold leading-snug transition-colors group-hover:text-primary md:text-2xl"
+                            >
+                              {thread.title}
+                            </h3>
+                            <span
+                              id={`thread-${thread.id}-summary`}
+                              className="hearst-community-copy mt-2 block line-clamp-2 text-sm leading-6 text-[var(--hp-text-ui)]"
+                            >
+                              {thread.body}
+                            </span>
                             {thread.posterImage ? (
-                              <span className="relative hidden aspect-[4/3] w-28 shrink-0 overflow-hidden rounded-[8px] border border-[var(--hp-border)] bg-[var(--community-surface-soft)] sm:block md:w-32">
+                              <span className="relative mt-4 block aspect-[16/9] w-full overflow-hidden rounded-[8px] border border-[var(--hp-border)] bg-[var(--community-surface-soft)]">
                                 <Image
                                   src={thread.posterImage}
                                   alt={thread.posterAlt ?? thread.title}
                                   fill
-                                  sizes="(max-width: 1024px) 112px, 128px"
+                                  sizes="(max-width: 1024px) calc(100vw - 112px), 760px"
                                   className="object-cover transition-transform duration-200 group-hover:scale-[1.03]"
                                 />
                               </span>
                             ) : null}
                           </Link>
-                          {thread.posterImage ? (
-                            <Link
-                              href={thread.href}
-                              className="relative mt-3 block aspect-[16/9] overflow-hidden rounded-[8px] border border-[var(--hp-border)] bg-[var(--community-surface-soft)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 sm:hidden"
-                              aria-label={`Open thread image: ${thread.title}`}
-                            >
-                              <Image
-                                src={thread.posterImage}
-                                alt={thread.posterAlt ?? thread.title}
-                                fill
-                                sizes="100vw"
-                                className="object-cover"
-                              />
-                            </Link>
-                          ) : null}
                           <div className="mt-4 flex flex-wrap items-center gap-4 text-sm font-bold text-[var(--hp-text-secondary)]">
                             <span className="inline-flex items-center gap-1.5">
                               <MessageCircle
@@ -1135,7 +1096,7 @@ export function CommunityForumsPage({
                 </>
               ) : (
                 <>
-                  <h2 className="hearst-community-display text-xl font-bold leading-tight">
+                  <h2 className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-text-primary)]">
                     Recommended for you
                   </h2>
                   <div className="mt-4 space-y-3">
