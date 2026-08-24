@@ -25,6 +25,8 @@ type NavItem = { label: string; href: string; external?: boolean };
 
 const BASE_MAIN_NAV: NavItem[] = [
   { label: "Style Guide", href: "/" },
+  { label: "Architecture", href: "/architecture" },
+  { label: "AI in HDS", href: "/ai-in-hds" },
   { label: "Home Page", href: "/home" },
   { label: "Color", href: "/color" },
   { label: "Typography", href: "/typography" },

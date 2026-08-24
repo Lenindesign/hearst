@@ -34,6 +34,8 @@ const productPages = [
   { id: "articles", label: "Article system", mobileLabel: "Articles", href: "/hearst-article-blueprint/" },
   { id: "tokens", label: "Token architecture", mobileLabel: "Tokens", href: "/token-architecture/" },
   { id: "hds", label: "HDS framework", mobileLabel: "HDS", href: "/hds-brand-framework/" },
+  { id: "architecture", label: "App architecture", mobileLabel: "Architecture", href: "/architecture/" },
+  { id: "ai-in-hds", label: "AI in HDS", mobileLabel: "AI in HDS", href: "/ai-in-hds/" },
 ] as const;
 
 export type ProductPageId = (typeof productPages)[number]["id"];
