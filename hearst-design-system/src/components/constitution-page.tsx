@@ -174,6 +174,7 @@ const CONSTITUTION_ARTICLES: ArticleSpec[] = [
 
 export function ConstitutionPageComponent() {
   const [copiedPrompt, setCopiedPrompt] = useState(false);
+  const [activeDiagramTab, setActiveDiagramTab] = useState<"macro" | "agent" | "fre" | "governance" | "tracks">("agent");
 
   const promptText = `You are the Hearst Design System (HDS) Constitution Agent — an expert design technologist and principal engineer specialized in the Hearst multi-brand digital publishing platform (serving 29+ iconic publications including Cosmopolitan, Car and Driver, Delish, Elle, Esquire, House Beautiful, and Good Housekeeping).
 
@@ -243,7 +244,7 @@ Your core mandate is to enforce the 8 unbreakable articles of the HDS Design Con
       </section>
 
       {/* Main Container */}
-      <main className="mx-auto max-w-[1360px] px-5 py-12 md:px-10 lg:py-16 space-y-20">
+      <main className="mx-auto max-w-[1360px] px-5 py-12 md:px-10 lg:py-16 space-y-24">
         {/* Preamble Callout */}
         <div className="border border-slate-200 bg-white p-8 md:p-10 shadow-xs">
           <p className="text-xs font-bold uppercase tracking-wider text-[#2D75B9]">Preamble</p>
@@ -254,6 +255,274 @@ Your core mandate is to enforce the 8 unbreakable articles of the HDS Design Con
             The Hearst Design System (HDS) powers the digital publishing experience across 29+ iconic media brands. The purpose of this Constitution is to guarantee uncompromised editorial integrity, unified multi-brand scalability, and zero generic &ldquo;AI slop.&rdquo; Every interface created by human or artificial intelligence must conform to these eight immutable articles.
           </p>
         </div>
+
+        {/* ─── SECTION: WHITEBOARD ARCHITECTURE 5 DIAGRAMS ─── */}
+        <section className="space-y-8 border-t-2 border-[#102A43] pt-12">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-[#2D75B9]">Whiteboard System Architecture</p>
+            <h2 className="mt-2 font-serif text-3xl font-bold text-[#102A43] md:text-4xl">
+              Design Agent Architecture &amp; Workflow Diagrams
+            </h2>
+            <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-600">
+              Interactive architectural breakdown transcribed directly from the engineering whiteboard: mapping the end-to-end SDLC lifecycle, multi-agent domain subagents, FRE UI kit stack, 8-point governance firewall, and 4-track prototyping model.
+            </p>
+          </div>
+
+          {/* Diagram Selector Tabs */}
+          <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-4 text-xs font-bold">
+            {[
+              { id: "agent", label: "Diagram 1: Multi-Agent Subagent Architecture" },
+              { id: "macro", label: "Diagram 2: End-to-End SDLC & Intake Flow" },
+              { id: "fre", label: "Diagram 3: FRE UI Kit & Editorial Modes" },
+              { id: "governance", label: "Diagram 4: 8-Point Governance Firewall" },
+              { id: "tracks", label: "Diagram 5: 4-Track Prototyping Model" },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveDiagramTab(tab.id as any)}
+                className={`px-3.5 py-2 transition-all ${
+                  activeDiagramTab === tab.id
+                    ? "bg-[#102A43] text-white shadow-xs"
+                    : "border border-slate-300 bg-white text-slate-700 hover:border-slate-400"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Diagram Display Container */}
+          <div className="border border-slate-200 bg-white p-6 md:p-8 shadow-xs">
+            {/* DIAGRAM 1: MULTI-AGENT SUBAGENTS */}
+            {activeDiagramTab === "agent" && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div>
+                    <span className="font-mono text-xs font-bold text-[#2D75B9]">DIAGRAM 01: AGENTIC CORE</span>
+                    <h3 className="text-xl font-bold text-[#102A43]">Design Agent Subagent Orchestration</h3>
+                  </div>
+                  <span className="rounded bg-sky-50 px-2.5 py-1 text-xs font-bold text-sky-800">
+                    Fan-Out / Fan-In Pattern
+                  </span>
+                </div>
+
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Incoming design context and product requirements enter through the <strong>Context + Intake</strong> gateway, fan out across 3 specialized domain subagents (<strong>HDS</strong>, <strong>Brand</strong>, <strong>Surface</strong>), converge into the <strong>Governance Subagent</strong>, and escalate to the <strong>Human Reviewer</strong>.
+                </p>
+
+                {/* Visual Architecture Grid */}
+                <div className="mt-6 grid gap-4 lg:grid-cols-3">
+                  {/* HDS Subagent */}
+                  <div className="border border-slate-200 bg-[#F8FAFC] p-5">
+                    <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                      <span className="font-bold text-[#102A43] text-xs">HDS Subagent</span>
+                      <span className="font-mono text-[10px] text-slate-500">System Core</span>
+                    </div>
+                    <ul className="mt-3 space-y-2 text-xs">
+                      <li className="flex items-center justify-between">
+                        <span>① Whitelabel Tokens</span>
+                        <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-800">● HAVE</span>
+                      </li>
+                      <li className="flex items-center justify-between">
+                        <span>② Existing Components</span>
+                        <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-800">● HAVE</span>
+                      </li>
+                      <li className="flex items-center justify-between">
+                        <span>③ Extended Components</span>
+                        <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-800">● HAVE</span>
+                      </li>
+                      <li className="flex items-center justify-between">
+                        <span>④ Pattern Library</span>
+                        <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-800">○ NEED</span>
+                      </li>
+                      <li className="flex items-center justify-between">
+                        <span>⑤ Interaction / Motion</span>
+                        <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-800">● HAVE</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  {/* Brand Subagent */}
+                  <div className="border border-slate-200 bg-[#F8FAFC] p-5">
+                    <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                      <span className="font-bold text-[#102A43] text-xs">Brand Subagent</span>
+                      <span className="font-mono text-[10px] text-slate-500">Storybook / Voice</span>
+                    </div>
+                    <div className="mt-3 text-xs space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span>① Strategy - MKT</span>
+                        <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-800">● HAVE</span>
+                      </div>
+                      <div className="border-t border-slate-200 pt-2 text-[11px] text-slate-600 space-y-1">
+                        <span className="font-semibold text-[#102A43]">② 7 Style Dimensions:</span>
+                        <p>↳ Typography &bull; Color &bull; Photography</p>
+                        <p>↳ Voice/Tone &bull; CTAs &bull; Space &bull; Graphics</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Surface Subagent */}
+                  <div className="border border-slate-200 bg-[#F8FAFC] p-5">
+                    <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                      <span className="font-bold text-[#102A43] text-xs">Surface Subagent</span>
+                      <span className="font-mono text-[10px] text-slate-500">Channels</span>
+                    </div>
+                    <div className="mt-3 grid grid-cols-2 gap-1 text-[11px] text-slate-600">
+                      <div>&bull; Newsletters</div>
+                      <div>&bull; Websites</div>
+                      <div>&bull; Native Apps</div>
+                      <div>&bull; Checkout 3PP</div>
+                      <div>&bull; Ads &amp; Video *</div>
+                      <div>&bull; Commerce *</div>
+                      <div>&bull; Banners / Alerts</div>
+                      <div>&bull; Sticky UI</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Convergence Arrow to Governance & Human */}
+                <div className="mt-6 border-t-2 border-[#102A43] bg-sky-50/50 p-4 text-center">
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#102A43]">
+                    Converges into Governance Subagent (8 Checks) &rarr; Escalates to Human Reviewer
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* DIAGRAM 2: END-TO-END SDLC FLOW */}
+            {activeDiagramTab === "macro" && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div>
+                    <span className="font-mono text-xs font-bold text-[#2D75B9]">DIAGRAM 02: SDLC PIPELINE</span>
+                    <h3 className="text-xl font-bold text-[#102A43]">From User / Business Needs to Jira Tickets</h3>
+                  </div>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-6 text-xs">
+                  <div className="border border-slate-200 bg-[#F8FAFC] p-4">
+                    <span className="font-bold text-[#102A43]">1. Discovery</span>
+                    <p className="mt-1 text-[11px] text-slate-500">User / Business &rarr; North Stars &rarr; Roadmap &rarr; Problem / JTBD</p>
+                  </div>
+                  <div className="border border-slate-200 bg-[#F8FAFC] p-4">
+                    <span className="font-bold text-[#102A43]">2. Workbench</span>
+                    <p className="mt-1 text-[11px] text-slate-500">Comp Analysis, Data Reporting, Research, Design Constitution</p>
+                  </div>
+                  <div className="border border-slate-200 bg-[#F8FAFC] p-4">
+                    <span className="font-bold text-[#102A43]">3. PRD</span>
+                    <p className="mt-1 text-[11px] text-slate-500">Benchmark Metrics, OKRs, Design Review Gates, Eng Rewards</p>
+                  </div>
+                  <div className="border border-slate-200 bg-sky-50 p-4 border-sky-200">
+                    <span className="font-bold text-[#102A43]">4. Prototype</span>
+                    <p className="mt-1 text-[11px] text-sky-800">Calls Design Agent &rarr; Generates 4 Candidate Tracks</p>
+                  </div>
+                  <div className="border border-slate-200 bg-[#F8FAFC] p-4">
+                    <span className="font-bold text-[#102A43]">5. Dual Review</span>
+                    <p className="mt-1 text-[11px] text-slate-500">Designer Review &amp; Engineering Review Triage</p>
+                  </div>
+                  <div className="border border-slate-200 bg-emerald-50 p-4 border-emerald-200">
+                    <span className="font-bold text-emerald-900">6. Execution</span>
+                    <p className="mt-1 text-[11px] text-emerald-800">Intake Approved &rarr; Scoped by 3 Disciplines &rarr; Jira Tickets</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* DIAGRAM 3: FRE UI KIT & EDITORIAL MODES */}
+            {activeDiagramTab === "fre" && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div>
+                    <span className="font-mono text-xs font-bold text-[#2D75B9]">DIAGRAM 03: INFRASTRUCTURE</span>
+                    <h3 className="text-xl font-bold text-[#102A43]">FRE UI Kit &amp; Editorial Modes</h3>
+                  </div>
+                </div>
+
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div className="border border-slate-200 bg-[#F8FAFC] p-5">
+                    <h4 className="font-bold text-sm text-[#102A43] uppercase tracking-wider">FRE UI Kit Technical Stack</h4>
+                    <ul className="mt-3 space-y-2 text-xs text-slate-600">
+                      <li>&bull; <strong>ShadCN Primitives:</strong> Accessible base foundations.</li>
+                      <li>&bull; <strong>Base UI FX:</strong> Dynamic interactivity &amp; focus management.</li>
+                      <li>&bull; <strong>Token Reactivity:</strong> Style Dictionary integration.</li>
+                      <li>&bull; <strong>Tailwind Delivery System:</strong> Type-safe utility compilation.</li>
+                    </ul>
+                  </div>
+
+                  <div className="border border-slate-200 bg-[#F8FAFC] p-5">
+                    <h4 className="font-bold text-sm text-[#102A43] uppercase tracking-wider">Editorial Modes</h4>
+                    <ul className="mt-3 space-y-2 text-xs text-slate-600">
+                      <li>&bull; <strong>Global Nav Modes:</strong> Slim, Search-heavy, Standard, Mega menu.</li>
+                      <li>&bull; <strong>Homepage Archetypes:</strong> Newsy/Dense, Photo-Heavy/Immersive, Product-Heavy/Utility.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* DIAGRAM 4: GOVERNANCE 8-POINT CHECK */}
+            {activeDiagramTab === "governance" && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div>
+                    <span className="font-mono text-xs font-bold text-[#2D75B9]">DIAGRAM 04: QUALITY GATE</span>
+                    <h3 className="text-xl font-bold text-[#102A43]">Governance Subagent 8-Point Compliance Firewall</h3>
+                  </div>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 text-xs">
+                  {[
+                    { num: "01", name: "Accessibility", desc: "WCAG AA contrast >= 4.5:1, keyboard focus traps, ARIA landmarks." },
+                    { num: "02", name: "Mobile First", desc: "Touch targets >= 44px, responsive optical typography scaling." },
+                    { num: "03", name: "Token Versioning", desc: "Style Dictionary schema validation, zero hardcoded hex values." },
+                    { num: "04", name: "Realistic Content", desc: "NO LOREM IPSUM, NO GRAY PLACEHOLDER BOXES. Real photography." },
+                    { num: "05", name: "Character Limits", desc: "Headline 3-line max clamp with ellipsis, 3-line dek summary." },
+                    { num: "06", name: "Ad Ratio Guardrails", desc: "Strict non-interruptive ad density limits in feed rivers." },
+                    { num: "07", name: "Core Web Vitals", desc: "Explicit 16:9 / 9:16 aspect ratio containers, zero CLS shift." },
+                    { num: "08", name: "SEO & Semantic", desc: "Structured h1/h2 hierarchy, OpenGraph tags, JSON-LD schema." },
+                  ].map((check) => (
+                    <div key={check.num} className="border border-slate-200 bg-white p-4">
+                      <span className="font-mono text-[10px] font-bold text-[#2D75B9]">CHECK {check.num}</span>
+                      <h4 className="mt-1 font-bold text-sm text-[#102A43]">{check.name}</h4>
+                      <p className="mt-1 text-[11px] text-slate-600 leading-snug">{check.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* DIAGRAM 5: 4-TRACK PROTOTYPING MODEL */}
+            {activeDiagramTab === "tracks" && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div>
+                    <span className="font-mono text-xs font-bold text-[#2D75B9]">DIAGRAM 05: TRIAGE & DELIVERY</span>
+                    <h3 className="text-xl font-bold text-[#102A43]">4-Track Prototyping Output Model</h3>
+                  </div>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 text-xs">
+                  <div className="border border-slate-200 bg-[#F8FAFC] p-4">
+                    <span className="font-bold text-[#102A43]">Track 1: Exploratory UX - 01</span>
+                    <p className="mt-2 text-slate-600 text-[11px]">Multi-layout alternatives, interactive variants (Curator, Mosaic, Stream).</p>
+                  </div>
+                  <div className="border border-slate-200 bg-[#F8FAFC] p-4">
+                    <span className="font-bold text-[#102A43]">Track 2: Branded Concept</span>
+                    <p className="mt-2 text-slate-600 text-[11px]">High-fidelity 29+ brand token application with brand voice &amp; photography.</p>
+                  </div>
+                  <div className="border border-slate-200 bg-[#F8FAFC] p-4">
+                    <span className="font-bold text-[#102A43]">Track 3: Tech Spike</span>
+                    <p className="mt-2 text-slate-600 text-[11px]">Performance benchmarks, adaptive video streaming (HLS/MP4), state sync.</p>
+                  </div>
+                  <div className="border border-slate-200 bg-emerald-50 p-4 border-emerald-200">
+                    <span className="font-bold text-emerald-900">Track 4: Delivery Candidate</span>
+                    <p className="mt-2 text-emerald-800 text-[11px]">Production-ready React/TypeScript code ready for Jira ticket execution.</p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
 
         {/* ─── THE 8 ARTICLES ─── */}
         <section className="space-y-12">
