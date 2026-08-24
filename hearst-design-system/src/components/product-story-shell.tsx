@@ -36,6 +36,7 @@ const productPages = [
   { id: "hds", label: "HDS framework", mobileLabel: "HDS", href: "/hds-brand-framework/" },
   { id: "architecture", label: "App architecture", mobileLabel: "Architecture", href: "/architecture/" },
   { id: "ai-in-hds", label: "AI in HDS", mobileLabel: "AI in HDS", href: "/ai-in-hds/" },
+  { id: "constitution", label: "Constitution", mobileLabel: "Constitution", href: "/constitution/" },
 ] as const;
 
 export type ProductPageId = (typeof productPages)[number]["id"];
