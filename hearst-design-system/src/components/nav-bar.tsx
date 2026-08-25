@@ -28,6 +28,7 @@ const BASE_MAIN_NAV: NavItem[] = [
   { label: "Architecture", href: "/architecture" },
   { label: "AI in HDS", href: "/ai-in-hds" },
   { label: "Constitution", href: "/constitution" },
+  { label: "Design Agent", href: "/design-agent" },
   { label: "Home Page", href: "/home" },
   { label: "Color", href: "/color" },
   { label: "Typography", href: "/typography" },

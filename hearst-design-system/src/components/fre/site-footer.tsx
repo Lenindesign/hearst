@@ -47,6 +47,7 @@ const defaultProductLinkGroups: SiteFooterLinkGroup[] = [
       { label: "App architecture", href: "/architecture/" },
       { label: "AI in Design Systems", href: "/ai-in-hds/" },
       { label: "Design Constitution", href: "/constitution/" },
+      { label: "Design Agent Architecture", href: "/design-agent/" },
       { label: "Hearst+ Design System", href: "/" },
     ],
   },

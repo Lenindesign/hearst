@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hearst Design Agent System Architecture & Workflow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,600;0,6..72,700;1,6..72,600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy-900: #102a43;
+      --navy-800: #1f3a56;
+      --navy-700: #2d4d6e;
+      --blue-600: #2d75b9;
+      --blue-500: #3b82f6;
+      --blue-100: #e0f2fe;
+      --blue-50: #f0f9ff;
+      --slate-900: #0f172a;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-600: #475569;
+      --slate-500: #64748b;
+      --slate-400: #94a3b8;
+      --slate-300: #cbd5e1;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --emerald-700: #047857;
+      --emerald-600: #059669;
+      --emerald-100: #d1fae5;
+      --emerald-50: #ecfdf5;
+      --amber-700: #b45309;
+      --amber-600: #d97706;
+      --amber-100: #fef3c7;
+      --amber-50: #fffbeb;
+      --rose-700: #be123c;
+      --rose-600: #e11d48;
+      --rose-100: #ffe4e6;
+      --rose-50: #fff1f2;
+      --orange-600: #ea580c;
+      --orange-100: #ffedd5;
+      --orange-50: #fff7ed;
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #f1f5f9;
+      color: var(--slate-900);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      padding: 24px;
+    }
+
+    /* Masthead Header */
+    .header-bar {
+      background: var(--navy-900);
+      color: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 24px 32px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .header-title-group h1 {
+      font-family: 'Newsreader', serif;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .header-title-group p {
+      font-size: 13px;
+      color: var(--slate-300);
+      margin-top: 4px;
+    }
+
+    .header-badges {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .badge-pill {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-have {
+      background: var(--emerald-100);
+      color: var(--emerald-700);
+      border: 1px solid var(--emerald-600);
+    }
+
+    .badge-need {
+      background: var(--amber-100);
+      color: var(--amber-700);
+      border: 1px dashed var(--amber-600);
+    }
+
+    .badge-brain {
+      background: var(--orange-100);
+      color: var(--orange-600);
+      border: 1px solid var(--orange-600);
+    }
+
+    /* Main Diagram Canvas */
+    .diagram-canvas {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    @media (max-width: 1200px) {
+      .diagram-canvas {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Left Frame: Design Agent Box */
+    .agent-boundary-box {
+      background: #ffffff;
+      border: 2px solid var(--navy-900);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      box-shadow: var(--shadow-md);
+      position: relative;
+    }
+
+    .agent-tag-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--slate-200);
+      padding-bottom: 12px;
+    }
+
+    .agent-tag-header h2 {
+      font-family: 'Newsreader', serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--navy-900);
+      letter-spacing: -0.02em;
+    }
+
+    /* Intake Center Node */
+    .intake-root-node {
+      background: var(--navy-900);
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: var(--radius-md);
+      text-align: center;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      box-shadow: var(--shadow-sm);
+      margin: 0 auto 24px auto;
+      max-width: 320px;
+      border: 2px solid var(--blue-600);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    /* Subagent 3-Column Grid */
+    .subagent-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 800px) {
+      .subagent-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .subagent-card {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-300);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .subagent-card.hds {
+      border-top: 4px solid var(--blue-600);
+    }
+
+    .subagent-card.brand {
+      border-top: 4px solid var(--orange-600);
+    }
+
+    .subagent-card.surface {
+      border-top: 4px solid var(--emerald-600);
+    }
+
+    .subagent-header {
+      border-bottom: 1px solid var(--slate-200);
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+
+    .subagent-header h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy-900);
+    }
+
+    .subagent-header span {
+      font-size: 11px;
+      color: var(--slate-500);
+      font-weight: 600;
+    }
+
+    .item-list {
+      list-style: none;
+      font-size: 12px;
+      color: var(--slate-700);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .item-list li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .item-badge-have {
+      color: var(--emerald-700);
+      font-weight: 700;
+      font-size: 10px;
+    }
+
+    .item-badge-need {
+      color: var(--amber-700);
+      font-weight: 700;
+      font-size: 10px;
+    }
+
+    .style-guide-branch {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      margin-top: 8px;
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    .style-guide-branch strong {
+      color: var(--orange-600);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* FRE UI Kit Lateral Container */
+    .fre-lateral-bar {
+      background: var(--blue-50);
+      border: 1px solid var(--blue-600);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .fre-tag {
+      background: var(--blue-600);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 11px;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+    }
+
+    .fre-details {
+      font-size: 11px;
+      color: var(--navy-900);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .fre-details span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Governance Subagent Firewall Box */
+    .governance-firewall {
+      background: var(--rose-50);
+      border: 2px solid var(--rose-600);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .governance-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--rose-200);
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+    }
+
+    .governance-header h3 {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--rose-700);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .gov-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .gov-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .gov-item {
+      background: #ffffff;
+      border: 1px solid var(--rose-200);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      font-size: 11px;
+      color: var(--slate-800);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .gov-item-num {
+      background: var(--rose-100);
+      color: var(--rose-700);
+      font-weight: 800;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .human-reviewer-node {
+      background: var(--navy-900);
+      color: #ffffff;
+      text-align: center;
+      padding: 12px;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border: 2px solid var(--slate-400);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    /* Right Frame: Lifecycle & Prototyping Pipeline */
+    .pipeline-boundary-box {
+      background: #ffffff;
+      border: 2px solid var(--slate-300);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .company-brain-banner {
+      background: var(--orange-50);
+      border: 2px dashed var(--orange-600);
+      border-radius: var(--radius-lg);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .company-brain-banner h3 {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--orange-600);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .company-brain-banner p {
+      font-size: 11px;
+      color: var(--slate-700);
+    }
+
+    /* Stepper Nodes */
+    .step-card {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      position: relative;
+    }
+
+    .step-card-header {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--blue-600);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    .step-card h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy-900);
+    }
+
+    .step-card p {
+      font-size: 11px;
+      color: var(--slate-600);
+      margin-top: 4px;
+    }
+
+    .workbench-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .workbench-item {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      padding: 6px 10px;
+      font-size: 11px;
+      color: var(--slate-700);
+      font-weight: 500;
+    }
+
+    /* Prototype Box with 4 Candidate Tracks */
+    .prototype-engine-box {
+      background: var(--amber-50);
+      border: 2px solid var(--amber-600);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+    }
+
+    .prototype-engine-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--amber-200);
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+
+    .prototype-engine-header h4 {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--amber-700);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .tracks-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .track-card {
+      background: #ffffff;
+      border: 1px solid var(--amber-300);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      font-size: 11px;
+    }
+
+    .track-card strong {
+      display: block;
+      color: var(--navy-900);
+      margin-bottom: 2px;
+    }
+
+    .track-card span {
+      color: var(--slate-600);
+      font-size: 10px;
+    }
+
+    /* Review & Delivery Pipeline */
+    .dual-review-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .review-pill {
+      background: var(--slate-100);
+      border: 1px solid var(--slate-300);
+      border-radius: var(--radius-md);
+      padding: 10px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--navy-900);
+    }
+
+    .ship-stepper {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--slate-600);
+    }
+
+    .ship-step-active {
+      color: var(--emerald-700);
+    }
+
+    .jira-output-box {
+      background: var(--emerald-50);
+      border: 2px solid var(--emerald-600);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      text-align: center;
+      color: var(--emerald-700);
+    }
+
+    .jira-output-box strong {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: block;
+    }
+
+    .jira-output-box span {
+      font-size: 11px;
+      color: var(--slate-600);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Masthead Header -->
+  <header class="header-bar">
+    <div class="header-title-group">
+      <h1>Hearst Design Agent System Architecture</h1>
+      <p>Transcribed engineering whiteboard model: Multi-Subagent Orchestration &amp; End-to-End Product-to-Jira Delivery Pipeline</p>
+    </div>
+    <div class="header-badges">
+      <span class="badge-pill badge-have">● HAVE: Implemented</span>
+      <span class="badge-pill badge-need">○ NEED: Pattern Library</span>
+      <span class="badge-pill badge-brain">🧠 Company Brain Active</span>
+    </div>
+  </header>
+
+  <!-- Main Architecture Diagram Canvas -->
+  <main class="diagram-canvas">
+
+    <!-- ════════════════════ LEFT COLUMN: DESIGN AGENT ENGINE ════════════════════ -->
+    <section class="agent-boundary-box" aria-label="Design Agent Architecture">
+      <div class="agent-tag-header">
+        <h2>DESIGN AGENT (Multi-Subagent Engine)</h2>
+        <span class="badge-pill badge-have">HDS Co-Pilot</span>
+      </div>
+
+      <!-- Top Intake Gateway -->
+      <div class="intake-root-node">
+        <span>⚡ Context + Intake Gateway</span>
+      </div>
+
+      <!-- FRE UI Kit Layer -->
+      <div class="fre-lateral-bar">
+        <span class="fre-tag">FRE UI KIT</span>
+        <div class="fre-details">
+          <span>• <strong>ShadCN Base</strong></span>
+          <span>• <strong>Base UI FX</strong> (Interactivity / A11y)</span>
+          <span>• <strong>Token Reactivity</strong></span>
+          <span>• <strong>Tailwind Delivery System</strong></span>
+          <span>• <strong>Editorial Modes:</strong> Slim, Search-Heavy, Standard, Mega Menu</span>
+        </div>
+      </div>
+
+      <!-- 3-Subagent Domain Fan-Out -->
+      <div class="subagent-grid">
+        <!-- 1. HDS Subagent -->
+        <div class="subagent-card hds">
+          <div>
+            <div class="subagent-header">
+              <h3>HDS Subagent</h3>
+              <span>System Foundations</span>
+            </div>
+            <ul class="item-list">
+              <li>
+                <span>① Whitelabel Tokens</span>
+                <span class="item-badge-have">● HAVE</span>
+              </li>
+              <li>
+                <span>② Existing Components</span>
+                <span class="item-badge-have">● HAVE</span>
+              </li>
+              <li>
+                <span>③ Extended Components</span>
+                <span class="item-badge-have">● HAVE</span>
+              </li>
+              <li>
+                <span>④ Pattern Library</span>
+                <span class="item-badge-need">○ NEED</span>
+              </li>
+              <li>
+                <span>⑤ Interaction / Motion</span>
+                <span class="item-badge-have">● HAVE</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 2. Brand Subagent -->
+        <div class="subagent-card brand">
+          <div>
+            <div class="subagent-header">
+              <h3>Brand Subagent</h3>
+              <span>Storybook &amp; Identity</span>
+            </div>
+            <ul class="item-list">
+              <li>
+                <span>① Strategy - MKT</span>
+                <span class="item-badge-have">● HAVE</span>
+              </li>
+            </ul>
+
+            <div class="style-guide-branch">
+              <strong>② Style Guide (7 Sub-dims):</strong>
+              <div>↳ Typography &bull; Color</div>
+              <div>↳ Photography &bull; Voice/Tone</div>
+              <div>↳ CTAs &bull; Space &bull; Iconography</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Surface Subagent -->
+        <div class="subagent-card surface">
+          <div>
+            <div class="subagent-header">
+              <h3>Surface Subagent</h3>
+              <span>Channels &amp; Distribution</span>
+            </div>
+            <ul class="item-list">
+              <li><span>&bull; Newsletters</span></li>
+              <li><span>&bull; Websites &amp; Portals</span></li>
+              <li><span>&bull; Native Apps</span></li>
+              <li><span>&bull; Checkout &amp; 3PP Funnels</span></li>
+              <li><span>&bull; 3rd Party Platforms</span></li>
+              <li><span>&bull; Ads &amp; Video (16:9 / 9:16) *</span></li>
+              <li><span>&bull; Interruptions, Alerts, Popups</span></li>
+              <li><span>&bull; Sticky UI / Toolbars</span></li>
+              <li><span>&bull; Commerce &amp; Lift *</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Governance Subagent 8-Point Compliance Firewall -->
+      <div class="governance-firewall">
+        <div class="governance-header">
+          <h3>Governance Subagent (8-Point Quality Gate)</h3>
+          <span class="badge-pill badge-have">Automated Firewall</span>
+        </div>
+
+        <div class="gov-grid">
+          <div class="gov-item">
+            <span class="gov-item-num">1</span>
+            <div><strong>Accessibility</strong>: WCAG AA contrast &ge; 4.5:1, keyboard traps</div>
+          </div>
+          <div class="gov-item">
+            <span class="gov-item-num">2</span>
+            <div><strong>Mobile First</strong>: Touch targets &ge; 44px, responsive density</div>
+          </div>
+          <div class="gov-item">
+            <span class="gov-item-num">3</span>
+            <div><strong>Versioning</strong>: Style Dictionary schema, zero hardcoded hex</div>
+          </div>
+          <div class="gov-item">
+            <span class="gov-item-num">4</span>
+            <div><strong>Realistic Content Check</strong>: NO LOREM IPSUM, NO GRAY BOXES</div>
+          </div>
+          <div class="gov-item">
+            <span class="gov-item-num">5</span>
+            <div><strong>Character Limits</strong>: 3-line max headline clamping with ellipsis</div>
+          </div>
+          <div class="gov-item">
+            <span class="gov-item-num">6</span>
+            <div><strong>Ad Ratio Guardrails</strong>: Non-interruptive feed density</div>
+          </div>
+          <div class="gov-item">
+            <span class="gov-item-num">7</span>
+            <div><strong>CLS &amp; Performance</strong>: Aspect ratio media containers</div>
+          </div>
+          <div class="gov-item">
+            <span class="gov-item-num">8</span>
+            <div><strong>SEO + A11Y</strong>: Semantic landmarks, OpenGraph, JSON-LD</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Human Reviewer Output Node -->
+      <div class="human-reviewer-node">
+        <span>👤 Human Reviewer (Design &amp; Tech Sign-Off)</span>
+      </div>
+    </section>
+
+    <!-- ════════════════════ RIGHT COLUMN: SDLC LIFECYCLE ════════════════════ -->
+    <section class="pipeline-boundary-box" aria-label="Product to Production Lifecycle">
+      
+      <!-- Company Brain Banner -->
+      <div class="company-brain-banner">
+        <div>
+          <h3>Company Brain</h3>
+          <p>Wiki of skills &bull; LLM managing &bull; Cross-disciplinary knowledge vault</p>
+        </div>
+        <span class="badge-pill badge-brain">Memory Layer</span>
+      </div>
+
+      <!-- Step 1: User / Business Discovery -->
+      <div class="step-card">
+        <div class="step-card-header">Step 01 &bull; Discovery</div>
+        <h4>User / Business Needs &rarr; North Stars &rarr; Roadmap &rarr; Problem / JTBD</h4>
+        <p>Strategic alignment on user problems, business outcomes, and key opportunities.</p>
+      </div>
+
+      <!-- Step 2: Workbench & Design Constitution -->
+      <div class="step-card">
+        <div class="step-card-header">Step 02 &bull; Strategy Workbench</div>
+        <h4>Strategy Synthesis &amp; Design Constitution (.md)</h4>
+        <div class="workbench-grid">
+          <div class="workbench-item">&bull; Comp Analysis</div>
+          <div class="workbench-item">&bull; Data Reporting</div>
+          <div class="workbench-item">&bull; Integrations / Services</div>
+          <div class="workbench-item">&bull; Research &amp; User Needs</div>
+        </div>
+        <p style="margin-top: 8px;"><strong>Design Constitution (.md):</strong> DX Laws, Principles, Editorial Guardrails.</p>
+      </div>
+
+      <!-- Step 3: PRD -->
+      <div class="step-card">
+        <div class="step-card-header">Step 03 &bull; PRD Alignment</div>
+        <h4>Product Requirements Document (PRD)</h4>
+        <p>&bull; Benchmark Metrics &bull; OKRs &bull; Design Review Gates &bull; Eng Reward Criteria &bull; Scope Estimate</p>
+      </div>
+
+      <!-- Step 4: Prototype Engine (Calls Design Agent) -->
+      <div class="prototype-engine-box">
+        <div class="prototype-engine-header">
+          <h4>PROTOTYPE (Calls Design Agent)</h4>
+          <span class="badge-pill badge-have">4 Tracks</span>
+        </div>
+
+        <div class="tracks-grid">
+          <div class="track-card">
+            <strong>Track 1: Exploratory UX - 01</strong>
+            <span>Multi-layout variations (Curator, Mosaic, Stream).</span>
+          </div>
+          <div class="track-card">
+            <strong>Track 2: Branded Concept</strong>
+            <span>29+ brand token applications with photography.</span>
+          </div>
+          <div class="track-card">
+            <strong>Track 3: Tech Spike</strong>
+            <span>Benchmarks &amp; adaptive video streaming (HLS/MP4).</span>
+          </div>
+          <div class="track-card">
+            <strong>Track 4: Delivery Candidate</strong>
+            <span>Production-ready TypeScript with 0 lint errors.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5: Dual Review -->
+      <div class="dual-review-box">
+        <div class="review-pill">
+          🎨 Designer Review
+          <span style="display:block; font-size:10px; font-weight:normal; color:var(--slate-500); margin-top:2px;">Aesthetics &amp; Editorial Pacing</span>
+        </div>
+        <div class="review-pill">
+          ⚙️ Engineering Review
+          <span style="display:block; font-size:10px; font-weight:normal; color:var(--slate-500); margin-top:2px;">TypeScript &amp; Bundle Size</span>
+        </div>
+      </div>
+
+      <!-- Step 6: User Validation -> Build -> UAT -> Ship -->
+      <div class="ship-stepper">
+        <span class="ship-step-active">User Validation</span>
+        <span>&rarr;</span>
+        <span class="ship-step-active">Build</span>
+        <span>&rarr;</span>
+        <span class="ship-step-active">UAT Review</span>
+        <span>&rarr;</span>
+        <span class="ship-step-active">Ship</span>
+      </div>
+
+      <!-- Step 7: Jira Execution -->
+      <div class="jira-output-box">
+        <strong>Intake Approved &rarr; Scoped by 3 Disciplines</strong>
+        <span>Design Lead + Product Manager + Tech Lead &rarr; Production Jira Tickets</span>
+      </div>
+
+    </section>
+
+  </main>
+
+</body>
+</html>
