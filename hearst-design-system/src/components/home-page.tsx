@@ -311,6 +311,13 @@ export interface HomePageTemplateProps {
   staticDestinationData?: HearstDestinationStaticData;
   globalBrandInventory?: Record<string, number>;
   onboardingBrandInventory?: Record<string, number>;
+  /**
+   * Force the destination-river layout (with the modal story reader + infinite
+   * scroll) even when the active brand is a single publication rather than a
+   * destination. Used by the single-brand destinations so an individual brand
+   * gets the Hearst+ river experience instead of the classic magazine grid.
+   */
+  forceDestinationRiver?: boolean;
 }
 
 interface ProgressiveFeedPage {
@@ -6340,6 +6347,7 @@ export function HomePageTemplate({
   staticDestinationData,
   globalBrandInventory,
   onboardingBrandInventory,
+  forceDestinationRiver = false,
 }: HomePageTemplateProps = {}) {
   const { brand, colorMode } = useTheme();
   const { account } = useReaderAccount();
@@ -6423,7 +6431,7 @@ export function HomePageTemplate({
     [colorMode, selectedBrand?.slug, selectedBrandCssVars]
   );
   const destinationContentRef = React.useRef<HTMLDivElement | null>(null);
-  const isDestinationRiver = brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
+  const isDestinationRiver = forceDestinationRiver || brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
   const isDelishOnboardingRoute = selectedBrand?.slug === "delish";
   const isMotorTrendOnboardingRoute = selectedBrand?.slug === "motortrend";
   const publicationOnboardingBrandSlug = isPublicationOnboardingBrandSlug(selectedBrand?.slug)
