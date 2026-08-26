@@ -2640,6 +2640,7 @@ function LifestyleStoryReaderModal({
   followedBrands,
   commentsByStoryId,
   readerReturnHref,
+  singleBrandSlug,
   initialLiveArticle,
   returnFocusElementRef,
   initialOpenAmbientReader = false,
@@ -2658,6 +2659,8 @@ function LifestyleStoryReaderModal({
   followedBrands: string[];
   commentsByStoryId: Record<string, LifestyleStoryComment[]>;
   readerReturnHref?: string;
+  /** When set, the reader's brand-switcher row is scoped to just this brand. */
+  singleBrandSlug?: string;
   initialLiveArticle?: LiveArticleData;
   returnFocusElementRef: React.RefObject<HTMLElement | null>;
   initialOpenAmbientReader?: boolean;
@@ -2950,7 +2953,9 @@ function LifestyleStoryReaderModal({
       } as React.CSSProperties
     : undefined;
   const isReaderOpen = Boolean(openStoryId);
-  const readerSectionBrands = readerDestinationConfig.sourceNotes;
+  const readerSectionBrands = singleBrandSlug
+    ? readerDestinationConfig.sourceNotes.filter((note) => note.brandSlug === singleBrandSlug)
+    : readerDestinationConfig.sourceNotes;
   const readerMastheadNavItems = usePublicationTheme
     ? readerSectionBrands.map((brand) => ({
         type: "brand" as const,
@@ -5372,6 +5377,7 @@ function LifestyleRiverHomePage({
             followedBrands={profile.followedBrands}
             commentsByStoryId={resolvedCommentsByStoryId}
             readerReturnHref={storyOpenReturnHref}
+            singleBrandSlug={singleBrandName ? initialBrandSlug : undefined}
             initialLiveArticle={openStoryId === initialOpenStoryId ? initialLiveArticle : undefined}
             returnFocusElementRef={readerReturnFocusElementRef}
             initialOpenAmbientReader={initialOpenAmbientReader}
@@ -5577,6 +5583,7 @@ function LifestyleRiverHomePage({
             followedBrands={profile.followedBrands}
             commentsByStoryId={resolvedCommentsByStoryId}
             readerReturnHref={storyOpenReturnHref}
+            singleBrandSlug={singleBrandName ? initialBrandSlug : undefined}
             initialLiveArticle={openStoryId === initialOpenStoryId ? initialLiveArticle : undefined}
             returnFocusElementRef={readerReturnFocusElementRef}
             initialOpenAmbientReader={initialOpenAmbientReader}
@@ -6106,6 +6113,7 @@ function LifestyleRiverHomePage({
           followedBrands={profile.followedBrands}
           commentsByStoryId={resolvedCommentsByStoryId}
           readerReturnHref={storyOpenReturnHref}
+            singleBrandSlug={singleBrandName ? initialBrandSlug : undefined}
           initialLiveArticle={openStoryId === initialOpenStoryId ? initialLiveArticle : undefined}
           returnFocusElementRef={readerReturnFocusElementRef}
           initialOpenAmbientReader={initialOpenAmbientReader}
