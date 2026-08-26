@@ -59,6 +59,11 @@ const defaultProductLinkGroups: SiteFooterLinkGroup[] = [
       { label: "Lifestyle Live", href: "/hearst-plus/lifestyle-live/" },
       { label: "Autos Videos", href: "/hearst-plus/motortrend-videos/" },
       { label: "HOT ROD Events", href: "/autos/hot-rod/events/" },
+      { label: "Single-brand home", href: "/single-brand/delish/" },
+      {
+        label: "Single-brand article",
+        href: "/single-brand/delish/article/delish-food-news-a73504555-sonic-banana-and-hotumn-menus/",
+      },
     ],
   },
 ];
