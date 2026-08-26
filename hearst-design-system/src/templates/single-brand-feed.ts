@@ -8,8 +8,8 @@
  * instead of "HEARST+". The article experience is the template's built-in
  * modal reader with infinite "up next" scroll.
  */
-import { lifestyleRiverStories } from "@/components/lifestyle-river-data";
 import { getBrandLogoSrc, getBrandLogoLabel } from "@/lib/logos";
+import { getPersonalizeLiveFeed } from "@/lib/personalize-live-feed";
 import type { LiveFeedData } from "@/lib/live-feed-types";
 
 /** Pilot cohort of single-brand destinations. */
@@ -27,26 +27,20 @@ export function getSingleBrandName(slug: string): string | undefined {
   return SINGLE_BRANDS.find((b) => b.slug === slug)?.name;
 }
 
-/** Build a single-brand LiveFeedData from the real lifestyle feed. */
-export function getSingleBrandLiveFeed(slug: string): LiveFeedData {
-  const stories = lifestyleRiverStories.filter((s) => s.brandSlug === slug);
-  const brandName = getSingleBrandName(slug) ?? stories[0]?.brand ?? slug;
-  return {
-    stories,
-    sourceNotes: [
-      {
-        brand: brandName,
-        brandSlug: slug,
-        feedCount: 1,
-        importedCount: stories.length,
-        selectedCount: stories.length,
-      },
-    ],
-    dataSourceCopy: `${brandName} RSS metadata (titles, links, summaries, images).`,
-    fetchedAt: new Date().toISOString(),
-    isFallback: false,
-    productName: `${brandName} Live`,
-  };
+/**
+ * Fetch a single-brand LiveFeedData from the Personalize live feed, scoped to
+ * one brand. `getPersonalizeLiveFeed` handles the network call and, if the
+ * Personalize API is unavailable, falls back to the local static snapshot
+ * filtered to the same brand — so this always resolves to brand-scoped stories.
+ */
+export async function getSingleBrandLiveFeed(slug: string): Promise<LiveFeedData> {
+  const brandName = getSingleBrandName(slug) ?? slug;
+  const feed = await getPersonalizeLiveFeed({
+    destination: "lifestyle",
+    brandSlug: slug,
+    sizePerBrand: 24,
+  });
+  return { ...feed, productName: `${brandName} Live` };
 }
 
 /** Masthead override so the template shows the brand logo, not "HEARST+". */

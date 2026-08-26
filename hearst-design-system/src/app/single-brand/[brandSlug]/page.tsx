@@ -31,11 +31,13 @@ export default async function SingleBrandHomePage({ params }: PageProps) {
   const { brandSlug } = await params;
   if (!isSingleBrand(brandSlug)) notFound();
 
+  const liveFeedData = await getSingleBrandLiveFeed(brandSlug);
+
   return (
     <ThemeProvider defaultBrandSlug={brandSlug} persistColorMode={false}>
       <HomePageTemplate
         initialBrandSlug={brandSlug}
-        liveFeedData={getSingleBrandLiveFeed(brandSlug)}
+        liveFeedData={liveFeedData}
         liveFeedMode="replace"
         mastheadLogoOverride={getSingleBrandMasthead(brandSlug)}
         staticDestinationData={getHearstDestinationStaticData()}

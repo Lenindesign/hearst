@@ -19,7 +19,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { brandSlug, storyId } = await params;
   const name = getSingleBrandName(brandSlug);
   if (!name) return { title: "Not found" };
-  const story = getSingleBrandLiveFeed(brandSlug).stories.find((s) => s.id === storyId);
+  const feed = await getSingleBrandLiveFeed(brandSlug);
+  const story = feed.stories.find((s) => s.id === storyId);
   return { title: story ? `${story.title} — ${name}` : name };
 }
 
@@ -27,8 +28,11 @@ export default async function SingleBrandArticlePage({ params }: PageProps) {
   const { brandSlug, storyId } = await params;
   if (!isSingleBrand(brandSlug)) notFound();
 
-  const feed = getSingleBrandLiveFeed(brandSlug);
-  if (!feed.stories.some((s) => s.id === storyId)) notFound();
+  const feed = await getSingleBrandLiveFeed(brandSlug);
+  // Degrade gracefully: with the live feed, story ids are dynamic, so a shared
+  // or stale deep-link may not be in the current feed. Rather than 404, open
+  // the reader only when the story is present; otherwise render the brand home.
+  const hasStory = feed.stories.some((s) => s.id === storyId);
 
   // Reuse the Hearst+ template but open its built-in modal reader (with infinite
   // "up next" scroll) directly on this story — the article "template".
@@ -40,7 +44,7 @@ export default async function SingleBrandArticlePage({ params }: PageProps) {
         liveFeedMode="replace"
         mastheadLogoOverride={getSingleBrandMasthead(brandSlug)}
         staticDestinationData={getHearstDestinationStaticData()}
-        initialOpenStoryId={storyId}
+        initialOpenStoryId={hasStory ? storyId : undefined}
         readerReturnHref={`/single-brand/${brandSlug}`}
         forceDestinationRiver
         singleBrandName={getSingleBrandName(brandSlug)}
