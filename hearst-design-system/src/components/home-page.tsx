@@ -416,6 +416,20 @@ function appendStakeholderDemoMode(path: string, enabled: boolean) {
   return `${url.pathname}${url.search}${url.hash}`;
 }
 
+/**
+ * Reader URL for a story. In single-brand mode the reader opens contextually at
+ * the single-brand article route (`/single-brand/{slug}/article/{id}`) so the
+ * URL and chrome stay within the brand; otherwise it uses the shared /read route.
+ */
+function buildReaderStoryHref(
+  storyId: string,
+  returnHref: string | null,
+  singleBrandSlug?: string,
+) {
+  if (singleBrandSlug) return `/single-brand/${singleBrandSlug}/article/${storyId}`;
+  return appendReaderReturnHref(storyId, returnHref);
+}
+
 const DestinationConfigsContext = React.createContext(baseDestinationConfigs);
 const emptyJoinedBrandGroups: string[] = [];
 let joinedBrandGroupsSnapshotRaw: string | null = null;
@@ -3363,7 +3377,7 @@ function LifestyleStoryReaderModal({
           hearstReaderStory: nextStoryId,
         },
         "",
-        appendReaderReturnHref(nextStoryId, readerReturnHref ?? null)
+        buildReaderStoryHref(nextStoryId, readerReturnHref ?? null, singleBrandSlug)
       );
     };
 
@@ -3380,7 +3394,7 @@ function LifestyleStoryReaderModal({
       observer.disconnect();
       root.removeEventListener("scroll", updateActiveReaderRoute);
     };
-  }, [openStoryId, readerReturnHref, visibleReaderStoryIds, visibleReaderStories.length]);
+  }, [openStoryId, readerReturnHref, singleBrandSlug, visibleReaderStoryIds, visibleReaderStories.length]);
 
   React.useEffect(() => {
     const root = scrollRef.current;
@@ -4339,8 +4353,11 @@ function LifestyleRiverHomePage({
       storyOpenReturnHref,
       readerRiverReturnContextRef.current?.storyIds ?? displayStoryIdsRef.current
     );
-    router.push(appendReaderReturnHref(storyId, storyOpenReturnHref), { scroll: false });
-  }, [rememberReaderRiverReturnContext, rememberSessionContinueReadingStory, router, setOpenStoryId, storyOpenReturnHref]);
+    router.push(
+      buildReaderStoryHref(storyId, storyOpenReturnHref, singleBrandName ? initialBrandSlug : undefined),
+      { scroll: false },
+    );
+  }, [initialBrandSlug, rememberReaderRiverReturnContext, rememberSessionContinueReadingStory, router, setOpenStoryId, singleBrandName, storyOpenReturnHref]);
 
   const switchReaderStory = React.useCallback((storyId: string) => {
     recordStoryOpened(storyId);
@@ -4353,10 +4370,10 @@ function LifestyleRiverHomePage({
           hearstReaderStory: storyId,
         },
         "",
-        appendReaderReturnHref(storyId, storyOpenReturnHref)
+        buildReaderStoryHref(storyId, storyOpenReturnHref, singleBrandName ? initialBrandSlug : undefined)
       );
     }
-  }, [rememberSessionContinueReadingStory, setOpenStoryId, storyOpenReturnHref]);
+  }, [initialBrandSlug, rememberSessionContinueReadingStory, setOpenStoryId, singleBrandName, storyOpenReturnHref]);
 
   const closeStory = React.useCallback(() => {
     const closingStoryId = openStoryId;
