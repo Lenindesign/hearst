@@ -6016,7 +6016,7 @@ function LifestyleRiverHomePage({
         </main>
 
         <aside className="min-w-0 space-y-5 lg:sticky lg:top-[108px] lg:max-h-[calc(100dvh-132px)] lg:self-start lg:overflow-y-auto lg:pr-1">
-          {!singleBrandName && <ContextualRiverAdvertisement ad={rightRailAd} />}
+          <ContextualRiverAdvertisement ad={rightRailAd} />
           {!singleBrandName && <LocalNewsRail />}
           {showStakeholderTools ? (
             <>

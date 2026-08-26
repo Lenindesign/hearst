@@ -212,7 +212,7 @@ export function DelishClubsModule({
 
   return (
     <section
-      className="overflow-hidden rounded-[8px] border border-[var(--delish-club-border)] bg-[var(--delish-club-shell)] text-[var(--delish-club-ink)] shadow-[var(--hp-shadow-card)]"
+      className="@container overflow-hidden rounded-[8px] border border-[var(--delish-club-border)] bg-[var(--delish-club-shell)] text-[var(--delish-club-ink)] shadow-[var(--hp-shadow-card)]"
       aria-labelledby="delish-clubs-title"
       style={
         {
@@ -228,7 +228,7 @@ export function DelishClubsModule({
         } as React.CSSProperties
       }
     >
-      <div className="grid gap-5 p-4 sm:p-5 lg:grid-cols-[minmax(0,1fr)_minmax(260px,0.54fr)] lg:items-start">
+      <div className="grid gap-5 p-4 sm:p-5 @3xl:grid-cols-[minmax(0,1fr)_minmax(240px,0.5fr)] @3xl:items-start">
         <div>
           <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--delish-club-red)]">
             Delish Groups
@@ -252,7 +252,7 @@ export function DelishClubsModule({
                 : "border-[var(--delish-club-border)]",
             )}
           >
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+            <div className="flex flex-col gap-4 @sm:flex-row @sm:items-start">
               <span className="flex size-12 shrink-0 items-center justify-center rounded-[8px] bg-[var(--delish-club-red-soft)] text-[var(--delish-club-red)]">
                 <FeaturedIcon className="size-5" aria-hidden />
               </span>
