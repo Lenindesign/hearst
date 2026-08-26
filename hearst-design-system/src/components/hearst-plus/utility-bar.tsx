@@ -106,6 +106,8 @@ export interface UtilityBarProps {
   onLocalNewsSelect?: () => void;
   activeDestinationOverride?: string;
   darkMode?: boolean;
+  /** Hide the cross-destination switcher (All/Lifestyle/Autos/…) — used by single-brand destinations. */
+  hideDestinationNav?: boolean;
 }
 
 export function UtilityBar({
@@ -114,6 +116,7 @@ export function UtilityBar({
   onOpenProfile,
   activeDestinationOverride,
   darkMode = false,
+  hideDestinationNav = false,
 }: UtilityBarProps) {
   const { brand } = useTheme();
   const { account } = useReaderAccount();
@@ -206,6 +209,7 @@ export function UtilityBar({
             </LinkComponent>
           ))}
         </nav>
+        {!hideDestinationNav && (
         <nav
           ref={destinationNavRef}
           className="flex min-w-0 items-center justify-start overflow-x-auto [scrollbar-width:none] sm:justify-center [&::-webkit-scrollbar]:hidden"
@@ -264,6 +268,7 @@ export function UtilityBar({
             })}
           </div>
         </nav>
+        )}
         <div className="flex shrink-0 items-center gap-2">
           <Button
             variant="secondary"

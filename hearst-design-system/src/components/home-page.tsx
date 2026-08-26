@@ -7126,6 +7126,7 @@ export function HomePageTemplate({
         onLocalNewsSelect={handleLocalNewsSelect}
         activeDestinationOverride={useLocalNewsRiver ? localNewsFilter : undefined}
         darkMode={useVideosDarkHeader}
+        hideDestinationNav={Boolean(singleBrandName)}
       />
 
       {/* Main Nav — full width background, content constrained */}
