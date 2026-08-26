@@ -43,6 +43,7 @@ export default async function SingleBrandArticlePage({ params }: PageProps) {
         initialOpenStoryId={storyId}
         readerReturnHref={`/single-brand/${brandSlug}`}
         forceDestinationRiver
+        singleBrandName={getSingleBrandName(brandSlug)}
       />
     </ThemeProvider>
   );

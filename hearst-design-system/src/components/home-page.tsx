@@ -318,6 +318,12 @@ export interface HomePageTemplateProps {
    * gets the Hearst+ river experience instead of the classic magazine grid.
    */
   forceDestinationRiver?: boolean;
+  /**
+   * When set, the river renders in single-brand mode: the discovery sidebar's
+   * trending rail is titled "Trending in {name}" and cross-brand modules
+   * (brand promotions, local-news rail, cross-brand studio ad) are suppressed.
+   */
+  singleBrandName?: string;
 }
 
 interface ProgressiveFeedPage {
@@ -4036,6 +4042,7 @@ type LifestyleRiverHomePageProps = {
   destination: DestinationMode;
   destinationConfig?: DestinationConfig;
   videoFeedData?: LiveFeedData;
+  singleBrandName?: string;
   initialBrandSlug?: string;
   initialOpenStoryId?: string;
   initialLiveArticle?: LiveArticleData;
@@ -4103,6 +4110,7 @@ function LifestyleRiverHomePage({
   destination,
   destinationConfig,
   videoFeedData,
+  singleBrandName,
   initialBrandSlug,
   initialOpenStoryId,
   initialLiveArticle,
@@ -5708,6 +5716,7 @@ function LifestyleRiverHomePage({
           topStories={moduleAllocation.dailyHabitStories}
           savedStories={savedStoryInventory}
           trendingStories={moduleAllocation.trendingStories}
+          trendingTitle={singleBrandName ? `Trending in ${singleBrandName}` : undefined}
           topics={sidebarTopics}
           brands={sidebarBrands}
           communityBrandSlug={initialBrandSlug === "elle" ? "elle" : undefined}
@@ -5783,7 +5792,9 @@ function LifestyleRiverHomePage({
 
                 return riverStories.map((story, index) => {
                 const storyPosition = index + heroStories.length + 1;
-                const shouldShowFeedModule = storyPosition % 5 === 0;
+                // Single-brand mode shows a clean brand river — no cross-brand
+                // sponsor/promo/ad modules interleaved.
+                const shouldShowFeedModule = !singleBrandName && storyPosition % 5 === 0;
                 const moduleSlotNumber = storyPosition / 5;
                 const shouldShowBrandPromotion = shouldShowFeedModule && moduleSlotNumber % 2 === 0;
                 const shouldUseAEFamilyPromotion = shouldShowBrandPromotion
@@ -5998,8 +6009,8 @@ function LifestyleRiverHomePage({
         </main>
 
         <aside className="min-w-0 space-y-5 lg:sticky lg:top-[108px] lg:max-h-[calc(100dvh-132px)] lg:self-start lg:overflow-y-auto lg:pr-1">
-          <ContextualRiverAdvertisement ad={rightRailAd} />
-          <LocalNewsRail />
+          {!singleBrandName && <ContextualRiverAdvertisement ad={rightRailAd} />}
+          {!singleBrandName && <LocalNewsRail />}
           {showStakeholderTools ? (
             <>
               <div className="rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-4 shadow-[var(--hp-shadow-card)]">
@@ -6348,6 +6359,7 @@ export function HomePageTemplate({
   globalBrandInventory,
   onboardingBrandInventory,
   forceDestinationRiver = false,
+  singleBrandName,
 }: HomePageTemplateProps = {}) {
   const { brand, colorMode } = useTheme();
   const { account } = useReaderAccount();
@@ -7207,6 +7219,7 @@ export function HomePageTemplate({
                 destination={destinationMode}
                 destinationConfig={inventoryAwareDestinationConfig}
                 videoFeedData={resolvedVideoFeedData}
+                singleBrandName={singleBrandName}
                 initialBrandSlug={initialBrandSlug}
                 initialOpenStoryId={initialOpenStoryId}
                 initialLiveArticle={initialLiveArticle}

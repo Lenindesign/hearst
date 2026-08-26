@@ -26,6 +26,8 @@ export interface LifestyleDiscoverySidebarProps {
   topStories: LifestyleRiverStory[];
   savedStories?: LifestyleRiverStory[];
   trendingStories?: LifestyleRiverStory[];
+  /** Heading for the trending rail. Defaults to "Trending Across Brands"; single-brand mode passes "Trending in {Brand}". */
+  trendingTitle?: string;
   topics: { name: string; count: number }[];
   brands: { name: string; slug: string; count: number }[];
   brandFilterTitle?: string;
@@ -142,6 +144,7 @@ export function LifestyleDiscoverySidebar({
   topStories,
   savedStories: savedStoryInventory = topStories,
   trendingStories,
+  trendingTitle = "Trending Across Brands",
   brands,
   brandFilterTitle = "Join Groups",
   communityBrandSlug,
@@ -205,7 +208,7 @@ export function LifestyleDiscoverySidebar({
     <TrendingStoryRail
       stories={trendingStories.slice(0, 3)}
       onOpenStory={onOpenStory}
-      title="Trending Across Brands"
+      title={trendingTitle}
       className="hidden lg:block"
     />
   ) : (

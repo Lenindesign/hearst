@@ -40,6 +40,7 @@ export default async function SingleBrandHomePage({ params }: PageProps) {
         mastheadLogoOverride={getSingleBrandMasthead(brandSlug)}
         staticDestinationData={getHearstDestinationStaticData()}
         forceDestinationRiver
+        singleBrandName={getSingleBrandName(brandSlug)}
       />
     </ThemeProvider>
   );
