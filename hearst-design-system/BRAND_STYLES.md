@@ -33,15 +33,15 @@ Do not edit generated TypeScript or CSS. For a publication, update its canonical
 
 The route names and internal theme slugs are intentionally different in two places. Use this map rather than inferring a theme from a URL.
 
-| Route | Destination mode | Theme slug |
-|---|---|---|
-| `/hearst-plus/` | All / Hearst+ | `hearst-all` |
-| `/hearst-lifestyle/` | Lifestyle | `hearst-lifestyle` |
-| `/hearst-autos/` | Autos | `hearst-plus` |
-| `/hearst-flux/` | Fashion & Luxury | `hearst-flux` |
-| `/hearst-ew/` | Enthusiast & Wellness | `hearst-ew` |
-| `/hearst-plus/local-news/` | Local News | `hearst-local-news` |
-| `/hearst-plus/entertainment/` | A&E Family | `hearst-entertainment` |
+| Route                         | Destination mode      | Theme slug             |
+| ----------------------------- | --------------------- | ---------------------- |
+| `/hearst-plus/`               | All / Hearst+         | `hearst-all`           |
+| `/hearst-lifestyle/`          | Lifestyle             | `hearst-lifestyle`     |
+| `/hearst-autos/`              | Autos                 | `hearst-plus`          |
+| `/hearst-flux/`               | Fashion & Luxury      | `hearst-flux`          |
+| `/hearst-ew/`                 | Enthusiast & Wellness | `hearst-ew`            |
+| `/hearst-plus/local-news/`    | Local News            | `hearst-local-news`    |
+| `/hearst-plus/entertainment/` | A&E Family            | `hearst-entertainment` |
 
 ## Native default style guide
 
