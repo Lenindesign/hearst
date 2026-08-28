@@ -1,1 +1,12 @@
-{}
+{
+  "userIgnoreFilters": [
+    "node_modules/",
+    ".next/",
+    "output/",
+    ".git/",
+    "hearst-design-system/node_modules/",
+    "hearst-design-system/.next/",
+    "hearst-design-system/output/"
+  ],
+  "showUnsupportedFiles": false
+}

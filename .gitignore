@@ -47,3 +47,8 @@ RESIN-VS-HEARST-DESIGN-SYSTEM-COMPARISON.md
 # Font sources
 hearst-design-system/fonts/
 hearst-design-system/sources/
+
+# Obsidian local UI state (churns constantly, per-user)
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/graph.json
