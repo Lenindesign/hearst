@@ -8,18 +8,18 @@
 
 ## Existing Stack (must be preserved)
 
-| Layer              | Current Technology            | Version   | Notes                                                                             |
-| ------------------ | ----------------------------- | --------- | --------------------------------------------------------------------------------- |
-| Language           | TypeScript                    | 5.x       | Strict mode (`strict: true`, target ES2017). Do not introduce JavaScript files.   |
-| Framework          | Next.js (App Router)          | 16.1.6    | RSC-first. Route handlers under `src/app/api/*`. Do not add another framework.    |
-| UI library         | React                         | 19.2.3    |                                                                                   |
-| Styling            | Tailwind CSS                  | v4        | Token-backed CSS variables. No CSS-in-JS.                                          |
-| Design tokens      | Style Dictionary              | 5.x       | Source of brand theming. `tokens:audit:ci` gate. Do not bypass.                   |
-| Component workshop | Storybook                     | 8.6.x     | Published alongside the app; also the test harness.                               |
-| Hosting            | Netlify                       | —         | Next via `@netlify/plugin-nextjs`. Persistence via Netlify Blobs. Not AWS.        |
-| Runtime            | Node.js                       | 22 (CI)   | No `engines` field pinned in `package.json`.                                      |
-| Test frameworks    | Vitest + Playwright           | 3.2.x     | Storybook stories run in Chromium via the Vitest browser project.                 |
-| Icons              | @phosphor-icons/react         | 2.x       | Use `/dist/ssr` entry in server components.                                       |
+| Layer              | Current Technology    | Version | Notes                                                                           |
+| ------------------ | --------------------- | ------- | ------------------------------------------------------------------------------- |
+| Language           | TypeScript            | 5.x     | Strict mode (`strict: true`, target ES2017). Do not introduce JavaScript files. |
+| Framework          | Next.js (App Router)  | 16.1.6  | RSC-first. Route handlers under `src/app/api/*`. Do not add another framework.  |
+| UI library         | React                 | 19.2.3  |                                                                                 |
+| Styling            | Tailwind CSS          | v4      | Token-backed CSS variables. No CSS-in-JS.                                       |
+| Design tokens      | Style Dictionary      | 5.x     | Source of brand theming. `tokens:audit:ci` gate. Do not bypass.                 |
+| Component workshop | Storybook             | 8.6.x   | Published alongside the app; also the test harness.                             |
+| Hosting            | Netlify               | —       | Next via `@netlify/plugin-nextjs`. Persistence via Netlify Blobs. Not AWS.      |
+| Runtime            | Node.js               | 22 (CI) | No `engines` field pinned in `package.json`.                                    |
+| Test frameworks    | Vitest + Playwright   | 3.2.x   | Storybook stories run in Chromium via the Vitest browser project.               |
+| Icons              | @phosphor-icons/react | 2.x     | Use `/dist/ssr` entry in server components.                                     |
 
 ---
 
