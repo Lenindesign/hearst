@@ -600,8 +600,13 @@ export function MainNav({
       ? destinationConfig.filters
       : content.navLinks);
   const uncappedNavLinks = (includeVideos ? insertVideosFilter(baseNavLinks) : baseNavLinks)
+    // The cross-brand "For You" tab is not surfaced anywhere in the nav — destination
+    // pages, brand pages, and article pages alike. The full mix still loads as the
+    // default landing view; it simply has no dedicated tab. This covers destination
+    // configs, getBrandContextualFilters, and any navLinksOverride.
+    .filter((link) => link !== "For You")
     .filter((link) => !((brand.slug === "hearst-all" || brand.slug === "hearst-plus")
-      && (link === "For You" || link === "Streaming" || link === "Events")));
+      && (link === "Streaming" || link === "Events")));
   const navLinks = selectedBrand?.slug === "good-housekeeping" && uncappedNavLinks.length > 7
     ? (() => {
         const visibleLinks = uncappedNavLinks.slice(0, 7);
@@ -6822,13 +6827,15 @@ export function HomePageTemplate({
     anchorDestinationContent();
   }, [anchorDestinationContent, destinationMode, selectedBrand, showStakeholderTools]);
   const pageCategorySwipeFilters = React.useMemo(() => {
-    const baseFilters = selectedBrand
+    const rawFilters = selectedBrand
       ? getBrandContextualFilters(
           selectedBrand.slug,
           destinationConfigs.all.stories,
           hasScopedVideoFeed,
         )
       : inventoryAwareDestinationConfig.filters;
+    // Mirror the tab bar: "For You" is not a swipeable category anywhere.
+    const baseFilters = rawFilters.filter((filter) => filter !== "For You");
     return !selectedBrand && hasScopedVideoFeed
       ? insertVideosFilter(baseFilters)
       : baseFilters;
