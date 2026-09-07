@@ -70,7 +70,7 @@ type PersonalizeDestination = "all" | "lifestyle" | "autos" | "flux" | "ew";
 
 const videoRequestOptionsByBrand = {
   caranddriver: {
-    useCase: "similar_items",
+    useCase: "trending_now",
   },
   delish: {
     useCase: "trending_now",
