@@ -14,7 +14,6 @@ import {
 } from "@/lib/video-transcoding";
 import { selectVideoAspectRatioQuotas } from "@/lib/video-feed-selection";
 
-const PERSONALIZE_STAGE_URL = "https://personalize-stage.motortrend.com/recommendations";
 const PERSONALIZE_PRODUCTION_URL = "https://personalize.motortrend.com/recommendations";
 
 // The public route keeps the shorter Pioneer Woman slug, while Personalize
@@ -302,7 +301,7 @@ function mapVideoRecommendation(
 
 function fallbackData({
   stories: fallbackStories = [...autosRiverStories, ...lifestyleRiverStories].slice(0, 80),
-  dataSourceCopy = "the local story snapshot because the Personalize stage feed is temporarily unavailable.",
+  dataSourceCopy = "the local story snapshot because the production Personalize feed is temporarily unavailable.",
   productName,
 }: {
   stories?: LifestyleRiverStory[];
@@ -345,7 +344,7 @@ async function loadPersonalizeFeed({
   dataSourceCopy,
   fallback,
   requestType = "all",
-  useCase = "similar_items",
+  useCase = "trending_now",
   size = 10,
   videoSize = 4,
   productName,
@@ -502,18 +501,19 @@ export async function getPersonalizeLiveFeed({
   if (brands.length === 0) {
     return fallbackData({
       stories: [],
-      dataSourceCopy: "the Personalize stage API, with no scoped live article brands configured for this destination yet.",
+      dataSourceCopy: "the production Personalize API, with no scoped live article brands configured for this destination yet.",
     });
   }
 
   return loadPersonalizeFeed({
-    apiKey: process.env.PERSONALIZE_API_KEY,
-    endpoint: PERSONALIZE_STAGE_URL,
+    apiKey: process.env.PERSONALIZE_API_KEY ?? process.env.PERSONALIZE_LIFESTYLE_API_KEY,
+    endpoint: PERSONALIZE_PRODUCTION_URL,
     brands,
     videoBrandIds,
     size: sizePerBrand,
     videoSize: videoSizePerBrand,
-    dataSourceCopy: `the Personalize stage API, scoped to ${brands.map(([, brandName]) => brandName).join(", ")} current article recommendations.`,
+    useCase: "trending_now",
+    dataSourceCopy: `the production Personalize API, scoped to ${brands.map(([, brandName]) => brandName).join(", ")} current article recommendations.`,
     fallback: () => fallbackData({
       stories: fallbackStories,
       dataSourceCopy: "the local destination snapshot because the Personalize live article feed is temporarily unavailable.",
