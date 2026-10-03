@@ -20,168 +20,168 @@ export const storybookFixtureData = {
   "lifestyle": {
     "stories": [
       {
-        "id": "cosmopolitan-lifestyle-a73564478-weekly-horoscope-september-6-2026",
+        "id": "cosmopolitan-entertainment-movies-a73996943-verity-ending-explained",
         "brand": "Cosmopolitan",
         "brandSlug": "cosmopolitan",
-        "topic": "Lifestyle",
-        "title": "Your Horoscope for the Week of September 6",
-        "summary": "It's all happening on Thursday.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/dd7bdb11-8c60-47d5-9723-38dae30572ef.jpg",
-        "imageCredit": "Kara Miller/Getty Images",
-        "byline": "Erika W. Smith",
+        "topic": "Entertainment",
+        "title": "Breaking Down the Ending of ‘Verity’",
+        "summary": "Team Manuscript or Team Letter? You decide.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/7d1f61c7-1a59-4a51-b49f-e214d6b4eb0a.jpg",
+        "imageCredit": "Alisha Wetherill",
+        "byline": "Leah Marilla Thomas",
         "readTime": "3 min read",
-        "publishedAt": "2026-09-06T13:00:00.000Z",
-        "sourceUrl": "https://www.cosmopolitan.com/lifestyle/a73564478/weekly-horoscope-september-6-2026/",
+        "publishedAt": "2026-10-03T17:00:00.000Z",
+        "sourceUrl": "https://www.cosmopolitan.com/entertainment/movies/a73996943/verity-ending-explained/",
         "popularity": 100,
         "signal": "Most Popular",
         "tags": [
-          "lifestyle",
+          "entertainment",
           "cosmopolitan",
-          "your",
-          "horoscope",
-          "week",
-          "september"
+          "breaking",
+          "down",
+          "ending",
+          "verity"
         ],
-        "age": 12
+        "age": 5
       },
       {
-        "id": "cosmopolitan-style-beauty-beauty-a73606687-chocolate-brown-nails",
+        "id": "cosmopolitan-entertainment-movies-a73999587-how-to-watch-digger",
         "brand": "Cosmopolitan",
         "brandSlug": "cosmopolitan",
-        "topic": "Style Beauty",
-        "title": "Chocolate Brown Nails Are Serving Sweet Hot Cocoa Energy This Fall",
-        "summary": "This mani and a warm mug of hot chocolate? Yeah, sign me up.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/310e7345-be56-4487-9b9a-2cfdfb9fc92a.jpg",
-        "imageCredit": "@amyle.nails / @overglowedit",
-        "byline": "Catharine Malzahn",
-        "readTime": "4 min read",
-        "publishedAt": "2026-09-04T20:54:19.000Z",
-        "sourceUrl": "https://www.cosmopolitan.com/style-beauty/beauty/a73606687/chocolate-brown-nails/",
+        "topic": "Entertainment",
+        "title": "Where and When to Stream ‘Digger’",
+        "summary": "It is, as always, Tom’s world and we’re just living in it.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/ba70aa23-9281-47fc-ac8f-7065e77d1e37.jpg",
+        "imageCredit": "Warner Bros. Pictures",
+        "byline": "Leah Marilla Thomas",
+        "readTime": "3 min read",
+        "publishedAt": "2026-10-02T22:20:17.000Z",
+        "sourceUrl": "https://www.cosmopolitan.com/entertainment/movies/a73999587/how-to-watch-digger/",
         "popularity": 99,
         "signal": "Trending",
         "tags": [
-          "style beauty",
+          "entertainment",
           "cosmopolitan",
-          "style",
-          "beauty",
-          "chocolate",
-          "brown"
+          "where",
+          "when",
+          "stream",
+          "digger"
         ],
-        "age": 52
+        "age": 23
       },
       {
-        "id": "cosmopolitan-style-beauty-fashion-a73616693-alessandra-ambrosio-stella-maxwell-intimissimi",
+        "id": "cosmopolitan-entertainment-books-a73998624-how-to-find-love-in-the-cereal-aisle-alissa-derogatis-book-tour-diary",
         "brand": "Cosmopolitan",
         "brandSlug": "cosmopolitan",
-        "topic": "Style Beauty",
-        "title": "Alessandra Ambrosio and Stella Maxwell Wore Intimissimi on the Venice Red Carpet—Here’s How to Recreate The Look",
-        "summary": "They’re making a major case for wearing lingerie out.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/530d8dad-b61d-4dfc-b269-1f7e37fb4f37.jpeg",
-        "imageCredit": "STEFANO RELLANDINI",
-        "byline": "Megan Schaltegger",
+        "topic": "Entertainment",
+        "title": "‘How to Find Love in the Cereal Aisle’ Author Alissa DeRogatis Brought Us Behind the Scenes on Her Book Tour",
+        "summary": "The Cosmo Reads author dropped by some indie bookstores and even had a Cannoli Cowboy and the ultimate cereal bar.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/7b87bd8a-e01f-4635-b2b0-5031c30dca19.jpg",
+        "imageCredit": "Alissa DeRogatis / Drew Furr / Cosmo Reads",
+        "byline": "Tamara Fuentes",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-04T18:11:24.000Z",
-        "sourceUrl": "https://www.cosmopolitan.com/style-beauty/fashion/a73616693/alessandra-ambrosio-stella-maxwell-intimissimi/",
+        "publishedAt": "2026-10-02T21:58:42.000Z",
+        "sourceUrl": "https://www.cosmopolitan.com/entertainment/books/a73998624/how-to-find-love-in-the-cereal-aisle-alissa-derogatis-book-tour-diary/",
         "popularity": 98,
         "signal": "Editor Pick",
         "tags": [
-          "style beauty",
+          "entertainment",
           "cosmopolitan",
-          "style",
-          "beauty",
-          "alessandra",
-          "ambrosio"
+          "find",
+          "love",
+          "cereal",
+          "aisle"
         ],
-        "age": 55
+        "age": 24
       },
       {
-        "id": "country-living-gardening-garden-ideas-a73564759-seed-saving-beginner-guide",
+        "id": "country-living-gardening-garden-ideas-a73870440-cardboard-garden-uses",
         "brand": "Country Living",
         "brandSlug": "country-living",
         "topic": "Home",
-        "title": "My Grandma Taught Me How to Save Seeds—Now I’m Passing On Her Garden Wisdom",
-        "summary": "From marigolds and zinnias to tomatoes, beans, and herbs, these are the garden seeds worth saving—and the ones you should skip.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/89553d27-5c9b-4bc8-a413-f6f6b2d2ebd3.jpeg",
-        "imageCredit": "Jenny Elia Pfeiffer",
-        "byline": "Arricca Elin SanSone",
-        "readTime": "4 min read",
-        "publishedAt": "2026-09-06T15:00:00.000Z",
-        "sourceUrl": "https://www.countryliving.com/gardening/garden-ideas/a73564759/seed-saving-beginner-guide/",
+        "title": "5 Clever Ways to Use Cardboard in Your Garden",
+        "summary": "Don't recycle that parcel box just yet.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/9404c733-639c-4745-a7bd-3d31ee850e80.jpg",
+        "imageCredit": "Reflexpixel",
+        "byline": "Lauran Elsden",
+        "readTime": "3 min read",
+        "publishedAt": "2026-10-03T12:00:00.000Z",
+        "sourceUrl": "https://www.countryliving.com/gardening/garden-ideas/a73870440/cardboard-garden-uses/",
         "popularity": 72,
         "signal": "Most Popular",
         "tags": [
           "home",
           "country living",
-          "grandma",
-          "taught",
-          "save",
-          "seeds"
+          "clever",
+          "ways",
+          "cardboard",
+          "your"
         ],
         "age": 10
       },
       {
-        "id": "country-living-life-entertainment-a73571868-labor-day-history-september",
+        "id": "country-living-home-design-decorating-ideas-a73535546-fall-home-decor-magical",
         "brand": "Country Living",
         "brandSlug": "country-living",
-        "topic": "Shopping",
-        "title": "Why We Celebrate Labor Day in September—and What the Holiday Actually Means",
-        "summary": "If you’ve ever pondered what puts the “labor” in Labor Day, this bit of American history is for you.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/dbfda155-e5f7-4a9a-bba7-dafd620a45af.jpeg",
-        "imageCredit": "FatCamera",
-        "byline": "Terri Robertson",
+        "topic": "Home",
+        "title": "A Hearth Witch Shares 5 Cozy Ways to Make Your Home Feel Magical This Fall",
+        "summary": "A little hearth magic goes a long way.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/cozy-cabin-fall-porch-decor-1566917727.jpg",
+        "imageCredit": "Dana Gallagher",
+        "byline": "Sam Manzella",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-06T13:00:00.000Z",
-        "sourceUrl": "https://www.countryliving.com/life/entertainment/a73571868/labor-day-history-september/",
+        "publishedAt": "2026-10-03T12:00:00.000Z",
+        "sourceUrl": "https://www.countryliving.com/home-design/decorating-ideas/a73535546/fall-home-decor-magical/",
         "popularity": 71,
         "signal": "Trending",
         "tags": [
-          "shopping",
+          "home",
           "country living",
-          "celebrate",
-          "labor",
-          "september",
-          "what"
+          "hearth",
+          "witch",
+          "shares",
+          "cozy"
         ],
-        "age": 12
+        "age": 10
       },
       {
-        "id": "country-living-life-entertainment-a73599139-how-does-the-grand-ole-opry-honor-a-member-after-they-die",
+        "id": "country-living-shopping-a73962651-holiday-decor-amazon",
         "brand": "Country Living",
         "brandSlug": "country-living",
         "topic": "Shopping",
-        "title": "How Does the Grand Ole Opry Honor a Member After They Die?",
-        "summary": "The Opry considers its members family, so the losses are painful.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/bc00933e-9e8e-41c5-aeaa-d15f8f55add9.jpeg",
-        "imageCredit": "NBC",
-        "byline": "Amanda Hensel Jermstad",
+        "title": "‘Tis the Season to Start Buying Holiday Decorations, and My Amazon Finds Start at Just $13",
+        "summary": "Festive touches for indoors, outdoors, and your tablescape.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/9b310adb-948f-40f5-87f1-31c61f788779.jpeg",
+        "imageCredit": "Product Shot Image",
+        "byline": "Jessica Dukes",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-06T12:00:00.000Z",
-        "sourceUrl": "https://www.countryliving.com/life/entertainment/a73599139/how-does-the-grand-ole-opry-honor-a-member-after-they-die/",
+        "publishedAt": "2026-10-02T21:01:17.000Z",
+        "sourceUrl": "https://www.countryliving.com/shopping/a73962651/holiday-decor-amazon/",
         "popularity": 70,
         "signal": "Editor Pick",
         "tags": [
           "shopping",
           "country living",
-          "does",
-          "grand",
-          "opry",
-          "honor"
+          "season",
+          "start",
+          "buying",
+          "holiday"
         ],
-        "age": 13
+        "age": 25
       },
       {
-        "id": "delish-food-news-a73624769-united-airlines-gate-food-ordering",
+        "id": "delish-food-news-a74006161-amc-street-fighter-guile-popcorn-bucket",
         "brand": "Delish",
         "brandSlug": "delish",
         "topic": "Food News",
-        "title": "United Is Testing A New Way To Have Food Waiting At Your Gate",
-        "summary": "One less reason to sprint through the terminal.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/9d337123-84b9-447b-a9f8-a0f00531be9f.jpg",
-        "imageCredit": "United Airlines",
+        "title": "AMC's New 'Street Fighter' Popcorn Bucket Goes On Your Head—And Fans Are Ready For Their Flat-Top Era",
+        "summary": "Who knew the secret to great hair was extra butter?",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/7fd1336a-3a06-4a77-9cdb-0301be07eb02.jpeg",
+        "imageCredit": "masa44",
         "byline": "Sean Abrams",
-        "readTime": "3 min read",
-        "publishedAt": "2026-09-06T13:57:30.000Z",
-        "sourceUrl": "https://www.delish.com/food-news/a73624769/united-airlines-gate-food-ordering/",
+        "readTime": "4 min read",
+        "publishedAt": "2026-10-03T17:33:36.000Z",
+        "sourceUrl": "https://www.delish.com/food-news/a74006161/amc-street-fighter-guile-popcorn-bucket/",
         "popularity": 90,
         "signal": "Most Popular",
         "tags": [
@@ -189,24 +189,24 @@ export const storybookFixtureData = {
           "delish",
           "food",
           "news",
-          "united",
-          "testing"
+          "street",
+          "fighter"
         ],
-        "age": 11
+        "age": 4
       },
       {
-        "id": "delish-food-news-a73624602-starbucks-honey-deuce-secret-menu-drink",
+        "id": "delish-food-news-a74005656-dolly-parton-cup-of-ambition-coffee-release",
         "brand": "Delish",
         "brandSlug": "delish",
         "topic": "Food News",
-        "title": "This Starbucks Honey Deuce-Inspired Drink Costs Nearly As Much As The Real Thing",
-        "summary": "The recipe takes some pretty serious liberties.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/119c32cc-c86f-4c0b-a8dc-0f04eeb84123.jpeg",
-        "imageCredit": "Hasan Ashari",
+        "title": "Dolly Parton's Coffee Launch Has Fans Celebrating & Mourning Her All Over Again",
+        "summary": "Her Cup of Ambition was more than 40 years in the making",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/98bc8001-2a26-4a66-a514-1792a0881f24.jpeg",
+        "imageCredit": "Jim Dyson",
         "byline": "Sean Abrams",
-        "readTime": "3 min read",
-        "publishedAt": "2026-09-06T12:49:41.000Z",
-        "sourceUrl": "https://www.delish.com/food-news/a73624602/starbucks-honey-deuce-secret-menu-drink/",
+        "readTime": "4 min read",
+        "publishedAt": "2026-10-03T16:19:33.000Z",
+        "sourceUrl": "https://www.delish.com/food-news/a74005656/dolly-parton-cup-of-ambition-coffee-release/",
         "popularity": 89,
         "signal": "Trending",
         "tags": [
@@ -214,24 +214,24 @@ export const storybookFixtureData = {
           "delish",
           "food",
           "news",
-          "this",
-          "starbucks"
+          "dolly",
+          "parton"
         ],
-        "age": 12
+        "age": 5
       },
       {
-        "id": "delish-food-news-a73624462-shake-shack-reeses-peanut-butter-cup-shake-calories",
+        "id": "delish-food-news-a74004904-alison-hammond-this-morning-health-scare-update",
         "brand": "Delish",
         "brandSlug": "delish",
         "topic": "Food News",
-        "title": "Shake Shack’s New Reese’s Shake Is A Halloween Dream With One Major Jump Scare",
-        "summary": "The real trick is pretending you don’t want one.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/8c2fee79-30af-49a3-9798-bebb78c271f3.png",
-        "imageCredit": "Shake Shack",
+        "title": "What Happened to Alison Hammond? TV Host Speaks Out After Sudden On-Air Exit",
+        "summary": "The Bake Off favorite shared a message with fans following the health scare.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/a56b449f-f0f9-47b6-887e-d2a60ad4cbef.jpeg",
+        "imageCredit": "Dave Benett",
         "byline": "Sean Abrams",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-06T11:51:44.000Z",
-        "sourceUrl": "https://www.delish.com/food-news/a73624462/shake-shack-reeses-peanut-butter-cup-shake-calories/",
+        "publishedAt": "2026-10-03T15:29:27.000Z",
+        "sourceUrl": "https://www.delish.com/food-news/a74004904/alison-hammond-this-morning-health-scare-update/",
         "popularity": 88,
         "signal": "Editor Pick",
         "tags": [
@@ -239,197 +239,198 @@ export const storybookFixtureData = {
           "delish",
           "food",
           "news",
-          "shake",
-          "shack"
-        ],
-        "age": 13
-      },
-      {
-        "id": "good-housekeeping-food-recipes-g73596371-brunch-recipes",
-        "brand": "Good Housekeeping",
-        "brandSlug": "good-housekeeping",
-        "topic": "Food",
-        "title": "47 Brunch Recipes That Are Perfect for Every Occasion",
-        "summary": "From timeless favorites to fresh, unexpected twists, there’s a dish here for every craving.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/waffles-with-spicy-glazed-bacon-and-pecans-brunch-ideas-1674769665.jpg",
-        "imageCredit": "Mike Garten",
-        "byline": "Samantha MacAvoy, Rosamelia Sánchez Lara",
-        "readTime": "4 min read",
-        "publishedAt": "2026-09-06T23:00:00.000Z",
-        "sourceUrl": "https://www.goodhousekeeping.com/food-recipes/g73596371/brunch-recipes/",
-        "popularity": 62,
-        "signal": "Most Popular",
-        "tags": [
-          "food",
-          "good housekeeping",
-          "brunch",
-          "recipes",
-          "that",
-          "perfect"
-        ],
-        "age": 2
-      },
-      {
-        "id": "good-housekeeping-health-a73606947-when-to-take-magnesium",
-        "brand": "Good Housekeeping",
-        "brandSlug": "good-housekeeping",
-        "topic": "Wellness",
-        "title": "The Best Time to Take Magnesium, According to Dietitians",
-        "summary": "Experts explain why consistency matters more than the clock.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/d06161dc-39ee-444e-b3a5-499f67033a25.jpeg",
-        "imageCredit": "Doucefleur",
-        "byline": "Lisa Bain",
-        "readTime": "3 min read",
-        "publishedAt": "2026-09-06T19:00:00.000Z",
-        "sourceUrl": "https://www.goodhousekeeping.com/health/a73606947/when-to-take-magnesium/",
-        "popularity": 61,
-        "signal": "Trending",
-        "tags": [
-          "wellness",
-          "good housekeeping",
-          "best",
-          "time",
-          "take",
-          "magnesium"
+          "what",
+          "happened"
         ],
         "age": 6
       },
       {
-        "id": "good-housekeeping-health-diet-nutrition-g73606944-best-anti-inflammatory-teas",
+        "id": "good-housekeeping-home-cleaning-g31206600-best-self-cleaning-litter-box",
         "brand": "Good Housekeeping",
         "brandSlug": "good-housekeeping",
-        "topic": "Wellness",
-        "title": "8 Soothing Teas That May Help Fight Inflammation, According to Dietitians",
-        "summary": "These polyphenol-rich brews can support your health.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/37278b63-1290-4064-b60e-223161adbe8d.jpeg",
-        "imageCredit": "d3sign",
-        "byline": "Luisa Colón",
+        "topic": "Home",
+        "title": "5 Best Automatic, Self-Cleaning Litter Boxes",
+        "summary": "With one of these electronic litter boxes, you won't have to scoop, and your cats will always have a clean box.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/ba3d94a3-ff75-481a-9078-6a95714298d6.jpg",
+        "imageCredit": "Jessica Hartshorn",
+        "byline": "Jessica Hartshorn",
+        "readTime": "4 min read",
+        "publishedAt": "2026-10-03T21:54:00.000Z",
+        "sourceUrl": "https://www.goodhousekeeping.com/home/cleaning/g31206600/best-self-cleaning-litter-box/",
+        "popularity": 62,
+        "signal": "Most Popular",
+        "tags": [
+          "home",
+          "good housekeeping",
+          "best",
+          "automatic",
+          "self-cleaning",
+          "litter"
+        ],
+        "age": 0
+      },
+      {
+        "id": "good-housekeeping-holidays-halloween-ideas-g4544-80s-costumes-halloween",
+        "brand": "Good Housekeeping",
+        "brandSlug": "good-housekeeping",
+        "topic": "Family",
+        "title": "60 Totally Awesome '80s Costume Ideas That Are Retro Cool",
+        "summary": "Whether you buy or DIY, these ideas take Halloween to the max.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/gh-062221-80s-costumes-1624638797.png",
+        "imageCredit": "amazon",
+        "byline": "Marisa LaScala",
         "readTime": "3 min read",
-        "publishedAt": "2026-09-06T18:00:00.000Z",
-        "sourceUrl": "https://www.goodhousekeeping.com/health/diet-nutrition/g73606944/best-anti-inflammatory-teas/",
+        "publishedAt": "2026-10-03T21:17:00.000Z",
+        "sourceUrl": "https://www.goodhousekeeping.com/holidays/halloween-ideas/g4544/80s-costumes-halloween/",
+        "popularity": 61,
+        "signal": "Trending",
+        "tags": [
+          "family",
+          "good housekeeping",
+          "totally",
+          "awesome",
+          "costume",
+          "ideas"
+        ],
+        "age": 1
+      },
+      {
+        "id": "good-housekeeping-home-decorating-ideas-a73982426-homegoods-finds-designers-recommend",
+        "brand": "Good Housekeeping",
+        "brandSlug": "good-housekeeping",
+        "topic": "Home",
+        "title": "The Best Things to Buy at HomeGoods, According to Designers",
+        "summary": "Pros share the stylish finds they never pass up.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/a5e45cc0-0aa9-44ff-a164-bf16431b55e1.jpeg",
+        "imageCredit": "John Greim",
+        "byline": "Monique Valeris",
+        "readTime": "3 min read",
+        "publishedAt": "2026-10-03T19:00:00.000Z",
+        "sourceUrl": "https://www.goodhousekeeping.com/home/decorating-ideas/a73982426/homegoods-finds-designers-recommend/",
         "popularity": 60,
         "signal": "Editor Pick",
         "tags": [
-          "wellness",
+          "home",
           "good housekeeping",
-          "soothing",
-          "teas",
-          "that",
-          "help"
+          "best",
+          "things",
+          "homegoods",
+          "according"
         ],
-        "age": 7
+        "age": 3
       },
       {
-        "id": "house-beautiful-shopping-a73605749-designer-favorite-ikea-finds-for-own-homes",
+        "id": "house-beautiful-design-inspiration-house-tours-a73992943-digital-home-tour-serena-dugan-shelter-island-new-york",
         "brand": "House Beautiful",
         "brandSlug": "house-beautiful",
-        "topic": "Shopping",
-        "title": "17 IKEA Finds Designers Swear By in Their Own Homes",
-        "summary": "These picks can make your space look surprisingly expensive.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/2018-0910-hhm-21788-68506de510003.jpg",
-        "imageCredit": "Stacey Brandford",
-        "byline": "Meghan Shouse",
+        "topic": "Home",
+        "title": "This Shelter Island Home Boasts the Best Porch We’ve Ever Seen",
+        "summary": "Artist and textile designer Serena Dugan’s cottage is a high-low masterpiece.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/hbx010125serenadugan-009-6764a6b3a01bd.jpg",
+        "imageCredit": "CHRISTIAN HARDER",
+        "byline": "Elizabeth Kiefer",
         "readTime": "3 min read",
-        "publishedAt": "2026-09-06T14:30:00.000Z",
-        "sourceUrl": "https://www.housebeautiful.com/shopping/a73605749/designer-favorite-ikea-finds-for-own-homes/",
+        "publishedAt": "2026-10-03T13:30:00.000Z",
+        "sourceUrl": "https://www.housebeautiful.com/design-inspiration/house-tours/a73992943/digital-home-tour-serena-dugan-shelter-island-new-york/",
         "popularity": 80,
         "signal": "Most Popular",
         "tags": [
-          "shopping",
+          "home",
           "house beautiful",
-          "ikea",
-          "finds",
-          "designers",
-          "swear"
+          "this",
+          "shelter",
+          "island"
         ],
-        "age": 11
+        "age": 8
       },
       {
-        "id": "house-beautiful-design-inspiration-house-tours-a73605500-digital-home-tour-scot-meacham-wood-harlem-new-york-city",
+        "id": "house-beautiful-lifestyle-organizing-tips-a73960375-outdated-decluttering-rules-organizers",
         "brand": "House Beautiful",
         "brandSlug": "house-beautiful",
-        "topic": "Home",
-        "title": "This Designer’s Whimsical Harlem Residence Is a Lesson in Funky Pattern Mixing",
-        "summary": "Scot Meacham Wood went all out in designing his new New York City home.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/2021-meacham-280-v1-1632237736.jpg",
-        "imageCredit": "Lesley Unruh Photography",
-        "byline": "Nikhita Mahtani",
+        "topic": "Lifestyle",
+        "title": "The 2 Most Outdated Decluttering Rules That Experts Say You Can Stop Following Right Now",
+        "summary": "Your home should leave room for growth—not constant purging.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/15aa01c3-1dfc-4260-aa3b-4dc85e18f2c0.jpeg",
+        "imageCredit": "Cicy",
+        "byline": "Sarah Lyon",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-05T14:30:00.000Z",
-        "sourceUrl": "https://www.housebeautiful.com/design-inspiration/house-tours/a73605500/digital-home-tour-scot-meacham-wood-harlem-new-york-city/",
+        "publishedAt": "2026-10-02T17:30:00.000Z",
+        "sourceUrl": "https://www.housebeautiful.com/lifestyle/organizing-tips/a73960375/outdated-decluttering-rules-organizers/",
         "popularity": 79,
         "signal": "Trending",
         "tags": [
-          "home",
+          "lifestyle",
           "house beautiful",
-          "this",
-          "designer",
-          "whimsical",
-          "harlem"
+          "most",
+          "outdated",
+          "decluttering",
+          "rules"
         ],
-        "age": 35
+        "age": 28
       },
       {
-        "id": "house-beautiful-design-inspiration-a73594078-how-to-style-throw-pillows-guide",
+        "id": "house-beautiful-lifestyle-cleaning-tips-a73983006-magic-eraser-never-clean",
         "brand": "House Beautiful",
         "brandSlug": "house-beautiful",
-        "topic": "Home",
-        "title": "Designers Say THIS Is How to Style Throw Pillows for an Elevated Home",
-        "summary": "To pillow chop or to not pillow chop—that is the question.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/20240925-jennapeffley-frenchandfrench-ivyhouse-0546-6761e7b235edc.jpg",
-        "imageCredit": "Jenna Peffley",
-        "byline": "Catherine DiPersico",
+        "topic": "Lifestyle",
+        "title": "7 Things You Should NEVER Clean With a Magic Eraser, According to Cleaning Experts",
+        "summary": "It can scratch, dull, or strip more surfaces than you think.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/72677d34-7bf7-4722-a092-0e9d7568637d.jpeg",
+        "imageCredit": "Mariia Demchenko",
+        "byline": "Jenna Clark",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-04T16:00:00.000Z",
-        "sourceUrl": "https://www.housebeautiful.com/design-inspiration/a73594078/how-to-style-throw-pillows-guide/",
+        "publishedAt": "2026-10-02T16:30:00.000Z",
+        "sourceUrl": "https://www.housebeautiful.com/lifestyle/cleaning-tips/a73983006/magic-eraser-never-clean/",
         "popularity": 78,
         "signal": "Editor Pick",
         "tags": [
-          "home",
+          "lifestyle",
           "house beautiful",
-          "designers",
-          "this",
-          "style",
-          "throw"
+          "things",
+          "should",
+          "never",
+          "clean"
         ],
-        "age": 57
+        "age": 29
       },
       {
-        "id": "pioneer-woman-food-cooking-recipes-a73580896-collard-greens-pesto-pasta-recipe",
+        "id": "pioneer-woman-products-a73996623-ree-drummond-favorite-top-qvc-sale-2026",
         "brand": "The Pioneer Woman",
         "brandSlug": "pioneer-woman",
-        "topic": "Food Cooking",
-        "title": "Pasta with Collard Greens Pesto",
-        "summary": "This easy pasta comes together in just 25 minutes!",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/8cb4d2fd-531a-4b35-b4a9-ae201aab30bb.jpg",
-        "imageCredit": "Ralph Smith",
+        "topic": "Shopping",
+        "title": "Ree Drummond’s ‘Favorite Top’ from Her QVC Line Is on Sale",
+        "summary": "Get 40% off a blouse you’ll wear all the time.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/f93b38d5-cc01-4dd7-9376-fcf3a37aa15e.jpg",
+        "imageCredit": "QVC",
+        "byline": "Alexandra Churchill",
         "readTime": "3 min read",
-        "publishedAt": "2026-09-06T10:30:00.000Z",
-        "sourceUrl": "https://www.thepioneerwoman.com/food-cooking/recipes/a73580896/collard-greens-pesto-pasta-recipe/",
+        "publishedAt": "2026-10-02T21:56:47.000Z",
+        "sourceUrl": "https://www.thepioneerwoman.com/products/a73996623/ree-drummond-favorite-top-qvc-sale-2026/",
         "popularity": 98,
         "signal": "Most Popular",
         "tags": [
-          "food cooking",
+          "shopping",
           "the pioneer woman",
-          "food",
-          "cooking",
-          "pasta",
-          "with"
+          "drummond",
+          "favorite",
+          "from",
+          "line"
         ],
-        "age": 15
+        "age": 24
       },
       {
-        "id": "pioneer-woman-food-cooking-recipes-a73572885-caramel-apple-crisp-recipe",
+        "id": "pioneer-woman-food-cooking-meals-menus-a73930316-molasses-recipes",
         "brand": "The Pioneer Woman",
         "brandSlug": "pioneer-woman",
         "topic": "Food Cooking",
-        "title": "Caramel Apple Crisp",
-        "summary": "Don't forget to top it with a big scoop of vanilla ice cream!",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/5acaa8ca-1413-445e-8a83-9697306f702c.jpg",
-        "imageCredit": "ryan liebe",
+        "title": "10 Sticky-Sweet Molasses Recipes for All Those Cozy Days Ahead",
+        "summary": "It’s the ultimate thickening and sweetening agent!",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/5943b0bd-41cc-4fda-93c5-ab4a92bd0722.jpg",
+        "imageCredit": "C.W. Newell",
+        "byline": "Lilly Blomquist",
         "readTime": "3 min read",
-        "publishedAt": "2026-09-04T10:30:00.000Z",
-        "sourceUrl": "https://www.thepioneerwoman.com/food-cooking/recipes/a73572885/caramel-apple-crisp-recipe/",
+        "publishedAt": "2026-10-02T21:01:14.000Z",
+        "sourceUrl": "https://www.thepioneerwoman.com/food-cooking/meals-menus/a73930316/molasses-recipes/",
         "popularity": 97,
         "signal": "Trending",
         "tags": [
@@ -437,24 +438,24 @@ export const storybookFixtureData = {
           "the pioneer woman",
           "food",
           "cooking",
-          "caramel",
-          "apple"
+          "sticky-sweet",
+          "molasses"
         ],
-        "age": 63
+        "age": 25
       },
       {
-        "id": "pioneer-woman-food-cooking-cooking-tips-tutorials-a73606076-how-to-store-corn-on-the-cob",
+        "id": "pioneer-woman-food-cooking-meals-menus-g73995509-easy-quick-bread-recipes",
         "brand": "The Pioneer Woman",
         "brandSlug": "pioneer-woman",
         "topic": "Food Cooking",
-        "title": "How to Store Corn on the Cob So It Stays Sweet and Fresh",
-        "summary": "Should you leave it in the husk?",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/a6c8909e-c7d6-4bc4-a2d1-c2b7164b0db9.jpeg",
-        "imageCredit": "istetiana",
-        "byline": "AnnMarie Mattila",
+        "title": "10 Quick Breads That Make Homemade Baking Easier Than Ever",
+        "summary": "Enjoy a freshly baked loaf anytime.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/aa655caa-4e3c-4e1c-9eed-de33c4e62bb3.png",
+        "imageCredit": "Ryan Liebe",
+        "byline": "Macie Reynolds, Kara Zauberman",
         "readTime": "3 min read",
-        "publishedAt": "2026-09-04T09:00:00.000Z",
-        "sourceUrl": "https://www.thepioneerwoman.com/food-cooking/cooking-tips-tutorials/a73606076/how-to-store-corn-on-the-cob/",
+        "publishedAt": "2026-10-02T20:43:15.000Z",
+        "sourceUrl": "https://www.thepioneerwoman.com/food-cooking/meals-menus/g73995509/easy-quick-bread-recipes/",
         "popularity": 96,
         "signal": "Editor Pick",
         "tags": [
@@ -462,49 +463,49 @@ export const storybookFixtureData = {
           "the pioneer woman",
           "food",
           "cooking",
-          "store",
-          "corn"
+          "quick",
+          "breads"
         ],
-        "age": 64
+        "age": 25
       },
       {
-        "id": "prevention-health-sleep-energy-a73617787-night-owl-work-life-balance-mental-health-study",
+        "id": "prevention-health-sleep-energy-a73985112-sleep-reduce-disease-risk-study",
         "brand": "Prevention",
         "brandSlug": "prevention",
         "topic": "Wellness",
-        "title": "Night Owls More Likely to Struggle With Work-Life Balance, Scientists Say",
-        "summary": "This may partly explain their greater chances of developing anxiety and depression.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/2a98cbbd-0c69-4244-84cf-03ff7dc770d6.jpeg",
-        "imageCredit": "Maskot",
+        "title": "Getting More REM Sleep May Reduce Your Risk of 83 Different Diseases, Study Suggests",
+        "summary": "There’s a growing body of evidence linking quality sleep to overall health.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/a8fa74bf-385c-4c00-adf7-602e79c6ec7f.jpeg",
+        "imageCredit": "JGI",
         "byline": "Chloe Joe",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-06T11:15:00.000Z",
-        "sourceUrl": "https://www.prevention.com/health/sleep-energy/a73617787/night-owl-work-life-balance-mental-health-study/",
+        "publishedAt": "2026-10-03T12:26:00.000Z",
+        "sourceUrl": "https://www.prevention.com/health/sleep-energy/a73985112/sleep-reduce-disease-risk-study/",
         "popularity": 70,
         "signal": "Most Popular",
         "tags": [
           "wellness",
           "prevention",
-          "night",
-          "owls",
+          "getting",
           "more",
-          "likely"
+          "sleep",
+          "reduce"
         ],
-        "age": 14
+        "age": 9
       },
       {
-        "id": "prevention-food-nutrition-a73617936-caffeine-no-cognitive-improvement-study",
+        "id": "prevention-food-nutrition-healthy-eating-a73968087-what-is-the-mind-diet",
         "brand": "Prevention",
         "brandSlug": "prevention",
         "topic": "Food Nutrition",
-        "title": "Caffeine May Not Actually Make You Sharper in the Morning, Scientists Say",
-        "summary": "Experts break down new research.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/d275ed5e-fe66-435e-b2df-fc2c84aba65e.jpeg",
-        "imageCredit": "Yulia-Images",
-        "byline": "Chloe Joe",
-        "readTime": "3 min read",
-        "publishedAt": "2026-09-05T10:40:00.000Z",
-        "sourceUrl": "https://www.prevention.com/food-nutrition/a73617936/caffeine-no-cognitive-improvement-study/",
+        "title": "What Is the MIND Diet? Experts Explain How the Eating Plan Could Protect Your Brain",
+        "summary": "Plus, how to start incorporating it into your menu.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/56aa17fc-a924-423e-adbe-a6b610cf66f8.jpeg",
+        "imageCredit": "Alexander Spatari",
+        "byline": "Stephanie Kasulka",
+        "readTime": "4 min read",
+        "publishedAt": "2026-10-03T11:18:00.000Z",
+        "sourceUrl": "https://www.prevention.com/food-nutrition/healthy-eating/a73968087/what-is-the-mind-diet/",
         "popularity": 69,
         "signal": "Trending",
         "tags": [
@@ -512,35 +513,35 @@ export const storybookFixtureData = {
           "prevention",
           "food",
           "nutrition",
-          "caffeine",
-          "actually"
+          "what",
+          "mind"
         ],
-        "age": 39
+        "age": 10
       },
       {
-        "id": "prevention-health-a71186530-best-pillows-neck-pain",
+        "id": "prevention-health-a73996638-longevity-supplements-expert-guide",
         "brand": "Prevention",
         "brandSlug": "prevention",
         "topic": "Wellness",
-        "title": "The 11 Best Pillows for Neck Pain Relief, According to Experts and Testing",
-        "summary": "Snooze more comfortably with these editor-tested pillows that provide reliable neck support.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/57c40258-48d5-49d2-82ad-598d974ceded.jpg",
-        "imageCredit": "Honeydew/Coop Sleep Goods/Purple",
-        "byline": "Jake Smith, Hannah Jeon",
-        "readTime": "4 min read",
-        "publishedAt": "2026-09-04T14:57:51.000Z",
-        "sourceUrl": "https://www.prevention.com/health/a71186530/best-pillows-neck-pain/",
+        "title": "Do Supplements Designed for Longevity Actually Work? Experts Weigh In",
+        "summary": "Here’s what’s actually proven to add quality years to your life.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/7531d11e-c83f-4bd6-8903-68c827beea9a.jpeg",
+        "imageCredit": "Anastasiia Voloshko",
+        "byline": "Cindy Kuzma",
+        "readTime": "3 min read",
+        "publishedAt": "2026-10-02T18:28:10.000Z",
+        "sourceUrl": "https://www.prevention.com/health/a73996638/longevity-supplements-expert-guide/",
         "popularity": 68,
         "signal": "Editor Pick",
         "tags": [
           "wellness",
           "prevention",
-          "best",
-          "pillows",
-          "neck",
-          "pain"
+          "supplements",
+          "designed",
+          "longevity",
+          "actually"
         ],
-        "age": 58
+        "age": 27
       },
       {
         "id": "redbook-life-charity-g4632-funny-animal-pictures",
@@ -565,7 +566,7 @@ export const storybookFixtureData = {
           "animal",
           "photos"
         ],
-        "age": 79063
+        "age": 79707
       },
       {
         "id": "redbook-life-charity-g60982152-odd-day-off-activities",
@@ -589,7 +590,7 @@ export const storybookFixtureData = {
           "activities",
           "refreshing"
         ],
-        "age": 18803
+        "age": 19448
       },
       {
         "id": "redbook-body-health-fitness-g61444461-best-manuka-honey-tips",
@@ -614,32 +615,7 @@ export const storybookFixtureData = {
           "know",
           "about"
         ],
-        "age": 18803
-      },
-      {
-        "id": "seventeen-celebrity-a73605310-why-travis-kelce-taylor-swift-married-msg-revealed",
-        "brand": "Seventeen",
-        "brandSlug": "seventeen",
-        "topic": "Entertainment",
-        "title": "Travis Kelce Explained Exactly Why He and Taylor Swift Got Married at MSG",
-        "summary": "There was a specific reason!",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/3291f159-65aa-47ec-9867-11103a7c00c8.jpeg",
-        "imageCredit": "Kevin Mazur",
-        "byline": "Mehera Bonner",
-        "readTime": "3 min read",
-        "publishedAt": "2026-09-03T15:04:01.000Z",
-        "sourceUrl": "https://www.seventeen.com/celebrity/a73605310/why-travis-kelce-taylor-swift-married-msg-revealed/",
-        "popularity": 59,
-        "signal": "Trending",
-        "tags": [
-          "entertainment",
-          "seventeen",
-          "travis",
-          "kelce",
-          "explained",
-          "exactly"
-        ],
-        "age": 82
+        "age": 19448
       },
       {
         "id": "seventeen-celebrity-a71506957-seventeen-fandoms-2026-cover-interviews",
@@ -654,8 +630,8 @@ export const storybookFixtureData = {
         "readTime": "4 min read",
         "publishedAt": "2026-06-16T12:00:05.000Z",
         "sourceUrl": "https://www.seventeen.com/celebrity/a71506957/seventeen-fandoms-2026-cover-interviews/",
-        "popularity": 58,
-        "signal": "Editor Pick",
+        "popularity": 59,
+        "signal": "Trending",
         "tags": [
           "entertainment",
           "seventeen",
@@ -664,7 +640,7 @@ export const storybookFixtureData = {
           "have",
           "entered"
         ],
-        "age": 1981
+        "age": 2626
       },
       {
         "id": "seventeen-fashion-trends-a42829074-swimsuit-trends-2023",
@@ -679,8 +655,8 @@ export const storybookFixtureData = {
         "readTime": "4 min read",
         "publishedAt": "2023-02-13T23:13:03.000Z",
         "sourceUrl": "https://www.seventeen.com/fashion/trends/a42829074/swimsuit-trends-2023/",
-        "popularity": 57,
-        "signal": "Continue",
+        "popularity": 58,
+        "signal": "Editor Pick",
         "tags": [
           "style",
           "seventeen",
@@ -689,7 +665,57 @@ export const storybookFixtureData = {
           "trends",
           "want"
         ],
-        "age": 31226
+        "age": 31871
+      },
+      {
+        "id": "seventeen-fashion-celeb-fashion-a42778095-kylie-jenner-tiny-bedazzled-neon-bikini",
+        "brand": "Seventeen",
+        "brandSlug": "seventeen",
+        "topic": "Style",
+        "title": "Kylie Jenner's Bedazzled Neon Bikini Will Have You Counting Down to Spring Break",
+        "summary": "Kylie Jenner's latest bikini pics nearly broke the internet. Here's where you can shop her look.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/kylie-jenner-is-seen-arriving-at-the-jean-paul-gaultier-news-photo-1675703479.jpg?crop=0.648xw:0.249xh;0.190xw,0.0641xh&resize=1200:*",
+        "imageCredit": "",
+        "byline": "Samantha Olson",
+        "readTime": "4 min read",
+        "publishedAt": "2023-02-06T18:24:11.000Z",
+        "sourceUrl": "https://www.seventeen.com/fashion/celeb-fashion/a42778095/kylie-jenner-tiny-bedazzled-neon-bikini/",
+        "popularity": 57,
+        "signal": "Continue",
+        "tags": [
+          "style",
+          "seventeen",
+          "kylie",
+          "jenner",
+          "bedazzled",
+          "neon"
+        ],
+        "age": 32043
+      },
+      {
+        "id": "womans-day-life-g74001402-fun-tailgate-essentials-i-shared-on-today",
+        "brand": "Woman's Day",
+        "brandSlug": "womans-day",
+        "topic": "Shopping",
+        "title": "I Shared My Favorite Tailgate Finds on TODAY—Here’s the Full Lineup",
+        "summary": "Shop Meaghan Murphy’s favorite tailgate essentials, including cozy stadium gear, football party finds and clever picks featured on TODAY.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/629195e3-a024-4394-b5c1-49aa7dba6351.jpg?crop=1.00xw:0.376xh;0,0.244xh&resize=1200:*",
+        "imageCredit": "",
+        "byline": "Meaghan B Murphy",
+        "readTime": "4 min read",
+        "publishedAt": "2026-10-03T01:56:38.000Z",
+        "sourceUrl": "https://www.womansday.com/life/g74001402/fun-tailgate-essentials-i-shared-on-today/",
+        "popularity": 75,
+        "signal": "Continue",
+        "tags": [
+          "shopping",
+          "woman's day",
+          "shared",
+          "favorite",
+          "tailgate",
+          "finds"
+        ],
+        "age": 20
       },
       {
         "id": "womans-day-style-fashion-a73605076-tommy-bahama-stetson-collection",
@@ -704,8 +730,8 @@ export const storybookFixtureData = {
         "readTime": "4 min read",
         "publishedAt": "2026-09-03T19:16:13.000Z",
         "sourceUrl": "https://www.womansday.com/style/fashion/a73605076/tommy-bahama-stetson-collection/",
-        "popularity": 75,
-        "signal": "Continue",
+        "popularity": 74,
+        "signal": "Most Popular",
         "tags": [
           "style",
           "woman's day",
@@ -714,7 +740,7 @@ export const storybookFixtureData = {
           "tommy",
           "bahama"
         ],
-        "age": 78
+        "age": 723
       },
       {
         "id": "womans-day-life-g73554439-the-best-back-to-school-essentials-for-teens-in-2026",
@@ -729,8 +755,8 @@ export const storybookFixtureData = {
         "readTime": "4 min read",
         "publishedAt": "2026-08-30T22:11:37.000Z",
         "sourceUrl": "https://www.womansday.com/life/g73554439/the-best-back-to-school-essentials-for-teens-in-2026/",
-        "popularity": 74,
-        "signal": "Most Popular",
+        "popularity": 73,
+        "signal": "Trending",
         "tags": [
           "shopping",
           "woman's day",
@@ -739,32 +765,7 @@ export const storybookFixtureData = {
           "actually",
           "want"
         ],
-        "age": 171
-      },
-      {
-        "id": "womans-day-life-travel-tips-a73494673-i-took-my-family-to-irelandheres-the-2-stop-itinerary-id-recommend",
-        "brand": "Woman's Day",
-        "brandSlug": "womans-day",
-        "topic": "Shopping",
-        "title": "I Took My Family to Ireland—Here’s the Dublin + County Clare Itinerary I’d Do Again",
-        "summary": "Planning an Ireland family vacation? Here’s where to stay, eat and explore in Dublin and County Clare, from the Cliffs of Moher to Dromoland Castle.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/9cec1064-6052-4d78-bd9f-9219d58fe6ac.jpg?crop=1.00xw:0.376xh;0,0.243xh&resize=1200:*",
-        "imageCredit": "",
-        "byline": "Meaghan B Murphy",
-        "readTime": "4 min read",
-        "publishedAt": "2026-08-21T15:09:48.000Z",
-        "sourceUrl": "https://www.womansday.com/life/travel-tips/a73494673/i-took-my-family-to-irelandheres-the-2-stop-itinerary-id-recommend/",
-        "popularity": 73,
-        "signal": "Trending",
-        "tags": [
-          "shopping",
-          "woman's day",
-          "took",
-          "family",
-          "ireland",
-          "here"
-        ],
-        "age": 394
+        "age": 816
       }
     ],
     "sourceNotes": [
@@ -793,7 +794,7 @@ export const storybookFixtureData = {
         "brand": "Good Housekeeping",
         "brandSlug": "good-housekeeping",
         "feedCount": 7,
-        "importedCount": 288,
+        "importedCount": 283,
         "selectedCount": 28
       },
       {
@@ -828,14 +829,14 @@ export const storybookFixtureData = {
         "brand": "Seventeen",
         "brandSlug": "seventeen",
         "feedCount": 2,
-        "importedCount": 32,
+        "importedCount": 30,
         "selectedCount": 30
       },
       {
         "brand": "Woman's Day",
         "brandSlug": "womans-day",
         "feedCount": 2,
-        "importedCount": 11,
+        "importedCount": 6,
         "selectedCount": 4
       }
     ]
@@ -843,94 +844,95 @@ export const storybookFixtureData = {
   "autos": {
     "stories": [
       {
-        "id": "autoweek-photos-a73598307-ln4-fusion-livery-photos",
+        "id": "autoweek-photos-a73987110-gallery-2027-hyundai-tucson-photos",
         "brand": "Autoweek",
         "brandSlug": "autoweek",
         "topic": "Trucks",
-        "title": "Gallery: LN4 Fusion Livery Photos",
-        "summary": "Lando Norris is officially a race team owner, with his LN4 Fusion car to be entered in F3 next season.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/68fc904d-c9e1-4df9-ac98-ed9949b4f7d1.jpg",
-        "imageCredit": "LN4 Fusion",
-        "readTime": "4 min read",
-        "publishedAt": "2026-09-02T23:23:02.000Z",
-        "sourceUrl": "https://www.autoweek.com/photos/a73598307/ln4-fusion-livery-photos/",
-        "popularity": 88,
-        "signal": "Editor Pick",
+        "title": "Gallery: 2027 Hyundai Tucson Photos",
+        "summary": "The Korean automaker’s most important vehicle gets a bold redesign.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/4bbd415d-2870-41c2-9e47-b9ddfcb37e83.jpg",
+        "imageCredit": "Hyundai",
+        "readTime": "3 min read",
+        "publishedAt": "2026-10-02T00:55:01.000Z",
+        "sourceUrl": "https://www.autoweek.com/photos/a73987110/gallery-2027-hyundai-tucson-photos/",
+        "popularity": 86,
+        "signal": "Most Popular",
         "tags": [
           "trucks",
           "autoweek",
           "gallery",
-          "fusion",
-          "livery",
+          "2027",
+          "hyundai",
+          "tucson",
           "photos"
         ],
-        "age": 98
+        "age": 45
       },
       {
-        "id": "autoweek-racing-indycar-a73626664-mclaughlin-ends-winless-inydcar-drought-at-laguna-seca",
+        "id": "autoweek-racing-formula-1-a74003525-max-verstappen-gives-red-bull-f1-first-pole-of-2026",
         "brand": "Autoweek",
         "brandSlug": "autoweek",
         "topic": "Racing",
-        "title": "Scott McLaughlin Ends Winless Drought to Close IndyCar Season",
-        "summary": "The Team Penske driver dominated at Laguna Seca for his first victory in 35 races as Kyle Kirkwood locked up second in the standings and Alexander Rossi earned his first podium with Ed Carpenter Racing.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/1c5056d6-384d-4165-bb1b-f33e00b43348.jpeg",
-        "imageCredit": "Perry Nelson",
-        "byline": "Susan Wade",
+        "title": "Max Verstappen Gives Red Bull F1 Its First Pole of 2026",
+        "summary": "Verstappen mastered Formula 1’s return to Sepang, delivering Red Bull’s breakthrough qualifying performance of the season at the Bahrain Grand Prix in Malaysia.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/5f16f8e4-f7c3-4e6e-81ca-6e068853aa76.jpeg",
+        "imageCredit": "Sona Maleterova",
+        "byline": "Phillip Horton",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-07T01:22:57.000Z",
-        "sourceUrl": "https://www.autoweek.com/racing/indycar/a73626664/mclaughlin-ends-winless-inydcar-drought-at-laguna-seca/",
+        "publishedAt": "2026-10-03T12:37:21.000Z",
+        "sourceUrl": "https://www.autoweek.com/racing/formula-1/a74003525/max-verstappen-gives-red-bull-f1-first-pole-of-2026/",
         "popularity": 100,
         "signal": "Most Popular",
         "tags": [
           "racing",
           "autoweek",
-          "scott",
-          "mclaughlin",
-          "ends",
-          "winless",
-          "drought"
+          "verstappen",
+          "gives",
+          "bull",
+          "first",
+          "pole"
         ],
-        "age": 0
+        "age": 9
       },
       {
-        "id": "autoweek-racing-nascar-a73626064-creed-darlington-win-tightens-nascar-oreilly-chase",
+        "id": "autoweek-racing-nhra-a74002837-nhra-racers-get-crown-of-weiners-at-st-louis-in-friday-qualifying",
         "brand": "Autoweek",
         "brandSlug": "autoweek",
         "topic": "Racing",
-        "title": "Sheldon Creed’s Darlington Win Tightens NASCAR O’Reilly Series Chase",
-        "summary": "The playoff opener cut Justin Allgaier’s lead to seven points and left six drivers separated by just 48 entering Race 2.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/9c789584-cac9-4b3b-83d3-4be7bd0378bf.jpeg",
-        "imageCredit": "James Gilbert",
-        "byline": "Deb Williams",
+        "title": "NHRA Racers Get 'Crown of Weiners' At St. Louis In Friday Qualifying",
+        "summary": "Top NHRA qualifiers got a trophy they could really relish Friday at WWT Raceway.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/63935347-23fb-46ec-8222-0fb86e1b970b.jpg",
+        "imageCredit": "NHRA",
+        "byline": "Susan Wade",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-06T21:35:56.000Z",
-        "sourceUrl": "https://www.autoweek.com/racing/nascar/a73626064/creed-darlington-win-tightens-nascar-oreilly-chase/",
+        "publishedAt": "2026-10-03T10:24:28.000Z",
+        "sourceUrl": "https://www.autoweek.com/racing/nhra/a74002837/nhra-racers-get-crown-of-weiners-at-st-louis-in-friday-qualifying/",
         "popularity": 94,
         "signal": "Editor Pick",
         "tags": [
           "racing",
           "autoweek",
-          "sheldon",
-          "creed",
-          "darlington",
-          "tightens",
-          "nascar"
+          "nhra",
+          "racers",
+          "crown",
+          "weiners",
+          "louis"
         ],
-        "age": 4
+        "age": 11
       },
       {
-        "id": "bring-a-trailer-listing-1992-lamborghini-diablo-8",
+        "id": "bring-a-trailer-listing-1983-mercedes-benz-380sel-16",
         "brand": "Bring a Trailer",
         "brandSlug": "bring-a-trailer",
         "topic": "Classics",
-        "title": "Euro 1992 Lamborghini Diablo",
-        "summary": "This European-market 1992 Lamborghini Diablo spent time in Japan prior to being imported to the US in 2024, and it is powered by a 5.7-liter V12 paired with a five-speed manual transmission. Finished in red over beige leather, the car is equipped with a limited-slip differential, 17\" five-hole alloy wheels, an aftermarket exhaust system, retractable headlights, fog lights, scissor doors, air conditioning, a gated shifter, an Alpine sound system, an Eclipse head unit, and fixed-back bucket seats. The current owner purchased the car in 2024, and service in April 2026 included installing a triple-disc clutch, repairing a coolant leak, and replacing the spark plugs. This Diablo shows 41k kilometers (~25k miles) and is now offered by the seller on behalf of the owner with recent service records, a car cover, a clean Carfax report, and a Washington title in the name of the current owner's business.",
-        "image": "https://bringatrailer.com/wp-content/uploads/2025/11/2-2db79819e5700e4ac4a4af183bb02ff8-scaled-copy-2026-09-02-6i6-77885.jpg?w=940",
+        "title": "33k-Mile 1983 Mercedes-Benz 380SEL",
+        "summary": "This 1983 Mercedes-Benz 380SEL is powered by a 3.8-liter M116 V8 paired with a four-speed automatic transmission and now shows 33k miles. The car is finished in Astral Silver Metallic over Blue leather, and equipment includes a glass sunroof, 14\" Bundt alloy wheels, power-adjustable front seats, a leather-wrapped steering wheel, a Becker cassette stereo, power windows, air conditioning, and cruise control. This W126 380SEL is now offered by the seller on behalf of the owner, a licensed Maryland retail dealer, with a Maryland title.",
+        "image": "https://bringatrailer.com/wp-content/uploads/2026/09/17-print-1983_MERCEDES-BENZ_380-017-scaled-copy-2026-09-28-57j-17377.jpg?w=940",
         "imageCredit": "",
         "byline": "bringatrailer",
-        "readTime": "6 min read",
-        "publishedAt": "2026-09-07T00:01:08.000Z",
-        "sourceUrl": "https://bringatrailer.com/listing/1992-lamborghini-diablo-8/",
+        "readTime": "5 min read",
+        "publishedAt": "2026-10-03T22:10:11.000Z",
+        "sourceUrl": "https://bringatrailer.com/listing/1983-mercedes-benz-380sel-16/",
         "popularity": 99,
         "signal": "Trending",
         "tags": [
@@ -938,134 +940,132 @@ export const storybookFixtureData = {
           "bring a trailer",
           "bring",
           "trailer",
-          "euro",
-          "1992",
-          "lamborghini",
-          "diablo"
+          "33k-mile",
+          "1983",
+          "mercedes-benz",
+          "380sel"
         ],
-        "age": 1
+        "age": 0
       },
       {
-        "id": "bring-a-trailer-listing-1969-chevrolet-camaro-549",
+        "id": "bring-a-trailer-listing-2003-porsche-911-carrera-cabriolet-108",
         "brand": "Bring a Trailer",
         "brandSlug": "bring-a-trailer",
-        "topic": "EVs",
-        "title": "LSA-Powered 1969 Chevrolet Camaro Coupe 6-Speed",
-        "summary": "This 1969 Chevrolet Camaro coupe is the result of a custom build completed in 2023 that involved mounting a Dynacorn reproduction body shell atop a Roadster Shop SPEC chassis as well as installing a supercharged 6.2-liter LSA V8 linked to a Tremec six-speed manual transmission and a fabricated 9\" rear end. The chassis features adjustable coilovers, power rack-and-pinion steering, reinforced front control arms, a rear four-link setup, and power-assisted four-wheel disc brakes with Baer six-piston front calipers. The body was painted in Dark Shadow Gray and features a cowl hood, tucked and smoothed body-color bumpers, Ringbrothers door mirrors, and front and rear spoilers. Inside, Recaro front bucket seats and a custom rear bench are trimmed in black leather and suede and accompanied by a Billet Specialties steering wheel, a center console, Vintage Air climate control, and Dakota Digital gauges. Additional equipment includes a Katech throttle body, billet hood hinges, an aluminum radiator with dual electric fans, a stainless dual exhaust system, and 18\" Forgeline wheels. This modified Camaro is now offered in Canada on consignment by the selling dealer, a BaT Local Partner , with an Ontario registration document.",
-        "image": "https://bringatrailer.com/wp-content/uploads/2026/01/1-copy-2026-09-01-gqc-92281.jpg?w=940",
+        "topic": "Classics",
+        "title": "38k-Mile 2003 Porsche 911 Carrera Cabriolet 6-Speed at No Reserve",
+        "summary": "This 2003 Porsche 911 Carrera cabriolet has remained registered in California since 2007 and now has 38k miles. The car is powered by a 3.6-liter M96 flat-six paired with a six-speed manual transaxle and is finished in black over black leather. Features include a black soft top, the Heated Front Seats Package, xenon headlights, a deployable rear spoiler, 19\" multi-spoke wheels, Porsche Stability Management, heated front seats, a Becker Porsche CD stereo, cruise control, aluminum interior trim inlays, and automatic climate control. This 996.2 cabriolet is now offered in Massachusetts by the selling dealer with service records and a clean California title.",
+        "image": "https://bringatrailer.com/wp-content/uploads/2026/08/20260825_091304-scaled-copy-2026-09-18-99g-01650.jpg?w=940",
         "imageCredit": "",
         "byline": "bringatrailer",
-        "readTime": "7 min read",
-        "publishedAt": "2026-09-06T23:55:27.000Z",
-        "sourceUrl": "https://bringatrailer.com/listing/1969-chevrolet-camaro-549/",
+        "readTime": "5 min read",
+        "publishedAt": "2026-10-03T22:07:23.000Z",
+        "sourceUrl": "https://bringatrailer.com/listing/2003-porsche-911-carrera-cabriolet-108/",
         "popularity": 93,
         "signal": "Continue",
         "tags": [
-          "evs",
+          "classics",
           "bring a trailer",
           "bring",
           "trailer",
-          "lsa-powered",
-          "1969",
-          "chevrolet",
-          "camaro"
+          "38k-mile",
+          "2003",
+          "porsche",
+          "carrera"
         ],
-        "age": 1
+        "age": 0
       },
       {
-        "id": "bring-a-trailer-listing-2014-lotus-evora-14-2",
+        "id": "bring-a-trailer-listing-1970-bultaco-pursang-6",
         "brand": "Bring a Trailer",
         "brandSlug": "bring-a-trailer",
-        "topic": "EVs",
-        "title": "4,700-Mile 2014 Lotus Evora 2+2 6-Speed",
-        "summary": "This 2014 Lotus Evora 2+2 was acquired new by the owner and configured with the Sport and Tech Packs in addition to the Premium Pack Heated and Stealth Grey 18\" and 19\" Y-spoke wheels. The optioned Packs together equip the car with a switchable sports mode, a sports diffuser, and cross-drilled disc brakes with red-painted calipers in addition to rear parking sensors, heated bucket seats, extended leather, navigation, and an upgraded audio system. Finished in Amethyst Gray Metallic over Venom Red upholstery, the car is powered by a 3.5-liter V6 linked with a six-speed manual transaxle. Previously offered on BaT in August 2026 , this Evora has 4,700 miles and is now offered again with a window sticker, the owner's manual, a clean Carfax report, and a clean Nebraska title in the seller's name.",
-        "image": "https://bringatrailer.com/wp-content/uploads/2026/09/FL0A3881-scaled-96040-pb7q8V-1-copy-2026-09-05-vhy-74247.jpg?w=940",
+        "topic": "Classics",
+        "title": "1970 Bultaco Pursang",
+        "summary": "This 1970 Bultaco Pursang was acquired by the seller as a non-running project in 2019, and a subsequent refurbishment involved rebuilding the 244cc two-stroke single, replacing the bodywork, powder-coating the frame and swingarm, and installing a Mikuni carburetor and a Vape electronic ignition system. The bike rides on rebuilt wire-spoke wheels and is further equipped with Betor shocks, a high-mount fender, number plates, and a cross-braced handlebar. This Mk4 Pursang is now offered in Iowa for off-road use only with an engine stand, refurbishment records, a parts manual, and a bill of sale.",
+        "image": "https://bringatrailer.com/wp-content/uploads/2026/09/IMG_4906-scaled-copy-2026-09-29-p6r-92353.jpeg?w=940",
         "imageCredit": "",
         "byline": "bringatrailer",
-        "readTime": "6 min read",
-        "publishedAt": "2026-09-06T23:50:13.000Z",
-        "sourceUrl": "https://bringatrailer.com/listing/2014-lotus-evora-14-2/",
+        "readTime": "5 min read",
+        "publishedAt": "2026-10-03T22:06:16.000Z",
+        "sourceUrl": "https://bringatrailer.com/listing/1970-bultaco-pursang-6/",
         "popularity": 87,
         "signal": "Trending",
         "tags": [
-          "evs",
+          "classics",
           "bring a trailer",
           "bring",
           "trailer",
-          "700-mile",
-          "2014",
-          "lotus",
-          "evora"
+          "1970",
+          "bultaco",
+          "pursang"
         ],
-        "age": 1
+        "age": 0
       },
       {
-        "id": "car-and-driver-photos-a73571805-ev-vs-hybrid-vs-gas-best-road-trip-car-gallery",
+        "id": "car-and-driver-photos-a73963655-1978-subaru-wagon-through-baja-archive-feature-gallery",
         "brand": "Car and Driver",
         "brandSlug": "car-and-driver",
-        "topic": "EVs",
-        "title": "View Photos of the EV vs. Hybrid vs. Gas Vehicle Test",
-        "summary": "See the interior and exterior of the 2026 Tesla Model 3, Honda Accord Touring Hybrid, and Volkswagen Jetta GLI from every angle.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/21f722f6-a48c-4650-ad5b-a9432810c3c1.jpg",
-        "imageCredit": "Michael Simari",
-        "byline": "Marc Urbano, Michael Simari",
-        "readTime": "4 min read",
-        "publishedAt": "2026-09-05T13:31:25.000Z",
-        "sourceUrl": "https://www.caranddriver.com/photos/a73571805/ev-vs-hybrid-vs-gas-best-road-trip-car-gallery/",
-        "popularity": 86,
-        "signal": "Editor Pick",
+        "topic": "Reviews",
+        "title": "View Photos of the 1978 Subaru Wagon Through Baja",
+        "summary": "See photos of the 1978 Subaru wagon through Baja from every angle.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/656510d4-7dd3-4b6b-8012-75ebd70f948a.jpg",
+        "imageCredit": "Al Satterwhite",
+        "readTime": "3 min read",
+        "publishedAt": "2026-10-03T12:47:15.000Z",
+        "sourceUrl": "https://www.caranddriver.com/photos/a73963655/1978-subaru-wagon-through-baja-archive-feature-gallery/",
+        "popularity": 80,
+        "signal": "Most Popular",
         "tags": [
-          "evs",
+          "reviews",
           "car and driver",
           "driver",
           "view",
           "photos",
-          "hybrid",
-          "vehicle",
-          "test"
+          "1978",
+          "subaru",
+          "wagon"
         ],
-        "age": 36
+        "age": 9
       },
       {
-        "id": "car-and-driver-news-a73593901-2003-bmw-z4-bring-a-trailer-auction",
+        "id": "car-and-driver-features-columns-a73929551-ezra-dyer-friend-ferrari-f40",
         "brand": "Car and Driver",
         "brandSlug": "car-and-driver",
         "topic": "Reviews",
-        "title": "This BMW Roadster on Bring a Trailer Is Not What It Appears to Be",
-        "summary": "It’s the perfect car for those with Z8 tastes but a Z4 budget.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/44ecc4fe-ce5d-42a7-a023-19e969fcd4f9.jpeg",
-        "imageCredit": "Bring a Trailer",
-        "byline": "Brendan McAleer",
+        "title": "Ezra Dyer: Let Me Tell You About My (Friend’s) Ferrari F40",
+        "summary": "The Ferrari F40 conundrum: What do you do when the best car you own is the worst car for your life?",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/103bf0e6-81f6-40f1-b5eb-882279317060.png",
+        "imageCredit": "Illustration by Jon Stich",
+        "byline": "Ezra Dyer",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-06T15:00:00.000Z",
-        "sourceUrl": "https://www.caranddriver.com/news/a73593901/2003-bmw-z4-bring-a-trailer-auction/",
+        "publishedAt": "2026-10-03T18:00:00.000Z",
+        "sourceUrl": "https://www.caranddriver.com/features/columns/a73929551/ezra-dyer-friend-ferrari-f40/",
         "popularity": 98,
         "signal": "Editor Pick",
         "tags": [
           "reviews",
           "car and driver",
           "driver",
-          "this",
-          "roadster",
-          "bring",
-          "trailer",
-          "what"
+          "ezra",
+          "dyer",
+          "tell",
+          "about",
+          "friend"
         ],
-        "age": 10
+        "age": 4
       },
       {
-        "id": "car-and-driver-news-a73594889-british-wedding-car-bring-a-trailer-auction",
+        "id": "car-and-driver-news-a73992894-1963-ford-falcon-ranchero-bring-a-trailer-auction",
         "brand": "Car and Driver",
         "brandSlug": "car-and-driver",
         "topic": "Reviews",
-        "title": "Say ‘I Do’ to This Wild British Wedding Car on BaT",
-        "summary": "The 1996 Imperial Landaulette is based on an Austin taxi and powered by a Nissan diesel engine.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/505119b2-5765-43af-9e61-b4e80ab87b06.jpeg",
+        "title": "This 1963 Falcon Ranchero on BaT Was Ford’s Original Small Pickup",
+        "summary": "It has an undeniable simple charm.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/e927299a-c02b-4d90-b1b2-b47dcfc69a89.jpeg",
         "imageCredit": "Bring a Trailer",
         "byline": "Brendan McAleer",
-        "readTime": "4 min read",
-        "publishedAt": "2026-09-05T15:00:00.000Z",
-        "sourceUrl": "https://www.caranddriver.com/news/a73594889/british-wedding-car-bring-a-trailer-auction/",
+        "readTime": "3 min read",
+        "publishedAt": "2026-10-03T15:00:00.000Z",
+        "sourceUrl": "https://www.caranddriver.com/news/a73992894/1963-ford-falcon-ranchero-bring-a-trailer-auction/",
         "popularity": 92,
         "signal": "Most Popular",
         "tags": [
@@ -1073,212 +1073,211 @@ export const storybookFixtureData = {
           "car and driver",
           "driver",
           "this",
-          "wild",
-          "british",
-          "wedding"
+          "1963",
+          "falcon",
+          "ranchero",
+          "ford"
         ],
-        "age": 34
+        "age": 7
       },
       {
-        "id": "hot-rod-events-2026-hot-rod-drag-week-schedule-route-66-raceway",
+        "id": "hot-rod-events-2026-grand-national-truck-show-photo-gallery-pomona",
         "brand": "HOT ROD",
         "brandSlug": "hot-rod",
         "topic": "EVs",
-        "title": "HOT ROD Drag Week 2026: Routes, Locations, and All Details Inside!",
-        "summary": "The toughest street car event on Earth returns with a historic host track, brand-new route, and a chance at glory.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/dc35ce36-dc23-4bc9-b8af-869b3c540d49.jpg",
-        "imageCredit": "Hot Rod Archives",
-        "byline": "Mike Galimi",
+        "title": "2026 Grand National Truck Show Photo Gallery: America's Best Trucks Invade Pomona",
+        "summary": "From WMBT contenders to iconic vans and nostalgic OBS pickups, here's what stole the show in Pomona.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/03d4273b-2e90-4cac-baff-b53a3e30c813.jpg",
+        "imageCredit": "John McGann",
+        "byline": "John McGann",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-04T22:00:16.000Z",
-        "sourceUrl": "https://www.hotrod.com/events/2026-hot-rod-drag-week-schedule-route-66-raceway",
-        "popularity": 97,
-        "signal": "Continue",
+        "publishedAt": "2026-09-28T19:43:54.000Z",
+        "sourceUrl": "https://www.hotrod.com/events/2026-grand-national-truck-show-photo-gallery-pomona",
+        "popularity": 55,
+        "signal": "Trending",
         "tags": [
           "evs",
           "hot rod",
-          "drag",
-          "week",
           "2026",
-          "routes",
-          "locations",
-          "details"
+          "grand",
+          "national",
+          "truck",
+          "show",
+          "photo"
         ],
-        "age": 51
+        "age": 122
       },
       {
-        "id": "hot-rod-features-bmr-suspension-acquires-hotchkis-sport-suspension",
+        "id": "hot-rod-how-to-dlc-flat-tappet-lifters-cam-break-in-test-results",
+        "brand": "HOT ROD",
+        "brandSlug": "hot-rod",
+        "topic": "Reviews",
+        "title": "How DLC Lifters Can Dramatically Improve Flat-Tappet Cam Break-In Success",
+        "summary": "Dyno testing reveals why one lifter upgrade could save your next engine build from disaster.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/fd90ce4f-011f-4699-b3c7-ceadbb68801f.jpg",
+        "imageCredit": "Manufacturer",
+        "byline": "Jeff Smith",
+        "readTime": "4 min read",
+        "publishedAt": "2026-10-02T23:28:04.000Z",
+        "sourceUrl": "https://www.hotrod.com/how-to/dlc-flat-tappet-lifters-cam-break-in-test-results",
+        "popularity": 97,
+        "signal": "Continue",
+        "tags": [
+          "reviews",
+          "hot rod",
+          "lifters",
+          "dramatically",
+          "improve",
+          "flat-tappet",
+          "break-in",
+          "success"
+        ],
+        "age": 22
+      },
+      {
+        "id": "hot-rod-features-800-hp-twin-turbo-ford-maverick-coyote-v8-sema-2026",
         "brand": "HOT ROD",
         "brandSlug": "hot-rod",
         "topic": "Performance",
-        "title": "BMR Just Acquired Hotchkis. Here’s What It Means for Performance Enthusiasts",
-        "summary": "BMR Suspension has acquired Hotchkis Sport Suspension, bringing two respected names in muscle car handling under one roof as the aftermarket continues to consolidate.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/ab783a58-e1d2-4344-bbd9-a44bbbde3a69.jpg",
-        "imageCredit": "BMR",
+        "title": "800-Horsepower Twin-Turbo Ford Maverick Compact Truck Being Built for SEMA 2026",
+        "summary": "Forget practical. Tucci Hot Rods is building the fire-breathing, twin-turbo V-8 Maverick every hot rodder wished Ford had built from day one.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/89823fef-a7e9-4d8c-b43b-5b366de0705e.jpg",
+        "imageCredit": "HOT ROD",
         "byline": "Steven Rupp",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-04T17:01:00.000Z",
-        "sourceUrl": "https://www.hotrod.com/features/bmr-suspension-acquires-hotchkis-sport-suspension",
+        "publishedAt": "2026-10-01T16:03:00.000Z",
+        "sourceUrl": "https://www.hotrod.com/features/800-hp-twin-turbo-ford-maverick-coyote-v8-sema-2026",
         "popularity": 91,
         "signal": "Trending",
         "tags": [
           "performance",
           "hot rod",
-          "just",
-          "acquired",
-          "hotchkis",
-          "here",
-          "what",
-          "means"
+          "800-horsepower",
+          "twin-turbo",
+          "ford",
+          "maverick",
+          "compact",
+          "truck"
         ],
-        "age": 56
+        "age": 54
       },
       {
-        "id": "hot-rod-features-1964-shelby-cobra-daytona-coupe-42-million-auction-record",
-        "brand": "HOT ROD",
-        "brandSlug": "hot-rod",
-        "topic": "Classics",
-        "title": "1964 Shelby Cobra Daytona Coupe Sells for $42.9 Million, Sets American Car Auction Record",
-        "summary": "The Ferrari-fighting Shelby racer nearly doubled the previous record for an American car at auction.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/a01f36dd-a54b-4812-b3f3-849b5c8b6023.jpg",
-        "imageCredit": "Mathieu Heurtault/Gooding & Company",
-        "byline": "Mike Galimi",
-        "readTime": "4 min read",
-        "publishedAt": "2026-09-04T14:01:00.000Z",
-        "sourceUrl": "https://www.hotrod.com/features/1964-shelby-cobra-daytona-coupe-42-million-auction-record",
-        "popularity": 85,
-        "signal": "Continue",
-        "tags": [
-          "classics",
-          "hot rod",
-          "1964",
-          "shelby",
-          "cobra",
-          "daytona",
-          "coupe",
-          "sells"
-        ],
-        "age": 59
-      },
-      {
-        "id": "motortrend-news-teslas-autonomous-cybercab-service-is-go",
+        "id": "motortrend-news-subaru-wrx-and-brz-get-throwback-special-editions",
         "brand": "MotorTrend",
         "brandSlug": "motortrend",
         "topic": "News",
-        "title": "Tesla’s Autonomous Cybercab Service Is GO!",
-        "summary": "Tesla’s steering-wheel-free Cybercab is now available to public riders in Austin through the Robotaxi app, though supply, service area, and pricing are limited.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/39c76fc2-e04e-4ae1-813c-4dc862e7b20b.jpg",
+        "title": "Subaru’s WRX and BRZ Get Throwback Special Editions",
+        "summary": "The 2027 WRX GD25 and BRZ ZC15 celebrate the cars’ U.S. anniversaries with gold wheels, upgraded hardware, and classic chassis-code-inspired style.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/66f859ba-b26f-43be-a2e3-b0e713955477.jpg",
         "imageCredit": "MotorTrend",
-        "byline": "Edward Loh",
+        "byline": "Miguel Cortina",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-04T18:57:52.200Z",
-        "sourceUrl": "https://www.motortrend.com/news/teslas-autonomous-cybercab-service-is-go",
+        "publishedAt": "2026-10-02T21:01:31.301Z",
+        "sourceUrl": "https://www.motortrend.com/news/subaru-wrx-and-brz-get-throwback-special-editions",
         "popularity": 96,
         "signal": "Most Popular",
         "tags": [
           "news",
           "motortrend",
-          "tesla",
-          "autonomous",
-          "cybercab",
-          "service"
+          "subaru",
+          "throwback",
+          "special",
+          "editions"
         ],
-        "age": 54
+        "age": 25
       },
       {
-        "id": "motortrend-reviews-comparison-2004-audi-a4-cabriolet-mercedes-benz-clk320-saab-9-3-convertible-archive",
+        "id": "motortrend-reviews-first-drive-2026-volkswagen-id-polo",
         "brand": "MotorTrend",
         "brandSlug": "motortrend",
         "topic": "EVs",
-        "title": "We Tested Three Luxury Convertibles in 2004, and Came Up With One Surprise Winner",
-        "summary": "We compare the 2004 Audi A4 Cabriolet 3.0, Mercedes-Benz CLK320 Cabriolet, and Saab 9-3 Arc Convertible to find the best luxury drop-top.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/768179ae-03ce-4e5a-a041-4ed430634b26.jpg",
+        "title": "Driven: VW’s New ID.Polo Is the EV Volkswagen Should Have Built in the First Place",
+        "summary": "We drive the 2026 Volkswagen ID.Polo and find it to be an EV that finally captures the charm, usability, and personality missing from VW&#x27;s original ID lineup.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/c96d9414-49e0-4d43-ab35-996a1a4970dd.jpg",
         "imageCredit": "MotorTrend",
-        "byline": "Arthur St. Antoine",
+        "byline": "Angus MacKenzie",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-04T14:29:00.000Z",
-        "sourceUrl": "https://www.motortrend.com/reviews/comparison-2004-audi-a4-cabriolet-mercedes-benz-clk320-saab-9-3-convertible-archive",
+        "publishedAt": "2026-10-02T14:00:00.000Z",
+        "sourceUrl": "https://www.motortrend.com/reviews/first-drive-2026-volkswagen-id-polo",
         "popularity": 90,
         "signal": "Editor Pick",
         "tags": [
           "evs",
           "motortrend",
-          "tested",
-          "three",
-          "luxury",
-          "convertibles",
-          "2004",
-          "came"
+          "driven",
+          "polo",
+          "volkswagen",
+          "should",
+          "have",
+          "built"
         ],
-        "age": 59
+        "age": 32
       },
       {
-        "id": "motortrend-reviews-first-test-2026-hyundai-elantra-n-tcr",
+        "id": "motortrend-news-tesla-semi-diesel-killer-or-giant-cybertruck",
         "brand": "MotorTrend",
         "brandSlug": "motortrend",
-        "topic": "EVs",
-        "title": "Hyundai’s Elantra N TCR Certainly Looks Faster. Our Testing Tells a Different Story.",
-        "summary": "We test the 2026 Hyundai Elantra N TCR to see if its race-inspired upgrades make it quicker, sharper, and worth buying over the standard Elantra N.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/c81f14eb-5e3c-4e12-a037-6ea16817322f.jpg",
+        "topic": "Trucks",
+        "title": "Tesla Semi: Diesel Killer or Giant Cybertruck?",
+        "summary": "A million-mile trucker shares his first impressions of the 1,076-hp Tesla Semi after driving it solo and towing 37,000 pounds.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/9638310c-68c1-40f4-a125-4f1cbc747b89.jpg",
         "imageCredit": "MotorTrend",
-        "byline": "Christian Seabaugh",
+        "byline": "Edward Loh",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-04T13:00:00.000Z",
-        "sourceUrl": "https://www.motortrend.com/reviews/first-test-2026-hyundai-elantra-n-tcr",
+        "publishedAt": "2026-10-02T13:00:00.000Z",
+        "sourceUrl": "https://www.motortrend.com/news/tesla-semi-diesel-killer-or-giant-cybertruck",
         "popularity": 84,
         "signal": "Most Popular",
         "tags": [
-          "evs",
+          "trucks",
           "motortrend",
-          "hyundai",
-          "elantra",
-          "certainly",
-          "looks",
-          "faster",
-          "testing"
+          "tesla",
+          "semi",
+          "diesel",
+          "killer",
+          "giant"
         ],
-        "age": 60
+        "age": 33
       },
       {
-        "id": "road-and-track-photos-a73583079-see-every-angle-of-the-2027-chevrolet-corvette-grand-sport-x",
-        "brand": "Road & Track",
-        "brandSlug": "road-and-track",
-        "topic": "EVs",
-        "title": "See Every Angle of the 2027 Chevrolet Corvette Grand Sport X",
-        "summary": "The E-Ray is now the Grand Sport X, and it improves in all the ways that matter most.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/b1a2b4e6-8cd3-496f-ae32-e79b132649bd.jpg",
-        "imageCredit": "Zac Palmer",
-        "byline": "Zac Palmer",
-        "readTime": "4 min read",
-        "publishedAt": "2026-09-03T13:00:00.000Z",
-        "sourceUrl": "https://www.roadandtrack.com/photos/a73583079/see-every-angle-of-the-2027-chevrolet-corvette-grand-sport-x/",
-        "popularity": 64,
-        "signal": "Editor Pick",
-        "tags": [
-          "evs",
-          "road & track",
-          "road",
-          "track",
-          "every",
-          "angle",
-          "2027",
-          "chevrolet"
-        ],
-        "age": 84
-      },
-      {
-        "id": "road-and-track-news-a73626643-heartbreaking-final-minutes-for-toyota-lead-to-ferraris-first-wec-win-of-the-year-at-cota",
+        "id": "road-and-track-photos-a73977776-see-more-photos-of-the-2027-hyundai-tucson",
         "brand": "Road & Track",
         "brandSlug": "road-and-track",
         "topic": "News",
-        "title": "Heartbreaking Final Minutes for Toyota Lead to Ferrari’s First WEC Win of the Year at COTA",
-        "summary": "The No. 50 Ferrari won the 6 Hours Lone Star Le Mans over Cadillac and Alpine following a late hydraulic failure for Toyota Racing.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/a5f41179-e40e-4ec0-8f59-2c785ed7b01e.jpeg",
-        "imageCredit": "James Moy Photography",
+        "title": "See More Photos of the 2027 Hyundai Tucson",
+        "summary": "The compact crossover has a whole new look.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/408931a9-64d8-4f0b-9fc0-0720a30854a4.jpg",
+        "imageCredit": "Hyundai",
+        "readTime": "3 min read",
+        "publishedAt": "2026-10-01T21:15:00.000Z",
+        "sourceUrl": "https://www.roadandtrack.com/photos/a73977776/see-more-photos-of-the-2027-hyundai-tucson/",
+        "popularity": 81,
+        "signal": "Trending",
+        "tags": [
+          "news",
+          "road & track",
+          "road",
+          "track",
+          "more",
+          "photos",
+          "2027",
+          "hyundai"
+        ],
+        "age": 49
+      },
+      {
+        "id": "road-and-track-news-a74008113-magnussen-palou-crash-petit-le-mans-cadillac-leads-halfway-mark",
+        "brand": "Road & Track",
+        "brandSlug": "road-and-track",
+        "topic": "News",
+        "title": "Cadillac Benefits from Magnussen-Palou Crash at Petit Le Mans Halfway Mark",
+        "summary": "Alex Palou, in the opening corners of his first race at Road Atlanta, was involved in an incident with Kevin Magnussen in the No. 25 BMW.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/dd2f4823-1193-4e1f-8f53-824baa07e455.png",
+        "imageCredit": "IMSA on NBC",
         "byline": "Victoria Beaver",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-07T00:36:30.000Z",
-        "sourceUrl": "https://www.roadandtrack.com/news/a73626643/heartbreaking-final-minutes-for-toyota-lead-to-ferraris-first-wec-win-of-the-year-at-cota/",
+        "publishedAt": "2026-10-03T21:29:56.000Z",
+        "sourceUrl": "https://www.roadandtrack.com/news/a74008113/magnussen-palou-crash-petit-le-mans-cadillac-leads-halfway-mark/",
         "popularity": 95,
         "signal": "Trending",
         "tags": [
@@ -1286,26 +1285,26 @@ export const storybookFixtureData = {
           "road & track",
           "road",
           "track",
-          "heartbreaking",
-          "final",
-          "minutes",
-          "toyota"
+          "cadillac",
+          "benefits",
+          "from",
+          "magnussen-palou"
         ],
-        "age": 1
+        "age": 0
       },
       {
-        "id": "road-and-track-news-a73626500-a-nightmare-monza-for-ferrari-as-leclerc-crashes-out-and-frustrated-hamilton-calls-for-changes",
+        "id": "road-and-track-news-a74006599-mercedes-struggles-brings-long-awaited-upgrades-malaysia",
         "brand": "Road & Track",
         "brandSlug": "road-and-track",
         "topic": "News",
-        "title": "A Nightmare Monza for Ferrari as Leclerc Crashes Out and Frustrated Hamilton Calls for Changes",
-        "summary": "Hamilton wants ‘rules of engagement’ after teammates touched on the first lap.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/257447f0-604c-4b95-848c-bc9e88a4c81f.jpeg",
-        "imageCredit": "ANDREJ ISAKOVIC",
+        "title": "Mercedes Struggles to Get It Right As It Brings Long-Awaited Upgrades to Malaysia",
+        "summary": "Antonelli only qualified fourth as Mercedes trials new parts.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/4ef6c63f-fb5d-4c6a-9fe0-760d25d7705b.jpeg",
+        "imageCredit": "Kym Illman",
         "byline": "Adam Cooper",
-        "readTime": "4 min read",
-        "publishedAt": "2026-09-06T23:25:33.000Z",
-        "sourceUrl": "https://www.roadandtrack.com/news/a73626500/a-nightmare-monza-for-ferrari-as-leclerc-crashes-out-and-frustrated-hamilton-calls-for-changes/",
+        "readTime": "3 min read",
+        "publishedAt": "2026-10-03T17:29:48.000Z",
+        "sourceUrl": "https://www.roadandtrack.com/news/a74006599/mercedes-struggles-brings-long-awaited-upgrades-malaysia/",
         "popularity": 89,
         "signal": "Continue",
         "tags": [
@@ -1313,12 +1312,12 @@ export const storybookFixtureData = {
           "road & track",
           "road",
           "track",
-          "nightmare",
-          "monza",
-          "ferrari",
-          "leclerc"
+          "mercedes",
+          "struggles",
+          "right",
+          "brings"
         ],
-        "age": 2
+        "age": 4
       }
     ],
     "sourceNotes": [
@@ -1347,14 +1346,14 @@ export const storybookFixtureData = {
         "brand": "HOT ROD",
         "brandSlug": "hot-rod",
         "feedCount": 1,
-        "importedCount": 45,
+        "importedCount": 50,
         "selectedCount": 36
       },
       {
         "brand": "MotorTrend",
         "brandSlug": "motortrend",
         "feedCount": 3,
-        "importedCount": 54,
+        "importedCount": 56,
         "selectedCount": 36
       },
       {
@@ -1369,476 +1368,478 @@ export const storybookFixtureData = {
   "flux": {
     "stories": [
       {
-        "id": "elle-culture-celebrities-a73616371-sydney-sweeney-sheer-vintage-armani-gown-venice-dinner-photos",
+        "id": "elle-fashion-celebrity-style-a73995501-sarah-jessica-parker-simone-rocha-ballet-look-2026-details-photos",
         "brand": "Elle",
         "brandSlug": "elle",
-        "topic": "Culture",
-        "title": "Sydney Sweeney Wore a Sheer Vintage Armani Gown With a Black Thong",
-        "summary": "The actress channeled one of her most viral red carpet looks at the Venice Film Festival.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/c62d0c92-2e5c-4f30-837b-175b62b30da3.jpg",
-        "imageCredit": "Carlo Paloni",
-        "byline": "Alyssa Bailey",
-        "readTime": "4 min read",
-        "publishedAt": "2026-09-04T21:13:47.000Z",
-        "sourceUrl": "https://www.elle.com/culture/celebrities/a73616371/sydney-sweeney-sheer-vintage-armani-gown-venice-dinner-photos/",
-        "popularity": 74,
-        "signal": "Most Popular",
+        "topic": "Style",
+        "title": "Sarah Jessica Parker’s Ballet Look Had Ribbons Everywhere—Even Her Ponytail",
+        "summary": "No one commits to a theme quite like SJP.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/92c17e5d-386d-49ea-b57c-c74f895b975b.jpeg",
+        "imageCredit": "Gilbert Carrasquillo",
+        "byline": "Moriel Mizrahi Finder",
+        "readTime": "3 min read",
+        "publishedAt": "2026-10-02T16:10:55.000Z",
+        "sourceUrl": "https://www.elle.com/fashion/celebrity-style/a73995501/sarah-jessica-parker-simone-rocha-ballet-look-2026-details-photos/",
+        "popularity": 56,
+        "signal": "Editor Pick",
         "tags": [
-          "culture",
+          "style",
           "elle",
-          "sydney",
-          "sweeney",
-          "wore",
-          "sheer",
-          "vintage"
+          "sarah",
+          "jessica",
+          "parker",
+          "ballet",
+          "look"
         ],
-        "age": 52
+        "age": 30
       },
       {
-        "id": "elle-culture-celebrities-a69470643-who-is-north-west-kim-kardashian-kanye-west-daughter",
+        "id": "elle-culture-celebrities-a64907566-michelle-barack-obama-relationship-timeline",
         "brand": "Elle",
         "brandSlug": "elle",
         "topic": "Culture",
-        "title": "All About North West, Kim Kardashian and Kanye West’s Eldest Child",
+        "title": "Michelle and Barack Obama’s Complete Relationship Timeline",
         "summary": "Elle editors recommend this culture story.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/b8073e58-3dc0-49b7-bb4a-69dcdda33766.jpeg",
-        "imageCredit": "Arnold Jerocki",
-        "byline": "Juliana Ukiomogbe",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/57bcbf69-f3d1-4183-8f71-edb53e5d5c24.jpeg",
+        "imageCredit": "Christopher Polk",
+        "byline": "Aimée Lutkin",
         "readTime": "3 min read",
-        "publishedAt": "2026-09-06T22:13:00.000Z",
-        "sourceUrl": "https://www.elle.com/culture/celebrities/a69470643/who-is-north-west-kim-kardashian-kanye-west-daughter/",
+        "publishedAt": "2026-10-03T20:50:00.000Z",
+        "sourceUrl": "https://www.elle.com/culture/celebrities/a64907566/michelle-barack-obama-relationship-timeline/",
         "popularity": 100,
         "signal": "Most Popular",
         "tags": [
           "culture",
           "elle",
-          "about",
-          "north",
-          "west",
-          "kardashian",
-          "kanye"
+          "michelle",
+          "barack",
+          "obama",
+          "complete",
+          "relationship"
         ],
-        "age": 3
+        "age": 1
       },
       {
-        "id": "elle-culture-music-a71497403-taylor-swift-i-knew-it-i-knew-you-toy-story-5-song-lyrics-meaning",
+        "id": "elle-runway-a74004875-hermes-spring-2027-review",
         "brand": "Elle",
         "brandSlug": "elle",
-        "topic": "Culture",
-        "title": "Taylor Swift’s ‘I Knew It, I Knew You’ Lyrics Capture the Feeling of Reconnecting With Someone You Thought You Lost",
-        "summary": "The singer wrote about Jessie’s journey for the Toy Story 5 track.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/f7c41ae1-9c33-4e4a-8768-078b193e704f.jpeg",
-        "imageCredit": "Erika Goldring/TAS24",
-        "byline": "Alyssa Bailey",
-        "readTime": "4 min read",
-        "publishedAt": "2026-09-06T22:09:00.000Z",
-        "sourceUrl": "https://www.elle.com/culture/music/a71497403/taylor-swift-i-knew-it-i-knew-you-toy-story-5-song-lyrics-meaning/",
+        "topic": "Style",
+        "title": "Hermès Is Embracing Fashion’s Lighter Side",
+        "summary": "The lightness of air served as the reference point for the brand’s spring/summer 2027 show.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/ed49d914-e4e1-41a1-a8ce-e26d0ee8e186.jpeg",
+        "imageCredit": "LOU BENOIST",
+        "byline": "Kristen Bateman",
+        "readTime": "3 min read",
+        "publishedAt": "2026-10-03T20:43:06.000Z",
+        "sourceUrl": "https://www.elle.com/runway/a74004875/hermes-spring-2027-review/",
         "popularity": 94,
         "signal": "Editor Pick",
         "tags": [
-          "culture",
+          "style",
           "elle",
-          "taylor",
-          "swift",
-          "knew",
-          "lyrics"
+          "herm",
+          "embracing",
+          "fashion",
+          "lighter",
+          "side"
         ],
-        "age": 3
+        "age": 1
       },
       {
-        "id": "elle-decor-shopping-a73596348-summer-home-decor-shopping",
+        "id": "elle-decor-design-decorate-house-interiors-a73998297-ryan-lawson-connecticut-barn-house-tour",
         "brand": "Elle Décor",
         "brandSlug": "elle-decor",
         "topic": "Design",
-        "title": "Shop ELLE Decor’s Summer Houses",
-        "summary": "The pieces we couldn’t stop thinking about this summer, inspired by editor-approved homes.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/c7ad8c9d-7143-496b-9e93-a35f43a71a4f.jpg",
-        "imageCredit": "Elle Decor",
-        "byline": "Sean Kim",
-        "readTime": "3 min read",
-        "publishedAt": "2026-09-06T14:00:00.000Z",
-        "sourceUrl": "https://www.elledecor.com/shopping/a73596348/summer-home-decor-shopping/",
+        "title": "How Two Friends Turned a Timeworn Connecticut Garage Into a Vintage-Inspired Barnhouse",
+        "summary": "The new wing designer Ryan Lawson added to restaurateur Rose Bonura’s 300-year-old Colonial feels like it's always been there.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/80ee6efd-5552-4411-aee3-dfaad32deded.jpg",
+        "imageCredit": "Stephen Kent Johnson",
+        "byline": "William Li",
+        "readTime": "4 min read",
+        "publishedAt": "2026-10-03T14:00:00.000Z",
+        "sourceUrl": "https://www.elledecor.com/design-decorate/house-interiors/a73998297/ryan-lawson-connecticut-barn-house-tour/",
         "popularity": 99,
         "signal": "Trending",
         "tags": [
           "design",
           "elle décor",
           "elle",
-          "shop",
-          "decor",
-          "summer",
-          "houses"
+          "friends",
+          "turned",
+          "timeworn",
+          "connecticut",
+          "garage"
         ],
-        "age": 11
+        "age": 8
       },
       {
-        "id": "elle-decor-design-decorate-house-interiors-a73596866-la-jolla-georgis-mirgorodsky-house-tour",
+        "id": "elle-decor-celebrity-style-luxury-real-estate-a73995188-real-estate-roundup-oct-2",
         "brand": "Elle Décor",
         "brandSlug": "elle-decor",
-        "topic": "Design",
-        "title": "A La Jolla Home That Sings “Let the Healing Begin”",
-        "summary": "When a longtime client asked architecture and interiors studio Georgis & Mirgorodsky to revamp a midcentury house after a breakup, the duo devised a haven for new beginnings, in elevated California-cool style.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/d08e4d56-18c2-4bfa-95b3-107deb1ac2d8.jpg",
-        "imageCredit": "Richard Powers",
-        "byline": "Stephen Wallis",
+        "topic": "Style",
+        "title": "Taylor Swift’s “Blank Space” Castle Heads to Auction—Plus 6 More Luxury Homes for Sale",
+        "summary": "This week’s top listings include homes linked to King George III, Diane Keaton, Julia Child, Meghan Markle, and Jackson Pollock.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/4498b913-a71a-4328-baa5-b8c00607ab79.jpg",
+        "imageCredit": "Brett Matthews Photography, Elliott Kaufman Photography, Phillip Ennia, Stefen Turner, and Camelot",
+        "byline": "Geoffrey Montes",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-05T14:00:00.000Z",
-        "sourceUrl": "https://www.elledecor.com/design-decorate/house-interiors/a73596866/la-jolla-georgis-mirgorodsky-house-tour/",
+        "publishedAt": "2026-10-02T22:23:03.000Z",
+        "sourceUrl": "https://www.elledecor.com/celebrity-style/luxury-real-estate/a73995188/real-estate-roundup-oct-2/",
         "popularity": 93,
         "signal": "Continue",
         "tags": [
-          "design",
+          "style",
           "elle décor",
           "elle",
-          "jolla",
-          "home",
-          "that",
-          "sings",
-          "healing"
+          "taylor",
+          "swift",
+          "blank",
+          "space",
+          "castle"
         ],
-        "age": 35
+        "age": 23
       },
       {
-        "id": "elle-decor-shopping-a73615677-ds-durga-hand-soap-review",
+        "id": "elle-decor-life-culture-a73948130-october-horoscope-home-design-2026",
         "brand": "Elle Décor",
         "brandSlug": "elle-decor",
         "topic": "Design",
-        "title": "Obsession: This Hand Soap Smells Like Rain",
-        "summary": "D.S. & Durga’s Big Sur After Rain brings the marine air of California to my New York sink.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/736f5d12-88e0-4b2f-957a-75d5bcae7de3.jpg",
-        "imageCredit": "D.S. & Durga",
-        "byline": "Sean Kim",
-        "readTime": "4 min read",
-        "publishedAt": "2026-09-04T19:00:00.000Z",
-        "sourceUrl": "https://www.elledecor.com/shopping/a73615677/ds-durga-hand-soap-review/",
+        "title": "ELLE Decoroscope: Your October Design Horoscope Is Here",
+        "summary": "October brings a taste audit, courtesy of Venus retrograde.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/205a4809-8e4d-4821-a996-824765925fc6.jpg",
+        "imageCredit": "Hearst Owned",
+        "byline": "Julia Cancilla",
+        "readTime": "3 min read",
+        "publishedAt": "2026-10-02T22:16:46.000Z",
+        "sourceUrl": "https://www.elledecor.com/life-culture/a73948130/october-horoscope-home-design-2026/",
         "popularity": 87,
         "signal": "Trending",
         "tags": [
           "design",
           "elle décor",
           "elle",
-          "obsession",
-          "this",
-          "hand",
-          "soap",
-          "smells"
+          "decoroscope",
+          "your",
+          "october"
         ],
-        "age": 54
+        "age": 24
       },
       {
-        "id": "esquire-entertainment-tv-a73605862-lioness-season-3-episode-6-recap",
+        "id": "esquire-style-mens-accessories-a73977651-how-to-take-better-photos-of-your-watch",
         "brand": "Esquire",
         "brandSlug": "esquire",
-        "topic": "Culture",
-        "title": "Lioness Episode 6 Finally Introduces the Villain",
-        "summary": "As the team races to find Joe, the kidnapper—who might connect to season 2—reveals his face.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/598654d0-c5d6-40e4-b1fb-a5d4026c4c65.jpeg",
-        "imageCredit": "Emerson Miller",
-        "byline": "Josh Rosenberg",
+        "topic": "Style",
+        "title": "How to Take Better Photos of Your Watch (According to a Professional)",
+        "summary": "Tim Vaux has photographed some of the world’s rarest timepieces. His simplest advice works with an iPhone.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/8799ddd7-c4ca-4eab-bdb6-f39a4814794c.jpeg",
+        "imageCredit": "Tim Vaux",
+        "byline": "Johnny Davis",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-06T16:00:00.000Z",
-        "sourceUrl": "https://www.esquire.com/entertainment/tv/a73605862/lioness-season-3-episode-6-recap/",
-        "popularity": 98,
-        "signal": "Editor Pick",
+        "publishedAt": "2026-10-01T14:26:04.000Z",
+        "sourceUrl": "https://www.esquire.com/style/mens-accessories/a73977651/how-to-take-better-photos-of-your-watch/",
+        "popularity": 64,
+        "signal": "Most Popular",
         "tags": [
-          "culture",
+          "style",
           "esquire",
-          "lioness",
-          "episode",
-          "finally",
-          "introduces",
-          "villain"
+          "take",
+          "better",
+          "photos",
+          "your",
+          "watch"
         ],
-        "age": 9
+        "age": 55
       },
       {
-        "id": "esquire-news-politics-politics-a73617613-john-fetterman-israel-fox-news",
+        "id": "esquire-news-politics-politics-a73998608-russell-vought-omb-pocket-recessions-congress-budget",
         "brand": "Esquire",
         "brandSlug": "esquire",
         "topic": "Features",
-        "title": "John Fetterman Is Making the Case for Worst Democratic Senator of All Time",
-        "summary": "Rather than, you know, serving his constituents, the Pennsylvania senator is more interested in jumping on Fox News to yammer about Israel.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/12ddbee7-5222-46ee-9472-064fd0994593.jpeg",
-        "imageCredit": "Anna Moneymaker",
+        "title": "Russell Vought and His Budgeting Cronies Are Using This Sketchy Loophole to Control Government Spending",
+        "summary": "Why the hell are Republican senators letting it happen?",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/b7cc4227-e157-486e-a245-7e9033a422d9.jpeg",
+        "imageCredit": "Bill Clark",
         "byline": "Charles P. Pierce",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-04T23:30:00.000Z",
-        "sourceUrl": "https://www.esquire.com/news-politics/politics/a73617613/john-fetterman-israel-fox-news/",
-        "popularity": 92,
-        "signal": "Most Popular",
+        "publishedAt": "2026-10-02T21:00:03.000Z",
+        "sourceUrl": "https://www.esquire.com/news-politics/politics/a73998608/russell-vought-omb-pocket-recessions-congress-budget/",
+        "popularity": 98,
+        "signal": "Editor Pick",
         "tags": [
           "features",
           "esquire",
-          "john",
-          "fetterman",
-          "making",
-          "case",
-          "worst"
+          "russell",
+          "vought",
+          "budgeting",
+          "cronies",
+          "using"
         ],
-        "age": 50
+        "age": 25
       },
       {
-        "id": "esquire-style-mens-fashion-a73614051-rei-labor-day-sale-2026",
+        "id": "esquire-style-mens-fashion-a73997240-light-jackets-style-guide-men",
         "brand": "Esquire",
         "brandSlug": "esquire",
         "topic": "Style",
-        "title": "The Best Deals from REI's Labor Day Sale: Arc’teryx, Patagonia, and More",
-        "summary": "Enjoy up to 50 percent off everything from lightweight shells to best-selling running shoes.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/70973486-ac8a-49ae-9540-cbbec5281342.jpg",
-        "imageCredit": "REI",
-        "byline": "Sam Peters",
-        "readTime": "4 min read",
-        "publishedAt": "2026-09-04T19:27:15.000Z",
-        "sourceUrl": "https://www.esquire.com/style/mens-fashion/a73614051/rei-labor-day-sale-2026/",
-        "popularity": 86,
-        "signal": "Editor Pick",
+        "title": "The 5 Not-So-Basic Light Jackets Every Man Should Know",
+        "summary": "Stand out from every other guy wearing a Harrington this autumn.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/961bf292-b99a-46ba-b706-9bff44b5625a.jpg",
+        "imageCredit": "Mr Porter, Farfetch, Taylor Stitch, Blue Owl, Levi's, The Real McCoys",
+        "byline": "Jonathan Evans",
+        "readTime": "3 min read",
+        "publishedAt": "2026-10-02T20:23:16.000Z",
+        "sourceUrl": "https://www.esquire.com/style/mens-fashion/a73997240/light-jackets-style-guide-men/",
+        "popularity": 92,
+        "signal": "Most Popular",
         "tags": [
           "style",
           "esquire",
-          "best",
-          "deals",
-          "from",
-          "labor",
-          "sale"
+          "not-so-basic",
+          "light",
+          "jackets",
+          "every",
+          "should"
         ],
-        "age": 54
+        "age": 25
       },
       {
-        "id": "harpers-bazaar-celebrity-latest-a73617370-amal-clooney-polka-dot-stella-mccartney-dress-venice-film-festival-2026-photos",
-        "brand": "Harper's Bazaar",
-        "brandSlug": "harpers-bazaar",
-        "topic": "Culture",
-        "title": "Amal Clooney Captures Venetian Summer Elegance in a Slouchy Polka-Dot Dress",
-        "summary": "And luxurious, beachy accessories",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/a6661d28-5623-44fb-a262-99960e4c10ac.jpg",
-        "imageCredit": "Victor Boyko",
-        "byline": "Rosa Sanchez",
-        "readTime": "3 min read",
-        "publishedAt": "2026-09-04T16:58:23.000Z",
-        "sourceUrl": "https://www.harpersbazaar.com/celebrity/latest/a73617370/amal-clooney-polka-dot-stella-mccartney-dress-venice-film-festival-2026-photos/",
-        "popularity": 85,
-        "signal": "Continue",
-        "tags": [
-          "culture",
-          "harper's bazaar",
-          "harper",
-          "bazaar",
-          "amal",
-          "clooney",
-          "captures",
-          "venetian"
-        ],
-        "age": 56
-      },
-      {
-        "id": "harpers-bazaar-celebrity-latest-a73616946-who-is-emily-ratajkowski-boyfriend-romain-gavras-explained",
-        "brand": "Harper's Bazaar",
-        "brandSlug": "harpers-bazaar",
-        "topic": "Culture",
-        "title": "Who Is Emily Ratajkowski’s Boyfriend, Romain Gavras?",
-        "summary": "The French filmmaker was previously linked to Dua Lipa",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/3088f692-c83f-43ab-bf08-6af3652cf759.jpg",
-        "imageCredit": "XPOS",
-        "byline": "Joel Calfee",
-        "readTime": "3 min read",
-        "publishedAt": "2026-09-04T17:37:39.000Z",
-        "sourceUrl": "https://www.harpersbazaar.com/celebrity/latest/a73616946/who-is-emily-ratajkowski-boyfriend-romain-gavras-explained/",
-        "popularity": 97,
-        "signal": "Continue",
-        "tags": [
-          "culture",
-          "harper's bazaar",
-          "harper",
-          "bazaar",
-          "emily",
-          "ratajkowski",
-          "boyfriend",
-          "romain"
-        ],
-        "age": 56
-      },
-      {
-        "id": "harpers-bazaar-fashion-a73616931-lvmh-prize-winner-2026-announcement-julie-kegels",
+        "id": "harpers-bazaar-celebrity-latest-a74003931-jennifer-lawrence-styles-flip-flops-for-fall-cargo-pants-sheer-cardigan-photos",
         "brand": "Harper's Bazaar",
         "brandSlug": "harpers-bazaar",
         "topic": "Style",
-        "title": "Julie Kegels Wins the LVMH Prize",
-        "summary": "Runners-up include Zane Li of Lii and Anil Padia’s Yoshita 1967",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/68d647e0-3ab7-4bff-9c32-a067157ec645.jpg",
-        "imageCredit": "Getty Images",
-        "byline": "Camille Freestone",
+        "title": "Jennifer Lawrence Brings Flip Flops Into Fall With Cargo Pants and a Semi-Sheer Cardigan",
+        "summary": "Take notes",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/af39d339-540e-4ddb-a484-2ba19dfda8a1.jpg",
+        "imageCredit": "BACKGRID",
+        "byline": "Sophie Wang",
         "readTime": "3 min read",
-        "publishedAt": "2026-09-04T16:59:47.000Z",
-        "sourceUrl": "https://www.harpersbazaar.com/fashion/a73616931/lvmh-prize-winner-2026-announcement-julie-kegels/",
-        "popularity": 91,
-        "signal": "Trending",
+        "publishedAt": "2026-10-03T19:47:02.000Z",
+        "sourceUrl": "https://www.harpersbazaar.com/celebrity/latest/a74003931/jennifer-lawrence-styles-flip-flops-for-fall-cargo-pants-sheer-cardigan-photos/",
+        "popularity": 97,
+        "signal": "Continue",
         "tags": [
           "style",
           "harper's bazaar",
           "harper",
           "bazaar",
-          "julie",
-          "kegels",
-          "wins",
-          "lvmh"
+          "jennifer",
+          "lawrence",
+          "brings",
+          "flip"
+        ],
+        "age": 2
+      },
+      {
+        "id": "harpers-bazaar-celebrity-latest-a74006647-paul-mccartney-reveals-story-about-performing-at-taylor-swift-travis-kelce-wedding-explained",
+        "brand": "Harper's Bazaar",
+        "brandSlug": "harpers-bazaar",
+        "topic": "Culture",
+        "title": "Paul McCartney Opens Up About Performing at Taylor Swift’s Wedding",
+        "summary": "The star revealed his idea for the celebration on Jimmy Kimmel Live",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/3b78187f-f72d-45f1-a865-a53eb95209d4.png",
+        "imageCredit": "Getty Images",
+        "byline": "Sophie Wang",
+        "readTime": "3 min read",
+        "publishedAt": "2026-10-03T18:51:07.000Z",
+        "sourceUrl": "https://www.harpersbazaar.com/celebrity/latest/a74006647/paul-mccartney-reveals-story-about-performing-at-taylor-swift-travis-kelce-wedding-explained/",
+        "popularity": 91,
+        "signal": "Trending",
+        "tags": [
+          "culture",
+          "harper's bazaar",
+          "harper",
+          "bazaar",
+          "paul",
+          "mccartney",
+          "opens",
+          "about"
+        ],
+        "age": 3
+      },
+      {
+        "id": "harpers-bazaar-celebrity-latest-a73944674-all-the-celebrity-looks-paris-fashion-week-spring-2027-shows",
+        "brand": "Harper's Bazaar",
+        "brandSlug": "harpers-bazaar",
+        "topic": "Style",
+        "title": "All the Celebrity Front-Row Looks From the Spring/Summer 2027 Paris Fashion Week Shows",
+        "summary": "From Rosalía to Rihanna to Jennifer Lawrence to Greta Lee",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/2e17b5f9-a574-42a3-bf34-e02c15957b03.jpg",
+        "imageCredit": "Getty Images",
+        "byline": "Sophie Wang",
+        "readTime": "4 min read",
+        "publishedAt": "2026-10-03T16:55:00.000Z",
+        "sourceUrl": "https://www.harpersbazaar.com/celebrity/latest/a73944674/all-the-celebrity-looks-paris-fashion-week-spring-2027-shows/",
+        "popularity": 85,
+        "signal": "Continue",
+        "tags": [
+          "style",
+          "harper's bazaar",
+          "harper",
+          "bazaar",
+          "celebrity",
+          "front-row",
+          "looks",
+          "from"
+        ],
+        "age": 5
+      },
+      {
+        "id": "town-and-country-society-tradition-a73977412-sophie-duchess-edinburgh-reme-brooch-meaning-history-photos-2026",
+        "brand": "Town & Country",
+        "brandSlug": "town-and-country",
+        "topic": "Events",
+        "title": "The Meaning Behind Sophie, Duchess of Edinburgh’s Brooch During a Military Memorial Event",
+        "summary": "The piece of jewelry has roots dating back to World War II.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/963d0f69-fefb-43e7-89e7-bb6995448fd9.jpeg",
+        "imageCredit": "Joe Giddens - PA Images",
+        "byline": "Rachel King",
+        "readTime": "4 min read",
+        "publishedAt": "2026-10-01T14:05:31.000Z",
+        "sourceUrl": "https://www.townandcountrymag.com/society/tradition/a73977412/sophie-duchess-edinburgh-reme-brooch-meaning-history-photos-2026/",
+        "popularity": 90,
+        "signal": "Most Popular",
+        "tags": [
+          "events",
+          "town & country",
+          "town",
+          "country",
+          "meaning",
+          "behind",
+          "sophie",
+          "duchess"
         ],
         "age": 56
       },
       {
-        "id": "town-and-country-leisure-sporting-a73616172-celebrities-us-open-2026-week-1-photos",
+        "id": "town-and-country-leisure-a73634118-tavo-pets-maeve-iso-roscoe-trek-stroller-review",
         "brand": "Town & Country",
         "brandSlug": "town-and-country",
         "topic": "Leisure",
-        "title": "All the Celebrities We Spotted at the U.S. Open This Week",
-        "summary": "The early rounds of the final Grand Slam of the year saw numerous A-Listers in the stands at Arthur Ashe Stadium.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/74cc1c5e-a6fd-4f41-b7c6-6aca97520d2a.jpeg",
-        "imageCredit": "Shea Kastriner",
-        "byline": "Emily Burack",
-        "readTime": "4 min read",
-        "publishedAt": "2026-09-04T15:45:55.000Z",
-        "sourceUrl": "https://www.townandcountrymag.com/leisure/sporting/a73616172/celebrities-us-open-2026-week-1-photos/",
-        "popularity": 64,
-        "signal": "Editor Pick",
-        "tags": [
-          "leisure",
-          "town & country",
-          "town",
-          "country",
-          "celebrities",
-          "spotted",
-          "open",
-          "this"
-        ],
-        "age": 57
-      },
-      {
-        "id": "town-and-country-leisure-travel-guide-a62059229-who-is-georgios-frangulis-aryna-sabalenka-boyfriend",
-        "brand": "Town & Country",
-        "brandSlug": "town-and-country",
-        "topic": "Travel",
-        "title": "Meet Aryna Sabalenka’s Fiancé Georgios Frangulis",
-        "summary": "\"There was a really tough period where I was really happy to have him by my side,\" the tennis star shared.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/aryna-sabalenka-with-her-partner-georgios-frangulis-news-photo-1752152246.pjpeg",
-        "imageCredit": "Ben Whitley - PA Images",
-        "byline": "Emily Burack",
-        "readTime": "4 min read",
-        "publishedAt": "2026-09-06T15:56:02.000Z",
-        "sourceUrl": "https://www.townandcountrymag.com/leisure/travel-guide/a62059229/who-is-georgios-frangulis-aryna-sabalenka-boyfriend/",
+        "title": "T&C Tried & True: The Rolls-Royce of Dog Strollers",
+        "summary": "When Fido needs four wheels, there’s only one way to go.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/2b2e732a-c1d4-4d01-be42-eab1d00a93bb.jpg",
+        "imageCredit": "Courtesy Tavo Pets",
+        "byline": "Adam Rathe",
+        "readTime": "3 min read",
+        "publishedAt": "2026-10-03T14:00:00.000Z",
+        "sourceUrl": "https://www.townandcountrymag.com/leisure/a73634118/tavo-pets-maeve-iso-roscoe-trek-stroller-review/",
         "popularity": 96,
         "signal": "Most Popular",
         "tags": [
-          "travel",
-          "town & country",
-          "town",
-          "country",
-          "meet",
-          "aryna",
-          "sabalenka",
-          "fianc"
-        ],
-        "age": 9
-      },
-      {
-        "id": "town-and-country-leisure-sporting-a65922175-taylor-townsend-family-explained",
-        "brand": "Town & Country",
-        "brandSlug": "town-and-country",
-        "topic": "Leisure",
-        "title": "Get to Know Taylor Townsend’s Family",
-        "summary": "Taylor has tennis in her blood.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/8cd544d7-80c8-49df-a84e-06f3c8af3c49.jpg",
-        "imageCredit": "Instagram/Taylor Townsend",
-        "byline": "Rachel King",
-        "readTime": "3 min read",
-        "publishedAt": "2026-09-06T15:55:09.000Z",
-        "sourceUrl": "https://www.townandcountrymag.com/leisure/sporting/a65922175/taylor-townsend-family-explained/",
-        "popularity": 90,
-        "signal": "Editor Pick",
-        "tags": [
           "leisure",
           "town & country",
           "town",
           "country",
-          "know",
-          "taylor",
-          "townsend",
-          "family"
+          "tried",
+          "true",
+          "rolls-royce",
+          "strollers"
         ],
-        "age": 9
+        "age": 8
       },
       {
-        "id": "veranda-decorating-ideas-house-tours-a73556197-eerdmans-west-village-gallery-house",
-        "brand": "Veranda",
-        "brandSlug": "veranda",
-        "topic": "Design",
-        "title": "Step Inside Emily Eerdmans’s Joyful Live-Work Design Laboratory in the West Village",
-        "summary": "Chintz, lacquer, leopard print, and a Cotswolds-inspired garden collide in the author and historian’s delightfully personal home.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/eerdmans-west-village-gallery-house-tour-living-room-fireplace-jpg-1629223020.jpg",
-        "imageCredit": "Kelly Marshall",
-        "readTime": "4 min read",
-        "publishedAt": "2026-09-01T18:45:35.000Z",
-        "sourceUrl": "https://www.veranda.com/decorating-ideas/house-tours/a73556197/eerdmans-west-village-gallery-house/",
-        "popularity": 85,
-        "signal": "Continue",
+        "id": "town-and-country-leisure-arts-and-culture-a73945934-ali-hazelwood-romance-books-reading-guide",
+        "brand": "Town & Country",
+        "brandSlug": "town-and-country",
+        "topic": "Culture",
+        "title": "How to Read Ali Hazelwood’s Romance Books in Order",
+        "summary": "No one writes a heroine working in a STEM job quite like Hazelwood.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/388183a9-618c-49d9-a9a3-4d5e1efe3ef8.jpg",
+        "imageCredit": "Product Shot Image",
+        "byline": "Rachel King",
+        "readTime": "3 min read",
+        "publishedAt": "2026-10-03T12:00:00.000Z",
+        "sourceUrl": "https://www.townandcountrymag.com/leisure/arts-and-culture/a73945934/ali-hazelwood-romance-books-reading-guide/",
+        "popularity": 90,
+        "signal": "Editor Pick",
         "tags": [
-          "design",
-          "veranda",
-          "step",
-          "inside",
-          "emily",
-          "eerdmans",
-          "joyful"
+          "culture",
+          "town & country",
+          "town",
+          "country",
+          "read",
+          "hazelwood",
+          "romance",
+          "books"
         ],
-        "age": 126
+        "age": 10
       },
       {
-        "id": "veranda-travel-a73605086-palazzo-avino-italy-review",
+        "id": "veranda-home-decorators-design-trends-a73959366-2027-curb-appeal-trends",
         "brand": "Veranda",
         "brandSlug": "veranda",
-        "topic": "Design",
-        "title": "Rooms With a View: This Ravello Hotel Offers Amalfi Coast Splendor—Without the Crowds",
-        "summary": "A 12th-century “pink palace” and a Slim Aarons-style beach club? We’re in.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/fdeb78d9-cf89-45ce-8d4a-a959e4981a55.jpeg",
-        "imageCredit": "Courtesy of Palazzo Avino",
+        "topic": "Style",
+        "title": "The 5 Curb Appeal Trends You’ll Be Seeing Everywhere in 2027",
+        "summary": "From mature trees to landscape lighting, pros share their top predictions for the year ahead.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/area-locust-valley-exterior-68478c5ac87b5.jpg",
+        "imageCredit": "Ethan Herrington",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-04T21:11:23.000Z",
-        "sourceUrl": "https://www.veranda.com/travel/a73605086/palazzo-avino-italy-review/",
+        "publishedAt": "2026-09-30T16:20:17.000Z",
+        "sourceUrl": "https://www.veranda.com/home-decorators/design-trends/a73959366/2027-curb-appeal-trends/",
         "popularity": 95,
         "signal": "Trending",
         "tags": [
-          "design",
+          "style",
           "veranda",
-          "rooms",
-          "with",
-          "view",
-          "this",
-          "ravello"
+          "curb",
+          "appeal",
+          "trends",
+          "seeing",
+          "everywhere"
         ],
-        "age": 52
+        "age": 77
       },
       {
-        "id": "veranda-outdoor-garden-a73610917-how-to-grow-japanese-anemone-guide",
+        "id": "veranda-shopping-g73774363-luxury-christmas-decorations",
         "brand": "Veranda",
         "brandSlug": "veranda",
         "topic": "Design",
-        "title": "How to Grow Japanese Anemones the Right Way, According to a Garden Expert",
-        "summary": "Don’t let their dainty looks fool you—once established, these hardy perennials are virtually bulletproof.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/13404d36-c247-4f11-b177-070e9a242d18.jpeg",
-        "imageCredit": "Jacky Parker Photography",
+        "title": "27 Luxury Christmas Decorations That'll Help You Deck the Halls in Style",
+        "summary": "From stockings and bows to vintage and handmade pieces, these festive finds will jazz up your home this holiday season.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/a22cb296-fd72-4fd9-ad1f-bf4ce97b9e7b.jpg",
+        "imageCredit": "Becky Luigart-Stayner for VERANDA",
+        "byline": "Arricca Elin SanSone, Jaime Milan",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-04T16:00:00.000Z",
-        "sourceUrl": "https://www.veranda.com/outdoor-garden/a73610917/how-to-grow-japanese-anemone-guide/",
+        "publishedAt": "2026-09-29T20:13:27.000Z",
+        "sourceUrl": "https://www.veranda.com/shopping/g73774363/luxury-christmas-decorations/",
         "popularity": 89,
         "signal": "Continue",
         "tags": [
           "design",
           "veranda",
-          "grow",
-          "japanese",
-          "anemones",
-          "right",
-          "according"
+          "luxury",
+          "christmas",
+          "decorations",
+          "that",
+          "help"
         ],
-        "age": 57
+        "age": 98
+      },
+      {
+        "id": "veranda-decorating-ideas-advice-from-designers-a73931310-halloween-decor-trends-2026",
+        "brand": "Veranda",
+        "brandSlug": "veranda",
+        "topic": "Style",
+        "title": "7 Halloween Decor Trends That Are Having a Major Moment This Year",
+        "summary": "From spooky Victorian-inspired decor to faux spiderwebs, here’s what designers and tastemakers are predicting will be everywhere.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/a470b3de-2d7e-4496-9a26-e211e165565e.jpeg",
+        "imageCredit": "Philip Gould",
+        "byline": "Shelby Deering",
+        "readTime": "4 min read",
+        "publishedAt": "2026-09-29T20:02:33.000Z",
+        "sourceUrl": "https://www.veranda.com/decorating-ideas/advice-from-designers/a73931310/halloween-decor-trends-2026/",
+        "popularity": 83,
+        "signal": "Trending",
+        "tags": [
+          "style",
+          "veranda",
+          "halloween",
+          "decor",
+          "trends",
+          "that",
+          "having"
+        ],
+        "age": 98
       }
     ],
     "sourceNotes": [
@@ -1889,18 +1890,18 @@ export const storybookFixtureData = {
   "ew": {
     "stories": [
       {
-        "id": "best-products-parenting-baby-a73593454-baby-registry-affordable-gear",
+        "id": "best-products-parenting-kids-a73979034-wednesday-lego-set",
         "brand": "Best Products",
         "brandSlug": "best-products",
         "topic": "Gear",
-        "title": "How New Parents Can Build a Baby Registry Without Breaking the Bank—My Picks Start at $30",
-        "summary": "New parents have enough to worry about without overspending on baby gear. We highlight affordable essentials that make everyday life a little easier.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/a7ff4b7f-23a7-45ce-b2ec-45f8b536765e.jpg",
-        "imageCredit": "Getty Images",
+        "title": "Lego’s Nevermore Academy Set Brings Wednesday’s Gothic World to Life",
+        "summary": "The build recreates the eerie school from the hit series.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/77dff0f0-b3cb-45bf-b8e9-76024a8aa1fc.png",
+        "imageCredit": "Product Shot Image",
         "byline": "Sarah Connor",
-        "readTime": "4 min read",
-        "publishedAt": "2026-09-03T16:11:35.000Z",
-        "sourceUrl": "https://www.bestproducts.com/parenting/baby/a73593454/baby-registry-affordable-gear/",
+        "readTime": "3 min read",
+        "publishedAt": "2026-10-01T20:36:17.000Z",
+        "sourceUrl": "https://www.bestproducts.com/parenting/kids/a73979034/wednesday-lego-set/",
         "popularity": 100,
         "signal": "Most Popular",
         "tags": [
@@ -1908,26 +1909,26 @@ export const storybookFixtureData = {
           "best products",
           "best",
           "products",
-          "parents",
-          "build",
-          "baby",
-          "registry"
+          "lego",
+          "nevermore",
+          "academy",
+          "brings"
         ],
-        "age": 81
+        "age": 49
       },
       {
-        "id": "best-products-tech-a70712161-best-ipad-deals-2026",
+        "id": "best-products-appliances-large-appliances-g750-electric-towel-warmers",
         "brand": "Best Products",
         "brandSlug": "best-products",
         "topic": "Gear",
-        "title": "Top Amazon iPad Labor Day Deals: Score Hundreds Off Editor-Recommended Picks",
-        "summary": "Save over 20% during the holiday sale.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/fe10a270-cb45-431c-9af8-2c0d85247382.png",
-        "imageCredit": "Stefan Vazharov",
-        "byline": "Sidney Lee",
-        "readTime": "3 min read",
-        "publishedAt": "2026-09-03T14:08:00.000Z",
-        "sourceUrl": "https://www.bestproducts.com/tech/a70712161/best-ipad-deals-2026/",
+        "title": "The 11 Best Towel Warmers to Make Your Bathroom Feel Like a Spa",
+        "summary": "Keep the post-shower chill at bay with a towel warmer that will add a luxe touch to your bathroom.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/towel-warmer-1603997407.jpg",
+        "imageCredit": "Stocksy",
+        "byline": "Joni Sweet, Brandon Carte",
+        "readTime": "4 min read",
+        "publishedAt": "2026-10-01T16:08:00.000Z",
+        "sourceUrl": "https://www.bestproducts.com/appliances/large-appliances/g750/electric-towel-warmers/",
         "popularity": 93,
         "signal": "Continue",
         "tags": [
@@ -1935,26 +1936,25 @@ export const storybookFixtureData = {
           "best products",
           "best",
           "products",
-          "amazon",
-          "ipad",
-          "labor",
-          "deals"
+          "towel",
+          "warmers",
+          "make"
         ],
-        "age": 83
+        "age": 54
       },
       {
-        "id": "best-products-tech-gadgets-a70226058-best-amazon-deals-2026",
+        "id": "best-products-lifestyle-g62895951-best-stocking-stuffers",
         "brand": "Best Products",
         "brandSlug": "best-products",
         "topic": "Gear",
-        "title": "Amazon Labor Day Deals Are Up to 40% Off on Editor-Approved Tech, Home Essentials, and More",
-        "summary": "Shop editor-approved picks now before they sell out.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/eb247344-44a7-4f4d-968c-2204076a4644.png",
-        "imageCredit": "Product Shot Image",
-        "byline": "Sarah Connor",
-        "readTime": "4 min read",
-        "publishedAt": "2026-09-03T14:03:00.000Z",
-        "sourceUrl": "https://www.bestproducts.com/tech/gadgets/a70226058/best-amazon-deals-2026/",
+        "title": "48 Stocking Stuffer Ideas for Everyone on Your List",
+        "summary": "Small, but mighty, gifts that will steal the show this year.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/best-stocking-stuffers-68efa90870b8d.png",
+        "imageCredit": "Trevor Raab",
+        "byline": "Jessica Dukes",
+        "readTime": "3 min read",
+        "publishedAt": "2026-09-29T19:47:00.000Z",
+        "sourceUrl": "https://www.bestproducts.com/lifestyle/g62895951/best-stocking-stuffers/",
         "popularity": 86,
         "signal": "Editor Pick",
         "tags": [
@@ -1962,265 +1962,264 @@ export const storybookFixtureData = {
           "best products",
           "best",
           "products",
-          "amazon",
-          "labor",
-          "deals",
-          "editor-approved"
+          "stocking",
+          "stuffer",
+          "ideas",
+          "everyone"
         ],
-        "age": 83
+        "age": 98
       },
       {
-        "id": "bicycling-health-nutrition-a73595431-sweat-sensor-cycling-hydration",
+        "id": "bicycling-health-nutrition-a73996481-saddle-sores-cyclists-myths",
         "brand": "Bicycling",
         "brandSlug": "bicycling",
         "topic": "Fitness",
-        "title": "This Is the Piece of Tech That I’ve Been Using to Dial In My Hydration Plan",
-        "summary": "This wearable tracks sweat loss in real time to help build a smarter hydration plan.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/3bc0e90b-cee9-4236-8fc2-8421dcd5c28a.jpg",
+        "title": "The Painful Truth About Saddle Sores: 3 Myths Cyclists Need to Stop Believing",
+        "summary": "Learn what causes saddle sores, how to prevent them, and when to find a medical professional",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/riding-in-rain-209-copy-65e6212405e34.jpg",
         "imageCredit": "Trevor Raab",
         "byline": "Jason Griffin",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-05T14:15:00.000Z",
-        "sourceUrl": "https://www.bicycling.com/health-nutrition/a73595431/sweat-sensor-cycling-hydration/",
+        "publishedAt": "2026-10-03T13:38:15.000Z",
+        "sourceUrl": "https://www.bicycling.com/health-nutrition/a73996481/saddle-sores-cyclists-myths/",
         "popularity": 99,
         "signal": "Trending",
         "tags": [
           "fitness",
           "bicycling",
-          "this",
-          "piece",
-          "tech",
-          "that",
-          "been"
+          "painful",
+          "truth",
+          "about",
+          "saddle",
+          "sores"
         ],
-        "age": 35
+        "age": 8
       },
       {
-        "id": "bicycling-bikes-gear-a73604908-bike-aero-claims-explained",
+        "id": "bicycling-health-nutrition-a73873199-thc-cycling-performance-effects",
         "brand": "Bicycling",
         "brandSlug": "bicycling",
         "topic": "Fitness",
-        "title": "Your New Bike Is Four Watts Faster. What Does That Actually Mean?",
-        "summary": "Aero claims are increasingly precise—and increasingly easy to misunderstand. Here’s how to determine whether those watts, seconds, and percentages have anything to do with you.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/tk22-madone-wind-tunnel-13-1656556567.jpg",
-        "imageCredit": "DYLAN REMIS",
-        "byline": "Dan Chabanov",
+        "title": "I Loaded Myself Up With Sensors and a Bunch of THC to Test Whether Weed Really Is a Performance Enhancer",
+        "summary": "The ride felt easier and more immersive—find out if the data told a different story.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/fdaba6fe-335c-4c56-a74b-3c0b938b3adb.jpeg",
+        "imageCredit": "Jason Griffin",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-04T17:09:26.000Z",
-        "sourceUrl": "https://www.bicycling.com/bikes-gear/a73604908/bike-aero-claims-explained/",
+        "publishedAt": "2026-10-02T16:31:04.000Z",
+        "sourceUrl": "https://www.bicycling.com/health-nutrition/a73873199/thc-cycling-performance-effects/",
         "popularity": 92,
         "signal": "Most Popular",
         "tags": [
           "fitness",
           "bicycling",
-          "your",
-          "bike",
-          "four",
-          "watts",
-          "faster"
+          "loaded",
+          "myself",
+          "with",
+          "sensors",
+          "bunch"
         ],
-        "age": 56
+        "age": 29
       },
       {
-        "id": "bicycling-training-a73596853-indoor-cycling-tips-trainer",
+        "id": "bicycling-bikes-gear-a73992655-brandon-mcnulty-colnago-y1rs",
         "brand": "Bicycling",
         "brandSlug": "bicycling",
         "topic": "Fitness",
-        "title": "8 Ways to Make Indoor Cycling More Enjoyable, Effective, and Sustainable",
-        "summary": "Experts offer eight tips to help you fall back in love with the indoor trainer.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/wahoo-kickr-core-zwift-one-0435-65c4fabb22014.jpg",
-        "imageCredit": "Trevor Raab",
-        "byline": "Jason Griffin, Kristine Kearns",
+        "title": "Brandon McNulty’s New Rainbow Colnago Is Here—and It’s Surprisingly Close to the Bike You Can Buy",
+        "summary": "McNulty’s new Colnago gets rainbow bands, chrome logos, and a hidden Montreal tribute.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/7b86a1db-eb24-435d-90ac-3b16f22c4b57.jpeg",
+        "imageCredit": "Tara Seplavy",
+        "byline": "Tara Seplavy",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-04T12:00:00.000Z",
-        "sourceUrl": "https://www.bicycling.com/training/a73596853/indoor-cycling-tips-trainer/",
+        "publishedAt": "2026-10-02T12:28:32.000Z",
+        "sourceUrl": "https://www.bicycling.com/bikes-gear/a73992655/brandon-mcnulty-colnago-y1rs/",
         "popularity": 85,
         "signal": "Continue",
         "tags": [
           "fitness",
           "bicycling",
-          "ways",
-          "make",
-          "indoor",
-          "cycling",
-          "more"
+          "brandon",
+          "mcnulty",
+          "rainbow",
+          "colnago",
+          "here"
         ],
-        "age": 61
+        "age": 33
       },
       {
-        "id": "mens-health-style-a73618628-ben-shelton-on-lights-out-collection-2026",
+        "id": "mens-health-fitness-a73858984-blood-flow-restriction-suji",
         "brand": "Men's Health",
         "brandSlug": "mens-health",
-        "topic": "Wellness",
-        "title": "Ben Shelton Helped Design On’s Coolest US Open Kit Yet",
-        "summary": "The American tennis star’s Lights Out collection is built for big serves and off-court flexes.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/33932af0-022a-4662-9f52-64614529fd52.jpg",
-        "imageCredit": "Hearst Owned",
-        "byline": "Christian Gollayan",
-        "readTime": "4 min read",
-        "publishedAt": "2026-09-04T20:13:00.000Z",
-        "sourceUrl": "https://www.menshealth.com/style/a73618628/ben-shelton-on-lights-out-collection-2026/",
+        "topic": "Fitness",
+        "title": "The Weird Tool That Makes 20 Pounds Feel Like 40",
+        "summary": "My favorite way to train when I don’t feel like training.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/12ce61b3-bbeb-4e5d-b326-411b4dafab00.jpg",
+        "imageCredit": "Getty Images. Suji. Gillian MacLeod/MH Illustration",
+        "byline": "Richard Dorment",
+        "readTime": "3 min read",
+        "publishedAt": "2026-10-03T12:00:00.000Z",
+        "sourceUrl": "https://www.menshealth.com/fitness/a73858984/blood-flow-restriction-suji/",
         "popularity": 98,
         "signal": "Editor Pick",
         "tags": [
-          "wellness",
+          "fitness",
           "men's health",
           "health",
-          "shelton",
-          "helped",
-          "design",
-          "coolest",
-          "open"
+          "weird",
+          "tool",
+          "that",
+          "makes",
+          "pounds"
         ],
-        "age": 53
+        "age": 10
       },
       {
-        "id": "mens-health-grooming-a73615965-best-kojic-acid-soaps",
+        "id": "mens-health-nutrition-a73994278-irish-sea-moss-supplement-benefits-risks",
         "brand": "Men's Health",
         "brandSlug": "mens-health",
         "topic": "Wellness",
-        "title": "The 7 Best Kojic Acid Soaps for Men in 2026, According to Dermatologists",
-        "summary": "There are few better ingredients for combating dark spots and discoloration.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/f1eb57a3-bfd4-4ada-bc79-72ca0dfc0168.jpg",
-        "imageCredit": "Faded Topicals",
-        "byline": "Sean Zucker",
+        "title": "The Wellness World Is Hooked on Irish Sea Moss. Should You Be?",
+        "summary": "The moss-have superfood is awash in claims and some murky risks.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/86eb256a-07c8-4411-b7c5-ce8dc0653e35.jpg",
+        "imageCredit": "Laura Barrera",
+        "byline": "Perri O. Blumberg",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-04T16:56:20.000Z",
-        "sourceUrl": "https://www.menshealth.com/grooming/a73615965/best-kojic-acid-soaps/",
+        "publishedAt": "2026-10-02T21:30:12.000Z",
+        "sourceUrl": "https://www.menshealth.com/nutrition/a73994278/irish-sea-moss-supplement-benefits-risks/",
         "popularity": 91,
         "signal": "Trending",
         "tags": [
           "wellness",
           "men's health",
           "health",
-          "best",
-          "kojic",
-          "acid",
-          "soaps",
-          "2026"
+          "world",
+          "hooked",
+          "irish",
+          "moss"
         ],
-        "age": 56
+        "age": 24
       },
       {
-        "id": "mens-health-health-a73616698-semaglutide-biological-aging-study",
+        "id": "mens-health-entertainment-g70271803-best-new-shows-2026",
         "brand": "Men's Health",
         "brandSlug": "mens-health",
         "topic": "Wellness",
-        "title": "Scientists Might Have Just Discovered a Fourth Factor to Slow Down Aging",
-        "summary": "Chances are you already have it in your home.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/da0aeec6-5dc0-48eb-a737-69924d02c2ce.jpg",
-        "imageCredit": "Just_Super",
-        "byline": "Jocelyn Solis-Moreira",
-        "readTime": "3 min read",
-        "publishedAt": "2026-09-04T16:08:04.000Z",
-        "sourceUrl": "https://www.menshealth.com/health/a73616698/semaglutide-biological-aging-study/",
+        "title": "The 50 Best New Shows of 2026 (and 10 More We Can't Wait For)",
+        "summary": "We've got murder mysteries, stories of love and lust, and lots and lots of Yellowstone . And that's just the beginning.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/best-new-tv2-69af0a607373b.png",
+        "imageCredit": "Jason Speakman/MH Illustration/Netflix/HBO/Apple TV/Prime Video/ABC",
+        "byline": "Evan Romano",
+        "readTime": "4 min read",
+        "publishedAt": "2026-10-02T19:31:12.000Z",
+        "sourceUrl": "https://www.menshealth.com/entertainment/g70271803/best-new-shows-2026/",
         "popularity": 84,
         "signal": "Most Popular",
         "tags": [
           "wellness",
           "men's health",
           "health",
-          "scientists",
-          "might",
-          "have",
-          "just",
-          "discovered"
+          "best",
+          "shows",
+          "2026",
+          "more",
+          "wait"
         ],
-        "age": 57
+        "age": 26
       },
       {
-        "id": "oprah-daily-life-a73617176-oprah-intention-summerends",
+        "id": "oprah-daily-life-a73780538-santa-monica-go-there-travel-guide",
         "brand": "Oprah Daily",
         "brandSlug": "oprah-daily",
-        "topic": "Life",
-        "title": "The Simple Shift That Helped Oprah Appreciate the Last Weeks of Summer",
-        "summary": "\"We still have a few weeks left, and I urge you to squeeze every last drop out of the season.\"",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/opr101023-dig-009-resized-68658157ce8b6.jpg",
-        "imageCredit": "Oprah Daily",
-        "byline": "Oprah Winfrey",
+        "topic": "Adventure",
+        "title": "Go There: Santa Monica—The Ultimate Guide to Staying, Shopping, and Eating",
+        "summary": "Our new video series kicks off with the best places to check in, dine, browse, and soak up the California coast.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/b7c66630-8d1a-4eb8-9637-a9b6a7e020c1.jpg",
+        "imageCredit": "Getty Images. Oprah Daily.",
+        "byline": "Sofia Lodato",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-06T12:00:00.000Z",
-        "sourceUrl": "https://www.oprahdaily.com/life/a73617176/oprah-intention-summerends/",
+        "publishedAt": "2026-10-02T19:45:38.000Z",
+        "sourceUrl": "https://www.oprahdaily.com/life/a73780538/santa-monica-go-there-travel-guide/",
         "popularity": 97,
         "signal": "Continue",
         "tags": [
-          "life",
+          "adventure",
           "oprah daily",
           "oprah",
           "daily",
-          "simple",
-          "shift",
-          "that",
-          "helped"
+          "there",
+          "santa",
+          "monica",
+          "ultimate"
         ],
-        "age": 13
+        "age": 26
       },
       {
-        "id": "oprah-daily-life-wholeness-a73617250-gloria-steinem-quotes",
+        "id": "oprah-daily-beauty-skin-makeup-a73841470-best-cleansing-balms",
         "brand": "Oprah Daily",
         "brandSlug": "oprah-daily",
-        "topic": "Life",
-        "title": "14 of Gloria Steinem’s Most Powerful Quotes",
-        "summary": "She was a feminist warrior and a force for change. Her legacy will live on in her brilliant words.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/b41463f4-a7eb-418f-a941-df8407ea489e.jpeg",
-        "imageCredit": "Michael Loccisano",
-        "byline": "Jessie Van Amburg",
-        "readTime": "4 min read",
-        "publishedAt": "2026-09-04T19:29:06.000Z",
-        "sourceUrl": "https://www.oprahdaily.com/life/wholeness/a73617250/gloria-steinem-quotes/",
+        "topic": "Gear",
+        "title": "A Derm Says Cleansing Balms Are Necessary for Mature Skin",
+        "summary": "It’s all about keeping your barrier intact.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/e43235c2-dcba-434b-8559-32ffc63cb32e.jpg",
+        "imageCredit": "Product Shot Image",
+        "byline": "Genesis Rivas",
+        "readTime": "3 min read",
+        "publishedAt": "2026-10-02T18:31:16.000Z",
+        "sourceUrl": "https://www.oprahdaily.com/beauty/skin-makeup/a73841470/best-cleansing-balms/",
         "popularity": 90,
         "signal": "Editor Pick",
         "tags": [
-          "life",
+          "gear",
           "oprah daily",
           "oprah",
           "daily",
-          "gloria",
-          "steinem",
-          "most",
-          "powerful"
+          "derm",
+          "says",
+          "cleansing",
+          "balms"
         ],
-        "age": 54
+        "age": 27
       },
       {
-        "id": "oprah-daily-life-a73522606-4-ways-to-make-your-home-a-cold-weather-retreat",
+        "id": "oprah-daily-beauty-skin-makeup-g46156824-best-treatment-for-under-eye-bags",
         "brand": "Oprah Daily",
         "brandSlug": "oprah-daily",
-        "topic": "Life",
-        "title": "4 Ways to Make Your Home a Cold-Weather Retreat",
-        "summary": "Pro tip: Do it before the cold weather actually arrives.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/3764c908-0470-4b61-b3e1-3ddfc1e55d55.png",
-        "imageCredit": "Courtesy of American Standard",
+        "topic": "Gear",
+        "title": "Can You Really Get Rid of Undereye Bags? Here’s What Experts Say",
+        "summary": "Explore temporary and permanent options.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/60e3ff9e-7d88-49a1-8756-65d9849ad3e8.jpg",
+        "imageCredit": "Product Shot Image",
+        "byline": "Genesis Rivas",
         "readTime": "3 min read",
-        "publishedAt": "2026-09-04T17:34:00.000Z",
-        "sourceUrl": "https://www.oprahdaily.com/life/a73522606/4-ways-to-make-your-home-a-cold-weather-retreat/",
+        "publishedAt": "2026-10-02T17:11:45.000Z",
+        "sourceUrl": "https://www.oprahdaily.com/beauty/skin-makeup/g46156824/best-treatment-for-under-eye-bags/",
         "popularity": 83,
         "signal": "Trending",
         "tags": [
-          "life",
+          "gear",
           "oprah daily",
           "oprah",
           "daily",
-          "ways",
-          "make",
-          "your",
-          "home"
+          "really",
+          "undereye",
+          "bags",
+          "here"
         ],
-        "age": 56
+        "age": 29
       },
       {
-        "id": "popular-mechanics-home-tools-a73475251-dewalt-labor-day-sale-2026",
+        "id": "popular-mechanics-culture-a73995698-christmas-toys-for-kids",
         "brand": "Popular Mechanics",
         "brandSlug": "popular-mechanics",
         "topic": "Tech",
-        "title": "Best DeWalt Labor Day Deals: Save Up to 64% Off Ahead of the Holiday Weekend",
-        "summary": "Some of these prices are low enough to justify buying the tool before you need it.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/e2b55afe-0db8-46ad-a26f-c3f7c213ec68.png",
-        "imageCredit": "Trevor Raab",
-        "byline": "Paul Smith",
-        "readTime": "4 min read",
-        "publishedAt": "2026-09-06T04:54:00.000Z",
-        "sourceUrl": "https://www.popularmechanics.com/home/tools/a73475251/dewalt-labor-day-sale-2026/",
+        "title": "The Best 2026 Holiday Toys Include Editor-Favorite Brands like Stanley, John Deere, and Nintendo",
+        "summary": "We started early this year.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/cdc3ced0-d38a-4a66-ac5b-69d5b905b7fc.jpg",
+        "imageCredit": "Thomas Hengge",
+        "byline": "Tim Kohut",
+        "readTime": "3 min read",
+        "publishedAt": "2026-10-02T21:18:43.000Z",
+        "sourceUrl": "https://www.popularmechanics.com/culture/a73995698/christmas-toys-for-kids/",
         "popularity": 96,
         "signal": "Most Popular",
         "tags": [
@@ -2229,25 +2228,25 @@ export const storybookFixtureData = {
           "popular",
           "mechanics",
           "best",
-          "dewalt",
-          "labor",
-          "deals"
+          "2026",
+          "holiday",
+          "toys"
         ],
-        "age": 20
+        "age": 24
       },
       {
-        "id": "popular-mechanics-science-environment-a73608609-earth-supercontinent-climate-models-pangea",
+        "id": "popular-mechanics-culture-a73998254-halloween-lego-sets",
         "brand": "Popular Mechanics",
         "brandSlug": "popular-mechanics",
         "topic": "Tech",
-        "title": "Earth Will Become One Big Supercontinent Again—And It Will Probably Kill Us, Scientists Say",
-        "summary": "In 200 million years, there will be no borders–and possibly no humans.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/western-hemisphere-of-the-earth-during-the-royalty-free-illustration-1653508196.jpg",
-        "imageCredit": "Getty Images",
-        "byline": "Stav Dimitropoulos",
-        "readTime": "4 min read",
-        "publishedAt": "2026-09-05T13:00:00.000Z",
-        "sourceUrl": "https://www.popularmechanics.com/science/environment/a73608609/earth-supercontinent-climate-models-pangea/",
+        "title": "From Cute to Creepy, Lego’s Halloween Sets Make the Season More Fun",
+        "summary": "Looking for a Halloween display that lasts longer than candy?",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/8255787a-3f1d-4cfe-909b-56dd9675ed95.png",
+        "imageCredit": "Product Shot Image",
+        "byline": "Sarah Connor",
+        "readTime": "3 min read",
+        "publishedAt": "2026-10-02T21:10:12.000Z",
+        "sourceUrl": "https://www.popularmechanics.com/culture/a73998254/halloween-lego-sets/",
         "popularity": 89,
         "signal": "Continue",
         "tags": [
@@ -2255,53 +2254,53 @@ export const storybookFixtureData = {
           "popular mechanics",
           "popular",
           "mechanics",
-          "earth",
-          "will",
-          "become",
-          "supercontinent"
+          "from",
+          "cute",
+          "creepy",
+          "lego"
         ],
-        "age": 36
+        "age": 25
       },
       {
-        "id": "popular-mechanics-home-g35765278-best-pop-up-canopy-tents",
+        "id": "popular-mechanics-home-tools-a29389142-space-heaters",
         "brand": "Popular Mechanics",
         "brandSlug": "popular-mechanics",
-        "topic": "Gear",
-        "title": "The 6 Best Pop-Up Canopy Tents for Outdoor Activities and Events",
-        "summary": "Insta-shade and rain coverage for all your backyard barbecues, park outings, and tailgates.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/98936780-874f-49d1-b1d8-421bffaa6582.jpg",
-        "imageCredit": "Dustin Fenstermacher",
-        "byline": "April McCormick",
+        "topic": "Tech",
+        "title": "The 8 Best Space Heaters to Keep the Chill Out of Your Home and Office",
+        "summary": "We compared different models’ heating levels, timer functions, safety features, and more.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/dreo-whole-room-heater-007-69a091e9b43b5.jpg",
+        "imageCredit": "Trevor Raab",
+        "byline": "Amber Joglar, Tom Price",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-04T18:23:00.000Z",
-        "sourceUrl": "https://www.popularmechanics.com/home/g35765278/best-pop-up-canopy-tents/",
+        "publishedAt": "2026-10-02T20:43:16.000Z",
+        "sourceUrl": "https://www.popularmechanics.com/home/tools/a29389142/space-heaters/",
         "popularity": 82,
         "signal": "Editor Pick",
         "tags": [
-          "gear",
+          "tech",
           "popular mechanics",
           "popular",
           "mechanics",
           "best",
-          "pop-up",
-          "canopy",
-          "tents"
+          "space",
+          "heaters",
+          "keep"
         ],
-        "age": 55
+        "age": 25
       },
       {
-        "id": "runners-world-training-a73605080-half-marathon-training-problems-solutions-series",
+        "id": "runners-world-health-injuries-a73611168-guide-to-common-running-injuries-program-runners-knee",
         "brand": "Runner's World",
         "brandSlug": "runners-world",
         "topic": "Fitness",
-        "title": "I Documented Every Problem in My Half Marathon Training. Here’s How I Solved Each One—and PR’d.",
-        "summary": "Expert advice helped me have my best training block yet—and it could help you nail yours as well.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/9c7fba58-c4c8-4e50-a0ca-185358ab4e6f.jpg",
+        "title": "The Runner’s World Guide to Common Running Injuries: Runner’s Knee",
+        "summary": "Expert-backed exercises, mobility work, and return-to-running guidance can help you manage runner’s knee and build your way back to the road.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/f513f121-d053-42e3-ac93-5966614031a5.jpg",
         "imageCredit": "Winston Zhou",
-        "byline": "Pavlína Černá",
+        "byline": "Donna Raskin",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-06T13:00:00.000Z",
-        "sourceUrl": "https://www.runnersworld.com/training/a73605080/half-marathon-training-problems-solutions-series/",
+        "publishedAt": "2026-10-03T19:48:14.000Z",
+        "sourceUrl": "https://www.runnersworld.com/health-injuries/a73611168/guide-to-common-running-injuries-program-runners-knee/",
         "popularity": 95,
         "signal": "Trending",
         "tags": [
@@ -2309,26 +2308,24 @@ export const storybookFixtureData = {
           "runner's world",
           "runner",
           "world",
-          "documented",
-          "every",
-          "problem",
-          "half"
+          "guide",
+          "common"
         ],
-        "age": 12
+        "age": 2
       },
       {
-        "id": "runners-world-nutrition-weight-loss-a73358606-guide-to-nutrition-and-fueling-program-vitamins-nutrients-and-supplements",
+        "id": "runners-world-training-a73982091-marathon-recovery-next-race",
         "brand": "Runner's World",
         "brandSlug": "runners-world",
         "topic": "Fitness",
-        "title": "The Runner’s World Guide to Nutrition and Fueling: Vitamins, Nutrients, and Supplements",
-        "summary": "Our dietitians explain exactly what social media gets wrong about supplements and which additions you need to your healthy diet.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/d66fae2b-203b-4ac8-816f-56084a4d79c5.jpg",
-        "imageCredit": "Getty Images",
-        "byline": "Donna Raskin",
+        "title": "This Is the Minimum Amount of Time You Need After a Marathon to Run Your Next Race",
+        "summary": "Coaches outline the right recovery timeline that can help you return to racing without losing all the fitness you worked months to build.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/32c586ba-0184-4224-8d73-c1040714482d.jpg",
+        "imageCredit": "WINSTON ZHOU",
+        "byline": "Matt Rudisill",
         "readTime": "4 min read",
-        "publishedAt": "2026-09-06T12:58:42.000Z",
-        "sourceUrl": "https://www.runnersworld.com/nutrition-weight-loss/a73358606/guide-to-nutrition-and-fueling-program-vitamins-nutrients-and-supplements/",
+        "publishedAt": "2026-10-03T12:00:00.000Z",
+        "sourceUrl": "https://www.runnersworld.com/training/a73982091/marathon-recovery-next-race/",
         "popularity": 88,
         "signal": "Most Popular",
         "tags": [
@@ -2336,24 +2333,26 @@ export const storybookFixtureData = {
           "runner's world",
           "runner",
           "world",
-          "guide",
-          "nutrition"
+          "this",
+          "minimum",
+          "amount",
+          "time"
         ],
-        "age": 12
+        "age": 10
       },
       {
-        "id": "runners-world-training-a73606899-marathon-start-pace-control",
+        "id": "runners-world-gear-a73997174-amazon-prime-big-deal-day-adidas-supernova-prima-2-sale",
         "brand": "Runner's World",
         "brandSlug": "runners-world",
         "topic": "Fitness",
-        "title": "Start Your Marathon Too Fast, and You Could Pay for It Later. Here’s How to Stay in Control.",
-        "summary": "Coach-backed tips to stay patient, controlled, and strong during the opening miles.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/46025f8f-b760-4da3-acb1-aebcc11bd69a.jpeg",
-        "imageCredit": "TOBIAS SCHWARZ",
-        "byline": "Matt Rudisill",
-        "readTime": "4 min read",
-        "publishedAt": "2026-09-06T12:00:00.000Z",
-        "sourceUrl": "https://www.runnersworld.com/training/a73606899/marathon-start-pace-control/",
+        "title": "Amazon Just Posted an Incredible Early Prime Day Deal on Adidas’ PEBA-Equipped Training Shoes",
+        "summary": "They’re nearly half off.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/77efbd39-d6a9-461f-a1db-8941ad396dda.png",
+        "imageCredit": "Product Shot Image",
+        "byline": "Michael Charboneau",
+        "readTime": "3 min read",
+        "publishedAt": "2026-10-02T21:28:30.000Z",
+        "sourceUrl": "https://www.runnersworld.com/gear/a73997174/amazon-prime-big-deal-day-adidas-supernova-prima-2-sale/",
         "popularity": 81,
         "signal": "Continue",
         "tags": [
@@ -2361,26 +2360,26 @@ export const storybookFixtureData = {
           "runner's world",
           "runner",
           "world",
-          "start",
-          "your",
-          "marathon",
-          "fast"
+          "amazon",
+          "just",
+          "posted",
+          "incredible"
         ],
-        "age": 13
+        "age": 24
       },
       {
-        "id": "womens-health-fitness-a73616978-stair-stepper-vs-incline-walking",
+        "id": "womens-health-fitness-a73979083-dr-vonda-wright-4x4-formula",
         "brand": "Women's Health",
         "brandSlug": "womens-health",
         "topic": "Fitness",
-        "title": "Incline Walking Vs. Stair Stepper: Which One Is Better For Cardio, Strength, And Calorie Burning",
-        "summary": "The answer depends on your goals.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/sbs-incline-stair-6765d5a01b99e.jpg",
-        "imageCredit": "Getty Images",
-        "byline": "Korin Miller",
-        "readTime": "3 min read",
-        "publishedAt": "2026-09-05T16:00:00.000Z",
-        "sourceUrl": "https://www.womenshealthmag.com/fitness/a73616978/stair-stepper-vs-incline-walking/",
+        "title": "Women Over 50 Should Lift Heavier, Says Dr. Vonda Wright—Here's Her 4x4 Formula to Age With Strength",
+        "summary": "The healthy-aging expert says lower reps and heavier weights can help replace the muscle-building stimulus lost during menopause—and it's never too late to start.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/3d11f411-6679-4f36-b45d-d075db227442.jpeg",
+        "imageCredit": "Tom Werner",
+        "byline": "Kate Cheng",
+        "readTime": "4 min read",
+        "publishedAt": "2026-10-03T16:00:00.000Z",
+        "sourceUrl": "https://www.womenshealthmag.com/fitness/a73979083/dr-vonda-wright-4x4-formula/",
         "popularity": 94,
         "signal": "Editor Pick",
         "tags": [
@@ -2388,26 +2387,25 @@ export const storybookFixtureData = {
           "women's health",
           "women",
           "health",
-          "incline",
-          "walking",
-          "stair",
-          "stepper"
+          "over",
+          "should",
+          "lift"
         ],
-        "age": 33
+        "age": 6
       },
       {
-        "id": "womens-health-fitness-a73617248-nerve-flossing-sciatica-pain-relief",
+        "id": "womens-health-fitness-a73946509-i-tried-the-viral-tracy-anderson-method-workout",
         "brand": "Women's Health",
         "brandSlug": "womens-health",
         "topic": "Fitness",
-        "title": "Nerve Flossing May Help Ease Pain—Here's How It Works and What Experts Want You to Know",
-        "summary": "First things first: learn from a pro",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/c79255d9-63d4-4c94-8526-130b5d7bbb46.jpeg",
-        "imageCredit": "Galina Zhigalova",
-        "byline": "Jennifer Nied",
-        "readTime": "4 min read",
-        "publishedAt": "2026-09-04T17:02:28.000Z",
-        "sourceUrl": "https://www.womenshealthmag.com/fitness/a73617248/nerve-flossing-sciatica-pain-relief/",
+        "title": "‘I Tried the Viral Tracy Anderson Method—Here Are My Honest Thoughts’",
+        "summary": "This workout was like nothing I’d ever experienced before.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/7133a6d9-1e7b-4754-b12f-8320be1d56f3.jpg",
+        "imageCredit": "Addison Aloian / WH Illustration",
+        "byline": "Addison Aloian, NASM-CPT",
+        "readTime": "3 min read",
+        "publishedAt": "2026-10-03T11:00:00.000Z",
+        "sourceUrl": "https://www.womenshealthmag.com/fitness/a73946509/i-tried-the-viral-tracy-anderson-method-workout/",
         "popularity": 87,
         "signal": "Trending",
         "tags": [
@@ -2415,25 +2413,26 @@ export const storybookFixtureData = {
           "women's health",
           "women",
           "health",
-          "nerve",
-          "flossing",
-          "help",
-          "ease"
+          "tried",
+          "viral",
+          "tracy",
+          "anderson"
         ],
-        "age": 56
+        "age": 11
       },
       {
-        "id": "womens-health-fitness-a73616821-overtraining-runners-red-flags",
+        "id": "womens-health-fitness-a73958909-vuori-classic-energry-moisture-wicking-tee-review",
         "brand": "Women's Health",
         "brandSlug": "womens-health",
         "topic": "Fitness",
-        "title": "6 Signs You’re Running Too Much, According To A Physical Therapist",
-        "summary": "From constant fatigue to injuries that won’t settle, these are the signs runners should never ignore.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/tired-runner-68c9709417986.jpg",
-        "imageCredit": "Carlos Barquero",
-        "readTime": "4 min read",
-        "publishedAt": "2026-09-04T17:00:00.000Z",
-        "sourceUrl": "https://www.womenshealthmag.com/fitness/a73616821/overtraining-runners-red-flags/",
+        "title": "This Sweat-Wicking Tee Has Earned a Spot in Both My Gym and Travel Bag",
+        "summary": "It’s the multitasker my closet was missing.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/e9d040bb-e926-48bb-a694-fcd10cd16cad.png",
+        "imageCredit": "Courtesy of Vuori",
+        "byline": "Natascha Grief, NASM-CPT",
+        "readTime": "3 min read",
+        "publishedAt": "2026-10-03T11:00:00.000Z",
+        "sourceUrl": "https://www.womenshealthmag.com/fitness/a73958909/vuori-classic-energry-moisture-wicking-tee-review/",
         "popularity": 80,
         "signal": "Most Popular",
         "tags": [
@@ -2441,12 +2440,12 @@ export const storybookFixtureData = {
           "women's health",
           "women",
           "health",
-          "signs",
-          "running",
-          "much",
-          "according"
+          "this",
+          "sweat-wicking",
+          "earned",
+          "spot"
         ],
-        "age": 56
+        "age": 11
       }
     ],
     "sourceNotes": [
@@ -2454,50 +2453,50 @@ export const storybookFixtureData = {
         "brand": "Best Products",
         "brandSlug": "best-products",
         "feedCount": 1,
-        "importedCount": 22,
-        "selectedCount": 22
+        "importedCount": 42,
+        "selectedCount": 29
       },
       {
         "brand": "Bicycling",
         "brandSlug": "bicycling",
         "feedCount": 1,
         "importedCount": 50,
-        "selectedCount": 30
+        "selectedCount": 29
       },
       {
         "brand": "Men's Health",
         "brandSlug": "mens-health",
         "feedCount": 1,
         "importedCount": 50,
-        "selectedCount": 30
+        "selectedCount": 29
       },
       {
         "brand": "Oprah Daily",
         "brandSlug": "oprah-daily",
         "feedCount": 1,
-        "importedCount": 50,
-        "selectedCount": 30
+        "importedCount": 49,
+        "selectedCount": 29
       },
       {
         "brand": "Popular Mechanics",
         "brandSlug": "popular-mechanics",
         "feedCount": 1,
         "importedCount": 50,
-        "selectedCount": 30
+        "selectedCount": 28
       },
       {
         "brand": "Runner's World",
         "brandSlug": "runners-world",
         "feedCount": 1,
         "importedCount": 50,
-        "selectedCount": 29
+        "selectedCount": 28
       },
       {
         "brand": "Women's Health",
         "brandSlug": "womens-health",
         "feedCount": 1,
         "importedCount": 50,
-        "selectedCount": 29
+        "selectedCount": 28
       }
     ]
   }
@@ -2506,261 +2505,261 @@ export const storybookFixtureData = {
 export const storybookGalleryImagesByBrand: Record<string, StorybookGalleryImage[]> = {
   "cosmopolitan": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/dd7bdb11-8c60-47d5-9723-38dae30572ef.jpg",
-      "alt": "Your Horoscope for the Week of September 6",
-      "credit": "Kara Miller/Getty Images"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/7d1f61c7-1a59-4a51-b49f-e214d6b4eb0a.jpg",
+      "alt": "Breaking Down the Ending of ‘Verity’",
+      "credit": "Alisha Wetherill"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/310e7345-be56-4487-9b9a-2cfdfb9fc92a.jpg",
-      "alt": "Chocolate Brown Nails Are Serving Sweet Hot Cocoa Energy This Fall",
-      "credit": "@amyle.nails / @overglowedit"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/ba70aa23-9281-47fc-ac8f-7065e77d1e37.jpg",
+      "alt": "Where and When to Stream ‘Digger’",
+      "credit": "Warner Bros. Pictures"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/530d8dad-b61d-4dfc-b269-1f7e37fb4f37.jpeg",
-      "alt": "Alessandra Ambrosio and Stella Maxwell Wore Intimissimi on the Venice Red Carpet—Here’s How to Recreate The Look",
-      "credit": "STEFANO RELLANDINI"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/7b87bd8a-e01f-4635-b2b0-5031c30dca19.jpg",
+      "alt": "‘How to Find Love in the Cereal Aisle’ Author Alissa DeRogatis Brought Us Behind the Scenes on Her Book Tour",
+      "credit": "Alissa DeRogatis / Drew Furr / Cosmo Reads"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/ca6dfa28-c82c-45d0-98ca-a4240f174429.jpg",
-      "alt": "Why JJ is the True Protagonist of the Final Season of ‘Outer Banks’",
-      "credit": "Netflix"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/cec293e3-284e-47c7-b607-0b2d77d10ed4.jpg",
-      "alt": "Will ‘The Last Sunrise’ Have Any Sequels?",
-      "credit": "Lucia Faraig/Prime"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/6f9a6492-b81a-4a4d-b7cf-2fe5ff3f9258.png",
-      "alt": "Selena Quintanilla’s Husband Claps Back at Fans Criticizing Beyoncé’s “Como La Flor” Sample on ‘B’Day’ 20th Anniversary Album",
-      "credit": "Getty Images"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/58184fd0-6b3e-4450-8732-7afd8176774c.jpeg",
-      "alt": "Ballet Cardigans Are Fall’s Most Polished Knitwear Trend—Aritzia’s Chocolate Brown Design Is So Chic, You’ll Want One in Every Color",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/0f965ab8-8e3c-4b30-ab82-0b15ebc62d00.jpeg",
+      "alt": "14 Under-$75 TJ Maxx and Marshalls Fall Decor Finds That Bring My Pinterest Board to Life",
       "credit": "NurPhoto"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/379424e1-9e8f-488f-b87e-570948b518d2.jpeg",
+      "alt": "Lil Nas X Had the Best Response to This Shady Report About His Music Comeback",
+      "credit": "Warner Bros. TV"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/429a465d-3110-428b-bb5e-67b965eabe8d.jpeg",
+      "alt": "6 Sporty Fall Outfits That Prove Athleisure Is Alive and Well",
+      "credit": "Edward Berthelot"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/e8e46071-2d29-4aba-b289-54e27e3eb0b8.png",
+      "alt": "Drew Starkey and Cailee Spaeny Seemingly Confirm Romance Amid Rumored Falling Out With Odessa A’zion",
+      "credit": "Getty Images"
     }
   ],
   "country-living": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/89553d27-5c9b-4bc8-a413-f6f6b2d2ebd3.jpeg",
-      "alt": "My Grandma Taught Me How to Save Seeds—Now I’m Passing On Her Garden Wisdom",
-      "credit": "Jenny Elia Pfeiffer"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/9404c733-639c-4745-a7bd-3d31ee850e80.jpg",
+      "alt": "5 Clever Ways to Use Cardboard in Your Garden",
+      "credit": "Reflexpixel"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/dbfda155-e5f7-4a9a-bba7-dafd620a45af.jpeg",
-      "alt": "Why We Celebrate Labor Day in September—and What the Holiday Actually Means",
-      "credit": "FatCamera"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/cozy-cabin-fall-porch-decor-1566917727.jpg",
+      "alt": "A Hearth Witch Shares 5 Cozy Ways to Make Your Home Feel Magical This Fall",
+      "credit": "Dana Gallagher"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/bc00933e-9e8e-41c5-aeaa-d15f8f55add9.jpeg",
-      "alt": "How Does the Grand Ole Opry Honor a Member After They Die?",
-      "credit": "NBC"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/9b310adb-948f-40f5-87f1-31c61f788779.jpeg",
+      "alt": "‘Tis the Season to Start Buying Holiday Decorations, and My Amazon Finds Start at Just $13",
+      "credit": "Product Shot Image"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/8bd4c82d-5d2b-4023-a94a-d7a9a63fc29a.jpeg",
-      "alt": "4 Ways to Help Birds Fuel Up Before Fall Migration",
-      "credit": "mirceax"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/162eaaec-2b9d-44d0-8c1f-ed7b71b813e3.jpeg",
+      "alt": "20 Thanksgiving Wreaths for Welcoming Your Holiday Guests to the Feast",
+      "credit": "Product Shot Image"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/clx080123huntcollecting-002-6807ce6c8bce5.jpg",
-      "alt": "7 Thrift Store Finds Under $50 That Collectors Routinely Overlook—But Shouldn’t",
-      "credit": "Becky Luigart-Stayner"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/3da08f59-53d5-48f8-90b9-8d94abbf47eb.jpg",
+      "alt": "Pumpkin Margarita",
+      "credit": "Becky Luigart-Stayner for Country Living"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/796bbcf2-b241-44e8-855c-a35f64624d3e.jpeg",
-      "alt": "Dolly Parton Will Be Honored by Tennessee Football Team at Every Game",
-      "credit": "Icon Sportswire"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/veronica-flowers-and-dry-grass-royalty-free-image-1753902327.pjpeg",
+      "alt": "11 Perennials to Cut Back This Fall for a Healthier Garden Next Spring",
+      "credit": "Lesya Marchuk / 500px"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/1163f15e-be59-40af-bcfb-4941e7be6517.png",
-      "alt": "Randy Travis’s First Album in 18 Years Is Filled with Songs from His Past",
-      "credit": "Marisa Taylor"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/bd6cde40-0ece-448c-b80e-275bc2f97368.jpeg",
+      "alt": "Why Skunks Spray—and What to Do If You’re Hit, According to an Expert",
+      "credit": "Mark Chivers"
     }
   ],
   "delish": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/9d337123-84b9-447b-a9f8-a0f00531be9f.jpg",
-      "alt": "United Is Testing A New Way To Have Food Waiting At Your Gate",
-      "credit": "United Airlines"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/7fd1336a-3a06-4a77-9cdb-0301be07eb02.jpeg",
+      "alt": "AMC's New 'Street Fighter' Popcorn Bucket Goes On Your Head—And Fans Are Ready For Their Flat-Top Era",
+      "credit": "masa44"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/119c32cc-c86f-4c0b-a8dc-0f04eeb84123.jpeg",
-      "alt": "This Starbucks Honey Deuce-Inspired Drink Costs Nearly As Much As The Real Thing",
-      "credit": "Hasan Ashari"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/98bc8001-2a26-4a66-a514-1792a0881f24.jpeg",
+      "alt": "Dolly Parton's Coffee Launch Has Fans Celebrating & Mourning Her All Over Again",
+      "credit": "Jim Dyson"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/8c2fee79-30af-49a3-9798-bebb78c271f3.png",
-      "alt": "Shake Shack’s New Reese’s Shake Is A Halloween Dream With One Major Jump Scare",
-      "credit": "Shake Shack"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/a56b449f-f0f9-47b6-887e-d2a60ad4cbef.jpeg",
+      "alt": "What Happened to Alison Hammond? TV Host Speaks Out After Sudden On-Air Exit",
+      "credit": "Dave Benett"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/ac59751b-6dc5-41a8-b1d4-d979d0df71b1.jpg",
-      "alt": "Chipotle’s New Chili Lime Chips Are Basically A Fan Hack Come To Life",
-      "credit": "Chipotle"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/4de80ecf-12a6-4bfc-9a95-e7af633fb95f.jpg",
+      "alt": "Slow-Cooker Beef & Broccoli",
+      "credit": "PHOTO: RACHEL VANNI; FOOD STYLING: MAKINZE GORE"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/e1c617b4-def2-4b11-bfc2-27a078878652.jpg",
-      "alt": "Walmart Is Bringing Dunkin’ Delivery To Its App—And Not Just From In-Store Locations",
-      "credit": "Walmart"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/apple-cinnamon-bread-index-68e8132994a48.jpg",
+      "alt": "Apple Cinnamon Bread",
+      "credit": "PARKER FEIERBACH"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/d42954f1-5376-4c5d-9f11-dc1b4a0d7b42.jpeg",
-      "alt": "Costco’s Giant 5.5-Pound Chocolate Frankenstein Head Is Peak Halloween",
-      "credit": "Marvin Samuel Tolentino Pineda"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/d7a35d46-813e-42dd-afd6-ae978b6f1f5d.jpeg",
+      "alt": "Costco Sued Over Claims Its 'Sugar-Free' Drink Mix Isn't Actually Sugar-Free",
+      "credit": "Steve Heap"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/d934889c-62f4-46a3-880a-43b37361e5fa.jpeg",
-      "alt": "A Frozen Berry Recall Tied To An E. Coli Outbreak Just Expanded To Walmart",
-      "credit": "Wang HE"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/9a060287-370c-40be-b14f-29bdb22cde5c.jpg",
+      "alt": "Chip City Is Closing All Of Its Locations—And Fans Are Devastated",
+      "credit": "Chip City"
     }
   ],
   "good-housekeeping": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/waffles-with-spicy-glazed-bacon-and-pecans-brunch-ideas-1674769665.jpg",
-      "alt": "47 Brunch Recipes That Are Perfect for Every Occasion",
-      "credit": "Mike Garten"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/ba3d94a3-ff75-481a-9078-6a95714298d6.jpg",
+      "alt": "5 Best Automatic, Self-Cleaning Litter Boxes",
+      "credit": "Jessica Hartshorn"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/d06161dc-39ee-444e-b3a5-499f67033a25.jpeg",
-      "alt": "The Best Time to Take Magnesium, According to Dietitians",
-      "credit": "Doucefleur"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/gh-062221-80s-costumes-1624638797.png",
+      "alt": "60 Totally Awesome '80s Costume Ideas That Are Retro Cool",
+      "credit": "amazon"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/37278b63-1290-4064-b60e-223161adbe8d.jpeg",
-      "alt": "8 Soothing Teas That May Help Fight Inflammation, According to Dietitians",
-      "credit": "d3sign"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/a5e45cc0-0aa9-44ff-a164-bf16431b55e1.jpeg",
+      "alt": "The Best Things to Buy at HomeGoods, According to Designers",
+      "credit": "John Greim"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/41ab0998-4b72-4b38-b610-474aff87bf6b.jpg",
-      "alt": "I Track Sales All Year—60+ Best Labor Day Deals I’ve Found",
-      "credit": "Betsy Farrell"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/b26cbdff-4017-4a23-9b72-e84169db9f38.jpeg",
+      "alt": "How to Get Rid of Mice in Your House, According to Pest Experts",
+      "credit": "GlobalP"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/3c4cb144-97a4-4492-86b6-70028721f4c1.png",
-      "alt": "The Ninja Air Fryer I Use More Than My Oven Is 40% Off for Labor Day",
-      "credit": "Product Shot Image"
+      "src": "https://hips.hearstapps.com/goodhousekeeping/assets/17/38/haunted-halloween-mantel.jpg",
+      "alt": "67 DIY Halloween Decorations for a Festive and Spooky Home",
+      "credit": "Danielle Occhiogrosso"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/e2272360-efd3-402b-acea-5df5c3a7f423.jpeg",
-      "alt": "11 Vegetables That Are High in Vitamin C, According to Dietitians",
-      "credit": "Maskot"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/94603663-6202-4108-9a1e-198c2aa89177.jpg",
+      "alt": "Hosting on Halloween? Here's How to Make It Fun for Kids and Adults",
+      "credit": "svetikd"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/a6122e0b-ab5f-4743-8c89-d7f00c08520b.jpg",
-      "alt": "I’ve Tested 100+ Mattresses—The Bear I Sleep On Is 40% Off for Labor Day With Our Exclusive Code",
-      "credit": "Betsy Farrell"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/0cb6cb66-2427-4c70-9958-b0a51aa63a11.jpg",
+      "alt": "Living Next to Costco Increases Your Home Value, According to New Study",
+      "credit": "Willard"
     }
   ],
   "house-beautiful": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/2018-0910-hhm-21788-68506de510003.jpg",
-      "alt": "17 IKEA Finds Designers Swear By in Their Own Homes",
-      "credit": "Stacey Brandford"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/hbx010125serenadugan-009-6764a6b3a01bd.jpg",
+      "alt": "This Shelter Island Home Boasts the Best Porch We’ve Ever Seen",
+      "credit": "CHRISTIAN HARDER"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/2021-meacham-280-v1-1632237736.jpg",
-      "alt": "This Designer’s Whimsical Harlem Residence Is a Lesson in Funky Pattern Mixing",
-      "credit": "Lesley Unruh Photography"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/15aa01c3-1dfc-4260-aa3b-4dc85e18f2c0.jpeg",
+      "alt": "The 2 Most Outdated Decluttering Rules That Experts Say You Can Stop Following Right Now",
+      "credit": "Cicy"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/20240925-jennapeffley-frenchandfrench-ivyhouse-0546-6761e7b235edc.jpg",
-      "alt": "Designers Say THIS Is How to Style Throw Pillows for an Elevated Home",
-      "credit": "Jenna Peffley"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/72677d34-7bf7-4722-a092-0e9d7568637d.jpeg",
+      "alt": "7 Things You Should NEVER Clean With a Magic Eraser, According to Cleaning Experts",
+      "credit": "Mariia Demchenko"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/20aabed0-0a74-4140-b473-3e243b001cbd.jpeg",
-      "alt": "12 Apple-Picking Destinations That Are Worth a Fall Road Trip",
-      "credit": "Shan Lu"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/e197c7c2-4df0-4dd1-a82d-c9d6b121c7ff.png",
+      "alt": "Amazon Just Dropped New Holiday Decor That’ll Make Your Home Merry and Bright",
+      "credit": "Martha Stewart/Amazon"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/7ece2929-ace0-4e14-81ce-100dd64c56c1.jpeg",
-      "alt": "Everything at Serena & Lily Is Up to 40% Off Right Now—Snag These 17 Pieces First",
-      "credit": "Serena & Lily"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/0fae516b-b838-42cc-806e-d4f325fb589b.jpg",
+      "alt": "This Is What Wallpaper Looked Like in the Decade You Were Born",
+      "credit": "LAUREN MILLER"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/9262c7ff-8b5f-469d-b710-d5b4e9fa727a.jpg",
-      "alt": "20 Surprisingly Good Labor Day Deals Our Editors Are Buying for Their Own Homes",
-      "credit": "Soumi Sarkar"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/f236b7dd-b2ae-445a-b7b2-c5cebe348c3f.jpeg",
+      "alt": "Real Estate Experts Agree: This Is the ONE Room That Influences Home Buyers the Most",
+      "credit": "Joe Schmelzer"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/flea1-2-1622145040.jpg",
-      "alt": "These Are the Best Flea Markets in Every State, According to Design Experts",
-      "credit": "Joanna Neborsky"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/ae37b5eb-e20e-420e-91a7-a630bc15508f.jpg",
+      "alt": "One Designer's Smart Paint Trick Totally Transformed This Open-Concept Tribeca Loft",
+      "credit": "Madeline Tolle"
     }
   ],
   "pioneer-woman": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/8cb4d2fd-531a-4b35-b4a9-ae201aab30bb.jpg",
-      "alt": "Pasta with Collard Greens Pesto",
-      "credit": "Ralph Smith"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/5acaa8ca-1413-445e-8a83-9697306f702c.jpg",
-      "alt": "Caramel Apple Crisp",
-      "credit": "ryan liebe"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/a6c8909e-c7d6-4bc4-a2d1-c2b7164b0db9.jpeg",
-      "alt": "How to Store Corn on the Cob So It Stays Sweet and Fresh",
-      "credit": "istetiana"
-    },
-    {
-      "src": "https://hips.hearstapps.com/vidthumb/images/zucchini-lasagna-square-1197-68756fb41f5d9.jpeg",
-      "alt": "20 Best Summer-To-Fall Recipes for the Seasonal Transition",
-      "credit": "Gordon Sawyer"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/d579d430-0045-404f-a151-973977902142.png",
-      "alt": "Why You Shouldn’t Pack Away Your Whites After Labor Day",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/f93b38d5-cc01-4dd7-9376-fcf3a37aa15e.jpg",
+      "alt": "Ree Drummond’s ‘Favorite Top’ from Her QVC Line Is on Sale",
       "credit": "QVC"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/b8676989-b2e1-490f-afd1-9ae586d464bb.png",
-      "alt": "Walmart’s Labor Day Sale Is Here! These Are the Deals Worth Shopping This Weekend",
-      "credit": "Walmart"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/5943b0bd-41cc-4fda-93c5-ab4a92bd0722.jpg",
+      "alt": "10 Sticky-Sweet Molasses Recipes for All Those Cozy Days Ahead",
+      "credit": "C.W. Newell"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/1ce32baf-d4a8-45cd-81cc-cfe30b85af30.jpg",
-      "alt": "The Best Types of Apples for Baking Apple Pie",
-      "credit": "Will Dickey"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/aa655caa-4e3c-4e1c-9eed-de33c4e62bb3.png",
+      "alt": "10 Quick Breads That Make Homemade Baking Easier Than Ever",
+      "credit": "Ryan Liebe"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/38b44651-cb96-4061-b2d4-368ffca450bc.jpg",
+      "alt": "16 Butternut Squash Dinners You'll Want on Repeat This Fall",
+      "credit": "RYAN LIEBE"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/625bb23b-3c19-41c0-bd12-219c549911cb.png",
+      "alt": "20 Cute Pumpkin Patch Outfits for Your Fall Photos",
+      "credit": "QVC"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/e7debefd-4975-47e3-9691-8f1a8662dc1a.jpg",
+      "alt": "Here's What Gives Pumpkin Spice Its Famous Fall Flavor",
+      "credit": "Danielle Daly"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/802910d2-4ab7-411a-9e42-e57992f58fba.jpeg",
+      "alt": "7 Halloween Decorating Mistakes You’re Probably Making, According to a Home Designer",
+      "credit": "Olga Rolenko"
     }
   ],
   "prevention": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/2a98cbbd-0c69-4244-84cf-03ff7dc770d6.jpeg",
-      "alt": "Night Owls More Likely to Struggle With Work-Life Balance, Scientists Say",
-      "credit": "Maskot"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/a8fa74bf-385c-4c00-adf7-602e79c6ec7f.jpeg",
+      "alt": "Getting More REM Sleep May Reduce Your Risk of 83 Different Diseases, Study Suggests",
+      "credit": "JGI"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/d275ed5e-fe66-435e-b2df-fc2c84aba65e.jpeg",
-      "alt": "Caffeine May Not Actually Make You Sharper in the Morning, Scientists Say",
-      "credit": "Yulia-Images"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/56aa17fc-a924-423e-adbe-a6b610cf66f8.jpeg",
+      "alt": "What Is the MIND Diet? Experts Explain How the Eating Plan Could Protect Your Brain",
+      "credit": "Alexander Spatari"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/57c40258-48d5-49d2-82ad-598d974ceded.jpg",
-      "alt": "The 11 Best Pillows for Neck Pain Relief, According to Experts and Testing",
-      "credit": "Honeydew/Coop Sleep Goods/Purple"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/7531d11e-c83f-4bd6-8903-68c827beea9a.jpeg",
+      "alt": "Do Supplements Designed for Longevity Actually Work? Experts Weigh In",
+      "credit": "Anastasiia Voloshko"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/d06c18b2-c685-4bd9-a685-2ec87e61dd56.jpg",
-      "alt": "Keep Your Brain Sharp As You Age: These 5 Habits Are Proven to Lower Dementia Risk",
-      "credit": "Flashpop"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/eb6a148b-2368-4404-9db8-707afa719d93.jpeg",
+      "alt": "A Personal Trainer Says That These Are 18 of the Best Ab Exercises to Build a Stronger Core",
+      "credit": "Fly View Productions"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/c6eddd1b-1d6f-405d-ab42-49dfb51aa28d.jpeg",
-      "alt": "What to Know About 11 Lines, According to Dermatologists",
-      "credit": "Anastassiya Bezhekeneva"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/1f242633-1441-45f6-a0a0-d10641e770ab.jpeg",
+      "alt": "What’s This Dark, Waxy Growth That Looks ‘Stuck’ on My Skin?",
+      "credit": "Ekaterina Demidova"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/37331200-27ec-4e4a-96c7-65f65761d0c3.jpeg",
-      "alt": "This New Definition for Heart Attacks May Help More Women Get Diagnosed",
-      "credit": "Catherine McQueen"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/76888a13-60ba-4b98-9075-0a32491f6672.jpeg",
+      "alt": "This Common Sleep Issue May Raise Your Risk of Stroke by 26%",
+      "credit": "miniseries"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/e803c704-f051-4b88-aa78-fa4a9598e324.jpeg",
-      "alt": "COVID Cases Are Climbing Across the Country—Here Are the Top Symptoms to Expect in 2026",
-      "credit": "dragana991"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/d39f24ba-6352-4bf1-a83c-bff6ab95fd79.jpeg",
+      "alt": "Taking Multiple Meds May Be Worsening—Not Fixing—Your Health, Scientists Say",
+      "credit": "Trevor Williams"
     }
   ],
   "redbook": [
@@ -2795,11 +2794,6 @@ export const storybookGalleryImagesByBrand: Record<string, StorybookGalleryImage
   ],
   "seventeen": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/3291f159-65aa-47ec-9867-11103a7c00c8.jpeg",
-      "alt": "Travis Kelce Explained Exactly Why He and Taylor Swift Got Married at MSG",
-      "credit": "Kevin Mazur"
-    },
-    {
       "src": "https://hips.hearstapps.com/hmg-prod/images/b79928fa-8b3c-45f7-b995-65b526df7d70.jpg?crop=1xw:0.888888888889xh;center,top&resize=1200:*",
       "alt": "These Six Scene-Stealers Have Entered the Chat [Exclusive]"
     },
@@ -2822,9 +2816,17 @@ export const storybookGalleryImagesByBrand: Record<string, StorybookGalleryImage
     {
       "src": "https://hips.hearstapps.com/hmg-prod/images/lead-image-wednesday-gifts-01-1671570080.jpg?crop=1.00xw:1.00xh;0,0&resize=1200:*",
       "alt": "25 \"Wednesday\"-Inspired Gifts That You'll Love Forevermore"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/lead-image-plus-size-hannah-01-1670385774.jpg?crop=1xw:0.999632892804699xh;center,top&resize=1200:*",
+      "alt": "These Plus-Size Winter Outfits Are So Cute They'll Beat Pajamas Any Day"
     }
   ],
   "womans-day": [
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/629195e3-a024-4394-b5c1-49aa7dba6351.jpg?crop=1.00xw:0.376xh;0,0.244xh&resize=1200:*",
+      "alt": "I Shared My Favorite Tailgate Finds on TODAY—Here’s the Full Lineup"
+    },
     {
       "src": "https://hips.hearstapps.com/hmg-prod/images/8bf87063-3db4-494a-a405-cb26ac0e52e0.png?crop=1.00xw:0.482xh;0,0&resize=1200:*",
       "alt": "I Didn’t Have Tommy Bahama x Stetson on My Fall Bingo Card, But I’m Obsessed"
@@ -2838,719 +2840,715 @@ export const storybookGalleryImagesByBrand: Record<string, StorybookGalleryImage
       "alt": "I Took My Family to Ireland—Here’s the Dublin + County Clare Itinerary I’d Do Again"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/46c2bf74-6a6d-494a-a2e7-dd63525873c6.jpg?crop=1.00xw:0.376xh;0,0.321xh&resize=1200:*",
-      "alt": "I Took My Son to Mohonk Mountain House for His 13th Birthday—and We Both Did Hard Things"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/7d1f61c7-1a59-4a51-b49f-e214d6b4eb0a.jpg",
+      "alt": "Breaking Down the Ending of ‘Verity’",
+      "credit": "Alisha Wetherill"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/dd7bdb11-8c60-47d5-9723-38dae30572ef.jpg",
-      "alt": "Your Horoscope for the Week of September 6",
-      "credit": "Kara Miller/Getty Images"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/ba70aa23-9281-47fc-ac8f-7065e77d1e37.jpg",
+      "alt": "Where and When to Stream ‘Digger’",
+      "credit": "Warner Bros. Pictures"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/310e7345-be56-4487-9b9a-2cfdfb9fc92a.jpg",
-      "alt": "Chocolate Brown Nails Are Serving Sweet Hot Cocoa Energy This Fall",
-      "credit": "@amyle.nails / @overglowedit"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/530d8dad-b61d-4dfc-b269-1f7e37fb4f37.jpeg",
-      "alt": "Alessandra Ambrosio and Stella Maxwell Wore Intimissimi on the Venice Red Carpet—Here’s How to Recreate The Look",
-      "credit": "STEFANO RELLANDINI"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/7b87bd8a-e01f-4635-b2b0-5031c30dca19.jpg",
+      "alt": "‘How to Find Love in the Cereal Aisle’ Author Alissa DeRogatis Brought Us Behind the Scenes on Her Book Tour",
+      "credit": "Alissa DeRogatis / Drew Furr / Cosmo Reads"
     }
   ],
   "autoweek": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/68fc904d-c9e1-4df9-ac98-ed9949b4f7d1.jpg",
-      "alt": "Gallery: LN4 Fusion Livery Photos",
-      "credit": "LN4 Fusion"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/4bbd415d-2870-41c2-9e47-b9ddfcb37e83.jpg",
+      "alt": "Gallery: 2027 Hyundai Tucson Photos",
+      "credit": "Hyundai"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/89ab32dc-8927-4f88-858e-59f3c80b54b1.jpg",
-      "alt": "Gallery: 2027 Bristol Fighter Photos",
-      "credit": "Bristol Cars"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/4e8dcafa-7ee2-4fea-988c-af91706d36b9.jpg",
+      "alt": "Gallery: 2027 Subaru BRZ ZC15 Photos",
+      "credit": "Subaru"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/7bc47a56-654a-41f9-ac3c-f94a1b8f7d2a.jpg",
-      "alt": "Gallery: 2027 Range Rover Electric",
-      "credit": "Land Rover"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/1963d4db-97da-4cfa-b13b-c2ddf11242a9.jpg",
+      "alt": "Gallery: 2027 Subaru WRX GD25 Photos",
+      "credit": "Subaru"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/1c5056d6-384d-4165-bb1b-f33e00b43348.jpeg",
-      "alt": "Scott McLaughlin Ends Winless Drought to Close IndyCar Season",
-      "credit": "Perry Nelson"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/5f16f8e4-f7c3-4e6e-81ca-6e068853aa76.jpeg",
+      "alt": "Max Verstappen Gives Red Bull F1 Its First Pole of 2026",
+      "credit": "Sona Maleterova"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/9c789584-cac9-4b3b-83d3-4be7bd0378bf.jpeg",
-      "alt": "Sheldon Creed’s Darlington Win Tightens NASCAR O’Reilly Series Chase",
-      "credit": "James Gilbert"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/63935347-23fb-46ec-8222-0fb86e1b970b.jpg",
+      "alt": "NHRA Racers Get 'Crown of Weiners' At St. Louis In Friday Qualifying",
+      "credit": "NHRA"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/65ec939c-2ce7-4793-a6c0-038ee7776c69.jpeg",
-      "alt": "Kimi Antonelli’s Historic Monza Win Headlines Formula 1 Weekend",
-      "credit": "Anadolu"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/af0550b4-8ca4-4d67-a6be-72aeef9153ba.jpeg",
+      "alt": "Joe Gibbs Racing, Spire Continue Discovery Fight in NASCAR Lawsuit",
+      "credit": "Icon Sportswire"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/94c5fa00-b68e-4ab2-b5ef-9ee011124b52.jpeg",
-      "alt": "IndyCar Title Is Settled, but the Driver Market Isn’t",
-      "credit": "Michael L. Levitt"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/e24e446b-1b54-4eb0-8bbf-c95675305ef6.png",
+      "alt": "New Isky Documentary Celebrates the Man Who Changed Hot Rodding",
+      "credit": "Ed Iskenderian"
     }
   ],
   "bring-a-trailer": [
     {
-      "src": "https://bringatrailer.com/wp-content/uploads/2025/11/2-2db79819e5700e4ac4a4af183bb02ff8-scaled-copy-2026-09-02-6i6-77885.jpg?w=940",
-      "alt": "Euro 1992 Lamborghini Diablo"
+      "src": "https://bringatrailer.com/wp-content/uploads/2026/09/17-print-1983_MERCEDES-BENZ_380-017-scaled-copy-2026-09-28-57j-17377.jpg?w=940",
+      "alt": "33k-Mile 1983 Mercedes-Benz 380SEL"
     },
     {
-      "src": "https://bringatrailer.com/wp-content/uploads/2026/01/1-copy-2026-09-01-gqc-92281.jpg?w=940",
-      "alt": "LSA-Powered 1969 Chevrolet Camaro Coupe 6-Speed"
+      "src": "https://bringatrailer.com/wp-content/uploads/2026/08/20260825_091304-scaled-copy-2026-09-18-99g-01650.jpg?w=940",
+      "alt": "38k-Mile 2003 Porsche 911 Carrera Cabriolet 6-Speed at No Reserve"
     },
     {
-      "src": "https://bringatrailer.com/wp-content/uploads/2026/09/FL0A3881-scaled-96040-pb7q8V-1-copy-2026-09-05-vhy-74247.jpg?w=940",
-      "alt": "4,700-Mile 2014 Lotus Evora 2+2 6-Speed"
+      "src": "https://bringatrailer.com/wp-content/uploads/2026/09/IMG_4906-scaled-copy-2026-09-29-p6r-92353.jpeg?w=940",
+      "alt": "1970 Bultaco Pursang"
     },
     {
-      "src": "https://bringatrailer.com/wp-content/uploads/2026/08/DSC00124-scaled-06740.jpg?w=940",
-      "alt": "2008 Porsche 911 Turbo Coupe"
+      "src": "https://bringatrailer.com/wp-content/uploads/2026/09/IMG_3588-scaled-20676-oRWzE4-1-copy-2026-10-01-fpf-89227.jpg?w=940",
+      "alt": "39k-Mile 2004 Lexus SC430"
     },
     {
-      "src": "https://bringatrailer.com/wp-content/uploads/2026/08/20260721_080945-scaled-copy-2026-08-27-ceu-57354.jpg?w=940",
-      "alt": "47k-Mile 2012 BMW M3 Coupe at No Reserve"
+      "src": "https://bringatrailer.com/wp-content/uploads/2026/08/EXTERIA_2-copy-2026-08-07-t92-27936.jpeg?w=940",
+      "alt": "10k-Mile 2013 Bentley Continental GT W12"
     },
     {
-      "src": "https://bringatrailer.com/wp-content/uploads/2026/08/1969_triumph_gt6_1969_triumph_gt6_678b13f5-10be-47d3-bc91-ed17313a7436-jAbpLt-01748-01749-scaled-1-copy-2026-08-24-7qp-copy-2026-08-26-ngf-86105.jpg?w=940",
-      "alt": "1969 Triumph GT6+"
+      "src": "https://bringatrailer.com/wp-content/uploads/2026/09/1000088331-scaled-copy-2026-10-01-bqf-86731.jpg?w=940",
+      "alt": "20×8.5″ and 20×9.5″ Alpina Wheels by Borbet at No Reserve"
     },
     {
-      "src": "https://bringatrailer.com/wp-content/uploads/2026/08/1965_ford_mustang_1965_ford_mustang_a49c5947-69b5-4026-bda3-10ca2a124bfa-oZrD6n-20786-20787-scaled-1-copy-2026-08-26-dyc-56163.jpg?w=940",
-      "alt": "R-Style 1965 Ford Mustang Fastback 5-Speed at No Reserve"
+      "src": "https://bringatrailer.com/wp-content/uploads/2026/09/2006_jaguar_xk8-convertible_2006_jaguar_xk8-convertible_bb5e654e-4102-4081-968b-c3a42c3538fa-HTzQdE-33856-33857-scaled.jpg?w=940",
+      "alt": "38k-Mile 2006 Jaguar XK8 Convertible Victory Edition"
     }
   ],
   "car-and-driver": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/21f722f6-a48c-4650-ad5b-a9432810c3c1.jpg",
-      "alt": "View Photos of the EV vs. Hybrid vs. Gas Vehicle Test",
-      "credit": "Michael Simari"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/656510d4-7dd3-4b6b-8012-75ebd70f948a.jpg",
+      "alt": "View Photos of the 1978 Subaru Wagon Through Baja",
+      "credit": "Al Satterwhite"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/a89a37cb-2566-4978-aaeb-693793d15c12.jpg",
-      "alt": "View Photos of the 1994 Budget Sports Coupes Comparison Test",
-      "credit": "David Dewhurst"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/73509d42-bede-4d53-b54f-f47e1a354352.jpg",
+      "alt": "View Interior Photos of the 2026 Jeep Recon",
+      "credit": "Jeep"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/f51bc694-1ad0-48ca-8cdb-1bb601c7f597.jpg",
-      "alt": "View Exterior Photos of the 2027 Ram 2500 HD Power Wagon",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/3393d3aa-05a9-4c87-bec2-d1723eca610c.jpg",
+      "alt": "View Exterior Photos of the 2026 Jeep Recon",
       "credit": "Marc Urbano"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/690c0d82-60f1-48db-8c30-80dafc6e02de.jpg",
-      "alt": "View Interior Photos of the 2027 Ram 2500 HD Power Wagon",
-      "credit": "Marc Urbano"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/9a44abae-c36f-4b50-89a6-933b04aa07c5.jpg",
+      "alt": "View Exterior Photos of the 2027 Hyundai Tucson Hybrid",
+      "credit": "Hyundai"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/9ff12e30-dcc1-4cb5-802d-ee2eef311d96.jpg",
-      "alt": "View Interior Photos of the 2027 Land Rover Range Rover Sport Hybrid Battersea Edition",
-      "credit": "Land Rover"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/43335161-f396-461d-879a-eb479fe26219.jpg",
+      "alt": "View Interior Photos of the 2027 Hyundai Tucson",
+      "credit": "Hyundai"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/91fb10d3-9e75-4ecf-ac49-b31b7f5689df.jpg",
-      "alt": "View Exterior Photos of the 2027 Land Rover Range Rover Sport Hybrid Battersea Edition",
-      "credit": "Land Rover"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/5d407f30-f002-459a-83df-0e81bd01123a.jpg",
+      "alt": "View Exterior Photos of the 2027 Hyundai Tucson",
+      "credit": "Hyundai"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/b49cea1e-ed1c-4e37-ae32-b4107a52ba67.jpg",
-      "alt": "View Interior Photos of the 2027 Land Rover Range Rover Twenty Edition",
-      "credit": "Land Rover"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/943db90e-06b8-4d6c-8070-964ad8aab8f1.jpg",
+      "alt": "View Photos of the 2027 Honda Civic Type R",
+      "credit": "Honda"
     }
   ],
   "hot-rod": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/dc35ce36-dc23-4bc9-b8af-869b3c540d49.jpg",
-      "alt": "HOT ROD Drag Week 2026: Routes, Locations, and All Details Inside!",
-      "credit": "Hot Rod Archives"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/03d4273b-2e90-4cac-baff-b53a3e30c813.jpg",
+      "alt": "2026 Grand National Truck Show Photo Gallery: America's Best Trucks Invade Pomona",
+      "credit": "John McGann"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/ab783a58-e1d2-4344-bbd9-a44bbbde3a69.jpg",
-      "alt": "BMR Just Acquired Hotchkis. Here’s What It Means for Performance Enthusiasts",
-      "credit": "BMR"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/6b647633-fe28-47a6-89d4-1e971c65723e.jpg",
+      "alt": "HOT ROD Drag Week 2026 Day Five: Final Photos and Route 66 Raceway Action—Mega Gallery",
+      "credit": "Kevin DiOssi"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/a01f36dd-a54b-4812-b3f3-849b5c8b6023.jpg",
-      "alt": "1964 Shelby Cobra Daytona Coupe Sells for $42.9 Million, Sets American Car Auction Record",
-      "credit": "Mathieu Heurtault/Gooding & Company"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/735bbb9f-4467-4e2b-b983-45d862272e1f.jpg",
+      "alt": "HOT ROD Drag Week 2026 Day Four: It’s Been a Long Hard Road—Action Gallery",
+      "credit": "Kevin DiOssi"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/2bdad668-b950-4f1d-9bcf-dd32f83d76bb.jpg",
-      "alt": "How Do You Reinvent a ’65 GTO Without Ruining It? Ringbrothers Has a Plan",
-      "credit": "Ringbrothers"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/0da6cdce-658e-4647-8d12-38ed721ec8ba.jpg",
+      "alt": "HOT ROD Drag Week 2026 Day Three: Fast Times and the Game of Attrition—Action Gallery",
+      "credit": "Kevin DiOssi"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/49e6aa13-fec2-457b-b69c-88bb7d66c5f0.jpg",
-      "alt": "This Shelby-Powered ’57 Ford Ranch Wagon Is the Nomad Rival Ford Never Built",
-      "credit": "Renz Dimaandal"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/bcdd82cb-0e26-4853-b658-af030331b022.jpg",
+      "alt": "HOT ROD Drag Week 2026 Day Two: Rain Stops Racing but the Road Rolls On—Action Gallery",
+      "credit": "Kevin DiOssi"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/07cd4dd4-e518-4573-8a07-b2c5c3d10a34.jpg",
-      "alt": "Co-Founder of Katech Engineering, John “Fritz” Kayl, Passes Away, but His Legacy of Performance Lives On",
-      "credit": "Katech Engineering"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/00306f27-5d48-4757-9088-faa5f3a31334.jpg",
+      "alt": "HOT ROD Drag Week 2026 – 5-Second Passes, Roadside Repairs, and One Big Exit – Day One Action Gallery!",
+      "credit": "HOT ROD Staff"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/e1b80fd7-fb20-4adb-85c0-c35f1e867307.jpg",
-      "alt": "Woodward Avenue: The Road That Built Detroit Car Culture",
-      "credit": "HOT ROD Archives"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/46ba660c-353f-4943-8cec-ffbb3f36f158.jpg",
+      "alt": "2026 Carlisle Chrysler Nationals: 60 Years of Charger, Street Hemis, and Rare Survivors",
+      "credit": "Dan Gallo Jr."
     }
   ],
   "motortrend": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/39c76fc2-e04e-4ae1-813c-4dc862e7b20b.jpg",
-      "alt": "Tesla’s Autonomous Cybercab Service Is GO!",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/66f859ba-b26f-43be-a2e3-b0e713955477.jpg",
+      "alt": "Subaru’s WRX and BRZ Get Throwback Special Editions",
       "credit": "MotorTrend"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/768179ae-03ce-4e5a-a041-4ed430634b26.jpg",
-      "alt": "We Tested Three Luxury Convertibles in 2004, and Came Up With One Surprise Winner",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/c96d9414-49e0-4d43-ab35-996a1a4970dd.jpg",
+      "alt": "Driven: VW’s New ID.Polo Is the EV Volkswagen Should Have Built in the First Place",
       "credit": "MotorTrend"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/c81f14eb-5e3c-4e12-a037-6ea16817322f.jpg",
-      "alt": "Hyundai’s Elantra N TCR Certainly Looks Faster. Our Testing Tells a Different Story.",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/9638310c-68c1-40f4-a125-4f1cbc747b89.jpg",
+      "alt": "Tesla Semi: Diesel Killer or Giant Cybertruck?",
       "credit": "MotorTrend"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/a47437b2-7161-4ce9-a483-dff4146287a4.jpg",
-      "alt": "Tesla Cybercab First Look: No Steering Wheel! No Brake Pedal! No Problem?",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/7e1e0938-bd10-477d-a449-d06b073f99c5.jpg",
+      "alt": "Tested! The $1 Million Aston Martin Valhalla Is a Supercar For Your Heart, Not Your Brain",
       "credit": "MotorTrend"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/6de4fbb4-ff28-4c1c-a2db-7b9e7a5cc076.jpg",
-      "alt": "Tested: The New 2027 Kia Seltos Turbo Is Way Better-Looking Than Before—and So Much Slower",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/8c1e692e-b538-42b1-9888-d276ad160004.jpg",
+      "alt": "The Best Dash Cam Deals Ahead of Fall’s Prime Big Deal Days",
       "credit": "MotorTrend"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/c2a082cc-cf89-477a-869f-f8452551fd4f.jpg",
-      "alt": "The 2027 Infiniti Lineup Grows: QX65, Plus More New Soon?",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/77bc4f48-6b9b-4ede-9a76-6d5fd10f6911.jpg",
+      "alt": "We Just Tested the 2027 Nissan Z NISMO Manual—Is It the Best Z Yet?",
       "credit": "MotorTrend"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/7963e814-63b0-4dec-86e0-14751f13b3ca.jpg",
-      "alt": "The Jensen Interceptor GTX is the Latest Track Day Car for Enthusiasts Who Have Everything",
+      "src": "https://hips.hearstapps.com/mtg-prod/688933b03d6e6300025ac3b9/01-volkswagen-id4-2026.jpg",
+      "alt": "Bargain: Volkswagen Is Practically Giving Away the ID4 Before the ID.Tiguan Arrives",
       "credit": "MotorTrend"
     }
   ],
   "road-and-track": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/b1a2b4e6-8cd3-496f-ae32-e79b132649bd.jpg",
-      "alt": "See Every Angle of the 2027 Chevrolet Corvette Grand Sport X",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/408931a9-64d8-4f0b-9fc0-0720a30854a4.jpg",
+      "alt": "See More Photos of the 2027 Hyundai Tucson",
+      "credit": "Hyundai"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/ae422338-074d-41e3-9b34-d3029a637eab.jpg",
+      "alt": "See More Photos of The 2027 Aston Martin DB12 S and The 2027 Bentley Continental GT S",
+      "credit": "ralph bohannon"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/3378e45e-7d07-4464-82af-44566eaa2f5b.jpg",
+      "alt": "See Every Angle of the 2026 Ford Mustang Dark Horse SC",
       "credit": "Zac Palmer"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/90368819-0fbc-41f2-943a-35d10fdecc34.jpg",
-      "alt": "See More Photos of The 2027 Lamborghini Revuleto SV Prototype",
-      "credit": "Lamborghini"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/dd2f4823-1193-4e1f-8f53-824baa07e455.png",
+      "alt": "Cadillac Benefits from Magnussen-Palou Crash at Petit Le Mans Halfway Mark",
+      "credit": "IMSA on NBC"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/a5f41179-e40e-4ec0-8f59-2c785ed7b01e.jpeg",
-      "alt": "Heartbreaking Final Minutes for Toyota Lead to Ferrari’s First WEC Win of the Year at COTA",
-      "credit": "James Moy Photography"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/4ef6c63f-fb5d-4c6a-9fe0-760d25d7705b.jpeg",
+      "alt": "Mercedes Struggles to Get It Right As It Brings Long-Awaited Upgrades to Malaysia",
+      "credit": "Kym Illman"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/257447f0-604c-4b95-848c-bc9e88a4c81f.jpeg",
-      "alt": "A Nightmare Monza for Ferrari as Leclerc Crashes Out and Frustrated Hamilton Calls for Changes",
-      "credit": "ANDREJ ISAKOVIC"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/264042d9-665e-4fe3-a4de-ce83315024fb.jpeg",
+      "alt": "Jack Aitken and the No. 31 Cadillac Whelen Clinch 2026 IMSA Championship with Petit Le Mans Start",
+      "credit": "Brandon Badraoui"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/2de94c06-7b6f-4ff3-b916-8d387d7b9a8f.jpg",
-      "alt": "Scott McLaughlin Breaks Two-Year Winless Streak with Win in IndyCar Finale",
-      "credit": "Travis Hinkle"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/29c86256-74fe-4b91-818f-dc0bf3409cb3.jpeg",
-      "alt": "Antonelli Becomes First Italian to Win Italian Grand Prix Since ‘66 With Impressive Run from 19th",
-      "credit": "Peter Fox"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/94a01f00-6005-4727-b30c-6d2b6212dce4.jpeg",
-      "alt": "Charles Leclerc Out of the Italian Grand Prix After Red Flag Crash",
-      "credit": "Peter Fox"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/c1205ccc-94c4-4908-bd83-cbd15d6cba6d.jpeg",
+      "alt": "Las Vegas Motor Speedway Honors Kyle Busch with Kurt as Pace Car Driver and a Weekend of Tributes",
+      "credit": "Icon Sportswire"
     }
   ],
   "elle": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/c62d0c92-2e5c-4f30-837b-175b62b30da3.jpg",
-      "alt": "Sydney Sweeney Wore a Sheer Vintage Armani Gown With a Black Thong",
-      "credit": "Carlo Paloni"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/92c17e5d-386d-49ea-b57c-c74f895b975b.jpeg",
+      "alt": "Sarah Jessica Parker’s Ballet Look Had Ribbons Everywhere—Even Her Ponytail",
+      "credit": "Gilbert Carrasquillo"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/2f587c56-2e70-4163-9797-249f03f0040c.jpeg",
-      "alt": "See Every Major Red Carpet Look From the 2026 Venice Film Festival",
-      "credit": "Victor Boyko"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/57bcbf69-f3d1-4183-8f71-edb53e5d5c24.jpeg",
+      "alt": "Michelle and Barack Obama’s Complete Relationship Timeline",
+      "credit": "Christopher Polk"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/1bc87d4a-be9e-4084-97ca-ec54f12d93bf.jpeg",
-      "alt": "Amal Clooney’s ‘Silk Nails’ Are Fall’s Most Elegant Manicure Trend: How to Try the Look Yourself",
-      "credit": "Alessandro Levati"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/ed49d914-e4e1-41a1-a8ce-e26d0ee8e186.jpeg",
+      "alt": "Hermès Is Embracing Fashion’s Lighter Side",
+      "credit": "LOU BENOIST"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/90638784-17d4-4201-9817-b79746287b68.jpeg",
-      "alt": "Brace Yourself: Kendall Jenner Is Bringing the Zigzag Part Back",
-      "credit": "Stephane Cardinale - Corbis"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/1d3a4900-4ec6-4dbb-9071-42cbfe5b9713.jpg",
+      "alt": "Elizabeth Debicki Takes Us Inside Her ‘Very Parisian Night’ With Christian Louboutin",
+      "credit": "Wojciech Christopher Nowak"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/b8073e58-3dc0-49b7-bb4a-69dcdda33766.jpeg",
-      "alt": "All About North West, Kim Kardashian and Kanye West’s Eldest Child",
-      "credit": "Arnold Jerocki"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/eec8ef85-164f-485a-bb89-5cc4005c3b6f.jpeg",
+      "alt": "Portrait of God : Everything We Know So Far",
+      "credit": "Lexie Moreland"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/f7c41ae1-9c33-4e4a-8768-078b193e704f.jpeg",
-      "alt": "Taylor Swift’s ‘I Knew It, I Knew You’ Lyrics Capture the Feeling of Reconnecting With Someone You Thought You Lost",
-      "credit": "Erika Goldring/TAS24"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/f7de88c5-bc43-4efa-b383-7b0a335635c9.jpg",
+      "alt": "Why Anne Hathaway Is ‘Disappearing’ for the Rest of the Year",
+      "credit": "TATIANA KEVYCH&#xA;"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/da1906cc-cd41-45e3-8e82-ea416093b24e.jpeg",
-      "alt": "All About Antonia Roumelioti, Luke Newton’s Girlfriend",
-      "credit": "Dave Benett/BAFTA"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/029f48f0-aa06-411b-bbc6-f25699041002.jpg",
+      "alt": "Celine’s Summer 2027 Show Is a Reminder of Fashion’s Emotional Power",
+      "credit": "Alessandro Lucioni"
     }
   ],
   "elle-decor": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/c7ad8c9d-7143-496b-9e93-a35f43a71a4f.jpg",
-      "alt": "Shop ELLE Decor’s Summer Houses",
-      "credit": "Elle Decor"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/80ee6efd-5552-4411-aee3-dfaad32deded.jpg",
+      "alt": "How Two Friends Turned a Timeworn Connecticut Garage Into a Vintage-Inspired Barnhouse",
+      "credit": "Stephen Kent Johnson"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/d08e4d56-18c2-4bfa-95b3-107deb1ac2d8.jpg",
-      "alt": "A La Jolla Home That Sings “Let the Healing Begin”",
-      "credit": "Richard Powers"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/4498b913-a71a-4328-baa5-b8c00607ab79.jpg",
+      "alt": "Taylor Swift’s “Blank Space” Castle Heads to Auction—Plus 6 More Luxury Homes for Sale",
+      "credit": "Brett Matthews Photography, Elliott Kaufman Photography, Phillip Ennia, Stefen Turner, and Camelot"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/736f5d12-88e0-4b2f-957a-75d5bcae7de3.jpg",
-      "alt": "Obsession: This Hand Soap Smells Like Rain",
-      "credit": "D.S. & Durga"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/205a4809-8e4d-4821-a996-824765925fc6.jpg",
+      "alt": "ELLE Decoroscope: Your October Design Horoscope Is Here",
+      "credit": "Hearst Owned"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/15a08a76-786e-48c9-808b-1aecad5e5419.jpeg",
-      "alt": "This Luxurious Maltese Hotel Suite Is the Epitome of Whimsy",
-      "credit": "Courtesy of Casa Bonavita"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/64335443-b912-4ccd-8024-4495d230c234.jpeg",
+      "alt": "Diane Keaton’s Final Home Project, a Laguna Beach House, Is Now on the Market for $10.3 Million",
+      "credit": "Rodin Eckenroth"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/93b21df6-aa46-4327-bde0-d6a01c589091.jpg",
-      "alt": "Fire Island’s Pyramid House Lists for $3.3 Million—Plus 4 More Luxury Homes for Sale",
-      "credit": "Daniel Rodriguez"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/f22b8281-5511-4e72-9c31-920010d25b6a.jpg",
+      "alt": "This $30 Estate Sale Find Just Sold for $1.35 Million at Auction",
+      "credit": "Courtesy Freeman's"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/04a0a12b-a70b-4d65-b3e6-84e65f21ca2e.jpg",
-      "alt": "Ralph Lauren Brings the Polo Bar to the U.S. Open",
-      "credit": "WESTON WELLS"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/3daf1a7d-6b87-4762-99b3-052498445eb2.jpg",
+      "alt": "Look Inside Tyler Perry’s Beverly Hills Mansion, Where Prince Harry and Meghan Markle Hid After Leaving the Royal Family",
+      "credit": "Marc Angeles"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/1fd72fa9-1ef9-4bb1-969d-5fc366889370.jpg",
-      "alt": "Kelly Wearstler Launches Shape-Shifting Furniture Line for H&M Home",
-      "credit": "H&M HOME/Piergiorgio Sorgetti"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/d1fdeecc-c8c9-4549-99cd-613a5072219c.jpg",
+      "alt": "On the Couch with Jennifer Meyer",
+      "credit": "Courtesy Jennifer Meyer"
     }
   ],
   "esquire": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/598654d0-c5d6-40e4-b1fb-a5d4026c4c65.jpeg",
-      "alt": "Lioness Episode 6 Finally Introduces the Villain",
-      "credit": "Emerson Miller"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/8799ddd7-c4ca-4eab-bdb6-f39a4814794c.jpeg",
+      "alt": "How to Take Better Photos of Your Watch (According to a Professional)",
+      "credit": "Tim Vaux"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/12ddbee7-5222-46ee-9472-064fd0994593.jpeg",
-      "alt": "John Fetterman Is Making the Case for Worst Democratic Senator of All Time",
-      "credit": "Anna Moneymaker"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/b7cc4227-e157-486e-a245-7e9033a422d9.jpeg",
+      "alt": "Russell Vought and His Budgeting Cronies Are Using This Sketchy Loophole to Control Government Spending",
+      "credit": "Bill Clark"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/70973486-ac8a-49ae-9540-cbbec5281342.jpg",
-      "alt": "The Best Deals from REI's Labor Day Sale: Arc’teryx, Patagonia, and More",
-      "credit": "REI"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/961bf292-b99a-46ba-b706-9bff44b5625a.jpg",
+      "alt": "The 5 Not-So-Basic Light Jackets Every Man Should Know",
+      "credit": "Mr Porter, Farfetch, Taylor Stitch, Blue Owl, Levi's, The Real McCoys"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/aad56fb9-a896-4681-9c21-332d153f8acf.jpg",
-      "alt": "Need a New Fall Jacket? All Our Favorite Brands Are on Sale for Labor Day",
-      "credit": "filson / nordstrom / all saints"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/3dbb3edf-ba40-4e49-b2f8-a1ae8dcf6b73.jpeg",
+      "alt": "Every Tom Cruise Movie, Ranked",
+      "credit": "Archive Photos"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/80417420-0a42-4b54-b9c9-0c4f4bb9da03.jpg",
-      "alt": "Watches, Parkas, and All the New Launches Esquire’s Editors Loved This Week",
-      "credit": "AE / Zenith / Aesop / uniqlo"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/9625f46e-fba8-4e36-9773-2bf885473203.jpg",
+      "alt": "The Best Oxford Shirt Is a Timeless Classic—Here Are Our Favorites.",
+      "credit": "Gap/Brooks Brothers/Bonobos"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/2d801ebe-1ff8-4fc9-ba0f-53ae473af598.jpg",
-      "alt": "The 4 New Rules of Fall Style",
-      "credit": "getty images"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/1-indexl-6931e88ccb901.jpg",
+      "alt": "The 40 Best Gifts to Buy Your Brother, No Matter the Occasion",
+      "credit": "Timex"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/24768ab5-cb87-4caa-82a0-4f6a1bdcf8b6.jpeg",
-      "alt": "Casio Just Made an Affordable Matcha-Green Watch With Café Kitsuné",
-      "credit": "Casio."
+      "src": "https://hips.hearstapps.com/hmg-prod/images/b64699eb-d561-4d5d-ae7e-99888304385b.jpg",
+      "alt": "10 Waterproof Boots for Unexpected Nasty Weather",
+      "credit": "Blundstone / Danner / Barbour"
     }
   ],
   "harpers-bazaar": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/a6661d28-5623-44fb-a262-99960e4c10ac.jpg",
-      "alt": "Amal Clooney Captures Venetian Summer Elegance in a Slouchy Polka-Dot Dress",
-      "credit": "Victor Boyko"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/af39d339-540e-4ddb-a484-2ba19dfda8a1.jpg",
+      "alt": "Jennifer Lawrence Brings Flip Flops Into Fall With Cargo Pants and a Semi-Sheer Cardigan",
+      "credit": "BACKGRID"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/f203359d-997b-4c17-892b-bec0353f7e6e.jpg",
-      "alt": "Leslie Bibb and Sam Rockwell Look So Damn in Love on the Venice Red Carpet",
-      "credit": "picture alliance"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/828d79a1-b98b-45eb-bd28-a7c801f67dc7.jpeg",
+      "alt": "Taylor Swift Ushers in Her Favorite Season With a Cozy Maroon Sweater and Khaki Trousers",
+      "credit": "Gotham"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/5c84961c-c025-40bb-999f-df19dcfc8f44.jpg",
-      "alt": "You Can’t Take Sydney Sweeney Away From Her Naked Dresses",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/06cf1bff-5e8d-48f8-895a-63f3ab3016b3.jpg",
+      "alt": "All of Daisy Edgar-Jones’s Sense and Sensibility Looks",
       "credit": "Getty Images"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/8bab4f68-d9a3-4455-8169-539f623b72f7.jpeg",
-      "alt": "Kendall Jenner Makes Her Debut on the Venice Film Festival Red Carpet",
-      "credit": "Dave Benett"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/788f02c8-187e-40a3-802d-2d01ef3bbdbf.jpeg",
+      "alt": "Olivia Rodrigo Sourced a Dreamy Vintage Chloé Dress for Her Night at the Ballet",
+      "credit": "Courtesy of Leah Chernikoff"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/e435e2fd-5266-418f-8168-941e23deab9e.jpg",
-      "alt": "Jennifer Lopez’s Bold Red Dress Makes for the Perfect End-of-Summer Night-Out Look",
-      "credit": "TYJA, JWNY"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/8005c06b-ca8b-454b-af21-3be06a7b1cde.jpeg",
+      "alt": "Stevie Nicks Brings Fairy Energy in a Flower Crown at the New York City Ballet Fall Fashion Gala",
+      "credit": "Dimitrios Kambouris"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/58c90de4-41b2-454f-ae5f-21e48f7fb02a.jpeg",
-      "alt": "Gloria Steinem’s Revolutionary Life in Photos",
-      "credit": "Robert R. McElroy"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/2a867f94-7936-4845-8aa0-3db163df59a4.jpg",
+      "alt": "Dior and Harper’s Bazaar Take Over Paris Fashion Week With a Book Party Celebrating the Legacy of Richard Avedon",
+      "credit": "Bruno Chiappe"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/7b432172-6cff-45c1-985c-a436d1fbf1b4.jpg",
-      "alt": "All the Celebrity Looks From the 2026 Venice Film Festival",
-      "credit": "Getty Images / Design by Sarah Olivieri"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/7c5727fc-36b6-4e30-ac84-15b39f31fa4d.jpg",
+      "alt": "Jennifer Lawrence Celebrates the Beginning of October With Her Cutest Statement Baseball Cap Yet",
+      "credit": "MMVV, CPTT"
     }
   ],
   "town-and-country": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/74cc1c5e-a6fd-4f41-b7c6-6aca97520d2a.jpeg",
-      "alt": "All the Celebrities We Spotted at the U.S. Open This Week",
-      "credit": "Shea Kastriner"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/963d0f69-fefb-43e7-89e7-bb6995448fd9.jpeg",
+      "alt": "The Meaning Behind Sophie, Duchess of Edinburgh’s Brooch During a Military Memorial Event",
+      "credit": "Joe Giddens - PA Images"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/db4323ce-a161-417d-bd03-0b623576a270.jpg",
-      "alt": "Lesley O’Connor & Steve Wyatt’s Houston Wedding",
-      "credit": "Bonnie Burke"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/2b2e732a-c1d4-4d01-be42-eab1d00a93bb.jpg",
+      "alt": "T&C Tried & True: The Rolls-Royce of Dog Strollers",
+      "credit": "Courtesy Tavo Pets"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/aryna-sabalenka-with-her-partner-georgios-frangulis-news-photo-1752152246.pjpeg",
-      "alt": "Meet Aryna Sabalenka’s Fiancé Georgios Frangulis",
-      "credit": "Ben Whitley - PA Images"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/388183a9-618c-49d9-a9a3-4d5e1efe3ef8.jpg",
+      "alt": "How to Read Ali Hazelwood’s Romance Books in Order",
+      "credit": "Product Shot Image"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/8cd544d7-80c8-49df-a84e-06f3c8af3c49.jpg",
-      "alt": "Get to Know Taylor Townsend’s Family",
-      "credit": "Instagram/Taylor Townsend"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/28ccf7a2-9087-4cf0-bc50-b2923d43203d.jpg",
+      "alt": "Sheila Johnson Is Mastering Her Third Act",
+      "credit": "Scott Suchman"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/5fc3ba20-eb8a-4904-bbc4-9c6be15bf289.jpeg",
-      "alt": "Why Doesn’t Aryna Sabalenka Have a Flag Next to Her Name?",
-      "credit": "Robert Prange"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/e1f2d173-c18d-49e0-a08f-2603bbedc0c9.jpg",
+      "alt": "8 College Application Myths That Need to Be Busted Now",
+      "credit": "Sean Sime"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/d08851db-0d46-4edf-894f-e71311fd95ba.jpg",
-      "alt": "Everything We Know About The Gentlemen Season 3",
-      "credit": "Christopher Raphael"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/733834ec-3371-481a-bb65-2a18b53bc612.jpg",
+      "alt": "The Last Days of a Dallas Landmark",
+      "credit": "Getty Images"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/43c00f35-aa6d-4263-bc8e-b409cdb225c9.jpg",
-      "alt": "The Best 2026 U.S. Open Merch to Shop Now",
-      "credit": "Ralph Lauren"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/354d3141-6196-4446-af4c-c88c6a6fab05.jpeg",
+      "alt": "King Charles’s Caribbean Trip Will “Not Shy Away” From Addressing Slavery, Palace Says",
+      "credit": "Pool"
     }
   ],
   "veranda": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/eerdmans-west-village-gallery-house-tour-living-room-fireplace-jpg-1629223020.jpg",
-      "alt": "Step Inside Emily Eerdmans’s Joyful Live-Work Design Laboratory in the West Village",
-      "credit": "Kelly Marshall"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/area-locust-valley-exterior-68478c5ac87b5.jpg",
+      "alt": "The 5 Curb Appeal Trends You’ll Be Seeing Everywhere in 2027",
+      "credit": "Ethan Herrington"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/fdeb78d9-cf89-45ce-8d4a-a959e4981a55.jpeg",
-      "alt": "Rooms With a View: This Ravello Hotel Offers Amalfi Coast Splendor—Without the Crowds",
-      "credit": "Courtesy of Palazzo Avino"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/a22cb296-fd72-4fd9-ad1f-bf4ce97b9e7b.jpg",
+      "alt": "27 Luxury Christmas Decorations That'll Help You Deck the Halls in Style",
+      "credit": "Becky Luigart-Stayner for VERANDA"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/13404d36-c247-4f11-b177-070e9a242d18.jpeg",
-      "alt": "How to Grow Japanese Anemones the Right Way, According to a Garden Expert",
-      "credit": "Jacky Parker Photography"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/a470b3de-2d7e-4496-9a26-e211e165565e.jpeg",
+      "alt": "7 Halloween Decor Trends That Are Having a Major Moment This Year",
+      "credit": "Philip Gould"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/a3f75196-cf09-4d51-95bf-4abc594ea97f.jpg",
-      "alt": "10 Ways to Make Your Entryway Look More Expensive, According to Interior Designers",
-      "credit": "William Waldron"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/93dca965-c13c-40b9-97f5-a55ddaeb5a1d.jpg",
-      "alt": "48 Must-Have Gifts to Inspire the Artist in Your Life",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/efac4e38-cde8-4c18-af28-abef701679b2.jpg",
+      "alt": "23 Luxury Amazon Gifts You Can Still Get at the Last Minute",
       "credit": "Products, Courtesy of Brands"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/redd-kaihoi-dallas-home-library-67f042cbe78e9.jpg",
-      "alt": "These Are the 7 Color Trends Experts Say Will Be Everywhere in 2027",
-      "credit": "Noe DeWitt for VERANDA"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/markham-roberts-connecticut-colonial-living-room-jpg-1597869870.jpg",
+      "alt": "7 Decorating Tricks Designers Love for Making Small Spaces Look More Expensive",
+      "credit": "Nelson Hancock"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/markham-roberts-connecticut-house-exterior-67f41ccfb2d48.jpg",
-      "alt": "Preservation Experts Say These 8 Historic Home Maintenance Tasks Can’t Wait Until Winter",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/markham-roberts-connecticut-colonial-dining-room-jpg-1597870044.jpg",
+      "alt": "This 1920s New England Home Proves Classic American Decorating Never Goes Out of Style",
       "credit": "Nelson Hancock"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/ba9097b9-1563-48cd-81af-70fb70b1449e.jpg",
+      "alt": "22 Monogrammed Gift Ideas That Add the Most Thoughtful Personal Touch",
+      "credit": "Products, Courtesy of Brands"
     }
   ],
   "best-products": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/a7ff4b7f-23a7-45ce-b2ec-45f8b536765e.jpg",
-      "alt": "How New Parents Can Build a Baby Registry Without Breaking the Bank—My Picks Start at $30",
-      "credit": "Getty Images"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/fe10a270-cb45-431c-9af8-2c0d85247382.png",
-      "alt": "Top Amazon iPad Labor Day Deals: Score Hundreds Off Editor-Recommended Picks",
-      "credit": "Stefan Vazharov"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/eb247344-44a7-4f4d-968c-2204076a4644.png",
-      "alt": "Amazon Labor Day Deals Are Up to 40% Off on Editor-Approved Tech, Home Essentials, and More",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/77dff0f0-b3cb-45bf-b8e9-76024a8aa1fc.png",
+      "alt": "Lego’s Nevermore Academy Set Brings Wednesday’s Gothic World to Life",
       "credit": "Product Shot Image"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/uppababy-vista-v3-stroller-017-6789753e9b6d8.jpg",
-      "alt": "9 Best Strollers of 2026, According to Hundreds of Hours of Testing",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/towel-warmer-1603997407.jpg",
+      "alt": "The 11 Best Towel Warmers to Make Your Bathroom Feel Like a Spa",
+      "credit": "Stocksy"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/best-stocking-stuffers-68efa90870b8d.png",
+      "alt": "48 Stocking Stuffer Ideas for Everyone on Your List",
       "credit": "Trevor Raab"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/59bd1a6c-f19d-4853-880b-978a37fce7c1.jpg",
-      "alt": "35+ Best Halloween Costumes for 2026 That Will Steal the Show",
-      "credit": "BEST PRODUCTS; BRIDGET CLEGG, ELENI DIMOU, UNIVERSAL, TREVOR RAAB, GETTY IMAGES"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/best-stocking-stuffers-657a1fe45edb7.gif",
+      "alt": "45 Stocking Stuffers for Kids That Will Be the Cherry on Top of Their Holiday",
+      "credit": "Product Shot Image"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/last-minute-diy-halloween-costumes-2024-66e477dd81bba.jpg",
-      "alt": "60 DIY Halloween Costume Ideas That You Can Put Together in No Time",
-      "credit": "Best Products; Thomas Hengge"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/128f6af4-e9d8-4532-806e-ae312ca6b627.png",
+      "alt": "Save Up to 50% On Bestselling Halloween Essentials Ahead Of Prime Big Deal Days",
+      "credit": "Product Shot Image"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/3cbbbe48-f24d-4590-bc54-cb7b73c971d5.png",
-      "alt": "Add a Little Autumn Charm to Your Work or Study Space With Fall Office Essentials",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/eb247344-44a7-4f4d-968c-2204076a4644.png",
+      "alt": "The Best Early Amazon Prime Big Deal Days Deals: Save Up to 40% Off on Editor-Approved Tech, Home Essentials, and More",
+      "credit": "Product Shot Image"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/310a6f1b-94c4-4484-815a-a9111dad8ad3.png",
+      "alt": "Amazon’s Early Deals Include Smart Glasses, Air Fryers, and More Up to 50% Off",
       "credit": "Product Shot Image"
     }
   ],
   "bicycling": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/3bc0e90b-cee9-4236-8fc2-8421dcd5c28a.jpg",
-      "alt": "This Is the Piece of Tech That I’ve Been Using to Dial In My Hydration Plan",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/riding-in-rain-209-copy-65e6212405e34.jpg",
+      "alt": "The Painful Truth About Saddle Sores: 3 Myths Cyclists Need to Stop Believing",
       "credit": "Trevor Raab"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/tk22-madone-wind-tunnel-13-1656556567.jpg",
-      "alt": "Your New Bike Is Four Watts Faster. What Does That Actually Mean?",
-      "credit": "DYLAN REMIS"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/fdaba6fe-335c-4c56-a74b-3c0b938b3adb.jpeg",
+      "alt": "I Loaded Myself Up With Sensors and a Bunch of THC to Test Whether Weed Really Is a Performance Enhancer",
+      "credit": "Jason Griffin"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/wahoo-kickr-core-zwift-one-0435-65c4fabb22014.jpg",
-      "alt": "8 Ways to Make Indoor Cycling More Enjoyable, Effective, and Sustainable",
-      "credit": "Trevor Raab"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/7b86a1db-eb24-435d-90ac-3b16f22c4b57.jpeg",
+      "alt": "Brandon McNulty’s New Rainbow Colnago Is Here—and It’s Surprisingly Close to the Bike You Can Buy",
+      "credit": "Tara Seplavy"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/c54b0079-af06-4c39-8164-8d390724cc8f.jpg",
-      "alt": "Want to Climb Faster and Ride Farther? These 10 Editor-Approved E-MTBs Deliver Real Trail Capability",
-      "credit": "Trevor Raab"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/9f7e1c06-1657-41eb-8da1-e56a61f7d19d.jpg",
-      "alt": "What Running Can Give Cyclists That Riding Can't.",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/1a412074-c1ed-4c04-84f5-fcbc278dcf28.jpg",
+      "alt": "The Groupset Bicycling Editors Would Spend Their Own Money On",
       "credit": "Hearst Owned"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/century-fueling-0014-1623946965.jpg",
-      "alt": "Cyclists Have Relied on Coca-Cola to Fight the Bonk for 100 Years. A Dietitian Explains Why It Works — and Where It Breaks Down",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/0c729d51-5c43-46a0-982c-7fe2015d82d0.jpeg",
+      "alt": "Flying With Your Bike? These Editor-Tested Travel Cases Make Packing Easier and Help Prevent Damage",
       "credit": "Trevor Raab"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/8f1c6532-ae66-435f-ba3b-8de547f33ca6.jpeg",
-      "alt": "The 10 Best Cheap Electric Bikes for Commuting, Errands, and Weekend Rides",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/7e792071-18b3-4292-b290-e54d1371b545.jpg",
+      "alt": "The Ari Shafer Shows How to Balance Speed and Adventure",
+      "credit": "Matt Phillips"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/901bc7fa-8c33-4e66-9208-381299ae058f.jpg",
+      "alt": "The Things I Missed When Switching Between Shimano and SRAM According to Our Members",
       "credit": "Trevor Raab"
     }
   ],
   "mens-health": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/33932af0-022a-4662-9f52-64614529fd52.jpg",
-      "alt": "Ben Shelton Helped Design On’s Coolest US Open Kit Yet",
-      "credit": "Hearst Owned"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/12ce61b3-bbeb-4e5d-b326-411b4dafab00.jpg",
+      "alt": "The Weird Tool That Makes 20 Pounds Feel Like 40",
+      "credit": "Getty Images. Suji. Gillian MacLeod/MH Illustration"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/f1eb57a3-bfd4-4ada-bc79-72ca0dfc0168.jpg",
-      "alt": "The 7 Best Kojic Acid Soaps for Men in 2026, According to Dermatologists",
-      "credit": "Faded Topicals"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/86eb256a-07c8-4411-b7c5-ce8dc0653e35.jpg",
+      "alt": "The Wellness World Is Hooked on Irish Sea Moss. Should You Be?",
+      "credit": "Laura Barrera"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/da0aeec6-5dc0-48eb-a737-69924d02c2ce.jpg",
-      "alt": "Scientists Might Have Just Discovered a Fourth Factor to Slow Down Aging",
-      "credit": "Just_Super"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/best-new-tv2-69af0a607373b.png",
+      "alt": "The 50 Best New Shows of 2026 (and 10 More We Can't Wait For)",
+      "credit": "Jason Speakman/MH Illustration/Netflix/HBO/Apple TV/Prime Video/ABC"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/efdc3f91-7ab8-4764-bb0a-aad837c8d6ff.jpg",
-      "alt": "I Let a Pair of Earbuds Read My Brain While I Slept",
-      "credit": "Getty Images. Gillian MacLeod/MH Illustration"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/best-new-movies-6980f63c49f02.jpg",
+      "alt": "The 79 Best Movies of 2026 So Far (and 28 More We Can't Wait For)",
+      "credit": "MH Illustration/Studiocanal/Paramount/Briarcliff/Disney/WBD/A24/Universal"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/777df348-bdc3-41db-a0d8-ca1e94cac1b0.jpg",
-      "alt": "Build Real Total-Body Strength With the Farmer's Walk",
-      "credit": "JUSTIN STEELE"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/6b0adbd8-5e8d-4f04-bd6d-f6dd4481a142.jpg",
+      "alt": "Matthew McConaughey and Woody Harrelson Embrace a Very Real Family Rumor in Apple TV’s Brothers",
+      "credit": "Apple"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/9e5c5d7b-7efb-4f05-b04e-e05d8f0d8049.jpg",
-      "alt": "Our Editors Found the Perfect Golf Pant for Year-Round Play",
-      "credit": "JL"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/b74bcec5-e4a3-4301-9667-32a278a0c8f2.jpg",
+      "alt": "Jason Sudeikis Brings Ted Lasso Back to England for 10 Season 4 Episodes",
+      "credit": "Apple"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/mhl-opener-cock-rings-251-67fffdfbd7bc9.jpg",
-      "alt": "The 9 Best Cock Rings for Longer-Lasting Erections and Stronger Orgasms, According to Sex Experts",
-      "credit": "JOE LINGEMAN"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/cthfwkzv-6909141a38163.jpg",
+      "alt": "We Found the Best Adjustable Dumbbells for Every Home Gym",
+      "credit": "Courtesy of Retailer"
     }
   ],
   "oprah-daily": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/opr101023-dig-009-resized-68658157ce8b6.jpg",
-      "alt": "The Simple Shift That Helped Oprah Appreciate the Last Weeks of Summer",
-      "credit": "Oprah Daily"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/b7c66630-8d1a-4eb8-9637-a9b6a7e020c1.jpg",
+      "alt": "Go There: Santa Monica—The Ultimate Guide to Staying, Shopping, and Eating",
+      "credit": "Getty Images. Oprah Daily."
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/b41463f4-a7eb-418f-a941-df8407ea489e.jpeg",
-      "alt": "14 of Gloria Steinem’s Most Powerful Quotes",
-      "credit": "Michael Loccisano"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/e43235c2-dcba-434b-8559-32ffc63cb32e.jpg",
+      "alt": "A Derm Says Cleansing Balms Are Necessary for Mature Skin",
+      "credit": "Product Shot Image"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/3764c908-0470-4b61-b3e1-3ddfc1e55d55.png",
-      "alt": "4 Ways to Make Your Home a Cold-Weather Retreat",
-      "credit": "Courtesy of American Standard"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/60e3ff9e-7d88-49a1-8756-65d9849ad3e8.jpg",
+      "alt": "Can You Really Get Rid of Undereye Bags? Here’s What Experts Say",
+      "credit": "Product Shot Image"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/402528ed-f67c-469b-bc7c-991bb7a65dca.jpg",
-      "alt": "The New Art of Going Grayish",
-      "credit": "Lubos Chlubny/Adobe Stock"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/330bb0cd-831d-4518-827e-8d6528c033c5.png",
+      "alt": "‘GMA’ Host Michael Strahan Shares Rare Emotional Update About His Daughter on Instagram",
+      "credit": "Getty Images"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/2c10fd87-5563-41b5-baab-9913a1675045.jpeg",
-      "alt": "Meet the Woman Helping Lower Manhattan Move Forward",
-      "credit": "Adam Lerner"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/e1057c6c-08d7-479e-8b03-7cbf03848ed4.jpg",
+      "alt": "Have You Heard About the New Happiness Therapy?",
+      "credit": "Adobe Stock. Oprah Daily."
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/435879c0-21d0-47b3-a476-daf565455c01.jpg",
-      "alt": "Oprah Daily’s Guide to the Best Jeans for Women",
-      "credit": "Adobe"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/f5315208-e9af-40b1-aaf6-2bf9601a654b.jpg",
+      "alt": "Why Is Everyone Talking About Eating Foods in a Certain Order?",
+      "credit": "Getty Images. Oprah Daily."
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/6850037d-fb2d-40cf-b55c-2845c58a9f96.jpeg",
-      "alt": "All the Touching Celebrity Tributes to Gloria Steinem",
-      "credit": "John Lamparski"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/arch-support-2-69a5d6435e12e.gif",
+      "alt": "11 Best Arch-Support Slippers, According to Podiatrists",
+      "credit": "Hearst Owned"
     }
   ],
   "popular-mechanics": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/e2b55afe-0db8-46ad-a26f-c3f7c213ec68.png",
-      "alt": "Best DeWalt Labor Day Deals: Save Up to 64% Off Ahead of the Holiday Weekend",
-      "credit": "Trevor Raab"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/western-hemisphere-of-the-earth-during-the-royalty-free-illustration-1653508196.jpg",
-      "alt": "Earth Will Become One Big Supercontinent Again—And It Will Probably Kill Us, Scientists Say",
-      "credit": "Getty Images"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/98936780-874f-49d1-b1d8-421bffaa6582.jpg",
-      "alt": "The 6 Best Pop-Up Canopy Tents for Outdoor Activities and Events",
-      "credit": "Dustin Fenstermacher"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/frontgate-9-foot-market-umbrella-012-67ffbabb623b6.jpg",
-      "alt": "The 8 Best Patio Umbrellas, Whatever Size and Style You Need",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/cdc3ced0-d38a-4a66-ac5b-69d5b905b7fc.jpg",
+      "alt": "The Best 2026 Holiday Toys Include Editor-Favorite Brands like Stanley, John Deere, and Nintendo",
       "credit": "Thomas Hengge"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/best-cantilever-umbrellas-67e2ef15b368e.png",
-      "alt": "The 7 Best Cantilever Umbrellas Make Outdoor Living More Comfortable",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/8255787a-3f1d-4cfe-909b-56dd9675ed95.png",
+      "alt": "From Cute to Creepy, Lego’s Halloween Sets Make the Season More Fun",
       "credit": "Product Shot Image"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/victorinox-swiss-tool-spirit-x-0394-69820c048dd56.jpg",
-      "alt": "The 9 Best Multitools for Fixing Things in a Pinch",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/dreo-whole-room-heater-007-69a091e9b43b5.jpg",
+      "alt": "The 8 Best Space Heaters to Keep the Chill Out of Your Home and Office",
       "credit": "Trevor Raab"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/15ba6668-7fb9-47a3-b3cb-ba48c63cbdef.jpeg",
-      "alt": "Archaeologists Found a Mysterious 7-Foot Statue Buried Face Down in an Ancient Roman Road",
-      "credit": "Anadolu"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/outdoor-pizza-ovens-011-682e315d379ab.jpg",
+      "alt": "The Best Outdoor Pizza Ovens That Deliver Delicious Homemade Pies",
+      "credit": "Trevor Raab"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/3c5e7323-2c48-417e-8bb9-3ec6e7363b15.png",
+      "alt": "Solo Stove vs. Breeo Smokeless Fire Pits: One Is More Portable, but the Other Has Some Big Advantages",
+      "credit": "Trevor Raab, Thomas Hengge"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/2031dc5b-92ee-437a-ae77-a083806600df.jpg",
+      "alt": "How to Use Meta Smart Glasses Without Being a Creep",
+      "credit": "Winston Zhou"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/ryobi-40v-21-inch-mower-681390917f8e4.jpg",
+      "alt": "The 12 Best Lawn Mowers: Whether You Run Forever on Gas or Clean With Electric",
+      "credit": "Thomas Hengge"
     }
   ],
   "runners-world": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/9c7fba58-c4c8-4e50-a0ca-185358ab4e6f.jpg",
-      "alt": "I Documented Every Problem in My Half Marathon Training. Here’s How I Solved Each One—and PR’d.",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/f513f121-d053-42e3-ac93-5966614031a5.jpg",
+      "alt": "The Runner’s World Guide to Common Running Injuries: Runner’s Knee",
       "credit": "Winston Zhou"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/d66fae2b-203b-4ac8-816f-56084a4d79c5.jpg",
-      "alt": "The Runner’s World Guide to Nutrition and Fueling: Vitamins, Nutrients, and Supplements",
-      "credit": "Getty Images"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/32c586ba-0184-4224-8d73-c1040714482d.jpg",
+      "alt": "This Is the Minimum Amount of Time You Need After a Marathon to Run Your Next Race",
+      "credit": "WINSTON ZHOU"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/46025f8f-b760-4da3-acb1-aebcc11bd69a.jpeg",
-      "alt": "Start Your Marathon Too Fast, and You Could Pay for It Later. Here’s How to Stay in Control.",
-      "credit": "TOBIAS SCHWARZ"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/77efbd39-d6a9-461f-a1db-8941ad396dda.png",
+      "alt": "Amazon Just Posted an Incredible Early Prime Day Deal on Adidas’ PEBA-Equipped Training Shoes",
+      "credit": "Product Shot Image"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/901b6ae3-0656-4716-877b-90c37bee01be.jpg",
-      "alt": "Why Runners Don’t Make It to the Starting Line on Marathon Day—and Expert Advice for Getting There Feeling Strong and Fast",
-      "credit": "Thomas Hengge"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/002bb8d5-deca-4413-ba16-19cea40484fa.png",
+      "alt": "The New Fall Running Gear Our Editors Are Reaching for When the Weather Can't Make Up Its Mind",
+      "credit": "Product Shot Image"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/32764345-0d80-4a8c-8ff7-7e4304d258da.jpg",
-      "alt": "The Best Hot Weather Gear That Beats the Heat and Guards Against Chafing",
-      "credit": "Winston Zhou"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/7576f62a-a470-4671-9ab8-6555ec8df728.jpeg",
+      "alt": "This Running Coach Has Millions of Views and Hundreds of Thousands of Followers—But Does He Exist?",
+      "credit": "SOPA Images"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/dc7dcf02-e8ff-41c6-ad01-968e84a4ff44.jpg",
-      "alt": "The Runner’s World Guide to Nutrition and Fueling: The Runner’s Diet",
-      "credit": "Trevor Raab"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/2d3bff84-1c22-4a79-809f-ceb0b7bc82cf.jpeg",
+      "alt": "‘My Body’s Used to It’: This Full-Time Lawyer Ran an Ultramarathon Every Single Day for 1,000 Days",
+      "credit": "Jordan Siemens"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/52bc12f6-19a9-4834-91b2-f093344c0277.jpg",
-      "alt": "This 3-Day Soreness Checklist Can Reveal If You Nailed Your Workout—or Pushed Too Hard",
-      "credit": "Winston Zhou"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/0ab50239-90ae-421b-8aef-6ab49476c581.jpg",
+      "alt": "Peak Week Is Your Marathon Dress Rehearsal. Here’s How to Get It Right.",
+      "credit": "WINSTON ZHOU"
     }
   ],
   "womens-health": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/sbs-incline-stair-6765d5a01b99e.jpg",
-      "alt": "Incline Walking Vs. Stair Stepper: Which One Is Better For Cardio, Strength, And Calorie Burning",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/3d11f411-6679-4f36-b45d-d075db227442.jpeg",
+      "alt": "Women Over 50 Should Lift Heavier, Says Dr. Vonda Wright—Here's Her 4x4 Formula to Age With Strength",
+      "credit": "Tom Werner"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/7133a6d9-1e7b-4754-b12f-8320be1d56f3.jpg",
+      "alt": "‘I Tried the Viral Tracy Anderson Method—Here Are My Honest Thoughts’",
+      "credit": "Addison Aloian / WH Illustration"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/e9d040bb-e926-48bb-a694-fcd10cd16cad.png",
+      "alt": "This Sweat-Wicking Tee Has Earned a Spot in Both My Gym and Travel Bag",
+      "credit": "Courtesy of Vuori"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/a1ec81c9-80b6-46ca-9e60-a8bd5aa58a61.jpeg",
+      "alt": "The One Thing That’s Always in My Nightstand",
+      "credit": "Letizia Le Fur"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/2f8edf86-992a-4e2e-a369-444c73a64d50.png",
+      "alt": "Veronica Burton Shares the Mindset Fueling the Golden State Valkyries’ Historic Playoff Push",
       "credit": "Getty Images"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/c79255d9-63d4-4c94-8526-130b5d7bbb46.jpeg",
-      "alt": "Nerve Flossing May Help Ease Pain—Here's How It Works and What Experts Want You to Know",
-      "credit": "Galina Zhigalova"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/af5af57e-d59f-468c-94b7-a23f40ff1317.png",
+      "alt": "Our Best Overall Moisturizer Soothes My Dry Skin—Now It's 30% Off Ahead of Prime Big Deal Days",
+      "credit": "Avene"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/tired-runner-68c9709417986.jpg",
-      "alt": "6 Signs You’re Running Too Much, According To A Physical Therapist",
-      "credit": "Carlos Barquero"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/whm-howto-gut-2000x15002-648a3ce41b853.png",
-      "alt": "How to Improve Gut Health: 12 Science-Backed Tips to Support Your Gut Naturally",
-      "credit": "Massimo Gammacurta"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/3c4d880c-1ffc-4882-8a7a-2b63a53c3b2d.jpg",
-      "alt": "HYROX vs. Half Marathon: Which Is Harder? Trainers Settle TikTok’s Latest Debate",
-      "credit": "Getty Images/Jason Speakman/WH Illustration"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/de766908-9aa6-4d93-b384-ee60b19d4f03.jpg",
-      "alt": "Meet the Proud GLP-1-Taking Dietitians on a Mission to Change the Medication’s Stigma",
-      "credit": "BreakRoom Marketing / Summer Kessel / Kasie Wilcox of The KMC Agency"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/10a8ceff-3f44-44a1-9175-8a18226e6ea5.jpg",
-      "alt": "Researchers Just Linked This Rare Vision Loss Condition to GLP-1s—Should You Be Concerned?",
-      "credit": "Joe Lingeman"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/whm250111-digital-ecomm-waterflossers-waterpikcordless-040-lead-6930696dec134.jpg",
+      "alt": "6 Best Water Flossers, Tested by Dentists and Editors",
+      "credit": "JULIA GARTLAND"
     }
   ]
 };
