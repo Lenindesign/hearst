@@ -236,11 +236,14 @@ for (let i = 0; i < 4; i++) {
 
 // ---- flat stacks on the bottom shelf: the 11 titles that don't fit face-out, one copy each ----
 // The scene fans a stack out across the shelf when it is clicked, so every title stays reachable.
+// Titles with cover photography go on top of each pile (stacks build bottom-up); logo-only covers sit underneath.
 for (const [p, sx, first, count] of [[0, -0.22, 16, 6], [1, 0.2, 22, 5]]) {
   const stack = new THREE.Group(); stack.name = `shelf_stack_${p + 1}`; rack.add(stack);
+  const order = Array.from({ length: count }, (_, k) => first + k)
+    .sort((a, b) => Number(COVER_SLUGS.has(titles[a][1])) - Number(COVER_SLUGS.has(titles[b][1])));
   for (let k = 0; k < count; k++) {
     const th = 0.008;
-    const m = magazine(`shelf_stack_${p + 1}_copy_${k + 1}`, palettes[(k + p * 4) % palettes.length], (k + p) % 3, th, first + k);
+    const m = magazine(`shelf_stack_${p + 1}_copy_${k + 1}`, palettes[(k + p * 4) % palettes.length], (k + p) % 3, th, order[k]);
     m.rotation.set(-Math.PI / 2, 0, ((k * 37 + p * 11) % 9 - 4) * 0.012);
     m.position.set(sx + ((k * 5) % 3 - 1) * 0.004, 0.125 + (k + 1) * (th + 0.0012), 0.03);
     stack.add(m);
