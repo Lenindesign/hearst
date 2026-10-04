@@ -391,8 +391,6 @@ function NewspaperFeaturedCarousel({
       getCommentCount={() => 0}
       isCurrentStory={() => true}
       onOpenStory={onOpenStory}
-      onSave={() => undefined}
-      onMoreLikeThis={() => undefined}
       onFollowBrand={() => undefined}
       indicatorPalette={["#087A68", "#3EA391", "#91CFC2"]}
     />

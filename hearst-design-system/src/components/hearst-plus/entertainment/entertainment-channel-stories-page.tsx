@@ -407,8 +407,6 @@ function EntertainmentStoryHeroCarousel({
       getCommentCount={() => 0}
       isCurrentStory={() => true}
       onOpenStory={onOpenStory}
-      onSave={() => undefined}
-      onMoreLikeThis={() => undefined}
       onFollowBrand={() => undefined}
       indicatorPalette={["#B9913F", "#80652C", "#D5B869"]}
     />

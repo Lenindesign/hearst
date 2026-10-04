@@ -75,7 +75,7 @@ function StoryPresentationSpecimen({
         <LifestyleCardModule story={story} kind={kind} />
         {!hasSupplementalModule ? (
           <p className="mt-4 border-t border-border pt-3 text-xs leading-5 text-foreground">
-            No supplemental metadata block. The production card keeps its
+            No supplemental metadata block. The story reader keeps its
             standard article, gallery, or video anatomy.
           </p>
         ) : null}
@@ -119,7 +119,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Direct specification for the production story-presentation resolver and its supplemental recipe, vehicle-specification, shopping, and guide metadata. The same pure rules are consumed by the river, reader, video filtering, and stakeholder inventory; Storybook does not maintain a second classification model.",
+          "Direct specification for the production story-presentation resolver and its supplemental recipe, vehicle-specification, shopping, and guide metadata. The supplemental block renders in the story reader only; river cards stay quiet and omit it. The same pure rules are consumed by the river, reader, video filtering, and stakeholder inventory; Storybook does not maintain a second classification model.",
       },
     },
   },

@@ -74,8 +74,8 @@ The complete brand registry is documented in `BRAND_STYLES.md`. Canonical HDS pu
 - Do not show generic `Article`, `Gallery`, or `Watch` chips on river cards.
 - Video cards place the source brand icon immediately before the brand and topic metadata.
 - Preserve source-specific formats such as galleries and videos through imagery and interaction, not generic type labels.
-- Rich photo-gallery river cards place story identity, headline, and summary before a two-large and three-small image mosaic. The final tile shows the remaining photo count. Preserve shared actions, focus treatment, semantic surfaces, typography, and brand theme. `APP_RULES.md` owns gallery eligibility and loading behavior.
-- Use consistent hover, focus, save, comment, hide, and open-reader behavior across card variants.
+- Rich photo-gallery river cards place story identity, headline, and summary before a two-large and three-small image mosaic. The final tile shows the remaining photo count. Preserve focus treatment, semantic surfaces, typography, and brand theme. `APP_RULES.md` owns gallery eligibility and loading behavior.
+- Use consistent hover, focus, and open-reader behavior across card variants. Content cards (story, photo-gallery, lead video and video index cards) do not show a per-card action row (Save, More like this, comments, Hide, Open story) or a bottom summary strip (shopping picks, recipe stats, vehicle specs); the card surface opens the story, and Save, More like this and comments live in the reader action bar. The featured carousel keeps only its Follow brand control.
 
 ## Sidebars and rankings
 

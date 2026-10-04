@@ -79,35 +79,21 @@ function FeaturedCarouselExample({
   editionLabel = "Today’s Picks",
   featuredMode = false,
   initialStoryId,
-  initialSavedIds = [],
   indicatorPalette,
 }: {
   stories?: LifestyleRiverStory[];
   editionLabel?: string;
   featuredMode?: boolean;
   initialStoryId?: string;
-  initialSavedIds?: string[];
   indicatorPalette?: readonly string[];
 }) {
-  const [savedIds, setSavedIds] = React.useState(initialSavedIds);
   const [openedStoryId, setOpenedStoryId] = React.useState("");
-  const [moreLikeStoryId, setMoreLikeStoryId] = React.useState("");
   const [followedBrand, setFollowedBrand] = React.useState("");
   const [activeStoryId, setActiveStoryId] = React.useState("");
   const [impressionCount, setImpressionCount] = React.useState(0);
 
-  const handleSave = React.useCallback((story: LifestyleRiverStory) => {
-    setSavedIds((current) =>
-      current.includes(story.id)
-        ? current.filter((id) => id !== story.id)
-        : [...current, story.id],
-    );
-  }, []);
   const handleOpen = React.useCallback((story: LifestyleRiverStory) => {
     setOpenedStoryId(story.id);
-  }, []);
-  const handleMoreLikeThis = React.useCallback((story: LifestyleRiverStory) => {
-    setMoreLikeStoryId(story.id);
   }, []);
   const handleFollow = React.useCallback((brand: string) => {
     setFollowedBrand(brand);
@@ -129,13 +115,10 @@ function FeaturedCarouselExample({
           stories={stories}
           editionLabel={featuredMode ? undefined : editionLabel}
           initialStoryId={initialStoryId}
-          savedIds={savedIds}
           renderImage={(story, _index, active) => (
             <StoryImage story={story} active={active} />
           )}
           onOpenStory={handleOpen}
-          onSave={handleSave}
-          onMoreLikeThis={handleMoreLikeThis}
           onFollowBrand={handleFollow}
           onActiveStoryChange={handleActiveStoryChange}
           onEditionImpression={handleEditionImpression}
@@ -154,9 +137,6 @@ function FeaturedCarouselExample({
       <div className="sr-only">
         <p role="status" aria-label="Opened story">
           {openedStoryId || "No story opened."}
-        </p>
-        <p role="status" aria-label="More-like-this story">
-          {moreLikeStoryId || "No preference recorded."}
         </p>
         <p role="status" aria-label="Followed brand">
           {followedBrand || "No brand followed."}
@@ -258,19 +238,13 @@ export const Interactions: Story = {
       `Story 2 of 5: ${mixedStories[1].title}`,
     );
 
-    await userEvent.click(
-      within(carousel).getByRole("button", { name: "Save" }),
-    );
+    // Story actions (Save, More like this) live in the reader, not on the carousel.
     await expect(
-      within(carousel).getByRole("button", { name: "Saved" }),
-    ).toHaveAttribute("aria-pressed", "true");
-
-    await userEvent.click(
-      within(carousel).getByRole("button", { name: "More like this" }),
-    );
+      within(carousel).queryByRole("button", { name: /^Save/ }),
+    ).toBeNull();
     await expect(
-      canvas.getByRole("status", { name: "More-like-this story" }),
-    ).toHaveTextContent(mixedStories[1].id);
+      within(carousel).queryByRole("button", { name: "More like this" }),
+    ).toBeNull();
 
     await userEvent.click(
       within(carousel).getByRole("button", {
@@ -315,19 +289,6 @@ export const Mobile: Story = {
     await expect(document.documentElement.scrollWidth).toBe(
       document.documentElement.clientWidth,
     );
-  },
-};
-
-export const SavedStory: Story = {
-  name: "Selected: saved story",
-  globals: { brand: "hearst-all" },
-  render: () => (
-    <FeaturedCarouselExample initialSavedIds={[mixedStories[0].id]} />
-  ),
-  play: async ({ canvasElement }) => {
-    await expect(
-      within(canvasElement).getByRole("button", { name: "Saved" }),
-    ).toHaveAttribute("aria-pressed", "true");
   },
 };
 

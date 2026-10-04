@@ -31,9 +31,6 @@ function getGalleryFixture(brandSlug: string) {
 
 const handlers = {
   onOpen: fn(),
-  onSave: fn(),
-  onMoreLikeThis: fn(),
-  onHide: fn(),
 };
 
 function CardFrame({ children, width = 760 }: { children: React.ReactNode; width?: number }) {
@@ -48,23 +45,9 @@ function CardFrame({ children, width = 760 }: { children: React.ReactNode; width
 }
 
 function InteractiveArticleCard({ story, featured = false }: { story: LifestyleRiverStory; featured?: boolean }) {
-  const [saved, setSaved] = React.useState(false);
-
   return (
     <CardFrame>
-      <LifestyleRiverCard
-        story={story}
-        featured={featured}
-        saved={saved}
-        commentCount={18}
-        onOpen={handlers.onOpen}
-        onSave={() => {
-          setSaved((current) => !current);
-          handlers.onSave();
-        }}
-        onMoreLikeThis={handlers.onMoreLikeThis}
-        onHide={handlers.onHide}
-      />
+      <LifestyleRiverCard story={story} featured={featured} onOpen={handlers.onOpen} />
     </CardFrame>
   );
 }
@@ -92,13 +75,11 @@ export const ArticleRiverCard: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const saveButton = canvas.getByRole("button", { name: "Save story" });
-    await expect(saveButton).toHaveAttribute("aria-pressed", "false");
-    await userEvent.click(saveButton);
-    await expect(
-      canvas.getByRole("button", { name: "Remove from saved stories" })
-    ).toHaveAttribute("aria-pressed", "true");
-    await expect(handlers.onSave).toHaveBeenCalled();
+    // River cards carry no per-card action row; Save, More like this, comments and Hide live in the reader.
+    await expect(canvas.queryByRole("group", { name: /^Actions for/ })).toBeNull();
+    await expect(canvas.queryByRole("button", { name: "Save story" })).toBeNull();
+    await userEvent.click(canvas.getByRole("button", { name: /^Open story:/ }));
+    await expect(handlers.onOpen).toHaveBeenCalled();
   },
 };
 
@@ -113,26 +94,11 @@ export const RichPhotoGallery: Story = {
   name: "Rich photo gallery",
   render: (_args, context) => {
     const { story, images } = getGalleryFixture(context.globals.brand);
-    const GalleryExample = () => {
-      const [saved, setSaved] = React.useState(false);
-      return (
-        <CardFrame>
-          <RichPhotoGalleryCard
-            story={story}
-            images={images}
-            saved={saved}
-            commentCount={24}
-            onOpen={handlers.onOpen}
-            onSave={() => {
-              setSaved((current) => !current);
-              handlers.onSave();
-            }}
-            onMoreLikeThis={handlers.onMoreLikeThis}
-            onHide={handlers.onHide}
-          />
-        </CardFrame>
-      );
-    };
+    const GalleryExample = () => (
+      <CardFrame>
+        <RichPhotoGalleryCard story={story} images={images} onOpen={handlers.onOpen} />
+      </CardFrame>
+    );
 
     return <GalleryExample />;
   },

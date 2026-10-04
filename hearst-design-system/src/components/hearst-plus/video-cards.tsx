@@ -4,12 +4,8 @@ import React from "react";
 import Image from "next/image";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { AdaptiveVideo } from "@/components/adaptive-video";
-import { Button } from "@/components/ui/button";
 import {
-  Bookmark,
   Clock,
-  EyeOff,
-  MessageCircle,
   Play,
   X,
 } from "@/components/ui/icons";
@@ -254,20 +250,16 @@ export function VideoPlaySurface({
   );
 }
 
+// Video cards carry no per-card action row (Save, comments, Hide, Open story); the play surface and
+// title open the story, and those actions live in the reader.
 export function VideoFeedLeadCard({
   story,
-  saved,
-  commentCount,
   onOpen,
-  onSave,
   variant = "videoIndex",
   eyebrowLabel,
 }: {
   story: LifestyleRiverStory;
-  saved: boolean;
-  commentCount: number;
   onOpen: () => void;
-  onSave: () => void;
   variant?: "videoIndex" | "hearstPlus";
   eyebrowLabel?: string;
 }) {
@@ -312,43 +304,6 @@ export function VideoFeedLeadCard({
         >
           {story.summary}
         </p>
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
-          <div className="flex items-center gap-3 text-sm text-muted-foreground">
-            <button
-              type="button"
-              onClick={onSave}
-              aria-pressed={saved}
-              aria-label={saved ? "Remove from saved videos" : "Save video"}
-              className={cn(
-                "inline-flex min-h-11 items-center gap-1.5 transition-colors hover:text-primary sm:min-h-0",
-                saved ? "text-primary" : ""
-              )}
-            >
-              <Bookmark
-                className="h-4 w-4"
-                weight={saved ? "fill" : "regular"}
-                aria-hidden
-              />
-              <span>{saved ? "Saved" : "Save"}</span>
-            </button>
-            <button
-              type="button"
-              onClick={onOpen}
-              className="inline-flex min-h-11 items-center gap-1.5 transition-colors hover:text-primary sm:min-h-0"
-            >
-              <MessageCircle className="h-4 w-4" aria-hidden />
-              <span>{commentCount}</span>
-            </button>
-          </div>
-          <Button
-            variant="outline"
-            size="sm"
-            className="h-11 sm:h-7"
-            onClick={onOpen}
-          >
-            Open story
-          </Button>
-        </div>
       </div>
     </article>
   );
@@ -356,19 +311,11 @@ export function VideoFeedLeadCard({
 
 export function VideoIndexCard({
   story,
-  saved,
-  commentCount,
   onOpen,
-  onSave,
-  onHide,
   variant = "videoIndex",
 }: {
   story: LifestyleRiverStory;
-  saved: boolean;
-  commentCount: number;
   onOpen: () => void;
-  onSave: () => void;
-  onHide: () => void;
   variant?: "videoIndex" | "hearstPlus";
 }) {
   const useHearstPlusStyle = variant === "hearstPlus";
@@ -420,52 +367,6 @@ export function VideoIndexCard({
         >
           {story.summary}
         </p>
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4 text-sm text-muted-foreground">
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={onSave}
-              aria-pressed={saved}
-              aria-label={saved ? "Remove from saved videos" : "Save video"}
-              className={cn(
-                "inline-flex min-h-11 items-center gap-1.5 transition-colors hover:text-primary sm:min-h-0",
-                saved ? "text-primary" : ""
-              )}
-            >
-              <Bookmark
-                className="h-4 w-4"
-                weight={saved ? "fill" : "regular"}
-                aria-hidden
-              />
-              <span>{saved ? "Saved" : "Save"}</span>
-            </button>
-            <button
-              type="button"
-              onClick={onOpen}
-              className="inline-flex min-h-11 items-center gap-1.5 transition-colors hover:text-primary sm:min-h-0"
-            >
-              <MessageCircle className="h-4 w-4" aria-hidden />
-              <span>{commentCount}</span>
-            </button>
-            <button
-              type="button"
-              onClick={onHide}
-              aria-label="Hide video"
-              className="inline-flex min-h-11 items-center gap-1.5 transition-colors hover:text-primary sm:min-h-0"
-            >
-              <EyeOff className="h-4 w-4" aria-hidden />
-              <span>Hide</span>
-            </button>
-          </div>
-          <Button
-            variant="outline"
-            size="sm"
-            className="h-11 sm:h-7"
-            onClick={onOpen}
-          >
-            Open story
-          </Button>
-        </div>
       </div>
     </article>
   );

@@ -2,13 +2,11 @@
 
 import React from "react";
 import {
-  Bookmark,
   ChevronLeft,
   ChevronRight,
   MessageCircle,
   Pause,
   Play,
-  Plus,
 } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
@@ -17,9 +15,6 @@ import { BrandSourceIcon } from "@/components/hearst-plus/brand-source-icon";
 import { LiveStoryBadge } from "@/components/hearst-plus/story-metadata";
 import { usePrefersReducedMotion } from "@/components/hearst-plus/use-prefers-reduced-motion";
 import { formatVideoDuration } from "@/components/hearst-plus/video-format";
-
-const quietStoryActionButtonClass =
-  "min-h-11 min-w-11 border-0 bg-transparent px-0 text-muted-foreground shadow-none hover:bg-transparent hover:text-primary focus-visible:border-transparent focus-visible:ring-2 focus-visible:ring-primary/30 sm:min-h-6 sm:min-w-0";
 
 export type FeaturedStoryCarouselProps = {
   stories: LifestyleRiverStory[];
@@ -30,12 +25,9 @@ export type FeaturedStoryCarouselProps = {
   ) => React.ReactNode;
   editionLabel?: string;
   initialStoryId?: string;
-  savedIds?: readonly string[];
   getCommentCount?: (story: LifestyleRiverStory) => number;
   isCurrentStory?: (story: LifestyleRiverStory) => boolean;
   onOpenStory: (story: LifestyleRiverStory) => void;
-  onSave: (story: LifestyleRiverStory) => void;
-  onMoreLikeThis: (story: LifestyleRiverStory) => void;
   onFollowBrand: (brandName: string) => void;
   onEditionImpression?: () => void;
   onEditionStoryOpen?: (story: LifestyleRiverStory, position: number) => void;
@@ -56,12 +48,9 @@ export function FeaturedStoryCarousel({
   renderImage,
   editionLabel,
   initialStoryId,
-  savedIds = [],
   getCommentCount = defaultCommentCount,
   isCurrentStory = defaultIsCurrentStory,
   onOpenStory,
-  onSave,
-  onMoreLikeThis,
   onFollowBrand,
   onEditionImpression,
   onEditionStoryOpen,
@@ -466,7 +455,6 @@ export function FeaturedStoryCarousel({
 
   if (!activeStory) return null;
 
-  const saved = savedIds.includes(activeStory.id);
 
   return (
     <article
@@ -721,36 +709,6 @@ export function FeaturedStoryCarousel({
           ))}
         </div>
         <div className="flex shrink-0 items-center justify-center gap-2 sm:gap-4">
-          <Button
-            variant="ghost"
-            size="xs"
-            className={cn(
-              quietStoryActionButtonClass,
-              "!h-7 !min-h-7 px-2 text-xs sm:!h-6 sm:!min-h-6 sm:px-0",
-              saved && "text-primary hover:text-primary",
-            )}
-            onClick={() => onSave(activeStory)}
-            aria-pressed={saved}
-          >
-            <Bookmark
-              className="hidden h-3.5 w-3.5 sm:block"
-              weight={saved ? "fill" : "regular"}
-              aria-hidden
-            />
-            {saved ? "Saved" : "Save"}
-          </Button>
-          <Button
-            variant="ghost"
-            size="xs"
-            className={cn(
-              quietStoryActionButtonClass,
-              "!h-7 !min-h-7 px-2 text-xs sm:!h-6 sm:!min-h-6 sm:px-0",
-            )}
-            onClick={() => onMoreLikeThis(activeStory)}
-          >
-            <Plus className="hidden h-3.5 w-3.5 sm:block" aria-hidden />
-            More like this
-          </Button>
           <span className="inline-flex items-center gap-1">
             <Button
               variant="ghost"

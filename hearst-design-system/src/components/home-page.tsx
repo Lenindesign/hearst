@@ -2329,21 +2329,11 @@ function useGalleryPreview(story: LifestyleRiverStory, enabled: boolean) {
 export function RichPhotoGalleryCard({
   story,
   images,
-  saved,
-  commentCount,
   onOpen,
-  onSave,
-  onMoreLikeThis,
-  onHide,
 }: {
   story: LifestyleRiverStory;
   images: FullscreenReaderImage[];
-  saved: boolean;
-  commentCount: number;
   onOpen: () => void;
-  onSave: () => void;
-  onMoreLikeThis: () => void;
-  onHide: () => void;
 }) {
   const visibleImages = images.slice(0, richGalleryImageMinimum);
   const remainingImageCount = Math.max(0, images.length - visibleImages.length);
@@ -2409,39 +2399,19 @@ export function RichPhotoGalleryCard({
           </div>
         ))}
       </div>
-
-      <div className="relative min-w-0 px-4 pb-4 sm:px-5 sm:pb-5">
-        <LifestyleStoryActions
-          story={story}
-          saved={saved}
-          commentCount={commentCount}
-          onOpen={onOpen}
-          onSave={onSave}
-          onMoreLikeThis={onMoreLikeThis}
-          onHide={onHide}
-        />
-      </div>
     </article>
   );
 }
 
+// River cards stay deliberately quiet: no per-card Save / More like this / comments / Hide row.
+// Those actions live in the story reader's action bar.
 export function LifestyleRiverCard({
   story,
-  saved,
-  commentCount,
   onOpen,
-  onSave,
-  onMoreLikeThis,
-  onHide,
   featured = false,
 }: {
   story: LifestyleRiverStory;
-  saved: boolean;
-  commentCount: number;
   onOpen: () => void;
-  onSave: () => void;
-  onMoreLikeThis: () => void;
-  onHide: () => void;
   featured?: boolean;
 }) {
   const kind = getLifestyleCardKind(story);
@@ -2454,12 +2424,7 @@ export function LifestyleRiverCard({
       <RichPhotoGalleryCard
         story={story}
         images={galleryPreview.images}
-        saved={saved}
-        commentCount={commentCount}
         onOpen={onOpen}
-        onSave={onSave}
-        onMoreLikeThis={onMoreLikeThis}
-        onHide={onHide}
       />
     );
   }
@@ -2515,16 +2480,6 @@ export function LifestyleRiverCard({
         )}>
           {story.summary}
         </p>
-        <LifestyleCardModule story={story} kind={kind} />
-        <LifestyleStoryActions
-          story={story}
-          saved={saved}
-          commentCount={commentCount}
-          onOpen={onOpen}
-          onSave={onSave}
-          onMoreLikeThis={onMoreLikeThis}
-          onHide={onHide}
-        />
       </div>
     </article>
   );
@@ -5329,18 +5284,6 @@ function LifestyleRiverHomePage({
     }));
   };
 
-  const hideStory = (id: string) => {
-    trackProductEvent("story_hide", {
-      destination,
-      story_id: id,
-      surface: activeFilter === "Videos" ? "video_river" : "river",
-    });
-    updateReaderProfile((current) => ({
-      ...current,
-      hiddenIds: mergeUnique(current.hiddenIds, [id]),
-    }));
-  };
-
   const addStoryComment = (storyId: string, body: string) => {
     if (account) {
       const story = config.stories.find((item) => item.id === storyId);
@@ -5466,10 +5409,7 @@ function LifestyleRiverHomePage({
               <>
                 <VideoFeedLeadCard
                   story={featuredVideo}
-                  saved={profile.savedIds.includes(featuredVideo.id)}
-                  commentCount={getLifestyleCommentCount(featuredVideo, resolvedCommentsByStoryId[featuredVideo.id]?.length ?? 0)}
                   onOpen={() => openStory(featuredVideo.id)}
-                  onSave={() => toggleSaved(featuredVideo)}
                   variant="videoIndex"
                   eyebrowLabel={usingVideoTabFeed ? "Recommended video" : undefined}
                 />
@@ -5496,11 +5436,7 @@ function LifestyleRiverHomePage({
                     <VideoIndexCard
                       key={story.id}
                       story={story}
-                      saved={profile.savedIds.includes(story.id)}
-                      commentCount={getLifestyleCommentCount(story, resolvedCommentsByStoryId[story.id]?.length ?? 0)}
                       onOpen={() => openStory(story.id)}
-                      onSave={() => toggleSaved(story)}
-                      onHide={() => hideStory(story.id)}
                       variant="videoIndex"
                     />
                   ))}
@@ -5772,7 +5708,6 @@ function LifestyleRiverHomePage({
                 stories={heroStories}
                 editionLabel={shouldUseTodaysPicks ? "Today’s Picks" : undefined}
                 initialStoryId={leadStory.id}
-                savedIds={profile.savedIds}
                 renderImage={(story, _index, active) => (
                   <LifestyleRiverImage
                     story={story}
@@ -5788,8 +5723,6 @@ function LifestyleRiverHomePage({
                 }
                 isCurrentStory={isCurrentFeedStory}
                 onOpenStory={(story) => openStory(story.id)}
-                onSave={toggleSaved}
-                onMoreLikeThis={boostStory}
                 onFollowBrand={followBrand}
                 onEditionImpression={trackTodaysPicksImpression}
                 onEditionStoryOpen={trackTodaysPickOpen}
@@ -5867,22 +5800,13 @@ function LifestyleRiverHomePage({
                     {getLifestyleCardKind(story) === "video" ? (
                       <VideoIndexCard
                         story={story}
-                        saved={profile.savedIds.includes(story.id)}
-                        commentCount={getLifestyleCommentCount(story, resolvedCommentsByStoryId[story.id]?.length ?? 0)}
                         onOpen={() => openStory(story.id)}
-                        onSave={() => toggleSaved(story)}
-                        onHide={() => hideStory(story.id)}
                         variant="hearstPlus"
                       />
                     ) : (
                       <LifestyleRiverCard
                         story={story}
-                        saved={profile.savedIds.includes(story.id)}
-                        commentCount={getLifestyleCommentCount(story, resolvedCommentsByStoryId[story.id]?.length ?? 0)}
                         onOpen={() => openStory(story.id)}
-                        onSave={() => toggleSaved(story)}
-                        onMoreLikeThis={() => boostStory(story)}
-                        onHide={() => hideStory(story.id)}
                       />
                     )}
                     {adMatch && adMatch.ad.id !== "autos-cd-deal-score" ? (

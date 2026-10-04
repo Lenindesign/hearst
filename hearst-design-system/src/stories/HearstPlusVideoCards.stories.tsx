@@ -46,8 +46,6 @@ function getPortraitVideoStories(brandSlug: string) {
 
 const handlers = {
   onOpen: fn(),
-  onSave: fn(),
-  onHide: fn(),
 };
 
 function VideoFrame({ children, width = 760, dark = false }: { children: React.ReactNode; width?: number; dark?: boolean }) {
@@ -81,25 +79,11 @@ export const LeadVideo: Story = {
   name: "Lead video",
   render: (_args, context) => {
     const videoStory = getVideoStory(context.globals.brand);
-    const LeadExample = () => {
-      const [saved, setSaved] = React.useState(false);
-      return (
-        <VideoFrame>
-          <VideoFeedLeadCard
-            story={videoStory}
-            saved={saved}
-            commentCount={16}
-            onOpen={handlers.onOpen}
-            onSave={() => {
-              setSaved((current) => !current);
-              handlers.onSave();
-            }}
-            variant="hearstPlus"
-          />
-        </VideoFrame>
-      );
-    };
-    return <LeadExample />;
+    return (
+      <VideoFrame>
+        <VideoFeedLeadCard story={videoStory} onOpen={handlers.onOpen} variant="hearstPlus" />
+      </VideoFrame>
+    );
   },
 };
 
@@ -109,11 +93,7 @@ export const FeedVideo: Story = {
     <VideoFrame>
       <VideoIndexCard
         story={getVideoStory(context.globals.brand)}
-        saved={false}
-        commentCount={13}
         onOpen={handlers.onOpen}
-        onSave={handlers.onSave}
-        onHide={handlers.onHide}
         variant="hearstPlus"
       />
     </VideoFrame>

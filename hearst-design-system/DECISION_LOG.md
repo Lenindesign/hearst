@@ -2,6 +2,14 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-10-04: Quieter river cards
+
+- **Context:** The Save / More like this / comments / Hide row under every river card added too much information to the feed.
+- **Decision:** Remove the per-card action row from every content card: standard and photo-gallery river cards, the lead video card, and video index cards (including their Open story button). The featured carousel drops Save and More like this and keeps Follow brand. River cards also drop the bottom summary strip (shopping picks, recipe stats, vehicle specs); the story reader keeps it. Readers reach Save, More like this and comments in the story reader's action bar.
+- **Scope:** `LifestyleRiverCard`, `RichPhotoGalleryCard`, `VideoFeedLeadCard`, `VideoIndexCard` and `FeaturedStoryCarousel` everywhere they render.
+- **Consequence:** Hide existed only on cards, so readers can no longer hide stories. Previously hidden stories stay hidden.
+- **Canonical rule:** `STYLE.md` card rules.
+
 ## 2026-10-04: Newsstand conversion and load pass
 
 - **Context:** The handoff version scrolled about ten screens before the only sign-up point, showed bracketed pricing placeholders, and loaded three.js plus 3.6 MB of cover art before the rack appeared.
