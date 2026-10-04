@@ -30,6 +30,7 @@ const defaultProductLinkGroups: SiteFooterLinkGroup[] = [
       { label: "Open Hearst+", href: "/hearst-plus/" },
       { label: "Local News", href: "/hearst-plus/local-news/" },
       { label: "Shop the stories", href: "/hearst-plus/shop/" },
+      { label: "Newsstand", href: "/hearst-plus/newsstand/" },
       { label: "Complete article viewer", href: "/hearst-plus/complete-articles/" },
     ],
   },
