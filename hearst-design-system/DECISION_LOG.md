@@ -2,6 +2,14 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-10-04: Hearst+ Newsstand landing page
+
+- **Context:** A developer handoff delivered a scroll-driven three.js magazine rack that presents every Hearst title under one subscription.
+- **Decision:** Ship it at `/hearst-plus/newsstand/` and link it as `Newsstand` in the shared site footer's `Discover Hearst+` group. Pricing, trial length, and brand copy remain placeholders pending editorial approval; trial buttons are not yet wired to checkout.
+- **Scope:** Hearst+ product prototype footer and the new newsstand route. Adds the `three` dependency, loaded client-side only.
+- **Exceptions:** The route is not a feed category and is excluded from destination category navigation.
+- **Canonical rule:** `APP_RULES.md` navigation rules.
+
 ## 2026-08-02: Restrained product-document status language
 
 - **Context:** Pastel green, blue, and amber status badges made the Article Experience Blueprint read like a generic generated dashboard instead of a Hearst executive reference.
