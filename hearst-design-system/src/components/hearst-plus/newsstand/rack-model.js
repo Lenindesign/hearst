@@ -1,6 +1,6 @@
 // Procedural vintage newsstand rack (three.js). Named meshes/materials.
 // Generated from "Magazine Rack.html" — same model, named meshes/materials.
-import { COVER_SLUGS } from './newsstand-catalog';
+import { COVER_SLUGS, TITLES } from './newsstand-catalog';
 
 // Returns as soon as the geometry is built. Cover art streams in afterwards, so the rack never waits on images.
 // skipSlots: magazine slots whose cover the caller replaces (featured titles), so their art is not fetched twice.
@@ -140,14 +140,43 @@ const titles = [   // first 16 fill the rack; the rest go to the shelf stacks
 // place the five featured brands across the rack: t4s2, t3s3, t2s1, t2s4, t1s2
 for (const [a, b] of [[1, 8], [4, 2], [7, 2], [10, 8], [13, 0], [15, 21]]) [titles[a], titles[b]] = [titles[b], titles[a]];
 const coverCache = new Map();
+// Editorial logo cover for titles without photography, matching the title modal: logo, headline, Hearst+ band.
+const headlineFamily = () => getComputedStyle(document.querySelector('.headline') ?? document.body).fontFamily || 'Georgia, serif';
+const wrapLines = (ctx, text, maxW) => text.split(' ').reduce((lines, word) => {
+  const next = lines.length ? `${lines[lines.length - 1]} ${word}` : word;
+  if (lines.length && ctx.measureText(next).width <= maxW) lines[lines.length - 1] = next; else lines.push(word);
+  return lines;
+}, []);
+async function drawLogoCover(ctx, file, slug, accent) {
+  const family = headlineFamily();
+  await document.fonts.load(`900 38px ${family}`).catch(() => {});
+  const im = await logoImg(file, css.black);
+  ctx.fillStyle = css.paper; ctx.fillRect(0, 0, 420, 550);
+  ctx.fillStyle = accent; ctx.fillRect(0, 0, 420, 12);
+  const s = Math.min(340 / im.width, 86 / im.height), w = im.width * s, h = im.height * s;
+  ctx.drawImage(im, 210 - w / 2, 84 - h / 2, w, h);
+  ctx.fillStyle = css.black; ctx.fillRect(40, 148, 340, 2);
+  ctx.font = `900 38px ${family}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.letterSpacing = '-0.5px';
+  const lines = wrapLines(ctx, TITLES[slug]?.headline ?? '', 330).slice(0, 4);
+  lines.forEach((l, i) => ctx.fillText(l, 210, 300 + (i - (lines.length - 1) / 2) * 44));
+  ctx.fillStyle = accent; ctx.fillRect(0, 474, 420, 76);
+  ctx.fillStyle = accent === css.yellow ? css.black : '#ffffff';
+  ctx.font = '700 15px "Helvetica Neue", Helvetica, Arial, sans-serif'; ctx.letterSpacing = '4px';
+  ctx.fillText('ON HEARST+', 210, 512);
+}
+
 function coverMaterial(t, pal, layout, skip) {
   const key = `${t}|${pal}|${layout}|${skip}`;
   if (coverCache.has(key)) return coverCache.get(key);
   const [file, slug] = titles[t];
   const [bg, mast, img] = pal.map(k => css[k]);
+  const photoSrc = !skip && COVER_SLUGS.has(slug) ? '/images/newsstand/covers/' + slug + '.webp' : null;
+  const logoCover = !skip && !photoSrc;
   let cctx;
-  const tex = canvasTex(420, 550, ctx => {
+  // Logo covers render at 2x so the headline type stays crisp; photo covers match their 420x550 source.
+  const tex = canvasTex(logoCover ? 840 : 420, logoCover ? 1100 : 550, ctx => {
     cctx = ctx;
+    if (logoCover) { ctx.scale(2, 2); ctx.fillStyle = css.paper; ctx.fillRect(0, 0, 420, 550); return; }
     ctx.fillStyle = bg; ctx.fillRect(0, 0, 420, 550);
     ctx.fillStyle = img;
     if (layout === 0) ctx.fillRect(40, 185, 340, 320);
@@ -157,17 +186,15 @@ function coverMaterial(t, pal, layout, skip) {
     const ly = layout === 1 ? 335 : 195;
     for (let k = 0; k < 3; k++) ctx.fillRect(30, ly + k * 32 - 7, k === 0 ? 120 : 90, 14);
   });
-  // Real cover photo when available; otherwise the logo cover. Not awaited: textures update when art arrives.
-  const photoSrc = !skip && COVER_SLUGS.has(slug) ? '/images/newsstand/covers/' + slug + '.webp' : null;
-  if (!skip) new Promise(res => { if (!photoSrc) return res(null); const p = new Image(); p.decoding = 'async'; p.onload = () => res(p); p.onerror = () => res(null); p.src = photoSrc; }).then(photo => {
-    if (photo) { cctx.drawImage(photo, 0, 0, 420, 550); tex.needsUpdate = true; return; }
-    return logoImg(file, mast).then(im => {
-    const maxW = layout === 0 ? 340 : 380, maxH = 92, cy = layout === 1 ? 70 : 76;
-    const s = Math.min(maxW / im.width, maxH / im.height), w = im.width * s, h = im.height * s;
-    cctx.drawImage(im, 210 - w / 2, cy - h / 2, w, h);
-    tex.needsUpdate = true;
-  });
-  }).catch(e => console.warn('cover failed', file, e));
+  // Not awaited: textures update when art arrives.
+  const accent = [css.blue, css.magenta, css.yellow, css.black][t % 4];
+  if (logoCover) drawLogoCover(cctx, file, slug, accent).then(() => { tex.needsUpdate = true; }).catch(e => console.warn('cover failed', file, e));
+  else if (photoSrc) {
+    const p = new Image(); p.decoding = 'async';
+    p.onload = () => { cctx.drawImage(p, 0, 0, 420, 550); tex.needsUpdate = true; };
+    p.onerror = () => drawLogoCover(cctx, file, slug, accent).then(() => { tex.needsUpdate = true; });
+    p.src = photoSrc;
+  }
   const m = Object.assign(new THREE.MeshStandardMaterial({ map: tex, roughness: 0.4 }), { name: `cover_${slug}_${coverCache.size + 1}` });
   coverCache.set(key, m); return m;
 }
@@ -207,12 +234,13 @@ for (let i = 0; i < 4; i++) {
   });
 }
 
-// ---- flat stacks on the bottom shelf ----
-for (const [p, sx] of [[0, -0.22], [1, 0.2]]) {
+// ---- flat stacks on the bottom shelf: the 11 titles that don't fit face-out, one copy each ----
+// The scene fans a stack out across the shelf when it is clicked, so every title stays reachable.
+for (const [p, sx, first, count] of [[0, -0.22, 16, 6], [1, 0.2, 22, 5]]) {
   const stack = new THREE.Group(); stack.name = `shelf_stack_${p + 1}`; rack.add(stack);
-  for (let k = 0; k < 7; k++) {
+  for (let k = 0; k < count; k++) {
     const th = 0.008;
-    const m = magazine(`shelf_stack_${p + 1}_copy_${k + 1}`, palettes[(k + p * 4) % palettes.length], (k + p) % 3, th, k + p * 7 < 11 ? 16 + k + p * 7 : (k + p * 7 - 11) * 3);
+    const m = magazine(`shelf_stack_${p + 1}_copy_${k + 1}`, palettes[(k + p * 4) % palettes.length], (k + p) % 3, th, first + k);
     m.rotation.set(-Math.PI / 2, 0, ((k * 37 + p * 11) % 9 - 4) * 0.012);
     m.position.set(sx + ((k * 5) % 3 - 1) * 0.004, 0.125 + (k + 1) * (th + 0.0012), 0.03);
     stack.add(m);

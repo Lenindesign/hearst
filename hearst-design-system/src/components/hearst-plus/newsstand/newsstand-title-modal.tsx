@@ -2,9 +2,17 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import Link from "next/link";
 import { X } from "@/components/ui/icons";
 import { useBodyPortalTarget, useModalIsolation } from "@/components/ui/use-modal-isolation";
+import { getHearstAllBrands, getHearstBrandRoute } from "@/lib/hearst-routes";
 import { TITLES, coverSrc, logoSrc } from "./newsstand-catalog";
+
+// The title's publication page in the Hearst+ app, when one exists (Biography has none yet).
+function appRoute(slug: string) {
+  const brandSlug = slug.replace(/_/g, "-");
+  return getHearstAllBrands().some((b) => b.brandSlug === brandSlug) ? getHearstBrandRoute(brandSlug) : null;
+}
 
 type Props = {
   slug: string;
@@ -25,6 +33,7 @@ export function NewsstandTitleModal({ slug, picked, offerLine, primaryButton, on
   const skipRestoreRef = useRef(false);
   const title = TITLES[slug];
   const cover = coverSrc(slug);
+  const appHref = appRoute(slug);
   // The portal renders outside ThemeProvider's wrapper, so carry the page's brand tokens onto the overlay.
   const [theme] = useState(() => {
     const el = document.querySelector<HTMLElement>("[data-brand]");
@@ -83,16 +92,16 @@ export function NewsstandTitleModal({ slug, picked, offerLine, primaryButton, on
           <X className="size-5" aria-hidden />
         </button>
 
-        <div className="flex shrink-0 items-center justify-center bg-muted px-6 pb-4 pt-14 md:w-[46%] md:p-10">
+        <div className="flex shrink-0 items-center justify-center bg-black px-6 pb-6 pt-14 md:w-[46%] md:p-10">
           {cover ? (
             <img
               src={cover}
               alt={`${title.name} cover`}
-              className="aspect-[420/550] h-auto w-[52vw] max-w-[220px] object-cover shadow-[0_18px_40px_rgba(0,0,0,.28)] md:w-full md:max-w-[340px]"
+              className="aspect-[420/550] h-auto w-[52vw] max-w-[220px] object-cover shadow-[0_18px_50px_rgba(0,0,0,.6)] md:w-full md:max-w-[340px]"
             />
           ) : (
             // Digital-only or not yet photographed: a clean logo cover keeps the modal consistent.
-            <div className="flex aspect-[420/550] w-[52vw] max-w-[220px] flex-col items-center justify-between bg-background p-6 shadow-[0_18px_40px_rgba(0,0,0,.28)] md:w-full md:max-w-[340px] md:p-8">
+            <div className="flex aspect-[420/550] w-[52vw] max-w-[220px] flex-col items-center justify-between bg-background p-6 shadow-[0_18px_50px_rgba(0,0,0,.6)] md:w-full md:max-w-[340px] md:p-8">
               <img src={logoSrc(slug)} alt={`${title.name} logo`} className="h-10 w-full object-contain md:h-14" />
               <p className="headline text-balance text-center text-xl font-black leading-tight md:text-2xl">{title.headline}</p>
               <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-primary">On Hearst+</p>
@@ -130,6 +139,14 @@ export function NewsstandTitleModal({ slug, picked, offerLine, primaryButton, on
             </button>
           </div>
           <p className="text-xs text-muted-foreground">{offerLine} All {Object.keys(TITLES).length} titles included.</p>
+          {appHref ? (
+            <Link
+              href={appHref}
+              className="inline-flex min-h-11 items-center gap-1.5 self-start border-t border-border pt-3 text-sm font-bold text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              Preview {title.name} in the Hearst+ app <span aria-hidden>→</span>
+            </Link>
+          ) : null}
         </div>
       </section>
     </div>,

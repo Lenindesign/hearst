@@ -108,7 +108,7 @@ export const COVER_SLUGS = new Set([
 
 export const logoSrc = (slug: string) => `/images/newsstand/logos/${TITLES[slug].logo}`;
 
+// Full-resolution cover for the title modal. The rack uses the smaller <slug>.webp textures.
 export function coverSrc(slug: string) {
-  if (!COVER_SLUGS.has(slug)) return null;
-  return `/images/newsstand/covers/${slug}${FEATURED_SLUGS.includes(slug) ? "@2x" : ""}.webp`;
+  return COVER_SLUGS.has(slug) ? `/images/newsstand/covers/${slug}@2x.webp` : null;
 }

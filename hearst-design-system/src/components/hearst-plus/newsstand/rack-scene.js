@@ -2,6 +2,7 @@ import { buildRack } from './rack-model.js';
 import * as THREE from 'three';
 const V = THREE.Vector3;
 const clamp01 = x => Math.max(0, Math.min(1, x));
+const MW = 0.21, MH = 0.275;   // magazine size, matching rack-model.js
 const ss = x => x * x * (3 - 2 * x);
 const easeOut = x => 1 - Math.pow(1 - x, 3);
 const C = { paper: '#f6f4ee', black: '#111111', blue: '#0099cc', magenta: '#e1208d', yellow: '#ffc42f', grey: '#5d6770', greyL: '#a7a8a9', white: '#ffffff' };
@@ -134,9 +135,22 @@ export async function createRackScene(canvas, opts = {}) {
   const all = [];
   rack.traverse(g => {
     if (/^magazine_t\d_s\d$/.test(g.name) || /^shelf_stack_\d_copy_\d+$/.test(g.name))
-      all.push({ g, pos: g.position.clone(), rot: g.rotation.clone(), tier: g.name.startsWith('magazine_'), feat: mags.findIndex(m => m.g === g), pick: 0, hov: 0 });
+      all.push({ g, pos: g.position.clone(), rot: g.rotation.clone(), tier: g.name.startsWith('magazine_'), feat: mags.findIndex(m => m.g === g),
+        stack: g.name.startsWith('shelf_stack_') ? Number(g.name[12]) - 1 : -1, pick: 0, hov: 0, sp: 0 });
   });
   all.sort((a, b) => b.pos.y - a.pos.y || a.pos.x - b.pos.x);
+
+  // Bottom-shelf stacks fan out on click: each copy stands up, face-out and overlapping, across the shelf.
+  const stacks = [0, 1].map(p => all.filter(m => m.stack === p).sort((a, b) => a.pos.y - b.pos.y));
+  stacks.forEach(list => list.forEach((m, i) => {
+    // Side by side with no overlap, so every masthead reads in full. Both piles share one scale.
+    const n = list.length, slot = 0.88 / 6;
+    m.sscale = (slot - 0.012) / MW;
+    m.spos = new V((i - (n - 1) / 2) * slot, 0.125 + (MH * m.sscale) / 2 + 0.012, 0.34);   // in front of the frame, clear of the tier ledge
+    m.srot = new THREE.Euler(-0.2, 0, 0);
+  }));
+  const entryOf = new Map(all.map(m => [m.g, m]));
+  let spread = -1;
 
   let poses = [], wide;
   const P = (tgt, off, k = 1) => ({ tgt, pos: tgt.clone().addScaledVector(off, k) });
@@ -184,20 +198,30 @@ export async function createRackScene(canvas, opts = {}) {
   const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
   const covers = all.map(m => m.g.getObjectByName(`${m.g.name}_cover`)).filter(Boolean);
   const picked = new Set();
-  let hovered = null;
+  let hovered = null, hoverStack = -1;
+  // Returns the rack entry under the pointer. A closed stack acts as one target for the whole pile.
   const hit = e => {
     ndc.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
     ray.setFromCamera(ndc, camera);
-    return ray.intersectObjects(covers, false)[0]?.object.parent.userData.slug ?? null;
+    const g = ray.intersectObjects(covers, false)[0]?.object.parent;
+    return g ? entryOf.get(g) ?? null : null;
   };
+  const closedStack = m => m && m.stack >= 0 && m.stack !== spread;
   const onMove = e => {
-    const slug = e.pointerType === 'touch' ? null : hit(e);
-    canvas.style.cursor = slug ? 'pointer' : '';
-    if (slug !== hovered) hovered = slug;
-    o.onHover?.(slug, e.clientX, e.clientY);
+    const m = e.pointerType === 'touch' ? null : hit(e);
+    canvas.style.cursor = m ? 'pointer' : '';
+    hoverStack = closedStack(m) ? m.stack : -1;
+    hovered = m && hoverStack < 0 ? m.g.userData.slug : null;
+    const hint = hoverStack >= 0 ? `Browse ${stacks[hoverStack].length} more titles` : undefined;
+    o.onHover?.(hovered ?? (hint ? '' : null), e.clientX, e.clientY, hint);
   };
-  const onLeave = () => { hovered = null; canvas.style.cursor = ''; o.onHover?.(null, 0, 0); };
-  const onClick = e => { const slug = hit(e); if (slug) o.onPick?.(slug); };
+  const onLeave = () => { hovered = null; hoverStack = -1; canvas.style.cursor = ''; o.onHover?.(null, 0, 0); };
+  const onClick = e => {
+    const m = hit(e);
+    if (!m) { spread = -1; return; }
+    if (closedStack(m)) { spread = m.stack; onMove(e); return; }
+    o.onPick?.(m.g.userData.slug);
+  };
   canvas.addEventListener('pointermove', onMove, { passive: true });
   canvas.addEventListener('pointerleave', onLeave);
   canvas.addEventListener('click', onClick);
@@ -206,6 +230,20 @@ export async function createRackScene(canvas, opts = {}) {
   const bgA = new THREE.Color(), bgB = new THREE.Color(), bg = new THREE.Color(0xf4f4f5);
   const t0 = performance.now(), sp = new V();
   const dropAt = o.reducedMotion ? -1e9 : t0 + 250;
+  // Fall height that starts every magazine above the top of the current framing (taller on phones).
+  let dropH = 0;
+  const dropHeight = () => {
+    const p = new V();
+    let h = 0.9;
+    for (const m of all) {
+      for (;;) {
+        p.copy(m.pos); p.y += h - MH / 2; rack.localToWorld(p); p.project(camera);
+        if (p.y > 1.1 || h > 12) break;
+        h += 0.2;
+      }
+    }
+    return h;
+  };
   function frame(now) {
     cur = o.reducedMotion ? Math.round(target) : cur + (target - cur) * 0.1;
     if (Math.abs(target - cur) < 1e-4) cur = target;
@@ -221,11 +259,23 @@ export async function createRackScene(canvas, opts = {}) {
     const hw = clamp01(1 - cur);
     rack.rotation.y = (o.heroSpin && motion ? Math.sin((now - t0) / 1000 * 0.35) * 0.3 * hw : 0) + tilt.x * 0.09 * ts;
     rack.rotation.x = tilt.y * 0.025 * ts;
+    if (!dropH) { camera.updateMatrixWorld(); rack.updateMatrixWorld(true); dropH = dropHeight(); }
 
     all.forEach((m, j) => {
-      m.g.position.copy(m.pos); m.g.rotation.copy(m.rot);
-      const e = clamp01((now - dropAt - j * 45) / 650);
-      if (e < 1) { m.g.position.y += (1 - easeOut(e)) * 0.9; m.g.rotation.z += (1 - easeOut(e)) * 0.35 * (j % 2 ? 1 : -1); }
+      if (m.stack >= 0) {
+        m.sp += ((spread === m.stack ? 1 : 0) - m.sp) * (motion ? 0.12 : 1);
+        const k = ss(clamp01(m.sp));
+        m.g.position.lerpVectors(m.pos, m.spos, k);
+        m.g.rotation.set(m.rot.x + (m.srot.x - m.rot.x) * k, m.rot.y + (m.srot.y - m.rot.y) * k, m.rot.z + (m.srot.z - m.rot.z) * k);
+        m.g.scale.setScalar(1 + (m.sscale - 1) * k);
+        m.g.position.y += Math.sin(Math.PI * k) * 0.06;   // lift clear of the pile while dealing out
+        if (hoverStack === m.stack) m.g.position.y += 0.006;
+      } else { m.g.position.copy(m.pos); m.g.rotation.copy(m.rot); }
+      // Drop-in: each magazine falls from above the top of the frame and stays hidden until its turn.
+      const tDrop = now - dropAt - j * 45;
+      m.g.visible = tDrop > 0;
+      const e = clamp01(tDrop / (500 + 110 * dropH));
+      if (e < 1) { m.g.position.y += (1 - easeOut(e)) * dropH; m.g.rotation.z += (1 - easeOut(e)) * 0.35 * (j % 2 ? 1 : -1); }
       const s = clamp01((now - shuffleAt - j * 30) / 900);
       if (s > 0 && s < 1) {
         m.g.position.y += Math.sin(Math.PI * s) * 0.09;
@@ -241,7 +291,7 @@ export async function createRackScene(canvas, opts = {}) {
       m.pick += ((picked.has(slug) ? 1 : 0) - m.pick) * ease;
       m.hov += ((hovered === slug ? 1 : 0) - m.hov) * ease;
       const lift = 0.03 * m.pick + 0.012 * m.hov;
-      if (m.tier) m.g.position.addScaledVector(nrm, lift);
+      if (m.tier || m.sp > 0.5) m.g.position.addScaledVector(nrm, lift);
       else m.g.position.y += lift * 0.6;
     });
 

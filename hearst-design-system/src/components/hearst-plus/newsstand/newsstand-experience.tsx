@@ -38,6 +38,7 @@ export function NewsstandExperience() {
   const [sceneReady, setSceneReady] = useState(false);
   const [picked, setPicked] = useState<string[]>([]);
   const [hovered, setHovered] = useState<string | null>(null);
+  const [hoverHint, setHoverHint] = useState<string | null>(null);
   const [joined, setJoined] = useState(false);
   const [announcement, setAnnouncement] = useState("");
   const [openSlug, setOpenSlug] = useState<string | null>(null);
@@ -114,8 +115,9 @@ export function NewsstandExperience() {
         const s = await m.createRackScene(canvasRef.current, {
           reducedMotion: reduced.current,
           onPick: (slug: string) => setOpenSlug(slug),
-          onHover: (slug: string | null, x: number, y: number) => {
+          onHover: (slug: string | null, x: number, y: number, hint?: string) => {
             setHovered(slug);
+            setHoverHint(hint ?? null);
             if (hoverLabelRef.current) hoverLabelRef.current.style.transform = `translate(${x + 14}px, ${y + 14}px)`;
           },
         });
@@ -181,9 +183,9 @@ export function NewsstandExperience() {
       <div
         ref={hoverLabelRef}
         aria-hidden
-        className={`pointer-events-none fixed left-0 top-0 z-30 whitespace-nowrap bg-foreground px-2.5 py-1.5 text-xs font-bold text-background transition-opacity ${hovered ? "opacity-100" : "opacity-0"}`}
+        className={`pointer-events-none fixed left-0 top-0 z-30 whitespace-nowrap bg-foreground px-2.5 py-1.5 text-xs font-bold text-background transition-opacity ${hovered !== null ? "opacity-100" : "opacity-0"}`}
       >
-        {hovered ? `${TITLES[hovered]?.name ?? ""}${picked.includes(hovered) ? " ✓" : ""} · View` : ""}
+        {hoverHint ?? (hovered ? `${TITLES[hovered]?.name ?? ""}${picked.includes(hovered) ? " ✓" : ""} · View` : "")}
       </div>
 
       {openSlug ? (
