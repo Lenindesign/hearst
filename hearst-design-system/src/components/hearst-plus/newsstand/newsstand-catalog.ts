@@ -100,10 +100,13 @@ export const TITLE_SLUGS = Object.keys(TITLES);
 export const FEATURED_SLUGS = ["esquire", "cosmopolitan", "harpers_bazaar", "good_housekeeping", "car_and_driver"];
 
 // Titles with real cover photography in /images/newsstand/covers/<slug>.webp. Others get a logo cover.
+// Prevention, Road & Track, Bicycling, Delish and Oprah Daily use 2026 issues. Redbook (2018) and Seventeen (2019)
+// use their last regular print issues. Autoweek, Best Products and Biography have no print edition.
 export const COVER_SLUGS = new Set([
-  "car_and_driver", "cosmopolitan", "country_living", "elle", "elle_decor", "esquire", "good_housekeeping", "harpers_bazaar",
-  "house_beautiful", "mens_health", "pioneer_woman", "popular_mechanics", "runners_world", "town_and_country", "veranda",
-  "womans_day", "womens_health",
+  "bicycling", "car_and_driver", "cosmopolitan", "country_living", "delish", "elle", "elle_decor", "esquire",
+  "good_housekeeping", "harpers_bazaar", "house_beautiful", "mens_health", "oprah_daily", "pioneer_woman",
+  "popular_mechanics", "prevention", "redbook", "road_and_track", "runners_world", "seventeen", "town_and_country",
+  "veranda", "womans_day", "womens_health",
 ]);
 
 export const logoSrc = (slug: string) => `/images/newsstand/logos/${TITLES[slug].logo}`;

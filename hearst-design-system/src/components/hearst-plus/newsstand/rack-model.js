@@ -136,7 +136,7 @@ const titles = [   // first 16 fill the rack; the rest go to the shelf stacks
   ['seventeen.svg', 'seventeen'], ['womans.svg', 'womans_day'], ['pioneer.svg', 'pioneer_woman'], ['logo.063cc2c.svg', 'bicycling'],
   ['autoweek.svg', 'autoweek'], ['bestproducts.svg', 'best_products'], ['biography.svg', 'biography'],
 ];
-// Delish is digital-only (no print cover), so Woman's Day takes its rack slot.
+// Woman's Day takes Delish's face-out slot; Delish (a quarterly) sits in the bottom-shelf stacks.
 // place the five featured brands across the rack: t4s2, t3s3, t2s1, t2s4, t1s2
 for (const [a, b] of [[1, 8], [4, 2], [7, 2], [10, 8], [13, 0], [15, 21]]) [titles[a], titles[b]] = [titles[b], titles[a]];
 const coverCache = new Map();

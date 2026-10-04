@@ -31,6 +31,7 @@ export function NewsstandTitleModal({ slug, picked, offerLine, primaryButton, on
   const closeRef = useRef<HTMLButtonElement | null>(null);
   const restoreFocusRef = useRef<HTMLElement | null>(null);
   const skipRestoreRef = useRef(false);
+  const dragRef = useRef<{ y: number; dy: number } | null>(null);
   const title = TITLES[slug];
   const cover = coverSrc(slug);
   const appHref = appRoute(slug);
@@ -70,10 +71,32 @@ export function NewsstandTitleModal({ slug, picked, offerLine, primaryButton, on
     return () => removeEventListener("keydown", onKeyDown);
   }, [onClose]);
 
+  // Phone bottom sheet: dragging the cover panel down past a threshold dismisses it.
+  const onDragStart = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (matchMedia("(min-width: 768px)").matches || !dialogRef.current) return;
+    dragRef.current = { y: e.clientY, dy: 0 };
+    e.currentTarget.setPointerCapture(e.pointerId);
+    dialogRef.current.style.transition = "none";
+  };
+  const onDragMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const drag = dragRef.current;
+    if (!drag || !dialogRef.current) return;
+    drag.dy = Math.max(0, e.clientY - drag.y);
+    dialogRef.current.style.transform = `translateY(${drag.dy}px)`;
+  };
+  const onDragEnd = () => {
+    const drag = dragRef.current, dialog = dialogRef.current;
+    dragRef.current = null;
+    if (!drag || !dialog) return;
+    if (drag.dy > 110) { onClose(); return; }
+    dialog.style.transition = "transform 200ms ease-out";
+    dialog.style.transform = "";
+  };
+
   if (!portalTarget || !title) return null;
 
   return createPortal(
-    <div ref={overlayRef} data-brand={theme.brand} className="fixed inset-0 z-[130] flex items-center justify-center bg-foreground/60 p-3 font-brand backdrop-blur-sm sm:p-6">
+    <div ref={overlayRef} data-brand={theme.brand} className="fixed inset-0 z-[130] flex items-end justify-center bg-foreground/60 font-brand backdrop-blur-sm animate-in fade-in duration-200 motion-reduce:animate-none md:items-center md:p-6">
       <div className="absolute inset-0" onClick={() => onClose()} aria-hidden="true" />
       <section
         ref={dialogRef}
@@ -81,7 +104,7 @@ export function NewsstandTitleModal({ slug, picked, offerLine, primaryButton, on
         aria-modal="true"
         aria-labelledby="newsstand-title-heading"
         aria-describedby="newsstand-title-body"
-        className="relative z-10 flex max-h-[calc(100dvh-1.5rem)] w-full max-w-[860px] flex-col overflow-y-auto bg-background text-foreground shadow-2xl sm:max-h-[calc(100dvh-3rem)] md:flex-row md:overflow-hidden"
+        className="relative z-10 flex max-h-[92dvh] w-full max-w-[860px] flex-col overflow-y-auto overscroll-contain rounded-t-[16px] bg-background pb-[env(safe-area-inset-bottom)] text-foreground shadow-2xl max-md:animate-in max-md:slide-in-from-bottom max-md:duration-300 motion-reduce:animate-none md:max-h-[calc(100dvh-3rem)] md:flex-row md:overflow-hidden md:rounded-none md:pb-0"
       >
         <button
           ref={closeRef}
@@ -92,16 +115,23 @@ export function NewsstandTitleModal({ slug, picked, offerLine, primaryButton, on
           <X className="size-5" aria-hidden />
         </button>
 
-        <div className="flex shrink-0 items-center justify-center bg-black px-6 pb-6 pt-14 md:w-[46%] md:p-10">
+        <div
+          onPointerDown={onDragStart}
+          onPointerMove={onDragMove}
+          onPointerUp={onDragEnd}
+          onPointerCancel={onDragEnd}
+          className="relative flex shrink-0 items-center justify-center bg-black px-6 pb-6 pt-9 max-md:touch-none md:w-[46%] md:p-10"
+        >
+          <span aria-hidden className="absolute left-1/2 top-2.5 h-1.5 w-10 -translate-x-1/2 rounded-full bg-white/40 md:hidden" />
           {cover ? (
             <img
               src={cover}
               alt={`${title.name} cover`}
-              className="aspect-[420/550] h-auto w-[52vw] max-w-[220px] object-cover shadow-[0_18px_50px_rgba(0,0,0,.6)] md:w-full md:max-w-[340px]"
+              className="aspect-[420/550] h-auto w-[42vw] max-w-[180px] object-cover shadow-[0_18px_50px_rgba(0,0,0,.6)] md:w-full md:max-w-[340px]"
             />
           ) : (
             // Digital-only or not yet photographed: a clean logo cover keeps the modal consistent.
-            <div className="flex aspect-[420/550] w-[52vw] max-w-[220px] flex-col items-center justify-between bg-background p-6 shadow-[0_18px_50px_rgba(0,0,0,.6)] md:w-full md:max-w-[340px] md:p-8">
+            <div className="flex aspect-[420/550] w-[42vw] max-w-[180px] flex-col items-center justify-between bg-background p-6 shadow-[0_18px_50px_rgba(0,0,0,.6)] md:w-full md:max-w-[340px] md:p-8">
               <img src={logoSrc(slug)} alt={`${title.name} logo`} className="h-10 w-full object-contain md:h-14" />
               <p className="headline text-balance text-center text-xl font-black leading-tight md:text-2xl">{title.headline}</p>
               <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-primary">On Hearst+</p>
