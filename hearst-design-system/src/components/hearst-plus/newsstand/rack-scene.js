@@ -6,7 +6,7 @@ const ss = x => x * x * (3 - 2 * x);
 const easeOut = x => 1 - Math.pow(1 - x, 3);
 const C = { paper: '#f6f4ee', black: '#111111', blue: '#0099cc', magenta: '#e1208d', yellow: '#ffc42f', grey: '#5d6770', greyL: '#a7a8a9', white: '#ffffff' };
 
-// Featured brands, in scroll order. Designed stand-in covers until real cover art is supplied.
+// Featured brands, in scroll order. The designed stand-in cover is used only if the photo fails to load.
 const FEATURED = [
   { slot: 'magazine_t4_s2', slug: 'esquire', logo: 'logo.20861e6.svg', bg: C.black, ink: C.paper, dot: '#3a3a3a', accent: C.yellow,
     kicker: 'THE STYLE ISSUE', head: ['How to', 'Dress Now'], lines: ['The 50 best-dressed men', 'Fall\u2019s new essentials'],
@@ -59,26 +59,33 @@ function drawLogo(ctx, img, cx, cy, maxW, maxH) {
   ctx.drawImage(img, cx - w / 2, cy - h / 2, w, h);
 }
 
-async function featuredTextures(THREE, b) {
-  const [logo, art] = await Promise.all([logoImg(b.logo, b.ink), tryImage(`/images/newsstand/covers/${b.slug}.jpg`)]);
-  const cover = tex(THREE, ctx => {
-    if (art) { ctx.drawImage(art, 0, 0, 420, 550); return; }
-    ctx.fillStyle = b.bg; ctx.fillRect(0, 0, 420, 550);
-    halftone(ctx, 0, 120, 420, 430, b.dot, 270, 300);
-    drawLogo(ctx, logo, 210, 66, 370, 86);
-    ctx.fillStyle = b.ink; ctx.font = font(700, 11); ctx.textAlign = 'right'; ctx.letterSpacing = '2px';
-    ctx.fillText('OCTOBER 2026', 400, 128);
-    ctx.textAlign = 'left';
-    ctx.fillStyle = b.accent; ctx.font = font(700, 13); ctx.fillText(b.kicker, 26, 360);
-    ctx.fillStyle = b.ink; ctx.letterSpacing = '-1px'; ctx.font = font(700, 46);
-    b.head.forEach((l, i) => ctx.fillText(l, 24, 408 + i * 46));
-    ctx.letterSpacing = '0px'; ctx.font = font(700, 13);
-    b.lines.forEach((l, i) => ctx.fillText(l, 26, 490 + i * 20));
-    ctx.fillStyle = b.accent; ctx.fillRect(26, 172, 46, 4);
-    ctx.fillStyle = b.ink; ctx.font = font(700, 12); ctx.fillText('PLUS', 26, 196);
-    ctx.font = font(400, 12); ctx.fillText(b.contents[2], 26, 212);
-  });
+// Returns a texture immediately (brand colour), then paints the cover photo, or the designed stand-in if it fails.
+function featuredTextures(THREE, b) {
+  let cctx;
+  const cover = tex(THREE, ctx => { cctx = ctx; ctx.fillStyle = b.bg; ctx.fillRect(0, 0, 420, 550); });
+  tryImage(`/images/newsstand/covers/${b.slug}@2x.webp`).then(async art => {
+    if (art) cctx.drawImage(art, 0, 0, 420, 550);
+    else drawStandIn(cctx, b, await logoImg(b.logo, b.ink));
+    cover.needsUpdate = true;
+  }).catch(e => console.warn('featured cover failed', b.slug, e));
   return { cover };
+}
+
+function drawStandIn(ctx, b, logo) {
+  ctx.fillStyle = b.bg; ctx.fillRect(0, 0, 420, 550);
+  halftone(ctx, 0, 120, 420, 430, b.dot, 270, 300);
+  drawLogo(ctx, logo, 210, 66, 370, 86);
+  ctx.fillStyle = b.ink; ctx.font = font(700, 11); ctx.textAlign = 'right'; ctx.letterSpacing = '2px';
+  ctx.fillText('OCTOBER 2026', 400, 128);
+  ctx.textAlign = 'left';
+  ctx.fillStyle = b.accent; ctx.font = font(700, 13); ctx.fillText(b.kicker, 26, 360);
+  ctx.fillStyle = b.ink; ctx.letterSpacing = '-1px'; ctx.font = font(700, 46);
+  b.head.forEach((l, i) => ctx.fillText(l, 24, 408 + i * 46));
+  ctx.letterSpacing = '0px'; ctx.font = font(700, 13);
+  b.lines.forEach((l, i) => ctx.fillText(l, 26, 490 + i * 20));
+  ctx.fillStyle = b.accent; ctx.fillRect(26, 172, 46, 4);
+  ctx.fillStyle = b.ink; ctx.font = font(700, 12); ctx.fillText('PLUS', 26, 196);
+  ctx.font = font(400, 12); ctx.fillText(b.contents[2], 26, 212);
 }
 
 export async function createRackScene(canvas, opts = {}) {
@@ -106,12 +113,12 @@ export async function createRackScene(canvas, opts = {}) {
   const ground = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.ShadowMaterial({ opacity: 0.16 }));
   ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
 
-  const rack = await buildRack(THREE);
+  const rack = await buildRack(THREE, { skipSlots: new Set(FEATURED.map(b => b.slot)) });
   const lean = THREE.MathUtils.degToRad(15);
   const nrm = new V(0, Math.sin(lean), Math.cos(lean));
 
-  // Featured magazines wear the real cover photography (assets/covers/<slug>.jpg, from hearst.com brand pages).
-  const featTex = await Promise.all(FEATURED.map(b => featuredTextures(THREE, b)));
+  // Featured magazines wear full-resolution cover photography (covers/<slug>@2x.webp, from hearst.com brand pages).
+  const featTex = FEATURED.map(b => featuredTextures(THREE, b));
   const mags = FEATURED.map((b, i) => {
     const g = rack.getObjectByName(b.slot);
     const cover = g.getObjectByName(`${b.slot}_cover`);
@@ -127,7 +134,7 @@ export async function createRackScene(canvas, opts = {}) {
   const all = [];
   rack.traverse(g => {
     if (/^magazine_t\d_s\d$/.test(g.name) || /^shelf_stack_\d_copy_\d+$/.test(g.name))
-      all.push({ g, pos: g.position.clone(), rot: g.rotation.clone(), tier: g.name.startsWith('magazine_'), feat: mags.findIndex(m => m.g === g) });
+      all.push({ g, pos: g.position.clone(), rot: g.rotation.clone(), tier: g.name.startsWith('magazine_'), feat: mags.findIndex(m => m.g === g), pick: 0, hov: 0 });
   });
   all.sort((a, b) => b.pos.y - a.pos.y || a.pos.x - b.pos.x);
 
@@ -173,6 +180,28 @@ export async function createRackScene(canvas, opts = {}) {
   const onPtr = e => { if (e.pointerType === 'touch') return; ptr.x = e.clientX / innerWidth * 2 - 1; ptr.y = e.clientY / innerHeight * 2 - 1; };
   addEventListener('pointermove', onPtr, { passive: true });
 
+  // Cover picking: hover lifts a magazine, click toggles it in the reader's newsstand.
+  const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+  const covers = all.map(m => m.g.getObjectByName(`${m.g.name}_cover`)).filter(Boolean);
+  const picked = new Set();
+  let hovered = null;
+  const hit = e => {
+    ndc.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+    ray.setFromCamera(ndc, camera);
+    return ray.intersectObjects(covers, false)[0]?.object.parent.userData.slug ?? null;
+  };
+  const onMove = e => {
+    const slug = e.pointerType === 'touch' ? null : hit(e);
+    canvas.style.cursor = slug ? 'pointer' : '';
+    if (slug !== hovered) hovered = slug;
+    o.onHover?.(slug, e.clientX, e.clientY);
+  };
+  const onLeave = () => { hovered = null; canvas.style.cursor = ''; o.onHover?.(null, 0, 0); };
+  const onClick = e => { const slug = hit(e); if (slug) o.onPick?.(slug); };
+  canvas.addEventListener('pointermove', onMove, { passive: true });
+  canvas.addEventListener('pointerleave', onLeave);
+  canvas.addEventListener('click', onClick);
+
   let target = 0, cur = 0, raf, shuffleAt = -1e9;
   const bgA = new THREE.Color(), bgB = new THREE.Color(), bg = new THREE.Color(0xf4f4f5);
   const t0 = performance.now(), sp = new V();
@@ -208,6 +237,12 @@ export async function createRackScene(canvas, opts = {}) {
         m.g.position.addScaledVector(nrm, 0.055 * f);
         m.g.rotation.x += 0.06 * f;
       }
+      const slug = m.g.userData.slug, ease = motion ? 0.18 : 1;
+      m.pick += ((picked.has(slug) ? 1 : 0) - m.pick) * ease;
+      m.hov += ((hovered === slug ? 1 : 0) - m.hov) * ease;
+      const lift = 0.03 * m.pick + 0.012 * m.hov;
+      if (m.tier) m.g.position.addScaledVector(nrm, lift);
+      else m.g.position.y += lift * 0.6;
     });
 
     const dim = o.dim ? 1 - 0.38 * wmax : 1;
@@ -233,7 +268,12 @@ export async function createRackScene(canvas, opts = {}) {
     setProgress: p => { target = p; },
     setOptions: x => { Object.assign(o, x); if (!o.tints) renderer.setClearColor(0xf4f4f5); },
     shuffle: () => { if (!o.reducedMotion) shuffleAt = performance.now(); },
+    setPicked: slugs => { picked.clear(); slugs.forEach(x => picked.add(x)); },
     resize,
-    dispose: () => { cancelAnimationFrame(raf); removeEventListener('pointermove', onPtr); renderer.dispose(); },
+    dispose: () => {
+      cancelAnimationFrame(raf); removeEventListener('pointermove', onPtr);
+      canvas.removeEventListener('pointermove', onMove); canvas.removeEventListener('pointerleave', onLeave); canvas.removeEventListener('click', onClick);
+      renderer.dispose();
+    },
   };
 }

@@ -2,6 +2,14 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-10-04: Newsstand conversion and load pass
+
+- **Context:** The handoff version scrolled about ten screens before the only sign-up point, showed bracketed pricing placeholders, and loaded three.js plus 3.6 MB of cover art before the rack appeared.
+- **Decision:** Every brand panel carries a trial button and an "Add to my newsstand" toggle, brand sections are shortened to about one screen, and the hero links straight to plans. Readers can click covers on the rack or logos in the plans grid to build a "My newsstand" list that carries into an in-page confirmation. The offer is one editable config marked as prototype pricing. Covers ship as WebP (small for the rack, 2x only for the five featured titles), logo C2PA metadata is stripped, covers stream in instead of blocking the rack, and the scene loads after idle.
+- **Scope:** `/hearst-plus/newsstand/` only.
+- **Exceptions:** Trial buttons do not hand off to checkout or onboarding yet.
+- **Canonical rule:** `APP_RULES.md` navigation rules.
+
 ## 2026-10-04: Hearst+ Newsstand landing page
 
 - **Context:** A developer handoff delivered a scroll-driven three.js magazine rack that presents every Hearst title under one subscription.

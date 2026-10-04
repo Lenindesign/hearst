@@ -1,6 +1,15 @@
 // Procedural vintage newsstand rack (three.js). Named meshes/materials.
 // Generated from "Magazine Rack.html" — same model, named meshes/materials.
-export async function buildRack(THREE) {
+// Titles with real cover photography in /images/newsstand/covers/<slug>.webp. Others get a logo cover.
+export const COVER_SLUGS = new Set([
+  'car_and_driver', 'cosmopolitan', 'country_living', 'elle', 'elle_decor', 'esquire', 'good_housekeeping', 'harpers_bazaar',
+  'house_beautiful', 'mens_health', 'pioneer_woman', 'popular_mechanics', 'runners_world', 'town_and_country', 'veranda',
+  'womans_day', 'womens_health',
+]);
+
+// Returns as soon as the geometry is built. Cover art streams in afterwards, so the rack never waits on images.
+// skipSlots: magazine slots whose cover the caller replaces (featured titles), so their art is not fetched twice.
+export async function buildRack(THREE, { skipSlots = new Set() } = {}) {
 const rack = new THREE.Group(); rack.name = 'magazine_rack';
 const M = (name, color, roughness, metalness = 0) =>
   Object.assign(new THREE.MeshStandardMaterial({ color, roughness, metalness }), { name });
@@ -19,7 +28,7 @@ await document.fonts.load('700 80px "Helvetica Neue"');
 // Official title logos (uploads/). Strip C2PA metadata, recolour the --primary fill, rasterise.
 const logoSrc = new Map();
 const logoImg = async (file, color) => {
-  if (!logoSrc.has(file)) logoSrc.set(file, fetch('/images/newsstand/logos/' + file).then(r => r.text()).then(s => s.replace(/<metadata>[\s\S]*?<\/metadata>/g, '')));
+  if (!logoSrc.has(file)) logoSrc.set(file, fetch('/images/newsstand/logos/' + file).then(r => r.text()));
   let s = (await logoSrc.get(file)).replace(/var\(--primary,\s*[^)]*\)/g, color);
   const vb = s.match(/viewBox="([^"]+)"/)[1].split(/[\s,]+/).map(Number);
   const w = 1600, h = Math.round(w * vb[3] / vb[2]);
@@ -28,7 +37,6 @@ const logoImg = async (file, color) => {
   const img = new Image(); img.src = URL.createObjectURL(new Blob([s], { type: 'image/svg+xml' }));
   await img.decode(); return img;
 };
-const pending = [];
 const hMark = new Image(); hMark.src = '/images/newsstand/hearst-h-white.png'; await hMark.decode();
 const canvasTex = (w, h, draw) => {
   const c = document.createElement('canvas'); c.width = w; c.height = h;
@@ -137,14 +145,14 @@ const titles = [   // first 16 fill the rack; the rest go to the shelf stacks
 // place the five featured brands across the rack: t4s2, t3s3, t2s1, t2s4, t1s2
 for (const [a, b] of [[1, 8], [4, 2], [7, 2], [10, 8], [13, 0], [15, 21]]) [titles[a], titles[b]] = [titles[b], titles[a]];
 const coverCache = new Map();
-function coverMaterial(t, pal, layout) {
-  const key = `${t}|${pal}|${layout}`;
+function coverMaterial(t, pal, layout, skip) {
+  const key = `${t}|${pal}|${layout}|${skip}`;
   if (coverCache.has(key)) return coverCache.get(key);
   const [file, slug] = titles[t];
   const [bg, mast, img] = pal.map(k => css[k]);
   let cctx;
-  const tex = canvasTex(1260, 1650, ctx => {
-    cctx = ctx; ctx.scale(3, 3);
+  const tex = canvasTex(420, 550, ctx => {
+    cctx = ctx;
     ctx.fillStyle = bg; ctx.fillRect(0, 0, 420, 550);
     ctx.fillStyle = img;
     if (layout === 0) ctx.fillRect(40, 185, 340, 320);
@@ -154,23 +162,24 @@ function coverMaterial(t, pal, layout) {
     const ly = layout === 1 ? 335 : 195;
     for (let k = 0; k < 3; k++) ctx.fillRect(30, ly + k * 32 - 7, k === 0 ? 120 : 90, 14);
   });
-  // Real cover photo when available (assets/covers/<slug>.jpg); otherwise the logo cover.
-  pending.push(new Promise(res => { const p = new Image(); p.onload = () => res(p); p.onerror = () => res(null); p.src = '/images/newsstand/covers/' + slug + '.jpg'; }).then(photo => {
-    if (photo) { cctx.setTransform(1, 0, 0, 1, 0, 0); cctx.drawImage(photo, 0, 0, 1260, 1650); tex.needsUpdate = true; return; }
+  // Real cover photo when available; otherwise the logo cover. Not awaited: textures update when art arrives.
+  const photoSrc = !skip && COVER_SLUGS.has(slug) ? '/images/newsstand/covers/' + slug + '.webp' : null;
+  if (!skip) new Promise(res => { if (!photoSrc) return res(null); const p = new Image(); p.decoding = 'async'; p.onload = () => res(p); p.onerror = () => res(null); p.src = photoSrc; }).then(photo => {
+    if (photo) { cctx.drawImage(photo, 0, 0, 420, 550); tex.needsUpdate = true; return; }
     return logoImg(file, mast).then(im => {
     const maxW = layout === 0 ? 340 : 380, maxH = 92, cy = layout === 1 ? 70 : 76;
     const s = Math.min(maxW / im.width, maxH / im.height), w = im.width * s, h = im.height * s;
     cctx.drawImage(im, 210 - w / 2, cy - h / 2, w, h);
     tex.needsUpdate = true;
   });
-  }).catch(e => console.warn('cover failed', file, e)));
+  }).catch(e => console.warn('cover failed', file, e));
   const m = Object.assign(new THREE.MeshStandardMaterial({ map: tex, roughness: 0.4 }), { name: `cover_${slug}_${coverCache.size + 1}` });
   coverCache.set(key, m); return m;
 }
 function magazine(name, pal, layout, thick, t) {
-  const g = new THREE.Group(); g.name = name;
+  const g = new THREE.Group(); g.name = name; g.userData.slug = titles[t][1];
   add(g, `${name}_pages`, box(MW, MH, thick), mat.paper, 0, 0, -thick / 2);
-  add(g, `${name}_cover`, new THREE.PlaneGeometry(MW, MH), coverMaterial(t, pal, layout), 0, 0, 0.0004);
+  add(g, `${name}_cover`, new THREE.PlaneGeometry(MW, MH), coverMaterial(t, pal, layout, skipSlots.has(name)), 0, 0, 0.0004);
   return g;
 }
 
@@ -215,6 +224,5 @@ for (const [p, sx] of [[0, -0.22], [1, 0.2]]) {
   }
 }
 
-await Promise.all(pending);
 return rack;
 }
