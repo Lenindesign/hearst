@@ -1,11 +1,6 @@
 // Procedural vintage newsstand rack (three.js). Named meshes/materials.
 // Generated from "Magazine Rack.html" — same model, named meshes/materials.
-// Titles with real cover photography in /images/newsstand/covers/<slug>.webp. Others get a logo cover.
-export const COVER_SLUGS = new Set([
-  'car_and_driver', 'cosmopolitan', 'country_living', 'elle', 'elle_decor', 'esquire', 'good_housekeeping', 'harpers_bazaar',
-  'house_beautiful', 'mens_health', 'pioneer_woman', 'popular_mechanics', 'runners_world', 'town_and_country', 'veranda',
-  'womans_day', 'womens_health',
-]);
+import { COVER_SLUGS } from './newsstand-catalog';
 
 // Returns as soon as the geometry is built. Cover art streams in afterwards, so the rack never waits on images.
 // skipSlots: magazine slots whose cover the caller replaces (featured titles), so their art is not fetched twice.

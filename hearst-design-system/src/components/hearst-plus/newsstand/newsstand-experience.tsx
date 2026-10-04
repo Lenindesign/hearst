@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { FEATURED_SLUGS, TITLES, TITLE_SLUGS, logoSrc } from "./newsstand-catalog";
+import { NewsstandTitleModal } from "./newsstand-title-modal";
 
 type Scene = {
   setProgress(p: number): void;
@@ -17,57 +19,7 @@ type Scene = {
 const OFFER = { price: "$X.XX", period: "month", trialDays: 7, terms: "Cancel anytime", placeholder: true };
 const OFFER_LINE = `${OFFER.trialDays}-day free trial, then ${OFFER.price}/${OFFER.period}. ${OFFER.terms}.`;
 
-// Every title on the rack, keyed by the slug the 3D scene reports when a cover is clicked.
-const TITLES: Record<string, { name: string; logo: string }> = {
-  esquire: { name: "Esquire", logo: "logo.20861e6.svg" },
-  cosmopolitan: { name: "Cosmopolitan", logo: "cosmo.svg" },
-  harpers_bazaar: { name: "Harper's Bazaar", logo: "harpers.svg" },
-  good_housekeeping: { name: "Good Housekeeping", logo: "good-housekeeping.svg" },
-  car_and_driver: { name: "Car and Driver", logo: "caranddriver.svg" },
-  elle: { name: "ELLE", logo: "logo.2856426.svg" },
-  town_and_country: { name: "Town & Country", logo: "town.svg" },
-  mens_health: { name: "Men's Health", logo: "mens.svg" },
-  womens_health: { name: "Women's Health", logo: "womenshealth.svg" },
-  popular_mechanics: { name: "Popular Mechanics", logo: "popular.svg" },
-  runners_world: { name: "Runner's World", logo: "runners.svg" },
-  house_beautiful: { name: "House Beautiful", logo: "house.svg" },
-  elle_decor: { name: "ELLE Decor", logo: "elle-decor.svg" },
-  veranda: { name: "Veranda", logo: "veranda.svg" },
-  country_living: { name: "Country Living", logo: "country.svg" },
-  delish: { name: "Delish", logo: "delish.svg" },
-  oprah_daily: { name: "Oprah Daily", logo: "oprah.svg" },
-  prevention: { name: "Prevention", logo: "prevention.svg" },
-  redbook: { name: "Redbook", logo: "redbook.svg" },
-  road_and_track: { name: "Road & Track", logo: "roadandtrack.svg" },
-  seventeen: { name: "Seventeen", logo: "seventeen.svg" },
-  womans_day: { name: "Woman's Day", logo: "womans.svg" },
-  pioneer_woman: { name: "The Pioneer Woman", logo: "pioneer.svg" },
-  bicycling: { name: "Bicycling", logo: "logo.063cc2c.svg" },
-  autoweek: { name: "Autoweek", logo: "autoweek.svg" },
-  best_products: { name: "Best Products", logo: "bestproducts.svg" },
-  biography: { name: "Biography", logo: "biography.svg" },
-};
-const TITLE_SLUGS = Object.keys(TITLES);
-
-const BRANDS = [
-  { slug: "esquire", headline: "Man at his best, every month since 1933.",
-    body: "Long-form profiles, sharp cultural criticism and the style advice that actually holds up. Hearst+ unlocks every new issue plus decades of the archive.",
-    included: "[12 issues a year] + [archive back to 1933]", tags: ["Style", "Interviews", "Culture"] },
-  { slug: "cosmopolitan", headline: "Bold advice on love, life and everything in between.",
-    body: "The beauty finds, career moves and honest relationship talk your group chat is already quoting. Read every issue the day it drops, plus exclusive digital-only features.",
-    included: "[12 issues a year] + [archive back to 1886]", tags: ["Beauty", "Relationships", "Careers"] },
-  { slug: "harpers_bazaar", headline: "Fashion, art and the people shaping both.",
-    body: "America's first fashion magazine, still setting the agenda. Runway reports, landmark photography and conversations with the designers and artists defining what comes next.",
-    included: "[10 issues a year] + [archive back to 1867]", tags: ["Fashion", "Art", "Beauty"] },
-  { slug: "good_housekeeping", headline: "Tested at the Institute, trusted at home.",
-    body: "Lab-tested product picks, recipes that work the first time and smart fixes for every room, backed by the Good Housekeeping Institute's experts.",
-    included: "[12 issues a year] + [archive back to 1885]", tags: ["Home", "Food", "Product tests"] },
-  { slug: "car_and_driver", headline: "Straight-talking reviews from people who live to drive.",
-    body: "Instrumented road tests, honest buyer's guides and first drives of the cars everyone's talking about. Know what to buy, and what to skip.",
-    included: "[12 issues a year] + [archive back to 1955]", tags: ["Reviews", "Buyer's guides", "Motorsport"] },
-];
-
-const LOGO = (f: string) => `/images/newsstand/logos/${f}`;
+const BRANDS = FEATURED_SLUGS.map((slug) => ({ slug, ...TITLES[slug] }));
 const PICKS_KEY = "hearst-plus-newsstand-picks";
 
 const primaryButton =
@@ -88,6 +40,7 @@ export function NewsstandExperience() {
   const [hovered, setHovered] = useState<string | null>(null);
   const [joined, setJoined] = useState(false);
   const [announcement, setAnnouncement] = useState("");
+  const [openSlug, setOpenSlug] = useState<string | null>(null);
   const picksRestored = useRef(false);
 
   const togglePick = useCallback((slug: string) => {
@@ -160,7 +113,7 @@ export function NewsstandExperience() {
         if (disposed || !canvasRef.current) return;
         const s = await m.createRackScene(canvasRef.current, {
           reducedMotion: reduced.current,
-          onPick: togglePick,
+          onPick: (slug: string) => setOpenSlug(slug),
           onHover: (slug: string | null, x: number, y: number) => {
             setHovered(slug);
             if (hoverLabelRef.current) hoverLabelRef.current.style.transform = `translate(${x + 14}px, ${y + 14}px)`;
@@ -206,6 +159,7 @@ export function NewsstandExperience() {
     sceneRef.current?.shuffle();
     goToPlans();
   };
+  const closeModal = useCallback(() => setOpenSlug(null), []);
 
   const offerNote = (
     <span className="text-sm text-muted-foreground">
@@ -229,12 +183,25 @@ export function NewsstandExperience() {
         aria-hidden
         className={`pointer-events-none fixed left-0 top-0 z-30 whitespace-nowrap bg-foreground px-2.5 py-1.5 text-xs font-bold text-background transition-opacity ${hovered ? "opacity-100" : "opacity-0"}`}
       >
-        {hovered ? `${picked.includes(hovered) ? "✓ In your newsstand" : "+ Add"} · ${TITLES[hovered]?.name ?? ""}` : ""}
+        {hovered ? `${TITLES[hovered]?.name ?? ""}${picked.includes(hovered) ? " ✓" : ""} · View` : ""}
       </div>
+
+      {openSlug ? (
+        <NewsstandTitleModal
+          key={openSlug}
+          slug={openSlug}
+          picked={picked.includes(openSlug)}
+          offerLine={OFFER_LINE}
+          primaryButton={primaryButton}
+          onTogglePick={() => togglePick(openSlug)}
+          onStartTrial={() => { setOpenSlug(null); startTrial(); }}
+          onClose={closeModal}
+        />
+      ) : null}
 
       <nav aria-label="Featured brands" className="fixed right-5 top-1/2 z-20 hidden -translate-y-1/2 flex-col gap-1 md:flex">
         {BRANDS.map((b, i) => (
-          <button key={b.slug} onClick={() => goTo(i)} aria-label={TITLES[b.slug].name} aria-current={i === active}
+          <button key={b.slug} onClick={() => goTo(i)} aria-label={b.name} aria-current={i === active}
             className="flex size-7 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
             <span className={`block size-2.5 rounded-full border-2 border-foreground ${i === active ? "bg-primary" : "bg-background"}`} />
           </button>
@@ -254,7 +221,7 @@ export function NewsstandExperience() {
       {/* The overlay passes clicks through to the rack; only cards and controls catch them. */}
       <main className="pointer-events-none relative z-10">
         <section data-stop className="flex min-h-screen items-start px-[6vw] pb-16 pt-24 md:items-center">
-          <div className="pointer-events-auto flex max-w-[640px] flex-col gap-6 max-md:-mx-2 max-md:bg-background/90 max-md:p-5 max-md:backdrop-blur-sm">
+          <div className="flex max-w-[640px] flex-col gap-6 max-md:-mx-2 max-md:bg-background/90 max-md:p-5 max-md:backdrop-blur-sm">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Hearst+</p>
             <h1 className="headline text-balance text-[clamp(32px,6vw,116px)] font-black leading-[0.92] tracking-[-0.045em]">
               <span className="text-primary">Every</span> Hearst magazine. <span className="text-primary">One</span> subscription.
@@ -263,30 +230,29 @@ export function NewsstandExperience() {
               Esquire, Cosmopolitan, Harper&apos;s Bazaar, Good Housekeeping, Car and Driver and 22 more, with every issue and every archive, in one membership.
             </p>
             <div className="flex flex-col items-start gap-3">
-              <button onClick={startTrial} className={`${primaryButton} min-h-[52px] px-7 text-sm`}>
+              <button onClick={startTrial} className={`${primaryButton} pointer-events-auto min-h-[52px] px-7 text-sm`}>
                 Start your {OFFER.trialDays}-day free trial
               </button>
               {offerNote}
             </div>
             <p className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
               <span>Scroll to browse the rack ↓</span>
-              <button onClick={goToPlans} className="inline-flex min-h-11 items-center font-semibold text-foreground underline underline-offset-4 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+              <button onClick={goToPlans} className="pointer-events-auto inline-flex min-h-11 items-center font-semibold text-foreground underline underline-offset-4 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
                 Skip to plans
               </button>
             </p>
-            <p className="hidden text-sm text-muted-foreground md:block">Tip: click any cover on the rack to add it to your newsstand.</p>
+            <p className="hidden text-sm text-muted-foreground md:block">Tip: click any cover on the rack to see what&apos;s inside.</p>
           </div>
         </section>
 
         {BRANDS.map((b, i) => {
-          const t = TITLES[b.slug];
           const on = picked.includes(b.slug);
           return (
             <section key={b.slug} data-stop className="h-[120vh]">
               <div className={`sticky top-0 flex h-screen items-end justify-center px-6 pb-20 pt-[88px] md:pb-6 md:items-center md:pr-[72px] ${i % 2 ? "md:justify-start" : "md:justify-end"}`}>
                 <article data-panel className="pointer-events-auto flex w-full max-w-[420px] flex-col gap-4 bg-background p-6 shadow-[0_12px_40px_rgba(0,0,0,.08)] md:p-8">
                   <p className="text-xs font-bold tracking-[0.16em] text-primary">{String(i + 1).padStart(2, "0")} / 05</p>
-                  <img src={LOGO(t.logo)} alt={t.name} className="h-9 w-auto max-w-[300px] self-start object-contain md:h-11" />
+                  <img src={logoSrc(b.slug)} alt={b.name} className="h-9 w-auto max-w-[300px] self-start object-contain md:h-11" />
                   <h2 className="headline text-balance text-[26px] font-black leading-[1.04] tracking-[-0.03em] md:text-[32px]">{b.headline}</h2>
                   <p className="hidden text-pretty leading-relaxed text-muted-foreground md:block">{b.body}</p>
                   <p className="flex items-baseline gap-2 border-y border-border py-3 text-sm font-bold">
@@ -330,7 +296,7 @@ export function NewsstandExperience() {
                     <p className="text-sm font-bold">Your newsstand, first in your feed</p>
                     <ul className="flex max-w-[680px] flex-wrap items-center justify-center gap-x-10 gap-y-6">
                       {picked.map((slug) => (
-                        <li key={slug}><img src={LOGO(TITLES[slug].logo)} alt={TITLES[slug].name} className="h-[18px] w-auto max-w-[110px] object-contain" /></li>
+                        <li key={slug}><img src={logoSrc(slug)} alt={TITLES[slug].name} className="h-[18px] w-auto max-w-[110px] object-contain" /></li>
                       ))}
                     </ul>
                   </div>
@@ -365,7 +331,7 @@ export function NewsstandExperience() {
                           className={`inline-flex min-h-11 items-center gap-2 border px-3 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${on ? "border-primary bg-primary/10" : "border-transparent hover:border-border"}`}
                         >
                           <span aria-hidden className={`w-3 text-xs font-bold text-primary ${on ? "" : "invisible"}`}>✓</span>
-                          <img src={LOGO(TITLES[slug].logo)} alt="" loading="lazy" decoding="async" className="h-[15px] w-auto max-w-[92px] object-contain" />
+                          <img src={logoSrc(slug)} alt="" loading="lazy" decoding="async" className="h-[15px] w-auto max-w-[92px] object-contain" />
                         </button>
                       </li>
                     );
