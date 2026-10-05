@@ -4,7 +4,6 @@ const V = THREE.Vector3;
 const clamp01 = x => Math.max(0, Math.min(1, x));
 const MW = 0.21, MH = 0.275;   // magazine size, matching rack-model.js
 const ss = x => x * x * (3 - 2 * x);
-const easeOut = x => 1 - Math.pow(1 - x, 3);
 const C = { paper: '#f6f4ee', black: '#111111', blue: '#0099cc', magenta: '#e1208d', yellow: '#ffc42f', grey: '#5d6770', greyL: '#a7a8a9', white: '#ffffff' };
 
 // Featured brands, in scroll order. The designed stand-in cover is used only if the photo fails to load.
@@ -136,7 +135,7 @@ export async function createRackScene(canvas, opts = {}) {
   rack.traverse(g => {
     if (/^magazine_t\d_s\d$/.test(g.name) || /^shelf_stack_\d_copy_\d+$/.test(g.name))
       all.push({ g, pos: g.position.clone(), rot: g.rotation.clone(), tier: g.name.startsWith('magazine_'), feat: mags.findIndex(m => m.g === g),
-        stack: g.name.startsWith('shelf_stack_') ? Number(g.name[12]) - 1 : -1, pick: 0, hov: 0, sp: 0 });
+        stack: g.name.startsWith('shelf_stack_') ? Number(g.name[12]) - 1 : -1, pick: 0, hov: 0, sp: 0, landed: false });
   });
   all.sort((a, b) => b.pos.y - a.pos.y || a.pos.x - b.pos.x);
 
@@ -144,13 +143,38 @@ export async function createRackScene(canvas, opts = {}) {
   const stacks = [0, 1].map(p => all.filter(m => m.stack === p).sort((a, b) => a.pos.y - b.pos.y));
   stacks.forEach(list => list.forEach((m, i) => {
     // Side by side with no overlap, so every masthead reads in full. Both piles share one scale.
+    m.si = i;   // deal order: bottom of the pile goes out first
     const n = list.length, slot = 0.88 / 6;
     m.sscale = (slot - 0.012) / MW;
     m.spos = new V((i - (n - 1) / 2) * slot, 0.125 + (MH * m.sscale) / 2 + 0.012, 0.34);   // in front of the frame, clear of the tier ledge
     m.srot = new THREE.Euler(-0.2, 0, 0);
   }));
   const entryOf = new Map(all.map(m => [m.g, m]));
-  let spread = -1;
+  let spread = -1, spreadAt = -1e9, lastSpread = -1, closeAt = -1e9;
+  const setSpread = p => {
+    if (p === spread) return;
+    if (spread >= 0) { lastSpread = spread; closeAt = performance.now(); }
+    spread = p; spreadAt = performance.now();
+  };
+
+  // Sign: starts unlit and flickers on once the rack is stocked.
+  const signMat = rack.getObjectByName('sign_face').material;
+  signMat.emissive = new THREE.Color(0xffffff); signMat.emissiveMap = signMat.map; signMat.emissiveIntensity = 0;
+
+  // Hover sheen: one additive highlight band that sweeps across whichever cover is hovered.
+  const sheenCanvas = document.createElement('canvas'); sheenCanvas.width = 768; sheenCanvas.height = 256;
+  {
+    const c = sheenCanvas.getContext('2d'), g = c.createLinearGradient(256, 0, 512, 0);
+    g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(0.5, 'rgba(255,255,255,0.7)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+    c.fillStyle = g; c.beginPath(); c.moveTo(300, 0); c.lineTo(468, 0); c.lineTo(412, 256); c.lineTo(244, 256); c.closePath(); c.fill();
+  }
+  const sheenTex = new THREE.CanvasTexture(sheenCanvas);
+  sheenTex.repeat.x = 1 / 3;   // window onto the strip: left third and right third are empty
+  const sheen = new THREE.Mesh(new THREE.PlaneGeometry(MW, MH), new THREE.MeshBasicMaterial({
+    map: sheenTex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false, opacity: 0.55,
+  }));
+  sheen.position.z = 0.0012; sheen.visible = false;
+  let sheenAt = -1e9;
 
   let poses = [], wide;
   const P = (tgt, off, k = 1) => ({ tgt, pos: tgt.clone().addScaledVector(off, k) });
@@ -198,7 +222,7 @@ export async function createRackScene(canvas, opts = {}) {
   const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
   const covers = all.map(m => m.g.getObjectByName(`${m.g.name}_cover`)).filter(Boolean);
   const picked = new Set();
-  let hovered = null, hoverStack = -1;
+  let hovered = null, hoverStack = -1, hoverEntry = null;
   // Returns the rack entry under the pointer. A closed stack acts as one target for the whole pile.
   const hit = e => {
     ndc.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
@@ -212,24 +236,34 @@ export async function createRackScene(canvas, opts = {}) {
     canvas.style.cursor = m ? 'pointer' : '';
     hoverStack = closedStack(m) ? m.stack : -1;
     hovered = m && hoverStack < 0 ? m.g.userData.slug : null;
+    const entry = hovered ? m : null;
+    if (entry !== hoverEntry) {
+      hoverEntry = entry;
+      if (entry && !o.reducedMotion) { entry.g.add(sheen); sheenAt = performance.now(); }
+    }
     const hint = hoverStack >= 0 ? `Browse ${stacks[hoverStack].length} more titles` : undefined;
     o.onHover?.(hovered ?? (hint ? '' : null), e.clientX, e.clientY, hint);
   };
-  const onLeave = () => { hovered = null; hoverStack = -1; canvas.style.cursor = ''; o.onHover?.(null, 0, 0); };
+  const onLeave = () => { hovered = null; hoverStack = -1; hoverEntry = null; canvas.style.cursor = ''; o.onHover?.(null, 0, 0); };
   const onClick = e => {
     const m = hit(e);
-    if (!m) { spread = -1; return; }
-    if (closedStack(m)) { spread = m.stack; onMove(e); return; }
+    if (!m) { setSpread(-1); return; }
+    if (closedStack(m)) { setSpread(m.stack); onMove(e); return; }
     o.onPick?.(m.g.userData.slug);
   };
   canvas.addEventListener('pointermove', onMove, { passive: true });
   canvas.addEventListener('pointerleave', onLeave);
   canvas.addEventListener('click', onClick);
 
-  let target = 0, cur = 0, raf, shuffleAt = -1e9;
+  let target = 0, cur = 0, raf, shuffleAt = -1e9, paused = false, lastRender = 0;
+  let wob = 0, wobV = 0, stockedAt = Infinity;   // rack wobble spring, fed by each magazine landing
   const bgA = new THREE.Color(), bgB = new THREE.Color(), bg = new THREE.Color(0xf4f4f5);
   const t0 = performance.now(), sp = new V();
-  const dropAt = o.reducedMotion ? -1e9 : t0 + 250;
+  // Intro: the empty rack makes one full turn while the canvas fades in. The magazines start dropping once the
+  // spin begins to settle (~45% of its time, ~90% of the turn), so they land as the rack eases into place.
+  const spinAt = t0 + 300, spinMs = 2000;
+  const swayAt = spinAt + spinMs;
+  const dropAt = o.reducedMotion ? -1e9 : spinAt + spinMs * 0.45;
   // Fall height that starts every magazine above the top of the current framing (taller on phones).
   let dropH = 0;
   const dropHeight = () => {
@@ -257,13 +291,26 @@ export async function createRackScene(canvas, opts = {}) {
     tilt.x += ((motion ? ptr.x : 0) - tilt.x) * 0.06; tilt.y += ((motion ? ptr.y : 0) - tilt.y) * 0.06;
     const ts = 1 - 0.7 * wmax;
     const hw = clamp01(1 - cur);
-    rack.rotation.y = (o.heroSpin && motion ? Math.sin((now - t0) / 1000 * 0.35) * 0.3 * hw : 0) + tilt.x * 0.09 * ts;
-    rack.rotation.x = tilt.y * 0.025 * ts;
-    if (!dropH) { camera.updateMatrixWorld(); rack.updateMatrixWorld(true); dropH = dropHeight(); }
+    // Ease-out (quartic): starts at full speed and settles into place.
+    const spin = motion ? (1 - Math.pow(1 - clamp01((now - spinAt) / spinMs), 4)) * Math.PI * 2 : 0;
+    const sway = o.heroSpin && motion ? Math.sin(Math.max(0, now - swayAt) / 1000 * 0.35) * 0.3 * hw : 0;
+    rack.rotation.y = spin + sway + tilt.x * 0.09 * ts;
+    wobV += -0.09 * wob - 0.14 * wobV; wob += wobV;
+    rack.rotation.x = tilt.y * 0.025 * ts + wob;
+    if (!dropH) {
+      camera.updateMatrixWorld(); rack.updateMatrixWorld(true); dropH = dropHeight();
+      stockedAt = dropAt + (all.length - 1) * 45 + 500 + 110 * dropH;
+    }
+    let busy = false;   // anything still moving this frame? When not, skip the expensive render.
 
     all.forEach((m, j) => {
       if (m.stack >= 0) {
-        m.sp += ((spread === m.stack ? 1 : 0) - m.sp) * (motion ? 0.12 : 1);
+        // Deal out one at a time (bottom of the pile first); gather back in reverse order.
+        const n = stacks[m.stack].length;
+        const goal = spread === m.stack ? (now > spreadAt + m.si * 70 ? 1 : 0)
+          : (lastSpread === m.stack && now < closeAt + (n - 1 - m.si) * 50 ? 1 : 0);
+        m.sp += ((motion ? goal : spread === m.stack ? 1 : 0) - m.sp) * (motion ? 0.16 : 1);
+        if (Math.abs((spread === m.stack ? 1 : 0) - m.sp) > 1e-3) busy = true;
         const k = ss(clamp01(m.sp));
         m.g.position.lerpVectors(m.pos, m.spos, k);
         m.g.rotation.set(m.rot.x + (m.srot.x - m.rot.x) * k, m.rot.y + (m.srot.y - m.rot.y) * k, m.rot.z + (m.srot.z - m.rot.z) * k);
@@ -271,25 +318,40 @@ export async function createRackScene(canvas, opts = {}) {
         m.g.position.y += Math.sin(Math.PI * k) * 0.06;   // lift clear of the pile while dealing out
         if (hoverStack === m.stack) m.g.position.y += 0.006;
       } else { m.g.position.copy(m.pos); m.g.rotation.copy(m.rot); }
-      // Drop-in: each magazine falls from above the top of the frame and stays hidden until its turn.
-      const tDrop = now - dropAt - j * 45;
+      // Drop-in: each magazine falls from above the top of the frame (hidden until its turn), accelerating like
+      // paper under gravity, then bounces twice and settles. Each landing nudges the rack.
+      const tDrop = now - dropAt - j * 45, total = 500 + 110 * dropH, fallMs = total * 0.7, dir = j % 2 ? 1 : -1;
       m.g.visible = tDrop > 0;
-      const e = clamp01(tDrop / (500 + 110 * dropH));
-      if (e < 1) { m.g.position.y += (1 - easeOut(e)) * dropH; m.g.rotation.z += (1 - easeOut(e)) * 0.35 * (j % 2 ? 1 : -1); }
+      if (tDrop < fallMs) {
+        const f = clamp01(tDrop / fallMs);
+        m.g.position.y += dropH * (1 - f * f); m.g.rotation.z += (1 - f) * 0.35 * dir;
+        busy = true;
+      } else if (tDrop < total) {
+        if (!m.landed) { m.landed = true; wobV += m.tier ? 0.0022 : 0.0012; }
+        const b = (tDrop - fallMs) / (total - fallMs);
+        m.g.position.y += 0.03 * Math.abs(Math.sin(b * Math.PI * 2)) * (1 - b);
+        m.g.rotation.z += 0.05 * Math.sin(b * Math.PI * 3) * (1 - b) * dir;
+        busy = true;
+      } else m.landed = true;
       const s = clamp01((now - shuffleAt - j * 30) / 900);
       if (s > 0 && s < 1) {
+        busy = true;
         m.g.position.y += Math.sin(Math.PI * s) * 0.09;
         if (m.tier) m.g.rotation.y += ss(s) * Math.PI * 2;
         else m.g.rotation.z += Math.sin(Math.PI * s) * 0.25;
       }
       if (m.feat >= 0) {
+        // On its brand panel the featured magazine slides out of the slot, stands up and turns to the camera.
         const f = w[m.feat];
-        m.g.position.addScaledVector(nrm, 0.055 * f);
-        m.g.rotation.x += 0.06 * f;
+        m.g.position.addScaledVector(nrm, 0.1 * f); m.g.position.y += 0.025 * f;
+        m.g.rotation.x += lean * 0.85 * f;
+        m.g.rotation.y += (m.feat % 2 ? 0.16 : -0.16) * f;
       }
       const slug = m.g.userData.slug, ease = motion ? 0.18 : 1;
       m.pick += ((picked.has(slug) ? 1 : 0) - m.pick) * ease;
       m.hov += ((hovered === slug ? 1 : 0) - m.hov) * ease;
+      if (Math.abs((picked.has(slug) ? 1 : 0) - m.pick) > 1e-3 || Math.abs((hovered === slug ? 1 : 0) - m.hov) > 1e-3) busy = true;
+      if (m.hov > 1e-3 && motion) { m.g.rotation.y += ptr.x * 0.12 * m.hov; m.g.rotation.x -= ptr.y * 0.06 * m.hov; }
       const lift = 0.03 * m.pick + 0.012 * m.hov;
       if (m.tier || m.sp > 0.5) m.g.position.addScaledVector(nrm, lift);
       else m.g.position.y += lift * 0.6;
@@ -309,19 +371,42 @@ export async function createRackScene(canvas, opts = {}) {
       bg.copy(bgA.set(t[k])).lerp(bgB.set(t[k + 1]), e);
       renderer.setClearColor(bg);
     }
-    renderer.render(scene, camera);
-    raf = requestAnimationFrame(frame);
+    // Sign: dim until stocked, then a quick flicker and on.
+    const ts2 = motion ? now - stockedAt - 150 : Infinity;
+    const lit = ts2 < 0 ? 0 : ts2 < 80 ? 1 : ts2 < 160 ? 0 : ts2 < 240 ? 1 : ts2 < 300 ? 0.2 : clamp01((ts2 - 300) / 250);
+    signMat.color.setScalar(0.5 + 0.5 * lit); signMat.emissiveIntensity = 0.32 * lit;
+    if (ts2 > -200 && ts2 < 600) busy = true;
+
+    const sh = (now - sheenAt) / 700;
+    sheen.visible = !!hoverEntry && sh < 1;
+    if (sheen.visible) { sheenTex.offset.x = ss(clamp01(sh)) * (2 / 3); busy = true; }
+
+    if (now < swayAt || Math.abs(target - cur) > 1e-4 || Math.abs(wob) + Math.abs(wobV) > 1e-5) busy = true;
+    if (motion && hw > 1e-3) busy = true;   // hero sway is continuous
+    if (Math.abs(ptr.x - tilt.x) + Math.abs(ptr.y - tilt.y) > 1e-3) busy = true;
+    // Render when something moves, plus a slow heartbeat so late-arriving cover art still appears.
+    if (busy || now - lastRender > 250) { renderer.render(scene, camera); lastRender = now; }
+    raf = paused ? 0 : requestAnimationFrame(frame);
   }
   raf = requestAnimationFrame(frame);
+  const onVisibility = () => { if (!document.hidden && !paused && !raf) raf = requestAnimationFrame(frame); };
+  document.addEventListener('visibilitychange', onVisibility);
 
   return {
     setProgress: p => { target = p; },
     setOptions: x => { Object.assign(o, x); if (!o.tints) renderer.setClearColor(0xf4f4f5); },
     shuffle: () => { if (!o.reducedMotion) shuffleAt = performance.now(); },
     setPicked: slugs => { picked.clear(); slugs.forEach(x => picked.add(x)); },
+    // Stop the render loop entirely, e.g. while a modal covers the page or the tab is hidden.
+    setPaused: v => {
+      if (v === paused) return;
+      paused = v;
+      if (!paused && !raf) raf = requestAnimationFrame(frame);
+    },
     resize,
     dispose: () => {
-      cancelAnimationFrame(raf); removeEventListener('pointermove', onPtr);
+      paused = true; cancelAnimationFrame(raf); removeEventListener('pointermove', onPtr);
+      document.removeEventListener('visibilitychange', onVisibility);
       canvas.removeEventListener('pointermove', onMove); canvas.removeEventListener('pointerleave', onLeave); canvas.removeEventListener('click', onClick);
       renderer.dispose();
     },

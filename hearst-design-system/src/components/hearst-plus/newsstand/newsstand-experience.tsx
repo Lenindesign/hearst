@@ -2,13 +2,14 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { FEATURED_SLUGS, TITLES, TITLE_SLUGS, logoSrc } from "./newsstand-catalog";
+import { FEATURED_SLUGS, TITLES, TITLE_SLUGS, coverSrc, logoSrc } from "./newsstand-catalog";
 import { NewsstandTitleModal } from "./newsstand-title-modal";
 
 type Scene = {
   setProgress(p: number): void;
   setOptions(o: object): void;
   setPicked(slugs: string[]): void;
+  setPaused(paused: boolean): void;
   shuffle(): void;
   resize(): void;
   dispose(): void;
@@ -44,13 +45,44 @@ export function NewsstandExperience() {
   const [openSlug, setOpenSlug] = useState<string | null>(null);
   const picksRestored = useRef(false);
 
-  const togglePick = useCallback((slug: string) => {
-    setPicked((cur) => {
-      const on = !cur.includes(slug);
-      setAnnouncement(`${TITLES[slug]?.name ?? slug} ${on ? "added to" : "removed from"} your newsstand`);
-      return on ? [...cur, slug] : cur.filter((s) => s !== slug);
-    });
+  const pickedRef = useRef<string[]>([]);
+  const pillRef = useRef<HTMLButtonElement>(null);
+
+  // Adding a title flies a small copy of its cover from where it was picked into the "My newsstand" pill,
+  // which then pulses. The pill may mount on this same pick, so wait two frames for it.
+  const flyToPill = useCallback((slug: string, from?: DOMRect) => {
+    if (reduced.current) return;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const pill = pillRef.current;
+      if (!pill) return;
+      const pulse = () => pill.animate([{ transform: "scale(1)" }, { transform: "scale(1.12)" }, { transform: "scale(1)" }], { duration: 360, easing: "ease-out" });
+      if (!from || !from.width) { pulse(); return; }
+      const to = pill.getBoundingClientRect();
+      const w = 56, h = w * 550 / 420;
+      const x0 = from.left + from.width / 2 - w / 2, y0 = from.top + from.height / 2 - h / 2;
+      const dx = to.left + to.width / 2 - (x0 + w / 2), dy = to.top + to.height / 2 - (y0 + h / 2);
+      const el = document.createElement("div");
+      const src = coverSrc(slug);
+      Object.assign(el.style, {
+        position: "fixed", left: `${x0}px`, top: `${y0}px`, width: `${w}px`, height: `${h}px`, zIndex: "140", pointerEvents: "none",
+        background: src ? `center / cover url(${src})` : `#fff center / 80% auto no-repeat url(${logoSrc(slug)})`,
+        boxShadow: "0 10px 24px rgba(0,0,0,.28)",
+      });
+      document.body.append(el);
+      el.animate([
+        { transform: "translate(0, 0) scale(1) rotate(0deg)", opacity: 1 },
+        { transform: `translate(${dx * 0.45}px, ${dy * 0.45 - 140}px) scale(0.85) rotate(-10deg)`, opacity: 1, offset: 0.45 },
+        { transform: `translate(${dx}px, ${dy}px) scale(0.2) rotate(6deg)`, opacity: 0.3 },
+      ], { duration: 720, easing: "cubic-bezier(.45,0,.55,1)" }).onfinish = () => { el.remove(); pulse(); };
+    }));
   }, []);
+
+  const togglePick = useCallback((slug: string, from?: DOMRect) => {
+    const on = !pickedRef.current.includes(slug);
+    setAnnouncement(`${TITLES[slug]?.name ?? slug} ${on ? "added to" : "removed from"} your newsstand`);
+    setPicked((cur) => on ? (cur.includes(slug) ? cur : [...cur, slug]) : cur.filter((s) => s !== slug));
+    if (on) flyToPill(slug, from);
+  }, [flyToPill]);
 
   // Restore and persist picks (per-viewer convenience only). Restored after hydration so server and client markup match.
   useEffect(() => {
@@ -64,6 +96,7 @@ export function NewsstandExperience() {
     return () => cancelAnimationFrame(id);
   }, []);
   useEffect(() => {
+    pickedRef.current = picked;
     sceneRef.current?.setPicked(picked);
     if (!picksRestored.current) return;
     try { localStorage.setItem(PICKS_KEY, JSON.stringify(picked)); } catch {}
@@ -148,6 +181,9 @@ export function NewsstandExperience() {
     };
   }, [togglePick]);
 
+  // Nothing on the rack needs to move while a title modal covers it.
+  useEffect(() => { sceneRef.current?.setPaused(!!openSlug); }, [openSlug, sceneReady]);
+
   useEffect(() => {
     remeasure.current();
     if (joined) confirmRef.current?.focus({ preventScroll: true });
@@ -195,7 +231,7 @@ export function NewsstandExperience() {
           picked={picked.includes(openSlug)}
           offerLine={OFFER_LINE}
           primaryButton={primaryButton}
-          onTogglePick={() => togglePick(openSlug)}
+          onTogglePick={(from) => togglePick(openSlug, from)}
           onStartTrial={() => { setOpenSlug(null); startTrial(); }}
           onClose={closeModal}
         />
@@ -212,6 +248,7 @@ export function NewsstandExperience() {
 
       {picked.length > 0 && !joined ? (
         <button
+          ref={pillRef}
           onClick={goToPlans}
           className="fixed bottom-5 left-1/2 z-20 inline-flex min-h-11 -translate-x-1/2 items-center gap-3 whitespace-nowrap bg-background px-5 text-sm font-bold shadow-[0_12px_40px_rgba(0,0,0,.16)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
@@ -268,7 +305,7 @@ export function NewsstandExperience() {
                   <div className="flex flex-wrap items-center gap-2">
                     <button onClick={startTrial} className={`${primaryButton} min-h-11 px-5 text-xs`}>Start free trial</button>
                     <button
-                      onClick={() => togglePick(b.slug)}
+                      onClick={(e) => togglePick(b.slug, e.currentTarget.getBoundingClientRect())}
                       aria-pressed={on}
                       className={`inline-flex min-h-11 items-center border px-4 text-xs font-bold uppercase tracking-[0.08em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${on ? "border-primary text-primary" : "border-foreground hover:border-primary hover:text-primary"}`}
                     >
@@ -296,11 +333,31 @@ export function NewsstandExperience() {
                 {picked.length > 0 ? (
                   <div className="flex w-full flex-col items-center gap-4">
                     <p className="text-sm font-bold">Your newsstand, first in your feed</p>
-                    <ul className="flex max-w-[680px] flex-wrap items-center justify-center gap-x-10 gap-y-6">
-                      {picked.map((slug) => (
-                        <li key={slug}><img src={logoSrc(slug)} alt={TITLES[slug].name} className="h-[18px] w-auto max-w-[110px] object-contain" /></li>
-                      ))}
+                    {/* Picked covers gather into a small fanned pile, dealt in one after another. */}
+                    <ul aria-label="Your picks" className="flex items-end justify-center pb-2 pt-4">
+                      {picked.slice(0, 8).map((slug, i, list) => {
+                        const mid = (list.length - 1) / 2, src = coverSrc(slug);
+                        return (
+                          <li
+                            key={slug}
+                            className="-ml-6 first:ml-0 animate-in fade-in slide-in-from-bottom-8 fill-mode-both duration-500 motion-reduce:animate-none"
+                            style={{ animationDelay: `${i * 80}ms`, zIndex: i }}
+                          >
+                            <div
+                              className="w-16 overflow-hidden bg-white shadow-[0_10px_24px_rgba(0,0,0,.22)] sm:w-20"
+                              style={{ aspectRatio: "420 / 550", transform: `translateY(${Math.abs(i - mid) * 5}px) rotate(${(i - mid) * 6}deg)` }}
+                            >
+                              {src ? (
+                                <img src={src} alt={TITLES[slug].name} className="size-full object-cover" />
+                              ) : (
+                                <img src={logoSrc(slug)} alt={TITLES[slug].name} className="size-full object-contain p-2" />
+                              )}
+                            </div>
+                          </li>
+                        );
+                      })}
                     </ul>
+                    {picked.length > 8 ? <p className="text-xs text-muted-foreground">+ {picked.length - 8} more</p> : null}
                   </div>
                 ) : (
                   <p className="text-sm text-muted-foreground">Pick favorites anytime to put them first in your feed.</p>
@@ -327,7 +384,7 @@ export function NewsstandExperience() {
                     return (
                       <li key={slug}>
                         <button
-                          onClick={() => togglePick(slug)}
+                          onClick={(e) => togglePick(slug, e.currentTarget.getBoundingClientRect())}
                           aria-pressed={on}
                           aria-label={TITLES[slug].name}
                           className={`inline-flex min-h-11 items-center gap-2 border px-3 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${on ? "border-primary bg-primary/10" : "border-transparent hover:border-border"}`}
