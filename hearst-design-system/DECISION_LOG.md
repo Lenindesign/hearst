@@ -2,6 +2,13 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-10-10: Hearst+ headline font is Schibsted Grotesk
+
+- **Context:** Hearst+ is positioned as a cross-brand app rather than a magazine; Newsreader read as a publication serif. Space Grotesk was tried briefly and felt too technical for a daily reading feed.
+- **Decision:** The Hearst+ (`hearst-all`) headline font is Schibsted Grotesk 800, a grotesk designed for a news publisher, loaded through `next/font/google` (open source, no license purchase). Body and UI stay Inter.
+- **Scope:** Surfaces themed `hearst-all` (Hearst+ home, newsstand). Lifestyle and other destinations keep their own headline fonts.
+- **Canonical rule:** `BRAND_STYLES.md` Typography.
+
 ## 2026-10-09: Newsstand promotes the app, not the magazines
 
 - **Context:** The newsstand page sold "every Hearst magazine, one subscription", with per-title tags, "Included" lines and a pick-your-magazines list. Hearst+ is a cross-brand aggregator app, and the app is the product being promoted.

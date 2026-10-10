@@ -86,6 +86,7 @@ function toCssVars(tokens: Record<string, string | number>) {
 
 const runtimeFontStacks: Record<string, string> = {
   Newsreader: 'var(--font-newsreader, "Newsreader"), Georgia, serif',
+  "Schibsted Grotesk": 'var(--font-schibsted-grotesk, "Schibsted Grotesk"), system-ui, sans-serif',
   Livvic: 'var(--font-livvic, "Livvic"), system-ui, sans-serif',
   Petrona: 'var(--font-petrona, "Petrona"), Georgia, serif',
   "Knockout Condensed": 'var(--font-knockout-condensed, "Knockout Condensed", "League Gothic", "Barlow Condensed", Impact, sans-serif)',

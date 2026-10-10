@@ -72,7 +72,7 @@ The **HDS page token** is the theme's published background value. The prototype 
 
 | Theme | Body/UI | Editorial | Headline | Runtime status |
 |---|---|---|---|---|
-| Hearst Magazines / Hearst+ | Inter | Inter | Newsreader 700 | Loaded |
+| Hearst Magazines / Hearst+ | Inter | Inter | Schibsted Grotesk 800 | Loaded |
 | Hearst Autos | Inter | Inter | Barlow Condensed 700 | Loaded |
 | Hearst Lifestyle | Inter | Newsreader | Newsreader 700 | Loaded |
 | Hearst Fashion & Luxury | Inter | Newsreader | Modern MT Pro 400 | Loaded |

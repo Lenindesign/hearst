@@ -270,8 +270,8 @@ export const hearstAllTheme: BrandTheme = {
   name: "Hearst Magazines",
   slug: "hearst-all",
   fontSecondary: "Inter",
-  fontHeadline: "Newsreader",
-  fontHeadlineWeight: 700,
+  fontHeadline: "Schibsted Grotesk",
+  fontHeadlineWeight: 800,
   colors: {
     ...lifestyleTheme.colors,
     "1": "#2B6FAF",
