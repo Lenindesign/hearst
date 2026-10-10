@@ -229,7 +229,6 @@ export function NewsstandExperience() {
                       Preview in Hearst+ <span aria-hidden>→</span>
                     </Link>
                   ) : null}
-                  <p className="text-xs text-muted-foreground">{OFFER_LINE}</p>
                 </article>
               </div>
             </section>
