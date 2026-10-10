@@ -5,32 +5,22 @@ import { createPortal } from "react-dom";
 import Link from "next/link";
 import { X } from "@/components/ui/icons";
 import { useBodyPortalTarget, useModalIsolation } from "@/components/ui/use-modal-isolation";
-import { getHearstAllBrands, getHearstBrandRoute } from "@/lib/hearst-routes";
-import { TITLES, coverSrc, logoSrc } from "./newsstand-catalog";
-
-// The title's publication page in the Hearst+ app, when one exists (Biography has none yet).
-function appRoute(slug: string) {
-  const brandSlug = slug.replace(/_/g, "-");
-  return getHearstAllBrands().some((b) => b.brandSlug === brandSlug) ? getHearstBrandRoute(brandSlug) : null;
-}
+import { PRINT_SLUGS, PRINT_SUBSCRIBE_URL, TITLES, appRoute, coverSrc, logoSrc } from "./newsstand-catalog";
 
 type Props = {
   slug: string;
-  picked: boolean;
   offerLine: string;
   primaryButton: string;
-  onTogglePick(from?: DOMRect): void;
   onStartTrial(): void;
   onClose(): void;
 };
 
 /* eslint-disable @next/next/no-img-element */
-export function NewsstandTitleModal({ slug, picked, offerLine, primaryButton, onTogglePick, onStartTrial, onClose }: Props) {
+export function NewsstandTitleModal({ slug, offerLine, primaryButton, onStartTrial, onClose }: Props) {
   const portalTarget = useBodyPortalTarget();
   const dialogRef = useRef<HTMLElement | null>(null);
   const closeRef = useRef<HTMLButtonElement | null>(null);
   const restoreFocusRef = useRef<HTMLElement | null>(null);
-  const coverRef = useRef<HTMLElement | null>(null);
   const skipRestoreRef = useRef(false);
   const dragRef = useRef<{ y: number; dy: number } | null>(null);
   const title = TITLES[slug];
@@ -126,14 +116,13 @@ export function NewsstandTitleModal({ slug, picked, offerLine, primaryButton, on
           <span aria-hidden className="absolute left-1/2 top-2.5 h-1.5 w-10 -translate-x-1/2 rounded-full bg-white/40 md:hidden" />
           {cover ? (
             <img
-              ref={(el) => { coverRef.current = el; }}
               src={cover}
               alt={`${title.name} cover`}
               className="aspect-[420/550] h-auto w-[42vw] max-w-[180px] object-cover shadow-[0_18px_50px_rgba(0,0,0,.6)] md:w-full md:max-w-[340px]"
             />
           ) : (
             // Digital-only or not yet photographed: a clean logo cover keeps the modal consistent.
-            <div ref={(el) => { coverRef.current = el; }} className="flex aspect-[420/550] w-[42vw] max-w-[180px] flex-col items-center justify-between bg-background p-6 shadow-[0_18px_50px_rgba(0,0,0,.6)] md:w-full md:max-w-[340px] md:p-8">
+            <div className="flex aspect-[420/550] w-[42vw] max-w-[180px] flex-col items-center justify-between bg-background p-6 shadow-[0_18px_50px_rgba(0,0,0,.6)] md:w-full md:max-w-[340px] md:p-8">
               <img src={logoSrc(slug)} alt={`${title.name} logo`} className="h-10 w-full object-contain md:h-14" />
               <p className="headline text-balance text-center text-xl font-black leading-tight md:text-2xl">{title.headline}</p>
               <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-primary">On Hearst+</p>
@@ -147,14 +136,7 @@ export function NewsstandTitleModal({ slug, picked, offerLine, primaryButton, on
             <span className="sr-only">{title.name}: </span>{title.headline}
           </h2>
           <p id="newsstand-title-body" className="text-pretty leading-relaxed text-muted-foreground">{title.body}</p>
-          <p className="flex items-baseline gap-2 border-y border-border py-3 text-sm font-bold">
-            <span className="text-lg leading-none text-primary">+</span>Included with Hearst+: {title.included}
-          </p>
-          <ul className="flex flex-wrap gap-2" aria-label="Topics">
-            {title.tags.map((tag) => (
-              <li key={tag} className="border border-foreground px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em]">{tag}</li>
-            ))}
-          </ul>
+          {/* Hearst+ is the product: start the trial, or see this brand inside the app. Print is a quiet secondary path. */}
           <div className="mt-2 flex flex-wrap items-center gap-2">
             <button
               onClick={() => { skipRestoreRef.current = true; onStartTrial(); }}
@@ -162,22 +144,25 @@ export function NewsstandTitleModal({ slug, picked, offerLine, primaryButton, on
             >
               Start free trial
             </button>
-            <button
-              onClick={() => onTogglePick(coverRef.current?.getBoundingClientRect())}
-              aria-pressed={picked}
-              className={`inline-flex min-h-11 items-center border px-4 text-xs font-bold uppercase tracking-[0.08em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${picked ? "border-primary text-primary" : "border-foreground hover:border-primary hover:text-primary"}`}
-            >
-              {picked ? "✓ In my newsstand" : "+ Add to my newsstand"}
-            </button>
+            {appHref ? (
+              <Link
+                href={appHref}
+                className="inline-flex min-h-11 items-center gap-1.5 border border-foreground px-4 text-xs font-bold uppercase tracking-[0.08em] transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              >
+                Preview in Hearst+ <span aria-hidden>→</span>
+              </Link>
+            ) : null}
           </div>
-          <p className="text-xs text-muted-foreground">{offerLine} All {Object.keys(TITLES).length} titles included.</p>
-          {appHref ? (
-            <Link
-              href={appHref}
-              className="inline-flex min-h-11 items-center gap-1.5 self-start border-t border-border pt-3 text-sm font-bold text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          <p className="text-xs text-muted-foreground">{offerLine} Every Hearst brand in one app.</p>
+          {PRINT_SLUGS.has(slug) ? (
+            <a
+              href={PRINT_SUBSCRIBE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-11 items-center self-start text-xs text-muted-foreground underline underline-offset-4 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
-              Preview {title.name} in the Hearst+ app <span aria-hidden>→</span>
-            </Link>
+              Prefer print? Subscribe to {title.name} magazine
+            </a>
           ) : null}
         </div>
       </section>

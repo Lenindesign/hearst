@@ -16,7 +16,7 @@ export default function HearstPlusNewsstandPage() {
   return (
     <ThemeProvider defaultBrandSlug="hearst-all">
       <div className="min-h-screen bg-background text-foreground">
-        <header className="sticky top-0 z-30 border-b border-border bg-background">
+        <header className="relative z-30 border-b border-border bg-background">
           <div className="mx-auto flex max-w-[1360px] items-center justify-between gap-5 px-5 py-4 md:px-8">
             <Link
               href="/hearst-plus/"

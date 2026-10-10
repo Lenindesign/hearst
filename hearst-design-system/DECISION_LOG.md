@@ -2,6 +2,13 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-10-09: Newsstand promotes the app, not the magazines
+
+- **Context:** The newsstand page sold "every Hearst magazine, one subscription", with per-title tags, "Included" lines and a pick-your-magazines list. Hearst+ is a cross-brand aggregator app, and the app is the product being promoted.
+- **Decision:** Lead with "Every Hearst brand. One app." Remove topic tags, "Included" lines and the whole `My newsstand` picking flow (panel and modal toggles, pill, fly-to-pill, plans-grid picks, confirmation pile). Every title modal and brand panel offers `Start free trial` and `Preview in Hearst+`; print remains as a quiet subscription link for titles still in print.
+- **Scope:** `/hearst-plus/newsstand/` only.
+- **Canonical rule:** `APP_RULES.md` navigation rules (newsstand entries).
+
 ## 2026-10-04: Quieter river cards
 
 - **Context:** The Save / More like this / comments / Hide row under every river card added too much information to the feed.

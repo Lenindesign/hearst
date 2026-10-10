@@ -3,6 +3,7 @@ import * as THREE from 'three';
 const V = THREE.Vector3;
 const clamp01 = x => Math.max(0, Math.min(1, x));
 const MW = 0.21, MH = 0.275;   // magazine size, matching rack-model.js
+const PULL_OUT = 0.1, PULL_UP = 0.025;   // how far a featured magazine slides out on its brand panel
 const ss = x => x * x * (3 - 2 * x);
 const C = { paper: '#f6f4ee', black: '#111111', blue: '#0099cc', magenta: '#e1208d', yellow: '#ffc42f', grey: '#5d6770', greyL: '#a7a8a9', white: '#ffffff' };
 
@@ -110,6 +111,7 @@ export async function createRackScene(canvas, opts = {}) {
   const rim = new THREE.DirectionalLight(0xffffff, 0.9); rim.position.set(-1, 3, -3);
   const spot = new THREE.SpotLight(0xffffff, 0, 4, 0.36, 0.7, 1.5);
   scene.add(hemi, key, fill, rim, spot, spot.target);
+  [hemi, key, fill, rim, spot].forEach(l => l.layers.enableAll());
   const ground = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.ShadowMaterial({ opacity: 0.16 }));
   ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
 
@@ -135,7 +137,7 @@ export async function createRackScene(canvas, opts = {}) {
   rack.traverse(g => {
     if (/^magazine_t\d_s\d$/.test(g.name) || /^shelf_stack_\d_copy_\d+$/.test(g.name))
       all.push({ g, pos: g.position.clone(), rot: g.rotation.clone(), tier: g.name.startsWith('magazine_'), feat: mags.findIndex(m => m.g === g),
-        stack: g.name.startsWith('shelf_stack_') ? Number(g.name[12]) - 1 : -1, pick: 0, hov: 0, sp: 0, landed: false });
+        stack: g.name.startsWith('shelf_stack_') ? Number(g.name[12]) - 1 : -1, hov: 0, sp: 0, landed: false });
   });
   all.sort((a, b) => b.pos.y - a.pos.y || a.pos.x - b.pos.x);
 
@@ -176,6 +178,107 @@ export async function createRackScene(canvas, opts = {}) {
   sheen.position.z = 0.0012; sheen.visible = false;
   let sheenAt = -1e9;
 
+  // Focus pass: while a brand panel is up, the rest of the scene is rendered off-screen, blurred and darkened,
+  // and the featured magazine (moved to layer 1) is drawn sharp on top.
+  const bufSize = new THREE.Vector2();
+  const rtOpts = { type: THREE.HalfFloatType, depthBuffer: true };
+  const rtA = new THREE.WebGLRenderTarget(1, 1, rtOpts), rtB = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, depthBuffer: false });
+  const quadVert = 'varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }';
+  const blurMat = new THREE.ShaderMaterial({
+    uniforms: { tDiffuse: { value: null }, dir: { value: new THREE.Vector2() } },
+    vertexShader: quadVert,
+    fragmentShader: `uniform sampler2D tDiffuse; uniform vec2 dir; varying vec2 vUv;
+      void main() {
+        vec4 c = texture2D(tDiffuse, vUv) * 0.227027;
+        c += texture2D(tDiffuse, vUv + dir * 1.3846) * 0.3162162; c += texture2D(tDiffuse, vUv - dir * 1.3846) * 0.3162162;
+        c += texture2D(tDiffuse, vUv + dir * 3.2308) * 0.0702703; c += texture2D(tDiffuse, vUv - dir * 3.2308) * 0.0702703;
+        gl_FragColor = c;
+      }`,
+    depthTest: false, depthWrite: false, toneMapped: false,
+  });
+  // Composite: tone-map the scene the same way the direct render does, lay it over the page background,
+  // then darken. Keeping the background out of tone mapping avoids a shade jump when focus starts.
+  const compMat = new THREE.ShaderMaterial({
+    uniforms: { tDiffuse: { value: null }, dark: { value: 0 }, bg: { value: new THREE.Color(0xf4f4f5) } },
+    vertexShader: quadVert,
+    fragmentShader: `uniform sampler2D tDiffuse; uniform float dark; uniform vec3 bg; varying vec2 vUv;
+      void main() {
+        vec4 c = texture2D(tDiffuse, vUv);
+        gl_FragColor = vec4(c.a > 0.0 ? c.rgb / c.a : vec3(0.0), 1.0);
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+        gl_FragColor = vec4(mix(bg, gl_FragColor.rgb, c.a) * (1.0 - dark), 1.0);
+      }`,
+    depthTest: false, depthWrite: false, toneMapped: true,
+  });
+  compMat.uniforms.bg.value.convertLinearToSRGB();   // compared against output-space colour
+  const quadScene = new THREE.Scene(), quadCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+  const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), blurMat); quadScene.add(quad);
+  let focusGroup = null;
+  const setFocus = g => {
+    if (g === focusGroup) return;
+    focusGroup?.traverse(o => o.layers.set(0));
+    g?.traverse(o => o.layers.set(1));
+    focusGroup = g;
+  };
+  function renderFrame(focus) {
+    if (focus < 0.003 || !focusGroup) { camera.layers.set(0); camera.layers.enable(1); renderer.render(scene, camera); return; }
+    camera.layers.set(0);
+    renderer.setClearColor(0xf4f4f5, 0);
+    renderer.setRenderTarget(rtA); renderer.clear(); renderer.render(scene, camera);
+    renderer.setClearColor(0xf4f4f5, 1);
+    const radius = focus * 3.2 * renderer.getPixelRatio();
+    quad.material = blurMat;
+    for (let i = 0; i < 2; i++) {
+      blurMat.uniforms.tDiffuse.value = rtA.texture; blurMat.uniforms.dir.value.set(radius / bufSize.x, 0);
+      renderer.setRenderTarget(rtB); renderer.render(quadScene, quadCam);
+      blurMat.uniforms.tDiffuse.value = rtB.texture; blurMat.uniforms.dir.value.set(0, radius / bufSize.y);
+      renderer.setRenderTarget(rtA); renderer.render(quadScene, quadCam);
+    }
+    renderer.setRenderTarget(null);
+    quad.material = compMat; compMat.uniforms.tDiffuse.value = rtA.texture; compMat.uniforms.dark.value = 0.5 * focus;
+    renderer.render(quadScene, quadCam);
+    renderer.autoClear = false; renderer.clearDepth();
+    camera.layers.set(1); renderer.render(scene, camera);
+    renderer.autoClear = true; camera.layers.set(0); camera.layers.enable(1);
+  }
+
+  // Desktop brand framing: choose the closest camera at which the pulled-out magazine is ~106% of the height
+  // below the header (a slight, even crop top and bottom) without reaching the panel, centered vertically in that area and
+  // horizontally in the free side of the screen.
+  const fitCam = new THREE.PerspectiveCamera(), probe = new THREE.Object3D(), corner = new V(), ndcP = new V();
+  function fitBrandPose(c, i, side) {
+    fitCam.fov = camera.fov; fitCam.aspect = camera.aspect; fitCam.near = camera.near; fitCam.far = camera.far;
+    fitCam.updateProjectionMatrix();
+    probe.position.copy(c); probe.rotation.set(-lean + lean * 0.85, i % 2 ? 0.16 : -0.16, 0); probe.updateMatrixWorld(true);
+    const corners = [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([x, y]) => probe.localToWorld(corner.set(x * MW / 2, y * MH / 2, 0)).clone());
+    const avail = 1 - topInset / innerHeight;               // fraction of the viewport below the header
+    const wantY = -topInset / innerHeight;                  // NDC y of the middle of that area
+    const wantX = -0.42 * side;                             // NDC x: middle of the side the panel leaves free
+    const tanH = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+    const place = d => {
+      const tgt = c.clone(), pos = tgt.clone().addScaledVector(nrm, d).add(new V(-0.3 * side * d / 0.78, 0.03, 0));
+      for (let it = 0; it < 3; it++) {                     // nudge until the magazine center lands where wanted
+        fitCam.position.copy(pos); fitCam.lookAt(tgt); fitCam.updateMatrixWorld();
+        ndcP.copy(c).project(fitCam);
+        const dist = pos.distanceTo(c);
+        const dx = (ndcP.x - wantX) * dist * tanH * camera.aspect, dy = (ndcP.y - wantY) * dist * tanH;
+        tgt.x += dx; pos.x += dx; tgt.y += dy; pos.y += dy;
+      }
+      fitCam.position.copy(pos); fitCam.lookAt(tgt); fitCam.updateMatrixWorld();
+      let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+      corners.forEach(q => { ndcP.copy(q).project(fitCam); x0 = Math.min(x0, ndcP.x); x1 = Math.max(x1, ndcP.x); y0 = Math.min(y0, ndcP.y); y1 = Math.max(y1, ndcP.y); });
+      return { pose: { tgt, pos }, h: (y1 - y0) / 2, w: (x1 - x0) / 2 };
+    };
+    let best = null;
+    for (let d = 0.3; d <= 2.5; d += 0.01) {
+      const r = place(d);
+      best = r;
+      if (r.h <= 1.06 * avail && r.w <= 0.44) break;
+    }
+    return best.pose;
+  }
+
   let poses = [], wide;
   const P = (tgt, off, k = 1) => ({ tgt, pos: tgt.clone().addScaledVector(off, k) });
   function buildPoses() {
@@ -185,9 +288,19 @@ export async function createRackScene(canvas, opts = {}) {
     wide = mob ? P(new V(0, 1.0, 0), new V(0.8, 0.3, 3.8), k) : P(new V(0, 0.92, 0), new V(1.2, 0.38, 4.0), k);
     const brands = mags.map((m, i) => {
       const side = i % 2 ? -1 : 1;                       // alternate: magazine left / panel right, then swap
-      const tgt = m.world.clone().add(mob ? new V(0, -0.13, 0) : new V(0.15 * side, 0, 0));
-      const d = mob ? 1.1 * Math.max(1, 0.5 / a) : 0.78 * k;
-      return { tgt, pos: tgt.clone().addScaledVector(nrm, d).add(new V(mob ? 0.08 : -0.3 * side, 0.03, 0)) };
+      // Where the magazine sits once pulled out of its slot (not the empty slot).
+      const c = m.world.clone().addScaledVector(nrm, PULL_OUT).add(new V(0, PULL_UP, 0));
+      if (mob) {
+        const tgt = c.clone().add(new V(0, -0.13, 0));
+        const d = 1.1 * Math.max(1, 0.5 / a);
+        const pose = { tgt, pos: tgt.clone().addScaledVector(nrm, d).add(new V(0.08, 0.03, 0)) };
+        // Phones: the panel sits below, so drop the magazine a full header height clear of the sticky header.
+        const fh = 2 * pose.pos.distanceTo(tgt) * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+        const up = topInset / innerHeight * fh;
+        pose.tgt.y += up; pose.pos.y += up;
+        return pose;
+      }
+      return fitBrandPose(c, i, side);
     });
     const outro = mob ? P(new V(0, 2.0, 0), new V(0, -0.5, 6.2), k) : P(new V(0, 1.95, 0), new V(0, -0.6, 6.4), k);
     poses = [hero, ...brands, outro];
@@ -205,10 +318,17 @@ export async function createRackScene(canvas, opts = {}) {
     camera.position.copy(tp); camera.lookAt(tt);
   }
 
+  let topInset = 0;
   function resize() {
     const w = innerWidth, h = innerHeight;
     renderer.setSize(w, h, false);
     camera.aspect = w / h; camera.updateProjectionMatrix();
+    // Only a pinned header covers the scene while scrolling; a header in normal flow scrolls away.
+    const header = document.querySelector('header');
+    const pinned = header && ['sticky', 'fixed'].includes(getComputedStyle(header).position);
+    topInset = pinned ? header.getBoundingClientRect().height : 0;
+    renderer.getDrawingBufferSize(bufSize);
+    rtA.setSize(bufSize.x, bufSize.y); rtB.setSize(bufSize.x, bufSize.y);
     buildPoses();
   }
   resize();
@@ -218,16 +338,19 @@ export async function createRackScene(canvas, opts = {}) {
   const onPtr = e => { if (e.pointerType === 'touch') return; ptr.x = e.clientX / innerWidth * 2 - 1; ptr.y = e.clientY / innerHeight * 2 - 1; };
   addEventListener('pointermove', onPtr, { passive: true });
 
-  // Cover picking: hover lifts a magazine, click toggles it in the reader's newsstand.
+  // Cover interaction: hover lifts and zooms a magazine; click opens its Hearst+ preview modal.
   const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+  ray.layers.enableAll();
   const covers = all.map(m => m.g.getObjectByName(`${m.g.name}_cover`)).filter(Boolean);
-  const picked = new Set();
-  let hovered = null, hoverStack = -1, hoverEntry = null;
+  let hovered = null, hoverStack = -1, hoverEntry = null, lastHoverAt = -1e9;
+  const hitPoint = new V();   // world point under the cursor on the hovered cover
   // Returns the rack entry under the pointer. A closed stack acts as one target for the whole pile.
   const hit = e => {
     ndc.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
     ray.setFromCamera(ndc, camera);
-    const g = ray.intersectObjects(covers, false)[0]?.object.parent;
+    const h = ray.intersectObjects(covers, false)[0];
+    if (h) hitPoint.copy(h.point);
+    const g = h?.object.parent;
     return g ? entryOf.get(g) ?? null : null;
   };
   const closedStack = m => m && m.stack >= 0 && m.stack !== spread;
@@ -257,6 +380,9 @@ export async function createRackScene(canvas, opts = {}) {
 
   let target = 0, cur = 0, raf, shuffleAt = -1e9, paused = false, lastRender = 0;
   let wob = 0, wobV = 0, stockedAt = Infinity;   // rack wobble spring, fed by each magazine landing
+  let camZ = 0;                                   // roll-over camera zoom toward the hovered magazine
+  let swayClock = 0, lastFrame = 0;               // sway time; paused while zoomed so covers hold under the cursor
+  const zoomAt = new V(), zoomGoal = new V(), dolly = new V();
   const bgA = new THREE.Color(), bgB = new THREE.Color(), bg = new THREE.Color(0xf4f4f5);
   const t0 = performance.now(), sp = new V();
   // Intro: the empty rack makes one full turn while the canvas fades in. The magazines start dropping once the
@@ -288,12 +414,31 @@ export async function createRackScene(canvas, opts = {}) {
     w.forEach((x, i) => { if (x > wmax) { wmax = x; wi = i; } });
 
     const motion = !o.reducedMotion;
+
+    // Roll-over stand zoom: dolly the camera part of the way toward the hovered magazine. Moving along the ray
+    // from the camera to that magazine keeps it under the cursor while the whole stand grows around it.
+    // Zoom toward the exact point under the cursor so it stays put; hold briefly after leaving a cover so
+    // crossing the gap between two covers doesn't pulse the zoom.
+    if (hoverEntry) { lastHoverAt = now; zoomGoal.copy(hitPoint); }
+    const wantZoom = motion && now - lastHoverAt < 400 && wmax < 0.5 ? 1 : 0;
+    let zoomBusy = false;
+    if (camZ < 1e-3) zoomAt.copy(zoomGoal); else zoomAt.lerp(zoomGoal, 0.12);   // glide between covers
+    camZ += (wantZoom - camZ) * 0.08;
+    if (camZ < 1e-4) camZ = 0;
+    if (camZ > 0) {
+      dolly.subVectors(zoomAt, camera.position).multiplyScalar(0.18 * ss(Math.min(1, camZ)) * (1 - wmax));
+      camera.position.add(dolly); tt.add(dolly); camera.lookAt(tt);
+      if (Math.abs(wantZoom - camZ) > 1e-3 || zoomAt.distanceToSquared(zoomGoal) > 1e-8) zoomBusy = true;
+    }
+
     tilt.x += ((motion ? ptr.x : 0) - tilt.x) * 0.06; tilt.y += ((motion ? ptr.y : 0) - tilt.y) * 0.06;
     const ts = 1 - 0.7 * wmax;
     const hw = clamp01(1 - cur);
     // Ease-out (quartic): starts at full speed and settles into place.
     const spin = motion ? (1 - Math.pow(1 - clamp01((now - spinAt) / spinMs), 4)) * Math.PI * 2 : 0;
-    const sway = o.heroSpin && motion ? Math.sin(Math.max(0, now - swayAt) / 1000 * 0.35) * 0.3 * hw : 0;
+    if (now > swayAt) swayClock += Math.min(50, now - (lastFrame || now)) * (1 - Math.min(1, camZ * 1.5));
+    lastFrame = now;
+    const sway = o.heroSpin && motion ? Math.sin(swayClock / 1000 * 0.35) * 0.3 * hw : 0;
     rack.rotation.y = spin + sway + tilt.x * 0.09 * ts;
     wobV += -0.09 * wob - 0.14 * wobV; wob += wobV;
     rack.rotation.x = tilt.y * 0.025 * ts + wob;
@@ -301,7 +446,7 @@ export async function createRackScene(canvas, opts = {}) {
       camera.updateMatrixWorld(); rack.updateMatrixWorld(true); dropH = dropHeight();
       stockedAt = dropAt + (all.length - 1) * 45 + 500 + 110 * dropH;
     }
-    let busy = false;   // anything still moving this frame? When not, skip the expensive render.
+    let busy = zoomBusy;   // anything still moving this frame? When not, skip the expensive render.
 
     all.forEach((m, j) => {
       if (m.stack >= 0) {
@@ -317,7 +462,7 @@ export async function createRackScene(canvas, opts = {}) {
         m.g.scale.setScalar(1 + (m.sscale - 1) * k);
         m.g.position.y += Math.sin(Math.PI * k) * 0.06;   // lift clear of the pile while dealing out
         if (hoverStack === m.stack) m.g.position.y += 0.006;
-      } else { m.g.position.copy(m.pos); m.g.rotation.copy(m.rot); }
+      } else { m.g.position.copy(m.pos); m.g.rotation.copy(m.rot); m.g.scale.setScalar(1); }
       // Drop-in: each magazine falls from above the top of the frame (hidden until its turn), accelerating like
       // paper under gravity, then bounces twice and settles. Each landing nudges the rack.
       const tDrop = now - dropAt - j * 45, total = 500 + 110 * dropH, fallMs = total * 0.7, dir = j % 2 ? 1 : -1;
@@ -343,21 +488,24 @@ export async function createRackScene(canvas, opts = {}) {
       if (m.feat >= 0) {
         // On its brand panel the featured magazine slides out of the slot, stands up and turns to the camera.
         const f = w[m.feat];
-        m.g.position.addScaledVector(nrm, 0.1 * f); m.g.position.y += 0.025 * f;
+        m.g.position.addScaledVector(nrm, PULL_OUT * f); m.g.position.y += PULL_UP * f;
         m.g.rotation.x += lean * 0.85 * f;
         m.g.rotation.y += (m.feat % 2 ? 0.16 : -0.16) * f;
       }
       const slug = m.g.userData.slug, ease = motion ? 0.18 : 1;
-      m.pick += ((picked.has(slug) ? 1 : 0) - m.pick) * ease;
       m.hov += ((hovered === slug ? 1 : 0) - m.hov) * ease;
-      if (Math.abs((picked.has(slug) ? 1 : 0) - m.pick) > 1e-3 || Math.abs((hovered === slug ? 1 : 0) - m.hov) > 1e-3) busy = true;
+      if (Math.abs((hovered === slug ? 1 : 0) - m.hov) > 1e-3) busy = true;
       if (m.hov > 1e-3 && motion) { m.g.rotation.y += ptr.x * 0.12 * m.hov; m.g.rotation.x -= ptr.y * 0.06 * m.hov; }
-      const lift = 0.03 * m.pick + 0.012 * m.hov;
+      // Roll-over zoom: the hovered magazine grows ~1.4x and comes forward so it clears its neighbours.
+      // Fades out on brand panels, where the featured magazine already fills the screen.
+      const hz = ss(clamp01(m.hov)) * (1 - wmax);
+      const lift = (0.012 + 0.07 * hz) * m.hov;
       if (m.tier || m.sp > 0.5) m.g.position.addScaledVector(nrm, lift);
       else m.g.position.y += lift * 0.6;
+      if (hz > 1e-4) m.g.scale.multiplyScalar(1 + 0.4 * hz);
     });
 
-    const dim = o.dim ? 1 - 0.38 * wmax : 1;
+    const dim = o.dim ? 1 - 0.12 * wmax : 1;
     hemi.intensity = 1.5 * dim; key.intensity = 2.4 * dim; fill.intensity = 0.7 * dim;
     if (wi >= 0) {
       const m = mags[wi];
@@ -385,7 +533,8 @@ export async function createRackScene(canvas, opts = {}) {
     if (motion && hw > 1e-3) busy = true;   // hero sway is continuous
     if (Math.abs(ptr.x - tilt.x) + Math.abs(ptr.y - tilt.y) > 1e-3) busy = true;
     // Render when something moves, plus a slow heartbeat so late-arriving cover art still appears.
-    if (busy || now - lastRender > 250) { renderer.render(scene, camera); lastRender = now; }
+    setFocus(wi >= 0 && wmax > 0.003 ? mags[wi].g : null);
+    if (busy || now - lastRender > 250) { renderFrame(wmax); lastRender = now; }
     raf = paused ? 0 : requestAnimationFrame(frame);
   }
   raf = requestAnimationFrame(frame);
@@ -396,7 +545,6 @@ export async function createRackScene(canvas, opts = {}) {
     setProgress: p => { target = p; },
     setOptions: x => { Object.assign(o, x); if (!o.tints) renderer.setClearColor(0xf4f4f5); },
     shuffle: () => { if (!o.reducedMotion) shuffleAt = performance.now(); },
-    setPicked: slugs => { picked.clear(); slugs.forEach(x => picked.add(x)); },
     // Stop the render loop entirely, e.g. while a modal covers the page or the tab is hidden.
     setPaused: v => {
       if (v === paused) return;
@@ -408,7 +556,7 @@ export async function createRackScene(canvas, opts = {}) {
       paused = true; cancelAnimationFrame(raf); removeEventListener('pointermove', onPtr);
       document.removeEventListener('visibilitychange', onVisibility);
       canvas.removeEventListener('pointermove', onMove); canvas.removeEventListener('pointerleave', onLeave); canvas.removeEventListener('click', onClick);
-      renderer.dispose();
+      rtA.dispose(); rtB.dispose(); blurMat.dispose(); compMat.dispose(); renderer.dispose();
     },
   };
 }
