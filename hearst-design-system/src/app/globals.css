@@ -91,6 +91,15 @@
   --hp-motion-standard: 240ms;
 }
 
+/* Hearst+ modules (any surface carrying the card shadow) have no outline stroke; the shadow and the
+   surface color separate them from the page. The 1px border width stays so layouts do not shift.
+   Inner dividers on child elements are untouched. */
+.hearst-plus-theme [class*="hp-shadow-card"],
+.hearst-plus-theme [class*="hp-shadow-card"]:hover,
+.hearst-plus-theme [class*="hp-shadow-card"]:focus-within {
+  border-color: transparent !important;
+}
+
 .hearst-community-page {
   font-family: var(--community-font-ui);
 }

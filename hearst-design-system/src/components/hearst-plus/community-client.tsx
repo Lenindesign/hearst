@@ -675,7 +675,7 @@ export function CommunityComposer({ groups, defaultGroup }: { groups: CommunityG
             <div className="grid gap-2">
               <div className="relative">
                 {/* eslint-disable-next-line @next/next/no-img-element -- a local data URL preview */}
-                <img src={photo} alt={photoAlt || "Photo for your post"} className="max-h-72 w-full rounded-[8px] border border-[var(--hp-border)] object-cover" />
+                <img src={photo} alt={photoAlt || "Photo for your post"} className="max-h-72 w-full rounded-[8px] object-cover" />
                 <button
                   type="button"
                   onClick={() => {
@@ -785,7 +785,7 @@ function ThreadCard({ thread }: { thread: CommunityFeedThread }) {
         </h3>
         <span className="hearst-community-copy mt-2 line-clamp-2 block text-sm leading-6 text-[var(--hp-text-ui)]">{thread.body}</span>
         {thread.posterImage ? (
-          <span className="relative mt-4 block aspect-[16/9] w-full overflow-hidden rounded-[8px] border border-[var(--hp-border)] bg-[var(--community-surface-soft)]">
+          <span className="relative mt-4 block aspect-[16/9] w-full overflow-hidden rounded-[8px] bg-[var(--community-surface-soft)]">
             <Image
               src={thread.posterImage}
               alt={thread.posterAlt ?? thread.title}
@@ -833,7 +833,7 @@ function LocalPostCard({ post }: { post: LocalPost }) {
       {post.body ? <p className="hearst-community-copy mt-2 whitespace-pre-line text-sm leading-6 text-[var(--hp-text-ui)]">{post.body}</p> : null}
       {post.image ? (
         // eslint-disable-next-line @next/next/no-img-element -- a local data URL from the reader's device
-        <img src={post.image} alt={post.imageAlt ?? post.title} className="mt-4 aspect-[16/9] w-full rounded-[8px] border border-[var(--hp-border)] object-cover" />
+        <img src={post.image} alt={post.imageAlt ?? post.title} className="mt-4 aspect-[16/9] w-full rounded-[8px] object-cover" />
       ) : null}
       {post.status === "live" ? (
         <div className="mt-3">

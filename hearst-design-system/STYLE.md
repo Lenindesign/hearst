@@ -75,6 +75,7 @@ The complete brand registry is documented in `BRAND_STYLES.md`. Canonical HDS pu
 
 ## Cards and river modules
 
+- Hearst+ modules (cards, rails, sidebar modules, ads, community panels) have no outline stroke. The card shadow (`--hp-shadow-card`) and surface color separate them from the page; a theme rule in `globals.css` makes the border of any `hp-shadow-card` surface transparent, including on hover and focus. Do not add outline borders to module surfaces or to the photos inside them; inner dividers between rows are allowed. Focus stays visible through rings.
 - Delish featured-story indicators map in order to Delish palette colors 1–5. Changing the active story changes only the indicator width; it does not move the colors between positions. All other brands and destination-wide rivers retain the shared primary/muted indicator treatment.
 - River-card summaries display no more than three lines with an ellipsis. Shorter existing limits may remain.
 - Do not show generic `Article`, `Gallery`, or `Watch` chips on river cards.

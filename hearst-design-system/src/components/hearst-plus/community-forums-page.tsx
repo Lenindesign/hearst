@@ -375,7 +375,7 @@ export function CommunityForumsPage({ activeBrandSlug, activeGroupSlug, activeTh
                   </h1>
                   <p className="hearst-community-copy mt-3 max-w-2xl text-base leading-7 text-[var(--hp-text-ui)]">{activeThread.body}</p>
                   {activeThread.posterImage ? (
-                    <div className="relative mt-4 aspect-[16/9] w-full overflow-hidden rounded-[8px] border border-[var(--hp-border)] bg-[var(--community-surface-soft)]">
+                    <div className="relative mt-4 aspect-[16/9] w-full overflow-hidden rounded-[8px] bg-[var(--community-surface-soft)]">
                       <Image
                         src={activeThread.posterImage}
                         alt={activeThread.posterAlt ?? activeThread.title}
