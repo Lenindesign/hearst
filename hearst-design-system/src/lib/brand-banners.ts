@@ -4,7 +4,9 @@
 // HOT ROD, Oprah Daily, Runner's World; unsuitable: Delish's app ad, Woman's Day's edge-to-edge wordmark) use a
 // contextual photo from one of their own stories instead, with the white logo and a scrim on top.
 export type BrandBanner = {
-  src: string;
+  /** Banner art; leave out for a solid block in `background` with the overlaid logo. */
+  src?: string;
+  background?: string;
   alt: string;
   width: number;
   height: number;
@@ -63,10 +65,12 @@ export const brandBanners: Partial<Record<string, BrandBanner>> = {
     height: 440,
   },
   "harpers-bazaar": {
-    src: "/images/brand-banners/harpers-bazaar.jpg",
+    // Solid black with the white Harper's Bazaar SVG logo (Yahoo's art was the wordmark on white).
+    background: "#000",
     alt: "Harper's Bazaar",
     width: 2560,
     height: 440,
+    overlayLogo: true,
   },
   "house-beautiful": {
     src: "/images/brand-banners/house-beautiful.jpg",

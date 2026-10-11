@@ -1338,21 +1338,26 @@ export function MainNav({
           className="relative w-full overflow-hidden max-sm:aspect-[3/1]"
           style={{ aspectRatio: `${mastheadBanner.width - (mastheadBanner.cropX?.left ?? 0) - (mastheadBanner.cropX?.right ?? 0)} / ${mastheadBanner.height}` }}
         >
-          <Image
-            src={mastheadBanner.src}
-            alt={mastheadBanner.alt}
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-            style={{
-              objectPosition: `${(() => {
-                const left = mastheadBanner.cropX?.left ?? 0;
-                const right = mastheadBanner.cropX?.right ?? 0;
-                return left + right === 0 ? 50 : (left / (left + right)) * 100;
-              })()}% 50%`,
-            }}
-          />
+          {mastheadBanner.src ? (
+            <Image
+              src={mastheadBanner.src}
+              alt={mastheadBanner.alt}
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover"
+              style={{
+                objectPosition: `${(() => {
+                  const left = mastheadBanner.cropX?.left ?? 0;
+                  const right = mastheadBanner.cropX?.right ?? 0;
+                  return left + right === 0 ? 50 : (left / (left + right)) * 100;
+                })()}% 50%`,
+              }}
+            />
+          ) : (
+            // A solid banner: the brand color block with the overlaid logo carrying the brand name.
+            <div role="img" aria-label={mastheadBanner.alt} className="absolute inset-0" style={{ background: mastheadBanner.background ?? "#000" }} />
+          )}
         </div>
         {mastheadBanner.scrim ? <div aria-hidden className="pointer-events-none absolute inset-0 bg-black/40" /> : null}
         {mastheadBanner.overlayLogo && selectedBrand ? (
@@ -1360,7 +1365,11 @@ export function MainNav({
             <BrandLogo
               slug={selectedBrand.slug}
               color="#fff"
-              className="block h-10 max-w-full drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] sm:h-16 lg:h-24 [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full"
+              className={cn(
+                "block max-w-full [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full",
+                // Solid banners have nothing but the logo, so it fills most of the banner height.
+                mastheadBanner.src ? "h-10 drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] sm:h-16 lg:h-24" : "h-16 sm:h-28 lg:h-40",
+              )}
             />
           </div>
         ) : null}
