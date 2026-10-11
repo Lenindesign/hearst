@@ -48,6 +48,7 @@ import { FourAcrossGrid } from "./fre/four-across-grid";
 import { SiteFooter } from "./fre/site-footer";
 import { LocalWeather } from "@/components/hearst-plus/local-weather";
 import { brandBanners } from "@/lib/brand-banners";
+import { BrandInstagramModule } from "@/components/hearst-plus/brand-instagram-module";
 import {
   Bookmark,
   Camera,
@@ -6031,6 +6032,9 @@ function LifestyleRiverHomePage({
 
         <aside className="min-w-0 space-y-5 lg:sticky lg:top-[108px] lg:max-h-[calc(100dvh-132px)] lg:self-start lg:overflow-y-auto lg:pr-1">
           <ContextualRiverAdvertisement ad={rightRailAd} />
+          {initialBrandSlug && initialBrandName ? (
+            <BrandInstagramModule brandSlug={initialBrandSlug} brandName={initialBrandName} />
+          ) : null}
           {!singleBrandName && <LocalNewsRail />}
           {showStakeholderTools ? (
             <>
