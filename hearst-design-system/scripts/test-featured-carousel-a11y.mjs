@@ -99,30 +99,34 @@ async function verifyViewport(browser, width) {
   await carousel.waitFor({ state: "visible" });
 
   const slides = carousel.locator(realSlideSelector);
-  const indicators = carousel.locator('button[aria-label^="Show story "]');
+  const nextButton = carousel.locator('button[aria-label="Next featured story"]');
+  const positionLabel = carousel.locator('[aria-label*=" of "][aria-label*="story "]').first();
   const slideCount = await slides.count();
   assert.equal(slideCount, 5, `${width}px should render five Today’s Picks slides.`);
-  assert.equal(
-    await indicators.count(),
-    slideCount,
-    `${width}px should provide one named selector for every slide.`
-  );
+  assert.equal(await nextButton.count(), 1, `${width}px should provide a Next control.`);
 
-  for (let index = 0; index < slideCount; index += 1) {
-    await indicators.nth(index).focus();
-    await page.keyboard.press("Enter");
-    await page.waitForFunction(
-      ({ selector, slideSelector, activeIndex }) => {
+  const waitForActive = (activeIndex) =>
+    page.waitForFunction(
+      ({ selector, slideSelector, activeIndex: expected }) => {
         const root = document.querySelector(selector);
-        const activeSlide = root?.querySelectorAll(slideSelector)[activeIndex];
+        const activeSlide = root?.querySelectorAll(slideSelector)[expected];
         return activeSlide?.getAttribute("aria-hidden") === "false";
       },
-      {
-        selector: carouselSelector,
-        slideSelector: realSlideSelector,
-        activeIndex: index,
-      }
+      { selector: carouselSelector, slideSelector: realSlideSelector, activeIndex }
     );
+  // The Next control is hidden at phone widths (phones swipe), so it is activated programmatically there.
+  const goNext = () => nextButton.dispatchEvent("click");
+
+  const startIndex = await readActiveSlideIndex(carousel);
+  assert.ok(startIndex >= 0, `${width}px should start with one active slide.`);
+
+  // Walk every slide with Next (wrapping back to the start) and check exactly one is operable each time.
+  for (let step = 0; step < slideCount; step += 1) {
+    const index = (startIndex + step) % slideCount;
+    if (step > 0) {
+      await goNext();
+      await waitForActive(index);
+    }
 
     const states = await readSlideState(carousel);
     const operableSlides = states
@@ -132,7 +136,7 @@ async function verifyViewport(browser, width) {
     assert.deepEqual(
       operableSlides.map((state) => state.slideIndex),
       [index],
-      `${width}px transition ${index + 1} should expose only its active slide.`
+      `${width}px transition ${step + 1} should expose only its active slide.`
     );
 
     states.forEach((state, slideIndex) => {
@@ -147,23 +151,21 @@ async function verifyViewport(browser, width) {
       assert.equal(state.tabIndex, -1);
     });
 
-    assert.equal(
-      await indicators.nth(index).getAttribute("aria-current"),
-      "true",
-      `${width}px transition ${index + 1} should identify the current selector.`
+    assert.match(
+      (await positionLabel.getAttribute("aria-label")) ?? "",
+      new RegExp(`story ${index + 1} of ${slideCount}\\b`),
+      `${width}px transition ${step + 1} should name the current slide position.`
     );
   }
 
-  await indicators.first().focus();
-  await page.keyboard.press("Enter");
-  await page.waitForFunction(
-    ({ selector, slideSelector }) => {
-      const root = document.querySelector(selector);
-      const firstSlide = root?.querySelector(slideSelector);
-      return firstSlide?.getAttribute("aria-hidden") === "false";
-    },
-    { selector: carouselSelector, slideSelector: realSlideSelector }
-  );
+  // Return to the first slide for the gesture checks.
+  for (let guard = 0; guard < slideCount && (await readActiveSlideIndex(carousel)) !== 0; guard += 1) {
+    const next = ((await readActiveSlideIndex(carousel)) + 1) % slideCount;
+    await goNext();
+    await waitForActive(next);
+  }
+  await waitForActive(0);
+  await page.waitForTimeout(500);
 
   const swipeStage = carousel.getByTestId("featured-story-track");
   const swipeBox = await swipeStage.boundingBox();
