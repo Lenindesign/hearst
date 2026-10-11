@@ -12,7 +12,7 @@ import { useReaderAccount } from "@/components/reader-account";
 import { ReaderAuthDialog } from "@/components/reader-account-ui";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { CheckCircle2, Flag, Heart, ImageIcon, MessageCircle, Plus, Send, Shield } from "@/components/ui/icons";
+import { Camera, CheckCircle2, Flag, Heart, HelpCircle, ImageIcon, Lightbulb, MessageCircle, Plus, Send, Shield } from "@/components/ui/icons";
 import {
   joinedBrandGroupsChangeEvent,
   joinedBrandGroupsStorageKey,
@@ -248,8 +248,10 @@ export function CommunityHelpfulButton({ id, base, label = "thread" }: { id: str
         }))
       }
       className={cn(
-        "inline-flex min-h-9 items-center gap-1.5 rounded-full px-2 text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35",
-        active ? "text-primary" : "text-[var(--hp-text-secondary)] hover:text-primary",
+        "inline-flex min-h-9 items-center gap-1.5 rounded-full px-3 text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35",
+        active
+          ? "bg-primary/10 text-primary"
+          : "bg-[var(--community-surface-soft)] text-[var(--hp-text-secondary)] hover:bg-[var(--community-surface-soft-hover)] hover:text-primary",
       )}
     >
       <Heart className={cn("size-4", active && "fill-current")} aria-hidden />
@@ -288,6 +290,49 @@ export function CommunityHostBadge({ brand }: { brand: string }) {
     <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-bold text-primary">
       <Shield className="size-3" aria-hidden />
       {brand} host
+    </span>
+  );
+}
+
+// Faces make a thread feel lived in. Prototype threads carry only a reply count, so the repliers shown are stand-in
+// first names picked from the thread id (stable across renders and visits).
+const READER_NAMES = ["Maria", "Dev", "Sam", "Priya", "Jordan", "Alex", "Taylor", "Chris", "Nina", "Omar", "Lena", "Ray", "Jess", "Marcus"];
+const AVATAR_TONES = ["#2D75B9", "#A62C37", "#819238", "#B5651D", "#6B4FA0", "#087A68", "#C2417A"];
+
+function pickRepliers(id: string, count: number) {
+  let hash = 0;
+  for (const char of id) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
+  return Array.from({ length: Math.min(count, 3) }, (_, index) => READER_NAMES[(hash + index * 5) % READER_NAMES.length]);
+}
+
+function ReaderAvatar({ name, className }: { name: string; className?: string }) {
+  let hash = 0;
+  for (const char of name) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
+  return (
+    <span
+      aria-hidden
+      className={cn("inline-flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ring-2 ring-[var(--hp-surface)]", className)}
+      style={{ background: AVATAR_TONES[hash % AVATAR_TONES.length] }}
+    >
+      {name.slice(0, 1).toUpperCase()}
+    </span>
+  );
+}
+
+function ReplierLine({ id, replies }: { id: string; replies: number }) {
+  if (replies === 0) return <span className="text-sm font-semibold text-[var(--hp-text-secondary)]">Be the first to reply</span>;
+  const names = pickRepliers(id, replies);
+  const others = replies - names.length;
+  const label =
+    others > 0 ? `${names.slice(0, 2).join(", ")} and ${others.toLocaleString()} others replied` : `${names.join(" and ")} replied`;
+  return (
+    <span className="flex min-w-0 items-center gap-2">
+      <span className="flex -space-x-2">
+        {names.map((name) => (
+          <ReaderAvatar key={name} name={name} />
+        ))}
+      </span>
+      <span className="truncate text-sm font-semibold text-[var(--hp-text-secondary)]">{label}</span>
     </span>
   );
 }
@@ -549,6 +594,14 @@ export function CommunityGroupsToJoin({ groups }: { groups: CommunityGroupSummar
  * Composer (Q4, Q8): posts as the Hearst+ identity, first posts wait for host review
  * ---------------------------------------------------------------------------------------------- */
 
+type ComposerStarter = { label: string; title: string; icon: typeof HelpCircle; photo?: boolean };
+
+const composerStarters: ComposerStarter[] = [
+  { label: "Ask a question", title: "Question: ", icon: HelpCircle },
+  { label: "Share a tip", title: "Tip: ", icon: Lightbulb },
+  { label: "Show a photo", title: "", icon: Camera, photo: true },
+];
+
 const emptyProfile = { followedTopics: [], followedBrands: [], savedTags: [], boostedTags: [], savedIds: [], hiddenIds: [] };
 
 export function CommunityComposer({ groups, defaultGroup }: { groups: CommunityGroupSummary[]; defaultGroup?: CommunityGroupSummary }) {
@@ -569,7 +622,10 @@ export function CommunityComposer({ groups, defaultGroup }: { groups: CommunityG
   const target = groups.find((group) => group.brandSlug === groupKey) ?? defaultGroup;
   const placeName = defaultGroup?.name ?? "a group";
 
-  const start = () => {
+  // A starter seeds the title so the reader isn't facing a blank page.
+  const start = (starter?: ComposerStarter) => {
+    if (starter) setTitle(starter.title);
+    if (starter?.photo) window.setTimeout(() => photoInputRef.current?.click(), 0);
     if (!account) {
       setAuthOpen(true);
       return;
@@ -580,14 +636,43 @@ export function CommunityComposer({ groups, defaultGroup }: { groups: CommunityG
   return (
     <section className="rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]" aria-label="Start a post">
       {!open ? (
-        <button
-          type="button"
-          onClick={start}
-          className="hearst-community-copy flex min-h-11 w-full items-center gap-3 rounded-[8px] border border-primary/15 bg-[var(--community-surface-soft)] px-3 text-left text-sm font-semibold text-[var(--hp-text-secondary)] transition-colors hover:border-primary/45 hover:bg-[var(--community-surface-soft-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
-        >
-          <MessageCircle className="size-4 shrink-0 text-primary" aria-hidden />
-          {account ? `Start a post in ${placeName}` : `Sign in to post in ${placeName}`}
-        </button>
+        // An open invitation rather than a form: the reader's face, a friendly prompt, and one-tap starters.
+        <div>
+          <div className="flex items-center gap-3">
+            {account ? (
+              <ReaderAvatar name={account.firstName || "Reader"} className="size-10 text-sm ring-0" />
+            ) : (
+              <span aria-hidden className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <MessageCircle className="size-5" />
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={() => start()}
+              className="hearst-community-copy flex min-h-12 min-w-0 flex-1 items-center rounded-full bg-[var(--community-surface-soft)] px-5 text-left text-base text-[var(--hp-text-secondary)] transition-colors hover:bg-[var(--community-surface-soft-hover)] hover:text-[var(--hp-text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+            >
+              <span className="truncate">
+                {account ? `What's on your mind, ${account.firstName || "reader"}?` : defaultGroup ? `Join the conversation in ${defaultGroup.name}` : "Join the conversation"}
+              </span>
+            </button>
+            <Button type="button" onClick={() => start()} className="hidden shrink-0 rounded-full px-5 text-primary-foreground sm:inline-flex">
+              {account ? "Post" : "Sign in to post"}
+            </Button>
+          </div>
+          <div className="mt-3 flex flex-wrap items-center gap-2 sm:pl-[52px]">
+            {composerStarters.map((starter) => (
+              <button
+                key={starter.label}
+                type="button"
+                onClick={() => start(starter)}
+                className="inline-flex min-h-9 items-center gap-1.5 rounded-full bg-[var(--hp-background)] px-3 text-sm font-semibold text-[var(--hp-text-ui)] transition-colors hover:bg-[var(--community-surface-soft-hover)] hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+              >
+                <starter.icon className="size-4 text-primary" aria-hidden />
+                {starter.label}
+              </button>
+            ))}
+          </div>
+        </div>
       ) : (
         <form
           className="grid gap-3"
@@ -769,7 +854,11 @@ export function CommunityComposer({ groups, defaultGroup }: { groups: CommunityG
 
 function ThreadCard({ thread }: { thread: CommunityFeedThread }) {
   return (
-    <article className="group p-4 sm:p-5" aria-labelledby={`thread-${thread.id}-title`}>
+    // Each thread is its own card that lifts on hover, so the feed reads as conversations to step into.
+    <article
+      className="group rounded-[8px] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] transition-[box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(1,34,71,0.12)] motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:p-5"
+      aria-labelledby={`thread-${thread.id}-title`}
+    >
       <Link href={thread.href} className="block min-w-0 rounded-[8px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35">
         <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-xs font-bold text-[var(--hp-text-secondary)]">
           <BrandSourceIcon brand={thread.brand} brandSlug={thread.brandSlug} className="size-7 shrink-0 rounded-full" imageClassName="object-cover p-0" />
@@ -796,14 +885,27 @@ function ThreadCard({ thread }: { thread: CommunityFeedThread }) {
           </span>
         ) : null}
       </Link>
-      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
-        <CommunityHelpfulButton id={thread.id} base={thread.helpfulBase} />
-        <Link href={thread.href} className="inline-flex min-h-9 items-center gap-1.5 text-sm font-bold text-[var(--hp-text-secondary)] hover:text-primary">
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+        <ReplierLine id={thread.id} replies={thread.replies} />
+        <Link
+          href={`${thread.href}#reply`}
+          className="inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-full bg-primary px-4 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90 hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+        >
           <MessageCircle className="size-4" aria-hidden />
-          {thread.replies} replies
+          Add your reply
+        </Link>
+      </div>
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <CommunityHelpfulButton id={thread.id} base={thread.helpfulBase} />
+        <Link
+          href={thread.href}
+          className="inline-flex min-h-9 items-center gap-1.5 rounded-full bg-[var(--community-surface-soft)] px-3 text-sm font-bold text-[var(--hp-text-secondary)] transition-colors hover:bg-[var(--community-surface-soft-hover)] hover:text-primary"
+        >
+          <MessageCircle className="size-4" aria-hidden />
+          {thread.replies.toLocaleString()} {thread.replies === 1 ? "reply" : "replies"}
         </Link>
         {thread.storyHref ? (
-          <Link href={thread.storyHref} className="inline-flex min-h-9 items-center text-sm font-bold text-[var(--hp-text-secondary)] hover:text-primary">
+          <Link href={thread.storyHref} className="inline-flex min-h-9 items-center px-2 text-sm font-bold text-[var(--hp-text-secondary)] hover:text-primary">
             Read the story
           </Link>
         ) : null}
@@ -906,7 +1008,7 @@ export function CommunityFeed({
             {section.title ? (
               <h2 className="px-1 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-text-primary)]">{section.title}</h2>
             ) : null}
-            <div className="divide-y divide-[var(--hp-border)] rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
+            <div className="space-y-4">
               {section.threads.map((thread) => (
                 <ThreadCard key={thread.id} thread={thread} />
               ))}
@@ -993,7 +1095,8 @@ export function CommunityThreadReplies({
         </ul>
       </section>
       <form
-        className="border-t border-[var(--hp-border)] p-5"
+        id="reply"
+        className="scroll-mt-32 border-t border-[var(--hp-border)] p-5"
         aria-labelledby="reply-thread-title"
         onSubmit={(event) => {
           event.preventDefault();
