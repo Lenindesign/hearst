@@ -46,6 +46,7 @@ import { BigStoryFeedStacked } from "./fre/big-story-feed";
 import { BigStoryImageRight } from "./fre/big-story";
 import { FourAcrossGrid } from "./fre/four-across-grid";
 import { SiteFooter } from "./fre/site-footer";
+import { LocalWeather } from "@/components/hearst-plus/local-weather";
 import {
   Bookmark,
   Camera,
@@ -1358,20 +1359,8 @@ export function MainNav({
               <Menu className="h-5 w-5" aria-hidden />
             </Button>
           ) : null}
-          <Button
-            variant="outline"
-            size="icon-sm"
-            className={cn(
-              "h-11 w-11 rounded-[4px] sm:h-7 sm:w-7",
-              showMobileDiscoveryMenu && "hidden sm:inline-flex",
-              useDarkHeaderIconButtons ? darkHeaderIconButtonClass : undefined
-            )}
-            onClick={toggleColorMode}
-            aria-label={`Switch to ${colorMode === "dark" ? "light" : "dark"} mode`}
-            title={`Switch to ${colorMode === "dark" ? "light" : "dark"} mode`}
-          >
-            {colorMode === "dark" ? <Sun className="h-4 w-4" aria-hidden /> : <Moon className="h-4 w-4" aria-hidden />}
-          </Button>
+          {/* A quiet local signal in place of the desktop color-mode button; the mode toggle stays in the phone menu. */}
+          <LocalWeather className="hidden sm:inline-flex" />
         </div>
         <div className="flex min-w-0 flex-1 justify-center">
           {renderMastheadLogo(false)}

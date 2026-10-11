@@ -4,6 +4,12 @@ export { BookmarkSimpleIcon as Bookmark } from "@phosphor-icons/react/dist/ssr/B
 export { BookOpenTextIcon as BookOpenText } from "@phosphor-icons/react/dist/ssr/BookOpenText";
 export { CalendarBlankIcon as CalendarBlank } from "@phosphor-icons/react/dist/ssr/CalendarBlank";
 export { CameraIcon as Camera } from "@phosphor-icons/react/dist/ssr/Camera";
+export { CloudIcon as Cloud } from "@phosphor-icons/react/dist/ssr/Cloud";
+export { CloudFogIcon as CloudFog } from "@phosphor-icons/react/dist/ssr/CloudFog";
+export { CloudLightningIcon as CloudLightning } from "@phosphor-icons/react/dist/ssr/CloudLightning";
+export { CloudRainIcon as CloudRain } from "@phosphor-icons/react/dist/ssr/CloudRain";
+export { CloudSnowIcon as CloudSnow } from "@phosphor-icons/react/dist/ssr/CloudSnow";
+export { CloudSunIcon as CloudSun } from "@phosphor-icons/react/dist/ssr/CloudSun";
 export { CarIcon as Car } from "@phosphor-icons/react/dist/ssr/Car";
 export { CaretDownIcon as ChevronDown, CaretDownIcon as ChevronDownIcon } from "@phosphor-icons/react/dist/ssr/CaretDown";
 export { CaretLeftIcon as ChevronLeft, CaretLeftIcon as ChevronLeftIcon } from "@phosphor-icons/react/dist/ssr/CaretLeft";
