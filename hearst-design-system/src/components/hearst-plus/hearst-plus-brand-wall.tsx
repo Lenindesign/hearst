@@ -26,7 +26,7 @@ export function HearstPlusBrandWall({ logos = allBrandLogos }: { logos?: string[
                   alt=""
                   loading="lazy"
                   decoding="async"
-                  className="h-5 w-auto max-w-[140px] shrink-0 object-contain opacity-[0.08] sm:h-7"
+                  className="h-5 w-auto max-w-[140px] shrink-0 object-contain opacity-[0.05] sm:h-7"
                   style={{ filter: "brightness(0) invert(1)" }}
                 />
               ))}

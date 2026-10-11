@@ -1354,12 +1354,9 @@ export function MainNav({
         <div
           className={cn(
             "relative w-full overflow-hidden",
-            mastheadBanner.height <= 220 ? "max-sm:aspect-[5/1]" : "max-sm:aspect-[3/1]",
+            mastheadBanner.pattern === "brand-wall" ? "max-sm:aspect-[5/1]" : "max-sm:aspect-[3/1]",
           )}
-          style={{
-            aspectRatio: `${mastheadBanner.width - (mastheadBanner.cropX?.left ?? 0) - (mastheadBanner.cropX?.right ?? 0)} / ${mastheadBanner.height}`,
-            background: mastheadBanner.watermark ? mastheadBanner.background : undefined,
-          }}
+          style={{ aspectRatio: `${mastheadBanner.width - (mastheadBanner.cropX?.left ?? 0) - (mastheadBanner.cropX?.right ?? 0)} / ${mastheadBanner.height}` }}
         >
           {mastheadBanner.src ? (
             <Image
@@ -1368,8 +1365,7 @@ export function MainNav({
               fill
               priority
               sizes="100vw"
-              // A watermark photo is greyed and faint, so the banner reads as Hearst+ navy with a scene behind it.
-              className={cn("object-cover", mastheadBanner.watermark && "opacity-30 mix-blend-luminosity")}
+              className="object-cover"
               style={{
                 objectPosition: `${(() => {
                   const left = mastheadBanner.cropX?.left ?? 0;
@@ -1388,14 +1384,12 @@ export function MainNav({
         {mastheadBanner.overlayLogo ? (
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-24">
             <BrandLogo
-              slug={mastheadSlug}
+              slug={mastheadBanner.logoSlug ?? mastheadSlug}
               color={mastheadBanner.logoColor === "native" ? undefined : "#fff"}
               className={cn(
                 "block max-w-full [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full",
                 // Solid banners have nothing but the logo, so it fills most of the banner height.
-                mastheadBanner.watermark
-                  ? "h-5 sm:h-7 lg:h-9"
-                  : mastheadBanner.src
+                mastheadBanner.src
                   ? "h-10 drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] sm:h-16 lg:h-24"
                   : mastheadBanner.pattern === "brand-wall"
                     ? mastheadBanner.wallSection || mastheadBanner.wallLogos

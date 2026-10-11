@@ -21,6 +21,8 @@ export const brandLogos: Record<string, string> = {
   "hearst-flux": "/logos/hearst-fashion-luxury.svg?v=2026-10-11",
   "hearst-flux-compact": "/logos/hearst-flux.svg?v=2026-10-11",
   "hearst-all": "/logos/hearst-plus.svg?v=2026-10-11",
+  // White HEARST with the blue plus, for the navy Hearst+ banner.
+  "hearst-all-knockout": "/logos/hearst-plus-knockout.svg?v=2026-10-11c",
   // Hearst+ feature lockup: HEARST+ wordmark plus a Schibsted Grotesk descriptor (BRAND_STYLES.md).
   "hearst-communities": "/logos/hearst-plus-communities.svg?v=2026-10-11",
   "hearst-autos": "/logos/hearst-autos.svg?v=2026-10-11",
@@ -74,6 +76,7 @@ export const brandLogoLabels: Record<keyof typeof brandLogos, string> = {
   "hearst-flux": "Hearst Fashion & Luxury",
   "hearst-flux-compact": "Hearst Fashion & Luxury",
   "hearst-all": "Hearst+",
+  "hearst-all-knockout": "Hearst+",
   "hearst-communities": "Hearst+ Communities",
   "hearst-autos": "Hearst Autos",
   "hearst-local-news": "Hearst Local News",
@@ -142,6 +145,7 @@ export function getBrandLogoLabel(slug: string) {
 // for a knockout (white) version; brand-color tints would flatten them into one color.
 const twoToneLogoSlugs = new Set([
   "hearst-all",
+  "hearst-all-knockout",
   "hearst-communities",
   // Destination lockups: navy HEARST, divider, Hearst+ blue section name.
   "hearst-lifestyle",
