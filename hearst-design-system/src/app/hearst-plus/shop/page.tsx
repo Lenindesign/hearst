@@ -129,7 +129,7 @@ export default function HearstPlusShopPage() {
         </main>
 
         <SiteFooter
-          siteName={<BrandLogo slug="hearst-all" className="h-8 max-w-[16rem] [&_svg]:h-full [&_svg]:w-auto" color="#fff" />}
+          siteName={<BrandLogo slug="hearst-all" className="block h-8 max-w-[16rem] [&_svg]:h-full [&_svg]:w-auto" color="#fff" />}
           copyrightYear={2026}
           finePrintNote="Prototype only. Stories and products are sourced from public Hearst pages. Amazon affiliate tracking is not enabled."
         />

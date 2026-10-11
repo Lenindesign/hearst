@@ -36,7 +36,7 @@ export default function HearstPlusNewsstandPage() {
         </header>
         <NewsstandExperience />
         <SiteFooter
-          siteName={<BrandLogo slug="hearst-all" className="h-8 max-w-[16rem] [&_svg]:h-full [&_svg]:w-auto" color="#fff" />}
+          siteName={<BrandLogo slug="hearst-all" className="block h-8 max-w-[16rem] [&_svg]:h-full [&_svg]:w-auto" color="#fff" />}
           className="relative z-20"
           copyrightYear={2026}
           finePrintNote="Prototype only. Cover images are sourced from public Hearst brand pages."

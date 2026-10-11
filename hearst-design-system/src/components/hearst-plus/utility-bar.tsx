@@ -115,10 +115,13 @@ export function UtilityBar({
   onCreateAccount,
   onOpenProfile,
   activeDestinationOverride,
-  darkMode = false,
+  darkMode: darkModeProp = false,
   hideDestinationNav = false,
 }: UtilityBarProps) {
-  const { brand } = useTheme();
+  const { brand, colorMode } = useTheme();
+  // Dark pages (the Videos tab, Fashion & Luxury's default dark mode) get the knockout utility bar; a light
+  // primary such as a dark-mode tint must never become the bar background.
+  const darkMode = darkModeProp || colorMode === "dark";
   const { account } = useReaderAccount();
   const utilityBarRef = React.useRef<HTMLDivElement>(null);
   const destinationNavRef = React.useRef<HTMLElement>(null);
@@ -212,7 +215,7 @@ export function UtilityBar({
         {!hideDestinationNav && (
         <nav
           ref={destinationNavRef}
-          className="flex min-w-0 items-center justify-start overflow-x-auto [scrollbar-width:none] sm:justify-center [&::-webkit-scrollbar]:hidden"
+          className="relative flex min-w-0 items-center justify-start overflow-x-auto [scrollbar-width:none] sm:justify-center [&::-webkit-scrollbar]:hidden"
           aria-label="Hearst destination sections"
         >
           <div className={cn("flex min-w-max items-center gap-1 rounded-full px-0.5 sm:p-0.5", darkMode ? "bg-white/[0.06]" : "bg-black/10")}>
@@ -247,9 +250,7 @@ export function UtilityBar({
                     className={cn(
                       "inline-flex min-h-7 min-w-7 cursor-pointer items-center justify-center rounded-full px-2 py-1 text-[11px] font-bold leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:min-h-6 sm:min-w-0 sm:text-xs",
                       isActive
-                        ? darkMode
-                          ? "bg-[var(--component-navigation-utility-content-accent)] text-[var(--component-navigation-utility-background-knockout)] hover:text-[var(--component-navigation-utility-background-knockout)]"
-                          : "bg-white text-black hover:text-black"
+                        ? "bg-white text-black hover:text-black"
                         : darkMode
                           ? "text-[var(--component-navigation-utility-content-knockout)] opacity-85 hover:bg-white/10 hover:text-white hover:opacity-100"
                           : "text-primary-foreground hover:bg-white/10 hover:text-primary-foreground"
