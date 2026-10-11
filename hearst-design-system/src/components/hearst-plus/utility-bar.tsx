@@ -55,8 +55,9 @@ const brandMenuSections = [
   { mode: "ew", label: "Enthusiast & Wellness" },
 ] satisfies { mode: HearstBrandSection; label: string }[];
 
+// The top-left utility slot promotes the Hearst+ free trial (the newsstand page sells the app).
 const utilityLinks = [
-  { label: "Newsletter", href: "https://www.hearst.co.uk/newsletter" },
+  { label: "Try Hearst+ free", href: "/hearst-plus/newsstand/" },
 ] as const;
 
 const localNewsOptions = [
