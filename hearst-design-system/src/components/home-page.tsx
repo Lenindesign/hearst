@@ -1354,9 +1354,12 @@ export function MainNav({
         <div
           className={cn(
             "relative w-full overflow-hidden",
-            mastheadBanner.pattern === "brand-wall" ? "max-sm:aspect-[5/1]" : "max-sm:aspect-[3/1]",
+            mastheadBanner.height <= 220 ? "max-sm:aspect-[5/1]" : "max-sm:aspect-[3/1]",
           )}
-          style={{ aspectRatio: `${mastheadBanner.width - (mastheadBanner.cropX?.left ?? 0) - (mastheadBanner.cropX?.right ?? 0)} / ${mastheadBanner.height}` }}
+          style={{
+            aspectRatio: `${mastheadBanner.width - (mastheadBanner.cropX?.left ?? 0) - (mastheadBanner.cropX?.right ?? 0)} / ${mastheadBanner.height}`,
+            background: mastheadBanner.watermark ? mastheadBanner.background : undefined,
+          }}
         >
           {mastheadBanner.src ? (
             <Image
@@ -1365,7 +1368,8 @@ export function MainNav({
               fill
               priority
               sizes="100vw"
-              className="object-cover"
+              // A watermark photo is greyed and faint, so the banner reads as Hearst+ navy with a scene behind it.
+              className={cn("object-cover", mastheadBanner.watermark && "opacity-30 mix-blend-luminosity")}
               style={{
                 objectPosition: `${(() => {
                   const left = mastheadBanner.cropX?.left ?? 0;
@@ -1389,7 +1393,9 @@ export function MainNav({
               className={cn(
                 "block max-w-full [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full",
                 // Solid banners have nothing but the logo, so it fills most of the banner height.
-                mastheadBanner.src
+                mastheadBanner.watermark
+                  ? "h-5 sm:h-7 lg:h-9"
+                  : mastheadBanner.src
                   ? "h-10 drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] sm:h-16 lg:h-24"
                   : mastheadBanner.pattern === "brand-wall"
                     ? mastheadBanner.wallSection || mastheadBanner.wallLogos

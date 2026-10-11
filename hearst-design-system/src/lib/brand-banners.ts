@@ -26,18 +26,22 @@ export type BrandBanner = {
   logoColor?: "white" | "native";
   /** "xl" lets a solid banner's logo fill nearly the whole banner height (ELLE). */
   logoSize?: "xl";
+  /** Show the photo as a watermark: desaturated and faint over `background`. */
+  watermark?: boolean;
 };
 
-// The Hearst+ home masthead: navy with a faint wall of every brand's wordmark behind the white HEARST+ logo.
-// Brand-wall banners (Hearst+, sections, Local News, A&E) are half the height of brand banners: they introduce a
+// The Hearst+ home masthead: a cozy interior photo from a House Beautiful story,
+// shown as a navy watermark behind the white HEARST+ logo.
+// Section banners (Hearst+, sections, Local News, A&E) are half the height of brand banners: they introduce a
 // section, not a publication.
 export const hearstPlusBrandWallBanner: BrandBanner = {
+  src: "https://hips.hearstapps.com/hmg-prod/images/2b72c598-bc27-4a40-ba62-e7dba2d9dbe9.jpg",
   background: "#012247",
-  alt: "Hearst+: every Hearst brand",
+  alt: "Hearst+",
   width: 2560,
   height: 220,
   overlayLogo: true,
-  pattern: "brand-wall",
+  watermark: true,
 };
 
 // Destination pages: the section color with a wall of that section's brands behind the white section lockup.
