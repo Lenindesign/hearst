@@ -2,7 +2,7 @@
 export const brandLogos: Record<string, string> = {
   "autoweek": "/logos/autoweek.svg",
   "a-e": "/logos/aande.svg",
-  "hearst-entertainment": "/logos/aande-family.svg?v=2026-10-11",
+  "hearst-entertainment": "/logos/aande-family.svg?v=2026-10-11b",
   "best-products": "/logos/bestproducts.svg",
   "bicycling": "/logos/bicycling.svg",
   "biography": "/logos/biography.svg",

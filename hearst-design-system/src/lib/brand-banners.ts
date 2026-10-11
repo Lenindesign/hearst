@@ -16,6 +16,94 @@ export type BrandBanner = {
   overlayLogo?: boolean;
   /** Darken busy photography so the overlaid logo stays legible. */
   scrim?: boolean;
+  /** A drawn pattern behind a solid banner (the Hearst+ home's wall of brand wordmarks). */
+  pattern?: "brand-wall";
+  /** For a destination brand wall: the section whose brands fill the wall. */
+  wallSection?: "lifestyle" | "autos" | "flux" | "ew";
+  /** Explicit logos for the wall (Local News stations, A&E channels) instead of a section's brands. */
+  wallLogos?: string[];
+  /** "native" keeps the overlaid logo's own colors (A&E Family's white and gold); default is all white. */
+  logoColor?: "white" | "native";
+  /** "xl" lets a solid banner's logo fill nearly the whole banner height (ELLE). */
+  logoSize?: "xl";
+};
+
+// The Hearst+ home masthead: navy with a faint wall of every brand's wordmark behind the white HEARST+ logo.
+// Brand-wall banners (Hearst+, sections, Local News, A&E) are half the height of brand banners: they introduce a
+// section, not a publication.
+export const hearstPlusBrandWallBanner: BrandBanner = {
+  background: "#012247",
+  alt: "Hearst+: every Hearst brand",
+  width: 2560,
+  height: 220,
+  overlayLogo: true,
+  pattern: "brand-wall",
+};
+
+// Destination pages: the section color with a wall of that section's brands behind the white section lockup.
+// Fashion & Luxury is a dark section, so its banner uses the dark page surface (#0D1014) instead of its navy.
+export const destinationBrandWallBanners: Partial<Record<string, BrandBanner>> = {
+  "hearst-lifestyle": { background: "#A62C37", alt: "Hearst Lifestyle", width: 2560, height: 220, overlayLogo: true, pattern: "brand-wall", wallSection: "lifestyle" },
+  "hearst-plus": { background: "#819238", alt: "Hearst Autos", width: 2560, height: 220, overlayLogo: true, pattern: "brand-wall", wallSection: "autos" },
+  "hearst-flux": { background: "#0D1014", alt: "Hearst Fashion & Luxury", width: 2560, height: 220, overlayLogo: true, pattern: "brand-wall", wallSection: "flux" },
+  "hearst-ew": { background: "#34454C", alt: "Hearst Enthusiast & Wellness", width: 2560, height: 220, overlayLogo: true, pattern: "brand-wall", wallSection: "ew" },
+  // Local News: a wall of the Hearst Television station logos.
+  "hearst-local-news": {
+    background: "#087A68",
+    alt: "Hearst Local News",
+    width: 2560,
+    height: 220,
+    overlayLogo: true,
+    pattern: "brand-wall",
+    wallLogos: [
+      "/logos/tv-stations/kcci.png",
+      "/logos/tv-stations/kcra.png",
+      "/logos/tv-stations/ketv.png",
+      "/logos/tv-stations/khbs-khog.png",
+      "/logos/tv-stations/kmbc.png",
+      "/logos/tv-stations/koat.png",
+      "/logos/tv-stations/koco.png",
+      "/logos/tv-stations/ksbw.png",
+      "/logos/tv-stations/wapt.png",
+      "/logos/tv-stations/wbal.png",
+      "/logos/tv-stations/wcvb.png",
+      "/logos/tv-stations/wdsu.png",
+      "/logos/tv-stations/wesh.png",
+      "/logos/tv-stations/wgal.png",
+      "/logos/tv-stations/wisn.png",
+      "/logos/tv-stations/wjcl.png",
+      "/logos/tv-stations/wlky.png",
+      "/logos/tv-stations/wlwt.png",
+      "/logos/tv-stations/wmtw.png",
+      "/logos/tv-stations/wmur.png",
+      "/logos/tv-stations/wpbf.png",
+      "/logos/tv-stations/wptz.png",
+      "/logos/tv-stations/wtae.png",
+      "/logos/tv-stations/wvtm.png",
+      "/logos/tv-stations/wxii.png",
+      "/logos/tv-stations/wyff.png",
+    ],
+  },
+};
+
+// A&E Family: near-black like its landing page, a wall of its channel logos, and the lockup in its own white and gold.
+export const entertainmentBrandWallBanner: BrandBanner = {
+  background: "#050608",
+  alt: "Hearst A&E Family",
+  width: 2560,
+  height: 220,
+  overlayLogo: true,
+  pattern: "brand-wall",
+  logoColor: "native",
+  wallLogos: [
+    "/logos/aande.svg",
+    "/logos/history.svg",
+    "/logos/lifetime.svg",
+    "/logos/lmn.svg",
+    "/logos/fyi.svg",
+    "/logos/vice-tv.svg",
+    "/logos/biography.svg",
+  ],
 };
 
 export const brandBanners: Partial<Record<string, BrandBanner>> = {
@@ -41,10 +129,13 @@ export const brandBanners: Partial<Record<string, BrandBanner>> = {
     height: 440,
   },
   elle: {
-    src: "/images/brand-banners/elle.jpg",
+    // Solid black with the white ELLE SVG logo, drawn larger than the wordmark in Yahoo's art.
+    background: "#000",
     alt: "ELLE",
     width: 2560,
     height: 440,
+    overlayLogo: true,
+    logoSize: "xl",
   },
   "elle-decor": {
     src: "/images/brand-banners/elle-decor.jpg",

@@ -11,6 +11,7 @@ import { brandLogos } from "@/lib/logos";
 import {
   getHearstBrandRoute,
   getHearstDestinationCategoryDisplayLabel,
+  getHearstSectionBrands,
   getHearstDestinationCategoryLabel,
   getHearstDestinationCategoryRoute,
   getHearstDestinationRoute,
@@ -47,7 +48,8 @@ import { BigStoryImageRight } from "./fre/big-story";
 import { FourAcrossGrid } from "./fre/four-across-grid";
 import { SiteFooter } from "./fre/site-footer";
 import { LocalWeather } from "@/components/hearst-plus/local-weather";
-import { brandBanners } from "@/lib/brand-banners";
+import { brandBanners, destinationBrandWallBanners, entertainmentBrandWallBanner, hearstPlusBrandWallBanner } from "@/lib/brand-banners";
+import { HearstPlusBrandWall } from "@/components/hearst-plus/hearst-plus-brand-wall";
 import { BrandInstagramModule } from "@/components/hearst-plus/brand-instagram-module";
 import {
   Bookmark,
@@ -1324,7 +1326,22 @@ export function MainNav({
     overlayPortalTarget
   ) : null;
   const useDarkHeaderIconButtons = darkMode || colorMode === "dark";
-  const mastheadBanner = selectedBrand ? brandBanners[selectedBrand.slug] : undefined;
+  // Brand pages use their registered banner; the Hearst+ home gets the brand wall (layout default, no logo override).
+  // Pages with their own logo override (channel and station pages, Communities) keep their masthead.
+  const mastheadBanner = mastheadLogoOverride || mastheadSlugOverride
+    ? undefined
+    : selectedBrand?.slug === "hearst-entertainment"
+      ? entertainmentBrandWallBanner
+      : selectedBrand
+        ? brandBanners[selectedBrand.slug]
+        : brand.slug === "hearst-all"
+          ? hearstPlusBrandWallBanner
+          : destinationBrandWallBanners[brand.slug];
+  const brandWallLogos = mastheadBanner?.wallLogos ?? (mastheadBanner?.wallSection
+    ? getHearstSectionBrands(mastheadBanner.wallSection)
+        .map((sectionBrand) => brandLogos[sectionBrand.brandSlug])
+        .filter((src): src is string => Boolean(src?.startsWith("/")))
+    : undefined);
   const darkHeaderIconButtonClass =
     "hearst-plus-dark-header-icon-button";
 
@@ -1335,7 +1352,10 @@ export function MainNav({
     <div className="relative border-b border-border bg-black">
         {/* Full-bleed art, trimmed of any baked-in side bars so it always reaches both edges. */}
         <div
-          className="relative w-full overflow-hidden max-sm:aspect-[3/1]"
+          className={cn(
+            "relative w-full overflow-hidden",
+            mastheadBanner.pattern === "brand-wall" ? "max-sm:aspect-[5/1]" : "max-sm:aspect-[3/1]",
+          )}
           style={{ aspectRatio: `${mastheadBanner.width - (mastheadBanner.cropX?.left ?? 0) - (mastheadBanner.cropX?.right ?? 0)} / ${mastheadBanner.height}` }}
         >
           {mastheadBanner.src ? (
@@ -1360,15 +1380,24 @@ export function MainNav({
           )}
         </div>
         {mastheadBanner.scrim ? <div aria-hidden className="pointer-events-none absolute inset-0 bg-black/40" /> : null}
-        {mastheadBanner.overlayLogo && selectedBrand ? (
+        {mastheadBanner.pattern === "brand-wall" ? <HearstPlusBrandWall logos={brandWallLogos} /> : null}
+        {mastheadBanner.overlayLogo ? (
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-24">
             <BrandLogo
-              slug={selectedBrand.slug}
-              color="#fff"
+              slug={mastheadSlug}
+              color={mastheadBanner.logoColor === "native" ? undefined : "#fff"}
               className={cn(
                 "block max-w-full [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full",
                 // Solid banners have nothing but the logo, so it fills most of the banner height.
-                mastheadBanner.src ? "h-10 drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] sm:h-16 lg:h-24" : "h-16 sm:h-28 lg:h-40",
+                mastheadBanner.src
+                  ? "h-10 drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] sm:h-16 lg:h-24"
+                  : mastheadBanner.pattern === "brand-wall"
+                    ? mastheadBanner.wallSection || mastheadBanner.wallLogos
+                      ? "h-6 sm:h-9 lg:h-12"
+                      : "h-5 sm:h-7 lg:h-9"
+                    : mastheadBanner.logoSize === "xl"
+                      ? "h-20 sm:h-36 lg:h-52"
+                      : "h-16 sm:h-28 lg:h-40",
               )}
             />
           </div>
