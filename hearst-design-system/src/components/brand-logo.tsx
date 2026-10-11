@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getBrandLogoLabel, getBrandLogoSrc } from "@/lib/logos";
+import { getBrandLogoLabel, getBrandLogoSrc, resolveBrandLogoColor } from "@/lib/logos";
 
 export interface BrandLogoProps {
   slug: string;
@@ -90,10 +90,11 @@ function applySvgColor(markup: string, color: string) {
 export function BrandLogo({
   slug,
   className = "",
-  color,
+  color: requestedColor,
   label,
   decorative = false,
 }: BrandLogoProps) {
+  const color = resolveBrandLogoColor(slug, requestedColor);
   const [loadResult, setLoadResult] = useState<
     | { src: string; status: "ready"; markup: string }
     | { src: string; status: "error" }

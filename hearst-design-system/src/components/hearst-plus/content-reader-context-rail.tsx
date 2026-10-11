@@ -1,10 +1,16 @@
 "use client";
 
+import Link from "next/link";
 import React from "react";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
-import { getCommunityGroupsForBrand } from "@/lib/community-groups";
+import { MessageCircle } from "@/components/ui/icons";
+import {
+  getCommunityGroupsForBrand,
+  getCommunityStoryThreadHref,
+  isHostPickedStory,
+} from "@/lib/community-groups";
 import { CommunityJoinedGroupsCard } from "./community-joined-groups-card";
-import { getLifestyleContextStories } from "./content-reader-model";
+import { getLifestyleCommentCount, getLifestyleContextStories } from "./content-reader-model";
 import { TrendingStoryRail } from "./trending-rail";
 
 export type ContentReaderContextRailProps = {
@@ -34,6 +40,28 @@ function ReaderCommunityModule({
   return <CommunityJoinedGroupsCard groups={groups} />;
 }
 
+// Only stories a host attached to a thread link to Communities (communities design Q6).
+function ReaderConversationLink({ story }: { story: LifestyleRiverStory }) {
+  const replies = getLifestyleCommentCount(story);
+  return (
+    <Link
+      href={getCommunityStoryThreadHref(story)}
+      className="block rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+    >
+      <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-text-primary)]">
+        Join the conversation
+      </span>
+      <span className="mt-2 block text-sm leading-6 text-[var(--hp-text-secondary)]">
+        {story.brand} editors picked this story for discussion.
+      </span>
+      <span className="mt-2 inline-flex items-center gap-1.5 text-sm font-bold text-primary">
+        <MessageCircle className="size-4" aria-hidden />
+        {replies} replies
+      </span>
+    </Link>
+  );
+}
+
 export function ContentReaderContextRail({
   currentStory,
   stories,
@@ -53,6 +81,9 @@ export function ContentReaderContextRail({
             onOpenStory={(story) => onOpenStory(story.id)}
             title="Trending"
           />
+        ) : null}
+        {isHostPickedStory(currentStory, stories) ? (
+          <ReaderConversationLink story={currentStory} />
         ) : null}
         <ReaderCommunityModule
           brand={currentStory.brand}

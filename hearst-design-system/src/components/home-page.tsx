@@ -517,6 +517,7 @@ export function MainNav({
   navLinkHrefOverrides,
   navCarouselMode = "default",
   mastheadLogoOverride,
+  mastheadSlugOverride,
   includeVideos,
   darkMode = false,
   mobileContinueStories = [],
@@ -535,6 +536,8 @@ export function MainNav({
   navLinkHrefOverrides?: Partial<Record<string, string>>;
   navCarouselMode?: "default" | "compact";
   mastheadLogoOverride?: { src: string; label: string; surface?: "default" | "station"; tone?: "normal" | "white"; className?: string } | null;
+  /** A registered logo key (src/lib/logos.ts) shown in the masthead instead of the theme's, sized by the shared geometry. */
+  mastheadSlugOverride?: string;
   includeVideos?: boolean;
   darkMode?: boolean;
   mobileContinueStories?: LifestyleRiverStory[];
@@ -590,7 +593,7 @@ export function MainNav({
     setSearchOpen(false);
     restoreSearchTriggerFocus();
   }, [restoreSearchTriggerFocus, setSearchOpen]);
-  const mastheadSlug = selectedBrand?.slug ?? brand.slug;
+  const mastheadSlug = mastheadSlugOverride ?? selectedBrand?.slug ?? brand.slug;
   const logo = brandLogos[mastheadSlug];
   const content = getContent(brandSlug);
   const isDestinationRiver = brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew" || brand.slug === "hearst-local-news";
@@ -805,12 +808,7 @@ export function MainNav({
       ? "hearst-flux-compact"
       : mastheadSlug;
   const usesCompactMobileDestinationMark = mobileMastheadSlug !== mastheadSlug;
-  const mastheadHearstGeometry = mastheadSlug === "hearst-entertainment"
-    ? {
-        compact: "h-[15px] max-w-[230px] sm:h-[21.5px] sm:max-w-[360px]",
-        regular: "h-[20px] max-w-[300px] sm:h-[32px] sm:max-w-[500px]",
-      }
-    : selectedBrand
+  const mastheadHearstGeometry = selectedBrand
     ? {
         compact: "h-[20px] max-w-[275px] sm:h-[28.75px] sm:max-w-[500px]",
         regular: "h-[27.5px] max-w-[350px] sm:h-[42.5px] sm:max-w-[725px]",
@@ -820,21 +818,13 @@ export function MainNav({
           compact: "h-[16.057px] max-w-[220px] sm:h-[23.082px] sm:max-w-[400px]",
           regular: "h-[22.079px] max-w-[280px] sm:h-[34.122px] sm:max-w-[580px]",
         }
-      : mastheadSlug === "hearst-lifestyle"
+      : mastheadSlug === "hearst-lifestyle" || mastheadSlug === "hearst-flux" || mastheadSlug === "hearst-ew" || mastheadSlug === "hearst-autos" || mastheadSlug === "hearst-plus" || mastheadSlug === "hearst-local-news" || mastheadSlug === "hearst-entertainment" || mastheadSlug === "hearst-communities"
         ? {
-            compact: "h-[18.734px] max-w-[260px] sm:h-[26.929px] sm:max-w-[400px]",
-            regular: "h-[25.759px] max-w-[320px] sm:h-[39.809px] sm:max-w-[580px]",
+            // Destination lockups share the HEARST wordmark and a 140.66-unit viewBox (divider included);
+            // these heights put the HEARST letters at the same size as the Hearst+ masthead.
+            compact: "h-[23.53px] max-w-[min(260px,calc(100vw-140px))] sm:h-[33.82px] sm:max-w-[460px]",
+            regular: "h-[32.35px] max-w-[min(300px,calc(100vw-140px))] sm:h-[50px] sm:max-w-[640px]",
           }
-        : mastheadSlug === "hearst-flux"
-          ? {
-              compact: "h-[18.945px] max-w-[260px] sm:h-[27.233px] sm:max-w-[400px]",
-              regular: "h-[26.049px] max-w-[320px] sm:h-[40.257px] sm:max-w-[580px]",
-            }
-          : mastheadSlug === "hearst-ew" || mastheadSlug === "hearst-autos" || mastheadSlug === "hearst-plus"
-            ? {
-                compact: "h-[16.238px] max-w-[360px] sm:h-[23.342px] sm:max-w-[400px]",
-                regular: "h-[22.327px] max-w-[360px] sm:h-[34.506px] sm:max-w-[580px]",
-              }
             : {
                 compact: "h-[16px] max-w-[220px] sm:h-[23px] sm:max-w-[400px]",
                 regular: "h-[22px] max-w-[280px] sm:h-[34px] sm:max-w-[580px]",
@@ -935,7 +925,8 @@ export function MainNav({
     const active = activeFilter === link;
     const destinationMode = getDestinationMode(brand.slug);
     const showHearstPlusTopicSeparator = brand.slug === "hearst-all" && !selectedBrand && link === "Videos";
-    const displayLabel = isDestinationRiver && !selectedBrand
+    // Overridden links (for example Communities' Home) are page-specific, not destination categories.
+    const displayLabel = isDestinationRiver && !selectedBrand && !navLinkHrefOverrides?.[link]
       ? getHearstDestinationCategoryDisplayLabel(destinationMode, link)
       : link;
     const destinationHref = brand.slug === "hearst-all" ? hearstDestinationNavHrefs.get(link) : undefined;

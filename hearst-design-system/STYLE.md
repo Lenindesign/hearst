@@ -53,10 +53,16 @@ The complete brand registry is documented in `BRAND_STYLES.md`. Canonical HDS pu
 - Qualifiers such as `Lifestyle`, `Fashion & Luxury`, `Enthusiast & Wellness`, and `Autos` may vary in width, but they must not scale down the Hearst wordmark.
 - Align wordmark cap height and baseline consistently across destination mastheads.
 - Generated Hearst destination masthead logos use the active destination primary color on light surfaces.
-- The generated A&E Family destination masthead uses the A&E Family primary color on the dark entertainment landing masthead.
+- The A&E Family destination masthead lockup has a white HEARST wordmark with the divider and `A&E Family` in the A&E Family gold on the dark entertainment landing masthead.
 - Publication, station, newspaper, and channel mastheads preserve official/native logo coloring unless a dark-surface white treatment is explicitly scoped.
 - Preserve theme-specific logo colors. Dark surfaces use the documented white logo treatment.
 - Publication-brand masthead logos render 25% larger than their previous shared regular and compact sizes. This scale applies only when a publication brand is active; destination and section mastheads retain their normalized dimensions.
+
+## Communities
+
+- Community thread, group and card titles use the shared `.headline` style (the theme headline font, Schibsted Grotesk on Hearst+); do not hard-code a community display font.
+- Community reactions are a single `Helpful` heart toggle with a count; never show up or down vote arrows or a net score.
+- Host content carries the `{Brand} host` badge (shield icon, primary tint). A reader's pending post carries an amber `Waiting for host review · only you can see it` label.
 
 ## Carousels and sliders
 

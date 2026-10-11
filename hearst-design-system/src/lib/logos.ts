@@ -1,7 +1,8 @@
+// Rebuilt logos carry a version so cached copies (BrandLogo keeps markup per src) refresh.
 export const brandLogos: Record<string, string> = {
   "autoweek": "/logos/autoweek.svg",
   "a-e": "/logos/aande.svg",
-  "hearst-entertainment": "/logos/aande-family.svg",
+  "hearst-entertainment": "/logos/aande-family.svg?v=2026-10-11",
   "best-products": "/logos/bestproducts.svg",
   "bicycling": "/logos/bicycling.svg",
   "biography": "/logos/biography.svg",
@@ -15,15 +16,17 @@ export const brandLogos: Record<string, string> = {
   "esquire": "/logos/esquire.svg",
   "good-housekeeping": "/logos/good-housekeeping.svg",
   "harpers-bazaar": "/logos/harpers.svg",
-  "hearst-eandw": "/logos/hearst-eandw.svg",
-  "hearst-ew": "/logos/hearst-ew-official.svg",
-  "hearst-flux": "/logos/hearst-fashion-luxury.svg",
-  "hearst-flux-compact": "/logos/hearst-flux.svg",
-  "hearst-all": "/logos/hearst-plus.svg",
-  "hearst-autos": "/logos/hearst-autos.svg",
-  "hearst-local-news": "/logos/hearst-local-news.svg",
-  "hearst-plus": "/logos/hearst-autos.svg",
-  "hearst-lifestyle": "/logos/hearst-lifestyle.svg",
+  "hearst-eandw": "/logos/hearst-eandw.svg?v=2026-10-11",
+  "hearst-ew": "/logos/hearst-ew-official.svg?v=2026-10-11",
+  "hearst-flux": "/logos/hearst-fashion-luxury.svg?v=2026-10-11",
+  "hearst-flux-compact": "/logos/hearst-flux.svg?v=2026-10-11",
+  "hearst-all": "/logos/hearst-plus.svg?v=2026-10-11",
+  // Hearst+ feature lockup: HEARST+ wordmark plus a Schibsted Grotesk descriptor (BRAND_STYLES.md).
+  "hearst-communities": "/logos/hearst-plus-communities.svg?v=2026-10-11",
+  "hearst-autos": "/logos/hearst-autos.svg?v=2026-10-11",
+  "hearst-local-news": "/logos/hearst-local-news.svg?v=2026-10-11",
+  "hearst-plus": "/logos/hearst-autos.svg?v=2026-10-11",
+  "hearst-lifestyle": "/logos/hearst-lifestyle.svg?v=2026-10-11",
   "house-beautiful": "/logos/house.svg",
   "hot-rod": "/logos/hot-rod.svg",
   "mens-health": "/logos/mens.svg",
@@ -71,6 +74,7 @@ export const brandLogoLabels: Record<keyof typeof brandLogos, string> = {
   "hearst-flux": "Hearst Fashion & Luxury",
   "hearst-flux-compact": "Hearst Fashion & Luxury",
   "hearst-all": "Hearst+",
+  "hearst-communities": "Hearst+ Communities",
   "hearst-autos": "Hearst Autos",
   "hearst-local-news": "Hearst Local News",
   "hearst-plus": "Hearst Autos",
@@ -132,4 +136,31 @@ export function getBrandLogoSrc(slug: string, variant: "logo" | "icon" = "logo")
 
 export function getBrandLogoLabel(slug: string) {
   return brandLogoLabels[slug];
+}
+
+// Hearst+ and destination logos are two-tone (navy HEARST, blue plus or section name). They keep their own colors unless a surface asks
+// for a knockout (white) version; brand-color tints would flatten them into one color.
+const twoToneLogoSlugs = new Set([
+  "hearst-all",
+  "hearst-communities",
+  // Destination lockups: navy HEARST, divider, Hearst+ blue section name.
+  "hearst-lifestyle",
+  "hearst-autos",
+  "hearst-plus",
+  "hearst-flux",
+  "hearst-flux-compact",
+  "hearst-ew",
+  "hearst-eandw",
+  "hearst-local-news",
+  // A&E Family sits on a dark masthead: white HEARST, gold divider and name.
+  "hearst-entertainment",
+]);
+
+export function isKnockoutLogoColor(color: string) {
+  return /knockout|white|#fff(?:fff)?\b/i.test(color);
+}
+
+export function resolveBrandLogoColor(slug: string, color?: string) {
+  if (!color) return undefined;
+  return twoToneLogoSlugs.has(slug) && !isKnockoutLogoColor(color) ? undefined : color;
 }

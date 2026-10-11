@@ -2,6 +2,27 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-10-11: New Hearst+ logo and destination lockups
+
+- **Context:** A new two-tone Hearst+ logo (navy HEARST, blue plus) replaced the single-color one, and the destination lockups (HEARST plus an italic serif section name) no longer matched it.
+- **Decision:** Use the new Hearst+ logo everywhere, keeping its two colors except on knockout surfaces. Rebuild the Lifestyle, Autos, Fashion & Luxury and Enthusiast & Wellness lockups as navy HEARST, a thin divider and the section name in letter-spaced Schibsted Grotesk Bold, with the divider and name in the destination primary.
+- **Scope:** Every Hearst+ and destination masthead and footer that renders these logos.
+- **Canonical rule:** `BRAND_STYLES.md` Brand application rules.
+
+## 2026-10-11: Hearst+ feature lockup for Communities
+
+- **Context:** The Communities logo used the destination family (HEARST + italic serif "Communities") as a plain image at its own size, so it read as a fifth destination, its letters did not match other pages and it overflowed on phones.
+- **Decision:** A Hearst+ feature lockup: HEARST+ wordmark plus "Communities" in outlined Schibsted Grotesk Bold, all Hearst+ blue (white on dark), registered as `hearst-communities` and sized by the shared masthead geometry. The same pattern applies to later Hearst+ features.
+- **Scope:** Communities masthead; the rule for future Hearst+ feature mastheads.
+- **Canonical rule:** `BRAND_STYLES.md` Brand application rules; design in `docs/hearst-plus-communities-logo-design.md`.
+
+## 2026-10-11: Communities is brand-hosted conversation
+
+- **Context:** Communities mixed brand-seeded groups and editor threads with Reddit-style reader-made communities, `c/` names and up and down votes that did nothing, plus three overlapping navigations.
+- **Decision:** Every group belongs to a Hearst brand with its editors as hosts; readers post on a trust ladder (first three posts reviewed); one positive `Helpful` reaction; one job per navigation control; host-picked story threads linked from the reader; Hearst+ identity with host badges; in-app Activity only.
+- **Scope:** `/communities/` and its brand, group, post and thread routes, plus the story reader's context rail.
+- **Canonical rule:** `APP_RULES.md` Communities; design in `docs/hearst-plus-communities-design.md`.
+
 ## 2026-10-10: New destination primaries
 
 - **Context:** The four main destinations needed a palette that reads as one family: carmine, olive, dark Tyrian blue and slate.

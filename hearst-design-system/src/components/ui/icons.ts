@@ -33,6 +33,7 @@ export { GearIcon as Settings } from "@phosphor-icons/react/dist/ssr/Gear";
 export { GlobeHemisphereEastIcon as GlobeHemisphereEast } from "@phosphor-icons/react/dist/ssr/GlobeHemisphereEast";
 export { HandbagIcon as ShoppingBag } from "@phosphor-icons/react/dist/ssr/Handbag";
 export { HeadphonesIcon as Headphones } from "@phosphor-icons/react/dist/ssr/Headphones";
+export { FlagIcon as Flag } from "@phosphor-icons/react/dist/ssr/Flag";
 export { HeartIcon as Heart } from "@phosphor-icons/react/dist/ssr/Heart";
 export { ImageIcon as ImageIcon } from "@phosphor-icons/react/dist/ssr/Image";
 export { InfoIcon as Info } from "@phosphor-icons/react/dist/ssr/Info";

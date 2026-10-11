@@ -97,6 +97,17 @@ Read `PRODUCT.md` for intent. Open the relevant section of `STYLE.md` only when 
 - Story reader URLs use `/read/{storyId}/`. When a story is opened from an in-app page, links must append a safe same-origin `from` path and closing the reader returns to that captured entry page. Direct/shared `/read/{storyId}/` URLs without a safe `from` fall back to the story’s source brand route. Never allow external or nested `/read/` return targets.
 - As readers scroll through the continuous modal queue, the browser URL updates to the story currently nearest the reading position with `history.replaceState`. Do not remount the reader, reorder the queue, or add a new browser-history entry for every passively reached story.
 
+## Communities
+
+- Communities (`/communities/`) is brand-hosted conversation, not a reader-run forum. Every group belongs to a Hearst brand; that brand's editors are its hosts, shown with a `{Brand} host` badge. Readers cannot create groups; `Suggest a group` at the end of the reader's group list sends an idea to the hosts. Group names have no `c/` prefix.
+- Any signed-in reader can start a thread and reply, under their Hearst+ display name. A reader's first three threads wait for host review and are visible only to the poster with a pending label; later threads go live at once. Every thread and reply has `Report`. In the prototype, posts, replies, reports and approvals are browser-local, and a simulated host approves pending posts after about 45 seconds.
+- The header topic row switches places: `Home`, `My groups` (`?view=mine`) and `All groups` (`?view=all`). The feed keeps its own Hot / New / Top sort. The left rail lists only the reader's joined groups, then `Suggest a group` and the Activity list. The right rail shows `Groups to join` on Home and My groups, nothing on All groups, and the group's description, hosts and rules inside a group.
+- Home puts threads from joined groups first, then three from other groups under `From groups you might like`. A reader with no joined groups sees `Popular across Hearst+` with a join prompt. Joining uses the shared joined-brand-groups store, so it also tunes the rest of Hearst+.
+- Threads and replies have one positive reaction, `Helpful`, plus the reply count; there are no downvotes. Top sorts by Helpful.
+- Story threads exist only for stories a host attached; the prototype rule is the two most popular stories per brand (`getHostPickedStories`). Only those stories show `Join the conversation` in the story reader's context rail, with the reply count.
+- Activity is in-app only: pending, approved and reply notices appear in the left rail's Activity list with a new-item count. There is no email.
+- On phones, the left rail becomes a horizontal chip row (Home, joined groups, All groups) above the feed, a group's About collapses above its feed, and the right rail is hidden.
+
 ## Featured carousel
 
 - Only the active featured slide is operable and exposed to assistive technology. Inactive slides remain rendered for animation but are `inert`, `aria-hidden`, and removed from sequential focus.

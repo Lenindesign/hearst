@@ -7,7 +7,7 @@ import { hearstNewspaperPublications } from "@/lib/hearst-newspaper-feed-framewo
 import type { BrandTheme } from "@/lib/brands";
 import { getHearstBrandRoute, getHearstDestinationRoute } from "@/lib/hearst-routes";
 import { hearstTVStations } from "@/lib/hearst-tv-feed-framework";
-import { brandLogos } from "@/lib/logos";
+import { brandLogos, resolveBrandLogoColor } from "@/lib/logos";
 import { themeOptions } from "@/lib/theme-options";
 
 export const productImage = "https://hips.hearstapps.com/hmg-prod/images/4cf6b4aa-4f88-469f-a235-545368381794.jpeg";
@@ -773,6 +773,17 @@ function LogoMark({ slug, name, className = "h-8 w-32", color = "var(--foregroun
   const src = brandLogos[slug];
   if (!src || src.startsWith("http")) {
     return <span className="w-32 shrink-0 text-sm font-black uppercase tracking-[0.08em]" style={{ color }}>{name}</span>;
+  }
+
+  if (!resolveBrandLogoColor(slug, color)) {
+    // Two-tone Hearst+ logos keep their own colors; a mask would flatten them.
+    return (
+      <span
+        aria-hidden="true"
+        className={`block shrink-0 bg-contain bg-no-repeat ${className}`}
+        style={{ backgroundImage: `url(${src})`, backgroundPosition: position }}
+      />
+    );
   }
 
   const style: CSSProperties = {

@@ -173,3 +173,25 @@ export function getCommunityLegacyGroupThread(brandSlug: string, threadId: strin
     (group) => group.brandSlug === brandSlug && group.groupSlug === threadId,
   );
 }
+
+type HostPickCandidate = { id: string; brandSlug: string; popularity: number; age: number };
+
+// Stand-in for the editors' choice of which stories get a discussion (communities design Q6): the
+// two most popular stories per brand. Both Communities and the story reader use this rule.
+export const HOST_PICKED_STORIES_PER_BRAND = 2;
+
+export function getHostPickedStories<T extends HostPickCandidate>(stories: readonly T[]): T[] {
+  return [...stories]
+    .sort((a, b) => b.popularity - a.popularity || a.age - b.age)
+    .slice(0, HOST_PICKED_STORIES_PER_BRAND);
+}
+
+export function isHostPickedStory<T extends HostPickCandidate>(story: T, stories: readonly T[]) {
+  return getHostPickedStories(stories.filter((candidate) => candidate.brandSlug === story.brandSlug)).some(
+    (candidate) => candidate.id === story.id,
+  );
+}
+
+export function getCommunityStoryThreadHref(story: Pick<HostPickCandidate, "id" | "brandSlug">) {
+  return `/communities/${story.brandSlug}/threads/${story.id}/`;
+}
