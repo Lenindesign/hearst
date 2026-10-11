@@ -249,7 +249,7 @@ export function UtilityBar({
                     onMouseEnter={() => setOpenDestinationMenu(menuMode)}
                     onFocus={() => setOpenDestinationMenu(menuMode)}
                     className={cn(
-                      "inline-flex min-h-7 min-w-7 cursor-pointer items-center justify-center rounded-full px-2 py-1 text-[11px] font-bold leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:min-h-6 sm:min-w-0 sm:text-xs",
+                      "inline-flex min-h-7 min-w-7 cursor-pointer items-center justify-center rounded-full px-2 py-1 text-[11px] font-normal leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:min-h-6 sm:min-w-0 sm:text-xs",
                       isActive
                         ? "bg-white text-black hover:text-black"
                         : darkMode
