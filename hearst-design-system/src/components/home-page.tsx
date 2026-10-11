@@ -47,6 +47,7 @@ import { BigStoryImageRight } from "./fre/big-story";
 import { FourAcrossGrid } from "./fre/four-across-grid";
 import { SiteFooter } from "./fre/site-footer";
 import { LocalWeather } from "@/components/hearst-plus/local-weather";
+import { brandBanners } from "@/lib/brand-banners";
 import {
   Bookmark,
   Camera,
@@ -953,7 +954,7 @@ export function MainNav({
         size="sm"
         aria-current={(publicationHref || overrideHref) && active ? "page" : undefined}
         className={cn(
-          "min-h-8 min-w-max whitespace-nowrap border-b-2 border-transparent font-normal hover:no-underline md:min-h-0 md:pb-1",
+          "min-h-8 min-w-max whitespace-nowrap border-b-2 border-transparent font-normal hover:no-underline md:min-h-0",
           navCarouselMode === "compact" ? "px-2 text-xs md:min-w-max md:text-sm" : "px-0.5 md:min-w-0",
           navLinkClasses,
           (publicationHref || overrideHref) && active && (
@@ -978,7 +979,7 @@ export function MainNav({
         size="sm"
         aria-current={active ? "page" : undefined}
         className={cn(
-          "min-h-8 min-w-max whitespace-nowrap border-b-2 border-transparent font-normal hover:no-underline md:min-h-0 md:pb-1",
+          "min-h-8 min-w-max whitespace-nowrap border-b-2 border-transparent font-normal hover:no-underline md:min-h-0",
           navCarouselMode === "compact" ? "px-2 text-xs md:min-w-max md:text-sm" : "px-0.5 md:min-w-0",
           navLinkClasses,
           active
@@ -995,7 +996,7 @@ export function MainNav({
         type="button"
         onClick={() => onFilterChange?.(link)}
         className={cn(
-          "min-h-8 min-w-max whitespace-nowrap border-b-2 border-transparent text-sm font-normal transition-colors md:min-h-0 md:pb-1",
+          "min-h-8 min-w-max whitespace-nowrap border-b-2 border-transparent text-sm font-normal transition-colors md:min-h-0",
           navCarouselMode === "compact" ? "px-2 text-xs md:min-w-max md:text-sm" : "px-0.5 md:min-w-0",
           active
             ? useDarkActiveState
@@ -1322,11 +1323,97 @@ export function MainNav({
     overlayPortalTarget
   ) : null;
   const useDarkHeaderIconButtons = darkMode || colorMode === "dark";
+  const mastheadBanner = selectedBrand ? brandBanners[selectedBrand.slug] : undefined;
   const darkHeaderIconButtonClass =
     "hearst-plus-dark-header-icon-button";
 
   return (
     <>
+    {mastheadBanner ? (
+    // A brand banner replaces the logo row; the controls sit over its left and right ends.
+    <div className="relative border-b border-border bg-black">
+        {/* Full-bleed art, trimmed of any baked-in side bars so it always reaches both edges. */}
+        <div
+          className="relative w-full overflow-hidden max-sm:aspect-[3/1]"
+          style={{ aspectRatio: `${mastheadBanner.width - (mastheadBanner.cropX?.left ?? 0) - (mastheadBanner.cropX?.right ?? 0)} / ${mastheadBanner.height}` }}
+        >
+          <Image
+            src={mastheadBanner.src}
+            alt={mastheadBanner.alt}
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+            style={{
+              objectPosition: `${(() => {
+                const left = mastheadBanner.cropX?.left ?? 0;
+                const right = mastheadBanner.cropX?.right ?? 0;
+                return left + right === 0 ? 50 : (left / (left + right)) * 100;
+              })()}% 50%`,
+            }}
+          />
+        </div>
+        {mastheadBanner.scrim ? <div aria-hidden className="pointer-events-none absolute inset-0 bg-black/40" /> : null}
+        {mastheadBanner.overlayLogo && selectedBrand ? (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-24">
+            <BrandLogo
+              slug={selectedBrand.slug}
+              color="#fff"
+              className="block h-10 max-w-full drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] sm:h-16 lg:h-24 [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full"
+            />
+          </div>
+        ) : null}
+        {/* Full-bleed art; the controls stay on the page container's edges. */}
+        <PageContainer className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between py-3 [&>*]:pointer-events-auto">
+          <div className="flex w-10 shrink-0 justify-start sm:w-[var(--width-sidebar-narrow)]">
+            {showMobileDiscoveryMenu ? (
+              <Button
+                ref={mobileMenuTriggerRef}
+                variant="outline"
+                size="icon-sm"
+                className={cn(
+                  "h-11 w-11 rounded-[4px] sm:hidden",
+                  useDarkHeaderIconButtons || mastheadBanner ? darkHeaderIconButtonClass : undefined
+                )}
+                onClick={() => {
+                  setOverlayPortalTarget(document.body);
+                  setSearchOpen(false);
+                  setMobileMenuOpen(true);
+                }}
+                aria-label="Open reading and brand menu"
+                aria-expanded={mobileMenuOpen}
+              >
+                <Menu className="h-5 w-5" aria-hidden />
+              </Button>
+            ) : null}
+            {/* A quiet local signal in place of the desktop color-mode button; the mode toggle stays in the phone menu. */}
+            <LocalWeather className={cn("hidden sm:inline-flex", mastheadBanner && "[&_button]:bg-black/45 [&_button]:px-2 [&_button]:text-white [&_button]:backdrop-blur [&_span]:!text-white")} />
+          </div>
+          <div className="flex w-10 shrink-0 justify-end sm:w-[var(--width-sidebar-narrow)]">
+            <Button
+              ref={searchTriggerRef}
+              data-search-trigger
+              variant="outline"
+              size="icon-sm"
+              className={cn(
+                "h-11 w-11 rounded-[4px] sm:h-7 sm:w-7",
+                useDarkHeaderIconButtons || mastheadBanner ? darkHeaderIconButtonClass : undefined
+              )}
+              aria-label="Search"
+              title="Search"
+              aria-expanded={searchOpen}
+              onClick={() => {
+                setOverlayPortalTarget(document.body);
+                setMobileMenuOpen(false);
+                setSearchOpen(true);
+              }}
+            >
+              <Search className="h-3.5 w-3.5" aria-hidden />
+            </Button>
+          </div>
+        </PageContainer>
+    </div>
+    ) : (
     <div className={cn("flex h-20 border-b sm:h-24", darkMode ? "border-white/10 bg-[var(--component-video-feed-background-default)] text-[var(--component-video-feed-content-primary)]" : "border-border bg-[var(--hp-surface)]")}>
       <PageContainer className="flex items-center justify-between">
         <div className="flex w-10 shrink-0 justify-start sm:w-[var(--width-sidebar-narrow)]">
@@ -1380,6 +1467,7 @@ export function MainNav({
         </div>
       </PageContainer>
     </div>
+    )}
     <div className={cn(
       "border-b",
       darkMode ? "border-white/10 bg-[var(--component-video-feed-background-default)]" : "border-border",
