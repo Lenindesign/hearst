@@ -2,6 +2,13 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-10-10: New destination primaries
+
+- **Context:** The four main destinations needed a palette that reads as one family: carmine, olive, dark Tyrian blue and slate.
+- **Decision:** Lifestyle `#A62C37`, Autos `#819238`, Fashion & Luxury `#12354E`, Enthusiast & Wellness `#34454C`, each with derived hover, active and light tint steps and a curated dark-mode primary. Autos olive is only about 3.4:1 on white, so its link, content-brand and button tokens use darker olive steps (`#5A6627` text, `#6E7C30` buttons) to clear WCAG AA; Lifestyle keeps its teal, amber and sage secondary accents.
+- **Scope:** `lifestyleTheme`, `hearstPlusTheme` (Autos), `fluxTheme` and `ewTheme` in `src/lib/theme-options.ts`. Official destination logo SVGs are unchanged.
+- **Canonical rule:** `BRAND_STYLES.md` Identity.
+
 ## 2026-10-10: Hearst+ headline font is Schibsted Grotesk
 
 - **Context:** Hearst+ is positioned as a cross-brand app rather than a magazine; Newsreader read as a publication serif. Space Grotesk was tried briefly and felt too technical for a daily reading feed.
