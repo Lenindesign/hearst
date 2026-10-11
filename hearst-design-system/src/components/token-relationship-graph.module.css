@@ -1,6 +1,6 @@
 .shell {
   --graph-ink: var(--palette-content-default, #121212);
-  --graph-muted: var(--palette-content-subtle, #5f6b7a);
+  --graph-muted: var(--palette-content-subtle, #5b6676);
   --graph-border: var(--palette-border-subtle, #d6d6d6);
   --graph-surface: var(--palette-background-default, #ffffff);
   --graph-canvas: var(--palette-background-subtle, #f7f8fa);

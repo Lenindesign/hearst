@@ -4,14 +4,14 @@
 @import "../lib/tokens.css";
 
 .hearst-plus-theme {
-  --background: #F4F2EE;
+  --background: #ECE9E3;
   --foreground: var(--palette-content-default, #121212);
   --card: #ffffff;
   --card-foreground: var(--palette-content-default, #121212);
   --popover: var(--component-modal-background-primary-default, var(--card));
   --popover-foreground: var(--card-foreground);
   --muted: var(--palette-background-subtle, #ededed);
-  --muted-foreground: var(--palette-content-subtle, #5F6B7A);
+  --muted-foreground: var(--palette-content-subtle, #5B6676);
   --secondary: var(--palette-background-subtle, #ededed);
   --secondary-foreground: var(--palette-content-default, #121212);
   --accent: var(--palette-background-subtle-brand, var(--muted));
@@ -25,7 +25,7 @@
   --hp-font-ui: "Inter", system-ui, sans-serif;
   --hp-font-headline: var(--font-schibsted-grotesk, "Schibsted Grotesk"), system-ui, sans-serif;
   --hp-font-headline-weight: 800;
-  --hp-background: #F4F2EE;
+  --hp-background: #ECE9E3;
   --hp-nav: var(--primary);
   --hp-nav-translucent: color-mix(in oklab, var(--primary) 94%, transparent);
   --hp-strip: #ffffff;
@@ -91,13 +91,13 @@
   --hp-motion-standard: 240ms;
 }
 
-/* Hearst+ modules (any surface carrying the card shadow) have no outline stroke; the shadow and the
-   surface color separate them from the page. The 1px border width stays so layouts do not shift.
-   Inner dividers on child elements are untouched. */
+/* Hearst+ modules (any surface carrying the card shadow) have no border at all; the shadow and the
+   surface color separate them from the page. A transparent border would still leave a 1px rim of the
+   white surface around edge-to-edge photos. Inner dividers on child elements are untouched. */
 .hearst-plus-theme [class*="hp-shadow-card"],
 .hearst-plus-theme [class*="hp-shadow-card"]:hover,
 .hearst-plus-theme [class*="hp-shadow-card"]:focus-within {
-  border-color: transparent !important;
+  border-width: 0 !important;
 }
 
 .hearst-community-page {

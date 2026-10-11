@@ -452,7 +452,7 @@ export function FeaturedStoryCarousel({
 
   return (
     <article
-      className="group relative min-w-0 overscroll-x-contain overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]"
+      className="group relative min-w-0 overscroll-x-contain overflow-hidden rounded-[8px] bg-black shadow-[var(--hp-shadow-card)]"
       aria-roledescription="carousel"
       aria-label={editionLabel ?? "Featured stories"}
       aria-describedby={swipeInstructionsId}

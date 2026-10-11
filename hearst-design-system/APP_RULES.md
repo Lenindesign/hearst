@@ -6,7 +6,7 @@ Read `PRODUCT.md` for intent. Open the relevant section of `STYLE.md` only when 
 
 ## Theme and surfaces
 
-- The default page canvas is `#F4F2EE`; content modules use white surfaces.
+- The default page canvas is `#ECE9E3`; content modules use white surfaces.
 - AutoWeek uses dark neutral `#242424` for editorial and module-title text on light surfaces. Keep AutoWeek yellow `#FFC84E` for utility backgrounds, active navigation underlines, numbered badges, carousel indicators, and other brand accents; do not use the yellow as foreground title text on white.
 - Hearst Fashion & Luxury, including `/hearst-flux/`, its category views, and its brand routes, loads in dark mode by default.
 - Exception: the `Videos` tab inside the Hearst+ home destination (`/hearst-plus/`) loads its feed area and complete navigation header in dark mode by default because it is a video-index experience. The utility bar, masthead, category navigation, compact sticky navigation, controls, active states, and Hearst+ logo all use the scoped dark treatment. This exception must not change non-video tabs, other destinations, RSS/story pages, or readers. This tab intentionally shows every configured video source across supported sections and brands by default.

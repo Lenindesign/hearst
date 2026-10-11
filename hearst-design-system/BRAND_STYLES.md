@@ -54,7 +54,7 @@ The route names and internal theme slugs are intentionally different in two plac
 
 ## Hearst destination themes
 
-The **HDS page token** is the theme's published background value. The prototype application canvas remains `#F4F2EE` unless a scoped rule in `APP_RULES.md` overrides it.
+The **HDS page token** is the theme's published background value. The prototype application canvas remains `#ECE9E3` unless a scoped rule in `APP_RULES.md` overrides it.
 
 ### Identity
 

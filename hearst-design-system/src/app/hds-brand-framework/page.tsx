@@ -545,7 +545,7 @@ function BrandStorySample({
   );
   const ink = value(theme, "palette-content-default", "#121212");
   const subtle = readableColor(
-    value(theme, "palette-content-subtle", "#5F6B7A"),
+    value(theme, "palette-content-subtle", "#5B6676"),
     surface,
     ink,
   );

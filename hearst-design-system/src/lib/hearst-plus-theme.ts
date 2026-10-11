@@ -3,14 +3,14 @@ import type { CSSProperties } from "react";
 export type HearstPlusCssVars = CSSProperties & Record<`--${string}`, string | number>;
 
 export const hearstPlusLightVars: HearstPlusCssVars = {
-  "--background": "#F4F2EE",
+  "--background": "#ECE9E3",
   "--foreground": "var(--palette-content-default, #121212)",
   "--card": "var(--component-card-background-default, var(--palette-background-default, #ffffff))",
   "--card-foreground": "var(--palette-content-default, #121212)",
   "--popover": "var(--component-modal-background-primary-default, var(--card))",
   "--popover-foreground": "var(--card-foreground)",
   "--muted": "var(--palette-background-subtle, #ededed)",
-  "--muted-foreground": "var(--palette-content-subtle, #5F6B7A)",
+  "--muted-foreground": "var(--palette-content-subtle, #5B6676)",
   "--secondary": "var(--palette-background-subtle, #ededed)",
   "--secondary-foreground": "var(--palette-content-default, #121212)",
   "--accent": "var(--palette-background-subtle-brand, var(--muted))",

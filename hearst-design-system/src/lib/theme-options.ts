@@ -45,7 +45,7 @@ export const hearstPlusTheme: BrandTheme = {
     "palette-content-default-link": "#5A6627",
     "palette-content-default-link-hover": "#434C1D",
     "palette-content-knockout-hover": "#ededed",
-    "palette-content-subtle": "#5F6B7A",
+    "palette-content-subtle": "#5B6676",
   },
   componentTokens: {
     "component-card-background-default": "#ffffff",
@@ -302,7 +302,7 @@ export const hearstAllTheme: BrandTheme = {
     "palette-content-brand-hover": "#1F65A6",
     "palette-content-default-link": "#2B6FAF",
     "palette-content-default-link-hover": "#174C7D",
-    "palette-content-subtle": "#5F6B7A",
+    "palette-content-subtle": "#5B6676",
   },
   componentTokens: {
     ...lifestyleTheme.componentTokens,

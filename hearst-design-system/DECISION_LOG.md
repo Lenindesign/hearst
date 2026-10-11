@@ -2,6 +2,14 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-10-11: Darker page canvas
+
+- **Context:** With module outlines removed, white cards on the `#F4F2EE` canvas separated only by a faint shadow, so the page read as flat.
+- **Decision:** Darken the warm canvas to `#ECE9E3` so white modules stand out, keeping its warm hue. Subtle text darkens from `#5F6B7A` to `#5B6676` to keep 4.5:1 on the new canvas.
+- **Scope:** Every Hearst+ light page (`.hearst-plus-theme` in `globals.css`, `hearst-plus-theme.ts`).
+- **Exceptions:** The shared blue `#2B6FAF` is unchanged; it reaches only 4.34:1 on the canvas, so blue text stays inside white modules.
+- **Canonical rule:** `APP_RULES.md` page canvas; `STYLE.md` contrast.
+
 ## 2026-10-11: New Hearst+ logo and destination lockups
 
 - **Context:** A new two-tone Hearst+ logo (navy HEARST, blue plus) replaced the single-color one, and the destination lockups (HEARST plus an italic serif section name) no longer matched it.
