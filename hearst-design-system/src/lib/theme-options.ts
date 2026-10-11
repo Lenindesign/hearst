@@ -308,6 +308,8 @@ export const hearstAllTheme: BrandTheme = {
     ...lifestyleTheme.componentTokens,
     "component-card-background-neutral": "#F4F8FC",
     "component-card-border-default": "#C7D9EA",
+    "component-button-border-neutral-outlined-default": "#C7D9EA",
+    "component-chip-border-neutral-default": "#C7D9EA",
     "component-button-background-primary-solid-default": "#2B6FAF",
     "component-button-background-primary-solid-hover": "#1F65A6",
     "component-button-background-primary-solid-active": "#174C7D",
