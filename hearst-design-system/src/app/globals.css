@@ -27,6 +27,8 @@
   --hp-font-headline-weight: 800;
   --hp-background: #ECE9E3;
   --hp-nav: var(--primary);
+  /* The Hearst+ home's utility bar: the logo navy, so the logo's blue plus is the header's one bright blue. */
+  --hp-utility-bar: #012247;
   --hp-nav-translucent: color-mix(in oklab, var(--primary) 94%, transparent);
   --hp-strip: #ffffff;
   --hp-surface-deep: var(--foreground);

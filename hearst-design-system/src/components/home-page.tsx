@@ -522,6 +522,7 @@ export function MainNav({
   navCarouselMode = "default",
   mastheadLogoOverride,
   mastheadSlugOverride,
+  extendBannerUnderUtilityBar = false,
   includeVideos,
   darkMode = false,
   mobileContinueStories = [],
@@ -542,6 +543,8 @@ export function MainNav({
   mastheadLogoOverride?: { src: string; label: string; surface?: "default" | "station"; tone?: "normal" | "white"; className?: string } | null;
   /** A registered logo key (src/lib/logos.ts) shown in the masthead instead of the theme's, sized by the shared geometry. */
   mastheadSlugOverride?: string;
+  /** The Hearst+ home banner runs up behind its transparent utility bar. */
+  extendBannerUnderUtilityBar?: boolean;
   includeVideos?: boolean;
   darkMode?: boolean;
   mobileContinueStories?: LifestyleRiverStory[];
@@ -1337,6 +1340,8 @@ export function MainNav({
         : brand.slug === "hearst-all"
           ? hearstPlusBrandWallBanner
           : destinationBrandWallBanners[brand.slug];
+  // The Hearst+ home banner starts under the transparent utility bar (32px), so the bar floats on the brand wall.
+  const underUtilityBar = extendBannerUnderUtilityBar && mastheadBanner === hearstPlusBrandWallBanner;
   const brandWallLogos = mastheadBanner?.wallLogos ?? (mastheadBanner?.wallSection
     ? getHearstSectionBrands(mastheadBanner.wallSection)
         .map((sectionBrand) => brandLogos[sectionBrand.brandSlug])
@@ -1349,14 +1354,19 @@ export function MainNav({
     <>
     {mastheadBanner ? (
     // A brand banner replaces the logo row; the controls sit over its left and right ends.
-    <div className="relative border-b border-border bg-black">
+    <div
+      className={cn("relative border-b border-border bg-black", underUtilityBar && "-mt-8 pt-8")}
+      style={underUtilityBar ? { background: mastheadBanner.background } : undefined}
+    >
         {/* Full-bleed art, trimmed of any baked-in side bars so it always reaches both edges. */}
         <div
           className={cn(
-            "relative w-full overflow-hidden",
+            // The art's own ratio on wider screens; phones use a taller crop so the overlaid controls fit. The ratio
+            // goes through a custom property because an inline aspect-ratio would override the phone class.
+            "relative w-full overflow-hidden aspect-[var(--banner-aspect)]",
             mastheadBanner.pattern === "brand-wall" ? "max-sm:aspect-[5/1]" : "max-sm:aspect-[3/1]",
           )}
-          style={{ aspectRatio: `${mastheadBanner.width - (mastheadBanner.cropX?.left ?? 0) - (mastheadBanner.cropX?.right ?? 0)} / ${mastheadBanner.height}` }}
+          style={{ "--banner-aspect": `${mastheadBanner.width - (mastheadBanner.cropX?.left ?? 0) - (mastheadBanner.cropX?.right ?? 0)} / ${mastheadBanner.height}` } as React.CSSProperties}
         >
           {mastheadBanner.src ? (
             <Image
@@ -1382,7 +1392,7 @@ export function MainNav({
         {mastheadBanner.scrim ? <div aria-hidden className="pointer-events-none absolute inset-0 bg-black/40" /> : null}
         {mastheadBanner.pattern === "brand-wall" ? <HearstPlusBrandWall logos={brandWallLogos} /> : null}
         {mastheadBanner.overlayLogo ? (
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-24">
+          <div className={cn("pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-center px-24", underUtilityBar ? "top-8" : "top-0")}>
             <BrandLogo
               slug={mastheadBanner.logoSlug ?? mastheadSlug}
               color={mastheadBanner.logoColor === "native" ? undefined : "#fff"}
@@ -1403,7 +1413,7 @@ export function MainNav({
           </div>
         ) : null}
         {/* Full-bleed art; the controls stay on the page container's edges. */}
-        <PageContainer className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between py-3 [&>*]:pointer-events-auto">
+        <PageContainer className={cn("pointer-events-none absolute inset-x-0 flex items-start justify-between py-3 [&>*]:pointer-events-auto", underUtilityBar ? "top-8" : "top-0")}>
           <div className="flex w-10 shrink-0 justify-start sm:w-[var(--width-sidebar-narrow)]">
             {showMobileDiscoveryMenu ? (
               <Button
@@ -7168,6 +7178,9 @@ export function HomePageTemplate({
     && !selectedBrand
     && activeLifestyleFilter === localNewsFilter;
 
+  // Mirrors MainNav's banner choice: the Hearst+ home (no brand, no logo override) shows the Hearst+ banner.
+  const hearstPlusHomeBanner = brand.slug === "hearst-all" && !selectedBrand && !mastheadLogoOverride;
+
   return (
     <DestinationConfigsContext.Provider value={destinationConfigs}>
     <div
@@ -7185,6 +7198,7 @@ export function HomePageTemplate({
         activeDestinationOverride={useLocalNewsRiver ? localNewsFilter : undefined}
         darkMode={useVideosDarkHeader}
         hideDestinationNav={Boolean(singleBrandName)}
+        overBanner={hearstPlusHomeBanner}
       />
 
       {/* Main Nav — full width background, content constrained */}
@@ -7195,6 +7209,7 @@ export function HomePageTemplate({
         selectedBrand={selectedBrand}
         navLinksOverride={navLinksOverride}
         mastheadLogoOverride={mastheadLogoOverride}
+        extendBannerUnderUtilityBar={hearstPlusHomeBanner}
         includeVideos={hasScopedVideoFeed}
         darkMode={useVideosDarkHeader}
         mobileContinueStories={mobileContinueStories}

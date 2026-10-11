@@ -109,6 +109,8 @@ export interface UtilityBarProps {
   darkMode?: boolean;
   /** Hide the cross-destination switcher (All/Lifestyle/Autos/…) — used by single-brand destinations. */
   hideDestinationNav?: boolean;
+  /** The page's banner runs up behind the bar: transparent at the top, solid once the page scrolls. */
+  overBanner?: boolean;
 }
 
 export function UtilityBar({
@@ -118,6 +120,7 @@ export function UtilityBar({
   activeDestinationOverride,
   darkMode: darkModeProp = false,
   hideDestinationNav = false,
+  overBanner = false,
 }: UtilityBarProps) {
   const { brand, colorMode } = useTheme();
   // Dark pages (the Videos tab, Fashion & Luxury's default dark mode) get the knockout utility bar; a light
@@ -148,6 +151,17 @@ export function UtilityBar({
                   ? "Enthusiast & Wellness"
                   : "Lifestyle";
   const activeDestinationLabel = activeDestinationOverride ?? activeDestination;
+  // Only the Hearst+ home (All) sits on the navy bar, under its navy banner; other pages keep their primary color.
+  const navyBar = activeDestinationLabel === "All";
+  const [scrolled, setScrolled] = React.useState(false);
+  React.useEffect(() => {
+    if (!overBanner) return;
+    const update = () => setScrolled(window.scrollY > 0);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, [overBanner]);
+  const transparent = overBanner && !scrolled;
   const openSection = hearstDestinationSections.find((section) => section.mode === openDestinationMenu);
   const visibleBrandSections = openDestinationMenu === "all"
     ? brandMenuSections
@@ -185,10 +199,14 @@ export function UtilityBar({
       ref={utilityBarRef}
       onMouseLeave={() => setOpenDestinationMenu(null)}
       className={cn(
-        "sticky top-0 z-50 h-8 text-[length:var(--text-token-4xs)] font-semibold sm:h-8",
-        darkMode
+        "sticky top-0 z-50 h-8 text-[length:var(--text-token-4xs)] font-semibold transition-colors duration-200 sm:h-8",
+        transparent
+          ? "bg-transparent text-primary-foreground"
+          : darkMode
           ? "border-b border-white/10 bg-[var(--component-navigation-utility-background-knockout)] text-[var(--component-navigation-utility-content-knockout)]"
-          : "bg-primary text-primary-foreground"
+          : navyBar
+            ? "bg-[var(--hp-utility-bar)] text-primary-foreground"
+            : "bg-primary text-primary-foreground"
       )}
     >
       <PageContainer className="grid h-full grid-cols-[minmax(0,1fr)_auto] items-center gap-2 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:gap-3">

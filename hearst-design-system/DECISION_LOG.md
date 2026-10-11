@@ -2,6 +2,14 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-10-11: Navy utility bar
+
+- **Context:** The bright Hearst+ blue utility bar sat above the navy Hearst+ banner and matched the logo's plus, so the header carried two strong blues and the plus competed with the bar.
+- **Decision:** On the Hearst+ home the banner extends up behind a transparent utility bar, which fills with the logo navy `#012247` (`--hp-utility-bar`) once the page scrolls, so the header reads as one navy block and the plus is its one bright blue.
+- **Scope:** The utility bar on the Hearst+ home (`All`) only.
+- **Exceptions:** Sections, Local News, A&E and brand pages keep a bar in their own primary color, which reads better over their colored banners; dark-mode pages keep the dark knockout bar.
+- **Canonical rule:** `STYLE.md` Hearst+ shell styling.
+
 ## 2026-10-11: Darker page canvas
 
 - **Context:** With module outlines removed, white cards on the `#F4F2EE` canvas separated only by a faint shadow, so the page read as flat.
