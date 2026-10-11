@@ -73,3 +73,5 @@ export { XCircleIcon as CircleX } from "@phosphor-icons/react/dist/ssr/XCircle";
 export type { Icon as PhosphorIcon } from "@phosphor-icons/react";
 export { LightbulbIcon as Lightbulb } from "@phosphor-icons/react/dist/ssr/Lightbulb";
 export { QuestionIcon as HelpCircle } from "@phosphor-icons/react/dist/ssr/Question";
+export { SquaresFourIcon as LayoutCards } from "@phosphor-icons/react/dist/ssr/SquaresFour";
+export { ListBulletsIcon as LayoutList } from "@phosphor-icons/react/dist/ssr/ListBullets";

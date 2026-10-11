@@ -1084,3 +1084,17 @@
     scrollbar-width: none;
   }
 }
+
+/* The masthead's card/list toggle marks the current river layout with a filled button. */
+[data-slot="button"][data-variant="outline"].hearst-plus-layout-toggle[aria-pressed="true"],
+[data-slot="button"][data-variant="outline"].hearst-plus-layout-toggle[aria-pressed="true"]:hover:not(:disabled) {
+  border-color: var(--foreground);
+  background-color: var(--foreground);
+  color: var(--background);
+}
+[data-slot="button"][data-variant="outline"].hearst-plus-layout-toggle.hearst-plus-dark-header-icon-button[aria-pressed="true"],
+[data-slot="button"][data-variant="outline"].hearst-plus-layout-toggle.hearst-plus-dark-header-icon-button[aria-pressed="true"]:hover:not(:disabled) {
+  border-color: #fff;
+  background-color: #fff;
+  color: #000;
+}

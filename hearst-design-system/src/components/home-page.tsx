@@ -64,6 +64,8 @@ import {
   Pause,
   Play,
   Plus,
+  LayoutCards,
+  LayoutList,
   Search,
   ShoppingBag,
   SlidersHorizontal,
@@ -78,6 +80,7 @@ import {
 import type { LifestyleRiverProfile, LifestyleRiverStory } from "./lifestyle-river-types";
 import type { LiveArticleData, LiveFeedData } from "@/lib/live-feed-types";
 import { loadLiveArticle } from "@/lib/live-article-client-cache";
+import { setRiverLayout, useRiverLayout } from "@/lib/river-layout";
 import { useReaderAccount } from "./reader-account";
 import { ReaderAuthDialog, ReaderProfileDialog, SaveAcrossDevicesDialog } from "./reader-account-ui";
 import { AdaptiveVideo } from "./adaptive-video";
@@ -512,6 +515,34 @@ const hearstDestinationNavHrefs = new Map(
     ["Communities", "/communities/"] as const,
   ]
 );
+// Card blocks or a compact list for the story river. Phones keep cards; the toggle shows from sm up.
+function RiverLayoutToggle({ buttonClassName }: { buttonClassName?: string }) {
+  const layout = useRiverLayout();
+  const options = [
+    { value: "cards", label: "Show stories as cards", Icon: LayoutCards },
+    { value: "list", label: "Show stories as a list", Icon: LayoutList },
+  ] as const;
+  return (
+    <div role="group" aria-label="Story layout" className="hidden items-center gap-1 sm:flex">
+      {options.map(({ value, label, Icon }) => (
+        <Button
+          key={value}
+          type="button"
+          variant="outline"
+          size="icon-sm"
+          aria-pressed={layout === value}
+          aria-label={label}
+          title={label}
+          className={cn("hearst-plus-layout-toggle h-7 w-7 rounded-[4px]", buttonClassName)}
+          onClick={() => setRiverLayout(value)}
+        >
+          <Icon className="h-3.5 w-3.5" aria-hidden />
+        </Button>
+      ))}
+    </div>
+  );
+}
+
 export function MainNav({
   brandSlug,
   activeFilter,
@@ -523,6 +554,7 @@ export function MainNav({
   mastheadLogoOverride,
   mastheadSlugOverride,
   extendBannerUnderUtilityBar = false,
+  showRiverLayoutToggle = false,
   includeVideos,
   darkMode = false,
   mobileContinueStories = [],
@@ -545,6 +577,8 @@ export function MainNav({
   mastheadSlugOverride?: string;
   /** The Hearst+ home banner runs up behind its transparent utility bar. */
   extendBannerUnderUtilityBar?: boolean;
+  /** Show the card/list toggle for the story river beside search. */
+  showRiverLayoutToggle?: boolean;
   includeVideos?: boolean;
   darkMode?: boolean;
   mobileContinueStories?: LifestyleRiverStory[];
@@ -1438,7 +1472,10 @@ export function MainNav({
             {/* A quiet local signal in place of the desktop color-mode button; the mode toggle stays in the phone menu. */}
             <LocalWeather className={cn("hidden sm:inline-flex", mastheadBanner && "[&_button]:bg-black/45 [&_button]:px-2 [&_button]:text-white [&_button]:backdrop-blur [&_span]:!text-white")} />
           </div>
-          <div className="flex w-10 shrink-0 justify-end sm:w-[var(--width-sidebar-narrow)]">
+          <div className="flex shrink-0 items-start justify-end gap-2 sm:w-[var(--width-sidebar-narrow)]">
+            {showRiverLayoutToggle ? (
+              <RiverLayoutToggle buttonClassName={useDarkHeaderIconButtons || mastheadBanner ? darkHeaderIconButtonClass : undefined} />
+            ) : null}
             <Button
               ref={searchTriggerRef}
               data-search-trigger
@@ -1492,7 +1529,10 @@ export function MainNav({
         <div className="flex min-w-0 flex-1 justify-center">
           {renderMastheadLogo(false)}
         </div>
-        <div className="flex w-10 shrink-0 justify-end sm:w-[var(--width-sidebar-narrow)]">
+        <div className="flex shrink-0 items-center justify-end gap-2 sm:w-[var(--width-sidebar-narrow)]">
+          {showRiverLayoutToggle ? (
+            <RiverLayoutToggle buttonClassName={useDarkHeaderIconButtons ? darkHeaderIconButtonClass : undefined} />
+          ) : null}
           <Button
             ref={searchTriggerRef}
             data-search-trigger
@@ -2535,6 +2575,53 @@ export function LifestyleRiverCard({
   const [videoPlaying, setVideoPlaying] = React.useState(false);
   const isVideo = kind === "video";
   const galleryPreview = useGalleryPreview(story, kind === "gallery" && isExplicitGalleryStory(story));
+  const layout = useRiverLayout();
+
+  // List layout: a compact row (thumbnail left, text right) for scanning many stories quickly.
+  if (layout === "list" && !featured) {
+    return (
+      <article
+        className="group/card relative grid min-w-0 cursor-pointer grid-cols-[112px_minmax(0,1fr)] items-center gap-4 overflow-hidden rounded-[8px] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] sm:grid-cols-[168px_minmax(0,1fr)] sm:p-5"
+        data-story-module="river"
+        data-story-layout="list"
+        data-story-id={story.id}
+      >
+        <button
+          type="button"
+          onClick={onOpen}
+          className="peer absolute inset-0 z-10 rounded-[8px] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/60"
+          aria-label={`Open story: ${story.title}`}
+        />
+        <div className="min-w-0">
+          <div className="mb-2 flex flex-wrap items-center gap-2">
+            <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+              {story.signal}
+            </span>
+            <LifestyleKindBadge kind={kind} story={story} />
+            <LifestyleBrandSource story={story} />
+          </div>
+          <h2 className="headline line-clamp-3 break-words text-lg leading-snug transition-colors group-hover/card:text-primary group-focus-within/card:text-primary sm:text-xl">
+            {story.title}
+          </h2>
+          <p className="mt-1.5 hidden text-sm leading-6 text-muted-foreground sm:line-clamp-3">{story.summary}</p>
+        </div>
+        <div className="relative order-first aspect-[4/3] overflow-hidden rounded-[6px] bg-muted">
+          <LifestyleRiverImage
+            story={story}
+            alt=""
+            className="h-full w-full transition-transform duration-200 ease-out group-hover/card:scale-105 motion-reduce:transition-none"
+          />
+          {kind === "video" ? (
+            <span aria-hidden className="absolute inset-0 grid place-items-center">
+              <span className="grid size-9 place-items-center rounded-full bg-black/60 text-white">
+                <Play className="size-4" />
+              </span>
+            </span>
+          ) : null}
+        </div>
+      </article>
+    );
+  }
 
   if (galleryPreview.status === "ready") {
     return (
@@ -4232,6 +4319,7 @@ function LifestyleRiverHomePage({
   onRequestNextFeedPage,
 }: LifestyleRiverHomePageProps) {
   const destinationConfigs = useDestinationConfigs();
+  const riverLayout = useRiverLayout();
   const config = destinationConfig ?? destinationConfigs[destination];
   const { account, updatePreferences, addComment } = useReaderAccount();
   const router = useRouter();
@@ -5914,7 +6002,7 @@ function LifestyleRiverHomePage({
                         theme="light"
                       />
                     ) : null}
-                    {getLifestyleCardKind(story) === "video" ? (
+                    {getLifestyleCardKind(story) === "video" && riverLayout === "cards" ? (
                       <VideoIndexCard
                         story={story}
                         onOpen={() => openStory(story.id)}
@@ -7210,6 +7298,7 @@ export function HomePageTemplate({
         navLinksOverride={navLinksOverride}
         mastheadLogoOverride={mastheadLogoOverride}
         extendBannerUnderUtilityBar={hearstPlusHomeBanner}
+        showRiverLayoutToggle
         includeVideos={hasScopedVideoFeed}
         darkMode={useVideosDarkHeader}
         mobileContinueStories={mobileContinueStories}
