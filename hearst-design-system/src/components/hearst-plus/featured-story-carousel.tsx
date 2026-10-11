@@ -8,11 +8,9 @@ import {
   Pause,
   Play,
 } from "@/components/ui/icons";
-import { Button } from "@/components/ui/button";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { cn } from "@/lib/utils";
 import { BrandSourceIcon } from "@/components/hearst-plus/brand-source-icon";
-import { LiveStoryBadge } from "@/components/hearst-plus/story-metadata";
 import { usePrefersReducedMotion } from "@/components/hearst-plus/use-prefers-reduced-motion";
 import { formatVideoDuration } from "@/components/hearst-plus/video-format";
 
@@ -28,7 +26,8 @@ export type FeaturedStoryCarouselProps = {
   getCommentCount?: (story: LifestyleRiverStory) => number;
   isCurrentStory?: (story: LifestyleRiverStory) => boolean;
   onOpenStory: (story: LifestyleRiverStory) => void;
-  onFollowBrand: (brandName: string) => void;
+  /** Unused: the slide row with Follow and the dot indicators is hidden. Kept so callers need no change. */
+  onFollowBrand?: (brandName: string) => void;
   onEditionImpression?: () => void;
   onEditionStoryOpen?: (story: LifestyleRiverStory, position: number) => void;
   onActiveStoryChange?: (story: LifestyleRiverStory, position: number) => void;
@@ -51,11 +50,9 @@ export function FeaturedStoryCarousel({
   getCommentCount = defaultCommentCount,
   isCurrentStory = defaultIsCurrentStory,
   onOpenStory,
-  onFollowBrand,
   onEditionImpression,
   onEditionStoryOpen,
   onActiveStoryChange,
-  indicatorPalette,
 }: FeaturedStoryCarouselProps) {
   const prefersReducedMotion = usePrefersReducedMotion();
   const initialActualIndex = React.useMemo(() => {
@@ -201,9 +198,6 @@ export function FeaturedStoryCarousel({
     setActiveIndex(normalizedIndex);
     setTrackIndex(nextIndex + 1);
   }, [scheduleGestureUnlockFallback, stories.length, unlockGesture]);
-  const selectStory = React.useCallback((index: number) => {
-    moveToIndex(index, false);
-  }, [moveToIndex]);
   const goToPrevious = React.useCallback(() => {
     moveToIndex(activeIndex - 1);
   }, [activeIndex, moveToIndex]);
@@ -669,61 +663,6 @@ export function FeaturedStoryCarousel({
               </button>
             </div>
           ) : null}
-        </div>
-      </div>
-
-      <div className="flex flex-col items-center justify-center gap-1 border-t border-border bg-[var(--hp-surface)] px-4 py-1.5 sm:flex-row sm:justify-between sm:gap-3 sm:py-3">
-        <div
-          className="flex min-w-0 flex-wrap justify-center gap-1 sm:justify-start sm:gap-1.5"
-          aria-label="Featured story slides"
-        >
-          {stories.map((story, index) => (
-            <button
-              key={story.id}
-              type="button"
-              className="inline-flex h-6 w-9 items-center justify-center rounded-full transition-colors hover:bg-muted/60 sm:w-auto"
-              onClick={() => selectStory(index)}
-              aria-label={`Show story ${index + 1}: ${story.title}`}
-              aria-current={index === activeIndex ? "true" : undefined}
-            >
-              <span
-                aria-hidden
-                style={
-                  indicatorPalette?.length
-                    ? {
-                        backgroundColor:
-                          indicatorPalette[index % indicatorPalette.length],
-                      }
-                    : undefined
-                }
-                className={cn(
-                  "h-1.5 rounded-full transition-all motion-reduce:transition-none",
-                  index === activeIndex ? "w-8" : "w-4",
-                  !indicatorPalette?.length &&
-                    (index === activeIndex
-                      ? "bg-primary"
-                      : "bg-muted-foreground/30"),
-                )}
-              />
-            </button>
-          ))}
-        </div>
-        <div className="flex shrink-0 items-center justify-center gap-2 sm:gap-4">
-          <span className="inline-flex items-center gap-1">
-            <Button
-              variant="ghost"
-              size="xs"
-              className="h-7 border border-border px-2 text-xs sm:h-6 sm:border-0 sm:px-0"
-              onClick={() => onFollowBrand(activeStory.brand)}
-              aria-label={`Follow ${activeStory.brand}`}
-            >
-              <span className="sm:hidden">Follow</span>
-              <span className="hidden sm:inline">
-                Follow {activeStory.brand}
-              </span>
-            </Button>
-            <LiveStoryBadge story={activeStory} />
-          </span>
         </div>
       </div>
     </article>
