@@ -3,6 +3,7 @@ import Link from "next/link";
 import { BrandLogo } from "@/components/brand-logo";
 import { SiteFooter } from "@/components/fre/site-footer";
 import { ThemeProvider } from "@/components/theme-provider";
+import { PageContainer } from "@/components/ui/grid";
 import { NewsstandExperience } from "@/components/hearst-plus/newsstand/newsstand-experience";
 import { socialGraphMetadata } from "@/lib/social-graph-image";
 
@@ -17,13 +18,13 @@ export default function HearstPlusNewsstandPage() {
     <ThemeProvider defaultBrandSlug="hearst-all">
       <div className="min-h-screen bg-background text-foreground">
         <header className="relative z-30 border-b border-border bg-background">
-          <div className="mx-auto flex max-w-[1360px] items-center justify-between gap-5 px-5 py-4 md:px-8">
+          <PageContainer className="flex items-center justify-between gap-5 py-4">
             <Link
               href="/hearst-plus/"
               className="inline-flex min-h-11 items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
               aria-label="Return to Hearst+"
             >
-              <span className="text-2xl font-black tracking-[0.2em] text-primary">HEARST+</span>
+              <BrandLogo slug="hearst-all" label="Hearst+" className="block h-[22px] [&_svg]:h-full [&_svg]:w-auto" />
             </Link>
             <Link
               href="/hearst-plus/"
@@ -31,7 +32,7 @@ export default function HearstPlusNewsstandPage() {
             >
               Back to For You
             </Link>
-          </div>
+          </PageContainer>
         </header>
         <NewsstandExperience />
         <SiteFooter

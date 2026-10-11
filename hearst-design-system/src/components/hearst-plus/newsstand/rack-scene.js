@@ -254,7 +254,7 @@ export async function createRackScene(canvas, opts = {}) {
     const corners = [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([x, y]) => probe.localToWorld(corner.set(x * MW / 2, y * MH / 2, 0)).clone());
     const avail = 1 - topInset / innerHeight;               // fraction of the viewport below the header
     const wantY = -topInset / innerHeight;                  // NDC y of the middle of that area
-    const wantX = -0.42 * side;                             // NDC x: middle of the side the panel leaves free
+    const wantX = -0.36 * side;                             // NDC x: just off center, so the magazine sits beside its panel
     const tanH = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
     const place = d => {
       const tgt = c.clone(), pos = tgt.clone().addScaledVector(nrm, d).add(new V(-0.3 * side * d / 0.78, 0.03, 0));

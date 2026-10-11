@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { BrandLogo } from "@/components/brand-logo";
+import { Col, Grid, PageContainer } from "@/components/ui/grid";
 import { FEATURED_SLUGS, PRINT_SUBSCRIBE_URL, TITLES, TITLE_SLUGS, appRoute, logoSrc } from "./newsstand-catalog";
 import { NewsstandTitleModal } from "./newsstand-title-modal";
 
@@ -189,8 +191,11 @@ export function NewsstandExperience() {
 
       {/* The overlay passes clicks through to the rack; only cards and controls catch them. */}
       <main className="pointer-events-none relative z-10">
-        <section data-stop className="flex min-h-screen items-start px-[6vw] pb-16 pt-24 md:items-center">
-          <div className="flex max-w-[640px] flex-col gap-6 max-md:-mx-2 max-md:bg-background/90 max-md:p-5 max-md:backdrop-blur-sm">
+        {/* Overlay copy sits on the shared Hearst+ page container and 12-column grid; the 3D rack behind it is a full-bleed layer. */}
+        <section data-stop className="flex min-h-screen items-start pb-16 pt-24 md:items-center">
+          <PageContainer>
+            <Grid>
+              <Col span="full" spanMd={6} spanLg={6} className="flex flex-col gap-6 max-md:-mx-2 max-md:bg-background/90 max-md:p-5 max-md:backdrop-blur-sm">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Hearst+</p>
             <h1 className="headline text-balance text-[clamp(32px,6vw,116px)] font-black leading-[0.92] tracking-[-0.045em]">
               <span className="text-primary">Every</span> Hearst brand. <span className="text-primary">One</span> app.
@@ -211,15 +216,30 @@ export function NewsstandExperience() {
               </button>
             </p>
             <p className="hidden text-sm text-muted-foreground md:block">Tip: click any cover to preview that brand in Hearst+.</p>
-          </div>
+              </Col>
+            </Grid>
+          </PageContainer>
         </section>
 
         {BRANDS.map((b, i) => {
           const appHref = appRoute(b.slug);
           return (
             <section key={b.slug} data-stop className="h-[120vh]">
-              <div className={`sticky top-0 flex h-screen items-end justify-center px-6 pb-20 pt-6 md:pb-6 md:items-center md:pr-[72px] ${i % 2 ? "md:justify-start" : "md:justify-end"}`}>
-                <article data-panel className="pointer-events-auto flex w-full max-w-[420px] flex-col gap-4 bg-background p-6 shadow-[0_12px_40px_rgba(0,0,0,.08)] md:p-8">
+              <div className="sticky top-0 flex h-screen items-end pb-20 pt-6 md:items-center md:pb-6">
+                <PageContainer>
+                  <Grid>
+                    {/* Panels sit one column in from the edge (columns 2-5 or 8-11 on desktop) so each reads as a pair
+                        with its magazine, which the scene frames just off center on the other side. On tablets the
+                        right panel stops one column short so it clears the brand dots in the page margin. */}
+                    <Col
+                      span="full"
+                      spanMd={4}
+                      spanLg={4}
+                      startMd={i % 2 ? 1 : 4}
+                      startLg={i % 2 ? 2 : 8}
+                      className="pointer-events-auto"
+                    >
+                <article data-panel className="flex w-full flex-col gap-5 bg-background p-7 shadow-[0_12px_40px_rgba(0,0,0,.08)] md:p-10 lg:p-12">
                   <img src={logoSrc(b.slug)} alt={b.name} className="h-9 w-auto max-w-[300px] self-start object-contain md:h-11" />
                   <h2 className="headline text-balance text-[26px] font-black leading-[1.04] tracking-[-0.03em] md:text-[32px]">{b.headline}</h2>
                   <p className="hidden text-pretty leading-relaxed text-muted-foreground md:block">{b.body}</p>
@@ -230,13 +250,18 @@ export function NewsstandExperience() {
                     </Link>
                   ) : null}
                 </article>
+                    </Col>
+                  </Grid>
+                </PageContainer>
               </div>
             </section>
           );
         })}
 
-        <section id="join" data-stop className="flex min-h-[110vh] items-start justify-center px-6 pb-12 pt-16">
-          <div className="pointer-events-auto flex w-full max-w-[880px] flex-col items-center gap-6 bg-background p-[clamp(28px,4vw,48px)] text-center shadow-[0_12px_40px_rgba(0,0,0,.08)]">
+        <section id="join" data-stop className="min-h-[110vh] pb-12 pt-16">
+          <PageContainer>
+            <Grid>
+              <Col span="full" spanMd={8} spanLg={8} startLg={3} className="pointer-events-auto flex flex-col items-center gap-6 bg-background p-[clamp(28px,4vw,48px)] text-center shadow-[0_12px_40px_rgba(0,0,0,.08)]">
             {joined ? (
               <>
                 <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Welcome to Hearst+</p>
@@ -253,7 +278,8 @@ export function NewsstandExperience() {
               </>
             ) : (
               <>
-                <h2 className="headline text-[clamp(40px,6vw,80px)] font-black leading-[0.95] tracking-[-0.045em]">
+                <BrandLogo slug="hearst-all" label="Hearst+" className="block h-7 md:h-9 [&_svg]:h-full [&_svg]:w-auto" />
+                <h2 className="headline text-balance text-[clamp(26px,2.8vw,40px)] font-black leading-[0.95] tracking-[-0.045em]">
                   {TITLE_SLUGS.length} brands<span className="text-primary">.</span> One app<span className="text-primary">.</span>
                 </h2>
                 <p className="max-w-[540px] text-pretty text-muted-foreground">
@@ -292,7 +318,9 @@ export function NewsstandExperience() {
                 </a>
               </>
             )}
-          </div>
+              </Col>
+            </Grid>
+          </PageContainer>
         </section>
       </main>
     </div>
