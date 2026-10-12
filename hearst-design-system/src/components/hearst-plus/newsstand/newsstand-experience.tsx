@@ -188,11 +188,10 @@ export function NewsstandExperience() {
       {/* The overlay passes clicks through to the rack; only cards and controls catch them. */}
       <main className="pointer-events-none relative z-10">
         {/* Overlay copy sits on the shared Hearst+ page container and 12-column grid; the 3D rack behind it is a full-bleed layer. */}
-        <section data-stop className="flex min-h-screen items-start pb-16 pt-24 md:items-center">
+        <section data-stop className="flex min-h-screen items-start pb-16 pt-24 md:pt-[24vh]">
           <PageContainer>
             <Grid>
               <Col span="full" spanMd={6} spanLg={6} className="flex flex-col gap-6 max-md:-mx-2 max-md:bg-background/90 max-md:p-5 max-md:backdrop-blur-sm">
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Hearst+</p>
             <h1 className="headline text-balance text-[clamp(32px,6vw,116px)] font-black leading-[0.92] tracking-[-0.045em]">
               <span className="text-primary">Every</span> Hearst brand. <span className="text-primary">One</span> app.
             </h1>
