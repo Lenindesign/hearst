@@ -543,22 +543,25 @@ export function FeaturedStoryCarousel({
                 <div className="relative isolate">
                   <div className="relative h-[min(128vw,520px)] w-full overflow-hidden sm:h-auto sm:aspect-video">
                     {renderImage(story, index, index === activeIndex)}
+                    {/* A short fade so the photo's bottom edge melts into the black band under the headline. */}
                     <div
                       aria-hidden="true"
                       data-slider-layer="gradient"
-                      className="pointer-events-none absolute inset-x-0 bottom-0 h-[180px] bg-[linear-gradient(to_bottom,transparent_0%,var(--hp-image-scrim-soft)_30%,var(--hp-image-scrim-strong)_72%,var(--hp-image-scrim-solid)_100%)] sm:h-[220px] xl:h-[240px]"
+                      className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-[linear-gradient(to_bottom,transparent,var(--hp-image-scrim-solid))] sm:h-20"
                     />
                   </div>
                 </div>
                 <div data-slider-layer="frame" className="bg-black" />
+                {/* One light scrim behind the text only: the bottom ~45% of the slide on an ease-in curve, topping out at 75%
+                    black instead of solid, so most of the photo stays visible. The text shadow keeps contrast on bright spots. */}
                 <div
                   aria-hidden="true"
                   data-slider-layer="bottom-scrim"
-                  className="pointer-events-none absolute inset-x-0 bottom-0 h-[min(72%,430px)] bg-[linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.34)_32%,rgba(0,0,0,0.86)_62%,#000_100%)]"
+                  className="pointer-events-none absolute inset-x-0 bottom-0 h-[min(48%,300px)] bg-[linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.12)_30%,rgba(0,0,0,0.42)_62%,rgba(0,0,0,0.75)_100%)]"
                 />
                 <div
                   data-slider-content
-                  className="absolute inset-x-0 bottom-0 p-5 text-white sm:p-7"
+                  className="absolute inset-x-0 bottom-0 p-5 text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.45),0_2px_14px_rgba(0,0,0,0.4)] sm:p-7"
                 >
                   <div className="mb-3 flex flex-wrap items-center gap-2 text-sm font-semibold">
                     <BrandSourceIcon
@@ -587,7 +590,7 @@ export function FeaturedStoryCarousel({
                   </div>
                   <h2
                     className={cn(
-                      "headline line-clamp-3 max-w-[min(42rem,100%)] break-words text-balance text-[clamp(2rem,4.5vw,2.75rem)] sm:text-[clamp(2.25rem,3.25vw,3rem)]",
+                      "headline line-clamp-2 max-w-[min(42rem,100%)] break-words text-balance text-[clamp(1.75rem,4vw,2.4rem)] sm:text-[clamp(2rem,2.9vw,2.6rem)]",
                       story.brandSlug === "house-beautiful" ||
                         story.brandSlug === "road-and-track"
                         ? "leading-[1.12]"
