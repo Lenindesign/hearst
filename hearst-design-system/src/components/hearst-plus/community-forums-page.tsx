@@ -226,7 +226,8 @@ function makeThreads(brands: CommunityBrand[], activeBrandSlug?: string, activeG
       : [...allThreads].sort((a, b) =>
           sortBy === "top" ? b.helpfulBase - a.helpfulBase : b.replies + (b.kind === "story" ? 8 : 0) - (a.replies + (a.kind === "story" ? 8 : 0)),
         );
-  return sorted.slice(0, activeBrandSlug ? 14 : 16);
+  // Home carries every thread from every brand; a brand page shows its own top 14.
+  return activeBrandSlug ? sorted.slice(0, 14) : sorted;
 }
 
 function toFeedThread(thread: Thread): CommunityFeedThread {
@@ -319,6 +320,17 @@ function CommunityHeader({
         {/* A light scrim keeps busy art and baked-in wordmarks from fighting the icon and name below. */}
         {banner?.src ? (
           <div aria-hidden className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.05),rgba(0,0,0,0.35))]" />
+        ) : null}
+        {/* Art without a built-in wordmark (story photos, some Yahoo banners) gets the white logo, as on brand pages. */}
+        {banner?.src && banner.overlayLogo ? (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-24">
+            <BrandLogo
+              slug={group.brandSlug}
+              color="#fff"
+              decorative
+              className="block h-10 drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] sm:h-16 [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full"
+            />
+          </div>
         ) : null}
         {/* Weather and search sit on the banner's top corners, as on every other Hearst+ banner. */}
         <MainNav brandSlug="hearst-all" controlsOnly searchStories={searchStories} />

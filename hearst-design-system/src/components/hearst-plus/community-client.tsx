@@ -949,40 +949,22 @@ export function CommunityFeed({
   threads,
   view,
   scopeBrandSlug,
-  suggestedLimit = 3,
 }: {
   threads: CommunityFeedThread[];
   view: "home" | "mine" | "group";
   scopeBrandSlug?: string;
-  suggestedLimit?: number;
 }) {
   const { joined, store } = useCommunityState();
   const localPosts = store.posts.filter((post) => !scopeBrandSlug || post.brandSlug === scopeBrandSlug);
   const visibleLocalPosts = view === "mine" ? localPosts.filter((post) => joined.includes(post.brand)) : localPosts;
 
-  let sections: { title?: string; threads: CommunityFeedThread[] }[];
-  if (view === "group") {
-    sections = [{ threads }];
-  } else {
-    const mine = threads.filter((thread) => joined.includes(thread.brand));
-    const others = threads.filter((thread) => !joined.includes(thread.brand));
-    if (view === "mine") {
-      sections = [{ threads: mine }];
-    } else if (mine.length === 0) {
-      sections = [{ title: "Popular across Hearst+", threads: others }];
-    } else {
-      sections = [{ threads: mine }, { title: "From groups you might like", threads: others.slice(0, suggestedLimit) }];
-    }
-  }
+  // Home shows every thread from every brand in the chosen sort order; My groups narrows to joined groups.
+  const sections: { title?: string; threads: CommunityFeedThread[] }[] =
+    view === "mine" ? [{ threads: threads.filter((thread) => joined.includes(thread.brand)) }] : [{ threads }];
   const empty = sections.every((section) => section.threads.length === 0) && visibleLocalPosts.length === 0;
 
   return (
     <div className="space-y-4">
-      {view === "home" && joined.length === 0 ? (
-        <p className="hearst-community-copy rounded-[8px] border border-primary/15 bg-[var(--community-surface-soft)] p-4 text-sm leading-6 text-[var(--hp-text-ui)]">
-          Join a few groups and their threads will come first here. Until then, here is what is popular across Hearst+.
-        </p>
-      ) : null}
       {empty ? (
         <p className="hearst-community-copy rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-6 text-sm leading-6 text-[var(--hp-text-secondary)]">
           {view === "mine" ? (
