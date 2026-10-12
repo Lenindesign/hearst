@@ -555,6 +555,7 @@ export function MainNav({
   mastheadSlugOverride,
   extendBannerUnderUtilityBar = false,
   showRiverLayoutToggle = false,
+  controlsOnly = false,
   includeVideos,
   darkMode = false,
   mobileContinueStories = [],
@@ -579,6 +580,8 @@ export function MainNav({
   extendBannerUnderUtilityBar?: boolean;
   /** Show the card/list toggle for the story river beside search. */
   showRiverLayoutToggle?: boolean;
+  /** Render only the weather and search controls (and search overlay), for a page that draws its own banner. */
+  controlsOnly?: boolean;
   includeVideos?: boolean;
   darkMode?: boolean;
   mobileContinueStories?: LifestyleRiverStory[];
@@ -1383,6 +1386,37 @@ export function MainNav({
     : undefined);
   const darkHeaderIconButtonClass =
     "hearst-plus-dark-header-icon-button";
+
+  if (controlsOnly) {
+    // The host page positions this layer over its own banner, matching the masthead banner's control placement.
+    return (
+      <>
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between p-3 [&>*]:pointer-events-auto">
+          <LocalWeather className="hidden sm:inline-flex [&_button]:bg-black/45 [&_button]:px-2 [&_button]:text-white [&_button]:backdrop-blur [&_span]:!text-white" />
+          <span aria-hidden className="sm:hidden" />
+          <Button
+            ref={searchTriggerRef}
+            data-search-trigger
+            variant="outline"
+            size="icon-sm"
+            className={cn("h-11 w-11 rounded-[4px] backdrop-blur sm:h-7 sm:w-7", darkHeaderIconButtonClass)}
+            // A dark chip like the weather control, so the button stays visible on bright banner art.
+            style={{ backgroundColor: "rgba(0, 0, 0, 0.45)" }}
+            aria-label="Search"
+            title="Search"
+            aria-expanded={searchOpen}
+            onClick={() => {
+              setOverlayPortalTarget(document.body);
+              setSearchOpen(true);
+            }}
+          >
+            <Search className="h-3.5 w-3.5" aria-hidden />
+          </Button>
+        </div>
+        {searchDialog}
+      </>
+    );
+  }
 
   return (
     <>

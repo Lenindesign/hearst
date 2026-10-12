@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Camera, CheckCircle2, Flag, Heart, HelpCircle, ImageIcon, Lightbulb, MessageCircle, Plus, Send, Shield } from "@/components/ui/icons";
 import {
+  COMMUNITY_REVIEWED_POST_COUNT,
   joinedBrandGroupsChangeEvent,
   joinedBrandGroupsStorageKey,
 } from "@/lib/community-groups";
@@ -91,8 +92,6 @@ type CommunityStore = {
   suggestions: { name: string; reason: string; brand?: string; createdAt: number }[];
 };
 
-// Trust ladder (Q4): a reader's first posts wait for host review, later posts go live at once.
-export const COMMUNITY_REVIEWED_POST_COUNT = 3;
 // Prototype stand-in for a host working the review queue.
 const SIMULATED_REVIEW_MS = 45_000;
 const STORE_KEY = "hearst-plus-community-v1";

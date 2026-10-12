@@ -4,7 +4,9 @@ import type { CSSProperties } from "react";
 import { Flame, Newspaper, TrendingUp } from "@/components/ui/icons";
 import { MainNav } from "@/components/home-page";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
+import { BrandLogo } from "@/components/brand-logo";
 import { BrandSourceIcon } from "@/components/hearst-plus/brand-source-icon";
+import { brandBanners } from "@/lib/brand-banners";
 import {
   CommunityComposer,
   CommunityFeed,
@@ -17,7 +19,6 @@ import {
   CommunityLeftRail,
   CommunityReportButton,
   CommunityThreadReplies,
-  COMMUNITY_REVIEWED_POST_COUNT,
   type CommunityFeedThread,
   type CommunityGroupSummary,
 } from "@/components/hearst-plus/community-client";
@@ -27,6 +28,7 @@ import { SiteFooter } from "@/components/fre/site-footer";
 import { getHearstDestinationStaticData } from "@/lib/hearst-destination-data";
 import { getHearstAllBrands } from "@/lib/hearst-routes";
 import {
+  COMMUNITY_REVIEWED_POST_COUNT,
   communityGroups,
   communityParticipationThreads,
   getCommunityGroup,
@@ -274,6 +276,91 @@ function makeGroupSummaries(brands: CommunityBrand[]): CommunityGroupSummary[] {
   return [...named, ...brandGroups];
 }
 
+// A subreddit-style header for a brand community or group: a short strip of the brand's banner art, the round brand
+// icon overlapping its bottom edge, the community name, its host and a prominent Join. Group pages use the parent
+// brand's banner, so a group reads as a room inside that brand.
+function CommunityHeader({
+  group,
+  isGroup,
+  headingLevel,
+  searchStories,
+}: {
+  group: CommunityGroupSummary;
+  isGroup: boolean;
+  headingLevel: "h1" | "p";
+  searchStories: LifestyleRiverStory[];
+}) {
+  const banner = brandBanners[group.brandSlug];
+  const Heading = headingLevel;
+  const cropLeft = banner?.cropX?.left ?? 0;
+  const cropRight = banner?.cropX?.right ?? 0;
+  return (
+    <section
+      aria-label={`${group.name} community`}
+      className="overflow-hidden rounded-[8px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]"
+    >
+      <div className="relative h-[96px] overflow-hidden sm:h-[160px]" style={{ background: banner?.background ?? "#012247" }}>
+        {banner?.src ? (
+          <Image
+            src={banner.src}
+            alt=""
+            fill
+            priority
+            sizes="(max-width: 1360px) 100vw, 1360px"
+            className="object-cover"
+            style={{ objectPosition: `${cropLeft + cropRight === 0 ? 50 : (cropLeft / (cropLeft + cropRight)) * 100}% 50%` }}
+          />
+        ) : (
+          // Solid banners (and brands without art) carry the brand's white wordmark instead.
+          <div className="absolute inset-0 flex items-center justify-center px-24">
+            <BrandLogo slug={group.brandSlug} color="#fff" decorative className="block h-12 sm:h-20 [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full" />
+          </div>
+        )}
+        {/* A light scrim keeps busy art and baked-in wordmarks from fighting the icon and name below. */}
+        {banner?.src ? (
+          <div aria-hidden className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.05),rgba(0,0,0,0.35))]" />
+        ) : null}
+        {/* Weather and search sit on the banner's top corners, as on every other Hearst+ banner. */}
+        <MainNav brandSlug="hearst-all" controlsOnly searchStories={searchStories} />
+      </div>
+      <div className="flex flex-wrap items-start gap-x-4 gap-y-3 px-4 pb-4 sm:px-6 sm:pb-5">
+        <BrandSourceIcon
+          brand={group.brand}
+          brandSlug={group.brandSlug}
+          className="-mt-8 size-16 shrink-0 rounded-full ring-4 ring-[var(--hp-surface)] sm:-mt-10 sm:size-20"
+          imageClassName="object-cover p-0"
+        />
+        <div className="min-w-0 flex-1 pt-2 sm:pt-3">
+          <Heading className="headline text-2xl leading-tight sm:text-3xl">
+            {isGroup ? group.name : `${group.brand} Community`}
+          </Heading>
+          {/* On brand community pages the Communities masthead is dropped, so its links live here beside the host line. */}
+          <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1">
+            <p className="text-sm font-semibold text-[var(--hp-text-secondary)]">
+              Hosted by {group.brand} editors
+              {group.members ? ` · ${group.members}` : ""}
+            </p>
+            {/* Phones already have Home and All groups in the group chips row below the header. */}
+            <nav aria-label="Communities" className="hidden flex-wrap items-center gap-x-1 sm:flex">
+              <span aria-hidden className="mr-2 h-4 w-px bg-[var(--hp-border)]" />
+              {communityNavLinks.map((link) => (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className="inline-flex min-h-9 items-center rounded-full px-2.5 text-sm font-semibold text-[var(--hp-text-primary)] transition-colors hover:bg-[var(--community-surface-soft)] hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+        </div>
+        <CommunityJoinButton brand={group.brand} groupName={group.name} className="mt-3 min-h-10 px-5 text-sm max-sm:w-full max-sm:justify-center" />
+      </div>
+    </section>
+  );
+}
+
 export function CommunityForumsPage({ activeBrandSlug, activeGroupSlug, activeThreadId, sortBy = "hot", view = "home" }: CommunityForumsPageProps) {
   const brands = getCommunityBrands();
   const activeBrand = activeBrandSlug ? brands.find((brand) => brand.brandSlug === activeBrandSlug) : undefined;
@@ -305,18 +392,8 @@ export function CommunityForumsPage({ activeBrandSlug, activeGroupSlug, activeTh
 
   const groupAbout = activeGroup ? (
     <>
-      <div className="flex items-start gap-3">
-        <BrandSourceIcon brand={activeGroup.brand} brandSlug={activeGroup.brandSlug} className="size-10 shrink-0 rounded-full" imageClassName="object-cover p-0" />
-        <div className="min-w-0 flex-1">
-          <h2 className="headline text-xl leading-tight">{activeGroup.name}</h2>
-          <p className="text-xs font-bold text-[var(--hp-text-secondary)]">
-            Hosted by {activeGroup.brand}
-            {activeGroup.members ? ` · ${activeGroup.members}` : ""}
-          </p>
-        </div>
-        <CommunityJoinButton brand={activeGroup.brand} groupName={activeGroup.name} />
-      </div>
-      <p className="hearst-community-copy mt-3 text-sm leading-6 text-[var(--hp-text-secondary)]">{activeGroup.description}</p>
+      <h2 className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest">About</h2>
+      <p className="hearst-community-copy mt-2 text-sm leading-6 text-[var(--hp-text-secondary)]">{activeGroup.description}</p>
       <h3 className="mt-4 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest">Hosts</h3>
       <p className="mt-2 flex flex-wrap items-center gap-2 text-sm font-bold">
         {activeGroup.brand} editors
@@ -334,15 +411,32 @@ export function CommunityForumsPage({ activeBrandSlug, activeGroupSlug, activeTh
   return (
     <div className="hearst-plus-theme hearst-community-page min-h-screen bg-[var(--hp-background)] text-[var(--hp-text-primary)]" style={communityTypographyStyle}>
       <UtilityBar selectedBrand={activeBrand ? { name: activeBrand.brand, slug: activeBrand.brandSlug } : null} />
-      <MainNav
-        brandSlug="hearst-all"
-        activeFilter={activeNavLabel}
-        navLinksOverride={communityNavLinks.map((link) => link.label)}
-        navLinkHrefOverrides={Object.fromEntries(communityNavLinks.map((link) => [link.label, link.href]))}
-        mastheadSlugOverride="hearst-communities"
-      />
+      {/* Brand, group and thread pages have their own community header (with these links), so they skip the masthead. */}
+      {activeGroup ? null : (
+        <MainNav
+          brandSlug="hearst-all"
+          activeFilter={activeNavLabel}
+          navLinksOverride={communityNavLinks.map((link) => link.label)}
+          navLinkHrefOverrides={Object.fromEntries(communityNavLinks.map((link) => [link.label, link.href]))}
+          mastheadSlugOverride="hearst-communities"
+        />
+      )}
 
       <main>
+        {activeGroup ? (
+          <div className="mx-auto max-w-[1360px] px-5 pt-6 md:px-10 md:pt-8">
+            <CommunityHeader
+              group={activeGroup}
+              isGroup={Boolean(activeGroupSeed)}
+              headingLevel={activeThread ? "p" : "h1"}
+              // Search covers this brand's stories first, then the rest, capped like the home page's search set.
+              searchStories={[
+                ...(activeBrand?.stories ?? []),
+                ...brands.filter((brand) => brand.brandSlug !== activeBrand?.brandSlug).flatMap((brand) => brand.stories.slice(0, 20)),
+              ].slice(0, 460)}
+            />
+          </div>
+        ) : null}
         <div className="mx-auto grid max-w-[1360px] gap-6 bg-[var(--hp-background)] px-5 py-6 md:px-10 md:py-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.58fr)_minmax(280px,0.7fr)]">
           <aside className="hidden min-w-0 lg:sticky lg:top-28 lg:block lg:self-start">
             <CommunityLeftRail groups={groups} activeBrandSlug={activeBrandSlug} activeGroupSlug={activeGroupSlug} />
@@ -430,7 +524,8 @@ export function CommunityForumsPage({ activeBrandSlug, activeGroupSlug, activeTh
             ) : (
               <>
                 <CommunityComposer groups={groups} defaultGroup={activeGroup} />
-                <nav aria-label="Sort threads" className="flex w-fit items-center gap-1 rounded-[8px] border border-primary/15 bg-[var(--community-surface-soft)] p-1">
+                {/* A full-width feed control across the content well, styled as a module (no stroke). */}
+                <nav aria-label="Sort threads" className="grid w-full grid-cols-3 gap-1 rounded-[8px] bg-[var(--hp-surface)] p-1 shadow-[var(--hp-shadow-card)]">
                   {communitySortTabs.map((item) => {
                     const Icon = item.icon;
                     const active = sortBy === item.value;
@@ -440,8 +535,8 @@ export function CommunityForumsPage({ activeBrandSlug, activeGroupSlug, activeTh
                         href={sortHref(item.value)}
                         aria-current={active ? "page" : undefined}
                         className={cn(
-                          "inline-flex min-h-9 items-center gap-1.5 rounded-[6px] px-3 text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35",
-                          active ? "bg-[var(--hp-surface)] text-primary" : "text-[var(--hp-text-secondary)] hover:bg-[var(--hp-control-hover)] hover:text-[var(--hp-text-primary)]",
+                          "inline-flex min-h-10 items-center justify-center gap-1.5 rounded-[6px] px-3 text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35",
+                          active ? "bg-[var(--community-surface-soft)] text-primary" : "text-[var(--hp-text-secondary)] hover:bg-[var(--hp-control-hover)] hover:text-[var(--hp-text-primary)]",
                         )}
                       >
                         <Icon className="size-4" aria-hidden />

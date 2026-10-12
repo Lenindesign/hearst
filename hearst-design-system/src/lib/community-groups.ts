@@ -195,3 +195,7 @@ export function isHostPickedStory<T extends HostPickCandidate>(story: T, stories
 export function getCommunityStoryThreadHref(story: Pick<HostPickCandidate, "id" | "brandSlug">) {
   return `/communities/${story.brandSlug}/threads/${story.id}/`;
 }
+
+// Trust ladder: a reader's first posts wait for host review, later posts go live at once. Shared by the server-built
+// group rules and the client composer, so it lives here rather than in the "use client" module.
+export const COMMUNITY_REVIEWED_POST_COUNT = 3;
