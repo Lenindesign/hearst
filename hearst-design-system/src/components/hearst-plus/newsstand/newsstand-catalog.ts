@@ -70,8 +70,8 @@ export const TITLES: Record<string, NewsstandTitle> = {
 
 export const TITLE_SLUGS = Object.keys(TITLES);
 
-// The five titles the scroll story features, in order. Their covers ship at 2x for the close-up camera.
-export const FEATURED_SLUGS = ["esquire", "cosmopolitan", "harpers_bazaar", "good_housekeeping", "car_and_driver"];
+// The six titles the scroll story features, in order. Covers ship at 2x for the close-up camera.
+export const FEATURED_SLUGS = ["good_housekeeping", "harpers_bazaar", "car_and_driver", "elle", "cosmopolitan", "esquire"];
 
 // Titles with real cover photography in /images/newsstand/covers/<slug>.webp. Others get a logo cover.
 // Prevention, Road & Track, Bicycling, Delish and Oprah Daily use 2026 issues. Redbook (2018) and Seventeen (2019)

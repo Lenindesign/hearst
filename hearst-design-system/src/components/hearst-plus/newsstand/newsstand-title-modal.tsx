@@ -11,6 +11,7 @@ type Props = {
   slug: string;
   offerLine: string;
   primaryButton: string;
+  secondaryButton: string;
   onStartTrial(): void;
   onClose(): void;
 };
@@ -18,7 +19,7 @@ type Props = {
 /* eslint-disable @next/next/no-img-element */
 // The modal is a slider over every title: it opens on the picked magazine, and arrows, arrow keys or a sideways
 // swipe on the cover move through the rest of the newsstand.
-export function NewsstandTitleModal({ slug: initialSlug, offerLine, primaryButton, onStartTrial, onClose }: Props) {
+export function NewsstandTitleModal({ slug: initialSlug, offerLine, primaryButton, secondaryButton, onStartTrial, onClose }: Props) {
   const [position, setPosition] = useState(() => Math.max(0, TITLE_SLUGS.indexOf(initialSlug)));
   const [direction, setDirection] = useState<1 | -1>(1);
   const slug = TITLE_SLUGS[position];
@@ -206,22 +207,20 @@ export function NewsstandTitleModal({ slug: initialSlug, offerLine, primaryButto
             <span className="sr-only">{title.name}: </span>{title.headline}
           </h2>
           <p id="newsstand-title-body" className="text-pretty leading-relaxed text-muted-foreground">{title.body}</p>
-          {/* Hearst+ is the product: start the trial, or see this brand inside the app. Print is a quiet secondary path. */}
+          {/* Preview first: see this brand inside Hearst+; the trial is the follow-up. With no app route (Biography) the
+              trial is the only action and takes the solid style. */}
           <div className="mt-2 flex flex-wrap items-center gap-2">
-            <button
-              onClick={() => { skipRestoreRef.current = true; onStartTrial(); }}
-              className={`${primaryButton} min-h-11 px-5 text-xs`}
-            >
-              Start free trial
-            </button>
             {appHref ? (
-              <Link
-                href={appHref}
-                className="inline-flex min-h-11 items-center gap-1.5 border border-foreground px-4 text-xs font-bold uppercase tracking-[0.08em] transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              >
+              <Link href={appHref} className={`${primaryButton} min-h-11 gap-1.5 px-5 text-xs`}>
                 Preview in Hearst+ <span aria-hidden>→</span>
               </Link>
             ) : null}
+            <button
+              onClick={() => { skipRestoreRef.current = true; onStartTrial(); }}
+              className={`${appHref ? secondaryButton : primaryButton} min-h-11 px-5 text-xs`}
+            >
+              Start free trial
+            </button>
           </div>
           <p className="text-xs text-muted-foreground">{offerLine} Every Hearst brand in one app.</p>
           {PRINT_SLUGS.has(slug) ? (

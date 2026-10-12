@@ -2,6 +2,13 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-10-11: Preview-first Newsstand landing page
+
+- **Context:** The landing page split attention between the trial and Preview, ran about eight screens of brand panels before the offer, and ended on a plans card with the rack poking out around it.
+- **Decision:** Preview the app is the page's main action and the trial its follow-up. Three brand panels, one per section (Good Housekeeping, Harper's Bazaar, Car and Driver). Preview goes to the brand in view, otherwise the home feed. The page ends on a solid white full-bleed plans section. In the app, a soft trial banner follows after about three stories (its placement is still open).
+- **Scope:** `/hearst-plus/newsstand/` and its title modal; the in-app trial banner is not built yet.
+- **Canonical rule:** `APP_RULES.md` Newsstand rules; design in `docs/landing-page-design.md`.
+
 ## 2026-10-11: Navy utility bar
 
 - **Context:** The bright Hearst+ blue utility bar sat above the navy Hearst+ banner and matched the logo's plus, so the header carried two strong blues and the plus competed with the bar.

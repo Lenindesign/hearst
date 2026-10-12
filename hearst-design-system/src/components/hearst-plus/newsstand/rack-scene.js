@@ -7,23 +7,40 @@ const PULL_OUT = 0.1, PULL_UP = 0.025;   // how far a featured magazine slides o
 const ss = x => x * x * (3 - 2 * x);
 const C = { paper: '#f6f4ee', black: '#111111', blue: '#0099cc', magenta: '#e1208d', yellow: '#ffc42f', grey: '#5d6770', greyL: '#a7a8a9', white: '#ffffff' };
 
-// Featured brands, in scroll order. The designed stand-in cover is used only if the photo fails to load.
+// Featured brands, in scroll order: Good Housekeeping, Harper's Bazaar, Car and Driver, ELLE, Cosmopolitan, Esquire. The designed stand-in cover is used only if the photo fails to load.
 const FEATURED = [
-  { slot: 'magazine_t4_s2', slug: 'esquire', logo: 'logo.20861e6.svg', bg: C.black, ink: C.paper, dot: '#3a3a3a', accent: C.yellow,
-    kicker: 'THE STYLE ISSUE', head: ['How to', 'Dress Now'], lines: ['The 50 best-dressed men', 'Fall\u2019s new essentials'],
-    contents: ['The new rules of tailoring', 'A long lunch with a legend', 'Fall\u2019s best watches', 'Books worth your weekend'], feature: ['The Quiet', 'Return of', 'the Suit'] },
-  { slot: 'magazine_t3_s3', slug: 'cosmopolitan', logo: 'cosmo.svg', bg: C.magenta, ink: C.white, dot: '#b8136f', accent: C.white,
-    kicker: 'THE LOVE ISSUE', head: ['Date', 'Smarter'], lines: ['Beauty buys we swear by', 'Money moves for your 20s'],
-    contents: ['Love, rewritten', 'The 10-minute glow-up', 'Ask for the raise', 'Your horoscope'], feature: ['Love,', 'Rewritten'] },
-  { slot: 'magazine_t2_s1', slug: 'harpers_bazaar', logo: 'harpers.svg', bg: C.paper, ink: C.black, dot: '#cfcfcc', accent: C.black,
-    kicker: 'FALL FASHION', head: ['The New', 'Elegance'], lines: ['Paris, Milan, New York', 'Art\u2019s next generation'],
-    contents: ['The collections', 'In the studio', 'Beauty\u2019s new minimalism', 'Where to travel now'], feature: ['The New', 'Elegance'] },
   { slot: 'magazine_t2_s4', slug: 'good_housekeeping', logo: 'good-housekeeping.svg', bg: C.blue, ink: C.white, dot: '#0a7fa8', accent: C.yellow,
     kicker: 'TESTED & TRUSTED', head: ['Easy Fall', 'Dinners'], lines: ['Lab-tested cookware', 'A calmer, cleaner home'],
     contents: ['30-minute suppers', 'Institute-tested picks', 'Declutter in a weekend', 'Health, simplified'], feature: ['Dinner,', 'Done'] },
+  { slot: 'magazine_t2_s1', slug: 'harpers_bazaar', logo: 'harpers.svg', bg: C.paper, ink: C.black, dot: '#cfcfcc', accent: C.black,
+    kicker: 'FALL FASHION', head: ['The New', 'Elegance'], lines: ['Paris, Milan, New York', 'Art\u2019s next generation'],
+    contents: ['The collections', 'In the studio', 'Beauty\u2019s new minimalism', 'Where to travel now'], feature: ['The New', 'Elegance'] },
   { slot: 'magazine_t1_s2', slug: 'car_and_driver', logo: 'caranddriver.svg', bg: C.paper, ink: C.black, dot: '#b3dbe9', accent: C.blue,
     kicker: 'ROAD TEST', head: ['Sport Sedan', 'Showdown'], lines: ['Comparison: 3 family SUVs', 'First drive: new EVs'],
     contents: ['Sport sedan showdown', 'Long-term test update', 'Buyer\u2019s guide: EVs', 'Track day diaries'], feature: ['Sport Sedan', 'Showdown'] },
+  { slot: 'magazine_t1_s4', slug: 'elle', logo: 'logo.2856426.svg', bg: C.black, ink: C.white, dot: '#333333', accent: C.white,
+    kicker: 'FASHION NOW', head: ['The New', 'Season'], lines: ['Runway to real life', 'Beauty that lasts'],
+    contents: ['The collections', 'Street style', 'Beauty, simplified', 'Culture now'], feature: ['The New', 'Season'] },
+  { slot: 'magazine_t3_s3', slug: 'cosmopolitan', logo: 'cosmo.svg', bg: C.magenta, ink: C.white, dot: '#b8136f', accent: C.white,
+    kicker: 'THE LOVE ISSUE', head: ['Date', 'Smarter'], lines: ['Beauty buys we swear by', 'Money moves for your 20s'],
+    contents: ['Love, rewritten', 'The 10-minute glow-up', 'Ask for the raise', 'Your horoscope'], feature: ['Love,', 'Rewritten'] },
+  { slot: 'magazine_t4_s2', slug: 'esquire', logo: 'logo.20861e6.svg', bg: C.black, ink: C.paper, dot: '#3a3a3a', accent: C.yellow,
+    kicker: 'THE STYLE ISSUE', head: ['How to', 'Dress Now'], lines: ['The 50 best-dressed men', 'Fall\u2019s new essentials'],
+    contents: ['The new rules of tailoring', 'A long lunch with a legend', 'Fall\u2019s best watches', 'Books worth your weekend'], feature: ['The Quiet', 'Return of', 'the Suit'] },
+];
+
+// Studio backdrop, one stop per scroll position: hero, each featured brand in order, outro. Each is a top and floor
+// colour; the backdrop drifts between them as you scroll. Harper's Bazaar stays deep charcoal, not black, because the
+// brand focus pass darkens it further and the shelves must stay visible.
+const BACKDROPS = [
+  { top: '#f8f5ef', bottom: '#ddd5c8' },   // hero: warm paper sweeping down to stone
+  { top: '#eef7f8', bottom: '#bcdbe2' },   // Good Housekeeping: soft teal
+  { top: '#5c5c62', bottom: '#2f2f34' },   // Harper's Bazaar: deep charcoal
+  { top: '#eef3f9', bottom: '#bccde0' },   // Car and Driver: cool blue
+  { top: '#f4f1ec', bottom: '#cfc8be' },   // ELLE: pale greige
+  { top: '#faeff5', bottom: '#e6bdd4' },   // Cosmopolitan: soft magenta
+  { top: '#56524c', bottom: '#2e2b28' },   // Esquire: warm graphite
+  { top: '#f8f5ef', bottom: '#ddd5c8' },   // outro: back to neutral
 ];
 
 const logoCache = new Map();
@@ -90,7 +107,7 @@ function drawStandIn(ctx, b, logo) {
 }
 
 export async function createRackScene(canvas, opts = {}) {
-  const o = { reducedMotion: false, heroSpin: true, dim: true, tints: null, ...opts };
+  const o = { reducedMotion: false, heroSpin: true, dim: true, ...opts };
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.setClearColor(0xf4f4f5);
@@ -112,7 +129,7 @@ export async function createRackScene(canvas, opts = {}) {
   const spot = new THREE.SpotLight(0xffffff, 0, 4, 0.36, 0.7, 1.5);
   scene.add(hemi, key, fill, rim, spot, spot.target);
   [hemi, key, fill, rim, spot].forEach(l => l.layers.enableAll());
-  const ground = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.ShadowMaterial({ opacity: 0.16 }));
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.ShadowMaterial({ opacity: 0.22 }));
   ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
 
   const rack = await buildRack(THREE, { skipSlots: new Set(FEATURED.map(b => b.slot)) });
@@ -178,42 +195,55 @@ export async function createRackScene(canvas, opts = {}) {
   sheen.position.z = 0.0012; sheen.visible = false;
   let sheenAt = -1e9;
 
-  // Focus pass: while a brand panel is up, the rest of the scene is rendered off-screen, blurred and darkened,
-  // and the featured magazine (moved to layer 1) is drawn sharp on top.
+  // Focus pass: while a brand panel is up, the rest of the scene is rendered off-screen and darkened (kept sharp,
+  // not blurred), and the featured magazine (moved to layer 1) is drawn on top at full brightness.
   const bufSize = new THREE.Vector2();
   const rtOpts = { type: THREE.HalfFloatType, depthBuffer: true };
-  const rtA = new THREE.WebGLRenderTarget(1, 1, rtOpts), rtB = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, depthBuffer: false });
+  const rtA = new THREE.WebGLRenderTarget(1, 1, rtOpts);
   const quadVert = 'varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }';
-  const blurMat = new THREE.ShaderMaterial({
-    uniforms: { tDiffuse: { value: null }, dir: { value: new THREE.Vector2() } },
-    vertexShader: quadVert,
-    fragmentShader: `uniform sampler2D tDiffuse; uniform vec2 dir; varying vec2 vUv;
-      void main() {
-        vec4 c = texture2D(tDiffuse, vUv) * 0.227027;
-        c += texture2D(tDiffuse, vUv + dir * 1.3846) * 0.3162162; c += texture2D(tDiffuse, vUv - dir * 1.3846) * 0.3162162;
-        c += texture2D(tDiffuse, vUv + dir * 3.2308) * 0.0702703; c += texture2D(tDiffuse, vUv - dir * 3.2308) * 0.0702703;
-        gl_FragColor = c;
-      }`,
-    depthTest: false, depthWrite: false, toneMapped: false,
-  });
   // Composite: tone-map the scene the same way the direct render does, lay it over the page background,
   // then darken. Keeping the background out of tone mapping avoids a shade jump when focus starts.
-  const compMat = new THREE.ShaderMaterial({
-    uniforms: { tDiffuse: { value: null }, dark: { value: 0 }, bg: { value: new THREE.Color(0xf4f4f5) } },
+  // The studio backdrop: a vertical sweep from the top colour to a darker floor, with a soft vignette. Colours are in
+  // output (sRGB) space and skip tone mapping, so the backdrop matches between the direct and the focus renders.
+  const backdropGlsl = `uniform vec3 bgTop; uniform vec3 bgBottom;
+    vec3 backdrop(vec2 uv) {
+      vec3 c = mix(bgBottom, bgTop, smoothstep(0.05, 0.85, uv.y));
+      float v = distance(uv * vec2(1.25, 1.0), vec2(0.625, 0.6));
+      return c * (1.0 - 0.14 * smoothstep(0.3, 0.95, v));
+    }`;
+  const bgTop = new THREE.Color(), bgBottom = new THREE.Color();
+  const backdropUniforms = { bgTop: { value: bgTop }, bgBottom: { value: bgBottom } };
+  const bgMat = new THREE.ShaderMaterial({
+    uniforms: backdropUniforms,
     vertexShader: quadVert,
-    fragmentShader: `uniform sampler2D tDiffuse; uniform float dark; uniform vec3 bg; varying vec2 vUv;
+    fragmentShader: `${backdropGlsl} varying vec2 vUv; void main() { gl_FragColor = vec4(backdrop(vUv), 1.0); }`,
+    depthTest: false, depthWrite: false, toneMapped: false,
+  });
+  const compMat = new THREE.ShaderMaterial({
+    uniforms: { tDiffuse: { value: null }, dark: { value: 0 }, ...backdropUniforms },
+    vertexShader: quadVert,
+    fragmentShader: `uniform sampler2D tDiffuse; uniform float dark; ${backdropGlsl} varying vec2 vUv;
       void main() {
         vec4 c = texture2D(tDiffuse, vUv);
         gl_FragColor = vec4(c.a > 0.0 ? c.rgb / c.a : vec3(0.0), 1.0);
         #include <tonemapping_fragment>
         #include <colorspace_fragment>
-        gl_FragColor = vec4(mix(bg, gl_FragColor.rgb, c.a) * (1.0 - dark), 1.0);
+        gl_FragColor = vec4(mix(backdrop(vUv), gl_FragColor.rgb, c.a) * (1.0 - dark), 1.0);
       }`,
     depthTest: false, depthWrite: false, toneMapped: true,
   });
-  compMat.uniforms.bg.value.convertLinearToSRGB();   // compared against output-space colour
+  const backdropA = new THREE.Color(), backdropB = new THREE.Color();
+  // Backdrop colours for scroll position c, written in output space for the shaders above.
+  function setBackdrop(c) {
+    const last = BACKDROPS.length - 1;
+    c = Math.max(0, Math.min(last, c));
+    const k = Math.min(Math.floor(c), last - 1), e = ss(clamp01((c - k - 0.2) / 0.6));
+    bgTop.copy(backdropA.set(BACKDROPS[k].top)).lerp(backdropB.set(BACKDROPS[k + 1].top), e).convertLinearToSRGB();
+    bgBottom.copy(backdropA.set(BACKDROPS[k].bottom)).lerp(backdropB.set(BACKDROPS[k + 1].bottom), e).convertLinearToSRGB();
+  }
+  setBackdrop(0);
   const quadScene = new THREE.Scene(), quadCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-  const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), blurMat); quadScene.add(quad);
+  const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), bgMat); quadScene.add(quad);
   let focusGroup = null;
   const setFocus = g => {
     if (g === focusGroup) return;
@@ -222,19 +252,19 @@ export async function createRackScene(canvas, opts = {}) {
     focusGroup = g;
   };
   function renderFrame(focus) {
-    if (focus < 0.003 || !focusGroup) { camera.layers.set(0); camera.layers.enable(1); renderer.render(scene, camera); return; }
+    if (focus < 0.003 || !focusGroup) {
+      // Backdrop first, then the scene over it without clearing.
+      renderer.setRenderTarget(null);
+      quad.material = bgMat; renderer.render(quadScene, quadCam);
+      renderer.autoClear = false; renderer.clearDepth();
+      camera.layers.set(0); camera.layers.enable(1); renderer.render(scene, camera);
+      renderer.autoClear = true;
+      return;
+    }
     camera.layers.set(0);
     renderer.setClearColor(0xf4f4f5, 0);
     renderer.setRenderTarget(rtA); renderer.clear(); renderer.render(scene, camera);
     renderer.setClearColor(0xf4f4f5, 1);
-    const radius = focus * 3.2 * renderer.getPixelRatio();
-    quad.material = blurMat;
-    for (let i = 0; i < 2; i++) {
-      blurMat.uniforms.tDiffuse.value = rtA.texture; blurMat.uniforms.dir.value.set(radius / bufSize.x, 0);
-      renderer.setRenderTarget(rtB); renderer.render(quadScene, quadCam);
-      blurMat.uniforms.tDiffuse.value = rtB.texture; blurMat.uniforms.dir.value.set(0, radius / bufSize.y);
-      renderer.setRenderTarget(rtA); renderer.render(quadScene, quadCam);
-    }
     renderer.setRenderTarget(null);
     quad.material = compMat; compMat.uniforms.tDiffuse.value = rtA.texture; compMat.uniforms.dark.value = 0.5 * focus;
     renderer.render(quadScene, quadCam);
@@ -328,7 +358,7 @@ export async function createRackScene(canvas, opts = {}) {
     const pinned = header && ['sticky', 'fixed'].includes(getComputedStyle(header).position);
     topInset = pinned ? header.getBoundingClientRect().height : 0;
     renderer.getDrawingBufferSize(bufSize);
-    rtA.setSize(bufSize.x, bufSize.y); rtB.setSize(bufSize.x, bufSize.y);
+    rtA.setSize(bufSize.x, bufSize.y);
     buildPoses();
   }
   resize();
@@ -383,7 +413,6 @@ export async function createRackScene(canvas, opts = {}) {
   let camZ = 0;                                   // roll-over camera zoom toward the hovered magazine
   let swayClock = 0, lastFrame = 0;               // sway time; paused while zoomed so covers hold under the cursor
   const zoomAt = new V(), zoomGoal = new V(), dolly = new V();
-  const bgA = new THREE.Color(), bgB = new THREE.Color(), bg = new THREE.Color(0xf4f4f5);
   const t0 = performance.now(), sp = new V();
   // Intro: the empty rack makes one full turn while the canvas fades in. The magazines start dropping once the
   // spin begins to settle (~45% of its time, ~90% of the turn), so they land as the rack eases into place.
@@ -513,12 +542,7 @@ export async function createRackScene(canvas, opts = {}) {
       spot.target.position.copy(m.world);
       spot.intensity = 3.8 * wmax;
     } else spot.intensity = 0;
-    if (o.tints) {   // backdrop drifts to each brand's tint as you scroll
-      const t = o.tints, last = t.length - 1, c = Math.max(0, Math.min(last, cur));
-      const k = Math.min(Math.floor(c), last - 1), e = ss(clamp01((c - k - 0.2) / 0.6));
-      bg.copy(bgA.set(t[k])).lerp(bgB.set(t[k + 1]), e);
-      renderer.setClearColor(bg);
-    }
+    setBackdrop(cur);   // the studio backdrop drifts to each featured brand's tint as you scroll
     // Sign: dim until stocked, then a quick flicker and on.
     const ts2 = motion ? now - stockedAt - 150 : Infinity;
     const lit = ts2 < 0 ? 0 : ts2 < 80 ? 1 : ts2 < 160 ? 0 : ts2 < 240 ? 1 : ts2 < 300 ? 0.2 : clamp01((ts2 - 300) / 250);
@@ -543,7 +567,7 @@ export async function createRackScene(canvas, opts = {}) {
 
   return {
     setProgress: p => { target = p; },
-    setOptions: x => { Object.assign(o, x); if (!o.tints) renderer.setClearColor(0xf4f4f5); },
+    setOptions: x => { Object.assign(o, x); },
     shuffle: () => { if (!o.reducedMotion) shuffleAt = performance.now(); },
     // Stop the render loop entirely, e.g. while a modal covers the page or the tab is hidden.
     setPaused: v => {
@@ -556,7 +580,7 @@ export async function createRackScene(canvas, opts = {}) {
       paused = true; cancelAnimationFrame(raf); removeEventListener('pointermove', onPtr);
       document.removeEventListener('visibilitychange', onVisibility);
       canvas.removeEventListener('pointermove', onMove); canvas.removeEventListener('pointerleave', onLeave); canvas.removeEventListener('click', onClick);
-      rtA.dispose(); rtB.dispose(); blurMat.dispose(); compMat.dispose(); renderer.dispose();
+      rtA.dispose(); compMat.dispose(); bgMat.dispose(); renderer.dispose();
     },
   };
 }

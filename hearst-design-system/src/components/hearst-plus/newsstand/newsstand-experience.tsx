@@ -25,6 +25,8 @@ const BRANDS = FEATURED_SLUGS.map((slug) => ({ slug, ...TITLES[slug] }));
 
 const primaryButton =
   "inline-flex items-center justify-center bg-foreground font-bold uppercase tracking-[0.08em] text-background transition-colors hover:bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
+const secondaryButton =
+  "inline-flex items-center justify-center border border-foreground font-bold uppercase tracking-[0.08em] transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary";
 
 /* eslint-disable @next/next/no-img-element */
 export function NewsstandExperience() {
@@ -72,7 +74,7 @@ export function NewsstandExperience() {
         el.style.transform = reduced.current ? "none" : `translateY(${(p - (i + 1)) * -40}px)`;
       });
       const r = Math.round(p);
-      setActive(r >= 1 && r <= 5 && Math.abs(p - r) < 0.4 ? r - 1 : -1);
+      setActive(r >= 1 && r <= BRANDS.length && Math.abs(p - r) < 0.4 ? r - 1 : -1);
     };
     remeasure.current = () => requestAnimationFrame(() => { measure(); update(); });
     measureNow.current = measure;
@@ -146,13 +148,6 @@ export function NewsstandExperience() {
   };
   const closeModal = useCallback(() => setOpenSlug(null), []);
 
-  const offerNote = (
-    <span className="text-sm text-muted-foreground">
-      {OFFER_LINE}
-      {OFFER.placeholder ? <span className="ml-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-primary">Prototype pricing</span> : null}
-    </span>
-  );
-
   return (
     <div className="relative">
       <canvas
@@ -175,6 +170,7 @@ export function NewsstandExperience() {
           slug={openSlug}
           offerLine={OFFER_LINE}
           primaryButton={primaryButton}
+          secondaryButton={secondaryButton}
           onStartTrial={() => { setOpenSlug(null); startTrial(); }}
           onClose={closeModal}
         />
@@ -203,19 +199,12 @@ export function NewsstandExperience() {
             <p className="max-w-[440px] text-pretty text-lg leading-7 text-muted-foreground">
               Stories, videos and recipes from Esquire, Cosmopolitan, Harper&apos;s Bazaar, Good Housekeeping, Car and Driver and 22 more Hearst brands, in one personalized feed that gets better the more you read.
             </p>
+            {/* Preview first: the page's main action is looking inside the app; the trial and price live in the plans section. */}
             <div className="flex flex-col items-start gap-3">
-              <button onClick={startTrial} className={`${primaryButton} pointer-events-auto min-h-[52px] px-7 text-sm`}>
-                Start your {OFFER.trialDays}-day free trial
-              </button>
-              {offerNote}
+              <Link href="/hearst-plus/" className={`${primaryButton} pointer-events-auto min-h-[52px] gap-1.5 px-7 text-sm`}>
+                Preview Hearst+ <span aria-hidden>→</span>
+              </Link>
             </div>
-            <p className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
-              <span>Scroll to browse the rack ↓</span>
-              <button onClick={goToPlans} className="pointer-events-auto inline-flex min-h-11 items-center font-semibold text-foreground underline underline-offset-4 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-                Skip to plans
-              </button>
-            </p>
-            <p className="hidden text-sm text-muted-foreground md:block">Tip: click any cover to preview that brand in Hearst+.</p>
               </Col>
             </Grid>
           </PageContainer>
@@ -239,13 +228,17 @@ export function NewsstandExperience() {
                       startLg={i % 2 ? 2 : 8}
                       className="pointer-events-auto"
                     >
-                <article data-panel className="flex w-full flex-col gap-5 bg-background p-7 shadow-[0_12px_40px_rgba(0,0,0,.08)] md:p-10 lg:p-12">
-                  <img src={logoSrc(b.slug)} alt={b.name} className="h-9 w-auto max-w-[300px] self-start object-contain md:h-11" />
-                  <h2 className="headline text-balance text-[26px] font-black leading-[1.04] tracking-[-0.03em] md:text-[32px]">{b.headline}</h2>
-                  <p className="hidden text-pretty leading-relaxed text-muted-foreground md:block">{b.body}</p>
+                {/* Brand panels are dark so the pulled-out cover, not the card, leads; logos are knocked out to white. */}
+                <article data-panel className="flex w-full flex-col gap-5 bg-[#111] p-7 text-white shadow-[0_12px_40px_rgba(0,0,0,.35)] md:p-10 lg:p-12">
+                  <img src={logoSrc(b.slug)} alt={b.name} className="h-9 w-auto max-w-[300px] self-start object-contain brightness-0 invert md:h-11" />
+                  <h2 className="headline text-balance text-[26px] font-black leading-[1.04] tracking-[-0.03em] text-white md:text-[32px]">{b.headline}</h2>
+                  <p className="hidden text-pretty leading-relaxed text-white/70 md:block">{b.body}</p>
                   {/* One action per brand panel: see this brand inside the app. The trial lives in the hero and plans. */}
                   {appHref ? (
-                    <Link href={appHref} className={`${primaryButton} min-h-11 gap-1.5 self-start px-5 text-xs`}>
+                    <Link
+                      href={appHref}
+                      className="inline-flex min-h-11 items-center justify-center gap-1.5 self-start bg-white px-5 text-xs font-bold uppercase tracking-[0.08em] text-black transition-colors hover:bg-white/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#111]"
+                    >
                       Preview in Hearst+ <span aria-hidden>→</span>
                     </Link>
                   ) : null}
@@ -258,10 +251,11 @@ export function NewsstandExperience() {
           );
         })}
 
-        <section id="join" data-stop className="min-h-[110vh] pb-12 pt-16">
+        {/* The plans section closes the page on a solid full-bleed surface that covers the rack completely. */}
+        <section id="join" data-stop className="pointer-events-auto flex min-h-screen items-center bg-background py-20">
           <PageContainer>
             <Grid>
-              <Col span="full" spanMd={8} spanLg={8} startLg={3} className="pointer-events-auto flex flex-col items-center gap-6 bg-background p-[clamp(28px,4vw,48px)] text-center shadow-[0_12px_40px_rgba(0,0,0,.08)]">
+              <Col span="full" spanMd={8} spanLg={8} startLg={3} className="flex flex-col items-center gap-6 text-center">
             {joined ? (
               <>
                 <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Welcome to Hearst+</p>
@@ -285,28 +279,27 @@ export function NewsstandExperience() {
                 <p className="max-w-[540px] text-pretty text-muted-foreground">
                   The best of every Hearst brand in one place: stories, videos, recipes and reviews, ranked for you, with saved collections and a morning brief.
                 </p>
+                {/* One dark ink for every logo, so the wall reads as a single calm block under the headline. */}
                 <ul aria-label="Brands in Hearst+" className="flex max-w-[760px] flex-wrap items-center justify-center gap-x-8 gap-y-5">
                   {TITLE_SLUGS.map((slug) => (
                     <li key={slug}>
-                      <img src={logoSrc(slug)} alt={TITLES[slug].name} loading="lazy" decoding="async" className="h-[15px] w-auto max-w-[92px] object-contain" />
+                      <img src={logoSrc(slug)} alt={TITLES[slug].name} loading="lazy" decoding="async" className="h-[15px] w-auto max-w-[92px] object-contain brightness-0" />
                     </li>
                   ))}
                 </ul>
                 <div className="h-px w-full bg-border" />
-                <div className="flex flex-col items-center gap-1.5">
-                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Try Hearst+ free for {OFFER.trialDays} days</p>
-                  <p className="text-4xl font-bold tracking-[-0.02em]">{OFFER.price}<span className="text-lg font-normal text-muted-foreground"> / {OFFER.period}</span></p>
-                  <p className="text-sm text-muted-foreground">after your {OFFER.trialDays}-day free trial · {OFFER.terms}</p>
-                  {OFFER.placeholder ? <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-primary">Prototype pricing</p> : null}
-                </div>
-                <div className="flex flex-wrap items-center justify-center gap-3">
-                  <button onClick={startTrial} className={`${primaryButton} min-h-[52px] px-8 text-sm`}>Start your free trial</button>
-                  <Link
-                    href="/hearst-plus/"
-                    className="inline-flex min-h-[52px] items-center border border-foreground px-6 text-sm font-bold uppercase tracking-[0.08em] hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                  >
-                    Preview the app
+                {/* Preview leads; the trial sits beside it with the price in small text underneath. */}
+                <div className="flex flex-wrap items-start justify-center gap-3">
+                  <Link href="/hearst-plus/" className={`${primaryButton} min-h-[52px] gap-1.5 px-8 text-sm`}>
+                    Preview the app <span aria-hidden>→</span>
                   </Link>
+                  <div className="flex flex-col items-center gap-1.5">
+                    <button onClick={startTrial} className={`${secondaryButton} min-h-[52px] px-6 text-sm`}>Start your free trial</button>
+                    <p className="text-xs text-muted-foreground">
+                      {OFFER.trialDays} days free, then {OFFER.price}/{OFFER.period} · {OFFER.terms}
+                    </p>
+                    {OFFER.placeholder ? <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-primary">Prototype pricing</p> : null}
+                  </div>
                 </div>
                 <a
                   href={PRINT_SUBSCRIBE_URL}

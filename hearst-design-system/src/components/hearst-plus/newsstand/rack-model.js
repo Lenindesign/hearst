@@ -11,14 +11,14 @@ const M = (name, color, roughness, metalness = 0) =>
 const mat = {
   walnut:  M('walnut', 0x5b3a22, 0.55),
   brass:   M('brass', 0xd2ab55, 0.32, 0.35),
-  enamel:  M('enamel_blue', 0x0099cc, 0.28),
+  enamel:  M('enamel_navy', 0x012247, 0.28),
   paper:   M('paper', 0xf6f4ee, 0.85),
   black:   M('ink_black', 0x111111, 0.6),
   blue:    M('ink_blue', 0x0099cc, 0.55),
   magenta: M('ink_magenta', 0xe1208d, 0.55),
   yellow:  M('ink_yellow', 0xffc42f, 0.55),
 };
-const css = { paper: '#f6f4ee', black: '#111111', blue: '#0099cc', magenta: '#e1208d', yellow: '#ffc42f' };
+const css = { paper: '#f6f4ee', black: '#111111', blue: '#0099cc', navy: '#012247', magenta: '#e1208d', yellow: '#ffc42f' };
 await document.fonts.load('700 80px "Helvetica Neue"');
 // Official title logos (uploads/). Strip C2PA metadata, recolour the --primary fill, rasterise.
 const logoSrc = new Map();
@@ -32,17 +32,17 @@ const logoImg = async (file, color) => {
   const img = new Image(); img.src = URL.createObjectURL(new Blob([s], { type: 'image/svg+xml' }));
   await img.decode(); return img;
 };
-const hMark = new Image(); hMark.src = '/images/newsstand/hearst-h-white.png'; await hMark.decode();
+// The header sign carries the Hearst+ logo: white HEARST and the Hearst+ blue plus (the knockout lockup).
+const signLogo = await (async () => {
+  let svg = await fetch('/logos/hearst-plus-knockout.svg').then(r => r.text());
+  svg = svg.replace(/<svg\b[^>]*?width="[^"]*"[^>]*?height="[^"]*"/, m => m.replace(/width="[^"]*"/, 'width="1600"').replace(/height="[^"]*"/, 'height="171"'));
+  const img = new Image(); img.src = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml' }));
+  await img.decode(); return img;
+})();
 const canvasTex = (w, h, draw) => {
   const c = document.createElement('canvas'); c.width = w; c.height = h;
   draw(c.getContext('2d'));
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t;
-};
-const fitText = (ctx, text, font, maxW, maxH, cx, cy, spacing = 0) => {
-  ctx.letterSpacing = spacing + 'px';
-  let size = maxH; ctx.font = font(size);
-  const w = ctx.measureText(text).width; if (w > maxW) { size *= maxW / w; ctx.font = font(size); }
-  ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(text, cx, cy);
 };
 const add = (parent, name, geo, m, x = 0, y = 0, z = 0) => {
   const o = new THREE.Mesh(geo, m); o.name = name; o.position.set(x, y, z); parent.add(o); return o;
@@ -104,12 +104,10 @@ sign.position.set(0, TOP + 0.11, sz + 0.01);
 add(sign, 'sign_frame', box(W + 0.02, 0.22, 0.045), mat.walnut);
 add(sign, 'sign_enamel', box(W - 0.05, 0.16, 0.006), mat.enamel, 0, 0, 0.0255);
 const signTex = canvasTex(1900, 320, ctx => {
-  ctx.fillStyle = css.blue; ctx.fillRect(0, 0, 1900, 320);
+  ctx.fillStyle = css.navy; ctx.fillRect(0, 0, 1900, 320);
   ctx.strokeStyle = css.paper; ctx.lineWidth = 8; ctx.strokeRect(40, 40, 1820, 240);
-  const hh = 170, hw = hh * (hMark.width / hMark.height);
-  for (const x of [190, 1710]) ctx.drawImage(hMark, x - hw / 2, 160 - hh / 2, hw, hh);
-  ctx.fillStyle = css.paper;
-  fitText(ctx, 'HEARST MAGAZINES', s => `700 ${s}px "Helvetica Neue", Arial, sans-serif`, 1200, 96, 950, 165, 22);
+  const lw = 1240, lh = lw * (signLogo.height / signLogo.width);
+  ctx.drawImage(signLogo, 950 - lw / 2, 160 - lh / 2, lw, lh);
 });
 const signFace = Object.assign(new THREE.MeshStandardMaterial({ map: signTex, roughness: 0.28 }), { name: 'sign_face' });
 add(sign, 'sign_face', new THREE.PlaneGeometry(W - 0.05, 0.16), signFace, 0, 0, 0.0286);
