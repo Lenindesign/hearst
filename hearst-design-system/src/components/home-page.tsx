@@ -2544,9 +2544,6 @@ export function RichPhotoGalleryCard({
 
       <div className="relative min-w-0 p-4 sm:p-5">
         <div className="mb-3 flex flex-wrap items-center gap-2">
-          <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
-            {story.signal}
-          </span>
           <LifestyleBrandSource story={story} />
           <span className="inline-flex items-center gap-1 text-[length:var(--text-token-4xs)] font-semibold text-muted-foreground">
             <Camera className="h-3.5 w-3.5" aria-hidden />
@@ -2628,9 +2625,6 @@ export function LifestyleRiverCard({
         />
         <div className="min-w-0">
           <div className="mb-2 flex flex-wrap items-center gap-2">
-            <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
-              {story.signal}
-            </span>
             <LifestyleKindBadge kind={kind} story={story} />
             <LifestyleBrandSource story={story} />
           </div>
@@ -2700,9 +2694,6 @@ export function LifestyleRiverCard({
         isVideo ? "p-4 sm:p-5" : featured ? "flex flex-col justify-center p-5 sm:p-6 lg:p-8" : "p-4 sm:p-5"
       )}>
         <div className="mb-3 flex flex-wrap items-center gap-2">
-          <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
-            {story.signal}
-          </span>
           <LifestyleKindBadge kind={kind} story={story} />
           <LifestyleBrandSource story={story} />
         </div>
