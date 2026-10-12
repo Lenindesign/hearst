@@ -7,9 +7,9 @@ const metadata: ComponentMetadata = {
   level: "organism",
   path: "hearst-plus/content-reader-dialog-shell.tsx",
   exports: [
-    "rememberContentReaderReturnFocus",
     "ContentReaderDialogShell",
     "ContentReaderDialogShellProps",
+    "rememberContentReaderReturnFocus",
   ],
   whenToUse: [
     "The routed Hearst+ application opens its standard in-app story reader",
@@ -43,7 +43,10 @@ const metadata: ComponentMetadata = {
     "ui/use-modal-isolation",
   ],
   usedBy: [
+    "entertainment-channel-stories-page",
+    "hearst-tv-feed-experience",
     "home-page",
+    "newspaper-feeds-section",
   ],
   brandAware: false,
   responsive: true,

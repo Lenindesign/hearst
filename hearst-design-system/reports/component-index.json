@@ -1,15 +1,18 @@
 {
-  "generatedAt": "2026-08-06T19:04:37.793Z",
-  "totalComponents": 108,
+  "generatedAt": "2026-10-12T16:42:42.024Z",
+  "totalComponents": 133,
   "byLevel": {
-    "template": 20,
-    "molecule": 35,
-    "organism": 28,
+    "template": 28,
+    "molecule": 44,
+    "organism": 36,
     "atom": 25
   },
   "byNamespace": {
     "accordion-page.tsx": 1,
     "adaptive-video.tsx": 1,
+    "ai-in-hds-page.tsx": 1,
+    "architecture-page.tsx": 1,
+    "article-blueprint-card-samples.tsx": 1,
     "article-blueprint-experience.tsx": 1,
     "article-page.tsx": 1,
     "badge-page.tsx": 1,
@@ -21,11 +24,13 @@
     "carousel-page.tsx": 1,
     "chip-page.tsx": 1,
     "color-page.tsx": 1,
+    "constitution-page.tsx": 1,
     "content-carousel.tsx": 1,
+    "design-agent-page.tsx": 1,
     "divider-page.tsx": 1,
     "form-label-page.tsx": 1,
     "fre": 12,
-    "hearst-plus": 35,
+    "hearst-plus": 55,
     "home-page.tsx": 1,
     "homepage-layouts.tsx": 1,
     "hot-rod-events-page.tsx": 1,
@@ -50,37 +55,22 @@
   },
   "metadataCoverage": {
     "componentsWithMetadata": 28,
-    "componentsWithoutMetadata": 80,
-    "coveragePercent": 25.9,
-    "validMetadata": 26,
-    "invalidMetadata": 2
+    "componentsWithoutMetadata": 105,
+    "coveragePercent": 21.1,
+    "validMetadata": 28,
+    "invalidMetadata": 0
   },
   "metadataValidation": {
-    "valid": false,
-    "errors": [
-      {
-        "component": "brand-logo",
-        "metadataPath": "src/components/brand-logo.metadata.ts",
-        "issues": [
-          "usedBy missing current values: delish-onboarding-modal, elle-onboarding-modal, good-housekeeping-onboarding-modal"
-        ]
-      },
-      {
-        "component": "button",
-        "metadataPath": "src/components/ui/button.metadata.ts",
-        "issues": [
-          "usedBy missing current values: delish-onboarding-modal, elle-onboarding-modal, good-housekeeping-onboarding-modal, motortrend-onboarding-modal"
-        ]
-      }
-    ]
+    "valid": true,
+    "errors": []
   },
   "storyCoverage": {
     "directlySpecifiedComponents": 56,
-    "productionUsedWithoutDirectStory": 45,
+    "productionUsedWithoutDirectStory": 69,
     "integratedSpecifiedComponents": 1,
     "infrastructureClassifiedComponents": 1,
     "specifiedComponents": 57,
-    "productionUsedWithoutStorybookSpecification": 43
+    "productionUsedWithoutStorybookSpecification": 67
   },
   "dependencyGraph": {
     "accordion-page": [
@@ -93,6 +83,16 @@
     "adaptive-video": [
       "ui/button"
     ],
+    "ai-in-hds-page": [
+      "product-story-shell",
+      "ui/icons"
+    ],
+    "architecture-page": [
+      "product-story-shell",
+      "adaptive-video",
+      "ui/icons"
+    ],
+    "article-blueprint-card-samples": [],
     "article-blueprint-experience": [],
     "article-page": [
       "theme-provider",
@@ -161,8 +161,16 @@
       "ui/card",
       "ui/separator"
     ],
+    "constitution-page": [
+      "product-story-shell",
+      "ui/icons"
+    ],
     "content-carousel": [
       "ui/carousel",
+      "ui/icons"
+    ],
+    "design-agent-page": [
+      "product-story-shell",
       "ui/icons"
     ],
     "divider-page": [
@@ -222,6 +230,7 @@
       "hearst-plus/story-metadata"
     ],
     "amplitude-analytics-bridge": [],
+    "brand-instagram-module": [],
     "brand-promotion-river-module": [
       "brand-logo",
       "lifestyle-river-types",
@@ -231,6 +240,34 @@
       "hearst-plus/story-metadata"
     ],
     "brand-source-icon": [],
+    "community-client": [
+      "hearst-plus/brand-source-icon",
+      "reader-account",
+      "reader-account-ui",
+      "ui/button",
+      "ui/textarea",
+      "ui/icons"
+    ],
+    "community-feedback-controls": [
+      "ui/button",
+      "ui/textarea",
+      "ui/icons"
+    ],
+    "community-forums-page": [
+      "ui/icons",
+      "home-page",
+      "lifestyle-river-types",
+      "brand-logo",
+      "hearst-plus/brand-source-icon",
+      "hearst-plus/hearst-plus-brand-wall",
+      "hearst-plus/community-client",
+      "hearst-plus/content-reader-model",
+      "hearst-plus/utility-bar",
+      "fre/site-footer"
+    ],
+    "community-joined-groups-card": [
+      "hearst-plus/brand-source-icon"
+    ],
     "content-reader-advertisement": [
       "lifestyle-river-types"
     ],
@@ -242,10 +279,10 @@
     ],
     "content-reader-context-rail": [
       "lifestyle-river-types",
-      "hearst-plus/brand-source-icon",
+      "ui/icons",
+      "hearst-plus/community-joined-groups-card",
       "hearst-plus/content-reader-model",
-      "hearst-plus/story-presentation",
-      "hearst-plus/story-metadata"
+      "hearst-plus/trending-rail"
     ],
     "content-reader-dialog-shell": [
       "ui/use-modal-isolation"
@@ -265,10 +302,18 @@
       "hearst-plus/story-metadata"
     ],
     "contextual-river-advertisement": [
-      "hearst-plus/content-reader-advertisement"
+      "hearst-plus/content-reader-advertisement",
+      "ui/icons"
+    ],
+    "delish-clubs-module": [
+      "ui/button",
+      "ui/icons",
+      "lifestyle-river-types",
+      "hearst-plus/onboarding-modal"
     ],
     "delish-onboarding-modal": [
       "brand-logo",
+      "hearst-plus/fluent-emoji-art",
       "hearst-plus/onboarding-modal",
       "ui/button",
       "ui/icons",
@@ -285,24 +330,45 @@
     ],
     "discovery-sidebar": [
       "ui/icons",
-      "ui/button",
       "lifestyle-river-types",
       "hearst-plus/brand-source-icon",
-      "hearst-plus/story-metadata"
+      "hearst-plus/community-joined-groups-card",
+      "hearst-plus/story-metadata",
+      "hearst-plus/trending-rail"
     ],
     "elle-onboarding-modal": [
       "brand-logo",
+      "hearst-plus/fluent-emoji-art",
       "hearst-plus/onboarding-modal",
       "ui/button",
       "ui/icons",
       "ui/use-modal-isolation"
     ],
+    "entertainment-channel-stories-page": [
+      "brand-logo",
+      "fre/site-footer",
+      "home-page",
+      "lifestyle-river-types",
+      "hearst-plus/content-reader-dialog-shell",
+      "hearst-plus/content-reader-masthead",
+      "hearst-plus/featured-story-carousel",
+      "hearst-plus/utility-bar",
+      "ui/icons"
+    ],
+    "entertainment-watch-page": [
+      "brand-logo",
+      "fre/site-footer",
+      "home-page",
+      "hearst-plus/utility-bar",
+      "ui/carousel",
+      "ui/use-modal-isolation",
+      "ui/icons"
+    ],
+    "entertainment-route-fallback": [],
     "featured-story-carousel": [
       "ui/icons",
-      "ui/button",
       "lifestyle-river-types",
       "hearst-plus/brand-source-icon",
-      "hearst-plus/story-metadata",
       "hearst-plus/use-prefers-reduced-motion",
       "hearst-plus/video-format"
     ],
@@ -318,6 +384,7 @@
     ],
     "good-housekeeping-onboarding-modal": [
       "brand-logo",
+      "hearst-plus/fluent-emoji-art",
       "hearst-plus/onboarding-modal",
       "ui/button",
       "ui/icons",
@@ -330,17 +397,72 @@
       "ui/icons",
       "hearst-plus/story-actions"
     ],
+    "hearst-plus-brand-wall": [
+      "hearst-plus/newsstand/newsstand-catalog"
+    ],
+    "hearst-tv-feed-experience": [
+      "hearst-plus/content-reader-dialog-shell",
+      "hearst-plus/content-reader-masthead",
+      "hearst-plus/featured-story-carousel",
+      "hearst-plus/local-news-source-toggle",
+      "hearst-plus/story-presentation",
+      "lifestyle-river-types",
+      "ui/select"
+    ],
+    "international-feed-page": [
+      "home-page",
+      "lifestyle-river-types",
+      "fre/site-footer",
+      "hearst-plus/utility-bar"
+    ],
     "lifestyle-technology-guide": [],
+    "local-news-global-header": [
+      "home-page",
+      "hearst-plus/utility-bar"
+    ],
+    "local-news-rail": [],
+    "local-news-source-toggle": [],
+    "local-weather": [
+      "ui/icons"
+    ],
     "motortrend-onboarding-modal": [
+      "hearst-plus/fluent-emoji-art",
       "hearst-plus/onboarding-modal",
       "ui/button",
       "ui/icons",
       "ui/use-modal-isolation"
     ],
+    "newspaper-feeds-section": [
+      "hearst-plus/content-reader-dialog-shell",
+      "hearst-plus/content-reader-masthead",
+      "hearst-plus/featured-story-carousel",
+      "ui/select",
+      "hearst-plus/local-news-source-toggle",
+      "lifestyle-river-types"
+    ],
+    "newsstand-experience": [
+      "brand-logo",
+      "ui/grid",
+      "hearst-plus/newsstand/newsstand-catalog",
+      "hearst-plus/newsstand/newsstand-title-modal"
+    ],
+    "newsstand-title-modal": [
+      "ui/icons",
+      "ui/use-modal-isolation",
+      "hearst-plus/newsstand/newsstand-catalog"
+    ],
     "onboarding-modal": [
       "lifestyle-river-types",
       "ui/button",
       "hearst-plus/brand-source-icon",
+      "ui/icons",
+      "ui/use-modal-isolation"
+    ],
+    "publication-onboarding-modal": [
+      "brand-logo",
+      "hearst-plus/fluent-emoji-art",
+      "hearst-plus/onboarding-modal",
+      "ui/button",
       "ui/icons",
       "ui/use-modal-isolation"
     ],
@@ -395,6 +517,7 @@
       "reader-account-ui",
       "reader-account",
       "ui/button",
+      "ui/icons",
       "ui/link",
       "ui/grid",
       "theme-provider"
@@ -410,7 +533,6 @@
     "video-cards": [
       "lifestyle-river-types",
       "adaptive-video",
-      "ui/button",
       "ui/icons",
       "hearst-plus/brand-source-icon",
       "hearst-plus/story-metadata",
@@ -429,6 +551,9 @@
       "fre/big-story",
       "fre/four-across-grid",
       "fre/site-footer",
+      "hearst-plus/local-weather",
+      "hearst-plus/hearst-plus-brand-wall",
+      "hearst-plus/brand-instagram-module",
       "ui/icons",
       "homepage-data",
       "lifestyle-river-types",
@@ -461,18 +586,19 @@
       "hearst-plus/content-reader-dialog-shell",
       "hearst-plus/content-reader-model",
       "hearst-plus/content-reader-comments",
-      "hearst-plus/content-reader-recommendations",
       "hearst-plus/content-reader-context-rail",
       "hearst-plus/content-reader-advertisement",
       "hearst-plus/contextual-river-advertisement",
+      "hearst-plus/local-news-rail",
       "hearst-plus/brand-promotion-river-module",
       "hearst-plus/brand-promotion-model",
       "hearst-plus/onboarding-modal",
       "hearst-plus/delish-onboarding-modal",
+      "hearst-plus/delish-clubs-module",
       "hearst-plus/motortrend-onboarding-modal",
-      "hearst-plus/good-housekeeping-onboarding-modal",
-      "hearst-plus/elle-onboarding-modal",
+      "hearst-plus/publication-onboarding-modal",
       "hearst-plus/stakeholder-personalization-console",
+      "hearst-plus/hearst-tv-feed-experience",
       "hearst-plus/utility-bar",
       "ui/use-modal-isolation",
       "hearst-plus/home-page-reader-state",
@@ -758,36 +884,117 @@
       "button-page",
       "card-page",
       "site-header",
+      "community-client",
+      "community-feedback-controls",
       "content-reader-comments",
       "content-reader-masthead",
+      "delish-clubs-module",
       "delish-onboarding-modal",
-      "discovery-sidebar",
       "elle-onboarding-modal",
-      "featured-story-carousel",
       "feed-states",
       "good-housekeeping-onboarding-modal",
       "hearst-games-index",
       "motortrend-onboarding-modal",
       "onboarding-modal",
+      "publication-onboarding-modal",
       "reader-masthead-carousel",
       "stakeholder-personalization-console",
       "story-actions",
       "utility-bar",
-      "video-cards",
       "home-page",
       "homepage-layouts",
       "hot-rod-events-page",
       "reader-account-ui",
       "carousel"
     ],
+    "product-story-shell": [
+      "ai-in-hds-page",
+      "architecture-page",
+      "constitution-page",
+      "design-agent-page"
+    ],
+    "icons": [
+      "ai-in-hds-page",
+      "architecture-page",
+      "article-page",
+      "badge-page",
+      "button-page",
+      "constitution-page",
+      "content-carousel",
+      "design-agent-page",
+      "ambient-reader",
+      "community-client",
+      "community-feedback-controls",
+      "community-forums-page",
+      "content-reader-comments",
+      "content-reader-context-rail",
+      "content-reader-masthead",
+      "contextual-river-advertisement",
+      "delish-clubs-module",
+      "delish-onboarding-modal",
+      "delish-shorts-viewer",
+      "discovery-sidebar",
+      "elle-onboarding-modal",
+      "entertainment-channel-stories-page",
+      "entertainment-watch-page",
+      "featured-story-carousel",
+      "fullscreen-image-viewer",
+      "good-housekeeping-onboarding-modal",
+      "hearst-games-index",
+      "local-weather",
+      "motortrend-onboarding-modal",
+      "newsstand-title-modal",
+      "onboarding-modal",
+      "publication-onboarding-modal",
+      "reader-action-bar",
+      "reader-masthead-carousel",
+      "stakeholder-personalization-console",
+      "story-actions",
+      "story-presentation",
+      "today-edit-strip",
+      "utility-bar",
+      "vertical-video-carousel",
+      "video-cards",
+      "home-page",
+      "homepage-layouts",
+      "hot-rod-events-page",
+      "input-page",
+      "nav-bar",
+      "reader-account-ui",
+      "special-offers",
+      "token-dashboard",
+      "token-inspector",
+      "accordion",
+      "article-card",
+      "button",
+      "carousel",
+      "chip",
+      "form-label",
+      "input",
+      "link",
+      "media",
+      "pagination",
+      "select"
+    ],
+    "adaptive-video": [
+      "architecture-page",
+      "delish-shorts-viewer",
+      "video-cards",
+      "home-page"
+    ],
     "brand-logo": [
       "article-page",
       "ambient-reader",
       "brand-promotion-river-module",
+      "community-forums-page",
       "content-reader-masthead",
       "delish-onboarding-modal",
       "elle-onboarding-modal",
+      "entertainment-channel-stories-page",
+      "entertainment-watch-page",
       "good-housekeeping-onboarding-modal",
+      "newsstand-experience",
+      "publication-onboarding-modal",
       "home-page",
       "homepage-layouts",
       "hot-rod-events-page",
@@ -825,6 +1032,10 @@
     ],
     "site-footer": [
       "article-page",
+      "community-forums-page",
+      "entertainment-channel-stories-page",
+      "entertainment-watch-page",
+      "international-feed-page",
       "home-page",
       "homepage-layouts",
       "hot-rod-events-page",
@@ -832,6 +1043,7 @@
     ],
     "grid": [
       "article-page",
+      "newsstand-experience",
       "utility-bar",
       "home-page",
       "hot-rod-events-page"
@@ -852,53 +1064,6 @@
       "article-page",
       "homepage-layouts"
     ],
-    "icons": [
-      "article-page",
-      "badge-page",
-      "button-page",
-      "content-carousel",
-      "ambient-reader",
-      "content-reader-comments",
-      "content-reader-masthead",
-      "delish-onboarding-modal",
-      "delish-shorts-viewer",
-      "discovery-sidebar",
-      "elle-onboarding-modal",
-      "featured-story-carousel",
-      "fullscreen-image-viewer",
-      "good-housekeeping-onboarding-modal",
-      "hearst-games-index",
-      "motortrend-onboarding-modal",
-      "onboarding-modal",
-      "reader-action-bar",
-      "reader-masthead-carousel",
-      "stakeholder-personalization-console",
-      "story-actions",
-      "story-presentation",
-      "today-edit-strip",
-      "vertical-video-carousel",
-      "video-cards",
-      "home-page",
-      "homepage-layouts",
-      "hot-rod-events-page",
-      "input-page",
-      "nav-bar",
-      "reader-account-ui",
-      "special-offers",
-      "token-dashboard",
-      "token-inspector",
-      "accordion",
-      "article-card",
-      "button",
-      "carousel",
-      "chip",
-      "form-label",
-      "input",
-      "link",
-      "media",
-      "pagination",
-      "select"
-    ],
     "tabs": [
       "button-page",
       "card-page",
@@ -907,7 +1072,8 @@
     ],
     "carousel": [
       "carousel-page",
-      "content-carousel"
+      "content-carousel",
+      "entertainment-watch-page"
     ],
     "chip": [
       "chip-page",
@@ -923,14 +1089,20 @@
     "lifestyle-river-types": [
       "ambient-reader",
       "brand-promotion-river-module",
+      "community-forums-page",
       "content-reader-advertisement",
       "content-reader-comments",
       "content-reader-context-rail",
       "content-reader-recommendations",
+      "delish-clubs-module",
       "delish-shorts-viewer",
       "discovery-sidebar",
+      "entertainment-channel-stories-page",
       "featured-story-carousel",
       "fullscreen-image-viewer",
+      "hearst-tv-feed-experience",
+      "international-feed-page",
+      "newspaper-feeds-section",
       "onboarding-modal",
       "reader-action-bar",
       "reader-article-body",
@@ -951,10 +1123,13 @@
       "delish-onboarding-modal",
       "delish-shorts-viewer",
       "elle-onboarding-modal",
+      "entertainment-watch-page",
       "fullscreen-image-viewer",
       "good-housekeeping-onboarding-modal",
       "motortrend-onboarding-modal",
+      "newsstand-title-modal",
       "onboarding-modal",
+      "publication-onboarding-modal",
       "stakeholder-personalization-console",
       "home-page",
       "reader-account-ui"
@@ -979,10 +1154,8 @@
     "story-metadata": [
       "ambient-reader",
       "brand-promotion-river-module",
-      "content-reader-context-rail",
       "content-reader-recommendations",
       "discovery-sidebar",
-      "featured-story-carousel",
       "reader-action-bar",
       "story-actions",
       "video-cards",
@@ -990,7 +1163,9 @@
     ],
     "brand-source-icon": [
       "brand-promotion-river-module",
-      "content-reader-context-rail",
+      "community-client",
+      "community-forums-page",
+      "community-joined-groups-card",
       "content-reader-recommendations",
       "delish-shorts-viewer",
       "discovery-sidebar",
@@ -1010,16 +1185,65 @@
     ],
     "story-presentation": [
       "brand-promotion-river-module",
-      "content-reader-context-rail",
       "content-reader-recommendations",
+      "hearst-tv-feed-experience",
       "stakeholder-personalization-console",
       "trending-rail",
       "home-page"
     ],
+    "reader-account": [
+      "community-client",
+      "utility-bar",
+      "home-page",
+      "reader-account-ui"
+    ],
+    "reader-account-ui": [
+      "community-client",
+      "utility-bar",
+      "home-page"
+    ],
+    "textarea": [
+      "community-client",
+      "community-feedback-controls"
+    ],
+    "home-page": [
+      "community-forums-page",
+      "entertainment-channel-stories-page",
+      "entertainment-watch-page",
+      "international-feed-page",
+      "local-news-global-header",
+      "hot-rod-events-page"
+    ],
+    "hearst-plus-brand-wall": [
+      "community-forums-page",
+      "home-page"
+    ],
+    "community-client": [
+      "community-forums-page"
+    ],
     "content-reader-model": [
+      "community-forums-page",
       "content-reader-comments",
       "content-reader-context-rail",
       "content-reader-recommendations",
+      "home-page"
+    ],
+    "utility-bar": [
+      "community-forums-page",
+      "entertainment-channel-stories-page",
+      "entertainment-watch-page",
+      "international-feed-page",
+      "local-news-global-header",
+      "home-page",
+      "hot-rod-events-page"
+    ],
+    "community-joined-groups-card": [
+      "content-reader-context-rail",
+      "discovery-sidebar"
+    ],
+    "trending-rail": [
+      "content-reader-context-rail",
+      "discovery-sidebar",
       "home-page"
     ],
     "reader-masthead-carousel": [
@@ -1030,16 +1254,20 @@
       "home-page"
     ],
     "onboarding-modal": [
+      "delish-clubs-module",
       "delish-onboarding-modal",
       "elle-onboarding-modal",
       "good-housekeeping-onboarding-modal",
       "motortrend-onboarding-modal",
+      "publication-onboarding-modal",
       "home-page"
     ],
-    "adaptive-video": [
-      "delish-shorts-viewer",
-      "video-cards",
-      "home-page"
+    "fluent-emoji-art": [
+      "delish-onboarding-modal",
+      "elle-onboarding-modal",
+      "good-housekeeping-onboarding-modal",
+      "motortrend-onboarding-modal",
+      "publication-onboarding-modal"
     ],
     "use-prefers-reduced-motion": [
       "delish-shorts-viewer",
@@ -1056,9 +1284,43 @@
       "video-cards",
       "home-page"
     ],
+    "content-reader-dialog-shell": [
+      "entertainment-channel-stories-page",
+      "hearst-tv-feed-experience",
+      "newspaper-feeds-section",
+      "home-page"
+    ],
+    "content-reader-masthead": [
+      "entertainment-channel-stories-page",
+      "hearst-tv-feed-experience",
+      "newspaper-feeds-section",
+      "home-page"
+    ],
+    "featured-story-carousel": [
+      "entertainment-channel-stories-page",
+      "hearst-tv-feed-experience",
+      "newspaper-feeds-section",
+      "home-page"
+    ],
     "story-actions": [
       "hearst-games-index",
       "home-page"
+    ],
+    "newsstand-catalog": [
+      "hearst-plus-brand-wall",
+      "newsstand-experience",
+      "newsstand-title-modal"
+    ],
+    "local-news-source-toggle": [
+      "hearst-tv-feed-experience",
+      "newspaper-feeds-section"
+    ],
+    "select": [
+      "hearst-tv-feed-experience",
+      "newspaper-feeds-section"
+    ],
+    "newsstand-title-modal": [
+      "newsstand-experience"
     ],
     "avatar": [
       "reader-action-bar",
@@ -1070,15 +1332,6 @@
     "video-cards": [
       "trending-rail",
       "home-page"
-    ],
-    "reader-account-ui": [
-      "utility-bar",
-      "home-page"
-    ],
-    "reader-account": [
-      "utility-bar",
-      "home-page",
-      "reader-account-ui"
     ],
     "story-utils": [
       "vertical-video-carousel",
@@ -1100,6 +1353,12 @@
     "four-across-grid": [
       "home-page",
       "homepage-layouts"
+    ],
+    "local-weather": [
+      "home-page"
+    ],
+    "brand-instagram-module": [
+      "home-page"
     ],
     "homepage-data": [
       "home-page",
@@ -1129,25 +1388,10 @@
     "discovery-sidebar": [
       "home-page"
     ],
-    "trending-rail": [
-      "home-page"
-    ],
     "today-edit-strip": [
       "home-page"
     ],
-    "featured-story-carousel": [
-      "home-page"
-    ],
-    "content-reader-masthead": [
-      "home-page"
-    ],
-    "content-reader-dialog-shell": [
-      "home-page"
-    ],
     "content-reader-comments": [
-      "home-page"
-    ],
-    "content-reader-recommendations": [
       "home-page"
     ],
     "content-reader-context-rail": [
@@ -1156,36 +1400,35 @@
     "contextual-river-advertisement": [
       "home-page"
     ],
+    "local-news-rail": [
+      "home-page"
+    ],
     "brand-promotion-river-module": [
       "home-page"
     ],
     "delish-onboarding-modal": [
       "home-page"
     ],
+    "delish-clubs-module": [
+      "home-page"
+    ],
     "motortrend-onboarding-modal": [
       "home-page"
     ],
-    "good-housekeeping-onboarding-modal": [
-      "home-page"
-    ],
-    "elle-onboarding-modal": [
+    "publication-onboarding-modal": [
       "home-page"
     ],
     "stakeholder-personalization-console": [
       "home-page"
     ],
-    "utility-bar": [
-      "home-page",
-      "hot-rod-events-page"
+    "hearst-tv-feed-experience": [
+      "home-page"
     ],
     "home-page-reader-state": [
       "home-page"
     ],
     "hearst-games-index": [
       "home-page"
-    ],
-    "home-page": [
-      "hot-rod-events-page"
     ],
     "aspect-image": [
       "image-page"
@@ -1265,6 +1508,7 @@
       "hasHardcodedColors": false,
       "metadataPath": "src/components/adaptive-video.metadata.ts",
       "applicationUseSites": [
+        "src/components/architecture-page.tsx",
         "src/components/hearst-plus/delish-shorts-viewer.tsx",
         "src/components/hearst-plus/video-cards.tsx",
         "src/components/home-page.tsx"
@@ -1274,6 +1518,91 @@
       ],
       "storybookSpecification": null,
       "lineCount": 247
+    },
+    {
+      "name": "ai-in-hds-page",
+      "path": "src/components/ai-in-hds-page.tsx",
+      "exports": [
+        "AiInHdsPageComponent"
+      ],
+      "level": "template",
+      "dependencies": [
+        "product-story-shell",
+        "ui/icons"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/app/ai-in-hds/page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 780
+    },
+    {
+      "name": "architecture-page",
+      "path": "src/components/architecture-page.tsx",
+      "exports": [
+        "ArchitecturePageComponent"
+      ],
+      "level": "template",
+      "dependencies": [
+        "product-story-shell",
+        "adaptive-video",
+        "ui/icons"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": [
+          "font-brand"
+        ]
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/app/architecture/page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 1498
+    },
+    {
+      "name": "article-blueprint-card-samples",
+      "path": "src/components/article-blueprint-card-samples.tsx",
+      "exports": [
+        "RealAppCardSamples",
+        "ArticleBlueprintCardSample"
+      ],
+      "level": "molecule",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [
+          "--font-newsreader",
+          "--font-geist-sans"
+        ],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/app/hearst-article-blueprint/page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 147
     },
     {
       "name": "article-blueprint-experience",
@@ -1524,14 +1853,23 @@
       "metadataPath": "src/components/brand-logo.metadata.ts",
       "applicationUseSites": [
         "src/app/hds-brand-framework/page.tsx",
+        "src/app/hearst-plus/local-news/admin/page.tsx",
+        "src/app/hearst-plus/local-news/newspapers/page.tsx",
+        "src/app/hearst-plus/local-news/page.tsx",
+        "src/app/hearst-plus/newsstand/page.tsx",
         "src/app/hearst-plus/shop/page.tsx",
         "src/components/article-page.tsx",
         "src/components/hearst-plus/ambient-reader.tsx",
         "src/components/hearst-plus/brand-promotion-river-module.tsx",
+        "src/components/hearst-plus/community-forums-page.tsx",
         "src/components/hearst-plus/content-reader-masthead.tsx",
         "src/components/hearst-plus/delish-onboarding-modal.tsx",
         "src/components/hearst-plus/elle-onboarding-modal.tsx",
+        "src/components/hearst-plus/entertainment/entertainment-channel-stories-page.tsx",
+        "src/components/hearst-plus/entertainment/entertainment-watch-page.tsx",
         "src/components/hearst-plus/good-housekeeping-onboarding-modal.tsx",
+        "src/components/hearst-plus/newsstand/newsstand-experience.tsx",
+        "src/components/hearst-plus/publication-onboarding-modal.tsx",
         "src/components/home-page.tsx",
         "src/components/homepage-layouts.tsx",
         "src/components/hot-rod-events-page.tsx",
@@ -1550,7 +1888,7 @@
         ],
         "rationale": "Five direct Brand Logo stories import the exact production export and specify the complete destination and publication registries, canonical accessible names, sanitized SVG semantics, documented light-on-dark treatment, decorative usage, unknown-key omission, intrinsic sizing, and 320px containment. The production-aligned Typography story also uses the same renderer for its selected publication identity."
       },
-      "lineCount": 150
+      "lineCount": 151
     },
     {
       "name": "brand-switcher",
@@ -1788,6 +2126,36 @@
       "lineCount": 365
     },
     {
+      "name": "constitution-page",
+      "path": "src/components/constitution-page.tsx",
+      "exports": [
+        "ConstitutionPageComponent"
+      ],
+      "level": "template",
+      "dependencies": [
+        "product-story-shell",
+        "ui/icons"
+      ],
+      "tokens": {
+        "cssVariables": [
+          "--primary",
+          "--font-headline"
+        ],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/app/constitution/page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 627
+    },
+    {
       "name": "content-carousel",
       "path": "src/components/content-carousel.tsx",
       "exports": [
@@ -1820,6 +2188,33 @@
       "storybookStories": [],
       "storybookSpecification": null,
       "lineCount": 151
+    },
+    {
+      "name": "design-agent-page",
+      "path": "src/components/design-agent-page.tsx",
+      "exports": [
+        "DesignAgentPageComponent"
+      ],
+      "level": "template",
+      "dependencies": [
+        "product-story-shell",
+        "ui/icons"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/app/design-agent/page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 438
     },
     {
       "name": "divider-page",
@@ -2304,9 +2699,17 @@
       "hasHardcodedColors": false,
       "metadataPath": null,
       "applicationUseSites": [
+        "src/app/hearst-plus/local-news/admin/page.tsx",
+        "src/app/hearst-plus/local-news/newspapers/page.tsx",
+        "src/app/hearst-plus/local-news/page.tsx",
+        "src/app/hearst-plus/newsstand/page.tsx",
         "src/app/hearst-plus/shop/page.tsx",
         "src/components/article-page.tsx",
         "src/components/fre/index.ts",
+        "src/components/hearst-plus/community-forums-page.tsx",
+        "src/components/hearst-plus/entertainment/entertainment-channel-stories-page.tsx",
+        "src/components/hearst-plus/entertainment/entertainment-watch-page.tsx",
+        "src/components/hearst-plus/international-feed-page.tsx",
         "src/components/home-page.tsx",
         "src/components/homepage-layouts.tsx",
         "src/components/hot-rod-events-page.tsx",
@@ -2316,7 +2719,7 @@
         "src/stories/FRE.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 217
+      "lineCount": 232
     },
     {
       "name": "site-header",
@@ -2449,6 +2852,36 @@
       "lineCount": 64
     },
     {
+      "name": "brand-instagram-module",
+      "path": "src/components/hearst-plus/brand-instagram-module.tsx",
+      "exports": [
+        "BrandInstagramModule"
+      ],
+      "level": "molecule",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [
+          "--hp-surface",
+          "--hp-shadow-card"
+        ],
+        "tailwindSemantics": [
+          "bg-muted",
+          "text-primary"
+        ],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/components/home-page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 110
+    },
+    {
       "name": "brand-promotion-river-module",
       "path": "src/components/hearst-plus/brand-promotion-river-module.tsx",
       "exports": [
@@ -2467,21 +2900,15 @@
       "tokens": {
         "cssVariables": [
           "--text-token-4xs",
-          "--hp-surface",
-          "--hp-shadow-card"
+          "--hp-shadow-card",
+          "--hp-surface"
         ],
-        "tailwindSemantics": [
-          "text-primary",
-          "border-border",
-          "text-foreground",
-          "bg-border",
-          "text-muted-foreground"
-        ],
+        "tailwindSemantics": [],
         "classes": []
       },
       "brandAware": false,
       "responsive": true,
-      "hasHardcodedColors": false,
+      "hasHardcodedColors": true,
       "metadataPath": null,
       "applicationUseSites": [
         "src/components/hearst-plus/index.ts",
@@ -2491,7 +2918,7 @@
         "src/stories/HearstPlusBrandSpotlight.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 139
+      "lineCount": 228
     },
     {
       "name": "brand-source-icon",
@@ -2516,7 +2943,9 @@
       "metadataPath": "src/components/hearst-plus/brand-source-icon.metadata.ts",
       "applicationUseSites": [
         "src/components/hearst-plus/brand-promotion-river-module.tsx",
-        "src/components/hearst-plus/content-reader-context-rail.tsx",
+        "src/components/hearst-plus/community-client.tsx",
+        "src/components/hearst-plus/community-forums-page.tsx",
+        "src/components/hearst-plus/community-joined-groups-card.tsx",
         "src/components/hearst-plus/content-reader-recommendations.tsx",
         "src/components/hearst-plus/delish-shorts-viewer.tsx",
         "src/components/hearst-plus/discovery-sidebar.tsx",
@@ -2534,7 +2963,201 @@
         "src/stories/HearstPlusStoryMetadata.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 54
+      "lineCount": 59
+    },
+    {
+      "name": "community-client",
+      "path": "src/components/hearst-plus/community-client.tsx",
+      "exports": [
+        "CommunityJoinButton",
+        "CommunityHelpfulButton",
+        "CommunityReportButton",
+        "CommunityHostBadge",
+        "CommunityLeftRail",
+        "CommunityGroupChips",
+        "CommunityGroupsToJoin",
+        "CommunityComposer",
+        "CommunityFeed",
+        "CommunityGroupsDirectory",
+        "CommunityThreadReplies",
+        "CommunityGroupSummary",
+        "CommunityFeedThread"
+      ],
+      "level": "organism",
+      "dependencies": [
+        "hearst-plus/brand-source-icon",
+        "reader-account",
+        "reader-account-ui",
+        "ui/button",
+        "ui/textarea",
+        "ui/icons"
+      ],
+      "tokens": {
+        "cssVariables": [
+          "--hp-border",
+          "--hp-text-secondary",
+          "--hp-text-primary",
+          "--community-surface-soft",
+          "--community-surface-soft-hover",
+          "--hp-surface",
+          "--hp-shadow-card",
+          "--text-token-4xs",
+          "--hp-background",
+          "--hp-text-ui"
+        ],
+        "tailwindSemantics": [
+          "text-primary-foreground",
+          "text-primary",
+          "bg-primary/10",
+          "bg-primary",
+          "text-destructive",
+          "border-primary/15"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/components/hearst-plus/community-forums-page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 1120
+    },
+    {
+      "name": "community-feedback-controls",
+      "path": "src/components/hearst-plus/community-feedback-controls.tsx",
+      "exports": [
+        "CommunityInlineAction",
+        "CommunityStartPostForm",
+        "CommunityReplyForm",
+        "CommunitySuggestGroupForm",
+        "CommunityCreateActionButton"
+      ],
+      "level": "organism",
+      "dependencies": [
+        "ui/button",
+        "ui/textarea",
+        "ui/icons"
+      ],
+      "tokens": {
+        "cssVariables": [
+          "--hp-text-primary",
+          "--hp-border",
+          "--hp-surface",
+          "--hp-shadow-card",
+          "--hp-text-secondary",
+          "--community-surface-soft"
+        ],
+        "tailwindSemantics": [
+          "text-primary",
+          "border-primary/15"
+        ],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "metadataPath": null,
+      "applicationUseSites": [],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 333
+    },
+    {
+      "name": "community-forums-page",
+      "path": "src/components/hearst-plus/community-forums-page.tsx",
+      "exports": [
+        "getCommunitySort",
+        "getCommunityView",
+        "CommunityForumsPage",
+        "CommunitySort",
+        "CommunityView"
+      ],
+      "level": "template",
+      "dependencies": [
+        "ui/icons",
+        "home-page",
+        "lifestyle-river-types",
+        "brand-logo",
+        "hearst-plus/brand-source-icon",
+        "hearst-plus/hearst-plus-brand-wall",
+        "hearst-plus/community-client",
+        "hearst-plus/content-reader-model",
+        "hearst-plus/utility-bar",
+        "fre/site-footer"
+      ],
+      "tokens": {
+        "cssVariables": [
+          "--community-font-ui",
+          "--hp-surface",
+          "--hp-shadow-card",
+          "--hp-text-secondary",
+          "--hp-border",
+          "--community-surface-soft",
+          "--hp-text-primary",
+          "--text-token-4xs",
+          "--hp-background",
+          "--hp-text-ui",
+          "--hp-control-hover"
+        ],
+        "tailwindSemantics": [
+          "text-primary"
+        ],
+        "classes": [
+          "font-brand"
+        ]
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/app/communities/[brandSlug]/groups/[groupSlug]/page.tsx",
+        "src/app/communities/[brandSlug]/groups/[groupSlug]/posts/[postId]/page.tsx",
+        "src/app/communities/[brandSlug]/page.tsx",
+        "src/app/communities/[brandSlug]/threads/[threadId]/page.tsx",
+        "src/app/communities/page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 641
+    },
+    {
+      "name": "community-joined-groups-card",
+      "path": "src/components/hearst-plus/community-joined-groups-card.tsx",
+      "exports": [
+        "CommunityJoinedGroupsCard",
+        "CommunityJoinedGroupItem"
+      ],
+      "level": "molecule",
+      "dependencies": [
+        "hearst-plus/brand-source-icon"
+      ],
+      "tokens": {
+        "cssVariables": [
+          "--hp-surface",
+          "--hp-shadow-card",
+          "--text-token-4xs",
+          "--hp-text-secondary",
+          "--hp-text-primary"
+        ],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": true,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/components/hearst-plus/content-reader-context-rail.tsx",
+        "src/components/hearst-plus/discovery-sidebar.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 132
     },
     {
       "name": "content-reader-advertisement",
@@ -2630,23 +3253,22 @@
       "level": "organism",
       "dependencies": [
         "lifestyle-river-types",
-        "hearst-plus/brand-source-icon",
+        "ui/icons",
+        "hearst-plus/community-joined-groups-card",
         "hearst-plus/content-reader-model",
-        "hearst-plus/story-presentation",
-        "hearst-plus/story-metadata"
+        "hearst-plus/trending-rail"
       ],
       "tokens": {
         "cssVariables": [
+          "--hp-border",
           "--hp-surface",
           "--hp-shadow-card",
           "--text-token-4xs",
-          "--hp-surface-low"
+          "--hp-text-primary",
+          "--hp-text-secondary"
         ],
         "tailwindSemantics": [
-          "border-border",
-          "text-primary",
-          "text-muted-foreground",
-          "bg-background"
+          "text-primary"
         ],
         "classes": []
       },
@@ -2662,7 +3284,7 @@
         "src/stories/HearstPlusReaderContextRail.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 119
+      "lineCount": 96
     },
     {
       "name": "content-reader-dialog-shell",
@@ -2690,7 +3312,10 @@
       "hasHardcodedColors": false,
       "metadataPath": "src/components/hearst-plus/content-reader-dialog-shell.metadata.ts",
       "applicationUseSites": [
+        "src/components/hearst-plus/entertainment/entertainment-channel-stories-page.tsx",
+        "src/components/hearst-plus/hearst-tv-feed-experience.tsx",
         "src/components/hearst-plus/index.ts",
+        "src/components/hearst-plus/newspaper-feeds-section.tsx",
         "src/components/home-page.tsx"
       ],
       "storybookStories": [],
@@ -2739,7 +3364,10 @@
       "hasHardcodedColors": false,
       "metadataPath": null,
       "applicationUseSites": [
+        "src/components/hearst-plus/entertainment/entertainment-channel-stories-page.tsx",
+        "src/components/hearst-plus/hearst-tv-feed-experience.tsx",
         "src/components/hearst-plus/index.ts",
+        "src/components/hearst-plus/newspaper-feeds-section.tsx",
         "src/components/home-page.tsx"
       ],
       "storybookStories": [
@@ -2770,8 +3398,8 @@
         "tailwindSemantics": [
           "border-border",
           "text-primary",
-          "text-muted-foreground",
-          "text-foreground"
+          "text-foreground",
+          "text-muted-foreground"
         ],
         "classes": [
           "font-brand"
@@ -2782,14 +3410,13 @@
       "hasHardcodedColors": false,
       "metadataPath": null,
       "applicationUseSites": [
-        "src/components/hearst-plus/index.ts",
-        "src/components/home-page.tsx"
+        "src/components/hearst-plus/index.ts"
       ],
       "storybookStories": [
         "src/stories/HearstPlusReaderRecommendations.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 107
+      "lineCount": 101
     },
     {
       "name": "contextual-river-advertisement",
@@ -2800,7 +3427,8 @@
       ],
       "level": "molecule",
       "dependencies": [
-        "hearst-plus/content-reader-advertisement"
+        "hearst-plus/content-reader-advertisement",
+        "ui/icons"
       ],
       "tokens": {
         "cssVariables": [
@@ -2809,11 +3437,22 @@
           "--text-token-4xs"
         ],
         "tailwindSemantics": [
-          "border-border"
+          "border-border",
+          "bg-muted/25",
+          "text-muted-foreground",
+          "bg-background",
+          "text-foreground",
+          "text-primary",
+          "bg-muted/35",
+          "border-primary/20",
+          "bg-primary/10",
+          "bg-muted/20",
+          "bg-primary",
+          "text-primary-foreground"
         ],
         "classes": []
       },
-      "brandAware": false,
+      "brandAware": true,
       "responsive": true,
       "hasHardcodedColors": true,
       "metadataPath": null,
@@ -2825,7 +3464,47 @@
         "src/stories/HearstPlusRiverAdvertisement.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 111
+      "lineCount": 486
+    },
+    {
+      "name": "delish-clubs-module",
+      "path": "src/components/hearst-plus/delish-clubs-module.tsx",
+      "exports": [
+        "DelishClubsModule"
+      ],
+      "level": "organism",
+      "dependencies": [
+        "ui/button",
+        "ui/icons",
+        "lifestyle-river-types",
+        "hearst-plus/onboarding-modal"
+      ],
+      "tokens": {
+        "cssVariables": [
+          "--delish-club-border",
+          "--delish-club-shell",
+          "--delish-club-ink",
+          "--hp-shadow-card",
+          "--text-token-4xs",
+          "--delish-club-red",
+          "--delish-club-muted",
+          "--delish-club-surface",
+          "--delish-club-red-soft",
+          "--delish-club-red-dark"
+        ],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/components/home-page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 343
     },
     {
       "name": "delish-onboarding-modal",
@@ -2838,6 +3517,7 @@
       "level": "organism",
       "dependencies": [
         "brand-logo",
+        "hearst-plus/fluent-emoji-art",
         "hearst-plus/onboarding-modal",
         "ui/button",
         "ui/icons",
@@ -2857,7 +3537,7 @@
       ],
       "storybookStories": [],
       "storybookSpecification": null,
-      "lineCount": 1176
+      "lineCount": 1189
     },
     {
       "name": "delish-shorts-viewer",
@@ -2909,10 +3589,11 @@
       "level": "organism",
       "dependencies": [
         "ui/icons",
-        "ui/button",
         "lifestyle-river-types",
         "hearst-plus/brand-source-icon",
-        "hearst-plus/story-metadata"
+        "hearst-plus/community-joined-groups-card",
+        "hearst-plus/story-metadata",
+        "hearst-plus/trending-rail"
       ],
       "tokens": {
         "cssVariables": [
@@ -2922,22 +3603,17 @@
           "--hp-sidebar-heading",
           "--color-primary",
           "--primary",
-          "--hp-text-primary",
-          "--hp-text-ui"
+          "--hp-text-primary"
         ],
         "tailwindSemantics": [
           "border-border",
           "text-muted-foreground",
           "text-primary",
-          "ring-primary/20",
-          "bg-background",
-          "bg-primary/10",
-          "bg-card",
-          "bg-muted/30"
+          "ring-primary/20"
         ],
         "classes": []
       },
-      "brandAware": true,
+      "brandAware": false,
       "responsive": true,
       "hasHardcodedColors": false,
       "metadataPath": null,
@@ -2949,7 +3625,7 @@
         "src/stories/HearstPlusDiscoverySidebar.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 362
+      "lineCount": 334
     },
     {
       "name": "elle-onboarding-modal",
@@ -2961,6 +3637,7 @@
       "level": "organism",
       "dependencies": [
         "brand-logo",
+        "hearst-plus/fluent-emoji-art",
         "hearst-plus/onboarding-modal",
         "ui/button",
         "ui/icons",
@@ -2975,12 +3652,102 @@
       "responsive": true,
       "hasHardcodedColors": true,
       "metadataPath": null,
+      "applicationUseSites": [],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 907
+    },
+    {
+      "name": "entertainment-channel-stories-page",
+      "path": "src/components/hearst-plus/entertainment/entertainment-channel-stories-page.tsx",
+      "exports": [
+        "EntertainmentChannelStoriesPage"
+      ],
+      "level": "template",
+      "dependencies": [
+        "brand-logo",
+        "fre/site-footer",
+        "home-page",
+        "lifestyle-river-types",
+        "hearst-plus/content-reader-dialog-shell",
+        "hearst-plus/content-reader-masthead",
+        "hearst-plus/featured-story-carousel",
+        "hearst-plus/utility-bar",
+        "ui/icons"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "metadataPath": null,
       "applicationUseSites": [
-        "src/components/home-page.tsx"
+        "src/app/hearst-plus/entertainment/stories/[channelSlug]/page.tsx"
       ],
       "storybookStories": [],
       "storybookSpecification": null,
-      "lineCount": 901
+      "lineCount": 454
+    },
+    {
+      "name": "entertainment-watch-page",
+      "path": "src/components/hearst-plus/entertainment/entertainment-watch-page.tsx",
+      "exports": [
+        "EntertainmentWatchPage"
+      ],
+      "level": "template",
+      "dependencies": [
+        "brand-logo",
+        "fre/site-footer",
+        "home-page",
+        "hearst-plus/utility-bar",
+        "ui/carousel",
+        "ui/use-modal-isolation",
+        "ui/icons"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/app/hearst-plus/entertainment/[channelSlug]/page.tsx",
+        "src/app/hearst-plus/entertainment/a-e/page.tsx",
+        "src/app/hearst-plus/entertainment/page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 1141
+    },
+    {
+      "name": "entertainment-route-fallback",
+      "path": "src/components/hearst-plus/entertainment-route-fallback.tsx",
+      "exports": [
+        "EntertainmentRouteFallback"
+      ],
+      "level": "molecule",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/app/layout.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 18
     },
     {
       "name": "featured-story-carousel",
@@ -2992,33 +3759,30 @@
       "level": "organism",
       "dependencies": [
         "ui/icons",
-        "ui/button",
         "lifestyle-river-types",
         "hearst-plus/brand-source-icon",
-        "hearst-plus/story-metadata",
         "hearst-plus/use-prefers-reduced-motion",
         "hearst-plus/video-format"
       ],
       "tokens": {
         "cssVariables": [
-          "--hp-surface",
           "--hp-shadow-card",
-          "--hp-image-scrim-soft",
-          "--hp-image-scrim-strong",
           "--hp-image-scrim-solid"
         ],
         "tailwindSemantics": [
-          "text-muted-foreground",
           "border-border"
         ],
         "classes": []
       },
-      "brandAware": true,
+      "brandAware": false,
       "responsive": true,
       "hasHardcodedColors": false,
       "metadataPath": "src/components/hearst-plus/featured-story-carousel.metadata.ts",
       "applicationUseSites": [
+        "src/components/hearst-plus/entertainment/entertainment-channel-stories-page.tsx",
+        "src/components/hearst-plus/hearst-tv-feed-experience.tsx",
         "src/components/hearst-plus/index.ts",
+        "src/components/hearst-plus/newspaper-feeds-section.tsx",
         "src/components/home-page.tsx"
       ],
       "storybookStories": [
@@ -3031,7 +3795,7 @@
         ],
         "rationale": "Seven direct stories import the production component and specify mixed article/video allocation, active-slide semantics, reader actions, mobile targets, saved state, publication treatment, single-story fallback, empty allocation, and reduced-motion behavior."
       },
-      "lineCount": 720
+      "lineCount": 674
     },
     {
       "name": "feed-states",
@@ -3123,6 +3887,7 @@
       "level": "organism",
       "dependencies": [
         "brand-logo",
+        "hearst-plus/fluent-emoji-art",
         "hearst-plus/onboarding-modal",
         "ui/button",
         "ui/icons",
@@ -3137,12 +3902,10 @@
       "responsive": true,
       "hasHardcodedColors": true,
       "metadataPath": null,
-      "applicationUseSites": [
-        "src/components/home-page.tsx"
-      ],
+      "applicationUseSites": [],
       "storybookStories": [],
       "storybookSpecification": null,
-      "lineCount": 897
+      "lineCount": 902
     },
     {
       "name": "hearst-games-index",
@@ -3197,6 +3960,149 @@
       "lineCount": 581
     },
     {
+      "name": "hearst-plus-brand-wall",
+      "path": "src/components/hearst-plus/hearst-plus-brand-wall.tsx",
+      "exports": [
+        "HearstPlusBrandWall"
+      ],
+      "level": "molecule",
+      "dependencies": [
+        "hearst-plus/newsstand/newsstand-catalog"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/components/hearst-plus/community-forums-page.tsx",
+        "src/components/home-page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 40
+    },
+    {
+      "name": "hearst-tv-feed-experience",
+      "path": "src/components/hearst-plus/hearst-tv-feed-experience.tsx",
+      "exports": [
+        "HearstTVFeedExperience",
+        "HearstTVLocalNewsRiver",
+        "HearstTVLocalNewsReaderExperience"
+      ],
+      "level": "organism",
+      "dependencies": [
+        "hearst-plus/content-reader-dialog-shell",
+        "hearst-plus/content-reader-masthead",
+        "hearst-plus/featured-story-carousel",
+        "hearst-plus/local-news-source-toggle",
+        "hearst-plus/story-presentation",
+        "lifestyle-river-types",
+        "ui/select"
+      ],
+      "tokens": {
+        "cssVariables": [
+          "--hp-background",
+          "--hp-text-primary",
+          "--hp-border",
+          "--hp-surface",
+          "--hp-primary",
+          "--hp-text-headline",
+          "--hp-text-secondary",
+          "--hp-shadow-card",
+          "--text-token-4xs",
+          "--hp-sidebar-heading",
+          "--color-primary",
+          "--primary",
+          "--hp-surface-low",
+          "--hp-focus",
+          "--hp-control",
+          "--hp-action",
+          "--hp-action-text",
+          "--hp-action-hover",
+          "--hp-border-strong",
+          "--hp-control-hover",
+          "--available-height"
+        ],
+        "tailwindSemantics": [
+          "border-border",
+          "text-muted-foreground",
+          "text-primary",
+          "text-foreground",
+          "bg-primary/35",
+          "bg-primary/20",
+          "bg-card",
+          "bg-border",
+          "text-foreground/85",
+          "border-input",
+          "bg-background",
+          "bg-popover",
+          "ring-foreground/10",
+          "text-popover-foreground"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/app/hearst-plus/local-news/admin/page.tsx",
+        "src/app/hearst-plus/local-news/page.tsx",
+        "src/components/home-page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 1326
+    },
+    {
+      "name": "international-feed-page",
+      "path": "src/components/hearst-plus/international-feed-page.tsx",
+      "exports": [
+        "InternationalFeedPage"
+      ],
+      "level": "template",
+      "dependencies": [
+        "home-page",
+        "lifestyle-river-types",
+        "fre/site-footer",
+        "hearst-plus/utility-bar"
+      ],
+      "tokens": {
+        "cssVariables": [
+          "--hp-background",
+          "--hp-text-primary",
+          "--hp-surface",
+          "--hp-shadow-card",
+          "--hp-surface-low"
+        ],
+        "tailwindSemantics": [
+          "border-border",
+          "text-primary",
+          "text-muted-foreground",
+          "text-primary-foreground",
+          "text-foreground"
+        ],
+        "classes": [
+          "font-brand"
+        ]
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/app/hearst-plus/international/page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 213
+    },
+    {
       "name": "lifestyle-technology-guide",
       "path": "src/components/hearst-plus/lifestyle-technology-guide.tsx",
       "exports": [
@@ -3235,6 +4141,143 @@
       "lineCount": 177
     },
     {
+      "name": "local-news-global-header",
+      "path": "src/components/hearst-plus/local-news-global-header.tsx",
+      "exports": [
+        "LocalNewsGlobalHeader"
+      ],
+      "level": "molecule",
+      "dependencies": [
+        "home-page",
+        "hearst-plus/utility-bar"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/app/hearst-plus/local-news/admin/page.tsx",
+        "src/app/hearst-plus/local-news/newspapers/page.tsx",
+        "src/app/hearst-plus/local-news/page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 112
+    },
+    {
+      "name": "local-news-rail",
+      "path": "src/components/hearst-plus/local-news-rail.tsx",
+      "exports": [
+        "LocalNewsRail"
+      ],
+      "level": "molecule",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [
+          "--hp-surface",
+          "--hp-shadow-card",
+          "--text-token-4xs",
+          "--hp-section-title"
+        ],
+        "tailwindSemantics": [
+          "border-border",
+          "bg-muted",
+          "text-muted-foreground",
+          "text-primary",
+          "ring-border"
+        ],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/components/home-page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 87
+    },
+    {
+      "name": "local-news-source-toggle",
+      "path": "src/components/hearst-plus/local-news-source-toggle.tsx",
+      "exports": [
+        "LocalNewsSourceToggle"
+      ],
+      "level": "molecule",
+      "dependencies": [],
+      "tokens": {
+        "cssVariables": [
+          "--text-token-4xs",
+          "--hp-sidebar-heading",
+          "--color-primary",
+          "--primary",
+          "--hp-surface-low",
+          "--hp-shadow-card",
+          "--hp-surface",
+          "--hp-text-headline"
+        ],
+        "tailwindSemantics": [
+          "border-border",
+          "text-primary-foreground",
+          "ring-primary/25"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/components/hearst-plus/hearst-tv-feed-experience.tsx",
+        "src/components/hearst-plus/newspaper-feeds-section.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 59
+    },
+    {
+      "name": "local-weather",
+      "path": "src/components/hearst-plus/local-weather.tsx",
+      "exports": [
+        "LocalWeather"
+      ],
+      "level": "molecule",
+      "dependencies": [
+        "ui/icons"
+      ],
+      "tokens": {
+        "cssVariables": [
+          "--hp-surface",
+          "--hp-shadow-card"
+        ],
+        "tailwindSemantics": [
+          "text-muted-foreground",
+          "text-foreground",
+          "border-border",
+          "border-input",
+          "bg-background"
+        ],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/components/home-page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 297
+    },
+    {
       "name": "motortrend-onboarding-modal",
       "path": "src/components/hearst-plus/motortrend-onboarding-modal.tsx",
       "exports": [
@@ -3243,6 +4286,7 @@
       ],
       "level": "organism",
       "dependencies": [
+        "hearst-plus/fluent-emoji-art",
         "hearst-plus/onboarding-modal",
         "ui/button",
         "ui/icons",
@@ -3262,7 +4306,143 @@
       ],
       "storybookStories": [],
       "storybookSpecification": null,
-      "lineCount": 1055
+      "lineCount": 1058
+    },
+    {
+      "name": "newspaper-feeds-section",
+      "path": "src/components/hearst-plus/newspaper-feeds-section.tsx",
+      "exports": [
+        "NewspaperFeedsSection",
+        "NewspaperFeedsReaderExperience"
+      ],
+      "level": "organism",
+      "dependencies": [
+        "hearst-plus/content-reader-dialog-shell",
+        "hearst-plus/content-reader-masthead",
+        "hearst-plus/featured-story-carousel",
+        "ui/select",
+        "hearst-plus/local-news-source-toggle",
+        "lifestyle-river-types"
+      ],
+      "tokens": {
+        "cssVariables": [
+          "--hp-surface",
+          "--hp-shadow-card",
+          "--text-token-4xs",
+          "--hp-sidebar-heading",
+          "--color-primary",
+          "--primary",
+          "--hp-surface-low",
+          "--hp-text-headline",
+          "--available-height",
+          "--hp-control-hover"
+        ],
+        "tailwindSemantics": [
+          "border-border",
+          "text-muted-foreground",
+          "text-foreground",
+          "text-primary",
+          "bg-primary/10",
+          "bg-primary/35",
+          "bg-primary/20",
+          "bg-card",
+          "bg-border",
+          "text-foreground/85",
+          "border-input",
+          "bg-background",
+          "bg-popover",
+          "ring-foreground/10",
+          "text-popover-foreground"
+        ],
+        "classes": []
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/app/hearst-plus/local-news/newspapers/page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 778
+    },
+    {
+      "name": "newsstand-experience",
+      "path": "src/components/hearst-plus/newsstand/newsstand-experience.tsx",
+      "exports": [
+        "NewsstandExperience"
+      ],
+      "level": "organism",
+      "dependencies": [
+        "brand-logo",
+        "ui/grid",
+        "hearst-plus/newsstand/newsstand-catalog",
+        "hearst-plus/newsstand/newsstand-title-modal"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "bg-foreground",
+          "text-background",
+          "border-foreground",
+          "text-muted-foreground",
+          "bg-background",
+          "text-primary",
+          "bg-border"
+        ],
+        "classes": [
+          ".headline"
+        ]
+      },
+      "brandAware": true,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/app/hearst-plus/newsstand/page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 321
+    },
+    {
+      "name": "newsstand-title-modal",
+      "path": "src/components/hearst-plus/newsstand/newsstand-title-modal.tsx",
+      "exports": [
+        "NewsstandTitleModal"
+      ],
+      "level": "organism",
+      "dependencies": [
+        "ui/icons",
+        "ui/use-modal-isolation",
+        "hearst-plus/newsstand/newsstand-catalog"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [
+          "bg-foreground/60",
+          "bg-background",
+          "text-foreground",
+          "bg-background/90",
+          "text-primary",
+          "text-muted-foreground"
+        ],
+        "classes": [
+          "font-brand",
+          ".headline"
+        ]
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/components/hearst-plus/newsstand/newsstand-experience.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 242
     },
     {
       "name": "onboarding-modal",
@@ -3310,11 +4490,13 @@
       "hasHardcodedColors": false,
       "metadataPath": null,
       "applicationUseSites": [
+        "src/components/hearst-plus/delish-clubs-module.tsx",
         "src/components/hearst-plus/delish-onboarding-modal.tsx",
         "src/components/hearst-plus/elle-onboarding-modal.tsx",
         "src/components/hearst-plus/good-housekeeping-onboarding-modal.tsx",
         "src/components/hearst-plus/index.ts",
         "src/components/hearst-plus/motortrend-onboarding-modal.tsx",
+        "src/components/hearst-plus/publication-onboarding-modal.tsx",
         "src/components/home-page.tsx"
       ],
       "storybookStories": [
@@ -3322,6 +4504,52 @@
       ],
       "storybookSpecification": null,
       "lineCount": 650
+    },
+    {
+      "name": "publication-onboarding-modal",
+      "path": "src/components/hearst-plus/publication-onboarding-modal.tsx",
+      "exports": [
+        "isPublicationOnboardingBrandSlug",
+        "PublicationOnboardingModal",
+        "publicationOnboardingBrandSlugs",
+        "publicationOnboardingStorageKeyPrefix",
+        "publicationOnboardingConfigs",
+        "PublicationOnboardingBrandSlug"
+      ],
+      "level": "organism",
+      "dependencies": [
+        "brand-logo",
+        "hearst-plus/fluent-emoji-art",
+        "hearst-plus/onboarding-modal",
+        "ui/button",
+        "ui/icons",
+        "ui/use-modal-isolation"
+      ],
+      "tokens": {
+        "cssVariables": [
+          "--publication-surface",
+          "--publication-ink",
+          "--publication-line",
+          "--publication-pale",
+          "--publication-primary",
+          "--publication-muted",
+          "--publication-secondary"
+        ],
+        "tailwindSemantics": [],
+        "classes": [
+          ".headline"
+        ]
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/components/home-page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 2736
     },
     {
       "name": "reader-action-bar",
@@ -3563,10 +4791,8 @@
       "applicationUseSites": [
         "src/components/hearst-plus/ambient-reader.tsx",
         "src/components/hearst-plus/brand-promotion-river-module.tsx",
-        "src/components/hearst-plus/content-reader-context-rail.tsx",
         "src/components/hearst-plus/content-reader-recommendations.tsx",
         "src/components/hearst-plus/discovery-sidebar.tsx",
-        "src/components/hearst-plus/featured-story-carousel.tsx",
         "src/components/hearst-plus/reader-action-bar.tsx",
         "src/components/hearst-plus/story-actions.tsx",
         "src/components/hearst-plus/video-cards.tsx",
@@ -3616,8 +4842,8 @@
       "metadataPath": null,
       "applicationUseSites": [
         "src/components/hearst-plus/brand-promotion-river-module.tsx",
-        "src/components/hearst-plus/content-reader-context-rail.tsx",
         "src/components/hearst-plus/content-reader-recommendations.tsx",
+        "src/components/hearst-plus/hearst-tv-feed-experience.tsx",
         "src/components/hearst-plus/index.ts",
         "src/components/hearst-plus/stakeholder-personalization-console.tsx",
         "src/components/hearst-plus/trending-rail.tsx",
@@ -3627,7 +4853,7 @@
         "src/stories/HearstPlusStoryPresentation.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 136
+      "lineCount": 141
     },
     {
       "name": "today-edit-strip",
@@ -3636,6 +4862,7 @@
         "TodayEditStrip",
         "TodayEditStory",
         "TodayEditSelection",
+        "TodayEditDestinationModule",
         "TodayEditStripProps"
       ],
       "level": "molecule",
@@ -3668,7 +4895,7 @@
         "src/stories/HearstPlusTodayEdit.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 243
+      "lineCount": 358
     },
     {
       "name": "trending-rail",
@@ -3689,7 +4916,7 @@
           "--hp-surface",
           "--hp-shadow-card",
           "--text-token-4xs",
-          "--hp-section-title",
+          "--hp-text-primary",
           "--hp-sidebar-heading",
           "--color-primary",
           "--primary"
@@ -3697,7 +4924,6 @@
         "tailwindSemantics": [
           "border-border",
           "bg-muted",
-          "text-primary",
           "ring-border",
           "text-muted-foreground"
         ],
@@ -3708,6 +4934,8 @@
       "hasHardcodedColors": false,
       "metadataPath": null,
       "applicationUseSites": [
+        "src/components/hearst-plus/content-reader-context-rail.tsx",
+        "src/components/hearst-plus/discovery-sidebar.tsx",
         "src/components/hearst-plus/index.ts",
         "src/components/home-page.tsx"
       ],
@@ -3731,6 +4959,7 @@
         "reader-account-ui",
         "reader-account",
         "ui/button",
+        "ui/icons",
         "ui/link",
         "ui/grid",
         "theme-provider"
@@ -3740,6 +4969,7 @@
           "--text-token-4xs",
           "--component-navigation-utility-background-knockout",
           "--component-navigation-utility-content-knockout",
+          "--hp-utility-bar",
           "--component-navigation-utility-content-accent",
           "--component-navigation-utility-content-accent-hover",
           "--component-navigation-utility-megamenu-background-knockout"
@@ -3747,7 +4977,8 @@
         "tailwindSemantics": [
           "text-primary-foreground",
           "bg-background",
-          "text-foreground"
+          "text-foreground",
+          "bg-muted"
         ],
         "classes": []
       },
@@ -3756,6 +4987,11 @@
       "hasHardcodedColors": false,
       "metadataPath": "src/components/hearst-plus/utility-bar.metadata.ts",
       "applicationUseSites": [
+        "src/components/hearst-plus/community-forums-page.tsx",
+        "src/components/hearst-plus/entertainment/entertainment-channel-stories-page.tsx",
+        "src/components/hearst-plus/entertainment/entertainment-watch-page.tsx",
+        "src/components/hearst-plus/international-feed-page.tsx",
+        "src/components/hearst-plus/local-news-global-header.tsx",
         "src/components/home-page.tsx",
         "src/components/hot-rod-events-page.tsx"
       ],
@@ -3763,7 +4999,7 @@
         "src/stories/HearstPlusUtilityBar.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 284
+      "lineCount": 767
     },
     {
       "name": "vertical-video-carousel",
@@ -3826,7 +5062,6 @@
       "dependencies": [
         "lifestyle-river-types",
         "adaptive-video",
-        "ui/button",
         "ui/icons",
         "hearst-plus/brand-source-icon",
         "hearst-plus/story-metadata",
@@ -3846,8 +5081,8 @@
         "tailwindSemantics": [
           "border-border",
           "text-foreground",
-          "text-muted-foreground",
           "text-primary",
+          "text-muted-foreground",
           "bg-muted",
           "bg-primary",
           "text-primary-foreground"
@@ -3867,7 +5102,7 @@
         "src/stories/HearstPlusVideoCards.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 524
+      "lineCount": 425
     },
     {
       "name": "home-page",
@@ -3899,6 +5134,9 @@
         "fre/big-story",
         "fre/four-across-grid",
         "fre/site-footer",
+        "hearst-plus/local-weather",
+        "hearst-plus/hearst-plus-brand-wall",
+        "hearst-plus/brand-instagram-module",
         "ui/icons",
         "homepage-data",
         "lifestyle-river-types",
@@ -3931,18 +5169,19 @@
         "hearst-plus/content-reader-dialog-shell",
         "hearst-plus/content-reader-model",
         "hearst-plus/content-reader-comments",
-        "hearst-plus/content-reader-recommendations",
         "hearst-plus/content-reader-context-rail",
         "hearst-plus/content-reader-advertisement",
         "hearst-plus/contextual-river-advertisement",
+        "hearst-plus/local-news-rail",
         "hearst-plus/brand-promotion-river-module",
         "hearst-plus/brand-promotion-model",
         "hearst-plus/onboarding-modal",
         "hearst-plus/delish-onboarding-modal",
+        "hearst-plus/delish-clubs-module",
         "hearst-plus/motortrend-onboarding-modal",
-        "hearst-plus/good-housekeeping-onboarding-modal",
-        "hearst-plus/elle-onboarding-modal",
+        "hearst-plus/publication-onboarding-modal",
         "hearst-plus/stakeholder-personalization-console",
+        "hearst-plus/hearst-tv-feed-experience",
         "hearst-plus/utility-bar",
         "ui/use-modal-isolation",
         "hearst-plus/home-page-reader-state",
@@ -3950,28 +5189,29 @@
       ],
       "tokens": {
         "cssVariables": [
+          "--hp-primary",
+          "--primary",
           "--palette-content-knockout",
           "--foreground",
+          "--palette-content-brand",
           "--component-navigation-utility-content-knockout",
           "--component-navigation-utility-content-accent",
           "--hp-section-title",
           "--component-video-feed-background-default",
           "--component-video-feed-content-primary",
           "--text-token-4xs",
-          "--hp-surface",
+          "--banner-aspect",
           "--width-sidebar-narrow",
+          "--hp-surface",
           "--space-sm",
           "--space-md",
           "--text-token-5xl",
           "--card",
-          "--primary",
           "--secondary",
           "--hp-chip-border",
           "--hp-chip",
           "--hp-text-chip",
           "--hp-shadow-card",
-          "--hp-sidebar-heading",
-          "--color-primary",
           "--content-reader-article-surface",
           "--component-video-feed-border-default",
           "--component-video-feed-content-headline",
@@ -3979,11 +5219,14 @@
           "--hp-text-ui",
           "--hp-background",
           "--hp-text-primary",
+          "--hp-sidebar-heading",
+          "--color-primary",
           "--hp-surface-low",
           "--brand-primary",
           "--component-video-feed-action-content"
         ],
         "tailwindSemantics": [
+          "bg-border",
           "bg-background",
           "text-foreground",
           "bg-muted",
@@ -3992,11 +5235,10 @@
           "bg-primary",
           "text-primary-foreground",
           "bg-muted/40",
-          "text-primary",
           "border-border",
+          "text-primary",
           "bg-accent",
           "text-background",
-          "bg-border",
           "bg-card"
         ],
         "classes": [
@@ -4005,7 +5247,7 @@
       },
       "brandAware": true,
       "responsive": true,
-      "hasHardcodedColors": false,
+      "hasHardcodedColors": true,
       "metadataPath": null,
       "applicationUseSites": [
         "src/app/hearst-autos/page.tsx",
@@ -4020,7 +5262,14 @@
         "src/app/hearst-plus/page.tsx",
         "src/app/hearst-section-brand-page.tsx",
         "src/app/read/[storyId]/page.tsx",
+        "src/app/single-brand/[brandSlug]/article/[storyId]/page.tsx",
+        "src/app/single-brand/[brandSlug]/page.tsx",
+        "src/components/hearst-plus/community-forums-page.tsx",
+        "src/components/hearst-plus/entertainment/entertainment-channel-stories-page.tsx",
+        "src/components/hearst-plus/entertainment/entertainment-watch-page.tsx",
         "src/components/hearst-plus/index.ts",
+        "src/components/hearst-plus/international-feed-page.tsx",
+        "src/components/hearst-plus/local-news-global-header.tsx",
         "src/components/hot-rod-events-page.tsx"
       ],
       "storybookStories": [
@@ -4032,7 +5281,7 @@
         "src/stories/LifestyleDestinationApp.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 7034
+      "lineCount": 7652
     },
     {
       "name": "homepage-layouts",
@@ -4431,7 +5680,7 @@
         ],
         "rationale": "The direct stories import the exact DesignSystemNavBar renderer used by NavBar. They specify the documentation-home state, component subnavigation and current-page semantics, named brand preview, external Storybook handoff, and mobile disclosure target, Escape, and focus-restoration behavior."
       },
-      "lineCount": 373
+      "lineCount": 377
     },
     {
       "name": "pagination-page",
@@ -4489,9 +5738,16 @@
         "BrandStyleGuide",
         "productImage",
         "streams",
-        "prototypeStats",
         "brandSections",
         "portfolioBrands",
+        "totalMagazineStories",
+        "totalMagazineBrands",
+        "totalTVStations",
+        "totalNewspapers",
+        "totalEntertainmentChannels",
+        "totalEntertainmentShows",
+        "totalPortfolioSources",
+        "prototypeStats",
         "journeys",
         "valueProps",
         "systemSteps",
@@ -4516,10 +5772,10 @@
           "bg-card",
           "text-primary",
           "text-muted-foreground",
-          "bg-primary",
           "bg-secondary",
           "text-foreground",
           "bg-muted/35",
+          "bg-primary",
           "bg-foreground",
           "border-border/60",
           "bg-border"
@@ -4528,15 +5784,21 @@
       },
       "brandAware": true,
       "responsive": true,
-      "hasHardcodedColors": false,
+      "hasHardcodedColors": true,
       "metadataPath": "src/components/product-story-shell.metadata.ts",
       "applicationUseSites": [
         "src/app/about-hearst-magazines/page.tsx",
+        "src/app/ad-logic/page.tsx",
         "src/app/hds-brand-framework/page.tsx",
         "src/app/hearst-article-blueprint/page.tsx",
+        "src/app/hearst-plus/accessibility-ai/page.tsx",
         "src/app/hearst-product-blueprint/page.tsx",
         "src/app/token-architecture/page.tsx",
-        "src/app/why-hearst-plus/page.tsx"
+        "src/app/why-hearst-plus/page.tsx",
+        "src/components/ai-in-hds-page.tsx",
+        "src/components/architecture-page.tsx",
+        "src/components/constitution-page.tsx",
+        "src/components/design-agent-page.tsx"
       ],
       "storybookStories": [
         "src/stories/ProductSpecificationModules.stories.tsx"
@@ -4548,17 +5810,19 @@
         ],
         "rationale": "The direct stories import the exact routed exports and separate them from reader-facing components. They specify desktop and phone navigation, current-page semantics, 44px targets, the non-interactive diagram boundary, both story-card concepts, portfolio and destination maps, journey/ranking evidence, architecture/palette guidance, brand style tiles, marquee behavior, and the shared footer."
       },
-      "lineCount": 614
+      "lineCount": 803
     },
     {
       "name": "reader-account-ui",
       "path": "src/components/reader-account-ui.tsx",
       "exports": [
         "ReaderAvatar",
+        "SaveAcrossDevicesDialog",
         "ReaderAuthDialog",
         "ReaderProfileDialog",
         "ReaderAuthMode",
         "ReaderAvatarProps",
+        "SaveAcrossDevicesDialogProps",
         "ReaderAuthDialogProps",
         "ReaderProfileDialogProps"
       ],
@@ -4578,19 +5842,21 @@
       "tokens": {
         "cssVariables": [
           "--text-token-4xs",
+          "--component-button-radius-default",
           "--color-primary"
         ],
         "tailwindSemantics": [
           "text-foreground",
           "bg-foreground/55",
           "bg-background",
-          "bg-muted",
           "border-border",
+          "bg-primary/10",
+          "text-primary",
           "text-muted-foreground",
+          "bg-muted",
           "bg-border",
           "bg-destructive/10",
           "text-destructive",
-          "text-primary",
           "bg-primary",
           "text-primary-foreground"
         ],
@@ -4601,6 +5867,7 @@
       "hasHardcodedColors": false,
       "metadataPath": "src/components/reader-account-ui.metadata.ts",
       "applicationUseSites": [
+        "src/components/hearst-plus/community-client.tsx",
         "src/components/hearst-plus/utility-bar.tsx",
         "src/components/home-page.tsx"
       ],
@@ -4608,7 +5875,7 @@
         "src/stories/HearstPlusReaderAccount.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 1193
+      "lineCount": 1257
     },
     {
       "name": "reader-account",
@@ -4632,6 +5899,7 @@
       "metadataPath": "src/components/reader-account.metadata.ts",
       "applicationUseSites": [
         "src/app/layout.tsx",
+        "src/components/hearst-plus/community-client.tsx",
         "src/components/hearst-plus/utility-bar.tsx",
         "src/components/home-page.tsx",
         "src/components/reader-account-ui.tsx"
@@ -4705,10 +5973,17 @@
       "hasHardcodedColors": false,
       "metadataPath": "src/components/theme-provider.metadata.ts",
       "applicationUseSites": [
+        "src/app/ai-in-hds/page.tsx",
+        "src/app/architecture/page.tsx",
         "src/app/autos/[brandSlug]/events/drag-week/page.tsx",
         "src/app/autos/[brandSlug]/events/page.tsx",
         "src/app/autos/[brandSlug]/events/power-tour/page.tsx",
         "src/app/color/page.tsx",
+        "src/app/communities/[brandSlug]/groups/[groupSlug]/page.tsx",
+        "src/app/communities/[brandSlug]/groups/[groupSlug]/posts/[postId]/page.tsx",
+        "src/app/communities/[brandSlug]/page.tsx",
+        "src/app/communities/[brandSlug]/threads/[threadId]/page.tsx",
+        "src/app/communities/page.tsx",
         "src/app/components/accordion/page.tsx",
         "src/app/components/badge/page.tsx",
         "src/app/components/button/page.tsx",
@@ -4724,21 +5999,34 @@
         "src/app/components/media/page.tsx",
         "src/app/components/pagination/page.tsx",
         "src/app/components/special-offers/page.tsx",
+        "src/app/constitution/page.tsx",
+        "src/app/design-agent/page.tsx",
         "src/app/hearst-autos/page.tsx",
         "src/app/hearst-destination-category-page.tsx",
         "src/app/hearst-ew/page.tsx",
         "src/app/hearst-flux/page.tsx",
         "src/app/hearst-lifestyle/page.tsx",
         "src/app/hearst-plus/complete-articles/page.tsx",
+        "src/app/hearst-plus/entertainment/[channelSlug]/page.tsx",
+        "src/app/hearst-plus/entertainment/a-e/page.tsx",
+        "src/app/hearst-plus/entertainment/page.tsx",
+        "src/app/hearst-plus/entertainment/stories/[channelSlug]/page.tsx",
+        "src/app/hearst-plus/international/page.tsx",
         "src/app/hearst-plus/lifestyle-live/page.tsx",
         "src/app/hearst-plus/live-feed/page.tsx",
+        "src/app/hearst-plus/local-news/admin/page.tsx",
+        "src/app/hearst-plus/local-news/newspapers/page.tsx",
+        "src/app/hearst-plus/local-news/page.tsx",
         "src/app/hearst-plus/motortrend-videos/page.tsx",
+        "src/app/hearst-plus/newsstand/page.tsx",
         "src/app/hearst-plus/page.tsx",
         "src/app/hearst-plus/shop/page.tsx",
         "src/app/hearst-section-brand-page.tsx",
         "src/app/home/page.tsx",
         "src/app/layout-system/page.tsx",
         "src/app/read/[storyId]/page.tsx",
+        "src/app/single-brand/[brandSlug]/article/[storyId]/page.tsx",
+        "src/app/single-brand/[brandSlug]/page.tsx",
         "src/app/tokens/dashboard/page.tsx",
         "src/app/tokens/page.tsx",
         "src/app/typography/page.tsx",
@@ -5289,22 +6577,23 @@
         "src/components/button-page.tsx",
         "src/components/card-page.tsx",
         "src/components/fre/site-header.tsx",
+        "src/components/hearst-plus/community-client.tsx",
+        "src/components/hearst-plus/community-feedback-controls.tsx",
         "src/components/hearst-plus/content-reader-comments.tsx",
         "src/components/hearst-plus/content-reader-masthead.tsx",
+        "src/components/hearst-plus/delish-clubs-module.tsx",
         "src/components/hearst-plus/delish-onboarding-modal.tsx",
-        "src/components/hearst-plus/discovery-sidebar.tsx",
         "src/components/hearst-plus/elle-onboarding-modal.tsx",
-        "src/components/hearst-plus/featured-story-carousel.tsx",
         "src/components/hearst-plus/feed-states.tsx",
         "src/components/hearst-plus/good-housekeeping-onboarding-modal.tsx",
         "src/components/hearst-plus/hearst-games-index.tsx",
         "src/components/hearst-plus/motortrend-onboarding-modal.tsx",
         "src/components/hearst-plus/onboarding-modal.tsx",
+        "src/components/hearst-plus/publication-onboarding-modal.tsx",
         "src/components/hearst-plus/reader-masthead-carousel.tsx",
         "src/components/hearst-plus/stakeholder-personalization-console.tsx",
         "src/components/hearst-plus/story-actions.tsx",
         "src/components/hearst-plus/utility-bar.tsx",
-        "src/components/hearst-plus/video-cards.tsx",
         "src/components/home-page.tsx",
         "src/components/homepage-layouts.tsx",
         "src/components/hot-rod-events-page.tsx",
@@ -5414,13 +6703,14 @@
       "metadataPath": "src/components/ui/carousel.metadata.ts",
       "applicationUseSites": [
         "src/components/carousel-page.tsx",
-        "src/components/content-carousel.tsx"
+        "src/components/content-carousel.tsx",
+        "src/components/hearst-plus/entertainment/entertainment-watch-page.tsx"
       ],
       "storybookStories": [
         "src/stories/Carousel.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 248
+      "lineCount": 252
     },
     {
       "name": "chip",
@@ -5554,7 +6844,9 @@
       "hasHardcodedColors": false,
       "metadataPath": "src/components/ui/grid.metadata.ts",
       "applicationUseSites": [
+        "src/app/hearst-plus/newsstand/page.tsx",
         "src/components/article-page.tsx",
+        "src/components/hearst-plus/newsstand/newsstand-experience.tsx",
         "src/components/hearst-plus/utility-bar.tsx",
         "src/components/home-page.tsx",
         "src/components/hot-rod-events-page.tsx"
@@ -5770,7 +7062,10 @@
       "responsive": false,
       "hasHardcodedColors": false,
       "metadataPath": null,
-      "applicationUseSites": [],
+      "applicationUseSites": [
+        "src/components/hearst-plus/hearst-tv-feed-experience.tsx",
+        "src/components/hearst-plus/newspaper-feeds-section.tsx"
+      ],
       "storybookStories": [],
       "storybookSpecification": null,
       "lineCount": 202
@@ -5905,7 +7200,10 @@
       "responsive": true,
       "hasHardcodedColors": false,
       "metadataPath": null,
-      "applicationUseSites": [],
+      "applicationUseSites": [
+        "src/components/hearst-plus/community-client.tsx",
+        "src/components/hearst-plus/community-feedback-controls.tsx"
+      ],
       "storybookStories": [],
       "storybookSpecification": null,
       "lineCount": 19

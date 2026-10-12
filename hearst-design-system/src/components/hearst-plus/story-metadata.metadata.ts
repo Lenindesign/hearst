@@ -7,10 +7,10 @@ const metadata: ComponentMetadata = {
   level: "molecule",
   path: "hearst-plus/story-metadata.tsx",
   exports: [
-    "getLifestyleByline",
     "LifestyleBrandSource",
-    "LiveStoryBadge",
     "LifestyleRecommendationReason",
+    "LiveStoryBadge",
+    "getLifestyleByline",
   ],
   whenToUse: [
     "A reader card needs the canonical publication route, topic, and byline",
@@ -53,14 +53,12 @@ const metadata: ComponentMetadata = {
   usedBy: [
     "ambient-reader",
     "brand-promotion-river-module",
-    "content-reader-context-rail",
     "content-reader-recommendations",
     "discovery-sidebar",
-    "featured-story-carousel",
+    "home-page",
     "reader-action-bar",
     "story-actions",
     "video-cards",
-    "home-page",
   ],
   brandAware: true,
   responsive: true,

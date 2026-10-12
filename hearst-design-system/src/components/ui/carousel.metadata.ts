@@ -8,12 +8,12 @@ const metadata: ComponentMetadata = {
   path: "ui/carousel.tsx",
   exports: [
     "Carousel",
+    "CarouselApi",
     "CarouselContent",
     "CarouselItem",
-    "CarouselPrevious",
     "CarouselNext",
+    "CarouselPrevious",
     "useCarousel",
-    "CarouselApi",
   ],
   whenToUse: [
     "A bounded horizontal or vertical sequence requires pointer and keyboard navigation",
@@ -30,8 +30,15 @@ const metadata: ComponentMetadata = {
     borders: [],
     other: [],
   },
-  dependencies: ["ui/button", "ui/icons"],
-  usedBy: ["content-carousel", "carousel-page"],
+  dependencies: [
+    "ui/button",
+    "ui/icons",
+  ],
+  usedBy: [
+    "carousel-page",
+    "content-carousel",
+    "entertainment-watch-page",
+  ],
   brandAware: true,
   responsive: true,
   variants: ["horizontal", "vertical"],

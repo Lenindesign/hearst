@@ -6,7 +6,10 @@ const metadata: ComponentMetadata = {
     "Shared production video player for direct MP4 and adaptive HLS playback with retryable failure handling.",
   level: "molecule",
   path: "adaptive-video.tsx",
-  exports: ["AdaptiveVideo", "AdaptiveVideoProps"],
+  exports: [
+    "AdaptiveVideo",
+    "AdaptiveVideoProps",
+  ],
   whenToUse: [
     "A Hearst+ video surface must play a selected direct H.264 MP4 or HLS source",
     "The same media element must expose native playback attributes and a forwarded ref",
@@ -24,11 +27,14 @@ const metadata: ComponentMetadata = {
     borders: [],
     other: [],
   },
-  dependencies: ["ui/button"],
+  dependencies: [
+    "ui/button",
+  ],
   usedBy: [
+    "architecture-page",
     "delish-shorts-viewer",
-    "video-cards",
     "home-page",
+    "video-cards",
   ],
   brandAware: false,
   responsive: true,

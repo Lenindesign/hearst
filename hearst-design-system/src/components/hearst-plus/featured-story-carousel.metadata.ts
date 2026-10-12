@@ -46,15 +46,16 @@ const metadata: ComponentMetadata = {
   },
   dependencies: [
     "hearst-plus/brand-source-icon",
-    "hearst-plus/story-metadata",
     "hearst-plus/use-prefers-reduced-motion",
     "hearst-plus/video-format",
     "lifestyle-river-types",
-    "ui/button",
     "ui/icons",
   ],
   usedBy: [
+    "entertainment-channel-stories-page",
+    "hearst-tv-feed-experience",
     "home-page",
+    "newspaper-feeds-section",
   ],
   brandAware: true,
   responsive: true,

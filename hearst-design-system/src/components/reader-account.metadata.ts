@@ -31,9 +31,10 @@ const metadata: ComponentMetadata = {
     "lifestyle-river-types",
   ],
   usedBy: [
-    "utility-bar",
+    "community-client",
     "home-page",
     "reader-account-ui",
+    "utility-bar",
   ],
   brandAware: false,
   responsive: false,

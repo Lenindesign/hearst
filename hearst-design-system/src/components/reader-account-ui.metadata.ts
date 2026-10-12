@@ -7,13 +7,15 @@ const metadata: ComponentMetadata = {
   level: "organism",
   path: "reader-account-ui.tsx",
   exports: [
-    "ReaderAvatar",
-    "ReaderAvatarProps",
     "ReaderAuthDialog",
     "ReaderAuthDialogProps",
     "ReaderAuthMode",
+    "ReaderAvatar",
+    "ReaderAvatarProps",
     "ReaderProfileDialog",
     "ReaderProfileDialogProps",
+    "SaveAcrossDevicesDialog",
+    "SaveAcrossDevicesDialogProps",
   ],
   whenToUse: [
     "The Hearst+ application needs the production account sign-in or local-profile creation dialog",
@@ -55,8 +57,9 @@ const metadata: ComponentMetadata = {
     "ui/use-modal-isolation",
   ],
   usedBy: [
-    "utility-bar",
+    "community-client",
     "home-page",
+    "utility-bar",
   ],
   brandAware: true,
   responsive: true,
