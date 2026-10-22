@@ -12,7 +12,7 @@ function getContextRailFixture(brandSlug: string) {
   const currentStory =
     getComponentStoriesForBrand(brandSlug)[0] ?? stories[0];
 
-  return { currentStory, stories };
+  return { currentStory, stories, savedStories: stories, savedIds: [] };
 }
 
 const defaultFixture = getContextRailFixture("hearst-all");
@@ -60,13 +60,15 @@ function ContextRailCanvas({
       <div
         className={`mx-auto grid max-w-[1184px] gap-8 ${
           forceDesktop
-            ? "md:grid-cols-[220px_minmax(0,1fr)]"
-            : "xl:grid-cols-[220px_minmax(0,1fr)]"
+            ? "md:grid-cols-[280px_minmax(0,1fr)]"
+            : "xl:grid-cols-[280px_minmax(0,1fr)]"
         }`}
       >
         <ContentReaderContextRail
           currentStory={fixture.currentStory}
           stories={stories ?? fixture.stories}
+          savedStories={fixture.savedStories}
+          savedIds={fixture.savedIds}
           onOpenStory={onOpenStory}
         />
         <main className="min-h-[760px] rounded-[8px] border border-dashed border-border bg-[var(--hp-surface)] p-4 sm:p-8">

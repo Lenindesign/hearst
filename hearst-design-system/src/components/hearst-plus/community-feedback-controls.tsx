@@ -4,9 +4,9 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  Bookmark,
   Camera,
   Check,
+  Heart,
   MessageCircle,
   Send,
   Share2,
@@ -34,7 +34,7 @@ const actionCopy: Record<
   save: {
     label: "Save",
     activeLabel: "Saved locally",
-    icon: Bookmark,
+    icon: Heart,
   },
   follow: {
     label: "Follow post",

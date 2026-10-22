@@ -7,6 +7,8 @@ export interface BrandLogoProps {
   slug: string;
   className?: string;
   color?: string;
+  /** Applies one contextual color even to a normally two-tone destination mark. */
+  forceColor?: boolean;
   /** Overrides the canonical publication or destination name. */
   label?: string;
   /** Hides the logo from assistive technology when nearby text already names it. */
@@ -91,10 +93,11 @@ export function BrandLogo({
   slug,
   className = "",
   color: requestedColor,
+  forceColor = false,
   label,
   decorative = false,
 }: BrandLogoProps) {
-  const color = resolveBrandLogoColor(slug, requestedColor);
+  const color = forceColor ? requestedColor : resolveBrandLogoColor(slug, requestedColor);
   const [loadResult, setLoadResult] = useState<
     | { src: string; status: "ready"; markup: string }
     | { src: string; status: "error" }

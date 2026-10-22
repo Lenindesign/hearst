@@ -52,7 +52,7 @@ import { destinationBanners, entertainmentBrandWallBanner, hearstPlusBrandWallBa
 import { HearstPlusBrandWall } from "@/components/hearst-plus/hearst-plus-brand-wall";
 import { BrandInstagramModule } from "@/components/hearst-plus/brand-instagram-module";
 import {
-  Bookmark,
+  Heart,
   Camera,
   Check,
   ChevronRight,
@@ -2900,6 +2900,7 @@ function getLifestyleReaderAd(currentStory: LifestyleRiverStory, slotIndex = 0) 
 function LifestyleStoryReaderModal({
   stories,
   availableStories,
+  savedStoryInventory,
   openStoryId,
   savedIds,
   followedBrands,
@@ -2919,6 +2920,7 @@ function LifestyleStoryReaderModal({
 }: {
   stories: LifestyleRiverStory[];
   availableStories: LifestyleRiverStory[];
+  savedStoryInventory: LifestyleRiverStory[];
   openStoryId: string | null;
   savedIds: string[];
   followedBrands: string[];
@@ -2937,6 +2939,7 @@ function LifestyleStoryReaderModal({
   onToggleFollowBrand: (brandName: string) => void;
   onAddComment: (storyId: string, body: string) => void;
 }) {
+  const { colorMode, toggleColorMode } = useTheme();
   const destinationConfigs = useDestinationConfigs();
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
@@ -3184,7 +3187,7 @@ function LifestyleStoryReaderModal({
     : "lifestyle";
   const readerDestinationLabel = getReaderDestinationLabel(readerDestination);
   const readerDestinationConfig = destinationConfigs[readerDestination];
-  const readerColorMode = "light";
+  const readerColorMode = colorMode;
   const readerDestinationTheme = themeOptions.find((theme) => theme.slug === readerDestinationConfig.brandSlug);
   const usePublicationTheme = Boolean(
     readerContextStory
@@ -3205,13 +3208,24 @@ function LifestyleStoryReaderModal({
   const readerLogoHref = usePublicationTheme && readerContextStory
     ? getHearstBrandRoute(readerContextStory.brandSlug)
     : getHearstDestinationRoute(readerDestination);
+  const readerLogoColor = usePublicationTheme
+    ? readerLogoSlug === "motortrend"
+      ? readerTheme?.colors["1"]
+      : undefined
+    : readerTheme?.colors["1"]
+      ? readerColorMode === "dark"
+        ? `color-mix(in srgb, ${readerTheme.colors["1"]} 65%, white)`
+        : readerTheme.colors["1"]
+      : undefined;
   const autoWeekReaderTheme = readerContextStory?.brandSlug === "autoweek" && readerDestinationTheme
     ? getSelectedBrandTheme({ name: "Autoweek", slug: "autoweek" }, readerDestinationTheme)
     : null;
   const readerThemeCssVars = readerTheme
     ? {
         ...brandToCssVars(readerTheme, readerColorMode),
-        "--content-reader-article-surface": contentReaderTheme.fluxArticleSurface,
+        "--content-reader-article-surface": readerColorMode === "dark"
+          ? contentReaderTheme.fluxArticleSurface
+          : "var(--hp-surface)",
         ...(autoWeekReaderTheme
           ? { "--content-reader-active-label": autoWeekReaderTheme.colors["11"] }
           : {}),
@@ -4047,13 +4061,8 @@ function LifestyleStoryReaderModal({
           logoHref={readerLogoHref}
           contextLabel={readerContextLabel}
           logoSlug={readerLogoSlug}
-          logoColor={
-            readerDestination === "flux"
-              ? "var(--palette-content-knockout, white)"
-              : readerLogoSlug === "motortrend"
-                ? readerTheme?.colors["1"]
-                : undefined
-          }
+          logoColor={readerLogoColor}
+          forceLogoColor={!usePublicationTheme && Boolean(readerLogoColor)}
           visibleStoryCount={visibleReaderStories.length}
           storyCount={storyQueue.length}
           activeMastheadKey={activeReaderMastheadNavKey}
@@ -4073,7 +4082,7 @@ function LifestyleStoryReaderModal({
         <div
           ref={readerSwipeStageRef}
           className={cn(
-            "grid touch-pan-y gap-8 overscroll-x-contain px-4 py-6 sm:px-8 lg:px-10 xl:grid-cols-[220px_minmax(0,1fr)]",
+            "grid touch-pan-y gap-y-8 gap-x-[18px] overscroll-x-contain px-4 py-6 sm:px-8 lg:px-10 xl:grid-cols-[280px_minmax(0,1fr)]",
             readerSwipeTransitionEnabled && "transition-transform duration-[250ms] ease-out",
             readerSwipeDragging && "cursor-grabbing select-none transition-none",
           )}
@@ -4097,6 +4106,8 @@ function LifestyleStoryReaderModal({
           <ContentReaderContextRail
             currentStory={activeReaderContextStory}
             stories={readerStories}
+            savedStories={savedStoryInventory}
+            savedIds={savedIds}
             onOpenStory={onOpenStory}
           />
           <div className="min-w-0">
@@ -4115,12 +4126,12 @@ function LifestyleStoryReaderModal({
                       <span className="h-px flex-1 bg-border" aria-hidden="true" />
                     </div>
                   ) : null}
-                  <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px]">
+                  <div className="grid gap-y-8 gap-x-[18px] lg:grid-cols-[minmax(0,1fr)_280px]">
                     <article
                       data-reader-story-id={story.id}
                       className={cn(
                         "relative min-w-0 rounded-[8px] border px-5 py-5 sm:px-7 sm:py-7",
-                        readerDestination === "flux"
+                        readerDestination === "flux" && readerColorMode === "dark"
                           ? "border-white/15 bg-[var(--content-reader-article-surface)] text-[var(--component-video-feed-content-primary)] [--border:var(--component-video-feed-border-default)] [--foreground:var(--component-video-feed-content-headline)] [--muted-foreground:var(--component-video-feed-content-secondary)]"
                           : "border-border bg-card text-foreground"
                       )}
@@ -4248,6 +4259,8 @@ function LifestyleStoryReaderModal({
         <AmbientArticleReader
           story={readerAvailableStoryPool.find((story) => story.id === ambientReaderStoryId) ?? storyQueue[0]}
           article={liveArticles[ambientReaderStoryId].data}
+          colorMode={colorMode}
+          onToggleColorMode={toggleColorMode}
           destinationThemeSlugs={{
             lifestyle: destinationConfigs.lifestyle.brandSlug,
             autos: destinationConfigs.autos.brandSlug,
@@ -5629,6 +5642,7 @@ function LifestyleRiverHomePage({
             key={storyOpenReturnHref}
             stories={filteredStories}
             availableStories={availableReaderStories}
+            savedStoryInventory={savedStoryInventory}
             openStoryId={openStoryId}
             savedIds={profile.savedIds}
             followedBrands={profile.followedBrands}
@@ -5828,6 +5842,7 @@ function LifestyleRiverHomePage({
             key={storyOpenReturnHref}
             stories={filteredStories}
             availableStories={availableReaderStories}
+            savedStoryInventory={savedStoryInventory}
             openStoryId={openStoryId}
             savedIds={profile.savedIds}
             followedBrands={profile.followedBrands}
@@ -6238,7 +6253,7 @@ function LifestyleRiverHomePage({
                               }}
                               aria-label={`Save suggested story: ${story.title}`}
                             >
-                              <Bookmark className="h-4 w-4" aria-hidden />
+                              <Heart className="h-4 w-4" aria-hidden />
                               Save story
                             </Button>
                           </div>
@@ -6355,6 +6370,7 @@ function LifestyleRiverHomePage({
           key={storyOpenReturnHref}
           stories={filteredStories}
           availableStories={availableReaderStories}
+          savedStoryInventory={savedStoryInventory}
           openStoryId={openStoryId}
           savedIds={profile.savedIds}
           followedBrands={profile.followedBrands}

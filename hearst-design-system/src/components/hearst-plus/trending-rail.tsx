@@ -12,6 +12,7 @@ type TrendingRailProps = {
   stories: LifestyleRiverStory[];
   onOpenStory: (story: LifestyleRiverStory) => void;
   className?: string;
+  titleIcon?: React.ReactNode;
 };
 
 export function TrendingStoryRail({
@@ -19,12 +20,14 @@ export function TrendingStoryRail({
   onOpenStory,
   className,
   title = "Trending Across Brands",
+  titleIcon,
 }: TrendingRailProps & {
   title?: string;
 }) {
   const titleId = React.useId();
+  const visibleStories = stories.slice(0, 5);
 
-  if (stories.length === 0) return null;
+  if (visibleStories.length === 0) return null;
 
   return (
     <section
@@ -39,14 +42,16 @@ export function TrendingStoryRail({
         id={titleId}
         className="flex items-center gap-1.5 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-text-primary)]"
       >
-        <TrendingUp
-          className="h-4 w-4 shrink-0 text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]"
-          aria-hidden
-        />
+        {titleIcon ?? (
+          <TrendingUp
+            className="h-4 w-4 shrink-0 text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]"
+            aria-hidden
+          />
+        )}
         {title}
       </h2>
       <ol className="-mb-3 mt-3 divide-y divide-border/70">
-        {stories.map((story, index) => (
+        {visibleStories.map((story, index) => (
           <li key={story.id}>
             <button
               type="button"
@@ -97,8 +102,9 @@ export function TrendingVideoRail({
   title?: string;
 }) {
   const titleId = React.useId();
+  const visibleStories = stories.slice(0, 5);
 
-  if (stories.length === 0) return null;
+  if (visibleStories.length === 0) return null;
 
   return (
     <section
@@ -116,7 +122,7 @@ export function TrendingVideoRail({
         {title}
       </h2>
       <ol className="mt-4 space-y-4">
-        {stories.map((story, index) => (
+        {visibleStories.map((story, index) => (
           <li key={story.id}>
             <VideoRailCard
               story={story}

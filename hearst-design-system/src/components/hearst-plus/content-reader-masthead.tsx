@@ -27,6 +27,7 @@ interface ContentReaderMastheadProps {
   contextLabel: string;
   logoSlug: string;
   logoColor?: string;
+  forceLogoColor?: boolean;
   visibleStoryCount: number;
   storyCount: number;
   activeMastheadKey?: string;
@@ -44,6 +45,7 @@ export function ContentReaderMasthead({
   contextLabel,
   logoSlug,
   logoColor,
+  forceLogoColor = false,
   visibleStoryCount,
   storyCount,
   activeMastheadKey,
@@ -88,6 +90,7 @@ export function ContentReaderMasthead({
             <BrandLogo
               slug={logoSlug}
               color={logoColor}
+              forceColor={forceLogoColor}
               className="flex h-full w-full items-center justify-start [&_svg]:block [&_svg]:h-full [&_svg]:w-full [&_svg]:max-w-full lg:[&_svg]:w-auto"
             />
           </LinkComponent>

@@ -806,6 +806,8 @@ export type { AmbientInterstitialAdvertiser } from "@/lib/ambient-interstitial-t
 export interface AmbientArticleReaderProps {
   story: LifestyleRiverStory;
   article: LiveArticleData;
+  colorMode?: "light" | "dark";
+  onToggleColorMode?: () => void;
   destinationThemeSlugs?: Partial<Record<AmbientReaderDestination, string>>;
   previousStory?: LifestyleRiverStory;
   nextStory?: LifestyleRiverStory;
@@ -828,6 +830,8 @@ export interface AmbientArticleReaderProps {
 export function AmbientArticleReader({
   story,
   article,
+  colorMode: colorModeProp,
+  onToggleColorMode,
   destinationThemeSlugs,
   previousStory,
   nextStory,
@@ -857,7 +861,10 @@ export function AmbientArticleReader({
   const trackFrameRef = React.useRef<number | null>(null);
   const trackSettleTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const trackNavigationPendingRef = React.useRef(false);
-  const [colorMode, setColorMode] = React.useState<"light" | "dark">("light");
+  const [localColorMode, setLocalColorMode] = React.useState<"light" | "dark">("light");
+  const colorMode = colorModeProp ?? localColorMode;
+  const toggleReaderColorMode = onToggleColorMode
+    ?? (() => setLocalColorMode((current) => current === "light" ? "dark" : "light"));
   const [density, setDensity] = React.useState<AmbientReaderDensity>("airy");
   const [progress, setProgress] = React.useState(0);
   const [heroImageRatios, setHeroImageRatios] = React.useState<Record<string, number>>({});
@@ -1145,7 +1152,7 @@ export function AmbientArticleReader({
             </button>
             <button
               type="button"
-              onClick={() => setColorMode((current) => current === "light" ? "dark" : "light")}
+              onClick={toggleReaderColorMode}
               className="inline-flex h-11 w-11 items-center justify-center text-[var(--ambient-muted)] transition-colors hover:text-[var(--ambient-ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
               aria-label={colorMode === "light" ? "Use dark reader theme" : "Use light reader theme"}
               title={colorMode === "light" ? "Dark theme" : "Light theme"}

@@ -80,7 +80,7 @@ export function ContentReaderAdvertisement({
       aria-label={`Advertisement: ${ad.sponsor} — ${ad.title}`}
     >
       <div
-        className="sticky top-32 flex h-[600px] max-h-[calc(100dvh-10rem)] w-[300px] flex-col overflow-hidden rounded-[8px] border border-border bg-background"
+        className="sticky top-32 flex h-[600px] max-h-[calc(100dvh-10rem)] w-[280px] flex-col overflow-hidden rounded-[8px] border border-border bg-background"
         style={{
           backgroundColor: ad.palette.background,
           color: ad.palette.foreground,
@@ -92,7 +92,7 @@ export function ContentReaderAdvertisement({
             alt=""
             width={600}
             height={536}
-            sizes="300px"
+            sizes="280px"
             className="h-full w-full object-cover"
           />
           <div

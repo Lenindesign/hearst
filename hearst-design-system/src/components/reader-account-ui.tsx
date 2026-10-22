@@ -9,6 +9,7 @@ import {
   Check,
   ChevronRight,
   FolderPlus,
+  Heart,
   LogOut,
   MessageCircle,
   Settings,
@@ -1094,7 +1095,7 @@ export function ReaderProfileDialog({
                             aria-label={`Remove ${story.title} from saved stories`}
                             onClick={() => removeSavedStoryFromLibrary(savedId, story.title)}
                           >
-                            <Bookmark className="mr-2 h-4 w-4 fill-current" aria-hidden />
+                            <Heart className="mr-2 h-4 w-4 fill-current" aria-hidden />
                             Remove
                           </Button>
                         </div>

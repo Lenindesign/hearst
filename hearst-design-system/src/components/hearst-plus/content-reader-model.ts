@@ -100,27 +100,47 @@ export function getLifestyleContextStories(
     (story) => story.id !== currentStory.id,
   );
   const claimedStoryIds = new Set<string>();
-  const takeDistinctStories = (candidates: LifestyleRiverStory[]) => {
+  const takeDistinctStories = (
+    candidates: LifestyleRiverStory[],
+    limit = 3,
+  ) => {
     const selected = candidates
       .filter((story) => !claimedStoryIds.has(story.id))
       .sort((a, b) => b.popularity - a.popularity)
-      .slice(0, 3);
+      .slice(0, limit);
 
     selected.forEach((story) => claimedStoryIds.add(story.id));
     return selected;
   };
-  const sharedIntent = takeDistinctStories(
-    otherStories.filter((story) =>
-      story.tags.some((tag) => currentStory.tags.includes(tag)),
-    ),
-  );
   const sameBrand = takeDistinctStories(
     otherStories.filter((story) => story.brand === currentStory.brand),
   );
   const sameTopic = takeDistinctStories(
     otherStories.filter((story) => story.topic === currentStory.topic),
   );
-
+  const sharedIntent = takeDistinctStories(
+    otherStories.filter((story) =>
+      story.tags.some((tag) => currentStory.tags.includes(tag)),
+    ),
+    5,
+  );
+  if (sharedIntent.length < 5) {
+    const sharedIntentIds = new Set(sharedIntent.map((story) => story.id));
+    const additionalContextStories = otherStories
+      .filter(
+        (story) =>
+          !sharedIntentIds.has(story.id)
+          && !claimedStoryIds.has(story.id),
+      )
+      .sort(
+        (first, second) =>
+          scoreLifestyleRelatedStory(currentStory, second)
+          - scoreLifestyleRelatedStory(currentStory, first),
+      )
+      .slice(0, 5 - sharedIntent.length);
+    sharedIntent.push(...additionalContextStories);
+    additionalContextStories.forEach((story) => claimedStoryIds.add(story.id));
+  }
   return {
     sameTopic,
     sameBrand,

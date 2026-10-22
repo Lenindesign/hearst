@@ -83,13 +83,13 @@ export function ThemeProvider({
   defaultBrandSlug?: string;
   persistColorMode?: boolean;
 }) {
-  const isFluxDefault = defaultBrandSlug === "hearst-flux";
-  const defaultColorMode = isFluxDefault ? "dark" : "light";
+  const defaultColorMode = "light";
   const legacyColorModeStorageKey = `hearst-color-mode:${defaultBrandSlug}`;
   const [brandSlug, setBrandSlug] = useState(defaultBrandSlug);
   const [colorMode, setColorMode] = useState<ThemeColorMode>(defaultColorMode);
   const colorModeInitializedRef = useRef(false);
   const persistNextColorModeRef = useRef(false);
+  const explicitColorModeRef = useRef(false);
 
   const brand = useMemo(
     () => themeOptions.find((b) => b.slug === brandSlug) || themeOptions[0],
@@ -98,6 +98,7 @@ export function ThemeProvider({
 
   const setBrand = useCallback((slug: string) => setBrandSlug(slug), []);
   const toggleColorMode = useCallback(() => {
+    explicitColorModeRef.current = true;
     persistNextColorModeRef.current = true;
     setColorMode((current) => current === "dark" ? "light" : "dark");
   }, []);
@@ -109,9 +110,14 @@ export function ThemeProvider({
       ? window.localStorage.getItem(GLOBAL_COLOR_MODE_STORAGE_KEY)
         ?? window.localStorage.getItem(legacyColorModeStorageKey)
       : null;
+    const systemColorMode = typeof window.matchMedia === "function"
+      && window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
     const resolvedMode = storedMode === "dark" || storedMode === "light"
       ? storedMode
-      : defaultColorMode;
+      : systemColorMode;
+    explicitColorModeRef.current = storedMode === "dark" || storedMode === "light";
     document.documentElement.classList.toggle("dark", resolvedMode === "dark");
     document.documentElement.style.colorScheme = resolvedMode;
     if (persistColorMode && storedMode && !window.localStorage.getItem(GLOBAL_COLOR_MODE_STORAGE_KEY)) {
@@ -120,6 +126,17 @@ export function ThemeProvider({
     // Initial client preference is only available after hydration.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setColorMode(resolvedMode);
+
+    const systemPreference = typeof window.matchMedia === "function"
+      ? window.matchMedia("(prefers-color-scheme: dark)")
+      : null;
+    if (!systemPreference || explicitColorModeRef.current) return;
+    const syncSystemPreference = (event: MediaQueryListEvent) => {
+      if (explicitColorModeRef.current) return;
+      setColorMode(event.matches ? "dark" : "light");
+    };
+    systemPreference.addEventListener("change", syncSystemPreference);
+    return () => systemPreference.removeEventListener("change", syncSystemPreference);
   }, [defaultColorMode, legacyColorModeStorageKey, persistColorMode]);
 
   useEffect(() => {
@@ -144,6 +161,7 @@ export function ThemeProvider({
       if (event.key !== GLOBAL_COLOR_MODE_STORAGE_KEY) return;
       const nextMode = event.newValue;
       if (nextMode !== "dark" && nextMode !== "light") return;
+      explicitColorModeRef.current = true;
       setColorMode(nextMode);
     };
 

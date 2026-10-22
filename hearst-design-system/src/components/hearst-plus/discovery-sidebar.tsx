@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ChevronDown } from "@/components/ui/icons";
+import { ChevronDown, Heart } from "@/components/ui/icons";
 import type {
   LifestyleRiverProfile,
   LifestyleRiverStory,
@@ -48,6 +48,7 @@ export interface LifestyleDiscoverySidebarProps {
 
 interface DiscoverySidebarCardProps {
   title: string;
+  titleIcon?: React.ReactNode;
   summary: string;
   children: React.ReactNode;
   className?: string;
@@ -65,6 +66,7 @@ interface DiscoverySidebarCardProps {
  */
 export function DiscoverySidebarCard({
   title,
+  titleIcon,
   summary,
   children,
   className,
@@ -82,7 +84,8 @@ export function DiscoverySidebarCard({
       )}
     >
       <div className="hidden lg:block">
-        <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+        <p className="flex items-center gap-1.5 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+          {titleIcon}
           {title}
         </p>
       </div>
@@ -93,7 +96,8 @@ export function DiscoverySidebarCard({
           onClick={() => setOpen((value) => !value)}
           aria-expanded={open}
         >
-          <span className="block text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+          <span className="flex items-center gap-1.5 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+            {titleIcon}
             {title}
           </span>
           <span className="mt-1 line-clamp-2 block max-w-full break-words text-xs font-normal normal-case tracking-normal text-muted-foreground lg:hidden">
@@ -311,9 +315,14 @@ export function LifestyleDiscoverySidebar({
       stories={savedStories}
       onOpenStory={onOpenStory}
       title="Saved items"
+      titleIcon={<Heart className="h-4 w-4 shrink-0" aria-hidden />}
     />
   ) : (
-    <DiscoverySidebarCard title="Saved items" summary="Your saved stories">
+    <DiscoverySidebarCard
+      title="Saved items"
+      summary="Your saved stories"
+      titleIcon={<Heart className="h-4 w-4 shrink-0" aria-hidden />}
+    >
       <p className="text-sm leading-6 text-muted-foreground">
         Save stories as you browse and they will appear here.
       </p>

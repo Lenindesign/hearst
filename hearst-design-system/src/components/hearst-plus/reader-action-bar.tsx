@@ -4,8 +4,8 @@ import type { LiveArticleData } from "@/lib/live-feed-types";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-  Bookmark,
   BookOpenText,
+  Heart,
   MessageCircle,
 } from "@/components/ui/icons";
 import { getLifestyleByline } from "@/components/hearst-plus/story-metadata";
@@ -186,7 +186,7 @@ export function ReaderActionBar({
                 : "text-muted-foreground hover:text-primary"
             )}
           >
-            <Bookmark
+            <Heart
               className="h-4 w-4"
               weight={saved ? "fill" : "regular"}
               aria-hidden

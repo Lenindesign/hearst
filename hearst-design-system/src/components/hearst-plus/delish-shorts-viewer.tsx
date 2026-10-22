@@ -11,7 +11,7 @@ import { formatVideoDuration } from "@/components/hearst-plus/video-format";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { useBodyPortalTarget, useModalIsolation } from "@/components/ui/use-modal-isolation";
 import {
-  Bookmark,
+  Heart,
   BookOpenText,
   ChevronDown,
   ChevronUpIcon,
@@ -458,7 +458,7 @@ export function DelishShortsImmersiveViewer({
 
           <div className="absolute bottom-28 right-3 z-30 flex flex-col gap-3 sm:hidden">
             <button type="button" onClick={() => onSave(activeStory)} className={controlButtonClass} aria-label={saved ? "Remove saved short" : "Save short"} aria-pressed={saved}>
-              <Bookmark className="h-5 w-5" weight={saved ? "fill" : "regular"} aria-hidden />
+              <Heart className="h-5 w-5" weight={saved ? "fill" : "regular"} aria-hidden />
             </button>
             <button type="button" onClick={() => setMuted((value) => !value)} className={controlButtonClass} aria-label={muted ? "Unmute short" : "Mute short"} aria-pressed={!muted}>
               {muted ? <VolumeX className="h-5 w-5" aria-hidden /> : <Volume2 className="h-5 w-5" aria-hidden />}
@@ -478,7 +478,7 @@ export function DelishShortsImmersiveViewer({
           </button>
           <span className="my-1 h-px w-7 bg-white/15" aria-hidden />
           <button type="button" onClick={() => onSave(activeStory)} className={controlButtonClass} aria-label={saved ? "Remove saved short" : "Save short"} aria-pressed={saved}>
-            <Bookmark className="h-5 w-5" weight={saved ? "fill" : "regular"} aria-hidden />
+            <Heart className="h-5 w-5" weight={saved ? "fill" : "regular"} aria-hidden />
           </button>
           <button type="button" onClick={() => setMuted((value) => !value)} className={controlButtonClass} aria-label={muted ? "Unmute short" : "Mute short"} aria-pressed={!muted}>
             {muted ? <VolumeX className="h-5 w-5" aria-hidden /> : <Volume2 className="h-5 w-5" aria-hidden />}
