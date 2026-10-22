@@ -210,10 +210,7 @@ export function UtilityBar({
           hideCityOnCompact
           className="min-w-0 shrink-0"
           buttonClassName={cn(
-            "!min-h-6 !rounded-[4px] !border-0 !px-2 !py-1 !text-[10px] !font-normal !leading-none shadow-none sm:!text-xs",
-            darkMode
-              ? "bg-[var(--component-navigation-utility-content-accent)] !text-[var(--component-navigation-utility-background-knockout)] hover:bg-[var(--component-navigation-utility-content-accent-hover)] [&_span]:!text-[var(--component-navigation-utility-background-knockout)]"
-              : "bg-white !text-black hover:bg-white/90 [&_span]:!text-black",
+            "!min-h-6 !rounded-none !border-0 !bg-transparent !px-0 !py-0 !text-[10px] !font-normal !leading-none !text-primary-foreground shadow-none hover:!bg-transparent hover:!text-primary-foreground [&_span]:!text-primary-foreground sm:!text-xs",
           )}
         />
         {!hideDestinationNav && (

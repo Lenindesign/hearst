@@ -558,7 +558,7 @@ export function FeaturedStoryCarousel({
                     layoutMode === "list"
                       ? "h-full min-h-0"
                       : reducePhotoHeight
-                        ? "h-[min(102.4vw,416px)] sm:h-auto sm:aspect-[20/9]"
+                        ? "h-[min(81.92vw,333px)] sm:h-auto sm:aspect-[25/9]"
                         : "h-[min(128vw,520px)] sm:h-auto sm:aspect-video",
                   )}>
                     {renderImage(story, index, index === activeIndex)}

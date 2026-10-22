@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-10-12T16:42:42.024Z",
-  "totalComponents": 133,
+  "generatedAt": "2026-10-22T15:03:45.407Z",
+  "totalComponents": 134,
   "byLevel": {
-    "template": 28,
+    "template": 29,
     "molecule": 44,
     "organism": 36,
     "atom": 25
@@ -30,7 +30,7 @@
     "divider-page.tsx": 1,
     "form-label-page.tsx": 1,
     "fre": 12,
-    "hearst-plus": 55,
+    "hearst-plus": 56,
     "home-page.tsx": 1,
     "homepage-layouts.tsx": 1,
     "hot-rod-events-page.tsx": 1,
@@ -55,8 +55,8 @@
   },
   "metadataCoverage": {
     "componentsWithMetadata": 28,
-    "componentsWithoutMetadata": 105,
-    "coveragePercent": 21.1,
+    "componentsWithoutMetadata": 106,
+    "coveragePercent": 20.9,
     "validMetadata": 28,
     "invalidMetadata": 0
   },
@@ -66,11 +66,11 @@
   },
   "storyCoverage": {
     "directlySpecifiedComponents": 56,
-    "productionUsedWithoutDirectStory": 69,
+    "productionUsedWithoutDirectStory": 70,
     "integratedSpecifiedComponents": 1,
     "infrastructureClassifiedComponents": 1,
     "specifiedComponents": 57,
-    "productionUsedWithoutStorybookSpecification": 67
+    "productionUsedWithoutStorybookSpecification": 68
   },
   "dependencyGraph": {
     "accordion-page": [
@@ -237,9 +237,18 @@
       "hearst-plus/brand-source-icon",
       "hearst-plus/brand-promotion-model",
       "hearst-plus/story-presentation",
-      "hearst-plus/story-metadata"
+      "hearst-plus/story-metadata",
+      "theme-provider"
     ],
-    "brand-source-icon": [],
+    "brand-source-icon": [
+      "theme-provider"
+    ],
+    "brutalist-home-page": [
+      "hearst-plus/story-presentation",
+      "lifestyle-river-types",
+      "fre/site-footer",
+      "ui/icons"
+    ],
     "community-client": [
       "hearst-plus/brand-source-icon",
       "reader-account",
@@ -279,9 +288,10 @@
     ],
     "content-reader-context-rail": [
       "lifestyle-river-types",
-      "ui/icons",
       "hearst-plus/community-joined-groups-card",
+      "ui/icons",
       "hearst-plus/content-reader-model",
+      "hearst-plus/discovery-sidebar",
       "hearst-plus/trending-rail"
     ],
     "content-reader-dialog-shell": [
@@ -510,10 +520,12 @@
       "lifestyle-river-types",
       "hearst-plus/brand-source-icon",
       "hearst-plus/story-presentation",
-      "hearst-plus/video-cards"
+      "hearst-plus/video-cards",
+      "ui/icons"
     ],
     "utility-bar": [
       "hearst-plus/brand-source-icon",
+      "hearst-plus/local-weather",
       "reader-account-ui",
       "reader-account",
       "ui/button",
@@ -535,6 +547,7 @@
       "adaptive-video",
       "ui/icons",
       "hearst-plus/brand-source-icon",
+      "hearst-plus/story-actions",
       "hearst-plus/story-metadata",
       "hearst-plus/video-format"
     ],
@@ -551,7 +564,6 @@
       "fre/big-story",
       "fre/four-across-grid",
       "fre/site-footer",
-      "hearst-plus/local-weather",
       "hearst-plus/hearst-plus-brand-wall",
       "hearst-plus/brand-instagram-module",
       "ui/icons",
@@ -559,12 +571,12 @@
       "lifestyle-river-types",
       "reader-account",
       "reader-account-ui",
+      "hearst-plus/story-actions",
       "adaptive-video",
       "hearst-plus/use-progressive-feed",
       "hearst-plus/feed-states",
       "hearst-plus/brand-source-icon",
       "hearst-plus/story-metadata",
-      "hearst-plus/story-actions",
       "hearst-plus/reader-action-bar",
       "hearst-plus/reader-article-body",
       "hearst-plus/fullscreen-image-viewer",
@@ -793,6 +805,8 @@
       "color-page",
       "divider-page",
       "form-label-page",
+      "brand-promotion-river-module",
+      "brand-source-icon",
       "utility-bar",
       "home-page",
       "homepage-layouts",
@@ -923,6 +937,7 @@
       "content-carousel",
       "design-agent-page",
       "ambient-reader",
+      "brutalist-home-page",
       "community-client",
       "community-feedback-controls",
       "community-forums-page",
@@ -952,6 +967,7 @@
       "story-actions",
       "story-presentation",
       "today-edit-strip",
+      "trending-rail",
       "utility-bar",
       "vertical-video-carousel",
       "video-cards",
@@ -1032,6 +1048,7 @@
     ],
     "site-footer": [
       "article-page",
+      "brutalist-home-page",
       "community-forums-page",
       "entertainment-channel-stories-page",
       "entertainment-watch-page",
@@ -1089,6 +1106,7 @@
     "lifestyle-river-types": [
       "ambient-reader",
       "brand-promotion-river-module",
+      "brutalist-home-page",
       "community-forums-page",
       "content-reader-advertisement",
       "content-reader-comments",
@@ -1185,6 +1203,7 @@
     ],
     "story-presentation": [
       "brand-promotion-river-module",
+      "brutalist-home-page",
       "content-reader-recommendations",
       "hearst-tv-feed-experience",
       "stakeholder-personalization-console",
@@ -1240,6 +1259,10 @@
     "community-joined-groups-card": [
       "content-reader-context-rail",
       "discovery-sidebar"
+    ],
+    "discovery-sidebar": [
+      "content-reader-context-rail",
+      "home-page"
     ],
     "trending-rail": [
       "content-reader-context-rail",
@@ -1304,6 +1327,7 @@
     ],
     "story-actions": [
       "hearst-games-index",
+      "video-cards",
       "home-page"
     ],
     "newsstand-catalog": [
@@ -1333,6 +1357,9 @@
       "trending-rail",
       "home-page"
     ],
+    "local-weather": [
+      "utility-bar"
+    ],
     "story-utils": [
       "vertical-video-carousel",
       "home-page"
@@ -1353,9 +1380,6 @@
     "four-across-grid": [
       "home-page",
       "homepage-layouts"
-    ],
-    "local-weather": [
-      "home-page"
     ],
     "brand-instagram-module": [
       "home-page"
@@ -1383,9 +1407,6 @@
       "home-page"
     ],
     "ambient-reader": [
-      "home-page"
-    ],
-    "discovery-sidebar": [
       "home-page"
     ],
     "today-edit-strip": [
@@ -1888,7 +1909,7 @@
         ],
         "rationale": "Five direct Brand Logo stories import the exact production export and specify the complete destination and publication registries, canonical accessible names, sanitized SVG semantics, documented light-on-dark treatment, decorative usage, unknown-key omission, intrinsic sizing, and 320px containment. The production-aligned Typography story also uses the same renderer for its selected publication identity."
       },
-      "lineCount": 151
+      "lineCount": 154
     },
     {
       "name": "brand-switcher",
@@ -2706,6 +2727,7 @@
         "src/app/hearst-plus/shop/page.tsx",
         "src/components/article-page.tsx",
         "src/components/fre/index.ts",
+        "src/components/hearst-plus/brutalist-home-page.tsx",
         "src/components/hearst-plus/community-forums-page.tsx",
         "src/components/hearst-plus/entertainment/entertainment-channel-stories-page.tsx",
         "src/components/hearst-plus/entertainment/entertainment-watch-page.tsx",
@@ -2719,7 +2741,7 @@
         "src/stories/FRE.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 232
+      "lineCount": 234
     },
     {
       "name": "site-header",
@@ -2825,7 +2847,7 @@
         "src/stories/HearstPlusAmbientReader.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 1526
+      "lineCount": 1533
     },
     {
       "name": "amplitude-analytics-bridge",
@@ -2895,7 +2917,8 @@
         "hearst-plus/brand-source-icon",
         "hearst-plus/brand-promotion-model",
         "hearst-plus/story-presentation",
-        "hearst-plus/story-metadata"
+        "hearst-plus/story-metadata",
+        "theme-provider"
       ],
       "tokens": {
         "cssVariables": [
@@ -2906,7 +2929,7 @@
         "tailwindSemantics": [],
         "classes": []
       },
-      "brandAware": false,
+      "brandAware": true,
       "responsive": true,
       "hasHardcodedColors": true,
       "metadataPath": null,
@@ -2918,7 +2941,7 @@
         "src/stories/HearstPlusBrandSpotlight.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 228
+      "lineCount": 232
     },
     {
       "name": "brand-source-icon",
@@ -2927,17 +2950,17 @@
         "BrandSourceIcon"
       ],
       "level": "molecule",
-      "dependencies": [],
+      "dependencies": [
+        "theme-provider"
+      ],
       "tokens": {
         "cssVariables": [],
         "tailwindSemantics": [
-          "border-border",
-          "bg-background",
           "text-primary"
         ],
         "classes": []
       },
-      "brandAware": false,
+      "brandAware": true,
       "responsive": false,
       "hasHardcodedColors": false,
       "metadataPath": "src/components/hearst-plus/brand-source-icon.metadata.ts",
@@ -2963,7 +2986,39 @@
         "src/stories/HearstPlusStoryMetadata.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 59
+      "lineCount": 64
+    },
+    {
+      "name": "brutalist-home-page",
+      "path": "src/components/hearst-plus/brutalist-home-page.tsx",
+      "exports": [
+        "BrutalistHomePage"
+      ],
+      "level": "template",
+      "dependencies": [
+        "hearst-plus/story-presentation",
+        "lifestyle-river-types",
+        "fre/site-footer",
+        "ui/icons"
+      ],
+      "tokens": {
+        "cssVariables": [
+          "--font-brutalist",
+          "--font-schibsted-grotesk"
+        ],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": true,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/app/hearst-plus/brutalist-home/page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 321
     },
     {
       "name": "community-client",
@@ -3163,6 +3218,7 @@
       "name": "content-reader-advertisement",
       "path": "src/components/hearst-plus/content-reader-advertisement.tsx",
       "exports": [
+        "getContextualAdvertisementImage",
         "selectContentReaderAdvertisement",
         "ContentReaderAdvertisement",
         "ReaderAdvertisementDestination",
@@ -3198,7 +3254,7 @@
         "src/stories/HearstPlusReaderAdvertisement.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 185
+      "lineCount": 206
     },
     {
       "name": "content-reader-comments",
@@ -3253,22 +3309,16 @@
       "level": "organism",
       "dependencies": [
         "lifestyle-river-types",
-        "ui/icons",
         "hearst-plus/community-joined-groups-card",
+        "ui/icons",
         "hearst-plus/content-reader-model",
+        "hearst-plus/discovery-sidebar",
         "hearst-plus/trending-rail"
       ],
       "tokens": {
-        "cssVariables": [
-          "--hp-border",
-          "--hp-surface",
-          "--hp-shadow-card",
-          "--text-token-4xs",
-          "--hp-text-primary",
-          "--hp-text-secondary"
-        ],
+        "cssVariables": [],
         "tailwindSemantics": [
-          "text-primary"
+          "text-muted-foreground"
         ],
         "classes": []
       },
@@ -3284,7 +3334,7 @@
         "src/stories/HearstPlusReaderContextRail.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 96
+      "lineCount": 95
     },
     {
       "name": "content-reader-dialog-shell",
@@ -3374,7 +3424,7 @@
         "src/stories/HearstPlusContentReaderMasthead.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 185
+      "lineCount": 188
     },
     {
       "name": "content-reader-recommendations",
@@ -3618,6 +3668,7 @@
       "hasHardcodedColors": false,
       "metadataPath": null,
       "applicationUseSites": [
+        "src/components/hearst-plus/content-reader-context-rail.tsx",
         "src/components/hearst-plus/index.ts",
         "src/components/home-page.tsx"
       ],
@@ -3625,7 +3676,7 @@
         "src/stories/HearstPlusDiscoverySidebar.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 334
+      "lineCount": 353
     },
     {
       "name": "elle-onboarding-modal",
@@ -3770,6 +3821,8 @@
           "--hp-image-scrim-solid"
         ],
         "tailwindSemantics": [
+          "bg-card",
+          "text-foreground",
           "border-border"
         ],
         "classes": []
@@ -3795,7 +3848,7 @@
         ],
         "rationale": "Seven direct stories import the production component and specify mixed article/video allocation, active-slide semantics, reader actions, mobile targets, saved state, publication treatment, single-story fallback, empty allocation, and reduced-motion behavior."
       },
-      "lineCount": 674
+      "lineCount": 710
     },
     {
       "name": "feed-states",
@@ -4186,8 +4239,8 @@
         ],
         "tailwindSemantics": [
           "border-border",
-          "bg-muted",
           "text-muted-foreground",
+          "bg-muted",
           "text-primary",
           "ring-border"
         ],
@@ -4202,7 +4255,7 @@
       ],
       "storybookStories": [],
       "storybookSpecification": null,
-      "lineCount": 87
+      "lineCount": 105
     },
     {
       "name": "local-news-source-toggle",
@@ -4271,11 +4324,11 @@
       "hasHardcodedColors": false,
       "metadataPath": null,
       "applicationUseSites": [
-        "src/components/home-page.tsx"
+        "src/components/hearst-plus/utility-bar.tsx"
       ],
       "storybookStories": [],
       "storybookSpecification": null,
-      "lineCount": 297
+      "lineCount": 308
     },
     {
       "name": "motortrend-onboarding-modal",
@@ -4669,7 +4722,7 @@
       ],
       "storybookStories": [],
       "storybookSpecification": null,
-      "lineCount": 138
+      "lineCount": 153
     },
     {
       "name": "stakeholder-personalization-console",
@@ -4727,6 +4780,7 @@
       "name": "story-actions",
       "path": "src/components/hearst-plus/story-actions.tsx",
       "exports": [
+        "StorySaveIconButton",
         "LifestyleStoryActions",
         "quietStoryActionButtonClass",
         "LifestyleStoryActionsProps"
@@ -4752,13 +4806,15 @@
       "applicationUseSites": [
         "src/components/hearst-plus/hearst-games-index.tsx",
         "src/components/hearst-plus/index.ts",
+        "src/components/hearst-plus/video-cards.tsx",
+        "src/components/home-page.tsx",
         "src/components/home-page.tsx"
       ],
       "storybookStories": [
         "src/stories/HearstPlusStoryActions.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 137
+      "lineCount": 169
     },
     {
       "name": "story-metadata",
@@ -4842,6 +4898,7 @@
       "metadataPath": null,
       "applicationUseSites": [
         "src/components/hearst-plus/brand-promotion-river-module.tsx",
+        "src/components/hearst-plus/brutalist-home-page.tsx",
         "src/components/hearst-plus/content-reader-recommendations.tsx",
         "src/components/hearst-plus/hearst-tv-feed-experience.tsx",
         "src/components/hearst-plus/index.ts",
@@ -4853,7 +4910,7 @@
         "src/stories/HearstPlusStoryPresentation.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 141
+      "lineCount": 143
     },
     {
       "name": "today-edit-strip",
@@ -4909,7 +4966,8 @@
         "lifestyle-river-types",
         "hearst-plus/brand-source-icon",
         "hearst-plus/story-presentation",
-        "hearst-plus/video-cards"
+        "hearst-plus/video-cards",
+        "ui/icons"
       ],
       "tokens": {
         "cssVariables": [
@@ -4943,7 +5001,7 @@
         "src/stories/HearstPlusTrendingRails.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 127
+      "lineCount": 138
     },
     {
       "name": "utility-bar",
@@ -4956,6 +5014,7 @@
       "level": "organism",
       "dependencies": [
         "hearst-plus/brand-source-icon",
+        "hearst-plus/local-weather",
         "reader-account-ui",
         "reader-account",
         "ui/button",
@@ -4999,7 +5058,7 @@
         "src/stories/HearstPlusUtilityBar.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 767
+      "lineCount": 749
     },
     {
       "name": "vertical-video-carousel",
@@ -5064,6 +5123,7 @@
         "adaptive-video",
         "ui/icons",
         "hearst-plus/brand-source-icon",
+        "hearst-plus/story-actions",
         "hearst-plus/story-metadata",
         "hearst-plus/video-format"
       ],
@@ -5102,7 +5162,7 @@
         "src/stories/HearstPlusVideoCards.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 425
+      "lineCount": 433
     },
     {
       "name": "home-page",
@@ -5134,7 +5194,6 @@
         "fre/big-story",
         "fre/four-across-grid",
         "fre/site-footer",
-        "hearst-plus/local-weather",
         "hearst-plus/hearst-plus-brand-wall",
         "hearst-plus/brand-instagram-module",
         "ui/icons",
@@ -5142,12 +5201,12 @@
         "lifestyle-river-types",
         "reader-account",
         "reader-account-ui",
+        "hearst-plus/story-actions",
         "adaptive-video",
         "hearst-plus/use-progressive-feed",
         "hearst-plus/feed-states",
         "hearst-plus/brand-source-icon",
         "hearst-plus/story-metadata",
-        "hearst-plus/story-actions",
         "hearst-plus/reader-action-bar",
         "hearst-plus/reader-article-body",
         "hearst-plus/fullscreen-image-viewer",
@@ -5201,6 +5260,7 @@
           "--component-video-feed-content-primary",
           "--text-token-4xs",
           "--banner-aspect",
+          "--font-newsreader",
           "--width-sidebar-narrow",
           "--hp-surface",
           "--space-sm",
@@ -5208,9 +5268,6 @@
           "--text-token-5xl",
           "--card",
           "--secondary",
-          "--hp-chip-border",
-          "--hp-chip",
-          "--hp-text-chip",
           "--hp-shadow-card",
           "--content-reader-article-surface",
           "--component-video-feed-border-default",
@@ -5256,6 +5313,7 @@
         "src/app/hearst-flux/page.tsx",
         "src/app/hearst-lifestyle/page.tsx",
         "src/app/hearst-plus/complete-articles/page.tsx",
+        "src/app/hearst-plus/full-width-hero/page.tsx",
         "src/app/hearst-plus/lifestyle-live/page.tsx",
         "src/app/hearst-plus/live-feed/page.tsx",
         "src/app/hearst-plus/motortrend-videos/page.tsx",
@@ -5281,7 +5339,7 @@
         "src/stories/LifestyleDestinationApp.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 7652
+      "lineCount": 7812
     },
     {
       "name": "homepage-layouts",
@@ -5875,7 +5933,7 @@
         "src/stories/HearstPlusReaderAccount.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 1257
+      "lineCount": 1258
     },
     {
       "name": "reader-account",
@@ -6006,11 +6064,13 @@
         "src/app/hearst-ew/page.tsx",
         "src/app/hearst-flux/page.tsx",
         "src/app/hearst-lifestyle/page.tsx",
+        "src/app/hearst-plus/brutalist-home/page.tsx",
         "src/app/hearst-plus/complete-articles/page.tsx",
         "src/app/hearst-plus/entertainment/[channelSlug]/page.tsx",
         "src/app/hearst-plus/entertainment/a-e/page.tsx",
         "src/app/hearst-plus/entertainment/page.tsx",
         "src/app/hearst-plus/entertainment/stories/[channelSlug]/page.tsx",
+        "src/app/hearst-plus/full-width-hero/page.tsx",
         "src/app/hearst-plus/international/page.tsx",
         "src/app/hearst-plus/lifestyle-live/page.tsx",
         "src/app/hearst-plus/live-feed/page.tsx",
@@ -6041,6 +6101,8 @@
         "src/components/color-page.tsx",
         "src/components/divider-page.tsx",
         "src/components/form-label-page.tsx",
+        "src/components/hearst-plus/brand-promotion-river-module.tsx",
+        "src/components/hearst-plus/brand-source-icon.tsx",
         "src/components/hearst-plus/utility-bar.tsx",
         "src/components/home-page.tsx",
         "src/components/homepage-layouts.tsx",
@@ -6084,7 +6146,7 @@
         ],
         "rationale": "ThemeRuntime directly mounts the exact production ThemeProvider and verifies its context, generated variables, brand switching, Hearst Flux dark default, mode toggling, root color-scheme synchronization, and disabled-persistence boundary. The other listed stories are source-graph consumers of the provider; the global decorator separately implements the same complete context shape for their previews."
       },
-      "lineCount": 137
+      "lineCount": 182
     },
     {
       "name": "token-dashboard",

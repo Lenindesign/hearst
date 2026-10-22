@@ -7,8 +7,9 @@ import { LifestyleRiverImage } from "@/components/hearst-plus/story-presentation
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { SiteFooter } from "@/components/fre/site-footer";
 import { getLifestyleImagePosition } from "@/components/hearst-plus/story-presentation";
-import { Menu, ChevronLeft, ChevronRight } from "@/components/ui/icons";
+import { Menu, Search, ChevronLeft, ChevronRight } from "@/components/ui/icons";
 import { getHearstStoryRoute } from "@/lib/story-routes";
+import { searchLifestyleStories } from "@/lib/story-search";
 
 const homeHref = "/hearst-plus/brutalist-home/";
 
@@ -114,7 +115,12 @@ function TopicTile({
 export function BrutalistHomePage({ stories }: { stories: LifestyleRiverStory[] }) {
   const heroStories = React.useMemo(() => stories.slice(0, Math.min(5, stories.length)), [stories]);
   const [activeHeroIndex, setActiveHeroIndex] = React.useState(0);
+  const [searchQuery, setSearchQuery] = React.useState("");
   const activeStory = heroStories[activeHeroIndex];
+  const searchResults = React.useMemo(
+    () => searchQuery.trim() ? searchLifestyleStories(stories, searchQuery, 5) : [],
+    [searchQuery, stories],
+  );
 
   const heroIds = React.useMemo(() => new Set(heroStories.map((story) => story.id)), [heroStories]);
   const discoveryStories = React.useMemo(() => stories.filter((story) => !heroIds.has(story.id)), [heroIds, stories]);
@@ -173,16 +179,45 @@ export function BrutalistHomePage({ stories }: { stories: LifestyleRiverStory[] 
 
           <div className="flex min-w-0 flex-col items-center">
             <Link href={homeHref} aria-label="Hearst+ brutalist editorial home" className="inline-flex focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#075db6]">
-              <Image src="/logos/hearst-plus.svg" alt="Hearst+" width={220} height={24} priority className="h-auto w-[150px] sm:w-[210px]" />
+              <Image src="/logos/hearst-plus.svg" alt="Hearst+" width={220} height={24} priority className="h-auto w-[150px] brightness-0 sm:w-[210px]" />
             </Link>
             <div className="mt-1 hidden max-w-[70vw] items-center gap-3 overflow-hidden text-[8px] font-bold uppercase tracking-[0.15em] text-[#1d2937]/65 md:flex">
               <span>Good Housekeeping</span><span>ELLE</span><span>Country Living</span><span>Veranda</span><span>Prevention</span><span>Woman’s Day</span><span>Seventeen</span>
             </div>
           </div>
 
-          <Link href="/hearst-plus/" className="min-h-11 justify-self-end border-2 border-black bg-black px-2 py-2 text-[10px] font-black uppercase tracking-wide text-[#ffec00] hover:bg-white hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#075db6] sm:px-4 sm:text-xs">
-            Open Hearst+
-          </Link>
+          <div className="relative w-full max-w-[260px] justify-self-end">
+            <form role="search" onSubmit={(event) => event.preventDefault()}>
+              <label htmlFor="brutalist-home-search" className="sr-only">Search Hearst stories</label>
+              <Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2" aria-hidden />
+              <input
+                id="brutalist-home-search"
+                type="search"
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                placeholder="Search stories"
+                autoComplete="off"
+                className="min-h-11 w-full border-2 border-black bg-white py-2 pl-8 pr-2 text-xs font-bold text-black placeholder:text-black/55 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#075db6] sm:text-sm"
+              />
+            </form>
+            {searchQuery.trim() ? (
+              <ul className="absolute right-0 top-[calc(100%+8px)] z-40 max-h-[min(70vh,420px)] w-[min(360px,calc(100vw-1.5rem))] overflow-y-auto border-2 border-black bg-white text-black shadow-[6px_6px_0_#071a30]">
+                {searchResults.length > 0 ? searchResults.map((story) => (
+                  <li key={story.id} className="border-b border-black last:border-b-0">
+                    <Link
+                      href={storyHref(story)}
+                      className="block px-3 py-2.5 hover:bg-[#ffec00] focus-visible:bg-[#ffec00] focus-visible:outline-none"
+                    >
+                      <span className="block text-[10px] font-black uppercase tracking-wide text-[#075db6]">{story.brand} · {story.topic}</span>
+                      <span className="mt-0.5 block font-[family-name:var(--font-brutalist)] text-lg font-bold leading-tight">{story.title}</span>
+                    </Link>
+                  </li>
+                )) : (
+                  <li className="px-3 py-3 text-sm font-bold">No stories found.</li>
+                )}
+              </ul>
+            ) : null}
+          </div>
         </div>
         <nav aria-label="Hearst+ topics" className="mx-auto hidden min-h-12 max-w-[1600px] items-center justify-center border-t-2 border-black bg-[#071a30] px-4 py-1 text-xs font-black uppercase tracking-[0.12em] text-white md:flex">
           {sections.map((section) => (
@@ -212,10 +247,10 @@ export function BrutalistHomePage({ stories }: { stories: LifestyleRiverStory[] 
               </div>
               <div className="max-w-[760px] bg-[#ffec00] p-3 text-black sm:p-5 lg:p-6">
                 <p className="mb-2 text-[9px] font-black uppercase tracking-[0.18em] sm:text-xs">Today on Hearst+ · {activeHeroIndex + 1} of {heroStories.length}</p>
-                <h1 className="font-[family-name:var(--font-brutalist)] text-[clamp(2.7rem,7.2vw,6.8rem)] font-black uppercase leading-[0.77] tracking-[-0.055em] [text-wrap:balance]">
+                <h1 className="line-clamp-4 font-[family-name:var(--font-brutalist)] text-[clamp(2.7rem,7.2vw,6.8rem)] font-black uppercase leading-[0.77] tracking-[-0.055em] [text-wrap:balance]">
                   {activeStory.title}
                 </h1>
-                {activeStory.summary ? <p className="mt-3 max-w-2xl text-xs font-bold leading-tight sm:text-base">{activeStory.summary}</p> : null}
+                {activeStory.summary ? <p className="mt-3 max-w-2xl truncate text-xs font-bold leading-tight sm:text-base">{activeStory.summary}</p> : null}
                 <p className="mt-3 border-t-2 border-black pt-2 text-[9px] font-black uppercase tracking-[0.12em] sm:text-[11px]">
                   {activeStory.brand} <span aria-hidden="true">·</span> {activeStory.byline || "Hearst Editors"} <span aria-hidden="true">·</span> {activeStory.readTime}
                 </p>
