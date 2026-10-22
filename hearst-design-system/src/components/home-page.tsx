@@ -48,7 +48,7 @@ import { BigStoryImageRight } from "./fre/big-story";
 import { FourAcrossGrid } from "./fre/four-across-grid";
 import { SiteFooter } from "./fre/site-footer";
 import { LocalWeather } from "@/components/hearst-plus/local-weather";
-import { brandBanners, destinationBrandWallBanners, entertainmentBrandWallBanner, hearstPlusBrandWallBanner } from "@/lib/brand-banners";
+import { destinationBanners, entertainmentBrandWallBanner, hearstPlusBrandWallBanner } from "@/lib/brand-banners";
 import { HearstPlusBrandWall } from "@/components/hearst-plus/hearst-plus-brand-wall";
 import { BrandInstagramModule } from "@/components/hearst-plus/brand-instagram-module";
 import {
@@ -83,6 +83,7 @@ import { loadLiveArticle } from "@/lib/live-article-client-cache";
 import { setRiverLayout, useRiverLayout } from "@/lib/river-layout";
 import { useReaderAccount } from "./reader-account";
 import { ReaderAuthDialog, ReaderProfileDialog, SaveAcrossDevicesDialog } from "./reader-account-ui";
+import { StorySaveIconButton } from "@/components/hearst-plus/story-actions";
 import { AdaptiveVideo } from "./adaptive-video";
 import { useProgressiveFeed } from "./hearst-plus/use-progressive-feed";
 import {
@@ -328,7 +329,8 @@ export interface HomePageTemplateProps {
   forceDestinationRiver?: boolean;
   /**
    * When set, the river renders in single-brand mode: the discovery sidebar's
-   * trending rail is titled "Trending in {name}" and cross-brand modules
+   * trending rail is titled "Trending" and filters to the current publication;
+   * cross-brand modules
    * (brand promotions, local-news rail, cross-brand studio ad) are suppressed.
    */
   singleBrandName?: string;
@@ -1366,17 +1368,15 @@ export function MainNav({
     overlayPortalTarget
   ) : null;
   const useDarkHeaderIconButtons = darkMode || colorMode === "dark";
-  // Brand pages use their registered banner; the Hearst+ home gets the brand wall (layout default, no logo override).
+  // Publication pages keep the original compact logo row. Banners are reserved for Hearst+ and destinations.
   // Pages with their own logo override (channel and station pages, Communities) keep their masthead.
-  const mastheadBanner = mastheadLogoOverride || mastheadSlugOverride
+  const mastheadBanner = mastheadLogoOverride || mastheadSlugOverride || selectedBrand
     ? undefined
-    : selectedBrand?.slug === "hearst-entertainment"
+    : brand.slug === "hearst-entertainment"
       ? entertainmentBrandWallBanner
-      : selectedBrand
-        ? brandBanners[selectedBrand.slug]
-        : brand.slug === "hearst-all"
+      : brand.slug === "hearst-all"
           ? hearstPlusBrandWallBanner
-          : destinationBrandWallBanners[brand.slug];
+          : destinationBanners[brand.slug];
   // The Hearst+ home banner starts under the transparent utility bar (32px), so the bar floats on the brand wall.
   const underUtilityBar = extendBannerUnderUtilityBar && mastheadBanner === hearstPlusBrandWallBanner;
   const brandWallLogos = mastheadBanner?.wallLogos ?? (mastheadBanner?.wallSection
@@ -1394,24 +1394,37 @@ export function MainNav({
         <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between p-3 [&>*]:pointer-events-auto">
           <LocalWeather className="hidden sm:inline-flex [&_button]:bg-black/45 [&_button]:px-2 [&_button]:text-white [&_button]:backdrop-blur [&_span]:!text-white" />
           <span aria-hidden className="sm:hidden" />
-          <Button
-            ref={searchTriggerRef}
-            data-search-trigger
-            variant="outline"
-            size="icon-sm"
-            className={cn("h-11 w-11 rounded-[4px] backdrop-blur sm:h-7 sm:w-7", darkHeaderIconButtonClass)}
-            // A dark chip like the weather control, so the button stays visible on bright banner art.
-            style={{ backgroundColor: "rgba(0, 0, 0, 0.45)" }}
-            aria-label="Search"
-            title="Search"
-            aria-expanded={searchOpen}
-            onClick={() => {
-              setOverlayPortalTarget(document.body);
-              setSearchOpen(true);
-            }}
-          >
-            <Search className="h-3.5 w-3.5" aria-hidden />
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="icon-sm"
+              className={cn("h-11 w-11 rounded-[4px] backdrop-blur sm:h-7 sm:w-7", darkHeaderIconButtonClass)}
+              style={{ backgroundColor: "rgba(0, 0, 0, 0.45)" }}
+              aria-label={colorMode === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              title={colorMode === "dark" ? "Light mode" : "Dark mode"}
+              onClick={toggleColorMode}
+            >
+              {colorMode === "dark" ? <Sun className="h-3.5 w-3.5" aria-hidden /> : <Moon className="h-3.5 w-3.5" aria-hidden />}
+            </Button>
+            <Button
+              ref={searchTriggerRef}
+              data-search-trigger
+              variant="outline"
+              size="icon-sm"
+              className={cn("h-11 w-11 rounded-[4px] backdrop-blur sm:h-7 sm:w-7", darkHeaderIconButtonClass)}
+              style={{ backgroundColor: "rgba(0, 0, 0, 0.45)" }}
+              aria-label="Search"
+              title="Search"
+              aria-expanded={searchOpen}
+              onClick={() => {
+                setOverlayPortalTarget(document.body);
+                setSearchOpen(true);
+              }}
+            >
+              <Search className="h-3.5 w-3.5" aria-hidden />
+            </Button>
+          </div>
         </div>
         {searchDialog}
       </>
@@ -1432,7 +1445,7 @@ export function MainNav({
             // The art's own ratio on wider screens; phones use a taller crop so the overlaid controls fit. The ratio
             // goes through a custom property because an inline aspect-ratio would override the phone class.
             "relative w-full overflow-hidden aspect-[var(--banner-aspect)]",
-            mastheadBanner.pattern === "brand-wall" ? "max-sm:aspect-[5/1]" : "max-sm:aspect-[3/1]",
+            mastheadBanner.pattern === "brand-wall" || mastheadBanner.logoSize === "section" ? "max-sm:aspect-[5/1]" : "max-sm:aspect-[3/1]",
           )}
           style={{ "--banner-aspect": `${mastheadBanner.width - (mastheadBanner.cropX?.left ?? 0) - (mastheadBanner.cropX?.right ?? 0)} / ${mastheadBanner.height}` } as React.CSSProperties}
         >
@@ -1465,11 +1478,13 @@ export function MainNav({
               slug={mastheadBanner.logoSlug ?? mastheadSlug}
               color={mastheadBanner.logoColor === "native" ? undefined : "#fff"}
               className={cn(
-                "block max-w-full [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full",
+                "flex w-[min(500px,calc(100vw-3rem))] max-w-full items-center justify-center [&_svg]:block [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-h-full [&_svg]:max-w-full",
                 // Solid banners have nothing but the logo, so it fills most of the banner height.
                 mastheadBanner.src
                   ? "h-10 drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] sm:h-16 lg:h-24"
-                  : mastheadBanner.pattern === "brand-wall"
+                  : mastheadBanner.logoSize === "section"
+                    ? "h-6 sm:h-9 lg:h-12"
+                    : mastheadBanner.pattern === "brand-wall"
                     ? mastheadBanner.wallSection || mastheadBanner.wallLogos
                       ? "h-6 sm:h-9 lg:h-12"
                       : "h-5 sm:h-7 lg:h-9"
@@ -1510,6 +1525,20 @@ export function MainNav({
             {showRiverLayoutToggle ? (
               <RiverLayoutToggle buttonClassName={useDarkHeaderIconButtons || mastheadBanner ? darkHeaderIconButtonClass : undefined} />
             ) : null}
+            <Button
+              type="button"
+              variant="outline"
+              size="icon-sm"
+              className={cn(
+                "h-11 w-11 rounded-[4px] sm:h-7 sm:w-7",
+                useDarkHeaderIconButtons || mastheadBanner ? darkHeaderIconButtonClass : undefined
+              )}
+              aria-label={colorMode === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              title={colorMode === "dark" ? "Light mode" : "Dark mode"}
+              onClick={toggleColorMode}
+            >
+              {colorMode === "dark" ? <Sun className="h-3.5 w-3.5" aria-hidden /> : <Moon className="h-3.5 w-3.5" aria-hidden />}
+            </Button>
             <Button
               ref={searchTriggerRef}
               data-search-trigger
@@ -1567,6 +1596,20 @@ export function MainNav({
           {showRiverLayoutToggle ? (
             <RiverLayoutToggle buttonClassName={useDarkHeaderIconButtons ? darkHeaderIconButtonClass : undefined} />
           ) : null}
+          <Button
+            type="button"
+            variant="outline"
+            size="icon-sm"
+            className={cn(
+              "h-11 w-11 rounded-[4px] sm:h-7 sm:w-7",
+              useDarkHeaderIconButtons ? darkHeaderIconButtonClass : undefined
+            )}
+            aria-label={colorMode === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            title={colorMode === "dark" ? "Light mode" : "Dark mode"}
+            onClick={toggleColorMode}
+          >
+            {colorMode === "dark" ? <Sun className="h-3.5 w-3.5" aria-hidden /> : <Moon className="h-3.5 w-3.5" aria-hidden />}
+          </Button>
           <Button
             ref={searchTriggerRef}
             data-search-trigger
@@ -2521,10 +2564,14 @@ export function RichPhotoGalleryCard({
   story,
   images,
   onOpen,
+  saved,
+  onSave,
 }: {
   story: LifestyleRiverStory;
   images: FullscreenReaderImage[];
   onOpen: () => void;
+  saved?: boolean;
+  onSave?: () => void;
 }) {
   const visibleImages = images.slice(0, richGalleryImageMinimum);
   const remainingImageCount = Math.max(0, images.length - visibleImages.length);
@@ -2543,12 +2590,15 @@ export function RichPhotoGalleryCard({
       />
 
       <div className="relative min-w-0 p-4 sm:p-5">
-        <div className="mb-3 flex flex-wrap items-center gap-2">
+        <div className="relative z-20 mb-3 flex min-w-0 items-center gap-2">
           <LifestyleBrandSource story={story} />
           <span className="inline-flex items-center gap-1 text-[length:var(--text-token-4xs)] font-semibold text-muted-foreground">
             <Camera className="h-3.5 w-3.5" aria-hidden />
             {images.length} photos
           </span>
+          {onSave && saved !== undefined ? (
+            <StorySaveIconButton saved={saved} onSave={onSave} className="ml-auto" />
+          ) : null}
         </div>
         <h2 className="headline break-words text-2xl leading-tight transition-colors group-hover/card:text-primary group-focus-within/card:text-primary sm:text-3xl">
           {story.title}
@@ -2591,15 +2641,19 @@ export function RichPhotoGalleryCard({
   );
 }
 
-// River cards stay deliberately quiet: no per-card Save / More like this / comments / Hide row.
-// Those actions live in the story reader's action bar.
+// Keep secondary story actions in the reader, with Save available in each
+// card's metadata row so readers can save without opening the story.
 export function LifestyleRiverCard({
   story,
   onOpen,
+  saved,
+  onSave,
   featured = false,
 }: {
   story: LifestyleRiverStory;
   onOpen: () => void;
+  saved?: boolean;
+  onSave?: () => void;
   featured?: boolean;
 }) {
   const kind = getLifestyleCardKind(story);
@@ -2624,9 +2678,12 @@ export function LifestyleRiverCard({
           aria-label={`Open story: ${story.title}`}
         />
         <div className="min-w-0">
-          <div className="mb-2 flex flex-wrap items-center gap-2">
+          <div className="relative z-20 mb-2 flex min-w-0 flex-wrap items-center gap-2">
             <LifestyleKindBadge kind={kind} story={story} />
             <LifestyleBrandSource story={story} />
+            {onSave && saved !== undefined ? (
+              <StorySaveIconButton saved={saved} onSave={onSave} className="ml-auto" />
+            ) : null}
           </div>
           <h2 className="headline line-clamp-3 break-words text-lg leading-snug transition-colors group-hover/card:text-primary group-focus-within/card:text-primary sm:text-xl">
             {story.title}
@@ -2657,6 +2714,8 @@ export function LifestyleRiverCard({
         story={story}
         images={galleryPreview.images}
         onOpen={onOpen}
+        saved={saved}
+        onSave={onSave}
       />
     );
   }
@@ -2693,9 +2752,12 @@ export function LifestyleRiverCard({
         "relative min-w-0",
         isVideo ? "p-4 sm:p-5" : featured ? "flex flex-col justify-center p-5 sm:p-6 lg:p-8" : "p-4 sm:p-5"
       )}>
-        <div className="mb-3 flex flex-wrap items-center gap-2">
+        <div className="relative z-20 mb-3 flex min-w-0 flex-wrap items-center gap-2">
           <LifestyleKindBadge kind={kind} story={story} />
           <LifestyleBrandSource story={story} />
+          {onSave && saved !== undefined ? (
+            <StorySaveIconButton saved={saved} onSave={onSave} className="ml-auto" />
+          ) : null}
         </div>
         <h2 className={cn(
           "headline break-words leading-tight transition-colors group-hover/card:text-primary group-focus-within/card:text-primary",
@@ -3122,7 +3184,7 @@ function LifestyleStoryReaderModal({
     : "lifestyle";
   const readerDestinationLabel = getReaderDestinationLabel(readerDestination);
   const readerDestinationConfig = destinationConfigs[readerDestination];
-  const readerColorMode = readerDestination === "flux" ? "dark" : "light";
+  const readerColorMode = "light";
   const readerDestinationTheme = themeOptions.find((theme) => theme.slug === readerDestinationConfig.brandSlug);
   const usePublicationTheme = Boolean(
     readerContextStory
@@ -5606,7 +5668,7 @@ function LifestyleRiverHomePage({
       >
         <div
           className={cn(
-            "grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]",
+            "grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[300px_minmax(0,1fr)_300px]",
             !usingVideoTabFeed && "mt-6 sm:mt-8"
           )}
         >
@@ -5905,13 +5967,15 @@ function LifestyleRiverHomePage({
         />
       ) : null}
 
-      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]">
+      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[300px_minmax(0,1fr)_300px]">
         <LifestyleDiscoverySidebar
           profile={profile}
           topStories={moduleAllocation.dailyHabitStories}
           savedStories={savedStoryInventory}
-          trendingStories={moduleAllocation.trendingStories}
-          trendingTitle={singleBrandName ? `Trending in ${singleBrandName}` : undefined}
+          trendingStories={initialBrandSlug
+            ? moduleAllocation.trendingStories.filter((story) => story.brandSlug === initialBrandSlug)
+            : moduleAllocation.trendingStories}
+          trendingTitle={initialBrandSlug ? "Trending" : undefined}
           topics={sidebarTopics}
           brands={sidebarBrands}
           communityBrandSlug={initialBrandSlug === "elle" ? "elle" : undefined}
@@ -6031,12 +6095,16 @@ function LifestyleRiverHomePage({
                       <VideoIndexCard
                         story={story}
                         onOpen={() => openStory(story.id)}
+                        saved={profile.savedIds.includes(story.id)}
+                        onSave={() => toggleSaved(story)}
                         variant="hearstPlus"
                       />
                     ) : (
                       <LifestyleRiverCard
                         story={story}
                         onOpen={() => openStory(story.id)}
+                        saved={profile.savedIds.includes(story.id)}
+                        onSave={() => toggleSaved(story)}
                       />
                     )}
                     {adMatch && adMatch.ad.id !== "autos-cd-deal-score" ? (

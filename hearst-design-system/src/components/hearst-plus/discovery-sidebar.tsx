@@ -26,7 +26,7 @@ export interface LifestyleDiscoverySidebarProps {
   topStories: LifestyleRiverStory[];
   savedStories?: LifestyleRiverStory[];
   trendingStories?: LifestyleRiverStory[];
-  /** Heading for the trending rail. Defaults to "Trending Across Brands"; single-brand mode passes "Trending in {Brand}". */
+  /** Heading for the trending rail. Defaults to "Trending Across Brands"; brand pages use "Trending". */
   trendingTitle?: string;
   topics: { name: string; count: number }[];
   brands: { name: string; slug: string; count: number }[];
@@ -206,7 +206,7 @@ export function LifestyleDiscoverySidebar({
     .slice(0, 3);
   const dailyHabitModule = trendingStories ? (
     <TrendingStoryRail
-      stories={trendingStories.slice(0, 3)}
+      stories={trendingStories.slice(0, 5)}
       onOpenStory={onOpenStory}
       title={trendingTitle}
       className="hidden lg:block"
@@ -325,9 +325,19 @@ export function LifestyleDiscoverySidebar({
       className="hidden min-w-0 space-y-5 lg:sticky lg:top-[108px] lg:block lg:max-h-[calc(100dvh-132px)] lg:self-start lg:overflow-y-auto lg:pr-1"
       aria-label="Lifestyle discovery sidebar"
     >
-      {brandFilterFirst ? brandFilterModule : dailyHabitModule}
-      {brandFilterFirst ? dailyHabitModule : brandFilterModule}
-      {savedItemsModule}
+      {brandFilterFirst ? (
+        <>
+          {brandFilterModule}
+          {dailyHabitModule}
+          {savedItemsModule}
+        </>
+      ) : (
+        <>
+          {dailyHabitModule}
+          {savedItemsModule}
+          {brandFilterModule}
+        </>
+      )}
     </aside>
   );
 }

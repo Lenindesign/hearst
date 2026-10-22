@@ -15,6 +15,38 @@ import { cn } from "@/lib/utils";
 export const quietStoryActionButtonClass =
   "min-h-11 min-w-11 border-0 bg-transparent px-0 text-muted-foreground shadow-none hover:bg-transparent hover:text-primary focus-visible:border-transparent focus-visible:ring-2 focus-visible:ring-primary/30 sm:min-h-6 sm:min-w-0";
 
+export function StorySaveIconButton({
+  saved,
+  onSave,
+  className,
+}: {
+  saved: boolean;
+  onSave: () => void;
+  className?: string;
+}) {
+  return (
+    <Button
+      type="button"
+      variant="ghost"
+      size="icon-sm"
+      className={cn(
+        "relative z-20 h-7 w-7 shrink-0 rounded-[4px] text-muted-foreground hover:text-primary",
+        saved && "text-primary",
+        className,
+      )}
+      aria-label={saved ? "Remove from saved stories" : "Save story"}
+      title={saved ? "Remove from saved stories" : "Save story"}
+      aria-pressed={saved}
+      onClick={(event) => {
+        event.stopPropagation();
+        onSave();
+      }}
+    >
+      <Bookmark className="h-3.5 w-3.5" weight={saved ? "fill" : "regular"} aria-hidden />
+    </Button>
+  );
+}
+
 export type LifestyleStoryActionsProps = {
   story: LifestyleRiverStory;
   saved: boolean;

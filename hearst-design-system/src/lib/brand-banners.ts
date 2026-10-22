@@ -26,8 +26,8 @@ export type BrandBanner = {
   logoColor?: "white" | "native";
   /** Overlay this logo instead of the page's own (the Hearst+ banner lockup, which keeps its two colors). */
   logoSlug?: string;
-  /** "xl" lets a solid banner's logo fill nearly the whole banner height (ELLE). */
-  logoSize?: "xl";
+  /** Size preset for overlaid wordmarks: "section" for destination banners, "xl" for ELLE. */
+  logoSize?: "section" | "xl";
 };
 
 // The Hearst+ home masthead: navy with a faint wall of every brand's wordmark behind the white HEARST+ logo.
@@ -46,13 +46,13 @@ export const hearstPlusBrandWallBanner: BrandBanner = {
   logoColor: "native",
 };
 
-// Destination pages: the section color with a wall of that section's brands behind the white section lockup.
-// Fashion & Luxury is a dark section, so its banner uses the dark page surface (#0D1014) instead of its navy.
-export const destinationBrandWallBanners: Partial<Record<string, BrandBanner>> = {
-  "hearst-lifestyle": { background: "#A62C37", alt: "Hearst Lifestyle", width: 2560, height: 220, overlayLogo: true, pattern: "brand-wall", wallSection: "lifestyle" },
-  "hearst-plus": { background: "#819238", alt: "Hearst Autos", width: 2560, height: 220, overlayLogo: true, pattern: "brand-wall", wallSection: "autos" },
-  "hearst-flux": { background: "#0D1014", alt: "Hearst Fashion & Luxury", width: 2560, height: 220, overlayLogo: true, pattern: "brand-wall", wallSection: "flux" },
-  "hearst-ew": { background: "#34454C", alt: "Hearst Enthusiast & Wellness", width: 2560, height: 220, overlayLogo: true, pattern: "brand-wall", wallSection: "ew" },
+// Destination pages: compact section-color banners with a faint wall of that section's publication logos.
+// The Hearst+ home keeps its separate all-brands treatment above.
+export const destinationBanners: Partial<Record<string, BrandBanner>> = {
+  "hearst-lifestyle": { background: "#A62C37", alt: "Hearst Lifestyle", width: 2560, height: 220, overlayLogo: true, pattern: "brand-wall", wallSection: "lifestyle", logoSlug: "hearst-lifestyle-knockout", logoColor: "native", logoSize: "section" },
+  "hearst-plus": { background: "#819238", alt: "Hearst Autos", width: 2560, height: 220, overlayLogo: true, pattern: "brand-wall", wallSection: "autos", logoSlug: "hearst-autos-knockout", logoColor: "native", logoSize: "section" },
+  "hearst-flux": { background: "#0D1014", alt: "Hearst Fashion & Luxury", width: 2560, height: 220, overlayLogo: true, pattern: "brand-wall", wallSection: "flux", logoSlug: "hearst-flux-knockout", logoColor: "native", logoSize: "section" },
+  "hearst-ew": { background: "#34454C", alt: "Hearst Enthusiast & Wellness", width: 2560, height: 220, overlayLogo: true, pattern: "brand-wall", wallSection: "ew", logoSlug: "hearst-ew-knockout", logoColor: "native", logoSize: "section" },
   // Local News: a wall of the Hearst Television station logos.
   "hearst-local-news": {
     background: "#087A68",

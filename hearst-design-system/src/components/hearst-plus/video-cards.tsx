@@ -10,6 +10,7 @@ import {
   X,
 } from "@/components/ui/icons";
 import { BrandSourceIcon } from "@/components/hearst-plus/brand-source-icon";
+import { StorySaveIconButton } from "@/components/hearst-plus/story-actions";
 import {
   getLifestyleByline,
   LifestyleBrandSource,
@@ -312,10 +313,14 @@ export function VideoFeedLeadCard({
 export function VideoIndexCard({
   story,
   onOpen,
+  saved,
+  onSave,
   variant = "videoIndex",
 }: {
   story: LifestyleRiverStory;
   onOpen: () => void;
+  saved?: boolean;
+  onSave?: () => void;
   variant?: "videoIndex" | "hearstPlus";
 }) {
   const useHearstPlusStyle = variant === "hearstPlus";
@@ -328,18 +333,21 @@ export function VideoIndexCard({
     >
       <VideoPlaySurface story={story} featured />
       <div className="p-4 sm:p-5">
-        <div className="mb-3 flex min-w-0 flex-wrap items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+        <div className="relative z-20 mb-3 flex min-w-0 flex-wrap items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
           <BrandSourceIcon
             brand={story.brand}
             brandSlug={story.brandSlug}
             className="h-5 w-5"
           />
-          <span className="truncate normal-case tracking-normal text-muted-foreground">
+          <span className="min-w-0 flex-1 truncate normal-case tracking-normal text-muted-foreground">
             {story.brand}
             {story.topic ? ` · ${story.topic}` : ""}
             {` · ${getLifestyleByline(story)}`}
           </span>
           <LiveStoryBadge story={story} />
+          {onSave && saved !== undefined ? (
+            <StorySaveIconButton saved={saved} onSave={onSave} className="ml-auto" />
+          ) : null}
         </div>
         <button
           type="button"

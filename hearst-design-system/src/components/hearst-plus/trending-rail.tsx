@@ -5,6 +5,7 @@ import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { BrandSourceIcon } from "@/components/hearst-plus/brand-source-icon";
 import { LifestyleRiverImage } from "@/components/hearst-plus/story-presentation";
 import { VideoRailCard } from "@/components/hearst-plus/video-cards";
+import { TrendingUp } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 type TrendingRailProps = {
@@ -36,8 +37,12 @@ export function TrendingStoryRail({
     >
       <h2
         id={titleId}
-        className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-text-primary)]"
+        className="flex items-center gap-1.5 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-text-primary)]"
       >
+        <TrendingUp
+          className="h-4 w-4 shrink-0 text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]"
+          aria-hidden
+        />
         {title}
       </h2>
       <ol className="-mb-3 mt-3 divide-y divide-border/70">

@@ -55,12 +55,6 @@ const brandMenuSections = [
   { mode: "ew", label: "Enthusiast & Wellness" },
 ] satisfies { mode: HearstBrandSection; label: string }[];
 
-// The top-left utility slot promotes the Hearst+ free trial (the newsstand page sells the app).
-// "Try Hearst+ free" is hidden globally per request; restore the entry below to bring it back.
-const utilityLinks: { label: string; href: string }[] = [
-  // { label: "Try Hearst+ free", href: "/hearst-plus/newsstand/" },
-];
-
 const localNewsOptions = [
   { label: "TV Stations", href: "/hearst-plus/local-news/#tv-stations", description: "Hearst Television feeds" },
   { label: "Newspapers", href: "/hearst-plus/local-news/newspapers/", description: "Local newspaper feeds" },
@@ -210,34 +204,12 @@ export function UtilityBar({
             : "bg-primary text-primary-foreground"
       )}
     >
-      <PageContainer className="grid h-full grid-cols-[minmax(0,1fr)_auto] items-center gap-2 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:gap-3">
-        {utilityLinks.length > 0 && (
-        <nav className="hidden items-center gap-3 sm:col-start-1 sm:flex" aria-label="Utility navigation">
-          {utilityLinks.map((link) => (
-            <LinkComponent
-              key={link.label}
-              href={link.href}
-              target={link.href.startsWith("http") ? "_blank" : undefined}
-              rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
-              variant="neutral"
-              underline={false}
-              size="xs"
-              className={cn(
-                "font-semibold",
-                darkMode
-                  ? "text-[var(--component-navigation-utility-content-knockout)] hover:text-[var(--component-navigation-utility-content-accent)]"
-                  : "text-primary-foreground hover:text-primary-foreground"
-              )}
-            >
-              {link.label}
-            </LinkComponent>
-          ))}
-        </nav>
-        )}
+      <PageContainer className="grid h-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:gap-3">
+        <span aria-hidden className="block w-7 shrink-0 sm:w-0" />
         {!hideDestinationNav && (
         <nav
           ref={destinationNavRef}
-          className="relative col-start-1 flex min-w-0 items-center justify-start overflow-x-auto [scrollbar-width:none] sm:col-start-2 sm:justify-center [&::-webkit-scrollbar]:hidden"
+          className="relative flex min-w-0 items-center justify-start overflow-x-auto [scrollbar-width:none] sm:justify-center [&::-webkit-scrollbar]:hidden"
           aria-label="Hearst destination sections"
         >
           <div className={cn("flex min-w-max items-center gap-1 rounded-full px-0.5 sm:p-0.5", darkMode ? "bg-white/[0.06]" : "bg-black/10")}>
@@ -292,7 +264,7 @@ export function UtilityBar({
           </div>
         </nav>
         )}
-        <div className="col-start-2 flex shrink-0 items-center justify-end gap-2 justify-self-end sm:col-start-3">
+        <div className="flex shrink-0 items-center gap-2">
           <Button
             variant="secondary"
             size="xs"
