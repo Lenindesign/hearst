@@ -7,6 +7,8 @@ import { themeOptions } from "@/lib/theme-options";
 
 export type ThemeColorMode = "light" | "dark";
 
+const GLOBAL_COLOR_MODE_STORAGE_KEY = "hearst-color-mode";
+
 export interface ThemeContextType {
   brand: BrandTheme;
   setBrand: (slug: string) => void;
@@ -83,10 +85,11 @@ export function ThemeProvider({
 }) {
   const isFluxDefault = defaultBrandSlug === "hearst-flux";
   const defaultColorMode = isFluxDefault ? "dark" : "light";
-  const colorModeStorageKey = `hearst-color-mode:${defaultBrandSlug}`;
+  const legacyColorModeStorageKey = `hearst-color-mode:${defaultBrandSlug}`;
   const [brandSlug, setBrandSlug] = useState(defaultBrandSlug);
   const [colorMode, setColorMode] = useState<ThemeColorMode>(defaultColorMode);
-  const colorModeReady = useRef(false);
+  const colorModeInitializedRef = useRef(false);
+  const persistNextColorModeRef = useRef(false);
 
   const brand = useMemo(
     () => themeOptions.find((b) => b.slug === brandSlug) || themeOptions[0],
@@ -95,34 +98,58 @@ export function ThemeProvider({
 
   const setBrand = useCallback((slug: string) => setBrandSlug(slug), []);
   const toggleColorMode = useCallback(() => {
+    persistNextColorModeRef.current = true;
     setColorMode((current) => current === "dark" ? "light" : "dark");
   }, []);
 
   const cssVars = useMemo(() => brandToCssVars(brand, colorMode), [brand, colorMode]);
 
   useEffect(() => {
-    const storedMode = persistColorMode ? window.localStorage.getItem(colorModeStorageKey) : null;
+    const storedMode = persistColorMode
+      ? window.localStorage.getItem(GLOBAL_COLOR_MODE_STORAGE_KEY)
+        ?? window.localStorage.getItem(legacyColorModeStorageKey)
+      : null;
     const resolvedMode = storedMode === "dark" || storedMode === "light"
       ? storedMode
       : defaultColorMode;
     document.documentElement.classList.toggle("dark", resolvedMode === "dark");
     document.documentElement.style.colorScheme = resolvedMode;
+    if (persistColorMode && storedMode && !window.localStorage.getItem(GLOBAL_COLOR_MODE_STORAGE_KEY)) {
+      window.localStorage.setItem(GLOBAL_COLOR_MODE_STORAGE_KEY, resolvedMode);
+    }
     // Initial client preference is only available after hydration.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setColorMode(resolvedMode);
-  }, [colorModeStorageKey, defaultColorMode, persistColorMode]);
+  }, [defaultColorMode, legacyColorModeStorageKey, persistColorMode]);
 
   useEffect(() => {
-    if (!colorModeReady.current) {
-      colorModeReady.current = true;
+    if (!colorModeInitializedRef.current) {
+      colorModeInitializedRef.current = true;
       return;
     }
     document.documentElement.classList.toggle("dark", colorMode === "dark");
     document.documentElement.style.colorScheme = colorMode;
-    if (persistColorMode) {
-      window.localStorage.setItem(colorModeStorageKey, colorMode);
+    if (persistNextColorModeRef.current) {
+      if (persistColorMode) {
+        window.localStorage.setItem(GLOBAL_COLOR_MODE_STORAGE_KEY, colorMode);
+      }
+      persistNextColorModeRef.current = false;
     }
-  }, [colorMode, colorModeStorageKey, persistColorMode]);
+  }, [colorMode, persistColorMode]);
+
+  useEffect(() => {
+    if (!persistColorMode) return;
+
+    const syncColorMode = (event: StorageEvent) => {
+      if (event.key !== GLOBAL_COLOR_MODE_STORAGE_KEY) return;
+      const nextMode = event.newValue;
+      if (nextMode !== "dark" && nextMode !== "light") return;
+      setColorMode(nextMode);
+    };
+
+    window.addEventListener("storage", syncColorMode);
+    return () => window.removeEventListener("storage", syncColorMode);
+  }, [persistColorMode]);
 
   useGoogleFonts([brand.fontDefault, brand.fontSecondary, brand.fontHeadline]);
 

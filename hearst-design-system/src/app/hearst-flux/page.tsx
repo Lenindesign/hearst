@@ -21,7 +21,7 @@ export default async function HearstFluxPage() {
   ]);
 
   return (
-    <ThemeProvider defaultBrandSlug="hearst-flux" persistColorMode={false}>
+    <ThemeProvider defaultBrandSlug="hearst-flux">
       <HomePageTemplate staticDestinationData={getHearstDestinationStaticData()} liveFeedData={liveFeedData} liveFeedMode="blend" videoFeedData={videoFeedData} onboardingBrandInventory={getHearstAllStoryInventory()} />
     </ThemeProvider>
   );

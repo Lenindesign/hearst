@@ -72,7 +72,7 @@ export async function DestinationCategoryRoutePage({
   ]);
 
   const content = (
-    <ThemeProvider defaultBrandSlug={destinationThemeSlugs[destination]} persistColorMode={destination === "flux" ? false : undefined}>
+    <ThemeProvider defaultBrandSlug={destinationThemeSlugs[destination]}>
       <HomePageTemplate
         staticDestinationData={getHearstDestinationStaticData()}
         initialFilter={categoryLabel}

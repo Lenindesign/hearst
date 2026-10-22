@@ -37,7 +37,7 @@ export default async function SingleBrandArticlePage({ params }: PageProps) {
   // Reuse the Hearst+ template but open its built-in modal reader (with infinite
   // "up next" scroll) directly on this story — the article "template".
   return (
-    <ThemeProvider defaultBrandSlug={brandSlug} persistColorMode={false}>
+    <ThemeProvider defaultBrandSlug={brandSlug}>
       <HomePageTemplate
         initialBrandSlug={brandSlug}
         liveFeedData={feed}

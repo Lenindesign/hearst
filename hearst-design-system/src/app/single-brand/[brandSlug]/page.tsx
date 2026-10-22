@@ -34,7 +34,7 @@ export default async function SingleBrandHomePage({ params }: PageProps) {
   const liveFeedData = await getSingleBrandLiveFeed(brandSlug);
 
   return (
-    <ThemeProvider defaultBrandSlug={brandSlug} persistColorMode={false}>
+    <ThemeProvider defaultBrandSlug={brandSlug}>
       <HomePageTemplate
         initialBrandSlug={brandSlug}
         liveFeedData={liveFeedData}
