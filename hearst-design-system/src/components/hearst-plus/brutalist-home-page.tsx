@@ -154,17 +154,17 @@ export function BrutalistHomePage({ stories }: { stories: LifestyleRiverStory[] 
 
   return (
     <div className="hearst-plus-theme hearst-brutalist-home min-h-screen bg-white text-[#090d14] [--font-brutalist:'Barlow_Condensed',var(--font-schibsted-grotesk),sans-serif]" data-brutalist-home>
-      <header className="relative z-20 border-b-2 border-black bg-white">
+      <header className="relative z-20 border-b-4 border-black bg-[#ffec00] text-black">
         <div className="mx-auto grid min-h-[82px] max-w-[1600px] grid-cols-[1fr_auto_1fr] items-center gap-2 px-3 sm:px-6">
           <details className="group relative justify-self-start">
-            <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 text-sm font-black uppercase tracking-wide focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#075db6]">
+            <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 border-2 border-black bg-black px-3 text-sm font-black uppercase tracking-wide text-[#ffec00] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#075db6]">
               <Menu className="h-6 w-6" aria-hidden />
               <span className="hidden sm:inline">Sections</span>
               <span className="sr-only">Explore Hearst sections</span>
             </summary>
-            <nav aria-label="Explore Hearst sections" className="absolute left-0 top-full z-30 hidden w-64 border-2 border-black bg-white p-2 shadow-[6px_6px_0_#071a30] group-open:block">
+            <nav aria-label="Explore Hearst sections" className="absolute left-0 top-full z-30 hidden w-64 border-4 border-black bg-[#ffec00] p-2 shadow-[8px_8px_0_#071a30] group-open:block">
               {sections.map((section) => (
-                <Link key={section.label} href={section.href} className="block border-b border-black/20 px-3 py-2 font-[family-name:var(--font-brutalist)] text-xl font-bold uppercase hover:bg-[#ffec00] focus-visible:outline-2 focus-visible:outline-[#075db6]">
+                <Link key={section.label} href={section.href} className="block border-b-2 border-black bg-white px-3 py-2 font-[family-name:var(--font-brutalist)] text-xl font-bold uppercase hover:bg-[#071a30] hover:text-white focus-visible:outline-2 focus-visible:outline-[#075db6]">
                   {section.label}
                 </Link>
               ))}
@@ -180,13 +180,13 @@ export function BrutalistHomePage({ stories }: { stories: LifestyleRiverStory[] 
             </div>
           </div>
 
-          <Link href="/hearst-plus/" className="min-h-11 justify-self-end border-2 border-black px-2 py-2 text-[10px] font-black uppercase tracking-wide hover:bg-[#ffec00] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#075db6] sm:px-4 sm:text-xs">
+          <Link href="/hearst-plus/" className="min-h-11 justify-self-end border-2 border-black bg-black px-2 py-2 text-[10px] font-black uppercase tracking-wide text-[#ffec00] hover:bg-white hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#075db6] sm:px-4 sm:text-xs">
             Open Hearst+
           </Link>
         </div>
-        <nav aria-label="Hearst+ topics" className="mx-auto hidden max-w-[1120px] items-center justify-center gap-7 px-4 pb-2 text-[10px] font-black uppercase tracking-[0.12em] md:flex">
+        <nav aria-label="Hearst+ topics" className="mx-auto hidden min-h-12 max-w-[1600px] items-center justify-center border-t-2 border-black bg-[#071a30] px-4 py-1 text-xs font-black uppercase tracking-[0.12em] text-white md:flex">
           {sections.map((section) => (
-            <Link key={section.label} href={section.href} className="hover:text-[#075db6] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#075db6]">{section.label}</Link>
+            <Link key={section.label} href={section.href} className="border-r border-white/40 px-3 py-2 last:border-r-0 hover:bg-[#ffec00] hover:text-black focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#ffec00]">{section.label}</Link>
           ))}
         </nav>
       </header>
