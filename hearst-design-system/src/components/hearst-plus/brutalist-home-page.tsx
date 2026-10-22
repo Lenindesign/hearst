@@ -173,7 +173,9 @@ export function BrutalistHomePage({ stories }: { stories: LifestyleRiverStory[] 
 
           <div className="flex min-w-0 flex-col items-center">
             <Link href={homeHref} aria-label="Hearst+ brutalist editorial home" className="inline-flex focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#075db6]">
-              <Image src="/logos/hearst-plus.svg" alt="Hearst+" width={220} height={24} priority className="h-auto w-[150px] sm:w-[210px]" />
+              <span className="relative isolate inline-flex after:absolute after:inset-y-0 after:right-0 after:z-0 after:w-[11%] after:bg-[#012247]">
+                <Image src="/logos/hearst-plus-brutalist.svg" alt="Hearst+" width={220} height={24} priority className="relative z-10 h-auto w-[150px] sm:w-[210px]" />
+              </span>
             </Link>
             <div className="mt-1 hidden max-w-[70vw] items-center gap-3 overflow-hidden text-[8px] font-bold uppercase tracking-[0.15em] text-[#1d2937]/65 md:flex">
               <span>Good Housekeeping</span><span>ELLE</span><span>Country Living</span><span>Veranda</span><span>Prevention</span><span>Woman’s Day</span><span>Seventeen</span>
