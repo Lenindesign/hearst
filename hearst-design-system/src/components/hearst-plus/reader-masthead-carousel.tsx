@@ -21,22 +21,30 @@ export function ReaderMastheadCarousel({
   onWheelCapture,
 }: ReaderMastheadCarouselProps) {
   const viewportRef = React.useRef<HTMLDivElement>(null);
+  const navRef = React.useRef<HTMLElementTagNameMap["nav"]>(null);
+  const itemsRef = React.useRef<HTMLDivElement>(null);
   const [scrollState, setScrollState] = React.useState({
+    hasOverflow: false,
     canScrollLeft: false,
     canScrollRight: false,
   });
 
   const updateScrollState = React.useCallback(() => {
     const viewport = viewportRef.current;
-    if (!viewport) return;
+    const nav = navRef.current;
+    const items = itemsRef.current;
+    if (!viewport || !nav || !items) return;
 
     const maximumScrollLeft = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+    const hasOverflow = items.scrollWidth > nav.clientWidth + 1;
     const nextState = {
+      hasOverflow,
       canScrollLeft: viewport.scrollLeft > 1,
       canScrollRight: viewport.scrollLeft < maximumScrollLeft - 1,
     };
     setScrollState((current) =>
-      current.canScrollLeft === nextState.canScrollLeft
+      current.hasOverflow === nextState.hasOverflow
+      && current.canScrollLeft === nextState.canScrollLeft
       && current.canScrollRight === nextState.canScrollRight
         ? current
         : nextState
@@ -49,7 +57,9 @@ export function ReaderMastheadCarousel({
 
     const frame = window.requestAnimationFrame(updateScrollState);
     const resizeObserver = new ResizeObserver(updateScrollState);
+    if (navRef.current) resizeObserver.observe(navRef.current);
     resizeObserver.observe(viewport);
+    if (itemsRef.current) resizeObserver.observe(itemsRef.current);
     viewport.addEventListener("scroll", updateScrollState, { passive: true });
 
     return () => {
@@ -96,42 +106,47 @@ export function ReaderMastheadCarousel({
 
   return (
     <nav
+      ref={navRef}
       className={cn("ml-auto hidden min-w-0 flex-1 items-center gap-1 lg:flex", className)}
       aria-label={ariaLabel}
       onWheelCapture={onWheelCapture}
     >
-      <Button
-        type="button"
-        variant="ghost"
-        size="icon-sm"
-        className="h-7 w-7 shrink-0"
-        disabled={!scrollState.canScrollLeft}
-        onClick={() => scrollByPage(-1)}
-        aria-label="Previous Hearst publications"
-      >
-        <ChevronLeft className="h-4 w-4" aria-hidden />
-      </Button>
+      {scrollState.hasOverflow ? (
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-sm"
+          className="h-7 w-7 shrink-0"
+          disabled={!scrollState.canScrollLeft}
+          onClick={() => scrollByPage(-1)}
+          aria-label="Previous Hearst publications"
+        >
+          <ChevronLeft className="h-4 w-4" aria-hidden />
+        </Button>
+      ) : null}
       <div
         ref={viewportRef}
         className="min-w-0 flex-1 overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         data-reader-masthead-navigation
         onWheelCapture={onWheelCapture}
       >
-        <div className="flex min-w-max items-center gap-5 px-1">
+        <div ref={itemsRef} className="flex min-w-max items-center gap-5 px-1">
           {children}
         </div>
       </div>
-      <Button
-        type="button"
-        variant="ghost"
-        size="icon-sm"
-        className="h-7 w-7 shrink-0"
-        disabled={!scrollState.canScrollRight}
-        onClick={() => scrollByPage(1)}
-        aria-label="Next Hearst publications"
-      >
-        <ChevronRight className="h-4 w-4" aria-hidden />
-      </Button>
+      {scrollState.hasOverflow ? (
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-sm"
+          className="h-7 w-7 shrink-0"
+          disabled={!scrollState.canScrollRight}
+          onClick={() => scrollByPage(1)}
+          aria-label="Next Hearst publications"
+        >
+          <ChevronRight className="h-4 w-4" aria-hidden />
+        </Button>
+      ) : null}
     </nav>
   );
 }

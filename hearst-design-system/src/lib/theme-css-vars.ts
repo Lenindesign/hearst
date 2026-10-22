@@ -42,9 +42,9 @@ function getContrastColor(hex: string): string {
 const darkModeSectionPrimaryColors: Record<string, string> = {
   "hearst-all": "#74B9F5",
   "hearst-lifestyle": "#F0919A",
-  "hearst-plus": "#C5D47E",
+  "hearst-plus": "#A9BCC4",
   "hearst-flux": "#8FB6D3",
-  "hearst-ew": "#A9BCC4",
+  "hearst-ew": "#C5D47E",
   "hearst-local-news": "#61CDBD",
   "hearst-entertainment": "#D5B869",
   elle: "#F2F2F2",

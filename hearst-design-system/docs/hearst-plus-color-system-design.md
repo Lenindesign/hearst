@@ -6,7 +6,7 @@ Hearst+ separates color into two roles. The **Hearst+ shell** (navigation, activ
 
 - **Hearst+ blue**: the Hearst+ brand blue, `#2D75B9` (the Hearst+ logo and `BRAND_STYLES.md` value). Before this design the `hearst-all` theme shipped `#2B6FAF`.
   Avoid: brand color, accent, primary blue.
-- **Destination primary**: each destination's own theme primary: Lifestyle `#A62C37` (carmine), Autos `#819238` (olive; text tokens use the darker `#5A6627` for AA), Fashion and Luxury `#12354E` (dark Tyrian blue), Enthusiast and Wellness `#34454C` (slate), Local News `#087A68`, A&E Family `#B9913F`.
+- **Destination primary**: each destination's own theme primary: Lifestyle `#A62C37` (carmine), Autos `#34454C` (slate), Fashion and Luxury `#12354E` (dark Tyrian blue), Enthusiast and Wellness `#819238` (olive; text tokens use the darker `#5A6627` for AA), Local News `#087A68`, A&E Family `#B9913F`.
   Avoid: section color, vertical color.
 - **Page canvas**: the background behind feed cards and rails (`--background` / `--hp-background`).
   Avoid: page color, bg.

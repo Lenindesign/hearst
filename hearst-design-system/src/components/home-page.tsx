@@ -47,7 +47,6 @@ import { BigStoryFeedStacked } from "./fre/big-story-feed";
 import { BigStoryImageRight } from "./fre/big-story";
 import { FourAcrossGrid } from "./fre/four-across-grid";
 import { SiteFooter } from "./fre/site-footer";
-import { LocalWeather } from "@/components/hearst-plus/local-weather";
 import { destinationBanners, entertainmentBrandWallBanner, hearstPlusBrandWallBanner } from "@/lib/brand-banners";
 import { HearstPlusBrandWall } from "@/components/hearst-plus/hearst-plus-brand-wall";
 import { BrandInstagramModule } from "@/components/hearst-plus/brand-instagram-module";
@@ -167,6 +166,7 @@ import { ContentReaderComments } from "./hearst-plus/content-reader-comments";
 import { ContentReaderContextRail } from "./hearst-plus/content-reader-context-rail";
 import {
   ContentReaderAdvertisement,
+  getContextualAdvertisementImage,
   selectContentReaderAdvertisement,
   type ContextualAdUnit,
 } from "./hearst-plus/content-reader-advertisement";
@@ -1392,8 +1392,6 @@ export function MainNav({
     return (
       <>
         <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between p-3 [&>*]:pointer-events-auto">
-          <LocalWeather className="hidden sm:inline-flex [&_button]:bg-black/45 [&_button]:px-2 [&_button]:text-white [&_button]:backdrop-blur [&_span]:!text-white" />
-          <span aria-hidden className="sm:hidden" />
           <div className="flex items-center gap-2">
             <Button
               type="button"
@@ -1473,31 +1471,53 @@ export function MainNav({
         {mastheadBanner.scrim ? <div aria-hidden className="pointer-events-none absolute inset-0 bg-black/40" /> : null}
         {mastheadBanner.pattern === "brand-wall" ? <HearstPlusBrandWall logos={brandWallLogos} /> : null}
         {mastheadBanner.overlayLogo ? (
-          <div className={cn("pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-center px-24", underUtilityBar ? "top-8" : "top-0")}>
-            <BrandLogo
-              slug={mastheadBanner.logoSlug ?? mastheadSlug}
-              color={mastheadBanner.logoColor === "native" ? undefined : "#fff"}
-              className={cn(
-                "flex w-[min(500px,calc(100vw-3rem))] max-w-full items-center justify-center [&_svg]:block [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-h-full [&_svg]:max-w-full",
-                // Solid banners have nothing but the logo, so it fills most of the banner height.
-                mastheadBanner.src
-                  ? "h-10 drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] sm:h-16 lg:h-24"
-                  : mastheadBanner.logoSize === "section"
-                    ? "h-6 sm:h-9 lg:h-12"
-                    : mastheadBanner.pattern === "brand-wall"
-                    ? mastheadBanner.wallSection || mastheadBanner.wallLogos
+          <div className={cn(
+            "pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-center",
+            mastheadBanner.logoDescriptor ? "px-4 sm:px-24" : "px-24",
+            underUtilityBar ? "top-8" : "top-0",
+          )}>
+            {mastheadBanner.logoDescriptor ? (
+              <div role="img" aria-label={mastheadBanner.alt} className="flex max-w-full items-baseline justify-center gap-1 whitespace-nowrap text-white sm:gap-2">
+                <BrandLogo
+                  slug={mastheadBanner.logoSlug ?? "hearst-wordmark"}
+                  color="#fff"
+                  decorative
+                  className="flex h-3 w-auto shrink-0 items-center [&_svg]:block [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full sm:h-6 lg:h-8"
+                />
+                <span className="shrink-0 font-semibold italic leading-none [font-family:var(--font-newsreader),Georgia,serif] text-[10px] sm:text-base lg:text-2xl">
+                  {mastheadBanner.logoDescriptor}
+                </span>
+              </div>
+            ) : (
+              <BrandLogo
+                slug={mastheadBanner.logoSlug ?? mastheadSlug}
+                color={mastheadBanner.logoColor === "native" ? undefined : "#fff"}
+                className={cn(
+                  "flex max-w-full items-center justify-center [&_svg]:block [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-h-full [&_svg]:max-w-full",
+                  "w-[min(500px,calc(100vw-3rem))]",
+                  // Solid banners have nothing but the logo, so it fills most of the banner height.
+                  mastheadBanner.src
+                    ? "h-10 drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] sm:h-16 lg:h-24"
+                    : mastheadBanner.logoSize === "section"
                       ? "h-6 sm:h-9 lg:h-12"
-                      : "h-5 sm:h-7 lg:h-9"
-                    : mastheadBanner.logoSize === "xl"
-                      ? "h-20 sm:h-36 lg:h-52"
-                      : "h-16 sm:h-28 lg:h-40",
-              )}
-            />
+                      : mastheadBanner.pattern === "brand-wall"
+                      ? mastheadBanner.wallSection || mastheadBanner.wallLogos
+                        ? "h-6 sm:h-9 lg:h-12"
+                        : "h-5 sm:h-7 lg:h-9"
+                      : mastheadBanner.logoSize === "xl"
+                        ? "h-20 sm:h-36 lg:h-52"
+                        : "h-16 sm:h-28 lg:h-40",
+                )}
+              />
+            )}
           </div>
         ) : null}
         {/* Full-bleed art; the controls stay on the page container's edges. */}
         <PageContainer className={cn("pointer-events-none absolute inset-x-0 flex items-start justify-between py-3 [&>*]:pointer-events-auto", underUtilityBar ? "top-8" : "top-0")}>
           <div className="flex w-10 shrink-0 justify-start sm:w-[var(--width-sidebar-narrow)]">
+            {showRiverLayoutToggle ? (
+              <RiverLayoutToggle buttonClassName={useDarkHeaderIconButtons || mastheadBanner ? darkHeaderIconButtonClass : undefined} />
+            ) : null}
             {showMobileDiscoveryMenu ? (
               <Button
                 ref={mobileMenuTriggerRef}
@@ -1518,13 +1538,8 @@ export function MainNav({
                 <Menu className="h-5 w-5" aria-hidden />
               </Button>
             ) : null}
-            {/* A quiet local signal in place of the desktop color-mode button; the mode toggle stays in the phone menu. */}
-            <LocalWeather className={cn("hidden sm:inline-flex", mastheadBanner && "[&_button]:bg-black/45 [&_button]:px-2 [&_button]:text-white [&_button]:backdrop-blur [&_span]:!text-white")} />
           </div>
           <div className="flex shrink-0 items-start justify-end gap-2 sm:w-[var(--width-sidebar-narrow)]">
-            {showRiverLayoutToggle ? (
-              <RiverLayoutToggle buttonClassName={useDarkHeaderIconButtons || mastheadBanner ? darkHeaderIconButtonClass : undefined} />
-            ) : null}
             <Button
               type="button"
               variant="outline"
@@ -1566,6 +1581,9 @@ export function MainNav({
     <div className={cn("flex h-20 border-b sm:h-24", darkMode ? "border-white/10 bg-[var(--component-video-feed-background-default)] text-[var(--component-video-feed-content-primary)]" : "border-border bg-[var(--hp-surface)]")}>
       <PageContainer className="flex items-center justify-between">
         <div className="flex w-10 shrink-0 justify-start sm:w-[var(--width-sidebar-narrow)]">
+          {showRiverLayoutToggle ? (
+            <RiverLayoutToggle buttonClassName={useDarkHeaderIconButtons ? darkHeaderIconButtonClass : undefined} />
+          ) : null}
           {showMobileDiscoveryMenu ? (
             <Button
               ref={mobileMenuTriggerRef}
@@ -1586,16 +1604,11 @@ export function MainNav({
               <Menu className="h-5 w-5" aria-hidden />
             </Button>
           ) : null}
-          {/* A quiet local signal in place of the desktop color-mode button; the mode toggle stays in the phone menu. */}
-          <LocalWeather className="hidden sm:inline-flex" />
         </div>
         <div className="flex min-w-0 flex-1 justify-center">
           {renderMastheadLogo(false)}
         </div>
         <div className="flex shrink-0 items-center justify-end gap-2 sm:w-[var(--width-sidebar-narrow)]">
-          {showRiverLayoutToggle ? (
-            <RiverLayoutToggle buttonClassName={useDarkHeaderIconButtons ? darkHeaderIconButtonClass : undefined} />
-          ) : null}
           <Button
             type="button"
             variant="outline"
@@ -2059,7 +2072,15 @@ function getContextualAdForSlot({
     .sort((a, b) => b.score - a.score || a.ad.id.localeCompare(b.ad.id));
 
   const match = rankedAds[slotIndex % rankedAds.length] ?? rankedAds[0];
-  return match;
+  return match
+    ? {
+        ...match,
+        ad: {
+          ...match.ad,
+          imageUrl: getContextualAdvertisementImage(match.ad, surroundingStories),
+        },
+      }
+    : undefined;
 }
 
 function ensureGallerySampleInRiver(

@@ -30,18 +30,39 @@ export function LocalNewsRail() {
 
   if (stories.length === 0) return null;
 
+  const localMarkets = Array.from(new Set(
+    stories
+      .map((story) => getHearstTVStationById(story.stationId))
+      .filter((station): station is NonNullable<typeof station> => Boolean(station))
+      .map((station) => `${station.market}, ${station.state}`),
+  ));
+  const localNewsLocation = localMarkets.length > 0
+    ? localMarkets.slice(0, 2).join(" · ")
+    : "Hearst TV markets";
+  const nearestHearstZip = stories
+    .map((story) => getHearstTVStationById(story.stationId))
+    .find((station) => Boolean(station?.postalCode))?.postalCode;
+
   return (
     <section
       className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]"
       aria-labelledby="local-news-rail-title"
       data-story-module="local-news"
     >
-      <h2
-        id="local-news-rail-title"
-        className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]"
-      >
-        Local News
-      </h2>
+      <div className="flex items-center justify-between gap-3">
+        <h2
+          id="local-news-rail-title"
+          className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]"
+        >
+          Local News
+        </h2>
+        <span
+          className="shrink-0 text-xs text-muted-foreground"
+          aria-label={nearestHearstZip ? `Nearby Hearst station ZIP code ${nearestHearstZip}` : `Local news for ${localNewsLocation}`}
+        >
+          {nearestHearstZip ?? localNewsLocation}
+        </span>
+      </div>
       <ol className="-mb-3 mt-3 divide-y divide-border/70">
         {stories.map((story, index) => {
           const station = getHearstTVStationById(story.stationId);

@@ -98,7 +98,15 @@ async function searchPlaces(query: string, signal: AbortSignal): Promise<SearchR
   }));
 }
 
-export function LocalWeather({ className }: { className?: string }) {
+export function LocalWeather({
+  className,
+  buttonClassName,
+  hideCityOnCompact = false,
+}: {
+  className?: string;
+  buttonClassName?: string;
+  hideCityOnCompact?: boolean;
+}) {
   const [place, setPlace] = React.useState<Place | null>(null);
   const [chosen, setChosen] = React.useState(false);
   const [weather, setWeather] = React.useState<Weather | null>(null);
@@ -207,7 +215,10 @@ export function LocalWeather({ className }: { className?: string }) {
       <button
         ref={triggerRef}
         type="button"
-        className="inline-flex min-h-7 items-center gap-1.5 whitespace-nowrap rounded-[4px] px-1 text-xs font-medium text-muted-foreground transition-colors animate-in fade-in duration-300 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 motion-reduce:animate-none"
+        className={cn(
+          "inline-flex min-h-7 items-center gap-1.5 whitespace-nowrap rounded-[4px] px-1 text-xs font-medium text-muted-foreground transition-colors animate-in fade-in duration-300 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 motion-reduce:animate-none",
+          buttonClassName,
+        )}
         aria-label={`Weather in ${place.city}: ${weather.temperature} degrees, ${label.toLowerCase()}. Change location`}
         aria-expanded={open}
         aria-controls={open ? panelId : undefined}
@@ -216,7 +227,7 @@ export function LocalWeather({ className }: { className?: string }) {
       >
         <Icon className="h-4 w-4 shrink-0" aria-hidden />
         <span className="font-semibold text-foreground">{weather.temperature}°</span>
-        <span className="max-w-[9rem] truncate">{place.city}</span>
+        <span className={cn("max-w-[9rem] truncate", hideCityOnCompact && "max-[1023px]:hidden")}>{place.city}</span>
       </button>
 
       {open ? (

@@ -53,6 +53,8 @@ The complete brand registry is documented in `BRAND_STYLES.md`. Canonical HDS pu
 - Normalize the visual height of the `HEARST` wordmark across Hearst+, Lifestyle, Fashion & Luxury, Enthusiast & Wellness, and Autos mastheads.
 - Qualifiers such as `Lifestyle`, `Fashion & Luxury`, `Enthusiast & Wellness`, and `Autos` may vary in width, but they must not scale down the Hearst wordmark.
 - Align wordmark cap height and baseline consistently across destination mastheads.
+- Destination banners for Lifestyle, Autos, Fashion & Luxury, and Enthusiast & Wellness share one standalone HEARST SVG and separately rendered Newsreader 600 italic descriptors. Keep their wordmark dimensions and descriptor font size identical across all four at each responsive breakpoint.
+- The Local News rail places its verified Hearst station ZIP at the right of the title; use station address metadata and do not infer or fabricate a postal code.
 - Generated Hearst destination masthead logos use the active destination primary color on light surfaces.
 - The A&E Family destination masthead lockup has a white HEARST wordmark with the divider and `A&E Family` in the A&E Family gold on the dark entertainment landing masthead.
 - Publication, station, newspaper, and channel mastheads preserve official/native logo coloring unless a dark-surface white treatment is explicitly scoped.

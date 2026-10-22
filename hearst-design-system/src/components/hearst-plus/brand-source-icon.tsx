@@ -36,23 +36,23 @@ export function BrandSourceIcon({
       data-brand-slug={brandSlug}
       data-image-state={showImage ? "available" : "fallback"}
       className={cn(
-        "relative inline-flex h-4 w-4 shrink-0 items-center justify-center overflow-hidden rounded-[3px] border border-border bg-background p-0.5 text-[8px] font-black leading-none text-primary",
+        "relative inline-flex h-4 w-4 shrink-0 items-center justify-center overflow-hidden rounded-[3px] bg-transparent p-0 text-[8px] font-black leading-none text-primary",
         className,
       )}
     >
-      <span>{getBrandInitials(brand)}</span>
       {showImage && (
         <img
           src={iconUrl}
           alt=""
           aria-hidden
           className={cn(
-            "absolute inset-0 h-full w-full bg-background object-contain p-0.5",
+            "absolute inset-0 h-full w-full object-contain",
             imageClassName,
           )}
           onError={() => setFailedUrl(iconUrl)}
         />
       )}
+      {!showImage ? <span>{getBrandInitials(brand)}</span> : null}
     </span>
   );
 }

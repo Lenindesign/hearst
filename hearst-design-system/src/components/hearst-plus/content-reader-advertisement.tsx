@@ -34,6 +34,24 @@ export type ContentReaderAdvertisementProps = {
   currentTopic: string;
 };
 
+export function getContextualAdvertisementImage(
+  ad: ContextualAdUnit,
+  stories: LifestyleRiverStory[],
+) {
+  const bestMatch = stories
+    .filter((story) => Boolean(story.image))
+    .map((story) => ({
+      story,
+      score:
+        (ad.topics.includes(story.topic) ? 40 : 0)
+        + ad.tags.filter((tag) => story.tags.includes(tag)).length * 18,
+    }))
+    .filter((match) => match.score > 0)
+    .sort((first, second) => second.score - first.score || first.story.id.localeCompare(second.story.id))[0];
+
+  return bestMatch?.story.image ?? ad.imageUrl;
+}
+
 export function selectContentReaderAdvertisement(
   currentStory: LifestyleRiverStory,
   adsByDestination: Record<ReaderAdvertisementDestination, ContextualAdUnit[]>,
@@ -65,7 +83,10 @@ export function selectContentReaderAdvertisement(
       second.score - first.score || first.ad.id.localeCompare(second.ad.id)
     );
 
-  return rankedAds[slotIndex % rankedAds.length]?.ad ?? rankedAds[0]?.ad ?? null;
+  const selectedAd = rankedAds[slotIndex % rankedAds.length]?.ad ?? rankedAds[0]?.ad ?? null;
+  return selectedAd
+    ? { ...selectedAd, imageUrl: getContextualAdvertisementImage(selectedAd, [currentStory]) }
+    : null;
 }
 
 export function ContentReaderAdvertisement({

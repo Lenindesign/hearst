@@ -2,6 +2,7 @@
 
 import React from "react";
 import { BrandSourceIcon } from "@/components/hearst-plus/brand-source-icon";
+import { LocalWeather } from "@/components/hearst-plus/local-weather";
 import { ReaderAvatar } from "@/components/reader-account-ui";
 import { useReaderAccount } from "@/components/reader-account";
 import { Button } from "@/components/ui/button";
@@ -205,7 +206,16 @@ export function UtilityBar({
       )}
     >
       <PageContainer className="grid h-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:gap-3">
-        <span aria-hidden className="block w-7 shrink-0 sm:w-0" />
+        <LocalWeather
+          hideCityOnCompact
+          className="min-w-0 shrink-0"
+          buttonClassName={cn(
+            "!min-h-6 !rounded-[4px] !border-0 !px-2 !py-1 !text-[10px] !font-normal !leading-none shadow-none sm:!text-xs",
+            darkMode
+              ? "bg-[var(--component-navigation-utility-content-accent)] !text-[var(--component-navigation-utility-background-knockout)] hover:bg-[var(--component-navigation-utility-content-accent-hover)] [&_span]:!text-[var(--component-navigation-utility-background-knockout)]"
+              : "bg-white !text-black hover:bg-white/90 [&_span]:!text-black",
+          )}
+        />
         {!hideDestinationNav && (
         <nav
           ref={destinationNavRef}
@@ -244,7 +254,7 @@ export function UtilityBar({
                     className={cn(
                       "inline-flex min-h-7 min-w-7 cursor-pointer items-center justify-center rounded-full px-2 py-1 text-[11px] font-normal leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:min-h-6 sm:min-w-0 sm:text-xs",
                       isActive
-                        ? "bg-white text-black hover:text-black"
+                        ? "bg-white font-semibold text-black hover:text-black"
                         : darkMode
                           ? "text-[var(--component-navigation-utility-content-knockout)] opacity-85 hover:bg-white/10 hover:text-white hover:opacity-100"
                           : "text-primary-foreground hover:bg-white/10 hover:text-primary-foreground"

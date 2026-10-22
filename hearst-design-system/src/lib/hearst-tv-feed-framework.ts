@@ -8,6 +8,8 @@ export type HearstTVStation = {
   callSign: string;
   market: string;
   state: string;
+  /** Postal ZIP for the Hearst station's local office, when verified. */
+  postalCode?: string;
   network: string;
   logo: string | null;
   homepageUrl: string | null;
@@ -93,7 +95,7 @@ export const hearstTVStations: HearstTVStation[] = [
   { id: "koco", stationName: "KOCO 5", callSign: "KOCO-TV", market: "Oklahoma City", state: "OK", network: "ABC", logo: tvStationLogoUrl("koco"), homepageUrl: "https://www.koco.com/", enabled: false, category: "Hearst TV", geo: { latitude: 35.4676, longitude: -97.5164 } },
   { id: "khbs-khog", stationName: "40/29 News", callSign: "KHBS/KHOG-TV", market: "Fort Smith/Fayetteville", state: "AR", network: "ABC/CW", logo: tvStationLogoUrl("khbs-khog"), homepageUrl: "https://www.4029tv.com/", enabled: false, category: "Hearst TV", geo: { latitude: 36.0626, longitude: -94.1574 } },
   { id: "koat", stationName: "KOAT 7", callSign: "KOAT-TV", market: "Albuquerque/Santa Fe", state: "NM", network: "ABC", logo: tvStationLogoUrl("koat"), homepageUrl: "https://www.koat.com/", enabled: false, category: "Hearst TV", geo: { latitude: 35.0844, longitude: -106.6504 } },
-  { id: "kcra", stationName: "KCRA 3", callSign: "KCRA-TV", market: "Sacramento", state: "CA", network: "NBC", logo: kcraLogoUrl, homepageUrl: "https://www.kcra.com/", enabled: true, category: "Hearst TV", geo: { latitude: 38.5816, longitude: -121.4944 } },
+  { id: "kcra", stationName: "KCRA 3", callSign: "KCRA-TV", market: "Sacramento", state: "CA", postalCode: "95814", network: "NBC", logo: kcraLogoUrl, homepageUrl: "https://www.kcra.com/", enabled: true, category: "Hearst TV", geo: { latitude: 38.5816, longitude: -121.4944 } },
   { id: "kqca", stationName: "KQCA My58", callSign: "KQCA", market: "Sacramento", state: "CA", network: "MyNetworkTV", logo: null, homepageUrl: null, enabled: false, category: "Hearst TV", geo: { latitude: 38.5816, longitude: -121.4944 } },
   { id: "ksbw", stationName: "KSBW 8", callSign: "KSBW", market: "Monterey/Salinas", state: "CA", network: "NBC/ABC", logo: tvStationLogoUrl("ksbw"), homepageUrl: "https://www.ksbw.com/", enabled: false, category: "Hearst TV", geo: { latitude: 36.6002, longitude: -121.8947 } },
   { id: "kitv", stationName: "KITV Island News", callSign: "KITV", market: "Honolulu", state: "HI", network: "ABC", logo: null, homepageUrl: "https://www.kitv.com/", enabled: false, category: "Hearst TV", geo: { latitude: 21.3099, longitude: -157.8581 } },
