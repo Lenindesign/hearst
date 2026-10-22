@@ -34,14 +34,11 @@ export function LocalNewsRail() {
     stories
       .map((story) => getHearstTVStationById(story.stationId))
       .filter((station): station is NonNullable<typeof station> => Boolean(station))
-      .map((station) => `${station.market}, ${station.state}`),
+      .map((station) => station.market),
   ));
   const localNewsLocation = localMarkets.length > 0
     ? localMarkets.slice(0, 2).join(" · ")
     : "Hearst TV markets";
-  const nearestHearstZip = stories
-    .map((story) => getHearstTVStationById(story.stationId))
-    .find((station) => Boolean(station?.postalCode))?.postalCode;
 
   return (
     <section
@@ -58,9 +55,9 @@ export function LocalNewsRail() {
         </h2>
         <span
           className="shrink-0 text-xs text-muted-foreground"
-          aria-label={nearestHearstZip ? `Nearby Hearst station ZIP code ${nearestHearstZip}` : `Local news for ${localNewsLocation}`}
+          aria-label={`Local news for ${localNewsLocation}`}
         >
-          {nearestHearstZip ?? localNewsLocation}
+          {localNewsLocation}
         </span>
       </div>
       <ol className="-mb-3 mt-3 divide-y divide-border/70">
