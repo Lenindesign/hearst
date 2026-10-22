@@ -75,3 +75,4 @@ export { LightbulbIcon as Lightbulb } from "@phosphor-icons/react/dist/ssr/Light
 export { QuestionIcon as HelpCircle } from "@phosphor-icons/react/dist/ssr/Question";
 export { SquaresFourIcon as LayoutCards } from "@phosphor-icons/react/dist/ssr/SquaresFour";
 export { ListBulletsIcon as LayoutList } from "@phosphor-icons/react/dist/ssr/ListBullets";
+export { RectangleIcon as LayoutFullWidth } from "@phosphor-icons/react/dist/ssr/Rectangle";

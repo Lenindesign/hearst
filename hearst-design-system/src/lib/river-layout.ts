@@ -2,16 +2,16 @@
 
 import React from "react";
 
-// How the story river is shown: the default card blocks, or a compact list of rows. A per-reader convenience kept in
-// this browser; the masthead toggle sets it and every river card reads it.
-export type RiverLayout = "cards" | "list";
+// The story river presentation is a per-reader preference shared across Hearst sections.
+export type RiverLayout = "cards" | "list" | "full-width-hero";
 
 const STORAGE_KEY = "hearst-plus:river-layout";
 const CHANGE_EVENT = "hearst-plus-river-layout-change";
 
 function read(): RiverLayout {
   try {
-    return window.localStorage.getItem(STORAGE_KEY) === "list" ? "list" : "cards";
+    const savedLayout = window.localStorage.getItem(STORAGE_KEY);
+    return savedLayout === "list" || savedLayout === "full-width-hero" ? savedLayout : "cards";
   } catch {
     return "cards";
   }

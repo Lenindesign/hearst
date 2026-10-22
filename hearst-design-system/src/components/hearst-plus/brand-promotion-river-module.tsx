@@ -14,6 +14,7 @@ import {
 } from "./story-presentation";
 import { getLifestyleByline } from "./story-metadata";
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/components/theme-provider";
 
 const aeFamilyBrandSlugs = new Set(["a-e", "history", "lifetime", "lmn", "fyi", "vice-tv", "biography"]);
 
@@ -81,6 +82,7 @@ export function BrandPromotionRiverModule({
   promotion,
   onOpenStory,
 }: BrandPromotionRiverModuleProps) {
+  const { colorMode } = useTheme();
   const [featuredStory, ...secondaryStories] = promotion?.stories ?? [];
 
   if (!promotion || !featuredStory) return null;
@@ -136,7 +138,9 @@ export function BrandPromotionRiverModule({
           >
             <BrandLogo
               slug={promotion.brandSlug}
-              color={promotion.brandSlug === "car-and-driver" ? undefined : "currentColor"}
+              color={promotion.brandSlug === "car-and-driver" && colorMode !== "dark"
+                ? undefined
+                : "currentColor"}
               className="[&_svg]:h-9 [&_svg]:w-auto [&_svg]:max-w-[180px]"
             />
           </a>

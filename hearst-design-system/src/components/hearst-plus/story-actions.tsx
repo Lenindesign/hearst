@@ -30,7 +30,7 @@ export function StorySaveIconButton({
       variant="ghost"
       size="icon-sm"
       className={cn(
-        "relative z-20 h-7 w-7 shrink-0 rounded-[4px] text-muted-foreground hover:text-primary",
+        "relative z-20 h-7 w-7 shrink-0 rounded-[4px] border-0 bg-transparent text-muted-foreground hover:bg-transparent hover:text-primary focus-visible:border-transparent",
         saved && "text-primary",
         className,
       )}
@@ -42,7 +42,7 @@ export function StorySaveIconButton({
         onSave();
       }}
     >
-      <Heart className="h-3.5 w-3.5" weight={saved ? "fill" : "regular"} aria-hidden />
+      <Heart className="size-4" weight={saved ? "fill" : "regular"} aria-hidden />
     </Button>
   );
 }

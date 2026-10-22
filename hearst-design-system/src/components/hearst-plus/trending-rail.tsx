@@ -73,7 +73,7 @@ export function TrendingStoryRail({
                 </span>
               </span>
               <span className="min-w-0">
-                <span className="line-clamp-4 text-[12px] font-bold leading-[1.35] group-hover:text-primary group-focus-visible:text-primary">
+                <span className="line-clamp-3 text-[12px] font-bold leading-[1.35] group-hover:text-primary group-focus-visible:text-primary">
                   {story.title}
                 </span>
                 <span className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground">

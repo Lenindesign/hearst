@@ -29,6 +29,7 @@ export function LifestyleRiverImage({
   priority = false,
   alt,
   sizes = "(max-width: 640px) 100vw, (max-width: 1024px) 66vw, 640px",
+  objectPosition,
   unoptimized = false,
 }: {
   story: LifestyleRiverStory;
@@ -36,6 +37,7 @@ export function LifestyleRiverImage({
   priority?: boolean;
   alt?: string;
   sizes?: string;
+  objectPosition?: string;
   unoptimized?: boolean;
 }) {
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -57,7 +59,7 @@ export function LifestyleRiverImage({
         loaded || priority ? "opacity-100" : "opacity-0",
         className,
       )}
-      style={{ objectPosition: getLifestyleImagePosition(story) }}
+      style={{ objectPosition: objectPosition ?? getLifestyleImagePosition(story) }}
       preload={priority}
       unoptimized={unoptimized}
       onLoad={() => setLoadedImageKey(imageKey)}

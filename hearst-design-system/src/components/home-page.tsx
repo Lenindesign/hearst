@@ -64,6 +64,7 @@ import {
   Play,
   Plus,
   LayoutCards,
+  LayoutFullWidth,
   LayoutList,
   Search,
   ShoppingBag,
@@ -327,6 +328,8 @@ export interface HomePageTemplateProps {
    * gets the Hearst+ river experience instead of the classic magazine grid.
    */
   forceDestinationRiver?: boolean;
+  /** Render the featured carousel across all three desktop feed columns. */
+  fullWidthFeaturedHero?: boolean;
   /**
    * When set, the river renders in single-brand mode: the discovery sidebar's
    * trending rail is titled "Trending" and filters to the current publication;
@@ -517,12 +520,20 @@ const hearstDestinationNavHrefs = new Map(
     ["Communities", "/communities/"] as const,
   ]
 );
-// Card blocks or a compact list for the story river. Phones keep cards; the toggle shows from sm up.
-function RiverLayoutToggle({ buttonClassName }: { buttonClassName?: string }) {
+// Shared story presentation controls. Phones keep the chosen layout; the toggle shows from sm up.
+function RiverLayoutToggle({
+  buttonClassName,
+}: {
+  buttonClassName?: string;
+}) {
   const layout = useRiverLayout();
+  const pathname = usePathname()?.replace(/\/+$/, "") || "/";
+  const router = useRouter();
+  const isFullWidthHero = pathname === "/hearst-plus/full-width-hero" || layout === "full-width-hero";
   const options = [
     { value: "cards", label: "Show stories as cards", Icon: LayoutCards },
     { value: "list", label: "Show stories as a list", Icon: LayoutList },
+    { value: "full-width-hero", label: "Show stories with a full-width hero", Icon: LayoutFullWidth },
   ] as const;
   return (
     <div role="group" aria-label="Story layout" className="hidden items-center gap-1 sm:flex">
@@ -532,11 +543,18 @@ function RiverLayoutToggle({ buttonClassName }: { buttonClassName?: string }) {
           type="button"
           variant="outline"
           size="icon-sm"
-          aria-pressed={layout === value}
+          aria-pressed={value === "full-width-hero" ? isFullWidthHero : !isFullWidthHero && layout === value}
           aria-label={label}
           title={label}
           className={cn("hearst-plus-layout-toggle h-7 w-7 rounded-[4px]", buttonClassName)}
-          onClick={() => setRiverLayout(value)}
+          onClick={() => {
+            if (value === "full-width-hero") {
+              setRiverLayout(value);
+              return;
+            }
+            setRiverLayout(value);
+            if (pathname === "/hearst-plus/full-width-hero") router.push("/hearst-plus/");
+          }}
         >
           <Icon className="h-3.5 w-3.5" aria-hidden />
         </Button>
@@ -1516,7 +1534,9 @@ export function MainNav({
         <PageContainer className={cn("pointer-events-none absolute inset-x-0 flex items-start justify-between py-3 [&>*]:pointer-events-auto", underUtilityBar ? "top-8" : "top-0")}>
           <div className="flex w-10 shrink-0 justify-start sm:w-[var(--width-sidebar-narrow)]">
             {showRiverLayoutToggle ? (
-              <RiverLayoutToggle buttonClassName={useDarkHeaderIconButtons || mastheadBanner ? darkHeaderIconButtonClass : undefined} />
+              <RiverLayoutToggle
+                buttonClassName={useDarkHeaderIconButtons || mastheadBanner ? darkHeaderIconButtonClass : undefined}
+              />
             ) : null}
             {showMobileDiscoveryMenu ? (
               <Button
@@ -1582,7 +1602,9 @@ export function MainNav({
       <PageContainer className="flex items-center justify-between">
         <div className="flex w-10 shrink-0 justify-start sm:w-[var(--width-sidebar-narrow)]">
           {showRiverLayoutToggle ? (
-            <RiverLayoutToggle buttonClassName={useDarkHeaderIconButtons ? darkHeaderIconButtonClass : undefined} />
+            <RiverLayoutToggle
+              buttonClassName={useDarkHeaderIconButtons ? darkHeaderIconButtonClass : undefined}
+            />
           ) : null}
           {showMobileDiscoveryMenu ? (
             <Button
@@ -2123,31 +2145,6 @@ function ensureGallerySampleInRiver(
   const nextStories = [...riverStories];
   nextStories.splice(Math.min(2, nextStories.length), 0, gallerySample);
   return nextStories;
-}
-
-function LifestyleKindBadge({
-  kind,
-  story,
-}: {
-  kind: LifestyleCardKind;
-  story: LifestyleRiverStory;
-}) {
-  if (kind === "article" || kind === "gallery") return null;
-
-  const label = getLifestyleKindLabel(kind, story);
-  const iconClassName = "h-3 w-3 shrink-0";
-  const icon = kind === "video"
-    ? <Play className={cn(iconClassName, "fill-current")} aria-hidden />
-    : label === "Guide"
-      ? <ShoppingBag className={iconClassName} aria-hidden />
-      : null;
-
-  return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--hp-chip-border)] bg-[var(--hp-chip)] px-2 py-0.5 text-[length:var(--text-token-4xs)] font-semibold uppercase tracking-widest text-[var(--hp-text-chip)]">
-      {icon}
-      {label}
-    </span>
-  );
 }
 
 function formatLiveFeedUpdatedAt(fetchedAt: string) {
@@ -2700,7 +2697,6 @@ export function LifestyleRiverCard({
         />
         <div className="min-w-0">
           <div className="relative z-20 mb-2 flex min-w-0 flex-wrap items-center gap-2">
-            <LifestyleKindBadge kind={kind} story={story} />
             <LifestyleBrandSource story={story} />
             {onSave && saved !== undefined ? (
               <StorySaveIconButton saved={saved} onSave={onSave} className="ml-auto" />
@@ -2774,7 +2770,6 @@ export function LifestyleRiverCard({
         isVideo ? "p-4 sm:p-5" : featured ? "flex flex-col justify-center p-5 sm:p-6 lg:p-8" : "p-4 sm:p-5"
       )}>
         <div className="relative z-20 mb-3 flex min-w-0 flex-wrap items-center gap-2">
-          <LifestyleKindBadge kind={kind} story={story} />
           <LifestyleBrandSource story={story} />
           {onSave && saved !== undefined ? (
             <StorySaveIconButton saved={saved} onSave={onSave} className="ml-auto" />
@@ -4344,6 +4339,7 @@ function LifestyleStoryReaderModal({
 type LifestyleRiverHomePageProps = {
   activeFilter: string;
   destination: DestinationMode;
+  fullWidthFeaturedHero?: boolean;
   destinationConfig?: DestinationConfig;
   videoFeedData?: LiveFeedData;
   singleBrandName?: string;
@@ -4396,12 +4392,17 @@ export {
 function LifestyleRiverHydrationGate(props: LifestyleRiverHomePageProps) {
   const destinationConfigs = useDestinationConfigs();
   const { isHydrated } = useReaderAccount();
+  const riverLayout = useRiverLayout();
   const config = props.destinationConfig ?? destinationConfigs[props.destination];
   const pageHeading = getLifestyleRiverPageHeading(config, props.initialBrandSlug);
   const useFlushVideoTop = props.activeFilter === "Videos" && Boolean(props.videoFeedData);
+  const fullWidthHeroActive = props.fullWidthFeaturedHero || riverLayout === "full-width-hero";
 
   return (
-    <div className={cn("flow-root min-h-[calc(100dvh-173px)] md:min-h-[calc(100dvh-171px)]", !useFlushVideoTop && "md:pt-8")}>
+    <div className={cn(
+      "flow-root min-h-[calc(100dvh-173px)] md:min-h-[calc(100dvh-171px)]",
+      !useFlushVideoTop && (fullWidthHeroActive ? "pt-4" : "md:pt-4"),
+    )}>
       {isHydrated
         ? <LifestyleRiverHomePage {...props} />
         : <LifestyleRiverLoadingState pageHeading={pageHeading} />}
@@ -4412,6 +4413,7 @@ function LifestyleRiverHydrationGate(props: LifestyleRiverHomePageProps) {
 function LifestyleRiverHomePage({
   activeFilter,
   destination,
+  fullWidthFeaturedHero: forceFullWidthFeaturedHero = false,
   destinationConfig,
   videoFeedData,
   singleBrandName,
@@ -4440,7 +4442,9 @@ function LifestyleRiverHomePage({
   onRequestNextFeedPage,
 }: LifestyleRiverHomePageProps) {
   const destinationConfigs = useDestinationConfigs();
-  const riverLayout = useRiverLayout();
+  const savedRiverLayout = useRiverLayout();
+  const riverLayout = savedRiverLayout === "list" ? "list" : "cards";
+  const fullWidthFeaturedHero = forceFullWidthFeaturedHero || savedRiverLayout === "full-width-hero";
   const config = destinationConfig ?? destinationConfigs[destination];
   const { account, updatePreferences, addComment } = useReaderAccount();
   const router = useRouter();
@@ -5703,7 +5707,7 @@ function LifestyleRiverHomePage({
       >
         <div
           className={cn(
-            "grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[300px_minmax(0,1fr)_300px]",
+            "grid min-w-0 grid-cols-[minmax(0,1fr)] gap-x-4 gap-y-6 lg:grid-cols-[256px_minmax(0,1fr)_256px] xl:grid-cols-[300px_minmax(0,1fr)_300px]",
             !usingVideoTabFeed && "mt-6 sm:mt-8"
           )}
         >
@@ -5973,6 +5977,9 @@ function LifestyleRiverHomePage({
     );
   }
 
+  const FeedLayout = fullWidthFeaturedHero ? "main" : "div";
+  const StoryRiver = fullWidthFeaturedHero ? "div" : "main";
+
   return (
     <div className="space-y-8">
       {showTodayEdit ? (
@@ -6003,7 +6010,45 @@ function LifestyleRiverHomePage({
         />
       ) : null}
 
-      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[300px_minmax(0,1fr)_300px]">
+      <FeedLayout
+        id={fullWidthFeaturedHero ? "hearst-story-river" : undefined}
+        className={fullWidthFeaturedHero ? "min-w-0 scroll-mt-28" : undefined}
+        aria-label={fullWidthFeaturedHero ? config.riverLabel : undefined}
+      >
+      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-x-4 gap-y-6 lg:grid-cols-[256px_minmax(0,1fr)_256px] xl:grid-cols-[300px_minmax(0,1fr)_300px]">
+        {fullWidthFeaturedHero && leadStory ? (
+          <div className="min-w-0 lg:col-span-3">
+            <FeaturedStoryCarousel
+              key={`full-width:${leadStory.id}:${heroStories.map((story) => story.id).join("|")}`}
+              stories={heroStories}
+              layoutMode={riverLayout}
+              reducePhotoHeight
+              editionLabel={shouldUseTodaysPicks ? "Today’s Picks" : undefined}
+              initialStoryId={leadStory.id}
+              renderImage={(story, _index, active) => (
+                <LifestyleRiverImage
+                  story={story}
+                  className="h-full w-full"
+                  objectPosition="center top"
+                  priority={active}
+                />
+              )}
+              getCommentCount={(story) =>
+                getLifestyleCommentCount(
+                  story,
+                  resolvedCommentsByStoryId[story.id]?.length ?? 0,
+                )
+              }
+              isCurrentStory={isCurrentFeedStory}
+              onOpenStory={(story) => openStory(story.id)}
+              onFollowBrand={followBrand}
+              onEditionImpression={trackTodaysPicksImpression}
+              onEditionStoryOpen={trackTodaysPickOpen}
+              indicatorPalette={indicatorPalette}
+            />
+          </div>
+        ) : null}
+
         <LifestyleDiscoverySidebar
           profile={profile}
           topStories={moduleAllocation.dailyHabitStories}
@@ -6029,35 +6074,42 @@ function LifestyleRiverHomePage({
           onOpenStory={(story) => openStory(story.id)}
         />
 
-        <main id="hearst-story-river" className="min-w-0 scroll-mt-28 space-y-4" aria-label={config.riverLabel}>
+        <StoryRiver
+          id={!fullWidthFeaturedHero ? "hearst-story-river" : undefined}
+          className="min-w-0 scroll-mt-28 space-y-4"
+          aria-label={!fullWidthFeaturedHero ? config.riverLabel : undefined}
+        >
           <h1 className="sr-only">{pageHeading}</h1>
           {leadStory ? (
             <>
-              <FeaturedStoryCarousel
-                key={`${leadStory.id}:${heroStories.map((story) => story.id).join("|")}`}
-                stories={heroStories}
-                editionLabel={shouldUseTodaysPicks ? "Today’s Picks" : undefined}
-                initialStoryId={leadStory.id}
-                renderImage={(story, _index, active) => (
-                  <LifestyleRiverImage
-                    story={story}
-                    className="h-full w-full"
-                    priority={active}
-                  />
-                )}
-                getCommentCount={(story) =>
-                  getLifestyleCommentCount(
-                    story,
-                    resolvedCommentsByStoryId[story.id]?.length ?? 0,
-                  )
-                }
-                isCurrentStory={isCurrentFeedStory}
-                onOpenStory={(story) => openStory(story.id)}
-                onFollowBrand={followBrand}
-                onEditionImpression={trackTodaysPicksImpression}
-                onEditionStoryOpen={trackTodaysPickOpen}
-                indicatorPalette={indicatorPalette}
-              />
+              {!fullWidthFeaturedHero ? (
+                <FeaturedStoryCarousel
+                  key={`${leadStory.id}:${heroStories.map((story) => story.id).join("|")}`}
+                  stories={heroStories}
+                  layoutMode={riverLayout}
+                  editionLabel={shouldUseTodaysPicks ? "Today’s Picks" : undefined}
+                  initialStoryId={leadStory.id}
+                  renderImage={(story, _index, active) => (
+                    <LifestyleRiverImage
+                      story={story}
+                      className="h-full w-full"
+                      priority={active}
+                    />
+                  )}
+                  getCommentCount={(story) =>
+                    getLifestyleCommentCount(
+                      story,
+                      resolvedCommentsByStoryId[story.id]?.length ?? 0,
+                    )
+                  }
+                  isCurrentStory={isCurrentFeedStory}
+                  onOpenStory={(story) => openStory(story.id)}
+                  onFollowBrand={followBrand}
+                  onEditionImpression={trackTodaysPicksImpression}
+                  onEditionStoryOpen={trackTodaysPickOpen}
+                  indicatorPalette={indicatorPalette}
+                />
+              ) : null}
 
               {showDelishPublicationShorts ? (
                 <DelishVerticalVideoCarousel
@@ -6293,9 +6345,9 @@ function LifestyleRiverHomePage({
               </div>
             )
           )}
-        </main>
+        </StoryRiver>
 
-        <aside className="min-w-0 space-y-5 lg:sticky lg:top-[108px] lg:max-h-[calc(100dvh-132px)] lg:self-start lg:overflow-y-auto lg:pr-1">
+        <aside className="min-w-0 space-y-5 lg:sticky lg:top-[86px] lg:max-h-[calc(100dvh-110px)] lg:self-start lg:overflow-y-auto lg:pr-1">
           <ContextualRiverAdvertisement ad={rightRailAd} />
           {initialBrandSlug && initialBrandName ? (
             <BrandInstagramModule brandSlug={initialBrandSlug} brandName={initialBrandName} />
@@ -6385,6 +6437,7 @@ function LifestyleRiverHomePage({
           ) : null}
         </aside>
       </div>
+      </FeedLayout>
 
       {openStoryId ? (
         <LifestyleStoryReaderModal
@@ -6651,6 +6704,7 @@ export function HomePageTemplate({
   globalBrandInventory,
   onboardingBrandInventory,
   forceDestinationRiver = false,
+  fullWidthFeaturedHero = false,
   singleBrandName,
 }: HomePageTemplateProps = {}) {
   const { brand, colorMode } = useTheme();
@@ -7518,6 +7572,7 @@ export function HomePageTemplate({
               <LifestyleRiverHydrationGate
                 activeFilter={activeLifestyleFilter}
                 destination={destinationMode}
+                fullWidthFeaturedHero={fullWidthFeaturedHero}
                 destinationConfig={inventoryAwareDestinationConfig}
                 videoFeedData={resolvedVideoFeedData}
                 singleBrandName={singleBrandName}

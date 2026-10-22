@@ -16,6 +16,8 @@ import { formatVideoDuration } from "@/components/hearst-plus/video-format";
 
 export type FeaturedStoryCarouselProps = {
   stories: LifestyleRiverStory[];
+  layoutMode?: "cards" | "list";
+  reducePhotoHeight?: boolean;
   renderImage: (
     story: LifestyleRiverStory,
     index: number,
@@ -44,6 +46,8 @@ function defaultIsCurrentStory(story: LifestyleRiverStory) {
 
 export function FeaturedStoryCarousel({
   stories,
+  layoutMode = "cards",
+  reducePhotoHeight = false,
   renderImage,
   editionLabel,
   initialStoryId,
@@ -520,7 +524,12 @@ export function FeaturedStoryCarousel({
               <button
                 key={`${isClone ? "clone" : "story"}-${visualIndex}-${story.id}`}
                 type="button"
-                className="relative grid w-full shrink-0 grid-rows-[auto_112px] bg-black text-left text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30 sm:grid-rows-[auto_144px]"
+                className={cn(
+                  "relative w-full shrink-0 bg-black text-left text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30",
+                  layoutMode === "list"
+                    ? "grid h-[184px] grid-cols-[112px_minmax(0,1fr)] grid-rows-[184px] sm:h-[220px] sm:grid-cols-[38%_minmax(0,1fr)] sm:grid-rows-[220px]"
+                    : "grid grid-rows-[auto_112px] sm:grid-rows-[auto_144px]",
+                )}
                 onClick={(event) => {
                   if (suppressSlideClickRef.current) {
                     event.preventDefault();
@@ -540,30 +549,50 @@ export function FeaturedStoryCarousel({
                 data-media-kind={story.videoUrl ? "video" : "article"}
                 data-story-id={story.id}
               >
-                <div className="relative isolate">
-                  <div className="relative h-[min(128vw,520px)] w-full overflow-hidden sm:h-auto sm:aspect-video">
+                <div className={cn(
+                  "relative isolate",
+                  layoutMode === "list" && "col-start-1 row-start-1 min-h-0",
+                )}>
+                  <div className={cn(
+                    "relative w-full overflow-hidden",
+                    layoutMode === "list"
+                      ? "h-full min-h-0"
+                      : reducePhotoHeight
+                        ? "h-[min(102.4vw,416px)] sm:h-auto sm:aspect-[20/9]"
+                        : "h-[min(128vw,520px)] sm:h-auto sm:aspect-video",
+                  )}>
                     {renderImage(story, index, index === activeIndex)}
                     {/* A short fade so the photo's bottom edge melts into the black band under the headline. */}
                     <div
                       aria-hidden="true"
                       data-slider-layer="gradient"
-                      className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-[linear-gradient(to_bottom,transparent,var(--hp-image-scrim-solid))] sm:h-20"
+                      className={cn(
+                        "pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-[linear-gradient(to_bottom,transparent,var(--hp-image-scrim-solid))] sm:h-20",
+                        layoutMode === "list" && "hidden",
+                      )}
                     />
                   </div>
                 </div>
-                <div data-slider-layer="frame" className="bg-black" />
+                <div data-slider-layer="frame" className={cn("bg-black", layoutMode === "list" && "hidden")} />
                 {/* One light scrim behind the text only: the bottom ~45% of the slide on an ease-in curve, topping out at 75%
                     black instead of solid, so most of the photo stays visible. The text shadow keeps contrast on bright spots. */}
                 <div
                   aria-hidden="true"
                   data-slider-layer="bottom-scrim"
-                  className="pointer-events-none absolute inset-x-0 bottom-0 h-[min(48%,300px)] bg-[linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.12)_30%,rgba(0,0,0,0.42)_62%,rgba(0,0,0,0.75)_100%)]"
+                  className={cn(
+                    "pointer-events-none absolute inset-x-0 bottom-0 h-[min(48%,300px)] bg-[linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.12)_30%,rgba(0,0,0,0.42)_62%,rgba(0,0,0,0.75)_100%)]",
+                    layoutMode === "list" && "hidden",
+                  )}
                 />
                 <div
                   data-slider-content
-                  className="absolute inset-x-0 bottom-0 p-5 text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.45),0_2px_14px_rgba(0,0,0,0.4)] sm:p-7"
+                  className={cn(
+                    layoutMode === "list"
+                      ? "relative col-start-2 row-start-1 flex min-w-0 flex-col justify-center bg-card p-4 pt-12 text-foreground sm:p-6 sm:pt-12"
+                      : "absolute inset-x-0 bottom-0 p-5 text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.45),0_2px_14px_rgba(0,0,0,0.4)] sm:p-7",
+                  )}
                 >
-                  <div className="mb-3 flex flex-wrap items-center gap-2 text-sm font-semibold">
+                  <div className={cn("mb-3 flex flex-wrap items-center gap-2 text-sm font-semibold", layoutMode === "list" && "mb-2 text-xs sm:text-sm")}>
                     <BrandSourceIcon
                       brand={story.brand}
                       brandSlug={story.brandSlug}
@@ -590,7 +619,9 @@ export function FeaturedStoryCarousel({
                   </div>
                   <h2
                     className={cn(
-                      "headline line-clamp-2 max-w-[min(42rem,100%)] break-words text-balance text-[clamp(1.75rem,4vw,2.4rem)] sm:text-[clamp(2rem,2.9vw,2.6rem)]",
+                      layoutMode === "list"
+                        ? "headline line-clamp-3 max-w-[min(42rem,100%)] break-words text-balance text-[clamp(1rem,2.2vw,1.75rem)] leading-[1.12] sm:text-[clamp(1.35rem,2vw,2rem)]"
+                        : "headline line-clamp-2 max-w-[min(42rem,100%)] break-words text-balance text-[clamp(1.75rem,4vw,2.4rem)] sm:text-[clamp(2rem,2.9vw,2.6rem)]",
                       story.brandSlug === "house-beautiful" ||
                         story.brandSlug === "road-and-track"
                         ? "leading-[1.12]"
@@ -604,16 +635,21 @@ export function FeaturedStoryCarousel({
             );
           })}
         </div>
-        <div className="absolute left-5 right-5 top-5 flex items-center justify-between gap-3">
+        <div className={cn(
+          "absolute top-5 flex items-center justify-between gap-3",
+          layoutMode === "list"
+            ? "left-[124px] right-3 top-3 sm:left-[calc(38%+1.5rem)] sm:right-6 sm:top-4"
+            : "left-5 right-5",
+        )}>
           <span
-            className="inline-flex items-center gap-1.5 rounded-full bg-black/45 px-3 py-1 text-sm font-bold text-white backdrop-blur"
+            className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-black/45 px-3 py-1 text-sm font-bold text-white backdrop-blur"
             aria-label={
               editionLabel
                 ? `${editionLabel}, story ${activeIndex + 1} of ${stories.length}`
                 : `Story ${activeIndex + 1} of ${stories.length}`
             }
           >
-            {editionLabel ? (
+            {editionLabel && layoutMode !== "list" ? (
               <>
                 <span>{editionLabel}</span>
                 <span aria-hidden>·</span>

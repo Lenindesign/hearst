@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTheme } from "@/components/theme-provider";
 import { getBrandLogoSrc } from "@/lib/logos";
 import { cn } from "@/lib/utils";
 
@@ -25,7 +26,10 @@ export function BrandSourceIcon({
   className?: string;
   imageClassName?: string;
 }) {
+  const { colorMode } = useTheme();
   const iconUrl = getBrandLogoSrc(brandSlug, "icon");
+  const wordmarkUrl = getBrandLogoSrc(brandSlug);
+  const needsLightSurface = colorMode === "dark" && iconUrl === wordmarkUrl;
   const [failedUrl, setFailedUrl] = useState<string>();
   const showImage = Boolean(iconUrl && failedUrl !== iconUrl);
 
@@ -37,6 +41,7 @@ export function BrandSourceIcon({
       data-image-state={showImage ? "available" : "fallback"}
       className={cn(
         "relative inline-flex h-4 w-4 shrink-0 items-center justify-center overflow-hidden rounded-[3px] bg-transparent p-0 text-[8px] font-black leading-none text-primary",
+        needsLightSurface && "bg-white",
         className,
       )}
     >
