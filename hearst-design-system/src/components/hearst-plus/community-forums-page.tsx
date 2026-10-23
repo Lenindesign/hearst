@@ -156,6 +156,7 @@ function makeThreads(brands: CommunityBrand[], activeBrandSlug?: string, activeG
   const seededThreads: Thread[] = communityGroups
     .filter((seed) => !activeBrandSlug || seed.brandSlug === activeBrandSlug)
     .filter((seed) => !activeGroupSlug || seed.groupSlug === activeGroupSlug)
+    .filter((seed) => !activeGroupSlug || seed.brandSlug !== "delish")
     .map((seed, index) => {
       const brand = brands.find((candidate) => candidate.brandSlug === seed.brandSlug);
       const replies = 18 + index * 7;
@@ -180,10 +181,24 @@ function makeThreads(brands: CommunityBrand[], activeBrandSlug?: string, activeG
 
   const participationThreads: Thread[] = communityParticipationThreads
     .filter((seed) => !activeBrandSlug || seed.brandSlug === activeBrandSlug)
-    .filter(() => !activeGroupSlug)
-    .map((seed) => {
+    .filter((seed) => !activeGroupSlug || seed.groupSlug === activeGroupSlug)
+    .map((seed, index) => {
       const brand = brands.find((candidate) => candidate.brandSlug === seed.brandSlug);
       const isHost = seed.kind === "writer";
+      const poster = pickPoster(seed.brandSlug);
+      const storyImages = (brand?.stories ?? [])
+        .filter((story) => story.image)
+        .sort((a, b) => b.popularity - a.popularity || a.age - b.age)
+        .slice(index % 3, (index % 3) + 3)
+        .map((story) => ({ src: story.image, alt: story.title }));
+      const galleryImages = seed.mediaType === "gallery"
+        ? [
+            ...storyImages,
+            { src: "/images/delish-cook-everyday.png", alt: "Everyday cooking inspiration from Delish" },
+            { src: "/images/delish-cook-everyday.png", alt: "Everyday cooking inspiration from Delish" },
+            { src: "/images/delish-newsletter-daily.png", alt: "A daily Delish cooking idea" },
+          ].slice(0, 3)
+        : undefined;
       return {
         id: seed.id,
         kind: seed.kind,
@@ -198,7 +213,11 @@ function makeThreads(brands: CommunityBrand[], activeBrandSlug?: string, activeG
         author: isHost ? `${brand?.brand ?? seed.author} editors` : seed.author,
         isHost,
         href: `/communities/${seed.brandSlug}/threads/${seed.id}/`,
-        ...pickPoster(seed.brandSlug),
+        ...poster,
+        ...(galleryImages?.length ? { posterImage: galleryImages[0].src, posterAlt: galleryImages[0].alt } : {}),
+        mediaType: seed.mediaType,
+        videoUrl: seed.videoUrl,
+        galleryImages,
       };
     });
 
@@ -232,6 +251,9 @@ function toFeedThread(thread: Thread): CommunityFeedThread {
     storyHref: thread.storyHref,
     posterImage: thread.posterImage,
     posterAlt: thread.posterAlt,
+    mediaType: thread.mediaType,
+    videoUrl: thread.videoUrl,
+    galleryImages: thread.galleryImages,
   };
 }
 
@@ -414,7 +436,26 @@ export function CommunityForumsPage({ activeBrandSlug, activeGroupSlug, activeTh
                     {activeThread.title}
                   </h1>
                   <p className="hearst-community-copy mt-3 max-w-2xl text-base leading-7 text-[var(--hp-text-ui)]">{activeThread.body}</p>
-                  {activeThread.posterImage ? (
+                  {activeThread.mediaType === "video" && activeThread.videoUrl ? (
+                    <video
+                      className="mt-4 aspect-video w-full rounded-[8px] bg-black object-cover"
+                      controls
+                      playsInline
+                      preload="metadata"
+                      poster={activeThread.posterImage}
+                      aria-label={activeThread.title}
+                    >
+                      <source src={activeThread.videoUrl} type="video/mp4" />
+                    </video>
+                  ) : activeThread.mediaType === "gallery" && activeThread.galleryImages?.length ? (
+                    <div className="mt-4 grid grid-cols-2 gap-2 overflow-hidden rounded-[8px] sm:grid-cols-3" aria-label="Photo gallery">
+                      {activeThread.galleryImages.map((photo, index) => (
+                        <div key={`${activeThread.id}-photo-${index}`} className="relative aspect-[4/3] overflow-hidden bg-muted">
+                          <Image src={photo.src} alt={photo.alt} fill sizes="(max-width: 640px) 45vw, 240px" className="object-cover" />
+                        </div>
+                      ))}
+                    </div>
+                  ) : activeThread.posterImage ? (
                     <div className="relative mt-4 aspect-[16/9] w-full overflow-hidden rounded-[8px] bg-[var(--community-surface-soft)]">
                       <Image
                         src={activeThread.posterImage}

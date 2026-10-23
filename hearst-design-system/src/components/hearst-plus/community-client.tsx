@@ -51,6 +51,9 @@ export type CommunityFeedThread = {
   storyHref?: string;
   posterImage?: string;
   posterAlt?: string;
+  mediaType?: "video" | "gallery";
+  videoUrl?: string;
+  galleryImages?: { src: string; alt: string }[];
 };
 
 type LocalPost = {
@@ -885,6 +888,12 @@ export function CommunityRiverCard({ thread }: { thread: CommunityFeedThread }) 
               sizes="(max-width: 1024px) calc(100vw - 64px), 760px"
               className="object-cover transition-transform duration-200 group-hover:scale-[1.03] motion-reduce:transition-none"
             />
+            {thread.mediaType ? (
+              <span className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-black/75 px-3 py-1.5 text-xs font-bold text-white">
+                {thread.mediaType === "video" ? <Play className="size-3.5 fill-current" aria-hidden /> : <ImageIcon className="size-3.5" aria-hidden />}
+                {thread.mediaType === "video" ? "Video" : `Photo gallery${thread.galleryImages?.length ? ` · ${thread.galleryImages.length}` : ""}`}
+              </span>
+            ) : null}
           </span>
         ) : null}
         <span className={cn("block p-4 sm:p-5", isList && "min-w-0")}>

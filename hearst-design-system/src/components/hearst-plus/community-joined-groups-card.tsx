@@ -112,9 +112,12 @@ export function CommunityJoinedGroupsCard({
                   brandSlug={group.brandSlug}
                   className="h-5 w-5 rounded-[4px]"
                 />
-                <span className="min-w-0 line-clamp-4 text-[12px] font-bold leading-[1.35]">
+                <Link
+                  href={getCommunityGroupHref(group)}
+                  className="min-w-0 line-clamp-4 text-[12px] font-bold leading-[1.35] hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+                >
                   {group.name}
-                </span>
+                </Link>
               </span>
               <button
                 type="button"
@@ -171,7 +174,7 @@ export function CommunityJoinedGroupsCard({
                       <span className="font-normal">
                         Conversation
                       </span>
-                      <span className="mt-0.5 line-clamp-2 block font-normal text-[var(--hp-text-secondary)]">
+                      <span className="mt-0.5 line-clamp-2 block text-[12px] font-bold leading-[1.35] text-[var(--hp-text-primary)]">
                         {conversation.title}
                       </span>
                       <span className="mt-1 block text-[length:var(--text-token-4xs)]">

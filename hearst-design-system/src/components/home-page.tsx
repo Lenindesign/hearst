@@ -5190,9 +5190,6 @@ function LifestyleRiverHomePage({
   const communityRiverGroup = communityGroups.find(
     (group) => group.brandSlug === communityRiverSeed.brandSlug,
   );
-  const communityRiverPoster = destinationConfigs.all.stories.find(
-    (story) => story.brandSlug === communityRiverSeed.brandSlug && story.image,
-  );
   const communityRiverThread: CommunityFeedThread = {
     id: communityRiverSeed.id,
     brand: "Delish",
@@ -5206,8 +5203,10 @@ function LifestyleRiverHomePage({
     author: "Delish editors",
     isHost: true,
     href: `/communities/${communityRiverSeed.brandSlug}/threads/${communityRiverSeed.id}/`,
-    posterImage: communityRiverPoster?.image,
+    posterImage: "/images/delish-community-feature.png",
     posterAlt: communityRiverSeed.title,
+    mediaType: communityRiverSeed.mediaType,
+    videoUrl: communityRiverSeed.videoUrl,
   };
   const showCommunityRiverCard =
     !initialBrandSlug

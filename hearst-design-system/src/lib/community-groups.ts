@@ -60,6 +60,7 @@ export const communityGroups = [
 
 export type CommunityParticipationThread = {
   brandSlug: string;
+  groupSlug?: string;
   id: string;
   title: string;
   body: string;
@@ -67,11 +68,15 @@ export type CommunityParticipationThread = {
   kind: "writer" | "reader";
   replies: number;
   author: string;
+  mediaType?: "video" | "gallery";
+  videoUrl?: string;
+  galleryImages?: readonly { src: string; alt: string }[];
 };
 
-export const communityParticipationThreads = [
+export const communityParticipationThreads: readonly CommunityParticipationThread[] = [
   {
     brandSlug: "delish",
+    groupSlug: "italian-weeknights",
     id: "writers-test-kitchen",
     title: "Ask the test kitchen: what should we solve next?",
     body: "Delish editors are collecting reader questions for weeknight dinners, shortcuts, and recipes that need troubleshooting.",
@@ -79,6 +84,111 @@ export const communityParticipationThreads = [
     kind: "writer",
     replies: 44,
     author: "Delish writers",
+  },
+  {
+    brandSlug: "delish",
+    groupSlug: "italian-weeknights",
+    id: "crispy-chicken-cutlets",
+    title: "How do you keep chicken cutlets crispy until dinner?",
+    body: "I’m making a batch for a busy weeknight. Do you use a rack, a warm oven, or another trick to keep the coating crunchy?",
+    meta: "Weeknight help · 2 hours ago",
+    kind: "reader",
+    replies: 18,
+    author: "Maya R.",
+    mediaType: "gallery",
+  },
+  {
+    brandSlug: "delish",
+    groupSlug: "italian-weeknights",
+    id: "one-pot-tomato-pasta",
+    title: "One-pot tomato pasta: when do you add the greens?",
+    body: "The test kitchen is trying a one-pot version this week. Tell us which greens hold up best and when you stir them in.",
+    meta: "Test kitchen · 4 hours ago",
+    kind: "writer",
+    replies: 26,
+    author: "Delish editors",
+    mediaType: "video",
+    videoUrl: "/storybook-video-fixture.mp4",
+  },
+  {
+    brandSlug: "delish",
+    groupSlug: "italian-weeknights",
+    id: "freezer-sauce-swap",
+    title: "Show us the sauce you keep in the freezer",
+    body: "A reader favorite from our recipe club: share your best make-ahead sauce and how you use it on a tired Tuesday.",
+    meta: "Reader swap · Yesterday",
+    kind: "reader",
+    replies: 12,
+    author: "Nico L.",
+    mediaType: "gallery",
+  },
+  {
+    brandSlug: "delish",
+    groupSlug: "italian-weeknights",
+    id: "garlic-bread-crunch",
+    title: "The easiest way to get extra-crispy garlic bread?",
+    body: "Butter under the broiler, olive oil in a skillet, or something else? Add your timing so everyone can copy it.",
+    meta: "Kitchen question · Yesterday",
+    kind: "reader",
+    replies: 9,
+    author: "Tessa P.",
+  },
+  {
+    brandSlug: "delish",
+    groupSlug: "italian-weeknights",
+    id: "chop-salad-prep",
+    title: "Can we prep a chopped salad two days ahead?",
+    body: "We’re testing the best way to keep crunchy vegetables fresh. Which ingredients do you store separately?",
+    meta: "Test kitchen · 2 days ago",
+    kind: "writer",
+    replies: 21,
+    author: "Delish editors",
+    mediaType: "video",
+    videoUrl: "/storybook-vertical-video-fixture.mp4",
+  },
+  {
+    brandSlug: "delish",
+    groupSlug: "italian-weeknights",
+    id: "meatball-freezer-tips",
+    title: "Do you freeze meatballs before or after cooking?",
+    body: "We make a double batch most Sundays. Looking for the method that reheats tender without extra dishes.",
+    meta: "Meal prep · 3 days ago",
+    kind: "reader",
+    replies: 16,
+    author: "Jordan K.",
+  },
+  {
+    brandSlug: "delish",
+    groupSlug: "italian-weeknights",
+    id: "lemony-orzo-finish",
+    title: "What makes your lemony orzo taste bright, not sharp?",
+    body: "The editors are comparing zest, juice, and herbs. Share your favorite finish and the amount you use.",
+    meta: "Editors ask · 4 days ago",
+    kind: "writer",
+    replies: 14,
+    author: "Delish editors",
+  },
+  {
+    brandSlug: "delish",
+    groupSlug: "italian-weeknights",
+    id: "pantry-dinner-under-20",
+    title: "Your best pantry dinner in under 20 minutes",
+    body: "Beans, pasta, tinned tomatoes, or a very good egg: tell us the combination you reach for when the fridge is empty.",
+    meta: "Community favorites · 5 days ago",
+    kind: "reader",
+    replies: 32,
+    author: "Sam D.",
+  },
+  {
+    brandSlug: "delish",
+    groupSlug: "italian-weeknights",
+    id: "leftover-roast-vegetables",
+    title: "Turn leftover roasted vegetables into tonight’s dinner",
+    body: "Here are three quick ways to turn yesterday’s tray into a satisfying meal. Which one should we test first?",
+    meta: "Delish test kitchen · 1 week ago",
+    kind: "writer",
+    replies: 19,
+    author: "Delish editors",
   },
   {
     brandSlug: "good-housekeeping",
@@ -120,7 +230,7 @@ export const communityParticipationThreads = [
     replies: 27,
     author: "Elle Décor writers",
   },
-] as const satisfies readonly CommunityParticipationThread[];
+];
 
 export type CommunityGroupMembership = {
   brandSlug: string;
