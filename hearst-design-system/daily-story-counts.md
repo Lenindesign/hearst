@@ -1,66 +1,66 @@
 # Daily Hearst Story Counts
 
-**Latest refresh:** 2026-10-22 15:19:12 UTC
+**Latest refresh:** 2026-10-23 15:05:56 UTC
 
 Counts include distinct source URLs published since the previous successful feed refresh. They are calculated from deduplicated source candidates before the app’s inventory selection caps, so destination totals are not limited to 200. The app’s feed inventory caps remain unchanged.
 
 If the previous source URL index is unavailable, the first run uses the last generated feed timestamp and reports that baseline in the section heading.
 
-## Lifestyle — 93 new stories since 2026-10-21 15:16:30 UTC
+## Lifestyle — 117 new stories since 2026-10-22 15:19:05 UTC
 
 | Brand | New stories |
 |---|---:|
-| Cosmopolitan | 28 |
-| Country Living | 6 |
-| Delish | 8 |
-| Good Housekeeping | 25 |
-| House Beautiful | 6 |
-| The Pioneer Woman | 10 |
-| Prevention | 10 |
+| Cosmopolitan | 33 |
+| Country Living | 4 |
+| Delish | 10 |
+| Good Housekeeping | 35 |
+| House Beautiful | 9 |
+| The Pioneer Woman | 17 |
+| Prevention | 9 |
 | Redbook | 0 |
 | Seventeen | 0 |
 | Woman's Day | 0 |
-| **Total** | **93** |
+| **Total** | **117** |
 
-## Autos — 55 new stories since 2026-10-21 15:16:37 UTC
+## Autos — 68 new stories since 2026-10-22 15:19:09 UTC
 
 | Brand | New stories |
 |---|---:|
-| Autoweek | 4 |
+| Autoweek | 5 |
 | Bring a Trailer | 20 |
-| Car and Driver | 18 |
-| HOT ROD | 1 |
-| MotorTrend | 5 |
-| Road & Track | 7 |
-| **Total** | **55** |
+| Car and Driver | 19 |
+| HOT ROD | 0 |
+| MotorTrend | 13 |
+| Road & Track | 11 |
+| **Total** | **68** |
 
-## Fashion & Luxury — 78 new stories since 2026-10-21 15:16:38 UTC
-
-| Brand | New stories |
-|---|---:|
-| Elle | 27 |
-| Elle Décor | 3 |
-| Esquire | 13 |
-| Harper's Bazaar | 16 |
-| Town & Country | 13 |
-| Veranda | 6 |
-| **Total** | **78** |
-
-## Enthusiast & Wellness — 58 new stories since 2026-10-21 15:16:39 UTC
+## Fashion & Luxury — 69 new stories since 2026-10-22 15:19:11 UTC
 
 | Brand | New stories |
 |---|---:|
-| Best Products | 2 |
-| Bicycling | 4 |
-| Men's Health | 12 |
-| Oprah Daily | 9 |
-| Popular Mechanics | 9 |
-| Runner's World | 8 |
-| Women's Health | 14 |
-| **Total** | **58** |
+| Elle | 18 |
+| Elle Décor | 4 |
+| Esquire | 14 |
+| Harper's Bazaar | 17 |
+| Town & Country | 12 |
+| Veranda | 4 |
+| **Total** | **69** |
+
+## Enthusiast & Wellness — 57 new stories since 2026-10-22 15:19:12 UTC
+
+| Brand | New stories |
+|---|---:|
+| Best Products | 3 |
+| Bicycling | 0 |
+| Men's Health | 19 |
+| Oprah Daily | 8 |
+| Popular Mechanics | 14 |
+| Runner's World | 9 |
+| Women's Health | 4 |
+| **Total** | **57** |
 
 ## Overall total
 
-**284 new stories**
+**311 new stories**
 
 New stories are counted by brand when their source URL was absent from the previous refresh and their source publication time is newer than that refresh. Existing catalog size limits do not affect this count.
