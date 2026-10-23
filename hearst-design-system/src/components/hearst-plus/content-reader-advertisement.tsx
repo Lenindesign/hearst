@@ -173,24 +173,7 @@ export function ContentReaderAdvertisement({
               >
                 {ad.cta}
               </a>
-            ) : (
-              <div
-                className="rounded-[8px] border px-3 py-2 text-center"
-                style={{
-                  borderColor: ad.palette.soft,
-                  backgroundColor: ad.palette.soft,
-                  color: ad.palette.foreground,
-                }}
-                aria-label={`Prototype CTA unavailable: ${ad.cta}`}
-              >
-                <p className="text-[10px] font-bold uppercase tracking-widest">
-                  Prototype creative
-                </p>
-                <p className="mt-1 text-xs font-semibold">
-                  {ad.cta} · Destination not connected
-                </p>
-              </div>
-            )}
+            ) : null}
             <p
               className="text-center text-[length:var(--text-token-4xs)] font-semibold uppercase tracking-widest"
               style={{ color: ad.palette.foreground }}

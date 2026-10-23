@@ -45,13 +45,6 @@ export function ContextualRiverAdvertisement({
           <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest">
             Advertisement
           </span>
-          <span
-            className="flex h-9 w-9 items-center justify-center rounded-full text-xs font-black shadow-sm"
-            style={{ backgroundColor: ad.palette.accent, color: "#fff" }}
-            aria-hidden="true"
-          >
-            AD
-          </span>
         </div>
         <p className="absolute inset-x-0 bottom-0 p-4 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-white">
           {ad.creativeLabel}
@@ -74,11 +67,11 @@ export function ContextualRiverAdvertisement({
           <p className="mt-3 text-sm leading-6 opacity-80">{ad.summary}</p>
         </div>
 
-        <div
-          className="mt-5 border-t pt-4"
-          style={{ borderColor: ad.palette.soft }}
-        >
-          {ad.ctaHref ? (
+        {ad.ctaHref ? (
+          <div
+            className="mt-5 border-t pt-4"
+            style={{ borderColor: ad.palette.soft }}
+          >
             <a
               href={ad.ctaHref}
               aria-label={`${ad.cta}: ${ad.title}`}
@@ -91,25 +84,8 @@ export function ContextualRiverAdvertisement({
             >
               {ad.cta}
             </a>
-          ) : (
-            <div
-              className="inline-flex min-h-11 flex-col justify-center rounded-[4px] border px-3 py-2"
-              style={{
-                borderColor: ad.palette.soft,
-                backgroundColor: ad.palette.soft,
-                color: ad.palette.foreground,
-              }}
-              aria-label={`Prototype CTA unavailable: ${ad.cta}`}
-            >
-              <span className="text-[10px] font-bold uppercase tracking-widest">
-                Prototype creative
-              </span>
-              <span className="mt-0.5 text-xs font-semibold">
-                {ad.cta} · Destination not connected
-              </span>
-            </div>
-          )}
-        </div>
+          </div>
+        ) : null}
       </div>
     </article>
   );
