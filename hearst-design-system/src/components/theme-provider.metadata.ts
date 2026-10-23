@@ -55,6 +55,8 @@ const metadata: ComponentMetadata = {
     "color-page",
     "divider-page",
     "form-label-page",
+    "brand-promotion-river-module",
+    "brand-source-icon",
     "utility-bar",
     "home-page",
     "homepage-layouts",

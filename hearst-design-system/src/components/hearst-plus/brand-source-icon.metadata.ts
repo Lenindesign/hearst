@@ -30,7 +30,7 @@ const metadata: ComponentMetadata = {
     borders: [],
     other: [],
   },
-  dependencies: [],
+  dependencies: ["theme-provider"],
   usedBy: [
     "brand-promotion-river-module",
     "community-client",

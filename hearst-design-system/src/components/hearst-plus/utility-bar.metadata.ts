@@ -39,6 +39,7 @@ const metadata: ComponentMetadata = {
   },
   dependencies: [
     "hearst-plus/brand-source-icon",
+    "hearst-plus/local-weather",
     "reader-account",
     "reader-account-ui",
     "theme-provider",
