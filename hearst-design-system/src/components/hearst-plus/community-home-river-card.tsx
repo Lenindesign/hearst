@@ -26,13 +26,13 @@ export function CommunityHomeRiverCard({ thread }: { thread: CommunityFeedThread
         href={thread.href}
         className={cn(
           "block min-w-0 rounded-[8px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35",
-          isList && "col-span-full grid grid-cols-[112px_minmax(0,1fr)] items-center gap-4 sm:grid-cols-[168px_minmax(0,1fr)]",
+          isList && "col-span-full grid grid-cols-[112px_minmax(0,1fr)] items-center gap-4 p-4 sm:grid-cols-[168px_minmax(0,1fr)] sm:p-5",
         )}
       >
         {thread.posterImage ? (
           <span className={cn(
             "relative block w-full overflow-hidden bg-muted",
-            isList ? "aspect-[4/3]" : "aspect-[16/9]",
+            isList ? "aspect-[4/3] rounded-[6px]" : "aspect-[16/9]",
           )}>
             <Image
               src={thread.posterImage}
