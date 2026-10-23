@@ -3,7 +3,10 @@
 import Link from "next/link";
 import React from "react";
 import { BrandSourceIcon } from "@/components/hearst-plus/brand-source-icon";
+import { UsersThree } from "@/components/ui/icons";
 import {
+  communityParticipationThreads,
+  getCommunityGroupHref,
   joinedBrandGroupsChangeEvent,
   joinedBrandGroupsStorageKey,
 } from "@/lib/community-groups";
@@ -77,23 +80,31 @@ export function CommunityJoinedGroupsCard({
     writeJoinedGroups(next);
   };
 
+  const joinedGroups = groups.filter((group) =>
+    joinedBrandNames.includes(group.brand),
+  );
   return (
-    <section className="rounded-[8px] border border-[#e8c9db] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
-      <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[#8d3566]">
-        Join groups
-      </p>
-      <p className="mt-2 text-xs leading-5 text-[var(--hp-text-secondary)]">
-        {contextualBrand
-          ? `Join the ${contextualBrand} group to tune your feed, then open the group when you want the full discussion.`
-          : "Pick the brand groups you want in your feed, then open the group when you want the full discussion."}
-      </p>
-      <div className="mt-4 space-y-2">
-        {groups.map((group) => {
-          const joined = joinedBrandNames.includes(group.brand);
-          return (
+    <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
+      <div>
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="flex min-w-0 items-center gap-1.5 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+            <UsersThree className="h-4 w-4 shrink-0" aria-hidden />
+            Explore Communities
+          </h2>
+          <Link
+            href={browseHref}
+            className="shrink-0 text-xs font-bold text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+          >
+            All
+          </Link>
+        </div>
+        <div className="mt-3 space-y-2">
+          {groups.length > 0 ? groups.map((group) => {
+            const joined = joinedBrandNames.includes(group.brand);
+            return (
             <div
               key={`${group.brandSlug}-${group.groupSlug}`}
-              className="flex min-h-11 min-w-0 items-center justify-between gap-3 rounded-[8px] border border-[#e8c9db] bg-[#fbf6f8] px-3 py-2"
+              className="flex min-h-11 min-w-0 items-center justify-between gap-3 border-b border-border/70 py-2 last:border-0"
             >
               <span className="flex min-w-0 items-center gap-2">
                 <BrandSourceIcon
@@ -101,31 +112,83 @@ export function CommunityJoinedGroupsCard({
                   brandSlug={group.brandSlug}
                   className="h-5 w-5 rounded-[4px]"
                 />
-                <span className="min-w-0 truncate text-sm">{group.brand}</span>
+                <span className="min-w-0 line-clamp-4 text-[12px] font-bold leading-[1.35]">
+                  {group.name}
+                </span>
               </span>
               <button
                 type="button"
                 onClick={() => toggleMembership(group.brand)}
                 aria-pressed={joined}
-                className="shrink-0 text-xs font-bold text-[#8d3566] transition-colors hover:text-[var(--hp-text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+                className="shrink-0 px-2 py-1 text-xs font-bold text-primary transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
               >
                 {joined ? "Joined" : "Join"}
               </button>
             </div>
           );
-        })}
+          }) : (
+            <p className="rounded-md bg-muted/50 px-3 py-3 text-sm leading-5 text-[var(--hp-text-secondary)]">
+              {contextualBrand
+                ? `You’re part of the ${contextualBrand} community.`
+                : "You’ve joined all the communities shown here."}
+            </p>
+          )}
+        </div>
       </div>
-      <p className="mt-4 text-xs leading-5 text-[var(--hp-text-secondary)]">
-        {contextualBrand
-          ? `Join the ${contextualBrand} group to open its discussions.`
-          : "Join a brand group to tune your feed and open its discussions."}
-      </p>
-      <Link
-        href={browseHref}
-        className="mt-3 flex min-h-9 w-full items-center justify-center rounded-[4px] border border-[#e8c9db] px-3 text-xs font-bold text-[var(--hp-text-primary)] transition-colors hover:border-[#8d3566] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
-      >
-        Browse groups
-      </Link>
+
+      <div className="mt-3 border-t border-border pt-3">
+        <h2 className="flex items-center gap-1.5 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+          <UsersThree className="h-4 w-4 shrink-0" aria-hidden />
+          My Communities
+        </h2>
+        {joinedGroups.length > 0 ? (
+          <div className="mt-3 space-y-3">
+            {joinedGroups.map((group) => {
+              const conversation = communityParticipationThreads.find(
+                (thread) => thread.brandSlug === group.brandSlug,
+              );
+              return (
+                <div
+                  key={`${group.brandSlug}-${group.groupSlug}`}
+                  className="min-w-0 border-t border-border pt-3 first:border-0 first:pt-0"
+                >
+                  <Link
+                    href={getCommunityGroupHref(group)}
+                    className="flex min-w-0 items-center gap-2 text-sm font-semibold hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+                  >
+                    <BrandSourceIcon
+                      brand={group.brand}
+                      brandSlug={group.brandSlug}
+                      className="h-5 w-5 rounded-[4px]"
+                    />
+                    <span className="truncate">{group.name}</span>
+                  </Link>
+                  {conversation ? (
+                    <Link
+                      href={`/communities/${conversation.brandSlug}/threads/${conversation.id}/`}
+                      className="mt-2 block px-2 py-2 text-xs leading-5 text-[var(--hp-text-secondary)] hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+                    >
+                      <span className="font-normal">
+                        Conversation
+                      </span>
+                      <span className="mt-0.5 line-clamp-2 block font-normal text-[var(--hp-text-secondary)]">
+                        {conversation.title}
+                      </span>
+                      <span className="mt-1 block text-[length:var(--text-token-4xs)]">
+                        {conversation.replies} replies · Open discussion
+                      </span>
+                    </Link>
+                  ) : null}
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <p className="mt-3 rounded-md bg-muted/50 px-3 py-3 text-sm leading-5 text-[var(--hp-text-secondary)]">
+            Join a community to see its conversations here.
+          </p>
+        )}
+      </div>
     </section>
   );
 }

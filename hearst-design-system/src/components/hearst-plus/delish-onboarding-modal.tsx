@@ -1067,20 +1067,18 @@ function DelishMembershipCard({
     : ["New ideas"];
 
   return (
-    <section className="relative overflow-hidden rounded-[22px] bg-[#081017] p-6 text-white shadow-[0_18px_40px_rgba(0,0,0,0.28)] sm:p-8">
-      <div className="absolute -right-12 -top-14 size-44 rounded-full bg-[#E31837]" aria-hidden />
-      <div className="absolute -bottom-20 -left-12 size-56 rounded-full bg-[#D7A726]/85" aria-hidden />
+    <section className="relative overflow-hidden rounded-[22px] bg-[#FFF4E6] p-6 text-[#101828] shadow-[0_18px_40px_rgba(0,0,0,0.16)] sm:p-8">
       <div className="relative z-10 flex h-full flex-col">
         <div className="flex items-center gap-4">
-          <div className="flex size-16 shrink-0 items-center justify-center rounded-[10px] bg-white text-[2.8rem] font-black leading-none text-[#E31837]">
-            d
+          <div className="flex size-12 shrink-0 items-center justify-center rounded-[8px] bg-white">
+            <img src="/logos/delish-mark.svg" alt="" aria-hidden="true" className="h-9 w-auto" />
           </div>
           <div className="min-w-0 text-left">
-            <p className="w-full text-left text-sm font-black uppercase tracking-[0.16em] text-[#FFC835]">
+            <p className="w-full text-left text-sm font-black uppercase tracking-[0.16em] text-[#D92731]">
               Delish
             </p>
             <h3
-              className="mt-1 text-3xl font-black leading-none sm:text-[2rem]"
+              className="mt-1 text-3xl font-black leading-none text-[#101828] sm:text-[2rem]"
               style={{ fontFamily: delishHeadlineFont }}
             >
               Membership Card
@@ -1088,7 +1086,7 @@ function DelishMembershipCard({
           </div>
         </div>
 
-        <div className="mt-9 grid gap-6 border-b border-t border-white/14 py-6 text-left sm:grid-cols-2 sm:gap-8">
+        <div className="mt-9 grid gap-6 border-b border-t border-[#E8D5C1] py-6 text-left sm:grid-cols-2 sm:gap-8">
           <CardProfileBlock
             icon={<User className="size-9 text-[#EF3B35]" weight="regular" aria-hidden />}
             label="Member name"
@@ -1101,7 +1099,7 @@ function DelishMembershipCard({
           />
         </div>
 
-        <div className="grid gap-6 border-b border-white/14 py-6 text-left sm:grid-cols-2 sm:gap-8">
+        <div className="grid gap-6 border-b border-[#E8D5C1] py-6 text-left sm:grid-cols-2 sm:gap-8">
           <CardChipBlock
             icon={<Heart className="size-9 text-[#EF3B35]" weight="regular" aria-hidden />}
             label="Favorite foods"
@@ -1122,17 +1120,11 @@ function DelishMembershipCard({
           />
           <div className="flex gap-4">
             <Heart className="mt-1 size-8 shrink-0 text-[#EF3B35]" weight="regular" aria-hidden />
-            <p className="text-base font-normal leading-6 text-white">
+            <p className="text-base font-normal leading-6 text-[#101828]">
               Thanks for joining our community. We can’t wait to cook with you.
             </p>
           </div>
         </div>
-        <BrandLogo
-          slug="delish"
-          decorative
-          color="rgba(255, 255, 255, 0.14)"
-          className="pointer-events-none absolute bottom-8 right-0 w-[220px] translate-x-10 translate-y-2 [&_svg]:h-auto [&_svg]:w-full"
-        />
       </div>
     </section>
   );
@@ -1151,8 +1143,8 @@ function CardProfileBlock({
     <div className="flex min-w-0 gap-4">
       <span className="shrink-0">{icon}</span>
       <div className="min-w-0">
-        <p className="text-xs font-black uppercase tracking-[0.08em] text-white/55">{label}</p>
-        <p className="mt-1 break-words text-xl font-normal leading-tight text-white">{value}</p>
+        <p className="text-xs font-black uppercase tracking-[0.08em] text-[#667085]">{label}</p>
+        <p className="mt-1 break-words text-base font-normal leading-6 text-[#101828]">{value}</p>
       </div>
     </div>
   );
@@ -1171,12 +1163,12 @@ function CardChipBlock({
     <div className="flex min-w-0 gap-4">
       <span className="shrink-0">{icon}</span>
       <div className="min-w-0">
-        <p className="text-xs font-black uppercase tracking-[0.08em] text-white/55">{label}</p>
+        <p className="text-xs font-black uppercase tracking-[0.08em] text-[#667085]">{label}</p>
         <div className="mt-3 flex flex-wrap gap-2">
           {items.slice(0, 5).map((item) => (
             <span
               key={item}
-              className="rounded-[8px] bg-white/12 px-3 py-2 text-sm font-medium leading-none text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+              className="rounded-[8px] border border-[#E8D5C1] bg-white/75 px-3 py-2 text-base font-medium leading-6 text-[#101828]"
             >
               {item}
             </span>

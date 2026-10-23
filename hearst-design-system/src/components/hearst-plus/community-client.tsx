@@ -12,12 +12,13 @@ import { useReaderAccount } from "@/components/reader-account";
 import { ReaderAuthDialog } from "@/components/reader-account-ui";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Camera, CheckCircle2, Flag, Heart, HelpCircle, ImageIcon, Lightbulb, MessageCircle, Plus, Send, Shield } from "@/components/ui/icons";
+import { CheckCircle2, Flag, Heart, HelpCircle, ImageIcon, MessageCircle, Newspaper, Play, Plus, Send, Shield, User } from "@/components/ui/icons";
 import {
   COMMUNITY_REVIEWED_POST_COUNT,
   joinedBrandGroupsChangeEvent,
   joinedBrandGroupsStorageKey,
 } from "@/lib/community-groups";
+import { useRiverLayout } from "@/lib/river-layout";
 import { cn } from "@/lib/utils";
 
 /* ------------------------------------------------------------------------------------------------
@@ -593,12 +594,12 @@ export function CommunityGroupsToJoin({ groups }: { groups: CommunityGroupSummar
  * Composer (Q4, Q8): posts as the Hearst+ identity, first posts wait for host review
  * ---------------------------------------------------------------------------------------------- */
 
-type ComposerStarter = { label: string; title: string; icon: typeof HelpCircle; photo?: boolean };
+type ComposerStarter = { label: string; title: string; icon: typeof HelpCircle; photo?: boolean; bodyPlaceholder?: string };
 
 const composerStarters: ComposerStarter[] = [
-  { label: "Ask a question", title: "Question: ", icon: HelpCircle },
-  { label: "Share a tip", title: "Tip: ", icon: Lightbulb },
-  { label: "Show a photo", title: "", icon: Camera, photo: true },
+  { label: "Video", title: "Video: ", icon: Play, bodyPlaceholder: "Paste a video link and tell the community what to look for." },
+  { label: "Photo", title: "", icon: ImageIcon, photo: true },
+  { label: "Write article", title: "", icon: Newspaper, bodyPlaceholder: "Write a useful post for your community." },
 ];
 
 const emptyProfile = { followedTopics: [], followedBrands: [], savedTags: [], boostedTags: [], savedIds: [], hiddenIds: [] };
@@ -611,7 +612,9 @@ export function CommunityComposer({ groups, defaultGroup }: { groups: CommunityG
   const [groupKey, setGroupKey] = React.useState(defaultGroup ? defaultGroup.brandSlug : "");
   const [title, setTitle] = React.useState("");
   const [body, setBody] = React.useState("");
+  const [bodyPlaceholder, setBodyPlaceholder] = React.useState("Ask a question, share a tip, or start a conversation.");
   const [notice, setNotice] = React.useState("");
+  const [pendingPhoto, setPendingPhoto] = React.useState(false);
   const [photo, setPhoto] = React.useState<string | null>(null);
   const [photoAlt, setPhotoAlt] = React.useState("");
   const [photoError, setPhotoError] = React.useState("");
@@ -619,54 +622,49 @@ export function CommunityComposer({ groups, defaultGroup }: { groups: CommunityG
   const myPostCount = store.posts.length;
   const willWait = myPostCount < COMMUNITY_REVIEWED_POST_COUNT;
   const target = groups.find((group) => group.brandSlug === groupKey) ?? defaultGroup;
-  const placeName = defaultGroup?.name ?? "a group";
 
   // A starter seeds the title so the reader isn't facing a blank page.
   const start = (starter?: ComposerStarter) => {
-    if (starter) setTitle(starter.title);
-    if (starter?.photo) window.setTimeout(() => photoInputRef.current?.click(), 0);
+    setTitle(starter?.title ?? "");
+    setBodyPlaceholder(starter?.bodyPlaceholder ?? "Ask a question, share a tip, or start a conversation.");
+    setPendingPhoto(Boolean(starter?.photo));
     if (!account) {
       setAuthOpen(true);
       return;
     }
     setOpen(true);
+    if (starter?.photo) window.setTimeout(() => photoInputRef.current?.click(), 0);
   };
 
   return (
-    <section className="rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]" aria-label="Start a post">
+    <section className="rounded-xl border border-border bg-[var(--hp-surface)] p-3" aria-label="Start a post">
       {!open ? (
-        // An open invitation rather than a form: the reader's face, a friendly prompt, and one-tap starters.
         <div>
           <div className="flex items-center gap-3">
             {account ? (
-              <ReaderAvatar name={account.firstName || "Reader"} className="size-10 text-sm ring-0" />
+              <ReaderAvatar name={account.firstName || "Reader"} className="size-11 text-sm ring-0" />
             ) : (
-              <span aria-hidden className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <MessageCircle className="size-5" />
+              <span aria-hidden className="inline-flex size-11 shrink-0 items-center justify-center rounded-full border-2 border-primary bg-[var(--hp-surface)] text-primary">
+                <User className="size-5" />
               </span>
             )}
             <button
               type="button"
               onClick={() => start()}
-              className="hearst-community-copy flex min-h-12 min-w-0 flex-1 items-center rounded-full bg-[var(--community-surface-soft)] px-5 text-left text-base text-[var(--hp-text-secondary)] transition-colors hover:bg-[var(--community-surface-soft-hover)] hover:text-[var(--hp-text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+              className="hearst-community-copy flex min-h-12 min-w-0 flex-1 items-center rounded-full border border-border bg-[var(--hp-surface)] px-5 text-left text-lg font-semibold text-[var(--hp-text-primary)] transition-colors hover:border-primary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
             >
-              <span className="truncate">
-                {account ? `What's on your mind, ${account.firstName || "reader"}?` : defaultGroup ? `Join the conversation in ${defaultGroup.name}` : "Join the conversation"}
-              </span>
+              <span className="truncate">Start a post</span>
             </button>
-            <Button type="button" onClick={() => start()} className="hidden shrink-0 rounded-full px-5 text-primary-foreground sm:inline-flex">
-              {account ? "Post" : "Sign in to post"}
-            </Button>
           </div>
-          <div className="mt-3 flex flex-wrap items-center gap-2 sm:pl-[52px]">
+          <div className="mt-3 grid grid-cols-3 gap-2">
             {composerStarters.map((starter) => (
               <button
                 key={starter.label}
                 type="button"
                 onClick={() => start(starter)}
-                className="inline-flex min-h-9 items-center gap-1.5 rounded-full bg-[var(--hp-background)] px-3 text-sm font-semibold text-[var(--hp-text-ui)] transition-colors hover:bg-[var(--community-surface-soft-hover)] hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+                className="inline-flex min-h-9 items-center justify-center gap-2 rounded-lg px-2 text-sm font-semibold text-[var(--hp-text-ui)] transition-colors hover:bg-[var(--community-surface-soft)] hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
               >
-                <starter.icon className="size-4 text-primary" aria-hidden />
+                <starter.icon className="size-[18px] text-primary" aria-hidden />
                 {starter.label}
               </button>
             ))}
@@ -751,7 +749,7 @@ export function CommunityComposer({ groups, defaultGroup }: { groups: CommunityG
           <Textarea
             value={body}
             onChange={(event) => setBody(event.target.value)}
-            placeholder="Ask a question, share a tip, or start a conversation."
+            placeholder={bodyPlaceholder}
             aria-label="Post text"
             className="hearst-community-copy min-h-28 text-sm leading-6"
           />
@@ -841,6 +839,7 @@ export function CommunityComposer({ groups, defaultGroup }: { groups: CommunityG
         onAuthenticated={() => {
           setAuthOpen(false);
           setOpen(true);
+                  if (pendingPhoto) window.setTimeout(() => photoInputRef.current?.click(), 0);
         }}
       />
     </section>
@@ -851,29 +850,34 @@ export function CommunityComposer({ groups, defaultGroup }: { groups: CommunityG
  * Feed (Q7): my groups first, then suggested; empty state for readers with no groups
  * ---------------------------------------------------------------------------------------------- */
 
-function ThreadCard({ thread }: { thread: CommunityFeedThread }) {
+export function CommunityRiverCard({ thread }: { thread: CommunityFeedThread }) {
+  const layout = useRiverLayout();
+  const isList = layout === "list";
+
   return (
-    // Each thread is its own card that lifts on hover, so the feed reads as conversations to step into.
+    // Community posts share the river card surface while keeping their type and reply actions visible.
     <article
-      className="group rounded-[8px] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] transition-[box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(1,34,71,0.12)] motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:p-5"
+      className={cn(
+        "group/card min-w-0 overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/50",
+        isList && "grid grid-cols-[112px_minmax(0,1fr)] items-center sm:grid-cols-[168px_minmax(0,1fr)]",
+      )}
       aria-labelledby={`thread-${thread.id}-title`}
+      data-story-module="community"
+      data-content-type="community"
+      data-story-id={thread.id}
     >
-      <Link href={thread.href} className="block min-w-0 rounded-[8px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35">
-        <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-xs font-bold text-[var(--hp-text-secondary)]">
-          <BrandSourceIcon brand={thread.brand} brandSlug={thread.brandSlug} className="size-7 shrink-0 rounded-full" imageClassName="object-cover p-0" />
-          <span className="text-[var(--hp-text-primary)]">{thread.author}</span>
-          {thread.isHost ? <CommunityHostBadge brand={thread.brand} /> : null}
-          <span aria-hidden>·</span>
-          <span>{thread.kindLabel}</span>
-          <span aria-hidden>·</span>
-          <span className="truncate">{thread.meta}</span>
-        </span>
-        <h3 id={`thread-${thread.id}-title`} className="headline mt-2 text-xl leading-snug transition-colors group-hover:text-primary md:text-2xl">
-          {thread.title}
-        </h3>
-        <span className="hearst-community-copy mt-2 line-clamp-2 block text-sm leading-6 text-[var(--hp-text-ui)]">{thread.body}</span>
+      <Link
+        href={thread.href}
+        className={cn(
+          "block min-w-0 rounded-[8px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35",
+          isList && "col-span-full grid grid-cols-[112px_minmax(0,1fr)] items-center gap-4 sm:grid-cols-[168px_minmax(0,1fr)]",
+        )}
+      >
         {thread.posterImage ? (
-          <span className="relative mt-4 block aspect-[16/9] w-full overflow-hidden rounded-[8px] bg-[var(--community-surface-soft)]">
+          <span className={cn(
+            "relative block w-full overflow-hidden bg-muted",
+            isList ? "aspect-[4/3]" : "aspect-[16/9]",
+          )}>
             <Image
               src={thread.posterImage}
               alt={thread.posterAlt ?? thread.title}
@@ -883,8 +887,28 @@ function ThreadCard({ thread }: { thread: CommunityFeedThread }) {
             />
           </span>
         ) : null}
+        <span className={cn("block p-4 sm:p-5", isList && "min-w-0")}>
+          <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-xs font-bold text-[var(--hp-text-secondary)]">
+            <BrandSourceIcon brand={thread.brand} brandSlug={thread.brandSlug} className="size-5 shrink-0 rounded-full" imageClassName="object-cover p-0" />
+            <span className="text-[var(--hp-text-primary)]">{thread.author}</span>
+            {thread.isHost ? <CommunityHostBadge brand={thread.brand} /> : null}
+            <span aria-hidden>·</span>
+            <span className="uppercase tracking-wide text-[var(--hp-section-title)]">Community</span>
+            <span aria-hidden>·</span>
+            <span>{thread.kindLabel}</span>
+            <span aria-hidden>·</span>
+            <span className="truncate">{thread.meta}</span>
+          </span>
+          <h3 id={`thread-${thread.id}-title`} className="headline mt-2 line-clamp-3 text-xl leading-snug transition-colors group-hover/card:text-primary sm:text-2xl">
+            {thread.title}
+          </h3>
+          <span className="hearst-community-copy mt-2 line-clamp-3 block text-sm leading-6 text-[var(--hp-text-ui)]">{thread.body}</span>
+        </span>
       </Link>
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+      <div className={cn(
+        "flex flex-wrap items-center justify-between gap-3 border-t border-border px-4 py-3 sm:px-5",
+        isList && "col-span-full",
+      )}>
         <ReplierLine id={thread.id} replies={thread.replies} />
         <Link
           href={`${thread.href}#reply`}
@@ -894,7 +918,10 @@ function ThreadCard({ thread }: { thread: CommunityFeedThread }) {
           Add your reply
         </Link>
       </div>
-      <div className="mt-3 flex flex-wrap items-center gap-2">
+      <div className={cn(
+        "flex flex-wrap items-center gap-2 px-4 pb-4 sm:px-5 sm:pb-5",
+        isList && "col-span-full",
+      )}>
         <CommunityHelpfulButton id={thread.id} base={thread.helpfulBase} />
         <Link
           href={thread.href}
@@ -991,7 +1018,7 @@ export function CommunityFeed({
             ) : null}
             <div className="space-y-4">
               {section.threads.map((thread) => (
-                <ThreadCard key={thread.id} thread={thread} />
+                <CommunityRiverCard key={thread.id} thread={thread} />
               ))}
             </div>
           </section>

@@ -65,6 +65,7 @@ export { TrashIcon as Trash2 } from "@phosphor-icons/react/dist/ssr/Trash";
 export { TrendUpIcon as TrendingUp } from "@phosphor-icons/react/dist/ssr/TrendUp";
 export { UserIcon as User } from "@phosphor-icons/react/dist/ssr/User";
 export { UserCircleIcon as CircleUserRound } from "@phosphor-icons/react/dist/ssr/UserCircle";
+export { UsersThreeIcon as UsersThree } from "@phosphor-icons/react/dist/ssr/UsersThree";
 export { WarningIcon as TriangleAlert } from "@phosphor-icons/react/dist/ssr/Warning";
 export { WrenchIcon as Wrench } from "@phosphor-icons/react/dist/ssr/Wrench";
 export { XIcon as X } from "@phosphor-icons/react/dist/ssr/X";

@@ -18,6 +18,8 @@ import {
   hearstReaderSections,
 } from "@/lib/hearst-routes";
 import {
+  communityGroups,
+  communityParticipationThreads,
   joinedBrandGroupsChangeEvent,
   joinedBrandGroupsStorageKey,
 } from "@/lib/community-groups";
@@ -91,6 +93,8 @@ import {
   ProgressiveFeedSentinelStatus,
 } from "./hearst-plus/feed-states";
 import { BrandSourceIcon } from "./hearst-plus/brand-source-icon";
+import { CommunityHomeRiverCard } from "./hearst-plus/community-home-river-card";
+import type { CommunityFeedThread } from "./hearst-plus/community-client";
 import {
   getLifestyleByline,
   LifestyleBrandSource,
@@ -185,7 +189,6 @@ import {
 import {
   DelishOnboardingModal,
 } from "./hearst-plus/delish-onboarding-modal";
-import { DelishClubsModule } from "./hearst-plus/delish-clubs-module";
 import {
   MotorTrendOnboardingModal,
 } from "./hearst-plus/motortrend-onboarding-modal";
@@ -569,10 +572,12 @@ export function MainNav({
   onFilterChange,
   selectedBrand,
   navLinksOverride,
+  navLinkLabelOverrides,
   navLinkHrefOverrides,
   navCarouselMode = "default",
   mastheadLogoOverride,
   mastheadSlugOverride,
+  mastheadDescriptorOverride,
   extendBannerUnderUtilityBar = false,
   showRiverLayoutToggle = false,
   controlsOnly = false,
@@ -591,11 +596,14 @@ export function MainNav({
   onFilterChange?: (filter: string) => void;
   selectedBrand?: { name: string; slug: string } | null;
   navLinksOverride?: string[];
+  navLinkLabelOverrides?: Partial<Record<string, string>>;
   navLinkHrefOverrides?: Partial<Record<string, string>>;
   navCarouselMode?: "default" | "compact";
   mastheadLogoOverride?: { src: string; label: string; surface?: "default" | "station"; tone?: "normal" | "white"; className?: string } | null;
   /** A registered logo key (src/lib/logos.ts) shown in the masthead instead of the theme's, sized by the shared geometry. */
   mastheadSlugOverride?: string;
+  /** Use the destination HEARST wordmark with a custom italic section descriptor in the shared brand-wall banner. */
+  mastheadDescriptorOverride?: string;
   /** The Hearst+ home banner runs up behind its transparent utility bar. */
   extendBannerUnderUtilityBar?: boolean;
   /** Show the card/list toggle for the story river beside search. */
@@ -992,7 +1000,7 @@ export function MainNav({
     // Overridden links (for example Communities' Home) are page-specific, not destination categories.
     const displayLabel = isDestinationRiver && !selectedBrand && !navLinkHrefOverrides?.[link]
       ? getHearstDestinationCategoryDisplayLabel(destinationMode, link)
-      : link;
+      : navLinkLabelOverrides?.[link] ?? link;
     const destinationHref = brand.slug === "hearst-all" ? hearstDestinationNavHrefs.get(link) : undefined;
     const publicationHref = selectedBrand?.slug === "hot-rod" && link === "Events"
       ? "/autos/hot-rod/events/"
@@ -1491,19 +1499,19 @@ export function MainNav({
         {mastheadBanner.overlayLogo ? (
           <div className={cn(
             "pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-center",
-            mastheadBanner.logoDescriptor ? "px-4 sm:px-24" : "px-24",
+            mastheadBanner.logoDescriptor || mastheadDescriptorOverride ? "px-4 sm:px-24" : "px-24",
             underUtilityBar ? "top-8" : "top-0",
           )}>
-            {mastheadBanner.logoDescriptor ? (
-              <div role="img" aria-label={mastheadBanner.alt} className="flex max-w-full items-baseline justify-center gap-1 whitespace-nowrap text-white sm:gap-2">
+            {mastheadBanner.logoDescriptor || mastheadDescriptorOverride ? (
+              <div role="img" aria-label={mastheadDescriptorOverride ? `Hearst ${mastheadDescriptorOverride}` : mastheadBanner.alt} className="flex max-w-full items-baseline justify-center gap-1 whitespace-nowrap text-white sm:gap-2">
                 <BrandLogo
-                  slug={mastheadBanner.logoSlug ?? "hearst-wordmark"}
+                  slug={mastheadDescriptorOverride ? "hearst-wordmark" : mastheadBanner.logoSlug ?? "hearst-wordmark"}
                   color="#fff"
                   decorative
                   className="flex h-3 w-auto shrink-0 items-center [&_svg]:block [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full sm:h-6 lg:h-8"
                 />
                 <span className="shrink-0 font-semibold italic leading-none [font-family:var(--font-newsreader),Georgia,serif] text-[10px] sm:text-base lg:text-2xl">
-                  {mastheadBanner.logoDescriptor}
+                  {mastheadDescriptorOverride ?? mastheadBanner.logoDescriptor}
                 </span>
               </div>
             ) : (
@@ -5000,7 +5008,7 @@ function LifestyleRiverHomePage({
   const showDelishVerticalVideoCarousel = usingVideoTabFeed
     && (effectiveBrandFilters.length === 0 || effectiveBrandFilters.includes("Delish"));
   const showDelishPublicationShorts = isDelishPublicationRiver && delishVerticalVideoStories.length > 0;
-  const showDelishClubsModule = isDelishPublicationRiver && activeFilter === "For You";
+  const showDelishCommunityCard = isDelishPublicationRiver && activeFilter === "For You";
   const showDelishShortsInHearstPlusRiver = destination === "all"
     && !initialBrandSlug
     && !usingVideoTabFeed
@@ -5178,6 +5186,33 @@ function LifestyleRiverHomePage({
     !usingVideoTabFeed && activeFilter !== "Saved",
     preferredReaderRiverStoryId
   );
+  const communityRiverSeed = communityParticipationThreads[0];
+  const communityRiverGroup = communityGroups.find(
+    (group) => group.brandSlug === communityRiverSeed.brandSlug,
+  );
+  const communityRiverPoster = destinationConfigs.all.stories.find(
+    (story) => story.brandSlug === communityRiverSeed.brandSlug && story.image,
+  );
+  const communityRiverThread: CommunityFeedThread = {
+    id: communityRiverSeed.id,
+    brand: "Delish",
+    brandSlug: communityRiverSeed.brandSlug,
+    title: communityRiverSeed.title,
+    body: communityRiverSeed.body,
+    meta: `${communityRiverGroup?.name ?? "Delish"}${communityRiverGroup?.members ? ` · ${communityRiverGroup.members}` : ""}`,
+    kindLabel: "Host thread",
+    replies: communityRiverSeed.replies,
+    helpfulBase: communityRiverSeed.replies + 14,
+    author: "Delish editors",
+    isHost: true,
+    href: `/communities/${communityRiverSeed.brandSlug}/threads/${communityRiverSeed.id}/`,
+    posterImage: communityRiverPoster?.image,
+    posterAlt: communityRiverSeed.title,
+  };
+  const showCommunityRiverCard =
+    !initialBrandSlug
+    && !singleBrandName
+    && (pathname === "/hearst-plus" || pathname === "/hearst-plus/");
   const loadMoreVisibleStories = React.useCallback(() => {
     const demand = feedDemandRef.current;
     if (!demand.feedReady) return;
@@ -6124,11 +6159,8 @@ function LifestyleRiverHomePage({
                 <ContextualRiverAdvertisement ad={autosDealScoreAd} />
               ) : null}
 
-              {showDelishClubsModule ? (
-                <DelishClubsModule
-                  profile={profile}
-                  onboardingResult={onboardingResult}
-                />
+              {showDelishCommunityCard ? (
+                <CommunityHomeRiverCard thread={communityRiverThread} />
               ) : null}
 
               {(() => {
@@ -6195,6 +6227,9 @@ function LifestyleRiverHomePage({
                         onSave={() => toggleSaved(story)}
                       />
                     )}
+                    {showCommunityRiverCard && index === 0 ? (
+                      <CommunityHomeRiverCard thread={communityRiverThread} />
+                    ) : null}
                     {adMatch && adMatch.ad.id !== "autos-cd-deal-score" ? (
                       <ContextualRiverAdvertisement
                         ad={adMatch.ad}
