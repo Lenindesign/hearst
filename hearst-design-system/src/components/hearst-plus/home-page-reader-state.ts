@@ -77,14 +77,18 @@ export function useDailyEditionStories(
   editionSize = 6
 ) {
   const storyIdentityKey = stories.slice(0, 40).map((story) => story.id).join("|");
-  const [storyIds, setStoryIds] = React.useState<string[]>([]);
+  const resolutionKey = `${editionKey}:${storyIdentityKey}`;
+  const [editionState, setEditionState] = React.useState<{ resolutionKey: string; storyIds: string[] }>({
+    resolutionKey: "",
+    storyIds: [],
+  });
 
   React.useEffect(() => {
     let cancelled = false;
     queueMicrotask(() => {
       if (cancelled) return;
       if (!editionKey || stories.length === 0) {
-        setStoryIds([]);
+        setEditionState({ resolutionKey, storyIds: [] });
         return;
       }
 
@@ -97,7 +101,10 @@ export function useDailyEditionStories(
         currentDailyEditionSelectionVersion
       );
       writeDailyEditionRecords(records);
-      setStoryIds(records.find((record) => record.editionKey === editionKey)?.storyIds ?? []);
+      setEditionState({
+        resolutionKey,
+        storyIds: records.find((record) => record.editionKey === editionKey)?.storyIds ?? [],
+      });
     });
     return () => {
       cancelled = true;
@@ -106,12 +113,13 @@ export function useDailyEditionStories(
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editionKey, editionSize, storyIdentityKey]);
 
-  return React.useMemo(
-    () => storyIds
+  return React.useMemo(() => {
+    if (editionState.resolutionKey !== resolutionKey) return [];
+
+    return editionState.storyIds
       .map((storyId) => stories.find((story) => story.id === storyId))
-      .filter((story): story is LifestyleRiverStory => Boolean(story)),
-    [stories, storyIds]
-  );
+      .filter((story): story is LifestyleRiverStory => Boolean(story));
+  }, [editionState, resolutionKey, stories]);
 }
 
 export function getSessionContinueReadingStoryIds(scopeKey: string, editionDate: string) {

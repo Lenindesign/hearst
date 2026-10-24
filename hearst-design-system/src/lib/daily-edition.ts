@@ -12,7 +12,7 @@ export type DailyEditionRecord = {
 };
 
 export const dailyEditionStorageKey = "hearst-daily-editions-v1";
-export const currentDailyEditionSelectionVersion = 2;
+export const currentDailyEditionSelectionVersion = 4;
 
 const maximumStoredEditions = 14;
 
@@ -95,7 +95,7 @@ export function selectDailyEditionStoryIds(
   };
 
   if (selectedStories.length === 0 && availableStories[0]) {
-    const leadStory = availableStories[0];
+    const leadStory = availableStories.find((story) => !deprioritizedIds.has(story.id)) ?? availableStories[0];
     selectedStories.push(leadStory);
     selectedIds.add(leadStory.id);
     selectedBrands.add(leadStory.brand);

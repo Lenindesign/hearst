@@ -2406,7 +2406,16 @@ function LifestyleRiverMedia({
     : "aspect-video w-full self-start rounded-[4px]";
 
   if (kind !== "video") {
-    return <LifestyleRiverImage story={story} className={imageClassName} priority={featured} />;
+    return (
+      <LifestyleRiverImage
+        story={story}
+        className={cn(
+          imageClassName,
+          "transition-transform duration-250 ease-out group-hover/card:scale-[1.025] motion-reduce:transition-none motion-reduce:group-hover/card:scale-100",
+        )}
+        priority={featured}
+      />
+    );
   }
 
   if (story.videoUrl) {
@@ -2423,7 +2432,7 @@ function LifestyleRiverMedia({
             width={1200}
             height={675}
             sizes="(max-width: 1024px) 100vw, 640px"
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover transition-transform duration-250 ease-out group-hover/card:scale-[1.025] motion-reduce:transition-none motion-reduce:group-hover/card:scale-100"
             preload={featured}
           />
           <div className="absolute inset-0 bg-black/15" />
@@ -2719,7 +2728,7 @@ export function LifestyleRiverCard({
           <LifestyleRiverImage
             story={story}
             alt=""
-            className="h-full w-full transition-transform duration-200 ease-out group-hover/card:scale-105 motion-reduce:transition-none"
+            className="h-full w-full transition-transform duration-250 ease-out group-hover/card:scale-[1.025] motion-reduce:transition-none motion-reduce:group-hover/card:scale-100"
           />
           {kind === "video" ? (
             <span aria-hidden className="absolute inset-0 grid place-items-center">
@@ -2805,6 +2814,8 @@ export {
   LifestyleStoryActions,
   VerticalVideoCarousel,
 };
+
+const TODAYS_PICKS_FRESHNESS_WINDOW_HOURS = 72;
 
 function getPersonalizedLeadSliderStories(
   stories: LifestyleRiverStory[],
@@ -4464,7 +4475,18 @@ function LifestyleRiverHomePage({
     [readingHistory]
   );
   const [visitStartedAt] = React.useState(() => Date.now());
-  const [editionDate] = React.useState(() => getLocalEditionDate(new Date(visitStartedAt)));
+  const [editionDate, setEditionDate] = React.useState(() => getLocalEditionDate(new Date(visitStartedAt)));
+  React.useEffect(() => {
+    const refreshEditionDate = () => {
+      const nextEditionDate = getLocalEditionDate(new Date());
+      setEditionDate((currentEditionDate) => currentEditionDate === nextEditionDate
+        ? currentEditionDate
+        : nextEditionDate);
+    };
+
+    const intervalId = window.setInterval(refreshEditionDate, 60_000);
+    return () => window.clearInterval(intervalId);
+  }, []);
   const visitScopeKey = `${destination}:${initialBrandSlug ?? "all-brands"}`;
   const [sessionContinueReadingState, setSessionContinueReadingState] = React.useState<{
     scopeKey: string;
@@ -5015,12 +5037,21 @@ function LifestyleRiverHomePage({
     && activeFilter === "For You"
     && delishVerticalVideoStories.length > 0
     && (effectiveBrandFilters.length === 0 || effectiveBrandFilters.includes("Delish"));
+  const todaysPickCandidates = shouldUseTodaysPicks
+    ? displayStories.flatMap((story) => {
+        if (!story.publishedAt) return [];
+        const publishedTime = Date.parse(story.publishedAt);
+        const ageInHours = (Date.now() - publishedTime) / 3_600_000;
+        if (!Number.isFinite(publishedTime) || ageInHours < 0 || ageInHours > TODAYS_PICKS_FRESHNESS_WINDOW_HOURS) return [];
+        return [{ ...story, age: Math.floor(ageInHours) }];
+      })
+    : visibleStories;
   const personalizedHeroStories = getPersonalizedLeadSliderStories(
-    visibleStories,
+    todaysPickCandidates,
     rankingProfile,
     demoState,
     config,
-    shouldUseTodaysPicks ? 15 : 5,
+    shouldUseTodaysPicks ? Math.max(5, todaysPickCandidates.length) : 5,
     config.liveFeedMode === "blend"
   );
   const dailyEditionKey = shouldUseTodaysPicks
@@ -5031,14 +5062,14 @@ function LifestyleRiverHomePage({
     personalizedHeroStories,
     5
   );
-  const heroStories = shouldUseTodaysPicks && dailyEditionStories.length > 0
+  const heroStories = shouldUseTodaysPicks
     ? dailyEditionStories
     : personalizedHeroStories.slice(0, 5);
   const leadStory = (
     demoState.returnHours > 0 && demoState.previousLeadId
       ? heroStories.find((story) => story.id !== demoState.previousLeadId)
       : heroStories[0]
-  ) ?? heroStories[0] ?? visibleStories[0];
+  ) ?? heroStories[0] ?? (shouldUseTodaysPicks ? undefined : visibleStories[0]);
   React.useEffect(() => {
     if (demoState.isSimulated || initialOpenStoryId) return;
     trackProductEventOnce(`return-session:${visitScopeKey}`, "return_session", {
@@ -6062,7 +6093,7 @@ function LifestyleRiverHomePage({
               renderImage={(story, _index, active) => (
                 <LifestyleRiverImage
                   story={story}
-                  className="h-full w-full"
+                  className="h-full w-full transition-transform duration-250 ease-out group-hover/featured-slide:scale-[1.025] motion-reduce:transition-none motion-reduce:group-hover/featured-slide:scale-100"
                   objectPosition="center top"
                   priority={active}
                 />
@@ -6126,7 +6157,7 @@ function LifestyleRiverHomePage({
                   renderImage={(story, _index, active) => (
                     <LifestyleRiverImage
                       story={story}
-                      className="h-full w-full"
+                      className="h-full w-full transition-transform duration-250 ease-out group-hover/featured-slide:scale-[1.025] motion-reduce:transition-none motion-reduce:group-hover/featured-slide:scale-100"
                       priority={active}
                     />
                   )}
@@ -6270,8 +6301,21 @@ function LifestyleRiverHomePage({
                 />
               </div>
             </>
-          ) : (
-            activeFilter === "Saved" ? (
+          ) : shouldUseTodaysPicks ? (
+            <section
+              className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-6 shadow-[var(--hp-shadow-card)]"
+              aria-live="polite"
+            >
+              <h2 className="text-lg font-bold">
+                {personalizedHeroStories.length > 0 ? "Preparing today’s picks" : "No recent stories available"}
+              </h2>
+              <p className="mt-2 max-w-prose text-sm leading-6 text-muted-foreground">
+                {personalizedHeroStories.length > 0
+                  ? "Selecting today’s edition from stories published in the last 72 hours."
+                  : "No stories with a verified publish date in the last 72 hours are available yet."}
+              </p>
+            </section>
+          ) : activeFilter === "Saved" ? (
               <section
                 className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-5 shadow-[var(--hp-shadow-card)] sm:p-6"
                 aria-labelledby="saved-empty-title"
@@ -6370,15 +6414,14 @@ function LifestyleRiverHomePage({
                   </div>
                 ) : null}
               </section>
-            ) : (
+            ) :
               <div className="rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-8 text-center shadow-[var(--hp-shadow-card)]">
                 <p className="headline text-2xl">No stories in {activeFilter} yet.</p>
                 <p className="mt-2 text-sm text-muted-foreground">
                   Clear a brand filter or switch back to For You to keep exploring.
                 </p>
               </div>
-            )
-          )}
+          }
         </StoryRiver>
 
         <aside className="min-w-0 space-y-5 lg:sticky lg:top-[86px] lg:max-h-[calc(100dvh-110px)] lg:self-start lg:overflow-y-auto lg:pr-1">
