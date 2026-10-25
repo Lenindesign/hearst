@@ -72,23 +72,28 @@ export const Default: Story = {
     const region = canvas.getByRole("region", {
       name: `Brand spotlight: ${productionPromotion.brand}`,
     });
-    const storyButtons = within(region).getAllByRole("button", {
-      name: /^Open story:/,
-    });
+    const storyActions = region.querySelectorAll('[aria-label^="Open story:"]');
 
     await expect(region).toBeVisible();
-    await expect(storyButtons).toHaveLength(productionPromotion.stories.length);
+    await expect(storyActions.length).toBe(productionPromotion.stories.length);
     await expect(
       within(region).queryByText(/ranked by|reader intent|inside this river|Follow /i),
     ).not.toBeInTheDocument();
     await expect(
       within(region).queryByText(/^(Article|Gallery|Watch)$/i),
     ).not.toBeInTheDocument();
-    await userEvent.click(storyButtons[0]);
-    await expect(args.onOpenStory).toHaveBeenCalledWith(
-      productionPromotion.stories[0].id,
+    const firstStory = productionPromotion.stories[0];
+    const firstStoryAction = within(region).getByRole(
+      firstStory.sourceUrl ? "link" : "button",
+      { name: `Open story: ${firstStory.title}` },
     );
-    storyButtons[0].blur();
+    if (firstStory.sourceUrl) {
+      await expect(firstStoryAction).toHaveAttribute("href", firstStory.sourceUrl);
+    } else {
+      await userEvent.click(firstStoryAction);
+      await expect(args.onOpenStory).toHaveBeenCalledWith(firstStory.id);
+      firstStoryAction.blur();
+    }
   },
 };
 
@@ -152,13 +157,12 @@ export const Zoom200Mobile: Story = {
     });
     const regionRect = region.getBoundingClientRect();
     const contentRight = regionRect.right - 20;
-    const storyButtons = within(region).getAllByRole("button", {
-      name: /^Open story:/,
-    });
+    const storyActions = region.querySelectorAll('[aria-label^="Open story:"]');
 
     await expect(regionRect.width).toBeLessThanOrEqual(160);
-    storyButtons.forEach((button) => {
-      const buttonRect = button.getBoundingClientRect();
+    await expect(storyActions.length).toBeGreaterThan(0);
+    storyActions.forEach((action) => {
+      const buttonRect = action.getBoundingClientRect();
 
       expect(buttonRect.right).toBeLessThanOrEqual(contentRight + 1);
     });

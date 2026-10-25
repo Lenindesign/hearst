@@ -54,12 +54,13 @@ export const NavigationShell: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const banner = canvas.getByRole("banner");
+    await expect(banner).toHaveAttribute("data-current-product-page", "blueprint");
     const navigation = within(banner).getByRole("navigation", {
-      name: "Product pages",
+      name: "Prototype navigation",
     });
     await expect(
-      within(navigation).getByRole("link", { name: "Blueprint" })
-    ).toHaveAttribute("aria-current", "page");
+      within(navigation).getByRole("link", { name: "Open prototype" })
+    ).toHaveAttribute("href", "/hearst-plus/");
     await expect(
       within(banner).getByRole("link", { name: "Hearst Magazines" })
     ).toHaveAttribute("href", "/hearst-plus/");
@@ -88,12 +89,13 @@ export const PhoneNavigation: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const banner = canvas.getByRole("banner");
+    await expect(banner).toHaveAttribute("data-current-product-page", "tokens");
     const navigation = within(banner).getByRole("navigation", {
-      name: "Product pages",
+      name: "Prototype navigation",
     });
     await expect(
-      within(navigation).getByRole("link", { name: "Tokens" })
-    ).toHaveAttribute("aria-current", "page");
+      within(navigation).getByRole("link", { name: "Prototype" })
+    ).toHaveAttribute("href", "/hearst-plus/");
     for (const link of within(navigation).getAllByRole("link")) {
       await expect(link.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
     }
@@ -117,7 +119,7 @@ export const IllustrativeNavigation: Story = {
     const canvas = within(canvasElement);
     await expect(
       canvas.getByRole("figure", {
-        name: "Illustrative Hearst+ navigation and story treatment",
+        name: "Sample Delish story record used by the Hearst+ prototype",
       })
     ).toBeVisible();
   },
@@ -136,7 +138,7 @@ export const StoryConcepts: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(
-      canvas.getByRole("article", { name: "Illustrative editorial story card" })
+      canvas.getByRole("article", { name: "Sample Delish editorial story" })
     ).toBeVisible();
     await expect(
       canvas.getByRole("article", { name: "Illustrative commercial concept card" })
@@ -170,7 +172,7 @@ export const JourneyAndRanking: Story = {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole("table")).toBeVisible();
     await expect(
-      canvas.getByRole("article", { name: "Illustrative editorial story card" })
+      canvas.getByRole("article", { name: "Sample Delish editorial story" })
     ).toBeVisible();
   },
 };

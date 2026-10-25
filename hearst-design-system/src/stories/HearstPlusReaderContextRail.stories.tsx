@@ -25,7 +25,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "The exact production desktop context rail used beside the Hearst+ article reader. It allocates each related story to only one intent, publication, or topic group; keeps the current story out of every group; and remains intentionally absent below the xl desktop breakpoint.",
+          "The production desktop context rail used beside the Hearst+ article reader. It displays the ranked shared-intent story set, saved items, and community links. Recommendation stories exclude the current story and remain intentionally absent below the xl desktop breakpoint.",
       },
     },
   },
@@ -106,16 +106,12 @@ export const RankedContextGroups: Story = {
       fixture.currentStory,
       fixture.stories,
     );
-    const expectedStories = [
-      ...context.sharedIntent,
-      ...context.sameBrand,
-      ...context.sameTopic,
-    ];
+    const expectedStories = context.sharedIntent.slice(0, 5);
     const rail = canvas.getByRole("complementary", {
       name: "Contextual story recommendations",
     });
     const storyButtons = within(rail).getAllByRole("button", {
-      name: /^Open contextual story:/,
+      name: /^Open story:/,
     });
 
     await expect(storyButtons).toHaveLength(expectedStories.length);
@@ -123,7 +119,7 @@ export const RankedContextGroups: Story = {
       new Set(expectedStories.map((story) => story.id)).size,
     ).toBe(expectedStories.length);
     await expect(storyButtons[0]).toHaveAccessibleName(
-      `Open contextual story: ${expectedStories[0].title}`,
+      `Open story: ${expectedStories[0].title}`,
     );
     await userEvent.click(storyButtons[0]);
     await expect(args.onOpenStory).toHaveBeenCalledWith(expectedStories[0].id);
@@ -149,20 +145,21 @@ export const ReaderIntentOnly: Story = {
       />
     );
   },
-  play: async ({ canvasElement, globals }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const fixture = getContextRailFixture(globals.brand);
     const rail = canvas.getByRole("complementary", {
       name: "Contextual story recommendations",
     });
 
     await expect(
       within(rail).queryByRole("button", {
-        name: /^Open contextual story:/,
+        name: /^Open story:/,
       }),
     ).not.toBeInTheDocument();
-    await expect(within(rail).getByText("Reader Intent")).toBeVisible();
-    await expect(within(rail).getByText(fixture.currentStory.topic)).toBeVisible();
+    await expect(
+      within(rail).getByText("Save stories as you browse and they will appear here."),
+    ).toBeVisible();
+    await expect(within(rail).getByText("Explore Communities")).toBeVisible();
   },
 };
 

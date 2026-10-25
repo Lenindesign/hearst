@@ -155,7 +155,7 @@ export const Loading: Story = {
   play: async ({ canvasElement }) => {
     await expect(
       within(canvasElement).getByText(
-        "Loading the full article and photos...",
+        "Loading the full article and photos…",
       ),
     ).toBeVisible();
   },
@@ -173,7 +173,7 @@ export const Error: Story = {
   play: async ({ canvasElement }) => {
     await expect(
       within(canvasElement).getByRole("status"),
-    ).toHaveTextContent("This complete article could not be loaded.");
+    ).toHaveTextContent("The full source article could not be loaded.");
   },
 };
 

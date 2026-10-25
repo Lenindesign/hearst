@@ -85,7 +85,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const PrototypeCreative: Story = {
-  name: "Prototype creative: CTA unavailable",
+  name: "Prototype creative without a verified destination",
   globals: {
     viewport: "desktop",
   },
@@ -100,9 +100,8 @@ export const PrototypeCreative: Story = {
     });
 
     await expect(within(ad).getByText("Advertisement")).toBeVisible();
-    await expect(
-      within(ad).getByLabelText("Prototype CTA unavailable: Open beauty"),
-    ).toBeVisible();
+    await expect(within(ad).queryByText(/Prototype CTA unavailable/i))
+      .not.toBeInTheDocument();
     await expect(
       within(ad).queryByRole("button", { name: "Open beauty" }),
     ).not.toBeInTheDocument();

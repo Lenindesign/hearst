@@ -32,7 +32,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          "The current Hearst+ feed template rendered with React, Tailwind CSS 4, HDS semantic tokens, and shared shadcn-style primitives. These stories show the same responsive reader experience used by the product; no retired homepage layout variants are included. Editorial metadata and posters use the generated production-aligned fixture, while playable video uses the labeled deterministic Storybook clip.",
+          "The production Hearst+ feed template rendered with React, Tailwind CSS 4, HDS semantic tokens, and shared UI primitives. Storybook supplies a checked-in, generated editorial fixture; it does not call the production personalization endpoints or reproduce a reader's live ranked feed. Playable video uses the labeled deterministic Storybook clip. Use the routed app to review current feed data and personalization behavior.",
       },
     },
   },
@@ -72,7 +72,7 @@ export const Mobile: Story = {
     docs: {
       description: {
         story:
-          "The current Hearst+ feed at the Storybook mobile viewport. Modules follow the production reading order and collapse to the supported single-column experience.",
+          "The production feed template with deterministic Storybook fixture data at the mobile viewport. This checks the component's responsive layout; it does not verify live feed ranking or API behavior.",
       },
     },
   },
@@ -89,7 +89,7 @@ export const Tablet: Story = {
     docs: {
       description: {
         story:
-          "The current Hearst+ feed at the Storybook tablet viewport, using the same responsive Tailwind composition and HDS tokens as the application.",
+          "The production feed template with deterministic Storybook fixture data at the tablet viewport. This checks the component's responsive layout; it does not verify live feed ranking or API behavior.",
       },
     },
   },
@@ -105,7 +105,7 @@ export const Desktop: Story = {
     docs: {
       description: {
         story:
-          "The current desktop Hearst+ feed with its personalized river, supporting rails, and production component hierarchy.",
+          "The production feed template with deterministic Storybook fixture data at the desktop viewport. This checks the component composition and layout; it does not represent a reader-specific ranked river.",
       },
     },
   },

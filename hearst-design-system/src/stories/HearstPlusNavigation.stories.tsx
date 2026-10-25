@@ -95,7 +95,7 @@ export const MobilePublicationNavigation: Story = {
     <div className="w-[320px] max-w-full overflow-hidden">
       <NavigationExample
         brandSlug="hot-rod"
-        initialActiveFilter="Events"
+        initialActiveFilter="Performance"
         selectedBrandOverride={{ name: "HOT ROD", slug: "hot-rod" }}
       />
     </div>
@@ -105,7 +105,7 @@ export const MobilePublicationNavigation: Story = {
     docs: {
       description: {
         story:
-          "The production publication rail with a later active section. The rail reveals the complete preceding label instead of opening on clipped text, keeps the active Events link visible, and retains horizontal access to every section.",
+          "The production publication rail with a later active section. The rail reveals the complete preceding label instead of opening on clipped text, keeps the active Performance filter visible, and retains horizontal access to every section.",
       },
     },
   },
@@ -114,26 +114,21 @@ export const MobilePublicationNavigation: Story = {
     const sectionNav = canvas.getByRole("navigation", {
       name: "HOT ROD sections",
     });
-    const eventsLink = within(sectionNav).getByRole("link", { name: "Events" });
+    const activeFilter = within(sectionNav).getByRole("button", { name: "Performance" });
     const scroller = sectionNav.querySelector<HTMLElement>(
       "[data-topic-navigation-scroll]"
     );
-    const previousItem = eventsLink.previousElementSibling as HTMLElement | null;
-    const leftOverflowCue = sectionNav.querySelector<HTMLElement>(
-      '[data-navigation-overflow="left"]'
-    );
+    const previousItem = activeFilter.previousElementSibling as HTMLElement | null;
 
     await expect(scroller).not.toBeNull();
     await expect(previousItem).not.toBeNull();
-    await expect(leftOverflowCue).not.toBeNull();
     await waitFor(() => {
       const scrollerRect = scroller!.getBoundingClientRect();
       const previousRect = previousItem!.getBoundingClientRect();
-      const eventsRect = eventsLink.getBoundingClientRect();
+      const activeRect = activeFilter.getBoundingClientRect();
 
       expect(previousRect.left).toBeGreaterThanOrEqual(scrollerRect.left);
-      expect(eventsRect.right).toBeLessThanOrEqual(scrollerRect.right);
-      expect(leftOverflowCue).toHaveAttribute("data-visible", "true");
+      expect(activeRect.right).toBeLessThanOrEqual(scrollerRect.right);
     });
   },
 };

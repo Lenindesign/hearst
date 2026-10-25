@@ -1164,7 +1164,7 @@ export default function HdsBrandFrameworkPage() {
               </SectionHeading>
               <ol className="mt-10 border-t-2 border-[#2D75B9]">
                 {implementationPlan.map((item) => (
-                  <li key={item.phase} className="grid gap-3 border-b border-slate-200 py-6 md:grid-cols-[6rem_6rem_0.9fr_1.7fr] md:items-start">
+                  <li key={item.phase} className="grid gap-3 border-b border-slate-200 py-6 lg:grid-cols-[6rem_11rem_minmax(0,0.9fr)_minmax(0,1.7fr)] lg:items-start">
                     <div>
                       <p className="font-mono text-sm font-bold text-[#2D75B9]">{item.phase}</p>
                       <p className="mt-1 text-xs font-bold uppercase tracking-[0.14em] text-slate-500">{item.timing}</p>

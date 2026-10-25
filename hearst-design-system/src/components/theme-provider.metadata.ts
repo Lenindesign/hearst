@@ -102,7 +102,7 @@ const metadata: ComponentMetadata = {
       "src/stories/Typography.stories.tsx",
     ],
     rationale:
-      "ThemeRuntime directly mounts the exact production ThemeProvider and verifies its context, generated variables, brand switching, Hearst Flux dark default, mode toggling, root color-scheme synchronization, and disabled-persistence boundary. The other listed stories are source-graph consumers of the provider; the global decorator separately implements the same complete context shape for their previews.",
+      "ThemeRuntime directly mounts the exact production ThemeProvider and verifies its context, generated variables, brand switching, system color-mode preference, mode toggling, root color-scheme synchronization, and disabled-persistence boundary. The other listed stories are source-graph consumers of the provider; the global decorator separately implements the same complete context shape for their previews.",
   },
 };
 

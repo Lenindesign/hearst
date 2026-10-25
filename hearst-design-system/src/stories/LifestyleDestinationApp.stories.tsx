@@ -53,9 +53,9 @@ export const DailyHome: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    const brandFilterHeadings = await canvas.findAllByText("Join Groups");
+    const brandFilterHeadings = await canvas.findAllByText("Explore Communities");
     const brandFilterDescriptions = await canvas.findAllByText(
-      "Join a brand group to tune your feed and open its discussions.",
+      "Join a community to see its conversations here.",
     );
 
     await expect(brandFilterHeadings.length).toBeGreaterThan(0);

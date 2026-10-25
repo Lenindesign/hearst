@@ -38,14 +38,6 @@ const mixedStories = [
   currentArticle,
 ] satisfies LifestyleRiverStory[];
 
-const delishPalette = [
-  "var(--palette-brand-1)",
-  "var(--palette-brand-2)",
-  "var(--palette-brand-3)",
-  "var(--palette-brand-4)",
-  "var(--palette-brand-5)",
-];
-
 function getTranslateX(element: Element) {
   const transform = window.getComputedStyle(element).transform;
   if (!transform || transform === "none") return 0;
@@ -79,24 +71,18 @@ function FeaturedCarouselExample({
   editionLabel = "Today’s Picks",
   featuredMode = false,
   initialStoryId,
-  indicatorPalette,
 }: {
   stories?: LifestyleRiverStory[];
   editionLabel?: string;
   featuredMode?: boolean;
   initialStoryId?: string;
-  indicatorPalette?: readonly string[];
 }) {
   const [openedStoryId, setOpenedStoryId] = React.useState("");
-  const [followedBrand, setFollowedBrand] = React.useState("");
   const [activeStoryId, setActiveStoryId] = React.useState("");
   const [impressionCount, setImpressionCount] = React.useState(0);
 
   const handleOpen = React.useCallback((story: LifestyleRiverStory) => {
     setOpenedStoryId(story.id);
-  }, []);
-  const handleFollow = React.useCallback((brand: string) => {
-    setFollowedBrand(brand);
   }, []);
   const handleActiveStoryChange = React.useCallback(
     (story: LifestyleRiverStory) => {
@@ -119,10 +105,8 @@ function FeaturedCarouselExample({
             <StoryImage story={story} active={active} />
           )}
           onOpenStory={handleOpen}
-          onFollowBrand={handleFollow}
           onActiveStoryChange={handleActiveStoryChange}
           onEditionImpression={handleEditionImpression}
-          indicatorPalette={indicatorPalette}
         />
       </div>
       {stories.length === 0 ? (
@@ -137,9 +121,6 @@ function FeaturedCarouselExample({
       <div className="sr-only">
         <p role="status" aria-label="Opened story">
           {openedStoryId || "No story opened."}
-        </p>
-        <p role="status" aria-label="Followed brand">
-          {followedBrand || "No brand followed."}
         </p>
         <p role="status" aria-label="Active story">
           {activeStoryId || "No active story."}
@@ -178,12 +159,7 @@ export const TodaysPicks: Story = {
     const slides = carousel.querySelectorAll(
       'button[aria-label^="Open story:"]:not([data-carousel-clone="true"])',
     );
-    const selectors = within(carousel).getAllByRole("button", {
-      name: /^Show story /,
-    });
-
     await expect(slides).toHaveLength(5);
-    await expect(selectors).toHaveLength(5);
     await expect(
       carousel.querySelectorAll(
         'button[aria-label^="Open story:"][aria-hidden="false"]',
@@ -207,23 +183,17 @@ export const Interactions: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const carousel = canvas.getByRole("article", { name: "Today’s Picks" });
-    const secondSelector = within(carousel).getByRole("button", {
-      name: `Show story 2: ${mixedStories[1].title}`,
+    const nextButton = within(carousel).getByRole("button", {
+      name: "Next featured story",
     });
-
-    secondSelector.focus();
-    await waitFor(async () => {
-      await expect(
-        within(carousel).getByRole("button", { name: "Resume slider" }),
-      ).toBeVisible();
-    });
+    await userEvent.click(nextButton);
     const featuredStoryStatus = within(carousel).getByRole("status", {
       name: "Featured story status",
     });
     await expect(featuredStoryStatus).toHaveAttribute("aria-live", "polite");
-    await userEvent.keyboard("{Enter}");
-    await expect(secondSelector).toHaveFocus();
-    await expect(secondSelector).toHaveAttribute("aria-current", "true");
+    await expect(featuredStoryStatus).toHaveTextContent(
+      `Story 2 of 5: ${mixedStories[1].title}`,
+    );
 
     const secondSlide = carousel.querySelector(
       `[data-story-id="${mixedStories[1].id}"]`,
@@ -245,15 +215,6 @@ export const Interactions: Story = {
     await expect(
       within(carousel).queryByRole("button", { name: "More like this" }),
     ).toBeNull();
-
-    await userEvent.click(
-      within(carousel).getByRole("button", {
-        name: `Follow ${mixedStories[1].brand}`,
-      }),
-    );
-    await expect(
-      canvas.getByRole("status", { name: "Followed brand" }),
-    ).toHaveTextContent(mixedStories[1].brand);
 
     await userEvent.click(secondSlide as HTMLElement);
     await expect(
@@ -281,11 +242,15 @@ export const Mobile: Story = {
     await expect(
       carouselCanvas.getByRole("button", { name: "Pause slider" }),
     ).toHaveClass("h-11", "w-11");
-    for (const selector of carouselCanvas.getAllByRole("button", {
-      name: /^Show story /,
-    })) {
-      await expect(selector).toHaveClass("h-6", "w-9");
-    }
+    await expect(
+      carouselCanvas.queryByRole("button", { name: "Previous featured story" }),
+    ).toBeNull();
+    await expect(
+      carouselCanvas.queryByRole("button", { name: "Next featured story" }),
+    ).toBeNull();
+    await expect(
+      carouselCanvas.getByRole("status", { name: "Featured story status" }),
+    ).toHaveTextContent(`Story 1 of 5: ${mixedStories[0].title}`);
     await expect(document.documentElement.scrollWidth).toBe(
       document.documentElement.clientWidth,
     );
@@ -295,17 +260,16 @@ export const Mobile: Story = {
 export const PublicationFeaturedStories: Story = {
   name: "Publication: featured stories",
   globals: { brand: "delish" },
-  render: () => (
-    <FeaturedCarouselExample featuredMode indicatorPalette={delishPalette} />
-  ),
+  render: () => <FeaturedCarouselExample featuredMode />,
   play: async ({ canvasElement }) => {
     const carousel = within(canvasElement).getByRole("article", {
       name: "Featured stories",
     });
     await expect(carousel).toHaveAttribute("data-story-module", "featured");
     await expect(
-      within(carousel).getAllByRole("button", { name: /^Show story / }),
-    ).toHaveLength(5);
+      within(carousel).getByRole("button", { name: "Next featured story" }),
+    ).toBeVisible();
+    await expect(carousel).toHaveAccessibleName("Featured stories");
   },
 };
 

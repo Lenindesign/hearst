@@ -203,21 +203,21 @@ export default function TokenArchitecturePage() {
     <div className="hearst-plus-theme min-h-screen overflow-x-clip bg-background font-sans text-foreground">
       <ProductHeader current="tokens" />
       <main>
-        <section className="overflow-hidden bg-[#102A43] text-white">
+        <section className="overflow-hidden bg-[var(--hp-utility-bar)] text-primary-foreground">
           <div className="mx-auto grid max-w-[1360px] gap-14 px-5 py-20 md:px-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:py-28">
             <div className="min-w-0">
-              <p className="text-sm font-bold text-sky-300">Hearst+ implementation guide</p>
+              <p className="text-sm font-bold text-[var(--hp-logo)]">Hearst+ implementation guide</p>
               <h1 className="mt-5 max-w-3xl text-balance text-5xl font-bold leading-[0.98] tracking-[-0.035em] sm:text-6xl 2xl:text-7xl">
                 From one token source to every Hearst+ brand in production.
               </h1>
-              <p className="mt-7 max-w-[68ch] text-pretty text-lg leading-8 text-slate-300">
+              <p className="mt-7 max-w-[68ch] text-pretty text-lg leading-8 text-primary-foreground/80">
                 Hearst+ uses versioned token JSON to keep brand identity, shared components, and Tailwind implementation connected. This page explains the real path from a token change to the branded reader a user sees.
               </p>
               <div className="mt-9 flex flex-wrap gap-3">
-                <Link href="#pipeline" className="bg-white px-5 py-3 text-sm font-bold text-[#2D75B9] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
+                <Link href="#pipeline" className="bg-primary-foreground px-5 py-3 text-sm font-bold text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-foreground">
                   Follow the pipeline
                 </Link>
-                <Link href="#tailwind" className="border border-white/50 px-5 py-3 text-sm font-bold text-white hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
+                <Link href="#tailwind" className="border border-primary-foreground/50 px-5 py-3 text-sm font-bold text-primary-foreground hover:bg-primary-foreground/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-foreground">
                   See the Tailwind boundary
                 </Link>
               </div>

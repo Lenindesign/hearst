@@ -160,13 +160,14 @@ export const CompleteAllocationInteractions: Story = {
   render: () => <TodayEditExample selection={completeSelection} />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const continueButton = canvas.getByRole("button", {
-      name: new RegExp(`Continue Reading ${continueStory.title}`, "i"),
-    });
+    const continueButton = canvasElement.querySelector<HTMLButtonElement>(
+      'button[data-story-id="continue"]',
+    );
+    await expect(continueButton).not.toBeNull();
 
     await userEvent.tab();
     await expect(canvas.getAllByRole("button")[0]).toHaveFocus();
-    await userEvent.click(continueButton);
+    await userEvent.click(continueButton!);
     await expect(
       canvas.getByRole("status", { name: "Opened story" }),
     ).toHaveTextContent(continueStory.id);

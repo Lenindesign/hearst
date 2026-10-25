@@ -221,10 +221,11 @@ export const DestinationDiscovery: Story = {
     await userEvent.click(firstStory);
     await expect(canvas.getByRole("status")).toHaveTextContent(/^Opened /);
 
-    await userEvent.click(canvas.getByRole("button", { name: "Join Country Living group" }));
-    await expect(
-      canvas.getByRole("button", { name: "Leave Country Living group" }),
-    ).toHaveAttribute("aria-pressed", "true");
+    await expect(canvas.getByRole("link", { name: "Italian Weeknights" }))
+      .toHaveAttribute("href", "/communities/delish/groups/italian-weeknights/");
+    const joinButton = canvas.getAllByRole("button", { name: "Join" })[0];
+    await userEvent.click(joinButton);
+    await expect(joinButton).toHaveAttribute("aria-pressed", "true");
   },
 };
 
@@ -237,7 +238,7 @@ export const PublicationInventory: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(
-      canvas.getByRole("button", { name: "Join House Beautiful group" }),
+      canvas.getByRole("link", { name: "Cosmo Watch Party" }),
     ).toBeInTheDocument();
   },
 };
@@ -250,32 +251,10 @@ export const PublicationInventoryInteractions: Story = {
   render: () => <DiscoverySidebarExample mode="publication" />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const selectedBrand = canvas.getByRole("button", { name: "Leave Cosmopolitan group" });
-    await expect(selectedBrand).toHaveAttribute("aria-pressed", "true");
-
-    await userEvent.click(selectedBrand);
-    await expect(
-      canvas.getByRole("button", { name: "Join Cosmopolitan group" }),
-    ).toHaveAttribute("aria-pressed", "false");
-    await expect(canvas.getByRole("status")).toHaveTextContent("Selected Cosmopolitan");
-  },
-};
-
-export const AutosMakeFilters: Story = {
-  name: "Autos: Make filters",
-  render: () => <DiscoverySidebarExample mode="autos" />,
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const makeFilter = canvas.getByRole("button", {
-      name: "Filter Autos stories by Toyota",
-    });
-
-    await userEvent.click(makeFilter);
-    await expect(makeFilter).toHaveAttribute("aria-pressed", "true");
-
-    const topic = canvas.getByRole("button", { name: "Lifestyle" });
-    await userEvent.click(topic);
-    await expect(topic).toHaveAttribute("aria-pressed", "true");
+    const membershipButton = canvas.getAllByRole("button", { name: /^(Join|Joined)$/ })[0];
+    const wasJoined = membershipButton.getAttribute("aria-pressed") === "true";
+    await userEvent.click(membershipButton);
+    await expect(membershipButton).toHaveAttribute("aria-pressed", String(!wasJoined));
   },
 };
 
@@ -284,7 +263,7 @@ export const VideoBrandFilter: Story = {
   render: () => <DiscoverySidebarExample mode="videos" />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const brandFilter = canvas.getByRole("button", { name: "Delish" });
+    const brandFilter = canvas.getByRole("button", { name: "Join Delish group" });
 
     await userEvent.click(brandFilter);
     await expect(brandFilter).toHaveAttribute("aria-pressed", "true");

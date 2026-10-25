@@ -135,13 +135,13 @@ const prototypeTruth = [
 ];
 
 function DailyEditionPreview() {
-  return <StoryCard />;
+  return <StoryCard storyId="delish-food-news-a74237374-jimmy-johns-picklewich-pickle-pals-2026" />;
 }
 
 function PrincipleCycle() {
   return (
-    <div className="grid gap-8 bg-white p-5 shadow-sm lg:grid-cols-[0.86fr_1.14fr] lg:p-8">
-      <div className="bg-[#102A43] p-5 text-white sm:p-7">
+    <div className="grid gap-8 bg-card p-5 shadow-sm lg:grid-cols-[0.86fr_1.14fr] lg:p-8">
+      <div className="bg-[var(--hp-utility-bar)] p-5 text-primary-foreground sm:p-7">
         <div
           className="relative mx-auto aspect-square max-w-[430px]"
           aria-label="Hearst+ principle loop: acquire and understand, activate and engage, learn and expand, then repeat"
@@ -156,27 +156,27 @@ function PrincipleCycle() {
               cy="210"
               fill="none"
               r="135"
-              stroke="rgba(255,255,255,0.16)"
+              stroke="currentColor" strokeOpacity="0.16"
               strokeWidth="2"
             />
             <path
               d="M210 75 A135 135 0 0 1 327 277"
               fill="none"
-              stroke="var(--primary)"
+              stroke="var(--hp-logo)"
               strokeLinecap="round"
               strokeWidth="12"
             />
             <path
               d="M327 277 A135 135 0 0 1 93 277"
               fill="none"
-              stroke="var(--primary)"
+              stroke="var(--hp-logo)"
               strokeLinecap="round"
               strokeWidth="12"
             />
             <path
               d="M93 277 A135 135 0 0 1 210 75"
               fill="none"
-              stroke="var(--primary)"
+              stroke="var(--hp-logo)"
               strokeLinecap="round"
               strokeWidth="12"
             />
@@ -190,51 +190,51 @@ function PrincipleCycle() {
             return (
               <div key={principle.number} className={`absolute z-10 ${positions[index]}`}>
                 <span
-                  className="grid h-16 w-16 place-items-center rounded-full border-4 border-[#102A43] bg-primary text-base font-black text-primary-foreground shadow-lg"
+                  className="grid h-16 w-16 place-items-center rounded-full border-4 border-primary-foreground/80 bg-primary-foreground text-base font-black text-[var(--hp-utility-bar)] shadow-lg"
                 >
                   {formatPrincipleNumber(principle.number)}
                 </span>
               </div>
             );
           })}
-          <div className="absolute left-1/2 top-1/2 grid h-40 w-40 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-white/15 bg-white/10 p-5 text-center shadow-[0_18px_50px_rgba(0,0,0,0.22)] backdrop-blur-sm">
+          <div className="absolute left-1/2 top-1/2 grid h-40 w-40 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-primary-foreground/15 bg-primary-foreground/10 p-5 text-center shadow-[var(--hp-shadow-card)] backdrop-blur-sm">
             <div>
-              <span className="block text-[11px] font-black uppercase tracking-[0.18em] text-sky-200">
+              <span className="block text-[11px] font-black uppercase tracking-[0.18em] text-[var(--hp-logo)]">
                 Reader loop
               </span>
-              <p className="mt-2 text-sm font-bold leading-5 text-white">
+              <p className="mt-2 text-sm font-bold leading-5 text-primary-foreground">
                 1 to 2 to 3, then back smarter.
               </p>
             </div>
           </div>
         </div>
-        <div className="mt-5 grid gap-px bg-white/15 sm:grid-cols-3">
+        <div className="mt-5 grid gap-px bg-primary-foreground/15 sm:grid-cols-3">
           {principles.map((principle) => (
-            <div key={principle.number} className="bg-white/10 p-3">
-              <span className="block text-xs font-black text-white">
+            <div key={principle.number} className="bg-primary-foreground/10 p-3">
+              <span className="block text-xs font-black text-primary-foreground">
                 {formatPrincipleNumber(principle.number)}
               </span>
-              <span className="mt-1 block text-[11px] font-bold uppercase leading-4 tracking-[0.1em] text-slate-200">
+              <span className="mt-1 block text-[11px] font-bold uppercase leading-4 tracking-[0.1em] text-primary-foreground/80">
                 {principle.title}
               </span>
             </div>
           ))}
         </div>
       </div>
-      <ol className="grid gap-px bg-slate-200">
+      <ol className="grid gap-px bg-border">
         {principles.map((principle) => (
-          <li key={principle.number} className="bg-[#F8FAFC] p-5 sm:p-6">
+          <li key={principle.number} className="bg-muted p-5 sm:p-6">
             <div className="flex items-start gap-4">
               <span
                 aria-hidden="true"
-                className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-primary text-xs font-black text-primary-foreground"
+                className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[var(--hp-utility-bar)] text-xs font-black text-primary-foreground"
               >
                 {formatPrincipleNumber(principle.number)}
               </span>
               <div className="min-w-0">
                 <h3 className="font-serif text-2xl leading-none">{principle.title}</h3>
-                <p className="mt-3 text-sm leading-6 text-slate-600">{principle.copy}</p>
-                <p className="mt-4 border-t border-slate-200 pt-3 text-xs font-semibold leading-5 text-slate-500">
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">{principle.copy}</p>
+                <p className="mt-4 border-t border-border pt-3 text-xs font-semibold leading-5 text-muted-foreground">
                   {principle.evidence}
                 </p>
               </div>
@@ -251,81 +251,81 @@ export default function WhyHearstPlusPage() {
     <div className="min-h-screen overflow-x-clip hearst-plus-theme bg-background text-foreground">
       <ProductHeader current="value" />
       <main>
-        <section className="overflow-hidden bg-[#102A43] text-white">
+        <section className="overflow-hidden bg-[var(--hp-utility-bar)] text-primary-foreground">
           <div className="mx-auto grid max-w-[1360px] gap-10 px-5 py-16 md:px-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-x-12 lg:gap-y-10 lg:py-24">
             <div className="min-w-0">
-              <p className="text-xs font-black uppercase tracking-[0.2em] text-sky-300">
+              <p className="text-xs font-black uppercase tracking-[0.2em] text-[var(--hp-logo)]">
                 Direct relationship. Daily habit. Paid upgrade path.
               </p>
               <h1 className="mt-6 max-w-3xl text-balance font-serif text-5xl leading-[0.95] tracking-[-0.035em] sm:text-6xl lg:text-7xl">
                 A cross-brand reader product, with source attribution intact.
               </h1>
-              <p className="mt-7 max-w-2xl text-pretty text-lg leading-8 text-slate-300">
+              <p className="mt-7 max-w-2xl text-pretty text-lg leading-8 text-primary-foreground/80">
                 The product hypothesis is that readers may return more often when stories, local sources and entertainment are available in one reader experience. The prototype demonstrates parts of that experience. It does not establish retention, registration lift, or willingness to pay.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/hearst-plus/"
-                  className="bg-white px-5 py-3 text-sm font-bold text-[#2D75B9] transition-colors hover:bg-blue-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+                  className="bg-card px-5 py-3 text-sm font-bold text-primary transition-colors hover:bg-primary-foreground/90 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-foreground"
                 >
                   Open today&apos;s edition
                 </Link>
                 <Link
                   href="#how-it-works"
-                  className="border border-white/50 px-5 py-3 text-sm font-bold text-white transition-colors hover:border-white hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+                  className="border border-primary-foreground/50 px-5 py-3 text-sm font-bold text-primary-foreground transition-colors hover:border-primary-foreground hover:bg-primary-foreground/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-foreground"
                 >
                   See how it works
                 </Link>
               </div>
             </div>
-            <div className="min-w-0 self-center border border-white/15 bg-white/5 p-3 sm:p-5">
+            <div className="min-w-0 self-center border border-primary-foreground/15 bg-primary-foreground/5 p-3 sm:p-5">
               <DailyEditionPreview />
             </div>
-            <div className="grid min-w-0 gap-px bg-white/15 md:grid-cols-3 lg:col-span-2">
+            <div className="grid min-w-0 gap-px bg-primary-foreground/15 md:grid-cols-3 lg:col-span-2">
               {heroStrategy.map((item) => (
-                <article key={item.label} className="min-w-0 bg-[#123A5A] p-5 md:p-6">
-                  <h2 className="text-[11px] font-black uppercase tracking-[0.16em] text-sky-300">
+                <article key={item.label} className="min-w-0 bg-primary-foreground/10 p-5 md:p-6">
+                  <p className="text-[11px] font-black uppercase tracking-[0.16em] text-[var(--hp-logo)]">
                     {item.label}
-                  </h2>
-                  <p className="mt-3 text-sm leading-6 text-slate-200">{item.copy}</p>
+                  </p>
+                  <p className="mt-3 text-sm leading-6 text-primary-foreground/80">{item.copy}</p>
                 </article>
               ))}
             </div>
-            <div className="grid min-w-0 gap-px bg-white/15 md:grid-cols-3 lg:col-span-2">
+            <div className="grid min-w-0 gap-px bg-primary-foreground/15 md:grid-cols-3 lg:col-span-2">
               {[
                 ["Browse", "Open discovery in the prototype"],
                 ["Demo profile", "Interests and saved items in this browser"],
                 ["Membership", "Possible offer; payment and entitlements are not implemented"],
               ].map(([tier, value]) => (
-                <div key={tier} className="min-w-0 bg-white/10 px-5 py-4">
-                  <span className="block text-sm font-bold text-white">{tier}</span>
-                  <span className="mt-1 block text-xs leading-5 text-slate-300">{value}</span>
+                <div key={tier} className="min-w-0 bg-primary-foreground/10 px-5 py-4">
+                  <span className="block text-sm font-bold text-primary-foreground">{tier}</span>
+                  <span className="mt-1 block text-xs leading-5 text-primary-foreground/80">{value}</span>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <section id="how-it-works" className="scroll-mt-20 border-b border-slate-200 bg-white">
+        <section id="how-it-works" className="scroll-mt-20 border-b border-border bg-card">
           <div className="mx-auto max-w-[1360px] px-5 py-20 md:px-10 lg:py-28">
             <div className="grid gap-12 lg:grid-cols-[0.7fr_1.3fr]">
               <div>
                 <h2 className="max-w-xl text-balance font-serif text-5xl leading-none tracking-[-0.03em]">
                   Example reader flow
                 </h2>
-                <p className="mt-6 max-w-[62ch] text-pretty leading-7 text-slate-600">
+                <p className="mt-6 max-w-[62ch] text-pretty leading-7 text-muted-foreground">
                   This is a product hypothesis, not a measured outcome. The prototype lets reviewers inspect the river, open a source story, and change browser-local interests or saved items. It does not establish daily return behavior.
                 </p>
               </div>
-              <ol className="border-t-2 border-[#2D75B9]">
+              <ol className="border-t-2 border-primary">
                 {habitSteps.map((step, index) => (
                   <li
                     key={step.title}
-                    className="grid gap-3 border-b border-slate-200 py-6 sm:grid-cols-[3rem_0.75fr_1.25fr] sm:items-start"
+                    className="grid gap-3 border-b border-border py-6 sm:grid-cols-[3rem_0.75fr_1.25fr] sm:items-start"
                   >
-                    <span className="text-sm font-bold text-[#2D75B9]">{String(index + 1).padStart(2, "0")}</span>
+                    <span className="text-sm font-bold text-primary">{String(index + 1).padStart(2, "0")}</span>
                     <h3 className="font-bold">{step.title}</h3>
-                    <p className="text-sm leading-6 text-slate-600">{step.copy}</p>
+                    <p className="text-sm leading-6 text-muted-foreground">{step.copy}</p>
                   </li>
                 ))}
               </ol>
@@ -333,44 +333,44 @@ export default function WhyHearstPlusPage() {
           </div>
         </section>
 
-        <section className="border-b border-slate-200 bg-[#F7F8FC]">
+        <section className="border-b border-border bg-muted">
           <div className="mx-auto max-w-[1360px] px-5 py-20 md:px-10 lg:py-28">
             <div className="grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:items-end">
               <div>
-                <p className="text-xs font-black uppercase tracking-[0.2em] text-[#2D75B9]">The Hearst+ principles</p>
+                <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">The Hearst+ principles</p>
                 <h2 className="mt-5 max-w-xl text-balance font-serif text-5xl leading-none tracking-[-0.03em]">
                   A relationship that compounds, not a feed that forgets.
                 </h2>
               </div>
-              <p className="max-w-[70ch] text-pretty leading-7 text-slate-600">
+              <p className="max-w-[70ch] text-pretty leading-7 text-muted-foreground">
                 The principles below are design goals. No retention result or portfolio-wide learning loop has been measured in this prototype. Reader controls currently change local demo state; analytics events are not sent to a vendor.
               </p>
             </div>
             <div className="mt-12">
               <PrincipleCycle />
             </div>
-            <div className="mt-6 border-l-4 border-[#2D75B9] bg-white px-6 py-5 text-sm leading-6 text-slate-700 shadow-sm">
-              <strong className="text-[#102A43]">The guardrail:</strong> Hearst+ should become more useful because readers choose to return—not because the product creates pressure, hides control, or treats every interaction as a conversion.
+            <div className="mt-6 border border-border bg-card px-6 py-5 text-sm leading-6 text-foreground/80 shadow-sm">
+              <strong className="text-primary">The guardrail:</strong> Hearst+ should become more useful because readers choose to return—not because the product creates pressure, hides control, or treats every interaction as a conversion.
             </div>
           </div>
         </section>
 
-        <section className="border-b border-slate-200 bg-[#E9F2FA]">
+        <section className="border-b border-border bg-muted">
           <div className="mx-auto max-w-[1360px] px-5 py-20 md:px-10 lg:py-28">
             <div className="max-w-4xl">
               <h2 className="text-balance font-serif text-5xl leading-none tracking-[-0.03em]">
                 Interests cross publication, local, and entertainment lines. Hearst has the depth to follow them.
               </h2>
-              <p className="mt-6 max-w-[70ch] text-pretty leading-7 text-slate-700">
+              <p className="mt-6 max-w-[70ch] text-pretty leading-7 text-foreground/80">
                 A reader planning dinner may also need shopping advice, wellness guidance, a local update, or a show to watch tonight. Hearst+ organizes that breadth around the reader while keeping every source unmistakable.
               </p>
             </div>
-            <div className="mt-12 grid gap-px bg-slate-300 md:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-12 grid gap-px bg-border md:grid-cols-2 xl:grid-cols-3">
               {destinationPromises.map((destination) => (
-                <article key={destination.name} className="bg-white p-6">
+                <article key={destination.name} className="bg-card p-6">
                   <p className="text-xs font-bold uppercase tracking-[0.14em]" style={{ color: destination.color }}>Configured section</p>
                   <h3 className="mt-3 font-serif text-3xl leading-none">{destination.name}</h3>
-                  <p className="mt-4 text-sm leading-6 text-slate-600">{destination.copy}</p>
+                  <p className="mt-4 text-sm leading-6 text-muted-foreground">{destination.copy}</p>
                 </article>
               ))}
             </div>
@@ -378,80 +378,80 @@ export default function WhyHearstPlusPage() {
           </div>
         </section>
 
-        <section className="border-b border-slate-200 bg-white">
+        <section className="border-b border-border bg-card">
           <div className="mx-auto max-w-[1360px] px-5 py-20 md:px-10 lg:py-28">
             <div className="grid gap-8 lg:grid-cols-[0.7fr_1.3fr] lg:items-end">
               <h2 className="text-balance font-serif text-5xl leading-none tracking-[-0.03em]">
                 Magazine brands, local sources, newspapers, and channels stay visible inside one system.
               </h2>
-              <p className="max-w-[70ch] text-pretty leading-7 text-slate-600">
+              <p className="max-w-[70ch] text-pretty leading-7 text-muted-foreground">
                 Shared product infrastructure does not require generic presentation. Logos, typography, colors, routes, bylines, station identity, newspaper mastheads, channel branding, show pages, and source links preserve the trust each source has earned.
               </p>
             </div>
             <div className="mt-12">
               <BrandPortfolioGrid compact />
             </div>
-            <div className="mt-8 grid gap-px bg-slate-200 md:grid-cols-4">
+            <div className="mt-8 grid gap-px bg-border md:grid-cols-4">
               {[
                 [`${totalBrands}`, "magazine brands"],
                 [`${totalTVStations}`, "TV stations"],
                 [`${totalNewspapers}`, "newspapers"],
                 [`${totalEntertainmentChannels}`, "entertainment channels"],
               ].map(([value, label]) => (
-                <div key={label} className="bg-[#F8FAFC] p-5">
+                <div key={label} className="bg-muted p-5">
                   <strong className="font-serif text-4xl leading-none">{value}</strong>
-                  <p className="mt-2 text-xs font-black uppercase tracking-[0.14em] text-[#2D75B9]">{label}</p>
+                  <p className="mt-2 text-xs font-black uppercase tracking-[0.14em] text-primary">{label}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="border-b border-slate-200 bg-[#F8FAFC]">
+        <section className="border-b border-border bg-muted">
           <div className="mx-auto max-w-[1360px] px-5 py-20 md:px-10 lg:py-28">
             <div className="max-w-4xl">
               <h2 className="text-balance font-serif text-5xl leading-none tracking-[-0.03em]">
                 A working reader product, built on reusable foundations.
               </h2>
-              <p className="mt-6 max-w-[72ch] text-pretty leading-7 text-slate-600">
+              <p className="mt-6 max-w-[72ch] text-pretty leading-7 text-muted-foreground">
                 The prototype combines a validated magazine catalog, local TV and newspaper feed frameworks, entertainment channel-story sources, current recommendation candidates, explainable ranking, progressive delivery, accessible interaction patterns, and source-aware theming. The architecture is designed to improve once across the portfolio.
               </p>
             </div>
             <div className="mt-12">
               <ArchitectureFlow />
             </div>
-            <div className="mt-6 grid gap-px bg-slate-200 md:grid-cols-2">
+            <div className="mt-6 grid gap-px bg-border md:grid-cols-2">
               {stack.map(([title, copy]) => (
-                <div key={title} className="grid gap-3 bg-white p-5 sm:grid-cols-[8rem_1fr]">
-                  <h3 className="text-sm font-bold text-[#2D75B9]">{title}</h3>
-                  <p className="text-sm leading-6 text-slate-600">{copy}</p>
+                <div key={title} className="grid gap-3 bg-card p-5 sm:grid-cols-[8rem_1fr]">
+                  <h3 className="text-sm font-bold text-primary">{title}</h3>
+                  <p className="text-sm leading-6 text-muted-foreground">{copy}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="border-b border-slate-200 bg-white">
+        <section className="border-b border-border bg-card">
           <div className="mx-auto max-w-[1360px] px-5 py-20 md:px-10 lg:py-28">
             <div className="grid gap-12 lg:grid-cols-[0.65fr_1.35fr]">
               <div>
                 <h2 className="text-balance font-serif text-5xl leading-none tracking-[-0.03em]">
                   What stakeholders can evaluate.
                 </h2>
-                <p className="mt-6 max-w-[62ch] text-pretty leading-7 text-slate-600">
+                <p className="mt-6 max-w-[62ch] text-pretty leading-7 text-muted-foreground">
                   These are candidate measures for a future instrumented release. The prototype does not collect production analytics or establish outcomes against them.
                 </p>
               </div>
-              <div className="border-t-2 border-[#102A43]">
+              <div className="border-t-2 border-primary">
                 {stakeholderValue.map((item) => (
                   <article
                     key={item.audience}
-                    className="grid gap-4 border-b border-slate-200 py-6 md:grid-cols-[9rem_1fr_1fr]"
+                    className="grid gap-4 border-b border-border py-6 md:grid-cols-[9rem_1fr_1fr]"
                   >
                     <h3 className="font-bold">{item.audience}</h3>
-                    <p className="text-sm leading-6 text-slate-600">{item.value}</p>
-                    <p className="text-sm leading-6 text-slate-600">
-                      <strong className="text-[#102A43]">Proposed measure, not instrumented: </strong>
+                    <p className="text-sm leading-6 text-muted-foreground">{item.value}</p>
+                    <p className="text-sm leading-6 text-muted-foreground">
+                      <strong className="text-primary">Proposed measure, not instrumented: </strong>
                       {item.evidence}
                     </p>
                   </article>
@@ -461,24 +461,24 @@ export default function WhyHearstPlusPage() {
           </div>
         </section>
 
-        <section className="border-b border-slate-200 bg-[#E9F2FA]">
+        <section className="border-b border-border bg-muted">
           <div className="mx-auto max-w-[1360px] px-5 py-20 md:px-10 lg:py-28">
             <div className="max-w-4xl">
               <h2 className="text-balance font-serif text-5xl leading-none tracking-[-0.03em]">
                 Clear about what exists, and what must come next.
               </h2>
-              <p className="mt-6 max-w-[72ch] text-pretty leading-7 text-slate-700">
+              <p className="mt-6 max-w-[72ch] text-pretty leading-7 text-foreground/80">
                 Hearst+ is a working reader prototype, not a claim of production readiness. This distinction matters for identity, privacy, measurement, editorial operations, and investment decisions.
               </p>
             </div>
-            <div className="mt-12 grid gap-px bg-slate-300 lg:grid-cols-2">
+            <div className="mt-12 grid gap-px bg-border lg:grid-cols-2">
               {prototypeTruth.map((group, index) => (
-                <article key={group.title} className={index === 0 ? "bg-white p-7" : "bg-[#102A43] p-7 text-white"}>
+                <article key={group.title} className={index === 0 ? "bg-card p-7" : "bg-[var(--hp-utility-bar)] p-7 text-primary-foreground"}>
                   <h3 className="font-serif text-3xl leading-none">{group.title}</h3>
-                  <ul className={`mt-6 space-y-4 text-sm leading-6 ${index === 0 ? "text-slate-600" : "text-slate-300"}`}>
+                  <ul className={`mt-6 space-y-4 text-sm leading-6 ${index === 0 ? "text-muted-foreground" : "text-primary-foreground/80"}`}>
                     {group.items.map((item) => (
                       <li key={item} className="grid grid-cols-[1rem_1fr] gap-3">
-                        <span aria-hidden="true" className={index === 0 ? "text-[#2D75B9]" : "text-sky-300"}>●</span>
+                        <span aria-hidden="true" className={index === 0 ? "text-primary" : "text-[var(--hp-logo)]"}>●</span>
                         <span>{item}</span>
                       </li>
                     ))}
@@ -489,24 +489,24 @@ export default function WhyHearstPlusPage() {
           </div>
         </section>
 
-        <section className="bg-[#2D75B9] text-white">
+        <section className="bg-[var(--hp-utility-bar)] text-primary-foreground">
           <div className="mx-auto grid max-w-[1360px] gap-10 px-5 py-20 md:px-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-end lg:py-24">
             <div>
               <h2 className="max-w-4xl text-balance font-serif text-5xl leading-none tracking-[-0.03em] sm:text-6xl">
                 Review the current prototype flows.
               </h2>
-              <p className="mt-6 max-w-[68ch] text-pretty leading-7 text-blue-50">
+              <p className="mt-6 max-w-[68ch] text-pretty leading-7 text-primary-foreground/80">
                 Open the prototype to inspect destination routes, the story river, browser-local reader actions, and stakeholder controls. A linked source story opens on its publisher site.
               </p>
             </div>
             <div className="flex flex-wrap gap-3 lg:justify-end">
-              <Link href="/hearst-plus/" className="bg-white px-5 py-3 text-sm font-bold text-[#2D75B9]">
+              <Link href="/hearst-plus/" className="bg-card px-5 py-3 text-sm font-bold text-primary">
                 Open Hearst+
               </Link>
-              <Link href="/hearst-plus/?demo=1" className="border border-white/60 px-5 py-3 text-sm font-bold text-white">
+              <Link href="/hearst-plus/?demo=1" className="border border-primary-foreground/60 px-5 py-3 text-sm font-bold text-primary-foreground">
                 Open stakeholder demo
               </Link>
-              <Link href="/hearst-product-blueprint/" className="border border-white/60 px-5 py-3 text-sm font-bold text-white">
+              <Link href="/hearst-product-blueprint/" className="border border-primary-foreground/60 px-5 py-3 text-sm font-bold text-primary-foreground">
                 Review the blueprint
               </Link>
             </div>

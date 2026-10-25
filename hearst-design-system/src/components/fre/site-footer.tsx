@@ -40,6 +40,7 @@ const defaultProductLinkGroups: SiteFooterLinkGroup[] = [
     title: "Product strategy",
     links: [
       { label: "Hearst+ product reference", href: "/hearst-plus-reference/" },
+      { label: "Storybook", href: "http://localhost:6006/?path=/docs/hearst-plus-start-overview--docs" },
     ],
   },
   {

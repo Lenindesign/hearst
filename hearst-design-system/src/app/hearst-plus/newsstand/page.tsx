@@ -24,7 +24,12 @@ export default function HearstPlusNewsstandPage() {
               className="inline-flex min-h-11 items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
               aria-label="Return to Hearst+"
             >
-              <BrandLogo slug="hearst-all" label="Hearst+" className="block h-[22px] [&_svg]:h-full [&_svg]:w-auto" />
+              <BrandLogo
+                slug="hearst-all"
+                label="Hearst+"
+                color="var(--palette-content-knockout)"
+                className="block h-[22px] [&_svg]:h-full [&_svg]:w-auto"
+              />
             </Link>
             <Link
               href="/hearst-plus/"

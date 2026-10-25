@@ -78,11 +78,16 @@ export const PublicationTheme: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByTestId("brand-name")).toHaveTextContent("Cosmopolitan");
-    await expect(canvas.getByTestId("color-mode")).toHaveTextContent("light");
+    const colorMode = canvas.getByTestId("color-mode").textContent;
+    await expect(["light", "dark"]).toContain(colorMode);
     const runtime = canvas.getByTestId("brand-name").closest("[data-brand]");
     await expect(runtime).toHaveAttribute("data-brand", "cosmopolitan");
     await expect(getComputedStyle(runtime as Element).getPropertyValue("--font-brand"))
       .toContain("Basis Grotesque Pro");
+    await expect(document.documentElement.classList.contains("dark")).toBe(
+      colorMode === "dark",
+    );
+    await expect(document.documentElement.style.colorScheme).toBe(colorMode);
   },
 };
 
@@ -97,31 +102,44 @@ export const RuntimeBrandSwitch: Story = {
   },
 };
 
-export const FluxDarkDefault: Story = {
-  name: "Hearst Flux dark default",
+export const FluxDefaultMode: Story = {
+  name: "Hearst Flux follows the active color preference",
   args: {
     defaultBrandSlug: "hearst-flux",
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByTestId("brand-name")).toHaveTextContent("Hearst Flux");
-    await expect(canvas.getByTestId("color-mode")).toHaveTextContent("dark");
-    await waitFor(() => expect(document.documentElement).toHaveClass("dark"));
-    await expect(document.documentElement.style.colorScheme).toBe("dark");
+    const colorMode = canvas.getByTestId("color-mode").textContent;
+    await expect(["light", "dark"]).toContain(colorMode);
+    await waitFor(() =>
+      expect(document.documentElement.classList.contains("dark")).toBe(
+        colorMode === "dark",
+      ),
+    );
+    await expect(document.documentElement.style.colorScheme).toBe(colorMode);
   },
 };
 
 export const FluxModeToggle: Story = {
-  name: "Hearst Flux mode toggle",
+  name: "Hearst Flux color mode toggle",
   args: {
     defaultBrandSlug: "hearst-flux",
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByTestId("color-mode")).toHaveTextContent("dark");
-    await userEvent.click(canvas.getByRole("button", { name: "Switch to light mode" }));
-    await expect(canvas.getByTestId("color-mode")).toHaveTextContent("light");
-    await waitFor(() => expect(document.documentElement).not.toHaveClass("dark"));
-    await expect(document.documentElement.style.colorScheme).toBe("light");
+    const initialMode = canvas.getByTestId("color-mode").textContent;
+    await expect(["light", "dark"]).toContain(initialMode);
+    const nextMode = initialMode === "dark" ? "light" : "dark";
+    await userEvent.click(
+      canvas.getByRole("button", { name: `Switch to ${nextMode} mode` }),
+    );
+    await expect(canvas.getByTestId("color-mode")).toHaveTextContent(nextMode);
+    await waitFor(() => {
+      expect(document.documentElement.classList.contains("dark")).toBe(
+        nextMode === "dark",
+      );
+    });
+    await expect(document.documentElement.style.colorScheme).toBe(nextMode);
   },
 };

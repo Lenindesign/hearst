@@ -5,18 +5,21 @@ import { DraggableBrandLogoMarquee } from "@/components/brand-logo-marquee";
 import { SiteFooter } from "@/components/fre/site-footer";
 import { entertainmentWebsiteFeedConfigs } from "@/lib/hearst-entertainment-story-feeds";
 import { hearstNewspaperPublications } from "@/lib/hearst-newspaper-feed-framework";
-import type { BrandTheme } from "@/lib/brands";
+import { brands, type BrandTheme } from "@/lib/brands";
 import { getHearstBrandRoute, getHearstDestinationRoute } from "@/lib/hearst-routes";
 import { hearstTVStations } from "@/lib/hearst-tv-feed-framework";
 import { brandLogos, resolveBrandLogoColor } from "@/lib/logos";
 import { themeOptions } from "@/lib/theme-options";
-import { getSelectedBrandTheme } from "@/components/hearst-plus/brand-theme-resolution";
 import { lifestyleRiverStories } from "@/components/lifestyle-river-data";
 import { baseDestinationConfigs, getLifestyleScoreBreakdown } from "@/lib/hearst-personalization-model";
 
 export const productImage = "https://hips.hearstapps.com/hmg-prod/images/4cf6b4aa-4f88-469f-a235-545368381794.jpeg";
-const documentationSample = lifestyleRiverStories.find((story) => story.id === "delish-food-news-a74209326-costco-kirkland-grass-fed-butter-irish-dairy")!;
+const documentationSample = lifestyleRiverStories.find((story) => story.id === "delish-food-news-a74237374-jimmy-johns-picklewich-pickle-pals-2026")!;
 const documentationSampleUrl = documentationSample.sourceUrl ?? getHearstBrandRoute(documentationSample.brandSlug);
+const documentationSamplePublishedDate = documentationSample.publishedAt
+  ? new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" }).format(new Date(documentationSample.publishedAt))
+  : null;
+const documentationSampleTheme = brands.find((brand) => brand.slug === documentationSample.brandSlug);
 const documentationSampleProfile = {
   followedTopics: ["Food"],
   followedBrands: ["Delish"],
@@ -51,20 +54,28 @@ export type ProductPageId = "reference" | "story" | "value" | "blueprint" | "ads
 const productLinkFocus =
   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
 
-export function ProductHeader({ current }: { current: ProductPageId }) {
+export function ProductHeader({ current, appearance = "light" }: { current: ProductPageId; appearance?: "light" | "navy" }) {
+  const isNavy = appearance === "navy";
+  const linkFocus = isNavy
+    ? "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-foreground"
+    : productLinkFocus;
+
   return (
-    <header data-current-product-page={current} className="border-b border-border bg-card">
+    <header
+      data-current-product-page={current}
+      className={isNavy ? "border-b border-primary-foreground/20 bg-[var(--hp-utility-bar)] text-primary-foreground" : "border-b border-border bg-card"}
+    >
       <div className="mx-auto flex max-w-[1360px] flex-col gap-2 px-5 py-3 md:px-10 lg:flex-row lg:items-center lg:justify-between lg:gap-5">
         <Link
           href={getHearstDestinationRoute("all")}
-          className={`flex min-h-11 items-center self-start ${productLinkFocus}`}
+          className={`flex min-h-11 items-center self-start ${linkFocus}`}
           aria-label="Hearst Magazines"
         >
-          <LogoMark slug="hearst-all" name="Hearst Magazines" color={hearstPrimaryColor} className="h-6 w-32 sm:w-40" />
+          <LogoMark slug="hearst-all" name="Hearst Magazines" color={isNavy ? knockoutContentColor : hearstPrimaryColor} className="h-6 w-32 sm:w-40" />
         </Link>
         <nav aria-label="Prototype navigation" className="hidden items-center gap-2 text-sm font-semibold lg:flex">
           <Link
-            className={`inline-flex min-h-11 items-center px-2 text-muted-foreground hover:text-foreground ${productLinkFocus}`}
+            className={`inline-flex min-h-11 items-center px-2 ${isNavy ? "text-primary-foreground/80 hover:text-primary-foreground" : "text-muted-foreground hover:text-foreground"} ${linkFocus}`}
             href={getHearstDestinationRoute("all")}
           >
             Open prototype
@@ -72,11 +83,11 @@ export function ProductHeader({ current }: { current: ProductPageId }) {
         </nav>
         <nav
           aria-label="Prototype navigation"
-          className="-mx-5 flex min-w-0 overflow-x-auto border-t border-border px-5 text-xs font-bold md:-mx-10 md:px-10 lg:hidden"
+          className={`-mx-5 flex min-w-0 overflow-x-auto border-t px-5 text-xs font-bold md:-mx-10 md:px-10 lg:hidden ${isNavy ? "border-primary-foreground/20" : "border-border"}`}
           style={{ scrollbarWidth: "none" }}
         >
           <Link
-            className={`inline-flex min-h-11 shrink-0 items-center px-3 text-muted-foreground ${productLinkFocus}`}
+            className={`inline-flex min-h-11 shrink-0 items-center px-3 ${isNavy ? "text-primary-foreground/80" : "text-muted-foreground"} ${linkFocus}`}
             href={getHearstDestinationRoute("all")}
           >
             Prototype
@@ -211,6 +222,18 @@ export const valueProps = [
 ];
 
 export function DemoNav() {
+  const brandColor = documentationSampleTheme?.semanticColors["palette-content-brand"];
+  const headlineStyle: CSSProperties | undefined = documentationSampleTheme
+    ? {
+        fontFamily: `"${documentationSampleTheme.fontHeadline}", Georgia, serif`,
+        fontWeight: documentationSampleTheme.fontHeadlineWeight,
+        fontStretch: documentationSampleTheme.fontHeadlineStretch || "normal",
+      }
+    : undefined;
+  const bodyStyle: CSSProperties | undefined = documentationSampleTheme
+    ? { fontFamily: `"${documentationSampleTheme.fontDefault}", Inter, system-ui, sans-serif` }
+    : undefined;
+
   return (
     <figure
       aria-label="Sample Delish story record used by the Hearst+ prototype"
@@ -224,35 +247,54 @@ export function DemoNav() {
           <Image src={documentationSample.image} alt="" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
         </div>
         <div className="p-5 sm:p-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">{documentationSample.brand} · {documentationSample.topic} · {documentationSample.readTime}</p>
-          <h3 className="mt-3 text-balance font-serif text-2xl leading-tight text-foreground sm:text-3xl">{documentationSample.title}</h3>
-          <p className="mt-3 text-sm leading-6 text-muted-foreground">{documentationSample.summary} By {documentationSample.byline}. Published October 22, 2026 in the sample feed snapshot.</p>
-          <span className="mt-5 inline-flex min-h-11 items-center font-semibold text-primary">Open the original Delish story <span aria-hidden="true" className="ml-2">↗</span></span>
+          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground" style={brandColor ? { color: brandColor } : undefined}>{documentationSample.brand} · {documentationSample.topic} · {documentationSample.readTime}</p>
+          <h3 className="mt-3 text-balance text-2xl leading-tight text-foreground sm:text-3xl" style={headlineStyle}>{documentationSample.title}</h3>
+          <p className="mt-3 text-sm leading-6 text-muted-foreground" style={bodyStyle}>{documentationSample.summary} By {documentationSample.byline}.{documentationSamplePublishedDate ? ` Published ${documentationSamplePublishedDate}` : ""} In the sample feed snapshot.</p>
+          <span className="mt-5 inline-flex min-h-11 items-center font-semibold text-primary" style={brandColor ? { color: brandColor } : undefined}>Open the original Delish story <span aria-hidden="true" className="ml-2">↗</span></span>
         </div>
       </Link>
       <div className="border-t border-border bg-muted/40 px-5 py-3 text-xs leading-5 text-muted-foreground sm:px-6">
-        Sample record from the checked-in public RSS snapshot. This card is a documentation example; the link opens Delish.
+        Sample record from the checked-in public RSS snapshot. This card is a documentation example; the link opens {documentationSample.brand}.
       </div>
     </figure>
   );
 }
 
-export function StoryCard({ ad = false }: { ad?: boolean }) {
+export function StoryCard({ ad = false, storyId }: { ad?: boolean; storyId?: string }) {
+  const story = storyId
+    ? lifestyleRiverStories.find((candidate) => candidate.id === storyId) ?? documentationSample
+    : documentationSample;
+  const storyUrl = story.sourceUrl ?? getHearstBrandRoute(story.brandSlug);
+  const storyTheme = brands.find((brand) => brand.slug === story.brandSlug);
+  const storyHeadlineStyle: CSSProperties | undefined = storyTheme
+    ? {
+        fontFamily: `"${storyTheme.fontHeadline}", Georgia, serif`,
+        fontWeight: storyTheme.fontHeadlineWeight,
+        fontStretch: storyTheme.fontHeadlineStretch || "normal",
+      }
+    : undefined;
+  const storyBodyStyle: CSSProperties | undefined = storyTheme
+    ? { fontFamily: `"${storyTheme.fontDefault}", Inter, system-ui, sans-serif` }
+    : undefined;
+  const publishedDate = story.publishedAt
+    ? new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" }).format(new Date(story.publishedAt))
+    : "Date unavailable";
+
   if (!ad) {
     return (
-      <article aria-label="Sample Delish editorial story" className="min-w-0 overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-[var(--hp-shadow-card)]">
-        <Link href={documentationSampleUrl} target="_blank" rel="noreferrer" className="group block focus-visible:outline-2 focus-visible:outline-primary">
+      <article aria-label={`Sample ${story.brand} editorial story`} className="min-w-0 overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-[var(--hp-shadow-card)]">
+        <Link href={storyUrl} target="_blank" rel="noreferrer" className="group block focus-visible:outline-2 focus-visible:outline-primary">
           <div className="relative aspect-[16/9] overflow-hidden bg-muted">
-            <Image src={documentationSample.image} alt="" fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
+            <Image src={story.image} alt="" fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
           </div>
           <div className="p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">{documentationSample.brand} · {documentationSample.topic}</p>
-            <h3 className="mt-3 text-balance font-serif text-xl leading-tight text-card-foreground">{documentationSample.title}</h3>
-            <p className="mt-3 text-sm leading-6 text-muted-foreground">{documentationSample.summary}</p>
-            <p className="mt-4 border-t border-border pt-3 text-xs text-muted-foreground">By {documentationSample.byline} · {documentationSample.readTime} · October 22, 2026</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">{story.brand} · {story.topic}</p>
+            <h3 className="mt-3 text-balance text-xl leading-tight text-card-foreground" style={storyHeadlineStyle}>{story.title}</h3>
+            <p className="mt-3 text-sm leading-6 text-muted-foreground" style={storyBodyStyle}>{story.summary}</p>
+            <p className="mt-4 border-t border-border pt-3 text-xs text-muted-foreground" style={storyBodyStyle}>By {story.byline ?? story.brand} · {story.readTime} · {publishedDate}</p>
           </div>
         </Link>
-        <p className="border-t border-border bg-muted/40 px-5 py-3 text-xs leading-5 text-muted-foreground">Sample public story metadata from the checked-in feed snapshot. Selecting the card opens Delish.</p>
+        <p className="border-t border-border bg-muted/40 px-5 py-3 text-xs leading-5 text-muted-foreground">Sample public story metadata from the checked-in feed snapshot. Selecting the card opens {story.brand}.</p>
       </article>
     );
   }
@@ -615,36 +657,24 @@ export function PaletteSystem() {
 }
 
 export function BrandStyleGuide() {
-  const sectionThemes = brandSections.map((section) => {
-    const theme = themeOptions.find((option) => option.slug === section.logoSlug);
-    return { section, theme };
-  });
-
   return (
     <div className="space-y-8">
       <div className="border border-border bg-card p-6">
         <div className="grid gap-5 border-b border-border pb-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
           <div className="max-w-xl">
-            <p className="text-xs font-black uppercase tracking-[0.16em] text-primary">Section style guides</p>
-            <h3 className="mt-4 font-serif text-4xl leading-none">Destinations set the broad visual voice.</h3>
+            <p className="text-xs font-black uppercase tracking-[0.16em] text-primary">Configured destinations</p>
+            <h3 className="mt-4 font-serif text-4xl leading-none">Readers enter through six destinations.</h3>
           </div>
-          <p className="max-w-2xl text-sm leading-6 text-muted-foreground">Each destination has a primary color, headline treatment and dark-mode companion. Individual brands inherit the section context when their own brand token is not available.</p>
+          <p className="max-w-2xl text-sm leading-6 text-muted-foreground">These links describe the prototype’s configured routes. The brand samples below show color and type only when a canonical brand token record exists in <code>tokens/brands</code>.</p>
         </div>
-        <div className="mt-6 grid gap-3 xl:grid-cols-2">
-          {sectionThemes.map(({ section, theme }) => (
-            <StyleTile
-              key={section.name}
-              name={section.name}
-              slug={section.logoSlug}
-              href={section.route}
-              color={section.color}
-              accent={theme?.colors["2"] || neutralAccentColor}
-              headline={theme?.fontHeadline || "Newsreader"}
-              body={theme?.fontDefault || "Inter"}
-              sample="Distinct editorial rhythm"
-            />
+        <nav aria-label="Configured destinations" className="mt-6 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+          {brandSections.map((section) => (
+            <Link key={section.name} href={section.route} className="flex min-h-12 items-center justify-between gap-3 border border-border px-4 py-3 text-sm font-semibold text-foreground transition hover:border-primary hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+              <span>{section.name}</span>
+              <span className="text-xs font-normal text-muted-foreground">{section.brands.length} configured brands</span>
+            </Link>
           ))}
-        </div>
+        </nav>
       </div>
 
       {brandSections.map((section) => (
@@ -658,7 +688,36 @@ export function BrandStyleGuide() {
           </Link>
           <div className="mt-5 grid gap-3 lg:grid-cols-2">
             {section.brands.map(([name, slug]) => {
-              const theme = getBrandStyleTheme(name, slug, section.logoSlug);
+              const theme = getBrandStyleTheme(slug);
+              if (!theme) {
+                return (
+                  <article key={slug} className="grid min-w-0 gap-5 border border-border bg-muted/35 p-4 sm:grid-cols-[12rem_minmax(0,1fr)]">
+                    <div className="flex min-w-0 flex-col justify-between">
+                      <div>
+                        <LogoMark slug={slug} name={name} color="var(--foreground)" className="h-8 w-36" />
+                        <p className="mt-3 text-xs font-bold text-muted-foreground">{name}</p>
+                      </div>
+                      <span className="mt-5 text-xs font-bold text-muted-foreground">Canonical brand tokens unavailable</span>
+                    </div>
+                    <div className="min-w-0 self-center">
+                      <p className="text-sm leading-6 text-muted-foreground">No brand token JSON is registered for this publication in the repository. Color and type samples are omitted until canonical values are available.</p>
+                    </div>
+                  </article>
+                );
+              }
+              const brandColor = theme.semanticColors["palette-content-brand"];
+              const brandSurface = theme.semanticColors["palette-background-subtle-brand"];
+              if (!brandColor || !brandSurface) {
+                return (
+                  <article key={slug} className="grid min-w-0 gap-5 border border-border bg-muted/35 p-4 sm:grid-cols-[12rem_minmax(0,1fr)]">
+                    <div>
+                      <LogoMark slug={slug} name={name} color="var(--foreground)" className="h-8 w-36" />
+                      <p className="mt-3 text-xs font-bold text-muted-foreground">{name}</p>
+                    </div>
+                    <p className="self-center text-sm leading-6 text-muted-foreground">The registered brand token file is missing the semantic color roles required for this sample. Color and type samples are omitted rather than inferred.</p>
+                  </article>
+                );
+              }
               const inherited = theme.slug === section.logoSlug;
               return (
                 <StyleTile
@@ -666,9 +725,11 @@ export function BrandStyleGuide() {
                   name={name}
                   slug={slug}
                   href={getHearstBrandRoute(slug)}
-                  color={theme.colors["1"] || section.color}
-                  accent={theme.colors["2"] || neutralAccentColor}
+                  color={brandColor}
+                  accent={brandSurface}
                   headline={theme.fontHeadline}
+                  headlineWeight={theme.fontHeadlineWeight}
+                  headlineStretch={theme.fontHeadlineStretch}
                   body={theme.fontDefault}
                   sample={inherited ? "Section inherited theme" : "Brand voice sample"}
                   inherited={inherited}
@@ -682,24 +743,20 @@ export function BrandStyleGuide() {
   );
 }
 
-function getBrandStyleTheme(name: string, slug: string, sectionSlug: string): BrandTheme {
+function getBrandStyleTheme(slug: string): BrandTheme | null {
   const aliases: Record<string, string> = {
     "pioneer-woman": "the-pioneer-woman",
   };
-  const registeredTheme = themeOptions.find((option) => option.slug === slug)
-    || themeOptions.find((option) => option.slug === aliases[slug]);
-  if (registeredTheme) return registeredTheme;
-
-  const sectionTheme = themeOptions.find((option) => option.slug === sectionSlug) || themeOptions[0];
-  return getSelectedBrandTheme({ name, slug }, sectionTheme) || sectionTheme;
+  const normalizedSlug = aliases[slug] || slug;
+  return brands.find((brand) => brand.slug === normalizedSlug) || null;
 }
 
-function StyleTile({ name, slug, href, color, accent, headline, body, sample, inherited = false }: { name: string; slug: string; href: string; color: string; accent: string; headline: string; body: string; sample: string; inherited?: boolean }) {
+function StyleTile({ name, slug, href, color, accent, headline, headlineWeight, headlineStretch, body, sample, inherited = false }: { name: string; slug: string; href: string; color: string; accent: string; headline: string; headlineWeight: number; headlineStretch?: string; body: string; sample: string; inherited?: boolean }) {
   return (
     <Link href={href} className="group grid min-w-0 gap-5 border border-border bg-muted/35 p-4 transition hover:border-primary/45 sm:grid-cols-[12rem_minmax(0,1fr)]">
       <div className="flex min-w-0 flex-col justify-between">
         <div>
-          <LogoMark slug={slug} name={name} color="var(--foreground)" className="h-8 w-36" />
+          <LogoMark slug={slug} name={name} color={color} className="h-8 w-36" />
           <p className="mt-3 text-xs font-bold text-muted-foreground group-hover:text-foreground">{name}</p>
         </div>
         <div className="mt-5">
@@ -715,7 +772,7 @@ function StyleTile({ name, slug, href, color, accent, headline, body, sample, in
           <span className="text-[11px] font-black uppercase tracking-[0.14em] text-primary">Type sample</span>
           {inherited && <span className="border border-border bg-card px-2 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">section inherited</span>}
         </div>
-        <p className="mt-3 max-w-full text-balance text-2xl leading-[1.05] text-foreground" style={{ fontFamily: `"${headline}", Georgia, serif`, fontWeight: 700 }}>{sample}</p>
+        <p className="mt-3 max-w-full text-balance text-2xl leading-[1.05]" style={{ color, fontFamily: `"${headline}", Georgia, serif`, fontWeight: headlineWeight, fontStretch: headlineStretch || "normal" }}>{sample}</p>
         <p className="mt-3 text-sm leading-6 text-muted-foreground" style={{ fontFamily: `"${body}", Inter, system-ui, sans-serif` }}>Body copy uses the brand default font for metadata, controls and explanatory text.</p>
         <dl className="mt-4 grid gap-2 border-t border-border pt-4 text-xs text-muted-foreground sm:grid-cols-2">
           <div><dt className="font-bold text-foreground">Headline</dt><dd className="mt-1">{headline}</dd></div>

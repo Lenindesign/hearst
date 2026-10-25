@@ -13,7 +13,7 @@ import {
   hearstPlusVideoStoryData,
 } from "./hearst-plus-story-data";
 
-const presentationLabels = [
+const supportedPresentationLabels = [
   "Article",
   "Gallery",
   "Watch",
@@ -27,6 +27,13 @@ const presentationStories = [
   ...hearstPlusStoryData.all.stories,
   ...hearstPlusVideoStoryData.all.stories,
 ];
+
+const presentationLabels = supportedPresentationLabels.filter((label) =>
+  presentationStories.some((candidate) => {
+    const kind = getLifestyleCardKind(candidate);
+    return getLifestyleKindLabel(kind, candidate) === label;
+  }),
+);
 
 function getPresentationStory(label: typeof presentationLabels[number]) {
   const story = presentationStories.find((candidate) => {
@@ -90,13 +97,13 @@ function StoryPresentationMatrix() {
       <div className="mx-auto w-full max-w-[1180px]">
         <div className="mb-6 max-w-3xl">
           <p className="text-xs font-bold uppercase tracking-widest text-primary">
-            Production rules
+            Checked-in production samples
           </p>
           <h1 className="headline mt-2 text-3xl">Story presentation matrix</h1>
           <p className="mt-2 text-sm leading-6 text-foreground">
-            Each specimen uses checked-in production-aligned editorial metadata.
-            The shared resolver decides the card meaning once; the river,
-            reader, filters, and stakeholder counts consume the same result.
+            Each specimen uses a checked-in editorial record and the production
+            resolver. Formats without a checked-in sample are omitted rather
+            than represented with invented story data.
           </p>
         </div>
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
@@ -141,7 +148,9 @@ export const ClassificationMatrix: Story = {
       await expect(specimen).toBeInTheDocument();
     }
 
-    await expect(canvas.getByText("0-60")).toBeVisible();
+    await expect(
+      canvasElement.querySelectorAll("[data-story-presentation]").length,
+    ).toBe(presentationLabels.length);
     await expect(canvas.getAllByText(/editor picks/)[0]).toBeVisible();
     await expect(canvas.getAllByRole("img")).toHaveLength(presentationLabels.length);
   },

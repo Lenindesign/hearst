@@ -109,7 +109,7 @@ const preview: Preview = {
             "Start",
             ["Overview", "Site Map", "Architecture", "Component Architecture", "Technology Stack", "Repository Docs"],
             "Product",
-            ["For You Feed", "Lifestyle Destination", "HOT ROD Events", "Onboarding Journey"],
+            ["For You Feed", "Lifestyle Destination", "Onboarding Journey"],
             "Components",
             [
               "Inventory",

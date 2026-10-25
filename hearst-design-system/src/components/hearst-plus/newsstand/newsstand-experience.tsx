@@ -195,7 +195,7 @@ export function NewsstandExperience() {
             <h1 className="headline text-balance text-[clamp(32px,6vw,116px)] font-black leading-[0.92] tracking-[-0.045em]">
               <span className="text-primary">Every</span> Hearst brand. <span className="text-primary">One</span> app.
             </h1>
-            <p className="max-w-[440px] text-pretty text-lg leading-7 text-muted-foreground">
+            <p className="max-w-[440px] text-pretty text-lg leading-7 text-[var(--palette-alert-info-1000)]">
               Stories, videos and recipes from Esquire, Cosmopolitan, Harper&apos;s Bazaar, Good Housekeeping, Car and Driver and 22 more Hearst brands, in one personalized feed that gets better the more you read.
             </p>
             {/* Preview first: the page's main action is looking inside the app; the trial and price live in the plans section. */}

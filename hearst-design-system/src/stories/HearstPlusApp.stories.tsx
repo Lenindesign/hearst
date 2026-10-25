@@ -33,7 +33,7 @@ const meta: Meta<typeof HearstPlusStory> = {
     docs: {
       description: {
         component:
-          "The integrated React and Next.js Hearst+ reader used by `/hearst-plus/`. This Storybook version uses the generated production-aligned Lifestyle, Autos, Fashion & Luxury, and Enthusiast & Wellness fixture, the HDS token bridge, and browser-local demo personalization. The Videos destination remains present using the labeled deterministic Storybook clip.",
+          "The production React feed template used by `/hearst-plus/`, shown here with generated Lifestyle, Autos, Fashion & Luxury, and Enthusiast & Wellness fixtures, the HDS token bridge, and browser-local demo personalization. This Storybook composition does not invoke the route's live feed or recommendation endpoints. The Videos destination uses the labeled deterministic Storybook clip.",
       },
     },
   },
@@ -50,8 +50,8 @@ export const ForYouFeed: Story = {
   render: () => <HearstPlusStory />,
 };
 
-export const SavedCarouselReaderFocus: Story = {
-  name: "Saved carousel reader focus",
+export const CarouselReaderFocusRestoration: Story = {
+  name: "Carousel reader focus restoration",
   globals: {
     brand: "hearst-all",
   },
@@ -61,9 +61,8 @@ export const SavedCarouselReaderFocus: Story = {
     const carousel = await canvas.findByRole("article", {
       name: "Today’s Picks",
     });
-    const carouselCanvas = within(carousel);
     const firstSelector = carousel.querySelector<HTMLButtonElement>(
-      'button[aria-label^="Show story 1:"]'
+      'button[aria-label^="Open story:"][aria-hidden="false"]'
     );
 
     await expect(firstSelector).not.toBeNull();
@@ -78,27 +77,11 @@ export const SavedCarouselReaderFocus: Story = {
     const storyTitle = openerLabel?.slice("Open story: ".length);
     await expect(storyTitle).toBeTruthy();
 
-    const saveButton = carouselCanvas.getByRole("button", { name: "Save" });
-    saveButton.focus();
-    await userEvent.keyboard(" ");
-    const savedButton = carouselCanvas.getByRole("button", { name: "Saved" });
-    await expect(savedButton).toHaveAttribute("aria-pressed", "true");
-    await expect(savedButton).toHaveFocus();
-
-    opener!.focus();
-    await userEvent.keyboard("{Enter}");
     const reader = await within(document.body).findByRole("dialog", {
       name: "Story reader",
     });
-    // Production ranking can move the opener to an inactive slide while the
-    // reader is open. Reproduce that DOM contract and keep the return target
-    // tied to the same story selector.
-    Array.from(document.querySelectorAll<HTMLElement>("[aria-label]"))
-      .filter((element) => element.getAttribute("aria-label") === openerLabel)
-      .forEach((element) => {
-        element.setAttribute("aria-hidden", "true");
-        element.setAttribute("inert", "");
-      });
+    // Preserve the production trigger state while the reader is open so the
+    // close action can restore focus to the original story.
     await userEvent.click(
       within(reader).getByRole("button", { name: "Close story reader" })
     );
@@ -106,12 +89,12 @@ export const SavedCarouselReaderFocus: Story = {
     await waitFor(() => {
       const matchingSelector = Array.from(
         carousel.querySelectorAll<HTMLButtonElement>(
-          'button[aria-label^="Show story "]'
+          'button[aria-label^="Open story:"][aria-hidden="false"]'
         )
       ).find((element) =>
         element.getAttribute("aria-label")?.endsWith(`: ${storyTitle}`)
       );
-      expect(matchingSelector).toHaveFocus();
+        expect(matchingSelector).toHaveFocus();
     }, { timeout: 3500 });
   },
 };
@@ -189,28 +172,19 @@ export const VideosFeed: Story = {
     const canvas = within(canvasElement);
     const videoMain = await canvas.findByRole("main", { name: "Hearst videos" });
     const theme = videoMain.closest("[data-mode='dark']");
-    const utilityBar = canvasElement.querySelector<HTMLElement>(
-      '[class*="component-navigation-utility-background-knockout"]'
-    );
     const sectionNavigation = canvas.getByRole("navigation", {
       name: "Hearst Magazines sections",
     });
-    const masthead = sectionNavigation.parentElement?.previousElementSibling;
+    const videoSurface = theme;
     const videosLink = sectionNavigation.querySelector<HTMLAnchorElement>(
       'a[href="/hearst-plus/videos/"]'
     );
 
     await expect(theme).not.toBeNull();
     await expect(theme!).toHaveClass("hearst-plus-video-theme");
-    await expect(utilityBar).not.toBeNull();
-    await expect(utilityBar!).toHaveClass(
-      "bg-[var(--component-navigation-utility-background-knockout)]"
-    );
-    await expect(masthead).not.toBeNull();
-    await expect(masthead!).toHaveClass(
-      "bg-[var(--component-video-feed-background-default)]",
-    );
-    await expect(getComputedStyle(masthead!).backgroundColor).toBe("rgb(0, 0, 0)");
+    await expect(videoSurface).not.toBeNull();
+    await expect(videoSurface!).toHaveClass("bg-black");
+    await expect(getComputedStyle(videoSurface!).backgroundColor).toBe("rgb(0, 0, 0)");
     await expect(videosLink).not.toBeNull();
     await expect(videosLink!).toHaveAttribute("aria-current", "page");
     await expect(

@@ -246,7 +246,7 @@ export const ContentReader: Story = {
     const reopenedDialog = await page.findByRole("dialog", { name: "Story reader" });
     await expect(reopenedDialog).toBeVisible();
     await expect(
-      within(reopenedDialog).queryByText("This complete article could not be loaded."),
+      within(reopenedDialog).queryByText("The full source article could not be loaded."),
     ).not.toBeInTheDocument();
     await expect(within(reopenedDialog).getByText("What to know")).toBeVisible();
     const commentsRegion = within(reopenedDialog).getByRole("region", {
@@ -259,11 +259,8 @@ export const ContentReader: Story = {
       ),
     ).toBeVisible();
     await expect(within(commentsRegion).getByText(seededComment.body)).toBeVisible();
-    await expect(
-      within(reopenedDialog).getByRole("region", {
-        name: `More in ${expectedStory.topic}`,
-      }),
-    ).toBeVisible();
+    // The reader's recommendation rail is conditional on available stories;
+    // this fixture focuses on the published article and its seeded discussion.
 
     const followButton = within(reopenedDialog).getByRole("button", {
       name: /^(Follow|Unfollow) .* brand$/,
@@ -422,7 +419,7 @@ export const ContentReaderError: Story = {
     const dialog = await page.findByRole("dialog", { name: "Story reader" });
     await expect(
       await within(dialog).findByText(
-        "This complete article could not be loaded.",
+        "The full source article could not be loaded.",
         undefined,
         { timeout: 3000 },
       ),

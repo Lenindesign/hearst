@@ -72,7 +72,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const PrototypeCreative: Story = {
-  name: "Prototype creative: CTA unavailable",
+  name: "Prototype creative without a verified destination",
   render: (args) => <RiverCanvas {...args} />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -82,10 +82,8 @@ export const PrototypeCreative: Story = {
 
     await expect(advertisement).toBeVisible();
     await expect(
-      within(advertisement).getByLabelText(
-        "Prototype CTA unavailable: Open lookbook",
-      ),
-    ).toBeVisible();
+      within(advertisement).queryByText(/Prototype CTA unavailable/i),
+    ).not.toBeInTheDocument();
     await expect(
       within(advertisement).queryByRole("button", { name: "Open lookbook" }),
     ).not.toBeInTheDocument();
@@ -135,10 +133,10 @@ export const ResponsiveMobile: Story = {
       window.innerWidth,
     );
     await expect(
-      within(advertisement).getByLabelText(
-        "Prototype CTA unavailable: Open lookbook",
-      ).getBoundingClientRect().height,
-    ).toBeGreaterThanOrEqual(44);
+      within(advertisement).queryByRole("link", {
+        name: "Open lookbook: The Event Lookbook",
+      }),
+    ).not.toBeInTheDocument();
   },
 };
 

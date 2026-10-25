@@ -66,19 +66,11 @@ const metadata: ComponentMetadata = {
     "concluded",
   ],
   caveats: [
-    "Production application routes are the source of truth. The direct stories import these exact exports and do not maintain a parallel template.",
+    "This template is intentionally excluded from Storybook. Review the routed production pages for Power Tour and Drag Week when validating this experience; Storybook does not currently claim coverage for them.",
     "The HOT ROD palette is an approved route-scoped composition documented in BRAND_STYLES.md; it must not leak into shared Autos or publication components.",
     "Event dates, availability, ticket terms, and external links are checked-in public information rather than a live organizer integration. The production footer tells readers to confirm with the organizer.",
     "The horizontal production navigation intentionally scrolls on narrow screens; active-item visibility and edge discoverability require continued responsive review.",
   ],
-  storybook: {
-    kind: "direct",
-    stories: [
-      "src/stories/HearstPlusHotRodEvents.stories.tsx",
-    ],
-    rationale:
-      "Five direct stories import the exact routed exports and specify the event hub, Power Tour detail, Drag Week detail, calendar/list interaction, event and ticket states, and the two distinct mobile compositions.",
-  },
   violations: [
     {
       type: "hardcoded-color",

@@ -27,8 +27,8 @@
   --hp-font-headline-weight: 800;
   --hp-background: #ECE9E3;
   --hp-nav: var(--primary);
-  /* The Hearst+ home's utility bar: the logo navy, so the logo's blue plus is the header's one bright blue. */
-  --hp-utility-bar: #012247;
+  /* Shared Hearst+ navy uses the canonical core information-blue token, not a brand-scoped primary. */
+  --hp-utility-bar: var(--palette-alert-info-1000);
   --hp-nav-translucent: color-mix(in oklab, var(--primary) 94%, transparent);
   --hp-strip: #ffffff;
   --hp-surface-deep: var(--foreground);
@@ -1105,7 +1105,7 @@
   --reference-heading-weight: var(--hp-font-headline-weight, 800);
   --reference-heading-1-size: clamp(2.5rem, 4vw, 3.5rem);
   --reference-heading-2-size: clamp(2rem, 3vw, 2.75rem);
-  --reference-heading-3-size: clamp(1.375rem, 1.8vw, 1.625rem);
+  --reference-heading-3-size: clamp(1.125rem, 1.5vw, 1.375rem);
   --reference-heading-4-size: 1.125rem;
   --reference-heading-1-leading: 1.06;
   --reference-heading-2-leading: 1.1;
@@ -1125,11 +1125,15 @@
 }
 .hearst-plus-reference h1,
 .reference-source h1 {
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-weight: 500 !important;
   font-size: var(--reference-heading-1-size) !important;
   line-height: var(--reference-heading-1-leading) !important;
 }
 .hearst-plus-reference h2,
 .reference-source h2 {
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-weight: 500 !important;
   font-size: var(--reference-heading-2-size) !important;
   line-height: var(--reference-heading-2-leading) !important;
 }

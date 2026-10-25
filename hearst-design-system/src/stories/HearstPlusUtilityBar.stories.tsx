@@ -53,7 +53,7 @@ export const LightGuest: Story = {
       name: "Lifestyle",
     });
     lifestyleLink.focus();
-    const menu = await canvas.findByRole("menu", { name: "Lifestyle brands" });
+    const menu = await canvas.findByRole("menu", { name: "Lifestyle menu" });
     await expect(menu).toBeVisible();
     await expect(within(menu).getByRole("menuitem", { name: /Country Living/ })).toHaveAttribute(
       "href",
@@ -93,7 +93,7 @@ export const SelectedPublication: Story = {
     await expect(lifestyleLink).toHaveAttribute("aria-current", "page");
     lifestyleLink.focus();
 
-    const menu = await canvas.findByRole("menu", { name: "Lifestyle brands" });
+    const menu = await canvas.findByRole("menu", { name: "Lifestyle menu" });
     const currentBrand = within(menu).getByRole("menuitem", {
       name: /Country Living Current/,
     });
@@ -125,7 +125,7 @@ export const DarkVideos: Story = {
     await expect(autosLink).toHaveAttribute("aria-current", "page");
     autosLink.focus();
     await expect(
-      await canvas.findByRole("menu", { name: "Autos brands" }),
+      await canvas.findByRole("menu", { name: "Autos menu" }),
     ).toBeVisible();
   },
 };

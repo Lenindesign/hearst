@@ -28,7 +28,7 @@ export const hearstPlusLightVars: HearstPlusCssVars = {
 
   "--hp-background": "var(--background)",
   "--hp-nav": "var(--primary)",
-  "--hp-utility-bar": "#012247",
+  "--hp-utility-bar": "var(--palette-alert-info-1000)",
   "--hp-nav-translucent": "color-mix(in oklab, var(--primary) 94%, transparent)",
   "--hp-strip": "var(--card)",
   "--hp-surface-deep": "var(--foreground)",

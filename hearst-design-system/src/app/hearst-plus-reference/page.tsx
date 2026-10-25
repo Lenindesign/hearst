@@ -167,7 +167,7 @@ function HearstPlusSystemContent() {
 export default function HearstPlusReferencePage() {
   return (
     <div className="hearst-plus-theme hearst-plus-reference min-h-screen overflow-x-clip bg-background text-foreground">
-      <ProductHeader current="reference" />
+      <ProductHeader current="reference" appearance="navy" />
       <main>
         <section className="border-b border-border bg-card">
           <div className="mx-auto grid max-w-[1360px] gap-10 px-5 py-14 md:px-10 md:py-20 lg:grid-cols-[minmax(0,1.2fr)_minmax(300px,.8fr)] lg:items-center">
@@ -177,10 +177,10 @@ export default function HearstPlusReferencePage() {
               <p className="mt-6 max-w-3xl text-base leading-7 text-muted-foreground md:text-lg">Hearst+ is intended for readers moving among selected Hearst editorial, local-news, and entertainment sources. Its proposed mechanism is one discovery and reading path that keeps each publication visible. Why review it now? A working prototype and checked-in content snapshots make the proposition concrete enough to inspect. The repository does not report research showing which readers value it, whether they return more often, register, or pay.</p>
               <p className="mt-4 max-w-3xl text-sm leading-6 text-muted-foreground">This reference follows the argument in order: the case, the reader, the experience, the systems behind it, and the evidence and limits that should guide the next decision.</p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link href="/hearst-plus/" className="inline-flex min-h-11 items-center rounded-md bg-primary px-5 text-sm font-bold text-primary-foreground">Open the prototype</Link>
+                <Link href="/hearst-plus/" className="inline-flex min-h-11 items-center rounded-md bg-[var(--hp-utility-bar)] px-5 text-sm font-bold text-primary-foreground">Open the prototype</Link>
               </div>
             </div>
-            <aside aria-label="Decision framing" className="border border-primary bg-primary p-6 text-primary-foreground md:p-8">
+            <aside aria-label="Decision framing" className="border border-[var(--hp-utility-bar)] bg-[var(--hp-utility-bar)] p-6 text-primary-foreground md:p-8">
               <p className="text-xs font-bold uppercase tracking-[.16em] text-primary-foreground">Decision question</p>
               <h2 className="mt-4 font-serif text-2xl leading-tight">Should Hearst continue validating a shared, source-aware reader?</h2>
               <div className="mt-6 grid gap-5 border-t border-primary-foreground/25 pt-5 sm:grid-cols-2">
