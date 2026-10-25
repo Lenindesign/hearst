@@ -209,7 +209,7 @@ export function BrandPromotionRiverModule({
                 <span className="min-w-0">
                   {renderFormatLabel(story)}
                   <span className={cn(
-                    "headline mt-1 line-clamp-3 block text-[clamp(1.125rem,7cqw,2rem)] leading-tight",
+                    "headline mt-1 line-clamp-3 block text-[clamp(1.125rem,5.4cqw,2rem)] leading-tight",
                     isAEFamilyPromotion ? "text-white" : "text-foreground",
                   )}>
                     {story.title}
