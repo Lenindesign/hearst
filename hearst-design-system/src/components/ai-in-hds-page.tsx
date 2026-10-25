@@ -6,7 +6,6 @@ import Link from "next/link";
 import { ProductFooter, ProductHeader } from "./product-story-shell";
 import {
   Bookmark,
-  Check,
   CheckCircle2,
   ChevronRight,
   CircleX,
@@ -18,17 +17,12 @@ import {
   SlidersHorizontal,
   Sparkles,
   TriangleAlert,
-  X,
   Zap,
 } from "@/components/ui/icons";
 
 interface WorkflowAuditItem {
   id: string;
   title: string;
-  category: "High Leverage (🟢)" | "Conditional (🟡)" | "Fragile / Limited (🔴)";
-  score: string;
-  verdict: "High Utility" | "Moderate Utility" | "Fragile / High Risk";
-  statusColor: "emerald" | "amber" | "rose";
   summary: string;
   whatWorks: string[];
   whatFails: string[];
@@ -39,14 +33,10 @@ const WORKFLOW_AUDITS: WorkflowAuditItem[] = [
   {
     id: "docs",
     title: "01. Architecture Synthesis & Living Documentation",
-    category: "High Leverage (🟢)",
-    score: "9.5 / 10",
-    verdict: "High Utility",
-    statusColor: "emerald",
     summary: "Compiling complex cross-template rules, 5-layer hierarchy matrices, sidebar rail behaviors, and component contracts into interactive, living documentation.",
     whatWorks: [
       "Translates complex markdown specs (DESIGN-SYSTEM-SPEC.md, APP_RULES.md) into interactive React documentation pages in minutes.",
-      "Maintains 100% fidelity with codebase contracts without manual copy-pasting.",
+      "Can summarize relationships across source documents when those documents are provided and checked against the code.",
       "Synthesizes multi-page state matrices (Home vs Article, reading modes, layout switchers).",
     ],
     whatFails: [
@@ -58,10 +48,6 @@ const WORKFLOW_AUDITS: WorkflowAuditItem[] = [
   {
     id: "tokens-multi-brand",
     title: "02. Multi-Brand Token Propagation (29+ Brands)",
-    category: "High Leverage (🟢)",
-    score: "9.0 / 10",
-    verdict: "High Utility",
-    statusColor: "emerald",
     summary: "Translating brand design decisions into Style Dictionary token mappings and applying them across 29+ publication identities.",
     whatWorks: [
       "Propagates token variable changes across all brand directories (Cosmopolitan, Car and Driver, Delish, etc.) without human fatigue.",
@@ -77,15 +63,11 @@ const WORKFLOW_AUDITS: WorkflowAuditItem[] = [
   {
     id: "scaffolding",
     title: "03. Component & Layout Scaffolding",
-    category: "High Leverage (🟢)",
-    score: "8.5 / 10",
-    verdict: "High Utility",
-    statusColor: "emerald",
     summary: "Assembling responsive multi-column layouts, 5-image composite grids, aspect ratio containers, and accessible Radix/shadcn primitives from design specs.",
     whatWorks: [
       "Rapidly generates complex responsive layouts (8+4 reading grids, 5-image mosaic layouts, 9:16 vertical shorts containers).",
       "Correctly hooks up ARIA attributes, focus traps, keyboard shortcuts, and semantic landmarks.",
-      "Eliminates hours of boilerplate construction for new card models and sidebar rails.",
+      "Can draft repetitive markup for new card models and sidebar rails for engineering review.",
     ],
     whatFails: [
       "Tendency to inject ad-hoc utility classes rather than using canonical design tokens unless strictly prompted.",
@@ -96,10 +78,6 @@ const WORKFLOW_AUDITS: WorkflowAuditItem[] = [
   {
     id: "guardrails",
     title: "04. Pattern Auditing & Rule Enforcement",
-    category: "Conditional (🟡)",
-    score: "7.5 / 10",
-    verdict: "Moderate Utility",
-    statusColor: "amber",
     summary: "Scanning codebase components to flag anti-patterns, banned generic chips ('Watch', 'Article'), aspect ratio violations, or missing byline metadata.",
     whatWorks: [
       "Excellent at grep/pattern scanning for deprecated utility classes, non-token colors, or unauthorized UI chips.",
@@ -114,10 +92,6 @@ const WORKFLOW_AUDITS: WorkflowAuditItem[] = [
   {
     id: "token-governance",
     title: "05. Autonomous Token Governance & Versioning",
-    category: "Fragile / Limited (🔴)",
-    score: "3.0 / 10",
-    verdict: "Fragile / High Risk",
-    statusColor: "rose",
     summary: "Allowing AI agents to autonomously migrate token schemas, rename legacy variables, or manage bi-directional Figma-to-code token sync.",
     whatWorks: [
       "Generating pull request diffs for human review when migrating deprecated tokens.",
@@ -132,10 +106,6 @@ const WORKFLOW_AUDITS: WorkflowAuditItem[] = [
   {
     id: "taste",
     title: "06. Autonomous Aesthetic Judgment & Optical Pacing",
-    category: "Fragile / Limited (🔴)",
-    score: "2.0 / 10",
-    verdict: "Fragile / High Risk",
-    statusColor: "rose",
     summary: "Relying on AI models to generate editorial aesthetics, color palettes, optical typography spacing, or editorial visual hierarchy from scratch.",
     whatWorks: [
       "Executing human-defined typographic hierarchies (e.g. applying Newsreader 32px with -0.02em tracking).",
@@ -651,78 +621,47 @@ export function AiInHdsPageComponent() {
           </div>
         </section>
 
-        {/* ─── SECTION 5: COMPREHENSIVE WORKFLOW AUDIT SCORECARD ─── */}
+        {/* ─── SECTION 5: WORKFLOW REVIEW ─── */}
         <section className="space-y-8">
           <header className="border-t-2 border-[#102A43] pt-6">
-            <p className="text-xs font-bold uppercase tracking-wider text-[#2D75B9]">Scorecard &amp; Audit</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-[#2D75B9]">Workflow review</p>
             <h2 className="mt-3 max-w-4xl text-balance font-serif text-3xl font-bold leading-[1.05] tracking-[-0.02em] text-[#102A43] md:text-4xl">
-              HDS Workflow Audit: What Works vs. What Fails
+              Potential uses and their limits
             </h2>
             <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600">
-              A breakdown of 6 specific design system workflows evaluated for accuracy, risk, and utility:
+              These examples are qualitative considerations, not measured results. Performance, quality, and time savings have not been evaluated in this document.
             </p>
           </header>
 
-          <div className="space-y-6">
+          <div>
             {WORKFLOW_AUDITS.map((item) => (
-              <div key={item.id} className="border border-slate-200 bg-white p-6 md:p-8 shadow-xs">
-                <div className="flex flex-col justify-between gap-3 border-b border-slate-100 pb-4 sm:flex-row sm:items-center">
+              <article key={item.id} className="border-t border-slate-300 py-6 last:border-b">
+                <header className="max-w-4xl">
+                  <h3 className="text-xl font-semibold text-[#102A43]">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-slate-600">{item.summary}</p>
+                </header>
+
+                <div className="mt-5 grid gap-6 border-t border-slate-200 pt-5 md:grid-cols-2 md:gap-10">
                   <div>
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#2D75B9]">{item.category}</span>
-                    <h3 className="mt-1 text-xl font-bold text-[#102A43]">{item.title}</h3>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span
-                      className={`rounded px-2.5 py-1 text-xs font-bold ${
-                        item.statusColor === "emerald"
-                          ? "bg-emerald-100 text-emerald-800"
-                          : item.statusColor === "amber"
-                          ? "bg-amber-100 text-amber-800"
-                          : "bg-rose-100 text-rose-800"
-                      }`}
-                    >
-                      Utility: {item.score}
-                    </span>
-                  </div>
-                </div>
-
-                <p className="mt-4 text-sm text-slate-600 leading-relaxed">{item.summary}</p>
-
-                <div className="mt-6 grid gap-6 md:grid-cols-2">
-                  <div className="rounded bg-emerald-50/50 p-4 border border-emerald-100">
-                    <span className="flex items-center gap-1.5 text-xs font-bold text-emerald-900 uppercase tracking-wider">
-                      <Check className="size-3.5 text-emerald-700" /> What Works Reliably:
-                    </span>
-                    <ul className="mt-3 space-y-1.5 text-xs text-emerald-950">
-                      {item.whatWorks.map((point, i) => (
-                        <li key={i} className="flex items-start gap-2">
-                          <span className="mt-1 size-1.5 shrink-0 rounded-full bg-emerald-700" />
-                          <span>{point}</span>
-                        </li>
-                      ))}
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-600">Potential application</h4>
+                    <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-6 text-slate-700">
+                      {item.whatWorks.map((point, i) => <li key={i}>{point}</li>)}
                     </ul>
                   </div>
 
-                  <div className="rounded bg-rose-50/50 p-4 border border-rose-100">
-                    <span className="flex items-center gap-1.5 text-xs font-bold text-rose-900 uppercase tracking-wider">
-                      <X className="size-3.5 text-rose-600" /> What Fails / Risks:
-                    </span>
-                    <ul className="mt-3 space-y-1.5 text-xs text-rose-950">
-                      {item.whatFails.map((point, i) => (
-                        <li key={i} className="flex items-start gap-2">
-                          <span className="mt-1 size-1.5 shrink-0 rounded-full bg-rose-600" />
-                          <span>{point}</span>
-                        </li>
-                      ))}
+                  <div>
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-600">Limits to account for</h4>
+                    <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-6 text-slate-700">
+                      {item.whatFails.map((point, i) => <li key={i}>{point}</li>)}
                     </ul>
                   </div>
                 </div>
 
-                <div className="mt-4 border-t border-slate-100 pt-3 text-xs text-slate-600">
-                  <strong className="text-[#102A43]">HDS Policy: </strong>
+                <p className="mt-5 border-t border-slate-200 pt-4 text-sm leading-6 text-slate-600">
+                  <strong className="text-[#102A43]">HDS guidance: </strong>
                   {item.hdsRecommendation}
-                </div>
-              </div>
+                </p>
+              </article>
             ))}
           </div>
         </section>

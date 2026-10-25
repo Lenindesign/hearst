@@ -4,13 +4,13 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { socialGraphMetadata } from "@/lib/social-graph-image";
 
 export const metadata: Metadata = {
-  title: "Design Agent Architecture & SDLC | Hearst Design System",
+  title: "Design Agent Implementation Review | Hearst Design System",
   description:
-    "Interactive architectural diagram of the Hearst Design Agent: multi-subagent orchestration (HDS, Brand, Surface, Governance), Company Brain, and the end-to-end SDLC lifecycle.",
+    "Repository evidence for what the Design Agent page implements and which proposed capabilities it does not demonstrate.",
   ...socialGraphMetadata(
     "/design-agent/opengraph-image/",
-    "Design Agent Architecture & SDLC",
-    "Interactive whiteboard architecture: Multi-Subagent Engine, FRE UI Kit, 8-Point Governance Firewall, and 4-Track Prototyping Pipeline."
+    "Design Agent Implementation Review",
+    "Repository evidence for a static workflow illustration and its implementation boundaries."
   ),
 };
 

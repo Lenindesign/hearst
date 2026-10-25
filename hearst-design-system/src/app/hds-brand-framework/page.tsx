@@ -562,6 +562,7 @@ function BrandStorySample({
     "--sample-button": button,
     "--sample-button-text": buttonText,
     "--sample-headline": `"${theme.fontHeadline}", Georgia, serif`,
+    "--sample-headline-weight": String(theme.fontHeadlineWeight),
     "--sample-body": `"${theme.fontDefault}", Arial, sans-serif`,
   } as CSSProperties;
 
@@ -581,7 +582,7 @@ function BrandStorySample({
       <div className="bg-[var(--sample-surface)] p-5" style={{ fontFamily: "var(--sample-body)" }}>
         <p className="text-xs font-bold text-[var(--sample-primary)]">{story.topic} · {story.readTime}</p>
         <h3
-          className="mt-3 text-balance text-3xl leading-[1.02] tracking-[-0.02em]"
+          className="brand-story-sample-title mt-3 text-balance text-3xl leading-[1.02] tracking-[-0.02em]"
           style={{ fontFamily: "var(--sample-headline)", fontWeight: theme.fontHeadlineWeight }}
         >
           {story.title}
@@ -606,7 +607,7 @@ export default function HdsBrandFrameworkPage() {
   });
 
   return (
-    <div className="min-h-screen overflow-x-clip bg-[#F8FAFC] font-sans text-[#102A43]">
+    <div className="hearst-plus-theme min-h-screen overflow-x-clip bg-background font-sans text-foreground">
       <ProductHeader current="hds" />
       <main>
         <section className="border-b border-slate-200 bg-[#102A43] text-white">

@@ -1098,3 +1098,103 @@
   background-color: #fff;
   color: #000;
 }
+
+/* One Hearst+ type scale for the consolidated stakeholder reference. */
+.hearst-plus-reference {
+  --reference-headline-font: var(--hp-font-headline, var(--font-headline, system-ui, sans-serif));
+  --reference-heading-weight: var(--hp-font-headline-weight, 800);
+  --reference-heading-1-size: clamp(2.5rem, 4vw, 3.5rem);
+  --reference-heading-2-size: clamp(2rem, 3vw, 2.75rem);
+  --reference-heading-3-size: clamp(1.375rem, 1.8vw, 1.625rem);
+  --reference-heading-4-size: 1.125rem;
+  --reference-heading-1-leading: 1.06;
+  --reference-heading-2-leading: 1.1;
+  --reference-heading-3-leading: 1.25;
+  --reference-heading-4-leading: 1.3;
+  --reference-heading-tracking: -0.02em;
+}
+.hearst-plus-reference :is(h1, h2, h3, h4) {
+  color: inherit !important;
+  text-wrap: balance;
+}
+.hearst-plus-reference :is(h1, h2, h3, h4),
+.reference-source :is(h1, h2, h3, h4) {
+  font-family: var(--reference-headline-font) !important;
+  font-weight: var(--reference-heading-weight) !important;
+  letter-spacing: var(--reference-heading-tracking) !important;
+}
+.hearst-plus-reference h1,
+.reference-source h1 {
+  font-size: var(--reference-heading-1-size) !important;
+  line-height: var(--reference-heading-1-leading) !important;
+}
+.hearst-plus-reference h2,
+.reference-source h2 {
+  font-size: var(--reference-heading-2-size) !important;
+  line-height: var(--reference-heading-2-leading) !important;
+}
+.hearst-plus-reference h3,
+.reference-source h3 {
+  font-size: var(--reference-heading-3-size) !important;
+  line-height: var(--reference-heading-3-leading) !important;
+}
+.hearst-plus-reference h4,
+.reference-source h4 {
+  font-size: var(--reference-heading-4-size) !important;
+  line-height: var(--reference-heading-4-leading) !important;
+}
+.reference-source .brand-story-sample-title {
+  font-family: var(--sample-headline) !important;
+  font-weight: var(--sample-headline-weight, 700) !important;
+}
+
+/* The unified reference presents each source document inside one audited page. */
+.reference-source header:has(nav[aria-label="Prototype navigation"]) {
+  display: none !important;
+}
+.reference-source footer {
+  display: none !important;
+}
+.reference-source[data-doc-id="product-blueprint"] aside.self-start {
+  display: none !important;
+}
+.reference-source[data-doc-id="product-blueprint"] > .hearst-plus-theme > main > div.mx-auto.grid {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+.reference-source[data-doc-id="article-system"] aside.self-start {
+  display: none !important;
+}
+.reference-source[data-doc-id="article-system"] > .hearst-plus-theme > main > div.mx-auto.grid {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+.reference-source[data-doc-id="ad-logic"] aside.self-start {
+  display: none !important;
+}
+.reference-source[data-doc-id="ad-logic"] main > div.mx-auto.px-5 > div.grid.gap-12 {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+.reference-source[data-doc-id="hds-brand-framework"] aside.self-start {
+  display: none !important;
+}
+.reference-source[data-doc-id="hds-brand-framework"] > .hearst-plus-theme > main > div.mx-auto.grid {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+.reference-source[data-doc-id="accessibility-ai"] header:has(nav[aria-label="Page sections"]) {
+  display: none !important;
+}
+.reference-source a[href="/about-hearst-magazines/"],
+.reference-source a[href="/why-hearst-plus/"],
+.reference-source a[href="/hearst-plus/accessibility-ai/"],
+.reference-source a[href="/ad-logic/"],
+.reference-source a[href="/hearst-product-blueprint/"],
+.reference-source a[href="/hearst-article-blueprint/"],
+.reference-source a[href="/token-architecture/"],
+.reference-source a[href="/hds-brand-framework/"],
+.reference-source a[href="/architecture/"],
+.reference-source a[href="/ai-in-hds/"],
+.reference-source a[href="/constitution/"],
+.reference-source a[href="/design-agent/"],
+.reference-source a[href="/design-agent-architecture.html"],
+.reference-source a[href="/hearst-plus-reference/"] {
+  display: none !important;
+}

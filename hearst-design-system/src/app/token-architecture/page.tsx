@@ -200,7 +200,7 @@ function SectionIntro({ eyebrow, title, children }: { eyebrow?: string; title: s
 
 export default function TokenArchitecturePage() {
   return (
-    <div className="min-h-screen overflow-x-clip bg-white font-sans text-[#102A43]">
+    <div className="hearst-plus-theme min-h-screen overflow-x-clip bg-background font-sans text-foreground">
       <ProductHeader current="tokens" />
       <main>
         <section className="overflow-hidden bg-[#102A43] text-white">
@@ -362,7 +362,7 @@ npm run build`}</pre>
             <SectionIntro eyebrow="4–5. Runtime and Tailwind" title="Tailwind is the delivery mechanism, not the design system.">
               Hearst+ uses Tailwind v4 to compose the interface, while semantic CSS variables carry the design-system decisions. This split gives engineers fast responsive authoring without turning utility classes into an unmanaged second source of truth.
             </SectionIntro>
-            <div className="mt-12 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+            <div className="mt-12 grid grid-cols-1 gap-6">
               <div className="bg-[#102A43] p-7 text-white">
                 <p className="text-xs font-bold text-sky-300">THE BRIDGE IN globals.css</p>
                 <pre className="mt-5 overflow-x-auto whitespace-pre-wrap font-mono text-sm leading-7 text-slate-200">{`@theme inline {

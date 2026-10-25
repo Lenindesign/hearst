@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import {
   ArchitectureFlow,
@@ -7,7 +6,9 @@ import {
   BrandPortfolioGrid,
   ProductFooter,
   ProductHeader,
+  StoryCard,
   brandSections,
+  streams,
 } from "@/components/product-story-shell";
 import { entertainmentWebsiteFeedConfigs } from "@/lib/hearst-entertainment-story-feeds";
 import { hearstNewspaperPublications } from "@/lib/hearst-newspaper-feed-framework";
@@ -15,9 +16,9 @@ import { hearstTVStations } from "@/lib/hearst-tv-feed-framework";
 import { hearstGrowthPrinciples } from "@/lib/hearst-growth-principles";
 
 export const metadata: Metadata = {
-  title: "Hearst+ | A Daily Reading Habit Across Hearst",
+  title: "Hearst+ | Reader Experience and Validation Case",
   description:
-    "See how Hearst+ combines magazine brands, TV stations, newspapers, entertainment channels, a personalized daily edition, reusable technology, and transparent reader controls.",
+    "Review the Hearst+ reader proposition, prototype evidence, evaluation questions, and production requirements.",
 };
 
 const totalStories = brandSections.reduce((sum, destination) => sum + destination.count, 0);
@@ -25,28 +26,26 @@ const totalBrands = brandSections.reduce((sum, destination) => sum + destination
 const totalTVStations = hearstTVStations.length;
 const totalNewspapers = hearstNewspaperPublications.length;
 const totalEntertainmentChannels = entertainmentWebsiteFeedConfigs.length;
-const totalEntertainmentShows = 42;
-const dailyEditionPreviewImage = "https://hips.hearstapps.com/hmg-prod/images/457d25d9-6587-43a2-bf62-c9269692f6e7.jpg";
 
 const heroStrategy = [
   {
     label: "Problem",
-    copy: "Search, social, and AI answers are weakening anonymous referral traffic. Hearst needs a direct reader relationship across magazines, local news, newspapers, and A&E Family.",
+    copy: "Strategic question: will readers choose to return to one Hearst experience after discovering stories, local reporting, or shows across separate properties? The current prototype demonstrates a possible flow; it does not establish a traffic or retention result.",
   },
   {
-    label: "MVP proof",
+    label: "Prototype behavior",
     copy: "The first product test is daily return behavior: can one compact edition make a large Hearst portfolio feel personal enough to become a repeat habit?",
   },
   {
-    label: "Commercial path",
-    copy: "Keep discovery open, use registration for follows, saves, local preferences, and show interests, then reserve membership for premium depth and utility.",
+    label: "Commercial hypothesis",
+    copy: "A future model could keep discovery open, use registration for persistent preferences, and reserve additional utility for members. None of those entitlements or payment flows is implemented here.",
   },
 ] as const;
 
 const habitSteps = [
   {
     title: "Return to a fresh edition",
-    copy: "Today’s Picks can mix magazine stories, local headlines, channel stories, and show-led entertainment into a stable daily edition.",
+    copy: "The prototype has a cross-source river and destination routes. Checked-in magazine records are a snapshot; Personalize recommendations are read-only, and local source routes use configured feeds.",
   },
   {
     title: "Find value quickly",
@@ -58,58 +57,32 @@ const habitSteps = [
   },
   {
     title: "Build continuity",
-    copy: "The next visit remembers unfinished stories, followed sources, preferred local markets, entertainment channels, and what changed since the reader last returned.",
+    copy: "Local email demo profiles keep preferences and saved items in this browser. When verified Google credentials are configured, Google prototype profiles can sync supported demo state through the server profile store. This is prototype sync, not a production account service.",
   },
 ];
 
-const principleColors = ["#6D45D8", "#169DB4", "#70B52C"] as const;
-const principles = hearstGrowthPrinciples.map((principle, index) => ({
+const principles = hearstGrowthPrinciples.map((principle) => ({
   ...principle,
   evidence: `Signals: ${principle.signals.charAt(0).toLowerCase()}${principle.signals.slice(1)}`,
-  color: principleColors[index],
 }));
 
 function formatPrincipleNumber(number: string) {
   return String(Number(number));
 }
 
-const destinationPromises = [
-  {
-    name: "Lifestyle",
-    color: "#7A2E57",
-    copy: "Food, home, entertainment, style, shopping, and everyday wellness.",
-  },
-  {
-    name: "Autos",
-    color: "#1B5F8A",
-    copy: "News, reviews, buying guidance, EVs, racing, trucks, and enthusiast culture.",
-  },
-  {
-    name: "Fashion & Luxury",
-    color: "#121212",
-    copy: "Fashion, beauty, design, culture, travel, and considered living.",
-  },
-  {
-    name: "Enthusiast & Wellness",
-    color: "#E50022",
-    copy: "Health, fitness, gear, science, active living, and practical expertise.",
-  },
-  {
-    name: "Local News",
-    color: "#087A68",
-    copy: `${totalTVStations} Hearst TV stations and ${totalNewspapers} newspaper publications organized around local source choice.`,
-  },
-  {
-    name: "A&E Family",
-    color: "#B9913F",
-    copy: `${totalEntertainmentChannels} entertainment channels with show pages, channel stories, and ${totalEntertainmentShows} promoted show entries.`,
-  },
-];
+const destinationPromises = streams.map((stream) => ({
+  ...stream,
+  copy: stream.name === "Local News"
+    ? `${totalTVStations} TV station records and ${totalNewspapers} newspaper records in the configured source lists.`
+    : stream.name === "A&E Family"
+      ? `${totalEntertainmentChannels} configured channel routes. This is not a show inventory.`
+      : stream.copy,
+}));
 
 const stack = [
   ["Experience", "Next.js 16, React 19, TypeScript, and Tailwind CSS 4"],
   ["Design system", "Hearst Design System foundations, semantic tokens, publication themes, and shared components"],
-  ["Editorial supply", "Validated magazine RSS snapshots, TV and newspaper feed frameworks, entertainment channel-story sources, canonical URLs, source dates, images, and enriched bylines"],
+  ["Editorial supply", "Checked-in image-backed magazine RSS snapshots, configured TV and newspaper source frameworks, channel-story sources, canonical URLs, source dates, images, and bylines"],
   ["Recommendations", "Read-only Personalize article and video candidates with explainable additive ranking"],
   ["Media", "Responsive editorial images, galleries, native HLS, and an hls.js fallback for adaptive video"],
   ["Delivery", "Progressive server payloads, demand-driven catalog pages, cached article resolution, and Netlify"],
@@ -144,11 +117,10 @@ const prototypeTruth = [
   {
     title: "Working now",
     items: [
-      `${totalStories} validated real-image stories across ${totalBrands} publication brands`,
-      `${totalTVStations} Hearst TV stations, ${totalNewspapers} newspaper publications, ${totalEntertainmentChannels} entertainment channels, and ${totalEntertainmentShows} promoted show entries`,
-      "Responsive destination, publication, Saved, search, video, gallery, and in-app reader experiences",
-      "Stable daily picks, reading continuity, local-source selection, entertainment show surfaces, explainable recommendations, and progressive delivery",
-      "A typed browser event contract for measuring explicit value actions without sending personal data",
+      `${totalStories} image-backed public story records in the checked-in snapshot across ${totalBrands} publication brands`,
+      `${totalTVStations} Hearst TV station records, ${totalNewspapers} newspaper publication records, and ${totalEntertainmentChannels} configured entertainment channel routes`,
+      "Destination and brand routes, saved items, search, video, gallery, and in-app reader flows",
+      "A typed browser event contract; this prototype does not send these events to an analytics vendor",
     ],
   },
   {
@@ -163,49 +135,7 @@ const prototypeTruth = [
 ];
 
 function DailyEditionPreview() {
-  return (
-    <div className="overflow-hidden bg-white text-[#102A43]">
-      <div className="flex items-center justify-between bg-[#2D75B9] px-4 py-2 text-[11px] font-bold text-white">
-        <span>HEARST+</span>
-        <span className="text-blue-100">For You · Saved</span>
-      </div>
-      <div className="relative min-h-[390px] sm:min-h-[440px]">
-        <Image
-          src={dailyEditionPreviewImage}
-          alt="Historical action films featured in the Hearst+ daily edition preview"
-          fill
-          priority
-          sizes="(max-width: 1024px) 100vw, 48vw"
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
-        <div className="absolute left-4 top-4 flex items-center gap-2 bg-black/75 px-3 py-2 text-xs font-bold text-white">
-          <span>Today&apos;s Picks</span>
-          <span aria-hidden="true">·</span>
-          <span>1 of 5</span>
-        </div>
-        <div className="absolute inset-x-0 bottom-0 p-5 text-white sm:p-7">
-          <p className="text-xs font-bold text-blue-100">Entertainment · Editor selected</p>
-          <h2 className="mt-3 max-w-xl text-balance font-serif text-4xl leading-[0.98] tracking-[-0.03em] sm:text-5xl">
-            Stories, headlines, and shows worth making time for today.
-          </h2>
-          <p className="mt-4 max-w-lg text-sm leading-6 text-slate-200">
-            A concise daily mix that balances relevance, freshness, trusted sources, local utility, and useful discovery.
-          </p>
-        </div>
-      </div>
-      <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 text-xs">
-        <div className="flex gap-2" aria-label="Five daily picks">
-          <span className="h-1.5 w-8 bg-[#2D75B9]" />
-          <span className="h-1.5 w-4 bg-slate-300" />
-          <span className="h-1.5 w-4 bg-slate-300" />
-          <span className="h-1.5 w-4 bg-slate-300" />
-          <span className="h-1.5 w-4 bg-slate-300" />
-        </div>
-        <span className="font-semibold text-slate-600">Save · More like this · Follow</span>
-      </div>
-    </div>
-  );
+  return <StoryCard />;
 }
 
 function PrincipleCycle() {
@@ -232,21 +162,21 @@ function PrincipleCycle() {
             <path
               d="M210 75 A135 135 0 0 1 327 277"
               fill="none"
-              stroke="#6D45D8"
+              stroke="var(--primary)"
               strokeLinecap="round"
               strokeWidth="12"
             />
             <path
               d="M327 277 A135 135 0 0 1 93 277"
               fill="none"
-              stroke="#169DB4"
+              stroke="var(--primary)"
               strokeLinecap="round"
               strokeWidth="12"
             />
             <path
               d="M93 277 A135 135 0 0 1 210 75"
               fill="none"
-              stroke="#70B52C"
+              stroke="var(--primary)"
               strokeLinecap="round"
               strokeWidth="12"
             />
@@ -260,8 +190,7 @@ function PrincipleCycle() {
             return (
               <div key={principle.number} className={`absolute z-10 ${positions[index]}`}>
                 <span
-                  className="grid h-16 w-16 place-items-center rounded-full border-4 border-[#102A43] text-base font-black text-white shadow-lg"
-                  style={{ backgroundColor: principle.color }}
+                  className="grid h-16 w-16 place-items-center rounded-full border-4 border-[#102A43] bg-primary text-base font-black text-primary-foreground shadow-lg"
                 >
                   {formatPrincipleNumber(principle.number)}
                 </span>
@@ -298,8 +227,7 @@ function PrincipleCycle() {
             <div className="flex items-start gap-4">
               <span
                 aria-hidden="true"
-                className="grid h-10 w-10 shrink-0 place-items-center rounded-full text-xs font-black text-white"
-                style={{ backgroundColor: principle.color }}
+                className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-primary text-xs font-black text-primary-foreground"
               >
                 {formatPrincipleNumber(principle.number)}
               </span>
@@ -320,44 +248,22 @@ function PrincipleCycle() {
 
 export default function WhyHearstPlusPage() {
   return (
-    <div className="min-h-screen overflow-x-clip bg-[#F8FAFC] text-[#102A43]">
+    <div className="min-h-screen overflow-x-clip hearst-plus-theme bg-background text-foreground">
       <ProductHeader current="value" />
       <main>
         <section className="overflow-hidden bg-[#102A43] text-white">
-          <div className="mx-auto grid max-w-[1360px] gap-12 px-5 py-16 md:px-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:py-24">
-            <div>
+          <div className="mx-auto grid max-w-[1360px] gap-10 px-5 py-16 md:px-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-x-12 lg:gap-y-10 lg:py-24">
+            <div className="min-w-0">
               <p className="text-xs font-black uppercase tracking-[0.2em] text-sky-300">
                 Direct relationship. Daily habit. Paid upgrade path.
               </p>
               <h1 className="mt-6 max-w-3xl text-balance font-serif text-5xl leading-[0.95] tracking-[-0.035em] sm:text-6xl lg:text-7xl">
-                Turn Hearst&apos;s portfolio into a daily reader relationship.
+                A cross-brand reader product, with source attribution intact.
               </h1>
               <p className="mt-7 max-w-2xl text-pretty text-lg leading-8 text-slate-300">
-                Hearst+ should prove that readers will come back directly when trusted brands, local sources, shows, communities, and shopping guidance are organized into one useful daily edition. Habit comes first. Registration makes it personal. Membership becomes the upgrade for premium depth and convenience.
+                The product hypothesis is that readers may return more often when stories, local sources and entertainment are available in one reader experience. The prototype demonstrates parts of that experience. It does not establish retention, registration lift, or willingness to pay.
               </p>
-              <div className="mt-8 grid gap-px bg-white/15 sm:grid-cols-3">
-                {heroStrategy.map((item) => (
-                  <article key={item.label} className="bg-[#123A5A] p-4">
-                    <h2 className="text-[11px] font-black uppercase tracking-[0.16em] text-sky-300">
-                      {item.label}
-                    </h2>
-                    <p className="mt-3 text-sm leading-6 text-slate-200">{item.copy}</p>
-                  </article>
-                ))}
-              </div>
-              <div className="mt-4 grid gap-px bg-white/15 sm:grid-cols-3">
-                {[
-                  ["Free", "Open discovery and sampling"],
-                  ["Registered", "For You, saves, follows, local preferences"],
-                  ["Member", "Premium collections, ad-light reading, perks"],
-                ].map(([tier, value]) => (
-                  <div key={tier} className="bg-white/10 px-4 py-3">
-                    <span className="block text-sm font-bold text-white">{tier}</span>
-                    <span className="mt-1 block text-xs leading-5 text-slate-300">{value}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-9 flex flex-wrap gap-3">
+              <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/hearst-plus/"
                   className="bg-white px-5 py-3 text-sm font-bold text-[#2D75B9] transition-colors hover:bg-blue-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
@@ -372,8 +278,30 @@ export default function WhyHearstPlusPage() {
                 </Link>
               </div>
             </div>
-            <div className="border border-white/15 bg-white/5 p-3 sm:p-5">
+            <div className="min-w-0 self-center border border-white/15 bg-white/5 p-3 sm:p-5">
               <DailyEditionPreview />
+            </div>
+            <div className="grid min-w-0 gap-px bg-white/15 md:grid-cols-3 lg:col-span-2">
+              {heroStrategy.map((item) => (
+                <article key={item.label} className="min-w-0 bg-[#123A5A] p-5 md:p-6">
+                  <h2 className="text-[11px] font-black uppercase tracking-[0.16em] text-sky-300">
+                    {item.label}
+                  </h2>
+                  <p className="mt-3 text-sm leading-6 text-slate-200">{item.copy}</p>
+                </article>
+              ))}
+            </div>
+            <div className="grid min-w-0 gap-px bg-white/15 md:grid-cols-3 lg:col-span-2">
+              {[
+                ["Browse", "Open discovery in the prototype"],
+                ["Demo profile", "Interests and saved items in this browser"],
+                ["Membership", "Possible offer; payment and entitlements are not implemented"],
+              ].map(([tier, value]) => (
+                <div key={tier} className="min-w-0 bg-white/10 px-5 py-4">
+                  <span className="block text-sm font-bold text-white">{tier}</span>
+                  <span className="mt-1 block text-xs leading-5 text-slate-300">{value}</span>
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -383,10 +311,10 @@ export default function WhyHearstPlusPage() {
             <div className="grid gap-12 lg:grid-cols-[0.7fr_1.3fr]">
               <div>
                 <h2 className="max-w-xl text-balance font-serif text-5xl leading-none tracking-[-0.03em]">
-                  A habit built on usefulness, not pressure.
+                  Example reader flow
                 </h2>
                 <p className="mt-6 max-w-[62ch] text-pretty leading-7 text-slate-600">
-                  The daily loop is intentionally calm. There are no punitive streaks, points, false urgency, or endless background loading. The reason to return is a compact edition that feels current, relevant, and easy to shape.
+                  This is a product hypothesis, not a measured outcome. The prototype lets reviewers inspect the river, open a source story, and change browser-local interests or saved items. It does not establish daily return behavior.
                 </p>
               </div>
               <ol className="border-t-2 border-[#2D75B9]">
@@ -415,7 +343,7 @@ export default function WhyHearstPlusPage() {
                 </h2>
               </div>
               <p className="max-w-[70ch] text-pretty leading-7 text-slate-600">
-                Hearst+ turns a reader&apos;s first useful visit into a measurable, reader-controlled loop. Each principle protects the experience: value before data collection, engagement without pressure, and learning that improves the whole portfolio without flattening magazine brands, local sources, newspapers, or entertainment channels.
+                The principles below are design goals. No retention result or portfolio-wide learning loop has been measured in this prototype. Reader controls currently change local demo state; analytics events are not sent to a vendor.
               </p>
             </div>
             <div className="mt-12">
@@ -440,8 +368,8 @@ export default function WhyHearstPlusPage() {
             <div className="mt-12 grid gap-px bg-slate-300 md:grid-cols-2 xl:grid-cols-3">
               {destinationPromises.map((destination) => (
                 <article key={destination.name} className="bg-white p-6">
-                  <span className="block h-2 w-12" style={{ backgroundColor: destination.color }} />
-                  <h3 className="mt-7 font-serif text-3xl leading-none">{destination.name}</h3>
+                  <p className="text-xs font-bold uppercase tracking-[0.14em]" style={{ color: destination.color }}>Configured section</p>
+                  <h3 className="mt-3 font-serif text-3xl leading-none">{destination.name}</h3>
                   <p className="mt-4 text-sm leading-6 text-slate-600">{destination.copy}</p>
                 </article>
               ))}
@@ -511,7 +439,7 @@ export default function WhyHearstPlusPage() {
                   What stakeholders can evaluate.
                 </h2>
                 <p className="mt-6 max-w-[62ch] text-pretty leading-7 text-slate-600">
-                  The strongest case begins with reader value. Portfolio, editorial, local-news, entertainment, and platform benefits should follow from a destination people choose to use.
+                  These are candidate measures for a future instrumented release. The prototype does not collect production analytics or establish outcomes against them.
                 </p>
               </div>
               <div className="border-t-2 border-[#102A43]">
@@ -523,7 +451,7 @@ export default function WhyHearstPlusPage() {
                     <h3 className="font-bold">{item.audience}</h3>
                     <p className="text-sm leading-6 text-slate-600">{item.value}</p>
                     <p className="text-sm leading-6 text-slate-600">
-                      <strong className="text-[#102A43]">Measure: </strong>
+                      <strong className="text-[#102A43]">Proposed measure, not instrumented: </strong>
                       {item.evidence}
                     </p>
                   </article>
@@ -565,10 +493,10 @@ export default function WhyHearstPlusPage() {
           <div className="mx-auto grid max-w-[1360px] gap-10 px-5 py-20 md:px-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-end lg:py-24">
             <div>
               <h2 className="max-w-4xl text-balance font-serif text-5xl leading-none tracking-[-0.03em] sm:text-6xl">
-                See the daily habit in the product.
+                Review the current prototype flows.
               </h2>
               <p className="mt-6 max-w-[68ch] text-pretty leading-7 text-blue-50">
-                Open Hearst+ to explore Today&apos;s Picks, return continuity, personalized recommendations, magazine brands, local TV stations, newspapers, A&E Family shows, and the stakeholder demo tools.
+                Open the prototype to inspect destination routes, the story river, browser-local reader actions, and stakeholder controls. A linked source story opens on its publisher site.
               </p>
             </div>
             <div className="flex flex-wrap gap-3 lg:justify-end">

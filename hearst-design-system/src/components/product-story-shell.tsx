@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { CSSProperties } from "react";
 import { DraggableBrandLogoMarquee } from "@/components/brand-logo-marquee";
 import { SiteFooter } from "@/components/fre/site-footer";
@@ -9,8 +10,27 @@ import { getHearstBrandRoute, getHearstDestinationRoute } from "@/lib/hearst-rou
 import { hearstTVStations } from "@/lib/hearst-tv-feed-framework";
 import { brandLogos, resolveBrandLogoColor } from "@/lib/logos";
 import { themeOptions } from "@/lib/theme-options";
+import { getSelectedBrandTheme } from "@/components/hearst-plus/brand-theme-resolution";
+import { lifestyleRiverStories } from "@/components/lifestyle-river-data";
+import { baseDestinationConfigs, getLifestyleScoreBreakdown } from "@/lib/hearst-personalization-model";
 
 export const productImage = "https://hips.hearstapps.com/hmg-prod/images/4cf6b4aa-4f88-469f-a235-545368381794.jpeg";
+const documentationSample = lifestyleRiverStories.find((story) => story.id === "delish-food-news-a74209326-costco-kirkland-grass-fed-butter-irish-dairy")!;
+const documentationSampleUrl = documentationSample.sourceUrl ?? getHearstBrandRoute(documentationSample.brandSlug);
+const documentationSampleProfile = {
+  followedTopics: ["Food"],
+  followedBrands: ["Delish"],
+  savedTags: [],
+  boostedTags: [],
+  savedIds: [],
+  hiddenIds: [],
+};
+const documentationSampleScore = getLifestyleScoreBreakdown(
+  documentationSample,
+  documentationSampleProfile,
+  { daypart: "morning", returnHours: 0, contentDay: "today", isSimulated: true },
+  baseDestinationConfigs.lifestyle,
+);
 
 function getThemeColor(slug: string, role: "1" | "2", fallback: string) {
   return themeOptions.find((option) => option.slug === slug)?.colors[role] || fallback;
@@ -21,33 +41,19 @@ const lifestylePrimaryColor = getThemeColor("hearst-lifestyle", "1", "var(--prim
 const autosPrimaryColor = getThemeColor("hearst-plus", "1", "var(--primary)");
 const fluxPrimaryColor = getThemeColor("hearst-flux", "1", "var(--foreground)");
 const wellnessPrimaryColor = getThemeColor("hearst-ew", "1", "var(--primary)");
-const localNewsPrimaryColor = "#087A68";
-const entertainmentPrimaryColor = "#B9913F";
+const localNewsPrimaryColor = getThemeColor("hearst-local-news", "1", "var(--primary)");
+const entertainmentPrimaryColor = getThemeColor("hearst-entertainment", "1", "var(--primary)");
 const knockoutContentColor = "var(--palette-content-knockout, white)";
 const neutralAccentColor = "var(--muted)";
 
-const productPages = [
-  { id: "story", label: "Product story", mobileLabel: "Story", href: "/about-hearst-magazines/" },
-  { id: "value", label: "Why Hearst+", mobileLabel: "Why Hearst+", href: "/why-hearst-plus/" },
-  { id: "blueprint", label: "Blueprint", mobileLabel: "Blueprint", href: "/hearst-product-blueprint/" },
-  { id: "ads", label: "Ad logic", mobileLabel: "Ads", href: "/ad-logic/" },
-  { id: "articles", label: "Article system", mobileLabel: "Articles", href: "/hearst-article-blueprint/" },
-  { id: "tokens", label: "Token architecture", mobileLabel: "Tokens", href: "/token-architecture/" },
-  { id: "hds", label: "HDS framework", mobileLabel: "HDS", href: "/hds-brand-framework/" },
-  { id: "architecture", label: "App architecture", mobileLabel: "Architecture", href: "/architecture/" },
-  { id: "ai-in-hds", label: "AI in HDS", mobileLabel: "AI in HDS", href: "/ai-in-hds/" },
-  { id: "constitution", label: "Constitution", mobileLabel: "Constitution", href: "/constitution/" },
-  { id: "design-agent", label: "Design Agent", mobileLabel: "Agent", href: "/design-agent/" },
-] as const;
-
-export type ProductPageId = (typeof productPages)[number]["id"];
+export type ProductPageId = "reference" | "story" | "value" | "blueprint" | "ads" | "articles" | "tokens" | "hds" | "architecture" | "ai-in-hds" | "constitution" | "design-agent";
 
 const productLinkFocus =
   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
 
 export function ProductHeader({ current }: { current: ProductPageId }) {
   return (
-    <header className="border-b border-border bg-card">
+    <header data-current-product-page={current} className="border-b border-border bg-card">
       <div className="mx-auto flex max-w-[1360px] flex-col gap-2 px-5 py-3 md:px-10 lg:flex-row lg:items-center lg:justify-between lg:gap-5">
         <Link
           href={getHearstDestinationRoute("all")}
@@ -56,21 +62,7 @@ export function ProductHeader({ current }: { current: ProductPageId }) {
         >
           <LogoMark slug="hearst-all" name="Hearst Magazines" color={hearstPrimaryColor} className="h-6 w-32 sm:w-40" />
         </Link>
-        <nav aria-label="Product pages" className="hidden items-center gap-2 text-sm font-semibold lg:flex">
-          {productPages.map((page) => (
-            <Link
-              key={page.id}
-              aria-current={current === page.id ? "page" : undefined}
-              className={`inline-flex min-h-11 items-center px-2 ${productLinkFocus} ${
-                current === page.id
-                  ? "bg-accent text-primary"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-              href={page.href}
-            >
-              {page.label}
-            </Link>
-          ))}
+        <nav aria-label="Prototype navigation" className="hidden items-center gap-2 text-sm font-semibold lg:flex">
           <Link
             className={`inline-flex min-h-11 items-center px-2 text-muted-foreground hover:text-foreground ${productLinkFocus}`}
             href={getHearstDestinationRoute("all")}
@@ -79,24 +71,10 @@ export function ProductHeader({ current }: { current: ProductPageId }) {
           </Link>
         </nav>
         <nav
-          aria-label="Product pages"
+          aria-label="Prototype navigation"
           className="-mx-5 flex min-w-0 overflow-x-auto border-t border-border px-5 text-xs font-bold md:-mx-10 md:px-10 lg:hidden"
           style={{ scrollbarWidth: "none" }}
         >
-          {productPages.map((page) => (
-            <Link
-              key={page.id}
-              href={page.href}
-              aria-current={current === page.id ? "page" : undefined}
-              className={`inline-flex min-h-11 shrink-0 items-center px-3 ${productLinkFocus} ${
-                current === page.id
-                  ? "bg-accent text-primary"
-                  : "text-muted-foreground"
-              }`}
-            >
-              {page.mobileLabel}
-            </Link>
-          ))}
           <Link
             className={`inline-flex min-h-11 shrink-0 items-center px-3 text-muted-foreground ${productLinkFocus}`}
             href={getHearstDestinationRoute("all")}
@@ -209,105 +187,84 @@ export const totalMagazineBrands = brandSections.reduce((sum, destination) => su
 export const totalTVStations = hearstTVStations.length;
 export const totalNewspapers = hearstNewspaperPublications.length;
 export const totalEntertainmentChannels = entertainmentWebsiteFeedConfigs.length;
-export const totalEntertainmentShows = 42;
 export const totalPortfolioSources =
   totalMagazineBrands + totalTVStations + totalNewspapers + totalEntertainmentChannels;
 
 export const prototypeStats = [
-  { value: String(totalMagazineStories), label: "magazine catalog", copy: "Validated stories with source dates, canonical URLs and real Hearst image metadata." },
+  { value: String(totalMagazineStories), label: "snapshot stories", copy: "Image-backed public RSS records selected for this prototype snapshot across four magazine destinations. This is not a live feed count." },
   { value: String(totalPortfolioSources), label: "portfolio sources", copy: "Magazine brands, TV stations, newspapers and entertainment channels represented in one product frame." },
   { value: String(streams.length), label: "reader sections", copy: "Lifestyle, Autos, Fashion & Luxury, Enthusiast & Wellness, Local News and A&E Family." },
-  { value: String(totalEntertainmentShows), label: "show surfaces", copy: "Promoted show entries extend discovery beyond article feeds into entertainment intent." },
+  { value: String(totalMagazineBrands), label: "magazine brands", copy: "Distinct publication identities represented in the four magazine destination snapshots." },
 ];
 
 export const journeys = [
-  { title: "Discover", copy: "A useful daily edition brings together magazine stories, local headlines, show-led entertainment and video without asking readers to hunt site by site." },
-  { title: "Deepen intent", copy: "Every save, follow, hide, local-source choice, show interest and More Like This action sharpens the mix while visible controls keep the reader in charge." },
-  { title: "Build a habit", copy: "Freshness, continuity and remembered interests make Hearst+ worth returning to throughout the day." },
+  { title: "Open a source-backed story", copy: "The sample Delish card shows the checked-in headline, topic, image, byline and read time. Its source link opens the original Delish article." },
+  { title: "Change the next mix", copy: "In the prototype river, Save, Hide and More Like This update browser-local reader state. They do not update a production account or shared profile." },
+  { title: "Choose local coverage", copy: "The Local News route lets a reader choose from configured station or newspaper sources. Feed availability varies by source and market." },
 ];
 
 export const valueProps = [
-  { title: "For readers", copy: "Less searching, more signal and one useful relationship with the brands, local sources, shows and communities they already care about." },
-  { title: "For editorial", copy: "A new distribution surface that preserves magazine, station, newspaper and channel authority while creating discovery across adjacent reader intent." },
-  { title: "For the business", copy: "A credible environment for evaluating direct return behavior, registration value, cross-source discovery and future paid membership paths." },
-  { title: "For product teams", copy: "One composable system for destinations, sources, cards, readers, signals and ranking. The same model can power magazines, local news and entertainment." },
+  { title: "Reader", copy: "Browse magazine stories, configured local sources, video, communities and entertainment routes from one Hearst+ interface." },
+  { title: "Editorial", copy: "Cards retain publication attribution and link to their source. The sample record above demonstrates the metadata shown in the river." },
+  { title: "Business", copy: "The prototype can support evaluation of cross-source browsing and reader controls. It has no connected analytics, membership checkout or measured lift." },
+  { title: "Product teams", copy: "The shared prototype composes destination routes, source-aware cards, reader controls and ranking with HDS tokens and publication themes." },
 ];
 
 export function DemoNav() {
-  const navItems = ["All", "Lifestyle", "Autos", "Fashion & Luxury", "Enthusiast & Wellness", "Local News", "A&E Family"];
-  const storyTabs = ["For You", "Today", "Local", "Shows", "Saved"];
-
   return (
     <figure
-      aria-label="Illustrative Hearst+ navigation and story treatment"
-      className="overflow-hidden border border-border bg-card shadow-[var(--hp-shadow-card)]"
+      aria-label="Sample Delish story record used by the Hearst+ prototype"
+      className="overflow-hidden rounded-xl border border-border bg-card shadow-[var(--hp-shadow-card)]"
     >
       <figcaption className="sr-only">
-        Static stakeholder diagram showing the intended Hearst+ navigation hierarchy and a sample editorial story. This is not an interactive product component.
+        Public Delish RSS story record from the checked-in feed snapshot. The example demonstrates source attribution and opens the original Delish article.
       </figcaption>
-      <div className="grid h-8 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 bg-[#111827] px-4 text-[11px] font-semibold text-white">
-        <span className="hidden items-center gap-3 sm:flex"><span>Shop</span><span>Newsletter</span></span>
-        <div className="flex min-w-0 justify-center overflow-hidden">
-          <div className="flex min-w-max items-center gap-1 rounded-full bg-white/[0.08] p-0.5">
-            {navItems.map((item) => (
-              <span key={item} className={`inline-flex min-h-6 items-center rounded-full px-2 text-[10px] font-bold leading-none ${item === "All" ? "bg-white text-black" : "text-white/85"}`}>
-                {item}
-              </span>
-            ))}
-          </div>
+      <Link href={documentationSampleUrl} target="_blank" rel="noreferrer" className="group block focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary">
+        <div className="relative aspect-[16/9] overflow-hidden bg-muted">
+          <Image src={documentationSample.image} alt="" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
         </div>
-        <span className="rounded-full bg-[#B9913F] px-3 py-1 text-[10px] font-black text-[#111827]">Sign in</span>
-      </div>
-      <div className="flex h-20 items-center justify-between px-5">
-        <span className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">Edition</span>
-        <LogoMark slug="hearst-all" name="Hearst+" color={hearstPrimaryColor} className="h-6 w-48" position="center" />
-        <span className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">Search</span>
-      </div>
-      <div className="flex gap-2 overflow-hidden border-y border-border px-5 py-3 text-xs font-semibold">
-        {storyTabs.map((item) => (
-          <span key={item} className={`shrink-0 rounded-full px-3 py-1.5 ${item === "For You" ? "bg-primary text-white" : "bg-muted text-muted-foreground"}`}>{item}</span>
-        ))}
-      </div>
-      <div className="grid gap-0 bg-[#F8FAFC] p-4 md:grid-cols-[1.25fr_.95fr]">
-        <div className="relative min-h-72 overflow-hidden bg-secondary">
-          <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url(${productImage})` }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-            <span className="text-[11px] font-black uppercase tracking-[0.16em] text-white/80">Today&apos;s edit</span>
-            <h3 className="mt-3 max-w-md font-serif text-4xl leading-[0.98]">A daily river across every Hearst interest.</h3>
-          </div>
+        <div className="p-5 sm:p-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">{documentationSample.brand} · {documentationSample.topic} · {documentationSample.readTime}</p>
+          <h3 className="mt-3 text-balance font-serif text-2xl leading-tight text-foreground sm:text-3xl">{documentationSample.title}</h3>
+          <p className="mt-3 text-sm leading-6 text-muted-foreground">{documentationSample.summary} By {documentationSample.byline}. Published October 22, 2026 in the sample feed snapshot.</p>
+          <span className="mt-5 inline-flex min-h-11 items-center font-semibold text-primary">Open the original Delish story <span aria-hidden="true" className="ml-2">↗</span></span>
         </div>
-        <div className="grid content-between border border-l-0 border-border bg-card p-5">
-          <div>
-            <span className="mb-3 block text-[11px] font-black uppercase tracking-[0.16em] text-primary">Recommended next</span>
-            <h3 className="font-serif text-3xl leading-[1.02] text-foreground">Stories, local updates and shows in one place.</h3>
-            <p className="mt-4 text-sm leading-6 text-muted-foreground">The real app connects destination navigation, source menus, reader controls and a shared story-card system.</p>
-          </div>
-          <div className="mt-6 grid gap-2 text-xs font-bold text-muted-foreground sm:grid-cols-3">
-            <span className="border border-border px-3 py-2">Save</span>
-            <span className="border border-border px-3 py-2">Follow</span>
-            <span className="border border-border px-3 py-2">More like this</span>
-          </div>
-        </div>
+      </Link>
+      <div className="border-t border-border bg-muted/40 px-5 py-3 text-xs leading-5 text-muted-foreground sm:px-6">
+        Sample record from the checked-in public RSS snapshot. This card is a documentation example; the link opens Delish.
       </div>
     </figure>
   );
 }
 
 export function StoryCard({ ad = false }: { ad?: boolean }) {
+  if (!ad) {
+    return (
+      <article aria-label="Sample Delish editorial story" className="min-w-0 overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-[var(--hp-shadow-card)]">
+        <Link href={documentationSampleUrl} target="_blank" rel="noreferrer" className="group block focus-visible:outline-2 focus-visible:outline-primary">
+          <div className="relative aspect-[16/9] overflow-hidden bg-muted">
+            <Image src={documentationSample.image} alt="" fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
+          </div>
+          <div className="p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">{documentationSample.brand} · {documentationSample.topic}</p>
+            <h3 className="mt-3 text-balance font-serif text-xl leading-tight text-card-foreground">{documentationSample.title}</h3>
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">{documentationSample.summary}</p>
+            <p className="mt-4 border-t border-border pt-3 text-xs text-muted-foreground">By {documentationSample.byline} · {documentationSample.readTime} · October 22, 2026</p>
+          </div>
+        </Link>
+        <p className="border-t border-border bg-muted/40 px-5 py-3 text-xs leading-5 text-muted-foreground">Sample public story metadata from the checked-in feed snapshot. Selecting the card opens Delish.</p>
+      </article>
+    );
+  }
   return (
     <article
       aria-label={ad ? "Illustrative commercial concept card" : "Illustrative editorial story card"}
       className="min-w-0 border-t-4 bg-card p-5 shadow-sm"
       style={{ borderTopColor: ad ? lifestylePrimaryColor : hearstPrimaryColor }}
     >
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-2 text-[10px] font-black uppercase tracking-[0.14em] text-muted-foreground"><span>{ad ? "Commercial concept" : "Editor pick"}</span><span>{ad ? "Not integrated" : "Country Living · Home"}</span></div>
-      <h3 className="font-serif text-2xl leading-tight text-foreground">{ad ? "Summer home refresh" : "The ideas worth making time for today"}</h3>
-      <p className="mt-3 text-sm leading-6 text-muted-foreground">{ad ? "A future evaluation pattern for disclosed commercial utility, not a completed campaign integration." : "A complete content model carries brand, topic, format, freshness and source signals."}</p>
-      <div className="mt-5 flex gap-2 text-xs font-bold"><span className="border border-border px-3 py-2">{ad ? "Concept CTA" : "Save"}</span><span className="border border-border px-3 py-2">{ad ? "Disclosure" : "More like this"}</span></div>
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-2 text-[10px] font-black uppercase tracking-[0.14em] text-muted-foreground"><span>Commercial concept</span><span>Not integrated</span></div>
+      <h3 className="font-serif text-2xl leading-tight text-foreground">Commercial placement example</h3>
+      <p className="mt-3 text-sm leading-6 text-muted-foreground">No campaign, sponsor, creative, targeting, delivery, or click tracking is connected in this prototype. Ad behavior must be reviewed with commercial and legal teams before implementation.</p>
     </article>
   );
 }
@@ -323,7 +280,7 @@ export function MobileMenuIcon() { return <span aria-hidden="true" className="bl
 
 export function BrandPortfolioGrid({ compact = false }: { compact?: boolean }) {
   return (
-    <div className="grid min-w-0 gap-4">
+    <div className="@container/brand-portfolio grid min-w-0 gap-4">
       {brandSections.map((section) => (
         <article key={section.name} className="min-w-0 overflow-hidden border border-border bg-card p-5">
           <Link href={section.route} className="group flex flex-wrap items-end justify-between gap-3">
@@ -334,7 +291,7 @@ export function BrandPortfolioGrid({ compact = false }: { compact?: boolean }) {
             </div>
             <span className="text-xs font-semibold text-muted-foreground">{section.brands.length} brands</span>
           </Link>
-          <div className={`mt-5 grid gap-3 ${compact ? "sm:grid-cols-2" : "sm:grid-cols-2 xl:grid-cols-3"}`}>
+          <div className={`mt-5 grid gap-3 ${compact ? "@xl/brand-portfolio:grid-cols-2" : "@xl/brand-portfolio:grid-cols-2 @2xl/brand-portfolio:grid-cols-3"}`}>
             {section.brands.map(([name, slug, count]) => (
               <Link
                 key={slug}
@@ -365,7 +322,7 @@ export function BrandPortfolioGrid({ compact = false }: { compact?: boolean }) {
             <Link href="/hearst-plus/local-news/#tv-stations" className="text-xs font-black uppercase tracking-[0.14em] text-muted-foreground hover:text-foreground">
               TV Stations
             </Link>
-            <div className={`mt-3 grid gap-3 ${compact ? "sm:grid-cols-2" : "sm:grid-cols-2"}`}>
+            <div className="mt-3 grid gap-3 @xl/brand-portfolio:grid-cols-2">
               {hearstTVStations.map((station) => (
                 <Link
                   key={station.id}
@@ -394,7 +351,7 @@ export function BrandPortfolioGrid({ compact = false }: { compact?: boolean }) {
             <Link href="/hearst-plus/local-news/newspapers/#newspapers" className="text-xs font-black uppercase tracking-[0.14em] text-muted-foreground hover:text-foreground">
               Newspapers
             </Link>
-            <div className={`mt-3 grid gap-3 ${compact ? "sm:grid-cols-2" : "sm:grid-cols-2"}`}>
+            <div className="mt-3 grid gap-3 @xl/brand-portfolio:grid-cols-2">
               {hearstNewspaperPublications.map((publication) => {
                 const logo = publication.mastheadLogo || publication.logo;
                 return (
@@ -430,9 +387,9 @@ export function BrandPortfolioGrid({ compact = false }: { compact?: boolean }) {
             <span className="block text-sm font-black uppercase tracking-[0.16em]" style={{ color: entertainmentPrimaryColor }}>A&amp;E Family</span>
             <span className="mt-1 block text-sm font-bold text-muted-foreground group-hover:text-foreground">{totalEntertainmentChannels} channels with show pages and story feeds</span>
           </div>
-          <span className="text-xs font-semibold text-muted-foreground">{totalEntertainmentShows} show entries</span>
+          <span className="text-xs font-semibold text-muted-foreground">{totalEntertainmentChannels} channel routes</span>
         </Link>
-        <div className={`mt-5 grid gap-3 ${compact ? "sm:grid-cols-2" : "sm:grid-cols-2 xl:grid-cols-3"}`}>
+        <div className={`mt-5 grid gap-3 ${compact ? "@xl/brand-portfolio:grid-cols-2" : "@xl/brand-portfolio:grid-cols-2 @2xl/brand-portfolio:grid-cols-3"}`}>
           {entertainmentWebsiteFeedConfigs.map((channel) => (
             <Link
               key={channel.slug}
@@ -469,15 +426,15 @@ export function BrandLogoMarquee() {
 
 export function DestinationConvergence() {
   return (
-    <div className="overflow-hidden border border-border bg-card">
-      <div className="grid gap-0 lg:grid-cols-[0.9fr_1.1fr]">
-        <div className="border-b border-border p-6 lg:border-b-0 lg:border-r">
+    <div className="@container/destination-convergence overflow-hidden border border-border bg-card">
+      <div className="grid gap-0 @xl/destination-convergence:grid-cols-[0.9fr_1.1fr]">
+        <div className="border-b border-border p-6 @xl/destination-convergence:border-b-0 @xl/destination-convergence:border-r">
           <p className="text-xs font-black uppercase tracking-[0.16em] text-primary">Destination logic</p>
           <h3 className="mt-4 font-serif text-4xl leading-none">One personalized river, six clear sections.</h3>
           <p className="mt-5 text-sm leading-6 text-muted-foreground">Readers can enter through a destination, brand, local market, publication, channel, show or topic. The product keeps those paths connected so intent can move across the portfolio without losing source trust.</p>
         </div>
-        <div className="p-6">
-          <div className="grid min-w-0 gap-4 2xl:grid-cols-[minmax(0,1fr)_4rem_minmax(0,1fr)] 2xl:items-center">
+        <div className="@container/convergence-body min-w-0 p-6">
+          <div className="grid min-w-0 gap-4 @xl/convergence-body:grid-cols-[minmax(0,1fr)_4rem_minmax(0,1fr)] @xl/convergence-body:items-center">
             <div className="min-w-0 space-y-3">
               {brandSections.map((section) => (
                 <Link key={section.name} href={section.route} className="group flex items-center justify-between gap-4 border border-border bg-muted/35 p-4 hover:border-primary/45">
@@ -498,12 +455,12 @@ export function DestinationConvergence() {
               <Link href="/hearst-plus/entertainment/" className="group flex items-center justify-between gap-4 border border-border bg-muted/35 p-4 hover:border-primary/45">
                 <span className="min-w-0">
                   <span className="block text-sm font-black uppercase tracking-[0.14em]" style={{ color: entertainmentPrimaryColor }}>A&amp;E Family</span>
-                  <span className="mt-1 block text-xs text-muted-foreground">{totalEntertainmentChannels} channels + {totalEntertainmentShows} show entries</span>
+                  <span className="mt-1 block text-xs text-muted-foreground">{totalEntertainmentChannels} configured channel routes</span>
                 </span>
                 <span className="text-xs font-bold text-muted-foreground group-hover:text-foreground">shows + stories</span>
               </Link>
             </div>
-            <div className="hidden h-px w-full bg-primary 2xl:block" />
+            <div className="hidden h-px w-full bg-primary @xl/convergence-body:block" />
             <Link href={getHearstDestinationRoute("all")} className="flex min-h-56 min-w-0 flex-col justify-center bg-foreground p-6 text-white hover:bg-foreground/90">
               <span className="text-xs font-black uppercase tracking-[0.16em] text-[var(--component-navigation-utility-content-accent)]">Unified river</span>
               <strong className="mt-4 max-w-sm text-wrap font-serif text-3xl leading-none sm:text-4xl">Personalized daily briefing</strong>
@@ -518,10 +475,10 @@ export function DestinationConvergence() {
 
 export function JourneyMatrix() {
   const rows = [
-    ["Daily edition", "Open the river", "Scan useful highlights", "Save, follow or continue", "A reason to return"],
-    ["Local source check", "Choose a station or newspaper", "Read market-specific updates", "Set a preferred source", "Local utility remembered"],
-    ["Show discovery", "Enter A&E Family", "Explore channels, stories and shows", "Open a preview or show page", "Entertainment intent captured"],
-    ["Community return", "Open a group or thread", "See what readers are discussing", "Join, reply or save", "Habit reinforced"],
+    ["Magazine story", "Open Hearst+ Home", "Select Food and open the Delish sample", "Save or More Like This", "Action changes browser-local demo state"],
+    ["Local source", "Open Local News", "Choose a configured station or newspaper", "Select a source", "Availability depends on the configured feed"],
+    ["A&E show", "Open A&E Family", "Choose a configured channel and show route", "Open the show page", "The card is a show entry, not an article"],
+    ["Community thread", "Open Communities", "Read a group thread and its replies", "Join or reply", "Sample interaction; no production account is connected"],
   ];
 
   return (
@@ -529,11 +486,11 @@ export function JourneyMatrix() {
       <table className="w-full min-w-[820px] border-collapse text-left text-sm">
         <thead>
           <tr className="border-b border-border text-xs font-black uppercase tracking-[0.14em] text-primary">
-            <th className="w-52 p-5">Journey</th>
-            <th className="p-5">Entry</th>
-            <th className="p-5">Explore</th>
-            <th className="p-5">Signal</th>
-            <th className="p-5">Outcome</th>
+            <th className="w-52 p-5">Flow</th>
+            <th className="p-5">Start</th>
+            <th className="p-5">Action</th>
+            <th className="p-5">Reader input</th>
+            <th className="p-5">Current behavior</th>
           </tr>
         </thead>
         <tbody>
@@ -551,16 +508,16 @@ export function JourneyMatrix() {
 }
 
 export function RankingExample() {
-  const factors = [
-    ["Popularity", "82", "Uses the story's source popularity signal"],
-    ["Recency", "+48", "Published within the freshest six-hour window"],
-    ["Followed topic", "+18", "Matches a topic the reader follows"],
-    ["Followed brand", "+16", "Matches a publication the reader follows"],
-    ["Saved tags", "+14", "Shares a tag with saved content"],
-    ["More Like This", "+22", "Matches a reader-boosted tag"],
-    ["Daypart", "+16", "Fits the active morning topic mix"],
-    ["Return freshness", "+24", "Fresh since the previous visit"],
-  ];
+  const factorDescriptions: Record<string, string> = {
+    popularity: "Popularity value stored on this sample record",
+    followedTopic: "Food News matches the sample reader’s Food interest",
+    followedBrand: "Sample reader follows Delish",
+    recency: "Sample record age is 0 hours",
+    timeOfDay: "Morning context from the prototype’s Lifestyle rules",
+  };
+  const factors = Object.entries(documentationSampleScore)
+    .filter(([key, value]) => key !== "total" && value !== 0 && factorDescriptions[key])
+    .map(([key, value]) => [key, value, factorDescriptions[key]]);
 
   return (
     <div className="grid min-w-0 gap-5 lg:grid-cols-[0.9fr_1.1fr]">
@@ -569,9 +526,9 @@ export function RankingExample() {
         <div className="flex flex-wrap items-start justify-between gap-5 border-b border-border pb-5">
           <div className="min-w-0">
             <p className="text-xs font-black uppercase tracking-[0.16em] text-primary">Why this ranked here</p>
-            <h3 className="mt-3 font-serif text-3xl leading-none">Implemented score inputs</h3>
+            <h3 className="mt-3 font-serif text-3xl leading-none">Calculated sample score</h3>
           </div>
-          <strong className="text-right text-xs font-bold uppercase tracking-[0.12em] text-primary">Additive<br />points</strong>
+          <strong className="text-right text-xs font-bold uppercase tracking-[0.12em] text-primary">{documentationSampleScore.total}<br />points</strong>
         </div>
         <div className="mt-5 space-y-4">
           {factors.map(([name, score, reason]) => (
@@ -581,12 +538,12 @@ export function RankingExample() {
                 <p className="mt-1 text-xs text-muted-foreground">{reason}</p>
               </div>
               <div className="h-px bg-border" />
-              <span className="text-right text-xs font-bold text-muted-foreground">{score}</span>
+              <span className="text-right text-xs font-bold text-muted-foreground">+{score}</span>
             </div>
           ))}
         </div>
         <p className="mt-5 border-t border-border pt-4 text-xs leading-5 text-muted-foreground">
-          Exact points vary by story and profile mode. Hidden items receive an exclusion penalty, a previous lead is suppressed on return, and the final pass prevents the same brand or topic from occupying three consecutive positions.
+          Example inputs: this checked-in Delish record, a reader who follows Food and Delish, no saves or boosted tags, a first morning visit, and no previous lead. The score is calculated by the current Lifestyle ranking function; changing the record, reader state, daypart, or return context changes it. The diversity pass runs after scoring.
         </p>
       </div>
     </div>
@@ -701,7 +658,7 @@ export function BrandStyleGuide() {
           </Link>
           <div className="mt-5 grid gap-3 lg:grid-cols-2">
             {section.brands.map(([name, slug]) => {
-              const theme = getBrandStyleTheme(slug, section.logoSlug);
+              const theme = getBrandStyleTheme(name, slug, section.logoSlug);
               const inherited = theme.slug === section.logoSlug;
               return (
                 <StyleTile
@@ -725,16 +682,16 @@ export function BrandStyleGuide() {
   );
 }
 
-function getBrandStyleTheme(slug: string, sectionSlug: string): BrandTheme {
+function getBrandStyleTheme(name: string, slug: string, sectionSlug: string): BrandTheme {
   const aliases: Record<string, string> = {
     "pioneer-woman": "the-pioneer-woman",
   };
-  return (
-    themeOptions.find((option) => option.slug === slug) ||
-    themeOptions.find((option) => option.slug === aliases[slug]) ||
-    themeOptions.find((option) => option.slug === sectionSlug) ||
-    themeOptions[0]
-  );
+  const registeredTheme = themeOptions.find((option) => option.slug === slug)
+    || themeOptions.find((option) => option.slug === aliases[slug]);
+  if (registeredTheme) return registeredTheme;
+
+  const sectionTheme = themeOptions.find((option) => option.slug === sectionSlug) || themeOptions[0];
+  return getSelectedBrandTheme({ name, slug }, sectionTheme) || sectionTheme;
 }
 
 function StyleTile({ name, slug, href, color, accent, headline, body, sample, inherited = false }: { name: string; slug: string; href: string; color: string; accent: string; headline: string; body: string; sample: string; inherited?: boolean }) {

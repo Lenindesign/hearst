@@ -11,9 +11,11 @@ import { autosRiverStories } from "@/components/autos-river-data";
 import { ewRiverStories } from "@/components/ew-river-data";
 import { fluxRiverStories } from "@/components/flux-river-data";
 import { lifestyleRiverStories } from "@/components/lifestyle-river-data";
+import { todayEditLocalNewsStory } from "@/lib/hearst-plus-today-edit-stories";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { ProductFooter, ProductHeader } from "@/components/product-story-shell";
 import { getAmbientCommerceStories } from "@/lib/ambient-commerce-stories";
+import { getHearstBrandRoute } from "@/lib/hearst-routes";
 
 export const metadata: Metadata = {
   title: "Hearst Article Experience",
@@ -58,10 +60,6 @@ function findStory(stories: LifestyleRiverStory[], preferredBrands: string[]) {
     .find((story): story is LifestyleRiverStory => Boolean(story)) ?? stories.find((story) => Boolean(story.image)) ?? stories[0];
 }
 
-function normalizeBlueprintCopy(copy: string) {
-  return copy.replace(/\s*\u2014\s*/g, ": ");
-}
-
 function toCardSample(label: string, story: LifestyleRiverStory): ArticleBlueprintCardSample {
   return {
     id: story.id,
@@ -71,6 +69,8 @@ function toCardSample(label: string, story: LifestyleRiverStory): ArticleBluepri
     title: story.title,
     summary: story.summary,
     image: story.image,
+    sourceLabel: "Public RSS snapshot record",
+    sourceUrl: story.sourceUrl ?? getHearstBrandRoute(story.brandSlug),
   };
 }
 
@@ -86,13 +86,8 @@ export default function HearstArticleBlueprintPage() {
     toCardSample("Fashion & Luxury", fluxStory),
     toCardSample("Enthusiast & Wellness", ewStory),
     {
-      id: "local-wbal-weather-alerts",
-      label: "Local News",
-      brand: "WBAL-TV 11",
-      topic: "Baltimore",
-      title: "Here's how to get severe weather alerts to your phone",
-      summary: "A local-news card keeps station attribution, market context and the original source path inside the same reader-facing system.",
-      image: "https://hips.hearstapps.com/hmg-prod/images/457d25d9-6587-43a2-bf62-c9269692f6e7.jpg",
+      ...toCardSample("Local News", todayEditLocalNewsStory),
+      sourceLabel: "Curated WBAL prototype record; not a current feed item",
     },
     {
       id: "entertainment-first-48",
@@ -100,13 +95,15 @@ export default function HearstArticleBlueprintPage() {
       brand: "A&E",
       topic: "Crime",
       title: "The First 48",
-      summary: "Entertainment cards use the same source-aware presentation for show discovery, previews, channel pages and story feeds.",
+      summary: "Homicide detectives race against the clock because the odds of solving a case fall sharply after the first 48 hours.",
       image: "https://cropper.watch.aetnd.com/cdn.watch.aetnd.com/sites/4/2015/09/the-first-48-s29-3000x3000-primary-1x1-1.jpg?w=1180",
+      sourceLabel: "Configured A&E show example, not an article record",
+      sourceUrl: "/hearst-plus/entertainment/a-e/",
     },
   ];
 
   return (
-    <div className="min-h-screen overflow-x-clip bg-[#F8FAFC] text-[#102A43]">
+    <div className="hearst-plus-theme min-h-screen overflow-x-clip bg-background text-foreground">
       <ProductHeader current="articles" />
       <main>
         <section className="border-b border-slate-200 bg-[#102A43] text-white">
@@ -154,7 +151,7 @@ export default function HearstArticleBlueprintPage() {
             </section>
 
             <section id="reading-modes" className="scroll-mt-8">
-              <SectionHead label="Story cards" title="One reusable river card across every section" copy="Each tab shows the same card pattern with a different source, image, headline and section context. The blueprint should represent how stories actually load in the Hearst+ river." />
+              <SectionHead label="Story cards" title="Compare source-backed and curated card examples" copy="The four magazine tabs use image-backed public RSS records in the checked-in snapshot. The Local News tab uses a curated WBAL prototype record, and A&amp;E shows a configured show entry rather than a story. Selecting Open source follows the target shown on that record. Action labels are displayed as examples and are inactive on this documentation page." />
               <div className="mt-10"><RealAppCardSamples stories={appCardSamples} /></div>
             </section>
 
@@ -172,10 +169,10 @@ export default function HearstArticleBlueprintPage() {
                   <div className="relative min-h-72 bg-slate-100"><Image src={commerceStory.image} alt="" fill sizes="(min-width: 1024px) 34vw, 100vw" className="object-cover" /></div>
                   <div className="p-6 sm:p-8">
                     <Status>Working today</Status>
-                    <h3 className="mt-5 text-balance font-serif text-4xl leading-[1.02]">{normalizeBlueprintCopy(commerceStory.title)}</h3>
+                    <h3 className="mt-5 text-balance font-serif text-4xl leading-[1.02]">{commerceStory.title}</h3>
                     <p className="mt-4 text-sm leading-6 text-slate-600">Products appear because the story supports them, not because space is available.</p>
                     <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                      {commerceStory.commerceCollection.products.slice(0, 2).map((product) => <article key={`${product.name}-${product.amazonUrl}`} className="grid grid-cols-[72px_1fr] items-center gap-3 border-t border-slate-200 pt-3"><div className="relative aspect-square bg-white"><Image src={product.imageUrl} alt="" fill sizes="72px" className="object-contain" /></div><h4 className="text-sm font-bold leading-5">{normalizeBlueprintCopy(product.name)}</h4></article>)}
+                      {commerceStory.commerceCollection.products.slice(0, 2).map((product) => <article key={`${product.name}-${product.amazonUrl}`} className="grid grid-cols-[72px_1fr] items-center gap-3 border-t border-slate-200 pt-3"><div className="relative aspect-square bg-white"><Image src={product.imageUrl} alt="" fill sizes="72px" className="object-contain" /></div><h4 className="text-sm font-bold leading-5">{product.name}</h4></article>)}
                     </div>
                   </div>
                 </div>

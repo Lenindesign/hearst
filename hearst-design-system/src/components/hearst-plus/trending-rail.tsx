@@ -64,7 +64,7 @@ export function TrendingStoryRail({
                 <LifestyleRiverImage
                   story={story}
                   alt=""
-                  className="h-full w-full transition-transform duration-200 ease-out group-hover:scale-105 motion-reduce:transition-none"
+                  className="h-full w-full transition-transform duration-250 ease-out group-hover:scale-[1.025] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                 />
                 <span className="absolute left-1 top-1 grid h-5 w-5 place-items-center rounded-full bg-[var(--hp-surface)] text-[11px] font-bold leading-none text-[var(--hp-text-primary)] ring-1 ring-border">
                   <span className="translate-y-px tabular-nums leading-none text-[var(--hp-text-primary)]">

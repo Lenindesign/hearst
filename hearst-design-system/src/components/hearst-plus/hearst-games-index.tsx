@@ -7,6 +7,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LinkComponent } from "@/components/ui/link";
+import { useBodyPortalTarget, useModalIsolation } from "@/components/ui/use-modal-isolation";
 import { ExternalLink, Play, X } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import { quietStoryActionButtonClass } from "./story-actions";
@@ -42,6 +43,21 @@ const hearstGameConcepts = [
     imageUrl: "https://hips.hearstapps.com/hmg-prod/images/amazon-asuli-bookshelf-6627efda24610.jpg?crop=1.00xw:0.570xh;0,0.375xh&resize=1200:*",
     imagePosition: "center",
     playKind: "mini" as const,
+  },
+  {
+    title: "Labyrinth",
+    format: "Maze game",
+    habit: "2 to 4 min",
+    source: "OpenGames.dev",
+    license: "MIT",
+    href: "https://github.com/opengames-dev/opengames-dev.github.io",
+    proof: "Free browser maze with touch, keyboard, and gamepad controls.",
+    fit: "A quick, tactile escape: find the way out, then try a larger maze.",
+    status: "Free to play",
+    tone: "Puzzle",
+    imageUrl: "/images/games/labyrinth.svg",
+    imagePosition: "center",
+    playKind: "labyrinth" as const,
   },
   {
     title: "Tile Merge",
@@ -122,6 +138,7 @@ const hearstGameConcepts = [
 
 export function HearstGamesIndex() {
   const [activeGame, setActiveGame] = React.useState<(typeof hearstGameConcepts)[number] | null>(null);
+  const returnFocusElementRef = React.useRef<HTMLElement | null>(null);
   const playableGames = hearstGameConcepts.filter((game) => game.playKind !== "finder");
   const researchGame = hearstGameConcepts.find((game) => game.playKind === "finder") ?? hearstGameConcepts[hearstGameConcepts.length - 1];
   const openGame = (game: (typeof hearstGameConcepts)[number]) => {
@@ -131,8 +148,12 @@ export function HearstGamesIndex() {
       return;
     }
 
+    returnFocusElementRef.current = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
     setActiveGame(game);
   };
+  const closeGame = React.useCallback(() => setActiveGame(null), []);
 
   return (
     <>
@@ -259,15 +280,21 @@ export function HearstGamesIndex() {
                   }}
                 >
                   <div className="relative aspect-video min-w-0 overflow-hidden rounded-[8px] bg-muted sm:h-full sm:min-h-36 sm:aspect-auto">
-                    <Image
-                      src={game.imageUrl}
-                      alt=""
-                      fill
-                      sizes="(max-width: 640px) calc(100vw - 48px), 176px"
-                      className="object-cover transition-transform duration-200 group-hover:scale-[1.025] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
-                      style={{ objectPosition: game.imagePosition }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-transparent to-black/65" />
+                    {game.playKind === "labyrinth" ? (
+                      <LabyrinthPreview compact />
+                    ) : (
+                      <>
+                        <Image
+                          src={game.imageUrl}
+                          alt=""
+                          fill
+                          sizes="(max-width: 640px) calc(100vw - 48px), 176px"
+                          className="object-cover transition-transform duration-200 group-hover:scale-[1.025] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+                          style={{ objectPosition: game.imagePosition }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-transparent to-black/65" />
+                      </>
+                    )}
                     <div className="absolute inset-x-0 top-0 p-3">
                       <span className="rounded-full bg-black/55 px-2.5 py-1 text-xs font-bold uppercase tracking-[0.16em] text-white backdrop-blur-sm">
                         {game.tone}
@@ -345,7 +372,7 @@ export function HearstGamesIndex() {
           </section>
         </aside>
       </div>
-      <HearstGameModal game={activeGame} onClose={() => setActiveGame(null)} />
+      <HearstGameModal game={activeGame} onClose={closeGame} returnFocusElementRef={returnFocusElementRef} />
     </>
   );
 }
@@ -353,55 +380,122 @@ export function HearstGamesIndex() {
 function HearstGameModal({
   game,
   onClose,
+  returnFocusElementRef,
 }: {
   game: (typeof hearstGameConcepts)[number] | null;
   onClose: () => void;
+  returnFocusElementRef: React.RefObject<HTMLElement | null>;
 }) {
+  const portalTarget = useBodyPortalTarget();
+  const dialogRef = React.useRef<HTMLDivElement | null>(null);
+  const closeButtonRef = React.useRef<HTMLButtonElement | null>(null);
+  const titleId = React.useId();
+
+  useModalIsolation(Boolean(game && portalTarget), dialogRef);
+
   React.useEffect(() => {
-    if (!game) return;
+    if (!game || !portalTarget) return;
 
-    const previousOverflow = document.body.style.overflow;
+    const focusFrame = window.requestAnimationFrame(() => closeButtonRef.current?.focus());
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      const dialog = dialogRef.current;
+      if (!dialog || dialog.inert || dialog.getAttribute("aria-hidden") === "true") return;
+
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+      const focusableElements = Array.from(dialog.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), iframe, [tabindex]:not([tabindex="-1"])'
+      )).filter((element) => element.getClientRects().length > 0);
+      if (!focusableElements.length) {
+        event.preventDefault();
+        dialog.focus();
+        return;
+      }
+
+      const first = focusableElements[0];
+      const last = focusableElements[focusableElements.length - 1];
+      const activeElement = document.activeElement;
+      if (!dialog.contains(activeElement)) {
+        event.preventDefault();
+        (event.shiftKey ? last : first).focus();
+      } else if (event.shiftKey && activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
 
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", onKeyDown);
+    document.addEventListener("keydown", onKeyDown, true);
     return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", onKeyDown);
+      window.cancelAnimationFrame(focusFrame);
+      document.removeEventListener("keydown", onKeyDown, true);
+      const returnTarget = returnFocusElementRef.current;
+      returnFocusElementRef.current = null;
+      window.requestAnimationFrame(() => {
+        if (
+          returnTarget?.isConnected
+          && returnTarget.getClientRects().length > 0
+          && !returnTarget.closest("[inert]")
+        ) {
+          returnTarget.focus();
+        }
+      });
     };
-  }, [game, onClose]);
+  }, [game, onClose, portalTarget, returnFocusElementRef]);
 
-  if (!game) return null;
+  if (!game || !portalTarget) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-[220] flex items-center justify-center bg-black/55 p-4" role="dialog" aria-modal="true" aria-label={`${game.title} game`}>
-      <button type="button" className="absolute inset-0" onClick={onClose} aria-label="Close game" />
-      <div className="relative max-h-[min(820px,92dvh)] w-full max-w-3xl overflow-y-auto rounded-[12px] bg-background shadow-2xl">
-        <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-border bg-background/95 px-5 py-4 backdrop-blur">
+    <div
+      ref={dialogRef}
+      className="fixed inset-0 z-[220] flex items-center justify-center bg-black/55 p-3 sm:p-6"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={titleId}
+      tabIndex={-1}
+    >
+      <div className="absolute inset-0" onClick={onClose} aria-hidden="true" />
+      <div className="relative max-h-[min(820px,94dvh)] w-full max-w-3xl overflow-y-auto rounded-[12px] bg-background shadow-2xl sm:max-h-[min(820px,92dvh)]">
+        <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-border bg-background/95 px-4 py-3 backdrop-blur sm:px-5 sm:py-4">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--hp-section-title)]">{game.format}</p>
-            <h2 className="headline mt-1 text-3xl leading-tight">{game.title}</h2>
-            <p className="mt-1 text-sm text-muted-foreground">{game.habit} · Prototype game</p>
+            <h2 id={titleId} className="headline mt-1 text-2xl leading-tight sm:text-3xl">{game.title}</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {game.playKind === "labyrinth" ? `${game.habit} · Free to play` : `${game.habit} · Prototype game`}
+            </p>
           </div>
           <button
+            ref={closeButtonRef}
             type="button"
-            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
             onClick={onClose}
             aria-label="Close game"
           >
             <X className="h-5 w-5" aria-hidden />
           </button>
         </div>
-        <div className="p-5 sm:p-6">
+        <div className="p-4 sm:p-6">
           <HearstGamePlayable game={game} />
-          <div className="mt-6 rounded-[8px] border border-border bg-muted/35 p-4 text-sm leading-6 text-muted-foreground">
-            <p className="font-bold text-foreground">Prototype note</p>
-            <p className="mt-1">
-              This modal uses Hearst-owned demo logic. The referenced repo remains a source and license review input before any production implementation.
+          {game.playKind === "labyrinth" ? (
+            <p className="mt-3 text-xs leading-5 text-muted-foreground">
+              Labyrinth by OpenGames contributors, shared under the MIT License. The game is hosted by OpenGames.dev.{" "}
+              <LinkComponent href="https://github.com/opengames-dev/opengames-dev.github.io" target="_blank" rel="noopener noreferrer" variant="neutral" underline className="text-primary">
+                View source and license
+              </LinkComponent>
             </p>
-          </div>
+          ) : (
+            <div className="mt-6 rounded-[8px] border border-border bg-muted/35 p-4 text-sm leading-6 text-muted-foreground">
+              <p className="font-bold text-foreground">Prototype note</p>
+              <p className="mt-1">This modal uses Hearst-owned demo logic.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>,
@@ -410,11 +504,71 @@ function HearstGameModal({
 }
 
 function HearstGamePlayable({ game }: { game: (typeof hearstGameConcepts)[number] }) {
+  if (game.playKind === "labyrinth") return <LabyrinthGame />;
   if (game.playKind === "mini") return <DailyMiniGame />;
   if (game.playKind === "merge") return <TileMergeGame />;
   if (game.playKind === "photo") return <PhotoPuzzleGame />;
   if (game.playKind === "memory") return <MemoryMatchGame />;
   return <ArcadeBlocksGame />;
+}
+
+function LabyrinthGame() {
+  const [started, setStarted] = React.useState(false);
+
+  return (
+    <div>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="max-w-xl text-sm leading-6 text-muted-foreground">
+          Find the exit in this quick maze. Use the arrow keys, WASD, swipe, or the on-screen controls.
+        </p>
+        {!started && (
+          <Button onClick={() => setStarted(true)} className="min-h-11">
+            <Play className="h-4 w-4" aria-hidden />
+            Play Labyrinth
+          </Button>
+        )}
+      </div>
+      {started ? (
+        <iframe
+          src="https://opengames-dev.github.io/labyrinth/index.html"
+          title="Labyrinth game by OpenGames"
+          className="mt-4 h-[min(62dvh,560px)] min-h-[360px] w-full rounded-[8px] border border-border bg-white"
+          sandbox="allow-scripts allow-same-origin"
+          allow="gamepad; fullscreen"
+          allowFullScreen
+          referrerPolicy="no-referrer"
+        />
+      ) : (
+        <LabyrinthPreview />
+      )}
+    </div>
+  );
+}
+
+function LabyrinthPreview({ compact = false }: { compact?: boolean }) {
+  return (
+    <div className={cn(
+      "overflow-hidden rounded-[8px] border border-border bg-[#102A43]",
+      compact ? "absolute inset-0 p-2" : "mt-4 p-3 sm:p-5"
+    )}>
+      <svg viewBox="0 0 560 270" role="img" aria-label="Preview of a winding maze" className={cn(
+        "mx-auto block w-full",
+        compact ? "h-full" : "max-h-[300px] max-w-2xl"
+      )}>
+        <rect x="12" y="12" width="536" height="246" rx="8" fill="#102A43" stroke="#C8D7E6" strokeWidth="4" />
+        <path d="M76 12v66h76v-34h82v82h-58v48h92v-54h84v96h-62v42M152 78v42H84v80h92M234 44h124v44h64v68h58M332 174h-52v46h-80v38M422 88v52h-48v38M484 156v48h64M76 200v58" fill="none" stroke="#F7F4EE" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+        <circle cx="48" cy="42" r="13" fill="#2D75B9" stroke="#F7F4EE" strokeWidth="4" />
+        <circle cx="520" cy="228" r="13" fill="#E9B949" stroke="#F7F4EE" strokeWidth="4" />
+      </svg>
+      <div className={cn(
+        "flex items-center justify-center gap-5 text-[10px] font-bold uppercase tracking-[0.14em] text-white/85",
+        compact ? "absolute bottom-2 inset-x-0" : "mt-2"
+      )}>
+        <span className="inline-flex items-center gap-2"><span className="size-2.5 rounded-full bg-[#2D75B9]" aria-hidden="true" /> Start</span>
+        <span className="inline-flex items-center gap-2"><span className="size-2.5 rounded-full bg-[#E9B949]" aria-hidden="true" /> Exit</span>
+      </div>
+    </div>
+  );
 }
 
 function DailyMiniGame() {

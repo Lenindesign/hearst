@@ -525,7 +525,7 @@ export function FeaturedStoryCarousel({
                 key={`${isClone ? "clone" : "story"}-${visualIndex}-${story.id}`}
                 type="button"
                 className={cn(
-                  "relative w-full shrink-0 bg-black text-left text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30",
+                  "group/featured-slide relative w-full shrink-0 bg-black text-left text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30",
                   layoutMode === "list"
                     ? "grid h-[184px] grid-cols-[112px_minmax(0,1fr)] grid-rows-[184px] sm:h-[220px] sm:grid-cols-[38%_minmax(0,1fr)] sm:grid-rows-[220px]"
                     : "grid grid-rows-[auto_112px] sm:grid-rows-[auto_144px]",

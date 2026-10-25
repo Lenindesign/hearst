@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import packageJson from "../../../package.json";
-import { ArchitectureFlow, BrandLogoMarquee, BrandPortfolioGrid, BrandStyleGuide, DestinationConvergence, JourneyMatrix, PaletteSystem, ProductFooter, ProductHeader, RankingExample, StoryCard, prototypeStats, systemSteps } from "@/components/product-story-shell";
+import { ArchitectureFlow, BrandLogoMarquee, BrandPortfolioGrid, BrandStyleGuide, DestinationConvergence, JourneyMatrix, PaletteSystem, ProductFooter, ProductHeader, RankingExample, StoryCard, prototypeStats, systemSteps, totalMagazineStories } from "@/components/product-story-shell";
 
 export const metadata: Metadata = {
   title: "Hearst Magazines Product Blueprint",
@@ -61,7 +61,7 @@ const technology = [
 
 export default function BlueprintPage() {
   return (
-    <div className="min-h-screen overflow-x-clip bg-[#F8FAFC] text-[#102A43]">
+    <div className="hearst-plus-theme min-h-screen overflow-x-clip bg-background text-foreground">
       <ProductHeader current="blueprint" />
       <main>
         <section className="border-b border-slate-200 bg-[#102A43] text-white">
@@ -73,7 +73,7 @@ export default function BlueprintPage() {
               <div className="flex flex-wrap gap-2 self-start">{["Working prototype", "Explainable ranking", "Cross-brand", "Progressive delivery", "Reader controlled"].map((x) => <span key={x} className="border border-white/25 px-3 py-2 text-xs font-bold">{x}</span>)}</div>
             </div>
             <p className="mt-8 max-w-4xl border-t border-white/20 pt-5 text-sm leading-6 text-slate-300">
-              Prototype boundary: public story metadata and read-only recommendations power the content experience. Reader identity, preferences and stakeholder controls are browser-local demo state. Production identity, publishing, consent, analytics and experimentation are not represented as completed integrations.
+              Prototype boundary: public story metadata and read-only recommendations power the content experience. Local email demo profiles keep state in the browser; verified Google prototype profiles can sync supported state when credentials are configured. Stakeholder controls remain demo behavior. Production identity operations, publishing, consent, analytics collection and experimentation are not represented as completed integrations.
             </p>
             <BrandLogoMarquee />
           </div>
@@ -92,7 +92,7 @@ export default function BlueprintPage() {
 
           <div className="min-w-0 space-y-24">
             <section id="scope" className="scroll-mt-8">
-              <SectionHead label="01 · Prototype truth" title="A working reader product, not a static presentation" copy="The current catalog contains 859 validated stories across 29 publication brands and four editorial destinations. The interface, ranking, progressive river, readers, galleries, short-form video and route transitions are implemented. Browser-local identity and unscheduled catalog refresh remain explicit prototype boundaries." />
+              <SectionHead label="01 · Prototype truth" title="What this build demonstrates" copy={`The checked-in snapshot contains ${totalMagazineStories} image-backed public RSS records across 29 magazine brands and four magazine destinations. Reader routes, additive ranking, progressive story loading, article readers, galleries, short-form video and route transitions are implemented. Local email profile state is browser-local; verified Google prototype profiles can sync supported state when configured. The snapshot changes only after the import and validation workflow runs.`} />
               <div className="mt-10 grid gap-px bg-slate-200 md:grid-cols-3">
                 {prototypeStats.map((stat) => (
                   <article key={stat.label} className="bg-white p-6">
@@ -106,7 +106,7 @@ export default function BlueprintPage() {
                 {[
                   ["Implemented", "Ranking, route transitions, responsive layouts, progressive loading, in-app readers and adaptive video playback."],
                   ["Current data", "A validated RSS snapshot plus read-only Personalize article and video recommendations through server routes."],
-                  ["Not yet integrated", "Production identity, cross-device preference sync, consent, CMS publishing, live analytics and experiments."],
+                  ["Not yet integrated", "Production identity operations, consent, CMS publishing, production analytics collection and experiments. Optional Google profile sync is prototype behavior, not a production identity service."],
                 ].map(([title, copy]) => (
                   <article key={title} className="bg-white p-5">
                     <h3 className="text-sm font-bold">{title}</h3>

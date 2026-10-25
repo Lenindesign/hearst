@@ -548,9 +548,7 @@ export function CommunityForumsPage({ activeBrandSlug, activeGroupSlug, activeTh
           {
             title: "Product strategy",
             links: [
-              { label: "HDS brand framework", href: "/hds-brand-framework/" },
-              { label: "Product blueprint", href: "/hearst-product-blueprint/" },
-              { label: "Why Hearst+", href: "/why-hearst-plus/" },
+              { label: "Hearst+ product reference", href: "/hearst-plus-reference/" },
             ],
           },
         ]}

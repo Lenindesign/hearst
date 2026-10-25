@@ -14,7 +14,7 @@ const metadata: ComponentMetadata = {
   ],
   whenToUse: [
     "A reader card needs the canonical publication route, topic, and byline",
-    "A live-feed record needs a non-color-only current-story status",
+    "Assistive technology needs the current-feed status announced",
     "A recommendation needs a concise explanatory reason",
   ],
   whenNotToUse: [
@@ -24,11 +24,6 @@ const metadata: ComponentMetadata = {
   ],
   tokens: {
     colors: [
-      {
-        variable: "--palette-alert-success-600",
-        via: "css-var",
-        usage: "Live-feed status dot",
-      },
       {
         variable: "--muted-foreground",
         via: "tailwind",
@@ -70,7 +65,7 @@ const metadata: ComponentMetadata = {
   ],
   caveats: [
     "Bylines resolve in production order: live article, checked-in story, then publication editors.",
-    "LiveStoryBadge must retain its screen-reader text because the visible status is color-only.",
+    "LiveStoryBadge keeps the current-feed status available to screen readers without a visible dot.",
     "Publication source links stop event propagation so nested card navigation does not also activate.",
   ],
 };

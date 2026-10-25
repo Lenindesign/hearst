@@ -8,15 +8,17 @@ export const metadata: Metadata = {
 };
 
 const matchingInputs = [
-  ["Active context", "The current destination and active section or topic filter scope the available ad set."],
-  ["Reader signals", "Followed topics, saved tags and boosted tags add weight when they overlap an ad's topics or tags."],
-  ["Time of day", "The selected daypart contributes preferred topics and tags to the match."],
-  ["Story neighborhood", "Nearby stories add weight for shared topics and tags, keeping the creative aligned with the surrounding river."],
+  ["Eligible inventory", "The active destination selects its configured prototype catalog. An empty catalog returns no unit."],
+  ["Active filter", "A matching ad topic adds 28 points when the reader has selected a filter other than For You."],
+  ["Reader profile", "Each followed-topic match adds 16 points. Each saved-tag or More Like This tag match adds 14."],
+  ["Daypart", "Each preferred topic match adds 12 points; each preferred tag match adds 10."],
+  ["Nearby stories", "Stories within two positions of the slot add 8 points per matching topic and 6 per matching tag."],
+  ["Tie and image rules", "Ties sort by ad ID. The image uses the highest topic/tag-overlap story in the nearby set; the configured image is the fallback."],
 ];
 
 const boundaries = [
   ["Implemented", "Destination-scoped ad catalogs, contextual scoring, recurring river placement, disclosure labels and no-inventory handling."],
-  ["Prototype data", "Creative, sponsor, topic, tag, palette and image metadata are defined in the prototype catalog; images come from the configured Hearst CDN set."],
+  ["Sample catalog", "Creative names, sponsor labels, CTAs and match metadata are prototype-authored examples. They are not booked campaigns, confirmed advertisers or approved commercial offers. Images are sample Hearst CDN assets, not campaign creative."],
   ["Still required for production", "Ad server integration, consent and privacy controls, campaign management, impression/click measurement, frequency capping and revenue reporting."],
 ];
 
@@ -66,7 +68,7 @@ const availableAdSet = [
 
 export default function AdLogicPage() {
   return (
-    <div className="min-h-screen overflow-x-clip bg-[#F8FAFC] text-[#102A43]">
+    <div className="hearst-plus-theme min-h-screen overflow-x-clip bg-background text-foreground">
       <ProductHeader current="ads" />
       <main>
         <section className="border-b border-slate-200 bg-[#102A43] text-white">
@@ -129,13 +131,13 @@ export default function AdLogicPage() {
                     <p className="text-xs font-black uppercase tracking-[.18em] text-[#2D75B9]">Next matched ad · example</p>
                     <h3 className="mt-3 text-xl font-bold">Know the Best Price to Buy</h3>
                     <p className="mt-1 text-sm text-slate-500">Car and Driver Marketplace</p>
-                    <p className="mt-4 text-sm leading-6 text-slate-600">The selected unit is the highest-ranked eligible creative for the active context. The prototype also explains the score inputs and identifies the image as a dedicated ad creative outside the editorial river.</p>
+                    <p className="mt-4 text-sm leading-6 text-slate-600">This is a sample catalog entry for the Autos destination. At slot zero, the prototype selects the first eligible item after contextual scoring and ID-based tie sorting. The displayed vehicle photo is a sample Hearst CDN image, not campaign creative. No advertiser or offer is connected.</p>
                   </div>
                   <div className="min-h-36 bg-cover bg-center" role="img" aria-label="Example car and driver ad creative" style={{ backgroundImage: "url(https://hips.hearstapps.com/mtg-prod/68f7e39e42ad0d0002a0414e/003-2026-honda-crv-hybrid-sport-touring.jpg)" }} />
                 </div>
                 <div className="mt-8 border border-slate-200 bg-slate-50 p-6">
                   <p className="text-xs font-black uppercase tracking-[.18em] text-[#2D75B9]">Available Hearst magazines ad set</p>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">The prototype catalog contains destination-scoped units across Lifestyle, Autos, Fashion &amp; Luxury, and Enthusiast &amp; Wellness. Each card carries sponsor, topic, tag, creative, and image metadata used by the matcher.</p>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">These rows show prototype-authored examples in the destination catalogs. Sponsor labels and offer copy are fictional demonstration data, not advertiser commitments. Metadata fields are consumed by the matcher.</p>
                   <div className="mt-6 grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
                     {availableAdSet.map(([title, sponsor, topics]) => (
                       <article key={title} className="border border-slate-200 bg-white p-3">

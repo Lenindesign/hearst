@@ -2,7 +2,6 @@
 
 import type { LiveArticleData } from "@/lib/live-feed-types";
 import { getHearstBrandRoute } from "@/lib/hearst-routes";
-import { cn } from "@/lib/utils";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { BrandSourceIcon } from "@/components/hearst-plus/brand-source-icon";
 
@@ -38,24 +37,13 @@ export function LifestyleBrandSource({
 
 export function LiveStoryBadge({
   story,
-  className,
 }: {
   story: LifestyleRiverStory;
-  className?: string;
 }) {
   if (!story.id.startsWith("live-")) return null;
 
   return (
-    <span className="inline-flex shrink-0 items-center" title="Current feed story">
-      <span
-        className={cn(
-          "block h-1.5 w-1.5 rounded-full bg-[var(--palette-alert-success-600)] ring-1 ring-white",
-          className
-        )}
-        aria-hidden="true"
-      />
-      <span className="sr-only">Current feed story</span>
-    </span>
+    <span className="sr-only">Current feed story</span>
   );
 }
 

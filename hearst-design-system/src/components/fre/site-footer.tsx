@@ -39,19 +39,7 @@ const defaultProductLinkGroups: SiteFooterLinkGroup[] = [
   {
     title: "Product strategy",
     links: [
-      { label: "Product story", href: "/about-hearst-magazines/" },
-      { label: "Why Hearst+", href: "/why-hearst-plus/" },
-      { label: "Accessibility and AI", href: "/hearst-plus/accessibility-ai/" },
-      { label: "Ad logic", href: "/ad-logic/" },
-      { label: "Product blueprint", href: "/hearst-product-blueprint/" },
-      { label: "Article system", href: "/hearst-article-blueprint/" },
-      { label: "Token architecture", href: "/token-architecture/" },
-      { label: "HDS brand framework", href: "/hds-brand-framework/" },
-      { label: "App architecture", href: "/architecture/" },
-      { label: "AI in Design Systems", href: "/ai-in-hds/" },
-      { label: "Design Constitution", href: "/constitution/" },
-      { label: "Design Agent Architecture", href: "/design-agent/" },
-      { label: "Hearst+ Design System", href: "/" },
+      { label: "Hearst+ product reference", href: "/hearst-plus-reference/" },
     ],
   },
   {
