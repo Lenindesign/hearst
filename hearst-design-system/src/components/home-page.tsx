@@ -4469,12 +4469,11 @@ function LifestyleRiverHomePage({
   const { account, updatePreferences, addComment } = useReaderAccount();
   const router = useRouter();
   const pathname = usePathname();
-  const useHearstPlusHomeRightRail =
-    destination === "all" &&
+  const useResponsiveDestinationRails =
+    ["all", "lifestyle", "autos", "flux", "ew"].includes(destination) &&
     activeFilter === "For You" &&
     !singleBrandName &&
     !initialBrandSlug &&
-    pathname?.replace(/\/+$/, "") === "/hearst-plus" &&
     !fullWidthFeaturedHero;
   const searchParams = useSearchParams();
   const { entries: readingHistory } = useReadingHistoryState();
@@ -6090,7 +6089,7 @@ function LifestyleRiverHomePage({
       >
       <div className={cn(
         "grid min-w-0 grid-cols-[minmax(0,1fr)] gap-x-4 gap-y-6",
-        useHearstPlusHomeRightRail
+        useResponsiveDestinationRails
           ? "md:grid-cols-[minmax(0,1fr)_300px] lg:grid-cols-[clamp(240px,24vw,300px)_minmax(0,1fr)_300px]"
           : "lg:grid-cols-[300px_minmax(0,1fr)_300px]",
       )}>
@@ -6127,7 +6126,7 @@ function LifestyleRiverHomePage({
           </div>
         ) : null}
 
-        <div className={useHearstPlusHomeRightRail ? "hidden lg:block" : undefined}>
+        <div className={useResponsiveDestinationRails ? "hidden lg:block" : undefined}>
         <LifestyleDiscoverySidebar
           profile={profile}
           topStories={moduleAllocation.dailyHabitStories}
@@ -6442,17 +6441,17 @@ function LifestyleRiverHomePage({
         <aside
           className={cn(
             "min-w-0 space-y-5",
-            useHearstPlusHomeRightRail
+            useResponsiveDestinationRails
               ? "hidden md:sticky md:top-[86px] md:block md:max-h-[calc(100dvh-110px)] md:self-start md:overflow-y-auto md:pr-1"
               : "lg:sticky lg:top-[86px] lg:max-h-[calc(100dvh-110px)] lg:self-start lg:overflow-y-auto lg:pr-1",
           )}
-          aria-label={useHearstPlusHomeRightRail ? "Hearst+ discovery sidebar" : undefined}
+          aria-label={useResponsiveDestinationRails ? "Hearst+ discovery sidebar" : undefined}
         >
-          {useHearstPlusHomeRightRail ? (
+          {useResponsiveDestinationRails ? (
             <TrendingStoryRail
               stories={moduleAllocation.trendingStories.slice(0, 3)}
               onOpenStory={(story) => openStory(story.id)}
-              title="Trending Across Hearst"
+              title={destination === "all" ? "Trending Across Hearst" : "Trending Across Brands"}
               className="lg:hidden"
             />
           ) : null}
