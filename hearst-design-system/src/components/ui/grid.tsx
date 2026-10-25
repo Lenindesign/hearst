@@ -7,7 +7,7 @@
  *
  *   Mobile  (base)    : 4 columns,  16px gutter, 16px outer padding
  *   Tablet  (md ≥768) : 8 columns,  20px gutter, 24px outer padding
- *   Desktop (lg ≥1024): 12 columns, 24px gutter, up to 48px outer padding
+ *   Desktop (lg ≥1024): 12 columns, 24px gutter, 24px outer padding; 48px at xl
  *
  * Use these primitives for layouts that follow the reusable HDS page-grid
  * contract. Application-specific editorial compositions may use explicit CSS
@@ -98,7 +98,7 @@ export const PageContainer = React.forwardRef<HTMLElement, PageContainerProps>(
         className={cn(
           "mx-auto box-border w-full",
           widthClass[width],
-          !bleed && "px-4 md:px-6 lg:px-12",
+          !bleed && "px-4 md:px-6 lg:px-6 xl:px-12",
           className,
         )}
         {...rest}
