@@ -170,7 +170,7 @@ export function BrandPromotionRiverModule({
       </div>
 
       <div className={cn("min-w-0 p-5 sm:p-6", isAEFamilyPromotion && "bg-[#0D1014]")}>
-        <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1fr)]">
+        <div className="grid items-start gap-5 min-[1043px]:grid-cols-[minmax(0,0.95fr)_minmax(0,1fr)]">
           <PromotionStoryAction
             story={featuredStory}
             onOpenStory={onOpenStory}
