@@ -145,6 +145,7 @@ import {
 } from "./hearst-plus/discovery-sidebar";
 import {
   TrendingVideoRail,
+  TrendingStoryRail,
 } from "./hearst-plus/trending-rail";
 import { TodayEditStrip } from "./hearst-plus/today-edit-strip";
 import { FeaturedStoryCarousel } from "./hearst-plus/featured-story-carousel";
@@ -4161,7 +4162,7 @@ function LifestyleStoryReaderModal({
                       <span className="h-px flex-1 bg-border" aria-hidden="true" />
                     </div>
                   ) : null}
-                  <div className="grid gap-y-8 gap-x-[18px] lg:grid-cols-[minmax(0,1fr)_280px]">
+                  <div className="grid gap-y-8 gap-x-[18px] lg:grid-cols-[minmax(0,1fr)_300px]">
                     <article
                       data-reader-story-id={story.id}
                       className={cn(
@@ -4468,6 +4469,13 @@ function LifestyleRiverHomePage({
   const { account, updatePreferences, addComment } = useReaderAccount();
   const router = useRouter();
   const pathname = usePathname();
+  const useHearstPlusHomeRightRail =
+    destination === "all" &&
+    activeFilter === "For You" &&
+    !singleBrandName &&
+    !initialBrandSlug &&
+    pathname?.replace(/\/+$/, "") === "/hearst-plus" &&
+    !fullWidthFeaturedHero;
   const searchParams = useSearchParams();
   const { entries: readingHistory } = useReadingHistoryState();
   const continueReadingStoryIds = React.useMemo(
@@ -5772,7 +5780,7 @@ function LifestyleRiverHomePage({
       >
         <div
           className={cn(
-            "grid min-w-0 grid-cols-[minmax(0,1fr)] gap-x-4 gap-y-6 lg:grid-cols-[256px_minmax(0,1fr)_256px] xl:grid-cols-[300px_minmax(0,1fr)_300px]",
+            "grid min-w-0 grid-cols-[minmax(0,1fr)] gap-x-4 gap-y-6 lg:grid-cols-[300px_minmax(0,1fr)_300px]",
             !usingVideoTabFeed && "mt-6 sm:mt-8"
           )}
         >
@@ -6080,7 +6088,12 @@ function LifestyleRiverHomePage({
         className={fullWidthFeaturedHero ? "min-w-0 scroll-mt-28" : undefined}
         aria-label={fullWidthFeaturedHero ? config.riverLabel : undefined}
       >
-      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-x-4 gap-y-6 lg:grid-cols-[256px_minmax(0,1fr)_256px] xl:grid-cols-[300px_minmax(0,1fr)_300px]">
+      <div className={cn(
+        "grid min-w-0 grid-cols-[minmax(0,1fr)] gap-x-4 gap-y-6",
+        useHearstPlusHomeRightRail
+          ? "md:grid-cols-[minmax(0,1fr)_300px] lg:grid-cols-[clamp(240px,24vw,300px)_minmax(0,1fr)_300px]"
+          : "lg:grid-cols-[300px_minmax(0,1fr)_300px]",
+      )}>
         {fullWidthFeaturedHero && leadStory ? (
           <div className="min-w-0 lg:col-span-3">
             <FeaturedStoryCarousel
@@ -6114,6 +6127,7 @@ function LifestyleRiverHomePage({
           </div>
         ) : null}
 
+        <div className={useHearstPlusHomeRightRail ? "hidden lg:block" : undefined}>
         <LifestyleDiscoverySidebar
           profile={profile}
           topStories={moduleAllocation.dailyHabitStories}
@@ -6138,6 +6152,7 @@ function LifestyleRiverHomePage({
           onFollowTopic={followTopic}
           onOpenStory={(story) => openStory(story.id)}
         />
+        </div>
 
         <StoryRiver
           id={!fullWidthFeaturedHero ? "hearst-story-river" : undefined}
@@ -6424,7 +6439,23 @@ function LifestyleRiverHomePage({
           }
         </StoryRiver>
 
-        <aside className="min-w-0 space-y-5 lg:sticky lg:top-[86px] lg:max-h-[calc(100dvh-110px)] lg:self-start lg:overflow-y-auto lg:pr-1">
+        <aside
+          className={cn(
+            "min-w-0 space-y-5",
+            useHearstPlusHomeRightRail
+              ? "hidden md:sticky md:top-[86px] md:block md:max-h-[calc(100dvh-110px)] md:self-start md:overflow-y-auto md:pr-1"
+              : "lg:sticky lg:top-[86px] lg:max-h-[calc(100dvh-110px)] lg:self-start lg:overflow-y-auto lg:pr-1",
+          )}
+          aria-label={useHearstPlusHomeRightRail ? "Hearst+ discovery sidebar" : undefined}
+        >
+          {useHearstPlusHomeRightRail ? (
+            <TrendingStoryRail
+              stories={moduleAllocation.trendingStories.slice(0, 3)}
+              onOpenStory={(story) => openStory(story.id)}
+              title="Trending Across Hearst"
+              className="lg:hidden"
+            />
+          ) : null}
           <ContextualRiverAdvertisement ad={rightRailAd} />
           {initialBrandSlug && initialBrandName ? (
             <BrandInstagramModule brandSlug={initialBrandSlug} brandName={initialBrandName} />

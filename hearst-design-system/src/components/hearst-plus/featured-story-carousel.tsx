@@ -621,7 +621,7 @@ export function FeaturedStoryCarousel({
                     className={cn(
                       layoutMode === "list"
                         ? "headline line-clamp-3 max-w-[min(42rem,100%)] break-words text-balance text-[clamp(1rem,2.2vw,1.75rem)] leading-[1.12] sm:text-[clamp(1.35rem,2vw,2rem)]"
-                        : "headline line-clamp-2 max-w-[min(42rem,100%)] break-words text-balance text-[clamp(1.75rem,4vw,2.4rem)] sm:text-[clamp(2rem,2.9vw,2.6rem)]",
+                        : "headline line-clamp-2 max-w-[min(42rem,100%)] break-words text-balance text-[clamp(1.75rem,4vw,2.4rem)] sm:text-[clamp(2rem,2.5vw,2.25rem)]",
                       story.brandSlug === "house-beautiful" ||
                         story.brandSlug === "road-and-track"
                         ? "leading-[1.12]"

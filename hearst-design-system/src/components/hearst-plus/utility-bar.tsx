@@ -205,18 +205,20 @@ export function UtilityBar({
             : "bg-primary text-primary-foreground"
       )}
     >
-      <PageContainer className="grid h-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:gap-3">
-        <LocalWeather
-          hideCityOnCompact
-          className="min-w-0 shrink-0"
-          buttonClassName={cn(
-            "!min-h-6 !rounded-none !border-0 !bg-transparent !px-0 !py-0 !text-[10px] !font-normal !leading-none !text-primary-foreground shadow-none hover:!bg-transparent hover:!text-primary-foreground [&_span]:!text-primary-foreground sm:!text-xs",
-          )}
-        />
+      <PageContainer className="grid h-full grid-cols-[minmax(0,1fr)_minmax(0,3fr)_minmax(0,1fr)] items-center gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,3fr)_minmax(0,1fr)] sm:gap-3">
+        <div className="w-[4.5rem] shrink-0 lg:w-48">
+          <LocalWeather
+            hideCityOnCompact
+            className="w-full min-w-0 shrink-0"
+            buttonClassName={cn(
+              "!min-h-6 !rounded-none !border-0 !bg-transparent !px-0 !py-0 !text-[10px] !font-normal !leading-none !text-primary-foreground shadow-none hover:!bg-transparent hover:!text-primary-foreground [&_span]:!text-primary-foreground sm:!text-xs",
+            )}
+          />
+        </div>
         {!hideDestinationNav && (
         <nav
           ref={destinationNavRef}
-          className="relative flex min-w-0 items-center justify-start overflow-x-auto [scrollbar-width:none] sm:justify-center [&::-webkit-scrollbar]:hidden"
+          className="relative flex min-w-0 items-center justify-center overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           aria-label="Hearst destination sections"
         >
           <div className={cn("flex min-w-max items-center gap-1 rounded-full px-0.5 sm:p-0.5", darkMode ? "bg-white/[0.06]" : "bg-black/10")}>
@@ -271,7 +273,7 @@ export function UtilityBar({
           </div>
         </nav>
         )}
-        <div className="flex shrink-0 items-center gap-2">
+        <div className="flex shrink-0 items-center justify-self-end gap-2">
           <Button
             variant="secondary"
             size="xs"
