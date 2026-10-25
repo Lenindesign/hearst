@@ -6441,8 +6441,8 @@ function LifestyleRiverHomePage({
           className={cn(
             "min-w-0 space-y-5",
             useResponsiveDestinationRails
-              ? "hidden md:sticky md:top-[86px] md:block md:max-h-[calc(100dvh-110px)] md:self-start md:overflow-y-auto md:pr-1"
-              : "lg:sticky lg:top-[86px] lg:max-h-[calc(100dvh-110px)] lg:self-start lg:overflow-y-auto lg:pr-1",
+              ? "hidden md:sticky md:top-[86px] md:block md:max-h-[calc(100dvh-110px)] md:self-start md:overflow-y-auto"
+              : "lg:sticky lg:top-[86px] lg:max-h-[calc(100dvh-110px)] lg:self-start lg:overflow-y-auto",
           )}
           aria-label={useResponsiveDestinationRails ? "Hearst+ discovery sidebar" : undefined}
         >
