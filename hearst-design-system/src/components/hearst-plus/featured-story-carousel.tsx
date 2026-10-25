@@ -18,6 +18,7 @@ export type FeaturedStoryCarouselProps = {
   stories: LifestyleRiverStory[];
   layoutMode?: "cards" | "list";
   reducePhotoHeight?: boolean;
+  scrimDirection?: "bottom" | "left-to-right";
   renderImage: (
     story: LifestyleRiverStory,
     index: number,
@@ -48,6 +49,7 @@ export function FeaturedStoryCarousel({
   stories,
   layoutMode = "cards",
   reducePhotoHeight = false,
+  scrimDirection = "bottom",
   renderImage,
   editionLabel,
   initialStoryId,
@@ -528,6 +530,8 @@ export function FeaturedStoryCarousel({
                   "group/featured-slide relative w-full shrink-0 bg-black text-left text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30",
                   layoutMode === "list"
                     ? "grid h-[184px] grid-cols-[112px_minmax(0,1fr)] grid-rows-[184px] sm:h-[220px] sm:grid-cols-[38%_minmax(0,1fr)] sm:grid-rows-[220px]"
+                    : scrimDirection === "left-to-right"
+                      ? "grid grid-rows-[auto]"
                     : "grid grid-rows-[auto_112px] sm:grid-rows-[auto_144px]",
                 )}
                 onClick={(event) => {
@@ -562,28 +566,40 @@ export function FeaturedStoryCarousel({
                         : "h-[min(128vw,520px)] sm:h-auto sm:aspect-video",
                   )}>
                     {renderImage(story, index, index === activeIndex)}
-                    {/* A short fade so the photo's bottom edge melts into the black band under the headline. */}
-                    <div
-                      aria-hidden="true"
-                      data-slider-layer="gradient"
-                      className={cn(
-                        "pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-[linear-gradient(to_bottom,transparent,var(--hp-image-scrim-solid))] sm:h-20",
-                        layoutMode === "list" && "hidden",
-                      )}
-                    />
+                    {scrimDirection === "left-to-right" ? (
+                      <div
+                        aria-hidden="true"
+                        data-slider-layer="side-scrim"
+                        className={cn(
+                          "pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,0.62)_0%,rgba(0,0,0,0.32)_35%,transparent_72%)]",
+                          layoutMode === "list" && "hidden",
+                        )}
+                      />
+                    ) : (
+                      /* A short fade so the photo's bottom edge melts into the black band under the headline. */
+                      <div
+                        aria-hidden="true"
+                        data-slider-layer="gradient"
+                        className={cn(
+                          "pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-[linear-gradient(to_bottom,transparent,var(--hp-image-scrim-solid))] sm:h-20",
+                          layoutMode === "list" && "hidden",
+                        )}
+                      />
+                    )}
                   </div>
                 </div>
-                <div data-slider-layer="frame" className={cn("bg-black", layoutMode === "list" && "hidden")} />
-                {/* One light scrim behind the text only: the bottom ~45% of the slide on an ease-in curve, topping out at 75%
-                    black instead of solid, so most of the photo stays visible. The text shadow keeps contrast on bright spots. */}
-                <div
-                  aria-hidden="true"
-                  data-slider-layer="bottom-scrim"
-                  className={cn(
-                    "pointer-events-none absolute inset-x-0 bottom-0 h-[min(48%,300px)] bg-[linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.12)_30%,rgba(0,0,0,0.42)_62%,rgba(0,0,0,0.75)_100%)]",
-                    layoutMode === "list" && "hidden",
-                  )}
-                />
+                <div data-slider-layer="frame" className={cn("bg-black", (layoutMode === "list" || scrimDirection === "left-to-right") && "hidden")} />
+                {/* The default bottom scrim fades behind the text; full-width heroes can use a side scrim instead. */}
+                {scrimDirection === "bottom" ? (
+                  <div
+                    aria-hidden="true"
+                    data-slider-layer="bottom-scrim"
+                    className={cn(
+                      "pointer-events-none absolute inset-x-0 bottom-0 h-[min(48%,300px)] bg-[linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.12)_30%,rgba(0,0,0,0.42)_62%,rgba(0,0,0,0.75)_100%)]",
+                      layoutMode === "list" && "hidden",
+                    )}
+                  />
+                ) : null}
                 <div
                   data-slider-content
                   className={cn(
@@ -621,7 +637,12 @@ export function FeaturedStoryCarousel({
                     className={cn(
                       layoutMode === "list"
                         ? "headline line-clamp-3 max-w-[min(42rem,100%)] break-words text-balance text-[clamp(1rem,2.2vw,1.75rem)] leading-[1.12] sm:text-[clamp(1.35rem,2vw,2rem)]"
-                        : "headline line-clamp-2 max-w-[min(42rem,100%)] break-words text-balance text-[clamp(1.75rem,4vw,2.4rem)] sm:text-[clamp(2rem,2.5vw,2.25rem)]",
+                      : cn(
+                          "headline break-words text-balance text-[clamp(1.75rem,4vw,2.4rem)] sm:text-[clamp(2rem,2.5vw,2.25rem)]",
+                          scrimDirection === "left-to-right"
+                            ? "line-clamp-none max-w-[min(42rem,33.333%)]"
+                            : "line-clamp-2 max-w-[min(42rem,100%)]",
+                        ),
                       story.brandSlug === "house-beautiful" ||
                         story.brandSlug === "road-and-track"
                         ? "leading-[1.12]"

@@ -6099,6 +6099,7 @@ function LifestyleRiverHomePage({
               stories={heroStories}
               layoutMode={riverLayout}
               reducePhotoHeight
+              scrimDirection="left-to-right"
               editionLabel={shouldUseTodaysPicks ? "Today’s Picks" : undefined}
               initialStoryId={leadStory.id}
               renderImage={(story, _index, active) => (
