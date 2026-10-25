@@ -195,7 +195,7 @@ export function BrandPromotionRiverModule({
           </PromotionStoryAction>
 
           <div className={cn(
-            "@container divide-y @max-[679px]:-mx-5 @max-[679px]:flex @max-[679px]:gap-3 @max-[679px]:overflow-x-auto @max-[679px]:px-5 @max-[679px]:pb-1 @max-[679px]:snap-x @max-[679px]:snap-mandatory @max-[679px]:divide-y-0",
+            "@container divide-y",
             isAEFamilyPromotion ? "divide-[#2A2E35]" : "divide-border",
           )}>
             {secondaryStories.map((story) => (
@@ -203,7 +203,7 @@ export function BrandPromotionRiverModule({
                 key={story.id}
                 story={story}
                 onOpenStory={onOpenStory}
-                className="group grid w-full grid-cols-[88px_minmax(0,1fr)] gap-4 py-4 text-left first:pt-0 last:pb-0 focus:outline-none focus:ring-2 focus:ring-primary/30 @max-[119px]:grid-cols-1 @max-[119px]:gap-3 @min-[680px]:grid-cols-[112px_minmax(0,1fr)] @max-[679px]:w-[min(82%,300px)] @max-[679px]:shrink-0 @max-[679px]:snap-start @max-[679px]:rounded-md @max-[679px]:border @max-[679px]:border-border @max-[679px]:p-3 @max-[679px]:first:pt-3 @max-[679px]:last:pb-3"
+                className="group grid w-full grid-cols-[88px_minmax(0,1fr)] gap-4 py-4 text-left first:pt-0 last:pb-0 focus:outline-none focus:ring-2 focus:ring-primary/30 @max-[119px]:grid-cols-1 @max-[119px]:gap-3 @min-[680px]:grid-cols-[112px_minmax(0,1fr)]"
               >
                 <LifestyleRiverImage story={story} className="aspect-square w-full rounded-[8px]" />
                 <span className="min-w-0">
