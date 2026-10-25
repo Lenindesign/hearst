@@ -124,7 +124,7 @@ export function UtilityBar({
   const darkMode = darkModeProp || colorMode === "dark";
   const { account } = useReaderAccount();
   const utilityBarRef = React.useRef<HTMLDivElement>(null);
-  const destinationNavRef = React.useRef<HTMLElement>(null);
+  const destinationNavRef = React.useRef<HTMLDivElement>(null);
   const [openDestinationMenu, setOpenDestinationMenu] = React.useState<UtilityDestinationMode | null>(null);
   const selectedDestination = selectedBrand
     ? getHearstBrandSection(selectedBrand.slug)
@@ -159,6 +159,9 @@ export function UtilityBar({
   }, [overBanner]);
   const transparent = overBanner && !scrolled;
   const openSection = hearstDestinationSections.find((section) => section.mode === openDestinationMenu);
+  const allDestinationSection = hearstDestinationSections[0];
+  const allDestinationIsActive = allDestinationSection.label === activeDestinationLabel;
+  const allDestinationIsOpen = allDestinationSection.mode === openDestinationMenu;
   const visibleBrandSections = openDestinationMenu === "all"
     ? brandMenuSections
     : brandMenuSections.filter((section) => section.mode === openDestinationMenu);
@@ -205,7 +208,7 @@ export function UtilityBar({
             : "bg-primary text-primary-foreground"
       )}
     >
-      <PageContainer className="grid h-full grid-cols-[minmax(0,1fr)_minmax(0,3fr)_minmax(0,1fr)] items-center gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,3fr)_minmax(0,1fr)] sm:gap-3">
+      <PageContainer className="grid h-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 sm:gap-3">
         <div className="w-[4.5rem] shrink-0 lg:w-48">
           <LocalWeather
             hideCityOnCompact
@@ -217,12 +220,41 @@ export function UtilityBar({
         </div>
         {!hideDestinationNav && (
         <nav
-          ref={destinationNavRef}
-          className="relative flex min-w-0 items-center justify-center overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className={cn(
+            "relative flex min-w-0 items-center overflow-hidden rounded-full",
+            darkMode ? "bg-white/[0.06]" : "bg-black/10",
+          )}
           aria-label="Hearst destination sections"
         >
-          <div className={cn("flex min-w-max items-center gap-1 rounded-full px-0.5 sm:p-0.5", darkMode ? "bg-white/[0.06]" : "bg-black/10")}>
-            {hearstDestinationSections.map((section) => {
+          <LinkComponent
+            href={allDestinationSection.href}
+            variant="neutral"
+            underline={false}
+            size="xs"
+            aria-haspopup="menu"
+            aria-expanded={allDestinationIsOpen}
+            aria-controls={allDestinationIsOpen ? "hearst-brand-menu" : undefined}
+            aria-current={allDestinationIsActive ? "page" : undefined}
+            onClick={() => setOpenDestinationMenu(null)}
+            onMouseEnter={() => setOpenDestinationMenu(allDestinationSection.mode)}
+            onFocus={() => setOpenDestinationMenu(allDestinationSection.mode)}
+            className={cn(
+              "z-10 inline-flex min-h-7 min-w-7 shrink-0 cursor-pointer items-center justify-center rounded-full px-2 py-1 text-[11px] font-normal leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:min-h-6 sm:min-w-0 sm:text-xs",
+              allDestinationIsActive
+                ? "bg-white font-semibold text-black hover:text-black"
+                : darkMode
+                  ? "text-[var(--component-navigation-utility-content-knockout)] opacity-85 hover:bg-white/10 hover:text-white hover:opacity-100"
+                  : "text-primary-foreground hover:bg-white/10 hover:text-primary-foreground"
+            )}
+          >
+            {allDestinationSection.label}
+          </LinkComponent>
+          <div
+            ref={destinationNavRef}
+            className="min-w-0 flex-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            <div className="flex min-w-max items-center gap-1 px-0.5 py-0.5">
+            {hearstDestinationSections.slice(1).map((section) => {
               const isActive = section.label === activeDestinationLabel;
               const isOpen = section.mode === openDestinationMenu;
               const menuMode = section.hasBrandMenu ? section.mode : null;
@@ -270,6 +302,7 @@ export function UtilityBar({
                 </React.Fragment>
               );
             })}
+            </div>
           </div>
         </nav>
         )}
