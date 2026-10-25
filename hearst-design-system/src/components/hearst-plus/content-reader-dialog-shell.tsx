@@ -237,6 +237,7 @@ export function ContentReaderDialogShell({
         )}
         data-mode={mode}
         data-reader-destination={destination}
+        data-reader-scroll-container
         style={style}
       >
         {children}

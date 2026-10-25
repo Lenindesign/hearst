@@ -54,28 +54,6 @@ export function LifestyleRiverLoadingState({ pageHeading }: { pageHeading: strin
       aria-label="Loading your personalized feed"
     >
       <span className="sr-only">Loading your personalized feed.</span>
-      <section
-        className="relative hidden w-full overflow-hidden rounded-[8px] border border-border bg-[var(--hp-strip)] shadow-[var(--hp-shadow-card)] md:block"
-        aria-hidden="true"
-      >
-        <div className="flex w-full overflow-hidden xl:grid xl:grid-cols-4 xl:divide-x xl:divide-border">
-          {Array.from({ length: 4 }, (_, index) => (
-            <div
-              key={index}
-              className="flex w-[88vw] shrink-0 flex-col border-r border-border p-4 last:border-r-0 sm:w-[58vw] md:w-[44vw] lg:w-[34vw] xl:w-auto xl:min-w-0 xl:border-0"
-            >
-              <span className="block h-[11px] w-28 rounded-full bg-muted motion-safe:animate-pulse" />
-              <span className="mt-3 flex items-start gap-3">
-                <span className="mt-0.5 h-16 w-20 shrink-0 rounded-[8px] bg-muted motion-safe:animate-pulse" />
-                <span className="min-w-0 flex-1 space-y-2">
-                  <span className="block h-3 w-full rounded-full bg-muted motion-safe:animate-pulse" />
-                  <span className="block h-3 w-4/5 rounded-full bg-muted motion-safe:animate-pulse" />
-                </span>
-              </span>
-            </div>
-          ))}
-        </div>
-      </section>
       <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]">
         <aside
           className="hidden min-h-[360px] rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 lg:block"

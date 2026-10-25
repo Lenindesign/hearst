@@ -57,6 +57,21 @@ export function ContentReaderMasthead({
   onSelectFilter,
   onClose,
 }: ContentReaderMastheadProps) {
+  const [hasScrolled, setHasScrolled] = React.useState(false);
+
+  React.useEffect(() => {
+    const scrollContainer = document.querySelector<HTMLElement>(
+      "[data-reader-scroll-container]",
+    );
+    if (!scrollContainer) return;
+
+    const updateScrollState = () => setHasScrolled(scrollContainer.scrollTop > 12);
+    updateScrollState();
+    scrollContainer.addEventListener("scroll", updateScrollState, { passive: true });
+
+    return () => scrollContainer.removeEventListener("scroll", updateScrollState);
+  }, []);
+
   const handleStaticNavigationWheel = React.useCallback(
     (event: React.WheelEvent<HTMLElement>) => {
       const isHorizontalIntent =
@@ -156,9 +171,14 @@ export function ContentReaderMasthead({
         </Button>
       </div>
       <nav
-        className="overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className={cn(
+          "overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden transition-[max-height,opacity] duration-200 ease-out",
+          hasScrolled ? "pointer-events-none max-h-0 overflow-hidden opacity-0" : "max-h-16 opacity-100",
+        )}
         aria-label={`${sectionLabel} reader sections`}
         data-reader-filter-navigation
+        aria-hidden={hasScrolled}
+        inert={hasScrolled}
         onWheelCapture={handleStaticNavigationWheel}
       >
         <div className="mx-auto flex min-w-max items-center gap-6 px-4 sm:justify-center sm:px-6">
