@@ -4473,7 +4473,6 @@ function LifestyleRiverHomePage({
     ["all", "lifestyle", "autos", "flux", "ew"].includes(destination) &&
     activeFilter === "For You" &&
     !singleBrandName &&
-    !initialBrandSlug &&
     !fullWidthFeaturedHero;
   const searchParams = useSearchParams();
   const { entries: readingHistory } = useReadingHistoryState();
@@ -6449,9 +6448,11 @@ function LifestyleRiverHomePage({
         >
           {useResponsiveDestinationRails ? (
             <TrendingStoryRail
-              stories={moduleAllocation.trendingStories.slice(0, 3)}
+              stories={initialBrandSlug
+                ? moduleAllocation.trendingStories.filter((story) => story.brandSlug === initialBrandSlug).slice(0, 3)
+                : moduleAllocation.trendingStories.slice(0, 3)}
               onOpenStory={(story) => openStory(story.id)}
-              title={destination === "all" ? "Trending Across Hearst" : "Trending Across Brands"}
+              title={initialBrandSlug ? "Trending" : destination === "all" ? "Trending Across Hearst" : "Trending Across Brands"}
               className="lg:hidden"
             />
           ) : null}
