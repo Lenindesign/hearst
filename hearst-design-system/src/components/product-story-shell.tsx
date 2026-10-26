@@ -707,7 +707,9 @@ export function BrandStyleGuide() {
               }
               const brandColor = theme.semanticColors["palette-content-brand"];
               const brandSurface = theme.semanticColors["palette-background-subtle-brand"];
-              if (!brandColor || !brandSurface) {
+              const palettePrimary = theme.colors["1"] || brandColor;
+              const paletteSecondary = theme.colors["2"] || brandSurface;
+              if (!brandColor || !brandSurface || !palettePrimary || !paletteSecondary) {
                 return (
                   <article key={slug} className="grid min-w-0 gap-5 border border-border bg-muted/35 p-4 sm:grid-cols-[12rem_minmax(0,1fr)]">
                     <div>
@@ -726,7 +728,8 @@ export function BrandStyleGuide() {
                   slug={slug}
                   href={getHearstBrandRoute(slug)}
                   color={brandColor}
-                  accent={brandSurface}
+                  palettePrimary={palettePrimary}
+                  paletteSecondary={paletteSecondary}
                   headline={theme.fontHeadline}
                   headlineWeight={theme.fontHeadlineWeight}
                   headlineStretch={theme.fontHeadlineStretch}
@@ -751,7 +754,7 @@ function getBrandStyleTheme(slug: string): BrandTheme | null {
   return brands.find((brand) => brand.slug === normalizedSlug) || null;
 }
 
-function StyleTile({ name, slug, href, color, accent, headline, headlineWeight, headlineStretch, body, sample, inherited = false }: { name: string; slug: string; href: string; color: string; accent: string; headline: string; headlineWeight: number; headlineStretch?: string; body: string; sample: string; inherited?: boolean }) {
+function StyleTile({ name, slug, href, color, palettePrimary, paletteSecondary, headline, headlineWeight, headlineStretch, body, sample, inherited = false }: { name: string; slug: string; href: string; color: string; palettePrimary: string; paletteSecondary: string; headline: string; headlineWeight: number; headlineStretch?: string; body: string; sample: string; inherited?: boolean }) {
   return (
     <Link href={href} className="group grid min-w-0 gap-5 border border-border bg-muted/35 p-4 transition hover:border-primary/45 sm:grid-cols-[12rem_minmax(0,1fr)]">
       <div className="flex min-w-0 flex-col justify-between">
@@ -761,10 +764,10 @@ function StyleTile({ name, slug, href, color, accent, headline, headlineWeight, 
         </div>
         <div className="mt-5">
           <div className="flex gap-2">
-            <span className="h-9 flex-1 border border-border" style={{ backgroundColor: color }} />
-            <span className="h-9 flex-1 border border-border" style={{ backgroundColor: accent }} />
+            <span className="h-9 flex-1 border border-border" style={{ backgroundColor: palettePrimary }} />
+            <span className="h-9 flex-1 border border-border" style={{ backgroundColor: paletteSecondary }} />
           </div>
-          <p className="mt-2 font-mono text-[11px] text-muted-foreground">{color} · {accent}</p>
+          <p className="mt-2 font-mono text-[11px] text-muted-foreground">{palettePrimary} · {paletteSecondary}</p>
         </div>
       </div>
       <div className="min-w-0">

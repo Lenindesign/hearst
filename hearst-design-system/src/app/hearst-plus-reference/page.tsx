@@ -178,6 +178,7 @@ export default function HearstPlusReferencePage() {
               <p className="mt-4 max-w-3xl text-sm leading-6 text-muted-foreground">This reference follows the argument in order: the case, the reader, the experience, the systems behind it, and the evidence and limits that should guide the next decision.</p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link href="/hearst-plus/" className="inline-flex min-h-11 items-center rounded-md bg-[var(--hp-utility-bar)] px-5 text-sm font-bold text-primary-foreground">Open the prototype</Link>
+                <Link href="/hearst-plus-brief/" className="inline-flex min-h-11 items-center rounded-md border border-border px-5 text-sm font-semibold text-foreground underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">Read the executive brief</Link>
               </div>
             </div>
             <aside aria-label="Decision framing" className="border border-[var(--hp-utility-bar)] bg-[var(--hp-utility-bar)] p-6 text-primary-foreground md:p-8">

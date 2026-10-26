@@ -4,6 +4,7 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { LinkComponent } from "@/components/ui/link";
+import { PROD_STORYBOOK_URL } from "@/lib/storybook-links";
 
 const socialLinkHrefs: Record<string, string> = {
   YouTube: "https://www.youtube.com/@Hearst",
@@ -39,8 +40,9 @@ const defaultProductLinkGroups: SiteFooterLinkGroup[] = [
   {
     title: "Product strategy",
     links: [
+      { label: "Hearst+ executive brief", href: "/hearst-plus-brief/" },
       { label: "Hearst+ product reference", href: "/hearst-plus-reference/" },
-      { label: "Storybook", href: "http://localhost:6006/?path=/docs/hearst-plus-start-overview--docs" },
+      { label: "Storybook", href: PROD_STORYBOOK_URL },
     ],
   },
   {

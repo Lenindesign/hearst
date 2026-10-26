@@ -208,7 +208,7 @@ export function UtilityBar({
             : "bg-primary text-primary-foreground"
       )}
     >
-      <PageContainer className="grid h-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 sm:gap-3">
+      <PageContainer className="grid h-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 sm:gap-3 xl:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
         <div className="w-[4.5rem] shrink-0 lg:w-48">
           <LocalWeather
             hideCityOnCompact
@@ -221,7 +221,7 @@ export function UtilityBar({
         {!hideDestinationNav && (
         <nav
           className={cn(
-            "relative flex min-w-0 items-center overflow-hidden rounded-full",
+            "relative flex w-fit min-w-0 max-w-full justify-self-center items-center overflow-hidden rounded-full",
             darkMode ? "bg-white/[0.06]" : "bg-black/10",
           )}
           aria-label="Hearst destination sections"
