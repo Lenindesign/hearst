@@ -5245,10 +5245,6 @@ function LifestyleRiverHomePage({
     mediaType: communityRiverSeed.mediaType,
     videoUrl: communityRiverSeed.videoUrl,
   };
-  const showCommunityRiverCard =
-    !initialBrandSlug
-    && !singleBrandName
-    && (pathname === "/hearst-plus" || pathname === "/hearst-plus/");
   const loadMoreVisibleStories = React.useCallback(() => {
     const demand = feedDemandRef.current;
     if (!demand.feedReady) return;
@@ -6271,9 +6267,6 @@ function LifestyleRiverHomePage({
                         onSave={() => toggleSaved(story)}
                       />
                     )}
-                    {showCommunityRiverCard && index === 0 ? (
-                      <CommunityHomeRiverCard thread={communityRiverThread} />
-                    ) : null}
                     {adMatch && adMatch.ad.id !== "autos-cd-deal-score" ? (
                       <ContextualRiverAdvertisement
                         ad={adMatch.ad}
