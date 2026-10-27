@@ -102,6 +102,13 @@
   border-width: 0 !important;
 }
 
+/* Keep black backing out of rounded photo crops; antialiased corners otherwise blend against it. */
+.hearst-plus-theme [class*="rounded-"][class*="overflow-hidden"][class*="bg-black"]:has(img),
+.hearst-plus-theme [class*="rounded-"][class*="overflow-hidden"][class*="bg-black"]:has(img)
+  [class*="bg-black"]:has(img) {
+  background-color: transparent !important;
+}
+
 .hearst-community-page {
   font-family: var(--community-font-ui);
 }
