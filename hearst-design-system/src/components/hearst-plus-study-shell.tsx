@@ -16,7 +16,7 @@ export function HearstPlusStudyShell({
 }) {
   return (
     <ThemeProvider defaultBrandSlug="hearst-all">
-      <div className="hearst-plus-theme min-h-screen overflow-x-clip bg-background text-foreground">
+      <div className="hearst-plus-theme hearst-plus-strategy-document min-h-screen overflow-x-clip bg-background text-foreground">
         <ProductHeader current="reference" appearance="navy" />
         <main>
           <header className="bg-[var(--hp-utility-bar)] text-primary-foreground">

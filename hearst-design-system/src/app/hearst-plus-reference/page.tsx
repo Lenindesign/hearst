@@ -166,7 +166,7 @@ function HearstPlusSystemContent() {
 
 export default function HearstPlusReferencePage() {
   return (
-    <div className="hearst-plus-theme hearst-plus-reference min-h-screen overflow-x-clip bg-background text-foreground">
+    <div className="hearst-plus-theme hearst-plus-reference hearst-plus-strategy-document min-h-screen overflow-x-clip bg-background text-foreground">
       <ProductHeader current="reference" appearance="navy" />
       <main>
         <section className="border-b border-border bg-card">

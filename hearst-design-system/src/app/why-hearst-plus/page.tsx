@@ -248,7 +248,7 @@ function PrincipleCycle() {
 
 export default function WhyHearstPlusPage() {
   return (
-    <div className="min-h-screen overflow-x-clip hearst-plus-theme bg-background text-foreground">
+    <div className="min-h-screen overflow-x-clip hearst-plus-theme hearst-plus-strategy-document bg-background text-foreground">
       <ProductHeader current="value" />
       <main>
         <section className="overflow-hidden bg-[var(--hp-utility-bar)] text-primary-foreground">

@@ -103,7 +103,7 @@ export default function HearstArticleBlueprintPage() {
   ];
 
   return (
-    <div className="hearst-plus-theme min-h-screen overflow-x-clip bg-background text-foreground">
+    <div className="hearst-plus-theme hearst-plus-strategy-document min-h-screen overflow-x-clip bg-background text-foreground">
       <ProductHeader current="articles" />
       <main>
         <section className="border-b border-slate-200 bg-[#102A43] text-white">
