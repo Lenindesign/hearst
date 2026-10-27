@@ -82,7 +82,7 @@ import {
 import type { LifestyleRiverProfile, LifestyleRiverStory } from "./lifestyle-river-types";
 import type { LiveArticleData, LiveFeedData } from "@/lib/live-feed-types";
 import { loadLiveArticle } from "@/lib/live-article-client-cache";
-import { setRiverLayout, useRiverLayout } from "@/lib/river-layout";
+import { setRiverLayout, useRiverLayout, type RiverLayout } from "@/lib/river-layout";
 import { useReaderAccount } from "./reader-account";
 import { ReaderAuthDialog, ReaderProfileDialog, SaveAcrossDevicesDialog } from "./reader-account-ui";
 import { StorySaveIconButton } from "@/components/hearst-plus/story-actions";
@@ -2685,18 +2685,21 @@ export function LifestyleRiverCard({
   saved,
   onSave,
   featured = false,
+  layoutOverride,
 }: {
   story: LifestyleRiverStory;
   onOpen: () => void;
   saved?: boolean;
   onSave?: () => void;
   featured?: boolean;
+  layoutOverride?: RiverLayout;
 }) {
   const kind = getLifestyleCardKind(story);
   const [videoPlaying, setVideoPlaying] = React.useState(false);
   const isVideo = kind === "video";
   const galleryPreview = useGalleryPreview(story, kind === "gallery" && isExplicitGalleryStory(story));
-  const layout = useRiverLayout();
+  const currentLayout = useRiverLayout();
+  const layout = layoutOverride ?? currentLayout;
 
   // List layout: a compact row (thumbnail left, text right) for scanning many stories quickly.
   if (layout === "list" && !featured) {
