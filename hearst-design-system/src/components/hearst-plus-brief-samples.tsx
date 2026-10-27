@@ -288,14 +288,14 @@ export function HearstPlusBriefSamples({
       <div className="grid gap-14 pt-16">
         <div>
           <p className="text-xs font-bold uppercase tracking-[.14em] text-primary">The card models behind the river</p>
-          <h3 className="mt-3 max-w-3xl font-[var(--hp-font-headline)] font-bold text-balance text-xl leading-tight">Each format keeps its own story clear.</h3>
-          <p className="mt-4 max-w-3xl text-base leading-6 text-muted-foreground">The same personalized inventory can pair articles, video, galleries, and community with the right preview and next step.</p>
+          <h3 className="mt-3 max-w-3xl font-[var(--hp-font-headline)] font-bold text-balance text-xl leading-tight">Each format needs its own preview.</h3>
+          <p className="mt-4 max-w-3xl text-base leading-6 text-muted-foreground">The river can show articles, video, galleries, and community. Each card previews the format and offers a clear next step.</p>
         </div>
         <div className="grid items-start gap-16">
           <SampleFigure
             label="Article card · real feed story"
-            headline="A clear story preview leads into reading."
-            description="The river card keeps the publisher visible, gives the headline room, and opens the matching article detail."
+              headline="See the source and headline before opening a story."
+              description="The article card shows its publisher, headline, summary, and link to the full story."
             note={`${articleStory.brand} · ${articleStory.topic} · ${articleStory.readTime}`}
           >
             <RiverStorySample story={articleStory} />
@@ -304,7 +304,7 @@ export function HearstPlusBriefSamples({
           {videoStory ? (
             <SampleFigure
               label="Video card · configured recommendation"
-              headline="A preview that sets up the watch."
+              headline="See the publisher and runtime before playback."
               description="Publisher, thumbnail, and runtime identify the video before the reader opens playback."
               note={`${videoStory.brand} · ${videoStory.readTime} · ${videoSourceCopy}`}
             >
@@ -313,7 +313,7 @@ export function HearstPlusBriefSamples({
           ) : (
             <SampleFigure
               label="Video card · sample unavailable"
-              headline="A preview that sets up the watch."
+              headline="See the publisher and runtime before playback."
               description="Publisher, thumbnail, and runtime identify the video before the reader opens playback."
               note={videoSourceCopy}
             >
@@ -328,7 +328,7 @@ export function HearstPlusBriefSamples({
           {galleryStory ? (
             <SampleFigure
               label="Photo gallery card · real gallery story"
-              headline="The gallery signals that images are the story."
+              headline="Preview the images before opening the gallery."
               description="A multi-image preview and image count show readers what to expect before opening the gallery detail."
               note={`${galleryStory.brand} · ${galleryStory.topic} · ${galleryStory.readTime}`}
             >
@@ -347,8 +347,8 @@ export function HearstPlusBriefSamples({
 
           <SampleFigure
             label="Shorts · vertical video river module"
-            headline="A vertical run of video brings movement into the river."
-            description="Portrait clips form a distinct, swipeable module, with publication identity and playback context kept visible."
+            headline="Browse vertical clips in one swipeable module."
+            description="The Delish carousel shows portrait clips with publication identity and playback controls."
             note="Uses the same Delish Shorts carousel as the Delish feed and loads its scoped portrait-video inventory."
           >
             <DelishVerticalVideoCarousel
@@ -361,8 +361,8 @@ export function HearstPlusBriefSamples({
           {shoppingStory ? (
             <SampleFigure
               label="Shopping · editorial commerce card"
-              headline="Useful picks turn a story into a next step."
-              description="A shopping treatment keeps the story and its editorial source visible while signaling product utility."
+              headline="Show related products beside the story."
+              description="Keep the publisher visible and label shopping links so readers know where they lead."
               note={`${shoppingStory.brand} · ${shoppingStory.topic} · rendered with the shared story card and its shopping treatment.`}
             >
               <RiverStorySample story={shoppingStory} />
@@ -372,8 +372,8 @@ export function HearstPlusBriefSamples({
           {brandSpotlight ? (
             <SampleFigure
               label="Brand spotlight · multi-story module"
-              headline="A publication can open a window into more of its coverage."
-              description="The spotlight groups several stories under one brand identity, giving readers a clear path into that publication."
+              headline="Show several stories from one publication."
+              description="The spotlight groups stories under a brand name and opens the selected story."
               note="Ranked from the current Hearst story inventory and rendered with the existing brand-promotion module."
             >
               <BrandSpotlightSample promotion={brandSpotlight} />
@@ -382,8 +382,8 @@ export function HearstPlusBriefSamples({
 
           <SampleFigure
             label="Advertisement · sponsored river placement"
-            headline="Commercial content stays clearly identified."
-            description="A labeled sponsor unit can appear in the river with its own creative, offer, and destination, separate from editorial recommendations."
+            headline="Label sponsored placements clearly."
+            description="Keep the sponsor name, offer, and destination visible beside the sponsored creative."
             note="Representative creative rendered with the existing contextual river advertisement component."
           >
             <ContextualRiverAdvertisement ad={sponsoredSample} />
