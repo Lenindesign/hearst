@@ -10,6 +10,11 @@ import type { BrandTheme } from "@/lib/brands";
 import { getBrandLogoSrc } from "@/lib/logos";
 import type { CommunityFeedThread } from "@/components/hearst-plus/community-client";
 import { LifestyleRiverCard } from "@/components/home-page";
+import { BrandPromotionRiverModule } from "@/components/hearst-plus/brand-promotion-river-module";
+import type { BrandPromotionMatch } from "@/components/hearst-plus/brand-promotion-model";
+import { ContextualRiverAdvertisement } from "@/components/hearst-plus/contextual-river-advertisement";
+import type { ContextualAdUnit } from "@/components/hearst-plus/content-reader-advertisement";
+import { DelishVerticalVideoCarousel } from "@/components/hearst-plus/vertical-video-carousel";
 import { useMemo, useState } from "react";
 import {
   applyOnboardingPreferences,
@@ -85,12 +90,14 @@ function SampleFigure({
   headline,
   description,
   note,
+  headlineClassName = "text-[28px] sm:text-[38px]",
   children,
 }: {
   label: string;
   headline: string;
   description: string;
   note: string;
+  headlineClassName?: string;
   children: ReactNode;
 }) {
   return (
@@ -98,11 +105,21 @@ function SampleFigure({
       <div className="min-w-0">{children}</div>
       <figcaption className="min-w-0 sm:px-2">
         <p className="text-xs font-bold uppercase tracking-[.14em] text-primary">{label}</p>
-        <h3 className="mt-3 font-[var(--hp-font-headline)] font-bold text-xl leading-tight tracking-[-.02em]">{headline}</h3>
+        <h3 className={`mt-3 font-[var(--hp-font-headline)] font-bold leading-tight tracking-[-.02em] ${headlineClassName}`}>{headline}</h3>
         <p className="mt-3 text-base leading-7 text-muted-foreground">{description}</p>
         <p className="mt-4 text-xs leading-5 text-muted-foreground">{note}</p>
       </figcaption>
     </figure>
+  );
+}
+
+function BrandSpotlightSample({ promotion }: { promotion: BrandPromotionMatch | null }) {
+  const router = useRouter();
+  return (
+    <BrandPromotionRiverModule
+      promotion={promotion}
+      onOpenStory={(storyId) => router.push(`/read/${encodeURIComponent(storyId)}/?from=%2Fhearst-plus-brief%2F`)}
+    />
   );
 }
 
@@ -228,6 +245,9 @@ function PersonalizationRiverDemo({ stories }: { stories: LifestyleRiverStory[] 
 export function HearstPlusBriefSamples({
   articleStory,
   galleryStory,
+  shoppingStory,
+  shortsStories,
+  brandSpotlight,
   videoStory,
   communityThread,
   videoSourceCopy,
@@ -235,11 +255,33 @@ export function HearstPlusBriefSamples({
 }: {
   articleStory: LifestyleRiverStory;
   galleryStory?: LifestyleRiverStory;
+  shoppingStory?: LifestyleRiverStory;
+  shortsStories: LifestyleRiverStory[];
+  brandSpotlight: BrandPromotionMatch | null;
   videoStory?: LifestyleRiverStory;
   communityThread: CommunityFeedThread;
   videoSourceCopy: string;
   riverDemoStories: LifestyleRiverStory[];
 }) {
+  const router = useRouter();
+  const sponsoredSample: ContextualAdUnit = {
+    id: "brief-sponsored-sample",
+    sponsor: "Hearst Market",
+    title: "A more useful kitchen, picked for you",
+    summary: "A clearly labeled sponsored placement can sit alongside stories while preserving its own destination and disclosure.",
+    cta: "Explore the edit",
+    topics: ["Food", "Home", "Shopping"],
+    tags: ["kitchen", "products", "shopping"],
+    creativeLabel: "Kitchen",
+    imageUrl: articleStory.image,
+    palette: {
+      background: "var(--card)",
+      foreground: "var(--foreground)",
+      accent: "var(--primary)",
+      soft: "var(--secondary)",
+    },
+  };
+
   return (
     <section aria-labelledby="river-demo-heading" className="my-16 border-y border-border py-16">
       <PersonalizationRiverDemo stories={riverDemoStories} />
@@ -301,6 +343,50 @@ export function HearstPlusBriefSamples({
             note="This uses the real community card component and seeded demo content, not a reader-submitted post."
           >
             <CommunityHomeRiverCard thread={communityThread} />
+          </SampleFigure>
+
+          <SampleFigure
+            label="Shorts · vertical video river module"
+            headline="A vertical run of video brings movement into the river."
+            description="Portrait clips form a distinct, swipeable module, with publication identity and playback context kept visible."
+            note="Uses the same Delish Shorts carousel as the Delish feed and loads its scoped portrait-video inventory."
+          >
+            <DelishVerticalVideoCarousel
+              stories={shortsStories}
+              onOpen={(story) => router.push(`/read/${encodeURIComponent(story.id)}/?from=%2Fhearst-plus-brief%2F`)}
+              theme="light"
+            />
+          </SampleFigure>
+
+          {shoppingStory ? (
+            <SampleFigure
+              label="Shopping · editorial commerce card"
+              headline="Useful picks turn a story into a next step."
+              description="A shopping treatment keeps the story and its editorial source visible while signaling product utility."
+              note={`${shoppingStory.brand} · ${shoppingStory.topic} · rendered with the shared story card and its shopping treatment.`}
+            >
+              <RiverStorySample story={shoppingStory} />
+            </SampleFigure>
+          ) : null}
+
+          {brandSpotlight ? (
+            <SampleFigure
+              label="Brand spotlight · multi-story module"
+              headline="A publication can open a window into more of its coverage."
+              description="The spotlight groups several stories under one brand identity, giving readers a clear path into that publication."
+              note="Ranked from the current Hearst story inventory and rendered with the existing brand-promotion module."
+            >
+              <BrandSpotlightSample promotion={brandSpotlight} />
+            </SampleFigure>
+          ) : null}
+
+          <SampleFigure
+            label="Advertisement · sponsored river placement"
+            headline="Commercial content stays clearly identified."
+            description="A labeled sponsor unit can appear in the river with its own creative, offer, and destination, separate from editorial recommendations."
+            note="Representative creative rendered with the existing contextual river advertisement component."
+          >
+            <ContextualRiverAdvertisement ad={sponsoredSample} />
           </SampleFigure>
         </div>
       </div>

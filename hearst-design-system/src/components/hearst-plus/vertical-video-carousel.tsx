@@ -43,6 +43,7 @@ export function VerticalVideoCarousel({
   const [canScrollBackward, setCanScrollBackward] = React.useState(false);
   const [canScrollForward, setCanScrollForward] = React.useState(false);
   const [supplementalStories, setSupplementalStories] = React.useState<LifestyleRiverStory[]>([]);
+  const [supplementalLoaded, setSupplementalLoaded] = React.useState(false);
   const requestedBrandSlug = filterBrandSlug;
   const availableStories = React.useMemo(
     () => mergeUniqueStories(stories, supplementalStories),
@@ -84,9 +85,11 @@ export function VerticalVideoCarousel({
         .then((payload) => {
           const nextStories = Array.isArray(payload.stories) ? payload.stories : [];
           setSupplementalStories(nextStories);
+          setSupplementalLoaded(true);
           onSupplementalStories?.(nextStories);
         })
         .catch(() => {
+          setSupplementalLoaded(true);
           supplementalRequestRef.current = null;
         });
     }, { rootMargin: "240px 0px" });
@@ -129,7 +132,7 @@ export function VerticalVideoCarousel({
     });
   };
 
-  if (portraitStories.length === 0) return null;
+  if (portraitStories.length === 0 && !requestedBrandSlug) return null;
 
   return (
     <section
@@ -168,7 +171,11 @@ export function VerticalVideoCarousel({
               role="status"
               aria-live="polite"
             >
-              {portraitStories.length} {summaryLabel} {portraitStories.length === 1 ? "video" : "videos"}
+              {portraitStories.length > 0
+                ? `${portraitStories.length} ${summaryLabel} ${portraitStories.length === 1 ? "video" : "videos"}`
+                : supplementalLoaded
+                  ? `No ${summaryLabel} videos are available right now`
+                  : `Loading ${displayTitle}…`}
             </p>
           </div>
         </div>
@@ -214,6 +221,11 @@ export function VerticalVideoCarousel({
         role="list"
         aria-label={`Vertical videos from ${displayBrandName}`}
       >
+        {portraitStories.length === 0 ? (
+          <p className="py-4 text-sm text-muted-foreground" aria-hidden="true">
+            {supplementalLoaded ? "Check back for more clips." : `Loading ${displayBrandName} videos…`}
+          </p>
+        ) : null}
         {portraitStories.map((story) => (
           <article
             key={story.id}
