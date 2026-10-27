@@ -105,12 +105,120 @@ export default async function HearstPlusBriefPage() {
 
         <section aria-labelledby="habit-heading" className="mx-auto max-w-[1200px] px-5 py-20 md:px-10 md:py-28">
           <p className="text-xs font-bold uppercase tracking-[.16em] text-primary">The reader habit</p>
-          <h2 id="habit-heading" className="mt-8 max-w-3xl font-[var(--hp-font-headline)] font-bold text-balance text-4xl leading-[1.08] md:text-[54px]">New stories each day. Reader choices shape the next mix.</h2>
+          <h2 id="habit-heading" className="mt-8 max-w-3xl font-[var(--hp-font-headline)] font-bold text-balance text-4xl leading-[1.08] md:text-[54px]">One visit shapes the next.</h2>
           <ol className="mt-14 grid gap-0 border-y border-border md:grid-cols-3 md:divide-x md:divide-border">
             <li className="py-10 md:px-8 md:first:pl-0"><span className="font-mono text-xs text-primary">01</span><h3 className="mt-5 text-xl font-semibold md:text-[28px]">Show new stories</h3><p className="mt-5 max-w-sm text-base leading-6 text-muted-foreground">Open with current stories across the subjects, formats, and sources a reader follows.</p></li>
             <li className="border-t border-border py-10 md:border-t-0 md:px-7"><span className="font-mono text-xs text-primary">02</span><h3 className="mt-5 text-xl font-semibold md:text-[28px]">Learn from reader choices</h3><p className="mt-5 max-w-sm text-base leading-6 text-muted-foreground">Use reads, saves, and skips to adjust ranking while keeping a range of sources and topics.</p></li>
             <li className="border-t border-border py-10 md:border-t-0 md:px-7 md:last:pr-0"><span className="font-mono text-xs text-primary">03</span><h3 className="mt-5 text-xl font-semibold md:text-[28px]">Check whether readers return</h3><p className="mt-5 max-w-sm text-base leading-6 text-muted-foreground">Use those signals to rank future stories, then measure useful repeat visits.</p></li>
           </ol>
+        </section>
+
+        <section aria-labelledby="daily-habit-heading" className="border-y border-border bg-card">
+          <div className="mx-auto max-w-[1200px] px-5 py-20 md:px-10 md:py-28">
+            <h2 id="daily-habit-heading" className="mb-12 max-w-5xl font-[var(--hp-font-headline)] text-5xl font-bold leading-[.98] tracking-[-.025em] text-balance md:mb-16 md:text-[78px]">The Daily Habit</h2>
+            <div className="grid gap-10 lg:grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)] lg:gap-16">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[.16em] text-primary">Why the river model</p>
+                <h3 id="river-model-heading" className="mt-8 max-w-2xl font-[var(--hp-font-headline)] font-bold text-balance text-4xl leading-[1.08] md:text-[54px]">Come back to a fresh mix that feels more like yours.</h3>
+                <p className="mt-6 max-w-xl text-base leading-7 text-muted-foreground">Each visit opens on new stories. Reader choices then shape what appears next, bringing the experience closer to the topics, sources, and formats each person values.</p>
+              </div>
+              <ol className="border-y border-border">
+                <li className="grid gap-3 border-b border-border py-7 sm:grid-cols-[180px_1fr] sm:gap-6">
+                  <h3 className="font-[var(--hp-font-headline)] text-xl font-bold md:text-2xl">Freshness</h3>
+                  <p className="text-base leading-7 text-muted-foreground">New reporting and timely updates make the river visibly different between visits, instead of replaying the same lineup.</p>
+                </li>
+                <li className="grid gap-3 border-b border-border py-7 sm:grid-cols-[180px_1fr] sm:gap-6">
+                  <h3 className="font-[var(--hp-font-headline)] text-xl font-bold md:text-2xl">Personal relevance</h3>
+                  <p className="text-base leading-7 text-muted-foreground">What readers choose, finish, save, or skip helps shape the next mix, bringing forward more of what has proved useful to them.</p>
+                </li>
+                <li className="grid gap-3 py-7 sm:grid-cols-[180px_1fr] sm:gap-6">
+                  <h3 className="font-[var(--hp-font-headline)] text-xl font-bold md:text-2xl">Discovery</h3>
+                  <p className="text-base leading-7 text-muted-foreground">Ranking can introduce relevant sources and formats beyond the brands or topics a reader already knows to seek out.</p>
+                </li>
+              </ol>
+            </div>
+
+            <section aria-labelledby="loop-heading" className="mt-16 border-t border-border pt-10">
+              <h2 id="loop-heading" className="mb-10 max-w-5xl font-[var(--hp-font-headline)] text-5xl font-bold leading-[.98] tracking-[-.025em] text-balance md:mb-14 md:text-[78px]">The Loop</h2>
+              <div>
+                <h3 className="max-w-5xl font-[var(--hp-font-headline)] text-4xl font-bold leading-[1.05] tracking-[-.02em] text-balance md:text-[54px]">Why people return to a fresh-content river</h3>
+                <p className="mt-6 max-w-5xl text-xl leading-8 text-muted-foreground md:text-2xl md:leading-9">Readers have a reason to return when the feed has changed and includes stories relevant to their interests.</p>
+
+                <div className="mt-10 border-y border-border py-5 md:py-6">
+                  <ol aria-label="The return sequence" className="grid grid-cols-2 gap-x-5 gap-y-4 sm:grid-cols-3 lg:grid-cols-6 lg:gap-5">
+                    {["Cue", "Anticipation", "Check in", "Discover something relevant", "Get a payoff", "Expect a reason to return"].map((step, index, steps) => (
+                      <li key={step} className="flex items-center gap-3 text-base font-semibold leading-6 md:text-lg">
+                        <span>{step}</span>
+                        {index < steps.length - 1 ? <span aria-hidden="true" className="text-primary">→</span> : null}
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+
+                <ol className="mt-10 grid gap-x-8 gap-y-8 md:grid-cols-2 xl:grid-cols-3">
+                  {[
+                    { title: "Cue", body: "A familiar moment, event, or update prompts a visit." },
+                    { title: "Anticipation", body: "The reader expects new content, but doesn’t know exactly what they’ll find." },
+                    { title: "Discovery", body: "The feed surfaces something timely, personally relevant, or unexpectedly interesting." },
+                    { title: "Payoff", body: "The reader feels informed, entertained, connected, or caught up." },
+                    { title: "Return", body: "A satisfying visit makes the next check-in feel worthwhile." },
+                  ].map((step, index) => (
+                    <li key={step.title} className="border-t border-border pt-5 md:pt-6">
+                      <p className="font-mono text-sm font-semibold text-primary">0{index + 1}</p>
+                      <h4 className="mt-3 font-[var(--hp-font-headline)] text-2xl font-bold leading-tight md:text-[28px]">{step.title}</h4>
+                      <p className="mt-3 text-lg leading-7 text-muted-foreground">{step.body}</p>
+                    </li>
+                  ))}
+                </ol>
+
+                <p className="mt-12 max-w-5xl border-t border-border pt-6 text-base leading-7 text-muted-foreground md:text-lg md:leading-8">
+                  Habit research examines how repeated actions in consistent contexts can become more automatic. Reward-learning research explores how expectations and outcomes shape future behavior. Together, these studies offer a useful framework for designing a return experience around freshness, discovery, and relevance. <a className="font-semibold text-foreground underline underline-offset-4" href="https://onlinelibrary.wiley.com/doi/10.1002/ejsp.674" target="_blank" rel="noreferrer">Lally et al. on habit formation</a> · <a className="font-semibold text-foreground underline underline-offset-4" href="https://www.nature.com/articles/s41593-024-01705-4" target="_blank" rel="noreferrer">Gershman et al. on dopamine and reward prediction</a>
+                </p>
+
+                <div className="mt-12 grid gap-4 border-t-2 border-primary pt-7 md:grid-cols-[minmax(220px,.65fr)_minmax(0,1.35fr)] md:gap-12">
+                  <p className="text-sm font-bold uppercase tracking-[.16em] text-primary">The product question</p>
+                  <p className="max-w-4xl font-[var(--hp-font-headline)] text-3xl font-bold leading-tight tracking-[-.02em] text-balance md:text-[40px]">Did readers find useful stories, and will they return for more?</p>
+                </div>
+
+                <div className="mt-12 border-t border-border pt-6">
+                  <h4 className="text-sm font-bold uppercase tracking-[.16em] text-primary">Feed-based products audiences already know</h4>
+                  <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-3 text-lg font-semibold">
+                    {[
+                      { name: "Yahoo", href: "https://www.yahoo.com/" },
+                      { name: "ESPN", href: "https://www.espn.com/" },
+                      { name: "TMZ", href: "https://www.tmz.com/" },
+                      { name: "BuzzFeed", href: "https://www.buzzfeed.com/" },
+                      { name: "X", href: "https://x.com/" },
+                      { name: "Instagram", href: "https://www.instagram.com/" },
+                      { name: "Facebook", href: "https://www.facebook.com/" },
+                    ].map((site) => (
+                      <li key={site.name}><a className="underline decoration-border underline-offset-4 hover:decoration-foreground" href={site.href} target="_blank" rel="noreferrer">{site.name}<span className="sr-only"> (opens in a new tab)</span></a></li>
+                    ))}
+                  </ul>
+                  <p className="mt-4 text-sm leading-6 text-muted-foreground">From news and sports to social discovery, people know to check feeds for what is new. Hearst+ can bring that familiar rhythm to trusted magazine brands, with fresh stories across the interests readers care about.</p>
+                </div>
+              </div>
+            </section>
+
+            <div className="mt-14 grid gap-5 border-t-2 border-primary pt-8 md:grid-cols-[minmax(220px,.65fr)_minmax(0,1.35fr)] md:gap-12">
+              <h3 className="font-[var(--hp-font-headline)] text-2xl font-bold leading-tight md:text-[32px]">Why this pattern fits Hearst+</h3>
+              <div>
+                <p className="text-base leading-7 text-muted-foreground">A Hearst+ river can pair timely stories across the magazine portfolio with signals from reader choices, while keeping each source visible. A pilot can measure whether that combination earns useful repeat visits and supports participating titles.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section aria-labelledby="evidence-heading" className="border-y border-border bg-muted/40">
+          <div className="mx-auto max-w-[1200px] px-5 py-20 md:px-10 md:py-28">
+            <div className="grid gap-10 lg:grid-cols-[.8fr_1.2fr]">
+              <div><p className="text-xs font-bold uppercase tracking-[.16em] text-primary">What we know today</p><h2 id="evidence-heading" className="mt-8 font-[var(--hp-font-headline)] font-bold text-balance text-4xl leading-[1.08] md:text-[54px]">The prototype lets us test the product hypothesis.</h2><p className="mt-5 text-base leading-6 text-muted-foreground">The prototype connects {totalMagazineStories} image-backed public RSS records across four magazine datasets and {streams.length} reader sections, so we can see how a cross-brand river handles stories across interests and formats.</p></div>
+              <div className="grid gap-8 border-t border-border pt-5 sm:grid-cols-2 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
+                <div><h3 className="text-xl font-semibold">Already demonstrated</h3><p className="mt-2 text-base leading-6 text-muted-foreground">Cross-source routes, source-aware stories, read-only recommendations, progressive feed delivery, video and gallery surfaces, community examples, and browser-local reader controls.</p></div>
+                <div><h3 className="text-xl font-semibold">Pilot measures and production needs</h3><p className="mt-2 text-base leading-6 text-muted-foreground">Measure reader return and perceived usefulness. Prepare production identity, consent, analytics, monitored content refresh, and a commercial model agreed with participating brands.</p></div>
+              </div>
+            </div>
+          </div>
         </section>
 
         <section aria-labelledby="system-heading" className="border-y border-border bg-card">
@@ -180,122 +288,14 @@ export default async function HearstPlusBriefPage() {
           <HearstPlusBriefSamples articleStory={articleStory} galleryStory={galleryStory} shoppingStory={shoppingStory} shortsStories={shortsStories} brandSpotlight={brandSpotlight} videoStory={videoStory} riverDemoStories={riverDemoStories} communityThread={communityThread} videoSourceCopy={videoSourceCopy} />
         </section>
 
-        <section aria-labelledby="daily-habit-heading" className="border-y border-border bg-card">
-          <div className="mx-auto max-w-[1200px] px-5 py-20 md:px-10 md:py-28">
-            <h2 id="daily-habit-heading" className="mb-12 max-w-5xl font-[var(--hp-font-headline)] text-5xl font-bold leading-[.98] tracking-[-.025em] text-balance md:mb-16 md:text-[78px]">The Daily Habit</h2>
-            <div className="grid gap-10 lg:grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)] lg:gap-16">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[.16em] text-primary">Why the river model</p>
-                <h3 id="river-model-heading" className="mt-8 max-w-2xl font-[var(--hp-font-headline)] font-bold text-balance text-4xl leading-[1.08] md:text-[54px]">Come back to a fresh mix that feels more like yours.</h3>
-                <p className="mt-6 max-w-xl text-base leading-7 text-muted-foreground">The intended pattern is a changing feed: each visit shows new stories, and a reader’s choices help rank what appears next. A pilot will show whether that mix is useful enough to prompt repeat visits.</p>
-              </div>
-              <ol className="border-y border-border">
-                <li className="grid gap-3 border-b border-border py-7 sm:grid-cols-[180px_1fr] sm:gap-6">
-                  <h3 className="font-[var(--hp-font-headline)] text-xl font-bold md:text-2xl">Freshness</h3>
-                  <p className="text-base leading-7 text-muted-foreground">New reporting and timely updates make the river visibly different between visits, instead of replaying the same lineup.</p>
-                </li>
-                <li className="grid gap-3 border-b border-border py-7 sm:grid-cols-[180px_1fr] sm:gap-6">
-                  <h3 className="font-[var(--hp-font-headline)] text-xl font-bold md:text-2xl">Personal relevance</h3>
-                  <p className="text-base leading-7 text-muted-foreground">What readers choose, finish, save, or skip helps shape the next mix, bringing forward more of what has proved useful to them.</p>
-                </li>
-                <li className="grid gap-3 py-7 sm:grid-cols-[180px_1fr] sm:gap-6">
-                  <h3 className="font-[var(--hp-font-headline)] text-xl font-bold md:text-2xl">Discovery</h3>
-                  <p className="text-base leading-7 text-muted-foreground">Ranking can introduce relevant sources and formats beyond the brands or topics a reader already knows to seek out.</p>
-                </li>
-              </ol>
-            </div>
-
-            <section aria-labelledby="loop-heading" className="mt-16 border-t border-border pt-10">
-              <h2 id="loop-heading" className="mb-10 max-w-5xl font-[var(--hp-font-headline)] text-5xl font-bold leading-[.98] tracking-[-.025em] text-balance md:mb-14 md:text-[78px]">The Loop</h2>
-              <div>
-                <h3 className="max-w-5xl font-[var(--hp-font-headline)] text-4xl font-bold leading-[1.05] tracking-[-.02em] text-balance md:text-[54px]">Why people return to a fresh-content river</h3>
-                <p className="mt-6 max-w-5xl text-xl leading-8 text-muted-foreground md:text-2xl md:leading-9">Readers have a reason to return when the feed has changed and includes stories relevant to their interests.</p>
-
-                <div className="mt-10 border-y border-border py-5 md:py-6">
-                  <ol aria-label="The return sequence" className="grid grid-cols-2 gap-x-5 gap-y-4 sm:grid-cols-3 lg:grid-cols-6 lg:gap-5">
-                    {["Cue", "Anticipation", "Check in", "Discover something relevant", "Get a payoff", "Expect a reason to return"].map((step, index, steps) => (
-                      <li key={step} className="flex items-center gap-3 text-base font-semibold leading-6 md:text-lg">
-                        <span>{step}</span>
-                        {index < steps.length - 1 ? <span aria-hidden="true" className="text-primary">→</span> : null}
-                      </li>
-                    ))}
-                  </ol>
-                </div>
-
-                <ol className="mt-10 grid gap-x-8 gap-y-8 md:grid-cols-2 xl:grid-cols-3">
-                  {[
-                    { title: "Cue", body: "A familiar moment, event, or update prompts a visit." },
-                    { title: "Anticipation", body: "The reader expects new content, but doesn’t know exactly what they’ll find." },
-                    { title: "Discovery", body: "The feed surfaces something timely, personally relevant, or unexpectedly interesting." },
-                    { title: "Payoff", body: "The reader feels informed, entertained, connected, or caught up." },
-                    { title: "Return", body: "A satisfying visit makes the next check-in feel worthwhile." },
-                  ].map((step, index) => (
-                    <li key={step.title} className="border-t border-border pt-5 md:pt-6">
-                      <p className="font-mono text-sm font-semibold text-primary">0{index + 1}</p>
-                      <h4 className="mt-3 font-[var(--hp-font-headline)] text-2xl font-bold leading-tight md:text-[28px]">{step.title}</h4>
-                      <p className="mt-3 text-lg leading-7 text-muted-foreground">{step.body}</p>
-                    </li>
-                  ))}
-                </ol>
-
-                <p className="mt-12 max-w-5xl border-t border-border pt-6 text-base leading-7 text-muted-foreground md:text-lg md:leading-8">
-                  Repeating an action in a consistent context can make it more automatic over time. Reward-learning research examines how expectations and outcomes shape future behavior. Together, these ideas help frame the return-loop hypothesis; they do not prove that every feed creates a habit or causes a dopamine response. <a className="font-semibold text-foreground underline underline-offset-4" href="https://onlinelibrary.wiley.com/doi/10.1002/ejsp.674" target="_blank" rel="noreferrer">Lally et al. on habit formation</a> · <a className="font-semibold text-foreground underline underline-offset-4" href="https://www.nature.com/articles/s41593-024-01705-4" target="_blank" rel="noreferrer">Gershman et al. on dopamine and reward prediction</a>
-                </p>
-
-                <div className="mt-12 grid gap-4 border-t-2 border-primary pt-7 md:grid-cols-[minmax(220px,.65fr)_minmax(0,1.35fr)] md:gap-12">
-                  <p className="text-sm font-bold uppercase tracking-[.16em] text-primary">The product question</p>
-                  <p className="max-w-4xl font-[var(--hp-font-headline)] text-3xl font-bold leading-tight tracking-[-.02em] text-balance md:text-[40px]">Did readers find useful stories, and will they return for more?</p>
-                </div>
-
-                <div className="mt-12 border-t border-border pt-6">
-                  <h4 className="text-sm font-bold uppercase tracking-[.16em] text-primary">Feed-based products audiences already know</h4>
-                  <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-3 text-lg font-semibold">
-                    {[
-                      { name: "Yahoo", href: "https://www.yahoo.com/" },
-                      { name: "ESPN", href: "https://www.espn.com/" },
-                      { name: "TMZ", href: "https://www.tmz.com/" },
-                      { name: "BuzzFeed", href: "https://www.buzzfeed.com/" },
-                      { name: "X", href: "https://x.com/" },
-                      { name: "Instagram", href: "https://www.instagram.com/" },
-                      { name: "Facebook", href: "https://www.facebook.com/" },
-                    ].map((site) => (
-                      <li key={site.name}><a className="underline decoration-border underline-offset-4 hover:decoration-foreground" href={site.href} target="_blank" rel="noreferrer">{site.name}<span className="sr-only"> (opens in a new tab)</span></a></li>
-                    ))}
-                  </ul>
-                  <p className="mt-4 text-sm leading-6 text-muted-foreground">These are familiar examples of feed-based products, not evidence that the same design will produce the same results for Hearst+.</p>
-                </div>
-              </div>
-            </section>
-
-            <div className="mt-14 grid gap-5 border-t-2 border-primary pt-8 md:grid-cols-[minmax(220px,.65fr)_minmax(0,1.35fr)] md:gap-12">
-              <h3 className="font-[var(--hp-font-headline)] text-2xl font-bold leading-tight md:text-[32px]">What Hearst+ must prove</h3>
-              <div>
-                <p className="text-base leading-7 text-muted-foreground">The loop is a product hypothesis, not proof. In a reader pilot, test whether freshness and relevance improve useful repeat visits while preserving each brand’s identity, source variety, and brand-level outcomes.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section aria-labelledby="evidence-heading" className="border-y border-border bg-muted/40">
-          <div className="mx-auto max-w-[1200px] px-5 py-20 md:px-10 md:py-28">
-            <div className="grid gap-10 lg:grid-cols-[.8fr_1.2fr]">
-              <div><p className="text-xs font-bold uppercase tracking-[.16em] text-primary">What we know today</p><h2 id="evidence-heading" className="mt-8 font-[var(--hp-font-headline)] font-bold text-balance text-4xl leading-[1.08] md:text-[54px]">The prototype lets us test the product hypothesis.</h2><p className="mt-5 text-base leading-6 text-muted-foreground">The repository contains {totalMagazineStories} image-backed public RSS records across four magazine datasets and {streams.length} configured reader sections. These are implementation snapshots, not live audience or performance metrics.</p></div>
-              <div className="grid gap-8 border-t border-border pt-5 sm:grid-cols-2 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
-                <div><h3 className="text-xl font-semibold">Already demonstrated</h3><p className="mt-2 text-base leading-6 text-muted-foreground">Cross-source routes, source-aware stories, read-only recommendations, progressive feed delivery, video and gallery surfaces, community examples, and browser-local reader controls.</p></div>
-                <div><h3 className="text-xl font-semibold">Still to prove or build for production</h3><p className="mt-2 text-base leading-6 text-muted-foreground">Whether readers return more often, whether personalization improves usefulness, plus production identity, consent, analytics collection, monitored content refresh, and a validated commercial model.</p></div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         <section aria-labelledby="publisher-value-heading" className="border-y border-border bg-card">
           <div className="mx-auto max-w-[1200px] px-5 py-20 md:px-10 md:py-28">
             <p className="text-xs font-bold uppercase tracking-[.16em] text-primary">A business model that strengthens the brands</p>
-            <h2 id="publisher-value-heading" className="mt-8 max-w-4xl font-[var(--hp-font-headline)] font-bold text-balance text-4xl leading-[1.08] md:text-[54px]">Make Hearst+ a discovery layer, not a substitute for the source.</h2>
-            <p className="mt-4 max-w-4xl text-base leading-7 text-muted-foreground">Research on news aggregation is mixed: links can help readers discover publishers, while complete in-app content can replace visits to the original site. The results vary across publishers and markets, so they do not prove that all 29 Hearst brands will benefit. <a className="font-semibold text-foreground underline underline-offset-4" href="https://journals.sagepub.com/doi/10.1177/0022243720913029" target="_blank" rel="noreferrer">Research on links between publishers</a> · <a className="font-semibold text-foreground underline underline-offset-4" href="https://www.nber.org/papers/w28746" target="_blank" rel="noreferrer">Research on Google News aggregation</a></p>
+            <h2 id="publisher-value-heading" className="mt-8 max-w-4xl font-[var(--hp-font-headline)] font-bold text-balance text-4xl leading-[1.08] md:text-[54px]">Make Hearst+ a discovery layer that sends value back to brands.</h2>
+            <p className="mt-4 max-w-4xl text-base leading-7 text-muted-foreground">Start with brand-owned previews and direct links that send readers to the original publication. Add licensed in-app access only when a title opts in, with clear attribution and agreed economics. Track source traffic, engagement, revenue, and conversions title by title. <a className="font-semibold text-foreground underline underline-offset-4" href="https://journals.sagepub.com/doi/10.1177/0022243720913029" target="_blank" rel="noreferrer">Research on links between publishers</a> · <a className="font-semibold text-foreground underline underline-offset-4" href="https://www.nber.org/papers/w28746" target="_blank" rel="noreferrer">Research on Google News aggregation</a></p>
             <div className="mt-16 border-t border-border pt-10">
               <h3 className="max-w-3xl font-[var(--hp-font-headline)] text-3xl font-bold leading-tight md:text-[38px]">A subscription ladder to test, from free discovery to premium.</h3>
-              <p className="mt-4 max-w-4xl text-base leading-7 text-muted-foreground">Treat these as offer options for reader research, not settled tiers or prices. Preserve direct brand subscriptions and let each participating title approve its access, content, and economics.</p>
+              <p className="mt-4 max-w-4xl text-base leading-7 text-muted-foreground">Use these options to learn what readers value. Preserve direct brand subscriptions, and let each participating title approve its access, content, and economics.</p>
               <ol className="mt-8 divide-y divide-border border-y border-border">
                 <li className="grid gap-3 py-7 sm:grid-cols-[220px_1fr] sm:gap-8">
                   <h4 className="font-[var(--hp-font-headline)] text-2xl font-bold">Free discovery</h4>
@@ -314,7 +314,7 @@ export default async function HearstPlusBriefPage() {
                   <p className="max-w-3xl text-base leading-7 text-muted-foreground">Test an ad-free cross-brand experience with approved full access and distinct member utility, such as saved collections or member newsletters. Remove ads only where the economics and brand agreements support it.</p>
                 </li>
               </ol>
-              <p className="mt-5 max-w-4xl text-sm leading-6 text-muted-foreground">The central test: does each paid option add enough recurring value to earn a subscription without displacing a stronger title relationship?</p>
+              <p className="mt-5 max-w-4xl text-sm leading-6 text-muted-foreground">Evaluate each paid option on recurring reader value, subscriber fit, and its effect on direct title relationships.</p>
               <Link href="/hearst-plus-subscription-study/" className="mt-4 inline-flex min-h-11 items-center font-semibold text-primary underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">Read the subscription feasibility study</Link>
             </div>
             <ol className="mt-10 grid gap-0 border-y border-border md:grid-cols-3 md:divide-x md:divide-border">
@@ -327,8 +327,8 @@ export default async function HearstPlusBriefPage() {
         </section>
 
         <section aria-labelledby="success-heading" className="mx-auto max-w-[1200px] px-5 py-20 md:px-10 md:py-28">
-          <p className="text-xs font-bold uppercase tracking-[.16em] text-primary">Executive decision · what we need to prove</p>
-          <h2 id="success-heading" className="mt-8 max-w-4xl font-[var(--hp-font-headline)] font-bold text-balance text-4xl leading-[1.08] md:text-[54px]">Can a more useful daily mix create value for readers and brands?</h2>
+          <p className="text-xs font-bold uppercase tracking-[.16em] text-primary">Executive decision · pilot plan</p>
+          <h2 id="success-heading" className="mt-8 max-w-4xl font-[var(--hp-font-headline)] font-bold text-balance text-4xl leading-[1.08] md:text-[54px]">A fresh mix can bring readers back and strengthen Hearst brands.</h2>
           <div className="mt-10 grid gap-px border-y-2 border-primary bg-border sm:grid-cols-2 lg:grid-cols-4">
             <article className="bg-card p-7"><p className="font-mono text-xs text-primary">01</p><h3 className="mt-2 text-xl font-semibold">Reader value</h3><p className="mt-2 text-base leading-6 text-muted-foreground">Do readers value cross-interest discovery enough to choose Hearst+ and return, alongside brand sites and other aggregators?</p></article>
             <article className="bg-card p-7"><p className="font-mono text-xs text-primary">02</p><h3 className="mt-2 text-xl font-semibold">Portfolio value</h3><p className="mt-2 text-base leading-6 text-muted-foreground">Can readers follow a few brands, discover others, and still find value in memberships and bundles?</p></article>

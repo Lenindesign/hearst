@@ -115,9 +115,19 @@ function SampleFigure({
 
 function BrandSpotlightSample({ promotion }: { promotion: BrandPromotionMatch | null }) {
   const router = useRouter();
+  const samplePromotion = promotion
+    ? {
+        ...promotion,
+        stories: promotion.stories.map((story) => ({
+          ...story,
+          title: story.title.replaceAll("—", ":"),
+        })),
+      }
+    : promotion;
+
   return (
     <BrandPromotionRiverModule
-      promotion={promotion}
+      promotion={samplePromotion}
       onOpenStory={(storyId) => router.push(`/read/${encodeURIComponent(storyId)}/?from=%2Fhearst-plus-brief%2F`)}
     />
   );
