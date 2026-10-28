@@ -318,8 +318,8 @@ export function HearstEventsIndex({ initialBrand = "all" }: { initialBrand?: str
                 <p className="max-w-2xl text-sm leading-6 text-muted-foreground">Upcoming experiences and stories from events our editors follow.</p>
               </div>
               {visibleEvents.length ? (
-                <div className="flex flex-col gap-3 border-t border-border p-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-                <p className="text-sm text-muted-foreground">Browse event stories or find dates on the calendar.</p>
+                <div className="flex flex-col gap-3 border-t border-border p-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:px-6">
+                <p className="min-w-0 flex-1 text-sm text-muted-foreground">Browse event stories or find dates on the calendar.</p>
                 <ToggleGroup
                   value={[displayMode]}
                   onValueChange={(value) => {
@@ -328,7 +328,7 @@ export function HearstEventsIndex({ initialBrand = "all" }: { initialBrand?: str
                   }}
                   variant="outline"
                   aria-label="Choose event view"
-                  className="overflow-hidden rounded-md"
+                  className="shrink-0 rounded-md"
                 >
                   <ToggleGroupItem value="stories" className="min-h-10 px-4 text-sm font-semibold data-[state=on]:bg-foreground data-[state=on]:text-background">Stories</ToggleGroupItem>
                   <ToggleGroupItem value="calendar" className="min-h-10 px-4 text-sm font-semibold data-[state=on]:bg-foreground data-[state=on]:text-background">Calendar</ToggleGroupItem>
