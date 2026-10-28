@@ -73,36 +73,24 @@ export function FeaturedStoryCarousel({
   );
   const [trackTransitionEnabled, setTrackTransitionEnabled] =
     React.useState(true);
+  const [dragOffset, setDragOffset] = React.useState(0);
+  const [isDragging, setIsDragging] = React.useState(false);
   const [paused, setPaused] = React.useState(false);
   const [hoverPaused, setHoverPaused] = React.useState(false);
-  const [isDragging, setIsDragging] = React.useState(false);
-  const [dragOffset, setDragOffset] = React.useState(0);
-  const activeIndexRef = React.useRef(activeIndex);
-  const swipeStageRef = React.useRef<HTMLDivElement | null>(null);
-  const swipeStartRef = React.useRef<{
-    x: number;
-    y: number;
-    time: number;
+  const swipeRef = React.useRef<{
+    pointerId: number;
+    startX: number;
+    startY: number;
+    lastX: number;
+    lastY: number;
+    startedAt: number;
+    target: HTMLElement | null;
+    hasSwipeIntent: boolean;
   } | null>(null);
-  const swipeLastRef = React.useRef<{ x: number; y: number } | null>(null);
-  const hasSwipeIntentRef = React.useRef(false);
-  const suppressSlideClickRef = React.useRef(false);
-  const gestureLockedRef = React.useRef(false);
-  const queuedSwipeDirectionRef = React.useRef<-1 | 1 | null>(null);
-  const commitQueuedSwipeRef = React.useRef<(() => void) | null>(null);
-  const gestureUnlockTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(
-    null,
-  );
-  const wheelGestureRef = React.useRef<{ offsetX: number; lastTime: number } | null>(
-    null,
-  );
-  const wheelResetTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(
-    null,
-  );
-  const wheelCooldownUntilRef = React.useRef(0);
-  const swipeInstructionsId = React.useId();
+  const suppressClickRef = React.useRef(false);
   const activeStory = stories[activeIndex] ?? stories[0];
   const hasMultipleStories = stories.length > 1;
+  const swipeEnabled = editionLabel === "Today’s Picks";
   const visualStories = React.useMemo(() => {
     if (!hasMultipleStories) return stories;
     const firstStory = stories[0];
@@ -130,7 +118,6 @@ export function FeaturedStoryCarousel({
 
   React.useEffect(() => {
     if (!activeStory) return;
-    activeIndexRef.current = activeIndex;
     onActiveStoryChange?.(activeStory, activeIndex + 1);
   }, [activeIndex, activeStory, onActiveStoryChange]);
 
@@ -157,38 +144,10 @@ export function FeaturedStoryCarousel({
     });
   }, [adjacentPreloadSources]);
 
-  React.useEffect(() => {
-    return () => {
-      if (wheelResetTimerRef.current) {
-        clearTimeout(wheelResetTimerRef.current);
-      }
-      if (gestureUnlockTimerRef.current) {
-        clearTimeout(gestureUnlockTimerRef.current);
-      }
-    };
-  }, []);
-
-  const unlockGesture = React.useCallback(() => {
-    gestureLockedRef.current = false;
-    if (gestureUnlockTimerRef.current) {
-      clearTimeout(gestureUnlockTimerRef.current);
-      gestureUnlockTimerRef.current = null;
-    }
-  }, []);
-
-  const scheduleGestureUnlockFallback = React.useCallback(() => {
-    if (gestureUnlockTimerRef.current) {
-      clearTimeout(gestureUnlockTimerRef.current);
-    }
-    gestureUnlockTimerRef.current = setTimeout(() => {
-      unlockGesture();
-      commitQueuedSwipeRef.current?.();
-    }, 420);
-  }, [unlockGesture]);
-
-  const moveToIndex = React.useCallback((nextIndex: number, lock = true) => {
+  const moveToIndex = React.useCallback((nextIndex: number) => {
+    setDragOffset(0);
+    setIsDragging(false);
     if (stories.length <= 1) {
-      unlockGesture();
       setActiveIndex(0);
       setTrackIndex(0);
       return;
@@ -196,30 +155,109 @@ export function FeaturedStoryCarousel({
 
     const normalizedIndex =
       ((nextIndex % stories.length) + stories.length) % stories.length;
-    if (lock) {
-      gestureLockedRef.current = true;
-      scheduleGestureUnlockFallback();
-    }
-    activeIndexRef.current = normalizedIndex;
     setActiveIndex(normalizedIndex);
     setTrackIndex(nextIndex + 1);
-  }, [scheduleGestureUnlockFallback, stories.length, unlockGesture]);
+  }, [stories.length]);
   const goToPrevious = React.useCallback(() => {
     moveToIndex(activeIndex - 1);
   }, [activeIndex, moveToIndex]);
   const goToNext = React.useCallback(() => {
     moveToIndex(activeIndex + 1);
   }, [activeIndex, moveToIndex]);
+
+  const handleSwipePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (
+      !swipeEnabled ||
+      !hasMultipleStories ||
+      !event.isPrimary ||
+      (event.pointerType === "mouse" && event.button !== 0)
+    ) return;
+    const target = event.target instanceof HTMLElement ? event.target : null;
+    swipeRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      lastX: event.clientX,
+      lastY: event.clientY,
+      startedAt: event.timeStamp,
+      target,
+      hasSwipeIntent: false,
+    };
+    if (target?.setPointerCapture) {
+      try {
+        target.setPointerCapture(event.pointerId);
+      } catch {
+        // Pointer capture can be unavailable in synthetic browser events.
+      }
+    }
+  };
+
+  const handleSwipePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const swipe = swipeRef.current;
+    if (!swipe || swipe.pointerId !== event.pointerId) return;
+    swipe.lastX = event.clientX;
+    swipe.lastY = event.clientY;
+    const deltaX = event.clientX - swipe.startX;
+    const deltaY = event.clientY - swipe.startY;
+    if (Math.abs(deltaY) > Math.abs(deltaX) * 1.2 || Math.abs(deltaX) < 8) return;
+    swipe.hasSwipeIntent = true;
+    event.preventDefault();
+    setIsDragging(true);
+    const maxOffset = event.currentTarget.clientWidth * 0.24;
+    setDragOffset(Math.max(-maxOffset, Math.min(maxOffset, deltaX)));
+  };
+
+  const finishSwipe = (event: React.PointerEvent<HTMLDivElement>, cancelled = false) => {
+    const swipe = swipeRef.current;
+    if (!swipe || swipe.pointerId !== event.pointerId) return;
+    swipeRef.current = null;
+    if (swipe.target?.hasPointerCapture(event.pointerId)) {
+      try {
+        swipe.target.releasePointerCapture(event.pointerId);
+      } catch {
+        // Ignore unsupported pointer-capture releases.
+      }
+    }
+
+    const deltaX = event.clientX - swipe.startX;
+    const deltaY = event.clientY - swipe.startY;
+    const elapsed = Math.max(event.timeStamp - swipe.startedAt, 1);
+    const threshold = Math.min(64, event.currentTarget.clientWidth * 0.14);
+    const shouldChangeSlide = !cancelled
+      && Math.abs(deltaX) > Math.abs(deltaY) * 1.2
+      && (Math.abs(deltaX) >= threshold || (Math.abs(deltaX) >= 24 && Math.abs(deltaX) / elapsed >= 0.45));
+
+    if (swipe.hasSwipeIntent) {
+      suppressClickRef.current = true;
+      window.setTimeout(() => {
+        suppressClickRef.current = false;
+      }, 400);
+    }
+
+    if (shouldChangeSlide) {
+      if (swipe.target?.hasPointerCapture(event.pointerId)) {
+        try {
+          swipe.target.releasePointerCapture(event.pointerId);
+        } catch {
+          // Ignore unsupported pointer-capture releases.
+        }
+      }
+      moveToIndex(activeIndex + (deltaX < 0 ? 1 : -1));
+      return;
+    }
+
+    setDragOffset(0);
+    setIsDragging(false);
+  };
+
   React.useEffect(() => {
     if (
       paused ||
       hoverPaused ||
-      prefersReducedMotion ||
       isDragging ||
+      prefersReducedMotion ||
       !hasMultipleStories
-    ) {
-      return;
-    }
+    ) return;
 
     const intervalId = window.setInterval(() => {
       moveToIndex(activeIndex + 1);
@@ -235,196 +273,11 @@ export function FeaturedStoryCarousel({
     prefersReducedMotion,
     moveToIndex,
   ]);
-  const resetSwipe = React.useCallback(() => {
-    swipeStartRef.current = null;
-    swipeLastRef.current = null;
-    hasSwipeIntentRef.current = false;
-    wheelGestureRef.current = null;
-    if (wheelResetTimerRef.current) {
-      clearTimeout(wheelResetTimerRef.current);
-      wheelResetTimerRef.current = null;
-    }
-    setIsDragging(false);
-    setDragOffset(0);
-  }, []);
-  const commitSwipe = React.useCallback((direction: -1 | 1) => {
-    const nextIndex = activeIndexRef.current + direction;
-    resetSwipe();
-    setTrackTransitionEnabled(true);
-    moveToIndex(nextIndex);
-  }, [moveToIndex, resetSwipe]);
-  const queueSwipe = React.useCallback((direction: -1 | 1) => {
-    queuedSwipeDirectionRef.current = direction;
-  }, []);
-  const commitQueuedSwipe = React.useCallback(() => {
-    const direction = queuedSwipeDirectionRef.current;
-    if (!direction) return;
-
-    queuedSwipeDirectionRef.current = null;
-    commitSwipe(direction);
-  }, [commitSwipe]);
-  React.useEffect(() => {
-    commitQueuedSwipeRef.current = commitQueuedSwipe;
-  }, [commitQueuedSwipe]);
-  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (!hasMultipleStories || event.button !== 0) {
-      return;
-    }
-
-    swipeStartRef.current = {
-      x: event.clientX,
-      y: event.clientY,
-      time: performance.now(),
-    };
-    swipeLastRef.current = { x: event.clientX, y: event.clientY };
-  };
-  const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
-    const start = swipeStartRef.current;
-    if (!start) return;
-
-    swipeLastRef.current = { x: event.clientX, y: event.clientY };
-    const deltaX = event.clientX - start.x;
-    const deltaY = event.clientY - start.y;
-    if (Math.abs(deltaY) > Math.abs(deltaX) * 1.15) return;
-    if (Math.abs(deltaX) < 6 && !hasSwipeIntentRef.current) return;
-
-    hasSwipeIntentRef.current = true;
-
-    if (
-      event.currentTarget.setPointerCapture &&
-      !event.currentTarget.hasPointerCapture(event.pointerId)
-    ) {
-      try {
-        event.currentTarget.setPointerCapture(event.pointerId);
-      } catch {
-        // Ignore synthetic pointer events from test environments.
-      }
-    }
-
-    event.preventDefault();
-    if (gestureLockedRef.current) return;
-
-    setIsDragging(true);
-    const maxOffset = event.currentTarget.clientWidth * 0.22;
-    setDragOffset(Math.max(-maxOffset, Math.min(maxOffset, deltaX)));
-  };
-  const handlePointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
-    const start = swipeStartRef.current;
-    if (!start) return;
-
-    const end = swipeLastRef.current ?? {
-      x: event.clientX,
-      y: event.clientY,
-    };
-    const deltaX = end.x - start.x;
-    const deltaY = end.y - start.y;
-    const elapsed = Math.max(performance.now() - start.time, 1);
-    const velocity = Math.abs(deltaX) / elapsed;
-    const threshold = Math.min(52, event.currentTarget.clientWidth * 0.11);
-    const isHorizontalSwipe =
-      Math.abs(deltaX) > Math.abs(deltaY) * 1.2 &&
-      (Math.abs(deltaX) >= threshold ||
-        (Math.abs(deltaX) >= 18 && velocity >= 0.35));
-
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      try {
-        event.currentTarget.releasePointerCapture(event.pointerId);
-      } catch {
-        // Ignore release errors from unsupported test environments.
-      }
-    }
-
-    if (isHorizontalSwipe) {
-      suppressSlideClickRef.current = true;
-      const direction = deltaX < 0 ? 1 : -1;
-      if (gestureLockedRef.current) {
-        queueSwipe(direction);
-        resetSwipe();
-      } else {
-        commitSwipe(direction);
-      }
-      window.setTimeout(() => {
-        suppressSlideClickRef.current = false;
-      }, 0);
-      return;
-    }
-
-    resetSwipe();
-  };
-  const handleWheel = React.useCallback((event: WheelEvent) => {
-    const stage = swipeStageRef.current;
-    if (!stage || !hasMultipleStories) return;
-
-    const width = stage.clientWidth || window.innerWidth;
-    const deltaScale =
-      event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? width : 1;
-    const deltaX = event.deltaX * deltaScale;
-    const deltaY = event.deltaY * deltaScale;
-    const isHorizontalGesture =
-      Math.abs(deltaX) > Math.abs(deltaY) * 1.15 && Math.abs(deltaX) > 1;
-
-    if (!isHorizontalGesture) return;
-
-    event.preventDefault();
-    event.stopPropagation();
-    setHoverPaused(true);
-
-    const now = performance.now();
-    const threshold = Math.min(52, width * 0.11);
-    if (now < wheelCooldownUntilRef.current || gestureLockedRef.current) {
-      if (Math.abs(deltaX) >= threshold) {
-        queueSwipe(deltaX > 0 ? 1 : -1);
-      }
-      wheelCooldownUntilRef.current = now + 420;
-      return;
-    }
-
-    if (
-      !wheelGestureRef.current ||
-      now - wheelGestureRef.current.lastTime > 240
-    ) {
-      wheelGestureRef.current = { offsetX: 0, lastTime: now };
-    }
-
-    wheelGestureRef.current.offsetX += deltaX;
-    wheelGestureRef.current.lastTime = now;
-
-    const maxOffset = width * 0.22;
-    const visualOffset = Math.max(
-      -maxOffset,
-      Math.min(maxOffset, -wheelGestureRef.current.offsetX),
-    );
-    setIsDragging(true);
-    setDragOffset(visualOffset);
-
-    if (Math.abs(wheelGestureRef.current.offsetX) >= threshold) {
-      const direction = wheelGestureRef.current.offsetX > 0 ? 1 : -1;
-      wheelCooldownUntilRef.current = now + 720;
-      commitSwipe(direction);
-      return;
-    }
-
-    if (wheelResetTimerRef.current) clearTimeout(wheelResetTimerRef.current);
-    wheelResetTimerRef.current = setTimeout(() => {
-      wheelGestureRef.current = null;
-      wheelResetTimerRef.current = null;
-      setIsDragging(false);
-      setDragOffset(0);
-    }, 180);
-  }, [commitSwipe, hasMultipleStories, queueSwipe]);
 
   const handleTrackTransitionEnd = (
     event: React.TransitionEvent<HTMLDivElement>,
   ) => {
     if (event.propertyName !== "transform" || stories.length <= 1) return;
-
-    unlockGesture();
-
-    const commitQueuedAfterTrackReset = () => {
-      if (queuedSwipeDirectionRef.current) {
-        window.requestAnimationFrame(commitQueuedSwipe);
-      }
-    };
 
     if (trackIndex === 0 || trackIndex === stories.length + 1) {
       setTrackTransitionEnabled(false);
@@ -432,36 +285,19 @@ export function FeaturedStoryCarousel({
       window.requestAnimationFrame(() => {
         window.requestAnimationFrame(() => {
           setTrackTransitionEnabled(true);
-          commitQueuedAfterTrackReset();
         });
       });
-    } else {
-      commitQueuedAfterTrackReset();
     }
   };
-
-  React.useEffect(() => {
-    const stage = swipeStageRef.current;
-    if (!stage) return;
-
-    stage.addEventListener("wheel", handleWheel, {
-      capture: true,
-      passive: false,
-    });
-    return () => {
-      stage.removeEventListener("wheel", handleWheel, { capture: true });
-    };
-  }, [handleWheel]);
 
   if (!activeStory) return null;
 
 
   return (
     <article
-      className="group relative min-w-0 overscroll-x-contain overflow-hidden rounded-[8px] bg-black shadow-[var(--hp-shadow-card)]"
+      className="group relative min-w-0 overflow-hidden rounded-[8px] bg-black shadow-[var(--hp-shadow-card)]"
       aria-roledescription="carousel"
       aria-label={editionLabel ?? "Featured stories"}
-      aria-describedby={swipeInstructionsId}
       data-story-module={editionLabel ? "todays-picks" : "featured"}
       onFocusCapture={(event) => {
         const target = event.target;
@@ -476,9 +312,10 @@ export function FeaturedStoryCarousel({
       onMouseEnter={() => setHoverPaused(true)}
       onMouseLeave={() => setHoverPaused(false)}
     >
-      <p id={swipeInstructionsId} className="sr-only">
-        Swipe left or right to move between{" "}
-        {editionLabel ? editionLabel : "featured stories"}.
+      <p className="sr-only">
+        Use the previous and next buttons to move between{" "}
+        {editionLabel ? editionLabel : "featured stories"}
+        {swipeEnabled ? ", or swipe on the featured story" : ""}.
       </p>
       <p
         role="status"
@@ -490,14 +327,21 @@ export function FeaturedStoryCarousel({
         Story {activeIndex + 1} of {stories.length}: {activeStory.title}
       </p>
       <div
-        ref={swipeStageRef}
-        data-page-category-swipe-exempt
         data-testid="featured-story-track"
-        className="relative w-full min-w-0 touch-pan-y overscroll-x-contain select-none overflow-hidden bg-black"
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onPointerCancel={resetSwipe}
+        className={cn(
+          "relative w-full min-w-0 overflow-hidden bg-black",
+          swipeEnabled && "touch-pan-y",
+        )}
+        onPointerDown={handleSwipePointerDown}
+        onPointerMove={handleSwipePointerMove}
+        onPointerUp={(event) => finishSwipe(event)}
+        onPointerCancel={(event) => finishSwipe(event, true)}
+        onClickCapture={(event) => {
+          if (!suppressClickRef.current) return;
+          event.preventDefault();
+          event.stopPropagation();
+          suppressClickRef.current = false;
+        }}
         onDragStart={(event) => event.preventDefault()}
       >
         <div
@@ -534,11 +378,7 @@ export function FeaturedStoryCarousel({
                       ? "grid grid-rows-[auto]"
                     : "grid grid-rows-[auto_112px] sm:grid-rows-[auto_144px]",
                 )}
-                onClick={(event) => {
-                  if (suppressSlideClickRef.current) {
-                    event.preventDefault();
-                    return;
-                  }
+                onClick={() => {
                   onEditionStoryOpen?.(story, index + 1);
                   onOpenStory(story);
                 }}
@@ -681,10 +521,7 @@ export function FeaturedStoryCarousel({
             </span>
           </span>
           {stories.length > 1 ? (
-            <div
-              className="flex items-center gap-1.5"
-              onPointerDown={(event) => event.stopPropagation()}
-            >
+            <div className="flex items-center gap-1.5">
               <button
                 type="button"
                 className="hidden h-7 w-7 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60 sm:inline-flex"

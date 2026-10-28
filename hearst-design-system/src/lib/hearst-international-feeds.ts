@@ -81,6 +81,25 @@ export function getHearstInternationalFeed(url: string | null | undefined) {
   return hearstInternationalFeeds.find((feed) => feed.url === url);
 }
 
+export function getHearstInternationalFeedForStoryUrl(sourceUrl: string) {
+  let articleUrl: URL;
+  try {
+    articleUrl = new URL(sourceUrl);
+  } catch {
+    return undefined;
+  }
+  if (articleUrl.protocol !== "https:") return undefined;
+
+  return hearstInternationalFeeds
+    .filter((feed) => {
+      const feedUrl = new URL(feed.url);
+      const feedPath = feedUrl.pathname.endsWith("/") ? feedUrl.pathname : `${feedUrl.pathname}/`;
+      return feedUrl.hostname === articleUrl.hostname
+        && (feedPath === "/" || articleUrl.pathname.startsWith(feedPath));
+    })
+    .sort((a, b) => new URL(b.url).pathname.length - new URL(a.url).pathname.length)[0];
+}
+
 export function getHearstInternationalFeedRssUrl(feed: HearstInternationalFeed) {
   const source = new URL(feed.url);
   const editionPath = source.pathname.endsWith("/") ? source.pathname : `${source.pathname}/`;

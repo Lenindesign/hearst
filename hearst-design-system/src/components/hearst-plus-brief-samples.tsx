@@ -152,11 +152,11 @@ export function HearstPlusTemplatePreviews({ articleStory }: { articleStory: Lif
   return (
     <div className="mt-14 grid gap-14">
       {templates.map((template) => (
-        <figure key={template.href} className="min-w-0 space-y-3">
+        <figure key={template.href} className="mx-auto w-full max-w-[780px] min-w-0 space-y-3">
           <figcaption>
             <p className="text-xs font-bold uppercase tracking-[.14em] text-primary">{template.label}</p>
             <div className="mt-1 flex flex-wrap items-baseline justify-between gap-2">
-              <h3 className="font-[var(--hp-font-headline)] font-bold text-xl leading-tight">{template.title}</h3>
+              <h3 className="font-[var(--hp-font-headline)] font-bold text-xl leading-tight md:text-[32px]">{template.title}</h3>
               <Link href={template.href} target="_blank" rel="noreferrer" className="text-base font-semibold text-primary underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">Open full page</Link>
             </div>
           </figcaption>
@@ -298,7 +298,7 @@ export function HearstPlusBriefSamples({
       <div className="grid gap-14 pt-16">
         <div>
           <p className="text-xs font-bold uppercase tracking-[.14em] text-primary">The card models behind the river</p>
-          <h3 className="mt-3 max-w-3xl font-[var(--hp-font-headline)] font-bold text-balance text-xl leading-tight">Each format needs its own preview.</h3>
+          <h3 className="mt-3 max-w-3xl font-[var(--hp-font-headline)] font-bold text-balance text-xl leading-tight md:text-5xl">Each format needs its own preview.</h3>
           <p className="mt-4 max-w-3xl text-base leading-6 text-muted-foreground">The river can show articles, video, galleries, and community. Each card previews the format and offers a clear next step.</p>
         </div>
         <div className="grid items-start gap-16">

@@ -84,9 +84,7 @@ export function selectContentReaderAdvertisement(
     );
 
   const selectedAd = rankedAds[slotIndex % rankedAds.length]?.ad ?? rankedAds[0]?.ad ?? null;
-  return selectedAd
-    ? { ...selectedAd, imageUrl: getContextualAdvertisementImage(selectedAd, [currentStory]) }
-    : null;
+  return selectedAd;
 }
 
 export function ContentReaderAdvertisement({

@@ -579,6 +579,7 @@ export function MainNav({
   mastheadLogoOverride,
   mastheadSlugOverride,
   mastheadDescriptorOverride,
+  navTrailingContent,
   extendBannerUnderUtilityBar = false,
   showRiverLayoutToggle = false,
   controlsOnly = false,
@@ -605,6 +606,8 @@ export function MainNav({
   mastheadSlugOverride?: string;
   /** Use the destination HEARST wordmark with a custom italic section descriptor in the shared brand-wall banner. */
   mastheadDescriptorOverride?: string;
+  /** Page-specific controls aligned beside a custom section navigation. */
+  navTrailingContent?: React.ReactNode;
   /** The Hearst+ home banner runs up behind its transparent utility bar. */
   extendBannerUnderUtilityBar?: boolean;
   /** Show the card/list toggle for the story river beside search. */
@@ -682,15 +685,29 @@ export function MainNav({
     // default landing view; it simply has no dedicated tab. This covers destination
     // configs, getBrandContextualFilters, and any navLinksOverride.
     .filter((link) => link !== "For You")
-    .filter((link) => !((brand.slug === "hearst-all" || brand.slug === "hearst-plus")
-      && (link === "Streaming" || link === "Events")));
-  const navLinks = selectedBrand?.slug === "good-housekeeping" && uncappedNavLinks.length > 7
+    .filter((link) => !(brand.slug === "hearst-all" && link === "Streaming"));
+  const showsEventsLink = !navLinksOverride && (
+    Boolean(selectedBrand) || brand.slug === "hearst-all" || brand.slug === "hearst-plus"
+  );
+  const destinationNavLinks = showsEventsLink
     ? (() => {
-        const visibleLinks = uncappedNavLinks.slice(0, 7);
-        if (!activeFilter || visibleLinks.includes(activeFilter)) return visibleLinks;
-        return [...visibleLinks.slice(0, 6), activeFilter];
+        const linksWithoutEvents = uncappedNavLinks.filter((link) => link !== "Events");
+        const videosIndex = linksWithoutEvents.indexOf("Videos");
+        return videosIndex === -1
+          ? [...linksWithoutEvents, "Events"]
+          : [...linksWithoutEvents.slice(0, videosIndex + 1), "Events", ...linksWithoutEvents.slice(videosIndex + 1)];
       })()
     : uncappedNavLinks;
+  const navLinks = selectedBrand?.slug === "good-housekeeping" && destinationNavLinks.length > 7
+    ? (() => {
+        const visibleLinks = destinationNavLinks.filter((link) => link !== "Events").slice(0, 6);
+        if (activeFilter && !visibleLinks.includes(activeFilter) && activeFilter !== "Events") {
+          if (visibleLinks.length) visibleLinks[visibleLinks.length - 1] = activeFilter;
+          else visibleLinks.push(activeFilter);
+        }
+        return [...visibleLinks, ...(destinationNavLinks.includes("Events") ? ["Events"] : [])];
+      })()
+    : destinationNavLinks;
   const normalizedSearchQuery = normalizeStorySearchText(deferredSearchQuery);
   const searchResults = React.useMemo(() => {
     return searchLifestyleStories(searchStories, deferredSearchQuery);
@@ -1003,13 +1020,14 @@ export function MainNav({
       ? getHearstDestinationCategoryDisplayLabel(destinationMode, link)
       : navLinkLabelOverrides?.[link] ?? link;
     const destinationHref = brand.slug === "hearst-all" ? hearstDestinationNavHrefs.get(link) : undefined;
-    const publicationHref = selectedBrand?.slug === "hot-rod" && link === "Events"
-      ? "/autos/hot-rod/events/"
+    const publicationHref = selectedBrand && link === "Events"
+      ? `/hearst-plus/events/?brand=${encodeURIComponent(selectedBrand.slug)}`
       : undefined;
     const communityHref = selectedBrand && link === "Community"
       ? `/communities/${selectedBrand.slug}/`
       : undefined;
-    const overrideHref = navLinkHrefOverrides?.[link];
+    const overrideHref = navLinkHrefOverrides?.[link]
+      ?? ((brand.slug === "hearst-all" || brand.slug === "hearst-plus") && link === "Events" ? "/hearst-plus/events/" : undefined);
     const categoryHref = isDestinationRiver && !selectedBrand
       ? getHearstDestinationCategoryRoute(destinationMode, link)
       : undefined;
@@ -1689,7 +1707,8 @@ export function MainNav({
         aria-label={selectedBrand ? `${selectedBrand.name} sections` : `${brand.name} sections`}
 	        className={cn(
             "relative flex items-center gap-3 py-1 md:py-2",
-            navCarouselMode === "compact" ? "md:justify-start" : "md:justify-center"
+            navTrailingContent ? "justify-between" : "md:justify-center",
+            navCarouselMode === "compact" && !navTrailingContent ? "md:justify-start" : ""
           )}
       >
         <div
@@ -1697,13 +1716,13 @@ export function MainNav({
           data-topic-navigation-scroll
 	          className={cn(
             "flex min-w-0 flex-1 scroll-px-4 items-center overflow-x-auto text-sm scrollbar-hide",
-            navCarouselMode === "compact" ? "gap-3 md:justify-start" : "gap-6 md:flex-none md:justify-center"
+            navTrailingContent || navCarouselMode === "compact" ? "gap-3 md:justify-start" : "gap-6 md:flex-none md:justify-center"
           )}
           onWheelCapture={handleNavigationWheel}
         >
           {renderNavLinks()}
         </div>
-        <span
+        {!navTrailingContent ? <span
           aria-hidden="true"
           data-navigation-overflow="left"
           data-visible={navOverflow.left}
@@ -1712,8 +1731,9 @@ export function MainNav({
             darkMode ? "from-[var(--component-video-feed-background-default)]" : "from-[var(--hp-surface)]",
             navOverflow.left ? "opacity-100" : "opacity-0"
           )}
-        />
-        <span
+        /> : null}
+        {navTrailingContent ? <div className="relative z-20 shrink-0">{navTrailingContent}</div> : null}
+        {!navTrailingContent ? <span
           aria-hidden="true"
           data-navigation-overflow="right"
           data-visible={navOverflow.right}
@@ -1722,7 +1742,7 @@ export function MainNav({
             darkMode ? "from-[var(--component-video-feed-background-default)]" : "from-[var(--hp-surface)]",
             navOverflow.right ? "opacity-100" : "opacity-0"
           )}
-        />
+        /> : null}
       </PageContainer>
     </div>
     <div
@@ -1738,10 +1758,13 @@ export function MainNav({
         as="nav"
         ref={compactNavScrollRef}
         aria-label={selectedBrand ? `${selectedBrand.name} compact sections` : `${brand.name} compact sections`}
-        className="flex items-center justify-center gap-6 overflow-x-auto py-2 scrollbar-hide"
+        className={cn("flex items-center gap-3 py-2", navTrailingContent ? "justify-between" : "justify-center")}
         onWheelCapture={handleNavigationWheel}
       >
-        {renderNavLinks()}
+        <div className="flex min-w-0 flex-1 items-center gap-6 overflow-x-auto scrollbar-hide md:flex-none md:justify-center">
+          {renderNavLinks()}
+        </div>
+        {navTrailingContent ? <div className="relative z-20 shrink-0">{navTrailingContent}</div> : null}
       </PageContainer>
     </div>
     {mobileMenu}
@@ -1983,7 +2006,7 @@ const contextualAdCatalog = {
   autos: [
     ["autos-cd-deal-score", "Car and Driver Marketplace", "Know the Best Price to Buy", "An AI-powered Deal Score evaluates the full vehicle offer against incentives, inventory, price trends, demand, and local market signals.", "Check my deal", ["Buying Guides", "Reviews"], ["buying", "reviews", "used", "shopping", "marketplace", "deal"], "Deal Score", "https://hips.hearstapps.com/mtg-prod/68f7e39e42ad0d0002a0414e/003-2026-honda-crv-hybrid-sport-touring.jpg"],
     ["autos-ev-home-charge", "ChargePoint", "EV Charging, Matched to Your Garage", "A contextual offer for readers comparing EVs, range, charging speed, and home setup decisions.", "Estimate charging", ["EVs", "Buying Guides"], ["evs", "electric", "buying", "reviews"], "EV", "https://hips.hearstapps.com/hmg-prod/images/2025-chevrolet-equinox-rs-awd-132-67110e2133505.jpg"],
-    ["autos-tire-finder", "Michelin Garage", "Find the Right Performance Tire", "Tire and handling recommendations for readers deep in reviews, performance, and track-day content.", "Match tires", ["Reviews", "Performance", "Racing"], ["performance", "drive", "racing", "reviews"], "Grip", "https://hips.hearstapps.com/hmg-prod/images/d91a8038-0b16-435e-9cc3-e5629f2c0d81.jpeg"],
+    ["autos-tire-finder", "Michelin Garage", "Find the Right Performance Tire", "Tire and handling recommendations for readers deep in reviews, performance, and track-day content.", "Match tires", ["Reviews", "Performance", "Racing"], ["performance", "drive", "racing", "reviews"], "Grip", "https://hips.hearstapps.com/hmg-prod/images/edfd1030-a261-483c-a7e1-4e9ff77622a3.jpg"],
     ["autos-auction-alert", "Collector Watch", "Auction Watchlist", "Collector-car alerts aligned to classics, Bring a Trailer behavior, and save-for-later browsing.", "Track listings", ["Classics", "Auctions"], ["auction", "classic", "collector", "used"], "Bid", "https://hips.hearstapps.com/hmg-prod/images/92a52d3f-3d3c-4e38-b3bd-7f82dc8b7146.jpg"],
     ["autos-tool-chest", "Craftsman Pro", "Build the Home Garage", "Tools, lifts, storage, and detailing gear for readers acting on trucks, classics, and project-car intent.", "Open garage", ["Trucks", "Classics", "Performance"], ["truck", "classic", "gear", "engine"], "Garage", "https://hips.hearstapps.com/hmg-prod/images/f04e60d2-9db2-4c60-91ba-a037f75a8fce.jpeg"],
     ["autos-insurance", "Hagerty", "Collector Coverage Check", "Insurance guidance for readers browsing classics, auctions, and collectible performance cars.", "Check coverage", ["Classics", "Auctions", "Buying Guides"], ["classic", "collector", "auction", "buying"], "Cover", "https://hips.hearstapps.com/hmg-prod/images/4d6fd00c-2cd1-4bf1-bbba-fca826f647e6.jpg"],
@@ -2982,29 +3005,6 @@ function LifestyleStoryReaderModal({
   const destinationConfigs = useDestinationConfigs();
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
-  const readerSwipeStageRef = React.useRef<HTMLDivElement | null>(null);
-  const readerSwipeStartRef = React.useRef<{
-    x: number;
-    y: number;
-    time: number;
-  } | null>(null);
-  const readerSwipeLastRef = React.useRef<{ x: number; y: number } | null>(null);
-  const readerSwipeLockedRef = React.useRef(false);
-  const readerSwipeIntentRef = React.useRef(false);
-  const readerSuppressClickRef = React.useRef(false);
-  const readerSwipeWheelRef = React.useRef<{ offsetX: number; lastTime: number } | null>(
-    null,
-  );
-  const readerSwipeWheelResetTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(
-    null,
-  );
-  const readerSwipeUnlockTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(
-    null,
-  );
-  const [readerSwipeOffset, setReaderSwipeOffset] = React.useState(0);
-  const [readerSwipeDragging, setReaderSwipeDragging] = React.useState(false);
-  const [readerSwipeTransitionEnabled, setReaderSwipeTransitionEnabled] =
-    React.useState(true);
   const [readerDestinationOverride, setReaderDestinationOverride] = React.useState<Exclude<DestinationMode, "all"> | null>(null);
   const readerOriginBrandSlug = getReaderOriginBrandSlug(readerReturnHref);
   const [readerBrandOverrideSlug, setReaderBrandOverrideSlug] = React.useState<string | null>(null);
@@ -3317,36 +3317,6 @@ function LifestyleStoryReaderModal({
     active: filter === readerActiveFilter,
     disabled: !getReaderFilterStory(filter),
   }));
-  const readerSwipeFilterLabels = contentReaderFilterItems
-    .filter((filter) => !filter.disabled)
-    .map((filter) => filter.label);
-  const readerSwipeFilterIndex = Math.max(
-    0,
-    readerSwipeFilterLabels.indexOf(readerActiveFilter),
-  );
-  const hasMultipleReaderSwipeFilters = readerSwipeFilterLabels.length > 1;
-  const previousReaderSwipeFilter = hasMultipleReaderSwipeFilters
-    ? readerSwipeFilterLabels[
-        (readerSwipeFilterIndex - 1 + readerSwipeFilterLabels.length)
-        % readerSwipeFilterLabels.length
-      ]
-    : undefined;
-  const nextReaderSwipeFilter = hasMultipleReaderSwipeFilters
-    ? readerSwipeFilterLabels[
-        (readerSwipeFilterIndex + 1) % readerSwipeFilterLabels.length
-      ]
-    : undefined;
-  const readerCategoryPreloadStories = [
-    previousReaderSwipeFilter ? getReaderFilterStory(previousReaderSwipeFilter) : undefined,
-    nextReaderSwipeFilter ? getReaderFilterStory(nextReaderSwipeFilter) : undefined,
-  ].filter((story): story is LifestyleRiverStory => Boolean(story));
-  const readerCategoryPreloadStoryIds = readerCategoryPreloadStories
-    .map((story) => story.id)
-    .join("|");
-  const readerCategoryImagePreloadKey = readerCategoryPreloadStories
-    .map((story) => story.image)
-    .join("|");
-
   React.useEffect(() => {
     if (openStoryId) recordStoryOpened(openStoryId);
   }, [openStoryId]);
@@ -3369,12 +3339,6 @@ function LifestyleStoryReaderModal({
 
   React.useEffect(() => () => {
     ambientDiscoveryControllerRef.current?.abort();
-    if (readerSwipeUnlockTimerRef.current) {
-      clearTimeout(readerSwipeUnlockTimerRef.current);
-    }
-    if (readerSwipeWheelResetTimerRef.current) {
-      clearTimeout(readerSwipeWheelResetTimerRef.current);
-    }
   }, []);
 
   const selectReaderStory = React.useCallback((storyId: string, options?: { activeFilter?: string }) => {
@@ -3604,7 +3568,6 @@ function LifestyleStoryReaderModal({
 
     [
       ...storyQueue.slice(1, 3),
-      ...readerCategoryPreloadStories,
     ].forEach((story) => {
       if (!story.image) return;
       const image = new window.Image();
@@ -3615,9 +3578,9 @@ function LifestyleStoryReaderModal({
         q: "75",
       }).toString()}`;
     });
-  // The keys intentionally represent the next reader stories and adjacent category heroes.
+  // The key intentionally represents the next reader stories.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openStoryId, nextReaderImagePreloadKey, readerCategoryImagePreloadKey]);
+  }, [openStoryId, nextReaderImagePreloadKey]);
 
   React.useEffect(() => {
     const node = sentinelRef.current;
@@ -3752,7 +3715,6 @@ function LifestyleStoryReaderModal({
   React.useEffect(() => {
     const storiesToLoad = [
       ...visibleReaderStories,
-      ...readerCategoryPreloadStories,
       ...ambientReaderPreloadStories,
     ];
     const seenStoryIds = new Set<string>();
@@ -3763,7 +3725,7 @@ function LifestyleStoryReaderModal({
     });
   // The ID key intentionally represents the current lazy-loaded reader queue.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ambientReaderPreloadStoryIds, readerCategoryPreloadStoryIds, requestLiveArticle, visibleReaderStoryIds]);
+  }, [ambientReaderPreloadStoryIds, requestLiveArticle, visibleReaderStoryIds]);
 
   React.useEffect(() => {
     if (!isReaderOpen || ambientReaderStoryId || fullscreenGallery) return;
@@ -3894,197 +3856,6 @@ function LifestyleStoryReaderModal({
     const filterStory = getReaderFilterStory(filter);
     if (filterStory) selectReaderStory(filterStory.id, { activeFilter: filter });
   };
-  const resetReaderCategorySwipe = () => {
-    readerSwipeStartRef.current = null;
-    readerSwipeLastRef.current = null;
-    readerSwipeIntentRef.current = false;
-    readerSwipeWheelRef.current = null;
-    if (readerSwipeWheelResetTimerRef.current) {
-      clearTimeout(readerSwipeWheelResetTimerRef.current);
-      readerSwipeWheelResetTimerRef.current = null;
-    }
-    setReaderSwipeDragging(false);
-    setReaderSwipeTransitionEnabled(true);
-    setReaderSwipeOffset(0);
-  };
-  const unlockReaderCategorySwipe = () => {
-    readerSwipeLockedRef.current = false;
-    if (readerSwipeUnlockTimerRef.current) {
-      clearTimeout(readerSwipeUnlockTimerRef.current);
-      readerSwipeUnlockTimerRef.current = null;
-    }
-  };
-  const commitReaderCategorySwipe = (direction: "previous" | "next") => {
-    const targetFilter = direction === "next"
-      ? nextReaderSwipeFilter
-      : previousReaderSwipeFilter;
-    const stageWidth = readerSwipeStageRef.current?.clientWidth ?? 0;
-
-    if (!targetFilter || !stageWidth || readerSwipeLockedRef.current) {
-      resetReaderCategorySwipe();
-      return;
-    }
-
-    readerSwipeLockedRef.current = true;
-    if (readerSwipeUnlockTimerRef.current) {
-      clearTimeout(readerSwipeUnlockTimerRef.current);
-    }
-    readerSwipeWheelRef.current = null;
-    if (readerSwipeWheelResetTimerRef.current) {
-      clearTimeout(readerSwipeWheelResetTimerRef.current);
-      readerSwipeWheelResetTimerRef.current = null;
-    }
-
-    const exitOffset = direction === "next" ? -stageWidth : stageWidth;
-    const enterOffset = direction === "next" ? stageWidth : -stageWidth;
-    setReaderSwipeDragging(false);
-    setReaderSwipeTransitionEnabled(true);
-    setReaderSwipeOffset(exitOffset);
-
-    window.setTimeout(() => {
-      setReaderSwipeTransitionEnabled(false);
-      selectReaderFilter(targetFilter);
-      setReaderSwipeOffset(enterOffset);
-      window.requestAnimationFrame(() => {
-        window.requestAnimationFrame(() => {
-          setReaderSwipeTransitionEnabled(true);
-          setReaderSwipeOffset(0);
-        });
-      });
-    }, 220);
-
-    readerSwipeUnlockTimerRef.current = setTimeout(() => {
-      unlockReaderCategorySwipe();
-    }, 620);
-  };
-  const handleReaderCategoryPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (event.button !== 0 || readerSwipeLockedRef.current) return;
-    event.stopPropagation();
-    readerSwipeStartRef.current = {
-      x: event.clientX,
-      y: event.clientY,
-      time: performance.now(),
-    };
-    readerSwipeLastRef.current = { x: event.clientX, y: event.clientY };
-  };
-  const handleReaderCategoryPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
-    const start = readerSwipeStartRef.current;
-    if (!start || readerSwipeLockedRef.current) return;
-    event.stopPropagation();
-
-    const deltaX = event.clientX - start.x;
-    const deltaY = event.clientY - start.y;
-    readerSwipeLastRef.current = { x: event.clientX, y: event.clientY };
-
-    if (Math.abs(deltaY) > Math.abs(deltaX) * 1.2) return;
-    if (Math.abs(deltaX) < 8 && !readerSwipeIntentRef.current) return;
-    if (deltaX < 0 && !nextReaderSwipeFilter) return;
-    if (deltaX > 0 && !previousReaderSwipeFilter) return;
-
-    readerSwipeIntentRef.current = true;
-    readerSuppressClickRef.current = true;
-    setReaderSwipeDragging(true);
-    setReaderSwipeTransitionEnabled(false);
-
-    if (
-      event.currentTarget.setPointerCapture &&
-      !event.currentTarget.hasPointerCapture(event.pointerId)
-    ) {
-      try {
-        event.currentTarget.setPointerCapture(event.pointerId);
-      } catch {
-        // Test environments may not support pointer capture for synthetic events.
-      }
-    }
-
-    event.preventDefault();
-    const maxOffset = event.currentTarget.clientWidth * 0.28;
-    setReaderSwipeOffset(Math.max(-maxOffset, Math.min(maxOffset, deltaX)));
-  };
-  const handleReaderCategoryPointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
-    const start = readerSwipeStartRef.current;
-    if (!start) return;
-    event.stopPropagation();
-
-    const end = readerSwipeLastRef.current ?? {
-      x: event.clientX,
-      y: event.clientY,
-    };
-    const deltaX = end.x - start.x;
-    const deltaY = end.y - start.y;
-    const elapsed = Math.max(performance.now() - start.time, 1);
-    const velocity = Math.abs(deltaX) / elapsed;
-    const threshold = Math.min(96, event.currentTarget.clientWidth * 0.16);
-    const isHorizontalSwipe =
-      Math.abs(deltaX) > Math.abs(deltaY) * 1.25 &&
-      (Math.abs(deltaX) >= threshold ||
-        (Math.abs(deltaX) >= 32 && velocity >= 0.55));
-
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      try {
-        event.currentTarget.releasePointerCapture(event.pointerId);
-      } catch {
-        // Ignore release errors from unsupported test environments.
-      }
-    }
-
-    if (isHorizontalSwipe) {
-      commitReaderCategorySwipe(deltaX < 0 ? "next" : "previous");
-    } else {
-      resetReaderCategorySwipe();
-    }
-
-    window.setTimeout(() => {
-      readerSuppressClickRef.current = false;
-    }, 0);
-  };
-  const handleReaderCategoryWheel = (event: React.WheelEvent<HTMLDivElement>) => {
-    if (!hasMultipleReaderSwipeFilters || readerSwipeLockedRef.current) return;
-    event.stopPropagation();
-
-    const stageWidth = readerSwipeStageRef.current?.clientWidth ?? event.currentTarget.clientWidth;
-    if (!stageWidth) return;
-
-    const deltaScale = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? stageWidth : 1;
-    const deltaX = event.deltaX * deltaScale;
-    const deltaY = event.deltaY * deltaScale;
-    const isHorizontalIntent =
-      Math.abs(deltaX) > Math.abs(deltaY) * 1.15 && Math.abs(deltaX) > 1;
-
-    if (!isHorizontalIntent) return;
-
-    event.preventDefault();
-    event.stopPropagation();
-
-    const now = performance.now();
-    const previousWheel = readerSwipeWheelRef.current;
-    const nextOffsetX =
-      previousWheel && now - previousWheel.lastTime < 220
-        ? previousWheel.offsetX + deltaX
-        : deltaX;
-    readerSwipeWheelRef.current = { offsetX: nextOffsetX, lastTime: now };
-
-    if (readerSwipeWheelResetTimerRef.current) {
-      clearTimeout(readerSwipeWheelResetTimerRef.current);
-    }
-
-    const maxOffset = stageWidth * 0.28;
-    const visualOffset = Math.max(-maxOffset, Math.min(maxOffset, -nextOffsetX));
-    setReaderSwipeDragging(true);
-    setReaderSwipeTransitionEnabled(false);
-    setReaderSwipeOffset(visualOffset);
-
-    const threshold = Math.min(96, stageWidth * 0.16);
-    if (Math.abs(nextOffsetX) >= threshold) {
-      commitReaderCategorySwipe(nextOffsetX > 0 ? "next" : "previous");
-      return;
-    }
-
-    readerSwipeWheelResetTimerRef.current = setTimeout(() => {
-      resetReaderCategorySwipe();
-    }, 160);
-  };
-
   return (
     <>
       <ContentReaderDialogShell
@@ -4119,28 +3890,7 @@ function LifestyleStoryReaderModal({
         />
 
         <div
-          ref={readerSwipeStageRef}
-          className={cn(
-            "grid touch-pan-y gap-y-8 gap-x-[18px] overscroll-x-contain px-4 py-6 sm:px-8 lg:px-10 xl:grid-cols-[280px_minmax(0,1fr)]",
-            readerSwipeTransitionEnabled && "transition-transform duration-[250ms] ease-out",
-            readerSwipeDragging && "cursor-grabbing select-none transition-none",
-          )}
-          data-reader-category-swipe-container
-          data-reader-category-swipe-stage
-          data-reader-category-filter={readerActiveFilter}
-          onPointerDown={handleReaderCategoryPointerDown}
-          onPointerMove={handleReaderCategoryPointerMove}
-          onPointerUp={handleReaderCategoryPointerUp}
-          onPointerCancel={resetReaderCategorySwipe}
-          onClickCapture={(event) => {
-            if (!readerSuppressClickRef.current) return;
-            event.preventDefault();
-            event.stopPropagation();
-          }}
-          onWheelCapture={handleReaderCategoryWheel}
-          style={{
-            transform: `translate3d(${readerSwipeOffset}px, 0, 0)`,
-          }}
+          className="grid touch-pan-y gap-y-8 gap-x-[18px] px-4 py-6 sm:px-8 lg:px-10 xl:grid-cols-[280px_minmax(0,1fr)]"
         >
           <ContentReaderContextRail
             currentStory={activeReaderContextStory}
@@ -6829,22 +6579,6 @@ export function HomePageTemplate({
     [staticDestinationData]
   );
   const [activeLifestyleFilter, setActiveLifestyleFilter] = React.useState(initialFilter ?? "For You");
-  const pageCategorySwipeStageRef = React.useRef<HTMLDivElement | null>(null);
-  const pageCategorySwipeStartRef = React.useRef<{
-    x: number;
-    y: number;
-    time: number;
-  } | null>(null);
-  const pageCategorySwipeLastRef = React.useRef<{ x: number; y: number } | null>(null);
-  const pageCategorySwipeIntentRef = React.useRef(false);
-  const pageCategorySwipeLockedRef = React.useRef(false);
-  const pageCategorySwipeSuppressClickRef = React.useRef(false);
-  const pageCategorySwipeWheelRef = React.useRef<{ offsetX: number; lastTime: number } | null>(null);
-  const pageCategorySwipeWheelResetTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-  const pageCategorySwipeUnlockTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [pageCategorySwipeOffset, setPageCategorySwipeOffset] = React.useState(0);
-  const [pageCategorySwipeDragging, setPageCategorySwipeDragging] = React.useState(false);
-  const [pageCategorySwipeTransitionEnabled, setPageCategorySwipeTransitionEnabled] = React.useState(true);
   const [onboardingOpen, setOnboardingOpen] = React.useState(false);
   const [delishOnboardingOpen, setDelishOnboardingOpen] = React.useState(false);
   const [motorTrendOnboardingOpen, setMotorTrendOnboardingOpen] = React.useState(false);
@@ -7247,274 +6981,6 @@ export function HomePageTemplate({
 
     anchorDestinationContent();
   }, [anchorDestinationContent, destinationMode, selectedBrand, showStakeholderTools]);
-  const pageCategorySwipeFilters = React.useMemo(() => {
-    const rawFilters = selectedBrand
-      ? getBrandContextualFilters(
-          selectedBrand.slug,
-          destinationConfigs.all.stories,
-          hasScopedVideoFeed,
-        )
-      : inventoryAwareDestinationConfig.filters;
-    // Mirror the tab bar: "For You" is not a swipeable category anywhere.
-    const baseFilters = rawFilters.filter((filter) => filter !== "For You");
-    return !selectedBrand && hasScopedVideoFeed
-      ? insertVideosFilter(baseFilters)
-      : baseFilters;
-  }, [
-    destinationConfigs.all.stories,
-    hasScopedVideoFeed,
-    inventoryAwareDestinationConfig.filters,
-    selectedBrand,
-  ]);
-  const pageCategorySwipeIndex = Math.max(
-    0,
-    pageCategorySwipeFilters.indexOf(activeLifestyleFilter),
-  );
-  const hasMultiplePageCategorySwipeFilters = pageCategorySwipeFilters.length > 1;
-  React.useEffect(() => {
-    if (!isDestinationRiver || !hasMultiplePageCategorySwipeFilters) return;
-
-    const previousHtmlOverscrollBehaviorX =
-      document.documentElement.style.overscrollBehaviorX;
-    const previousBodyOverscrollBehaviorX =
-      document.body.style.overscrollBehaviorX;
-
-    document.documentElement.style.overscrollBehaviorX = "none";
-    document.body.style.overscrollBehaviorX = "none";
-
-    return () => {
-      document.documentElement.style.overscrollBehaviorX =
-        previousHtmlOverscrollBehaviorX;
-      document.body.style.overscrollBehaviorX =
-        previousBodyOverscrollBehaviorX;
-    };
-  }, [hasMultiplePageCategorySwipeFilters, isDestinationRiver]);
-  const previousPageCategorySwipeFilter = hasMultiplePageCategorySwipeFilters
-    ? pageCategorySwipeFilters[
-        (pageCategorySwipeIndex - 1 + pageCategorySwipeFilters.length)
-        % pageCategorySwipeFilters.length
-      ]
-    : undefined;
-  const nextPageCategorySwipeFilter = hasMultiplePageCategorySwipeFilters
-    ? pageCategorySwipeFilters[
-        (pageCategorySwipeIndex + 1) % pageCategorySwipeFilters.length
-      ]
-    : undefined;
-  const resetPageCategorySwipe = React.useCallback(() => {
-    pageCategorySwipeStartRef.current = null;
-    pageCategorySwipeLastRef.current = null;
-    pageCategorySwipeIntentRef.current = false;
-    pageCategorySwipeWheelRef.current = null;
-    if (pageCategorySwipeWheelResetTimerRef.current) {
-      clearTimeout(pageCategorySwipeWheelResetTimerRef.current);
-      pageCategorySwipeWheelResetTimerRef.current = null;
-    }
-    setPageCategorySwipeDragging(false);
-    setPageCategorySwipeTransitionEnabled(true);
-    setPageCategorySwipeOffset(0);
-  }, []);
-  const unlockPageCategorySwipe = React.useCallback(() => {
-    pageCategorySwipeLockedRef.current = false;
-    if (pageCategorySwipeUnlockTimerRef.current) {
-      clearTimeout(pageCategorySwipeUnlockTimerRef.current);
-      pageCategorySwipeUnlockTimerRef.current = null;
-    }
-  }, []);
-  const commitPageCategorySwipe = React.useCallback((direction: "previous" | "next") => {
-    const targetFilter = direction === "next"
-      ? nextPageCategorySwipeFilter
-      : previousPageCategorySwipeFilter;
-    const stageWidth = pageCategorySwipeStageRef.current?.clientWidth ?? 0;
-
-    if (!targetFilter || !stageWidth || pageCategorySwipeLockedRef.current) {
-      resetPageCategorySwipe();
-      return;
-    }
-
-    pageCategorySwipeLockedRef.current = true;
-    if (pageCategorySwipeUnlockTimerRef.current) {
-      clearTimeout(pageCategorySwipeUnlockTimerRef.current);
-    }
-    pageCategorySwipeWheelRef.current = null;
-    if (pageCategorySwipeWheelResetTimerRef.current) {
-      clearTimeout(pageCategorySwipeWheelResetTimerRef.current);
-      pageCategorySwipeWheelResetTimerRef.current = null;
-    }
-
-    const exitOffset = direction === "next" ? -stageWidth : stageWidth;
-    const enterOffset = direction === "next" ? stageWidth : -stageWidth;
-    setPageCategorySwipeDragging(false);
-    setPageCategorySwipeTransitionEnabled(true);
-    setPageCategorySwipeOffset(exitOffset);
-
-    window.setTimeout(() => {
-      setPageCategorySwipeTransitionEnabled(false);
-      handleLifestyleFilterChange(targetFilter);
-      setPageCategorySwipeOffset(enterOffset);
-      window.requestAnimationFrame(() => {
-        window.requestAnimationFrame(() => {
-          setPageCategorySwipeTransitionEnabled(true);
-          setPageCategorySwipeOffset(0);
-        });
-      });
-    }, 220);
-
-    pageCategorySwipeUnlockTimerRef.current = setTimeout(() => {
-      unlockPageCategorySwipe();
-    }, 620);
-  }, [
-    handleLifestyleFilterChange,
-    nextPageCategorySwipeFilter,
-    previousPageCategorySwipeFilter,
-    resetPageCategorySwipe,
-    unlockPageCategorySwipe,
-  ]);
-  const shouldIgnorePageCategorySwipeTarget = React.useCallback((target: EventTarget | null) => (
-    target instanceof HTMLElement
-      && Boolean(target.closest("input, textarea, select, option, [contenteditable='true'], video, audio, [role='dialog'], [data-reader-category-swipe-container], [data-page-category-swipe-exempt]"))
-  ), []);
-  const handlePageCategoryPointerDown = React.useCallback((event: React.PointerEvent<HTMLDivElement>) => {
-    if (
-      event.button !== 0
-      || pageCategorySwipeLockedRef.current
-      || shouldIgnorePageCategorySwipeTarget(event.target)
-    ) return;
-    pageCategorySwipeStartRef.current = {
-      x: event.clientX,
-      y: event.clientY,
-      time: performance.now(),
-    };
-    pageCategorySwipeLastRef.current = { x: event.clientX, y: event.clientY };
-  }, [shouldIgnorePageCategorySwipeTarget]);
-  const handlePageCategoryPointerMove = React.useCallback((event: React.PointerEvent<HTMLDivElement>) => {
-    const start = pageCategorySwipeStartRef.current;
-    if (!start || pageCategorySwipeLockedRef.current) return;
-
-    const deltaX = event.clientX - start.x;
-    const deltaY = event.clientY - start.y;
-    pageCategorySwipeLastRef.current = { x: event.clientX, y: event.clientY };
-
-    if (Math.abs(deltaY) > Math.abs(deltaX) * 1.2) return;
-    if (Math.abs(deltaX) < 8 && !pageCategorySwipeIntentRef.current) return;
-
-    pageCategorySwipeIntentRef.current = true;
-    pageCategorySwipeSuppressClickRef.current = true;
-    setPageCategorySwipeDragging(true);
-    setPageCategorySwipeTransitionEnabled(false);
-
-    if (
-      event.currentTarget.setPointerCapture &&
-      !event.currentTarget.hasPointerCapture(event.pointerId)
-    ) {
-      try {
-        event.currentTarget.setPointerCapture(event.pointerId);
-      } catch {
-        // Test environments may not support pointer capture for synthetic events.
-      }
-    }
-
-    event.preventDefault();
-    const maxOffset = event.currentTarget.clientWidth * 0.28;
-    setPageCategorySwipeOffset(Math.max(-maxOffset, Math.min(maxOffset, deltaX)));
-  }, []);
-  const handlePageCategoryPointerUp = React.useCallback((event: React.PointerEvent<HTMLDivElement>) => {
-    const start = pageCategorySwipeStartRef.current;
-    if (!start) return;
-
-    const end = pageCategorySwipeLastRef.current ?? {
-      x: event.clientX,
-      y: event.clientY,
-    };
-    const deltaX = end.x - start.x;
-    const deltaY = end.y - start.y;
-    const elapsed = Math.max(performance.now() - start.time, 1);
-    const velocity = Math.abs(deltaX) / elapsed;
-    const threshold = Math.min(96, event.currentTarget.clientWidth * 0.16);
-    const isHorizontalSwipe =
-      Math.abs(deltaX) > Math.abs(deltaY) * 1.25 &&
-      (Math.abs(deltaX) >= threshold ||
-        (Math.abs(deltaX) >= 32 && velocity >= 0.55));
-
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      try {
-        event.currentTarget.releasePointerCapture(event.pointerId);
-      } catch {
-        // Ignore release errors from unsupported test environments.
-      }
-    }
-
-    if (isHorizontalSwipe) {
-      commitPageCategorySwipe(deltaX < 0 ? "next" : "previous");
-    } else {
-      resetPageCategorySwipe();
-    }
-
-    window.setTimeout(() => {
-      pageCategorySwipeSuppressClickRef.current = false;
-    }, 0);
-  }, [commitPageCategorySwipe, resetPageCategorySwipe]);
-  const handlePageCategoryWheel = React.useCallback((event: React.WheelEvent<HTMLDivElement>) => {
-    if (
-      !hasMultiplePageCategorySwipeFilters
-      || pageCategorySwipeLockedRef.current
-      || shouldIgnorePageCategorySwipeTarget(event.target)
-    ) return;
-
-    const stageWidth = pageCategorySwipeStageRef.current?.clientWidth ?? event.currentTarget.clientWidth;
-    if (!stageWidth) return;
-
-    const deltaScale = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? stageWidth : 1;
-    const deltaX = event.deltaX * deltaScale;
-    const deltaY = event.deltaY * deltaScale;
-    const isHorizontalIntent =
-      Math.abs(deltaX) > Math.abs(deltaY) * 1.15 && Math.abs(deltaX) > 1;
-
-    if (!isHorizontalIntent) return;
-
-    event.preventDefault();
-    event.stopPropagation();
-
-    const now = performance.now();
-    const previousWheel = pageCategorySwipeWheelRef.current;
-    const nextOffsetX =
-      previousWheel && now - previousWheel.lastTime < 220
-        ? previousWheel.offsetX + deltaX
-        : deltaX;
-    pageCategorySwipeWheelRef.current = { offsetX: nextOffsetX, lastTime: now };
-
-    if (pageCategorySwipeWheelResetTimerRef.current) {
-      clearTimeout(pageCategorySwipeWheelResetTimerRef.current);
-    }
-
-    const maxOffset = stageWidth * 0.28;
-    const visualOffset = Math.max(-maxOffset, Math.min(maxOffset, -nextOffsetX));
-    setPageCategorySwipeDragging(true);
-    setPageCategorySwipeTransitionEnabled(false);
-    setPageCategorySwipeOffset(visualOffset);
-
-    const threshold = Math.min(96, stageWidth * 0.16);
-    if (Math.abs(nextOffsetX) >= threshold) {
-      commitPageCategorySwipe(nextOffsetX > 0 ? "next" : "previous");
-      return;
-    }
-
-    pageCategorySwipeWheelResetTimerRef.current = setTimeout(() => {
-      resetPageCategorySwipe();
-    }, 160);
-  }, [
-    commitPageCategorySwipe,
-    hasMultiplePageCategorySwipeFilters,
-    resetPageCategorySwipe,
-    shouldIgnorePageCategorySwipeTarget,
-  ]);
-  React.useEffect(() => () => {
-    if (pageCategorySwipeWheelResetTimerRef.current) {
-      clearTimeout(pageCategorySwipeWheelResetTimerRef.current);
-    }
-    if (pageCategorySwipeUnlockTimerRef.current) {
-      clearTimeout(pageCategorySwipeUnlockTimerRef.current);
-    }
-  }, []);
   const handleSelectedBrandChange = React.useCallback((nextBrand: { name: string; slug: string } | null) => {
     if ((selectedBrand?.slug ?? null) === (nextBrand?.slug ?? null)) return;
 
@@ -7652,27 +7118,7 @@ export function HomePageTemplate({
         >
           {isDestinationRiver ? (
             <div
-              ref={pageCategorySwipeStageRef}
-              className={cn(
-                "touch-pan-y overscroll-x-contain",
-                pageCategorySwipeTransitionEnabled && "transition-transform duration-[250ms] ease-out",
-                pageCategorySwipeDragging && "cursor-grabbing select-none transition-none",
-              )}
-              data-page-category-swipe-stage
-              data-page-category-filter={activeLifestyleFilter}
-              onPointerDown={handlePageCategoryPointerDown}
-              onPointerMove={handlePageCategoryPointerMove}
-              onPointerUp={handlePageCategoryPointerUp}
-              onPointerCancel={resetPageCategorySwipe}
-              onClickCapture={(event) => {
-                if (!pageCategorySwipeSuppressClickRef.current) return;
-                event.preventDefault();
-                event.stopPropagation();
-              }}
-              onWheelCapture={handlePageCategoryWheel}
-              style={pageCategorySwipeOffset !== 0 ? {
-                transform: `translate3d(${pageCategorySwipeOffset}px, 0, 0)`,
-              } : undefined}
+              className="relative"
             >
               <LifestyleRiverHydrationGate
                 activeFilter={activeLifestyleFilter}

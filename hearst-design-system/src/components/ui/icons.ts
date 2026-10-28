@@ -26,6 +26,7 @@ export { CurrencyDollarIcon as DollarSign } from "@phosphor-icons/react/dist/ssr
 export { DownloadSimpleIcon as Download } from "@phosphor-icons/react/dist/ssr/DownloadSimple";
 export { DotsThreeIcon as DotsThree } from "@phosphor-icons/react/dist/ssr/DotsThree";
 export { EnvelopeSimpleIcon as Mail } from "@phosphor-icons/react/dist/ssr/EnvelopeSimple";
+export { EyeIcon as Eye } from "@phosphor-icons/react/dist/ssr/Eye";
 export { EyeSlashIcon as EyeOff } from "@phosphor-icons/react/dist/ssr/EyeSlash";
 export { FireIcon as Flame } from "@phosphor-icons/react/dist/ssr/Fire";
 export { FolderPlusIcon as FolderPlus } from "@phosphor-icons/react/dist/ssr/FolderPlus";

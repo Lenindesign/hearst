@@ -2,6 +2,9 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "../lib/tokens.css";
+@import "@fullcalendar/react/skeleton.css";
+@import "@fullcalendar/react/themes/classic/theme.css";
+@import "@fullcalendar/react/themes/classic/palette.css";
 
 .hearst-plus-theme {
   --background: #ECE9E3;
@@ -131,6 +134,174 @@
 
 .hearst-community-copy {
   font-family: var(--community-font-copy);
+}
+
+.hearst-events-calendar {
+  --fc-classic-button: var(--foreground);
+  --fc-classic-button-border: var(--foreground);
+  --fc-classic-button-strong: var(--foreground);
+  --fc-classic-button-strong-border: var(--foreground);
+  --fc-classic-button-outline: color-mix(in oklab, var(--foreground) 35%, transparent);
+  --fc-classic-button-foreground: var(--background);
+  --fc-classic-primary: var(--primary);
+  --fc-classic-primary-foreground: var(--primary-foreground);
+  --fc-classic-background: var(--card);
+  --fc-classic-faint: var(--background);
+  --fc-classic-muted: var(--muted);
+  --fc-classic-strong: var(--border);
+  --fc-classic-foreground: var(--foreground);
+  --fc-classic-faint-foreground: var(--muted-foreground);
+  --fc-classic-muted-foreground: var(--muted-foreground);
+  --fc-classic-border: var(--border);
+  --fc-classic-strong-border: var(--border);
+  --fc-border-color: var(--border);
+  --fc-page-bg-color: var(--card);
+  --fc-neutral-bg-color: var(--background);
+  --fc-neutral-text-color: var(--muted-foreground);
+  --fc-today-bg-color: color-mix(in oklab, var(--primary) 8%, transparent);
+  --fc-button-bg-color: var(--card);
+  --fc-button-border-color: var(--border);
+  --fc-button-text-color: var(--foreground);
+  --fc-button-hover-bg-color: var(--muted);
+  --fc-button-hover-border-color: var(--border);
+  --fc-button-active-bg-color: var(--primary);
+  --fc-button-active-border-color: var(--primary);
+  --fc-button-active-text-color: var(--primary-foreground);
+  --fc-event-bg-color: var(--primary);
+  --fc-event-border-color: var(--primary);
+  --fc-event-text-color: var(--primary-foreground);
+  color: var(--foreground);
+  font-family: var(--hp-font-ui);
+}
+
+.hearst-events-calendar .fc .fc-toolbar {
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.hearst-events-calendar .fc .fc-toolbar-title {
+  font-family: var(--hp-font-headline);
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.hearst-events-calendar .fc .fc-button {
+  min-height: 2.75rem;
+  border-radius: 0;
+  box-shadow: none;
+  font-family: var(--hp-font-ui);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: none;
+}
+
+.hearst-events-calendar .fc .fc-button:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+.hearst-events-calendar .fc .fc-col-header-cell-cushion,
+.hearst-events-calendar .fc .fc-daygrid-day-number {
+  padding: 0.5rem;
+  color: var(--foreground);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.hearst-events-calendar .fc .fc-daygrid-day-frame {
+  min-height: 7rem;
+}
+
+.hearst-events-calendar .fc .fc-daygrid-event {
+  margin: 0.2rem 0.25rem;
+  border-radius: 0;
+  white-space: normal;
+}
+
+.hearst-events-calendar .fc .fc-daygrid-event.hearst-event--organized,
+.hearst-events-calendar .fc .fc-list-event.hearst-event--organized {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.hearst-events-calendar .fc .fc-daygrid-event.hearst-event--covered,
+.hearst-events-calendar .fc .fc-list-event.hearst-event--covered {
+  background: var(--card);
+  border-color: var(--foreground);
+  color: var(--foreground);
+}
+
+.hearst-events-calendar .fc .fc-daygrid-event.hearst-event--covered .fc-event-main,
+.hearst-events-calendar .fc .fc-list-event.hearst-event--covered .fc-list-event-title {
+  color: var(--foreground);
+}
+
+.hearst-events-calendar .fc .fc-event-main-frame {
+  min-width: 0;
+}
+
+.hearst-events-calendar__event {
+  display: grid;
+  min-width: 0;
+  gap: 0.12rem;
+  padding: 0.2rem 0.3rem;
+  white-space: normal;
+}
+
+.hearst-events-calendar__event-type,
+.hearst-events-calendar__event-brands {
+  overflow: hidden;
+  font-size: 0.625rem;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hearst-events-calendar__event-title {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.3;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.hearst-events-calendar .fc .fc-list {
+  border-color: var(--border);
+}
+
+.hearst-events-calendar .fc .fc-list-day-cushion {
+  background: var(--muted);
+  color: var(--foreground);
+}
+
+.hearst-events-calendar .fc .fc-list-event:hover td {
+  background: var(--muted);
+}
+
+@media (max-width: 639px) {
+  .hearst-events-calendar .fc .fc-toolbar {
+    align-items: flex-start;
+  }
+
+  .hearst-events-calendar .fc .fc-toolbar-chunk:nth-child(2) {
+    order: -1;
+    width: 100%;
+  }
+
+  .hearst-events-calendar .fc .fc-daygrid-day-frame {
+    min-height: 5rem;
+  }
+
+  .hearst-events-calendar .fc .fc-button {
+    padding-inline: 0.5rem;
+  }
 }
 
 .hearst-plus-theme[data-mode="dark"] {

@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "hips.hearstapps.com" },
       { protocol: "https", hostname: "hips.hearstapps.net" },
+      { protocol: "https", hostname: "www.goodhousekeepinglive.co.uk" },
+      { protocol: "https", hostname: "images.squarespace-cdn.com" },
       { protocol: "https", hostname: "hips.hearstchina.com" },
       { protocol: "http", hostname: "*.h-cdn.co" },
       { protocol: "https", hostname: "*.h-cdn.co" },

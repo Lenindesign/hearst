@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
-import { ChevronLeft, ChevronRight, Heart, Info, Pause, Play, Plus, X } from "@/components/ui/icons";
+import { ChevronLeft, ChevronRight, Eye, EyeOff, Heart, Info, Pause, Play, Plus, X } from "@/components/ui/icons";
 import { useModalIsolation } from "@/components/ui/use-modal-isolation";
 import { cn } from "@/lib/utils";
 import type { ReaderArticleImage, ReaderArticleLoadState } from "./reader-article-body";
@@ -81,6 +81,7 @@ export function FullscreenImageViewer({
   const prefersReducedMotion = usePrefersReducedMotion();
   const dialogRef = React.useRef<HTMLDivElement | null>(null);
   const wheelStageRef = React.useRef<HTMLDivElement | null>(null);
+  const controlsToggleRef = React.useRef<HTMLButtonElement | null>(null);
   const [activeIndex, setActiveIndex] = React.useState(gallery.initialIndex);
   const [isDragging, setIsDragging] = React.useState(false);
   const [dragOffset, setDragOffset] = React.useState(0);
@@ -90,7 +91,6 @@ export function FullscreenImageViewer({
   const [controlsVisible, setControlsVisible] = React.useState(true);
   const [captionOpen, setCaptionOpen] = React.useState(false);
   const [playing, setPlaying] = React.useState(false);
-  const controlsTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const pointerPositionsRef = React.useRef(new Map<number, { x: number; y: number }>());
   const swipeStartRef = React.useRef<SwipeStartState | null>(null);
   const swipeLastRef = React.useRef<{ x: number; y: number } | null>(null);
@@ -140,13 +140,11 @@ export function FullscreenImageViewer({
     resetTransform();
   }, [activeIndex, gallery.images.length, resetSwipe, resetTransform]);
 
-  const showControls = React.useCallback(() => {
-    setControlsVisible(true);
-    if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
-    controlsTimerRef.current = setTimeout(() => {
-      if (!captionOpen) setControlsVisible(false);
-    }, 2800);
-  }, [captionOpen]);
+  const toggleControls = React.useCallback(() => {
+    setCaptionOpen(false);
+    setControlsVisible((visible) => !visible);
+    window.requestAnimationFrame(() => controlsToggleRef.current?.focus({ preventScroll: true }));
+  }, []);
 
   const setClampedZoom = React.useCallback((nextZoom: number) => {
     const clampedZoom = Math.min(4, Math.max(1, nextZoom));
@@ -166,14 +164,7 @@ export function FullscreenImageViewer({
   }, [setClampedZoom, zoom]);
 
   React.useEffect(() => {
-    if (playing) return;
-    const frame = window.requestAnimationFrame(showControls);
-    return () => window.cancelAnimationFrame(frame);
-  }, [activeIndex, playing, showControls]);
-
-  React.useEffect(() => {
     return () => {
-      if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
       if (wheelResetTimerRef.current) clearTimeout(wheelResetTimerRef.current);
     };
   }, []);
@@ -217,7 +208,6 @@ export function FullscreenImageViewer({
   const handlePointerDown = React.useCallback((event: React.PointerEvent<HTMLDivElement>) => {
     if (event.button !== 0) return;
 
-    showControls();
     if (event.currentTarget.setPointerCapture) {
       event.currentTarget.setPointerCapture(event.pointerId);
     }
@@ -242,9 +232,16 @@ export function FullscreenImageViewer({
         setIsDragging(true);
       }
     } else if (pointerPositionsRef.current.size === 2) {
+      // A pinch claims this pointer sequence. Do not let its horizontal travel
+      // also complete a slide change when either pointer is released.
+      swipeStartRef.current = null;
+      swipeLastRef.current = null;
+      dragStartRef.current = null;
+      setIsDragging(false);
+      setDragOffset(0);
       pinchStartRef.current = { distance: getPointerDistance(), zoom };
     }
-  }, [getPointerDistance, offset.x, offset.y, showControls, zoom]);
+  }, [getPointerDistance, offset.x, offset.y, zoom]);
 
   const handlePointerMove = React.useCallback((event: React.PointerEvent<HTMLDivElement>) => {
     if (!pointerPositionsRef.current.has(event.pointerId)) return;
@@ -318,7 +315,6 @@ export function FullscreenImageViewer({
           toggleTapZoom(event.clientX, event.clientY);
           lastTapRef.current = null;
         } else {
-          showControls();
           lastTapRef.current = { x: event.clientX, y: event.clientY, time: event.timeStamp };
         }
       }
@@ -345,7 +341,6 @@ export function FullscreenImageViewer({
             toggleTapZoom(event.clientX, event.clientY);
             lastTapRef.current = null;
           } else {
-            showControls();
             lastTapRef.current = { x: event.clientX, y: event.clientY, time: event.timeStamp };
           }
         }
@@ -367,7 +362,7 @@ export function FullscreenImageViewer({
       swipeStartRef.current = null;
       dragStartRef.current = null;
     }
-  }, [activeIndex, hasMultipleImages, selectImage, showControls, toggleTapZoom, zoom]);
+  }, [activeIndex, hasMultipleImages, selectImage, toggleTapZoom, zoom]);
 
   const handlePointerCancel = React.useCallback((event: React.PointerEvent<HTMLDivElement>) => {
     if (event.currentTarget.releasePointerCapture) {
@@ -391,6 +386,17 @@ export function FullscreenImageViewer({
         onClose();
         return;
       }
+      const hasModifier = event.altKey || event.ctrlKey || event.metaKey;
+      if (!hasModifier && event.key.toLowerCase() === "e") {
+        event.preventDefault();
+        toggleControls();
+        return;
+      }
+      if (!hasModifier && event.key.toLowerCase() === "p" && hasMultipleImages && !prefersReducedMotion) {
+        event.preventDefault();
+        setPlaying((value) => !value);
+        return;
+      }
       if (event.key === "ArrowLeft" && hasMultipleImages) selectImage(activeIndex - 1);
       if (event.key === "ArrowRight" && hasMultipleImages) selectImage(activeIndex + 1);
       if (event.key === "+" || event.key === "=") setClampedZoom(zoom + 0.35);
@@ -398,7 +404,7 @@ export function FullscreenImageViewer({
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [activeIndex, hasMultipleImages, onClose, selectImage, setClampedZoom, zoom]);
+  }, [activeIndex, hasMultipleImages, onClose, prefersReducedMotion, selectImage, setClampedZoom, toggleControls, zoom]);
 
   const handleWheel = React.useCallback((event: WheelEvent) => {
     const width = wheelStageRef.current?.clientWidth ?? window.innerWidth;
@@ -414,8 +420,6 @@ export function FullscreenImageViewer({
     }
 
     event.preventDefault();
-    showControls();
-
     const now = performance.now();
     if (now < wheelCooldownUntilRef.current) return;
 
@@ -446,7 +450,7 @@ export function FullscreenImageViewer({
       setIsDragging(false);
       setDragOffset(0);
     }, 180);
-  }, [activeIndex, hasMultipleImages, selectImage, setClampedZoom, showControls, zoom]);
+  }, [activeIndex, hasMultipleImages, selectImage, setClampedZoom, zoom]);
 
   React.useEffect(() => {
     const stage = wheelStageRef.current;
@@ -456,7 +460,7 @@ export function FullscreenImageViewer({
     return () => stage.removeEventListener("wheel", handleWheel);
   }, [handleWheel]);
 
-  const chromeVisible = controlsVisible || captionOpen;
+  const chromeVisible = controlsVisible;
   const controlButtonClass =
     "inline-flex h-11 min-w-11 items-center justify-center rounded-full bg-black/35 px-3 text-sm font-semibold text-white/80 ring-1 ring-inset ring-white/15 transition-colors hover:bg-black/55 hover:text-white focus:outline-none focus:ring-2 focus:ring-white/70 sm:h-9 sm:min-w-9";
   const slideTransitionClass = isDragging || zoom > 1
@@ -471,11 +475,15 @@ export function FullscreenImageViewer({
       role="dialog"
       aria-modal="true"
       aria-label={`Fullscreen gallery for ${gallery.story.title}`}
-      onMouseMove={showControls}
+      aria-describedby="fullscreen-gallery-control-help"
+      tabIndex={-1}
       onClick={(event) => {
         if (event.target === event.currentTarget) onClose();
       }}
     >
+      <p id="fullscreen-gallery-control-help" className="sr-only">
+        Press E to hide or show the gallery controls. Press P to play or pause the slideshow.
+      </p>
       <div
         ref={wheelStageRef}
         data-testid="fullscreen-image-track"
@@ -524,14 +532,14 @@ export function FullscreenImageViewer({
         </div>
       </div>
 
-      <div className={cn(
-        "pointer-events-none absolute inset-x-4 top-4 flex items-center justify-between gap-3 transition-opacity duration-300 motion-reduce:transition-none",
-        chromeVisible ? "opacity-100" : "opacity-0",
-      )}>
-        <div className="pointer-events-auto inline-flex h-9 shrink-0 items-center whitespace-nowrap rounded-full bg-black/35 px-3 text-sm font-semibold text-white/80 ring-1 ring-inset ring-white/15">
-          {activeIndex + 1} of {gallery.images.length}
-        </div>
+      <div className="pointer-events-none absolute inset-x-4 top-4 flex items-center justify-between gap-3">
+        {controlsVisible ? (
+          <div className="pointer-events-auto inline-flex h-9 shrink-0 items-center whitespace-nowrap rounded-full bg-black/35 px-3 text-sm font-semibold text-white/80 ring-1 ring-inset ring-white/15">
+            {activeIndex + 1} of {gallery.images.length}
+          </div>
+        ) : <span aria-hidden="true" />}
         <div className="pointer-events-auto flex flex-wrap items-center justify-end gap-2">
+          {controlsVisible ? <>
           <button
             type="button"
             className={cn(controlButtonClass, "max-sm:px-0")}
@@ -563,7 +571,9 @@ export function FullscreenImageViewer({
                 : playing
                   ? "Pause slideshow"
                   : "Play slideshow"}
+              aria-keyshortcuts="P"
               aria-pressed={playing}
+              title={playing ? "Pause slideshow (P)" : "Play slideshow (P)"}
               disabled={prefersReducedMotion}
             >
               {playing
@@ -591,6 +601,21 @@ export function FullscreenImageViewer({
           >
             <X className="h-4 w-4" aria-hidden="true" />
           </button>
+          </> : null}
+          <button
+            ref={controlsToggleRef}
+            type="button"
+            className={controlButtonClass}
+            onClick={toggleControls}
+            aria-label={controlsVisible ? "Hide gallery controls" : "Show gallery controls"}
+            aria-keyshortcuts="E"
+            aria-pressed={!controlsVisible}
+            title={controlsVisible ? "Hide controls (E)" : "Show controls (E)"}
+          >
+            {controlsVisible
+              ? <EyeOff className="h-4 w-4" aria-hidden="true" />
+              : <Eye className="h-4 w-4" aria-hidden="true" />}
+          </button>
         </div>
       </div>
 
@@ -605,6 +630,8 @@ export function FullscreenImageViewer({
             )}
             onClick={() => selectImage(activeIndex - 1)}
             aria-label="Previous photo"
+            aria-hidden={!chromeVisible}
+            inert={!chromeVisible}
           >
             <ChevronLeft className="h-5 w-5" aria-hidden="true" />
           </button>
@@ -617,6 +644,8 @@ export function FullscreenImageViewer({
             )}
             onClick={() => selectImage(activeIndex + 1)}
             aria-label="Next photo"
+            aria-hidden={!chromeVisible}
+            inert={!chromeVisible}
           >
             <ChevronRight className="h-5 w-5" aria-hidden="true" />
           </button>
@@ -625,8 +654,8 @@ export function FullscreenImageViewer({
 
       <div className={cn(
         "pointer-events-none absolute inset-x-4 bottom-4 flex flex-col items-center gap-3 transition-opacity duration-300 motion-reduce:transition-none",
-        chromeVisible ? "opacity-100" : "opacity-0",
-      )}>
+        chromeVisible ? "opacity-100" : "pointer-events-none opacity-0",
+      )} aria-hidden={!chromeVisible} inert={!chromeVisible}>
         {captionOpen && (activeImage.caption || activeImage.credit) ? (
           <div className="pointer-events-auto w-full max-w-3xl bg-black/55 px-4 py-3 text-center text-sm leading-6 text-white/85 backdrop-blur-sm">
             {activeImage.caption ? <p>{activeImage.caption}</p> : null}
