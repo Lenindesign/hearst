@@ -369,25 +369,34 @@ export function HearstEventsIndex({ initialBrand = "all" }: { initialBrand?: str
 }
 
 function ProgramList({ event }: { event: HearstEventRecord }) {
-  if (event.relationship === "organized" && event.program?.length) {
-    return (
-      <div className="divide-y divide-border border-y border-border">
-        {event.program.map((item) => (
-          <article key={item.title} className="grid gap-3 py-6 md:grid-cols-[minmax(10rem,0.42fr)_minmax(0,1fr)] md:gap-8">
-            <p className="text-xs font-bold uppercase tracking-[0.14em] text-primary">{item.stage}</p>
-            <div>
-              <h3 className="headline text-2xl font-bold">{item.title}</h3>
-              <p className="mt-2 max-w-2xl leading-7 text-muted-foreground">{item.description}</p>
-            </div>
-          </article>
-        ))}
-      </div>
-    );
-  }
+  return (
+    <div className="divide-y divide-border border-y border-border">
+      {event.program?.map((item) => (
+        <article key={item.title} className="grid gap-3 py-6 md:grid-cols-[minmax(10rem,0.42fr)_minmax(0,1fr)] md:gap-8">
+          <p className="text-xs font-bold uppercase tracking-[0.14em] text-primary">{item.stage}</p>
+          <div>
+            <h3 className="headline text-2xl font-bold">{item.title}</h3>
+            <p className="mt-2 max-w-2xl leading-7 text-muted-foreground">{item.description}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+function EventCoverage({ event }: { event: HearstEventRecord }) {
+  const stories = event.coverage?.length
+    ? event.coverage
+    : [{
+        title: event.title,
+        summary: event.summary,
+        href: event.primaryAction.href,
+        publishedLabel: `${event.brandNames[0] ?? "Hearst"} event coverage`,
+      }];
 
   return (
     <div className="divide-y divide-border border-y border-border">
-      {event.coverage?.map((story) => (
+      {stories.map((story) => (
         <article key={story.href} className="grid gap-3 py-6 md:grid-cols-[minmax(10rem,0.42fr)_minmax(0,1fr)] md:gap-8">
           <p className="text-xs font-bold uppercase tracking-[0.14em] text-primary">{story.publishedLabel}</p>
           <div>
@@ -402,6 +411,32 @@ function ProgramList({ event }: { event: HearstEventRecord }) {
   );
 }
 
+function EventInformation({ event }: { event: HearstEventRecord }) {
+  const details = [
+    { label: "Organizer", value: event.brandNames.join(" and ") },
+    { label: "Date", value: event.dateLabel },
+    { label: "Venue", value: event.venue },
+    { label: "Location", value: event.location },
+  ];
+
+  return (
+    <div>
+      <dl className="grid gap-x-8 sm:grid-cols-2">
+        {details.map((detail) => (
+          <div key={detail.label} className="border-y border-border py-4 first:border-b-0 sm:odd:border-b-0">
+            <dt className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">{detail.label}</dt>
+            <dd className="mt-2 font-semibold">{detail.value}</dd>
+          </div>
+        ))}
+      </dl>
+      <a href={event.eventUrl} target="_blank" rel="noreferrer" className="mt-5 inline-flex min-h-11 items-center font-bold text-primary underline-offset-4 hover:underline focus-visible:underline">
+        {event.primaryAction.label}<ChevronRight className="ml-1 h-4 w-4" aria-hidden />
+      </a>
+      <p className="mt-2 text-xs leading-5 text-muted-foreground">Dates, venue details, and registration are supplied by the event organizer.</p>
+    </div>
+  );
+}
+
 export function HearstEventDetail({ event }: { event: HearstEventRecord }) {
   const router = useRouter();
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -409,13 +444,13 @@ export function HearstEventDetail({ event }: { event: HearstEventRecord }) {
   const isOrganized = event.relationship === "organized";
   const hasProgram = isOrganized && Boolean(event.program?.length);
   const hasCoverage = Boolean(event.coverage?.length);
+  const showCoverage = hasCoverage || !isOrganized;
+  const showEventInformation = isOrganized && !hasProgram && !hasCoverage;
   const eventSections = [
     { label: "Overview", id: "event-overview", disabled: false },
-    ...(hasProgram
-      ? [{ label: "Program", id: "event-program", disabled: false }]
-      : hasCoverage
-        ? [{ label: "Coverage", id: "event-coverage", disabled: false }]
-        : []),
+    ...(hasProgram ? [{ label: "Program", id: "event-program", disabled: false }] : []),
+    ...(showCoverage ? [{ label: "Coverage", id: "event-coverage", disabled: false }] : []),
+    ...(showEventInformation ? [{ label: "Event details", id: "event-information", disabled: false }] : []),
     ...(event.featuredGuests?.length || event.makerSpotlights?.length
       ? [{ label: "People and makers", id: "event-people", disabled: false }]
       : []),
@@ -462,7 +497,7 @@ export function HearstEventDetail({ event }: { event: HearstEventRecord }) {
         sectionNavigationLabel="Event details sections"
       />
       <div className="min-h-full bg-[var(--hp-background)] text-foreground">
-        <main className="mx-auto grid min-w-0 max-w-[1360px] grid-cols-1 items-start gap-5 px-4 pt-4 pb-5 sm:px-6 lg:grid-cols-[220px_minmax(0,1fr)_280px] lg:gap-5 lg:px-6 lg:pt-4 lg:pb-6">
+        <main className="mx-auto grid min-w-0 max-w-[1360px] grid-cols-1 items-start gap-5 px-4 pt-4 pb-5 sm:px-6 lg:grid-cols-[300px_minmax(0,1fr)_300px] lg:gap-5 lg:px-6 lg:pt-4 lg:pb-6">
           <aside className="order-2 min-w-0 space-y-5 lg:order-1 lg:sticky lg:top-4 lg:max-h-[calc(100dvh-5rem)] lg:overflow-y-auto lg:pr-1" aria-label="Event discovery">
             <DiscoverySidebarCard title="Presented by" summary="The Hearst brands behind this event">
               <EventBrandMarks event={event} />
@@ -521,20 +556,38 @@ export function HearstEventDetail({ event }: { event: HearstEventRecord }) {
               </div>
           </section>
 
-          {hasProgram || hasCoverage ? (
-            <section id={hasProgram ? "event-program" : "event-coverage"} className="scroll-mt-28 rounded-[8px] border border-border bg-card p-5 shadow-[var(--hp-shadow-card)] sm:p-7">
+          {hasProgram ? (
+            <section id="event-program" className="scroll-mt-28 rounded-[8px] border border-border bg-card p-5 shadow-[var(--hp-shadow-card)] sm:p-7">
               <div className="mb-6">
-                <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">{hasProgram ? "Make a day of it" : "The event, through our lens"}</p>
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Published program</p>
                 <h2 className="headline mt-3 text-2xl font-bold leading-tight sm:text-3xl">
-                  {hasProgram ? "Four days of festive ideas and finds." : "The moments worth following."}
+                  Explore what is happening at the event.
                 </h2>
-                <p className="mt-3 leading-7 text-muted-foreground">
-                  {hasProgram
-                    ? "Move between conversations, cooking and home stages, then explore the Country Living Christmas Market."
-                    : "Follow the results and reporting from the publication closest to the event, with each story linked to its original source."}
-                </p>
+                <p className="mt-3 leading-7 text-muted-foreground">Browse the program published for this event by its organizers.</p>
               </div>
               <ProgramList event={event} />
+            </section>
+          ) : null}
+
+          {showCoverage ? (
+            <section id="event-coverage" className="scroll-mt-28 rounded-[8px] border border-border bg-card p-5 shadow-[var(--hp-shadow-card)] sm:p-7">
+              <div className="mb-6">
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">{event.brandNames[0] ?? "Hearst"} coverage</p>
+                <h2 className="headline mt-3 text-2xl font-bold leading-tight sm:text-3xl">Follow the reporting on this event.</h2>
+                <p className="mt-3 leading-7 text-muted-foreground">Read the event story from its original publisher. The link opens the source publication.</p>
+              </div>
+              <EventCoverage event={event} />
+            </section>
+          ) : null}
+
+          {showEventInformation ? (
+            <section id="event-information" className="scroll-mt-28 rounded-[8px] border border-border bg-card p-5 shadow-[var(--hp-shadow-card)] sm:p-7">
+              <div className="mb-6">
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Organizer information</p>
+                <h2 className="headline mt-3 text-2xl font-bold leading-tight sm:text-3xl">The details to know before you go.</h2>
+                <p className="mt-3 leading-7 text-muted-foreground">Event information and next steps, linked to the organizer’s source.</p>
+              </div>
+              <EventInformation event={event} />
             </section>
           ) : null}
 

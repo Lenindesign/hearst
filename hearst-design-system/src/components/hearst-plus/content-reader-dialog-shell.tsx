@@ -3,7 +3,9 @@
 import React from "react";
 import { createPortal } from "react-dom";
 
+import { useTheme } from "@/components/theme-provider";
 import { useBodyPortalTarget, useModalIsolation } from "@/components/ui/use-modal-isolation";
+import { brandToCssVars } from "@/lib/theme-css-vars";
 import { cn } from "@/lib/utils";
 
 const readerReturnFocusStorageKey = "hearst-reader-return-focus-label";
@@ -80,6 +82,7 @@ export function ContentReaderDialogShell({
   returnFocusElementRef,
   style,
 }: ContentReaderDialogShellProps) {
+  const { brand } = useTheme();
   const portalTarget = useBodyPortalTarget();
   const dialogRef = React.useRef<HTMLDivElement | null>(null);
   const onCloseRef = React.useRef(onClose);
@@ -237,10 +240,11 @@ export function ContentReaderDialogShell({
           "hearst-plus-theme absolute inset-0 isolate mx-auto flex h-[100dvh] w-full max-w-[1360px] flex-col overflow-x-hidden overflow-y-auto overscroll-contain bg-background text-foreground shadow-2xl [scrollbar-gutter:stable]",
           "sm:inset-6 sm:h-auto sm:w-auto sm:rounded-[8px]",
         )}
+        data-brand={brand.slug}
         data-mode={mode}
         data-reader-destination={destination}
         data-reader-scroll-container
-        style={style}
+        style={{ ...brandToCssVars(brand, mode), ...style } as React.CSSProperties}
       >
         {children}
       </div>
