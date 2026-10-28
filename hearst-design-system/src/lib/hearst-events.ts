@@ -126,7 +126,7 @@ export const hearstEvents: HearstEventRecord[] = [
     eyebrow: "A cross-brand gathering for Women’s History Month",
     summary:
       "ELLE, Good Housekeeping, Cosmopolitan, Women’s Health, and Oprah Daily brought founders, investors, editors, and advocates together for conversations on growth, innovation, and leadership.",
-    primaryBrandSlug: "good-housekeeping",
+    primaryBrandSlug: "elle",
     brandSlugs: ["elle", "good-housekeeping", "cosmopolitan", "womens-health", "oprah-daily"],
     brandNames: ["ELLE", "Good Housekeeping", "Cosmopolitan", "Women’s Health", "Oprah Daily"],
     image: {

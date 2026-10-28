@@ -171,7 +171,7 @@ export function ContentReaderMasthead({
           onClick={onClose}
           aria-label={closeLabel}
           data-reader-close
-          className="h-11 w-11 sm:h-7 sm:w-7"
+          className="h-11 w-11 rounded-full sm:h-7 sm:w-7"
         >
           <X className="h-4 w-4" aria-hidden />
         </Button>
