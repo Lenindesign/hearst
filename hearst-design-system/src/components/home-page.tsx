@@ -1016,9 +1016,10 @@ export function MainNav({
     const destinationMode = getDestinationMode(brand.slug);
     const showHearstPlusTopicSeparator = brand.slug === "hearst-all" && !selectedBrand && link === "Videos";
     // Overridden links (for example Communities' Home) are page-specific, not destination categories.
-    const displayLabel = isDestinationRiver && !selectedBrand && !navLinkHrefOverrides?.[link]
-      ? getHearstDestinationCategoryDisplayLabel(destinationMode, link)
-      : navLinkLabelOverrides?.[link] ?? link;
+    const displayLabel = navLinkLabelOverrides?.[link]
+      ?? (isDestinationRiver && !selectedBrand && !navLinkHrefOverrides?.[link]
+        ? getHearstDestinationCategoryDisplayLabel(destinationMode, link)
+        : link);
     const destinationHref = brand.slug === "hearst-all" ? hearstDestinationNavHrefs.get(link) : undefined;
     const publicationHref = selectedBrand && link === "Events"
       ? `/hearst-plus/events/?brand=${encodeURIComponent(selectedBrand.slug)}`

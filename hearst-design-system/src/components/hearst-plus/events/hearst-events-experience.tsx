@@ -33,9 +33,11 @@ import {
   type HearstEventRecord,
   type HearstEventRelationship,
 } from "@/lib/hearst-events";
-import { getHearstAllBrands } from "@/lib/hearst-routes";
+import { getHearstAllBrands, getHearstBrandSection, hearstReaderSections, type HearstBrandSection } from "@/lib/hearst-routes";
 
 type RelationshipFilter = "all" | HearstEventRelationship;
+type VerticalFilter = "all" | HearstBrandSection;
+type EventNavFilter = "all" | "covered" | `vertical-${HearstBrandSection}`;
 type EventDisplayMode = "stories" | "calendar";
 
 const HearstEventsCalendar = dynamic(
@@ -43,11 +45,11 @@ const HearstEventsCalendar = dynamic(
   { ssr: false, loading: () => <p className="border-y border-border py-8 text-sm text-muted-foreground">Loading calendar…</p> },
 );
 
-const relationshipNavItems = [
+const relationshipNavItems: { value: EventNavFilter; label: string }[] = [
   { value: "all", label: "All events" },
-  { value: "organized", label: "Hearst events" },
+  ...hearstReaderSections.map(({ mode, label }) => ({ value: `vertical-${mode}` as const, label })),
   { value: "covered", label: "Editorial coverage" },
-] as const;
+];
 
 const eventBrandOptions = [
   { value: "all", label: "All brands" },
@@ -59,17 +61,26 @@ const eventBrandOptions = [
 function EventHeader({
   relationship = "all",
   onRelationshipChange,
+  vertical = "all",
+  onVerticalChange,
   brand,
   onBrandChange,
   brandOptions = eventBrandOptions,
 }: {
   relationship?: RelationshipFilter;
   onRelationshipChange?: (relationship: RelationshipFilter) => void;
+  vertical?: VerticalFilter;
+  onVerticalChange?: (vertical: VerticalFilter) => void;
   brand?: string;
   onBrandChange?: (brand: string) => void;
   brandOptions?: { value: string; label: string }[];
 }) {
   const headerNavItems = onRelationshipChange ? relationshipNavItems : [relationshipNavItems[0]];
+  const activeNavValue: EventNavFilter = relationship === "covered"
+    ? "covered"
+    : vertical === "all"
+      ? "all"
+      : `vertical-${vertical}`;
   const navTrailingContent = onBrandChange ? (
     <div className="flex min-h-10 shrink-0 items-center gap-2 border-l border-border pl-3 text-xs md:text-sm">
       <span className="font-bold">Brand</span>
@@ -78,9 +89,9 @@ function EventHeader({
       }}>
         <SelectTrigger
           aria-label="Filter events by brand"
-          className="h-10 min-h-10 w-[156px] rounded-lg border-input bg-background px-3 text-left text-sm font-medium text-foreground shadow-xs sm:w-[184px]"
+          className="h-10 min-h-10 w-[144px] rounded-lg border-input bg-background px-3 text-left text-sm font-medium text-foreground shadow-xs sm:w-[184px]"
         >
-          <SelectValue />
+          <SelectValue>{brandOptions.find((option) => option.value === brand)?.label ?? "All brands"}</SelectValue>
         </SelectTrigger>
         <SelectContent
           align="end"
@@ -88,11 +99,7 @@ function EventHeader({
           className="max-h-[min(420px,var(--available-height))] rounded-lg border border-border bg-popover p-1 shadow-xl ring-1 ring-foreground/10"
         >
           {brandOptions.map((option) => (
-            <SelectItem
-              key={option.value}
-              value={option.value}
-              className="min-h-10 px-3 pr-9 text-sm font-medium"
-            >
+            <SelectItem key={option.value} value={option.value} className="min-h-10 px-3 pr-9 text-sm font-medium">
               {option.label}
             </SelectItem>
           ))}
@@ -101,7 +108,7 @@ function EventHeader({
     </div>
   ) : undefined;
   const navLinkHrefOverrides = onRelationshipChange ? undefined : Object.fromEntries(
-    headerNavItems.map((item) => [item.label, "/hearst-plus/events/"]),
+    headerNavItems.map((item) => [item.value, "/hearst-plus/events/"]),
   );
 
   return (
@@ -111,11 +118,22 @@ function EventHeader({
         <MainNav
           brandSlug="hearst-all"
           mastheadDescriptorOverride="Events"
-          navLinksOverride={headerNavItems.map((item) => item.label)}
-          activeFilter={headerNavItems.find((item) => item.value === relationship)?.label}
-          onFilterChange={onRelationshipChange ? (label) => {
-            const selected = relationshipNavItems.find((item) => item.label === label);
-            if (selected) onRelationshipChange(selected.value);
+          navLinksOverride={headerNavItems.map((item) => item.value)}
+          navLinkLabelOverrides={Object.fromEntries(headerNavItems.map((item) => [item.value, item.label]))}
+          activeFilter={activeNavValue}
+          onFilterChange={onRelationshipChange ? (value) => {
+            const selected = relationshipNavItems.find((item) => item.value === value);
+            if (!selected) return;
+            if (selected.value === "covered") {
+              onRelationshipChange("covered");
+              onVerticalChange?.("all");
+            } else if (selected.value.startsWith("vertical-")) {
+              onRelationshipChange("all");
+              onVerticalChange?.(selected.value.slice("vertical-".length) as HearstBrandSection);
+            } else {
+              onRelationshipChange("all");
+              onVerticalChange?.("all");
+            }
           } : undefined}
           navLinkHrefOverrides={navLinkHrefOverrides}
           navTrailingContent={navTrailingContent}
@@ -281,13 +299,23 @@ function EventSidebars({
 
 export function HearstEventsIndex({ initialBrand = "all" }: { initialBrand?: string }) {
   const [relationship, setRelationship] = useState<RelationshipFilter>("all");
+  const [vertical, setVertical] = useState<VerticalFilter>("all");
   const [brand, setBrand] = useState(initialBrand);
   const [displayMode, setDisplayMode] = useState<EventDisplayMode>("stories");
-  const visibleEvents = useMemo(() => hearstEvents.filter((event) => {
-    const matchesRelationship = relationship === "all" || event.relationship === relationship;
-    const matchesBrand = brand === "all" || event.brandSlugs.includes(brand);
-    return matchesRelationship && matchesBrand;
-  }), [relationship, brand]);
+  const visibleEvents = useMemo(() => hearstEvents
+    .filter((event) => {
+      const matchesRelationship = relationship === "all" || event.relationship === relationship;
+      const matchesVertical = vertical === "all" || event.brandSlugs.some((slug) => getHearstBrandSection(slug) === vertical);
+      const matchesBrand = brand === "all" || event.brandSlugs.includes(brand);
+      return matchesRelationship && matchesVertical && matchesBrand;
+    })
+    .sort((first, second) => {
+      const firstUpcoming = first.status === "upcoming";
+      const secondUpcoming = second.status === "upcoming";
+      if (firstUpcoming !== secondUpcoming) return firstUpcoming ? -1 : 1;
+      const dateOrder = first.startDate.localeCompare(second.startDate);
+      return firstUpcoming ? dateOrder : -dateOrder;
+    }), [relationship, vertical, brand]);
   const selectedBrandHasEvents = brand === "all" || hearstEvents.some((event) => event.brandSlugs.includes(brand));
 
   const brandOptions = eventBrandOptions;
@@ -297,6 +325,8 @@ export function HearstEventsIndex({ initialBrand = "all" }: { initialBrand?: str
       <EventHeader
         relationship={relationship}
         onRelationshipChange={setRelationship}
+        vertical={vertical}
+        onVerticalChange={setVertical}
         brand={brand}
         onBrandChange={setBrand}
         brandOptions={brandOptions}
