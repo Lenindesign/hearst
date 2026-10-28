@@ -1,13 +1,35 @@
 {
   "passed": true,
-  "stories": 271,
-  "checks": 1084,
+  "stories": 269,
+  "checks": 1076,
   "viewports": [
     320,
     390,
     768,
     1280
   ],
-  "recoveredRetries": [],
+  "recoveredRetries": [
+    {
+      "id": "apps-lifestyle-destination--daily-home",
+      "width": 320,
+      "firstAttempt": [
+        "horizontal overflow (388px document): [{\"tag\":\"div\",\"className\":\"flex min-w-max items-center gap-1 rounded-full px-0.5 sm:p-0.5 bg-black/10\",\"left\":16,\"right\":615,\"width\":599},{\"tag\":\"a\",\"className\":\"gap-1 no-underline inline-flex min-h-7 min-w-7 cursor-pointer items-center justify-center rounded-full px-2 py-1 text-[1\",\"left\":277,\"right\":406,\"width\":129},{\"tag\":\"span\",\"className\":\"mx-1 h-4 w-px shrink-0 bg-primary-foreground/45\",\"left\":414,\"right\":415,\"width\":1},{\"tag\":\"a\",\"className\":\"gap-1 no-underline inline-flex min-h-7 min-w-7 cursor-pointer items-center justify-center rounded-full px-2 py-1 text-[1\",\"left\":423,\"right\":499,\"width\":76},{\"tag\":\"a\",\"className\":\"gap-1 no-underline inline-flex min-h-7 min-w-7 cursor-pointer items-center justify-center rounded-full px-2 py-1 text-[1\",\"left\":503,\"right\":577,\"width\":74}]"
+      ]
+    },
+    {
+      "id": "apps-lifestyle-destination--daily-home",
+      "width": 390,
+      "firstAttempt": [
+        "horizontal overflow (458px document): [{\"tag\":\"div\",\"className\":\"flex min-w-max items-center gap-1 rounded-full px-0.5 sm:p-0.5 bg-black/10\",\"left\":16,\"right\":615,\"width\":599},{\"tag\":\"a\",\"className\":\"gap-1 no-underline inline-flex min-h-7 min-w-7 cursor-pointer items-center justify-center rounded-full px-2 py-1 text-[1\",\"left\":277,\"right\":406,\"width\":129},{\"tag\":\"span\",\"className\":\"mx-1 h-4 w-px shrink-0 bg-primary-foreground/45\",\"left\":414,\"right\":415,\"width\":1},{\"tag\":\"a\",\"className\":\"gap-1 no-underline inline-flex min-h-7 min-w-7 cursor-pointer items-center justify-center rounded-full px-2 py-1 text-[1\",\"left\":423,\"right\":499,\"width\":76},{\"tag\":\"a\",\"className\":\"gap-1 no-underline inline-flex min-h-7 min-w-7 cursor-pointer items-center justify-center rounded-full px-2 py-1 text-[1\",\"left\":503,\"right\":577,\"width\":74}]"
+      ]
+    },
+    {
+      "id": "apps-lifestyle-destination--daily-home",
+      "width": 768,
+      "firstAttempt": [
+        "horizontal overflow (789px document): [{\"tag\":\"button\",\"className\":\"group/button inline-flex items-center justify-center bg-clip-padding whitespace-nowrap transition-[background-color,bord\",\"left\":673,\"right\":789,\"width\":116},{\"tag\":\"span\",\"className\":\"text-[10px] sm:text-xs\",\"left\":685,\"right\":777,\"width\":92},{\"tag\":\"div\",\"className\":\"absolute left-1/2 top-1/2 flex w-[180%] -translate-x-1/2 -translate-y-1/2 -rotate-6 flex-col gap-5 sm:gap-7\",\"left\":-322,\"right\":1090,\"width\":1413},{\"tag\":\"div\",\"className\":\"flex shrink-0 items-center gap-10 sm:gap-14\",\"left\":-322,\"right\":1055,\"width\":1378},{\"tag\":\"img\",\"className\":\"h-5 w-auto max-w-[140px] shrink-0 object-contain opacity-[0.05] sm:h-7\",\"left\":-322,\"right\":-180,\"width\":142}]"
+      ]
+    }
+  ],
   "failures": []
 }

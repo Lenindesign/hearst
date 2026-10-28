@@ -1,0 +1,215 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e6]:
+        - navigation "Hearst destination sections" [ref=e7]:
+          - link "All" [ref=e8] [cursor=pointer]:
+            - /url: /hearst-plus/
+          - generic [ref=e10]:
+            - link "Lifestyle" [ref=e11] [cursor=pointer]:
+              - /url: /hearst-lifestyle/
+            - link "Autos" [ref=e12] [cursor=pointer]:
+              - /url: /hearst-autos/
+            - link "Fashion & Luxury" [ref=e13] [cursor=pointer]:
+              - /url: /hearst-flux/
+            - link "Enthusiast & Wellness" [ref=e14] [cursor=pointer]:
+              - /url: /hearst-ew/
+            - link "Local News" [ref=e16] [cursor=pointer]:
+              - /url: /hearst-plus/local-news/
+            - link "A&E Family" [ref=e17] [cursor=pointer]:
+              - /url: /hearst-plus/entertainment/
+            - link "International" [ref=e18] [cursor=pointer]:
+              - /url: /hearst-plus/
+        - button "Sign in or sign up" [ref=e23]:
+          - generic [ref=e24]: Sign in / Sign up
+      - generic [ref=e25]:
+        - 'img "Hearst+: every Hearst brand" [ref=e27]'
+        - generic:
+          - img "Hearst+"
+        - generic [ref=e28]:
+          - button "Switch to dark mode" [ref=e29]
+          - button "Search" [ref=e30]
+      - navigation "Hearst Magazines sections" [ref=e32]:
+        - generic [ref=e33]:
+          - link "Style" [ref=e34] [cursor=pointer]:
+            - /url: /hearst-plus/style/
+          - link "Reviews" [ref=e35] [cursor=pointer]:
+            - /url: /hearst-plus/reviews/
+          - link "Fitness" [ref=e36] [cursor=pointer]:
+            - /url: /hearst-plus/fitness/
+          - link "Cars" [ref=e37] [cursor=pointer]:
+            - /url: /hearst-plus/cars/
+          - link "House & Garden" [ref=e38] [cursor=pointer]:
+            - /url: /hearst-plus/home/
+          - link "Videos" [ref=e39] [cursor=pointer]:
+            - /url: /hearst-plus/videos/
+          - link "Community" [ref=e41] [cursor=pointer]:
+            - /url: /communities/
+          - link "Games" [ref=e42] [cursor=pointer]:
+            - /url: /hearst-plus/games/
+      - generic [aria-hidden]:
+        - navigation:
+          - link:
+            - /url: /hearst-plus/style/
+            - text: Style
+          - link:
+            - /url: /hearst-plus/reviews/
+            - text: Reviews
+          - link:
+            - /url: /hearst-plus/fitness/
+            - text: Fitness
+          - link:
+            - /url: /hearst-plus/cars/
+            - text: Cars
+          - link:
+            - /url: /hearst-plus/home/
+            - text: House & Garden
+          - link:
+            - /url: /hearst-plus/videos/
+            - text: Videos
+          - link:
+            - /url: /communities/
+            - text: Community
+          - link:
+            - /url: /hearst-plus/games/
+            - text: Games
+    - main [ref=e43]:
+      - generic [ref=e45]:
+        - paragraph [ref=e46]: Hearst+ · Events
+        - generic [ref=e47]:
+          - heading "Find your next reason to show up." [level=1] [ref=e48]
+          - paragraph [ref=e49]: Meet readers in person at experiences created by Hearst brands, or follow the events our editors know best.
+        - generic [ref=e50]:
+          - group "Filter events by relationship" [ref=e51]:
+            - button "All events" [pressed] [ref=e52]
+            - button "Hearst events" [ref=e53]
+            - button "Editorial coverage" [ref=e54]
+          - generic [ref=e55]:
+            - generic [ref=e56]: Brand
+            - combobox "Brand" [ref=e57]:
+              - option "All brands" [selected]
+              - option "Good Housekeeping"
+              - option "Country Living"
+              - option "Runner’s World"
+      - generic [ref=e58]:
+        - generic [ref=e59]:
+          - generic [ref=e60]:
+            - paragraph [ref=e61]: Across the portfolio
+            - heading "Events and coverage" [level=2] [ref=e62]
+          - paragraph [ref=e63]: Each destination keeps the event’s organizer, publisher, practical details, and next step clear.
+        - generic [ref=e64]:
+          - article [ref=e65]:
+            - link [ref=e66] [cursor=pointer]:
+              - /url: /hearst-plus/events/good-housekeeping-live-country-living-christmas-market-2026/
+              - img "Visitors exploring the Good Housekeeping Live and Country Living Christmas Market" [ref=e67]
+            - generic [ref=e68]:
+              - generic [ref=e69]:
+                - paragraph [ref=e70]: Organized by Hearst brands
+                - heading [level=2] [ref=e71]:
+                  - link "Good Housekeeping Live with the Country Living Christmas Market" [ref=e72] [cursor=pointer]:
+                    - /url: /hearst-plus/events/good-housekeeping-live-country-living-christmas-market-2026/
+                - paragraph [ref=e73]: Meet the people behind the brands, discover independent makers, and spend a day with live conversations, food, festive shopping, and hands-on experiences.
+                - generic "Presented by Good Housekeeping and Country Living" [ref=e75]:
+                  - generic [aria-hidden] [ref=e81]: +
+              - generic [ref=e86]:
+                - generic [ref=e87]:
+                  - paragraph [ref=e92]: November 11–14, 2026
+                  - generic [ref=e96]:
+                    - paragraph [ref=e97]: Business Design Centre
+                    - paragraph [ref=e98]: Islington, London
+                - link "Explore this event" [ref=e99] [cursor=pointer]:
+                  - /url: /hearst-plus/events/good-housekeeping-live-country-living-christmas-market-2026/
+          - article [ref=e102]:
+            - link [ref=e103] [cursor=pointer]:
+              - /url: /hearst-plus/events/boston-marathon-2026/
+              - img "Runners racing along the Boston Marathon course" [ref=e104]
+            - generic [ref=e105]:
+              - generic [ref=e106]:
+                - paragraph [ref=e107]: Covered by our editors
+                - heading [level=2] [ref=e108]:
+                  - link "The 2026 Boston Marathon" [ref=e109] [cursor=pointer]:
+                    - /url: /hearst-plus/events/boston-marathon-2026/
+                - paragraph [ref=e110]: Runner’s World brings readers the results, race-day reporting, and the human stories that make the Boston Marathon matter beyond the finish line.
+                - generic "Presented by Runner’s World" [ref=e112]
+              - generic [ref=e117]:
+                - generic [ref=e118]:
+                  - generic [ref=e122]:
+                    - paragraph [ref=e123]: April 20, 2026
+                    - paragraph [ref=e124]: Event concluded
+                  - generic [ref=e128]:
+                    - paragraph [ref=e129]: Boston Marathon course
+                    - paragraph [ref=e130]: Hopkinton to Boston, Massachusetts
+                - link "Explore this event" [ref=e131] [cursor=pointer]:
+                  - /url: /hearst-plus/events/boston-marathon-2026/
+    - contentinfo [ref=e134]:
+      - generic [ref=e135]:
+        - generic [ref=e136]:
+          - generic [ref=e137]:
+            - img "Hearst+" [ref=e139]
+            - generic [ref=e148]:
+              - link "YouTube" [ref=e149] [cursor=pointer]:
+                - /url: https://www.youtube.com/@Hearst
+              - link "Facebook" [ref=e150] [cursor=pointer]:
+                - /url: https://www.facebook.com/Hearst/
+              - link "Instagram" [ref=e151] [cursor=pointer]:
+                - /url: https://www.instagram.com/hearst/
+              - link "Pinterest" [ref=e152] [cursor=pointer]:
+                - /url: https://www.pinterest.com/hearst/
+          - generic [ref=e153]:
+            - navigation "Discover Hearst+" [ref=e154]:
+              - link "Open Hearst+" [ref=e156] [cursor=pointer]:
+                - /url: /hearst-plus/
+              - link "Full-width hero slider" [ref=e157] [cursor=pointer]:
+                - /url: /hearst-plus/full-width-hero/
+              - link "Brutalist editorial home" [ref=e158] [cursor=pointer]:
+                - /url: /hearst-plus/brutalist-home/
+              - link "Local News" [ref=e159] [cursor=pointer]:
+                - /url: /hearst-plus/local-news/
+              - link "Shop the stories" [ref=e160] [cursor=pointer]:
+                - /url: /hearst-plus/shop/
+              - link "Newsstand" [ref=e161] [cursor=pointer]:
+                - /url: /hearst-plus/newsstand/
+              - link "Complete article viewer" [ref=e162] [cursor=pointer]:
+                - /url: /hearst-plus/complete-articles/
+            - navigation "Product strategy" [ref=e163]:
+              - link "Hearst+ executive brief" [ref=e165] [cursor=pointer]:
+                - /url: /hearst-plus-brief/
+              - link "Hearst+ product reference" [ref=e166] [cursor=pointer]:
+                - /url: /hearst-plus-reference/
+              - link "Storybook" [ref=e167] [cursor=pointer]:
+                - /url: https://hearst-design-system.netlify.app/storybook/?path=/docs/hearst-plus-start-overview--docs
+            - navigation "Prototype experiences" [ref=e168]:
+              - link "Live feed" [ref=e170] [cursor=pointer]:
+                - /url: /hearst-plus/live-feed/
+              - link "Local News feed admin" [ref=e171] [cursor=pointer]:
+                - /url: /hearst-plus/local-news/admin/
+              - link "Lifestyle Live" [ref=e172] [cursor=pointer]:
+                - /url: /hearst-plus/lifestyle-live/
+              - link "Autos Videos" [ref=e173] [cursor=pointer]:
+                - /url: /hearst-plus/motortrend-videos/
+              - link "HOT ROD Events" [ref=e174] [cursor=pointer]:
+                - /url: /autos/hot-rod/events/
+              - link "Single-brand home" [ref=e175] [cursor=pointer]:
+                - /url: /single-brand/delish/
+              - link "Single-brand article" [ref=e176] [cursor=pointer]:
+                - /url: /single-brand/delish/article/delish-food-news-a73504555-sonic-banana-and-hotumn-menus/
+            - generic [ref=e177]:
+              - generic [ref=e178]: Subscriptions
+              - link "Subscribe" [ref=e179] [cursor=pointer]:
+                - /url: https://subscribe.hearstmags.com/
+        - separator [ref=e180]
+        - generic [ref=e181]:
+          - generic [ref=e182]: A Part of Hearst Digital Media
+          - generic [ref=e183]:
+            - link "Privacy Notice" [ref=e184] [cursor=pointer]:
+              - /url: https://subscribe.hearstmags.com/circulation/shared/privacy.html
+            - link "Terms of Use" [ref=e185] [cursor=pointer]:
+              - /url: https://subscribe.hearstmags.com/circulation/shared/terms.html
+            - link "Hearst brands" [ref=e186] [cursor=pointer]:
+              - /url: https://www.hearst.com/magazines
+        - paragraph [ref=e187]: Personalized daily reading experiences across Hearst Magazine Media brands.
+        - paragraph [ref=e188]:
+          - generic [ref=e189]: ©2026 Hearst Magazine Media, Inc. All Rights Reserved.
+          - text: ·
+          - note "Prototype disclosure" [ref=e190]: "Note: Event details and registration are maintained by the organizer. Editorial coverage remains attributed to its publishing brand."
+  - alert [ref=e191]

@@ -1,0 +1,824 @@
+- generic [ref=f1e1]:
+  - generic [ref=f1e3]:
+    - generic [ref=f1e5]:
+      - navigation [ref=f1e1070]:
+        - generic [ref=f1e7]:
+          - link [ref=f1e1071] [cursor=pointer]:
+            - /url: /hearst-plus/
+            - text: All
+          - link [ref=f1e1072] [cursor=pointer]:
+            - /url: /hearst-lifestyle/
+            - text: Lifestyle
+          - link [ref=f1e1073] [cursor=pointer]:
+            - /url: /hearst-autos/
+            - text: Autos
+          - link [ref=f1e1074] [cursor=pointer]:
+            - /url: /hearst-flux/
+            - text: Fashion & Luxury
+          - link [ref=f1e1075] [cursor=pointer]:
+            - /url: /hearst-ew/
+            - text: Enthusiast & Wellness
+      - button [ref=f1e1076]:
+        - generic [ref=f1e15]: Sign in / Sign up
+    - generic [ref=f1e17]:
+      - button [ref=f1e1077]
+      - button [ref=f1e1081]
+    - navigation [ref=f1e1082]:
+      - generic [ref=f1e28]:
+        - button [pressed] [ref=f1e1083]: For You
+        - button [ref=f1e1084]: Food News
+        - button [ref=f1e1085]: Food
+        - button [ref=f1e1086]: Kitchen Tools
+        - button [ref=f1e1087]: Videos
+    - generic [ref=f1e39]:
+      - main [ref=f1e1088]:
+        - heading [level=1] [ref=f1e1089]: Delish personalized story feed
+        - article [ref=f1e1090]:
+          - paragraph [ref=f1e43]: Swipe left or right to move between featured stories.
+          - status [ref=f1e1091]: "Story 3 of 5: Auntie Anne's New Gabby's Dollhouse Meal Comes With the Cutest Take-Home Surprise"
+          - generic [ref=f1e45]:
+            - generic [ref=f1e46]:
+              - button [ref=f1e47]:
+                - generic [ref=f1e52]:
+                  - generic [ref=f1e53]:
+                    - generic [ref=f1e54]: D
+                    - generic [ref=f1e57]: Delish
+                    - generic [ref=f1e58]: /
+                    - generic [ref=f1e59]: Video · 0:37
+                    - generic [ref=f1e62]: /
+                    - generic [ref=f1e63]: "14"
+                  - heading [level=2] [ref=f1e66]: "Inside The Cake Boss Kitchen: Marriage, Mayhem & Mascarpone"
+              - button [ref=f1e67]:
+                - generic [ref=f1e72]:
+                  - generic [ref=f1e73]:
+                    - generic [ref=f1e74]: D
+                    - generic [ref=f1e77]: Delish
+                    - generic [ref=f1e78]: /
+                    - generic [ref=f1e79]: "14"
+                  - heading [level=2] [ref=f1e82]: Arden Myrin Says Shared-Plate Restaurants Could Leave You With A $7,000 Bill
+              - button [ref=f1e83]:
+                - generic [ref=f1e88]:
+                  - generic [ref=f1e89]:
+                    - generic [ref=f1e90]: D
+                    - generic [ref=f1e93]: Delish
+                    - generic [ref=f1e94]: /
+                    - generic [ref=f1e95]: "15"
+                  - heading [level=2] [ref=f1e98]: Rider Strong Shares The One Snack That Always Disappeared From The ‘Boy Meets World’ Set
+              - button [ref=f1e1092]:
+                - generic [ref=f1e104]:
+                  - generic [ref=f1e105]:
+                    - generic [ref=f1e106]: D
+                    - generic [ref=f1e109]: Delish
+                    - generic [ref=f1e110]: /
+                    - generic [ref=f1e111]: "14"
+                  - heading [level=2] [ref=f1e1094]: Auntie Anne's New Gabby's Dollhouse Meal Comes With the Cutest Take-Home Surprise
+              - button [ref=f1e115]:
+                - generic [ref=f1e120]:
+                  - generic [ref=f1e121]:
+                    - generic [ref=f1e122]: D
+                    - generic [ref=f1e125]: Delish
+                    - generic [ref=f1e126]: /
+                    - generic [ref=f1e127]: "14"
+                  - heading [level=2] [ref=f1e130]: These 15 Cocktails Are The Most Refreshing Sips Of The Summer
+              - button [ref=f1e131]:
+                - generic [ref=f1e136]:
+                  - generic [ref=f1e137]:
+                    - generic [ref=f1e138]: D
+                    - generic [ref=f1e141]: Delish
+                    - generic [ref=f1e142]: /
+                    - generic [ref=f1e143]: Video · 0:37
+                    - generic [ref=f1e146]: /
+                    - generic [ref=f1e147]: "14"
+                  - heading [level=2] [ref=f1e150]: "Inside The Cake Boss Kitchen: Marriage, Mayhem & Mascarpone"
+              - button [ref=f1e151]:
+                - generic [ref=f1e156]:
+                  - generic [ref=f1e157]:
+                    - generic [ref=f1e158]: D
+                    - generic [ref=f1e161]: Delish
+                    - generic [ref=f1e162]: /
+                    - generic [ref=f1e163]: "14"
+                  - heading [level=2] [ref=f1e166]: Arden Myrin Says Shared-Plate Restaurants Could Leave You With A $7,000 Bill
+            - generic [ref=f1e167]:
+              - generic [ref=f1e1095]: 3 of 5
+              - button [ref=f1e1096]
+          - generic [ref=f1e174]:
+            - generic [ref=f1e1097]:
+              - button [ref=f1e1098]
+              - button [ref=f1e1099]
+              - button [ref=f1e1100]
+              - button [ref=f1e1101]
+              - button [ref=f1e1102]
+            - generic [ref=f1e186]:
+              - button [ref=f1e1103]: Save
+              - button [ref=f1e1104]: More like this
+              - button [ref=f1e1105]:
+                - generic [ref=f1e191]: Follow
+        - region [ref=f1e1106]:
+          - generic [ref=f1e194]:
+            - generic [ref=f1e195]: D
+            - generic [ref=f1e198]:
+              - heading [level=2] [ref=f1e1107]: Delish Shorts
+              - status [ref=f1e200]: 16 vertical recipe videos
+          - list [ref=f1e1108]:
+            - listitem [ref=f1e202]:
+              - button [ref=f1e1109]:
+                - generic [ref=f1e204]: 0:35
+                - generic [ref=f1e209]: Fried Chicken Caesar Sandwich
+                - generic [ref=f1e210]: Delish · Food
+            - listitem [ref=f1e211]:
+              - button [ref=f1e1110]:
+                - generic [ref=f1e213]: 0:54
+                - generic [ref=f1e218]: Creamy Tuscan Chicken Chili
+                - generic [ref=f1e219]: Delish · Food
+            - listitem [ref=f1e220]:
+              - button [ref=f1e1111]:
+                - generic [ref=f1e222]: 1:01
+                - generic [ref=f1e227]: Caprese Chicken Gnocchi Skillet
+                - generic [ref=f1e228]: Delish · Food
+            - listitem [ref=f1e229]:
+              - button [ref=f1e1112]:
+                - generic [ref=f1e231]: 0:28
+                - generic [ref=f1e236]: Greek Salad
+                - generic [ref=f1e237]: Delish · Food
+            - listitem [ref=f1e238]:
+              - button [ref=f1e1113]:
+                - generic [ref=f1e240]: 0:59
+                - generic [ref=f1e245]: Pepper Steak
+                - generic [ref=f1e246]: Delish · Food
+            - listitem [ref=f1e247]:
+              - button [ref=f1e1114]:
+                - generic [ref=f1e249]: 1:09
+                - generic [ref=f1e254]: Peach Panzanella With Burrata
+                - generic [ref=f1e255]: Delish · Food
+            - listitem [ref=f1e256]:
+              - button [ref=f1e1115]:
+                - generic [ref=f1e258]: 0:41
+                - generic [ref=f1e263]: Bruschetta Is Proof That Sometimes The Most Simple Is The Most Delicious
+                - generic [ref=f1e264]: Delish · Food
+            - listitem [ref=f1e265]:
+              - button [ref=f1e1116]:
+                - generic [ref=f1e267]: 1:25
+                - generic [ref=f1e272]: This Chicken Pesto Pasta Is What Weeknight Dinner Dreams Are Made Of
+                - generic [ref=f1e273]: Delish · Food
+            - listitem [ref=f1e274]:
+              - button [ref=f1e1117]:
+                - generic [ref=f1e276]: 0:35
+                - generic [ref=f1e281]: Crock-Pot Chicken Marsala
+                - generic [ref=f1e282]: Delish · Food
+            - listitem [ref=f1e283]:
+              - button [ref=f1e1118]:
+                - generic [ref=f1e285]: 0:44
+                - generic [ref=f1e290]: Mexican Street Corn Nachos
+                - generic [ref=f1e291]: Delish · Food
+            - listitem [ref=f1e292]:
+              - button [ref=f1e1119]:
+                - generic [ref=f1e294]: 1:52
+                - generic [ref=f1e299]: Broccoli Caesar Pasta Salad
+                - generic [ref=f1e300]: Delish · Food
+            - listitem [ref=f1e301]:
+              - button [ref=f1e1120]:
+                - generic [ref=f1e303]: 0:29
+                - generic [ref=f1e308]: Smashed Potatoes
+                - generic [ref=f1e309]: Delish · Food
+            - listitem [ref=f1e310]:
+              - button [ref=f1e1121]:
+                - generic [ref=f1e312]: 0:28
+                - generic [ref=f1e317]: Peach Dump Cake
+                - generic [ref=f1e318]: Delish · Food
+            - listitem [ref=f1e319]:
+              - button [ref=f1e1122]:
+                - generic [ref=f1e321]: 0:52
+                - generic [ref=f1e326]: Million Dollar Chicken Skillet
+                - generic [ref=f1e327]: Delish · Food
+            - listitem [ref=f1e328]:
+              - button [ref=f1e1123]:
+                - generic [ref=f1e330]: 0:27
+                - generic [ref=f1e335]: Watermelon-Feta Salad
+                - generic [ref=f1e336]: Delish · Food
+            - listitem [ref=f1e337]:
+              - button [ref=f1e1124]:
+                - generic [ref=f1e339]: 0:38
+                - generic [ref=f1e344]: Basil & Feta Corn Salad Brings A Fresh Twist To Your Summer Plate
+                - generic [ref=f1e345]: Delish · Food
+        - article [ref=f1e346] [cursor=pointer]:
+          - button [ref=f1e1125]
+          - generic [ref=f1e350]:
+            - generic [ref=f1e351]:
+              - generic [ref=f1e352]: Trending
+              - generic [ref=f1e353]: Recipe
+              - link [ref=f1e1127]:
+                - /url: /lifestyle/delish/
+                - generic [ref=f1e355]: D
+                - generic [ref=f1e358]: Delish · Food News · Amanda Mactas
+            - heading [level=2] [ref=f1e1128]: "5 Under $5: The Best New Products To Shop At Whole Foods This Month"
+            - generic [ref=f1e360]:
+              - generic [ref=f1e361]:
+                - paragraph [ref=f1e362]: 30 min
+                - paragraph [ref=f1e363]: Total
+              - generic [ref=f1e364]:
+                - paragraph [ref=f1e365]: "3"
+                - paragraph [ref=f1e366]: Servings
+              - generic [ref=f1e367]:
+                - paragraph [ref=f1e368]: Easy
+                - paragraph [ref=f1e371]: Level
+            - group [ref=f1e1129]:
+              - button [ref=f1e1130]: Save
+              - button [ref=f1e1131]: More like this
+              - button [ref=f1e1132]: "19"
+              - button [ref=f1e1133]: Hide
+        - article [ref=f1e378] [cursor=pointer]:
+          - button [ref=f1e1134]
+          - generic [ref=f1e382]:
+            - generic [ref=f1e383]:
+              - generic [ref=f1e384]: Editor Pick
+              - generic [ref=f1e385]: Recipe
+              - link [ref=f1e1136]:
+                - /url: /lifestyle/delish/
+                - generic [ref=f1e387]: D
+                - generic [ref=f1e390]: Delish · Food News · Gabby Romero
+            - heading [level=2] [ref=f1e1137]: Is It Safe To Eat Taco Bell Again? A Food Safety Expert Explains
+            - generic [ref=f1e392]:
+              - generic [ref=f1e393]:
+                - paragraph [ref=f1e394]: 35 min
+                - paragraph [ref=f1e395]: Total
+              - generic [ref=f1e396]:
+                - paragraph [ref=f1e397]: "4"
+                - paragraph [ref=f1e398]: Servings
+              - generic [ref=f1e399]:
+                - paragraph [ref=f1e400]: Easy
+                - paragraph [ref=f1e403]: Level
+            - group [ref=f1e1138]:
+              - button [ref=f1e1139]: Save
+              - button [ref=f1e1140]: More like this
+              - button [ref=f1e1141]: "20"
+              - button [ref=f1e1142]: Hide
+        - article [ref=f1e410] [cursor=pointer]:
+          - button [ref=f1e1143]
+          - generic [ref=f1e414]:
+            - generic [ref=f1e415]:
+              - generic [ref=f1e416]: Most Popular
+              - link [ref=f1e1145]:
+                - /url: /lifestyle/delish/
+                - generic [ref=f1e418]: D
+                - generic [ref=f1e421]: Delish · Kitchen Tools · Gabby Romero
+            - heading [level=2] [ref=f1e1146]: The Right Way To Load Silverware In The Dishwasher, According To Experts
+            - group [ref=f1e1147]:
+              - button [ref=f1e1148]: Save
+              - button [ref=f1e1149]: More like this
+              - button [ref=f1e1150]: "12"
+              - button [ref=f1e1151]: Hide
+        - article [ref=f1e429] [cursor=pointer]:
+          - button [ref=f1e1152]
+          - generic [ref=f1e433]:
+            - generic [ref=f1e434]:
+              - generic [ref=f1e435]: Most Popular
+              - generic [ref=f1e436]: Recipe
+              - link [ref=f1e1154]:
+                - /url: /lifestyle/delish/
+                - generic [ref=f1e438]: D
+                - generic [ref=f1e441]: Delish · Food News · Steven Morea
+            - heading [level=2] [ref=f1e1155]: Wendy’s Brought Back Its Pretzel Bacon Pub Burger & It Deserves The Hype
+            - generic [ref=f1e443]:
+              - generic [ref=f1e444]:
+                - paragraph [ref=f1e445]: 20 min
+                - paragraph [ref=f1e446]: Total
+              - generic [ref=f1e447]:
+                - paragraph [ref=f1e448]: "3"
+                - paragraph [ref=f1e449]: Servings
+              - generic [ref=f1e450]:
+                - paragraph [ref=f1e451]: Easy
+                - paragraph [ref=f1e454]: Level
+            - group [ref=f1e1156]:
+              - button [ref=f1e1157]: Save
+              - button [ref=f1e1158]: More like this
+              - button [ref=f1e1159]: "14"
+              - button [ref=f1e1160]: Hide
+        - article [ref=f1e461] [cursor=pointer]:
+          - button [ref=f1e1161]
+          - generic [ref=f1e465]:
+            - generic [ref=f1e466]:
+              - generic [ref=f1e467]: Continue
+              - generic [ref=f1e468]: Recipe
+              - link [ref=f1e1163]:
+                - /url: /lifestyle/delish/
+                - generic [ref=f1e470]: D
+                - generic [ref=f1e473]: Delish · Food · Delish editors
+            - heading [level=2] [ref=f1e1164]: Upside-Down Plum Cake
+            - generic [ref=f1e475]:
+              - generic [ref=f1e476]:
+                - paragraph [ref=f1e477]: 35 min
+                - paragraph [ref=f1e478]: Total
+              - generic [ref=f1e479]:
+                - paragraph [ref=f1e480]: "4"
+                - paragraph [ref=f1e481]: Servings
+              - generic [ref=f1e482]:
+                - paragraph [ref=f1e483]: Easy
+                - paragraph [ref=f1e486]: Level
+            - group [ref=f1e1165]:
+              - button [ref=f1e1166]: Save
+              - button [ref=f1e1167]: More like this
+              - button [ref=f1e1168]: "20"
+              - button [ref=f1e1169]: Hide
+        - region [ref=f1e1170]:
+          - generic [ref=f1e495]:
+            - link [ref=f1e1171] [cursor=pointer]:
+              - /url: /lifestyle/good-housekeeping/
+            - generic [ref=f1e500]:
+              - heading [level=2] [ref=f1e1175]: Brand spotlight
+              - paragraph [ref=f1e502]: Explore Home from Good Housekeeping.
+          - generic [ref=f1e504]:
+            - button [ref=f1e1176]:
+              - generic [ref=f1e507]:
+                - generic [ref=f1e508]: Our Editor-in-Chief Shares Her Favorite Holiday Traditions
+                - generic [ref=f1e509]: See how Elspeth Velten’s time-honored holiday activity is made easier with DoorDash.
+            - generic [ref=f1e510]:
+              - button [ref=f1e1178]:
+                - generic [ref=f1e513]:
+                  - generic [ref=f1e514]: 15 Thoughtful Condolence Messages
+                  - generic [ref=f1e515]: Home · Good Housekeeping editors
+              - button [ref=f1e1180]:
+                - generic [ref=f1e518]:
+                  - generic [ref=f1e519]: The Best Dad Jokes Of All Time
+                  - generic [ref=f1e520]: Home · Good Housekeeping editors
+              - button [ref=f1e1182]:
+                - generic [ref=f1e523]:
+                  - generic [ref=f1e524]: How to Keep Your Air Conditioner Clean
+                  - generic [ref=f1e525]: Home · Good Housekeeping editors
+        - article [ref=f1e526] [cursor=pointer]:
+          - button [ref=f1e1184]
+          - generic [ref=f1e530]:
+            - generic [ref=f1e531]:
+              - generic [ref=f1e532]: Trending
+              - generic [ref=f1e533]: Recipe
+              - link [ref=f1e1186]:
+                - /url: /lifestyle/delish/
+                - generic [ref=f1e535]: D
+                - generic [ref=f1e538]: Delish · Food · Gabby Romero
+            - heading [level=2] [ref=f1e1187]: The Best Budget-Friendly Steaks To Buy, According To Experts
+            - generic [ref=f1e540]:
+              - generic [ref=f1e541]:
+                - paragraph [ref=f1e542]: 45 min
+                - paragraph [ref=f1e543]: Total
+              - generic [ref=f1e544]:
+                - paragraph [ref=f1e545]: "6"
+                - paragraph [ref=f1e546]: Servings
+              - generic [ref=f1e547]:
+                - paragraph [ref=f1e548]: Easy
+                - paragraph [ref=f1e551]: Level
+            - group [ref=f1e1188]:
+              - button [ref=f1e1189]: Save
+              - button [ref=f1e1190]: More like this
+              - button [ref=f1e1191]: "13"
+              - button [ref=f1e1192]: Hide
+        - article [ref=f1e558] [cursor=pointer]:
+          - button [ref=f1e1193]
+          - generic [ref=f1e562]:
+            - generic [ref=f1e563]:
+              - generic [ref=f1e564]: Editor Pick
+              - generic [ref=f1e565]: Recipe
+              - link [ref=f1e1195]:
+                - /url: /lifestyle/delish/
+                - generic [ref=f1e567]: D
+                - generic [ref=f1e570]: Delish · Food · Colton Trowbridge
+            - heading [level=2] [ref=f1e1196]: 21 Grab & Go Breakfast Ideas For The Busiest Of Mornings
+            - generic [ref=f1e572]:
+              - generic [ref=f1e573]:
+                - paragraph [ref=f1e574]: 50 min
+                - paragraph [ref=f1e575]: Total
+              - generic [ref=f1e576]:
+                - paragraph [ref=f1e577]: "2"
+                - paragraph [ref=f1e578]: Servings
+              - generic [ref=f1e579]:
+                - paragraph [ref=f1e580]: Easy
+                - paragraph [ref=f1e583]: Level
+            - group [ref=f1e1197]:
+              - button [ref=f1e1198]: Save
+              - button [ref=f1e1199]: More like this
+              - button [ref=f1e1200]: "13"
+              - button [ref=f1e1201]: Hide
+        - article [ref=f1e590] [cursor=pointer]:
+          - button [ref=f1e1202]
+          - generic [ref=f1e594]:
+            - generic [ref=f1e595]:
+              - generic [ref=f1e596]: Continue
+              - generic [ref=f1e597]: Recipe
+              - link [ref=f1e1204]:
+                - /url: /lifestyle/delish/
+                - generic [ref=f1e599]: D
+                - generic [ref=f1e602]: Delish · Food · Taylor Ann Spencer
+            - heading [level=2] [ref=f1e1205]: "Rice vs. Pasta: Which Is Better For Blood Sugar?"
+            - generic [ref=f1e604]:
+              - generic [ref=f1e605]:
+                - paragraph [ref=f1e606]: 20 min
+                - paragraph [ref=f1e607]: Total
+              - generic [ref=f1e608]:
+                - paragraph [ref=f1e609]: "3"
+                - paragraph [ref=f1e610]: Servings
+              - generic [ref=f1e611]:
+                - paragraph [ref=f1e612]: Easy
+                - paragraph [ref=f1e615]: Level
+            - group [ref=f1e1206]:
+              - button [ref=f1e1207]: Save
+              - button [ref=f1e1208]: More like this
+              - button [ref=f1e1209]: "14"
+              - button [ref=f1e1210]: Hide
+        - article [ref=f1e622] [cursor=pointer]:
+          - button [ref=f1e1211]
+          - generic [ref=f1e626]:
+            - generic [ref=f1e627]:
+              - generic [ref=f1e628]: Continue
+              - generic [ref=f1e629]: Recipe
+              - link [ref=f1e1213]:
+                - /url: /lifestyle/delish/
+                - generic [ref=f1e631]: D
+                - generic [ref=f1e634]: Delish · Food News · Amanda Mactas
+            - heading [level=2] [ref=f1e1214]: The Cyclospora Outbreak Has Turned Deadly After More Than 18,000 Reported Cases
+            - generic [ref=f1e636]:
+              - generic [ref=f1e637]:
+                - paragraph [ref=f1e638]: 50 min
+                - paragraph [ref=f1e639]: Total
+              - generic [ref=f1e640]:
+                - paragraph [ref=f1e641]: "3"
+                - paragraph [ref=f1e642]: Servings
+              - generic [ref=f1e643]:
+                - paragraph [ref=f1e644]: Easy
+                - paragraph [ref=f1e647]: Level
+            - group [ref=f1e1215]:
+              - button [ref=f1e1216]: Save
+              - button [ref=f1e1217]: More like this
+              - button [ref=f1e1218]: "16"
+              - button [ref=f1e1219]: Hide
+        - article [ref=f1e654] [cursor=pointer]:
+          - button [ref=f1e1220]
+          - generic [ref=f1e658]:
+            - generic [ref=f1e659]:
+              - generic [ref=f1e660]: Trending
+              - generic [ref=f1e661]: Recipe
+              - link [ref=f1e1222]:
+                - /url: /lifestyle/delish/
+                - generic [ref=f1e663]: D
+                - generic [ref=f1e666]: Delish · Food News · Amanda Mactas
+            - heading [level=2] [ref=f1e1223]: Some Singles Are Going On Dates For A Reason That Has Nothing To Do With Love
+            - generic [ref=f1e668]:
+              - generic [ref=f1e669]:
+                - paragraph [ref=f1e670]: 20 min
+                - paragraph [ref=f1e671]: Total
+              - generic [ref=f1e672]:
+                - paragraph [ref=f1e673]: "4"
+                - paragraph [ref=f1e674]: Servings
+              - generic [ref=f1e675]:
+                - paragraph [ref=f1e676]: Easy
+                - paragraph [ref=f1e679]: Level
+            - group [ref=f1e1224]:
+              - button [ref=f1e1225]: Save
+              - button [ref=f1e1226]: More like this
+              - button [ref=f1e1227]: "16"
+              - button [ref=f1e1228]: Hide
+        - article [ref=f1e1229]:
+          - generic [ref=f1e687]:
+            - generic [ref=f1e689]:
+              - generic [ref=f1e690]: Advertisement
+              - generic [ref=f1e691]: AD
+            - paragraph [ref=f1e692]: Tested
+          - generic [ref=f1e693]:
+            - generic [ref=f1e694]:
+              - generic [ref=f1e695]: Good Housekeeping Tested
+              - heading [level=2] [ref=f1e1230]: Hosting Without the Guesswork
+              - paragraph [ref=f1e698]: Lab-informed serveware, cleaning helpers, and party tools for readers saving home-service content.
+            - generic [ref=f1e1231]:
+              - generic [ref=f1e701]: Prototype creative
+              - generic [ref=f1e702]: See tested picks · Destination not connected
+        - article [ref=f1e703] [cursor=pointer]:
+          - button [ref=f1e1232]
+          - generic [ref=f1e707]:
+            - generic [ref=f1e708]:
+              - generic [ref=f1e709]: Most Popular
+              - generic [ref=f1e710]: Recipe
+              - link [ref=f1e1234]:
+                - /url: /lifestyle/delish/
+                - generic [ref=f1e712]: D
+                - generic [ref=f1e715]: Delish · Food News · Sean Abrams
+            - heading [level=2] [ref=f1e1235]: The PSL Is Almost Back At Starbucks—And A Brand-New Fall Menu Is Coming With It
+            - generic [ref=f1e717]:
+              - generic [ref=f1e718]:
+                - paragraph [ref=f1e719]: 20 min
+                - paragraph [ref=f1e720]: Total
+              - generic [ref=f1e721]:
+                - paragraph [ref=f1e722]: "6"
+                - paragraph [ref=f1e723]: Servings
+              - generic [ref=f1e724]:
+                - paragraph [ref=f1e725]: Easy
+                - paragraph [ref=f1e728]: Level
+            - group [ref=f1e1236]:
+              - button [ref=f1e1237]: Save
+              - button [ref=f1e1238]: More like this
+              - button [ref=f1e1239]: "14"
+              - button [ref=f1e1240]: Hide
+        - article [ref=f1e735] [cursor=pointer]:
+          - button [ref=f1e1241]
+          - generic [ref=f1e739]:
+            - generic [ref=f1e740]:
+              - generic [ref=f1e741]: Editor Pick
+              - generic [ref=f1e742]: Recipe
+              - link [ref=f1e1243]:
+                - /url: /lifestyle/delish/
+                - generic [ref=f1e744]: D
+                - generic [ref=f1e747]: Delish · Food News · Sean Abrams
+            - heading [level=2] [ref=f1e1244]: Red Baron Just Took Supreme Pizza To A Place I Was Not Prepared For
+            - generic [ref=f1e749]:
+              - generic [ref=f1e750]:
+                - paragraph [ref=f1e751]: 20 min
+                - paragraph [ref=f1e752]: Total
+              - generic [ref=f1e753]:
+                - paragraph [ref=f1e754]: "2"
+                - paragraph [ref=f1e755]: Servings
+              - generic [ref=f1e756]:
+                - paragraph [ref=f1e757]: Easy
+                - paragraph [ref=f1e760]: Level
+            - group [ref=f1e1245]:
+              - button [ref=f1e1246]: Save
+              - button [ref=f1e1247]: More like this
+              - button [ref=f1e1248]: "17"
+              - button [ref=f1e1249]: Hide
+        - article [ref=f1e767] [cursor=pointer]:
+          - button [ref=f1e1250]
+          - generic [ref=f1e771]:
+            - generic [ref=f1e772]:
+              - generic [ref=f1e773]: Continue
+              - generic [ref=f1e774]: Recipe
+              - link [ref=f1e1252]:
+                - /url: /lifestyle/delish/
+                - generic [ref=f1e776]: D
+                - generic [ref=f1e779]: Delish · Food News · Sean Abrams
+            - heading [level=2] [ref=f1e1253]: Alan Ritchson Asked If Mayo Belongs On A Philly Cheesesteak & People Are Picking Sides
+            - generic [ref=f1e781]:
+              - generic [ref=f1e782]:
+                - paragraph [ref=f1e783]: 30 min
+                - paragraph [ref=f1e784]: Total
+              - generic [ref=f1e785]:
+                - paragraph [ref=f1e786]: "4"
+                - paragraph [ref=f1e787]: Servings
+              - generic [ref=f1e788]:
+                - paragraph [ref=f1e789]: Easy
+                - paragraph [ref=f1e792]: Level
+            - group [ref=f1e1254]:
+              - button [ref=f1e1255]: Save
+              - button [ref=f1e1256]: More like this
+              - button [ref=f1e1257]: "10"
+              - button [ref=f1e1258]: Hide
+        - article [ref=f1e799] [cursor=pointer]:
+          - button [ref=f1e1259]
+          - generic [ref=f1e803]:
+            - generic [ref=f1e804]:
+              - generic [ref=f1e805]: Editor Pick
+              - generic [ref=f1e806]: Recipe
+              - link [ref=f1e1261]:
+                - /url: /lifestyle/delish/
+                - generic [ref=f1e808]: D
+                - generic [ref=f1e811]: Delish · Food · Delish editors
+            - heading [level=2] [ref=f1e1262]: Banana Pudding Fluff
+            - generic [ref=f1e813]:
+              - generic [ref=f1e814]:
+                - paragraph [ref=f1e815]: 40 min
+                - paragraph [ref=f1e816]: Total
+              - generic [ref=f1e817]:
+                - paragraph [ref=f1e818]: "2"
+                - paragraph [ref=f1e819]: Servings
+              - generic [ref=f1e820]:
+                - paragraph [ref=f1e821]: Easy
+                - paragraph [ref=f1e824]: Level
+            - group [ref=f1e1263]:
+              - button [ref=f1e1264]: Save
+              - button [ref=f1e1265]: More like this
+              - button [ref=f1e1266]: "18"
+              - button [ref=f1e1267]: Hide
+        - article [ref=f1e831] [cursor=pointer]:
+          - button [ref=f1e1268]
+          - generic [ref=f1e835]:
+            - generic [ref=f1e836]:
+              - generic [ref=f1e837]: Most Popular
+              - generic [ref=f1e838]: Recipe
+              - link [ref=f1e1270]:
+                - /url: /lifestyle/delish/
+                - generic [ref=f1e840]: D
+                - generic [ref=f1e843]: Delish · Food · Steven Morea
+            - heading [level=2] [ref=f1e1271]: These Fast Food Chains Actually Hand Bread Their Chicken
+            - generic [ref=f1e845]:
+              - generic [ref=f1e846]:
+                - paragraph [ref=f1e847]: 20 min
+                - paragraph [ref=f1e848]: Total
+              - generic [ref=f1e849]:
+                - paragraph [ref=f1e850]: "4"
+                - paragraph [ref=f1e851]: Servings
+              - generic [ref=f1e852]:
+                - paragraph [ref=f1e853]: Easy
+                - paragraph [ref=f1e856]: Level
+            - group [ref=f1e1272]:
+              - button [ref=f1e1273]: Save
+              - button [ref=f1e1274]: More like this
+              - button [ref=f1e1275]: "17"
+              - button [ref=f1e1276]: Hide
+        - region [ref=f1e1277]:
+          - generic [ref=f1e865]:
+            - link [ref=f1e1278] [cursor=pointer]:
+              - /url: /lifestyle/country-living/
+            - generic [ref=f1e871]:
+              - heading [level=2] [ref=f1e1283]: Brand spotlight
+              - paragraph [ref=f1e873]: Explore Home from Country Living.
+          - generic [ref=f1e875]:
+            - button [ref=f1e1284]:
+              - generic [ref=f1e878]:
+                - generic [ref=f1e879]: Chasing the West's Drew and Jonathan Scott Talk Ranch Life
+                - generic [ref=f1e880]: The Property Brothers Drew and Jonathan Scott talk about what it was like growing up on a ranch ahead of the premiere of their HGTV show "Chasing the West."
+            - generic [ref=f1e881]:
+              - button [ref=f1e1286]:
+                - generic [ref=f1e884]:
+                  - generic [ref=f1e885]: HGTV Chasing the West with Drew and Jonathan Scott
+                  - generic [ref=f1e886]: Home · Country Living editors
+              - button [ref=f1e1288]:
+                - generic [ref=f1e889]:
+                  - generic [ref=f1e890]: 10 Quotes For a Happy Life
+                  - generic [ref=f1e891]: Home · Country Living editors
+              - button [ref=f1e1290]:
+                - generic [ref=f1e894]:
+                  - generic [ref=f1e895]: Celebrity Mothers Get Emotional About Motherhood
+                  - generic [ref=f1e896]: Home · Country Living editors
+        - article [ref=f1e897]:
+          - generic [ref=f1e899]:
+            - button [ref=f1e1292]
+            - generic: 0:43
+          - generic [ref=f1e905]:
+            - generic [ref=f1e906]:
+              - generic [ref=f1e907]: D
+              - generic [ref=f1e910]: Delish · Food · Delish editors
+              - generic [ref=f1e1293]: Current feed story
+            - button [ref=f1e1294]:
+              - heading [level=3] [ref=f1e1295]: Forget The Store-Bought Jar—Our Easy Pesto Transforms Everything It's Added To
+            - paragraph [ref=f1e916]: Our ultimate pesto recipe is so easy to make and great on pasta, potatoes, eggs, veggies, and more! Here's how to make your own classic homemade pesto sauce.
+            - generic [ref=f1e917]:
+              - generic [ref=f1e918]:
+                - button [ref=f1e1296]:
+                  - generic [ref=f1e922]: Save
+                - button [ref=f1e1297]:
+                  - generic [ref=f1e926]: "15"
+                - button [ref=f1e1298]:
+                  - generic [ref=f1e930]: Hide
+              - button [ref=f1e1299]: Open story
+      - complementary [ref=f1e933]:
+        - region [ref=f1e1300]:
+          - heading [level=2] [ref=f1e1301]: Trending in Delish
+          - list [ref=f1e936]:
+            - listitem [ref=f1e937]:
+              - button [ref=f1e1302]:
+                - generic [ref=f1e939]: "1"
+                - generic [ref=f1e942]:
+                  - generic [ref=f1e943]: These Chicken Meatballs Have Everything You Love About French Onion Soup
+                  - generic [ref=f1e944]:
+                    - generic [ref=f1e945]: D
+                    - generic [ref=f1e948]: Delish
+            - listitem [ref=f1e949]:
+              - button [ref=f1e1303]:
+                - generic [ref=f1e951]: "2"
+                - generic [ref=f1e954]:
+                  - generic [ref=f1e955]: 45 Easy & Classic Italian Pasta Recipes (That Aren't Just Spaghetti & Meatballs)
+                  - generic [ref=f1e956]:
+                    - generic [ref=f1e957]: D
+                    - generic [ref=f1e960]: Delish
+            - listitem [ref=f1e961]:
+              - button [ref=f1e1304]:
+                - generic [ref=f1e963]: "3"
+                - generic [ref=f1e966]:
+                  - generic [ref=f1e967]: Patton Oswalt Can’t Stand ‘Slop Bowls’—Here’s Why
+                  - generic [ref=f1e968]:
+                    - generic [ref=f1e969]: D
+                    - generic [ref=f1e972]: Delish
+            - listitem [ref=f1e973]:
+              - button [ref=f1e1305]:
+                - generic [ref=f1e975]: "4"
+                - generic [ref=f1e978]:
+                  - generic [ref=f1e979]: Classic Stuffed Peppers Are The Easy, Versatile Dinner We Crave Year-Round
+                  - generic [ref=f1e980]:
+                    - generic [ref=f1e981]: D
+                    - generic [ref=f1e984]: Delish
+            - listitem [ref=f1e985]:
+              - button [ref=f1e1306]:
+                - generic [ref=f1e987]: "5"
+                - generic [ref=f1e990]:
+                  - generic [ref=f1e991]: 25 Ultra-Cozy Ways To Cook With Egg Noodles
+                  - generic [ref=f1e992]:
+                    - generic [ref=f1e993]: D
+                    - generic [ref=f1e996]: Delish
+    - contentinfo [ref=f1e998]:
+      - generic [ref=f1e999]:
+        - generic [ref=f1e1000]:
+          - generic [ref=f1e1021]:
+            - link [ref=f1e1325] [cursor=pointer]:
+              - /url: https://www.youtube.com/@Hearst
+              - text: YouTube
+            - link [ref=f1e1326] [cursor=pointer]:
+              - /url: https://www.facebook.com/Hearst/
+              - text: Facebook
+            - link [ref=f1e1327] [cursor=pointer]:
+              - /url: https://www.instagram.com/hearst/
+              - text: Instagram
+            - link [ref=f1e1328] [cursor=pointer]:
+              - /url: https://www.pinterest.com/hearst/
+              - text: Pinterest
+          - generic [ref=f1e1026]:
+            - navigation [ref=f1e1329]:
+              - generic [ref=f1e1028]: Discover Hearst+
+              - link [ref=f1e1330] [cursor=pointer]:
+                - /url: /hearst-plus/
+                - text: Open Hearst+
+              - link [ref=f1e1331] [cursor=pointer]:
+                - /url: /hearst-plus/shop/
+                - text: Shop the stories
+              - link [ref=f1e1332] [cursor=pointer]:
+                - /url: /hearst-plus/complete-articles/
+                - text: Complete article viewer
+            - navigation [ref=f1e1333]:
+              - generic [ref=f1e1033]: Product strategy
+              - link [ref=f1e1334] [cursor=pointer]:
+                - /url: /about-hearst-magazines/
+                - text: Product story
+              - link [ref=f1e1335] [cursor=pointer]:
+                - /url: /why-hearst-plus/
+                - text: Why Hearst+
+              - link [ref=f1e1336] [cursor=pointer]:
+                - /url: /hearst-product-blueprint/
+                - text: Product blueprint
+              - link [ref=f1e1337] [cursor=pointer]:
+                - /url: /hearst-article-blueprint/
+                - text: Article system
+              - link [ref=f1e1338] [cursor=pointer]:
+                - /url: /token-architecture/
+                - text: Token architecture
+              - link [ref=f1e1339] [cursor=pointer]:
+                - /url: /hds-brand-framework/
+                - text: HDS brand framework
+            - navigation [ref=f1e1340]:
+              - generic [ref=f1e1041]: Prototype experiences
+              - link [ref=f1e1341] [cursor=pointer]:
+                - /url: /hearst-plus/live-feed/
+                - text: Live feed
+              - link [ref=f1e1342] [cursor=pointer]:
+                - /url: /hearst-plus/lifestyle-live/
+                - text: Lifestyle Live
+              - link [ref=f1e1343] [cursor=pointer]:
+                - /url: /hearst-plus/motortrend-videos/
+                - text: Autos Videos
+              - link [ref=f1e1344] [cursor=pointer]:
+                - /url: /autos/hot-rod/events/
+                - text: HOT ROD Events
+            - generic [ref=f1e1046]:
+              - generic [ref=f1e1047]: Subscriptions
+              - link [ref=f1e1345] [cursor=pointer]:
+                - /url: https://subscribe.hearstmags.com/
+                - text: Subscribe
+        - separator [ref=f1e1049]
+        - generic [ref=f1e1050]:
+          - generic [ref=f1e1051]: A Part of Hearst Digital Media
+          - generic [ref=f1e1052]:
+            - link [ref=f1e1346] [cursor=pointer]:
+              - /url: https://subscribe.hearstmags.com/circulation/shared/privacy.html
+              - text: Privacy Notice
+            - link [ref=f1e1347] [cursor=pointer]:
+              - /url: https://subscribe.hearstmags.com/circulation/shared/terms.html
+              - text: Terms of Use
+            - link [ref=f1e1348] [cursor=pointer]:
+              - /url: https://www.hearst.com/magazines
+              - text: Hearst brands
+        - paragraph [ref=f1e1056]: Personalized daily reading experiences across Hearst Magazine Media brands.
+        - paragraph [ref=f1e1057]:
+          - generic [ref=f1e1058]: ©2026 Hearst Magazine Media, Inc. All Rights Reserved.
+          - text: ·
+          - note [ref=f1e1349]: "Note: Prototype only. Uses public story metadata and browser-local demo state; not a production account, access, or publishing surface."
+  - button [ref=f1e1350] [cursor=pointer]
+  - alert [ref=f1e1069]
+  - dialog [ref=f1e1398]:
+    - banner [ref=f1e1354]:
+      - generic [ref=f1e1355]:
+        - generic [ref=f1e1356]: D
+        - generic [ref=f1e1359]:
+          - paragraph [ref=f1e1360]: Make Delish yours
+          - paragraph [ref=f1e1361]: About one minute
+      - button "Close Delish onboarding" [ref=f1e1362]
+    - generic [ref=f1e1364]:
+      - generic "Step 2 of 3" [ref=f1e1399]: 2 of 3
+      - generic [ref=f1e1370]:
+        - heading "What do you want to cook more often?" [active] [level=2] [ref=f1e1400]
+        - paragraph [ref=f1e1372]: Pick up to three. We will use them to shape your Delish feed.
+      - generic [ref=f1e1401]:
+        - button [ref=f1e1402]
+        - button [ref=f1e1406]
+        - button [ref=f1e1410]
+        - button [ref=f1e1414]
+        - button [ref=f1e1418]
+        - button [ref=f1e1422]
+      - paragraph [ref=f1e1392]: 0 of 3 selected
+    - contentinfo [ref=f1e1393]:
+      - generic [ref=f1e1394]:
+        - button "Back" [ref=f1e1426]
+        - generic [ref=f1e1396]:
+          - button "Next" [disabled]
+      - button "Skip this step" [ref=f1e1397]

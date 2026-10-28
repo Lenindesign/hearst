@@ -1,0 +1,20 @@
+{
+  "alwaysUpdateLinks": true,
+  "attachmentFolderPath": "vault-assets",
+  "newFileLocation": "folder",
+  "newFileFolderPath": "notes",
+  "showUnsupportedFiles": false,
+  "userIgnoreFilters": [
+    "node_modules/",
+    ".next/",
+    "build/",
+    "coverage/",
+    "out/",
+    "output/",
+    "public/",
+    "scripts/",
+    "src/",
+    "storybook-static/",
+    "tokens/"
+  ]
+}

@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-10-22T15:03:45.407Z",
+  "generatedAt": "2026-10-25T03:31:48.681Z",
   "totalComponents": 134,
   "byLevel": {
     "template": 29,
-    "molecule": 44,
-    "organism": 36,
+    "molecule": 43,
+    "organism": 37,
     "atom": 25
   },
   "byNamespace": {
@@ -57,20 +57,50 @@
     "componentsWithMetadata": 28,
     "componentsWithoutMetadata": 106,
     "coveragePercent": 20.9,
-    "validMetadata": 28,
-    "invalidMetadata": 0
+    "validMetadata": 24,
+    "invalidMetadata": 4
   },
   "metadataValidation": {
-    "valid": true,
-    "errors": []
+    "valid": false,
+    "errors": [
+      {
+        "component": "brand-logo",
+        "metadataPath": "src/components/brand-logo.metadata.ts",
+        "issues": [
+          "usedBy contains stale values: community-forums-page"
+        ]
+      },
+      {
+        "component": "brand-source-icon",
+        "metadataPath": "src/components/hearst-plus/brand-source-icon.metadata.ts",
+        "issues": [
+          "usedBy missing current values: community-home-river-card"
+        ]
+      },
+      {
+        "component": "product-story-shell",
+        "metadataPath": "src/components/product-story-shell.metadata.ts",
+        "issues": [
+          "exports contains stale values: totalEntertainmentShows",
+          "dependencies missing current values: lifestyle-river-data"
+        ]
+      },
+      {
+        "component": "button",
+        "metadataPath": "src/components/ui/button.metadata.ts",
+        "issues": [
+          "usedBy contains stale values: delish-clubs-module"
+        ]
+      }
+    ]
   },
   "storyCoverage": {
-    "directlySpecifiedComponents": 56,
-    "productionUsedWithoutDirectStory": 70,
+    "directlySpecifiedComponents": 55,
+    "productionUsedWithoutDirectStory": 71,
     "integratedSpecifiedComponents": 1,
     "infrastructureClassifiedComponents": 1,
-    "specifiedComponents": 57,
-    "productionUsedWithoutStorybookSpecification": 68
+    "specifiedComponents": 56,
+    "productionUsedWithoutStorybookSpecification": 69
   },
   "dependencyGraph": {
     "accordion-page": [
@@ -170,8 +200,7 @@
       "ui/icons"
     ],
     "design-agent-page": [
-      "product-story-shell",
-      "ui/icons"
+      "product-story-shell"
     ],
     "divider-page": [
       "theme-provider",
@@ -263,19 +292,23 @@
       "ui/icons"
     ],
     "community-forums-page": [
-      "ui/icons",
       "home-page",
       "lifestyle-river-types",
-      "brand-logo",
       "hearst-plus/brand-source-icon",
-      "hearst-plus/hearst-plus-brand-wall",
+      "hearst-plus/community-joined-groups-card",
       "hearst-plus/community-client",
       "hearst-plus/content-reader-model",
       "hearst-plus/utility-bar",
       "fre/site-footer"
     ],
+    "community-home-river-card": [
+      "ui/icons",
+      "hearst-plus/brand-source-icon",
+      "hearst-plus/community-client"
+    ],
     "community-joined-groups-card": [
-      "hearst-plus/brand-source-icon"
+      "hearst-plus/brand-source-icon",
+      "ui/icons"
     ],
     "content-reader-advertisement": [
       "lifestyle-river-types"
@@ -314,12 +347,6 @@
     "contextual-river-advertisement": [
       "hearst-plus/content-reader-advertisement",
       "ui/icons"
-    ],
-    "delish-clubs-module": [
-      "ui/button",
-      "ui/icons",
-      "lifestyle-river-types",
-      "hearst-plus/onboarding-modal"
     ],
     "delish-onboarding-modal": [
       "brand-logo",
@@ -404,6 +431,7 @@
       "ui/button",
       "ui/input",
       "ui/link",
+      "ui/use-modal-isolation",
       "ui/icons",
       "hearst-plus/story-actions"
     ],
@@ -576,6 +604,8 @@
       "hearst-plus/use-progressive-feed",
       "hearst-plus/feed-states",
       "hearst-plus/brand-source-icon",
+      "hearst-plus/community-home-river-card",
+      "hearst-plus/community-client",
       "hearst-plus/story-metadata",
       "hearst-plus/reader-action-bar",
       "hearst-plus/reader-article-body",
@@ -606,7 +636,6 @@
       "hearst-plus/brand-promotion-model",
       "hearst-plus/onboarding-modal",
       "hearst-plus/delish-onboarding-modal",
-      "hearst-plus/delish-clubs-module",
       "hearst-plus/motortrend-onboarding-modal",
       "hearst-plus/publication-onboarding-modal",
       "hearst-plus/stakeholder-personalization-console",
@@ -693,7 +722,8 @@
     ],
     "product-story-shell": [
       "brand-logo-marquee",
-      "fre/site-footer"
+      "fre/site-footer",
+      "lifestyle-river-data"
     ],
     "reader-account-ui": [
       "ui/icons",
@@ -902,7 +932,6 @@
       "community-feedback-controls",
       "content-reader-comments",
       "content-reader-masthead",
-      "delish-clubs-module",
       "delish-onboarding-modal",
       "elle-onboarding-modal",
       "feed-states",
@@ -935,17 +964,16 @@
       "button-page",
       "constitution-page",
       "content-carousel",
-      "design-agent-page",
       "ambient-reader",
       "brutalist-home-page",
       "community-client",
       "community-feedback-controls",
-      "community-forums-page",
+      "community-home-river-card",
+      "community-joined-groups-card",
       "content-reader-comments",
       "content-reader-context-rail",
       "content-reader-masthead",
       "contextual-river-advertisement",
-      "delish-clubs-module",
       "delish-onboarding-modal",
       "delish-shorts-viewer",
       "discovery-sidebar",
@@ -1002,7 +1030,6 @@
       "article-page",
       "ambient-reader",
       "brand-promotion-river-module",
-      "community-forums-page",
       "content-reader-masthead",
       "delish-onboarding-modal",
       "elle-onboarding-modal",
@@ -1112,7 +1139,6 @@
       "content-reader-comments",
       "content-reader-context-rail",
       "content-reader-recommendations",
-      "delish-clubs-module",
       "delish-shorts-viewer",
       "discovery-sidebar",
       "entertainment-channel-stories-page",
@@ -1144,6 +1170,7 @@
       "entertainment-watch-page",
       "fullscreen-image-viewer",
       "good-housekeeping-onboarding-modal",
+      "hearst-games-index",
       "motortrend-onboarding-modal",
       "newsstand-title-modal",
       "onboarding-modal",
@@ -1183,6 +1210,7 @@
       "brand-promotion-river-module",
       "community-client",
       "community-forums-page",
+      "community-home-river-card",
       "community-joined-groups-card",
       "content-reader-recommendations",
       "delish-shorts-viewer",
@@ -1233,12 +1261,15 @@
       "local-news-global-header",
       "hot-rod-events-page"
     ],
-    "hearst-plus-brand-wall": [
+    "community-joined-groups-card": [
       "community-forums-page",
-      "home-page"
+      "content-reader-context-rail",
+      "discovery-sidebar"
     ],
     "community-client": [
-      "community-forums-page"
+      "community-forums-page",
+      "community-home-river-card",
+      "home-page"
     ],
     "content-reader-model": [
       "community-forums-page",
@@ -1256,10 +1287,6 @@
       "home-page",
       "hot-rod-events-page"
     ],
-    "community-joined-groups-card": [
-      "content-reader-context-rail",
-      "discovery-sidebar"
-    ],
     "discovery-sidebar": [
       "content-reader-context-rail",
       "home-page"
@@ -1276,21 +1303,20 @@
       "contextual-river-advertisement",
       "home-page"
     ],
-    "onboarding-modal": [
-      "delish-clubs-module",
-      "delish-onboarding-modal",
-      "elle-onboarding-modal",
-      "good-housekeeping-onboarding-modal",
-      "motortrend-onboarding-modal",
-      "publication-onboarding-modal",
-      "home-page"
-    ],
     "fluent-emoji-art": [
       "delish-onboarding-modal",
       "elle-onboarding-modal",
       "good-housekeeping-onboarding-modal",
       "motortrend-onboarding-modal",
       "publication-onboarding-modal"
+    ],
+    "onboarding-modal": [
+      "delish-onboarding-modal",
+      "elle-onboarding-modal",
+      "good-housekeeping-onboarding-modal",
+      "motortrend-onboarding-modal",
+      "publication-onboarding-modal",
+      "home-page"
     ],
     "use-prefers-reduced-motion": [
       "delish-shorts-viewer",
@@ -1381,6 +1407,9 @@
       "home-page",
       "homepage-layouts"
     ],
+    "hearst-plus-brand-wall": [
+      "home-page"
+    ],
     "brand-instagram-module": [
       "home-page"
     ],
@@ -1392,6 +1421,9 @@
       "home-page"
     ],
     "feed-states": [
+      "home-page"
+    ],
+    "community-home-river-card": [
       "home-page"
     ],
     "reader-queue": [
@@ -1430,9 +1462,6 @@
     "delish-onboarding-modal": [
       "home-page"
     ],
-    "delish-clubs-module": [
-      "home-page"
-    ],
     "motortrend-onboarding-modal": [
       "home-page"
     ],
@@ -1464,6 +1493,9 @@
       "pagination-page"
     ],
     "brand-logo-marquee": [
+      "product-story-shell"
+    ],
+    "lifestyle-river-data": [
       "product-story-shell"
     ],
     "toggle": [
@@ -1565,7 +1597,7 @@
       ],
       "storybookStories": [],
       "storybookSpecification": null,
-      "lineCount": 780
+      "lineCount": 719
     },
     {
       "name": "architecture-page",
@@ -1609,9 +1641,15 @@
       "tokens": {
         "cssVariables": [
           "--font-newsreader",
-          "--font-geist-sans"
+          "--font-geist-sans",
+          "--hp-shadow-card"
         ],
-        "tailwindSemantics": [],
+        "tailwindSemantics": [
+          "border-border",
+          "bg-card",
+          "text-muted-foreground",
+          "text-primary"
+        ],
         "classes": []
       },
       "brandAware": false,
@@ -1623,7 +1661,7 @@
       ],
       "storybookStories": [],
       "storybookSpecification": null,
-      "lineCount": 147
+      "lineCount": 148
     },
     {
       "name": "article-blueprint-experience",
@@ -1882,7 +1920,6 @@
         "src/components/article-page.tsx",
         "src/components/hearst-plus/ambient-reader.tsx",
         "src/components/hearst-plus/brand-promotion-river-module.tsx",
-        "src/components/hearst-plus/community-forums-page.tsx",
         "src/components/hearst-plus/content-reader-masthead.tsx",
         "src/components/hearst-plus/delish-onboarding-modal.tsx",
         "src/components/hearst-plus/elle-onboarding-modal.tsx",
@@ -2218,24 +2255,29 @@
       ],
       "level": "template",
       "dependencies": [
-        "product-story-shell",
-        "ui/icons"
+        "product-story-shell"
       ],
       "tokens": {
         "cssVariables": [],
-        "tailwindSemantics": [],
+        "tailwindSemantics": [
+          "bg-background",
+          "text-foreground",
+          "border-border",
+          "text-primary",
+          "text-muted-foreground"
+        ],
         "classes": []
       },
       "brandAware": false,
       "responsive": true,
-      "hasHardcodedColors": true,
+      "hasHardcodedColors": false,
       "metadataPath": null,
       "applicationUseSites": [
         "src/app/design-agent/page.tsx"
       ],
       "storybookStories": [],
       "storybookSpecification": null,
-      "lineCount": 438
+      "lineCount": 62
     },
     {
       "name": "divider-page",
@@ -2741,7 +2783,7 @@
         "src/stories/FRE.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 234
+      "lineCount": 223
     },
     {
       "name": "site-header",
@@ -2968,6 +3010,7 @@
         "src/components/hearst-plus/brand-promotion-river-module.tsx",
         "src/components/hearst-plus/community-client.tsx",
         "src/components/hearst-plus/community-forums-page.tsx",
+        "src/components/hearst-plus/community-home-river-card.tsx",
         "src/components/hearst-plus/community-joined-groups-card.tsx",
         "src/components/hearst-plus/content-reader-recommendations.tsx",
         "src/components/hearst-plus/delish-shorts-viewer.tsx",
@@ -3032,6 +3075,7 @@
         "CommunityGroupChips",
         "CommunityGroupsToJoin",
         "CommunityComposer",
+        "CommunityRiverCard",
         "CommunityFeed",
         "CommunityGroupsDirectory",
         "CommunityThreadReplies",
@@ -3057,15 +3101,18 @@
           "--hp-surface",
           "--hp-shadow-card",
           "--text-token-4xs",
-          "--hp-background",
-          "--hp-text-ui"
+          "--hp-text-ui",
+          "--hp-section-title"
         ],
         "tailwindSemantics": [
           "text-primary-foreground",
           "text-primary",
           "bg-primary/10",
           "bg-primary",
+          "border-border",
+          "border-primary",
           "text-destructive",
+          "bg-muted",
           "border-primary/15"
         ],
         "classes": []
@@ -3075,11 +3122,13 @@
       "hasHardcodedColors": true,
       "metadataPath": null,
       "applicationUseSites": [
-        "src/components/hearst-plus/community-forums-page.tsx"
+        "src/components/hearst-plus/community-forums-page.tsx",
+        "src/components/hearst-plus/community-home-river-card.tsx",
+        "src/components/home-page.tsx"
       ],
       "storybookStories": [],
       "storybookSpecification": null,
-      "lineCount": 1120
+      "lineCount": 1156
     },
     {
       "name": "community-feedback-controls",
@@ -3133,12 +3182,10 @@
       ],
       "level": "template",
       "dependencies": [
-        "ui/icons",
         "home-page",
         "lifestyle-river-types",
-        "brand-logo",
         "hearst-plus/brand-source-icon",
-        "hearst-plus/hearst-plus-brand-wall",
+        "hearst-plus/community-joined-groups-card",
         "hearst-plus/community-client",
         "hearst-plus/content-reader-model",
         "hearst-plus/utility-bar",
@@ -3147,18 +3194,19 @@
       "tokens": {
         "cssVariables": [
           "--community-font-ui",
-          "--hp-surface",
-          "--hp-shadow-card",
           "--hp-text-secondary",
-          "--hp-border",
-          "--community-surface-soft",
-          "--hp-text-primary",
           "--text-token-4xs",
           "--hp-background",
+          "--hp-text-primary",
+          "--hp-border",
+          "--hp-surface",
+          "--hp-shadow-card",
           "--hp-text-ui",
-          "--hp-control-hover"
+          "--community-surface-soft"
         ],
         "tailwindSemantics": [
+          "border-border",
+          "bg-muted",
           "text-primary"
         ],
         "classes": [
@@ -3178,7 +3226,46 @@
       ],
       "storybookStories": [],
       "storybookSpecification": null,
-      "lineCount": 641
+      "lineCount": 559
+    },
+    {
+      "name": "community-home-river-card",
+      "path": "src/components/hearst-plus/community-home-river-card.tsx",
+      "exports": [
+        "CommunityHomeRiverCard"
+      ],
+      "level": "organism",
+      "dependencies": [
+        "ui/icons",
+        "hearst-plus/brand-source-icon",
+        "hearst-plus/community-client"
+      ],
+      "tokens": {
+        "cssVariables": [
+          "--hp-surface",
+          "--hp-shadow-card",
+          "--hp-text-secondary",
+          "--hp-text-primary",
+          "--hp-section-title"
+        ],
+        "tailwindSemantics": [
+          "border-border",
+          "bg-muted",
+          "text-muted-foreground",
+          "text-primary"
+        ],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": true,
+      "hasHardcodedColors": false,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/components/home-page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 81
     },
     {
       "name": "community-joined-groups-card",
@@ -3189,30 +3276,40 @@
       ],
       "level": "molecule",
       "dependencies": [
-        "hearst-plus/brand-source-icon"
+        "hearst-plus/brand-source-icon",
+        "ui/icons"
       ],
       "tokens": {
         "cssVariables": [
           "--hp-surface",
           "--hp-shadow-card",
           "--text-token-4xs",
+          "--hp-sidebar-heading",
+          "--color-primary",
+          "--primary",
           "--hp-text-secondary",
           "--hp-text-primary"
         ],
-        "tailwindSemantics": [],
+        "tailwindSemantics": [
+          "border-border",
+          "text-primary",
+          "border-border/70",
+          "bg-muted/50"
+        ],
         "classes": []
       },
       "brandAware": false,
       "responsive": false,
-      "hasHardcodedColors": true,
+      "hasHardcodedColors": false,
       "metadataPath": null,
       "applicationUseSites": [
+        "src/components/hearst-plus/community-forums-page.tsx",
         "src/components/hearst-plus/content-reader-context-rail.tsx",
         "src/components/hearst-plus/discovery-sidebar.tsx"
       ],
       "storybookStories": [],
       "storybookSpecification": null,
-      "lineCount": 132
+      "lineCount": 198
     },
     {
       "name": "content-reader-advertisement",
@@ -3254,7 +3351,7 @@
         "src/stories/HearstPlusReaderAdvertisement.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 206
+      "lineCount": 189
     },
     {
       "name": "content-reader-comments",
@@ -3514,47 +3611,7 @@
         "src/stories/HearstPlusRiverAdvertisement.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 486
-    },
-    {
-      "name": "delish-clubs-module",
-      "path": "src/components/hearst-plus/delish-clubs-module.tsx",
-      "exports": [
-        "DelishClubsModule"
-      ],
-      "level": "organism",
-      "dependencies": [
-        "ui/button",
-        "ui/icons",
-        "lifestyle-river-types",
-        "hearst-plus/onboarding-modal"
-      ],
-      "tokens": {
-        "cssVariables": [
-          "--delish-club-border",
-          "--delish-club-shell",
-          "--delish-club-ink",
-          "--hp-shadow-card",
-          "--text-token-4xs",
-          "--delish-club-red",
-          "--delish-club-muted",
-          "--delish-club-surface",
-          "--delish-club-red-soft",
-          "--delish-club-red-dark"
-        ],
-        "tailwindSemantics": [],
-        "classes": []
-      },
-      "brandAware": false,
-      "responsive": true,
-      "hasHardcodedColors": true,
-      "metadataPath": null,
-      "applicationUseSites": [
-        "src/components/home-page.tsx"
-      ],
-      "storybookStories": [],
-      "storybookSpecification": null,
-      "lineCount": 343
+      "lineCount": 462
     },
     {
       "name": "delish-onboarding-modal",
@@ -3587,7 +3644,7 @@
       ],
       "storybookStories": [],
       "storybookSpecification": null,
-      "lineCount": 1189
+      "lineCount": 1181
     },
     {
       "name": "delish-shorts-viewer",
@@ -3971,6 +4028,7 @@
         "ui/button",
         "ui/input",
         "ui/link",
+        "ui/use-modal-isolation",
         "ui/icons",
         "hearst-plus/story-actions"
       ],
@@ -4003,14 +4061,14 @@
       },
       "brandAware": false,
       "responsive": true,
-      "hasHardcodedColors": false,
+      "hasHardcodedColors": true,
       "metadataPath": null,
       "applicationUseSites": [
         "src/components/home-page.tsx"
       ],
       "storybookStories": [],
       "storybookSpecification": null,
-      "lineCount": 581
+      "lineCount": 735
     },
     {
       "name": "hearst-plus-brand-wall",
@@ -4032,7 +4090,6 @@
       "hasHardcodedColors": false,
       "metadataPath": null,
       "applicationUseSites": [
-        "src/components/hearst-plus/community-forums-page.tsx",
         "src/components/home-page.tsx"
       ],
       "storybookStories": [],
@@ -4434,14 +4491,16 @@
         "hearst-plus/newsstand/newsstand-title-modal"
       ],
       "tokens": {
-        "cssVariables": [],
+        "cssVariables": [
+          "--palette-alert-info-1000"
+        ],
         "tailwindSemantics": [
           "bg-foreground",
           "text-background",
           "border-foreground",
-          "text-muted-foreground",
           "bg-background",
           "text-primary",
+          "text-muted-foreground",
           "bg-border"
         ],
         "classes": [
@@ -4543,7 +4602,6 @@
       "hasHardcodedColors": false,
       "metadataPath": null,
       "applicationUseSites": [
-        "src/components/hearst-plus/delish-clubs-module.tsx",
         "src/components/hearst-plus/delish-onboarding-modal.tsx",
         "src/components/hearst-plus/elle-onboarding-modal.tsx",
         "src/components/hearst-plus/good-housekeeping-onboarding-modal.tsx",
@@ -4832,8 +4890,7 @@
       ],
       "tokens": {
         "cssVariables": [
-          "--text-token-4xs",
-          "--palette-alert-success-600"
+          "--text-token-4xs"
         ],
         "tailwindSemantics": [
           "text-muted-foreground"
@@ -4858,7 +4915,7 @@
         "src/stories/HearstPlusStoryMetadata.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 75
+      "lineCount": 63
     },
     {
       "name": "story-presentation",
@@ -5206,6 +5263,8 @@
         "hearst-plus/use-progressive-feed",
         "hearst-plus/feed-states",
         "hearst-plus/brand-source-icon",
+        "hearst-plus/community-home-river-card",
+        "hearst-plus/community-client",
         "hearst-plus/story-metadata",
         "hearst-plus/reader-action-bar",
         "hearst-plus/reader-article-body",
@@ -5236,7 +5295,6 @@
         "hearst-plus/brand-promotion-model",
         "hearst-plus/onboarding-modal",
         "hearst-plus/delish-onboarding-modal",
-        "hearst-plus/delish-clubs-module",
         "hearst-plus/motortrend-onboarding-modal",
         "hearst-plus/publication-onboarding-modal",
         "hearst-plus/stakeholder-personalization-console",
@@ -5339,7 +5397,7 @@
         "src/stories/LifestyleDestinationApp.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 7812
+      "lineCount": 7889
     },
     {
       "name": "homepage-layouts",
@@ -5469,16 +5527,8 @@
         "src/app/autos/[brandSlug]/events/page.tsx",
         "src/app/autos/[brandSlug]/events/power-tour/page.tsx"
       ],
-      "storybookStories": [
-        "src/stories/HearstPlusHotRodEvents.stories.tsx"
-      ],
-      "storybookSpecification": {
-        "kind": "direct",
-        "stories": [
-          "src/stories/HearstPlusHotRodEvents.stories.tsx"
-        ],
-        "rationale": "Five direct stories import the exact routed exports and specify the event hub, Power Tour detail, Drag Week detail, calendar/list interaction, event and ticket states, and the two distinct mobile compositions."
-      },
+      "storybookStories": [],
+      "storybookSpecification": null,
       "lineCount": 912
     },
     {
@@ -5803,7 +5853,6 @@
         "totalTVStations",
         "totalNewspapers",
         "totalEntertainmentChannels",
-        "totalEntertainmentShows",
         "totalPortfolioSources",
         "prototypeStats",
         "journeys",
@@ -5811,10 +5860,11 @@
         "systemSteps",
         "ProductPageId"
       ],
-      "level": "molecule",
+      "level": "organism",
       "dependencies": [
         "brand-logo-marquee",
-        "fre/site-footer"
+        "fre/site-footer",
+        "lifestyle-river-data"
       ],
       "tokens": {
         "cssVariables": [
@@ -5822,16 +5872,21 @@
           "--foreground",
           "--palette-content-knockout",
           "--muted",
+          "--hp-utility-bar",
           "--hp-shadow-card",
           "--component-navigation-utility-content-accent"
         ],
         "tailwindSemantics": [
+          "border-primary-foreground/20",
+          "text-primary-foreground",
           "border-border",
           "bg-card",
-          "text-primary",
+          "bg-muted",
           "text-muted-foreground",
-          "bg-secondary",
           "text-foreground",
+          "text-primary",
+          "bg-muted/40",
+          "text-card-foreground",
           "bg-muted/35",
           "bg-primary",
           "bg-foreground",
@@ -5842,13 +5897,14 @@
       },
       "brandAware": true,
       "responsive": true,
-      "hasHardcodedColors": true,
+      "hasHardcodedColors": false,
       "metadataPath": "src/components/product-story-shell.metadata.ts",
       "applicationUseSites": [
         "src/app/about-hearst-magazines/page.tsx",
         "src/app/ad-logic/page.tsx",
         "src/app/hds-brand-framework/page.tsx",
         "src/app/hearst-article-blueprint/page.tsx",
+        "src/app/hearst-plus-reference/page.tsx",
         "src/app/hearst-plus/accessibility-ai/page.tsx",
         "src/app/hearst-product-blueprint/page.tsx",
         "src/app/token-architecture/page.tsx",
@@ -5868,7 +5924,7 @@
         ],
         "rationale": "The direct stories import the exact routed exports and separate them from reader-facing components. They specify desktop and phone navigation, current-page semantics, 44px targets, the non-interactive diagram boundary, both story-card concepts, portfolio and destination maps, journey/ranking evidence, architecture/palette guidance, brand style tiles, marquee behavior, and the shared footer."
       },
-      "lineCount": 803
+      "lineCount": 817
     },
     {
       "name": "reader-account-ui",
@@ -6144,7 +6200,7 @@
           "src/stories/ThemeRuntime.stories.tsx",
           "src/stories/Typography.stories.tsx"
         ],
-        "rationale": "ThemeRuntime directly mounts the exact production ThemeProvider and verifies its context, generated variables, brand switching, Hearst Flux dark default, mode toggling, root color-scheme synchronization, and disabled-persistence boundary. The other listed stories are source-graph consumers of the provider; the global decorator separately implements the same complete context shape for their previews."
+        "rationale": "ThemeRuntime directly mounts the exact production ThemeProvider and verifies its context, generated variables, brand switching, system color-mode preference, mode toggling, root color-scheme synchronization, and disabled-persistence boundary. The other listed stories are source-graph consumers of the provider; the global decorator separately implements the same complete context shape for their previews."
       },
       "lineCount": 182
     },
@@ -6643,7 +6699,6 @@
         "src/components/hearst-plus/community-feedback-controls.tsx",
         "src/components/hearst-plus/content-reader-comments.tsx",
         "src/components/hearst-plus/content-reader-masthead.tsx",
-        "src/components/hearst-plus/delish-clubs-module.tsx",
         "src/components/hearst-plus/delish-onboarding-modal.tsx",
         "src/components/hearst-plus/elle-onboarding-modal.tsx",
         "src/components/hearst-plus/feed-states.tsx",

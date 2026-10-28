@@ -1,0 +1,853 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e5]:
+      - navigation "Utility navigation" [ref=e6]:
+        - link "Shop" [ref=e7] [cursor=pointer]:
+          - /url: /hearst-plus/shopping/
+        - link "Newsletter" [ref=e8] [cursor=pointer]:
+          - /url: https://www.hearst.co.uk/newsletter
+      - navigation "Hearst destination sections" [ref=e9]:
+        - generic [ref=e10]:
+          - link "All" [ref=e11] [cursor=pointer]:
+            - /url: /hearst-plus/
+          - link "Lifestyle" [ref=e12] [cursor=pointer]:
+            - /url: /hearst-lifestyle/
+          - link "Autos" [ref=e13] [cursor=pointer]:
+            - /url: /hearst-autos/
+          - link "Fashion & Luxury" [ref=e14] [cursor=pointer]:
+            - /url: /hearst-flux/
+          - link "Enthusiast & Wellness" [ref=e15] [cursor=pointer]:
+            - /url: /hearst-ew/
+      - button "Sign in or sign up" [ref=e17]:
+        - generic [ref=e18]: Sign in / Sign up
+    - generic [ref=e20]:
+      - button "Switch to dark mode" [ref=e22]
+      - generic [ref=e23]:
+        - img "Delish"
+      - button "Search" [ref=e25]
+    - navigation "Delish sections" [ref=e27]:
+      - generic [ref=e28]:
+        - button "For You" [pressed] [ref=e29]
+        - button "Food News" [ref=e30]
+        - button "Food" [ref=e31]
+        - button "Kitchen Tools" [ref=e32]
+        - button "Videos" [ref=e33]
+    - generic:
+      - navigation:
+        - button [pressed]: For You
+        - button: Food News
+        - button: Food
+        - button: Kitchen Tools
+        - button: Videos
+    - generic [ref=e39]:
+      - complementary "Lifestyle discovery sidebar" [ref=e40]:
+        - generic [ref=e41]:
+          - paragraph [ref=e43]: Your Daily Habit
+          - generic [ref=e45]:
+            - 'button "Open story: The 5 Golden Rules Of Pub-Style Burgers With Ronnie Faust" [ref=e46]':
+              - paragraph [ref=e47]: Kitchen Tools
+              - paragraph [ref=e48]: The 5 Golden Rules Of Pub-Style Burgers With Ronnie Faust
+              - paragraph [ref=e49]: Delish · Colton Trowbridge · Popularity 77
+            - 'button "Open story: 110 People Have Been Sickened In A Salmonella Outbreak Tied To Chipotle" [ref=e50]':
+              - paragraph [ref=e51]: Food News
+              - paragraph [ref=e52]: 110 People Have Been Sickened In A Salmonella Outbreak Tied To Chipotle
+              - paragraph [ref=e53]: Delish · Amanda Mactas · Popularity 86
+            - 'button "Open story: One-Pan Baked Feta Gnocchi" [ref=e54]':
+              - paragraph [ref=e55]: Food
+              - paragraph [ref=e56]: One-Pan Baked Feta Gnocchi
+              - paragraph [ref=e57]: Delish · Delish editors · Popularity 89
+        - generic [ref=e58]:
+          - paragraph [ref=e60]: Global Story Inventory
+          - generic [ref=e61]:
+            - button "Clear" [ref=e63]
+            - generic [ref=e64]:
+              - button "Cosmopolitan 62" [ref=e65]:
+                - generic [ref=e66]:
+                  - generic [ref=e67]: C
+                  - generic [ref=e70]: Cosmopolitan
+                - generic [ref=e71]: "62"
+              - button "Country Living 55" [ref=e72]:
+                - generic [ref=e73]:
+                  - generic [ref=e74]: CL
+                  - generic [ref=e77]: Country Living
+                - generic [ref=e78]: "55"
+              - button "Delish 57" [pressed] [ref=e79]:
+                - generic [ref=e80]:
+                  - generic [ref=e81]: D
+                  - generic [ref=e84]: Delish
+                - generic [ref=e85]: "57"
+              - button "Good Housekeeping 63" [ref=e86]:
+                - generic [ref=e87]:
+                  - generic [ref=e88]: GH
+                  - generic [ref=e91]: Good Housekeeping
+                - generic [ref=e92]: "63"
+              - button "House Beautiful 61" [ref=e93]:
+                - generic [ref=e94]:
+                  - generic [ref=e95]: HB
+                  - generic [ref=e98]: House Beautiful
+                - generic [ref=e99]: "61"
+              - button "The Pioneer Woman 28" [ref=e100]:
+                - generic [ref=e101]:
+                  - generic [ref=e102]: TPW
+                  - generic [ref=e105]: The Pioneer Woman
+                - generic [ref=e106]: "28"
+              - button "Prevention 62" [ref=e107]:
+                - generic [ref=e108]:
+                  - generic [ref=e109]: P
+                  - generic [ref=e112]: Prevention
+                - generic [ref=e113]: "62"
+              - button "Redbook 52" [ref=e114]:
+                - generic [ref=e115]:
+                  - generic [ref=e116]: R
+                  - generic [ref=e119]: Redbook
+                - generic [ref=e120]: "52"
+              - button "Seventeen 64" [ref=e121]:
+                - generic [ref=e122]:
+                  - generic [ref=e123]: S
+                  - generic [ref=e126]: Seventeen
+                - generic [ref=e127]: "64"
+              - button "Woman's Day 38" [ref=e128]:
+                - generic [ref=e129]:
+                  - generic [ref=e130]: WD
+                  - generic [ref=e133]: Woman's Day
+                - generic [ref=e134]: "38"
+            - paragraph [ref=e135]: Complete section inventory. Select a brand to open its publication.
+        - generic [ref=e136]:
+          - paragraph [ref=e138]: Follow Topics
+          - generic [ref=e140]:
+            - button "Food" [pressed] [ref=e141]
+            - button "Food News" [ref=e142]
+            - button "Home" [pressed] [ref=e143]
+            - button "Lifestyle" [ref=e144]
+            - button "Entertainment" [ref=e145]
+            - button "Style" [ref=e146]
+            - button "Wellness" [ref=e147]
+            - button "Style Beauty" [ref=e148]
+            - button "Kitchen Tools" [ref=e149]
+            - button "Relationships" [ref=e150]
+        - generic [ref=e151]:
+          - paragraph [ref=e153]: Collections
+          - generic [ref=e155]:
+            - paragraph [ref=e156]: Dinner ideas
+            - paragraph [ref=e157]: Weekend projects
+            - paragraph [ref=e158]: Sleep better
+            - paragraph [ref=e159]: Saved stories and more-like-this actions tune these collections over time.
+      - main "Personalized lifestyle story river" [ref=e160]:
+        - heading "Delish personalized story feed" [level=1] [ref=e161]
+        - article "Featured stories" [ref=e162]:
+          - paragraph [ref=e163]: Swipe left or right to move between featured stories.
+          - status "Featured story status" [ref=e164]: "Story 1 of 5: Arden Myrin Says Shared-Plate Restaurants Could Leave You With A $7,000 Bill"
+          - generic [ref=e165]:
+            - generic [ref=e166]:
+              - button [ref=e167]:
+                - generic [ref=e172]:
+                  - generic [ref=e173]:
+                    - generic [ref=e174]: D
+                    - generic [ref=e177]: Delish
+                    - generic [ref=e178]: /
+                    - generic [ref=e179]: Video · 0:37
+                    - generic [ref=e182]: /
+                    - generic [ref=e183]: "14"
+                  - heading [level=2] [ref=e186]: "Inside The Cake Boss Kitchen: Marriage, Mayhem & Mascarpone"
+              - 'button "Open story: Arden Myrin Says Shared-Plate Restaurants Could Leave You With A $7,000 Bill" [ref=e187]':
+                - 'img "Delish: Arden Myrin Says Shared-Plate Restaurants Could Leave You With A $7,000 Bill" [ref=e190]'
+                - generic [ref=e192]:
+                  - generic [ref=e193]:
+                    - generic [ref=e194]: D
+                    - generic [ref=e197]: Delish
+                    - generic [ref=e198]: /
+                    - generic [ref=e199]: "14"
+                  - heading "Arden Myrin Says Shared-Plate Restaurants Could Leave You With A $7,000 Bill" [level=2] [ref=e202]
+              - button [ref=e203]:
+                - generic [ref=e208]:
+                  - generic [ref=e209]:
+                    - generic [ref=e210]: D
+                    - generic [ref=e213]: Delish
+                    - generic [ref=e214]: /
+                    - generic [ref=e215]: "15"
+                  - heading [level=2] [ref=e218]: Rider Strong Shares The One Snack That Always Disappeared From The ‘Boy Meets World’ Set
+              - button [ref=e219]:
+                - generic [ref=e224]:
+                  - generic [ref=e225]:
+                    - generic [ref=e226]: D
+                    - generic [ref=e229]: Delish
+                    - generic [ref=e230]: /
+                    - generic [ref=e231]: "14"
+                  - heading [level=2] [ref=e234]: Auntie Anne's New Gabby's Dollhouse Meal Comes With the Cutest Take-Home Surprise
+              - button [ref=e235]:
+                - generic [ref=e240]:
+                  - generic [ref=e241]:
+                    - generic [ref=e242]: D
+                    - generic [ref=e245]: Delish
+                    - generic [ref=e246]: /
+                    - generic [ref=e247]: "22"
+                  - heading [level=2] [ref=e250]: These 15 Cocktails Are The Most Refreshing Sips Of The Summer
+              - button [ref=e251]:
+                - generic [ref=e256]:
+                  - generic [ref=e257]:
+                    - generic [ref=e258]: D
+                    - generic [ref=e261]: Delish
+                    - generic [ref=e262]: /
+                    - generic [ref=e263]: Video · 0:37
+                    - generic [ref=e266]: /
+                    - generic [ref=e267]: "14"
+                  - heading [level=2] [ref=e270]: "Inside The Cake Boss Kitchen: Marriage, Mayhem & Mascarpone"
+              - button [ref=e271]:
+                - generic [ref=e276]:
+                  - generic [ref=e277]:
+                    - generic [ref=e278]: D
+                    - generic [ref=e281]: Delish
+                    - generic [ref=e282]: /
+                    - generic [ref=e283]: "14"
+                  - heading [level=2] [ref=e286]: Arden Myrin Says Shared-Plate Restaurants Could Leave You With A $7,000 Bill
+            - generic [ref=e287]:
+              - generic "Story 1 of 5" [ref=e288]: 1 of 5
+              - generic [ref=e290]:
+                - button "Previous featured story" [ref=e291]
+                - button "Pause slider" [ref=e294]
+                - button "Next featured story" [ref=e297]
+          - generic [ref=e300]:
+            - generic "Featured story slides" [ref=e301]:
+              - 'button "Show story 1: Arden Myrin Says Shared-Plate Restaurants Could Leave You With A $7,000 Bill" [ref=e302]'
+              - 'button "Show story 2: Rider Strong Shares The One Snack That Always Disappeared From The ‘Boy Meets World’ Set" [ref=e304]'
+              - 'button "Show story 3: Auntie Anne''s New Gabby''s Dollhouse Meal Comes With the Cutest Take-Home Surprise" [ref=e306]'
+              - 'button "Show story 4: These 15 Cocktails Are The Most Refreshing Sips Of The Summer" [ref=e308]'
+              - 'button "Show story 5: Inside The Cake Boss Kitchen: Marriage, Mayhem & Mascarpone" [ref=e310]'
+            - generic [ref=e312]:
+              - button "Save" [ref=e313]
+              - button "More like this" [ref=e314]
+              - button "Follow Delish" [ref=e316]
+        - region [ref=e318]:
+          - generic [ref=e319]:
+            - generic [ref=e320]:
+              - generic [ref=e321]: D
+              - generic [ref=e324]:
+                - heading "Delish Shorts" [level=2] [ref=e325]
+                - status [ref=e326]: 2 vertical recipe videos
+            - generic "Delish Shorts carousel controls" [ref=e327]:
+              - button "Previous Delish Shorts" [disabled] [ref=e328]
+              - button "Next Delish Shorts" [disabled] [ref=e331]
+          - list "Vertical videos from Delish" [ref=e334]:
+            - listitem [ref=e335]:
+              - 'button "Open Delish short: Fried Chicken Caesar Sandwich" [ref=e336]':
+                - generic [ref=e337]: 0:35
+                - generic [ref=e342]: Fried Chicken Caesar Sandwich
+                - generic [ref=e343]: Delish · Food
+            - listitem [ref=e344]:
+              - 'button "Open Delish short: Creamy Tuscan Chicken Chili" [ref=e345]':
+                - generic [ref=e346]: 0:54
+                - generic [ref=e351]: Creamy Tuscan Chicken Chili
+                - generic [ref=e352]: Delish · Food
+        - article [ref=e353] [cursor=pointer]:
+          - 'button "Open story: 5 Under $5: The Best New Products To Shop At Whole Foods This Month" [ref=e354]'
+          - 'img "Delish: 5 Under $5: The Best New Products To Shop At Whole Foods This Month" [ref=e356]'
+          - generic [ref=e357]:
+            - generic [ref=e358]:
+              - generic [ref=e359]: Trending
+              - generic [ref=e360]: Recipe
+              - link "Open Delish brand page" [ref=e361]:
+                - /url: /lifestyle/delish/
+                - generic [ref=e362]: D
+                - generic [ref=e365]: Delish · Food News · Amanda Mactas
+            - 'heading "5 Under $5: The Best New Products To Shop At Whole Foods This Month" [level=2] [ref=e366]'
+            - paragraph [ref=e367]: Who doesn’t love a steal?!
+            - generic [ref=e368]:
+              - generic [ref=e369]:
+                - paragraph [ref=e370]: 30 min
+                - paragraph [ref=e371]: Total
+              - generic [ref=e372]:
+                - paragraph [ref=e373]: "3"
+                - paragraph [ref=e374]: Servings
+              - generic [ref=e375]:
+                - paragraph [ref=e376]: Easy
+                - paragraph [ref=e379]: Level
+            - 'group "Actions for 5 Under $5: The Best New Products To Shop At Whole Foods This Month" [ref=e380]':
+              - button "Save story" [ref=e381]: Save
+              - 'button "Show more stories like 5 Under $5: The Best New Products To Shop At Whole Foods This Month" [ref=e382]': More like this
+              - button "Open story with 19 comments" [ref=e383]: "19"
+              - 'button "Hide story: 5 Under $5: The Best New Products To Shop At Whole Foods This Month" [ref=e385]': Hide
+        - article [ref=e386] [cursor=pointer]:
+          - 'button "Open story: Is It Safe To Eat Taco Bell Again? A Food Safety Expert Explains" [ref=e387]'
+          - 'img "Delish: Is It Safe To Eat Taco Bell Again? A Food Safety Expert Explains" [ref=e389]'
+          - generic [ref=e390]:
+            - generic [ref=e391]:
+              - generic [ref=e392]: Editor Pick
+              - generic [ref=e393]: Recipe
+              - link "Open Delish brand page" [ref=e394]:
+                - /url: /lifestyle/delish/
+                - generic [ref=e395]: D
+                - generic [ref=e398]: Delish · Food News · Gabby Romero
+            - heading "Is It Safe To Eat Taco Bell Again? A Food Safety Expert Explains" [level=2] [ref=e399]
+            - paragraph [ref=e400]: Read this before ordering your next Crunchwrap.
+            - generic [ref=e401]:
+              - generic [ref=e402]:
+                - paragraph [ref=e403]: 35 min
+                - paragraph [ref=e404]: Total
+              - generic [ref=e405]:
+                - paragraph [ref=e406]: "4"
+                - paragraph [ref=e407]: Servings
+              - generic [ref=e408]:
+                - paragraph [ref=e409]: Easy
+                - paragraph [ref=e412]: Level
+            - group "Actions for Is It Safe To Eat Taco Bell Again? A Food Safety Expert Explains" [ref=e413]:
+              - button "Save story" [ref=e414]: Save
+              - button "Show more stories like Is It Safe To Eat Taco Bell Again? A Food Safety Expert Explains" [ref=e415]: More like this
+              - button "Open story with 20 comments" [ref=e416]: "20"
+              - 'button "Hide story: Is It Safe To Eat Taco Bell Again? A Food Safety Expert Explains" [ref=e418]': Hide
+        - article [ref=e419] [cursor=pointer]:
+          - 'button "Open story: The Right Way To Load Silverware In The Dishwasher, According To Experts" [ref=e420]'
+          - 'img "Delish: The Right Way To Load Silverware In The Dishwasher, According To Experts" [ref=e422]'
+          - generic [ref=e423]:
+            - generic [ref=e424]:
+              - generic [ref=e425]: Most Popular
+              - link "Open Delish brand page" [ref=e426]:
+                - /url: /lifestyle/delish/
+                - generic [ref=e427]: D
+                - generic [ref=e430]: Delish · Kitchen Tools · Gabby Romero
+            - heading "The Right Way To Load Silverware In The Dishwasher, According To Experts" [level=2] [ref=e431]
+            - paragraph [ref=e432]: Get a load of this!
+            - group "Actions for The Right Way To Load Silverware In The Dishwasher, According To Experts" [ref=e433]:
+              - button "Save story" [ref=e434]: Save
+              - button "Show more stories like The Right Way To Load Silverware In The Dishwasher, According To Experts" [ref=e435]: More like this
+              - button "Open story with 12 comments" [ref=e436]: "12"
+              - 'button "Hide story: The Right Way To Load Silverware In The Dishwasher, According To Experts" [ref=e438]': Hide
+        - article [ref=e439] [cursor=pointer]:
+          - 'button "Open story: Wendy’s Brought Back Its Pretzel Bacon Pub Burger & It Deserves The Hype" [ref=e440]'
+          - 'img "Delish: Wendy’s Brought Back Its Pretzel Bacon Pub Burger & It Deserves The Hype" [ref=e442]'
+          - generic [ref=e443]:
+            - generic [ref=e444]:
+              - generic [ref=e445]: Most Popular
+              - generic [ref=e446]: Recipe
+              - link "Open Delish brand page" [ref=e447]:
+                - /url: /lifestyle/delish/
+                - generic [ref=e448]: D
+                - generic [ref=e451]: Delish · Food News · Steven Morea
+            - heading "Wendy’s Brought Back Its Pretzel Bacon Pub Burger & It Deserves The Hype" [level=2] [ref=e452]
+            - paragraph [ref=e453]: Pub food meets fall.
+            - generic [ref=e454]:
+              - generic [ref=e455]:
+                - paragraph [ref=e456]: 20 min
+                - paragraph [ref=e457]: Total
+              - generic [ref=e458]:
+                - paragraph [ref=e459]: "3"
+                - paragraph [ref=e460]: Servings
+              - generic [ref=e461]:
+                - paragraph [ref=e462]: Easy
+                - paragraph [ref=e465]: Level
+            - group "Actions for Wendy’s Brought Back Its Pretzel Bacon Pub Burger & It Deserves The Hype" [ref=e466]:
+              - button "Save story" [ref=e467]: Save
+              - button "Show more stories like Wendy’s Brought Back Its Pretzel Bacon Pub Burger & It Deserves The Hype" [ref=e468]: More like this
+              - button "Open story with 14 comments" [ref=e469]: "14"
+              - 'button "Hide story: Wendy’s Brought Back Its Pretzel Bacon Pub Burger & It Deserves The Hype" [ref=e471]': Hide
+        - article [ref=e472] [cursor=pointer]:
+          - 'button "Open story: Upside-Down Plum Cake" [ref=e473]'
+          - 'img "Delish: Upside-Down Plum Cake" [ref=e475]'
+          - generic [ref=e476]:
+            - generic [ref=e477]:
+              - generic [ref=e478]: Continue
+              - generic [ref=e479]: Recipe
+              - link "Open Delish brand page" [ref=e480]:
+                - /url: /lifestyle/delish/
+                - generic [ref=e481]: D
+                - generic [ref=e484]: Delish · Food · Delish editors
+            - heading "Upside-Down Plum Cake" [level=2] [ref=e485]
+            - paragraph [ref=e486]: Delish editors recommend this food story.
+            - generic [ref=e487]:
+              - generic [ref=e488]:
+                - paragraph [ref=e489]: 35 min
+                - paragraph [ref=e490]: Total
+              - generic [ref=e491]:
+                - paragraph [ref=e492]: "4"
+                - paragraph [ref=e493]: Servings
+              - generic [ref=e494]:
+                - paragraph [ref=e495]: Easy
+                - paragraph [ref=e498]: Level
+            - group "Actions for Upside-Down Plum Cake" [ref=e499]:
+              - button "Save story" [ref=e500]: Save
+              - button "Show more stories like Upside-Down Plum Cake" [ref=e501]: More like this
+              - button "Open story with 20 comments" [ref=e502]: "20"
+              - 'button "Hide story: Upside-Down Plum Cake" [ref=e504]': Hide
+        - region [ref=e505]:
+          - generic [ref=e507]:
+            - link "Open Good Housekeeping publication":
+              - /url: /lifestyle/good-housekeeping/
+              - img "Good Housekeeping"
+            - generic [ref=e509]:
+              - 'heading "Brand spotlight: Good Housekeeping" [level=2] [ref=e510]': Brand spotlight
+              - paragraph [ref=e511]: Explore Home from Good Housekeeping.
+          - generic [ref=e513]:
+            - 'button "Open story: Our Editor-in-Chief Shares Her Favorite Holiday Traditions" [ref=e514]':
+              - 'img "Good Housekeeping: Our Editor-in-Chief Shares Her Favorite Holiday Traditions" [ref=e515]'
+              - generic [ref=e516]:
+                - generic [ref=e517]: Our Editor-in-Chief Shares Her Favorite Holiday Traditions
+                - generic [ref=e518]: See how Elspeth Velten’s time-honored holiday activity is made easier with DoorDash.
+            - generic [ref=e519]:
+              - 'button "Open story: 15 Thoughtful Condolence Messages" [ref=e520]':
+                - 'img "Good Housekeeping: 15 Thoughtful Condolence Messages" [ref=e521]'
+                - generic [ref=e522]:
+                  - generic [ref=e523]: 15 Thoughtful Condolence Messages
+                  - generic [ref=e524]: Home · Good Housekeeping editors
+              - 'button "Open story: The Best Dad Jokes Of All Time" [ref=e525]':
+                - 'img "Good Housekeeping: The Best Dad Jokes Of All Time" [ref=e526]'
+                - generic [ref=e527]:
+                  - generic [ref=e528]: The Best Dad Jokes Of All Time
+                  - generic [ref=e529]: Home · Good Housekeeping editors
+              - 'button "Open story: How to Keep Your Air Conditioner Clean" [ref=e530]':
+                - 'img "Good Housekeeping: How to Keep Your Air Conditioner Clean" [ref=e531]'
+                - generic [ref=e532]:
+                  - generic [ref=e533]: How to Keep Your Air Conditioner Clean
+                  - generic [ref=e534]: Home · Good Housekeeping editors
+        - article [ref=e535] [cursor=pointer]:
+          - 'button "Open story: The Best Budget-Friendly Steaks To Buy, According To Experts" [ref=e536]'
+          - 'img "Delish: The Best Budget-Friendly Steaks To Buy, According To Experts" [ref=e538]'
+          - generic [ref=e539]:
+            - generic [ref=e540]:
+              - generic [ref=e541]: Trending
+              - generic [ref=e542]: Recipe
+              - link "Open Delish brand page" [ref=e543]:
+                - /url: /lifestyle/delish/
+                - generic [ref=e544]: D
+                - generic [ref=e547]: Delish · Food · Gabby Romero
+            - heading "The Best Budget-Friendly Steaks To Buy, According To Experts" [level=2] [ref=e548]
+            - paragraph [ref=e549]: Don’t sleep on these cheap cuts.
+            - generic [ref=e550]:
+              - generic [ref=e551]:
+                - paragraph [ref=e552]: 45 min
+                - paragraph [ref=e553]: Total
+              - generic [ref=e554]:
+                - paragraph [ref=e555]: "6"
+                - paragraph [ref=e556]: Servings
+              - generic [ref=e557]:
+                - paragraph [ref=e558]: Easy
+                - paragraph [ref=e561]: Level
+            - group "Actions for The Best Budget-Friendly Steaks To Buy, According To Experts" [ref=e562]:
+              - button "Save story" [ref=e563]: Save
+              - button "Show more stories like The Best Budget-Friendly Steaks To Buy, According To Experts" [ref=e564]: More like this
+              - button "Open story with 13 comments" [ref=e565]: "13"
+              - 'button "Hide story: The Best Budget-Friendly Steaks To Buy, According To Experts" [ref=e567]': Hide
+        - article [ref=e568] [cursor=pointer]:
+          - 'button "Open story: 21 Grab & Go Breakfast Ideas For The Busiest Of Mornings" [ref=e569]'
+          - 'img "Delish: 21 Grab & Go Breakfast Ideas For The Busiest Of Mornings" [ref=e571]'
+          - generic [ref=e572]:
+            - generic [ref=e573]:
+              - generic [ref=e574]: Editor Pick
+              - generic [ref=e575]: Recipe
+              - link "Open Delish brand page" [ref=e576]:
+                - /url: /lifestyle/delish/
+                - generic [ref=e577]: D
+                - generic [ref=e580]: Delish · Food · Colton Trowbridge
+            - heading "21 Grab & Go Breakfast Ideas For The Busiest Of Mornings" [level=2] [ref=e581]
+            - paragraph [ref=e582]: These easy breakfasts make rushing a whole lot more delicious.
+            - generic [ref=e583]:
+              - generic [ref=e584]:
+                - paragraph [ref=e585]: 50 min
+                - paragraph [ref=e586]: Total
+              - generic [ref=e587]:
+                - paragraph [ref=e588]: "2"
+                - paragraph [ref=e589]: Servings
+              - generic [ref=e590]:
+                - paragraph [ref=e591]: Easy
+                - paragraph [ref=e594]: Level
+            - group "Actions for 21 Grab & Go Breakfast Ideas For The Busiest Of Mornings" [ref=e595]:
+              - button "Save story" [ref=e596]: Save
+              - button "Show more stories like 21 Grab & Go Breakfast Ideas For The Busiest Of Mornings" [ref=e597]: More like this
+              - button "Open story with 13 comments" [ref=e598]: "13"
+              - 'button "Hide story: 21 Grab & Go Breakfast Ideas For The Busiest Of Mornings" [ref=e600]': Hide
+        - article [ref=e601] [cursor=pointer]:
+          - 'button "Open story: Rice vs. Pasta: Which Is Better For Blood Sugar?" [ref=e602]'
+          - 'img "Delish: Rice vs. Pasta: Which Is Better For Blood Sugar?" [ref=e604]'
+          - generic [ref=e605]:
+            - generic [ref=e606]:
+              - generic [ref=e607]: Continue
+              - generic [ref=e608]: Recipe
+              - link "Open Delish brand page" [ref=e609]:
+                - /url: /lifestyle/delish/
+                - generic [ref=e610]: D
+                - generic [ref=e613]: Delish · Food · Taylor Ann Spencer
+            - 'heading "Rice vs. Pasta: Which Is Better For Blood Sugar?" [level=2] [ref=e614]'
+            - paragraph [ref=e615]: Well, it’s complicated.
+            - generic [ref=e616]:
+              - generic [ref=e617]:
+                - paragraph [ref=e618]: 20 min
+                - paragraph [ref=e619]: Total
+              - generic [ref=e620]:
+                - paragraph [ref=e621]: "3"
+                - paragraph [ref=e622]: Servings
+              - generic [ref=e623]:
+                - paragraph [ref=e624]: Easy
+                - paragraph [ref=e627]: Level
+            - 'group "Actions for Rice vs. Pasta: Which Is Better For Blood Sugar?" [ref=e628]':
+              - button "Save story" [ref=e629]: Save
+              - 'button "Show more stories like Rice vs. Pasta: Which Is Better For Blood Sugar?" [ref=e630]': More like this
+              - button "Open story with 14 comments" [ref=e631]: "14"
+              - 'button "Hide story: Rice vs. Pasta: Which Is Better For Blood Sugar?" [ref=e633]': Hide
+        - article [ref=e634] [cursor=pointer]:
+          - 'button "Open story: The Cyclospora Outbreak Has Turned Deadly After More Than 18,000 Reported Cases" [ref=e635]'
+          - 'img "Delish: The Cyclospora Outbreak Has Turned Deadly After More Than 18,000 Reported Cases" [ref=e637]'
+          - generic [ref=e638]:
+            - generic [ref=e639]:
+              - generic [ref=e640]: Continue
+              - generic [ref=e641]: Recipe
+              - link "Open Delish brand page" [ref=e642]:
+                - /url: /lifestyle/delish/
+                - generic [ref=e643]: D
+                - generic [ref=e646]: Delish · Food News · Amanda Mactas
+            - heading "The Cyclospora Outbreak Has Turned Deadly After More Than 18,000 Reported Cases" [level=2] [ref=e647]
+            - paragraph [ref=e648]: What to know as officials investigate clusters across the U.S.
+            - generic [ref=e649]:
+              - generic [ref=e650]:
+                - paragraph [ref=e651]: 50 min
+                - paragraph [ref=e652]: Total
+              - generic [ref=e653]:
+                - paragraph [ref=e654]: "3"
+                - paragraph [ref=e655]: Servings
+              - generic [ref=e656]:
+                - paragraph [ref=e657]: Easy
+                - paragraph [ref=e660]: Level
+            - group "Actions for The Cyclospora Outbreak Has Turned Deadly After More Than 18,000 Reported Cases" [ref=e661]:
+              - button "Save story" [ref=e662]: Save
+              - button "Show more stories like The Cyclospora Outbreak Has Turned Deadly After More Than 18,000 Reported Cases" [ref=e663]: More like this
+              - button "Open story with 16 comments" [ref=e664]: "16"
+              - 'button "Hide story: The Cyclospora Outbreak Has Turned Deadly After More Than 18,000 Reported Cases" [ref=e666]': Hide
+        - article [ref=e667] [cursor=pointer]:
+          - 'button "Open story: Some Singles Are Going On Dates For A Reason That Has Nothing To Do With Love" [ref=e668]'
+          - 'img "Delish: Some Singles Are Going On Dates For A Reason That Has Nothing To Do With Love" [ref=e670]'
+          - generic [ref=e671]:
+            - generic [ref=e672]:
+              - generic [ref=e673]: Trending
+              - generic [ref=e674]: Recipe
+              - link "Open Delish brand page" [ref=e675]:
+                - /url: /lifestyle/delish/
+                - generic [ref=e676]: D
+                - generic [ref=e679]: Delish · Food News · Amanda Mactas
+            - heading "Some Singles Are Going On Dates For A Reason That Has Nothing To Do With Love" [level=2] [ref=e680]
+            - paragraph [ref=e681]: The “foodie call” may be more common than you think.
+            - generic [ref=e682]:
+              - generic [ref=e683]:
+                - paragraph [ref=e684]: 20 min
+                - paragraph [ref=e685]: Total
+              - generic [ref=e686]:
+                - paragraph [ref=e687]: "4"
+                - paragraph [ref=e688]: Servings
+              - generic [ref=e689]:
+                - paragraph [ref=e690]: Easy
+                - paragraph [ref=e693]: Level
+            - group "Actions for Some Singles Are Going On Dates For A Reason That Has Nothing To Do With Love" [ref=e694]:
+              - button "Save story" [ref=e695]: Save
+              - button "Show more stories like Some Singles Are Going On Dates For A Reason That Has Nothing To Do With Love" [ref=e696]: More like this
+              - button "Open story with 16 comments" [ref=e697]: "16"
+              - 'button "Hide story: Some Singles Are Going On Dates For A Reason That Has Nothing To Do With Love" [ref=e699]': Hide
+        - 'article "Advertisement: Good Housekeeping Tested — Hosting Without the Guesswork" [ref=e700]':
+          - generic [ref=e701]:
+            - generic [ref=e703]:
+              - generic [ref=e704]: Advertisement
+              - generic [ref=e705]: AD
+            - paragraph [ref=e706]: Tested
+          - generic [ref=e707]:
+            - generic [ref=e708]:
+              - generic [ref=e709]: Good Housekeeping Tested
+              - heading "Hosting Without the Guesswork" [level=2] [ref=e711]
+              - paragraph [ref=e712]: Lab-informed serveware, cleaning helpers, and party tools for readers saving home-service content.
+            - 'generic "Prototype CTA unavailable: See tested picks" [ref=e714]':
+              - generic [ref=e715]: Prototype creative
+              - generic [ref=e716]: See tested picks · Destination not connected
+        - article [ref=e717] [cursor=pointer]:
+          - 'button "Open story: The PSL Is Almost Back At Starbucks—And A Brand-New Fall Menu Is Coming With It" [ref=e718]'
+          - 'img "Delish: The PSL Is Almost Back At Starbucks—And A Brand-New Fall Menu Is Coming With It" [ref=e720]'
+          - generic [ref=e721]:
+            - generic [ref=e722]:
+              - generic [ref=e723]: Most Popular
+              - generic [ref=e724]: Recipe
+              - link "Open Delish brand page" [ref=e725]:
+                - /url: /lifestyle/delish/
+                - generic [ref=e726]: D
+                - generic [ref=e729]: Delish · Food News · Sean Abrams
+            - heading "The PSL Is Almost Back At Starbucks—And A Brand-New Fall Menu Is Coming With It" [level=2] [ref=e730]
+            - paragraph [ref=e731]: Here’s when pumpkin spice season officially begins.
+            - generic [ref=e732]:
+              - generic [ref=e733]:
+                - paragraph [ref=e734]: 20 min
+                - paragraph [ref=e735]: Total
+              - generic [ref=e736]:
+                - paragraph [ref=e737]: "6"
+                - paragraph [ref=e738]: Servings
+              - generic [ref=e739]:
+                - paragraph [ref=e740]: Easy
+                - paragraph [ref=e743]: Level
+            - group "Actions for The PSL Is Almost Back At Starbucks—And A Brand-New Fall Menu Is Coming With It" [ref=e744]:
+              - button "Save story" [ref=e745]: Save
+              - button "Show more stories like The PSL Is Almost Back At Starbucks—And A Brand-New Fall Menu Is Coming With It" [ref=e746]: More like this
+              - button "Open story with 14 comments" [ref=e747]: "14"
+              - 'button "Hide story: The PSL Is Almost Back At Starbucks—And A Brand-New Fall Menu Is Coming With It" [ref=e749]': Hide
+        - article [ref=e750] [cursor=pointer]:
+          - 'button "Open story: Red Baron Just Took Supreme Pizza To A Place I Was Not Prepared For" [ref=e751]'
+          - 'img "Delish: Red Baron Just Took Supreme Pizza To A Place I Was Not Prepared For" [ref=e753]'
+          - generic [ref=e754]:
+            - generic [ref=e755]:
+              - generic [ref=e756]: Editor Pick
+              - generic [ref=e757]: Recipe
+              - link "Open Delish brand page" [ref=e758]:
+                - /url: /lifestyle/delish/
+                - generic [ref=e759]: D
+                - generic [ref=e762]: Delish · Food News · Sean Abrams
+            - heading "Red Baron Just Took Supreme Pizza To A Place I Was Not Prepared For" [level=2] [ref=e763]
+            - paragraph [ref=e764]: For its 50th anniversary, the frozen pizza brand blessed one crust with 50 toppings.
+            - generic [ref=e765]:
+              - generic [ref=e766]:
+                - paragraph [ref=e767]: 20 min
+                - paragraph [ref=e768]: Total
+              - generic [ref=e769]:
+                - paragraph [ref=e770]: "2"
+                - paragraph [ref=e771]: Servings
+              - generic [ref=e772]:
+                - paragraph [ref=e773]: Easy
+                - paragraph [ref=e776]: Level
+            - group "Actions for Red Baron Just Took Supreme Pizza To A Place I Was Not Prepared For" [ref=e777]:
+              - button "Save story" [ref=e778]: Save
+              - button "Show more stories like Red Baron Just Took Supreme Pizza To A Place I Was Not Prepared For" [ref=e779]: More like this
+              - button "Open story with 17 comments" [ref=e780]: "17"
+              - 'button "Hide story: Red Baron Just Took Supreme Pizza To A Place I Was Not Prepared For" [ref=e782]': Hide
+        - article [ref=e783] [cursor=pointer]:
+          - 'button "Open story: Alan Ritchson Asked If Mayo Belongs On A Philly Cheesesteak & People Are Picking Sides" [ref=e784]'
+          - 'img "Delish: Alan Ritchson Asked If Mayo Belongs On A Philly Cheesesteak & People Are Picking Sides" [ref=e786]'
+          - generic [ref=e787]:
+            - generic [ref=e788]:
+              - generic [ref=e789]: Continue
+              - generic [ref=e790]: Recipe
+              - link "Open Delish brand page" [ref=e791]:
+                - /url: /lifestyle/delish/
+                - generic [ref=e792]: D
+                - generic [ref=e795]: Delish · Food News · Sean Abrams
+            - heading "Alan Ritchson Asked If Mayo Belongs On A Philly Cheesesteak & People Are Picking Sides" [level=2] [ref=e796]
+            - paragraph [ref=e797]: This isn’t the kind of sandwich question people take lightly.
+            - generic [ref=e798]:
+              - generic [ref=e799]:
+                - paragraph [ref=e800]: 30 min
+                - paragraph [ref=e801]: Total
+              - generic [ref=e802]:
+                - paragraph [ref=e803]: "4"
+                - paragraph [ref=e804]: Servings
+              - generic [ref=e805]:
+                - paragraph [ref=e806]: Easy
+                - paragraph [ref=e809]: Level
+            - group "Actions for Alan Ritchson Asked If Mayo Belongs On A Philly Cheesesteak & People Are Picking Sides" [ref=e810]:
+              - button "Save story" [ref=e811]: Save
+              - button "Show more stories like Alan Ritchson Asked If Mayo Belongs On A Philly Cheesesteak & People Are Picking Sides" [ref=e812]: More like this
+              - button "Open story with 10 comments" [ref=e813]: "10"
+              - 'button "Hide story: Alan Ritchson Asked If Mayo Belongs On A Philly Cheesesteak & People Are Picking Sides" [ref=e815]': Hide
+        - article [ref=e816] [cursor=pointer]:
+          - 'button "Open story: Banana Pudding Fluff" [ref=e817]'
+          - 'img "Delish: Banana Pudding Fluff" [ref=e819]'
+          - generic [ref=e820]:
+            - generic [ref=e821]:
+              - generic [ref=e822]: Editor Pick
+              - generic [ref=e823]: Recipe
+              - link "Open Delish brand page" [ref=e824]:
+                - /url: /lifestyle/delish/
+                - generic [ref=e825]: D
+                - generic [ref=e828]: Delish · Food · Delish editors
+            - heading "Banana Pudding Fluff" [level=2] [ref=e829]
+            - paragraph [ref=e830]: Delish editors recommend this food story.
+            - generic [ref=e831]:
+              - generic [ref=e832]:
+                - paragraph [ref=e833]: 40 min
+                - paragraph [ref=e834]: Total
+              - generic [ref=e835]:
+                - paragraph [ref=e836]: "2"
+                - paragraph [ref=e837]: Servings
+              - generic [ref=e838]:
+                - paragraph [ref=e839]: Easy
+                - paragraph [ref=e842]: Level
+            - group "Actions for Banana Pudding Fluff" [ref=e843]:
+              - button "Save story" [ref=e844]: Save
+              - button "Show more stories like Banana Pudding Fluff" [ref=e845]: More like this
+              - button "Open story with 18 comments" [ref=e846]: "18"
+              - 'button "Hide story: Banana Pudding Fluff" [ref=e848]': Hide
+        - article [ref=e849] [cursor=pointer]:
+          - 'button "Open story: These Fast Food Chains Actually Hand Bread Their Chicken" [ref=e850]'
+          - 'img "Delish: These Fast Food Chains Actually Hand Bread Their Chicken" [ref=e852]'
+          - generic [ref=e853]:
+            - generic [ref=e854]:
+              - generic [ref=e855]: Most Popular
+              - generic [ref=e856]: Recipe
+              - link "Open Delish brand page" [ref=e857]:
+                - /url: /lifestyle/delish/
+                - generic [ref=e858]: D
+                - generic [ref=e861]: Delish · Food · Steven Morea
+            - heading "These Fast Food Chains Actually Hand Bread Their Chicken" [level=2] [ref=e862]
+            - paragraph [ref=e863]: Not all chicken is prepared equally.
+            - generic [ref=e864]:
+              - generic [ref=e865]:
+                - paragraph [ref=e866]: 20 min
+                - paragraph [ref=e867]: Total
+              - generic [ref=e868]:
+                - paragraph [ref=e869]: "4"
+                - paragraph [ref=e870]: Servings
+              - generic [ref=e871]:
+                - paragraph [ref=e872]: Easy
+                - paragraph [ref=e875]: Level
+            - group "Actions for These Fast Food Chains Actually Hand Bread Their Chicken" [ref=e876]:
+              - button "Save story" [ref=e877]: Save
+              - button "Show more stories like These Fast Food Chains Actually Hand Bread Their Chicken" [ref=e878]: More like this
+              - button "Open story with 17 comments" [ref=e879]: "17"
+              - 'button "Hide story: These Fast Food Chains Actually Hand Bread Their Chicken" [ref=e881]': Hide
+        - region [ref=e882]:
+          - generic [ref=e884]:
+            - link "Open Country Living publication":
+              - /url: /lifestyle/country-living/
+              - img "Country Living"
+            - generic [ref=e886]:
+              - 'heading "Brand spotlight: Country Living" [level=2] [ref=e887]': Brand spotlight
+              - paragraph [ref=e888]: Explore Home from Country Living.
+          - generic [ref=e890]:
+            - 'button "Open story: Chasing the West''s Drew and Jonathan Scott Talk Ranch Life" [ref=e891]':
+              - 'img "Country Living: Chasing the West''s Drew and Jonathan Scott Talk Ranch Life" [ref=e892]'
+              - generic [ref=e893]:
+                - generic [ref=e894]: Chasing the West's Drew and Jonathan Scott Talk Ranch Life
+                - generic [ref=e895]: The Property Brothers Drew and Jonathan Scott talk about what it was like growing up on a ranch ahead of the premiere of their HGTV show "Chasing the West."
+            - generic [ref=e896]:
+              - 'button "Open story: HGTV Chasing the West with Drew and Jonathan Scott" [ref=e897]':
+                - 'img "Country Living: HGTV Chasing the West with Drew and Jonathan Scott" [ref=e898]'
+                - generic [ref=e899]:
+                  - generic [ref=e900]: HGTV Chasing the West with Drew and Jonathan Scott
+                  - generic [ref=e901]: Home · Country Living editors
+              - 'button "Open story: 10 Quotes For a Happy Life" [ref=e902]':
+                - 'img "Country Living: 10 Quotes For a Happy Life" [ref=e903]'
+                - generic [ref=e904]:
+                  - generic [ref=e905]: 10 Quotes For a Happy Life
+                  - generic [ref=e906]: Home · Country Living editors
+              - 'button "Open story: Celebrity Mothers Get Emotional About Motherhood" [ref=e907]':
+                - 'img "Country Living: Celebrity Mothers Get Emotional About Motherhood" [ref=e908]'
+                - generic [ref=e909]:
+                  - generic [ref=e910]: Celebrity Mothers Get Emotional About Motherhood
+                  - generic [ref=e911]: Home · Country Living editors
+        - article [ref=e912]:
+          - generic [ref=e914]:
+            - 'button "Play video: Forget The Store-Bought Jar—Our Easy Pesto Transforms Everything It''s Added To" [ref=e917]'
+            - generic: 0:43
+          - generic [ref=e920]:
+            - generic [ref=e921]:
+              - generic [ref=e922]: D
+              - generic [ref=e925]: Delish · Food · Delish editors
+              - generic "Current feed story" [ref=e926]
+            - button [ref=e929]:
+              - heading "Forget The Store-Bought Jar—Our Easy Pesto Transforms Everything It's Added To" [level=3] [ref=e930]
+            - paragraph [ref=e931]: Our ultimate pesto recipe is so easy to make and great on pasta, potatoes, eggs, veggies, and more! Here's how to make your own classic homemade pesto sauce.
+            - generic [ref=e932]:
+              - generic [ref=e933]:
+                - button "Save video" [ref=e934]:
+                  - generic [ref=e937]: Save
+                - button "15" [ref=e938]
+                - button "Hide video" [ref=e942]:
+                  - generic [ref=e945]: Hide
+              - button "Open story" [ref=e946]
+        - paragraph [ref=e948]: Loading more stories...
+      - complementary [ref=e949]:
+        - region [ref=e950]:
+          - heading "Trending in Delish" [level=2] [ref=e951]
+          - list [ref=e952]:
+            - listitem [ref=e953]:
+              - 'button "Open story: These Chicken Meatballs Have Everything You Love About French Onion Soup" [ref=e954]':
+                - generic [ref=e955]: "1"
+                - generic [ref=e958]:
+                  - generic [ref=e959]: These Chicken Meatballs Have Everything You Love About French Onion Soup
+                  - generic [ref=e960]:
+                    - generic [ref=e961]: D
+                    - generic [ref=e964]: Delish
+            - listitem [ref=e965]:
+              - 'button "Open story: 45 Easy & Classic Italian Pasta Recipes (That Aren''t Just Spaghetti & Meatballs)" [ref=e966]':
+                - generic [ref=e967]: "2"
+                - generic [ref=e970]:
+                  - generic [ref=e971]: 45 Easy & Classic Italian Pasta Recipes (That Aren't Just Spaghetti & Meatballs)
+                  - generic [ref=e972]:
+                    - generic [ref=e973]: D
+                    - generic [ref=e976]: Delish
+            - listitem [ref=e977]:
+              - 'button "Open story: Patton Oswalt Can’t Stand ‘Slop Bowls’—Here’s Why" [ref=e978]':
+                - generic [ref=e979]: "3"
+                - generic [ref=e982]:
+                  - generic [ref=e983]: Patton Oswalt Can’t Stand ‘Slop Bowls’—Here’s Why
+                  - generic [ref=e984]:
+                    - generic [ref=e985]: D
+                    - generic [ref=e988]: Delish
+            - listitem [ref=e989]:
+              - 'button "Open story: Classic Stuffed Peppers Are The Easy, Versatile Dinner We Crave Year-Round" [ref=e990]':
+                - generic [ref=e991]: "4"
+                - generic [ref=e994]:
+                  - generic [ref=e995]: Classic Stuffed Peppers Are The Easy, Versatile Dinner We Crave Year-Round
+                  - generic [ref=e996]:
+                    - generic [ref=e997]: D
+                    - generic [ref=e1000]: Delish
+            - listitem [ref=e1001]:
+              - 'button "Open story: 25 Ultra-Cozy Ways To Cook With Egg Noodles" [ref=e1002]':
+                - generic [ref=e1003]: "5"
+                - generic [ref=e1006]:
+                  - generic [ref=e1007]: 25 Ultra-Cozy Ways To Cook With Egg Noodles
+                  - generic [ref=e1008]:
+                    - generic [ref=e1009]: D
+                    - generic [ref=e1012]: Delish
+    - contentinfo [ref=e1014]:
+      - generic [ref=e1015]:
+        - generic [ref=e1016]:
+          - generic [ref=e1017]:
+            - img "Hearst Lifestyle" [ref=e1019]
+            - generic [ref=e1020]:
+              - link "YouTube" [ref=e1021] [cursor=pointer]:
+                - /url: https://www.youtube.com/@Hearst
+              - link "Facebook" [ref=e1022] [cursor=pointer]:
+                - /url: https://www.facebook.com/Hearst/
+              - link "Instagram" [ref=e1023] [cursor=pointer]:
+                - /url: https://www.instagram.com/hearst/
+              - link "Pinterest" [ref=e1024] [cursor=pointer]:
+                - /url: https://www.pinterest.com/hearst/
+          - generic [ref=e1025]:
+            - navigation "Discover Hearst+" [ref=e1026]:
+              - link "Open Hearst+" [ref=e1028] [cursor=pointer]:
+                - /url: /hearst-plus/
+              - link "Shop the stories" [ref=e1029] [cursor=pointer]:
+                - /url: /hearst-plus/shop/
+              - link "Complete article viewer" [ref=e1030] [cursor=pointer]:
+                - /url: /hearst-plus/complete-articles/
+            - navigation "Product strategy" [ref=e1031]:
+              - link "Product story" [ref=e1033] [cursor=pointer]:
+                - /url: /about-hearst-magazines/
+              - link "Why Hearst+" [ref=e1034] [cursor=pointer]:
+                - /url: /why-hearst-plus/
+              - link "Product blueprint" [ref=e1035] [cursor=pointer]:
+                - /url: /hearst-product-blueprint/
+              - link "Article system" [ref=e1036] [cursor=pointer]:
+                - /url: /hearst-article-blueprint/
+              - link "Token architecture" [ref=e1037] [cursor=pointer]:
+                - /url: /token-architecture/
+              - link "HDS brand framework" [ref=e1038] [cursor=pointer]:
+                - /url: /hds-brand-framework/
+            - navigation "Prototype experiences" [ref=e1039]:
+              - link "Live feed" [ref=e1041] [cursor=pointer]:
+                - /url: /hearst-plus/live-feed/
+              - link "Lifestyle Live" [ref=e1042] [cursor=pointer]:
+                - /url: /hearst-plus/lifestyle-live/
+              - link "Autos Videos" [ref=e1043] [cursor=pointer]:
+                - /url: /hearst-plus/motortrend-videos/
+              - link "HOT ROD Events" [ref=e1044] [cursor=pointer]:
+                - /url: /autos/hot-rod/events/
+            - generic [ref=e1045]:
+              - generic [ref=e1046]: Subscriptions
+              - link "Subscribe" [ref=e1047] [cursor=pointer]:
+                - /url: https://subscribe.hearstmags.com/
+        - separator [ref=e1048]
+        - generic [ref=e1049]:
+          - generic [ref=e1050]: A Part of Hearst Digital Media
+          - generic [ref=e1051]:
+            - link "Privacy Notice" [ref=e1052] [cursor=pointer]:
+              - /url: https://subscribe.hearstmags.com/circulation/shared/privacy.html
+            - link "Terms of Use" [ref=e1053] [cursor=pointer]:
+              - /url: https://subscribe.hearstmags.com/circulation/shared/terms.html
+            - link "Hearst brands" [ref=e1054] [cursor=pointer]:
+              - /url: https://www.hearst.com/magazines
+        - paragraph [ref=e1055]: Personalized daily reading experiences across Hearst Magazine Media brands.
+        - paragraph [ref=e1056]:
+          - generic [ref=e1057]: ©2026 Hearst Magazine Media, Inc. All Rights Reserved.
+          - text: ·
+          - note "Prototype disclosure" [ref=e1058]: "Note: Prototype only. Uses public story metadata and browser-local demo state; not a production account, access, or publishing surface."
+  - button "Open Next.js Dev Tools" [ref=e1064] [cursor=pointer]
+  - alert [ref=e1068]

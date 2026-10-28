@@ -1,0 +1,170 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e5]:
+      - navigation "Hearst destination sections" [ref=e6]:
+        - link "All" [ref=e7] [cursor=pointer]:
+          - /url: /hearst-plus/
+        - generic [ref=e9]:
+          - link "Lifestyle" [ref=e10] [cursor=pointer]:
+            - /url: /hearst-lifestyle/
+          - link "Autos" [ref=e11] [cursor=pointer]:
+            - /url: /hearst-autos/
+          - link "Fashion & Luxury" [ref=e12] [cursor=pointer]:
+            - /url: /hearst-flux/
+          - link "Enthusiast & Wellness" [ref=e13] [cursor=pointer]:
+            - /url: /hearst-ew/
+          - link "Local News" [ref=e15] [cursor=pointer]:
+            - /url: /hearst-plus/local-news/
+          - link "A&E Family" [ref=e16] [cursor=pointer]:
+            - /url: /hearst-plus/entertainment/
+          - link "International" [ref=e17] [cursor=pointer]:
+            - /url: /hearst-plus/
+      - button "Sign in or sign up" [ref=e22]:
+        - generic [ref=e23]: Sign in / Sign up
+    - generic [ref=e24]:
+      - 'img "Hearst+: every Hearst brand" [ref=e26]'
+      - generic:
+        - img "Hearst+"
+      - generic:
+        - group "Story layout" [ref=e28]:
+          - button "Show stories as cards" [pressed] [ref=e29]
+          - button "Show stories as a list" [ref=e30]
+          - button "Show stories with a full-width hero" [ref=e31]
+        - generic [ref=e32]:
+          - button "Switch to dark mode" [ref=e33]
+          - button "Search" [ref=e34]
+    - navigation "Hearst Magazines sections" [ref=e36]:
+      - generic [ref=e37]:
+        - link "Style" [ref=e38] [cursor=pointer]:
+          - /url: /hearst-plus/style/
+        - link "Reviews" [ref=e39] [cursor=pointer]:
+          - /url: /hearst-plus/reviews/
+        - link "Fitness" [ref=e40] [cursor=pointer]:
+          - /url: /hearst-plus/fitness/
+        - link "Cars" [ref=e41] [cursor=pointer]:
+          - /url: /hearst-plus/cars/
+        - link "House & Garden" [ref=e42] [cursor=pointer]:
+          - /url: /hearst-plus/home/
+        - link "Videos" [ref=e43] [cursor=pointer]:
+          - /url: /hearst-plus/videos/
+        - link "Community" [ref=e45] [cursor=pointer]:
+          - /url: /communities/
+        - link "Games" [ref=e46] [cursor=pointer]:
+          - /url: /hearst-plus/games/
+    - generic [aria-hidden]:
+      - navigation:
+        - link:
+          - /url: /hearst-plus/style/
+          - text: Style
+        - link:
+          - /url: /hearst-plus/reviews/
+          - text: Reviews
+        - link:
+          - /url: /hearst-plus/fitness/
+          - text: Fitness
+        - link:
+          - /url: /hearst-plus/cars/
+          - text: Cars
+        - link:
+          - /url: /hearst-plus/home/
+          - text: House & Garden
+        - link:
+          - /url: /hearst-plus/videos/
+          - text: Videos
+        - link:
+          - /url: /communities/
+          - text: Community
+        - link:
+          - /url: /hearst-plus/games/
+          - text: Games
+    - generic "Loading your personalized feed" [ref=e51]:
+      - generic [ref=e52]: Loading your personalized feed.
+      - generic [ref=e53]:
+        - complementary [aria-hidden] [ref=e54]:
+          - generic [ref=e55]: Your Daily Habit
+        - main "Hearst Magazines personalized story feed" [ref=e69]:
+          - heading "Hearst Magazines personalized story feed" [level=1] [ref=e70]
+        - complementary [aria-hidden] [ref=e85]
+    - contentinfo [ref=e114]:
+      - generic [ref=e115]:
+        - generic [ref=e116]:
+          - generic [ref=e117]:
+            - img "Hearst+" [ref=e119]
+            - generic [ref=e120]:
+              - link "YouTube" [ref=e121] [cursor=pointer]:
+                - /url: https://www.youtube.com/@Hearst
+              - link "Facebook" [ref=e122] [cursor=pointer]:
+                - /url: https://www.facebook.com/Hearst/
+              - link "Instagram" [ref=e123] [cursor=pointer]:
+                - /url: https://www.instagram.com/hearst/
+              - link "Pinterest" [ref=e124] [cursor=pointer]:
+                - /url: https://www.pinterest.com/hearst/
+          - generic [ref=e125]:
+            - navigation "Discover Hearst+" [ref=e126]:
+              - link "Open Hearst+" [ref=e128] [cursor=pointer]:
+                - /url: /hearst-plus/
+              - link "Full-width hero slider" [ref=e129] [cursor=pointer]:
+                - /url: /hearst-plus/full-width-hero/
+              - link "Brutalist editorial home" [ref=e130] [cursor=pointer]:
+                - /url: /hearst-plus/brutalist-home/
+              - link "Local News" [ref=e131] [cursor=pointer]:
+                - /url: /hearst-plus/local-news/
+              - link "Shop the stories" [ref=e132] [cursor=pointer]:
+                - /url: /hearst-plus/shop/
+              - link "Newsstand" [ref=e133] [cursor=pointer]:
+                - /url: /hearst-plus/newsstand/
+              - link "Complete article viewer" [ref=e134] [cursor=pointer]:
+                - /url: /hearst-plus/complete-articles/
+            - navigation "Product strategy" [ref=e135]:
+              - link "Hearst+ executive brief" [ref=e137] [cursor=pointer]:
+                - /url: /hearst-plus-brief/
+              - link "Hearst+ product reference" [ref=e138] [cursor=pointer]:
+                - /url: /hearst-plus-reference/
+              - link "Storybook" [ref=e139] [cursor=pointer]:
+                - /url: https://hearst-design-system.netlify.app/storybook/?path=/docs/hearst-plus-start-overview--docs
+            - navigation "Prototype experiences" [ref=e140]:
+              - link "Live feed" [ref=e142] [cursor=pointer]:
+                - /url: /hearst-plus/live-feed/
+              - link "Local News feed admin" [ref=e143] [cursor=pointer]:
+                - /url: /hearst-plus/local-news/admin/
+              - link "Lifestyle Live" [ref=e144] [cursor=pointer]:
+                - /url: /hearst-plus/lifestyle-live/
+              - link "Autos Videos" [ref=e145] [cursor=pointer]:
+                - /url: /hearst-plus/motortrend-videos/
+              - link "HOT ROD Events" [ref=e146] [cursor=pointer]:
+                - /url: /autos/hot-rod/events/
+              - link "Single-brand home" [ref=e147] [cursor=pointer]:
+                - /url: /single-brand/delish/
+              - link "Single-brand article" [ref=e148] [cursor=pointer]:
+                - /url: /single-brand/delish/article/delish-food-news-a73504555-sonic-banana-and-hotumn-menus/
+            - generic [ref=e149]:
+              - generic [ref=e150]: Subscriptions
+              - link "Subscribe" [ref=e151] [cursor=pointer]:
+                - /url: https://subscribe.hearstmags.com/
+        - separator [ref=e152]
+        - generic [ref=e153]:
+          - generic [ref=e154]: A Part of Hearst Digital Media
+          - generic [ref=e155]:
+            - link "Privacy Notice" [ref=e156] [cursor=pointer]:
+              - /url: https://subscribe.hearstmags.com/circulation/shared/privacy.html
+            - link "Terms of Use" [ref=e157] [cursor=pointer]:
+              - /url: https://subscribe.hearstmags.com/circulation/shared/terms.html
+            - link "Hearst brands" [ref=e158] [cursor=pointer]:
+              - /url: https://www.hearst.com/magazines
+        - paragraph [ref=e159]: Personalized daily reading experiences across Hearst Magazine Media brands.
+        - paragraph [ref=e160]:
+          - generic [ref=e161]: ©2026 Hearst Magazine Media, Inc. All Rights Reserved.
+          - text: ·
+          - note "Prototype disclosure" [ref=e162]: "Note: Prototype only. Uses public story metadata and browser-local demo state; not a production account, access, or publishing surface."
+  - generic [ref=e167] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e168]
+    - generic [ref=e172]:
+      - button "Open issues overlay" [ref=e173]:
+        - generic [ref=e174]:
+          - generic [aria-hidden] [ref=e175]: "14"
+          - generic [ref=e176]: "15"
+        - generic [ref=e177]:
+          - text: Issue
+          - generic [aria-hidden] [ref=e178]: s
+      - button "Collapse issues badge" [ref=e179]
+  - alert [ref=e182]
