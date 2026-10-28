@@ -11,6 +11,7 @@ import { LocalNewsRail } from "@/components/hearst-plus/local-news-rail";
 import { UtilityBar } from "@/components/hearst-plus/utility-bar";
 import { MainNav } from "@/components/home-page";
 import { CalendarBlank, ChevronRight, MapPin } from "@/components/ui/icons";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
   ArticleCard,
   ArticleCardContent,
@@ -288,32 +289,33 @@ export function HearstEventsIndex({ initialBrand = "all" }: { initialBrand?: str
             onFilterRelationship={(value) => setRelationship(value)}
           />
           <section aria-live="polite" aria-labelledby="events-results-heading" className="min-w-0 space-y-6 md:col-start-1 md:row-start-1 lg:col-start-2">
-            <div className="flex flex-wrap items-end justify-between gap-3 border-b border-border pb-4">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Across Hearst brands</p>
-                <h1 id="events-results-heading" className="headline mt-2 text-2xl font-bold md:text-3xl">Events and coverage</h1>
-              </div>
-              <p className="max-w-sm text-sm leading-6 text-muted-foreground">Upcoming experiences and stories from events our editors follow.</p>
-            </div>
-            {visibleEvents.length ? (
-              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-4">
-                <p className="text-sm text-muted-foreground">Browse event stories or find dates on the calendar.</p>
-                <div className="inline-flex border border-border" role="group" aria-label="Choose event view">
-                  <button
-                    type="button"
-                    aria-pressed={displayMode === "stories"}
-                    onClick={() => setDisplayMode("stories")}
-                    className={`min-h-11 px-4 text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${displayMode === "stories" ? "bg-foreground text-background" : "hover:bg-muted"}`}
-                  >Stories</button>
-                  <button
-                    type="button"
-                    aria-pressed={displayMode === "calendar"}
-                    onClick={() => setDisplayMode("calendar")}
-                    className={`min-h-11 border-l border-border px-4 text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${displayMode === "calendar" ? "bg-foreground text-background" : "hover:bg-muted"}`}
-                  >Calendar</button>
+            <div className="overflow-hidden rounded-[8px] border border-border bg-card">
+              <div className="flex flex-col gap-3 p-5 sm:flex-row sm:items-end sm:justify-between sm:p-6">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Across Hearst brands</p>
+                  <h1 id="events-results-heading" className="headline mt-2 text-2xl font-bold md:text-3xl">Events and coverage</h1>
                 </div>
+                <p className="max-w-sm text-sm leading-6 text-muted-foreground">Upcoming experiences and stories from events our editors follow.</p>
               </div>
-            ) : null}
+              {visibleEvents.length ? (
+                <div className="flex flex-col gap-3 border-t border-border p-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                <p className="text-sm text-muted-foreground">Browse event stories or find dates on the calendar.</p>
+                <ToggleGroup
+                  value={[displayMode]}
+                  onValueChange={(value) => {
+                    const selected = value[0];
+                    if (selected === "stories" || selected === "calendar") setDisplayMode(selected);
+                  }}
+                  variant="outline"
+                  aria-label="Choose event view"
+                  className="rounded-none border border-border"
+                >
+                  <ToggleGroupItem value="stories" className="min-h-10 rounded-none px-4 text-sm font-semibold data-[state=on]:bg-foreground data-[state=on]:text-background">Stories</ToggleGroupItem>
+                  <ToggleGroupItem value="calendar" className="min-h-10 rounded-none px-4 text-sm font-semibold data-[state=on]:bg-foreground data-[state=on]:text-background">Calendar</ToggleGroupItem>
+                </ToggleGroup>
+              </div>
+              ) : null}
+            </div>
             {visibleEvents.length ? (
               displayMode === "calendar" ? (
                 <HearstEventsCalendar events={visibleEvents} />
