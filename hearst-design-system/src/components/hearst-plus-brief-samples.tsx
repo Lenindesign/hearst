@@ -9,13 +9,18 @@ import { BrandLogo } from "@/components/brand-logo";
 import type { BrandTheme } from "@/lib/brands";
 import { getBrandLogoSrc } from "@/lib/logos";
 import type { CommunityFeedThread } from "@/components/hearst-plus/community-client";
-import { LifestyleRiverCard } from "@/components/home-page";
+import { LifestyleRiverCard, RichPhotoGalleryCard } from "@/components/home-page";
+import { getFullscreenReaderImages } from "@/components/hearst-plus/fullscreen-image-viewer";
+import type { FullscreenReaderImage } from "@/components/hearst-plus/fullscreen-image-viewer";
+import { loadLiveArticle } from "@/lib/live-article-client-cache";
 import { BrandPromotionRiverModule } from "@/components/hearst-plus/brand-promotion-river-module";
 import type { BrandPromotionMatch } from "@/components/hearst-plus/brand-promotion-model";
 import { ContextualRiverAdvertisement } from "@/components/hearst-plus/contextual-river-advertisement";
 import type { ContextualAdUnit } from "@/components/hearst-plus/content-reader-advertisement";
 import { DelishVerticalVideoCarousel } from "@/components/hearst-plus/vertical-video-carousel";
-import { useMemo, useState } from "react";
+import { EventTile } from "@/components/hearst-plus/events/hearst-events-experience";
+import type { HearstEventRecord } from "@/lib/hearst-events";
+import { useEffect, useMemo, useState } from "react";
 import {
   applyOnboardingPreferences,
   baseDestinationConfigs,
@@ -83,6 +88,32 @@ function RiverStorySample({ story }: { story: LifestyleRiverStory }) {
   const openStory = () => router.push(`/read/${encodeURIComponent(story.id)}/?from=%2Fhearst-plus-brief%2F`);
 
   return <LifestyleRiverCard story={story} onOpen={openStory} />;
+}
+
+function PhotoGalleryStorySample({ story }: { story: LifestyleRiverStory }) {
+  const router = useRouter();
+  const [images, setImages] = useState<FullscreenReaderImage[]>(() => getFullscreenReaderImages(story));
+
+  useEffect(() => {
+    if (!story.sourceUrl) return;
+    let active = true;
+    void loadLiveArticle(story.sourceUrl)
+      .then((article) => {
+        if (active) setImages(getFullscreenReaderImages(story, { status: "ready", data: article }));
+      })
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, [story]);
+
+  return (
+    <RichPhotoGalleryCard
+      story={story}
+      images={images}
+      onOpen={() => router.push(`/read/${encodeURIComponent(story.id)}/?from=%2Fhearst-plus-brief%2F`)}
+    />
+  );
 }
 
 function SampleFigure({
@@ -262,6 +293,7 @@ export function HearstPlusBriefSamples({
   communityThread,
   videoSourceCopy,
   riverDemoStories,
+  eventSample,
 }: {
   articleStory: LifestyleRiverStory;
   galleryStory?: LifestyleRiverStory;
@@ -272,6 +304,7 @@ export function HearstPlusBriefSamples({
   communityThread: CommunityFeedThread;
   videoSourceCopy: string;
   riverDemoStories: LifestyleRiverStory[];
+  eventSample?: HearstEventRecord;
 }) {
   const router = useRouter();
   const sponsoredSample: ContextualAdUnit = {
@@ -299,7 +332,7 @@ export function HearstPlusBriefSamples({
         <div>
           <p className="text-xs font-bold uppercase tracking-[.14em] text-primary">The card models behind the river</p>
           <h3 className="mt-3 max-w-3xl font-[var(--hp-font-headline)] font-bold text-balance text-xl leading-tight md:text-5xl">Each format needs its own preview.</h3>
-          <p className="mt-4 max-w-3xl text-base leading-6 text-muted-foreground">The river can show articles, video, galleries, and community. Each card previews the format and offers a clear next step.</p>
+          <p className="mt-4 max-w-3xl text-base leading-6 text-muted-foreground">The river can show articles, video, galleries, community, and events. Each card previews what it is and gives readers a clear next step.</p>
         </div>
         <div className="grid items-start gap-16">
           <SampleFigure
@@ -342,7 +375,18 @@ export function HearstPlusBriefSamples({
               description="A multi-image preview and image count show readers what to expect before opening the gallery detail."
               note={`${galleryStory.brand} · ${galleryStory.topic} · ${galleryStory.readTime}`}
             >
-              <RiverStorySample story={galleryStory} />
+              <PhotoGalleryStorySample story={galleryStory} />
+            </SampleFigure>
+          ) : null}
+
+          {eventSample ? (
+            <SampleFigure
+              label="Event card · organized by Hearst brands"
+              headline="Make the event and the next step easy to see."
+              description="The event card brings the organizers, dates, venue, and event details together in one preview."
+              note={`${eventSample.brandNames.join(" + ")} · ${eventSample.dateLabel} · ${eventSample.venue}`}
+            >
+              <EventTile event={eventSample} />
             </SampleFigure>
           ) : null}
 

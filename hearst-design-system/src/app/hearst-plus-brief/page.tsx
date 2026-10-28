@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { communityParticipationThreads, communityGroups } from "@/lib/community-groups";
 import { lifestyleRiverStories } from "@/components/lifestyle-river-data";
+import { autosRiverStories } from "@/components/autos-river-data";
 import { getLifestyleCardKind, isExplicitGalleryStory } from "@/components/hearst-plus/story-presentation-model";
 import type { CommunityFeedThread } from "@/components/hearst-plus/community-client";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -11,6 +12,7 @@ import { brands } from "@/lib/brands";
 import { getBrandPromotionForSlot } from "@/components/hearst-plus/brand-promotion-model";
 import { isDelishPortraitShort } from "@/lib/hearst-video-destination-model";
 import { HearstPlusBrandDirectory, HearstPlusBriefSamples, HearstPlusTemplatePreviews } from "@/components/hearst-plus-brief-samples";
+import { hearstEvents } from "@/lib/hearst-events";
 
 const riverDemoTopics = ["Food", "Style", "Home", "Wellness", "Entertainment", "Shopping"];
 
@@ -48,7 +50,7 @@ function getCommunitySample(): CommunityFeedThread {
 export default async function HearstPlusBriefPage() {
   const videoFeed = await getPersonalizeAutosVideoFeed();
   const articleStory = lifestyleRiverStories.find((story) => story.sourceUrl && !story.videoUrl && !isExplicitGalleryStory(story)) ?? lifestyleRiverStories[0];
-  const galleryStory = lifestyleRiverStories.find(isExplicitGalleryStory);
+  const galleryStory = autosRiverStories.find((story) => story.id === "car-and-driver-photos-a74231347-2027-audi-q9-drive-interior-gallery");
   const shoppingStory = lifestyleRiverStories.find((story) => getLifestyleCardKind(story) === "shopping");
   const shortsStories = videoFeed.stories.filter(isDelishPortraitShort).slice(0, 4);
   const brandSpotlight = getBrandPromotionForSlot({
@@ -69,6 +71,7 @@ export default async function HearstPlusBriefPage() {
     ? "Using the local snapshot fallback for this preview."
     : "From Hearst+ configured video recommendations.";
   const communityThread = getCommunitySample();
+  const eventSample = hearstEvents.find((event) => event.status === "upcoming");
 
   return (
     <ThemeProvider defaultBrandSlug="hearst-all">
@@ -285,7 +288,7 @@ export default async function HearstPlusBriefPage() {
             </div>
           </div>
           <p className="mt-8 max-w-5xl text-xs leading-5 text-muted-foreground"><strong className="text-foreground">Five HDS layers:</strong> tokens, accessible primitives, shared modules, the two page templates, and brand themes. Production also needs a shared content record for source and rights data, eligibility, deduplication, ranking, and privacy-aware measurement.</p>
-          <HearstPlusBriefSamples articleStory={articleStory} galleryStory={galleryStory} shoppingStory={shoppingStory} shortsStories={shortsStories} brandSpotlight={brandSpotlight} videoStory={videoStory} riverDemoStories={riverDemoStories} communityThread={communityThread} videoSourceCopy={videoSourceCopy} />
+          <HearstPlusBriefSamples articleStory={articleStory} galleryStory={galleryStory} shoppingStory={shoppingStory} shortsStories={shortsStories} brandSpotlight={brandSpotlight} videoStory={videoStory} riverDemoStories={riverDemoStories} communityThread={communityThread} videoSourceCopy={videoSourceCopy} eventSample={eventSample} />
         </section>
 
         <section aria-labelledby="publisher-value-heading" className="border-y border-border bg-card">

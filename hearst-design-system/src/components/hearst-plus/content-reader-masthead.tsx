@@ -38,6 +38,9 @@ interface ContentReaderMastheadProps {
   onSelectMastheadItem: (key: string) => void | Promise<void>;
   onSelectFilter: (label: string) => void;
   onClose: () => void;
+  closeLabel?: string;
+  statusLabel?: string;
+  sectionNavigationLabel?: string;
 }
 
 export function ContentReaderMasthead({
@@ -56,6 +59,9 @@ export function ContentReaderMasthead({
   onSelectMastheadItem,
   onSelectFilter,
   onClose,
+  closeLabel = "Close story reader",
+  statusLabel,
+  sectionNavigationLabel = `${sectionLabel} reader sections`,
 }: ContentReaderMastheadProps) {
   const [hasScrolled, setHasScrolled] = React.useState(false);
 
@@ -114,7 +120,7 @@ export function ContentReaderMasthead({
               Reading {contextLabel}
             </p>
             <p className="mt-0.5 truncate text-xs text-[var(--hp-text-ui)]">
-              {visibleStoryCount} of {storyCount} stories loaded
+              {statusLabel ?? `${visibleStoryCount} of ${storyCount} stories loaded`}
             </p>
           </div>
         </div>
@@ -163,7 +169,7 @@ export function ContentReaderMasthead({
           variant="outline"
           size="icon-sm"
           onClick={onClose}
-          aria-label="Close story reader"
+          aria-label={closeLabel}
           data-reader-close
           className="h-11 w-11 sm:h-7 sm:w-7"
         >
@@ -175,7 +181,7 @@ export function ContentReaderMasthead({
           "overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden transition-[max-height,opacity] duration-200 ease-out",
           hasScrolled ? "pointer-events-none max-h-0 overflow-hidden opacity-0" : "max-h-16 opacity-100",
         )}
-        aria-label={`${sectionLabel} reader sections`}
+        aria-label={sectionNavigationLabel}
         data-reader-filter-navigation
         aria-hidden={hasScrolled}
         inert={hasScrolled}

@@ -61,6 +61,7 @@ export interface ContentReaderDialogShellProps {
   children: React.ReactNode;
   contentRef: React.RefObject<HTMLDivElement | null>;
   destination: string;
+  ariaLabel?: string;
   mode: "light" | "dark";
   nestedDialogOpen?: boolean;
   onClose: () => void;
@@ -72,6 +73,7 @@ export function ContentReaderDialogShell({
   children,
   contentRef,
   destination,
+  ariaLabel = "Story reader",
   mode,
   nestedDialogOpen = false,
   onClose,
@@ -225,7 +227,7 @@ export function ContentReaderDialogShell({
       className="fixed inset-0 z-[200] bg-foreground/55 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
-      aria-label="Story reader"
+      aria-label={ariaLabel}
       tabIndex={-1}
     >
       <div className="absolute inset-0" onClick={onClose} />
