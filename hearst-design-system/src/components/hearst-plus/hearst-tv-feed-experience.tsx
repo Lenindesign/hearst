@@ -6,10 +6,13 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ContentReaderDialogShell, rememberContentReaderReturnFocus } from "@/components/hearst-plus/content-reader-dialog-shell";
 import { ContentReaderMasthead } from "@/components/hearst-plus/content-reader-masthead";
 import { FeaturedStoryCarousel } from "@/components/hearst-plus/featured-story-carousel";
-import { LocalNewsSourceToggle } from "@/components/hearst-plus/local-news-source-toggle";
+import { ContextualRiverAdvertisement } from "@/components/hearst-plus/contextual-river-advertisement";
+import { LocalNewsRail } from "@/components/hearst-plus/local-news-rail";
 import { LifestyleRiverImage } from "@/components/hearst-plus/story-presentation";
+import { TrendingStoryRail } from "@/components/hearst-plus/trending-rail";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import type { ContextualAdUnit } from "@/components/hearst-plus/content-reader-advertisement";
 import type { FeedStatus, FeedType, HearstTVContentType, HearstTVFeed } from "@/lib/hearst-tv-feed-framework";
 import {
   dedupeHearstTVContent,
@@ -44,6 +47,23 @@ const feedStorageKey = "hearst-tv-feed-admin-config:v1";
 const allValue = "all";
 const localNewsHeroStoryLimit = 3;
 const localNewsRiverStoryLimit = 12;
+const localNewsContextualAd: ContextualAdUnit = {
+  id: "local-news-community-partner",
+  sponsor: "Local Market Partner",
+  title: "Closer to your community",
+  summary: "A contextual sponsorship preview for neighborhood services, events, and local businesses.",
+  cta: "Explore local coverage",
+  topics: ["Local News", "Community"],
+  tags: ["community", "local", "neighborhood"],
+  creativeLabel: "COMMUNITY",
+  imageUrl: "/images/hearst-local-news-community-ad.svg",
+  palette: {
+    background: "var(--card)",
+    foreground: "var(--foreground)",
+    accent: "var(--primary)",
+    soft: "var(--secondary)",
+  },
+};
 
 function isConfiguredFeed(feed: StoredFeed) {
   return feed.enabled && feed.feedUrl !== feedUrlTbd;
@@ -168,7 +188,6 @@ export function HearstTVLocalNewsRiver({
   });
   const [manualSelectedStation, setManualSelectedStation] = useState(allValue);
   const selectedStation = routedStation ?? manualSelectedStation;
-  const filterMessage = "Use the station filter to choose a Hearst TV market.";
   const [liveContent, setLiveContent] = useState<HearstTVContent[]>([]);
   const [liveFeedError, setLiveFeedError] = useState<string | null>(null);
   const [liveFeedLoading, setLiveFeedLoading] = useState(false);
@@ -328,14 +347,13 @@ export function HearstTVLocalNewsRiver({
 
   return (
     <div className="space-y-6" data-hearst-plus-local-news-river>
-      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]">
-        <aside className="min-w-0 space-y-4 lg:sticky lg:top-[108px] lg:max-h-[calc(100dvh-132px)] lg:self-start lg:overflow-y-auto lg:pr-1">
+      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-x-4 gap-y-6 md:grid-cols-[minmax(0,1fr)_300px] lg:grid-cols-[clamp(240px,24vw,300px)_minmax(0,1fr)_300px]">
+        <aside className="hidden min-w-0 space-y-5 lg:sticky lg:top-[86px] lg:block lg:max-h-[calc(100dvh-110px)] lg:self-start lg:overflow-y-auto lg:pr-1">
           <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]" aria-labelledby="local-news-filter-title">
-            <LocalNewsSourceToggle activeSource="tv" />
-            <h2 id="local-news-filter-title" className="mt-5 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
-              Local News
+            <h2 id="local-news-filter-title" className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+              Your TV market
             </h2>
-            <p className="mt-3 text-sm leading-6 text-muted-foreground">{filterMessage}</p>
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">Choose a station to see news from its market.</p>
             <div className="mt-4 grid gap-4">
               <FilterSelect
                 id="inline-local-station-filter"
@@ -351,13 +369,13 @@ export function HearstTVLocalNewsRiver({
                 ]}
               />
             </div>
-            <Link
-              href="/hearst-plus/local-news/admin/"
-              className="mt-4 inline-flex min-h-11 items-center text-sm font-bold text-primary underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-            >
-              Manage feeds
-            </Link>
           </section>
+          <TrendingStoryRail
+            stories={readerStories.slice(3, 8).filter((story) => Boolean(story.image))}
+            title="More Local News"
+            onOpenStory={(story) => onOpenStory?.(story.id)}
+            unoptimizedImages
+          />
         </aside>
 
         <main id="hearst-story-river" className="min-w-0 scroll-mt-28 space-y-4" aria-label="Hearst TV local news river">
@@ -457,20 +475,9 @@ export function HearstTVLocalNewsRiver({
           ) : null}
         </main>
 
-        <aside className="min-w-0 space-y-4 lg:sticky lg:top-[108px] lg:max-h-[calc(100dvh-132px)] lg:self-start lg:overflow-y-auto lg:pr-1">
-          <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
-            <h2 className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
-              Feed status
-            </h2>
-            <div className="mt-4 space-y-3 text-sm">
-              <p><span className="font-bold">{hearstTVStations.length}</span> Hearst TV stations</p>
-              <p><span className="font-bold">{feeds.filter(isConfiguredFeed).length}</span> configured feeds</p>
-              <p><span className="font-bold">{feeds.filter(isConnectedFeed).length}</span> connected</p>
-            </div>
-            <p className="mt-4 text-xs leading-5 text-muted-foreground">
-              Stations with a green dot have a real RSS or MRSS URL configured. TBD station records use prototype content until a verified endpoint is added in feed admin.
-            </p>
-          </section>
+        <aside className="hidden min-w-0 space-y-5 md:sticky md:top-[86px] md:block md:max-h-[calc(100dvh-110px)] md:self-start md:overflow-y-auto md:pr-1">
+          <ContextualRiverAdvertisement ad={localNewsContextualAd} />
+          <LocalNewsRail />
         </aside>
       </div>
     </div>

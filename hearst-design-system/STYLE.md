@@ -19,6 +19,7 @@ The complete brand registry is documented in `BRAND_STYLES.md`. Canonical HDS pu
 
 - Normal light destinations use their active theme primary color for section titles, sidebar module titles, topic labels, active navigation states, badges, and interactive story-link hover states.
 - Use `--hp-section-title` for destination section headings and `--hp-sidebar-heading` for sidebar module titles and topic labels. Their normal value is the active `--primary` token.
+- In the dark utility bar, weather icon, temperature, and location use `--component-navigation-utility-content-knockout`, including while the bar is transparent over a banner. Do not use `--primary-foreground` there because a light theme accent can resolve to dark text.
 - AutoWeek is a documented exception: editorial and module-title text on light surfaces uses dark neutral `#242424`. AutoWeek yellow remains an accent for utility surfaces, active states, badges, and indicators.
 - Hearst+ Videos is a scoped dark-mode exception. Its navigation, masthead, feed, sidebars, and section titles use the dark video tokens, including light-blue `--hp-sidebar-heading: #BDDDFC` and a white Hearst+ masthead logo.
 - Video caption caveats live as footer fine print on the dark video surface, not as blocking card chrome.
