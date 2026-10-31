@@ -78,7 +78,7 @@ export function BrandPromotionRiverModule({
     return (
       <span className={cn(
         "flex items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest",
-        isAEFamilyPromotion ? "text-[#79B9FF]" : "text-primary",
+        isAEFamilyPromotion ? "text-[#79B9FF]" : "text-[var(--hp-sidebar-heading,var(--primary))]",
       )}>
         <BrandSourceIcon brand={story.brand} brandSlug={story.brandSlug} />
         {formatLabel}
@@ -127,7 +127,7 @@ export function BrandPromotionRiverModule({
               aria-label={`Brand spotlight: ${promotion.brand}`}
               className={cn(
                 "text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest",
-                isAEFamilyPromotion ? "text-[#79B9FF]" : "text-primary",
+                isAEFamilyPromotion ? "text-[#79B9FF]" : "text-[var(--hp-sidebar-heading,var(--primary))]",
               )}
             >
               Brand spotlight

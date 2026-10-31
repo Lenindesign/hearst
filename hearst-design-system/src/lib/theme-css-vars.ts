@@ -105,6 +105,11 @@ export function brandToCssVars(brand: BrandTheme, colorMode: "light" | "dark" = 
   const accentFg = getContrastColor(accent);
   const darkPrimary = getDarkModePrimary(brand.slug, primary);
   const darkPrimaryFg = getContrastColor(darkPrimary);
+  const sidebarHeading = brand.slug === "autoweek" && colorMode === "light"
+    ? "#242424"
+    : colorMode === "dark"
+      ? hexToOklch(darkPrimary)
+      : hexToOklch(primary);
   const brandColorVars = Object.fromEntries(
     Object.entries(brand.colors).map(([key, value]) => [`--brand-${key}`, value]),
   );
@@ -151,6 +156,7 @@ export function brandToCssVars(brand: BrandTheme, colorMode: "light" | "dark" = 
     ...brandColorVars,
     "--brand-primary": primary,
     "--brand-secondary": secondary,
+    "--hp-sidebar-heading": sidebarHeading,
     "--primary": hexToOklch(primary),
     "--primary-foreground": hexToOklch(primaryFg),
     "--secondary": hexToOklch(secondary),

@@ -27,10 +27,7 @@ const sourceItems: Array<{
 
 export function LocalNewsSourceToggle({ activeSource }: { activeSource: LocalNewsSource }) {
   return (
-    <nav aria-label="Local News source" className="grid gap-2">
-      <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
-        Sources
-      </p>
+    <nav aria-label="Local News source">
       <div className="grid grid-cols-2 gap-1 rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-1">
         {sourceItems.map((item) => {
           const active = item.value === activeSource;

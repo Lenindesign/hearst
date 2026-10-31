@@ -369,7 +369,7 @@ export function UtilityBar({
               {isLocalNewsMenu ? (
                 <section aria-labelledby="hearst-brand-menu-local-news">
                   <div className="mb-2">
-                    <p id="hearst-brand-menu-local-news" className={cn("text-[11px] font-bold uppercase tracking-[0.12em]", darkMode ? "text-[var(--component-navigation-utility-content-accent)]" : "text-primary")}>
+                    <p id="hearst-brand-menu-local-news" className={cn("text-[11px] font-bold uppercase tracking-[0.12em]", darkMode ? "text-[var(--component-navigation-utility-content-accent)]" : "text-[var(--hp-sidebar-heading,var(--primary))]")}>
                       Sources
                     </p>
                   </div>
@@ -548,7 +548,7 @@ export function UtilityBar({
                   <div className="grid gap-5 md:grid-cols-2">
                     <div>
                       <div className="mb-2">
-                        <p id="hearst-brand-menu-entertainment-culture" className={cn("text-[11px] font-bold uppercase tracking-[0.12em]", darkMode ? "text-[var(--component-navigation-utility-content-accent)]" : "text-primary")}>
+                        <p id="hearst-brand-menu-entertainment-culture" className={cn("text-[11px] font-bold uppercase tracking-[0.12em]", darkMode ? "text-[var(--component-navigation-utility-content-accent)]" : "text-[var(--hp-sidebar-heading,var(--primary))]")}>
                           Shows
                         </p>
                       </div>
@@ -568,7 +568,7 @@ export function UtilityBar({
                     </div>
                     <div>
                       <div className="mb-2">
-                        <p className={cn("text-[11px] font-bold uppercase tracking-[0.12em]", darkMode ? "text-[var(--component-navigation-utility-content-accent)]" : "text-primary")}>
+                        <p className={cn("text-[11px] font-bold uppercase tracking-[0.12em]", darkMode ? "text-[var(--component-navigation-utility-content-accent)]" : "text-[var(--hp-sidebar-heading,var(--primary))]")}>
                           Stories
                         </p>
                       </div>
@@ -615,7 +615,7 @@ export function UtilityBar({
               {visibleBrandSections.map((section) => (
                 <section key={section.mode} aria-labelledby={`hearst-brand-menu-${section.mode}`}>
                   <div className="mb-2">
-                    <p id={`hearst-brand-menu-${section.mode}`} className={cn("text-[11px] font-bold uppercase tracking-[0.12em]", darkMode ? "text-[var(--component-navigation-utility-content-accent)]" : "text-primary")}>
+                    <p id={`hearst-brand-menu-${section.mode}`} className={cn("text-[11px] font-bold uppercase tracking-[0.12em]", darkMode ? "text-[var(--component-navigation-utility-content-accent)]" : "text-[var(--hp-sidebar-heading,var(--primary))]")}>
                       {section.label}
                     </p>
                   </div>

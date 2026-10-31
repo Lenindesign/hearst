@@ -7,12 +7,13 @@ import { ContentReaderDialogShell, rememberContentReaderReturnFocus } from "@/co
 import { ContentReaderMasthead } from "@/components/hearst-plus/content-reader-masthead";
 import { FeaturedStoryCarousel } from "@/components/hearst-plus/featured-story-carousel";
 import { ContextualRiverAdvertisement } from "@/components/hearst-plus/contextual-river-advertisement";
+import { localNewsContextualAd } from "@/components/hearst-plus/local-news-contextual-ad";
+import { LocalNewsSourceToggle } from "@/components/hearst-plus/local-news-source-toggle";
 import { LocalNewsRail } from "@/components/hearst-plus/local-news-rail";
 import { LifestyleRiverImage } from "@/components/hearst-plus/story-presentation";
 import { TrendingStoryRail } from "@/components/hearst-plus/trending-rail";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import type { ContextualAdUnit } from "@/components/hearst-plus/content-reader-advertisement";
 import type { FeedStatus, FeedType, HearstTVContentType, HearstTVFeed } from "@/lib/hearst-tv-feed-framework";
 import {
   dedupeHearstTVContent,
@@ -23,7 +24,6 @@ import {
   hearstTVSampleContent,
   hearstTVStations,
   type HearstTVContent,
-  type HearstTVStation,
 } from "@/lib/hearst-tv-feed-framework";
 
 type ViewMode = "reader" | "admin";
@@ -47,24 +47,6 @@ const feedStorageKey = "hearst-tv-feed-admin-config:v1";
 const allValue = "all";
 const localNewsHeroStoryLimit = 3;
 const localNewsRiverStoryLimit = 12;
-const localNewsContextualAd: ContextualAdUnit = {
-  id: "local-news-community-partner",
-  sponsor: "Local Market Partner",
-  title: "Closer to your community",
-  summary: "A contextual sponsorship preview for neighborhood services, events, and local businesses.",
-  cta: "Explore local coverage",
-  topics: ["Local News", "Community"],
-  tags: ["community", "local", "neighborhood"],
-  creativeLabel: "COMMUNITY",
-  imageUrl: "/images/hearst-local-news-community-ad.svg",
-  palette: {
-    background: "var(--card)",
-    foreground: "var(--foreground)",
-    accent: "var(--primary)",
-    soft: "var(--secondary)",
-  },
-};
-
 function isConfiguredFeed(feed: StoredFeed) {
   return feed.enabled && feed.feedUrl !== feedUrlTbd;
 }
@@ -171,7 +153,6 @@ export function HearstTVLocalNewsRiver({
   onOpenStory,
   onStoriesChange,
 }: HearstTVLocalNewsRiverProps = {}) {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const requestedStation = searchParams.get("station");
   const routedStation = requestedStation && getHearstTVStationById(requestedStation)
@@ -186,8 +167,7 @@ export function HearstTVLocalNewsRiver({
       return hearstTVFeeds;
     }
   });
-  const [manualSelectedStation, setManualSelectedStation] = useState(allValue);
-  const selectedStation = routedStation ?? manualSelectedStation;
+  const selectedStation = routedStation ?? allValue;
   const [liveContent, setLiveContent] = useState<HearstTVContent[]>([]);
   const [liveFeedError, setLiveFeedError] = useState<string | null>(null);
   const [liveFeedLoading, setLiveFeedLoading] = useState(false);
@@ -337,38 +317,12 @@ export function HearstTVLocalNewsRiver({
     return () => onStoriesChange?.([]);
   }, [onStoriesChange]);
 
-  function handleStationChange(value: string) {
-    setManualSelectedStation(value);
-    const target = value === allValue
-      ? "/hearst-plus/local-news/#tv-stations"
-      : `/hearst-plus/local-news/?station=${encodeURIComponent(value)}#tv-stations`;
-    router.replace(target, { scroll: false });
-  }
-
   return (
     <div className="space-y-6" data-hearst-plus-local-news-river>
-      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-x-4 gap-y-6 md:grid-cols-[minmax(0,1fr)_300px] lg:grid-cols-[clamp(240px,24vw,300px)_minmax(0,1fr)_300px]">
+      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-x-4 gap-y-6 md:grid-cols-[minmax(0,1fr)_300px] lg:grid-cols-[300px_minmax(0,1fr)_300px]">
         <aside className="hidden min-w-0 space-y-5 lg:sticky lg:top-[86px] lg:block lg:max-h-[calc(100dvh-110px)] lg:self-start lg:overflow-y-auto lg:pr-1">
-          <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]" aria-labelledby="local-news-filter-title">
-            <h2 id="local-news-filter-title" className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
-              Your TV market
-            </h2>
-            <p className="mt-3 text-sm leading-6 text-muted-foreground">Choose a station to see news from its market.</p>
-            <div className="mt-4 grid gap-4">
-              <FilterSelect
-                id="inline-local-station-filter"
-                label="Station"
-                value={selectedStation}
-                onChange={handleStationChange}
-                options={[
-                  { label: "All stations", value: allValue },
-                  ...hearstTVStations.map((station) => ({
-                    label: formatStationOptionLabel(station, configuredStationIds.has(station.id)),
-                    value: station.id,
-                  })),
-                ]}
-              />
-            </div>
+          <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-3 shadow-[var(--hp-shadow-card)]">
+            <LocalNewsSourceToggle activeSource="tv" />
           </section>
           <TrendingStoryRail
             stories={readerStories.slice(3, 8).filter((story) => Boolean(story.image))}
@@ -1300,10 +1254,6 @@ function StationLogo({
       ) : null}
     </span>
   );
-}
-
-function formatStationOptionLabel(station: HearstTVStation, configured: boolean) {
-  return `${configured ? "🟢 " : ""}${station.callSign} · ${station.market}`;
 }
 
 function formatContentType(type: HearstTVContentType) {

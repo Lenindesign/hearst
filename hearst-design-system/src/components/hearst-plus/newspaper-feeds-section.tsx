@@ -2,20 +2,21 @@
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type RefObject } from "react";
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { ContentReaderDialogShell, rememberContentReaderReturnFocus } from "@/components/hearst-plus/content-reader-dialog-shell";
 import { ContentReaderMasthead } from "@/components/hearst-plus/content-reader-masthead";
 import { FeaturedStoryCarousel } from "@/components/hearst-plus/featured-story-carousel";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ContextualRiverAdvertisement } from "@/components/hearst-plus/contextual-river-advertisement";
+import { LocalNewsRail } from "@/components/hearst-plus/local-news-rail";
+import { localNewsContextualAd } from "@/components/hearst-plus/local-news-contextual-ad";
+import { TrendingStoryRail } from "@/components/hearst-plus/trending-rail";
 import {
   getHearstNewspaperFeedById,
   getHearstNewspaperPublicationById,
   hearstNewspaperFeeds,
-  hearstNewspaperPublications,
   hearstNewspaperSampleContent,
   newspaperFeedUrlTbd,
   type HearstNewspaperContent,
-  type HearstNewspaperPublication,
 } from "@/lib/hearst-newspaper-feed-framework";
 import { LocalNewsSourceToggle } from "@/components/hearst-plus/local-news-source-toggle";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
@@ -38,10 +39,6 @@ type NewspaperFeedsSectionProps = {
 
 function isConnectedFeed(feed: (typeof hearstNewspaperFeeds)[number]) {
   return feed.enabled && feed.status === "connected" && feed.feedUrl !== newspaperFeedUrlTbd;
-}
-
-function formatPublicationOption(publication: HearstNewspaperPublication, connectedPublicationIds: Set<string>) {
-  return `${connectedPublicationIds.has(publication.id) ? "🟢 " : ""}${publication.publicationName} · ${publication.market}`;
 }
 
 function formatContentType(type: HearstNewspaperContent["contentType"]) {
@@ -68,19 +65,12 @@ export function NewspaperFeedsSection({
   onOpenStory,
   onStoriesChange,
 }: NewspaperFeedsSectionProps = {}) {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const requestedPublication = searchParams.get("publication");
   const routedPublication = requestedPublication && getHearstNewspaperPublicationById(requestedPublication)
     ? requestedPublication
     : null;
-  const connectedFeeds = hearstNewspaperFeeds.filter(isConnectedFeed);
-  const connectedPublicationIds = useMemo(
-    () => new Set(connectedFeeds.map((feed) => feed.publicationId)),
-    [connectedFeeds],
-  );
-  const [manualSelectedPublication, setManualSelectedPublication] = useState(defaultNewspaperPublication);
-  const selectedPublication = routedPublication ?? manualSelectedPublication;
+  const selectedPublication = routedPublication ?? defaultNewspaperPublication;
   const [liveContent, setLiveContent] = useState<HearstNewspaperContent[]>([]);
   const [liveFeedLoading, setLiveFeedLoading] = useState(false);
   const [liveRiverLoading, setLiveRiverLoading] = useState(false);
@@ -205,40 +195,19 @@ export function NewspaperFeedsSection({
     return () => onStoriesChange?.([]);
   }, [onStoriesChange]);
 
-  function handlePublicationChange(value: string) {
-    setManualSelectedPublication(value);
-    const target = value === allValue
-      ? "/hearst-plus/local-news/newspapers/#newspapers"
-      : `/hearst-plus/local-news/newspapers/?publication=${encodeURIComponent(value)}#newspapers`;
-    router.replace(target, { scroll: false });
-  }
-
   return (
     <div className="space-y-6" data-hearst-plus-newspaper-river aria-labelledby="newspaper-feeds-title">
-      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]">
-        <aside className="min-w-0 space-y-4 lg:sticky lg:top-[108px] lg:max-h-[calc(100dvh-132px)] lg:self-start lg:overflow-y-auto lg:pr-1">
-          <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]" aria-labelledby="newspaper-filter-title">
+      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-x-4 gap-y-6 md:grid-cols-[minmax(0,1fr)_300px] lg:grid-cols-[300px_minmax(0,1fr)_300px]">
+        <aside className="hidden min-w-0 space-y-5 lg:sticky lg:top-[86px] lg:block lg:max-h-[calc(100dvh-110px)] lg:self-start lg:overflow-y-auto lg:pr-1">
+          <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-3 shadow-[var(--hp-shadow-card)]">
             <LocalNewsSourceToggle activeSource="newspapers" />
-            <h2 id="newspaper-filter-title" className="mt-5 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">Newspapers</h2>
-            <p className="mt-3 text-sm leading-6 text-muted-foreground">
-              Select a Hearst newspaper feed. Green dots mark publications with a verified RSS endpoint.
-            </p>
-            <div className="mt-4 grid gap-4">
-              <FilterSelect
-                id="inline-newspaper-publication-filter"
-                label="Newspaper"
-                value={selectedPublication}
-                onChange={handlePublicationChange}
-                options={[
-                  { label: "All newspapers", value: allValue },
-                  ...hearstNewspaperPublications.map((publication) => ({
-                    label: formatPublicationOption(publication, connectedPublicationIds),
-                    value: publication.id,
-                  })),
-                ]}
-              />
-            </div>
           </section>
+          <TrendingStoryRail
+            stories={readerStories.slice(3, 8).filter((story) => Boolean(story.image))}
+            title="More Newspaper Stories"
+            onOpenStory={(story) => onOpenStory?.(story.id)}
+            unoptimizedImages
+          />
         </aside>
 
         <main id="hearst-story-river" className="min-w-0 scroll-mt-28 space-y-4" aria-label="Hearst Newspapers RSS feeds">
@@ -246,8 +215,8 @@ export function NewspaperFeedsSection({
             <NewspaperFeaturedSkeleton />
           ) : liveFeedError && selectedPublication !== allValue ? (
             <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-6 text-sm leading-6 text-muted-foreground shadow-[var(--hp-shadow-card)]" role="status">
-              <p className="font-bold text-foreground">This newspaper feed is temporarily unavailable.</p>
-              <p className="mt-2">{liveFeedError}</p>
+              <p className="font-bold text-foreground">Newspaper stories aren’t available right now.</p>
+              <p className="mt-2">Please try again later.</p>
             </section>
           ) : heroItems.length > 0 ? (
             <NewspaperFeaturedCarousel
@@ -272,7 +241,6 @@ export function NewspaperFeedsSection({
             const publication = getHearstNewspaperPublicationById(item.publicationId);
             const feed = getHearstNewspaperFeedById(item.feedId);
             if (!publication || !feed) return null;
-            const connected = isConnectedFeed(feed);
             const readerStory = readerStoryById.get(item.id);
 
             return (
@@ -304,9 +272,7 @@ export function NewspaperFeedsSection({
                   </span>
                   <span className="block min-w-0 p-4 sm:p-5">
                     <span className="mb-3 flex flex-wrap items-center gap-2">
-                      <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">{connected ? "Latest" : "Sample"}</span>
                       <span className="text-[length:var(--text-token-4xs)] text-muted-foreground">{publication.publicationName} · {publication.market}</span>
-                      <span className="rounded-full bg-[var(--hp-surface-low)] px-2 py-1 text-primary">{formatContentType(item.contentType)}</span>
                     </span>
                     <span className="headline block break-words text-2xl leading-tight text-foreground transition-colors group-hover/card:text-primary sm:text-[1.7rem]">
                       {item.title}
@@ -314,8 +280,7 @@ export function NewspaperFeedsSection({
                     <span className="mt-3 line-clamp-3 block text-sm leading-6 text-muted-foreground">{item.description}</span>
                     <span className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4 text-xs text-muted-foreground">
                       <span>{formatDate(item.publishedAt)}</span>
-                      <span>{item.isMock ? "Mock sample" : feed.feedName}</span>
-                      <span>{connected ? "RSS connected" : "Feed URL TBD"}</span>
+                      <span>{item.isMock ? "Local preview" : publication.publicationName}</span>
                     </span>
                   </span>
                 </button>
@@ -330,18 +295,9 @@ export function NewspaperFeedsSection({
           ) : null}
         </main>
 
-        <aside className="min-w-0 space-y-4 lg:sticky lg:top-[108px] lg:max-h-[calc(100dvh-132px)] lg:self-start lg:overflow-y-auto lg:pr-1">
-          <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
-            <h2 className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">Feed status</h2>
-            <div className="mt-4 space-y-3 text-sm">
-              <p><span className="font-bold">{hearstNewspaperPublications.length}</span> Hearst newspapers</p>
-              <p><span className="font-bold">{connectedFeeds.length}</span> connected feeds</p>
-              <p><span className="font-bold">{hearstNewspaperFeeds.length - connectedFeeds.length}</span> pending</p>
-            </div>
-            <p className="mt-4 text-xs leading-5 text-muted-foreground">
-              Publications with a green dot have a verified RSS endpoint. Other records remain pending until a real endpoint is confirmed.
-            </p>
-          </section>
+        <aside className="hidden min-w-0 space-y-5 md:sticky md:top-[86px] md:block md:max-h-[calc(100dvh-110px)] md:self-start md:overflow-y-auto md:pr-1">
+          <ContextualRiverAdvertisement ad={localNewsContextualAd} />
+          <LocalNewsRail />
         </aside>
       </div>
     </div>
@@ -392,7 +348,7 @@ function NewspaperFeaturedCarousel({
       isCurrentStory={() => true}
       onOpenStory={onOpenStory}
       onFollowBrand={() => undefined}
-      indicatorPalette={["#087A68", "#3EA391", "#91CFC2"]}
+      indicatorPalette={["#2B6FAF", "#70A4D5", "#B1CFE9"]}
     />
   );
 }
@@ -608,10 +564,10 @@ function NewspaperReaderModal({
       onClose={onClose}
       returnFocusElementRef={returnFocusElementRef}
       style={{
-        "--primary": "#087A68",
-        "--hp-primary": "#087A68",
-        "--hp-section-title": "#087A68",
-        "--hp-sidebar-heading": "#087A68",
+        "--primary": "#2B6FAF",
+        "--hp-primary": "#2B6FAF",
+        "--hp-section-title": "#2B6FAF",
+        "--hp-sidebar-heading": "#2B6FAF",
       } as CSSProperties}
     >
       <ContentReaderMasthead
@@ -729,49 +685,4 @@ function mapNewspaperItemToCarouselStory(item: HearstNewspaperContent): Lifestyl
     publishedAt: item.publishedAt,
     sourceUrl: item.url === "#" ? undefined : item.url,
   };
-}
-
-function FilterSelect({
-  id,
-  label,
-  onChange,
-  options,
-  value,
-}: {
-  id: string;
-  label: string;
-  onChange: (value: string) => void;
-  options: Array<{ label: string; value: string }>;
-  value: string;
-}) {
-  return (
-    <div className="block text-sm font-semibold text-[var(--hp-text-headline)]">
-      <label htmlFor={id}>{label}</label>
-      <Select value={value} onValueChange={(nextValue) => {
-        if (nextValue) onChange(nextValue);
-      }}>
-        <SelectTrigger
-          id={id}
-          className="mt-2 h-11 min-h-11 w-full rounded-lg border-input bg-background px-3 text-left text-sm font-semibold text-foreground shadow-xs"
-        >
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent
-          align="start"
-          alignItemWithTrigger={false}
-          className="max-h-[min(420px,var(--available-height))] rounded-lg border border-border bg-popover p-1 shadow-xl ring-1 ring-foreground/10"
-        >
-          {options.map((option) => (
-            <SelectItem
-              key={option.value}
-              value={option.value}
-              className="min-h-10 px-3 pr-9 text-sm font-semibold text-popover-foreground focus:bg-[var(--hp-control-hover)] focus:text-foreground"
-            >
-              {option.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
-  );
 }

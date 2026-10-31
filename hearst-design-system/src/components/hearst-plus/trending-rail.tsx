@@ -28,6 +28,9 @@ export function TrendingStoryRail({
 }) {
   const titleId = React.useId();
   const visibleStories = stories.slice(0, 5);
+  const hasMixedBrands = new Set(
+    visibleStories.map((story) => story.brandSlug || story.brand).filter(Boolean),
+  ).size > 1;
 
   if (visibleStories.length === 0) return null;
 
@@ -76,17 +79,19 @@ export function TrendingStoryRail({
                 </span>
               </span>
               <span className="min-w-0">
-                <span className="line-clamp-3 text-[12px] font-bold leading-[1.35] group-hover:text-primary group-focus-visible:text-primary">
+                <span className="line-clamp-3 text-[12px] font-bold leading-[1.35] group-hover:text-[var(--hp-sidebar-heading,var(--primary))] group-focus-visible:text-[var(--hp-sidebar-heading,var(--primary))]">
                   {story.title}
                 </span>
-                <span className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground">
-                  <BrandSourceIcon
-                    brand={story.brand}
-                    brandSlug={story.brandSlug}
-                    className="h-3.5 w-3.5"
-                  />
-                  <span>{story.brand}</span>
-                </span>
+                {hasMixedBrands ? (
+                  <span className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground">
+                    <BrandSourceIcon
+                      brand={story.brand}
+                      brandSlug={story.brandSlug}
+                      className="h-3.5 w-3.5"
+                    />
+                    <span>{story.brand}</span>
+                  </span>
+                ) : null}
               </span>
             </button>
           </li>

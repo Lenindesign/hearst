@@ -93,7 +93,7 @@ export function CommunityJoinedGroupsCard({
           </h2>
           <Link
             href={browseHref}
-            className="shrink-0 text-xs font-bold text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+            className="shrink-0 text-xs font-bold text-[var(--hp-sidebar-heading,var(--primary))] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
           >
             All
           </Link>
@@ -114,7 +114,7 @@ export function CommunityJoinedGroupsCard({
                 />
                 <Link
                   href={getCommunityGroupHref(group)}
-                  className="min-w-0 line-clamp-4 text-[12px] font-bold leading-[1.35] hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+                  className="min-w-0 line-clamp-4 text-[12px] font-bold leading-[1.35] hover:text-[var(--hp-sidebar-heading,var(--primary))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
                 >
                   {group.name}
                 </Link>
@@ -123,7 +123,7 @@ export function CommunityJoinedGroupsCard({
                 type="button"
                 onClick={() => toggleMembership(group.brand)}
                 aria-pressed={joined}
-                className="shrink-0 px-2 py-1 text-xs font-bold text-primary transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+                className="shrink-0 px-2 py-1 text-xs font-bold text-[var(--hp-sidebar-heading,var(--primary))] transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
               >
                 {joined ? "Joined" : "Join"}
               </button>
@@ -157,7 +157,7 @@ export function CommunityJoinedGroupsCard({
                 >
                   <Link
                     href={getCommunityGroupHref(group)}
-                    className="flex min-w-0 items-center gap-2 text-sm font-semibold hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+                    className="flex min-w-0 items-center gap-2 text-sm font-semibold hover:text-[var(--hp-sidebar-heading,var(--primary))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
                   >
                     <BrandSourceIcon
                       brand={group.brand}
@@ -169,7 +169,7 @@ export function CommunityJoinedGroupsCard({
                   {conversation ? (
                     <Link
                       href={`/communities/${conversation.brandSlug}/threads/${conversation.id}/`}
-                      className="mt-2 block px-2 py-2 text-xs leading-5 text-[var(--hp-text-secondary)] hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+                      className="mt-2 block px-2 py-2 text-xs leading-5 text-[var(--hp-text-secondary)] hover:text-[var(--hp-sidebar-heading,var(--primary))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
                     >
                       <span className="font-normal">
                         Conversation

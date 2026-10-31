@@ -59,7 +59,7 @@ export function ContextualRiverAdvertisement({
           <div className="flex flex-wrap items-center gap-2">
             <span
               className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest"
-              style={{ color: ad.palette.accent }}
+              style={{ color: "var(--hp-sidebar-heading, var(--primary))" }}
             >
               {ad.sponsor}
             </span>
