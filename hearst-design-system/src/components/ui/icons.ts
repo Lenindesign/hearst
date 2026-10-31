@@ -78,3 +78,4 @@ export { QuestionIcon as HelpCircle } from "@phosphor-icons/react/dist/ssr/Quest
 export { SquaresFourIcon as LayoutCards } from "@phosphor-icons/react/dist/ssr/SquaresFour";
 export { ListBulletsIcon as LayoutList } from "@phosphor-icons/react/dist/ssr/ListBullets";
 export { RectangleIcon as LayoutFullWidth } from "@phosphor-icons/react/dist/ssr/Rectangle";
+export { RowsIcon as LayoutSections } from "@phosphor-icons/react/dist/ssr/Rows";

@@ -65,7 +65,7 @@ The **HDS page token** is the theme's published background value. The prototype 
 | Hearst Lifestyle | `hearst-lifestyle` | `#A62C37` | `#EFD9DB` | `#F7EFE7` | `/logos/hearst-lifestyle.svg` |
 | Hearst Fashion & Luxury | `hearst-flux` | `#12354E` | `#D4DBDF` | `#F3F5F6` | `/logos/hearst-fashion-luxury.svg` |
 | Hearst Enthusiast & Wellness | `hearst-ew` | `#819238` | `#DADEDF` | `#F5F6F6` | `/logos/hearst-ew-official.svg` |
-| Hearst Local News | `hearst-local-news` | `#087A68` | `#DDF3E9` | `#F3FAF7` | `/logos/hearst-local-news.svg` |
+| Hearst Local News | `hearst-local-news` | `#2B6FAF` | `#DCEBFA` | `#F4F8FC` | `/logos/hearst-local-news.svg` |
 | A&E Family | `hearst-entertainment` | `#B9913F` | `#F2DEAE` | `#FBF8EF` | `/logos/aande-family.svg` |
 
 ### Typography
@@ -160,7 +160,7 @@ The registry is split into narrower identity and typography tables so it remains
 - Use compact brand icons only in metadata, filters, and dense lists. Do not replace a masthead wordmark with an icon.
 - **Publication mastheads:** publication pages use the original compact masthead row with the registered brand logo, without photo banners. The compact sticky bar keeps the same logo. The banner art catalog in `src/lib/brand-banners.ts` remains available to contextual community headers.
 - **Hearst+ logo:** `/logos/hearst-plus.svg` is two-tone: HEARST in navy `#012247` and the plus in Hearst+ blue `#2D75B9`. Brand-color tints never flatten it; only knockout (white) surfaces recolor it, all white.
-- **Destination banner lockups:** Lifestyle, Autos, Fashion & Luxury, and Enthusiast & Wellness banners use the shared standalone `/logos/hearst-wordmark.svg` plus a separate live-text descriptor. All four use the same HEARST artwork size and the same Newsreader 600 italic descriptor size at each responsive breakpoint. Keep the Hearst+ home's separate two-tone HEARST+ wordmark; the standard compact destination logo row and Local News/A&E lockups retain their registered destination SVGs.
+- **Destination banner lockups:** Lifestyle, Autos, Fashion & Luxury, Enthusiast & Wellness, and Local News banners use the shared standalone `/logos/hearst-wordmark.svg` plus a separate live-text descriptor. Use the same HEARST artwork size and Newsreader 600 italic descriptor size at each responsive breakpoint. Local News retains its registered SVG in the compact destination logo row; A&E keeps its registered destination lockup. Keep the Hearst+ home's separate two-tone HEARST+ wordmark.
 - **Hearst+ feature lockup:** app-level features (Communities first; later Newsstand, Shop, Games) use the destination lockup above with Hearst+ blue `#2D75B9` as the section color: navy HEARST, divider, one short feature name. Register each in `src/lib/logos.ts` (Communities: `hearst-communities`, `/logos/hearst-plus-communities.svg`) and render it through the shared masthead geometry.
 - Dark mode uses the accessible derived primary from `brandToCssVars`; do not assume the light primary has sufficient contrast on a dark surface.
 - AutoWeek keeps the dark-neutral editorial-title exception documented in `STYLE.md` and `APP_RULES.md`.

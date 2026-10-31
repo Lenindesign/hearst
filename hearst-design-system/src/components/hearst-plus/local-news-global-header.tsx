@@ -101,6 +101,7 @@ function LocalNewsGlobalHeaderContent({
       <MainNav
         brandSlug="hearst-local-news"
         activeFilter={activeLabel}
+        mastheadDescriptorOverride="Local News"
         navLinksOverride={navLinksOverride}
         navLinkHrefOverrides={navLinkHrefOverrides}
         navCarouselMode="compact"

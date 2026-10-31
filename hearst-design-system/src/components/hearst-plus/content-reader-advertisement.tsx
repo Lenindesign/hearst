@@ -34,22 +34,11 @@ export type ContentReaderAdvertisementProps = {
   currentTopic: string;
 };
 
-export function getContextualAdvertisementImage(
-  ad: ContextualAdUnit,
-  stories: LifestyleRiverStory[],
-) {
-  const bestMatch = stories
-    .filter((story) => Boolean(story.image))
-    .map((story) => ({
-      story,
-      score:
-        (ad.topics.includes(story.topic) ? 40 : 0)
-        + ad.tags.filter((tag) => story.tags.includes(tag)).length * 18,
-    }))
-    .filter((match) => match.score > 0)
-    .sort((first, second) => second.score - first.score || first.story.id.localeCompare(second.story.id))[0];
-
-  return bestMatch?.story.image ?? ad.imageUrl;
+export function getContextualAdvertisementImage(ad: ContextualAdUnit) {
+  // Keep paid/demo creative separate from editorial story imagery. Replacing an
+  // ad image with a nearby story image can make the sponsor and creative feel
+  // unrelated, especially on section index pages.
+  return ad.imageUrl;
 }
 
 export function selectContentReaderAdvertisement(

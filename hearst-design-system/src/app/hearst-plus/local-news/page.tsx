@@ -23,11 +23,11 @@ export default function LocalNewsPage() {
       <div
         className="hearst-plus-theme min-h-screen bg-[var(--hp-background)] text-foreground"
         style={{
-          "--primary": "#087A68",
-          "--hp-primary": "#087A68",
-          "--hp-nav": "#087A68",
-          "--hp-section-title": "#087A68",
-          "--hp-sidebar-heading": "#087A68",
+          "--primary": "#2B6FAF",
+          "--hp-primary": "#2B6FAF",
+          "--hp-nav": "#2B6FAF",
+          "--hp-section-title": "#2B6FAF",
+          "--hp-sidebar-heading": "#2B6FAF",
         } as CSSProperties}
       >
         <LocalNewsGlobalHeader />

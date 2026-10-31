@@ -3,26 +3,26 @@
   <desc id="desc">Illustrated neighborhood skyline in Hearst Local News green.</desc>
   <defs>
     <linearGradient id="sky" x1="0" x2="1" y1="0" y2="1">
-      <stop offset="0" stop-color="#075b50"/>
-      <stop offset="1" stop-color="#12a78a"/>
+      <stop offset="0" stop-color="#174c7d"/>
+      <stop offset="1" stop-color="#2b6faf"/>
     </linearGradient>
     <linearGradient id="ground" x1="0" x2="0" y1="0" y2="1">
       <stop offset="0" stop-color="#ffffff" stop-opacity=".12"/>
-      <stop offset="1" stop-color="#002d28" stop-opacity=".65"/>
+      <stop offset="1" stop-color="#102a43" stop-opacity=".65"/>
     </linearGradient>
   </defs>
   <rect width="1200" height="675" fill="url(#sky)"/>
   <circle cx="920" cy="150" r="92" fill="#f2d99c" opacity=".9"/>
-  <path d="M0 430 160 355l125 50 137-130 140 105 128-91 134 82 139-139 237 117v326H0Z" fill="#0d7464" opacity=".8"/>
+  <path d="M0 430 160 355l125 50 137-130 140 105 128-91 134 82 139-139 237 117v326H0Z" fill="#1f65a6" opacity=".8"/>
   <g fill="#e7f3e9" opacity=".88">
     <path d="M65 425h155v250H65zM244 374h130v301H244zM395 450h174v225H395zM603 334h145v341H603zM780 414h166v261H780zM972 366h158v309H972z"/>
     <path d="M47 425h190l-95-95zM225 374h168l-84-80zM584 334h184l-92-95zM951 366h200l-100-89z"/>
   </g>
-  <g fill="#087a68" opacity=".9">
+  <g fill="#174c7d" opacity=".9">
     <path d="M88 463h28v34H88zm52 0h28v34h-28zm52 0h28v34h-28zM271 414h24v34h-24zm51 0h24v34h-24zm-51 64h24v34h-24zm51 0h24v34h-24zM431 487h31v38h-31zm58 0h31v38h-31zM632 383h28v37h-28zm55 0h28v37h-28zm-55 70h28v37h-28zm55 0h28v37h-28zM816 455h29v36h-29zm60 0h29v36h-29zM1002 413h28v36h-28zm56 0h28v36h-28z"/>
   </g>
-  <path d="M0 548c146-44 227-12 359 14 144 28 234-19 381-9 180 12 288 86 460 30v92H0Z" fill="#b3d59e"/>
-  <path d="M0 580c180-19 267 43 432 51 150 8 246-41 391-29 151 12 244 73 377 40v33H0Z" fill="#76b77e"/>
+  <path d="M0 548c146-44 227-12 359 14 144 28 234-19 381-9 180 12 288 86 460 30v92H0Z" fill="#9fc5e8"/>
+  <path d="M0 580c180-19 267 43 432 51 150 8 246-41 391-29 151 12 244 73 377 40v33H0Z" fill="#6a92b7"/>
   <rect y="585" width="1200" height="90" fill="url(#ground)"/>
   <g fill="#fff" opacity=".9">
     <circle cx="186" cy="552" r="27"/><circle cx="164" cy="566" r="19"/><circle cx="210" cy="570" r="21"/>

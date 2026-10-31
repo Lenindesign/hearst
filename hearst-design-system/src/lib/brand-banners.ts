@@ -57,7 +57,7 @@ export const destinationBanners: Partial<Record<string, BrandBanner>> = {
   "hearst-ew": { background: "#819238", alt: "Hearst Enthusiast & Wellness", width: 2560, height: 220, overlayLogo: true, pattern: "brand-wall", wallSection: "ew", logoSlug: "hearst-wordmark", logoDescriptor: "Enthusiast & Wellness", logoColor: "white", logoSize: "section" },
   // Local News: a wall of the Hearst Television station logos.
   "hearst-local-news": {
-    background: "#087A68",
+    background: "#2B6FAF",
     alt: "Hearst Local News",
     width: 2560,
     height: 220,

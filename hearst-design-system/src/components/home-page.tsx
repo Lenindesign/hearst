@@ -3,6 +3,7 @@
 import React from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTheme } from "./theme-provider";
 import { NavBar } from "./nav-bar";
@@ -15,6 +16,8 @@ import {
   getHearstDestinationCategoryLabel,
   getHearstDestinationCategoryRoute,
   getHearstDestinationRoute,
+  getHearstAllBrands,
+  getHearstBrandSection,
   hearstReaderSections,
 } from "@/lib/hearst-routes";
 import {
@@ -25,6 +28,7 @@ import {
 } from "@/lib/community-groups";
 import type { HearstDestinationStaticData } from "@/lib/hearst-destination-data-types";
 import { todayEditLocalNewsStory } from "@/lib/hearst-plus-today-edit-stories";
+import { hearstEvents } from "@/lib/hearst-events";
 import { normalizeReaderReturnHref } from "@/lib/story-routes";
 import {
   appendAmbientReaderHref,
@@ -68,6 +72,7 @@ import {
   LayoutCards,
   LayoutFullWidth,
   LayoutList,
+  LayoutSections,
   Search,
   ShoppingBag,
   SlidersHorizontal,
@@ -334,6 +339,8 @@ export interface HomePageTemplateProps {
   forceDestinationRiver?: boolean;
   /** Render the featured carousel across all three desktop feed columns. */
   fullWidthFeaturedHero?: boolean;
+  /** Render the Hearst+ home as editorial sections instead of one continuous story river. */
+  sectionsHomepage?: boolean;
   /**
    * When set, the river renders in single-brand mode: the discovery sidebar's
    * trending rail is titled "Trending" and filters to the current publication;
@@ -532,12 +539,15 @@ function RiverLayoutToggle({
 }) {
   const layout = useRiverLayout();
   const pathname = usePathname()?.replace(/\/+$/, "") || "/";
+  const searchParams = useSearchParams();
   const router = useRouter();
-  const isFullWidthHero = pathname === "/hearst-plus/full-width-hero" || layout === "full-width-hero";
+  const isSectionsRoute = pathname === "/hearst-plus/sections" || searchParams?.get("layout") === "sections";
+  const isFullWidthHero = pathname === "/hearst-plus/full-width-hero" || (!isSectionsRoute && layout === "full-width-hero");
   const options = [
     { value: "cards", label: "Show stories as cards", Icon: LayoutCards },
     { value: "list", label: "Show stories as a list", Icon: LayoutList },
     { value: "full-width-hero", label: "Show stories with a full-width hero", Icon: LayoutFullWidth },
+    { value: "sections", label: "Show stories in editorial sections", Icon: LayoutSections },
   ] as const;
   return (
     <div role="group" aria-label="Story layout" className="hidden items-center gap-1 sm:flex">
@@ -547,17 +557,28 @@ function RiverLayoutToggle({
           type="button"
           variant="outline"
           size="icon-sm"
-          aria-pressed={value === "full-width-hero" ? isFullWidthHero : !isFullWidthHero && layout === value}
+          aria-pressed={value === "sections"
+            ? isSectionsRoute
+            : !isSectionsRoute && (value === "full-width-hero" ? isFullWidthHero : !isFullWidthHero && layout === value)}
           aria-label={label}
           title={label}
           className={cn("hearst-plus-layout-toggle h-7 w-7 rounded-[4px]", buttonClassName)}
           onClick={() => {
+            if (value === "sections") {
+              router.push(pathname === "/hearst-plus" || pathname === "/"
+                ? "/hearst-plus/sections/"
+                : `${pathname}/?layout=sections`);
+              return;
+            }
             if (value === "full-width-hero") {
               setRiverLayout(value);
+              if (pathname === "/hearst-plus/sections") router.push("/hearst-plus/full-width-hero/");
+              else if (isSectionsRoute) router.push(pathname);
               return;
             }
             setRiverLayout(value);
-            if (pathname === "/hearst-plus/full-width-hero") router.push("/hearst-plus/");
+            if (pathname === "/hearst-plus/sections" || pathname === "/hearst-plus/full-width-hero") router.push("/hearst-plus/");
+            else if (isSectionsRoute) router.push(pathname);
           }}
         >
           <Icon className="h-3.5 w-3.5" aria-hidden />
@@ -1154,6 +1175,86 @@ export function MainNav({
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto px-5 py-6">
+          <section aria-labelledby="mobile-browse-hearst-title">
+            <h2 id="mobile-browse-hearst-title" className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
+              Browse Hearst+
+            </h2>
+            <nav aria-label="Main navigation" className="mt-3 grid grid-cols-2 gap-2">
+              {[
+                { label: "All", href: "/hearst-plus/sections/", mode: "all" },
+                ...hearstReaderSections.map((section) => ({
+                  label: section.label,
+                  href: `${getHearstDestinationRoute(section.mode)}?layout=sections`,
+                  mode: section.mode,
+                })),
+                { label: "Local News", href: "/hearst-plus/local-news/", mode: "local-news" },
+                { label: "A&E Family", href: "/hearst-plus/entertainment/", mode: "entertainment-culture" },
+              ].map((section) => (
+                <Link
+                  key={section.mode}
+                  href={section.href}
+                  onClick={closeMobileMenu}
+                  aria-current={
+                    section.mode === (selectedBrand ? getHearstBrandSection(selectedBrand.slug) : getDestinationMode(brandSlug))
+                      ? "page"
+                      : undefined
+                  }
+                  className={cn(
+                    "flex min-h-11 items-center rounded-[8px] border px-3 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+                    darkMode
+                      ? "border-white/15 bg-white/[0.03] text-white hover:bg-white/[0.08]"
+                      : "border-border bg-background hover:border-primary/45 hover:bg-muted/40",
+                    section.mode === (selectedBrand ? getHearstBrandSection(selectedBrand.slug) : getDestinationMode(brandSlug)) && "border-primary/50 bg-primary/5"
+                  )}
+                >
+                  {section.label}
+                </Link>
+              ))}
+            </nav>
+          </section>
+
+          <section className={cn("mt-7 border-t pt-6", darkMode ? "border-white/10" : "border-border")} aria-labelledby="mobile-browse-brands-title">
+            <div className="flex items-center justify-between gap-3">
+              <h2 id="mobile-browse-brands-title" className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
+                Browse brands
+              </h2>
+              <span className={cn("text-xs", darkMode ? "text-white/60" : "text-muted-foreground")}>{getHearstAllBrands().length} publications</span>
+            </div>
+            <div className="mt-4 space-y-5">
+              {hearstReaderSections.map((section) => (
+                <div key={section.mode}>
+                  <h3 className={cn("mb-2 text-xs font-semibold", darkMode ? "text-white/65" : "text-muted-foreground")}>
+                    {section.label}
+                  </h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    {getHearstSectionBrands(section.mode).map((sectionBrand) => {
+                      const active = selectedBrand?.slug === sectionBrand.brandSlug;
+                      return (
+                        <Link
+                          key={sectionBrand.brandSlug}
+                          href={`${getHearstBrandRoute(sectionBrand.brandSlug)}?layout=sections`}
+                          onClick={closeMobileMenu}
+                          aria-current={active ? "page" : undefined}
+                          className={cn(
+                            "flex min-h-11 min-w-0 items-center gap-2 rounded-[8px] border px-2.5 py-2 text-left text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+                            active
+                              ? "border-primary/50 bg-primary/5"
+                              : darkMode
+                                ? "border-white/15 bg-white/[0.03] text-white hover:bg-white/[0.08]"
+                                : "border-border bg-background hover:border-primary/45 hover:bg-muted/40"
+                          )}
+                        >
+                          <BrandSourceIcon brand={sectionBrand.brand} brandSlug={sectionBrand.brandSlug} className="h-6 w-6 shrink-0 rounded-[4px]" />
+                          <span className="min-w-0 truncate">{sectionBrand.brand}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
           <section aria-labelledby="mobile-continue-reading-title">
             <div className="flex items-center justify-between gap-4">
               <h2 id="mobile-continue-reading-title" className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
@@ -2132,7 +2233,7 @@ function getContextualAdForSlot({
         ...match,
         ad: {
           ...match.ad,
-          imageUrl: getContextualAdvertisementImage(match.ad, surroundingStories),
+          imageUrl: getContextualAdvertisementImage(match.ad),
         },
       }
     : undefined;
@@ -2711,6 +2812,7 @@ export function LifestyleRiverCard({
   onSave,
   featured = false,
   layoutOverride,
+  editorialRow = false,
 }: {
   story: LifestyleRiverStory;
   onOpen: () => void;
@@ -2718,6 +2820,7 @@ export function LifestyleRiverCard({
   onSave?: () => void;
   featured?: boolean;
   layoutOverride?: RiverLayout;
+  editorialRow?: boolean;
 }) {
   const kind = getLifestyleCardKind(story);
   const [videoPlaying, setVideoPlaying] = React.useState(false);
@@ -2730,7 +2833,10 @@ export function LifestyleRiverCard({
   if (layout === "list" && !featured) {
     return (
       <article
-        className="group/card relative grid min-w-0 cursor-pointer grid-cols-[112px_minmax(0,1fr)] items-center gap-4 overflow-hidden rounded-[8px] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] sm:grid-cols-[168px_minmax(0,1fr)] sm:p-5"
+        className={cn(
+          "group/card relative grid min-w-0 cursor-pointer items-center gap-4 overflow-hidden rounded-[8px] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] sm:p-5",
+          editorialRow ? "grid-cols-[minmax(0,28%)_minmax(0,1fr)]" : "grid-cols-[112px_minmax(0,1fr)] sm:grid-cols-[168px_minmax(0,1fr)]",
+        )}
         data-story-module="river"
         data-story-layout="list"
         data-story-id={story.id}
@@ -2748,10 +2854,13 @@ export function LifestyleRiverCard({
               <StorySaveIconButton saved={saved} onSave={onSave} className="ml-auto" />
             ) : null}
           </div>
-          <h2 className="headline line-clamp-3 break-words text-lg leading-snug transition-colors group-hover/card:text-primary group-focus-within/card:text-primary sm:text-xl">
+          <h2 className={cn(
+            "headline line-clamp-3 break-words text-lg leading-snug transition-colors group-hover/card:text-primary group-focus-within/card:text-primary sm:text-xl",
+            editorialRow && "text-primary",
+          )}>
             {story.title}
           </h2>
-          <p className="mt-1.5 hidden text-sm leading-6 text-muted-foreground sm:line-clamp-3">{story.summary}</p>
+          <p className={cn("mt-1.5 text-sm leading-6 text-muted-foreground", editorialRow ? "line-clamp-3" : "hidden sm:line-clamp-3")}>{story.summary}</p>
         </div>
         <div className="relative order-first aspect-[4/3] overflow-hidden rounded-[6px] bg-muted">
           <LifestyleRiverImage
@@ -4115,6 +4224,7 @@ type LifestyleRiverHomePageProps = {
   activeFilter: string;
   destination: DestinationMode;
   fullWidthFeaturedHero?: boolean;
+  sectionsHomepage?: boolean;
   destinationConfig?: DestinationConfig;
   videoFeedData?: LiveFeedData;
   singleBrandName?: string;
@@ -4169,7 +4279,9 @@ function LifestyleRiverHydrationGate(props: LifestyleRiverHomePageProps) {
   const { isHydrated } = useReaderAccount();
   const riverLayout = useRiverLayout();
   const config = props.destinationConfig ?? destinationConfigs[props.destination];
-  const pageHeading = getLifestyleRiverPageHeading(config, props.initialBrandSlug);
+  const pageHeading = props.sectionsHomepage
+    ? "Hearst+ editorial sections"
+    : getLifestyleRiverPageHeading(config, props.initialBrandSlug);
   const useFlushVideoTop = props.activeFilter === "Videos" && Boolean(props.videoFeedData);
   const fullWidthHeroActive = props.fullWidthFeaturedHero || riverLayout === "full-width-hero";
 
@@ -4189,6 +4301,7 @@ function LifestyleRiverHomePage({
   activeFilter,
   destination,
   fullWidthFeaturedHero: forceFullWidthFeaturedHero = false,
+  sectionsHomepage = false,
   destinationConfig,
   videoFeedData,
   singleBrandName,
@@ -4217,9 +4330,11 @@ function LifestyleRiverHomePage({
   onRequestNextFeedPage,
 }: LifestyleRiverHomePageProps) {
   const destinationConfigs = useDestinationConfigs();
+  const searchParams = useSearchParams();
+  const isSectionsHomepage = sectionsHomepage || searchParams?.get("layout") === "sections";
   const savedRiverLayout = useRiverLayout();
   const riverLayout = savedRiverLayout === "list" ? "list" : "cards";
-  const fullWidthFeaturedHero = forceFullWidthFeaturedHero || savedRiverLayout === "full-width-hero";
+  const fullWidthFeaturedHero = forceFullWidthFeaturedHero || (!isSectionsHomepage && savedRiverLayout === "full-width-hero");
   const config = destinationConfig ?? destinationConfigs[destination];
   const { account, updatePreferences, addComment } = useReaderAccount();
   const router = useRouter();
@@ -4229,7 +4344,6 @@ function LifestyleRiverHomePage({
     activeFilter === "For You" &&
     !singleBrandName &&
     !fullWidthFeaturedHero;
-  const searchParams = useSearchParams();
   const { entries: readingHistory } = useReadingHistoryState();
   const continueReadingStoryIds = React.useMemo(
     () => getContinueReadingStoryIds(readingHistory),
@@ -4334,7 +4448,9 @@ function LifestyleRiverHomePage({
   const appliedOnboardingResultRef = React.useRef<HearstOnboardingResult | null>(null);
   const resolvedCommentsByStoryId = account?.commentsByStoryId ?? commentsByStoryId;
   const safeReaderReturnHref = React.useMemo(() => normalizeReaderReturnHref(readerReturnHref), [readerReturnHref]);
-  const pageHeading = getLifestyleRiverPageHeading(config, initialBrandSlug);
+  const pageHeading = isSectionsHomepage
+    ? `${initialBrandName ?? "Hearst+"} editorial sections`
+    : getLifestyleRiverPageHeading(config, initialBrandSlug);
   const currentPageReturnHref = React.useMemo(() => {
     if (!pathname || pathname.startsWith("/read/")) return null;
 
@@ -4837,6 +4953,87 @@ function LifestyleRiverHomePage({
       ? heroStories.find((story) => story.id !== demoState.previousLeadId)
       : heroStories[0]
   ) ?? heroStories[0] ?? (shouldUseTodaysPicks ? undefined : visibleStories[0]);
+  const sectionsHomepageLatest = React.useMemo(() => {
+    return [...displayStories]
+      .sort((first, second) => {
+        const firstTime = Date.parse(first.publishedAt ?? "");
+        const secondTime = Date.parse(second.publishedAt ?? "");
+        return (Number.isFinite(secondTime) ? secondTime : 0) - (Number.isFinite(firstTime) ? firstTime : 0);
+      })
+      .slice(0, 5);
+  }, [displayStories]);
+  const sectionsHomepageMostPopular = React.useMemo(() => {
+    const latestIds = new Set(sectionsHomepageLatest.map((story) => story.id));
+    return [...filteredStories]
+      .filter((story) => !latestIds.has(story.id))
+      .sort((first, second) => second.popularity - first.popularity)
+      .slice(0, 3);
+  }, [filteredStories, sectionsHomepageLatest]);
+  const editorialHomepageSections = React.useMemo(() => {
+    const definitionsByDestination = {
+      all: [
+        { title: "Style & Beauty", terms: ["style", "beauty", "fashion", "shopping", "jewelry"] },
+        { title: "Food & Home", terms: ["food", "home", "garden", "recipe", "cooking", "kitchen", "design"] },
+        { title: "Cars & Reviews", terms: ["car", "auto", "vehicle", "review", "motor", "driving"] },
+        { title: "Fitness & Wellness", terms: ["fitness", "wellness", "health", "training", "outdoor", "exercise"] },
+        { title: "Culture & Entertainment", terms: ["culture", "celebrity", "television", "movie", "movies", "show", "series", "entertainment", "music"] },
+      ],
+      lifestyle: [
+        { title: "Food & Recipes", terms: ["food", "recipe", "cooking", "kitchen", "meal"] },
+        { title: "Home & Garden", terms: ["home", "garden", "design", "decor", "interior"] },
+        { title: "Style & Beauty", terms: ["style", "beauty", "fashion", "shopping", "jewelry"] },
+        { title: "Family & Relationships", terms: ["family", "parent", "relationship", "wedding", "kids"] },
+        { title: "Wellness", terms: ["wellness", "health", "fitness", "sleep", "self-care"] },
+      ],
+      autos: [
+        { title: "News & First Looks", terms: ["news", "first look", "reveal", "debut", "launch"] },
+        { title: "Reviews & Comparisons", terms: ["review", "test", "drive", "comparison", "vs.", "tested"] },
+        { title: "Buying Guides", terms: ["buying", "best", "rank", "price", "deal", "guide"] },
+        { title: "EVs & Technology", terms: ["ev", "electric", "hybrid", "technology", "battery", "charging"] },
+        { title: "Racing & Classics", terms: ["race", "racing", "motorsport", "classic", "hot rod", "truck"] },
+      ],
+      flux: [
+        { title: "Style & Beauty", terms: ["style", "beauty", "fashion", "designer", "couture"] },
+        { title: "Design & Interiors", terms: ["design", "interior", "home", "decor", "architecture"] },
+        { title: "Culture & Society", terms: ["culture", "celebrity", "film", "television", "music", "society"] },
+        { title: "Shopping", terms: ["shopping", "shop", "product", "best", "buy"] },
+        { title: "Travel & Experiences", terms: ["travel", "hotel", "destination", "event", "experience"] },
+      ],
+      ew: [
+        { title: "Fitness & Training", terms: ["fitness", "training", "workout", "exercise", "running", "cycling"] },
+        { title: "Health & Wellness", terms: ["health", "wellness", "medical", "sleep", "nutrition", "mental"] },
+        { title: "Gear & Technology", terms: ["gear", "tech", "technology", "product", "equipment", "device"] },
+        { title: "Adventure & Outdoors", terms: ["outdoor", "adventure", "hiking", "camping", "travel", "trail"] },
+        { title: "Life & Culture", terms: ["culture", "life", "celebrity", "entertainment", "family"] },
+      ],
+    } satisfies Record<typeof destination, { title: string; terms: string[] }[]>;
+    const definitions = definitionsByDestination[destination];
+    const categoryForStory = (story: LifestyleRiverStory) => {
+      const text = [story.topic, story.title, story.summary, ...story.tags].join(" ").toLowerCase();
+      return definitions.find(({ terms }) => terms.some((term) => text.includes(term)))?.title
+        ?? "More from Hearst";
+    };
+    const used = new Set([
+      ...sectionsHomepageLatest.map((story) => story.id),
+      ...sectionsHomepageMostPopular.map((story) => story.id),
+    ]);
+    const sections = definitions.map(({ title }) => {
+      const matches = displayStories.filter((story) => !used.has(story.id) && categoryForStory(story) === title).slice(0, 4);
+      matches.forEach((story) => used.add(story.id));
+      return { title, stories: matches };
+    }).filter((section) => section.stories.length > 0);
+    const remaining = displayStories.filter((story) => !used.has(story.id));
+    if (remaining.length) sections.push({ title: `More from ${initialBrandName ?? "Hearst"}`, stories: remaining.slice(0, 3) });
+    return sections;
+  }, [destination, displayStories, initialBrandName, sectionsHomepageLatest, sectionsHomepageMostPopular]);
+  const sectionsHomepageVideos = videoTabStories
+    .filter((story) => !initialBrandSlug || story.brandSlug === initialBrandSlug)
+    .slice(0, 3);
+  const sectionsHomepageEvents = React.useMemo(() => {
+    const contextualEvents = hearstEvents.filter((event) => !initialBrandSlug || event.brandSlugs.includes(initialBrandSlug));
+    const upcoming = contextualEvents.filter((event) => event.status === "upcoming" || event.status === "live");
+    return (upcoming.length ? upcoming : contextualEvents).slice(0, 3);
+  }, [initialBrandSlug]);
   React.useEffect(() => {
     if (demoState.isSimulated || initialOpenStoryId) return;
     trackProductEventOnce(`return-session:${visitScopeKey}`, "return_session", {
@@ -5842,7 +6039,7 @@ function LifestyleRiverHomePage({
       <FeedLayout
         id={fullWidthFeaturedHero ? "hearst-story-river" : undefined}
         className={fullWidthFeaturedHero ? "min-w-0 scroll-mt-28" : undefined}
-        aria-label={fullWidthFeaturedHero ? config.riverLabel : undefined}
+        aria-label={fullWidthFeaturedHero ? (isSectionsHomepage ? "Hearst+ editorial sections" : config.riverLabel) : undefined}
       >
       <div className={cn(
         "grid min-w-0 grid-cols-[minmax(0,1fr)] gap-x-4 gap-y-6",
@@ -5919,10 +6116,10 @@ function LifestyleRiverHomePage({
         <StoryRiver
           id={!fullWidthFeaturedHero ? "hearst-story-river" : undefined}
           className="min-w-0 scroll-mt-28 space-y-4"
-          aria-label={!fullWidthFeaturedHero ? config.riverLabel : undefined}
+          aria-label={!fullWidthFeaturedHero ? (isSectionsHomepage ? "Hearst+ editorial sections" : config.riverLabel) : undefined}
         >
           <h1 className="sr-only">{pageHeading}</h1>
-          {isShowingLatestAvailableStories && !fullWidthFeaturedHero ? (
+          {isShowingLatestAvailableStories && !fullWidthFeaturedHero && !isSectionsHomepage ? (
             <p className="border-b border-border pb-3 text-sm leading-6 text-muted-foreground" role="status">
               Today’s Picks are updating. Showing the latest stories currently available.
             </p>
@@ -5975,7 +6172,126 @@ function LifestyleRiverHomePage({
                 <CommunityHomeRiverCard thread={communityRiverThread} />
               ) : null}
 
-              {(() => {
+              {isSectionsHomepage ? (
+                <div className="space-y-8" aria-label={`${initialBrandName ?? "Hearst+"} editorial sections`}>
+                  {editorialHomepageSections.map((section) => (
+                    <section key={section.title} className="space-y-4 border-t-2 border-primary pt-5" aria-label={section.title}>
+                      <div className="flex items-end justify-between gap-4">
+                        <h2 className="headline text-3xl font-bold leading-tight">{section.title}</h2>
+                        <span className="shrink-0 pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                          {initialBrandName ? `${initialBrandName} Selection` : "Hearst+ Selection"}
+                        </span>
+                      </div>
+                      {section.stories.length ? (
+                        <div className="space-y-3">
+                          <LifestyleRiverCard
+                            story={section.stories[0]}
+                            onOpen={() => openStory(section.stories[0].id)}
+                            saved={profile.savedIds.includes(section.stories[0].id)}
+                            onSave={() => toggleSaved(section.stories[0])}
+                            layoutOverride="cards"
+                          />
+                          {section.stories.length > 1 ? <div className="space-y-3">
+                            {section.stories.slice(1).map((story) => (
+                            <LifestyleRiverCard
+                              key={`support-${story.id}`}
+                              story={story}
+                              onOpen={() => openStory(story.id)}
+                              saved={profile.savedIds.includes(story.id)}
+                              onSave={() => toggleSaved(story)}
+                              layoutOverride="list"
+                              editorialRow
+                            />
+                          ))}
+                          </div> : null}
+                        </div>
+                      ) : null}
+                    </section>
+                  ))}
+                  {sectionsHomepageMostPopular.length ? (
+                    <section className="space-y-4 border-t-2 border-primary pt-5" aria-label="Most Popular">
+                      <h2 className="headline text-3xl font-bold leading-tight">Most Popular</h2>
+                      {sectionsHomepageMostPopular.length ? (
+                        <div className="space-y-3">
+                          <LifestyleRiverCard
+                            story={sectionsHomepageMostPopular[0]}
+                            onOpen={() => openStory(sectionsHomepageMostPopular[0].id)}
+                            saved={profile.savedIds.includes(sectionsHomepageMostPopular[0].id)}
+                            onSave={() => toggleSaved(sectionsHomepageMostPopular[0])}
+                            layoutOverride="cards"
+                          />
+                          {sectionsHomepageMostPopular.length > 1 ? (
+                            <div className="space-y-3">
+                              {sectionsHomepageMostPopular.slice(1, 3).map((story) => (
+                                <LifestyleRiverCard
+                                  key={`popular-${story.id}`}
+                                  story={story}
+                                  onOpen={() => openStory(story.id)}
+                                  saved={profile.savedIds.includes(story.id)}
+                                  onSave={() => toggleSaved(story)}
+                                  layoutOverride="list"
+                                  editorialRow
+                                />
+                              ))}
+                            </div>
+                          ) : null}
+                        </div>
+                      ) : null}
+                    </section>
+                  ) : null}
+                  {sectionsHomepageVideos.length ? (
+                    <section className="space-y-4 border-t-2 border-primary pt-5" aria-label="Video">
+                      <div className="flex items-end justify-between gap-4">
+                        <h2 className="headline text-3xl font-bold leading-tight">Video</h2>
+                        <Link href="/hearst-plus/videos/" className="pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Watch all videos</Link>
+                      </div>
+                      <div className="grid gap-3">
+                        {sectionsHomepageVideos.map((story, index) => (
+                          <LifestyleRiverCard
+                            key={`sections-video-${story.id}`}
+                            story={story}
+                            onOpen={() => openStory(story.id)}
+                            saved={profile.savedIds.includes(story.id)}
+                            onSave={() => toggleSaved(story)}
+                            layoutOverride={index === 0 ? "cards" : "list"}
+                          />
+                        ))}
+                      </div>
+                    </section>
+                  ) : null}
+                  {sectionsHomepageEvents.length ? <section className="space-y-4 border-t-2 border-primary pt-5" aria-label="Events">
+                    <div className="flex items-end justify-between gap-4">
+                      <h2 className="headline text-3xl font-bold leading-tight">Events</h2>
+                      <Link href={initialBrandSlug ? `/hearst-plus/events/?brand=${encodeURIComponent(initialBrandSlug)}` : "/hearst-plus/events/"} className="pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Explore all events</Link>
+                    </div>
+                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                      {sectionsHomepageEvents.map((event) => (
+                        <Link
+                          key={event.slug}
+                          href={`/hearst-plus/events/${event.slug}/`}
+                          className="group overflow-hidden rounded-[8px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md"
+                        >
+                          <div className="relative aspect-video overflow-hidden bg-muted">
+                            <Image src={event.image.src} alt={event.image.alt} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.025]" />
+                          </div>
+                          <div className="p-4">
+                            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">{event.dateLabel}</p>
+                            <h3 className="headline mt-2 text-lg font-bold leading-snug group-hover:text-primary">{event.title}</h3>
+                            <p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">{event.summary}</p>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </section> : null}
+                  {feedHasMore ? (
+                    <div className="flex justify-center border-t border-border pt-5">
+                      <Button type="button" variant="outline" disabled={feedLoading} onClick={onRequestNextFeedPage}>
+                        {feedLoading ? "Loading more stories…" : "Load more stories"}
+                      </Button>
+                    </div>
+                  ) : null}
+                </div>
+              ) : (() => {
                 const usedPromotionBrandSlugs = new Set<string>();
 
                 return riverStories.map((story, index) => {
@@ -6583,6 +6899,7 @@ export function HomePageTemplate({
   onboardingBrandInventory,
   forceDestinationRiver = false,
   fullWidthFeaturedHero = false,
+  sectionsHomepage = false,
   singleBrandName,
 }: HomePageTemplateProps = {}) {
   const { brand, colorMode } = useTheme();
@@ -7147,6 +7464,7 @@ export function HomePageTemplate({
                 activeFilter={activeLifestyleFilter}
                 destination={destinationMode}
                 fullWidthFeaturedHero={fullWidthFeaturedHero}
+                sectionsHomepage={sectionsHomepage}
                 destinationConfig={inventoryAwareDestinationConfig}
                 videoFeedData={resolvedVideoFeedData}
                 singleBrandName={singleBrandName}
