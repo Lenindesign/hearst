@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import { BrandLogo } from "@/components/brand-logo";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { getHearstBrandRoute } from "@/lib/hearst-routes";
@@ -40,32 +39,6 @@ function PromotionStoryAction({
   className: string;
   children: React.ReactNode;
 }) {
-  if (story.sourceUrl) {
-    if (story.sourceUrl.startsWith("/")) {
-      return (
-        <Link
-          href={story.sourceUrl}
-          className={className}
-          aria-label={`Open story: ${story.title}`}
-        >
-          {children}
-        </Link>
-      );
-    }
-
-    return (
-      <a
-        href={story.sourceUrl}
-        target="_blank"
-        rel="noreferrer"
-        className={className}
-        aria-label={`Open story: ${story.title}`}
-      >
-        {children}
-      </a>
-    );
-  }
-
   return (
     <button
       type="button"

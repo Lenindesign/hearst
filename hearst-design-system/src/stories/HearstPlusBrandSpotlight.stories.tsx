@@ -83,17 +83,12 @@ export const Default: Story = {
       within(region).queryByText(/^(Article|Gallery|Watch)$/i),
     ).not.toBeInTheDocument();
     const firstStory = productionPromotion.stories[0];
-    const firstStoryAction = within(region).getByRole(
-      firstStory.sourceUrl ? "link" : "button",
-      { name: `Open story: ${firstStory.title}` },
-    );
-    if (firstStory.sourceUrl) {
-      await expect(firstStoryAction).toHaveAttribute("href", firstStory.sourceUrl);
-    } else {
-      await userEvent.click(firstStoryAction);
-      await expect(args.onOpenStory).toHaveBeenCalledWith(firstStory.id);
-      firstStoryAction.blur();
-    }
+    const firstStoryAction = within(region).getByRole("button", {
+      name: `Open story: ${firstStory.title}`,
+    });
+    await userEvent.click(firstStoryAction);
+    await expect(args.onOpenStory).toHaveBeenCalledWith(firstStory.id);
+    firstStoryAction.blur();
   },
 };
 
