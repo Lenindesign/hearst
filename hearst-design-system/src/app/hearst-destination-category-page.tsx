@@ -11,7 +11,8 @@ import {
   hearstDestinationRoutes,
   type HearstDestinationMode,
 } from "@/lib/hearst-routes";
-import { getPersonalizeLiveFeed, getPersonalizeVideoFeed } from "@/lib/personalize-live-feed";
+import { getLocalStoryFeed } from "@/lib/hearst-local-feed";
+import { getPersonalizeVideoFeed } from "@/lib/hearst-video-feed";
 import { socialGraphMetadata } from "@/lib/social-graph-image";
 
 export type DestinationCategoryPageProps = {
@@ -67,7 +68,7 @@ export async function DestinationCategoryRoutePage({
   if (!categoryLabel) notFound();
 
   const [liveFeedData, videoFeedData] = await Promise.all([
-    getPersonalizeLiveFeed({ destination }),
+    getLocalStoryFeed({ destination }),
     getPersonalizeVideoFeed({ destination }),
   ]);
 

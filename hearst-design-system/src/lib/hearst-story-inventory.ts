@@ -3,7 +3,8 @@ import "server-only";
 import { unstable_cache } from "next/cache";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { getHearstDestinationStaticData } from "@/lib/hearst-destination-data";
-import { getPersonalizeLiveFeed, getPersonalizeVideoFeed } from "@/lib/personalize-live-feed";
+import { getLocalStoryFeed } from "@/lib/hearst-local-feed";
+import { getPersonalizeVideoFeed } from "@/lib/hearst-video-feed";
 import type { HearstBrandSection } from "@/lib/hearst-routes";
 
 const fullCatalogLimitPerDestination = 10_000;
@@ -33,10 +34,9 @@ const getCachedHearstStoryInventory = unstable_cache(
       storyLimitPerDestination: fullCatalogLimitPerDestination,
     })[section].stories;
     const [liveFeed, videoFeed] = await Promise.all([
-      getPersonalizeLiveFeed({
+      getLocalStoryFeed({
         destination: section,
         sizePerBrand: 10,
-        videoSizePerBrand: 4,
       }),
       getPersonalizeVideoFeed({
         destination: section,

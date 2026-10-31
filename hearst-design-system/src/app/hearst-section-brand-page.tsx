@@ -4,7 +4,8 @@ import { HomePageTemplate } from "@/components/home-page";
 import { ThemeProvider } from "@/components/theme-provider";
 import { getHearstDestinationStaticData } from "@/lib/hearst-destination-data";
 import { getHearstAllStoryInventory, getHearstGlobalStoryInventory } from "@/lib/hearst-story-inventory";
-import { getPersonalizeLiveFeed, getPersonalizeVideoFeed } from "@/lib/personalize-live-feed";
+import { getLocalStoryFeed } from "@/lib/hearst-local-feed";
+import { getPersonalizeVideoFeed } from "@/lib/hearst-video-feed";
 import {
   getHearstSectionBrand,
   getHearstSectionBrandSlugs,
@@ -46,7 +47,7 @@ export async function SectionBrandRoutePage({
   if (!brand) notFound();
 
   const [liveFeedData, videoFeedData, globalBrandInventory] = await Promise.all([
-    getPersonalizeLiveFeed({ destination: section, brandSlug: brand.brandSlug }),
+    getLocalStoryFeed({ destination: section, brandSlug: brand.brandSlug }),
     getPersonalizeVideoFeed({ destination: section }),
     getHearstGlobalStoryInventory(section),
   ]);

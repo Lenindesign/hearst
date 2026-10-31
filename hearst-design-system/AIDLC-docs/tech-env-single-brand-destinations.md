@@ -42,8 +42,8 @@
 - `src/components/home-page.tsx` — only the additive `forceDestinationRiver` prop was
   added. Do not refactor this file or change its default (river layout stays gated to
   destination slugs unless the prop is passed). Reuse the template; do not fork it.
-- `personalize-live-feed.ts`, the `api/*` route handlers, and `LiveFeedData` — consume
-  as-is; do not change the feed schema.
+- `hearst-local-feed.ts`, the RSS `api/*` route handlers, and `LiveFeedData` — share
+  the validated RSS snapshot and local feed contract.
 - The token pipeline (`tokens/`, `style-dictionary.config.mjs`, `tokens:audit:ci`) —
   additive tokens only.
 - `src/components/ui/` primitives, `ThemeProvider`, and the built-in story reader
@@ -70,8 +70,7 @@
 
 - Authentication: reuse the existing optional Google Sign-In (`api/auth/google`,
   server-side ID-token verification). Do not build a new auth layer for single-brand.
-- Secrets: server-only keys (`PERSONALIZE_API_KEY`, `GOOGLE_CLIENT_ID`) stay in
-  Netlify env; never expose them to the client. Only `NEXT_PUBLIC_*` are public.
+- Secrets: Google verification credentials stay server-side in Netlify env; never expose them to the client. Only `NEXT_PUBLIC_*` values are public. RSS feed refresh uses public source feeds and does not require a Personalize API key; the video feed uses its key only for playable video recommendations.
 - Input validation: `brandSlug` and `storyId` route params are validated against the
   known single-brand set / feed before rendering (`notFound()` otherwise).
 - Injection / SSRF: images render via `next/image` against hosts already pinned in

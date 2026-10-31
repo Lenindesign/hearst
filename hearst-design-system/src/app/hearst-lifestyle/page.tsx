@@ -3,7 +3,8 @@ import { HomePageTemplate } from "@/components/home-page";
 import { ThemeProvider } from "@/components/theme-provider";
 import { getHearstDestinationStaticData } from "@/lib/hearst-destination-data";
 import { getHearstAllStoryInventory } from "@/lib/hearst-story-inventory";
-import { getPersonalizeLiveFeed, getPersonalizeVideoFeed } from "@/lib/personalize-live-feed";
+import { getLocalStoryFeed } from "@/lib/hearst-local-feed";
+import { getPersonalizeVideoFeed } from "@/lib/hearst-video-feed";
 import { socialGraphMetadata } from "@/lib/social-graph-image";
 
 export const metadata: Metadata = {
@@ -17,7 +18,7 @@ export const dynamic = "force-dynamic";
 
 export default async function HearstLifestylePage() {
   const [liveFeedData, videoFeedData] = await Promise.all([
-    getPersonalizeLiveFeed({ destination: "lifestyle" }),
+    getLocalStoryFeed({ destination: "lifestyle" }),
     getPersonalizeVideoFeed({ destination: "lifestyle" }),
   ]);
 

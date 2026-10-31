@@ -385,7 +385,7 @@ export function ArchitecturePageComponent() {
                     </div>
                     <div className="flex items-start gap-2">
                       <span className="mt-0.5 size-1.5 shrink-0 rounded-full bg-[#102A43]" />
-                      <span><strong>Feed Engine:</strong> Blends RSS catalog + Personalize live feed + playable Video</span>
+                      <span><strong>Feed Engine:</strong> Uses the validated RSS catalog, locally ranked for reader context; playable video only when present</span>
                     </div>
                     <div className="flex items-start gap-2">
                       <span className="mt-0.5 size-1.5 shrink-0 rounded-full bg-[#102A43]" />
@@ -494,7 +494,7 @@ export function ArchitecturePageComponent() {
             <SectionHead
               label="Template 1 Specification"
               title="Home Page &amp; Index Pages Archetype"
-              copy="The Home &amp; Index template orchestrates multiple content sources (RSS inventories, Personalize live feeds, video APIs) into responsive, high-engagement layouts."
+              copy="The Home &amp; Index template locally ranks validated RSS inventory and uses verified playable media when available."
             />
 
             {/* Technical Wireframe Blueprint */}
@@ -1429,7 +1429,7 @@ export function ArchitecturePageComponent() {
             <SectionHead
               label="Data Flow Engine"
               title="Feed Orchestration, Blending &amp; Progressive Delivery"
-              copy="Hearst+ runs an advanced multi-feed orchestration engine that blends curated editorial RSS catalogs with read-only Personalize article &amp; video recommendations, applying diversity safeguards and demand-driven progressive loading."
+              copy="Hearst+ runs an advanced multi-feed orchestration engine that blends curated editorial RSS catalogs with read-only locally ranked RSS story snapshots, applying diversity safeguards and demand-driven progressive loading."
             />
 
             <div className="grid gap-px bg-slate-200 md:grid-cols-3">
@@ -1452,7 +1452,7 @@ export function ArchitecturePageComponent() {
                 <p className="text-xs font-bold uppercase tracking-wider text-[#2D75B9]">02. Blending</p>
                 <h3 className="mt-2 text-lg font-bold text-[#102A43]">3-Source Blend Logic</h3>
                 <p className="mt-2 text-xs leading-relaxed text-slate-600">
-                  The feed blends 3 distinct content layers with strict proportion guardrails:
+                  The feed uses validated source inventory and locally applies reader-context ranking:
                 </p>
                 <ul className="mt-4 space-y-2 text-xs text-slate-600">
                   <li className="flex items-center gap-2">
@@ -1461,7 +1461,7 @@ export function ArchitecturePageComponent() {
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="size-1.5 rounded-full bg-[#102A43]" />
-                    <strong>Personalize Articles:</strong> Ranked by reader signals, capped &lt; 30%.
+                    <strong>Local ranking:</strong> Stories are ordered by freshness, interests, brands, and reader signals.
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="size-1.5 rounded-full bg-[#102A43]" />

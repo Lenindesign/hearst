@@ -7,7 +7,7 @@ import { getLifestyleCardKind, isExplicitGalleryStory } from "@/components/hears
 import type { CommunityFeedThread } from "@/components/hearst-plus/community-client";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ProductFooter, ProductHeader, streams, totalMagazineStories } from "@/components/product-story-shell";
-import { getPersonalizeAutosVideoFeed } from "@/lib/personalize-live-feed";
+import { getPersonalizeAutosVideoFeed } from "@/lib/hearst-video-feed";
 import { brands } from "@/lib/brands";
 import { getBrandPromotionForSlot } from "@/components/hearst-plus/brand-promotion-model";
 import { isDelishPortraitShort } from "@/lib/hearst-video-destination-model";
@@ -68,8 +68,8 @@ export default async function HearstPlusBriefPage() {
     .filter((story) => Boolean(story.videoUrl))
     .sort((first, second) => Date.parse(second.publishedAt ?? "") - Date.parse(first.publishedAt ?? ""))[0];
   const videoSourceCopy = videoFeed.isFallback
-    ? "Using the local snapshot fallback for this preview."
-    : "From Hearst+ configured video recommendations.";
+    ? "Using a saved catalog snapshot for this preview."
+    : "From verified playable media in the validated Hearst RSS catalog.";
   const communityThread = getCommunitySample();
   const eventSample = hearstEvents.find((event) => event.status === "upcoming");
 

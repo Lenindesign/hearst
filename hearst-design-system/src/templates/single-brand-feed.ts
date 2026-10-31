@@ -9,7 +9,7 @@
  * modal reader with infinite "up next" scroll.
  */
 import { getBrandLogoSrc, getBrandLogoLabel } from "@/lib/logos";
-import { getPersonalizeLiveFeed } from "@/lib/personalize-live-feed";
+import { getLocalStoryFeed } from "@/lib/hearst-local-feed";
 import type { LiveFeedData } from "@/lib/live-feed-types";
 
 /** Pilot cohort of single-brand destinations. */
@@ -28,14 +28,11 @@ export function getSingleBrandName(slug: string): string | undefined {
 }
 
 /**
- * Fetch a single-brand LiveFeedData from the Personalize live feed, scoped to
- * one brand. `getPersonalizeLiveFeed` handles the network call and, if the
- * Personalize API is unavailable, falls back to the local static snapshot
- * filtered to the same brand — so this always resolves to brand-scoped stories.
+ * Load a single-brand slice of the validated RSS snapshot.
  */
 export async function getSingleBrandLiveFeed(slug: string): Promise<LiveFeedData> {
   const brandName = getSingleBrandName(slug) ?? slug;
-  const feed = await getPersonalizeLiveFeed({
+  const feed = await getLocalStoryFeed({
     destination: "lifestyle",
     brandSlug: slug,
     sizePerBrand: 24,

@@ -2181,6 +2181,7 @@ function ensureGallerySampleInRiver(
 }
 
 function formatLiveFeedUpdatedAt(fetchedAt: string) {
+  if (!fetchedAt || !Number.isFinite(Date.parse(fetchedAt))) return "not available";
   return new Intl.DateTimeFormat("en-US", {
     hour: "numeric",
     minute: "2-digit",
@@ -4320,7 +4321,7 @@ function LifestyleRiverHomePage({
     scopeKey: string;
     index: number;
   } | null>(null);
-  const sentinelRef = React.useRef<HTMLDivElement | null>(null);
+  const [sentinelNode, setSentinelNode] = React.useState<HTMLDivElement | null>(null);
   const feedDemandRef = React.useRef({
     feedReady: feedTotal !== null,
     feedHasMore,
@@ -4806,16 +4807,22 @@ function LifestyleRiverHomePage({
         return [{ ...story, age: Math.floor(ageInHours) }];
       })
     : visibleStories;
+  const latestAvailablePickCandidates = shouldUseTodaysPicks && todaysPickCandidates.length === 0
+    ? displayStories
+      .filter((story) => Boolean(story.publishedAt) && Number.isFinite(Date.parse(story.publishedAt!)) && Date.parse(story.publishedAt!) <= Date.now())
+      .sort((first, second) => Date.parse(second.publishedAt!) - Date.parse(first.publishedAt!))
+    : todaysPickCandidates;
+  const isShowingLatestAvailableStories = shouldUseTodaysPicks && todaysPickCandidates.length === 0 && latestAvailablePickCandidates.length > 0;
   const personalizedHeroStories = getPersonalizedLeadSliderStories(
-    todaysPickCandidates,
+    latestAvailablePickCandidates,
     rankingProfile,
     demoState,
     config,
-    shouldUseTodaysPicks ? Math.max(5, todaysPickCandidates.length) : 5,
+    shouldUseTodaysPicks ? Math.max(5, latestAvailablePickCandidates.length) : 5,
     config.liveFeedMode === "blend"
   );
   const dailyEditionKey = shouldUseTodaysPicks
-    ? `${editionDate}:${destination}:todays-picks`
+    ? `${editionDate}:${destination}:${isShowingLatestAvailableStories ? "latest-available" : "todays-picks"}`
     : "";
   const dailyEditionStories = useDailyEditionStories(
     dailyEditionKey,
@@ -5171,7 +5178,7 @@ function LifestyleRiverHomePage({
   }, [onBrandFilterChange]);
 
   React.useEffect(() => {
-    const node = sentinelRef.current;
+    const node = sentinelNode;
     if (!node) return;
 
     const preloadMargin = Math.max(1200, Math.ceil(window.innerHeight * 1.75));
@@ -5182,12 +5189,7 @@ function LifestyleRiverHomePage({
         && bounds.bottom >= -preloadMargin;
     };
     const requestMoreStories = () => {
-      const pageCanScroll = document.documentElement.scrollHeight > window.innerHeight;
-      if (
-        requestedForCurrentRender
-        || !isWithinPreloadZone()
-        || (pageCanScroll && window.scrollY <= 0)
-      ) return;
+      if (requestedForCurrentRender || !isWithinPreloadZone()) return;
       requestedForCurrentRender = true;
       loadMoreVisibleStories();
     };
@@ -5203,16 +5205,22 @@ function LifestyleRiverHomePage({
     );
 
     observer.observe(node);
+    window.addEventListener("scroll", requestMoreStories, { passive: true });
+    window.addEventListener("resize", requestMoreStories);
     return () => {
       window.cancelAnimationFrame(preloadCheckFrame);
       observer.disconnect();
+      window.removeEventListener("scroll", requestMoreStories);
+      window.removeEventListener("resize", requestMoreStories);
     };
   }, [
     displayOrderScopeKey,
     displayStories.length,
+    feedTotal,
     feedHasMore,
     feedLoading,
     loadMoreVisibleStories,
+    sentinelNode,
     visibleRiverCount,
   ]);
 
@@ -5595,7 +5603,7 @@ function LifestyleRiverHomePage({
                 </div>
 
                 <div
-                  ref={sentinelRef}
+                  ref={setSentinelNode}
                   className="flex justify-center py-6"
                   data-story-river-sentinel
                   aria-live="polite"
@@ -5655,10 +5663,10 @@ function LifestyleRiverHomePage({
                             )}
                             aria-hidden="true"
                           />
-                          {activeLiveFeedStatus.isFallback ? "Cached videos" : "Current videos"}
+                          {activeLiveFeedStatus.isFallback ? "Cached videos" : "Catalog videos"}
                         </p>
                         <p className="mt-1 text-muted-foreground">
-                          Updated {formatLiveFeedUpdatedAt(activeLiveFeedStatus.fetchedAt)}
+                          Latest story {formatLiveFeedUpdatedAt(activeLiveFeedStatus.fetchedAt)}
                         </p>
                       </div>
                     ) : null}
@@ -5844,13 +5852,18 @@ function LifestyleRiverHomePage({
       )}>
         {fullWidthFeaturedHero && leadStory ? (
           <div className="min-w-0 lg:col-span-3">
+            {isShowingLatestAvailableStories ? (
+              <p className="mb-3 border-b border-border pb-3 text-sm leading-6 text-muted-foreground" role="status">
+                Today’s Picks are updating. Showing the latest stories currently available.
+              </p>
+            ) : null}
             <FeaturedStoryCarousel
               key={`full-width:${leadStory.id}:${heroStories.map((story) => story.id).join("|")}`}
               stories={heroStories}
               layoutMode={riverLayout}
               reducePhotoHeight
               scrimDirection="left-to-right"
-              editionLabel={shouldUseTodaysPicks ? "Today’s Picks" : undefined}
+              editionLabel={shouldUseTodaysPicks ? (isShowingLatestAvailableStories ? "Latest available" : "Today’s Picks") : undefined}
               initialStoryId={leadStory.id}
               renderImage={(story, _index, active) => (
                 <LifestyleRiverImage
@@ -5869,8 +5882,8 @@ function LifestyleRiverHomePage({
               isCurrentStory={isCurrentFeedStory}
               onOpenStory={(story) => openStory(story.id)}
               onFollowBrand={followBrand}
-              onEditionImpression={trackTodaysPicksImpression}
-              onEditionStoryOpen={trackTodaysPickOpen}
+              onEditionImpression={isShowingLatestAvailableStories ? undefined : trackTodaysPicksImpression}
+              onEditionStoryOpen={isShowingLatestAvailableStories ? undefined : trackTodaysPickOpen}
               indicatorPalette={indicatorPalette}
             />
           </div>
@@ -5909,6 +5922,11 @@ function LifestyleRiverHomePage({
           aria-label={!fullWidthFeaturedHero ? config.riverLabel : undefined}
         >
           <h1 className="sr-only">{pageHeading}</h1>
+          {isShowingLatestAvailableStories && !fullWidthFeaturedHero ? (
+            <p className="border-b border-border pb-3 text-sm leading-6 text-muted-foreground" role="status">
+              Today’s Picks are updating. Showing the latest stories currently available.
+            </p>
+          ) : null}
           {leadStory ? (
             <>
               {!fullWidthFeaturedHero ? (
@@ -5916,7 +5934,7 @@ function LifestyleRiverHomePage({
                   key={`${leadStory.id}:${heroStories.map((story) => story.id).join("|")}`}
                   stories={heroStories}
                   layoutMode={riverLayout}
-                  editionLabel={shouldUseTodaysPicks ? "Today’s Picks" : undefined}
+                  editionLabel={shouldUseTodaysPicks ? (isShowingLatestAvailableStories ? "Latest available" : "Today’s Picks") : undefined}
                   initialStoryId={leadStory.id}
                   renderImage={(story, _index, active) => (
                     <LifestyleRiverImage
@@ -5934,8 +5952,8 @@ function LifestyleRiverHomePage({
                   isCurrentStory={isCurrentFeedStory}
                   onOpenStory={(story) => openStory(story.id)}
                   onFollowBrand={followBrand}
-                  onEditionImpression={trackTodaysPicksImpression}
-                  onEditionStoryOpen={trackTodaysPickOpen}
+                  onEditionImpression={isShowingLatestAvailableStories ? undefined : trackTodaysPicksImpression}
+                  onEditionStoryOpen={isShowingLatestAvailableStories ? undefined : trackTodaysPickOpen}
                   indicatorPalette={indicatorPalette}
                 />
               ) : null}
@@ -6047,7 +6065,7 @@ function LifestyleRiverHomePage({
               ) : null}
 
               <div
-                ref={sentinelRef}
+                ref={setSentinelNode}
                 className="flex justify-center py-6"
                 data-story-river-sentinel
                 aria-live="polite"
@@ -6068,12 +6086,16 @@ function LifestyleRiverHomePage({
               aria-live="polite"
             >
               <h2 className="text-lg font-bold">
-                {personalizedHeroStories.length > 0 ? "Preparing today’s picks" : "No recent stories available"}
+                {personalizedHeroStories.length > 0
+                  ? isShowingLatestAvailableStories ? "Preparing the latest available stories" : "Preparing today’s picks"
+                  : "Stories are temporarily unavailable"}
               </h2>
               <p className="mt-2 max-w-prose text-sm leading-6 text-muted-foreground">
                 {personalizedHeroStories.length > 0
-                  ? "Selecting today’s edition from stories published in the last 72 hours."
-                  : "No stories with a verified publish date in the last 72 hours are available yet."}
+                  ? isShowingLatestAvailableStories
+                    ? "Today’s Picks are updating. Showing the latest stories currently available."
+                    : "Selecting today’s edition from stories published in the last 72 hours."
+                  : "We couldn’t find a recent story with a verified publish date. Please check back shortly."}
               </p>
             </section>
           ) : activeFilter === "Saved" ? (
@@ -6253,10 +6275,10 @@ function LifestyleRiverHomePage({
                           )}
                           aria-hidden="true"
                         />
-                        {config.liveFeedStatus.isFallback ? "Cached stories" : "Current stories"}
+                        {config.liveFeedStatus.isFallback ? "Cached stories" : "RSS stories"}
                       </p>
                       <p className="mt-1 text-muted-foreground">
-                        Updated {formatLiveFeedUpdatedAt(config.liveFeedStatus.fetchedAt)}
+                        Latest story {formatLiveFeedUpdatedAt(config.liveFeedStatus.fetchedAt)}
                       </p>
                     </div>
                   ) : null}
@@ -6777,7 +6799,7 @@ export function HomePageTemplate({
       return {
         ...baseDestinationConfig,
         stories: blendedStories,
-        dataSourceCopy: `${baseDestinationConfig.dataSourceCopy.replace(/\.$/, "")}, blended contextually with current Personalize article and playable video recommendations.`,
+        dataSourceCopy: `${baseDestinationConfig.dataSourceCopy.replace(/\.$/, "")}, blended contextually with locally ranked stories from the validated RSS snapshot.`,
         liveFeedStatus: {
           fetchedAt: liveFeedData.fetchedAt,
           isFallback: liveFeedData.isFallback && (resolvedVideoFeedData?.isFallback ?? true),

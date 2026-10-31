@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { getHearstDestinationStaticData } from "@/lib/hearst-destination-data";
 import type { HearstDestinationMode } from "@/lib/hearst-routes";
-import { getPersonalizeLiveFeed } from "@/lib/personalize-live-feed";
 import { storyMatchesLifestyleFilter } from "@/lib/story-feed-filter";
 
 export const dynamic = "force-dynamic";
@@ -17,24 +15,6 @@ function parsePositiveInteger(value: string | null, fallback: number) {
   return Number.isFinite(parsed) && parsed >= 0 ? parsed : fallback;
 }
 
-function getStoryIdentity(story: LifestyleRiverStory) {
-  const sourceUrl = story.sourceUrl?.trim().toLowerCase();
-  if (sourceUrl) return `url:${sourceUrl}`;
-
-  return `story:${story.brandSlug}:${story.title.trim().toLowerCase().replace(/\s+/g, " ")}`;
-}
-
-function mergeUniqueStories(...storyGroups: LifestyleRiverStory[][]) {
-  const seen = new Set<string>();
-
-  return storyGroups.flat().filter((story) => {
-    const identity = getStoryIdentity(story);
-    if (seen.has(identity)) return false;
-    seen.add(identity);
-    return true;
-  });
-}
-
 export async function GET(request: NextRequest) {
   const requestedDestination = request.nextUrl.searchParams.get("destination") ?? "all";
   const destination = destinations.has(requestedDestination as HearstDestinationMode)
@@ -47,24 +27,15 @@ export async function GET(request: NextRequest) {
     maximumPageSize,
     Math.max(1, parsePositiveInteger(request.nextUrl.searchParams.get("limit"), defaultPageSize)),
   );
-  const [fullCatalog, expandedLiveFeed] = await Promise.all([
-    Promise.resolve(getHearstDestinationStaticData({
-      storyLimitPerDestination: fullCatalogLimitPerDestination,
-    })),
-    getPersonalizeLiveFeed({
-      destination,
-      brandSlug,
-      sizePerBrand: 10,
-      videoSizePerBrand: 4,
-    }),
-  ]);
+  const fullCatalog = getHearstDestinationStaticData({
+    storyLimitPerDestination: fullCatalogLimitPerDestination,
+  });
   const staticStories = brandSlug
     ? fullCatalog[destination].stories.filter((story) => story.brandSlug === brandSlug)
     : fullCatalog[destination].stories;
-  const mergedStories = mergeUniqueStories(staticStories, expandedLiveFeed.stories);
   const eligibleStories = category
-    ? mergedStories.filter((story) => storyMatchesLifestyleFilter(story, category))
-    : mergedStories;
+    ? staticStories.filter((story) => storyMatchesLifestyleFilter(story, category))
+    : staticStories;
   const stories = eligibleStories.slice(offset, offset + limit);
   const nextOffset = offset + stories.length;
 

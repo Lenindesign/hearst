@@ -45,7 +45,7 @@ const heroStrategy = [
 const habitSteps = [
   {
     title: "Return to a fresh edition",
-    copy: "The prototype has a cross-source river and destination routes. Checked-in magazine records are a snapshot; Personalize recommendations are read-only, and local source routes use configured feeds.",
+    copy: "The prototype has a cross-source river and destination routes. Checked-in magazine records are a snapshot; stories come from validated RSS snapshots and are ranked locally.",
   },
   {
     title: "Find value quickly",
@@ -83,7 +83,7 @@ const stack = [
   ["Experience", "Next.js 16, React 19, TypeScript, and Tailwind CSS 4"],
   ["Design system", "Hearst Design System foundations, semantic tokens, publication themes, and shared components"],
   ["Editorial supply", "Checked-in image-backed magazine RSS snapshots, configured TV and newspaper source frameworks, channel-story sources, canonical URLs, source dates, images, and bylines"],
-  ["Recommendations", "Read-only Personalize article and video candidates with explainable additive ranking"],
+  ["Recommendations", "RSS story inventory with explainable local ranking"],
   ["Media", "Responsive editorial images, galleries, native HLS, and an hls.js fallback for adaptive video"],
   ["Delivery", "Progressive server payloads, demand-driven catalog pages, cached article resolution, and Netlify"],
   ["Quality", "Type checks, Node unit tests, Storybook, feed validation, accessibility checks, and production smoke tests"],

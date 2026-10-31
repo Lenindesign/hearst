@@ -49,8 +49,8 @@ const technology = [
   },
   {
     label: "Content",
-    title: "Hearst RSS + Personalize",
-    copy: "Validated public story metadata is combined with current read-only Personalize recommendations.",
+    title: "Hearst RSS + local ranking",
+    copy: "Validated public story metadata is ranked locally using reader context.",
   },
   {
     label: "Delivery",
@@ -105,7 +105,7 @@ export default function BlueprintPage() {
               <div className="mt-6 grid gap-px bg-slate-200 md:grid-cols-3">
                 {[
                   ["Implemented", "Ranking, route transitions, responsive layouts, progressive loading, in-app readers and adaptive video playback."],
-                  ["Current data", "A validated RSS snapshot plus read-only Personalize article and video recommendations through server routes."],
+                  ["Current data", "A validated RSS snapshot plus read-only RSS snapshots ranked locally."],
                   ["Not yet integrated", "Production identity operations, consent, CMS publishing, production analytics collection and experiments. Optional Google profile sync is prototype behavior, not a production identity service."],
                 ].map(([title, copy]) => (
                   <article key={title} className="bg-white p-5">
@@ -130,7 +130,7 @@ export default function BlueprintPage() {
               </div>
               <div className="mt-6"><ArchitectureFlow /></div>
               <p className="mt-5 max-w-3xl text-sm leading-6 text-slate-600">
-                Freshness has two clocks. Personalize recommendations are requested through dynamic server routes with short cache revalidation. The larger RSS catalog changes only after the import, byline enrichment and validation workflow succeeds. A production scheduler for the daily morning refresh remains required.
+                Freshness has two clocks. All story candidates come from the validated RSS snapshot and are ranked locally. A scheduled workflow proposes refreshed catalogs for review before they become part of the app.
               </p>
             </section>
 

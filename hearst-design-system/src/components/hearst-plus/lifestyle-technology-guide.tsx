@@ -119,8 +119,8 @@ export function LifestyleTechnologyGuide() {
     },
     {
       label: "Content",
-      title: "Hearst feeds + Personalize",
-      body: "Server routes combine public Hearst RSS story metadata with playable Personalize video recommendations, then the product applies eligibility and ranking rules.",
+      title: "Hearst RSS + video recommendations",
+      body: "Article stories come from public Hearst RSS snapshots and are ranked locally. The Videos experience uses section-scoped playable video recommendations.",
     },
     {
       label: "Delivery",

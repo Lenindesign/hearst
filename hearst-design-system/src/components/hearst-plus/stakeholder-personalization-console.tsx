@@ -100,6 +100,7 @@ function isVisibleFocusTarget(element: HTMLElement) {
 }
 
 function formatLiveFeedUpdatedAt(fetchedAt: string) {
+  if (!fetchedAt || !Number.isFinite(Date.parse(fetchedAt))) return "not available";
   return new Intl.DateTimeFormat("en-US", {
     hour: "numeric",
     minute: "2-digit",

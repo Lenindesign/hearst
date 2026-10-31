@@ -1,0 +1,42 @@
+name: Refresh Hearst RSS catalog
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 12 * * *"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: hearst-rss-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Import, enrich, validate, and report
+        run: npm run feed:refresh
+      - name: Open catalog review pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: automation/daily-rss-refresh
+          delete-branch: true
+          commit-message: "Refresh validated Hearst RSS catalog"
+          title: "Daily Hearst RSS catalog refresh"
+          body: |
+            Automated daily refresh of the public Hearst RSS story catalog.
+
+            The import, byline enrichment, feed validation, fixture generation, and count report completed successfully. Review the content changes before merging.
+
+            This workflow does not merge or deploy the catalog.

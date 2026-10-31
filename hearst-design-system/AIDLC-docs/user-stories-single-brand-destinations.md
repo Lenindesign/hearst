@@ -119,7 +119,7 @@
 
 ### US-5.2 — No token/feed contract drift · MVP · ✅
 **As a** maintainer, **I want** single-brand mode to consume the token pipeline and feed contract as-is, **so that** nothing downstream breaks.
-- **Given** the feature is built · **Then** no changes to `tokens/`, `personalize-live-feed`, or `LiveFeedData`; `tokens:audit:ci` and the build pass.
+- **Given** the feature is built · **Then** no changes to `tokens/`, the RSS feed schema, or `LiveFeedData`; `tokens:audit:ci` and the build pass.
 
 ---
 

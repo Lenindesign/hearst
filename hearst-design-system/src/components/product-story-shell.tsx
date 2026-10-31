@@ -14,7 +14,9 @@ import { lifestyleRiverStories } from "@/components/lifestyle-river-data";
 import { baseDestinationConfigs, getLifestyleScoreBreakdown } from "@/lib/hearst-personalization-model";
 
 export const productImage = "https://hips.hearstapps.com/hmg-prod/images/4cf6b4aa-4f88-469f-a235-545368381794.jpeg";
-const documentationSample = lifestyleRiverStories.find((story) => story.id === "delish-food-news-a74237374-jimmy-johns-picklewich-pickle-pals-2026")!;
+const documentationSample = lifestyleRiverStories.find((story) => story.id === "delish-food-news-a74237374-jimmy-johns-picklewich-pickle-pals-2026")
+  ?? lifestyleRiverStories.find((story) => story.brandSlug === "delish")
+  ?? lifestyleRiverStories[0]!;
 const documentationSampleUrl = documentationSample.sourceUrl ?? getHearstBrandRoute(documentationSample.brandSlug);
 const documentationSamplePublishedDate = documentationSample.publishedAt
   ? new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" }).format(new Date(documentationSample.publishedAt))
@@ -312,7 +314,7 @@ export function StoryCard({ ad = false, storyId }: { ad?: boolean; storyId?: str
 }
 
 export const systemSteps = [
-  { title: "Ingest", copy: "Validated RSS snapshots and current Personalize recommendations" },
+  { title: "Ingest", copy: "Validated RSS snapshots" },
   { title: "Normalize", copy: "Source dates, bylines, canonical URLs, media, topics and brands" },
   { title: "Score", copy: "Popularity, freshness, reader signals, daypart and return context" },
   { title: "Guard", copy: "Hidden items, repetition, diversity and playable-media eligibility" },
@@ -594,7 +596,7 @@ export function RankingExample() {
 
 export function ArchitectureFlow() {
   const columns = [
-    ["Sources", "Validated public RSS snapshots and current Personalize recommendations"],
+    ["Sources", "Validated public RSS snapshots"],
     ["Normalize", "Brand, topic, format, source date, byline, media and canonical URL"],
     ["Eligibility", "Real imagery, playable video, active scope, exclusions and deduplication"],
     ["Decide", "Additive score, return context, diversity pass and explanation"],

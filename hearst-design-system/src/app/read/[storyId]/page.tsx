@@ -15,10 +15,10 @@ import {
 import { parseHearstInternationalRssItems } from "@/lib/hearst-international-rss";
 import { getHearstBrandSection, hearstSectionThemeSlugs } from "@/lib/hearst-routes";
 import {
-  getPersonalizeLifestyleLiveFeed,
-  getPersonalizeLiveFeed,
-  getPersonalizeVideoFeed,
-} from "@/lib/personalize-live-feed";
+  getLocalLifestyleStoryFeed,
+  getLocalStoryFeed,
+} from "@/lib/hearst-local-feed";
+import { getPersonalizeVideoFeed } from "@/lib/hearst-video-feed";
 import {
   getHearstStoryReturnHref,
   normalizeReaderReturnHref,
@@ -263,25 +263,25 @@ export default async function ReaderArticlePage({ params, searchParams }: Reader
       productName: "Hearst International",
     };
   } else if (requestedBrandSlug && isVideoStory) {
-    videoFeedData = await safeLiveFeed(() => getPersonalizeVideoFeed({
+    videoFeedData = await safeLiveFeed(() => Promise.resolve(getPersonalizeVideoFeed({
       destination: requestedSection,
       brandSlug: requestedBrandSlug,
-    }));
+    })));
   } else if (requestedBrandSlug) {
     [liveFeedData, lifestyleLiveFeedData] = await Promise.all([
-      safeLiveFeed(() => getPersonalizeLiveFeed({
+      safeLiveFeed(() => Promise.resolve(getLocalStoryFeed({
         destination: requestedSection,
         brandSlug: requestedBrandSlug,
-      })),
+      }))),
       requestedBrandSlug === "cosmopolitan"
-        ? safeLiveFeed(getPersonalizeLifestyleLiveFeed)
+        ? safeLiveFeed(() => Promise.resolve(getLocalLifestyleStoryFeed()))
         : Promise.resolve(undefined),
     ]);
   } else {
     [liveFeedData, lifestyleLiveFeedData, videoFeedData] = await Promise.all([
-      safeLiveFeed(getPersonalizeLiveFeed),
-      safeLiveFeed(getPersonalizeLifestyleLiveFeed),
-      safeLiveFeed(() => getPersonalizeVideoFeed({ destination: "all" })),
+      safeLiveFeed(() => Promise.resolve(getLocalStoryFeed())),
+      safeLiveFeed(() => Promise.resolve(getLocalLifestyleStoryFeed())),
+      safeLiveFeed(() => Promise.resolve(getPersonalizeVideoFeed({ destination: "all" }))),
     ]);
   }
   const story =

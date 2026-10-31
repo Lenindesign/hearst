@@ -127,14 +127,14 @@ const CONSTITUTION_ARTICLES: ArticleSpec[] = [
     summary: "High-value placements claim stories in strict sequence to prevent duplicate cards across the interface.",
     mandates: [
       "Deterministic Allocation: 1. Today's Picks -> 2. Today's Edit -> 3. Daily Habit -> 4. Trending -> 5. River Sentinel.",
-      "3-Source Blend: Curated RSS snapshot + Personalize recommendations (<30% feed cap) + Playable H.264/HLS video.",
+      "RSS snapshots ranked locally, with verified playable H.264/HLS media when present.",
       "Demand-Driven Delivery: Append exactly 4 ranked cards on scroll proximity; never load entire catalogs on idle.",
     ],
     prohibitions: [
       "Never permit a story to appear twice on the same index page.",
       "Never exceed the 30% personalization quota for uncurated live feeds.",
     ],
-    codeRef: "src/lib/personalize-live-feed.ts & src/lib/story-module-allocation.ts",
+    codeRef: "src/lib/hearst-local-feed.ts & src/lib/story-module-allocation.ts",
   },
   {
     articleNum: "Article VII",

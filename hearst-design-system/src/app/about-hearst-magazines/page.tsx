@@ -35,7 +35,7 @@ const productProof = [
   },
   {
     title: "Recommendation logic",
-    copy: "Current Personalize article and video candidates, explainable ranking, freshness, source diversity, local preference and explicit reader controls.",
+    copy: "Validated RSS stories with local ranking, explainable ranking, freshness, source diversity, local preference and explicit reader controls.",
   },
   {
     title: "Reusable UI",

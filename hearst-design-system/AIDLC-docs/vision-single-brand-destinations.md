@@ -18,8 +18,8 @@ reader** that supports infinite "up next" scrolling.
 
 The platform already includes: a design-token pipeline (`tokens/` +
 `style-dictionary`, validated by `tokens:audit:ci`) with per-brand color/type/logo
-sets for 29 brands; a personalization/content layer (`personalize-live-feed.ts`
-and the `api/*` route handlers) plus static feed data in `lifestyleRiverStories`;
+sets for 29 brands; a validated RSS/local-ranking layer (`hearst-local-feed.ts`
+and the `api/*` route handlers) plus checked-in feed data in `lifestyleRiverStories`;
 and a shared UI primitive library (`src/components/ui/`).
 
 Today `HomePageTemplate` only renders the **river-with-reader** layout for
@@ -82,7 +82,7 @@ Cosmopolitan, Redbook.
   unchanged. Do not fork or rewrite the template.
 - The design-token pipeline (`tokens/`, `style-dictionary`, `tokens:audit:ci`) —
   consume as-is; brand additions are additive tokens only.
-- The personalization / feed data contract (`personalize-live-feed.ts`, the `api/*`
+- The personalization / feed data contract (`hearst-local-feed.ts`, the `api/*`
   response shapes, `LiveFeedData`) — consume as-is; do not change the schema.
 - The shared UI primitive library (`src/components/ui/`) — reuse, do not fork.
 - The existing `/hearst-plus` aggregated experience and the `/read/[storyId]` reader

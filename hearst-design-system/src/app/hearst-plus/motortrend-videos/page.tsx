@@ -2,19 +2,19 @@ import type { Metadata } from "next";
 import { HomePageTemplate } from "@/components/home-page";
 import { ThemeProvider } from "@/components/theme-provider";
 import { getHearstDestinationStaticData } from "@/lib/hearst-destination-data";
-import { getPersonalizeAutosVideoFeed } from "@/lib/personalize-live-feed";
+import { getPersonalizeAutosVideoFeed } from "@/lib/hearst-video-feed";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Autos Video Feed",
-  description: "An autos video-only feed powered by production Personalize recommendations from MotorTrend and Car and Driver.",
+  description: "A section-scoped feed of playable video recommendations from MotorTrend and Car and Driver.",
   alternates: {
     canonical: "/hearst-plus/motortrend-videos/",
   },
   openGraph: {
     title: "Autos Video Feed",
-    description: "An autos video-only feed powered by production Personalize recommendations from MotorTrend and Car and Driver.",
+    description: "A section-scoped feed of playable video recommendations from MotorTrend and Car and Driver.",
     url: "/hearst-plus/motortrend-videos/",
     siteName: "Hearst+ Prototype",
     type: "website",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Autos Video Feed",
-    description: "An autos video-only feed powered by production Personalize recommendations from MotorTrend and Car and Driver.",
+    description: "A section-scoped feed of playable video recommendations from MotorTrend and Car and Driver.",
     images: ["/hearst-plus/opengraph-image/"],
   },
 };

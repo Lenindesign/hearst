@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { BrutalistHomePage } from "@/components/hearst-plus/brutalist-home-page";
 import { ThemeProvider } from "@/components/theme-provider";
 import { getHearstDestinationStaticData } from "@/lib/hearst-destination-data";
-import { getPersonalizeLiveFeed } from "@/lib/personalize-live-feed";
+import { getLocalStoryFeed } from "@/lib/hearst-local-feed";
 import { socialGraphMetadata } from "@/lib/social-graph-image";
 
 export const metadata: Metadata = {
@@ -19,7 +19,7 @@ export const dynamic = "force-dynamic";
 
 export default async function HearstPlusBrutalistHomeRoute() {
   const [liveFeed] = await Promise.all([
-    getPersonalizeLiveFeed({ destination: "all" }).catch(() => undefined),
+    Promise.resolve(getLocalStoryFeed({ destination: "all" })),
   ]);
   const staticStories = getHearstDestinationStaticData({ storyLimitPerDestination: 32 }).all.stories;
   const seen = new Set<string>();

@@ -3,7 +3,7 @@ import "server-only";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { getHearstLiveArticle } from "@/lib/hearst-live-article";
 import type { LiveFeedData, LiveFeedSourceNote } from "@/lib/live-feed-types";
-import { getPersonalizeLiveFeed } from "@/lib/personalize-live-feed";
+import { getLocalStoryFeed } from "@/lib/hearst-local-feed";
 
 const candidateLimit = 60;
 const articleLimit = 12;
@@ -44,7 +44,7 @@ function buildSourceNotes(stories: LifestyleRiverStory[]) {
 }
 
 export async function getCompleteArticleFeed(): Promise<LiveFeedData> {
-  const liveFeed = await getPersonalizeLiveFeed({ destination: "all" });
+  const liveFeed = await getLocalStoryFeed({ destination: "all" });
   const candidates = liveFeed.stories
     .filter((story) => story.sourceUrl && !story.videoUrl && story.id.startsWith("live-"))
     .slice(0, candidateLimit);

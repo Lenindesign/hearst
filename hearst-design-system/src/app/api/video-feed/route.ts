@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getPersonalizeVideoFeed } from "@/lib/personalize-live-feed";
+import { getPersonalizeVideoFeed } from "@/lib/hearst-video-feed";
 
 export const dynamic = "force-dynamic";
 
 const destinations = new Set(["all", "lifestyle", "autos", "flux", "ew"]);
-// Personalize currently rejects sizes above 25 and does not expose working
-// pagination. Keep this at the upstream maximum so the feed stays populated.
 const fullVideoInventoryPerBrand = 25;
 const defaultPageSize = 36;
 const maximumPageSize = 48;
