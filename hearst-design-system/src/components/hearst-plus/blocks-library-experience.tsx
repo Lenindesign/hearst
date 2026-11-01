@@ -33,7 +33,7 @@ const patterns = [
   { id: "featured-four", name: "Featured + Row", description: "A full-width lead story followed by one supporting row that reduces from four cards to three or two as space narrows.", wireframe: "featured-four" },
   { id: "four-card-row", name: "Card Row", description: "A single horizontal row that shows up to four cards, reducing to three or two as space narrows.", wireframe: "four-card-row" },
   { id: "feature-sidebar", name: "Feature + Sidebar", description: "A lead story beside a stack of compact horizontal stories.", wireframe: "feature-sidebar" },
-  { id: "hero-three-horizontal", name: "River with Hero", description: "A large lead story followed by a vertical river of horizontal story cards.", wireframe: "hero-three-horizontal" },
+  { id: "hero-three-horizontal", name: "River with Hero", description: "A section heading and full-width lead story followed by three horizontal story cards in a vertical river.", wireframe: "hero-three-horizontal" },
   { id: "three-column-feature", name: "Three-Column Feature Row", description: "A discovery rail, central feature, and contextual ad placement.", wireframe: "three-column-feature" },
   { id: "featured-video-four", name: "Featured Video + Four", description: "A featured playable video followed by four video cards in one row.", wireframe: "featured-video-four" },
   { id: "four-card-grid", name: "Grid", description: "Editorial cards arranged in a responsive grid that expands as space allows.", wireframe: "four-card-grid" },
@@ -227,7 +227,7 @@ function Wireframe({ type, active = false }: { type: string; active?: boolean })
     return <div className="grid w-full grid-cols-[1.3fr_1fr] gap-1"><span className={cn(surface, "h-9")} /><span className="grid grid-rows-4 gap-1">{Array.from({ length: 4 }, (_, i) => block(`r${i}`, "h-2"))}</span></div>;
   }
   if (type === "hero-three-horizontal") {
-    return <div className="w-full space-y-1"><span className={cn(surface, "block h-5")} /><span className="grid grid-cols-[38px_1fr] gap-1">{block("i1", "h-3")}{block("t1", "h-3")}{block("i2", "h-3")}{block("t2", "h-3")}{block("i3", "h-3")}{block("t3", "h-3")}</span></div>;
+    return <div className="w-full space-y-1"><span className={cn(surface, "block h-2 w-2/3")} /><span className={cn(surface, "block h-7 w-full")} />{Array.from({ length: 3 }, (_, i) => <span key={i} className="grid grid-cols-[18px_1fr] gap-1"><span className={cn(surface, "h-3")} /><span className="flex flex-col justify-center gap-1"><span className={cn(surface, "h-1.5 w-full")} /><span className={cn(surface, "h-1 w-2/3")} /></span></span>)}</div>;
   }
   if (type === "three-column-feature") {
     return <div className="grid w-full grid-cols-[.8fr_1.5fr_.8fr] gap-1">{block("left", "h-9")}{block("mid", "h-9")}{block("right", "h-9")}</div>;
@@ -244,7 +244,7 @@ function StorySample({
   video = false,
 }: {
   story: LifestyleRiverStory;
-  variant?: "card" | "feature" | "horizontal" | "hero";
+  variant?: "card" | "feature" | "horizontal" | "hero" | "river-hero";
   video?: boolean;
 }) {
   const image = variant === "horizontal" ? "relative aspect-[4/3] w-full overflow-hidden rounded-[5px] bg-muted" : cn("relative w-full overflow-hidden bg-muted", variant === "hero" ? "aspect-[2.5/1]" : "aspect-[16/9]");
@@ -272,6 +272,9 @@ function StorySample({
   if (variant === "hero") {
     return <article className="relative isolate overflow-hidden rounded-[7px] bg-black text-white shadow-[var(--hp-shadow-card)]">{visual}<div className="absolute inset-x-0 bottom-0 p-4 sm:p-6 lg:p-8">{heroIdentity}<h3 className="headline mt-2 max-w-3xl text-balance text-xl font-bold leading-tight text-white sm:text-3xl lg:text-4xl">{story.title}</h3></div></article>;
   }
+  if (variant === "river-hero") {
+    return <article className="min-w-0 overflow-hidden rounded-[7px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">{visual}<div className="p-3 sm:p-4">{identity}<h3 className="headline mt-2 line-clamp-3 text-xl font-bold leading-tight sm:text-2xl">{story.title}</h3><p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">{story.summary}</p></div></article>;
+  }
   if (variant === "horizontal") {
     return <article className="grid min-w-0 grid-cols-[minmax(82px,28%)_minmax(0,1fr)] items-center gap-3 rounded-[7px] bg-[var(--hp-surface)] p-3 shadow-[var(--hp-shadow-card)] sm:grid-cols-[minmax(110px,28%)_minmax(0,1fr)] sm:gap-4 sm:p-4">{visual}<div className="min-w-0">{identity}<h3 className="headline mt-1 line-clamp-2 text-sm font-bold leading-snug sm:text-base">{story.title}</h3><p className="mt-1 hidden line-clamp-2 text-xs leading-5 text-muted-foreground sm:block">{story.summary}</p></div></article>;
   }
@@ -298,7 +301,7 @@ function PatternPreview({ patternId, stories, videos }: { patternId: PatternId; 
   if (patternId === "featured-four") return <><StorySample story={sample[0]} variant="hero" /><div className="mt-4"><ResponsiveStoryRow stories={sample.slice(1, 5)} /></div></>;
   if (patternId === "four-card-row") return <ResponsiveStoryRow stories={sample.slice(0, 4)} />;
   if (patternId === "feature-sidebar") return <div className="grid min-w-0 items-start gap-4 xl:grid-cols-[minmax(0,1.8fr)_minmax(260px,1fr)]"><StorySample story={sample[0]} variant="feature" /><div className="space-y-2">{sample.slice(1, 5).map((story) => <StorySample key={story.id} story={story} variant="horizontal" />)}</div></div>;
-  if (patternId === "hero-three-horizontal") return <><StorySample story={sample[0]} variant="hero" /><div className="mt-3 space-y-2">{sample.slice(1, 4).map((story) => <StorySample key={story.id} story={story} variant="horizontal" />)}</div></>;
+  if (patternId === "hero-three-horizontal") return <><SectionHeading>Style &amp; Beauty</SectionHeading><StorySample story={sample[0]} variant="river-hero" /><div className="mt-3 space-y-2">{sample.slice(1, 4).map((story) => <StorySample key={story.id} story={story} variant="horizontal" />)}</div></>;
   if (patternId === "three-column-feature") return <div className="grid min-w-0 items-start gap-3 lg:grid-cols-[minmax(140px,.75fr)_minmax(0,1.6fr)_minmax(140px,.75fr)] xl:gap-4"><section className="rounded-[7px] bg-[var(--hp-surface)] p-2.5 shadow-[var(--hp-shadow-card)] sm:p-3"><h3 className="text-[10px] font-bold uppercase tracking-widest">Trending across brands</h3>{sample.slice(0, 4).map((story, index) => <StoryRow key={story.id} story={story} rank={index + 1} />)}</section><div className="min-w-0"><SectionHeading>Style &amp; Beauty</SectionHeading><StorySample story={sample[4] ?? sample[0]} variant="feature" /></div><div className="min-w-0"><AdSample /></div></div>;
   if (patternId === "featured-video-four") return <><article className="overflow-hidden rounded-[7px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]"><div className="relative aspect-[2.2/1] overflow-hidden bg-black"><LifestyleRiverImage story={videoSamples[0]} className="h-full w-full object-cover" priority /><div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/10 to-transparent"/><span className="absolute left-5 top-5 rounded-full bg-black/55 px-3 py-1 text-xs font-bold text-white">{hasPlayableSamples ? "Featured video" : "Featured media slot"}</span>{hasPlayableSamples ? <span className="absolute inset-0 grid place-items-center"><span className="grid size-12 place-items-center rounded-full bg-white text-black"><Play className="size-5 fill-current" aria-hidden /></span></span> : null}<div className="absolute inset-x-0 bottom-0 p-5 text-white"><p className="text-xs font-semibold">{videoSamples[0].brand} · {videoSamples[0].topic}</p><h3 className="headline mt-1 max-w-2xl text-2xl font-bold sm:text-3xl">{videoSamples[0].title}</h3></div></div></article><div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">{videoSamples.slice(1, 5).map((story) => <StorySample key={story.id} story={story} video={Boolean(story.videoUrl)} />)}</div></>;
   if (patternId === "four-card-grid") return <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 2xl:grid-cols-4">{sample.slice(0, 4).map((story) => <StorySample key={story.id} story={story} />)}</div>;

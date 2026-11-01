@@ -2135,6 +2135,7 @@ function EditorialHomepageSection({
   cardGrid = false,
   featureSidebar = false,
   featureFirstGrid = false,
+  riverWithHero = false,
   largeHeading = false,
 }: {
   section: { title: string; stories: LifestyleRiverStory[] };
@@ -2145,6 +2146,7 @@ function EditorialHomepageSection({
   cardGrid?: boolean;
   featureSidebar?: boolean;
   featureFirstGrid?: boolean;
+  riverWithHero?: boolean;
   largeHeading?: boolean | "elle";
 }) {
   return (
@@ -2155,7 +2157,33 @@ function EditorialHomepageSection({
           {selectionLabel}
         </span>
       </div>
-      {section.stories.length && featureFirstGrid ? (
+      {section.stories.length && riverWithHero ? (
+        <div className="space-y-3">
+          <LifestyleRiverCard
+            story={section.stories[0]}
+            onOpen={() => onOpen(section.stories[0])}
+            saved={savedIds.includes(section.stories[0].id)}
+            onSave={() => onSave(section.stories[0])}
+            layoutOverride="cards"
+            hideGalleryCount
+            compactGallery
+          />
+          {section.stories.length > 1 ? (
+            <div className="space-y-3">
+              {section.stories.slice(1, 4).map((story) => (
+                <LifestyleRiverCard
+                  key={`${section.title}-${story.id}`}
+                  story={story}
+                  onOpen={() => onOpen(story)}
+                  saved={savedIds.includes(story.id)}
+                  onSave={() => onSave(story)}
+                  layoutOverride="list"
+                />
+              ))}
+            </div>
+          ) : null}
+        </div>
+      ) : section.stories.length && featureFirstGrid ? (
         <div className="space-y-4">
           <LifestyleRiverCard
             story={section.stories[0]}
@@ -6770,12 +6798,25 @@ function LifestyleRiverHomePage({
                 <div className={cn("space-y-10", initialBrandSlug === "elle" && "[&>section:not(:first-child)]:!pt-[4.5rem]")} aria-label="Hearst+ blocks layout">
                   <section aria-label="Trending, Today’s Picks, Style & Beauty, and advertising">
                     <div className="grid min-w-0 items-start gap-5 lg:grid-cols-[minmax(220px,.82fr)_minmax(0,2fr)_minmax(220px,.82fr)]">
-                      <TrendingStoryRail
-                        stories={moduleAllocation.trendingStories.filter((story) => !initialBrandSlug || story.brandSlug === initialBrandSlug).slice(0, 5)}
-                        onOpenStory={(story) => openStory(story.id)}
-                        title={initialBrandName ? `Trending ${initialBrandName}` : "Trending Across Brands"}
-                        className="h-fit lg:sticky lg:top-24 lg:self-start"
-                      />
+                      <div className="min-w-0 space-y-5 lg:sticky lg:top-24 lg:self-start">
+                        <TrendingStoryRail
+                          stories={moduleAllocation.trendingStories.filter((story) => !initialBrandSlug || story.brandSlug === initialBrandSlug).slice(0, 5)}
+                          onOpenStory={(story) => openStory(story.id)}
+                          title={initialBrandName ? `Trending ${initialBrandName}` : "Trending Across Brands"}
+                        />
+                        {profile.savedIds.some((id) => savedStoryInventory.some((story) => story.id === id)) ? (
+                          <TrendingStoryRail
+                            stories={savedStoryInventory.filter((story) => profile.savedIds.includes(story.id)).slice(0, 3)}
+                            onOpenStory={(story) => openStory(story.id)}
+                            title="Saved Items"
+                            titleIcon={<Heart className="h-4 w-4 shrink-0" aria-hidden />}
+                          />
+                        ) : (
+                          <DiscoverySidebarCard title="Saved Items" summary="Your saved stories" titleIcon={<Heart className="h-4 w-4 shrink-0" aria-hidden />}>
+                            <p className="text-sm leading-6 text-muted-foreground">Save stories as you browse and they will appear here.</p>
+                          </DiscoverySidebarCard>
+                        )}
+                      </div>
                       <div className="min-w-0 space-y-6">
                         <FeaturedStoryCarousel
                           key={`blocks:${leadStory.id}:${heroStories.map((story) => story.id).join("|")}`}
@@ -6798,6 +6839,28 @@ function LifestyleRiverHomePage({
                           onEditionStoryOpen={isShowingLatestAvailableStories ? undefined : trackTodaysPickOpen}
                           indicatorPalette={indicatorPalette}
                         />
+                        {destination === "autos" && editorialHomepageSections.find((section) => section.title === "News & First Looks" && section.stories.length > 1) ? (
+                          <EditorialHomepageSection
+                            section={editorialHomepageSections.find((section) => section.title === "News & First Looks")!}
+                            selectionLabel={initialBrandName ? `${initialBrandName} Selection` : "Hearst+ Selection"}
+                            onOpen={(story) => openStory(story.id)}
+                            savedIds={profile.savedIds}
+                            onSave={toggleSaved}
+                            riverWithHero
+                            largeHeading={enlargeBlocksSectionHeadings}
+                          />
+                        ) : null}
+                        {destination === "ew" && editorialHomepageSections.find((section) => section.title === "Fitness & Training" && section.stories.length > 1) ? (
+                          <EditorialHomepageSection
+                            section={editorialHomepageSections.find((section) => section.title === "Fitness & Training")!}
+                            selectionLabel={initialBrandName ? `${initialBrandName} Selection` : "Hearst+ Selection"}
+                            onOpen={(story) => openStory(story.id)}
+                            savedIds={profile.savedIds}
+                            onSave={toggleSaved}
+                            riverWithHero
+                            largeHeading={enlargeBlocksSectionHeadings}
+                          />
+                        ) : null}
                         {editorialHomepageSections.find((section) => section.title === "Style & Beauty") ? (
                           <EditorialHomepageSection
                             section={editorialHomepageSections.find((section) => section.title === "Style & Beauty")!}
@@ -6809,8 +6872,9 @@ function LifestyleRiverHomePage({
                           />
                         ) : null}
                       </div>
-                      <div className="h-fit lg:sticky lg:top-24 lg:self-start">
+                      <div className="h-fit space-y-5 lg:sticky lg:top-24 lg:self-start">
                         <ContextualRiverAdvertisement ad={rightRailAd} />
+                        <LocalNewsRail />
                       </div>
                     </div>
                   </section>
@@ -6841,21 +6905,20 @@ function LifestyleRiverHomePage({
                     );
                   })()}
 
-                  {(editorialHomepageSections.find((section) => section.title === "Food & Home")?.stories.length ?? 0) > 0 ? <section className="border-t-2 border-primary pt-5" aria-label="Saved items, Food & Home, and Local News">
+                  {(editorialHomepageSections.find((section) => section.title === "Food & Home")?.stories.length ?? 0) > 0 ? <section className="border-t-2 border-primary pt-5" aria-label="Food & Home and Local News">
                     <div className="grid min-w-0 items-start gap-5 lg:grid-cols-[minmax(220px,.82fr)_minmax(0,2fr)_minmax(220px,.82fr)]">
                       <div className="h-fit lg:sticky lg:top-24 lg:self-start">
-                        {profile.savedIds.some((id) => savedStoryInventory.some((story) => story.id === id)) ? (
-                          <TrendingStoryRail
-                            stories={savedStoryInventory.filter((story) => profile.savedIds.includes(story.id)).slice(0, 3)}
-                            onOpenStory={(story) => openStory(story.id)}
-                            title="Saved Items"
-                            titleIcon={<Heart className="h-4 w-4 shrink-0" aria-hidden />}
-                          />
-                        ) : (
-                          <DiscoverySidebarCard title="Saved Items" summary="Your saved stories" titleIcon={<Heart className="h-4 w-4 shrink-0" aria-hidden />}>
-                            <p className="text-sm leading-6 text-muted-foreground">Save stories as you browse and they will appear here.</p>
-                          </DiscoverySidebarCard>
-                        )}
+                        <DiscoverySidebarCard title="Explore Events" summary={initialBrandName ? `Upcoming experiences for ${initialBrandName}` : "Upcoming experiences across Hearst brands"}>
+                          <div className="-mb-3 divide-y divide-border/70">
+                            {sectionsHomepageEvents.slice(0, 3).map((event, index) => (
+                              <Link key={event.slug} href={`/hearst-plus/events/${event.slug}/`} className="group grid min-h-16 grid-cols-[48px_minmax(0,1fr)] items-start gap-3 py-3">
+                                <span className="relative block h-12 w-12 overflow-hidden rounded-[6px] border border-border bg-muted"><Image src={event.image.src} alt="" fill sizes="48px" className="object-cover" /><span className="absolute left-1 top-1 grid h-5 w-5 place-items-center rounded-full bg-background text-[11px] font-bold text-foreground ring-1 ring-border">{index + 1}</span></span>
+                                <span className="min-w-0"><span className="line-clamp-3 block text-xs font-bold leading-[1.35] group-hover:text-primary">{event.title}</span><span className="mt-1 block text-xs text-muted-foreground">{event.dateLabel}</span></span>
+                              </Link>
+                            ))}
+                          </div>
+                          <Link href="/hearst-plus/events/" className="mt-3 inline-flex min-h-9 items-center text-sm font-bold text-primary hover:underline">Explore all events</Link>
+                        </DiscoverySidebarCard>
                       </div>
                       {editorialHomepageSections.find((section) => section.title === "Food & Home") ? (
                         <EditorialHomepageSection
@@ -6868,7 +6931,7 @@ function LifestyleRiverHomePage({
                         />
                       ) : <div />}
                       <div className="h-fit lg:sticky lg:top-24 lg:self-start">
-                        <LocalNewsRail />
+                        <ContextualRiverAdvertisement ad={rightRailAd} />
                       </div>
                     </div>
                   </section> : null}
@@ -6941,6 +7004,8 @@ function LifestyleRiverHomePage({
                   {destination !== "all" ? editorialHomepageSections
                     .filter((section) => section.stories.length > 0)
                     .filter((section) => {
+                      if (destination === "autos" && section.title === "News & First Looks") return false;
+                      if (destination === "ew" && section.title === "Fitness & Training") return false;
                       if (!initialBrandSlug) return true;
                       if (section.title === "Style & Beauty") return false;
                       const sectionName = section.title.toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -7449,10 +7514,10 @@ function LifestyleRiverHomePage({
                 />
               ) : null}
               <ContextualRiverAdvertisement ad={rightRailAd} />
+              <LocalNewsRail />
               {initialBrandSlug && initialBrandName ? (
                 <BrandInstagramModule brandSlug={initialBrandSlug} brandName={initialBrandName} />
               ) : null}
-              {!singleBrandName && <LocalNewsRail />}
               {showStakeholderTools ? (
                 <>
               <div className="rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-4 shadow-[var(--hp-shadow-card)]">
