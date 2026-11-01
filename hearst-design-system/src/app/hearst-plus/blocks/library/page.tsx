@@ -1,45 +1,71 @@
-import Link from "next/link";
+import type { Metadata } from "next";
+import { BlocksLibraryExperience } from "@/components/hearst-plus/blocks-library-experience";
+import { ThemeProvider } from "@/components/theme-provider";
+import { getHearstDestinationStaticData } from "@/lib/hearst-destination-data";
+import { getPersonalizeVideoFeed } from "@/lib/hearst-video-feed";
+import { autosRiverStories } from "@/components/autos-river-data";
+import type { CommunityFeedThread } from "@/components/hearst-plus/community-client";
+import { communityGroups, communityParticipationThreads } from "@/lib/community-groups";
+import { isExplicitGalleryStory } from "@/components/hearst-plus/story-presentation-model";
+import { hearstEvents } from "@/lib/hearst-events";
+import { isExactPortraitVideo } from "@/lib/hearst-video-destination-model";
+import { getBrandPromotionForSlot } from "@/components/hearst-plus/brand-promotion-model";
+import { localNewsContextualAd } from "@/components/hearst-plus/local-news-contextual-ad";
 
-const blocks = [
-  { name: "Featured + Four", description: "One full-width lead card followed by four cards in a single row.", layout: "hero-four" },
-  { name: "Four-Card Row", description: "Four equal cards aligned in one row beneath a section heading.", layout: "four" },
-  { name: "Feature + Sidebar", description: "A large feature beside four stacked horizontal cards.", layout: "feature-sidebar" },
-  { name: "Hero + Three Horizontal", description: "One featured card followed by three horizontal cards.", layout: "hero-three" },
-  { name: "Three-Column Feature Row", description: "A left rail, central feature column, and right rail.", layout: "three-column" },
-  { name: "Featured Video + Four", description: "One full-width video followed by four video cards in one row.", layout: "video-four" },
-  { name: "Four-Card Grid", description: "A responsive two-by-two grid that expands to four columns.", layout: "four" },
-  { name: "Horizontal Story List", description: "Stories arranged as stacked, image-led horizontal cards.", layout: "horizontal" },
-];
+export const metadata: Metadata = {
+  title: "Building Blocks Library | Hearst+",
+  description: "A visual reference for the reusable layout patterns used in Hearst+ editorial blocks.",
+};
 
-function LayoutSample({ layout }: { layout: string }) {
-  const block = "rounded-[3px] border border-primary/40 bg-primary/10";
-  if (layout === "hero-four") return <div className="space-y-1.5"><div className={`${block} h-8 w-full`} /><div className="grid grid-cols-4 gap-1.5">{Array.from({ length: 4 }, (_, index) => <div key={index} className={`${block} h-7`} />)}</div></div>;
-  if (layout === "feature-sidebar") return <div className="grid grid-cols-[1.8fr_1fr] gap-1.5"><div className={`${block} h-20`} /><div className="grid grid-rows-4 gap-1.5">{Array.from({ length: 4 }, (_, index) => <div key={index} className={`${block} min-h-0`} />)}</div></div>;
-  if (layout === "hero-three") return <div className="space-y-1.5"><div className={`${block} h-12`} /><div className="space-y-1">{Array.from({ length: 3 }, (_, index) => <div key={index} className={`${block} h-5`} />)}</div></div>;
-  if (layout === "three-column") return <div className="grid grid-cols-[1fr_2fr_1fr] gap-1.5"><div className={`${block} h-16`} /><div className={`${block} h-16`} /><div className={`${block} h-16`} /></div>;
-  if (layout === "horizontal") return <div className="space-y-1.5">{Array.from({ length: 3 }, (_, index) => <div key={index} className={`${block} h-6`} />)}</div>;
-  return <div className="grid grid-cols-4 gap-1.5">{Array.from({ length: 4 }, (_, index) => <div key={index} className={`${block} h-14`} />)}</div>;
-}
+export default async function BlocksLibraryPage() {
+  const [videoFeed] = await Promise.all([
+    getPersonalizeVideoFeed({ destination: "all", sizePerBrand: 5 }),
+  ]);
+  const stories = getHearstDestinationStaticData({ storyLimitPerDestination: 80 }).all.stories;
+  const shortsStories = videoFeed.stories.filter(isExactPortraitVideo).slice(0, 6);
+  const vehicleStory = autosRiverStories.find((story) => story.id === "car-and-driver-kia-ev9-2027") ?? autosRiverStories[0];
+  const galleryStory = autosRiverStories.find(isExplicitGalleryStory) ?? vehicleStory;
+  const communitySeed = communityParticipationThreads[0];
+  const communityGroup = communityGroups.find((group) => group.brandSlug === communitySeed.brandSlug && group.groupSlug === communitySeed.groupSlug);
+  const communityThread: CommunityFeedThread = {
+    id: communitySeed.id,
+    brand: "Delish",
+    brandSlug: communitySeed.brandSlug,
+    title: communitySeed.title,
+    body: communitySeed.body,
+    meta: `${communityGroup?.name ?? "Delish"}${communityGroup?.members ? ` · ${communityGroup.members}` : ""}`,
+    kindLabel: communitySeed.kind === "writer" ? "Host thread" : "Reader post",
+    replies: communitySeed.replies,
+    helpfulBase: communitySeed.replies + 14,
+    author: communitySeed.author,
+    isHost: communitySeed.kind === "writer",
+    href: `/communities/${communitySeed.brandSlug}/threads/${communitySeed.id}/`,
+    posterImage: "/images/delish-community-feature.png",
+    posterAlt: communitySeed.title,
+    mediaType: communitySeed.mediaType,
+    videoUrl: communitySeed.videoUrl,
+  };
+  const eventSample = hearstEvents.find((event) => event.status === "upcoming") ?? hearstEvents[0];
+  const brandSpotlight = getBrandPromotionForSlot({
+    stories,
+    fallbackStories: stories,
+    activeFilter: "For You",
+    slotNumber: 2,
+  });
 
-export default function BlocksLibraryPage() {
   return (
-    <main className="mx-auto min-h-screen max-w-7xl px-6 py-12 sm:px-8 sm:py-16 lg:px-12">
-      <Link href="/hearst-plus/blocks/" className="inline-flex min-h-11 items-center text-sm font-bold text-primary hover:underline">← Blocks layout</Link>
-      <header className="mt-8 border-b-2 border-primary pb-8">
-        <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Hearst+</p>
-        <h1 className="headline mt-3 text-4xl font-bold sm:text-5xl">Blocks Library</h1>
-        <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">Reusable block names describe layout patterns. Content, vertical, and brand can change within each pattern.</p>
-      </header>
-      <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:gap-6">
-        {blocks.map((block, index) => (
-          <li key={block.name} className="rounded-[8px] border border-border bg-card p-6 sm:p-7">
-            <LayoutSample layout={block.layout} />
-            <p className="mt-5 text-xs font-bold uppercase tracking-[0.12em] text-primary">Pattern {String(index + 1).padStart(2, "0")}</p>
-            <h2 className="headline mt-2 text-xl font-bold">{block.name}</h2>
-            <p className="mt-3 max-w-prose text-sm leading-6 text-muted-foreground">{block.description}</p>
-          </li>
-        ))}
-      </ul>
-    </main>
+    <ThemeProvider defaultBrandSlug="hearst-all">
+      <BlocksLibraryExperience
+        stories={stories}
+        videoStories={videoFeed.stories}
+        communityThread={communityThread}
+        eventSample={eventSample}
+        vehicleStory={vehicleStory}
+        galleryStory={galleryStory}
+        shortsStories={shortsStories}
+        sponsoredAd={localNewsContextualAd}
+        brandSpotlight={brandSpotlight}
+      />
+    </ThemeProvider>
   );
 }

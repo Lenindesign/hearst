@@ -722,6 +722,7 @@ export function HearstPlusBriefSamples({
             type="button"
             size="touch"
             variant={showMightyCard ? "secondary" : "default"}
+            style={{ color: "#fff" }}
             aria-expanded={showMightyCard}
             aria-controls={showMightyCard ? "mighty-card-workbench" : undefined}
             onClick={() => setShowMightyCard((current) => !current)}

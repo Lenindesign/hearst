@@ -29,12 +29,8 @@ const defaultProductLinkGroups: SiteFooterLinkGroup[] = [
     title: "Discover Hearst+",
     links: [
       { label: "Open Hearst+", href: "/hearst-plus/" },
-      { label: "Blocks layout", href: "/hearst-plus/blocks/" },
-      { label: "Blocks library", href: "/hearst-plus/blocks/library/" },
       { label: "Sections layout", href: "/hearst-plus/sections/" },
       { label: "Events", href: "/hearst-plus/events/" },
-      { label: "Full-width hero slider", href: "/hearst-plus/full-width-hero/" },
-      { label: "Brutalist editorial home", href: "/hearst-plus/brutalist-home/" },
       { label: "Local News", href: "/hearst-plus/local-news/" },
       { label: "Shop the stories", href: "/hearst-plus/shop/" },
       { label: "Newsstand", href: "/hearst-plus/newsstand/" },
@@ -53,10 +49,12 @@ const defaultProductLinkGroups: SiteFooterLinkGroup[] = [
   {
     title: "Prototype experiences",
     links: [
+      { label: "Blocks layout", href: "/hearst-plus/blocks/" },
+      { label: "Blocks library", href: "/hearst-plus/blocks/library/" },
+      { label: "Brutalist editorial home", href: "/hearst-plus/brutalist-home/" },
       { label: "Live feed", href: "/hearst-plus/live-feed/" },
       { label: "Local News feed admin", href: "/hearst-plus/local-news/admin/" },
       { label: "Lifestyle Live", href: "/hearst-plus/lifestyle-live/" },
-      { label: "Autos Videos", href: "/hearst-plus/motortrend-videos/" },
       { label: "HOT ROD Events", href: "/autos/hot-rod/events/" },
       { label: "Single-brand home", href: "/single-brand/delish/" },
       {

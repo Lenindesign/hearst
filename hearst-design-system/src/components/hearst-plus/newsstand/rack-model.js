@@ -199,7 +199,15 @@ function coverMaterial(t, pal, layout, skip) {
 function magazine(name, pal, layout, thick, t) {
   const g = new THREE.Group(); g.name = name; g.userData.slug = titles[t][1];
   add(g, `${name}_pages`, box(MW, MH, thick), mat.paper, 0, 0, -thick / 2);
-  add(g, `${name}_cover`, new THREE.PlaneGeometry(MW, MH), coverMaterial(t, pal, layout, skipSlots.has(name)), 0, 0, 0.0004);
+  const coverHinge = new THREE.Group();
+  coverHinge.name = `${name}_cover_hinge`;
+  coverHinge.position.x = -MW / 2;
+  g.add(coverHinge);
+  const cover = new THREE.Mesh(new THREE.PlaneGeometry(MW, MH), coverMaterial(t, pal, layout, skipSlots.has(name)));
+  cover.name = `${name}_cover`;
+  cover.position.set(MW / 2, 0, 0.0004);
+  coverHinge.add(cover);
+  g.userData.coverHinge = coverHinge;
   return g;
 }
 

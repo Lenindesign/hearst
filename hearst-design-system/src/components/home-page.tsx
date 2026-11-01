@@ -309,6 +309,25 @@ import {
   usesNativePublicationLogoColor,
 } from "@/lib/home-page-feed-model";
 
+const elleDailyHoroscopes = [
+  { sign: "Aries", dates: "Mar 21–Apr 19", articleId: "a60", image: "aries-final-65c53a391c6ed.jpg" },
+  { sign: "Taurus", dates: "Apr 20–May 20", articleId: "a98", image: "taurus-final-65c53d0a5ea92.jpg" },
+  { sign: "Gemini", dates: "May 21–Jun 20", articleId: "a99", image: "gemini-final-65c53f0a53394.jpg" },
+  { sign: "Cancer", dates: "Jun 21–Jul 22", articleId: "a100", image: "cancer-final-65c540a4f3330.jpg" },
+  { sign: "Leo", dates: "Jul 23–Aug 22", articleId: "a101", image: "leo-final-65c53b0ab6f6f.jpg" },
+  { sign: "Virgo", dates: "Aug 23–Sep 22", articleId: "a102", image: "virgo-final-65c53dd8e700a.jpg" },
+  { sign: "Libra", dates: "Sep 23–Oct 22", articleId: "a103", image: "libra-final-65c53f91cdeb0.jpg" },
+  { sign: "Scorpio", dates: "Oct 23–Nov 21", articleId: "a104", image: "scoprio-final-65c54127a8712.jpg" },
+  { sign: "Sagittarius", dates: "Nov 22–Dec 21", articleId: "a105", image: "sagittarius-final-65c53c344e35b.jpg" },
+  { sign: "Capricorn", dates: "Dec 22–Jan 19", articleId: "a106", image: "capricorn-final-65c53e7b70fb7.jpg" },
+  { sign: "Aquarius", dates: "Jan 20–Feb 18", articleId: "a107", image: "aquarius-final-65c5401965263.jpg" },
+  { sign: "Pisces", dates: "Feb 19–Mar 20", articleId: "a108", image: "pisces-final-65c5440b949f5.jpg" },
+].map((horoscope) => ({
+  ...horoscope,
+  href: `https://www.elle.com/horoscopes/daily/${horoscope.articleId}/${horoscope.sign.toLowerCase()}-daily-horoscope/`,
+  imageUrl: `https://hips.hearstapps.com/hmg-prod/images/${horoscope.image}`,
+}));
+
 type ReaderRiverReturnContext = {
   storyId: string;
   storyIds: string[];
@@ -580,22 +599,26 @@ function RiverLayoutToggle({
           title={label}
           className={cn("hearst-plus-layout-toggle h-7 w-7 rounded-[4px]", buttonClassName)}
           onClick={() => {
+            const params = new URLSearchParams(searchParams?.toString() ?? "");
             if (value === "blocks") {
               setRiverLayout("blocks");
+              params.set("layout", "blocks");
+              const query = params.toString();
               router.push(pathname === "/hearst-plus" || pathname === "/" || pathname === "/hearst-plus/sections" || pathname === "/hearst-plus/blocks"
                 ? "/hearst-plus/blocks/"
-                : `${pathname}/?layout=blocks`);
-              return;
-            }
-            if (value === "full-width-hero") {
-              setRiverLayout(value);
-              if (pathname === "/hearst-plus/sections") router.push("/hearst-plus/full-width-hero/");
-              else if (isSectionsRoute) router.push(pathname);
+                : `${pathname}/?${query}`);
               return;
             }
             setRiverLayout(value);
-            if (pathname === "/hearst-plus/sections" || pathname === "/hearst-plus/full-width-hero") router.push("/hearst-plus/");
-            else if (isSectionsRoute) router.push(pathname);
+            params.delete("layout");
+            const isDedicatedLayoutRoute = pathname === "/hearst-plus/blocks" || pathname === "/hearst-plus/sections" || pathname === "/hearst-plus/full-width-hero";
+            const nextPathname = isDedicatedLayoutRoute
+              ? value === "full-width-hero" ? "/hearst-plus/full-width-hero/" : "/hearst-plus/"
+              : pathname;
+            const query = params.toString();
+            const nextHref = `${nextPathname}${query ? `?${query}` : ""}`;
+            const currentHref = `${pathname}${searchParams?.toString() ? `?${searchParams.toString()}` : ""}`;
+            if (nextHref !== currentHref) router.push(nextHref);
           }}
         >
           <Icon className="h-3.5 w-3.5" aria-hidden />
@@ -2097,6 +2120,12 @@ function Footer({
   );
 }
 
+function blocksSectionHeadingClass(brandSlug?: string) {
+  return brandSlug === "elle"
+    ? "headline text-4xl leading-tight italic lg:text-7xl"
+    : "headline text-4xl leading-tight font-bold";
+}
+
 function EditorialHomepageSection({
   section,
   selectionLabel,
@@ -2121,7 +2150,7 @@ function EditorialHomepageSection({
   return (
     <section className="min-w-0 space-y-4" aria-label={section.title}>
       <div className="flex items-end justify-between gap-4">
-        <h2 className={cn("headline leading-tight", largeHeading === "elle" ? "italic" : largeHeading ? "text-6xl font-bold" : "text-3xl font-bold")} style={largeHeading === "elle" ? { fontSize: "4.5rem" } : undefined}>{section.title}</h2>
+        <h2 className={largeHeading === "elle" ? blocksSectionHeadingClass("elle") : blocksSectionHeadingClass()}>{section.title}</h2>
         <span className="shrink-0 pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
           {selectionLabel}
         </span>
@@ -2967,10 +2996,10 @@ function CompactPhotoGalleryCard({
   onSave?: () => void;
 }) {
   return (
-    <article className="group/card relative min-w-0 overflow-hidden rounded-[8px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
+    <article className="group/card compact-photo-gallery relative min-w-0 overflow-hidden rounded-[8px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
       <button type="button" onClick={onOpen} className="peer absolute inset-0 z-10 rounded-[8px] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/60" aria-label={`Open photo gallery: ${story.title}`} />
-      <div className="grid aspect-video grid-cols-[2fr_1fr] grid-rows-2 gap-0.5 overflow-hidden bg-border">
-        {images.slice(0, 3).map((image, index) => <div key={image.src} className={cn("relative min-w-0 overflow-hidden bg-muted", index === 0 && "row-span-2")}><Image src={image.src} alt={image.alt} fill sizes={index === 0 ? "(max-width: 640px) 66vw, 40vw" : "(max-width: 640px) 33vw, 20vw"} className="object-cover transition-transform duration-200 group-hover/card:scale-[1.02]" /></div>)}
+      <div className="compact-photo-gallery__images grid aspect-video grid-cols-2 gap-0.5 overflow-hidden bg-border">
+        {images.slice(0, 4).map((image, index) => <div key={image.src} className={cn("compact-photo-gallery__image relative min-w-0 overflow-hidden bg-muted", index === 2 && "compact-photo-gallery__image--small", index === 3 && "compact-photo-gallery__image--large")}><Image src={image.src} alt={image.alt} fill sizes={index === 0 ? "(max-width: 640px) 50vw, 40vw" : "(max-width: 640px) 50vw, 20vw"} className="object-cover transition-transform duration-200 group-hover/card:scale-[1.02]" /></div>)}
       </div>
       <div className="story-card-content relative z-20 min-w-0 p-4">
         <div className="story-meta-row mb-2"><LifestyleBrandSource story={story} />{onSave && saved !== undefined ? <StorySaveIconButton saved={saved} onSave={onSave} className="ml-auto" /> : null}</div>
@@ -5548,6 +5577,7 @@ function LifestyleRiverHomePage({
         ?? "More from Hearst";
     };
     const used = new Set([
+      ...heroStories.map((story) => story.id),
       ...sectionsHomepageLatest.map((story) => story.id),
       ...sectionsHomepageMostPopular.map((story) => story.id),
     ]);
@@ -5565,7 +5595,7 @@ function LifestyleRiverHomePage({
     const remaining = displayStories.filter((story) => !used.has(story.id));
     if (remaining.length) sections.push({ title: `More from ${initialBrandName ?? "Hearst"}`, stories: remaining.slice(0, 3) });
     return sections;
-  }, [destination, destinationConfigs, displayStories, initialBrandName, initialBrandSlug, sectionsHomepageLatest, sectionsHomepageMostPopular]);
+  }, [destination, destinationConfigs, displayStories, heroStories, initialBrandName, initialBrandSlug, sectionsHomepageLatest, sectionsHomepageMostPopular]);
   const sectionsHomepageVideos = videoTabStories
     .filter((story) => !initialBrandSlug || story.brandSlug === initialBrandSlug)
     .slice(0, 3);
@@ -6786,21 +6816,24 @@ function LifestyleRiverHomePage({
                   </section>
 
                   {initialBrandSlug === "elle" && (() => {
-                    const horoscopeStory = destinationConfigs.all.stories.find((story) => story.brandSlug === "elle" && isHoroscopeStory(story));
-                    if (!horoscopeStory?.sourceUrl) return null;
-                    const horoscopeUrl = horoscopeStory.sourceUrl;
-                    const zodiacSigns = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
+                    const horoscopeUrl = "https://www.elle.com/horoscopes/daily/";
                     return (
                       <section className="space-y-4 border-t-2 border-primary pt-5" aria-labelledby="blocks-horoscopes-heading">
                         <div className="flex items-end justify-between gap-4">
-                          <h2 id="blocks-horoscopes-heading" className="headline leading-tight italic" style={{ fontSize: "4.5rem" }}>Horoscopes</h2>
+                          <h2 id="blocks-horoscopes-heading" className={blocksSectionHeadingClass(initialBrandSlug)}>Horoscopes</h2>
                           <Link href={horoscopeUrl} className="pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Read your horoscope</Link>
                         </div>
-                        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
-                          {zodiacSigns.map((sign) => (
-                            <Link key={sign} href={horoscopeUrl} className="group flex min-h-24 flex-col justify-between rounded-[8px] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] transition-colors hover:bg-[var(--hp-surface-low)]">
-                              <span className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">Daily horoscope</span>
-                              <span className="headline text-xl font-semibold group-hover:text-primary">{sign}</span>
+                        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                          {elleDailyHoroscopes.map(({ sign, dates, href, imageUrl }) => (
+                            <Link key={sign} href={href} className="group min-w-0 overflow-hidden rounded-[8px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md">
+                              <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+                                <Image src={imageUrl} alt={`${sign} zodiac illustration`} fill sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 17vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.025]" />
+                              </div>
+                              <div className="p-3 sm:p-4">
+                                <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-muted-foreground">{dates}</p>
+                                <h3 className="headline mt-1 text-base font-bold leading-snug group-hover:text-primary sm:text-lg">{sign} Daily Horoscope</h3>
+                                <p className="mt-2 text-sm font-semibold text-primary">Read today’s horoscope <span aria-hidden="true">→</span></p>
+                              </div>
                             </Link>
                           ))}
                         </div>
@@ -6857,7 +6890,7 @@ function LifestyleRiverHomePage({
                   <section className="space-y-4 border-t-2 border-primary pt-5" aria-labelledby="blocks-videos-heading">
                     <div className="flex items-end justify-between gap-4 border-b border-border pb-3">
                       <div>
-                        <h2 id="blocks-videos-heading" className={cn("headline leading-tight", initialBrandSlug === "elle" ? "italic" : "font-bold", enlargeBlocksSectionHeadings ? "text-6xl" : initialBrandSlug === "cosmopolitan" ? "text-5xl sm:text-6xl" : initialBrandSlug === "elle" ? "" : "text-2xl sm:text-3xl")} style={initialBrandSlug === "elle" ? { fontSize: "4.5rem" } : undefined}>Videos</h2>
+                        <h2 id="blocks-videos-heading" className={blocksSectionHeadingClass(initialBrandSlug)}>Videos</h2>
                         <p className="mt-1 text-sm text-muted-foreground">Watch the latest videos from {initialBrandName ?? "Hearst brands"}.</p>
                       </div>
                       <Link href="/hearst-plus/videos/" className="shrink-0 pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Watch all videos</Link>
@@ -6950,7 +6983,7 @@ function LifestyleRiverHomePage({
                       </div>
                       <section className="min-w-0 space-y-4" aria-label="Events">
                         <div className="flex items-end justify-between gap-4">
-                          <h2 className={cn("headline leading-tight", initialBrandSlug === "elle" ? "italic" : enlargeBlocksSectionHeadings ? "text-6xl font-bold" : "text-3xl font-bold")} style={initialBrandSlug === "elle" ? { fontSize: "4.5rem" } : undefined}>Events</h2>
+                          <h2 className={blocksSectionHeadingClass(initialBrandSlug)}>Events</h2>
                           <Link href={initialBrandSlug ? `/hearst-plus/events/?brand=${encodeURIComponent(initialBrandSlug)}` : "/hearst-plus/events/"} className="pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Explore all events</Link>
                         </div>
                         {sectionsHomepageEvents[0] ? (
@@ -6984,7 +7017,7 @@ function LifestyleRiverHomePage({
                       </div>
                       <div className="min-w-0 space-y-4">
                         <div className="flex items-end justify-between gap-4">
-                          <h2 className={cn("headline leading-tight", initialBrandSlug === "elle" ? "italic" : enlargeBlocksSectionHeadings ? "text-6xl font-bold" : "text-3xl font-bold")} style={initialBrandSlug === "elle" ? { fontSize: "4.5rem" } : undefined}>Communities</h2>
+                          <h2 className={blocksSectionHeadingClass(initialBrandSlug)}>Communities</h2>
                           <Link href="/communities/" className="pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Explore all</Link>
                         </div>
                         {(() => {
@@ -7024,14 +7057,14 @@ function LifestyleRiverHomePage({
                   </section> : null}
                   {!initialBrandSlug ? <section className="border-t-2 border-primary pt-5" aria-label="Local News">
                     <div className="mb-4 flex items-end justify-between gap-4">
-                      <h2 className={cn("headline leading-tight", initialBrandSlug === "elle" ? "text-[4.5rem] italic" : enlargeBlocksSectionHeadings ? "text-6xl font-bold" : "text-3xl font-bold")}>Local News</h2>
+                      <h2 className={blocksSectionHeadingClass(initialBrandSlug)}>Local News</h2>
                       <Link href="/hearst-plus/local-news/" className="pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Explore local news</Link>
                     </div>
                     <LocalNewsRail layout="grid" />
                   </section> : null}
                   {!initialBrandSlug ? <section className="space-y-4 border-t-2 border-primary pt-5" aria-labelledby="blocks-ae-videos-heading">
                     <div className="flex items-end justify-between gap-4 border-b border-border pb-3">
-                      <div><h2 id="blocks-ae-videos-heading" className={cn("headline leading-tight", initialBrandSlug === "elle" ? "text-[4.5rem] italic" : enlargeBlocksSectionHeadings ? "text-6xl font-bold" : "text-2xl font-bold sm:text-3xl")}>A&amp;E Channel Videos</h2><p className="mt-1 text-sm text-muted-foreground">Series and stories from across the A&amp;E family.</p></div>
+                      <div><h2 id="blocks-ae-videos-heading" className={blocksSectionHeadingClass(initialBrandSlug)}>A&amp;E Channel Videos</h2><p className="mt-1 text-sm text-muted-foreground">Series and stories from across the A&amp;E family.</p></div>
                       <Link href="/hearst-plus/entertainment/" className="shrink-0 pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Explore A&amp;E</Link>
                     </div>
                     {aandeBrandPromotion.stories[0] ? <Link href={aandeBrandPromotion.stories[0].sourceUrl ?? "/hearst-plus/entertainment/"} className="group block overflow-hidden rounded-[8px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md"><div className="relative aspect-[21/8] overflow-hidden bg-muted"><Image src={aandeBrandPromotion.stories[0].image} alt="" fill sizes="100vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.025]" /></div><div className="p-5"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">A&amp;E · {aandeBrandPromotion.stories[0].topic}</p><h3 className="headline mt-2 text-2xl font-bold group-hover:text-primary">{aandeBrandPromotion.stories[0].title}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">{aandeBrandPromotion.stories[0].summary}</p></div></Link> : null}

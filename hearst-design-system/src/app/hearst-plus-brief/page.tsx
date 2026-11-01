@@ -256,6 +256,11 @@ export default async function HearstPlusBriefPage() {
           </div>
         </section>
 
+        <section aria-label="Hearst+ product principle" className="mx-auto max-w-[1320px] px-5 py-16 md:px-10 md:py-20">
+          <h2 className="max-w-6xl font-[var(--hp-font-headline)] text-[clamp(4rem,12vw,15rem)] font-black leading-[0.84] tracking-[-0.025em] text-balance">LESS BUT BETTER</h2>
+          <p className="mt-6 text-lg font-medium leading-7 text-muted-foreground md:mt-8 md:text-2xl">HEARST+ A single-page web app.</p>
+        </section>
+
         <section aria-labelledby="samples-heading" className="mx-auto max-w-[1320px] px-5 py-20 md:px-10 md:py-28">
           <div className="flex flex-wrap items-end justify-between gap-6">
             <div><p className="text-xs font-bold uppercase tracking-[.16em] text-primary">Architecture · demonstrated in the app</p><h2 id="samples-heading" className="mt-8 max-w-3xl font-[var(--hp-font-headline)] font-bold text-balance text-4xl leading-[1.08] md:text-[54px]">One app. Two page templates. One river across brands and formats.</h2></div>
@@ -274,27 +279,6 @@ export default async function HearstPlusBriefPage() {
             </article>
           </div>
           <HearstPlusTemplatePreviews articleStory={articleStory} />
-          <div className="mt-10 grid gap-px bg-border md:grid-cols-2">
-            <div className="bg-card p-8 md:p-10">
-              <p className="text-xs font-bold uppercase tracking-[.12em] text-primary">Story formats · canonical content</p>
-              <p className="mt-2 max-w-lg text-base leading-6 text-muted-foreground">Four content models carry publisher, rights, and destination details into their cards and detail pages.</p>
-              <ul className="mt-6 grid grid-cols-2 gap-px bg-border sm:grid-cols-4">
-                {["Article", "Video", "Photo gallery", "Community post"].map((model, index) => (
-                  <li key={model} className="bg-background p-3"><span className="font-mono text-xs text-primary">0{index + 1}</span><p className="mt-2 text-base font-semibold">{model}</p></li>
-                ))}
-              </ul>
-            </div>
-            <div className="bg-card p-8 md:p-10">
-              <p className="text-xs font-bold uppercase tracking-[.12em] text-primary">More river modules · already represented in the app</p>
-              <p className="mt-2 max-w-lg text-base leading-6 text-muted-foreground">The river can include reader utilities and labeled commercial placements alongside stories.</p>
-              <ul className="mt-6 grid grid-cols-2 gap-px bg-border sm:grid-cols-4">
-                {["Shorts / vertical video", "Shopping / commerce", "Brand spotlight", "Advertisement"].map((model) => (
-                  <li key={model} className="bg-background p-3"><p className="text-base font-semibold">{model}</p></li>
-                ))}
-              </ul>
-              <p className="mt-3 text-xs leading-5 text-muted-foreground">Label ads as sponsored, and keep shopping and brand-promotion links connected to their approved destinations.</p>
-            </div>
-          </div>
           <p className="mt-8 max-w-5xl text-xs leading-5 text-muted-foreground"><strong className="text-foreground">Five HDS layers:</strong> tokens, accessible primitives, shared modules, the two page templates, and brand themes. Production also needs a shared content record for source and rights data, eligibility, deduplication, ranking, and privacy-aware measurement.</p>
           <HearstPlusBriefSamples articleStory={articleStory} galleryStory={galleryStory} shoppingStory={shoppingStory} shortsStories={shortsStories} brandSpotlight={brandSpotlight} videoStory={videoStory} vehicleStory={vehicleStory} riverDemoStories={riverDemoStories} brandStorySamples={brandStorySamples} communityThread={communityThread} videoSourceCopy={videoSourceCopy} eventSample={eventSample} brands={brands.filter((brand) => brand.slug !== "white-label")} />
         </section>

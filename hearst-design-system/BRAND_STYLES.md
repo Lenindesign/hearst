@@ -153,6 +153,7 @@ The registry is split into narrower identity and typography tables so it remains
 ## Brand application rules
 
 - The primary and secondary values above feed semantic tokens. Components must use semantic roles rather than referencing the raw hex values.
+- **ELLE Blocks section headings:** ELLE is the only publication brand with the oversized section-heading treatment in the Blocks layout. Use an italic 4.5rem (72px) headline at desktop widths and the shared 2.25rem (36px) size below desktop. All other brands and destinations use the standard 2.25rem section heading. Keep this exception scoped to the Blocks surface and implement it through the shared Blocks heading helper; do not add brand-wide heading overrides.
 - Editorial or advertiser-specific art direction that is not a reusable brand token must live in its named scoped configuration. Rendering components consume that configuration through local semantic CSS variables; they do not carry raw palette values or promote one campaign color into the shared system.
 - Headline weight is part of the brand identity and must travel with the headline family.
 - Use registered masthead SVGs at their intrinsic aspect ratio. Never constrain different wordmarks to the same width.

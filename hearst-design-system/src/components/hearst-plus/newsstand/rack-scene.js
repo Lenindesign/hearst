@@ -496,6 +496,18 @@ export async function createRackScene(canvas, opts = {}) {
       // paper under gravity, then bounces twice and settles. Each landing nudges the rack.
       const tDrop = now - dropAt - j * 45, total = 500 + 110 * dropH, fallMs = total * 0.7, dir = j % 2 ? 1 : -1;
       m.g.visible = tDrop > 0;
+      if (m.tier && m.g.userData.coverHinge) {
+        const hinge = m.g.userData.coverHinge;
+        if (motion && tDrop > 0 && tDrop < total) {
+          const fold = clamp01(tDrop / fallMs);
+          const easedFold = fold * fold * (3 - 2 * fold);
+          const landingFlex = tDrop >= fallMs
+            ? Math.sin(((tDrop - fallMs) / (total - fallMs)) * Math.PI * 2) * 0.075
+            : 0;
+          hinge.rotation.y = 0.78 * (1 - easedFold) + landingFlex;
+          busy = true;
+        } else hinge.rotation.y = 0;
+      }
       if (tDrop < fallMs) {
         const f = clamp01(tDrop / fallMs);
         m.g.position.y += dropH * (1 - f * f); m.g.rotation.z += (1 - f) * 0.35 * dir;
