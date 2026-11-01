@@ -187,7 +187,7 @@ export function CommunityJoinedGroupsCard({
             })}
           </div>
         ) : (
-          <p className="mt-3 rounded-md bg-[var(--brand-3)] px-3 py-3 text-sm leading-5 text-[var(--hp-text-secondary)]">
+          <p className="mt-3 rounded-md bg-[var(--hp-neutral-surface,var(--palette-neutral-100))] px-3 py-3 text-sm leading-5 text-[var(--hp-text-secondary)]">
             Join a community to see its conversations here.
           </p>
         )}

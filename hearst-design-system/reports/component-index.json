@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-01T07:53:15.462Z",
+  "generatedAt": "2026-11-01T16:02:38.531Z",
   "totalComponents": 140,
   "byLevel": {
     "template": 29,
@@ -701,6 +701,7 @@
       "hearst-plus/brand-source-icon",
       "hearst-plus/community-home-river-card",
       "hearst-plus/community-client",
+      "hearst-plus/community-joined-groups-card",
       "hearst-plus/story-metadata",
       "hearst-plus/reader-action-bar",
       "hearst-plus/reader-article-body",
@@ -1379,7 +1380,8 @@
     "community-joined-groups-card": [
       "community-forums-page",
       "content-reader-context-rail",
-      "discovery-sidebar"
+      "discovery-sidebar",
+      "home-page"
     ],
     "community-client": [
       "community-forums-page",
@@ -2952,7 +2954,7 @@
         "src/stories/FRE.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 227
+      "lineCount": 230
     },
     {
       "name": "site-header",
@@ -3464,7 +3466,8 @@
           "--primary",
           "--hp-text-secondary",
           "--hp-text-primary",
-          "--brand-3"
+          "--hp-neutral-surface",
+          "--palette-neutral-100"
         ],
         "tailwindSemantics": [
           "border-border",
@@ -3480,7 +3483,8 @@
       "applicationUseSites": [
         "src/components/hearst-plus/community-forums-page.tsx",
         "src/components/hearst-plus/content-reader-context-rail.tsx",
-        "src/components/hearst-plus/discovery-sidebar.tsx"
+        "src/components/hearst-plus/discovery-sidebar.tsx",
+        "src/components/home-page.tsx"
       ],
       "storybookStories": [],
       "storybookSpecification": null,
@@ -3546,7 +3550,8 @@
       ],
       "tokens": {
         "cssVariables": [
-          "--brand-3"
+          "--hp-neutral-surface",
+          "--palette-neutral-100"
         ],
         "tailwindSemantics": [
           "border-border",
@@ -4226,7 +4231,7 @@
         "src/stories/HearstPlusFeedStates.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 130
+      "lineCount": 136
     },
     {
       "name": "fullscreen-image-viewer",
@@ -4579,16 +4584,16 @@
           "--hp-section-title"
         ],
         "tailwindSemantics": [
-          "border-border",
-          "text-muted-foreground",
           "bg-muted",
           "text-primary",
+          "border-border",
+          "text-muted-foreground",
           "ring-border"
         ],
         "classes": []
       },
       "brandAware": false,
-      "responsive": false,
+      "responsive": true,
       "hasHardcodedColors": false,
       "metadataPath": null,
       "applicationUseSites": [
@@ -4599,7 +4604,7 @@
       ],
       "storybookStories": [],
       "storybookSpecification": null,
-      "lineCount": 105
+      "lineCount": 116
     },
     {
       "name": "local-news-source-toggle",
@@ -5190,7 +5195,7 @@
         "src/stories/HearstPlusStoryMetadata.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 63
+      "lineCount": 64
     },
     {
       "name": "story-presentation",
@@ -5537,7 +5542,7 @@
         "src/stories/HearstPlusVideoCards.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 433
+      "lineCount": 440
     },
     {
       "name": "hearst-plus-brief-samples",
@@ -5693,6 +5698,7 @@
         "hearst-plus/brand-source-icon",
         "hearst-plus/community-home-river-card",
         "hearst-plus/community-client",
+        "hearst-plus/community-joined-groups-card",
         "hearst-plus/story-metadata",
         "hearst-plus/reader-action-bar",
         "hearst-plus/reader-article-body",
@@ -5753,10 +5759,10 @@
           "--space-sm",
           "--space-md",
           "--text-token-5xl",
-          "--card",
-          "--secondary",
           "--hp-shadow-card",
           "--hp-sidebar-heading",
+          "--card",
+          "--secondary",
           "--component-card-background-default",
           "--palette-background-default",
           "--content-reader-article-surface",
@@ -5788,7 +5794,8 @@
           "bg-accent",
           "text-background",
           "bg-card",
-          "border-primary"
+          "border-primary",
+          "ring-border"
         ],
         "classes": [
           "font-brand"
@@ -5804,6 +5811,7 @@
         "src/app/hearst-ew/page.tsx",
         "src/app/hearst-flux/page.tsx",
         "src/app/hearst-lifestyle/page.tsx",
+        "src/app/hearst-plus/blocks/page.tsx",
         "src/app/hearst-plus/complete-articles/page.tsx",
         "src/app/hearst-plus/full-width-hero/page.tsx",
         "src/app/hearst-plus/lifestyle-live/page.tsx",
@@ -5834,7 +5842,7 @@
         "src/stories/LifestyleDestinationApp.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 8089
+      "lineCount": 8598
     },
     {
       "name": "homepage-layouts",
@@ -6605,6 +6613,7 @@
         "src/app/hearst-flux/page.tsx",
         "src/app/hearst-lifestyle/page.tsx",
         "src/app/hearst-plus-brief/page.tsx",
+        "src/app/hearst-plus/blocks/page.tsx",
         "src/app/hearst-plus/brutalist-home/page.tsx",
         "src/app/hearst-plus/complete-articles/page.tsx",
         "src/app/hearst-plus/entertainment/[channelSlug]/page.tsx",

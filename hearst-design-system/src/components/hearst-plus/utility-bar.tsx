@@ -119,9 +119,9 @@ export function UtilityBar({
   overBanner = false,
 }: UtilityBarProps) {
   const { brand, colorMode } = useTheme();
-  // Dark pages (the Videos tab, Fashion & Luxury's default dark mode) get the knockout utility bar; a light
-  // primary such as a dark-mode tint must never become the bar background.
-  const darkMode = darkModeProp || colorMode === "dark";
+  // Videos and the Flux destination masthead use a knockout utility bar so the strip
+  // matches the dark masthead instead of inheriting Flux's blue primary color.
+  const darkMode = darkModeProp || colorMode === "dark" || (brand.slug === "hearst-flux" && !selectedBrand);
   const { account } = useReaderAccount();
   const utilityBarRef = React.useRef<HTMLDivElement>(null);
   const destinationNavRef = React.useRef<HTMLDivElement>(null);

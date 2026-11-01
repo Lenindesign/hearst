@@ -102,6 +102,8 @@ import {
 } from "./hearst-plus/feed-states";
 import { BrandSourceIcon } from "./hearst-plus/brand-source-icon";
 import { CommunityHomeRiverCard } from "./hearst-plus/community-home-river-card";
+import { CommunityRiverCard } from "./hearst-plus/community-client";
+import { CommunityJoinedGroupsCard } from "./hearst-plus/community-joined-groups-card";
 import type { CommunityFeedThread } from "./hearst-plus/community-client";
 import {
   getLifestyleByline,
@@ -153,6 +155,7 @@ import {
 } from "./hearst-plus/ambient-reader";
 import {
   LifestyleDiscoverySidebar,
+  DiscoverySidebarCard,
   type AutosOemFilterOption,
   type ResearchCarFilters,
 } from "./hearst-plus/discovery-sidebar";
@@ -351,6 +354,8 @@ export interface HomePageTemplateProps {
   fullWidthFeaturedHero?: boolean;
   /** Render the Hearst+ home as editorial sections instead of one continuous story river. */
   sectionsHomepage?: boolean;
+  /** Render editorial sections grouped with related discovery modules in blocks. */
+  blocksHomepage?: boolean;
   /**
    * When set, the river renders in single-brand mode: the discovery sidebar's
    * trending rail is titled "Trending" and filters to the current publication;
@@ -551,13 +556,14 @@ function RiverLayoutToggle({
   const pathname = usePathname()?.replace(/\/+$/, "") || "/";
   const searchParams = useSearchParams();
   const router = useRouter();
+  const isBlocksRoute = pathname === "/hearst-plus/blocks" || searchParams?.get("layout") === "blocks" || (layout === "blocks" && searchParams?.get("layout") !== "sections" && pathname !== "/hearst-plus/sections");
   const isSectionsRoute = pathname === "/hearst-plus/sections" || searchParams?.get("layout") === "sections";
   const isFullWidthHero = pathname === "/hearst-plus/full-width-hero" || (!isSectionsRoute && layout === "full-width-hero");
   const options = [
     { value: "cards", label: "Show stories as cards", Icon: LayoutCards },
     { value: "list", label: "Show stories as a list", Icon: LayoutList },
     { value: "full-width-hero", label: "Show stories with a full-width hero", Icon: LayoutFullWidth },
-    { value: "sections", label: "Show stories in editorial sections", Icon: LayoutSections },
+    { value: "blocks", label: "Show stories in editorial blocks", Icon: LayoutSections },
   ] as const;
   return (
     <div role="group" aria-label="Story layout" className="hidden items-center gap-1 sm:flex">
@@ -567,17 +573,18 @@ function RiverLayoutToggle({
           type="button"
           variant="outline"
           size="icon-sm"
-          aria-pressed={value === "sections"
-            ? isSectionsRoute
-            : !isSectionsRoute && (value === "full-width-hero" ? isFullWidthHero : !isFullWidthHero && layout === value)}
+          aria-pressed={value === "blocks"
+            ? isBlocksRoute
+            : !isBlocksRoute && !isSectionsRoute && (value === "full-width-hero" ? isFullWidthHero : !isFullWidthHero && layout === value)}
           aria-label={label}
           title={label}
           className={cn("hearst-plus-layout-toggle h-7 w-7 rounded-[4px]", buttonClassName)}
           onClick={() => {
-            if (value === "sections") {
-              router.push(pathname === "/hearst-plus" || pathname === "/"
-                ? "/hearst-plus/sections/"
-                : `${pathname}/?layout=sections`);
+            if (value === "blocks") {
+              setRiverLayout("blocks");
+              router.push(pathname === "/hearst-plus" || pathname === "/" || pathname === "/hearst-plus/sections" || pathname === "/hearst-plus/blocks"
+                ? "/hearst-plus/blocks/"
+                : `${pathname}/?layout=blocks`);
               return;
             }
             if (value === "full-width-hero") {
@@ -1194,7 +1201,7 @@ export function MainNav({
                 { label: "All", href: "/hearst-plus/sections/", mode: "all" },
                 ...hearstReaderSections.map((section) => ({
                   label: section.label,
-                  href: `${getHearstDestinationRoute(section.mode)}?layout=sections`,
+                  href: getHearstDestinationRoute(section.mode),
                   mode: section.mode,
                 })),
                 { label: "Local News", href: "/hearst-plus/local-news/", mode: "local-news" },
@@ -1242,7 +1249,7 @@ export function MainNav({
                       return (
                         <Link
                           key={sectionBrand.brandSlug}
-                          href={`${getHearstBrandRoute(sectionBrand.brandSlug)}?layout=sections`}
+                          href={getHearstBrandRoute(sectionBrand.brandSlug)}
                           onClick={closeMobileMenu}
                           aria-current={active ? "page" : undefined}
                           className={cn(
@@ -2090,6 +2097,137 @@ function Footer({
   );
 }
 
+function EditorialHomepageSection({
+  section,
+  selectionLabel,
+  onOpen,
+  savedIds,
+  onSave,
+  cardGrid = false,
+  featureSidebar = false,
+  featureFirstGrid = false,
+  largeHeading = false,
+}: {
+  section: { title: string; stories: LifestyleRiverStory[] };
+  selectionLabel: string;
+  onOpen: (story: LifestyleRiverStory) => void;
+  savedIds: string[];
+  onSave: (story: LifestyleRiverStory) => void;
+  cardGrid?: boolean;
+  featureSidebar?: boolean;
+  featureFirstGrid?: boolean;
+  largeHeading?: boolean | "elle";
+}) {
+  return (
+    <section className="min-w-0 space-y-4" aria-label={section.title}>
+      <div className="flex items-end justify-between gap-4">
+        <h2 className={cn("headline leading-tight", largeHeading === "elle" ? "italic" : largeHeading ? "text-6xl font-bold" : "text-3xl font-bold")} style={largeHeading === "elle" ? { fontSize: "4.5rem" } : undefined}>{section.title}</h2>
+        <span className="shrink-0 pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+          {selectionLabel}
+        </span>
+      </div>
+      {section.stories.length && featureFirstGrid ? (
+        <div className="space-y-4">
+          <LifestyleRiverCard
+            story={section.stories[0]}
+            onOpen={() => onOpen(section.stories[0])}
+            saved={savedIds.includes(section.stories[0].id)}
+            onSave={() => onSave(section.stories[0])}
+            layoutOverride="cards"
+            hideGalleryCount
+            compactGallery
+          />
+          {section.stories.length > 1 ? <div className="grid min-w-0 grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+            {section.stories.slice(1, 5).map((story) => <LifestyleRiverCard key={`${section.title}-${story.id}`} story={story} onOpen={() => onOpen(story)} saved={savedIds.includes(story.id)} onSave={() => onSave(story)} layoutOverride="cards" hideGalleryCount compactGallery />)}
+          </div> : null}
+        </div>
+      ) : section.stories.length && featureSidebar ? (
+        <div className="grid min-w-0 items-stretch gap-5 lg:grid-cols-[minmax(0,1.8fr)_minmax(0,1fr)] lg:grid-rows-[minmax(0,1fr)]">
+          <LifestyleRiverCard
+            story={section.stories[0]}
+            onOpen={() => onOpen(section.stories[0])}
+            saved={savedIds.includes(section.stories[0].id)}
+            onSave={() => onSave(section.stories[0])}
+            layoutOverride="cards"
+          />
+          {section.stories.length > 1 ? (
+            <div className="space-y-3 lg:grid lg:h-full lg:min-h-0 lg:grid-rows-4 lg:gap-3 lg:space-y-0">
+              {section.stories.slice(1, 5).map((story) => (
+                <LifestyleRiverCard
+                  key={`${section.title}-${story.id}`}
+                  story={story}
+                  onOpen={() => onOpen(story)}
+                  saved={savedIds.includes(story.id)}
+                  onSave={() => onSave(story)}
+                  layoutOverride="list"
+                  editorialRow
+                  hideSummary
+                  hideByline
+                  stretchToFeature
+                />
+              ))}
+            </div>
+          ) : null}
+        </div>
+      ) : section.stories.length && cardGrid ? (
+        <div className="grid min-w-0 grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+          {section.stories.slice(0, 4).map((story) => (
+            <article key={`${section.title}-${story.id}`} className="group/card relative min-w-0 overflow-hidden rounded-[8px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
+              <button
+                type="button"
+                onClick={() => onOpen(story)}
+                className="peer absolute inset-0 z-10 rounded-[8px] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/60"
+                aria-label={`Open story: ${story.title}`}
+              />
+              <div className="relative aspect-[4/3] overflow-hidden rounded-[6px] bg-muted">
+                <LifestyleRiverImage
+                  story={story}
+                  alt=""
+                  className="h-full w-full transition-transform duration-250 ease-out group-hover/card:scale-[1.025] motion-reduce:transition-none motion-reduce:group-hover/card:scale-100"
+                />
+              </div>
+              <div className="relative min-w-0 p-3">
+                <div className="story-meta-row relative z-20 mb-2">
+                  <LifestyleBrandSource story={story} />
+                  <StorySaveIconButton saved={savedIds.includes(story.id)} onSave={() => onSave(story)} className="ml-auto" />
+                </div>
+                <h3 className="headline line-clamp-3 text-lg font-bold leading-tight transition-colors group-hover/card:text-[var(--hp-sidebar-heading,var(--primary))] group-focus-within/card:text-[var(--hp-sidebar-heading,var(--primary))]">
+                  {story.title}
+                </h3>
+              </div>
+            </article>
+          ))}
+        </div>
+      ) : section.stories.length ? (
+        <div className="space-y-3">
+          <LifestyleRiverCard
+            story={section.stories[0]}
+            onOpen={() => onOpen(section.stories[0])}
+            saved={savedIds.includes(section.stories[0].id)}
+            onSave={() => onSave(section.stories[0])}
+            layoutOverride="cards"
+          />
+          {section.stories.length > 1 ? (
+            <div className="space-y-3">
+              {section.stories.slice(1).map((story) => (
+                <LifestyleRiverCard
+                  key={`${section.title}-${story.id}`}
+                  story={story}
+                  onOpen={() => onOpen(story)}
+                  saved={savedIds.includes(story.id)}
+                  onSave={() => onSave(story)}
+                  layoutOverride="list"
+                  editorialRow
+                />
+              ))}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+    </section>
+  );
+}
+
 type ContextualAdTuple = readonly [
   string,
   string,
@@ -2738,12 +2876,14 @@ export function RichPhotoGalleryCard({
   onOpen,
   saved,
   onSave,
+  hidePhotoCount = false,
 }: {
   story: LifestyleRiverStory;
   images: FullscreenReaderImage[];
   onOpen: () => void;
   saved?: boolean;
   onSave?: () => void;
+  hidePhotoCount?: boolean;
 }) {
   const visibleImages = images.slice(0, richGalleryImageMinimum);
   const remainingImageCount = Math.max(0, images.length - visibleImages.length);
@@ -2762,12 +2902,12 @@ export function RichPhotoGalleryCard({
       />
 
       <div className="relative min-w-0 p-4 sm:p-5">
-        <div className="relative z-20 mb-3 flex min-w-0 items-center gap-2">
+        <div className="story-meta-row relative z-20 mb-3">
           <LifestyleBrandSource story={story} />
-          <span className="inline-flex items-center gap-1 text-[length:var(--text-token-4xs)] font-semibold text-muted-foreground">
+          {!hidePhotoCount ? <span className="inline-flex items-center gap-1 text-[length:var(--text-token-4xs)] font-semibold text-muted-foreground">
             <Camera className="h-3.5 w-3.5" aria-hidden />
             {images.length} photos
-          </span>
+          </span> : null}
           {onSave && saved !== undefined ? (
             <StorySaveIconButton saved={saved} onSave={onSave} className="ml-auto" />
           ) : null}
@@ -2813,6 +2953,34 @@ export function RichPhotoGalleryCard({
   );
 }
 
+function CompactPhotoGalleryCard({
+  story,
+  images,
+  onOpen,
+  saved,
+  onSave,
+}: {
+  story: LifestyleRiverStory;
+  images: FullscreenReaderImage[];
+  onOpen: () => void;
+  saved?: boolean;
+  onSave?: () => void;
+}) {
+  return (
+    <article className="group/card relative min-w-0 overflow-hidden rounded-[8px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
+      <button type="button" onClick={onOpen} className="peer absolute inset-0 z-10 rounded-[8px] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/60" aria-label={`Open photo gallery: ${story.title}`} />
+      <div className="grid aspect-video grid-cols-[2fr_1fr] grid-rows-2 gap-0.5 overflow-hidden bg-border">
+        {images.slice(0, 3).map((image, index) => <div key={image.src} className={cn("relative min-w-0 overflow-hidden bg-muted", index === 0 && "row-span-2")}><Image src={image.src} alt={image.alt} fill sizes={index === 0 ? "(max-width: 640px) 66vw, 40vw" : "(max-width: 640px) 33vw, 20vw"} className="object-cover transition-transform duration-200 group-hover/card:scale-[1.02]" /></div>)}
+      </div>
+      <div className="story-card-content relative z-20 min-w-0 p-4">
+        <div className="story-meta-row mb-2"><LifestyleBrandSource story={story} />{onSave && saved !== undefined ? <StorySaveIconButton saved={saved} onSave={onSave} className="ml-auto" /> : null}</div>
+        <h3 className="headline story-card-headline line-clamp-3 font-bold leading-snug">{story.title}</h3>
+        <p className="mt-2 line-clamp-3 text-sm leading-6 text-muted-foreground">{story.summary}</p>
+      </div>
+    </article>
+  );
+}
+
 // Keep secondary story actions in the reader, with Save available in each
 // card's metadata row so readers can save without opening the story.
 function CarAndDriverResearchRating({ rating }: { rating: string }) {
@@ -2843,6 +3011,11 @@ export function LifestyleRiverCard({
   featured = false,
   layoutOverride,
   editorialRow = false,
+  hideSummary = false,
+  hideByline = false,
+  stretchToFeature = false,
+  hideGalleryCount = false,
+  compactGallery = false,
 }: {
   story: LifestyleRiverStory;
   onOpen: () => void;
@@ -2851,6 +3024,11 @@ export function LifestyleRiverCard({
   featured?: boolean;
   layoutOverride?: RiverLayout;
   editorialRow?: boolean;
+  hideSummary?: boolean;
+  hideByline?: boolean;
+  stretchToFeature?: boolean;
+  hideGalleryCount?: boolean;
+  compactGallery?: boolean;
 }) {
   const kind = getLifestyleCardKind(story);
   const [videoPlaying, setVideoPlaying] = React.useState(false);
@@ -2866,6 +3044,7 @@ export function LifestyleRiverCard({
         className={cn(
           "group/card relative grid min-w-0 cursor-pointer items-center gap-4 overflow-hidden rounded-[8px] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] sm:p-5",
           editorialRow ? "grid-cols-[minmax(0,28%)_minmax(0,1fr)]" : "grid-cols-[112px_minmax(0,1fr)] sm:grid-cols-[168px_minmax(0,1fr)]",
+          stretchToFeature && "lg:h-full lg:min-h-0",
         )}
         data-story-module="river"
         data-story-layout="list"
@@ -2878,8 +3057,8 @@ export function LifestyleRiverCard({
           aria-label={`Open story: ${story.title}`}
         />
         <div className="min-w-0">
-          <div className="relative z-20 mb-2 flex min-w-0 flex-wrap items-center gap-2">
-            <LifestyleBrandSource story={story} />
+          <div className="story-meta-row relative z-20 mb-2">
+            <LifestyleBrandSource story={story} hideByline={hideByline} />
             {onSave && saved !== undefined ? (
               <StorySaveIconButton saved={saved} onSave={onSave} className="ml-auto" />
             ) : null}
@@ -2895,7 +3074,7 @@ export function LifestyleRiverCard({
               <CarAndDriverResearchRating rating={getHearstAutoResearchCarRating(story.id)!} />
             ) : null}
           </div>
-          <p className={cn("mt-1.5 text-sm leading-6 text-muted-foreground", editorialRow ? "line-clamp-3" : "hidden sm:line-clamp-3")}>{story.summary}</p>
+          {!hideSummary ? <p className={cn("mt-1.5 text-sm leading-6 text-muted-foreground", editorialRow ? "line-clamp-3" : "hidden sm:line-clamp-3")}>{story.summary}</p> : null}
         </div>
         <div className="relative order-first aspect-[4/3] overflow-hidden rounded-[6px] bg-muted">
           <LifestyleRiverImage
@@ -2916,6 +3095,7 @@ export function LifestyleRiverCard({
   }
 
   if (galleryPreview.status === "ready") {
+    if (compactGallery || layout === "cards" || layout === "blocks") return <CompactPhotoGalleryCard story={story} images={galleryPreview.images} onOpen={onOpen} saved={saved} onSave={onSave} />;
     return (
       <RichPhotoGalleryCard
         story={story}
@@ -2923,6 +3103,7 @@ export function LifestyleRiverCard({
         onOpen={onOpen}
         saved={saved}
         onSave={onSave}
+        hidePhotoCount={hideGalleryCount}
       />
     );
   }
@@ -2956,10 +3137,10 @@ export function LifestyleRiverCard({
         />
       </div>
       <div className={cn(
-        "relative min-w-0",
+        "story-card-content relative min-w-0",
         isVideo ? "p-4 sm:p-5" : featured ? "flex flex-col justify-center p-5 sm:p-6 lg:p-8" : "p-4 sm:p-5"
       )}>
-        <div className="relative z-20 mb-3 flex min-w-0 flex-wrap items-center gap-2">
+        <div className="story-meta-row relative z-20 mb-3">
           <LifestyleBrandSource story={story} />
           {onSave && saved !== undefined ? (
             <StorySaveIconButton saved={saved} onSave={onSave} className="ml-auto" />
@@ -2968,7 +3149,7 @@ export function LifestyleRiverCard({
         <div className="flex min-w-0 items-end gap-3">
           <h2 className={cn(
             "headline min-w-0 flex-1 line-clamp-3 break-words leading-tight transition-colors group-hover/card:text-[var(--hp-sidebar-heading,var(--primary))] group-focus-within/card:text-[var(--hp-sidebar-heading,var(--primary))]",
-            featured ? "text-3xl sm:text-[2rem] lg:text-4xl" : "text-2xl sm:text-[1.7rem]"
+            featured ? "text-3xl sm:text-[2rem] lg:text-4xl" : "story-card-headline"
           )}>
             {story.title}
           </h2>
@@ -4545,6 +4726,7 @@ type LifestyleRiverHomePageProps = {
   destination: DestinationMode;
   fullWidthFeaturedHero?: boolean;
   sectionsHomepage?: boolean;
+  blocksHomepage?: boolean;
   destinationConfig?: DestinationConfig;
   videoFeedData?: LiveFeedData;
   singleBrandName?: string;
@@ -4599,8 +4781,10 @@ function LifestyleRiverHydrationGate(props: LifestyleRiverHomePageProps) {
   const { isHydrated } = useReaderAccount();
   const riverLayout = useRiverLayout();
   const config = props.destinationConfig ?? destinationConfigs[props.destination];
-  const pageHeading = props.sectionsHomepage
-    ? "Hearst+ editorial sections"
+  const pageHeading = props.blocksHomepage
+    ? "Hearst+ editorial blocks"
+    : props.sectionsHomepage
+      ? "Hearst+ editorial sections"
     : getLifestyleRiverPageHeading(config, props.initialBrandSlug);
   const useFlushVideoTop = props.activeFilter === "Videos" && Boolean(props.videoFeedData);
   const fullWidthHeroActive = props.fullWidthFeaturedHero || riverLayout === "full-width-hero";
@@ -4622,6 +4806,7 @@ function LifestyleRiverHomePage({
   destination,
   fullWidthFeaturedHero: forceFullWidthFeaturedHero = false,
   sectionsHomepage = false,
+  blocksHomepage = false,
   destinationConfig,
   videoFeedData,
   singleBrandName,
@@ -4653,8 +4838,10 @@ function LifestyleRiverHomePage({
   const searchParams = useSearchParams();
   const isSectionsHomepage = sectionsHomepage || searchParams?.get("layout") === "sections";
   const savedRiverLayout = useRiverLayout();
+  const isBlocksHomepage = blocksHomepage || searchParams?.get("layout") === "blocks" || (savedRiverLayout === "blocks" && !sectionsHomepage && searchParams?.get("layout") !== "sections");
+  const enlargeBlocksSectionHeadings = destination === "all" && !initialBrandSlug;
   const riverLayout = savedRiverLayout === "list" ? "list" : "cards";
-  const fullWidthFeaturedHero = forceFullWidthFeaturedHero || (!isSectionsHomepage && savedRiverLayout === "full-width-hero");
+  const fullWidthFeaturedHero = forceFullWidthFeaturedHero || (!isSectionsHomepage && !isBlocksHomepage && savedRiverLayout === "full-width-hero");
   const config = destinationConfig ?? destinationConfigs[destination];
   const { account, updatePreferences, addComment } = useReaderAccount();
   const router = useRouter();
@@ -5329,6 +5516,7 @@ function LifestyleRiverHomePage({
         { title: "Home & Garden", terms: ["home", "garden", "design", "decor", "interior"] },
         { title: "Style & Beauty", terms: ["style", "beauty", "fashion", "shopping", "jewelry"] },
         { title: "Family & Relationships", terms: ["family", "parent", "relationship", "wedding", "kids"] },
+        { title: "Entertainment", terms: ["entertainment", "celebrity", "television", "movie", "movies", "show", "series", "music", "actor", "actress"] },
         { title: "Wellness", terms: ["wellness", "health", "fitness", "sleep", "self-care"] },
       ],
       autos: [
@@ -5363,23 +5551,29 @@ function LifestyleRiverHomePage({
       ...sectionsHomepageLatest.map((story) => story.id),
       ...sectionsHomepageMostPopular.map((story) => story.id),
     ]);
+    const contextualBlockStories = initialBrandSlug
+      ? destinationConfigs.all.stories.filter((story) => story.brandSlug === initialBrandSlug)
+      : destinationConfigs[destination].stories;
     const sections = definitions.map(({ title }) => {
-      const matches = displayStories.filter((story) => !used.has(story.id) && categoryForStory(story) === title).slice(0, 4);
+      const sectionLimit = 5;
+      const categorizedMatches = displayStories.filter((story) => !used.has(story.id) && categoryForStory(story) === title);
+      const fallbackMatches = contextualBlockStories.filter((story) => !used.has(story.id) && categoryForStory(story) !== title);
+      const matches = [...categorizedMatches, ...fallbackMatches].slice(0, sectionLimit);
       matches.forEach((story) => used.add(story.id));
       return { title, stories: matches };
     }).filter((section) => section.stories.length > 0);
     const remaining = displayStories.filter((story) => !used.has(story.id));
     if (remaining.length) sections.push({ title: `More from ${initialBrandName ?? "Hearst"}`, stories: remaining.slice(0, 3) });
     return sections;
-  }, [destination, displayStories, initialBrandName, sectionsHomepageLatest, sectionsHomepageMostPopular]);
+  }, [destination, destinationConfigs, displayStories, initialBrandName, initialBrandSlug, sectionsHomepageLatest, sectionsHomepageMostPopular]);
   const sectionsHomepageVideos = videoTabStories
     .filter((story) => !initialBrandSlug || story.brandSlug === initialBrandSlug)
     .slice(0, 3);
   const sectionsHomepageEvents = React.useMemo(() => {
     const contextualEvents = hearstEvents.filter((event) => !initialBrandSlug || event.brandSlugs.includes(initialBrandSlug));
     const upcoming = contextualEvents.filter((event) => event.status === "upcoming" || event.status === "live");
-    return (upcoming.length ? upcoming : contextualEvents).slice(0, 3);
-  }, [initialBrandSlug]);
+    return (upcoming.length ? upcoming : contextualEvents).slice(0, isBlocksHomepage ? 4 : 3);
+  }, [initialBrandSlug, isBlocksHomepage]);
   React.useEffect(() => {
     if (demoState.isSimulated || initialOpenStoryId) return;
     trackProductEventOnce(`return-session:${visitScopeKey}`, "return_session", {
@@ -6403,13 +6597,15 @@ function LifestyleRiverHomePage({
       <FeedLayout
         id={fullWidthFeaturedHero ? "hearst-story-river" : undefined}
         className={fullWidthFeaturedHero ? "min-w-0 scroll-mt-28" : undefined}
-        aria-label={fullWidthFeaturedHero ? (isSectionsHomepage ? "Hearst+ editorial sections" : config.riverLabel) : undefined}
+        aria-label={fullWidthFeaturedHero ? (isBlocksHomepage ? "Hearst+ editorial blocks" : isSectionsHomepage ? "Hearst+ editorial sections" : config.riverLabel) : undefined}
       >
       <div className={cn(
         "grid min-w-0 grid-cols-[minmax(0,1fr)] gap-x-4 gap-y-6",
-        useResponsiveDestinationRails
-          ? "md:grid-cols-[minmax(0,1fr)_300px] lg:grid-cols-[clamp(240px,24vw,300px)_minmax(0,1fr)_300px]"
-          : "lg:grid-cols-[300px_minmax(0,1fr)_300px]",
+        isBlocksHomepage
+          ? "lg:grid-cols-1"
+          : useResponsiveDestinationRails
+            ? "md:grid-cols-[minmax(0,1fr)_300px] lg:grid-cols-[clamp(240px,24vw,300px)_minmax(0,1fr)_300px]"
+            : "lg:grid-cols-[300px_minmax(0,1fr)_300px]",
       )}>
         {fullWidthFeaturedHero && leadStory ? (
           <div className="min-w-0 lg:col-span-3">
@@ -6450,7 +6646,7 @@ function LifestyleRiverHomePage({
           </div>
         ) : null}
 
-        <div className={useResponsiveDestinationRails ? "hidden lg:block" : undefined}>
+        {!isBlocksHomepage ? <div className={useResponsiveDestinationRails ? "hidden lg:block" : undefined}>
         <LifestyleDiscoverySidebar
           profile={profile}
           topStories={moduleAllocation.dailyHabitStories}
@@ -6476,22 +6672,22 @@ function LifestyleRiverHomePage({
           onFollowTopic={followTopic}
           onOpenStory={(story) => openStory(story.id)}
         />
-        </div>
+        </div> : null}
 
         <StoryRiver
           id={!fullWidthFeaturedHero ? "hearst-story-river" : undefined}
           className="min-w-0 scroll-mt-28 space-y-4"
-          aria-label={!fullWidthFeaturedHero ? (isSectionsHomepage ? "Hearst+ editorial sections" : config.riverLabel) : undefined}
+          aria-label={!fullWidthFeaturedHero ? (isBlocksHomepage ? "Hearst+ editorial blocks" : isSectionsHomepage ? "Hearst+ editorial sections" : config.riverLabel) : undefined}
         >
           <h1 className="sr-only">{pageHeading}</h1>
-          {isShowingLatestAvailableStories && !fullWidthFeaturedHero && !isSectionsHomepage ? (
+          {isShowingLatestAvailableStories && !fullWidthFeaturedHero && !isSectionsHomepage && !isBlocksHomepage ? (
             <p className="border-b border-border pb-3 text-sm leading-6 text-muted-foreground" role="status">
               Today’s Picks are updating. Showing the latest stories currently available.
             </p>
           ) : null}
           {leadStory ? (
             <>
-              {!fullWidthFeaturedHero ? (
+              {!fullWidthFeaturedHero && !isBlocksHomepage ? (
                 <FeaturedStoryCarousel
                   key={`${leadStory.id}:${heroStories.map((story) => story.id).join("|")}`}
                   stories={heroStories}
@@ -6537,7 +6733,311 @@ function LifestyleRiverHomePage({
                 <CommunityHomeRiverCard thread={communityRiverThread} />
               ) : null}
 
-              {isSectionsHomepage ? (
+              {isBlocksHomepage ? (
+                <div className={cn("space-y-10", initialBrandSlug === "elle" && "[&>section:not(:first-child)]:!pt-[4.5rem]")} aria-label="Hearst+ blocks layout">
+                  <section aria-label="Trending, Today’s Picks, Style & Beauty, and advertising">
+                    <div className="grid min-w-0 items-start gap-5 lg:grid-cols-[minmax(220px,.82fr)_minmax(0,2fr)_minmax(220px,.82fr)]">
+                      <TrendingStoryRail
+                        stories={moduleAllocation.trendingStories.filter((story) => !initialBrandSlug || story.brandSlug === initialBrandSlug).slice(0, 5)}
+                        onOpenStory={(story) => openStory(story.id)}
+                        title={initialBrandName ? `Trending ${initialBrandName}` : "Trending Across Brands"}
+                        className="h-fit lg:sticky lg:top-24 lg:self-start"
+                      />
+                      <div className="min-w-0 space-y-6">
+                        <FeaturedStoryCarousel
+                          key={`blocks:${leadStory.id}:${heroStories.map((story) => story.id).join("|")}`}
+                          stories={heroStories}
+                          layoutMode={riverLayout}
+                          editionLabel={shouldUseTodaysPicks ? (isShowingLatestAvailableStories ? "Latest available" : "Today’s Picks") : undefined}
+                          initialStoryId={leadStory.id}
+                          renderImage={(story, _index, active) => (
+                            <LifestyleRiverImage
+                              story={story}
+                              className="h-full w-full transition-transform duration-250 ease-out group-hover/featured-slide:scale-[1.025] motion-reduce:transition-none motion-reduce:group-hover/featured-slide:scale-100"
+                              priority={active}
+                            />
+                          )}
+                          getCommentCount={(story) => getLifestyleCommentCount(story, resolvedCommentsByStoryId[story.id]?.length ?? 0)}
+                          isCurrentStory={isCurrentFeedStory}
+                          onOpenStory={(story) => openStory(story.id)}
+                          onFollowBrand={followBrand}
+                          onEditionImpression={isShowingLatestAvailableStories ? undefined : trackTodaysPicksImpression}
+                          onEditionStoryOpen={isShowingLatestAvailableStories ? undefined : trackTodaysPickOpen}
+                          indicatorPalette={indicatorPalette}
+                        />
+                        {editorialHomepageSections.find((section) => section.title === "Style & Beauty") ? (
+                          <EditorialHomepageSection
+                            section={editorialHomepageSections.find((section) => section.title === "Style & Beauty")!}
+                            selectionLabel={initialBrandName ? `${initialBrandName} Selection` : "Hearst+ Selection"}
+                            onOpen={(story) => openStory(story.id)}
+                            savedIds={profile.savedIds}
+                            onSave={toggleSaved}
+                            largeHeading={initialBrandSlug === "elle" ? "elle" : initialBrandSlug === "cosmopolitan" || enlargeBlocksSectionHeadings}
+                          />
+                        ) : null}
+                      </div>
+                      <div className="h-fit lg:sticky lg:top-24 lg:self-start">
+                        <ContextualRiverAdvertisement ad={rightRailAd} />
+                      </div>
+                    </div>
+                  </section>
+
+                  {initialBrandSlug === "elle" && (() => {
+                    const horoscopeStory = destinationConfigs.all.stories.find((story) => story.brandSlug === "elle" && isHoroscopeStory(story));
+                    if (!horoscopeStory?.sourceUrl) return null;
+                    const horoscopeUrl = horoscopeStory.sourceUrl;
+                    const zodiacSigns = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
+                    return (
+                      <section className="space-y-4 border-t-2 border-primary pt-5" aria-labelledby="blocks-horoscopes-heading">
+                        <div className="flex items-end justify-between gap-4">
+                          <h2 id="blocks-horoscopes-heading" className="headline leading-tight italic" style={{ fontSize: "4.5rem" }}>Horoscopes</h2>
+                          <Link href={horoscopeUrl} className="pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Read your horoscope</Link>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
+                          {zodiacSigns.map((sign) => (
+                            <Link key={sign} href={horoscopeUrl} className="group flex min-h-24 flex-col justify-between rounded-[8px] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] transition-colors hover:bg-[var(--hp-surface-low)]">
+                              <span className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">Daily horoscope</span>
+                              <span className="headline text-xl font-semibold group-hover:text-primary">{sign}</span>
+                            </Link>
+                          ))}
+                        </div>
+                      </section>
+                    );
+                  })()}
+
+                  {(editorialHomepageSections.find((section) => section.title === "Food & Home")?.stories.length ?? 0) > 0 ? <section className="border-t-2 border-primary pt-5" aria-label="Saved items, Food & Home, and Local News">
+                    <div className="grid min-w-0 items-start gap-5 lg:grid-cols-[minmax(220px,.82fr)_minmax(0,2fr)_minmax(220px,.82fr)]">
+                      <div className="h-fit lg:sticky lg:top-24 lg:self-start">
+                        {profile.savedIds.some((id) => savedStoryInventory.some((story) => story.id === id)) ? (
+                          <TrendingStoryRail
+                            stories={savedStoryInventory.filter((story) => profile.savedIds.includes(story.id)).slice(0, 3)}
+                            onOpenStory={(story) => openStory(story.id)}
+                            title="Saved Items"
+                            titleIcon={<Heart className="h-4 w-4 shrink-0" aria-hidden />}
+                          />
+                        ) : (
+                          <DiscoverySidebarCard title="Saved Items" summary="Your saved stories" titleIcon={<Heart className="h-4 w-4 shrink-0" aria-hidden />}>
+                            <p className="text-sm leading-6 text-muted-foreground">Save stories as you browse and they will appear here.</p>
+                          </DiscoverySidebarCard>
+                        )}
+                      </div>
+                      {editorialHomepageSections.find((section) => section.title === "Food & Home") ? (
+                        <EditorialHomepageSection
+                          section={editorialHomepageSections.find((section) => section.title === "Food & Home")!}
+                          selectionLabel={initialBrandName ? `${initialBrandName} Selection` : "Hearst+ Selection"}
+                          onOpen={(story) => openStory(story.id)}
+                          savedIds={profile.savedIds}
+                          onSave={toggleSaved}
+                          largeHeading={enlargeBlocksSectionHeadings}
+                        />
+                      ) : <div />}
+                      <div className="h-fit lg:sticky lg:top-24 lg:self-start">
+                        <LocalNewsRail />
+                      </div>
+                    </div>
+                  </section> : null}
+
+                  {editorialHomepageSections.find((section) => section.title === "Cars & Reviews")?.stories.length ? (
+                    <section className="border-t-2 border-primary pt-5" aria-label="Cars & Reviews">
+                      <EditorialHomepageSection
+                        section={editorialHomepageSections.find((section) => section.title === "Cars & Reviews")!}
+                        selectionLabel={initialBrandName ? `${initialBrandName} Selection` : "Hearst+ Selection"}
+                        onOpen={(story) => openStory(story.id)}
+                        savedIds={profile.savedIds}
+                        onSave={toggleSaved}
+                        cardGrid
+                        largeHeading={enlargeBlocksSectionHeadings}
+                      />
+                    </section>
+                  ) : null}
+
+                  <section className="space-y-4 border-t-2 border-primary pt-5" aria-labelledby="blocks-videos-heading">
+                    <div className="flex items-end justify-between gap-4 border-b border-border pb-3">
+                      <div>
+                        <h2 id="blocks-videos-heading" className={cn("headline leading-tight", initialBrandSlug === "elle" ? "italic" : "font-bold", enlargeBlocksSectionHeadings ? "text-6xl" : initialBrandSlug === "cosmopolitan" ? "text-5xl sm:text-6xl" : initialBrandSlug === "elle" ? "" : "text-2xl sm:text-3xl")} style={initialBrandSlug === "elle" ? { fontSize: "4.5rem" } : undefined}>Videos</h2>
+                        <p className="mt-1 text-sm text-muted-foreground">Watch the latest stories from Hearst brands.</p>
+                      </div>
+                      <Link href="/hearst-plus/videos/" className="shrink-0 pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Watch all videos</Link>
+                    </div>
+                    {videoTabStories[0] ? (
+                      <div className="space-y-4">
+                        <VideoFeedLeadCard story={videoTabStories[0]} onOpen={() => openStory(videoTabStories[0].id)} variant="hearstPlus" eyebrowLabel="Featured video" headingLevel="h2" />
+                        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                          {videoTabStories.slice(1, 5).map((story) => <VideoIndexCard key={`blocks-video-${story.id}`} story={story} onOpen={() => openStory(story.id)} variant="hearstPlus" compact />)}
+                        </div>
+                      </div>
+                    ) : <p className="rounded-[8px] bg-[var(--hp-surface-low)] px-4 py-6 text-sm text-muted-foreground" role="status">No playable videos are available right now.</p>}
+                  </section>
+
+                  {editorialHomepageSections.find((section) => section.title === "Fitness & Wellness") ? (
+                    <section className="border-t-2 border-primary pt-5" aria-label="Fitness & Wellness">
+                      <div className="mx-auto max-w-7xl">
+                        <EditorialHomepageSection
+                          section={editorialHomepageSections.find((section) => section.title === "Fitness & Wellness")!}
+                          selectionLabel={initialBrandName ? `${initialBrandName} Selection` : "Hearst+ Selection"}
+                          onOpen={(story) => openStory(story.id)}
+                          savedIds={profile.savedIds}
+                          onSave={toggleSaved}
+                          featureSidebar
+                          largeHeading={enlargeBlocksSectionHeadings}
+                        />
+                      </div>
+                    </section>
+                  ) : null}
+                  {destination === "lifestyle" && !initialBrandSlug ? editorialHomepageSections
+                    .filter((section) => section.title === "Food & Recipes" || section.title === "Home & Garden" || section.title === "Family & Relationships" || section.title === "Wellness")
+                    .filter((section) => section.stories.length > 0)
+                    .map((section) => (
+                      <section key={`blocks-${section.title}`} className="border-t-2 border-primary pt-5" aria-label={section.title}>
+                        <div className="mx-auto max-w-7xl">
+                          <EditorialHomepageSection
+                            section={section}
+                            selectionLabel={initialBrandName ? `${initialBrandName} Selection` : "Hearst+ Selection"}
+                            onOpen={(story) => openStory(story.id)}
+                            savedIds={profile.savedIds}
+                            onSave={toggleSaved}
+                            featureFirstGrid
+                            largeHeading={initialBrandSlug === "elle" ? "elle" : initialBrandSlug === "cosmopolitan" || enlargeBlocksSectionHeadings}
+                          />
+                        </div>
+                      </section>
+                    )) : null}
+                  {destination !== "all" ? editorialHomepageSections
+                    .filter((section) => section.stories.length > 0)
+                    .filter((section) => {
+                      if (!initialBrandSlug) return true;
+                      if (section.title === "Style & Beauty") return false;
+                      const sectionName = section.title.toLowerCase().replace(/[^a-z0-9]/g, "");
+                      const brandFilters = getBrandContextualFilters(initialBrandSlug, destinationConfigs.all.stories, false);
+                      return brandFilters.some((filter) => {
+                        const filterName = filter.toLowerCase().replace(/[^a-z0-9]/g, "");
+                        return sectionName.includes(filterName) || filterName.includes(sectionName);
+                      });
+                    })
+                    .slice(0, 3)
+                    .map((section) => (
+                      <section key={`front-nav-block-${section.title}`} className="border-t-2 border-primary pt-5" aria-label={`${section.title} stories`}>
+                        <div className="mx-auto max-w-7xl">
+                          <EditorialHomepageSection
+                            section={section}
+                            selectionLabel={initialBrandName ? `${initialBrandName} Selection` : "Hearst+ Selection"}
+                            onOpen={(story) => openStory(story.id)}
+                            savedIds={profile.savedIds}
+                            onSave={toggleSaved}
+                            featureFirstGrid
+                            largeHeading={initialBrandSlug === "elle" ? "elle" : initialBrandSlug === "cosmopolitan" || enlargeBlocksSectionHeadings}
+                          />
+                        </div>
+                      </section>
+                    )) : null}
+                  {(sectionsHomepageEvents.length > 0 || !initialBrandSlug) ? <section className="border-t-2 border-primary pt-5" aria-label="Events, community, and advertising">
+                    <div className="grid min-w-0 items-start gap-5 lg:grid-cols-[minmax(220px,.82fr)_minmax(0,2fr)_minmax(220px,.82fr)]">
+                      <div className="h-fit lg:sticky lg:top-24 lg:self-start">
+                        <DiscoverySidebarCard title="Explore Events" summary={initialBrandName ? `Upcoming experiences for ${initialBrandName}` : "Upcoming experiences across Hearst brands"}>
+                          <div className="-mb-3 divide-y divide-border/70">
+                            {sectionsHomepageEvents.slice(0, 3).map((event, index) => (
+                              <Link key={event.slug} href={`/hearst-plus/events/${event.slug}/`} className="group grid min-h-16 grid-cols-[48px_minmax(0,1fr)] items-start gap-3 py-3">
+                                <span className="relative block h-12 w-12 overflow-hidden rounded-[6px] border border-border bg-muted"><Image src={event.image.src} alt="" fill sizes="48px" className="object-cover" /><span className="absolute left-1 top-1 grid h-5 w-5 place-items-center rounded-full bg-background text-[11px] font-bold text-foreground ring-1 ring-border">{index + 1}</span></span>
+                                <span className="min-w-0"><span className="line-clamp-3 block text-xs font-bold leading-[1.35] group-hover:text-primary">{event.title}</span><span className="mt-1 block text-xs text-muted-foreground">{event.dateLabel}</span></span>
+                              </Link>
+                            ))}
+                          </div>
+                          <Link href="/hearst-plus/events/" className="mt-3 inline-flex min-h-9 items-center text-sm font-bold text-primary hover:underline">Explore all events</Link>
+                        </DiscoverySidebarCard>
+                      </div>
+                      <section className="min-w-0 space-y-4" aria-label="Events">
+                        <div className="flex items-end justify-between gap-4">
+                          <h2 className={cn("headline leading-tight", initialBrandSlug === "elle" ? "italic" : enlargeBlocksSectionHeadings ? "text-6xl font-bold" : "text-3xl font-bold")} style={initialBrandSlug === "elle" ? { fontSize: "4.5rem" } : undefined}>Events</h2>
+                          <Link href={initialBrandSlug ? `/hearst-plus/events/?brand=${encodeURIComponent(initialBrandSlug)}` : "/hearst-plus/events/"} className="pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Explore all events</Link>
+                        </div>
+                        {sectionsHomepageEvents[0] ? (
+                          <Link href={`/hearst-plus/events/${sectionsHomepageEvents[0].slug}/`} className="group block overflow-hidden rounded-[8px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md">
+                            <div className="relative aspect-[16/8] overflow-hidden bg-muted"><Image src={sectionsHomepageEvents[0].image.src} alt={sectionsHomepageEvents[0].image.alt} fill sizes="(max-width: 1024px) 100vw, 60vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.025]" /></div>
+                            <div className="p-4"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">{sectionsHomepageEvents[0].dateLabel}</p><h3 className="headline mt-2 text-2xl font-bold leading-snug group-hover:text-primary">{sectionsHomepageEvents[0].title}</h3><p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">{sectionsHomepageEvents[0].summary}</p></div>
+                          </Link>
+                        ) : null}
+                        <div className="space-y-3">
+                          {sectionsHomepageEvents.slice(1, 4).map((event) => (
+                            <Link key={event.slug} href={`/hearst-plus/events/${event.slug}/`} className="group flex min-w-0 gap-4 overflow-hidden rounded-[8px] bg-[var(--hp-surface)] p-3 shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md">
+                              <div className="relative aspect-square w-28 shrink-0 overflow-hidden rounded-[6px] bg-muted sm:w-36"><Image src={event.image.src} alt={event.image.alt} fill sizes="144px" className="object-cover transition-transform duration-300 group-hover:scale-[1.025]" /></div>
+                              <div className="min-w-0 self-center"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">{event.dateLabel}</p><h3 className="headline mt-1 line-clamp-2 text-lg font-bold leading-snug group-hover:text-primary">{event.title}</h3><p className="mt-1 line-clamp-2 text-sm leading-6 text-muted-foreground">{event.summary}</p></div>
+                            </Link>
+                          ))}
+                        </div>
+                      </section>
+                      <div className="h-fit lg:sticky lg:top-24 lg:self-start"><ContextualRiverAdvertisement ad={rightRailAd} /></div>
+                    </div>
+                  </section> : null}
+                  {communityParticipationThreads.some((post) => !initialBrandSlug || post.brandSlug === initialBrandSlug) ? <section className="border-t-2 border-primary pt-5" aria-label="Communities">
+                    <div className="grid min-w-0 items-start gap-5 lg:grid-cols-[minmax(220px,.82fr)_minmax(0,2fr)_minmax(220px,.82fr)]">
+                      <div className="h-fit lg:sticky lg:top-24 lg:self-start">
+                        <CommunityJoinedGroupsCard groups={communityGroups.filter((group) => !initialBrandSlug || group.brandSlug === initialBrandSlug).slice(0, 3).map((group) => ({
+                          brand: getHearstAllBrands().find((brand) => brand.brandSlug === group.brandSlug)?.brand ?? group.brandSlug,
+                          brandSlug: group.brandSlug,
+                          groupSlug: group.groupSlug,
+                          name: group.name,
+                          members: group.members,
+                        }))} />
+                      </div>
+                      <div className="min-w-0 space-y-4">
+                        <div className="flex items-end justify-between gap-4">
+                          <h2 className={cn("headline leading-tight", initialBrandSlug === "elle" ? "italic" : enlargeBlocksSectionHeadings ? "text-6xl font-bold" : "text-3xl font-bold")} style={initialBrandSlug === "elle" ? { fontSize: "4.5rem" } : undefined}>Communities</h2>
+                          <Link href="/communities/" className="pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Explore all</Link>
+                        </div>
+                        {(() => {
+                          const communityPosts = communityParticipationThreads.filter((post) => !initialBrandSlug || post.brandSlug === initialBrandSlug).slice(0, 4).map((post, index) => {
+                            const group = communityGroups.find((item) => item.brandSlug === post.brandSlug);
+                            const brand = getHearstAllBrands().find((item) => item.brandSlug === post.brandSlug)?.brand ?? post.brandSlug;
+                            const brandImages = displayStories.filter((story) => story.brandSlug === post.brandSlug && story.image);
+                            const postImage = brandImages[index % Math.max(brandImages.length, 1)]?.image;
+                            return {
+                              id: post.id,
+                              brand,
+                              brandSlug: post.brandSlug,
+                              title: post.title,
+                              body: post.body,
+                              meta: `${group?.name ?? brand}${group?.members ? ` · ${group.members}` : ""}`,
+                              kindLabel: post.kind === "writer" ? "Host thread" : "Reader post",
+                              replies: post.replies,
+                              helpfulBase: post.replies + 14,
+                              author: post.author,
+                              isHost: post.kind === "writer",
+                              href: `/communities/${post.brandSlug}/threads/${post.id}/`,
+                              posterImage: postImage,
+                              mediaType: post.mediaType,
+                              videoUrl: post.videoUrl,
+                            } satisfies CommunityFeedThread;
+                          });
+                          return communityPosts.length ? (
+                            <div className="space-y-3">
+                              <CommunityRiverCard thread={communityPosts[0]} />
+                              {communityPosts.slice(1, 4).map((post) => <CommunityRiverCard key={post.id} thread={post} />)}
+                            </div>
+                          ) : <p className="rounded-[8px] bg-[var(--hp-surface-low)] p-5 text-sm text-muted-foreground">Community posts will appear here.</p>;
+                        })()}
+                      </div>
+                      <div className="h-fit lg:sticky lg:top-24 lg:self-start"><ContextualRiverAdvertisement ad={rightRailAd} /></div>
+                    </div>
+                  </section> : null}
+                  {!initialBrandSlug ? <section className="border-t-2 border-primary pt-5" aria-label="Local News">
+                    <div className="mb-4 flex items-end justify-between gap-4">
+                      <h2 className={cn("headline leading-tight", initialBrandSlug === "elle" ? "text-[4.5rem] italic" : enlargeBlocksSectionHeadings ? "text-6xl font-bold" : "text-3xl font-bold")}>Local News</h2>
+                      <Link href="/hearst-plus/local-news/" className="pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Explore local news</Link>
+                    </div>
+                    <LocalNewsRail layout="grid" />
+                  </section> : null}
+                  {!initialBrandSlug ? <section className="space-y-4 border-t-2 border-primary pt-5" aria-labelledby="blocks-ae-videos-heading">
+                    <div className="flex items-end justify-between gap-4 border-b border-border pb-3">
+                      <div><h2 id="blocks-ae-videos-heading" className={cn("headline leading-tight", initialBrandSlug === "elle" ? "text-[4.5rem] italic" : enlargeBlocksSectionHeadings ? "text-6xl font-bold" : "text-2xl font-bold sm:text-3xl")}>A&amp;E Channel Videos</h2><p className="mt-1 text-sm text-muted-foreground">Series and stories from across the A&amp;E family.</p></div>
+                      <Link href="/hearst-plus/entertainment/" className="shrink-0 pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Explore A&amp;E</Link>
+                    </div>
+                    {aandeBrandPromotion.stories[0] ? <Link href={aandeBrandPromotion.stories[0].sourceUrl ?? "/hearst-plus/entertainment/"} className="group block overflow-hidden rounded-[8px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md"><div className="relative aspect-[21/8] overflow-hidden bg-muted"><Image src={aandeBrandPromotion.stories[0].image} alt="" fill sizes="100vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.025]" /></div><div className="p-5"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">A&amp;E · {aandeBrandPromotion.stories[0].topic}</p><h3 className="headline mt-2 text-2xl font-bold group-hover:text-primary">{aandeBrandPromotion.stories[0].title}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">{aandeBrandPromotion.stories[0].summary}</p></div></Link> : null}
+                    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                      {aandeBrandPromotion.stories.map((story) => <Link key={story.id} href={story.sourceUrl ?? "/hearst-plus/entertainment/"} className="group overflow-hidden rounded-[8px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md"><div className="relative aspect-video overflow-hidden bg-muted"><Image src={story.image} alt="" fill sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.025]" /></div><div className="p-4"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">A&amp;E · {story.topic}</p><h3 className="headline mt-2 text-lg font-bold leading-snug group-hover:text-primary">{story.title}</h3><p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">{story.summary}</p></div></Link>)}
+                    </div>
+                  </section> : null}
+                </div>
+              ) : isSectionsHomepage ? (
                 <div className="space-y-8" aria-label={`${initialBrandName ?? "Hearst+"} editorial sections`}>
                   {editorialHomepageSections.map((section) => (
                     <section key={section.title} className="space-y-4 border-t-2 border-primary pt-5" aria-label={section.title}>
@@ -6604,7 +7104,7 @@ function LifestyleRiverHomePage({
                       ) : null}
                     </section>
                   ) : null}
-                  {sectionsHomepageVideos.length ? (
+                  {!isBlocksHomepage && sectionsHomepageVideos.length ? (
                     <section className="space-y-4 border-t-2 border-primary pt-5" aria-label="Video">
                       <div className="flex items-end justify-between gap-4">
                         <h2 className="headline text-3xl font-bold leading-tight">Video</h2>
@@ -6755,6 +7255,7 @@ function LifestyleRiverHomePage({
                   error={feedError}
                   hasLoadedStories={visibleRiverCount < completeRiverStories.length}
                   hasMore={feedHasMore}
+                  hideCaughtUp={isBlocksHomepage}
                   isLoading={feedLoading}
                   noun="stories"
                   onRetry={onRequestNextFeedPage}
@@ -6889,31 +7390,35 @@ function LifestyleRiverHomePage({
         </StoryRiver>
 
         <aside
-          className={cn(
-            "min-w-0 space-y-5",
-            useResponsiveDestinationRails
-              ? "hidden md:sticky md:top-[86px] md:block md:max-h-[calc(100dvh-110px)] md:self-start md:overflow-y-auto"
-              : "lg:sticky lg:top-[86px] lg:max-h-[calc(100dvh-110px)] lg:self-start lg:overflow-y-auto",
-          )}
-          aria-label={useResponsiveDestinationRails ? "Hearst+ discovery sidebar" : undefined}
+          className={isBlocksHomepage
+            ? "min-w-0"
+            : cn(
+                "min-w-0 space-y-5",
+                useResponsiveDestinationRails
+                  ? "hidden md:sticky md:top-[86px] md:block md:max-h-[calc(100dvh-110px)] md:self-start md:overflow-y-auto"
+                  : "lg:sticky lg:top-[86px] lg:max-h-[calc(100dvh-110px)] lg:self-start lg:overflow-y-auto",
+              )}
+          aria-label={isBlocksHomepage ? "Hearst+ videos" : useResponsiveDestinationRails ? "Hearst+ discovery sidebar" : undefined}
         >
-          {useResponsiveDestinationRails ? (
-            <TrendingStoryRail
-              stories={initialBrandSlug
-                ? moduleAllocation.trendingStories.filter((story) => story.brandSlug === initialBrandSlug).slice(0, 3)
-                : moduleAllocation.trendingStories.slice(0, 3)}
-              onOpenStory={(story) => openStory(story.id)}
-              title={initialBrandSlug ? "Trending" : destination === "all" ? "Trending Across Hearst" : "Trending Across Brands"}
-              className="lg:hidden"
-            />
-          ) : null}
-          <ContextualRiverAdvertisement ad={rightRailAd} />
-          {initialBrandSlug && initialBrandName ? (
-            <BrandInstagramModule brandSlug={initialBrandSlug} brandName={initialBrandName} />
-          ) : null}
-          {!singleBrandName && <LocalNewsRail />}
-          {showStakeholderTools ? (
+          {!isBlocksHomepage ? (
             <>
+              {useResponsiveDestinationRails ? (
+                <TrendingStoryRail
+                  stories={initialBrandSlug
+                    ? moduleAllocation.trendingStories.filter((story) => story.brandSlug === initialBrandSlug).slice(0, 3)
+                    : moduleAllocation.trendingStories.slice(0, 3)}
+                  onOpenStory={(story) => openStory(story.id)}
+                  title={initialBrandSlug ? "Trending" : destination === "all" ? "Trending Across Hearst" : "Trending Across Brands"}
+                  className="lg:hidden"
+                />
+              ) : null}
+              <ContextualRiverAdvertisement ad={rightRailAd} />
+              {initialBrandSlug && initialBrandName ? (
+                <BrandInstagramModule brandSlug={initialBrandSlug} brandName={initialBrandName} />
+              ) : null}
+              {!singleBrandName && <LocalNewsRail />}
+              {showStakeholderTools ? (
+                <>
               <div className="rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-4 shadow-[var(--hp-shadow-card)]">
                 <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
                   Story Source
@@ -6992,6 +7497,8 @@ function LifestyleRiverHomePage({
                   </div>
                 </div>
               </div>
+                </>
+              ) : null}
             </>
           ) : null}
         </aside>
@@ -7265,6 +7772,7 @@ export function HomePageTemplate({
   forceDestinationRiver = false,
   fullWidthFeaturedHero = false,
   sectionsHomepage = false,
+  blocksHomepage = false,
   singleBrandName,
 }: HomePageTemplateProps = {}) {
   const { brand, colorMode } = useTheme();
@@ -7837,6 +8345,7 @@ export function HomePageTemplate({
                 destination={destinationMode}
                 fullWidthFeaturedHero={fullWidthFeaturedHero}
                 sectionsHomepage={sectionsHomepage}
+                blocksHomepage={blocksHomepage}
                 destinationConfig={inventoryAwareDestinationConfig}
                 videoFeedData={resolvedVideoFeedData}
                 singleBrandName={singleBrandName}

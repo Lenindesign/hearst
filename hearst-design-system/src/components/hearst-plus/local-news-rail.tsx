@@ -8,13 +8,13 @@ type LocalNewsFeedResponse = {
   stories: HearstTVContent[];
 };
 
-export function LocalNewsRail() {
+export function LocalNewsRail({ layout = "rail" }: { layout?: "rail" | "grid" }) {
   const [stories, setStories] = React.useState<HearstTVContent[]>([]);
 
   React.useEffect(() => {
     let cancelled = false;
 
-    fetch("/api/hearst-tv/local-news/?limit=3", { cache: "no-store" })
+    fetch(`/api/hearst-tv/local-news/?limit=${layout === "grid" ? 4 : 3}`, { cache: "no-store" })
       .then((response) => response.ok ? response.json() as Promise<LocalNewsFeedResponse> : null)
       .then((payload) => {
         if (!cancelled) setStories(payload?.stories ?? []);
@@ -26,7 +26,7 @@ export function LocalNewsRail() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [layout]);
 
   if (stories.length === 0) return null;
 
@@ -41,6 +41,17 @@ export function LocalNewsRail() {
     : "Hearst TV markets";
 
   return (
+    layout === "grid" ? (
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Local news stories">
+        {stories.slice(0, 4).map((story) => {
+          const station = getHearstTVStationById(story.stationId);
+          return <a key={story.id} href={`/hearst-plus/local-news/?story=${encodeURIComponent(story.id)}#tv-stations`} className="group overflow-hidden rounded-[8px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md">
+            <div className="aspect-video bg-muted bg-cover bg-center" style={story.imageUrl ? { backgroundImage: `url(${story.imageUrl})` } : undefined} role={story.imageUrl ? "img" : undefined} aria-label={story.imageUrl ? story.title : undefined} />
+            <div className="p-4"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">{station?.callSign ?? "Hearst TV"} · {station?.market ?? "Local News"}</p><h3 className="headline mt-2 line-clamp-3 text-lg font-bold leading-snug group-hover:text-primary">{story.title}</h3></div>
+          </a>;
+        })}
+      </div>
+    ) :
     <section
       className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]"
       aria-labelledby="local-news-rail-title"

@@ -174,10 +174,9 @@ export function VideoPlaySurface({
             aria-label={`Play video: ${story.title}`}
             onLoadedMetadata={(event) => updateVideoOrientation(event.currentTarget)}
             onPlay={() => requestExclusiveVideoPlayback(surfaceId)}
-            onPause={() => {
-              setDocked(false);
-              setPlaying(false);
-            }}
+            // Keep the video element mounted on pause. Native controls emit pause
+            // while seeking, and unmounting here would reset playback to 0.
+            onPause={() => setDocked(false)}
             onEnded={() => {
               setDocked(false);
               setPlaying(false);
@@ -258,18 +257,21 @@ export function VideoFeedLeadCard({
   onOpen,
   variant = "videoIndex",
   eyebrowLabel,
+  headingLevel = "h1",
 }: {
   story: LifestyleRiverStory;
   onOpen: () => void;
   variant?: "videoIndex" | "hearstPlus";
   eyebrowLabel?: string;
+  headingLevel?: "h1" | "h2";
 }) {
   const useHearstPlusStyle = variant === "hearstPlus";
+  const Headline = headingLevel;
 
   return (
     <article className="group overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
       <VideoPlaySurface story={story} featured priority />
-      <div className="p-4 sm:p-5">
+      <div className="story-card-content p-4 sm:p-5">
         <div className="mb-3 flex flex-wrap items-center gap-2">
           <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
             {eyebrowLabel ??
@@ -284,16 +286,16 @@ export function VideoFeedLeadCard({
           onClick={onOpen}
           aria-label={`Open story: ${story.title}`}
         >
-          <h1
+          <Headline
             className={cn(
-              "text-balance",
+              "story-card-headline text-balance",
               useHearstPlusStyle
-                ? "headline text-3xl font-bold leading-tight text-[var(--hp-text-headline)] sm:text-4xl"
-                : "text-3xl font-black leading-[1.02] tracking-[-0.025em] text-foreground sm:text-4xl"
+                ? "headline font-bold leading-tight text-[var(--hp-text-headline)]"
+                : "font-black leading-[1.02] tracking-[-0.025em] text-foreground"
             )}
           >
             {story.title}
-          </h1>
+          </Headline>
         </button>
         <p
           className={cn(
@@ -316,12 +318,14 @@ export function VideoIndexCard({
   saved,
   onSave,
   variant = "videoIndex",
+  compact = false,
 }: {
   story: LifestyleRiverStory;
   onOpen: () => void;
   saved?: boolean;
   onSave?: () => void;
   variant?: "videoIndex" | "hearstPlus";
+  compact?: boolean;
 }) {
   const useHearstPlusStyle = variant === "hearstPlus";
 
@@ -332,8 +336,8 @@ export function VideoIndexCard({
       data-story-id={story.id}
     >
       <VideoPlaySurface story={story} featured />
-      <div className="p-4 sm:p-5">
-        <div className="relative z-20 mb-3 flex min-w-0 flex-wrap items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+      <div className={compact ? "p-3" : "p-4 sm:p-5"}>
+        <div className={cn("relative z-20 mb-3 flex min-w-0 flex-wrap items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary", compact && "mb-2")}>
           <BrandSourceIcon
             brand={story.brand}
             brandSlug={story.brandSlug}
@@ -357,9 +361,11 @@ export function VideoIndexCard({
           <h3
             className={cn(
               "text-balance",
-              useHearstPlusStyle
-                ? "headline text-2xl font-bold leading-tight text-[var(--hp-text-headline)] sm:text-3xl"
-                : "text-3xl font-black leading-[1.02] tracking-[-0.025em] text-foreground sm:text-4xl"
+              compact
+                ? "headline line-clamp-3 text-base font-bold leading-snug text-[var(--hp-text-headline)] sm:text-lg"
+                : useHearstPlusStyle
+                  ? "headline text-2xl font-bold leading-tight text-[var(--hp-text-headline)] sm:text-3xl"
+                  : "text-3xl font-black leading-[1.02] tracking-[-0.025em] text-foreground sm:text-4xl"
             )}
           >
             {story.title}
@@ -368,6 +374,7 @@ export function VideoIndexCard({
         <p
           className={cn(
             "mt-2 line-clamp-2 max-w-3xl text-base leading-7",
+            compact && "text-sm leading-6",
             useHearstPlusStyle
               ? "text-[var(--hp-text-secondary)]"
               : "text-muted-foreground"

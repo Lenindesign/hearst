@@ -3,7 +3,7 @@
 import React from "react";
 
 // The story river presentation is a per-reader preference shared across Hearst sections.
-export type RiverLayout = "cards" | "list" | "full-width-hero";
+export type RiverLayout = "cards" | "list" | "full-width-hero" | "blocks";
 
 const STORAGE_KEY = "hearst-plus:river-layout";
 const CHANGE_EVENT = "hearst-plus-river-layout-change";
@@ -11,7 +11,7 @@ const CHANGE_EVENT = "hearst-plus-river-layout-change";
 function read(): RiverLayout {
   try {
     const savedLayout = window.localStorage.getItem(STORAGE_KEY);
-    return savedLayout === "list" || savedLayout === "full-width-hero" ? savedLayout : "cards";
+    return savedLayout === "list" || savedLayout === "full-width-hero" || savedLayout === "blocks" ? savedLayout : "cards";
   } catch {
     return "cards";
   }

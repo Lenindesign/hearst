@@ -6,6 +6,7 @@ export function ProgressiveFeedSentinelStatus({
   error,
   hasLoadedStories,
   hasMore,
+  hideCaughtUp = false,
   isLoading,
   noun,
   onRetry,
@@ -13,6 +14,7 @@ export function ProgressiveFeedSentinelStatus({
   error: string | null;
   hasLoadedStories: boolean;
   hasMore: boolean;
+  hideCaughtUp?: boolean;
   isLoading: boolean;
   noun: "stories" | "videos";
   onRetry?: () => void;
@@ -35,6 +37,10 @@ export function ProgressiveFeedSentinelStatus({
   }
 
   if (hasLoadedStories || hasMore) {
+    return null;
+  }
+
+  if (hideCaughtUp) {
     return null;
   }
 
