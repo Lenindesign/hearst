@@ -5569,6 +5569,9 @@ function LifestyleRiverHomePage({
   const sectionsHomepageVideos = videoTabStories
     .filter((story) => !initialBrandSlug || story.brandSlug === initialBrandSlug)
     .slice(0, 3);
+  const blocksVideoStories = initialBrandSlug
+    ? videoTabStories.filter((story) => story.brandSlug === initialBrandSlug)
+    : videoTabStories;
   const sectionsHomepageEvents = React.useMemo(() => {
     const contextualEvents = hearstEvents.filter((event) => !initialBrandSlug || event.brandSlugs.includes(initialBrandSlug));
     const upcoming = contextualEvents.filter((event) => event.status === "upcoming" || event.status === "live");
@@ -6855,15 +6858,15 @@ function LifestyleRiverHomePage({
                     <div className="flex items-end justify-between gap-4 border-b border-border pb-3">
                       <div>
                         <h2 id="blocks-videos-heading" className={cn("headline leading-tight", initialBrandSlug === "elle" ? "italic" : "font-bold", enlargeBlocksSectionHeadings ? "text-6xl" : initialBrandSlug === "cosmopolitan" ? "text-5xl sm:text-6xl" : initialBrandSlug === "elle" ? "" : "text-2xl sm:text-3xl")} style={initialBrandSlug === "elle" ? { fontSize: "4.5rem" } : undefined}>Videos</h2>
-                        <p className="mt-1 text-sm text-muted-foreground">Watch the latest stories from Hearst brands.</p>
+                        <p className="mt-1 text-sm text-muted-foreground">Watch the latest videos from {initialBrandName ?? "Hearst brands"}.</p>
                       </div>
                       <Link href="/hearst-plus/videos/" className="shrink-0 pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Watch all videos</Link>
                     </div>
-                    {videoTabStories[0] ? (
+                    {blocksVideoStories[0] ? (
                       <div className="space-y-4">
-                        <VideoFeedLeadCard story={videoTabStories[0]} onOpen={() => openStory(videoTabStories[0].id)} variant="hearstPlus" eyebrowLabel="Featured video" headingLevel="h2" />
+                        <VideoFeedLeadCard story={blocksVideoStories[0]} onOpen={() => openStory(blocksVideoStories[0].id)} variant="hearstPlus" eyebrowLabel="Featured video" headingLevel="h2" />
                         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                          {videoTabStories.slice(1, 5).map((story) => <VideoIndexCard key={`blocks-video-${story.id}`} story={story} onOpen={() => openStory(story.id)} variant="hearstPlus" compact />)}
+                          {blocksVideoStories.slice(1, 5).map((story) => <VideoIndexCard key={`blocks-video-${story.id}`} story={story} onOpen={() => openStory(story.id)} variant="hearstPlus" compact />)}
                         </div>
                       </div>
                     ) : <p className="rounded-[8px] bg-[var(--hp-surface-low)] px-4 py-6 text-sm text-muted-foreground" role="status">No playable videos are available right now.</p>}
