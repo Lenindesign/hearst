@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Livvic, Newsreader, Petrona, Schibsted_Grotesk } from "next/font/google";
+import { Geist, Geist_Mono, Inter, Livvic, Newsreader, Petrona, Schibsted_Grotesk } from "next/font/google";
 import { AmplitudeAnalyticsBridge } from "@/components/hearst-plus/amplitude-analytics-bridge";
 import { EntertainmentRouteFallback } from "@/components/hearst-plus/entertainment-route-fallback";
 import { ReaderAccountProvider } from "@/components/reader-account";
@@ -14,6 +14,13 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
 });
 
 const newsreader = Newsreader({
@@ -68,7 +75,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} ${schibstedGrotesk.variable} ${livvic.variable} ${petrona.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${newsreader.variable} ${schibstedGrotesk.variable} ${livvic.variable} ${petrona.variable} antialiased`}
       >
         <AmplitudeAnalyticsBridge />
         <EntertainmentRouteFallback />

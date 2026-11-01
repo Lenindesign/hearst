@@ -3,7 +3,7 @@ import type { ComponentMetadata } from "@/lib/component-metadata";
 const metadata: ComponentMetadata = {
   name: "Product Specification Shell",
   description:
-    "Production tooling modules shared by the four routed Hearst+ stakeholder specification pages: product story, value case, engineering blueprint, and token architecture.",
+    "Production tooling modules shared by the five routed Hearst+ stakeholder specification pages: product story, value case, engineering blueprint, token architecture, and magazine token study.",
   level: "organism",
   path: "product-story-shell.tsx",
   exports: [
@@ -63,6 +63,7 @@ const metadata: ComponentMetadata = {
     "architecture-page",
     "constitution-page",
     "design-agent-page",
+    "magazine-token-study-page",
   ],
   brandAware: true,
   responsive: true,

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import {
   ChevronLeft,
   ChevronRight,
@@ -13,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { BrandSourceIcon } from "@/components/hearst-plus/brand-source-icon";
 import { usePrefersReducedMotion } from "@/components/hearst-plus/use-prefers-reduced-motion";
 import { formatVideoDuration } from "@/components/hearst-plus/video-format";
+import { getHearstAutoResearchCarRating } from "@/lib/hearst-auto-research-cars";
 
 export type FeaturedStoryCarouselProps = {
   stories: LifestyleRiverStory[];
@@ -43,6 +45,23 @@ function defaultCommentCount(story: LifestyleRiverStory) {
 
 function defaultIsCurrentStory(story: LifestyleRiverStory) {
   return story.id.startsWith("live-");
+}
+
+function ResearchCarRating({ rating }: { rating: string }) {
+  const [score, denominator = "10"] = rating.split("/");
+
+  return (
+    <span className="flex shrink-0 flex-col items-center text-center text-white" aria-label={`Car and Driver rating ${rating}`}>
+      <span className="flex items-baseline font-extrabold tabular-nums leading-none">
+        <span className="text-[28px]">{score}</span>
+        <span className="text-sm">/{denominator}</span>
+      </span>
+      <span className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold leading-none text-white/85">
+        <Image src="/cd.svg" alt="" width={12} height={12} aria-hidden="true" />
+        Rating
+      </span>
+    </span>
+  );
 }
 
 export function FeaturedStoryCarousel({
@@ -365,6 +384,21 @@ export function FeaturedStoryCarousel({
               hasMultipleStories &&
               (visualIndex === 0 || visualIndex === visualStories.length - 1);
             const slideCommentCount = getCommentCount(story);
+            const researchCarRating = getHearstAutoResearchCarRating(story.id);
+            const headlineClassName = cn(
+              layoutMode === "list"
+                ? "headline line-clamp-3 max-w-[min(42rem,100%)] break-words text-balance text-[clamp(1rem,2.2vw,1.75rem)] leading-[1.12] sm:text-[clamp(1.35rem,2vw,2rem)]"
+                : cn(
+                    "headline break-words text-balance text-[clamp(1.25rem,5cqi,2.25rem)]",
+                    scrimDirection === "left-to-right"
+                      ? "line-clamp-none max-w-[min(42rem,33.333%)]"
+                      : "line-clamp-3 max-w-[min(42rem,100%)]",
+                  ),
+              story.brandSlug === "house-beautiful" ||
+                story.brandSlug === "road-and-track"
+                ? "leading-[1.12]"
+                : "leading-[1.08]",
+            );
 
             return (
               <button
@@ -372,6 +406,7 @@ export function FeaturedStoryCarousel({
                 type="button"
                 className={cn(
                   "group/featured-slide relative w-full shrink-0 bg-black text-left text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30",
+                  layoutMode !== "list" && "[container-type:inline-size]",
                   layoutMode === "list"
                     ? "grid h-[184px] grid-cols-[112px_minmax(0,1fr)] grid-rows-[184px] sm:h-[220px] sm:grid-cols-[38%_minmax(0,1fr)] sm:grid-rows-[220px]"
                     : scrimDirection === "left-to-right"
@@ -473,24 +508,14 @@ export function FeaturedStoryCarousel({
                       {slideCommentCount}
                     </span>
                   </div>
-                  <h2
-                    className={cn(
-                      layoutMode === "list"
-                        ? "headline line-clamp-3 max-w-[min(42rem,100%)] break-words text-balance text-[clamp(1rem,2.2vw,1.75rem)] leading-[1.12] sm:text-[clamp(1.35rem,2vw,2rem)]"
-                      : cn(
-                          "headline break-words text-balance text-[clamp(1.75rem,4vw,2.4rem)] sm:text-[clamp(2rem,2.5vw,2.25rem)]",
-                          scrimDirection === "left-to-right"
-                            ? "line-clamp-none max-w-[min(42rem,33.333%)]"
-                            : "line-clamp-2 max-w-[min(42rem,100%)]",
-                        ),
-                      story.brandSlug === "house-beautiful" ||
-                        story.brandSlug === "road-and-track"
-                        ? "leading-[1.12]"
-                        : "leading-[1.08]",
-                    )}
-                  >
-                    {story.title}
-                  </h2>
+                  {researchCarRating ? (
+                    <div className="flex min-w-0 items-end justify-between gap-3">
+                      <h2 className={cn("min-w-0 flex-1", headlineClassName)}>{story.title}</h2>
+                      <ResearchCarRating rating={researchCarRating} />
+                    </div>
+                  ) : (
+                    <h2 className={headlineClassName}>{story.title}</h2>
+                  )}
                 </div>
               </button>
             );

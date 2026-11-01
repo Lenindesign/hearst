@@ -153,7 +153,7 @@ export function BrandPromotionRiverModule({
             <span className="mt-4 block">
               {renderFormatLabel(featuredStory)}
               <span className={cn(
-                "headline mt-2 line-clamp-3 block text-2xl leading-tight",
+                "headline mt-2 line-clamp-3 text-2xl leading-tight",
                 isAEFamilyPromotion ? "text-white" : "text-foreground",
               )}>
                 {featuredStory.title}
@@ -182,7 +182,7 @@ export function BrandPromotionRiverModule({
                 <span className="min-w-0">
                   {renderFormatLabel(story)}
                   <span className={cn(
-                    "headline mt-1 line-clamp-3 block text-[clamp(1.125rem,5.4cqw,2rem)] leading-tight",
+                    "headline mt-1 line-clamp-3 text-[clamp(1rem,5.4cqw,2rem)] leading-tight",
                     isAEFamilyPromotion ? "text-white" : "text-foreground",
                   )}>
                     {story.title}

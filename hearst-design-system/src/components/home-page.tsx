@@ -2772,7 +2772,7 @@ export function RichPhotoGalleryCard({
             <StorySaveIconButton saved={saved} onSave={onSave} className="ml-auto" />
           ) : null}
         </div>
-        <h2 className="headline break-words text-2xl leading-tight transition-colors group-hover/card:text-[var(--hp-sidebar-heading,var(--primary))] group-focus-within/card:text-[var(--hp-sidebar-heading,var(--primary))] sm:text-3xl">
+        <h2 className="headline line-clamp-3 break-words text-2xl leading-tight transition-colors group-hover/card:text-[var(--hp-sidebar-heading,var(--primary))] group-focus-within/card:text-[var(--hp-sidebar-heading,var(--primary))] sm:text-3xl">
           {story.title}
         </h2>
         <p className="mt-2 line-clamp-3 text-sm leading-6 text-muted-foreground">
@@ -2967,7 +2967,7 @@ export function LifestyleRiverCard({
         </div>
         <div className="flex min-w-0 items-end gap-3">
           <h2 className={cn(
-            "headline min-w-0 flex-1 break-words leading-tight transition-colors group-hover/card:text-[var(--hp-sidebar-heading,var(--primary))] group-focus-within/card:text-[var(--hp-sidebar-heading,var(--primary))]",
+            "headline min-w-0 flex-1 line-clamp-3 break-words leading-tight transition-colors group-hover/card:text-[var(--hp-sidebar-heading,var(--primary))] group-focus-within/card:text-[var(--hp-sidebar-heading,var(--primary))]",
             featured ? "text-3xl sm:text-[2rem] lg:text-4xl" : "text-2xl sm:text-[1.7rem]"
           )}>
             {story.title}

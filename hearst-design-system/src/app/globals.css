@@ -107,6 +107,15 @@
   font-weight: 700 !important;
 }
 
+/* The interpretation harness is intentionally testing another brand's real browser fonts. */
+.hearst-plus-strategy-document [data-brand="car-and-driver"] {
+  --font-headline: var(--font-inter, Inter), system-ui, sans-serif;
+}
+.hearst-plus-strategy-document [data-brand="car-and-driver"] .harness-card-headline {
+  font-family: var(--font-headline) !important;
+  font-weight: var(--font-headline-weight, 800) !important;
+}
+
 /* Hearst+ modules (any surface carrying the card shadow) have no border at all; the shadow and the
    surface color separate them from the page. A transparent border would still leave a 1px rim of the
    white surface around edge-to-edge photos. Inner dividers on child elements are untouched. */
