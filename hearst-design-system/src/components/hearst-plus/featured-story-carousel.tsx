@@ -107,6 +107,12 @@ export function FeaturedStoryCarousel({
     hasSwipeIntent: boolean;
   } | null>(null);
   const suppressClickRef = React.useRef(false);
+  const wheelSwipeRef = React.useRef({
+    deltaX: 0,
+    lastEventAt: 0,
+    lockedUntil: 0,
+    direction: 0,
+  });
   const activeStory = stories[activeIndex] ?? stories[0];
   const hasMultipleStories = stories.length > 1;
   const swipeEnabled = editionLabel === "Today’s Picks";
@@ -184,6 +190,39 @@ export function FeaturedStoryCarousel({
     moveToIndex(activeIndex + 1);
   }, [activeIndex, moveToIndex]);
 
+  const handleTrackpadSwipe = (event: React.WheelEvent<HTMLDivElement>) => {
+    if (!swipeEnabled || !hasMultipleStories) return;
+
+    // macOS trackpad swipes arrive as a stream of horizontal wheel deltas,
+    // rather than pointer/touch events. Ignore ordinary vertical scrolling.
+    if (Math.abs(event.deltaX) <= Math.abs(event.deltaY) || Math.abs(event.deltaX) < 2) {
+      return;
+    }
+    if (event.cancelable) event.preventDefault();
+
+    const gesture = wheelSwipeRef.current;
+    const now = event.timeStamp;
+    const direction = Math.sign(event.deltaX);
+    if (now - gesture.lastEventAt > 180 || direction !== gesture.direction) {
+      gesture.deltaX = 0;
+      gesture.lockedUntil = 0;
+    }
+    gesture.direction = direction;
+    gesture.lastEventAt = now;
+
+    if (now <= gesture.lockedUntil) return;
+    gesture.deltaX += event.deltaX;
+
+    if (Math.abs(gesture.deltaX) < 55) return;
+
+    // Trackpad wheel deltas describe page content movement, opposite the
+    // direction of the user's two-finger gesture: left advances, right goes back.
+    const slideDirection = gesture.deltaX > 0 ? 1 : -1;
+    gesture.deltaX = 0;
+    gesture.lockedUntil = now + 520;
+    moveToIndex(activeIndex + slideDirection);
+  };
+
   const handleSwipePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     if (
       !swipeEnabled ||
@@ -191,7 +230,7 @@ export function FeaturedStoryCarousel({
       !event.isPrimary ||
       (event.pointerType === "mouse" && event.button !== 0)
     ) return;
-    const target = event.target instanceof HTMLElement ? event.target : null;
+    const target = event.currentTarget;
     swipeRef.current = {
       pointerId: event.pointerId,
       startX: event.clientX,
@@ -202,7 +241,7 @@ export function FeaturedStoryCarousel({
       target,
       hasSwipeIntent: false,
     };
-    if (target?.setPointerCapture) {
+    if (target.setPointerCapture) {
       try {
         target.setPointerCapture(event.pointerId);
       } catch {
@@ -314,7 +353,7 @@ export function FeaturedStoryCarousel({
 
   return (
     <article
-      className="group relative min-w-0 overflow-hidden rounded-[8px] bg-black shadow-[var(--hp-shadow-card)]"
+      className="group relative min-w-0 overscroll-x-none overflow-hidden rounded-[8px] bg-black shadow-[var(--hp-shadow-card)]"
       aria-roledescription="carousel"
       aria-label={editionLabel ?? "Featured stories"}
       data-story-module={editionLabel ? "todays-picks" : "featured"}
@@ -348,13 +387,14 @@ export function FeaturedStoryCarousel({
       <div
         data-testid="featured-story-track"
         className={cn(
-          "relative w-full min-w-0 overflow-hidden bg-black",
+          "relative w-full min-w-0 overscroll-x-none overflow-hidden bg-black",
           swipeEnabled && "touch-pan-y",
         )}
         onPointerDown={handleSwipePointerDown}
         onPointerMove={handleSwipePointerMove}
         onPointerUp={(event) => finishSwipe(event)}
         onPointerCancel={(event) => finishSwipe(event, true)}
+        onWheel={handleTrackpadSwipe}
         onClickCapture={(event) => {
           if (!suppressClickRef.current) return;
           event.preventDefault();
