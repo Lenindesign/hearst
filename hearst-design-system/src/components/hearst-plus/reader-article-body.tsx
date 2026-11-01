@@ -72,11 +72,13 @@ export function ReaderArticleBody({
   liveArticle,
   onOpenImage,
   onRetry,
+  hideImages = false,
 }: {
   story: LifestyleRiverStory;
   liveArticle?: ReaderArticleLoadState;
   onOpenImage: (image: ReaderArticleImage) => void;
   onRetry?: () => void;
+  hideImages?: boolean;
 }) {
   if (story.videoUrl) {
     return (
@@ -93,9 +95,14 @@ export function ReaderArticleBody({
   }
 
   if (liveArticle?.status === "ready") {
+    const blocks = liveArticle.data.blocks.filter(
+      (block) => !hideImages || block.type !== "image",
+    );
+    if (blocks.length === 0) return null;
+
     return (
       <div className="mt-6 space-y-7 text-[18px] leading-8 text-foreground/85">
-        {liveArticle.data.blocks.map((block, index) => {
+        {blocks.map((block, index) => {
           let content: React.ReactNode;
 
           if (block.type === "image") {

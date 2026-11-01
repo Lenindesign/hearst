@@ -9,6 +9,7 @@ import type {
 import { cn } from "@/lib/utils";
 import { BrandSourceIcon } from "./brand-source-icon";
 import { CommunityJoinedGroupsCard } from "./community-joined-groups-card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getLifestyleByline } from "./story-metadata";
 import { TrendingStoryRail } from "./trending-rail";
 import {
@@ -21,6 +22,19 @@ export type AutosOemFilterOption = {
   logo: string;
 };
 
+export type ResearchCarFilters = {
+  bodyStyle: string;
+  make: string;
+  price: string;
+  powertrain: string;
+  rating: string;
+  makes: string[];
+  resultCount: number;
+  pricedVehicleCount: number;
+  onChange: (key: "bodyStyle" | "make" | "price" | "powertrain" | "rating", value: string) => void;
+  onClear: () => void;
+};
+
 export interface LifestyleDiscoverySidebarProps {
   profile: LifestyleRiverProfile;
   topStories: LifestyleRiverStory[];
@@ -28,6 +42,7 @@ export interface LifestyleDiscoverySidebarProps {
   trendingStories?: LifestyleRiverStory[];
   /** Heading for the trending rail. Defaults to "Trending Across Brands"; brand pages use "Trending". */
   trendingTitle?: string;
+  researchCarFilters?: ResearchCarFilters;
   topics: { name: string; count: number }[];
   brands: { name: string; slug: string; count: number }[];
   brandFilterTitle?: string;
@@ -149,6 +164,7 @@ export function LifestyleDiscoverySidebar({
   savedStories: savedStoryInventory = topStories,
   trendingStories,
   trendingTitle = "Trending Across Brands",
+  researchCarFilters,
   brands,
   brandFilterTitle = "Join Groups",
   communityBrandSlug,
@@ -248,6 +264,62 @@ export function LifestyleDiscoverySidebar({
     </DiscoverySidebarCard>
   );
 
+  const researchCarFilterModule = researchCarFilters ? (
+    <DiscoverySidebarCard
+      title="Research cars"
+      summary={`${researchCarFilters.resultCount} cars`}
+      className="hidden lg:block"
+    >
+      <div className="space-y-3">
+        {([
+          ["bodyStyle", "Type", ["SUV", "Sedan", "Truck", "Hatchback", "Coupe"]],
+          ["make", "Brand", researchCarFilters.makes],
+          ["price", "Starting MSRP", ["Under $35,000", "$35,000–$50,000", "$50,000 and up"]],
+          ["powertrain", "Powertrain", ["Gas", "Hybrid", "Electric"]],
+          ["rating", "Minimum C/D rating", ["7+", "8+", "9+", "9.5+"]],
+        ] as const).map(([key, label, options]) => (
+          <label key={key} className="block text-xs font-medium text-muted-foreground">
+            {label}
+            <Select
+              value={researchCarFilters[key] || "any"}
+              onValueChange={(value) => researchCarFilters.onChange(key, !value || value === "any" ? "" : value)}
+            >
+              <SelectTrigger className="mt-1.5 h-10 min-h-10 w-full rounded-lg border-input bg-background px-3 text-left text-sm font-normal text-foreground shadow-xs">
+                <SelectValue>{researchCarFilters[key] || "Any"}</SelectValue>
+              </SelectTrigger>
+              <SelectContent
+                align="start"
+                alignItemWithTrigger={false}
+                className="max-h-[min(420px,var(--available-height))] rounded-lg border border-border bg-popover p-1 shadow-xl ring-1 ring-foreground/10"
+              >
+                <SelectItem value="any" className="min-h-10 px-3 pr-9 text-sm font-medium">Any</SelectItem>
+                {options.map((option) => (
+                  <SelectItem key={option} value={option} className="min-h-10 px-3 pr-9 text-sm font-medium">
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </label>
+        ))}
+        <div className="flex items-center justify-between gap-2 border-t border-border pt-3">
+          <p className="text-xs leading-5 text-muted-foreground" role="status" aria-live="polite">
+            {researchCarFilters.resultCount} matching cars
+            <span className="mt-1 block">Price filter includes {researchCarFilters.pricedVehicleCount} cars with verified MSRP.</span>
+          </p>
+          <button
+            type="button"
+            onClick={researchCarFilters.onClear}
+            disabled={!researchCarFilters.bodyStyle && !researchCarFilters.make && !researchCarFilters.price && !researchCarFilters.powertrain && !researchCarFilters.rating}
+            className="min-h-10 shrink-0 text-xs font-semibold text-primary underline-offset-4 hover:underline disabled:cursor-default disabled:text-muted-foreground disabled:no-underline"
+          >
+            Clear
+          </button>
+        </div>
+      </div>
+    </DiscoverySidebarCard>
+  ) : null;
+
   const brandFilterModule = isBrandCommunityModule ? (
     <CommunityJoinedGroupsCard groups={communityGroupItems} />
   ) : (
@@ -337,12 +409,12 @@ export function LifestyleDiscoverySidebar({
       {brandFilterFirst ? (
         <>
           {brandFilterModule}
-          {dailyHabitModule}
+          {researchCarFilterModule ?? dailyHabitModule}
           {savedItemsModule}
         </>
       ) : (
         <>
-          {dailyHabitModule}
+          {researchCarFilterModule ?? dailyHabitModule}
           {savedItemsModule}
           {brandFilterModule}
         </>

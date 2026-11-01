@@ -61,7 +61,7 @@ test("classifies food stories as recipes", () => {
   );
 });
 
-test("classifies year-make-model stories as specs", () => {
+test("classifies year-make-model stories as articles for source-backed details", () => {
   const story = makeStory({
     brand: "Car and Driver",
     brandSlug: "car-and-driver",
@@ -69,8 +69,8 @@ test("classifies year-make-model stories as specs", () => {
     title: "2026 Honda Civic Type R First Drive",
   });
 
-  assert.equal(getLifestyleCardKind(story), "recipe");
-  assert.equal(getLifestyleKindLabel("recipe", story), "Specs");
+  assert.equal(getLifestyleCardKind(story), "article");
+  assert.equal(getLifestyleKindLabel("article", story), "Article");
 });
 
 test("distinguishes shopping edits from non-shopping guides", () => {

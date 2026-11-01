@@ -61,6 +61,7 @@ export function rememberContentReaderReturnFocus(element: Element | null) {
 
 export interface ContentReaderDialogShellProps {
   children: React.ReactNode;
+  floatingAction?: React.ReactNode;
   contentRef: React.RefObject<HTMLDivElement | null>;
   destination: string;
   ariaLabel?: string;
@@ -73,6 +74,7 @@ export interface ContentReaderDialogShellProps {
 
 export function ContentReaderDialogShell({
   children,
+  floatingAction,
   contentRef,
   destination,
   ariaLabel = "Story reader",
@@ -248,6 +250,7 @@ export function ContentReaderDialogShell({
       >
         {children}
       </div>
+      {floatingAction}
     </div>,
     portalTarget,
   );

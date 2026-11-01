@@ -29,6 +29,8 @@ import {
 import type { HearstDestinationStaticData } from "@/lib/hearst-destination-data-types";
 import { todayEditLocalNewsStory } from "@/lib/hearst-plus-today-edit-stories";
 import { hearstEvents } from "@/lib/hearst-events";
+import { getHearstAutoResearchCarRating } from "@/lib/hearst-auto-research-cars";
+import { getResearchCarFacet } from "@/lib/hearst-auto-research-car-catalog";
 import { normalizeReaderReturnHref } from "@/lib/story-routes";
 import {
   appendAmbientReaderHref,
@@ -61,6 +63,7 @@ import {
   Camera,
   Check,
   ChevronRight,
+  ChevronUpIcon,
   ChefHat,
   ImageIcon,
   Mail,
@@ -122,6 +125,10 @@ import { buildReaderQueue } from "./hearst-plus/reader-queue";
 import { getStoryIdentity, mergeUniqueStories } from "./hearst-plus/story-utils";
 import { formatVideoDuration } from "./hearst-plus/video-format";
 import {
+  areHearstAutoStoriesAboutSameVehicle,
+  getHearstAutoStoryVehicleKey,
+} from "@/lib/hearst-auto-related-stories";
+import {
   VideoFeedLeadCard,
   VideoIndexCard,
 } from "./hearst-plus/video-cards";
@@ -147,6 +154,7 @@ import {
 import {
   LifestyleDiscoverySidebar,
   type AutosOemFilterOption,
+  type ResearchCarFilters,
 } from "./hearst-plus/discovery-sidebar";
 import {
   TrendingVideoRail,
@@ -159,6 +167,7 @@ import {
   getLifestyleImagePosition,
   getLifestyleKindLabel,
   isExplicitGalleryStory,
+  isYearMakeModelStory,
   LifestyleCardModule,
   LifestyleRiverImage,
   type LifestyleCardKind,
@@ -174,6 +183,7 @@ import {
   type LifestyleStoryComment,
 } from "./hearst-plus/content-reader-model";
 import { ContentReaderComments } from "./hearst-plus/content-reader-comments";
+import { VehicleDetailsReaderModule } from "./hearst-plus/vehicle-details-reader-module";
 import { ContentReaderContextRail } from "./hearst-plus/content-reader-context-rail";
 import {
   ContentReaderAdvertisement,
@@ -2805,6 +2815,26 @@ export function RichPhotoGalleryCard({
 
 // Keep secondary story actions in the reader, with Save available in each
 // card's metadata row so readers can save without opening the story.
+function CarAndDriverResearchRating({ rating }: { rating: string }) {
+  const [score, denominator = "10"] = rating.split("/");
+
+  return (
+    <span
+      className="flex shrink-0 flex-col items-center pt-0.5 text-center"
+      aria-label={`Car and Driver rating ${rating}`}
+    >
+      <span className="flex items-baseline font-extrabold tabular-nums leading-none text-foreground" style={{ fontFamily: '"Inter", Arial, sans-serif' }}>
+        <span className="text-[28px]">{score}</span>
+        <span className="text-sm">/{denominator}</span>
+      </span>
+      <span className="mt-1 inline-flex items-center gap-1 font-sans text-[10px] font-semibold leading-none text-muted-foreground">
+        <Image src="/cd.svg" alt="" width={12} height={12} aria-hidden="true" />
+        Rating
+      </span>
+    </span>
+  );
+}
+
 export function LifestyleRiverCard({
   story,
   onOpen,
@@ -2854,12 +2884,17 @@ export function LifestyleRiverCard({
               <StorySaveIconButton saved={saved} onSave={onSave} className="ml-auto" />
             ) : null}
           </div>
-          <h2 className={cn(
-            "headline line-clamp-3 break-words text-lg leading-snug transition-colors group-hover/card:text-[var(--hp-sidebar-heading,var(--primary))] group-focus-within/card:text-[var(--hp-sidebar-heading,var(--primary))] sm:text-xl",
-            editorialRow && "text-[var(--hp-sidebar-heading,var(--primary))]",
-          )}>
-            {story.title}
-          </h2>
+          <div className="flex min-w-0 items-end gap-3">
+            <h2 className={cn(
+              "headline min-w-0 flex-1 line-clamp-3 break-words text-lg leading-snug transition-colors group-hover/card:text-[var(--hp-sidebar-heading,var(--primary))] group-focus-within/card:text-[var(--hp-sidebar-heading,var(--primary))] sm:text-xl",
+              editorialRow && "text-[var(--hp-sidebar-heading,var(--primary))]",
+            )}>
+              {story.title}
+            </h2>
+            {getHearstAutoResearchCarRating(story.id) ? (
+              <CarAndDriverResearchRating rating={getHearstAutoResearchCarRating(story.id)!} />
+            ) : null}
+          </div>
           <p className={cn("mt-1.5 text-sm leading-6 text-muted-foreground", editorialRow ? "line-clamp-3" : "hidden sm:line-clamp-3")}>{story.summary}</p>
         </div>
         <div className="relative order-first aspect-[4/3] overflow-hidden rounded-[6px] bg-muted">
@@ -2930,12 +2965,17 @@ export function LifestyleRiverCard({
             <StorySaveIconButton saved={saved} onSave={onSave} className="ml-auto" />
           ) : null}
         </div>
-        <h2 className={cn(
-          "headline break-words leading-tight transition-colors group-hover/card:text-[var(--hp-sidebar-heading,var(--primary))] group-focus-within/card:text-[var(--hp-sidebar-heading,var(--primary))]",
-          featured ? "w-full text-3xl sm:text-[2rem] lg:text-4xl" : "text-2xl sm:text-[1.7rem]"
-        )}>
-          {story.title}
-        </h2>
+        <div className="flex min-w-0 items-end gap-3">
+          <h2 className={cn(
+            "headline min-w-0 flex-1 break-words leading-tight transition-colors group-hover/card:text-[var(--hp-sidebar-heading,var(--primary))] group-focus-within/card:text-[var(--hp-sidebar-heading,var(--primary))]",
+            featured ? "text-3xl sm:text-[2rem] lg:text-4xl" : "text-2xl sm:text-[1.7rem]"
+          )}>
+            {story.title}
+          </h2>
+          {getHearstAutoResearchCarRating(story.id) ? (
+            <CarAndDriverResearchRating rating={getHearstAutoResearchCarRating(story.id)!} />
+          ) : null}
+        </div>
         <p className={cn(
           "line-clamp-3 text-muted-foreground",
           featured ? "mt-3 max-w-prose text-base leading-7" : "mt-2 text-sm leading-6 sm:text-[0.95rem]"
@@ -3062,12 +3102,55 @@ function ReaderBrandFollowButton({
   );
 }
 
-function getLifestyleReaderAd(currentStory: LifestyleRiverStory, slotIndex = 0) {
+function getLifestyleReaderAd(
+  currentStory: LifestyleRiverStory,
+  slotIndex = 0,
+  verifiedVehicle?: { title: string; sourceUrl: string },
+) {
+  if (verifiedVehicle && currentStory.brandSlug === "car-and-driver") {
+    return {
+      id: `autos-shop-${currentStory.id}`,
+      sponsor: "Car and Driver Marketplace",
+      title: `Shop the ${verifiedVehicle.title}`,
+      summary: `Explore trims, pricing, and buying options for the ${verifiedVehicle.title} on Car and Driver.`,
+      cta: `Shop the ${verifiedVehicle.title}`,
+      ctaHref: verifiedVehicle.sourceUrl,
+      topics: ["Research Cars"],
+      tags: ["buying", "shopping", "new cars"],
+      creativeLabel: "SHOP",
+      imageUrl: currentStory.image,
+      palette: {
+        background: "#ffffff",
+        foreground: "#121212",
+        accent: "#1B5F8A",
+        soft: "#F1F7F7",
+      },
+    } satisfies ContextualAdUnit;
+  }
+
   return selectContentReaderAdvertisement(
     currentStory,
     contextualAdsByDestination,
     slotIndex,
   );
+}
+
+function getVehicleStoryFormat(story: LifestyleRiverStory) {
+  if (isExplicitGalleryStory(story)) {
+    const title = story.title.toLowerCase();
+    if (title.includes("interior")) return "Interior photos";
+    if (title.includes("exterior")) return "Exterior photos";
+    return "Photo gallery";
+  }
+  if (story.videoUrl || story.mediaKind === "video") return "Video";
+  if (getStoryDestinationMode(story.brandSlug) === "autos" && isYearMakeModelStory(story)) return "Vehicle details";
+  return "Article";
+}
+
+function getVehicleStoryLinkLabel(story: LifestyleRiverStory) {
+  const format = getVehicleStoryFormat(story);
+  if (format === "Vehicle details") return "Vehicle overview";
+  return format;
 }
 
 function LifestyleStoryReaderModal({
@@ -3115,12 +3198,14 @@ function LifestyleStoryReaderModal({
   const { colorMode, toggleColorMode } = useTheme();
   const destinationConfigs = useDestinationConfigs();
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
+  const [showBackToTop, setShowBackToTop] = React.useState(false);
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
   const [readerDestinationOverride, setReaderDestinationOverride] = React.useState<Exclude<DestinationMode, "all"> | null>(null);
   const readerOriginBrandSlug = getReaderOriginBrandSlug(readerReturnHref);
   const [readerBrandOverrideSlug, setReaderBrandOverrideSlug] = React.useState<string | null>(null);
   const [readerFilterOverride, setReaderFilterOverride] = React.useState<string | null>(null);
   const [readerFetchedStories, setReaderFetchedStories] = React.useState<LifestyleRiverStory[]>([]);
+  const relatedVehicleLookupKeysRef = React.useRef(new Set<string>());
   const [loadingReaderBrandSlug, setLoadingReaderBrandSlug] = React.useState<string | null>(null);
   const activeReaderBrandSlug = readerBrandOverrideSlug ?? readerOriginBrandSlug;
   const readerQueueModel = React.useMemo(
@@ -3143,6 +3228,16 @@ function LifestyleStoryReaderModal({
     ],
   );
   const readerAvailableStoryPool = readerQueueModel.availableStories;
+
+  React.useEffect(() => {
+    const scroller = scrollRef.current;
+    if (!scroller) return;
+
+    const updateBackToTopVisibility = () => setShowBackToTop(scroller.scrollTop > 320);
+    updateBackToTopVisibility();
+    scroller.addEventListener("scroll", updateBackToTopVisibility, { passive: true });
+    return () => scroller.removeEventListener("scroll", updateBackToTopVisibility);
+  }, []);
   const readerAvailableStoryPoolRef = React.useRef(readerAvailableStoryPool);
   React.useEffect(() => {
     readerAvailableStoryPoolRef.current = readerAvailableStoryPool;
@@ -3154,6 +3249,24 @@ function LifestyleStoryReaderModal({
       ? { [openStoryId]: { status: "ready", data: initialLiveArticle } }
       : {}
   ));
+  const [vehicleImagesByStoryId, setVehicleImagesByStoryId] = React.useState<Record<string, FullscreenReaderImage[]>>({});
+  const [verifiedVehiclesByStoryId, setVerifiedVehiclesByStoryId] = React.useState<Record<string, { title: string; sourceUrl: string }>>({});
+  const handleVehicleImages = React.useCallback((storyId: string, images: FullscreenReaderImage[]) => {
+    setVehicleImagesByStoryId((current) => {
+      const previous = current[storyId] ?? [];
+      if (previous.length === images.length && previous.every((image, index) => image.src === images[index]?.src)) {
+        return current;
+      }
+      return { ...current, [storyId]: images };
+    });
+  }, []);
+  const handleVerifiedVehicle = React.useCallback((storyId: string, vehicle: { title: string; sourceUrl: string }) => {
+    setVerifiedVehiclesByStoryId((current) => {
+      const previous = current[storyId];
+      if (previous?.title === vehicle.title && previous.sourceUrl === vehicle.sourceUrl) return current;
+      return { ...current, [storyId]: vehicle };
+    });
+  }, []);
   const liveArticlesRef = React.useRef(liveArticles);
   const liveArticleMountedRef = React.useRef(true);
   const liveArticleRequestIdsRef = React.useRef<Record<string, number>>({});
@@ -3267,6 +3380,29 @@ function LifestyleStoryReaderModal({
     .join("|");
   const visibleReaderStories = storyQueue.slice(0, visibleReaderCount);
   const visibleReaderStoryIds = visibleReaderStories.map((story) => story.id).join("|");
+  React.useEffect(() => {
+    visibleReaderStories.forEach((story) => {
+      if (getStoryDestinationMode(story.brandSlug) !== "autos") return;
+      const vehicleKey = getHearstAutoStoryVehicleKey(story);
+      if (!vehicleKey || relatedVehicleLookupKeysRef.current.has(vehicleKey)) return;
+      relatedVehicleLookupKeysRef.current.add(vehicleKey);
+
+      const params = new URLSearchParams({ title: story.title });
+      if (story.sourceUrl) params.set("url", story.sourceUrl);
+      void fetch(`/api/hearst-auto-related-stories/?${params.toString()}`)
+        .then(async (response) => {
+          if (!response.ok) throw new Error("Related vehicle stories are unavailable");
+          return response.json() as Promise<{ stories?: LifestyleRiverStory[] }>;
+        })
+        .then((result) => {
+          if (!Array.isArray(result.stories) || result.stories.length === 0) return;
+          setReaderFetchedStories((currentStories) => mergeUniqueStories(currentStories, result.stories ?? []));
+        })
+        .catch(() => relatedVehicleLookupKeysRef.current.delete(vehicleKey));
+    });
+  // visibleReaderStoryIds represents the reader's current lazy-loaded story set.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visibleReaderStoryIds]);
   const ambientCurrentStory = ambientReaderStoryId
     ? readerAvailableStoryPool.find((story) => story.id === ambientReaderStoryId)
     : undefined;
@@ -3378,6 +3514,9 @@ function LifestyleStoryReaderModal({
           : "var(--hp-surface)",
         ...(autoWeekReaderTheme
           ? { "--content-reader-active-label": autoWeekReaderTheme.colors["11"] }
+          : {}),
+        ...(readerDestination === "autos" && !singleBrandSlug && readerColorMode === "light"
+          ? { "--brand-3": "var(--component-card-background-default, var(--palette-background-default, #ffffff))" }
           : {}),
       } as React.CSSProperties
     : undefined;
@@ -3971,6 +4110,20 @@ function LifestyleStoryReaderModal({
     <>
       <ContentReaderDialogShell
         contentRef={scrollRef}
+        floatingAction={showBackToTop ? (
+          <Button
+            type="button"
+            variant="outline"
+            size="icon-sm"
+            aria-label="Back to top"
+            title="Back to top"
+            className="absolute bottom-8 z-[120] h-11 w-11 rounded-full bg-background sm:h-7 sm:w-7"
+            style={{ right: "max(2rem, calc((100vw - 1360px) / 2 + 2rem))" }}
+            onClick={() => scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" })}
+          >
+            <ChevronUpIcon className="h-4 w-4" aria-hidden="true" />
+          </Button>
+        ) : null}
         destination={readerDestination}
         mode={readerColorMode}
         nestedDialogOpen={Boolean(resolvedFullscreenGallery || ambientReaderStoryId)}
@@ -4014,6 +4167,73 @@ function LifestyleStoryReaderModal({
             {visibleReaderStories.map((story, index) => {
               const kind = getLifestyleCardKind(story);
               const useRoadAndTrackHeadline = story.brandSlug === "road-and-track";
+              const usePhotoGallery = story.brandSlug === "car-and-driver" && isExplicitGalleryStory(story);
+              const useInterReaderTypography = story.brandSlug === "car-and-driver" && isYearMakeModelStory(story);
+              const verifiedVehicle = useInterReaderTypography ? verifiedVehiclesByStoryId[story.id] : undefined;
+              const isAutosStory = getStoryDestinationMode(story.brandSlug) === "autos";
+              const relatedVehicleStories = isAutosStory && getHearstAutoStoryVehicleKey(story)
+                ? [...new Map(
+                    [...readerAvailableStoryPool, ...visibleReaderStories]
+                      .filter((candidate) => getStoryDestinationMode(candidate.brandSlug) === "autos"
+                        && candidate.id !== story.id
+                        && areHearstAutoStoriesAboutSameVehicle(story, candidate))
+                      .map((candidate) => [candidate.id, candidate] as const),
+                  ).values()]
+                    .sort((first, second) => {
+                      const priority: Record<string, number> = {
+                        "Vehicle details": 0,
+                        Video: 1,
+                        "Interior photos": 2,
+                        "Exterior photos": 3,
+                        "Photo gallery": 4,
+                        Article: 5,
+                      };
+                      return (priority[getVehicleStoryFormat(first)] ?? 6) - (priority[getVehicleStoryFormat(second)] ?? 6);
+                    })
+                    .slice(0, 8)
+                : [];
+              const readerAd = getLifestyleReaderAd(story, index, verifiedVehicle);
+              const photoGalleryImages = usePhotoGallery
+                ? getFullscreenReaderImages(story, liveArticles[story.id]).filter((image, imageIndex, images) => {
+                    const imagePath = (value: string) => {
+                      try {
+                        return new URL(value).pathname;
+                      } catch {
+                        return value;
+                      }
+                    };
+                    return images.findIndex((candidate) => imagePath(candidate.src) === imagePath(image.src)) === imageIndex;
+                  })
+                : [];
+              const vehicleGalleryImages = useInterReaderTypography
+                ? [
+                    ...getFullscreenReaderImages(story, liveArticles[story.id]),
+                    ...(vehicleImagesByStoryId[story.id] ?? []),
+                  ].filter((image, imageIndex, images) => {
+                    const imagePath = (value: string) => {
+                      try {
+                        return new URL(value).pathname;
+                      } catch {
+                        return value;
+                      }
+                    };
+                    return images.findIndex((candidate) => imagePath(candidate.src) === imagePath(image.src)) === imageIndex;
+                  }).slice(0, 4)
+                : [];
+              const vehicleThumbnailImages = vehicleGalleryImages.slice(1, 4);
+              const readerActionBar = (
+                <ReaderActionBar
+                  story={story}
+                  article={getReadyLiveArticle(liveArticles[story.id])}
+                  saved={savedIds.includes(story.id)}
+                  commentCount={getLifestyleCommentCount(story, commentsByStoryId[story.id]?.length ?? 0)}
+                  onSave={() => onSave(story)}
+                  premiumReaderState={getAmbientReaderState(story, liveArticles[story.id])}
+                  onOpenPremiumReader={isCompleteAmbientArticle(liveArticles[story.id])
+                    ? () => openAmbientReaderWithRoute(story.id)
+                    : undefined}
+                />
+              );
 
               return (
                 <React.Fragment key={story.id}>
@@ -4031,6 +4251,7 @@ function LifestyleStoryReaderModal({
                       data-reader-story-id={story.id}
                       className={cn(
                         "relative min-w-0 rounded-[8px] border px-5 py-5 sm:px-7 sm:py-7",
+                        useInterReaderTypography ? "font-sans" : "",
                         readerDestination === "flux" && readerColorMode === "dark"
                           ? "border-white/15 bg-[var(--content-reader-article-surface)] text-[var(--component-video-feed-content-primary)] [--border:var(--component-video-feed-border-default)] [--foreground:var(--component-video-feed-content-headline)] [--muted-foreground:var(--component-video-feed-content-secondary)]"
                           : "border-border bg-card text-foreground"
@@ -4059,24 +4280,60 @@ function LifestyleStoryReaderModal({
                             </span>
                           ) : null}
                         </div>
-                      ) : (
-                        <button
-                          type="button"
-                          className="group block w-full cursor-zoom-in rounded-[4px] focus:outline-none focus:ring-2 focus:ring-primary/40"
-                          onClick={() => setFullscreenGallery({
-                            story,
-                            images: getFullscreenReaderImages(story, liveArticles[story.id]),
-                            initialIndex: 0,
-                          })}
-                          aria-label={`View image fullscreen: ${story.title}`}
-                        >
-                          <LifestyleRiverImage
-                            story={story}
-                            className="aspect-video w-full rounded-[4px]"
-                          />
-                        </button>
+                      ) : usePhotoGallery ? null : (
+                        useInterReaderTypography ? (
+                          <div className="grid aspect-video w-full grid-cols-[minmax(0,2fr)_minmax(4.5rem,.8fr)] gap-2 overflow-hidden rounded-[4px] sm:gap-3">
+                            <button
+                              type="button"
+                              className="group relative h-full min-h-0 w-full cursor-zoom-in overflow-hidden rounded-[4px] focus:outline-none focus:ring-2 focus:ring-primary/40"
+                              onClick={() => setFullscreenGallery({ story, images: vehicleGalleryImages, initialIndex: 0 })}
+                              aria-label={`View image fullscreen: ${story.title}`}
+                            >
+                              <LifestyleRiverImage story={story} className="absolute inset-0 h-full w-full rounded-[4px] object-cover" />
+                            </button>
+                            {vehicleThumbnailImages.length > 0 ? (
+                              <div className={cn(
+                                "grid min-h-0 gap-2 sm:gap-3",
+                                vehicleThumbnailImages.length === 1 ? "grid-rows-1" : vehicleThumbnailImages.length === 2 ? "grid-rows-2" : "grid-rows-3",
+                              )}>
+                                {vehicleThumbnailImages.map((image, imageIndex) => (
+                                  <button
+                                    key={image.src}
+                                    type="button"
+                                    className="group relative min-h-0 w-full cursor-zoom-in overflow-hidden rounded-[4px] focus:outline-none focus:ring-2 focus:ring-primary/40"
+                                    onClick={() => setFullscreenGallery({ story, images: vehicleGalleryImages, initialIndex: imageIndex + 1 })}
+                                    aria-label={`View image fullscreen: ${image.alt}`}
+                                  >
+                                    <Image src={image.src} alt={image.alt} fill sizes="(max-width: 640px) 20vw, 160px" className="object-cover transition-opacity group-hover:opacity-90" />
+                                  </button>
+                                ))}
+                              </div>
+                            ) : null}
+                          </div>
+                        ) : (
+                          <button
+                            type="button"
+                            className="group block w-full cursor-zoom-in rounded-[4px] focus:outline-none focus:ring-2 focus:ring-primary/40"
+                            onClick={() => setFullscreenGallery({
+                              story,
+                              images: getFullscreenReaderImages(story, liveArticles[story.id]),
+                              initialIndex: 0,
+                            })}
+                            aria-label={`View image fullscreen: ${story.title}`}
+                          >
+                            <LifestyleRiverImage story={story} className="aspect-video w-full rounded-[4px]" />
+                          </button>
+                        )
                       )}
-                      <div className="mx-auto mt-6 max-w-3xl">
+                      <div className={cn("mx-auto max-w-3xl", usePhotoGallery ? "" : "mt-6")}>
+                        {useInterReaderTypography ? (
+                          <VehicleDetailsReaderModule
+                            story={story}
+                            afterHeading={readerActionBar}
+                            onImages={handleVehicleImages}
+                            onVehicleDetails={handleVerifiedVehicle}
+                          />
+                        ) : null}
                         <div className="mb-3 flex flex-wrap items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
                           <span className="inline-flex items-center gap-1.5">
                             <BrandSourceIcon brand={story.brand} brandSlug={story.brandSlug} />
@@ -4088,37 +4345,100 @@ function LifestyleStoryReaderModal({
                             onToggleFollowBrand={() => onToggleFollowBrand(story.brand)}
                           />
                         </div>
-                        <h2 className={cn(
-                          "headline text-4xl sm:text-5xl",
-                          useRoadAndTrackHeadline ? "leading-[1.12]" : "leading-[1.05]"
-                        )}>
-                          {story.title}
-                        </h2>
-                        <ReaderActionBar
-                          story={story}
-                          article={getReadyLiveArticle(liveArticles[story.id])}
-                          saved={savedIds.includes(story.id)}
-                          commentCount={getLifestyleCommentCount(story, commentsByStoryId[story.id]?.length ?? 0)}
-                          onSave={() => onSave(story)}
-                          premiumReaderState={getAmbientReaderState(story, liveArticles[story.id])}
-                          onOpenPremiumReader={isCompleteAmbientArticle(liveArticles[story.id])
-                            ? () => openAmbientReaderWithRoute(story.id)
-                            : undefined}
-                        />
-                        <ReaderArticleBody
-                          story={story}
-                          liveArticle={liveArticles[story.id]}
-                          onOpenImage={(image) => {
-                            const images = getFullscreenReaderImages(story, liveArticles[story.id]);
-                            setFullscreenGallery({
-                              story,
-                              images,
-                              initialIndex: Math.max(0, images.findIndex((candidate) => candidate.src === image.src)),
-                            });
-                          }}
-                          onRetry={() => requestLiveArticle(story, { force: true })}
-                        />
+                        {!useInterReaderTypography ? (
+                          <>
+                            <h2 className={cn("headline text-4xl sm:text-5xl", useRoadAndTrackHeadline ? "leading-[1.12]" : "leading-[1.05]")}>
+                              {story.title}
+                            </h2>
+                            {readerActionBar}
+                          </>
+                        ) : null}
+                        {usePhotoGallery && liveArticles[story.id]?.status === "ready" ? (
+                          <div className="mt-6 space-y-8" aria-label="Photo gallery">
+                            {photoGalleryImages.map((image, imageIndex) => (
+                              <figure key={image.src} className="space-y-2">
+                                <button
+                                  type="button"
+                                  className="group block w-full cursor-zoom-in rounded-[4px] focus:outline-none focus:ring-2 focus:ring-primary/40"
+                                  onClick={() => setFullscreenGallery({ story, images: photoGalleryImages, initialIndex: imageIndex })}
+                                  aria-label={`View image fullscreen: ${image.alt}`}
+                                >
+                                  <Image
+                                    src={image.src}
+                                    alt={image.alt}
+                                    width={1600}
+                                    height={1100}
+                                    sizes="(max-width: 768px) 100vw, 768px"
+                                    className="h-auto max-h-[720px] w-full rounded-[4px] object-contain transition-opacity group-hover:opacity-95"
+                                  />
+                                </button>
+                                {image.caption || image.credit ? (
+                                  <figcaption className="text-xs leading-5 text-muted-foreground">
+                                    {[image.caption, image.credit].filter(Boolean).join(" · ")}
+                                  </figcaption>
+                                ) : null}
+                              </figure>
+                            ))}
+                          </div>
+                        ) : (
+                          <ReaderArticleBody
+                            story={story}
+                            liveArticle={liveArticles[story.id]}
+                            onOpenImage={(image) => {
+                              const images = getFullscreenReaderImages(story, liveArticles[story.id]);
+                              setFullscreenGallery({
+                                story,
+                                images,
+                                initialIndex: Math.max(0, images.findIndex((candidate) => candidate.src === image.src)),
+                              });
+                            }}
+                            onRetry={() => requestLiveArticle(story, { force: true })}
+                            hideImages={useInterReaderTypography || usePhotoGallery}
+                          />
+                        )}
                         <LifestyleCardModule story={story} kind={kind} />
+                        {relatedVehicleStories.length ? (
+                          <nav className="mt-8 border-t border-border pt-6" aria-label={`More on ${story.title}`}>
+                            <h3 className="mb-4 text-base font-semibold text-foreground">More on this vehicle</h3>
+                            <ul className="grid gap-3">
+                              {relatedVehicleStories.map((relatedStory) => (
+                                <li key={relatedStory.id} className="relative min-w-0">
+                                  <button
+                                    type="button"
+                                    className="group grid w-full grid-cols-[minmax(112px,30%)_minmax(0,1fr)] items-center gap-4 rounded-[var(--border-radius-md)] border border-border bg-[var(--component-card-background-default)] p-3 text-left transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 sm:grid-cols-[minmax(180px,30%)_minmax(0,1fr)] sm:gap-6 sm:p-4"
+                                    onClick={() => selectReaderStory(relatedStory.id)}
+                                    aria-label={`Open ${getVehicleStoryLinkLabel(relatedStory)}: ${relatedStory.title}`}
+                                  >
+                                    <span className="relative block aspect-[4/3] min-w-0 overflow-hidden rounded-[8px] bg-muted">
+                                      <LifestyleRiverImage
+                                        story={relatedStory}
+                                        alt=""
+                                        className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.025] motion-reduce:transition-none"
+                                      />
+                                    </span>
+                                    <span className="min-w-0 py-1 pr-9 sm:py-2 sm:pr-12">
+                                      <span className="mb-3 flex min-w-0 items-center gap-2 text-xs text-muted-foreground sm:text-sm">
+                                        <BrandSourceIcon brand={relatedStory.brand} brandSlug={relatedStory.brandSlug} />
+                                        <span className="truncate">{[relatedStory.brand, relatedStory.topic, relatedStory.byline].filter(Boolean).join(" · ")}</span>
+                                      </span>
+                                      <span className="block line-clamp-3 text-base font-bold leading-snug text-foreground transition-colors group-hover:text-primary sm:text-xl">
+                                        {relatedStory.title}
+                                      </span>
+                                      <span className="mt-2 hidden line-clamp-2 text-sm leading-relaxed text-muted-foreground sm:block">
+                                        {relatedStory.summary || "Explore more reporting, photos, and vehicle details."}
+                                      </span>
+                                    </span>
+                                  </button>
+                                  <StorySaveIconButton
+                                    saved={savedIds.includes(relatedStory.id)}
+                                    onSave={() => onSave(relatedStory)}
+                                    className="absolute right-4 top-4"
+                                  />
+                                </li>
+                              ))}
+                            </ul>
+                          </nav>
+                        ) : null}
                         <ContentReaderComments
                           key={story.id}
                           story={story}
@@ -4128,7 +4448,7 @@ function LifestyleStoryReaderModal({
                       </div>
                     </article>
                     <ContentReaderAdvertisement
-                      ad={getLifestyleReaderAd(story, index)}
+                      ad={readerAd}
                       currentTopic={story.topic}
                     />
                   </div>
@@ -4390,6 +4710,13 @@ function LifestyleRiverHomePage({
   const joinedBrandGroups = controlledJoinedBrandGroups ?? activeBrandFilters;
   const setJoinedBrandGroups = onJoinedBrandGroupsChange ?? setActiveBrandFilters;
   const [activeAutosOemFilters, setActiveAutosOemFilters] = React.useState<string[]>([]);
+  const [researchCarFilterSelection, setResearchCarFilterSelection] = React.useState({
+    bodyStyle: "",
+    make: "",
+    price: "",
+    powertrain: "",
+    rating: "",
+  });
   const readerAccountId = account?.id;
   const profileSourceKey = `${readerAccountId ?? "guest"}:${config.productName}:${initialBrandSlug ?? ""}:${activeFilter}`;
   const sourceProfile = account?.preferences ?? config.initialProfile;
@@ -4626,6 +4953,7 @@ function LifestyleRiverHomePage({
   }, [activeBrandFilters, usingVideoTabFeed, videoTabStories]);
   const effectiveBrandFilters = usingVideoTabFeed ? activeVideoBrandFilters : activeBrandFilters;
   const showAutosOemFilter = destination === "autos" && !initialBrandSlug && !usingVideoTabFeed;
+  const isResearchCarsPage = destination === "autos" && activeFilter === "Research Cars" && !initialBrandSlug;
   const showAutosDealScoreCard = false;
   const autosDealScoreAd = showAutosDealScoreCard && destination === "autos" && !initialBrandSlug
     ? contextualAdsByDestination.autos.find((ad) => ad.id === "autos-cd-deal-score")
@@ -4648,6 +4976,7 @@ function LifestyleRiverHomePage({
     demoState.daypart,
     effectiveBrandFilters.join(","),
     showAutosOemFilter ? activeAutosOemFilters.join(",") : "",
+    isResearchCarsPage ? Object.values(researchCarFilterSelection).join(",") : "",
   ].join(":");
   React.useEffect(() => {
     visibleStoryScopeKeyRef.current = visibleStoryScopeKey;
@@ -4714,7 +5043,22 @@ function LifestyleRiverHomePage({
       return oemFilteredStories;
     }
 
-    const contextStories = oemFilteredStories.filter((story) => storyMatchesLifestyleFilter(story, activeFilter));
+    const contextStories = oemFilteredStories.filter((story) => {
+      if (!storyMatchesLifestyleFilter(story, activeFilter)) return false;
+      if (!isResearchCarsPage) return true;
+      const facet = getResearchCarFacet(story);
+      if (researchCarFilterSelection.bodyStyle && facet.bodyStyle !== researchCarFilterSelection.bodyStyle) return false;
+      if (researchCarFilterSelection.make && facet.make !== researchCarFilterSelection.make) return false;
+      if (researchCarFilterSelection.powertrain && !facet.powertrains.includes(researchCarFilterSelection.powertrain as "Gas" | "Hybrid" | "Electric")) return false;
+      if (researchCarFilterSelection.rating && (facet.rating ?? 0) < Number.parseFloat(researchCarFilterSelection.rating)) return false;
+      if (researchCarFilterSelection.price) {
+        if (facet.startingMsrp === undefined) return false;
+        if (researchCarFilterSelection.price === "Under $35,000" && facet.startingMsrp >= 35000) return false;
+        if (researchCarFilterSelection.price === "$35,000–$50,000" && (facet.startingMsrp < 35000 || facet.startingMsrp >= 50000)) return false;
+        if (researchCarFilterSelection.price === "$50,000 and up" && facet.startingMsrp < 50000) return false;
+      }
+      return true;
+    });
     return config.liveFeedMode === "blend"
       ? applyContextualFeedCadence(contextStories)
       : contextStories;
@@ -4723,9 +5067,11 @@ function LifestyleRiverHomePage({
     activeFilter,
     config.liveFeedMode,
     effectiveBrandFilters,
+    isResearchCarsPage,
     localNewsReaderStories,
     profile.savedIds,
     rankedStories,
+    researchCarFilterSelection,
     showAutosOemFilter,
     useLocalNewsMode,
     usingVideoTabFeed,
@@ -4988,7 +5334,7 @@ function LifestyleRiverHomePage({
       autos: [
         { title: "News & First Looks", terms: ["news", "first look", "reveal", "debut", "launch"] },
         { title: "Reviews & Comparisons", terms: ["review", "test", "drive", "comparison", "vs.", "tested"] },
-        { title: "Buying Guides", terms: ["buying", "best", "rank", "price", "deal", "guide"] },
+        { title: "Research Cars", terms: ["car", "vehicle", "rating", "specs", "model", "review"] },
         { title: "EVs & Technology", terms: ["ev", "electric", "hybrid", "technology", "battery", "charging"] },
         { title: "Racing & Classics", terms: ["race", "racing", "motorsport", "classic", "hot rod", "truck"] },
       ],
@@ -5334,6 +5680,12 @@ function LifestyleRiverHomePage({
       .sort((left, right) => right.count - left.count || left.name.localeCompare(right.name))
       .slice(0, 12);
   }, [activeAutosOemFilters, effectiveBrandFilters, rankedStories, showAutosOemFilter]);
+  const researchCarMakes = React.useMemo(() => Array.from(new Set(
+    rankedStories
+      .filter((story) => storyMatchesLifestyleFilter(story, "Research Cars"))
+      .map((story) => getResearchCarFacet(story).make)
+      .filter(Boolean),
+  )).sort((left, right) => left.localeCompare(right)), [rankedStories]);
 
   React.useEffect(() => {
     if (usingVideoTabFeed) return;
@@ -5616,6 +5968,18 @@ function LifestyleRiverHomePage({
     setActiveAutosOemFilters([]);
     anchorBrandToTop();
   };
+
+  const researchCarsSidebarFilters: ResearchCarFilters | undefined = isResearchCarsPage ? {
+    ...researchCarFilterSelection,
+    makes: researchCarMakes,
+    resultCount: filteredStories.length,
+    pricedVehicleCount: rankedStories.filter((story) =>
+      storyMatchesLifestyleFilter(story, "Research Cars")
+      && getResearchCarFacet(story).startingMsrp !== undefined
+    ).length,
+    onChange: (key, value) => setResearchCarFilterSelection((current) => ({ ...current, [key]: value })),
+    onClear: () => setResearchCarFilterSelection({ bodyStyle: "", make: "", price: "", powertrain: "", rating: "" }),
+  } : undefined;
 
   const browseForYou = () => {
     trackProductEvent("saved_browse_for_you", { destination });
@@ -6091,6 +6455,7 @@ function LifestyleRiverHomePage({
           profile={profile}
           topStories={moduleAllocation.dailyHabitStories}
           savedStories={savedStoryInventory}
+          researchCarFilters={researchCarsSidebarFilters}
           trendingStories={initialBrandSlug
             ? moduleAllocation.trendingStories.filter((story) => story.brandSlug === initialBrandSlug)
             : moduleAllocation.trendingStories}
@@ -6919,6 +7284,7 @@ export function HomePageTemplate({
     [staticDestinationData]
   );
   const [activeLifestyleFilter, setActiveLifestyleFilter] = React.useState(initialFilter ?? "For You");
+  const [showHomeBackToTop, setShowHomeBackToTop] = React.useState(false);
   const [onboardingOpen, setOnboardingOpen] = React.useState(false);
   const [delishOnboardingOpen, setDelishOnboardingOpen] = React.useState(false);
   const [motorTrendOnboardingOpen, setMotorTrendOnboardingOpen] = React.useState(false);
@@ -6968,6 +7334,12 @@ export function HomePageTemplate({
     [colorMode, selectedBrand?.slug, selectedBrandCssVars]
   );
   const destinationContentRef = React.useRef<HTMLDivElement | null>(null);
+  React.useEffect(() => {
+    const updateVisibility = () => setShowHomeBackToTop(window.scrollY > 320);
+    updateVisibility();
+    window.addEventListener("scroll", updateVisibility, { passive: true });
+    return () => window.removeEventListener("scroll", updateVisibility);
+  }, []);
   const isDestinationRiver = forceDestinationRiver || brand.slug === "hearst-all" || brand.slug === "hearst-lifestyle" || brand.slug === "hearst-plus" || brand.slug === "hearst-flux" || brand.slug === "hearst-ew";
   const isDelishOnboardingRoute = selectedBrand?.slug === "delish";
   const isMotorTrendOnboardingRoute = selectedBrand?.slug === "motortrend";
@@ -7688,6 +8060,19 @@ export function HomePageTemplate({
             : undefined
         }
       />
+      {showHomeBackToTop && !initialOpenStoryId ? (
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          aria-label="Back to top"
+          title="Back to top"
+          className="fixed bottom-5 right-5 z-40 h-10 w-10 rounded-full border-border bg-background shadow-sm sm:bottom-8 sm:right-8"
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        >
+          <ChevronUpIcon className="h-4 w-4" aria-hidden="true" />
+        </Button>
+      ) : null}
     </div>
     </DestinationConfigsContext.Provider>
   );

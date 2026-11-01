@@ -375,7 +375,7 @@ export const baseDestinationConfigs: Record<DestinationMode, DestinationConfig> 
     productName: "Hearst Autos",
     riverLabel: "Personalized autos story river",
     storyRiverLabel: "autos stories",
-    filters: ["For You", "News", "Reviews", "Buying Guides", "EVs", "Racing", "Trucks", "Classics"],
+    filters: ["For You", "News", "Reviews", "Research Cars", "EVs", "Racing", "Trucks", "Classics"],
     stories: [],
     sourceNotes: [],
     initialProfile: initialAutosProfile,

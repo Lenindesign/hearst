@@ -3,6 +3,9 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Card } from "@/components/ui/card";
+import { brands } from "@/lib/brands";
+import { brandToCssVars } from "@/lib/theme-css-vars";
 import { ProductFooter, ProductHeader } from "./product-story-shell";
 import {
   Bookmark,
@@ -123,8 +126,6 @@ const BRAND_THEME_SPECIMENS = [
   {
     slug: "cosmopolitan",
     name: "Cosmopolitan",
-    primary: "#EC008C",
-    fontHeadline: "Playfair Display, serif",
     category: "Style & Culture",
     title: "The Subtle Art of Boundary Setting in High-Stakes Relationships",
     dek: "Why modern psychologists say learning to pause before agreeing is the ultimate act of self-preservation.",
@@ -134,8 +135,6 @@ const BRAND_THEME_SPECIMENS = [
   {
     slug: "car-and-driver",
     name: "Car and Driver",
-    primary: "#D0021B",
-    fontHeadline: "Livvic, sans-serif",
     category: "Performance Testing",
     title: "Track Attack: 2026 Porsche 911 GT3 RS Shatters VIR Grand Course Record",
     dek: "With 518 naturally aspirated horsepower and radical active aero, Porsche's weapon sets a blistering new benchmark.",
@@ -145,8 +144,6 @@ const BRAND_THEME_SPECIMENS = [
   {
     slug: "delish",
     name: "Delish",
-    primary: "#FF4A00",
-    fontHeadline: "Newsreader, serif",
     category: "Weeknight Dinners",
     title: "Crispy Garlic Butter Smash Potatoes in Under 20 Minutes",
     dek: "The secret to restaurant-quality crispiness lies in double boiling and a splash of malt vinegar before searing.",
@@ -156,8 +153,6 @@ const BRAND_THEME_SPECIMENS = [
   {
     slug: "house-beautiful",
     name: "House Beautiful",
-    primary: "#1A5276",
-    fontHeadline: "Newsreader, serif",
     category: "Design Inspiration",
     title: "Inside a Coastal Maine Barn Converted Into a Serene Guest Haven",
     dek: "A 19th-century timber frame becomes a sun-drenched coastal retreat filled with natural textures and salvaged heritage wood.",
@@ -167,8 +162,6 @@ const BRAND_THEME_SPECIMENS = [
   {
     slug: "good-housekeeping",
     name: "Good Housekeeping",
-    primary: "#0072CE",
-    fontHeadline: "Newsreader, serif",
     category: "Lab Tested & Approved",
     title: "The 12 Best Vacuum Cleaners of 2026, Tested in Our Labs",
     dek: "Our Cleaning Lab experts tested over 80 upright, cordless, and robot vacuums on hardwood, carpet, and pet hair.",
@@ -182,6 +175,8 @@ export function AiInHdsPageComponent() {
   const [slopViewMode, setSlopViewMode] = useState<"comparison" | "ai-default" | "hds-standard">("comparison");
 
   const activeBrand = BRAND_THEME_SPECIMENS.find((b) => b.slug === selectedBrandSlug) ?? BRAND_THEME_SPECIMENS[0];
+  const activeBrandTheme = brands.find((brand) => brand.slug === activeBrand.slug) ?? brands[0];
+  const activeBrandTokens = brandToCssVars(activeBrandTheme);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-[#102A43] font-sans antialiased">
@@ -479,96 +474,109 @@ export function AiInHdsPageComponent() {
 
           {/* Brand Switcher Pills */}
           <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-4">
-            {BRAND_THEME_SPECIMENS.map((brand) => (
-              <button
-                key={brand.slug}
-                onClick={() => setSelectedBrandSlug(brand.slug)}
-                className={`flex items-center gap-2 px-3.5 py-1.5 text-xs font-bold transition-all ${
-                  selectedBrandSlug === brand.slug
-                    ? "bg-[#102A43] text-white shadow-xs"
-                    : "border border-slate-300 bg-white text-slate-700 hover:border-slate-400"
-                }`}
-              >
-                <span className="size-2 rounded-full" style={{ backgroundColor: brand.primary }} />
-                {brand.name}
-              </button>
-            ))}
+            {BRAND_THEME_SPECIMENS.map((brand) => {
+              const theme = brands.find((candidate) => candidate.slug === brand.slug) ?? brands[0];
+              const themeTokens = brandToCssVars(theme);
+              const isSelected = selectedBrandSlug === brand.slug;
+
+              return (
+                <button
+                  key={brand.slug}
+                  onClick={() => setSelectedBrandSlug(brand.slug)}
+                  className={`flex items-center gap-2 border px-3.5 py-1.5 text-xs font-bold transition-all ${
+                    isSelected
+                      ? "border-primary bg-primary text-primary-foreground shadow-xs"
+                      : "border-border bg-card text-foreground hover:border-primary"
+                  }`}
+                  style={isSelected ? themeTokens as React.CSSProperties : undefined}
+                >
+                  <span className="size-2 rounded-full" style={{ backgroundColor: theme.colors["1"] }} />
+                  {brand.name}
+                </button>
+              );
+            })}
           </div>
 
           {/* Live Card Specimen + Token Inspector */}
-          <div className="grid gap-8 lg:grid-cols-12">
+          <div
+            className="grid gap-8 lg:grid-cols-12"
+            data-brand={activeBrand.slug}
+            style={activeBrandTokens as React.CSSProperties}
+          >
             {/* Left: Rendered Card */}
             <div className="lg:col-span-7">
-              <article className="overflow-hidden border border-slate-200 bg-white shadow-xs">
-                <div className="relative aspect-[16/9] w-full bg-slate-100">
-                  <Image
-                    src={activeBrand.image}
-                    alt={activeBrand.title}
-                    fill
-                    sizes="(min-width: 1024px) 40vw, 100vw"
-                    className="object-cover"
-                  />
-                </div>
-                <div className="p-6">
-                  <div className="flex items-center gap-2 text-xs font-bold">
-                    <span style={{ color: activeBrand.primary }}>{activeBrand.name}</span>
-                    <span className="text-slate-300">•</span>
-                    <span className="text-slate-500 uppercase tracking-wider text-[10px]">{activeBrand.category}</span>
+              <Card className="gap-0 bg-[var(--component-card-background-neutral)] p-0 text-[var(--palette-content-default)]" data-brand={activeBrand.slug}>
+                <article>
+                  <div className="relative aspect-[16/9] w-full bg-[var(--palette-background-subtle)]">
+                    <Image
+                      src={activeBrand.image}
+                      alt={activeBrand.title}
+                      fill
+                      sizes="(min-width: 1024px) 40vw, 100vw"
+                      className="object-cover"
+                    />
                   </div>
+                  <div className="p-6">
+                    <div className="flex items-center gap-2 text-xs font-bold">
+                      <span className="text-[var(--brand-primary)]">{activeBrand.name}</span>
+                      <span className="text-muted-foreground">•</span>
+                      <span className="text-[var(--palette-content-default)] uppercase tracking-wider text-[10px]">{activeBrand.category}</span>
+                    </div>
 
-                  <h4
-                    className="mt-3 text-2xl font-bold leading-snug text-[#102A43]"
-                    style={{ fontFamily: activeBrand.fontHeadline }}
-                  >
-                    {activeBrand.title}
-                  </h4>
+                    <h4
+                      className="mt-3 text-2xl font-bold leading-snug text-[var(--palette-content-default)]"
+                      style={{ fontFamily: "var(--font-headline)" }}
+                    >
+                      {activeBrand.title}
+                    </h4>
 
-                  <p className="mt-3 text-sm leading-relaxed text-slate-600 line-clamp-3">
-                    {activeBrand.dek}
-                  </p>
+                    <p className="mt-3 text-sm leading-relaxed text-[var(--palette-content-default)] line-clamp-3">
+                      {activeBrand.dek}
+                    </p>
 
-                  <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-4 text-xs text-slate-500">
-                    <span>By <strong>{activeBrand.author}</strong></span>
-                    <div className="flex items-center gap-3">
-                      <span>Published Today</span>
-                      <Bookmark className="size-4 text-slate-400 hover:text-[#102A43]" />
+                  <div className="mt-6 flex items-center justify-between border-t border-[var(--component-card-collection-bigstoryfeed-4-storyfeed-border-default)] pt-4 text-xs text-[var(--palette-content-default)]">
+                      <span>By <strong>{activeBrand.author}</strong></span>
+                      <div className="flex items-center gap-3">
+                        <span>Published Today</span>
+                        <Bookmark className="size-4 text-[var(--palette-content-default)] hover:text-[var(--brand-primary)]" />
+                      </div>
                     </div>
                   </div>
-                </div>
-              </article>
+                </article>
+              </Card>
             </div>
 
             {/* Right: Real-Time Token Map Inspector */}
             <div className="space-y-4 text-xs lg:col-span-5">
-              <div className="border border-slate-200 bg-white p-5">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                  <span className="font-mono text-xs font-bold text-[#2D75B9]">ACTIVE TOKEN INJECTION</span>
-                  <code className="text-[10px] text-slate-500">data-brand=&quot;{activeBrand.slug}&quot;</code>
+              <Card className="gap-0 bg-[var(--palette-background-page)] p-5 text-[var(--palette-content-default)]" data-brand={activeBrand.slug}>
+                <div className="flex items-center justify-between border-b border-[var(--component-card-collection-bigstoryfeed-4-storyfeed-border-default)] pb-3">
+                  <span className="font-mono text-xs font-bold text-[var(--brand-primary)]">ACTIVE TOKEN INJECTION</span>
+                  <code className="text-[10px] text-[var(--palette-content-default)]">data-brand=&quot;{activeBrand.slug}&quot;</code>
                 </div>
 
                 <dl className="mt-4 space-y-3 font-mono text-[11px]">
-                  <div className="flex justify-between border-b border-slate-50 pb-2">
-                    <dt className="text-slate-500">--brand-primary:</dt>
-                    <dd className="font-bold" style={{ color: activeBrand.primary }}>{activeBrand.primary}</dd>
+                  <div className="flex justify-between border-b border-border pb-2">
+                    <dt className="text-[var(--palette-content-default)]">--brand-primary:</dt>
+                    <dd className="font-bold text-[var(--brand-primary)]">{activeBrandTheme.colors["1"]}</dd>
                   </div>
-                  <div className="flex justify-between border-b border-slate-50 pb-2">
-                    <dt className="text-slate-500">--font-headline:</dt>
-                    <dd className="font-bold text-slate-800">{activeBrand.fontHeadline}</dd>
+                  <div className="flex justify-between border-b border-border pb-2">
+                    <dt className="text-[var(--palette-content-default)]">--font-headline:</dt>
+                    <dd className="font-bold text-[var(--palette-content-default)]">{activeBrandTheme.fontHeadline}</dd>
                   </div>
-                  <div className="flex justify-between border-b border-slate-50 pb-2">
-                    <dt className="text-slate-500">--card-border-radius:</dt>
-                    <dd className="text-slate-800">0px (Editorial Flat)</dd>
+                  <div className="flex justify-between border-b border-border pb-2">
+                    <dt className="text-[var(--palette-content-default)]">--card-background-neutral:</dt>
+                    <dd className="text-[var(--palette-content-default)]">{activeBrandTheme.componentTokens["component-card-background-neutral"]}</dd>
                   </div>
-                  <div className="flex justify-between border-b border-slate-50 pb-2">
-                    <dt className="text-slate-500">--dek-line-clamp:</dt>
-                    <dd className="text-slate-800">3 lines</dd>
+                  <div className="flex justify-between border-b border-border pb-2">
+                    <dt className="text-[var(--palette-content-default)]">--dek-line-clamp:</dt>
+                    <dd className="text-[var(--palette-content-default)]">3 lines</dd>
                   </div>
                 </dl>
 
-                <div className="mt-5 rounded bg-slate-50 p-3 text-[11px] text-slate-600">
-                  <strong className="text-[#102A43]">Agentic Leverage:</strong> An AI agent can propagate this token schema to all 29 publications, generate TypeScript type definitions, and verify CSS compilation across the entire repo in under 2 minutes.
+                <div className="mt-5 rounded-md bg-[var(--palette-background-subtle)] p-3 text-[11px] text-[var(--palette-content-default)]">
+                  <strong className="text-[var(--brand-primary)]">Agentic Leverage:</strong> An AI agent can propagate this token schema to all 29 publications, generate TypeScript type definitions, and verify CSS compilation across the entire repo in under 2 minutes.
                 </div>
-              </div>
+              </Card>
             </div>
           </div>
         </section>

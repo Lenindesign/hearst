@@ -115,6 +115,8 @@ export function storyHasPlayableVideo(story: LifestyleRiverStory) {
 }
 
 export function isYearMakeModelStory(story: LifestyleRiverStory) {
+  if (isExplicitGalleryStory(story)) return false;
+
   const autosBrandSlugs = new Set([
     "autoweek",
     "bring-a-trailer",
@@ -123,15 +125,13 @@ export function isYearMakeModelStory(story: LifestyleRiverStory) {
     "motortrend",
     "road-and-track",
   ]);
-  const autosTopics = new Set(["Reviews", "EVs", "Performance", "Buying Guides"]);
+  const autosTopics = new Set(["Reviews", "EVs", "Performance", "Buying Guides", "Research Cars"]);
 
-  if (!autosBrandSlugs.has(story.brandSlug) && !autosTopics.has(story.topic)) {
+  if (!autosBrandSlugs.has(story.brandSlug) || !autosTopics.has(story.topic)) {
     return false;
   }
 
-  return /^(?:19|20)\d{2}\s+[A-Z0-9][A-Za-z0-9-]*(?:\s+[A-Z0-9][A-Za-z0-9-]*){1,6}\b/.test(
-    story.title,
-  );
+  return /\b(?:19|20)\d{2}\s+[A-Za-z0-9][A-Za-z0-9-]*(?:\s+[A-Za-z0-9][A-Za-z0-9-]*){1,6}\b/.test(story.title);
 }
 
 export function getLifestyleCardKind(
@@ -142,7 +142,7 @@ export function getLifestyleCardKind(
   if (isExplicitGalleryStory(story)) return "gallery";
   if (storyHasPlayableVideo(story)) return "video";
   if (story.topic.startsWith("Food")) return "recipe";
-  if (isYearMakeModelStory(story)) return "recipe";
+  if (isYearMakeModelStory(story)) return "article";
   if (/shopping|products|tested|best|buy|sale|deals|favorite|picks/.test(searchable)) {
     return "shopping";
   }
@@ -165,7 +165,6 @@ export function getLifestyleKindLabel(
   kind: LifestyleCardKind,
   story?: LifestyleRiverStory,
 ) {
-  if (story && kind === "recipe" && isYearMakeModelStory(story)) return "Specs";
   if (story && kind === "shopping" && !["Shopping", "Style"].includes(story.topic)) {
     return "Guide";
   }

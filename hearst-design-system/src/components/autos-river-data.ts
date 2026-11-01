@@ -2,6 +2,7 @@
 // Public RSS/page metadata only: titles, links, summaries, dates, and real image URLs.
 
 import type { LifestyleRiverStory } from "./lifestyle-river-types";
+import { hearstAutoResearchCarCatalog } from "@/lib/hearst-auto-research-car-catalog";
 
 export const autosRiverSourceNotes = [
   {
@@ -5344,3 +5345,7 @@ export const autosRiverStories: LifestyleRiverStory[] = [
     "age": 92
   }
 ];
+
+// These verified model pages are appended after the current RSS inventory so
+// the Research Cars filter can paginate through the complete catalog.
+autosRiverStories.push(...hearstAutoResearchCarCatalog);

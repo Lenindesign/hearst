@@ -51,6 +51,7 @@ export default async function HearstPlusBriefPage() {
   const videoFeed = await getPersonalizeAutosVideoFeed();
   const articleStory = lifestyleRiverStories.find((story) => story.sourceUrl && !story.videoUrl && !isExplicitGalleryStory(story)) ?? lifestyleRiverStories[0];
   const galleryStory = autosRiverStories.find((story) => story.id === "car-and-driver-photos-a74231347-2027-audi-q9-drive-interior-gallery");
+  const vehicleStory = autosRiverStories.find((story) => story.id === "car-and-driver-kia-ev9-2027");
   const shoppingStory = lifestyleRiverStories.find((story) => getLifestyleCardKind(story) === "shopping");
   const shortsStories = videoFeed.stories.filter(isDelishPortraitShort).slice(0, 4);
   const brandSpotlight = getBrandPromotionForSlot({
@@ -64,6 +65,13 @@ export default async function HearstPlusBriefPage() {
       .filter((story) => story.topic === topic || story.topic.startsWith(`${topic} `))
       .slice(0, 2),
   ).filter((story, index, stories) => stories.findIndex((candidate) => candidate.id === story.id) === index);
+  const brandStorySamples = brands.flatMap((brand) => {
+    if (brand.slug === "white-label") return [];
+    const sample = [...autosRiverStories, ...lifestyleRiverStories].find((story) =>
+      story.brandSlug === brand.slug && !story.videoUrl && !isExplicitGalleryStory(story),
+    );
+    return sample ? [sample] : [];
+  });
   const videoStory = videoFeed.stories
     .filter((story) => Boolean(story.videoUrl))
     .sort((first, second) => Date.parse(second.publishedAt ?? "") - Date.parse(first.publishedAt ?? ""))[0];
@@ -288,7 +296,7 @@ export default async function HearstPlusBriefPage() {
             </div>
           </div>
           <p className="mt-8 max-w-5xl text-xs leading-5 text-muted-foreground"><strong className="text-foreground">Five HDS layers:</strong> tokens, accessible primitives, shared modules, the two page templates, and brand themes. Production also needs a shared content record for source and rights data, eligibility, deduplication, ranking, and privacy-aware measurement.</p>
-          <HearstPlusBriefSamples articleStory={articleStory} galleryStory={galleryStory} shoppingStory={shoppingStory} shortsStories={shortsStories} brandSpotlight={brandSpotlight} videoStory={videoStory} riverDemoStories={riverDemoStories} communityThread={communityThread} videoSourceCopy={videoSourceCopy} eventSample={eventSample} />
+          <HearstPlusBriefSamples articleStory={articleStory} galleryStory={galleryStory} shoppingStory={shoppingStory} shortsStories={shortsStories} brandSpotlight={brandSpotlight} videoStory={videoStory} vehicleStory={vehicleStory} riverDemoStories={riverDemoStories} brandStorySamples={brandStorySamples} communityThread={communityThread} videoSourceCopy={videoSourceCopy} eventSample={eventSample} brands={brands.filter((brand) => brand.slug !== "white-label")} />
         </section>
 
         <section aria-labelledby="publisher-value-heading" className="border-y border-border bg-card">

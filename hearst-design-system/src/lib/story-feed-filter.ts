@@ -1,4 +1,5 @@
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
+import { isHearstAutoResearchCar } from "@/lib/hearst-auto-research-cars";
 import { getHearstBrandSection } from "@/lib/hearst-routes";
 
 export function storyMatchesLifestyleFilter(
@@ -8,6 +9,8 @@ export function storyMatchesLifestyleFilter(
   if (filter === "For You" || filter === "Saved") return true;
   if (filter === "Videos") return Boolean(story.videoUrl);
 
+  if (filter === "Research Cars") return isHearstAutoResearchCar(story);
+
   if (story.brandSlug === "car-and-driver") {
     if (filter === "Shop New Cars") {
       return story.topic === "EVs" || /\b20(?:26|27|28|29)\b/.test(story.title);
@@ -15,7 +18,6 @@ export function storyMatchesLifestyleFilter(
     if (filter === "Shop Used Cars") {
       return /\b(?:19\d{2}|20(?:0\d|1\d|2[0-5]))\b/.test(story.title);
     }
-    if (filter === "Research Cars") return true;
   }
 
   if (filter === "Lifestyle") return getHearstBrandSection(story.brandSlug) === "lifestyle";

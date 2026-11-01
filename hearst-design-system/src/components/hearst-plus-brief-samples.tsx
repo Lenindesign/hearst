@@ -2,7 +2,13 @@
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import type { ReactNode } from "react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Play } from "@/components/ui/icons";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { CommunityHomeRiverCard } from "@/components/hearst-plus/community-home-river-card";
 import { BrandLogo } from "@/components/brand-logo";
@@ -20,6 +26,7 @@ import type { ContextualAdUnit } from "@/components/hearst-plus/content-reader-a
 import { DelishVerticalVideoCarousel } from "@/components/hearst-plus/vertical-video-carousel";
 import { EventTile } from "@/components/hearst-plus/events/hearst-events-experience";
 import type { HearstEventRecord } from "@/lib/hearst-events";
+import { getHearstAutoResearchCarRating } from "@/lib/hearst-auto-research-cars";
 import { useEffect, useMemo, useState } from "react";
 import {
   applyOnboardingPreferences,
@@ -141,6 +148,375 @@ function SampleFigure({
         <p className="mt-4 text-xs leading-5 text-muted-foreground">{note}</p>
       </figcaption>
     </figure>
+  );
+}
+
+type MightyCardFormat =
+  | "article"
+  | "video"
+  | "gallery"
+  | "vehicle"
+  | "event"
+  | "community"
+  | "shorts"
+  | "shopping"
+  | "spotlight"
+  | "advertisement";
+
+const MIGHTY_CARD_FORMATS: { id: MightyCardFormat; label: string }[] = [
+  { id: "article", label: "Article" },
+  { id: "video", label: "Video" },
+  { id: "gallery", label: "Photo gallery" },
+  { id: "vehicle", label: "Make & model" },
+  { id: "event", label: "Event" },
+  { id: "community", label: "Community" },
+  { id: "shorts", label: "Shorts" },
+  { id: "shopping", label: "Shopping" },
+  { id: "spotlight", label: "Brand spotlight" },
+  { id: "advertisement", label: "Advertisement" },
+];
+
+const MIGHTY_CARD_ELEMENTS = [
+  { id: "media", label: "Media" },
+  { id: "identity", label: "Brand and category" },
+  { id: "summary", label: "Summary" },
+  { id: "byline", label: "Byline and details" },
+  { id: "next-step", label: "Primary link or action" },
+] as const;
+
+type MightyCardElement = (typeof MIGHTY_CARD_ELEMENTS)[number]["id"];
+
+function MightyCardWorkbench({
+  articleStory,
+  galleryStory,
+  shoppingStory,
+  shortsStories,
+  brandSpotlight,
+  videoStory,
+  communityThread,
+  vehicleStory,
+  eventSample,
+  sponsoredSample,
+  brands,
+  brandStorySamples,
+}: {
+  articleStory: LifestyleRiverStory;
+  galleryStory?: LifestyleRiverStory;
+  shoppingStory?: LifestyleRiverStory;
+  shortsStories: LifestyleRiverStory[];
+  brandSpotlight: BrandPromotionMatch | null;
+  videoStory?: LifestyleRiverStory;
+  communityThread: CommunityFeedThread;
+  vehicleStory?: LifestyleRiverStory;
+  eventSample?: HearstEventRecord;
+  sponsoredSample: ContextualAdUnit;
+  brands: BrandTheme[];
+  brandStorySamples: LifestyleRiverStory[];
+}) {
+  const [format, setFormat] = useState<MightyCardFormat>("article");
+  const [selectedBrandSlug, setSelectedBrandSlug] = useState("cosmopolitan");
+  const [visibleElements, setVisibleElements] = useState<MightyCardElement[]>([
+    "media",
+    "identity",
+    "summary",
+    "byline",
+    "next-step",
+  ]);
+  const [layout, setLayout] = useState<"feature" | "horizontal" | "text-only">("feature");
+  const story = articleStory;
+  const selectedBrand = brands.find((brand) => brand.slug === selectedBrandSlug) ?? brands[0];
+  const brandStory = brandStorySamples.find((candidate) => candidate.brandSlug === selectedBrand?.slug) ?? story;
+  const featureStory = videoStory ?? shortsStories[0] ?? articleStory;
+  const selectedGallery = galleryStory ?? articleStory;
+  const selectedVehicle = vehicleStory ?? articleStory;
+  const selectedSpotlightStory = brandSpotlight?.stories[0] ?? articleStory;
+  const vehicleRating = getHearstAutoResearchCarRating(selectedVehicle.id);
+
+  const cardContent = (() => {
+    switch (format) {
+      case "video":
+        return {
+          brand: featureStory.brand,
+          category: `${featureStory.topic} · Video`,
+          title: featureStory.title,
+          summary: featureStory.summary,
+          image: featureStory.image,
+          byline: featureStory.byline ?? featureStory.brand,
+          detail: featureStory.videoDuration ? `${Math.floor(featureStory.videoDuration / 60)}:${String(featureStory.videoDuration % 60).padStart(2, "0")}` : "Video",
+          nextStep: "Watch video",
+          contentKind: "video",
+        };
+      case "gallery":
+        return {
+          brand: selectedGallery.brand,
+          category: `${selectedGallery.topic} · Photo gallery`,
+          title: selectedGallery.title,
+          summary: selectedGallery.summary,
+          image: selectedGallery.image,
+          byline: selectedGallery.byline ?? selectedGallery.brand,
+          detail: "Photo gallery",
+          nextStep: "Open gallery",
+          contentKind: "gallery",
+        };
+      case "vehicle":
+        return {
+          brand: selectedVehicle.brand,
+          category: "Research Cars · Vehicle overview",
+          title: selectedVehicle.title,
+          summary: selectedVehicle.summary,
+          image: selectedVehicle.image,
+          byline: selectedVehicle.byline ?? selectedVehicle.brand,
+          detail: "Car and Driver source",
+          nextStep: "View vehicle details",
+          contentKind: "vehicle",
+        };
+      case "event":
+        return {
+          brand: eventSample?.brandNames.join(" + ") ?? "Hearst Events",
+          category: eventSample?.eyebrow ?? "Event",
+          title: eventSample?.heroHeadline ?? eventSample?.title ?? "Hearst event",
+          summary: eventSample?.summary ?? "Event details, venue, and dates appear together.",
+          image: eventSample?.image.src ?? story.image,
+          byline: eventSample?.venue ?? "Event details",
+          detail: eventSample?.dateLabel ?? "Date and venue",
+          nextStep: eventSample?.primaryAction.label ?? "See event details",
+          contentKind: "event",
+        };
+      case "community":
+        return {
+          brand: communityThread.brand,
+          category: `${communityThread.meta} · ${communityThread.kindLabel}`,
+          title: communityThread.title,
+          summary: communityThread.body,
+          image: communityThread.posterImage ?? story.image,
+          byline: communityThread.author,
+          detail: `${communityThread.replies} replies`,
+          nextStep: "Join the conversation",
+          contentKind: "community",
+        };
+      case "shorts": {
+        const short = shortsStories[0] ?? featureStory;
+        return {
+          brand: short.brand,
+          category: `${short.topic} · Shorts`,
+          title: short.title,
+          summary: short.summary,
+          image: short.image,
+          byline: short.byline ?? short.brand,
+          detail: "Vertical video",
+          nextStep: "Play short",
+          contentKind: "shorts",
+        };
+      }
+      case "shopping": {
+        const shopping = shoppingStory ?? story;
+        return {
+          brand: shopping.brand,
+          category: `${shopping.topic} · Shopping`,
+          title: shopping.title,
+          summary: shopping.summary,
+          image: shopping.image,
+          byline: shopping.byline ?? shopping.brand,
+          detail: "Editors’ picks",
+          nextStep: "Explore the edit",
+          contentKind: "shopping",
+        };
+      }
+      case "spotlight":
+        return {
+          brand: brandSpotlight?.brand ?? selectedSpotlightStory.brand,
+          category: "Brand spotlight",
+          title: selectedSpotlightStory.title,
+          summary: selectedSpotlightStory.summary,
+          image: selectedSpotlightStory.image,
+          byline: selectedSpotlightStory.byline ?? selectedSpotlightStory.brand,
+          detail: brandSpotlight?.topics.join(" · ") ?? selectedSpotlightStory.topic,
+          nextStep: "Explore this brand",
+          contentKind: "spotlight",
+        };
+      case "advertisement":
+        return {
+          brand: sponsoredSample.sponsor,
+          category: "Sponsored placement",
+          title: sponsoredSample.title,
+          summary: sponsoredSample.summary,
+          image: sponsoredSample.imageUrl,
+          byline: "Advertisement",
+          detail: "Sponsored",
+          nextStep: sponsoredSample.cta,
+          contentKind: "advertisement",
+        };
+      case "article":
+      default:
+        return {
+          brand: brandStory.brand,
+          category: brandStory.topic,
+          title: brandStory.title,
+          summary: brandStory.summary,
+          image: brandStory.image,
+          byline: brandStory.byline ?? brandStory.brand,
+          detail: brandStory.readTime,
+          nextStep: "Open story",
+          contentKind: "article",
+        };
+    }
+  })();
+
+  const hasElement = (element: MightyCardElement) => visibleElements.includes(element);
+  const toggleElement = (element: MightyCardElement) => {
+    setVisibleElements((current) => current.includes(element)
+      ? current.filter((candidate) => candidate !== element)
+      : [...current, element]);
+  };
+  const isPortrait = format === "shorts";
+  const isHorizontal = layout === "horizontal" && !isPortrait;
+  const showImage = hasElement("media") && layout !== "text-only";
+  const supportsCardAction = ["vehicle", "event", "community", "shopping", "spotlight", "advertisement"].includes(format);
+
+  return (
+    <section aria-label="Mighty Card workbench" className="overflow-hidden rounded-xl border border-border bg-background shadow-sm">
+      <div className="grid md:grid-cols-[minmax(230px,280px)_minmax(0,1fr)]">
+        <aside aria-label="Mighty Card options" className="border-b border-border bg-muted/30 p-5 md:border-r md:border-b-0">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[.14em] text-primary">Card builder</p>
+              <h4 className="mt-1 text-base font-semibold">Choose a format</h4>
+            </div>
+            <span className="font-mono text-xs text-muted-foreground">10 types</span>
+          </div>
+
+          <nav aria-label="Card formats" className="mt-4 grid grid-cols-2 gap-2 md:grid-cols-1">
+            {MIGHTY_CARD_FORMATS.map((option) => (
+              <Button
+                key={option.id}
+                type="button"
+                variant={format === option.id ? "secondary" : "ghost"}
+                size="touch"
+                aria-pressed={format === option.id}
+                onClick={() => setFormat(option.id)}
+                className={`w-full justify-start ${format === option.id ? "bg-primary text-primary-foreground hover:bg-primary/90" : ""}`}
+              >
+                {option.label}
+              </Button>
+            ))}
+          </nav>
+
+          <fieldset className="mt-6 border-t border-border pt-4">
+            <legend className="text-sm font-semibold">Card elements</legend>
+            <div className="mt-3 space-y-3">
+              {MIGHTY_CARD_ELEMENTS.map((element) => (
+                <label key={element.id} className="flex min-h-11 cursor-pointer items-center justify-between gap-3 text-sm">
+                  <span>{element.label}</span>
+                  <Switch
+                    checked={hasElement(element.id)}
+                    onCheckedChange={() => toggleElement(element.id)}
+                    disabled={element.id === "next-step" && !supportsCardAction}
+                    aria-label={`Show ${element.label.toLowerCase()}`}
+                  />
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <fieldset className="mt-6 border-t border-border pt-4">
+            <legend className="text-sm font-semibold">Media layout</legend>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {(["feature", "horizontal", "text-only"] as const).map((option) => (
+                <Button
+                  key={option}
+                  type="button"
+                  variant={layout === option ? "outline" : "ghost"}
+                  aria-pressed={layout === option}
+                  onClick={() => setLayout(option)}
+                  className={layout === option ? "border-primary text-primary" : ""}
+                >
+                  {option === "text-only" ? "Text only" : option === "feature" ? "Feature" : "Horizontal"}
+                </Button>
+              ))}
+            </div>
+            {isPortrait ? <p className="mt-2 text-xs leading-5 text-muted-foreground">Shorts keep their portrait card proportions. Text-only hides media for every format.</p> : null}
+          </fieldset>
+        </aside>
+
+        <div className="min-w-0 p-5 md:p-8">
+          <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[.14em] text-primary">Live preview</p>
+              <h4 className="mt-1 text-lg font-semibold">{MIGHTY_CARD_FORMATS.find((option) => option.id === format)?.label} card</h4>
+            </div>
+            <div className="flex w-full flex-col gap-2 sm:w-auto sm:min-w-56">
+              <label htmlFor="mighty-card-brand" className="text-xs font-semibold text-muted-foreground">Brand theme</label>
+              <Select value={selectedBrandSlug} onValueChange={(value) => { if (value) setSelectedBrandSlug(value); }}>
+                <SelectTrigger id="mighty-card-brand" className="h-10 min-h-10 w-full bg-background px-3 text-sm sm:min-w-56">
+                  <SelectValue>{selectedBrand?.name ?? "Choose a brand"}</SelectValue>
+                </SelectTrigger>
+                <SelectContent align="end" className="max-h-[min(420px,var(--available-height))] rounded-lg border border-border bg-popover p-1 shadow-xl">
+                  {brands.map((brand) => (
+                    <SelectItem key={brand.slug} value={brand.slug} className="min-h-10 px-3 pr-9 text-sm font-medium">
+                      {brand.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <p className="mb-5 text-xs text-muted-foreground">One shared card shell. The sample story and registered type and accent update with the selected brand when available.</p>
+
+          <div className={`mx-auto w-full ${isPortrait ? "max-w-[310px]" : "max-w-[680px]"}`}>
+            <Card className={`hp-shadow-card gap-0 overflow-hidden p-0 ${isHorizontal ? "sm:grid sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]" : ""}`}>
+              {showImage ? (
+                <div className={`relative overflow-hidden bg-muted ${isPortrait ? "aspect-[9/16]" : isHorizontal ? "aspect-[4/3]" : "aspect-[16/9]"}`}>
+                  <Image
+                    src={cardContent.image}
+                    alt={format === "community" && communityThread.posterAlt ? communityThread.posterAlt : cardContent.title}
+                    fill
+                    sizes={isPortrait ? "310px" : "(min-width: 768px) 45vw, 100vw"}
+                    className="object-cover"
+                  />
+                  {format === "video" || format === "shorts" ? (
+                    <span className="absolute inset-0 grid place-items-center bg-foreground/10 text-background" aria-hidden="true">
+                      <span className="grid size-12 place-items-center rounded-full bg-background/90 text-foreground shadow-sm"><Play className="size-5" weight="fill" /></span>
+                    </span>
+                  ) : null}
+                  {format === "gallery" ? <span className="absolute bottom-3 right-3 rounded-md bg-foreground/85 px-2.5 py-1.5 text-xs font-semibold text-background">Photo gallery</span> : null}
+                  {format === "advertisement" ? <span className="absolute left-3 top-3 rounded-sm bg-background/90 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-foreground">Advertisement</span> : null}
+                </div>
+              ) : null}
+
+              <div className="min-w-0 p-5 sm:p-6">
+                {hasElement("identity") ? (
+                  <p className="text-xs font-bold uppercase tracking-[.12em]" style={{ color: selectedBrand?.colors["1"] }}>
+                    {cardContent.brand}<span className="px-2 text-muted-foreground">·</span><span className="text-muted-foreground">{cardContent.category}</span>
+                  </p>
+                ) : null}
+                {format === "vehicle" && vehicleRating ? (
+                  <div className="mt-4 flex items-center justify-between gap-3 border-y border-border py-3 text-sm">
+                    <span className="text-muted-foreground">Car and Driver rating</span>
+                    <span className="font-bold">{vehicleRating}</span>
+                  </div>
+                ) : null}
+                <h5 className={`mt-3 font-bold leading-tight text-balance text-foreground ${isPortrait ? "text-xl" : "text-2xl"}`} style={{ fontFamily: selectedBrand ? `"${selectedBrand.fontHeadline}", Inter, sans-serif` : undefined }}>
+                  {cardContent.title}
+                </h5>
+                {hasElement("summary") ? <p className="mt-3 text-sm leading-6 text-muted-foreground" style={{ fontFamily: selectedBrand ? `"${selectedBrand.fontDefault}", Inter, sans-serif` : undefined }}>{cardContent.summary}</p> : null}
+                {hasElement("byline") ? (
+                  <div className="mt-5 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-4 text-xs text-muted-foreground">
+                    <span>{cardContent.byline}</span>
+                    <span>{cardContent.detail}</span>
+                  </div>
+                ) : null}
+                {hasElement("next-step") && supportsCardAction ? (
+                  <div className="mt-4 border-t border-border pt-4">
+                    <span className="text-sm font-semibold text-primary">{cardContent.nextStep}<span aria-hidden="true"> →</span></span>
+                  </div>
+                ) : null}
+              </div>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -291,9 +667,12 @@ export function HearstPlusBriefSamples({
   brandSpotlight,
   videoStory,
   communityThread,
+  vehicleStory,
   videoSourceCopy,
   riverDemoStories,
   eventSample,
+  brands,
+  brandStorySamples,
 }: {
   articleStory: LifestyleRiverStory;
   galleryStory?: LifestyleRiverStory;
@@ -302,11 +681,15 @@ export function HearstPlusBriefSamples({
   brandSpotlight: BrandPromotionMatch | null;
   videoStory?: LifestyleRiverStory;
   communityThread: CommunityFeedThread;
+  vehicleStory?: LifestyleRiverStory;
   videoSourceCopy: string;
   riverDemoStories: LifestyleRiverStory[];
   eventSample?: HearstEventRecord;
+  brands: BrandTheme[];
+  brandStorySamples: LifestyleRiverStory[];
 }) {
   const router = useRouter();
+  const [showMightyCard, setShowMightyCard] = useState(false);
   const sponsoredSample: ContextualAdUnit = {
     id: "brief-sponsored-sample",
     sponsor: "Hearst Market",
@@ -329,12 +712,42 @@ export function HearstPlusBriefSamples({
     <section aria-labelledby="river-demo-heading" className="my-16 border-y border-border py-16">
       <PersonalizationRiverDemo stories={riverDemoStories} />
       <div className="grid gap-14 pt-16">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[.14em] text-primary">The card models behind the river</p>
-          <h3 className="mt-3 max-w-3xl font-[var(--hp-font-headline)] font-bold text-balance text-xl leading-tight md:text-5xl">Each format needs its own preview.</h3>
-          <p className="mt-4 max-w-3xl text-base leading-6 text-muted-foreground">The river can show articles, video, galleries, community, and events. Each card previews what it is and gives readers a clear next step.</p>
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[.14em] text-primary">The card models behind the river</p>
+            <h3 className="mt-3 max-w-3xl font-[var(--hp-font-headline)] font-bold text-balance text-xl leading-tight md:text-5xl">Each format needs its own preview.</h3>
+            <p className="mt-4 max-w-3xl text-base leading-6 text-muted-foreground">The river can show articles, video, galleries, community, and events. Each card previews what it is and gives readers a clear next step.</p>
+          </div>
+          <Button
+            type="button"
+            size="touch"
+            variant={showMightyCard ? "secondary" : "default"}
+            aria-expanded={showMightyCard}
+            aria-controls={showMightyCard ? "mighty-card-workbench" : undefined}
+            onClick={() => setShowMightyCard((current) => !current)}
+          >
+            Mighty Card
+          </Button>
         </div>
-        <div className="grid items-start gap-16">
+        {showMightyCard ? (
+          <div id="mighty-card-workbench">
+            <MightyCardWorkbench
+              articleStory={articleStory}
+              galleryStory={galleryStory}
+              shoppingStory={shoppingStory}
+              shortsStories={shortsStories}
+              brandSpotlight={brandSpotlight}
+              videoStory={videoStory}
+              communityThread={communityThread}
+              vehicleStory={vehicleStory}
+              eventSample={eventSample}
+              sponsoredSample={sponsoredSample}
+              brands={brands}
+              brandStorySamples={brandStorySamples}
+            />
+          </div>
+        ) : (
+          <div className="grid items-start gap-16">
           <SampleFigure
             label="Article card · real feed story"
               headline="See the source and headline before opening a story."
@@ -442,7 +855,8 @@ export function HearstPlusBriefSamples({
           >
             <ContextualRiverAdvertisement ad={sponsoredSample} />
           </SampleFigure>
-        </div>
+          </div>
+        )}
       </div>
     </section>
   );

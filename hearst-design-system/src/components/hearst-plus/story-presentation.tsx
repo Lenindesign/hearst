@@ -8,7 +8,6 @@ import { cn } from "@/lib/utils";
 import { usePrefersReducedMotion } from "./use-prefers-reduced-motion";
 import {
   getLifestyleImagePosition,
-  isYearMakeModelStory,
   type LifestyleCardKind,
 } from "./story-presentation-model";
 
@@ -80,28 +79,6 @@ export function LifestyleCardModule({
   if (kind === "gallery" || kind === "video") return null;
 
   if (kind === "recipe") {
-    if (isYearMakeModelStory(story)) {
-      return (
-        <div className="mt-4 grid grid-cols-3 gap-2 border-t border-border pt-3 text-center text-xs">
-          <div className="rounded-[8px] border border-border bg-background px-2 py-2 text-foreground">
-            <p className="font-bold">{3 + (story.age % 5)} sec</p>
-            <p className="text-foreground">0-60</p>
-          </div>
-          <div className="rounded-[8px] border border-border bg-background px-2 py-2 text-foreground">
-            <p className="font-bold">{240 + ((story.age * 17) % 360)} hp</p>
-            <p className="text-foreground">Estimate</p>
-          </div>
-          <div className="rounded-[8px] border border-border bg-background px-2 py-2 text-foreground">
-            <p className="flex items-center justify-center gap-1 font-bold">
-              <Star className="h-3.5 w-3.5" aria-hidden />
-              Tested
-            </p>
-            <p className="text-foreground">Signal</p>
-          </div>
-        </div>
-      );
-    }
-
     return (
       <div className="mt-4 grid grid-cols-3 gap-2 border-t border-border pt-3 text-center text-xs">
         <div className="rounded-[8px] border border-border bg-background px-2 py-2 text-foreground">
