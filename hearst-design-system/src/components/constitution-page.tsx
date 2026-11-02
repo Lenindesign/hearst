@@ -59,7 +59,7 @@ const CONSTITUTION_ARTICLES: ArticleSpec[] = [
     mandates: [
       "Use single-pixel slate grid rules (grid gap-px bg-slate-200 with bg-white p-6 cards).",
       "Use deep Hearst Navy (#102A43) for primary headers and Hearst Blue (#2D75B9) for eyebrows and kickers.",
-      "Major editorial sections must begin with a top 2px solid navy rule (border-t-2 border-[#102A43] pt-6).",
+      "Major editorial sections use a 1px top rule with the active brand color (border-t border-primary).",
       "Headlines must use Newsreader serif typography with tight tracking (-0.02em) and optical line clamping.",
     ],
     prohibitions: [

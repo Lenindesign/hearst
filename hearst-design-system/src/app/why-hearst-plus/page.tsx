@@ -317,7 +317,7 @@ export default function WhyHearstPlusPage() {
                   This is a product hypothesis, not a measured outcome. The prototype lets reviewers inspect the river, open a source story, and change browser-local interests or saved items. It does not establish daily return behavior.
                 </p>
               </div>
-              <ol className="border-t-2 border-primary">
+              <ol className="border-t border-primary">
                 {habitSteps.map((step, index) => (
                   <li
                     key={step.title}
@@ -442,7 +442,7 @@ export default function WhyHearstPlusPage() {
                   These are candidate measures for a future instrumented release. The prototype does not collect production analytics or establish outcomes against them.
                 </p>
               </div>
-              <div className="border-t-2 border-primary">
+              <div className="border-t border-primary">
                 {stakeholderValue.map((item) => (
                   <article
                     key={item.audience}

@@ -186,7 +186,7 @@ export default async function HearstPlusBriefPage() {
                   Habit research examines how repeated actions in consistent contexts can become more automatic. Reward-learning research explores how expectations and outcomes shape future behavior. Together, these studies offer a useful framework for designing a return experience around freshness, discovery, and relevance. <a className="font-semibold text-foreground underline underline-offset-4" href="https://onlinelibrary.wiley.com/doi/10.1002/ejsp.674" target="_blank" rel="noreferrer">Lally et al. on habit formation</a> · <a className="font-semibold text-foreground underline underline-offset-4" href="https://www.nature.com/articles/s41593-024-01705-4" target="_blank" rel="noreferrer">Gershman et al. on dopamine and reward prediction</a>
                 </p>
 
-                <div className="mt-12 grid gap-4 border-t-2 border-primary pt-7 md:grid-cols-[minmax(220px,.65fr)_minmax(0,1.35fr)] md:gap-12">
+                <div className="mt-12 grid gap-4 border-t border-primary pt-7 md:grid-cols-[minmax(220px,.65fr)_minmax(0,1.35fr)] md:gap-12">
                   <p className="text-sm font-bold uppercase tracking-[.16em] text-primary">The product question</p>
                   <p className="max-w-4xl font-[var(--hp-font-headline)] text-3xl font-bold leading-tight tracking-[-.02em] text-balance md:text-[40px]">Did readers find useful stories, and will they return for more?</p>
                 </div>
@@ -211,7 +211,7 @@ export default async function HearstPlusBriefPage() {
               </div>
             </section>
 
-            <div className="mt-14 grid gap-5 border-t-2 border-primary pt-8 md:grid-cols-[minmax(220px,.65fr)_minmax(0,1.35fr)] md:gap-12">
+            <div className="mt-14 grid gap-5 border-t border-primary pt-8 md:grid-cols-[minmax(220px,.65fr)_minmax(0,1.35fr)] md:gap-12">
               <h3 className="font-[var(--hp-font-headline)] text-2xl font-bold leading-tight md:text-[32px]">Why this pattern fits Hearst+</h3>
               <div>
                 <p className="text-base leading-7 text-muted-foreground">A Hearst+ river can pair timely stories across the magazine portfolio with signals from reader choices, while keeping each source visible. A pilot can measure whether that combination earns useful repeat visits and supports participating titles.</p>

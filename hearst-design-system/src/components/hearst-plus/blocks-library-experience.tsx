@@ -113,7 +113,7 @@ function CardLibrary({
   }
 
   return (
-    <section className="mt-16 border-t-2 border-primary pt-8 sm:mt-20 sm:pt-10" aria-labelledby="card-library-heading">
+    <section className="mt-16 border-t border-primary pt-8 sm:mt-20 sm:pt-10" aria-labelledby="card-library-heading">
       <header className="max-w-3xl">
         <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Reusable content components</p>
         <h2 id="card-library-heading" className="headline mt-3 text-3xl font-bold leading-tight sm:text-4xl">Card Library</h2>
@@ -198,7 +198,7 @@ function SidebarWidgetLibrary({ stories, eventSample }: { stories: LifestyleRive
     sample = <AdSample />;
   }
 
-  return <section className="mt-16 border-t-2 border-primary pt-8 sm:mt-20 sm:pt-10" aria-labelledby="sidebar-widget-library-heading">
+  return <section className="mt-16 border-t border-primary pt-8 sm:mt-20 sm:pt-10" aria-labelledby="sidebar-widget-library-heading">
     <header className="max-w-3xl"><p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Reusable sidebar modules</p><h2 id="sidebar-widget-library-heading" className="headline mt-3 text-3xl font-bold leading-tight sm:text-4xl">Sidebar Widget Library</h2><p className="mt-3 text-base leading-7 text-muted-foreground">Browse modules that can be placed in sidebar columns. Select a widget to inspect its UI and the information it presents.</p></header>
     <div className="mt-7 grid min-w-0 gap-7 border-t border-border pt-6 lg:grid-cols-[270px_minmax(0,1fr)] lg:gap-10">
       <aside className="min-w-0 lg:sticky lg:top-6 lg:max-h-[calc(100dvh-3rem)] lg:self-start lg:overflow-y-auto lg:pr-2" aria-label="Sidebar widget index">

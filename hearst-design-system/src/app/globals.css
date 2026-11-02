@@ -6,6 +6,19 @@
 @import "@fullcalendar/react/themes/classic/theme.css";
 @import "@fullcalendar/react/themes/classic/palette.css";
 
+/* Use for short UI labels with no descender glyphs when cap-height alignment
+   matters (for example uppercase button labels and compact navigation pills). */
+.hds-cap-aligned-label {
+  display: inline-block;
+}
+
+@supports (text-box-trim: trim-both) and (text-box-edge: cap alphabetic) {
+  .hds-cap-aligned-label {
+    text-box-trim: trim-both;
+    text-box-edge: cap alphabetic;
+  }
+}
+
 .hearst-plus-theme {
   --background: #ECE9E3;
   --foreground: var(--palette-content-default, #121212);

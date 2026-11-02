@@ -511,7 +511,7 @@ export function LayoutCurator(props: HomepageLayoutProps = {}) {
 
       {/* Thematic Row 1 */}
       <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-6 pt-12 lg:pt-16">
-        <div className="border-t-2 border-primary pt-6">
+        <div className="border-t border-primary pt-6">
           <h2 className="text-2xl headline mb-6">
             {content.collectionTitle}
           </h2>
@@ -574,7 +574,7 @@ export function LayoutCurator(props: HomepageLayoutProps = {}) {
 
       {p.showBigStoryFeed && (
         <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-6 pb-12">
-          <div className="border-t-2 border-primary pt-6">
+          <div className="border-t border-primary pt-6">
             <h2 className="text-2xl headline mb-6">More Stories</h2>
             <BigStoryFeedStacked
               items={bigStoryItems}
@@ -1412,7 +1412,7 @@ export function LayoutEditorial(props: HomepageLayoutProps = {}) {
 
       {/* Thematic Row */}
       <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-6 pt-12 lg:pt-16">
-        <div className="border-t-2 border-primary pt-6">
+        <div className="border-t border-primary pt-6">
           <h2 className="text-2xl headline mb-6">{content.collectionTitle}</h2>
           <FourAcrossGrid items={thematicItems} columns={4} aspectRatio="3/2" />
         </div>
@@ -1438,7 +1438,7 @@ export function LayoutEditorial(props: HomepageLayoutProps = {}) {
 
       {p.showBigStoryFeed && (
         <div className="max-w-[var(--width-content-max)] mx-auto px-4 lg:px-6 pb-12">
-          <div className="border-t-2 border-primary pt-6">
+          <div className="border-t border-primary pt-6">
             <h2 className="text-2xl headline mb-6">More Stories</h2>
             <BigStoryFeedStacked
               items={bigStoryItems}

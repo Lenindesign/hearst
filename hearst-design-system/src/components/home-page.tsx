@@ -1621,7 +1621,11 @@ export function MainNav({
     {mastheadBanner ? (
     // A brand banner replaces the logo row; the controls sit over its left and right ends.
     <div
-      className={cn("relative border-b border-border bg-black", underUtilityBar && "-mt-8 pt-8")}
+      className={cn(
+        "relative bg-black",
+        darkMode ? "border-b-0" : "border-b border-border",
+        underUtilityBar && "-mt-8 pt-8"
+      )}
       style={underUtilityBar ? { background: mastheadBanner.background } : undefined}
     >
         {/* Full-bleed art, trimmed of any baked-in side bars so it always reaches both edges. */}
@@ -2157,33 +2161,7 @@ function EditorialHomepageSection({
           {selectionLabel}
         </span>
       </div>
-      {section.stories.length && riverWithHero ? (
-        <div className="space-y-3">
-          <LifestyleRiverCard
-            story={section.stories[0]}
-            onOpen={() => onOpen(section.stories[0])}
-            saved={savedIds.includes(section.stories[0].id)}
-            onSave={() => onSave(section.stories[0])}
-            layoutOverride="cards"
-            hideGalleryCount
-            compactGallery
-          />
-          {section.stories.length > 1 ? (
-            <div className="space-y-3">
-              {section.stories.slice(1, 4).map((story) => (
-                <LifestyleRiverCard
-                  key={`${section.title}-${story.id}`}
-                  story={story}
-                  onOpen={() => onOpen(story)}
-                  saved={savedIds.includes(story.id)}
-                  onSave={() => onSave(story)}
-                  layoutOverride="list"
-                />
-              ))}
-            </div>
-          ) : null}
-        </div>
-      ) : section.stories.length && featureFirstGrid ? (
+      {section.stories.length && featureFirstGrid ? (
         <div className="space-y-4">
           <LifestyleRiverCard
             story={section.stories[0]}
@@ -2197,6 +2175,31 @@ function EditorialHomepageSection({
           {section.stories.length > 1 ? <div className="grid min-w-0 grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
             {section.stories.slice(1, 5).map((story) => <LifestyleRiverCard key={`${section.title}-${story.id}`} story={story} onOpen={() => onOpen(story)} saved={savedIds.includes(story.id)} onSave={() => onSave(story)} layoutOverride="cards" hideGalleryCount compactGallery />)}
           </div> : null}
+        </div>
+      ) : section.stories.length && riverWithHero ? (
+        <div className="space-y-3">
+          <LifestyleRiverCard
+            story={section.stories[0]}
+            onOpen={() => onOpen(section.stories[0])}
+            saved={savedIds.includes(section.stories[0].id)}
+            onSave={() => onSave(section.stories[0])}
+            layoutOverride="cards"
+          />
+          {section.stories.length > 1 ? (
+            <div className="space-y-3">
+              {section.stories.slice(1).map((story) => (
+                <LifestyleRiverCard
+                  key={`${section.title}-${story.id}`}
+                  story={story}
+                  onOpen={() => onOpen(story)}
+                  saved={savedIds.includes(story.id)}
+                  onSave={() => onSave(story)}
+                  layoutOverride="list"
+                  editorialRow
+                />
+              ))}
+            </div>
+          ) : null}
         </div>
       ) : section.stories.length && featureSidebar ? (
         <div className="grid min-w-0 items-stretch gap-5 lg:grid-cols-[minmax(0,1.8fr)_minmax(0,1fr)] lg:grid-rows-[minmax(0,1fr)]">
@@ -2424,7 +2427,28 @@ function getContextualAdForSlot({
   excludeAdIds?: string[];
 }) {
   const surroundingStories = stories.slice(Math.max(0, slotIndex - 2), Math.min(stories.length, slotIndex + 3));
-  const rankedAds = contextualAdsByDestination[destination]
+  const categoryAdDestination: Partial<Record<string, Exclude<DestinationMode, "all">>> = {
+    Cars: "autos",
+    Reviews: "autos",
+    "Research Cars": "autos",
+    EVs: "autos",
+    Racing: "autos",
+    Trucks: "autos",
+    Classics: "autos",
+    Style: "flux",
+    Beauty: "flux",
+    "Style & Beauty": "flux",
+    Food: "lifestyle",
+    "Food & Recipes": "lifestyle",
+    Home: "lifestyle",
+    "House & Garden": "lifestyle",
+    Fitness: "ew",
+    Wellness: "ew",
+    Gear: "ew",
+    Adventure: "ew",
+  };
+  const adDestination = destination === "all" ? categoryAdDestination[activeFilter] ?? destination : destination;
+  const rankedAds = contextualAdsByDestination[adDestination]
     .filter((ad) => !excludeAdIds.includes(ad.id))
     .map((ad) => ({
       ad,
@@ -5599,7 +5623,26 @@ function LifestyleRiverHomePage({
       ],
     } satisfies Record<typeof destination, { title: string; terms: string[] }[]>;
     const definitions = definitionsByDestination[destination];
+    const allowedStoryDestinations: Record<string, readonly typeof destination[]> = {
+      "Style & Beauty": ["lifestyle", "flux"],
+      "Food & Home": ["lifestyle"],
+      "Cars & Reviews": ["autos"],
+      "Fitness & Wellness": ["lifestyle", "ew"],
+      "Culture & Entertainment": ["lifestyle", "flux", "ew"],
+    };
     const categoryForStory = (story: LifestyleRiverStory) => {
+      if (destination === "all") {
+        const allowed = allowedStoryDestinations;
+        const storyDestination = getStoryDestinationMode(story.brandSlug);
+        // Broad words such as "style", "design", and "home" occur in
+        // automotive headlines. Keep those stories inside their own vertical.
+        for (const definition of definitions) {
+          if (!allowed[definition.title]?.includes(storyDestination)) continue;
+          const text = [story.topic, story.title, story.summary, ...story.tags].join(" ").toLowerCase();
+          if (definition.terms.some((term) => text.includes(term))) return definition.title;
+        }
+        return "More from Hearst";
+      }
       const text = [story.topic, story.title, story.summary, ...story.tags].join(" ").toLowerCase();
       return definitions.find(({ terms }) => terms.some((term) => text.includes(term)))?.title
         ?? "More from Hearst";
@@ -5609,32 +5652,97 @@ function LifestyleRiverHomePage({
       ...sectionsHomepageLatest.map((story) => story.id),
       ...sectionsHomepageMostPopular.map((story) => story.id),
     ]);
-    const contextualBlockStories = initialBrandSlug
-      ? destinationConfigs.all.stories.filter((story) => story.brandSlug === initialBrandSlug)
-      : destinationConfigs[destination].stories;
     const sections = definitions.map(({ title }) => {
       const sectionLimit = 5;
       const categorizedMatches = displayStories.filter((story) => !used.has(story.id) && categoryForStory(story) === title);
-      const fallbackMatches = contextualBlockStories.filter((story) => !used.has(story.id) && categoryForStory(story) !== title);
-      const matches = [...categorizedMatches, ...fallbackMatches].slice(0, sectionLimit);
+      const matches = categorizedMatches.slice(0, sectionLimit);
       matches.forEach((story) => used.add(story.id));
       return { title, stories: matches };
     }).filter((section) => section.stories.length > 0);
     const remaining = displayStories.filter((story) => !used.has(story.id));
-    if (remaining.length) sections.push({ title: `More from ${initialBrandName ?? "Hearst"}`, stories: remaining.slice(0, 3) });
+    const remainingContext = initialBrandName
+      ?? (destination === "autos" || activeFilter === "Cars" ? "Automotive"
+        : activeFilter === "Style" || activeFilter === "Beauty" ? "Style & Beauty"
+          : activeFilter === "Food" || activeFilter === "Home" ? "Food & Home"
+            : destination === "all" ? "Hearst" : destinationPageNames[destination]);
+    if (remaining.length) sections.push({ title: `More from ${remainingContext}`, stories: remaining.slice(0, 3) });
     return sections;
-  }, [destination, destinationConfigs, displayStories, heroStories, initialBrandName, initialBrandSlug, sectionsHomepageLatest, sectionsHomepageMostPopular]);
+  }, [activeFilter, destination, destinationConfigs, displayStories, heroStories, initialBrandName, initialBrandSlug, sectionsHomepageLatest, sectionsHomepageMostPopular]);
   const sectionsHomepageVideos = videoTabStories
     .filter((story) => !initialBrandSlug || story.brandSlug === initialBrandSlug)
     .slice(0, 3);
   const blocksVideoStories = initialBrandSlug
     ? videoTabStories.filter((story) => story.brandSlug === initialBrandSlug)
     : videoTabStories;
+  const contextualModuleBrandSlugs = React.useMemo(() => {
+    if (initialBrandSlug) return new Set([initialBrandSlug]);
+
+    // The combined Hearst+ destination uses the active category as editorial
+    // context for modules below the river, just as section and brand routes do.
+    const categorySection: Partial<Record<string, typeof destination>> = {
+      Cars: "autos",
+      Reviews: "autos",
+      "Research Cars": "autos",
+      EVs: "autos",
+      Racing: "autos",
+      Trucks: "autos",
+      Classics: "autos",
+      Style: "flux",
+      Beauty: "flux",
+      "Style & Beauty": "flux",
+      Food: "lifestyle",
+      "Food & Recipes": "lifestyle",
+      Home: "lifestyle",
+      "House & Garden": "lifestyle",
+      Fitness: "ew",
+      Wellness: "ew",
+      Gear: "ew",
+      Adventure: "ew",
+    };
+    const scopedDestination = destination === "all" ? categorySection[activeFilter] : destination;
+    if (!scopedDestination) return undefined;
+    return new Set(getHearstAllBrands()
+      .filter((brand) => getStoryDestinationMode(brand.brandSlug) === scopedDestination)
+      .map((brand) => brand.brandSlug));
+  }, [activeFilter, destination, initialBrandSlug]);
+  const contextualModuleHeading = initialBrandName
+    ?? (destination === "autos" || ["Cars", "Reviews", "Research Cars", "EVs", "Racing", "Trucks", "Classics"].includes(activeFilter)
+      ? "Automotive"
+      : destination === "flux" || ["Style", "Beauty", "Style & Beauty"].includes(activeFilter)
+        ? "Style & Beauty"
+        : destination === "lifestyle" || ["Food", "Food & Recipes", "Home", "House & Garden"].includes(activeFilter)
+          ? "Food & Home"
+          : destination === "ew" || ["Fitness", "Wellness", "Gear", "Adventure"].includes(activeFilter)
+            ? "Fitness & Wellness"
+            : undefined);
   const sectionsHomepageEvents = React.useMemo(() => {
-    const contextualEvents = hearstEvents.filter((event) => !initialBrandSlug || event.brandSlugs.includes(initialBrandSlug));
+    const contextualEvents = hearstEvents.filter((event) =>
+      !contextualModuleBrandSlugs || event.brandSlugs.some((brandSlug) => contextualModuleBrandSlugs.has(brandSlug)),
+    );
     const upcoming = contextualEvents.filter((event) => event.status === "upcoming" || event.status === "live");
     return (upcoming.length ? upcoming : contextualEvents).slice(0, isBlocksHomepage ? 4 : 3);
-  }, [initialBrandSlug, isBlocksHomepage]);
+  }, [isBlocksHomepage, contextualModuleBrandSlugs]);
+  const renderEditorialBlock = (
+    section: (typeof editorialHomepageSections)[number],
+    key: string,
+    layout: "cardRow" | "featureSidebar" | "featuredRow" = "featureSidebar",
+  ) => (
+    <section key={key} className="border-t border-primary pt-5" aria-label={`${section.title} stories`}>
+      <div className="mx-auto min-w-0 max-w-7xl">
+        <EditorialHomepageSection
+          section={section}
+          selectionLabel={initialBrandName ? `${initialBrandName} Selection` : "Hearst+ Selection"}
+          onOpen={(story) => openStory(story.id)}
+          savedIds={profile.savedIds}
+          onSave={toggleSaved}
+          cardGrid={layout === "cardRow"}
+          featureSidebar={layout === "featureSidebar"}
+          featureFirstGrid={layout === "featuredRow"}
+          largeHeading={initialBrandSlug === "elle" ? "elle" : initialBrandSlug === "cosmopolitan" || enlargeBlocksSectionHeadings}
+        />
+      </div>
+    </section>
+  );
   React.useEffect(() => {
     if (demoState.isSimulated || initialOpenStoryId) return;
     trackProductEventOnce(`return-session:${visitScopeKey}`, "return_session", {
@@ -5982,6 +6090,9 @@ function LifestyleRiverHomePage({
   }, [onBrandFilterChange]);
 
   React.useEffect(() => {
+    // Blocks are finite editorial index pages; their trailing sentinel must not
+    // demand another story batch when it enters the viewport.
+    if (isBlocksHomepage) return;
     const node = sentinelNode;
     if (!node) return;
 
@@ -6020,6 +6131,7 @@ function LifestyleRiverHomePage({
   }, [
     displayOrderScopeKey,
     displayStories.length,
+    isBlocksHomepage,
     feedTotal,
     feedHasMore,
     feedLoading,
@@ -6796,13 +6908,13 @@ function LifestyleRiverHomePage({
 
               {isBlocksHomepage ? (
                 <div className={cn("space-y-10", initialBrandSlug === "elle" && "[&>section:not(:first-child)]:!pt-[4.5rem]")} aria-label="Hearst+ blocks layout">
-                  <section aria-label="Trending, Today’s Picks, Style & Beauty, and advertising">
-                    <div className="grid min-w-0 items-start gap-5 lg:grid-cols-[minmax(220px,.82fr)_minmax(0,2fr)_minmax(220px,.82fr)]">
+                  <section aria-label={`Trending, Today’s Picks, ${contextualModuleHeading ?? "editorial selections"}, and advertising`}>
+                    <div className="grid min-w-0 items-start gap-5 lg:grid-cols-[300px_minmax(0,1fr)_300px]">
                       <div className="min-w-0 space-y-5 lg:sticky lg:top-24 lg:self-start">
                         <TrendingStoryRail
                           stories={moduleAllocation.trendingStories.filter((story) => !initialBrandSlug || story.brandSlug === initialBrandSlug).slice(0, 5)}
                           onOpenStory={(story) => openStory(story.id)}
-                          title={initialBrandName ? `Trending ${initialBrandName}` : "Trending Across Brands"}
+                          title={initialBrandName ? `Trending ${initialBrandName}` : contextualModuleHeading ? `Trending in ${contextualModuleHeading}` : "Trending Across Brands"}
                         />
                         {profile.savedIds.some((id) => savedStoryInventory.some((story) => story.id === id)) ? (
                           <TrendingStoryRail
@@ -6868,6 +6980,7 @@ function LifestyleRiverHomePage({
                             onOpen={(story) => openStory(story.id)}
                             savedIds={profile.savedIds}
                             onSave={toggleSaved}
+                            riverWithHero
                             largeHeading={initialBrandSlug === "elle" ? "elle" : initialBrandSlug === "cosmopolitan" || enlargeBlocksSectionHeadings}
                           />
                         ) : null}
@@ -6882,7 +6995,7 @@ function LifestyleRiverHomePage({
                   {initialBrandSlug === "elle" && (() => {
                     const horoscopeUrl = "https://www.elle.com/horoscopes/daily/";
                     return (
-                      <section className="space-y-4 border-t-2 border-primary pt-5" aria-labelledby="blocks-horoscopes-heading">
+                      <section className="space-y-4 border-t border-primary pt-5" aria-labelledby="blocks-horoscopes-heading">
                         <div className="flex items-end justify-between gap-4">
                           <h2 id="blocks-horoscopes-heading" className={blocksSectionHeadingClass(initialBrandSlug)}>Horoscopes</h2>
                           <Link href={horoscopeUrl} className="pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Read your horoscope</Link>
@@ -6905,10 +7018,10 @@ function LifestyleRiverHomePage({
                     );
                   })()}
 
-                  {(editorialHomepageSections.find((section) => section.title === "Food & Home")?.stories.length ?? 0) > 0 ? <section className="border-t-2 border-primary pt-5" aria-label="Food & Home and Local News">
-                    <div className="grid min-w-0 items-start gap-5 lg:grid-cols-[minmax(220px,.82fr)_minmax(0,2fr)_minmax(220px,.82fr)]">
+                  {(editorialHomepageSections.find((section) => section.title === "Food & Home")?.stories.length ?? 0) > 0 ? <section className="border-t border-primary pt-5" aria-label="Food & Home and Local News">
+                    <div className="grid min-w-0 items-start gap-5 lg:grid-cols-[300px_minmax(0,1fr)_300px]">
                       <div className="h-fit lg:sticky lg:top-24 lg:self-start">
-                        <DiscoverySidebarCard title="Explore Events" summary={initialBrandName ? `Upcoming experiences for ${initialBrandName}` : "Upcoming experiences across Hearst brands"}>
+                        <DiscoverySidebarCard title="Explore Events" summary={contextualModuleHeading ? `Upcoming ${contextualModuleHeading.toLowerCase()} experiences` : "Upcoming experiences across Hearst brands"}>
                           <div className="-mb-3 divide-y divide-border/70">
                             {sectionsHomepageEvents.slice(0, 3).map((event, index) => (
                               <Link key={event.slug} href={`/hearst-plus/events/${event.slug}/`} className="group grid min-h-16 grid-cols-[48px_minmax(0,1fr)] items-start gap-3 py-3">
@@ -6927,6 +7040,7 @@ function LifestyleRiverHomePage({
                           onOpen={(story) => openStory(story.id)}
                           savedIds={profile.savedIds}
                           onSave={toggleSaved}
+                          riverWithHero
                           largeHeading={enlargeBlocksSectionHeadings}
                         />
                       ) : <div />}
@@ -6937,20 +7051,10 @@ function LifestyleRiverHomePage({
                   </section> : null}
 
                   {editorialHomepageSections.find((section) => section.title === "Cars & Reviews")?.stories.length ? (
-                    <section className="border-t-2 border-primary pt-5" aria-label="Cars & Reviews">
-                      <EditorialHomepageSection
-                        section={editorialHomepageSections.find((section) => section.title === "Cars & Reviews")!}
-                        selectionLabel={initialBrandName ? `${initialBrandName} Selection` : "Hearst+ Selection"}
-                        onOpen={(story) => openStory(story.id)}
-                        savedIds={profile.savedIds}
-                        onSave={toggleSaved}
-                        cardGrid
-                        largeHeading={enlargeBlocksSectionHeadings}
-                      />
-                    </section>
+                    renderEditorialBlock(editorialHomepageSections.find((section) => section.title === "Cars & Reviews")!, "blocks-cars-reviews", "cardRow")
                   ) : null}
 
-                  <section className="space-y-4 border-t-2 border-primary pt-5" aria-labelledby="blocks-videos-heading">
+                  {blocksVideoStories.length ? <section className="space-y-4 border-t border-primary pt-5" aria-labelledby="blocks-videos-heading">
                     <div className="flex items-end justify-between gap-4 border-b border-border pb-3">
                       <div>
                         <h2 id="blocks-videos-heading" className={blocksSectionHeadingClass(initialBrandSlug)}>Videos</h2>
@@ -6965,41 +7069,17 @@ function LifestyleRiverHomePage({
                           {blocksVideoStories.slice(1, 5).map((story) => <VideoIndexCard key={`blocks-video-${story.id}`} story={story} onOpen={() => openStory(story.id)} variant="hearstPlus" compact />)}
                         </div>
                       </div>
-                    ) : <p className="rounded-[8px] bg-[var(--hp-surface-low)] px-4 py-6 text-sm text-muted-foreground" role="status">No playable videos are available right now.</p>}
-                  </section>
+                    ) : null}
+                  </section> : null}
 
                   {editorialHomepageSections.find((section) => section.title === "Fitness & Wellness") ? (
-                    <section className="border-t-2 border-primary pt-5" aria-label="Fitness & Wellness">
-                      <div className="mx-auto max-w-7xl">
-                        <EditorialHomepageSection
-                          section={editorialHomepageSections.find((section) => section.title === "Fitness & Wellness")!}
-                          selectionLabel={initialBrandName ? `${initialBrandName} Selection` : "Hearst+ Selection"}
-                          onOpen={(story) => openStory(story.id)}
-                          savedIds={profile.savedIds}
-                          onSave={toggleSaved}
-                          featureSidebar
-                          largeHeading={enlargeBlocksSectionHeadings}
-                        />
-                      </div>
-                    </section>
+                    renderEditorialBlock(editorialHomepageSections.find((section) => section.title === "Fitness & Wellness")!, "blocks-fitness-wellness", "featureSidebar")
                   ) : null}
                   {destination === "lifestyle" && !initialBrandSlug ? editorialHomepageSections
                     .filter((section) => section.title === "Food & Recipes" || section.title === "Home & Garden" || section.title === "Family & Relationships" || section.title === "Wellness")
                     .filter((section) => section.stories.length > 0)
                     .map((section) => (
-                      <section key={`blocks-${section.title}`} className="border-t-2 border-primary pt-5" aria-label={section.title}>
-                        <div className="mx-auto max-w-7xl">
-                          <EditorialHomepageSection
-                            section={section}
-                            selectionLabel={initialBrandName ? `${initialBrandName} Selection` : "Hearst+ Selection"}
-                            onOpen={(story) => openStory(story.id)}
-                            savedIds={profile.savedIds}
-                            onSave={toggleSaved}
-                            featureFirstGrid
-                            largeHeading={initialBrandSlug === "elle" ? "elle" : initialBrandSlug === "cosmopolitan" || enlargeBlocksSectionHeadings}
-                          />
-                        </div>
-                      </section>
+                      renderEditorialBlock(section, `blocks-${section.title}`)
                     )) : null}
                   {destination !== "all" ? editorialHomepageSections
                     .filter((section) => section.stories.length > 0)
@@ -7017,24 +7097,20 @@ function LifestyleRiverHomePage({
                     })
                     .slice(0, 3)
                     .map((section) => (
-                      <section key={`front-nav-block-${section.title}`} className="border-t-2 border-primary pt-5" aria-label={`${section.title} stories`}>
-                        <div className="mx-auto max-w-7xl">
-                          <EditorialHomepageSection
-                            section={section}
-                            selectionLabel={initialBrandName ? `${initialBrandName} Selection` : "Hearst+ Selection"}
-                            onOpen={(story) => openStory(story.id)}
-                            savedIds={profile.savedIds}
-                            onSave={toggleSaved}
-                            featureFirstGrid
-                            largeHeading={initialBrandSlug === "elle" ? "elle" : initialBrandSlug === "cosmopolitan" || enlargeBlocksSectionHeadings}
-                          />
-                        </div>
-                      </section>
+                      renderEditorialBlock(
+                        section,
+                        `front-nav-block-${section.title}`,
+                        destination === "autos" && section.title === "Reviews & Comparisons"
+                          ? "cardRow"
+                          : destination === "autos" && section.title === "EVs & Technology"
+                            ? "featuredRow"
+                            : "featureSidebar",
+                      )
                     )) : null}
-                  {(sectionsHomepageEvents.length > 0 || !initialBrandSlug) ? <section className="border-t-2 border-primary pt-5" aria-label="Events, community, and advertising">
-                    <div className="grid min-w-0 items-start gap-5 lg:grid-cols-[minmax(220px,.82fr)_minmax(0,2fr)_minmax(220px,.82fr)]">
+                  {(sectionsHomepageEvents.length > 0 || !initialBrandSlug) ? <section className="border-t border-primary pt-5" aria-label="Events, community, and advertising">
+                    <div className="grid min-w-0 items-start gap-5 lg:grid-cols-[300px_minmax(0,1fr)_300px]">
                       <div className="h-fit lg:sticky lg:top-24 lg:self-start">
-                        <DiscoverySidebarCard title="Explore Events" summary={initialBrandName ? `Upcoming experiences for ${initialBrandName}` : "Upcoming experiences across Hearst brands"}>
+                        <DiscoverySidebarCard title="Explore Events" summary={contextualModuleHeading ? `Upcoming ${contextualModuleHeading.toLowerCase()} experiences` : "Upcoming experiences across Hearst brands"}>
                           <div className="-mb-3 divide-y divide-border/70">
                             {sectionsHomepageEvents.slice(0, 3).map((event, index) => (
                               <Link key={event.slug} href={`/hearst-plus/events/${event.slug}/`} className="group grid min-h-16 grid-cols-[48px_minmax(0,1fr)] items-start gap-3 py-3">
@@ -7046,9 +7122,9 @@ function LifestyleRiverHomePage({
                           <Link href="/hearst-plus/events/" className="mt-3 inline-flex min-h-9 items-center text-sm font-bold text-primary hover:underline">Explore all events</Link>
                         </DiscoverySidebarCard>
                       </div>
-                      <section className="min-w-0 space-y-4" aria-label="Events">
+                      <section className="min-w-0 space-y-4" aria-label={contextualModuleHeading ? `${contextualModuleHeading} Events` : "Events"}>
                         <div className="flex items-end justify-between gap-4">
-                          <h2 className={blocksSectionHeadingClass(initialBrandSlug)}>Events</h2>
+                          <h2 className={blocksSectionHeadingClass(initialBrandSlug)}>{contextualModuleHeading ? `${contextualModuleHeading} Events` : "Events"}</h2>
                           <Link href={initialBrandSlug ? `/hearst-plus/events/?brand=${encodeURIComponent(initialBrandSlug)}` : "/hearst-plus/events/"} className="pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Explore all events</Link>
                         </div>
                         {sectionsHomepageEvents[0] ? (
@@ -7069,10 +7145,10 @@ function LifestyleRiverHomePage({
                       <div className="h-fit lg:sticky lg:top-24 lg:self-start"><ContextualRiverAdvertisement ad={rightRailAd} /></div>
                     </div>
                   </section> : null}
-                  {communityParticipationThreads.some((post) => !initialBrandSlug || post.brandSlug === initialBrandSlug) ? <section className="border-t-2 border-primary pt-5" aria-label="Communities">
-                    <div className="grid min-w-0 items-start gap-5 lg:grid-cols-[minmax(220px,.82fr)_minmax(0,2fr)_minmax(220px,.82fr)]">
+                  {communityParticipationThreads.some((post) => !contextualModuleBrandSlugs || contextualModuleBrandSlugs.has(post.brandSlug)) ? <section className="border-t border-primary pt-5" aria-label={contextualModuleHeading ? `${contextualModuleHeading} Communities` : "Communities"}>
+                    <div className="grid min-w-0 items-start gap-5 lg:grid-cols-[300px_minmax(0,1fr)_300px]">
                       <div className="h-fit lg:sticky lg:top-24 lg:self-start">
-                        <CommunityJoinedGroupsCard groups={communityGroups.filter((group) => !initialBrandSlug || group.brandSlug === initialBrandSlug).slice(0, 3).map((group) => ({
+                        <CommunityJoinedGroupsCard groups={communityGroups.filter((group) => !contextualModuleBrandSlugs || contextualModuleBrandSlugs.has(group.brandSlug)).slice(0, 3).map((group) => ({
                           brand: getHearstAllBrands().find((brand) => brand.brandSlug === group.brandSlug)?.brand ?? group.brandSlug,
                           brandSlug: group.brandSlug,
                           groupSlug: group.groupSlug,
@@ -7082,11 +7158,11 @@ function LifestyleRiverHomePage({
                       </div>
                       <div className="min-w-0 space-y-4">
                         <div className="flex items-end justify-between gap-4">
-                          <h2 className={blocksSectionHeadingClass(initialBrandSlug)}>Communities</h2>
+                          <h2 className={blocksSectionHeadingClass(initialBrandSlug)}>{contextualModuleHeading ? `${contextualModuleHeading} Communities` : "Communities"}</h2>
                           <Link href="/communities/" className="pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Explore all</Link>
                         </div>
                         {(() => {
-                          const communityPosts = communityParticipationThreads.filter((post) => !initialBrandSlug || post.brandSlug === initialBrandSlug).slice(0, 4).map((post, index) => {
+                          const communityPosts = communityParticipationThreads.filter((post) => !contextualModuleBrandSlugs || contextualModuleBrandSlugs.has(post.brandSlug)).slice(0, 4).map((post, index) => {
                             const group = communityGroups.find((item) => item.brandSlug === post.brandSlug);
                             const brand = getHearstAllBrands().find((item) => item.brandSlug === post.brandSlug)?.brand ?? post.brandSlug;
                             const brandImages = displayStories.filter((story) => story.brandSlug === post.brandSlug && story.image);
@@ -7120,14 +7196,14 @@ function LifestyleRiverHomePage({
                       <div className="h-fit lg:sticky lg:top-24 lg:self-start"><ContextualRiverAdvertisement ad={rightRailAd} /></div>
                     </div>
                   </section> : null}
-                  {!initialBrandSlug ? <section className="border-t-2 border-primary pt-5" aria-label="Local News">
+                  {destination === "all" && activeFilter === "For You" && !initialBrandSlug ? <section className="border-t border-primary pt-5" aria-label="Local News">
                     <div className="mb-4 flex items-end justify-between gap-4">
                       <h2 className={blocksSectionHeadingClass(initialBrandSlug)}>Local News</h2>
                       <Link href="/hearst-plus/local-news/" className="pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Explore local news</Link>
                     </div>
                     <LocalNewsRail layout="grid" />
                   </section> : null}
-                  {!initialBrandSlug ? <section className="space-y-4 border-t-2 border-primary pt-5" aria-labelledby="blocks-ae-videos-heading">
+                  {destination === "all" && activeFilter === "For You" && !initialBrandSlug ? <section className="space-y-4 border-t border-primary pt-5" aria-labelledby="blocks-ae-videos-heading">
                     <div className="flex items-end justify-between gap-4 border-b border-border pb-3">
                       <div><h2 id="blocks-ae-videos-heading" className={blocksSectionHeadingClass(initialBrandSlug)}>A&amp;E Channel Videos</h2><p className="mt-1 text-sm text-muted-foreground">Series and stories from across the A&amp;E family.</p></div>
                       <Link href="/hearst-plus/entertainment/" className="shrink-0 pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Explore A&amp;E</Link>
@@ -7141,41 +7217,19 @@ function LifestyleRiverHomePage({
               ) : isSectionsHomepage ? (
                 <div className="space-y-8" aria-label={`${initialBrandName ?? "Hearst+"} editorial sections`}>
                   {editorialHomepageSections.map((section) => (
-                    <section key={section.title} className="space-y-4 border-t-2 border-primary pt-5" aria-label={section.title}>
-                      <div className="flex items-end justify-between gap-4">
-                        <h2 className="headline text-3xl font-bold leading-tight">{section.title}</h2>
-                        <span className="shrink-0 pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                          {initialBrandName ? `${initialBrandName} Selection` : "Hearst+ Selection"}
-                        </span>
-                      </div>
-                      {section.stories.length ? (
-                        <div className="space-y-3">
-                          <LifestyleRiverCard
-                            story={section.stories[0]}
-                            onOpen={() => openStory(section.stories[0].id)}
-                            saved={profile.savedIds.includes(section.stories[0].id)}
-                            onSave={() => toggleSaved(section.stories[0])}
-                            layoutOverride="cards"
-                          />
-                          {section.stories.length > 1 ? <div className="space-y-3">
-                            {section.stories.slice(1).map((story) => (
-                            <LifestyleRiverCard
-                              key={`support-${story.id}`}
-                              story={story}
-                              onOpen={() => openStory(story.id)}
-                              saved={profile.savedIds.includes(story.id)}
-                              onSave={() => toggleSaved(story)}
-                              layoutOverride="list"
-                              editorialRow
-                            />
-                          ))}
-                          </div> : null}
-                        </div>
-                      ) : null}
+                    <section key={section.title} className="space-y-4 border-t border-primary pt-5" aria-label={section.title}>
+                      <EditorialHomepageSection
+                        section={section}
+                        selectionLabel={initialBrandName ? `${initialBrandName} Selection` : "Hearst+ Selection"}
+                        onOpen={(story) => openStory(story.id)}
+                        savedIds={profile.savedIds}
+                        onSave={toggleSaved}
+                        featureSidebar
+                      />
                     </section>
                   ))}
                   {sectionsHomepageMostPopular.length ? (
-                    <section className="space-y-4 border-t-2 border-primary pt-5" aria-label="Most Popular">
+                    <section className="space-y-4 border-t border-primary pt-5" aria-label="Most Popular">
                       <h2 className="headline text-3xl font-bold leading-tight">Most Popular</h2>
                       {sectionsHomepageMostPopular.length ? (
                         <div className="space-y-3">
@@ -7206,7 +7260,7 @@ function LifestyleRiverHomePage({
                     </section>
                   ) : null}
                   {!isBlocksHomepage && sectionsHomepageVideos.length ? (
-                    <section className="space-y-4 border-t-2 border-primary pt-5" aria-label="Video">
+                    <section className="space-y-4 border-t border-primary pt-5" aria-label="Video">
                       <div className="flex items-end justify-between gap-4">
                         <h2 className="headline text-3xl font-bold leading-tight">Video</h2>
                         <Link href="/hearst-plus/videos/" className="pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Watch all videos</Link>
@@ -7225,7 +7279,7 @@ function LifestyleRiverHomePage({
                       </div>
                     </section>
                   ) : null}
-                  {sectionsHomepageEvents.length ? <section className="space-y-4 border-t-2 border-primary pt-5" aria-label="Events">
+                  {sectionsHomepageEvents.length ? <section className="space-y-4 border-t border-primary pt-5" aria-label="Events">
                     <div className="flex items-end justify-between gap-4">
                       <h2 className="headline text-3xl font-bold leading-tight">Events</h2>
                       <Link href={initialBrandSlug ? `/hearst-plus/events/?brand=${encodeURIComponent(initialBrandSlug)}` : "/hearst-plus/events/"} className="pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Explore all events</Link>
@@ -7509,12 +7563,12 @@ function LifestyleRiverHomePage({
                     ? moduleAllocation.trendingStories.filter((story) => story.brandSlug === initialBrandSlug).slice(0, 3)
                     : moduleAllocation.trendingStories.slice(0, 3)}
                   onOpenStory={(story) => openStory(story.id)}
-                  title={initialBrandSlug ? "Trending" : destination === "all" ? "Trending Across Hearst" : "Trending Across Brands"}
+                  title={initialBrandName ? `Trending ${initialBrandName}` : contextualModuleHeading ? `Trending in ${contextualModuleHeading}` : destination === "all" ? "Trending Across Hearst" : "Trending Across Brands"}
                   className="lg:hidden"
                 />
               ) : null}
               <ContextualRiverAdvertisement ad={rightRailAd} />
-              <LocalNewsRail />
+              {destination === "all" && !initialBrandSlug && (activeFilter === "For You" || activeFilter === localNewsFilter) ? <LocalNewsRail /> : null}
               {initialBrandSlug && initialBrandName ? (
                 <BrandInstagramModule brandSlug={initialBrandSlug} brandName={initialBrandName} />
               ) : null}

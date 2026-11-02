@@ -45,7 +45,7 @@ export function StudySection({
   children: ReactNode;
 }) {
   return (
-    <section className="border-t-2 border-primary pt-5">
+    <section className="border-t border-primary pt-5">
       <p className="text-xs font-bold uppercase tracking-[.15em] text-primary">{eyebrow}</p>
       <h2 className="mt-2 max-w-4xl font-serif text-3xl leading-tight md:text-4xl">{title}</h2>
       <div className="mt-5 space-y-4 text-sm leading-7 text-muted-foreground md:text-base">{children}</div>

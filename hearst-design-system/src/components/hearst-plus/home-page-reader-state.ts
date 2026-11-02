@@ -77,6 +77,12 @@ export function useDailyEditionStories(
   editionSize = 6
 ) {
   const storyIdentityKey = stories.slice(0, 40).map((story) => story.id).join("|");
+  const inventorySelectionVersion = [
+    currentDailyEditionSelectionVersion,
+    ...stories.slice(0, 40)
+      .map((story) => `${story.id}:${story.publishedAt ?? ""}`)
+      .sort(),
+  ].join("|");
   const resolutionKey = `${editionKey}:${storyIdentityKey}`;
   const [editionState, setEditionState] = React.useState<{ resolutionKey: string; storyIds: string[] }>({
     resolutionKey: "",
@@ -98,7 +104,7 @@ export function useDailyEditionStories(
         stories,
         Date.now(),
         editionSize,
-        currentDailyEditionSelectionVersion
+        inventorySelectionVersion
       );
       writeDailyEditionRecords(records);
       setEditionState({
@@ -109,9 +115,10 @@ export function useDailyEditionStories(
     return () => {
       cancelled = true;
     };
-  // The bounded identity key intentionally tracks the ranked candidates that can seed the edition.
+  // The bounded identity key tracks ranked candidates; the sorted inventory version detects feed
+  // refreshes without making reader personalization order reshuffle picks by itself.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editionKey, editionSize, storyIdentityKey]);
+  }, [editionKey, editionSize, inventorySelectionVersion, storyIdentityKey]);
 
   return React.useMemo(() => {
     if (editionState.resolutionKey !== resolutionKey) return [];

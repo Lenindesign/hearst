@@ -49,6 +49,12 @@ export const hearstDestinationSections = [
   { mode: "international", label: "International", href: "/hearst-plus/", hasBrandMenu: true },
 ] satisfies HearstDestinationSection[];
 
+function capAlignedLabelClassName(label: string) {
+  // Cap-to-baseline trimming would cut off lowercase descenders and the
+  // uppercase J/Q tails, so opt in only when the label fits that box.
+  return /[gjpqyJQ]/.test(label) ? undefined : "hds-cap-aligned-label";
+}
+
 const brandMenuSections = [
   { mode: "lifestyle", label: "Lifestyle" },
   { mode: "autos", label: "Autos" },
@@ -250,7 +256,9 @@ export function UtilityBar({
                   : "text-primary-foreground hover:bg-white/10 hover:text-primary-foreground"
             )}
           >
-            {allDestinationSection.label}
+            <span className={capAlignedLabelClassName(allDestinationSection.label)}>
+              {allDestinationSection.label}
+            </span>
           </LinkComponent>
           <div
             ref={destinationNavRef}
@@ -300,7 +308,9 @@ export function UtilityBar({
                         <span className="sr-only">{section.label}</span>
                       </>
                     ) : null}
-                    {section.mode === "international" ? null : section.label}
+                    {section.mode === "international" ? null : (
+                      <span className={capAlignedLabelClassName(section.label)}>{section.label}</span>
+                    )}
                   </LinkComponent>
                 </React.Fragment>
               );

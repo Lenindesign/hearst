@@ -115,6 +115,7 @@ The complete brand registry is documented in `BRAND_STYLES.md`. Canonical HDS pu
 - Personalization onboarding uses the editorial image-and-form split only at desktop widths and omits the decorative image on smaller screens. Keep the phone interest picker horizontally scrollable, the publication picker in a bounded grid, publication names visible in full, and controls at least 44px. The modal must not create horizontal overflow at 320px or 390px. `APP_RULES.md` owns onboarding steps, limits, state, and focus behavior.
 - Never allow headline or summary text to crop because a card or carousel uses a fixed height without a matching line clamp.
 - Preserve a minimum comfortable touch target for buttons and complete-row links.
+- For compact buttons and pills, opt short labels without descender glyphs into cap-height alignment with the shared `.hds-cap-aligned-label` utility or the `Button` primitive's `capAlignedLabel` prop. Use it for all-caps labels and other confirmed no-descender text; leave labels containing descenders (lowercase `g`, `j`, `p`, `q`, `y`, or uppercase `J` and `Q`) on normal line-box metrics so their glyphs never get clipped. Supported browsers trim the label to `cap alphabetic`; browsers without text-box trimming keep the default alignment.
 - Test desktop and mobile when changing shared mastheads, carousels, sidebars, cards, or readers.
 
 ## Implementation checklist

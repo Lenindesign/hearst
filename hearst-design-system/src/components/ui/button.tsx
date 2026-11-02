@@ -52,6 +52,8 @@ export interface ButtonProps
   loading?: boolean
   /** Optional temporary label announced and shown while loading. */
   loadingText?: ReactNode
+  /** Trims font leading for a short label known to contain no descender glyphs. */
+  capAlignedLabel?: boolean
 }
 
 function Button({
@@ -60,10 +62,16 @@ function Button({
   size = "default",
   loading = false,
   loadingText,
+  capAlignedLabel = false,
   disabled,
   children,
   ...props
 }: ButtonProps) {
+  const currentLabel = loading ? loadingText ?? children : children
+  const label = capAlignedLabel
+    ? <span className="hds-cap-aligned-label">{currentLabel}</span>
+    : currentLabel
+
   return (
     <ButtonPrimitive
       data-slot="button"
@@ -78,9 +86,9 @@ function Button({
       {loading ? (
         <>
           <SpinnerGap data-icon="inline-start" className="animate-spin motion-reduce:animate-none" aria-hidden />
-          {loadingText ?? children}
+          {label}
         </>
-      ) : children}
+      ) : label}
     </ButtonPrimitive>
   )
 }

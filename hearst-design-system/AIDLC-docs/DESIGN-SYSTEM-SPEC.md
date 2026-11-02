@@ -44,6 +44,13 @@ The component hierarchy is:
 A component belongs at the lowest layer that fully owns its behavior. Do not
 create page-local markup when a production component already owns the contract.
 
+The shared `Button` primitive exposes `capAlignedLabel` for short, verified
+no-descender labels. It wraps the label in `.hds-cap-aligned-label`, which
+progressively trims supported browser text boxes to `cap alphabetic` metrics.
+Do not enable it for labels with lowercase `g`, `j`, `p`, `q`, or `y`, or
+uppercase `J` or `Q`, because trimming to the alphabetic baseline can clip those
+glyphs. The default button label keeps normal font line-box metrics.
+
 Public Hearst+ components and helpers are exported from
 `src/components/hearst-plus/index.ts`. New public APIs should be typed,
 additive where possible, and independent of story fixture shapes.

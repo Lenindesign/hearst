@@ -8,7 +8,7 @@ export type DailyEditionRecord = {
   editionKey: string;
   storyIds: string[];
   createdAt: number;
-  selectionVersion?: number;
+  selectionVersion?: number | string;
 };
 
 export const dailyEditionStorageKey = "hearst-daily-editions-v1";
@@ -43,6 +43,8 @@ export function normalizeDailyEditionRecords(value: unknown): DailyEditionRecord
         : 0,
       ...(typeof record.selectionVersion === "number" && Number.isFinite(record.selectionVersion)
         ? { selectionVersion: record.selectionVersion }
+        : typeof record.selectionVersion === "string" && record.selectionVersion.trim().length > 0
+          ? { selectionVersion: record.selectionVersion.trim() }
         : {}),
     }))
     .filter((record) => {
@@ -117,7 +119,7 @@ export function resolveDailyEdition(
   stories: DailyEditionStory[],
   createdAt: number,
   editionSize = 6,
-  selectionVersion?: number
+  selectionVersion?: number | string
 ) {
   const normalizedRecords = normalizeDailyEditionRecords(records);
   const existingRecord = normalizedRecords.find((record) =>
