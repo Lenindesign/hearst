@@ -561,71 +561,71 @@ export function FeaturedStoryCarousel({
             );
           })}
         </div>
-        <div className={cn(
-          "absolute top-5 flex items-center justify-between gap-3",
-          layoutMode === "list"
-            ? "left-[124px] right-3 top-3 sm:left-[calc(38%+1.5rem)] sm:right-6 sm:top-4"
-            : "left-5 right-5",
-        )}>
-          <span
-            className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-black/45 px-3 py-1 text-sm font-bold text-white backdrop-blur"
-            aria-label={
-              editionLabel
-                ? `${editionLabel}, story ${activeIndex + 1} of ${stories.length}`
-                : `Story ${activeIndex + 1} of ${stories.length}`
-            }
-          >
-            {editionLabel && layoutMode !== "list" ? (
-              <>
-                <span>{editionLabel}</span>
-                <span aria-hidden>·</span>
-              </>
-            ) : null}
-            <span>
-              {activeIndex + 1} of {stories.length}
-            </span>
-          </span>
-          {stories.length > 1 ? (
-            <div className="flex items-center gap-1.5">
-              <button
-                type="button"
-                className="hidden h-7 w-7 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60 sm:inline-flex"
-                onClick={goToPrevious}
-                aria-label="Previous featured story"
-              >
-                <ChevronLeft className="h-4 w-4" aria-hidden />
-              </button>
-              <button
-                type="button"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60 sm:h-7 sm:w-7"
-                aria-label={
-                  prefersReducedMotion
-                    ? "Automatic rotation disabled because reduced motion is enabled"
-                    : paused
-                      ? "Resume slider"
-                      : "Pause slider"
-                }
-                onClick={() => setPaused((value) => !value)}
-                disabled={prefersReducedMotion}
-                data-carousel-rotation-control="true"
-              >
-                {paused || prefersReducedMotion ? (
-                  <Play className="h-4 w-4" aria-hidden />
-                ) : (
-                  <Pause className="h-4 w-4" aria-hidden />
-                )}
-              </button>
-              <button
-                type="button"
-                className="hidden h-7 w-7 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60 sm:inline-flex"
-                onClick={goToNext}
-                aria-label="Next featured story"
-              >
-                <ChevronRight className="h-4 w-4" aria-hidden />
-              </button>
-            </div>
+      </div>
+      <div className={cn(
+        "absolute top-5 z-10 flex items-center justify-between gap-3",
+        layoutMode === "list"
+          ? "left-[124px] right-3 top-3 sm:left-[calc(38%+1.5rem)] sm:right-6 sm:top-4"
+          : "left-5 right-5",
+      )}>
+        <span
+          className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-black/45 px-3 py-1 text-sm font-bold text-white backdrop-blur"
+          aria-label={
+            editionLabel
+              ? `${editionLabel}, story ${activeIndex + 1} of ${stories.length}`
+              : `Story ${activeIndex + 1} of ${stories.length}`
+          }
+        >
+          {editionLabel && layoutMode !== "list" ? (
+            <>
+              <span>{editionLabel}</span>
+              <span aria-hidden>·</span>
+            </>
           ) : null}
-        </div>
+          <span>
+            {activeIndex + 1} of {stories.length}
+          </span>
+        </span>
+        {stories.length > 1 ? (
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              className="hidden h-7 w-7 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60 sm:inline-flex"
+              onClick={goToPrevious}
+              aria-label="Previous featured story"
+            >
+              <ChevronLeft className="h-4 w-4" aria-hidden />
+            </button>
+            <button
+              type="button"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60 sm:h-7 sm:w-7"
+              aria-label={
+                prefersReducedMotion
+                  ? "Automatic rotation disabled because reduced motion is enabled"
+                  : paused
+                    ? "Resume slider"
+                    : "Pause slider"
+              }
+              onClick={() => setPaused((value) => !value)}
+              disabled={prefersReducedMotion}
+              data-carousel-rotation-control="true"
+            >
+              {paused || prefersReducedMotion ? (
+                <Play className="h-4 w-4" aria-hidden />
+              ) : (
+                <Pause className="h-4 w-4" aria-hidden />
+              )}
+            </button>
+            <button
+              type="button"
+              className="hidden h-7 w-7 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/60 sm:inline-flex"
+              onClick={goToNext}
+              aria-label="Next featured story"
+            >
+              <ChevronRight className="h-4 w-4" aria-hidden />
+            </button>
+          </div>
+        ) : null}
       </div>
     </article>
   );

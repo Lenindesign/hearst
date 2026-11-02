@@ -699,6 +699,7 @@ export function MainNav({
   const mobileMenuPanelRef = React.useRef<HTMLDivElement | null>(null);
   const mobileMenuDialogRef = React.useRef<HTMLDivElement | null>(null);
   const navScrollRef = React.useRef<HTMLDivElement | null>(null);
+  const sectionNavigationRef = React.useRef<HTMLDivElement | null>(null);
   const compactNavScrollRef = React.useRef<HTMLElement | null>(null);
   const searchTriggerRef = React.useRef<HTMLButtonElement | null>(null);
   const searchPanelRef = React.useRef<HTMLDivElement | null>(null);
@@ -860,6 +861,16 @@ export function MainNav({
     const updateMasthead = () => {
       frame = 0;
       setMastheadCompact((current) => {
+        if (darkMode && sectionNavigationRef.current) {
+          // The video masthead has a tall brand wall. Wait until its original
+          // section nav has scrolled to the compact nav's lower edge before
+          // swapping, so the banner tail stays covered and content meets the header.
+          const navBottom = sectionNavigationRef.current.getBoundingClientRect().bottom;
+          const compactNavBottom = compactNavScrollRef.current?.getBoundingClientRect().bottom ?? 68;
+          if (navBottom <= compactNavBottom) return true;
+          if (navBottom >= compactNavBottom + 8) return false;
+          return current;
+        }
         if (window.scrollY >= 96) return true;
         if (window.scrollY <= 64) return false;
         return current;
@@ -875,7 +886,7 @@ export function MainNav({
       window.removeEventListener("scroll", onScroll);
       if (frame) window.cancelAnimationFrame(frame);
     };
-  }, []);
+  }, [darkMode]);
 
   React.useEffect(() => {
     if (!mobileMenuOpen) return;
@@ -1842,7 +1853,7 @@ export function MainNav({
       </PageContainer>
     </div>
     )}
-    <div className={cn(
+    <div ref={sectionNavigationRef} className={cn(
       "border-b",
       darkMode ? "border-white/10 bg-[var(--component-video-feed-background-default)]" : "border-border",
       isDestinationRiver && (darkMode ? "sticky top-8 z-30 md:static" : "sticky top-8 z-30 bg-[var(--hp-surface)] md:static"),
