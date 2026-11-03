@@ -241,13 +241,6 @@ export function FeaturedStoryCarousel({
       target,
       hasSwipeIntent: false,
     };
-    if (target.setPointerCapture) {
-      try {
-        target.setPointerCapture(event.pointerId);
-      } catch {
-        // Pointer capture can be unavailable in synthetic browser events.
-      }
-    }
   };
 
   const handleSwipePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -259,6 +252,16 @@ export function FeaturedStoryCarousel({
     const deltaY = event.clientY - swipe.startY;
     if (Math.abs(deltaY) > Math.abs(deltaX) * 1.2 || Math.abs(deltaX) < 8) return;
     swipe.hasSwipeIntent = true;
+    // Capture only after a horizontal drag is underway. Capturing on pointer
+    // down retargets an ordinary click from the active slide button to this
+    // track container, so the hero's open-story handler never receives it.
+    if (swipe.target?.setPointerCapture && !swipe.target.hasPointerCapture(event.pointerId)) {
+      try {
+        swipe.target.setPointerCapture(event.pointerId);
+      } catch {
+        // Pointer capture can be unavailable in synthetic browser events.
+      }
+    }
     event.preventDefault();
     setIsDragging(true);
     const maxOffset = event.currentTarget.clientWidth * 0.24;
