@@ -41,12 +41,9 @@ export function ContextualRiverAdvertisement({
           className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/10 to-black/75"
           aria-hidden="true"
         />
-        <div className="absolute inset-x-0 top-0 flex items-center justify-between gap-3 p-4 text-white">
+        <div className="absolute inset-x-0 top-0 flex items-center gap-3 p-4 text-white">
           <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest">
             Advertisement
-          </span>
-          <span className="rounded-sm border border-white/70 bg-black/35 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.14em] text-white backdrop-blur-sm">
-            Demo creative
           </span>
         </div>
         <p className="absolute inset-x-0 bottom-0 p-4 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-white">

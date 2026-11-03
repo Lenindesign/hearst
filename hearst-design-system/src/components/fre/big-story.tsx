@@ -79,7 +79,10 @@ export function BigStoryImageRight({
       <ArticleCardContent className={cn(isTop ? "px-0" : "px-0 py-0")}>
         <ArticleCardEyebrow>{label}</ArticleCardEyebrow>
         <ArticleCardTitle
-          className={cn("leading-tight", headlineClass)}
+          className={cn(
+            "leading-tight transition-colors group-hover/article-card:text-primary group-focus-visible/article-card:text-primary",
+            headlineClass,
+          )}
           style={headlineFontSize ? { fontSize: headlineFontSize, ...(headlineLineHeight ? { lineHeight: `${headlineLineHeight}px` } : {}) } : undefined}
         >
           {headline}

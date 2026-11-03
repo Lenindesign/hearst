@@ -881,12 +881,12 @@ function ShowCard({
         type="button"
         onClick={(event) => onOpenShow(show, event.currentTarget)}
         draggable={false}
-        className="block h-full w-full min-w-0 text-left text-white"
+        className="block h-full w-full min-w-0 cursor-pointer text-left text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/80"
         aria-label={`Open ${show.title} details`}
       >
         <ShowPoster show={show} showTitleOverlay={false} />
         <span className="block pt-3">
-          <span className="line-clamp-1 block text-base font-bold leading-tight transition-colors group-hover:text-[#B9913F] md:text-lg">{show.title}</span>
+          <span className="line-clamp-1 block text-base font-bold leading-tight transition-colors group-hover:text-primary group-focus-visible:text-primary md:text-lg">{show.title}</span>
           <span className="mt-1 block text-xs font-semibold text-white/48">{show.meta}</span>
         </span>
       </button>

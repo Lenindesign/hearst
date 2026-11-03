@@ -445,7 +445,7 @@ export function FeaturedStoryCarousel({
                 key={`${isClone ? "clone" : "story"}-${visualIndex}-${story.id}`}
                 type="button"
                 className={cn(
-                  "group/featured-slide relative w-full shrink-0 bg-black text-left text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30",
+                  "group/featured-slide relative w-full shrink-0 cursor-pointer bg-black text-left text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30",
                   layoutMode !== "list" && "[container-type:inline-size]",
                   layoutMode === "list"
                     ? "grid h-[184px] grid-cols-[112px_minmax(0,1fr)] grid-rows-[184px] sm:h-[220px] sm:grid-cols-[38%_minmax(0,1fr)] sm:grid-rows-[220px]"
@@ -550,11 +550,11 @@ export function FeaturedStoryCarousel({
                   </div>
                   {researchCarRating ? (
                     <div className="flex min-w-0 items-end justify-between gap-3">
-                      <h2 className={cn("min-w-0 flex-1", headlineClassName)}>{story.title}</h2>
+                      <h2 className={cn("min-w-0 flex-1 transition-colors group-hover/featured-slide:text-primary group-focus-visible/featured-slide:text-primary", headlineClassName)}>{story.title}</h2>
                       <ResearchCarRating rating={researchCarRating} />
                     </div>
                   ) : (
-                    <h2 className={headlineClassName}>{story.title}</h2>
+                    <h2 className={cn("transition-colors group-hover/featured-slide:text-primary group-focus-visible/featured-slide:text-primary", headlineClassName)}>{story.title}</h2>
                   )}
                 </div>
               </button>
@@ -569,7 +569,7 @@ export function FeaturedStoryCarousel({
           : "left-5 right-5",
       )}>
         <span
-          className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-black/45 px-3 py-1 text-sm font-bold text-white backdrop-blur"
+          className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-black/45 px-2.5 py-1 text-xs font-bold text-white backdrop-blur"
           aria-label={
             editionLabel
               ? `${editionLabel}, story ${activeIndex + 1} of ${stories.length}`

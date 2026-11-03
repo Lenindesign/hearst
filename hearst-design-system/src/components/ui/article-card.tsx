@@ -51,7 +51,7 @@ function ArticleCard({
       data-size={size}
       role={role ?? (interactive ? "button" : undefined)}
       tabIndex={tabIndex ?? (interactive ? 0 : undefined)}
-      className={cn(articleCardVariants({ layout, size }), className)}
+      className={cn(articleCardVariants({ layout, size }), interactive && "cursor-pointer", className)}
       onClick={onClick}
       onKeyDown={(event) => {
         onKeyDown?.(event);
@@ -113,7 +113,11 @@ function ArticleCardImage({
           alt={alt || ""}
           fill
           sizes="(max-width: 768px) 100vw, 480px"
-          className={imageFit === "contain" ? "object-contain" : "object-cover"}
+          className={cn(
+            "transition-transform duration-200 motion-reduce:transition-none",
+            imageFit === "contain" ? "object-contain" : "object-cover",
+            "group-hover/article-card:scale-[1.02] group-focus-visible/article-card:scale-[1.02] motion-reduce:group-hover/article-card:scale-100 motion-reduce:group-focus-visible/article-card:scale-100",
+          )}
           style={imagePosition ? { objectPosition: imagePosition } : undefined}
         />
       ) : (
@@ -138,7 +142,7 @@ function ArticleCardContent({
         "flex flex-1 flex-col gap-2 px-4 py-4",
         "group-data-[layout=horizontal]/article-card:min-w-0",
         "group-data-[size=sm]/article-card:px-3 group-data-[size=sm]/article-card:py-3 group-data-[size=sm]/article-card:gap-1.5",
-        "group-data-[size=lg]/article-card:px-5 group-data-[size=lg]/article-card:py-6 group-data-[size=lg]/article-card:gap-3",
+        "group-data-[size=lg]/article-card:px-5 group-data-[size=lg]/article-card:py-6 group-data-[size=lg]/article-card:gap-2",
         className
       )}
       {...props}
@@ -178,7 +182,7 @@ function ArticleCardTitle({
     <h3
       data-slot="article-card-title"
       className={cn(
-        "headline leading-snug text-base",
+        "headline leading-snug text-base transition-colors group-hover/article-card:text-primary group-focus-visible/article-card:text-primary",
         "group-data-[size=sm]/article-card:text-sm",
         "group-data-[size=lg]/article-card:text-xl",
         className

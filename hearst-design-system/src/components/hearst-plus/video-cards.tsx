@@ -198,7 +198,7 @@ export function VideoPlaySurface({
               width={1200}
               height={675}
               sizes="(max-width: 1024px) 100vw, 640px"
-              className="relative z-10 h-full w-full object-contain"
+              className="relative z-10 h-full w-full object-contain transition-transform duration-200 group-hover/video-card:scale-[1.02] motion-reduce:transition-none motion-reduce:group-hover/video-card:scale-100"
               preload={priority}
             />
             <div className="absolute inset-0 z-20 bg-gradient-to-t from-black/75 via-black/15 to-black/5" />
@@ -269,10 +269,10 @@ export function VideoFeedLeadCard({
   const Headline = headingLevel;
 
   return (
-    <article className="group overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
+    <article className="group/video-card overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
       <VideoPlaySurface story={story} featured priority />
       <div className="story-card-content p-4 sm:p-5">
-        <div className="mb-3 flex flex-wrap items-center gap-2">
+        <div className="mb-2 flex flex-wrap items-center gap-2">
           <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
             {eyebrowLabel ??
               (useHearstPlusStyle ? "Recommended video" : "Featured video")}
@@ -282,16 +282,16 @@ export function VideoFeedLeadCard({
         </div>
         <button
           type="button"
-          className="block text-left focus:outline-none focus:ring-2 focus:ring-primary/30"
+          className="block cursor-pointer text-left focus:outline-none focus:ring-2 focus:ring-primary/30"
           onClick={onOpen}
           aria-label={`Open story: ${story.title}`}
         >
           <Headline
             className={cn(
-              "story-card-headline text-balance",
+              "story-card-headline text-balance transition-colors",
               useHearstPlusStyle
-                ? "headline font-bold leading-tight text-[var(--hp-text-headline)]"
-                : "font-black leading-[1.02] tracking-[-0.025em] text-foreground"
+                ? "headline font-bold leading-tight text-[var(--hp-text-headline)] group-hover/video-card:text-[var(--hp-sidebar-heading,var(--primary))] group-focus-visible/video-card:text-[var(--hp-sidebar-heading,var(--primary))]"
+                : "font-black leading-[1.02] tracking-[-0.025em] text-foreground group-hover/video-card:text-primary group-focus-visible/video-card:text-primary"
             )}
           >
             {story.title}
@@ -331,13 +331,13 @@ export function VideoIndexCard({
 
   return (
     <article
-      className="group overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/50"
+      className="group/video-card overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/50"
       data-story-module="river"
       data-story-id={story.id}
     >
       <VideoPlaySurface story={story} featured />
       <div className={compact ? "p-3" : "p-4 sm:p-5"}>
-        <div className={cn("relative z-20 mb-3 flex min-w-0 flex-wrap items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary", compact && "mb-2")}>
+        <div className="relative z-20 mb-2 flex min-w-0 flex-wrap items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
           <BrandSourceIcon
             brand={story.brand}
             brandSlug={story.brandSlug}
@@ -355,17 +355,17 @@ export function VideoIndexCard({
         </div>
         <button
           type="button"
-          className="block text-left focus:outline-none focus:ring-2 focus:ring-primary/30"
+          className="block cursor-pointer text-left focus:outline-none focus:ring-2 focus:ring-primary/30"
           onClick={onOpen}
         >
           <h3
             className={cn(
-              "text-balance",
+              "text-balance transition-colors",
               compact
-                ? "headline line-clamp-3 text-base font-bold leading-snug text-[var(--hp-text-headline)] sm:text-lg"
+                ? "headline line-clamp-3 text-base font-bold leading-snug text-[var(--hp-text-headline)] group-hover/video-card:text-[var(--hp-sidebar-heading,var(--primary))] group-focus-visible/video-card:text-[var(--hp-sidebar-heading,var(--primary))] sm:text-lg"
                 : useHearstPlusStyle
-                  ? "headline text-2xl font-bold leading-tight text-[var(--hp-text-headline)] sm:text-3xl"
-                  : "text-3xl font-black leading-[1.02] tracking-[-0.025em] text-foreground sm:text-4xl"
+                  ? "headline text-2xl font-bold leading-tight text-[var(--hp-text-headline)] group-hover/video-card:text-[var(--hp-sidebar-heading,var(--primary))] group-focus-visible/video-card:text-[var(--hp-sidebar-heading,var(--primary))] sm:text-3xl"
+                  : "text-3xl font-black leading-[1.02] tracking-[-0.025em] text-foreground group-hover/video-card:text-primary group-focus-visible/video-card:text-primary sm:text-4xl"
             )}
           >
             {story.title}

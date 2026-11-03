@@ -6,7 +6,7 @@ import {
   getCommunityGroupsForBrand,
 } from "@/lib/community-groups";
 import { CommunityJoinedGroupsCard } from "./community-joined-groups-card";
-import { Heart } from "@/components/ui/icons";
+import { Bookmark } from "@/components/ui/icons";
 import { getLifestyleContextStories } from "./content-reader-model";
 import { DiscoverySidebarCard } from "./discovery-sidebar";
 import { TrendingStoryRail } from "./trending-rail";
@@ -56,13 +56,13 @@ export function ContentReaderContextRail({
       stories={visibleSavedStories}
       onOpenStory={(story) => onOpenStory(story.id)}
       title="Saved items"
-      titleIcon={<Heart className="h-4 w-4 shrink-0" aria-hidden />}
+      titleIcon={<Bookmark className="h-4 w-4 shrink-0" aria-hidden />}
     />
   ) : (
     <DiscoverySidebarCard
       title="Saved items"
       summary="Your saved stories"
-      titleIcon={<Heart className="h-4 w-4 shrink-0" aria-hidden />}
+      titleIcon={<Bookmark className="h-4 w-4 shrink-0" aria-hidden />}
     >
       <p className="text-sm leading-6 text-muted-foreground">
         Save stories as you browse and they will appear here.

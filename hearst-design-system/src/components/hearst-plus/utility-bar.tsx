@@ -6,7 +6,6 @@ import { LocalWeather } from "@/components/hearst-plus/local-weather";
 import { ReaderAvatar } from "@/components/reader-account-ui";
 import { useReaderAccount } from "@/components/reader-account";
 import { Button } from "@/components/ui/button";
-import { GlobeHemisphereEast } from "@/components/ui/icons";
 import { LinkComponent } from "@/components/ui/link";
 import { PageContainer } from "@/components/ui/grid";
 import { entertainmentWebsiteFeedConfigs } from "@/lib/hearst-entertainment-story-feeds";
@@ -132,6 +131,7 @@ export function UtilityBar({
   const utilityBarRef = React.useRef<HTMLDivElement>(null);
   const destinationNavRef = React.useRef<HTMLDivElement>(null);
   const [openDestinationMenu, setOpenDestinationMenu] = React.useState<UtilityDestinationMode | null>(null);
+  const [brandMenuPosition, setBrandMenuPosition] = React.useState({ left: 12, width: 384 });
   const selectedDestination = selectedBrand
     ? getHearstBrandSection(selectedBrand.slug)
     : null;
@@ -175,6 +175,30 @@ export function UtilityBar({
   const isEntertainmentCultureMenu = openDestinationMenu === "entertainment-culture";
   const isInternationalMenu = openDestinationMenu === "international";
 
+  const openDestination = (
+    mode: UtilityDestinationMode | null,
+    trigger: HTMLElement,
+  ) => {
+    setOpenDestinationMenu(mode);
+    if (!mode) return;
+
+    const barBounds = utilityBarRef.current?.getBoundingClientRect();
+    const triggerBounds = trigger.getBoundingClientRect();
+    if (!barBounds) return;
+
+    const maxWidth = mode === "all" || mode === "international"
+      ? 1152
+      : mode === "local-news"
+        ? 1024
+        : mode === "entertainment-culture"
+          ? 672
+          : 384;
+    const width = Math.min(maxWidth, Math.max(0, barBounds.width - 24));
+    const maxLeft = Math.max(12, barBounds.width - width - 12);
+    const left = Math.min(maxLeft, Math.max(12, triggerBounds.left - barBounds.left));
+    setBrandMenuPosition({ left, width });
+  };
+
   React.useEffect(() => {
     if (!openDestinationMenu) return;
 
@@ -203,6 +227,11 @@ export function UtilityBar({
     <div
       ref={utilityBarRef}
       onMouseLeave={() => setOpenDestinationMenu(null)}
+      onBlurCapture={(event) => {
+        if (!(event.relatedTarget instanceof Node) || !utilityBarRef.current?.contains(event.relatedTarget)) {
+          setOpenDestinationMenu(null);
+        }
+      }}
       className={cn(
         "sticky top-0 z-50 h-8 text-[length:var(--text-token-4xs)] font-semibold transition-colors duration-200 sm:h-8",
         transparent
@@ -245,8 +274,8 @@ export function UtilityBar({
             aria-controls={allDestinationIsOpen ? "hearst-brand-menu" : undefined}
             aria-current={allDestinationIsActive ? "page" : undefined}
             onClick={() => setOpenDestinationMenu(null)}
-            onMouseEnter={() => setOpenDestinationMenu(allDestinationSection.mode)}
-            onFocus={() => setOpenDestinationMenu(allDestinationSection.mode)}
+            onMouseEnter={(event) => openDestination(allDestinationSection.mode, event.currentTarget)}
+            onFocus={(event) => openDestination(allDestinationSection.mode, event.currentTarget)}
             className={cn(
               "z-10 inline-flex min-h-7 min-w-7 shrink-0 cursor-pointer items-center justify-center rounded-full px-2 py-1 text-[11px] font-normal leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:min-h-6 sm:min-w-0 sm:text-xs",
               allDestinationIsActive
@@ -291,8 +320,8 @@ export function UtilityBar({
                     aria-controls={menuMode && isOpen ? "hearst-brand-menu" : undefined}
                     aria-current={isActive ? "page" : undefined}
                     onClick={() => setOpenDestinationMenu(null)}
-                    onMouseEnter={() => setOpenDestinationMenu(menuMode)}
-                    onFocus={() => setOpenDestinationMenu(menuMode)}
+                    onMouseEnter={(event) => openDestination(menuMode, event.currentTarget)}
+                    onFocus={(event) => openDestination(menuMode, event.currentTarget)}
                     className={cn(
                       "inline-flex min-h-7 min-w-7 cursor-pointer items-center justify-center rounded-full px-2 py-1 text-[11px] font-normal leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:min-h-6 sm:min-w-0 sm:text-xs",
                       isActive
@@ -302,15 +331,7 @@ export function UtilityBar({
                           : "text-primary-foreground hover:bg-white/10 hover:text-primary-foreground"
                     )}
                   >
-                    {section.mode === "international" ? (
-                      <>
-                        <GlobeHemisphereEast aria-hidden="true" weight="regular" className="size-4" />
-                        <span className="sr-only">{section.label}</span>
-                      </>
-                    ) : null}
-                    {section.mode === "international" ? null : (
-                      <span className={capAlignedLabelClassName(section.label)}>{section.label}</span>
-                    )}
+                    <span className={capAlignedLabelClassName(section.label)}>{section.label}</span>
                   </LinkComponent>
                 </React.Fragment>
               );
@@ -345,7 +366,8 @@ export function UtilityBar({
       {openSection ? (
         <div
           onMouseLeave={() => setOpenDestinationMenu(null)}
-          className="absolute left-1/2 top-full w-[calc(100%-1.5rem)] max-w-6xl -translate-x-1/2 pt-2 sm:w-[calc(100%-3rem)]"
+          className="absolute top-full z-[60] pt-2"
+          style={{ left: brandMenuPosition.left, width: brandMenuPosition.width }}
         >
           <div
             id="hearst-brand-menu"
@@ -353,10 +375,10 @@ export function UtilityBar({
             aria-label={`${openSection.label} menu`}
             className={cn(
               "max-h-[min(calc(100dvh-3rem),680px)] w-full overscroll-contain overflow-y-auto rounded-xl border p-4 shadow-2xl sm:max-h-[min(calc(100dvh-3.5rem),720px)] sm:p-5",
-              openDestinationMenu !== "all" && !isLocalNewsMenu && !isEntertainmentCultureMenu && !isInternationalMenu && "mx-auto max-w-sm",
-              isLocalNewsMenu && "mx-auto max-w-5xl",
-              isEntertainmentCultureMenu && "mx-auto max-w-2xl",
-              isInternationalMenu && "mx-auto max-w-6xl",
+              openDestinationMenu !== "all" && !isLocalNewsMenu && !isEntertainmentCultureMenu && !isInternationalMenu && "max-w-sm",
+              isLocalNewsMenu && "max-w-5xl",
+              isEntertainmentCultureMenu && "max-w-2xl",
+              isInternationalMenu && "max-w-6xl",
               darkMode
                 ? "border-white/15 bg-[var(--component-navigation-utility-megamenu-background-knockout)] text-[var(--component-navigation-utility-content-knockout)]"
                 : "border-border bg-background text-foreground"

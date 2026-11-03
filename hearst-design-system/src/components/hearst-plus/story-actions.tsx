@@ -5,8 +5,8 @@ import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { LiveStoryBadge } from "@/components/hearst-plus/story-metadata";
 import { Button } from "@/components/ui/button";
 import {
+  Bookmark,
   EyeOff,
-  Heart,
   MessageCircle,
   Plus,
 } from "@/components/ui/icons";
@@ -30,7 +30,7 @@ export function StorySaveIconButton({
       variant="ghost"
       size="icon-sm"
       className={cn(
-        "relative z-20 h-7 w-7 shrink-0 rounded-[4px] border-0 bg-transparent text-muted-foreground hover:bg-transparent hover:text-primary focus-visible:border-transparent",
+        "relative z-20 min-h-11 min-w-11 h-8 w-8 shrink-0 rounded-[4px] border-0 bg-transparent text-muted-foreground transition-colors hover:bg-muted/80 hover:text-primary focus-visible:border-transparent focus-visible:ring-2 focus-visible:ring-primary/40 sm:min-h-8 sm:min-w-8",
         saved && "text-primary",
         className,
       )}
@@ -42,7 +42,7 @@ export function StorySaveIconButton({
         onSave();
       }}
     >
-      <Heart className="size-4" weight={saved ? "fill" : "regular"} aria-hidden />
+      <Bookmark className="size-4" weight={saved ? "fill" : "regular"} aria-hidden />
     </Button>
   );
 }
@@ -123,7 +123,7 @@ export function LifestyleStoryActions({
         aria-label={saved ? "Remove from saved stories" : "Save story"}
         aria-pressed={saved}
       >
-        <Heart
+        <Bookmark
           className="h-3.5 w-3.5"
           weight={saved ? "fill" : "regular"}
           aria-hidden

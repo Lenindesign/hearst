@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
-import { getHearstBrandSection } from "@/lib/hearst-routes";
+import { getHearstBrandSection, getHearstDestinationCategoryRoute } from "@/lib/hearst-routes";
 
 export type ReaderAdvertisementDestination =
   | "lifestyle"
@@ -33,6 +34,38 @@ export type ContentReaderAdvertisementProps = {
   ad?: ContextualAdUnit | null;
   currentTopic: string;
 };
+
+const adTopicRoutes: Record<string, { mode: "lifestyle" | "autos" | "flux" | "ew"; label: string }> = {
+  beauty: { mode: "flux", label: "Beauty" },
+  style: { mode: "flux", label: "Style" },
+  culture: { mode: "flux", label: "Culture" },
+  events: { mode: "flux", label: "Events" },
+  travel: { mode: "flux", label: "Travel" },
+  shopping: { mode: "flux", label: "Shopping" },
+  food: { mode: "lifestyle", label: "Food" },
+  "food drinks": { mode: "lifestyle", label: "Food" },
+  "food news": { mode: "lifestyle", label: "Food" },
+  home: { mode: "lifestyle", label: "Home" },
+  family: { mode: "lifestyle", label: "Family" },
+  entertainment: { mode: "lifestyle", label: "Entertainment" },
+  design: { mode: "flux", label: "Design" },
+  wellness: { mode: "ew", label: "Wellness" },
+  fitness: { mode: "ew", label: "Fitness" },
+  gear: { mode: "ew", label: "Gear" },
+  tech: { mode: "ew", label: "Tech" },
+  adventure: { mode: "ew", label: "Adventure" },
+  nutrition: { mode: "ew", label: "Nutrition" },
+  life: { mode: "ew", label: "Life" },
+  cars: { mode: "autos", label: "Reviews" },
+  reviews: { mode: "autos", label: "Reviews" },
+  "research cars": { mode: "autos", label: "Research Cars" },
+  evs: { mode: "autos", label: "EVs" },
+};
+
+function getAdTopicHref(topic: string) {
+  const target = adTopicRoutes[topic.trim().toLowerCase()];
+  return target ? getHearstDestinationCategoryRoute(target.mode, target.label) : undefined;
+}
 
 export function getContextualAdvertisementImage(ad: ContextualAdUnit) {
   // Keep paid/demo creative separate from editorial story imagery. Replacing an
@@ -107,12 +140,9 @@ export function ContentReaderAdvertisement({
             className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/5 to-black/45"
             aria-hidden="true"
           />
-          <div className="absolute inset-x-0 top-0 flex items-center justify-between p-5 text-white">
+          <div className="absolute inset-x-0 top-0 flex items-center p-5 text-white">
             <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-[0.24em]">
               Advertisement
-            </span>
-            <span className="rounded-full border border-white/50 bg-white/15 px-2 py-1 text-[10px] font-bold uppercase tracking-widest backdrop-blur">
-              {ad.creativeLabel}
             </span>
           </div>
           <div className="absolute inset-x-0 bottom-0 p-5 text-white">
@@ -135,17 +165,29 @@ export function ContentReaderAdvertisement({
             </p>
             <div className="mt-5 flex flex-wrap gap-2">
               {ad.topics.slice(0, 2).map((topic) => (
-                <span
-                  key={topic}
-                  className="rounded-full border px-2.5 py-1 text-xs font-semibold"
-                  style={{
+                (() => {
+                  const href = getAdTopicHref(topic);
+                  const className = "rounded-full border px-2.5 py-1 text-xs font-semibold";
+                  const style = {
                     borderColor: ad.palette.soft,
                     backgroundColor: ad.palette.soft,
                     color: ad.palette.foreground,
-                  }}
-                >
-                  {topic}
-                </span>
+                  };
+                  return href ? (
+                    <Link
+                      key={topic}
+                      href={href}
+                      className={`${className} cursor-pointer transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40`}
+                      style={style}
+                    >
+                      {topic}
+                    </Link>
+                  ) : (
+                    <span key={topic} className={className} style={style}>
+                      {topic}
+                    </span>
+                  );
+                })()
               ))}
             </div>
           </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ChevronDown, Heart } from "@/components/ui/icons";
+import { Bookmark, ChevronDown } from "@/components/ui/icons";
 import type {
   LifestyleRiverProfile,
   LifestyleRiverStory,
@@ -387,13 +387,13 @@ export function LifestyleDiscoverySidebar({
       stories={savedStories}
       onOpenStory={onOpenStory}
       title="Saved items"
-      titleIcon={<Heart className="h-4 w-4 shrink-0" aria-hidden />}
+      titleIcon={<Bookmark className="h-4 w-4 shrink-0" aria-hidden />}
     />
   ) : (
     <DiscoverySidebarCard
       title="Saved items"
       summary="Your saved stories"
-      titleIcon={<Heart className="h-4 w-4 shrink-0" aria-hidden />}
+      titleIcon={<Bookmark className="h-4 w-4 shrink-0" aria-hidden />}
     >
       <p className="text-sm leading-6 text-muted-foreground">
         Save stories as you browse and they will appear here.

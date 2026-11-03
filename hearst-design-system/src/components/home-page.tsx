@@ -59,7 +59,7 @@ import { destinationBanners, entertainmentBrandWallBanner, hearstPlusBrandWallBa
 import { HearstPlusBrandWall } from "@/components/hearst-plus/hearst-plus-brand-wall";
 import { BrandInstagramModule } from "@/components/hearst-plus/brand-instagram-module";
 import {
-  Heart,
+  Bookmark,
   Camera,
   Check,
   ChevronRight,
@@ -3059,14 +3059,14 @@ function CompactPhotoGalleryCard({
   onSave?: () => void;
 }) {
   return (
-    <article className="group/card compact-photo-gallery relative min-w-0 overflow-hidden rounded-[8px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
+    <article className="group/card compact-photo-gallery relative min-w-0 cursor-pointer overflow-hidden rounded-[8px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
       <button type="button" onClick={onOpen} className="peer absolute inset-0 z-10 rounded-[8px] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/60" aria-label={`Open photo gallery: ${story.title}`} />
       <div className="compact-photo-gallery__images grid aspect-video grid-cols-2 gap-0.5 overflow-hidden bg-border">
         {images.slice(0, 4).map((image, index) => <div key={image.src} className={cn("compact-photo-gallery__image relative min-w-0 overflow-hidden bg-muted", index === 2 && "compact-photo-gallery__image--small", index === 3 && "compact-photo-gallery__image--large")}><Image src={image.src} alt={image.alt} fill sizes={index === 0 ? "(max-width: 640px) 50vw, 40vw" : "(max-width: 640px) 50vw, 20vw"} className="object-cover transition-transform duration-200 group-hover/card:scale-[1.02]" /></div>)}
       </div>
       <div className="story-card-content relative z-20 min-w-0 p-4">
         <div className="story-meta-row mb-2"><LifestyleBrandSource story={story} />{onSave && saved !== undefined ? <StorySaveIconButton saved={saved} onSave={onSave} className="ml-auto" /> : null}</div>
-        <h3 className="headline story-card-headline line-clamp-3 font-bold leading-snug">{story.title}</h3>
+        <h3 className="headline story-card-headline line-clamp-3 font-bold leading-snug transition-colors group-hover/card:text-[var(--hp-sidebar-heading,var(--primary))] group-focus-within/card:text-[var(--hp-sidebar-heading,var(--primary))]">{story.title}</h3>
         <p className="mt-2 line-clamp-3 text-sm leading-6 text-muted-foreground">{story.summary}</p>
       </div>
     </article>
@@ -3232,7 +3232,7 @@ export function LifestyleRiverCard({
         "story-card-content relative min-w-0",
         isVideo ? "p-4 sm:p-5" : featured ? "flex flex-col justify-center p-5 sm:p-6 lg:p-8" : "p-4 sm:p-5"
       )}>
-        <div className="story-meta-row relative z-20 mb-3">
+        <div className="story-meta-row relative z-20 mb-2">
           <LifestyleBrandSource story={story} />
           {onSave && saved !== undefined ? (
             <StorySaveIconButton saved={saved} onSave={onSave} className="ml-auto" />
@@ -3251,7 +3251,7 @@ export function LifestyleRiverCard({
         </div>
         <p className={cn(
           "line-clamp-3 text-muted-foreground",
-          featured ? "mt-3 max-w-prose text-base leading-7" : "mt-2 text-sm leading-6 sm:text-[0.95rem]"
+          featured ? "mt-2 max-w-prose text-base leading-7" : "mt-2 text-sm leading-6 sm:text-[0.95rem]"
         )}>
           {story.summary}
         </p>
@@ -6932,10 +6932,10 @@ function LifestyleRiverHomePage({
                             stories={savedStoryInventory.filter((story) => profile.savedIds.includes(story.id)).slice(0, 3)}
                             onOpenStory={(story) => openStory(story.id)}
                             title="Saved Items"
-                            titleIcon={<Heart className="h-4 w-4 shrink-0" aria-hidden />}
+                            titleIcon={<Bookmark className="h-4 w-4 shrink-0" aria-hidden />}
                           />
                         ) : (
-                          <DiscoverySidebarCard title="Saved Items" summary="Your saved stories" titleIcon={<Heart className="h-4 w-4 shrink-0" aria-hidden />}>
+                          <DiscoverySidebarCard title="Saved Items" summary="Your saved stories" titleIcon={<Bookmark className="h-4 w-4 shrink-0" aria-hidden />}>
                             <p className="text-sm leading-6 text-muted-foreground">Save stories as you browse and they will appear here.</p>
                           </DiscoverySidebarCard>
                         )}
@@ -7535,7 +7535,7 @@ function LifestyleRiverHomePage({
                               }}
                               aria-label={`Save suggested story: ${story.title}`}
                             >
-                              <Heart className="h-4 w-4" aria-hidden />
+                              <Bookmark className="h-4 w-4" aria-hidden />
                               Save story
                             </Button>
                           </div>

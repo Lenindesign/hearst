@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
-import { ChevronLeft, ChevronRight, Eye, EyeOff, Heart, Info, Pause, Play, Plus, X } from "@/components/ui/icons";
+import { Bookmark, ChevronLeft, ChevronRight, Eye, EyeOff, Info, Pause, Play, Plus, X } from "@/components/ui/icons";
 import { useModalIsolation } from "@/components/ui/use-modal-isolation";
 import { cn } from "@/lib/utils";
 import type { ReaderArticleImage, ReaderArticleLoadState } from "./reader-article-body";
@@ -547,7 +547,7 @@ export function FullscreenImageViewer({
             aria-pressed={saved}
             aria-label={saved ? "Remove saved story" : "Save story"}
           >
-            <Heart className="h-4 w-4 sm:mr-1.5" aria-hidden="true" />
+            <Bookmark className="h-4 w-4 sm:mr-1.5" aria-hidden="true" />
             <span className="max-sm:sr-only">{saved ? "Saved" : "Save story"}</span>
           </button>
           <button
