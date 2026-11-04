@@ -16,6 +16,16 @@ export type CommunityGroup = {
 
 export const communityGroups = [
   {
+    brandSlug: "mens-health",
+    groupSlug: "training-club",
+    name: "Men’s Health Training Club",
+    description: "A Men’s Health group for training together, sharing progress, and building useful routines with editors as hosts.",
+    members: "Pilot group",
+    prompt: "What movement are you making time for this week?",
+    starterPostSlug: "weekly-movement-check-in",
+    iconKey: "flame",
+  },
+  {
     brandSlug: "delish",
     groupSlug: "italian-weeknights",
     name: "Italian Weeknights",
