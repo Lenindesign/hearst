@@ -415,14 +415,14 @@ export function CommunityForumsPage({ activeBrandSlug, activeGroupSlug, activeTh
             <CommunityGroupChips groups={groups} activeBrandSlug={activeBrandSlug} />
 
             {activeGroup && !activeThread ? (
-              <details className="rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] lg:hidden">
+              <details className="rounded-card border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] lg:hidden">
                 <summary className="cursor-pointer text-sm font-bold">About {activeGroup.name}</summary>
                 <div className="mt-3">{groupAbout}</div>
               </details>
             ) : null}
 
             {activeThread ? (
-              <article className="overflow-hidden rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]" aria-labelledby="thread-title">
+              <article className="overflow-hidden rounded-card border border-[var(--hp-border)] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]" aria-labelledby="thread-title">
                 <div className="p-5">
                   <div className="flex flex-wrap items-center gap-2 text-xs font-bold text-[var(--hp-text-secondary)]">
                     <BrandSourceIcon brand={activeThread.brand} brandSlug={activeThread.brandSlug} className="size-8 rounded-full" imageClassName="object-cover p-0" />
@@ -520,7 +520,7 @@ export function CommunityForumsPage({ activeBrandSlug, activeGroupSlug, activeTh
 
           <aside className="hidden min-w-0 space-y-5 lg:sticky lg:top-[86px] lg:block lg:max-h-[calc(100dvh-110px)] lg:self-start lg:overflow-y-auto lg:pr-1">
             {activeGroup ? (
-              <section className="rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">{groupAbout}</section>
+              <section className="rounded-card border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">{groupAbout}</section>
             ) : view === "all" ? null : (
               <CommunityGroupsToJoin groups={groups} />
             )}

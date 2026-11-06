@@ -235,7 +235,7 @@ export function LocalWeather({
           id={panelId}
           role="dialog"
           aria-label="Weather location"
-          className="absolute left-0 top-full z-50 mt-2 w-72 rounded-[8px] border border-border bg-[var(--hp-surface)] p-3 text-foreground shadow-[var(--hp-shadow-card)]"
+          className="absolute left-0 top-full z-50 mt-2 w-72 rounded-card border border-border bg-[var(--hp-surface)] p-3 text-foreground shadow-[var(--hp-shadow-card)]"
         >
           <label htmlFor={`${panelId}-input`} className="mb-1.5 block text-xs font-semibold">
             City or ZIP code

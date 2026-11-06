@@ -209,7 +209,7 @@ export function TodayEditStrip<T extends TodayEditStory>({
   return (
     <section
       className={cn(
-        "relative hidden w-full overflow-hidden rounded-[8px] border border-border bg-[var(--hp-strip)] shadow-[var(--hp-shadow-card)] md:block",
+        "relative hidden w-full overflow-hidden rounded-card border border-border bg-[var(--hp-strip)] shadow-[var(--hp-shadow-card)] md:block",
         className,
       )}
       aria-labelledby={titleId}

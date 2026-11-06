@@ -107,7 +107,7 @@ export function BrandPromotionRiverModule({
   return (
     <section
       className={cn(
-        "min-w-0 overflow-hidden rounded-[8px] border shadow-[var(--hp-shadow-card)]",
+        "min-w-0 overflow-hidden rounded-card border shadow-[var(--hp-shadow-card)]",
         isAEFamilyPromotion
           ? "border-[#2A2E35] bg-[#0D1014] text-white"
           : "border-border bg-[var(--hp-surface)]",

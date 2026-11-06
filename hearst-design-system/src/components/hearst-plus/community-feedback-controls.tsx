@@ -77,7 +77,7 @@ export function CommunityStartPostForm() {
   return (
     <form
       id="start-thread"
-      className="scroll-mt-28 rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]"
+      className="scroll-mt-28 rounded-card border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]"
       aria-labelledby="start-thread-title"
       onSubmit={(event) => {
         event.preventDefault();
@@ -248,7 +248,7 @@ export function CommunitySuggestGroupForm({
   return (
     <form
       id="suggest-group"
-      className="scroll-mt-28 rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]"
+      className="scroll-mt-28 rounded-card border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]"
       aria-labelledby="suggest-group-title"
       onSubmit={(event) => {
         event.preventDefault();

@@ -162,7 +162,7 @@ export function InterpretationHarnessDemo() {
             </div>
 
             <div className="mt-4 bg-muted/40 p-3 md:p-5">
-              <article data-brand={brand === "car-and-driver" ? "car-and-driver" : undefined} className="mx-auto w-full overflow-hidden rounded-[8px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] [container-type:inline-size]" style={{ maxWidth: `${width}px` }}>
+              <article data-brand={brand === "car-and-driver" ? "car-and-driver" : undefined} className="mx-auto w-full overflow-hidden rounded-card bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] [container-type:inline-size]" style={{ maxWidth: `${width}px` }}>
                 <div className="relative aspect-video overflow-hidden bg-muted">
                   <Image
                     ref={(node) => { previewRefs.current.image = node; }}

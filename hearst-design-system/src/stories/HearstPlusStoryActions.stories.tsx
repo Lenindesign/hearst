@@ -31,7 +31,7 @@ function StoryActionsExample({
 
   return (
     <ActionsFrame>
-      <div className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] sm:p-5">
+      <div className="rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] sm:p-5">
         <p className="text-sm font-semibold">{story.title}</p>
         {hidden ? (
           <p className="mt-3 text-sm text-muted-foreground">
@@ -81,7 +81,7 @@ function FocusTransferExample({
             key={story.id}
             data-story-module="river"
             data-story-id={story.id}
-            className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] sm:p-5"
+            className="rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] sm:p-5"
           >
             <button
               type="button"

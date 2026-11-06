@@ -4,7 +4,6 @@ import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
-import { BrandSourceIcon } from "@/components/hearst-plus/brand-source-icon";
 import { LifestyleRiverImage } from "@/components/hearst-plus/story-presentation";
 import { CommunityHomeRiverCard } from "@/components/hearst-plus/community-home-river-card";
 import type { CommunityFeedThread } from "@/components/hearst-plus/community-client";
@@ -15,12 +14,13 @@ import { ContextualRiverAdvertisement } from "@/components/hearst-plus/contextua
 import type { ContextualAdUnit } from "@/components/hearst-plus/content-reader-advertisement";
 import { BrandPromotionRiverModule } from "@/components/hearst-plus/brand-promotion-river-module";
 import type { BrandPromotionMatch } from "@/components/hearst-plus/brand-promotion-model";
-import { LifestyleRiverCard } from "@/components/home-page";
+import { EditorialHomepageSection, LifestyleRiverCard } from "@/components/home-page";
 import { MainNav } from "@/components/home-page";
 import { UtilityBar } from "@/components/hearst-plus/utility-bar";
 import { ProductFooter } from "@/components/product-story-shell";
 import { DiscoverySidebarCard } from "@/components/hearst-plus/discovery-sidebar";
 import { TrendingStoryRail } from "@/components/hearst-plus/trending-rail";
+import { SavedItemsModule } from "@/components/hearst-plus/saved-items-module";
 import { CommunityJoinedGroupsCard } from "@/components/hearst-plus/community-joined-groups-card";
 import { communityGroups } from "@/lib/community-groups";
 import { brands } from "@/lib/brands";
@@ -30,13 +30,13 @@ import { Play } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 const patterns = [
-  { id: "featured-four", name: "Featured + Row", description: "A full-width lead story followed by one supporting row that reduces from four cards to three or two as space narrows.", wireframe: "featured-four" },
-  { id: "four-card-row", name: "Card Row", description: "A single horizontal row that shows up to four cards, reducing to three or two as space narrows.", wireframe: "four-card-row" },
-  { id: "feature-sidebar", name: "Feature + Sidebar", description: "A lead story beside a stack of compact horizontal stories.", wireframe: "feature-sidebar" },
+  { id: "featured-four", name: "Featured + Row", description: "A full-width lead story followed by a row of up to four cards. Columns follow the block width (1, 2, 3 or 4) and the row never leaves a partial line.", wireframe: "featured-four" },
+  { id: "four-card-row", name: "Card Row", description: "A row of up to four compact cards (4:3 image, no summary) at 1, 2, 3 or 4 columns depending on the block width. Cards share the row height.", wireframe: "four-card-row" },
+  { id: "feature-sidebar", name: "Feature + Sidebar", description: "A lead story beside a stack of four horizontal stories that stretches to the lead’s height once the block is 820px wide.", wireframe: "feature-sidebar" },
   { id: "hero-three-horizontal", name: "River with Hero", description: "A section heading and full-width lead story followed by three horizontal story cards in a vertical river.", wireframe: "hero-three-horizontal" },
-  { id: "three-column-feature", name: "Three-Column Feature Row", description: "A discovery rail, central feature, and contextual ad placement.", wireframe: "three-column-feature" },
-  { id: "featured-video-four", name: "Featured Video + Four", description: "A featured playable video followed by four video cards in one row.", wireframe: "featured-video-four" },
-  { id: "four-card-grid", name: "Grid", description: "Editorial cards arranged in a responsive grid that expands as space allows.", wireframe: "four-card-grid" },
+  { id: "three-column-feature", name: "Three-Column Feature Row", description: "A discovery rail, central feature and contextual ad. Three columns from a 1100px block; from 820px the ad stacks under the rail beside the feature; stacked below that.", wireframe: "three-column-feature" },
+  { id: "featured-video-four", name: "Featured Video + Four", description: "A featured playable video followed by four video cards at 1, 2 or 4 columns.", wireframe: "featured-video-four" },
+  { id: "four-card-grid", name: "Grid", description: "Editorial cards in a grid that wraps at 1, 2 or 4 columns, so sets of four always fill their rows.", wireframe: "four-card-grid" },
   { id: "horizontal-story-list", name: "River", description: "A vertical river of image-led horizontal story cards with consistent text alignment.", wireframe: "horizontal-story-list" },
 ] as const;
 
@@ -104,7 +104,7 @@ function CardLibrary({
   else if (selectedType === "event") sample = <div className="mx-auto w-full max-w-2xl"><EventTile event={eventSample} /></div>;
   else if (selectedType === "shorts") sample = shortsStories.length > 0
     ? <div className="mx-auto w-full max-w-4xl"><VerticalVideoCarousel stories={shortsStories} onOpen={() => undefined} theme="light" title="Hearst Shorts" summaryLabel="vertical" /></div>
-    : <div className="mx-auto w-full max-w-[320px]"><article className="overflow-hidden rounded-[8px] border border-border bg-card shadow-[var(--hp-shadow-card)]"><div className="relative aspect-[9/16] overflow-hidden bg-black"><LifestyleRiverImage story={video} className="h-full w-full object-cover" /><span className="absolute inset-0 grid place-items-center"><span className="grid size-12 place-items-center rounded-full bg-white text-black"><Play className="size-5 fill-current" aria-hidden /></span></span><span className="absolute left-3 top-3 rounded-full bg-black/70 px-2.5 py-1 text-xs font-bold text-white">Shorts</span></div><div className="p-4"><p className="text-xs text-muted-foreground">{video.brand} · Vertical video</p><h4 className="headline mt-2 text-lg font-bold leading-tight">{video.title}</h4></div></article></div>;
+    : <div className="mx-auto w-full max-w-[320px]"><article className="overflow-hidden rounded-card border border-border bg-card shadow-[var(--hp-shadow-card)]"><div className="relative aspect-[9/16] overflow-hidden bg-black"><LifestyleRiverImage story={video} className="h-full w-full object-cover" /><span className="absolute inset-0 grid place-items-center"><span className="grid size-12 place-items-center rounded-full bg-white text-black"><Play className="size-5 fill-current" aria-hidden /></span></span><span className="absolute left-3 top-3 rounded-full bg-black/70 px-2.5 py-1 text-xs font-bold text-white">Shorts</span></div><div className="p-4"><p className="text-xs text-muted-foreground">{video.brand} · Vertical video</p><h4 className="headline mt-2 text-lg font-bold leading-tight">{video.title}</h4></div></article></div>;
   else if (selectedType === "advertisement") sample = <div className="mx-auto w-full max-w-2xl"><ContextualRiverAdvertisement ad={sponsoredAd} /></div>;
   else if (selectedType === "brand-spotlight") sample = <div className="mx-auto w-full max-w-5xl"><BrandPromotionRiverModule promotion={brandSpotlight} onOpenStory={() => undefined} /></div>;
   else {
@@ -149,7 +149,7 @@ function CardLibrary({
 
 const sidebarWidgets = [
   { id: "trending", name: "Trending Stories", description: "Ranked stories for quick discovery across brands." },
-  { id: "saved", name: "Saved Stories", description: "A reader’s saved stories, with a useful empty state when none are saved." },
+  { id: "saved", name: "Saved Items", description: "A reader’s saved stories. When none are saved, it explains the value, offers Browse For You and suggests three stories to save." },
   { id: "communities", name: "Explore Communities", description: "Relevant brand groups with join actions and member context." },
   { id: "events", name: "Event Discovery", description: "Upcoming experiences with dates, locations, and event links." },
   { id: "local-news", name: "Local News", description: "Station-attributed headlines with market context." },
@@ -167,6 +167,7 @@ function SidebarWidgetWireframe({ type, active }: { type: SidebarWidgetId; activ
 
 function SidebarWidgetLibrary({ stories, eventSample }: { stories: LifestyleRiverStory[]; eventSample: HearstEventRecord }) {
   const [selectedId, setSelectedId] = React.useState<SidebarWidgetId>(sidebarWidgets[0].id);
+  const [savedState, setSavedState] = React.useState<"saved" | "empty">("saved");
   const selected = sidebarWidgets.find((widget) => widget.id === selectedId) ?? sidebarWidgets[0];
   const communityWidgetGroups = communityGroups.slice(0, 3).map((group) => ({
     brand: brands.find((brand) => brand.slug === group.brandSlug)?.name ?? group.brandSlug,
@@ -181,7 +182,10 @@ function SidebarWidgetLibrary({ stories, eventSample }: { stories: LifestyleRive
   if (selectedId === "trending") {
     sample = <TrendingStoryRail stories={stories.slice(0, 5)} onOpenStory={() => undefined} />;
   } else if (selectedId === "saved") {
-    sample = <TrendingStoryRail stories={stories.slice(1, 4)} onOpenStory={() => undefined} title="Saved Items" titleIcon={<span aria-hidden>♡</span>} />;
+    sample = <div className="space-y-3">
+      <div role="group" aria-label="Saved Items state" className="flex gap-2">{(["saved", "empty"] as const).map((state) => <button key={state} type="button" aria-pressed={savedState === state} onClick={() => setSavedState(state)} className={cn("inline-flex min-h-9 items-center rounded-[5px] border px-3 text-xs font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary", savedState === state ? "border-primary/40 bg-primary/5 text-primary" : "border-border bg-card hover:bg-muted")}>{state === "saved" ? "With saves" : "Empty"}</button>)}</div>
+      <SavedItemsModule savedStories={savedState === "saved" ? stories.slice(1, 4) : []} suggestions={stories.slice(4, 7)} onOpenStory={() => undefined} onSaveSuggestion={() => undefined} onBrowseForYou={() => undefined} />
+    </div>;
   } else if (selectedId === "communities") {
     sample = <CommunityJoinedGroupsCard groups={communityWidgetGroups} />;
   } else if (selectedId === "events") {
@@ -238,78 +242,56 @@ function Wireframe({ type, active = false }: { type: string; active?: boolean })
   return <div className="grid w-full grid-cols-2 gap-1">{Array.from({ length: 4 }, (_, i) => block(`g${i}`, "h-4"))}</div>;
 }
 
-function StorySample({
-  story,
-  variant = "card",
-  video = false,
-}: {
-  story: LifestyleRiverStory;
-  variant?: "card" | "feature" | "horizontal" | "hero" | "river-hero";
-  video?: boolean;
-}) {
-  const image = variant === "horizontal" ? "relative aspect-[4/3] w-full overflow-hidden rounded-[5px] bg-muted" : cn("relative w-full overflow-hidden bg-muted", variant === "hero" ? "aspect-[2.5/1]" : "aspect-[16/9]");
-  const visual = (
-    <div className={image}>
-      <LifestyleRiverImage story={story} className="h-full w-full object-cover" priority />
-      {video ? <span className="absolute inset-0 grid place-items-center"><span className="grid size-10 place-items-center rounded-full bg-white text-black shadow-sm"><Play className="size-4 fill-current" aria-hidden /></span></span> : null}
-      {variant === "hero" ? <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/5 to-transparent" /> : null}
-      {video && story.videoDuration ? <span className="absolute right-2 top-2 rounded-sm bg-black/75 px-2 py-1 text-[10px] font-bold text-white">{Math.floor(story.videoDuration / 60)}:{String(story.videoDuration % 60).padStart(2, "0")}</span> : null}
-    </div>
-  );
-  const identity = (
-    <div className="flex min-w-0 items-center gap-1.5 text-[10px] font-medium text-muted-foreground">
-      <BrandSourceIcon brand={story.brand} brandSlug={story.brandSlug} className="size-4 shrink-0 rounded-[3px]" />
-      <span className="truncate">{story.brand}{story.topic ? ` · ${story.topic}` : ""}</span>
-    </div>
-  );
-  const heroIdentity = (
-    <div className="flex min-w-0 items-center gap-1.5 text-[10px] font-medium text-white/85">
-      <BrandSourceIcon brand={story.brand} brandSlug={story.brandSlug} className="size-4 shrink-0 rounded-[3px]" />
-      <span className="truncate">{story.brand}{story.topic ? ` · ${story.topic}` : ""}</span>
-    </div>
-  );
-
-  if (variant === "hero") {
-    return <article className="relative isolate overflow-hidden rounded-[7px] bg-black text-white shadow-[var(--hp-shadow-card)]">{visual}<div className="absolute inset-x-0 bottom-0 p-4 sm:p-6 lg:p-8">{heroIdentity}<h3 className="headline mt-2 max-w-3xl text-balance text-xl font-bold leading-tight text-white sm:text-3xl lg:text-4xl">{story.title}</h3></div></article>;
-  }
-  if (variant === "river-hero") {
-    return <article className="min-w-0 overflow-hidden rounded-[7px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">{visual}<div className="p-3 sm:p-4">{identity}<h3 className="headline mt-2 line-clamp-3 text-xl font-bold leading-tight sm:text-2xl">{story.title}</h3><p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">{story.summary}</p></div></article>;
-  }
-  if (variant === "horizontal") {
-    return <article className="grid min-w-0 grid-cols-[minmax(82px,28%)_minmax(0,1fr)] items-center gap-3 rounded-[7px] bg-[var(--hp-surface)] p-3 shadow-[var(--hp-shadow-card)] sm:grid-cols-[minmax(110px,28%)_minmax(0,1fr)] sm:gap-4 sm:p-4">{visual}<div className="min-w-0">{identity}<h3 className="headline mt-1 line-clamp-2 text-sm font-bold leading-snug sm:text-base">{story.title}</h3><p className="mt-1 hidden line-clamp-2 text-xs leading-5 text-muted-foreground sm:block">{story.summary}</p></div></article>;
-  }
-  return <article className="min-w-0 overflow-hidden rounded-[7px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">{visual}<div className="p-3 sm:p-4">{identity}<h3 className={cn("headline mt-2 line-clamp-3 font-bold leading-snug", variant === "feature" ? "text-xl sm:text-2xl" : "text-sm sm:text-base")}>{story.title}</h3><p className="mt-2 line-clamp-2 text-xs leading-5 text-muted-foreground">{story.summary}</p></div></article>;
-}
-
-function SectionHeading({ children }: { children: React.ReactNode }) {
-  return <div className="mb-3 flex items-end justify-between gap-4 border-b border-border pb-2"><h3 className="headline text-xl font-bold sm:text-2xl">{children}</h3><span className="shrink-0 text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">Hearst+ Selection</span></div>;
-}
-
 function StoryRow({ story, rank }: { story: LifestyleRiverStory; rank?: number }) {
   return <div className="grid min-w-0 grid-cols-[48px_minmax(0,1fr)] items-center gap-2 border-b border-border/70 py-2 last:border-0"><div className="relative aspect-square overflow-hidden rounded-[4px] bg-muted"><LifestyleRiverImage story={story} className="h-full w-full object-cover" priority />{rank ? <span className="absolute left-1 top-1 grid size-4 place-items-center rounded-full bg-[var(--hp-surface)] text-[9px] font-bold">{rank}</span> : null}</div><div className="min-w-0"><p className="line-clamp-2 text-[11px] font-bold leading-snug">{story.title}</p><p className="mt-1 truncate text-[10px] text-muted-foreground">{story.brand}</p></div></div>;
 }
 
 function AdSample() {
-  return <article className="overflow-hidden rounded-[7px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]"><div className="relative aspect-[16/9] bg-slate-700"><div className="absolute inset-0 bg-gradient-to-br from-slate-700 via-slate-500 to-slate-800"/><span className="absolute left-3 top-3 text-[9px] font-bold uppercase tracking-widest text-white">Advertisement</span><span className="absolute bottom-3 left-3 text-[10px] font-bold uppercase tracking-widest text-white">Demo creative</span></div><div className="p-3"><p className="text-[9px] font-bold uppercase tracking-widest text-primary">Contextual placement</p><h3 className="headline mt-1 text-base font-bold">A message for this audience</h3><p className="mt-1 text-xs leading-5 text-muted-foreground">Sponsor copy adapts to the surrounding editorial context.</p></div></article>;
+  return <article className="overflow-hidden rounded-card bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]"><div className="relative aspect-[16/9] bg-slate-700"><div className="absolute inset-0 bg-gradient-to-br from-slate-700 via-slate-500 to-slate-800"/><span className="absolute left-3 top-3 text-[9px] font-bold uppercase tracking-widest text-white">Advertisement</span><span className="absolute bottom-3 left-3 text-[10px] font-bold uppercase tracking-widest text-white">Demo creative</span></div><div className="p-3"><p className="text-[9px] font-bold uppercase tracking-widest text-primary">Contextual placement</p><h3 className="headline mt-1 text-base font-bold">A message for this audience</h3><p className="mt-1 text-xs leading-5 text-muted-foreground">Sponsor copy adapts to the surrounding editorial context.</p></div></article>;
 }
 
-function PatternPreview({ patternId, stories, videos }: { patternId: PatternId; stories: LifestyleRiverStory[]; videos: LifestyleRiverStory[] }) {
+const noop = () => undefined;
+const noSavedIds: string[] = [];
+
+/** Library previews render the production block (`EditorialHomepageSection`) so each pattern shows what ships. */
+function ProductionBlock({ title, stories, mode }: { title: string; stories: LifestyleRiverStory[]; mode: "featuredRow" | "cardRow" | "featureSidebar" | "riverWithHero" | "grid" | "river" | "lead" }) {
+  return <EditorialHomepageSection
+    section={{ title, stories }}
+    selectionLabel="Hearst+ Selection"
+    onOpen={noop}
+    savedIds={noSavedIds}
+    onSave={noop}
+    featureFirstGrid={mode === "featuredRow"}
+    cardGrid={mode === "cardRow"}
+    featureSidebar={mode === "featureSidebar"}
+    riverWithHero={mode === "riverWithHero"}
+    grid={mode === "grid"}
+    river={mode === "river"}
+  />;
+}
+
+function PatternPreview({ patternId, stories, videos, sponsoredAd }: { patternId: PatternId; stories: LifestyleRiverStory[]; videos: LifestyleRiverStory[]; sponsoredAd: ContextualAdUnit }) {
   const sample = stories.slice(0, 9);
   const videoSamples = videos.length >= 5 ? videos.slice(0, 5) : [...videos, ...videos, ...videos].slice(0, 5);
-  const hasPlayableSamples = videoSamples.some((story) => Boolean(story.videoUrl));
 
-  if (patternId === "featured-four") return <><StorySample story={sample[0]} variant="hero" /><div className="mt-4"><ResponsiveStoryRow stories={sample.slice(1, 5)} /></div></>;
-  if (patternId === "four-card-row") return <ResponsiveStoryRow stories={sample.slice(0, 4)} />;
-  if (patternId === "feature-sidebar") return <div className="grid min-w-0 items-start gap-4 xl:grid-cols-[minmax(0,1.8fr)_minmax(260px,1fr)]"><StorySample story={sample[0]} variant="feature" /><div className="space-y-2">{sample.slice(1, 5).map((story) => <StorySample key={story.id} story={story} variant="horizontal" />)}</div></div>;
-  if (patternId === "hero-three-horizontal") return <><SectionHeading>Style &amp; Beauty</SectionHeading><StorySample story={sample[0]} variant="river-hero" /><div className="mt-3 space-y-2">{sample.slice(1, 4).map((story) => <StorySample key={story.id} story={story} variant="horizontal" />)}</div></>;
-  if (patternId === "three-column-feature") return <div className="grid min-w-0 items-start gap-3 lg:grid-cols-[minmax(140px,.75fr)_minmax(0,1.6fr)_minmax(140px,.75fr)] xl:gap-4"><section className="rounded-[7px] bg-[var(--hp-surface)] p-2.5 shadow-[var(--hp-shadow-card)] sm:p-3"><h3 className="text-[10px] font-bold uppercase tracking-widest">Trending across brands</h3>{sample.slice(0, 4).map((story, index) => <StoryRow key={story.id} story={story} rank={index + 1} />)}</section><div className="min-w-0"><SectionHeading>Style &amp; Beauty</SectionHeading><StorySample story={sample[4] ?? sample[0]} variant="feature" /></div><div className="min-w-0"><AdSample /></div></div>;
-  if (patternId === "featured-video-four") return <><article className="overflow-hidden rounded-[7px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]"><div className="relative aspect-[2.2/1] overflow-hidden bg-black"><LifestyleRiverImage story={videoSamples[0]} className="h-full w-full object-cover" priority /><div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/10 to-transparent"/><span className="absolute left-5 top-5 rounded-full bg-black/55 px-3 py-1 text-xs font-bold text-white">{hasPlayableSamples ? "Featured video" : "Featured media slot"}</span>{hasPlayableSamples ? <span className="absolute inset-0 grid place-items-center"><span className="grid size-12 place-items-center rounded-full bg-white text-black"><Play className="size-5 fill-current" aria-hidden /></span></span> : null}<div className="absolute inset-x-0 bottom-0 p-5 text-white"><p className="text-xs font-semibold">{videoSamples[0].brand} · {videoSamples[0].topic}</p><h3 className="headline mt-1 max-w-2xl text-2xl font-bold sm:text-3xl">{videoSamples[0].title}</h3></div></div></article><div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">{videoSamples.slice(1, 5).map((story) => <StorySample key={story.id} story={story} video={Boolean(story.videoUrl)} />)}</div></>;
-  if (patternId === "four-card-grid") return <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 2xl:grid-cols-4">{sample.slice(0, 4).map((story) => <StorySample key={story.id} story={story} />)}</div>;
-  return <div className="space-y-3">{sample.slice(0, 5).map((story) => <StorySample key={story.id} story={story} variant="horizontal" />)}</div>;
-}
-
-function ResponsiveStoryRow({ stories }: { stories: LifestyleRiverStory[] }) {
-  return <div className="pattern-card-row-container"><div className="pattern-card-row flex w-full gap-3">{stories.map((story) => <div key={story.id} className="pattern-card-row__card min-w-0"><StorySample story={story} /></div>)}</div></div>;
+  if (patternId === "featured-four") return <ProductionBlock title="Style & Beauty" stories={sample.slice(0, 5)} mode="featuredRow" />;
+  if (patternId === "four-card-row") return <ProductionBlock title="Cars & Reviews" stories={sample.slice(0, 4)} mode="cardRow" />;
+  if (patternId === "feature-sidebar") return <ProductionBlock title="Fitness & Wellness" stories={sample.slice(0, 5)} mode="featureSidebar" />;
+  if (patternId === "hero-three-horizontal") return <ProductionBlock title="Style & Beauty" stories={sample.slice(0, 4)} mode="riverWithHero" />;
+  if (patternId === "four-card-grid") return <ProductionBlock title="Food & Home" stories={sample.slice(0, 8)} mode="grid" />;
+  if (patternId === "horizontal-story-list") return <ProductionBlock title="Entertainment" stories={sample.slice(0, 5)} mode="river" />;
+  if (patternId === "three-column-feature") return <div className="@container/hp-block min-w-0">
+    <div className="grid min-w-0 items-start gap-5 @min-[820px]/hp-block:grid-cols-[minmax(240px,.8fr)_minmax(0,1.6fr)] @min-[1100px]/hp-block:grid-cols-[minmax(240px,.75fr)_minmax(0,1.6fr)_minmax(240px,.75fr)]">
+      <TrendingStoryRail stories={sample.slice(0, 5)} onOpenStory={noop} />
+      <div className="min-w-0 @min-[820px]/hp-block:col-start-2 @min-[820px]/hp-block:row-span-2 @min-[820px]/hp-block:row-start-1 @min-[1100px]/hp-block:row-span-1"><ProductionBlock title="Style & Beauty" stories={sample.slice(5, 6)} mode="lead" /></div>
+      <div className="min-w-0 @min-[1100px]/hp-block:col-start-3 @min-[1100px]/hp-block:row-start-1"><ContextualRiverAdvertisement ad={sponsoredAd} /></div>
+    </div>
+  </div>;
+  if (patternId === "featured-video-four") return <div className="@container/hp-block min-w-0 space-y-5">
+    <LifestyleRiverCard story={videoSamples[0]} onOpen={noop} layoutOverride="cards" featured />
+    <div className="hp-block-grid min-w-0">{videoSamples.slice(1, 5).map((story, index) => <LifestyleRiverCard key={`${story.id}-${index}`} story={story} onOpen={noop} layoutOverride="cards" />)}</div>
+  </div>;
+  return null;
 }
 
 export function BlocksLibraryExperience({
@@ -387,7 +369,7 @@ export function BlocksLibraryExperience({
               <span className="text-xs font-semibold text-muted-foreground">Responsive preview · Hearst+ stories</span>
             </div>
             <div className="mt-5 rounded-[8px] bg-muted/60 p-3 sm:p-5 lg:p-7">
-              <PatternPreview patternId={selectedId} stories={previewStories} videos={previewVideos} />
+              <PatternPreview patternId={selectedId} stories={previewStories} videos={previewVideos} sponsoredAd={sponsoredAd} />
             </div>
             <div className="mt-5 grid gap-4 border-t border-border pt-4 sm:grid-cols-2">
               <div><p className="text-[10px] font-bold uppercase tracking-[0.14em] text-primary">Layout rule</p><p className="mt-1 text-sm leading-6">The pattern sets placement and card proportions. Editorial content and brand styling remain contextual.</p></div>

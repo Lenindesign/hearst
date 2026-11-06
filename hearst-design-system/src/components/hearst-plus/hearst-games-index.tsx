@@ -159,7 +159,7 @@ export function HearstGamesIndex() {
     <>
       <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]">
         <aside className="hidden min-w-0 space-y-5 lg:block">
-          <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
+          <section className="rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
             <h2 className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
               Your daily habit
             </h2>
@@ -179,7 +179,7 @@ export function HearstGamesIndex() {
             </div>
           </section>
 
-          <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
+          <section className="rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
             <h2 className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
               Game types
             </h2>
@@ -204,7 +204,7 @@ export function HearstGamesIndex() {
                     key={game.title}
                     role="link"
                     tabIndex={0}
-                    className="group relative min-w-0 cursor-pointer overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/45 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/45"
+                    className="group relative min-w-0 cursor-pointer overflow-hidden rounded-card border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/45"
                     onClick={() => openGame(game)}
                     onKeyDown={(event) => {
                       if (event.key === "Enter" || event.key === " ") {
@@ -270,7 +270,7 @@ export function HearstGamesIndex() {
                   key={game.title}
                   role="button"
                   tabIndex={0}
-                  className="group relative grid min-w-0 cursor-pointer gap-4 overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/45 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/45 sm:grid-cols-[176px_minmax(0,1fr)]"
+                  className="group relative grid min-w-0 cursor-pointer gap-4 overflow-hidden rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/45 sm:grid-cols-[176px_minmax(0,1fr)]"
                   onClick={() => openGame(game)}
                   onKeyDown={(event) => {
                     if (event.key === "Enter" || event.key === " ") {
@@ -328,7 +328,7 @@ export function HearstGamesIndex() {
         </main>
 
         <aside className="min-w-0 space-y-5 lg:sticky lg:top-[108px] lg:self-start">
-          <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
+          <section className="rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
             <h2 className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
               Why games
             </h2>
@@ -338,7 +338,7 @@ export function HearstGamesIndex() {
             </div>
           </section>
 
-          <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
+          <section className="rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
             <h2 className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
               Source review
             </h2>
@@ -364,7 +364,7 @@ export function HearstGamesIndex() {
             </div>
           </section>
 
-          <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
+          <section className="rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
             <h2 className="text-sm font-bold text-foreground">Research only</h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
               {researchGame.source} is useful for market scanning, but its {researchGame.license} license means it should stay a reference unless legal approves a compliant use.

@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { appendReaderReturnHref } from "@/lib/reader-navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,6 +12,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 const STORAGE_KEY = "hearst-mens-health-training-club-v1";
 const STORE_CHANGE_EVENT = "hearst-mens-health-training-club-change";
 const WEEKLY_DAY_GOAL = 3;
+const TRAINING_PLAN_STORY_ID = "mens-health-fitness-a74297441-workout-challenge-30-day";
+const TRAINING_CLUB_RETURN_HREF = "/communities/mens-health/groups/training-club/";
 
 type TrainingActivity = {
   id: string;
@@ -151,7 +154,7 @@ export function MensHealthTrainingClub() {
 
   return (
     <section className="space-y-4" aria-labelledby="mh-training-club-title">
-      <Card className="gap-4 rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] ring-0 sm:p-5">
+      <Card className="gap-4 rounded-card border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] ring-0 sm:p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="min-w-0">
             <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">Men’s Health · Hearst+ community</p>
@@ -160,7 +163,7 @@ export function MensHealthTrainingClub() {
               Log the movement that works for you, share a check-in if you choose, and follow a weekly challenge from Men’s Health.
             </p>
           </div>
-          <Link href="/read/mens-health-fitness-a74297441-workout-challenge-30-day/?from=%2Fcommunities%2Fmens-health%2Fgroups%2Ftraining-club%2F" className="inline-flex min-h-11 shrink-0 items-center font-bold text-primary underline-offset-4 hover:underline">
+          <Link href={appendReaderReturnHref(TRAINING_PLAN_STORY_ID, TRAINING_CLUB_RETURN_HREF)} className="inline-flex min-h-11 shrink-0 items-center font-bold text-primary underline-offset-4 hover:underline">
             Read the Men’s Health plan <span aria-hidden className="ml-1">→</span>
           </Link>
         </div>
@@ -210,7 +213,7 @@ export function MensHealthTrainingClub() {
         </div>
       </Card>
 
-      <Card className="gap-0 rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-0 shadow-[var(--hp-shadow-card)] ring-0">
+      <Card className="gap-0 rounded-card border border-[var(--hp-border)] bg-[var(--hp-surface)] p-0 shadow-[var(--hp-shadow-card)] ring-0">
       <form onSubmit={handleSubmit} className="p-4 sm:p-5">
         <div className="flex items-center gap-2">
           <Plus className="size-5 text-primary" aria-hidden />
@@ -247,7 +250,7 @@ export function MensHealthTrainingClub() {
       </form>
       </Card>
 
-      <Card className="gap-3 rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] ring-0 sm:p-5">
+      <Card className="gap-3 rounded-card border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] ring-0 sm:p-5">
       <section aria-labelledby="mh-recent-activity-title">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h3 id="mh-recent-activity-title" className="headline text-xl leading-tight">Your recent activity</h3>

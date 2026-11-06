@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { getHearstBrandSection, getHearstDestinationCategoryRoute } from "@/lib/hearst-routes";
+import { buttonVariants } from "@/components/ui/button";
 
 export type ReaderAdvertisementDestination =
   | "lifestyle"
@@ -62,7 +63,7 @@ const adTopicRoutes: Record<string, { mode: "lifestyle" | "autos" | "flux" | "ew
   evs: { mode: "autos", label: "EVs" },
 };
 
-function getAdTopicHref(topic: string) {
+export function getAdTopicHref(topic: string) {
   const target = adTopicRoutes[topic.trim().toLowerCase()];
   return target ? getHearstDestinationCategoryRoute(target.mode, target.label) : undefined;
 }
@@ -193,12 +194,15 @@ export function ContentReaderAdvertisement({
           </div>
 
           <div className="space-y-4">
+            {/* CTA: HDS primary button (touch size) rendered as a link; sponsor colors stay on the creative. */}
             {ad.ctaHref ? (
               <a
                 href={ad.ctaHref}
                 aria-label={`${ad.cta}: ${ad.title}`}
-                className="inline-flex min-h-11 w-full items-center justify-center rounded-full px-4 py-3 text-center text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest transition-transform hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 active:translate-y-0"
-                style={{ backgroundColor: ad.palette.accent, color: "#fff" }}
+                data-slot="button"
+                data-variant="default"
+                data-size="touch"
+                className={buttonVariants({ variant: "default", size: "touch", className: "w-full" })}
               >
                 {ad.cta}
               </a>

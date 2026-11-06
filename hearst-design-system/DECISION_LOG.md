@@ -2,6 +2,13 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-11-06: Bookmark is the save icon
+
+- **Context:** Save used a heart, which readers associate with liking a story, while the surrounding language is about keeping stories for later ("Save story", "Save stories to build your reading list", Library, Read Later). The HDS Constitution's river card contract also names a bookmark action.
+- **Decision:** Save and saved-item affordances use the bookmark (outline unsaved, filled saved). The heart is reserved for reactions and favorites such as community likes. Library navigation moves from the bookmark to the books icon so the two never look alike.
+- **Scope:** Story card save, story action row, reader action bar, Shorts viewer, fullscreen image viewer, Saved Items module headings and suggestions, and the account Library navigation.
+- **Canonical rule:** `APP_RULES.md` save icon rule.
+
 ## 2026-10-11: Preview-first Newsstand landing page
 
 - **Context:** The landing page split attention between the trial and Preview, ran about eight screens of brand panels before the offer, and ended on a plans card with the rack poking out around it.

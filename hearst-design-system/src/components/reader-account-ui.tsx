@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   Bookmark,
+  Books,
   Check,
   ChevronRight,
   FolderPlus,
@@ -578,7 +579,7 @@ const profileTabs: { id: ProfileTab; label: string; icon: React.ComponentType<{ 
   { id: "overview", label: "Profile", icon: User },
   { id: "personalization", label: "Tune For You", icon: Check },
   { id: "recommendations", label: "Recommended", icon: Sparkles },
-  { id: "library", label: "Library", icon: Bookmark },
+  { id: "library", label: "Library", icon: Books },
   { id: "activity", label: "Comments", icon: MessageCircle },
   { id: "settings", label: "Account", icon: Settings },
 ];
@@ -776,7 +777,7 @@ export function ReaderProfileDialog({
                   { id: "recommendations" as const, icon: Sparkles, title: "Recommended", detail: `${recommendedStories.length} fresh ${recommendedStories.length === 1 ? "story" : "stories"} based on your current preferences` },
                   {
                     id: "library" as const,
-                    icon: Bookmark,
+                    icon: Books,
                     title: "Library",
                     detail: `${savedStories.length} saved ${savedStories.length === 1 ? "story" : "stories"} · ${customCollections.length === 0 ? "No custom collections" : `${customCollections.length} custom ${customCollections.length === 1 ? "collection" : "collections"}`}`,
                   },

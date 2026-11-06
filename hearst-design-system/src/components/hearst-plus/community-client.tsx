@@ -386,7 +386,7 @@ export function CommunityLeftRail({
   const unseen = store.activity.filter((item) => item.createdAt > store.activitySeenAt).length;
 
   return (
-    <section className="rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
+    <section className="rounded-card border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
       <h2 className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-text-primary)]">
         My groups
       </h2>
@@ -564,7 +564,7 @@ export function CommunityGroupsToJoin({ groups }: { groups: CommunityGroupSummar
   const { joined } = useCommunityState();
   const toJoin = groups.filter((group) => !joined.includes(group.brand)).slice(0, 5);
   return (
-    <section className="rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
+    <section className="rounded-card border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
       <h2 className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-text-primary)]">
         Groups to join
       </h2>
@@ -861,7 +861,7 @@ export function CommunityRiverCard({ thread }: { thread: CommunityFeedThread }) 
     // Community posts share the river card surface while keeping their type and reply actions visible.
     <article
       className={cn(
-        "group/card min-w-0 overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/50",
+        "group/card min-w-0 overflow-hidden rounded-card border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors",
         isList && "grid grid-cols-[112px_minmax(0,1fr)] items-center sm:grid-cols-[168px_minmax(0,1fr)]",
       )}
       aria-labelledby={`thread-${thread.id}-title`}
@@ -1013,7 +1013,7 @@ export function CommunityFeed({
         </p>
       ) : null}
       {visibleLocalPosts.length > 0 ? (
-        <div className="divide-y divide-[var(--hp-border)] rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
+        <div className="divide-y divide-[var(--hp-border)] rounded-card border border-[var(--hp-border)] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
           {visibleLocalPosts.map((post) => (
             <LocalPostCard key={post.id} post={post} />
           ))}
@@ -1045,7 +1045,7 @@ export function CommunityGroupsDirectory({ groups }: { groups: CommunityGroupSum
   return (
     <ul className="grid gap-3 sm:grid-cols-2">
       {groups.map((group) => (
-        <li key={`${group.brandSlug}-${group.groupSlug ?? "brand"}`} className="flex flex-col rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
+        <li key={`${group.brandSlug}-${group.groupSlug ?? "brand"}`} className="flex flex-col rounded-card border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
           <div className="flex items-start gap-3">
             <BrandSourceIcon brand={group.brand} brandSlug={group.brandSlug} className="size-9 shrink-0 rounded-full" imageClassName="object-cover p-0" />
             <div className="min-w-0 flex-1">

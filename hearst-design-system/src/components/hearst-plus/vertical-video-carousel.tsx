@@ -139,7 +139,7 @@ export function VerticalVideoCarousel({
       ref={sectionRef}
       className={cn(
         theme === "light"
-          ? "rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] sm:p-5"
+          ? "rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] sm:p-5"
           : "border-y border-white/10 py-5",
       )}
       aria-labelledby={titleId}
@@ -240,7 +240,7 @@ export function VerticalVideoCarousel({
             >
               <span
                 className={cn(
-                  "relative block aspect-[9/16] overflow-hidden rounded-[8px] bg-[var(--hp-surface-low)] shadow-[var(--hp-shadow-card)] transition-transform duration-200 group-hover:-translate-y-0.5 group-focus-visible:ring-2 group-focus-visible:ring-primary/60 motion-reduce:transition-none",
+                  "relative block aspect-[9/16] overflow-hidden rounded-card bg-[var(--hp-surface-low)] shadow-[var(--hp-shadow-card)] transition-transform duration-200 group-hover:-translate-y-0.5 group-focus-visible:ring-2 group-focus-visible:ring-primary/60 motion-reduce:transition-none",
                   theme === "light" ? "border border-border" : "border border-white/10",
                 )}
               >

@@ -33,6 +33,13 @@ export {
   TrendingVideoRail,
 } from "@/components/hearst-plus/trending-rail";
 
+export {
+  SAVED_ITEMS_EMPTY_MESSAGE,
+  SavedItemsModule,
+} from "@/components/hearst-plus/saved-items-module";
+
+export type { SavedItemsModuleProps } from "@/components/hearst-plus/saved-items-module";
+
 export { TodayEditStrip } from "@/components/hearst-plus/today-edit-strip";
 
 export type {

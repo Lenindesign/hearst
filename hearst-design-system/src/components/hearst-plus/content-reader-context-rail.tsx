@@ -6,9 +6,8 @@ import {
   getCommunityGroupsForBrand,
 } from "@/lib/community-groups";
 import { CommunityJoinedGroupsCard } from "./community-joined-groups-card";
-import { Bookmark } from "@/components/ui/icons";
 import { getLifestyleContextStories } from "./content-reader-model";
-import { DiscoverySidebarCard } from "./discovery-sidebar";
+import { SavedItemsModule } from "./saved-items-module";
 import { TrendingStoryRail } from "./trending-rail";
 
 export type ContentReaderContextRailProps = {
@@ -17,6 +16,8 @@ export type ContentReaderContextRailProps = {
   savedStories: LifestyleRiverStory[];
   savedIds: string[];
   onOpenStory: (storyId: string) => void;
+  /** Saves a suggested story from the Saved Items empty state. */
+  onSaveStory?: (story: LifestyleRiverStory) => void;
 };
 
 function ReaderCommunityModule({
@@ -46,28 +47,25 @@ export function ContentReaderContextRail({
   savedStories: savedStoryInventory,
   savedIds,
   onOpenStory,
+  onSaveStory,
 }: ContentReaderContextRailProps) {
   const recommendations = getLifestyleContextStories(currentStory, stories);
   const visibleSavedStories = savedStoryInventory
     .filter((story) => savedIds.includes(story.id))
     .slice(0, 3);
-  const savedItemsModule = visibleSavedStories.length > 0 ? (
-    <TrendingStoryRail
-      stories={visibleSavedStories}
+  // Empty-state suggestions: the reader's ranked queue, minus saved stories,
+  // the open story and anything already shown in the Trending rail.
+  const shownIds = new Set([currentStory.id, ...recommendations.sharedIntent.map((story) => story.id)]);
+  const savedSuggestions = visibleSavedStories.length > 0
+    ? []
+    : stories.filter((story) => !savedIds.includes(story.id) && !shownIds.has(story.id)).slice(0, 3);
+  const savedItemsModule = (
+    <SavedItemsModule
+      savedStories={visibleSavedStories}
+      suggestions={savedSuggestions}
       onOpenStory={(story) => onOpenStory(story.id)}
-      title="Saved items"
-      titleIcon={<Bookmark className="h-4 w-4 shrink-0" aria-hidden />}
+      onSaveSuggestion={onSaveStory ? (story) => onSaveStory(story) : undefined}
     />
-  ) : (
-    <DiscoverySidebarCard
-      title="Saved items"
-      summary="Your saved stories"
-      titleIcon={<Bookmark className="h-4 w-4 shrink-0" aria-hidden />}
-    >
-      <p className="text-sm leading-6 text-muted-foreground">
-        Save stories as you browse and they will appear here.
-      </p>
-    </DiscoverySidebarCard>
   );
 
   return (

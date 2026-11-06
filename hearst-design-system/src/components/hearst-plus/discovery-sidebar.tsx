@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Bookmark, ChevronDown } from "@/components/ui/icons";
+import { ChevronDown } from "@/components/ui/icons";
 import type {
   LifestyleRiverProfile,
   LifestyleRiverStory,
@@ -12,6 +12,7 @@ import { CommunityJoinedGroupsCard } from "./community-joined-groups-card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getLifestyleByline } from "./story-metadata";
 import { TrendingStoryRail } from "./trending-rail";
+import { SavedItemsModule } from "./saved-items-module";
 import {
   communityGroups,
 } from "@/lib/community-groups";
@@ -59,6 +60,10 @@ export interface LifestyleDiscoverySidebarProps {
   onClearAutosOemFilters?: () => void;
   onFollowTopic: (topic: string) => void;
   onOpenStory: (story: LifestyleRiverStory) => void;
+  /** Ranked, unsaved, non-hidden suggestions for the Saved Items empty state. */
+  savedSuggestions?: LifestyleRiverStory[];
+  onSaveSuggestion?: (story: LifestyleRiverStory, position: number) => void;
+  onBrowseForYou?: () => void;
 }
 
 interface DiscoverySidebarCardProps {
@@ -94,7 +99,7 @@ export function DiscoverySidebarCard({
   return (
     <section
       className={cn(
-        "min-w-0 overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]",
+        "min-w-0 overflow-hidden rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]",
         className,
       )}
     >
@@ -174,6 +179,9 @@ export function LifestyleDiscoverySidebar({
   activeBrandFilters,
   onToggleBrandFilter,
   onOpenStory,
+  savedSuggestions,
+  onSaveSuggestion,
+  onBrowseForYou,
 }: LifestyleDiscoverySidebarProps) {
   const brandStoryCount = brands.reduce(
     (total, brand) => total + brand.count,
@@ -382,23 +390,14 @@ export function LifestyleDiscoverySidebar({
     </DiscoverySidebarCard>
   );
 
-  const savedItemsModule = savedStories.length > 0 ? (
-    <TrendingStoryRail
-      stories={savedStories}
-      onOpenStory={onOpenStory}
-      title="Saved items"
-      titleIcon={<Bookmark className="h-4 w-4 shrink-0" aria-hidden />}
+  const savedItemsModule = (
+    <SavedItemsModule
+      savedStories={savedStories}
+      suggestions={savedSuggestions}
+      onOpenStory={(story) => onOpenStory(story)}
+      onSaveSuggestion={onSaveSuggestion}
+      onBrowseForYou={onBrowseForYou}
     />
-  ) : (
-    <DiscoverySidebarCard
-      title="Saved items"
-      summary="Your saved stories"
-      titleIcon={<Bookmark className="h-4 w-4 shrink-0" aria-hidden />}
-    >
-      <p className="text-sm leading-6 text-muted-foreground">
-        Save stories as you browse and they will appear here.
-      </p>
-    </DiscoverySidebarCard>
   );
 
   return (
