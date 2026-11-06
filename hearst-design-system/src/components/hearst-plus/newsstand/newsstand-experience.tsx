@@ -47,6 +47,13 @@ export function NewsstandExperience() {
 
   useEffect(() => {
     reduced.current = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const root = document.documentElement;
+    const priorSnapType = root.style.scrollSnapType;
+    const priorScrollBehavior = root.style.scrollBehavior;
+    if (!reduced.current) {
+      root.style.scrollSnapType = "y mandatory";
+      root.style.scrollBehavior = "smooth";
+    }
     let disposed = false;
     const measure = () => {
       const els = [...document.querySelectorAll<HTMLElement>("[data-stop]")];
@@ -126,6 +133,8 @@ export function NewsstandExperience() {
       layoutObserver.disconnect();
       removeEventListener("resize", onResize);
       removeEventListener("scroll", update);
+      root.style.scrollSnapType = priorSnapType;
+      root.style.scrollBehavior = priorScrollBehavior;
       sceneRef.current?.dispose();
     };
   }, []);
@@ -188,7 +197,7 @@ export function NewsstandExperience() {
       {/* The overlay passes clicks through to the rack; only cards and controls catch them. */}
       <main className="pointer-events-none relative z-10">
         {/* Overlay copy sits on the shared Hearst+ page container and 12-column grid; the 3D rack behind it is a full-bleed layer. */}
-        <section data-stop className="flex min-h-screen items-start pb-16 pt-24 md:pt-[24vh]">
+        <section data-stop style={{ scrollSnapAlign: "start", scrollSnapStop: "always" }} className="flex min-h-screen items-start pb-16 pt-24 md:pt-[24vh]">
           <PageContainer>
             <Grid>
               <Col span="full" spanMd={6} spanLg={6} className="flex flex-col gap-6 max-md:-mx-2 max-md:bg-background/90 max-md:p-5 max-md:backdrop-blur-sm">
@@ -212,7 +221,7 @@ export function NewsstandExperience() {
         {BRANDS.map((b, i) => {
           const appHref = appRoute(b.slug);
           return (
-            <section key={b.slug} data-stop className="h-[120vh]">
+            <section key={b.slug} data-stop style={{ scrollSnapAlign: "center", scrollSnapStop: "always" }} className="h-[120vh]">
               <div className="sticky top-0 flex h-screen items-end pb-20 pt-6 md:items-center md:pb-6">
                 <PageContainer>
                   <Grid>
@@ -251,7 +260,7 @@ export function NewsstandExperience() {
         })}
 
         {/* The plans section closes the page on a solid full-bleed surface that covers the rack completely. */}
-        <section id="join" data-stop className="pointer-events-auto flex min-h-screen items-center bg-background py-20">
+        <section id="join" data-stop style={{ scrollSnapAlign: "start", scrollSnapStop: "always" }} className="pointer-events-auto flex min-h-screen items-center bg-background py-20">
           <PageContainer>
             <Grid>
               <Col span="full" spanMd={8} spanLg={8} startLg={3} className="flex flex-col items-center gap-6 text-center">

@@ -288,10 +288,10 @@ export function VideoFeedLeadCard({
         >
           <Headline
             className={cn(
-              "story-card-headline text-balance transition-colors",
+              "story-card-headline text-balance underline-offset-4 group-hover/video-card:underline group-focus-visible/video-card:underline",
               useHearstPlusStyle
-                ? "headline font-bold leading-tight text-[var(--hp-text-headline)] group-hover/video-card:text-[var(--hp-sidebar-heading,var(--primary))] group-focus-visible/video-card:text-[var(--hp-sidebar-heading,var(--primary))]"
-                : "font-black leading-[1.02] tracking-[-0.025em] text-foreground group-hover/video-card:text-primary group-focus-visible/video-card:text-primary"
+                ? "headline font-bold leading-tight text-[var(--hp-text-headline)]"
+                : "font-black leading-[1.02] tracking-[-0.025em] text-foreground"
             )}
           >
             {story.title}
@@ -360,12 +360,12 @@ export function VideoIndexCard({
         >
           <h3
             className={cn(
-              "text-balance transition-colors",
+              "story-card-headline text-balance underline-offset-4 group-hover/video-card:underline group-focus-visible/video-card:underline",
               compact
-                ? "headline line-clamp-3 text-base font-bold leading-snug text-[var(--hp-text-headline)] group-hover/video-card:text-[var(--hp-sidebar-heading,var(--primary))] group-focus-visible/video-card:text-[var(--hp-sidebar-heading,var(--primary))] sm:text-lg"
+                ? "headline line-clamp-3 text-base font-bold leading-snug text-[var(--hp-text-headline)] sm:text-lg"
                 : useHearstPlusStyle
-                  ? "headline text-2xl font-bold leading-tight text-[var(--hp-text-headline)] group-hover/video-card:text-[var(--hp-sidebar-heading,var(--primary))] group-focus-visible/video-card:text-[var(--hp-sidebar-heading,var(--primary))] sm:text-3xl"
-                  : "text-3xl font-black leading-[1.02] tracking-[-0.025em] text-foreground group-hover/video-card:text-primary group-focus-visible/video-card:text-primary sm:text-4xl"
+                  ? "headline font-bold leading-tight text-[var(--hp-text-headline)]"
+                  : "font-black leading-[1.02] tracking-[-0.025em] text-foreground"
             )}
           >
             {story.title}

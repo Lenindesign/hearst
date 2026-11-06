@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { BrandLogo } from "@/components/brand-logo";
 import { SiteFooter } from "@/components/fre/site-footer";
 import { MainNav } from "@/components/home-page";
@@ -40,13 +42,23 @@ const entertainmentNavLinks = [
 
 const entertainmentNavHrefs: Partial<Record<string, string>> = {
   Featured: "/hearst-plus/entertainment/",
-  "A&E": "/hearst-plus/entertainment/?channel=a-e",
-  HISTORY: "/hearst-plus/entertainment/?channel=history",
-  Lifetime: "/hearst-plus/entertainment/?channel=lifetime",
-  LMN: "/hearst-plus/entertainment/?channel=lmn",
-  FYI: "/hearst-plus/entertainment/?channel=fyi",
-  "VICE TV": "/hearst-plus/entertainment/?channel=vice-tv",
-  BIOGRAPHY: "/hearst-plus/entertainment/?channel=biography",
+  "A&E": "/hearst-plus/entertainment/a-e/",
+  HISTORY: "/hearst-plus/entertainment/history/",
+  Lifetime: "/hearst-plus/entertainment/lifetime/",
+  LMN: "/hearst-plus/entertainment/lmn/",
+  FYI: "/hearst-plus/entertainment/fyi/",
+  "VICE TV": "/hearst-plus/entertainment/vice-tv/",
+  BIOGRAPHY: "/hearst-plus/entertainment/biography/",
+};
+
+const channelSlugByBrand: Record<EntertainmentChannel, string> = {
+  "A&E": "a-e",
+  HISTORY: "history",
+  Lifetime: "lifetime",
+  LMN: "lmn",
+  FYI: "fyi",
+  "VICE TV": "vice-tv",
+  BIOGRAPHY: "biography",
 };
 
 const heroShows: EntertainmentShow[] = [
@@ -611,17 +623,33 @@ function formatBrandInitials(brand: EntertainmentShow["brand"]) {
 
 export function EntertainmentWatchPage({
   activeChannel,
+  initialShowSlug,
 }: {
   activeChannel?: EntertainmentChannel;
+  initialShowSlug?: string;
 } = {}) {
+  const router = useRouter();
   const [activeHeroIndex, setActiveHeroIndex] = useState(0);
-  const [activeShow, setActiveShow] = useState<EntertainmentShow | null>(null);
+  const initialShow = useMemo(
+    () => initialShowSlug
+      ? channelRows.find((row) => row.brand === activeChannel)?.shows.find(
+          (show) => getShowSlug(show) === initialShowSlug,
+        ) ?? null
+      : null,
+    [activeChannel, initialShowSlug],
+  );
+  const [activeShow, setActiveShow] = useState<EntertainmentShow | null>(initialShow);
   const showModalReturnFocusRef = useRef<HTMLElement | null>(null);
+  useEffect(() => setActiveShow(initialShow), [initialShow]);
   const openShowModal = (show: EntertainmentShow, opener?: HTMLElement | null) => {
     showModalReturnFocusRef.current = opener ?? null;
-    setActiveShow(show);
+    router.push(getShowRoute(show));
   };
   const closeShowModal = () => {
+    if (initialShowSlug) {
+      router.replace(`/hearst-plus/entertainment/${channelSlugByBrand[activeChannel ?? "A&E"]}/`);
+      return;
+    }
     setActiveShow(null);
     window.requestAnimationFrame(() => showModalReturnFocusRef.current?.focus());
   };
@@ -639,6 +667,24 @@ export function EntertainmentWatchPage({
   }, [activeChannel, visibleRows]);
   const activeHero = heroPool[activeHeroIndex] ?? heroPool[0] ?? heroShows[0];
   const activeFilter = activeChannel ?? "Featured";
+
+  if (initialShowSlug) {
+    return (
+      <div className="min-h-screen bg-[#050608] text-white">
+        <UtilityBar activeDestinationOverride="A&E Family" darkMode />
+        <MainNav
+          brandSlug="hearst-all"
+          selectedBrand={{ name: "A&E", slug: "hearst-entertainment" }}
+          activeFilter={activeFilter}
+          navLinksOverride={entertainmentNavLinks}
+          navLinkHrefOverrides={entertainmentNavHrefs}
+          mastheadLogoOverride={mastheadLogo ? { ...mastheadLogo, tone: "white" } : null}
+          darkMode
+        />
+        <ShowDetailModal show={activeShow} onClose={closeShowModal} />
+      </div>
+    );
+  }
 
   return (
     <div
@@ -705,7 +751,7 @@ export function EntertainmentWatchPage({
               </p>
               <div className="mt-7 flex flex-wrap items-center gap-3">
                 <a
-                  href={activeHero.href}
+                  href={getShowRoute(activeHero)}
                   onClick={(event) => {
                     event.preventDefault();
                     openShowModal(activeHero, event.currentTarget);
@@ -799,6 +845,8 @@ function ChannelRow({
   onOpenShow: (show: EntertainmentShow, opener?: HTMLElement | null) => void;
   row: (typeof channelRows)[number];
 }) {
+  const channelHref = getChannelRoute(row.brand);
+
   return (
     <section aria-labelledby={`entertainment-${row.brand.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}`}>
       <div className="mb-3 flex items-center justify-between gap-4">
@@ -808,10 +856,10 @@ function ChannelRow({
           </div>
           <p className="mt-1 max-w-2xl text-sm leading-6 text-white/58">{row.description}</p>
         </div>
-        <a href={row.shows[0]?.href ?? "#"} target="_blank" rel="noreferrer" className="hidden min-h-11 items-center gap-1 text-sm font-bold text-white/72 no-underline hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 md:inline-flex">
+        <Link href={channelHref} className="hidden min-h-11 items-center gap-1 text-sm font-bold text-white/72 no-underline hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 md:inline-flex">
           View channel
           <ChevronRight className="size-4" aria-hidden="true" />
-        </a>
+        </Link>
       </div>
       <Carousel
         opts={{ align: "start", containScroll: "trimSnaps", dragFree: true }}
@@ -850,20 +898,22 @@ function ChannelLogoHeading({ brand }: { brand: EntertainmentShow["brand"] }) {
 
   return (
     <h2 id={headingId} className="flex min-h-11 items-center text-2xl font-bold text-white">
-      {logo ? (
-        <>
-          <span className="sr-only">{brand}</span>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={logo.src}
-            alt=""
-            className={cn("block max-w-[11rem] object-contain", logo.className, logo.invert && "brightness-0 invert")}
-            loading="lazy"
-          />
-        </>
-      ) : (
-        brand
-      )}
+      <Link href={getChannelRoute(brand)} aria-label={`Open ${brand} channel`} className="inline-flex min-h-11 items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70">
+        {logo ? (
+          <>
+            <span className="sr-only">{brand}</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={logo.src}
+              alt=""
+              className={cn("block max-w-[11rem] object-contain", logo.className, logo.invert && "brightness-0 invert")}
+              loading="lazy"
+            />
+          </>
+        ) : (
+          brand
+        )}
+      </Link>
     </h2>
   );
 }
@@ -886,7 +936,7 @@ function ShowCard({
       >
         <ShowPoster show={show} showTitleOverlay={false} />
         <span className="block pt-3">
-          <span className="line-clamp-1 block text-base font-bold leading-tight transition-colors group-hover:text-primary group-focus-visible:text-primary md:text-lg">{show.title}</span>
+          <span className="line-clamp-1 block text-base font-bold leading-tight underline-offset-4 group-hover:underline group-focus-visible:underline md:text-lg">{show.title}</span>
           <span className="mt-1 block text-xs font-semibold text-white/48">{show.meta}</span>
         </span>
       </button>
@@ -946,6 +996,22 @@ function getShowPreviewEmbedUrl(show: EntertainmentShow) {
 function getShowSlugFromHref(href: string) {
   const match = href.match(/\/shows\/([^/?#]+)/);
   return match?.[1] ?? null;
+}
+
+function getShowSlug(show: EntertainmentShow) {
+  return show.title
+    .toLowerCase()
+    .replace(/[’']/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+function getChannelRoute(brand: EntertainmentChannel) {
+  return `/hearst-plus/entertainment/${channelSlugByBrand[brand]}/`;
+}
+
+function getShowRoute(show: EntertainmentShow) {
+  return `${getChannelRoute(show.brand)}${getShowSlug(show)}/`;
 }
 
 function getShowPageUrl(show: EntertainmentShow) {

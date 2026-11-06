@@ -230,7 +230,7 @@ function EventRailLink({ event, rank }: { event: HearstEventRecord; rank?: numbe
         ) : null}
       </span>
       <span className="min-w-0">
-        <span className="line-clamp-3 block text-xs font-bold leading-[1.35] group-hover:text-primary group-focus-visible:text-primary">
+        <span className="line-clamp-3 block text-xs font-bold leading-[1.35] underline-offset-2 group-hover:underline group-focus-visible:underline">
           {event.title}
         </span>
         <span className="mt-1 block text-xs text-muted-foreground">

@@ -1377,11 +1377,11 @@
     }
   }
   .story-card-headline {
-    font-size: 1.125rem;
+    font-size: 1.25rem;
   }
-  @container story-card (min-width: 36rem) {
+  @media (min-width: 640px) {
     .story-card-headline {
-      font-size: 2.25rem;
+      font-size: 1.5rem;
     }
   }
   .scrollbar-hide::-webkit-scrollbar {

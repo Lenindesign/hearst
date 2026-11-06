@@ -2,7 +2,7 @@
 // Generated from "Magazine Rack.html" — same model, named meshes/materials.
 import { COVER_SLUGS, TITLES } from './newsstand-catalog';
 
-// Returns as soon as the geometry is built. Cover art streams in afterwards, so the rack never waits on images.
+// Geometry builds immediately; the scene waits for the covers before showing the rack's intro animation.
 // skipSlots: magazine slots whose cover the caller replaces (featured titles), so their art is not fetched twice.
 export async function buildRack(THREE, { skipSlots = new Set() } = {}) {
 const rack = new THREE.Group(); rack.name = 'magazine_rack';
@@ -44,6 +44,21 @@ const canvasTex = (w, h, draw) => {
   draw(c.getContext('2d'));
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t;
 };
+const loadImage = (src, timeoutMs = 5000) => new Promise(resolve => {
+  const img = new Image();
+  let settled = false;
+  const finish = result => {
+    if (settled) return;
+    settled = true;
+    clearTimeout(timeout);
+    img.onload = null; img.onerror = null;
+    resolve(result);
+  };
+  const timeout = setTimeout(() => finish(null), timeoutMs);
+  img.onload = () => finish(img);
+  img.onerror = () => finish(null);
+  img.src = src;
+});
 const add = (parent, name, geo, m, x = 0, y = 0, z = 0) => {
   const o = new THREE.Mesh(geo, m); o.name = name; o.position.set(x, y, z); parent.add(o); return o;
 };
@@ -138,6 +153,7 @@ const titles = [   // first 16 fill the rack; the rest go to the shelf stacks
 // place the five featured brands across the rack: t4s2, t3s3, t2s1, t2s4, t1s2
 for (const [a, b] of [[1, 8], [4, 2], [7, 2], [10, 8], [13, 0], [15, 21]]) [titles[a], titles[b]] = [titles[b], titles[a]];
 const coverCache = new Map();
+const coverReady = [];
 // Editorial logo cover for titles without photography, matching the title modal: logo, headline, Hearst+ band.
 const headlineFamily = () => getComputedStyle(document.querySelector('.headline') ?? document.body).fontFamily || 'Georgia, serif';
 const wrapLines = (ctx, text, maxW) => text.split(' ').reduce((lines, word) => {
@@ -184,26 +200,32 @@ function coverMaterial(t, pal, layout, skip) {
     const ly = layout === 1 ? 335 : 195;
     for (let k = 0; k < 3; k++) ctx.fillRect(30, ly + k * 32 - 7, k === 0 ? 120 : 90, 14);
   });
-  // Not awaited: textures update when art arrives.
   const accent = [css.blue, css.magenta, css.yellow, css.black][t % 4];
-  if (logoCover) drawLogoCover(cctx, file, slug, accent).then(() => { tex.needsUpdate = true; }).catch(e => console.warn('cover failed', file, e));
-  else if (photoSrc) {
-    const p = new Image(); p.decoding = 'async';
-    p.onload = () => { cctx.drawImage(p, 0, 0, 420, 550); tex.needsUpdate = true; };
-    p.onerror = () => drawLogoCover(cctx, file, slug, accent).then(() => { tex.needsUpdate = true; });
-    p.src = photoSrc;
-  }
-  const m = Object.assign(new THREE.MeshStandardMaterial({ map: tex, roughness: 0.4 }), { name: `cover_${slug}_${coverCache.size + 1}` });
+  const ready = logoCover
+    ? drawLogoCover(cctx, file, slug, accent).then(() => { tex.needsUpdate = true; }).catch(e => console.warn('cover failed', file, e))
+    : photoSrc
+      ? loadImage(photoSrc).then(p => p
+        ? cctx.drawImage(p, 0, 0, 420, 550)
+        : drawLogoCover(cctx, file, slug, accent)
+      ).then(() => { tex.needsUpdate = true; }).catch(e => console.warn('cover failed', file, e))
+      : Promise.resolve();
+  tex.userData.ready = ready;
+  coverReady.push(ready);
+  const m = Object.assign(new THREE.MeshStandardMaterial({ map: tex, roughness: 0.4, side: THREE.DoubleSide }), { name: `cover_${slug}_${coverCache.size + 1}` });
   coverCache.set(key, m); return m;
 }
 function magazine(name, pal, layout, thick, t) {
   const g = new THREE.Group(); g.name = name; g.userData.slug = titles[t][1];
-  add(g, `${name}_pages`, box(MW, MH, thick), mat.paper, 0, 0, -thick / 2);
+  const coverMat = coverMaterial(t, pal, layout, skipSlots.has(name));
+  // Keep the fore edge as paper, but print the cover texture on both broad faces. The rack turns
+  // through a full rotation during its intro, so a plain paper back would read as a blank white cover.
+  add(g, `${name}_pages`, box(MW, MH, thick),
+    [mat.paper, mat.paper, mat.paper, mat.paper, coverMat, coverMat], 0, 0, -thick / 2);
   const coverHinge = new THREE.Group();
   coverHinge.name = `${name}_cover_hinge`;
   coverHinge.position.x = -MW / 2;
   g.add(coverHinge);
-  const cover = new THREE.Mesh(new THREE.PlaneGeometry(MW, MH), coverMaterial(t, pal, layout, skipSlots.has(name)));
+  const cover = new THREE.Mesh(new THREE.PlaneGeometry(MW, MH), coverMat);
   cover.name = `${name}_cover`;
   cover.position.set(MW / 2, 0, 0.0004);
   coverHinge.add(cover);
@@ -256,5 +278,6 @@ for (const [p, sx, first, count] of [[0, -0.22, 16, 6], [1, 0.2, 22, 5]]) {
   }
 }
 
+rack.userData.coverArtReady = Promise.all(coverReady);
 return rack;
 }

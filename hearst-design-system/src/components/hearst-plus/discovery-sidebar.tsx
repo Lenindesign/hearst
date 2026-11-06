@@ -251,7 +251,7 @@ export function LifestyleDiscoverySidebar({
             <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
               {story.topic}
             </p>
-            <p className="mt-1 text-sm font-bold leading-snug group-hover:text-primary group-focus-visible:text-primary">
+            <p className="mt-1 text-sm font-bold leading-snug underline-offset-2 group-hover:underline group-focus-visible:underline">
               {story.title}
             </p>
             <p className="mt-1 text-xs text-muted-foreground">

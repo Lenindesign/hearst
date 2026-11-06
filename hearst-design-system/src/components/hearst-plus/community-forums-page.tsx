@@ -5,6 +5,7 @@ import { MainNav } from "@/components/home-page";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { BrandSourceIcon } from "@/components/hearst-plus/brand-source-icon";
 import { CommunityJoinedGroupsCard } from "@/components/hearst-plus/community-joined-groups-card";
+import { MensHealthTrainingClub } from "@/components/hearst-plus/mens-health-training-club";
 import {
   CommunityComposer,
   CommunityFeed,
@@ -510,6 +511,7 @@ export function CommunityForumsPage({ activeBrandSlug, activeGroupSlug, activeTh
               </>
             ) : (
               <>
+                {activeGroupSeed?.groupSlug === "training-club" ? <MensHealthTrainingClub /> : null}
                 <CommunityComposer groups={groups} defaultGroup={activeGroup} />
                 <CommunityFeed threads={threads.map(toFeedThread)} view={inGroup ? "group" : view === "mine" ? "mine" : "home"} scopeBrandSlug={activeBrandSlug} />
               </>

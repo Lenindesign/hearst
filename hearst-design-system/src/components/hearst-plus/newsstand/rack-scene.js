@@ -2,6 +2,7 @@ import { buildRack } from './rack-model.js';
 import * as THREE from 'three';
 const V = THREE.Vector3;
 const clamp01 = x => Math.max(0, Math.min(1, x));
+const easeOutCubic = x => 1 - Math.pow(1 - x, 3);
 const MW = 0.21, MH = 0.275;   // magazine size, matching rack-model.js
 const PULL_OUT = 0.1, PULL_UP = 0.025;   // how far a featured magazine slides out on its brand panel
 const ss = x => x * x * (3 - 2 * x);
@@ -53,7 +54,19 @@ async function logoImg(file, color) {
   const img = new Image(); img.src = URL.createObjectURL(new Blob([s], { type: 'image/svg+xml' }));
   await img.decode(); return img;
 }
-const tryImage = src => new Promise(res => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
+const tryImage = (src, timeoutMs = 5000) => new Promise(res => {
+  const i = new Image();
+  let settled = false;
+  const finish = image => {
+    if (settled) return;
+    settled = true;
+    clearTimeout(timeout);
+    i.onload = null; i.onerror = null;
+    res(image);
+  };
+  const timeout = setTimeout(() => finish(null), timeoutMs);
+  i.onload = () => finish(i); i.onerror = () => finish(null); i.src = src;
+});
 
 function tex(THREE, draw) {
   const c = document.createElement('canvas'); c.width = 840; c.height = 1100;
@@ -81,12 +94,12 @@ function drawLogo(ctx, img, cx, cy, maxW, maxH) {
 function featuredTextures(THREE, b) {
   let cctx;
   const cover = tex(THREE, ctx => { cctx = ctx; ctx.fillStyle = b.bg; ctx.fillRect(0, 0, 420, 550); });
-  tryImage(`/images/newsstand/covers/${b.slug}@2x.webp`).then(async art => {
+  const ready = tryImage(`/images/newsstand/covers/${b.slug}@2x.webp`).then(async art => {
     if (art) cctx.drawImage(art, 0, 0, 420, 550);
     else drawStandIn(cctx, b, await logoImg(b.logo, b.ink));
     cover.needsUpdate = true;
   }).catch(e => console.warn('featured cover failed', b.slug, e));
-  return { cover };
+  return { cover, ready };
 }
 
 function drawStandIn(ctx, b, logo) {
@@ -140,10 +153,15 @@ export async function createRackScene(canvas, opts = {}) {
   const featTex = FEATURED.map(b => featuredTextures(THREE, b));
   const mags = FEATURED.map((b, i) => {
     const g = rack.getObjectByName(b.slot);
-    const cover = g.getObjectByName(`${b.slot}_cover`);
-    cover.material = Object.assign(new THREE.MeshStandardMaterial({ map: featTex[i].cover, roughness: 0.38 }), { name: `cover_${b.slug}_featured` });
+    const material = Object.assign(new THREE.MeshStandardMaterial({ map: featTex[i].cover, roughness: 0.38, side: THREE.DoubleSide }), { name: `cover_${b.slug}_featured` });
+    g.getObjectByName(`${b.slot}_cover`).material = material;
+    const pages = g.getObjectByName(`${b.slot}_pages`);
+    pages.material[4] = material;
+    pages.material[5] = material;
     return { g, world: null };
   });
+  // Do not begin the spin/drop while any cover is still a white or flat-color placeholder.
+  await Promise.all([rack.userData.coverArtReady, ...featTex.map(x => x.ready)]);
 
   rack.traverse(m => { if (m.isMesh) { m.castShadow = true; m.receiveShadow = true; } });
   scene.add(rack);
@@ -157,6 +175,12 @@ export async function createRackScene(canvas, opts = {}) {
         stack: g.name.startsWith('shelf_stack_') ? Number(g.name[12]) - 1 : -1, hov: 0, sp: 0, landed: false });
   });
   all.sort((a, b) => b.pos.y - a.pos.y || a.pos.x - b.pos.x);
+  // A small, repeatable variation keeps the shelves from moving like a single timed mechanism.
+  all.forEach((m, j) => {
+    m.dropSeed = ((j * 17 + 11) % 29) / 28;
+    m.dropPhase = ((j * 13 + 5) % 19) / 19 * Math.PI * 2;
+    m.dropDelay = Math.floor(j / 4) * 105 + (j % 4) * 48 + m.dropSeed * 24;
+  });
 
   // Bottom-shelf stacks fan out on click: each copy stands up, face-out and overlapping, across the shelf.
   const stacks = [0, 1].map(p => all.filter(m => m.stack === p).sort((a, b) => a.pos.y - b.pos.y));
@@ -371,16 +395,22 @@ export async function createRackScene(canvas, opts = {}) {
   // Cover interaction: hover lifts and zooms a magazine; click opens its Hearst+ preview modal.
   const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
   ray.layers.enableAll();
-  const covers = all.map(m => m.g.getObjectByName(`${m.g.name}_cover`)).filter(Boolean);
+  const pickTargets = all.flatMap(m => [
+    m.g.getObjectByName(`${m.g.name}_cover`),
+    m.g.getObjectByName(`${m.g.name}_pages`),
+  ]).filter(Boolean);
   let hovered = null, hoverStack = -1, hoverEntry = null, lastHoverAt = -1e9;
   const hitPoint = new V();   // world point under the cursor on the hovered cover
   // Returns the rack entry under the pointer. A closed stack acts as one target for the whole pile.
   const hit = e => {
-    ndc.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+    const rect = canvas.getBoundingClientRect();
+    ndc.set((e.clientX - rect.left) / rect.width * 2 - 1, -((e.clientY - rect.top) / rect.height) * 2 + 1);
     ray.setFromCamera(ndc, camera);
-    const h = ray.intersectObjects(covers, false)[0];
+    const h = ray.intersectObjects(pickTargets, false)[0];
     if (h) hitPoint.copy(h.point);
-    const g = h?.object.parent;
+    // Covers are nested under the hinge group, so resolve the hit back to its magazine root.
+    let g = h?.object ?? null;
+    while (g && !entryOf.has(g)) g = g.parent;
     return g ? entryOf.get(g) ?? null : null;
   };
   const closedStack = m => m && m.stack >= 0 && m.stack !== spread;
@@ -473,7 +503,12 @@ export async function createRackScene(canvas, opts = {}) {
     rack.rotation.x = tilt.y * 0.025 * ts + wob;
     if (!dropH) {
       camera.updateMatrixWorld(); rack.updateMatrixWorld(true); dropH = dropHeight();
-      stockedAt = dropAt + (all.length - 1) * 45 + 500 + 110 * dropH;
+      const baseFallMs = (500 + 110 * dropH) * 0.68;
+      all.forEach(m => {
+        m.dropFallMs = baseFallMs * (0.94 + m.dropSeed * 0.12);
+        m.dropBounceMs = 300 + m.dropSeed * 80;
+      });
+      stockedAt = dropAt + Math.max(...all.map(m => m.dropDelay + m.dropFallMs + m.dropBounceMs));
     }
     let busy = zoomBusy;   // anything still moving this frame? When not, skip the expensive render.
 
@@ -492,31 +527,30 @@ export async function createRackScene(canvas, opts = {}) {
         m.g.position.y += Math.sin(Math.PI * k) * 0.06;   // lift clear of the pile while dealing out
         if (hoverStack === m.stack) m.g.position.y += 0.006;
       } else { m.g.position.copy(m.pos); m.g.rotation.copy(m.rot); m.g.scale.setScalar(1); }
-      // Drop-in: each magazine falls from above the top of the frame (hidden until its turn), accelerating like
-      // paper under gravity, then bounces twice and settles. Each landing nudges the rack.
-      const tDrop = now - dropAt - j * 45, total = 500 + 110 * dropH, fallMs = total * 0.7, dir = j % 2 ? 1 : -1;
+      // Drop-in: each magazine falls from above the top of the frame, eases into its slot, then gives a small,
+      // damped paper bounce. Each staggered landing nudges the rack.
+      const tDrop = now - dropAt - m.dropDelay, fallMs = m.dropFallMs, total = fallMs + m.dropBounceMs, dir = j % 2 ? 1 : -1;
       m.g.visible = tDrop > 0;
       if (m.tier && m.g.userData.coverHinge) {
         const hinge = m.g.userData.coverHinge;
         if (motion && tDrop > 0 && tDrop < total) {
           const fold = clamp01(tDrop / fallMs);
-          const easedFold = fold * fold * (3 - 2 * fold);
-          const landingFlex = tDrop >= fallMs
-            ? Math.sin(((tDrop - fallMs) / (total - fallMs)) * Math.PI * 2) * 0.075
-            : 0;
-          hinge.rotation.y = 0.78 * (1 - easedFold) + landingFlex;
+          const settle = tDrop < fallMs ? 1 - fold * 0.45 : Math.exp(-4 * ((tDrop - fallMs) / m.dropBounceMs));
+          // Keep the cover nearly closed; a tiny flutter reads as paper without exposing the blank page block.
+          hinge.rotation.y = Math.sin(fold * Math.PI * 4 + m.dropPhase) * 0.035 * settle;
           busy = true;
         } else hinge.rotation.y = 0;
       }
       if (tDrop < fallMs) {
         const f = clamp01(tDrop / fallMs);
-        m.g.position.y += dropH * (1 - f * f); m.g.rotation.z += (1 - f) * 0.35 * dir;
+        m.g.position.y += dropH * (1 - easeOutCubic(f));
+        m.g.rotation.z += dir * (0.055 + Math.sin(f * Math.PI * 2 + m.dropPhase) * 0.035) * Math.pow(1 - f, 0.8);
         busy = true;
       } else if (tDrop < total) {
         if (!m.landed) { m.landed = true; wobV += m.tier ? 0.0022 : 0.0012; }
-        const b = (tDrop - fallMs) / (total - fallMs);
-        m.g.position.y += 0.03 * Math.abs(Math.sin(b * Math.PI * 2)) * (1 - b);
-        m.g.rotation.z += 0.05 * Math.sin(b * Math.PI * 3) * (1 - b) * dir;
+        const b = (tDrop - fallMs) / m.dropBounceMs, decay = Math.exp(-4 * b);
+        m.g.position.y += (0.024 + m.dropSeed * 0.014) * Math.abs(Math.sin(b * Math.PI * 2.25)) * decay;
+        m.g.rotation.z += dir * 0.035 * Math.sin(b * Math.PI * 2.25) * decay;
         busy = true;
       } else m.landed = true;
       const s = clamp01((now - shuffleAt - j * 30) / 900);

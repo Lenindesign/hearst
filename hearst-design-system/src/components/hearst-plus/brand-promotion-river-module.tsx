@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { BrandLogo } from "@/components/brand-logo";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { getHearstBrandRoute } from "@/lib/hearst-routes";
@@ -39,6 +40,23 @@ function PromotionStoryAction({
   className: string;
   children: React.ReactNode;
 }) {
+  if (story.brandSlug === "a-e") {
+    const showSlug = story.title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
+
+    return (
+      <Link
+        href={`/hearst-plus/entertainment/a-e/${showSlug}/`}
+        className={cn("block", className)}
+        aria-label={`Open ${story.title} show page`}
+      >
+        {children}
+      </Link>
+    );
+  }
+
   return (
     <button
       type="button"
@@ -153,7 +171,7 @@ export function BrandPromotionRiverModule({
             <span className="mt-4 block">
               {renderFormatLabel(featuredStory)}
               <span className={cn(
-                "headline mt-2 line-clamp-3 text-2xl leading-tight",
+                "headline mt-2 line-clamp-3 text-2xl leading-tight underline-offset-4 group-hover:underline group-focus-visible:underline",
                 isAEFamilyPromotion ? "text-white" : "text-foreground",
               )}>
                 {featuredStory.title}
@@ -182,7 +200,7 @@ export function BrandPromotionRiverModule({
                 <span className="min-w-0">
                   {renderFormatLabel(story)}
                   <span className={cn(
-                    "headline mt-1 line-clamp-3 text-[clamp(1rem,5.4cqw,2rem)] leading-tight",
+                    "headline mt-1 line-clamp-3 text-[clamp(1rem,5.4cqw,2rem)] leading-tight underline-offset-4 group-hover:underline group-focus-visible:underline",
                     isAEFamilyPromotion ? "text-white" : "text-foreground",
                   )}>
                     {story.title}

@@ -47,7 +47,7 @@ export function LocalNewsRail({ layout = "rail" }: { layout?: "rail" | "grid" })
           const station = getHearstTVStationById(story.stationId);
           return <a key={story.id} href={`/hearst-plus/local-news/?story=${encodeURIComponent(story.id)}#tv-stations`} className="group overflow-hidden rounded-[8px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30">
             <div className="aspect-video bg-muted bg-cover bg-center" style={story.imageUrl ? { backgroundImage: `url(${story.imageUrl})` } : undefined} role={story.imageUrl ? "img" : undefined} aria-label={story.imageUrl ? story.title : undefined} />
-            <div className="p-4"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">{station?.callSign ?? "Hearst TV"} · {station?.market ?? "Local News"}</p><h3 className="headline mt-2 line-clamp-3 text-lg font-bold leading-snug transition-colors group-hover:text-primary group-focus-visible:text-primary">{story.title}</h3></div>
+            <div className="p-4"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">{station?.callSign ?? "Hearst TV"} · {station?.market ?? "Local News"}</p><h3 className="headline mt-2 line-clamp-3 text-lg font-bold leading-snug underline-offset-4 group-hover:underline group-focus-visible:underline">{story.title}</h3></div>
           </a>;
         })}
       </div>
@@ -92,7 +92,7 @@ export function LocalNewsRail({ layout = "rail" }: { layout?: "rail" | "grid" })
                   </span>
                 </span>
                 <span className="min-w-0">
-                  <span className="line-clamp-4 block text-[12px] font-bold leading-[1.35] transition-colors group-hover:text-primary group-focus-visible:text-primary">
+                  <span className="line-clamp-4 block text-[12px] font-bold leading-[1.35] underline-offset-2 group-hover:underline group-focus-visible:underline">
                     {story.title}
                   </span>
                   <span className="mt-1 block truncate text-xs text-muted-foreground">

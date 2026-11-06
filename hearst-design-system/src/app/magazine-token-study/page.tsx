@@ -384,11 +384,18 @@ export default function MagazineTokenStudyPage() {
                   <h3 id="harness-contract-title" className="mt-3 text-lg font-semibold">Ground AI interpretation in the browser and code.</h3>
                   <p className="mt-3 text-sm leading-6 text-muted-foreground">Provide the agent with accessible DOM, computed styles, source components, fonts, assets, and real browser captures. Ask it to explain the mapping from semantic elements to production components and to verify its result at multiple widths.</p>
                 </section>
+                <section className="border border-border bg-background p-5" aria-labelledby="production-dom-title">
+                  <p className="text-xs font-bold uppercase tracking-[.14em] text-primary">Production DOM · observed November 5, 2026</p>
+                  <h3 id="production-dom-title" className="mt-3 text-lg font-semibold">A live link resolves through component and color tokens.</h3>
+                  <p className="mt-3 text-sm leading-6 text-muted-foreground">On <a href="https://www.caranddriver.com/" target="_blank" rel="noreferrer" className="underline underline-offset-2">caranddriver.com</a>, a story link uses <code>--comp-link-inline-txt-primary-txt</code> and its hover counterpart. The loaded brand stylesheet maps them to <code>--color-link-txt</code> and <code>--color-link-txt-hover</code>. In the inspected page, those values resolve to <code>#121212</code> and <code>#1b5f8a</code>; hovering changes the rendered link to the blue value.</p>
+                  <p className="mt-3 text-sm leading-6 text-muted-foreground">The “Latest News” heading maps the same link tokens to block-title color tokens, showing a contextual override. The page loads an <code>/api/styles.css</code> response tagged <code>type=brand</code> and <code>source=section:custom</code>. Its story links also carry separate <code>data-vars-*</code> tracking attributes.</p>
+                  <p className="mt-3 text-sm leading-6 text-muted-foreground">This confirms a component-to-color token chain with a context-specific override on this production page, consistent with the diagram’s layered model. It does not establish Figma as the source, a key-for-key mapping to the proposal, or the upstream authoring and delivery path.</p>
+                </section>
                 <section className="border-l-2 border-primary bg-muted/40 p-5" aria-labelledby="reported-history-title">
                   <p className="text-xs font-bold uppercase tracking-[.14em] text-primary">Reported history · needs confirmation</p>
                   <h3 id="reported-history-title" className="mt-3 text-lg font-semibold">Why the current path became complex</h3>
                   <p className="mt-3 text-sm leading-6 text-muted-foreground">Based on context provided for this study: the original Token Studio idea was to create Figma designs/components and push them toward production. The route may have gone through ConfigDS or the HDS package stylesheet; that detail is uncertain. A later attempt created Figma Variables and tried to control the push from Figma into GitHub, but Figma did not reliably support the production-ready workflow the team needed. The current architecture was the final practical option.</p>
-                  <p className="mt-3 text-xs leading-5 text-muted-foreground">This history is stakeholder-provided context, not independently verified by the technical documents reviewed here.</p>
+                  <p className="mt-3 text-xs leading-5 text-muted-foreground">The production DOM confirms the layered token pattern exists, but not this historical sequence or why the team chose it. This history remains stakeholder-provided context, not independently verified by the technical documents reviewed here.</p>
                 </section>
               </aside>
             </div>

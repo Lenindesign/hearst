@@ -79,7 +79,7 @@ export function TrendingStoryRail({
                 </span>
               </span>
               <span className="min-w-0">
-                <span className="line-clamp-3 text-[12px] font-bold leading-[1.35] group-hover:text-[var(--hp-sidebar-heading,var(--primary))] group-focus-visible:text-[var(--hp-sidebar-heading,var(--primary))]">
+                <span className="line-clamp-3 text-[12px] font-bold leading-[1.35] underline-offset-2 group-hover:underline group-focus-visible:underline">
                   {story.title}
                 </span>
                 {hasMixedBrands ? (
