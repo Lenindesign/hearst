@@ -3431,6 +3431,7 @@ function LifestyleStoryReaderModal({
   availableStories,
   savedStoryInventory,
   openStoryId,
+  initialCommentStoryId,
   savedIds,
   followedBrands,
   commentsByStoryId,
@@ -3451,6 +3452,7 @@ function LifestyleStoryReaderModal({
   availableStories: LifestyleRiverStory[];
   savedStoryInventory: LifestyleRiverStory[];
   openStoryId: string | null;
+  initialCommentStoryId?: string | null;
   savedIds: string[];
   followedBrands: string[];
   commentsByStoryId: Record<string, LifestyleStoryComment[]>;
@@ -3473,6 +3475,7 @@ function LifestyleStoryReaderModal({
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
   const [showBackToTop, setShowBackToTop] = React.useState(false);
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
+  const commentsJumpedStoryIdRef = React.useRef<string | null>(null);
   const [readerDestinationOverride, setReaderDestinationOverride] = React.useState<Exclude<DestinationMode, "all"> | null>(null);
   const readerOriginBrandSlug = getReaderOriginBrandSlug(readerReturnHref);
   const [readerBrandOverrideSlug, setReaderBrandOverrideSlug] = React.useState<string | null>(null);
@@ -3653,6 +3656,36 @@ function LifestyleStoryReaderModal({
     .join("|");
   const visibleReaderStories = storyQueue.slice(0, visibleReaderCount);
   const visibleReaderStoryIds = visibleReaderStories.map((story) => story.id).join("|");
+  React.useEffect(() => {
+    if (
+      !initialCommentStoryId
+      || initialCommentStoryId !== openStoryId
+      || commentsJumpedStoryIdRef.current === initialCommentStoryId
+    ) return;
+    const scroller = scrollRef.current;
+    if (!scroller) return;
+
+    let frame = 0;
+    let attempts = 0;
+    const scrollToComments = () => {
+      const target = document.getElementById(`reader-comments-${initialCommentStoryId}`);
+      if (target && scroller.contains(target)) {
+        const scrollerTop = scroller.getBoundingClientRect().top;
+        const targetTop = target.getBoundingClientRect().top;
+        scroller.scrollTo({
+          top: scroller.scrollTop + targetTop - scrollerTop - 24,
+        });
+        target.focus({ preventScroll: true });
+        commentsJumpedStoryIdRef.current = initialCommentStoryId;
+        return;
+      }
+      attempts += 1;
+      if (attempts < 12) frame = window.requestAnimationFrame(scrollToComments);
+    };
+
+    frame = window.requestAnimationFrame(scrollToComments);
+    return () => window.cancelAnimationFrame(frame);
+  }, [initialCommentStoryId, openStoryId, visibleReaderStoryIds]);
   React.useEffect(() => {
     visibleReaderStories.forEach((story) => {
       if (getStoryDestinationMode(story.brandSlug) !== "autos") return;
@@ -4824,6 +4857,7 @@ type LifestyleRiverHomePageProps = {
   singleBrandName?: string;
   initialBrandSlug?: string;
   initialOpenStoryId?: string;
+  initialCommentStoryId?: string;
   initialLiveArticle?: LiveArticleData;
   initialOpenAmbientReader?: boolean;
   readerReturnHref?: string;
@@ -4904,6 +4938,7 @@ function LifestyleRiverHomePage({
   singleBrandName,
   initialBrandSlug,
   initialOpenStoryId,
+  initialCommentStoryId: initialCommentStoryIdProp,
   initialLiveArticle,
   initialOpenAmbientReader = false,
   readerReturnHref,
@@ -5035,6 +5070,9 @@ function LifestyleRiverHomePage({
   const delishShortOpenerRef = React.useRef<HTMLElement | null>(null);
   const displayStoryIdsRef = React.useRef<string[]>([]);
   const [commentsByStoryId, setCommentsByStoryId] = React.useState<Record<string, LifestyleStoryComment[]>>({});
+  const [initialCommentStoryId, setInitialCommentStoryId] = React.useState<string | null>(
+    initialCommentStoryIdProp ?? null,
+  );
   const [localNewsReaderStories, setLocalNewsReaderStories] = React.useState<LifestyleRiverStory[]>([]);
   const [demoModalOpen, setDemoModalOpen] = React.useState(false);
   const [delishShortsRiverPlacement, setDelishShortsRiverPlacement] = React.useState<{
@@ -5139,7 +5177,8 @@ function LifestyleRiverHomePage({
     });
   }, []);
 
-  const openStory = React.useCallback((storyId: string) => {
+  const openStory = React.useCallback((storyId: string, options?: { openComments?: boolean }) => {
+    setInitialCommentStoryId(options?.openComments ? storyId : null);
     readerReturnFocusElementRef.current = rememberContentReaderReturnFocus(
       document.activeElement,
     );
@@ -5156,10 +5195,18 @@ function LifestyleRiverHomePage({
       storyOpenReturnHref,
       readerRiverReturnContextRef.current?.storyIds ?? displayStoryIdsRef.current
     );
-    router.push(
-      buildReaderStoryHref(storyId, storyOpenReturnHref, singleBrandName ? initialBrandSlug : undefined),
-      { scroll: false },
+    const readerHref = buildReaderStoryHref(
+      storyId,
+      storyOpenReturnHref,
+      singleBrandName ? initialBrandSlug : undefined,
     );
+    if (options?.openComments) {
+      const readerUrl = new URL(readerHref, window.location.origin);
+      readerUrl.searchParams.set("comments", "1");
+      router.push(`${readerUrl.pathname}${readerUrl.search}${readerUrl.hash}`, { scroll: false });
+    } else {
+      router.push(readerHref, { scroll: false });
+    }
   }, [initialBrandSlug, rememberReaderRiverReturnContext, rememberSessionContinueReadingStory, router, setOpenStoryId, singleBrandName, storyOpenReturnHref]);
 
   const switchReaderStory = React.useCallback((storyId: string) => {
@@ -6437,6 +6484,7 @@ function LifestyleRiverHomePage({
             availableStories={availableReaderStories}
             savedStoryInventory={savedStoryInventory}
             openStoryId={openStoryId}
+            initialCommentStoryId={initialCommentStoryId}
             savedIds={profile.savedIds}
             followedBrands={profile.followedBrands}
             commentsByStoryId={resolvedCommentsByStoryId}
@@ -6637,6 +6685,7 @@ function LifestyleRiverHomePage({
             availableStories={availableReaderStories}
             savedStoryInventory={savedStoryInventory}
             openStoryId={openStoryId}
+            initialCommentStoryId={initialCommentStoryId}
             savedIds={profile.savedIds}
             followedBrands={profile.followedBrands}
             commentsByStoryId={resolvedCommentsByStoryId}
@@ -6822,6 +6871,7 @@ function LifestyleRiverHomePage({
               }
               isCurrentStory={isCurrentFeedStory}
               onOpenStory={(story) => openStory(story.id)}
+              onOpenStoryComments={(story) => openStory(story.id, { openComments: true })}
               onFollowBrand={followBrand}
               onEditionImpression={isShowingLatestAvailableStories ? undefined : trackTodaysPicksImpression}
               onEditionStoryOpen={isShowingLatestAvailableStories ? undefined : trackTodaysPickOpen}
@@ -6893,6 +6943,7 @@ function LifestyleRiverHomePage({
                   }
                   isCurrentStory={isCurrentFeedStory}
                   onOpenStory={(story) => openStory(story.id)}
+                  onOpenStoryComments={(story) => openStory(story.id, { openComments: true })}
                   onFollowBrand={followBrand}
                   onEditionImpression={isShowingLatestAvailableStories ? undefined : trackTodaysPicksImpression}
                   onEditionStoryOpen={isShowingLatestAvailableStories ? undefined : trackTodaysPickOpen}
@@ -7514,7 +7565,7 @@ function LifestyleRiverHomePage({
                               <span className="block text-xs font-bold text-[var(--hp-section-title)]">
                                 {story.brand} · {story.topic}
                               </span>
-                              <span className="mt-1 line-clamp-3 block text-sm font-bold leading-snug group-hover:text-primary group-focus-visible:text-primary">
+                              <span className="mt-1 line-clamp-3 block text-sm font-bold leading-snug underline-offset-2 group-hover:underline group-focus-visible:underline">
                                 {story.title}
                               </span>
                             </span>
@@ -8480,7 +8531,7 @@ export function HomePageTemplate({
               <span className="block text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
                 Continue Reading
               </span>
-              <span className="mt-1 line-clamp-1 text-sm font-bold leading-snug group-hover:text-primary">
+              <span className="mt-1 line-clamp-1 text-sm font-bold leading-snug underline-offset-2 group-hover:underline group-focus-visible:underline">
                 {mobileContinueStories[0].title}
               </span>
             </span>
@@ -8517,6 +8568,11 @@ export function HomePageTemplate({
                 singleBrandName={singleBrandName}
                 initialBrandSlug={initialBrandSlug}
                 initialOpenStoryId={initialOpenStoryId}
+                initialCommentStoryId={
+                  initialOpenStoryId && pageSearchParams?.get("comments") === "1"
+                    ? initialOpenStoryId
+                    : undefined
+                }
                 initialLiveArticle={initialLiveArticle}
                 initialOpenAmbientReader={initialOpenAmbientReader}
                 readerReturnHref={readerReturnHref}

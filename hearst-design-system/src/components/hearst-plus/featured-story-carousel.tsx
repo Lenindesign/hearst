@@ -31,6 +31,7 @@ export type FeaturedStoryCarouselProps = {
   getCommentCount?: (story: LifestyleRiverStory) => number;
   isCurrentStory?: (story: LifestyleRiverStory) => boolean;
   onOpenStory: (story: LifestyleRiverStory) => void;
+  onOpenStoryComments?: (story: LifestyleRiverStory) => void;
   /** Unused: the slide row with Follow and the dot indicators is hidden. Kept so callers need no change. */
   onFollowBrand?: (brandName: string) => void;
   onEditionImpression?: () => void;
@@ -75,6 +76,7 @@ export function FeaturedStoryCarousel({
   getCommentCount = defaultCommentCount,
   isCurrentStory = defaultIsCurrentStory,
   onOpenStory,
+  onOpenStoryComments,
   onEditionImpression,
   onEditionStoryOpen,
   onActiveStoryChange,
@@ -444,11 +446,10 @@ export function FeaturedStoryCarousel({
             );
 
             return (
-              <button
+              <article
                 key={`${isClone ? "clone" : "story"}-${visualIndex}-${story.id}`}
-                type="button"
                 className={cn(
-                  "group/featured-slide relative w-full shrink-0 cursor-pointer bg-black text-left text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary/30",
+                  "group/featured-slide relative w-full shrink-0 cursor-pointer bg-black text-left text-white focus-within:outline-none focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary/30",
                   layoutMode !== "list" && "[container-type:inline-size]",
                   layoutMode === "list"
                     ? "grid h-[184px] grid-cols-[112px_minmax(0,1fr)] grid-rows-[184px] sm:h-[220px] sm:grid-cols-[38%_minmax(0,1fr)] sm:grid-rows-[220px]"
@@ -463,16 +464,26 @@ export function FeaturedStoryCarousel({
                 aria-label={`Open story: ${story.title}`}
                 aria-hidden={isClone || index !== activeIndex}
                 inert={isClone || index !== activeIndex ? true : undefined}
-                tabIndex={!isClone && index === activeIndex ? 0 : -1}
                 data-feed-source={
                   isCurrentStory(story) ? "current" : "editorial"
                 }
                 data-carousel-clone={isClone ? "true" : undefined}
                 data-media-kind={story.videoUrl ? "video" : "article"}
                 data-story-id={story.id}
+                data-story-module="featured-story"
               >
+                <button
+                  type="button"
+                  className="absolute inset-0 z-10 cursor-pointer rounded-none bg-transparent text-transparent focus-visible:outline-none"
+                  onClick={() => {
+                    onEditionStoryOpen?.(story, index + 1);
+                    onOpenStory(story);
+                  }}
+                  aria-label={`Open story: ${story.title}`}
+                  tabIndex={!isClone && index === activeIndex ? 0 : -1}
+                />
                 <div className={cn(
-                  "relative isolate",
+                  "pointer-events-none relative isolate",
                   layoutMode === "list" && "col-start-1 row-start-1 min-h-0",
                 )}>
                   <div className={cn(
@@ -506,7 +517,7 @@ export function FeaturedStoryCarousel({
                     )}
                   </div>
                 </div>
-                <div data-slider-layer="frame" className={cn("bg-black", (layoutMode === "list" || scrimDirection === "left-to-right") && "hidden")} />
+                <div data-slider-layer="frame" className={cn("pointer-events-none bg-black", (layoutMode === "list" || scrimDirection === "left-to-right") && "hidden")} />
                 {/* The default bottom scrim fades behind the text; full-width heroes can use a side scrim instead. */}
                 {scrimDirection === "bottom" ? (
                   <div
@@ -523,7 +534,7 @@ export function FeaturedStoryCarousel({
                   className={cn(
                     layoutMode === "list"
                       ? "relative col-start-2 row-start-1 flex min-w-0 flex-col justify-center bg-card p-4 pt-12 text-foreground sm:p-6 sm:pt-12"
-                      : "absolute inset-x-0 bottom-0 p-5 text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.45),0_2px_14px_rgba(0,0,0,0.4)] sm:p-7",
+                    : "pointer-events-none absolute inset-x-0 bottom-0 p-5 text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.45),0_2px_14px_rgba(0,0,0,0.4)] sm:p-7",
                   )}
                 >
                   <div className={cn("mb-3 flex flex-wrap items-center gap-2 text-sm font-semibold", layoutMode === "list" && "mb-2 text-xs sm:text-sm")}>
@@ -546,21 +557,29 @@ export function FeaturedStoryCarousel({
                       </>
                     ) : null}
                     <span aria-hidden>/</span>
-                    <span className="inline-flex items-center gap-1">
+                    <button
+                      type="button"
+                      className="pointer-events-auto relative z-20 inline-flex min-h-8 items-center gap-1 rounded-sm underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
+                      aria-label={`Open ${slideCommentCount} comments for ${story.title}`}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        (onOpenStoryComments ?? onOpenStory)(story);
+                      }}
+                    >
                       <MessageCircle className="h-4 w-4" aria-hidden />
                       {slideCommentCount}
-                    </span>
+                    </button>
                   </div>
                   {researchCarRating ? (
                     <div className="flex min-w-0 items-end justify-between gap-3">
-                      <h2 className={cn("min-w-0 flex-1 transition-colors group-hover/featured-slide:text-primary group-focus-visible/featured-slide:text-primary", headlineClassName)}>{story.title}</h2>
+                      <h2 className={cn("min-w-0 flex-1 underline-offset-4 group-hover/featured-slide:underline group-focus-visible/featured-slide:underline", headlineClassName)}>{story.title}</h2>
                       <ResearchCarRating rating={researchCarRating} />
                     </div>
                   ) : (
-                    <h2 className={cn("transition-colors group-hover/featured-slide:text-primary group-focus-visible/featured-slide:text-primary", headlineClassName)}>{story.title}</h2>
+                    <h2 className={cn("underline-offset-4 group-hover/featured-slide:underline group-focus-visible/featured-slide:underline", headlineClassName)}>{story.title}</h2>
                   )}
                 </div>
-              </button>
+              </article>
             );
           })}
         </div>
