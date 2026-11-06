@@ -37,7 +37,7 @@ export function TrendingStoryRail({
   return (
     <section
       className={cn(
-        "rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]",
+        "rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]",
         className,
       )}
       aria-labelledby={titleId}
@@ -117,7 +117,7 @@ export function TrendingVideoRail({
   return (
     <section
       className={cn(
-        "rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]",
+        "rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]",
         className,
       )}
       aria-labelledby={titleId}

@@ -358,7 +358,7 @@ export function FeaturedStoryCarousel({
 
   return (
     <article
-      className="group relative min-w-0 overscroll-x-none overflow-hidden rounded-[8px] bg-black shadow-[var(--hp-shadow-card)]"
+      className="group relative min-w-0 overscroll-x-none overflow-hidden rounded-card bg-black shadow-[var(--hp-shadow-card)]"
       aria-roledescription="carousel"
       aria-label={editionLabel ?? "Featured stories"}
       data-story-module={editionLabel ? "todays-picks" : "featured"}

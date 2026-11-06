@@ -186,7 +186,7 @@ export function EventTile({ event }: { event: HearstEventRecord }) {
   const href = `/hearst-plus/events/${event.slug}/`;
 
   return (
-    <ArticleCard size="lg" className="min-w-0">
+    <ArticleCard size="lg" className="min-w-0 rounded-card shadow-[var(--hp-shadow-card)] ring-0">
       <Link href={href} className="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-primary" aria-label={`Open event: ${event.title}`}>
         <ArticleCardImage
           src={event.image.src}
@@ -546,7 +546,7 @@ export function HearstEventDetail({ event }: { event: HearstEventRecord }) {
           </aside>
 
           <div className="order-1 min-w-0 space-y-5 lg:order-2">
-          <section id="event-overview" className="scroll-mt-28 overflow-hidden rounded-[8px] border border-border bg-card shadow-[var(--hp-shadow-card)]">
+          <section id="event-overview" className="scroll-mt-28 overflow-hidden rounded-card border border-border bg-card shadow-[var(--hp-shadow-card)]">
             <div className="relative aspect-[4/3] min-h-[280px] overflow-hidden bg-muted sm:aspect-[16/10]">
                 <Image src={event.image.src} alt={event.image.alt} fill priority sizes="(max-width: 1024px) 100vw, 60vw" className="object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" aria-hidden />
@@ -587,7 +587,7 @@ export function HearstEventDetail({ event }: { event: HearstEventRecord }) {
           </section>
 
           {hasProgram ? (
-            <section id="event-program" className="scroll-mt-28 rounded-[8px] border border-border bg-card p-5 shadow-[var(--hp-shadow-card)] sm:p-7">
+            <section id="event-program" className="scroll-mt-28 rounded-card border border-border bg-card p-5 shadow-[var(--hp-shadow-card)] sm:p-7">
               <div className="mb-6">
                 <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Published program</p>
                 <h2 className="headline mt-3 text-2xl font-bold leading-tight sm:text-3xl">
@@ -600,7 +600,7 @@ export function HearstEventDetail({ event }: { event: HearstEventRecord }) {
           ) : null}
 
           {showCoverage ? (
-            <section id="event-coverage" className="scroll-mt-28 rounded-[8px] border border-border bg-card p-5 shadow-[var(--hp-shadow-card)] sm:p-7">
+            <section id="event-coverage" className="scroll-mt-28 rounded-card border border-border bg-card p-5 shadow-[var(--hp-shadow-card)] sm:p-7">
               <div className="mb-6">
                 <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">{event.brandNames[0] ?? "Hearst"} coverage</p>
                 <h2 className="headline mt-3 text-2xl font-bold leading-tight sm:text-3xl">Follow the reporting on this event.</h2>
@@ -611,7 +611,7 @@ export function HearstEventDetail({ event }: { event: HearstEventRecord }) {
           ) : null}
 
           {showEventInformation ? (
-            <section id="event-information" className="scroll-mt-28 rounded-[8px] border border-border bg-card p-5 shadow-[var(--hp-shadow-card)] sm:p-7">
+            <section id="event-information" className="scroll-mt-28 rounded-card border border-border bg-card p-5 shadow-[var(--hp-shadow-card)] sm:p-7">
               <div className="mb-6">
                 <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Organizer information</p>
                 <h2 className="headline mt-3 text-2xl font-bold leading-tight sm:text-3xl">The details to know before you go.</h2>
@@ -622,7 +622,7 @@ export function HearstEventDetail({ event }: { event: HearstEventRecord }) {
           ) : null}
 
         {event.featuredGuests?.length || event.makerSpotlights?.length ? (
-          <section id="event-people" className="scroll-mt-28 rounded-[8px] border border-border bg-card p-5 shadow-[var(--hp-shadow-card)] sm:p-7">
+          <section id="event-people" className="scroll-mt-28 rounded-card border border-border bg-card p-5 shadow-[var(--hp-shadow-card)] sm:p-7">
             <div className="grid gap-10">
               {event.featuredGuests?.length ? (
                 <section aria-labelledby="event-guests-heading">
@@ -657,7 +657,7 @@ export function HearstEventDetail({ event }: { event: HearstEventRecord }) {
         ) : null}
 
         {isOrganized && event.practicalLinks?.length ? (
-          <section id="event-visit" className="scroll-mt-28 rounded-[8px] border border-border bg-card p-5 shadow-[var(--hp-shadow-card)] sm:p-7">
+          <section id="event-visit" className="scroll-mt-28 rounded-card border border-border bg-card p-5 shadow-[var(--hp-shadow-card)] sm:p-7">
             <div className="grid gap-5">
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Before you go</p>

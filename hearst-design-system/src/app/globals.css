@@ -100,6 +100,8 @@
   --hp-positive: #384959;
   --hp-positive-bg: color-mix(in oklab, #BDDDFC 28%, var(--background) 72%);
   --hp-radius-card: var(--radius);
+  /* HDS button radius for Hearst+ surfaces. Publication themes set their own value on their data-brand wrapper. */
+  --component-button-radius-default: 4px;
   --hp-radius-pill: 999px;
   --hp-shadow-card: 0 2px 6px rgba(15, 23, 42, 0.05);
   --hp-shadow-modal: 0 8px 20px rgba(0, 0, 0, 0.3);
@@ -1020,6 +1022,9 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  /* Hearst+ card surfaces: rounded-card, and rounded-card-inner for media nested inside a card. */
+  --radius-card: var(--hp-radius-card, 8px);
+  --radius-card-inner: calc(var(--hp-radius-card, 8px) - 2px);
 
   /* Typography scale from design tokens (unitless values × 1rem) */
   --text-token-4xs: calc(var(--font-size-4xs, 0.688) * 1rem);
@@ -1313,39 +1318,42 @@
     container-name: story-card;
     container-type: inline-size;
   }
-  .pattern-card-row-container {
-    container-name: pattern-card-row;
-    container-type: inline-size;
+  /* Hearst+ block rows and grids (Building Blocks Library patterns).
+     Columns follow the block's own width, not the viewport: minimum card
+     width 260px with a 20px gap gives 2 columns at 540px (2·260 + 20),
+     3 at 820px (3·260 + 40) and 4 at 1100px (4·260 + 60). The container is
+     the block section (`@container/hp-block`).
+     - .hp-block-row (Card Row, Featured + Row): up to four cards and never a
+       partial row, so the fourth card is hidden while three columns fit.
+     - .hp-block-grid (Grid, Featured Video + Four): wraps at 1 / 2 / 4
+       columns so sets of four always fill their rows.
+     Grid items stretch, so cards in a row share the tallest card's height. */
+  .hp-block-row,
+  .hp-block-grid {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: minmax(0, 1fr);
   }
-  .pattern-card-row {
-    flex-wrap: nowrap;
-  }
-  .pattern-card-row__card {
-    flex: 0 0 calc((100% - 0.75rem) / 2);
-  }
-  .pattern-card-row__card:nth-child(n + 3) {
-    display: none;
-  }
-  @container pattern-card-row (min-width: 44rem) {
-    .pattern-card-row {
-      flex-wrap: nowrap;
-    }
-    .pattern-card-row__card {
-      flex-basis: calc((100% - 1.5rem) / 3);
-    }
-    .pattern-card-row__card:nth-child(3) {
-      display: block;
+  @container hp-block (min-width: 33.75rem) {
+    .hp-block-row,
+    .hp-block-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
-  @container pattern-card-row (min-width: 64rem) {
-    .pattern-card-row {
-      flex-wrap: nowrap;
+  @container hp-block (min-width: 51.25rem) {
+    .hp-block-row {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
-    .pattern-card-row__card {
-      flex-basis: calc((100% - 2.25rem) / 4);
+  }
+  @container hp-block (min-width: 51.25rem) and (max-width: 68.7499rem) {
+    .hp-block-row > :nth-child(n + 4) {
+      display: none;
     }
-    .pattern-card-row__card:nth-child(4) {
-      display: block;
+  }
+  @container hp-block (min-width: 68.75rem) {
+    .hp-block-row,
+    .hp-block-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
   .compact-photo-gallery {

@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Story Card Drawing</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;600;700&display=swap">
+<style>
+/* Layout: one Apple-style dimensional drawing sheet (notes · section · plan · tables · details · layouts · title block), black on white, single light theme by design. */
+:root{--paper:#ececec;--sheet:#ffffff;--ink:#111;--ink2:#444;--ink3:#7a7a7a;--fill:#f3f3f3;--fill2:#e6e6e6;--f:'Arimo','Helvetica Neue',Helvetica,Arial,sans-serif;color-scheme:light}
+body{background:var(--paper);color:var(--ink);font-family:var(--f)}
+.wrap{max-width:1760px;margin:0 auto;padding-block:24px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.scroll{overflow-x:auto;background:var(--sheet);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+svg{display:block;width:100%;min-width:1100px;height:auto}
+.tb{background:var(--sheet);border:1.5px solid var(--ink);display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr;margin-bottom:24px}
+.tb>div{border-right:1px solid #d0d0d0;border-bottom:1px solid #d0d0d0;padding:10px 12px;min-width:0}
+.tb .big{grid-row:span 2;display:flex;flex-direction:column;justify-content:space-between;gap:12px}
+.tb h1{font-size:clamp(26px,4vw,40px);line-height:1;margin:0;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.lbl{text-transform:uppercase;letter-spacing:.08em;font-size:12px;color:var(--ink3);font-weight:600}
+.tb .v{font-size:13px;margin-top:2px;font-variant-numeric:tabular-nums}
+.tb .notes{grid-column:1/-1;border-right:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:6px 24px;font-size:13px;color:var(--ink2)}
+.tb .notes ol{margin:4px 0 0;padding-left:18px}
+.tb .figs{grid-column:1/-1;border-right:0;border-bottom:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px 18px}
+.tb .figs .v{font-size:17px}
+@media (max-width:640px){.tb{grid-template-columns:1fr 1fr}.tb .big{grid-column:1/-1;grid-row:auto}}
+.sheetwrap{margin-bottom:28px}
+.foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--ink2);padding:10px 2px 0}
+.foot b{font-weight:600;color:var(--ink)}
+/* drawing */
+.u{font-family:var(--f);text-transform:uppercase;letter-spacing:.07em}
+.border{fill:none;stroke:var(--ink);stroke-width:1.2}
+.obj{fill:var(--sheet);stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round}
+.well{fill:var(--fill);stroke:var(--ink);stroke-width:1}
+.slot{fill:none;stroke:var(--ink2);stroke-width:.8;stroke-dasharray:4 3}
+.hug{fill:var(--fill2);stroke:var(--ink);stroke-width:1}
+.thin{fill:none;stroke:var(--ink);stroke-width:.8}
+.ph{fill:none;stroke:var(--ink3);stroke-width:.8;stroke-dasharray:14 3 3 3}
+.cl{fill:none;stroke:var(--ink3);stroke-width:.7;stroke-dasharray:16 3 2 3}
+.cut{stroke:var(--ink);stroke-width:2}
+.dl{stroke:var(--ink);stroke-width:.7;fill:none}
+.ext{stroke:var(--ink);stroke-width:.55;fill:none}
+.arrow{fill:var(--ink)}
+.hl{stroke:var(--ink2);stroke-width:.7}
+.hs{stroke:var(--ink);stroke-width:.8}
+.env{fill:none;stroke:var(--ink);stroke-width:.8;stroke-dasharray:10 3 2 3}
+.dt{font:400 11px var(--f);fill:var(--ink);paint-order:stroke;stroke:var(--sheet);stroke-width:4px;stroke-linejoin:round}
+.dts{font:400 9.5px var(--f);fill:var(--ink2);letter-spacing:.06em;text-transform:uppercase;paint-order:stroke;stroke:var(--sheet);stroke-width:3px}
+.sl{font:400 9px var(--f);fill:var(--ink2);letter-spacing:.08em;text-transform:uppercase}
+.nt{font:400 11.5px var(--f);fill:var(--ink);letter-spacing:.06em;text-transform:uppercase}
+.nth{font:700 13px var(--f);fill:var(--ink);letter-spacing:.06em}
+.vt{font:400 12px var(--f);fill:var(--ink);letter-spacing:.1em;text-transform:uppercase}
+.vtb{font:400 20px var(--f);fill:var(--ink);letter-spacing:.06em}
+.nb{fill:var(--sheet);stroke:var(--ink);stroke-width:.9}
+.nbt{font:400 9.5px var(--f);fill:var(--ink)}
+.lead{stroke:var(--ink);stroke-width:.7;fill:none}
+.dot{fill:var(--ink)}
+.th{font:400 10.5px var(--f);fill:var(--ink);letter-spacing:.05em;text-transform:uppercase}
+.tc{font:400 10.5px var(--f);fill:var(--ink)}
+.tbk{font:400 7px var(--f);fill:var(--ink2);letter-spacing:.04em;text-transform:uppercase}
+.tbt{font:700 15px var(--f);fill:var(--ink)}
+.tbv{font:400 17px var(--f);fill:var(--ink);letter-spacing:.06em}
+
+/* title block restyled to match the drawing sheet: thin black rules, plain caps lettering */
+.tb{border:1.2px solid var(--ink);border-radius:16px;overflow:hidden}
+.tb>div{border-right:.8px solid var(--ink);border-bottom:.8px solid var(--ink);padding:10px 14px}
+.tb>div:nth-child(4),.tb>div:nth-child(7){border-right:0}
+.tb .lbl{font-size:9.5px;font-weight:400;letter-spacing:.06em;color:var(--ink2)}
+.tb h1{font-weight:400;letter-spacing:.1em;font-size:clamp(28px,4vw,44px);margin-top:4px}
+.tb .v{font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink)}
+.tb .big .v{font-size:11px;color:var(--ink2);line-height:1.6}
+.tb .notes{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);line-height:1.9}
+.tb .notes ol{padding-left:20px}
+.tb .nh{font-weight:700;font-size:13px;letter-spacing:.06em}
+.tb .nh span{font-weight:400;font-size:11.5px;margin-left:6px}
+.tb .figs>div{border-left:.8px solid var(--ink);padding-left:14px}
+.tb .figs>div:first-child{border-left:0;padding-left:0}
+.tb .figs .v{font-size:18px;letter-spacing:.06em;text-transform:none;margin-top:4px}
+.foot{font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+.foot b{font-weight:700}
+</style>
+<style>body{margin:0}.tb .notes ol li{margin:0}</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="tb">
+    <div class="big">
+      <div><div class="lbl">UI component · dimensional drawing</div><h1>Story card</h1></div>
+      <div class="v">Article story card, base and sm layouts. Architecture only: slots, spacing, radii, layers and states. Values measured in the running app and traced to tokens.</div>
+    </div>
+    <div><div class="lbl">Dwg no.</div><div class="v">HP-CARD-001</div></div>
+    <div><div class="lbl">Rev</div><div class="v">C · 2026-11-06</div></div>
+    <div><div class="lbl">Sheets</div><div class="v">1</div></div>
+    <div><div class="lbl">Units</div><div class="v">CSS px @ 1× · rem = 16</div></div>
+    <div><div class="lbl">Scale</div><div class="v">Noted per view</div></div>
+    <div><div class="lbl">Source</div><div class="v">LifestyleRiverCard · home-page.tsx · globals.css · story-actions.tsx</div></div>
+    <div class="notes">
+      <div><span class="nh">NOTES:<span>(UNLESS OTHERWISE SPECIFIED)</span></span><ol>
+        <li>Do not scale from screen. Read the numbers.</li>
+        <li>Measured with Playwright at 1440 and 390 viewports (Chromium, fonts loaded): Card Library Article type for the card, and the blocks home page for the save trail. Re-measured for rev B; every value is unchanged. Rev C changes only the save icon.</li>
+        <li>Slots are placeholders. Copy, imagery and brand marks are not part of the drawing.</li>
+        <li>Variable column names the token or utility that sets the value; spacing utilities resolve as n × --spacing (0.25rem = 4).</li></ol></div>
+      <div><span class="nh" aria-hidden="true">&nbsp;</span><ol start="5">
+        <li>Two values (20 · 16) read: sm ≥ 640 viewport · base &lt; 640.</li>
+        <li>HUG = sized by content · FLEX = takes remaining space · FILL = parent width. n, m = rendered line counts (≤ 3).</li>
+        <li>REF heights are the measured sample (n = 2, m = 1 at sm; n = 3, m = 1 at base) and change with copy.</li>
+        <li>Grayscale by design. Color tokens are listed in the blocks spec, not drawn.</li>
+        <li>Rev B: R1 comes from the rounded-card utility (--hp-radius-card); the save trail was a heart (rev C returns it to the bookmark, per APP_RULES); the card uses content-start so text stays top-aligned when a row stretches it. The compact variant (4:3, p-3, no summary) is specified in the blocks spec.</li></ol></div>
+    </div>
+    <div class="figs">
+      <div><div class="lbl">W · card-w</div><div class="v">FILL · ref 672</div></div>
+      <div><div class="lbl">HM · media-h</div><div class="v">W · 9/16</div></div>
+      <div><div class="lbl">S1 · content-pad</div><div class="v">20 · 16</div></div>
+      <div><div class="lbl">R1 · rounded-card</div><div class="v">8</div></div>
+      <div><div class="lbl">B · border</div><div class="v">0</div></div>
+      <div><div class="lbl">H · card-h</div><div class="v">HM + 2·S1 + H4 + S2 + n·H5 + S3 + m·H6</div></div>
+      <div><div class="lbl">E1 · E2 · E3</div><div class="v">4 · 6 · 8</div></div>
+    </div>
+  </header>
+  <div class="sheetwrap"><div class="scroll"><svg id="sh1" viewBox="0 0 1700 1060" role="img" aria-label="Story card drawing sheet: plan views at sm and base breakpoints, shadow envelope, exploded layer stack, meta row detail, headline row detail, radius details, states, breakpoint table and variable tables"></svg></div>
+  <div class="foot"><span>2026-11-06 &nbsp;|&nbsp; UI component reference · Blocks library</span><span><b>Story card, architecture</b> &nbsp;|&nbsp; 1</span></div></div>
+</div>
+
+<script>
+(function(){
+const NS='http://www.w3.org/2000/svg';let sv,A,HAT,uid=0;
+function mk(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)if(a[k]!=null)e.setAttribute(k,a[k]);(p||sv).appendChild(e);return e}
+function tx(x,y,s,c,a,p){const t=mk('text',Object.assign({x:x,y:y,class:c||'dt'},a||{}),p);t.textContent=s;return t}
+function begin(id){sv=document.getElementById(id);sv.innerHTML='';const n=uid++;const d=mk('defs',{});const m=mk('marker',{id:'ar'+n,viewBox:'0 0 10 10',refX:10,refY:5,markerWidth:7,markerHeight:7,orient:'auto-start-reverse',markerUnits:'userSpaceOnUse'},d);mk('path',{d:'M0,1.7 L10,5 L0,8.3 z',class:'arrow'},m);
+ const pt=mk('pattern',{id:'hat'+n,width:5,height:5,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'},d);mk('line',{x1:0,y1:0,x2:0,y2:5,class:'hl'},pt);A='url(#ar'+n+')';HAT='url(#hat'+n+')';rr(20,20,1660,1020,16,'border')}
+function dimH(x1,x2,y,e1,e2,l,o){o=o||{};[[x1,e1],[x2,e2]].forEach(([x,e])=>{if(e==null)return;const s=Math.sign(y-e)||1;mk('line',{x1:x,y1:e+s*3,x2:x,y2:y+s*5,class:'ext'})});
+ if(x2-x1>=28)mk('line',{x1:x1,y1:y,x2:x2,y2:y,class:'dl','marker-start':A,'marker-end':A});else{mk('line',{x1:x1-13,y1:y,x2:x1,y2:y,class:'dl','marker-end':A});mk('line',{x1:x2+13,y1:y,x2:x2,y2:y,class:'dl','marker-end':A});mk('line',{x1:x1,y1:y,x2:x2,y2:y,class:'dl'})}
+ tx((x1+x2)/2+(o.dx||0),(o.below?y+13:y-4)+(o.dy||0),l,o.c||'dt',{'text-anchor':'middle'})}
+function dimV(y1,y2,x,e1,e2,l,o){o=o||{};[[y1,e1],[y2,e2]].forEach(([y,e])=>{if(e==null)return;const s=Math.sign(x-e)||1;mk('line',{x1:e+s*3,y1:y,x2:x+s*5,y2:y,class:'ext'})});
+ if(y2-y1>=28)mk('line',{x1:x,y1:y1,x2:x,y2:y2,class:'dl','marker-start':A,'marker-end':A});else{mk('line',{x1:x,y1:y1-13,x2:x,y2:y1,class:'dl','marker-end':A});mk('line',{x1:x,y1:y2+13,x2:x,y2:y2,class:'dl','marker-end':A});mk('line',{x1:x,y1:y1,x2:x,y2:y2,class:'dl'})}
+ const c=(y1+y2)/2+(o.dy||0);if(o.side){const r=o.side==='r';const lx=(r?x+6:x-6)+(o.dx||0);if(o.dx)mk('line',{x1:x+(r?2:-2),y1:(y1+y2)/2,x2:lx+(r?-2:2),y2:c,class:'lead'});tx(lx,c+4,l,o.c||'dt',{'text-anchor':r?'start':'end'})}else tx(x-5,c,l,o.c||'dt',{'text-anchor':'middle',transform:'rotate(-90 '+(x-5)+' '+c+')'})}
+function callout(px,py,ex,ey,l,dir,c){const s=dir||(ex>=px?1:-1);mk('circle',{cx:px,cy:py,r:1.8,class:'dot'});mk('polyline',{points:px+','+py+' '+ex+','+ey+' '+(ex+s*10)+','+ey,class:'lead'});tx(ex+s*14,ey+4,l,c||'dt',{'text-anchor':s>0?'start':'end'})}
+function rad(cx,cy,r,c,l,L){const sx=c.includes('l')?-1:1,sy=c.includes('t')?-1:1;const ox=cx-sx*r,oy=cy-sy*r;const px=ox+sx*r*Math.SQRT1_2,py=oy+sy*r*Math.SQRT1_2;callout(px,py,px+sx*L,py+sy*L,l,sx)}
+function nb(x,y,n){mk('rect',{x:x-6,y:y-6,width:12,height:12,class:'nb'});tx(x,y+3.5,String(n),'nbt',{'text-anchor':'middle'})}
+function rr(x,y,w,h,r,c){return mk('rect',{x:x,y:y,width:w,height:h,rx:r,class:c})}
+function slotLabel(x,y,w,h,l,al){tx(al==='l'?x+6:x+w/2,y+h/2+3.2,l,'sl',{'text-anchor':al==='l'?'start':'middle'})}
+function title(x,y,t,s){tx(x,y,t,'vt',{'text-anchor':'middle'});if(s)tx(x,y+14,s,'dts',{'text-anchor':'middle'})}
+function notes(list){const NX=50,NY=58;tx(NX,NY,'NOTES:','nth');tx(NX+62,NY,'(UNLESS OTHERWISE SPECIFIED)','nt');
+ list.forEach(([n,t],i)=>{const y=NY+30+i*22;if(n){nb(NX+6,y-4,n);tx(NX+22,y,t,'nt')}else tx(NX+22,y,t,'nt')})}
+function table(x,y,ttl,rows,ws){ws=ws||[42,100,88];const rh=17;tx(x,y-8,ttl,'vt');
+ const all=[ws.length===3&&!ws.hdr?['Code','Variable','Value']:ws.hdr].concat(rows);all.forEach((r,i)=>{let cx2=x;r.forEach((c,j)=>{mk('rect',{x:cx2,y:y+i*rh,width:ws[j],height:rh,class:'thin'});tx(cx2+(j?ws[j]/2:5),y+i*rh+12,c,i?'tc':'th',{'text-anchor':j?'middle':'start'});cx2+=ws[j]})});return y+all.length*rh+34}
+function detailRef(cx,cy,r,lbl,lx,ly){mk('circle',{cx:cx,cy:cy,r:r,class:'ph'});const a=Math.atan2(ly-cy,lx-cx);mk('line',{x1:cx+r*Math.cos(a),y1:cy+r*Math.sin(a),x2:lx,y2:ly,class:'lead'});tx(lx+(lx<cx?-4:4),ly+4,lbl,'dts',{'text-anchor':lx<cx?'end':'start'})}
+function xbox(x,y,w,h,cls){rr(x,y,w,h,0,cls||'thin');mk('path',{d:'M'+x+','+y+' L'+(x+w)+','+(y+h)+' M'+(x+w)+','+y+' L'+x+','+(y+h),class:'thin'})}
+/* top-rounded media region (clipped by R1) */
+function media(x,y,w,h,r){mk('path',{d:'M'+x+','+(y+h)+' L'+x+','+(y+r)+' A'+r+' '+r+' 0 0 1 '+(x+r)+','+y+' L'+(x+w-r)+','+y+' A'+r+' '+r+' 0 0 1 '+(x+w)+','+(y+r)+' L'+(x+w)+','+(y+h)+' Z',class:'well'});
+ mk('path',{d:'M'+(x+r*.3)+','+(y+r*.3)+' L'+(x+w)+','+(y+h)+' M'+(x+w-r*.3)+','+(y+r*.3)+' L'+x+','+(y+h),class:'ph'})}
+
+/* measured geometry (CSS px) */
+const D={W:672,HM:378,S1:20,H4:16.5,S2:8,H5:30,n:2,S3:8,H6:24,m:1,Z1:16,S5:6,H:534.5};
+const M={W:326,HM:183.4,S1:16,T1:44,S2:8,H5:25,n:3,S3:8,H6:24,m:1,H:374.4};
+const VAR={
+ spacing:[['S1','--spacing×5','20 · 16'],['S2','--spacing×2 (mb-2)','8'],['S3','--spacing×2 (mt-2)','8'],['S4','meta-row gap','0.5rem = 8'],['S5','--spacing×1.5','6'],['S6','--spacing×3','12']],
+ size:[['W','FILL (max-w-2xl)','REF 672'],['HM','aspect-video','W·9/16 = 378'],['Z1','--spacing×4','16'],['H4','4xs × lh 1.5','16.5'],['T1','min-h-11','44 · BASE'],['Z2','save h-8 w-8','32'],['I1','size-4','16'],['H5','lh-tight 1.25','30 · 25'],['H6','leading-6','24'],['B','shadow-card rule','0'],['H','sum (see block)','534.5 · 374.4']],
+ radius:[['R1','rounded-card','8'],['R2','rounded-[3px]','3'],['R3','rounded-[4px]','4']],
+ shadow:[['X·Y','--hp-shadow-card','0 · 2'],['BL','blur','6'],['SP','spread','0'],['E1','BL+SP−Y','4'],['E2','BL+SP','6'],['E3','BL+SP+Y','8']],
+ type:[['TH','--font-headline 800','24/30 · 20/25'],['TM','--text-token-4xs','11/16.5'],['TS','--hp-font-ui 400','15.2/24 · 14/24']]
+};
+
+begin('sh1');
+notes([
+ [1,'FULL-CARD OPEN BUTTON: INSET 0, Z-10.'],
+ [2,'META ROW SITS AT Z-20, ABOVE THE HIT AREA.'],
+ [3,'B = 0. SHADOW + SURFACE SEPARATE THE CARD.'],
+ [4,'MEDIA FILLS W AT 16:9, CLIPPED BY R1.'],
+ [5,'HEADLINE AND SUMMARY CLAMP AT 3 LINES.'],
+ [6,'BYLINE HIDES WHEN META ROW < 20REM.'],
+ [7,'BASE < 640: S1 = 16, META ROW = T1 44.'],
+ [8,'BOOKMARK SAVE TRAIL RENDERS ONLY WITH onSave.'],
+ [0,'HEIGHT HUGS CONTENT. IN A ROW IT STRETCHES;'],
+ [0,'CONTENT-START KEEPS SLOTS TOP-ALIGNED.'],
+]);
+
+/* ---------- Plan view · sm ≥ 640 ---------- */
+{const k=.8,PX=500,PY=120,X=v=>PX+v*k,Y=v=>PY+v*k,d=D;
+ rr(X(0),Y(0),d.W*k,d.H*k,8*k,'obj');
+ media(X(0),Y(0),d.W*k,d.HM*k,8*k);slotLabel(X(0),Y(150),d.W*k,20,'Media slot · 16:9 · fill');
+ mk('line',{x1:X(0),y1:Y(d.HM),x2:X(d.W),y2:Y(d.HM),class:'thin'});
+ const my=d.HM+d.S1;
+ xbox(X(20),Y(my),16*k,16*k);
+ rr(X(42),Y(my),250*k,d.H4*k,1,'slot');slotLabel(X(42),Y(my),250*k,d.H4*k,'Source · flex · truncate','l');
+ rr(X(300),Y(my),110*k,d.H4*k,1,'ph');slotLabel(X(300),Y(my),110*k,d.H4*k,'Byline');
+ const hy=my+d.H4+d.S2;rr(X(20),Y(hy),632*k,d.n*d.H5*k,1,'slot');slotLabel(X(20),Y(hy),632*k,d.n*d.H5*k,'Headline slot · flex · ≤ 3 lines','l');
+ const sy=hy+d.n*d.H5+d.S3;rr(X(20),Y(sy),632*k,d.m*d.H6*k,1,'slot');slotLabel(X(20),Y(sy),632*k,d.m*d.H6*k,'Summary slot · fill · ≤ 3 lines','l');
+ mk('line',{x1:X(336),y1:Y(-16),x2:X(336),y2:Y(d.H+16),class:'cl'});
+ /* top: W */
+ dimH(X(0),X(d.W),Y(-30),Y(-3),Y(-3),'W');tx(X(336),Y(-52),'W = FILL · REF 672 (MAX-W-2XL)','dts',{'text-anchor':'middle'});
+ /* bottom chain */
+ const by=Y(d.H+28);dimH(X(0),X(20),by,Y(d.H),Y(sy+24),'S1',{below:true,dx:-10});dimH(X(20),X(652),by,null,Y(sy+24),'FILL',{below:true,c:'dts'});dimH(X(652),X(672),by,null,Y(d.H),'S1',{below:true,dx:10});
+ /* left region chain */
+ dimV(Y(0),Y(d.HM),X(-36),X(0),X(0),'HM = W·9/16');dimV(Y(d.HM),Y(d.H),X(-36),null,X(0),'HUG','dts');
+ dimV(Y(0),Y(d.H),X(-78),X(-40),X(-40),'(REF 534.5)');
+ /* right inner chain */
+ const rx=X(d.W+34);let y=d.HM;
+ [[d.S1,'S1',0,0],[d.H4,'H4',0,-2],[d.S2,'S2',30,0],[d.n*d.H5,'n·H5',0,0],[d.S3,'S3',30,-2],[d.m*d.H6,'m·H6',0,2],[d.S1,'S1',0,3]].forEach(([h,l,dx,dy])=>{dimV(Y(y),Y(y+h),rx,X(d.W),X(d.W),l,{side:'r',dx:dx,dy:dy});y+=h});
+ rad(X(d.W),Y(0),8*k,'tr','R1',20);rad(X(0),Y(d.H),8*k,'bl','R1',20);
+ nb(X(640),Y(28),1);nb(X(-14),Y(my+8),2);nb(X(d.W)+10,Y(250),3);nb(X(28),Y(28),4);nb(X(640),Y(hy+15),5);nb(X(420),Y(my+8),6);
+ detailRef(X(600),Y(my+8),22,'DETAIL A',X(560),Y(my-60));
+ title(X(336),Y(d.H)+64,'Plan view · sm ≥ 640','Scale 0.8:1 · REF W 672 · n = 2, m = 1');}
+
+/* ---------- Plan view · base < 640 ---------- */
+{const k=.55,PX=1196,PY=140,X=v=>PX+v*k,Y=v=>PY+v*k,d=M;
+ rr(X(0),Y(0),d.W*k,d.H*k,8*k,'obj');media(X(0),Y(0),d.W*k,d.HM*k,8*k);
+ mk('line',{x1:X(0),y1:Y(d.HM),x2:X(d.W),y2:Y(d.HM),class:'thin'});
+ const my=d.HM+d.S1;rr(X(16),Y(my),294*k,d.T1*k,1,'ph');xbox(X(16),Y(my+14),16*k,16*k);rr(X(38),Y(my+14),150*k,16.5*k,1,'slot');
+ const hy=my+d.T1+d.S2;rr(X(16),Y(hy),294*k,d.n*d.H5*k,1,'slot');slotLabel(X(16),Y(hy),294*k,d.n*d.H5*k,'Headline','l');
+ const sy=hy+d.n*d.H5+d.S3;rr(X(16),Y(sy),294*k,d.H6*k,1,'slot');
+ dimH(X(0),X(d.W),Y(-26),Y(-3),Y(-3),'W · REF 326');
+ const rx=X(d.W+26);dimV(Y(d.HM),Y(my),rx,X(d.W),X(d.W),'S1',{side:'r',dy:-3});dimV(Y(my),Y(my+d.T1),rx,X(d.W),X(d.W),'T1',{side:'r'});dimV(Y(hy),Y(hy+d.n*d.H5),rx,X(d.W),X(d.W),'3·H5',{side:'r'});
+ dimV(Y(0),Y(d.HM),X(-22),X(0),X(0),'HM');
+ nb(X(250),Y(my+22),7);
+ title(X(163),Y(d.H)+34,'Plan · base < 640','Scale 0.55:1 · REF H 374.4');}
+
+/* ---------- Detail C · headline row (rating trail) ---------- */
+{const k=.38,X0=1180,Y0=470,X=v=>X0+v*k,Y=v=>Y0+v*k;
+ mk('line',{x1:X(0),y1:Y(-24),x2:X(0),y2:Y(84),class:'ph'});mk('line',{x1:X(632),y1:Y(-24),x2:X(632),y2:Y(84),class:'ph'});
+ rr(X(0),Y(0),522*k,60*k,1,'slot');slotLabel(X(0),Y(0),522*k,60*k,'Headline · flex','l');
+ rr(X(534),Y(14),98*k,46*k,3,'hug');
+ mk('line',{x1:X(-10),y1:Y(60),x2:X(642),y2:Y(60),class:'cl'});
+ const by=Y(96);dimH(X(0),X(522),by,null,Y(62),'FLEX',{below:true,c:'dts'});dimH(X(522),X(534),by,null,Y(62),'S6',{below:true,dx:0,dy:0});dimH(X(534),X(632),by,null,Y(62),'HUG',{below:true,c:'dts',dx:10});
+  title(X(316),Y(96)+42,'Detail C · headline row','Scale 0.38:1 · vehicle rating · items-end');}
+
+/* ---------- Detail D · shadow envelope (corners) ---------- */
+{const q=4,CX=150,CY=360,L=130,gap=34;/* top-left corner at (CX,CY); bottom-left corner below a break */
+ const BY=CY+70+gap+70;/* bottom edge y */
+ const r=8*q,E1=4*q,E2=6*q,E3=8*q,Yo=2*q;
+ /* hatched footprint (shadow offset Y below the bottom edge) */
+ mk('path',{d:'M'+CX+','+(BY-r)+' A'+r+' '+r+' 0 0 0 '+(CX+r)+','+BY+' L'+(CX+L)+','+BY+' L'+(CX+L)+','+(BY+Yo)+' L'+(CX+r)+','+(BY+Yo)+' A'+r+' '+r+' 0 0 1 '+CX+','+(BY-r+Yo)+' Z',fill:HAT,class:'hs'});
+ /* card outline: top-left and bottom-left corners */
+ mk('path',{d:'M'+CX+','+(CY+70)+' L'+CX+','+(CY+r)+' A'+r+' '+r+' 0 0 1 '+(CX+r)+','+CY+' L'+(CX+L)+','+CY,class:'obj',fill:'none'});
+ mk('path',{d:'M'+CX+','+(CY+70+gap)+' L'+CX+','+(BY-r)+' A'+r+' '+r+' 0 0 0 '+(CX+r)+','+BY+' L'+(CX+L)+','+BY,class:'obj',fill:'none'});
+ /* break marks */
+ [CX].forEach(x=>{mk('path',{d:'M'+(x-10)+','+(CY+70)+' l20,0 M'+(x-10)+','+(CY+70+gap)+' l20,0',class:'thin'})});
+ /* envelope */
+ mk('path',{d:'M'+(CX+L)+','+(CY-E1)+' L'+(CX-E2)+','+(CY-E1)+' L'+(CX-E2)+','+(CY+70)+' M'+(CX-E2)+','+(CY+70+gap)+' L'+(CX-E2)+','+(BY+E3)+' L'+(CX+L)+','+(BY+E3),class:'env'});
+ dimV(CY-E1,CY,CX+L+18,CX+L,CX+L,'E1',{side:'r'});
+ dimH(CX-E2,CX,CY+40,null,null,'E2',{dy:-6,dx:-14});
+ dimV(BY,BY+E3,CX+L+18,CX+L,CX+L,'E3',{side:'r'});
+ dimV(BY,BY+Yo,CX+L+60,CX+L,CX+L,'Y',{side:'r'});
+ rad(CX,CY,r,'tl','R1',18);
+ nb(CX+L-14,CY+28,3);
+ tx(CX+40,CY+58,'CARD','sl');tx(CX+40,BY+E3+16,'FOOTPRINT HATCHED','sl');
+ title(CX+70,BY+E3+48,'Detail D · shadow envelope','Scale 4:1 · --hp-shadow-card · break not to scale');}
+
+/* ---------- Exploded view ---------- */
+{const sc=.34,TX=270,TY=850,gap=40,a=.94*sc,b=.17*sc,c=-.34*sc,dd=.47*sc,W=D.W,H=D.H;
+ const P=(x,y,z)=>[TX+a*x+c*y,TY+b*x+dd*y-z];
+ const G=z=>mk('g',{transform:'matrix('+a+','+b+','+c+','+dd+','+TX+','+(TY-z)+')'});
+ const R2=(g,x,y,w,h,r,cls,extra)=>mk('rect',Object.assign({x:x,y:y,width:w,height:h,rx:r,class:cls,'vector-effect':'non-scaling-stroke'},extra||{}),g);
+ const L2=(g,x1,y1,x2,y2,cls)=>mk('line',{x1:x1,y1:y1,x2:x2,y2:y2,class:cls,'vector-effect':'non-scaling-stroke'},g);
+ [[0,0],[W,0],[W,H],[0,H]].forEach(([x,y])=>{const p1=P(x,y,gap),p2=P(x,y,gap*5);mk('line',{x1:p1[0],y1:p1[1],x2:p2[0],y2:p2[1],class:'ph'})});
+ let g=G(0);R2(g,-30,-30,W+60,H+60,0,'thin');
+ g=G(gap);R2(g,0,2,W,H,8,'hs',{fill:HAT});
+ g=G(gap*2);R2(g,0,0,W,H,8,'obj');L2(g,0,378,W,378,'thin');
+ g=G(gap*3);R2(g,0,0,W,378,8,'well');R2(g,20,422.5,632,60,1,'slot');R2(g,20,490.5,632,24,1,'slot');
+ g=G(gap*4);R2(g,0,0,W,H,8,'ph');L2(g,0,0,W,H,'ph');L2(g,W,0,0,H,'ph');
+ g=G(gap*5);R2(g,20,398,16,16,0,'thin');R2(g,42,398,360,16.5,1,'slot');R2(g,612,390,40,32,4,'hug');
+ const LX=192;
+ [[0,[-30,H+30],'L0 · Canvas','--hp-background'],[gap,[0,H+2],'L1 · Shadow','--hp-shadow-card'],[gap*2,[0,H],'L2 · Container','--hp-surface · R1 · clip'],[gap*3,[20,514],'L3 · Media + text','Image · headline · summary'],[gap*4,[0,H],'L4 · Hit area','Open button · z-10'],[gap*5,[20,414],'L5 · Meta controls','Source link · save · z-20']].forEach(([z,[x,y],t,st])=>{
+  const p1=P(x,y,z);mk('circle',{cx:p1[0],cy:p1[1],r:1.8,class:'dot'});mk('polyline',{points:p1[0]+','+p1[1]+' '+(LX+10)+','+p1[1]+' '+LX+','+p1[1],class:'lead'});
+  tx(LX-4,p1[1]-2,t,'vt',{'text-anchor':'end'});tx(LX-4,p1[1]+11,st,'dts',{'text-anchor':'end'})});
+ nb(P(W,0,gap*4)[0]+12,P(W,0,gap*4)[1],1);nb(P(W,0,gap*5)[0]+12,P(W,0,gap*5)[1],2);
+ title(290,TY+150,'Exploded view','Axonometric · z order from code · gaps not to scale');}
+
+/* ---------- Detail A · meta row (sm, with save trail) ---------- */
+{const q=2.5,X0=566,TOP=700,Z2=32*q,rowC=TOP+Z2/2;
+ const ic=16*q,s5=6*q,src=120,byl=80,s4=8*q;
+ let x=X0;const lineH=16.5*q,ly=rowC-lineH/2;
+ mk('line',{x1:X0-20,y1:rowC,x2:X0+400,y2:rowC,class:'cl'});
+ xbox(x,rowC-ic/2,ic,ic);const xi=x;x+=ic+s5;
+ rr(x,ly,src,lineH,2,'slot');slotLabel(x,ly,src,lineH,'Source · flex','l');const xs=x;x+=src+6;
+ rr(x,ly,byl,lineH,2,'ph');slotLabel(x,ly,byl,lineH,'Byline');const xb=x;x+=byl;
+ /* break */
+ mk('path',{d:'M'+(x+6)+','+(ly-6)+' l6,'+(lineH/2+6)+' l-6,'+(lineH/2+6),class:'thin'});x+=22;
+ const xg=x;x+=s4;
+ const xz=x;rr(x,TOP,Z2,Z2,4*q,'hug');const ii=16*q;rr(x+(Z2-ii)/2,TOP+(Z2-ii)/2,ii,ii,0,'thin');
+ {const hx=x+Z2/2,hy=TOP+Z2/2;mk('path',{d:'M'+(hx-10)+','+(hy-14)+' h20 v28 l-10,-8 l-10,8 z',class:'thin'});}
+ const T1=44*q;rr(x-(T1-Z2)/2,TOP-(T1-Z2)/2,T1,T1,0,'ph');
+ const ty=TOP-(T1-Z2)/2-14;
+ dimH(xi,xi+ic,ty,rowC-ic/2,null,'Z1');dimH(xi+ic,xs,ty,null,ly,'S5',{dy:-12});dimH(xs,xs+src,ty,null,ly,'FLEX','dts');
+ dimH(xg,xz,ty,ly,TOP,'S4',{dx:-14});dimH(xz,xz+Z2,ty+0,null,null,'Z2',{dy:-10});
+ dimV(ly,ly+lineH,X0-28,X0,X0,'H4',{side:'l'});
+ dimV(TOP,TOP+Z2,xz+Z2+(T1-Z2)/2+18,xz+Z2,xz+Z2,'Z2',{side:'r'});
+ dimV(TOP-(T1-Z2)/2,TOP+Z2+(T1-Z2)/2,xz+Z2+(T1-Z2)/2+60,xz+Z2+(T1-Z2)/2,xz+Z2+(T1-Z2)/2,'T1 · BASE',{side:'r'});
+ dimH(xz,xz+(Z2-ii)/2,TOP+Z2+28,TOP+Z2,TOP+Z2,'(Z2−I1)÷2',{below:true,dx:-34});
+ rad(xz+Z2,TOP,4*q,'tr','R3',14);
+ nb(xb+byl-8,ly-12,6);nb(xz-10,TOP+Z2+12,8);nb(X0+ic/2,TOP+Z2+12,2);
+ title(760,TOP+Z2+64,'Detail A · meta row','Scale 2.5:1 · bookmark save trail · sm row height = Z2 when save renders, else H4');}
+
+/* ---------- States ---------- */
+{const k=.125,Y0=878,w=D.W*k,h=D.H*k,xs=[540,662,784,906];
+ const mini=(x0,st)=>{rr(x0,Y0,w,h,1,'obj');media(x0,Y0,w,D.HM*k,1);
+  rr(x0+3,Y0+D.HM*k+3,w*.4,2,0,'hug');rr(x0+3,Y0+D.HM*k+8,w-6,7,0,'slot');rr(x0+3,Y0+D.HM*k+18,w-6,3,0,'slot');
+  if(st==='hover'){mk('line',{x1:x0+3,y1:Y0+D.HM*k+15.8,x2:x0+w-12,y2:Y0+D.HM*k+15.8,stroke:'#111','stroke-width':1.2});rr(x0-1.2,Y0-1.2,w+2.4,D.HM*k+2.4,1,'ph')}
+  if(st==='focus'){rr(x0+1.5,Y0+1.5,w-3,h-3,1,'thin');mk('rect',{x:x0+1.5,y:Y0+1.5,width:w-3,height:h-3,fill:'none',stroke:'#111','stroke-width':2})}
+  if(st==='saved'){rr(x0+w-9,Y0+D.HM*k+2,6,6,0,'thin');mk('rect',{x:x0+w-8,y:Y0+D.HM*k+3,width:4,height:4,fill:'#111'})}
+  if(st==='rest'){rr(x0+w-9,Y0+D.HM*k+2,6,6,0,'thin')}};
+ [['rest','Rest','Save outline'],['hover','Hover','Underline · ×1.025'],['focus','Focus-visible','Ring 2 inset'],['saved','Saved','Bookmark fill']].forEach(([s,l,sub],i)=>{mini(xs[i],s);tx(xs[i]+w/2,Y0+h+16,l,'sl',{'text-anchor':'middle'});tx(xs[i]+w/2,Y0+h+28,sub,'dts',{'text-anchor':'middle'})});
+ title(760,1012,'States','Scale 0.125:1 · hover 250ms ease-out · none under reduced motion');}
+
+/* ---------- Radius details ---------- */
+{const q=4,y0=760,items=[['R1','Card · media clip',8],['R2','Brand icon',3],['R3','Save · focus',4]];
+ items.forEach(([c,n,r],i)=>{const x0=1092+i*116,L=22;const P=(u,v)=>[x0+u*q,y0-v*q];
+  mk('path',{d:'M'+P(0,L)+' L'+P(0,r)+' A'+r*q+' '+r*q+' 0 0 0 '+P(r,0)+' L'+P(L,0),class:'obj',fill:'none'});
+  const cc=P(r,r);mk('path',{d:'M'+(cc[0]-5)+','+cc[1]+' h10 M'+cc[0]+','+(cc[1]-5)+' v10',class:'thin'});
+  const a=225*Math.PI/180;mk('line',{x1:cc[0],y1:cc[1],x2:cc[0]+r*q*Math.cos(a),y2:cc[1]-r*q*Math.sin(a),class:'dl','marker-end':A});
+  tx(x0+L*q/2+6,y0-L*q+16,c+' = '+r,'dt');tx(x0,y0+18,n,'dts');});
+ title(1240,y0+44,'Radius details','Scale 4:1');}
+
+/* ---------- Breakpoints ---------- */
+{const ws=[64,104,104];ws.hdr=['Code','Base < 640','sm ≥ 640'];
+ table(1072,872,'Breakpoints',[['S1','16','20'],['META-H','T1 = 44','H4 = 16.5'],['Z2 HIT','T1 = 44','32'],['TH','20 / 25','24 / 30'],['TS','14 / 24','15.2 / 24'],['H REF','374.4 (n 3)','534.5 (n 2)'],['BYLINE','HIDDEN < 20REM','HIDDEN < 20REM']],ws);}
+
+{let y=table(1436,86,'Spacing',VAR.spacing);y=table(1436,y,'Size',VAR.size);y=table(1436,y,'Radius',VAR.radius);y=table(1436,y,'Shadow',VAR.shadow);table(1436,y,'Type · size / line',VAR.type);}
+})();
+</script>
+</body>
+</html>

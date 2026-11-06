@@ -131,7 +131,7 @@ export function InternationalFeedPage({ initialFeedUrl }: { initialFeedUrl?: str
       />
       <main className="mx-auto grid max-w-[1440px] grid-cols-1 gap-6 px-5 py-8 lg:grid-cols-[240px_1fr_280px] lg:px-10">
         <aside className="min-w-0 lg:sticky lg:top-[108px] lg:self-start">
-          <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]" aria-labelledby="international-feed-list">
+          <section className="rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]" aria-labelledby="international-feed-list">
             <h1 id="international-feed-list" className="text-xs font-bold uppercase tracking-[0.16em] text-primary">International feeds</h1>
             <div className="mt-4 grid gap-4">
               {hearstInternationalFeedCountries.map((country) => (
@@ -155,15 +155,15 @@ export function InternationalFeedPage({ initialFeedUrl }: { initialFeedUrl?: str
           </section>
         </aside>
         <section className="min-w-0 space-y-4" aria-label={`${selectedFeed?.name ?? "International"} story river`}>
-          <header className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-6 shadow-[var(--hp-shadow-card)]">
+          <header className="rounded-card border border-border bg-[var(--hp-surface)] p-6 shadow-[var(--hp-shadow-card)]">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">International</p>
             <h2 className="mt-2 text-3xl font-bold">{selectedFeed?.name}</h2>
             <p className="mt-2 text-sm text-muted-foreground">Stories from the official international edition feed.</p>
             <p className="mt-4 text-xs uppercase tracking-[0.12em] text-muted-foreground">{status === "connected" ? `${stories.length} stories loaded` : status}</p>
           </header>
-          {error ? <p className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 text-sm text-muted-foreground shadow-[var(--hp-shadow-card)]">{error}</p> : null}
+          {error ? <p className="rounded-card border border-border bg-[var(--hp-surface)] p-4 text-sm text-muted-foreground shadow-[var(--hp-shadow-card)]">{error}</p> : null}
           {stories.map((story) => (
-            <article key={story.id} className="group/card grid overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] sm:grid-cols-[220px_minmax(0,1fr)]">
+            <article key={story.id} className="group/card grid overflow-hidden rounded-card border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] sm:grid-cols-[220px_minmax(0,1fr)]">
               <a href={story.imageUrl ?? story.url} target="_blank" rel="noopener noreferrer" className="aspect-[16/10] bg-[var(--hp-surface-low)] sm:aspect-auto">
                 {story.imageUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -177,11 +177,11 @@ export function InternationalFeedPage({ initialFeedUrl }: { initialFeedUrl?: str
               </div>
             </article>
           ))}
-          {status === "pending" && stories.length === 0 ? <p className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-6 text-sm text-muted-foreground shadow-[var(--hp-shadow-card)]">Loading this edition’s stories…</p> : null}
-          {status !== "pending" && stories.length === 0 && !error ? <p className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-6 text-sm text-muted-foreground shadow-[var(--hp-shadow-card)]">No stories are available for this edition yet.</p> : null}
+          {status === "pending" && stories.length === 0 ? <p className="rounded-card border border-border bg-[var(--hp-surface)] p-6 text-sm text-muted-foreground shadow-[var(--hp-shadow-card)]">Loading this edition’s stories…</p> : null}
+          {status !== "pending" && stories.length === 0 && !error ? <p className="rounded-card border border-border bg-[var(--hp-surface)] p-6 text-sm text-muted-foreground shadow-[var(--hp-shadow-card)]">No stories are available for this edition yet.</p> : null}
         </section>
         <aside className="min-w-0 space-y-4 lg:sticky lg:top-[108px] lg:self-start">
-          <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]" aria-labelledby="international-context">
+          <section className="rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]" aria-labelledby="international-context">
             <h2 id="international-context" className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Edition context</h2>
             <div className="mt-4 space-y-3 text-sm text-muted-foreground">
               <p><span className="font-bold text-foreground">{selectedCountry}</span> edition</p>
@@ -194,7 +194,7 @@ export function InternationalFeedPage({ initialFeedUrl }: { initialFeedUrl?: str
               </a>
             ) : null}
           </section>
-          <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
+          <section className="rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
             <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-primary">More from {selectedCountry}</h2>
             <div className="mt-3 grid gap-1">
               {hearstInternationalFeeds.filter((feed) => feed.country === selectedFeed?.country && feed.url !== selectedFeed?.url).slice(0, 5).map((feed) => (

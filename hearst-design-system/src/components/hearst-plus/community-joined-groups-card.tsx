@@ -84,7 +84,7 @@ export function CommunityJoinedGroupsCard({
     joinedBrandNames.includes(group.brand),
   );
   return (
-    <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
+    <section className="rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
       <div>
         <div className="flex items-center justify-between gap-2">
           <h2 className="flex min-w-0 items-center gap-1.5 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">

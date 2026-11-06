@@ -269,7 +269,7 @@ export function VideoFeedLeadCard({
   const Headline = headingLevel;
 
   return (
-    <article className="group/video-card overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
+    <article className="group/video-card overflow-hidden rounded-card border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
       <VideoPlaySurface story={story} featured priority />
       <div className="story-card-content p-4 sm:p-5">
         <div className="mb-2 flex flex-wrap items-center gap-2">
@@ -331,7 +331,7 @@ export function VideoIndexCard({
 
   return (
     <article
-      className="group/video-card overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/50"
+      className="group/video-card overflow-hidden rounded-card border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors"
       data-story-module="river"
       data-story-id={story.id}
     >

@@ -60,7 +60,7 @@ function StoryPresentationSpecimen({
   return (
     <article
       data-story-presentation={label}
-      className="min-w-0 rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]"
+      className="min-w-0 rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]"
     >
       <LifestyleRiverImage
         story={story}

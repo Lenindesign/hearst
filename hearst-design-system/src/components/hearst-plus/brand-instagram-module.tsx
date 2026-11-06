@@ -76,7 +76,7 @@ export function BrandInstagramModule({ brandSlug, brandName }: { brandSlug: stri
   return (
     // Just Instagram's embed, flush to the module edges: its own header already names the account and links to it.
     <section
-      className="overflow-hidden rounded-[8px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]"
+      className="overflow-hidden rounded-card bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]"
       aria-label={`${brandName} on Instagram`}
       data-story-module="brand-instagram"
     >

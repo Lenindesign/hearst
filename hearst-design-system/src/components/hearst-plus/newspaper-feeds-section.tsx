@@ -199,7 +199,7 @@ export function NewspaperFeedsSection({
     <div className="space-y-6" data-hearst-plus-newspaper-river aria-labelledby="newspaper-feeds-title">
       <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-x-4 gap-y-6 md:grid-cols-[minmax(0,1fr)_300px] lg:grid-cols-[300px_minmax(0,1fr)_300px]">
         <aside className="hidden min-w-0 space-y-5 lg:sticky lg:top-[86px] lg:block lg:max-h-[calc(100dvh-110px)] lg:self-start lg:overflow-y-auto lg:pr-1">
-          <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-3 shadow-[var(--hp-shadow-card)]">
+          <section className="rounded-card border border-border bg-[var(--hp-surface)] p-3 shadow-[var(--hp-shadow-card)]">
             <LocalNewsSourceToggle activeSource="newspapers" />
           </section>
           <TrendingStoryRail
@@ -214,7 +214,7 @@ export function NewspaperFeedsSection({
           {liveFeedLoading && activeFeed ? (
             <NewspaperFeaturedSkeleton />
           ) : liveFeedError && selectedPublication !== allValue ? (
-            <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-6 text-sm leading-6 text-muted-foreground shadow-[var(--hp-shadow-card)]" role="status">
+            <section className="rounded-card border border-border bg-[var(--hp-surface)] p-6 text-sm leading-6 text-muted-foreground shadow-[var(--hp-shadow-card)]" role="status">
               <p className="font-bold text-foreground">Newspaper stories aren’t available right now.</p>
               <p className="mt-2">Please try again later.</p>
             </section>
@@ -232,7 +232,7 @@ export function NewspaperFeedsSection({
               }}
             />
           ) : (
-            <section className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-6 text-sm leading-6 text-muted-foreground shadow-[var(--hp-shadow-card)]">
+            <section className="rounded-card border border-border bg-[var(--hp-surface)] p-6 text-sm leading-6 text-muted-foreground shadow-[var(--hp-shadow-card)]">
               No newspaper items match the current newspaper. Clear the newspaper filter to restore the river.
             </section>
           )}
@@ -244,7 +244,7 @@ export function NewspaperFeedsSection({
             const readerStory = readerStoryById.get(item.id);
 
             return (
-              <article key={item.id} className="group/card relative min-w-0 overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/50" data-story-module="river" data-story-id={item.id}>
+              <article key={item.id} className="group/card relative min-w-0 overflow-hidden rounded-card border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors" data-story-module="river" data-story-id={item.id}>
                 <button
                   type="button"
                   onClick={() => {
@@ -289,7 +289,7 @@ export function NewspaperFeedsSection({
           })}
           {liveRiverLoading && activeFeed ? <NewspaperRiverStorySkeletons /> : null}
           {!liveFeedLoading && !liveRiverLoading && filteredContent.length > 0 && riverItems.length === 0 ? (
-            <p className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 text-sm leading-6 text-muted-foreground shadow-[var(--hp-shadow-card)]">
+            <p className="rounded-card border border-border bg-[var(--hp-surface)] p-4 text-sm leading-6 text-muted-foreground shadow-[var(--hp-shadow-card)]">
               More newspaper stories will appear here as additional feed items match the selected newspaper.
             </p>
           ) : null}
@@ -432,7 +432,7 @@ function NewspaperStoryImage({
 function NewspaperFeaturedSkeleton() {
   return (
     <section
-      className="overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]"
+      className="overflow-hidden rounded-card border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]"
       aria-label="Loading newspaper stories"
       aria-busy="true"
     >
@@ -463,7 +463,7 @@ function NewspaperRiverStorySkeletons() {
       {Array.from({ length: 3 }).map((_, index) => (
         <article
           key={index}
-          className="overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]"
+          className="overflow-hidden rounded-card border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]"
         >
           <div className="aspect-video animate-pulse bg-[var(--hp-surface-low)]" />
           <div className="space-y-4 p-5">

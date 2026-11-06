@@ -163,6 +163,7 @@ import {
   TrendingVideoRail,
   TrendingStoryRail,
 } from "./hearst-plus/trending-rail";
+import { SavedItemsModule } from "./hearst-plus/saved-items-module";
 import { TodayEditStrip } from "./hearst-plus/today-edit-strip";
 import { FeaturedStoryCarousel } from "./hearst-plus/featured-story-carousel";
 import {
@@ -191,6 +192,7 @@ import { ContentReaderContextRail } from "./hearst-plus/content-reader-context-r
 import {
   ContentReaderAdvertisement,
   getContextualAdvertisementImage,
+  getAdTopicHref,
   selectContentReaderAdvertisement,
   type ContextualAdUnit,
 } from "./hearst-plus/content-reader-advertisement";
@@ -2141,7 +2143,13 @@ function blocksSectionHeadingClass(brandSlug?: string) {
     : "headline text-4xl leading-tight font-bold";
 }
 
-function EditorialHomepageSection({
+/**
+ * Production Hearst+ editorial block. Each mode is one Building Blocks pattern;
+ * the Blocks Library renders this component directly so its previews match
+ * what ships. Column counts follow the block's own width (container
+ * `hp-block`, see `.hp-block-row` / `.hp-block-grid` in globals.css).
+ */
+export function EditorialHomepageSection({
   section,
   selectionLabel,
   onOpen,
@@ -2151,6 +2159,8 @@ function EditorialHomepageSection({
   featureSidebar = false,
   featureFirstGrid = false,
   riverWithHero = false,
+  river = false,
+  grid = false,
   largeHeading = false,
 }: {
   section: { title: string; stories: LifestyleRiverStory[] };
@@ -2162,10 +2172,14 @@ function EditorialHomepageSection({
   featureSidebar?: boolean;
   featureFirstGrid?: boolean;
   riverWithHero?: boolean;
+  /** River: every story as a horizontal list card. */
+  river?: boolean;
+  /** Grid: standard cards that wrap at 1 / 2 / 4 columns. */
+  grid?: boolean;
   largeHeading?: boolean | "elle";
 }) {
   return (
-    <section className="min-w-0 space-y-4" aria-label={section.title}>
+    <section className="@container/hp-block min-w-0 space-y-4" aria-label={section.title}>
       <div className="flex items-end justify-between gap-4">
         <h2 className={largeHeading === "elle" ? blocksSectionHeadingClass("elle") : blocksSectionHeadingClass()}>{section.title}</h2>
         <span className="shrink-0 pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
@@ -2183,7 +2197,7 @@ function EditorialHomepageSection({
             hideGalleryCount
             compactGallery
           />
-          {section.stories.length > 1 ? <div className="grid min-w-0 grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+          {section.stories.length > 1 ? <div className="hp-block-row min-w-0">
             {section.stories.slice(1, 5).map((story) => <LifestyleRiverCard key={`${section.title}-${story.id}`} story={story} onOpen={() => onOpen(story)} saved={savedIds.includes(story.id)} onSave={() => onSave(story)} layoutOverride="cards" hideGalleryCount compactGallery />)}
           </div> : null}
         </div>
@@ -2213,7 +2227,7 @@ function EditorialHomepageSection({
           ) : null}
         </div>
       ) : section.stories.length && featureSidebar ? (
-        <div className="grid min-w-0 items-stretch gap-5 lg:grid-cols-[minmax(0,1.8fr)_minmax(0,1fr)] lg:grid-rows-[minmax(0,1fr)]">
+        <div className="grid min-w-0 items-stretch gap-5 @min-[820px]/hp-block:grid-cols-[minmax(0,1.8fr)_minmax(0,1fr)] @min-[820px]/hp-block:grid-rows-[minmax(0,1fr)]">
           <LifestyleRiverCard
             story={section.stories[0]}
             onOpen={() => onOpen(section.stories[0])}
@@ -2222,7 +2236,7 @@ function EditorialHomepageSection({
             layoutOverride="cards"
           />
           {section.stories.length > 1 ? (
-            <div className="space-y-3 lg:grid lg:h-full lg:min-h-0 lg:grid-rows-4 lg:gap-3 lg:space-y-0">
+            <div className="space-y-3 @min-[820px]/hp-block:grid @min-[820px]/hp-block:h-full @min-[820px]/hp-block:min-h-0 @min-[820px]/hp-block:grid-rows-4 @min-[820px]/hp-block:gap-3 @min-[820px]/hp-block:space-y-0">
               {section.stories.slice(1, 5).map((story) => (
                 <LifestyleRiverCard
                   key={`${section.title}-${story.id}`}
@@ -2241,32 +2255,48 @@ function EditorialHomepageSection({
           ) : null}
         </div>
       ) : section.stories.length && cardGrid ? (
-        <div className="grid min-w-0 grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="hp-block-row min-w-0">
           {section.stories.slice(0, 4).map((story) => (
-            <article key={`${section.title}-${story.id}`} className="group/card relative min-w-0 overflow-hidden rounded-[8px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
-              <button
-                type="button"
-                onClick={() => onOpen(story)}
-                className="peer absolute inset-0 z-10 rounded-[8px] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/60"
-                aria-label={`Open story: ${story.title}`}
-              />
-              <div className="relative aspect-[4/3] overflow-hidden rounded-[6px] bg-muted">
-                <LifestyleRiverImage
-                  story={story}
-                  alt=""
-                  className="h-full w-full transition-transform duration-250 ease-out group-hover/card:scale-[1.025] motion-reduce:transition-none motion-reduce:group-hover/card:scale-100"
-                />
-              </div>
-              <div className="relative min-w-0 p-3">
-                <div className="story-meta-row relative z-20 mb-2">
-                  <LifestyleBrandSource story={story} />
-                  <StorySaveIconButton saved={savedIds.includes(story.id)} onSave={() => onSave(story)} className="ml-auto" />
-                </div>
-                <h3 className="headline line-clamp-3 text-lg font-bold leading-tight transition-colors group-hover/card:text-[var(--hp-sidebar-heading,var(--primary))] group-focus-within/card:text-[var(--hp-sidebar-heading,var(--primary))]">
-                  {story.title}
-                </h3>
-              </div>
-            </article>
+            <LifestyleRiverCard
+              key={`${section.title}-${story.id}`}
+              story={story}
+              onOpen={() => onOpen(story)}
+              saved={savedIds.includes(story.id)}
+              onSave={() => onSave(story)}
+              layoutOverride="cards"
+              compact
+              hideGalleryCount
+              compactGallery
+            />
+          ))}
+        </div>
+      ) : section.stories.length && grid ? (
+        <div className="hp-block-grid min-w-0">
+          {section.stories.map((story) => (
+            <LifestyleRiverCard
+              key={`${section.title}-${story.id}`}
+              story={story}
+              onOpen={() => onOpen(story)}
+              saved={savedIds.includes(story.id)}
+              onSave={() => onSave(story)}
+              layoutOverride="cards"
+              hideGalleryCount
+              compactGallery
+            />
+          ))}
+        </div>
+      ) : section.stories.length && river ? (
+        <div className="space-y-3">
+          {section.stories.map((story) => (
+            <LifestyleRiverCard
+              key={`${section.title}-${story.id}`}
+              story={story}
+              onOpen={() => onOpen(story)}
+              saved={savedIds.includes(story.id)}
+              onSave={() => onSave(story)}
+              layoutOverride="list"
+              editorialRow
+            />
           ))}
         </div>
       ) : section.stories.length ? (
@@ -2370,6 +2400,7 @@ function normalizeContextualAds(units: ContextualAdTuple[]): ContextualAdUnit[] 
     title,
     summary,
     cta,
+    ctaHref: topics.map(getAdTopicHref).find(Boolean),
     topics,
     tags,
     creativeLabel,
@@ -2583,7 +2614,7 @@ const lifestyleCardModelGuide: {
 
 function LifestyleCardModelGuide() {
   return (
-    <section className="mt-4 rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]" aria-label="Lifestyle river card models">
+    <section className="mt-4 rounded-card border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]" aria-label="Lifestyle river card models">
       <div className="border-b border-border p-4 sm:p-5">
         <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
           River Content Models
@@ -2662,7 +2693,7 @@ function ContextualAdLogicGuide({
   const units = contextualAdsByDestination[config.mode];
 
   return (
-    <section className="mt-4 rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]" aria-label="Contextual ad logic">
+    <section className="mt-4 rounded-card border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]" aria-label="Contextual ad logic">
       <div className="border-b border-border p-4 sm:p-5">
         <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
           Contextual Ad Logic
@@ -2756,21 +2787,23 @@ function LifestyleRiverMedia({
   story,
   kind,
   featured,
+  compact = false,
   playing,
   onTogglePlaying,
 }: {
   story: LifestyleRiverStory;
   kind: LifestyleCardKind;
   featured: boolean;
+  compact?: boolean;
   playing: boolean;
   onTogglePlaying: () => void;
 }) {
-  const imageClassName = featured
-    ? "aspect-video w-full"
-    : "aspect-video w-full";
+  const imageClassName = compact ? "aspect-[4/3] w-full" : "aspect-video w-full";
   const videoClassName = featured
     ? "aspect-video w-full 2xl:self-center"
-    : "aspect-video w-full self-start rounded-[4px]";
+    : compact
+      ? "aspect-[4/3] w-full self-start"
+      : "aspect-video w-full self-start rounded-[4px]";
 
   if (kind !== "video") {
     return (
@@ -2982,14 +3015,14 @@ export function RichPhotoGalleryCard({
 
   return (
     <article
-      className="group/card relative min-w-0 cursor-pointer overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/50"
+      className="group/card relative min-w-0 cursor-pointer overflow-hidden rounded-card bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]"
       data-story-module="river"
       data-story-id={story.id}
     >
       <button
         type="button"
         onClick={onOpen}
-        className="peer absolute inset-0 z-10 rounded-[8px] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/60"
+        className="peer absolute inset-0 z-10 rounded-card focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/60"
         aria-label={`Open photo gallery: ${story.title}`}
       />
 
@@ -3059,8 +3092,8 @@ function CompactPhotoGalleryCard({
   onSave?: () => void;
 }) {
   return (
-    <article className="group/card compact-photo-gallery relative min-w-0 cursor-pointer overflow-hidden rounded-[8px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
-      <button type="button" onClick={onOpen} className="peer absolute inset-0 z-10 rounded-[8px] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/60" aria-label={`Open photo gallery: ${story.title}`} />
+    <article className="group/card compact-photo-gallery relative min-w-0 cursor-pointer overflow-hidden rounded-card bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
+      <button type="button" onClick={onOpen} className="peer absolute inset-0 z-10 rounded-card focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/60" aria-label={`Open photo gallery: ${story.title}`} />
       <div className="compact-photo-gallery__images grid aspect-video grid-cols-2 gap-0.5 overflow-hidden bg-border">
         {images.slice(0, 4).map((image, index) => <div key={image.src} className={cn("compact-photo-gallery__image relative min-w-0 overflow-hidden bg-muted", index === 2 && "compact-photo-gallery__image--small", index === 3 && "compact-photo-gallery__image--large")}><Image src={image.src} alt={image.alt} fill sizes={index === 0 ? "(max-width: 640px) 50vw, 40vw" : "(max-width: 640px) 50vw, 20vw"} className="object-cover transition-transform duration-200 group-hover/card:scale-[1.02]" /></div>)}
       </div>
@@ -3108,6 +3141,7 @@ export function LifestyleRiverCard({
   stretchToFeature = false,
   hideGalleryCount = false,
   compactGallery = false,
+  compact = false,
 }: {
   story: LifestyleRiverStory;
   onOpen: () => void;
@@ -3121,6 +3155,8 @@ export function LifestyleRiverCard({
   stretchToFeature?: boolean;
   hideGalleryCount?: boolean;
   compactGallery?: boolean;
+  /** Row card: 4:3 media, 12px padding, text-lg headline, no summary. Used by Card Row blocks. */
+  compact?: boolean;
 }) {
   const kind = getLifestyleCardKind(story);
   const [videoPlaying, setVideoPlaying] = React.useState(false);
@@ -3134,9 +3170,9 @@ export function LifestyleRiverCard({
     return (
       <article
         className={cn(
-          "group/card relative grid min-w-0 cursor-pointer items-center gap-4 overflow-hidden rounded-[8px] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] sm:p-5",
+          "group/card relative grid min-w-0 cursor-pointer items-center gap-4 overflow-hidden rounded-card bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] sm:p-5",
           editorialRow ? "grid-cols-[minmax(0,28%)_minmax(0,1fr)]" : "grid-cols-[112px_minmax(0,1fr)] sm:grid-cols-[168px_minmax(0,1fr)]",
-          stretchToFeature && "lg:h-full lg:min-h-0",
+          stretchToFeature && "@min-[820px]/hp-block:h-full @min-[820px]/hp-block:min-h-0",
         )}
         data-story-module="river"
         data-story-layout="list"
@@ -3145,7 +3181,7 @@ export function LifestyleRiverCard({
         <button
           type="button"
           onClick={onOpen}
-          className="peer absolute inset-0 z-10 rounded-[8px] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/60"
+          className="peer absolute inset-0 z-10 rounded-card focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/60"
           aria-label={`Open story: ${story.title}`}
         />
         <div className="min-w-0">
@@ -3168,7 +3204,7 @@ export function LifestyleRiverCard({
           </div>
           {!hideSummary ? <p className={cn("mt-1.5 text-sm leading-6 text-muted-foreground", editorialRow ? "line-clamp-3" : "hidden sm:line-clamp-3")}>{story.summary}</p> : null}
         </div>
-        <div className="relative order-first aspect-[4/3] overflow-hidden rounded-[6px] bg-muted">
+        <div className="relative order-first aspect-[4/3] overflow-hidden rounded-card-inner bg-muted">
           <LifestyleRiverImage
             story={story}
             alt=""
@@ -3203,7 +3239,7 @@ export function LifestyleRiverCard({
   return (
     <article
       className={cn(
-        "group/card relative min-w-0 cursor-pointer overflow-hidden rounded-[8px] border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors hover:border-primary/50",
+        "group/card relative min-w-0 cursor-pointer content-start overflow-hidden rounded-card bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]",
         isVideo
           ? "grid"
         : featured
@@ -3216,7 +3252,7 @@ export function LifestyleRiverCard({
       <button
         type="button"
         onClick={onOpen}
-        className="peer absolute inset-0 z-10 rounded-[8px] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/60"
+        className="peer absolute inset-0 z-10 rounded-card focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/60"
         aria-label={`Open story: ${story.title}`}
       />
       <div className={cn("relative min-w-0", isVideo && "z-20")}>
@@ -3224,13 +3260,14 @@ export function LifestyleRiverCard({
           story={story}
           kind={kind}
           featured={featured}
+          compact={compact && !featured}
           playing={videoPlaying}
           onTogglePlaying={() => setVideoPlaying((playing) => !playing)}
         />
       </div>
       <div className={cn(
         "story-card-content relative min-w-0",
-        isVideo ? "p-4 sm:p-5" : featured ? "flex flex-col justify-center p-5 sm:p-6 lg:p-8" : "p-4 sm:p-5"
+        compact && !featured ? "p-3" : isVideo ? "p-4 sm:p-5" : featured ? "flex flex-col justify-center p-5 sm:p-6 lg:p-8" : "p-4 sm:p-5"
       )}>
         <div className="story-meta-row relative z-20 mb-2">
           <LifestyleBrandSource story={story} />
@@ -3240,7 +3277,8 @@ export function LifestyleRiverCard({
         </div>
         <div className="flex min-w-0 items-end gap-3">
           <h2 className={cn(
-            "headline story-card-headline min-w-0 flex-1 line-clamp-3 break-words leading-tight underline-offset-4 group-hover/card:underline group-focus-within/card:underline",
+            "headline min-w-0 flex-1 line-clamp-3 break-words leading-tight underline-offset-4 group-hover/card:underline group-focus-within/card:underline",
+            compact && !featured ? "text-lg" : "story-card-headline",
           )}>
             {story.title}
           </h2>
@@ -3248,12 +3286,14 @@ export function LifestyleRiverCard({
             <CarAndDriverResearchRating rating={getHearstAutoResearchCarRating(story.id)!} />
           ) : null}
         </div>
-        <p className={cn(
-          "line-clamp-3 text-muted-foreground",
-          featured ? "mt-2 max-w-prose text-base leading-7" : "mt-2 text-sm leading-6 sm:text-[0.95rem]"
-        )}>
-          {story.summary}
-        </p>
+        {compact && !featured ? null : (
+          <p className={cn(
+            "line-clamp-3 text-muted-foreground",
+            featured ? "mt-2 max-w-prose text-base leading-7" : "mt-2 text-sm leading-6 sm:text-[0.95rem]"
+          )}>
+            {story.summary}
+          </p>
+        )}
       </div>
     </article>
   );
@@ -4467,6 +4507,7 @@ function LifestyleStoryReaderModal({
             savedStories={savedStoryInventory}
             savedIds={savedIds}
             onOpenStory={onOpenStory}
+            onSaveStory={onSave}
           />
           <div className="min-w-0">
             {visibleReaderStories.map((story, index) => {
@@ -5437,6 +5478,21 @@ function LifestyleRiverHomePage({
         config.liveFeedMode === "blend"
       )
     : [];
+  // Saved Items sidebar module: the same ranked, unsaved, non-hidden suggestions
+  // as the Saved feed empty state, shown only while no saved story resolves.
+  const hasResolvableSavedStories = profile.savedIds.some((id) => savedStoryInventory.some((story) => story.id === id));
+  const sidebarSavedSuggestions = activeFilter === "Saved"
+    ? savedSuggestionStories
+    : hasResolvableSavedStories
+      ? []
+      : getPersonalizedLeadSliderStories(
+          savedSuggestionCandidates,
+          rankingProfile,
+          demoState,
+          config,
+          3,
+          config.liveFeedMode === "blend"
+        );
   React.useEffect(() => {
     if (activeFilter !== "Saved" || profile.savedIds.length > 0) return;
     trackProductEventOnce(
@@ -6416,6 +6472,17 @@ function LifestyleRiverHomePage({
     setActiveAutosOemFilters([]);
     onFilterChange?.("For You");
   };
+  const openSavedSuggestion = (story: LifestyleRiverStory, context?: { suggestionPosition?: number }) => {
+    if (context?.suggestionPosition) {
+      trackProductEvent("saved_suggestion_open", { destination, story_id: story.id, position: context.suggestionPosition });
+    }
+    openStory(story.id);
+  };
+  const saveSavedSuggestion = (story: LifestyleRiverStory, position: number) => {
+    trackProductEvent("saved_suggestion_save", { destination, story_id: story.id, position });
+    toggleSaved(story);
+  };
+  const savedItemsBrowseForYou = activeFilter === "For You" && effectiveBrandFilters.length === 0 ? undefined : browseForYou;
 
   const followBrand = (brandName: string) => {
     updateReaderProfile((current) => ({
@@ -6535,6 +6602,9 @@ function LifestyleRiverHomePage({
             profile={profile}
             topStories={filteredStories}
             savedStories={savedStoryInventory}
+            savedSuggestions={sidebarSavedSuggestions}
+            onSaveSuggestion={saveSavedSuggestion}
+            onBrowseForYou={savedItemsBrowseForYou}
             topics={sidebarTopics}
             brands={sidebarBrands}
             communityBrandSlug={initialBrandSlug === "elle" ? "elle" : undefined}
@@ -6610,7 +6680,7 @@ function LifestyleRiverHomePage({
                 </div>
               </>
             ) : (
-              <div className="rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-8 text-center shadow-[var(--hp-shadow-card)]">
+              <div className="rounded-card border border-border bg-[var(--hp-surface-low)] p-8 text-center shadow-[var(--hp-shadow-card)]">
                 <p className="text-2xl font-black">No videos in {activeFilter} yet.</p>
                 <p className="mt-2 text-sm text-muted-foreground">
                   Clear a brand filter or switch back to For You to keep watching.
@@ -6627,7 +6697,7 @@ function LifestyleRiverHomePage({
 
             {showStakeholderTools ? (
               <>
-                <div className="rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-4 shadow-[var(--hp-shadow-card)]">
+                <div className="rounded-card border border-border bg-[var(--hp-surface-low)] p-4 shadow-[var(--hp-shadow-card)]">
                   <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
                     Video source
                   </p>
@@ -6639,7 +6709,7 @@ function LifestyleRiverHomePage({
                   </p>
                 </div>
 
-                <div className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
+                <div className="rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
                   <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
                     Why this queue
                   </p>
@@ -6889,6 +6959,9 @@ function LifestyleRiverHomePage({
           profile={profile}
           topStories={moduleAllocation.dailyHabitStories}
           savedStories={savedStoryInventory}
+          savedSuggestions={sidebarSavedSuggestions}
+          onSaveSuggestion={saveSavedSuggestion}
+          onBrowseForYou={savedItemsBrowseForYou}
           researchCarFilters={researchCarsSidebarFilters}
           trendingStories={initialBrandSlug
             ? moduleAllocation.trendingStories.filter((story) => story.brandSlug === initialBrandSlug)
@@ -6982,18 +7055,13 @@ function LifestyleRiverHomePage({
                           onOpenStory={(story) => openStory(story.id)}
                           title={initialBrandName ? `Trending ${initialBrandName}` : contextualModuleHeading ? `Trending in ${contextualModuleHeading}` : "Trending Across Brands"}
                         />
-                        {profile.savedIds.some((id) => savedStoryInventory.some((story) => story.id === id)) ? (
-                          <TrendingStoryRail
-                            stories={savedStoryInventory.filter((story) => profile.savedIds.includes(story.id)).slice(0, 3)}
-                            onOpenStory={(story) => openStory(story.id)}
-                            title="Saved Items"
-                            titleIcon={<Bookmark className="h-4 w-4 shrink-0" aria-hidden />}
-                          />
-                        ) : (
-                          <DiscoverySidebarCard title="Saved Items" summary="Your saved stories" titleIcon={<Bookmark className="h-4 w-4 shrink-0" aria-hidden />}>
-                            <p className="text-sm leading-6 text-muted-foreground">Save stories as you browse and they will appear here.</p>
-                          </DiscoverySidebarCard>
-                        )}
+                        <SavedItemsModule
+                          savedStories={savedStoryInventory.filter((story) => profile.savedIds.includes(story.id)).slice(0, 3)}
+                          suggestions={sidebarSavedSuggestions}
+                          onOpenStory={openSavedSuggestion}
+                          onSaveSuggestion={saveSavedSuggestion}
+                          onBrowseForYou={savedItemsBrowseForYou}
+                        />
                       </div>
                       <div className="min-w-0 space-y-6">
                         <FeaturedStoryCarousel
@@ -7069,7 +7137,7 @@ function LifestyleRiverHomePage({
                         </div>
                         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
                           {elleDailyHoroscopes.map(({ sign, dates, href, imageUrl }) => (
-                            <Link key={sign} href={href} className="group min-w-0 overflow-hidden rounded-[8px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md">
+                            <Link key={sign} href={href} className="group min-w-0 overflow-hidden rounded-card bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md">
                               <div className="relative aspect-[4/3] overflow-hidden bg-muted">
                                 <Image src={imageUrl} alt={`${sign} zodiac illustration`} fill sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 17vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.025]" />
                               </div>
@@ -7195,14 +7263,14 @@ function LifestyleRiverHomePage({
                           <Link href={initialBrandSlug ? `/hearst-plus/events/?brand=${encodeURIComponent(initialBrandSlug)}` : "/hearst-plus/events/"} className="pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Explore all events</Link>
                         </div>
                         {sectionsHomepageEvents[0] ? (
-                          <Link href={`/hearst-plus/events/${sectionsHomepageEvents[0].slug}/`} className="group block overflow-hidden rounded-[8px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md">
+                          <Link href={`/hearst-plus/events/${sectionsHomepageEvents[0].slug}/`} className="group block overflow-hidden rounded-card bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md">
                             <div className="relative aspect-[16/8] overflow-hidden bg-muted"><Image src={sectionsHomepageEvents[0].image.src} alt={sectionsHomepageEvents[0].image.alt} fill sizes="(max-width: 1024px) 100vw, 60vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.025]" /></div>
                             <div className="p-4"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">{sectionsHomepageEvents[0].dateLabel}</p><h3 className="headline mt-2 text-2xl font-bold leading-snug group-hover:text-primary">{sectionsHomepageEvents[0].title}</h3><p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">{sectionsHomepageEvents[0].summary}</p></div>
                           </Link>
                         ) : null}
                         <div className="space-y-3">
                           {sectionsHomepageEvents.slice(1, 4).map((event) => (
-                            <Link key={event.slug} href={`/hearst-plus/events/${event.slug}/`} className="group flex min-w-0 gap-4 overflow-hidden rounded-[8px] bg-[var(--hp-surface)] p-3 shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md">
+                            <Link key={event.slug} href={`/hearst-plus/events/${event.slug}/`} className="group flex min-w-0 gap-4 overflow-hidden rounded-card bg-[var(--hp-surface)] p-3 shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md">
                               <div className="relative aspect-square w-28 shrink-0 overflow-hidden rounded-[6px] bg-muted sm:w-36"><Image src={event.image.src} alt={event.image.alt} fill sizes="144px" className="object-cover transition-transform duration-300 group-hover:scale-[1.025]" /></div>
                               <div className="min-w-0 self-center"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">{event.dateLabel}</p><h3 className="headline mt-1 line-clamp-2 text-lg font-bold leading-snug group-hover:text-primary">{event.title}</h3><p className="mt-1 line-clamp-2 text-sm leading-6 text-muted-foreground">{event.summary}</p></div>
                             </Link>
@@ -7275,9 +7343,9 @@ function LifestyleRiverHomePage({
                       <div><h2 id="blocks-ae-videos-heading" className={blocksSectionHeadingClass(initialBrandSlug)}>A&amp;E Channel Videos</h2><p className="mt-1 text-sm text-muted-foreground">Series and stories from across the A&amp;E family.</p></div>
                       <Link href="/hearst-plus/entertainment/" className="shrink-0 pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Explore A&amp;E</Link>
                     </div>
-                    {aandeBrandPromotion.stories[0] ? <Link href={aandeBrandPromotion.stories[0].sourceUrl ?? "/hearst-plus/entertainment/"} className="group block overflow-hidden rounded-[8px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md"><div className="relative aspect-[21/8] overflow-hidden bg-muted"><Image src={aandeBrandPromotion.stories[0].image} alt="" fill sizes="100vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.025]" /></div><div className="p-5"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">A&amp;E · {aandeBrandPromotion.stories[0].topic}</p><h3 className="headline mt-2 text-2xl font-bold group-hover:text-primary">{aandeBrandPromotion.stories[0].title}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">{aandeBrandPromotion.stories[0].summary}</p></div></Link> : null}
+                    {aandeBrandPromotion.stories[0] ? <Link href={aandeBrandPromotion.stories[0].sourceUrl ?? "/hearst-plus/entertainment/"} className="group block overflow-hidden rounded-card bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md"><div className="relative aspect-[21/8] overflow-hidden bg-muted"><Image src={aandeBrandPromotion.stories[0].image} alt="" fill sizes="100vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.025]" /></div><div className="p-5"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">A&amp;E · {aandeBrandPromotion.stories[0].topic}</p><h3 className="headline mt-2 text-2xl font-bold group-hover:text-primary">{aandeBrandPromotion.stories[0].title}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">{aandeBrandPromotion.stories[0].summary}</p></div></Link> : null}
                     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                      {aandeBrandPromotion.stories.map((story) => <Link key={story.id} href={story.sourceUrl ?? "/hearst-plus/entertainment/"} className="group overflow-hidden rounded-[8px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md"><div className="relative aspect-video overflow-hidden bg-muted"><Image src={story.image} alt="" fill sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.025]" /></div><div className="p-4"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">A&amp;E · {story.topic}</p><h3 className="headline mt-2 text-lg font-bold leading-snug group-hover:text-primary">{story.title}</h3><p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">{story.summary}</p></div></Link>)}
+                      {aandeBrandPromotion.stories.map((story) => <Link key={story.id} href={story.sourceUrl ?? "/hearst-plus/entertainment/"} className="group overflow-hidden rounded-card bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md"><div className="relative aspect-video overflow-hidden bg-muted"><Image src={story.image} alt="" fill sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.025]" /></div><div className="p-4"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">A&amp;E · {story.topic}</p><h3 className="headline mt-2 text-lg font-bold leading-snug group-hover:text-primary">{story.title}</h3><p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">{story.summary}</p></div></Link>)}
                     </div>
                   </section> : null}
                 </div>
@@ -7356,7 +7424,7 @@ function LifestyleRiverHomePage({
                         <Link
                           key={event.slug}
                           href={`/hearst-plus/events/${event.slug}/`}
-                          className="group overflow-hidden rounded-[8px] bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md"
+                          className="group overflow-hidden rounded-card bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md"
                         >
                           <div className="relative aspect-video overflow-hidden bg-muted">
                             <Image src={event.image.src} alt={event.image.alt} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.025]" />
@@ -7486,7 +7554,7 @@ function LifestyleRiverHomePage({
             </>
           ) : shouldUseTodaysPicks ? (
             <section
-              className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-6 shadow-[var(--hp-shadow-card)]"
+              className="rounded-card border border-border bg-[var(--hp-surface)] p-6 shadow-[var(--hp-shadow-card)]"
               aria-live="polite"
             >
               <h2 className="text-lg font-bold">
@@ -7504,7 +7572,7 @@ function LifestyleRiverHomePage({
             </section>
           ) : activeFilter === "Saved" ? (
               <section
-                className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-5 shadow-[var(--hp-shadow-card)] sm:p-6"
+                className="rounded-card border border-border bg-[var(--hp-surface)] p-5 shadow-[var(--hp-shadow-card)] sm:p-6"
                 aria-labelledby="saved-empty-title"
               >
                 <div className="max-w-xl">
@@ -7602,7 +7670,7 @@ function LifestyleRiverHomePage({
                 ) : null}
               </section>
             ) :
-              <div className="rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-8 text-center shadow-[var(--hp-shadow-card)]">
+              <div className="rounded-card border border-border bg-[var(--hp-surface-low)] p-8 text-center shadow-[var(--hp-shadow-card)]">
                 <p className="headline text-2xl">No stories in {activeFilter} yet.</p>
                 <p className="mt-2 text-sm text-muted-foreground">
                   Clear a brand filter or switch back to For You to keep exploring.
@@ -7641,7 +7709,7 @@ function LifestyleRiverHomePage({
               ) : null}
               {showStakeholderTools ? (
                 <>
-              <div className="rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-4 shadow-[var(--hp-shadow-card)]">
+              <div className="rounded-card border border-border bg-[var(--hp-surface-low)] p-4 shadow-[var(--hp-shadow-card)]">
                 <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
                   Story Source
                 </p>
@@ -7668,7 +7736,7 @@ function LifestyleRiverHomePage({
                   </LinkComponent>
                 ) : null}
               </div>
-              <div className="rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
+              <div className="rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
                 <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
                   Why Your River Looks Like This
                 </p>
@@ -7853,7 +7921,7 @@ function LifestyleRiverHomePage({
                 A continuously ranked {config.productName} feed across {config.brandSummary}
               </p>
             </div>
-            <div className="rounded-[8px] border border-border bg-[var(--hp-surface-low)] p-4 shadow-[var(--hp-shadow-card)]">
+            <div className="rounded-card border border-border bg-[var(--hp-surface-low)] p-4 shadow-[var(--hp-shadow-card)]">
               <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
                 Behavior Model
               </p>

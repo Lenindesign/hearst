@@ -87,6 +87,7 @@ export const hearstPlusLightVars: HearstPlusCssVars = {
   "--hp-positive-bg": "color-mix(in oklab, #BDDDFC 28%, var(--background) 72%)",
 
   "--hp-radius-card": "var(--radius)",
+  "--component-button-radius-default": "4px",
   "--hp-radius-pill": "999px",
   "--hp-shadow-card": "none",
   "--hp-shadow-modal": "0 8px 20px rgba(0, 0, 0, 0.3)",

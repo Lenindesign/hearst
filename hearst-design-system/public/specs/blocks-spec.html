@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hearst+ Blocks Spec</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Schibsted+Grotesk:wght@700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* HDS Constitution editorial rules: navy section rules, Hearst Blue kickers, slate neutrals, single-pixel slate grids. */
+:root{
+  --navy:#102A43; --blue:#2D75B9; --ink:#0F172A; --slate-600:#475569; --slate-500:#64748B; --slate-300:#CBD5E1; --slate-200:#E2E8F0; --slate-100:#F1F5F9; --slate-50:#F8FAFC; --white:#fff;
+  --ui:"Inter",system-ui,sans-serif; --head:"Schibsted Grotesk","Inter",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--slate-50);color:var(--ink);font:400 15px/1.6 var(--ui)}
+.page{max-width:1180px;margin:0 auto;padding:40px 16px 80px}
+@media (min-width:720px){.page{padding:56px 40px 96px}}
+.kicker{font:700 11px/1.2 var(--ui);letter-spacing:.16em;text-transform:uppercase;color:var(--blue);margin:0}
+h1,h2,h3,h4{font-family:var(--head);font-weight:800;color:var(--navy);margin:0;line-height:1.12}
+h1{font-size:clamp(34px,5vw,54px);margin-top:12px}
+h2{font-size:clamp(26px,3.4vw,34px);margin-top:10px}
+h3{font-size:22px;margin-top:6px}
+h4{font-size:15px;font-family:var(--ui);font-weight:700;letter-spacing:.01em;margin:18px 0 6px}
+p{margin:10px 0}
+.lede{font-size:17px;color:var(--slate-600);max-width:760px}
+.mast{border-top:2px solid var(--navy);padding-top:24px}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:var(--slate-200);border:1px solid var(--slate-200);margin-top:24px}
+.meta>div{background:var(--white);padding:12px 16px}
+.meta b{display:block;font:700 10px/1.2 var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--slate-500);margin-bottom:4px}
+.meta span{font-size:13px}
+nav.toc{margin:28px 0 0;display:flex;flex-wrap:wrap;gap:6px}
+nav.toc a{font:600 13px/1 var(--ui);color:var(--navy);text-decoration:none;border:1px solid var(--slate-200);background:var(--white);padding:9px 12px;border-radius:4px}
+nav.toc a:hover{border-color:var(--blue);color:var(--blue)}
+section.major{border-top:2px solid var(--navy);padding-top:24px;margin-top:64px}
+.block{background:var(--white);border:1px solid var(--slate-200);padding:24px;margin-top:24px;min-width:0}
+@media (min-width:720px){.block{padding:28px 32px}}
+.block .id{font:600 12px/1 var(--mono);color:var(--blue)}
+.cols{display:grid;gap:24px}.cols>*{min-width:0}
+@media (min-width:900px){.cols{grid-template-columns:1fr 1fr}}
+ul{margin:6px 0;padding-left:18px}
+li{margin:3px 0}
+code,.mono{font-family:var(--mono);font-size:12.5px}
+code{background:var(--slate-100);padding:1px 5px;border-radius:3px;color:var(--navy);overflow-wrap:anywhere}
+.tw{overflow-x:auto;margin-top:8px;border:1px solid var(--slate-200)}
+table{border-collapse:collapse;width:100%;font-size:13px;background:var(--white)}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--slate-200);vertical-align:top}
+th{font:700 10.5px/1.3 var(--ui);letter-spacing:.12em;text-transform:uppercase;color:var(--slate-500);background:var(--slate-50)}
+tr:last-child td{border-bottom:0}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.flag{border-left:3px solid var(--blue);background:var(--slate-50);padding:10px 14px;margin-top:14px;font-size:13.5px}
+.flag b{color:var(--navy)}
+.bp{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-end;margin-top:12px;padding:16px;background:var(--slate-50);border:1px solid var(--slate-200)}
+.bp figure{margin:0}
+.bp figcaption{font:500 11px/1.35 var(--ui);color:var(--slate-600);margin-top:6px;font-variant-numeric:tabular-nums}
+.bp svg rect{fill:var(--white);stroke:var(--slate-600);stroke-width:1}
+.bp svg rect.frame{fill:none;stroke:var(--slate-300);stroke-dasharray:3 3}
+.sheet img{display:block;width:100%;height:auto;border:1px solid var(--slate-200)}
+.sheet a{font-weight:600;color:var(--blue)}
+.grid-px{display:grid;gap:1px;background:var(--slate-200);border:1px solid var(--slate-200);margin-top:16px}
+@media (min-width:720px){.grid-px{grid-template-columns:repeat(3,1fr)}}
+.grid-px>div{background:var(--white);padding:18px 20px}
+.grid-px h4{margin-top:0}
+.small{font-size:13px;color:var(--slate-600)}
+.tag{display:inline-block;font:700 10px/1 var(--ui);letter-spacing:.12em;text-transform:uppercase;color:var(--blue);border:1px solid var(--slate-300);padding:4px 6px;border-radius:3px;margin-right:4px}
+</style>
+</head>
+<body>
+<main class="page">
+
+<header class="mast">
+  <p class="kicker">HDS · Hearst+ building blocks · Spec</p>
+  <h1>Blocks, cards and widgets</h1>
+  <p class="lede">This spec covers the parts that make up Hearst+ home page sections: 8 layout patterns, 9 card types and 6 sidebar widgets from the Building Blocks Library. Each entry gives the part's anatomy, the tokens it uses, how it responds to width, and its states. Values come from the component source and from measuring the running app.</p>
+  <div class="meta">
+    <div><b>Doc</b><span>HP-BLOCKS-SPEC · Rev A · 2026-11-06</span></div>
+    <div><b>Route</b><span><code>/hearst-plus/blocks/library/</code></span></div>
+    <div><b>Source</b><span><code>blocks-library-experience.tsx</code>, <code>home-page.tsx</code>, <code>globals.css</code></span></div>
+    <div><b>Measured</b><span>Playwright · Chromium · viewports 390, 768, 1024, 1280, 1440, 1600 · fonts loaded · light mode</span></div>
+  </div>
+  <nav class="toc" aria-label="Contents">
+    <a href="#model">Composition model</a><a href="#foundations">Foundations</a><a href="#story-card">Story card</a><a href="#patterns">Patterns</a><a href="#variants">Card variants</a><a href="#cards">Card types</a><a href="#widgets">Widgets</a><a href="#findings">Findings &amp; solutions</a>
+  </nav>
+</header>
+
+<!-- ================= MODEL ================= -->
+<section class="major" id="model">
+  <p class="kicker">00 · How the parts combine</p>
+  <h2>Composition model</h2>
+  <div class="grid-px">
+    <div><h4>Pattern = placement</h4><p class="small">A pattern sets where cards go, how many show, their proportions and the gaps between them. It says nothing about what a card contains.</p></div>
+    <div><h4>Card type = content</h4><p class="small">A card type decides the fields and actions shown: an article, a video, a community thread, an event, an ad. Any card type can fill any pattern slot of a matching shape.</p></div>
+    <div><h4>Widget = sidebar module</h4><p class="small">A widget is a self-contained module for a sidebar column. Widgets stack in any order inside a sidebar slot (for example, the side rail of Three-Column Feature).</p></div>
+  </div>
+  <p class="small" style="margin-top:14px">In the library, every preview sits in a frame with <code>rounded-[8px] bg-muted/60</code> and padding of <code>p-3 · sm:p-5 · lg:p-7</code> (12 · 20 · 28). The frame is library chrome, not part of the block. Content width inside the frame (the "inner W" below) is the width the pattern actually gets.</p>
+</section>
+
+<!-- ================= FOUNDATIONS ================= -->
+<section class="major" id="foundations">
+  <p class="kicker">01 · Shared tokens</p>
+  <h2>Foundations</h2>
+  <p>All blocks render inside <code>.hearst-plus-theme</code>. The values below are what <code>getComputedStyle</code> returned on the library route. Brand themes can override them.</p>
+  <div class="cols">
+    <div>
+      <h4>Surface, shadow, radius</h4>
+      <div class="tw"><table>
+        <tr><th>Token</th><th>Resolved</th><th>Used for</th></tr>
+        <tr><td><code>--hp-surface</code></td><td class="n">#FFFFFF</td><td>Card and widget surface</td></tr>
+        <tr><td><code>--hp-background</code></td><td class="n">#ECE9E3</td><td>Page canvas</td></tr>
+        <tr><td><code>--hp-shadow-card</code></td><td class="n">0 2px 6px rgb(15 23 42 / .05)</td><td>Every Hearst+ card and widget. Any element with this class gets <code>border-width: 0 !important</code> (globals.css), so the shadow and surface separate the card from the page.</td></tr>
+        <tr><td><code>--hp-radius-card</code> → <code>--radius</code></td><td class="n">8px</td><td>Card corners (production cards use the literal <code>rounded-[8px]</code>)</td></tr>
+        <tr><td><code>--border</code></td><td class="n">#C7D9EA</td><td>Inner dividers, thumbnail rims</td></tr>
+        <tr><td><code>--muted</code></td><td class="n">#EDF4FB</td><td>Image placeholder fill</td></tr>
+      </table></div>
+    </div>
+    <div>
+      <h4>Type and color</h4>
+      <div class="tw"><table>
+        <tr><th>Token</th><th>Resolved</th><th>Used for</th></tr>
+        <tr><td><code>--font-headline</code></td><td>Schibsted Grotesk 800</td><td>Card headlines (<code>.headline</code>)</td></tr>
+        <tr><td><code>--hp-font-ui</code></td><td>Inter</td><td>Meta, summaries, UI</td></tr>
+        <tr><td><code>--text-token-4xs</code></td><td class="n">0.688rem = 11.008px</td><td>Source/byline line, widget titles</td></tr>
+        <tr><td><code>--primary</code></td><td class="n">#2B6FAF</td><td>Kickers, links, focus ring base, selected states</td></tr>
+        <tr><td><code>--muted-foreground</code></td><td class="n">#5B6676</td><td>Meta and summary text</td></tr>
+        <tr><td><code>--foreground</code></td><td class="n">#121212</td><td>Headlines</td></tr>
+        <tr><td><code>--ring</code></td><td class="n">#BDDDFC</td><td>Focus ring token (cards use <code>ring-primary/60</code>)</td></tr>
+      </table></div>
+    </div>
+  </div>
+  <h4>Spacing and breakpoints</h4>
+  <div class="tw"><table>
+    <tr><th>Name</th><th>Value</th><th>Notes</th></tr>
+    <tr><td>Spacing unit <code>--spacing</code></td><td class="n">0.25rem = 4px</td><td>Tailwind utilities resolve as n × 4: <code>gap-2</code> 8, <code>gap-3</code> 12, <code>p-4</code> 16, <code>p-5</code> 20.</td></tr>
+    <tr><td>Viewport breakpoints</td><td class="n">sm 640 · lg 1024 · xl 1280 · 2xl 1536</td><td>Card padding and type step at sm. Pattern columns no longer use viewport breakpoints (see container queries).</td></tr>
+    <tr><td>Container queries</td><td class="n">20rem · 32rem · hp-block 540 / 820 / 1100</td><td><code>story-meta</code> &lt; 20rem hides the byline. <code>compact-photo-gallery</code> ≥ 32rem shows 3 rows. Blocks (<code>@container/hp-block</code>) set their columns at 540, 820 and 1100px of block width.</td></tr>
+    <tr><td>Touch minimum</td><td class="n">44px (<code>min-h-11</code>)</td><td>The meta link and the save button grow to 44 below sm.</td></tr>
+    <tr><td>Motion</td><td class="n">250ms ease-out</td><td>Card media scales on hover; this is turned off under <code>prefers-reduced-motion</code>.</td></tr>
+  </table></div>
+</section>
+
+<!-- ================= STORY CARD ================= -->
+<section class="major" id="story-card">
+  <p class="kicker">02 · Card type 01 · Drawing HP-CARD-001 · Rev C</p>
+  <h2>Story card</h2>
+  <p>The Article card type is the production river card: <code>LifestyleRiverCard</code> in <code>home-page.tsx</code>, rendered with <code>layoutOverride="blocks"</code>. Video, Make/Model/Year and Gallery cards are variations of it. The full dimensional drawing is in <a href="story-card-drawing.html">story-card-drawing.html</a>, and an 11.5 s <a href="story-card-film.mp4">motion film</a> walks through it.</p>
+  <div class="sheet"><a href="story-card-drawing.html"><img src="story-card-drawing.png" alt="Dimensional drawing sheet of the story card: plan views at sm and base breakpoints, exploded layer stack, meta row detail, shadow envelope, states, radius details and token tables."></a></div>
+  <div class="cols" style="margin-top:20px">
+    <div>
+      <h4>Anatomy (top to bottom)</h4>
+      <ul>
+        <li><b>Container</b>: <code>article</code>, <code>rounded-[8px]</code>, <code>--hp-surface</code>, <code>--hp-shadow-card</code>, <code>overflow-hidden</code>, border 0.</li>
+        <li><b>Media</b>: fills W at 16:9 (<code>aspect-video</code>, <code>object-cover</code>). Its top corners are clipped by the container radius.</li>
+        <li><b>Meta row</b> (<code>.story-meta-row</code>, z-20): 16px brand icon (r 3) · 6 gap · "Brand · Topic" (truncates) · "· Byline" (hidden below a 20rem container) · optional save button at the end.</li>
+        <li><b>Headline</b>: <code>.story-card-headline</code>, clamped to 3 lines, underlines on hover or focus. On vehicle stories a rating badge sits at the end of the row (gap 12, aligned to the bottom).</li>
+        <li><b>Summary</b>: clamped to 3 lines, <code>--muted-foreground</code>.</li>
+        <li><b>Hit area</b>: an invisible <code>button</code> covers the whole card (<code>absolute inset-0</code>, z-10). The meta row sits above it, so the brand link and save button get their own clicks.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Measured values</h4>
+      <div class="tw"><table>
+        <tr><th>Part</th><th>Base &lt; 640</th><th>sm ≥ 640</th></tr>
+        <tr><td>Content padding</td><td class="n">16 (p-4)</td><td class="n">20 (p-5)</td></tr>
+        <tr><td>Meta row height</td><td class="n">44 (touch)</td><td class="n">16.5 · 32 with save</td></tr>
+        <tr><td>Meta → headline / headline → summary</td><td class="n">8 / 8</td><td class="n">8 / 8</td></tr>
+        <tr><td>Headline size / line</td><td class="n">20 / 25</td><td class="n">24 / 30</td></tr>
+        <tr><td>Summary size / line</td><td class="n">14 / 24</td><td class="n">15.2 / 24</td></tr>
+        <tr><td>Sample card (W × H)</td><td class="n">326 × 374.4</td><td class="n">672 × 534.5</td></tr>
+      </table></div>
+      <p class="small">Height = W·9/16 + 2·padding + meta row + 8 + n·headline line + 8 + m·summary line. The 672 sample: 378 + 40 + 16.5 + 8 + 60 + 8 + 24 = 534.5, which matches the measurement exactly.</p>
+    </div>
+  </div>
+  <h4>States</h4>
+  <div class="tw"><table>
+    <tr><th>State</th><th>Treatment</th></tr>
+    <tr><td>Rest</td><td>Shadow only, no border.</td></tr>
+    <tr><td>Hover</td><td>Headline underlines (offset 4) and media scales to 1.025 over 250ms ease-out. The code also sets <code>hover:border-primary/50</code>, but it has no effect because the border is forced to 0.</td></tr>
+    <tr><td>Focus-visible</td><td>The hit-area button shows a 2px inset ring, <code>ring-primary/60</code>, rounded 8. The headline also underlines (<code>group-focus-within</code>).</td></tr>
+    <tr><td>Saved</td><td>The bookmark icon fills and turns <code>text-primary</code>, with <code>aria-pressed=true</code>. The button only renders when <code>onSave</code> is passed; the library sample doesn't pass it.</td></tr>
+    <tr><td>Reduced motion</td><td>No media scale.</td></tr>
+    <tr><td>Loading / no image</td><td>The image slot falls back to <code>bg-muted</code>. The skeleton for a whole card is out of scope here; see <code>feed-states.tsx</code>.</td></tr>
+  </table></div>
+</section>
+
+<!-- ================= PATTERNS ================= -->
+<section class="major" id="patterns">
+  <p class="kicker">03 · Layout patterns</p>
+  <h2>Patterns</h2>
+  <p>Every pattern is now a mode of the production block <code>EditorialHomepageSection</code> (<code>home-page.tsx</code>), and the library renders that component directly. Columns follow the block's own width through the container <code>hp-block</code>, not the viewport. Each figure redraws the measured card rectangles at 0.14:1 for every inner width the library produced (inner W = preview width minus the frame padding).</p>
+  <div class="tw"><table>
+    <tr><th>Block width</th><th>Row (<code>.hp-block-row</code>)</th><th>Grid (<code>.hp-block-grid</code>)</th><th>Feature + Sidebar</th><th>Three-Column</th></tr>
+    <tr><td class="n">&lt; 540</td><td>1</td><td>1</td><td>stacked</td><td>stacked</td></tr>
+    <tr><td class="n">540–819</td><td>2</td><td>2</td><td>stacked</td><td>stacked</td></tr>
+    <tr><td class="n">820–1099</td><td>3 (4th card hidden)</td><td>2</td><td>1.8fr | 1fr, list stretches</td><td>rail + ad | feature</td></tr>
+    <tr><td class="n">≥ 1100</td><td>4</td><td>4</td><td>1.8fr | 1fr</td><td>rail | feature | ad</td></tr>
+  </table></div>
+  <p class="small">Thresholds come from a 260px minimum card and a 20px gap: 2·260 + 20 = 540, 3·260 + 40 = 820, 4·260 + 60 = 1100. Grid items stretch, so cards in a row share the tallest card's height. Cards use <code>content-start</code>, so the spare height collects below the text and media and meta rows stay aligned. Production check (<code>/hearst-plus/blocks/</code>, Card Row): 358 → 1, 720 → 2 × 350, 976 → 3 × 312, 1184 → 4 × 281, 1264 → 4 × 301, every row with equal heights.</p>
+
+  <article class="block" id="p-featured-four">
+    <span class="id">PATTERN 01 · featured-four · mode <code>featureFirstGrid</code></span>
+    <h3>Featured + Row</h3>
+    <p>A section heading, a full-width lead story, then a row of up to four cards.</p>
+    <div class="cols"><div>
+      <h4>Anatomy</h4><ul><li><b>Heading:</b> <code>headline text-4xl</code> section title, with a 12px caps selection label at the end.</li><li><b>Lead:</b> a standard story card (16:9, see Story card), then a 16px gap.</li><li><b>Row:</b> <code>.hp-block-row</code> holding four standard cards, with a 20px gap.</li></ul>
+    </div><div>
+      <h4>Responsive rule</h4><ul><li>The row follows the table above: 1, 2, 3 or 4 columns. With 3 columns the fourth card is hidden, so a row is never partial.</li><li>The lead stays full width at every size.</li></ul>
+    </div></div>
+    <div class="bp" data-pattern="Featured + Row"></div>
+    <h4>States</h4><p class="small">Row cards stretch to one height. Hover underlines the headline and scales the media 1.025; focus shows the inset ring; the bookmark save button sits in the meta row.</p>
+  </article>
+
+  <article class="block" id="p-four-card-row">
+    <span class="id">PATTERN 02 · four-card-row · mode <code>cardGrid</code></span>
+    <h3>Card Row</h3>
+    <p>A section heading and a row of up to four compact cards.</p>
+    <div class="cols"><div>
+      <h4>Anatomy</h4><ul><li><code>.hp-block-row</code>, 20px gap.</li><li>Compact story cards (<code>LifestyleRiverCard compact</code>): 4:3 media, 12px padding, text-lg headline clamped to 3 lines, no summary.</li></ul>
+    </div><div>
+      <h4>Responsive rule</h4><ul><li>1 → 2 → 3 → 4 columns at 540, 820 and 1100. At 3 columns the fourth card is hidden.</li></ul>
+    </div></div>
+    <div class="bp" data-pattern="Card Row"></div>
+    <h4>States</h4><p class="small">Same as Pattern 01.</p>
+  </article>
+
+  <article class="block" id="p-feature-sidebar">
+    <span class="id">PATTERN 03 · feature-sidebar · mode <code>featureSidebar</code></span>
+    <h3>Feature + Sidebar</h3>
+    <p>A lead story beside a stack of four horizontal stories.</p>
+    <div class="cols"><div>
+      <h4>Anatomy</h4><ul><li>Grid with a 20px gap. The lead is a standard card.</li><li>The stack holds four list cards (<code>layoutOverride="list"</code>, <code>editorialRow</code>, no summary or byline) at a 12px gap.</li></ul>
+    </div><div>
+      <h4>Responsive rule</h4><ul><li>Below a 820px block: one column, lead first.</li><li>From 820: columns <code>minmax(0,1.8fr) | minmax(0,1fr)</code>. The stack becomes <code>grid-rows-4</code> at full height, so the four cards together match the lead (<code>stretchToFeature</code>). Production: 615 | 341 at 976, and 800 | 444 at 1264.</li></ul>
+    </div></div>
+    <div class="bp" data-pattern="Feature + Sidebar"></div>
+  </article>
+
+  <article class="block" id="p-hero-three">
+    <span class="id">PATTERN 04 · hero-three-horizontal · mode <code>riverWithHero</code></span>
+    <h3>River with Hero</h3>
+    <p>A section heading, a full-width lead story, then three horizontal story cards.</p>
+    <div class="cols"><div>
+      <h4>Anatomy</h4><ul><li>Lead: a standard card. Then a 12px gap and three list cards (<code>editorialRow</code>), also 12px apart.</li><li>List card: grid <code>28% | 1fr</code>, 4:3 media at r 6 (<code>rounded-card-inner</code>), padding <code>p-4 · sm:p-5</code>, headline <code>lg · sm:xl</code> clamped to 3 lines, summary clamped to 3.</li></ul>
+    </div><div>
+      <h4>Responsive rule</h4><ul><li>One column at every width. The media column is 28% of the card width, so card height grows with width.</li></ul>
+    </div></div>
+    <div class="bp" data-pattern="River with Hero"></div>
+  </article>
+
+  <article class="block" id="p-three-col">
+    <span class="id">PATTERN 05 · three-column-feature · library composition</span>
+    <h3>Three-Column Feature Row</h3>
+    <p>A discovery rail, a central feature and a contextual ad slot. It's built from production parts: <code>TrendingStoryRail</code>, a one-story <code>EditorialHomepageSection</code> and <code>ContextualRiverAdvertisement</code>.</p>
+    <div class="cols"><div>
+      <h4>Anatomy</h4><ul><li>Rail: Trending widget, 5 ranked rows.</li><li>Center: heading and standard lead card.</li><li>Ad: contextual river advertisement (16:9 creative, disclosure, CTA).</li></ul>
+    </div><div>
+      <h4>Responsive rule</h4><ul><li>Below 820: stacked (rail, feature, ad).</li><li>820–1099: rail and ad stack in the left column (min 240) beside the feature, which spans both rows.</li><li>From 1100: <code>.75fr | 1.6fr | .75fr</code> (min 240 for the side columns). The center column never drops under ~480.</li></ul>
+    </div></div>
+    <div class="bp" data-pattern="Three-Column Feature Row"></div>
+  </article>
+
+  <article class="block" id="p-video-four">
+    <span class="id">PATTERN 06 · featured-video-four · library composition</span>
+    <h3>Featured Video + Four</h3>
+    <p>A featured playable video, then four video cards.</p>
+    <div class="cols"><div>
+      <h4>Anatomy</h4><ul><li>Featured: <code>LifestyleRiverCard featured</code>. A video story renders the 16:9 poster with a 56px play button and a duration pill.</li><li>Then a 20px gap and <code>.hp-block-grid</code> with four video story cards.</li></ul>
+    </div><div>
+      <h4>Responsive rule</h4><ul><li>Grid: 1 → 2 → 4 columns at 540 and 1100. There's no 3-column step, so four cards always fill their rows.</li></ul>
+    </div></div>
+    <div class="bp" data-pattern="Featured Video + Four"></div>
+    <h4>States</h4><p class="small">poster → playing (inline <code>AdaptiveVideo</code>). Stories without a <code>videoUrl</code> show their poster with no play button.</p>
+  </article>
+
+  <article class="block" id="p-grid">
+    <span class="id">PATTERN 07 · four-card-grid · mode <code>grid</code> (new)</span>
+    <h3>Grid</h3>
+    <p>Standard story cards in a grid that wraps.</p>
+    <div class="cols"><div>
+      <h4>Anatomy</h4><ul><li><code>.hp-block-grid</code>, 20px gap, any number of standard cards (the library shows 8).</li></ul>
+    </div><div>
+      <h4>Responsive rule</h4><ul><li>1 → 2 → 4 columns at 540 and 1100. Rows stretch to their tallest card.</li></ul>
+    </div></div>
+    <div class="bp" data-pattern="Grid"></div>
+  </article>
+
+  <article class="block" id="p-river">
+    <span class="id">PATTERN 08 · horizontal-story-list · mode <code>river</code> (new)</span>
+    <h3>River</h3>
+    <p>A section heading and a stack of horizontal story cards.</p>
+    <div class="cols"><div>
+      <h4>Anatomy</h4><ul><li>List cards (<code>editorialRow</code>) at a 12px gap. Each has its meta row, headline and summary, plus the bookmark save button when saving is available.</li></ul>
+    </div><div>
+      <h4>Responsive rule</h4><ul><li>One column at every width. Media is 28% of the card width.</li></ul>
+    </div></div>
+    <div class="bp" data-pattern="River"></div>
+  </article>
+</section>
+
+<!-- ================= VARIANTS ================= -->
+<section class="major" id="variants">
+  <p class="kicker">04 · Inside the patterns</p>
+  <h2>Story card variants</h2>
+  <p>Patterns use one card component, <code>LifestyleRiverCard</code>. The library's separate <code>StorySample</code> and the inline Card Row card are gone.</p>
+  <div class="tw"><table>
+    <tr><th>Variant</th><th>Props</th><th>Media</th><th>Body</th><th>Headline</th><th>Summary</th><th>Used in</th></tr>
+    <tr><td>standard</td><td><code>layoutOverride="cards"</code></td><td>16:9, clipped by R1</td><td><code>p-4 · sm:p-5</code></td><td>20/25 · 24/30, ≤ 3 lines</td><td>14 · 15.2 / 24, ≤ 3 lines</td><td>01 lead + row, 03 lead, 04 lead, 05, 07</td></tr>
+    <tr><td>compact</td><td><code>compact</code></td><td>4:3, video stories included (play button and duration kept)</td><td><code>p-3</code></td><td>text-lg, tight, ≤ 3 lines</td><td>none</td><td>02</td></tr>
+    <tr><td>list</td><td><code>layoutOverride="list"</code> + <code>editorialRow</code></td><td>4:3, 28% wide, <code>rounded-card-inner</code></td><td><code>p-4 · sm:p-5</code>, gap 16</td><td>lg · sm:xl, ≤ 3 lines</td><td>sm / 24, ≤ 3 lines</td><td>03 stack, 04, 08</td></tr>
+    <tr><td>featured</td><td><code>featured</code></td><td>16:9; side by side from 2xl</td><td><code>p-5 · sm:p-6 · lg:p-8</code></td><td>as standard</td><td>base / 28</td><td>06</td></tr>
+    <tr><td>video</td><td>story with <code>videoUrl</code></td><td>16:9 poster, 56px play, duration pill</td><td colspan="4">Same body as the variant it's used in. The media layer sits above the hit area (z-20), so play has its own click.</td></tr>
+  </table></div>
+  <p class="small">Every variant: <code>rounded-card</code> (8), <code>--hp-surface</code>, <code>--hp-shadow-card</code>, no border. The meta row is a 16px brand icon, "Brand · Topic · Byline" (byline hidden below 20rem) and an optional bookmark save button.</p>
+</section>
+
+<!-- ================= CARD TYPES ================= -->
+<section class="major" id="cards">
+  <p class="kicker">05 · Content components</p>
+  <h2>Card types</h2>
+  <p>The library renders each type at up to 672px wide (<code>max-w-2xl</code>), except Shorts and Brand Spotlight. Heights are the library samples.</p>
+  <div class="tw"><table>
+    <tr><th>#</th><th>Type · component</th><th>Anatomy</th><th>Tokens and sizes</th><th>Responsive</th><th>States</th></tr>
+    <tr><td class="n">01</td><td><b>Article</b><br><code>LifestyleRiverCard</code></td><td>See Story card above.</td><td>r 8 · padding 20 / 16 · 16:9</td><td class="n">326 × 374 → 672 × 534.5</td><td>hover, focus, saved, reduced motion</td></tr>
+    <tr><td class="n">02</td><td><b>Video</b><br><code>LifestyleRiverCard</code> · kind video</td><td>Poster at 16:9 on black with a 15% scrim, a 56px play button (<code>bg-black/70</code>, 24px icon), and a duration pill at top-right (12px bold, tabular figures). Body as on Article.</td><td>Media layer at z-20, above the hit area, so play has its own click.</td><td class="n">326 × 397 → 672 × 552.5</td><td>poster → playing (<code>AdaptiveVideo</code> with controls and autoplay); poster-only fallback with no <code>videoUrl</code></td></tr>
+    <tr><td class="n">03</td><td><b>Community</b><br><code>CommunityHomeRiverCard</code></td><td>Optional 16:9 poster. Host row: 20px round icon, xs bold. Title <code>xl · sm:2xl</code>, ≤ 3 lines. Body sm / 24, ≤ 3 lines. Footer row: reply count and a "Join the conversation" link.</td><td>Padding <code>p-4 · sm:p-5</code>. Footer has <code>border-t</code>, <code>px-4 py-3</code>, controls ≥ 36 (<code>min-h-9</code>).</td><td class="n">326 × 459 → 672 × 596. List layout: 112 | 1fr (168 at sm), 4:3 r 6.</td><td>Hover turns the title <code>text-primary</code> and scales media 1.02. Focus ring is <code>primary/35</code>.</td></tr>
+    <tr><td class="n">04</td><td><b>Event</b><br><code>EventTile</code> (HDS <code>ArticleCard</code> lg)</td><td>Image, title <code>2xl · sm:3xl</code>, summary ≤ 4 lines, brand marks, a "Plan your visit" / "Explore the coverage" footer.</td><td><code>rounded-card</code> (8) and <code>--hp-shadow-card</code>, with no ring at rest (was r 11.2 with a ring outline before F8).</td><td class="n">326 × 616 → 672 × 706</td><td>upcoming vs past copy; image scales 1.015 over 300ms on hover</td></tr>
+    <tr><td class="n">05</td><td><b>Make, Model &amp; Year</b><br><code>LifestyleRiverCard</code> + rating</td><td>Article card plus a Car and Driver rating badge at the end of the headline row (see Detail C on the sheet).</td><td>gap 12, <code>items-end</code>; the badge sizes to its content</td><td class="n">326 × 397 → 672 × 558.5</td><td>The badge shows only when a verified rating exists.</td></tr>
+    <tr><td class="n">06</td><td><b>Photo Gallery</b><br><code>CompactPhotoGalleryCard</code></td><td>A 16:9 image grid (2fr | 1fr, 2px gaps on <code>--border</code>), then a <code>p-4</code> body with the same meta row and headline.</td><td>The body doesn't step to 20 at sm, unlike Article.</td><td>Container &lt; 32rem: 2 rows. ≥ 32rem: 3 rows, adding a fourth image. 326 × 406 → 672 × 532.5.</td><td>Until the gallery preview is ready, it renders as an Article card.</td></tr>
+    <tr><td class="n">07</td><td><b>Shorts</b><br><code>VerticalVideoCarousel</code></td><td>A titled carousel of 9:16 vertical cards, each with a 32px play button at bottom-left (<code>white/90</code>) and a duration chip at bottom-right.</td><td>Card width 164 (180 at sm), gap 12. The 9:16 media frame carries <code>rounded-card</code> and <code>--hp-shadow-card</code>.</td><td>Horizontal scroll with mandatory snap and a hidden scrollbar. 2 cards visible at 390, 4 or more at desktop.</td><td>Without short-form stories, it falls back to a single 9:16 card (r 8, max 320).</td></tr>
+    <tr><td class="n">08</td><td><b>Advertisement</b><br><code>ContextualRiverAdvertisement</code></td><td>16:9 creative with an overlaid disclosure row (<code>p-4</code>), body <code>p-4 · sm:p-5</code>, CTA button.</td><td>r 8 · <code>--hp-shadow-card</code> · CTA <code>min-h-11</code>, r 4, <code>px-4 py-2</code>, sm semibold.</td><td class="n">672 × 516.5 at desktop</td><td>Hover drops CTA opacity to 80%; focus ring <code>primary/40</code>.</td></tr>
+    <tr><td class="n">09</td><td><b>Brand Spotlight</b><br><code>BrandPromotionRiverModule</code></td><td>Header with wordmark, "Brand spotlight" kicker and summary (<code>p-5 · sm:p-6</code>, <code>border-b</code>). Body: a 4:3 lead (r 8) plus a list of three rows (square thumb r 8, 88px / 112px at sm, rows <code>py-4</code> with dividers).</td><td><code>section</code>, r 8, <code>--hp-shadow-card</code>. The A&amp;E family uses a dark override (#0D1014).</td><td>Body becomes 2 columns (0.95fr | 1fr, gap 20) at viewport ≥ 1201. Below that it stacks. Rows go single-column when the container is under 120px.</td><td>Returns nothing when there's no matching promotion or lead story.</td></tr>
+  </table></div>
+</section>
+
+<!-- ================= WIDGETS ================= -->
+<section class="major" id="widgets">
+  <p class="kicker">06 · Sidebar modules</p>
+  <h2>Widgets</h2>
+  <p>Shared shell (<code>DiscoverySidebarCard</code> and its siblings): <code>section</code>, r 8, <code>--hp-surface</code>, <code>--hp-shadow-card</code>, padding 16 (<code>p-4</code>). The title is 4xs (11px) bold caps, <code>tracking-widest</code>, in <code>--hp-sidebar-heading</code>, which falls back to <code>--primary</code>. The library preview caps widgets at 360px wide.</p>
+  <div class="tw"><table>
+    <tr><th>#</th><th>Widget · component</th><th>Anatomy</th><th>Sizes</th><th>Responsive</th><th>States</th></tr>
+    <tr><td class="n">01</td><td><b>Trending Stories</b><br><code>TrendingStoryRail</code></td><td>Title row, then ranked rows: 48px thumbnail (r 6, bordered) with a 20px rank badge (round, ring 1) and a 12px bold title (line 1.35, ≤ 3 lines) with meta.</td><td>Row min height 80 (<code>min-h-20</code>), <code>py-3</code>, gap 12. 5 rows = 453 tall at 360.</td><td>Fills the sidebar column width.</td><td>Title underlines on hover or focus. Renders nothing with no stories.</td></tr>
+    <tr><td class="n">02</td><td><b>Saved Items</b><br><code>SavedItemsModule</code></td><td>With saves: the Trending rail layout with a bookmark in the title, up to 3 rows. Empty: the message, an optional Browse For You button, then "Suggested for you" rows (48px thumbnail r 6, 12px bold title clamped to 2 lines, brand line, and a bookmark save button that's 44 below sm and 32 above).</td><td>3 rows = 291 tall with saves</td><td>Collapses below lg like the other discovery widgets; the collapsed header reads the empty message.</td><td>with saves / empty; Browse For You hidden on an unfiltered For You view</td></tr>
+    <tr><td class="n">03</td><td><b>Explore Communities</b><br><code>CommunityJoinedGroupsCard</code></td><td>Title row, then group rows: 20px brand icon (r 4), 12px bold name (≤ 4 lines), member context and a join action.</td><td>Rows <code>min-h-11</code>, <code>py-2</code>, gap 12, with dividers. 326 tall at 360.</td><td>Fills the column width.</td><td>joined vs not joined (read from localStorage); an empty message on <code>bg-muted/50</code>, <code>px-3 py-3</code>.</td></tr>
+    <tr><td class="n">04</td><td><b>Event Discovery</b><br><code>DiscoverySidebarCard</code></td><td>Title, then event rows: 48px thumbnail (r 5) with an xs bold title (≤ 2 lines) and an 11px date.</td><td>Rows <code>min-h-16</code> (64), <code>py-3</code>, gap 12, with dividers. 294 tall at lg.</td><td><b>Below lg (1024): collapses</b> to a 44px disclosure row (title, 2-line summary, 44px expand toggle). Measured 76 to 85 collapsed.</td><td>collapsed / expanded (<code>aria-expanded</code>)</td></tr>
+    <tr><td class="n">05</td><td><b>Local News</b><br><code>DiscoverySidebarCard</code></td><td>Market header (10px caps title plus the market name), a <code>StoryRow</code> (48px thumbnail), and a "View all local news" link (<code>border-t pt-3</code>).</td><td>195 tall at lg</td><td>Collapses below lg, same as Event Discovery.</td><td>collapsed / expanded</td></tr>
+    <tr><td class="n">06</td><td><b>Advertisement</b><br><code>AdSample</code></td><td>16:9 creative with a 9px caps "Advertisement" label, then a <code>p-3</code> body (9px caps kicker, base headline, xs copy).</td><td><code>article</code>, r 7, 292 tall at 360</td><td>Fills the column width.</td><td>Static demo creative</td></tr>
+  </table></div>
+</section>
+
+<!-- ================= FINDINGS ================= -->
+<section class="major" id="findings">
+  <p class="kicker">07 · For the design system team</p>
+  <h2>Findings and solutions</h2>
+  <div class="flag"><b>Applied 2026-11-06 (uncommitted):</b> <code>rounded-card</code> and <code>rounded-card-inner</code> tokens in <code>globals.css</code> <code>@theme</code>, registered in <code>cn()</code>. 106 card-surface radii switched from <code>rounded-[8px]</code> / <code>rounded-[7px]</code>. Dead <code>hover:border-*</code> classes removed from 9 cards. Event card surface fixed. Bookmark save icons (rev C; the heart is reserved for likes). Headline hover changed from a color change to an underline. Every card checked renders at 8px, including brand pages.</div>
+  <p>Each finding was checked against the production blocks page (<code>/hearst-plus/blocks/</code>, measured at 390 to 1920) and the rule documents. Production renders sections with <code>EditorialHomepageSection</code> inside a column of up to 1264px. Nothing has been changed in code yet.</p>
+
+  <div class="grid-px">
+    <div><h4>Done · 10</h4><p class="small">F1–F8, F11 and F12, all uncommitted. S1 covers F1, F3, F4 and F5.</p></div>
+    <div><h4>Needs a decision · 3</h4><p class="small">F9 card timestamp, F10 kicker blue, F13 save control on cards.</p></div>
+    <div><h4>Biggest lever</h4><p class="small">One story card with variants, plus one row rule based on container width (S1 below), resolves F1–F5 together.</p></div>
+  </div>
+
+  <article class="block" id="s1">
+    <span class="id">SOLUTION S1 · resolves F1 · F2 · F3 · F4 · F5 · DONE 2026-11-06</span>
+    <h3>One card, one row rule</h3>
+    <p>Today there are <b>three</b> implementations of the story card. There's <code>LifestyleRiverCard</code> and the library's <code>StorySample</code>. There's also an inline card inside the production Card Row (<code>EditorialHomepageSection</code>, <code>cardGrid</code>), with 4:3 media at r 6, <code>p-3</code>, a text-lg headline and no summary. The library shows patterns the home page doesn't actually ship.</p>
+    <div class="cols"><div>
+      <h4>Card</h4>
+      <ul>
+        <li>Make <code>LifestyleRiverCard</code> the only story card, with four variants: <b>standard</b> (today's card), <b>compact</b> (the row card: 4:3 media, 12 padding, no summary), <b>horizontal</b> (the list layout) and <b>hero</b> (overlay).</li>
+        <li>Make the library a thin wrapper that renders the real <code>EditorialHomepageSection</code> modes with sample stories, and delete <code>StorySample</code>.</li>
+        <li><b>Radius:</b> add <code>--radius-card: var(--hp-radius-card)</code> to <code>@theme</code> so cards use the class <code>rounded-card</code>. Inner media uses a derived <code>--hp-radius-inner: calc(var(--hp-radius-card) − 2px)</code> (= 6). Codemod <code>rounded-[8px]</code> on <code>hp-shadow-card</code> surfaces (240 uses in <code>src</code>) and retire <code>rounded-[7px]</code> (8 uses, all in the library and one onboarding modal).</li>
+        <li><b>Height:</b> cards in a row stretch to the tallest one, as the production grid already does (four cards at 1440 are all 357 tall). The article gets <code>h-full</code>, and content stays top-aligned with no pinned footer.</li>
+      </ul>
+    </div><div>
+      <h4>Row rule (container, not viewport)</h4>
+      <p class="small">Column count follows the row's own width, using a minimum card width of 260 and a gap of 20 (production's <code>gap-5</code>):</p>
+      <div class="tw"><table>
+        <tr><th>Row width</th><th>Columns</th><th>Production check</th></tr>
+        <tr><td class="n">&lt; 540</td><td>1</td><td class="n">358 → 1 (matches today)</td></tr>
+        <tr><td class="n">≥ 540 = 2·260 + 20</td><td>2</td><td class="n">720 → 2 × 350</td></tr>
+        <tr><td class="n">≥ 820 = 3·260 + 40</td><td>3</td><td class="n">976 → 3 × 312 (today: 2 × 478)</td></tr>
+        <tr><td class="n">≥ 1100 = 4·260 + 60</td><td>4</td><td class="n">1184 → 4 × 281 · 1264 → 4 × 301</td></tr>
+      </table></div>
+      <p class="small">Card Row keeps one line and hides the extra cards. Grid and Featured Video + Four wrap onto more rows. Feature + Sidebar goes side by side at ≥ 820 (production switches at lg, giving a 615 | 341 split). Three-Column uses three columns only at ≥ 1100. Between 820 and 1100 it drops to two (feature + rail, ad below), so the center column is never under ~480. The library's 2-up at 326 (157px cards) goes away.</p>
+    </div></div>
+    <p class="small"><span class="tag">F4 answer</span> The 64rem threshold isn't a problem in production: the column is 1184–1264, so it gets 4 cards from a 1280 viewport. It only looked broken inside the narrower library frame. With S1, the library and production agree because both read the container width.</p>
+  </article>
+
+  <div class="tw" style="margin-top:24px"><table>
+    <tr><th>#</th><th>Finding</th><th>Recommended solution</th><th>Rule source</th><th>Status</th></tr>
+    <tr><td class="n">F1</td><td>Pattern previews use <code>StorySample</code>, not the production card.</td><td>The library renders the production section components (S1).</td><td>AGENTS.md: compose HDS components, no parallel system</td><td>Done · 2026-11-06</td></tr>
+    <tr><td class="n">F2</td><td>Radius is hard-coded (7 / 8 / 11.2); <code>--hp-radius-card</code> isn't used.</td><td><code>rounded-card</code> utility, plus <code>--hp-radius-inner</code> and a codemod (S1).</td><td>Token governance (Constitution Art. V)</td><td>Done · 2026-11-06</td></tr>
+    <tr><td class="n">F3</td><td>Cards in a row don't match heights.</td><td>Stretch to the row height, top-aligned. Production already does this.</td><td>Production <code>cardGrid</code>, <code>stretchToFeature</code></td><td>Done · 2026-11-06</td></tr>
+    <tr><td class="n">F4</td><td>4-up appears only on very wide screens.</td><td>Not a production bug; fixed for the library by the row rule.</td><td>Measured production widths</td><td>Done · 2026-11-06</td></tr>
+    <tr><td class="n">F5</td><td>Patterns key off the viewport.</td><td>Container queries at 540 / 820 / 1100 (S1).</td><td>Container queries (<code>hp-block</code>)</td><td>Done · 2026-11-06</td></tr>
+    <tr><td class="n">F6</td><td>The story card's hover border never shows.</td><td>Delete <code>hover:border-primary/50</code> and <code>border border-border</code> from the card. Hover stays as the headline underline plus a 1.025 media scale.</td><td>STYLE.md: modules have no outline stroke, including on hover</td><td>Done · 2026-11-06</td></tr>
+    <tr><td class="n">F7</td><td>Saved Stories disappears when empty.</td><td>New shared <code>SavedItemsModule</code> (<code>saved-items-module.tsx</code>) replaces three separate copies: the blocks home sidebar, <code>LifestyleDiscoverySidebar</code> and the reader context rail. Empty, it shows "Save stories to build your reading list.", a <b>Browse For You</b> action (hidden when the reader is already on an unfiltered For You), and three ranked, unsaved, non-hidden suggestions, each with its own open and save actions. Saving one swaps in the real list. The library widget has a With saves / Empty switch.</td><td>APP_RULES: Saved empty state; Saved Items uses the homepage empty state</td><td>Done · 2026-11-06</td></tr>
+    <tr><td class="n">F8</td><td>Event card: r 11.2 with a <code>ring-1</code> outline.</td><td>Event: <code>EventTile</code> now uses the Hearst+ surface (<code>rounded-card</code>, <code>--hp-shadow-card</code>, <code>ring-0</code> at rest, focus ring kept). Shorts: no change needed. The first measurement read the outer wrapper; the 9:16 media inside already has the card radius and shadow.</td><td>STYLE.md: no outline stroke on modules; focus through rings</td><td>Done · 2026-11-06</td></tr>
+    <tr><td class="n">F11 <span class="tag">new</span></td><td>Save icon: the old rule required a heart, which reads as "like" for a save-for-later action.</td><td>Decided 2026-11-06: save uses the <b>bookmark</b> (outline / fill) on the card save button, story action row, reader action bar, Shorts and image viewers, and Saved Items headings and suggestions. The heart is kept for likes and favorites. Library navigation moves to the <b>books</b> icon. <code>APP_RULES.md</code> and <code>DECISION_LOG.md</code> are updated.</td><td>APP_RULES save icon rule (changed); Constitution Art. IV bookmark action</td><td>Done · 2026-11-06</td></tr>
+    <tr><td class="n">F12 <span class="tag">new</span></td><td>Some headlines change color on hover: the Community card (<code>text-primary</code>) and the production Card Row (<code>--hp-sidebar-heading</code>).</td><td>Keep the headline color and underline on hover or focus, like the story card.</td><td>STYLE.md: headlines keep color; underline is the cue</td><td>Done · 2026-11-06</td></tr>
+    <tr><td class="n">F9</td><td>No timestamp on the card; the Constitution's river contract asks for one.</td><td><b>Recommend</b> an optional date slot in the meta row after the byline, short and absolute (e.g. "Jul 20", Pacific). It hides with the byline below a 20rem container and is omitted when the source date is invalid, never generated.</td><td>Constitution Art. IV; APP_RULES date rules</td><td>Decide · editorial</td></tr>
+    <tr><td class="n">F10</td><td>Kicker blue: the Constitution says #2D75B9; the token is #2B6FAF.</td><td><b>Recommend</b> keeping the token and changing the Constitution to name <code>--primary</code>, not a hex. Neither blue reaches 4.5:1 for 11px text on the #ECE9E3 canvas (#2B6FAF 4.34, #2D75B9 3.98), though both pass on white cards. So add a canvas kicker token at <b>#2A6CAB</b>: 4.52 on the canvas, 5.48 on white.</td><td>Constitution Art. II; WCAG 1.4.3</td><td>Decide · brand</td></tr>
+    <tr><td class="n">F13 <span class="tag">new</span></td><td>STYLE.md says content cards show no per-card Save, but production passes <code>onSave</code> to every block card.</td><td><b>Recommend</b> keeping one bookmark toggle in the meta row and clarifying STYLE.md to allow a single save control while still banning action rows. The alternative is to remove it and save only from the reader.</td><td>STYLE.md content-card rule vs production</td><td>Decide · product</td></tr>
+  </table></div>
+
+  <h4>Suggested order</h4>
+  <ol class="small">
+    <li>Tokens: <code>--radius-card</code>, <code>--hp-radius-inner</code> and the radius codemod (F2). This is low risk and unblocks the rest.</li>
+    <li>Rule fixes in place: F6, F8, F11, F12. Small diffs, each backed by an existing rule.</li>
+    <li>F7, the Saved empty state. <b>Done.</b></li>
+    <li>S1: consolidate the card, add the container row rule, and switch the library to production components (F1, F3, F4, F5). <b>Done.</b> Patterns now render <code>EditorialHomepageSection</code>; <code>StorySample</code> and <code>.pattern-card-row</code> are removed.</li>
+    <li>F9, F10, F13 once decided. Record each in <code>DECISION_LOG.md</code> and its canonical owner (STYLE.md, APP_RULES.md or the Constitution).</li>
+  </ol>
+  <h4>Not measured here</h4>
+  <ul class="small">
+    <li>Dark mode and brand-theme overrides. Values above are the default Hearst+ light theme.</li>
+    <li>Skeleton and loading states of the home river (<code>feed-states.tsx</code>).</li>
+  </ul>
+</section>
+
+</main>
+<script>
+const DATA = {"Featured + Row":[{"vw":390,"w":326,"items":[[0,106,326,374],[0,496,326,398],[0,915,326,398],[0,1333,326,374],[0,1728,326,374]]},{"vw":1024,"w":562,"items":[[0,61,562,518],[0,595,271,402],[291,595,271,402],[0,1018,271,354],[291,1018,271,354]]},{"vw":768,"w":664,"items":[[0,61,664,546],[0,623,322,407],[342,623,322,407],[0,1050,322,383],[342,1050,322,383]]},{"vw":1280,"w":818,"items":[[0,61,818,632],[0,709,399,450],[419,709,399,450],[0,1180,399,426],[419,1180,399,426]]},{"vw":1440,"w":978,"items":[[0,61,978,722],[0,799,312.7,402],[333,799,312.7,402],[665,799,312.7,402]]},{"vw":1600,"w":1138,"items":[[0,61,1138,812],[0,889,269.5,402],[290,889,269.5,402],[579,889,269.5,402],[869,889,269.5,402]]}],"Card Row":[{"vw":390,"w":326,"items":[[0,106,326,405],[0,531,326,405],[0,955,326,405],[0,1380,326,405]]},{"vw":1024,"w":562,"items":[[0,61,271,351],[291,61,271,351],[0,432,271,351],[291,432,271,351]]},{"vw":768,"w":664,"items":[[0,61,322,390],[342,61,322,390],[0,471,322,390],[342,471,322,390]]},{"vw":1280,"w":818,"items":[[0,61,399,447],[419,61,399,447],[0,528,399,447],[419,528,399,447]]},{"vw":1440,"w":978,"items":[[0,61,312.7,383],[333,61,312.7,383],[665,61,312.7,383]]},{"vw":1600,"w":1138,"items":[[0,61,269.5,350],[290,61,269.5,350],[579,61,269.5,350],[869,61,269.5,350]]}],"Feature + Sidebar":[{"vw":390,"w":326,"items":[[0,106,326,374],[0,500,326,158],[0,671,326,158],[0,841,326,158],[0,1011,326,158]]},{"vw":1024,"w":562,"items":[[0,61,562,518],[0,599,562,163],[0,774,562,163],[0,948,562,163],[0,1123,562,163]]},{"vw":768,"w":664,"items":[[0,61,664,546],[0,627,664,171],[0,810,664,171],[0,993,664,171],[0,1176,664,171]]},{"vw":1280,"w":818,"items":[[0,61,818,632],[0,713,818,203],[0,928,818,203],[0,1144,818,203],[0,1359,818,203]]},{"vw":1440,"w":978,"items":[[0,61,615.8,686],[636,61,342.1,163],[636,236,342.1,163],[636,410,342.1,163],[636,585,342.1,163]]},{"vw":1600,"w":1138,"items":[[0,61,718.7,686],[739,61,399.3,163],[739,236,399.3,163],[739,410,399.3,163],[739,585,399.3,163]]}],"River with Hero":[{"vw":390,"w":326,"items":[[0,106,326,374],[0,492,326,236],[0,741,326,236],[0,989,326,188]]},{"vw":1024,"w":562,"items":[[0,61,562,518],[0,591,562,217],[0,820,562,217],[0,1048,562,193]]},{"vw":768,"w":664,"items":[[0,61,664,546],[0,619,664,217],[0,847,664,217],[0,1076,664,193]]},{"vw":1280,"w":818,"items":[[0,61,818,632],[0,705,818,203],[0,920,818,203],[0,1136,818,203]]},{"vw":1440,"w":978,"items":[[0,61,978,722],[0,795,978,237],[0,1044,978,237],[0,1293,978,237]]},{"vw":1600,"w":1138,"items":[[0,61,1138,812],[0,885,1138,271],[0,1168,1138,271],[0,1450,1138,271]]}],"Three-Column Feature Row":[{"vw":390,"w":326,"items":[[0,0,326,453],[0,579,326,398],[0,997,326,388]]},{"vw":1024,"w":562,"items":[[0,0,562,453],[0,534,562,518],[0,1072,562,479]]},{"vw":768,"w":664,"items":[[0,0,664,453],[0,534,664,576],[0,1129,664,512]]},{"vw":1280,"w":818,"items":[[0,0,818,453],[0,534,818,662],[0,1216,818,599]]},{"vw":1440,"w":978,"items":[[0,0,319.3,453],[339,61,638.7,561],[0,473,319.3,400]]},{"vw":1600,"w":1138,"items":[[0,0,265.6,453],[286,61,566.7,521],[872,0,265.7,370]]}],"Featured Video + Four":[{"vw":390,"w":326,"items":[[0,0,326,409],[0,429,326,422],[0,872,326,422],[0,1314,326,397],[0,1732,326,422]]},{"vw":1024,"w":562,"items":[[0,0,562,533],[0,553,271,387],[291,553,271,387],[0,960,271,387],[291,960,271,387]]},{"vw":768,"w":664,"items":[[0,0,664,560],[0,580,322,416],[342,580,322,416],[0,1016,322,416],[342,1016,322,416]]},{"vw":1280,"w":818,"items":[[0,0,818,647],[0,667,399,459],[419,667,399,459],[0,1146,399,459],[419,1146,399,459]]},{"vw":1440,"w":978,"items":[[0,0,978,737],[0,757,479,504],[499,757,479,504],[0,1281,479,504],[499,1281,479,504]]},{"vw":1600,"w":1138,"items":[[0,0,1138,827],[0,847,269.5,386],[290,847,269.5,386],[579,847,269.5,386],[869,847,269.5,386]]}],"Grid":[{"vw":390,"w":326,"items":[[0,106,326,374],[0,500,326,398],[0,919,326,398],[0,1337,326,374],[0,1732,326,374],[0,2126,326,398],[0,2544,326,398],[0,2963,326,398]]},{"vw":1024,"w":562,"items":[[0,61,271,402],[291,61,271,402],[0,483,271,402],[291,483,271,402],[0,906,271,378],[291,906,271,378],[0,1304,271,378],[291,1304,271,378]]},{"vw":768,"w":664,"items":[[0,61,322,407],[342,61,322,407],[0,488,322,407],[342,488,322,407],[0,915,322,407],[342,915,322,407],[0,1342,322,407],[342,1342,322,407]]},{"vw":1280,"w":818,"items":[[0,61,399,450],[419,61,399,450],[0,531,399,450],[419,531,399,450],[0,1002,399,450],[419,1002,399,450],[0,1472,399,450],[419,1472,399,450]]},{"vw":1440,"w":978,"items":[[0,61,479,495],[499,61,479,495],[0,576,479,495],[499,576,479,495],[0,1092,479,471],[499,1092,479,471],[0,1583,479,495],[499,1583,479,495]]},{"vw":1600,"w":1138,"items":[[0,61,269.5,402],[290,61,269.5,402],[579,61,269.5,402],[869,61,269.5,402],[0,483,269.5,378],[290,483,269.5,378],[579,483,269.5,378],[869,483,269.5,378]]}],"River":[{"vw":390,"w":326,"items":[[0,61,326,188],[0,261,326,236],[0,510,326,236],[0,758,326,188],[0,958,326,212]]},{"vw":1024,"w":562,"items":[[0,61,562,193],[0,266,562,217],[0,494,562,217],[0,723,562,193],[0,927,562,193]]},{"vw":768,"w":664,"items":[[0,61,664,193],[0,266,664,217],[0,494,664,217],[0,723,664,193],[0,927,664,193]]},{"vw":1280,"w":818,"items":[[0,61,818,203],[0,276,818,203],[0,492,818,203],[0,707,818,203],[0,922,818,203]]},{"vw":1440,"w":978,"items":[[0,61,978,237],[0,310,978,237],[0,559,978,237],[0,808,978,237],[0,1057,978,237]]},{"vw":1600,"w":1138,"items":[[0,61,1138,271],[0,344,1138,271],[0,626,1138,271],[0,909,1138,271],[0,1191,1138,271]]}]};
+const S = .14;
+document.querySelectorAll('.bp[data-pattern]').forEach((host) => {
+  const rows = DATA[host.dataset.pattern] || [];
+  rows.forEach((m) => {
+    const w = m.w, h = Math.max(...m.items.map((i) => i[1] + i[3]));
+    const svgW = Math.ceil(w * S) + 2, svgH = Math.ceil(h * S) + 2;
+    const ns = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('width', svgW); svg.setAttribute('height', svgH); svg.setAttribute('viewBox', `0 0 ${svgW} ${svgH}`);
+    svg.setAttribute('role', 'img'); svg.setAttribute('aria-label', `${host.dataset.pattern} at inner width ${w}px: ${m.items.length} items`);
+    const frame = document.createElementNS(ns, 'rect');
+    Object.entries({ class: 'frame', x: .5, y: .5, width: w * S + 1, height: h * S + 1 }).forEach(([k, v]) => frame.setAttribute(k, v));
+    svg.appendChild(frame);
+    m.items.forEach(([x, y, iw, ih]) => {
+      const r = document.createElementNS(ns, 'rect');
+      Object.entries({ x: 1 + x * S, y: 1 + y * S, width: Math.max(1, iw * S), height: Math.max(1, ih * S), rx: 1 }).forEach(([k, v]) => r.setAttribute(k, v));
+      svg.appendChild(r);
+    });
+    const fig = document.createElement('figure');
+    fig.appendChild(svg);
+    const cap = document.createElement('figcaption');
+    cap.innerHTML = `inner ${w} · vw ${m.vw}<br>${m.items.length} items`;
+    fig.appendChild(cap);
+    host.appendChild(fig);
+  });
+});
+</script>
+</body>
+</html>
