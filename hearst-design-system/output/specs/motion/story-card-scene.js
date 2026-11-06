@@ -190,7 +190,7 @@ kit.scene('story-card', {
         tx(x0 + L * q7 / 2 + 6, y0 - L * q7 + 16, c + ' = ' + r, 'dt'); tx(x0, y0 + 18, n, 'dts'); });
       title(1240, y0 + 44, 'Radius details', 'Scale 4:1'); }
     // tables
-    at(8.6, .005, .25); { let y = table(1436, 86, 'Spacing', [['S1', '--spacing×5', '20 · 16'], ['S2', '--spacing×2 (mb-2)', '8'], ['S3', '--spacing×2 (mt-2)', '8'], ['S4', 'meta-row gap', '0.5rem = 8'], ['S5', '--spacing×1.5', '6'], ['S6', '--spacing×3', '12']]);
+    at(8.6, .005, .25); { const sw = [40, 138, 52]; sw.hdr = ['Code', 'What it spaces', 'Px']; let y = table(1436, 86, 'Spacing', [['S1', 'Card padding', '20 · 16'], ['S2', 'Meta row → headline', '8'], ['S3', 'Headline → summary', '8'], ['S4', 'Source → save button', '8'], ['S5', 'Brand icon → source', '6'], ['S6', 'Headline → rating', '12']], sw); tx(1436, y - 22, 'PX = DESKTOP · MOBILE. 1 STEP = 4 PX.', 'tc'); y += 6;
       y = table(1436, y, 'Size', [['W', 'FILL (max-w-2xl)', 'REF 672'], ['HM', 'aspect-video', 'W·9/16 = 378'], ['Z1', '--spacing×4', '16'], ['H4', '4xs × lh 1.5', '16.5'], ['T1', 'min-h-11', '44 · BASE'], ['Z2', 'save h-8 w-8', '32'], ['I1', 'size-4', '16'], ['H5', 'lh-tight 1.25', '30 · 25'], ['H6', 'leading-6', '24'], ['B', 'shadow-card rule', '0'], ['H', 'sum (see block)', '534.5 · 374.4']]);
       y = table(1436, y, 'Radius', [['R1', 'rounded-card', '8'], ['R2', 'rounded-[3px]', '3'], ['R3', 'rounded-[4px]', '4']]);
       y = table(1436, y, 'Shadow', [['X·Y', '--hp-shadow-card', '0 · 2'], ['BL', 'blur', '6'], ['SP', 'spread', '0'], ['E1', 'BL+SP−Y', '4'], ['E2', 'BL+SP', '6'], ['E3', 'BL+SP+Y', '8']]);

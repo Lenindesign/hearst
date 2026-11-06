@@ -155,7 +155,7 @@ function media(x,y,w,h,r){mk('path',{d:'M'+x+','+(y+h)+' L'+x+','+(y+r)+' A'+r+'
 const D={W:672,HM:378,S1:20,H4:16.5,S2:8,H5:30,n:2,S3:8,H6:24,m:1,Z1:16,S5:6,H:534.5};
 const M={W:326,HM:183.4,S1:16,T1:44,S2:8,H5:25,n:3,S3:8,H6:24,m:1,H:374.4};
 const VAR={
- spacing:[['S1','--spacing×5','20 · 16'],['S2','--spacing×2 (mb-2)','8'],['S3','--spacing×2 (mt-2)','8'],['S4','meta-row gap','0.5rem = 8'],['S5','--spacing×1.5','6'],['S6','--spacing×3','12']],
+ spacing:[['S1','Card padding','20 · 16'],['S2','Meta row → headline','8'],['S3','Headline → summary','8'],['S4','Source → save button','8'],['S5','Brand icon → source','6'],['S6','Headline → rating','12']],
  size:[['W','FILL (max-w-2xl)','REF 672'],['HM','aspect-video','W·9/16 = 378'],['Z1','--spacing×4','16'],['H4','4xs × lh 1.5','16.5'],['T1','min-h-11','44 · BASE'],['Z2','save h-8 w-8','32'],['I1','size-4','16'],['H5','lh-tight 1.25','30 · 25'],['H6','leading-6','24'],['B','shadow-card rule','0'],['H','sum (see block)','534.5 · 374.4']],
  radius:[['R1','rounded-card','8'],['R2','rounded-[3px]','3'],['R3','rounded-[4px]','4']],
  shadow:[['X·Y','--hp-shadow-card','0 · 2'],['BL','blur','6'],['SP','spread','0'],['E1','BL+SP−Y','4'],['E2','BL+SP','6'],['E3','BL+SP+Y','8']],
@@ -316,7 +316,7 @@ notes([
 {const ws=[64,104,104];ws.hdr=['Code','Base < 640','sm ≥ 640'];
  table(1072,872,'Breakpoints',[['S1','16','20'],['META-H','T1 = 44','H4 = 16.5'],['Z2 HIT','T1 = 44','32'],['TH','20 / 25','24 / 30'],['TS','14 / 24','15.2 / 24'],['H REF','374.4 (n 3)','534.5 (n 2)'],['BYLINE','HIDDEN < 20REM','HIDDEN < 20REM']],ws);}
 
-{let y=table(1436,86,'Spacing',VAR.spacing);y=table(1436,y,'Size',VAR.size);y=table(1436,y,'Radius',VAR.radius);y=table(1436,y,'Shadow',VAR.shadow);table(1436,y,'Type · size / line',VAR.type);}
+{const sw=[40,138,52];sw.hdr=['Code','What it spaces','Px'];let y=table(1436,86,'Spacing',VAR.spacing,sw);tx(1436,y-22,'PX = DESKTOP · MOBILE. 1 STEP = 4 PX.','tc');y+=6;y=table(1436,y,'Size',VAR.size);y=table(1436,y,'Radius',VAR.radius);y=table(1436,y,'Shadow',VAR.shadow);table(1436,y,'Type · size / line',VAR.type);}
 })();
 </script>
 </body>
