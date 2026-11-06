@@ -48,7 +48,7 @@ export default async function Page({ params, searchParams }: PageProps) {
   if (!brand) notFound();
 
   return (
-    <ThemeProvider defaultBrandSlug="hearst-all">
+    <ThemeProvider defaultBrandSlug={brandSlug}>
       <CommunityForumsPage
         activeBrandSlug={brandSlug}
         sortBy={getCommunitySort(resolvedSearchParams?.sort)}

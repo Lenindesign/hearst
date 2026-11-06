@@ -327,7 +327,8 @@
   }
 }
 
-.hearst-plus-theme[data-mode="dark"] {
+.hearst-plus-theme[data-mode="dark"],
+[data-theme-provider-mode="dark"] .hearst-plus-theme:not([data-mode]) {
   --background: #0d1014;
   --foreground: #f8fbff;
   --card: #181b20;

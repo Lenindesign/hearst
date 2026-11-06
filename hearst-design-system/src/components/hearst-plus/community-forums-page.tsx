@@ -83,8 +83,8 @@ const kindLabels: Record<Thread["kind"], string> = {
 const communityTypographyStyle = {
   "--community-font-ui": "Inter, system-ui, sans-serif",
   "--community-font-copy": "Inter, system-ui, sans-serif",
-  "--community-surface-soft": "#eef7ff",
-  "--community-surface-soft-hover": "#e4f2ff",
+  "--community-surface-soft": "color-mix(in srgb, var(--primary) 8%, var(--hp-surface))",
+  "--community-surface-soft-hover": "color-mix(in srgb, var(--primary) 14%, var(--hp-surface))",
   "--font-brand": "var(--community-font-ui)",
   "--font-sans": "var(--community-font-ui)",
 } as CSSProperties;

@@ -49,7 +49,7 @@ export default async function Page({ params }: PageProps) {
   if (!brand || !group) notFound();
 
   return (
-    <ThemeProvider defaultBrandSlug="hearst-all">
+    <ThemeProvider defaultBrandSlug={brandSlug}>
       <CommunityForumsPage
         activeBrandSlug={brandSlug}
         activeGroupSlug={groupSlug}

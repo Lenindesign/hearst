@@ -93,7 +93,7 @@ export default async function Page({ params }: PageProps) {
   if (!story && !participationThread) notFound();
 
   return (
-    <ThemeProvider defaultBrandSlug="hearst-all">
+    <ThemeProvider defaultBrandSlug={brandSlug}>
       <CommunityForumsPage
         activeBrandSlug={brandSlug}
         activeThreadId={threadId}

@@ -173,7 +173,7 @@ export function ThemeProvider({
 
   return (
     <ThemeContext.Provider value={{ brand, setBrand, colorMode, toggleColorMode }}>
-      <div data-brand={brand.slug} style={cssVars as React.CSSProperties}>
+      <div data-brand={brand.slug} data-theme-provider-mode={colorMode} style={cssVars as React.CSSProperties}>
         {children}
       </div>
     </ThemeContext.Provider>
