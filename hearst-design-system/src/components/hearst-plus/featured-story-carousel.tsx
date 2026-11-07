@@ -572,11 +572,11 @@ export function FeaturedStoryCarousel({
                   </div>
                   {researchCarRating ? (
                     <div className="flex min-w-0 items-end justify-between gap-3">
-                      <h2 className={cn("min-w-0 flex-1 underline-offset-4 group-hover/featured-slide:underline group-focus-visible/featured-slide:underline", headlineClassName)}>{story.title}</h2>
+                      <h2 className={cn("min-w-0 flex-1 decoration-2 underline-offset-4 group-hover/featured-slide:underline group-focus-visible/featured-slide:underline", headlineClassName)}>{story.title}</h2>
                       <ResearchCarRating rating={researchCarRating} />
                     </div>
                   ) : (
-                    <h2 className={cn("underline-offset-4 group-hover/featured-slide:underline group-focus-visible/featured-slide:underline", headlineClassName)}>{story.title}</h2>
+                    <h2 className={cn("decoration-2 underline-offset-4 group-hover/featured-slide:underline group-focus-visible/featured-slide:underline", headlineClassName)}>{story.title}</h2>
                   )}
                 </div>
               </article>
