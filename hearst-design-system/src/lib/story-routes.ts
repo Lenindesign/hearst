@@ -12,6 +12,7 @@ const allowedReaderReturnPrefixes = [
   "/flux/",
   "/ew/",
   "/brands/",
+  "/communities/",
 ];
 
 export function getHearstStoryRoute(storyOrId: Pick<LifestyleRiverStory, "id"> | string) {

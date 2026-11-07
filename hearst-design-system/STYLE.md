@@ -42,12 +42,11 @@ The complete brand registry is documented in `BRAND_STYLES.md`. Canonical HDS pu
 
 ## Editorial links and clickable rows
 
-- Editorial story links change the headline to the active theme primary color on hover and keyboard focus.
-- Do not underline editorial story links on hover or focus.
-- Keep the existing visible focus ring for keyboard accessibility.
+- Editorial headlines keep their text color on hover and keyboard focus; underline is the consistent link cue.
+- Underline editorial headline links on pointer hover and keyboard focus, with a visible focus ring for keyboard accessibility.
 - When a story appears as a row, make the complete row the click target rather than linking only the headline.
 - Equivalent story rows use the same complete-row visual and focus treatment. `APP_RULES.md` owns their reader destination behavior.
-- Utility links may retain an underline when the underline is required to distinguish inline text from surrounding prose. This exception does not apply to editorial headlines or story rows.
+- Utility links may also use an underline when needed to distinguish inline text from surrounding prose.
 
 ## Masthead logos
 
