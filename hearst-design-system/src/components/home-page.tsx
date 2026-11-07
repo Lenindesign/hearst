@@ -197,6 +197,7 @@ import {
   type ContextualAdUnit,
 } from "./hearst-plus/content-reader-advertisement";
 import { ContextualRiverAdvertisement } from "./hearst-plus/contextual-river-advertisement";
+import { DisplayAdvertisement, toyotaCertifiedUsedHalfPage } from "./hearst-plus/display-advertisement";
 import { LocalNewsRail } from "./hearst-plus/local-news-rail";
 import { BrandPromotionRiverModule } from "./hearst-plus/brand-promotion-river-module";
 import {
@@ -5142,7 +5143,9 @@ function LifestyleRiverHomePage({
     return normalizeReaderReturnHref(`${pathname}${query ? `?${query}` : ""}`);
   }, [pathname, searchParams]);
   const currentReaderReturnHref = safeReaderReturnHref ?? (initialBrandSlug ? getHearstBrandRoute(initialBrandSlug) : getHearstDestinationRoute(destination));
-  const storyOpenReturnHref = safeReaderReturnHref ?? currentPageReturnHref ?? currentReaderReturnHref;
+  // Prefer the page the reader is on now (it tracks tab changes such as
+  // For You → Style); fall back to the original return href inside /read/.
+  const storyOpenReturnHref = currentPageReturnHref ?? safeReaderReturnHref ?? currentReaderReturnHref;
   const snapshotReaderReturnStoryId = readReaderReturnScrollSnapshot(currentReaderReturnHref)?.storyId ?? null;
   const preferredReaderRiverStoryId = readerReturnAnchorStoryId ?? snapshotReaderReturnStoryId;
   const rememberSessionContinueReadingStory = React.useCallback((storyId: string) => {
@@ -5185,36 +5188,40 @@ function LifestyleRiverHomePage({
   }, []);
 
   const restoreReaderRiverReturnContext = React.useCallback((storyId: string | null) => {
-    if (typeof document === "undefined" || typeof window === "undefined") return;
+    if (typeof document === "undefined" || typeof window === "undefined") return false;
 
     const context = readerRiverReturnContextRef.current;
-    if (!context || (storyId && context.storyId !== storyId)) return;
-    const attemptDelays = [0, 80, 200, 420, 800];
+    if (!context || (storyId && context.storyId !== storyId)) return false;
+    // The river can reorder and images can settle after the reader closes, so
+    // re-anchor on every pass instead of stopping at the first match. Each
+    // pass puts the closed story back where it sat in the viewport.
+    const attemptDelays = [0, 80, 200, 420, 800, 1400];
 
     const restore = (attemptIndex = 0) => {
       const storyElement = Array.from(
         document.querySelectorAll<HTMLElement>("#hearst-story-river [data-story-id]")
       ).find((element) => element.dataset.storyId === context.storyId);
+      const isFinalAttempt = attemptIndex >= attemptDelays.length - 1;
 
-      if (!storyElement) {
-        if (attemptIndex >= attemptDelays.length - 1) {
-          window.scrollTo(context.scrollX, context.scrollY);
-          return;
-        }
-        window.setTimeout(() => restore(attemptIndex + 1), attemptDelays[attemptIndex + 1]);
-        return;
+      if (storyElement) {
+        const nextScrollY = Math.max(
+          0,
+          window.scrollY + storyElement.getBoundingClientRect().top - context.viewportTop
+        );
+        if (Math.abs(nextScrollY - window.scrollY) > 1) window.scrollTo(context.scrollX, nextScrollY);
+      } else if (isFinalAttempt) {
+        window.scrollTo(context.scrollX, context.scrollY);
       }
 
-      const nextScrollY = Math.max(
-        0,
-        window.scrollY + storyElement.getBoundingClientRect().top - context.viewportTop
-      );
-      window.scrollTo(context.scrollX, nextScrollY);
+      if (!isFinalAttempt) {
+        window.setTimeout(() => restore(attemptIndex + 1), attemptDelays[attemptIndex + 1] - attemptDelays[attemptIndex]);
+      }
     };
 
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() => restore());
     });
+    return true;
   }, []);
 
   const openStory = React.useCallback((storyId: string, options?: { openComments?: boolean }) => {
@@ -5230,14 +5237,21 @@ function LifestyleRiverHomePage({
     if (storyId.startsWith("international-")) {
       return;
     }
+    // Tabs change the URL with history.pushState, which usePathname does not
+    // always see, so read the live location: closing must return to the tab
+    // (e.g. Style) the reader opened the story from.
+    const liveReturnHref = window.location.pathname.startsWith("/read/")
+      ? null
+      : normalizeReaderReturnHref(`${window.location.pathname}${window.location.search}`);
+    const returnHref = liveReturnHref ?? storyOpenReturnHref;
     saveReaderReturnScrollSnapshot(
       storyId,
-      storyOpenReturnHref,
+      returnHref,
       readerRiverReturnContextRef.current?.storyIds ?? displayStoryIdsRef.current
     );
     const readerHref = buildReaderStoryHref(
       storyId,
-      storyOpenReturnHref,
+      returnHref,
       singleBrandName ? initialBrandSlug : undefined,
     );
     if (options?.openComments) {
@@ -5271,8 +5285,12 @@ function LifestyleRiverHomePage({
     setOpenStoryId(null);
     if (pathname?.startsWith("/read/")) {
       router.push(currentReaderReturnHref, { scroll: false });
-      restoreReaderReturnScrollSnapshot(currentReaderReturnHref);
-      restoreReaderRiverReturnContext(closingStoryId);
+      // Anchor to the story card when we know it; the saved raw scroll offset
+      // is only a fallback (for example after a reload), because the river can
+      // reorder on return and a raw offset would then land on other stories.
+      if (!restoreReaderRiverReturnContext(closingStoryId)) {
+        restoreReaderReturnScrollSnapshot(currentReaderReturnHref);
+      }
     } else {
       restoreReaderRiverReturnContext(closingStoryId);
     }
@@ -7121,7 +7139,7 @@ function LifestyleRiverHomePage({
                         ) : null}
                       </div>
                       <div className="h-fit space-y-5 lg:sticky lg:top-24 lg:self-start">
-                        <ContextualRiverAdvertisement ad={rightRailAd} />
+                        <DisplayAdvertisement creative={toyotaCertifiedUsedHalfPage} />
                         <LocalNewsRail />
                       </div>
                     </div>
@@ -8465,14 +8483,14 @@ export function HomePageTemplate({
     anchorPageToTop();
   }, [anchorPageToTop, setJoinedBrandGroups]);
   const handleMobileStoryOpen = React.useCallback((storyId: string) => {
-    const currentPageHref = pathname
-      ? `${pathname}${pageSearchQuery ? `?${pageSearchQuery}` : ""}`
-      : null;
-    const returnHref = readerReturnHref ?? currentPageHref ?? getHearstDestinationRoute(destinationMode);
+    const currentPageHref = window.location.pathname.startsWith("/read/")
+      ? null
+      : `${window.location.pathname}${window.location.search}`;
+    const returnHref = currentPageHref ?? readerReturnHref ?? getHearstDestinationRoute(destinationMode);
     recordStoryOpened(storyId);
     saveReaderReturnScrollSnapshot(storyId, returnHref);
     router.push(appendReaderReturnHref(storyId, returnHref), { scroll: false });
-  }, [destinationMode, pageSearchQuery, pathname, readerReturnHref, router]);
+  }, [destinationMode, readerReturnHref, router]);
   const handleLifestyleFilterChange = React.useCallback((filter: string) => {
     setActiveLifestyleFilter(filter);
 

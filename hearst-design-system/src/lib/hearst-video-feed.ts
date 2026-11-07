@@ -12,7 +12,7 @@ import {
   getVideoTranscodingDimensions,
   type VideoTranscoding,
 } from "@/lib/video-transcoding";
-import { selectVideoAspectRatioQuotas } from "@/lib/video-feed-selection";
+import { rotateVideosForEdition, selectVideoAspectRatioQuotas } from "@/lib/video-feed-selection";
 
 type VideoDestination = "all" | "lifestyle" | "autos" | "flux" | "ew";
 
@@ -81,7 +81,8 @@ function mapVideo(item: ApiVideo, brand: VideoBrand, index: number): LifestyleRi
     popularity: Math.max(1, 99 - index),
     signal: index % 2 === 0 ? "Trending" : "Editor Pick",
     tags: [topic.toLowerCase(), brandName.toLowerCase(), "video"],
-    age: publishedAt ? Math.max(0, Math.floor((Date.now() - Date.parse(publishedAt)) / 86_400_000)) : 0,
+    // Hours, like every other story: the river's recency score reads age in hours.
+    age: publishedAt ? Math.max(0, Math.floor((Date.now() - Date.parse(publishedAt)) / 3_600_000)) : 0,
     publishedAt,
     mediaKind: "video",
     videoUrl,
@@ -119,7 +120,7 @@ export async function getPersonalizeVideoFeed({
 } = {}): Promise<LiveFeedData> {
   const scopedBrands = getScopedBrands(destination, brandSlug);
   const slugList = scopedBrands.map(([, , slug]) => slug);
-  const fallbackStories = localPlayableFallback(slugList);
+  const fallbackStories = rotateVideosForEdition(localPlayableFallback(slugList));
   const scopedProductName = productName ?? (brandSlug
     ? `${scopedBrands[0]?.[1] ?? "Brand"} Video Feed`
     : destination === "all"
@@ -158,9 +159,9 @@ export async function getPersonalizeVideoFeed({
     }
   }));
 
-  const stories = selectVideoAspectRatioQuotas(results.flatMap(({ brand, items }) =>
+  const stories = rotateVideosForEdition(selectVideoAspectRatioQuotas(results.flatMap(({ brand, items }) =>
     items.map((item, index) => mapVideo(item, brand, index)).filter((story): story is LifestyleRiverStory => Boolean(story))
-  ));
+  )));
   const sourceNotes: LiveFeedSourceNote[] = results.flatMap(({ brand, items }) => {
     const selectedCount = stories.filter((story) => story.brandSlug === brand[2]).length;
     return selectedCount ? [{ brand: brand[1], brandSlug: brand[2], feedCount: 1, importedCount: items.length, selectedCount }] : [];

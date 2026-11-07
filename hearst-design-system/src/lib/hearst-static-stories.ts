@@ -6,11 +6,13 @@ import { fluxRiverStories } from "@/components/flux-river-data";
 import { lifestyleRiverStories } from "@/components/lifestyle-river-data";
 import { getAmbientCommerceStories } from "@/lib/ambient-commerce-stories";
 import { filterExcludedStories } from "@/lib/content-exclusions";
+import { hearstAutoResearchCarCatalog } from "@/lib/hearst-auto-research-car-catalog";
 import { todayEditLocalNewsStory } from "@/lib/hearst-plus-today-edit-stories";
 
 const currentFeedStories = filterExcludedStories([
   ...lifestyleRiverStories,
   ...autosRiverStories,
+  ...hearstAutoResearchCarCatalog,
   ...fluxRiverStories,
   ...ewRiverStories,
 ]);

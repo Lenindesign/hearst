@@ -9,6 +9,8 @@ export interface ReaderReturnScrollSnapshot {
   scrollY: number;
   storyId: string;
   storyIds: string[];
+  /** Viewport top of the opened story card, used to re-anchor on return. */
+  storyViewportTop?: number;
   createdAt: number;
 }
 
@@ -36,6 +38,12 @@ export function removeAmbientReaderHref(href: string) {
   return `${url.pathname}${url.search}${url.hash}`;
 }
 
+function findRiverStoryElement(storyId: string) {
+  if (typeof document === "undefined") return undefined;
+  return Array.from(document.querySelectorAll<HTMLElement>("#hearst-story-river [data-story-id]"))
+    .find((element) => element.dataset.storyId === storyId);
+}
+
 export function getReaderReturnScrollStorageKey(returnHref: string | null) {
   const safeReturnHref = normalizeReaderReturnHref(returnHref);
 
@@ -56,12 +64,14 @@ export function saveReaderReturnScrollSnapshot(
 
   if (!safeReturnHref || !storageKey) return;
 
+  const storyElement = findRiverStoryElement(storyId);
   const snapshot: ReaderReturnScrollSnapshot = {
     href: safeReturnHref,
     scrollX: window.scrollX,
     scrollY: window.scrollY,
     storyId,
     storyIds,
+    storyViewportTop: storyElement?.getBoundingClientRect().top,
     createdAt: Date.now(),
   };
 
@@ -102,6 +112,7 @@ export function parseReaderReturnScrollSnapshot(
       storyIds: Array.isArray(snapshot.storyIds)
         ? snapshot.storyIds.filter((storyId): storyId is string => typeof storyId === "string")
         : [],
+      ...(Number.isFinite(snapshot.storyViewportTop) ? { storyViewportTop: snapshot.storyViewportTop } : {}),
       createdAt,
     };
   } catch {
@@ -142,16 +153,32 @@ export function restoreReaderReturnScrollSnapshot(returnHref: string | null) {
 
   if (!snapshot) return;
 
-  let attemptCount = 0;
-  const attemptDelays = [0, 80, 200, 420];
+  // The river can reorder and images can settle after returning, so keep
+  // re-anchoring the opened story to where it sat in the viewport. A raw
+  // scroll offset is only used when that story card is not on the page.
+  const attemptDelays = [0, 80, 200, 420, 800, 1400];
 
-  const restore = () => {
+  const restore = (attemptIndex = 0) => {
     const currentHref = `${window.location.pathname}${window.location.search}`;
     const isReturnPageVisible = currentHref === snapshot.href;
-    const isFinalAttempt = attemptCount >= attemptDelays.length - 1;
+    const isFinalAttempt = attemptIndex >= attemptDelays.length - 1;
 
     if (isReturnPageVisible || isFinalAttempt) {
-      window.scrollTo(snapshot.scrollX, snapshot.scrollY);
+      const storyElement = snapshot.storyViewportTop === undefined
+        ? undefined
+        : findRiverStoryElement(snapshot.storyId);
+      if (storyElement && snapshot.storyViewportTop !== undefined) {
+        const nextScrollY = Math.max(
+          0,
+          window.scrollY + storyElement.getBoundingClientRect().top - snapshot.storyViewportTop,
+        );
+        if (Math.abs(nextScrollY - window.scrollY) > 1) window.scrollTo(snapshot.scrollX, nextScrollY);
+      } else if (attemptIndex === 0 || isFinalAttempt || !isReturnPageVisible) {
+        window.scrollTo(snapshot.scrollX, snapshot.scrollY);
+      }
+    }
+
+    if (isFinalAttempt) {
       if (storageKey && isReturnPageVisible) {
         window.setTimeout(() => {
           try {
@@ -164,12 +191,11 @@ export function restoreReaderReturnScrollSnapshot(returnHref: string | null) {
       return;
     }
 
-    attemptCount += 1;
-    window.setTimeout(restore, attemptDelays[attemptCount]);
+    window.setTimeout(() => restore(attemptIndex + 1), attemptDelays[attemptIndex + 1] - attemptDelays[attemptIndex]);
   };
 
   window.requestAnimationFrame(() => {
-    window.requestAnimationFrame(restore);
+    window.requestAnimationFrame(() => restore());
   });
 }
 

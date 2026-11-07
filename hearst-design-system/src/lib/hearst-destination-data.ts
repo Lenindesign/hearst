@@ -5,9 +5,14 @@ import { ewRiverSourceNotes, ewRiverStories } from "@/components/ew-river-data";
 import { fluxRiverSourceNotes, fluxRiverStories } from "@/components/flux-river-data";
 import { lifestyleRiverSourceNotes, lifestyleRiverStories } from "@/components/lifestyle-river-data";
 import { filterExcludedStories } from "@/lib/content-exclusions";
+import { hearstAutoResearchCarCatalog } from "@/lib/hearst-auto-research-car-catalog";
 import type { HearstDestinationStaticData } from "@/lib/hearst-destination-data-types";
 
 const cachedDestinationData = new Map<string, HearstDestinationStaticData>();
+
+// The Research Cars catalog is hand-maintained, so it is added here rather than
+// inside autos-river-data.ts, which the daily feed refresh regenerates.
+const autosStoriesWithResearchCars = [...autosRiverStories, ...hearstAutoResearchCarCatalog];
 
 function getStoryIdentity(story: { id: string; sourceUrl?: string }) {
   return story.sourceUrl?.trim().toLowerCase() || story.id;
@@ -50,7 +55,7 @@ export function getHearstDestinationStaticData({
   if (cached) return cached;
 
   const lifestyleStories = selectDestinationStories(lifestyleRiverStories, normalizedLimit, includeBrandSlug);
-  const autosStories = selectDestinationStories(autosRiverStories, normalizedLimit, includeBrandSlug);
+  const autosStories = selectDestinationStories(autosStoriesWithResearchCars, normalizedLimit, includeBrandSlug);
   const fluxStories = selectDestinationStories(fluxRiverStories, normalizedLimit, includeBrandSlug);
   const ewStories = selectDestinationStories(ewRiverStories, normalizedLimit, includeBrandSlug);
 

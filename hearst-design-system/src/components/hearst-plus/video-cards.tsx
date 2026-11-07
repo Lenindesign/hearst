@@ -226,7 +226,8 @@ export function VideoPlaySurface({
             </button>
           </>
         )}
-        {story.videoDuration ? (
+        {/* Poster affordance only: once playing, the native controls show the time and hide on roll-out. */}
+        {story.videoDuration && !playing ? (
           <span className="pointer-events-none absolute right-3 top-3 z-30 inline-flex items-center gap-1 rounded-full bg-black/70 px-2.5 py-1 text-xs font-bold tabular-nums text-white">
             <Clock className="h-3 w-3" aria-hidden />
             {formatVideoDuration(story.videoDuration)}
