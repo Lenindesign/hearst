@@ -129,7 +129,7 @@ export function InternationalFeedPage({ initialFeedUrl }: { initialFeedUrl?: str
         activeFilter="For You"
         mastheadLogoOverride={selectedFeed ? { src: getHearstInternationalFeedLogoUrl(selectedFeed), label: selectedFeed.name } : null}
       />
-      <main className="mx-auto grid max-w-[1440px] grid-cols-1 gap-6 px-5 py-8 lg:grid-cols-[240px_1fr_280px] lg:px-10">
+      <main className="mx-auto grid max-w-[var(--width-content-max)] grid-cols-1 gap-[var(--layout-gap)] px-4 py-8 md:px-6 lg:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)] xl:px-12">
         <aside className="min-w-0 lg:sticky lg:top-[108px] lg:self-start">
           <section className="rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]" aria-labelledby="international-feed-list">
             <h1 id="international-feed-list" className="text-xs font-bold uppercase tracking-[0.16em] text-primary">International feeds</h1>

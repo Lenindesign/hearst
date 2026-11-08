@@ -87,10 +87,10 @@ svg{display:block;width:100%;min-width:1100px;height:auto}
   <header class="tb">
     <div class="big">
       <div><div class="lbl">UI layout · dimensional drawing</div><h1>Breakpoints and grid</h1></div>
-      <div class="v">Which breakpoint applies when, and how the page goes from one to two to three columns: river layout, reader layout, block grids and the page container. Values measured in the rendered app at 320–1920 and traced to their utilities and tokens.</div>
+      <div class="v">Which breakpoint applies when, and how the page goes from one to two to three columns under the rail layout contract: river, reader, block grids and the page container. Rev B applies the layout recommendations; values re-measured in the rendered app.</div>
     </div>
     <div><div class="lbl">Dwg no.</div><div class="v">UI-LAYOUT-001</div></div>
-    <div><div class="lbl">Rev</div><div class="v">A · 2026-11-07</div></div>
+    <div><div class="lbl">Rev</div><div class="v">B · 2026-11-07</div></div>
     <div><div class="lbl">Sheets</div><div class="v">1</div></div>
     <div><div class="lbl">Units</div><div class="v">CSS px @ 1× · VW = viewport width</div></div>
     <div><div class="lbl">Scale</div><div class="v">Noted per view · heights schematic</div></div>
@@ -99,19 +99,19 @@ svg{display:block;width:100%;min-width:1100px;height:auto}
       <div><span class="nh">NOTES:<span>(UNLESS OTHERWISE SPECIFIED)</span></span><ol>
         <li>Do not scale from screen. Read the numbers.</li>
         <li>Measured with Playwright in Chromium at 320, 390, 640, 768, 1024, 1280, 1440, 1600 and 1920 px. No horizontal overflow at any width.</li>
-        <li>Breakpoints are min-width media queries (Tailwind v4 defaults). Block grids use container queries on their own section.</li>
+        <li>Breakpoints are min-width media queries. 2xl is retired; sm never changes column count. Block grids use container queries on their own section.</li>
         <li>Columns are slots. Rails and river content are not part of the drawing.</li></ol></div>
-      <div><span class="nh">RECOMMENDED:</span><ol start="5">
-        <li>Bring the river's left rail in at BP4 (1280), not BP3: the river drops from 659 to 398 at 1024 today (Detail W). With the rail at BP4 it never goes below 404 above BP2.</li>
-        <li>One gutter token for all layouts: river 16, reader 18 and blocks 20 today. One rail token pair: left 300 (24vw clamp), right 300; retire the 200/220/260/280 one-offs.</li>
-        <li>One page container for pages and the reader: P 16 · 24 · 48 versus reader 16 · 32 · 40.</li>
-        <li>Retire 2xl (4 uses) and the stray min-[1201px]. Keep sm for type and spacing only. The HDS 4/8/12 Grid has no app uses: adopt it inside the river or document the rail layout as the contract.</li></ol></div>
+      <div><span class="nh">APPLIED IN REV B:</span><ol start="5">
+        <li>The river's left rail joins at BP4 (1280). The river widens 404 → 915 across BP2–BP4 and never drops below 404 above BP2; three columns start at 552 (Detail W; dashed = Rev A).</li>
+        <li>One gutter, --layout-gap 16, for river, reader and block grids. One rail width, --layout-rail 300; the 200/220/240/260/280 one-offs are retired.</li>
+        <li>One page container: pages and the reader pad P1 16 · P2 24 · P3 48 inside MX 1360.</li>
+        <li>2xl and min-[1201px] retired. The rail layout is the HDS layout contract (RAIL_LAYOUT in ui/grid.tsx); the 4/8/12 Grid is for columns inside a region. Rails that hold filters with no fallback may join at BP3.</li></ol></div>
     </div>
     <div class="figs">
-      <div><div class="lbl">BP · breakpoints</div><div class="v">640 · 768 · 1024 · 1280 · 1536</div></div>
+      <div><div class="lbl">BP · breakpoints</div><div class="v">640 · 768 · 1024 · 1280</div></div>
       <div><div class="lbl">MX · content max</div><div class="v">1360</div></div>
       <div><div class="lbl">P · page pad</div><div class="v">16 · 24 · 48</div></div>
-      <div><div class="lbl">LL · left rail</div><div class="v">clamp(240, 24vw, 300)</div></div>
+      <div><div class="lbl">LL · left rail</div><div class="v">300 from BP4</div></div>
       <div><div class="lbl">RR · right rail</div><div class="v">300</div></div>
       <div><div class="lbl">G1 · gutter</div><div class="v">16</div></div>
       <div><div class="lbl">RV · river</div><div class="v">vw − 2p − ll − rr − 2g1</div></div>
@@ -154,22 +154,22 @@ function iconSlot(x,y,s){xbox(x,y,s,s,'hug')}
 begin('sh1');
 notes([
  [1,'MIN-WIDTH BREAKPOINTS; EACH HOLDS TO THE NEXT.'],
- [2,'RIGHT RAIL JOINS AT BP2, LEFT RAIL AT BP3.'],
- [3,'LEFT RAIL FLEXES 240–300 (24 VW).'],
+ [2,'RIGHT RAIL JOINS AT BP2, LEFT RAIL AT BP4.'],
+ [3,'ONE GAP (G1 16) AND ONE RAIL (300).'],
  [4,'READER: AD RAIL AT BP3, CONTEXT AT BP4.'],
  [5,'BLOCK GRIDS FOLLOW THEIR CONTAINER.'],
- [6,'RIVER NARROWS WHEN A RAIL JOINS.'],
+ [6,'RIVER STAYS AT 404 OR WIDER ABOVE BP2.'],
  [0,'CONTENT CAPS AT MX; EXTRA WIDTH IS MARGIN.'],
  [0,'HEIGHTS ARE SCHEMATIC, NOT TO SCALE.']]);
 
 /* ---------- Breakpoint map ---------- */
 {const X0=480,K=920/1920,X=v=>X0+v*K,ay=112;
- const rows=[[130,[[0,768,'RIVER · 1 COL'],[768,1024,'2 COL · +RR'],[1024,1920,'3 COL · +LL']]],
+ const rows=[[130,[[0,768,'RIVER · 1 COL'],[768,1280,'2 COL · +RR'],[1280,1920,'3 COL · +LL']]],
    [154,[[0,1024,'READER · 1 COL'],[1024,1280,'2 · +AD'],[1280,1920,'3 · +RC']]],
    [178,[[0,768,'PAGE PAD · P1 16'],[768,1280,'P2 24'],[1280,1920,'P3 48']]]];
  rows.forEach(([y,cells])=>cells.forEach(([a,b,l])=>{rr(X(a),y,X(b)-X(a),18,0,'well');tx(X(a)+6,y+12.5,l,'sl',{'text-anchor':'start'})}));
  mk('line',{x1:X0,y1:ay,x2:X(1920),y2:ay,class:'obj'});
- [[0,'0','BASE'],[640,'640','BP1'],[768,'768','BP2'],[1024,'1024','BP3'],[1280,'1280','BP4'],[1360,'1360','MX'],[1536,'1536','BP5'],[1920,'1920','']].forEach(([v,n,c])=>{
+ [[0,'0','BASE'],[640,'640','BP1'],[768,'768','BP2'],[1024,'1024','BP3'],[1280,'1280','BP4'],[1360,'1360','MX'],[1920,'1920','']].forEach(([v,n,c])=>{
   mk('line',{x1:X(v),y1:ay-6,x2:X(v),y2:200,class:v&&v<1920?'ph':'thin'});tx(X(v),ay-24,n,'dt',{'text-anchor':'middle'});if(c)tx(X(v),ay-10,c,'dts',{'text-anchor':'middle'})});
  nb(X(640)-14,ay+8,1);
  title(940,224,'Breakpoint map · viewport width','Scale 0.48:1 · min-width · each cell holds until the next breakpoint');}
@@ -196,40 +196,41 @@ const PAGE={w:v=>v,max:1360,m:(v,cw)=>(v-cw)/2,p:pagePad,frame:false};
 {const y=316,H=170;
  plan(430,y,390,H,PAGE,[[358,'rv','RIVER · FILL','RV']],'A · 390 · base','1 col · rails hidden','P1');
  plan(552,y,768,H,PAGE,[[404,'rv','RIVER · FLEX','RV'],[16,'gap'],[300,'rail','R RAIL','RR']],'B · 768 · BP2','2 col · right rail joins','P2');
- const c=plan(772,y,1024,H,PAGE,[[245.76,'rail','L RAIL','LL'],[16,'gap'],[398.24,'rv','RIVER · FLEX','RV'],[16,'gap'],[300,'rail','R RAIL','RR']],'C · 1024 · BP3','3 col · left rail joins at 246','P2');
- nb(c[0][0]+8,y+40,3);nb(560,y+40,2);
- const d=plan(1050,y,1440,H,{...PAGE,frame:true},[[300,'rail','L RAIL','LL'],[16,'gap'],[632,'rv','RIVER · FLEX','RV'],[16,'gap'],[300,'rail','R RAIL','RR']],'D · 1440 · capped','3 col · container at MX, margins auto','P3');
+ const c=plan(772,y,1024,H,PAGE,[[660,'rv','RIVER · FLEX','RV'],[16,'gap'],[300,'rail','R RAIL','RR']],'C · 1024 · BP3','2 col · river widens to 660','P2');
+ nb(c[0][0]+8,y+40,6);nb(560,y+40,2);
+ const d=plan(1050,y,1440,H,{...PAGE,frame:true},[[300,'rail','L RAIL','LL'],[16,'gap'],[632,'rv','RIVER · FLEX','RV'],[16,'gap'],[300,'rail','R RAIL','RR']],'D · 1440 · capped','3 col · left rail joins at BP4','P3');
+ nb(d[0][0]+8,y+40,3);
  tx(1050+180,y+H-2,'','sl');}
 /* Reader plans */
-{const y=628,H=146;const READ={w:v=>v>=768?v-48:v,max:1360,m:(v,cw)=>(v-cw)/2,p:v=>v>=1024?40:v>=640?32:16,frame:true};
- plan(430,y,390,H,{...READ,frame:false},[[358,'rv','ARTICLE · FILL','AR']],'E · 390 · reader','1 col','RP');
- plan(560,y,1024,H,READ,[[578,'rv','ARTICLE · FLEX','AR'],[18,'gap'],[300,'rail','AD RAIL','AD']],'F · 1024 · reader','2 col · ad rail joins at BP3','RP');
- const g=plan(850,y,1440,H,READ,[[280,'rail','CONTEXT','RC'],[18,'gap'],[664,'rv','ARTICLE · FLEX','AR'],[18,'gap'],[300,'rail','AD RAIL','AD']],'G · 1440 · reader','3 col · context rail joins at BP4','RP');
+{const y=628,H=146;const READ={w:v=>v>=768?v-48:v,max:1360,m:(v,cw)=>(v-cw)/2,p:pagePad,frame:true};
+ plan(430,y,390,H,{...READ,frame:false},[[358,'rv','ARTICLE · FILL','AR']],'E · 390 · reader','1 col','P1');
+ plan(560,y,1024,H,READ,[[612,'rv','ARTICLE · FLEX','AR'],[16,'gap'],[300,'rail','AD RAIL','AD']],'F · 1024 · reader','2 col · ad rail joins at BP3','P2');
+ const g=plan(850,y,1440,H,READ,[[300,'rail','CONTEXT','RC'],[16,'gap'],[632,'rv','ARTICLE · FLEX','AR'],[16,'gap'],[300,'rail','AD RAIL','AD']],'G · 1440 · reader','3 col · context rail joins at BP4','P3');
  nb(g[0][0]+8,y+40,4);}
 
 /* ---------- Detail W · river width ---------- */
 {const gx=70,gy=310,gw=330,gh=200,v0=320,v1=1920,w1=950;const X=v=>gx+(v-v0)/(v1-v0)*gw,Y=w=>gy+gh-w/w1*gh;
- const rv=v=>{if(v<768)return v-32;if(v<1024)return v-48-16-300;const inner=v>=1280?Math.min(v-96,1264):v-48;const ll=Math.max(240,Math.min(300,.24*v));return inner-ll-300-32};
- const rv2=v=>{if(v<768)return v-32;if(v<1280)return v-48-16-300;return Math.min(v-96,1264)-632};
+ const rv2=v=>{if(v<768)return v-32;if(v<1024)return v-48-16-300;const inner=v>=1280?Math.min(v-96,1264):v-48;const ll=Math.max(240,Math.min(300,.24*v));return inner-ll-300-32};
+ const rv=v=>{if(v<768)return v-32;if(v<1280)return v-48-16-300;return Math.min(v-96,1264)-632};
  mk('line',{x1:gx,y1:gy+gh,x2:gx+gw,y2:gy+gh,class:'thin'});mk('line',{x1:gx,y1:gy,x2:gx,y2:gy+gh,class:'thin'});
  [0,400,600,900].forEach(w=>{mk('line',{x1:gx-4,y1:Y(w),x2:gx+gw,y2:Y(w),class:w?'ph':'thin'});tx(gx-7,Y(w)+3.5,String(w),'dts',{'text-anchor':'end'})});
  [[768,'BP2'],[1024,'BP3'],[1280,'BP4']].forEach(([v,c])=>{mk('line',{x1:X(v),y1:gy,x2:X(v),y2:gy+gh+4,class:'ph'});tx(X(v),gy+gh+15,c,'dts',{'text-anchor':'middle'})});
  tx(gx,gy+gh+15,'320','dts',{'text-anchor':'middle'});tx(gx+gw,gy+gh+15,'1920','dts',{'text-anchor':'middle'});
  const path=f=>{let d='',prev=null;for(let v=v0;v<=v1;v+=2){const w=f(v);const pt=X(v).toFixed(1)+','+Y(w).toFixed(1);if(prev!==null&&Math.abs(w-prev)>40)d+=' L'+pt;else d+=(d?' L':'M')+pt;prev=w}return d};
  mk('path',{d:path(rv2),class:'ph'});mk('path',{d:path(rv),class:'obj',style:'fill:none'});
- callout(X(1024),Y(398),X(1024)+30,Y(398)+24,'398 AT BP3 · WAS 659',1,'dts');nb(X(1024)-12,Y(398)+12,6);callout(X(1279),Y(915),X(1279)+24,Y(915)+4,'915 · LL AT BP4',1,'dts');
+ callout(X(1024),Y(398),X(1024)+30,Y(398)+24,'REV A · 398 AT BP3',1,'dts');nb(X(1024)-12,Y(660)+14,6);callout(X(1279),Y(915),X(1279)+24,Y(915)+4,'915 BEFORE BP4',1,'dts');
  callout(X(1280),Y(552),X(1280)+24,Y(552)+40,'552 AT BP4',1,'dts');
  callout(X(1560),Y(632),X(1560)+10,Y(632)-26,'632 MAX',1,'dts');
  tx(gx+gw-4,gy+gh-26,'RV · RIVER WIDTH','sl',{'text-anchor':'end'});
- tx(gx+gw-4,gy+gh-12,'SOLID = TODAY · DASHED = LL AT BP4','sl',{'text-anchor':'end'});
+ tx(gx+gw-4,gy+gh-12,'SOLID = REV B · DASHED = REV A','sl',{'text-anchor':'end'});
  title(gx+gw/2,gy+gh+44,'Detail W · river width vs viewport','Scale x 0.21:1 · y 0.21:1 · RV = VW − 2P − LL − RR − 2·G1');}
 
 /* ---------- Detail B · block grid (container query) ---------- */
-{const s=.3,x0=70;[[540,2,'Q2'],[820,3,'Q3'],[1100,4,'Q4']].forEach(([cw,n,c],i)=>{const y=640+i*64,w=cw*s,h=34;
-  rr(x0,y,w,h,0,'obj');const cm=(cw-(n-1)*20)/n*s;for(let j=0;j<n;j++)rr(x0+4+j*(cm+20*s)-(j?0:0),y+5,cm-8/n,h-10,0,'slot');
+{const s=.3,x0=70;[[536,2,'Q2'],[812,3,'Q3'],[1088,4,'Q4']].forEach(([cw,n,c],i)=>{const y=640+i*64,w=cw*s,h=34;
+  rr(x0,y,w,h,0,'obj');const cm=(cw-(n-1)*16)/n*s;for(let j=0;j<n;j++)rr(x0+4+j*(cm+16*s)-(j?0:0),y+5,cm-8/n,h-10,0,'slot');
   dimH(x0,x0+w,y-9,y,y,c+' · '+cw+' · '+n+' COL',{dy:0});});
  nb(x0-10,622,5);
- title(235,838,'Detail B · block grid','Scale 0.3:1 · container query · Q = N·CM + (N−1)·G3');}
+ title(235,838,'Detail B · block grid','Scale 0.3:1 · container query · Q = N·CM + (N−1)·G1');}
 
 /* ---------- Detail P · page container ---------- */
 {const s=.5,x=440,y=904,vw=1920,mx=1360,m=(vw-mx)/2,p=48,h=44;
@@ -241,12 +242,12 @@ const PAGE={w:v=>v,max:1360,m:(v,cw)=>(v-cw)/2,p:pagePad,frame:false};
 
 /* ---------- Tables ---------- */
 {const ws=[40,104,84];let y=60;
- y=table(1436,y,'Breakpoints',[['BP1','sm · 1,072 uses','640'],['BP2','md · 802 uses','768'],['BP3','lg · 902 uses','1024'],['BP4','xl · 69 uses','1280'],['BP5','2xl · 4 uses','1536']],ws);
+ y=table(1436,y,'Breakpoints',[['BP1','sm · type, spacing','640'],['BP2','md · right rail','768'],['BP3','lg · reader ad rail','1024'],['BP4','xl · left rail','1280'],['—','2xl','retired']],ws);
  y=table(1436,y,'Page container',[['MX','--width-content-max','1360'],['P1','px-4 · base','16'],['P2','px-6 · md·lg','24'],['P3','px-12 · xl','48'],['M','(VW − MX) ÷ 2','auto']],ws);
- y=table(1436,y,'River',[['LL','clamp(240,24vw,300)','240–300'],['RR','right rail','300'],['G1','gap-x-4','16'],['RV','VW−2P−LL−RR−2G1','FLEX']],ws);
- y=table(1436,y,'Reader',[['RC','context rail · xl','280'],['AD','ad rail · lg','300'],['G2','gap-x-[18px]','18'],['RP','px-4·8·10','16·32·40'],['AR','article','FLEX']],ws);
- y=table(1436,y,'Block grid',[['CM','card min','260'],['G3','gap-5','20'],['Q2','2·CM + G3','540'],['Q3','3·CM + 2·G3','820'],['Q4','4·CM + 3·G3','1100']],ws);
- table(1436,y,'HDS grid · no app uses',[['C4','base · 4 col','16 gap'],['C8','md · 8 col','20 gap'],['C12','lg · 12 col','24 gap']],ws);}
+ y=table(1436,y,'River',[['LL','--layout-rail · xl','300'],['RR','--layout-rail · md','300'],['G1','--layout-gap','16'],['RV','VW−2P−LL−RR−2G1','FLEX']],ws);
+ y=table(1436,y,'Reader',[['RC','context rail · xl','300'],['AD','ad rail · lg','300'],['G1','--layout-gap','16'],['P','page padding','16·24·48'],['AR','article','FLEX']],ws);
+ y=table(1436,y,'Block grid',[['CM','card min','260'],['G1','--layout-gap','16'],['Q2','2·CM + G1','536'],['Q3','3·CM + 2·G1','812'],['Q4','4·CM + 3·G1','1088']],ws);
+ table(1436,y,'HDS grid · inside regions',[['C4','base · 4 col','16 gap'],['C8','md · 8 col','20 gap'],['C12','lg · 12 col','24 gap']],ws);}
 })();
 </script>
 </body>

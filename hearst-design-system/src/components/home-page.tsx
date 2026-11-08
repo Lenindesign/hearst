@@ -2799,7 +2799,7 @@ function LifestyleRiverMedia({
 }) {
   const imageClassName = compact ? "aspect-[4/3] w-full" : "aspect-video w-full";
   const videoClassName = featured
-    ? "aspect-video w-full 2xl:self-center"
+    ? "aspect-video w-full"
     : compact
       ? "aspect-[4/3] w-full self-start"
       : "aspect-video w-full self-start rounded-[4px]";
@@ -3242,7 +3242,7 @@ export function LifestyleRiverCard({
         isVideo
           ? "grid"
         : featured
-          ? "grid items-stretch 2xl:grid-cols-[minmax(0,0.95fr)_minmax(320px,1fr)]"
+          ? "grid items-stretch"
           : "grid"
       )}
       data-story-module="river"
@@ -4498,7 +4498,7 @@ function LifestyleStoryReaderModal({
         />
 
         <div
-          className="grid touch-pan-y gap-y-8 gap-x-[18px] px-4 py-6 sm:px-8 lg:px-10 xl:grid-cols-[280px_minmax(0,1fr)]"
+          className="grid touch-pan-y gap-y-8 gap-x-[var(--layout-gap)] px-4 py-6 md:px-6 xl:px-12 xl:grid-cols-[var(--layout-rail)_minmax(0,1fr)]"
         >
           <ContentReaderContextRail
             currentStory={activeReaderContextStory}
@@ -4591,7 +4591,7 @@ function LifestyleStoryReaderModal({
                       <span className="h-px flex-1 bg-border" aria-hidden="true" />
                     </div>
                   ) : null}
-                  <div className="grid gap-y-8 gap-x-[18px] lg:grid-cols-[minmax(0,1fr)_300px]">
+                  <div className="grid gap-y-8 gap-x-[var(--layout-gap)] lg:grid-cols-[minmax(0,1fr)_var(--layout-rail)]">
                     <article
                       data-reader-story-id={story.id}
                       className={cn(
@@ -6614,7 +6614,7 @@ function LifestyleRiverHomePage({
       >
         <div
           className={cn(
-            "grid min-w-0 grid-cols-[minmax(0,1fr)] gap-x-4 gap-y-6 lg:grid-cols-[300px_minmax(0,1fr)_300px]",
+            "grid min-w-0 grid-cols-[minmax(0,1fr)] gap-x-[var(--layout-gap)] gap-y-6 lg:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]",
             !usingVideoTabFeed && "mt-6 sm:mt-8"
           )}
         >
@@ -6927,12 +6927,13 @@ function LifestyleRiverHomePage({
         aria-label={fullWidthFeaturedHero ? (isBlocksHomepage ? "Hearst+ editorial blocks" : isSectionsHomepage ? "Hearst+ editorial sections" : config.riverLabel) : undefined}
       >
       <div className={cn(
-        "grid min-w-0 grid-cols-[minmax(0,1fr)] gap-x-4 gap-y-6",
+        "grid min-w-0 grid-cols-[minmax(0,1fr)] gap-x-[var(--layout-gap)] gap-y-6",
         isBlocksHomepage
           ? "lg:grid-cols-1"
           : useResponsiveDestinationRails
-            ? "md:grid-cols-[minmax(0,1fr)_300px] lg:grid-cols-[clamp(240px,24vw,300px)_minmax(0,1fr)_300px]"
-            : "lg:grid-cols-[300px_minmax(0,1fr)_300px]",
+            // Left rail joins at xl so the river never narrows below its two-column width.
+            ? "md:grid-cols-[minmax(0,1fr)_var(--layout-rail)] xl:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]"
+            : "lg:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]",
       )}>
         {fullWidthFeaturedHero && leadStory ? (
           <div className="min-w-0 lg:col-span-3">
@@ -6974,7 +6975,7 @@ function LifestyleRiverHomePage({
           </div>
         ) : null}
 
-        {!isBlocksHomepage ? <div className={useResponsiveDestinationRails ? "hidden lg:block" : undefined}>
+        {!isBlocksHomepage ? <div className={useResponsiveDestinationRails ? "hidden xl:block" : undefined}>
         <LifestyleDiscoverySidebar
           profile={profile}
           topStories={moduleAllocation.dailyHabitStories}
@@ -7068,7 +7069,7 @@ function LifestyleRiverHomePage({
               {isBlocksHomepage ? (
                 <div className={cn("space-y-10", initialBrandSlug === "elle" && "[&>section:not(:first-child)]:!pt-[4.5rem]")} aria-label="Hearst+ blocks layout">
                   <section aria-label={`Trending, Today’s Picks, ${contextualModuleHeading ?? "editorial selections"}, and advertising`}>
-                    <div className="grid min-w-0 items-start gap-5 lg:grid-cols-[300px_minmax(0,1fr)_300px]">
+                    <div className="grid min-w-0 items-start gap-[var(--layout-gap)] lg:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]">
                       <div className="min-w-0 space-y-5 lg:sticky lg:top-24 lg:self-start">
                         <TrendingStoryRail
                           stories={moduleAllocation.trendingStories.filter((story) => !initialBrandSlug || story.brandSlug === initialBrandSlug).slice(0, 5)}
@@ -7174,7 +7175,7 @@ function LifestyleRiverHomePage({
                   })()}
 
                   {(editorialHomepageSections.find((section) => section.title === "Food & Home")?.stories.length ?? 0) > 0 ? <section className="border-t border-primary pt-5" aria-label="Food & Home and Local News">
-                    <div className="grid min-w-0 items-start gap-5 lg:grid-cols-[300px_minmax(0,1fr)_300px]">
+                    <div className="grid min-w-0 items-start gap-[var(--layout-gap)] lg:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]">
                       <div className="h-fit lg:sticky lg:top-24 lg:self-start">
                         <DiscoverySidebarCard title="Explore Events" summary={contextualModuleHeading ? `Upcoming ${contextualModuleHeading.toLowerCase()} experiences` : "Upcoming experiences across Hearst brands"}>
                           <div className="-mb-3 divide-y divide-border/70">
@@ -7263,7 +7264,7 @@ function LifestyleRiverHomePage({
                       )
                     )) : null}
                   {(sectionsHomepageEvents.length > 0 || !initialBrandSlug) ? <section className="border-t border-primary pt-5" aria-label="Events, community, and advertising">
-                    <div className="grid min-w-0 items-start gap-5 lg:grid-cols-[300px_minmax(0,1fr)_300px]">
+                    <div className="grid min-w-0 items-start gap-[var(--layout-gap)] lg:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]">
                       <div className="h-fit lg:sticky lg:top-24 lg:self-start">
                         <DiscoverySidebarCard title="Explore Events" summary={contextualModuleHeading ? `Upcoming ${contextualModuleHeading.toLowerCase()} experiences` : "Upcoming experiences across Hearst brands"}>
                           <div className="-mb-3 divide-y divide-border/70">
@@ -7301,7 +7302,7 @@ function LifestyleRiverHomePage({
                     </div>
                   </section> : null}
                   {communityParticipationThreads.some((post) => !contextualModuleBrandSlugs || contextualModuleBrandSlugs.has(post.brandSlug)) ? <section className="border-t border-primary pt-5" aria-label={contextualModuleHeading ? `${contextualModuleHeading} Communities` : "Communities"}>
-                    <div className="grid min-w-0 items-start gap-5 lg:grid-cols-[300px_minmax(0,1fr)_300px]">
+                    <div className="grid min-w-0 items-start gap-[var(--layout-gap)] lg:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]">
                       <div className="h-fit lg:sticky lg:top-24 lg:self-start">
                         <CommunityJoinedGroupsCard groups={communityGroups.filter((group) => !contextualModuleBrandSlugs || contextualModuleBrandSlugs.has(group.brandSlug)).slice(0, 3).map((group) => ({
                           brand: getHearstAllBrands().find((brand) => brand.brandSlug === group.brandSlug)?.brand ?? group.brandSlug,
@@ -7719,7 +7720,7 @@ function LifestyleRiverHomePage({
                     : moduleAllocation.trendingStories.slice(0, 3)}
                   onOpenStory={(story) => openStory(story.id)}
                   title={initialBrandName ? `Trending ${initialBrandName}` : contextualModuleHeading ? `Trending in ${contextualModuleHeading}` : destination === "all" ? "Trending Across Hearst" : "Trending Across Brands"}
-                  className="lg:hidden"
+                  className="xl:hidden"
                 />
               ) : null}
               <ContentReaderAdvertisement ad={rightRailAd} currentTopic={rightRailAdTopic} layout="rail" />

@@ -207,7 +207,7 @@ export default function TokenArchitecturePage() {
           <div className="mx-auto grid max-w-[1360px] gap-14 px-5 py-20 md:px-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:py-28">
             <div className="min-w-0">
               <p className="text-sm font-bold text-[var(--hp-logo)]">Hearst+ implementation guide</p>
-              <h1 className="mt-5 max-w-3xl text-balance text-5xl font-bold leading-[0.98] tracking-[-0.035em] sm:text-6xl 2xl:text-7xl">
+              <h1 className="mt-5 max-w-3xl text-balance text-5xl font-bold leading-[0.98] tracking-[-0.035em] sm:text-6xl">
                 From one token source to every Hearst+ brand in production.
               </h1>
               <p className="mt-7 max-w-[68ch] text-pretty text-lg leading-8 text-primary-foreground/80">

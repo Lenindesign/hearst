@@ -9,9 +9,12 @@
  *   Tablet  (md ≥768) : 8 columns,  20px gutter, 24px outer padding
  *   Desktop (lg ≥1024): 12 columns, 24px gutter, 24px outer padding; 48px at xl
  *
- * Use these primitives for layouts that follow the reusable HDS page-grid
- * contract. Application-specific editorial compositions may use explicit CSS
- * grid tracks inside the shared PageContainer boundary.
+ * Page layout contract: Hearst+ pages are rail layouts, not 12-column
+ * compositions. `RAIL_LAYOUT` below is the contract every page and the reader
+ * follow (one column → main + right rail at md → left rail + main + right rail
+ * at xl, one gutter, one rail width, content capped at 1360). The 4 / 8 / 12
+ * `Grid` remains for content blocks that need a column grid inside a region.
+ * See /layout-specs/ for the measured columns, drawing and film.
  *
  * - `PageContainer` constrains content to `--width-content-max` and applies the
  *   responsive outer padding.
@@ -60,6 +63,30 @@ export const GRID_COLUMNS: Record<"mobile" | "tablet" | "desktop", number> = {
   tablet: 8,
   desktop: 12,
 };
+
+/**
+ * The HDS page-layout contract. Values are CSS custom properties defined in
+ * globals.css so layouts reference one source:
+ * - `gap`: the only gutter between layout columns.
+ * - `rail`: the only rail width (left and right).
+ * - `contentMax`: the container cap; extra width becomes margin.
+ * - `padding`: container padding at base, md and xl.
+ * - `rightRailAt` / `leftRailAt`: breakpoints where the rails join. Rails
+ *   that hold controls with no fallback elsewhere may join at `lg`.
+ */
+export const RAIL_LAYOUT = {
+  gap: "var(--layout-gap)",
+  rail: "var(--layout-rail)",
+  contentMax: "var(--width-content-max)",
+  padding: { base: 16, md: 24, xl: 48 },
+  rightRailAt: "md",
+  leftRailAt: "xl",
+  classes: {
+    twoColumn: "md:grid-cols-[minmax(0,1fr)_var(--layout-rail)]",
+    threeColumn: "xl:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]",
+    gutter: "gap-x-[var(--layout-gap)]",
+  },
+} as const;
 
 // ─── PageContainer ───────────────────────────────────────────────────────────
 

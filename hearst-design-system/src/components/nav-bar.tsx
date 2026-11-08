@@ -241,7 +241,7 @@ export function DesignSystemNavBar({
                 style={{ backgroundColor: primary || "var(--foreground)" }}
               />
             )}
-            <div className="min-w-0 hidden 2xl:block">
+            <div className="min-w-0 hidden xl:block">
               <span className="block text-sm font-semibold leading-none truncate">
                 Hearst Design System
               </span>

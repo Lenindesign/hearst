@@ -254,7 +254,7 @@ function EventSidebars({
 
   return (
     <>
-      <aside className="hidden min-w-0 space-y-5 lg:col-start-1 lg:row-start-1 lg:sticky lg:top-[86px] lg:block lg:max-h-[calc(100dvh-110px)] lg:self-start lg:overflow-y-auto lg:pr-1" aria-label="Event discovery sidebar">
+      <aside className="hidden min-w-0 space-y-5 xl:col-start-1 xl:row-start-1 xl:sticky xl:top-[86px] xl:block xl:max-h-[calc(100dvh-110px)] xl:self-start xl:overflow-y-auto xl:pr-1" aria-label="Event discovery sidebar">
         <DiscoverySidebarCard title="Trending across events" summary="Experiences and stories from Hearst brands">
           <ol className="-mb-3 divide-y divide-border/70">
             {events.slice(0, 5).map((event, index) => (
@@ -274,7 +274,7 @@ function EventSidebars({
         </DiscoverySidebarCard>
       </aside>
 
-      <aside className="hidden min-w-0 space-y-5 md:col-start-2 md:row-start-1 md:sticky md:top-[86px] md:block md:max-h-[calc(100dvh-110px)] md:self-start md:overflow-y-auto md:pr-1 lg:col-start-3" aria-label="Event planning and local news">
+      <aside className="hidden min-w-0 space-y-5 md:col-start-2 md:row-start-1 md:sticky md:top-[86px] md:block md:max-h-[calc(100dvh-110px)] md:self-start md:overflow-y-auto md:pr-1 xl:col-start-3" aria-label="Event planning and local news">
         {upcomingEvent ? (
           <DiscoverySidebarCard title="Plan your visit" summary={`${upcomingEvent.dateLabel} · ${upcomingEvent.venue}`}>
             <p className="text-sm font-bold">{upcomingEvent.title}</p>
@@ -332,13 +332,13 @@ export function HearstEventsIndex({ initialBrand = "all" }: { initialBrand?: str
         brandOptions={brandOptions}
       />
       <main>
-        <section className="mx-auto grid max-w-[1360px] gap-x-4 gap-y-6 px-5 pt-4 pb-8 md:grid-cols-[minmax(0,1fr)_300px] md:px-8 md:pt-4 md:pb-10 lg:grid-cols-[clamp(240px,24vw,300px)_minmax(0,1fr)_300px]" aria-label="Events discovery">
+        <section className="mx-auto grid max-w-[1360px] gap-x-[var(--layout-gap)] gap-y-6 px-5 pt-4 pb-8 md:grid-cols-[minmax(0,1fr)_var(--layout-rail)] md:px-8 md:pt-4 md:pb-10 xl:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]" aria-label="Events discovery">
           <EventSidebars
             events={hearstEvents}
             upcomingEvent={hearstEvents.find((event) => event.status === "upcoming")}
             onFilterRelationship={(value) => setRelationship(value)}
           />
-          <section aria-live="polite" aria-labelledby="events-results-heading" className="min-w-0 space-y-6 md:col-start-1 md:row-start-1 lg:col-start-2">
+          <section aria-live="polite" aria-labelledby="events-results-heading" className="min-w-0 space-y-6 md:col-start-1 md:row-start-1 xl:col-start-2">
             <div className="overflow-hidden rounded-[8px] border border-border bg-card">
               <div className="flex flex-col gap-3 p-5 sm:p-6">
                 <div>
@@ -527,7 +527,7 @@ export function HearstEventDetail({ event }: { event: HearstEventRecord }) {
         sectionNavigationLabel="Event details sections"
       />
       <div className="min-h-full bg-[var(--hp-background)] text-foreground">
-        <main className="mx-auto grid min-w-0 max-w-[1360px] grid-cols-1 items-start gap-5 px-4 pt-4 pb-5 sm:px-6 lg:grid-cols-[300px_minmax(0,1fr)_300px] lg:gap-5 lg:px-6 lg:pt-4 lg:pb-6">
+        <main className="mx-auto grid min-w-0 max-w-[1360px] grid-cols-1 items-start gap-[var(--layout-gap)] px-4 pt-4 pb-5 sm:px-6 lg:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)] lg:px-6 lg:pt-4 lg:pb-6">
           <aside className="order-2 min-w-0 space-y-5 lg:order-1 lg:sticky lg:top-4 lg:max-h-[calc(100dvh-5rem)] lg:overflow-y-auto lg:pr-1" aria-label="Event discovery">
             <DiscoverySidebarCard title="Presented by" summary="The Hearst brands behind this event">
               <EventBrandMarks event={event} />
