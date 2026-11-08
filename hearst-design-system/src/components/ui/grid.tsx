@@ -9,11 +9,12 @@
  *   Tablet  (md ≥768) : 8 columns,  20px gutter, 24px outer padding
  *   Desktop (lg ≥1024): 12 columns, 24px gutter, 24px outer padding; 48px at xl
  *
- * Page layout contract: Hearst+ pages are rail layouts, not 12-column
- * compositions. `RAIL_LAYOUT` below is the contract every page and the reader
- * follow (one column → main + right rail at md → left rail + main + right rail
- * at xl, one gutter, one rail width, content capped at 1360). The 4 / 8 / 12
- * `Grid` remains for content blocks that need a column grid inside a region.
+ * Two layout contracts share PageContainer:
+ * - `RAIL_LAYOUT`: feed and river pages and the story reader (one column →
+ *   main + right rail at md → left rail + main + right rail at xl, one gutter,
+ *   one rail width).
+ * - The 4 / 8 / 12 `Grid` and `Col`: editorial compositions such as article,
+ *   events and newsstand pages, and columns inside a region.
  * See /layout-specs/ for the measured columns, drawing and film.
  *
  * - `PageContainer` constrains content to `--width-content-max` and applies the
@@ -29,13 +30,13 @@ import { cn } from "@/lib/utils";
 
 // ─── Breakpoints ─────────────────────────────────────────────────────────────
 
+/** Min-width breakpoints. 2xl (1536) is retired: content is capped at 1360. */
 export const BREAKPOINTS = {
   base: 0,
   sm: 640,
   md: 768,
   lg: 1024,
   xl: 1280,
-  "2xl": 1536,
 } as const;
 
 export type Breakpoint = keyof typeof BREAKPOINTS;
@@ -301,7 +302,8 @@ export interface ColProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Optional row-start at lg only (desktop+). */
   rowStartLg?: 1 | 2 | 3 | 4;
   /**
-   * Lift the column up/down by an integer multiple of the grid gap.
+   * Lift the column up/down by an integer multiple of the grid gutter
+   * (20px steps at md, 24px steps at lg).
    * Used sparingly to create intentional overlap. Use `0` to disable.
    */
   offsetYMd?: -2 | -1 | 0 | 1 | 2;
@@ -394,19 +396,19 @@ const rowStartLgClass: Record<1 | 2 | 3 | 4, string> = {
 };
 
 const offsetYMdClass: Record<-2 | -1 | 0 | 1 | 2, string> = {
-  [-2]: "md:-translate-y-12",
-  [-1]: "md:-translate-y-6",
+  [-2]: "md:-translate-y-10",
+  [-1]: "md:-translate-y-5",
   0: "md:translate-y-0",
-  1: "md:translate-y-6",
-  2: "md:translate-y-12",
+  1: "md:translate-y-5",
+  2: "md:translate-y-10",
 };
 
 const offsetYLgClass: Record<-2 | -1 | 0 | 1 | 2, string> = {
-  [-2]: "lg:-translate-y-16",
-  [-1]: "lg:-translate-y-8",
+  [-2]: "lg:-translate-y-12",
+  [-1]: "lg:-translate-y-6",
   0: "lg:translate-y-0",
-  1: "lg:translate-y-8",
-  2: "lg:translate-y-16",
+  1: "lg:translate-y-6",
+  2: "lg:translate-y-12",
 };
 
 export function Col({
@@ -471,7 +473,7 @@ export function GridOverlay({
     <div
       aria-hidden
       className={cn(
-        "pointer-events-none absolute inset-x-4 inset-y-0 z-0 grid grid-cols-4 gap-4 md:inset-x-6 md:grid-cols-8 md:gap-5 lg:inset-x-12 lg:grid-cols-12 lg:gap-6",
+        "pointer-events-none absolute inset-x-4 inset-y-0 z-0 grid grid-cols-4 gap-4 md:inset-x-6 md:grid-cols-8 md:gap-5 lg:grid-cols-12 lg:gap-6 xl:inset-x-12",
         hideOnMobile && "hidden sm:grid",
         className,
       )}

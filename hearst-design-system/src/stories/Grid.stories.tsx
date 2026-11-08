@@ -530,9 +530,9 @@ export const ResponsiveBehavior: Story = {
                   (md) → 12 (lg)
                 </p>
                 <p className="mt-2 text-muted-foreground">
-                  <span className="font-semibold text-foreground">Spacing</span>{" "}
-                  (outer padding + gutter) can still change at other breakpoints
-                  via tokens, but the track count stays the same.
+                  <span className="font-semibold text-foreground">Spacing</span>:
+                  padding 16 · 24 · 24 · 48 and gutter 16 · 20 · 24 · 24 at
+                  base · md · lg · xl. The track count does not change at xl.
                 </p>
               </>
             }
@@ -556,9 +556,11 @@ export const ResponsiveBehavior: Story = {
           <p className="mt-4 text-sm text-muted-foreground">
             Resize the canvas. The badge above updates from <code>base</code>{" "}
             (&lt;640) → <code>sm</code> (640) → <code>md</code> (768) →{" "}
-            <code>lg</code> (1024) → <code>xl</code> (1280) → <code>2xl</code>{" "}
-            (1536). The grid only changes column count at <code>md</code> and{" "}
-            <code>lg</code>.
+            <code>lg</code> (1024) → <code>xl</code> (1280). The 4 / 8 / 12 grid
+            changes column count at <code>md</code> and <code>lg</code>; its
+            padding grows from 24 to 48 at <code>xl</code>. Rail layouts add
+            their right rail at <code>md</code> and left rail at{" "}
+            <code>xl</code>. <code>2xl</code> is retired.
           </p>
         </PageContainer>
       </div>

@@ -45,7 +45,7 @@ const blockRows = [
 ] as const;
 
 const contractRows = [
-  ["--layout-gap", "16", "The only gutter between layout columns: river, reader, block sections and block grids."],
+  ["--layout-gap", "16", "The gutter between rail-layout columns: river, reader, block sections and block grids. The 4 / 8 / 12 Grid keeps its own 16 · 20 · 24 gutter."],
   ["--layout-rail", "300", "The only rail width, left and right, including the reader's context and ad rails."],
   ["--width-content-max", "1360", "Container cap for pages and the reader panel; extra width becomes margin."],
   ["padding", "16 · 24 · 48", "Container padding at base · md · xl, for pages and the reader."],
@@ -113,7 +113,7 @@ export default function LayoutSpecsPage() {
           <p className="text-xs font-bold uppercase tracking-[.16em] text-muted-foreground">HDS foundations · Layout</p>
           <h1 className="headline mt-4 text-balance text-4xl leading-[1.05] sm:text-6xl">Breakpoints and grid</h1>
           <p className="mt-5 max-w-3xl text-lg leading-8 text-muted-foreground">
-            Four min-width breakpoints (640, 768, 1024, 1280) and a 1360 content maximum. Pages go from one column to two at 768 and three at 1280; the reader adds its rails at 1024 and 1280; block grids follow their own width. One gutter (16), one rail width (300) and one container padding (16 · 24 · 48) everywhere. Every value here was measured in the running app.
+            Four min-width breakpoints (640, 768, 1024, 1280) and a 1360 content maximum. Pages go from one column to two at 768 and three at 1280; the reader adds its rails at 1024 and 1280; block grids follow their own width. Rail layouts share one gutter (16) and one rail width (300), and every page uses one container padding (16 · 24 · 48). Every value here was measured in the running app.
           </p>
           <nav aria-label="On this page" className="mt-7 flex flex-wrap gap-2">
             {[["Breakpoints", "#breakpoints"], ["Contract", "#contract"], ["Film", "#film"], ["Drawing", "#drawing"], ["Columns", "#columns"], ["Changes", "#changes"]].map(([label, href]) => (
