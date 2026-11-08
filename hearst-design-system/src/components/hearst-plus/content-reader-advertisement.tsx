@@ -198,7 +198,7 @@ export function ContentReaderAdvertisement({
             className="h-full w-full object-cover"
           />
           <div
-            className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/5 to-black/45"
+            className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/55 to-transparent"
             aria-hidden="true"
           />
           <div className="absolute inset-x-0 top-0 flex items-center p-5 text-white">
@@ -206,17 +206,20 @@ export function ContentReaderAdvertisement({
               Advertisement
             </span>
           </div>
-          <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-            <p className="font-brand-secondary text-3xl font-bold leading-none text-white">
-              {ad.title}
-            </p>
-          </div>
         </div>
 
         <div className={cn("flex flex-1 flex-col justify-between p-6", isRail && "gap-6")}>
           <div>
+            {/* Headline and deck sit together under the photo; the headline takes the vertical's CTA color
+                (--component-ad-headline falls back to the text color when that color would not read). */}
             <p
-              className="text-sm leading-5"
+              className="type-t3 font-brand-secondary font-bold"
+              style={{ color: "var(--component-ad-headline, var(--foreground))" }}
+            >
+              {ad.title}
+            </p>
+            <p
+              className="type-b2 mt-2"
               style={{ color: ad.palette.foreground }}
             >
               {ad.summary}

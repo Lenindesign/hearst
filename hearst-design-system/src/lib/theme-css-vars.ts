@@ -84,7 +84,7 @@ function contrastRatio(a: string, b: string) {
  * the theme set keeps its color when it reaches WCAG AA (4.5:1); otherwise the
  * first of white, near-black or black that reaches AA is used.
  */
-function withReadableButtonContent(vars: Record<string, string>) {
+function withReadableButtonContent(vars: Record<string, string>, colorMode: "light" | "dark" = "light") {
   const result = { ...vars };
   for (const family of BUTTON_SOLID_FAMILIES) {
     for (const state of BUTTON_STATES) {
@@ -105,6 +105,11 @@ function withReadableButtonContent(vars: Record<string, string>) {
       if (!result[borderKey]) result[borderKey] = result[backgroundKey];
     }
   }
+  // Contextual ad headlines take the vertical's CTA color when it reads on the card surface
+  // (3:1, large bold text); otherwise they fall back to the page text color.
+  const ctaColor = firstHex(result["--component-button-background-primary-solid-default"]);
+  const surface = colorMode === "dark" ? "#171717" : "#ffffff";
+  result["--component-ad-headline"] = ctaColor && contrastRatio(ctaColor, surface) >= 3 ? ctaColor : "var(--foreground)";
   return result;
 }
 
@@ -225,5 +230,5 @@ export function brandToCssVars(brand: BrandTheme, colorMode: "light" | "dark" = 
     "--font-headline-weight": `${brand.fontHeadlineWeight}`,
     "--font-headline-stretch": brand.fontHeadlineStretch || "normal",
     ...darkSurfaceVars,
-  });
+  }, colorMode);
 }

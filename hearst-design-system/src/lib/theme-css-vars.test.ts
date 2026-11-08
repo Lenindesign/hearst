@@ -44,3 +44,18 @@ test("Hearst Flux primary button uses a light label on its slate background", ()
   assert.equal(vars["--component-button-background-primary-solid-default"], "#12354E");
   assert.equal(vars["--component-button-content-primary-solid-default"], "#ffffff");
 });
+
+test("contextual ad headlines use the CTA color only where it reads on the card (3:1, large bold text)", () => {
+  for (const theme of themeOptions) {
+    for (const mode of ["light", "dark"] as const) {
+      const vars = brandToCssVars(theme, mode);
+      const headline = vars["--component-ad-headline"];
+      assert.ok(headline, `${theme.slug} ${mode} has no ad headline color`);
+      if (headline === "var(--foreground)") continue;
+      assert.ok(
+        contrast(headline, mode === "dark" ? "#171717" : "#ffffff") >= 3,
+        `${theme.slug} ${mode}: ad headline ${headline}`,
+      );
+    }
+  }
+});
