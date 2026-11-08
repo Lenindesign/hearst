@@ -108,6 +108,13 @@ The complete brand registry is documented in `BRAND_STYLES.md`. Canonical HDS pu
 - Reader recommendation links follow the same color-only hover behavior used by destination story links.
 - Keep article prose unclamped. Line limits apply to discovery surfaces, not the full reader story.
 
+## Type metrics
+
+- Editorial text follows the type metrics standard UI-TYPE-001 (`/type-specs/`, drawing and film in `public/specs/type-*`). Line height is `4 · round(size · ratio ÷ 4)`: text roles use the HDS `font.line-height` token for their size, headlines use the headline ratio (1.25 at 16 down to 1.08 at 48). Standard roles: T1 48/52 (base 32/36), T2 32/36 (24/28), T4 subhead 28/32 (22/28), T3 card headline 24/28 (20/24), T5 16/20, T6 14/20, D1 reader deck 20/28, B1 body 18/28, D2 card deck 16/24, B2 UI text 14/20, M1 byline and M2 date 12/16, C1 caption 12/16, K1 caps eyebrow 11/16.
+- Letter spacing uses the HDS `font.letter-spacing` token for the size; all-caps labels use +0.1em and display headlines of 40 px and up use −0.01em. No other tracking values.
+- Roles on one row share one line height. Spacing between roles is S1–S9 on the 4 px grid (8 · 8 · 12 · 16 · 16 · 24 · 24 · 40 · 12). Kerning stays on; dates, times and counts use tabular figures; headlines balance and body and decks wrap pretty.
+- Migration status: the standard is specified but not yet applied; components still use one-off `leading-*` and `tracking-*` classes. New and edited components should use the standard values.
+
 ## Responsive behavior
 
 - Treat responsive behavior structurally: stack or collapse columns, preserve readable widths, and keep interaction targets accessible. Breakpoints are the min-width set 640 · 768 · 1024 · 1280 with a 1360 content maximum (2xl is retired; sm never changes column count). Rail layouts follow `RAIL_LAYOUT` in `ui/grid.tsx`: one gutter `--layout-gap` (16), one rail width `--layout-rail` (300), container padding 16 · 24 · 48. Pages add the right rail at md and the left rail at xl; a left rail that holds controls with no fallback elsewhere may join at lg. The reader adds its ad rail at lg and context rail at xl. Block grids follow their container (2 · 3 · 4 columns at 536 · 812 · 1088). See `/layout-specs/`.
