@@ -109,7 +109,7 @@ The complete brand registry is documented in `BRAND_STYLES.md`. Canonical HDS pu
 
 ## Responsive behavior
 
-- Treat responsive behavior structurally: stack or collapse columns, preserve readable widths, and keep interaction targets accessible.
+- Treat responsive behavior structurally: stack or collapse columns, preserve readable widths, and keep interaction targets accessible. Breakpoints are the min-width set 640 · 768 · 1024 · 1280 · 1536 with a 1360 content maximum; pages add the right rail at 768 and the left rail at 1024, the reader adds its ad rail at 1024 and context rail at 1280, and block grids follow their container. See `/layout-specs/` for the measured columns, drawing, film and recommendations.
 - The stakeholder personalization console is a full-screen diagnostic overlay. At phone widths, its control groups stack in document order, content scrolls inside the dialog, and controls remain at least 44px. `APP_RULES.md` owns its state, focus, and availability behavior.
 - Personalization onboarding uses the editorial image-and-form split only at desktop widths and omits the decorative image on smaller screens. Keep the phone interest picker horizontally scrollable, the publication picker in a bounded grid, publication names visible in full, and controls at least 44px. The modal must not create horizontal overflow at 320px or 390px. `APP_RULES.md` owns onboarding steps, limits, state, and focus behavior.
 - Never allow headline or summary text to crop because a card or carousel uses a fixed height without a matching line clamp.
