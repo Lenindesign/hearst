@@ -7,6 +7,7 @@ import { AdaptiveVideo } from "@/components/adaptive-video";
 import {
   Clock,
   Play,
+  VolumeX,
   X,
 } from "@/components/ui/icons";
 import { BrandSourceIcon } from "@/components/hearst-plus/brand-source-icon";
@@ -29,6 +30,47 @@ function requestExclusiveVideoPlayback(surfaceId: string) {
   }));
 }
 
+/**
+ * Muted in-feed preview (LinkedIn-style): the single most visible video surface that is at least
+ * PREVIEW_MIN_RATIO on screen plays muted without controls. Nothing previews while a video plays
+ * with sound, when the reader prefers reduced motion, or when Save-Data is on.
+ */
+const PREVIEW_MIN_RATIO = 0.6;
+const previewRatios = new Map<string, number>();
+const fullPlaybackSurfaces = new Set<string>();
+const previewListeners = new Set<() => void>();
+let previewOwner: string | null = null;
+
+function recomputePreviewOwner() {
+  let next: string | null = null;
+  if (fullPlaybackSurfaces.size === 0) {
+    let best = PREVIEW_MIN_RATIO;
+    for (const [id, ratio] of previewRatios) {
+      if (ratio >= best) {
+        best = ratio;
+        next = id;
+      }
+    }
+  }
+  if (next === previewOwner) return;
+  previewOwner = next;
+  previewListeners.forEach((listener) => listener());
+}
+
+function subscribePreviewOwner(listener: () => void) {
+  previewListeners.add(listener);
+  return () => {
+    previewListeners.delete(listener);
+  };
+}
+
+function canAutoplayPreview() {
+  if (typeof window === "undefined") return false;
+  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return false;
+  const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+  return !connection?.saveData;
+}
+
 export function VideoPlaySurface({
   story,
   featured = false,
@@ -45,6 +87,65 @@ export function VideoPlaySurface({
   const [videoOrientation, setVideoOrientation] = React.useState<"landscape" | "portrait">("landscape");
   const surfaceRef = React.useRef<HTMLDivElement | null>(null);
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
+  const isPreviewOwner = React.useSyncExternalStore(
+    subscribePreviewOwner,
+    () => previewOwner === surfaceId,
+    () => false,
+  );
+  // Set when a preview ends or is refused; cleared when the surface leaves the viewport.
+  const [previewSpent, setPreviewSpent] = React.useState(false);
+  const resumeTimeRef = React.useRef(0);
+  const previewing = !playing && isPreviewOwner && !previewSpent && Boolean(story.videoUrl);
+
+  React.useEffect(() => {
+    const surface = surfaceRef.current;
+    if (!surface || !story.videoUrl || !canAutoplayPreview()) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        previewRatios.set(surfaceId, entry.intersectionRatio);
+        if (entry.intersectionRatio === 0) setPreviewSpent(false);
+        recomputePreviewOwner();
+      },
+      { threshold: [0, 0.25, 0.5, PREVIEW_MIN_RATIO, 0.75, 0.9, 1] },
+    );
+    observer.observe(surface);
+    return () => {
+      observer.disconnect();
+      previewRatios.delete(surfaceId);
+      recomputePreviewOwner();
+    };
+  }, [story.videoUrl, surfaceId]);
+
+  React.useEffect(() => {
+    if (!playing) return;
+    fullPlaybackSurfaces.add(surfaceId);
+    recomputePreviewOwner();
+    return () => {
+      fullPlaybackSurfaces.delete(surfaceId);
+      recomputePreviewOwner();
+    };
+  }, [playing, surfaceId]);
+
+  // Remember where the muted preview stopped so it resumes there when it scrolls back in.
+  React.useEffect(() => {
+    if (!previewing) return;
+    const video = videoRef.current;
+    return () => {
+      if (video) resumeTimeRef.current = video.currentTime || resumeTimeRef.current;
+    };
+  }, [previewing]);
+
+  const startFullPlayback = () => {
+    requestExclusiveVideoPlayback(surfaceId);
+    setDockDismissed(false);
+    setPlaying(true);
+    const video = videoRef.current;
+    if (video) {
+      video.muted = false;
+      void video.play().catch(() => undefined);
+    }
+  };
 
   React.useEffect(() => {
     if (!playing) return;
@@ -161,28 +262,70 @@ export function VideoPlaySurface({
         data-video-orientation={videoOrientation}
         data-video-dock-surface={docked ? "floating" : "inline"}
       >
-        {playing && story.videoUrl ? (
+        {(playing || previewing) && story.videoUrl ? (
           <AdaptiveVideo
             ref={videoRef}
             src={story.videoUrl}
             poster={story.image}
-            controls
+            controls={playing}
+            muted={!playing}
             autoPlay
             playsInline
             preload="metadata"
             className="h-full w-full bg-black object-contain"
-            aria-label={`Play video: ${story.title}`}
-            onLoadedMetadata={(event) => updateVideoOrientation(event.currentTarget)}
-            onPlay={() => requestExclusiveVideoPlayback(surfaceId)}
+            aria-label={playing ? `Play video: ${story.title}` : `Muted preview: ${story.title}`}
+            onLoadedMetadata={(event) => {
+              updateVideoOrientation(event.currentTarget);
+              const resumeAt = resumeTimeRef.current;
+              if (resumeAt > 0 && resumeAt < (event.currentTarget.duration || 0) - 1) {
+                event.currentTarget.currentTime = resumeAt;
+              }
+            }}
+            onAutoplayBlocked={() => {
+              if (!playing) setPreviewSpent(true);
+            }}
+            onPlay={() => {
+              if (playing) requestExclusiveVideoPlayback(surfaceId);
+            }}
             // Keep the video element mounted on pause. Native controls emit pause
             // while seeking, and unmounting here would reset playback to 0.
             onPause={() => setDocked(false)}
             onEnded={() => {
+              resumeTimeRef.current = 0;
+              if (!playing) {
+                setPreviewSpent(true);
+                return;
+              }
               setDocked(false);
               setPlaying(false);
             }}
           />
-        ) : (
+        ) : null}
+        {previewing ? (
+          <>
+            <button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                startFullPlayback();
+              }}
+              className="absolute inset-0 z-20 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/80"
+              aria-label={`Play video with sound: ${story.title}`}
+            />
+            <button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                startFullPlayback();
+              }}
+              className="absolute bottom-3 right-3 z-30 inline-flex h-11 w-11 items-center justify-center rounded-full bg-black/70 text-white shadow-sm transition-colors hover:bg-black focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
+              aria-label={`Unmute video: ${story.title}`}
+            >
+              <VolumeX className="h-5 w-5" aria-hidden />
+            </button>
+          </>
+        ) : null}
+        {!playing && !previewing ? (
           <>
             <Image
               src={story.image}
@@ -206,9 +349,7 @@ export function VideoPlaySurface({
               type="button"
               onClick={(event) => {
                 event.stopPropagation();
-                requestExclusiveVideoPlayback(surfaceId);
-                setDockDismissed(false);
-                setPlaying(true);
+                startFullPlayback();
               }}
               className={cn(
                 "absolute z-30 inline-flex items-center justify-center rounded-full bg-white text-black shadow-sm transition-transform duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/80 motion-reduce:transition-none",
@@ -225,9 +366,9 @@ export function VideoPlaySurface({
               />
             </button>
           </>
-        )}
+        ) : null}
         {/* Poster affordance only: once playing, the native controls show the time and hide on roll-out. */}
-        {story.videoDuration && !playing ? (
+        {story.videoDuration && !playing && !previewing ? (
           <span className="pointer-events-none absolute right-3 top-3 z-30 inline-flex items-center gap-1 rounded-full bg-black/70 px-2.5 py-1 text-xs font-bold tabular-nums text-white">
             <Clock className="h-3 w-3" aria-hidden />
             {formatVideoDuration(story.videoDuration)}
