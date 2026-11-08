@@ -477,7 +477,7 @@
   },
   "component-button-radius-default": {
     "type": "number",
-    "value": 0
+    "value": 4
   },
   "component-card-background-neutral": {
     "type": "color",

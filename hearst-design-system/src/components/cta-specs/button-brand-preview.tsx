@@ -9,7 +9,7 @@ import { brandToCssVars } from "@/lib/theme-css-vars";
 import { themeOptions } from "@/lib/theme-options";
 import { cn } from "@/lib/utils";
 
-/** Brands chosen to show the full radius range: 0 (square), 4 (Hearst+), 64 (pill). */
+/** Brands chosen to show the radius range: 0 (Cosmopolitan, square), 4 (Car and Driver, Hearst+), 64 (Esquire, pill). */
 const previewBrands = [
   { slug: "cosmopolitan", label: "Cosmopolitan" },
   { slug: "esquire", label: "Esquire" },
