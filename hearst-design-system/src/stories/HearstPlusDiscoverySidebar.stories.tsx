@@ -168,7 +168,7 @@ function DiscoverySidebarExample({
             onOpenStory={openStory}
           />
           <main className="min-h-[720px] rounded-[8px] border border-dashed border-border bg-[var(--hp-surface)] p-8">
-            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+            <p className="type-k1 text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
               Production sidebar specification
             </p>
             <h1 className="mt-3 text-2xl font-bold">

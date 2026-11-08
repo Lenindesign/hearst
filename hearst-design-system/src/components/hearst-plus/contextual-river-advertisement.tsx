@@ -48,7 +48,7 @@ export function ContextualRiverAdvertisement({
           aria-hidden="true"
         />
         <div className="absolute inset-x-0 top-0 flex items-center gap-3 p-4 text-white">
-          <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest">
+          <span className="type-k1">
             Advertisement
           </span>
         </div>

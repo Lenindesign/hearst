@@ -351,7 +351,7 @@ function ImmersiveHero({ content }: { content: ImmersiveArticleContent }) {
       <PageContainer className="relative z-10 flex min-h-[calc(100vh-4rem)] flex-col justify-end pb-[var(--spacing-token-3xl)] pt-[var(--spacing-token-3xl)]">
         <div className="max-w-[920px] space-y-[var(--spacing-token-lg)]">
           {content.breadcrumbs.length > 0 && (
-            <nav className="flex flex-wrap items-center gap-[var(--spacing-token-2xs)] text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-background/75 font-brand-secondary">
+            <nav className="flex flex-wrap items-center gap-[var(--spacing-token-2xs)] type-k1 text-background/75 font-brand-secondary">
               {content.breadcrumbs.map((crumb, i) => (
                 <React.Fragment key={i}>
                   {i > 0 && <span className="text-background/45">/</span>}
@@ -431,7 +431,7 @@ function ImmersiveIntro({ content }: { content: ImmersiveArticleContent }) {
             <dl className="divide-y divide-border border-y border-border">
               {content.factRail.map((fact) => (
                 <div key={fact.label} className="py-[var(--spacing-token-md)]">
-                  <dt className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-muted-foreground font-brand-secondary">
+                  <dt className="type-k1 text-muted-foreground font-brand-secondary">
                     {fact.label}
                   </dt>
                   <dd className="mt-[var(--spacing-token-2xs)] text-[length:var(--text-token-sm)] font-semibold leading-snug text-foreground">
@@ -550,7 +550,7 @@ function ImmersiveBodySection({
       <Grid alignStart>
         <Col span="full" spanMd={2} spanLg={3}>
           <aside className="hidden space-y-[var(--spacing-token-md)] border-t border-border pt-[var(--spacing-token-md)] md:block lg:sticky lg:top-[var(--spacing-token-xl)]">
-            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-muted-foreground font-brand-secondary">
+            <p className="type-k1 text-muted-foreground font-brand-secondary">
               Story spine
             </p>
             <ol className="space-y-[var(--spacing-token-sm)]">
@@ -590,7 +590,7 @@ function EditorialBreadcrumbs({
   return (
     <nav
       className={cn(
-        "flex flex-wrap items-center gap-[var(--spacing-token-2xs)] text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest font-brand-secondary",
+        "flex flex-wrap items-center gap-[var(--spacing-token-2xs)] type-k1 font-brand-secondary",
         inverted ? "text-background/80" : "text-muted-foreground",
       )}
     >
@@ -944,7 +944,7 @@ function EditorialProductReviewModule({
             </a>
           </div>
           {review.retailer && (
-            <p className="text-[length:var(--text-token-4xs)] font-semibold uppercase tracking-widest text-muted-foreground">
+            <p className="type-k1 text-muted-foreground">
               Buy from {review.retailer}
             </p>
           )}
@@ -1200,7 +1200,7 @@ function CinematicEditorialPrelude({
       <Grid alignStart gap="loose">
         <Col span="full" spanMd={3} spanLg={4}>
           <div className="space-y-[var(--spacing-token-md)] lg:sticky lg:top-[var(--spacing-token-xl)]">
-            <p className={cn("text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest", style.accentText, style.labelClass)}>
+            <p className={cn("type-k1", style.accentText, style.labelClass)}>
               {content.introEyebrow ?? "Before the story"}
             </p>
             {content.immersiveKicker && (
@@ -1222,7 +1222,7 @@ function CinematicEditorialPrelude({
             <dl className={cn("grid grid-cols-2 gap-x-[var(--spacing-token-md)] gap-y-[var(--spacing-token-lg)] border-y py-[var(--spacing-token-md)] lg:grid-cols-1", style.accentBorder)}>
               {content.factRail.map((fact) => (
                 <div key={fact.label}>
-                  <dt className={cn("text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest", style.accentText, style.labelClass)}>
+                  <dt className={cn("type-k1", style.accentText, style.labelClass)}>
                     {fact.label}
                   </dt>
                   <dd className="mt-[var(--spacing-token-2xs)] text-[length:var(--text-token-sm)] font-semibold leading-snug text-foreground">
@@ -1467,7 +1467,7 @@ function CinematicQuoteInterlude({
     <EditorialFullBleedSection className={cn("py-[var(--spacing-token-5xl)] lg:py-[calc(var(--spacing-token-6xl)*1.25)]", style.shell)}>
       <Grid alignStart gap="loose" className="items-center">
         <Col span="full" spanMd={2} spanLg={2}>
-          <p className={cn("text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest", style.accentText, style.labelClass)}>
+          <p className={cn("type-k1", style.accentText, style.labelClass)}>
             {content.posterQuoteEyebrow ?? "Editorial pause"}
           </p>
         </Col>
@@ -1631,7 +1631,7 @@ function EditorialBodySection({
       <Grid alignStart gap="loose">
         <Col span="full" spanMd={2} spanLg={3}>
           <aside className="hidden space-y-[var(--spacing-token-md)] border-t border-border pt-[var(--spacing-token-md)] md:block lg:sticky lg:top-[var(--spacing-token-xl)]">
-            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-muted-foreground font-brand-secondary">
+            <p className="type-k1 text-muted-foreground font-brand-secondary">
               {content.bodyRailEyebrow ?? "Reading path"}
             </p>
             <ol className="space-y-[var(--spacing-token-sm)]">

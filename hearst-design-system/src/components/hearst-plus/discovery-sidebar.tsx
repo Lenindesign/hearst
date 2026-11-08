@@ -104,7 +104,7 @@ export function DiscoverySidebarCard({
       )}
     >
       <div className="hidden lg:block">
-        <p className="flex items-center gap-1.5 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+        <p className="flex items-center gap-1.5 type-k1 text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
           {titleIcon}
           {title}
         </p>
@@ -116,7 +116,7 @@ export function DiscoverySidebarCard({
           onClick={() => setOpen((value) => !value)}
           aria-expanded={open}
         >
-          <span className="flex items-center gap-1.5 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+          <span className="flex items-center gap-1.5 type-k1 text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
             {titleIcon}
             {title}
           </span>
@@ -128,7 +128,7 @@ export function DiscoverySidebarCard({
           <button
             type="button"
             onClick={onMobileAction}
-            className="min-h-11 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))] transition-colors hover:text-[var(--hp-text-primary)] focus-visible:text-[var(--hp-text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+            className="min-h-11 type-k1 text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))] transition-colors hover:text-[var(--hp-text-primary)] focus-visible:text-[var(--hp-text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
           >
             {mobileActionLabel}
           </button>
@@ -256,7 +256,7 @@ export function LifestyleDiscoverySidebar({
             className="group block w-full border-b border-border pb-3 text-left last:border-0 last:pb-0 focus:outline-none focus:ring-2 focus:ring-primary/30"
             aria-label={`Open story: ${story.title}`}
           >
-            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+            <p className="type-k1 text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
               {story.topic}
             </p>
             <p className="mt-1 text-sm font-bold leading-snug underline-offset-2 group-hover:underline group-focus-visible:underline">

@@ -62,7 +62,7 @@ export function SavedItemsModule({
       className={className}
     >
       <div data-saved-items-state="empty">
-        <p className="hidden text-sm font-semibold leading-6 text-[var(--hp-text-primary)] lg:block">
+        <p className="type-b2 hidden font-semibold text-[var(--hp-text-primary)] lg:block">
           {SAVED_ITEMS_EMPTY_MESSAGE}
         </p>
         {onBrowseForYou ? (
@@ -72,7 +72,7 @@ export function SavedItemsModule({
         ) : null}
         {visibleSuggestions.length > 0 ? (
           <div className="mt-4 border-t border-border pt-3">
-            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-muted-foreground">
+            <p className="type-k1 text-muted-foreground">
               Suggested for you
             </p>
             <ul className="mt-1 divide-y divide-border/70">
@@ -88,10 +88,10 @@ export function SavedItemsModule({
                       <Image src={story.image} alt="" fill sizes="48px" className="object-cover" unoptimized />
                     </span>
                     <span className="min-w-0">
-                      <span className="line-clamp-2 text-[12px] font-bold leading-[1.35] underline-offset-2 group-hover:underline group-focus-visible:underline">
+                      <span className="line-clamp-2 type-t6 underline-offset-2 group-hover:underline group-focus-visible:underline">
                         {story.title}
                       </span>
-                      <span className="mt-1 block truncate text-[11px] text-muted-foreground">{story.brand}</span>
+                      <span className="type-c1 mt-1 block truncate text-muted-foreground">{story.brand}</span>
                     </span>
                   </button>
                   {onSaveSuggestion ? (

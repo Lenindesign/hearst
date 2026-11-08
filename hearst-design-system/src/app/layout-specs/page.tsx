@@ -80,7 +80,7 @@ function SpecTable({ caption, headers, rows, numeric = [] }: { caption: string; 
         <thead>
           <tr>
             {headers.map((header, index) => (
-              <th key={header} scope="col" className={cn("border-b border-border px-4 py-3 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-muted-foreground", numeric.includes(index) && "text-right")}>
+              <th key={header} scope="col" className={cn("border-b border-border px-4 py-3 type-k1 text-muted-foreground", numeric.includes(index) && "text-right")}>
                 {header}
               </th>
             ))}

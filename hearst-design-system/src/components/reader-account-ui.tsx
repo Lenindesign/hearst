@@ -247,7 +247,7 @@ export function SaveAcrossDevicesDialog({
             <Check className="size-5" aria-hidden />
           </span>
           <div className="min-w-0">
-            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+            <p className="type-k1 text-primary">
               Saved on this device
             </p>
             <h2 id="save-across-devices-title" className="mt-1 text-lg font-bold leading-tight text-foreground">
@@ -469,7 +469,7 @@ export function ReaderAuthDialog({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" aria-hidden />
         <div className="absolute inset-x-0 bottom-0 p-7 text-white">
-          <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-white/80">
+          <p className="type-k1 text-white/80">
             Your daily Hearst+
           </p>
           <p className="headline mt-3 max-w-sm text-4xl leading-tight">

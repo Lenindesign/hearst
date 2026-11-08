@@ -68,7 +68,7 @@ function StoryPresentationSpecimen({
       />
       <div className="mt-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+          <p className="type-k1 text-primary">
             Resolved presentation: {label}
           </p>
           <code className="rounded bg-muted px-2 py-1 text-xs text-foreground">

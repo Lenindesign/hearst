@@ -150,10 +150,10 @@ export default function TypeSpecsPage() {
         </header>
 
         <section aria-labelledby="today" className={sectionClass}>
-          <SectionHeading id="today" eyebrow="01 · Today" title="Line spacing is not standardized yet.">
-            HDS defines a line height and a letter spacing for every type size (font.line-height and font.letter-spacing), but they never reached the app&rsquo;s CSS. Components set their own values, so the same role renders differently from module to module. Measured in Chromium on the Hearst+ home river and the reader at 390 and 1440 px.
+          <SectionHeading id="today" eyebrow="01 · Before and after" title="What the standard replaced.">
+            HDS defines a line height and a letter spacing for every type size (font.line-height and font.letter-spacing), but they never reached the app&rsquo;s CSS, so components set their own values. The role utilities (type-t1 … type-k1 in globals.css) now carry the standard on the cards, rails, carousel and reader. The &ldquo;Before&rdquo; column was measured in Chromium on the Hearst+ home river and the reader at 390 and 1440 px.
           </SectionHeading>
-          <SpecTable caption="Typography audit" headers={["What", "Today", "Standard", "Notes"]} rows={auditRows} />
+          <SpecTable caption="Typography audit" headers={["What", "Before", "Standard", "Notes"]} rows={auditRows} />
         </section>
 
         <section aria-labelledby="rule" className={sectionClass}>
@@ -183,7 +183,7 @@ export default function TypeSpecsPage() {
               <div key={role.code} className="grid gap-4 px-5 py-5 md:grid-cols-[11rem_minmax(0,1fr)_12rem] md:items-start">
                 <div>
                   <p className="font-semibold"><code>{role.code}</code> · {role.role}</p>
-                  <p className="mt-1 text-sm leading-5 text-muted-foreground">{role.family === "headline" ? "Headline face · RH" : "Text face · HDS R"}</p>
+                  <p className="mt-1 text-sm leading-5 text-muted-foreground">{role.family === "headline" ? "Headline face · RH" : "Text face · HDS R"} · <code>type-{role.code.toLowerCase()}</code></p>
                 </div>
                 <p
                   className={cn("min-w-0 bg-[repeating-linear-gradient(to_bottom,transparent_0,transparent_3px,color-mix(in_oklab,var(--border)_70%,transparent)_3px,color-mix(in_oklab,var(--border)_70%,transparent)_4px)]", role.family === "headline" ? "font-[family-name:var(--hp-font-headline)]" : "font-sans")}
@@ -200,7 +200,7 @@ export default function TypeSpecsPage() {
                   <dd>{role.tracking}</dd>
                   <dt className="text-muted-foreground">Weight</dt>
                   <dd>{role.weight}{role.tabular ? " · tabular" : ""}</dd>
-                  <dt className="text-muted-foreground">Today</dt>
+                  <dt className="text-muted-foreground">Before</dt>
                   <dd>{role.today}</dd>
                 </dl>
               </div>

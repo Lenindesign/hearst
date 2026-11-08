@@ -1061,6 +1061,10 @@
      every rail layout. Pages and the reader pad 16 · 24 · 48 (base · md · xl). */
   --layout-gap: 1rem;
   --layout-rail: 300px;
+  /* Type spacing between roles (UI-TYPE-001): S1 meta→headline, S2 headline→deck, S3 eyebrow→H1, S4 H1→deck,
+     S5 deck→byline, S6 byline→body, S7 paragraph gap, S8 above subhead, S9 subhead→body. */
+  --type-s1: 0.5rem; --type-s2: 0.5rem; --type-s3: 0.75rem; --type-s4: 1rem; --type-s5: 1rem;
+  --type-s6: 1.5rem; --type-s7: 1.5rem; --type-s8: 2.5rem; --type-s9: 0.75rem;
   --width-page-max: 1440px;
   --width-sidebar: 320px;
   --width-sidebar-narrow: 180px;
@@ -1393,14 +1397,32 @@
       display: block;
     }
   }
-  .story-card-headline {
-    font-size: 1.25rem;
+  /* Type metrics standard UI-TYPE-001 (/type-specs/). LH = 4 · round(size · ratio ÷ 4): text roles use
+     the HDS font.line-height token for their size, headlines use RH. Tracking is the HDS
+     font.letter-spacing token; caps labels +0.1em; display 40 px and up −0.01em. Headline roles set
+     metrics only; the face and weight come from .headline and the brand. Steps up at md (768). */
+  .type-t1 { font-size: 2rem; line-height: 2.25rem; letter-spacing: 0; text-wrap: balance; }
+  .type-t2 { font-size: 1.5rem; line-height: 1.75rem; letter-spacing: 0; text-wrap: balance; }
+  .type-t3,
+  .story-card-headline { font-size: 1.25rem; line-height: 1.5rem; letter-spacing: 0; text-wrap: balance; }
+  .type-t4 { font-size: 1.375rem; line-height: 1.75rem; letter-spacing: 0; text-wrap: balance; }
+  @media (min-width: 768px) {
+    .type-t1 { font-size: 3rem; line-height: 3.25rem; letter-spacing: -0.01em; }
+    .type-t2 { font-size: 2rem; line-height: 2.25rem; }
+    .type-t3,
+    .story-card-headline { font-size: 1.5rem; line-height: 1.75rem; }
+    .type-t4 { font-size: 1.75rem; line-height: 2rem; }
   }
-  @media (min-width: 640px) {
-    .story-card-headline {
-      font-size: 1.5rem;
-    }
-  }
+  .type-t5 { font-size: 1rem; line-height: 1.25rem; letter-spacing: 0; text-wrap: balance; }
+  .type-t6 { font-size: 0.875rem; line-height: 1.25rem; letter-spacing: 0.3px; font-weight: 700; text-wrap: balance; }
+  .type-d1 { font-size: 1.25rem; line-height: 1.75rem; letter-spacing: 0; text-wrap: pretty; }
+  .type-b1 { font-size: 1.125rem; line-height: 1.75rem; letter-spacing: 0; text-wrap: pretty; }
+  .type-d2 { font-size: 1rem; line-height: 1.5rem; letter-spacing: 0.2px; text-wrap: pretty; }
+  .type-b2 { font-size: 0.875rem; line-height: 1.25rem; letter-spacing: 0.3px; }
+  .type-m1 { font-size: 0.75rem; line-height: 1rem; letter-spacing: 0.4px; font-weight: 600; }
+  .type-m2 { font-size: 0.75rem; line-height: 1rem; letter-spacing: 0.4px; font-variant-numeric: tabular-nums; }
+  .type-c1 { font-size: 0.75rem; line-height: 1rem; letter-spacing: 0.4px; }
+  .type-k1 { font-size: 0.6875rem; line-height: 1rem; letter-spacing: 0.1em; font-weight: 700; text-transform: uppercase; }
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }

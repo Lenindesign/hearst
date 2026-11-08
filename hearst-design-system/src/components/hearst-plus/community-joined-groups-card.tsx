@@ -87,7 +87,7 @@ export function CommunityJoinedGroupsCard({
     <section className="rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
       <div>
         <div className="flex items-center justify-between gap-2">
-          <h2 className="flex min-w-0 items-center gap-1.5 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+          <h2 className="flex min-w-0 items-center gap-1.5 type-k1 text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
             <UsersThree className="h-4 w-4 shrink-0" aria-hidden />
             Explore Communities
           </h2>
@@ -114,7 +114,7 @@ export function CommunityJoinedGroupsCard({
                 />
                 <Link
                   href={getCommunityGroupHref(group)}
-                  className="min-w-0 line-clamp-4 text-[12px] font-bold leading-[1.35] hover:text-[var(--hp-sidebar-heading,var(--primary))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+                  className="min-w-0 line-clamp-4 type-t6 hover:text-[var(--hp-sidebar-heading,var(--primary))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
                 >
                   {group.name}
                 </Link>
@@ -140,7 +140,7 @@ export function CommunityJoinedGroupsCard({
       </div>
 
       <div className="mt-3 border-t border-border pt-3">
-        <h2 className="flex items-center gap-1.5 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+        <h2 className="flex items-center gap-1.5 type-k1 text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
           <UsersThree className="h-4 w-4 shrink-0" aria-hidden />
           My Communities
         </h2>
@@ -174,7 +174,7 @@ export function CommunityJoinedGroupsCard({
                       <span className="font-normal">
                         Conversation
                       </span>
-                      <span className="mt-0.5 line-clamp-2 block text-[12px] font-bold leading-[1.35] text-[var(--hp-text-primary)]">
+                      <span className="mt-0.5 line-clamp-2 block type-t6 text-[var(--hp-text-primary)]">
                         {conversation.title}
                       </span>
                       <span className="mt-1 block text-[length:var(--text-token-4xs)]">

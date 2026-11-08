@@ -313,7 +313,7 @@ function HearstOnboardingModalContent({
 
         <div className="flex min-h-0 flex-col overflow-hidden">
           <div className="flex items-center justify-between border-b border-border px-5 py-2.5">
-            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+            <p className="type-k1 text-primary">
               Personalize your feed
             </p>
             <Button

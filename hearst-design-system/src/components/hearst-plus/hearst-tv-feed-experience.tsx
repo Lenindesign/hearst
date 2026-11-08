@@ -398,7 +398,7 @@ export function HearstTVLocalNewsRiver({
                   </span>
                   <span className="block min-w-0 p-4 sm:p-5">
                     <span className="mb-3 flex flex-wrap items-center gap-2">
-                      <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+                      <span className="type-k1 text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
                         {item.isMock ? "Fallback" : "Latest"}
                       </span>
                       <span className="inline-flex min-h-7 items-center gap-1.5 rounded-[4px] text-[length:var(--text-token-4xs)] text-muted-foreground sm:min-h-0">
@@ -690,7 +690,7 @@ function LocalNewsReaderModal({
               {index > 0 ? (
                 <div className="mb-8 flex items-center gap-4" aria-label="Up next">
                   <span className="h-px flex-1 bg-border" aria-hidden="true" />
-                  <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                  <span className="type-k1 text-primary">
                     Up next
                   </span>
                   <span className="h-px flex-1 bg-border" aria-hidden="true" />
@@ -709,7 +709,7 @@ function LocalNewsReaderModal({
                 )}
               </div>
               <div className="mx-auto mt-6 max-w-3xl">
-                <div className="mb-3 flex flex-wrap items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                <div className="mb-3 flex flex-wrap items-center gap-2 type-k1 text-primary">
                   <span>{story.signal}</span>
                   <span>{story.brand}</span>
                   <span>{story.topic}</span>

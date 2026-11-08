@@ -65,7 +65,7 @@ export function LifestyleRiverLoadingState({ pageHeading }: { pageHeading: strin
           className="hidden min-h-[360px] rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 xl:block"
           aria-hidden="true"
         >
-          <div className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+          <div className="type-k1 text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
             Your Daily Habit
           </div>
           <div className="mt-5 space-y-4">

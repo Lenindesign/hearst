@@ -596,7 +596,7 @@ function NewspaperReaderModal({
               {index > 0 ? (
                 <div className="mb-8 flex items-center gap-4" aria-label="Up next">
                   <span className="h-px flex-1 bg-border" aria-hidden="true" />
-                  <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                  <span className="type-k1 text-primary">
                     Up next
                   </span>
                   <span className="h-px flex-1 bg-border" aria-hidden="true" />
@@ -611,7 +611,7 @@ function NewspaperReaderModal({
                 />
               </div>
               <div className="mx-auto mt-6 max-w-3xl">
-                <div className="mb-3 flex flex-wrap items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                <div className="mb-3 flex flex-wrap items-center gap-2 type-k1 text-primary">
                   <span>{story.signal}</span>
                   <span>{story.brand}</span>
                   <span>{story.topic}</span>

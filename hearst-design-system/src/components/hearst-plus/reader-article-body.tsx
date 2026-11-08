@@ -29,7 +29,7 @@ function ReaderArticleLoadStatus({
   const fullArticleFailed = liveArticle?.status === "error";
 
   return (
-    <div className="mt-6 text-base leading-8 text-foreground/80">
+    <div className="type-d2 mt-6 text-foreground/80">
       {!fullArticleFailed ? (
         <div className="rounded-[8px] border border-border bg-muted/20 p-4" aria-live="polite">
           <p className="text-sm font-semibold text-muted-foreground">
@@ -50,7 +50,7 @@ function ReaderArticleLoadStatus({
           <p className="font-bold text-foreground">
             The full source article could not be loaded.
           </p>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">Please try loading it again.</p>
+          <p className="type-b2 mt-2 text-muted-foreground">Please try loading it again.</p>
           {onRetry ? (
             <button
               type="button"
@@ -82,7 +82,7 @@ export function ReaderArticleBody({
 }) {
   if (story.videoUrl) {
     return (
-      <div className="mt-6 space-y-4 text-[18px] leading-8 text-foreground/85">
+      <div className="type-b1 mt-6 space-y-6 text-foreground/85">
         <p>{story.summary}</p>
         <p className="border-t border-border pt-4 text-sm font-semibold text-muted-foreground">
           Hearst video
@@ -101,7 +101,7 @@ export function ReaderArticleBody({
     if (blocks.length === 0) return null;
 
     return (
-      <div className="mt-6 space-y-7 text-[18px] leading-8 text-foreground/85">
+      <div className="type-b1 mt-6 space-y-6 text-foreground/85">
         {blocks.map((block, index) => {
           let content: React.ReactNode;
 
@@ -131,7 +131,7 @@ export function ReaderArticleBody({
                   />
                 </button>
                 {block.caption || block.credit ? (
-                  <figcaption className="mt-2 text-xs leading-5 text-muted-foreground">
+                  <figcaption className="type-c1 mt-2 text-muted-foreground">
                     {[block.caption, block.credit].filter(Boolean).join(" · ")}
                   </figcaption>
                 ) : null}
@@ -139,13 +139,13 @@ export function ReaderArticleBody({
             );
           } else if (block.type === "heading") {
             content = (
-              <h3 className="headline !mb-3 pt-3 text-2xl leading-tight text-foreground sm:text-3xl">
+              <h3 className="headline type-t4 pt-4 text-foreground !mb-3">
                 {block.text}
               </h3>
             );
           } else if (block.type === "quote") {
             content = (
-              <blockquote className="border-y border-border py-5 font-brand-secondary text-xl leading-8 text-foreground">
+              <blockquote className="type-d1 border-y border-border py-5 font-brand-secondary text-foreground">
                 {block.text}
               </blockquote>
             );

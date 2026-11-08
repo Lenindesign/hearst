@@ -1230,7 +1230,7 @@ export function MainNav({
 
         <div className="min-h-0 flex-1 overflow-y-auto px-5 py-6">
           <section aria-labelledby="mobile-browse-hearst-title">
-            <h2 id="mobile-browse-hearst-title" className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
+            <h2 id="mobile-browse-hearst-title" className="type-k1 text-[var(--hp-section-title)]">
               Browse Hearst+
             </h2>
             <nav aria-label="Main navigation" className="mt-3 grid grid-cols-2 gap-2">
@@ -1269,7 +1269,7 @@ export function MainNav({
 
           <section className={cn("mt-7 border-t pt-6", darkMode ? "border-white/10" : "border-border")} aria-labelledby="mobile-browse-brands-title">
             <div className="flex items-center justify-between gap-3">
-              <h2 id="mobile-browse-brands-title" className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
+              <h2 id="mobile-browse-brands-title" className="type-k1 text-[var(--hp-section-title)]">
                 Browse brands
               </h2>
               <span className={cn("text-xs", darkMode ? "text-white/60" : "text-muted-foreground")}>{getHearstAllBrands().length} publications</span>
@@ -1311,7 +1311,7 @@ export function MainNav({
 
           <section aria-labelledby="mobile-continue-reading-title">
             <div className="flex items-center justify-between gap-4">
-              <h2 id="mobile-continue-reading-title" className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
+              <h2 id="mobile-continue-reading-title" className="type-k1 text-[var(--hp-section-title)]">
                 Continue Reading
               </h2>
               <span className={cn("text-xs", darkMode ? "text-white/60" : "text-muted-foreground")}>Your queue</span>
@@ -1355,7 +1355,7 @@ export function MainNav({
           <section className={cn("mt-7 border-t pt-6", darkMode ? "border-white/10" : "border-border")} aria-labelledby="mobile-filter-brands-title">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <h2 id="mobile-filter-brands-title" className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
+                <h2 id="mobile-filter-brands-title" className="type-k1 text-[var(--hp-section-title)]">
                   Join Groups
                 </h2>
                 <p className={cn("mt-1 text-xs", darkMode ? "text-white/60" : "text-muted-foreground")}>
@@ -1451,7 +1451,7 @@ export function MainNav({
             <h2
               id="hearst-search-title"
               className={cn(
-                "text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest",
+                "type-k1",
                 darkMode ? "text-[var(--component-navigation-utility-content-accent)]" : "text-primary"
               )}
             >
@@ -1513,7 +1513,7 @@ export function MainNav({
         <div className="min-h-0 overflow-y-auto px-4 pb-5 pt-4 sm:px-6 sm:pb-6">
           <div className="flex items-center justify-between gap-4 pb-3">
             <p className={cn(
-              "text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest",
+              "type-k1",
               darkMode ? "text-[var(--component-navigation-utility-content-accent)]" : "text-primary"
             )}>
               {normalizedSearchQuery ? "Search results" : "Popular now"}
@@ -2616,7 +2616,7 @@ function LifestyleCardModelGuide() {
   return (
     <section className="mt-4 rounded-card border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]" aria-label="Lifestyle river card models">
       <div className="border-b border-border p-4 sm:p-5">
-        <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+        <p className="type-k1 text-primary">
           River Content Models
         </p>
         <h2 className="headline mt-1 text-2xl leading-tight">
@@ -2640,7 +2640,7 @@ function LifestyleCardModelGuide() {
                 </span>
                 <div className="min-w-0">
                   <p className="truncate text-sm font-bold">{model.title}</p>
-                  <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                  <p className="type-k1 text-primary">
                     {getLifestyleKindLabel(model.kind)}
                   </p>
                 </div>
@@ -2695,7 +2695,7 @@ function ContextualAdLogicGuide({
   return (
     <section className="mt-4 rounded-card border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]" aria-label="Contextual ad logic">
       <div className="border-b border-border p-4 sm:p-5">
-        <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+        <p className="type-k1 text-primary">
           Contextual Ad Logic
         </p>
         <h2 className="headline mt-1 text-2xl leading-tight">
@@ -3098,8 +3098,8 @@ function CompactPhotoGalleryCard({
       </div>
       <div className="story-card-content relative z-20 min-w-0 p-4">
         <div className="story-meta-row mb-2"><LifestyleBrandSource story={story} />{onSave && saved !== undefined ? <StorySaveIconButton saved={saved} onSave={onSave} className="ml-auto" /> : null}</div>
-        <h3 className="headline story-card-headline line-clamp-3 font-bold leading-snug underline-offset-4 group-hover/card:underline group-focus-within/card:underline">{story.title}</h3>
-        <p className="mt-2 line-clamp-3 text-sm leading-6 text-muted-foreground">{story.summary}</p>
+        <h3 className="headline type-t3 line-clamp-3 font-bold underline-offset-4 group-hover/card:underline group-focus-within/card:underline">{story.title}</h3>
+        <p className="type-d2 mt-2 line-clamp-2 text-muted-foreground">{story.summary}</p>
       </div>
     </article>
   );
@@ -3276,8 +3276,8 @@ export function LifestyleRiverCard({
         </div>
         <div className="flex min-w-0 items-end gap-3">
           <h2 className={cn(
-            "headline min-w-0 flex-1 line-clamp-3 break-words leading-tight underline-offset-4 group-hover/card:underline group-focus-within/card:underline",
-            compact && !featured ? "text-lg" : "story-card-headline",
+            "headline min-w-0 flex-1 line-clamp-3 break-words underline-offset-4 group-hover/card:underline group-focus-within/card:underline",
+            compact && !featured ? "type-t5" : featured ? "type-t2" : "type-t3",
           )}>
             {story.title}
           </h2>
@@ -3287,8 +3287,8 @@ export function LifestyleRiverCard({
         </div>
         {compact && !featured ? null : (
           <p className={cn(
-            "line-clamp-3 text-muted-foreground",
-            featured ? "mt-2 max-w-prose text-base leading-7" : "mt-2 text-sm leading-6 sm:text-[0.95rem]"
+            "type-d2 mt-2 line-clamp-2 text-muted-foreground",
+            featured && "max-w-prose"
           )}>
             {story.summary}
           </p>
@@ -4585,7 +4585,7 @@ function LifestyleStoryReaderModal({
                   {index > 0 ? (
                     <div className="flex items-center gap-4 py-10" aria-label="Up next">
                       <span className="h-px flex-1 bg-border" aria-hidden="true" />
-                      <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                      <span className="type-k1 text-primary">
                         Up next
                       </span>
                       <span className="h-px flex-1 bg-border" aria-hidden="true" />
@@ -4679,7 +4679,7 @@ function LifestyleStoryReaderModal({
                             onVehicleDetails={handleVerifiedVehicle}
                           />
                         ) : null}
-                        <div className="mb-3 flex flex-wrap items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                        <div className="mb-3 flex flex-wrap items-center gap-2 type-k1 text-primary">
                           <span className="inline-flex items-center gap-1.5">
                             <BrandSourceIcon brand={story.brand} brandSlug={story.brandSlug} />
                             <span>{story.brand}</span>
@@ -4692,7 +4692,7 @@ function LifestyleStoryReaderModal({
                         </div>
                         {!useInterReaderTypography ? (
                           <>
-                            <h2 className={cn("headline text-4xl sm:text-5xl", useRoadAndTrackHeadline ? "leading-[1.12]" : "leading-[1.05]")}>
+                            <h2 className="headline type-t1">
                               {story.title}
                             </h2>
                             {readerActionBar}
@@ -4718,7 +4718,7 @@ function LifestyleStoryReaderModal({
                                   />
                                 </button>
                                 {image.caption || image.credit ? (
-                                  <figcaption className="text-xs leading-5 text-muted-foreground">
+                                  <figcaption className="type-c1 text-muted-foreground">
                                     {[image.caption, image.credit].filter(Boolean).join(" · ")}
                                   </figcaption>
                                 ) : null}
@@ -6718,7 +6718,7 @@ function LifestyleRiverHomePage({
             {showStakeholderTools ? (
               <>
                 <div className="rounded-card border border-border bg-[var(--hp-surface-low)] p-4 shadow-[var(--hp-shadow-card)]">
-                  <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+                  <p className="type-k1 text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
                     Video source
                   </p>
                   <p className="mt-3 text-sm font-bold">
@@ -6730,7 +6730,7 @@ function LifestyleRiverHomePage({
                 </div>
 
                 <div className="rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
-                  <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+                  <p className="type-k1 text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
                     Why this queue
                   </p>
                   <div className="mt-4 space-y-4 text-sm">
@@ -7731,7 +7731,7 @@ function LifestyleRiverHomePage({
               {showStakeholderTools ? (
                 <>
               <div className="rounded-card border border-border bg-[var(--hp-surface-low)] p-4 shadow-[var(--hp-shadow-card)]">
-                <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
+                <p className="type-k1 text-[var(--hp-section-title)]">
                   Story Source
                 </p>
                 <p className="mt-3 text-sm font-bold">
@@ -7758,7 +7758,7 @@ function LifestyleRiverHomePage({
                 ) : null}
               </div>
               <div className="rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
-                <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
+                <p className="type-k1 text-[var(--hp-section-title)]">
                   Why Your River Looks Like This
                 </p>
                 <div className="mt-4 space-y-4 text-sm">
@@ -7943,7 +7943,7 @@ function LifestyleRiverHomePage({
               </p>
             </div>
             <div className="rounded-card border border-border bg-[var(--hp-surface-low)] p-4 shadow-[var(--hp-shadow-card)]">
-              <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+              <p className="type-k1 text-primary">
                 Behavior Model
               </p>
               <dl className="mt-3 grid grid-cols-2 gap-3 text-sm">
@@ -8623,7 +8623,7 @@ export function HomePageTemplate({
               aria-hidden="true"
             />
             <span className="min-w-0 flex-1">
-              <span className="block text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]">
+              <span className="block type-k1 text-[var(--hp-section-title)]">
                 Continue Reading
               </span>
               <span className="mt-1 line-clamp-1 text-sm font-bold leading-snug underline-offset-2 group-hover:underline group-focus-visible:underline">

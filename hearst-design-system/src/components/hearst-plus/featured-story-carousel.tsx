@@ -431,18 +431,15 @@ export function FeaturedStoryCarousel({
             const slideCommentCount = getCommentCount(story);
             const researchCarRating = getHearstAutoResearchCarRating(story.id);
             const headlineClassName = cn(
+              // Type metrics UI-TYPE-001: slides use the lead role T2, list rows the card role T3.
               layoutMode === "list"
-                ? "headline line-clamp-3 max-w-[min(42rem,100%)] break-words text-balance text-[clamp(1rem,2.2vw,1.75rem)] leading-[1.12] sm:text-[clamp(1.35rem,2vw,2rem)]"
+                ? "headline type-t3 line-clamp-3 max-w-[min(42rem,100%)] break-words"
                 : cn(
-                    "headline break-words text-balance text-[clamp(1.25rem,5cqi,2.25rem)]",
+                    "headline type-t2 break-words",
                     scrimDirection === "left-to-right"
                       ? "line-clamp-none max-w-[min(42rem,33.333%)]"
                       : "line-clamp-3 max-w-[min(42rem,100%)]",
                   ),
-              story.brandSlug === "house-beautiful" ||
-                story.brandSlug === "road-and-track"
-                ? "leading-[1.12]"
-                : "leading-[1.08]",
             );
 
             return (

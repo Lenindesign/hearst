@@ -27,7 +27,7 @@ function RiverCanvas({
     <main className="hearst-plus-theme min-h-screen bg-[var(--hp-background)] p-4 text-[var(--hp-text-primary)] sm:p-8">
       <div className="mx-auto max-w-[636px] space-y-4">
         <div className="rounded-[8px] border border-dashed border-border bg-[var(--hp-surface)] p-4">
-          <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+          <p className="type-k1 text-primary">
             Production story river
           </p>
           <p className="mt-2 text-sm text-muted-foreground">

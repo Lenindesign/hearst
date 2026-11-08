@@ -415,7 +415,7 @@ export function VideoFeedLeadCard({
       <VideoPlaySurface story={story} featured priority />
       <div className="story-card-content p-4 sm:p-5">
         <div className="mb-2 flex flex-wrap items-center gap-2">
-          <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+          <span className="type-k1 text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
             {eyebrowLabel ??
               (useHearstPlusStyle ? "Recommended video" : "Featured video")}
           </span>
@@ -430,10 +430,10 @@ export function VideoFeedLeadCard({
         >
           <Headline
             className={cn(
-              "story-card-headline text-balance underline-offset-4 group-hover/video-card:underline group-focus-visible/video-card:underline",
+              "type-t2 underline-offset-4 group-hover/video-card:underline group-focus-visible/video-card:underline",
               useHearstPlusStyle
-                ? "headline font-bold leading-tight text-[var(--hp-text-headline)]"
-                : "font-black leading-[1.02] tracking-[-0.025em] text-foreground"
+                ? "headline font-bold text-[var(--hp-text-headline)]"
+                : "font-black text-foreground"
             )}
           >
             {story.title}
@@ -441,7 +441,7 @@ export function VideoFeedLeadCard({
         </button>
         <p
           className={cn(
-            "mt-2 line-clamp-2 max-w-3xl text-base leading-7",
+            "type-d2 mt-2 line-clamp-2 max-w-3xl",
             useHearstPlusStyle
               ? "text-[var(--hp-text-secondary)]"
               : "text-muted-foreground"
@@ -479,13 +479,13 @@ export function VideoIndexCard({
     >
       <VideoPlaySurface story={story} featured />
       <div className={compact ? "p-3" : "p-4 sm:p-5"}>
-        <div className="relative z-20 mb-2 flex min-w-0 flex-wrap items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+        <div className="type-m1 relative z-20 mb-2 flex min-w-0 flex-wrap items-center gap-2 text-primary">
           <BrandSourceIcon
             brand={story.brand}
             brandSlug={story.brandSlug}
             className="h-5 w-5"
           />
-          <span className="min-w-0 flex-1 truncate normal-case tracking-normal text-muted-foreground">
+          <span className="min-w-0 flex-1 truncate text-muted-foreground">
             {story.brand}
             {story.topic ? ` · ${story.topic}` : ""}
             {` · ${getLifestyleByline(story)}`}
@@ -502,12 +502,12 @@ export function VideoIndexCard({
         >
           <h3
             className={cn(
-              "story-card-headline text-balance underline-offset-4 group-hover/video-card:underline group-focus-visible/video-card:underline",
+              "underline-offset-4 group-hover/video-card:underline group-focus-visible/video-card:underline",
               compact
-                ? "headline line-clamp-3 text-base font-bold leading-snug text-[var(--hp-text-headline)] sm:text-lg"
+                ? "headline type-t5 line-clamp-3 font-bold text-[var(--hp-text-headline)]"
                 : useHearstPlusStyle
-                  ? "headline font-bold leading-tight text-[var(--hp-text-headline)]"
-                  : "font-black leading-[1.02] tracking-[-0.025em] text-foreground"
+                  ? "headline type-t3 font-bold text-[var(--hp-text-headline)]"
+                  : "type-t3 font-black text-foreground"
             )}
           >
             {story.title}
@@ -515,8 +515,8 @@ export function VideoIndexCard({
         </button>
         <p
           className={cn(
-            "mt-2 line-clamp-2 max-w-3xl text-base leading-7",
-            compact && "text-sm leading-6",
+            "mt-2 line-clamp-2 max-w-3xl",
+            compact ? "type-b2" : "type-d2",
             useHearstPlusStyle
               ? "text-[var(--hp-text-secondary)]"
               : "text-muted-foreground"
@@ -569,10 +569,10 @@ export function VideoRailCard({
         ) : null}
       </span>
       <span className="min-w-0">
-        <span className="block text-xs font-semibold text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+        <span className="type-m1 block text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
           {story.brand}
         </span>
-        <span className="mt-1 line-clamp-3 [display:-webkit-box] text-sm font-bold leading-snug text-foreground">
+        <span className="type-t6 mt-1 line-clamp-3 [display:-webkit-box] text-foreground">
           {story.title}
         </span>
       </span>

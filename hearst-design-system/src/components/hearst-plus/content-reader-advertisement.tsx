@@ -202,7 +202,7 @@ export function ContentReaderAdvertisement({
             aria-hidden="true"
           />
           <div className="absolute inset-x-0 top-0 flex items-center p-5 text-white">
-            <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-[0.24em]">
+            <span className="type-k1">
               Advertisement
             </span>
           </div>
@@ -239,7 +239,7 @@ export function ContentReaderAdvertisement({
               </a>
             ) : null}
             <p
-              className="text-center text-[length:var(--text-token-4xs)] font-semibold uppercase tracking-widest"
+              className="text-center type-k1"
               style={{ color: ad.palette.foreground }}
             >
               Matched to {currentTopic} intent

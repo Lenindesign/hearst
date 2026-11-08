@@ -72,7 +72,7 @@ function ContextRailCanvas({
           onOpenStory={onOpenStory}
         />
         <main className="min-h-[760px] rounded-[8px] border border-dashed border-border bg-[var(--hp-surface)] p-4 sm:p-8">
-          <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+          <p className="type-k1 text-primary">
             Production reader column
           </p>
           <h2 className="mt-3 max-w-2xl font-brand-secondary text-2xl font-bold leading-tight sm:text-4xl">

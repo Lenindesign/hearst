@@ -387,7 +387,7 @@ export function CommunityLeftRail({
 
   return (
     <section className="rounded-card border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
-      <h2 className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-text-primary)]">
+      <h2 className="type-k1 text-[var(--hp-text-primary)]">
         My groups
       </h2>
       {myGroups.length > 0 ? (
@@ -429,7 +429,7 @@ export function CommunityLeftRail({
       </details>
 
       <div className="mt-3 border-t border-[var(--hp-border)] pt-3">
-        <h2 className="flex items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-text-primary)]">
+        <h2 className="flex items-center gap-2 type-k1 text-[var(--hp-text-primary)]">
           Activity
           {unseen > 0 ? (
             <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[10px] font-black text-primary-foreground">
@@ -565,7 +565,7 @@ export function CommunityGroupsToJoin({ groups }: { groups: CommunityGroupSummar
   const toJoin = groups.filter((group) => !joined.includes(group.brand)).slice(0, 5);
   return (
     <section className="rounded-card border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
-      <h2 className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-text-primary)]">
+      <h2 className="type-k1 text-[var(--hp-text-primary)]">
         Groups to join
       </h2>
       {toJoin.length > 0 ? (
@@ -1023,7 +1023,7 @@ export function CommunityFeed({
         section.threads.length > 0 ? (
           <section key={section.title ?? index} aria-label={section.title ?? "Threads"} className="space-y-2">
             {section.title ? (
-              <h2 className="px-1 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-text-primary)]">{section.title}</h2>
+              <h2 className="px-1 type-k1 text-[var(--hp-text-primary)]">{section.title}</h2>
             ) : null}
             <div className="space-y-4">
               {section.threads.map((thread) => (

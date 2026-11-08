@@ -59,7 +59,7 @@ export function ContentReaderComments({
               {totalCount}
             </span>
           </p>
-          <p className="mt-1 text-xs leading-5 text-muted-foreground">
+          <p className="type-c1 mt-1 text-muted-foreground">
             Reader notes from people following {story.topic.toLowerCase()} and{" "}
             {story.brand}.
           </p>
@@ -136,7 +136,7 @@ export function ContentReaderComments({
                   {comment.role} · {comment.age}
                 </p>
               </div>
-              <p className="mt-1 text-sm leading-6 text-foreground/85">
+              <p className="type-b2 mt-1 text-foreground/85">
                 {comment.body}
               </p>
               <div className="mt-2 flex flex-wrap items-center gap-3 text-xs font-semibold text-muted-foreground">

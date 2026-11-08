@@ -30,7 +30,7 @@ export function ArticleHero({
   return (
     <header className={cn("space-y-[var(--spacing-token-xl)]", className)}>
       {breadcrumbs.length > 0 && (
-        <nav className="flex items-center gap-[var(--spacing-token-2xs)] text-[length:var(--text-token-4xs)] font-semibold uppercase tracking-widest font-brand-secondary">
+        <nav className="flex items-center gap-[var(--spacing-token-2xs)] type-k1 font-brand-secondary">
           {breadcrumbs.map((crumb, i) => (
             <React.Fragment key={i}>
               {i > 0 && <span className="text-muted-foreground">/</span>}

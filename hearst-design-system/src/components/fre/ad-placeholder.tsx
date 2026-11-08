@@ -34,7 +34,7 @@ export function AdPlaceholder({ size, className }: AdPlaceholderProps) {
       }}
     >
       <div className="text-center space-y-1">
-        <p className="text-[length:var(--text-token-4xs)] font-semibold uppercase tracking-widest text-muted-foreground/50">
+        <p className="type-k1 text-muted-foreground/50">
           Advertisement
         </p>
         <p className="text-[length:var(--text-token-4xs)] text-muted-foreground/40">

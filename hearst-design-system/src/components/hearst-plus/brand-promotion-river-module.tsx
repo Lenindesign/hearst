@@ -95,7 +95,7 @@ export function BrandPromotionRiverModule({
 
     return (
       <span className={cn(
-        "flex items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest",
+        "flex items-center gap-2 type-k1",
         isAEFamilyPromotion ? "text-[#79B9FF]" : "text-[var(--hp-sidebar-heading,var(--primary))]",
       )}>
         <BrandSourceIcon brand={story.brand} brandSlug={story.brandSlug} />
@@ -144,14 +144,14 @@ export function BrandPromotionRiverModule({
               id={headingId}
               aria-label={`Brand spotlight: ${promotion.brand}`}
               className={cn(
-                "text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest",
+                "type-k1",
                 isAEFamilyPromotion ? "text-[#79B9FF]" : "text-[var(--hp-sidebar-heading,var(--primary))]",
               )}
             >
               Brand spotlight
             </h2>
             <p className={cn(
-              "mt-1 text-sm leading-6",
+              "type-b2 mt-1",
               isAEFamilyPromotion ? "text-white/70" : "text-muted-foreground",
             )}>
               {description}
@@ -171,13 +171,13 @@ export function BrandPromotionRiverModule({
             <span className="mt-4 block">
               {renderFormatLabel(featuredStory)}
               <span className={cn(
-                "headline mt-2 line-clamp-3 text-2xl leading-tight underline-offset-4 group-hover:underline group-focus-visible:underline",
+                "headline type-t3 mt-2 line-clamp-3 underline-offset-4 group-hover:underline group-focus-visible:underline",
                 isAEFamilyPromotion ? "text-white" : "text-foreground",
               )}>
                 {featuredStory.title}
               </span>
               <span className={cn(
-                "mt-2 line-clamp-3 [display:-webkit-box] text-sm leading-6",
+                "type-b2 mt-2 line-clamp-3 [display:-webkit-box]",
                 isAEFamilyPromotion ? "text-white/70" : "text-muted-foreground",
               )}>
                 {featuredStory.summary}
@@ -200,13 +200,13 @@ export function BrandPromotionRiverModule({
                 <span className="min-w-0">
                   {renderFormatLabel(story)}
                   <span className={cn(
-                    "headline mt-1 line-clamp-3 text-[clamp(1rem,5.4cqw,2rem)] leading-tight underline-offset-4 group-hover:underline group-focus-visible:underline",
+                    "headline type-t5 mt-1 line-clamp-3 underline-offset-4 group-hover:underline group-focus-visible:underline",
                     isAEFamilyPromotion ? "text-white" : "text-foreground",
                   )}>
                     {story.title}
                   </span>
                   <span className={cn(
-                    "mt-1 block text-xs leading-5",
+                    "type-c1 mt-1 block",
                     isAEFamilyPromotion ? "text-white/60" : "text-muted-foreground",
                   )}>
                     {story.topic} · {getLifestyleByline(story)}

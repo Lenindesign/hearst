@@ -60,7 +60,7 @@ export function LocalNewsRail({ layout = "rail" }: { layout?: "rail" | "grid" })
       <div className="flex items-center justify-between gap-3">
         <h2
           id="local-news-rail-title"
-          className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-section-title)]"
+          className="type-k1 text-[var(--hp-section-title)]"
         >
           Local News
         </h2>
@@ -92,7 +92,7 @@ export function LocalNewsRail({ layout = "rail" }: { layout?: "rail" | "grid" })
                   </span>
                 </span>
                 <span className="min-w-0">
-                  <span className="line-clamp-4 block text-[12px] font-bold leading-[1.35] underline-offset-2 group-hover:underline group-focus-visible:underline">
+                  <span className="line-clamp-4 block type-t6 underline-offset-2 group-hover:underline group-focus-visible:underline">
                     {story.title}
                   </span>
                   <span className="mt-1 block truncate text-xs text-muted-foreground">
