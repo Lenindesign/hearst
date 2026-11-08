@@ -13,6 +13,14 @@
 # Do not 301 /storybook → /storybook/: on some Netlify stacks that matches /storybook/ and
 # redirects to itself (infinite 301). Serve both paths with 200 rewrites; built HTML includes
 # <base href="/storybook/"> so relative index.json resolves under /storybook/ even at /storybook.
+# Spec drawings and films copied in by Storybook staticDirs (public/specs → sb/specs).
+# Stories reference them relatively, which resolves under <base href="/storybook/">.
+[[redirects]]
+  from = "/storybook/specs/*"
+  to = "/_next/static/sb/specs/:splat"
+  status = 200
+  force = true
+
 [[redirects]]
   from = "/storybook/index.json"
   to = "/_next/static/sb/index.json"
