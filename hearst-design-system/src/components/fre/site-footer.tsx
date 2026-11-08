@@ -44,6 +44,7 @@ const defaultProductLinkGroups: SiteFooterLinkGroup[] = [
       { label: "Hearst+ product reference", href: "/hearst-plus-reference/" },
       { label: "Magazine token study", href: "/magazine-token-study/" },
       { label: "CTA specifications", href: "/cta-specs/" },
+      { label: "Breakpoints & grid", href: "/layout-specs/" },
       { label: "Blocks, cards & widgets spec", href: "/specs/blocks-spec.html" },
       { label: "Storybook", href: PROD_STORYBOOK_URL },
     ],

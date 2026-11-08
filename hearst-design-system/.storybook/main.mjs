@@ -27,6 +27,9 @@ const config = {
       },
     },
   ],
+  // Dimensional drawings and motion films for spec stories (Grid System, CTA).
+  // Stories reference them relatively ("specs/…") so the deployed /storybook/ subpath works.
+  staticDirs: [{ from: "../public/specs", to: "/specs" }],
   framework: {
     name: "@storybook/react-vite",
     options: {},
