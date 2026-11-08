@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { getHearstBrandSection, getHearstDestinationCategoryRoute } from "@/lib/hearst-routes";
 import { buttonVariants, capAlignButtonLabel } from "@/components/ui/button";
@@ -222,33 +221,6 @@ export function ContentReaderAdvertisement({
             >
               {ad.summary}
             </p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {ad.topics.slice(0, 2).map((topic) => (
-                (() => {
-                  const href = getAdTopicHref(topic);
-                  const className = "rounded-full border px-2.5 py-1 text-xs font-semibold";
-                  const style = {
-                    borderColor: ad.palette.soft,
-                    backgroundColor: ad.palette.soft,
-                    color: ad.palette.foreground,
-                  };
-                  return href ? (
-                    <Link
-                      key={topic}
-                      href={href}
-                      className={`${className} cursor-pointer transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40`}
-                      style={style}
-                    >
-                      {topic}
-                    </Link>
-                  ) : (
-                    <span key={topic} className={className} style={style}>
-                      {topic}
-                    </span>
-                  );
-                })()
-              ))}
-            </div>
           </div>
 
           <div className="space-y-3">
