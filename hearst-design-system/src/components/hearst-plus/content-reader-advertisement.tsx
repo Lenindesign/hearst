@@ -228,7 +228,7 @@ export function ContentReaderAdvertisement({
             {ad.ctaHref ? (
               <a
                 href={ad.ctaHref}
-                rel="sponsored"
+                rel="sponsored noopener noreferrer"
                 aria-label={`${ad.cta}: ${ad.title}`}
                 data-slot="button"
                 data-variant="default"

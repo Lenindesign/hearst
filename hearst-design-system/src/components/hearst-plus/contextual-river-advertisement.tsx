@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import * as React from "react";
 
 import {
@@ -9,8 +8,7 @@ import {
   type ContextualAdUnit,
 } from "@/components/hearst-plus/content-reader-advertisement";
 import { Car, DollarSign, Sparkles, TrendingUp } from "@/components/ui/icons";
-import { buttonVariants, capAlignButtonLabel } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Button, buttonVariants, capAlignButtonLabel } from "@/components/ui/button";
 
 export type ContextualRiverAdvertisementProps = {
   ad?: ContextualAdUnit | null;
@@ -57,17 +55,7 @@ export function ContextualRiverAdvertisement({
       <div className="flex min-w-0 flex-col justify-between p-4 sm:p-5">
         <div>
           <h2 className="headline break-words text-2xl leading-[1.12] sm:text-[1.7rem]">
-            {ad.ctaHref ? (
-              <Link
-                href={ad.ctaHref}
-                rel="sponsored"
-                className="decoration-1 underline-offset-4 hover:underline focus-visible:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-              >
-                {ad.title}
-              </Link>
-            ) : (
-              ad.title
-            )}
+            {ad.title}
           </h2>
           <p className="mt-2 text-sm leading-5 opacity-80">{ad.summary}</p>
         </div>
@@ -77,16 +65,16 @@ export function ContextualRiverAdvertisement({
             className="mt-4 border-t pt-3"
             style={{ borderColor: ad.palette.soft }}
           >
-            {/* HDS outline button (touch size) rendered as a link; sponsor colors stay on the creative.
-                rounded-[4px] keeps the Hearst+ radius when a publication theme sets the button token to 0. */}
+            {/* The only action in the ad: HDS outline button (touch size) rendered as a link. Radius and
+                colors come from the active theme's button tokens; sponsor colors stay on the creative. */}
             <a
               href={ad.ctaHref}
-              rel="sponsored"
+              rel="sponsored noopener noreferrer"
               aria-label={`${ad.cta}: ${ad.title}`}
               data-slot="button"
               data-variant="outline"
               data-size="touch"
-              className={cn(buttonVariants({ variant: "outline", size: "touch" }), "rounded-[4px]")}
+              className={buttonVariants({ variant: "outline", size: "touch" })}
             >
               {capAlignButtonLabel(ad.cta)}
             </a>
@@ -435,18 +423,8 @@ function CarAndDriverDealScoreCard({ ad }: { ad: ContextualAdUnit }) {
         </section>
 
         <div className="mt-5 flex flex-wrap gap-2">
-          <button
-            type="button"
-            className="inline-flex min-h-11 items-center justify-center rounded-[4px] bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-          >
-            Check my deal
-          </button>
-          <button
-            type="button"
-            className="inline-flex min-h-11 items-center justify-center rounded-[4px] border border-border bg-background px-4 py-2 text-sm font-bold transition-colors hover:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-          >
-            Compare offers
-          </button>
+          <Button type="button" size="touch">Check my deal</Button>
+          <Button type="button" size="touch" variant="outline">Compare offers</Button>
         </div>
 
         <p className="mt-4 flex items-center gap-2 text-xs font-semibold leading-5 text-muted-foreground">
