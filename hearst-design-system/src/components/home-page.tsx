@@ -2338,64 +2338,63 @@ type ContextualAdTuple = readonly [
   string,
   string[],
   string[],
-  string,
   string
 ];
 
 const contextualAdCatalog = {
   lifestyle: [
-    ["lifestyle-home-refresh", "Hearst Market", "Summer Home Refresh", "Editor-picked bedding, cookware, storage, and patio upgrades for the rooms readers are saving now.", "Shop the edit", ["Home", "Shopping"], ["decorating", "products", "summer", "home"], "Home", "https://hips.hearstapps.com/hmg-prod/images/824e435b-c480-4cba-92e3-cb4f5f72286e.jpg"],
-    ["lifestyle-dinner-planner", "Delish Selects", "Tonight's Dinner Plan", "Fast mains, flexible sides, and kitchen tools matched to food and weeknight-cooking intent.", "Build dinner", ["Food", "Food Drinks", "Food News"], ["dinner ideas", "recipe", "cookout", "food"], "Food", "https://hips.hearstapps.com/hmg-prod/images/f6b3c525-576e-4b56-a6d3-350a327a4531.jpg"],
-    ["lifestyle-sleep-reset", "Prevention Wellness", "Sleep Better Tonight", "Pillows, routines, and calm-down tools for readers returning to wellness content late in the day.", "See sleep picks", ["Wellness"], ["sleep", "health", "wellness"], "Wellness", "https://hips.hearstapps.com/hmg-prod/images/13cee80d-3684-44b4-b7d4-56465a4730b2.jpeg"],
-    ["lifestyle-beauty-counter", "Cosmo Beauty Lab", "The 10-Minute Beauty Counter", "High-signal beauty products and routines for style, shopping, and celebrity browsing sessions.", "Open the counter", ["Style", "Shopping", "Entertainment"], ["beauty", "style", "products", "celebrity"], "Beauty", "https://hips.hearstapps.com/hmg-prod/images/body-lotion-opener-691e31beacd6b.png"],
-    ["lifestyle-garden-weekend", "Country Living Finds", "Weekend Garden List", "Planters, tools, and porch pieces tuned to gardening, outdoor, and weekend-project signals.", "Plan the weekend", ["Home", "Shopping"], ["garden", "outdoor", "decorating", "weekend"], "Garden", "https://hips.hearstapps.com/hmg-prod/images/ad14fef8-09c7-421e-af6b-71e2dc6f4894.jpeg"],
-    ["lifestyle-hosting-kit", "Good Housekeeping Tested", "Hosting Without the Guesswork", "Lab-informed serveware, cleaning helpers, and party tools for readers saving home-service content.", "See tested picks", ["Home", "Food", "Shopping"], ["cleaning", "products", "party", "home"], "Tested", "https://hips.hearstapps.com/hmg-prod/images/8e24db63-0a89-4b73-b52e-e403f15f4664.jpeg"],
-    ["lifestyle-small-space", "House Beautiful Studio", "Small-Space Fixes", "Storage, lighting, and furniture picks for apartment, room refresh, and design-intent sessions.", "Refresh a room", ["Home", "Shopping"], ["decorating", "rooms", "products", "design"], "Rooms", "https://hips.hearstapps.com/hmg-prod/images/bd62be17-e3bc-47ce-998b-df0fb3603b5b.jpeg"],
-    ["lifestyle-teen-style", "Seventeen Style", "Back-to-School Style Drop", "Trend-led fashion, beauty, and dorm finds for younger style and shopping journeys.", "Shop trends", ["Style", "Shopping"], ["style", "beauty", "products", "school"], "Style", "https://hips.hearstapps.com/hmg-prod/images/03aba195-11cd-441a-914b-e56bf5cdc562.jpeg"],
-    ["lifestyle-family-meal-kit", "Woman's Day Kitchen", "Family Meal Shortcut", "A practical sponsor module for meal planning, leftovers, and family dinner intent.", "Get the shortcut", ["Food", "Family"], ["dinner ideas", "family", "food", "recipe"], "Family", "https://hips.hearstapps.com/hmg-prod/images/8c75311c-1d90-4191-b4dd-cfb0577ad148.jpeg"],
-    ["lifestyle-cozy-collection", "Pioneer Woman Picks", "Cozy Kitchen Collection", "Cookware, table linens, and colorful prep tools aligned with recipe and home-commerce behavior.", "Explore picks", ["Food", "Home", "Shopping"], ["cookware", "recipe", "products", "home"], "Kitchen", "https://hips.hearstapps.com/hmg-prod/images/72849786-d2ce-4cfe-8e54-2aea79b0db5c.jpeg"],
+    ["lifestyle-home-refresh", "Hearst Market", "Summer Home Refresh", "Editor-picked bedding, cookware, storage, and patio upgrades for the rooms readers are saving now.", "Shop the edit", ["Home", "Shopping"], ["decorating", "products", "summer", "home"], "Home"],
+    ["lifestyle-dinner-planner", "Delish Selects", "Tonight's Dinner Plan", "Fast mains, flexible sides, and kitchen tools matched to food and weeknight-cooking intent.", "Build dinner", ["Food", "Food Drinks", "Food News"], ["dinner ideas", "recipe", "cookout", "food"], "Food"],
+    ["lifestyle-sleep-reset", "Prevention Wellness", "Sleep Better Tonight", "Pillows, routines, and calm-down tools for readers returning to wellness content late in the day.", "See sleep picks", ["Wellness"], ["sleep", "health", "wellness"], "Wellness"],
+    ["lifestyle-beauty-counter", "Cosmo Beauty Lab", "The 10-Minute Beauty Counter", "High-signal beauty products and routines for style, shopping, and celebrity browsing sessions.", "Open the counter", ["Style", "Shopping", "Entertainment"], ["beauty", "style", "products", "celebrity"], "Beauty"],
+    ["lifestyle-garden-weekend", "Country Living Finds", "Weekend Garden List", "Planters, tools, and porch pieces tuned to gardening, outdoor, and weekend-project signals.", "Plan the weekend", ["Home", "Shopping"], ["garden", "outdoor", "decorating", "weekend"], "Garden"],
+    ["lifestyle-hosting-kit", "Good Housekeeping Tested", "Hosting Without the Guesswork", "Lab-informed serveware, cleaning helpers, and party tools for readers saving home-service content.", "See tested picks", ["Home", "Food", "Shopping"], ["cleaning", "products", "party", "home"], "Tested"],
+    ["lifestyle-small-space", "House Beautiful Studio", "Small-Space Fixes", "Storage, lighting, and furniture picks for apartment, room refresh, and design-intent sessions.", "Refresh a room", ["Home", "Shopping"], ["decorating", "rooms", "products", "design"], "Rooms"],
+    ["lifestyle-teen-style", "Seventeen Style", "Back-to-School Style Drop", "Trend-led fashion, beauty, and dorm finds for younger style and shopping journeys.", "Shop trends", ["Style", "Shopping"], ["style", "beauty", "products", "school"], "Style"],
+    ["lifestyle-family-meal-kit", "Woman's Day Kitchen", "Family Meal Shortcut", "A practical sponsor module for meal planning, leftovers, and family dinner intent.", "Get the shortcut", ["Food", "Family"], ["dinner ideas", "family", "food", "recipe"], "Family"],
+    ["lifestyle-cozy-collection", "Pioneer Woman Picks", "Cozy Kitchen Collection", "Cookware, table linens, and colorful prep tools aligned with recipe and home-commerce behavior.", "Explore picks", ["Food", "Home", "Shopping"], ["cookware", "recipe", "products", "home"], "Kitchen"],
   ],
   autos: [
-    ["autos-cd-deal-score", "Car and Driver Marketplace", "Know the Best Price to Buy", "An AI-powered Deal Score evaluates the full vehicle offer against incentives, inventory, price trends, demand, and local market signals.", "Check my deal", ["Buying Guides", "Reviews"], ["buying", "reviews", "used", "shopping", "marketplace", "deal"], "Deal Score", "https://hips.hearstapps.com/mtg-prod/68f7e39e42ad0d0002a0414e/003-2026-honda-crv-hybrid-sport-touring.jpg"],
-    ["autos-ev-home-charge", "ChargePoint", "EV Charging, Matched to Your Garage", "A contextual offer for readers comparing EVs, range, charging speed, and home setup decisions.", "Estimate charging", ["EVs", "Buying Guides"], ["evs", "electric", "buying", "reviews"], "EV", "https://hips.hearstapps.com/hmg-prod/images/2025-chevrolet-equinox-rs-awd-132-67110e2133505.jpg"],
-    ["autos-tire-finder", "Michelin Garage", "Find the Right Performance Tire", "Tire and handling recommendations for readers deep in reviews, performance, and track-day content.", "Match tires", ["Reviews", "Performance", "Racing"], ["performance", "drive", "racing", "reviews"], "Grip", "https://hips.hearstapps.com/hmg-prod/images/edfd1030-a261-483c-a7e1-4e9ff77622a3.jpg"],
-    ["autos-auction-alert", "Collector Watch", "Auction Watchlist", "Collector-car alerts aligned to classics, Bring a Trailer behavior, and save-for-later browsing.", "Track listings", ["Classics", "Auctions"], ["auction", "classic", "collector", "used"], "Bid", "https://hips.hearstapps.com/hmg-prod/images/92a52d3f-3d3c-4e38-b3bd-7f82dc8b7146.jpg"],
-    ["autos-tool-chest", "Craftsman Pro", "Build the Home Garage", "Tools, lifts, storage, and detailing gear for readers acting on trucks, classics, and project-car intent.", "Open garage", ["Trucks", "Classics", "Performance"], ["truck", "classic", "gear", "engine"], "Garage", "https://hips.hearstapps.com/hmg-prod/images/f04e60d2-9db2-4c60-91ba-a037f75a8fce.jpeg"],
-    ["autos-insurance", "Hagerty", "Collector Coverage Check", "Insurance guidance for readers browsing classics, auctions, and collectible performance cars.", "Check coverage", ["Classics", "Auctions", "Buying Guides"], ["classic", "collector", "auction", "buying"], "Cover", "https://hips.hearstapps.com/hmg-prod/images/4d6fd00c-2cd1-4bf1-bbba-fca826f647e6.jpg"],
-    ["autos-racing-weekend", "TrackPass", "Your Racing Weekend", "Tickets, streams, and schedules for readers consuming racing news and late-night performance content.", "Plan race day", ["Racing", "Performance"], ["racing", "speed", "performance", "track"], "Race", "https://hips.hearstapps.com/hmg-prod/images/b3eae25c-4d64-4443-aa85-d92038993110.jpeg"],
-    ["autos-detail-kit", "Meguiar's", "Weekend Detail Kit", "Wash, wax, ceramic, and interior care surfaced when the reader leans toward ownership utility.", "Build the kit", ["Buying Guides", "Classics", "Trucks"], ["used", "classic", "truck", "products"], "Detail", "https://hips.hearstapps.com/hmg-prod/images/35a0cc29-04f8-4da2-8884-4db6a81a1814.jpg"],
-    ["autos-finance", "Auto Finance Desk", "Know Your Monthly Number", "Financing and value tools for readers comparing models, reviews, and buying-guide content.", "Estimate payment", ["Buying Guides", "Reviews"], ["buying", "reviews", "used", "evs"], "Value", "https://hips.hearstapps.com/hmg-prod/images/b259176b-4ee0-448c-9af3-d0a8c63a86af.jpg"],
-    ["autos-truck-cargo", "WeatherTech", "Truck Bed and Cabin Protection", "Cargo liners, mats, and storage systems for readers signaling truck and adventure utility.", "Fit my truck", ["Trucks", "Buying Guides"], ["truck", "gear", "products", "buying"], "Truck", "https://hips.hearstapps.com/hmg-prod/images/52484e15-9a72-4b16-baf8-8470bd98f328.jpg"],
-    ["autos-performance-parts", "Summit Racing", "Performance Parts Finder", "Engine, exhaust, and suspension modules for readers following horsepower and racing signals.", "Find parts", ["Performance", "Racing", "Classics"], ["performance", "engine", "horsepower", "racing"], "Parts", "https://hips.hearstapps.com/hmg-prod/images/500cbd60-b7a3-4bad-9abe-367c1ff574f8.jpg"],
+    ["autos-cd-deal-score", "Car and Driver Marketplace", "Know the Best Price to Buy", "An AI-powered Deal Score evaluates the full vehicle offer against incentives, inventory, price trends, demand, and local market signals.", "Check my deal", ["Buying Guides", "Reviews"], ["buying", "reviews", "used", "shopping", "marketplace", "deal"], "Deal Score"],
+    ["autos-ev-home-charge", "ChargePoint", "EV Charging, Matched to Your Garage", "A contextual offer for readers comparing EVs, range, charging speed, and home setup decisions.", "Estimate charging", ["EVs", "Buying Guides"], ["evs", "electric", "buying", "reviews"], "EV"],
+    ["autos-tire-finder", "Michelin Garage", "Find the Right Performance Tire", "Tire and handling recommendations for readers deep in reviews, performance, and track-day content.", "Match tires", ["Reviews", "Performance", "Racing"], ["performance", "drive", "racing", "reviews"], "Grip"],
+    ["autos-auction-alert", "Collector Watch", "Auction Watchlist", "Collector-car alerts aligned to classics, Bring a Trailer behavior, and save-for-later browsing.", "Track listings", ["Classics", "Auctions"], ["auction", "classic", "collector", "used"], "Bid"],
+    ["autos-tool-chest", "Craftsman Pro", "Build the Home Garage", "Tools, lifts, storage, and detailing gear for readers acting on trucks, classics, and project-car intent.", "Open garage", ["Trucks", "Classics", "Performance"], ["truck", "classic", "gear", "engine"], "Garage"],
+    ["autos-insurance", "Hagerty", "Collector Coverage Check", "Insurance guidance for readers browsing classics, auctions, and collectible performance cars.", "Check coverage", ["Classics", "Auctions", "Buying Guides"], ["classic", "collector", "auction", "buying"], "Cover"],
+    ["autos-racing-weekend", "TrackPass", "Your Racing Weekend", "Tickets, streams, and schedules for readers consuming racing news and late-night performance content.", "Plan race day", ["Racing", "Performance"], ["racing", "speed", "performance", "track"], "Race"],
+    ["autos-detail-kit", "Meguiar's", "Weekend Detail Kit", "Wash, wax, ceramic, and interior care surfaced when the reader leans toward ownership utility.", "Build the kit", ["Buying Guides", "Classics", "Trucks"], ["used", "classic", "truck", "products"], "Detail"],
+    ["autos-finance", "Auto Finance Desk", "Know Your Monthly Number", "Financing and value tools for readers comparing models, reviews, and buying-guide content.", "Estimate payment", ["Buying Guides", "Reviews"], ["buying", "reviews", "used", "evs"], "Value"],
+    ["autos-truck-cargo", "Truck Gear Desk", "Truck Bed and Cabin Protection", "Cargo liners, mats, and storage systems for readers signaling truck and adventure utility.", "Fit my truck", ["Trucks", "Buying Guides"], ["truck", "gear", "products", "buying"], "Truck"],
+    ["autos-performance-parts", "Summit Racing", "Performance Parts Finder", "Engine, exhaust, and suspension modules for readers following horsepower and racing signals.", "Find parts", ["Performance", "Racing", "Classics"], ["performance", "engine", "horsepower", "racing"], "Parts"],
   ],
   flux: [
-    ["flux-designer-sale", "Luxury Edit", "The Designer Sale Watch", "A shopping module for readers browsing style, celebrity looks, and high-intent product stories.", "Watch the edit", ["Style", "Shopping"], ["style", "shopping", "fashion", "products"], "Style", "https://hips.hearstapps.com/hmg-prod/images/b2d33641-54c4-4049-bf45-dd15e0316852.jpg"],
-    ["flux-beauty-wardrobe", "Beauty Counter", "Build a Summer Beauty Wardrobe", "Fragrance, skin, and makeup picks aligned to beauty and style behavior.", "Open beauty", ["Beauty", "Style"], ["beauty", "style", "shopping", "fashion"], "Beauty", "https://hips.hearstapps.com/hmg-prod/images/a52e5ed3-b530-41c3-a9e1-457d122763f8.jpg"],
-    ["flux-art-weekend", "Culture Pass", "Your Culture Weekend", "Gallery openings, restaurants, performances, and bookable moments for culture-led sessions.", "Plan the weekend", ["Culture", "Events", "Travel"], ["culture", "events", "travel", "feature"], "Culture", "https://hips.hearstapps.com/hmg-prod/images/bfa63434-07db-4da1-ad7c-9ea52c6e56ee.jpeg"],
-    ["flux-interior-materials", "Design Materials", "A Better Room Starts With Texture", "Furniture, lighting, and fabric recommendations for interiors and design-intent readers.", "Source the room", ["Design", "Shopping"], ["design", "home", "products", "interiors"], "Design", "https://hips.hearstapps.com/hmg-prod/images/30454208-2b0a-4ed8-91a1-537490290eaf.jpg"],
-    ["flux-travel-club", "Town & Country Travel", "The Long Weekend List", "Hotels, luggage, and reservations tied to travel, culture, and luxury browsing behavior.", "See the list", ["Travel", "Culture", "Shopping"], ["travel", "culture", "shopping", "leisure"], "Travel", "https://hips.hearstapps.com/hmg-prod/images/cccaef24-76e6-4809-9500-8bb1d70824ab.jpg"],
-    ["flux-watch-jewelry", "Fine Objects", "Jewelry and Watch Radar", "Luxury objects matched to celebrity, event, and shopping signals.", "View radar", ["Shopping", "Style", "Events"], ["jewelry", "shopping", "celebrity", "events"], "Objects", "https://hips.hearstapps.com/hmg-prod/images/a5eadcc3-e1d6-48d4-ad47-d42dc01a22b4.jpg"],
-    ["flux-mens-style", "Esquire Shop", "Sharper Summer Dressing", "Menswear, grooming, and accessories for culture and style readers.", "Get dressed", ["Style", "Shopping"], ["style", "fashion", "shopping", "grooming"], "Menswear", "https://hips.hearstapps.com/hmg-prod/images/20eda3cc-1ce6-4365-ad78-44219f1391eb.png"],
-    ["flux-garden-party", "Veranda Entertains", "Garden Party Checklist", "Outdoor furniture, tabletop, flowers, and entertaining ideas for design and events sessions.", "Host outside", ["Design", "Events"], ["design", "home", "events", "garden"], "Host", "https://hips.hearstapps.com/hmg-prod/images/9357bef4-cbb5-4634-b167-58897274f85c.jpeg"],
-    ["flux-red-carpet", "Red Carpet Desk", "The Event Lookbook", "Dresses, beauty, accessories, and editor context for celebrity and event-led browsing.", "Open lookbook", ["Events", "Style", "Beauty"], ["celebrity", "events", "style", "beauty"], "Event", "https://hips.hearstapps.com/hmg-prod/images/7984ffdf-0689-4cd5-a2fc-966eb9187dba.jpeg"],
-    ["flux-design-consult", "Elle Decor Studio", "Find Your Design Direction", "A high-touch design consult module for readers saving interiors and home inspiration.", "Start consult", ["Design"], ["design", "home", "interiors", "products"], "Studio", "https://hips.hearstapps.com/hmg-prod/images/d4338644-77dd-4f18-980f-e99a3f966d50.jpg"],
+    ["flux-designer-sale", "Luxury Edit", "The Designer Sale Watch", "A shopping module for readers browsing style, celebrity looks, and high-intent product stories.", "Watch the edit", ["Style", "Shopping"], ["style", "shopping", "fashion", "products"], "Style"],
+    ["flux-beauty-wardrobe", "Beauty Counter", "Build a Summer Beauty Wardrobe", "Fragrance, skin, and makeup picks aligned to beauty and style behavior.", "Open beauty", ["Beauty", "Style"], ["beauty", "style", "shopping", "fashion"], "Beauty"],
+    ["flux-art-weekend", "Culture Pass", "Your Culture Weekend", "Gallery openings, restaurants, performances, and bookable moments for culture-led sessions.", "Plan the weekend", ["Culture", "Events", "Travel"], ["culture", "events", "travel", "feature"], "Culture"],
+    ["flux-interior-materials", "Design Materials", "A Better Room Starts With Texture", "Furniture, lighting, and fabric recommendations for interiors and design-intent readers.", "Source the room", ["Design", "Shopping"], ["design", "home", "products", "interiors"], "Design"],
+    ["flux-travel-club", "Town & Country Travel", "The Long Weekend List", "Hotels, luggage, and reservations tied to travel, culture, and luxury browsing behavior.", "See the list", ["Travel", "Culture", "Shopping"], ["travel", "culture", "shopping", "leisure"], "Travel"],
+    ["flux-watch-jewelry", "Fine Objects", "Jewelry and Watch Radar", "Luxury objects matched to celebrity, event, and shopping signals.", "View radar", ["Shopping", "Style", "Events"], ["jewelry", "shopping", "celebrity", "events"], "Objects"],
+    ["flux-mens-style", "Esquire Shop", "Sharper Summer Dressing", "Menswear, grooming, and accessories for culture and style readers.", "Get dressed", ["Style", "Shopping"], ["style", "fashion", "shopping", "grooming"], "Menswear"],
+    ["flux-garden-party", "Veranda Entertains", "Garden Party Checklist", "Outdoor furniture, tabletop, flowers, and entertaining ideas for design and events sessions.", "Host outside", ["Design", "Events"], ["design", "home", "events", "garden"], "Host"],
+    ["flux-red-carpet", "Red Carpet Desk", "The Event Lookbook", "Dresses, beauty, accessories, and editor context for celebrity and event-led browsing.", "Open lookbook", ["Events", "Style", "Beauty"], ["celebrity", "events", "style", "beauty"], "Event"],
+    ["flux-design-consult", "Elle Decor Studio", "Find Your Design Direction", "A high-touch design consult module for readers saving interiors and home inspiration.", "Start consult", ["Design"], ["design", "home", "interiors", "products"], "Studio"],
   ],
   ew: [
-    ["ew-running-shoe", "Runner's Lab", "Find Your Next Running Shoe", "Shoe, training, and recovery recommendations for fitness and running behavior.", "Match my run", ["Fitness", "Gear"], ["fitness", "running", "gear", "training"], "Run", "https://hips.hearstapps.com/hmg-prod/images/d75dce99-2d12-45cc-ad48-8e5fabb43be2.jpg"],
-    ["ew-home-gym", "Garage Gym Builder", "Build a Smarter Home Gym", "Weights, mats, benches, and programming for readers engaging with strength and gear stories.", "Plan gym", ["Fitness", "Gear"], ["fitness", "gear", "training", "products"], "Gym", "https://hips.hearstapps.com/hmg-prod/images/bass-headphones-earbuds-001-669a8ef2be058.jpg"],
-    ["ew-bike-fit", "Bicycling Fit Studio", "Dial In Your Bike Fit", "Fit tools, shoes, saddles, and gear surfaced for cycling and adventure intent.", "Tune fit", ["Gear", "Adventure", "Fitness"], ["bike", "cycling", "gear", "adventure"], "Bike", "https://hips.hearstapps.com/hmg-prod/images/01074154-c6c1-4856-bca5-7ab2ea491991.jpeg"],
-    ["ew-recovery-kit", "Recovery Desk", "Recovery That Fits Your Routine", "Sleep, mobility, massage, and recovery tools matched to wellness and fitness signals.", "Recover better", ["Wellness", "Fitness"], ["wellness", "recovery", "sleep", "health"], "Recover", "https://hips.hearstapps.com/hmg-prod/images/adventure-toys-for-kids-69a8a11950639.png"],
-    ["ew-tech-kit", "Popular Mechanics Tested", "Gear That Solves the Problem", "Tech, tools, and tested equipment for science, mechanics, and gear browsing.", "See tested gear", ["Tech", "Gear"], ["tech", "gear", "science", "products"], "Tested", "https://hips.hearstapps.com/hmg-prod/images/amazon-tech-products-2021-1635430982.jpg"],
-    ["ew-nutrition-plan", "Fuel Plan", "Nutrition for the Next Goal", "Meal, protein, hydration, and supplement signals for wellness and training readers.", "Build fuel plan", ["Nutrition", "Wellness", "Fitness"], ["nutrition", "food", "health", "training"], "Fuel", "https://hips.hearstapps.com/hmg-prod/images/f0fa3667-bbf0-40c8-b8e9-e7bd5d82876d.jpg"],
-    ["ew-adventure-pack", "Trail Kit", "Weekend Adventure Pack", "Bags, shoes, layers, and safety gear for readers signaling adventure and outdoor interest.", "Pack better", ["Adventure", "Gear"], ["adventure", "gear", "outdoor", "products"], "Trail", "https://hips.hearstapps.com/hmg-prod/images/dorm-room-ideas-681a6f88db8db.jpg"],
-    ["ew-health-check", "Health Navigator", "Your Next Health Check", "Screenings, routines, and practical next steps aligned with health and life content.", "Make a plan", ["Wellness", "Life"], ["health", "wellness", "life", "sleep"], "Health", "https://hips.hearstapps.com/hmg-prod/images/pedaling-daniel-wakefield-pasley-1658942201.jpg"],
-    ["ew-smartwatch", "Wearable Lab", "Track What Actually Matters", "Watch, heart-rate, and recovery tools matched to tech, fitness, and training sessions.", "Compare watches", ["Tech", "Fitness", "Gear"], ["tech", "fitness", "gear", "training"], "Track", "https://hips.hearstapps.com/hmg-prod/images/b32ab90f-fef4-4582-a72f-d1a8621e1148.jpg"],
-    ["ew-book-club", "Oprah Daily Life", "A Better Night Routine", "Books, journaling, sleep, and reflection picks for late-night life and wellness browsing.", "Start tonight", ["Life", "Wellness"], ["life", "sleep", "wellness", "books"], "Life", "https://hips.hearstapps.com/hmg-prod/images/ba0b950d-7abb-4544-b6df-13f3ce1d21bf.jpg"],
+    ["ew-running-shoe", "Runner's Lab", "Find Your Next Running Shoe", "Shoe, training, and recovery recommendations for fitness and running behavior.", "Match my run", ["Fitness", "Gear"], ["fitness", "running", "gear", "training"], "Run"],
+    ["ew-home-gym", "Garage Gym Builder", "Build a Smarter Home Gym", "Weights, mats, benches, and programming for readers engaging with strength and gear stories.", "Plan gym", ["Fitness", "Gear"], ["fitness", "gear", "training", "products"], "Gym"],
+    ["ew-bike-fit", "Bicycling Fit Studio", "Dial In Your Bike Fit", "Fit tools, shoes, saddles, and gear surfaced for cycling and adventure intent.", "Tune fit", ["Gear", "Adventure", "Fitness"], ["bike", "cycling", "gear", "adventure"], "Bike"],
+    ["ew-recovery-kit", "Recovery Desk", "Recovery That Fits Your Routine", "Sleep, mobility, massage, and recovery tools matched to wellness and fitness signals.", "Recover better", ["Wellness", "Fitness"], ["wellness", "recovery", "sleep", "health"], "Recover"],
+    ["ew-tech-kit", "Popular Mechanics Tested", "Gear That Solves the Problem", "Tech, tools, and tested equipment for science, mechanics, and gear browsing.", "See tested gear", ["Tech", "Gear"], ["tech", "gear", "science", "products"], "Tested"],
+    ["ew-nutrition-plan", "Fuel Plan", "Nutrition for the Next Goal", "Meal, protein, hydration, and supplement signals for wellness and training readers.", "Build fuel plan", ["Nutrition", "Wellness", "Fitness"], ["nutrition", "food", "health", "training"], "Fuel"],
+    ["ew-adventure-pack", "Trail Kit", "Weekend Adventure Pack", "Bags, shoes, layers, and safety gear for readers signaling adventure and outdoor interest.", "Pack better", ["Adventure", "Gear"], ["adventure", "gear", "outdoor", "products"], "Trail"],
+    ["ew-health-check", "Health Navigator", "Your Next Health Check", "Screenings, routines, and practical next steps aligned with health and life content.", "Make a plan", ["Wellness", "Life"], ["health", "wellness", "life", "sleep"], "Health"],
+    ["ew-smartwatch", "Wearable Lab", "Track What Actually Matters", "Watch, heart-rate, and recovery tools matched to tech, fitness, and training sessions.", "Compare watches", ["Tech", "Fitness", "Gear"], ["tech", "fitness", "gear", "training"], "Track"],
+    ["ew-book-club", "Oprah Daily Life", "A Better Night Routine", "Books, journaling, sleep, and reflection picks for late-night life and wellness browsing.", "Start tonight", ["Life", "Wellness"], ["life", "sleep", "wellness", "books"], "Life"],
   ],
 } satisfies Record<Exclude<DestinationMode, "all">, ContextualAdTuple[]>;
 
 function normalizeContextualAds(units: ContextualAdTuple[]): ContextualAdUnit[] {
-  return units.map(([id, sponsor, title, summary, cta, topics, tags, creativeLabel, imageUrl]) => ({
+  return units.map(([id, sponsor, title, summary, cta, topics, tags, creativeLabel]) => ({
     id,
     sponsor,
     title,
@@ -2405,7 +2404,7 @@ function normalizeContextualAds(units: ContextualAdTuple[]): ContextualAdUnit[] 
     topics,
     tags,
     creativeLabel,
-    imageUrl,
+    imageUrl: getContextualAdvertisementImage({ id }),
     palette: {
       background: "var(--card)",
       foreground: "var(--foreground)",
@@ -2704,8 +2703,7 @@ function ContextualAdLogicGuide({
         </h2>
         <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
           Ads use the same intent context as the editorial ranking layer: active section, followed topics, saved tags,
-          more-like-this behavior, time of day, and the surrounding story cluster. Creative imagery uses a dedicated
-          live-feed image set pulled from public Hearst brand feeds and pre-filtered against the river dataset.
+          more-like-this behavior, time of day, and the surrounding story cluster. Creative imagery uses purpose-made local artwork selected for each campaign context, separate from editorial photography.
         </p>
       </div>
 
@@ -2729,7 +2727,7 @@ function ContextualAdLogicGuide({
             <p className="text-xs font-bold uppercase tracking-widest text-primary">Creative source</p>
             <p className="mt-2 text-sm font-bold">Dedicated ad image set</p>
             <p className="mt-1 text-xs leading-5 text-muted-foreground">
-              The ad slot uses a same-topic or same-tag CDN image that is not already in the story river data.
+              Each campaign uses original, locally stored ad artwork selected for its subject. Editorial story images are not used in ad placements.
             </p>
           </div>
         </div>
@@ -3431,7 +3429,7 @@ function getLifestyleReaderAd(
       topics: ["Research Cars"],
       tags: ["buying", "shopping", "new cars"],
       creativeLabel: "SHOP",
-      imageUrl: currentStory.image,
+      imageUrl: "/images/ads/contextual/automotive.jpg",
       palette: {
         background: "#ffffff",
         foreground: "#121212",
@@ -5628,6 +5626,10 @@ function LifestyleRiverHomePage({
     stories: visibleStories,
     excludeAdIds: ["autos-cd-deal-score"],
   })?.ad ?? null;
+  const rightRailAdTopic =
+    rightRailAd?.topics.find((topic) => topic.toLowerCase() === String(activeFilter).toLowerCase()) ??
+    rightRailAd?.topics[0] ??
+    "";
   const delishVerticalVideoStories = React.useMemo(() => {
     // Keep one portrait-only inventory for both the carousel and immersive
     // viewer. Feed refreshes may replace either source, so merge all sources
@@ -7198,7 +7200,7 @@ function LifestyleRiverHomePage({
                         />
                       ) : <div />}
                       <div className="h-fit lg:sticky lg:top-24 lg:self-start">
-                        <ContextualRiverAdvertisement ad={rightRailAd} />
+                        <ContentReaderAdvertisement ad={rightRailAd} currentTopic={rightRailAdTopic} layout="rail" />
                       </div>
                     </div>
                   </section> : null}
@@ -7295,7 +7297,7 @@ function LifestyleRiverHomePage({
                           ))}
                         </div>
                       </section>
-                      <div className="h-fit lg:sticky lg:top-24 lg:self-start"><ContextualRiverAdvertisement ad={rightRailAd} /></div>
+                      <div className="h-fit lg:sticky lg:top-24 lg:self-start"><ContentReaderAdvertisement ad={rightRailAd} currentTopic={rightRailAdTopic} layout="rail" /></div>
                     </div>
                   </section> : null}
                   {communityParticipationThreads.some((post) => !contextualModuleBrandSlugs || contextualModuleBrandSlugs.has(post.brandSlug)) ? <section className="border-t border-primary pt-5" aria-label={contextualModuleHeading ? `${contextualModuleHeading} Communities` : "Communities"}>
@@ -7346,7 +7348,7 @@ function LifestyleRiverHomePage({
                           ) : <p className="rounded-[8px] bg-[var(--hp-surface-low)] p-5 text-sm text-muted-foreground">Community posts will appear here.</p>;
                         })()}
                       </div>
-                      <div className="h-fit lg:sticky lg:top-24 lg:self-start"><ContextualRiverAdvertisement ad={rightRailAd} /></div>
+                      <div className="h-fit lg:sticky lg:top-24 lg:self-start"><ContentReaderAdvertisement ad={rightRailAd} currentTopic={rightRailAdTopic} layout="rail" /></div>
                     </div>
                   </section> : null}
                   {destination === "all" && activeFilter === "For You" && !initialBrandSlug ? <section className="border-t border-primary pt-5" aria-label="Local News">
@@ -7720,7 +7722,7 @@ function LifestyleRiverHomePage({
                   className="lg:hidden"
                 />
               ) : null}
-              <ContextualRiverAdvertisement ad={rightRailAd} />
+              <ContentReaderAdvertisement ad={rightRailAd} currentTopic={rightRailAdTopic} layout="rail" />
               {destination === "all" && !initialBrandSlug && (activeFilter === "For You" || activeFilter === localNewsFilter) ? <LocalNewsRail /> : null}
               {initialBrandSlug && initialBrandName ? (
                 <BrandInstagramModule brandSlug={initialBrandSlug} brandName={initialBrandName} />

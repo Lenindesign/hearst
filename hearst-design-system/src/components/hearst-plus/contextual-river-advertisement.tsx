@@ -4,9 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
 
-import type { ContextualAdUnit } from "@/components/hearst-plus/content-reader-advertisement";
+import {
+  getContextualAdvertisementImage,
+  type ContextualAdUnit,
+} from "@/components/hearst-plus/content-reader-advertisement";
 import { Car, DollarSign, Sparkles, TrendingUp } from "@/components/ui/icons";
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants, capAlignButtonLabel } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export type ContextualRiverAdvertisementProps = {
@@ -33,7 +36,7 @@ export function ContextualRiverAdvertisement({
     >
       <div className="relative aspect-video min-w-0 overflow-hidden">
         <Image
-          src={ad.imageUrl}
+          src={getContextualAdvertisementImage(ad)}
           alt=""
           width={704}
           height={396}
@@ -53,18 +56,11 @@ export function ContextualRiverAdvertisement({
 
       <div className="flex min-w-0 flex-col justify-between p-4 sm:p-5">
         <div>
-          <div className="flex flex-wrap items-center gap-2">
-            <span
-              className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest"
-              style={{ color: "var(--hp-sidebar-heading, var(--primary))" }}
-            >
-              {ad.sponsor}
-            </span>
-          </div>
-          <h2 className="headline mt-3 break-words text-2xl leading-tight sm:text-[1.7rem]">
+          <h2 className="headline break-words text-2xl leading-[1.12] sm:text-[1.7rem]">
             {ad.ctaHref ? (
               <Link
                 href={ad.ctaHref}
+                rel="sponsored"
                 className="decoration-1 underline-offset-4 hover:underline focus-visible:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
               >
                 {ad.title}
@@ -73,25 +69,26 @@ export function ContextualRiverAdvertisement({
               ad.title
             )}
           </h2>
-          <p className="mt-3 text-sm leading-6 opacity-80">{ad.summary}</p>
+          <p className="mt-2 text-sm leading-5 opacity-80">{ad.summary}</p>
         </div>
 
         {ad.ctaHref ? (
           <div
-            className="mt-5 border-t pt-4"
+            className="mt-4 border-t pt-3"
             style={{ borderColor: ad.palette.soft }}
           >
             {/* HDS outline button (touch size) rendered as a link; sponsor colors stay on the creative.
                 rounded-[4px] keeps the Hearst+ radius when a publication theme sets the button token to 0. */}
             <a
               href={ad.ctaHref}
+              rel="sponsored"
               aria-label={`${ad.cta}: ${ad.title}`}
               data-slot="button"
               data-variant="outline"
               data-size="touch"
               className={cn(buttonVariants({ variant: "outline", size: "touch" }), "rounded-[4px]")}
             >
-              {ad.cta}
+              {capAlignButtonLabel(ad.cta)}
             </a>
           </div>
         ) : null}
@@ -122,8 +119,7 @@ const dealScoreVehicles: DealScoreVehicle[] = [
     make: "Honda",
     model: "CR-V Hybrid",
     trim: "Sport Touring AWD",
-    imageUrl:
-      "https://hips.hearstapps.com/mtg-prod/68f7e39e42ad0d0002a0414e/003-2026-honda-crv-hybrid-sport-touring.jpg",
+    imageUrl: "/images/ads/contextual/automotive.jpg",
     score: 87,
     verdict: "Strong buy if the dealer lands inside the target range.",
     targetRange: "$38.7K-$40.1K",
@@ -143,8 +139,7 @@ const dealScoreVehicles: DealScoreVehicle[] = [
     make: "Chevrolet",
     model: "Equinox",
     trim: "RS AWD",
-    imageUrl:
-      "https://hips.hearstapps.com/hmg-prod/images/2025-chevrolet-equinox-rs-awd-132-67110e2133505.jpg",
+    imageUrl: "/images/ads/contextual/automotive.jpg",
     score: 82,
     verdict: "Good deal if the discount survives the finance desk.",
     targetRange: "$32.2K-$33.6K",
@@ -164,8 +159,7 @@ const dealScoreVehicles: DealScoreVehicle[] = [
     make: "Kia",
     model: "Sportage Hybrid",
     trim: "SX Prestige AWD",
-    imageUrl:
-      "https://hips.hearstapps.com/hmg-prod/images/ab5611fc-d193-4368-bf4e-fe5560ee75fd.jpg",
+    imageUrl: "/images/ads/contextual/automotive.jpg",
     score: 74,
     verdict: "Fair offer, but wait for a cleaner incentive stack.",
     targetRange: "$36.9K-$38.0K",
@@ -185,8 +179,7 @@ const dealScoreVehicles: DealScoreVehicle[] = [
     make: "Lucid",
     model: "Gravity",
     trim: "GT-S AWD",
-    imageUrl:
-      "https://hips.hearstapps.com/hmg-prod/images/df1a3d12-34f0-4527-a421-c93b85ecd97c.png",
+    imageUrl: "/images/ads/contextual/automotive.jpg",
     score: 69,
     verdict: "Watchlist deal until inventory opens up.",
     targetRange: "$117.5K-$120.0K",
@@ -357,10 +350,7 @@ function CarAndDriverDealScoreCard({ ad }: { ad: ContextualAdUnit }) {
         <div className="absolute inset-0 flex flex-col justify-between p-5 sm:p-6">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-[length:var(--text-token-4xs)] font-black uppercase tracking-[0.24em] text-white/70">
-                Car and Driver Marketplace
-              </p>
-              <h2 className="headline mt-3 max-w-md text-3xl leading-none sm:text-4xl">
+              <h2 className="headline max-w-md text-3xl leading-none sm:text-4xl">
                 {ad.title}
               </h2>
             </div>

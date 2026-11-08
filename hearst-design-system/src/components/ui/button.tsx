@@ -2,7 +2,7 @@
 
 import { Button as ButtonPrimitive } from "@base-ui/react/button"
 import { cva, type VariantProps } from "class-variance-authority"
-import type { ReactNode } from "react"
+import { Children, type ReactNode } from "react"
 
 import { SpinnerGap } from "@/components/ui/icons"
 import { cn } from "@/lib/utils"
@@ -52,8 +52,54 @@ export interface ButtonProps
   loading?: boolean
   /** Optional temporary label announced and shown while loading. */
   loadingText?: ReactNode
-  /** Trims font leading for a short label known to contain no descender glyphs. */
-  capAlignedLabel?: boolean
+  /**
+   * Optically centers the label by trimming its box to cap height and baseline.
+   * `"auto"` (default) trims only when the label is plain text without descender glyphs
+   * (lowercase g, j, p, q, y or uppercase J, Q), so "Sign up" keeps normal
+   * metrics while "SIGN IN" or "Read the review" is trimmed. `true` always
+   * trims (only for labels known to have no descenders); `false` opts out.
+   */
+  capAlignedLabel?: boolean | "auto"
+}
+
+const descenderGlyphs = /[gjpqyJQ]/
+
+function isText(node: ReactNode): node is string | number {
+  return typeof node === "string" || typeof node === "number"
+}
+
+/**
+ * True when a label's text can be trimmed to cap height without clipping
+ * glyphs. Icons and other elements beside the text are ignored; a label with
+ * no text, or with text nested inside other elements, is left alone.
+ */
+function canCapAlignLabel(label: ReactNode) {
+  const parts = Children.toArray(label)
+  const text = parts.filter(isText).map(String).join("")
+  if (!text.trim()) return false
+  if (parts.some((part) => !isText(part) && !isIconElement(part))) return false
+  return !descenderGlyphs.test(text)
+}
+
+function isIconElement(node: ReactNode) {
+  if (!node || typeof node !== "object" || !("props" in node)) return false
+  const props = node.props as Record<string, unknown>
+  return props["aria-hidden"] === true || props["aria-hidden"] === "true" || "data-icon" in props
+}
+
+/**
+ * Wraps the text of a button label in the cap-aligned span and leaves icons
+ * beside it, so "Continue" + chevron is centered on its cap height too. Use it
+ * for links styled with `buttonVariants()`, which do not go through `Button`.
+ */
+function capAlignButtonLabel(label: ReactNode, mode: boolean | "auto" = "auto"): ReactNode {
+  const shouldCapAlign = mode === "auto" ? canCapAlignLabel(label) : mode
+  if (!shouldCapAlign) return label
+  return Children.toArray(label).map((part, index) =>
+    isText(part) && String(part).trim()
+      ? <span key={`cap-label-${index}`} className="hds-cap-aligned-label">{part}</span>
+      : part,
+  )
 }
 
 function Button({
@@ -62,15 +108,13 @@ function Button({
   size = "default",
   loading = false,
   loadingText,
-  capAlignedLabel = false,
+  capAlignedLabel = "auto",
   disabled,
   children,
   ...props
 }: ButtonProps) {
   const currentLabel = loading ? loadingText ?? children : children
-  const label = capAlignedLabel
-    ? <span className="hds-cap-aligned-label">{currentLabel}</span>
-    : currentLabel
+  const label = capAlignButtonLabel(currentLabel, capAlignedLabel)
 
   return (
     <ButtonPrimitive
@@ -93,4 +137,4 @@ function Button({
   )
 }
 
-export { Button, buttonVariants }
+export { Button, buttonVariants, canCapAlignLabel, capAlignButtonLabel }

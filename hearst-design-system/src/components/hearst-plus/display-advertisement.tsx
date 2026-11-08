@@ -60,6 +60,7 @@ export function DisplayAdvertisement({ creative, className }: DisplayAdvertiseme
           className="block rounded-[8px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
         >
           {image}
+          <span className="sr-only"> (opens in a new tab)</span>
         </a>
       ) : (
         image

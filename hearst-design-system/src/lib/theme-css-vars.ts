@@ -58,6 +58,56 @@ function relativeLuminance(hex: string) {
   return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
 }
 
+const BUTTON_SOLID_FAMILIES = ["primary-solid", "secondary-solid"] as const;
+const BUTTON_STATES = ["default", "hover", "active"] as const;
+const BUTTON_LIGHT_CONTENT = "#ffffff";
+const BUTTON_DARK_CONTENT = "#121212";
+
+/** First opaque #rrggbb color in a token value; translucent #rrggbbaa colors return null. */
+function firstHex(value: string | undefined) {
+  const match = value?.match(/#([0-9a-f]{6})([0-9a-f]{2})?(?![0-9a-f])/i);
+  if (!match || (match[2] && match[2].toLowerCase() !== "ff")) return null;
+  return `#${match[1]}`;
+}
+
+function contrastRatio(a: string, b: string) {
+  const la = relativeLuminance(a);
+  const lb = relativeLuminance(b);
+  return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+}
+
+/**
+ * Every solid button background a theme emits gets a matching label color and
+ * border in the same layer, so a brand that overrides only the background can
+ * never inherit a label color chosen for a different background (for example
+ * near-black text from a light-primary brand on Hearst Flux slate). A label
+ * the theme set keeps its color when it reaches WCAG AA (4.5:1); otherwise the
+ * first of white, near-black or black that reaches AA is used.
+ */
+function withReadableButtonContent(vars: Record<string, string>) {
+  const result = { ...vars };
+  for (const family of BUTTON_SOLID_FAMILIES) {
+    for (const state of BUTTON_STATES) {
+      const backgroundKey = `--component-button-background-${family}-${state}`;
+      const contentKey = `--component-button-content-${family}-${state}`;
+      const borderKey = `--component-button-border-${family}-${state}`;
+      const background = firstHex(result[backgroundKey]);
+      if (!background) continue;
+      const current = firstHex(result[contentKey]);
+      if (!current || contrastRatio(background, current) < 4.5) {
+        const candidates = [BUTTON_LIGHT_CONTENT, BUTTON_DARK_CONTENT, "#000000"];
+        result[contentKey] =
+          candidates.find((candidate) => contrastRatio(background, candidate) >= 4.5) ??
+          candidates.reduce((best, candidate) =>
+            contrastRatio(background, candidate) > contrastRatio(background, best) ? candidate : best,
+          );
+      }
+      if (!result[borderKey]) result[borderKey] = result[backgroundKey];
+    }
+  }
+  return result;
+}
+
 function getDarkModePrimary(brandSlug: string, primary: string) {
   const curated = darkModeSectionPrimaryColors[brandSlug];
   if (curated) return curated;
@@ -150,7 +200,7 @@ export function brandToCssVars(brand: BrandTheme, colorMode: "light" | "dark" = 
     "--component-badge-content-primary": darkPrimaryFg,
   } : {};
 
-  return {
+  return withReadableButtonContent({
     ...toCssVars(brand.semanticColors),
     ...toCssVars(brand.componentTokens),
     ...brandColorVars,
@@ -175,5 +225,5 @@ export function brandToCssVars(brand: BrandTheme, colorMode: "light" | "dark" = 
     "--font-headline-weight": `${brand.fontHeadlineWeight}`,
     "--font-headline-stretch": brand.fontHeadlineStretch || "normal",
     ...darkSurfaceVars,
-  };
+  });
 }

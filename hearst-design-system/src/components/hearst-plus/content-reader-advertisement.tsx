@@ -4,7 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { getHearstBrandSection, getHearstDestinationCategoryRoute } from "@/lib/hearst-routes";
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants, capAlignButtonLabel } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export type ReaderAdvertisementDestination =
   | "lifestyle"
@@ -34,6 +35,13 @@ export type ContextualAdUnit = {
 export type ContentReaderAdvertisementProps = {
   ad?: ContextualAdUnit | null;
   currentTopic: string;
+  /**
+   * `reader` (default): desktop-only sticky 300 × 600 unit beside an article.
+   * `rail`: the same unit in an index-page right rail. It shows at every
+   * width, leaves stickiness to the rail column, and is 600px tall from the
+   * large breakpoint, hugging its content when the rail stacks on phones.
+   */
+  layout?: "reader" | "rail";
 };
 
 const adTopicRoutes: Record<string, { mode: "lifestyle" | "autos" | "flux" | "ew"; label: string }> = {
@@ -68,11 +76,56 @@ export function getAdTopicHref(topic: string) {
   return target ? getHearstDestinationCategoryRoute(target.mode, target.label) : undefined;
 }
 
-export function getContextualAdvertisementImage(ad: ContextualAdUnit) {
-  // Keep paid/demo creative separate from editorial story imagery. Replacing an
-  // ad image with a nearby story image can make the sponsor and creative feel
-  // unrelated, especially on section index pages.
-  return ad.imageUrl;
+const contextualAdArtworkByCampaign: Record<string, string> = {
+  "lifestyle-home-refresh": "/images/ads/contextual/home.jpg",
+  "lifestyle-dinner-planner": "/images/ads/contextual/food.jpg",
+  "lifestyle-sleep-reset": "/images/ads/contextual/wellness.jpg",
+  "lifestyle-beauty-counter": "/images/ads/contextual/beauty.jpg",
+  "lifestyle-garden-weekend": "/images/ads/contextual/garden.jpg",
+  "lifestyle-hosting-kit": "/images/ads/contextual/home.jpg",
+  "lifestyle-small-space": "/images/ads/contextual/home.jpg",
+  "lifestyle-teen-style": "/images/ads/contextual/fashion.jpg",
+  "lifestyle-family-meal-kit": "/images/ads/contextual/food.jpg",
+  "lifestyle-cozy-collection": "/images/ads/contextual/food.jpg",
+  "autos-cd-deal-score": "/images/ads/contextual/automotive.jpg",
+  "autos-ev-home-charge": "/images/ads/contextual/automotive.jpg",
+  "autos-tire-finder": "/images/ads/contextual/automotive.jpg",
+  "autos-auction-alert": "/images/ads/contextual/automotive.jpg",
+  "autos-tool-chest": "/images/ads/contextual/technology.jpg",
+  "autos-insurance": "/images/ads/contextual/automotive.jpg",
+  "autos-racing-weekend": "/images/ads/contextual/automotive.jpg",
+  "autos-detail-kit": "/images/ads/contextual/automotive.jpg",
+  "autos-finance": "/images/ads/contextual/automotive.jpg",
+  "autos-truck-cargo": "/images/ads/contextual/automotive.jpg",
+  "autos-performance-parts": "/images/ads/contextual/technology.jpg",
+  "flux-designer-sale": "/images/ads/contextual/fashion.jpg",
+  "flux-beauty-wardrobe": "/images/ads/contextual/beauty.jpg",
+  "flux-art-weekend": "/images/ads/contextual/travel.jpg",
+  "flux-interior-materials": "/images/ads/contextual/home.jpg",
+  "flux-travel-club": "/images/ads/contextual/travel.jpg",
+  "flux-watch-jewelry": "/images/ads/contextual/objects.jpg",
+  "flux-mens-style": "/images/ads/contextual/fashion.jpg",
+  "flux-garden-party": "/images/ads/contextual/garden.jpg",
+  "flux-red-carpet": "/images/ads/contextual/fashion.jpg",
+  "flux-design-consult": "/images/ads/contextual/home.jpg",
+  "ew-running-shoe": "/images/ads/contextual/outdoor.jpg",
+  "ew-home-gym": "/images/ads/contextual/fitness.jpg",
+  "ew-bike-fit": "/images/ads/contextual/outdoor.jpg",
+  "ew-recovery-kit": "/images/ads/contextual/wellness.jpg",
+  "ew-tech-kit": "/images/ads/contextual/technology.jpg",
+  "ew-nutrition-plan": "/images/ads/contextual/food.jpg",
+  "ew-adventure-pack": "/images/ads/contextual/outdoor.jpg",
+  "ew-health-check": "/images/ads/contextual/wellness.jpg",
+  "ew-smartwatch": "/images/ads/contextual/technology.jpg",
+  "ew-book-club": "/images/ads/contextual/wellness.jpg",
+  "local-news-community-partner": "/images/hearst-local-news-community-ad.png",
+};
+
+export function getContextualAdvertisementImage(ad: Pick<ContextualAdUnit, "id">) {
+  if (ad.id.startsWith("autos-shop-")) {
+    return contextualAdArtworkByCampaign["autos-cd-deal-score"];
+  }
+  return contextualAdArtworkByCampaign[ad.id] ?? "/images/ads/contextual/home.jpg";
 }
 
 export function selectContentReaderAdvertisement(
@@ -113,16 +166,24 @@ export function selectContentReaderAdvertisement(
 export function ContentReaderAdvertisement({
   ad,
   currentTopic,
+  layout = "reader",
 }: ContentReaderAdvertisementProps) {
   if (!ad) return null;
+  const isRail = layout === "rail";
 
   return (
     <aside
-      className="hidden lg:block"
+      className={isRail ? "mx-auto w-full max-w-[300px] min-w-0" : "hidden lg:block"}
       aria-label={`Advertisement: ${ad.sponsor} — ${ad.title}`}
+      data-ad-format={isRail ? "rail-contextual" : "reader-contextual"}
     >
       <div
-        className="sticky top-32 flex h-[600px] max-h-[calc(100dvh-10rem)] w-[300px] flex-col overflow-hidden rounded-[8px] border border-border bg-background"
+        className={cn(
+          "flex flex-col overflow-hidden rounded-[8px] border border-border bg-background",
+          isRail
+            ? "w-full lg:h-[600px]"
+            : "sticky top-32 h-[600px] max-h-[calc(100dvh-10rem)] w-[300px]",
+        )}
         style={{
           backgroundColor: ad.palette.background,
           color: ad.palette.foreground,
@@ -130,7 +191,7 @@ export function ContentReaderAdvertisement({
       >
         <div className="relative h-[268px] overflow-hidden border-b border-black/10">
           <Image
-            src={ad.imageUrl}
+            src={getContextualAdvertisementImage(ad)}
             alt=""
             width={600}
             height={536}
@@ -147,24 +208,21 @@ export function ContentReaderAdvertisement({
             </span>
           </div>
           <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-            <p className="text-xs font-bold uppercase tracking-widest text-white/80">
-              {ad.sponsor}
-            </p>
-            <p className="mt-1 font-brand-secondary text-3xl font-bold leading-none text-white">
+            <p className="font-brand-secondary text-3xl font-bold leading-none text-white">
               {ad.title}
             </p>
           </div>
         </div>
 
-        <div className="flex flex-1 flex-col justify-between p-6">
+        <div className={cn("flex flex-1 flex-col justify-between p-6", isRail && "gap-6")}>
           <div>
             <p
-              className="text-sm leading-6"
+              className="text-sm leading-5"
               style={{ color: ad.palette.foreground }}
             >
               {ad.summary}
             </p>
-            <div className="mt-5 flex flex-wrap gap-2">
+            <div className="mt-4 flex flex-wrap gap-2">
               {ad.topics.slice(0, 2).map((topic) => (
                 (() => {
                   const href = getAdTopicHref(topic);
@@ -193,18 +251,19 @@ export function ContentReaderAdvertisement({
             </div>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3">
             {/* CTA: HDS primary button (touch size) rendered as a link; sponsor colors stay on the creative. */}
             {ad.ctaHref ? (
               <a
                 href={ad.ctaHref}
+                rel="sponsored"
                 aria-label={`${ad.cta}: ${ad.title}`}
                 data-slot="button"
                 data-variant="default"
                 data-size="touch"
                 className={buttonVariants({ variant: "default", size: "touch", className: "w-full" })}
               >
-                {ad.cta}
+                {capAlignButtonLabel(ad.cta)}
               </a>
             ) : null}
             <p
