@@ -23,7 +23,7 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { getHearstStoryRoute } from "@/lib/story-routes";
-import { useBodyPortalTarget, useModalIsolation } from "@/components/ui/use-modal-isolation";
+import { useBodyPortalTarget, useInheritedThemeScope, useModalIsolation } from "@/components/ui/use-modal-isolation";
 import { BrandSourceIcon } from "./hearst-plus/brand-source-icon";
 import { BrandLogo } from "./brand-logo";
 import type { LifestyleRiverProfile, LifestyleRiverStory } from "./lifestyle-river-types";
@@ -130,6 +130,7 @@ function ModalFrame({
   const dialogRef = React.useRef<HTMLElement>(null);
   const onCloseRef = React.useRef(onClose);
   const portalTarget = useBodyPortalTarget();
+  const { anchorRef, scope } = useInheritedThemeScope(open);
 
   React.useEffect(() => {
     onCloseRef.current = onClose;
@@ -183,10 +184,22 @@ function ModalFrame({
     };
   }, [open]);
 
-  if (!open || !portalTarget) return null;
+  // The anchor stays in place so the portaled dialog can inherit the brand theme around it.
+  const anchor = <span ref={anchorRef} hidden />;
+  if (!open || !portalTarget) return anchor;
 
-  return createPortal(
-    <div className="fixed inset-0 z-[280] flex items-center justify-center bg-foreground/55 p-4 backdrop-blur-sm sm:p-6">
+  return (
+    <>
+      {anchor}
+      {createPortal(
+    <div
+      className={cn(
+        "fixed inset-0 z-[280] flex items-center justify-center bg-foreground/55 p-4 font-brand text-foreground backdrop-blur-sm sm:p-6",
+        scope.className
+      )}
+      style={scope.style}
+      data-brand={scope.dataBrand}
+    >
       <div className="absolute inset-0" onClick={onClose} aria-hidden="true" />
       <section
         ref={dialogRef}
@@ -202,7 +215,9 @@ function ModalFrame({
         {children}
       </section>
     </div>,
-    portalTarget
+        portalTarget
+      )}
+    </>
   );
 }
 
@@ -228,7 +243,7 @@ export function SaveAcrossDevicesDialog({
     >
       <div className="flex items-start justify-between gap-4 border-b border-border px-5 py-4 sm:px-6">
         <div className="flex min-w-0 items-center gap-3">
-          <span className="flex size-11 shrink-0 items-center justify-center rounded-[8px] bg-primary/10 text-primary">
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-card bg-primary/10 text-primary">
             <Check className="size-5" aria-hidden />
           </span>
           <div className="min-w-0">
@@ -240,15 +255,17 @@ export function SaveAcrossDevicesDialog({
             </h2>
           </div>
         </div>
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="icon-touch"
           data-modal-close
           onClick={onClose}
-          className="inline-flex size-9 shrink-0 items-center justify-center rounded-[var(--component-button-radius-default)] text-muted-foreground transition hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 motion-reduce:transition-none"
+          className="-mr-2 -mt-1 shrink-0 text-muted-foreground hover:text-foreground"
           aria-label="Close save prompt"
         >
-          <X className="size-4" aria-hidden />
-        </button>
+          <X aria-hidden />
+        </Button>
       </div>
       <div className="px-5 py-5 sm:px-6">
         <p className="text-sm leading-6 text-muted-foreground">

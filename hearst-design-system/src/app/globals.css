@@ -1257,22 +1257,24 @@
     color: currentColor;
   }
 
+  /* Section themes (theme-options.ts) omit the neutral-transparent tokens, so ghost falls back to a
+     transparent box and a currentColor tint; text keeps inheriting when the content token is absent. */
   [data-slot="button"][data-variant="ghost"] {
-    border-color: var(--component-button-border-neutral-transparent-default);
-    background-color: var(--component-button-background-neutral-transparent-default);
+    border-color: var(--component-button-border-neutral-transparent-default, transparent);
+    background-color: var(--component-button-background-neutral-transparent-default, transparent);
     color: var(--component-button-content-neutral-transparent-default);
   }
   [data-slot="button"][data-variant="ghost"]:hover:not(:disabled),
   [data-slot="button"][data-variant="ghost"][data-preview-state="hover"] {
-    border-color: var(--component-button-border-neutral-transparent-hover);
-    background-color: var(--component-button-background-neutral-transparent-hover);
+    border-color: var(--component-button-border-neutral-transparent-hover, transparent);
+    background-color: var(--component-button-background-neutral-transparent-hover, color-mix(in oklab, currentColor 6%, transparent));
     color: var(--component-button-content-neutral-transparent-hover);
   }
   [data-slot="button"][data-variant="ghost"]:active:not(:disabled),
   [data-slot="button"][data-variant="ghost"][aria-expanded="true"],
   [data-slot="button"][data-variant="ghost"][data-preview-state="active"] {
-    border-color: var(--component-button-border-neutral-transparent-active);
-    background-color: var(--component-button-background-neutral-transparent-active);
+    border-color: var(--component-button-border-neutral-transparent-active, transparent);
+    background-color: var(--component-button-background-neutral-transparent-active, color-mix(in oklab, currentColor 10%, transparent));
     color: var(--component-button-content-neutral-transparent-active);
   }
 

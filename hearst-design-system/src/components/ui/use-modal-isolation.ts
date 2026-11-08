@@ -92,3 +92,55 @@ export function useModalIsolation<DialogElement extends HTMLElement>(
     };
   }, [dialogRef, open]);
 }
+
+export type InheritedThemeScope = {
+  className?: string;
+  dataBrand?: string;
+  style?: React.CSSProperties;
+};
+
+/** Theme-scope classes whose CSS defines tokens (e.g. the Hearst+ button radius). */
+const THEME_SCOPE_CLASSES = ["hearst-plus-theme"];
+
+/**
+ * Reads the theme an overlay would have inherited at `anchor` before it was portaled to <body>:
+ * inline custom properties from every ancestor (nearest wins), theme-scope classes, and the nearest
+ * data-brand. Apply the result to the portal root so HDS components keep the brand tokens.
+ */
+export function readInheritedThemeScope(anchor: Element | null): InheritedThemeScope {
+  const vars: Record<string, string> = {};
+  const classes = new Set<string>();
+  let dataBrand: string | undefined;
+
+  for (let element = anchor?.parentElement ?? null; element; element = element.parentElement) {
+    const { style } = element;
+    for (let index = 0; index < style.length; index += 1) {
+      const name = style[index];
+      if (name.startsWith("--") && !(name in vars)) vars[name] = style.getPropertyValue(name);
+    }
+    THEME_SCOPE_CLASSES.forEach((name) => {
+      if (element?.classList.contains(name)) classes.add(name);
+    });
+    dataBrand ??= element.dataset.brand;
+  }
+
+  return {
+    className: classes.size ? Array.from(classes).join(" ") : undefined,
+    dataBrand,
+    style: Object.keys(vars).length ? (vars as React.CSSProperties) : undefined,
+  };
+}
+
+/** Returns the anchor ref to render in place and the theme scope to put on the portal root. */
+export function useInheritedThemeScope(active: boolean) {
+  const anchorRef = React.useRef<HTMLSpanElement | null>(null);
+  const [scope, setScope] = React.useState<InheritedThemeScope>({});
+
+  React.useLayoutEffect(() => {
+    if (!active) return;
+    // The scope is read from the DOM after mount; it cannot be derived during render.
+    setScope(readInheritedThemeScope(anchorRef.current));
+  }, [active]);
+
+  return { anchorRef, scope };
+}
