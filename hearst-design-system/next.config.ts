@@ -4,6 +4,18 @@ const nextConfig: NextConfig = {
   // Netlify serves Storybook at `/storybook/` (trailing slash). Without this,
   // Next strips the slash (301 to `/storybook`) while Netlify adds it back → redirect loop.
   trailingSlash: true,
+  // /token-specs reads logo SVGs with a dynamic public/ path, so file tracing pulls the whole public folder
+  // (spec films, images, video fixtures) into the Netlify server function and pushes it past the AWS Lambda
+  // size limit. The server only needs public/logos at runtime; everything else is served from the CDN.
+  outputFileTracingExcludes: {
+    "*": [
+      "./public/specs/**/*",
+      "./public/images/**/*",
+      "./public/figma-exports/**/*",
+      "./public/**/*.mp4",
+      "./public/**/*.webm",
+    ],
+  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "hips.hearstapps.com" },
