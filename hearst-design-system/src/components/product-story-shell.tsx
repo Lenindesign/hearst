@@ -9,6 +9,7 @@ import { brands, type BrandTheme } from "@/lib/brands";
 import { getHearstBrandRoute, getHearstDestinationRoute } from "@/lib/hearst-routes";
 import { hearstTVStations } from "@/lib/hearst-tv-feed-framework";
 import { brandLogos, resolveBrandLogoColor } from "@/lib/logos";
+import { PROD_STORYBOOK_URL } from "@/lib/storybook-links";
 import { themeOptions } from "@/lib/theme-options";
 import { lifestyleRiverStories } from "@/components/lifestyle-river-data";
 import { baseDestinationConfigs, getLifestyleScoreBreakdown } from "@/lib/hearst-personalization-model";
@@ -51,47 +52,70 @@ const entertainmentPrimaryColor = getThemeColor("hearst-entertainment", "1", "va
 const knockoutContentColor = "var(--palette-content-knockout, white)";
 const neutralAccentColor = "var(--muted)";
 
-export type ProductPageId = "reference" | "story" | "value" | "blueprint" | "ads" | "articles" | "tokens" | "hds" | "architecture" | "ai-in-hds" | "constitution" | "design-agent" | "magazine-token-study" | "cta-specs" | "layout-specs" | "type-specs";
+export type ProductPageId = "reference" | "story" | "value" | "blueprint" | "ads" | "articles" | "tokens" | "hds" | "architecture" | "ai-in-hds" | "constitution" | "design-agent" | "magazine-token-study" | "cta-specs" | "layout-specs" | "type-specs" | "token-specs";
 
 const productLinkFocus =
   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
+
+/** Spec and reference pages, in reading order. Shown in the sticky product header on every product page. */
+const specNavLinks: { id?: ProductPageId; label: string; href: string; external?: boolean }[] = [
+  { id: "magazine-token-study", label: "Token study", href: "/magazine-token-study/" },
+  { id: "cta-specs", label: "CTAs", href: "/cta-specs/" },
+  { id: "layout-specs", label: "Breakpoints & grid", href: "/layout-specs/" },
+  { id: "type-specs", label: "Type metrics", href: "/type-specs/" },
+  { id: "token-specs", label: "Tokens & brands", href: "/token-specs/" },
+  { label: "Blocks spec", href: "/specs/blocks-spec.html" },
+  { label: "Storybook", href: PROD_STORYBOOK_URL, external: true },
+];
 
 export function ProductHeader({ current, appearance = "light" }: { current: ProductPageId; appearance?: "light" | "navy" }) {
   const isNavy = appearance === "navy";
   const linkFocus = isNavy
     ? "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-foreground"
     : productLinkFocus;
+  const linkTone = isNavy ? "text-primary-foreground/75 hover:text-primary-foreground" : "text-muted-foreground hover:text-foreground";
+  const activeTone = isNavy ? "border-primary-foreground text-primary-foreground" : "border-primary text-foreground";
+
+  const renderLinks = (compact: boolean) => specNavLinks.map((item) => {
+    const active = item.id === current;
+    const className = `relative inline-flex min-h-11 shrink-0 items-center whitespace-nowrap border-b-2 ${compact ? "px-3" : "px-2"} ${active ? activeTone : `border-transparent ${linkTone}`} ${linkFocus}`;
+    if (item.external) {
+      return <a key={item.href} href={item.href} target="_blank" rel="noopener noreferrer" className={className}>{item.label}<span className="sr-only"> (opens in a new tab)</span></a>;
+    }
+    // Static spec files are plain documents, not app routes.
+    if (item.href.endsWith(".html")) {
+      return <a key={item.href} href={item.href} className={className}>{item.label}</a>;
+    }
+    return <Link key={item.href} href={item.href} aria-current={active ? "page" : undefined} className={className}>{item.label}</Link>;
+  });
 
   return (
     <header
       data-current-product-page={current}
-      className={isNavy ? "border-b border-primary-foreground/20 bg-[var(--hp-utility-bar)] text-primary-foreground" : "border-b border-border bg-card"}
+      className={`sticky top-0 z-50 ${isNavy ? "border-b border-primary-foreground/20 bg-[var(--hp-utility-bar)] text-primary-foreground" : "border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/85"}`}
     >
-      <div className="mx-auto flex max-w-[1360px] flex-col gap-2 px-5 py-3 md:px-10 lg:flex-row lg:items-center lg:justify-between lg:gap-5">
+      <div className="mx-auto flex max-w-[1360px] flex-col gap-1 px-5 md:px-10 xl:flex-row xl:items-center xl:justify-between xl:gap-5">
         <Link
           href={getHearstDestinationRoute("all")}
-          className={`flex min-h-11 items-center self-start ${linkFocus}`}
+          className={`flex min-h-11 shrink-0 items-center self-start py-2 xl:self-auto ${linkFocus}`}
           aria-label="Hearst Magazines"
         >
           <LogoMark slug="hearst-all" name="Hearst Magazines" color={isNavy ? knockoutContentColor : hearstPrimaryColor} className="h-6 w-32 sm:w-40" />
         </Link>
-        <nav aria-label="Prototype navigation" className="hidden items-center gap-2 text-sm font-semibold lg:flex">
-          <Link
-            className={`inline-flex min-h-11 items-center px-2 ${isNavy ? "text-primary-foreground/80 hover:text-primary-foreground" : "text-muted-foreground hover:text-foreground"} ${linkFocus}`}
-            href={getHearstDestinationRoute("all")}
-          >
+        <nav aria-label="Spec pages" className="hidden min-w-0 items-center gap-1 overflow-x-auto text-sm font-semibold xl:flex" style={{ scrollbarWidth: "none" }}>
+          {renderLinks(false)}
+          <span aria-hidden className={`mx-2 h-5 w-px shrink-0 ${isNavy ? "bg-primary-foreground/25" : "bg-border"}`} />
+          <Link className={`inline-flex min-h-11 shrink-0 items-center whitespace-nowrap px-2 ${linkTone} ${linkFocus}`} href={getHearstDestinationRoute("all")}>
             Open prototype
           </Link>
         </nav>
         <nav
-          aria-label="Prototype navigation"
-          className={`-mx-5 flex min-w-0 overflow-x-auto border-t px-5 text-xs font-bold md:-mx-10 md:px-10 lg:hidden ${isNavy ? "border-primary-foreground/20" : "border-border"}`}
+          aria-label="Spec pages"
+          className={`-mx-5 flex min-w-0 overflow-x-auto border-t px-2 text-xs font-bold md:-mx-10 md:px-7 xl:hidden ${isNavy ? "border-primary-foreground/20" : "border-border"}`}
           style={{ scrollbarWidth: "none" }}
         >
-          <Link
-            className={`inline-flex min-h-11 shrink-0 items-center px-3 ${isNavy ? "text-primary-foreground/80" : "text-muted-foreground"} ${linkFocus}`}
-            href={getHearstDestinationRoute("all")}
-          >
+          {renderLinks(true)}
+          <Link className={`inline-flex min-h-11 shrink-0 items-center whitespace-nowrap border-b-2 border-transparent px-3 ${linkTone} ${linkFocus}`} href={getHearstDestinationRoute("all")}>
             Prototype
           </Link>
         </nav>

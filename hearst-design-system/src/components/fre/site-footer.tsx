@@ -46,6 +46,7 @@ const defaultProductLinkGroups: SiteFooterLinkGroup[] = [
       { label: "CTA specifications", href: "/cta-specs/" },
       { label: "Breakpoints & grid", href: "/layout-specs/" },
       { label: "Type metrics", href: "/type-specs/" },
+      { label: "Tokens & brand guides", href: "/token-specs/" },
       { label: "Blocks, cards & widgets spec", href: "/specs/blocks-spec.html" },
       { label: "Storybook", href: PROD_STORYBOOK_URL },
     ],
