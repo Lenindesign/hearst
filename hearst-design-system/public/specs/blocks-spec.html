@@ -64,9 +64,52 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 .grid-px h4{margin-top:0}
 .small{font-size:13px;color:var(--slate-600)}
 .tag{display:inline-block;font:700 10px/1 var(--ui);letter-spacing:.12em;text-transform:uppercase;color:var(--blue);border:1px solid var(--slate-300);padding:4px 6px;border-radius:3px;margin-right:4px}
+.film{margin:20px 0 0;background:var(--white);border:1px solid var(--slate-200)}
+.film video{scroll-margin-top:110px;display:block;width:100%;height:auto;aspect-ratio:16/9;background:#fff}
+.film figcaption{padding:14px 16px 16px;border-top:1px solid var(--slate-200)}
+.film figcaption p{margin:0 0 10px;font-size:13px;color:var(--slate-600)}
+.chapters{list-style:none;margin:0;padding:0;display:grid;gap:4px 16px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.chapters li{margin:0}
+.chapters button{all:unset;box-sizing:border-box;display:flex;gap:10px;align-items:baseline;width:100%;min-height:44px;padding:6px 8px;border-radius:4px;cursor:pointer;font-size:13.5px;color:var(--ink)}
+.chapters button:hover{background:var(--slate-100)}
+.chapters button:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+.chapters .tc{font:600 12px/1 var(--mono);color:var(--blue);min-width:38px;font-variant-numeric:tabular-nums}
+/* Spec-pages nav: static copy of ProductHeader (product-story-shell.tsx). Keep the links in step with specNavLinks. */
+.specnav{position:sticky;top:0;z-index:50;background:rgb(255 255 255 / .85);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid #bdbdbd;font-family:var(--ui)}
+.specnav .in{max-width:1360px;margin:0 auto;padding:0 20px;display:flex;flex-direction:column;gap:4px}
+.specnav .logo{display:flex;align-items:center;min-height:44px;padding:8px 0;align-self:flex-start}
+.specnav .logo span{display:block;width:128px;height:24px;background:url(/logos/hearst-plus.svg?v=2026-10-11) left center/contain no-repeat}
+.specnav nav{display:flex;min-width:0;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:0 8px;border-top:1px solid #bdbdbd;font-size:12px;font-weight:700}
+.specnav nav::-webkit-scrollbar{display:none}
+.specnav nav a{position:relative;display:inline-flex;align-items:center;min-height:44px;flex-shrink:0;white-space:nowrap;padding:0 12px;border-bottom:2px solid transparent;color:#757575;text-decoration:none}
+.specnav nav a:hover{color:#121212}
+.specnav nav a[aria-current=page]{border-bottom-color:#384959;color:#121212}
+.specnav a:focus-visible{outline:2px solid #384959;outline-offset:2px}
+.specnav .sep{display:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (min-width:640px){.specnav .logo span{width:160px}}
+@media (min-width:768px){.specnav .in{padding:0 40px}.specnav nav{margin:0 -40px;padding:0 28px}}
+@media (min-width:1280px){.specnav .in{flex-direction:row;align-items:center;justify-content:space-between;gap:20px}.specnav .logo{align-self:auto}.specnav nav{margin:0;padding:0;border-top:0;gap:4px;font-size:14px;font-weight:600}.specnav nav a{padding:0 8px}.specnav .sep{display:block;width:1px;height:20px;margin:0 8px;background:#bdbdbd;flex-shrink:0}.specnav .short{display:none}}
+@media (max-width:1279.98px){.specnav .long{display:none}}
 </style>
 </head>
 <body>
+<header class="specnav">
+  <div class="in">
+    <a class="logo" href="/hearst-plus/" aria-label="Hearst Magazines"><span aria-hidden="true"></span></a>
+    <nav aria-label="Spec pages">
+      <a href="/magazine-token-study/">Token study</a>
+      <a href="/cta-specs/">CTAs</a>
+      <a href="/layout-specs/">Breakpoints &amp; grid</a>
+      <a href="/type-specs/">Type metrics</a>
+      <a href="/token-specs/">Tokens &amp; brands</a>
+      <a href="/specs/blocks-spec.html" aria-current="page">Blocks spec</a>
+      <a href="https://hearst-design-system.netlify.app/storybook/?path=/docs/hearst-plus-start-overview--docs" target="_blank" rel="noopener noreferrer">Storybook<span class="sr"> (opens in a new tab)</span></a>
+      <span class="sep" aria-hidden="true"></span>
+      <a href="/hearst-plus/"><span class="long">Open prototype</span><span class="short">Prototype</span></a>
+    </nav>
+  </div>
+</header>
 <main class="page">
 
 <header class="mast">
@@ -74,7 +117,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
   <h1>Blocks, cards and widgets</h1>
   <p class="lede">This spec covers the parts that make up Hearst+ home page sections: 8 layout patterns, 9 card types and 6 sidebar widgets from the Building Blocks Library. Each entry gives the part's anatomy, the tokens it uses, how it responds to width, and its states. Values come from the component source and from measuring the running app.</p>
   <div class="meta">
-    <div><b>Doc</b><span>HP-BLOCKS-SPEC · Rev A · 2026-11-06</span></div>
+    <div><b>Doc</b><span>HP-BLOCKS-SPEC · Rev B · 2026-11-09</span></div>
     <div><b>Route</b><span><code>/hearst-plus/blocks/library/</code></span></div>
     <div><b>Source</b><span><code>blocks-library-experience.tsx</code>, <code>home-page.tsx</code>, <code>globals.css</code></span></div>
     <div><b>Measured</b><span>Playwright · Chromium · viewports 390, 768, 1024, 1280, 1440, 1600 · fonts loaded · light mode</span></div>
@@ -132,8 +175,8 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
   <div class="tw"><table>
     <tr><th>Name</th><th>Value</th><th>Notes</th></tr>
     <tr><td>Spacing unit <code>--spacing</code></td><td class="n">0.25rem = 4px</td><td>Tailwind utilities resolve as n × 4: <code>gap-2</code> 8, <code>gap-3</code> 12, <code>p-4</code> 16, <code>p-5</code> 20.</td></tr>
-    <tr><td>Viewport breakpoints</td><td class="n">sm 640 · lg 1024 · xl 1280 · 2xl 1536</td><td>Card padding and type step at sm. Pattern columns no longer use viewport breakpoints (see container queries).</td></tr>
-    <tr><td>Container queries</td><td class="n">20rem · 32rem · hp-block 540 / 820 / 1100</td><td><code>story-meta</code> &lt; 20rem hides the byline. <code>compact-photo-gallery</code> ≥ 32rem shows 3 rows. Blocks (<code>@container/hp-block</code>) set their columns at 540, 820 and 1100px of block width.</td></tr>
+    <tr><td>Viewport breakpoints</td><td class="n">sm 640 · md 768 · lg 1024 · xl 1280</td><td>Card padding steps at sm, headline type at md (UI-TYPE-001). 2xl is retired. Pattern columns don't use viewport breakpoints (see container queries).</td></tr>
+    <tr><td>Container queries</td><td class="n">20rem · 32rem · hp-block 536 / 812 / 1088 · 820 / 1100</td><td><code>story-meta</code> &lt; 20rem hides the byline. <code>compact-photo-gallery</code> ≥ 32rem shows 3 rows. In blocks (<code>@container/hp-block</code>), card rows and grids set their columns at 536, 812 and 1088px of block width. The Feature + Sidebar and Three-Column layouts switch at 820 and 1100.</td></tr>
     <tr><td>Touch minimum</td><td class="n">44px (<code>min-h-11</code>)</td><td>The meta link and the save button grow to 44 below sm.</td></tr>
     <tr><td>Motion</td><td class="n">250ms ease-out</td><td>Card media scales on hover; this is turned off under <code>prefers-reduced-motion</code>.</td></tr>
   </table></div>
@@ -141,34 +184,44 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 
 <!-- ================= STORY CARD ================= -->
 <section class="major" id="story-card">
-  <p class="kicker">02 · Card type 01 · Drawing HP-CARD-001 · Rev C</p>
+  <p class="kicker">02 · Card type 01 · Drawing HP-CARD-001 · Rev D</p>
   <h2>Story card</h2>
-  <p>The Article card type is the production river card: <code>LifestyleRiverCard</code> in <code>home-page.tsx</code>, rendered with <code>layoutOverride="blocks"</code>. Video, Make/Model/Year and Gallery cards are variations of it. The full dimensional drawing is in <a href="story-card-drawing.html">story-card-drawing.html</a>, and an 11.5 s <a href="story-card-film.mp4">motion film</a> walks through it.</p>
+  <p>The Article card type is the production river card: <code>LifestyleRiverCard</code> in <code>home-page.tsx</code>, rendered with <code>layoutOverride="blocks"</code>. Video, Make/Model/Year and Gallery cards are variations of it. The full dimensional drawing is in <a href="story-card-drawing.html">story-card-drawing.html</a>. The film below walks through it part by part.</p>
   <div class="sheet"><a href="story-card-drawing.html"><img src="story-card-drawing.png" alt="Dimensional drawing sheet of the story card: plan views at sm and base breakpoints, exploded layer stack, meta row detail, shadow envelope, states, radius details and token tables."></a></div>
+  <figure class="film" id="story-card-film">
+    <video controls muted playsinline preload="metadata" poster="story-card-film-poster.jpg" aria-describedby="story-card-film-desc">
+      <source src="story-card-film.mp4" type="video/mp4">
+      Your browser can't play this video. <a href="story-card-film.mp4">Download the story card film</a>.
+    </video>
+    <figcaption>
+      <p id="story-card-film-desc"><b>Story card film · 2:07 · no sound.</b> The drawing explained part by part: slots, spacing, the height formula, line clamps, the meta row, breakpoints, layers, shadow, radius, states and row behavior. Pick a chapter to jump to it.</p>
+      <ol class="chapters"><li><button type="button" data-t="0"><span class="tc">0:00</span>The card and its four slots</button></li><li><button type="button" data-t="8"><span class="tc">0:08</span>Anatomy and hit area</button></li><li><button type="button" data-t="20"><span class="tc">0:20</span>Vertical rhythm and height formula</button></li><li><button type="button" data-t="34"><span class="tc">0:34</span>Headline and summary lines</button></li><li><button type="button" data-t="46"><span class="tc">0:46</span>Meta row and save button</button></li><li><button type="button" data-t="60"><span class="tc">1:00</span>Breakpoints: base, sm, md</button></li><li><button type="button" data-t="74"><span class="tc">1:14</span>Layers and click targets</button></li><li><button type="button" data-t="86"><span class="tc">1:26</span>Shadow envelope and radius</button></li><li><button type="button" data-t="96"><span class="tc">1:36</span>States</button></li><li><button type="button" data-t="106"><span class="tc">1:46</span>In a row: columns and heights</button></li><li><button type="button" data-t="116"><span class="tc">1:56</span>The drawing sheet</button></li></ol>
+    </figcaption>
+  </figure>
   <div class="cols" style="margin-top:20px">
     <div>
       <h4>Anatomy (top to bottom)</h4>
       <ul>
         <li><b>Container</b>: <code>article</code>, <code>rounded-[8px]</code>, <code>--hp-surface</code>, <code>--hp-shadow-card</code>, <code>overflow-hidden</code>, border 0.</li>
         <li><b>Media</b>: fills W at 16:9 (<code>aspect-video</code>, <code>object-cover</code>). Its top corners are clipped by the container radius.</li>
-        <li><b>Meta row</b> (<code>.story-meta-row</code>, z-20): 16px brand icon (r 3) · 6 gap · "Brand · Topic" (truncates) · "· Byline" (hidden below a 20rem container) · optional save button at the end.</li>
-        <li><b>Headline</b>: <code>.story-card-headline</code>, clamped to 3 lines, underlines on hover or focus. On vehicle stories a rating badge sits at the end of the row (gap 12, aligned to the bottom).</li>
-        <li><b>Summary</b>: clamped to 3 lines, <code>--muted-foreground</code>.</li>
+        <li><b>Meta row</b> (<code>.story-meta-row</code>, z-20): 16px brand icon (r 3) · 6 gap · "Brand · Topic" (truncates) · "· Byline" (hidden below a 20rem container) · optional save button at the end. Text uses <code>type-m1</code> (12/16, 600, +0.4px).</li>
+        <li><b>Headline</b>: <code>.headline type-t3</code> (20/24, then 24/28 from md 768), clamped to 3 lines, underlines on hover or focus. On vehicle stories a rating badge sits at the end of the row (gap 12, aligned to the bottom).</li>
+        <li><b>Summary</b>: <code>type-d2</code> (16/24, +0.2px), clamped to 2 lines, <code>--muted-foreground</code>.</li>
         <li><b>Hit area</b>: an invisible <code>button</code> covers the whole card (<code>absolute inset-0</code>, z-10). The meta row sits above it, so the brand link and save button get their own clicks.</li>
       </ul>
     </div>
     <div>
       <h4>Measured values</h4>
       <div class="tw"><table>
-        <tr><th>Part</th><th>Base &lt; 640</th><th>sm ≥ 640</th></tr>
-        <tr><td>Content padding</td><td class="n">16 (p-4)</td><td class="n">20 (p-5)</td></tr>
-        <tr><td>Meta row height</td><td class="n">44 (touch)</td><td class="n">16.5 · 32 with save</td></tr>
-        <tr><td>Meta → headline / headline → summary</td><td class="n">8 / 8</td><td class="n">8 / 8</td></tr>
-        <tr><td>Headline size / line</td><td class="n">20 / 25</td><td class="n">24 / 30</td></tr>
-        <tr><td>Summary size / line</td><td class="n">14 / 24</td><td class="n">15.2 / 24</td></tr>
-        <tr><td>Sample card (W × H)</td><td class="n">326 × 374.4</td><td class="n">672 × 534.5</td></tr>
+        <tr><th>Part</th><th>Base &lt; 640</th><th>sm 640–767</th><th>md ≥ 768</th></tr>
+        <tr><td>Content padding</td><td class="n">16 (p-4)</td><td class="n">20 (p-5)</td><td class="n">20 (p-5)</td></tr>
+        <tr><td>Meta row height</td><td class="n">16 · 44 with save</td><td class="n">16 · 32 with save</td><td class="n">16 · 32 with save</td></tr>
+        <tr><td>Meta → headline / headline → summary</td><td class="n">8 / 8</td><td class="n">8 / 8</td><td class="n">8 / 8</td></tr>
+        <tr><td>Headline size / line</td><td class="n">20 / 24</td><td class="n">20 / 24</td><td class="n">24 / 28</td></tr>
+        <tr><td>Summary size / line</td><td class="n">16 / 24</td><td class="n">16 / 24</td><td class="n">16 / 24</td></tr>
+        <tr><td>Sample card (W × H)</td><td class="n">326 × 371.4</td><td class="n">—</td><td class="n">672 × 502</td></tr>
       </table></div>
-      <p class="small">Height = W·9/16 + 2·padding + meta row + 8 + n·headline line + 8 + m·summary line. The 672 sample: 378 + 40 + 16.5 + 8 + 60 + 8 + 24 = 534.5, which matches the measurement exactly.</p>
+      <p class="small">Height = W·9/16 + 2·padding + meta row + 8 + n·headline line + 8 + m·summary line. The 672 sample (no save, 1 headline line, 1 summary line): 378 + 40 + 16 + 8 + 28 + 8 + 24 = 502. The 326 sample (save, 2 + 2 lines): 183.4 + 32 + 44 + 8 + 48 + 8 + 48 = 371.4. Both match the measurements exactly (2026-11-09).</p>
     </div>
   </div>
   <h4>States</h4>
@@ -187,22 +240,35 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 <section class="major" id="patterns">
   <p class="kicker">03 · Layout patterns</p>
   <h2>Patterns</h2>
-  <p>Every pattern is now a mode of the production block <code>EditorialHomepageSection</code> (<code>home-page.tsx</code>), and the library renders that component directly. Columns follow the block's own width through the container <code>hp-block</code>, not the viewport. Each figure redraws the measured card rectangles at 0.14:1 for every inner width the library produced (inner W = preview width minus the frame padding).</p>
+  <p>Every pattern is now a mode of the production block <code>EditorialHomepageSection</code> (<code>home-page.tsx</code>), and the library renders that component directly. Columns follow the block's own width through the container <code>hp-block</code>, not the viewport. The film below walks through every pattern. Each figure redraws the measured card rectangles at 0.14:1 for every inner width the library produced (inner W = preview width minus the frame padding, measured 2026-11-09).</p>
   <div class="tw"><table>
     <tr><th>Block width</th><th>Row (<code>.hp-block-row</code>)</th><th>Grid (<code>.hp-block-grid</code>)</th><th>Feature + Sidebar</th><th>Three-Column</th></tr>
-    <tr><td class="n">&lt; 540</td><td>1</td><td>1</td><td>stacked</td><td>stacked</td></tr>
-    <tr><td class="n">540–819</td><td>2</td><td>2</td><td>stacked</td><td>stacked</td></tr>
-    <tr><td class="n">820–1099</td><td>3 (4th card hidden)</td><td>2</td><td>1.8fr | 1fr, list stretches</td><td>rail + ad | feature</td></tr>
+    <tr><td class="n">&lt; 536</td><td>1</td><td>1</td><td>stacked</td><td>stacked</td></tr>
+    <tr><td class="n">536–811</td><td>2</td><td>2</td><td>stacked</td><td>stacked</td></tr>
+    <tr><td class="n">812–819</td><td>3 (4th card hidden)</td><td>2</td><td>stacked</td><td>stacked</td></tr>
+    <tr><td class="n">820–1087</td><td>3 (4th card hidden)</td><td>2</td><td>1.8fr | 1fr, list stretches</td><td>rail + ad | feature</td></tr>
+    <tr><td class="n">1088–1099</td><td>4</td><td>4</td><td>1.8fr | 1fr</td><td>rail + ad | feature</td></tr>
     <tr><td class="n">≥ 1100</td><td>4</td><td>4</td><td>1.8fr | 1fr</td><td>rail | feature | ad</td></tr>
   </table></div>
-  <p class="small">Thresholds come from a 260px minimum card and a 20px gap: 2·260 + 20 = 540, 3·260 + 40 = 820, 4·260 + 60 = 1100. Grid items stretch, so cards in a row share the tallest card's height. Cards use <code>content-start</code>, so the spare height collects below the text and media and meta rows stay aligned. Production check (<code>/hearst-plus/blocks/</code>, Card Row): 358 → 1, 720 → 2 × 350, 976 → 3 × 312, 1184 → 4 × 281, 1264 → 4 × 301, every row with equal heights.</p>
+  <p class="small">Row and grid thresholds come from a 260px minimum card and the 16px layout gap (<code>--layout-gap</code>): 2·260 + 16 = 536, 3·260 + 32 = 812, 4·260 + 48 = 1088. Feature + Sidebar and Three-Column keep their own 820 and 1100 switches (<code>@min-[820px]</code>, <code>@min-[1100px]</code>), with a 20px gap between their columns. Grid items stretch, so cards in a row share the tallest card's height. Cards use <code>content-start</code>, so the spare height collects below the text and media and meta rows stay aligned. Card Row at production widths (computed with the 16 gap): 358 → 1, 720 → 2 × 352, 976 → 3 × 314.7, 1184 → 4 × 284, 1264 → 4 × 304, every row with equal heights.</p>
 
+
+  <figure class="film" id="blocks-film">
+    <video controls muted playsinline preload="metadata" poster="blocks-film-poster.jpg" aria-describedby="blocks-film-desc">
+      <source src="blocks-film.mp4" type="video/mp4">
+      Your browser can't play this video. <a href="blocks-film.mp4">Download the blocks film</a>.
+    </video>
+    <figcaption>
+      <p id="blocks-film-desc"><b>Blocks film · 1:48 · no sound.</b> How blocks hold cards: each of the 8 patterns morphs through block widths 326, 664, 978 and 1138, with column widths and gaps measured in the Blocks Library on 2026-11-09. Pick a chapter to jump to it.</p>
+      <ol class="chapters"><li><button type="button" data-t="0"><span class="tc">0:00</span>A block = pattern + cards</button></li><li><button type="button" data-t="9"><span class="tc">0:09</span>01 · Featured + Row</button></li><li><button type="button" data-t="20"><span class="tc">0:20</span>02 · Card Row</button></li><li><button type="button" data-t="31"><span class="tc">0:31</span>03 · Feature + Sidebar</button></li><li><button type="button" data-t="42"><span class="tc">0:42</span>04 · River with Hero</button></li><li><button type="button" data-t="53"><span class="tc">0:53</span>05 · Three-Column Feature Row</button></li><li><button type="button" data-t="64"><span class="tc">1:04</span>06 · Featured Video + Four</button></li><li><button type="button" data-t="75"><span class="tc">1:15</span>07 · Grid</button></li><li><button type="button" data-t="86"><span class="tc">1:26</span>08 · River</button></li><li><button type="button" data-t="97"><span class="tc">1:37</span>The breakpoint rules</button></li></ol>
+    </figcaption>
+  </figure>
   <article class="block" id="p-featured-four">
     <span class="id">PATTERN 01 · featured-four · mode <code>featureFirstGrid</code></span>
     <h3>Featured + Row</h3>
     <p>A section heading, a full-width lead story, then a row of up to four cards.</p>
     <div class="cols"><div>
-      <h4>Anatomy</h4><ul><li><b>Heading:</b> <code>headline text-4xl</code> section title, with a 12px caps selection label at the end.</li><li><b>Lead:</b> a standard story card (16:9, see Story card), then a 16px gap.</li><li><b>Row:</b> <code>.hp-block-row</code> holding four standard cards, with a 20px gap.</li></ul>
+      <h4>Anatomy</h4><ul><li><b>Heading:</b> <code>headline text-4xl</code> section title, with a 12px caps selection label at the end.</li><li><b>Lead:</b> a standard story card (16:9, see Story card), then a 16px gap.</li><li><b>Row:</b> <code>.hp-block-row</code> holding four standard cards, with a 16px gap (<code>--layout-gap</code>).</li></ul>
     </div><div>
       <h4>Responsive rule</h4><ul><li>The row follows the table above: 1, 2, 3 or 4 columns. With 3 columns the fourth card is hidden, so a row is never partial.</li><li>The lead stays full width at every size.</li></ul>
     </div></div>
@@ -215,9 +281,9 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
     <h3>Card Row</h3>
     <p>A section heading and a row of up to four compact cards.</p>
     <div class="cols"><div>
-      <h4>Anatomy</h4><ul><li><code>.hp-block-row</code>, 20px gap.</li><li>Compact story cards (<code>LifestyleRiverCard compact</code>): 4:3 media, 12px padding, text-lg headline clamped to 3 lines, no summary.</li></ul>
+      <h4>Anatomy</h4><ul><li><code>.hp-block-row</code>, 16px gap (<code>--layout-gap</code>).</li><li>Compact story cards (<code>LifestyleRiverCard compact</code>): 4:3 media, 12px padding, text-lg headline clamped to 3 lines, no summary.</li></ul>
     </div><div>
-      <h4>Responsive rule</h4><ul><li>1 → 2 → 3 → 4 columns at 540, 820 and 1100. At 3 columns the fourth card is hidden.</li></ul>
+      <h4>Responsive rule</h4><ul><li>1 → 2 → 3 → 4 columns at 536, 812 and 1088. At 3 columns the fourth card is hidden.</li></ul>
     </div></div>
     <div class="bp" data-pattern="Card Row"></div>
     <h4>States</h4><p class="small">Same as Pattern 01.</p>
@@ -266,7 +332,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
     <div class="cols"><div>
       <h4>Anatomy</h4><ul><li>Featured: <code>LifestyleRiverCard featured</code>. A video story renders the 16:9 poster with a 56px play button and a duration pill.</li><li>Then a 20px gap and <code>.hp-block-grid</code> with four video story cards.</li></ul>
     </div><div>
-      <h4>Responsive rule</h4><ul><li>Grid: 1 → 2 → 4 columns at 540 and 1100. There's no 3-column step, so four cards always fill their rows.</li></ul>
+      <h4>Responsive rule</h4><ul><li>Grid: 1 → 2 → 4 columns at 536 and 1088. There's no 3-column step, so four cards always fill their rows.</li></ul>
     </div></div>
     <div class="bp" data-pattern="Featured Video + Four"></div>
     <h4>States</h4><p class="small">poster → playing (inline <code>AdaptiveVideo</code>). Stories without a <code>videoUrl</code> show their poster with no play button.</p>
@@ -277,9 +343,9 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
     <h3>Grid</h3>
     <p>Standard story cards in a grid that wraps.</p>
     <div class="cols"><div>
-      <h4>Anatomy</h4><ul><li><code>.hp-block-grid</code>, 20px gap, any number of standard cards (the library shows 8).</li></ul>
+      <h4>Anatomy</h4><ul><li><code>.hp-block-grid</code>, 16px gap (<code>--layout-gap</code>), any number of standard cards (the library shows 8).</li></ul>
     </div><div>
-      <h4>Responsive rule</h4><ul><li>1 → 2 → 4 columns at 540 and 1100. Rows stretch to their tallest card.</li></ul>
+      <h4>Responsive rule</h4><ul><li>1 → 2 → 4 columns at 536 and 1088. Rows stretch to their tallest card.</li></ul>
     </div></div>
     <div class="bp" data-pattern="Grid"></div>
   </article>
@@ -304,10 +370,10 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
   <p>Patterns use one card component, <code>LifestyleRiverCard</code>. The library's separate <code>StorySample</code> and the inline Card Row card are gone.</p>
   <div class="tw"><table>
     <tr><th>Variant</th><th>Props</th><th>Media</th><th>Body</th><th>Headline</th><th>Summary</th><th>Used in</th></tr>
-    <tr><td>standard</td><td><code>layoutOverride="cards"</code></td><td>16:9, clipped by R1</td><td><code>p-4 · sm:p-5</code></td><td>20/25 · 24/30, ≤ 3 lines</td><td>14 · 15.2 / 24, ≤ 3 lines</td><td>01 lead + row, 03 lead, 04 lead, 05, 07</td></tr>
+    <tr><td>standard</td><td><code>layoutOverride="cards"</code></td><td>16:9, clipped by R1</td><td><code>p-4 · sm:p-5</code></td><td>type-t3 20/24 · md 24/28, ≤ 3 lines</td><td>type-d2 16/24, ≤ 2 lines</td><td>01 lead + row, 03 lead, 04 lead, 05, 07</td></tr>
     <tr><td>compact</td><td><code>compact</code></td><td>4:3, video stories included (play button and duration kept)</td><td><code>p-3</code></td><td>text-lg, tight, ≤ 3 lines</td><td>none</td><td>02</td></tr>
     <tr><td>list</td><td><code>layoutOverride="list"</code> + <code>editorialRow</code></td><td>4:3, 28% wide, <code>rounded-card-inner</code></td><td><code>p-4 · sm:p-5</code>, gap 16</td><td>lg · sm:xl, ≤ 3 lines</td><td>sm / 24, ≤ 3 lines</td><td>03 stack, 04, 08</td></tr>
-    <tr><td>featured</td><td><code>featured</code></td><td>16:9; side by side from 2xl</td><td><code>p-5 · sm:p-6 · lg:p-8</code></td><td>as standard</td><td>base / 28</td><td>06</td></tr>
+    <tr><td>featured</td><td><code>featured</code></td><td>16:9</td><td><code>p-5 · sm:p-6 · lg:p-8</code></td><td>as standard</td><td>base / 28</td><td>06</td></tr>
     <tr><td>video</td><td>story with <code>videoUrl</code></td><td>16:9 poster, 56px play, duration pill</td><td colspan="4">Same body as the variant it's used in. The media layer sits above the hit area (z-20), so play has its own click.</td></tr>
   </table></div>
   <p class="small">Every variant: <code>rounded-card</code> (8), <code>--hp-surface</code>, <code>--hp-shadow-card</code>, no border. The meta row is a 16px brand icon, "Brand · Topic · Byline" (byline hidden below 20rem) and an optional bookmark save button.</p>
@@ -320,7 +386,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
   <p>The library renders each type at up to 672px wide (<code>max-w-2xl</code>), except Shorts and Brand Spotlight. Heights are the library samples.</p>
   <div class="tw"><table>
     <tr><th>#</th><th>Type · component</th><th>Anatomy</th><th>Tokens and sizes</th><th>Responsive</th><th>States</th></tr>
-    <tr><td class="n">01</td><td><b>Article</b><br><code>LifestyleRiverCard</code></td><td>See Story card above.</td><td>r 8 · padding 20 / 16 · 16:9</td><td class="n">326 × 374 → 672 × 534.5</td><td>hover, focus, saved, reduced motion</td></tr>
+    <tr><td class="n">01</td><td><b>Article</b><br><code>LifestyleRiverCard</code></td><td>See Story card above.</td><td>r 8 · padding 20 / 16 · 16:9</td><td class="n">326 × 371.4 → 672 × 502</td><td>hover, focus, saved, reduced motion</td></tr>
     <tr><td class="n">02</td><td><b>Video</b><br><code>LifestyleRiverCard</code> · kind video</td><td>Poster at 16:9 on black with a 15% scrim, a 56px play button (<code>bg-black/70</code>, 24px icon), and a duration pill at top-right (12px bold, tabular figures). Body as on Article.</td><td>Media layer at z-20, above the hit area, so play has its own click.</td><td class="n">326 × 397 → 672 × 552.5</td><td>poster → playing (<code>AdaptiveVideo</code> with controls and autoplay); poster-only fallback with no <code>videoUrl</code></td></tr>
     <tr><td class="n">03</td><td><b>Community</b><br><code>CommunityHomeRiverCard</code></td><td>Optional 16:9 poster. Host row: 20px round icon, xs bold. Title <code>xl · sm:2xl</code>, ≤ 3 lines. Body sm / 24, ≤ 3 lines. Footer row: reply count and a "Join the conversation" link.</td><td>Padding <code>p-4 · sm:p-5</code>. Footer has <code>border-t</code>, <code>px-4 py-3</code>, controls ≥ 36 (<code>min-h-9</code>).</td><td class="n">326 × 459 → 672 × 596. List layout: 112 | 1fr (168 at sm), 4:3 r 6.</td><td>Hover turns the title <code>text-primary</code> and scales media 1.02. Focus ring is <code>primary/35</code>.</td></tr>
     <tr><td class="n">04</td><td><b>Event</b><br><code>EventTile</code> (HDS <code>ArticleCard</code> lg)</td><td>Image, title <code>2xl · sm:3xl</code>, summary ≤ 4 lines, brand marks, a "Plan your visit" / "Explore the coverage" footer.</td><td><code>rounded-card</code> (8) and <code>--hp-shadow-card</code>, with no ring at rest (was r 11.2 with a ring outline before F8).</td><td class="n">326 × 616 → 672 × 706</td><td>upcoming vs past copy; image scales 1.015 over 300ms on hover</td></tr>
@@ -336,7 +402,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 <section class="major" id="widgets">
   <p class="kicker">06 · Sidebar modules</p>
   <h2>Widgets</h2>
-  <p>Shared shell (<code>DiscoverySidebarCard</code> and its siblings): <code>section</code>, r 8, <code>--hp-surface</code>, <code>--hp-shadow-card</code>, padding 16 (<code>p-4</code>). The title is 4xs (11px) bold caps, <code>tracking-widest</code>, in <code>--hp-sidebar-heading</code>, which falls back to <code>--primary</code>. The library preview caps widgets at 360px wide.</p>
+  <p>Shared shell (<code>DiscoverySidebarCard</code> and its siblings): <code>section</code>, r 8, <code>--hp-surface</code>, <code>--hp-shadow-card</code>, padding 16 (<code>p-4</code>). The title is <code>type-k1</code> (11/16, 700, caps, +0.1em), in <code>--hp-sidebar-heading</code>, which falls back to <code>--primary</code>. The library preview caps widgets at 360px wide.</p>
   <div class="tw"><table>
     <tr><th>#</th><th>Widget · component</th><th>Anatomy</th><th>Sizes</th><th>Responsive</th><th>States</th></tr>
     <tr><td class="n">01</td><td><b>Trending Stories</b><br><code>TrendingStoryRail</code></td><td>Title row, then ranked rows: 48px thumbnail (r 6, bordered) with a 20px rank badge (round, ring 1) and a 12px bold title (line 1.35, ≤ 3 lines) with meta.</td><td>Row min height 80 (<code>min-h-20</code>), <code>py-3</code>, gap 12. 5 rows = 453 tall at 360.</td><td>Fills the sidebar column width.</td><td>Title underlines on hover or focus. Renders nothing with no stories.</td></tr>
@@ -375,13 +441,13 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
       </ul>
     </div><div>
       <h4>Row rule (container, not viewport)</h4>
-      <p class="small">Column count follows the row's own width, using a minimum card width of 260 and a gap of 20 (production's <code>gap-5</code>):</p>
+      <p class="small">Column count follows the row's own width, using a minimum card width of 260 and the 16px layout gap (<code>--layout-gap</code>; this rule first shipped with a 20 gap):</p>
       <div class="tw"><table>
         <tr><th>Row width</th><th>Columns</th><th>Production check</th></tr>
-        <tr><td class="n">&lt; 540</td><td>1</td><td class="n">358 → 1 (matches today)</td></tr>
-        <tr><td class="n">≥ 540 = 2·260 + 20</td><td>2</td><td class="n">720 → 2 × 350</td></tr>
-        <tr><td class="n">≥ 820 = 3·260 + 40</td><td>3</td><td class="n">976 → 3 × 312 (today: 2 × 478)</td></tr>
-        <tr><td class="n">≥ 1100 = 4·260 + 60</td><td>4</td><td class="n">1184 → 4 × 281 · 1264 → 4 × 301</td></tr>
+        <tr><td class="n">&lt; 536</td><td>1</td><td class="n">358 → 1</td></tr>
+        <tr><td class="n">≥ 536 = 2·260 + 16</td><td>2</td><td class="n">720 → 2 × 352</td></tr>
+        <tr><td class="n">≥ 812 = 3·260 + 32</td><td>3</td><td class="n">976 → 3 × 314.7</td></tr>
+        <tr><td class="n">≥ 1088 = 4·260 + 48</td><td>4</td><td class="n">1184 → 4 × 284 · 1264 → 4 × 304</td></tr>
       </table></div>
       <p class="small">Card Row keeps one line and hides the extra cards. Grid and Featured Video + Four wrap onto more rows. Feature + Sidebar goes side by side at ≥ 820 (production switches at lg, giving a 615 | 341 split). Three-Column uses three columns only at ≥ 1100. Between 820 and 1100 it drops to two (feature + rail, ad below), so the center column is never under ~480. The library's 2-up at 326 (157px cards) goes away.</p>
     </div></div>
@@ -394,7 +460,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
     <tr><td class="n">F2</td><td>Radius is hard-coded (7 / 8 / 11.2); <code>--hp-radius-card</code> isn't used.</td><td><code>rounded-card</code> utility, plus <code>--hp-radius-inner</code> and a codemod (S1).</td><td>Token governance (Constitution Art. V)</td><td>Done · 2026-11-06</td></tr>
     <tr><td class="n">F3</td><td>Cards in a row don't match heights.</td><td>Stretch to the row height, top-aligned. Production already does this.</td><td>Production <code>cardGrid</code>, <code>stretchToFeature</code></td><td>Done · 2026-11-06</td></tr>
     <tr><td class="n">F4</td><td>4-up appears only on very wide screens.</td><td>Not a production bug; fixed for the library by the row rule.</td><td>Measured production widths</td><td>Done · 2026-11-06</td></tr>
-    <tr><td class="n">F5</td><td>Patterns key off the viewport.</td><td>Container queries at 540 / 820 / 1100 (S1).</td><td>Container queries (<code>hp-block</code>)</td><td>Done · 2026-11-06</td></tr>
+    <tr><td class="n">F5</td><td>Patterns key off the viewport.</td><td>Container queries at 540 / 820 / 1100 (S1); rows and grids moved to 536 / 812 / 1088 with the 16 layout gap.</td><td>Container queries (<code>hp-block</code>)</td><td>Done · 2026-11-06</td></tr>
     <tr><td class="n">F6</td><td>The story card's hover border never shows.</td><td>Delete <code>hover:border-primary/50</code> and <code>border border-border</code> from the card. Hover stays as the headline underline plus a 1.025 media scale.</td><td>STYLE.md: modules have no outline stroke, including on hover</td><td>Done · 2026-11-06</td></tr>
     <tr><td class="n">F7</td><td>Saved Stories disappears when empty.</td><td>New shared <code>SavedItemsModule</code> (<code>saved-items-module.tsx</code>) replaces three separate copies: the blocks home sidebar, <code>LifestyleDiscoverySidebar</code> and the reader context rail. Empty, it shows "Save stories to build your reading list.", a <b>Browse For You</b> action (hidden when the reader is already on an unfiltered For You), and three ranked, unsaved, non-hidden suggestions, each with its own open and save actions. Saving one swaps in the real list. The library widget has a With saves / Empty switch.</td><td>APP_RULES: Saved empty state; Saved Items uses the homepage empty state</td><td>Done · 2026-11-06</td></tr>
     <tr><td class="n">F8</td><td>Event card: r 11.2 with a <code>ring-1</code> outline.</td><td>Event: <code>EventTile</code> now uses the Hearst+ surface (<code>rounded-card</code>, <code>--hp-shadow-card</code>, <code>ring-0</code> at rest, focus ring kept). Shorts: no change needed. The first measurement read the outer wrapper; the 9:16 media inside already has the card radius and shadow.</td><td>STYLE.md: no outline stroke on modules; focus through rings</td><td>Done · 2026-11-06</td></tr>
@@ -422,7 +488,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 
 </main>
 <script>
-const DATA = {"Featured + Row":[{"vw":390,"w":326,"items":[[0,106,326,374],[0,496,326,398],[0,915,326,398],[0,1333,326,374],[0,1728,326,374]]},{"vw":1024,"w":562,"items":[[0,61,562,518],[0,595,271,402],[291,595,271,402],[0,1018,271,354],[291,1018,271,354]]},{"vw":768,"w":664,"items":[[0,61,664,546],[0,623,322,407],[342,623,322,407],[0,1050,322,383],[342,1050,322,383]]},{"vw":1280,"w":818,"items":[[0,61,818,632],[0,709,399,450],[419,709,399,450],[0,1180,399,426],[419,1180,399,426]]},{"vw":1440,"w":978,"items":[[0,61,978,722],[0,799,312.7,402],[333,799,312.7,402],[665,799,312.7,402]]},{"vw":1600,"w":1138,"items":[[0,61,1138,812],[0,889,269.5,402],[290,889,269.5,402],[579,889,269.5,402],[869,889,269.5,402]]}],"Card Row":[{"vw":390,"w":326,"items":[[0,106,326,405],[0,531,326,405],[0,955,326,405],[0,1380,326,405]]},{"vw":1024,"w":562,"items":[[0,61,271,351],[291,61,271,351],[0,432,271,351],[291,432,271,351]]},{"vw":768,"w":664,"items":[[0,61,322,390],[342,61,322,390],[0,471,322,390],[342,471,322,390]]},{"vw":1280,"w":818,"items":[[0,61,399,447],[419,61,399,447],[0,528,399,447],[419,528,399,447]]},{"vw":1440,"w":978,"items":[[0,61,312.7,383],[333,61,312.7,383],[665,61,312.7,383]]},{"vw":1600,"w":1138,"items":[[0,61,269.5,350],[290,61,269.5,350],[579,61,269.5,350],[869,61,269.5,350]]}],"Feature + Sidebar":[{"vw":390,"w":326,"items":[[0,106,326,374],[0,500,326,158],[0,671,326,158],[0,841,326,158],[0,1011,326,158]]},{"vw":1024,"w":562,"items":[[0,61,562,518],[0,599,562,163],[0,774,562,163],[0,948,562,163],[0,1123,562,163]]},{"vw":768,"w":664,"items":[[0,61,664,546],[0,627,664,171],[0,810,664,171],[0,993,664,171],[0,1176,664,171]]},{"vw":1280,"w":818,"items":[[0,61,818,632],[0,713,818,203],[0,928,818,203],[0,1144,818,203],[0,1359,818,203]]},{"vw":1440,"w":978,"items":[[0,61,615.8,686],[636,61,342.1,163],[636,236,342.1,163],[636,410,342.1,163],[636,585,342.1,163]]},{"vw":1600,"w":1138,"items":[[0,61,718.7,686],[739,61,399.3,163],[739,236,399.3,163],[739,410,399.3,163],[739,585,399.3,163]]}],"River with Hero":[{"vw":390,"w":326,"items":[[0,106,326,374],[0,492,326,236],[0,741,326,236],[0,989,326,188]]},{"vw":1024,"w":562,"items":[[0,61,562,518],[0,591,562,217],[0,820,562,217],[0,1048,562,193]]},{"vw":768,"w":664,"items":[[0,61,664,546],[0,619,664,217],[0,847,664,217],[0,1076,664,193]]},{"vw":1280,"w":818,"items":[[0,61,818,632],[0,705,818,203],[0,920,818,203],[0,1136,818,203]]},{"vw":1440,"w":978,"items":[[0,61,978,722],[0,795,978,237],[0,1044,978,237],[0,1293,978,237]]},{"vw":1600,"w":1138,"items":[[0,61,1138,812],[0,885,1138,271],[0,1168,1138,271],[0,1450,1138,271]]}],"Three-Column Feature Row":[{"vw":390,"w":326,"items":[[0,0,326,453],[0,579,326,398],[0,997,326,388]]},{"vw":1024,"w":562,"items":[[0,0,562,453],[0,534,562,518],[0,1072,562,479]]},{"vw":768,"w":664,"items":[[0,0,664,453],[0,534,664,576],[0,1129,664,512]]},{"vw":1280,"w":818,"items":[[0,0,818,453],[0,534,818,662],[0,1216,818,599]]},{"vw":1440,"w":978,"items":[[0,0,319.3,453],[339,61,638.7,561],[0,473,319.3,400]]},{"vw":1600,"w":1138,"items":[[0,0,265.6,453],[286,61,566.7,521],[872,0,265.7,370]]}],"Featured Video + Four":[{"vw":390,"w":326,"items":[[0,0,326,409],[0,429,326,422],[0,872,326,422],[0,1314,326,397],[0,1732,326,422]]},{"vw":1024,"w":562,"items":[[0,0,562,533],[0,553,271,387],[291,553,271,387],[0,960,271,387],[291,960,271,387]]},{"vw":768,"w":664,"items":[[0,0,664,560],[0,580,322,416],[342,580,322,416],[0,1016,322,416],[342,1016,322,416]]},{"vw":1280,"w":818,"items":[[0,0,818,647],[0,667,399,459],[419,667,399,459],[0,1146,399,459],[419,1146,399,459]]},{"vw":1440,"w":978,"items":[[0,0,978,737],[0,757,479,504],[499,757,479,504],[0,1281,479,504],[499,1281,479,504]]},{"vw":1600,"w":1138,"items":[[0,0,1138,827],[0,847,269.5,386],[290,847,269.5,386],[579,847,269.5,386],[869,847,269.5,386]]}],"Grid":[{"vw":390,"w":326,"items":[[0,106,326,374],[0,500,326,398],[0,919,326,398],[0,1337,326,374],[0,1732,326,374],[0,2126,326,398],[0,2544,326,398],[0,2963,326,398]]},{"vw":1024,"w":562,"items":[[0,61,271,402],[291,61,271,402],[0,483,271,402],[291,483,271,402],[0,906,271,378],[291,906,271,378],[0,1304,271,378],[291,1304,271,378]]},{"vw":768,"w":664,"items":[[0,61,322,407],[342,61,322,407],[0,488,322,407],[342,488,322,407],[0,915,322,407],[342,915,322,407],[0,1342,322,407],[342,1342,322,407]]},{"vw":1280,"w":818,"items":[[0,61,399,450],[419,61,399,450],[0,531,399,450],[419,531,399,450],[0,1002,399,450],[419,1002,399,450],[0,1472,399,450],[419,1472,399,450]]},{"vw":1440,"w":978,"items":[[0,61,479,495],[499,61,479,495],[0,576,479,495],[499,576,479,495],[0,1092,479,471],[499,1092,479,471],[0,1583,479,495],[499,1583,479,495]]},{"vw":1600,"w":1138,"items":[[0,61,269.5,402],[290,61,269.5,402],[579,61,269.5,402],[869,61,269.5,402],[0,483,269.5,378],[290,483,269.5,378],[579,483,269.5,378],[869,483,269.5,378]]}],"River":[{"vw":390,"w":326,"items":[[0,61,326,188],[0,261,326,236],[0,510,326,236],[0,758,326,188],[0,958,326,212]]},{"vw":1024,"w":562,"items":[[0,61,562,193],[0,266,562,217],[0,494,562,217],[0,723,562,193],[0,927,562,193]]},{"vw":768,"w":664,"items":[[0,61,664,193],[0,266,664,217],[0,494,664,217],[0,723,664,193],[0,927,664,193]]},{"vw":1280,"w":818,"items":[[0,61,818,203],[0,276,818,203],[0,492,818,203],[0,707,818,203],[0,922,818,203]]},{"vw":1440,"w":978,"items":[[0,61,978,237],[0,310,978,237],[0,559,978,237],[0,808,978,237],[0,1057,978,237]]},{"vw":1600,"w":1138,"items":[[0,61,1138,271],[0,344,1138,271],[0,626,1138,271],[0,909,1138,271],[0,1191,1138,271]]}]};
+const DATA = {"Featured + Row":[{"vw":390,"w":326,"items":[[0,72,326,371],[0,459,326,371],[0,847,326,371],[0,1234,326,395],[0,1646,326,395]]},{"vw":1024,"w":562,"items":[[0,52,562,484],[0,552,273,350],[289,552,273,350],[0,918,273,374],[289,918,273,374]]},{"vw":768,"w":664,"items":[[0,52,664,514],[0,582,324,378],[340,582,324,378],[0,976,324,402],[340,976,324,402]]},{"vw":1280,"w":818,"items":[[0,52,818,600],[0,668,262,367],[278,668,262,367],[556,668,262,367]]},{"vw":1440,"w":978,"items":[[0,52,978,690],[0,758,315,397],[331,758,315,397],[663,758,315,397]]},{"vw":1600,"w":1138,"items":[[0,52,1138,780],[0,848,273,373],[289,848,273,373],[577,848,273,373],[866,848,273,373]]}],"Card Row":[{"vw":390,"w":326,"items":[[0,72,326,361],[0,449,326,381],[0,845,326,381],[0,1242,326,381]]},{"vw":1024,"w":562,"items":[[0,52,273,329],[289,52,273,329],[0,397,273,329],[289,397,273,329]]},{"vw":768,"w":664,"items":[[0,52,324,367],[340,52,324,367],[0,435,324,367],[340,435,324,367]]},{"vw":1280,"w":818,"items":[[0,52,262,321],[278,52,262,321],[556,52,262,321]]},{"vw":1440,"w":978,"items":[[0,52,315,361],[331,52,315,361],[663,52,315,361]]},{"vw":1600,"w":1138,"items":[[0,52,273,328],[289,52,273,328],[577,52,273,328],[866,52,273,328]]}],"Feature + Sidebar":[{"vw":390,"w":326,"items":[[0,72,326,371],[0,463,326,156],[0,631,326,156],[0,799,326,156],[0,967,326,156]]},{"vw":1024,"w":562,"items":[[0,52,562,484],[0,556,562,164],[0,732,562,164],[0,908,562,164],[0,1084,562,164]]},{"vw":768,"w":664,"items":[[0,52,664,514],[0,586,664,171],[0,769,664,171],[0,952,664,171],[0,1135,664,171]]},{"vw":1280,"w":818,"items":[[0,52,818,600],[0,672,818,203],[0,887,818,203],[0,1103,818,203],[0,1318,818,203]]},{"vw":1440,"w":978,"items":[[0,52,616,692],[636,52,342,164],[636,228,342,164],[636,404,342,164],[636,580,342,164]]},{"vw":1600,"w":1138,"items":[[0,52,719,692],[739,52,399,164],[739,228,399,164],[739,404,399,164],[739,580,399,164]]}],"River with Hero":[{"vw":390,"w":326,"items":[[0,72,326,371],[0,455,326,182],[0,649,326,182],[0,843,326,222]]},{"vw":1024,"w":562,"items":[[0,52,562,484],[0,548,562,190],[0,750,562,190],[0,952,562,210]]},{"vw":768,"w":664,"items":[[0,52,664,514],[0,578,664,190],[0,780,664,190],[0,982,664,190]]},{"vw":1280,"w":818,"items":[[0,52,818,600],[0,664,818,203],[0,879,818,203],[0,1095,818,203]]},{"vw":1440,"w":978,"items":[[0,52,978,690],[0,754,978,237],[0,1003,978,237],[0,1252,978,237]]},{"vw":1600,"w":1138,"items":[[0,52,1138,780],[0,844,1138,271],[0,1127,1138,271],[0,1409,1138,271]]}],"Three-Column Feature Row":[{"vw":390,"w":326,"items":[[0,0,326,468],[0,560,326,371],[0,951,326,337]]},{"vw":1024,"w":562,"items":[[0,0,562,452],[0,524,562,512],[0,1056,562,435]]},{"vw":768,"w":664,"items":[[0,0,664,452],[0,524,664,570],[0,1114,664,472]]},{"vw":1280,"w":818,"items":[[0,0,818,452],[0,524,818,656],[0,1200,818,559]]},{"vw":1440,"w":978,"items":[[0,0,319,468],[339,52,639,555],[0,488,319,349]]},{"vw":1600,"w":1138,"items":[[0,0,266,468],[286,52,567,515],[872,0,266,318]]}],"Featured Video + Four":[{"vw":390,"w":326,"items":[[0,0,326,351],[0,371,326,347],[0,735,326,347],[0,1098,326,395],[0,1510,326,371]]},{"vw":1024,"w":562,"items":[[0,0,562,472],[0,492,273,334],[289,492,273,334],[0,842,273,358],[289,842,273,358]]},{"vw":768,"w":664,"items":[[0,0,664,530],[0,550,324,362],[340,550,324,362],[0,928,324,386],[340,928,324,386]]},{"vw":1280,"w":818,"items":[[0,0,818,616],[0,636,401,378],[417,636,401,378],[0,1030,401,430],[417,1030,401,430]]},{"vw":1440,"w":978,"items":[[0,0,978,706],[0,726,481,423],[497,726,481,423],[0,1165,481,475],[497,1165,481,475]]},{"vw":1600,"w":1138,"items":[[0,0,1138,796],[0,816,273,357],[289,816,273,357],[577,816,273,357],[866,816,273,357]]}],"Grid":[{"vw":390,"w":326,"items":[[0,44,326,371],[0,431,326,371],[0,819,326,371],[0,1206,326,395],[0,1618,326,395],[0,2029,326,371],[0,2416,326,347],[0,2780,326,395]]},{"vw":1024,"w":562,"items":[[0,52,273,374],[289,52,273,374],[0,442,273,374],[289,442,273,374],[0,831,273,374],[289,831,273,374],[0,1221,273,374],[289,1221,273,374]]},{"vw":768,"w":664,"items":[[0,52,324,378],[340,52,324,378],[0,446,324,402],[340,446,324,402],[0,865,324,402],[340,865,324,402],[0,1283,324,402],[340,1283,324,402]]},{"vw":1280,"w":818,"items":[[0,52,401,422],[417,52,401,422],[0,490,401,446],[417,490,401,446],[0,951,401,446],[417,951,401,446],[0,1413,401,446],[417,1413,401,446]]},{"vw":1440,"w":978,"items":[[0,52,481,467],[497,52,481,467],[0,535,481,491],[497,535,481,491],[0,1041,481,491],[497,1041,481,491],[0,1548,481,491],[497,1548,481,491]]},{"vw":1600,"w":1138,"items":[[0,52,273,373],[289,52,273,373],[577,52,273,373],[866,52,273,373],[0,441,273,373],[289,441,273,373],[577,441,273,373],[866,441,273,373]]}],"River":[{"vw":390,"w":326,"items":[[0,44,326,202],[0,258,326,182],[0,452,326,182],[0,646,326,222],[0,880,326,222]]},{"vw":1024,"w":562,"items":[[0,52,562,162],[0,226,562,190],[0,428,562,190],[0,630,562,210],[0,852,562,210]]},{"vw":768,"w":664,"items":[[0,52,664,171],[0,235,664,190],[0,437,664,190],[0,639,664,190],[0,841,664,190]]},{"vw":1280,"w":818,"items":[[0,52,818,203],[0,267,818,203],[0,483,818,203],[0,698,818,203],[0,913,818,203]]},{"vw":1440,"w":978,"items":[[0,52,978,237],[0,301,978,237],[0,550,978,237],[0,799,978,237],[0,1048,978,237]]},{"vw":1600,"w":1138,"items":[[0,52,1138,271],[0,335,1138,271],[0,617,1138,271],[0,900,1138,271],[0,1182,1138,271]]}]};
 const S = .14;
 document.querySelectorAll('.bp[data-pattern]').forEach((host) => {
   const rows = DATA[host.dataset.pattern] || [];
@@ -447,6 +513,14 @@ document.querySelectorAll('.bp[data-pattern]').forEach((host) => {
     cap.innerHTML = `inner ${w} · vw ${m.vw}<br>${m.items.length} items`;
     fig.appendChild(cap);
     host.appendChild(fig);
+  });
+});
+</script>
+<script>
+document.querySelectorAll('.film .chapters button').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var v = b.closest('.film').querySelector('video');
+    v.currentTime = +b.dataset.t; v.play().catch(function () {}); v.focus();
   });
 });
 </script>
