@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { ButtonBrandPreview, ButtonStyleLink } from "@/components/cta-specs/button-brand-preview";
 import { ProductFooter, ProductHeader } from "@/components/product-story-shell";
+import { brands } from "@/lib/brands";
 import { PROD_STORYBOOK_URL } from "@/lib/storybook-links";
 import { cn } from "@/lib/utils";
 
@@ -39,10 +40,25 @@ const variantRows = [
 ] as const;
 
 const radiusRows = [
-  ["0", "Square", "Cosmopolitan, Car and Driver and most publication themes"],
-  ["4", "Soft corner", "Hearst+ product surfaces (.hearst-plus-theme)"],
+  ["0", "Square", "Cosmopolitan and most publication themes"],
+  ["4", "Soft corner", "Car and Driver; Hearst+ product surfaces (.hearst-plus-theme)"],
   ["64", "Pill (renders as H ÷ 2)", "Esquire"],
 ] as const;
+
+/** Read from the brand tokens (src/lib/brands.ts), so this table always matches what the Button renders. */
+const ctaTypeRows = brands
+  .filter((brand) => brand.componentTokens["component-button-font-family"])
+  .map((brand) => {
+    const t = brand.componentTokens;
+    return [
+      brand.name,
+      String(t["component-button-font-family"]),
+      String(t["component-button-font-weight"]),
+      t["component-button-text-transform"] === "uppercase" ? "Uppercase" : "As written",
+      String(t["component-button-letter-spacing"]),
+      `${t["component-button-radius-default"] ?? 0}`,
+    ] as const;
+  });
 
 const stateRows = [
   ["Hover", "Swaps to the variant's -hover background, border and content tokens.", ":hover"],
@@ -56,7 +72,7 @@ const stateRows = [
 const casingRules = [
   ["Sentence case", "Default for every action. Start with a verb and say what happens.", "Save story · Estimate payment · Join this week’s challenge"],
   ["Title Case", "Only to keep a proper name or a brand-owned phrase intact.", "Open Men’s Health · Read the Daily Brief"],
-  ["ALL CAPS", "Short utility labels where a brand requires it. Type the caps; don’t use CSS uppercase. Button optically centers labels without descenders by default (capAlignedLabel=\"auto\").", "SIGN IN · PLAY"],
+  ["ALL CAPS", "Brands whose live CTAs are set in capitals get them from the brand token component-button-text-transform: uppercase. Write the label in sentence case in code; screen readers keep it. Don’t type caps or add CSS uppercase in a component. Button optically centers labels without descenders by default (capAlignedLabel=\"auto\").", "Car and Driver · Bicycling · Runner’s World"],
 ] as const;
 
 const checklist = [
@@ -123,7 +139,7 @@ export default function CTASpecsPage() {
           <p className="text-xs font-bold uppercase tracking-[.16em] text-muted-foreground">HDS primitives · Button</p>
           <h1 className="headline mt-4 text-balance text-4xl leading-[1.05] sm:text-6xl">CTA specifications</h1>
           <p className="mt-5 max-w-3xl text-lg leading-8 text-muted-foreground">
-            Every call to action in Hearst+ comes from one primitive, <code className="text-foreground">ui/button.tsx</code>. Its geometry is the same in every brand; the brand theme only changes color and corner radius through tokens. All values on this page were measured from the rendered component in Storybook.
+            Every call to action in Hearst+ comes from one primitive, <code className="text-foreground">ui/button.tsx</code>. Its geometry is the same in every brand; the brand theme changes color, corner radius and CTA typography (typeface, weight, case and tracking) through tokens. All values on this page were measured from the rendered component in Storybook.
           </p>
           <nav aria-label="On this page" className="mt-7 flex flex-wrap gap-2">
             {[["Live reference", "#live"], ["Drawing", "#drawing"], ["Sizes", "#sizes"], ["Variants", "#variants"], ["States", "#states"], ["Label case", "#label-case"], ["Checklist", "#checklist"]].map(([label, href]) => (
@@ -192,9 +208,14 @@ export default function CTASpecsPage() {
             numeric={[2, 3]}
           />
           <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
-            All sizes: 1 px border, font weight 500, width hugs the label. Radius comes from <code className="text-foreground">--component-button-radius-default</code> and renders as min(token, height ÷ 2).
+            All sizes: 1 px border, width hugs the label. Radius comes from <code className="text-foreground">--component-button-radius-default</code> and renders as min(token, height ÷ 2). Weight is <code className="text-foreground">--component-button-font-weight</code> (500 when a theme does not set it); typeface, case and tracking come from the brand tokens below.
           </p>
           <SpecTable caption="Radius token values by theme" headers={["Token", "Shape", "Where"]} rows={radiusRows} />
+          <h3 id="cta-type" className="text-sm font-bold uppercase tracking-widest text-muted-foreground">CTA typography by brand</h3>
+          <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
+            From <code className="text-foreground">component-button-font-family</code>, <code className="text-foreground">-font-weight</code>, <code className="text-foreground">-text-transform</code> and <code className="text-foreground">-letter-spacing</code>, captured from each publication&rsquo;s live CTA. Families the app doesn&rsquo;t serve fall back to the brand body font; Bicycling also scales Teko to the standard cap height. Section themes without these tokens keep the inherited family, weight 500, the label as written and normal tracking.
+          </p>
+          <SpecTable caption="CTA typography tokens by brand" headers={["Brand", "Typeface", "Weight", "Case", "Tracking", "Radius"]} rows={ctaTypeRows} numeric={[2, 5]} />
         </section>
 
         <section aria-labelledby="variants" className={sectionClass}>
@@ -229,7 +250,7 @@ export default function CTASpecsPage() {
             ))}
           </ol>
           <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
-            Today the app renders the primitive at 182 call sites, and 3 links borrow its look through <code className="text-foreground">buttonVariants()</code>.
+            On 2026-11-09 the app rendered the primitive at 202 call sites (stories excluded), and 3 links borrow its look through <code className="text-foreground">buttonVariants()</code>.
           </p>
           <div className="flex flex-wrap gap-3">
             <ButtonStyleLink href="/specs/blocks-spec.html">Open the blocks, cards and widgets spec</ButtonStyleLink>
