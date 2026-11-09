@@ -217,7 +217,7 @@ export default function TypeSpecsPage() {
 
         <section aria-labelledby="film" className={sectionClass}>
           <SectionHeading id="film" eyebrow="05 · Motion film" title="Watch the standard explained.">
-            Today&rsquo;s scattered values and the two ramps that replace them, the anatomy of a line and the 4 px snap, every role from 11 to 48 px, tracking and tabular figures, then the story card and the reader moving from today&rsquo;s metrics to the standard, and a tour of the drawing.
+            Today&rsquo;s scattered values and the two ramps that replace them, the anatomy of a line and the 4 px snap, every role from 11 to 48 px, three-line headlines, decks and paragraphs growing from small to large while their line height scales with them, tracking and tabular figures, then the story card and the reader moving from today&rsquo;s metrics to the standard, and a tour of the drawing.
           </SectionHeading>
           <figure className="min-w-0">
             <video
@@ -227,10 +227,10 @@ export default function TypeSpecsPage() {
               muted
               playsInline
               preload="metadata"
-              aria-label="Motion film of the type metrics standard: a scatter plot of today's 15 measured line-height ratios gives way to two ramps, one for text and one for headlines; a line of type at 9 to 1 shows its line box, baseline, x-height, cap height, content area and half-leading, then snaps from 26.1 to 28 on the 4 pixel grid; every role from the 11 pixel eyebrow to the 48 pixel display headline steps through with a live ratio graph; caps tracking moves from 0 to 0.24em and settles at 0.1em, the display headline tightens by 0.01em, and dates switch to tabular figures; the story card headline tightens from 24/30 to 24/28 and its deck from 16/28 to 16/24; the reader headline moves to 48/52, the body from 18/32 to 18/28, and a zoomed byline row shows the byline and date baselines aligning; then the drawing sheet resolves and the camera tours its views."
+              aria-label="Motion film of the type metrics standard: a scatter plot of today's 15 measured line-height ratios gives way to two ramps, one for text and one for headlines; a line of type at 9 to 1 shows its line box, baseline, x-height, cap height, content area and half-leading, then snaps from 26.1 to 28 on the 4 pixel grid; every role from the 11 pixel eyebrow to the 48 pixel display headline steps through with a live ratio graph; a three-line headline grows from 16 to 48 pixels, a deck from 14 to 20 and a paragraph from 12 to 18 while their line heights step up on the 4 pixel grid and graphs trace line height against size; caps tracking moves from 0 to 0.24em and settles at 0.1em, the display headline tightens by 0.01em, and dates switch to tabular figures; the story card headline tightens from 24/30 to 24/28 and its deck from 16/28 to 16/24; the reader headline moves to 48/52, the body from 18/32 to 18/28, and a zoomed byline row shows the byline and date baselines aligning; then the drawing sheet resolves and the camera tours its views."
               className="block aspect-video w-full rounded-card bg-white shadow-[var(--hp-shadow-card)]"
             />
-            <figcaption className="mt-3 text-sm text-muted-foreground">Motion film · 78 s · problem 0–7 · anatomy 7–19 · ramp 19–31 · tracking and figures 31–40 · story card 40–52 · reader 52–64 · drawing tour 64–78.</figcaption>
+            <figcaption className="mt-3 text-sm text-muted-foreground">Motion film · 90 s · problem 0–7 · anatomy 7–19 · ramp 19–31 · line height scales with size 31–43 · tracking and figures 43–52 · story card 52–64 · reader 64–76 · drawing tour 76–90.</figcaption>
           </figure>
         </section>
 

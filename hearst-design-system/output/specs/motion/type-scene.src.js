@@ -1,7 +1,8 @@
 // Type metrics standard (UI-TYPE-001 · Rev A) → motion film, ~76 s.
 // Pure function of time: render(t) rebuilds every live group from t alone.
-// A 0–7 problem · B 7–19 anatomy of a line · C 19–31 size ramp · D 31–40 tracking and figures
-// E 40–52 story card · F 52–64 reader · G 64–76 sheet tour.
+// A 0–7 problem · B 7–19 anatomy of a line · C 19–31 size ramp · S 31–43 line height scales with size
+// D 43–52 tracking and figures · E 52–64 story card · F 64–76 reader · G 76–90 sheet tour.
+// Beats after S run on the original clock: render() shifts t by SCALE_D once S has played.
 const { seg, lerp, eo, eio, clamp01 } = kit;
 const NS = 'http://www.w3.org/2000/svg';
 const SHEET = __SHEET__;
@@ -74,6 +75,23 @@ const CAPS = [
   [64, 'THE DRAWING', 'UI-TYPE-001 Rev A: every role, its line height, tracking and spacing on one sheet.'],
 ];
 
+/* ---------- S · line height scales with size (inserted at 31 s, 12 s long) ---------- */
+const SCALE_T0 = 31, SCALE_D = 12;
+const snap4 = v => 4 * Math.round(v / 4);
+const rampAt = (pts, fs) => { if (fs <= pts[0][0]) return pts[0][1]; for (let i = 0; i < pts.length - 1; i++) { const [a, ra] = pts[i], [b, rb] = pts[i + 1]; if (fs <= b) return lerp(ra, rb, (fs - a) / (b - a)); } return pts[pts.length - 1][1]; };
+const RH_PTS = [[16, 1.25], [20, 1.2], [24, 1.2], [28, 1.125], [32, 1.125], [48, 1.08]];
+const R_PTS = [[11, 1.35], [12, 1.4], [13, 1.4], [14, 1.45], [18, 1.45], [20, 1.4]];
+const SCALE_COLS = [
+  { code: 'HEADLINE · RH', fam: HF, wt: 800, cls: 'ink', from: 16, to: 48, pts: RH_PTS, x: 110, w: 580, lines: ['Headlines stay', 'tight as they', 'grow larger'] },
+  { code: 'DECK · R', fam: BF, wt: 400, cls: 'ink2', from: 14, to: 20, pts: R_PTS, x: 820, w: 400, lines: ['Decks keep a little more', 'air between their lines', 'than headlines do'] },
+  { code: 'PARAGRAPH · R', fam: BF, wt: 400, cls: 'ink', from: 12, to: 18, pts: R_PTS, x: 1360, w: 400, lines: ['Paragraph text needs the', 'most room between lines,', 'so long reading stays', 'comfortable at any size.'] },
+];
+const SCALE_CAPS = [
+  [0, 'LINE HEIGHT SCALES WITH SIZE', 'As type grows, the space between its lines grows with it: LH = 4 · round(FS · R ÷ 4).'],
+  [4.2, 'PROPORTIONAL, NOT FIXED', 'Headlines tighten as they grow (×1.25 → ×1.08). Decks and paragraphs keep more air (×1.4–1.45).'],
+  [8.6, 'ON THE 4 PX GRID', 'Every line height lands on a multiple of 4, so the steps you see are the grid at work.'],
+];
+
 kit.scene('type-metrics', {
   init(kit) {
     kit.css('.ty{position:absolute;inset:0;background:#fff}' +
@@ -91,7 +109,7 @@ kit.scene('type-metrics', {
     svg.innerHTML = '<defs><marker id="ta" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M0,1.7 L10,5 L0,8.3 z" fill="#111"/></marker>' +
       '<clipPath id="twipe"><rect id="twr" x="0" y="-20" width="0" height="1100"/></clipPath></defs>';
     const g = id => { const e = document.createElementNS(NS, 'g'); e.id = id; svg.appendChild(e); return e; };
-    this.head = g('head'); this.A = g('bA'); this.B = g('bB'); this.C = g('bC'); this.D = g('bD'); this.E = g('bE'); this.F = g('bF');
+    this.head = g('head'); this.A = g('bA'); this.B = g('bB'); this.C = g('bC'); this.D = g('bD'); this.E = g('bE'); this.F = g('bF'); this.S = g('bS');
     // sheet (its <style> also registers the embedded @font-face rules for the whole film)
     const wrap = g('sheet'); this.cam = document.createElementNS(NS, 'g'); wrap.appendChild(this.cam);
     const holder = document.createElementNS(NS, 'g'); holder.setAttribute('transform', 'translate(110,10)'); holder.setAttribute('clip-path', 'url(#twipe)'); this.cam.appendChild(holder);
@@ -253,7 +271,53 @@ kit.scene('type-metrics', {
     return G(a, s);
   },
 
-  render(t) {
+  beatS(lt) {
+    const a = win(lt, 0, SCALE_D + .2, .6, .7); if (a <= 0) return '';
+    const k = 1.25, top = 290;
+    // grow 0.8–8.0, hold, then settle back slightly so the steps read twice
+    const p = lt < 8.6 ? eio(seg(lt, .8, 8)) : 1 - .35 * eio(seg(lt, 8.6, 11));
+    let s = '';
+    SCALE_COLS.forEach((c, ci) => {
+      const fs = lerp(c.from, c.to, p), r = rampAt(c.pts, fs), lh = snap4(fs * r);
+      let y = top, g = '';
+      for (let i = 0; i <= 48; i++) g += Ln(c.x, top + i * 4 * k, c.x + c.w, top + i * 4 * k, 'grid4');
+      s += g + T(c.x, top - 40, c.code, 'read2');
+      c.lines.forEach((str, i) => {
+        const L = typeLine(c.x, y, c.w, k, c.fam, c.wt, fs, lh, str, { cls: c.cls });
+        s += L.s + DV(y, y + lh * k, c.x + c.w + 22, i ? '' : 'LH ' + lh);
+        y += lh * k;
+      });
+      s += T(c.x, 690, `${fs.toFixed(1)} / ${lh}`, 'read') + T(c.x + (ci ? 200 : 230), 690, '× ' + (lh / fs).toFixed(2), 'read2');
+      // LH vs FS: snapped staircase (solid) over the unsnapped line (dashed), with the live point
+      const gx = c.x, gy = 730, gw = Math.min(c.w, 440), gh = 200, fmin = c.from, fmax = c.to;
+      const lmin = snap4(fmin * rampAt(c.pts, fmin)) - 4, lmax = snap4(fmax * rampAt(c.pts, fmax)) + 4;
+      const X = f => gx + (f - fmin) / (fmax - fmin) * gw, Y = l => gy + gh - (l - lmin) / (lmax - lmin) * gh;
+      let raw = '', st = '';
+      for (let f = fmin; f <= fmax + 1e-6; f += (fmax - fmin) / 120) {
+        raw += (raw ? ' L' : 'M') + f1(X(f)) + ',' + f1(Y(f * rampAt(c.pts, f)));
+        st += (st ? ' L' : 'M') + f1(X(f)) + ',' + f1(Y(snap4(f * rampAt(c.pts, f))));
+      }
+      s += Ln(gx, gy + gh, gx + gw, gy + gh, 'thin') + Ln(gx, gy, gx, gy + gh, 'thin') +
+        `<path d="${raw}" class="rampd" opacity=".45"/><path d="${st}" class="ramp"/>` +
+        `<circle cx="${f1(X(fs))}" cy="${f1(Y(lh))}" r="8" class="dot"/>` +
+        T(gx, gy + gh + 24, fmin + ' px', 'dts') + T(gx + gw, gy + gh + 24, fmax + ' px', 'dts', 'text-anchor="end"') +
+        T(gx - 10, Y(lmin + 4) + 5, String(lmin + 4), 'dts', 'text-anchor="end"') + T(gx - 10, Y(lmax - 4) + 5, String(lmax - 4), 'dts', 'text-anchor="end"');
+    });
+    s += T(110, 1010, 'SOLID · LH ON THE 4 PX GRID   DASHED · FS × RATIO BEFORE SNAPPING', 'dts');
+    return G(a, s);
+  },
+
+  render(t0) {
+    const inS = t0 >= SCALE_T0 && t0 < SCALE_T0 + SCALE_D;
+    this.S.innerHTML = inS ? this.beatS(t0 - SCALE_T0) : '';
+    if (inS) {
+      const lt = t0 - SCALE_T0, c = capAt(SCALE_CAPS, lt), a = eo(seg(lt, c[0], c[0] + .45));
+      this.head.innerHTML = T(120, 92, c[1], 'cap', op(a)) + T(120, 128, c[2], 'sub', op(a)) + T(1800, 92, 'UI-TYPE-001 · TYPE METRICS', 'cap', 'text-anchor="end"');
+      this.A.innerHTML = this.B.innerHTML = this.C.innerHTML = this.D.innerHTML = this.E.innerHTML = this.F.innerHTML = '';
+      this.sheet.style.display = 'none';
+      return;
+    }
+    const t = t0 >= SCALE_T0 + SCALE_D ? t0 - SCALE_D : t0;
     this.header(t);
     this.A.innerHTML = this.beatA(t); this.B.innerHTML = this.beatB(t); this.C.innerHTML = this.beatC(t);
     this.D.innerHTML = this.beatD(t); this.E.innerHTML = this.beatE(t); this.F.innerHTML = this.beatF(t);
