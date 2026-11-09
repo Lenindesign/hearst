@@ -1679,6 +1679,17 @@ export function MainNav({
         </div>
         {mastheadBanner.scrim ? <div aria-hidden className="pointer-events-none absolute inset-0 bg-black/40" /> : null}
         {mastheadBanner.pattern === "brand-wall" ? <HearstPlusBrandWall logos={brandWallLogos} /> : null}
+        {/* Depth: a darker shade of the banner's own color fades to clear. Under the transparent utility bar (Hearst+
+            home, Communities) it starts at the top so the bar reads cleanly; section banners sit below a solid bar,
+            so they darken from the bottom instead and never form a seam with it. Shorter on phones (5:1 crop). */}
+        <div
+          aria-hidden
+          data-banner-depth={underUtilityBar ? "top" : "bottom"}
+          className="pointer-events-none absolute inset-0 [--banner-depth-stop:45%] sm:[--banner-depth-stop:60%]"
+          style={{
+            background: `linear-gradient(${underUtilityBar ? "to bottom" : "to top"}, color-mix(in oklab, ${mastheadBanner.background ?? "#000"} ${underUtilityBar ? 60 : 70}%, black) 0%, transparent var(--banner-depth-stop))`,
+          }}
+        />
         {mastheadBanner.overlayLogo ? (
           <div className={cn(
             "pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-center",
