@@ -59,12 +59,12 @@ const productLinkFocus =
 
 /** Spec and reference pages, in reading order. Shown in the sticky product header on every product page. */
 const specNavLinks: { id?: ProductPageId; label: string; href: string; external?: boolean }[] = [
-  { id: "magazine-token-study", label: "Token study", href: "/magazine-token-study/" },
   { id: "cta-specs", label: "CTAs", href: "/cta-specs/" },
   { id: "layout-specs", label: "Breakpoints & grid", href: "/layout-specs/" },
   { id: "type-specs", label: "Type metrics", href: "/type-specs/" },
   { id: "token-specs", label: "Tokens & brands", href: "/token-specs/" },
   { label: "Blocks spec", href: "/specs/blocks-spec.html" },
+  { label: "Nav spec", href: "/specs/nav-spec.html" },
   { label: "Storybook", href: PROD_STORYBOOK_URL, external: true },
 ];
 
