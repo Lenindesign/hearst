@@ -4,13 +4,13 @@ import { ThemeProvider } from "@/components/theme-provider";
 export default async function InternationalPage({
   searchParams,
 }: {
-  searchParams: Promise<{ feed?: string }>;
+  searchParams: Promise<{ feed?: string; country?: string }>;
 }) {
-  const { feed } = await searchParams;
+  const { feed, country } = await searchParams;
 
   return (
     <ThemeProvider defaultBrandSlug="hearst-all">
-      <InternationalFeedPage initialFeedUrl={feed} />
+      <InternationalFeedPage key={`${feed ?? ""}:${country ?? ""}`} initialFeedUrl={feed} initialCountry={country} />
     </ThemeProvider>
   );
 }

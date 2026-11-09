@@ -45,7 +45,7 @@ export const hearstDestinationSections = [
   { mode: "ew", label: "Enthusiast & Wellness", href: getHearstDestinationRoute("ew"), hasBrandMenu: true },
   { mode: "local-news", label: "Local News", href: "/hearst-plus/local-news/", hasBrandMenu: true },
   { mode: "entertainment-culture", label: "A&E Family", href: "/hearst-plus/entertainment/", hasBrandMenu: true },
-  { mode: "international", label: "International", href: "/hearst-plus/", hasBrandMenu: true },
+  { mode: "international", label: "International", href: "/hearst-plus/international/", hasBrandMenu: true },
 ] satisfies HearstDestinationSection[];
 
 function capAlignedLabelClassName(label: string) {
@@ -623,6 +623,22 @@ export function UtilityBar({
               ) : null}
               {isInternationalMenu ? (
                 <section aria-label="International editions">
+                  <LinkComponent
+                    href="/hearst-plus/international/"
+                    variant="neutral"
+                    underline={false}
+                    size="sm"
+                    role="menuitem"
+                    onClick={() => setOpenDestinationMenu(null)}
+                    className={cn(
+                      "mb-4 min-h-11 w-full justify-start rounded-lg px-2 py-1.5 text-sm font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:min-h-8",
+                      darkMode
+                        ? "text-[var(--component-navigation-utility-content-knockout)] hover:bg-white/10 hover:text-white"
+                        : "text-foreground hover:bg-muted hover:text-foreground",
+                    )}
+                  >
+                    All international editions, mixed
+                  </LinkComponent>
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     {hearstInternationalFeedCountries.map((country) => (
                       <div key={country} className="min-w-0">

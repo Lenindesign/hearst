@@ -345,6 +345,10 @@ interface ContentType extends BaseContentType {
 }
 
 export interface HomePageTemplateProps {
+  /** Highlights a utility-bar destination the route itself cannot infer (e.g. "International"). */
+  activeDestinationOverride?: string;
+  /** Links for navLinksOverride labels that are not destination categories (e.g. International countries). */
+  navLinkHrefOverrides?: Partial<Record<string, string>>;
   /**
    * Classic preserves the current production homepage. Overlap grid makes the
    * breakpoint behavior visible for Storybook and design review.
@@ -8077,7 +8081,9 @@ export function HomePageTemplate({
   initialOpenAmbientReader,
   readerReturnHref,
   navLinksOverride,
+  navLinkHrefOverrides,
   mastheadLogoOverride,
+  activeDestinationOverride,
   staticDestinationData,
   globalBrandInventory,
   onboardingBrandInventory,
@@ -8570,7 +8576,7 @@ export function HomePageTemplate({
         onCreateAccount={openPersonalization}
         onOpenProfile={() => setProfileOpen(true)}
         onLocalNewsSelect={handleLocalNewsSelect}
-        activeDestinationOverride={useLocalNewsRiver ? localNewsFilter : undefined}
+        activeDestinationOverride={useLocalNewsRiver ? localNewsFilter : activeDestinationOverride}
         darkMode={useVideosDarkHeader}
         hideDestinationNav={Boolean(singleBrandName)}
         overBanner={hearstPlusHomeBanner}
@@ -8583,6 +8589,7 @@ export function HomePageTemplate({
         onFilterChange={handleLifestyleFilterChange}
         selectedBrand={selectedBrand}
         navLinksOverride={navLinksOverride}
+        navLinkHrefOverrides={navLinkHrefOverrides}
         mastheadLogoOverride={mastheadLogoOverride}
         extendBannerUnderUtilityBar={hearstPlusHomeBanner}
         showRiverLayoutToggle

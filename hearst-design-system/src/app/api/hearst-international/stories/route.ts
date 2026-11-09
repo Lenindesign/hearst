@@ -3,12 +3,26 @@ import {
   getHearstInternationalFeed,
   getHearstInternationalFeedRssUrls,
 } from "@/lib/hearst-international-feeds";
+import { getHearstInternationalMix } from "@/lib/hearst-international-mix";
 import { parseHearstInternationalRssItems } from "@/lib/hearst-international-rss";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
   const sourceUrl = new URL(request.url).searchParams.get("feed");
+
+  // feed=all: every international edition, interleaved by country and brand.
+  if (sourceUrl === "all") {
+    const mix = await getHearstInternationalMix();
+    return NextResponse.json({
+      stories: mix.stories,
+      status: mix.stories.length > 0 ? "connected" : "pending",
+      connectedFeeds: mix.connectedFeeds,
+      totalFeeds: mix.totalFeeds,
+      ...(mix.stories.length > 0 ? {} : { error: "No international edition answered yet." }),
+    });
+  }
+
   const feed = getHearstInternationalFeed(sourceUrl);
 
   if (!feed) {
