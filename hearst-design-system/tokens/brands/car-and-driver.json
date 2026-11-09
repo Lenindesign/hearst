@@ -485,7 +485,7 @@
   },
   "component-button-font-weight": {
     "type": "string",
-    "value": "500"
+    "value": "700"
   },
   "component-button-text-transform": {
     "type": "string",
