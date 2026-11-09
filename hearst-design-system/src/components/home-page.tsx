@@ -1341,13 +1341,13 @@ export function MainNav({
                     aria-hidden="true"
                   />
                   <span className="min-w-0">
-                    <span className="line-clamp-2 block text-sm font-bold leading-snug group-hover:text-primary">{story.title}</span>
+                    <span className="type-b2 line-clamp-2 block font-bold group-hover:text-primary">{story.title}</span>
                     <span className={cn("mt-1 block text-xs", darkMode ? "text-white/60" : "text-muted-foreground")}>{story.brand}</span>
                   </span>
                 </button>
               )) : (
                 <p className={cn(
-                  "rounded-[8px] border px-3 py-4 text-sm leading-relaxed",
+                  "type-b2 rounded-[8px] border px-3 py-4",
                   darkMode ? "border-white/10 bg-white/[0.03] text-white/65" : "border-border bg-muted/35 text-muted-foreground"
                 )}>
                   Stories you open will appear here until you finish them.
@@ -2065,7 +2065,7 @@ function NewsletterPromo() {
           Sign Me Up
         </Button>
       </div>
-      <p className="text-[length:var(--text-token-4xs)] leading-relaxed text-muted-foreground">
+      <p className="type-c1 text-muted-foreground">
         By signing up, I agree to the{" "}
         <LinkComponent href="https://subscribe.hearstmags.com/circulation/shared/terms.html" target="_blank" rel="noopener noreferrer" variant="neutral" underline size="xs" className="font-normal">Terms of Use</LinkComponent>{" "}
         (including the{" "}
@@ -2145,7 +2145,7 @@ function Footer({
 function blocksSectionHeadingClass(brandSlug?: string) {
   return brandSlug === "elle"
     ? "headline text-4xl leading-tight italic lg:text-7xl"
-    : "headline text-4xl leading-tight font-bold";
+    : "type-t2 headline font-bold";
 }
 
 /**
@@ -2623,10 +2623,10 @@ function LifestyleCardModelGuide() {
         <p className="type-k1 text-primary">
           River Content Models
         </p>
-        <h2 className="headline mt-1 text-2xl leading-tight">
+        <h2 className="type-t3 headline mt-1">
           Five card styles share one atomic structure.
         </h2>
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+        <p className="type-b2 mt-2 max-w-3xl text-muted-foreground">
           The personalization layer picks the story order. The content model picks the best card treatment for the reader intent,
           so every item still feels like one coherent Hearst destination river.
         </p>
@@ -2650,7 +2650,7 @@ function LifestyleCardModelGuide() {
                 </div>
               </div>
 
-              <dl className="mt-4 space-y-3 text-xs leading-5">
+              <dl className="type-c1 mt-4 space-y-3">
                 <div>
                   <dt className="font-bold text-foreground">When to use</dt>
                   <dd className="mt-1 text-muted-foreground">{model.when}</dd>
@@ -2702,10 +2702,10 @@ function ContextualAdLogicGuide({
         <p className="type-k1 text-primary">
           Contextual Ad Logic
         </p>
-        <h2 className="headline mt-1 text-2xl leading-tight">
+        <h2 className="type-t3 headline mt-1">
           Sponsored units enter the river every five cards.
         </h2>
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+        <p className="type-b2 mt-2 max-w-3xl text-muted-foreground">
           Ads use the same intent context as the editorial ranking layer: active section, followed topics, saved tags,
           more-like-this behavior, time of day, and the surrounding story cluster. Creative imagery uses purpose-made local artwork selected for each campaign context, separate from editorial photography.
         </p>
@@ -2716,21 +2716,21 @@ function ContextualAdLogicGuide({
           <div>
             <p className="text-xs font-bold uppercase tracking-widest text-primary">Placement</p>
             <p className="mt-2 text-sm font-bold">After cards 5, 10, 15...</p>
-            <p className="mt-1 text-xs leading-5 text-muted-foreground">
+            <p className="type-c1 mt-1 text-muted-foreground">
               The first unit appears after the fifth editorial card. Infinite scroll adds more as more story cards load.
             </p>
           </div>
           <div>
             <p className="text-xs font-bold uppercase tracking-widest text-primary">Matching inputs</p>
             <p className="mt-2 text-sm font-bold">{activeFilter} · {config.dayparts[demoState.daypart].label}</p>
-            <p className="mt-1 text-xs leading-5 text-muted-foreground">
+            <p className="type-c1 mt-1 text-muted-foreground">
               Followed topics, saved tags, boosted tags, daypart preferences, and nearby story tags all add to the ad score.
             </p>
           </div>
           <div>
             <p className="text-xs font-bold uppercase tracking-widest text-primary">Creative source</p>
             <p className="mt-2 text-sm font-bold">Dedicated ad image set</p>
-            <p className="mt-1 text-xs leading-5 text-muted-foreground">
+            <p className="type-c1 mt-1 text-muted-foreground">
               Each campaign uses original, locally stored ad artwork selected for its subject. Editorial story images are not used in ad placements.
             </p>
           </div>
@@ -2748,11 +2748,11 @@ function ContextualAdLogicGuide({
                   style={{ backgroundImage: `url("${firstAdMatch.ad.imageUrl}")` }}
                 />
                 <div className="p-3">
-                  <p className="text-sm font-bold leading-5">{firstAdMatch.ad.title}</p>
+                  <p className="type-b2 font-bold">{firstAdMatch.ad.title}</p>
                   <p className="mt-1 text-xs text-muted-foreground">
                     {firstAdMatch.ad.sponsor} · score {firstAdMatch.score}
                   </p>
-                  <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                  <p className="type-c1 mt-2 text-muted-foreground">
                     Image source: live Hearst feed image outside the river dataset
                   </p>
                 </div>
@@ -2769,7 +2769,7 @@ function ContextualAdLogicGuide({
         <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
           {units.map((ad) => (
             <div key={ad.id} className="rounded-[8px] border border-border p-3">
-              <p className="text-sm font-bold leading-5">{ad.title}</p>
+              <p className="type-b2 font-bold">{ad.title}</p>
               <p className="mt-1 truncate text-xs text-muted-foreground">{ad.sponsor}</p>
               <div className="mt-2 flex flex-wrap gap-1">
                 {ad.topics.slice(0, 2).map((topic) => (
@@ -3040,10 +3040,10 @@ export function RichPhotoGalleryCard({
             <StorySaveIconButton saved={saved} onSave={onSave} className="ml-auto" />
           ) : null}
         </div>
-        <h2 className="headline line-clamp-3 break-words text-2xl leading-tight transition-colors group-hover/card:text-[var(--hp-sidebar-heading,var(--primary))] group-focus-within/card:text-[var(--hp-sidebar-heading,var(--primary))] sm:text-3xl">
+        <h2 className="type-t4 headline line-clamp-3 break-words transition-colors group-hover/card:text-[var(--hp-sidebar-heading,var(--primary))] group-focus-within/card:text-[var(--hp-sidebar-heading,var(--primary))]">
           {story.title}
         </h2>
-        <p className="mt-2 line-clamp-3 text-sm leading-6 text-muted-foreground">
+        <p className="type-b2 mt-2 line-clamp-3 text-muted-foreground">
           {story.summary}
         </p>
       </div>
@@ -3196,7 +3196,7 @@ export function LifestyleRiverCard({
           </div>
           <div className="flex min-w-0 items-end gap-3">
             <h2 className={cn(
-              "headline min-w-0 flex-1 line-clamp-3 break-words text-lg leading-snug underline-offset-4 group-hover/card:underline group-focus-within/card:underline sm:text-xl",
+              "type-t3 headline min-w-0 flex-1 line-clamp-3 break-words underline-offset-4 group-hover/card:underline group-focus-within/card:underline",
               editorialRow && "text-[var(--hp-sidebar-heading,var(--primary))]",
             )}>
               {story.title}
@@ -3205,7 +3205,7 @@ export function LifestyleRiverCard({
               <CarAndDriverResearchRating rating={getHearstAutoResearchCarRating(story.id)!} />
             ) : null}
           </div>
-          {!hideSummary ? <p className={cn("mt-1.5 text-sm leading-6 text-muted-foreground", editorialRow ? "line-clamp-3" : "hidden sm:line-clamp-3")}>{story.summary}</p> : null}
+          {!hideSummary ? <p className={cn("type-b2 mt-1.5 text-muted-foreground", editorialRow ? "line-clamp-3" : "hidden sm:line-clamp-3")}>{story.summary}</p> : null}
         </div>
         <div className="relative order-first aspect-[4/3] overflow-hidden rounded-card-inner bg-muted">
           <LifestyleRiverImage
@@ -4773,7 +4773,7 @@ function LifestyleStoryReaderModal({
                                       <span className="block line-clamp-3 text-base font-bold leading-snug text-foreground transition-colors group-hover:text-primary sm:text-xl">
                                         {relatedStory.title}
                                       </span>
-                                      <span className="mt-2 hidden line-clamp-2 text-sm leading-relaxed text-muted-foreground sm:block">
+                                      <span className="type-b2 mt-2 hidden line-clamp-2 text-muted-foreground sm:block">
                                         {relatedStory.summary || "Explore more reporting, photos, and vehicle details."}
                                       </span>
                                     </span>
@@ -6728,7 +6728,7 @@ function LifestyleRiverHomePage({
                   <p className="mt-3 text-sm font-bold">
                     {activeStoryPool.length} playable videos
                   </p>
-                  <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                  <p className="type-c1 mt-2 text-muted-foreground">
                     Pulled from {activeDataSourceCopy}
                   </p>
                 </div>
@@ -6942,7 +6942,7 @@ function LifestyleRiverHomePage({
         {fullWidthFeaturedHero && leadStory ? (
           <div className="min-w-0 lg:col-span-3">
             {isShowingLatestAvailableStories ? (
-              <p className="mb-3 border-b border-border pb-3 text-sm leading-6 text-muted-foreground" role="status">
+              <p className="type-b2 mb-3 border-b border-border pb-3 text-muted-foreground" role="status">
                 Today’s Picks are updating. Showing the latest stories currently available.
               </p>
             ) : null}
@@ -7017,7 +7017,7 @@ function LifestyleRiverHomePage({
         >
           <h1 className="sr-only">{pageHeading}</h1>
           {isShowingLatestAvailableStories && !fullWidthFeaturedHero && !isSectionsHomepage && !isBlocksHomepage ? (
-            <p className="border-b border-border pb-3 text-sm leading-6 text-muted-foreground" role="status">
+            <p className="type-b2 border-b border-border pb-3 text-muted-foreground" role="status">
               Today’s Picks are updating. Showing the latest stories currently available.
             </p>
           ) : null}
@@ -7168,7 +7168,7 @@ function LifestyleRiverHomePage({
                               </div>
                               <div className="p-3 sm:p-4">
                                 <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-muted-foreground">{dates}</p>
-                                <h3 className="headline mt-1 text-base font-bold leading-snug group-hover:text-primary sm:text-lg">{sign} Daily Horoscope</h3>
+                                <h3 className="type-t5 headline mt-1 font-bold group-hover:text-primary">{sign} Daily Horoscope</h3>
                                 <p className="mt-2 text-sm font-semibold text-primary">Read today’s horoscope <span aria-hidden="true">→</span></p>
                               </div>
                             </Link>
@@ -7186,7 +7186,7 @@ function LifestyleRiverHomePage({
                             {sectionsHomepageEvents.slice(0, 3).map((event, index) => (
                               <Link key={event.slug} href={`/hearst-plus/events/${event.slug}/`} className="group grid min-h-16 grid-cols-[48px_minmax(0,1fr)] items-start gap-3 py-3">
                                 <span className="relative block h-12 w-12 overflow-hidden rounded-[6px] border border-border bg-muted"><Image src={event.image.src} alt="" fill sizes="48px" className="object-cover" /><span className="absolute left-1 top-1 grid h-5 w-5 place-items-center rounded-full bg-background text-[11px] font-bold text-foreground ring-1 ring-border">{index + 1}</span></span>
-                                <span className="min-w-0"><span className="line-clamp-3 block text-xs font-bold leading-[1.35] group-hover:text-primary">{event.title}</span><span className="mt-1 block text-xs text-muted-foreground">{event.dateLabel}</span></span>
+                                <span className="min-w-0"><span className="type-c1 line-clamp-3 block font-bold group-hover:text-primary">{event.title}</span><span className="mt-1 block text-xs text-muted-foreground">{event.dateLabel}</span></span>
                               </Link>
                             ))}
                           </div>
@@ -7275,7 +7275,7 @@ function LifestyleRiverHomePage({
                             {sectionsHomepageEvents.slice(0, 3).map((event, index) => (
                               <Link key={event.slug} href={`/hearst-plus/events/${event.slug}/`} className="group grid min-h-16 grid-cols-[48px_minmax(0,1fr)] items-start gap-3 py-3">
                                 <span className="relative block h-12 w-12 overflow-hidden rounded-[6px] border border-border bg-muted"><Image src={event.image.src} alt="" fill sizes="48px" className="object-cover" /><span className="absolute left-1 top-1 grid h-5 w-5 place-items-center rounded-full bg-background text-[11px] font-bold text-foreground ring-1 ring-border">{index + 1}</span></span>
-                                <span className="min-w-0"><span className="line-clamp-3 block text-xs font-bold leading-[1.35] group-hover:text-primary">{event.title}</span><span className="mt-1 block text-xs text-muted-foreground">{event.dateLabel}</span></span>
+                                <span className="min-w-0"><span className="type-c1 line-clamp-3 block font-bold group-hover:text-primary">{event.title}</span><span className="mt-1 block text-xs text-muted-foreground">{event.dateLabel}</span></span>
                               </Link>
                             ))}
                           </div>
@@ -7290,14 +7290,14 @@ function LifestyleRiverHomePage({
                         {sectionsHomepageEvents[0] ? (
                           <Link href={`/hearst-plus/events/${sectionsHomepageEvents[0].slug}/`} className="group block overflow-hidden rounded-card bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md">
                             <div className="relative aspect-[16/8] overflow-hidden bg-muted"><Image src={sectionsHomepageEvents[0].image.src} alt={sectionsHomepageEvents[0].image.alt} fill sizes="(max-width: 1024px) 100vw, 60vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.025]" /></div>
-                            <div className="p-4"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">{sectionsHomepageEvents[0].dateLabel}</p><h3 className="headline mt-2 text-2xl font-bold leading-snug group-hover:text-primary">{sectionsHomepageEvents[0].title}</h3><p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">{sectionsHomepageEvents[0].summary}</p></div>
+                            <div className="p-4"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">{sectionsHomepageEvents[0].dateLabel}</p><h3 className="type-t3 headline mt-2 font-bold group-hover:text-primary">{sectionsHomepageEvents[0].title}</h3><p className="type-b2 mt-2 line-clamp-2 text-muted-foreground">{sectionsHomepageEvents[0].summary}</p></div>
                           </Link>
                         ) : null}
                         <div className="space-y-3">
                           {sectionsHomepageEvents.slice(1, 4).map((event) => (
                             <Link key={event.slug} href={`/hearst-plus/events/${event.slug}/`} className="group flex min-w-0 gap-4 overflow-hidden rounded-card bg-[var(--hp-surface)] p-3 shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md">
                               <div className="relative aspect-square w-28 shrink-0 overflow-hidden rounded-[6px] bg-muted sm:w-36"><Image src={event.image.src} alt={event.image.alt} fill sizes="144px" className="object-cover transition-transform duration-300 group-hover:scale-[1.025]" /></div>
-                              <div className="min-w-0 self-center"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">{event.dateLabel}</p><h3 className="headline mt-1 line-clamp-2 text-lg font-bold leading-snug group-hover:text-primary">{event.title}</h3><p className="mt-1 line-clamp-2 text-sm leading-6 text-muted-foreground">{event.summary}</p></div>
+                              <div className="min-w-0 self-center"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">{event.dateLabel}</p><h3 className="type-t3 headline mt-1 line-clamp-2 font-bold group-hover:text-primary">{event.title}</h3><p className="type-b2 mt-1 line-clamp-2 text-muted-foreground">{event.summary}</p></div>
                             </Link>
                           ))}
                         </div>
@@ -7368,9 +7368,9 @@ function LifestyleRiverHomePage({
                       <div><h2 id="blocks-ae-videos-heading" className={blocksSectionHeadingClass(initialBrandSlug)}>A&amp;E Channel Videos</h2><p className="mt-1 text-sm text-muted-foreground">Series and stories from across the A&amp;E family.</p></div>
                       <Link href="/hearst-plus/entertainment/" className="shrink-0 pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Explore A&amp;E</Link>
                     </div>
-                    {aandeBrandPromotion.stories[0] ? <Link href={aandeBrandPromotion.stories[0].sourceUrl ?? "/hearst-plus/entertainment/"} className="group block overflow-hidden rounded-card bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md"><div className="relative aspect-[21/8] overflow-hidden bg-muted"><Image src={aandeBrandPromotion.stories[0].image} alt="" fill sizes="100vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.025]" /></div><div className="p-5"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">A&amp;E · {aandeBrandPromotion.stories[0].topic}</p><h3 className="headline mt-2 text-2xl font-bold group-hover:text-primary">{aandeBrandPromotion.stories[0].title}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">{aandeBrandPromotion.stories[0].summary}</p></div></Link> : null}
+                    {aandeBrandPromotion.stories[0] ? <Link href={aandeBrandPromotion.stories[0].sourceUrl ?? "/hearst-plus/entertainment/"} className="group block overflow-hidden rounded-card bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md"><div className="relative aspect-[21/8] overflow-hidden bg-muted"><Image src={aandeBrandPromotion.stories[0].image} alt="" fill sizes="100vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.025]" /></div><div className="p-5"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">A&amp;E · {aandeBrandPromotion.stories[0].topic}</p><h3 className="headline mt-2 text-2xl font-bold group-hover:text-primary">{aandeBrandPromotion.stories[0].title}</h3><p className="type-b2 mt-2 text-muted-foreground">{aandeBrandPromotion.stories[0].summary}</p></div></Link> : null}
                     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                      {aandeBrandPromotion.stories.map((story) => <Link key={story.id} href={story.sourceUrl ?? "/hearst-plus/entertainment/"} className="group overflow-hidden rounded-card bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md"><div className="relative aspect-video overflow-hidden bg-muted"><Image src={story.image} alt="" fill sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.025]" /></div><div className="p-4"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">A&amp;E · {story.topic}</p><h3 className="headline mt-2 text-lg font-bold leading-snug group-hover:text-primary">{story.title}</h3><p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">{story.summary}</p></div></Link>)}
+                      {aandeBrandPromotion.stories.map((story) => <Link key={story.id} href={story.sourceUrl ?? "/hearst-plus/entertainment/"} className="group overflow-hidden rounded-card bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md"><div className="relative aspect-video overflow-hidden bg-muted"><Image src={story.image} alt="" fill sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.025]" /></div><div className="p-4"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">A&amp;E · {story.topic}</p><h3 className="type-t3 headline mt-2 font-bold group-hover:text-primary">{story.title}</h3><p className="type-b2 mt-2 line-clamp-2 text-muted-foreground">{story.summary}</p></div></Link>)}
                     </div>
                   </section> : null}
                 </div>
@@ -7390,7 +7390,7 @@ function LifestyleRiverHomePage({
                   ))}
                   {sectionsHomepageMostPopular.length ? (
                     <section className="space-y-4 border-t border-primary pt-5" aria-label="Most Popular">
-                      <h2 className="headline text-3xl font-bold leading-tight">Most Popular</h2>
+                      <h2 className="type-t4 headline font-bold">Most Popular</h2>
                       {sectionsHomepageMostPopular.length ? (
                         <div className="space-y-3">
                           <LifestyleRiverCard
@@ -7422,7 +7422,7 @@ function LifestyleRiverHomePage({
                   {!isBlocksHomepage && sectionsHomepageVideos.length ? (
                     <section className="space-y-4 border-t border-primary pt-5" aria-label="Video">
                       <div className="flex items-end justify-between gap-4">
-                        <h2 className="headline text-3xl font-bold leading-tight">Video</h2>
+                        <h2 className="type-t4 headline font-bold">Video</h2>
                         <Link href="/hearst-plus/videos/" className="pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Watch all videos</Link>
                       </div>
                       <div className="grid gap-3">
@@ -7441,7 +7441,7 @@ function LifestyleRiverHomePage({
                   ) : null}
                   {sectionsHomepageEvents.length ? <section className="space-y-4 border-t border-primary pt-5" aria-label="Events">
                     <div className="flex items-end justify-between gap-4">
-                      <h2 className="headline text-3xl font-bold leading-tight">Events</h2>
+                      <h2 className="type-t4 headline font-bold">Events</h2>
                       <Link href={initialBrandSlug ? `/hearst-plus/events/?brand=${encodeURIComponent(initialBrandSlug)}` : "/hearst-plus/events/"} className="pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary hover:underline">Explore all events</Link>
                     </div>
                     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -7456,8 +7456,8 @@ function LifestyleRiverHomePage({
                           </div>
                           <div className="p-4">
                             <p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">{event.dateLabel}</p>
-                            <h3 className="headline mt-2 text-lg font-bold leading-snug group-hover:text-primary">{event.title}</h3>
-                            <p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">{event.summary}</p>
+                            <h3 className="type-t3 headline mt-2 font-bold group-hover:text-primary">{event.title}</h3>
+                            <p className="type-b2 mt-2 line-clamp-2 text-muted-foreground">{event.summary}</p>
                           </div>
                         </Link>
                       ))}
@@ -7587,7 +7587,7 @@ function LifestyleRiverHomePage({
                   ? isShowingLatestAvailableStories ? "Preparing the latest available stories" : "Preparing today’s picks"
                   : "Stories are temporarily unavailable"}
               </h2>
-              <p className="mt-2 max-w-prose text-sm leading-6 text-muted-foreground">
+              <p className="type-b2 mt-2 max-w-prose text-muted-foreground">
                 {personalizedHeroStories.length > 0
                   ? isShowingLatestAvailableStories
                     ? "Today’s Picks are updating. Showing the latest stories currently available."
@@ -7601,12 +7601,12 @@ function LifestyleRiverHomePage({
                 aria-labelledby="saved-empty-title"
               >
                 <div className="max-w-xl">
-                  <h2 id="saved-empty-title" className="headline text-2xl leading-tight sm:text-3xl">
+                  <h2 id="saved-empty-title" className="type-t4 headline">
                     {profile.savedIds.length === 0
                       ? "Save stories to build your reading list."
                       : "No saved stories match this view."}
                   </h2>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  <p className="type-b2 mt-2 text-muted-foreground">
                     {profile.savedIds.length === 0
                       ? "Keep articles, videos, and ideas here so they’re easy to find when you’re ready to return."
                       : "Browse all recommendations or clear the current brand filter to find the stories you saved."}
@@ -7663,7 +7663,7 @@ function LifestyleRiverHomePage({
                               <span className="block text-xs font-bold text-[var(--hp-section-title)]">
                                 {story.brand} · {story.topic}
                               </span>
-                              <span className="mt-1 line-clamp-3 block text-sm font-bold leading-snug underline-offset-2 group-hover:underline group-focus-visible:underline">
+                              <span className="type-b2 mt-1 line-clamp-3 block font-bold underline-offset-2 group-hover:underline group-focus-visible:underline">
                                 {story.title}
                               </span>
                             </span>
@@ -7746,7 +7746,7 @@ function LifestyleRiverHomePage({
                 <p className="mt-1 text-sm font-bold">
                   {filteredStories.length.toLocaleString()} currently loaded, image-ready stories
                 </p>
-                <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                <p className="type-c1 mt-2 text-muted-foreground">
                   {feedLoadedCount.toLocaleString()} stories have arrived through progressive catalog pages.{" "}
                   {demoState.contentDay === "nextDay" ? "Next-day demo edition generated from " : "Pulled from "}
                   {config.dataSourceCopy}
@@ -7942,7 +7942,7 @@ function LifestyleRiverHomePage({
               <h2 id="personalized-river-heading" className="headline text-4xl leading-tight sm:text-6xl">
                 Most popular {config.storyRiverLabel}, tuned by what you do next.
               </h2>
-              <p className="max-w-3xl text-base leading-7 text-[var(--hp-text-ui)]">
+              <p className="type-d2 max-w-3xl text-[var(--hp-text-ui)]">
                 A continuously ranked {config.productName} feed across {config.brandSummary}
               </p>
             </div>
@@ -7968,7 +7968,7 @@ function LifestyleRiverHomePage({
                   <dd className="font-bold">{profile.followedBrands.length}</dd>
                 </div>
               </dl>
-              <p className="mt-4 text-xs leading-5 text-muted-foreground">
+              <p className="type-c1 mt-4 text-muted-foreground">
                 Ranking uses popularity, followed topics, followed brands, saved tags, more-like-this
                 activity, recency, time of day, return-visit freshness, and diversity rules.
               </p>
@@ -8633,7 +8633,7 @@ export function HomePageTemplate({
               <span className="block type-k1 text-[var(--hp-section-title)]">
                 Continue Reading
               </span>
-              <span className="mt-1 line-clamp-1 text-sm font-bold leading-snug underline-offset-2 group-hover:underline group-focus-visible:underline">
+              <span className="type-b2 mt-1 line-clamp-1 font-bold underline-offset-2 group-hover:underline group-focus-visible:underline">
                 {mobileContinueStories[0].title}
               </span>
             </span>

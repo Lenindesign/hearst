@@ -415,7 +415,7 @@ export function CommunityLeftRail({
           })}
         </nav>
       ) : (
-        <p className="hearst-community-copy mt-3 text-sm leading-6 text-[var(--hp-text-secondary)]">
+        <p className="type-b2 hearst-community-copy mt-3 text-[var(--hp-text-secondary)]">
           Join a group to keep it here. <Link href="/communities/?view=all" className="font-bold text-primary hover:underline">Browse all groups</Link>
         </p>
       )}
@@ -441,7 +441,7 @@ export function CommunityLeftRail({
         {store.activity.length > 0 ? (
           <ul className="mt-3 space-y-2" onMouseEnter={() => unseen > 0 && writeStore((current) => ({ ...current, activitySeenAt: Date.now() }))}>
             {store.activity.slice(0, 5).map((item) => (
-              <li key={item.id} className="hearst-community-copy text-xs leading-5 text-[var(--hp-text-secondary)]">
+              <li key={item.id} className="type-c1 hearst-community-copy text-[var(--hp-text-secondary)]">
                 {item.href ? (
                   <Link href={item.href} className="hover:text-[var(--hp-text-primary)]" onFocus={() => writeStore((current) => ({ ...current, activitySeenAt: Date.now() }))}>
                     {item.text}
@@ -453,7 +453,7 @@ export function CommunityLeftRail({
             ))}
           </ul>
         ) : (
-          <p className="hearst-community-copy mt-2 text-xs leading-5 text-[var(--hp-text-secondary)]">
+          <p className="type-c1 hearst-community-copy mt-2 text-[var(--hp-text-secondary)]">
             Replies to you, host answers and approved posts show up here.
           </p>
         )}
@@ -469,7 +469,7 @@ function SuggestGroupForm() {
 
   if (sent) {
     return (
-      <p role="status" className="hearst-community-copy mt-2 px-2 text-sm leading-6 text-[var(--hp-text-secondary)]">
+      <p role="status" className="type-b2 hearst-community-copy mt-2 px-2 text-[var(--hp-text-secondary)]">
         Thanks. Your suggestion went to the hosts, who review new group ideas.
       </p>
     );
@@ -574,10 +574,10 @@ export function CommunityGroupsToJoin({ groups }: { groups: CommunityGroupSummar
             <li key={`${group.brandSlug}-${group.groupSlug ?? "brand"}`} className="flex items-start gap-3">
               <BrandSourceIcon brand={group.brand} brandSlug={group.brandSlug} className="mt-0.5 size-8 shrink-0 rounded-full" imageClassName="object-cover p-0" />
               <div className="min-w-0 flex-1">
-                <Link href={group.href} className="headline block text-base leading-snug hover:text-primary">
+                <Link href={group.href} className="type-t5 headline block hover:text-primary">
                   {group.name}
                 </Link>
-                <p className="hearst-community-copy mt-0.5 line-clamp-2 text-xs leading-5 text-[var(--hp-text-secondary)]">{group.description}</p>
+                <p className="type-c1 hearst-community-copy mt-0.5 line-clamp-2 text-[var(--hp-text-secondary)]">{group.description}</p>
                 <p className="mt-1 text-xs font-bold text-[var(--hp-text-secondary)]">{group.members}</p>
               </div>
               <CommunityJoinButton brand={group.brand} groupName={group.name} />
@@ -585,7 +585,7 @@ export function CommunityGroupsToJoin({ groups }: { groups: CommunityGroupSummar
           ))}
         </ul>
       ) : (
-        <p className="hearst-community-copy mt-3 text-sm leading-6 text-[var(--hp-text-secondary)]">
+        <p className="type-b2 hearst-community-copy mt-3 text-[var(--hp-text-secondary)]">
           You have joined every group. <Link href="/communities/?view=all" className="font-bold text-primary hover:underline">See all groups</Link>
         </p>
       )}
@@ -754,7 +754,7 @@ export function CommunityComposer({ groups, defaultGroup }: { groups: CommunityG
             onChange={(event) => setBody(event.target.value)}
             placeholder={bodyPlaceholder}
             aria-label="Post text"
-            className="hearst-community-copy min-h-28 text-sm leading-6"
+            className="type-b2 hearst-community-copy min-h-28"
           />
           {photo ? (
             <div className="grid gap-2">
@@ -813,7 +813,7 @@ export function CommunityComposer({ groups, defaultGroup }: { groups: CommunityG
                 }}
               />
             </label>
-            <p className="hearst-community-copy text-xs leading-5 text-[var(--hp-text-secondary)]">
+            <p className="type-c1 hearst-community-copy text-[var(--hp-text-secondary)]">
               {willWait
                 ? `Your first ${COMMUNITY_REVIEWED_POST_COUNT} posts are reviewed by the group's hosts before they go live.`
                 : "Keep it useful, kind, and specific to this group."}
@@ -831,7 +831,7 @@ export function CommunityComposer({ groups, defaultGroup }: { groups: CommunityG
         </form>
       )}
       {notice ? (
-        <p role="status" className="hearst-community-copy mt-3 text-sm leading-6 text-[var(--hp-text-secondary)]">
+        <p role="status" className="type-b2 hearst-community-copy mt-3 text-[var(--hp-text-secondary)]">
           {notice}
         </p>
       ) : null}
@@ -902,16 +902,16 @@ export function CommunityRiverCard({ thread }: { thread: CommunityFeedThread }) 
             <span className="text-[var(--hp-text-primary)]">{thread.author}</span>
             {thread.isHost ? <CommunityHostBadge brand={thread.brand} /> : null}
             <span aria-hidden>·</span>
-            <span className="uppercase tracking-wide text-[var(--hp-section-title)]">Community</span>
+            <span className="type-k1 text-[var(--hp-section-title)]">Community</span>
             <span aria-hidden>·</span>
             <span>{thread.kindLabel}</span>
             <span aria-hidden>·</span>
             <span className="truncate">{thread.meta}</span>
           </span>
-          <h3 id={`thread-${thread.id}-title`} className="headline mt-2 line-clamp-3 text-xl leading-snug transition-colors group-hover/card:text-primary sm:text-2xl">
+          <h3 id={`thread-${thread.id}-title`} className="headline type-t3 mt-2 line-clamp-3 transition-colors group-hover/card:text-primary">
             {thread.title}
           </h3>
-          <span className="hearst-community-copy mt-2 line-clamp-3 block text-sm leading-6 text-[var(--hp-text-ui)]">{thread.body}</span>
+          <span className="type-b2 hearst-community-copy mt-2 line-clamp-3 block text-[var(--hp-text-ui)]">{thread.body}</span>
         </span>
       </Link>
       <div className={cn(
@@ -964,10 +964,10 @@ function LocalPostCard({ post }: { post: LocalPost }) {
           <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-bold text-amber-900">Waiting for host review · only you can see it</span>
         ) : null}
       </span>
-      <h3 id={`${post.id}-title`} className="headline mt-2 text-xl leading-snug md:text-2xl">
+      <h3 id={`${post.id}-title`} className="headline type-t3 mt-2">
         {post.title}
       </h3>
-      {post.body ? <p className="hearst-community-copy mt-2 whitespace-pre-line text-sm leading-6 text-[var(--hp-text-ui)]">{post.body}</p> : null}
+      {post.body ? <p className="type-b2 hearst-community-copy mt-2 whitespace-pre-line text-[var(--hp-text-ui)]">{post.body}</p> : null}
       {post.image ? (
         // eslint-disable-next-line @next/next/no-img-element -- a local data URL from the reader's device
         <img src={post.image} alt={post.imageAlt ?? post.title} className="mt-4 aspect-[16/9] w-full rounded-[8px] object-cover" />
@@ -1002,7 +1002,7 @@ export function CommunityFeed({
   return (
     <div className="space-y-4">
       {empty ? (
-        <p className="hearst-community-copy rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-6 text-sm leading-6 text-[var(--hp-text-secondary)]">
+        <p className="type-b2 hearst-community-copy rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-surface)] p-6 text-[var(--hp-text-secondary)]">
           {view === "mine" ? (
             <>
               Threads from your groups show up here. <Link href="/communities/?view=all" className="font-bold text-primary hover:underline">Find groups to join</Link>
@@ -1049,7 +1049,7 @@ export function CommunityGroupsDirectory({ groups }: { groups: CommunityGroupSum
           <div className="flex items-start gap-3">
             <BrandSourceIcon brand={group.brand} brandSlug={group.brandSlug} className="size-9 shrink-0 rounded-full" imageClassName="object-cover p-0" />
             <div className="min-w-0 flex-1">
-              <Link href={group.href} className="headline block text-lg leading-snug hover:text-primary">
+              <Link href={group.href} className="type-t3 headline block hover:text-primary">
                 {group.name}
               </Link>
               <p className="text-xs font-bold text-[var(--hp-text-secondary)]">
@@ -1058,7 +1058,7 @@ export function CommunityGroupsDirectory({ groups }: { groups: CommunityGroupSum
               </p>
             </div>
           </div>
-          <p className="hearst-community-copy mt-3 flex-1 text-sm leading-6 text-[var(--hp-text-ui)]">{group.description}</p>
+          <p className="type-b2 hearst-community-copy mt-3 flex-1 text-[var(--hp-text-ui)]">{group.description}</p>
           <div className="mt-3">
             <CommunityJoinButton brand={group.brand} groupName={group.name} />
           </div>
@@ -1090,7 +1090,7 @@ export function CommunityThreadReplies({
   return (
     <>
       <section className="border-t border-[var(--hp-border)] p-5" aria-labelledby="thread-replies-title">
-        <h2 id="thread-replies-title" className="text-base font-black leading-tight">
+        <h2 id="thread-replies-title" className="type-t5 font-black">
           Replies
         </h2>
         <ul className="mt-4 space-y-3">
@@ -1100,7 +1100,7 @@ export function CommunityThreadReplies({
                 <span className="text-[var(--hp-text-primary)]">{reply.author}</span>
                 {reply.isHost ? <CommunityHostBadge brand={brand} /> : null}
               </div>
-              <p className="hearst-community-copy mt-2 whitespace-pre-line text-sm leading-6 text-[var(--hp-text-ui)]">{reply.body}</p>
+              <p className="type-b2 hearst-community-copy mt-2 whitespace-pre-line text-[var(--hp-text-ui)]">{reply.body}</p>
               <div className="mt-1 flex flex-wrap items-center gap-3">
                 <CommunityHelpfulButton id={reply.id} base={reply.helpfulBase} label="reply" />
                 <span className="ml-auto">
@@ -1129,7 +1129,7 @@ export function CommunityThreadReplies({
           setText("");
         }}
       >
-        <h2 id="reply-thread-title" className="headline text-xl leading-tight">
+        <h2 id="reply-thread-title" className="headline type-t3">
           Add a reply
         </h2>
         <label className="mt-3 block">
@@ -1138,11 +1138,11 @@ export function CommunityThreadReplies({
             value={text}
             onChange={(event) => setText(event.target.value)}
             placeholder={account ? `Reply as ${account.firstName || "Hearst+ reader"}` : "Sign in to reply"}
-            className="hearst-community-copy min-h-24 text-sm leading-6"
+            className="type-b2 hearst-community-copy min-h-24"
           />
         </label>
         <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-          <p className="hearst-community-copy text-xs leading-5 text-[var(--hp-text-secondary)]">Keep it useful, kind, and specific to this group.</p>
+          <p className="type-c1 hearst-community-copy text-[var(--hp-text-secondary)]">Keep it useful, kind, and specific to this group.</p>
           <Button type="submit" size="sm" className="text-primary-foreground">
             <Send className="size-4" aria-hidden />
             {account ? "Post reply" : "Sign in to reply"}

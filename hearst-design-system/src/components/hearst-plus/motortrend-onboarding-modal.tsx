@@ -690,8 +690,8 @@ function StepTwo({
                   selected ? "bg-white/95" : "bg-[#F3F4F6]",
                 )}
               />
-              <span className="mt-3 text-base font-semibold leading-tight">{option.title}</span>
-              <span className={cn("mt-1.5 text-sm leading-snug", selected ? "text-white/85" : "text-[#586172]")}>
+              <span className="type-t5 mt-3 font-semibold">{option.title}</span>
+              <span className={cn("type-b2 mt-1.5", selected ? "text-white/85" : "text-[#586172]")}>
                 {option.description}
               </span>
             </button>
@@ -922,7 +922,7 @@ function StepFour({
                   </span>
                   <span className="text-base font-semibold text-[#101828]">{newsletter.title}</span>
                 </span>
-                <span className="mt-1.5 block text-sm leading-snug text-[#586172]">
+                <span className="type-b2 mt-1.5 block text-[#586172]">
                   {newsletter.description}
                 </span>
               </span>
@@ -1010,7 +1010,7 @@ function WelcomeStep({
               <p className="text-[1.5rem] font-semibold leading-tight tracking-[-0.02em] sm:text-[1.75rem]">
                 Membership Card
               </p>
-              <p className="mt-1 text-base leading-snug text-[#B7BCC6]">
+              <p className="type-t5 mt-1 text-[#B7BCC6]">
                 MotorTrend Member
               </p>
             </div>
@@ -1050,7 +1050,7 @@ function WelcomeStep({
 function CardDetail({ label, value }: { label: string; value: string }) {
   return (
     <div className="text-left">
-      <p className="text-sm font-normal leading-snug text-[#B7BCC6]">{label}</p>
+      <p className="type-b2 font-normal text-[#B7BCC6]">{label}</p>
       <p className="mt-1 text-xl font-semibold leading-tight text-white">{value}</p>
     </div>
   );

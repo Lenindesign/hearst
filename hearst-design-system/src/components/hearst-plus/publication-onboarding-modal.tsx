@@ -2165,7 +2165,7 @@ function PublicationOnboardingModalContent({
                           aria-hidden="true"
                         />
                       </span>
-                      <p className="text-sm font-semibold leading-5 text-[var(--publication-ink)]">
+                      <p className="type-b2 font-semibold text-[var(--publication-ink)]">
                         {config.intro}
                       </p>
                     </div>
@@ -2247,7 +2247,7 @@ function PublicationOnboardingModalContent({
                             </span>
                             <span className="min-w-0 sm:mt-3">
                             <span className="block text-base font-black">{title}</span>
-                            <span className="mt-1.5 block text-sm leading-5 text-[var(--publication-muted)]">
+                            <span className="type-b2 mt-1.5 block text-[var(--publication-muted)]">
                               {optionDescription}
                             </span>
                           </span>
@@ -2318,7 +2318,7 @@ function PublicationOnboardingModalContent({
                         <p className="text-sm font-black text-[var(--publication-ink)]">
                           Your choices stay in this prototype
                         </p>
-                        <p className="mt-0.5 text-sm leading-5 text-[var(--publication-muted)]">
+                        <p className="type-b2 mt-0.5 text-[var(--publication-muted)]">
                           Newsletters personalize this demo flow and keep the brand experience contextual.
                         </p>
                       </div>
@@ -2565,7 +2565,7 @@ function PublicationNewsletterOption({
         <span className="block text-base font-black leading-tight text-[var(--publication-ink)] sm:text-lg">
           {option.title}
         </span>
-        <span className="mt-1 block max-w-[42ch] text-sm leading-5 text-[var(--publication-muted)]">
+        <span className="type-b2 mt-1 block max-w-[42ch] text-[var(--publication-muted)]">
           {option.description}
         </span>
       </span>
@@ -2729,7 +2729,7 @@ function CardDetail({ label, value }: { label: string; value: string }) {
   return (
     <div className="min-w-0 text-left">
       <p className="text-xs font-bold text-white/60">{label}</p>
-      <p className="mt-1 break-words text-base font-black leading-tight text-white">{value}</p>
+      <p className="type-t5 mt-1 break-words font-black text-white">{value}</p>
     </div>
   );
 }

@@ -120,7 +120,7 @@ export function DiscoverySidebarCard({
             {titleIcon}
             {title}
           </span>
-          <span className="mt-1 line-clamp-2 block max-w-full break-words text-xs font-normal normal-case tracking-normal text-muted-foreground lg:hidden">
+          <span className="mt-1 line-clamp-2 block max-w-full break-words type-c1 font-normal normal-case text-muted-foreground lg:hidden">
             {summary}
           </span>
         </button>
@@ -259,7 +259,7 @@ export function LifestyleDiscoverySidebar({
             <p className="type-k1 text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
               {story.topic}
             </p>
-            <p className="mt-1 text-sm font-bold leading-snug underline-offset-2 group-hover:underline group-focus-visible:underline">
+            <p className="type-t6 mt-1 underline-offset-2 group-hover:underline group-focus-visible:underline">
               {story.title}
             </p>
             <p className="mt-1 text-xs text-muted-foreground">

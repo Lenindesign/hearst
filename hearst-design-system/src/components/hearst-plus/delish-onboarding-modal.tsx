@@ -590,7 +590,7 @@ function DelishOnboardingModalContent({
                         <span className="mt-4 block text-lg font-bold leading-tight">
                           {title}
                         </span>
-                        <span className="mt-3 block max-w-[15rem] text-sm leading-6 text-[#5A6472]">
+                        <span className="type-b2 mt-3 block max-w-[15rem] text-[#5A6472]">
                           {optionDescription}
                         </span>
                       </span>
@@ -658,7 +658,7 @@ function DelishOnboardingModalContent({
                     <p className="text-base font-black text-[#101828]">
                       Your privacy matters
                     </p>
-                    <p className="mt-1 text-sm leading-5 text-[#5A6472]">
+                    <p className="type-b2 mt-1 text-[#5A6472]">
                       We will never share your email address. You can unsubscribe at any time with one click.
                     </p>
                   </div>
@@ -902,7 +902,7 @@ function DelishNewsletterOption({
         <span className="block text-xl font-black leading-tight text-[#101828]">
           {title}
         </span>
-        <span className="mt-1 block max-w-[38ch] text-base leading-6 text-[#5A6472]">
+        <span className="type-d2 mt-1 block max-w-[38ch] text-[#5A6472]">
           {description}
         </span>
       </span>
@@ -1120,7 +1120,7 @@ function DelishMembershipCard({
           />
           <div className="flex gap-4">
             <Heart className="mt-1 size-8 shrink-0 text-[#EF3B35]" weight="regular" aria-hidden />
-            <p className="text-base font-normal leading-6 text-[#101828]">
+            <p className="type-d2 font-normal text-[#101828]">
               Thanks for joining our community. We can’t wait to cook with you.
             </p>
           </div>
@@ -1144,7 +1144,7 @@ function CardProfileBlock({
       <span className="shrink-0">{icon}</span>
       <div className="min-w-0">
         <p className="text-xs font-black uppercase tracking-[0.08em] text-[#667085]">{label}</p>
-        <p className="mt-1 break-words text-base font-normal leading-6 text-[#101828]">{value}</p>
+        <p className="type-d2 mt-1 break-words font-normal text-[#101828]">{value}</p>
       </div>
     </div>
   );
@@ -1168,7 +1168,7 @@ function CardChipBlock({
           {items.slice(0, 5).map((item) => (
             <span
               key={item}
-              className="rounded-[8px] border border-[#E8D5C1] bg-white/75 px-3 py-2 text-base font-medium leading-6 text-[#101828]"
+              className="type-d2 rounded-[8px] border border-[#E8D5C1] bg-white/75 px-3 py-2 font-medium text-[#101828]"
             >
               {item}
             </span>

@@ -252,7 +252,7 @@ export function SaveAcrossDevicesDialog({
             <p className="type-k1 text-primary">
               Saved on this device
             </p>
-            <h2 id="save-across-devices-title" className="mt-1 text-lg font-bold leading-tight text-foreground">
+            <h2 id="save-across-devices-title" className="type-t5 mt-1 font-bold text-foreground">
               Save Across Devices
             </h2>
           </div>
@@ -474,7 +474,7 @@ export function ReaderAuthDialog({
           <p className="type-k1 text-white/80">
             Your daily Hearst+
           </p>
-          <p className="headline mt-3 max-w-sm text-4xl leading-tight">
+          <p className="headline type-t2 mt-3 max-w-sm">
             Save the feed that feels built for you.
           </p>
         </div>
@@ -492,7 +492,7 @@ export function ReaderAuthDialog({
           </Button>
         </div>
         <form className="min-h-0 flex-1 overflow-y-auto p-5 sm:px-6 sm:py-5" onSubmit={submit} noValidate>
-          <h2 id="reader-auth-title" className="headline text-3xl leading-tight outline-none">
+          <h2 id="reader-auth-title" className="headline type-t4 outline-none">
             {mode === "create" ? "Create your Hearst+ profile." : "Welcome back to Hearst+."}
           </h2>
           <p className="mt-2 max-w-md text-sm leading-5 text-muted-foreground">

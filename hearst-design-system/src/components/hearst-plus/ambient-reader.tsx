@@ -56,9 +56,9 @@ import { getLifestyleByline } from "./story-metadata";
 export type AmbientReaderDensity = "compact" | "comfortable" | "airy";
 
 const ambientReaderDensityStyles: Record<AmbientReaderDensity, string> = {
-  compact: "max-w-[68ch] text-[17px] leading-7 [--ambient-block-gap:1.25rem]",
-  comfortable: "max-w-[62ch] text-[19px] leading-8 [--ambient-block-gap:1.75rem]",
-  airy: "max-w-[58ch] text-[21px] leading-9 [--ambient-block-gap:2.25rem]",
+  compact: "max-w-[68ch] text-[17px] leading-6 [--ambient-block-gap:1.25rem]",
+  comfortable: "max-w-[62ch] text-[19px] leading-7 [--ambient-block-gap:1.75rem]",
+  airy: "max-w-[58ch] text-[21px] leading-8 [--ambient-block-gap:2.25rem]",
 };
 
 export function isCompleteAmbientArticle(liveArticle?: ReaderArticleLoadState) {
@@ -226,7 +226,7 @@ function AmbientReaderImageBlock({
       </button>
       {block.caption || block.credit ? (
         <figcaption className={cn(
-          "mt-3 font-brand text-xs leading-5 text-[var(--ambient-muted)]",
+          "type-c1 mt-3 font-brand text-[var(--ambient-muted)]",
           isPortrait && "mx-auto max-w-[min(100%,720px)]"
         )}>
           {[block.caption, block.credit].filter(Boolean).join(" · ")}
@@ -457,7 +457,7 @@ function AmbientReaderHero({
             <h1
               className={cn(
                 "max-w-[20ch] break-words font-headline text-[clamp(2.8rem,5.2vw,5.8rem)] font-[var(--font-headline-weight)] tracking-[-0.025em] text-balance",
-                usesBuzzHeadline ? "leading-[1.06]" : "leading-[0.95]"
+                "leading-[1.08] tracking-[-0.01em]"
               )}
             >
               {story.title}
@@ -465,7 +465,7 @@ function AmbientReaderHero({
           </div>
           <div className="self-end border-t border-current/25 pt-6 lg:border-t-0 lg:pt-0">
             <p className={cn(
-              "max-w-xl font-brand-secondary text-lg leading-7 sm:text-xl sm:leading-8",
+              "max-w-xl font-brand-secondary text-lg leading-7 sm:text-xl",
               !isMotorTrend && "text-white/80"
             )}>
               {story.summary}
@@ -505,10 +505,10 @@ function AmbientReaderHero({
           <p className="mb-7 border-y border-current/30 py-3 text-xs font-bold uppercase tracking-[0.2em]">
             {story.topic} · {story.brand}
           </p>
-          <h1 className="max-w-full break-words font-headline text-[clamp(2.6rem,4.2vw,4.8rem)] font-[var(--font-headline-weight)] uppercase leading-[0.94] tracking-[-0.025em] text-balance">
+          <h1 className="max-w-full break-words font-headline text-[clamp(2.6rem,4.2vw,4.8rem)] font-[var(--font-headline-weight)] uppercase leading-[1.08] tracking-[-0.01em] text-balance">
             {story.title}
           </h1>
-          <p className="mt-8 max-w-xl font-brand-secondary text-xl leading-8 opacity-90 sm:text-2xl">
+          <p className="mt-8 max-w-xl font-brand-secondary text-xl leading-7 opacity-90 sm:text-2xl sm:leading-8">
             {story.summary}
           </p>
           <AmbientReaderHeroMeta {...metaProps} />
@@ -529,10 +529,10 @@ function AmbientReaderHero({
             <p className="mb-7 text-xs font-bold uppercase tracking-[0.18em]" style={{ color: brandPrimary }}>
               {story.topic} · {story.brand}
             </p>
-            <h1 className="max-w-full break-words font-headline text-[clamp(2.65rem,4.2vw,5.2rem)] font-[var(--font-headline-weight)] leading-[1.02] tracking-[-0.025em] text-balance">
+            <h1 className="max-w-full break-words font-headline text-[clamp(2.65rem,4.2vw,5.2rem)] font-[var(--font-headline-weight)] leading-[1.08] tracking-[-0.01em] text-balance">
               {story.title}
             </h1>
-            <p className="mt-8 max-w-xl font-brand-secondary text-xl leading-8 text-[var(--ambient-muted)] sm:text-2xl">
+            <p className="mt-8 max-w-xl font-brand-secondary text-xl leading-7 text-[var(--ambient-muted)] sm:text-2xl sm:leading-8">
               {story.summary}
             </p>
             <AmbientReaderHeroMeta {...metaProps} className="text-[var(--ambient-muted)]" />
@@ -576,10 +576,10 @@ function AmbientReaderHero({
           <p className="mb-6 text-xs font-bold uppercase tracking-[0.18em] opacity-80">
             {story.topic} · {story.brand}
           </p>
-          <h1 className="max-w-full break-words font-headline text-[clamp(2.6rem,3.7vw,4.75rem)] font-[var(--font-headline-weight)] leading-[1.08] tracking-[-0.03em] text-balance">
+          <h1 className="max-w-full break-words font-headline text-[clamp(2.6rem,3.7vw,4.75rem)] font-[var(--font-headline-weight)] leading-[1.08] tracking-[-0.01em] text-balance">
             {story.title}
           </h1>
-          <p className="mt-7 max-w-xl font-brand-secondary text-xl leading-8 opacity-90 sm:text-2xl">
+          <p className="mt-7 max-w-xl font-brand-secondary text-xl leading-7 opacity-90 sm:text-2xl sm:leading-8">
             {story.summary}
           </p>
           <AmbientReaderHeroMeta {...metaProps} />
@@ -630,11 +630,11 @@ function AmbientCommerceModule({ config }: { config: VerifiedAmbientCommerceColl
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
         <div>
           <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--ambient-ink)]">{config.eyebrow}</p>
-          <h2 id="ambient-commerce-title" className="mt-2 font-headline text-3xl font-[var(--font-headline-weight)] leading-tight text-[var(--ambient-ink)]">
+          <h2 id="ambient-commerce-title" className="type-t4 mt-2 font-headline font-[var(--font-headline-weight)] text-[var(--ambient-ink)]">
             {config.title}
           </h2>
         </div>
-        <p className="max-w-sm text-sm leading-6 text-[var(--ambient-muted)]">
+        <p className="type-b2 max-w-sm text-[var(--ambient-muted)]">
           {config.description}
         </p>
       </div>
@@ -646,8 +646,8 @@ function AmbientCommerceModule({ config }: { config: VerifiedAmbientCommerceColl
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={product.imageUrl} alt="" className="h-full w-full object-contain" loading="lazy" />
             </div>
-            <h3 className="font-brand text-base font-bold leading-snug text-[var(--ambient-ink)]">{product.name}</h3>
-            <p className="mt-3 text-sm leading-6 text-[var(--ambient-muted)]">{product.context}</p>
+            <h3 className="type-t5 font-brand font-bold text-[var(--ambient-ink)]">{product.name}</h3>
+            <p className="type-b2 mt-3 text-[var(--ambient-muted)]">{product.context}</p>
             <a
               href={product.amazonUrl}
               target="_blank"
@@ -660,7 +660,7 @@ function AmbientCommerceModule({ config }: { config: VerifiedAmbientCommerceColl
           </article>
         ))}
       </div>
-      <p className="mt-5 text-xs leading-5 text-[var(--ambient-muted)]">
+      <p className="type-c1 mt-5 text-[var(--ambient-muted)]">
         Prototype commerce links. We do not earn a commission from these Amazon links; prices, sellers, and availability may change.
       </p>
     </section>
@@ -782,10 +782,10 @@ function AmbientReaderArticleBlocks({
           );
         }
         if (block.type === "heading") {
-          return <h2 key={index} className="pt-6 font-headline text-[clamp(2rem,4vw,3.5rem)] font-[var(--font-headline-weight)] leading-[1.05] tracking-[-0.025em] text-balance">{block.text}</h2>;
+          return <h2 key={index} className="pt-6 font-headline text-[clamp(2rem,4vw,3.5rem)] font-[var(--font-headline-weight)] leading-[1.08] tracking-[-0.01em] text-balance">{block.text}</h2>;
         }
         if (block.type === "quote") {
-          return <blockquote key={index} className="my-12 border-y border-[var(--ambient-rule)] py-8 font-headline text-[clamp(1.75rem,3.5vw,3rem)] font-[var(--font-headline-weight)] leading-tight text-balance">“{block.text}”</blockquote>;
+          return <blockquote key={index} className="my-12 border-y border-[var(--ambient-rule)] py-8 font-headline text-[clamp(1.75rem,3.5vw,3rem)] font-[var(--font-headline-weight)] leading-[1.125] text-balance">“{block.text}”</blockquote>;
         }
         if (block.type === "list") {
           return <ul key={index} className="list-disc space-y-3 pl-6">{block.items.map((item) => <li key={item}>{item}</li>)}</ul>;
@@ -1233,7 +1233,7 @@ export function AmbientArticleReader({
                         <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-primary">
                           Keep reading
                         </p>
-                        <h2 className="mt-2 font-headline text-2xl font-[var(--font-headline-weight)] leading-tight text-[var(--ambient-ink)]">
+                        <h2 className="type-t3 mt-2 font-headline font-[var(--font-headline-weight)] text-[var(--ambient-ink)]">
                           Related ambient reads
                         </h2>
                       </div>
@@ -1259,7 +1259,7 @@ export function AmbientArticleReader({
                             <span className="block text-[11px] font-bold uppercase tracking-[0.16em] text-primary">
                               {relatedStory.topic} · {relatedStory.brand}
                             </span>
-                            <span className="mt-1 block font-headline text-xl font-[var(--font-headline-weight)] leading-tight text-[var(--ambient-ink)] text-balance">
+                            <span className="mt-1 block font-headline text-xl font-[var(--font-headline-weight)] leading-6 text-[var(--ambient-ink)] text-balance">
                               {relatedStory.title}
                             </span>
                             <span className="mt-2 block text-xs font-semibold text-[var(--ambient-muted)]">
