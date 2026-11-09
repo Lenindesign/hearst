@@ -85,7 +85,7 @@ export function SavedItemsModule({
                     aria-label={`Open suggested story: ${story.title}`}
                   >
                     <span className="relative block size-12 overflow-hidden rounded-[6px] bg-muted" aria-hidden>
-                      <Image src={story.image} alt="" fill sizes="48px" className="object-cover" unoptimized />
+                      {story.image ? <Image src={story.image} alt="" fill sizes="48px" className="object-cover" unoptimized /> : null}
                     </span>
                     <span className="min-w-0">
                       <span className="line-clamp-2 type-t6 underline-offset-2 group-hover:underline group-focus-visible:underline">

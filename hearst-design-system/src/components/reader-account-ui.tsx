@@ -19,6 +19,8 @@ import {
   X,
 } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
@@ -208,7 +210,7 @@ function ModalFrame({
         aria-labelledby={titleId}
         tabIndex={-1}
         className={cn(
-          "relative z-10 flex max-h-[calc(100dvh-2rem)] w-full flex-col overflow-hidden rounded-[8px] bg-background shadow-2xl",
+          "relative z-10 flex max-h-[calc(100dvh-2rem)] w-full flex-col overflow-hidden rounded-card bg-card text-card-foreground shadow-2xl",
           className
         )}
       >
@@ -239,7 +241,7 @@ export function SaveAcrossDevicesDialog({
       open={open}
       titleId="save-across-devices-title"
       onClose={onClose}
-      className="max-w-[24rem] bg-background"
+      className="max-w-[24rem]"
     >
       <div className="flex items-start justify-between gap-4 border-b border-border px-5 py-4 sm:px-6">
         <div className="flex min-w-0 items-center gap-3">
@@ -268,7 +270,7 @@ export function SaveAcrossDevicesDialog({
         </Button>
       </div>
       <div className="px-5 py-5 sm:px-6">
-        <p className="text-sm leading-6 text-muted-foreground">
+        <p className="type-b2 text-muted-foreground">
           Your story is saved here. Sign in or create a profile to keep your saved stories on every device.
         </p>
         <div className="mt-5 grid gap-2.5">
@@ -741,39 +743,43 @@ export function ReaderProfileDialog({
             <p className="mt-0.5 truncate text-xs text-muted-foreground">{account.email}</p>
           </div>
         </div>
-        <Button data-modal-close variant="outline" size="icon-sm" className="size-11" onClick={onClose} aria-label="Close profile">
-          <X className="h-4 w-4" aria-hidden />
+        <Button data-modal-close variant="outline" size="icon-touch" onClick={onClose} aria-label="Close profile">
+          <X aria-hidden />
         </Button>
       </div>
-      <div className="flex min-h-0 flex-1 flex-col sm:grid sm:grid-cols-[200px_minmax(0,1fr)]">
-        <nav className="flex shrink-0 gap-1 overflow-x-auto border-b border-border p-3 sm:flex-col sm:border-b-0 sm:border-r sm:p-4" aria-label="Account sections">
+      <Tabs
+        value={tab}
+        onValueChange={(value) => setTab(value as ProfileTab)}
+        orientation="vertical"
+        className="flex min-h-0 flex-1 flex-col gap-0 sm:grid sm:grid-cols-[200px_minmax(0,1fr)]"
+      >
+        <TabsList
+          variant="line"
+          aria-label="Account sections"
+          className="flex w-auto shrink-0 items-stretch justify-start gap-1 overflow-x-auto rounded-none border-b border-border p-3 group-data-vertical/tabs:h-auto group-data-vertical/tabs:flex-row sm:border-b-0 sm:border-r sm:p-4 sm:group-data-vertical/tabs:flex-col"
+        >
           {profileTabs.map((item) => {
             const Icon = item.icon;
             return (
-              <button
+              <TabsTrigger
                 key={item.id}
-                type="button"
-                onClick={() => setTab(item.id)}
-                className={cn(
-                  "flex min-h-11 shrink-0 items-center gap-3 rounded-[8px] px-3 text-left text-sm font-semibold transition-colors",
-                  tab === item.id ? "bg-muted text-primary" : "text-foreground hover:bg-muted/70"
-                )}
-                aria-current={tab === item.id ? "page" : undefined}
+                value={item.id}
+                className="h-auto min-h-11 flex-none justify-start gap-3 rounded-card px-3 text-sm font-semibold text-foreground hover:bg-muted/70 data-active:bg-muted data-active:text-primary max-sm:after:hidden group-data-vertical/tabs:w-auto sm:group-data-vertical/tabs:w-full"
               >
-                <Icon className="h-4 w-4" aria-hidden />
+                <Icon aria-hidden />
                 {item.label}
-              </button>
+              </TabsTrigger>
             );
           })}
-        </nav>
+        </TabsList>
         <div className="min-h-0 overflow-y-auto p-5 sm:p-8">
-          {tab === "overview" ? (
+          <TabsContent value="overview">
             <div className="max-w-3xl">
-              <p className="text-xs font-bold uppercase tracking-[0.12em] text-primary">
+              <p className="type-k1 text-primary">
                 {account.syncId ? "Google-synced prototype profile" : "Browser-local demo profile"}
               </p>
-              <h3 className="mt-2 text-2xl font-bold">Your reading, in one place</h3>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+              <h3 className="headline type-t3 mt-2">Your reading, in one place</h3>
+              <p className="type-b2 mt-2 max-w-2xl text-muted-foreground">
                 {account.syncId
                   ? "Your preferences, library, and comments follow this Google profile across signed-in devices."
                   : "Your preferences, library, and comments are saved only in this browser."}
@@ -819,21 +825,22 @@ export function ReaderProfileDialog({
                 })}
               </div>
             </div>
-          ) : null}
+          </TabsContent>
 
-          {tab === "personalization" ? (
+          <TabsContent value="personalization">
             <div>
-              <h3 className="text-2xl font-bold">Tune your For You page</h3>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">Choose the topics and brands you want to see more often. Your feed updates as you make changes.</p>
+              <h3 className="headline type-t3">Tune your For You page</h3>
+              <p className="type-b2 mt-2 max-w-2xl text-muted-foreground">Choose the topics and brands you want to see more often. Your feed updates as you make changes.</p>
               <section className="mt-7">
                 <h4 className="font-bold">Interests</h4>
                 <div data-profile-options-primary="interests" className="mt-3 grid gap-2 sm:grid-cols-2">
                   {featuredTopics.map((topic) => {
                     const active = account.preferences.followedTopics.includes(topic);
                     return (
-                      <button key={topic} type="button" onClick={() => toggleTopic(topic)} aria-pressed={active} className={cn("flex min-h-11 items-center gap-3 rounded-[8px] px-3 text-left text-sm font-semibold hover:bg-muted", active && "bg-muted")}>
-                        <span className={cn("flex size-5 items-center justify-center rounded-[4px] border", active ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background")}>{active ? <Check className="h-3.5 w-3.5" aria-hidden /> : null}</span>{topic}
-                      </button>
+                      <label key={topic} className={cn("flex min-h-11 cursor-pointer items-center gap-3 rounded-card px-3 text-sm font-semibold hover:bg-muted", active && "bg-muted")}>
+                        <Checkbox checked={active} onCheckedChange={() => toggleTopic(topic)} />
+                        {topic}
+                      </label>
                     );
                   })}
                 </div>
@@ -853,9 +860,10 @@ export function ReaderProfileDialog({
                           {additionalTopics.map((topic) => {
                             const active = account.preferences.followedTopics.includes(topic);
                             return (
-                              <button key={topic} type="button" onClick={() => toggleTopic(topic)} aria-pressed={active} className={cn("flex min-h-11 items-center gap-3 rounded-[8px] px-3 text-left text-sm font-semibold hover:bg-muted", active && "bg-muted")}>
-                                <span className={cn("flex size-5 items-center justify-center rounded-[4px] border", active ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background")}>{active ? <Check className="h-3.5 w-3.5" aria-hidden /> : null}</span>{topic}
-                              </button>
+                              <label key={topic} className={cn("flex min-h-11 cursor-pointer items-center gap-3 rounded-card px-3 text-sm font-semibold hover:bg-muted", active && "bg-muted")}>
+                                <Checkbox checked={active} onCheckedChange={() => toggleTopic(topic)} />
+                                {topic}
+                              </label>
                             );
                           })}
                         </div>
@@ -870,11 +878,11 @@ export function ReaderProfileDialog({
                   {featuredBrands.map((brand) => {
                     const active = account.preferences.followedBrands.includes(brand);
                     return (
-                      <button key={brand} type="button" onClick={() => toggleBrand(brand)} aria-pressed={active} className={cn("flex min-h-14 items-center gap-3 rounded-[8px] px-2.5 text-left text-sm font-semibold hover:bg-muted", active && "bg-muted")}>
+                      <label key={brand} className={cn("flex min-h-14 cursor-pointer items-center gap-3 rounded-card px-2.5 text-sm font-semibold hover:bg-muted", active && "bg-muted")}>
                         <BrandMark brand={brand} stories={stories} />
                         <span className="min-w-0 flex-1 break-words">{brand}</span>
-                        <span className={cn("flex size-5 items-center justify-center rounded-[4px] border", active ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background")}>{active ? <Check className="h-3.5 w-3.5" aria-hidden /> : null}</span>
-                      </button>
+                        <Checkbox checked={active} onCheckedChange={() => toggleBrand(brand)} />
+                      </label>
                     );
                   })}
                 </div>
@@ -894,11 +902,11 @@ export function ReaderProfileDialog({
                           {additionalBrands.map((brand) => {
                             const active = account.preferences.followedBrands.includes(brand);
                             return (
-                              <button key={brand} type="button" onClick={() => toggleBrand(brand)} aria-pressed={active} className={cn("flex min-h-14 items-center gap-3 rounded-[8px] px-2.5 text-left text-sm font-semibold hover:bg-muted", active && "bg-muted")}>
+                              <label key={brand} className={cn("flex min-h-14 cursor-pointer items-center gap-3 rounded-card px-2.5 text-sm font-semibold hover:bg-muted", active && "bg-muted")}>
                                 <BrandMark brand={brand} stories={stories} />
                                 <span className="min-w-0 flex-1 break-words">{brand}</span>
-                                <span className={cn("flex size-5 items-center justify-center rounded-[4px] border", active ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background")}>{active ? <Check className="h-3.5 w-3.5" aria-hidden /> : null}</span>
-                              </button>
+                                <Checkbox checked={active} onCheckedChange={() => toggleBrand(brand)} />
+                              </label>
                             );
                           })}
                         </div>
@@ -908,12 +916,12 @@ export function ReaderProfileDialog({
                 ) : null}
               </section>
             </div>
-          ) : null}
+          </TabsContent>
 
-          {tab === "recommendations" ? (
+          <TabsContent value="recommendations">
             <div>
-              <h3 className="text-2xl font-bold">Fresh for you</h3>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+              <h3 className="headline type-t3">Fresh for you</h3>
+              <p className="type-b2 mt-2 max-w-2xl text-muted-foreground">
                 Recent stories ranked from the interests and brands you follow.
               </p>
               {recommendedStories.length === 0 ? (
@@ -930,7 +938,7 @@ export function ReaderProfileDialog({
                       className="group grid min-h-24 grid-cols-[88px_minmax(0,1fr)] items-center gap-3 py-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:grid-cols-[112px_minmax(0,1fr)]"
                       aria-label={`Open recommended story ${story.title}`}
                     >
-                      <Image unoptimized src={story.image} alt="" width={112} height={72} className="h-16 w-[88px] rounded-[4px] object-cover sm:h-[72px] sm:w-28" />
+                      {story.image ? <Image unoptimized src={story.image} alt="" width={112} height={72} className="h-16 w-[88px] rounded-[4px] object-cover sm:h-[72px] sm:w-28" /> : <span className="h-16 w-[88px] rounded-[4px] object-cover sm:h-[72px] sm:w-28 block bg-muted" aria-hidden />}
                       <span className="min-w-0">
                         <span className="block text-xs font-semibold text-primary">
                           {getReaderProfileRecommendationReason(story, account.preferences)}
@@ -943,11 +951,11 @@ export function ReaderProfileDialog({
                 </div>
               )}
             </div>
-          ) : null}
+          </TabsContent>
 
-          {tab === "library" ? (
+          <TabsContent value="library">
             <div>
-              <h3 ref={libraryHeadingRef} tabIndex={-1} className="text-2xl font-bold outline-none">Your library</h3>
+              <h3 ref={libraryHeadingRef} tabIndex={-1} className="headline type-t3 outline-none">Your library</h3>
               <p className="mt-2 text-sm text-muted-foreground">Keep stories together for meals, projects, trips, and anything you want to revisit.</p>
               <h4 className="mt-7 font-bold">Collections</h4>
               <form className="mt-3 flex items-start gap-2" onSubmit={(event) => { event.preventDefault(); createNamedCollection(); }}>
@@ -1020,7 +1028,7 @@ export function ReaderProfileDialog({
                         const href = archived && story.sourceUrl ? story.sourceUrl : getLibraryStoryHref(story);
                         return (
                           <Link key={id} href={href} target={archived && story.sourceUrl ? "_blank" : undefined} rel={archived && story.sourceUrl ? "noreferrer" : undefined} onClick={onClose} className="group flex min-h-12 items-center gap-3 rounded-[8px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label={`Open ${story.title}`}>
-                            <Image unoptimized src={story.image} alt="" width={64} height={44} className="h-11 w-16 shrink-0 rounded-[4px] object-cover" />
+                            {story.image ? <Image unoptimized src={story.image} alt="" width={64} height={44} className="h-11 w-16 shrink-0 rounded-[4px] object-cover" /> : <span className="h-11 w-16 shrink-0 rounded-[4px] object-cover block bg-muted" aria-hidden />}
                             <div className="min-w-0">
                               <p className="line-clamp-2 text-sm font-semibold group-hover:text-primary">{story.title}</p>
                               {archived ? <p className="mt-0.5 text-xs text-muted-foreground">Open original on {story.brand}</p> : null}
@@ -1068,7 +1076,7 @@ export function ReaderProfileDialog({
                           className="group flex min-h-16 min-w-0 items-center gap-3 rounded-[8px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                           aria-label={`Open ${story.title}`}
                         >
-                          <Image unoptimized src={story.image} alt="" width={80} height={56} className="h-14 w-20 shrink-0 rounded-[4px] object-cover" />
+                          {story.image ? <Image unoptimized src={story.image} alt="" width={80} height={56} className="h-14 w-20 shrink-0 rounded-[4px] object-cover" /> : <span className="h-14 w-20 shrink-0 rounded-[4px] object-cover block bg-muted" aria-hidden />}
                           <div className="min-w-0">
                             <p className="line-clamp-2 font-bold group-hover:text-primary">{story.title}</p>
                             <p className="mt-1 text-xs text-muted-foreground">{story.brand} · {story.readTime}{archived ? " · Opens original" : ""}</p>
@@ -1142,11 +1150,11 @@ export function ReaderProfileDialog({
                 ) : null}
               </section>
             </div>
-          ) : null}
+          </TabsContent>
 
-          {tab === "activity" ? (
+          <TabsContent value="activity">
             <div>
-              <h3 ref={commentsHeadingRef} tabIndex={-1} className="text-2xl font-bold outline-none">Your comments</h3>
+              <h3 ref={commentsHeadingRef} tabIndex={-1} className="headline type-t3 outline-none">Your comments</h3>
               <p className="mt-2 text-sm text-muted-foreground">Review or remove the comments you have added to stories.</p>
               {commentStatus ? <p role="status" className="mt-3 text-sm font-semibold text-muted-foreground">{commentStatus}</p> : null}
               {comments.length === 0 ? (
@@ -1158,7 +1166,7 @@ export function ReaderProfileDialog({
                       <div className="flex items-start justify-between gap-4">
                         <div>
                           <p className="text-xs font-semibold text-muted-foreground">{comment.storyTitle}</p>
-                          <p className="mt-2 text-sm leading-6">{comment.body}</p>
+                          <p className="type-b2 mt-2">{comment.body}</p>
                         </div>
                         <div className="flex flex-wrap justify-end gap-2">
                           <Button
@@ -1204,11 +1212,11 @@ export function ReaderProfileDialog({
                 </div>
               )}
             </div>
-          ) : null}
+          </TabsContent>
 
-          {tab === "settings" ? (
+          <TabsContent value="settings">
             <div>
-              <h3 className="text-2xl font-bold">Profile details</h3>
+              <h3 className="headline type-t3">Profile details</h3>
               <p className="mt-2 text-sm text-muted-foreground">
                 {account.syncId
                   ? "Update the name shown on every device signed in with this Google profile."
@@ -1226,7 +1234,7 @@ export function ReaderProfileDialog({
                 <Button variant="outline" className="min-h-11" onClick={() => { signOut(); onClose(); }}><LogOut className="mr-2 h-4 w-4" aria-hidden />Sign out</Button>
                 <div className="mt-8 border-t border-border pt-6">
                   <h4 className="font-bold text-destructive">Delete account</h4>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  <p className="type-b2 mt-2 text-muted-foreground">
                     {account.syncId
                       ? "This currently removes the signed-in copy from this browser. The synced prototype profile remains available when you sign in with Google again."
                       : "This removes the prototype account, saved stories, collections, comments, and preferences from this browser."}
@@ -1266,9 +1274,9 @@ export function ReaderProfileDialog({
                 </div>
               </div>
             </div>
-          ) : null}
+          </TabsContent>
         </div>
-      </div>
+      </Tabs>
     </ModalFrame>
   );
 }

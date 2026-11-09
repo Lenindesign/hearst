@@ -283,10 +283,11 @@ export const ProfilePreferences: Story = {
   play: async ({ canvasElement }) => {
     const { dialog } = await openDialog(canvasElement, "Open reader profile");
     const scope = within(dialog);
-    await userEvent.click(scope.getByRole("button", { name: "Tune For You" }));
-    await expect(scope.getByRole("button", { name: "Home" })).toHaveAttribute("aria-pressed", "true");
-    const countryLiving = scope.getByRole("button", { name: /Country Living/ });
-    await expect(countryLiving).toHaveAttribute("aria-pressed", "true");
+    await userEvent.click(scope.getByRole("tab", { name: "Tune For You" }));
+    await expect(scope.getByRole("checkbox", { name: "Home" })).toBeChecked();
+    const countryLivingCheckbox = scope.getByRole("checkbox", { name: /Country Living/ });
+    await expect(countryLivingCheckbox).toBeChecked();
+    const countryLiving = countryLivingCheckbox.closest("label") as HTMLElement;
     await expect(
       countryLiving.querySelector("[data-brand-source-icon]"),
     ).toHaveAttribute("data-brand-slug", "country-living");
@@ -300,7 +301,7 @@ export const ProfileLibrary: Story = {
   play: async ({ canvasElement }) => {
     const { dialog } = await openDialog(canvasElement, "Open reader profile");
     const scope = within(dialog);
-    await userEvent.click(scope.getByRole("button", { name: "Library" }));
+    await userEvent.click(scope.getByRole("tab", { name: "Library" }));
     await expect(scope.getByRole("heading", { name: "Your library" })).toBeVisible();
     await expect(scope.getByRole("heading", { name: "Weekend reads" })).toBeVisible();
     await expect(scope.queryByRole("heading", { name: "Read Later" })).not.toBeInTheDocument();
@@ -342,7 +343,7 @@ export const ProfileLibraryUnsave: Story = {
   play: async ({ canvasElement }) => {
     const { dialog } = await openDialog(canvasElement, "Open reader profile");
     const scope = within(dialog);
-    await userEvent.click(scope.getByRole("button", { name: "Library" }));
+    await userEvent.click(scope.getByRole("tab", { name: "Library" }));
     const removeSavedStory = scope.getByRole("button", {
       name: `Remove ${savedStory.title} from saved stories`,
     });
@@ -363,7 +364,7 @@ export const ProfileComments: Story = {
   play: async ({ canvasElement }) => {
     const { dialog } = await openDialog(canvasElement, "Open reader profile");
     const scope = within(dialog);
-    await userEvent.click(scope.getByRole("button", { name: "Comments" }));
+    await userEvent.click(scope.getByRole("tab", { name: "Comments" }));
     await expect(scope.getByText("I saved this for the weekend.")).toBeVisible();
     const deleteComment = scope.getByRole("button", { name: "Delete comment" });
     await expect(deleteComment.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
@@ -383,11 +384,11 @@ export const ProfileEmptyStates: Story = {
   play: async ({ canvasElement }) => {
     const { dialog } = await openDialog(canvasElement, "Open reader profile");
     const scope = within(dialog);
-    await userEvent.click(scope.getByRole("button", { name: "Library" }));
+    await userEvent.click(scope.getByRole("tab", { name: "Library" }));
     await expect(scope.getByText("Save a story from the feed and it will appear here.")).toBeVisible();
-    await userEvent.click(scope.getByRole("button", { name: "Comments" }));
+    await userEvent.click(scope.getByRole("tab", { name: "Comments" }));
     await expect(scope.getByText("Join a story conversation and your comments will appear here.")).toBeVisible();
-    await userEvent.click(scope.getByRole("button", { name: "Library" }));
+    await userEvent.click(scope.getByRole("tab", { name: "Library" }));
   },
 };
 
@@ -397,7 +398,7 @@ export const ProfileAccountDeletion: Story = {
   play: async ({ canvasElement }) => {
     const { dialog } = await openDialog(canvasElement, "Open reader profile");
     const scope = within(dialog);
-    await userEvent.click(scope.getByRole("button", { name: "Account" }));
+    await userEvent.click(scope.getByRole("tab", { name: "Account" }));
     const deleteAccount = scope.getByRole("button", { name: "Delete account" });
     await userEvent.click(deleteAccount);
     const confirm = scope.getByRole("button", { name: "Confirm delete account" });
