@@ -242,8 +242,7 @@ export function ContentReaderAdvertisement({
               </a>
             ) : null}
             <p
-              className="text-center type-k1"
-              style={{ color: ad.palette.foreground }}
+              className="type-c1 text-center text-muted-foreground"
             >
               Matched to {currentTopic} intent
             </p>
