@@ -32,7 +32,10 @@ test("generated brand runtime preserves every supported component token", () => 
     const expected = Object.fromEntries(
       Object.entries(source)
         .filter(([key, token]) =>
-          key.startsWith("component-") && (token.type === "color" || token.type === "number"))
+          key.startsWith("component-")
+          && (token.type === "color" || token.type === "number"
+            // CTA typography strings (family, weight, case, tracking) are carried for buttons only.
+            || (token.type === "string" && key.startsWith("component-button-"))))
         .map(([key, token]) => [key, token.value]),
     );
 

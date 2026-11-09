@@ -479,6 +479,22 @@
     "type": "number",
     "value": 0
   },
+  "component-button-font-family": {
+    "type": "string",
+    "value": "Barlow Semi Condensed"
+  },
+  "component-button-font-weight": {
+    "type": "string",
+    "value": "600"
+  },
+  "component-button-text-transform": {
+    "type": "string",
+    "value": "none"
+  },
+  "component-button-letter-spacing": {
+    "type": "string",
+    "value": "0.4px"
+  },
   "component-card-background-neutral": {
     "type": "color",
     "value": "#f8f3f4"

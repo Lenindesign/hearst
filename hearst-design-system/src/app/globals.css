@@ -1186,6 +1186,17 @@
 }
 
 @layer components {
+  /* CTA typography from brand tokens (component-button-font-family, -font-weight, -text-transform,
+     -letter-spacing; captured from each publication's live CTA). Themes without them keep the inherited
+     family, weight 500, the label as written and normal tracking. */
+  [data-slot="button"] {
+    font-family: var(--component-button-font-family, inherit);
+    font-weight: var(--component-button-font-weight, 500);
+    text-transform: var(--component-button-text-transform, none);
+    letter-spacing: var(--component-button-letter-spacing, normal);
+    /* Condensed faces with small capitals (Teko) scale to the cap height of the system UI face. */
+    font-size-adjust: var(--component-button-font-size-adjust, none);
+  }
   [data-slot="button"][data-variant="default"] {
     border-color: var(--component-button-border-primary-solid-default);
     background-color: var(--component-button-background-primary-solid-default);

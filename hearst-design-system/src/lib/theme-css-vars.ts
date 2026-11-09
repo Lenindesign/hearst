@@ -151,6 +151,14 @@ function getRuntimeFontStack(fontFamily: string, fallback: string) {
   return runtimeFontStacks[fontFamily] ?? `"${fontFamily}", ${fallback}`;
 }
 
+/** A brand's CTA typeface, falling back to its body font when the app does not serve that family. */
+function getButtonFontStack(brand: BrandTheme) {
+  const family = brand.componentTokens["component-button-font-family"];
+  if (typeof family !== "string" || !family) return undefined;
+  const stack = runtimeFontStacks[family] ?? `"${family}"`;
+  return `${stack}, ${getRuntimeFontStack(brand.fontDefault, "system-ui, sans-serif")}`;
+}
+
 export function brandToCssVars(brand: BrandTheme, colorMode: "light" | "dark" = "light"): Record<string, string> {
   const primary = brand.colors["1"] || Object.values(brand.colors)[0] || "#000000";
   const primaryFg = getContrastColor(primary);
@@ -229,6 +237,7 @@ export function brandToCssVars(brand: BrandTheme, colorMode: "light" | "dark" = 
     "--font-headline": getRuntimeFontStack(brand.fontHeadline, "system-ui, sans-serif"),
     "--font-headline-weight": `${brand.fontHeadlineWeight}`,
     "--font-headline-stretch": brand.fontHeadlineStretch || "normal",
+    ...(getButtonFontStack(brand) ? { "--component-button-font-family": getButtonFontStack(brand)! } : {}),
     ...darkSurfaceVars,
   }, colorMode);
 }

@@ -59,3 +59,14 @@ test("contextual ad headlines use the CTA color only where it reads on the card 
     }
   }
 });
+
+test("CTA typography tokens reach CSS as unitless strings with a body-font fallback", () => {
+  for (const theme of themeOptions) {
+    const tokens = theme.componentTokens ?? {};
+    if (!tokens["component-button-font-family"]) continue;
+    const vars = brandToCssVars(theme, "light");
+    assert.match(vars["--component-button-font-weight"], /^\d{3}$/, `${theme.slug} weight`);
+    assert.ok(["none", "uppercase"].includes(vars["--component-button-text-transform"]), `${theme.slug} transform`);
+    assert.ok(vars["--component-button-font-family"].includes(","), `${theme.slug} font stack has a fallback`);
+  }
+});
