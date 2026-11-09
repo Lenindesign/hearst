@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import { MapPin } from "@/components/ui/icons";
 import { getHearstTVStationById, type HearstTVContent } from "@/lib/hearst-tv-feed-framework";
 
 type LocalNewsFeedResponse = {
@@ -60,8 +61,9 @@ export function LocalNewsRail({ layout = "rail" }: { layout?: "rail" | "grid" })
       <div className="flex items-center justify-between gap-3">
         <h2
           id="local-news-rail-title"
-          className="type-k1 text-[var(--hp-section-title)]"
+          className="flex items-center gap-1.5 type-k1 text-[var(--hp-section-title)]"
         >
+          <MapPin className="h-4 w-4 shrink-0" aria-hidden />
           Local News
         </h2>
         <span
