@@ -519,9 +519,9 @@ export function FeaturedStoryCarousel({
                             : "transition-transform delay-[16ms] duration-[284ms]",
                         )}
                         style={{
-                          // The image content travels 4% less than its slide,
+                          // The image content travels 8% less than its slide,
                           // leaving the text card to lead the carousel motion.
-                          transform: `translate3d(calc(${(trackIndex - visualIndex) * (100 / 27.5)}% - ${dragOffset * 0.04}px), 0, 0)`,
+                          transform: `translate3d(calc(${(trackIndex - visualIndex) * (100 / 13.75)}% - ${dragOffset * 0.08}px), 0, 0)`,
                         }}
                       >
                         {renderImage(story, index, index === activeIndex)}
@@ -543,9 +543,9 @@ export function FeaturedStoryCarousel({
                         ),
                   )}
                   style={layoutMode === "list" ? undefined : {
-                    // Let the text card lead by a few pixels while the photo
+                    // Let the text card lead by 10px while the photo
                     // catches up through its delayed, shorter parallax motion.
-                    transform: `translate3d(${-(trackIndex - visualIndex) * 4}px, 0, 0)`,
+                    transform: `translate3d(${-(trackIndex - visualIndex) * 10}px, 0, 0)`,
                   }}
                 >
                   <div className={cn(
