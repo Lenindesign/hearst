@@ -18,6 +18,7 @@ import { formatVideoDuration } from "@/components/hearst-plus/video-format";
 import { getHearstAutoResearchCarRating } from "@/lib/hearst-auto-research-cars";
 
 export type FeaturedStoryCarouselProps = {
+  className?: string;
   stories: LifestyleRiverStory[];
   layoutMode?: "cards" | "list";
   reducePhotoHeight?: boolean;
@@ -70,6 +71,7 @@ function ResearchCarRating({ rating, lightMode }: { rating: string; lightMode: b
 }
 
 export function FeaturedStoryCarousel({
+  className,
   stories,
   layoutMode = "cards",
   scrimDirection = "bottom",
@@ -364,6 +366,7 @@ export function FeaturedStoryCarousel({
     <article
       className={cn(
         "group relative min-w-0 overscroll-x-none overflow-hidden",
+        className,
         layoutMode !== "list" && "shadow-none",
         layoutMode === "list" && "rounded-card bg-card shadow-[var(--hp-shadow-card)]",
       )}

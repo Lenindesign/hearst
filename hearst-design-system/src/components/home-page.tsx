@@ -7045,6 +7045,7 @@ function LifestyleRiverHomePage({
               {!fullWidthFeaturedHero && !isBlocksHomepage ? (
                 <FeaturedStoryCarousel
                   key={`${leadStory.id}:${heroStories.map((story) => story.id).join("|")}`}
+                  className="mb-[-10px]"
                   stories={heroStories}
                   layoutMode={riverLayout}
                   editionLabel={shouldUseTodaysPicks ? (isShowingLatestAvailableStories ? "Latest available" : "Today’s Picks") : undefined}
