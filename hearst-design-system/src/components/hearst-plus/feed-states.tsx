@@ -87,21 +87,18 @@ export function LifestyleRiverLoadingState({ pageHeading }: { pageHeading: strin
         >
           <h1 className="sr-only">{pageHeading}</h1>
           <div
-            className="relative w-full min-w-0 overflow-hidden bg-black motion-safe:animate-pulse"
+            className="relative w-full min-w-0 overflow-hidden bg-transparent motion-safe:animate-pulse"
             aria-hidden="true"
           >
             <div className="relative isolate">
-              <div className="relative h-[min(128vw,520px)] w-full overflow-hidden sm:h-auto sm:aspect-video">
-                <div className="absolute inset-0 bg-muted" />
-                <div className="absolute inset-x-0 bottom-0 h-[180px] bg-gradient-to-b from-transparent via-black/45 to-black sm:h-[220px] xl:h-[240px]" />
-              </div>
+              <div className="relative h-[min(128vw,520px)] w-full overflow-hidden sm:h-auto sm:aspect-video" />
             </div>
-            <div className="h-[112px] bg-black sm:h-[144px]" />
+            <div className="h-[112px] bg-transparent sm:h-[144px]" />
             <div className="absolute inset-x-5 bottom-6 space-y-3 sm:inset-x-7 sm:bottom-7">
-              <div className="h-3 w-32 rounded-full bg-white/35" />
-              <div className="h-7 w-full max-w-xl rounded-full bg-white/35" />
-              <div className="h-7 w-3/4 max-w-lg rounded-full bg-white/35" />
-              <div className="h-3 w-5/6 max-w-xl rounded-full bg-white/25" />
+              <div className="h-3 w-32 rounded-full bg-muted" />
+              <div className="h-7 w-full max-w-xl rounded-full bg-muted" />
+              <div className="h-7 w-3/4 max-w-lg rounded-full bg-muted" />
+              <div className="h-3 w-5/6 max-w-xl rounded-full bg-muted" />
             </div>
           </div>
           <div

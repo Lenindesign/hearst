@@ -12,6 +12,7 @@ import {
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { cn } from "@/lib/utils";
 import { BrandSourceIcon } from "@/components/hearst-plus/brand-source-icon";
+import { useTheme } from "@/components/theme-provider";
 import { usePrefersReducedMotion } from "@/components/hearst-plus/use-prefers-reduced-motion";
 import { formatVideoDuration } from "@/components/hearst-plus/video-format";
 import { getHearstAutoResearchCarRating } from "@/lib/hearst-auto-research-cars";
@@ -48,16 +49,19 @@ function defaultIsCurrentStory(story: LifestyleRiverStory) {
   return story.id.startsWith("live-");
 }
 
-function ResearchCarRating({ rating }: { rating: string }) {
+function ResearchCarRating({ rating, lightMode }: { rating: string; lightMode: boolean }) {
   const [score, denominator = "10"] = rating.split("/");
 
   return (
-    <span className="flex shrink-0 flex-col items-center text-center text-white" aria-label={`Car and Driver rating ${rating}`}>
+    <span className={cn(
+      "flex shrink-0 flex-col items-center text-center",
+      lightMode ? "text-[var(--palette-content-brand,var(--brand-primary))]" : "text-white",
+    )} aria-label={`Car and Driver rating ${rating}`}>
       <span className="flex items-baseline font-extrabold tabular-nums leading-none">
         <span className="text-[28px]">{score}</span>
         <span className="text-sm">/{denominator}</span>
       </span>
-      <span className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold leading-none text-white/85">
+      <span className={cn("mt-1 inline-flex items-center gap-1 text-[10px] font-semibold leading-none", lightMode ? "opacity-85" : "text-white/85")}>
         <Image src="/cd.svg" alt="" width={12} height={12} aria-hidden="true" />
         Rating
       </span>
@@ -68,7 +72,6 @@ function ResearchCarRating({ rating }: { rating: string }) {
 export function FeaturedStoryCarousel({
   stories,
   layoutMode = "cards",
-  reducePhotoHeight = false,
   scrimDirection = "bottom",
   renderImage,
   editionLabel,
@@ -81,6 +84,7 @@ export function FeaturedStoryCarousel({
   onEditionStoryOpen,
   onActiveStoryChange,
 }: FeaturedStoryCarouselProps) {
+  const { colorMode } = useTheme();
   const prefersReducedMotion = usePrefersReducedMotion();
   const initialActualIndex = React.useMemo(() => {
     const initialIndex = initialStoryId
@@ -358,7 +362,11 @@ export function FeaturedStoryCarousel({
 
   return (
     <article
-      className="group relative min-w-0 overscroll-x-none overflow-hidden rounded-card bg-black shadow-[var(--hp-shadow-card)]"
+      className={cn(
+        "group relative min-w-0 overscroll-x-none overflow-hidden",
+        layoutMode !== "list" && "shadow-none",
+        layoutMode === "list" && "rounded-card bg-card shadow-[var(--hp-shadow-card)]",
+      )}
       aria-roledescription="carousel"
       aria-label={editionLabel ?? "Featured stories"}
       data-story-module={editionLabel ? "todays-picks" : "featured"}
@@ -392,7 +400,9 @@ export function FeaturedStoryCarousel({
       <div
         data-testid="featured-story-track"
         className={cn(
-          "relative w-full min-w-0 overscroll-x-none overflow-hidden bg-black",
+          "relative w-full min-w-0 overscroll-x-none overflow-hidden",
+          layoutMode !== "list" && "shadow-none",
+          layoutMode === "list" && "bg-card",
           swipeEnabled && "touch-pan-y",
         )}
         onPointerDown={handleSwipePointerDown}
@@ -430,32 +440,33 @@ export function FeaturedStoryCarousel({
               (visualIndex === 0 || visualIndex === visualStories.length - 1);
             const slideCommentCount = getCommentCount(story);
             const researchCarRating = getHearstAutoResearchCarRating(story.id);
+            const carouselHeadlineColor = layoutMode === "list" ? undefined : "text-white";
             const headlineClassName = cn(
               layoutMode === "list"
-                ? "headline line-clamp-3 max-w-[min(42rem,100%)] break-words text-balance text-[clamp(1rem,2.2vw,1.75rem)] leading-[1.12] sm:text-[clamp(1.35rem,2vw,2rem)]"
+                ? "headline line-clamp-3 max-w-[min(42rem,100%)] break-words text-balance text-[clamp(1rem,2.2vw,1.75rem)] leading-[1.23] sm:text-[clamp(1.35rem,2vw,2rem)]"
                 : cn(
-                    "headline break-words text-balance text-[clamp(1.25rem,5cqi,2.25rem)]",
-                    scrimDirection === "left-to-right"
-                      ? "line-clamp-none max-w-[min(42rem,33.333%)]"
-                      : "line-clamp-3 max-w-[min(42rem,100%)]",
+                    "headline break-words text-[clamp(1.25rem,5cqi,2.25rem)]",
+                    "line-clamp-3 max-w-[min(42rem,100%)]",
                   ),
               story.brandSlug === "house-beautiful" ||
                 story.brandSlug === "road-and-track"
-                ? "leading-[1.12]"
-                : "leading-[1.08]",
+                ? "leading-[1.23]"
+                : "leading-[1.19]",
             );
 
             return (
               <article
                 key={`${isClone ? "clone" : "story"}-${visualIndex}-${story.id}`}
                 className={cn(
-                  "group/featured-slide relative w-full shrink-0 cursor-pointer bg-black text-left text-white focus-within:outline-none focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary/30",
+                  cn(
+                    "group/featured-slide relative w-full shrink-0 cursor-pointer text-left focus-within:outline-none focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary/30",
+                    layoutMode !== "list" && "shadow-none",
+                    layoutMode === "list" && "bg-card",
+                  ),
                   layoutMode !== "list" && "[container-type:inline-size]",
                   layoutMode === "list"
                     ? "grid h-[184px] grid-cols-[112px_minmax(0,1fr)] grid-rows-[184px] sm:h-[220px] sm:grid-cols-[38%_minmax(0,1fr)] sm:grid-rows-[220px]"
-                    : scrimDirection === "left-to-right"
-                      ? "grid grid-rows-[auto]"
-                    : "grid grid-rows-[auto_112px] sm:grid-rows-[auto_144px]",
+                    : "grid grid-rows-[auto_auto]",
                 )}
                 onClick={() => {
                   onEditionStoryOpen?.(story, index + 1);
@@ -483,67 +494,41 @@ export function FeaturedStoryCarousel({
                   tabIndex={!isClone && index === activeIndex ? 0 : -1}
                 />
                 <div className={cn(
-                  "pointer-events-none relative isolate",
+                  "pointer-events-none relative isolate shadow-none",
                   layoutMode === "list" && "col-start-1 row-start-1 min-h-0",
                 )}>
                   <div className={cn(
-                    "relative w-full overflow-hidden",
+                    "relative w-full overflow-hidden rounded-card bg-transparent shadow-none",
+                    layoutMode !== "list" && "featured-carousel-photo",
                     layoutMode === "list"
                       ? "h-full min-h-0"
-                      : reducePhotoHeight
-                        ? "h-[min(81.92vw,333px)] sm:h-auto sm:aspect-[25/9]"
-                        : "h-[min(128vw,520px)] sm:h-auto sm:aspect-video",
+                      : "h-auto aspect-[5/4]",
                   )}>
                     {renderImage(story, index, index === activeIndex)}
-                    {scrimDirection === "left-to-right" ? (
-                      <div
-                        aria-hidden="true"
-                        data-slider-layer="side-scrim"
-                        className={cn(
-                          "pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,0.62)_0%,rgba(0,0,0,0.32)_35%,transparent_72%)]",
-                          layoutMode === "list" && "hidden",
-                        )}
-                      />
-                    ) : (
-                      /* A short fade so the photo's bottom edge melts into the black band under the headline. */
-                      <div
-                        aria-hidden="true"
-                        data-slider-layer="gradient"
-                        className={cn(
-                          "pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-[linear-gradient(to_bottom,transparent,var(--hp-image-scrim-solid))] sm:h-20",
-                          layoutMode === "list" && "hidden",
-                        )}
-                      />
-                    )}
                   </div>
                 </div>
-                <div data-slider-layer="frame" className={cn("pointer-events-none bg-black", (layoutMode === "list" || scrimDirection === "left-to-right") && "hidden")} />
-                {/* The default bottom scrim fades behind the text; full-width heroes can use a side scrim instead. */}
-                {scrimDirection === "bottom" ? (
-                  <div
-                    aria-hidden="true"
-                    data-slider-layer="bottom-scrim"
-                    className={cn(
-                      "pointer-events-none absolute inset-x-0 bottom-0 h-[min(48%,300px)] bg-[linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.12)_30%,rgba(0,0,0,0.42)_62%,rgba(0,0,0,0.75)_100%)]",
-                      layoutMode === "list" && "hidden",
-                    )}
-                  />
-                ) : null}
                 <div
                   data-slider-content
                   className={cn(
                     layoutMode === "list"
                       ? "relative col-start-2 row-start-1 flex min-w-0 flex-col justify-center bg-card p-4 pt-12 text-foreground sm:p-6 sm:pt-12"
-                    : "pointer-events-none absolute inset-x-0 bottom-0 p-5 text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.45),0_2px_14px_rgba(0,0,0,0.4)] sm:p-7",
+                      : cn(
+                          "pointer-events-none relative z-10 col-start-1 row-start-2 mx-[6px] -mt-16 flex h-[204px] min-w-0 flex-col rounded-card px-5 py-2.5 shadow-[0_6px_18px_rgba(0,0,0,0.20)] sm:mx-[18px] sm:-mt-[72px] sm:h-[212px] sm:px-6 sm:py-3",
+                          "!bg-black text-white",
+                        ),
                   )}
                 >
-                  <div className={cn("mb-3 flex flex-wrap items-center gap-2 text-sm font-semibold", layoutMode === "list" && "mb-2 text-xs sm:text-sm")}>
+                  <div className={cn(
+                    "mb-1.5 flex flex-wrap items-center gap-2 text-sm font-semibold",
+                    layoutMode === "list" && "mb-2 text-xs sm:text-sm",
+                    layoutMode !== "list" && "text-white",
+                  )}>
                     <BrandSourceIcon
                       brand={story.brand}
                       brandSlug={story.brandSlug}
                       className="h-5 w-5 rounded-[4px] border-border"
                     />
-                    <span>{story.brand}</span>
+                    <span className="font-bold" style={{ fontWeight: 700 }}>{story.brand}</span>
                     {story.videoUrl ? (
                       <>
                         <span aria-hidden>/</span>
@@ -559,7 +544,10 @@ export function FeaturedStoryCarousel({
                     <span aria-hidden>/</span>
                     <button
                       type="button"
-                      className="pointer-events-auto relative z-20 inline-flex min-h-8 items-center gap-1 rounded-sm underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
+                      className={cn(
+                        "pointer-events-auto relative z-20 inline-flex min-h-8 items-center gap-1 rounded-sm underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2",
+                        colorMode === "light" ? "focus-visible:ring-[var(--palette-content-brand,var(--brand-primary))]" : "focus-visible:ring-white/80",
+                      )}
                       aria-label={`Open ${slideCommentCount} comments for ${story.title}`}
                       onClick={(event) => {
                         event.stopPropagation();
@@ -572,12 +560,19 @@ export function FeaturedStoryCarousel({
                   </div>
                   {researchCarRating ? (
                     <div className="flex min-w-0 items-end justify-between gap-3">
-                      <h2 className={cn("min-w-0 flex-1 underline-offset-4 group-hover/featured-slide:underline group-focus-visible/featured-slide:underline", headlineClassName)}>{story.title}</h2>
-                      <ResearchCarRating rating={researchCarRating} />
+                      <h2 className={cn("min-w-0 flex-1 underline-offset-4 group-hover/featured-slide:underline group-focus-visible/featured-slide:underline", carouselHeadlineColor, headlineClassName)}>{story.title}</h2>
+                      <ResearchCarRating rating={researchCarRating} lightMode={colorMode === "light"} />
                     </div>
                   ) : (
-                    <h2 className={cn("underline-offset-4 group-hover/featured-slide:underline group-focus-visible/featured-slide:underline", headlineClassName)}>{story.title}</h2>
+                    <h2 className={cn("underline-offset-4 group-hover/featured-slide:underline group-focus-visible/featured-slide:underline", carouselHeadlineColor, headlineClassName)}>{story.title}</h2>
                   )}
+                  {layoutMode !== "list" && story.summary ? (
+                    <p className={cn(
+                      "mt-3 line-clamp-2 max-w-3xl text-sm leading-[1.265] text-white/85 sm:text-base",
+                    )}>
+                      {story.summary}
+                    </p>
+                  ) : null}
                 </div>
               </article>
             );

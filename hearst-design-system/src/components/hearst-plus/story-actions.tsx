@@ -42,7 +42,7 @@ export function StorySaveIconButton({
         onSave();
       }}
     >
-      <Bookmark className="size-4" weight={saved ? "fill" : "regular"} aria-hidden />
+      <Bookmark className="size-[21px]" weight={saved ? "fill" : "regular"} aria-hidden />
     </Button>
   );
 }

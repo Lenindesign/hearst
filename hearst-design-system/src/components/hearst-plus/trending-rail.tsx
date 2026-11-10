@@ -65,15 +65,17 @@ export function TrendingStoryRail({
               className="group grid min-h-20 w-full grid-cols-[48px_minmax(0,1fr)] items-start gap-3 rounded-[6px] py-3 text-left focus:outline-none focus:ring-2 focus:ring-primary/30"
               aria-label={`Open story: ${story.title}`}
             >
-              <span className="relative block h-12 w-12 overflow-hidden rounded-[6px] border border-border bg-muted">
-                <LifestyleRiverImage
-                  story={story}
-                  alt=""
-                  className="h-full w-full transition-transform duration-250 ease-out group-hover:scale-[1.025] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
-                  unoptimized={unoptimizedImages}
-                />
-                <span className="absolute left-1 top-1 grid h-5 w-5 place-items-center rounded-full bg-[var(--hp-surface)] text-[11px] font-bold leading-none text-[var(--hp-text-primary)] ring-1 ring-border">
-                  <span className="translate-y-px tabular-nums leading-none text-[var(--hp-text-primary)]">
+              <span className="relative block h-12 w-12">
+                <span className="absolute inset-0 overflow-hidden rounded-[6px] border border-border bg-muted">
+                  <LifestyleRiverImage
+                    story={story}
+                    alt=""
+                    className="h-full w-full transition-transform duration-250 ease-out group-hover:scale-[1.025] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+                    unoptimized={unoptimizedImages}
+                  />
+                </span>
+                <span className="absolute -left-[6px] -top-[6px] grid h-5 w-5 place-items-center rounded-full bg-[var(--hp-surface)] text-[11px] font-bold leading-none text-[var(--hp-text-primary)] ring-1 ring-border">
+                  <span className="tabular-nums leading-none text-[var(--hp-text-primary)]">
                     {index + 1}
                   </span>
                 </span>
@@ -83,7 +85,7 @@ export function TrendingStoryRail({
                   {story.title}
                 </span>
                 {hasMixedBrands ? (
-                  <span className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground">
+                  <span className="mt-1 inline-flex items-center gap-1 text-xs font-bold text-muted-foreground">
                     <BrandSourceIcon
                       brand={story.brand}
                       brandSlug={story.brandSlug}

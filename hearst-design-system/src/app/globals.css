@@ -148,6 +148,32 @@
   background-color: transparent !important;
 }
 
+/* Featured carousel photography fills a consistent 5:4 crop behind the overlapping story panel. */
+.hearst-plus-theme .featured-carousel-photo > img {
+  background-color: transparent !important;
+  object-fit: cover !important;
+}
+
+/* Keep editorial headline hover underlines brand-aware; blending toward white
+   keeps a neutral gray underline when a publication's primary is black. */
+.hearst-plus-theme :is(
+  [class~="group-hover/card:underline"],
+  [class~="group-focus-within/card:underline"],
+  [class~="group-hover/featured-slide:underline"],
+  [class~="group-focus-visible/featured-slide:underline"],
+  [class~="group-hover/video-card:underline"],
+  [class~="group-focus-visible/video-card:underline"],
+  [class~="group-hover:underline"],
+  [class~="group-focus-visible:underline"],
+  .story-card-headline
+) {
+  text-decoration-color: color-mix(
+    in srgb,
+    var(--palette-content-brand, var(--brand-primary, var(--primary))) 78%,
+    white
+  );
+}
+
 .hearst-community-page {
   font-family: var(--community-font-ui);
 }

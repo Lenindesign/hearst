@@ -1119,7 +1119,7 @@ export function MainNav({
         size="sm"
         aria-current={(publicationHref || overrideHref) && active ? "page" : undefined}
         className={cn(
-          "min-h-8 min-w-max whitespace-nowrap border-b-2 border-transparent font-normal hover:no-underline md:min-h-0",
+          "min-h-8 min-w-max whitespace-nowrap border-b-2 border-transparent font-semibold hover:no-underline md:min-h-0",
           navCarouselMode === "compact" ? "px-2 text-xs md:min-w-max md:text-sm" : "px-0.5 md:min-w-0",
           navLinkClasses,
           (publicationHref || overrideHref) && active && (
@@ -1144,7 +1144,7 @@ export function MainNav({
         size="sm"
         aria-current={active ? "page" : undefined}
         className={cn(
-          "min-h-8 min-w-max whitespace-nowrap border-b-2 border-transparent font-normal hover:no-underline md:min-h-0",
+          "min-h-8 min-w-max whitespace-nowrap border-b-2 border-transparent font-semibold hover:no-underline md:min-h-0",
           navCarouselMode === "compact" ? "px-2 text-xs md:min-w-max md:text-sm" : "px-0.5 md:min-w-0",
           navLinkClasses,
           active
@@ -1161,7 +1161,7 @@ export function MainNav({
         type="button"
         onClick={() => onFilterChange?.(link)}
         className={cn(
-          "min-h-8 min-w-max whitespace-nowrap border-b-2 border-transparent text-sm font-normal transition-colors md:min-h-0",
+          "min-h-8 min-w-max whitespace-nowrap border-b-2 border-transparent text-sm font-semibold transition-colors md:min-h-0",
           navCarouselMode === "compact" ? "px-2 text-xs md:min-w-max md:text-sm" : "px-0.5 md:min-w-0",
           active
             ? useDarkActiveState
@@ -1681,14 +1681,14 @@ export function MainNav({
             underUtilityBar ? "top-8" : "top-0",
           )}>
             {mastheadBanner.logoDescriptor || mastheadDescriptorOverride ? (
-              <div role="img" aria-label={mastheadDescriptorOverride ? `Hearst ${mastheadDescriptorOverride}` : mastheadBanner.alt} className="flex max-w-full items-baseline justify-center gap-1 whitespace-nowrap text-white sm:gap-2">
+              <div role="img" aria-label={mastheadDescriptorOverride ? `Hearst ${mastheadDescriptorOverride}` : mastheadBanner.alt} className="flex max-w-full flex-col items-center justify-center gap-0 whitespace-nowrap text-white">
                 <BrandLogo
-                  slug={mastheadDescriptorOverride ? "hearst-wordmark" : mastheadBanner.logoSlug ?? "hearst-wordmark"}
-                  color="#fff"
+                  slug={mastheadBanner.logoSlug ?? mastheadSlug}
+                  color={mastheadBanner.logoColor === "native" ? undefined : "#fff"}
                   decorative
-                  className="flex h-3 w-auto shrink-0 items-center [&_svg]:block [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full sm:h-6 lg:h-8"
+                  className="flex h-[8px] w-auto shrink-0 items-center [&_svg]:block [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full sm:h-[10px] lg:h-[12px]"
                 />
-                <span className="shrink-0 font-semibold italic leading-none [font-family:var(--font-newsreader),Georgia,serif] text-[10px] sm:text-base lg:text-2xl">
+                <span className="mt-2 shrink-0 font-serif text-lg font-normal italic leading-none tracking-normal sm:text-3xl lg:text-[34px]">
                   {mastheadDescriptorOverride ?? mastheadBanner.logoDescriptor}
                 </span>
               </div>
@@ -1865,7 +1865,7 @@ export function MainNav({
         as="nav"
         aria-label={selectedBrand ? `${selectedBrand.name} sections` : `${brand.name} sections`}
 	        className={cn(
-            "relative flex items-center gap-3 py-1 md:py-2",
+            "relative flex items-center gap-3 py-[9px] md:py-[13px]",
             navTrailingContent ? "justify-between" : "md:justify-center",
             navCarouselMode === "compact" && !navTrailingContent ? "md:justify-start" : ""
           )}
@@ -3027,7 +3027,7 @@ export function RichPhotoGalleryCard({
       />
 
       <div className="relative min-w-0 p-4 sm:p-5">
-        <div className="story-meta-row relative z-20 mb-3">
+        <div className="story-meta-row relative z-20 mb-2">
           <LifestyleBrandSource story={story} />
           {!hidePhotoCount ? <span className="inline-flex items-center gap-1 text-[length:var(--text-token-4xs)] font-semibold text-muted-foreground">
             <Camera className="h-3.5 w-3.5" aria-hidden />
@@ -3040,7 +3040,7 @@ export function RichPhotoGalleryCard({
         <h2 className="headline line-clamp-3 break-words text-2xl leading-tight transition-colors group-hover/card:text-[var(--hp-sidebar-heading,var(--primary))] group-focus-within/card:text-[var(--hp-sidebar-heading,var(--primary))] sm:text-3xl">
           {story.title}
         </h2>
-        <p className="mt-2 line-clamp-3 text-sm leading-6 text-muted-foreground">
+        <p className="mt-1 line-clamp-3 text-sm leading-6 text-muted-foreground">
           {story.summary}
         </p>
       </div>
@@ -3098,9 +3098,9 @@ function CompactPhotoGalleryCard({
         {images.slice(0, 4).map((image, index) => <div key={image.src} className={cn("compact-photo-gallery__image relative min-w-0 overflow-hidden bg-muted", index === 2 && "compact-photo-gallery__image--small", index === 3 && "compact-photo-gallery__image--large")}><Image src={image.src} alt={image.alt} fill sizes={index === 0 ? "(max-width: 640px) 50vw, 40vw" : "(max-width: 640px) 50vw, 20vw"} className="object-cover transition-transform duration-200 group-hover/card:scale-[1.02]" /></div>)}
       </div>
       <div className="story-card-content relative z-20 min-w-0 p-4">
-        <div className="story-meta-row mb-2"><LifestyleBrandSource story={story} />{onSave && saved !== undefined ? <StorySaveIconButton saved={saved} onSave={onSave} className="ml-auto" /> : null}</div>
+        <div className="story-meta-row mb-1"><LifestyleBrandSource story={story} />{onSave && saved !== undefined ? <StorySaveIconButton saved={saved} onSave={onSave} className="ml-auto" /> : null}</div>
         <h3 className="headline story-card-headline line-clamp-3 font-bold leading-snug underline-offset-4 group-hover/card:underline group-focus-within/card:underline">{story.title}</h3>
-        <p className="mt-2 line-clamp-3 text-sm leading-6 text-muted-foreground">{story.summary}</p>
+        <p className="mt-1 line-clamp-3 text-sm leading-6 text-muted-foreground">{story.summary}</p>
       </div>
     </article>
   );
@@ -3185,7 +3185,7 @@ export function LifestyleRiverCard({
           aria-label={`Open story: ${story.title}`}
         />
         <div className="min-w-0">
-          <div className="story-meta-row relative z-20 mb-2">
+          <div className="story-meta-row relative z-20 mb-1">
             <LifestyleBrandSource story={story} hideByline={hideByline} />
             {onSave && saved !== undefined ? (
               <StorySaveIconButton saved={saved} onSave={onSave} className="ml-auto" />
@@ -3202,7 +3202,7 @@ export function LifestyleRiverCard({
               <CarAndDriverResearchRating rating={getHearstAutoResearchCarRating(story.id)!} />
             ) : null}
           </div>
-          {!hideSummary ? <p className={cn("mt-1.5 text-sm leading-6 text-muted-foreground", editorialRow ? "line-clamp-3" : "hidden sm:line-clamp-3")}>{story.summary}</p> : null}
+          {!hideSummary ? <p className={cn("mt-0.5 text-sm leading-6 text-muted-foreground", editorialRow ? "line-clamp-3" : "hidden sm:line-clamp-3")}>{story.summary}</p> : null}
         </div>
         <div className="relative order-first aspect-[4/3] overflow-hidden rounded-card-inner bg-muted">
           <LifestyleRiverImage
@@ -3267,9 +3267,9 @@ export function LifestyleRiverCard({
       </div>
       <div className={cn(
         "story-card-content relative min-w-0",
-        compact && !featured ? "p-3" : isVideo ? "p-4 sm:p-5" : featured ? "flex flex-col justify-center p-5 sm:p-6 lg:p-8" : "p-4 sm:p-5"
+        compact && !featured ? "p-3" : isVideo ? "p-4 sm:p-5" : featured ? "flex flex-col justify-center p-5 sm:p-6 lg:p-8" : "px-4 pb-4 pt-2 sm:px-5 sm:pb-5 sm:pt-3"
       )}>
-        <div className="story-meta-row relative z-20 mb-2">
+        <div className="story-meta-row relative z-20 mb-1">
           <LifestyleBrandSource story={story} />
           {onSave && saved !== undefined ? (
             <StorySaveIconButton saved={saved} onSave={onSave} className="ml-auto" />
@@ -3289,7 +3289,7 @@ export function LifestyleRiverCard({
         {compact && !featured ? null : (
           <p className={cn(
             "line-clamp-3 text-muted-foreground",
-            featured ? "mt-2 max-w-prose text-base leading-7" : "mt-2 text-sm leading-6 sm:text-[0.95rem]"
+            featured ? "mt-1 max-w-prose text-base leading-7" : "mt-1 text-sm leading-6 sm:text-[0.95rem]"
           )}>
             {story.summary}
           </p>
@@ -5662,6 +5662,8 @@ function LifestyleRiverHomePage({
       .sort((first, second) => Date.parse(second.publishedAt!) - Date.parse(first.publishedAt!))
     : todaysPickCandidates;
   const isShowingLatestAvailableStories = shouldUseTodaysPicks && todaysPickCandidates.length === 0 && latestAvailablePickCandidates.length > 0;
+  // Keep the status available for later data-driven use, but suppress it in this prototype view.
+  const showLatestAvailableStatus = false;
   const personalizedHeroStories = getPersonalizedLeadSliderStories(
     latestAvailablePickCandidates,
     rankingProfile,
@@ -6916,7 +6918,7 @@ function LifestyleRiverHomePage({
       )}>
         {fullWidthFeaturedHero && leadStory ? (
           <div className="min-w-0 lg:col-span-3">
-            {isShowingLatestAvailableStories ? (
+            {showLatestAvailableStatus && isShowingLatestAvailableStories ? (
               <p className="mb-3 border-b border-border pb-3 text-sm leading-6 text-muted-foreground" role="status">
                 Today’s Picks are updating. Showing the latest stories currently available.
               </p>
@@ -6991,7 +6993,7 @@ function LifestyleRiverHomePage({
           aria-label={!fullWidthFeaturedHero ? (isBlocksHomepage ? "Hearst+ editorial blocks" : isSectionsHomepage ? "Hearst+ editorial sections" : config.riverLabel) : undefined}
         >
           <h1 className="sr-only">{pageHeading}</h1>
-          {isShowingLatestAvailableStories && !fullWidthFeaturedHero && !isSectionsHomepage && !isBlocksHomepage ? (
+          {showLatestAvailableStatus && isShowingLatestAvailableStories && !fullWidthFeaturedHero && !isSectionsHomepage && !isBlocksHomepage ? (
             <p className="border-b border-border pb-3 text-sm leading-6 text-muted-foreground" role="status">
               Today’s Picks are updating. Showing the latest stories currently available.
             </p>
@@ -7562,6 +7564,7 @@ function LifestyleRiverHomePage({
                   ? isShowingLatestAvailableStories ? "Preparing the latest available stories" : "Preparing today’s picks"
                   : "Stories are temporarily unavailable"}
               </h2>
+              {!(personalizedHeroStories.length > 0 && isShowingLatestAvailableStories && !showLatestAvailableStatus) ? (
               <p className="mt-2 max-w-prose text-sm leading-6 text-muted-foreground">
                 {personalizedHeroStories.length > 0
                   ? isShowingLatestAvailableStories
@@ -7569,6 +7572,7 @@ function LifestyleRiverHomePage({
                     : "Selecting today’s edition from stories published in the last 72 hours."
                   : "We couldn’t find a recent story with a verified publish date. Please check back shortly."}
               </p>
+              ) : null}
             </section>
           ) : activeFilter === "Saved" ? (
               <section
