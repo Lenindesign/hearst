@@ -157,10 +157,10 @@ export function HearstGamesIndex() {
 
   return (
     <>
-      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]">
-        <aside className="hidden min-w-0 space-y-5 lg:block">
+      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-[var(--layout-gap)] lg:grid-cols-[minmax(0,1fr)_var(--layout-rail)] xl:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]">
+        <aside className="hidden min-w-0 space-y-5 xl:block">
           <section className="rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
-            <h2 className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+            <h2 className="type-k1 text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
               Your daily habit
             </h2>
             <div className="mt-4 space-y-4 text-sm">
@@ -180,7 +180,7 @@ export function HearstGamesIndex() {
           </section>
 
           <section className="rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
-            <h2 className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+            <h2 className="type-k1 text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
               Game types
             </h2>
             <div className="mt-4 flex flex-wrap gap-2">
@@ -329,7 +329,7 @@ export function HearstGamesIndex() {
 
         <aside className="min-w-0 space-y-5 lg:sticky lg:top-[108px] lg:self-start">
           <section className="rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
-            <h2 className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+            <h2 className="type-k1 text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
               Why games
             </h2>
             <div className="mt-4 space-y-3 text-sm leading-6 text-muted-foreground">
@@ -339,7 +339,7 @@ export function HearstGamesIndex() {
           </section>
 
           <section className="rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
-            <h2 className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+            <h2 className="type-k1 text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
               Source review
             </h2>
             <div className="mt-4 space-y-4 text-sm">

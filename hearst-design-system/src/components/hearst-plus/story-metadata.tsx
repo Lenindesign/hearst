@@ -26,7 +26,7 @@ export function LifestyleBrandSource({
       href={getHearstBrandRoute(story.brandSlug)}
       onClick={(event) => event.stopPropagation()}
       onKeyDown={(event) => event.stopPropagation()}
-      className="relative z-20 inline-flex min-h-11 min-w-0 max-w-full items-center gap-1.5 rounded-[4px] text-[length:var(--text-token-4xs)] text-muted-foreground transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30 sm:min-h-0"
+      className="relative z-20 inline-flex min-h-11 min-w-0 max-w-full items-center gap-1.5 rounded-[4px] type-m1 text-muted-foreground transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30 sm:min-h-0"
       aria-label={`Open ${story.brand} brand page`}
     >
       <BrandSourceIcon brand={story.brand} brandSlug={story.brandSlug} />

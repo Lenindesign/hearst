@@ -61,9 +61,10 @@ const meta: Meta<typeof Button> = {
       table: { category: "Content" },
     },
     capAlignedLabel: {
-      control: "boolean",
-      description: "Trims internal font leading for a short label without descender glyphs.",
-      table: { category: "Typography", defaultValue: { summary: "false" } },
+      control: "select",
+      options: [false, true, "auto"],
+      description: "Optically centers the label by trimming it to cap height and baseline. `\"auto\"` trims only plain-text labels without descender glyphs (g, j, p, q, y, J, Q).",
+      table: { category: "Typography", defaultValue: { summary: "\"auto\"" } },
     },
     onClick: {
       action: "click",
@@ -171,15 +172,17 @@ export const CapAlignedLabels: Story = {
     docs: {
       description: {
         story:
-          "Use `capAlignedLabel` for short labels whose glyphs have no descenders, especially all-caps labels. Supported browsers trim the label box to the font's cap-height and alphabetic baseline; other browsers retain normal line-box alignment.",
+          "`capAlignedLabel` defaults to `\"auto\"`, which optically centers labels: it trims labels with no descender glyphs and leaves labels like `Sign up` on normal metrics. Supported browsers trim the label box to the font's cap-height and alphabetic baseline; other browsers retain normal line-box alignment.",
       },
     },
   },
   render: (args) => (
     <div className="flex flex-wrap items-center gap-4">
-      <Button {...args} size="lg">SAVE STORY</Button>
+      <Button {...args} size="lg" capAlignedLabel={false}>SAVE STORY</Button>
       <Button {...args} size="lg" capAlignedLabel>SAVE STORY</Button>
       <Button {...args} size="lg" capAlignedLabel variant="outline">ENHANCED PICKS</Button>
+      <Button {...args} size="lg" capAlignedLabel="auto">Read the review</Button>
+      <Button {...args} size="lg" capAlignedLabel="auto" variant="outline">Sign up</Button>
     </div>
   ),
 };

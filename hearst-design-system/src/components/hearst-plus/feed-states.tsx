@@ -60,12 +60,12 @@ export function LifestyleRiverLoadingState({ pageHeading }: { pageHeading: strin
       aria-label="Loading your personalized feed"
     >
       <span className="sr-only">Loading your personalized feed.</span>
-      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]">
+      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-[var(--layout-gap)] md:grid-cols-[minmax(0,1fr)_var(--layout-rail)] xl:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]">
         <aside
-          className="hidden min-h-[360px] rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 lg:block"
+          className="hidden min-h-[360px] rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 xl:block"
           aria-hidden="true"
         >
-          <div className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
+          <div className="type-k1 text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
             Your Daily Habit
           </div>
           <div className="mt-5 space-y-4">
@@ -110,7 +110,7 @@ export function LifestyleRiverLoadingState({ pageHeading }: { pageHeading: strin
           </div>
         </main>
         <aside
-          className="hidden h-[360px] rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 lg:block"
+          className="hidden h-[360px] rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 md:block"
           aria-hidden="true"
         >
           <div className="h-3 w-36 rounded-full bg-muted motion-safe:animate-pulse" />

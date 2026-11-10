@@ -1083,6 +1083,14 @@
 
   /* Layout tokens */
   --width-content-max: 1360px;
+  /* Layout contract (see /layout-specs/): one gutter and one rail width for
+     every rail layout. Pages and the reader pad 16 · 24 · 48 (base · md · xl). */
+  --layout-gap: 1rem;
+  --layout-rail: 300px;
+  /* Type spacing between roles (UI-TYPE-001): S1 meta→headline, S2 headline→deck, S3 eyebrow→H1, S4 H1→deck,
+     S5 deck→byline, S6 byline→body, S7 paragraph gap, S8 above subhead, S9 subhead→body. */
+  --type-s1: 0.5rem; --type-s2: 0.5rem; --type-s3: 0.75rem; --type-s4: 1rem; --type-s5: 1rem;
+  --type-s6: 1.5rem; --type-s7: 1.5rem; --type-s8: 2.5rem; --type-s9: 0.75rem;
   --width-page-max: 1440px;
   --width-sidebar: 320px;
   --width-sidebar-narrow: 180px;
@@ -1103,6 +1111,7 @@
   --grid-gutter-tablet: var(--space-lg, 20px);
   --grid-gutter-desktop: var(--space-xl, 24px);
 
+  /* PageContainer padding: mobile at base, tablet at md and lg, desktop from xl. */
   --grid-margin-mobile: var(--space-md, 16px);
   --grid-margin-tablet: var(--space-xl, 24px);
   --grid-margin-desktop: var(--space-3xl, 48px);
@@ -1114,7 +1123,8 @@
   --breakpoint-md: 768px;
   --breakpoint-lg: 1024px;
   --breakpoint-xl: 1280px;
-  --breakpoint-2xl: 1536px;
+  /* 2xl is retired: content is capped at 1360, so nothing changes above it. */
+  --breakpoint-2xl: initial;
 }
 
 :root {
@@ -1202,6 +1212,17 @@
 }
 
 @layer components {
+  /* CTA typography from brand tokens (component-button-font-family, -font-weight, -text-transform,
+     -letter-spacing; captured from each publication's live CTA). Themes without them keep the inherited
+     family, weight 500, the label as written and normal tracking. */
+  [data-slot="button"] {
+    font-family: var(--component-button-font-family, inherit);
+    font-weight: var(--component-button-font-weight, 500);
+    text-transform: var(--component-button-text-transform, none);
+    letter-spacing: var(--component-button-letter-spacing, normal);
+    /* Condensed faces with small capitals (Teko) scale to the cap height of the system UI face. */
+    font-size-adjust: var(--component-button-font-size-adjust, none);
+  }
   [data-slot="button"][data-variant="default"] {
     border-color: var(--component-button-border-primary-solid-default);
     background-color: var(--component-button-background-primary-solid-default);
@@ -1277,22 +1298,24 @@
     color: currentColor;
   }
 
+  /* Section themes (theme-options.ts) omit the neutral-transparent tokens, so ghost falls back to a
+     transparent box and a currentColor tint; text keeps inheriting when the content token is absent. */
   [data-slot="button"][data-variant="ghost"] {
-    border-color: var(--component-button-border-neutral-transparent-default);
-    background-color: var(--component-button-background-neutral-transparent-default);
+    border-color: var(--component-button-border-neutral-transparent-default, transparent);
+    background-color: var(--component-button-background-neutral-transparent-default, transparent);
     color: var(--component-button-content-neutral-transparent-default);
   }
   [data-slot="button"][data-variant="ghost"]:hover:not(:disabled),
   [data-slot="button"][data-variant="ghost"][data-preview-state="hover"] {
-    border-color: var(--component-button-border-neutral-transparent-hover);
-    background-color: var(--component-button-background-neutral-transparent-hover);
+    border-color: var(--component-button-border-neutral-transparent-hover, transparent);
+    background-color: var(--component-button-background-neutral-transparent-hover, color-mix(in oklab, currentColor 6%, transparent));
     color: var(--component-button-content-neutral-transparent-hover);
   }
   [data-slot="button"][data-variant="ghost"]:active:not(:disabled),
   [data-slot="button"][data-variant="ghost"][aria-expanded="true"],
   [data-slot="button"][data-variant="ghost"][data-preview-state="active"] {
-    border-color: var(--component-button-border-neutral-transparent-active);
-    background-color: var(--component-button-background-neutral-transparent-active);
+    border-color: var(--component-button-border-neutral-transparent-active, transparent);
+    background-color: var(--component-button-background-neutral-transparent-active, color-mix(in oklab, currentColor 10%, transparent));
     color: var(--component-button-content-neutral-transparent-active);
   }
 
@@ -1346,8 +1369,8 @@
   }
   /* Hearst+ block rows and grids (Building Blocks Library patterns).
      Columns follow the block's own width, not the viewport: minimum card
-     width 260px with a 20px gap gives 2 columns at 540px (2·260 + 20),
-     3 at 820px (3·260 + 40) and 4 at 1100px (4·260 + 60). The container is
+     width 260px with the 16px layout gap gives 2 columns at 536px
+     (2·260 + 16), 3 at 812px (3·260 + 32) and 4 at 1088px (4·260 + 48). The container is
      the block section (`@container/hp-block`).
      - .hp-block-row (Card Row, Featured + Row): up to four cards and never a
        partial row, so the fourth card is hidden while three columns fit.
@@ -1357,26 +1380,26 @@
   .hp-block-row,
   .hp-block-grid {
     display: grid;
-    gap: 1.25rem;
+    gap: var(--layout-gap);
     grid-template-columns: minmax(0, 1fr);
   }
-  @container hp-block (min-width: 33.75rem) {
+  @container hp-block (min-width: 33.5rem) {
     .hp-block-row,
     .hp-block-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
-  @container hp-block (min-width: 51.25rem) {
+  @container hp-block (min-width: 50.75rem) {
     .hp-block-row {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
-  @container hp-block (min-width: 51.25rem) and (max-width: 68.7499rem) {
+  @container hp-block (min-width: 50.75rem) and (max-width: 67.9999rem) {
     .hp-block-row > :nth-child(n + 4) {
       display: none;
     }
   }
-  @container hp-block (min-width: 68.75rem) {
+  @container hp-block (min-width: 68rem) {
     .hp-block-row,
     .hp-block-grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1411,14 +1434,32 @@
       display: block;
     }
   }
-  .story-card-headline {
-    font-size: 1.25rem;
+  /* Type metrics standard UI-TYPE-001 (/type-specs/). LH = 4 · round(size · ratio ÷ 4): text roles use
+     the HDS font.line-height token for their size, headlines use RH. Tracking is the HDS
+     font.letter-spacing token; caps labels +0.1em; display 40 px and up −0.01em. Headline roles set
+     metrics only; the face and weight come from .headline and the brand. Steps up at md (768). */
+  .type-t1 { font-size: 2rem; line-height: 2.25rem; letter-spacing: 0; text-wrap: balance; }
+  .type-t2 { font-size: 1.5rem; line-height: 1.75rem; letter-spacing: 0; text-wrap: balance; }
+  .type-t3,
+  .story-card-headline { font-size: 1.25rem; line-height: 1.5rem; letter-spacing: 0; text-wrap: balance; }
+  .type-t4 { font-size: 1.375rem; line-height: 1.75rem; letter-spacing: 0; text-wrap: balance; }
+  @media (min-width: 768px) {
+    .type-t1 { font-size: 3rem; line-height: 3.25rem; letter-spacing: -0.01em; }
+    .type-t2 { font-size: 2rem; line-height: 2.25rem; }
+    .type-t3,
+    .story-card-headline { font-size: 1.5rem; line-height: 1.75rem; }
+    .type-t4 { font-size: 1.75rem; line-height: 2rem; }
   }
-  @media (min-width: 640px) {
-    .story-card-headline {
-      font-size: 1.5rem;
-    }
-  }
+  .type-t5 { font-size: 1rem; line-height: 1.25rem; letter-spacing: 0; text-wrap: balance; }
+  .type-t6 { font-size: 0.875rem; line-height: 1.25rem; letter-spacing: 0.3px; font-weight: 700; text-wrap: balance; }
+  .type-d1 { font-size: 1.25rem; line-height: 1.75rem; letter-spacing: 0; text-wrap: pretty; }
+  .type-b1 { font-size: 1.125rem; line-height: 1.75rem; letter-spacing: 0; text-wrap: pretty; }
+  .type-d2 { font-size: 1rem; line-height: 1.5rem; letter-spacing: 0.2px; text-wrap: pretty; }
+  .type-b2 { font-size: 0.875rem; line-height: 1.25rem; letter-spacing: 0.3px; }
+  .type-m1 { font-size: 0.75rem; line-height: 1rem; letter-spacing: 0.4px; font-weight: 600; }
+  .type-m2 { font-size: 0.75rem; line-height: 1rem; letter-spacing: 0.4px; font-variant-numeric: tabular-nums; }
+  .type-c1 { font-size: 0.75rem; line-height: 1rem; letter-spacing: 0.4px; }
+  .type-k1 { font-size: 0.6875rem; line-height: 1rem; letter-spacing: 0.1em; font-weight: 700; text-transform: uppercase; }
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }

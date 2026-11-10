@@ -6,31 +6,37 @@ import { Meta } from "@storybook/blocks";
 
 This section documents two related layout contracts:
 
-1. The reusable **HDS page-grid primitive**, built from `PageContainer`, `Grid`, and `Col`.
-2. The **Hearst+ production layout**, which combines shared outer spacing with application-specific editorial tracks.
+1. The **Hearst+ rail layout contract** (`RAIL_LAYOUT`): how feed and river pages and the story reader go from one to two to three columns.
+2. The reusable **HDS 4 / 8 / 12 grid primitive**, built from `PageContainer`, `Grid`, and `Col`: editorial compositions such as article, events and newsstand pages, and columns inside a region.
 
-The 4 / 8 / 12 grid is the default reusable page composition. It is not a claim that every production surface uses equal column tracks.
+Both share `PageContainer`, so their outer edges and padding always line up.
 
-> HDS page-grid primitive: **4 / 8 / 12** for mobile / tablet / desktop.
+> Rail layouts: **1 column → river + right rail at md → left rail + river + right rail at xl.** One gutter (16), one rail width (300). Every page: padding 16 · 24 · 48 (base · md · xl), content capped at 1360.
+>
+> Measured specs, the UI-LAYOUT-001 dimensional drawing and the motion film: **Foundation / Grid System / 7 · Breakpoints & Grid Specs**, and the app's `/layout-specs/` page.
 
 ---
 
 ## Breakpoints
 
-We adopt the Tailwind v4 default breakpoints. They are exposed as both Tailwind prefixes (`md:`, `lg:`, and others) and CSS variables (`--breakpoint-md` and others) so design and engineering use identical numbers.
+We use four min-width breakpoints, exposed as Tailwind prefixes (`md:`, `lg:`, and others) and CSS variables (`--breakpoint-md` and others) so design and engineering use identical numbers. Each layout holds until the next breakpoint.
 
-| Token | Min width | Tailwind prefix | Grid columns | Outer padding | Gutter |
-|-------|-----------|------------------|--------------|---------------|--------|
-| **base / mobile** | 0 px      | _(no prefix)_   | 4  | 16 px | 16 px |
-| `sm`              | 640 px    | `sm:`           | 4  | 16 px | 16 px |
-| `md` / **tablet** | 768 px    | `md:`           | 8  | 24 px | 20 px |
-| `lg` / **desktop**| 1024 px   | `lg:`           | 12 | 48 px | 24 px |
-| `xl`              | 1280 px   | `xl:`           | 12 | 48 px | 24 px |
-| `2xl`             | 1536 px   | `2xl:`          | 12 | 48 px | 24 px |
+| Token | Min width | Rail layout | Reader | Outer padding | HDS grid columns | HDS grid gutter |
+|-------|-----------|-------------|--------|---------------|------------------|-----------------|
+| **base / mobile** | 0 px    | 1 column | 1 column | 16 px | 4 | 16 px |
+| `sm`              | 640 px  | no column change | no change | 16 px | 4 | 16 px |
+| `md` / **tablet** | 768 px  | river + right rail | panel insets 24 | 24 px | 8 | 20 px |
+| `lg` / **desktop**| 1024 px | no river change | + ad rail | 24 px | 12 | 24 px |
+| `xl`              | 1280 px | + left rail (3 columns) | + context rail | 48 px | 12 | 24 px |
+| `2xl`             | 1536 px | **retired** | **retired** | — | — | — |
+
+Outer padding comes from `PageContainer` (tokens `--grid-margin-mobile` 16, `--grid-margin-tablet` 24 at md and lg, `--grid-margin-desktop` 48 from xl). Rail layouts use `--layout-gap` (16) between rails at every width; the HDS grid uses its own gutter (`Grid gap="default"`).
+
+`sm` adjusts type, spacing and small two-up grids only; it never changes a page's column count. `2xl` is retired: content is capped at 1360, so nothing changes above it.
 
 We deliberately do **not** change the column count at `sm`. Jumping from 4 to 8 columns at 640 px is jittery on landscape phones; the layout reads better when 4 columns hold until proper tablet width.
 
-The maximum content width is `--width-content-max` (1360 px). Everything wider lives inside `PageContainer`'s outer padding and never touches the viewport edge above `lg`.
+The maximum content width is `--width-content-max` (1360 px). Wider viewports add margin on both sides; content never grows past the cap.
 
 ---
 
@@ -78,7 +84,7 @@ A grid cell with declarative span/start/offset.
 | `spanLg`   | 1–12 or `"full"` | Span at desktop. |
 | `startMd` / `startLg` | 1–8 / 1–12 | Explicit column start (use for asymmetric rows or overlap). |
 | `rowStart` | 1–4 | Explicit row, lets two cells share the same row for overlap. |
-| `offsetYMd` / `offsetYLg` | -2 to 2 | Vertical translation in steps of the grid gutter, only for **intentional** overlap. |
+| `offsetYMd` / `offsetYLg` | -2 to 2 | Vertical translation in steps of the grid gutter (20 px at md, 24 px at lg), only for **intentional** overlap. |
 | `raised`   | bool | Adds `relative z-10` so an overlapping cell sits above its siblings. |
 
 Spans are restricted to literal values so Tailwind can detect every possible class at build time. **Do not pass dynamic numbers.** Extend the lookup tables in `grid.tsx` instead.
@@ -124,7 +130,7 @@ AI-assisted tools use the same committed sources:
 | Source | Authority |
 |---|---|
 | `src/components/ui/grid.tsx` | Executable component API, literal Tailwind lookups, breakpoints, and responsive behavior |
-| `src/app/globals.css` | Layout tokens such as `--width-content-max`, `--breakpoint-*`, `--grid-gutter-*`, and `--grid-margin-*` |
+| `src/app/globals.css` | Layout tokens such as `--width-content-max`, `--layout-gap`, `--layout-rail`, `--breakpoint-*`, `--grid-gutter-*`, and `--grid-margin-*` |
 | `src/components/ui/grid.metadata.ts` | Component inventory metadata and API caveats |
 | `src/stories/Grid.stories.tsx` | Runnable production-backed examples and interaction evidence |
 | This page | Stakeholder-facing usage guidance |
@@ -142,25 +148,56 @@ Use this before merging layout-heavy PRs:
 3. **`Col`:** literals per breakpoint; overlap uses `offsetY*`, `raised`, and the applicable `rowStart*` prop as in the overlap story.
 4. **Column math:** use **4 / 8 / 12** for the HDS page grid. Use a fixed 1 to 12 override only for a bounded pattern that remains usable at 320px and is covered in Storybook.
 
-**Storybook entry points:** this page (**Overview**), HDS Page Grid Primitive, Hearst+ Production Layout Anatomy, Placement Rules, Overlap Pattern, Responsive Behavior, and Fixed Column Override in **`src/stories/Grid.stories.tsx`**. Component-index metadata lives in **`src/components/ui/grid.metadata.ts`**. Local preview: run `npm run storybook`, then open Foundation and Grid System.
+**Storybook entry points:** this page (**Overview**), HDS Page Grid Primitive, Hearst+ Rail Layout Contract, Placement Rules, Overlap Pattern, Responsive Behavior, Fixed Column Override, and Breakpoints & Grid Specs in **`src/stories/Grid.stories.tsx`**. Component-index metadata lives in **`src/components/ui/grid.metadata.ts`**. Local preview: run `npm run storybook`, then open Foundation and Grid System.
 
 ---
 
-## Hearst+ Production Layout
+## Hearst+ Rail Layout Contract
 
-The main Hearst+ feed uses `PageContainer` for the shared maximum width and responsive outer padding. Inside that boundary, the application uses a purpose-built editorial grid:
+Feed and river pages (For You, local news, TV, events discovery, games) and the story reader use the same rail layout. `PageContainer` owns the 1360 cap and the 16 · 24 · 48 padding; inside it, the river (or article) is fluid and the rails are fixed.
+
+| Token | Value | Use |
+|---|---|---|
+| `--layout-gap` | 16 px | The gutter between rail-layout columns: river, reader, block sections and block grids. |
+| `--layout-rail` | 300 px | The only rail width, left and right, including the reader's context and ad rails. |
+| `--width-content-max` | 1360 px | Container cap for pages and the reader panel. |
+| padding | 16 · 24 · 48 | `PageContainer` padding at base · md · xl, for pages and the reader. |
 
 ```tsx
-<div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]">
-  <DiscoverySidebar />
+import { RAIL_LAYOUT } from "@/components/ui/grid";
+
+<div className={`grid min-w-0 grid-cols-[minmax(0,1fr)] ${RAIL_LAYOUT.classes.gutter} gap-y-6 ${RAIL_LAYOUT.classes.twoColumn} ${RAIL_LAYOUT.classes.threeColumn}`}>
+  <aside className="hidden xl:block">{/* left rail */}</aside>
   <StoryRiver />
-  <TrendingRail />
+  <aside className="hidden md:block">{/* right rail */}</aside>
 </div>
 ```
 
-Below `lg`, the composition uses one fluid track. At `lg`, it becomes 200px / fluid / 260px. At `xl`, it becomes 220px / fluid / 280px. The center track uses `minmax(0, 1fr)` so long editorial content cannot force the page wider than its container.
+- **Right rail joins at `md` (768).** **Left rail joins at `xl` (1280).** Between them the river keeps two columns and widens from 404 to 915, so it never narrows below its two-column width.
+- A left rail that holds controls with no fallback elsewhere (brand and topic filters, the video queue, block sections) may join at `lg`.
+- The reader adds its ad rail at `lg` and its context rail at `xl`; at 1440 it lines up with the river: 300 · 632 · 300.
+- Block grids (`.hp-block-row`, `.hp-block-grid`) follow their container, not the viewport: 2 · 3 · 4 columns at 536 · 812 · 1088 (card minimum 260 + the 16 gap).
 
-This is a documented application composition, not a second design system. It uses the same spacing, tokens, responsive conventions, and `PageContainer` foundation while choosing track widths that fit the editorial job.
+### Measured columns
+
+| Window | River (L · river · R) | Reader (context · article · ad) |
+|---|---|---|
+| 390 | — · 358 · — | — · 358 · — |
+| 768 | — · 404 · 300 | — · 672 · — |
+| 1024 | — · 660 · 300 | — · 612 · 300 |
+| 1280 | 300 · 552 · 300 | 300 · 504 · 300 |
+| 1440+ | 300 · 632 · 300 | 300 · 632 · 300 |
+
+### Drawing and film
+
+<figure>
+  <img src="specs/layout-drawing.svg" width="1700" height="1060" alt="Dimensional drawing UI-LAYOUT-001 revision B: breakpoint map, river and reader plans at each breakpoint, river width graph, block grid container query, page container and variable tables." style={{ width: "100%", height: "auto", background: "#fff", border: "1px solid #ddd", borderRadius: 8 }} />
+  <figcaption>UI-LAYOUT-001 · Rev B · <a href="specs/layout-drawing.html" target="_blank" rel="noreferrer">open the full sheet with notes</a></figcaption>
+</figure>
+
+<video src="specs/layout-film.mp4" poster="specs/layout-drawing.svg" controls muted playsInline preload="metadata" aria-label="Motion film: a viewport grows from 320 to 1920 and pauses at each breakpoint while the river goes from one to two to three columns; then the reader, the block grid and the drawing sheet." style={{ width: "100%", aspectRatio: "16 / 9", background: "#fff", border: "1px solid #ddd", borderRadius: 8 }} />
+
+Motion film · 66 s · river 0–24 s · reader 24–36 s · block grid 36–46 s · drawing tour 46–66 s.
 
 ---
 
@@ -172,7 +209,7 @@ This is a documented application composition, not a second design system. It use
 - **`gap` over margins** for siblings inside a `Grid`. No margin collapse, no cleanup hacks.
 - **`min-w-0` on every `Col`.** Without it, long children (e.g. headlines, tables) will blow out the cell. The `Col` primitive sets it for you.
 - **Container queries for components.** Use `@container` inside organisms when you want them to respond to their host cell, not the viewport.
-- **Fixed tracks need an application contract.** Components inside the HDS page grid should scale or claim a span. A template may use fixed editorial rails only when the responsive behavior is explicit and verified, as in the Hearst+ production layout.
+- **Fixed tracks come from the contract.** Rails use `--layout-rail` and gutters use `--layout-gap`; do not introduce new fixed rail widths or gaps.
 
 ---
 
@@ -184,4 +221,4 @@ Three things to check before a layout is considered correct:
 2. **The mobile order is the reading order.** Resize down to 375 px and read top-to-bottom; the result should make narrative sense.
 3. **The component fits its smallest cell.** The narrowest `Col` it can land in (e.g. a 3-column desktop sidebar) should still render without overflow.
 
-> See `Foundation / Grid System / 1 · HDS Page Grid Primitive` and `2 · Hearst+ Production Layout Anatomy` for runnable examples. Use `Hearst Plus / Templates / Feed` responsive stories to validate the complete production composition at mobile, tablet, and desktop widths.
+> See `Foundation / Grid System / 1 · HDS Page Grid Primitive`, `2 · Hearst+ Rail Layout Contract` and `7 · Breakpoints & Grid Specs` for runnable examples and measured specs. Use `Hearst Plus / Templates / Feed` responsive stories to validate the complete production composition at mobile, tablet, and desktop widths.

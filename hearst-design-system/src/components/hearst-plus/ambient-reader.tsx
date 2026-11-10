@@ -11,6 +11,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock,
+  ExternalLink,
   Moon,
   SlidersHorizontal,
   Sun,
@@ -55,9 +56,9 @@ import { getLifestyleByline } from "./story-metadata";
 export type AmbientReaderDensity = "compact" | "comfortable" | "airy";
 
 const ambientReaderDensityStyles: Record<AmbientReaderDensity, string> = {
-  compact: "max-w-[68ch] text-[17px] leading-7 [--ambient-block-gap:1.25rem]",
-  comfortable: "max-w-[62ch] text-[19px] leading-8 [--ambient-block-gap:1.75rem]",
-  airy: "max-w-[58ch] text-[21px] leading-9 [--ambient-block-gap:2.25rem]",
+  compact: "max-w-[68ch] text-[17px] leading-6 [--ambient-block-gap:1.25rem]",
+  comfortable: "max-w-[62ch] text-[19px] leading-7 [--ambient-block-gap:1.75rem]",
+  airy: "max-w-[58ch] text-[21px] leading-8 [--ambient-block-gap:2.25rem]",
 };
 
 export function isCompleteAmbientArticle(liveArticle?: ReaderArticleLoadState) {
@@ -225,7 +226,7 @@ function AmbientReaderImageBlock({
       </button>
       {block.caption || block.credit ? (
         <figcaption className={cn(
-          "mt-3 font-brand text-xs leading-5 text-[var(--ambient-muted)]",
+          "type-c1 mt-3 font-brand text-[var(--ambient-muted)]",
           isPortrait && "mx-auto max-w-[min(100%,720px)]"
         )}>
           {[block.caption, block.credit].filter(Boolean).join(" · ")}
@@ -456,7 +457,7 @@ function AmbientReaderHero({
             <h1
               className={cn(
                 "max-w-[20ch] break-words font-headline text-[clamp(2.8rem,5.2vw,5.8rem)] font-[var(--font-headline-weight)] tracking-[-0.025em] text-balance",
-                usesBuzzHeadline ? "leading-[1.06]" : "leading-[0.95]"
+                "leading-[1.08] tracking-[-0.01em]"
               )}
             >
               {story.title}
@@ -464,7 +465,7 @@ function AmbientReaderHero({
           </div>
           <div className="self-end border-t border-current/25 pt-6 lg:border-t-0 lg:pt-0">
             <p className={cn(
-              "max-w-xl font-brand-secondary text-lg leading-7 sm:text-xl sm:leading-8",
+              "max-w-xl font-brand-secondary text-lg leading-7 sm:text-xl",
               !isMotorTrend && "text-white/80"
             )}>
               {story.summary}
@@ -504,10 +505,10 @@ function AmbientReaderHero({
           <p className="mb-7 border-y border-current/30 py-3 text-xs font-bold uppercase tracking-[0.2em]">
             {story.topic} · {story.brand}
           </p>
-          <h1 className="max-w-full break-words font-headline text-[clamp(2.6rem,4.2vw,4.8rem)] font-[var(--font-headline-weight)] uppercase leading-[0.94] tracking-[-0.025em] text-balance">
+          <h1 className="max-w-full break-words font-headline text-[clamp(2.6rem,4.2vw,4.8rem)] font-[var(--font-headline-weight)] uppercase leading-[1.08] tracking-[-0.01em] text-balance">
             {story.title}
           </h1>
-          <p className="mt-8 max-w-xl font-brand-secondary text-xl leading-8 opacity-90 sm:text-2xl">
+          <p className="mt-8 max-w-xl font-brand-secondary text-xl leading-7 opacity-90 sm:text-2xl sm:leading-8">
             {story.summary}
           </p>
           <AmbientReaderHeroMeta {...metaProps} />
@@ -528,10 +529,10 @@ function AmbientReaderHero({
             <p className="mb-7 text-xs font-bold uppercase tracking-[0.18em]" style={{ color: brandPrimary }}>
               {story.topic} · {story.brand}
             </p>
-            <h1 className="max-w-full break-words font-headline text-[clamp(2.65rem,4.2vw,5.2rem)] font-[var(--font-headline-weight)] leading-[1.02] tracking-[-0.025em] text-balance">
+            <h1 className="max-w-full break-words font-headline text-[clamp(2.65rem,4.2vw,5.2rem)] font-[var(--font-headline-weight)] leading-[1.08] tracking-[-0.01em] text-balance">
               {story.title}
             </h1>
-            <p className="mt-8 max-w-xl font-brand-secondary text-xl leading-8 text-[var(--ambient-muted)] sm:text-2xl">
+            <p className="mt-8 max-w-xl font-brand-secondary text-xl leading-7 text-[var(--ambient-muted)] sm:text-2xl sm:leading-8">
               {story.summary}
             </p>
             <AmbientReaderHeroMeta {...metaProps} className="text-[var(--ambient-muted)]" />
@@ -575,10 +576,10 @@ function AmbientReaderHero({
           <p className="mb-6 text-xs font-bold uppercase tracking-[0.18em] opacity-80">
             {story.topic} · {story.brand}
           </p>
-          <h1 className="max-w-full break-words font-headline text-[clamp(2.6rem,3.7vw,4.75rem)] font-[var(--font-headline-weight)] leading-[1.08] tracking-[-0.03em] text-balance">
+          <h1 className="max-w-full break-words font-headline text-[clamp(2.6rem,3.7vw,4.75rem)] font-[var(--font-headline-weight)] leading-[1.08] tracking-[-0.01em] text-balance">
             {story.title}
           </h1>
-          <p className="mt-7 max-w-xl font-brand-secondary text-xl leading-8 opacity-90 sm:text-2xl">
+          <p className="mt-7 max-w-xl font-brand-secondary text-xl leading-7 opacity-90 sm:text-2xl sm:leading-8">
             {story.summary}
           </p>
           <AmbientReaderHeroMeta {...metaProps} />
@@ -629,11 +630,11 @@ function AmbientCommerceModule({ config }: { config: VerifiedAmbientCommerceColl
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
         <div>
           <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--ambient-ink)]">{config.eyebrow}</p>
-          <h2 id="ambient-commerce-title" className="mt-2 font-headline text-3xl font-[var(--font-headline-weight)] leading-tight text-[var(--ambient-ink)]">
+          <h2 id="ambient-commerce-title" className="type-t4 mt-2 font-headline font-[var(--font-headline-weight)] text-[var(--ambient-ink)]">
             {config.title}
           </h2>
         </div>
-        <p className="max-w-sm text-sm leading-6 text-[var(--ambient-muted)]">
+        <p className="type-b2 max-w-sm text-[var(--ambient-muted)]">
           {config.description}
         </p>
       </div>
@@ -645,8 +646,8 @@ function AmbientCommerceModule({ config }: { config: VerifiedAmbientCommerceColl
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={product.imageUrl} alt="" className="h-full w-full object-contain" loading="lazy" />
             </div>
-            <h3 className="font-brand text-base font-bold leading-snug text-[var(--ambient-ink)]">{product.name}</h3>
-            <p className="mt-3 text-sm leading-6 text-[var(--ambient-muted)]">{product.context}</p>
+            <h3 className="type-t5 font-brand font-bold text-[var(--ambient-ink)]">{product.name}</h3>
+            <p className="type-b2 mt-3 text-[var(--ambient-muted)]">{product.context}</p>
             <a
               href={product.amazonUrl}
               target="_blank"
@@ -659,7 +660,7 @@ function AmbientCommerceModule({ config }: { config: VerifiedAmbientCommerceColl
           </article>
         ))}
       </div>
-      <p className="mt-5 text-xs leading-5 text-[var(--ambient-muted)]">
+      <p className="type-c1 mt-5 text-[var(--ambient-muted)]">
         Prototype commerce links. We do not earn a commission from these Amazon links; prices, sellers, and availability may change.
       </p>
     </section>
@@ -781,10 +782,10 @@ function AmbientReaderArticleBlocks({
           );
         }
         if (block.type === "heading") {
-          return <h2 key={index} className="pt-6 font-headline text-[clamp(2rem,4vw,3.5rem)] font-[var(--font-headline-weight)] leading-[1.05] tracking-[-0.025em] text-balance">{block.text}</h2>;
+          return <h2 key={index} className="pt-6 font-headline text-[clamp(2rem,4vw,3.5rem)] font-[var(--font-headline-weight)] leading-[1.08] tracking-[-0.01em] text-balance">{block.text}</h2>;
         }
         if (block.type === "quote") {
-          return <blockquote key={index} className="my-12 border-y border-[var(--ambient-rule)] py-8 font-headline text-[clamp(1.75rem,3.5vw,3rem)] font-[var(--font-headline-weight)] leading-tight text-balance">“{block.text}”</blockquote>;
+          return <blockquote key={index} className="my-12 border-y border-[var(--ambient-rule)] py-8 font-headline text-[clamp(1.75rem,3.5vw,3rem)] font-[var(--font-headline-weight)] leading-[1.125] text-balance">“{block.text}”</blockquote>;
         }
         if (block.type === "list") {
           return <ul key={index} className="list-disc space-y-3 pl-6">{block.items.map((item) => <li key={item}>{item}</li>)}</ul>;
@@ -1232,7 +1233,7 @@ export function AmbientArticleReader({
                         <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-primary">
                           Keep reading
                         </p>
-                        <h2 className="mt-2 font-headline text-2xl font-[var(--font-headline-weight)] leading-tight text-[var(--ambient-ink)]">
+                        <h2 className="type-t3 mt-2 font-headline font-[var(--font-headline-weight)] text-[var(--ambient-ink)]">
                           Related ambient reads
                         </h2>
                       </div>
@@ -1258,7 +1259,7 @@ export function AmbientArticleReader({
                             <span className="block text-[11px] font-bold uppercase tracking-[0.16em] text-primary">
                               {relatedStory.topic} · {relatedStory.brand}
                             </span>
-                            <span className="mt-1 block font-headline text-xl font-[var(--font-headline-weight)] leading-tight text-[var(--ambient-ink)] text-balance">
+                            <span className="mt-1 block font-headline text-xl font-[var(--font-headline-weight)] leading-6 text-[var(--ambient-ink)] text-balance">
                               {relatedStory.title}
                             </span>
                             <span className="mt-2 block text-xs font-semibold text-[var(--ambient-muted)]">
@@ -1345,7 +1346,7 @@ function AmbientReaderInterstitialAd({ advertiser, onDismiss }: { advertiser: Am
   return (
     <div className="relative h-full w-full bg-[var(--ambient-ad-shell)]" style={getAmbientInterstitialCssVars("van-cleef")} role="region" aria-roledescription="advertisement" aria-labelledby="ambient-ad-title" aria-describedby="ambient-ad-description">
       <div className="relative grid h-full w-full grid-rows-[minmax(0,11fr)_minmax(15rem,9fr)] bg-[var(--ambient-ad-surface)] text-[var(--ambient-ad-ink)] lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-1">
-        <button type="button" onClick={onDismiss} autoFocus className="absolute right-4 top-4 z-30 inline-flex h-11 items-center border border-[var(--ambient-ad-ink)]/55 bg-[var(--ambient-ad-surface)]/40 px-3 text-[9px] font-semibold uppercase tracking-[0.18em] backdrop-blur-sm transition-colors hover:bg-[var(--ambient-ad-ink)] hover:text-[var(--ambient-ad-surface)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ambient-ad-ink)] sm:right-8 sm:top-8 sm:px-4 sm:text-[10px] lg:right-10 lg:top-10" aria-label="Close advertisement">Close</button>
+        <button type="button" onClick={onDismiss} autoFocus className="absolute right-4 top-4 z-30 inline-flex h-11 items-center border border-[var(--ambient-ad-ink)]/55 bg-[var(--ambient-ad-surface)]/40 px-3 text-xs font-semibold backdrop-blur-sm transition-colors hover:bg-[var(--ambient-ad-ink)] hover:text-[var(--ambient-ad-surface)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ambient-ad-ink)] sm:right-8 sm:top-8 sm:px-4 sm:text-sm lg:right-10 lg:top-10" aria-label="Close advertisement">Close</button>
         <div className="relative z-10 flex min-h-0 flex-col justify-between p-5 sm:p-8 lg:p-16">
           <div className="flex items-center justify-between gap-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1356,7 +1357,7 @@ function AmbientReaderInterstitialAd({ advertiser, onDismiss }: { advertiser: Am
             <h2 id="ambient-ad-title" className="mt-3 font-serif text-[clamp(2.25rem,10vw,3.25rem)] leading-[0.94] tracking-[-0.04em] sm:mt-4 lg:mt-6 lg:text-[clamp(3rem,6vw,6.5rem)] lg:leading-[0.92]">Snowflake</h2>
             <p id="ambient-ad-description" className="mt-3 max-w-md font-serif text-base leading-6 text-[var(--ambient-ad-body)] sm:mt-4 sm:text-lg sm:leading-7 lg:mt-7 lg:text-2xl lg:leading-8">Discover a constellation of diamonds and the savoir-faire of Van Cleef &amp; Arpels.</p>
           </div>
-          <a href={vanCleefSnowflakeUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-11 w-fit items-center bg-[var(--ambient-ad-cta)] px-5 text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--ambient-ad-cta-content)] transition-colors hover:bg-[var(--ambient-ad-cta-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ambient-ad-cta)] sm:min-h-12 sm:px-6 sm:text-xs sm:tracking-[0.16em]">Explore the collection</a>
+          <a href={vanCleefSnowflakeUrl} target="_blank" rel="sponsored noopener noreferrer" className="inline-flex min-h-11 w-fit items-center gap-2 bg-[var(--ambient-ad-cta)] px-5 text-sm font-semibold text-[var(--ambient-ad-cta-content)] transition-colors hover:bg-[var(--ambient-ad-cta-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ambient-ad-cta)] sm:min-h-12 sm:px-6 sm:text-base">Explore the collection<ExternalLink className="size-4 shrink-0" aria-hidden /><span className="sr-only"> (opens in a new tab)</span></a>
         </div>
         <div className="relative min-h-64 overflow-hidden bg-[var(--ambient-ad-media)] lg:min-h-full">
           {/* The official campaign asset is used as a still because the public collection page does not expose a stable embeddable video URL. */}
@@ -1377,7 +1378,7 @@ function BlancpainInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
   return (
     <div className="relative h-full w-full bg-[var(--ambient-ad-shell)]" style={getAmbientInterstitialCssVars("blancpain")} role="region" aria-roledescription="advertisement" aria-labelledby="blancpain-ad-title" aria-describedby="blancpain-ad-description">
       <div className="relative grid h-full w-full grid-rows-[minmax(0,11fr)_minmax(15rem,9fr)] bg-[var(--ambient-ad-surface)] text-[var(--ambient-ad-ink)] lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-1">
-        <button type="button" onClick={onDismiss} autoFocus className="absolute right-4 top-4 z-30 inline-flex h-11 items-center border border-[var(--ambient-ad-ink)]/45 bg-[var(--ambient-ad-surface)]/70 px-3 text-[9px] font-semibold uppercase tracking-[0.18em] backdrop-blur-sm transition-colors hover:bg-[var(--ambient-ad-ink)] hover:text-[var(--ambient-ad-cta-content)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ambient-ad-ink)] sm:right-8 sm:top-8 sm:px-4 sm:text-[10px] lg:right-10 lg:top-10" aria-label="Close advertisement">Close</button>
+        <button type="button" onClick={onDismiss} autoFocus className="absolute right-4 top-4 z-30 inline-flex h-11 items-center border border-[var(--ambient-ad-ink)]/45 bg-[var(--ambient-ad-surface)]/70 px-3 text-xs font-semibold backdrop-blur-sm transition-colors hover:bg-[var(--ambient-ad-ink)] hover:text-[var(--ambient-ad-cta-content)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ambient-ad-ink)] sm:right-8 sm:top-8 sm:px-4 sm:text-sm lg:right-10 lg:top-10" aria-label="Close advertisement">Close</button>
         <div className="relative z-10 flex min-h-0 flex-col justify-between p-5 sm:p-8 lg:p-16">
           <div className="flex items-center justify-between gap-4">
             <div className="font-serif text-base tracking-[0.24em] sm:text-xl sm:tracking-[0.28em] lg:text-2xl" aria-label="Blancpain logo">BLANCPAIN <span className="text-[0.55em] tracking-[0.18em]">1735</span></div>
@@ -1387,7 +1388,7 @@ function BlancpainInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
             <h2 id="blancpain-ad-title" className="mt-3 font-serif text-[clamp(2.25rem,10vw,3.25rem)] leading-[0.94] tracking-[-0.04em] sm:mt-4 lg:mt-6 lg:text-[clamp(3rem,6vw,6.5rem)] lg:leading-[0.92]">The Thinnest Argument</h2>
             <p id="blancpain-ad-description" className="mt-3 max-w-md font-serif text-base leading-6 text-[var(--ambient-ad-body)] sm:mt-4 sm:text-lg sm:leading-7 lg:mt-7 lg:text-2xl lg:leading-8">Discover Blancpain’s latest timepieces, where watchmaking excellence becomes a way of life.</p>
           </div>
-          <a href={blancpainUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-11 w-fit items-center bg-[var(--ambient-ad-cta)] px-5 text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--ambient-ad-cta-content)] transition-colors hover:bg-[var(--ambient-ad-cta-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ambient-ad-cta)] sm:min-h-12 sm:px-6 sm:text-xs sm:tracking-[0.16em]">Discover Blancpain</a>
+          <a href={blancpainUrl} target="_blank" rel="sponsored noopener noreferrer" className="inline-flex min-h-11 w-fit items-center gap-2 bg-[var(--ambient-ad-cta)] px-5 text-sm font-semibold text-[var(--ambient-ad-cta-content)] transition-colors hover:bg-[var(--ambient-ad-cta-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ambient-ad-cta)] sm:min-h-12 sm:px-6 sm:text-base">Discover Blancpain<ExternalLink className="size-4 shrink-0" aria-hidden /><span className="sr-only"> (opens in a new tab)</span></a>
         </div>
         <div className="relative min-h-64 overflow-hidden bg-[var(--ambient-ad-media)] lg:min-h-full">
           <video className="absolute inset-0 h-full w-full object-cover" src={blancpainHeroVideoUrl} autoPlay muted loop playsInline preload="metadata" aria-label="Blancpain timepiece film" />
@@ -1407,7 +1408,7 @@ function LexusInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
   return (
     <div className="relative h-full w-full bg-[var(--ambient-ad-shell)]" style={getAmbientInterstitialCssVars("lexus")} role="region" aria-roledescription="advertisement" aria-labelledby="lexus-ad-title" aria-describedby="lexus-ad-description">
       <div className="relative grid h-full w-full grid-rows-[minmax(0,11fr)_minmax(15rem,9fr)] bg-[var(--ambient-ad-surface)] text-[var(--ambient-ad-ink)] lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-1">
-        <button type="button" onClick={onDismiss} autoFocus className="absolute right-4 top-4 z-30 inline-flex h-11 items-center border border-[var(--ambient-ad-ink)]/45 bg-[var(--ambient-ad-surface)]/75 px-3 text-[9px] font-semibold uppercase tracking-[0.18em] backdrop-blur-sm transition-colors hover:bg-[var(--ambient-ad-ink)] hover:text-[var(--ambient-ad-cta-content)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ambient-ad-ink)] sm:right-8 sm:top-8 sm:px-4 sm:text-[10px] lg:right-10 lg:top-10" aria-label="Close advertisement">Close</button>
+        <button type="button" onClick={onDismiss} autoFocus className="absolute right-4 top-4 z-30 inline-flex h-11 items-center border border-[var(--ambient-ad-ink)]/45 bg-[var(--ambient-ad-surface)]/75 px-3 text-xs font-semibold backdrop-blur-sm transition-colors hover:bg-[var(--ambient-ad-ink)] hover:text-[var(--ambient-ad-cta-content)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ambient-ad-ink)] sm:right-8 sm:top-8 sm:px-4 sm:text-sm lg:right-10 lg:top-10" aria-label="Close advertisement">Close</button>
         <div className="relative z-10 flex min-h-0 flex-col justify-between p-5 sm:p-8 lg:p-16">
           {/* Official Lexus emblem supplied by the user. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1417,7 +1418,7 @@ function LexusInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
             <h2 id="lexus-ad-title" className="mt-3 font-sans text-[clamp(2.25rem,10vw,3.25rem)] font-medium leading-[0.94] tracking-[-0.04em] sm:mt-4 lg:mt-6 lg:text-[clamp(3rem,6vw,6.5rem)] lg:leading-[0.92]">The RX Hybrid</h2>
             <p id="lexus-ad-description" className="mt-3 max-w-md font-sans text-base font-light leading-6 text-[var(--ambient-ad-body)] sm:mt-4 sm:text-lg sm:leading-7 lg:mt-7 lg:text-2xl lg:leading-8">Experience the refined balance of electrified performance and considered luxury.</p>
           </div>
-          <a href={lexusRxOffersUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-11 w-fit items-center bg-[var(--ambient-ad-cta)] px-5 text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--ambient-ad-cta-content)] transition-colors hover:bg-[var(--ambient-ad-cta-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ambient-ad-cta)] sm:min-h-12 sm:px-6 sm:text-xs sm:tracking-[0.16em]">Explore RX Hybrid offers</a>
+          <a href={lexusRxOffersUrl} target="_blank" rel="sponsored noopener noreferrer" className="inline-flex min-h-11 w-fit items-center gap-2 bg-[var(--ambient-ad-cta)] px-5 text-sm font-semibold text-[var(--ambient-ad-cta-content)] transition-colors hover:bg-[var(--ambient-ad-cta-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ambient-ad-cta)] sm:min-h-12 sm:px-6 sm:text-base">Explore RX Hybrid offers<ExternalLink className="size-4 shrink-0" aria-hidden /><span className="sr-only"> (opens in a new tab)</span></a>
         </div>
         <div className="relative min-h-64 overflow-hidden bg-[var(--ambient-ad-media)] lg:min-h-full">
           {/* Keep the product image stable until Lexus exposes a direct, lightweight RX Hybrid video asset suitable for background playback. */}
@@ -1439,7 +1440,7 @@ function MarriottInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
   return (
     <div className="relative h-full w-full bg-[var(--ambient-ad-shell)]" style={getAmbientInterstitialCssVars("marriott")} role="region" aria-roledescription="advertisement" aria-labelledby="marriott-ad-title" aria-describedby="marriott-ad-description">
       <div className="relative grid h-full w-full grid-rows-[minmax(0,11fr)_minmax(15rem,9fr)] bg-[var(--ambient-ad-surface)] text-[var(--ambient-ad-ink)] lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-1">
-        <button type="button" onClick={onDismiss} autoFocus className="absolute right-4 top-4 z-30 inline-flex h-11 items-center border border-[var(--ambient-ad-ink)]/45 bg-[var(--ambient-ad-surface)]/75 px-3 text-[9px] font-semibold uppercase tracking-[0.18em] backdrop-blur-sm transition-colors hover:bg-[var(--ambient-ad-ink)] hover:text-[var(--ambient-ad-cta-content)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ambient-ad-ink)] sm:right-8 sm:top-8 sm:px-4 sm:text-[10px] lg:right-10 lg:top-10" aria-label="Close advertisement">Close</button>
+        <button type="button" onClick={onDismiss} autoFocus className="absolute right-4 top-4 z-30 inline-flex h-11 items-center border border-[var(--ambient-ad-ink)]/45 bg-[var(--ambient-ad-surface)]/75 px-3 text-xs font-semibold backdrop-blur-sm transition-colors hover:bg-[var(--ambient-ad-ink)] hover:text-[var(--ambient-ad-cta-content)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ambient-ad-ink)] sm:right-8 sm:top-8 sm:px-4 sm:text-sm lg:right-10 lg:top-10" aria-label="Close advertisement">Close</button>
         <div className="relative z-10 flex min-h-0 flex-col justify-between p-5 sm:p-8 lg:p-16">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -1452,7 +1453,7 @@ function MarriottInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
             <h2 id="marriott-ad-title" className="mt-3 font-serif text-[clamp(2.25rem,10vw,3.25rem)] leading-[0.94] tracking-[-0.04em] sm:mt-4 lg:mt-6 lg:text-[clamp(3rem,6vw,6.5rem)] lg:leading-[0.92]">An Invitation to the Extraordinary</h2>
             <p id="marriott-ad-description" className="mt-3 max-w-md font-serif text-base leading-6 text-[var(--ambient-ad-body)] sm:mt-4 sm:text-lg sm:leading-7 lg:mt-7 lg:text-2xl lg:leading-8">Discover stays shaped by beauty, belonging, and the moments that linger long after you return home.</p>
           </div>
-          <a href={marriottLuxuryUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-11 w-fit items-center bg-[var(--ambient-ad-cta)] px-5 text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--ambient-ad-cta-content)] transition-colors hover:bg-[var(--ambient-ad-cta-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ambient-ad-cta)] sm:min-h-12 sm:px-6 sm:text-xs sm:tracking-[0.16em]">Explore luxury stays</a>
+          <a href={marriottLuxuryUrl} target="_blank" rel="sponsored noopener noreferrer" className="inline-flex min-h-11 w-fit items-center gap-2 bg-[var(--ambient-ad-cta)] px-5 text-sm font-semibold text-[var(--ambient-ad-cta-content)] transition-colors hover:bg-[var(--ambient-ad-cta-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ambient-ad-cta)] sm:min-h-12 sm:px-6 sm:text-base">Explore luxury stays<ExternalLink className="size-4 shrink-0" aria-hidden /><span className="sr-only"> (opens in a new tab)</span></a>
         </div>
         <div className="relative min-h-64 overflow-hidden bg-[var(--ambient-ad-media)] lg:min-h-full">
           {/* The official Marriott Luxury page exposes campaign stills but no stable embeddable video asset. */}
@@ -1475,7 +1476,7 @@ function PorscheInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
   return (
     <div className="relative h-full w-full bg-[var(--ambient-ad-shell)]" style={getAmbientInterstitialCssVars("porsche")} role="region" aria-roledescription="advertisement" aria-labelledby="porsche-ad-title" aria-describedby="porsche-ad-description">
       <div className="relative grid h-full w-full grid-rows-[minmax(0,11fr)_minmax(15rem,9fr)] bg-[var(--ambient-ad-surface)] text-[var(--ambient-ad-ink)] lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-1">
-        <button type="button" onClick={onDismiss} autoFocus className="absolute right-4 top-4 z-30 inline-flex h-11 items-center border border-[var(--ambient-ad-ink)]/45 bg-[var(--ambient-ad-surface)]/75 px-3 text-[9px] font-semibold uppercase tracking-[0.18em] backdrop-blur-sm transition-colors hover:bg-[var(--ambient-ad-ink)] hover:text-[var(--ambient-ad-cta-content)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ambient-ad-ink)] sm:right-8 sm:top-8 sm:px-4 sm:text-[10px] lg:right-10 lg:top-10" aria-label="Close advertisement">Close</button>
+        <button type="button" onClick={onDismiss} autoFocus className="absolute right-4 top-4 z-30 inline-flex h-11 items-center border border-[var(--ambient-ad-ink)]/45 bg-[var(--ambient-ad-surface)]/75 px-3 text-xs font-semibold backdrop-blur-sm transition-colors hover:bg-[var(--ambient-ad-ink)] hover:text-[var(--ambient-ad-cta-content)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ambient-ad-ink)] sm:right-8 sm:top-8 sm:px-4 sm:text-sm lg:right-10 lg:top-10" aria-label="Close advertisement">Close</button>
         <div className="relative z-10 flex min-h-0 flex-col justify-between p-5 sm:p-8 lg:p-16">
           {/* Official Porsche crest supplied by the user. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1485,7 +1486,7 @@ function PorscheInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
             <h2 id="porsche-ad-title" className="mt-3 font-sans text-[clamp(2.25rem,10vw,3.25rem)] font-light leading-[0.94] tracking-[-0.05em] sm:mt-4 lg:mt-6 lg:text-[clamp(3rem,6vw,6.5rem)] lg:leading-[0.92]">Your Porsche Journey Starts Now</h2>
             <p id="porsche-ad-description" className="mt-3 max-w-md font-sans text-base font-light leading-6 text-[var(--ambient-ad-body)] sm:mt-4 sm:text-lg sm:leading-7 lg:mt-7 lg:text-2xl lg:leading-8">Discover iconic sports cars, electric performance, and the freedom to choose your next Porsche.</p>
           </div>
-          <a href={porscheUsaUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-11 w-fit items-center bg-[var(--ambient-ad-cta)] px-5 text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--ambient-ad-cta-content)] transition-colors hover:bg-[var(--ambient-ad-cta-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ambient-ad-cta)] sm:min-h-12 sm:px-6 sm:text-xs sm:tracking-[0.16em]">Explore Porsche</a>
+          <a href={porscheUsaUrl} target="_blank" rel="sponsored noopener noreferrer" className="inline-flex min-h-11 w-fit items-center gap-2 bg-[var(--ambient-ad-cta)] px-5 text-sm font-semibold text-[var(--ambient-ad-cta-content)] transition-colors hover:bg-[var(--ambient-ad-cta-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ambient-ad-cta)] sm:min-h-12 sm:px-6 sm:text-base">Explore Porsche<ExternalLink className="size-4 shrink-0" aria-hidden /><span className="sr-only"> (opens in a new tab)</span></a>
         </div>
         <div className="relative min-h-64 overflow-hidden bg-[var(--ambient-ad-media)] lg:min-h-full">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1507,7 +1508,7 @@ function PrincessInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
   return (
     <div className="relative h-full w-full bg-[var(--ambient-ad-shell)]" style={getAmbientInterstitialCssVars("princess")} role="region" aria-roledescription="advertisement" aria-labelledby="princess-ad-title" aria-describedby="princess-ad-description">
       <div className="relative grid h-full w-full grid-rows-[minmax(0,11fr)_minmax(15rem,9fr)] bg-[var(--ambient-ad-surface)] text-[var(--ambient-ad-ink)] lg:grid-cols-[0.82fr_1.18fr] lg:grid-rows-1">
-        <button type="button" onClick={onDismiss} autoFocus className="absolute right-4 top-4 z-30 inline-flex h-11 items-center border border-[var(--ambient-ad-ink)]/45 bg-[var(--ambient-ad-surface)]/75 px-3 text-[9px] font-semibold uppercase tracking-[0.18em] backdrop-blur-sm transition-colors hover:bg-[var(--ambient-ad-ink)] hover:text-[var(--ambient-ad-cta-content)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ambient-ad-ink)] sm:right-8 sm:top-8 sm:px-4 sm:text-[10px] lg:right-10 lg:top-10" aria-label="Close advertisement">Close</button>
+        <button type="button" onClick={onDismiss} autoFocus className="absolute right-4 top-4 z-30 inline-flex h-11 items-center border border-[var(--ambient-ad-ink)]/45 bg-[var(--ambient-ad-surface)]/75 px-3 text-xs font-semibold backdrop-blur-sm transition-colors hover:bg-[var(--ambient-ad-ink)] hover:text-[var(--ambient-ad-cta-content)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ambient-ad-ink)] sm:right-8 sm:top-8 sm:px-4 sm:text-sm lg:right-10 lg:top-10" aria-label="Close advertisement">Close</button>
         <div className="relative z-10 flex min-h-0 flex-col justify-between p-5 sm:p-8 lg:p-16">
           {/* Official Princess Cruises logo supplied by the user. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1517,7 +1518,7 @@ function PrincessInterstitialAd({ onDismiss }: { onDismiss: () => void }) {
             <h2 id="princess-ad-title" className="mt-3 font-serif text-[clamp(2.25rem,10vw,3.25rem)] leading-[0.94] tracking-[-0.04em] sm:mt-4 lg:mt-6 lg:text-[clamp(3rem,6vw,6.5rem)] lg:leading-[0.92]">Sail Into the Extraordinary</h2>
             <p id="princess-ad-description" className="mt-3 max-w-md font-sans text-base font-light leading-6 text-[var(--ambient-ad-body)] sm:mt-4 sm:text-lg sm:leading-7 lg:mt-7 lg:text-2xl lg:leading-8">Experience glaciers, coastlines, and unforgettable moments with Princess.</p>
           </div>
-          <a href={princessUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-11 w-fit items-center bg-[var(--ambient-ad-cta)] px-5 text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--ambient-ad-cta-content)] transition-colors hover:bg-[var(--ambient-ad-cta-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ambient-ad-cta)] sm:min-h-12 sm:px-6 sm:text-xs sm:tracking-[0.16em]">Explore Princess</a>
+          <a href={princessUrl} target="_blank" rel="sponsored noopener noreferrer" className="inline-flex min-h-11 w-fit items-center gap-2 bg-[var(--ambient-ad-cta)] px-5 text-sm font-semibold text-[var(--ambient-ad-cta-content)] transition-colors hover:bg-[var(--ambient-ad-cta-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ambient-ad-cta)] sm:min-h-12 sm:px-6 sm:text-base">Explore Princess<ExternalLink className="size-4 shrink-0" aria-hidden /><span className="sr-only"> (opens in a new tab)</span></a>
         </div>
         <div className="relative min-h-64 overflow-hidden bg-[var(--ambient-ad-media)] lg:min-h-full">
           {/* Official Princess campaign imagery is used as the reliable creative for this placement. */}

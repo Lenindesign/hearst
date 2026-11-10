@@ -479,6 +479,22 @@
     "type": "number",
     "value": 0
   },
+  "component-button-font-family": {
+    "type": "string",
+    "value": "Futura Now Text"
+  },
+  "component-button-font-weight": {
+    "type": "string",
+    "value": "700"
+  },
+  "component-button-text-transform": {
+    "type": "string",
+    "value": "uppercase"
+  },
+  "component-button-letter-spacing": {
+    "type": "string",
+    "value": "0.4px"
+  },
   "component-card-background-neutral": {
     "type": "color",
     "value": "#ededed"

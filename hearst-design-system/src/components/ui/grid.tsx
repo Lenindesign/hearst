@@ -9,9 +9,13 @@
  *   Tablet  (md ≥768) : 8 columns,  20px gutter, 24px outer padding
  *   Desktop (lg ≥1024): 12 columns, 24px gutter, 24px outer padding; 48px at xl
  *
- * Use these primitives for layouts that follow the reusable HDS page-grid
- * contract. Application-specific editorial compositions may use explicit CSS
- * grid tracks inside the shared PageContainer boundary.
+ * Two layout contracts share PageContainer:
+ * - `RAIL_LAYOUT`: feed and river pages and the story reader (one column →
+ *   main + right rail at md → left rail + main + right rail at xl, one gutter,
+ *   one rail width).
+ * - The 4 / 8 / 12 `Grid` and `Col`: editorial compositions such as article,
+ *   events and newsstand pages, and columns inside a region.
+ * See /layout-specs/ for the measured columns, drawing and film.
  *
  * - `PageContainer` constrains content to `--width-content-max` and applies the
  *   responsive outer padding.
@@ -26,13 +30,13 @@ import { cn } from "@/lib/utils";
 
 // ─── Breakpoints ─────────────────────────────────────────────────────────────
 
+/** Min-width breakpoints. 2xl (1536) is retired: content is capped at 1360. */
 export const BREAKPOINTS = {
   base: 0,
   sm: 640,
   md: 768,
   lg: 1024,
   xl: 1280,
-  "2xl": 1536,
 } as const;
 
 export type Breakpoint = keyof typeof BREAKPOINTS;
@@ -60,6 +64,30 @@ export const GRID_COLUMNS: Record<"mobile" | "tablet" | "desktop", number> = {
   tablet: 8,
   desktop: 12,
 };
+
+/**
+ * The HDS page-layout contract. Values are CSS custom properties defined in
+ * globals.css so layouts reference one source:
+ * - `gap`: the only gutter between layout columns.
+ * - `rail`: the only rail width (left and right).
+ * - `contentMax`: the container cap; extra width becomes margin.
+ * - `padding`: container padding at base, md and xl.
+ * - `rightRailAt` / `leftRailAt`: breakpoints where the rails join. Rails
+ *   that hold controls with no fallback elsewhere may join at `lg`.
+ */
+export const RAIL_LAYOUT = {
+  gap: "var(--layout-gap)",
+  rail: "var(--layout-rail)",
+  contentMax: "var(--width-content-max)",
+  padding: { base: 16, md: 24, xl: 48 },
+  rightRailAt: "md",
+  leftRailAt: "xl",
+  classes: {
+    twoColumn: "md:grid-cols-[minmax(0,1fr)_var(--layout-rail)]",
+    threeColumn: "xl:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]",
+    gutter: "gap-x-[var(--layout-gap)]",
+  },
+} as const;
 
 // ─── PageContainer ───────────────────────────────────────────────────────────
 
@@ -274,7 +302,8 @@ export interface ColProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Optional row-start at lg only (desktop+). */
   rowStartLg?: 1 | 2 | 3 | 4;
   /**
-   * Lift the column up/down by an integer multiple of the grid gap.
+   * Lift the column up/down by an integer multiple of the grid gutter
+   * (20px steps at md, 24px steps at lg).
    * Used sparingly to create intentional overlap. Use `0` to disable.
    */
   offsetYMd?: -2 | -1 | 0 | 1 | 2;
@@ -367,19 +396,19 @@ const rowStartLgClass: Record<1 | 2 | 3 | 4, string> = {
 };
 
 const offsetYMdClass: Record<-2 | -1 | 0 | 1 | 2, string> = {
-  [-2]: "md:-translate-y-12",
-  [-1]: "md:-translate-y-6",
+  [-2]: "md:-translate-y-10",
+  [-1]: "md:-translate-y-5",
   0: "md:translate-y-0",
-  1: "md:translate-y-6",
-  2: "md:translate-y-12",
+  1: "md:translate-y-5",
+  2: "md:translate-y-10",
 };
 
 const offsetYLgClass: Record<-2 | -1 | 0 | 1 | 2, string> = {
-  [-2]: "lg:-translate-y-16",
-  [-1]: "lg:-translate-y-8",
+  [-2]: "lg:-translate-y-12",
+  [-1]: "lg:-translate-y-6",
   0: "lg:translate-y-0",
-  1: "lg:translate-y-8",
-  2: "lg:translate-y-16",
+  1: "lg:translate-y-6",
+  2: "lg:translate-y-12",
 };
 
 export function Col({
@@ -444,7 +473,7 @@ export function GridOverlay({
     <div
       aria-hidden
       className={cn(
-        "pointer-events-none absolute inset-x-4 inset-y-0 z-0 grid grid-cols-4 gap-4 md:inset-x-6 md:grid-cols-8 md:gap-5 lg:inset-x-12 lg:grid-cols-12 lg:gap-6",
+        "pointer-events-none absolute inset-x-4 inset-y-0 z-0 grid grid-cols-4 gap-4 md:inset-x-6 md:grid-cols-8 md:gap-5 lg:grid-cols-12 lg:gap-6 xl:inset-x-12",
         hideOnMobile && "hidden sm:grid",
         className,
       )}

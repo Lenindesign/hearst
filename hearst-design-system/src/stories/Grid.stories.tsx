@@ -7,6 +7,7 @@ import {
   Grid,
   GridOverlay,
   PageContainer,
+  RAIL_LAYOUT,
   useBreakpoint,
 } from "@/components/ui/grid";
 
@@ -239,60 +240,60 @@ export const Anatomy: Story = {
 };
 
 export const ProductionLayoutAnatomy: Story = {
-  name: "2 · Hearst+ Production Layout Anatomy",
+  name: "2 · Hearst+ Rail Layout Contract",
   render: () => (
     <div className="bg-background py-12">
       <PageContainer>
         <StoryCheatSheet
-          kicker="Hearst+ production composition"
-          title="Fixed side rails, fluid story river"
+          kicker="Hearst+ page-layout contract · RAIL_LAYOUT"
+          title="One gutter, one rail width, one container"
           intro={
             <>
-              The main Hearst+ feed uses <span className="font-medium text-foreground">PageContainer</span>{" "}
-              for shared outer width and padding, then applies a purpose-built
-              editorial grid. It does not use equal <span className="font-mono">Col</span>{" "}
-              spans for this composition.
+              Hearst+ pages and the story reader are rail layouts. <span className="font-medium text-foreground">PageContainer</span>{" "}
+              owns the 1360 cap and the 16 · 24 · 48 padding; inside it the river or article is fluid and the rails are{" "}
+              <span className="font-mono">--layout-rail</span> (300) with <span className="font-mono">--layout-gap</span> (16) between them.
+              Resize with the viewport toolbar to watch the rails join.
             </>
           }
-          leftTitle="Production tracks"
+          leftTitle="When rails join"
           leftBody={
             <div className="space-y-2">
-              <p><span className="font-semibold">Mobile and tablet:</span> one fluid track.</p>
-              <p><span className="font-semibold">Desktop:</span> 200px / fluid / 260px.</p>
-              <p><span className="font-semibold">Wide desktop:</span> 220px / fluid / 280px.</p>
+              <p><span className="font-semibold">Base:</span> one fluid track.</p>
+              <p><span className="font-semibold">md (768):</span> river + right rail.</p>
+              <p><span className="font-semibold">xl (1280):</span> left rail + river + right rail.</p>
+              <p className="text-muted-foreground">A left rail holding controls with no fallback (filters, video queue, block sections) may join at lg.</p>
             </div>
           }
-          rightTitle="Why it is different"
+          rightTitle="Measured river width"
           rightBody={
-            <p>
-              The sidebars need stable reading widths while the story river
-              absorbs the remaining space. A 24px gap keeps all three regions
-              aligned without forcing them into equal tracks.
-            </p>
+            <div className="space-y-2">
+              <p>358 at 390 · 404 at 768 · 660 at 1024 · 915 at 1279</p>
+              <p>552 at 1280 · 632 from 1360 (content cap).</p>
+              <p className="text-muted-foreground">The river never drops below 404 once the right rail is in.</p>
+            </div>
           }
         />
 
         <div
           data-production-grid-contract="hearst-plus-river"
-          className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[200px_minmax(0,1fr)_260px] xl:grid-cols-[220px_minmax(0,1fr)_280px]"
+          className={`grid min-w-0 grid-cols-[minmax(0,1fr)] ${RAIL_LAYOUT.classes.gutter} gap-y-6 ${RAIL_LAYOUT.classes.twoColumn} ${RAIL_LAYOUT.classes.threeColumn}`}
         >
-          <Block>Discovery sidebar<br />200px / 220px</Block>
+          <div className="hidden xl:block"><Block>Left rail<br />--layout-rail · xl</Block></div>
           <Block tone="brand">Story river<br />minmax(0, 1fr)</Block>
-          <Block>Trending rail<br />260px / 280px</Block>
+          <div className="hidden md:block"><Block>Right rail<br />--layout-rail · md</Block></div>
         </div>
 
         <div className="mt-6 border-t border-border pt-4">
-          <p className="text-sm font-semibold text-foreground">Current production class</p>
+          <p className="text-sm font-semibold text-foreground">Production classes (from RAIL_LAYOUT)</p>
           <pre className="mt-2 max-w-full overflow-x-auto rounded-md border border-border bg-muted/40 p-3 text-xs leading-relaxed text-foreground">
-            <code>{`grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6
-lg:grid-cols-[200px_minmax(0,1fr)_260px]
-xl:grid-cols-[220px_minmax(0,1fr)_280px]`}</code>
+            <code>{`grid min-w-0 grid-cols-[minmax(0,1fr)] ${RAIL_LAYOUT.classes.gutter} gap-y-6
+${RAIL_LAYOUT.classes.twoColumn}
+${RAIL_LAYOUT.classes.threeColumn}
+left rail: hidden xl:block · right rail: hidden md:block`}</code>
           </pre>
           <p className="mt-3 text-sm text-muted-foreground">
-            At widths below <span className="font-mono">lg</span>, the regions
-            enter one track and follow the production responsive behavior. Use
-            the app template stories to validate what is shown or hidden in
-            each region.
+            The reader follows the same contract: ad rail at <span className="font-mono">lg</span>, context rail at{" "}
+            <span className="font-mono">xl</span>, so at 1440 it lines up with the river (300 · 632 · 300).
           </p>
         </div>
       </PageContainer>
@@ -305,16 +306,16 @@ xl:grid-cols-[220px_minmax(0,1fr)_280px]`}</code>
     await expect(grid).not.toBeNull();
     await expect(grid!).toHaveClass(
       "grid-cols-[minmax(0,1fr)]",
-      "gap-6",
-      "lg:grid-cols-[200px_minmax(0,1fr)_260px]",
-      "xl:grid-cols-[220px_minmax(0,1fr)_280px]",
+      "gap-x-[var(--layout-gap)]",
+      "md:grid-cols-[minmax(0,1fr)_var(--layout-rail)]",
+      "xl:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]",
     );
   },
   parameters: {
     docs: {
       description: {
         story:
-          "This story mirrors the inner grid used by the main Hearst+ story river in `home-page.tsx`. `PageContainer` still owns the shared outer width and padding, while the application composition uses fixed side rails around a fluid center track.",
+          "Mirrors the For You river in `home-page.tsx` using the exported `RAIL_LAYOUT` classes. `PageContainer` owns width and padding; the river is fluid and the rails use `--layout-rail` with `--layout-gap` between them. See `7 · Breakpoints & Grid Specs` for measured widths, the drawing and the film.",
       },
     },
   },
@@ -529,9 +530,9 @@ export const ResponsiveBehavior: Story = {
                   (md) → 12 (lg)
                 </p>
                 <p className="mt-2 text-muted-foreground">
-                  <span className="font-semibold text-foreground">Spacing</span>{" "}
-                  (outer padding + gutter) can still change at other breakpoints
-                  via tokens, but the track count stays the same.
+                  <span className="font-semibold text-foreground">Spacing</span>:
+                  padding 16 · 24 · 24 · 48 and gutter 16 · 20 · 24 · 24 at
+                  base · md · lg · xl. The track count does not change at xl.
                 </p>
               </>
             }
@@ -555,9 +556,11 @@ export const ResponsiveBehavior: Story = {
           <p className="mt-4 text-sm text-muted-foreground">
             Resize the canvas. The badge above updates from <code>base</code>{" "}
             (&lt;640) → <code>sm</code> (640) → <code>md</code> (768) →{" "}
-            <code>lg</code> (1024) → <code>xl</code> (1280) → <code>2xl</code>{" "}
-            (1536). The grid only changes column count at <code>md</code> and{" "}
-            <code>lg</code>.
+            <code>lg</code> (1024) → <code>xl</code> (1280). The 4 / 8 / 12 grid
+            changes column count at <code>md</code> and <code>lg</code>; its
+            padding grows from 24 to 48 at <code>xl</code>. Rail layouts add
+            their right rail at <code>md</code> and left rail at{" "}
+            <code>xl</code>. <code>2xl</code> is retired.
           </p>
         </PageContainer>
       </div>
@@ -641,3 +644,143 @@ function ActiveBreakpoint() {
     </div>
   );
 }
+
+
+const specBreakpoints = [
+  ["base", "0", "One column · padding 16", "One column"],
+  ["sm", "640", "No column change (type and spacing only)", "No change"],
+  ["md", "768", "Right rail joins · padding 24", "Panel insets 24 · one column"],
+  ["lg", "1024", "No river change · filter rails may join", "Ad rail joins"],
+  ["xl", "1280", "Left rail joins · padding 48", "Context rail joins · padding 48"],
+  ["MX", "1360", "Content stops growing", "Panel stops growing"],
+  ["2xl", "1536", "Retired", "Retired"],
+] as const;
+
+const specRiver = [
+  ["390", "—", "358", "—"],
+  ["768", "—", "404", "300"],
+  ["1024", "—", "660", "300"],
+  ["1279", "—", "915", "300"],
+  ["1280", "300", "552", "300"],
+  ["1440+", "300", "632", "300"],
+] as const;
+
+const specReader = [
+  ["390", "—", "358", "—"],
+  ["768", "—", "672", "—"],
+  ["1024", "—", "612", "300"],
+  ["1280", "300", "504", "300"],
+  ["1440+", "300", "632", "300"],
+] as const;
+
+const specBlocks = [
+  ["< 536", "1"],
+  ["536", "2 · 2·260 + 16"],
+  ["812", "3 · 3·260 + 2·16"],
+  ["1088", "4 · 4·260 + 3·16"],
+] as const;
+
+function SpecTable({ caption, headers, rows }: { caption: string; headers: string[]; rows: readonly (readonly string[])[] }) {
+  return (
+    <div className="min-w-0 overflow-x-auto rounded-lg border border-border">
+      <table className="w-full min-w-[32rem] border-collapse text-left text-sm">
+        <caption className="sr-only">{caption}</caption>
+        <thead>
+          <tr>{headers.map((h) => <th key={h} scope="col" className="border-b border-border bg-muted/40 px-3 py-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">{h}</th>)}</tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr key={r[0]} className="border-b border-border last:border-b-0">
+              {r.map((c, i) => <td key={i} className={`px-3 py-2 ${i === 0 ? "font-mono font-semibold" : "tabular-nums"}`}>{c}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+export const BreakpointsAndGridSpecs: Story = {
+  name: "7 · Breakpoints & Grid Specs",
+  render: () => (
+    <div className="bg-background py-12">
+      <PageContainer>
+        <StoryCheatSheet
+          kicker="UI-LAYOUT-001 · Rev B"
+          title="Breakpoints and grid, measured"
+          intro={
+            <>
+              Measured with Playwright in the running app at 320–1920. Breakpoints are min-width: 640 · 768 · 1024 · 1280, content capped at 1360.
+              Tokens: <span className="font-mono">--layout-gap</span> 16, <span className="font-mono">--layout-rail</span> 300, <span className="font-mono">--width-content-max</span> 1360.
+            </>
+          }
+          leftTitle="Pages"
+          leftBody={<p>1 column → river + right rail at md → three columns at xl. Padding 16 · 24 · 48.</p>}
+          rightTitle="Reader and blocks"
+          rightBody={<p>Reader: ad rail at lg, context rail at xl. Block grids follow their container: 2 · 3 · 4 columns at 536 · 812 · 1088.</p>}
+        />
+
+        <div className="space-y-8">
+          <SpecTable caption="Breakpoints" headers={["Breakpoint", "Min width", "Pages", "Reader"]} rows={specBreakpoints} />
+          <div className="grid min-w-0 gap-6 lg:grid-cols-2">
+            <div className="min-w-0 space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Homepage river</p>
+              <SpecTable caption="River columns" headers={["Window", "Left rail", "River", "Right rail"]} rows={specRiver} />
+            </div>
+            <div className="min-w-0 space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Story reader</p>
+              <SpecTable caption="Reader columns" headers={["Window", "Context", "Article", "Ad rail"]} rows={specReader} />
+            </div>
+          </div>
+          <div className="max-w-xl space-y-2">
+            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Block grid (container query)</p>
+            <SpecTable caption="Block grid columns" headers={["Block width", "Columns"]} rows={specBlocks} />
+          </div>
+
+          <figure className="min-w-0">
+            <div className="overflow-x-auto rounded-lg border border-border bg-white">
+              <img
+                data-layout-spec="drawing"
+                src="specs/layout-drawing.svg"
+                width={1700}
+                height={1060}
+                alt="Dimensional drawing UI-LAYOUT-001 revision B: breakpoint map, river and reader plans at each breakpoint, river width graph comparing revisions A and B, block grid container query, page container at 1920 and variable tables."
+                className="block h-auto w-full min-w-[960px]"
+              />
+            </div>
+            <figcaption className="mt-2 text-sm text-muted-foreground">
+              Dimensional drawing · <a className="underline underline-offset-4" href="specs/layout-drawing.html" target="_blank" rel="noreferrer">open the full sheet with notes<span className="sr-only"> (opens in a new tab)</span></a>
+            </figcaption>
+          </figure>
+
+          <figure className="min-w-0">
+            <video
+              data-layout-spec="film"
+              src="specs/layout-film.mp4"
+              poster="specs/layout-drawing.svg"
+              controls
+              muted
+              playsInline
+              preload="metadata"
+              aria-label="Motion film: a viewport grows from 320 to 1920 and pauses at each breakpoint while the river goes from one to two to three columns; then the reader, the block grid and the drawing sheet."
+              className="block aspect-video w-full rounded-lg border border-border bg-white"
+            />
+            <figcaption className="mt-2 text-sm text-muted-foreground">Motion film · 66 s · river 0–24 s · reader 24–36 s · block grid 36–46 s · drawing tour 46–66 s.</figcaption>
+          </figure>
+        </div>
+      </PageContainer>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.querySelector('[data-layout-spec="drawing"]')).not.toBeNull();
+    await expect(canvasElement.querySelector('[data-layout-spec="film"]')).not.toBeNull();
+    await expect(canvasElement.querySelectorAll("table")).toHaveLength(4);
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "Measured breakpoints and column widths for pages, the reader and block grids, with the UI-LAYOUT-001 dimensional drawing and motion film. The same specs live on the app's /layout-specs/ page.",
+      },
+    },
+  },
+};

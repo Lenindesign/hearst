@@ -26,7 +26,8 @@ const inter = Inter({
 const newsreader = Newsreader({
   variable: "--font-newsreader",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  // Variable font (weights 200–800). Listing discrete weights makes Google return the same file for each,
+  // and Turbopack's next/font resolver fails on the duplicate URLs ("queries have exactly one entry").
   style: ["normal", "italic"],
   display: "swap",
   preload: false,

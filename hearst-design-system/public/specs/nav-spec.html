@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hearst+ Nav Spec</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Schibsted+Grotesk:wght@700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* HDS Constitution editorial rules: navy section rules, Hearst Blue kickers, slate neutrals, single-pixel slate grids. */
+:root{
+  --navy:#102A43; --blue:#2D75B9; --ink:#0F172A; --slate-600:#475569; --slate-500:#64748B; --slate-300:#CBD5E1; --slate-200:#E2E8F0; --slate-100:#F1F5F9; --slate-50:#F8FAFC; --white:#fff;
+  --ui:"Inter",system-ui,sans-serif; --head:"Schibsted Grotesk","Inter",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--slate-50);color:var(--ink);font:400 15px/1.6 var(--ui)}
+.page{max-width:1180px;margin:0 auto;padding:40px 16px 80px}
+@media (min-width:720px){.page{padding:56px 40px 96px}}
+.kicker{font:700 11px/1.2 var(--ui);letter-spacing:.16em;text-transform:uppercase;color:var(--blue);margin:0}
+h1,h2,h3,h4{font-family:var(--head);font-weight:800;color:var(--navy);margin:0;line-height:1.12}
+h1{font-size:clamp(34px,5vw,54px);margin-top:12px}
+h2{font-size:clamp(26px,3.4vw,34px);margin-top:10px}
+h3{font-size:22px;margin-top:6px}
+h4{font-size:15px;font-family:var(--ui);font-weight:700;letter-spacing:.01em;margin:18px 0 6px}
+p{margin:10px 0}
+.lede{font-size:17px;color:var(--slate-600);max-width:760px}
+.mast{border-top:2px solid var(--navy);padding-top:24px}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:var(--slate-200);border:1px solid var(--slate-200);margin-top:24px}
+.meta>div{background:var(--white);padding:12px 16px}
+.meta b{display:block;font:700 10px/1.2 var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--slate-500);margin-bottom:4px}
+.meta span{font-size:13px}
+nav.toc{margin:28px 0 0;display:flex;flex-wrap:wrap;gap:6px}
+nav.toc a{font:600 13px/1 var(--ui);color:var(--navy);text-decoration:none;border:1px solid var(--slate-200);background:var(--white);padding:9px 12px;border-radius:4px}
+nav.toc a:hover{border-color:var(--blue);color:var(--blue)}
+section.major{border-top:2px solid var(--navy);padding-top:24px;margin-top:64px}
+.block{background:var(--white);border:1px solid var(--slate-200);padding:24px;margin-top:24px;min-width:0}
+@media (min-width:720px){.block{padding:28px 32px}}
+.block .id{font:600 12px/1 var(--mono);color:var(--blue)}
+.cols{display:grid;gap:24px}.cols>*{min-width:0}
+@media (min-width:900px){.cols{grid-template-columns:1fr 1fr}}
+ul{margin:6px 0;padding-left:18px}
+li{margin:3px 0}
+code,.mono{font-family:var(--mono);font-size:12.5px}
+code{background:var(--slate-100);padding:1px 5px;border-radius:3px;color:var(--navy);overflow-wrap:anywhere}
+.tw{overflow-x:auto;margin-top:8px;border:1px solid var(--slate-200)}
+table{border-collapse:collapse;width:100%;font-size:13px;background:var(--white)}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--slate-200);vertical-align:top}
+th{font:700 10.5px/1.3 var(--ui);letter-spacing:.12em;text-transform:uppercase;color:var(--slate-500);background:var(--slate-50)}
+tr:last-child td{border-bottom:0}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.flag{border-left:3px solid var(--blue);background:var(--slate-50);padding:10px 14px;margin-top:14px;font-size:13.5px}
+.flag b{color:var(--navy)}
+.bp{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-end;margin-top:12px;padding:16px;background:var(--slate-50);border:1px solid var(--slate-200)}
+.bp figure{margin:0}
+.bp figcaption{font:500 11px/1.35 var(--ui);color:var(--slate-600);margin-top:6px;font-variant-numeric:tabular-nums}
+.bp svg rect{fill:var(--white);stroke:var(--slate-600);stroke-width:1}
+.bp svg rect.frame{fill:none;stroke:var(--slate-300);stroke-dasharray:3 3}
+.sheet img{display:block;width:100%;height:auto;border:1px solid var(--slate-200)}
+.sheet a{font-weight:600;color:var(--blue)}
+.grid-px{display:grid;gap:1px;background:var(--slate-200);border:1px solid var(--slate-200);margin-top:16px}
+@media (min-width:720px){.grid-px{grid-template-columns:repeat(3,1fr)}}
+.grid-px>div{background:var(--white);padding:18px 20px}
+.grid-px h4{margin-top:0}
+.small{font-size:13px;color:var(--slate-600)}
+.tag{display:inline-block;font:700 10px/1 var(--ui);letter-spacing:.12em;text-transform:uppercase;color:var(--blue);border:1px solid var(--slate-300);padding:4px 6px;border-radius:3px;margin-right:4px}
+.film{margin:20px 0 0;background:var(--white);border:1px solid var(--slate-200)}
+.film video{scroll-margin-top:110px;display:block;width:100%;height:auto;aspect-ratio:16/9;background:#fff}
+.film figcaption{padding:14px 16px 16px;border-top:1px solid var(--slate-200)}
+.film figcaption p{margin:0 0 10px;font-size:13px;color:var(--slate-600)}
+.chapters{list-style:none;margin:0;padding:0;display:grid;gap:4px 16px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.chapters li{margin:0}
+.chapters button{all:unset;box-sizing:border-box;display:flex;gap:10px;align-items:baseline;width:100%;min-height:44px;padding:6px 8px;border-radius:4px;cursor:pointer;font-size:13.5px;color:var(--ink)}
+.chapters button:hover{background:var(--slate-100)}
+.chapters button:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+.chapters .tc{font:600 12px/1 var(--mono);color:var(--blue);min-width:38px;font-variant-numeric:tabular-nums}
+/* Spec-pages nav: static copy of ProductHeader (product-story-shell.tsx). Keep the links in step with specNavLinks. */
+.specnav{position:sticky;top:0;z-index:50;background:rgb(255 255 255 / .85);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid #bdbdbd;font-family:var(--ui)}
+.specnav .in{max-width:1360px;margin:0 auto;padding:0 20px;display:flex;flex-direction:column;gap:4px}
+.specnav .logo{display:flex;align-items:center;min-height:44px;padding:8px 0;align-self:flex-start}
+.specnav .logo span{display:block;width:128px;height:24px;background:url(/logos/hearst-plus.svg?v=2026-10-11) left center/contain no-repeat}
+.specnav nav{display:flex;min-width:0;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:0 8px;border-top:1px solid #bdbdbd;font-size:12px;font-weight:700}
+.specnav nav::-webkit-scrollbar{display:none}
+.specnav nav a{position:relative;display:inline-flex;align-items:center;min-height:44px;flex-shrink:0;white-space:nowrap;padding:0 12px;border-bottom:2px solid transparent;color:#757575;text-decoration:none}
+.specnav nav a:hover{color:#121212}
+.specnav nav a[aria-current=page]{border-bottom-color:#384959;color:#121212}
+.specnav a:focus-visible{outline:2px solid #384959;outline-offset:2px}
+.specnav .sep{display:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (min-width:640px){.specnav .logo span{width:160px}}
+@media (min-width:768px){.specnav .in{padding:0 40px}.specnav nav{margin:0 -40px;padding:0 28px}}
+@media (min-width:1280px){.specnav .in{flex-direction:row;align-items:center;justify-content:space-between;gap:20px}.specnav .logo{align-self:auto}.specnav nav{margin:0;padding:0;border-top:0;gap:4px;font-size:14px;font-weight:600}.specnav nav a{padding:0 8px}.specnav .sep{display:block;width:1px;height:20px;margin:0 8px;background:#bdbdbd;flex-shrink:0}.specnav .short{display:none}}
+@media (max-width:1279.98px){.specnav .long{display:none}}
+</style>
+</head>
+<body>
+<header class="specnav">
+  <div class="in">
+    <a class="logo" href="/hearst-plus/" aria-label="Hearst Magazines"><span aria-hidden="true"></span></a>
+    <nav aria-label="Spec pages">
+      <a href="/cta-specs/">CTAs</a>
+      <a href="/layout-specs/">Breakpoints &amp; grid</a>
+      <a href="/type-specs/">Type metrics</a>
+      <a href="/token-specs/">Tokens &amp; brands</a>
+      <a href="/specs/blocks-spec.html">Blocks spec</a>
+      <a href="/specs/nav-spec.html" aria-current="page">Nav spec</a>
+      <a href="https://hearst-design-system.netlify.app/storybook/?path=/docs/hearst-plus-start-overview--docs" target="_blank" rel="noopener noreferrer">Storybook<span class="sr"> (opens in a new tab)</span></a>
+      <span class="sep" aria-hidden="true"></span>
+      <a href="/hearst-plus/"><span class="long">Open prototype</span><span class="short">Prototype</span></a>
+    </nav>
+  </div>
+</header>
+<main class="page">
+
+<header class="mast">
+  <p class="kicker">HDS · Hearst+ main navigation · Spec</p>
+  <h1>Main navigation</h1>
+  <p class="lede">This spec covers the Hearst+ header: the utility bar, the masthead, the section row, the compact nav that replaces it on scroll, the destination mega menu, the phone drawer and search. It gives each part's anatomy, sizes at each breakpoint, scroll behavior, keyboard and focus rules, and tokens. Values come from the component source and from measuring the running app.</p>
+  <div class="meta">
+    <div><b>Doc</b><span>HP-NAV-SPEC · Rev A · 2026-11-09</span></div>
+    <div><b>Drawing</b><span><a href="nav-drawing.html">HP-NAV-001</a> · 2 sheets</span></div>
+    <div><b>Source</b><span><code>utility-bar.tsx</code>, <code>home-page.tsx</code> (<code>MainNav</code>), <code>grid.tsx</code>, <code>globals.css</code></span></div>
+    <div><b>Measured</b><span>Playwright · Chromium · <code>/hearst-plus/</code> and a brand page · viewports 390, 640, 768, 1024, 1280, 1440 · light mode</span></div>
+  </div>
+  <nav class="toc" aria-label="Contents">
+    <a href="#film">Film</a><a href="#anatomy">Anatomy</a><a href="#breakpoints">Breakpoints</a><a href="#scroll">Scroll behavior</a><a href="#menus">Menus and overlays</a><a href="#keyboard">Keyboard and focus</a><a href="#tokens">Tokens</a><a href="#findings">Findings</a>
+  </nav>
+</header>
+
+<!-- ================= FILM ================= -->
+<section class="major" id="film">
+  <p class="kicker">00 · Walkthrough</p>
+  <h2>How the header works</h2>
+  <p>The film animates every behavior on a wireframe drawn from the measured geometry. It covers layout, the mega menu, scrolling at both sizes, breakpoints, the drawer, search and the layer order, and ends on the two drawing sheets.</p>
+  <figure class="film" id="nav-film">
+    <video controls muted playsinline preload="metadata" poster="nav-film-poster.jpg" aria-describedby="nav-film-desc">
+      <source src="nav-film.mp4" type="video/mp4">
+      Your browser can't play this video. <a href="nav-film.mp4">Download the navigation film</a>.
+    </video>
+    <figcaption>
+      <p id="nav-film-desc"><b>Main navigation film · 2:26 · no sound.</b> Captions at the top of each scene say what is happening; dimensions use the drawing's codes. Pick a chapter to jump to it.</p>
+      <ol class="chapters"><li><button type="button" data-t="0"><span class="tc">0:00</span>The header: three bands</button></li><li><button type="button" data-t="10"><span class="tc">0:10</span>Utility bar, desktop and phone</button></li><li><button type="button" data-t="22"><span class="tc">0:22</span>Mega menu: open, place, close</button></li><li><button type="button" data-t="36"><span class="tc">0:36</span>Masthead: banner and logo row</button></li><li><button type="button" data-t="48"><span class="tc">0:48</span>Section row and active topic</button></li><li><button type="button" data-t="62"><span class="tc">1:02</span>Scrolling at 768 and up: compact nav</button></li><li><button type="button" data-t="78"><span class="tc">1:18</span>Scrolling on phones: sticky row</button></li><li><button type="button" data-t="90"><span class="tc">1:30</span>Breakpoints from 360 to 1440</button></li><li><button type="button" data-t="104"><span class="tc">1:44</span>Phone drawer</button></li><li><button type="button" data-t="116"><span class="tc">1:56</span>Search</button></li><li><button type="button" data-t="126"><span class="tc">2:06</span>Layer order</button></li><li><button type="button" data-t="134"><span class="tc">2:14</span>The drawing sheets</button></li></ol>
+    </figcaption>
+  </figure>
+</section>
+
+<!-- ================= ANATOMY ================= -->
+<section class="major" id="anatomy">
+  <p class="kicker">01 · Drawing HP-NAV-001 · Rev A · Sheet 1</p>
+  <h2>Anatomy</h2>
+  <p>The header has three bands. Only the utility bar stays on screen. The masthead scrolls away. The section row scrolls away from 768 and up, where a compact copy takes over; below 768 it sticks under the bar. The full drawing is in <a href="nav-drawing.html">nav-drawing.html</a>.</p>
+  <div class="sheet"><a href="nav-drawing.html"><img src="nav-drawing-sheet-1.jpg" alt="Drawing sheet 1, structure: the header at 1280 and at 390 with dimensions, a breakpoint ruler, the exploded layer order, details of the destination pill, a section link and a header control, and variable tables."></a></div>
+  <div class="cols" style="margin-top:20px">
+    <div>
+      <h4>1 · Utility bar</h4>
+      <ul>
+        <li><b>Box</b>: <code>sticky top-0 z-50 h-8</code> (32 at every width), inside <code>PageContainer</code>.</li>
+        <li><b>Grid</b>: <code>auto | minmax(0,1fr) | auto</code>, gap 8 (12 from 640). From 1280: <code>1fr | auto | 1fr</code>, so the pill centers on the page.</li>
+        <li><b>Weather</b>: 72 wide (192 from 1024).</li>
+        <li><b>Destination pill</b>: <code>rounded-full</code>, black at 10%. "All" sits outside the scroller; the other seven scroll inside the pill when it doesn't fit. A 1 × 16 divider sits before Local News. Links are 28 tall with 11 px text below 640, and 24 tall with 12 px text from 640; padding 4 / 8, gap 4. The active link is a white fill with semibold black text.</li>
+        <li><b>Account</b>: hugs its label. "Sign in / Sign up" is 93 wide at 10 px below 640, and 116 at 12 px from 640. Signed in, it shows an avatar plus first name.</li>
+      </ul>
+      <h4>2 · Masthead</h4>
+      <ul>
+        <li><b>Banner</b> (Hearst+ and destinations): full-bleed art at its own ratio from 640 (W ÷ 11.54), and a 5:1 crop below 640. The lockup is centered. On the Hearst+ home the banner starts under the bar (<code>-mt-8 pt-8</code>).</li>
+        <li><b>Logo row</b> (brand pages): <code>h-20 sm:h-24</code> (80 · 96) with the brand logo centered.</li>
+        <li><b>Controls</b>: 12 below the bar on banners, vertically centered in the logo row. They are 44 × 44 below 640 and 28 × 28 from 640, radius 4, with a 14 icon. Left: the menu button (below 640) or the four layout toggles (from 640, gap 4). Right: theme and search, gap 8.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>3 · Section row</h4>
+      <ul>
+        <li><b>Box</b>: <code>py-1 md:py-2</code> plus a 1 px bottom border. 41 tall below 768, 39 from 768.</li>
+        <li><b>Links</b>: 14 / 20 text, horizontal padding 2, gap 24. Each link is at least 32 tall below 768 and 22 from 768. Active: semibold, <code>--hp-section-title</code>, 2 px <code>border-primary</code> underline. On Hearst+ a 1 × 16 divider follows Videos.</li>
+        <li><b>Below 768</b>: left-aligned and horizontally scrollable, with 24 px hatched fades on whichever side has more links.</li>
+        <li><b>From 768</b>: hugs its links (739 on Hearst+) and is centered.</li>
+      </ul>
+      <h4>Measured header heights</h4>
+      <div class="tw"><table>
+        <tr><th>Page</th><th>390</th><th>640</th><th>768</th><th>1024</th><th>1280</th><th>1440</th></tr>
+        <tr><td>Hearst+ home (banner, incl. bar)</td><td class="n">111 + 41</td><td class="n">88 + 41</td><td class="n">99 + 39</td><td class="n">121 + 39</td><td class="n">143 + 39</td><td class="n">157 + 39</td></tr>
+        <tr><td>Brand page (bar + logo row)</td><td class="n">32 + 80 + 41</td><td class="n">32 + 96 + 41</td><td class="n" colspan="4">32 + 96 + 39</td></tr>
+      </table></div>
+      <p class="small">Page gutters (<code>PageContainer</code>): 16 below 768, 24 from 768, 48 from 1280. Content stops at 1360 and centers.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BREAKPOINTS ================= -->
+<section class="major" id="breakpoints">
+  <p class="kicker">02 · What changes where</p>
+  <h2>Breakpoints</h2>
+  <div class="tw"><table>
+    <tr><th>From</th><th>Utility bar</th><th>Masthead</th><th>Section row</th><th>Overlays</th></tr>
+    <tr><td class="n">0</td><td>Pill scrolls inside itself; links 28 tall · gutters 16</td><td>Controls 44; menu button left; banner 5:1</td><td>Scrolls with fades; sticky at top 32</td><td>Drawer available; search inset 12, top 64</td></tr>
+    <tr><td class="n">sm 640</td><td>Links 24 tall, 12 px text; grid gap 12</td><td>Controls 28; layout toggle; banner at art ratio; logo row 96</td><td>Unchanged</td><td>No drawer; search top 96</td></tr>
+    <tr><td class="n">md 768</td><td>Gutters 24</td><td>Unchanged</td><td>Static, centered, 39 tall; no fades; compact copy on scroll</td><td>Unchanged</td></tr>
+    <tr><td class="n">lg 1024</td><td>Weather cell 72 → 192</td><td>Unchanged</td><td>Unchanged</td><td>Mega menu "All" uses 4 columns</td></tr>
+    <tr><td class="n">xl 1280</td><td>Grid <code>1fr | auto | 1fr</code>; gutters 48</td><td>Unchanged</td><td>Unchanged</td><td>Unchanged</td></tr>
+    <tr><td class="n">1360</td><td colspan="4">Content stops at 1360 and centers. The bar background and the banner stay full-bleed.</td></tr>
+  </table></div>
+</section>
+
+<!-- ================= SCROLL ================= -->
+<section class="major" id="scroll">
+  <p class="kicker">03 · Drawing HP-NAV-001 · Sheet 2</p>
+  <h2>Scroll behavior</h2>
+  <div class="sheet"><a href="nav-drawing.html"><img src="nav-drawing-sheet-2.jpg" alt="Drawing sheet 2, logic: the compact-nav hysteresis graph, the phone sticky row, mega menu placement, the phone drawer, the search dialog, section row scroll alignment, and threshold, menu, overlay and focus tables."></a></div>
+  <div class="grid-px">
+    <div><h4>768 and up · compact nav</h4><p class="small">A second copy of the section row is <code>fixed top-8 z-40</code>. It turns on when <code>scrollY ≥ 96</code> and off when <code>scrollY ≤ 64</code>; between the two it keeps its state, so it never flickers. On: opacity 0 → 1 and translateY −8 → 0 over 250 ms, <code>cubic-bezier(.22,1,.36,1)</code>, and the original row is <code>invisible</code>. Off: <code>aria-hidden</code> and <code>inert</code>. Checked once per animation frame. Reduced motion: no transition.</p></div>
+    <div><h4>Below 768 · sticky row</h4><p class="small">On destination pages the section row is <code>sticky top-8 z-30</code> and stops under the utility bar. There is no compact copy (it is <code>hidden</code> below md).</p></div>
+    <div><h4>Hearst+ home · bar fill</h4><p class="small">The bar is transparent over the banner at <code>scrollY = 0</code> and fills with <code>--hp-utility-bar</code> as soon as <code>scrollY &gt; 0</code>, with a 200 ms color transition.</p></div>
+  </div>
+  <h4>Keeping the active topic in view (below 768)</h4>
+  <p class="small">On load, when the active topic changes and on resize, the row scrolls to <code>max(0, previous.left − 16)</code>. If the active link's end still falls past <code>scroll + width − 16</code>, it scrolls to <code>active.end − width + 16</code>. The fades show when <code>scrollLeft &gt; 1</code> (left) and <code>scrollLeft &lt; max − 1</code> (right). A wheel gesture that is mostly horizontal (<code>|dx| &gt; 1.15·|dy|</code>) is blocked, so trackpad swipes don't trigger browser back while the row holds its position.</p>
+</section>
+
+<!-- ================= MENUS ================= -->
+<section class="major" id="menus">
+  <p class="kicker">04 · Mega menu · drawer · search</p>
+  <h2>Menus and overlays</h2>
+  <div class="cols">
+    <div>
+      <h4>Destination mega menu</h4>
+      <ul>
+        <li><b>Opens</b> when the pointer enters a destination link or keyboard focus lands on it. There is no caret. Click or Enter follows the link.</li>
+        <li><b>Closes</b> when the pointer leaves the menu or the bar, on a press outside, on Escape, or when focus leaves the bar.</li>
+        <li><b>Placement</b>: 8 below the bar (<code>top-full pt-2</code>). Width = <code>min(Wmax, bar − 24)</code>. Left = <code>clamp(trigger.left, 12, bar − width − 12)</code>.</li>
+        <li><b>Wmax</b>: All and International 1152, Local News 1024, A&amp;E Family 672, each other destination 384.</li>
+        <li><b>Surface</b>: <code>rounded-xl</code> (11.2), border, <code>shadow-2xl</code>, padding 16 (20 from 640). Max height <code>min(100dvh − 3rem, 680px)</code>, or <code>min(100dvh − 3.5rem, 720px)</code> from 640; scrolls inside.</li>
+        <li><b>Layer</b>: <code>absolute z-60</code>, inside the bar's own z-50 layer.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Phone drawer (below 640)</h4>
+      <ul>
+        <li><b>Trigger</b>: the 44 menu button, on destination and brand pages that have brand filters.</li>
+        <li><b>Surface</b>: a modal dialog portaled to <code>body</code>, <code>fixed inset-0 z-50</code>, black scrim at 45%. The panel is <code>min(91vw, 400px)</code> wide (355 at 390), on the left, full height. It appears without a transition.</li>
+        <li><b>Contents</b>: an 80 header with a 44 Close button; Browse Hearst+ (2-column tiles, 44 tall, gap 8, radius 8); Browse brands; Continue Reading; Join Groups; a footer with the theme action (44).</li>
+      </ul>
+      <h4>Search (every width)</h4>
+      <ul>
+        <li>A modal dialog portaled to <code>body</code>, <code>fixed inset-0 z-50</code>, black scrim at 70% plus <code>backdrop-blur-sm</code>.</li>
+        <li>The panel is inset 12 from each side and at most 672 wide, 64 from the top (96 from 640), with a 4 px <code>border-primary</code> top rule, radius 8 and max height <code>100dvh − 5rem</code>.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= KEYBOARD ================= -->
+<section class="major" id="keyboard">
+  <p class="kicker">05 · Accessibility</p>
+  <h2>Keyboard and focus</h2>
+  <div class="tw"><table>
+    <tr><th>Surface</th><th>Open</th><th>While open</th><th>Close</th><th>Focus returns to</th></tr>
+    <tr><td>Mega menu</td><td>Hover, or focus a destination</td><td><code>role=menu</code>; links are <code>menuitem</code>; <code>aria-expanded</code> on the trigger</td><td>Escape, press outside, pointer leaves, focus leaves the bar</td><td>Stays where it is</td></tr>
+    <tr><td>Phone drawer</td><td>Menu button (<code>aria-expanded</code>)</td><td>Focus starts on Close; Tab and Shift+Tab wrap inside; the page behind is isolated</td><td>Escape, Close, scrim, or picking a link</td><td>The menu button</td></tr>
+    <tr><td>Search</td><td>Search button (<code>aria-expanded</code>)</td><td>Focus in the input; ↑ ↓ move through results; Enter opens one; Tab wraps</td><td>Escape, Close, scrim</td><td>The search button (retried up to 4 × 50 ms after remount)</td></tr>
+  </table></div>
+  <div class="tw" style="margin-top:16px"><table>
+    <tr><th>Target</th><th>Below 640</th><th>From 640</th><th>Note</th></tr>
+    <tr><td>Masthead controls</td><td class="n">44 × 44</td><td class="n">28 × 28</td><td>Touch size on phones</td></tr>
+    <tr><td>Destination links</td><td class="n">≥ 28 tall</td><td class="n">≥ 24 tall</td><td>Meets the 24 px utility-control rule (APP_RULES)</td></tr>
+    <tr><td>Section links</td><td class="n">≥ 32 tall</td><td class="n">22 tall</td><td>See F2</td></tr>
+    <tr><td>Drawer and search controls</td><td class="n">44</td><td class="n">44</td><td>Close, tiles, theme action</td></tr>
+  </table></div>
+  <p class="small">Landmarks: <code>nav aria-label="Hearst destination sections"</code>, <code>nav aria-label="{Brand} sections"</code>, the compact copy <code>"{Brand} compact sections"</code>, and the drawer's <code>"Main navigation"</code>. Active items use <code>aria-current="page"</code>; filter buttons use <code>aria-pressed</code>.</p>
+</section>
+
+<!-- ================= TOKENS ================= -->
+<section class="major" id="tokens">
+  <p class="kicker">06 · Color and type</p>
+  <h2>Tokens</h2>
+  <div class="tw"><table>
+    <tr><th>Part</th><th>Light</th><th>Dark / Videos</th></tr>
+    <tr><td>Utility bar background</td><td><code>--primary</code>; Hearst+ home <code>--hp-utility-bar</code> (<code>--palette-alert-info-1000</code>); transparent over the home banner at the top</td><td><code>--component-navigation-utility-background-knockout</code> with a white/10 bottom border</td></tr>
+    <tr><td>Utility bar content</td><td><code>--primary-foreground</code></td><td><code>--component-navigation-utility-content-knockout</code></td></tr>
+    <tr><td>Pill track · active link</td><td>black / 10 · white fill, black text</td><td>white / 6 · white fill, black text</td></tr>
+    <tr><td>Mega menu surface</td><td><code>--background</code>, <code>--border</code></td><td><code>--component-navigation-utility-megamenu-background-knockout</code></td></tr>
+    <tr><td>Masthead row and section row</td><td><code>--hp-surface</code>, <code>--border</code></td><td><code>--component-video-feed-background-default</code></td></tr>
+    <tr><td>Section link · hover · active</td><td><code>--foreground</code> · <code>--primary</code> · <code>--hp-section-title</code> + <code>border-primary</code></td><td>knockout · accent · <code>--component-navigation-utility-content-accent</code></td></tr>
+    <tr><td>Type</td><td colspan="2">Utility bar: <code>--text-token-4xs</code> base, links 11 / 12 px. Section links 14 / 20. Drawer headings <code>type-k1</code>. Search title <code>type-k1</code>.</td></tr>
+  </table></div>
+</section>
+
+<!-- ================= FINDINGS ================= -->
+<section class="major" id="findings">
+  <p class="kicker">07 · For the design system team</p>
+  <h2>Findings</h2>
+  <p>These come from comparing the measurements with the component metadata and the rule documents. Nothing has been changed in code.</p>
+  <article class="block" id="f1">
+    <span class="id">F1 · DOC DRIFT</span>
+    <h3>The utility bar is 32 tall on phones, not 44</h3>
+    <p><code>utility-bar.metadata.ts</code> says the mobile bar is 44 tall. The bar is <code>h-8 sm:h-8</code>, which measures 32 at 390, and its links are 28 tall. <b>Fix:</b> correct the caveat to "32 bar, 28 links below 640", and drop the redundant <code>sm:h-8</code>.</p>
+  </article>
+  <article class="block" id="f2">
+    <span class="id">F2 · NEEDS A DECISION</span>
+    <h3>Phone section links are 32 tall</h3>
+    <p>Section links have <code>min-h-8</code> (32) below 768, while masthead controls, drawer tiles and search controls are 44. The 24 px rule in APP_RULES covers utility controls only. <b>Option:</b> raise phone section links to <code>min-h-11</code>. The row would grow from 41 to 53 and the sticky header from 73 to 85.</p>
+  </article>
+  <article class="block" id="f3">
+    <span class="id">F3 · LAYOUT</span>
+    <h3>From 768 to 786 the section row runs into the gutters</h3>
+    <p>From 768 the row stops scrolling (<code>md:flex-none md:justify-center</code>) and hugs its 739 px of links. At 768 the container's inner width is 720, so the row sits 9.5 px into each 24 px gutter (measured x = 14.5). It fits from 787. A longer brand nav would spill further, and with no fades and no scroll a link could be cut off. <b>Fix:</b> keep <code>overflow-x-auto</code> and <code>min-w-0</code> from md, and center only when the links fit (for example <code>justify-content: safe center</code>).</p>
+  </article>
+  <article class="block" id="f4">
+    <span class="id">F4 · DOC DRIFT</span>
+    <h3>The home bar's navy doesn't match STYLE.md</h3>
+    <p>STYLE.md says the bar fills with <code>#012247</code>. <code>--hp-utility-bar</code> points to <code>--palette-alert-info-1000</code>, which renders as <code>rgb(3 17 43)</code> (#03112B). <b>Fix:</b> decide which value is right, then update either the token or STYLE.md.</p>
+  </article>
+  <article class="block" id="f5">
+    <span class="id">F5 · DOC DRIFT</span>
+    <h3>Weather is in the utility bar, not the masthead</h3>
+    <p>APP_RULES says the masthead's left slot shows local weather on tablet and desktop. In the app, weather is the utility bar's left cell (72, then 192 from 1024), and from 640 the masthead's left slot holds the layout toggle. <b>Fix:</b> update the APP_RULES line.</p>
+  </article>
+</section>
+
+</main>
+<script>
+document.querySelectorAll('.film .chapters button').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var v = b.closest('.film').querySelector('video');
+    v.currentTime = +b.dataset.t; v.play().catch(function () {}); v.focus();
+  });
+});
+</script>
+</body>
+</html>

@@ -46,7 +46,7 @@ export function LifestylePersonalizationRulesGuide() {
       aria-labelledby="personalization-rules-title"
     >
       <div className="border-b border-border p-4 sm:p-5">
-        <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+        <p className="type-k1 text-primary">
           How personalization works
         </p>
         <h2 id="personalization-rules-title" className="headline mt-1 text-2xl leading-tight">
@@ -135,7 +135,7 @@ export function LifestyleTechnologyGuide() {
       aria-labelledby="technology-guide-title"
     >
       <div className="border-b border-border p-4 sm:p-5">
-        <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+        <p className="type-k1 text-primary">
           Technology
         </p>
         <h2 id="technology-guide-title" className="headline mt-1 text-2xl leading-tight">
@@ -154,7 +154,7 @@ export function LifestyleTechnologyGuide() {
             key={item.label}
             className="border-b border-border p-4 last:border-b-0 md:[&:nth-child(odd)]:border-r xl:[&:nth-child(odd)]:border-r-0 xl:[&:not(:nth-child(3n))]:border-r xl:[&:nth-last-child(-n+3)]:border-b-0"
           >
-            <dt className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+            <dt className="type-k1 text-primary">
               {item.label}
             </dt>
             <dd>

@@ -479,6 +479,26 @@
     "type": "number",
     "value": 0
   },
+  "component-button-font-family": {
+    "type": "string",
+    "value": "Teko"
+  },
+  "component-button-font-weight": {
+    "type": "string",
+    "value": "400"
+  },
+  "component-button-text-transform": {
+    "type": "string",
+    "value": "uppercase"
+  },
+  "component-button-letter-spacing": {
+    "type": "string",
+    "value": "2.4px"
+  },
+  "component-button-font-size-adjust": {
+    "type": "string",
+    "value": "cap-height 0.72"
+  },
   "component-card-background-neutral": {
     "type": "color",
     "value": "#ededed"

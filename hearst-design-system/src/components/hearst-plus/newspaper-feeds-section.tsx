@@ -197,8 +197,8 @@ export function NewspaperFeedsSection({
 
   return (
     <div className="space-y-6" data-hearst-plus-newspaper-river aria-labelledby="newspaper-feeds-title">
-      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-x-4 gap-y-6 md:grid-cols-[minmax(0,1fr)_300px] lg:grid-cols-[300px_minmax(0,1fr)_300px]">
-        <aside className="hidden min-w-0 space-y-5 lg:sticky lg:top-[86px] lg:block lg:max-h-[calc(100dvh-110px)] lg:self-start lg:overflow-y-auto lg:pr-1">
+      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-x-[var(--layout-gap)] gap-y-6 md:grid-cols-[minmax(0,1fr)_var(--layout-rail)] xl:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]">
+        <aside className="hidden min-w-0 space-y-5 xl:sticky xl:top-[86px] xl:block xl:max-h-[calc(100dvh-110px)] xl:self-start xl:overflow-y-auto xl:pr-1">
           <section className="rounded-card border border-border bg-[var(--hp-surface)] p-3 shadow-[var(--hp-shadow-card)]">
             <LocalNewsSourceToggle activeSource="newspapers" />
           </section>
@@ -596,7 +596,7 @@ function NewspaperReaderModal({
               {index > 0 ? (
                 <div className="mb-8 flex items-center gap-4" aria-label="Up next">
                   <span className="h-px flex-1 bg-border" aria-hidden="true" />
-                  <span className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                  <span className="type-k1 text-primary">
                     Up next
                   </span>
                   <span className="h-px flex-1 bg-border" aria-hidden="true" />
@@ -611,7 +611,7 @@ function NewspaperReaderModal({
                 />
               </div>
               <div className="mx-auto mt-6 max-w-3xl">
-                <div className="mb-3 flex flex-wrap items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                <div className="mb-3 flex flex-wrap items-center gap-2 type-k1 text-primary">
                   <span>{story.signal}</span>
                   <span>{story.brand}</span>
                   <span>{story.topic}</span>

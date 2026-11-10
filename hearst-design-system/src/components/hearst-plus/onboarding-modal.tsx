@@ -313,7 +313,7 @@ function HearstOnboardingModalContent({
 
         <div className="flex min-h-0 flex-col overflow-hidden">
           <div className="flex items-center justify-between border-b border-border px-5 py-2.5">
-            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+            <p className="type-k1 text-primary">
               Personalize your feed
             </p>
             <Button
@@ -339,13 +339,13 @@ function HearstOnboardingModalContent({
                       ref={headingRef}
                       id="hearst-onboarding-title"
                       tabIndex={-1}
-                      className="headline text-3xl leading-tight outline-none sm:text-4xl"
+                      className="type-t2 headline outline-none"
                     >
                       Pick what you want to see more often.
                     </h2>
                     <p
                       id="hearst-onboarding-description"
-                      className="mt-3 text-sm leading-6 text-muted-foreground"
+                      className="type-b2 mt-3 text-muted-foreground"
                     >
                       Choose one or two interests. Your preview updates immediately.
                     </p>
@@ -412,7 +412,7 @@ function HearstOnboardingModalContent({
                             <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-wider text-primary">
                               {story.brand} · {story.topic}
                             </p>
-                            <h3 className="mt-1 line-clamp-2 text-sm font-bold leading-5">
+                            <h3 className="type-b2 mt-1 line-clamp-2 font-bold">
                               {story.title}
                             </h3>
                           </div>
@@ -424,7 +424,7 @@ function HearstOnboardingModalContent({
                       <p className="text-sm font-semibold">
                         Choose an interest to preview your feed.
                       </p>
-                      <p className="mt-1 text-sm leading-5 text-muted-foreground">
+                      <p className="type-b2 mt-1 text-muted-foreground">
                         You can change these choices later from your profile.
                       </p>
                     </div>
@@ -441,13 +441,13 @@ function HearstOnboardingModalContent({
                       ref={headingRef}
                       id="hearst-onboarding-title"
                       tabIndex={-1}
-                      className="headline text-3xl leading-tight outline-none sm:text-4xl"
+                      className="type-t2 headline outline-none"
                     >
                       Follow brands you trust.
                     </h2>
                     <p
                       id="hearst-onboarding-description"
-                      className="mt-3 text-sm leading-6 text-muted-foreground"
+                      className="type-b2 mt-3 text-muted-foreground"
                     >
                       Optional: choose the publications you return to most. Your
                       feed will still discover across Hearst, while these voices
@@ -502,7 +502,7 @@ function HearstOnboardingModalContent({
                               className="h-8 w-8 rounded-[6px]"
                             />
                             <span className="min-w-0">
-                              <span className="block break-words text-sm font-bold leading-5">
+                              <span className="type-b2 block break-words font-bold">
                                 {brandOption.brand}
                               </span>
                               <span className="mt-0.5 block text-xs text-muted-foreground">
@@ -545,13 +545,13 @@ function HearstOnboardingModalContent({
                   ref={headingRef}
                   id="hearst-onboarding-title"
                   tabIndex={-1}
-                  className="headline mx-auto mt-5 max-w-xl text-4xl leading-tight outline-none"
+                  className="type-t2 headline mx-auto mt-5 max-w-xl outline-none"
                 >
                   Your feed is ready.
                 </h2>
                 <p
                   id="hearst-onboarding-description"
-                  className="mx-auto mt-3 max-w-xl text-sm leading-6 text-muted-foreground"
+                  className="type-b2 mx-auto mt-3 max-w-xl text-muted-foreground"
                 >
                   Your For You page now reflects your selected interests and
                   brands. Save it to a profile for access across devices, or

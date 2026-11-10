@@ -102,9 +102,9 @@ const hearstPlusJourney = {
   summary: "Hearst+ validates its Git JSON and generates app-local theme files before the Next.js app is deployed.",
   steps: [
     { title: "Canonical token JSON", detail: "Hearst+ · tokens/core, tokens/semantic, tokens/brands — checked into this application repository." },
-    { title: "Validate and resolve", detail: "The token build script validates the source structure and resolves core, semantic, and brand values." },
+    { title: "Resolve", detail: "npm run build-tokens reads core, semantic, and brand JSON, resolves aliases, and fixes known source typos. Validation is a separate step: npm run tokens:validate (scripts/validate-tokens.ts) and the token-validation unit test; neither runs inside build-tokens." },
     { title: "Generate app-local artifacts", detail: "scripts/build-from-tokens.ts writes src/lib/brands.ts and src/lib/tokens.css for the app to consume." },
-    { title: "Apply the selected brand", detail: "ThemeProvider sets data-brand; generated CSS variables resolve for the active publication theme." },
+    { title: "Apply the selected brand", detail: "ThemeProvider sets data-brand and writes the theme's runtime variables inline (brandToCssVars, 282 per brand, after contrast guards); the nearest scope wins over tokens.css. Seven section themes (Lifestyle, Autos, Fashion & Luxury, Enthusiast & Wellness, Local News, A&E, Hearst+) are authored in theme-options.ts, outside tokens/." },
     { title: "Build and deploy Hearst+", detail: "Next.js builds the cross-brand reader app and the configured Netlify deployment serves it." },
   ],
   implementation: [
@@ -205,7 +205,7 @@ const comparisonRows = [
   {
     topic: "Catalog coverage",
     magazine: "The All Tokens page displayed 4,685 White Label tokens and explicitly said brand-theme values are currently viewed in individual catalog sections through the Theme Switcher. The page is marked work in progress.",
-    hearst: "The local specification reports 435 core tokens, 13 semantic JSON files, and 29 publication-theme JSON files in this checkout. These counts use different grains and should not be compared as a single total.",
+    hearst: "This checkout has 624 core tokens in 7 files, 13 semantic JSON files, and 29 theme files: 27 publications plus the White Label and FRE base themes. These counts use different grains and should not be compared as a single total.",
     reading: "The catalog is broad, but the all-brand rollup is not yet represented on that page. A theme-by-theme view remains necessary for brand-value inspection.",
   },
   {
@@ -223,10 +223,10 @@ const comparisonRows = [
 ];
 
 const repoFacts = [
-  ["Canonical sources", "tokens/core/, tokens/semantic/, tokens/brands/"],
+  ["Canonical sources", "tokens/core/, tokens/semantic/, tokens/brands/ (section themes: src/lib/theme-options.ts)"],
   ["Generator", "scripts/build-from-tokens.ts"],
   ["Runtime outputs", "src/lib/brands.ts and src/lib/tokens.css"],
-  ["Theme application", "ThemeProvider sets data-brand and resolves CSS variables"],
+  ["Theme application", "ThemeProvider sets data-brand and inline runtime variables from brandToCssVars; the nearest scope wins"],
 ];
 
 const recommendations = [
@@ -286,7 +286,7 @@ export default function MagazineTokenStudyPage() {
               A comparison of current Hearst Design System documentation, the Hearst+ prototype token pipeline, and the supplied Figma Variables architecture proposal.
             </p>
             <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-primary-foreground/70">
-              <span>Reviewed October 31, 2026</span>
+              <span>Reviewed October 31, 2026 · Hearst+ facts corrected November 9, 2026</span>
               <span>Storybook theme reviewed: Biography</span>
               <span>Sources: internal docs, local repo, supplied diagram</span>
             </div>
@@ -317,7 +317,21 @@ export default function MagazineTokenStudyPage() {
               </article>
             </div>
           </div>
-          <p className="mt-6 max-w-4xl text-xs leading-5 text-muted-foreground">Storybook counts are observations from the selected Biography theme and documentation views at review time. Mapping counts are not unique-token counts; the All Tokens total is explicitly White Label. The local repo’s 435 core, 13 semantic-file, and 29 brand-file counts use different categories and grains.</p>
+          <p className="mt-6 max-w-4xl text-xs leading-5 text-muted-foreground">Storybook counts are observations from the selected Biography theme and documentation views at review time. Mapping counts are not unique-token counts; the All Tokens total is explicitly White Label. The local repo’s 624 core-token, 13 semantic-file, and 29 theme-file counts use different categories and grains.</p>
+        </section>
+
+        <section aria-labelledby="changed-since-review" className="mx-auto max-w-[1200px] px-5 pb-16 md:px-10">
+          <div className="border-l-2 border-primary bg-muted/40 p-5 md:p-6">
+            <p className="type-k1 text-primary">Changed since review</p>
+            <h2 id="changed-since-review" className="headline type-t3 mt-2">Hearst+ added to its token contract in November.</h2>
+            <ul className="type-b2 mt-3 grid gap-2 text-muted-foreground md:grid-cols-2">
+              <li><strong className="text-foreground">Runtime guards.</strong> Button labels are kept at 4.5:1 or better, ad headlines use the CTA color only at 3:1 or better, missing ghost tokens fall back to transparent, and dark mode lifts the primary color.</li>
+              <li><strong className="text-foreground">CTA typography tokens.</strong> component-button-font-family, -font-weight, -text-transform, and -letter-spacing carry each publication&rsquo;s live CTA type into the shared Button.</li>
+              <li><strong className="text-foreground">Theme scope for overlays.</strong> Dialogs portaled to &lt;body&gt; copy the nearest theme scope, so they keep the brand.</li>
+              <li><strong className="text-foreground">Type and layout standards.</strong> Line height, tracking, and spacing roles (UI-TYPE-001) and the rail layout contract (UI-LAYOUT-001) are CSS utilities and custom properties, not yet token JSON.</li>
+            </ul>
+            <p className="type-c1 mt-3 text-muted-foreground">The magazine-side Storybook and repository observations above are unchanged from October 31. Current Hearst+ detail: <Link href="/token-specs/" className="font-semibold text-foreground underline underline-offset-2">Tokens and brand guides</Link>.</p>
+          </div>
         </section>
 
         <section id="architecture" className="border-y border-border bg-card">

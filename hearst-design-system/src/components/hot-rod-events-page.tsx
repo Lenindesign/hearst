@@ -183,7 +183,7 @@ function SeriesIntro() {
             <h2 id="power-tour-series-title" className="headline mt-2 text-4xl font-black uppercase leading-[0.92] md:text-5xl">
               America’s ultimate road trip
             </h2>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-white/76">
+            <p className="type-d2 mt-4 max-w-2xl text-white/76">
               Power Tour returns every year with a new route, new host cities, and the same rolling celebration of American car culture. Each edition keeps its schedule, maps, galleries, and stories after the final stop.
             </p>
           </Col>
@@ -208,7 +208,7 @@ function SeriesIntro() {
                 </button>
               ))}
             </div>
-            <p className="mt-3 text-xs leading-5 text-white/55">
+            <p className="type-c1 mt-3 text-white/55">
               The 2026 edition is available now. Earlier archives will join this selector as their structured routes are added.
             </p>
           </Col>
@@ -244,7 +244,7 @@ function RouteAndResources() {
                       <p className="text-xs font-black uppercase tracking-[0.1em] text-[var(--hot-rod-events-red)]">{stop.date}</p>
                       <p className="headline mt-0.5 text-2xl font-black uppercase leading-none">{stop.location}</p>
                     </div>
-                    <div className="pt-1 text-sm leading-6">
+                    <div className="type-b2 pt-1">
                       <p className="font-bold">{stop.venue}</p>
                       {stop.note ? <p className="text-black/60">{stop.note}</p> : null}
                     </div>
@@ -271,7 +271,7 @@ function RouteAndResources() {
                     <span className="block text-sm font-black uppercase tracking-[0.06em] group-hover:text-[var(--hot-rod-events-red)]">
                       {resource.label}
                     </span>
-                    <span className="mt-1 block text-sm leading-5 text-black/60">{resource.description}</span>
+                    <span className="type-b2 mt-1 block text-black/60">{resource.description}</span>
                   </span>
                   <ExternalLink className="size-4 text-[var(--hot-rod-events-red)]" aria-hidden />
                 </a>
@@ -279,7 +279,7 @@ function RouteAndResources() {
             </div>
             <div className="mt-6 border-l-4 border-[var(--hot-rod-events-red)] bg-white/50 px-4 py-4">
               <p className="text-xs font-black uppercase tracking-[0.12em]">Registration archive</p>
-              <p className="mt-2 text-sm leading-6 text-black/65">
+              <p className="type-b2 mt-2 text-black/65">
                 Online registration is closed. TicketSpice remains available for confirmations and the archived event notice.
               </p>
               <a
@@ -411,7 +411,7 @@ function EventList({ events }: { events: HotRodEvent[] }) {
             </div>
             <h3 className="headline mt-3 text-3xl font-black uppercase leading-none md:text-4xl">{event.title}</h3>
             <p className="mt-2 text-sm font-semibold text-foreground">{event.dateLabel} · {event.locationLabel}</p>
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">{event.summary}</p>
+            <p className="type-b2 mt-3 max-w-2xl text-muted-foreground">{event.summary}</p>
             <EventAction event={event} />
           </div>
         </article>
@@ -441,7 +441,7 @@ function EventCalendar({ events }: { events: HotRodEvent[] }) {
                   <StatusLabel status={event.status} label={event.statusLabel} />
                   <p className="headline mt-3 text-2xl font-black uppercase leading-none">{event.series}</p>
                   <p className="mt-2 text-sm font-bold">{event.dateLabel}</p>
-                  <p className="mt-1 text-sm leading-5 text-black/60">{event.locationLabel}</p>
+                  <p className="type-b2 mt-1 text-black/60">{event.locationLabel}</p>
                   <EventAction event={event} />
                 </div>
               ))}
@@ -598,7 +598,7 @@ function DragWeekIntro() {
             <h2 id="drag-week-intro-title" className="headline mt-2 max-w-[16ch] text-4xl font-black uppercase leading-[0.92] md:text-5xl">
               Race, drive, repair, repeat
             </h2>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-white/80">
+            <p className="type-d2 mt-4 max-w-2xl text-white/80">
               Drag Week combines timed dragstrip runs with the road miles between venues. The 2026 route starts and finishes at Route 66 Raceway, then moves through Byron, Cordova, and Madison before returning to Joliet for the finals.
             </p>
           </Col>
@@ -650,7 +650,7 @@ function DragWeekRouteAndResources() {
                       <p className="text-xs font-black uppercase tracking-[0.1em] text-[var(--hot-rod-events-red)]">{stop.date}</p>
                       <p className="headline mt-0.5 text-2xl font-black uppercase leading-none">{stop.location}</p>
                     </div>
-                    <div className="pt-1 text-sm leading-6">
+                    <div className="type-b2 pt-1">
                       <p className="font-bold">{stop.venue}</p>
                       {stop.note ? <p className="text-black/65">{stop.note}</p> : null}
                     </div>
@@ -677,7 +677,7 @@ function DragWeekRouteAndResources() {
                     <span className="block text-sm font-black uppercase tracking-[0.06em] group-hover:text-[var(--hot-rod-events-red)]">
                       {resource.label}
                     </span>
-                    <span className="mt-1 block text-sm leading-5 text-black/65">{resource.description}</span>
+                    <span className="type-b2 mt-1 block text-black/65">{resource.description}</span>
                   </span>
                   <ExternalLink className="size-4 text-[var(--hot-rod-events-red)]" aria-hidden />
                 </a>
@@ -685,7 +685,7 @@ function DragWeekRouteAndResources() {
             </div>
             <div className="mt-6 border border-black/15 bg-white/55 p-4">
               <p className="text-xs font-black uppercase tracking-[0.12em]">Travel partner</p>
-              <p className="mt-2 text-sm leading-6 text-black/70">
+              <p className="type-b2 mt-2 text-black/70">
                 On Location, through Anthony Travel, lists discounted event accommodations and reservation support for Drag Week.
               </p>
               <a
@@ -743,7 +743,7 @@ function DragWeekTickets() {
                 <div key={option.title} className="grid gap-2 py-5 sm:grid-cols-[minmax(0,1fr)_110px] sm:gap-5">
                   <div>
                     <h3 className="text-base font-black uppercase tracking-[0.04em]">{option.title}</h3>
-                    <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">{option.detail}</p>
+                    <p className="type-b2 mt-2 max-w-2xl text-muted-foreground">{option.detail}</p>
                   </div>
                   <p className="text-left text-base font-black text-[var(--hot-rod-events-red)] sm:text-right">{option.price}</p>
                 </div>
@@ -755,7 +755,7 @@ function DragWeekTickets() {
               <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--hot-rod-events-red)]">
                 Before purchasing
               </p>
-              <ul className="mt-4 space-y-3 text-sm leading-6 text-muted-foreground">
+              <ul className="type-b2 mt-4 space-y-3 text-muted-foreground">
                 <li>Racer tickets are sold out; the waitlist is separate from spectator purchases.</li>
                 <li>The Drag Pack has limited availability and does not include racer entry.</li>
                 <li>TicketSpice lists Drag Pack purchases as nonrefundable and nontransferable.</li>

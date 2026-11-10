@@ -142,7 +142,7 @@ function StakeholderPersonalizationPanel({
         <div className="p-4 sm:p-5">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+              <p className="type-k1 text-primary">
                 Personalization Demo
               </p>
               <h2 className="headline mt-1 text-2xl leading-tight">
@@ -307,7 +307,7 @@ function StakeholderPersonalizationPanel({
         </div>
 
         <div className="border-t border-border p-4 sm:p-5 lg:border-l lg:border-t-0">
-          <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+          <p className="type-k1 text-primary">
             Current top story score
           </p>
           {topStory && topBreakdown ? (
@@ -440,7 +440,7 @@ function StakeholderEvidenceGuide({
       aria-labelledby="stakeholder-evidence-guide-title"
     >
       <div className="border-b border-border p-4 sm:p-5">
-        <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+        <p className="type-k1 text-primary">
           Live evidence
         </p>
         <h2
@@ -461,7 +461,7 @@ function StakeholderEvidenceGuide({
             key={fact.label}
             className="border-b border-border p-4 last:border-b-0 md:[&:nth-child(odd)]:border-r xl:border-b-0 xl:[&:not(:last-child)]:border-r"
           >
-            <dt className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+            <dt className="type-k1 text-primary">
               {fact.label}
             </dt>
             <dd>
@@ -608,7 +608,7 @@ function StakeholderPersonalizationConsoleContent({
           <div className="min-w-0">
             <p
               id="stakeholder-personalization-console-title"
-              className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary"
+              className="type-k1 text-primary"
             >
               Stakeholder Demo Console
             </p>

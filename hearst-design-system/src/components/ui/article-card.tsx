@@ -161,7 +161,7 @@ function ArticleCardEyebrow({
     <span
       data-slot="article-card-eyebrow"
       className={cn(
-        "text-[length:var(--text-token-4xs)] font-semibold uppercase tracking-widest text-primary",
+        "type-k1 text-primary",
         "group-data-[size=lg]/article-card:text-xs",
         className
       )}

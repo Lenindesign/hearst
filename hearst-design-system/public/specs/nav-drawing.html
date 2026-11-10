@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Main Nav Drawing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;600;700&display=swap">
+<style>
+/* Layout: one Apple-style dimensional drawing sheet (notes · section · plan · tables · details · layouts · title block), black on white, single light theme by design. */
+:root{--paper:#ececec;--sheet:#ffffff;--ink:#111;--ink2:#444;--ink3:#7a7a7a;--fill:#f3f3f3;--fill2:#e6e6e6;--f:'Arimo','Helvetica Neue',Helvetica,Arial,sans-serif;color-scheme:light}
+body{background:var(--paper);color:var(--ink);font-family:var(--f)}
+.wrap{max-width:1760px;margin:0 auto;padding-block:24px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.scroll{overflow-x:auto;background:var(--sheet);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+svg{display:block;width:100%;min-width:1100px;height:auto}
+.tb{background:var(--sheet);border:1.5px solid var(--ink);display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr;margin-bottom:24px}
+.tb>div{border-right:1px solid #d0d0d0;border-bottom:1px solid #d0d0d0;padding:10px 12px;min-width:0}
+.tb .big{grid-row:span 2;display:flex;flex-direction:column;justify-content:space-between;gap:12px}
+.tb h1{font-size:clamp(26px,4vw,40px);line-height:1;margin:0;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.lbl{text-transform:uppercase;letter-spacing:.08em;font-size:12px;color:var(--ink3);font-weight:600}
+.tb .v{font-size:13px;margin-top:2px;font-variant-numeric:tabular-nums}
+.tb .notes{grid-column:1/-1;border-right:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:6px 24px;font-size:13px;color:var(--ink2)}
+.tb .notes ol{margin:4px 0 0;padding-left:18px}
+.tb .figs{grid-column:1/-1;border-right:0;border-bottom:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px 18px}
+.tb .figs .v{font-size:17px}
+@media (max-width:640px){.tb{grid-template-columns:1fr 1fr}.tb .big{grid-column:1/-1;grid-row:auto}}
+.sheetwrap{margin-bottom:28px}
+.foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--ink2);padding:10px 2px 0}
+.foot b{font-weight:600;color:var(--ink)}
+/* drawing */
+.u{font-family:var(--f);text-transform:uppercase;letter-spacing:.07em}
+.border{fill:none;stroke:var(--ink);stroke-width:1.2}
+.obj{fill:var(--sheet);stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round}
+.well{fill:var(--fill);stroke:var(--ink);stroke-width:1}
+.slot{fill:none;stroke:var(--ink2);stroke-width:.8;stroke-dasharray:4 3}
+.hug{fill:var(--fill2);stroke:var(--ink);stroke-width:1}
+.thin{fill:none;stroke:var(--ink);stroke-width:.8}
+.ph{fill:none;stroke:var(--ink3);stroke-width:.8;stroke-dasharray:14 3 3 3}
+.cl{fill:none;stroke:var(--ink3);stroke-width:.7;stroke-dasharray:16 3 2 3}
+.cut{stroke:var(--ink);stroke-width:2}
+.dl{stroke:var(--ink);stroke-width:.7;fill:none}
+.ext{stroke:var(--ink);stroke-width:.55;fill:none}
+.arrow{fill:var(--ink)}
+.hl{stroke:var(--ink2);stroke-width:.7}
+.hs{stroke:var(--ink);stroke-width:.8}
+.env{fill:none;stroke:var(--ink);stroke-width:.8;stroke-dasharray:10 3 2 3}
+.dt{font:400 11px var(--f);fill:var(--ink);paint-order:stroke;stroke:var(--sheet);stroke-width:4px;stroke-linejoin:round}
+.dts{font:400 9.5px var(--f);fill:var(--ink2);letter-spacing:.06em;text-transform:uppercase;paint-order:stroke;stroke:var(--sheet);stroke-width:3px}
+.sl{font:400 9px var(--f);fill:var(--ink2);letter-spacing:.08em;text-transform:uppercase}
+.nt{font:400 11.5px var(--f);fill:var(--ink);letter-spacing:.06em;text-transform:uppercase}
+.nth{font:700 13px var(--f);fill:var(--ink);letter-spacing:.06em}
+.vt{font:400 12px var(--f);fill:var(--ink);letter-spacing:.1em;text-transform:uppercase}
+.vtb{font:400 20px var(--f);fill:var(--ink);letter-spacing:.06em}
+.nb{fill:var(--sheet);stroke:var(--ink);stroke-width:.9}
+.nbt{font:400 9.5px var(--f);fill:var(--ink)}
+.lead{stroke:var(--ink);stroke-width:.7;fill:none}
+.dot{fill:var(--ink)}
+.th{font:400 10.5px var(--f);fill:var(--ink);letter-spacing:.05em;text-transform:uppercase}
+.tc{font:400 10.5px var(--f);fill:var(--ink)}
+.tbk{font:400 7px var(--f);fill:var(--ink2);letter-spacing:.04em;text-transform:uppercase}
+.tbt{font:700 15px var(--f);fill:var(--ink)}
+.tbv{font:400 17px var(--f);fill:var(--ink);letter-spacing:.06em}
+
+/* title block restyled to match the drawing sheet: thin black rules, plain caps lettering */
+.tb{border:1.2px solid var(--ink);border-radius:16px;overflow:hidden}
+.tb>div{border-right:.8px solid var(--ink);border-bottom:.8px solid var(--ink);padding:10px 14px}
+.tb>div:nth-child(4),.tb>div:nth-child(7){border-right:0}
+.tb .lbl{font-size:9.5px;font-weight:400;letter-spacing:.06em;color:var(--ink2)}
+.tb h1{font-weight:400;letter-spacing:.1em;font-size:clamp(28px,4vw,44px);margin-top:4px}
+.tb .v{font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink)}
+.tb .big .v{font-size:11px;color:var(--ink2);line-height:1.6}
+.tb .notes{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);line-height:1.9}
+.tb .notes ol{padding-left:20px}
+.tb .nh{font-weight:700;font-size:13px;letter-spacing:.06em}
+.tb .nh span{font-weight:400;font-size:11.5px;margin-left:6px}
+.tb .figs>div{border-left:.8px solid var(--ink);padding-left:14px}
+.tb .figs>div:first-child{border-left:0;padding-left:0}
+.tb .figs .v{font-size:18px;letter-spacing:.06em;text-transform:none;margin-top:4px}
+.foot{font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+.foot b{font-weight:700}
+</style>
+<style>body{margin:0}.tb .notes ol li{margin:0}</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="tb">
+    <div class="big">
+      <div><div class="lbl">UI component · dimensional drawing</div><h1>Main navigation</h1></div>
+      <div class="v">Hearst+ header: utility bar, masthead, section row, compact nav, mega menu, phone drawer and search. Sheet 1 is structure; sheet 2 is scroll, menu and focus logic. Values measured in the running app.</div>
+    </div>
+    <div><div class="lbl">Dwg no.</div><div class="v">HP-NAV-001</div></div>
+    <div><div class="lbl">Rev</div><div class="v">A · 2026-11-09</div></div>
+    <div><div class="lbl">Sheets</div><div class="v">2</div></div>
+    <div><div class="lbl">Units</div><div class="v">CSS px @ 1× · rem = 16</div></div>
+    <div><div class="lbl">Scale</div><div class="v">Noted per view</div></div>
+    <div><div class="lbl">Source</div><div class="v">utility-bar.tsx · home-page.tsx (MainNav) · grid.tsx (PageContainer) · globals.css</div></div>
+    <div class="notes">
+      <div><span class="nh">NOTES:<span>(UNLESS OTHERWISE SPECIFIED)</span></span><ol>
+        <li>Do not scale from screen. Read the numbers.</li>
+        <li>Measured with Playwright (Chromium, fonts loaded, light mode) on /hearst-plus/ and a brand page at viewports 390, 640, 768, 1024, 1280 and 1440.</li>
+        <li>Slots are placeholders. Labels, logos and banner art are not part of the drawing.</li>
+        <li>Values with a dot read base · breakpoint (sm 640, md 768, lg 1024, xl 1280).</li></ol></div>
+      <div><span class="nh" aria-hidden="true">&nbsp;</span><ol start="5">
+        <li>HUG = sized by content · FLEX = takes remaining space · FILL = parent width.</li>
+        <li>Banner height follows the art: W ÷ 5 below sm, W ÷ 11.54 from sm. On the Hearst+ home it starts under the utility bar.</li>
+        <li>Menu heights and list lengths are schematic; they follow content.</li>
+        <li>Grayscale by design. Color tokens are listed in the nav spec, not drawn.</li></ol></div>
+    </div>
+    <div class="figs">
+      <div><div class="lbl">H1 · utility bar</div><div class="v">32</div></div>
+      <div><div class="lbl">S1 · page gutter</div><div class="v">16 · 24 · 48</div></div>
+      <div><div class="lbl">Z1 · control</div><div class="v">44 · 28 sm</div></div>
+      <div><div class="lbl">H4 · section row</div><div class="v">41 · 39 md</div></div>
+      <div><div class="lbl">Y1 / Y2 · compact</div><div class="v">on 96 · off 64</div></div>
+      <div><div class="lbl">W · mega menu</div><div class="v">min(Wmax, BW − 24)</div></div>
+      <div><div class="lbl">O1 · drawer</div><div class="v">min(91vw, 400)</div></div>
+    </div>
+  </header>
+  <div class="sheetwrap"><div class="scroll"><svg id="sh1" viewBox="0 0 1700 1060" role="img" aria-label="Main navigation sheet 1, structure: plan at xl 1280, plan at base 390, breakpoint ruler, exploded layer order, destination pill, section link and header control details, variable tables"></svg></div>
+  <div class="foot"><span>2026-11-09 &nbsp;|&nbsp; UI component reference · Hearst+ header</span><span><b>Main navigation, structure</b> &nbsp;|&nbsp; 1 of 2</span></div></div>
+  <div class="sheetwrap"><div class="scroll"><svg id="sh2" viewBox="0 0 1700 1060" role="img" aria-label="Main navigation sheet 2, logic: compact nav hysteresis, phone sticky row, mega menu placement, phone drawer, search dialog, section row scroll alignment, thresholds and focus tables"></svg></div>
+  <div class="foot"><span>2026-11-09 &nbsp;|&nbsp; UI component reference · Hearst+ header</span><span><b>Main navigation, logic</b> &nbsp;|&nbsp; 2 of 2</span></div></div>
+</div>
+<script>
+(function(){
+const NS='http://www.w3.org/2000/svg';let sv,A,HAT,uid=0;
+function mk(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)if(a[k]!=null)e.setAttribute(k,a[k]);(p||sv).appendChild(e);return e}
+function tx(x,y,s,c,a,p){const t=mk('text',Object.assign({x:x,y:y,class:c||'dt'},a||{}),p);t.textContent=s;return t}
+function begin(id){sv=document.getElementById(id);sv.innerHTML='';const n=uid++;const d=mk('defs',{});const m=mk('marker',{id:'ar'+n,viewBox:'0 0 10 10',refX:10,refY:5,markerWidth:7,markerHeight:7,orient:'auto-start-reverse',markerUnits:'userSpaceOnUse'},d);mk('path',{d:'M0,1.7 L10,5 L0,8.3 z',class:'arrow'},m);
+ const pt=mk('pattern',{id:'hat'+n,width:5,height:5,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'},d);mk('line',{x1:0,y1:0,x2:0,y2:5,class:'hl'},pt);A='url(#ar'+n+')';HAT='url(#hat'+n+')';rr(20,20,1660,1020,16,'border')}
+function dimH(x1,x2,y,e1,e2,l,o){o=o||{};[[x1,e1],[x2,e2]].forEach(([x,e])=>{if(e==null)return;const s=Math.sign(y-e)||1;mk('line',{x1:x,y1:e+s*3,x2:x,y2:y+s*5,class:'ext'})});
+ if(x2-x1>=28)mk('line',{x1:x1,y1:y,x2:x2,y2:y,class:'dl','marker-start':A,'marker-end':A});else{mk('line',{x1:x1-13,y1:y,x2:x1,y2:y,class:'dl','marker-end':A});mk('line',{x1:x2+13,y1:y,x2:x2,y2:y,class:'dl','marker-end':A});mk('line',{x1:x1,y1:y,x2:x2,y2:y,class:'dl'})}
+ tx((x1+x2)/2+(o.dx||0),(o.below?y+13:y-4)+(o.dy||0),l,o.c||'dt',{'text-anchor':'middle'})}
+function dimV(y1,y2,x,e1,e2,l,o){o=o||{};[[y1,e1],[y2,e2]].forEach(([y,e])=>{if(e==null)return;const s=Math.sign(x-e)||1;mk('line',{x1:e+s*3,y1:y,x2:x+s*5,y2:y,class:'ext'})});
+ if(y2-y1>=28)mk('line',{x1:x,y1:y1,x2:x,y2:y2,class:'dl','marker-start':A,'marker-end':A});else{mk('line',{x1:x,y1:y1-13,x2:x,y2:y1,class:'dl','marker-end':A});mk('line',{x1:x,y1:y2+13,x2:x,y2:y2,class:'dl','marker-end':A});mk('line',{x1:x,y1:y1,x2:x,y2:y2,class:'dl'})}
+ const c=(y1+y2)/2+(o.dy||0);if(o.side){const r=o.side==='r';const lx=(r?x+6:x-6)+(o.dx||0);if(o.dx)mk('line',{x1:x+(r?2:-2),y1:(y1+y2)/2,x2:lx+(r?-2:2),y2:c,class:'lead'});tx(lx,c+4,l,o.c||'dt',{'text-anchor':r?'start':'end'})}else tx(x-5,c,l,o.c||'dt',{'text-anchor':'middle',transform:'rotate(-90 '+(x-5)+' '+c+')'})}
+function callout(px,py,ex,ey,l,dir,c){const s=dir||(ex>=px?1:-1);mk('circle',{cx:px,cy:py,r:1.8,class:'dot'});mk('polyline',{points:px+','+py+' '+ex+','+ey+' '+(ex+s*10)+','+ey,class:'lead'});tx(ex+s*14,ey+4,l,c||'dt',{'text-anchor':s>0?'start':'end'})}
+function rad(cx,cy,r,c,l,L){const sx=c.includes('l')?-1:1,sy=c.includes('t')?-1:1;const ox=cx-sx*r,oy=cy-sy*r;const px=ox+sx*r*Math.SQRT1_2,py=oy+sy*r*Math.SQRT1_2;callout(px,py,px+sx*L,py+sy*L,l,sx)}
+function nb(x,y,n){mk('rect',{x:x-6,y:y-6,width:12,height:12,class:'nb'});tx(x,y+3.5,String(n),'nbt',{'text-anchor':'middle'})}
+function rr(x,y,w,h,r,c){return mk('rect',{x:x,y:y,width:w,height:h,rx:r,class:c})}
+function slotLabel(x,y,w,h,l,al){tx(al==='l'?x+6:x+w/2,y+h/2+3.2,l,'sl',{'text-anchor':al==='l'?'start':'middle'})}
+function title(x,y,t,s){tx(x,y,t,'vt',{'text-anchor':'middle'});if(s)tx(x,y+14,s,'dts',{'text-anchor':'middle'})}
+function notes(list){const NX=50,NY=58;tx(NX,NY,'NOTES:','nth');tx(NX+62,NY,'(UNLESS OTHERWISE SPECIFIED)','nt');
+ list.forEach(([n,t],i)=>{const y=NY+30+i*22;if(n){nb(NX+6,y-4,n);tx(NX+22,y,t,'nt')}else tx(NX+22,y,t,'nt')})}
+function table(x,y,ttl,rows,ws){ws=ws||[42,100,88];const rh=17;tx(x,y-8,ttl,'vt');
+ const all=[ws.length===3&&!ws.hdr?['Code','Variable','Value']:ws.hdr].concat(rows);all.forEach((r,i)=>{let cx2=x;r.forEach((c,j)=>{mk('rect',{x:cx2,y:y+i*rh,width:ws[j],height:rh,class:'thin'});tx(cx2+(j?ws[j]/2:5),y+i*rh+12,c,i?'tc':'th',{'text-anchor':j?'middle':'start'});cx2+=ws[j]})});return y+all.length*rh+34}
+function detailRef(cx,cy,r,lbl,lx,ly){mk('circle',{cx:cx,cy:cy,r:r,class:'ph'});const a=Math.atan2(ly-cy,lx-cx);mk('line',{x1:cx+r*Math.cos(a),y1:cy+r*Math.sin(a),x2:lx,y2:ly,class:'lead'});tx(lx+(lx<cx?-4:4),ly+4,lbl,'dts',{'text-anchor':lx<cx?'end':'start'})}
+function xbox(x,y,w,h,cls){rr(x,y,w,h,0,cls||'thin');mk('path',{d:'M'+x+','+y+' L'+(x+w)+','+(y+h)+' M'+(x+w)+','+y+' L'+x+','+(y+h),class:'thin'})}
+/* ---------- shared helpers for this drawing ---------- */
+function hat(x,y,w,h){mk('rect',{x:x,y:y,width:w,height:h,fill:HAT,class:'hs'})}
+function line(x1,y1,x2,y2,c){return mk('line',{x1:x1,y1:y1,x2:x2,y2:y2,class:c||'thin'})}
+function arrowLine(x1,y1,x2,y2){mk('line',{x1:x1,y1:y1,x2:x2,y2:y2,class:'dl','marker-end':A})}
+function plate(x,y,w,lbl,sub,cls){const d=26,h=30;mk('path',{d:'M'+(x+d)+','+y+' H'+(x+d+w)+' L'+(x+w)+','+(y+h)+' H'+x+' Z',class:cls||'obj'});
+ mk('polyline',{points:(x+d+w-4)+','+(y+h/2)+' '+(x+d+w+16)+','+(y+h/2),class:'lead'});tx(x+d+w+20,y+h/2-1,lbl,'dts');if(sub)tx(x+d+w+20,y+h/2+11,sub,'sl')}
+function links(xs,ws,y,h,k,ox,clipR,active){xs.forEach((x,i)=>{let X=ox+x*k,W=ws[i]*k;if(clipR!=null&&X>=clipR)return;let cut=false;if(clipR!=null&&X+W>clipR){W=clipR-X;cut=true}
+ if(ws[i]<=1){line(X,y+h/2-8*k,X,y+h/2+8*k,'thin');return}
+ rr(X,y,W,h,0,'slot');if(i===active){mk('line',{x1:X,y1:y+h-1,x2:X+W,y2:y+h-1,class:'cut'})}})}
+
+/* =====================================================================
+   SHEET 1 · STRUCTURE
+   ===================================================================== */
+begin('sh1');
+notes([[1,'UTILITY BAR · STICKY TOP 0 · Z 50'],[2,'MASTHEAD · BANNER OR LOGO ROW · SCROLLS'],[3,'SECTION ROW · CENTERED MD+ · SCROLLS < MD'],[4,'HEADER CONTROLS · 44 BASE · 28 SM+'],[5,'ACTIVE LINK · 2 UNDERLINE · SEMIBOLD'],[6,'OVERFLOW FADES · BELOW MD ONLY'],[0,'HORIZONTAL INSETS = S1 (PAGE CONTAINER)'],[0,'CONTENT MAX 1360 · CENTERED ABOVE 1360'],[0,'SCROLL, MENU AND FOCUS LOGIC: SEE SHEET 2']]);
+
+/* ---- plan 1 · xl 1280 · 0.7:1 ---- */
+(function(){const k=.64,X=490,Y=126,W=1280*k,H=182*k,ub=32*k,mh=143*k;
+ rr(X,Y,W,mh,0,'well');mk('path',{d:'M'+X+','+(Y+ub)+' L'+(X+W)+','+(Y+mh)+' M'+(X+W)+','+(Y+ub)+' L'+X+','+(Y+mh),class:'ph'});
+ rr(X,Y,W,H,0,'obj');rr(X,Y,W,mh,0,'thin');line(X,Y+ub,X+W,Y+ub,'thin');
+ tx(X+W-8,Y+mh-8,'BANNER ART · FILL · W ÷ 11.54','sl',{'text-anchor':'end'});
+ // utility bar
+ rr(X+48*k,Y+3.7*k,192*k,24.5*k,0,'slot');slotLabel(X+48*k,Y+3.7*k,192*k,24.5*k,'WEATHER · W1');
+ rr(X+297*k,Y+2*k,685.9*k,28*k,14*k,'thin');
+ const dx=[297,330.1,398,450.8,568.4,725.3,811.3,894.5],dw=[31,64,48.7,113.6,139.9,82,79.3,86.4];
+ dx.forEach((x,i)=>{rr(X+x*k,Y+4*k,dw[i]*k,24*k,12*k,i?'slot':'hug')});line(X+716.8*k,Y+8*k,X+716.8*k,Y+24*k,'thin');
+ rr(X+1115.6*k,Y+4*k,116.4*k,24*k,3,'hug');
+ // controls
+ [48,80,112,144,1168,1204].forEach(x=>{rr(X+x*k,Y+44*k,28*k,28*k,4*k,'thin');rr(X+(x+7)*k,Y+51*k,14*k,14*k,0,'slot')});
+ rr(X+W/2-250*k,Y+87.5*k-24*k,500*k,48*k,0,'slot');slotLabel(X+W/2-250*k,Y+87.5*k-24*k,500*k,48*k,'LOCKUP SLOT · CENTERED');
+ // section row
+ const sx=[270.5,331.9,414.6,490,548.8,684.7,758.2,783.2,855.5,959.3],sw=[37.3,58.7,51.5,34.8,111.9,49.6,1,48.3,79.8,50.1];
+ links(sx,sw,Y+151*k,22*k,k,X,null,0);
+ mk('line',{x1:X+W/2,y1:Y-14,x2:X+W/2,y2:Y+H+14,class:'cl'});
+ // dims top
+ dimH(X,X+W,Y-52,Y,Y,'W · VIEWPORT 1280 · FILL');
+ dimH(X,X+48*k,Y-26,Y,Y,'S1 48',{dx:-6});dimH(X+W-48*k,X+W,Y-26,Y,Y,'S1 48',{dx:6});
+ dimH(X+297*k,X+982.9*k,Y-26,Y+2*k,Y+2*k,'PILL · HUG · CENTERED (1FR | AUTO | 1FR)');
+ // left chain
+ dimV(Y,Y+ub,X-16,X,X,'H1 32',{side:'l'});dimV(Y+ub,Y+mh,X-16,X,X,'H3 BANNER',{side:'l'});dimV(Y+mh,Y+H,X-16,X,X,'H4 39',{side:'l'});
+ dimV(Y,Y+H,X-80,X,X,'(REF 182)');
+ // right chain
+ dimV(Y+ub,Y+44*k,X+W+16,X+W,X+W,'S6 12',{side:'r'});dimV(Y+44*k,Y+72*k,X+W+16,X+W,X+W,'Z1 28',{side:'r',dy:6});
+ dimV(Y+mh,Y+151*k,X+W+16,X+W,X+W,'S8 8',{side:'r',dy:-2});dimV(Y+151*k,Y+173*k,X+W+16,X+W,X+W,'H5 22',{side:'r',dy:8});
+ // bottom
+ dimH(X+307.8*k,X+331.9*k,Y+H+18,Y+173*k,Y+173*k,'S9 24',{below:true});
+ dimH(X+270.5*k,X+1009.4*k,Y+H+44,Y+173*k,Y+173*k,'SECTION LINKS · HUG · CENTERED',{below:true});
+ nb(X+1250*k,Y-8,1);nb(X+W-30,Y+mh-30,2);nb(X+1030*k,Y+H+12,3);nb(X+190*k,Y+58*k,4);nb(X+258*k,Y+H+12,5);
+ title(X+W/2,Y+H+96,'PLAN · XL 1280 · HEARST+ HOME, TOP OF PAGE','SCALE 0.64:1 · BANNER MASTHEAD · UTILITY BAR TRANSPARENT OVER BANNER');
+})();
+
+/* ---- plan 2 · base 390 · 1:1 ---- */
+(function(){const X=560,Y=450,W=390,H=152;
+ rr(X,Y,W,111,0,'well');mk('path',{d:'M'+X+','+(Y+32)+' L'+(X+W)+','+(Y+111)+' M'+(X+W)+','+(Y+32)+' L'+X+','+(Y+111),class:'ph'});
+ rr(X,Y,W,H,0,'obj');rr(X,Y,W,111,0,'thin');line(X,Y+32,X+W,Y+32,'thin');
+ rr(X+16,Y+3.7,72,24.5,0,'slot');slotLabel(X+16,Y+3.7,72,24.5,'W1');
+ rr(X+96,Y,177,32,16,'thin');rr(X+96,Y+2,29.8,28,14,'hug');
+ [[127.8,60],[191.8,46],[241.8,31.2]].forEach(([x,w])=>rr(X+x,Y+2,w,28,14,'slot'));
+ rr(X+281,Y+2,93,28,4,'hug');slotLabel(X+281,Y+2,93,28,'ACCOUNT');
+ [16,278,330].forEach(x=>{rr(X+x,Y+44,44,44,4,'thin');rr(X+x+15,Y+59,14,14,0,'slot')});
+ rr(X+116,Y+59.5,156,24,0,'slot');slotLabel(X+116,Y+59.5,156,24,'LOCKUP');
+ links([16,77.3,160,235.5,294.3],[37.3,58.7,51.5,34.8,111.9],Y+115,32,1,X,X+374,0);
+ rr(X+374,Y+115,32,32,0,'ph');
+ rr(X+16,Y+119,24,24,0,'slot');hat(X+350,Y+119,24,24);rr(X+350,Y+119,24,24,0,'thin');
+ // dims top chain
+ dimH(X,X+W,Y-50,Y,Y,'W 390');
+ dimH(X,X+16,Y-22,Y,Y+3.7,'S1 16',{dx:-14});dimH(X+16,X+88,Y-22,Y+3.7,Y+3.7,'W1 72');dimH(X+88,X+96,Y-22,Y+3.7,Y,'S2 8',{dx:10,dy:-12});
+ dimH(X+96,X+273,Y-22,Y,Y,'FLEX · SCROLLS');dimH(X+281,X+374,Y-22,Y+2,Y+2,'W2 HUG');
+ dimV(Y,Y+32,X-16,X,X,'H1 32',{side:'l'});dimV(Y+32,Y+111,X-16,X,X,'H3 = W ÷ 5',{side:'l'});dimV(Y+111,Y+H,X-16,X,X,'H4 41',{side:'l'});
+ dimV(Y+32,Y+44,X+W+16,X+W,X+W,'S6 12',{side:'r'});dimV(Y+44,Y+88,X+W+16,X+W,X+W,'Z1 44',{side:'r'});
+ dimV(Y+115,Y+147,X+W+44,X+406,X+406,'H5 32',{side:'r'});
+ dimH(X+350,X+374,Y+H+18,Y+143,Y+143,'W3 24',{below:true,dx:10});dimH(X+53.3,X+77.3,Y+H+18,Y+147,Y+147,'S9 24',{below:true});
+ callout(X+28,Y+131,X-30,Y+H+40,'HIDDEN AT SCROLL 0',-1);
+ nb(X+W-8,Y-8,1);nb(X+60,Y+100,2);nb(X+38,Y+52,4);nb(X+W+12,Y+132,6);
+ title(X+W/2,Y+H+70,'PLAN · BASE 390 · HEARST+ HOME','SCALE 1:1 · PHONE · CONTROLS 44 · MENU BUTTON LEFT');
+})();
+
+/* ---- breakpoint ruler ---- */
+(function(){const X=1010,RW=360,Y=470,V=v=>X+(v-320)/(1440-320)*RW;
+ line(X,Y,X+RW,Y,'obj');tx(X,Y+16,'320','dts');tx(X+RW,Y+16,'1440','dts',{'text-anchor':'end'});
+ [[640,'SM 640',0],[768,'MD 768',1],[1024,'LG 1024',0],[1280,'XL 1280',1],[1360,'1360',0]].forEach(([v,l,s])=>{line(V(v),Y-8,V(v),Y+6,'obj');tx(V(v),Y-14-s*14,l,'dts',{'text-anchor':'middle'})});
+ const rows=[['BASE','UB 32 · CONTROLS 44 · MENU BUTTON · S1 16'],['SM 640','CONTROLS 28 · LAYOUT TOGGLE · NO DRAWER'],['','BANNER W ÷ 11.54 · LOGO ROW 96'],['MD 768','ROW STATIC + CENTERED · COMPACT NAV ON'],['','FADES OFF · S1 24 · H4 39'],['LG 1024','WEATHER CELL W1 72 → 192'],['XL 1280','UB GRID 1FR | AUTO | 1FR · S1 48'],['≥ 1360','CONTENT MAX 1360 · CENTERED']];
+ rows.forEach(([a,b],i)=>{tx(X,Y+44+i*19,a,'dts');tx(X+64,Y+44+i*19,b,'sl')});
+ title(X+RW/2,Y+214,'BREAKPOINTS · WHAT CHANGES WHERE','VIEWPORT PX · TAILWIND SM · MD · LG · XL');
+})();
+
+/* ---- exploded layers ---- */
+(function(){const X=56;const L=[['DRAWER · SEARCH','FIXED · Z50 · PORTAL, LATER IN DOM'],['MEGA MENU','ABSOLUTE · Z60 INSIDE THE BAR'],['UTILITY BAR','STICKY TOP 0 · Z50'],['COMPACT NAV','FIXED TOP 32 · Z40 · MD+'],['SECTION ROW','STICKY TOP 32 · Z30 · < MD'],['MASTHEAD','STATIC · SCROLLS AWAY'],['PAGE CONTENT','RIVER, RAILS']];
+ L.forEach(([a,b],i)=>plate(X,330+i*52,150,a,b,i===6?'well':i===0?'hug':'obj'));
+ title(X+170,330+7*52+20,'EXPLODED · LAYER ORDER','TOP TO BOTTOM · Z-INDEX · POSITION');
+})();
+
+/* ---- detail A · destination pill 2:1 ---- */
+(function(){const k=2,X=470,Y=800;
+ rr(X,Y,300,56,28,'thin');rr(X,Y+4,62,48,24,'hug');slotLabel(X,Y+4,62,48,'ACTIVE');
+ rr(X+66,Y+4,128,48,24,'slot');rr(X+66+16,Y+14,96,28,0,'ph');rr(X+202,Y+4,96,48,24,'slot');
+ dimV(Y,Y+56,X-14,X,X,'H2 28',{side:'l'});dimV(Y+4,Y+52,X+316,X+298,X+298,'L1 24',{side:'r'});
+ dimH(X+66,X+194,Y-18,Y+4,Y+4,'HUG');dimH(X+194,X+202,Y-18,Y+4,Y+4,'S4 4',{dx:16,dy:-12});
+ dimH(X+66,X+82,Y+76,Y+52,Y+52,'S3 8',{below:true});
+ callout(X+8,Y+8,X-10,Y-30,'R1 FULL',-1);
+ title(X+150,Y+128,'DETAIL A · DESTINATION PILL','SCALE 2:1 · SM+ · BASE: L1 28, H2 32');
+})();
+
+/* ---- detail B · section link 2:1 ---- */
+(function(){const X=880,Y=790;
+ line(X-10,Y,X+250,Y,'ph');rr(X,Y+16,74.6,44,0,'slot');mk('rect',{x:X,y:Y+56,width:74.6,height:4,class:'hug'});rr(X+122.6,Y+16,117.4,44,0,'slot');
+ dimV(Y+16,Y+60,X-14,X,X,'H5 22',{side:'l'});dimV(Y,Y+16,X-14,X,X,'S8 8',{side:'l',dy:-4});
+ dimV(Y+56,Y+60,X+268,X+240,X+240,'B1 2',{side:'r'});
+ dimH(X+74.6,X+122.6,Y+86,Y+60,Y+60,'S9 24',{below:true});dimH(X,X+4,Y-4,Y+16,Y+16,'S10 2',{dx:-20,dy:-8});
+ title(X+120,Y+138,'DETAIL B · SECTION LINK','SCALE 2:1 · MD+ · BASE: H5 32 · S8 4');
+})();
+
+/* ---- detail C · header control 3:1 ---- */
+(function(){const X=1240,Y=790;
+ rr(X,Y,84,84,12,'obj');rr(X+21,Y+21,42,42,0,'slot');slotLabel(X+21,Y+21,42,42,'I1');
+ dimH(X,X+84,Y-18,Y,Y,'Z1 28');dimV(Y,Y+84,X-16,X,X,'Z1',{side:'l'});
+ dimH(X,X+21,Y+104,Y+84,Y+63,'(Z1 − I1) ÷ 2 = 7',{below:true,dx:24});
+ rad(X+84,Y,12,'tr','R2 4',22);
+ title(X+42,Y+148,'DETAIL C · HEADER CONTROL','SCALE 3:1 · SM+ · BASE: Z1 44, INSET 15');
+})();
+
+/* ---- tables ---- */
+(function(){const X=1404,ws=[40,112,112];let y=70;
+ y=table(X,y,'SPACING',[['S1','page gutter','16 · 24 · 48'],['S2','bar grid gap','8 · 12 SM'],['S3','pill link pad','4 / 8'],['S4','pill link gap','4'],['S5','pill divider','MX 4 · 1 × 16'],['S6','control inset','12'],['S7','control gap','8 · TOGGLES 4'],['S8','row pad y','4 · 8 MD'],['S9','link gap','24'],['S10','link pad x','2']],ws);
+ y=table(X,y,'SIZE',[['H1','utility bar','32'],['H2','dest pill','32 · 28 SM'],['L1','pill link','28 · 24 SM'],['H3','banner','W÷5 · W÷11.54'],['H3B','logo row','80 · 96 SM'],['H4','section row','41 · 39 MD'],['H5','section link','32 · 22 MD'],['B1','active underline','2'],['Z1','header control','44 · 28 SM'],['I1','icon','14'],['W1','weather cell','72 · 192 LG'],['W2','account','HUG 93 · 116'],['W3','overflow fade','24'],['W4','side slot','40 · 180 SM']],ws);
+ y=table(X,y,'RADIUS',[['R1','pill · links','FULL'],['R2','header control','4']],ws);
+ y=table(X,y,'POSITION · LAYER',[['P1','utility bar','STICKY 0 · Z50'],['P2','section row','STICKY 32 · Z30'],['P3','compact nav','FIXED 32 · Z40'],['P4','mega menu','ABS · Z60'],['P5','drawer · search','FIXED · Z50'],['P6','masthead','STATIC']],ws);
+ table(X,y,'HEADER STACK (REF)',[['HX1','home · 390','32+79+41 = 152'],['HX2','home · 1280','143+39 = 182'],['HX3','brand · base','32+80+41 = 153'],['HX4','brand · md+','32+96+39 = 167']],ws);
+})();
+
+/* =====================================================================
+   SHEET 2 · LOGIC
+   ===================================================================== */
+begin('sh2');
+notes([[1,'COMPACT NAV · MD+ · ON AT 96, OFF AT 64'],[2,'SECTION ROW · STICKY UNDER THE BAR < MD'],[3,'MEGA MENU · OPENS ON HOVER OR FOCUS'],[4,'PHONE DRAWER · MODAL · BELOW SM ONLY'],[5,'SEARCH · MODAL · EVERY WIDTH'],[6,'ACTIVE LINK KEPT IN VIEW · INSET 16'],[0,'DRAWER + SEARCH PORTAL TO BODY · TAB TRAPPED'],[0,'ESCAPE CLOSES · FOCUS RETURNS TO OPENER'],[0,'REDUCED MOTION · TRANSITIONS OFF']]);
+
+/* ---- hysteresis + elevations ---- */
+(function(){const X=520,Y=330,K=2.75,V=v=>X+v*K;
+ // mini elevations
+ const e=(x,y,on)=>{const k=.26,W=768*k;rr(x,y,W,140*k,0,'thin');rr(x,y,W,32*k,0,'hug');
+  if(!on){rr(x,y+32*k,W,67*k,0,'well');rr(x,y+99*k,W,39*k,0,'obj');}else{rr(x,y+32*k,W,39*k,0,'obj');mk('rect',{x:x,y:y+32*k,width:W,height:39*k,class:'cut',fill:'none'});}
+  return W};
+ const w=e(X,96,false);tx(X,96+52,'SCROLL Y < 64 · FULL MASTHEAD','sl');
+ e(X+270,96,true);tx(X+270,96+52,'SCROLL Y ≥ 96 · COMPACT AT TOP 32','sl');
+ // axes
+ arrowLine(X,Y,X+470,Y);arrowLine(X,Y,X,Y-140);tx(X+470,Y+18,'SCROLL Y · PX','dts',{'text-anchor':'end'});
+ tx(X-8,Y-104,'ON','dts',{'text-anchor':'end'});tx(X-8,Y-14,'OFF','dts',{'text-anchor':'end'});
+ hat(V(64),Y-110,V(96)-V(64),110);
+ mk('polyline',{points:X+','+(Y-10)+' '+V(96)+','+(Y-10),class:'obj',fill:'none'});
+ mk('polyline',{points:V(64)+','+(Y-100)+' '+(X+440)+','+(Y-100),class:'obj',fill:'none'});
+ mk('line',{x1:V(96),y1:Y-10,x2:V(96),y2:Y-100,class:'dl','marker-end':A,'stroke-width':1.4});
+ mk('line',{x1:V(64),y1:Y-100,x2:V(64),y2:Y-10,class:'dl','marker-end':A,'stroke-width':1.4});
+ [[64,'Y2 64'],[96,'Y1 96']].forEach(([v,l])=>{line(V(v),Y-4,V(v),Y+4,'obj');tx(V(v),Y+18,l,'dt',{'text-anchor':'middle'})});
+ tx((V(64)+V(96))/2,Y-118,'KEEPS STATE','sl',{'text-anchor':'middle'});
+ callout(V(130),Y-100,V(150),Y-66,'ORIGINAL ROW INVISIBLE · COMPACT −8 → 0 · OPACITY 0 → 1 · 250 MS',1);
+ nb(X+460,Y-130,1);
+ title(X+235,Y+50,'SCROLL STATE · MD+ · COMPACT NAV','HYSTERESIS · CHECKED ONCE PER ANIMATION FRAME');
+})();
+
+/* ---- base sticky elevations ---- */
+(function(){const k=.32,X=1030,Y=110,W=390*k;
+ const el=(x,scrolled)=>{rr(x,Y,W,300*k,0,'thin');
+  if(!scrolled){rr(x,Y,W,111*k,0,'well');rr(x,Y,W,32*k,0,'thin');rr(x,Y+111*k,W,41*k,0,'obj');rr(x,Y+152*k,W,148*k,0,'slot');}
+  else{rr(x,Y+73*k,W,227*k,0,'slot');rr(x,Y,W,32*k,0,'hug');rr(x,Y+32*k,W,41*k,0,'obj');mk('rect',{x:x,y:Y+32*k,width:W,height:41*k,class:'cut',fill:'none'})}};
+ el(X,false);el(X+W+40,true);
+ tx(X,Y+300*k+16,'AT 0 · BAR CLEAR ON HOME','sl');tx(X+W+40,Y+300*k+16,'SCROLLED · ROW STUCK','sl');
+ dimV(Y,Y+32*k,X+2*W+56,X+2*W+40,X+2*W+40,'P1 TOP 0',{side:'r'});dimV(Y+32*k,Y+73*k,X+2*W+56,X+2*W+40,X+2*W+40,'P2 TOP 32',{side:'r'});
+ nb(X+W+40+W-10,Y+52*k,2);
+ callout(X+20,Y+6,X+30,Y-14,'Y3 · BAR FILLS AT SCROLL Y > 0',1);
+ title(X+W+20,Y+270,'SCROLL STATE · BASE < MD','SECTION ROW STICKS UNDER THE UTILITY BAR');
+})();
+
+/* ---- mega menu placement ---- */
+(function(){const k=.6,X=520,Y=470,BW=1280*k;
+ rr(X,Y,BW,32*k,0,'hug');tx(X+6,Y+14,'UTILITY BAR · BW','sl');
+ rr(X+330.1*k,Y+4*k,64*k,24*k,10,'obj');
+ // phantom: All menu clamped right
+ rr(X+116*k,Y+40*k,1152*k,150,11.2*k,'ph');tx(X+(116+1152)*k-8,Y+40*k+142,'ALL · WA 1152 · CLAMPED TO BW − W − 12','sl',{'text-anchor':'end'});
+ rr(X+330.1*k,Y+40*k,384*k,104,11.2*k,'obj');slotLabel(X+330.1*k,Y+40*k,384*k,104,'LIFESTYLE · WD 384 · AT TRIGGER');
+ dimH(X+330.1*k,X+714.1*k,Y+40*k+124,Y+40*k+104,Y+40*k+104,'W = MIN(WMAX, BW − 24)',{below:true});
+ dimV(Y+32*k,Y+40*k,X+330.1*k-12,X+330.1*k,X+330.1*k,'M2 8',{side:'l'});
+ dimH(X+(116+1152)*k,X+BW,Y-14,Y+40*k,Y,'M1 12',{dx:20});
+ dimH(X,X+BW,Y-40,Y,Y,'BW · BAR WIDTH (1280 SHOWN)');
+ tx(X,Y+232,'L = CLAMP(TRIGGER.LEFT, 12, BW − W − 12) · TOP = 100% + 8','dt');
+ tx(X,Y+252,'OPEN: POINTER ENTERS OR FOCUS LANDS ON A DESTINATION · CLICK / ENTER FOLLOWS ITS LINK','dts');
+ tx(X,Y+268,'CLOSE: POINTER LEAVES MENU OR BAR · PRESS OUTSIDE · ESCAPE · FOCUS LEAVES THE BAR','dts');
+ nb(X+330.1*k+32,Y-10,3);
+ title(X+BW/2,Y+306,'MEGA MENU · PLACEMENT','SCALE 0.6:1 · XL · HEIGHT SCHEMATIC · MAX-H MIN(100DVH − 56, 720)');
+})();
+
+/* ---- phone drawer 0.5:1 ---- */
+(function(){const k=.5,X=96,Y=346,VW=390*k,VH=900*k,PW=354.9*k;
+ rr(X,Y,VW,VH,0,'thin');hat(X+PW,Y,VW-PW,VH);
+ rr(X,Y,PW,VH,0,'obj');line(X,Y+80*k,X+PW,Y+80*k,'thin');line(X,Y+831*k,X+PW,Y+831*k,'thin');
+ rr(X+20*k,Y+26*k,140*k,28*k,0,'slot');rr(X+289.9*k,Y+17.5*k,44*k,44*k,4,'thin');
+ rr(X+20*k,Y+104*k,120*k,16*k,0,'slot');
+ for(let r=0;r<4;r++)for(let c=0;c<2;c++){if(r===3&&c===1)continue;rr(X+(20+c*160.9)*k,Y+(132+r*52)*k,152.9*k,44*k,8*k,'slot')}
+ ['BRANDS','CONTINUE READING','JOIN GROUPS'].forEach((l,i)=>{rr(X+20*k,Y+(370+i*150)*k,313.9*k,120*k,0,'slot');slotLabel(X+20*k,Y+(370+i*150)*k,313.9*k,120*k,l)});
+ rr(X+20*k,Y+843*k,313.9*k,44*k,8*k,'slot');slotLabel(X+20*k,Y+843*k,313.9*k,44*k,'THEME ACTION');
+ dimH(X,X+PW,Y-18,Y,Y,'O1 = MIN(91VW, 400)');
+ dimV(Y,Y+80*k,X-14,X,X,'O2 80',{side:'l'});dimV(Y+831*k,Y+VH,X-14,X,X,'69',{side:'l'});
+ dimV(Y+132*k,Y+176*k,X+VW+14,X+PW,X+PW,'O3 44',{side:'r'});dimV(Y+17.5*k,Y+61.5*k,X+VW+14,X+PW,X+PW,'44',{side:'r'});
+ dimH(X,X+20*k,Y+VH+16,Y+VH,Y+VH,'20',{below:true,dx:-10});
+ callout(X+PW+8,Y+VH-60,X+VW+20,Y+VH-30,'O4 SCRIM',1);
+ nb(X+PW-14,Y+VH/2,4);
+ title(X+VW/2+10,Y+VH+56,'PHONE DRAWER · < 640','SCALE 0.5:1 · 390 × 900 · FOCUS STARTS ON CLOSE');
+})();
+
+/* ---- search dialog ---- */
+(function(){const k=.28,X=520,Y=830,VW=1440*k,VH=560*k;
+ rr(X,Y,VW,VH,0,'thin');hat(X,Y,VW,VH);
+ const px=X+384*k,pw=672*k,py=Y+96*k;
+ rr(px,py,pw,VH-96*k-6,8*k,'obj');mk('line',{x1:px,y1:py+1,x2:px+pw,y2:py+1,class:'cut','stroke-width':3});
+ line(px,py+77*k,px+pw,py+77*k,'thin');rr(px+70*k,py+105*k,560*k,24*k,0,'slot');
+ for(let i=0;i<3;i++)rr(px+16*k,py+(150+i*72)*k,640*k,60*k,0,'slot');
+ dimH(px,px+pw,Y-14,py,py,'O5 MAX-W 672');dimV(Y,py,X-14,X,X,'O6 96',{side:'l'});
+ nb(px+pw-12,py+14,5);
+ title(X+VW/2,Y+VH+24,'SEARCH · XL','SCALE 0.28:1 · BASE: INSET 12 · TOP 64 · TOP RULE 4');
+})();
+
+/* ---- section row alignment 1:1 ---- */
+(function(){const X=990,Y=880,CW=358;
+ rr(X,Y,CW,32,0,'obj');
+ const off=[278.3,414.1,487.7,512.7,585],ws=[111.9,49.6,1,48.3,79.8],sl=262.3;
+ off.forEach((o,i)=>{const x=X+o-sl,w=ws[i];if(w<=1){line(x,Y+8,x,Y+24,'thin');return}const vis=Math.min(w,X+CW-x);rr(x,Y+4,vis,24,0,'slot');if(vis<w)rr(X+CW,Y+4,w-vis,24,0,'ph');if(i===1)mk('line',{x1:x,y1:Y+27,x2:x+w,y2:Y+27,class:'cut'})});
+ rr(X-42.8+0,Y+4,34.8,24,0,'ph');
+ hat(X,Y+4,24,24);hat(X+CW-24,Y+4,24,24);
+ dimH(X,X+16,Y-14,Y,Y+4,'A1 16',{dx:-16});dimH(X,X+CW,Y-40,Y,Y,'CW · SCROLLER WIDTH');
+ tx(X+16+56,Y+46,'PREVIOUS','sl',{'text-anchor':'middle'});tx(X+151.8+25,Y+46,'ACTIVE','sl',{'text-anchor':'middle'});
+ ['SCROLL = MAX(0, PREVIOUS.LEFT − 16)','IF ACTIVE.END > SCROLL + CW − 16 → SCROLL = ACTIVE.END − CW + 16','FADES: LEFT IF SCROLL > 1 · RIGHT IF SCROLL < MAX − 1','WHEEL: |DX| > 1.15 · |DY| IS BLOCKED · ROW HOLDS POSITION'].forEach((l,i)=>tx(X,Y+70+i*15,l,'sl'));
+ nb(X+CW-12,Y+46,6);
+ title(X+CW/2-20,Y+142,'DETAIL D · SECTION ROW SCROLL','SCALE 1:1 · BASE · RUNS ON ACTIVE CHANGE AND RESIZE');
+})();
+
+/* ---- tables ---- */
+(function(){const X=1404,ws=[40,112,112];let y=70;
+ y=table(X,y,'THRESHOLDS · MOTION',[['Y1','compact on','SCROLL Y ≥ 96'],['Y2','compact off','SCROLL Y ≤ 64'],['Y3','bar fills (home)','SCROLL Y > 0'],['T1','compact in','250 MS'],['T2','easing','(.22, 1, .36, 1)'],['D1','compact shift','−8 → 0'],['A1','align inset','16'],['K1','wheel ratio','1.15']],ws);
+ y=table(X,y,'MEGA MENU',[['M1','edge inset','12'],['M2','drop offset','8'],['M3','padding','16 · 20 SM'],['M4','radius','11.2 (XL)'],['WA','all · intl','1152'],['WL','local news','1024'],['WE','a&e family','672'],['WD','one destination','384'],['MH','max height','≤ 680 · 720 SM']],ws);
+ y=table(X,y,'OVERLAYS',[['O1','drawer width','MIN(91VW, 400)'],['O2','drawer header','80'],['O3','tile · radius','44 · 8'],['O4','drawer scrim','BLACK 45%'],['O5','search max-w','672'],['O6','search top','64 · 96 SM'],['O7','search inset','12'],['O8','search scrim','70% + BLUR'],['O9','top rule','4']],ws);
+ const fw=[64,100,100];fw.hdr=['Surface','Open → focus','Close → focus'];
+ table(X,y,'FOCUS · KEYBOARD',[['MEGA','HOVER · FOCUS','ESC · LEAVE'],['DRAWER','CLOSE BUTTON','MENU BUTTON'],['SEARCH','INPUT','SEARCH BUTTON'],['TAB','TRAPPED','IN BOTH']],fw);
+})();
+document.body.dataset.ready='1';})();
+</script></body></html>

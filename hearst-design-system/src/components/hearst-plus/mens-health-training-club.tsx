@@ -157,7 +157,7 @@ export function MensHealthTrainingClub() {
       <Card className="gap-4 rounded-card border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] ring-0 sm:p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="min-w-0">
-            <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">Men’s Health · Hearst+ community</p>
+            <p className="type-k1 text-primary">Men’s Health · Hearst+ community</p>
             <h2 id="mh-training-club-title" className="headline mt-1 text-2xl leading-tight sm:text-3xl">Train together. Build your week.</h2>
             <p className="hearst-community-copy mt-2 max-w-2xl text-sm leading-6 text-[var(--hp-text-secondary)]">
               Log the movement that works for you, share a check-in if you choose, and follow a weekly challenge from Men’s Health.
@@ -173,7 +173,7 @@ export function MensHealthTrainingClub() {
             <div className="flex items-start gap-3">
               <TrendingUp className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden />
               <div className="min-w-0 flex-1">
-                <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-text-secondary)]">This week’s challenge</p>
+                <p className="type-k1 text-[var(--hp-text-secondary)]">This week’s challenge</p>
                 <h3 className="headline mt-1 text-lg leading-snug">Move on three days</h3>
                 <p className="hearst-community-copy mt-1 text-sm leading-5 text-[var(--hp-text-secondary)]">
                   Any activity counts. Your check-ins stay on this device unless you add them to the group preview.
@@ -193,7 +193,7 @@ export function MensHealthTrainingClub() {
             </div>
           </Card>
           <Card className="gap-3 rounded-[8px] border border-[var(--hp-border)] bg-[var(--hp-background)] p-4 ring-0">
-            <h3 className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-text-secondary)]">Your week</h3>
+            <h3 className="type-k1 text-[var(--hp-text-secondary)]">Your week</h3>
             <dl className="mt-3 grid grid-cols-2 gap-3">
               <div>
                 <dt className="text-xs text-[var(--hp-text-secondary)]">Activities</dt>

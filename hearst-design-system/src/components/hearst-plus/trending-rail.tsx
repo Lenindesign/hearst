@@ -45,7 +45,7 @@ export function TrendingStoryRail({
     >
       <h2
         id={titleId}
-        className="flex items-center gap-1.5 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-text-primary)]"
+        className="flex items-center gap-1.5 type-k1 text-[var(--hp-text-primary)]"
       >
         {titleIcon ?? (
           <TrendingUp
@@ -81,7 +81,7 @@ export function TrendingStoryRail({
                 </span>
               </span>
               <span className="min-w-0">
-                <span className="line-clamp-3 text-[12px] font-bold leading-[1.35] underline-offset-2 group-hover:underline group-focus-visible:underline">
+                <span className="line-clamp-3 type-t6 underline-offset-2 group-hover:underline group-focus-visible:underline">
                   {story.title}
                 </span>
                 {hasMixedBrands ? (
@@ -127,7 +127,7 @@ export function TrendingVideoRail({
     >
       <h2
         id={titleId}
-        className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]"
+        className="type-k1 text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]"
       >
         {title}
       </h2>

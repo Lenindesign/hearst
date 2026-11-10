@@ -530,7 +530,7 @@ function GoodHousekeepingOnboardingModalContent({
                           </span>
                           <span className="min-w-0 sm:mt-4">
                             <span className="block text-base font-bold">{title}</span>
-                            <span className={cn("mt-1 block text-sm leading-5", selected ? "text-white/85" : "text-[#5A6472]")}>
+                            <span className={cn("type-b2 mt-1 block", selected ? "text-white/85" : "text-[#5A6472]")}>
                               {optionDescription}
                             </span>
                           </span>
@@ -895,7 +895,7 @@ function CardDetail({ label, value }: { label: string; value: string }) {
   return (
     <div className="min-w-0 text-left">
       <p className="text-xs font-bold text-white/55">{label}</p>
-      <p className="mt-1 break-words text-base font-black leading-tight text-white">{value}</p>
+      <p className="type-t5 mt-1 break-words font-black text-white">{value}</p>
     </div>
   );
 }

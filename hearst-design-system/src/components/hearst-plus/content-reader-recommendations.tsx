@@ -32,7 +32,7 @@ export function ContentReaderRecommendations({
       aria-label="Recommended For You"
     >
       <div className="mb-5">
-        <p className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+        <p className="type-k1 text-primary">
           Recommended For You
         </p>
       </div>
@@ -48,7 +48,7 @@ export function ContentReaderRecommendations({
             story={featuredStory}
             className="aspect-[4/3] w-full rounded-[8px]"
           />
-          <span className="mt-4 flex items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+          <span className="mt-4 flex items-center gap-2 type-k1 text-primary">
             <BrandSourceIcon
               brand={featuredStory.brand}
               brandSlug={featuredStory.brandSlug}
@@ -77,7 +77,7 @@ export function ContentReaderRecommendations({
                 className="aspect-square w-full rounded-[8px]"
               />
               <span className="min-w-0">
-                <span className="flex items-center gap-2 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest text-primary">
+                <span className="flex items-center gap-2 type-k1 text-primary">
                   <BrandSourceIcon
                     brand={story.brand}
                     brandSlug={story.brandSlug}

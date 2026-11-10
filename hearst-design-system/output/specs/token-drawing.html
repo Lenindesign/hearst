@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Token Architecture</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;600;700&family=Inter:wght@400;600;700&family=Schibsted+Grotesk:wght@800&family=Geist+Mono:wght@400&display=swap">
+<style>
+/* Typography: one Apple-style dimensional drawing sheet, black on white, single light theme by design. */
+:root{--paper:#ececec;--sheet:#ffffff;--ink:#111;--ink2:#444;--ink3:#7a7a7a;--fill:#f3f3f3;--fill2:#e6e6e6;--f:'Arimo','Helvetica Neue',Helvetica,Arial,sans-serif;--hf:'Schibsted Grotesk','Arimo',sans-serif;--bf:'Inter','Arimo',sans-serif;color-scheme:light}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f)}
+.wrap{max-width:1760px;margin:0 auto;padding-block:24px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.scroll{overflow-x:auto;background:var(--sheet);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+svg{display:block;width:100%;min-width:1100px;height:auto}
+.tb{background:var(--sheet);display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr;margin-bottom:24px;border:1.2px solid var(--ink);border-radius:16px;overflow:hidden}
+.tb>div{border-right:.8px solid var(--ink);border-bottom:.8px solid var(--ink);padding:10px 14px;min-width:0}
+.tb>div:nth-child(4),.tb>div:nth-child(7){border-right:0}
+.tb .big{grid-row:span 2;display:flex;flex-direction:column;justify-content:space-between;gap:12px}
+.tb h1{font-weight:400;letter-spacing:.1em;font-size:clamp(28px,4vw,44px);line-height:1;margin:4px 0 0;text-transform:uppercase}
+.lbl{text-transform:uppercase;font-size:9.5px;letter-spacing:.06em;color:var(--ink2)}
+.tb .v{font-size:13px;margin-top:2px;letter-spacing:.05em;text-transform:uppercase;font-variant-numeric:tabular-nums}
+.tb .big .v{font-size:11px;color:var(--ink2);line-height:1.6}
+.tb .notes{grid-column:1/-1;border-right:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:6px 24px;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;line-height:1.9}
+.tb .notes ol{margin:4px 0 0;padding-left:20px}.tb .notes ol li{margin:0}
+.tb .nh{font-weight:700;font-size:13px;letter-spacing:.06em}.tb .nh span{font-weight:400;font-size:11.5px;margin-left:6px}
+.tb .figs{grid-column:1/-1;border-right:0;border-bottom:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px 18px}
+.tb .figs>div{border-left:.8px solid var(--ink);padding-left:14px}.tb .figs>div:first-child{border-left:0;padding-left:0}
+.tb .figs .v{font-size:18px;letter-spacing:.06em;text-transform:none;margin-top:4px}
+@media (max-width:640px){.tb{grid-template-columns:1fr 1fr}.tb .big{grid-column:1/-1;grid-row:auto}}
+.sheetwrap{margin-bottom:28px}
+.foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink2);padding:10px 2px 0}
+.foot b{font-weight:700;color:var(--ink)}
+/* drawing */
+.border{fill:none;stroke:var(--ink);stroke-width:1.2}
+.obj{fill:var(--sheet);stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round}
+.well{fill:var(--fill);stroke:var(--ink);stroke-width:1}
+.lbox{fill:var(--fill);stroke:none}
+.lboxe{fill:none;stroke:var(--ink3);stroke-width:.6}
+.slot{fill:none;stroke:var(--ink2);stroke-width:.8;stroke-dasharray:4 3}
+.hug{fill:var(--fill2);stroke:var(--ink);stroke-width:1}
+.thin{fill:none;stroke:var(--ink);stroke-width:.8}
+.ph{fill:none;stroke:var(--ink3);stroke-width:.8;stroke-dasharray:14 3 3 3}
+.cl{fill:none;stroke:var(--ink3);stroke-width:.7;stroke-dasharray:16 3 2 3}
+.base{stroke:var(--ink);stroke-width:.9}
+.metric{stroke:var(--ink3);stroke-width:.7;stroke-dasharray:3 3}
+.grid4{stroke:#d9d9d9;stroke-width:.5}
+.dl{stroke:var(--ink);stroke-width:.7;fill:none}
+.ext{stroke:var(--ink);stroke-width:.55;fill:none}
+.arrow{fill:var(--ink)}
+.hl{stroke:var(--ink2);stroke-width:.7}
+.hs{stroke:var(--ink);stroke-width:.8}
+.dt{font:400 11px var(--f);fill:var(--ink);paint-order:stroke;stroke:var(--sheet);stroke-width:4px;stroke-linejoin:round}
+.dts{font:400 9.5px var(--f);fill:var(--ink2);letter-spacing:.06em;text-transform:uppercase;paint-order:stroke;stroke:var(--sheet);stroke-width:3px}
+.sl{font:400 9px var(--f);fill:var(--ink2);letter-spacing:.08em;text-transform:uppercase}
+.nt{font:400 11.5px var(--f);fill:var(--ink);letter-spacing:.06em;text-transform:uppercase}
+.nth{font:700 13px var(--f);fill:var(--ink);letter-spacing:.06em}
+.vt{font:400 12px var(--f);fill:var(--ink);letter-spacing:.1em;text-transform:uppercase}
+.nb{fill:var(--sheet);stroke:var(--ink);stroke-width:.9}
+.nbt{font:400 9.5px var(--f);fill:var(--ink)}
+.lead{stroke:var(--ink);stroke-width:.7;fill:none}
+.dot{fill:var(--ink)}
+.odot{fill:var(--sheet);stroke:var(--ink);stroke-width:1}
+.th{font:400 10px var(--f);fill:var(--ink);letter-spacing:.05em;text-transform:uppercase}
+.tc{font:400 10px var(--f);fill:var(--ink)}
+.hf{font-family:var(--hf);font-weight:800;fill:var(--ink)}
+.bf{font-family:var(--bf);fill:var(--ink)}
+.bf2{font-family:var(--bf);fill:var(--ink2)}
+.mono{font:400 11px "Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;fill:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="tb">
+    <div class="big">
+      <div><div class="lbl">UI tokens · dimensional drawing</div><h1>Token architecture</h1></div>
+      <div class="v">How a design decision becomes a rendered pixel: four token tiers in Git, one build, generated brand data, a runtime that scopes CSS custom properties per section and publication, safety guards, and the Tailwind and component layer that reads them. 29 themes (27 publications and 2 base themes) share one component contract.</div>
+    </div>
+    <div><div class="lbl">Dwg no.</div><div class="v">UI-TOKEN-001</div></div>
+    <div><div class="lbl">Rev</div><div class="v">A · 2026-11-09</div></div>
+    <div><div class="lbl">Sheets</div><div class="v">1</div></div>
+    <div><div class="lbl">Units</div><div class="v">Token counts · CSS custom properties</div></div>
+    <div><div class="lbl">Scale</div><div class="v">Schematic · not to scale</div></div>
+    <div><div class="lbl">Source</div><div class="v">tokens/ · build-from-tokens.ts · theme-css-vars.ts · globals.css</div></div>
+    <div class="notes">
+      <div><span class="nh">NOTES:<span>(UNLESS OTHERWISE SPECIFIED)</span></span><ol>
+        <li>Counts read from the token JSON and the runtime on 2026-11-09.</li>
+        <li>tokens/ in Git is the single source of truth. Generated files are never edited by hand.</li>
+        <li>Names read tier · component · property · intent · variant · state.</li>
+        <li>Boxes are stages and scopes, not screens.</li></ol></div>
+      <div><span class="nh">THE CONTRACT:</span><ol start="5">
+        <li>Components read semantic or component tokens, never core values or hex.</li>
+        <li>A brand may change color, type family, weight and radius; metrics, spacing and layout are system-owned.</li>
+        <li>The nearest scope wins: :root → product → section → publication → portal root.</li>
+        <li>Runtime guards keep labels and headlines readable whatever a brand sets.</li></ol></div>
+    </div>
+    <div class="figs">
+      <div><div class="lbl">T1 · core</div><div class="v">624</div></div>
+      <div><div class="lbl">T2 · semantic</div><div class="v">412</div></div>
+      <div><div class="lbl">T3 · component</div><div class="v">398</div></div>
+      <div><div class="lbl">T4 · brand files</div><div class="v">29 × 607</div></div>
+      <div><div class="lbl">V · vars per brand</div><div class="v">282</div></div>
+      <div><div class="lbl">S · section themes</div><div class="v">7</div></div>
+      <div><div class="lbl">G · guards</div><div class="v">4</div></div>
+    </div>
+  </header>
+  <div class="sheetwrap"><div class="scroll"><svg id="sh1" viewBox="0 0 1700 1060" role="img" aria-label="Token architecture drawing sheet: token pipeline from Git to components, the four token tiers, an alias chain from a button token to its value, token name anatomy, CSS scope cascade, runtime guards, brand override boundaries and tables"></svg></div>
+  <div class="foot"><span>2026-11-09 &nbsp;|&nbsp; UI token reference · Foundations</span><span><b>Token architecture, pipeline and scopes</b> &nbsp;|&nbsp; 1</span></div></div>
+</div>
+<script>
+(async function(){
+await document.fonts.ready;
+await Promise.all(['400 11px "Geist Mono"','400 12px Arimo'].map(f=>document.fonts.load(f)));
+const NS='http://www.w3.org/2000/svg';let sv,A,HAT,uid=0,P=null;
+function mk(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)if(a[k]!=null)e.setAttribute(k,a[k]);(p||P||sv).appendChild(e);return e}
+function tx(x,y,s,c,a,p){const t=mk('text',Object.assign({x:x,y:y,class:c||'dt'},a||{}),p);t.textContent=s;return t}
+function rr(x,y,w,h,r,c){return mk('rect',{x:x,y:y,width:w,height:h,rx:r,class:c})}
+function begin(id){sv=document.getElementById(id);sv.innerHTML='';const n=uid++;const d=mk('defs',{});const m=mk('marker',{id:'ar'+n,viewBox:'0 0 10 10',refX:10,refY:5,markerWidth:7,markerHeight:7,orient:'auto-start-reverse',markerUnits:'userSpaceOnUse'},d);mk('path',{d:'M0,1.7 L10,5 L0,8.3 z',class:'arrow'},m);
+ const pt=mk('pattern',{id:'hat'+n,width:5,height:5,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'},d);mk('line',{x1:0,y1:0,x2:0,y2:5,class:'hl'},pt);A='url(#ar'+n+')';HAT='url(#hat'+n+')';rr(20,20,1660,1020,16,'border')}
+function dimH(x1,x2,y,e1,e2,l,o){o=o||{};[[x1,e1],[x2,e2]].forEach(([x,e])=>{if(e==null)return;const s=Math.sign(y-e)||1;mk('line',{x1:x,y1:e+s*3,x2:x,y2:y+s*5,class:'ext'})});
+ if(x2-x1>=28)mk('line',{x1:x1,y1:y,x2:x2,y2:y,class:'dl','marker-start':A,'marker-end':A});else{mk('line',{x1:x1-13,y1:y,x2:x1,y2:y,class:'dl','marker-end':A});mk('line',{x1:x2+13,y1:y,x2:x2,y2:y,class:'dl','marker-end':A});mk('line',{x1:x1,y1:y,x2:x2,y2:y,class:'dl'})}
+ tx((x1+x2)/2+(o.dx||0),(o.below?y+13:y-4)+(o.dy||0),l,o.c||'dt',{'text-anchor':'middle'})}
+function dimV(y1,y2,x,e1,e2,l,o){o=o||{};[[y1,e1],[y2,e2]].forEach(([y,e])=>{if(e==null)return;const s=Math.sign(x-e)||1;mk('line',{x1:e+s*3,y1:y,x2:x+s*5,y2:y,class:'ext'})});
+ if(y2-y1>=22)mk('line',{x1:x,y1:y1,x2:x,y2:y2,class:'dl','marker-start':A,'marker-end':A});else{mk('line',{x1:x,y1:y1-11,x2:x,y2:y1,class:'dl','marker-end':A});mk('line',{x1:x,y1:y2+11,x2:x,y2:y2,class:'dl','marker-end':A});mk('line',{x1:x,y1:y1,x2:x,y2:y2,class:'dl'})}
+ const r=o.side!=='l';const c=(y1+y2)/2;tx(r?x+7+(o.dx||0):x-7-(o.dx||0),c+3.8+(o.dy||0),l,o.c||'dt',{'text-anchor':r?'start':'end'})}
+function callout(px,py,ex,ey,l,dir,c){const s=dir||(ex>=px?1:-1);mk('circle',{cx:px,cy:py,r:1.8,class:'dot'});mk('polyline',{points:px+','+py+' '+ex+','+ey+' '+(ex+s*10)+','+ey,class:'lead'});tx(ex+s*14,ey+4,l,c||'dt',{'text-anchor':s>0?'start':'end'})}
+function nb(x,y,n){mk('rect',{x:x-6,y:y-6,width:12,height:12,class:'nb'});tx(x,y+3.5,String(n),'nbt',{'text-anchor':'middle'})}
+function title(x,y,t,s){tx(x,y,t,'vt',{'text-anchor':'middle'});if(s)tx(x,y+14,s,'dts',{'text-anchor':'middle'})}
+function notes(list){const NX=50,NY=58;tx(NX,NY,'NOTES:','nth');tx(NX+62,NY,'(UNLESS OTHERWISE SPECIFIED)','nt');
+ list.forEach(([n,t],i)=>{const y=NY+30+i*22;if(n){nb(NX+6,y-4,n);tx(NX+22,y,t,'nt')}else tx(NX+22,y,t,'nt')})}
+function table(x,y,ttl,hdr,rows,ws){const rh=17;tx(x,y-8,ttl,'vt');
+ [hdr].concat(rows).forEach((r,i)=>{let cx=x;r.forEach((c,j)=>{mk('rect',{x:cx,y:y+i*rh,width:ws[j],height:rh,class:'thin'});tx(cx+(j?ws[j]/2:5),y+i*rh+12,c,i?'tc':'th',{'text-anchor':j?'middle':'start'});cx+=ws[j]});});return y+(rows.length+1)*rh+32}
+
+/* font metrics from the real fonts */
+const cv=document.createElement('canvas').getContext('2d');
+function met(fam,w,fs){cv.font=w+' '+fs+'px '+fam;const m=cv.measureText('Hxgp');const H=cv.measureText('H'),x=cv.measureText('x'),g=cv.measureText('gp'),d=cv.measureText('d');
+ return{asc:m.fontBoundingBoxAscent,desc:m.fontBoundingBoxDescent,cap:H.actualBoundingBoxAscent,xh:x.actualBoundingBoxAscent,dsc:g.actualBoundingBoxDescent,ascd:d.actualBoundingBoxAscent}}
+const HF='"Schibsted Grotesk"',BF='Inter';
+const snap=v=>4*Math.round(v/4);
+/* baseline of a line box: top + half-leading + ascent */
+function baseOf(top,lh,m){return top+(lh-(m.asc+m.desc))/2+m.asc}
+/* one line of type with its line box; returns baseline */
+function line(x,top,w,fs,lh,str,o){o=o||{};const fam=o.fam||BF,wt=o.wt||400,m=met(fam,wt,fs);
+ rr(x,top,w,lh,0,o.box===false?'lboxe':'lbox');const b=baseOf(top,lh,m);
+ if(o.base!==false)mk('line',{x1:x,y1:b,x2:x+w,y2:b,class:'base'});
+ const t=mk('text',{x:x,y:b,class:o.cls||'bf','font-size':fs,'font-weight':wt,'letter-spacing':o.ls||0,style:'font-family:'+fam+(o.caps?';text-transform:uppercase':'')+(o.tab?';font-variant-numeric:tabular-nums':'')});t.textContent=str;return {b,m,t}}
+
+begin('sh1');
+const mono=(x,y,s,a)=>tx(x,y,s,'mono',a);
+notes([
+ [1,'FOUR TIERS ALIAS DOWNWARD: T3 → T2 → T1.'],
+ [2,'BRAND FILES RESOLVE EVERY TOKEN FOR ONE BRAND.'],
+ [3,'ONE BUILD WRITES BRANDS.TS AND TOKENS.CSS.'],
+ [4,'THE RUNTIME SCOPES VARS; NEAREST SCOPE WINS.'],
+ [5,'GUARDS RUN AFTER THE BRAND IS APPLIED.'],
+ [6,'COMPONENTS READ TOKENS, NEVER HEX.']]);
+
+/* ---------- Plan P · pipeline ---------- */
+{const y=78,h=150,w=118,g=20,x0=470;
+ const st=[['P1','SOURCE',['core/*.json','semantic/*','brands/*.json','_meta.json']],
+  ['P2','BUILD',['npm run','build-tokens','resolve aliases','fix typos']],
+  ['P3','OUTPUT',['lib/brands.ts','lib/tokens.css','29 brands']],
+  ['P4','RUNTIME',['theme-options.ts','brandToCssVars()','section + brand','guards']],
+  ['P5','SCOPE',['CSS custom','properties on',':root, wrapper','[data-brand]']],
+  ['P6','MAP',['@theme inline','bg-primary …','[data-slot]','component CSS']],
+  ['P7','RENDER',['Button · Card','Badge · Link','reader · river']]];
+ st.forEach(([c,t,lines],i)=>{const x=x0+i*(w+g);rr(x,y,w,h,6,i===0||i===6?'obj':'well');
+  rr(x,y,w,22,6,'hug');tx(x+w/2,y+15,t,'sl',{'text-anchor':'middle'});
+  lines.forEach((l,j)=>mono(x+8,y+42+j*18,l));
+  tx(x+w/2,y+h+16,c,'dts',{'text-anchor':'middle'});
+  if(i<st.length-1){mk('line',{x1:x+w+2,y1:y+h/2,x2:x+w+g-2,y2:y+h/2,class:'dl','marker-end':A})}});
+ const X=i=>x0+i*(w+g);
+ dimH(X(0),X(0)+w,y-14,y,y,'1,434 TOKENS',{c:'dts'});
+ dimH(X(2),X(2)+w,y-14,y,y,'29 THEMES',{c:'dts'});
+ dimH(X(3),X(3)+w,y-14,y,y,'+7 SECTIONS',{c:'dts'});
+ dimH(X(4),X(4)+w,y-14,y,y,'282 / BRAND',{c:'dts'});
+ nb(X(1)+w/2,y+h+34,3);nb(X(3)+w/2,y+h+34,5);nb(X(4)+w/2,y+h+34,4);
+ title(x0+(7*w+6*g)/2,y+h+62,'Plan P · token pipeline','Git → build → generated data → runtime scope → Tailwind and component CSS → components');}
+
+/* ---------- Detail T · tiers (exploded) ---------- */
+{const cx=270,top=330;const L=[['T4','BRAND',"29 FILES × 607 · RESOLVED PER BRAND"],['T3','COMPONENT','398 · BUTTON, CARD, CHIP, BADGE …'],['T2','SEMANTIC','412 · PALETTE ROLES, TYPE SCALE, SPACE'],['T1','CORE','624 · RAW COLOR, SIZE, SPACE, RADIUS']];
+ L.forEach(([c,n,d],i)=>{const y=top+i*62,w=300,sk=40;
+  mk('path',{d:`M${cx-w/2+sk},${y} L${cx+w/2+sk},${y} L${cx+w/2-sk},${y+34} L${cx-w/2-sk},${y+34} Z`,class:i===0?'hug':'well'});
+  tx(cx-w/2-sk-10,y+21,c,'dt',{'text-anchor':'end'});tx(cx,y+15,n,'vt',{'text-anchor':'middle'});tx(cx,y+28,d,'sl',{'text-anchor':'middle'});
+  if(i<L.length-1){mk('line',{x1:cx,y1:y+36,x2:cx,y2:y+60,class:'dl','marker-end':A})}});
+ tx(cx+12,top+50,'ALIASES INTO','sl');nb(cx+112,top+46,1);
+ title(cx,top+4*62+18,'Detail T · four tiers','Each tier aliases the one below · brand files are resolved');}
+
+/* ---------- Detail A · alias chain ---------- */
+{const x=480,y0=348,w=560,rh=34;const rows=[
+  ['T3','component.button.background.primary.solid-default','{palette.primary.1000}'],
+  ['T2','palette.primary.1000','{palette.neutral.1000}'],
+  ['T2','palette.neutral.1000','{_palette.gray.11}'],
+  ['T1','palette.gray.11','#1C1C1C · WHITE LABEL']];
+ rows.forEach(([t,n,v],i)=>{const y=y0+i*(rh+12);rr(x,y,w,rh,4,i===3?'hug':'well');tx(x+10,y+21,t,'dt');mono(x+44,y+21,n);mono(x+w-10,y+21,v,{'text-anchor':'end'});
+  if(i<rows.length-1)mk('line',{x1:x+w/2,y1:y+rh+1,x2:x+w/2,y2:y+rh+11,class:'dl','marker-end':A})});
+ const by=y0+4*(rh+12)+6;
+ rr(x,by,w,rh,4,'obj');tx(x+10,by+21,'T4','dt');mono(x+44,by+21,'cosmopolitan.json · component-button-…-solid-default');mono(x+w-10,by+21,'#D70000',{'text-anchor':'end'});
+ 
+ const vy=by+rh+16;rr(x,vy,w,rh,4,'slot');mono(x+44,vy+21,'--component-button-background-primary-solid-default: #d70000');tx(x+10,vy+21,'V','dt');
+ mk('line',{x1:x+w/2,y1:by+rh+1,x2:x+w/2,y2:vy-1,class:'dl','marker-end':A});
+ const cy=vy+rh+16;rr(x,cy,w,rh,4,'slot');mono(x+44,cy+21,'[data-slot=button][data-variant=default] { background-color: var(…) }');tx(x+10,cy+21,'C','dt');
+ mk('line',{x1:x+w/2,y1:vy+rh+1,x2:x+w/2,y2:cy-1,class:'dl','marker-end':A});
+ nb(x-14,by+17,2);
+ title(x+w/2,cy+rh+30,'Detail A · resolving one token','Default chain to #1C1C1C; Cosmopolitan’s brand file resolves the same name to #D70000');}
+
+/* ---------- Detail N · name anatomy ---------- */
+{const x=1066,y=356;const seg=[['component','TIER'],['button','COMPONENT'],['background','PROPERTY'],['primary','INTENT'],['solid','VARIANT'],['default','STATE']];
+ let cx=x;cv.font='400 10px "Geist Mono", ui-monospace, monospace';
+ seg.forEach(([s,l],i)=>{const w=Math.max(36,cv.measureText(s).width+10);rr(cx,y,w,24,3,i%2?'well':'hug');mono(cx+5,y+16,s,{style:'font-size:10px'});
+  dimH(cx,cx+w,y+40,y+24,y+24,l,{below:true,c:'dts',dy:i%2?12:0});cx+=w+3});
+ title(x+175,y+96,'Detail N · name anatomy','One name, six parts · states default · hover · active · disabled');}
+
+/* ---------- Detail S · scopes ---------- */
+{const x=1066,y=486;const S=[[0,':root','core defaults · tokens.css'],[1,'.hearst-plus-theme','product vars · --hp-*'],[2,'section wrapper','brandToCssVars(section)'],[3,'[data-brand] wrapper','brandToCssVars(publication)']];
+ S.forEach(([i,n,d])=>{const ix=x+i*14,iy=y+i*40,w=350-i*28,h=i===0?270:(y+204-i*10)-iy;rr(ix,iy,w,h,6,i===3?'hug':i===0?'obj':'well');mono(ix+8,iy+15,n);tx(ix+8,iy+29,d.toUpperCase(),'sl')});
+ const px=x+14,py=y+226;rr(px,py,150,36,6,'slot');mono(px+8,py+15,'portal root (body)');tx(px+8,py+29,'USEINHERITEDTHEMESCOPE','sl');
+ mk('path',{d:`M${x+200},${y+170} C${x+200},${y+212} ${px+190},${py+18} ${px+152},${py+18}`,class:'dl','marker-end':A});tx(x+206,y+214,'COPIES THE NEAREST SCOPE','sl');
+ nb(x-14,y+10,4);
+ title(x+175,y+292,'Detail S · scope cascade','The nearest scope that defines a var wins');}
+
+/* ---------- Detail G · guards ---------- */
+{const x=480,y=760;const G=[['G1','Button label ≥ 4.5:1','label → #FFF · #121212 · #000, first that passes'],['G2','Ad headline ≥ 3:1','CTA color, else the text color'],['G3','Ghost token missing','transparent border and fill'],['G4','Dark mode primary','lifted until 4.5:1 on #0B0B0B']];
+ G.forEach(([c,n,d],i)=>{const yy=y+i*30;rr(x,yy,560,24,3,'well');tx(x+10,yy+16,c,'dt');tx(x+50,yy+16,n.toUpperCase(),'sl');tx(x+550,yy+16,d.toUpperCase(),'dts',{'text-anchor':'end'})});
+ nb(x-14,y+12,5);
+ title(x+280,y+4*30+22,'Detail G · runtime guards','theme-css-vars.ts · tested across all 36 themes in light and dark');}
+
+/* ---------- Detail B · brand boundary ---------- */
+{const x=60,y=640;const may=['COLORS 1–14 · PALETTE','TYPE FAMILIES (3)','HEADLINE WEIGHT','BUTTON RADIUS','COMPONENT COLORS'],fix=['TYPE METRICS · UI-TYPE-001','SPACING · 4 PX GRID','LAYOUT · UI-LAYOUT-001','COMPONENT ANATOMY','CONTRAST FLOORS'];
+ rr(x,y,180,24+may.length*22,6,'hug');tx(x+10,y+16,'BRAND MAY SET','vt');may.forEach((m,i)=>tx(x+10,y+40+i*22,m,'sl'));
+ rr(x+190,y,190,24+fix.length*22,6,'well');tx(x+200,y+16,'SYSTEM FIXES','vt');fix.forEach((m,i)=>tx(x+200,y+40+i*22,m,'sl'));
+ nb(x-12,y+60,6);
+ title(x+190,y+24+5*22+34,'Detail B · brand boundary','What changes per publication, and what never does');}
+
+/* ---------- Tables ---------- */
+{const ws=[36,104,64,40];let y=60;
+ y=table(1430,y,'Tiers',['ID','Tier · file','Tokens','Ref'],[['T1','core/*.json','624','raw'],['T2','semantic/*','412','→T1'],['T3','semantic/component','398','→T2'],['T4','brands/{slug}.json','29×607','flat']],ws);
+ y=table(1430,y,'Outputs',['ID','File','Size','Use'],[['O1','src/lib/brands.ts','29','TS'],['O2','src/lib/tokens.css','10,508','CSS'],['O3','theme-options.ts','36','runtime']],ws);
+ y=table(1430,y,'Scopes',['ID','Selector','Sets','By'],[['S0',':root','core','css'],['S1','.hearst-plus-theme','--hp-*','css'],['S2','section wrapper','282','JS'],['S3','[data-brand]','282','JS'],['S4','portal root','copy','hook']],ws);
+ table(1430,y,'Themes',['ID','Group','Count','Ex.'],[['B1','Publications','27','Cosmo'],['B2','Base themes','2','White'],['B3','Section themes','7','Autos'],['—','Total runtime','36','']],ws);}
+document.documentElement.dataset.ready='1';
+})();
+</script>
+</body>
+</html>

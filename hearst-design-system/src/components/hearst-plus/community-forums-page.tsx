@@ -364,14 +364,14 @@ export function CommunityForumsPage({ activeBrandSlug, activeGroupSlug, activeTh
   const inGroup = Boolean(activeGroup);
   const groupAbout = activeGroup ? (
     <>
-      <h2 className="text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest">About</h2>
+      <h2 className="type-k1">About</h2>
       <p className="hearst-community-copy mt-2 text-sm leading-6 text-[var(--hp-text-secondary)]">{activeGroup.description}</p>
-      <h3 className="mt-4 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest">Hosts</h3>
+      <h3 className="mt-4 type-k1">Hosts</h3>
       <p className="mt-2 flex flex-wrap items-center gap-2 text-sm font-bold">
         {activeGroup.brand} editors
         <CommunityHostBadge brand={activeGroup.brand} />
       </p>
-      <h3 className="mt-4 text-[length:var(--text-token-4xs)] font-bold uppercase tracking-widest">Group rules</h3>
+      <h3 className="mt-4 type-k1">Group rules</h3>
       <ol className="hearst-community-copy mt-2 list-decimal space-y-1 pl-5 text-sm leading-6 text-[var(--hp-text-secondary)]">
         {groupRules.map((rule) => (
           <li key={rule}>{rule}</li>

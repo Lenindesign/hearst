@@ -230,7 +230,7 @@ function EventRailLink({ event, rank }: { event: HearstEventRecord; rank?: numbe
         ) : null}
       </span>
       <span className="min-w-0">
-        <span className="line-clamp-3 block text-xs font-bold leading-[1.35] underline-offset-2 group-hover:underline group-focus-visible:underline">
+        <span className="type-c1 line-clamp-3 block font-bold underline-offset-2 group-hover:underline group-focus-visible:underline">
           {event.title}
         </span>
         <span className="mt-1 block text-xs text-muted-foreground">
@@ -254,7 +254,7 @@ function EventSidebars({
 
   return (
     <>
-      <aside className="hidden min-w-0 space-y-5 lg:col-start-1 lg:row-start-1 lg:sticky lg:top-[86px] lg:block lg:max-h-[calc(100dvh-110px)] lg:self-start lg:overflow-y-auto lg:pr-1" aria-label="Event discovery sidebar">
+      <aside className="hidden min-w-0 space-y-5 xl:col-start-1 xl:row-start-1 xl:sticky xl:top-[86px] xl:block xl:max-h-[calc(100dvh-110px)] xl:self-start xl:overflow-y-auto xl:pr-1" aria-label="Event discovery sidebar">
         <DiscoverySidebarCard title="Trending across events" summary="Experiences and stories from Hearst brands">
           <ol className="-mb-3 divide-y divide-border/70">
             {events.slice(0, 5).map((event, index) => (
@@ -274,11 +274,11 @@ function EventSidebars({
         </DiscoverySidebarCard>
       </aside>
 
-      <aside className="hidden min-w-0 space-y-5 md:col-start-2 md:row-start-1 md:sticky md:top-[86px] md:block md:max-h-[calc(100dvh-110px)] md:self-start md:overflow-y-auto md:pr-1 lg:col-start-3" aria-label="Event planning and local news">
+      <aside className="hidden min-w-0 space-y-5 md:col-start-2 md:row-start-1 md:sticky md:top-[86px] md:block md:max-h-[calc(100dvh-110px)] md:self-start md:overflow-y-auto md:pr-1 xl:col-start-3" aria-label="Event planning and local news">
         {upcomingEvent ? (
           <DiscoverySidebarCard title="Plan your visit" summary={`${upcomingEvent.dateLabel} · ${upcomingEvent.venue}`}>
             <p className="text-sm font-bold">{upcomingEvent.title}</p>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">{upcomingEvent.dateLabel}<br />{upcomingEvent.venue}<br />{upcomingEvent.location}</p>
+            <p className="type-b2 mt-2 text-muted-foreground">{upcomingEvent.dateLabel}<br />{upcomingEvent.venue}<br />{upcomingEvent.location}</p>
             <a href={upcomingEvent.primaryAction.href} target="_blank" rel="noreferrer" className="mt-4 inline-flex min-h-11 items-center font-bold text-primary underline-offset-4 hover:underline">
               {upcomingEvent.primaryAction.label}<ChevronRight className="ml-1 h-4 w-4" aria-hidden />
             </a>
@@ -332,20 +332,20 @@ export function HearstEventsIndex({ initialBrand = "all" }: { initialBrand?: str
         brandOptions={brandOptions}
       />
       <main>
-        <section className="mx-auto grid max-w-[1360px] gap-x-4 gap-y-6 px-5 pt-4 pb-8 md:grid-cols-[minmax(0,1fr)_300px] md:px-8 md:pt-4 md:pb-10 lg:grid-cols-[clamp(240px,24vw,300px)_minmax(0,1fr)_300px]" aria-label="Events discovery">
+        <section className="mx-auto grid max-w-[1360px] gap-x-[var(--layout-gap)] gap-y-6 px-5 pt-4 pb-8 md:grid-cols-[minmax(0,1fr)_var(--layout-rail)] md:px-8 md:pt-4 md:pb-10 xl:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]" aria-label="Events discovery">
           <EventSidebars
             events={hearstEvents}
             upcomingEvent={hearstEvents.find((event) => event.status === "upcoming")}
             onFilterRelationship={(value) => setRelationship(value)}
           />
-          <section aria-live="polite" aria-labelledby="events-results-heading" className="min-w-0 space-y-6 md:col-start-1 md:row-start-1 lg:col-start-2">
+          <section aria-live="polite" aria-labelledby="events-results-heading" className="min-w-0 space-y-6 md:col-start-1 md:row-start-1 xl:col-start-2">
             <div className="overflow-hidden rounded-[8px] border border-border bg-card">
               <div className="flex flex-col gap-3 p-5 sm:p-6">
                 <div>
                   <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Across Hearst brands</p>
                   <h1 id="events-results-heading" className="headline mt-2 text-2xl font-bold md:text-3xl">Events and coverage</h1>
                 </div>
-                <p className="max-w-2xl text-sm leading-6 text-muted-foreground">Upcoming experiences and stories from events our editors follow.</p>
+                <p className="type-b2 max-w-2xl text-muted-foreground">Upcoming experiences and stories from events our editors follow.</p>
               </div>
               {visibleEvents.length ? (
                 <div className="flex flex-col gap-3 border-t border-border p-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:px-6">
@@ -462,7 +462,7 @@ function EventInformation({ event }: { event: HearstEventRecord }) {
       <a href={event.eventUrl} target="_blank" rel="noreferrer" className="mt-5 inline-flex min-h-11 items-center font-bold text-primary underline-offset-4 hover:underline focus-visible:underline">
         {event.primaryAction.label}<ChevronRight className="ml-1 h-4 w-4" aria-hidden />
       </a>
-      <p className="mt-2 text-xs leading-5 text-muted-foreground">Dates, venue details, and registration are supplied by the event organizer.</p>
+      <p className="type-c1 mt-2 text-muted-foreground">Dates, venue details, and registration are supplied by the event organizer.</p>
     </div>
   );
 }
@@ -527,11 +527,11 @@ export function HearstEventDetail({ event }: { event: HearstEventRecord }) {
         sectionNavigationLabel="Event details sections"
       />
       <div className="min-h-full bg-[var(--hp-background)] text-foreground">
-        <main className="mx-auto grid min-w-0 max-w-[1360px] grid-cols-1 items-start gap-5 px-4 pt-4 pb-5 sm:px-6 lg:grid-cols-[300px_minmax(0,1fr)_300px] lg:gap-5 lg:px-6 lg:pt-4 lg:pb-6">
+        <main className="mx-auto grid min-w-0 max-w-[1360px] grid-cols-1 items-start gap-[var(--layout-gap)] px-4 pt-4 pb-5 sm:px-6 lg:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)] lg:px-6 lg:pt-4 lg:pb-6">
           <aside className="order-2 min-w-0 space-y-5 lg:order-1 lg:sticky lg:top-4 lg:max-h-[calc(100dvh-5rem)] lg:overflow-y-auto lg:pr-1" aria-label="Event discovery">
             <DiscoverySidebarCard title="Presented by" summary="The Hearst brands behind this event">
               <EventBrandMarks event={event} />
-              <p className="mt-3 text-xs leading-5 text-muted-foreground">Event information and registration come from the organizer.</p>
+              <p className="type-c1 mt-3 text-muted-foreground">Event information and registration come from the organizer.</p>
             </DiscoverySidebarCard>
             <DiscoverySidebarCard title="Trending across events" summary="More experiences and stories from Hearst brands">
               <ol className="-mb-3 divide-y divide-border/70">
@@ -560,7 +560,7 @@ export function HearstEventDetail({ event }: { event: HearstEventRecord }) {
                   <p className="mt-4 text-sm font-semibold text-muted-foreground">{event.eyebrow}</p>
                   <h1 className="headline mt-3 text-3xl font-bold leading-[1.04] tracking-tight sm:text-4xl">{event.title}</h1>
                   {event.heroHeadline ? <p className="mt-4 text-lg font-semibold leading-snug">{event.heroHeadline}</p> : null}
-                  <p className="mt-5 text-base leading-7 text-muted-foreground">{event.summary}</p>
+                  <p className="type-d2 mt-5 text-muted-foreground">{event.summary}</p>
                 </div>
                 <div className="space-y-5 border-t border-border pt-5">
                   <EventFacts event={event} />
@@ -579,7 +579,7 @@ export function HearstEventDetail({ event }: { event: HearstEventRecord }) {
                       </a>
                     ) : null}
                   </div>
-                  <p className="text-xs leading-5 text-muted-foreground">
+                  <p className="type-c1 text-muted-foreground">
                     Event details and tickets are provided by the organizer. <a href={event.eventUrl} target="_blank" rel="noreferrer" className="font-semibold underline underline-offset-2">Visit the official event site</a>.
                   </p>
                 </div>
@@ -590,7 +590,7 @@ export function HearstEventDetail({ event }: { event: HearstEventRecord }) {
             <section id="event-program" className="scroll-mt-28 rounded-card border border-border bg-card p-5 shadow-[var(--hp-shadow-card)] sm:p-7">
               <div className="mb-6">
                 <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Published program</p>
-                <h2 className="headline mt-3 text-2xl font-bold leading-tight sm:text-3xl">
+                <h2 className="type-t4 headline mt-3 font-bold">
                   Explore what is happening at the event.
                 </h2>
                 <p className="mt-3 leading-7 text-muted-foreground">Browse the program published for this event by its organizers.</p>
@@ -603,7 +603,7 @@ export function HearstEventDetail({ event }: { event: HearstEventRecord }) {
             <section id="event-coverage" className="scroll-mt-28 rounded-card border border-border bg-card p-5 shadow-[var(--hp-shadow-card)] sm:p-7">
               <div className="mb-6">
                 <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">{event.brandNames[0] ?? "Hearst"} coverage</p>
-                <h2 className="headline mt-3 text-2xl font-bold leading-tight sm:text-3xl">Follow the reporting on this event.</h2>
+                <h2 className="type-t4 headline mt-3 font-bold">Follow the reporting on this event.</h2>
                 <p className="mt-3 leading-7 text-muted-foreground">Read the event story from its original publisher. The link opens the source publication.</p>
               </div>
               <EventCoverage event={event} />
@@ -614,7 +614,7 @@ export function HearstEventDetail({ event }: { event: HearstEventRecord }) {
             <section id="event-information" className="scroll-mt-28 rounded-card border border-border bg-card p-5 shadow-[var(--hp-shadow-card)] sm:p-7">
               <div className="mb-6">
                 <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Organizer information</p>
-                <h2 className="headline mt-3 text-2xl font-bold leading-tight sm:text-3xl">The details to know before you go.</h2>
+                <h2 className="type-t4 headline mt-3 font-bold">The details to know before you go.</h2>
                 <p className="mt-3 leading-7 text-muted-foreground">Event information and next steps, linked to the organizer’s source.</p>
               </div>
               <EventInformation event={event} />
@@ -627,7 +627,7 @@ export function HearstEventDetail({ event }: { event: HearstEventRecord }) {
               {event.featuredGuests?.length ? (
                 <section aria-labelledby="event-guests-heading">
                   <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Announced for 2026</p>
-                  <h2 id="event-guests-heading" className="headline mt-3 text-3xl font-bold leading-tight md:text-4xl">Meet the guests and writers</h2>
+                  <h2 id="event-guests-heading" className="type-t2 headline mt-3 font-bold">Meet the guests and writers</h2>
                   <ul className="mt-6 grid grid-cols-2 gap-x-6 border-y border-border sm:grid-cols-3">
                     {event.featuredGuests.map((guest) => (
                       <li key={guest} className="flex min-h-14 items-center border-b border-border py-2 text-sm font-semibold last:border-b-0">{guest}</li>
@@ -638,7 +638,7 @@ export function HearstEventDetail({ event }: { event: HearstEventRecord }) {
               {event.makerSpotlights?.length ? (
                 <section aria-labelledby="event-makers-heading">
                   <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Country Living Christmas Market</p>
-                  <h2 id="event-makers-heading" className="headline mt-3 text-3xl font-bold leading-tight md:text-4xl">Discover independent makers</h2>
+                  <h2 id="event-makers-heading" className="type-t2 headline mt-3 font-bold">Discover independent makers</h2>
                   <p className="mt-3 max-w-xl leading-7 text-muted-foreground">A first look at some of the artisan businesses featured by the event organizer.</p>
                   <ul className="mt-6 divide-y divide-border border-y border-border">
                     {event.makerSpotlights.map((maker) => (
@@ -679,7 +679,7 @@ export function HearstEventDetail({ event }: { event: HearstEventRecord }) {
           <aside className="order-3 min-w-0 space-y-5 lg:sticky lg:top-4 lg:max-h-[calc(100dvh-5rem)] lg:overflow-y-auto lg:pr-1" aria-label="Event information and related coverage">
             <DiscoverySidebarCard title="Plan your visit" summary={`${event.dateLabel} · ${event.venue}`}>
               <p className="text-sm font-bold">{event.title}</p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">{event.dateLabel}<br />{event.venue}<br />{event.location}</p>
+              <p className="type-b2 mt-2 text-muted-foreground">{event.dateLabel}<br />{event.venue}<br />{event.location}</p>
               <a href={event.primaryAction.href} target="_blank" rel="noreferrer" className="mt-4 inline-flex min-h-11 items-center font-bold text-primary underline-offset-4 hover:underline">
                 {event.primaryAction.label}<ChevronRight className="ml-1 h-4 w-4" aria-hidden />
               </a>
@@ -688,7 +688,7 @@ export function HearstEventDetail({ event }: { event: HearstEventRecord }) {
               <DiscoverySidebarCard title="From our editors" summary="Original reporting connected to this event">
                 <div className="divide-y divide-border/70">
                   {event.coverage.slice(0, 5).map((story) => (
-                    <a key={story.href} href={story.href} target="_blank" rel="noreferrer" className="block py-3 text-sm font-bold leading-5 hover:text-primary first:pt-0 last:pb-0">
+                    <a key={story.href} href={story.href} target="_blank" rel="noreferrer" className="type-b2 block py-3 font-bold hover:text-primary first:pt-0 last:pb-0">
                       {story.title}<span className="mt-1 block text-xs font-normal text-muted-foreground">{story.publishedLabel}</span>
                     </a>
                   ))}

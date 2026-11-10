@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 
 export type AdaptiveVideoProps = Omit<React.VideoHTMLAttributes<HTMLVideoElement>, "src"> & {
   src?: string;
+  /** Called instead of showing the error state when the browser refuses autoplay (e.g. Low Power Mode). */
+  onAutoplayBlocked?: () => void;
 };
 
 function isHlsSource(src: string) {
@@ -27,13 +29,17 @@ function setForwardedRef(
 
 export const AdaptiveVideo = React.forwardRef<HTMLVideoElement, AdaptiveVideoProps>(
   function AdaptiveVideo(
-    { src, className, autoPlay, onError, ...videoProps },
+    { src, className, autoPlay, onError, onAutoplayBlocked, ...videoProps },
     forwardedRef,
   ) {
     const videoRef = React.useRef<HTMLVideoElement | null>(null);
     const stalledStartTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
     const [retryKey, setRetryKey] = React.useState(0);
     const [playbackError, setPlaybackError] = React.useState(false);
+    const onAutoplayBlockedRef = React.useRef(onAutoplayBlocked);
+    React.useEffect(() => {
+      onAutoplayBlockedRef.current = onAutoplayBlocked;
+    });
 
     const assignVideoRef = React.useCallback(
       (video: HTMLVideoElement | null) => {
@@ -75,7 +81,15 @@ export const AdaptiveVideo = React.forwardRef<HTMLVideoElement, AdaptiveVideoPro
       const tryAutoplay = () => {
         if (!autoPlay) return;
         verifyPlaybackStarted();
-        void video.play().catch(failPlayback);
+        void video.play().catch((error: unknown) => {
+          const blocked = error instanceof DOMException && error.name === "NotAllowedError";
+          if (blocked && onAutoplayBlockedRef.current) {
+            clearStalledStartTimer();
+            if (!disposed) onAutoplayBlockedRef.current();
+            return;
+          }
+          failPlayback();
+        });
       };
 
       const canPlayNativeHls = Boolean(

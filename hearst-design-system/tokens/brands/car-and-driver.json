@@ -477,7 +477,23 @@
   },
   "component-button-radius-default": {
     "type": "number",
-    "value": 0
+    "value": 4
+  },
+  "component-button-font-family": {
+    "type": "string",
+    "value": "Inter"
+  },
+  "component-button-font-weight": {
+    "type": "string",
+    "value": "700"
+  },
+  "component-button-text-transform": {
+    "type": "string",
+    "value": "uppercase"
+  },
+  "component-button-letter-spacing": {
+    "type": "string",
+    "value": "0.44px"
   },
   "component-card-background-neutral": {
     "type": "color",

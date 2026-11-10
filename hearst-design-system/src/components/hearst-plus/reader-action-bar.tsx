@@ -74,7 +74,7 @@ export function ReaderPublicationDates({
   return (
     <p
       className={cn(
-        "flex flex-wrap gap-x-3 gap-y-1 text-[length:var(--text-token-4xs)] leading-5 text-muted-foreground",
+        "type-m2 flex flex-wrap gap-x-3 gap-y-1 text-muted-foreground",
         className
       )}
     >
@@ -115,7 +115,7 @@ export function ReaderActionBar({
     <div className="my-6 min-w-0 border-y border-border py-3">
       <div className="flex w-full min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-5">
         <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1">
-          <div className="inline-flex min-h-11 max-w-full min-w-0 items-center gap-1.5 text-[length:var(--text-token-4xs)] text-muted-foreground sm:min-h-0">
+          <div className="inline-flex min-h-11 max-w-full min-w-0 items-center gap-1.5 type-m1 text-muted-foreground sm:min-h-0">
             <Avatar size="default" className="size-7" aria-hidden>
               {authorAvatarUrl ? (
                 <AvatarImage

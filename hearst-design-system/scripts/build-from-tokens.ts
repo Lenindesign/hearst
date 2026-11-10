@@ -198,6 +198,8 @@ function main() {
       if (!key.startsWith("component-")) continue;
       if (token.type === "color") componentTokens[key] = String(token.value);
       else if (token.type === "number") componentTokens[key] = Number(token.value);
+      // CTA typography (font family, weight, case, tracking) stays a string so the runtime never adds units.
+      else if (token.type === "string" && key.startsWith("component-button-")) componentTokens[key] = String(token.value);
     }
 
     brands.push({
