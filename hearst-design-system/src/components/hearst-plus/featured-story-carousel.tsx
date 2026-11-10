@@ -513,8 +513,10 @@ export function FeaturedStoryCarousel({
                       <div
                         className={cn(
                           "absolute inset-y-0 left-[-5%] w-[110%]",
-                          "transition-transform duration-300 ease-[cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none",
-                          isDragging && "!transition-none",
+                          "ease-[cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none",
+                          isDragging || !trackTransitionEnabled
+                            ? "!transition-none"
+                            : "transition-transform delay-[16ms] duration-[284ms]",
                         )}
                         style={{
                           // The image content travels 4% less than its slide,
@@ -533,10 +535,18 @@ export function FeaturedStoryCarousel({
                     layoutMode === "list"
                       ? "relative col-start-2 row-start-1 flex min-w-0 flex-col justify-center bg-card p-4 pt-12 text-foreground sm:p-6 sm:pt-12"
                       : cn(
-                          "pointer-events-none relative z-10 col-start-1 row-start-2 mx-[6px] -mt-10 flex h-[224px] min-w-0 flex-col rounded-card px-5 py-2.5 shadow-[0_6px_18px_rgba(0,0,0,0.20)] sm:mx-[18px] sm:-mt-12 sm:h-[240px] sm:px-6 sm:py-3",
+                          "pointer-events-none relative z-10 col-start-1 row-start-2 mx-[6px] -mt-10 flex h-[224px] min-w-0 flex-col rounded-card px-5 py-2.5 shadow-[0_6px_18px_rgba(0,0,0,0.20)] ease-[cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none sm:mx-[18px] sm:-mt-12 sm:h-[240px] sm:px-6 sm:py-3",
+                          isDragging || !trackTransitionEnabled
+                            ? "!transition-none"
+                            : "transition-transform duration-300",
                           "!bg-black text-white",
                         ),
                   )}
+                  style={layoutMode === "list" ? undefined : {
+                    // Let the text card lead by a few pixels while the photo
+                    // catches up through its delayed, shorter parallax motion.
+                    transform: `translate3d(${-(trackIndex - visualIndex) * 4}px, 0, 0)`,
+                  }}
                 >
                   <div className={cn(
                     "mb-1.5 flex flex-wrap items-center gap-2 text-sm font-semibold",
