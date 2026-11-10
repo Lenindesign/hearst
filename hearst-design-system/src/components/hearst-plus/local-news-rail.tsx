@@ -82,15 +82,17 @@ export function LocalNewsRail({ layout = "rail" }: { layout?: "rail" | "grid" })
                 href={`/hearst-plus/local-news/?story=${encodeURIComponent(story.id)}#tv-stations`}
                 className="group grid min-h-20 w-full grid-cols-[48px_minmax(0,1fr)] items-start gap-3 rounded-[6px] py-3 text-left focus:outline-none focus:ring-2 focus:ring-primary/30"
               >
-                <span
-                  className="relative block h-12 w-12 overflow-hidden rounded-[6px] border border-border bg-muted bg-cover bg-center"
-                  style={story.imageUrl ? { backgroundImage: `url(${story.imageUrl})` } : undefined}
-                  role={story.imageUrl ? "img" : undefined}
-                  aria-label={story.imageUrl ? "" : undefined}
-                >
-                  {!story.imageUrl ? <span className="grid h-full place-items-center text-[10px] font-bold text-muted-foreground">NEWS</span> : null}
-                  <span className="absolute left-1 top-1 grid h-5 w-5 place-items-center rounded-full bg-[var(--hp-surface)] text-[11px] font-bold leading-none text-primary ring-1 ring-border">
-                    <span className="translate-y-px tabular-nums leading-none">{index + 1}</span>
+                <span className="relative block h-12 w-12">
+                  <span
+                    className="absolute inset-0 overflow-hidden rounded-[6px] border border-border bg-muted bg-cover bg-center"
+                    style={story.imageUrl ? { backgroundImage: `url(${story.imageUrl})` } : undefined}
+                    role={story.imageUrl ? "img" : undefined}
+                    aria-label={story.imageUrl ? "" : undefined}
+                  >
+                    {!story.imageUrl ? <span className="grid h-full place-items-center text-[10px] font-bold text-muted-foreground">NEWS</span> : null}
+                  </span>
+                  <span className="absolute -left-[6px] -top-[6px] grid h-5 w-5 place-items-center rounded-full bg-[var(--hp-surface)] text-[11px] font-bold leading-none text-[var(--hp-text-primary)] ring-1 ring-border">
+                    <span className="tabular-nums leading-none text-[var(--hp-text-primary)]">{index + 1}</span>
                   </span>
                 </span>
                 <span className="min-w-0">
