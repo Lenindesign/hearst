@@ -402,7 +402,7 @@ export function UtilityBar({
                     aria-controls={menuMode && isOpen ? "hearst-brand-menu" : undefined}
                     aria-current={isActive ? "page" : undefined}
                     onClick={() => setOpenDestinationMenu(null)}
-                    onMouseEnter={section.mode === "international" ? undefined : (event) => openDestination(menuMode, event.currentTarget)}
+                    onMouseEnter={(event) => openDestination(menuMode, event.currentTarget)}
                     onMouseLeave={closeWhenPointerLeavesMenu}
                     onFocus={(event) => openDestination(menuMode, event.currentTarget)}
                     className={cn(
@@ -695,7 +695,7 @@ export function UtilityBar({
                         {entertainmentWebsiteFeedConfigs.map((menuBrand) => (
                           <EntertainmentMenuLink
                             key={`shows-${menuBrand.slug}`}
-                            menuDarkMode={menuDarkMode}
+                            darkMode={menuDarkMode}
                             href={menuBrand.showHref}
                             label={menuBrand.brand}
                             favicon={menuBrand.favicon}
@@ -715,7 +715,7 @@ export function UtilityBar({
                         {entertainmentWebsiteFeedConfigs.map((menuBrand) => (
                           <EntertainmentMenuLink
                             key={`stories-${menuBrand.slug}`}
-                            menuDarkMode={menuDarkMode}
+                            darkMode={menuDarkMode}
                             href={menuBrand.storyHref}
                             label={menuBrand.brand}
                             favicon={menuBrand.favicon}
@@ -743,7 +743,7 @@ export function UtilityBar({
                                 <InternationalFeedLink
                                   key={`${country}-${feed.name}`}
                                   feed={feed}
-                                  menuDarkMode={menuDarkMode}
+                                  darkMode={menuDarkMode}
                                   lightSurface={isConceptMenu}
                                   onClick={() => setOpenDestinationMenu(null)}
                                 />

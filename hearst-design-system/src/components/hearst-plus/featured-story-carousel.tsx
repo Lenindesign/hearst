@@ -504,7 +504,24 @@ export function FeaturedStoryCarousel({
                       ? "h-full min-h-0"
                       : "h-auto aspect-[5/4]",
                   )}>
-                    {renderImage(story, index, index === activeIndex)}
+                    {layoutMode === "list" ? (
+                      renderImage(story, index, index === activeIndex)
+                    ) : (
+                      <div
+                        className={cn(
+                          "absolute inset-y-0 left-[-5%] w-[110%]",
+                          "transition-transform duration-300 ease-[cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none",
+                          isDragging && "!transition-none",
+                        )}
+                        style={{
+                          // The image content travels 4% less than its slide,
+                          // leaving the text card to lead the carousel motion.
+                          transform: `translate3d(calc(${(trackIndex - visualIndex) * (100 / 27.5)}% - ${dragOffset * 0.04}px), 0, 0)`,
+                        }}
+                      >
+                        {renderImage(story, index, index === activeIndex)}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div
