@@ -22,12 +22,23 @@ export type HearstInternationalMix = {
 
 const PER_FEED = 6;
 const MAX_STORIES = 144;
-const CONCURRENCY = 12;
+const CONCURRENCY = 24;
+/** Per-edition RSS timeout. An edition that misses it is skipped until the next load. */
 const TIMEOUT_MS = 6000;
+/** A cold request answers with the editions that responded by this point; late editions join the cache. */
+const RESPONSE_DEADLINE_MS = 2000;
+/** Once this share of editions has settled, the stragglers get only a short grace period before the response. */
+const SETTLED_SHARE = 0.9;
+const STRAGGLER_GRACE_MS = 200;
 const CACHE_MS = 10 * 60 * 1000;
 
-let cache: { at: number; data: HearstInternationalMix } | null = null;
-let pending: Promise<HearstInternationalMix> | null = null;
+// Held on globalThis so the page (which peeks at it) and the API route share one cache, even when the
+// bundler gives each route its own copy of this module.
+type MixState = { cache: { at: number; data: HearstInternationalMix } | null; pending: Promise<HearstInternationalMix> | null };
+const state: MixState = ((globalThis as { __hearstInternationalMix?: MixState }).__hearstInternationalMix ??= {
+  cache: null,
+  pending: null,
+});
 
 async function loadFeed(feed: HearstInternationalFeed): Promise<HearstInternationalMixStory[]> {
   for (const rssUrl of getHearstInternationalFeedRssUrls(feed)) {
@@ -90,36 +101,93 @@ export function mixHearstInternationalStories(perFeed: HearstInternationalMixSto
   return mixed;
 }
 
-async function loadMix(): Promise<HearstInternationalMix> {
-  const results: HearstInternationalMixStory[][] = new Array(hearstInternationalFeeds.length);
-  let next = 0;
-  await Promise.all(
-    Array.from({ length: Math.min(CONCURRENCY, hearstInternationalFeeds.length) }, async () => {
-      while (next < hearstInternationalFeeds.length) {
-        const index = next;
-        next += 1;
-        results[index] = await loadFeed(hearstInternationalFeeds[index]);
-      }
-    }),
-  );
+type FeedLoader = (feed: HearstInternationalFeed) => Promise<HearstInternationalMixStory[]>;
+
+function buildMix(results: (HearstInternationalMixStory[] | undefined)[], totalFeeds: number): HearstInternationalMix {
+  const answered = Array.from(results, (stories) => stories ?? []);
   return {
-    stories: mixHearstInternationalStories(results),
-    connectedFeeds: results.filter((stories) => stories.length > 0).length,
-    totalFeeds: hearstInternationalFeeds.length,
+    stories: mixHearstInternationalStories(answered),
+    connectedFeeds: answered.filter((stories) => stories.length > 0).length,
+    totalFeeds,
     fetchedAt: new Date().toISOString(),
   };
 }
 
-/** All international editions, mixed. Cached for 10 minutes; concurrent callers share one load. */
-export async function getHearstInternationalMix(): Promise<HearstInternationalMix> {
-  if (cache && Date.now() - cache.at < CACHE_MS) return cache.data;
-  pending ??= loadMix()
+/**
+ * Read every edition in parallel. `first` resolves with the editions that have answered once 90% have
+ * settled (after a short grace period) or at the response deadline, so one slow edition cannot hold the river; `complete` resolves once every edition has
+ * answered or timed out, and is what the cache keeps.
+ */
+export function loadHearstInternationalMix(
+  feeds: HearstInternationalFeed[] = hearstInternationalFeeds,
+  {
+    load = loadFeed,
+    deadlineMs = RESPONSE_DEADLINE_MS,
+    graceMs = STRAGGLER_GRACE_MS,
+  }: { load?: FeedLoader; deadlineMs?: number; graceMs?: number } = {},
+) {
+  const results: (HearstInternationalMixStory[] | undefined)[] = new Array(feeds.length);
+  let next = 0;
+  let settled = 0;
+  let respond: (() => void) | undefined;
+  let graceTimer: ReturnType<typeof setTimeout> | undefined;
+  const complete = Promise.all(
+    Array.from({ length: Math.min(CONCURRENCY, feeds.length) }, async () => {
+      while (next < feeds.length) {
+        const index = next;
+        next += 1;
+        results[index] = await load(feeds[index]).catch(() => []);
+        settled += 1;
+        if (!graceTimer && settled < feeds.length && settled >= Math.ceil(feeds.length * SETTLED_SHARE)) {
+          graceTimer = setTimeout(() => respond?.(), graceMs);
+        }
+      }
+    }),
+  ).then(() => buildMix(results, feeds.length));
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const early = new Promise<HearstInternationalMix>((resolve) => {
+    respond = () => resolve(buildMix(results, feeds.length));
+    timer = setTimeout(respond, deadlineMs);
+  });
+  const first = Promise.race([complete, early]).finally(() => {
+    clearTimeout(timer);
+    clearTimeout(graceTimer);
+  });
+  return { first, complete };
+}
+
+function refresh() {
+  if (state.pending) return state.pending;
+  const { first, complete } = loadHearstInternationalMix();
+  // Keep the deadline mix so requests that arrive before every edition answers are served at once;
+  // the complete mix replaces it when the last edition answers or times out.
+  state.pending = first.then((data) => {
+    if (data.stories.length > 0 && !state.cache) state.cache = { at: Date.now(), data };
+    return data;
+  });
+  void complete
     .then((data) => {
-      if (data.stories.length > 0) cache = { at: Date.now(), data };
-      return data;
+      if (data.stories.length > 0) state.cache = { at: Date.now(), data };
     })
     .finally(() => {
-      pending = null;
+      state.pending = null;
     });
-  return pending;
+  return state.pending;
+}
+
+/** The cached mix, without starting a load. Lets the page render the river on first paint when it is warm. */
+export function peekHearstInternationalMix(): HearstInternationalMix | null {
+  return state.cache?.data ?? null;
+}
+
+/**
+ * All international editions, mixed. A mix younger than 10 minutes is served from memory; an older one is
+ * served immediately while a background load replaces it. A cold call waits at most for the response deadline.
+ */
+export async function getHearstInternationalMix(): Promise<HearstInternationalMix> {
+  if (state.cache) {
+    if (Date.now() - state.cache.at >= CACHE_MS) void refresh();
+    return state.cache.data;
+  }
+  return refresh();
 }

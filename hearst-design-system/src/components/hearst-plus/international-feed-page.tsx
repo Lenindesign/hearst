@@ -39,7 +39,16 @@ type InternationalStory = {
   feedUrl?: string;
 };
 
-export function InternationalFeedPage({ initialFeedUrl, initialCountry }: { initialFeedUrl?: string; initialCountry?: string }) {
+export function InternationalFeedPage({
+  initialFeedUrl,
+  initialCountry,
+  initialStories,
+}: {
+  initialFeedUrl?: string;
+  initialCountry?: string;
+  /** The server's cached mix, when warm, so the river renders on first paint without a client fetch. */
+  initialStories?: InternationalStory[];
+}) {
   const [selectedUrl, setSelectedUrl] = React.useState(
     initialFeedUrl && getHearstInternationalFeed(initialFeedUrl) ? initialFeedUrl : ALL_EDITIONS,
   );
@@ -48,8 +57,13 @@ export function InternationalFeedPage({ initialFeedUrl, initialCountry }: { init
   const initialCountryName = isMix && countryCode && hearstInternationalFeedCountries.includes(countryCode)
     ? hearstInternationalCountryNames[countryCode] ?? countryCode
     : undefined;
-  const [stories, setStories] = React.useState<InternationalStory[]>([]);
-  const [status, setStatus] = React.useState<"pending" | "connected" | "error">("pending");
+  const hasInitialStories = isMix && Boolean(initialStories?.length);
+  const [stories, setStories] = React.useState<InternationalStory[]>(hasInitialStories ? initialStories ?? [] : []);
+  const [status, setStatus] = React.useState<"pending" | "connected" | "error">(hasInitialStories ? "connected" : "pending");
+  // Set with the stories, not per render, so the server and client agree on the "Latest story" time.
+  const [fetchedAt, setFetchedAt] = React.useState(() => new Date().toISOString());
+  /** The feed the current stories belong to; a server-provided mix needs no client fetch. */
+  const loadedUrl = React.useRef<string | null>(hasInitialStories ? ALL_EDITIONS : null);
   const [error, setError] = React.useState<string | null>(null);
   const selectedFeed = isMix ? undefined : getHearstInternationalFeed(selectedUrl);
   const selectedCountry = selectedFeed ? hearstInternationalCountryNames[selectedFeed.country] ?? selectedFeed.country : "International";
@@ -110,24 +124,29 @@ export function InternationalFeedPage({ initialFeedUrl, initialCountry }: { init
     dataSourceCopy: isMix
       ? "Official RSS feeds from every Hearst international edition, mixed by country and brand."
       : `Official ${selectedBrandName} international edition RSS feed.`,
-    fetchedAt: new Date().toISOString(),
+    fetchedAt,
     isFallback: status !== "connected",
     productName: isMix ? "Hearst+ International" : `${selectedBrandName} International`,
   };
 
   React.useEffect(() => {
     if (!selectedUrl) return;
+    if (loadedUrl.current === selectedUrl) return;
     let cancelled = false;
     async function loadStories() {
       setStatus("pending");
       setError(null);
       try {
-        const response = await fetch(`/api/hearst-international/stories?feed=${encodeURIComponent(selectedUrl)}`, { cache: "no-store" });
+        const response = await fetch(`/api/hearst-international/stories/?feed=${encodeURIComponent(selectedUrl)}`, { cache: "no-store" });
         const payload = await response.json() as { stories?: InternationalStory[]; status?: "pending" | "connected" | "error"; error?: string };
         if (!response.ok) throw new Error(payload.error || "International feed failed.");
         if (!cancelled) {
-          setStories(payload.stories ?? []);
-          setStatus(payload.status ?? "pending");
+          const nextStories = payload.stories ?? [];
+          loadedUrl.current = nextStories.length > 0 ? selectedUrl : null;
+          setStories(nextStories);
+          setFetchedAt(new Date().toISOString());
+          // A finished request is never "pending": with no stories the page shows its empty or error state.
+          setStatus(nextStories.length > 0 ? "connected" : "error");
           setError(payload.error ?? null);
         }
       } catch (loadError) {
@@ -144,9 +163,12 @@ export function InternationalFeedPage({ initialFeedUrl, initialCountry }: { init
     };
   }, [selectedUrl]);
 
-  if (status === "connected" && (selectedFeed || isMix)) {
+  // While stories load, render the real destination chrome and the shared river skeleton, so the page
+  // keeps its final masthead, country navigation and column layout instead of placeholder copy.
+  if (status === "pending" || (status === "connected" && stories.length > 0)) {
     return (
       <HomePageTemplate
+        riverLoading={status === "pending"}
         initialBrandSlug={isMix ? undefined : selectedBrandSlug}
         staticDestinationData={staticDestinationData}
         liveFeedData={liveFeedData}
@@ -210,7 +232,7 @@ export function InternationalFeedPage({ initialFeedUrl, initialCountry }: { init
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">International</p>
             <h2 className="mt-2 text-3xl font-bold">{selectedBrandName}</h2>
             <p className="mt-2 text-sm text-muted-foreground">{isMix ? "Stories from every official international edition, mixed by country and brand." : "Stories from the official international edition feed."}</p>
-            <p className="mt-4 text-xs uppercase tracking-[0.12em] text-muted-foreground">{status === "connected" ? `${stories.length} stories loaded` : status}</p>
+            <p className="mt-4 text-xs uppercase tracking-[0.12em] text-muted-foreground">{stories.length > 0 ? `${stories.length} stories loaded` : "No stories yet"}</p>
           </header>
           {error ? <p className="rounded-card border border-border bg-[var(--hp-surface)] p-4 text-sm text-muted-foreground shadow-[var(--hp-shadow-card)]">{error}</p> : null}
           {stories.map((story) => (
@@ -228,8 +250,7 @@ export function InternationalFeedPage({ initialFeedUrl, initialCountry }: { init
               </div>
             </article>
           ))}
-          {status === "pending" && stories.length === 0 ? <p className="rounded-card border border-border bg-[var(--hp-surface)] p-6 text-sm text-muted-foreground shadow-[var(--hp-shadow-card)]">Loading this edition’s stories…</p> : null}
-          {status !== "pending" && stories.length === 0 && !error ? <p className="rounded-card border border-border bg-[var(--hp-surface)] p-6 text-sm text-muted-foreground shadow-[var(--hp-shadow-card)]">No stories are available for this edition yet.</p> : null}
+          {stories.length === 0 && !error ? <p className="rounded-card border border-border bg-[var(--hp-surface)] p-6 text-sm text-muted-foreground shadow-[var(--hp-shadow-card)]">No stories are available for this edition yet.</p> : null}
         </section>
         <aside className="min-w-0 space-y-4 lg:sticky lg:top-[108px] lg:self-start">
           <section className="rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]" aria-labelledby="international-context">
@@ -237,7 +258,7 @@ export function InternationalFeedPage({ initialFeedUrl, initialCountry }: { init
             <div className="mt-4 space-y-3 text-sm text-muted-foreground">
               <p><span className="font-bold text-foreground">{selectedCountry}</span> edition</p>
               <p>{selectedFeed?.name}</p>
-              <p>{status === "connected" ? "Official RSS connected" : status === "pending" ? "Feed verification pending" : "Feed error"}</p>
+              <p>{status === "connected" ? "Official RSS connected" : "Official RSS unavailable right now"}</p>
             </div>
             {selectedFeed ? (
               <a href={selectedFeed.url} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex text-sm font-bold text-primary underline underline-offset-4">

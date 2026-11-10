@@ -14,12 +14,16 @@ export async function GET(request: Request) {
   // feed=all: every international edition, interleaved by country and brand.
   if (sourceUrl === "all") {
     const mix = await getHearstInternationalMix();
+    const connected = mix.stories.length > 0;
     return NextResponse.json({
       stories: mix.stories,
-      status: mix.stories.length > 0 ? "connected" : "pending",
+      status: connected ? "connected" : "pending",
       connectedFeeds: mix.connectedFeeds,
       totalFeeds: mix.totalFeeds,
-      ...(mix.stories.length > 0 ? {} : { error: "No international edition answered yet." }),
+      ...(connected ? {} : { error: "No international edition answered yet." }),
+    }, {
+      // Let the CDN share the mix across server instances; the in-memory cache is per instance.
+      headers: connected ? { "cache-control": "public, max-age=0, s-maxage=600, stale-while-revalidate=600" } : undefined,
     });
   }
 

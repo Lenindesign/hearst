@@ -389,6 +389,11 @@ export interface HomePageTemplateProps {
    * (brand promotions, local-news rail, cross-brand studio ad) are suppressed.
    */
   singleBrandName?: string;
+  /**
+   * The page is still fetching its live stories: keep the masthead and navigation, and show the shared
+   * river skeleton in place of the river (used by International while its edition feeds load).
+   */
+  riverLoading?: boolean;
 }
 
 interface ProgressiveFeedPage {
@@ -4902,6 +4907,7 @@ function LifestyleStoryReaderModal({
 
 type LifestyleRiverHomePageProps = {
   activeFilter: string;
+  riverLoading?: boolean;
   destination: DestinationMode;
   fullWidthFeaturedHero?: boolean;
   sectionsHomepage?: boolean;
@@ -4974,7 +4980,7 @@ function LifestyleRiverHydrationGate(props: LifestyleRiverHomePageProps) {
       "flow-root min-h-[calc(100dvh-173px)] md:min-h-[calc(100dvh-171px)]",
       !useFlushVideoTop && (fullWidthHeroActive ? "pt-4" : "md:pt-4"),
     )}>
-      {isHydrated
+      {isHydrated && !props.riverLoading
         ? <LifestyleRiverHomePage {...props} />
         : <LifestyleRiverLoadingState pageHeading={pageHeading} />}
     </div>
@@ -8103,6 +8109,7 @@ export function HomePageTemplate({
   sectionsHomepage = false,
   blocksHomepage = false,
   singleBrandName,
+  riverLoading = false,
 }: HomePageTemplateProps = {}) {
   const { brand, colorMode } = useTheme();
   const { account } = useReaderAccount();
@@ -8671,6 +8678,7 @@ export function HomePageTemplate({
               className="relative"
             >
               <LifestyleRiverHydrationGate
+                riverLoading={riverLoading}
                 activeFilter={activeLifestyleFilter}
                 destination={destinationMode}
                 fullWidthFeaturedHero={fullWidthFeaturedHero}
