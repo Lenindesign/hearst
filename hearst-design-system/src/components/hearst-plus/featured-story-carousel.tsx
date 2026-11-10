@@ -530,7 +530,7 @@ export function FeaturedStoryCarousel({
                     layoutMode === "list"
                       ? "relative col-start-2 row-start-1 flex min-w-0 flex-col justify-center bg-card p-4 pt-12 text-foreground sm:p-6 sm:pt-12"
                       : cn(
-                          "pointer-events-none relative z-10 col-start-1 row-start-2 mx-[6px] -mt-10 flex h-[204px] min-w-0 flex-col rounded-card px-5 py-2.5 shadow-[0_6px_18px_rgba(0,0,0,0.20)] sm:mx-[18px] sm:-mt-12 sm:h-[212px] sm:px-6 sm:py-3",
+                          "pointer-events-none relative z-10 col-start-1 row-start-2 mx-[6px] -mt-10 flex h-[224px] min-w-0 flex-col rounded-card px-5 py-2.5 shadow-[0_6px_18px_rgba(0,0,0,0.20)] sm:mx-[18px] sm:-mt-12 sm:h-[240px] sm:px-6 sm:py-3",
                           "!bg-black text-white",
                         ),
                   )}
