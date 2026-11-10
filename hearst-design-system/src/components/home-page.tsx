@@ -7031,7 +7031,7 @@ function LifestyleRiverHomePage({
 
         <StoryRiver
           id={!fullWidthFeaturedHero ? "hearst-story-river" : undefined}
-          className="min-w-0 scroll-mt-28 space-y-4"
+          className="min-w-0 scroll-mt-28 space-y-[26px]"
           aria-label={!fullWidthFeaturedHero ? (isBlocksHomepage ? "Hearst+ editorial blocks" : isSectionsHomepage ? "Hearst+ editorial sections" : config.riverLabel) : undefined}
         >
           <h1 className="sr-only">{pageHeading}</h1>

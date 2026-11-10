@@ -402,6 +402,7 @@ export function FeaturedStoryCarousel({
         className={cn(
           "relative w-full min-w-0 overscroll-x-none overflow-hidden",
           layoutMode !== "list" && "shadow-none",
+          layoutMode !== "list" && "pb-6",
           layoutMode === "list" && "bg-card",
           swipeEnabled && "touch-pan-y",
         )}
