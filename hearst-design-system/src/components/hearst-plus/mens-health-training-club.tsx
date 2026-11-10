@@ -8,6 +8,8 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { CalendarBlank, CheckCircle2, Clock, Plus, TrendingUp } from "@/components/ui/icons";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ClubActivityFeed } from "@/components/hearst-plus/club-activity-card";
+import { sampleClubActivities, type Activity, type ActivityType } from "@/components/hearst-plus/club-activity-model";
 
 const STORAGE_KEY = "hearst-mens-health-training-club-v1";
 const STORE_CHANGE_EVENT = "hearst-mens-health-training-club-change";
@@ -89,6 +91,32 @@ function subscribeToStore(onChange: () => void) {
   };
 }
 
+const loggedActivityTypes: Record<string, ActivityType> = {
+  "Strength workout": "strength",
+  Run: "run",
+  Walk: "walk",
+  Ride: "ride",
+  Mobility: "mobility",
+};
+
+/** A reader's own check-in, shown in Club activity only when they chose the group preview. */
+function toClubActivity(activity: TrainingActivity): Activity {
+  return {
+    id: `own-${activity.id}`,
+    athlete: { id: "you", name: "You" },
+    type: loggedActivityTypes[activity.type] ?? "other",
+    title: activity.type,
+    startedAt: `${activity.date}T12:00:00Z`,
+    timeZone: "UTC",
+    dateOnly: true,
+    source: "Logged in Hearst+",
+    distanceMi: activity.distance,
+    durationSec: activity.minutes * 60,
+    kudos: [],
+    comments: [],
+  };
+}
+
 function formatActivityDate(date: string) {
   const [year, month, day] = date.split("-").map(Number);
   return new Intl.DateTimeFormat("en-US", { weekday: "short", month: "short", day: "numeric" }).format(new Date(year, month - 1, day, 12));
@@ -110,6 +138,11 @@ export function MensHealthTrainingClub() {
   const activeDays = new Set(thisWeek.map((activity) => activity.date)).size;
   const weekMinutes = thisWeek.reduce((total, activity) => total + activity.minutes, 0);
   const distanceEnabled = ["Run", "Walk", "Ride"].includes(activityType);
+  const clubActivities = React.useMemo(
+    () => [...store.activities.filter((activity) => activity.inGroupPreview).slice(0, 3).map(toClubActivity), ...sampleClubActivities]
+      .sort((a, b) => Date.parse(b.startedAt) - Date.parse(a.startedAt)),
+    [store.activities],
+  );
 
   function handleToggleChallenge() {
     const next = { ...store, challengeJoined: !store.challengeJoined };
@@ -249,6 +282,11 @@ export function MensHealthTrainingClub() {
         </div>
       </form>
       </Card>
+
+      <ClubActivityFeed
+        activities={clubActivities}
+        description="Sample activity from illustrative members, so you can see how the club feed works. Check-ins you add to the group preview appear here too and stay in this browser."
+      />
 
       <Card className="gap-3 rounded-card border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] ring-0 sm:p-5">
       <section aria-labelledby="mh-recent-activity-title">
