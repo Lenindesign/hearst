@@ -1465,6 +1465,12 @@
   }
   .type-t5 { font-size: 1rem; line-height: 1.25rem; letter-spacing: 0; text-wrap: balance; }
   .type-t6 { font-size: 0.875rem; line-height: 1.25rem; letter-spacing: 0.3px; font-weight: 700; text-wrap: balance; }
+  /* Featured carousel cards use a slightly larger T2 headline while retaining
+     the same line-height rhythm so the shorter overlay still fits its copy. */
+  .featured-carousel-headline { font-size: 1.65rem; line-height: 1.75rem; }
+  @media (min-width: 768px) {
+    .featured-carousel-headline { font-size: 2.2rem; line-height: 2.25rem; }
+  }
   .type-d1 { font-size: 1.25rem; line-height: 1.75rem; letter-spacing: 0; text-wrap: pretty; }
   .type-b1 { font-size: 1.125rem; line-height: 1.75rem; letter-spacing: 0; text-wrap: pretty; }
   .type-d2 { font-size: 1rem; line-height: 1.5rem; letter-spacing: 0.2px; text-wrap: pretty; }

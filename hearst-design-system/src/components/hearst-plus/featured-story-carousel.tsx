@@ -454,10 +454,10 @@ export function FeaturedStoryCarousel({
               layoutMode === "list"
                 ? "headline type-t3 line-clamp-3 max-w-[min(42rem,100%)] break-words"
                 : cn(
-                    "headline type-t2 break-words",
+                    "headline type-t2 featured-carousel-headline break-words",
                     scrimDirection === "left-to-right"
-                      ? "line-clamp-none max-w-[min(42rem,33.333%)]"
-                      : "line-clamp-3 max-w-[min(42rem,100%)]",
+                      ? "line-clamp-none w-full max-w-full"
+                      : "line-clamp-3 w-full max-w-full",
                   ),
             );
 
@@ -539,7 +539,7 @@ export function FeaturedStoryCarousel({
                     layoutMode === "list"
                       ? "relative col-start-2 row-start-1 flex min-w-0 flex-col justify-center bg-card p-4 pt-12 text-foreground sm:p-6 sm:pt-12"
                       : cn(
-                          "pointer-events-none relative z-10 col-start-1 row-start-2 mx-[6px] -mt-10 flex h-[224px] min-w-0 flex-col rounded-card px-5 py-2.5 shadow-[0_6px_18px_rgba(0,0,0,0.20)] ease-[cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none sm:mx-[18px] sm:-mt-12 sm:h-[240px] sm:px-6 sm:py-3",
+                          "pointer-events-none relative z-10 col-start-1 row-start-2 mx-[21px] -mt-10 flex h-[200px] min-w-0 flex-col rounded-card px-5 py-2.5 shadow-[0_6px_18px_rgba(0,0,0,0.20)] ease-[cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none sm:mx-[33px] sm:-mt-12 sm:h-[220px] sm:px-6 sm:py-3",
                           isDragging || !trackTransitionEnabled
                             ? "!transition-none"
                             : "transition-transform duration-300",
@@ -606,7 +606,7 @@ export function FeaturedStoryCarousel({
                   )}
                   {layoutMode !== "list" && story.summary ? (
                     <p className={cn(
-                      "mt-3 line-clamp-2 max-w-3xl text-sm leading-[1.265] text-[var(--featured-card-fg)] opacity-85 sm:text-base",
+                      "mt-3 line-clamp-2 w-full max-w-full text-sm leading-[1.265] text-[var(--featured-card-fg)] opacity-85 sm:text-base",
                     )}>
                       {story.summary}
                     </p>

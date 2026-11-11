@@ -1656,7 +1656,7 @@ export function MainNav({
           className={cn(
             "relative w-full overflow-hidden",
             mastheadBanner.pattern === "brand-wall" || mastheadBanner.logoSize === "section"
-              ? "aspect-[16/1] max-lg:aspect-[12/1] max-sm:aspect-[6/1]"
+              ? "h-[117px] max-lg:h-[95px] max-sm:h-[78px]"
               : "aspect-[var(--banner-aspect)] max-sm:aspect-[3/1]",
           )}
           style={{ "--banner-aspect": `${mastheadBanner.width - (mastheadBanner.cropX?.left ?? 0) - (mastheadBanner.cropX?.right ?? 0)} / ${mastheadBanner.height}` } as React.CSSProperties}
@@ -1698,7 +1698,7 @@ export function MainNav({
         {mastheadBanner.overlayLogo ? (
           <div className={cn(
             "pointer-events-none absolute inset-x-0 bottom-0 flex justify-center",
-            mastheadBanner.logoDescriptor || mastheadDescriptorOverride ? "items-end pb-2" : "items-center",
+            "items-center",
             mastheadBanner.logoDescriptor || mastheadDescriptorOverride ? "px-4 sm:px-24" : "px-24",
             underUtilityBar ? "top-8" : "top-0",
           )}>
