@@ -200,7 +200,9 @@ export function UtilityBar({
     openDestinationMenu === "flux" ||
     openDestinationMenu === "ew";
   const isConceptMenu = openDestinationMenu === "all" || isLifestyleMenu || isInternationalMenu;
-  const menuDarkMode = darkMode;
+  // The utility strip may use a dark treatment for a brand masthead (for
+  // example Flux), but dropdown surfaces follow the reader's actual theme.
+  const menuDarkMode = colorMode === "dark";
 
   const updateBrandMenuPosition = React.useCallback(() => {
     const barBounds = utilityBarRef.current?.getBoundingClientRect();
