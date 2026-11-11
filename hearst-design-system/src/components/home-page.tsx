@@ -1654,10 +1654,10 @@ export function MainNav({
         {/* Full-bleed art, trimmed of any baked-in side bars so it always reaches both edges. */}
         <div
           className={cn(
-            // The art's own ratio on wider screens; phones use a taller crop so the overlaid controls fit. The ratio
-            // goes through a custom property because an inline aspect-ratio would override the phone class.
-            "relative w-full overflow-hidden aspect-[var(--banner-aspect)]",
-            mastheadBanner.pattern === "brand-wall" || mastheadBanner.logoSize === "section" ? "max-sm:aspect-[6/1]" : "max-sm:aspect-[3/1]",
+            "relative w-full overflow-hidden",
+            mastheadBanner.pattern === "brand-wall" || mastheadBanner.logoSize === "section"
+              ? "aspect-[16/1] max-lg:aspect-[12/1] max-sm:aspect-[6/1]"
+              : "aspect-[var(--banner-aspect)] max-sm:aspect-[3/1]",
           )}
           style={{ "--banner-aspect": `${mastheadBanner.width - (mastheadBanner.cropX?.left ?? 0) - (mastheadBanner.cropX?.right ?? 0)} / ${mastheadBanner.height}` } as React.CSSProperties}
         >
