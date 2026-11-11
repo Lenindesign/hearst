@@ -2,8 +2,8 @@
   "$description": "Production font overrides per brand. These are sourced from live CDN @font-face analysis and override the Pencil font-family-default/serif values for headline and secondary typography roles.",
   "overrides": {
     "autoweek": {
-      "fontHeadline": "Inter",
-      "fontHeadlineWeight": 700
+      "fontHeadline": "Montserrat",
+      "fontHeadlineWeight": 800
     },
     "best-products": {
       "fontHeadline": "Inter",

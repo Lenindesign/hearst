@@ -799,6 +799,14 @@
   font-display: swap;
   src: url("https://www.countryliving.com/_assets/design-tokens/countryliving/static/fonts/montserrat-v29-latin-600.7dc378e.woff2") format("woff2");
 }
+/* ─── AutoWeek headlines: Montserrat 800, from AutoWeek's own design tokens ─── */
+@font-face {
+  font-family: "Montserrat";
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+  src: url("https://www.autoweek.com/_assets/design-tokens/autoweek/static/fonts/Montserrat-800.woff2") format("woff2");
+}
 @font-face {
   font-family: "Playfair Display";
   font-weight: 400;
