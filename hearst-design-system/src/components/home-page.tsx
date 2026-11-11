@@ -7045,7 +7045,9 @@ function LifestyleRiverHomePage({
               {!fullWidthFeaturedHero && !isBlocksHomepage ? (
                 <FeaturedStoryCarousel
                   key={`${leadStory.id}:${heroStories.map((story) => story.id).join("|")}`}
-                  className="mb-[-10px]"
+                  // The slide layout's track already reserves 24 px below the card for its shadow, so it tucks in;
+                  // the list layout has no such padding and keeps the river's full 26 px gap.
+                  className={riverLayout === "list" ? undefined : "mb-[-10px]"}
                   stories={heroStories}
                   layoutMode={riverLayout}
                   editionLabel={shouldUseTodaysPicks ? (isShowingLatestAvailableStories ? "Latest available" : "Today’s Picks") : undefined}
