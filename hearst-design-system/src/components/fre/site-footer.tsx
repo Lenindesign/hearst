@@ -49,6 +49,7 @@ const defaultProductLinkGroups: SiteFooterLinkGroup[] = [
       { label: "Tokens & brand guides", href: "/token-specs/" },
       { label: "Blocks, cards & widgets spec", href: "/specs/blocks-spec.html" },
       { label: "Main navigation spec", href: "/specs/nav-spec.html" },
+      { label: "Content reader spec", href: "/specs/reader-spec.html" },
       { label: "Storybook", href: PROD_STORYBOOK_URL },
     ],
   },

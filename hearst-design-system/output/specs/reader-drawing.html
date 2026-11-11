@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reader Drawing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;600;700&display=swap">
+<style>
+/* Layout: one Apple-style dimensional drawing sheet (notes · section · plan · tables · details · layouts · title block), black on white, single light theme by design. */
+:root{--paper:#ececec;--sheet:#ffffff;--ink:#111;--ink2:#444;--ink3:#7a7a7a;--fill:#f3f3f3;--fill2:#e6e6e6;--f:'Arimo','Helvetica Neue',Helvetica,Arial,sans-serif;color-scheme:light}
+body{background:var(--paper);color:var(--ink);font-family:var(--f)}
+.wrap{max-width:1760px;margin:0 auto;padding-block:24px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.scroll{overflow-x:auto;background:var(--sheet);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+svg{display:block;width:100%;min-width:1100px;height:auto}
+.tb{background:var(--sheet);border:1.5px solid var(--ink);display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr;margin-bottom:24px}
+.tb>div{border-right:1px solid #d0d0d0;border-bottom:1px solid #d0d0d0;padding:10px 12px;min-width:0}
+.tb .big{grid-row:span 2;display:flex;flex-direction:column;justify-content:space-between;gap:12px}
+.tb h1{font-size:clamp(26px,4vw,40px);line-height:1;margin:0;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.lbl{text-transform:uppercase;letter-spacing:.08em;font-size:12px;color:var(--ink3);font-weight:600}
+.tb .v{font-size:13px;margin-top:2px;font-variant-numeric:tabular-nums}
+.tb .notes{grid-column:1/-1;border-right:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:6px 24px;font-size:13px;color:var(--ink2)}
+.tb .notes ol{margin:4px 0 0;padding-left:18px}
+.tb .figs{grid-column:1/-1;border-right:0;border-bottom:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px 18px}
+.tb .figs .v{font-size:17px}
+@media (max-width:640px){.tb{grid-template-columns:1fr 1fr}.tb .big{grid-column:1/-1;grid-row:auto}}
+.sheetwrap{margin-bottom:28px}
+.foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--ink2);padding:10px 2px 0}
+.foot b{font-weight:600;color:var(--ink)}
+/* drawing */
+.u{font-family:var(--f);text-transform:uppercase;letter-spacing:.07em}
+.border{fill:none;stroke:var(--ink);stroke-width:1.2}
+.obj{fill:var(--sheet);stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round}
+.well{fill:var(--fill);stroke:var(--ink);stroke-width:1}
+.slot{fill:none;stroke:var(--ink2);stroke-width:.8;stroke-dasharray:4 3}
+.hug{fill:var(--fill2);stroke:var(--ink);stroke-width:1}
+.thin{fill:none;stroke:var(--ink);stroke-width:.8}
+.ph{fill:none;stroke:var(--ink3);stroke-width:.8;stroke-dasharray:14 3 3 3}
+.cl{fill:none;stroke:var(--ink3);stroke-width:.7;stroke-dasharray:16 3 2 3}
+.cut{stroke:var(--ink);stroke-width:2}
+.dl{stroke:var(--ink);stroke-width:.7;fill:none}
+.ext{stroke:var(--ink);stroke-width:.55;fill:none}
+.arrow{fill:var(--ink)}
+.hl{stroke:var(--ink2);stroke-width:.7}
+.hs{stroke:var(--ink);stroke-width:.8}
+.env{fill:none;stroke:var(--ink);stroke-width:.8;stroke-dasharray:10 3 2 3}
+.dt{font:400 11px var(--f);fill:var(--ink);paint-order:stroke;stroke:var(--sheet);stroke-width:4px;stroke-linejoin:round}
+.dts{font:400 9.5px var(--f);fill:var(--ink2);letter-spacing:.06em;text-transform:uppercase;paint-order:stroke;stroke:var(--sheet);stroke-width:3px}
+.sl{font:400 9px var(--f);fill:var(--ink2);letter-spacing:.08em;text-transform:uppercase}
+.nt{font:400 11.5px var(--f);fill:var(--ink);letter-spacing:.06em;text-transform:uppercase}
+.nth{font:700 13px var(--f);fill:var(--ink);letter-spacing:.06em}
+.vt{font:400 12px var(--f);fill:var(--ink);letter-spacing:.1em;text-transform:uppercase}
+.vtb{font:400 20px var(--f);fill:var(--ink);letter-spacing:.06em}
+.nb{fill:var(--sheet);stroke:var(--ink);stroke-width:.9}
+.nbt{font:400 9.5px var(--f);fill:var(--ink)}
+.lead{stroke:var(--ink);stroke-width:.7;fill:none}
+.dot{fill:var(--ink)}
+.th{font:400 10.5px var(--f);fill:var(--ink);letter-spacing:.05em;text-transform:uppercase}
+.tc{font:400 10.5px var(--f);fill:var(--ink)}
+.tbk{font:400 7px var(--f);fill:var(--ink2);letter-spacing:.04em;text-transform:uppercase}
+.tbt{font:700 15px var(--f);fill:var(--ink)}
+.tbv{font:400 17px var(--f);fill:var(--ink);letter-spacing:.06em}
+
+/* title block restyled to match the drawing sheet: thin black rules, plain caps lettering */
+.tb{border:1.2px solid var(--ink);border-radius:16px;overflow:hidden}
+.tb>div{border-right:.8px solid var(--ink);border-bottom:.8px solid var(--ink);padding:10px 14px}
+.tb>div:nth-child(4),.tb>div:nth-child(7){border-right:0}
+.tb .lbl{font-size:9.5px;font-weight:400;letter-spacing:.06em;color:var(--ink2)}
+.tb h1{font-weight:400;letter-spacing:.1em;font-size:clamp(28px,4vw,44px);margin-top:4px}
+.tb .v{font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink)}
+.tb .big .v{font-size:11px;color:var(--ink2);line-height:1.6}
+.tb .notes{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);line-height:1.9}
+.tb .notes ol{padding-left:20px}
+.tb .nh{font-weight:700;font-size:13px;letter-spacing:.06em}
+.tb .nh span{font-weight:400;font-size:11.5px;margin-left:6px}
+.tb .figs>div{border-left:.8px solid var(--ink);padding-left:14px}
+.tb .figs>div:first-child{border-left:0;padding-left:0}
+.tb .figs .v{font-size:18px;letter-spacing:.06em;text-transform:none;margin-top:4px}
+.foot{font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+.foot b{font-weight:700}
+</style>
+<style>body{margin:0}.tb .notes ol li{margin:0}</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="tb">
+    <div class="big">
+      <div><div class="lbl">UI component · dimensional drawing</div><h1>Content reader</h1></div>
+      <div class="v">Hearst+ story reader: scrim, inset shell, sticky masthead, context rail, article, ad rail and the endless story queue. Sheet 1 is structure; sheet 2 is queue, scroll and focus logic. Values measured in the running app.</div>
+    </div>
+    <div><div class="lbl">Dwg no.</div><div class="v">HP-READ-001</div></div>
+    <div><div class="lbl">Rev</div><div class="v">A · 2026-11-11</div></div>
+    <div><div class="lbl">Sheets</div><div class="v">2</div></div>
+    <div><div class="lbl">Units</div><div class="v">CSS px @ 1× · rem = 16</div></div>
+    <div><div class="lbl">Scale</div><div class="v">Noted per view</div></div>
+    <div><div class="lbl">Source</div><div class="v">content-reader-dialog-shell.tsx · content-reader-masthead.tsx · content-reader-context-rail.tsx · content-reader-advertisement.tsx · home-page.tsx (reader)</div></div>
+    <div class="notes">
+      <div><span class="nh">NOTES:<span>(UNLESS OTHERWISE SPECIFIED)</span></span><ol>
+        <li>Do not scale from screen. Read the numbers.</li>
+        <li>Measured with Playwright (Chromium, fonts loaded, light mode) on /read/{story} opened from the Hearst+ home at viewports 390, 640, 768, 1024, 1280 and 1440.</li>
+        <li>Slots are placeholders. Logos, images, ads and copy are not part of the drawing.</li>
+        <li>Values with a dot read base · breakpoint (sm 640, md 768, lg 1024, xl 1280).</li></ol></div>
+      <div><span class="nh" aria-hidden="true">&nbsp;</span><ol start="5">
+        <li>HUG = sized by content · FLEX = takes remaining space · FILL = parent width.</li>
+        <li>Story length, rail card heights and comment threads are schematic; they follow content.</li>
+        <li>Car stories swap the lead media for a gallery grid; video stories use a 16:9 player. Same frame.</li>
+        <li>Grayscale by design. Color tokens are listed in the reader spec, not drawn.</li></ol></div>
+    </div>
+    <div class="figs">
+      <div><div class="lbl">W1 · shell max</div><div class="v">1360</div></div>
+      <div><div class="lbl">I1 · inset</div><div class="v">0 · 24 sm</div></div>
+      <div><div class="lbl">H1+H2 · masthead</div><div class="v">116 · 111 sm</div></div>
+      <div><div class="lbl">R · rails</div><div class="v">300</div></div>
+      <div><div class="lbl">P · article pad</div><div class="v">20 · 28 sm</div></div>
+      <div><div class="lbl">C · content max</div><div class="v">768</div></div>
+      <div><div class="lbl">T2 · next story</div><div class="v">600 early</div></div>
+    </div>
+  </header>
+  <div class="sheetwrap"><div class="scroll"><svg id="sh1" viewBox="0 0 1700 1060" role="img" aria-label="Content reader sheet 1, structure: plan at 1440, plan at 390, breakpoint columns, article top, action bar and close details, variable tables"></svg></div>
+  <div class="foot"><span>2026-11-11 &nbsp;|&nbsp; UI component reference · Hearst+ reader</span><span><b>Content reader, structure</b> &nbsp;|&nbsp; 1 of 2</span></div></div>
+  <div class="sheetwrap"><div class="scroll"><svg id="sh2" viewBox="0 0 1700 1060" role="img" aria-label="Content reader sheet 2, logic: viewport placement, layer order, story queue and reading anchor, active story rules, focus flow, article width by viewport and thresholds"></svg></div>
+  <div class="foot"><span>2026-11-11 &nbsp;|&nbsp; UI component reference · Hearst+ reader</span><span><b>Content reader, logic</b> &nbsp;|&nbsp; 2 of 2</span></div></div>
+</div>
+<script>
+(function(){
+const NS='http://www.w3.org/2000/svg';let sv,A,HAT,uid=0;
+function mk(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)if(a[k]!=null)e.setAttribute(k,a[k]);(p||sv).appendChild(e);return e}
+function tx(x,y,s,c,a,p){const t=mk('text',Object.assign({x:x,y:y,class:c||'dt'},a||{}),p);t.textContent=s;return t}
+function begin(id){sv=document.getElementById(id);sv.innerHTML='';const n=uid++;const d=mk('defs',{});const m=mk('marker',{id:'ar'+n,viewBox:'0 0 10 10',refX:10,refY:5,markerWidth:7,markerHeight:7,orient:'auto-start-reverse',markerUnits:'userSpaceOnUse'},d);mk('path',{d:'M0,1.7 L10,5 L0,8.3 z',class:'arrow'},m);
+ const pt=mk('pattern',{id:'hat'+n,width:5,height:5,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'},d);mk('line',{x1:0,y1:0,x2:0,y2:5,class:'hl'},pt);A='url(#ar'+n+')';HAT='url(#hat'+n+')';rr(20,20,1660,1020,16,'border')}
+function dimH(x1,x2,y,e1,e2,l,o){o=o||{};[[x1,e1],[x2,e2]].forEach(([x,e])=>{if(e==null)return;const s=Math.sign(y-e)||1;mk('line',{x1:x,y1:e+s*3,x2:x,y2:y+s*5,class:'ext'})});
+ if(x2-x1>=28)mk('line',{x1:x1,y1:y,x2:x2,y2:y,class:'dl','marker-start':A,'marker-end':A});else{mk('line',{x1:x1-13,y1:y,x2:x1,y2:y,class:'dl','marker-end':A});mk('line',{x1:x2+13,y1:y,x2:x2,y2:y,class:'dl','marker-end':A});mk('line',{x1:x1,y1:y,x2:x2,y2:y,class:'dl'})}
+ tx((x1+x2)/2+(o.dx||0),(o.below?y+13:y-4)+(o.dy||0),l,o.c||'dt',{'text-anchor':'middle'})}
+function dimV(y1,y2,x,e1,e2,l,o){o=o||{};[[y1,e1],[y2,e2]].forEach(([y,e])=>{if(e==null)return;const s=Math.sign(x-e)||1;mk('line',{x1:e+s*3,y1:y,x2:x+s*5,y2:y,class:'ext'})});
+ if(y2-y1>=28)mk('line',{x1:x,y1:y1,x2:x,y2:y2,class:'dl','marker-start':A,'marker-end':A});else{mk('line',{x1:x,y1:y1-13,x2:x,y2:y1,class:'dl','marker-end':A});mk('line',{x1:x,y1:y2+13,x2:x,y2:y2,class:'dl','marker-end':A});mk('line',{x1:x,y1:y1,x2:x,y2:y2,class:'dl'})}
+ const c=(y1+y2)/2+(o.dy||0);if(o.side){const r=o.side==='r';const lx=(r?x+6:x-6)+(o.dx||0);if(o.dx)mk('line',{x1:x+(r?2:-2),y1:(y1+y2)/2,x2:lx+(r?-2:2),y2:c,class:'lead'});tx(lx,c+4,l,o.c||'dt',{'text-anchor':r?'start':'end'})}else tx(x-5,c,l,o.c||'dt',{'text-anchor':'middle',transform:'rotate(-90 '+(x-5)+' '+c+')'})}
+function callout(px,py,ex,ey,l,dir,c){const s=dir||(ex>=px?1:-1);mk('circle',{cx:px,cy:py,r:1.8,class:'dot'});mk('polyline',{points:px+','+py+' '+ex+','+ey+' '+(ex+s*10)+','+ey,class:'lead'});tx(ex+s*14,ey+4,l,c||'dt',{'text-anchor':s>0?'start':'end'})}
+function rad(cx,cy,r,c,l,L){const sx=c.includes('l')?-1:1,sy=c.includes('t')?-1:1;const ox=cx-sx*r,oy=cy-sy*r;const px=ox+sx*r*Math.SQRT1_2,py=oy+sy*r*Math.SQRT1_2;callout(px,py,px+sx*L,py+sy*L,l,sx)}
+function nb(x,y,n){mk('rect',{x:x-6,y:y-6,width:12,height:12,class:'nb'});tx(x,y+3.5,String(n),'nbt',{'text-anchor':'middle'})}
+function rr(x,y,w,h,r,c){return mk('rect',{x:x,y:y,width:w,height:h,rx:r,class:c})}
+function slotLabel(x,y,w,h,l,al){tx(al==='l'?x+6:x+w/2,y+h/2+3.2,l,'sl',{'text-anchor':al==='l'?'start':'middle'})}
+function title(x,y,t,s){tx(x,y,t,'vt',{'text-anchor':'middle'});if(s)tx(x,y+14,s,'dts',{'text-anchor':'middle'})}
+function notes(list){const NX=50,NY=58;tx(NX,NY,'NOTES:','nth');tx(NX+62,NY,'(UNLESS OTHERWISE SPECIFIED)','nt');
+ list.forEach(([n,t],i)=>{const y=NY+30+i*22;if(n){nb(NX+6,y-4,n);tx(NX+22,y,t,'nt')}else tx(NX+22,y,t,'nt')})}
+function table(x,y,ttl,rows,ws){ws=ws||[42,100,88];const rh=17;tx(x,y-8,ttl,'vt');
+ const all=[ws.length===3&&!ws.hdr?['Code','Variable','Value']:ws.hdr].concat(rows);all.forEach((r,i)=>{let cx2=x;r.forEach((c,j)=>{mk('rect',{x:cx2,y:y+i*rh,width:ws[j],height:rh,class:'thin'});tx(cx2+(j?ws[j]/2:5),y+i*rh+12,c,i?'tc':'th',{'text-anchor':j?'middle':'start'});cx2+=ws[j]})});return y+all.length*rh+34}
+function detailRef(cx,cy,r,lbl,lx,ly){mk('circle',{cx:cx,cy:cy,r:r,class:'ph'});const a=Math.atan2(ly-cy,lx-cx);mk('line',{x1:cx+r*Math.cos(a),y1:cy+r*Math.sin(a),x2:lx,y2:ly,class:'lead'});tx(lx+(lx<cx?-4:4),ly+4,lbl,'dts',{'text-anchor':lx<cx?'end':'start'})}
+function xbox(x,y,w,h,cls){rr(x,y,w,h,0,cls||'thin');mk('path',{d:'M'+x+','+y+' L'+(x+w)+','+(y+h)+' M'+(x+w)+','+y+' L'+x+','+(y+h),class:'thin'})}
+/* ---------- shared helpers for this drawing ---------- */
+function hat(x,y,w,h){mk('rect',{x:x,y:y,width:w,height:h,fill:HAT,class:'hs'})}
+function line(x1,y1,x2,y2,c){return mk('line',{x1:x1,y1:y1,x2:x2,y2:y2,class:c||'thin'})}
+function arrowLine(x1,y1,x2,y2){mk('line',{x1:x1,y1:y1,x2:x2,y2:y2,class:'dl','marker-end':A})}
+function plate(x,y,w,lbl,sub,cls){const d=26,h=30;mk('path',{d:'M'+(x+d)+','+y+' H'+(x+d+w)+' L'+(x+w)+','+(y+h)+' H'+x+' Z',class:cls||'obj'});
+ mk('polyline',{points:(x+d+w-4)+','+(y+h/2)+' '+(x+d+w+16)+','+(y+h/2),class:'lead'});tx(x+d+w+20,y+h/2-1,lbl,'dts');if(sub)tx(x+d+w+20,y+h/2+11,sub,'sl')}
+function textLines(x,y,w,n,gap,last){for(let i=0;i<n;i++){const ww=i===n-1?w*(last||.6):w;line(x,y+i*gap,x+ww,y+i*gap,'ph')}}
+/* article block, generic: returns bottom y */
+function article(x,y,w,k,o){o=o||{};const p=(o.pad||28)*k,iw=w-2*p,ih=iw*9/16;
+ rr(x,y,w,o.h,8*k,'obj');
+ xbox(x+p,y+p,iw,ih,'well');rr(x+p,y+p,iw,ih,4*k,'thin');slotLabel(x+p,y+p+ih/2-12,iw,24,'LEAD MEDIA · 16:9 · R4');
+ let yy=y+p+ih+24*k;rr(x+p,yy,iw*.32,16*k,0,'hug');slotLabel(x+p,yy,iw*.32,16*k,'KICKER');
+ yy+=28*k;const hh=(o.hh||104)*k;rr(x+p,yy,iw,hh,0,'slot');slotLabel(x+p,yy,iw,hh,'HEADLINE SLOT · T1 · FILL');
+ yy+=hh+24*k;const bh=54*k;line(x+p,yy,x+p+iw,yy);line(x+p,yy+bh,x+p+iw,yy+bh);rr(x+p,yy+12*k,iw*.5,30*k,0,'slot');slotLabel(x+p,yy+12*k,iw*.5,30*k,'BYLINE · FLEX','l');
+ [0,1,2].forEach(i=>rr(x+p+iw-(3-i)*36*k+8*k,yy+13*k,28*k,28*k,14*k,'hug'));
+ yy+=bh+24*k;rr(x+p,yy,iw,o.h-(yy-y)-p,0,'slot');slotLabel(x+p,yy+16,iw,16,'BODY SLOT · 18 / 28 · MAX 768');
+ return {p,iw,ih,bar:yy-24*k-bh,body:yy}}
+
+/* =====================================================================
+   SHEET 1 · STRUCTURE
+   ===================================================================== */
+begin('sh1');
+notes([[1,'SCRIM · FIXED INSET 0 · Z 200 · 55 % + BLUR 8'],[2,'SHELL · INSET 24 SM+ · MAX 1360 · R 8'],[3,'MASTHEAD · STICKY TOP 0 · Z 110'],[4,'CONTEXT RAIL · XL+ · STICKY 128'],[5,'ARTICLE · BORDER 1 · R 8 · PAD 20 · 28 SM'],[6,'AD RAIL · LG+ · 300 × 600 · STICKY 128'],[0,'THE SHELL IS THE SCROLL CONTAINER'],[0,'CONTENT COLUMN = MAX 768, CENTERED IN ARTICLE'],[0,'QUEUE, SCROLL AND FOCUS LOGIC: SEE SHEET 2']]);
+
+/* ---- plan 1 · xl 1440 · 0.5:1 ---- */
+(function(){const k=.5,X=470,Y=96,VW=1440*k,VH=900*k;
+ rr(X,Y,VW,VH,0,'thin');hat(X,Y,VW,VH);
+ const SX=X+40*k,SY=Y+24*k,SW=1360*k,SH=852*k;rr(SX,SY,SW,SH,8*k,'well');
+ // masthead
+ rr(SX,SY,SW,64*k,0,'obj');rr(SX,SY+64*k,SW,46*k,0,'obj');
+ rr(SX+24*k,SY+18*k,230*k,28*k,0,'slot');slotLabel(SX+24*k,SY+18*k,230*k,28*k,'LOGO SLOT');
+ rr(SX+666*k,SY+19*k,626*k*.62,26*k,0,'slot');slotLabel(SX+666*k,SY+19*k,626*k*.62,26*k,'DESTINATIONS · LG+');
+ rr(SX+SW-52*k,SY+18*k,28*k,28*k,14*k,'hug');
+ rr(SX+389*k,SY+64*k,582*k,46*k,0,'slot');slotLabel(SX+389*k,SY+64*k,582*k,46*k,'TOPIC FILTERS · HUG · CENTERED');
+ // grid
+ const GY=SY+135*k-24*k+24*k;const c1=SX+48*k,c2=c1+316*k,c3=c2+632*k+16*k;
+ rr(c1,GY,296*k,577*k,8*k,'obj');rr(c1,GY+593*k,296*k,SH-(GY-SY)-593*k-1,8*k,'obj');
+ slotLabel(c1,GY+20,296*k,16,'TRENDING CARD');slotLabel(c1,GY+593*k+20,296*k,16,'SAVED · SUGGESTED');
+ article(c2,GY,632*k,k,{h:SH-(GY-SY),pad:28});
+ rr(c3,GY,300*k,600*k,8*k,'obj');xbox(c3,GY,300*k,268*k,'well');slotLabel(c3,GY+268*k+30,300*k,16,'AD BODY · PAD 24');
+ mk('line',{x1:c2+316*k,y1:SY-14,x2:c2+316*k,y2:SY+SH+14,class:'cl'});
+ // dims
+ dimH(X,X+VW,Y-40,Y,Y,'VIEWPORT 1440');
+ dimH(X,SX,Y-16,Y,SY,'40',{dx:-8});dimH(SX,SX+SW,Y-16,SY,SY,'W1 1360 · MAX');
+ dimH(SX,c1,SY+SH+18,SY+SH,SY+SH,'S1 48',{below:true,dx:-6});dimH(c1,c1+300*k,SY+SH+18,SY+SH,SY+SH,'R 300',{below:true});
+ dimH(c1+300*k,c2,SY+SH+18,SY+SH,SY+SH,'G 16',{below:true,dy:14});dimH(c2,c2+632*k,SY+SH+18,SY+SH,SY+SH,'A · FLEX (632)',{below:true});
+ dimH(c3-16*k,c3,SY+SH+18,SY+SH,SY+SH,'G',{below:true,dy:14});dimH(c3,c3+300*k,SY+SH+18,SY+SH,SY+SH,'R 300',{below:true});
+ dimV(SY,SY+64*k,SX-14,SX,SX,'H1 64',{side:'l'});dimV(SY+64*k,SY+110*k,SX-14,SX,SX,'H2 46',{side:'l'});
+ dimV(Y,SY,X+VW+14,X+VW,X+VW,'I1 24',{side:'r'});dimV(GY-24*k,GY,X+VW+14,SX+SW,SX+SW,'S2 24',{side:'r',dy:-4});
+ dimV(GY,GY+600*k,X+VW+44,c3+300*k,c3+300*k,'AD 600',{side:'r'});
+ nb(X+14,Y+14,1);nb(SX+SW-12,SY+SH-12,2);nb(SX+SW/2+200,SY+10,3);nb(c1+12,GY+12,4);nb(c2+632*k-12,GY+12,5);nb(c3+300*k-12,GY+300*k*.9+150,6);
+ detailRef(SX+SW-38*k,SY+32*k,16,'DETAIL C',X+VW+60,Y+40);
+ detailRef(c2+632*k-60*k,GY+(28+323+24+16+28+104+24+27)*k,22,'DETAIL B',X+VW+60,GY+250);
+ title(X+VW/2,Y+VH+70,'PLAN · XL 1440 · READER OPEN OVER THE HOME','SCALE 0.5:1 · 3 COLUMNS · RAIL | ARTICLE | AD');
+})();
+
+/* ---- plan 2 · base 390 · 0.5:1 ---- */
+(function(){const k=.5,X=56,Y=330,W=390*k,H=900*k;
+ rr(X,Y,W,H,0,'well');rr(X,Y,W,69*k,0,'obj');rr(X,Y+69*k,W,46*k,0,'obj');
+ rr(X+16*k,Y+22*k,150*k,24*k,0,'slot');rr(X+W-60*k,Y+12*k,44*k,44*k,22*k,'hug');
+ rr(X+16*k,Y+69*k,W-16*k,46*k,0,'slot');slotLabel(X+16*k,Y+69*k,W-16*k,46*k,'FILTERS · SCROLL X');
+ article(X+16*k,Y+140*k,358*k,k,{h:H-140*k,pad:20,hh:72});
+ dimH(X,X+W,Y-16,Y,Y,'390 · FULL VIEWPORT');
+ dimV(Y,Y+69*k,X-12,X,X,'H1 69',{side:'l'});dimV(Y+69*k,Y+115*k,X-12,X,X,'H2',{side:'l'});
+ dimH(X,X+16*k,Y+H+16,Y+H,Y+H,'S1 16',{below:true,dx:-10});dimH(X+16*k,X+36*k,Y+H+40,Y+H,Y+H,'P 20',{below:true,dx:8});
+ callout(X+W-38*k,Y+34*k,X+W+24,Y-26,'Z1 44',1);
+ title(X+W/2,Y+H+76,'PLAN · BASE 390','SCALE 0.5:1 · 1 COLUMN · NO RAILS');
+})();
+
+/* ---- breakpoint strip ---- */
+(function(){const X=300,Y=700,BW=92,BH=64;
+ const cols=[['BASE · < 640','INSET 0 · R 0',[[0,1,'A']]],['SM 640','INSET 24 · R 8',[[0,1,'A']]],['LG 1024','A | AD',[[0,.62,'A'],[.68,1,'AD']]],['XL 1280','R | A | AD',[[0,.28,'R'],[.33,.66,'A'],[.72,1,'AD']]]];
+ cols.forEach(([a,b,cs],i)=>{const x=X+i*(BW+12);rr(x,Y,BW,BH,i?4:0,'thin');
+  cs.forEach(([s,e,l])=>{const xx=x+6+s*(BW-12),ww=(e-s)*(BW-12);rr(xx,Y+14,ww,BH-22,2,l==='A'?'obj':'hug');slotLabel(xx,Y+14,ww,BH-22,l)});
+  line(x,Y+10,x+BW,Y+10);tx(x+BW/2,Y+BH+16,a,'dts',{'text-anchor':'middle'});tx(x+BW/2,Y+BH+28,b,'sl',{'text-anchor':'middle'})});
+ title(X+(4*BW+36)/2,Y+BH+62,'BREAKPOINTS · COLUMNS','A ARTICLE · AD 300 AD RAIL · R 300 CONTEXT RAIL');
+ tx(X,Y+BH+110,'MD 768: GRID PAD 24 · XL 1280: GRID PAD 48','sl');
+})();
+
+/* ---- detail A · article top 0.75:1 ---- */
+(function(){const k=.75,X=740,Y=700,W=400*k,p=28*k,iw=W-2*p;
+ rr(X,Y,W,240,8*k,'obj');
+ xbox(X+p,Y+p,iw,76,'well');tx(X+p+iw/2,Y+p+42,'LEAD MEDIA · 16:9 (CROPPED)','sl',{'text-anchor':'middle'});
+ const y1=Y+p+76,y2=y1+24*k,y3=y2+16*k,y4=y3+12*k,y5=y4+52*k,y6=y5+24*k;
+ rr(X+p,y2,80,16*k,0,'hug');slotLabel(X+p,y2,80,16*k,'KICKER K1');
+ rr(X+p,y4,iw,52*k,0,'slot');slotLabel(X+p,y4,iw,52*k,'HEADLINE · T1');
+ line(X+p,y6,X+p+iw,y6);line(X+p,y6+54*k,X+p+iw,y6+54*k);slotLabel(X+p,y6,iw,54*k,'ACTION BAR · DETAIL B');
+ dimH(X,X+p,Y-14,Y,Y+p,'P 28',{dx:-10});dimH(X+p,X+p+iw,Y-14,Y+p,Y+p,'FILL');
+ dimV(y1,y2,X+W+14,X+p+iw,X+p+iw,'S3 24',{side:'r'});dimV(y3,y4,X+W+14,X+p+iw,X+p+iw,'S4 12',{side:'r',dy:4});
+ dimV(y5,y6,X+W+14,X+p+iw,X+p+iw,'S3 24',{side:'r'});
+ rad(X+W,Y,6,'tr','R1 8',16);rad(X+p,Y+p,3,'tl','R2 4',14);
+ title(X+W/2,Y+272,'DETAIL A · ARTICLE TOP','SCALE 0.75:1 · SM+ · BASE: PAD 20');
+})();
+
+/* ---- detail B · action bar 1.6:1 ---- */
+(function(){const X=1090,Y=720,k=1.6,BW=262;
+ line(X,Y,X+BW,Y);line(X,Y+54*k,X+BW,Y+54*k);
+ rr(X,Y+12*k,92,30*k,0,'slot');slotLabel(X,Y+12*k,92,30*k,'BYLINE · FLEX','l');
+ const bx=i=>X+BW-(3-i)*36*k+8*k;
+ [0,1,2].forEach(i=>{const x=bx(i);rr(x,Y+13*k,28*k,28*k,14*k,'hug');rr(x+7*k,Y+20*k,14*k,14*k,0,'slot')});
+ dimV(Y,Y+54*k,X-14,X,X,'H3 54',{side:'l'});dimV(Y,Y+13*k,X+BW+14,X+BW,X+BW,'S5 12',{side:'r'});
+ dimH(bx(0),bx(0)+28*k,Y-14,Y+13*k,Y+13*k,'Z2 28');dimH(bx(0)+28*k,bx(1),Y+54*k+16,Y+41*k,Y+41*k,'S6 8',{below:true});
+ tx(X,Y+54*k+44,'BASE: Z2 44 · BAR WRAPS (H3 146 AT 390)','sl');
+ title(X+BW/2,Y+54*k+74,'DETAIL B · ACTION BAR','SCALE 1.6:1 · SM+ · BORDER TOP + BOTTOM 1');
+})();
+
+/* ---- detail C · close control 3:1 ---- */
+(function(){const X=1470,Y=830;
+ mk('circle',{cx:X+42,cy:Y+42,r:42,class:'obj'});rr(X+21,Y+21,42,42,0,'slot');slotLabel(X+21,Y+21,42,42,'I 14');
+ dimH(X,X+84,Y-16,Y+42,Y+42,'Z1 28');tx(X+42,Y+104,'BASE: Z1 44','sl',{'text-anchor':'middle'});
+ title(X+42,Y+140,'DETAIL C · CLOSE','SCALE 3:1 · R FULL');
+})();
+
+/* ---- tables ---- */
+(function(){const X=1404,ws=[40,112,112];let y=70;
+ y=table(X,y,'SPACING',[['I1','shell inset','0 · 24 SM'],['S1','grid pad x','16 · 24 MD · 48 XL'],['S2','grid pad y','24'],['G','column gap','16'],['GV','row gap','32'],['P','article pad','20 · 28 SM'],['S3','media · bar gap','24'],['S4','kicker gap','12'],['S5','bar pad y','12'],['S6','action gap','8'],['S7','up-next pad y','40']],ws);
+ y=table(X,y,'SIZE',[['W1','shell max','1360'],['H1','masthead row','69 · 64 SM'],['H2','filter row','46'],['R','rail width','300'],['A','article','FLEX'],['C','content max','768'],['H3','action bar','54'],['Z1','close','44 · 28 SM'],['Z2','action','44 · 28 SM'],['AD','ad unit','300 × 600'],['T1','headline','32/36 · 48/52']],ws);
+ y=table(X,y,'RADIUS',[['R1','shell · article','8'],['R2','media','4'],['R3','controls','FULL']],ws);
+ table(X,y,'POSITION · LAYER',[['P1','scrim','FIXED · Z200'],['P2','masthead','STICKY 0 · Z110'],['P3','rails','STICKY 128'],['P4','back to top','ABS · Z120']],ws);
+})();
+
+/* =====================================================================
+   SHEET 2 · LOGIC
+   ===================================================================== */
+begin('sh2');
+notes([[1,'OPEN · FOCUS MOVES TO CLOSE'],[2,'TAB WRAPS INSIDE THE SHELL'],[3,'ESCAPE OR SCRIM CLICK CLOSES'],[4,'NEXT STORY LOADS 600 BEFORE THE END'],[5,'ACTIVE STORY SETS THE URL (REPLACE)'],[6,'BACK TO TOP AFTER 320 OF SCROLL'],[0,'NESTED GALLERY / AMBIENT: SHELL PAUSES KEYS'],[0,'CLOSE RESTORES FOCUS TO THE OPENER'],[0,'REDUCED MOTION · SMOOTH SCROLL OFF']]);
+
+/* ---- viewport placement ---- */
+(function(){const X=470,Y=80;
+ const v=(x,w,h,ins,lbl,sub,r)=>{rr(x,Y,w,h,0,'thin');hat(x,Y,w,h);rr(x+ins,Y+ins,w-2*ins,h-2*ins,r,'obj');
+  if(ins){mk('rect',{x:x+ins-6,y:Y+ins-4,width:w-2*ins+12,height:h-2*ins+16,rx:r+4,class:'env'})}
+  title(x+w/2,Y+h+28,lbl,sub)};
+ v(X,98,212,0,'BASE','INSET 0 · 100DVH · R 0',0);
+ v(X+140,300,190,12,'SM – 1407','INSET 24 · FILL · R 8',4);
+ v(X+480,360,190,12,'≥ 1408','MAX 1360 · CENTERED',4);
+ dimH(X+480+12,X+480+348,Y-14,Y+12,Y+12,'W1 1360');dimH(X+140,X+152,Y-14,Y,Y+12,'I1',{dx:-8});
+ callout(X+480+354,Y+180,X+480+300,Y+262,'SHADOW 2XL · ENVELOPE',-1);
+})();
+
+/* ---- exploded layers ---- */
+(function(){const X=56;const L=[['NESTED GALLERY · AMBIENT','OWN DIALOG · SHELL PAUSES KEYS'],['BACK TO TOP','ABS · Z120 · AFTER 320'],['MASTHEAD','STICKY TOP 0 · Z110'],['RAILS','STICKY 128 · MAX H 100DVH − 160'],['ARTICLE QUEUE','SCROLLS IN THE SHELL'],['SHELL','ABS · INSET 0 · 24 SM · SCROLL Y'],['CLICK CATCHER','ABS INSET 0 · CLOSES'],['SCRIM','FIXED · Z200 · 55 % + BLUR 8'],['PAGE','INERT WHILE OPEN']];
+ L.forEach(([a,b],i)=>plate(X,330+i*48,150,a,b,i===8?'well':i===0?'hug':'obj'));
+ title(X+170,330+9*48+16,'EXPLODED · LAYER ORDER','TOP TO BOTTOM');
+})();
+
+/* ---- story queue ---- */
+(function(){const X=520,Y=380,W=230;
+ rr(X,Y,W,420,4,'thin');rr(X,Y,W,24,0,'obj');slotLabel(X,Y,W,24,'MASTHEAD · STICKY');
+ rr(X+14,Y+36,W-28,150,4,'obj');slotLabel(X+14,Y+36,W-28,150,'STORY 1');
+ line(X+14,Y+206,X+80,Y+206);line(X+W-80,Y+206,X+W-14,Y+206);tx(X+W/2,Y+209,'UP NEXT','sl',{'text-anchor':'middle'});
+ rr(X+14,Y+226,W-28,150,4,'obj');slotLabel(X+14,Y+226,W-28,150,'STORY 2');
+ mk('rect',{x:X+14,y:Y+376,width:W-28,height:60,class:'slot'});tx(X+W/2,Y+410,'STORY 3 · MOUNTS','sl',{'text-anchor':'middle'});
+ // viewport window
+ rr(X-8,Y+60,W+16,190,0,'env');
+ const ra=Y+60+190*.45;line(X-30,ra,X+W+30,ra,'cut');tx(X+W+34,ra+4,'READING ANCHOR','dts');
+ tx(X+W+34,ra+16,'MIN(0.45 · H, 420)','sl');
+ dimV(Y+60,ra,X-24,X-8,X-8,'0.45 H',{side:'l'});tx(X-8,Y+54,'VIEWPORT H','sl');
+ callout(X+W/2,Y+376,X+W+30,Y+440,'SENTINEL · ROOT MARGIN 600',1);
+ dimV(Y+206-20,Y+206+20,X-40,X+14,X+14,'S7 40',{side:'l'});
+ nb(X+W+20,Y+420,4);nb(X+W+20,ra-14,5);
+ title(X+W/2,Y+470,'STORY QUEUE · ONE SCROLL','STARTS WITH 1 STORY · ADDS 1 AT A TIME');
+})();
+
+/* ---- active-story rule + back to top ---- */
+(function(){const X=900,Y=380;
+ const rows=[['SCROLL CONTAINER','THE SHELL, NOT THE PAGE'],['CANDIDATE','VISIBLE ≥ MIN(240, 0.35 · H)'],['WINNER','HOLDS THE ANCHOR, ELSE NEAREST TOP'],['ON CHANGE','REPLACESTATE /READ/{ID}'],['CONTEXT','RAIL + AD FOLLOW THE ACTIVE STORY'],['BACK TO TOP','SCROLLTOP > 320'],['BTT POSITION','BOTTOM 32 · RIGHT MAX(32, (VW − 1360) ÷ 2 + 32)']];
+ rows.forEach(([a,b],i)=>{tx(X,Y+i*22,a,'dts');tx(X+120,Y+i*22,b,'sl')});
+ title(X+190,Y+rows.length*22+24,'ACTIVE STORY · RULES','INTERSECTION OBSERVER · THRESHOLDS 0 · .25 · .5 · .75 · 1');
+})();
+
+/* ---- focus flow ---- */
+(function(){const X=900,Y=640;const st=[['OPENER','CARD · LINK'],['OPEN','FOCUS CLOSE'],['READING','TAB WRAPS'],['CLOSE','ESC · SCRIM · ×'],['RESTORE','OPENER → LABEL → CAROUSEL']];
+ st.forEach(([a,b],i)=>{const x=X+i*96;rr(x,Y,82,46,4,i===0||i===4?'hug':'obj');tx(x+41,Y+20,a,'dts',{'text-anchor':'middle'});tx(x+41,Y+34,b.split(' → ')[0],'sl',{'text-anchor':'middle'});if(i<4)arrowLine(x+82,Y+23,x+96,Y+23)});
+ tx(X,Y+70,'RESTORE ORDER: LIVE OPENER → STORED ARIA-LABEL → CAROUSEL DOT. RETRIES EVERY 50 FOR UP TO 3 S WHILE THE ROUTE REMOUNTS.','sl');
+ nb(X+137,Y-10,1);nb(X+233,Y-10,2);nb(X+329,Y-10,3);
+ title(X+232,Y+104,'FOCUS · OPEN TO CLOSE','MODAL ISOLATION ON THE PAGE · ONE DIALOG: STORY READER');
+})();
+
+/* ---- article width graph (finding) ---- */
+(function(){const X=1404,Y=110,W=250,H=150,V=v=>X+(v-390)/(1440-390)*W,A=a=>Y+H-(a-300)/(700-300)*H;
+ rr(X,Y,W,H,0,'thin');
+ const pts=[[390,358],[639,607],[640,560],[767,687],[768,672],[1023,927],[1024,612],[1279,867],[1280,504],[1440,632]];
+ mk('polyline',{points:pts.map(([v,a])=>V(v)+','+A(Math.min(a,700))).join(' '),class:'obj',fill:'none'});
+ [[1280,504],[1024,612]].forEach(([v,a])=>mk('circle',{cx:V(v),cy:A(a),r:2.5,class:'dot'}));
+ callout(V(1280),A(504),V(1280)-60,Y+H+36,'504 AT 1280 · NARROWEST',-1);
+ tx(X,Y+H+15,'390','sl');tx(X+W,Y+H+15,'1440','sl',{'text-anchor':'end'});
+ title(X+W/2,Y+H+70,'ARTICLE WIDTH VS VIEWPORT','CAPPED AT 700 IN THIS VIEW');
+ [640,1024,1280].forEach(v=>{line(V(v),Y+H,V(v),Y+H+5,'thin');tx(V(v),Y+H+15,String(v),'sl',{'text-anchor':'middle'})});
+ table(X,Y+H+120,'THRESHOLDS',[['T1','scroll top','> 320'],['T2','sentinel','600'],['T3','anchor','0.45 H ≤ 420'],['T4','min visible','240 · 0.35 H'],['T5','focus retry','50 / 3 S']],[40,112,112]);
+})();
+
+/* ---- keyboard ---- */
+(function(){const fw=[64,100,100];fw.hdr=['Key','Does','When'];
+ table(1404,560,'KEYBOARD',[['ESC','CLOSES','NO NESTED LAYER'],['TAB','NEXT · WRAPS','INSIDE SHELL'],['⇧ TAB','PREV · WRAPS','INSIDE SHELL'],['P','AMBIENT READER','NOT IN A FIELD'],['CLICK','SCRIM CLOSES','OUTSIDE SHELL']],fw);
+})();
+document.body.dataset.ready='1';})();
+</script></body></html>
