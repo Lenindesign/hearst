@@ -20,7 +20,7 @@ test("gives reserving modules distinct inventory before the river", () => {
     allocation.todayEdit.followedBrandStory,
     allocation.todayEdit.trendingStory,
     allocation.todayEdit.horoscopeStory,
-  ].filter(Boolean).map((story) => story.id);
+  ].flatMap((story) => (story ? [story.id] : []));
   const allocatedIds = [
     ...stories.slice(0, 5).map((story) => story.id),
     ...todayEditIds,
@@ -35,7 +35,7 @@ test("gives reserving modules distinct inventory before the river", () => {
 });
 
 test("does not remove an unfinished story from the river when Continue Reading references it", () => {
-  const continueStory = stories[5];
+  const continueStory = stories[5]!;
   const allocation = allocateStoryModules({
     stories,
     heroStoryIds: stories.slice(0, 5).map((story) => story.id),
@@ -52,7 +52,7 @@ test("does not remove an unfinished story from the river when Continue Reading r
 });
 
 test("keeps a Continue Reading story out of other reserving modules", () => {
-  const continueStory = stories[5];
+  const continueStory = stories[5]!;
   const allocation = allocateStoryModules({
     stories,
     heroStoryIds: stories.slice(0, 5).map((story) => story.id),
