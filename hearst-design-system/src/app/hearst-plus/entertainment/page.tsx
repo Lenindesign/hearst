@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Entertainment | Hearst+",
   description: "A dark streaming-style Hearst+ prototype for A&E family entertainment brands.",
   ...socialGraphMetadata(
-    "/hearst-plus/opengraph-image/",
+    "/images/hearst-plus-share.jpg",
     "Entertainment | Hearst+",
     "A dark streaming-style Hearst+ prototype for A&E family entertainment brands.",
   ),

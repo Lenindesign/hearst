@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description:
     "Brand-hosted Hearst+ groups for story discussions, editor threads, and reader questions.",
   ...socialGraphMetadata(
-    "/hearst-plus/opengraph-image/",
+    "/images/hearst-plus-share.jpg",
     "Communities | Hearst+",
     "Brand-hosted Hearst+ groups for story discussions, editor threads, and reader questions.",
   ),

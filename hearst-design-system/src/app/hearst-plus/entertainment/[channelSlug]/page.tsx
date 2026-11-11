@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: EntertainmentChannelPageProps
     title: `${channel} | Hearst+ Entertainment`,
     description: `A dark streaming-style Hearst+ prototype for ${channel} shows.`,
     ...socialGraphMetadata(
-      "/hearst-plus/opengraph-image/",
+      "/images/hearst-plus-share.jpg",
       `${channel} | Hearst+ Entertainment`,
       `A dark streaming-style Hearst+ prototype for ${channel} shows.`,
     ),

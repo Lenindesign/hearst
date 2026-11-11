@@ -52,7 +52,7 @@ export async function generateMetadata({ params }: EntertainmentShowPageProps): 
   return {
     title,
     description,
-    ...socialGraphMetadata("/hearst-plus/opengraph-image/", title, description),
+    ...socialGraphMetadata("/images/hearst-plus-share.jpg", title, description),
   };
 }
 

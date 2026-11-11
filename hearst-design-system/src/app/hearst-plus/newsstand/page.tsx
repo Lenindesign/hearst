@@ -10,7 +10,7 @@ import { socialGraphMetadata } from "@/lib/social-graph-image";
 export const metadata: Metadata = {
   title: "Newsstand | Hearst+",
   description: "Every Hearst magazine. One subscription.",
-  ...socialGraphMetadata("/hearst-plus/opengraph-image/", "Newsstand | Hearst+", "Every Hearst magazine. One subscription."),
+  ...socialGraphMetadata("/images/hearst-plus-share.jpg", "Newsstand | Hearst+", "Every Hearst magazine. One subscription."),
 };
 
 export default function HearstPlusNewsstandPage() {

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: "Full-width hero slider | Hearst+",
   description: "Explore Hearst+ with a full-width featured story slider and discovery sidebars below.",
   ...socialGraphMetadata(
-    "/hearst-plus/opengraph-image/",
+    "/images/hearst-plus-share.jpg",
     "Full-width hero slider | Hearst+",
     "A full-width featured story slider with Hearst+ discovery sidebars below.",
   ),

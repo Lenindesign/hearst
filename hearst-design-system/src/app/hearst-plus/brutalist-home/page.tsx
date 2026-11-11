@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "Brutalist editorial home | Hearst+",
   description: "A bold, image-first Hearst+ homepage with a full-width feature and graphic story sections.",
   ...socialGraphMetadata(
-    "/hearst-plus/opengraph-image/",
+    "/images/hearst-plus-share.jpg",
     "Hearst+ Brutalist editorial home",
     "A bold, image-first Hearst+ homepage with a full-width feature and graphic story sections.",
   ),

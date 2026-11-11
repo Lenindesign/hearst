@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/hearst-plus/opengraph-image/",
+        url: "/images/hearst-plus-share.jpg",
         width: 1200,
         height: 630,
         alt: "Autos Video Feed personalized magazine reader preview",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Autos Video Feed",
     description: "A section-scoped feed of playable video recommendations from MotorTrend and Car and Driver.",
-    images: ["/hearst-plus/opengraph-image/"],
+    images: ["/images/hearst-plus-share.jpg"],
   },
 };
 

@@ -10,7 +10,7 @@ import { socialGraphMetadata } from "@/lib/social-graph-image";
 export const metadata: Metadata = {
   title: "Hearst+",
   description: "A personalized daily destination prototype across every Hearst category.",
-  ...socialGraphMetadata("/hearst-plus/opengraph-image/", "Hearst+", "A personalized daily destination prototype across every Hearst category."),
+  ...socialGraphMetadata("/images/hearst-plus-share.jpg", "Hearst+", "A personalized daily destination prototype across every Hearst category."),
 };
 
 export const dynamic = "force-dynamic";

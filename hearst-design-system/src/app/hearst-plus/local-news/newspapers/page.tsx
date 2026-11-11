@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: "Local News Newspapers | Hearst+",
   description: "Hearst+ local-news prototype for reusable Hearst Newspapers RSS feed configuration.",
   ...socialGraphMetadata(
-    "/hearst-plus/opengraph-image/",
+    "/images/hearst-plus-share.jpg",
     "Local News Newspapers | Hearst+",
     "Hearst+ local-news prototype for reusable Hearst Newspapers RSS feed configuration.",
   ),
