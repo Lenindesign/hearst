@@ -1708,9 +1708,9 @@ export function MainNav({
                   slug={mastheadBanner.logoSlug ?? mastheadSlug}
                   color={mastheadBanner.logoColor === "native" ? undefined : "#fff"}
                   decorative
-                  className="flex h-[12px] w-auto shrink-0 items-center [&_svg]:block [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full sm:h-[14px] lg:h-[18px]"
+                  className="flex h-[11.05px] w-auto shrink-0 items-center [&_svg]:block [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full sm:h-[12.89px] lg:h-[16.57px]"
                 />
-                <span className="mt-2 shrink-0 font-serif text-[24px] font-normal italic leading-none tracking-normal sm:text-[38px] lg:text-[48px]">
+                <span className="mt-2 shrink-0 font-serif text-[22.1px] font-normal italic leading-none tracking-normal sm:text-[34.99px] lg:text-[44.19px]">
                   {mastheadDescriptorOverride ?? mastheadBanner.logoDescriptor}
                 </span>
               </div>

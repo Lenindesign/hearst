@@ -539,7 +539,10 @@ export function FeaturedStoryCarousel({
                     layoutMode === "list"
                       ? "relative col-start-2 row-start-1 flex min-w-0 flex-col justify-center bg-card p-4 pt-12 text-foreground sm:p-6 sm:pt-12"
                       : cn(
-                          "pointer-events-none relative z-10 col-start-1 row-start-2 mx-[21px] -mt-10 flex h-[200px] min-w-0 flex-col rounded-card px-5 py-2.5 shadow-[0_6px_18px_rgba(0,0,0,0.20)] ease-[cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none sm:mx-[33px] sm:-mt-12 sm:h-[220px] sm:px-6 sm:py-3",
+                          cn(
+                            "pointer-events-none relative z-10 col-start-1 row-start-2 mx-[6px] -mt-10 flex h-[200px] min-w-0 flex-col rounded-card px-5 py-2.5 shadow-[0_6px_18px_rgba(0,0,0,0.20)] ease-[cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none sm:mx-[18px] sm:-mt-12 sm:h-[220px] sm:px-6 sm:py-3",
+                            scrimDirection === "left-to-right" && "lg:mx-[33px]",
+                          ),
                           isDragging || !trackTransitionEnabled
                             ? "!transition-none"
                             : "transition-transform duration-300",
