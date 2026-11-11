@@ -1490,7 +1490,9 @@
   .hearst-plus-theme[data-destination-mode="flux"] .headline.type-t4 { font-size: calc(1.375rem * 1.1); line-height: calc(1.75rem * 1.1); }
   .hearst-plus-theme[data-destination-mode="flux"] .headline.type-t5 { font-size: calc(1rem * 1.1); line-height: calc(1.25rem * 1.1); }
   .hearst-plus-theme[data-destination-mode="flux"] .headline.type-t6 { font-size: calc(0.875rem * 1.1); line-height: calc(1.25rem * 1.1); }
-  .hearst-plus-theme[data-destination-mode="flux"] .headline.featured-carousel-headline { font-size: calc(1.65rem * 1.1); line-height: calc(1.75rem * 1.1); }
+  /* Keep the carousel at its original headline scale; the 10% Fashion & Luxury
+     increase is intended for the story cards around it. */
+  .hearst-plus-theme[data-destination-mode="flux"] .headline.featured-carousel-headline { font-size: 1.65rem; line-height: 1.75rem; }
   .hearst-plus-theme[data-destination-mode="flux"] .brand-promotion-story-headline { font-size: 22px; line-height: 30.8px; }
   @media (min-width: 768px) {
     .hearst-plus-theme[data-destination-mode="flux"] .headline.type-t1 { font-size: calc(3rem * 1.1); line-height: calc(3.25rem * 1.1); }
@@ -1498,7 +1500,7 @@
     .hearst-plus-theme[data-destination-mode="flux"] .headline.type-t3,
     .hearst-plus-theme[data-destination-mode="flux"] .headline.story-card-headline { font-size: calc(1.5rem * 1.1); line-height: calc(1.75rem * 1.1); }
     .hearst-plus-theme[data-destination-mode="flux"] .headline.type-t4 { font-size: calc(1.75rem * 1.1); line-height: calc(2rem * 1.1); }
-    .hearst-plus-theme[data-destination-mode="flux"] .headline.featured-carousel-headline { font-size: calc(2.2rem * 1.1); line-height: calc(2.25rem * 1.1); }
+    .hearst-plus-theme[data-destination-mode="flux"] .headline.featured-carousel-headline { font-size: 2.2rem; line-height: 2.25rem; }
   }
   /* Featured carousel cards use a slightly larger T2 headline while retaining
      the same line-height rhythm so the shorter overlay still fits its copy. */

@@ -3191,7 +3191,9 @@ export function LifestyleRiverCard({
       <article
         className={cn(
           "group/card relative grid min-w-0 cursor-pointer items-center gap-4 overflow-hidden rounded-card bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] sm:p-5",
-          editorialRow ? "grid-cols-[minmax(0,28%)_minmax(0,1fr)]" : "grid-cols-[112px_minmax(0,1fr)] sm:grid-cols-[168px_minmax(0,1fr)]",
+          editorialRow
+            ? "grid-cols-[clamp(88px,24%,128px)_minmax(0,1fr)] gap-3 p-3 sm:gap-3 sm:p-3"
+            : "grid-cols-[112px_minmax(0,1fr)] sm:grid-cols-[168px_minmax(0,1fr)]",
           stretchToFeature && "@min-[820px]/hp-block:h-full @min-[820px]/hp-block:min-h-0",
         )}
         data-story-module="river"
