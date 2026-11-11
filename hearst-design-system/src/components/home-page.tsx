@@ -1697,7 +1697,8 @@ export function MainNav({
         />
         {mastheadBanner.overlayLogo ? (
           <div className={cn(
-            "pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-center",
+            "pointer-events-none absolute inset-x-0 bottom-0 flex justify-center",
+            mastheadBanner.logoDescriptor || mastheadDescriptorOverride ? "items-end pb-2" : "items-center",
             mastheadBanner.logoDescriptor || mastheadDescriptorOverride ? "px-4 sm:px-24" : "px-24",
             underUtilityBar ? "top-8" : "top-0",
           )}>
