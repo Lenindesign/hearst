@@ -74,6 +74,7 @@ The complete brand registry is documented in `BRAND_STYLES.md`. Canonical HDS pu
 - Carousel headlines display no more than three lines and use an ellipsis when truncated.
 - Carousel descriptions display no more than two lines and use an ellipsis when truncated.
 - The carousel must remain responsive without clipping text at supported breakpoints.
+- Featured carousel story panels use a black surface with white headlines and descriptions. Keep the source brand's semantic brand-content color for the brand name and comment treatment in light mode. Crop carousel photos edge-to-edge in a consistent 5:3 frame with no bottom fade, and do not add a separate surface or shadow behind the overlapping text panel.
 - Mixed-format carousels may contain contextual articles and playable API videos, following the eligibility and personalization rules in `APP_RULES.md`.
 - Video controls, duration, and play affordances remain visible and distinct from headline metadata.
 - Delish Shorts use portrait `9:16` cards, horizontal snap scrolling, and compact desktop controls. The Videos view keeps the dark canvas visible between cards; river variants use light semantic surfaces. The fullscreen viewer keeps story chrome secondary through a compact bottom fade, quiet metadata, and a restrained two-line headline. `APP_RULES.md` owns eligibility, placement, playback, and navigation behavior.

@@ -64,7 +64,7 @@ export function ContentReaderComments({
             {story.brand}.
           </p>
         </div>
-        <span className="rounded-full border border-border bg-background px-2.5 py-1 text-xs font-semibold text-muted-foreground">
+        <span className="rounded-full border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-600">
           Top comments
         </span>
       </div>
@@ -91,7 +91,7 @@ export function ContentReaderComments({
             rows={3}
             placeholder="Add a comment"
             aria-describedby={commentGuidanceId}
-            className="min-h-20 w-full resize-y rounded-[8px] border border-border bg-background px-3 py-2 text-sm leading-6 text-foreground shadow-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
+            className="min-h-20 w-full resize-y rounded-[8px] border border-border bg-white px-3 py-2 text-sm leading-6 text-foreground shadow-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
           <div className="mt-2 flex items-center justify-between gap-3">
             <p

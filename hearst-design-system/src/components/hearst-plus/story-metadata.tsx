@@ -30,8 +30,9 @@ export function LifestyleBrandSource({
       aria-label={`Open ${story.brand} brand page`}
     >
       <BrandSourceIcon brand={story.brand} brandSlug={story.brandSlug} />
-      <span className="min-w-0 truncate">{story.brand} · {story.topic}</span>
-      {!hideByline ? <span className="story-meta-byline min-w-0 truncate">· {byline}</span> : null}
+      <span className="min-w-0 truncate text-base font-semibold text-foreground">{story.brand}</span>
+      <span className="min-w-0 truncate">· {story.topic}</span>
+      {!hideByline ? <span className="story-meta-byline min-w-0 truncate font-normal text-muted-foreground">· {byline}</span> : null}
     </a>
   );
 }

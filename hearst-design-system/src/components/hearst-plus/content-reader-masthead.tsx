@@ -116,11 +116,8 @@ export function ContentReaderMasthead({
             />
           </LinkComponent>
           <div className="hidden min-w-0 border-l border-border pl-4 sm:block">
-            <p className="truncate text-xs font-bold text-foreground">
-              Reading {contextLabel}
-            </p>
-            <p className="mt-0.5 truncate text-xs text-[var(--hp-text-ui)]">
-              {statusLabel ?? `${visibleStoryCount} of ${storyCount} stories loaded`}
+            <p className="whitespace-nowrap text-xs font-medium text-foreground">
+              {statusLabel ?? `Reading ${visibleStoryCount} of ${storyCount} stories`}
             </p>
           </div>
         </div>

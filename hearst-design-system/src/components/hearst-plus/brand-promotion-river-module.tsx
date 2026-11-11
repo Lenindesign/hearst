@@ -142,13 +142,13 @@ export function BrandPromotionRiverModule({
           <div className="min-w-0">
             <h2
               id={headingId}
-              aria-label={`Brand spotlight: ${promotion.brand}`}
+              aria-label={`Editorial spotlight: ${promotion.brand}`}
               className={cn(
                 "type-k1",
                 isAEFamilyPromotion ? "text-[#79B9FF]" : "text-[var(--hp-sidebar-heading,var(--primary))]",
               )}
             >
-              Brand spotlight
+              Editorial spotlight
             </h2>
             <p className={cn(
               "type-b2 mt-1",
