@@ -55,7 +55,7 @@ import { BigStoryFeedStacked } from "./fre/big-story-feed";
 import { BigStoryImageRight } from "./fre/big-story";
 import { FourAcrossGrid } from "./fre/four-across-grid";
 import { SiteFooter } from "./fre/site-footer";
-import { destinationBanners, entertainmentBrandWallBanner, hearstPlusBrandWallBanner } from "@/lib/brand-banners";
+import { destinationBanners, entertainmentBrandWallBanner, getFeaturedCardColors, hearstPlusBrandWallBanner } from "@/lib/brand-banners";
 import { HearstPlusBrandWall } from "@/components/hearst-plus/hearst-plus-brand-wall";
 import { BrandInstagramModule } from "@/components/hearst-plus/brand-instagram-module";
 import {
@@ -5028,6 +5028,7 @@ function LifestyleRiverHomePage({
   const isBlocksHomepage = blocksHomepage || searchParams?.get("layout") === "blocks" || (savedRiverLayout === "blocks" && !sectionsHomepage && searchParams?.get("layout") !== "sections");
   const enlargeBlocksSectionHeadings = destination === "all" && !initialBrandSlug;
   const riverLayout = savedRiverLayout === "list" ? "list" : "cards";
+  const featuredCardColors = getFeaturedCardColors(destination, initialBrandSlug);
   const fullWidthFeaturedHero = forceFullWidthFeaturedHero || (!isSectionsHomepage && !isBlocksHomepage && savedRiverLayout === "full-width-hero");
   const config = destinationConfig ?? destinationConfigs[destination];
   const { account, updatePreferences, addComment } = useReaderAccount();
@@ -6966,6 +6967,7 @@ function LifestyleRiverHomePage({
               </p>
             ) : null}
             <FeaturedStoryCarousel
+              cardColors={featuredCardColors}
               key={`full-width:${leadStory.id}:${heroStories.map((story) => story.id).join("|")}`}
               stories={heroStories}
               layoutMode={riverLayout}
@@ -7044,6 +7046,7 @@ function LifestyleRiverHomePage({
             <>
               {!fullWidthFeaturedHero && !isBlocksHomepage ? (
                 <FeaturedStoryCarousel
+                  cardColors={featuredCardColors}
                   key={`${leadStory.id}:${heroStories.map((story) => story.id).join("|")}`}
                   // The slide layout's track already reserves 24 px below the card for its shadow, so it tucks in;
                   // the list layout has no such padding and keeps the river's full 26 px gap.
@@ -7112,6 +7115,7 @@ function LifestyleRiverHomePage({
                       </div>
                       <div className="min-w-0 space-y-6">
                         <FeaturedStoryCarousel
+                          cardColors={featuredCardColors}
                           key={`blocks:${leadStory.id}:${heroStories.map((story) => story.id).join("|")}`}
                           stories={heroStories}
                           layoutMode={riverLayout}

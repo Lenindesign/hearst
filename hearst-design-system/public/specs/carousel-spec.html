@@ -160,7 +160,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
       </ul>
       <h4>2 · Text card</h4>
       <ul>
-        <li>Black in every theme, white text, radius 8, shadow <code>0 6 18 rgba(0,0,0,.2)</code>.</li>
+        <li>Filled with the page’s banner color (<code>getFeaturedCardColors</code>): Hearst+ navy on the home, the section banner on destinations, the brand’s bar color (<code>palette-background-utility</code>) on publication pages. White text on a color darkened to 5.5:1; light brand colors (Autoweek, Good Housekeeping, Veranda) keep their color with #121212 text. Black where no color is passed. radius 8, shadow <code>0 6 18 rgba(0,0,0,.2)</code>.</li>
         <li>Inset 6 from each side (18 from 640), pulled up over the photo by 40 (48 from 640), fixed height 224 (240 from 640), padding 10 / 20 (12 / 24 from 640).</li>
         <li><b>Meta row</b>: brand icon 20, brand name bold, optional Video badge, and a comments button (min height 32), 14 / 20 semibold, 6 above the headline.</li>
         <li><b>Headline</b>: T2, 24 / 28 (32 / 36 from 768), 800, clamp 3, max <code>min(672, 100%)</code>. Car stories add a research rating on the right.</li>
@@ -257,7 +257,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
   <h2>Tokens</h2>
   <div class="tw"><table>
     <tr><th>Part</th><th>Token</th><th>Rendered</th></tr>
-    <tr><td>Text card</td><td><code>!bg-black</code>, <code>text-white</code></td><td class="n">#000 · #FFF</td></tr>
+    <tr><td>Text card</td><td><code>cardColor</code> from the banner, <code>text-white</code></td><td class="n">#00142B home · #A62C37 Lifestyle · #34454C Autos · #0D1014 Flux · #5F6B29 E&amp;W</td></tr>
     <tr><td>Summary</td><td><code>text-white/85</code></td><td class="n">white 85%</td></tr>
     <tr><td>Pill and controls</td><td><code>bg-black/45</code> + blur</td><td class="n">black 45%</td></tr>
     <tr><td>Headline</td><td><code>--font-headline</code>, 800</td><td class="n">Schibsted Grotesk on Hearst+</td></tr>

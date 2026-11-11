@@ -23,6 +23,9 @@ export type FeaturedStoryCarouselProps = {
   layoutMode?: "cards" | "list";
   reducePhotoHeight?: boolean;
   scrimDirection?: "bottom" | "left-to-right";
+  /** Text card fill and text color. Defaults to black and white; pages pass their banner colors (see getFeaturedCardColors). */
+  /** iconTile: the card is the brand's own color, so the brand icon sits on a white tile to stay visible. */
+  cardColors?: { background: string; foreground: string; iconTile?: boolean };
   renderImage: (
     story: LifestyleRiverStory,
     index: number,
@@ -75,6 +78,7 @@ export function FeaturedStoryCarousel({
   stories,
   layoutMode = "cards",
   scrimDirection = "bottom",
+  cardColors = { background: "black", foreground: "white" },
   renderImage,
   editionLabel,
   initialStoryId,
@@ -444,7 +448,7 @@ export function FeaturedStoryCarousel({
               (visualIndex === 0 || visualIndex === visualStories.length - 1);
             const slideCommentCount = getCommentCount(story);
             const researchCarRating = getHearstAutoResearchCarRating(story.id);
-            const carouselHeadlineColor = layoutMode === "list" ? undefined : "text-white";
+            const carouselHeadlineColor = layoutMode === "list" ? undefined : "text-[var(--featured-card-fg)]";
             const headlineClassName = cn(
               // Type metrics UI-TYPE-001: slides use the lead role T2, list rows the card role T3.
               layoutMode === "list"
@@ -539,25 +543,29 @@ export function FeaturedStoryCarousel({
                           isDragging || !trackTransitionEnabled
                             ? "!transition-none"
                             : "transition-transform duration-300",
-                          "!bg-black text-white",
+                          "text-[var(--featured-card-fg)]",
                         ),
                   )}
                   style={layoutMode === "list" ? undefined : {
+                    backgroundColor: cardColors.background,
+                    "--featured-card-fg": cardColors.foreground,
                     // Let the text card lead by 10px while the photo
                     // catches up through its delayed, shorter parallax motion.
                     transform: `translate3d(${-(trackIndex - visualIndex) * 10}px, 0, 0)`,
-                  }}
+                  } as React.CSSProperties}
                 >
                   <div className={cn(
                     "mb-1.5 flex flex-wrap items-center gap-2 text-sm font-semibold",
                     layoutMode === "list" && "mb-2 text-xs sm:text-sm",
-                    layoutMode !== "list" && "text-white",
+                    layoutMode !== "list" && "text-[var(--featured-card-fg)]",
                   )}>
-                    <BrandSourceIcon
-                      brand={story.brand}
-                      brandSlug={story.brandSlug}
-                      className="h-5 w-5 rounded-[4px] border-border"
-                    />
+                    <span className={cn("inline-flex shrink-0", cardColors.iconTile && layoutMode !== "list" && "rounded-[5px] bg-white p-[2px]")}>
+                      <BrandSourceIcon
+                        brand={story.brand}
+                        brandSlug={story.brandSlug}
+                        className="h-5 w-5 rounded-[4px] border-border"
+                      />
+                    </span>
                     <span className="font-bold" style={{ fontWeight: 700 }}>{story.brand}</span>
                     {story.videoUrl ? (
                       <>
@@ -598,7 +606,7 @@ export function FeaturedStoryCarousel({
                   )}
                   {layoutMode !== "list" && story.summary ? (
                     <p className={cn(
-                      "mt-3 line-clamp-2 max-w-3xl text-sm leading-[1.265] text-white/85 sm:text-base",
+                      "mt-3 line-clamp-2 max-w-3xl text-sm leading-[1.265] text-[var(--featured-card-fg)] opacity-85 sm:text-base",
                     )}>
                       {story.summary}
                     </p>

@@ -1,3 +1,7 @@
+import { brands } from "./brands";
+import { supplementalBrandProfiles } from "./theme-options";
+import type { HearstDestinationMode } from "./hearst-routes";
+
 // Full-width brand banners used as the masthead on publication pages (MainNav swaps them in for the logo row).
 // Art is each brand's profile banner from Yahoo (profiles.yahoo.com/brands/<brand>/), 2560x440, downloaded
 // 2026-10-11. Brands without a usable Yahoo banner (none on Yahoo: Autoweek, Best Products, Bicycling, Bring a Trailer,
@@ -49,12 +53,13 @@ export const hearstPlusBrandWallBanner: BrandBanner = {
 };
 
 // Destination pages: compact section-color banners with a faint wall of that section's publication logos.
+// The HEARST+ lockup is all white here (the blue plus stays on the Hearst+ home only).
 // The Hearst+ home keeps its separate all-brands treatment above.
 export const destinationBanners: Partial<Record<string, BrandBanner>> = {
-  "hearst-lifestyle": { background: "#A62C37", alt: "Hearst+ Lifestyle", width: 2560, height: 220, overlayLogo: true, pattern: "brand-wall", wallSection: "lifestyle", logoSlug: "hearst-all-knockout", logoDescriptor: "Lifestyle", logoColor: "native", logoSize: "section" },
-  "hearst-plus": { background: "#34454C", alt: "Hearst+ Autos", width: 2560, height: 220, overlayLogo: true, pattern: "brand-wall", wallSection: "autos", logoSlug: "hearst-all-knockout", logoDescriptor: "Autos", logoColor: "native", logoSize: "section" },
-  "hearst-flux": { background: "#0D1014", alt: "Hearst+ Fashion & Luxury", width: 2560, height: 220, overlayLogo: true, pattern: "brand-wall", wallSection: "flux", logoSlug: "hearst-all-knockout", logoDescriptor: "Fashion & Luxury", logoColor: "native", logoSize: "section" },
-  "hearst-ew": { background: "#819238", alt: "Hearst+ Enthusiast & Wellness", width: 2560, height: 220, overlayLogo: true, pattern: "brand-wall", wallSection: "ew", logoSlug: "hearst-all-knockout", logoDescriptor: "Enthusiast & Wellness", logoColor: "native", logoSize: "section" },
+  "hearst-lifestyle": { background: "#A62C37", alt: "Hearst+ Lifestyle", width: 2560, height: 220, overlayLogo: true, pattern: "brand-wall", wallSection: "lifestyle", logoSlug: "hearst-all-knockout", logoDescriptor: "Lifestyle", logoColor: "white", logoSize: "section" },
+  "hearst-plus": { background: "#34454C", alt: "Hearst+ Autos", width: 2560, height: 220, overlayLogo: true, pattern: "brand-wall", wallSection: "autos", logoSlug: "hearst-all-knockout", logoDescriptor: "Autos", logoColor: "white", logoSize: "section" },
+  "hearst-flux": { background: "#0D1014", alt: "Hearst+ Fashion & Luxury", width: 2560, height: 220, overlayLogo: true, pattern: "brand-wall", wallSection: "flux", logoSlug: "hearst-all-knockout", logoDescriptor: "Fashion & Luxury", logoColor: "white", logoSize: "section" },
+  "hearst-ew": { background: "#819238", alt: "Hearst+ Enthusiast & Wellness", width: 2560, height: 220, overlayLogo: true, pattern: "brand-wall", wallSection: "ew", logoSlug: "hearst-all-knockout", logoDescriptor: "Enthusiast & Wellness", logoColor: "white", logoSize: "section" },
   // Local News: a wall of the Hearst Television station logos.
   "hearst-local-news": {
     background: "#2B6FAF",
@@ -299,3 +304,71 @@ export const brandBanners: Partial<Record<string, BrandBanner>> = {
     scrim: true,
   },
 };
+
+// Featured carousel text card: the page's banner color, so the card matches its section or brand.
+// Hearst+ home → the brand-wall navy; destinations → their section banner; publication pages (which keep a logo
+// row, not a solid banner) → the brand's bar color (palette-background-utility; the link color is often a
+// bright accent, like Car and Driver's blue). Darkened just enough to keep white text at 5.5:1 or better.
+const destinationBannerSlugs: Record<HearstDestinationMode, string | null> = {
+  all: null,
+  lifestyle: "hearst-lifestyle",
+  autos: "hearst-plus",
+  flux: "hearst-flux",
+  ew: "hearst-ew",
+};
+
+function relativeLuminance(hex: string) {
+  const value = hex.replace("#", "");
+  const full = value.length === 3 ? value.split("").map((c) => c + c).join("") : value.slice(0, 6);
+  const [r, g, b] = [0, 2, 4].map((i) => parseInt(full.slice(i, i + 2), 16) / 255)
+    .map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+function toHex(rgb: number[]) {
+  return `#${rgb.map((c) => Math.round(Math.max(0, Math.min(255, c))).toString(16).padStart(2, "0")).join("")}`;
+}
+
+/** Darkens a color toward black until white text on it reaches `minContrast`. */
+export function darkenForWhiteText(hex: string, minContrast = 5.5) {
+  const value = hex.replace("#", "");
+  const full = value.length === 3 ? value.split("").map((c) => c + c).join("") : value.slice(0, 6);
+  if (!/^[0-9a-f]{6}$/i.test(full)) return "#000000";
+  let rgb = [0, 2, 4].map((i) => parseInt(full.slice(i, i + 2), 16));
+  for (let step = 0; step < 40; step += 1) {
+    const color = toHex(rgb);
+    if (1.05 / (relativeLuminance(color) + 0.05) >= minContrast) return color;
+    rgb = rgb.map((c) => c * 0.94);
+  }
+  return "#000000";
+}
+
+const DARK_TEXT = "#121212";
+const contrast = (a: string, b: string) => {
+  const [hi, lo] = [relativeLuminance(a), relativeLuminance(b)].sort((x, y) => y - x);
+  return (hi + 0.05) / (lo + 0.05);
+};
+
+/** Card fill and text color. Light brand colors (Autoweek yellow, Veranda cream) keep their color with dark text
+ * instead of being darkened into a muddy shade; everything else gets white text on a color darkened to 5.5:1. */
+// Token brands carry a bar color; MotorTrend, Bring a Trailer and HOT ROD are supplemental profiles with a primary.
+export function getFeaturedCardColors(destination: HearstDestinationMode, brandSlug?: string | null) {
+  const brandColor = brandSlug
+    ? brands.find((brand) => brand.slug === brandSlug)?.semanticColors["palette-background-utility"]
+      ?? supplementalBrandProfiles[brandSlug]?.primary
+    : undefined;
+  const bannerSlug = destinationBannerSlugs[destination];
+  const base = brandColor
+    ?? (bannerSlug ? destinationBanners[bannerSlug]?.background : hearstPlusBrandWallBanner.background)
+    ?? "#000000";
+  const hex = /^#[0-9a-f]{3,8}$/i.test(base) ? base : "#000000";
+  // A brand's own on-brand text color wins when it reaches AA on the brand color (Esquire: #121212 on #FF3A30).
+  const brandText = brandSlug
+    ? brands.find((brand) => brand.slug === brandSlug)?.semanticColors["palette-content-default-link"]
+    : undefined;
+  if (brandColor && brandText && /^#[0-9a-f]{6}$/i.test(brandText) && contrast(hex.slice(0, 7), brandText) >= 4.5) {
+    return { background: hex.slice(0, 7), foreground: brandText, iconTile: true };
+  }
+  if (contrast(hex, "#ffffff") < 3 && contrast(hex, DARK_TEXT) >= 5.5) return { background: hex.slice(0, 7), foreground: DARK_TEXT, iconTile: Boolean(brandColor) };
+  return { background: darkenForWhiteText(hex), foreground: "#ffffff", iconTile: Boolean(brandColor) };
+}

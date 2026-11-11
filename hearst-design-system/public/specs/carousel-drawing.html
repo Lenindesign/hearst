@@ -104,7 +104,7 @@ svg{display:block;width:100%;min-width:1100px;height:auto}
         <li>HUG = sized by content · FLEX = takes remaining space · FILL = parent width.</li>
         <li>The carousel fills its column; its width comes from the page grid, not from the component.</li>
         <li>Motion curves on sheet 2 are drawn from the timing values, not traced from frames.</li>
-        <li>Grayscale by design. The text card is black in every theme.</li></ol></div>
+        <li>Grayscale by design. The text card takes the page banner color (see the spec).</li></ol></div>
     </div>
     <div class="figs">
       <div><div class="lbl">H1 · photo</div><div class="v">W × 0.6</div></div>
@@ -169,7 +169,7 @@ function slide(X,Y,W,k,o){o=o||{};const ph=W*.6,mx=o.phone?6:18,ov=o.phone?40:48
    SHEET 1 · STRUCTURE
    ===================================================================== */
 begin('sh1');
-notes([[1,'PHOTO · 5:3 · R 8 · FILL'],[2,'CARD · BLACK · OVERLAPS PHOTO 48 · 40 BASE'],[3,'CARD HEIGHT FIXED · 240 · 224 BASE'],[4,'CONTROLS · TOP 20 · INSET 20'],[5,'PREV / NEXT · SM+ ONLY · PAUSE 44 BASE'],[6,'TRACK PAD BOTTOM 24 · CARD SHADOW'],[0,'WIDTH = PARENT COLUMN (FILL)'],[0,'ONLY THE ACTIVE SLIDE IS OPERABLE'],[0,'MOTION, LOOP AND INPUT LOGIC: SEE SHEET 2']]);
+notes([[1,'PHOTO · 5:3 · R 8 · FILL'],[2,'CARD · BANNER COLOR · OVERLAPS PHOTO 48 · 40 BASE'],[3,'CARD HEIGHT FIXED · 240 · 224 BASE'],[4,'CONTROLS · TOP 20 · INSET 20'],[5,'PREV / NEXT · SM+ ONLY · PAUSE 44 BASE'],[6,'TRACK PAD BOTTOM 24 · CARD SHADOW'],[0,'WIDTH = PARENT COLUMN (FILL)'],[0,'ONLY THE ACTIVE SLIDE IS OPERABLE'],[0,'MOTION, LOOP AND INPUT LOGIC: SEE SHEET 2']]);
 
 /* ---- plan 1 · 1440 column 632 · 0.85:1 ---- */
 (function(){const k=.85,X=480,Y=110,W=632;const s=slide(X,Y,W,k,{hl:2});
