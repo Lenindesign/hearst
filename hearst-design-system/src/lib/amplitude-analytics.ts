@@ -19,7 +19,9 @@ export interface AmplitudeHttpPayload {
   events: AmplitudeHttpEvent[];
 }
 
-export function isAmplitudeAnalyticsEnabled(env = process.env) {
+export function isAmplitudeAnalyticsEnabled(
+  env: Record<string, string | undefined> = process.env
+) {
   return (
     env.NEXT_PUBLIC_HEARST_ANALYTICS_ENABLED === "true" &&
     env.NEXT_PUBLIC_HEARST_ANALYTICS_PROVIDER === "amplitude" &&
