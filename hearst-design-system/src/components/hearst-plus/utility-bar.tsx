@@ -331,7 +331,7 @@ export function UtilityBar({
             onMouseLeave={closeWhenPointerLeavesMenu}
             onFocus={(event) => openDestination(allDestinationSection.mode, event.currentTarget)}
             className={cn(
-              "z-10 inline-flex h-full min-h-8 min-w-7 shrink-0 cursor-pointer items-center justify-center gap-1 rounded-none border-0 px-2 py-0 text-[11px] font-medium leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:min-w-0 sm:text-xs",
+              "z-10 inline-flex h-full min-h-8 min-w-7 shrink-0 cursor-pointer items-center justify-center gap-1 rounded-none border-0 px-2 py-0 text-[11px] font-medium leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:min-w-0 sm:text-[11px]",
               allDestinationIsActive || allDestinationIsOpen
                 ? "bg-white text-black hover:bg-white hover:text-black"
                 : darkMode
@@ -340,7 +340,7 @@ export function UtilityBar({
               allDestinationIsActive && !allDestinationIsOpen && openDestinationMenu !== null && "opacity-50"
             )}
           >
-            <span className={capAlignedLabelClassName(allDestinationSection.label)}>{allDestinationSection.label}</span>
+            <span className={cn("uppercase", capAlignedLabelClassName(allDestinationSection.label))}>{allDestinationSection.label}</span>
             <ChevronDown className={cn("size-3 transition-transform", allDestinationIsOpen && "rotate-180")} aria-hidden="true" />
           </LinkComponent>
           <div
@@ -380,7 +380,7 @@ export function UtilityBar({
                       onMouseLeave={closeWhenPointerLeavesMenu}
                       onFocus={(event) => openDestination(section.mode, event.currentTarget)}
                       className={cn(
-                        "relative z-10 inline-flex h-full min-h-8 min-w-7 cursor-pointer items-center justify-center gap-1 rounded-none border-0 px-2 py-0 text-[11px] font-medium leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:min-w-0 sm:text-xs",
+                        "relative z-10 inline-flex h-full min-h-8 min-w-7 cursor-pointer items-center justify-center gap-1 rounded-none border-0 px-2 py-0 text-[11px] font-medium leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:min-w-0 sm:text-[11px]",
                         isActive || isOpen
                           ? "bg-white text-black hover:bg-white hover:text-black"
                           : darkMode
@@ -389,7 +389,7 @@ export function UtilityBar({
                         isActive && !isOpen && openDestinationMenu !== null && "opacity-50"
                       )}
                     >
-                      <span className={capAlignedLabelClassName(section.label)}>{section.label}</span>
+                      <span className={cn("uppercase", capAlignedLabelClassName(section.label))}>{section.label}</span>
                       <ChevronDown className={cn("size-3 transition-transform", isOpen && "rotate-180")} aria-hidden="true" />
                     </LinkComponent>
                   ) : <LinkComponent
@@ -406,7 +406,7 @@ export function UtilityBar({
                     onMouseLeave={closeWhenPointerLeavesMenu}
                     onFocus={(event) => openDestination(menuMode, event.currentTarget)}
                     className={cn(
-                      "relative z-10 inline-flex h-full min-h-8 min-w-7 cursor-pointer items-center justify-center rounded-none px-2 py-0 text-[11px] font-medium leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:min-w-0 sm:text-xs",
+                      "relative z-10 inline-flex h-full min-h-8 min-w-7 cursor-pointer items-center justify-center rounded-none px-2 py-0 text-[11px] font-medium leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:min-w-0 sm:text-[11px]",
                       isActive || isOpen
                         ? "bg-white text-black hover:bg-white hover:text-black"
                         : darkMode
@@ -415,7 +415,7 @@ export function UtilityBar({
                       isActive && !isOpen && openDestinationMenu !== null && "opacity-50"
                     )}
                   >
-                    <span className={capAlignedLabelClassName(section.label)}>{section.label}</span>
+                    <span className={cn("uppercase", capAlignedLabelClassName(section.label))}>{section.label}</span>
                   </LinkComponent>}
                 </React.Fragment>
               );
@@ -459,7 +459,7 @@ export function UtilityBar({
             role="menu"
             aria-label={`${openSection.label} menu`}
             className={cn(
-              "max-h-[calc(100dvh-2rem)] w-full max-w-none overscroll-contain overflow-y-auto rounded-b-2xl rounded-t-none border border-slate-200 bg-white p-5 text-slate-950 shadow-[0_18px_50px_rgba(15,23,42,0.16)] sm:p-8",
+              "max-h-[calc(100dvh-2rem)] w-full max-w-none overscroll-contain overflow-y-auto rounded-b-2xl rounded-t-none border-x border-b border-t-0 border-slate-200 bg-white px-5 pt-3 pb-5 text-slate-950 shadow-[0_18px_50px_rgba(15,23,42,0.16)] sm:px-8 sm:pt-5 sm:pb-8",
               isInternationalMenu && "xl:p-2.5",
             )}
           >

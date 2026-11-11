@@ -1657,7 +1657,7 @@ export function MainNav({
             // The art's own ratio on wider screens; phones use a taller crop so the overlaid controls fit. The ratio
             // goes through a custom property because an inline aspect-ratio would override the phone class.
             "relative w-full overflow-hidden aspect-[var(--banner-aspect)]",
-            mastheadBanner.pattern === "brand-wall" || mastheadBanner.logoSize === "section" ? "max-sm:aspect-[5/1]" : "max-sm:aspect-[3/1]",
+            mastheadBanner.pattern === "brand-wall" || mastheadBanner.logoSize === "section" ? "max-sm:aspect-[6/1]" : "max-sm:aspect-[3/1]",
           )}
           style={{ "--banner-aspect": `${mastheadBanner.width - (mastheadBanner.cropX?.left ?? 0) - (mastheadBanner.cropX?.right ?? 0)} / ${mastheadBanner.height}` } as React.CSSProperties}
         >
