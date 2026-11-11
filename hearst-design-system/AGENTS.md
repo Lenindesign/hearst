@@ -9,7 +9,7 @@ Before changing any destination, brand page, carousel, river, sidebar, card, vid
 1. Read `PRODUCT.md` for product purpose and design principles.
 2. Read `DESIGN.md` when a design workflow loads it or when the correct canonical owner is unclear.
 3. Read only the relevant canonical sections for the task:
-   - `DESIGN-SYSTEM-SPEC.md` for HDS foundations, tokens, typography roles, components, or generated theme outputs.
+   - `AIDLC-docs/DESIGN-SYSTEM-SPEC.md` for HDS foundations, tokens, typography roles, components, or generated theme outputs.
    - `STYLE.md` for shared visual, responsive, accessibility, theme, or interaction styling.
    - `BRAND_STYLES.md` for colors, fonts, logos, icons, mastheads, routes, or brand inheritance.
    - `APP_RULES.md` for personalization, content, feeds, readers, navigation, state, eligibility, loading, or scoped product behavior.
@@ -20,7 +20,7 @@ Do not load every canonical document for a narrowly scoped change.
 
 Keep rule ownership clear:
 
-- HDS token architecture and component contracts belong in `DESIGN-SYSTEM-SPEC.md`.
+- HDS token architecture and component contracts belong in `AIDLC-docs/DESIGN-SYSTEM-SPEC.md`.
 - Product intent belongs in `PRODUCT.md`.
 - Concise design-tool context belongs in `DESIGN.md`.
 - Shared visual and interaction rules belong in `STYLE.md`.

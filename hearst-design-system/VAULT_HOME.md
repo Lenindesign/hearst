@@ -2,11 +2,11 @@
 
 This project directory is an Obsidian vault and the canonical knowledge base for the Hearst reader prototypes.
 
-`AGENTS.md` requires Codex sessions working in this project to consult this vault before making interface changes.
+`AGENTS.md` requires agent sessions working in this project to read the relevant canonical files in this vault before making interface changes.
 
 ## Start here
 
-- [[DESIGN-SYSTEM-SPEC]]: canonical HDS token architecture, generated outputs, component contracts, and publication pipeline.
+- [[AIDLC-docs/DESIGN-SYSTEM-SPEC|DESIGN-SYSTEM-SPEC]]: canonical HDS token architecture, generated outputs, component contracts, and publication pipeline.
 - [[PRODUCT]]: product purpose, audience, personality, and design principles.
 - [[DESIGN]]: concise design-tool bridge that routes work to canonical owners.
 - [[STYLE]]: native visual foundation, responsive behavior, interaction rules, and cross-theme styling.
@@ -16,7 +16,7 @@ This project directory is an Obsidian vault and the canonical knowledge base for
 
 ## Canonical ownership
 
-1. HDS foundation and token architecture: `DESIGN-SYSTEM-SPEC.md`
+1. HDS foundation and token architecture: `AIDLC-docs/DESIGN-SYSTEM-SPEC.md`
 2. Product intent: `PRODUCT.md`
 3. Design-tool routing: `DESIGN.md` (summary bridge, not a competing source)
 4. Shared visual behavior: `STYLE.md`
@@ -28,7 +28,7 @@ Do not create duplicate notes for rules already covered by these files. Update t
 
 ## Efficient reading path
 
-Read `PRODUCT.md` first. Then read only the sections owned by the task: `DESIGN-SYSTEM-SPEC.md` for HDS architecture, `STYLE.md` for shared presentation, `BRAND_STYLES.md` for brand identity, and `APP_RULES.md` for product behavior. Use `DESIGN.md` as an automatically loaded routing bridge and `DECISION_LOG.md` only for historical rationale.
+Read `PRODUCT.md` first. Then read only the sections owned by the task: `AIDLC-docs/DESIGN-SYSTEM-SPEC.md` for HDS architecture, `STYLE.md` for shared presentation, `BRAND_STYLES.md` for brand identity, and `APP_RULES.md` for product behavior. Use `DESIGN.md` as an automatically loaded routing bridge and `DECISION_LOG.md` only for historical rationale.
 
 ## Working agreements
 
@@ -38,7 +38,7 @@ Read `PRODUCT.md` first. Then read only the sections owned by the task: `DESIGN-
 - Brand changes must use the current theme, font, and logo implementation sources documented in [[BRAND_STYLES]].
 - New durable visual rules belong in [[STYLE]].
 - New durable product behavior belongs in [[APP_RULES]].
-- Conversation history and Codex memory may provide context, but neither replaces this repository knowledge base.
+- Conversation history and agent memory may provide context, but neither replaces this repository knowledge base.
 
 ## Using this vault
 

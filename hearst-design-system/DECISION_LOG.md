@@ -2,6 +2,13 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-11-11: Carousel text card takes the banner color; vault audit
+
+- **Context:** The featured carousel's text card was black on every page, so it never matched the section or brand around it. An audit of the vault's canonical files against the shipped app also found stale values (utility-bar navy, Hearst+ blue, E&W and publication fonts, Road & Track color), retired modules still described as live (Today's Edit, carousel indicators and Follow row, Global Story Inventory), and wrong layout breakpoints.
+- **Decision:** The card takes the page's banner color through `getFeaturedCardColors`: the Hearst+ brand-wall navy on the home, the section banner on destinations, the brand's bar color (`palette-background-utility`) on publication pages. White text sits on the color darkened to 5.5:1; light brand colors keep their color with `#121212` text. The canonical files were corrected to describe the app as shipped, and superseded log entries carry a dated status line.
+- **Scope:** `featured-story-carousel.tsx`, `brand-banners.ts`, the three home-page carousels; `STYLE.md`, `BRAND_STYLES.md`, `APP_RULES.md`, `PRODUCT.md`, `VAULT_HOME.md`, `DESIGN.md`, `AGENTS.md`, `AIDLC-docs/DESIGN-SYSTEM-SPEC.md`.
+- **Canonical rule:** `STYLE.md` featured carousel panel rule.
+
 ## 2026-11-06: Bookmark is the save icon
 
 - **Context:** Save used a heart, which readers associate with liking a story, while the surrounding language is about keeping stories for later ("Save story", "Save stories to build your reading list", Library, Read Later). The HDS Constitution's river card contract also names a bookmark action.
@@ -13,6 +20,7 @@ Use this file for concise, dated context behind product and design decisions. Du
 
 - **Context:** The landing page split attention between the trial and Preview, ran about eight screens of brand panels before the offer, and ended on a plans card with the rack poking out around it.
 - **Decision:** Preview the app is the page's main action and the trial its follow-up. Three brand panels, one per section (Good Housekeeping, Harper's Bazaar, Car and Driver). Preview goes to the brand in view, otherwise the home feed. The page ends on a solid white full-bleed plans section. In the app, a soft trial banner follows after about three stories (its placement is still open).
+- **Status (2026-11-11 audit):** Superseded in part: the page now has six brand panels (`FEATURED_SLUGS` in `newsstand-catalog.ts`).
 - **Scope:** `/hearst-plus/newsstand/` and its title modal; the in-app trial banner is not built yet.
 - **Canonical rule:** `APP_RULES.md` Newsstand rules; design in `docs/landing-page-design.md`.
 
@@ -20,6 +28,7 @@ Use this file for concise, dated context behind product and design decisions. Du
 
 - **Context:** The bright Hearst+ blue utility bar sat above the navy Hearst+ banner and matched the logo's plus, so the header carried two strong blues and the plus competed with the bar.
 - **Decision:** On the Hearst+ home the banner extends up behind a transparent utility bar, which fills with the logo navy `#012247` (`--hp-utility-bar`) once the page scrolls, so the header reads as one navy block and the plus is its one bright blue.
+- **Status (2026-11-11 audit):** The filled bar renders `#03112B` (`--hp-utility-bar` → `--palette-alert-info-1000`), deeper than the logo navy `#012247`. The Communities home also uses the transparent-over-banner bar.
 - **Scope:** The utility bar on the Hearst+ home (`All`) only.
 - **Exceptions:** Sections, Local News, A&E and brand pages keep a bar in their own primary color, which reads better over their colored banners; dark-mode pages keep the dark knockout bar.
 - **Canonical rule:** `STYLE.md` Hearst+ shell styling.
@@ -36,6 +45,7 @@ Use this file for concise, dated context behind product and design decisions. Du
 
 - **Context:** A new two-tone Hearst+ logo (navy HEARST, blue plus) replaced the single-color one, and the destination lockups (HEARST plus an italic serif section name) no longer matched it.
 - **Decision:** Use the new Hearst+ logo everywhere, keeping its two colors except on knockout surfaces. Rebuild the Lifestyle, Autos, Fashion & Luxury and Enthusiast & Wellness lockups as navy HEARST, a thin divider and the section name in letter-spaced Schibsted Grotesk Bold, with the divider and name in the destination primary.
+- **Status (2026-11-11 audit):** Superseded in part: destination banners now draw the white HEARST+ knockout (`hearst-all-knockout`) with a live-text italic descriptor instead of letter-spaced section-name lockups.
 - **Scope:** Every Hearst+ and destination masthead and footer that renders these logos.
 - **Canonical rule:** `BRAND_STYLES.md` Brand application rules.
 
@@ -43,6 +53,7 @@ Use this file for concise, dated context behind product and design decisions. Du
 
 - **Context:** The Communities logo used the destination family (HEARST + italic serif "Communities") as a plain image at its own size, so it read as a fifth destination, its letters did not match other pages and it overflowed on phones.
 - **Decision:** A Hearst+ feature lockup: HEARST+ wordmark plus "Communities" in outlined Schibsted Grotesk Bold, all Hearst+ blue (white on dark), registered as `hearst-communities` and sized by the shared masthead geometry. The same pattern applies to later Hearst+ features.
+- **Status (2026-11-11 audit):** Superseded: `hearst-communities` stays registered but the Communities masthead renders the white HEARST+ knockout with an italic `Communities` descriptor (`mastheadDescriptorOverride`).
 - **Scope:** Communities masthead; the rule for future Hearst+ feature mastheads.
 - **Canonical rule:** `BRAND_STYLES.md` Brand application rules; design in `docs/hearst-plus-communities-logo-design.md`.
 
@@ -57,6 +68,7 @@ Use this file for concise, dated context behind product and design decisions. Du
 
 - **Context:** The four main destinations needed a palette that reads as one family: carmine, olive, dark Tyrian blue and slate.
 - **Decision:** Lifestyle `#A62C37`, Autos `#819238`, Fashion & Luxury `#12354E`, Enthusiast & Wellness `#34454C`, each with derived hover, active and light tint steps and a curated dark-mode primary. Autos olive is only about 3.4:1 on white, so its link, content-brand and button tokens use darker olive steps (`#5A6627` text, `#6E7C30` buttons) to clear WCAG AA; Lifestyle keeps its teal, amber and sage secondary accents.
+- **Status (2026-11-11 audit):** Corrected after this entry: Autos is slate `#34454C` and Enthusiast & Wellness is olive `#819238` with the AA olive steps (`theme-options.ts`).
 - **Scope:** `lifestyleTheme`, `hearstPlusTheme` (Autos), `fluxTheme` and `ewTheme` in `src/lib/theme-options.ts`. Official destination logo SVGs are unchanged.
 - **Canonical rule:** `BRAND_STYLES.md` Identity.
 
@@ -71,6 +83,7 @@ Use this file for concise, dated context behind product and design decisions. Du
 
 - **Context:** The newsstand page sold "every Hearst magazine, one subscription", with per-title tags, "Included" lines and a pick-your-magazines list. Hearst+ is a cross-brand aggregator app, and the app is the product being promoted.
 - **Decision:** Lead with "Every Hearst brand. One app." Remove topic tags, "Included" lines and the whole `My newsstand` picking flow (panel and modal toggles, pill, fly-to-pill, plans-grid picks, confirmation pile). Every title modal and brand panel offers `Start free trial` and `Preview in Hearst+`; print remains as a quiet subscription link for titles still in print.
+- **Status (2026-11-11 audit):** Superseded in part: brand panels no longer carry a trial button; title modals do.
 - **Scope:** `/hearst-plus/newsstand/` only.
 - **Canonical rule:** `APP_RULES.md` navigation rules (newsstand entries).
 
@@ -78,6 +91,7 @@ Use this file for concise, dated context behind product and design decisions. Du
 
 - **Context:** The Save / More like this / comments / Hide row under every river card added too much information to the feed.
 - **Decision:** Remove the per-card action row from every content card: standard and photo-gallery river cards, the lead video card, and video index cards (including their Open story button). The featured carousel drops Save and More like this and keeps Follow brand. River cards also drop the bottom summary strip (shopping picks, recipe stats, vehicle specs); the story reader keeps it. Readers reach Save, More like this and comments in the story reader's action bar.
+- **Status (2026-11-11 audit):** Superseded in part: the carousel's Follow brand row is hidden too; it shows no per-card controls.
 - **Scope:** `LifestyleRiverCard`, `RichPhotoGalleryCard`, `VideoFeedLeadCard`, `VideoIndexCard` and `FeaturedStoryCarousel` everywhere they render.
 - **Consequence:** Hide existed only on cards, so readers can no longer hide stories. Previously hidden stories stay hidden.
 - **Canonical rule:** `STYLE.md` card rules.
@@ -86,6 +100,7 @@ Use this file for concise, dated context behind product and design decisions. Du
 
 - **Context:** The handoff version scrolled about ten screens before the only sign-up point, showed bracketed pricing placeholders, and loaded three.js plus 3.6 MB of cover art before the rack appeared.
 - **Decision:** Every brand panel carries a trial button and an "Add to my newsstand" toggle, brand sections are shortened to about one screen, and the hero links straight to plans. Readers can click covers on the rack or logos in the plans grid to build a "My newsstand" list that carries into an in-page confirmation. The offer is one editable config marked as prototype pricing. Covers ship as WebP (small for the rack, 2x only for the five featured titles), logo C2PA metadata is stripped, covers stream in instead of blocking the rack, and the scene loads after idle.
+- **Status (2026-11-11 audit):** Superseded by the 2026-10-09 and 2026-10-11 entries: the newsstand picking flow and the hero-to-plans link were removed.
 - **Scope:** `/hearst-plus/newsstand/` only.
 - **Exceptions:** Trial buttons do not hand off to checkout or onboarding yet.
 - **Canonical rule:** `APP_RULES.md` navigation rules.
@@ -227,6 +242,7 @@ Use this file for concise, dated context behind product and design decisions. Du
 
 - **Context:** Delish requested a five-color hero-indicator exception, while every other publication must retain the established primary/muted indicators. Separately, the editorial hydration gate could wait for all progressive feed pages even though the river already renders cards incrementally.
 - **Decision:** Feed Delish palette colors 1–5 only into the Delish hero indicators, preserving position and active-width behavior. Render publication rivers immediately, continue merging every editorial page in the background, and let the existing sentinel append four ranked cards per batch until the active river is complete.
+- **Status (2026-11-11 audit):** Superseded in part: featured-carousel dot indicators are hidden, so the Delish indicator palette is dormant.
 - **Scope:** The color exception is limited to `/lifestyle/delish/`. Progressive river loading applies across publication routes. Every other publication and destination-wide river retains the shared indicator treatment.
 - **Canonical rule:** `APP_RULES.md` progressive river and publication behavior; `STYLE.md` carousel indicators and river modules.
 

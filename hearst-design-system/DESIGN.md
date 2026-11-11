@@ -9,7 +9,7 @@ Hearst+ and the destination prototypes compose the Hearst Design System. Reuse i
 ## Canonical owners
 
 - `PRODUCT.md`: audience, purpose, prototype boundary, personality, and principles.
-- `DESIGN-SYSTEM-SPEC.md`: HDS tokens, generated outputs, component contracts, and delivery evidence.
+- `AIDLC-docs/DESIGN-SYSTEM-SPEC.md`: HDS tokens, generated outputs, component contracts, and delivery evidence.
 - `STYLE.md`: shared visual hierarchy, responsive presentation, accessibility, and interaction styling.
 - `BRAND_STYLES.md`: brand identity, inheritance, routes, colors, typography, and logos.
 - `APP_RULES.md`: feeds, personalization, readers, navigation, state, content eligibility, and product behavior.

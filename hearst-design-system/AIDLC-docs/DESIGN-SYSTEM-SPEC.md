@@ -19,6 +19,7 @@ canonical token files, and verified automation are the evidence to reconcile.
 | Figma | Downstream design consumer | Exploration and optional published Variables |
 | Pencil | Optional downstream design/inspection consumer | Bounded `.pen` artifacts when a team explicitly uses them |
 | GitHub workflow | `../.github/workflows/hearst-design-system-quality.yml` | Current repository quality and application-build automation |
+| Feed refresh workflow | `../.github/workflows/refresh-hearst-story-feed.yml` | Daily RSS refresh that opens a PR (the nested `hearst-design-system/.github/workflows/rss-refresh.yml` is inert: GitHub only runs root workflows) |
 
 Figma and Pencil do not override canonical Git tokens or shipped production
 behavior. A design artifact can support a specification but cannot substitute
@@ -44,12 +45,13 @@ The component hierarchy is:
 A component belongs at the lowest layer that fully owns its behavior. Do not
 create page-local markup when a production component already owns the contract.
 
-The shared `Button` primitive exposes `capAlignedLabel` for short, verified
-no-descender labels. It wraps the label in `.hds-cap-aligned-label`, which
+The shared `Button` primitive exposes `capAlignedLabel`, which defaults to
+`"auto"`: plain-text labels without descender glyphs are trimmed automatically,
+`true` forces the trim, and `false` opts out. It wraps the label in `.hds-cap-aligned-label`, which
 progressively trims supported browser text boxes to `cap alphabetic` metrics.
 Do not enable it for labels with lowercase `g`, `j`, `p`, `q`, or `y`, or
 uppercase `J` or `Q`, because trimming to the alphabetic baseline can clip those
-glyphs. The default button label keeps normal font line-box metrics.
+glyphs; `"auto"` already skips them.
 
 Public Hearst+ components and helpers are exported from
 `src/components/hearst-plus/index.ts`. New public APIs should be typed,
@@ -91,7 +93,8 @@ The current component inventory and audit depth are maintained in
 ```text
 tokens/
 ├── core/
-│   └── global.json
+│   ├── global.json          # the only core file the generator reads
+│   └── border, color, elevation, opacity, spacing, typography.json
 ├── semantic/
 │   ├── aliases.json
 │   ├── color/
@@ -99,9 +102,11 @@ tokens/
 │   ├── layout/
 │   ├── misc/
 │   └── typography/
-└── brands/
-    ├── _meta.json
-    └── {publication-slug}.json
+├── brands/
+│   ├── _meta.json
+│   └── {publication-slug}.json
+├── publications.json        # registry: 32 entries, 29 active, 3 planned
+└── manifest.json            # legacy normalizer output (stale: 2026-03-15)
 ```
 
 The current checkout contains 435 core tokens, 13 semantic JSON files, and 29
@@ -116,7 +121,7 @@ Canonical flat entries use:
 {
   "component-card-background-default": {
     "type": "color",
-    "value": "#111111"
+    "value": "#ffffff"
   }
 }
 ```
@@ -157,8 +162,9 @@ Run:
 npm run build-tokens
 ```
 
-`scripts/build-from-tokens.ts` reads canonical core, publication, and
-typography metadata and writes:
+`scripts/build-from-tokens.ts` reads `tokens/core/global.json`, every
+`tokens/brands/*.json`, and `tokens/brands/_meta.json` (font overrides) and
+writes:
 
 - `src/lib/brands.ts` — typed publication theme data;
 - `src/lib/tokens.css` — CSS custom properties for the default and
@@ -169,11 +175,17 @@ theme decorator select the appropriate `data-brand` scope and apply the
 destination/publication layering used by the application.
 
 Do not hand-edit generated output. Review its diff after canonical changes.
+Two legacy scripts also overwrite these files and should not be run in normal
+work: `npm run sync-tokens` (remote Token Studio endpoint) and
+`npm run sync-pencil` (`scripts/sync-from-pencil.ts`). Separately,
+`npm run tokens:build` (Style Dictionary) writes a parallel `dist/css`,
+`dist/js`, and `dist/json` set that the app does not import.
 
 ### Current coverage gap
 
-`scripts/build-from-tokens.ts` does not directly read all 13 files under
-`tokens/semantic/`. The relationship between semantic source files and shipped
+`scripts/build-from-tokens.ts` reads none of the 13 files under
+`tokens/semantic/`, and alias (`$…`) and composite (`{…}`) values are skipped
+from CSS output. The relationship between semantic source files and shipped
 CSS/TypeScript output is not yet protected by an explicit coverage test. Treat
 semantic additions or removals as incomplete until generation and runtime
 consumption are proven.
@@ -203,11 +215,11 @@ Avoid:
 - raw palette values where a semantic or component token exists;
 - inline values that bypass publication theming.
 
-The token audit currently reports zero component-level hard-coded-color,
-raw-color-function, or non-semantic-Tailwind violations. The original
-689-finding baseline remains checked in as a historical regression ledger;
-all 689 entries are resolved. Any new or reintroduced violation fails
-`npm run tokens:audit:ci`; do not refresh the baseline to excuse new debt.
+The token audit is a ratchet, not a zero count. `reports/token-audit-baseline.json`
+(2026-10-12) records 1,717 findings across 576 fingerprints (1,019
+hard-coded-color, 619 non-semantic-Tailwind, 79 raw-color-function). Any new
+or increased fingerprint fails `npm run tokens:audit:ci`; on 2026-11-11 there
+are 54. Fix them rather than refreshing the baseline to excuse new debt.
 
 Brand and campaign art direction that is not a reusable system token must still
 have one explicit, scoped owner. Cinematic article palettes live in
@@ -233,7 +245,8 @@ Theme resolution follows the application:
 4. scoped product exceptions documented by the owning component or route.
 
 Publication themes must not leak across destination boundaries. Adding a theme
-requires canonical token data, typography metadata, registration, Storybook
+requires canonical token data, typography metadata, registration in
+`tokens/publications.json` (validated by `npm run publications:validate`), Storybook
 coverage, and production-route verification.
 
 ## 8. Typography, assets, and icons
@@ -260,8 +273,9 @@ npm run push-figma > figma-payload.json
 ```
 
 Despite the historical command name, `scripts/push-to-figma.ts` only prints a
-payload. The current verified output contains one collection, 29 modes, 774
-variables, and 22,432 mode values.
+payload. The current verified output contains one collection, 29 modes
+(`white-label` as the initial mode plus 28 created), 779 variables, and 22,541
+mode values.
 
 An approved Figma Variables API or connected-tool write is separate. After the
 write, verify destination identity, variable names, modes, values, scopes,
@@ -282,12 +296,14 @@ npm run push-pencil > pencil-payload.json
 ```
 
 `scripts/push-to-pencil.ts` only prints a Pencil-compatible payload. The current
-verified output contains 1,042 variables across 29 publication themes. It does
+verified output contains 1,047 variables across 29 publication themes. It does
 not select or modify a `.pen` file.
 
 The repository contains `homepage-version3.pen`; its contents must be inspected
-through Pencil editor tools. A separate legacy Token Studio path,
-`scripts/sync-to-pencil.ts`, targets `../../hearst-brands.pen`, while
+through Pencil editor tools. Legacy Token Studio importers (`scripts/import-token-studio.ts` for
+`tokens:import` and `tokens:pipeline`, and `scripts/sync-tokens.ts`) and a
+legacy Pencil writer, `scripts/sync-to-pencil.ts`, which targets
+`../../hearst-brands.pen`, sit beside this flow, while
 `scripts/sync-from-pencil.ts` can regenerate application output from legacy
 `src/lib/pencil-variables.json`. These paths conflict with the ordinary
 Git-to-production authority model and must be treated as legacy or migration
@@ -334,7 +350,9 @@ npm run build
 
 The current `quality` command includes:
 
-- token structure, validation, and no-regression hard-coded-style checks;
+- the component index and `*.metadata.ts` check (`index:check`);
+- token structure (`tokens:check`), validation (`tokens:validate`), and the
+  no-regression hard-coded-style audit (`tokens:audit:ci`);
 - publication metadata validation;
 - unit tests;
 - all indexed Storybook interaction and automated accessibility scenarios;
@@ -345,8 +363,11 @@ The current `quality` command includes:
 - every indexed documentation page at 390 and 1,280px for headings, render
   errors, browser errors, and horizontal page overflow.
 
-The no-regression token audit is currently at zero known violations against
-the retained 689-finding historical baseline.
+The token audit is a ratchet against `reports/token-audit-baseline.json`
+(2026-10-12: 1,717 findings across 576 fingerprints). As of 2026-11-11 it fails
+with 54 new or increased fingerprints (for example
+`brutalist-home-page.tsx` and `club-activity-route-map.tsx`), so
+`npm run quality` fails at `tokens:audit:ci` until they are fixed.
 
 The root GitHub workflow runs this quality command and then the application
 build for matching pull requests, `main` pushes, and manual dispatch.
@@ -395,7 +416,9 @@ A release claim requires:
 7. provider or registry success;
 8. smoke tests of the published artifact or route.
 
-Netlify build configuration exists in `../netlify.toml`. Repository
+Netlify build configuration exists in `../netlify.toml`; it also builds
+Storybook into `.next/static/sb` and serves it at `/storybook/`
+(`npm run verify:storybook:deployment` checks it). Repository
 configuration alone does not prove provider connection, automatic deployment,
 preview availability, or a successful deployed revision.
 

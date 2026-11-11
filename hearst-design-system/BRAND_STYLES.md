@@ -60,7 +60,7 @@ The **HDS page token** is the theme's published background value. The prototype 
 
 | Theme | Slug | Primary | Secondary | HDS page token | Logo |
 |---|---|---:|---:|---:|---|
-| Hearst Magazines / Hearst+ | `hearst-all` | `#2D75B9` | `#DCEBFA` | `#F4F8FC` | `/logos/hearst-plus.svg` |
+| Hearst Magazines / Hearst+ | `hearst-all` | `#2B6FAF` | `#DCEBFA` | `#F4F8FC` | `/logos/hearst-plus.svg` |
 | Hearst Autos | `hearst-plus` | `#34454C` | `#E8EBDB` | `#F9FAF5` | `/logos/hearst-autos.svg` |
 | Hearst Lifestyle | `hearst-lifestyle` | `#A62C37` | `#EFD9DB` | `#F7EFE7` | `/logos/hearst-lifestyle.svg` |
 | Hearst Fashion & Luxury | `hearst-flux` | `#12354E` | `#D4DBDF` | `#F3F5F6` | `/logos/hearst-fashion-luxury.svg` |
@@ -76,7 +76,7 @@ The **HDS page token** is the theme's published background value. The prototype 
 | Hearst Autos | Inter | Inter | Barlow Condensed 700 | Loaded |
 | Hearst Lifestyle | Inter | Newsreader | Newsreader 700 | Loaded |
 | Hearst Fashion & Luxury | Inter | Newsreader | Modern MT Pro 400 | Loaded |
-| Hearst Enthusiast & Wellness | Inter | Newsreader | Knockout Condensed 900 | Proprietary asset pending; League Gothic / Barlow Condensed fallback |
+| Hearst Enthusiast & Wellness | Inter | Newsreader | Barlow Semi Condensed 800 | Loaded |
 
 ## Publication brand themes
 
@@ -107,7 +107,7 @@ The registry is split into narrower identity and typography tables so it remains
 | Popular Mechanics | `popular-mechanics` | `#1C6A65` | `#F04E3E` | `#FFFFFF` | `/logos/popular.svg` |
 | Prevention | `prevention` | `#44C1C5` | `#EAF4F5` | `#FFFFFF` | `/logos/prevention.svg` |
 | Redbook | `redbook` | `#D30C4F` | `#69DCBF` | `#FFFFFF` | `/logos/redbook.svg` |
-| Road & Track | `road-and-track` | `#BB322F` | `#1B1A1A` | `#FFFFFF` | `/logos/roadandtrack.svg` |
+| Road & Track | `road-and-track` | `#434343` | `#1B1A1A` | `#FFFFFF` | `/logos/roadandtrack.svg` |
 | Runner's World | `runners-world` | `#59E7ED` | `#FF7D46` | `#FFFFFF` | `/logos/runners.svg` |
 | Seventeen | `seventeen` | `#FF92DE` | `#EEFFAE` | `#FFFFFF` | `/logos/seventeen.svg` |
 | The Pioneer Woman | `the-pioneer-woman` | `#8B376C` | `#F4EDD8` | `#FFFFFF` | `/logos/pioneer.svg` |
@@ -120,40 +120,40 @@ The registry is split into narrower identity and typography tables so it remains
 
 | Brand | Body/UI | Editorial | Headline | Runtime status |
 |---|---|---|---|---|
-| White Label | SF Pro | SF Pro | SF Pro 700 | Loaded / system fallback |
-| AutoWeek | SF Pro | SF Pro | Inter 700 | Loaded |
-| Best Products | SF Pro | SF Pro | Inter 700 | Loaded |
-| Bicycling | SF Pro | SF Pro | Velo Serif Display 700 | Loaded |
-| Biography | SF Pro | SF Pro | Playfair Display 400 | Loaded |
+| White Label | Inter | Inter | Inter 700 | Loaded |
+| AutoWeek | Inter | Inter | Montserrat 800 | Loaded (800 face from AutoWeek's design tokens, `globals.css`) |
+| Best Products | Inter | Inter | Inter 700 | Loaded |
+| Bicycling | Inter | Inter | Velo Serif Display 700 | Loaded |
+| Biography | Inter | Inter | Playfair Display 400 | Loaded |
 | Car and Driver | Inter | Barlow Semi Condensed | Inter 800 | Loaded |
 | Cosmopolitan | Basis Grotesque Pro | Chronicle Display | Chronicle Display 600 | Loaded |
 | Country Living | Montserrat | Playfair Display | Playfair Display 400 | Loaded |
-| Delish | TT Commons Pro | SF Pro | TT Commons Pro 700 | Loaded |
-| ELLE Decor | SF Pro | Modern MT Pro | Modern MT Pro 400 | Loaded |
+| Delish | TT Commons Pro | Inter | TT Commons Pro 700 | Loaded |
+| ELLE Decor | Inter | Modern MT Pro | Modern MT Pro 400 | Loaded |
 | ELLE | Neue Haas Unica Pro | Modern MT Pro | Modern MT Pro 400 | Loaded |
 | Esquire | Lausanne | Lausanne | Lausanne 400 | Loaded |
-| FRE | SF Pro | Georgia | SF Pro 700 | Loaded / system fallback |
+| FRE | Inter | Inter | Inter 700 | Loaded |
 | Good Housekeeping | Barlow Semi Condensed | Barlow Semi Condensed | Barlow Semi Condensed 800 | Loaded |
 | Harper's BAZAAR | Helvetica Now Text | NewParis Text | NewParis Text 400 | Loaded |
 | House Beautiful | Visuelt Pro | Apparel | SangBleu Sunrise 500 | Loaded |
-| Men's Health | Manrope | SF Pro | Manrope 800 | Loaded |
-| Oprah Daily | SF Pro | Juana | Juana 500 | Loaded |
-| Popular Mechanics | SF Pro | Work Sans | United Sans Cd 400 | Loaded |
-| Prevention | Poppins | SF Pro | Poppins 700 | Loaded |
-| Redbook | SF Pro | SF Pro | SF Pro 700 | Loaded / system fallback |
-| Road & Track | SF Pro | Roboto | Buzz 900 | Loaded |
-| Runner's World | SF Pro | Futura Now Text | League Gothic 400 | Loaded |
-| Seventeen | SF Pro | SF Pro | Inter 800 | Loaded |
+| Men's Health | Manrope | Inter | Manrope 800 | Loaded |
+| Oprah Daily | Inter | Juana | Juana 500 | Loaded |
+| Popular Mechanics | Inter | Work Sans | United Sans Cd 400 | Loaded |
+| Prevention | Poppins | Inter | Poppins 700 | Loaded |
+| Redbook | Inter | League Spartan | Inter 700 | Loaded |
+| Road & Track | Inter | Roboto | Buzz 900 | Loaded |
+| Runner's World | Inter | Futura Now Text | League Gothic 400 | Loaded |
+| Seventeen | Inter | Inter | Inter 800 | Loaded |
 | The Pioneer Woman | Livvic | Petrona | Livvic 700 | Loaded globally |
 | Town & Country | Montserrat | Montserrat | Montserrat 600 | Loaded |
-| Veranda | SF Pro | Playfair Display | Playfair Display 400 | Loaded |
-| Woman's Day | SF Pro | Arvo | League Spartan 600 | Loaded |
+| Veranda | Inter | Playfair Display | Playfair Display 400 | Loaded |
+| Woman's Day | Inter | Arvo | League Spartan 600 | Loaded |
 | Women's Health | Altone | Apparel | Altone 700 | Loaded |
 
 ## Brand application rules
 
 - The primary and secondary values above feed semantic tokens. Components must use semantic roles rather than referencing the raw hex values.
-- **ELLE Blocks section headings:** ELLE is the only publication brand with the oversized section-heading treatment in the Blocks layout. Use an italic 4.5rem (72px) headline at desktop widths and the shared 2.25rem (36px) size below desktop. All other brands and destinations use the standard 2.25rem section heading. Keep this exception scoped to the Blocks surface and implement it through the shared Blocks heading helper; do not add brand-wide heading overrides.
+- **ELLE Blocks section headings:** ELLE is the only publication brand with the oversized section-heading treatment in the Blocks layout. Use an italic 4.5rem (72px) headline at desktop widths (`lg:text-7xl`) and 2.25rem (36px, `text-4xl`) below desktop. All other brands and destinations use the T2 role (24px, 32px from md). Keep this exception scoped to the Blocks surface and implement it through the shared Blocks heading helper; do not add brand-wide heading overrides.
 - Editorial or advertiser-specific art direction that is not a reusable brand token must live in its named scoped configuration. Rendering components consume that configuration through local semantic CSS variables; they do not carry raw palette values or promote one campaign color into the shared system.
 - Headline weight is part of the brand identity and must travel with the headline family.
 - **Button radius:** CTA corner radius is the brand token `component-button-radius-default` (source `tokens/brands/<slug>.json`, rebuilt with `npm run build-tokens`), never a per-component override. Car and Driver uses 4px.
@@ -163,16 +163,16 @@ The registry is split into narrower identity and typography tables so it remains
 - Use compact brand icons only in metadata, filters, and dense lists. Do not replace a masthead wordmark with an icon.
 - **Publication mastheads:** publication pages use the original compact masthead row with the registered brand logo, without photo banners. The compact sticky bar keeps the same logo. The banner art catalog in `src/lib/brand-banners.ts` remains available to contextual community headers.
 - **Hearst+ logo:** `/logos/hearst-plus.svg` is two-tone: HEARST in navy `#012247` and the plus in Hearst+ blue `#2D75B9`. Brand-color tints never flatten it; only knockout (white) surfaces recolor it, all white.
-- **Destination banner lockups:** Lifestyle, Autos, Fashion & Luxury, Enthusiast & Wellness, and Local News banners use the shared standalone `/logos/hearst-wordmark.svg` plus a separate live-text descriptor. Use the same HEARST artwork size and Newsreader 600 italic descriptor size at each responsive breakpoint. Local News retains its registered SVG in the compact destination logo row; A&E keeps its registered destination lockup. Keep the Hearst+ home's separate two-tone HEARST+ wordmark.
-- **Hearst+ feature lockup:** app-level features (Communities first; later Newsstand, Shop, Games) use the destination lockup above with Hearst+ blue `#2D75B9` as the section color: navy HEARST, divider, one short feature name. Register each in `src/lib/logos.ts` (Communities: `hearst-communities`, `/logos/hearst-plus-communities.svg`) and render it through the shared masthead geometry.
+- **Destination banner lockups:** Lifestyle, Autos, Fashion & Luxury, Enthusiast & Wellness, and Local News banners use the white HEARST+ knockout lockup (`hearst-all-knockout`, `/logos/hearst-plus-knockout.svg`), drawn all white including the plus (`logoColor: "white"`; only the Hearst+ home keeps the blue plus), plus a separate live-text italic descriptor (currently `font-serif`, the system serif, weight 400; 18 / 30 / 34px at base / sm / lg). Keep the lockup size and descriptor size identical across banners at each breakpoint. Local News retains its registered SVG in the compact destination logo row; A&E keeps its registered destination lockup. Keep the Hearst+ home's separate two-tone HEARST+ wordmark.
+- **Hearst+ feature lockup:** app-level features (Communities first; later Newsstand, Shop, Games) use the destination lockup above with Hearst+ blue `#2D75B9` as the section color: navy HEARST, divider, one short feature name. Register each in `src/lib/logos.ts` (Communities: `hearst-communities`, `/logos/hearst-plus-communities.svg`) and render it through the shared masthead geometry. The `hearst-communities` lockup is registered but not currently rendered: the Communities masthead uses the white HEARST+ knockout with an italic `Communities` descriptor (`mastheadDescriptorOverride`).
 - Dark mode uses the accessible derived primary from `brandToCssVars`; do not assume the light primary has sufficient contrast on a dark surface.
 - AutoWeek keeps the dark-neutral editorial-title exception documented in `STYLE.md` and `APP_RULES.md`.
 - Hearst+ Videos keeps its scoped light-blue and white-logo exception documented in `STYLE.md` and `APP_RULES.md`.
 
 ### HOT ROD Events scoped composition
 
-- `/autos/hot-rod/events/` and its event-series routes inherit the Hearst Autos 4/8/12 grid, component anatomy, body typography, utility navigation, focus treatment, and footer.
-- The event surface may apply a tightly scoped HOT ROD editorial composition using red `#C8101E`, track black `#111111`, asphalt `#242424`, route cream `#F3EBDD`, and white. These values must stay inside the HOT ROD Events route root and must not alter shared Autos components or sibling publications.
+- `/autos/hot-rod/events/` (served by the dynamic `src/app/autos/[brandSlug]/events/` route) and its event-series routes inherit the Hearst Autos 4/8/12 grid, component anatomy, body typography, utility navigation, focus treatment, and footer.
+- The event surface may apply a tightly scoped HOT ROD editorial composition using red `#C8101E` (with primary `#C11B17` at the scope root), track black `#111111`, asphalt `#242424`, route cream `#F3EBDD`, and white. These values must stay inside the HOT ROD Events route root and must not alter shared Autos components or sibling publications.
 - `src/lib/hot-rod-events.ts` owns those route values; `src/components/hot-rod-events-page.tsx` consumes them through scoped variables rather than duplicating the palette.
 - HOT ROD Events uses the existing Autos condensed headline role and neutral UI/body role. It does not introduce a separate font or component system.
 - The route-line motif, dark photographic hero, and warm roadbook surface are editorial compositions. Controls, links, status labels, grids, and responsive behavior continue to use shared Hearst Design System foundations.
