@@ -472,9 +472,9 @@ export function UtilityBar({
               )}
             >
             <div className={cn("mb-4 border-b pb-3", isConceptMenu ? "border-slate-200" : menuDarkMode ? "border-white/15" : "border-border", isInternationalMenu && "xl:mb-1 xl:pb-1")}>
-              <div className="flex flex-wrap items-end justify-between gap-3">
-              <div>
-              <p className={cn("text-sm font-bold", isConceptMenu && "text-lg tracking-tight")}>
+              <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+              <div className={cn("min-w-0", isConceptMenu && "flex flex-wrap items-baseline gap-x-3 gap-y-1")}>
+              <p className={cn("text-sm font-bold", isConceptMenu && "shrink-0 text-lg tracking-tight")}>
                 {openDestinationMenu === "all"
                   ? "Hearst"
                   : isLifestyleMenu
@@ -487,7 +487,7 @@ export function UtilityBar({
                     ? "Hearst around the world"
                     : `${openSection.label} brands`}
               </p>
-              {openDestinationMenu === "all" || isLifestyleMenu ? <p className="mt-1 max-w-xl text-sm font-normal leading-5 text-slate-600">{openDestinationMenu === "all" ? "Find stories and publications by what you love." : brandSectionDescriptions.lifestyle}</p> : isInternationalMenu ? <p className="mt-1 max-w-xl text-sm font-normal leading-5 text-slate-600">Discover trusted Hearst publications from seven countries.</p> : null}
+              {openDestinationMenu === "all" || isLifestyleMenu ? <p className={cn("mt-1 max-w-xl text-sm font-normal leading-5 text-slate-600", isConceptMenu && "mt-0 min-w-0 max-w-full truncate")}>{openDestinationMenu === "all" ? "Find stories and publications by what you love." : brandSectionDescriptions.lifestyle}</p> : isInternationalMenu ? <p className="mt-0 min-w-0 max-w-full truncate text-sm font-normal leading-5 text-slate-600">Discover trusted Hearst publications from seven countries.</p> : null}
               </div>
               {isConceptMenu ? (
                 <LinkComponent

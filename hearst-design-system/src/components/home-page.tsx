@@ -8597,6 +8597,7 @@ export function HomePageTemplate({
     <div
       className="hearst-plus-theme min-h-screen bg-[var(--hp-background)] font-brand"
       data-filter-brand={selectedBrand?.slug}
+      data-destination-mode={destinationMode}
       data-mode={colorMode}
       style={homePageThemeCssVars as React.CSSProperties}
     >
