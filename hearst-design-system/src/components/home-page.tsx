@@ -7231,7 +7231,7 @@ function LifestyleRiverHomePage({
                         />
                       ) : <div />}
                       <div className="h-fit lg:sticky lg:top-24 lg:self-start">
-                        <ContentReaderAdvertisement ad={rightRailAd} currentTopic={rightRailAdTopic} layout="rail" />
+                        <ContentReaderAdvertisement ad={rightRailAd} currentTopic={rightRailAdTopic} layout="rail" accent={featuredCardColors} />
                       </div>
                     </div>
                   </section> : null}
@@ -7328,7 +7328,7 @@ function LifestyleRiverHomePage({
                           ))}
                         </div>
                       </section>
-                      <div className="h-fit lg:sticky lg:top-24 lg:self-start"><ContentReaderAdvertisement ad={rightRailAd} currentTopic={rightRailAdTopic} layout="rail" /></div>
+                      <div className="h-fit lg:sticky lg:top-24 lg:self-start"><ContentReaderAdvertisement ad={rightRailAd} currentTopic={rightRailAdTopic} layout="rail" accent={featuredCardColors} /></div>
                     </div>
                   </section> : null}
                   {communityParticipationThreads.some((post) => !contextualModuleBrandSlugs || contextualModuleBrandSlugs.has(post.brandSlug)) ? <section className="border-t border-primary pt-5" aria-label={contextualModuleHeading ? `${contextualModuleHeading} Communities` : "Communities"}>
@@ -7379,7 +7379,7 @@ function LifestyleRiverHomePage({
                           ) : <p className="rounded-[8px] bg-[var(--hp-surface-low)] p-5 text-sm text-muted-foreground">Community posts will appear here.</p>;
                         })()}
                       </div>
-                      <div className="h-fit lg:sticky lg:top-24 lg:self-start"><ContentReaderAdvertisement ad={rightRailAd} currentTopic={rightRailAdTopic} layout="rail" /></div>
+                      <div className="h-fit lg:sticky lg:top-24 lg:self-start"><ContentReaderAdvertisement ad={rightRailAd} currentTopic={rightRailAdTopic} layout="rail" accent={featuredCardColors} /></div>
                     </div>
                   </section> : null}
                   {destination === "all" && activeFilter === "For You" && !initialBrandSlug ? <section className="border-t border-primary pt-5" aria-label="Local News">
@@ -7755,7 +7755,7 @@ function LifestyleRiverHomePage({
                   className="xl:hidden"
                 />
               ) : null}
-              <ContentReaderAdvertisement ad={rightRailAd} currentTopic={rightRailAdTopic} layout="rail" />
+              <ContentReaderAdvertisement ad={rightRailAd} currentTopic={rightRailAdTopic} layout="rail" accent={featuredCardColors} />
               {destination === "all" && !initialBrandSlug && (activeFilter === "For You" || activeFilter === localNewsFilter) ? <LocalNewsRail /> : null}
               {initialBrandSlug && initialBrandName ? (
                 <BrandInstagramModule brandSlug={initialBrandSlug} brandName={initialBrandName} />

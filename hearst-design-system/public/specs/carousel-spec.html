@@ -126,7 +126,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
     <div><b>Measured</b><span>Playwright · Chromium · <code>/hearst-plus/</code> and <code>/hearst-plus/full-width-hero/</code> · viewports 390, 640, 768, 1024, 1280, 1440 · light mode</span></div>
   </div>
   <nav class="toc" aria-label="Contents">
-    <a href="#film">Film</a><a href="#anatomy">Anatomy</a><a href="#sizes">Sizes</a><a href="#motion">Motion</a><a href="#input">Swipe and autoplay</a><a href="#keyboard">Keyboard and focus</a><a href="#tokens">Tokens</a><a href="#findings">Findings</a>
+    <a href="#film">Film</a><a href="#anatomy">Anatomy</a><a href="#card-color">Card color</a><a href="#sizes">Sizes</a><a href="#motion">Motion</a><a href="#input">Swipe and autoplay</a><a href="#keyboard">Keyboard and focus</a><a href="#tokens">Tokens</a><a href="#findings">Findings</a>
   </nav>
 </header>
 
@@ -160,7 +160,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
       </ul>
       <h4>2 · Text card</h4>
       <ul>
-        <li>Filled with the page’s banner color (<code>getFeaturedCardColors</code>): Hearst+ navy on the home, the section banner on destinations, the brand’s bar color (<code>palette-background-utility</code>) on publication pages. White text on a color darkened to 5.5:1; light brand colors (Autoweek, Good Housekeeping, Veranda) keep their color with #121212 text. Black where no color is passed. radius 8, shadow <code>0 6 18 rgba(0,0,0,.2)</code>.</li>
+        <li>Its color follows the page: the section banner on a section index, the brand color on a brand index (see <a href="#card-color">Text card color</a>). White or dark text, radius 8, shadow <code>0 6 18 rgba(0,0,0,.2)</code>.</li>
         <li>Inset 6 from each side (18 from 640), pulled up over the photo by 40 (48 from 640), fixed height 224 (240 from 640), padding 10 / 20 (12 / 24 from 640).</li>
         <li><b>Meta row</b>: brand icon 20, brand name bold, optional Video badge, and a comments button (min height 32), 14 / 20 semibold, 6 above the headline.</li>
         <li><b>Headline</b>: T2, 24 / 28 (32 / 36 from 768), 800, clamp 3, max <code>min(672, 100%)</code>. Car stories add a research rating on the right.</li>
@@ -185,6 +185,38 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
       </ul>
     </div>
   </div>
+</section>
+
+<!-- ================= CARD COLOR ================= -->
+<section class="major" id="card-color">
+  <p class="kicker">01b · Context</p>
+  <h2>Text card color</h2>
+  <p>The text card has no fixed color. It inherits the color of the page it sits on, with the same logic as the masthead banners: on a section index it takes that section’s banner color, and on a brand’s index page it takes that brand’s color. So the same story card is red on the Lifestyle index, slate on Autos, and Esquire red on the Esquire page.</p>
+  <div class="cols" style="margin-top:12px">
+    <div>
+      <h4>Where the color comes from</h4>
+      <ol>
+        <li><b>Brand index page</b> (<code>/lifestyle/cosmopolitan/</code>, <code>/autos/motortrend/</code> …): the brand’s bar color, <code>palette-background-utility</code> from its tokens. Brands outside the token set (MotorTrend, Bring a Trailer, HOT ROD) use their <code>supplementalBrandProfiles</code> primary.</li>
+        <li><b>Section index</b> (Lifestyle, Autos, Fashion &amp; Luxury, Enthusiast &amp; Wellness): that section’s banner <code>background</code> in <code>destinationBanners</code>.</li>
+        <li><b>Hearst+ home</b>: the brand-wall banner navy, <code>hearstPlusBrandWallBanner</code>.</li>
+        <li><b>Anywhere else</b> (Newspapers, Hearst TV, A&amp;E channel pages): black, the component default.</li>
+      </ol>
+    </div>
+    <div>
+      <h4>Keeping the text readable</h4>
+      <ul>
+        <li>If the brand’s own on-brand text color (<code>palette-content-default-link</code>) reaches 4.5:1 on its color, use it. Esquire gets black on its red.</li>
+        <li>If the color is light (white text below 3:1) and <code>#121212</code> reaches 5.5:1, keep the color and use dark text (Good Housekeeping, Autoweek).</li>
+        <li>Otherwise use white text and darken the color just enough for 5.5:1 (Enthusiast &amp; Wellness, MotorTrend).</li>
+        <li>On brand pages the brand icon sits on a small white tile, so a red icon stays visible on a red card.</li>
+      </ul>
+      <p class="small">Source: <code>getFeaturedCardColors(destination, brandSlug)</code> in <code>src/lib/brand-banners.ts</code>, passed to the carousel as <code>cardColors</code>. The list layout keeps the card surface.</p>
+    </div>
+  </div>
+  <div class="tw" style="margin-top:16px"><table>
+    <tr><th>Page</th><th>Context</th><th>Source</th><th>Card</th><th>Text</th></tr>
+    <tr><td>Hearst+ home</td><td>Index</td><td>Brand-wall banner</td><td><span style="display:inline-flex;align-items:center;gap:8px"><span aria-hidden="true" style="display:inline-block;width:40px;height:22px;border-radius:4px;background:#00142b;color:#ffffff;font:700 11px/22px var(--ui);text-align:center;border:1px solid rgba(0,0,0,.12)">Aa</span><code>#00142B</code></span></td><td><code>#FFFFFF</code></td></tr><tr><td>Lifestyle index</td><td>Index</td><td>Section banner</td><td><span style="display:inline-flex;align-items:center;gap:8px"><span aria-hidden="true" style="display:inline-block;width:40px;height:22px;border-radius:4px;background:#a62c37;color:#ffffff;font:700 11px/22px var(--ui);text-align:center;border:1px solid rgba(0,0,0,.12)">Aa</span><code>#A62C37</code></span></td><td><code>#FFFFFF</code></td></tr><tr><td>Autos index</td><td>Index</td><td>Section banner</td><td><span style="display:inline-flex;align-items:center;gap:8px"><span aria-hidden="true" style="display:inline-block;width:40px;height:22px;border-radius:4px;background:#34454c;color:#ffffff;font:700 11px/22px var(--ui);text-align:center;border:1px solid rgba(0,0,0,.12)">Aa</span><code>#34454C</code></span></td><td><code>#FFFFFF</code></td></tr><tr><td>Fashion &amp; Luxury index</td><td>Index</td><td>Section banner</td><td><span style="display:inline-flex;align-items:center;gap:8px"><span aria-hidden="true" style="display:inline-block;width:40px;height:22px;border-radius:4px;background:#0d1014;color:#ffffff;font:700 11px/22px var(--ui);text-align:center;border:1px solid rgba(0,0,0,.12)">Aa</span><code>#0D1014</code></span></td><td><code>#FFFFFF</code></td></tr><tr><td>Enthusiast &amp; Wellness index</td><td>Index</td><td>Section banner, darkened from #819238</td><td><span style="display:inline-flex;align-items:center;gap:8px"><span aria-hidden="true" style="display:inline-block;width:40px;height:22px;border-radius:4px;background:#5f6b29;color:#ffffff;font:700 11px/22px var(--ui);text-align:center;border:1px solid rgba(0,0,0,.12)">Aa</span><code>#5F6B29</code></span></td><td><code>#FFFFFF</code></td></tr><tr><td>Cosmopolitan</td><td>Brand</td><td>Brand bar color</td><td><span style="display:inline-flex;align-items:center;gap:8px"><span aria-hidden="true" style="display:inline-block;width:40px;height:22px;border-radius:4px;background:#d70000;color:#ffffff;font:700 11px/22px var(--ui);text-align:center;border:1px solid rgba(0,0,0,.12)">Aa</span><code>#D70000</code></span></td><td><code>#FFFFFF</code></td></tr><tr><td>Men’s Health</td><td>Brand</td><td>Brand bar color</td><td><span style="display:inline-flex;align-items:center;gap:8px"><span aria-hidden="true" style="display:inline-block;width:40px;height:22px;border-radius:4px;background:#d2232e;color:#ffffff;font:700 11px/22px var(--ui);text-align:center;border:1px solid rgba(0,0,0,.12)">Aa</span><code>#D2232E</code></span></td><td><code>#FFFFFF</code></td></tr><tr><td>Car and Driver</td><td>Brand</td><td>Brand bar color</td><td><span style="display:inline-flex;align-items:center;gap:8px"><span aria-hidden="true" style="display:inline-block;width:40px;height:22px;border-radius:4px;background:#121212;color:#ffffff;font:700 11px/22px var(--ui);text-align:center;border:1px solid rgba(0,0,0,.12)">Aa</span><code>#121212</code></span></td><td><code>#FFFFFF</code></td></tr><tr><td>ELLE</td><td>Brand</td><td>Brand bar color</td><td><span style="display:inline-flex;align-items:center;gap:8px"><span aria-hidden="true" style="display:inline-block;width:40px;height:22px;border-radius:4px;background:#000000;color:#ffffff;font:700 11px/22px var(--ui);text-align:center;border:1px solid rgba(0,0,0,.12)">Aa</span><code>#000000</code></span></td><td><code>#FFFFFF</code></td></tr><tr><td>MotorTrend</td><td>Brand</td><td>Supplemental profile, darkened from #e90c17</td><td><span style="display:inline-flex;align-items:center;gap:8px"><span aria-hidden="true" style="display:inline-block;width:40px;height:22px;border-radius:4px;background:#ce0b14;color:#ffffff;font:700 11px/22px var(--ui);text-align:center;border:1px solid rgba(0,0,0,.12)">Aa</span><code>#CE0B14</code></span></td><td><code>#FFFFFF</code></td></tr><tr><td>Esquire</td><td>Brand</td><td>Brand bar color with its own on-brand text</td><td><span style="display:inline-flex;align-items:center;gap:8px"><span aria-hidden="true" style="display:inline-block;width:40px;height:22px;border-radius:4px;background:#ff3a30;color:#121212;font:700 11px/22px var(--ui);text-align:center;border:1px solid rgba(0,0,0,.12)">Aa</span><code>#FF3A30</code></span></td><td><code>#121212</code></td></tr><tr><td>Good Housekeeping</td><td>Brand</td><td>Light brand color, dark text</td><td><span style="display:inline-flex;align-items:center;gap:8px"><span aria-hidden="true" style="display:inline-block;width:40px;height:22px;border-radius:4px;background:#53c2be;color:#121212;font:700 11px/22px var(--ui);text-align:center;border:1px solid rgba(0,0,0,.12)">Aa</span><code>#53C2BE</code></span></td><td><code>#121212</code></td></tr><tr><td>Autoweek</td><td>Brand</td><td>Light brand color, dark text</td><td><span style="display:inline-flex;align-items:center;gap:8px"><span aria-hidden="true" style="display:inline-block;width:40px;height:22px;border-radius:4px;background:#ffc84e;color:#121212;font:700 11px/22px var(--ui);text-align:center;border:1px solid rgba(0,0,0,.12)">Aa</span><code>#FFC84E</code></span></td><td><code>#121212</code></td></tr>
+  </table></div>
 </section>
 
 <section class="major" id="sizes">
@@ -257,7 +289,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
   <h2>Tokens</h2>
   <div class="tw"><table>
     <tr><th>Part</th><th>Token</th><th>Rendered</th></tr>
-    <tr><td>Text card</td><td><code>cardColor</code> from the banner, <code>text-white</code></td><td class="n">#00142B home · #A62C37 Lifestyle · #34454C Autos · #0D1014 Flux · #5F6B29 E&amp;W</td></tr>
+    <tr><td>Text card</td><td><code>cardColors</code> from <code>getFeaturedCardColors</code> (see <a href="#card-color">Text card color</a>)</td><td class="n">#00142B home · #A62C37 Lifestyle · #34454C Autos · #0D1014 Flux · #5F6B29 E&amp;W</td></tr>
     <tr><td>Summary</td><td><code>text-white/85</code></td><td class="n">white 85%</td></tr>
     <tr><td>Pill and controls</td><td><code>bg-black/45</code> + blur</td><td class="n">black 45%</td></tr>
     <tr><td>Headline</td><td><code>--font-headline</code>, 800</td><td class="n">Schibsted Grotesk on Hearst+</td></tr>

@@ -1,5 +1,6 @@
 "use client";
 
+import { darkenForWhiteText } from "@/lib/brand-banners";
 import Image from "next/image";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { getHearstBrandSection, getHearstDestinationCategoryRoute } from "@/lib/hearst-routes";
@@ -41,6 +42,11 @@ export type ContentReaderAdvertisementProps = {
    * large breakpoint, hugging its content when the rail stacks on phones.
    */
   layout?: "reader" | "rail";
+  /**
+   * Index-page rails: the page's banner colors (getFeaturedCardColors), so the headline and CTA match the
+   * masthead banner and the featured carousel card. The headline is darkened until it reads on the ad surface.
+   */
+  accent?: { background: string; foreground: string };
 };
 
 const adTopicRoutes: Record<string, { mode: "lifestyle" | "autos" | "flux" | "ew"; label: string }> = {
@@ -166,9 +172,11 @@ export function ContentReaderAdvertisement({
   ad,
   currentTopic,
   layout = "reader",
+  accent,
 }: ContentReaderAdvertisementProps) {
   if (!ad) return null;
   const isRail = layout === "rail";
+  const accentHeadline = accent ? darkenForWhiteText(accent.background, 4.5) : undefined;
 
   return (
     <aside
@@ -186,7 +194,8 @@ export function ContentReaderAdvertisement({
         style={{
           backgroundColor: ad.palette.background,
           color: ad.palette.foreground,
-        }}
+          ...(accentHeadline ? { "--component-ad-headline": accentHeadline } : {}),
+        } as React.CSSProperties}
       >
         <div className="relative h-[268px] overflow-hidden border-b border-black/10">
           <Image
@@ -236,7 +245,8 @@ export function ContentReaderAdvertisement({
                 data-slot="button"
                 data-variant="default"
                 data-size="touch"
-                className={buttonVariants({ variant: "default", size: "touch", className: "w-full" })}
+                className={buttonVariants({ variant: "default", size: "touch", className: cn("w-full", accent && "hover:opacity-90") })}
+                style={accent ? { backgroundColor: accent.background, borderColor: accent.background, color: accent.foreground } : undefined}
               >
                 {capAlignButtonLabel(ad.cta)}
               </a>
