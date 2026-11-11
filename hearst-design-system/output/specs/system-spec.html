@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hearst+ System Spec</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Schibsted+Grotesk:wght@700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* HDS Constitution editorial rules: navy section rules, Hearst Blue kickers, slate neutrals, single-pixel slate grids. */
+:root{
+  --navy:#102A43; --blue:#2D75B9; --ink:#0F172A; --slate-600:#475569; --slate-500:#64748B; --slate-300:#CBD5E1; --slate-200:#E2E8F0; --slate-100:#F1F5F9; --slate-50:#F8FAFC; --white:#fff;
+  --ui:"Inter",system-ui,sans-serif; --head:"Schibsted Grotesk","Inter",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--slate-50);color:var(--ink);font:400 15px/1.6 var(--ui)}
+.page{max-width:1180px;margin:0 auto;padding:40px 16px 80px}
+@media (min-width:720px){.page{padding:56px 40px 96px}}
+.kicker{font:700 11px/1.2 var(--ui);letter-spacing:.16em;text-transform:uppercase;color:var(--blue);margin:0}
+h1,h2,h3,h4{font-family:var(--head);font-weight:800;color:var(--navy);margin:0;line-height:1.12}
+h1{font-size:clamp(34px,5vw,54px);margin-top:12px}
+h2{font-size:clamp(26px,3.4vw,34px);margin-top:10px}
+h3{font-size:22px;margin-top:6px}
+h4{font-size:15px;font-family:var(--ui);font-weight:700;letter-spacing:.01em;margin:18px 0 6px}
+p{margin:10px 0}
+.lede{font-size:17px;color:var(--slate-600);max-width:760px}
+.mast{border-top:2px solid var(--navy);padding-top:24px}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:var(--slate-200);border:1px solid var(--slate-200);margin-top:24px}
+.meta>div{background:var(--white);padding:12px 16px}
+.meta b{display:block;font:700 10px/1.2 var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--slate-500);margin-bottom:4px}
+.meta span{font-size:13px}
+nav.toc{margin:28px 0 0;display:flex;flex-wrap:wrap;gap:6px}
+nav.toc a{font:600 13px/1 var(--ui);color:var(--navy);text-decoration:none;border:1px solid var(--slate-200);background:var(--white);padding:9px 12px;border-radius:4px}
+nav.toc a:hover{border-color:var(--blue);color:var(--blue)}
+section.major{border-top:2px solid var(--navy);padding-top:24px;margin-top:64px}
+.block{background:var(--white);border:1px solid var(--slate-200);padding:24px;margin-top:24px;min-width:0}
+@media (min-width:720px){.block{padding:28px 32px}}
+.block .id{font:600 12px/1 var(--mono);color:var(--blue)}
+.cols{display:grid;gap:24px}.cols>*{min-width:0}
+@media (min-width:900px){.cols{grid-template-columns:1fr 1fr}}
+ul{margin:6px 0;padding-left:18px}
+li{margin:3px 0}
+code,.mono{font-family:var(--mono);font-size:12.5px}
+code{background:var(--slate-100);padding:1px 5px;border-radius:3px;color:var(--navy);overflow-wrap:anywhere}
+.tw{overflow-x:auto;margin-top:8px;border:1px solid var(--slate-200)}
+table{border-collapse:collapse;width:100%;font-size:13px;background:var(--white)}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--slate-200);vertical-align:top}
+th{font:700 10.5px/1.3 var(--ui);letter-spacing:.12em;text-transform:uppercase;color:var(--slate-500);background:var(--slate-50)}
+tr:last-child td{border-bottom:0}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.flag{border-left:3px solid var(--blue);background:var(--slate-50);padding:10px 14px;margin-top:14px;font-size:13.5px}
+.flag b{color:var(--navy)}
+.bp{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-end;margin-top:12px;padding:16px;background:var(--slate-50);border:1px solid var(--slate-200)}
+.bp figure{margin:0}
+.bp figcaption{font:500 11px/1.35 var(--ui);color:var(--slate-600);margin-top:6px;font-variant-numeric:tabular-nums}
+.bp svg rect{fill:var(--white);stroke:var(--slate-600);stroke-width:1}
+.bp svg rect.frame{fill:none;stroke:var(--slate-300);stroke-dasharray:3 3}
+.sheet img{display:block;width:100%;height:auto;border:1px solid var(--slate-200)}
+.sheet a{font-weight:600;color:var(--blue)}
+.grid-px{display:grid;gap:1px;background:var(--slate-200);border:1px solid var(--slate-200);margin-top:16px}
+@media (min-width:720px){.grid-px{grid-template-columns:repeat(3,1fr)}}
+.grid-px>div{background:var(--white);padding:18px 20px}
+.grid-px h4{margin-top:0}
+.small{font-size:13px;color:var(--slate-600)}
+.tag{display:inline-block;font:700 10px/1 var(--ui);letter-spacing:.12em;text-transform:uppercase;color:var(--blue);border:1px solid var(--slate-300);padding:4px 6px;border-radius:3px;margin-right:4px}
+.film{margin:20px 0 0;background:var(--white);border:1px solid var(--slate-200)}
+.film video{scroll-margin-top:110px;display:block;width:100%;height:auto;aspect-ratio:16/9;background:#fff}
+.film figcaption{padding:14px 16px 16px;border-top:1px solid var(--slate-200)}
+.film figcaption p{margin:0 0 10px;font-size:13px;color:var(--slate-600)}
+.chapters{list-style:none;margin:0;padding:0;display:grid;gap:4px 16px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.chapters li{margin:0}
+.chapters button{all:unset;box-sizing:border-box;display:flex;gap:10px;align-items:baseline;width:100%;min-height:44px;padding:6px 8px;border-radius:4px;cursor:pointer;font-size:13.5px;color:var(--ink)}
+.chapters button:hover{background:var(--slate-100)}
+.chapters button:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+.chapters .tc{font:600 12px/1 var(--mono);color:var(--blue);min-width:38px;font-variant-numeric:tabular-nums}
+/* Spec-pages nav: static copy of ProductHeader (product-story-shell.tsx). Keep the links in step with specNavLinks. */
+.specnav{position:sticky;top:0;z-index:50;background:rgb(255 255 255 / .85);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid #bdbdbd;font-family:var(--ui)}
+.specnav .in{max-width:1360px;margin:0 auto;padding:0 20px;display:flex;flex-direction:column;gap:4px}
+.specnav .logo{display:flex;align-items:center;min-height:44px;padding:8px 0;align-self:flex-start}
+.specnav .logo span{display:block;width:128px;height:24px;background:url(/logos/hearst-plus.svg?v=2026-10-11) left center/contain no-repeat}
+.specnav nav{display:flex;min-width:0;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:0 8px;border-top:1px solid #bdbdbd;font-size:12px;font-weight:700}
+.specnav nav::-webkit-scrollbar{display:none}
+.specnav nav a{position:relative;display:inline-flex;align-items:center;min-height:44px;flex-shrink:0;white-space:nowrap;padding:0 12px;border-bottom:2px solid transparent;color:#757575;text-decoration:none}
+.specnav nav a:hover{color:#121212}
+.specnav nav a[aria-current=page]{border-bottom-color:#384959;color:#121212}
+.specnav a:focus-visible{outline:2px solid #384959;outline-offset:2px}
+.specnav .sep{display:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (min-width:640px){.specnav .logo span{width:160px}}
+@media (min-width:768px){.specnav .in{padding:0 40px}.specnav nav{margin:0 -40px;padding:0 28px}}
+@media (min-width:1280px){.specnav .in{flex-direction:row;align-items:center;justify-content:space-between;gap:20px}.specnav .logo{align-self:auto}.specnav nav{margin:0;padding:0;border-top:0;gap:4px;font-size:14px;font-weight:600}.specnav nav a{padding:0 8px}.specnav .sep{display:block;width:1px;height:20px;margin:0 8px;background:#bdbdbd;flex-shrink:0}.specnav .short{display:none}}
+@media (max-width:1279.98px){.specnav .long{display:none}}
+</style>
+</head>
+<body>
+<header class="specnav">
+  <div class="in">
+    <a class="logo" href="/hearst-plus/" aria-label="Hearst Magazines"><span aria-hidden="true"></span></a>
+    <nav aria-label="Spec pages">
+      <a href="/cta-specs/">CTAs</a>
+      <a href="/layout-specs/">Breakpoints &amp; grid</a>
+      <a href="/type-specs/">Type metrics</a>
+      <a href="/token-specs/">Tokens &amp; brands</a>
+      <a href="/specs/blocks-spec.html">Blocks spec</a>
+      <a href="/specs/nav-spec.html">Nav spec</a>
+      <a href="/specs/reader-spec.html">Reader spec</a>
+      <a href="/specs/carousel-spec.html">Carousel spec</a>
+      <a href="/specs/system-spec.html" aria-current="page">System spec</a>
+      <a href="https://hearst-design-system.netlify.app/storybook/?path=/docs/hearst-plus-start-overview--docs" target="_blank" rel="noopener noreferrer">Storybook<span class="sr"> (opens in a new tab)</span></a>
+      <span class="sep" aria-hidden="true"></span>
+      <a href="/hearst-plus/"><span class="long">Open prototype</span><span class="short">Prototype</span></a>
+    </nav>
+  </div>
+</header>
+<main class="page">
+
+<header class="mast">
+  <p class="kicker">HDS · Agentic design system · Spec</p>
+  <h1>Agentic design system</h1>
+  <p class="lede">This spec shows how the Hearst design system is run with AI agents: the Design Brain vault, the rules, the skills, the agent roles and the repo, and how a change moves through them from request to release. Roles, gates and workflows are quoted from the agent charter and the runbooks; counts were taken from the repo and the vault.</p>
+  <div class="meta">
+    <div><b>Doc</b><span>HP-SYS-SPEC · Rev A · 2026-11-11</span></div>
+    <div><b>Drawing</b><span><a href="system-drawing.html">HP-SYS-001</a> · 2 sheets</span></div>
+    <div><b>Source</b><span><code>AGENTIC-DESIGN-SYSTEM.md</code>, <code>CODEX-AGENT-RUNBOOKS.md</code>, <code>.agents/rules/hds-constitution.md</code>, <code>.cursor/skills/</code>, Design Brain <code>references/</code></span></div>
+    <div><b>Counted</b><span>Repo and vault on 2026-11-11 · brands, components, metadata, stories, notes, skills</span></div>
+  </div>
+  <nav class="toc" aria-label="Contents">
+    <a href="#film">Film</a><a href="#stack">The stack</a><a href="#vault">Vault</a><a href="#skills">Skills</a><a href="#agents">Agents</a><a href="#loop">The loop</a><a href="#truth">Sources of truth</a><a href="#findings">Findings</a>
+  </nav>
+</header>
+
+<section class="major" id="film">
+  <p class="kicker">00 · Walkthrough</p>
+  <h2>How the system works</h2>
+  <p>The film builds the stack layer by layer, then walks through the vault, the repo’s layers, routing, the change loop with its stop gate, the sources of truth and the four workflows. It ends on the two drawing sheets.</p>
+  <figure class="film" id="system-film">
+    <video controls muted playsinline preload="metadata" poster="system-film-poster.jpg" aria-describedby="system-film-desc">
+      <source src="system-film.mp4" type="video/mp4">
+      Your browser can't play this video. <a href="system-film.mp4">Download the system film</a>.
+    </video>
+    <figcaption>
+      <p id="system-film-desc"><b>Agentic design system film · 1:28 · no sound.</b> Captions at the top of each scene say what is happening. Pick a chapter to jump to it.</p>
+      <ol class="chapters"><li><button type="button" data-t="0"><span class="tc">0:00</span>The six-layer stack</button></li><li><button type="button" data-t="14"><span class="tc">0:14</span>The vault: Design Brain</button></li><li><button type="button" data-t="24"><span class="tc">0:24</span>The repo’s five layers</button></li><li><button type="button" data-t="34"><span class="tc">0:34</span>Routing: who leads</button></li><li><button type="button" data-t="44"><span class="tc">0:44</span>The change loop and its gates</button></li><li><button type="button" data-t="58"><span class="tc">0:58</span>Sources of truth</button></li><li><button type="button" data-t="66"><span class="tc">1:06</span>Workflows 1–4</button></li><li><button type="button" data-t="76"><span class="tc">1:16</span>The drawing sheets</button></li></ol>
+    </figcaption>
+  </figure>
+</section>
+
+<section class="major" id="stack">
+  <p class="kicker">01 · Drawing HP-SYS-001 · Rev A · Sheet 1</p>
+  <h2>The stack</h2>
+  <p>Six layers. Knowledge flows down from the vault into code; evidence flows back up with every change. The full drawing is in <a href="system-drawing.html">system-drawing.html</a>.</p>
+  <div class="sheet"><a href="system-drawing.html"><img src="system-drawing-sheet-1.jpg" alt="Drawing sheet 1, structure: the exploded six-layer stack, the repo's five layers, the vault sections with note counts, the routing matrix and count tables."></a></div>
+  <div class="tw" style="margin-top:20px"><table>
+    <tr><th>Layer</th><th>What it is</th><th>Where it lives</th><th>Measured</th></tr>
+    <tr><td>1 · Vault</td><td>Design Brain: principles, standards, design system, feature reasoning, brand playbooks, prototypes</td><td><code>Design Brain/references/</code> (Obsidian)</td><td class="n">208 notes · 67 skill entry points</td></tr>
+    <tr><td>2 · Rules</td><td>HDS Constitution (8 articles), agent charter, runbooks</td><td><code>.agents/rules/</code>, repo root</td><td class="n">8 articles · 9 runbook roles</td></tr>
+    <tr><td>3 · Skills</td><td>Instructions an agent loads for a kind of task</td><td><code>.cursor/skills/</code>, <code>.agents/skills/</code>, <code>hearst-design-system/.agents/skills/</code>, personal</td><td class="n">8 role · 5 repo · 4 personal</td></tr>
+    <tr><td>4 · Agents</td><td>Roles with a file boundary, sequenced per request</td><td>Charter and runbooks</td><td class="n">9 roles</td></tr>
+    <tr><td>5 · Repo</td><td>Token JSON → generated → UI primitives → modules → page archetypes</td><td><code>hearst-design-system/</code></td><td class="n">29 brands · 148 component files · 28 metadata · 59 stories</td></tr>
+    <tr><td>6 · Outputs</td><td>App on Netlify, Storybook, Figma variables, Pencil specs, spec pages</td><td>Netlify · Figma · <code>.pen</code></td><td class="n">28 brand <code>.pen</code> files + 1</td></tr>
+  </table></div>
+</section>
+
+<section class="major" id="vault">
+  <p class="kicker">02 · Knowledge</p>
+  <h2>The vault</h2>
+  <div class="tw"><table>
+    <tr><th>Section</th><th>Notes</th><th>Status</th></tr>
+    <tr><td>00 · Start here</td><td class="n">14</td><td>Ready</td></tr>
+    <tr><td>01 · Constitution (principles, UX laws, standards, decision records)</td><td class="n">45</td><td>Ready</td></tr>
+    <tr><td>02 · Design system</td><td class="n">21</td><td>In review</td></tr>
+    <tr><td>03 · Feature reasoning</td><td class="n">5</td><td>In review</td></tr>
+    <tr><td>04 · Editorial guidelines</td><td class="n">9</td><td>Deprecated</td></tr>
+    <tr><td>05 · Brand playbooks</td><td class="n">110</td><td>In review</td></tr>
+    <tr><td>06 · Prototype</td><td class="n">4</td><td>Ready</td></tr>
+  </table></div>
+  <p class="small">Markdown notes are canonical. Guidance strength: Must = required, Should = default (document deviations), May = optional. Note status: Draft, In review (proposed), Ready (accepted), Deprecated.</p>
+</section>
+
+<section class="major" id="skills">
+  <p class="kicker">03 · Instructions</p>
+  <h2>Skills</h2>
+  <div class="tw"><table>
+    <tr><th>Home</th><th>Skills</th><th>Used for</th></tr>
+    <tr><td><code>.cursor/skills/</code></td><td><code>hearst-token-architect</code>, <code>hearst-frontend-component</code>, <code>hearst-grid-system</code>, <code>hearst-storybook-docs</code>, <code>hearst-figma-sync</code>, <code>hearst-pencil-design</code>, <code>hearst-qa-review</code>, <code>hearst-devops-deploy</code></td><td>One per agent role</td></tr>
+    <tr><td><code>.agents/</code> (root)</td><td><code>hds-constitution</code> (skill + rule), <code>handoff</code>, <code>oil-ui</code></td><td>The constitution; handing work to another agent; UI exploration</td></tr>
+    <tr><td><code>hearst-design-system/.agents/</code></td><td><code>impeccable</code>, <code>brand-interstitial-ads</code></td><td>Design critique and polish; Ambient Reader ads</td></tr>
+    <tr><td>Personal (<code>~/.claude/skills</code>)</td><td><code>dimensional-drawing</code>, <code>dimensional-drawing-motion</code>, <code>grill-with-ui</code>, <code>hearst-workbench</code></td><td>These spec sheets and films; design interviews; project setup</td></tr>
+    <tr><td>Design Brain</td><td>67 <code>SKILL.md</code> entry points</td><td>Navigating the vault by section</td></tr>
+  </table></div>
+</section>
+
+<section class="major" id="agents">
+  <p class="kicker">04 · Ownership</p>
+  <h2>Agents</h2>
+  <p>Use the narrowest agent that can do the work; when a request spans several, sequence them. The routing matrix on sheet 1 shows who leads each kind of request.</p>
+  <div class="tw"><table>
+    <tr><th>Role</th><th>Owns</th><th>Must not</th><th>Skill</th></tr>
+    <tr><td>Token Architect</td><td><code>tokens/**/*.json</code>, token naming, <code>build-tokens</code>, <code>tokens:check</code>, <code>tokens:validate</code></td><td>Edit generated <code>brands.ts</code> / <code>tokens.css</code>; rename keys without a migration plan</td><td><code>hearst-token-architect</code></td></tr><tr><td>Publication Stylist</td><td>Brand identity translation, publication token decisions, brand QA notes</td><td>Fork shared components for one publication; put brand behavior outside tokens</td><td>none</td></tr><tr><td>Component Builder</td><td><code>src/components/**</code>, metadata files, usage patterns</td><td>Brand conditionals that tokens can solve; hardcoded publication colors</td><td><code>hearst-frontend-component</code></td></tr><tr><td>Grid System</td><td>Layout and column behavior (runbook only)</td><td>—</td><td><code>hearst-grid-system</code></td></tr><tr><td>Storybook Documenter</td><td><code>src/stories/**</code>, usage docs, examples</td><td>Treat Storybook-only styling as production</td><td><code>hearst-storybook-docs</code></td></tr><tr><td>Figma Sync</td><td><code>scripts/push-to-figma.ts</code>, variable sync, collection hygiene</td><td>Treat Figma values as the source of truth</td><td><code>hearst-figma-sync</code></td></tr><tr><td>Pencil Design</td><td><code>.pen</code> specs, Pencil variables</td><td>Read or change <code>.pen</code> files outside Pencil tools</td><td><code>hearst-pencil-design</code></td></tr><tr><td>QA Review</td><td>Release checks, cross-publication checks, accessibility and token evidence</td><td>Approve without visible output or audit evidence</td><td><code>hearst-qa-review</code></td></tr><tr><td>Release</td><td>Build, deploy, release notes, PR hygiene, post-merge sync</td><td>Skip validation when generated files changed</td><td><code>hearst-devops-deploy</code></td></tr>
+  </table></div>
+</section>
+
+<section class="major" id="loop">
+  <p class="kicker">05 · Drawing HP-SYS-001 · Sheet 2</p>
+  <h2>The change loop</h2>
+  <div class="sheet"><a href="system-drawing.html"><img src="system-drawing-sheet-2.jpg" alt="Drawing sheet 2, logic: the change loop with its stop gate and QA return, the six stop conditions, sources of truth, workflows 1 to 4, the evidence format, pilot brands, note status and guidance strength."></a></div>
+  <div class="cols" style="margin-top:20px">
+    <div>
+      <h4>Every change</h4>
+      <ol>
+        <li><b>Request</b> in plain English.</li>
+        <li><b>Classify</b> with the routing matrix.</li>
+        <li><b>Preflight</b>: git status, leave unrelated changes alone, read the code first, check for generated files, pick the smallest boundary.</li>
+        <li><b>Edit</b> only the owned files.</li>
+        <li><b>Build and validate</b>; generated files change only through scripts.</li>
+        <li><b>QA</b> at least three brands: the changed one, an adjacent one and an unrelated one (five in the pilot). Failures go back to the owner.</li>
+        <li><b>Evidence</b>: change, files, validation, brand coverage, known gaps.</li>
+        <li><b>Release</b>, then sync Figma and Pencil after merge.</li>
+      </ol>
+    </div>
+    <div>
+      <h4>Stop and ask when</h4>
+      <ul>
+        <li>A token key would be renamed or deleted.</li>
+        <li>A brand needs behavior tokens, variants or editorial modes can’t express.</li>
+        <li>A <code>.pen</code> file is corrupt or won’t open in Pencil.</li>
+        <li>Figma sync would touch variables outside the HDS collection.</li>
+        <li>The user’s own changes conflict with the edit.</li>
+        <li>It would deploy or push to production without being asked.</li>
+      </ul>
+      <h4>Pilot</h4>
+      <p class="small">Brands: cosmopolitan, car-and-driver, esquire, good-housekeeping, delish. Surfaces: article, home, card collection, right rail, newsletter, button, badge, nav, carousel, pagination, input.</p>
+    </div>
+  </div>
+</section>
+
+<section class="major" id="truth">
+  <p class="kicker">06 · Authority</p>
+  <h2>Sources of truth</h2>
+  <div class="tw"><table>
+    <tr><th>What</th><th>Authority</th><th>Consumers</th></tr>
+    <tr><td>Token values</td><td>Git token JSON (<code>tokens/</code>)</td><td>Generated files, Figma variables, Pencil variables</td></tr>
+    <tr><td>Guidance</td><td>Vault Markdown notes</td><td>Canvases, prototypes, skills</td></tr>
+    <tr><td>Behavior</td><td>Component code and metadata</td><td>Storybook, the app, spec pages</td></tr>
+    <tr><td>Evidence</td><td>PR descriptions and handoff notes</td><td>Release notes</td></tr>
+  </table></div>
+  <p class="small">Sync is one way: Git → Figma and Pencil, never back.</p>
+</section>
+
+<section class="major" id="findings">
+  <p class="kicker">07 · For the design system team</p>
+  <h2>Findings</h2>
+  <p>These come from comparing the charter, the runbooks, the skills and the vault. Nothing has been changed.</p>
+  <article class="block" id="f1">
+    <span class="id">F1 · NEEDS A DECISION</span>
+    <h3>Two places claim to own token values</h3>
+    <p>The agent charter says Git token JSON is the source of truth. The Design Brain readme says to sync official token JSON and CSS from AI Enabler with <code>design-system-token-sync</code>. <b>Fix:</b> name one authority and describe the other as a sync target, in both documents.</p>
+  </article>
+  <article class="block" id="f2">
+    <span class="id">F2 · DOC DRIFT</span>
+    <h3>Eight roles in the charter, nine in the runbook, eight role skills</h3>
+    <p>The charter lists 8 roles. The runbook adds a Grid System agent, for 9. The 8 role skills include Grid System but have no Publication Stylist skill. <b>Fix:</b> add Grid System to the charter and either add a <code>hearst-publication-stylist</code> skill or fold that role into Token Architect.</p>
+  </article>
+  <article class="block" id="f3">
+    <span class="id">F3 · DOC DRIFT</span>
+    <h3>Skills live in four places, and the charter names one</h3>
+    <p>The charter says local agent instructions live in <code>.cursor/skills/</code>. Skills also live in <code>.agents/skills/</code>, <code>hearst-design-system/.agents/skills/</code> and the vault (67 entry points), with no single index. <b>Fix:</b> add a skills registry to the charter: name, home, owner, and when to use it.</p>
+  </article>
+  <article class="block" id="f4">
+    <span class="id">F4 · COVERAGE</span>
+    <h3>28 metadata files for 148 component files</h3>
+    <p>The review rules say new components need metadata and Storybook coverage. Some of the 148 files are sub-parts, so not every file needs its own metadata, but the gap is large. <b>Next step:</b> list the exported components without metadata and add them in small PRs.</p>
+  </article>
+</section>
+
+</main>
+<script>
+document.querySelectorAll('.film .chapters button').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var v = b.closest('.film').querySelector('video');
+    v.currentTime = +b.dataset.t; v.play().catch(function () {}); v.focus();
+  });
+});
+</script>
+</body>
+</html>

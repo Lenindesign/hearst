@@ -51,6 +51,7 @@ const defaultProductLinkGroups: SiteFooterLinkGroup[] = [
       { label: "Main navigation spec", href: "/specs/nav-spec.html" },
       { label: "Content reader spec", href: "/specs/reader-spec.html" },
       { label: "Featured carousel spec", href: "/specs/carousel-spec.html" },
+      { label: "Agentic system spec", href: "/specs/system-spec.html" },
       { label: "Storybook", href: PROD_STORYBOOK_URL },
     ],
   },

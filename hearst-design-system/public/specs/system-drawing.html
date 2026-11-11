@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>System Drawing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;600;700&display=swap">
+<style>
+/* Layout: one Apple-style dimensional drawing sheet (notes · section · plan · tables · details · layouts · title block), black on white, single light theme by design. */
+:root{--paper:#ececec;--sheet:#ffffff;--ink:#111;--ink2:#444;--ink3:#7a7a7a;--fill:#f3f3f3;--fill2:#e6e6e6;--f:'Arimo','Helvetica Neue',Helvetica,Arial,sans-serif;color-scheme:light}
+body{background:var(--paper);color:var(--ink);font-family:var(--f)}
+.wrap{max-width:1760px;margin:0 auto;padding-block:24px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.scroll{overflow-x:auto;background:var(--sheet);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+svg{display:block;width:100%;min-width:1100px;height:auto}
+.tb{background:var(--sheet);border:1.5px solid var(--ink);display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr;margin-bottom:24px}
+.tb>div{border-right:1px solid #d0d0d0;border-bottom:1px solid #d0d0d0;padding:10px 12px;min-width:0}
+.tb .big{grid-row:span 2;display:flex;flex-direction:column;justify-content:space-between;gap:12px}
+.tb h1{font-size:clamp(26px,4vw,40px);line-height:1;margin:0;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.lbl{text-transform:uppercase;letter-spacing:.08em;font-size:12px;color:var(--ink3);font-weight:600}
+.tb .v{font-size:13px;margin-top:2px;font-variant-numeric:tabular-nums}
+.tb .notes{grid-column:1/-1;border-right:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:6px 24px;font-size:13px;color:var(--ink2)}
+.tb .notes ol{margin:4px 0 0;padding-left:18px}
+.tb .figs{grid-column:1/-1;border-right:0;border-bottom:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px 18px}
+.tb .figs .v{font-size:17px}
+@media (max-width:640px){.tb{grid-template-columns:1fr 1fr}.tb .big{grid-column:1/-1;grid-row:auto}}
+.sheetwrap{margin-bottom:28px}
+.foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--ink2);padding:10px 2px 0}
+.foot b{font-weight:600;color:var(--ink)}
+/* drawing */
+.u{font-family:var(--f);text-transform:uppercase;letter-spacing:.07em}
+.border{fill:none;stroke:var(--ink);stroke-width:1.2}
+.obj{fill:var(--sheet);stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round}
+.well{fill:var(--fill);stroke:var(--ink);stroke-width:1}
+.slot{fill:none;stroke:var(--ink2);stroke-width:.8;stroke-dasharray:4 3}
+.hug{fill:var(--fill2);stroke:var(--ink);stroke-width:1}
+.thin{fill:none;stroke:var(--ink);stroke-width:.8}
+.ph{fill:none;stroke:var(--ink3);stroke-width:.8;stroke-dasharray:14 3 3 3}
+.cl{fill:none;stroke:var(--ink3);stroke-width:.7;stroke-dasharray:16 3 2 3}
+.cut{stroke:var(--ink);stroke-width:2}
+.dl{stroke:var(--ink);stroke-width:.7;fill:none}
+.ext{stroke:var(--ink);stroke-width:.55;fill:none}
+.arrow{fill:var(--ink)}
+.hl{stroke:var(--ink2);stroke-width:.7}
+.hs{stroke:var(--ink);stroke-width:.8}
+.env{fill:none;stroke:var(--ink);stroke-width:.8;stroke-dasharray:10 3 2 3}
+.dt{font:400 11px var(--f);fill:var(--ink);paint-order:stroke;stroke:var(--sheet);stroke-width:4px;stroke-linejoin:round}
+.dts{font:400 9.5px var(--f);fill:var(--ink2);letter-spacing:.06em;text-transform:uppercase;paint-order:stroke;stroke:var(--sheet);stroke-width:3px}
+.sl{font:400 9px var(--f);fill:var(--ink2);letter-spacing:.08em;text-transform:uppercase}
+.nt{font:400 11.5px var(--f);fill:var(--ink);letter-spacing:.06em;text-transform:uppercase}
+.nth{font:700 13px var(--f);fill:var(--ink);letter-spacing:.06em}
+.vt{font:400 12px var(--f);fill:var(--ink);letter-spacing:.1em;text-transform:uppercase}
+.vtb{font:400 20px var(--f);fill:var(--ink);letter-spacing:.06em}
+.nb{fill:var(--sheet);stroke:var(--ink);stroke-width:.9}
+.nbt{font:400 9.5px var(--f);fill:var(--ink)}
+.lead{stroke:var(--ink);stroke-width:.7;fill:none}
+.dot{fill:var(--ink)}
+.th{font:400 10.5px var(--f);fill:var(--ink);letter-spacing:.05em;text-transform:uppercase}
+.tc{font:400 10.5px var(--f);fill:var(--ink)}
+.tbk{font:400 7px var(--f);fill:var(--ink2);letter-spacing:.04em;text-transform:uppercase}
+.tbt{font:700 15px var(--f);fill:var(--ink)}
+.tbv{font:400 17px var(--f);fill:var(--ink);letter-spacing:.06em}
+
+/* title block restyled to match the drawing sheet: thin black rules, plain caps lettering */
+.tb{border:1.2px solid var(--ink);border-radius:16px;overflow:hidden}
+.tb>div{border-right:.8px solid var(--ink);border-bottom:.8px solid var(--ink);padding:10px 14px}
+.tb>div:nth-child(4),.tb>div:nth-child(7){border-right:0}
+.tb .lbl{font-size:9.5px;font-weight:400;letter-spacing:.06em;color:var(--ink2)}
+.tb h1{font-weight:400;letter-spacing:.1em;font-size:clamp(28px,4vw,44px);margin-top:4px}
+.tb .v{font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink)}
+.tb .big .v{font-size:11px;color:var(--ink2);line-height:1.6}
+.tb .notes{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);line-height:1.9}
+.tb .notes ol{padding-left:20px}
+.tb .nh{font-weight:700;font-size:13px;letter-spacing:.06em}
+.tb .nh span{font-weight:400;font-size:11.5px;margin-left:6px}
+.tb .figs>div{border-left:.8px solid var(--ink);padding-left:14px}
+.tb .figs>div:first-child{border-left:0;padding-left:0}
+.tb .figs .v{font-size:18px;letter-spacing:.06em;text-transform:none;margin-top:4px}
+.foot{font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+.foot b{font-weight:700}
+</style>
+<style>body{margin:0}.tb .notes ol li{margin:0}</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="tb">
+    <div class="big">
+      <div><div class="lbl">System architecture · dimensional drawing</div><h1>Agentic design system</h1></div>
+      <div class="v">How the vault, the rules, the skills, the agents and the design system repo fit together, and how a change moves through them. Sheet 1 is the stack and ownership; sheet 2 is the loop, its gates and the sources of truth. Counts measured in the repo.</div>
+    </div>
+    <div><div class="lbl">Dwg no.</div><div class="v">HP-SYS-001</div></div>
+    <div><div class="lbl">Rev</div><div class="v">A · 2026-11-11</div></div>
+    <div><div class="lbl">Sheets</div><div class="v">2</div></div>
+    <div><div class="lbl">Units</div><div class="v">Counts · not to scale</div></div>
+    <div><div class="lbl">Scale</div><div class="v">Schematic</div></div>
+    <div><div class="lbl">Source</div><div class="v">AGENTIC-DESIGN-SYSTEM.md · CODEX-AGENT-RUNBOOKS.md · .agents/rules/hds-constitution.md · .cursor/skills · Design Brain/references</div></div>
+    <div class="notes">
+      <div><span class="nh">NOTES:<span>(UNLESS OTHERWISE SPECIFIED)</span></span><ol>
+        <li>Schematic. Box sizes carry no meaning; counts are in the tables.</li>
+        <li>Counts taken from the repo and the Design Brain vault on 2026-11-11.</li>
+        <li>Roles and gates are quoted from the agent charter and the runbooks, not invented.</li>
+        <li>P = primary agent · S = supporting agent.</li></ol></div>
+      <div><span class="nh" aria-hidden="true">&nbsp;</span><ol start="5">
+        <li>Solid lines carry authority; dashed boxes are consumers.</li>
+        <li>Hatched = generated, never edited by hand.</li>
+        <li>Section status follows the vault labels: Draft, In review, Ready, Deprecated.</li>
+        <li>Grayscale by design.</li></ol></div>
+    </div>
+    <div class="figs">
+      <div><div class="lbl">N1 · brands</div><div class="v">29</div></div>
+      <div><div class="lbl">N8 · agent roles</div><div class="v">9</div></div>
+      <div><div class="lbl">K1 · role skills</div><div class="v">8</div></div>
+      <div><div class="lbl">N5 · vault notes</div><div class="v">208</div></div>
+      <div><div class="lbl">N2 · components</div><div class="v">148</div></div>
+      <div><div class="lbl">N4 · stories</div><div class="v">59</div></div>
+      <div><div class="lbl">QA · brands per change</div><div class="v">3 min</div></div>
+    </div>
+  </header>
+  <div class="sheetwrap"><div class="scroll"><svg id="sh1" viewBox="0 0 1700 1060" role="img" aria-label="Agentic design system sheet 1, structure: exploded stack from vault to outputs, the repo's five layers, vault sections, routing matrix and count tables"></svg></div>
+  <div class="foot"><span>2026-11-11 &nbsp;|&nbsp; System reference · Hearst design system</span><span><b>Agentic design system, structure</b> &nbsp;|&nbsp; 1 of 2</span></div></div>
+  <div class="sheetwrap"><div class="scroll"><svg id="sh2" viewBox="0 0 1700 1060" role="img" aria-label="Agentic design system sheet 2, logic: the change loop with its stop gate, stop conditions, sources of truth, the four workflows, evidence format, pilot brands and note status"></svg></div>
+  <div class="foot"><span>2026-11-11 &nbsp;|&nbsp; System reference · Hearst design system</span><span><b>Agentic design system, logic</b> &nbsp;|&nbsp; 2 of 2</span></div></div>
+</div>
+<script>
+(function(){
+const NS='http://www.w3.org/2000/svg';let sv,A,HAT,uid=0;
+function mk(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)if(a[k]!=null)e.setAttribute(k,a[k]);(p||sv).appendChild(e);return e}
+function tx(x,y,s,c,a,p){const t=mk('text',Object.assign({x:x,y:y,class:c||'dt'},a||{}),p);t.textContent=s;return t}
+function begin(id){sv=document.getElementById(id);sv.innerHTML='';const n=uid++;const d=mk('defs',{});const m=mk('marker',{id:'ar'+n,viewBox:'0 0 10 10',refX:10,refY:5,markerWidth:7,markerHeight:7,orient:'auto-start-reverse',markerUnits:'userSpaceOnUse'},d);mk('path',{d:'M0,1.7 L10,5 L0,8.3 z',class:'arrow'},m);
+ const pt=mk('pattern',{id:'hat'+n,width:5,height:5,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'},d);mk('line',{x1:0,y1:0,x2:0,y2:5,class:'hl'},pt);A='url(#ar'+n+')';HAT='url(#hat'+n+')';rr(20,20,1660,1020,16,'border')}
+function dimH(x1,x2,y,e1,e2,l,o){o=o||{};[[x1,e1],[x2,e2]].forEach(([x,e])=>{if(e==null)return;const s=Math.sign(y-e)||1;mk('line',{x1:x,y1:e+s*3,x2:x,y2:y+s*5,class:'ext'})});
+ if(x2-x1>=28)mk('line',{x1:x1,y1:y,x2:x2,y2:y,class:'dl','marker-start':A,'marker-end':A});else{mk('line',{x1:x1-13,y1:y,x2:x1,y2:y,class:'dl','marker-end':A});mk('line',{x1:x2+13,y1:y,x2:x2,y2:y,class:'dl','marker-end':A});mk('line',{x1:x1,y1:y,x2:x2,y2:y,class:'dl'})}
+ tx((x1+x2)/2+(o.dx||0),(o.below?y+13:y-4)+(o.dy||0),l,o.c||'dt',{'text-anchor':'middle'})}
+function dimV(y1,y2,x,e1,e2,l,o){o=o||{};[[y1,e1],[y2,e2]].forEach(([y,e])=>{if(e==null)return;const s=Math.sign(x-e)||1;mk('line',{x1:e+s*3,y1:y,x2:x+s*5,y2:y,class:'ext'})});
+ if(y2-y1>=28)mk('line',{x1:x,y1:y1,x2:x,y2:y2,class:'dl','marker-start':A,'marker-end':A});else{mk('line',{x1:x,y1:y1-13,x2:x,y2:y1,class:'dl','marker-end':A});mk('line',{x1:x,y1:y2+13,x2:x,y2:y2,class:'dl','marker-end':A});mk('line',{x1:x,y1:y1,x2:x,y2:y2,class:'dl'})}
+ const c=(y1+y2)/2+(o.dy||0);if(o.side){const r=o.side==='r';const lx=(r?x+6:x-6)+(o.dx||0);if(o.dx)mk('line',{x1:x+(r?2:-2),y1:(y1+y2)/2,x2:lx+(r?-2:2),y2:c,class:'lead'});tx(lx,c+4,l,o.c||'dt',{'text-anchor':r?'start':'end'})}else tx(x-5,c,l,o.c||'dt',{'text-anchor':'middle',transform:'rotate(-90 '+(x-5)+' '+c+')'})}
+function callout(px,py,ex,ey,l,dir,c){const s=dir||(ex>=px?1:-1);mk('circle',{cx:px,cy:py,r:1.8,class:'dot'});mk('polyline',{points:px+','+py+' '+ex+','+ey+' '+(ex+s*10)+','+ey,class:'lead'});tx(ex+s*14,ey+4,l,c||'dt',{'text-anchor':s>0?'start':'end'})}
+function rad(cx,cy,r,c,l,L){const sx=c.includes('l')?-1:1,sy=c.includes('t')?-1:1;const ox=cx-sx*r,oy=cy-sy*r;const px=ox+sx*r*Math.SQRT1_2,py=oy+sy*r*Math.SQRT1_2;callout(px,py,px+sx*L,py+sy*L,l,sx)}
+function nb(x,y,n){mk('rect',{x:x-6,y:y-6,width:12,height:12,class:'nb'});tx(x,y+3.5,String(n),'nbt',{'text-anchor':'middle'})}
+function rr(x,y,w,h,r,c){return mk('rect',{x:x,y:y,width:w,height:h,rx:r,class:c})}
+function slotLabel(x,y,w,h,l,al){tx(al==='l'?x+6:x+w/2,y+h/2+3.2,l,'sl',{'text-anchor':al==='l'?'start':'middle'})}
+function title(x,y,t,s){tx(x,y,t,'vt',{'text-anchor':'middle'});if(s)tx(x,y+14,s,'dts',{'text-anchor':'middle'})}
+function notes(list){const NX=50,NY=58;tx(NX,NY,'NOTES:','nth');tx(NX+62,NY,'(UNLESS OTHERWISE SPECIFIED)','nt');
+ list.forEach(([n,t],i)=>{const y=NY+30+i*22;if(n){nb(NX+6,y-4,n);tx(NX+22,y,t,'nt')}else tx(NX+22,y,t,'nt')})}
+function table(x,y,ttl,rows,ws){ws=ws||[42,100,88];const rh=17;tx(x,y-8,ttl,'vt');
+ const all=[ws.length===3&&!ws.hdr?['Code','Variable','Value']:ws.hdr].concat(rows);all.forEach((r,i)=>{let cx2=x;r.forEach((c,j)=>{mk('rect',{x:cx2,y:y+i*rh,width:ws[j],height:rh,class:'thin'});tx(cx2+(j?ws[j]/2:5),y+i*rh+12,c,i?'tc':'th',{'text-anchor':j?'middle':'start'});cx2+=ws[j]})});return y+all.length*rh+34}
+function detailRef(cx,cy,r,lbl,lx,ly){mk('circle',{cx:cx,cy:cy,r:r,class:'ph'});const a=Math.atan2(ly-cy,lx-cx);mk('line',{x1:cx+r*Math.cos(a),y1:cy+r*Math.sin(a),x2:lx,y2:ly,class:'lead'});tx(lx+(lx<cx?-4:4),ly+4,lbl,'dts',{'text-anchor':lx<cx?'end':'start'})}
+function xbox(x,y,w,h,cls){rr(x,y,w,h,0,cls||'thin');mk('path',{d:'M'+x+','+y+' L'+(x+w)+','+(y+h)+' M'+(x+w)+','+y+' L'+x+','+(y+h),class:'thin'})}
+/* ---------- shared helpers for this drawing ---------- */
+function hat(x,y,w,h){mk('rect',{x:x,y:y,width:w,height:h,fill:HAT,class:'hs'})}
+function line(x1,y1,x2,y2,c){return mk('line',{x1:x1,y1:y1,x2:x2,y2:y2,class:c||'thin'})}
+function arrowLine(x1,y1,x2,y2,c){mk('line',{x1:x1,y1:y1,x2:x2,y2:y2,class:c||'dl','marker-end':A})}
+function box(x,y,w,h,t,s,cls,r){rr(x,y,w,h,r==null?4:r,cls||'obj');tx(x+w/2,y+h/2+(s?-3:3.5),t,'dts',{'text-anchor':'middle'});if(s)tx(x+w/2,y+h/2+10,s,'sl',{'text-anchor':'middle'})}
+function diamond(cx,cy,w,h,t){mk('path',{d:`M${cx},${cy-h/2} L${cx+w/2},${cy} L${cx},${cy+h/2} L${cx-w/2},${cy} Z`,class:'obj'});tx(cx,cy+3.5,t,'sl',{'text-anchor':'middle'})}
+/* skewed plate for the exploded stack */
+function plateIso(x,y,w,d,cls){mk('path',{d:`M${x+d},${y} H${x+d+w} L${x+w},${y+d*.55} H${x} Z`,class:cls||'obj'})}
+
+/* =====================================================================
+   SHEET 1 · STRUCTURE
+   ===================================================================== */
+begin('sh1');
+notes([[1,'VAULT · DESIGN BRAIN · MARKDOWN IS CANONICAL'],[2,'RULES · CONSTITUTION + AGENT CHARTER'],[3,'SKILLS · ONE PER ROLE + SHARED HELPERS'],[4,'AGENTS · NARROW FILE OWNERSHIP'],[5,'DESIGN SYSTEM · GIT IS THE SOURCE OF TRUTH'],[6,'OUTPUTS · CONSUMERS, NEVER AUTHORITIES'],[0,'KNOWLEDGE FLOWS DOWN · EVIDENCE FLOWS UP'],[0,'COUNTS MEASURED IN THE REPO ON 2026-11-11'],[0,'ROUTING, GATES AND WORKFLOWS: SEE SHEET 2']]);
+
+/* ---- exploded stack ---- */
+(function(){const X=500,W=600,D=110,Y0=86,G=80,H=D*.55;
+ const L=[
+  ['6 · OUTPUTS','APP (NETLIFY) · STORYBOOK · FIGMA · PENCIL · SPEC PAGES','obj'],
+  ['5 · DESIGN SYSTEM REPO','TOKENS → GENERATED → PRIMITIVES → MODULES → ARCHETYPES','obj'],
+  ['4 · AGENTS','9 ROLES · EACH OWNS A FILE BOUNDARY · SEQUENCED','obj'],
+  ['3 · SKILLS','8 ROLE SKILLS · REPO SKILLS · PERSONAL SKILLS','obj'],
+  ['2 · RULES','HDS CONSTITUTION (8 ARTICLES) · AGENT CHARTER · RUNBOOKS','obj'],
+  ['1 · VAULT','DESIGN BRAIN · 7 SECTIONS · 208 NOTES · 67 SKILL ENTRY POINTS','well']];
+ L.forEach(([a,b,c],i)=>{const y=Y0+i*G;plateIso(X,y,W,D,c);const cx=X+(W+D)/2;tx(cx,y+H/2-1,a,'vt',{'text-anchor':'middle'});tx(cx,y+H/2+14,b,'sl',{'text-anchor':'middle'});nb(X+D+14,y+12,6-i)});
+ const yb=Y0+5*G+H;
+ arrowLine(X-14,yb,X-14,Y0+6);tx(X-20,(Y0+yb)/2,'KNOWLEDGE','sl',{'text-anchor':'middle',transform:`rotate(-90 ${X-20} ${(Y0+yb)/2})`});
+ arrowLine(X-36,Y0+6,X-36,yb);tx(X-42,(Y0+yb)/2,'EVIDENCE','sl',{'text-anchor':'middle',transform:`rotate(-90 ${X-42} ${(Y0+yb)/2})`});
+ title(X+(W+D)/2,yb+36,'EXPLODED · SYSTEM STACK','BOTTOM: WHAT WE KNOW · TOP: WHAT SHIPS');
+})();
+
+/* ---- detail A · the design system repo, 5 layers ---- */
+(function(){const X=56,Y=330,W=330;
+ const L=[['TOKEN JSON','29 BRANDS · CORE · SEMANTIC · PUBLICATIONS.JSON','hug'],['GENERATED','BRANDS.TS · TOKENS.CSS · BUILD-TOKENS ONLY','slot'],['UI PRIMITIVES','SRC/COMPONENTS/UI','obj'],['GLOBAL MODULES','SRC/COMPONENTS/HEARST-PLUS · 148 TSX · 28 METADATA','obj'],['PAGE ARCHETYPES','HOME + INDEX · ARTICLE + DETAIL','obj']];
+ L.forEach(([a,b,c],i)=>{const y=Y+i*58;rr(X,y,W,44,4,c);tx(X+12,y+19,(i+1)+' · '+a,'dts');tx(X+12,y+33,b,'sl');if(i<4)arrowLine(X+W/2,y+44,X+W/2,y+58)});
+ hat(X+W-40,Y+58,40,44);
+ tx(X,Y+5*58+12,'HATCHED = NEVER EDITED BY HAND','sl');
+ title(X+W/2,Y+5*58+46,'DETAIL A · REPO LAYERS','CONSTITUTION ARTICLE 1 · 5-LAYER STACK');
+})();
+
+/* ---- detail B · vault sections ---- */
+(function(){const X=56,Y=760,W=330;const S=[['00','START HERE',14,'READY'],['01','CONSTITUTION',45,'READY'],['02','DESIGN SYSTEM',21,'IN REVIEW'],['03','FEATURE REASONING',5,'IN REVIEW'],['04','EDITORIAL',9,'DEPRECATED'],['05','BRAND PLAYBOOKS',110,'IN REVIEW'],['06','PROTOTYPE',4,'READY']];
+ const mx=110;S.forEach(([n,l,c,st],i)=>{const y=Y+i*22;tx(X,y+12,n,'dts');tx(X+26,y+12,l,'sl');rr(X+150,y+3,c/mx*120,12,0,st==='DEPRECATED'?'slot':'hug');tx(X+150+c/mx*120+6,y+13,c+' · '+st,'sl')});
+ title(X+W/2,Y+7*22+30,'DETAIL B · VAULT SECTIONS','NOTES PER SECTION · STATUS = SECTION ENTRY POINT');
+})();
+
+/* ---- routing matrix ---- */
+(function(){const X=500,Y=660,cw=60,rh=22;const A=['TOKEN','STYLIST','COMP.','GRID','STORY','FIGMA','PENCIL','QA','RELEASE'];
+ const R=[['TOKEN VALUES',{0:'P',7:'S'}],['NEW PUBLICATION',{0:'P',1:'S',7:'S',5:'S',6:'S'}],['COMPONENT STYLING',{2:'P',3:'S',4:'S',7:'S'}],['LAYOUT · COLUMNS',{3:'P',2:'S',7:'S'}],['STORIES · DOCS',{4:'P',2:'S',7:'S'}],['FIGMA VARIABLES',{5:'P',7:'S'}],['PENCIL SPECS',{6:'P',7:'S'}],['DEPLOY · RELEASE',{8:'P',7:'S'}],['CROSS-BRAND REVIEW',{7:'P',0:'S',2:'S'}]];
+ const lw=146;A.forEach((a,j)=>{tx(X+lw+j*cw+cw/2,Y-8,a,'sl',{'text-anchor':'middle'})});
+ R.forEach(([l,m],i)=>{const y=Y+i*rh;tx(X,y+15,l,'dts');A.forEach((a,j)=>{const v=m[j];rr(X+lw+j*cw,y,cw,rh,0,v==='P'?'hug':'thin');if(v)tx(X+lw+j*cw+cw/2,y+15,v,'dts',{'text-anchor':'middle'})})});
+ title(X+lw+A.length*cw/2-40,Y+R.length*rh+34,'ROUTING MATRIX · WHO LEADS','P = PRIMARY AGENT · S = SUPPORTING · NARROWEST AGENT WINS');
+})();
+
+/* ---- tables ---- */
+(function(){const X=1404,ws=[40,112,112];let y=70;
+ y=table(X,y,'COUNTS',[['N1','brands','29'],['N2','components (tsx)','148'],['N3','metadata files','28'],['N4','stories','59'],['N5','vault notes','208'],['N6','vault skills','67'],['N7','.pen brand files','28 + 1'],['N8','agent roles','9']],ws);
+ y=table(X,y,'SKILLS',[['K1','role skills','8 · .CURSOR'],['K2','constitution','.AGENTS RULE'],['K3','repo helpers','HANDOFF · OIL-UI'],['K4','app skills','IMPECCABLE · ADS'],['K5','personal','DRAWING · MOTION'],['K6','personal','GRILL · WORKBENCH']],ws);
+ table(X,y,'SOURCES OF TRUTH',[['ST1','tokens','GIT JSON'],['ST2','guidance','VAULT MD'],['ST3','behavior','COMPONENT CODE'],['ST4','evidence','PR · HANDOFF'],['ST5','figma · pencil','CONSUMERS']],ws);
+})();
+
+/* =====================================================================
+   SHEET 2 · LOGIC
+   ===================================================================== */
+begin('sh2');
+notes([[1,'CLASSIFY · ROUTE TO THE NARROWEST AGENT'],[2,'PREFLIGHT · 5 CHECKS BEFORE ANY EDIT'],[3,'EDIT INSIDE THE OWNED BOUNDARY'],[4,'BUILD + VALIDATE · GENERATED FILES BY SCRIPT'],[5,'QA · 3 BRANDS MINIMUM · 5 IN THE PILOT'],[6,'EVIDENCE · CHANGE · FILES · VALIDATION · BRANDS · GAPS'],[0,'STOP CONDITIONS BREAK THE LOOP AND ASK'],[0,'RELEASE SYNCS FIGMA + PENCIL AFTER MERGE'],[0,'GUIDANCE STRENGTH: MUST · SHOULD · MAY']]);
+
+/* ---- main loop ---- */
+(function(){const Y=150,X=470;const S=[['REQUEST','PLAIN ENGLISH'],['CLASSIFY','ROUTING'],['PREFLIGHT','STATUS · OWNERS'],['EDIT','OWNED FILES'],['BUILD','VALIDATE'],['QA','3+ BRANDS'],['EVIDENCE','PR · HANDOFF'],['RELEASE','DEPLOY · SYNC']];
+ const w=100,g=14;S.forEach(([a,b],i)=>{const x=X+i*(w+g);box(x,Y,w,50,a,b,i===0||i===7?'hug':'obj');if(i<7)arrowLine(x+w,Y+25,x+w+g,Y+25);if(i>0&&i<7)nb(x+w-8,Y+8,i)});
+ // stop gate
+ const gx=X+3*(w+g)+w/2;mk('path',{d:`M${gx},${Y+50} V${Y+92}`,class:'dl','marker-end':A});diamond(gx,Y+118,120,52,'STOP CONDITION?');
+ arrowLine(gx+60,Y+118,gx+150,Y+118);box(gx+150,Y+100,130,36,'ASK THE OWNER','NO GUESSING','hug');
+ tx(gx-64,Y+140,'NO → CONTINUE','sl',{'text-anchor':'end'});
+ // feedback from QA back to edit
+ const qx=X+5*(w+g)+w/2,ex=X+3*(w+g)+w/2;mk('path',{d:`M${qx},${Y} V${Y-30} H${ex} V${Y-4}`,class:'dl','marker-end':A});tx((qx+ex)/2,Y-36,'QA FAILS → BACK TO THE OWNER','sl',{'text-anchor':'middle'});
+ title(X+4*(w+g)-g/2,Y+190,'THE LOOP · EVERY CHANGE','ONE REQUEST · ONE PRIMARY AGENT · EVIDENCE BEFORE MERGE');
+})();
+
+/* ---- stop conditions ---- */
+(function(){const X=470,Y=420;const rows=['A TOKEN KEY WOULD BE RENAMED OR DELETED','A BRAND NEEDS BEHAVIOR TOKENS, VARIANTS OR MODES CAN’T EXPRESS','A .PEN FILE IS CORRUPT OR WON’T OPEN IN PENCIL','FIGMA SYNC WOULD TOUCH VARIABLES OUTSIDE THE HDS COLLECTION','THE USER’S OWN CHANGES CONFLICT WITH THE EDIT','IT WOULD SHIP TO PRODUCTION WITHOUT BEING ASKED'];
+ rows.forEach((r,i)=>{nb(X+6,Y+i*22-4,i+1);tx(X+22,Y+i*22,r,'sl')});
+ title(X+230,Y+rows.length*22+24,'STOP CONDITIONS','FROM THE RUNBOOK · ANY ONE STOPS THE LOOP');
+})();
+
+/* ---- source of truth flow ---- */
+(function(){const X=1000,Y=372;
+ box(X,Y,140,44,'VAULT · MARKDOWN','GUIDANCE','well');box(X,Y+120,140,44,'GIT · TOKEN JSON','VALUES','hug');box(X+240,Y+60,150,44,'COMPONENT CODE','BEHAVIOR','obj');
+ box(X+240,Y+170,150,44,'APP · STORYBOOK','RENDERED','obj');box(X+80,Y+250,110,40,'FIGMA','VARIABLES','slot');box(X+220,Y+250,110,40,'PENCIL','.PEN SPECS','slot');
+ arrowLine(X+140,Y+22,X+240,Y+72);arrowLine(X+140,Y+142,X+240,Y+90);arrowLine(X+315,Y+104,X+315,Y+170);
+ arrowLine(X+70,Y+164,X+120,Y+250);arrowLine(X+100,Y+164,X+260,Y+250);
+ tx(X+70,Y+70,'AI ENABLER SYNC','sl',{'text-anchor':'middle'});mk('line',{x1:X+70,y1:Y+44,x2:X+70,y2:Y+120,class:'cl'});
+ tx(X+200,Y+312,'ONE-WAY: GIT → FIGMA / PENCIL · NEVER BACK','sl',{'text-anchor':'middle'});
+ title(X+195,Y+350,'SOURCES OF TRUTH','SOLID = AUTHORITY · DASHED = CONSUMER');
+})();
+
+/* ---- four workflows ---- */
+(function(){const X=470,Y=720;const W=[['TOKEN CHANGE',['TOKEN','BUILD','QA 3','PR','SYNC']],['NEW PUBLICATION',['STYLIST','TOKEN','COMPONENT','STORYBOOK','QA','RELEASE']],['SHARED COMPONENT',['COMPONENT','METADATA','STORYBOOK','QA']],['PUBLICATION AUDIT',['QA','FINDINGS','SMALL PRS']]];
+ W.forEach(([n,st],i)=>{const y=Y+i*56;tx(X,y+20,n,'dts');st.forEach((s,j)=>{const x=X+150+j*92;box(x,y+4,80,28,s,'','obj');if(j<st.length-1)arrowLine(x+80,y+18,x+92,y+18)})});
+ title(X+400,Y+4*56+26,'WORKFLOWS 1–4','FROM THE AGENT CHARTER · EACH STEP IS ONE OWNER');
+})();
+
+/* ---- evidence + statuses ---- */
+(function(){const X=1404,Y=110,ws=[40,112,112];
+ let y=table(X,Y,'EVIDENCE FORMAT',[['E1','change','WHAT CHANGED'],['E2','files','EDITED ON PURPOSE'],['E3','validation','COMMAND · RESULT'],['E4','brand coverage','SLUG · CHECKED'],['E5','known gaps','NOT VERIFIED']],ws);
+ y=table(X,y,'PILOT BRANDS',[['B1','cosmopolitan','MAGAZINE'],['B2','car-and-driver','AUTOS'],['B3','esquire','MAGAZINE'],['B4','good-housekeeping','LIFESTYLE'],['B5','delish','FOOD']],ws);
+ y=table(X,y,'NOTE STATUS',[['S1','draft','DRAFT'],['S2','proposed','IN REVIEW'],['S3','accepted','READY'],['S4','deprecated','DEPRECATED']],ws);
+ table(X,y,'STRENGTH',[['G1','must','REQUIRED'],['G2','should','DEFAULT'],['G3','may','OPTIONAL']],ws);
+})();
+
+document.body.dataset.ready='1';})();
+</script></body></html>
