@@ -118,11 +118,11 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 <header class="mast">
   <p class="kicker">HDS · Agentic design system · Spec</p>
   <h1>Agentic design system</h1>
-  <p class="lede">This spec shows how the Hearst design system is run with AI agents: the Design Brain vault, the rules, the skills, the agent roles and the repo, and how a change moves through them from request to release. Roles, gates and workflows are quoted from the agent charter and the runbooks; counts were taken from the repo and the vault.</p>
+  <p class="lede">This spec shows how the Hearst design system is run with AI agents: the Hearst+ app vault, the rules, the skills, the agent roles and the repo, and how a change moves through them from request to release. Roles, gates and workflows are quoted from the agent charter and the runbooks; counts were taken from the repo and the vaults.</p>
   <div class="meta">
     <div><b>Doc</b><span>HP-SYS-SPEC · Rev A · 2026-11-11</span></div>
     <div><b>Drawing</b><span><a href="system-drawing.html">HP-SYS-001</a> · 2 sheets</span></div>
-    <div><b>Source</b><span><code>AGENTIC-DESIGN-SYSTEM.md</code>, <code>CODEX-AGENT-RUNBOOKS.md</code>, <code>.agents/rules/hds-constitution.md</code>, <code>.cursor/skills/</code>, Design Brain <code>references/</code></span></div>
+    <div><b>Source</b><span><code>AGENTIC-DESIGN-SYSTEM.md</code>, <code>CODEX-AGENT-RUNBOOKS.md</code>, <code>hearst-design-system/VAULT_HOME.md</code>, <code>AGENTS.md</code>, <code>.cursor/skills/</code>, Design Brain <code>references/</code></span></div>
     <div><b>Counted</b><span>Repo and vault on 2026-11-11 · brands, components, metadata, stories, notes, skills</span></div>
   </div>
   <nav class="toc" aria-label="Contents">
@@ -133,15 +133,15 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 <section class="major" id="film">
   <p class="kicker">00 · Walkthrough</p>
   <h2>How the system works</h2>
-  <p>The film builds the stack layer by layer, then walks through the vault, the repo’s layers, routing, the change loop with its stop gate, the sources of truth and the four workflows. It ends on the two drawing sheets.</p>
+  <p>The film builds the stack layer by layer, then walks through the two vaults, the skills, the nine agents, the repo’s layers, routing, the change loop with its stop gate, the sources of truth and the four workflows. It ends on the two drawing sheets.</p>
   <figure class="film" id="system-film">
     <video controls muted playsinline preload="metadata" poster="system-film-poster.jpg" aria-describedby="system-film-desc">
       <source src="system-film.mp4" type="video/mp4">
       Your browser can't play this video. <a href="system-film.mp4">Download the system film</a>.
     </video>
     <figcaption>
-      <p id="system-film-desc"><b>Agentic design system film · 1:28 · no sound.</b> Captions at the top of each scene say what is happening. Pick a chapter to jump to it.</p>
-      <ol class="chapters"><li><button type="button" data-t="0"><span class="tc">0:00</span>The six-layer stack</button></li><li><button type="button" data-t="14"><span class="tc">0:14</span>The vault: Design Brain</button></li><li><button type="button" data-t="24"><span class="tc">0:24</span>The repo’s five layers</button></li><li><button type="button" data-t="34"><span class="tc">0:34</span>Routing: who leads</button></li><li><button type="button" data-t="44"><span class="tc">0:44</span>The change loop and its gates</button></li><li><button type="button" data-t="58"><span class="tc">0:58</span>Sources of truth</button></li><li><button type="button" data-t="66"><span class="tc">1:06</span>Workflows 1–4</button></li><li><button type="button" data-t="76"><span class="tc">1:16</span>The drawing sheets</button></li></ol>
+      <p id="system-film-desc"><b>Agentic design system film · 1:50 · no sound.</b> Captions at the top of each scene say what is happening. Pick a chapter to jump to it.</p>
+      <ol class="chapters"><li><button type="button" data-t="0"><span class="tc">0:00</span>The six-layer stack</button></li><li><button type="button" data-t="14"><span class="tc">0:14</span>The vaults: Hearst+ and Design Brain</button></li><li><button type="button" data-t="24"><span class="tc">0:24</span>Skills: four homes</button></li><li><button type="button" data-t="34"><span class="tc">0:34</span>Agents: nine roles</button></li><li><button type="button" data-t="46"><span class="tc">0:46</span>The repo’s five layers</button></li><li><button type="button" data-t="56"><span class="tc">0:56</span>Routing: who leads</button></li><li><button type="button" data-t="66"><span class="tc">1:06</span>The change loop and its gates</button></li><li><button type="button" data-t="80"><span class="tc">1:20</span>Sources of truth</button></li><li><button type="button" data-t="88"><span class="tc">1:28</span>Workflows 1–4</button></li><li><button type="button" data-t="98"><span class="tc">1:38</span>The drawing sheets</button></li></ol>
     </figcaption>
   </figure>
 </section>
@@ -149,11 +149,11 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 <section class="major" id="stack">
   <p class="kicker">01 · Drawing HP-SYS-001 · Rev A · Sheet 1</p>
   <h2>The stack</h2>
-  <p>Six layers. Knowledge flows down from the vault into code; evidence flows back up with every change. The full drawing is in <a href="system-drawing.html">system-drawing.html</a>.</p>
+  <p>Six layers. Knowledge flows down from the vaults into code; evidence flows back up with every change. The full drawing is in <a href="system-drawing.html">system-drawing.html</a>.</p>
   <div class="sheet"><a href="system-drawing.html"><img src="system-drawing-sheet-1.jpg" alt="Drawing sheet 1, structure: the exploded six-layer stack, the repo's five layers, the vault sections with note counts, the routing matrix and count tables."></a></div>
   <div class="tw" style="margin-top:20px"><table>
     <tr><th>Layer</th><th>What it is</th><th>Where it lives</th><th>Measured</th></tr>
-    <tr><td>1 · Vault</td><td>Design Brain: principles, standards, design system, feature reasoning, brand playbooks, prototypes</td><td><code>Design Brain/references/</code> (Obsidian)</td><td class="n">208 notes · 67 skill entry points</td></tr>
+    <tr><td>1 · Vaults</td><td><b>Hearst+ app vault</b>: the canonical product and design memory agents must read before UI changes. <b>Design Brain</b>: separate Hearst-wide guidance.</td><td><code>hearst-design-system/</code> (Obsidian) · <code>~/Documents/…/Design Brain</code></td><td class="n">7 canonical files · 5 notes · 9 docs · Design Brain 208 notes</td></tr>
     <tr><td>2 · Rules</td><td>HDS Constitution (8 articles), agent charter, runbooks</td><td><code>.agents/rules/</code>, repo root</td><td class="n">8 articles · 9 runbook roles</td></tr>
     <tr><td>3 · Skills</td><td>Instructions an agent loads for a kind of task</td><td><code>.cursor/skills/</code>, <code>.agents/skills/</code>, <code>hearst-design-system/.agents/skills/</code>, personal</td><td class="n">8 role · 5 repo · 4 personal</td></tr>
     <tr><td>4 · Agents</td><td>Roles with a file boundary, sequenced per request</td><td>Charter and runbooks</td><td class="n">9 roles</td></tr>
@@ -164,18 +164,21 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 
 <section class="major" id="vault">
   <p class="kicker">02 · Knowledge</p>
-  <h2>The vault</h2>
+  <h2>The vaults</h2>
+  <p>Hearst+ follows its own vault: the app folder <code>hearst-design-system/</code> is an Obsidian vault, and <code>AGENTS.md</code> tells every agent to read it before changing the interface. Each topic has one canonical file; working notes in <code>notes/</code> are non-canonical until promoted.</p>
   <div class="tw"><table>
-    <tr><th>Section</th><th>Notes</th><th>Status</th></tr>
-    <tr><td>00 · Start here</td><td class="n">14</td><td>Ready</td></tr>
-    <tr><td>01 · Constitution (principles, UX laws, standards, decision records)</td><td class="n">45</td><td>Ready</td></tr>
-    <tr><td>02 · Design system</td><td class="n">21</td><td>In review</td></tr>
-    <tr><td>03 · Feature reasoning</td><td class="n">5</td><td>In review</td></tr>
-    <tr><td>04 · Editorial guidelines</td><td class="n">9</td><td>Deprecated</td></tr>
-    <tr><td>05 · Brand playbooks</td><td class="n">110</td><td>In review</td></tr>
-    <tr><td>06 · Prototype</td><td class="n">4</td><td>Ready</td></tr>
+    <tr><th>File</th><th>Owns</th><th>Lines</th></tr>
+    <tr><td><code>VAULT_HOME.md</code></td><td>The map of the vault and who owns what</td><td class="n">—</td></tr>
+    <tr><td><code>AIDLC-docs/DESIGN-SYSTEM-SPEC.md</code></td><td>Token architecture, generated outputs, component contracts</td><td class="n">—</td></tr>
+    <tr><td><code>PRODUCT.md</code></td><td>Purpose, audience and design principles. Read first.</td><td class="n">58</td></tr>
+    <tr><td><code>DESIGN.md</code></td><td>Routes design tools to the right owner (a bridge, not a source)</td><td class="n">22</td></tr>
+    <tr><td><code>STYLE.md</code></td><td>Shared visual, responsive, accessibility and interaction rules</td><td class="n">153</td></tr>
+    <tr><td><code>BRAND_STYLES.md</code></td><td>Destination and publication colors, fonts and logos</td><td class="n">188</td></tr>
+    <tr><td><code>APP_RULES.md</code></td><td>Personalization, feeds, readers and scoped exceptions</td><td class="n">179</td></tr>
+    <tr><td><code>DECISION_LOG.md</code></td><td>Dated decisions that may graduate into a rule file</td><td class="n">272</td></tr>
   </table></div>
-  <p class="small">Markdown notes are canonical. Guidance strength: Must = required, Should = default (document deviations), May = optional. Note status: Draft, In review (proposed), Ready (accepted), Deprecated.</p>
+  <h4 style="margin-top:20px">Design Brain (separate)</h4>
+  <p>A Hearst-wide knowledge base in <code>~/Documents/ChatGPT/Design Brain</code>: 208 notes in 7 sections (start here 14, constitution 45, design system 21, feature reasoning 5, editorial 9 deprecated, brand playbooks 110, prototype 4) with 67 skill entry points. Nothing in the Hearst+ app links to it. Its notes use Must / Should / May and the statuses Draft, In review, Ready, Deprecated.</p>
 </section>
 
 <section class="major" id="skills">
@@ -187,7 +190,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
     <tr><td><code>.agents/</code> (root)</td><td><code>hds-constitution</code> (skill + rule), <code>handoff</code>, <code>oil-ui</code></td><td>The constitution; handing work to another agent; UI exploration</td></tr>
     <tr><td><code>hearst-design-system/.agents/</code></td><td><code>impeccable</code>, <code>brand-interstitial-ads</code></td><td>Design critique and polish; Ambient Reader ads</td></tr>
     <tr><td>Personal (<code>~/.claude/skills</code>)</td><td><code>dimensional-drawing</code>, <code>dimensional-drawing-motion</code>, <code>grill-with-ui</code>, <code>hearst-workbench</code></td><td>These spec sheets and films; design interviews; project setup</td></tr>
-    <tr><td>Design Brain</td><td>67 <code>SKILL.md</code> entry points</td><td>Navigating the vault by section</td></tr>
+    <tr><td>Design Brain</td><td>67 <code>SKILL.md</code> entry points</td><td>Navigating the Hearst-wide vault (not used by the app)</td></tr>
   </table></div>
 </section>
 
@@ -241,7 +244,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
   <div class="tw"><table>
     <tr><th>What</th><th>Authority</th><th>Consumers</th></tr>
     <tr><td>Token values</td><td>Git token JSON (<code>tokens/</code>)</td><td>Generated files, Figma variables, Pencil variables</td></tr>
-    <tr><td>Guidance</td><td>Vault Markdown notes</td><td>Canvases, prototypes, skills</td></tr>
+    <tr><td>Guidance</td><td>Hearst+ vault Markdown (<code>APP_RULES</code>, <code>STYLE</code>, <code>BRAND_STYLES</code> …)</td><td>Skills, <code>DESIGN.md</code>, agents</td></tr>
     <tr><td>Behavior</td><td>Component code and metadata</td><td>Storybook, the app, spec pages</td></tr>
     <tr><td>Evidence</td><td>PR descriptions and handoff notes</td><td>Release notes</td></tr>
   </table></div>
@@ -255,7 +258,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
   <article class="block" id="f1">
     <span class="id">F1 · NEEDS A DECISION</span>
     <h3>Two places claim to own token values</h3>
-    <p>The agent charter says Git token JSON is the source of truth. The Design Brain readme says to sync official token JSON and CSS from AI Enabler with <code>design-system-token-sync</code>. <b>Fix:</b> name one authority and describe the other as a sync target, in both documents.</p>
+    <p>The agent charter says Git token JSON is the source of truth. The Design Brain readme (a separate vault the app doesn’t use) says to sync official token JSON and CSS from AI Enabler with <code>design-system-token-sync</code>. The Hearst+ vault agrees with the charter: brand token JSON under <code>tokens/brands/</code> is canonical. <b>Fix:</b> name one authority and describe the other as a sync target, in both documents.</p>
   </article>
   <article class="block" id="f2">
     <span class="id">F2 · DOC DRIFT</span>
@@ -271,6 +274,11 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
     <span class="id">F4 · COVERAGE</span>
     <h3>28 metadata files for 148 component files</h3>
     <p>The review rules say new components need metadata and Storybook coverage. Some of the 148 files are sub-parts, so not every file needs its own metadata, but the gap is large. <b>Next step:</b> list the exported components without metadata and add them in small PRs.</p>
+  </article>
+  <article class="block" id="f5">
+    <span class="id">F5 · NEEDS A DECISION</span>
+    <h3>The Hearst+ vault and the Design Brain don’t know about each other</h3>
+    <p>The app’s vault is what agents read; the Design Brain holds Hearst-wide principles, UX laws and 110 brand playbooks the app never sees. <b>Options:</b> link the relevant Design Brain notes from <code>VAULT_HOME.md</code> (for example principles and brand playbooks), or state in both homes that they are independent.</p>
   </article>
 </section>
 
