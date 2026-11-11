@@ -5022,6 +5022,7 @@ function LifestyleRiverHomePage({
   feedError = null,
   onRequestNextFeedPage,
 }: LifestyleRiverHomePageProps) {
+  const { colorMode } = useTheme();
   const destinationConfigs = useDestinationConfigs();
   const searchParams = useSearchParams();
   const isSectionsHomepage = sectionsHomepage || searchParams?.get("layout") === "sections";
@@ -5030,6 +5031,9 @@ function LifestyleRiverHomePage({
   const enlargeBlocksSectionHeadings = destination === "all" && !initialBrandSlug;
   const riverLayout = savedRiverLayout === "list" ? "list" : "cards";
   const featuredCardColors = getFeaturedCardColors(destination, initialBrandSlug);
+  const carouselCardColors = colorMode === "dark"
+    ? { ...featuredCardColors, background: "var(--card)" }
+    : featuredCardColors;
   const fullWidthFeaturedHero = forceFullWidthFeaturedHero || (!isSectionsHomepage && !isBlocksHomepage && savedRiverLayout === "full-width-hero");
   const config = destinationConfig ?? destinationConfigs[destination];
   const { account, updatePreferences, addComment } = useReaderAccount();
@@ -6968,7 +6972,7 @@ function LifestyleRiverHomePage({
               </p>
             ) : null}
             <FeaturedStoryCarousel
-              cardColors={featuredCardColors}
+              cardColors={carouselCardColors}
               key={`full-width:${leadStory.id}:${heroStories.map((story) => story.id).join("|")}`}
               stories={heroStories}
               layoutMode={riverLayout}
@@ -7047,7 +7051,7 @@ function LifestyleRiverHomePage({
             <>
               {!fullWidthFeaturedHero && !isBlocksHomepage ? (
                 <FeaturedStoryCarousel
-                  cardColors={featuredCardColors}
+                  cardColors={carouselCardColors}
                   key={`${leadStory.id}:${heroStories.map((story) => story.id).join("|")}`}
                   // The slide layout's track already reserves 24 px below the card for its shadow, so it tucks in;
                   // the list layout has no such padding and keeps the river's full 26 px gap.
@@ -7116,7 +7120,7 @@ function LifestyleRiverHomePage({
                       </div>
                       <div className="min-w-0 space-y-6">
                         <FeaturedStoryCarousel
-                          cardColors={featuredCardColors}
+                          cardColors={carouselCardColors}
                           key={`blocks:${leadStory.id}:${heroStories.map((story) => story.id).join("|")}`}
                           stories={heroStories}
                           layoutMode={riverLayout}
