@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carousel Drawing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;600;700&display=swap">
+<style>
+/* Layout: one Apple-style dimensional drawing sheet (notes · section · plan · tables · details · layouts · title block), black on white, single light theme by design. */
+:root{--paper:#ececec;--sheet:#ffffff;--ink:#111;--ink2:#444;--ink3:#7a7a7a;--fill:#f3f3f3;--fill2:#e6e6e6;--f:'Arimo','Helvetica Neue',Helvetica,Arial,sans-serif;color-scheme:light}
+body{background:var(--paper);color:var(--ink);font-family:var(--f)}
+.wrap{max-width:1760px;margin:0 auto;padding-block:24px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.scroll{overflow-x:auto;background:var(--sheet);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+svg{display:block;width:100%;min-width:1100px;height:auto}
+.tb{background:var(--sheet);border:1.5px solid var(--ink);display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr;margin-bottom:24px}
+.tb>div{border-right:1px solid #d0d0d0;border-bottom:1px solid #d0d0d0;padding:10px 12px;min-width:0}
+.tb .big{grid-row:span 2;display:flex;flex-direction:column;justify-content:space-between;gap:12px}
+.tb h1{font-size:clamp(26px,4vw,40px);line-height:1;margin:0;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.lbl{text-transform:uppercase;letter-spacing:.08em;font-size:12px;color:var(--ink3);font-weight:600}
+.tb .v{font-size:13px;margin-top:2px;font-variant-numeric:tabular-nums}
+.tb .notes{grid-column:1/-1;border-right:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:6px 24px;font-size:13px;color:var(--ink2)}
+.tb .notes ol{margin:4px 0 0;padding-left:18px}
+.tb .figs{grid-column:1/-1;border-right:0;border-bottom:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px 18px}
+.tb .figs .v{font-size:17px}
+@media (max-width:640px){.tb{grid-template-columns:1fr 1fr}.tb .big{grid-column:1/-1;grid-row:auto}}
+.sheetwrap{margin-bottom:28px}
+.foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--ink2);padding:10px 2px 0}
+.foot b{font-weight:600;color:var(--ink)}
+/* drawing */
+.u{font-family:var(--f);text-transform:uppercase;letter-spacing:.07em}
+.border{fill:none;stroke:var(--ink);stroke-width:1.2}
+.obj{fill:var(--sheet);stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round}
+.well{fill:var(--fill);stroke:var(--ink);stroke-width:1}
+.slot{fill:none;stroke:var(--ink2);stroke-width:.8;stroke-dasharray:4 3}
+.hug{fill:var(--fill2);stroke:var(--ink);stroke-width:1}
+.thin{fill:none;stroke:var(--ink);stroke-width:.8}
+.ph{fill:none;stroke:var(--ink3);stroke-width:.8;stroke-dasharray:14 3 3 3}
+.cl{fill:none;stroke:var(--ink3);stroke-width:.7;stroke-dasharray:16 3 2 3}
+.cut{stroke:var(--ink);stroke-width:2}
+.dl{stroke:var(--ink);stroke-width:.7;fill:none}
+.ext{stroke:var(--ink);stroke-width:.55;fill:none}
+.arrow{fill:var(--ink)}
+.hl{stroke:var(--ink2);stroke-width:.7}
+.hs{stroke:var(--ink);stroke-width:.8}
+.env{fill:none;stroke:var(--ink);stroke-width:.8;stroke-dasharray:10 3 2 3}
+.dt{font:400 11px var(--f);fill:var(--ink);paint-order:stroke;stroke:var(--sheet);stroke-width:4px;stroke-linejoin:round}
+.dts{font:400 9.5px var(--f);fill:var(--ink2);letter-spacing:.06em;text-transform:uppercase;paint-order:stroke;stroke:var(--sheet);stroke-width:3px}
+.sl{font:400 9px var(--f);fill:var(--ink2);letter-spacing:.08em;text-transform:uppercase}
+.nt{font:400 11.5px var(--f);fill:var(--ink);letter-spacing:.06em;text-transform:uppercase}
+.nth{font:700 13px var(--f);fill:var(--ink);letter-spacing:.06em}
+.vt{font:400 12px var(--f);fill:var(--ink);letter-spacing:.1em;text-transform:uppercase}
+.vtb{font:400 20px var(--f);fill:var(--ink);letter-spacing:.06em}
+.nb{fill:var(--sheet);stroke:var(--ink);stroke-width:.9}
+.nbt{font:400 9.5px var(--f);fill:var(--ink)}
+.lead{stroke:var(--ink);stroke-width:.7;fill:none}
+.dot{fill:var(--ink)}
+.th{font:400 10.5px var(--f);fill:var(--ink);letter-spacing:.05em;text-transform:uppercase}
+.tc{font:400 10.5px var(--f);fill:var(--ink)}
+.tbk{font:400 7px var(--f);fill:var(--ink2);letter-spacing:.04em;text-transform:uppercase}
+.tbt{font:700 15px var(--f);fill:var(--ink)}
+.tbv{font:400 17px var(--f);fill:var(--ink);letter-spacing:.06em}
+
+/* title block restyled to match the drawing sheet: thin black rules, plain caps lettering */
+.tb{border:1.2px solid var(--ink);border-radius:16px;overflow:hidden}
+.tb>div{border-right:.8px solid var(--ink);border-bottom:.8px solid var(--ink);padding:10px 14px}
+.tb>div:nth-child(4),.tb>div:nth-child(7){border-right:0}
+.tb .lbl{font-size:9.5px;font-weight:400;letter-spacing:.06em;color:var(--ink2)}
+.tb h1{font-weight:400;letter-spacing:.1em;font-size:clamp(28px,4vw,44px);margin-top:4px}
+.tb .v{font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink)}
+.tb .big .v{font-size:11px;color:var(--ink2);line-height:1.6}
+.tb .notes{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);line-height:1.9}
+.tb .notes ol{padding-left:20px}
+.tb .nh{font-weight:700;font-size:13px;letter-spacing:.06em}
+.tb .nh span{font-weight:400;font-size:11.5px;margin-left:6px}
+.tb .figs>div{border-left:.8px solid var(--ink);padding-left:14px}
+.tb .figs>div:first-child{border-left:0;padding-left:0}
+.tb .figs .v{font-size:18px;letter-spacing:.06em;text-transform:none;margin-top:4px}
+.foot{font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+.foot b{font-weight:700}
+</style>
+<style>body{margin:0}.tb .notes ol li{margin:0}</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="tb">
+    <div class="big">
+      <div><div class="lbl">UI component · dimensional drawing</div><h1>Featured story carousel</h1></div>
+      <div class="v">Hearst+ lead module (Today’s Picks and Featured stories): photo, overlapping text card, controls, the looping track, parallax, autoplay and swipe. Sheet 1 is structure; sheet 2 is motion and input logic. Values measured in the running app.</div>
+    </div>
+    <div><div class="lbl">Dwg no.</div><div class="v">HP-CAR-001</div></div>
+    <div><div class="lbl">Rev</div><div class="v">A · 2026-11-11</div></div>
+    <div><div class="lbl">Sheets</div><div class="v">2</div></div>
+    <div><div class="lbl">Units</div><div class="v">CSS px @ 1× · rem = 16</div></div>
+    <div><div class="lbl">Scale</div><div class="v">Noted per view</div></div>
+    <div><div class="lbl">Source</div><div class="v">featured-story-carousel.tsx · featured-story-carousel.metadata.ts · home-page.tsx · globals.css</div></div>
+    <div class="notes">
+      <div><span class="nh">NOTES:<span>(UNLESS OTHERWISE SPECIFIED)</span></span><ol>
+        <li>Do not scale from screen. Read the numbers.</li>
+        <li>Measured with Playwright (Chromium, fonts loaded, light mode) on /hearst-plus/ and /hearst-plus/full-width-hero/ at viewports 390, 640, 768, 1024, 1280 and 1440.</li>
+        <li>Slots are placeholders. Photos, brand icons and copy are not part of the drawing.</li>
+        <li>Values with a dot read base · breakpoint (sm 640, md 768).</li></ol></div>
+      <div><span class="nh" aria-hidden="true">&nbsp;</span><ol start="5">
+        <li>HUG = sized by content · FLEX = takes remaining space · FILL = parent width.</li>
+        <li>The carousel fills its column; its width comes from the page grid, not from the component.</li>
+        <li>Motion curves on sheet 2 are drawn from the timing values, not traced from frames.</li>
+        <li>Grayscale by design. The text card is black in every theme.</li></ol></div>
+    </div>
+    <div class="figs">
+      <div><div class="lbl">H1 · photo</div><div class="v">W × 0.6</div></div>
+      <div><div class="lbl">H2 · card</div><div class="v">224 · 240 sm</div></div>
+      <div><div class="lbl">O1 · overlap</div><div class="v">40 · 48 sm</div></div>
+      <div><div class="lbl">Z1 · controls</div><div class="v">28 · 44 pause</div></div>
+      <div><div class="lbl">A1 · autoplay</div><div class="v">6.5 s</div></div>
+      <div><div class="lbl">M2 · step</div><div class="v">300 ms</div></div>
+      <div><div class="lbl">T1 · swipe</div><div class="v">min(64, .14 W)</div></div>
+    </div>
+  </header>
+  <div class="sheetwrap"><div class="scroll"><svg id="sh1" viewBox="0 0 1700 1060" role="img" aria-label="Featured story carousel sheet 1, structure: slide at 1440, slide at 390, list layout, controls and card text details, variable tables"></svg></div>
+  <div class="foot"><span>2026-11-11 &nbsp;|&nbsp; UI component reference · Hearst+ carousel</span><span><b>Featured story carousel, structure</b> &nbsp;|&nbsp; 1 of 2</span></div></div>
+  <div class="sheetwrap"><div class="scroll"><svg id="sh2" viewBox="0 0 1700 1060" role="img" aria-label="Featured story carousel sheet 2, logic: looping track with clones, parallax timing, autoplay pause conditions, swipe thresholds, semantics and focus, the full-width hero finding and thresholds"></svg></div>
+  <div class="foot"><span>2026-11-11 &nbsp;|&nbsp; UI component reference · Hearst+ carousel</span><span><b>Featured story carousel, logic</b> &nbsp;|&nbsp; 2 of 2</span></div></div>
+</div>
+<script>
+(function(){
+const NS='http://www.w3.org/2000/svg';let sv,A,HAT,uid=0;
+function mk(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)if(a[k]!=null)e.setAttribute(k,a[k]);(p||sv).appendChild(e);return e}
+function tx(x,y,s,c,a,p){const t=mk('text',Object.assign({x:x,y:y,class:c||'dt'},a||{}),p);t.textContent=s;return t}
+function begin(id){sv=document.getElementById(id);sv.innerHTML='';const n=uid++;const d=mk('defs',{});const m=mk('marker',{id:'ar'+n,viewBox:'0 0 10 10',refX:10,refY:5,markerWidth:7,markerHeight:7,orient:'auto-start-reverse',markerUnits:'userSpaceOnUse'},d);mk('path',{d:'M0,1.7 L10,5 L0,8.3 z',class:'arrow'},m);
+ const pt=mk('pattern',{id:'hat'+n,width:5,height:5,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'},d);mk('line',{x1:0,y1:0,x2:0,y2:5,class:'hl'},pt);A='url(#ar'+n+')';HAT='url(#hat'+n+')';rr(20,20,1660,1020,16,'border')}
+function dimH(x1,x2,y,e1,e2,l,o){o=o||{};[[x1,e1],[x2,e2]].forEach(([x,e])=>{if(e==null)return;const s=Math.sign(y-e)||1;mk('line',{x1:x,y1:e+s*3,x2:x,y2:y+s*5,class:'ext'})});
+ if(x2-x1>=28)mk('line',{x1:x1,y1:y,x2:x2,y2:y,class:'dl','marker-start':A,'marker-end':A});else{mk('line',{x1:x1-13,y1:y,x2:x1,y2:y,class:'dl','marker-end':A});mk('line',{x1:x2+13,y1:y,x2:x2,y2:y,class:'dl','marker-end':A});mk('line',{x1:x1,y1:y,x2:x2,y2:y,class:'dl'})}
+ tx((x1+x2)/2+(o.dx||0),(o.below?y+13:y-4)+(o.dy||0),l,o.c||'dt',{'text-anchor':'middle'})}
+function dimV(y1,y2,x,e1,e2,l,o){o=o||{};[[y1,e1],[y2,e2]].forEach(([y,e])=>{if(e==null)return;const s=Math.sign(x-e)||1;mk('line',{x1:e+s*3,y1:y,x2:x+s*5,y2:y,class:'ext'})});
+ if(y2-y1>=28)mk('line',{x1:x,y1:y1,x2:x,y2:y2,class:'dl','marker-start':A,'marker-end':A});else{mk('line',{x1:x,y1:y1-13,x2:x,y2:y1,class:'dl','marker-end':A});mk('line',{x1:x,y1:y2+13,x2:x,y2:y2,class:'dl','marker-end':A});mk('line',{x1:x,y1:y1,x2:x,y2:y2,class:'dl'})}
+ const c=(y1+y2)/2+(o.dy||0);if(o.side){const r=o.side==='r';const lx=(r?x+6:x-6)+(o.dx||0);if(o.dx)mk('line',{x1:x+(r?2:-2),y1:(y1+y2)/2,x2:lx+(r?-2:2),y2:c,class:'lead'});tx(lx,c+4,l,o.c||'dt',{'text-anchor':r?'start':'end'})}else tx(x-5,c,l,o.c||'dt',{'text-anchor':'middle',transform:'rotate(-90 '+(x-5)+' '+c+')'})}
+function callout(px,py,ex,ey,l,dir,c){const s=dir||(ex>=px?1:-1);mk('circle',{cx:px,cy:py,r:1.8,class:'dot'});mk('polyline',{points:px+','+py+' '+ex+','+ey+' '+(ex+s*10)+','+ey,class:'lead'});tx(ex+s*14,ey+4,l,c||'dt',{'text-anchor':s>0?'start':'end'})}
+function rad(cx,cy,r,c,l,L){const sx=c.includes('l')?-1:1,sy=c.includes('t')?-1:1;const ox=cx-sx*r,oy=cy-sy*r;const px=ox+sx*r*Math.SQRT1_2,py=oy+sy*r*Math.SQRT1_2;callout(px,py,px+sx*L,py+sy*L,l,sx)}
+function nb(x,y,n){mk('rect',{x:x-6,y:y-6,width:12,height:12,class:'nb'});tx(x,y+3.5,String(n),'nbt',{'text-anchor':'middle'})}
+function rr(x,y,w,h,r,c){return mk('rect',{x:x,y:y,width:w,height:h,rx:r,class:c})}
+function slotLabel(x,y,w,h,l,al){tx(al==='l'?x+6:x+w/2,y+h/2+3.2,l,'sl',{'text-anchor':al==='l'?'start':'middle'})}
+function title(x,y,t,s){tx(x,y,t,'vt',{'text-anchor':'middle'});if(s)tx(x,y+14,s,'dts',{'text-anchor':'middle'})}
+function notes(list){const NX=50,NY=58;tx(NX,NY,'NOTES:','nth');tx(NX+62,NY,'(UNLESS OTHERWISE SPECIFIED)','nt');
+ list.forEach(([n,t],i)=>{const y=NY+30+i*22;if(n){nb(NX+6,y-4,n);tx(NX+22,y,t,'nt')}else tx(NX+22,y,t,'nt')})}
+function table(x,y,ttl,rows,ws){ws=ws||[42,100,88];const rh=17;tx(x,y-8,ttl,'vt');
+ const all=[ws.length===3&&!ws.hdr?['Code','Variable','Value']:ws.hdr].concat(rows);all.forEach((r,i)=>{let cx2=x;r.forEach((c,j)=>{mk('rect',{x:cx2,y:y+i*rh,width:ws[j],height:rh,class:'thin'});tx(cx2+(j?ws[j]/2:5),y+i*rh+12,c,i?'tc':'th',{'text-anchor':j?'middle':'start'});cx2+=ws[j]})});return y+all.length*rh+34}
+function detailRef(cx,cy,r,lbl,lx,ly){mk('circle',{cx:cx,cy:cy,r:r,class:'ph'});const a=Math.atan2(ly-cy,lx-cx);mk('line',{x1:cx+r*Math.cos(a),y1:cy+r*Math.sin(a),x2:lx,y2:ly,class:'lead'});tx(lx+(lx<cx?-4:4),ly+4,lbl,'dts',{'text-anchor':lx<cx?'end':'start'})}
+function xbox(x,y,w,h,cls){rr(x,y,w,h,0,cls||'thin');mk('path',{d:'M'+x+','+y+' L'+(x+w)+','+(y+h)+' M'+(x+w)+','+y+' L'+x+','+(y+h),class:'thin'})}
+/* ---------- shared helpers for this drawing ---------- */
+function hat(x,y,w,h){mk('rect',{x:x,y:y,width:w,height:h,fill:HAT,class:'hs'})}
+function line(x1,y1,x2,y2,c){return mk('line',{x1:x1,y1:y1,x2:x2,y2:y2,class:c||'thin'})}
+function arrowLine(x1,y1,x2,y2){mk('line',{x1:x1,y1:y1,x2:x2,y2:y2,class:'dl','marker-end':A})}
+function plate(x,y,w,lbl,sub,cls){const d=26,h=30;mk('path',{d:'M'+(x+d)+','+y+' H'+(x+d+w)+' L'+(x+w)+','+(y+h)+' H'+x+' Z',class:cls||'obj'});
+ mk('polyline',{points:(x+d+w-4)+','+(y+h/2)+' '+(x+d+w+16)+','+(y+h/2),class:'lead'});tx(x+d+w+20,y+h/2-1,lbl,'dts');if(sub)tx(x+d+w+20,y+h/2+11,sub,'sl')}
+/* one slide: W slide width, k scale; o.phone */
+function slide(X,Y,W,k,o){o=o||{};const ph=W*.6,mx=o.phone?6:18,ov=o.phone?40:48,ch=o.phone?224:240,px=o.phone?20:24,py=o.phone?10:12;
+ xbox(X,Y,W*k,ph*k,'well');rr(X,Y,W*k,ph*k,8*k,'thin');tx(X+W*k/2,Y+ph*k/2+40*k,'PHOTO · 5:3 · R 8 · LAYER 110 %','sl',{'text-anchor':'middle'});
+ // controls
+ rr(X+20*k,Y+20*k,147*k,24*k,12*k,'hug');slotLabel(X+20*k,Y+20*k,147*k,24*k,'EDITION · N OF 5');
+ if(o.phone){mk('circle',{cx:X+(W-20-22)*k,cy:Y+(20+12)*k-0*k,r:22*k,class:'hug'})}else{[0,1,2].forEach(i=>mk('circle',{cx:X+(W-20-14-i*34)*k,cy:Y+(20+14-2)*k,r:14*k,class:'hug'}))}
+ const cx=X+mx*k,cy=Y+(ph-ov)*k,cw=(W-2*mx)*k;rr(cx,cy,cw,ch*k,8*k,'obj');mk('rect',{x:cx+3,y:cy+ch*k,width:cw-6,height:5,class:'ph'});
+ const ix=cx+px*k,iw=cw-2*px*k;let yy=cy+py*k;
+ rr(ix,yy,iw*.5,32*k,0,'slot');slotLabel(ix,yy,iw*.5,32*k,'META · BRAND / VIDEO / COMMENTS','l');yy+=38*k;
+ const hl=o.phone?28:36;rr(ix,yy,iw,(o.hl||2)*hl*k,0,'slot');slotLabel(ix,yy,iw,(o.hl||2)*hl*k,'HEADLINE · T2 · CLAMP 3');yy+=(o.hl||2)*hl*k+12*k;
+ rr(ix,yy,iw,(o.phone?35:40)*k,0,'slot');slotLabel(ix,yy,iw,(o.phone?35:40)*k,'SUMMARY · CLAMP 2');
+ return {ph,mx,ov,ch,px,py,cx,cy,cw,ix,iw,bottom:Y+(ph-ov+ch)*k}}
+
+/* =====================================================================
+   SHEET 1 · STRUCTURE
+   ===================================================================== */
+begin('sh1');
+notes([[1,'PHOTO · 5:3 · R 8 · FILL'],[2,'CARD · BLACK · OVERLAPS PHOTO 48 · 40 BASE'],[3,'CARD HEIGHT FIXED · 240 · 224 BASE'],[4,'CONTROLS · TOP 20 · INSET 20'],[5,'PREV / NEXT · SM+ ONLY · PAUSE 44 BASE'],[6,'TRACK PAD BOTTOM 24 · CARD SHADOW'],[0,'WIDTH = PARENT COLUMN (FILL)'],[0,'ONLY THE ACTIVE SLIDE IS OPERABLE'],[0,'MOTION, LOOP AND INPUT LOGIC: SEE SHEET 2']]);
+
+/* ---- plan 1 · 1440 column 632 · 0.85:1 ---- */
+(function(){const k=.85,X=480,Y=110,W=632;const s=slide(X,Y,W,k,{hl:2});
+ const ph=s.ph*k;
+ dimH(X,X+W*k,Y-58,Y,Y,'W · FILL (632 AT 1440)');
+ dimH(X,s.cx,Y-16,Y,s.cy,'M1 18',{dx:-12});dimH(s.cx,s.ix,s.bottom+18,s.bottom,s.bottom,'P1 24',{below:true,dx:-10});
+ dimH(s.cx+s.cw,X+W*k,Y-16,s.cy,Y,'M1',{dx:10});
+ dimV(Y,Y+ph,X-16,X,X,'H1 = W × 0.6',{side:'l'});dimV(s.cy,Y+ph,X-70,X,X,'O1 48',{side:'l'});
+ dimV(s.cy,s.bottom,X+W*k+16,X+W*k,X+W*k,'H2 240',{side:'r'});dimV(s.cy,s.cy+12*k,X+W*k+60,s.cx+s.cw,s.cx+s.cw,'P2 12',{side:'r',dy:-8});
+ dimV(s.bottom,s.bottom+24*k,X+W*k+16,X+W*k,X+W*k,'P3 24',{side:'r',dy:6});
+ dimV(Y,Y+20*k,X+W*k+60,X+W*k,X+W*k,'C1 20',{side:'r'});
+ dimH(X+(W-20-28-68)*k,X+(W-20)*k,Y-16,Y+20*k,Y+20*k,'3 × Z1 28 · GAP 6',{dx:-40,dy:-12});
+ mk('line',{x1:X+W*k/2,y1:Y-10,x2:X+W*k/2,y2:s.bottom+40,class:'cl'});
+ nb(X+12,Y+ph-14,1);nb(s.cx+s.cw-12,s.cy+12,2);nb(s.cx+s.cw-12,s.bottom-12,3);nb(X+175*k,Y+32*k,4);nb(X+W*k-12,Y+60*k,5);nb(X+W*k/2+20,s.bottom+14,6);
+ detailRef(X+(W-20-48)*k,Y+32*k,26,'DETAIL A',X+W*k+110,Y+90);detailRef(s.ix+40,s.cy+(12+16)*k,22,'DETAIL B',X+W*k+110,s.cy+40);
+ title(X+W*k/2,s.bottom+80,'PLAN · SLIDE AT 1440 · HEARST+ HOME','SCALE 0.85:1 · COLUMN 632 · 2-LINE HEADLINE');
+})();
+
+/* ---- plan 2 · base 390 (358) · 0.75:1 ---- */
+(function(){const k=.75,X=86,Y=340,W=358;const s=slide(X,Y,W,k,{phone:1,hl:3});
+ dimH(X,X+W*k,Y-16,Y,Y,'W 358');dimV(s.cy,s.bottom,X+W*k+14,X+W*k,X+W*k,'H2 224',{side:'r'});
+ dimV(s.cy,Y+s.ph*k,X-14,X,X,'O1 40',{side:'l'});dimH(X,s.cx,s.bottom+16,s.bottom,s.bottom,'M1 6',{below:true,dx:-12});
+ callout(X+(W-42)*k,Y+32*k,X+W*k+20,Y-6,'Z2 44 · PAUSE ONLY',1);
+ title(X+W*k/2,s.bottom+70,'PLAN · BASE 390','SCALE 0.75:1 · PAD 20 / 10 · NO PREV / NEXT');
+})();
+
+/* ---- list layout ---- */
+(function(){const X=60,Y=800,k=.75;
+ rr(X,Y,320*k,184*k,8*k,'obj');xbox(X,Y,112*k,184*k,'well');rr(X+(112+16)*k,Y+48*k,170*k,20*k,0,'slot');rr(X+(112+16)*k,Y+76*k,170*k,60*k,0,'slot');slotLabel(X+(112+16)*k,Y+76*k,170*k,60*k,'T3 · CLAMP 3');
+ const lx=X+280;rr(lx,Y,250*k+110,220*k,8*k,'obj');xbox(lx,Y,(250*k+110)*.38,220*k,'well');
+ dimH(X,X+112*k,Y-12,Y,Y,'112');dimV(Y,Y+184*k,X-12,X,X,'184',{side:'l'});
+ dimH(lx,lx+(250*k+110)*.38,Y-12,Y,Y,'38 %');dimV(Y,Y+220*k,lx+250*k+110+12,lx+250*k+110,lx+250*k+110,'220 SM',{side:'r'});
+ title(X+190,Y+210,'LIST LAYOUT · RIVER MODE "LIST"','BASE 112 | 1FR · SM 38 % | 1FR · CARD SURFACE, NO PHOTO OVERLAP');
+})();
+
+/* ---- detail A · controls 2:1 ---- */
+(function(){const X=980,Y=650,k=1.5;
+ rr(X,Y,147*k*.7,24*k,12*k,'hug');slotLabel(X,Y,147*k*.7,24*k,'PILL · 12 / 16 BOLD');
+ const bx=X+147*k*.7+30;[0,1,2].forEach(i=>{const x=bx+i*34*k;mk('circle',{cx:x+14*k,cy:Y+12*k,r:14*k,class:'hug'});rr(x+7*k,Y+5*k,14*k,14*k,0,'slot')});
+ dimV(Y,Y+24*k,X-14,X,X,'H3 24',{side:'l'});dimH(bx,bx+28*k,Y-14,Y,Y,'Z1 28');dimH(bx+28*k,bx+34*k,Y+24*k+14,Y+26*k,Y+26*k,'G1 6',{below:true});
+ tx(X,Y+24*k+50,'FILL BLACK 45 % + BLUR · PAD 4 / 10 · BASE: PAUSE ONLY, Z2 44','sl');
+ title(X+190,Y+24*k+86,'DETAIL A · CONTROLS','SCALE 1.5:1 · SM+ · PREVIOUS · PAUSE · NEXT');
+})();
+
+/* ---- detail B · card text stack 1:1 ---- */
+(function(){const X=1000,Y=815,W=360;
+ rr(X,Y,W,170,8,'obj');rr(X+24,Y+12,180,32,0,'slot');slotLabel(X+24,Y+12,180,32,'META 14 / 20 · MIN-H 32','l');
+ rr(X+24,Y+50,W-48,72,0,'slot');slotLabel(X+24,Y+50,W-48,72,'T2 · 32 / 36 MD · 24 / 28 BASE');
+ rr(X+24,Y+134,W-48,30,0,'slot');slotLabel(X+24,Y+134,W-48,30,'16 / 20.24 · 14 / 17.7 BASE');
+ dimV(Y+44,Y+50,X+W+14,X+W-24,X+W-24,'S1 6',{side:'r'});dimV(Y+122,Y+134,X+W+14,X+W-24,X+W-24,'S2 12',{side:'r'});
+ dimH(X,X+24,Y-12,Y,Y+12,'P1 24',{dx:-10});
+ title(X+W/2,Y+206,'DETAIL B · CARD TEXT','SCALE 1:1 · SM+ · HEADLINE MAX MIN(672, 100 %)');
+})();
+
+/* ---- tables ---- */
+(function(){const X=1404,ws=[40,112,112];let y=70;
+ y=table(X,y,'SPACING',[['M1','card inset x','6 · 18 SM'],['O1','card overlap','40 · 48 SM'],['P1','card pad x','20 · 24 SM'],['P2','card pad y','10 · 12 SM'],['P3','track pad bottom','24'],['C1','controls inset','20'],['G1','control gap','6'],['S1','meta → headline','6'],['S2','headline → summary','12']],ws);
+ y=table(X,y,'SIZE',[['W','slide width','FILL'],['H1','photo','W × 0.6 (5:3)'],['H2','card','224 · 240 SM'],['H3','edition pill','24'],['Z1','prev · pause · next','28 SM+'],['Z2','pause (base)','44'],['T2','headline','24/28 · 32/36 MD'],['D1','summary','14/17.7 · 16/20.2']],ws);
+ y=table(X,y,'RADIUS',[['R1','photo · card','8'],['R2','pill · controls','FULL']],ws);
+ table(X,y,'MEASURED (HOME)',[['390','358 × 399','3-LINE HEAD'],['768','404 × 434','3-LINE HEAD'],['1024','660 × 588','2-LINE HEAD'],['1280','552 × 523','2-LINE HEAD'],['1440','632 × 571','2-LINE HEAD']],ws);
+})();
+
+/* =====================================================================
+   SHEET 2 · LOGIC
+   ===================================================================== */
+begin('sh2');
+notes([[1,'5 STORIES + 2 CLONES · LOOPS WITHOUT A JUMP'],[2,'TRACK 300 MS · CUBIC-BEZIER(.2, 0, 0, 1)'],[3,'CARD LEADS BY 10 PX · PHOTO LAGS'],[4,'AUTOPLAY EVERY 6.5 S'],[5,'SWIPE · TODAY’S PICKS ONLY'],[6,'OFF-SCREEN SLIDES ARE INERT + HIDDEN'],[0,'REDUCED MOTION: NO AUTOPLAY, NO TRANSITIONS'],[0,'STATUS LIVE REGION: POLITE WHEN PAUSED'],[0,'FOCUS INSIDE PAUSES (EXCEPT THE PAUSE BUTTON)']]);
+
+/* ---- track and clones ---- */
+(function(){const X=470,Y=110,SW=88,G=0;const L=['CLONE 5','1','2','3','4','5','CLONE 1'];
+ L.forEach((l,i)=>{const x=X+i*SW;rr(x,Y,SW-4,70,4,i===0||i===6?'slot':'obj');tx(x+SW/2-2,Y+40,l,'dts',{'text-anchor':'middle'});tx(x+SW/2-2,Y+90,'INDEX '+i,'sl',{'text-anchor':'middle'})});
+ rr(X+SW*1-6,Y-8,SW+8,86,0,'env');tx(X+SW*1.5,Y-14,'VIEW','sl',{'text-anchor':'middle'});
+ const yy=Y+120;arrowLine(X+SW*5.5,yy,X+SW*6.5,yy);tx(X+SW*6,yy-6,'NEXT FROM 5','sl',{'text-anchor':'middle'});
+ mk('path',{d:'M'+(X+SW*6.5)+','+(yy+10)+' C'+(X+SW*6.5)+','+(yy+50)+' '+(X+SW*1.5)+','+(yy+50)+' '+(X+SW*1.5)+','+(yy+14),class:'dl','marker-end':A});
+ tx(X+SW*3.5,yy+58,'ON TRANSITION END: SNAP TO REAL 1 WITH TRANSITION OFF, THEN BACK ON (2 FRAMES)','sl',{'text-anchor':'middle'});
+ tx(X,Y+215,'TRACK X = −INDEX × 100 % + DRAG PX','dts');nb(X+SW*7+10,Y+10,1);
+ title(X+SW*3.5,Y+250,'TRACK · LOOP','TRANSLATE3D · ONE SLIDE = 100 % OF THE TRACK');
+})();
+
+/* ---- parallax timing ---- */
+(function(){const X=470,Y=420,W=520,H=150,V=ms=>X+ms/320*W,P=p=>Y+H-p*H;
+ rr(X,Y,W,H,0,'thin');
+ const ease=t=>{/* cubic-bezier .2,0,0,1 approx */return 1-Math.pow(1-t,3.2)};
+ const curve=(d0,dur,cls)=>{let pts=[];for(let ms=0;ms<=320;ms+=4){const t=Math.max(0,Math.min(1,(ms-d0)/dur));pts.push(V(ms)+','+P(ease(t)))}mk('polyline',{points:pts.join(' '),class:cls,fill:'none'})};
+ curve(0,300,'obj');curve(16,284,'ph');
+ [0,16,300].forEach((ms,i)=>{line(V(ms),Y+H,V(ms),Y+H+6+i%2*12);tx(V(ms),Y+H+18+i%2*12,ms+' MS','sl',{'text-anchor':'middle'})});
+ tx(X+W+10,Y+30,'TRACK + CARD · 0 → 300','dts');tx(X+W+10,Y+46,'PHOTO · 16 → 300','dts');
+ tx(X,Y+H+50,'PHOTO LAYER: 110 % WIDE AT −5 %, SHIFTED (TRACK − SLIDE) × 7.27 %; DRAG × 0.08 THE OTHER WAY','sl');
+ tx(X,Y+H+66,'CARD: SHIFTED −(TRACK − SLIDE) × 10 PX, SO IT LEADS THE PHOTO','sl');
+ nb(X+W-10,Y+12,2);nb(X+W-30,Y+12,3);
+ title(X+W/2,Y+H+96,'MOTION · ONE STEP','PROGRESS VS TIME · REDUCED MOTION: NONE');
+})();
+
+/* ---- autoplay state ---- */
+(function(){const X=470,Y=760;const st=[['PLAYING','EVERY 6.5 S'],['HOVER','PAUSED WHILE IN'],['FOCUS','PAUSED UNTIL RESUME'],['DRAG','PAUSED WHILE DOWN'],['PAUSE BTN','TOGGLES'],['REDUCED','NEVER PLAYS']];
+ rr(X,Y,110,46,4,'hug');tx(X+55,Y+20,st[0][0],'dts',{'text-anchor':'middle'});tx(X+55,Y+34,st[0][1],'sl',{'text-anchor':'middle'});
+ st.slice(1).forEach(([a,b],i)=>{const x=X+150+i*132;rr(x,Y+80,124,46,4,'obj');tx(x+62,Y+100,a,'dts',{'text-anchor':'middle'});tx(x+62,Y+114,b,'sl',{'text-anchor':'middle'});mk('path',{d:'M'+(X+110)+','+(Y+23)+' C'+(x+62)+','+(Y+23)+' '+(x+62)+','+(Y+50)+' '+(x+62)+','+(Y+78),class:'dl','marker-end':A})});
+ tx(X,Y+156,'THE TIMER RESTARTS ON EVERY SLIDE CHANGE · ANY MANUAL MOVE RESETS THE 6.5 S','sl');nb(X+125,Y+10,4);
+ title(X+400,Y+190,'AUTOPLAY · WHAT STOPS IT','SET-INTERVAL 6500 · CLEARED WHEN ANY CONDITION HOLDS');
+})();
+
+/* ---- swipe ---- */
+(function(){const X=1120,Y=110,W=250,H=150;
+ rr(X,Y,W,H,8,'obj');const th=Math.min(64,W*.14);
+ line(X+W/2,Y+10,X+W/2,Y+H-10,'cl');rr(X+W/2-th,Y+H/2-20,th*2,40,0,'slot');
+ arrowLine(X+W/2,Y+H/2+44,X+W/2-th,Y+H/2+44);tx(X+W/2-th/2,Y+H/2+58,'T1','sl',{'text-anchor':'middle'});
+ hat(X,Y,W*.24*0+10,0);
+ dimH(X+W/2,X+W/2+W*.24,Y-14,Y,Y,'±0.24 W DRAG CAP');
+ const rows=[['T1','MIN(64, 0.14 W)'],['FLICK','≥ 24 AND ≥ 0.45 PX/MS'],['AXIS','|DX| > 1.2 × |DY|'],['TRACKPAD','Σ DX ≥ 55 · LOCK 520 MS'],['RESET','GAP > 180 MS'],['CLICK','SUPPRESSED AFTER A SWIPE']];
+ rows.forEach(([a,b],i)=>{tx(X,Y+H+30+i*20,a,'dts');tx(X+80,Y+H+30+i*20,b,'sl')});nb(X+W+14,Y+10,5);
+ title(X+W/2,Y+H+170,'SWIPE · POINTER + TRACKPAD','TODAY’S PICKS ONLY · TOUCH-PAN-Y');
+})();
+
+/* ---- focus / semantics ---- */
+(function(){const X=1120,Y=596;const rows=[['ROOT','ARTICLE · ROLEDESCRIPTION CAROUSEL · LABEL = EDITION'],['SLIDE','ARIA-HIDDEN + INERT UNLESS ACTIVE'],['OPEN','FULL-SLIDE BUTTON · TABINDEX 0 ON ACTIVE ONLY'],['COMMENTS','NESTED BUTTON · MIN-H 32 · OPENS COMMENTS'],['STATUS','“STORY N OF 5: TITLE” · LIVE POLITE WHEN PAUSED'],['HELP','SR-ONLY: USE PREVIOUS / NEXT (OR SWIPE)'],['KEYS','NO ARROW KEYS · TAB TO PREV / NEXT']];
+ rows.forEach(([a,b],i)=>{tx(X,Y+i*22,a,'dts');tx(X+84,Y+i*22,b,'sl')});nb(X-14,Y+22,6);
+ title(X+200,Y+rows.length*22+24,'SEMANTICS · FOCUS','ONLY THE ACTIVE SLIDE IS IN THE TAB ORDER');
+})();
+
+/* ---- finding: full-width hero ---- */
+(function(){const X=1404,Y=110;
+ rr(X,Y,250,160,8,'obj');rr(X+20,Y+20,250*.333-10,120,0,'slot');tx(X+20+(250*.333-10)/2,Y+84,'33 %','sl',{'text-anchor':'middle'});hat(X+20,Y+140,250*.333-10,30);
+ tx(X,Y+190,'SCRIM "LEFT-TO-RIGHT" KEEPS A 33 % CAP','sl');tx(X,Y+206,'ON THE HEADLINE AND REMOVES ITS CLAMP.','sl');tx(X,Y+222,'AT 390: 102 WIDE, 224 TALL, OVERFLOWS','sl');tx(X,Y+238,'THE 224 CARD (CONTENT 272).','sl');
+ title(X+125,Y+270,'FINDING · FULL-WIDTH HERO','SEE SPEC F1');
+ table(X,Y+330,'THRESHOLDS',[['A1','autoplay','6500 MS'],['M2','track','300 MS'],['M3','photo','16 + 284'],['T1','swipe','MIN(64, .14 W)'],['T2','flick','24 · .45 PX/MS'],['T3','trackpad','55 · LOCK 520']],[40,112,112]);
+})();
+
+document.body.dataset.ready='1';})();
+</script></body></html>

@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hearst+ Carousel Spec</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Schibsted+Grotesk:wght@700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* HDS Constitution editorial rules: navy section rules, Hearst Blue kickers, slate neutrals, single-pixel slate grids. */
+:root{
+  --navy:#102A43; --blue:#2D75B9; --ink:#0F172A; --slate-600:#475569; --slate-500:#64748B; --slate-300:#CBD5E1; --slate-200:#E2E8F0; --slate-100:#F1F5F9; --slate-50:#F8FAFC; --white:#fff;
+  --ui:"Inter",system-ui,sans-serif; --head:"Schibsted Grotesk","Inter",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--slate-50);color:var(--ink);font:400 15px/1.6 var(--ui)}
+.page{max-width:1180px;margin:0 auto;padding:40px 16px 80px}
+@media (min-width:720px){.page{padding:56px 40px 96px}}
+.kicker{font:700 11px/1.2 var(--ui);letter-spacing:.16em;text-transform:uppercase;color:var(--blue);margin:0}
+h1,h2,h3,h4{font-family:var(--head);font-weight:800;color:var(--navy);margin:0;line-height:1.12}
+h1{font-size:clamp(34px,5vw,54px);margin-top:12px}
+h2{font-size:clamp(26px,3.4vw,34px);margin-top:10px}
+h3{font-size:22px;margin-top:6px}
+h4{font-size:15px;font-family:var(--ui);font-weight:700;letter-spacing:.01em;margin:18px 0 6px}
+p{margin:10px 0}
+.lede{font-size:17px;color:var(--slate-600);max-width:760px}
+.mast{border-top:2px solid var(--navy);padding-top:24px}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:var(--slate-200);border:1px solid var(--slate-200);margin-top:24px}
+.meta>div{background:var(--white);padding:12px 16px}
+.meta b{display:block;font:700 10px/1.2 var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--slate-500);margin-bottom:4px}
+.meta span{font-size:13px}
+nav.toc{margin:28px 0 0;display:flex;flex-wrap:wrap;gap:6px}
+nav.toc a{font:600 13px/1 var(--ui);color:var(--navy);text-decoration:none;border:1px solid var(--slate-200);background:var(--white);padding:9px 12px;border-radius:4px}
+nav.toc a:hover{border-color:var(--blue);color:var(--blue)}
+section.major{border-top:2px solid var(--navy);padding-top:24px;margin-top:64px}
+.block{background:var(--white);border:1px solid var(--slate-200);padding:24px;margin-top:24px;min-width:0}
+@media (min-width:720px){.block{padding:28px 32px}}
+.block .id{font:600 12px/1 var(--mono);color:var(--blue)}
+.cols{display:grid;gap:24px}.cols>*{min-width:0}
+@media (min-width:900px){.cols{grid-template-columns:1fr 1fr}}
+ul{margin:6px 0;padding-left:18px}
+li{margin:3px 0}
+code,.mono{font-family:var(--mono);font-size:12.5px}
+code{background:var(--slate-100);padding:1px 5px;border-radius:3px;color:var(--navy);overflow-wrap:anywhere}
+.tw{overflow-x:auto;margin-top:8px;border:1px solid var(--slate-200)}
+table{border-collapse:collapse;width:100%;font-size:13px;background:var(--white)}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--slate-200);vertical-align:top}
+th{font:700 10.5px/1.3 var(--ui);letter-spacing:.12em;text-transform:uppercase;color:var(--slate-500);background:var(--slate-50)}
+tr:last-child td{border-bottom:0}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.flag{border-left:3px solid var(--blue);background:var(--slate-50);padding:10px 14px;margin-top:14px;font-size:13.5px}
+.flag b{color:var(--navy)}
+.bp{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-end;margin-top:12px;padding:16px;background:var(--slate-50);border:1px solid var(--slate-200)}
+.bp figure{margin:0}
+.bp figcaption{font:500 11px/1.35 var(--ui);color:var(--slate-600);margin-top:6px;font-variant-numeric:tabular-nums}
+.bp svg rect{fill:var(--white);stroke:var(--slate-600);stroke-width:1}
+.bp svg rect.frame{fill:none;stroke:var(--slate-300);stroke-dasharray:3 3}
+.sheet img{display:block;width:100%;height:auto;border:1px solid var(--slate-200)}
+.sheet a{font-weight:600;color:var(--blue)}
+.grid-px{display:grid;gap:1px;background:var(--slate-200);border:1px solid var(--slate-200);margin-top:16px}
+@media (min-width:720px){.grid-px{grid-template-columns:repeat(3,1fr)}}
+.grid-px>div{background:var(--white);padding:18px 20px}
+.grid-px h4{margin-top:0}
+.small{font-size:13px;color:var(--slate-600)}
+.tag{display:inline-block;font:700 10px/1 var(--ui);letter-spacing:.12em;text-transform:uppercase;color:var(--blue);border:1px solid var(--slate-300);padding:4px 6px;border-radius:3px;margin-right:4px}
+.film{margin:20px 0 0;background:var(--white);border:1px solid var(--slate-200)}
+.film video{scroll-margin-top:110px;display:block;width:100%;height:auto;aspect-ratio:16/9;background:#fff}
+.film figcaption{padding:14px 16px 16px;border-top:1px solid var(--slate-200)}
+.film figcaption p{margin:0 0 10px;font-size:13px;color:var(--slate-600)}
+.chapters{list-style:none;margin:0;padding:0;display:grid;gap:4px 16px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.chapters li{margin:0}
+.chapters button{all:unset;box-sizing:border-box;display:flex;gap:10px;align-items:baseline;width:100%;min-height:44px;padding:6px 8px;border-radius:4px;cursor:pointer;font-size:13.5px;color:var(--ink)}
+.chapters button:hover{background:var(--slate-100)}
+.chapters button:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+.chapters .tc{font:600 12px/1 var(--mono);color:var(--blue);min-width:38px;font-variant-numeric:tabular-nums}
+/* Spec-pages nav: static copy of ProductHeader (product-story-shell.tsx). Keep the links in step with specNavLinks. */
+.specnav{position:sticky;top:0;z-index:50;background:rgb(255 255 255 / .85);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid #bdbdbd;font-family:var(--ui)}
+.specnav .in{max-width:1360px;margin:0 auto;padding:0 20px;display:flex;flex-direction:column;gap:4px}
+.specnav .logo{display:flex;align-items:center;min-height:44px;padding:8px 0;align-self:flex-start}
+.specnav .logo span{display:block;width:128px;height:24px;background:url(/logos/hearst-plus.svg?v=2026-10-11) left center/contain no-repeat}
+.specnav nav{display:flex;min-width:0;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:0 8px;border-top:1px solid #bdbdbd;font-size:12px;font-weight:700}
+.specnav nav::-webkit-scrollbar{display:none}
+.specnav nav a{position:relative;display:inline-flex;align-items:center;min-height:44px;flex-shrink:0;white-space:nowrap;padding:0 12px;border-bottom:2px solid transparent;color:#757575;text-decoration:none}
+.specnav nav a:hover{color:#121212}
+.specnav nav a[aria-current=page]{border-bottom-color:#384959;color:#121212}
+.specnav a:focus-visible{outline:2px solid #384959;outline-offset:2px}
+.specnav .sep{display:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (min-width:640px){.specnav .logo span{width:160px}}
+@media (min-width:768px){.specnav .in{padding:0 40px}.specnav nav{margin:0 -40px;padding:0 28px}}
+@media (min-width:1280px){.specnav .in{flex-direction:row;align-items:center;justify-content:space-between;gap:20px}.specnav .logo{align-self:auto}.specnav nav{margin:0;padding:0;border-top:0;gap:4px;font-size:14px;font-weight:600}.specnav nav a{padding:0 8px}.specnav .sep{display:block;width:1px;height:20px;margin:0 8px;background:#bdbdbd;flex-shrink:0}.specnav .short{display:none}}
+@media (max-width:1279.98px){.specnav .long{display:none}}
+</style>
+</head>
+<body>
+<header class="specnav">
+  <div class="in">
+    <a class="logo" href="/hearst-plus/" aria-label="Hearst Magazines"><span aria-hidden="true"></span></a>
+    <nav aria-label="Spec pages">
+      <a href="/cta-specs/">CTAs</a>
+      <a href="/layout-specs/">Breakpoints &amp; grid</a>
+      <a href="/type-specs/">Type metrics</a>
+      <a href="/token-specs/">Tokens &amp; brands</a>
+      <a href="/specs/blocks-spec.html">Blocks spec</a>
+      <a href="/specs/nav-spec.html">Nav spec</a>
+      <a href="/specs/reader-spec.html">Reader spec</a>
+      <a href="/specs/carousel-spec.html" aria-current="page">Carousel spec</a>
+      <a href="https://hearst-design-system.netlify.app/storybook/?path=/docs/hearst-plus-start-overview--docs" target="_blank" rel="noopener noreferrer">Storybook<span class="sr"> (opens in a new tab)</span></a>
+      <span class="sep" aria-hidden="true"></span>
+      <a href="/hearst-plus/"><span class="long">Open prototype</span><span class="short">Prototype</span></a>
+    </nav>
+  </div>
+</header>
+<main class="page">
+
+<header class="mast">
+  <p class="kicker">HDS · Hearst+ featured story carousel · Spec</p>
+  <h1>Featured story carousel</h1>
+  <p class="lede">This spec covers the lead carousel used for Today’s Picks and for Featured stories on destinations and publications: the photo, the overlapping text card, the controls, the looping track, the parallax, autoplay, swipe, focus and the list layout. Values come from the component source and from measuring the running app.</p>
+  <div class="meta">
+    <div><b>Doc</b><span>HP-CAR-SPEC · Rev A · 2026-11-11</span></div>
+    <div><b>Drawing</b><span><a href="carousel-drawing.html">HP-CAR-001</a> · 2 sheets</span></div>
+    <div><b>Source</b><span><code>featured-story-carousel.tsx</code>, <code>featured-story-carousel.metadata.ts</code>, <code>home-page.tsx</code>, <code>globals.css</code></span></div>
+    <div><b>Measured</b><span>Playwright · Chromium · <code>/hearst-plus/</code> and <code>/hearst-plus/full-width-hero/</code> · viewports 390, 640, 768, 1024, 1280, 1440 · light mode</span></div>
+  </div>
+  <nav class="toc" aria-label="Contents">
+    <a href="#film">Film</a><a href="#anatomy">Anatomy</a><a href="#sizes">Sizes</a><a href="#motion">Motion</a><a href="#input">Swipe and autoplay</a><a href="#keyboard">Keyboard and focus</a><a href="#tokens">Tokens</a><a href="#findings">Findings</a>
+  </nav>
+</header>
+
+<section class="major" id="film">
+  <p class="kicker">00 · Walkthrough</p>
+  <h2>How the carousel works</h2>
+  <p>The film animates the carousel on a wireframe drawn from the measured geometry: its parts and sizes, the looping track, the parallax at a tenth of the speed, swipe, what pauses autoplay, focus, the list layout and one finding. It ends on the two drawing sheets.</p>
+  <figure class="film" id="carousel-film">
+    <video controls muted playsinline preload="metadata" poster="carousel-film-poster.jpg" aria-describedby="carousel-film-desc">
+      <source src="carousel-film.mp4" type="video/mp4">
+      Your browser can't play this video. <a href="carousel-film.mp4">Download the carousel film</a>.
+    </video>
+    <figcaption>
+      <p id="carousel-film-desc"><b>Featured story carousel film · 1:50 · no sound.</b> Captions at the top of each scene say what is happening; dimensions use the drawing's codes. Pick a chapter to jump to it.</p>
+      <ol class="chapters"><li><button type="button" data-t="0"><span class="tc">0:00</span>The module: photo, card, controls</button></li><li><button type="button" data-t="10"><span class="tc">0:10</span>Sizes at 640+ and on phones</button></li><li><button type="button" data-t="22"><span class="tc">0:22</span>The track, autoplay and the loop</button></li><li><button type="button" data-t="36"><span class="tc">0:36</span>Parallax, slowed down</button></li><li><button type="button" data-t="48"><span class="tc">0:48</span>Swipe and trackpad</button></li><li><button type="button" data-t="60"><span class="tc">1:00</span>What pauses autoplay</button></li><li><button type="button" data-t="72"><span class="tc">1:12</span>Focus order and hidden slides</button></li><li><button type="button" data-t="82"><span class="tc">1:22</span>List layout</button></li><li><button type="button" data-t="90"><span class="tc">1:30</span>Finding: full-width hero</button></li><li><button type="button" data-t="98"><span class="tc">1:38</span>The drawing sheets</button></li></ol>
+    </figcaption>
+  </figure>
+</section>
+
+<section class="major" id="anatomy">
+  <p class="kicker">01 · Drawing HP-CAR-001 · Rev A · Sheet 1</p>
+  <h2>Anatomy</h2>
+  <p>One <code>article</code> with <code>aria-roledescription="carousel"</code>, labelled with the edition (“Today’s Picks”) or “Featured stories”. It fills its column. The full drawing is in <a href="carousel-drawing.html">carousel-drawing.html</a>.</p>
+  <div class="sheet"><a href="carousel-drawing.html"><img src="carousel-drawing-sheet-1.jpg" alt="Drawing sheet 1, structure: the slide at 1440 and at 390 with dimensions, the list layout, details of the controls and the card text, and variable tables."></a></div>
+  <div class="cols" style="margin-top:20px">
+    <div>
+      <h4>1 · Photo</h4>
+      <ul>
+        <li><code>aspect-[5/3]</code>, radius 8, fills the slide. The image sits in a layer 110% wide starting at −5%, which carries the parallax.</li>
+        <li>Hover zooms the image to 1.025 over 250 ms (off with reduced motion).</li>
+      </ul>
+      <h4>2 · Text card</h4>
+      <ul>
+        <li>Black in every theme, white text, radius 8, shadow <code>0 6 18 rgba(0,0,0,.2)</code>.</li>
+        <li>Inset 6 from each side (18 from 640), pulled up over the photo by 40 (48 from 640), fixed height 224 (240 from 640), padding 10 / 20 (12 / 24 from 640).</li>
+        <li><b>Meta row</b>: brand icon 20, brand name bold, optional Video badge, and a comments button (min height 32), 14 / 20 semibold, 6 above the headline.</li>
+        <li><b>Headline</b>: T2, 24 / 28 (32 / 36 from 768), 800, clamp 3, max <code>min(672, 100%)</code>. Car stories add a research rating on the right.</li>
+        <li><b>Summary</b>: 14 / 17.7 (16 / 20.2 from 640), white at 85%, clamp 2, 12 below the headline.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>3 · Controls</h4>
+      <ul>
+        <li>Top 20, inset 20, over the photo.</li>
+        <li><b>Edition pill</b>: 24 tall, padding 4 / 10, 12 / 16 bold, black at 45% with blur. “Today’s Picks · 1 of 5”.</li>
+        <li><b>Previous · Pause · Next</b>: round, 28, 6 apart, black at 45%, from 640. Below 640 only Pause shows, at 44.</li>
+      </ul>
+      <h4>4 · Track</h4>
+      <ul>
+        <li>Five stories plus a clone at each end (seven slides). The track moves by 100% per slide; the bottom padding of 24 leaves room for the card shadow.</li>
+        <li>Only the active slide is operable; the others and the clones are <code>aria-hidden</code> and <code>inert</code>.</li>
+      </ul>
+      <h4>5 · List layout</h4>
+      <ul>
+        <li>In the river’s list mode each slide is a row on a card surface: <code>112 | 1fr</code>, 184 tall; from 640 <code>38% | 1fr</code>, 220 tall. Headline T3, clamp 3. The controls sit beside the photo.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="major" id="sizes">
+  <p class="kicker">02 · Measured on the Hearst+ home</p>
+  <h2>Sizes</h2>
+  <div class="tw"><table>
+    <tr><th>Viewport</th><th>Slide (W × H)</th><th>Photo</th><th>Card</th><th>Headline</th><th>Controls</th></tr>
+    <tr><td class="n">390</td><td class="n">358 × 399</td><td class="n">215</td><td class="n">346 × 224</td><td>24 / 28 · 3 lines</td><td>Pause 44</td></tr>
+    <tr><td class="n">640</td><td class="n">608 × 557</td><td class="n">365</td><td class="n">572 × 240</td><td>24 / 28 · 2 lines</td><td>3 × 28</td></tr>
+    <tr><td class="n">768</td><td class="n">404 × 434</td><td class="n">242</td><td class="n">368 × 240</td><td>32 / 36 · 3 lines</td><td>3 × 28</td></tr>
+    <tr><td class="n">1024</td><td class="n">660 × 588</td><td class="n">396</td><td class="n">624 × 240</td><td>32 / 36 · 2 lines</td><td>3 × 28</td></tr>
+    <tr><td class="n">1280</td><td class="n">552 × 523</td><td class="n">331</td><td class="n">516 × 240</td><td>32 / 36 · 2 lines</td><td>3 × 28</td></tr>
+    <tr><td class="n">1440</td><td class="n">632 × 571</td><td class="n">379</td><td class="n">596 × 240</td><td>32 / 36 · 2 lines</td><td>3 × 28</td></tr>
+  </table></div>
+  <p class="small">The slide width comes from the page grid. At 768 the home river puts the carousel in a 404 column, which is why it is narrower there than at 640.</p>
+</section>
+
+<section class="major" id="motion">
+  <p class="kicker">03 · Drawing HP-CAR-001 · Sheet 2</p>
+  <h2>Motion</h2>
+  <div class="sheet"><a href="carousel-drawing.html"><img src="carousel-drawing-sheet-2.jpg" alt="Drawing sheet 2, logic: the looping track with clones, parallax timing, what pauses autoplay, swipe thresholds, semantics and focus, the full-width hero finding and thresholds."></a></div>
+  <div class="cols" style="margin-top:20px">
+    <div>
+      <h4>One step</h4>
+      <ul>
+        <li>The track translates in 300 ms with <code>cubic-bezier(.2, 0, 0, 1)</code>.</li>
+        <li>The <b>card</b> moves with the track and is offset by 10 px per slide of distance, so it leads.</li>
+        <li>The <b>photo</b> layer starts 16 ms late and runs 284 ms, shifted against the motion by 8% of the slide (7.27% of its 110% layer). During a drag it moves 8% of the drag the other way.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>The loop</h4>
+      <ul>
+        <li>Next from story 5 slides onto the clone of story 1. When the transition ends the track snaps to the real story 1 with the transition off, and turns it back on two frames later. Previous from story 1 does the same through the clone of story 5.</li>
+        <li><b>Reduced motion</b>: no transitions, no parallax, no autoplay, no hover zoom.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="major" id="input">
+  <p class="kicker">04 · Input</p>
+  <h2>Swipe and autoplay</h2>
+  <div class="tw"><table>
+    <tr><th>Rule</th><th>Value</th></tr>
+    <tr><td>Autoplay</td><td>One slide every 6.5 s. The timer restarts on every slide change.</td></tr>
+    <tr><td>Pauses while</td><td>The pointer is over the carousel, or a finger is down.</td></tr>
+    <tr><td>Pauses until Resume</td><td>Focus enters the carousel (except on the Pause button itself), or the reader presses Pause.</td></tr>
+    <tr><td>Never plays</td><td>Reduced motion; the button is disabled and says why.</td></tr>
+    <tr><td>Swipe (Today’s Picks only)</td><td>Horizontal only (<code>|dx| &gt; 1.2 × |dy|</code>, <code>touch-pan-y</code>). The slide follows up to 24% of its width. It moves on past <code>min(64, 14% of W)</code>, or on a flick of 24 px at 0.45 px/ms or faster. The click after a swipe is suppressed.</td></tr>
+    <tr><td>Trackpad</td><td>Horizontal wheel deltas add up; 55 moves one slide, then input locks for 520 ms. A pause longer than 180 ms or a change of direction resets the sum.</td></tr>
+  </table></div>
+</section>
+
+<section class="major" id="keyboard">
+  <p class="kicker">05 · Accessibility</p>
+  <h2>Keyboard and focus</h2>
+  <div class="tw"><table>
+    <tr><th>Part</th><th>Behavior</th></tr>
+    <tr><td>Tab order</td><td>Active slide only: Open story (a full-slide button), Comments, then Previous, Pause, Next.</td></tr>
+    <tr><td>Other slides</td><td><code>aria-hidden</code> and <code>inert</code>, so they are skipped and not announced.</td></tr>
+    <tr><td>Status</td><td>A live region reads “Story N of 5: title”. It is polite while paused or with reduced motion, and off while rotating.</td></tr>
+    <tr><td>Help text</td><td>Screen readers hear: use the previous and next buttons (or swipe) to move between stories.</td></tr>
+    <tr><td>Arrow keys</td><td>Not handled. Keyboard users move with Previous and Next.</td></tr>
+  </table></div>
+</section>
+
+<section class="major" id="tokens">
+  <p class="kicker">06 · Tokens</p>
+  <h2>Tokens</h2>
+  <div class="tw"><table>
+    <tr><th>Part</th><th>Token</th><th>Rendered</th></tr>
+    <tr><td>Text card</td><td><code>!bg-black</code>, <code>text-white</code></td><td class="n">#000 · #FFF</td></tr>
+    <tr><td>Summary</td><td><code>text-white/85</code></td><td class="n">white 85%</td></tr>
+    <tr><td>Pill and controls</td><td><code>bg-black/45</code> + blur</td><td class="n">black 45%</td></tr>
+    <tr><td>Headline</td><td><code>--font-headline</code>, 800</td><td class="n">Schibsted Grotesk on Hearst+</td></tr>
+    <tr><td>Focus</td><td><code>--primary</code> at 30% (slide), brand ring (comments)</td><td class="n">per brand</td></tr>
+    <tr><td>Card shadow</td><td>inline</td><td class="n">0 6 18 rgba(0,0,0,.2)</td></tr>
+  </table></div>
+</section>
+
+<section class="major" id="findings">
+  <p class="kicker">07 · For the design system team</p>
+  <h2>Findings</h2>
+  <p>These come from comparing the measurements with the source and the metadata. Nothing has been changed in code.</p>
+  <article class="block" id="f1">
+    <span class="id">F1 · BUG</span>
+    <h3>The full-width hero headline overflows on phones</h3>
+    <p>With <code>scrimDirection="left-to-right"</code> (the full-width hero layout) the headline keeps a 33% max width and loses its line clamp. That rule was for text over the photo; the text now sits in its own card. At 390 the headline is 102 wide, breaks words in the middle (“Collabo-ration”) and its 272 px of content overflows the 224 card. At 1024 it is 297 wide and four lines. <b>Fix:</b> drop the 33% cap and keep <code>line-clamp-3</code>, or apply the cap only from 1024.</p>
+  </article>
+  <article class="block" id="f2">
+    <span class="id">F2 · PHONE</span>
+    <h3>“Latest available” loses swipe, and phones lose every manual control</h3>
+    <p>Swipe is on only when the label is exactly “Today’s Picks”. When the feed falls back to “Latest available”, or on Featured stories, swipe is off. Below 640 Previous and Next are hidden, so a phone reader can only wait for autoplay or pause it. <b>Fix:</b> enable swipe for every edition, or show Previous and Next at 44 on phones.</p>
+  </article>
+  <article class="block" id="f3">
+    <span class="id">F3 · DOC DRIFT</span>
+    <h3>The metadata lists scrim tokens the carousel no longer uses</h3>
+    <p><code>featured-story-carousel.metadata.ts</code> lists <code>--hp-image-scrim-soft</code>, <code>-strong</code> and <code>-solid</code>. The component no longer draws a scrim; the text sits in a black card, and <code>scrimDirection</code> only changes the headline width (see F1). <b>Fix:</b> update the metadata, and rename or remove the prop.</p>
+  </article>
+</section>
+
+</main>
+<script>
+document.querySelectorAll('.film .chapters button').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var v = b.closest('.film').querySelector('video');
+    v.currentTime = +b.dataset.t; v.play().catch(function () {}); v.focus();
+  });
+});
+</script>
+</body>
+</html>

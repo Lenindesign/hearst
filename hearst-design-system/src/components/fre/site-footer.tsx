@@ -50,6 +50,7 @@ const defaultProductLinkGroups: SiteFooterLinkGroup[] = [
       { label: "Blocks, cards & widgets spec", href: "/specs/blocks-spec.html" },
       { label: "Main navigation spec", href: "/specs/nav-spec.html" },
       { label: "Content reader spec", href: "/specs/reader-spec.html" },
+      { label: "Featured carousel spec", href: "/specs/carousel-spec.html" },
       { label: "Storybook", href: PROD_STORYBOOK_URL },
     ],
   },

@@ -66,6 +66,7 @@ const specNavLinks: { id?: ProductPageId; label: string; href: string; external?
   { label: "Blocks spec", href: "/specs/blocks-spec.html" },
   { label: "Nav spec", href: "/specs/nav-spec.html" },
   { label: "Reader spec", href: "/specs/reader-spec.html" },
+  { label: "Carousel spec", href: "/specs/carousel-spec.html" },
   { label: "Storybook", href: PROD_STORYBOOK_URL, external: true },
 ];
 
