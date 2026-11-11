@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { appendReaderReturnHref } from "@/lib/reader-navigation";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,8 @@ import { sampleClubActivities, type Activity, type ActivityType } from "@/compon
 const STORAGE_KEY = "hearst-mens-health-training-club-v1";
 const STORE_CHANGE_EVENT = "hearst-mens-health-training-club-change";
 const WEEKLY_DAY_GOAL = 3;
+// Cover art from the Men’s Health 30-Day Workout Challenge, the plan the club links to.
+const TRAINING_CLUB_COVER = "https://hips.hearstapps.com/hmg-prod/images/e121f8cc-f786-4c8c-a1fd-c0d694f73bf2.png?resize=1600:*";
 const TRAINING_PLAN_STORY_ID = "mens-health-fitness-a74297441-workout-challenge-30-day";
 const TRAINING_CLUB_RETURN_HREF = "/communities/mens-health/groups/training-club/";
 
@@ -187,7 +190,17 @@ export function MensHealthTrainingClub() {
 
   return (
     <section className="space-y-4" aria-labelledby="mh-training-club-title">
-      <Card className="gap-4 rounded-card border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] ring-0 sm:p-5">
+      <Card className="gap-4 overflow-hidden rounded-card border border-[var(--hp-border)] bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] ring-0 sm:p-5">
+        <div className="relative -mx-4 -mt-4 aspect-[2/1] overflow-hidden bg-muted sm:-mx-5 sm:-mt-5 md:aspect-[3/1]">
+          <Image
+            src={TRAINING_CLUB_COVER}
+            alt="A Men’s Health trainer mid-exercise over a red calendar collage"
+            fill
+            priority
+            sizes="(min-width: 1280px) 760px, (min-width: 1024px) 60vw, 100vw"
+            className="object-cover object-[50%_30%]"
+          />
+        </div>
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="min-w-0">
             <p className="type-k1 text-primary">Men’s Health · Hearst+ community</p>
