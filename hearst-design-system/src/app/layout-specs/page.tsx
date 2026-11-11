@@ -9,13 +9,15 @@ export const metadata: Metadata = {
   description: "The rail layout contract: which breakpoint applies when, how layouts go from one to three columns, measured column widths, a dimensional drawing and a motion film.",
 };
 
-/** Re-measured with Playwright in Chromium at 320–1920 px after the layout contract (Rev B) was applied. */
+/** Re-measured with Playwright in Chromium at 320–1920 px after the layout contract (Rev C, 2026-11-11) was applied. */
 const breakpointRows = [
   ["base", "0", "—", "One column. Page padding P1 = 16.", "One column, padding 16."],
   ["sm", "640", "1,073", "No column change. Type, spacing and small two-up grids only.", "No change."],
   ["md", "768", "811", "Right rail (300) joins: two columns. Padding P2 = 24.", "Panel insets 24 from the window; padding 24; one column."],
   ["lg", "1024", "864", "No river change: two columns keep widening. Filter rails and block sections may go to three columns.", "Ad rail (300) joins: two columns."],
-  ["xl", "1280", "108", "Left rail (300) joins: three columns. Padding P3 = 48.", "Context rail (300) joins: three columns. Padding 48."],
+  ["rail", "1140", "rail layouts", "Left rail joins at 240 (--layout-rail-compact): three columns, river 520.", "No change."],
+  ["rail-full", "1200", "rail layouts", "Left rail widens to 300: river back to 520.", "No change."],
+  ["xl", "1280", "108", "Padding P3 = 48.", "Context rail (300) joins: three columns. Padding 48."],
   ["MX", "1360", "token", "Content stops growing at --width-content-max; extra width becomes margin.", "Panel stops growing at 1360."],
   ["2xl", "1536", "0", "Retired.", "Retired."],
 ] as const;
@@ -24,7 +26,11 @@ const riverRows = [
   ["390", "1", "—", "358", "—", "16"],
   ["768", "2", "—", "404", "300", "24"],
   ["1024", "2", "—", "660", "300", "24"],
-  ["1279", "2", "—", "915", "300", "24"],
+  ["1139", "2", "—", "775", "300", "24"],
+  ["1140", "3", "240", "520", "300", "24"],
+  ["1199", "3", "240", "579", "300", "24"],
+  ["1200", "3", "300", "520", "300", "24"],
+  ["1279", "3", "300", "599", "300", "24"],
   ["1280", "3", "300", "552", "300", "48"],
   ["1440+", "3", "300", "632", "300", "48"],
 ] as const;
@@ -46,15 +52,17 @@ const blockRows = [
 
 const contractRows = [
   ["--layout-gap", "16", "The gutter between rail-layout columns: river, reader, block sections and block grids. The 4 / 8 / 12 Grid keeps its own 16 · 20 · 24 gutter."],
-  ["--layout-rail", "300", "The only rail width, left and right, including the reader's context and ad rails."],
+  ["--layout-rail", "300", "The standard rail width, left and right, including the reader's context and ad rails."],
+  ["--layout-rail-compact", "240", "The left rail between 1140 and 1199 only."],
   ["--width-content-max", "1360", "Container cap for pages and the reader panel; extra width becomes margin."],
   ["padding", "16 · 24 · 48", "Container padding at base · md · xl, for pages and the reader."],
   ["right rail", "md", "Joins at 768."],
-  ["left rail", "xl", "Joins at 1280. A left rail that holds controls with no fallback elsewhere (brand and topic filters, the video queue, block sections) may join at lg."],
+  ["left rail", "rail · rail-full", "Joins at 1140 at 240 and widens to 300 at 1200. A left rail that holds controls with no fallback elsewhere (brand and topic filters, the video queue, block sections) may join at lg."],
 ] as const;
 
 const changes = [
-  ["Left rail at xl.", "The river keeps two columns from 768 to 1279 and widens 404 → 915; three columns start at 1280 with a 552 river. It no longer drops to 398 at 1024. Applies to the For You river, local news, TV, events discovery, games and the loading skeleton."],
+  ["Rev C · left rail at 1140.", "A 1280 laptop at 150% scaling has about 1265 of page width, so the left rail now joins at 1140 at 240 wide and widens to 300 at 1200. The river is 520 at both joins and widens to 599 just below 1280. Applies to the For You river, local news, TV, events discovery, games and the loading skeleton."],
+  ["Rev B · left rail moved off lg.", "The river keeps two columns from 768 and never drops to 398 at 1024 (Rev A)."],
   ["One gutter.", "--layout-gap (16) replaces 16, 18 and 20. Block grids now break at 536, 812 and 1088."],
   ["One rail width.", "--layout-rail (300) replaces the 200, 220, 240, 260 and 280 rails, including the reader's context rail."],
   ["One container.", "The reader now pads 16 · 24 · 48 like every page, so at 1440 it lines up with the river: 300 · 632 · 300."],
@@ -113,7 +121,7 @@ export default function LayoutSpecsPage() {
           <p className="text-xs font-bold uppercase tracking-[.16em] text-muted-foreground">HDS foundations · Layout</p>
           <h1 className="headline mt-4 text-balance text-4xl leading-[1.05] sm:text-6xl">Breakpoints and grid</h1>
           <p className="mt-5 max-w-3xl text-lg leading-8 text-muted-foreground">
-            Four min-width breakpoints (640, 768, 1024, 1280) and a 1360 content maximum. Pages go from one column to two at 768 and three at 1280; the reader adds its rails at 1024 and 1280; block grids follow their own width. Rail layouts share one gutter (16) and one rail width (300), and every page uses one container padding (16 · 24 · 48). Every value here was measured in the running app.
+            Four min-width breakpoints (640, 768, 1024, 1280), two rail-layout breakpoints (1140, 1200) and a 1360 content maximum. Pages go from one column to two at 768 and three at 1140, where the left rail joins at 240 before widening to 300 at 1200; the reader adds its rails at 1024 and 1280; block grids follow their own width. Rail layouts share one gutter (16) and a 300 rail width, and every page uses one container padding (16 · 24 · 48). Every value here was measured in the running app.
           </p>
           <nav aria-label="On this page" className="mt-7 flex flex-wrap gap-2">
             {[["Breakpoints", "#breakpoints"], ["Contract", "#contract"], ["Film", "#film"], ["Drawing", "#drawing"], ["Columns", "#columns"], ["Changes", "#changes"]].map(([label, href]) => (
@@ -138,7 +146,7 @@ export default function LayoutSpecsPage() {
 
         <section aria-labelledby="film" className={sectionClass}>
           <SectionHeading id="film" eyebrow="03 · Motion film" title="Watch the layout reflow.">
-            A window grows from 320 to 1920 and stops at every breakpoint. The columns are drawn from the measured formulas, and the graph traces the main column&rsquo;s width. The dashed line is the previous layout (left rail at 1024). Then the reader, the block grid and the full sheet.
+            A window grows from 320 to 1920 and stops at every breakpoint. The columns are drawn from the measured formulas, and the graph traces the main column&rsquo;s width. The dashed line is the previous layout (Rev B, left rail at 1280). Then the reader, the block grid and the full sheet.
           </SectionHeading>
           <figure className="min-w-0">
             <video
@@ -148,7 +156,7 @@ export default function LayoutSpecsPage() {
               muted
               playsInline
               preload="metadata"
-              aria-label="Motion film of the layout: a viewport frame grows from 320 to 1920 pixels and pauses at each breakpoint while the homepage river goes from one to two to three columns and a graph traces the river width; then the story reader adds its ad and context rails; then a block grid goes from one to four columns by container width; then the full drawing sheet resolves and the camera tours its views."
+              aria-label="Motion film of the layout: a viewport frame grows from 320 to 1920 pixels and pauses at each breakpoint while the homepage river goes from one to two to three columns, the left rail joining at 240 at 1140 and widening to 300 at 1200, and a graph traces the river width; then the story reader adds its ad and context rails; then a block grid goes from one to four columns by container width; then the full drawing sheet resolves and the camera tours its views."
               className="block aspect-video w-full rounded-card bg-white shadow-[var(--hp-shadow-card)]"
             />
             <figcaption className="mt-3 text-sm text-muted-foreground">Motion film · 66 s · river sweep 0–24 s · reader 24–36 s · block grid 36–46 s · drawing tour 46–66 s.</figcaption>
@@ -166,12 +174,12 @@ export default function LayoutSpecsPage() {
                 src="/specs/layout-drawing.svg"
                 width={1700}
                 height={1060}
-                alt="Dimensional drawing of the layout, revision B: breakpoint map from 0 to 1920 with BP1 640, BP2 768, BP3 1024, BP4 1280 and MX 1360; river plans at 390 (one column), 768 (404 river and 300 right rail), 1024 (660 river and 300 right rail) and 1440 (300, 632, 300 inside a 1360 container); reader plans at 390, 1024 (612 article, 300 ad rail) and 1440 (300, 632, 300); a graph of river width against viewport comparing revisions A and B; block grid widths 536, 812 and 1088; the page container at 1920 with 280 margins; and variable tables."
+                alt="Dimensional drawing of the layout, revision C: breakpoint map from 0 to 1920 with BP1 640, BP2 768, BP3 1024, the rail breakpoints at 1140 (240 left rail) and 1200 (300 left rail), BP4 1280 and MX 1360; river plans at 390 (one column), 768 (404 river and 300 right rail), 1024 (660 river and 300 right rail) and 1440 (300, 632, 300 inside a 1360 container); reader plans at 390, 1024 (612 article, 300 ad rail) and 1440 (300, 632, 300); a graph of river width against viewport comparing revisions B and C; block grid widths 536, 812 and 1088; the page container at 1920 with 280 margins; and variable tables."
                 className="block h-auto w-full min-w-[960px]"
               />
             </div>
             <figcaption className="mt-3 flex flex-wrap items-center justify-between gap-3 text-sm text-muted-foreground">
-              <span>Rev B · 2026-11-07 · CSS px · scale noted per view</span>
+              <span>Rev C · 2026-11-11 · CSS px · scale noted per view</span>
               <ButtonStyleLink href="/specs/layout-drawing.html">Open the full sheet with notes</ButtonStyleLink>
             </figcaption>
           </figure>
@@ -190,7 +198,7 @@ export default function LayoutSpecsPage() {
         </section>
 
         <section aria-labelledby="changes" className={sectionClass}>
-          <SectionHeading id="changes" eyebrow="06 · Changes in Rev B" title="What changed." />
+          <SectionHeading id="changes" eyebrow="06 · Changes in Rev C" title="What changed." />
           <ol className="grid gap-3 md:grid-cols-2">
             {changes.map(([titleText, body], index) => (
               <li key={titleText} className="flex gap-4 rounded-card bg-card p-5 leading-6 shadow-[var(--hp-shadow-card)]">

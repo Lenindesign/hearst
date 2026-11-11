@@ -197,8 +197,8 @@ export function NewspaperFeedsSection({
 
   return (
     <div className="space-y-6" data-hearst-plus-newspaper-river aria-labelledby="newspaper-feeds-title">
-      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-x-[var(--layout-gap)] gap-y-6 md:grid-cols-[minmax(0,1fr)_var(--layout-rail)] xl:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]">
-        <aside className="hidden min-w-0 space-y-5 xl:sticky xl:top-[86px] xl:block xl:max-h-[calc(100dvh-110px)] xl:self-start xl:overflow-y-auto xl:pr-1">
+      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-x-[var(--layout-gap)] gap-y-6 md:grid-cols-[minmax(0,1fr)_var(--layout-rail)] rail:grid-cols-[var(--layout-rail-compact)_minmax(0,1fr)_var(--layout-rail)] rail-full:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]">
+        <aside className="hidden min-w-0 space-y-5 rail:sticky rail:top-[86px] rail:block rail:max-h-[calc(100dvh-110px)] rail:self-start rail:overflow-y-auto rail:pr-1">
           <section className="rounded-card border border-border bg-[var(--hp-surface)] p-3 shadow-[var(--hp-shadow-card)]">
             <LocalNewsSourceToggle activeSource="newspapers" />
           </section>

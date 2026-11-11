@@ -11,7 +11,7 @@
  *
  * Two layout contracts share PageContainer:
  * - `RAIL_LAYOUT`: feed and river pages and the story reader (one column →
- *   main + right rail at md → left rail + main + right rail at xl, one gutter,
+ *   main + right rail at md → left rail + main + right rail at 1140, one gutter,
  *   one rail width).
  * - The 4 / 8 / 12 `Grid` and `Col`: editorial compositions such as article,
  *   events and newsstand pages, and columns inside a region.
@@ -78,14 +78,17 @@ export const GRID_COLUMNS: Record<"mobile" | "tablet" | "desktop", number> = {
 export const RAIL_LAYOUT = {
   gap: "var(--layout-gap)",
   rail: "var(--layout-rail)",
+  railCompact: "var(--layout-rail-compact)",
   contentMax: "var(--width-content-max)",
   padding: { base: 16, md: 24, xl: 48 },
   rightRailAt: "md",
-  leftRailAt: "xl",
+  leftRailAt: "rail (240px at 1140px, 300px at 1200px)",
   classes: {
     twoColumn: "md:grid-cols-[minmax(0,1fr)_var(--layout-rail)]",
-    threeColumn: "xl:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]",
+    threeColumn: "rail:grid-cols-[var(--layout-rail-compact)_minmax(0,1fr)_var(--layout-rail)] rail-full:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]",
     gutter: "gap-x-[var(--layout-gap)]",
+    leftRail: "hidden rail:block",
+    rightRail: "hidden md:block",
   },
 } as const;
 

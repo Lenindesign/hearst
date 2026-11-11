@@ -1095,6 +1095,8 @@
      every rail layout. Pages and the reader pad 16 · 24 · 48 (base · md · xl). */
   --layout-gap: 1rem;
   --layout-rail: 300px;
+  /* Left rail between the rail (1140) and rail-full (1200) breakpoints. */
+  --layout-rail-compact: 240px;
   /* Type spacing between roles (UI-TYPE-001): S1 meta→headline, S2 headline→deck, S3 eyebrow→H1, S4 H1→deck,
      S5 deck→byline, S6 byline→body, S7 paragraph gap, S8 above subhead, S9 subhead→body. */
   --type-s1: 0.5rem; --type-s2: 0.5rem; --type-s3: 0.75rem; --type-s4: 1rem; --type-s5: 1rem;
@@ -1131,6 +1133,9 @@
   --breakpoint-md: 768px;
   --breakpoint-lg: 1024px;
   --breakpoint-xl: 1280px;
+  /* Rail layouts add a 240px left rail at 1140 and widen it to 300px at 1200 (river 520px at both). */
+  --breakpoint-rail: 1140px;
+  --breakpoint-rail-full: 1200px;
   /* 2xl is retired: content is capped at 1360, so nothing changes above it. */
   --breakpoint-2xl: initial;
 }

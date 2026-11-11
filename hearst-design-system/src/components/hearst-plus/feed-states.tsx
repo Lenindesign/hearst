@@ -60,9 +60,9 @@ export function LifestyleRiverLoadingState({ pageHeading }: { pageHeading: strin
       aria-label="Loading your personalized feed"
     >
       <span className="sr-only">Loading your personalized feed.</span>
-      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-[var(--layout-gap)] md:grid-cols-[minmax(0,1fr)_var(--layout-rail)] xl:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]">
+      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-[var(--layout-gap)] md:grid-cols-[minmax(0,1fr)_var(--layout-rail)] rail:grid-cols-[var(--layout-rail-compact)_minmax(0,1fr)_var(--layout-rail)] rail-full:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]">
         <aside
-          className="hidden min-h-[360px] rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 xl:block"
+          className="hidden min-h-[360px] rounded-[8px] border border-border bg-[var(--hp-surface)] p-4 rail:block"
           aria-hidden="true"
         >
           <div className="type-k1 text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">

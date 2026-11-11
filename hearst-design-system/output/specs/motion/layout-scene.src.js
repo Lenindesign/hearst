@@ -1,4 +1,4 @@
-// Breakpoints and grid (UI-LAYOUT-001 · Rev B) → motion film.
+// Breakpoints and grid (UI-LAYOUT-001 · Rev C) → motion film.
 // Pure function of time: render(t) sets everything from t alone.
 // Part 1 river sweep 0–24 s · part 2 reader 24–36 s · part 3 block grid 36–46 s · part 4 sheet tour 46–60 s.
 // Column formulas are the measured ones from layout-drawing.html.
@@ -13,7 +13,8 @@ const pad = v => v >= 1280 ? 48 : v >= 768 ? 24 : 16;
 function river(v) {
   const cw = Math.min(v, 1360), m = (v - cw) / 2, p = pad(v), inner = cw - 2 * p;
   if (v < 768) return { m, p, cols: [['RV', 'RIVER · FILL', inner, 'rv']] };
-  if (v < 1280) return { m, p, cols: [['RV', 'RIVER · FLEX', inner - 316, 'rv'], ['G1', '', 16, 'gap'], ['RR', 'R RAIL', 300, 'rail']] };
+  if (v < 1140) return { m, p, cols: [['RV', 'RIVER · FLEX', inner - 316, 'rv'], ['G1', '', 16, 'gap'], ['RR', 'R RAIL', 300, 'rail']] };
+  if (v < 1200) return { m, p, cols: [['LL', 'L RAIL', 240, 'rail'], ['G1', '', 16, 'gap'], ['RV', 'RIVER · FLEX', inner - 572, 'rv'], ['G1', '', 16, 'gap'], ['RR', 'R RAIL', 300, 'rail']] };
   return { m, p, cols: [['LL', 'L RAIL', 300, 'rail'], ['G1', '', 16, 'gap'], ['RV', 'RIVER · FLEX', inner - 632, 'rv'], ['G1', '', 16, 'gap'], ['RR', 'R RAIL', 300, 'rail']] };
 }
 function reader(v) {
@@ -32,19 +33,21 @@ const arOf = v => reader(v).cols.find(c => c[0] === 'AR')[2];
 const cardOf = c => blocks(c).cols[0][2];
 
 /* ---------- timelines: [t, value] keys, eased between, held when equal ---------- */
-const RIVER_K = [[0, 320], [1.2, 320], [2.2, 390], [3.4, 390], [4.4, 640], [5.4, 640], [6.4, 768], [8.4, 768], [9.8, 1024], [11.2, 1024], [12.6, 1279], [13.8, 1279], [14.0, 1280], [16.0, 1280], [17.2, 1360], [18.6, 1360], [20.2, 1600], [21.0, 1600], [22.4, 1920], [24.0, 1920]];
+const RIVER_K = [[0, 320], [1.2, 320], [2.2, 390], [3.0, 390], [3.8, 640], [4.6, 640], [5.4, 768], [7.0, 768], [8.2, 1024], [9.4, 1024], [10.4, 1139], [11.4, 1139], [11.6, 1140], [13.0, 1140], [13.8, 1199], [14.4, 1199], [14.6, 1200], [15.8, 1200], [16.6, 1279], [17.2, 1279], [17.4, 1280], [18.6, 1280], [19.4, 1360], [20.4, 1360], [21.6, 1600], [22.0, 1600], [23.0, 1920], [24.0, 1920]];
 const READER_K = [[24.0, 390], [25.4, 390], [26.6, 768], [27.4, 768], [28.4, 1023], [28.6, 1024], [30.2, 1024], [31.2, 1279], [31.4, 1280], [33.0, 1280], [34.0, 1440], [36.0, 1440]];
 const BLOCK_K = [[36.0, 300], [37.2, 300], [38.2, 535], [38.4, 536], [39.8, 536], [40.8, 811], [41.0, 812], [42.4, 812], [43.4, 1087], [43.6, 1088], [45.0, 1088], [45.6, 1200], [46.4, 1200]];
 function keyed(K, t) { if (t <= K[0][0]) return K[0][1]; for (let i = 0; i < K.length - 1; i++) { const [a, va] = K[i], [b, vb] = K[i + 1]; if (t <= b) return lerp(va, vb, eio(seg(t, a, b))); } return K[K.length - 1][1]; }
 const CAPS = {
   river: [[0, 'BASE · PHONE', 'One column. Rails are hidden; the river fills the width inside P1 = 16.'],
-    [4.0, 'BP1 · 640 · SM', 'No column change. sm only adjusts type and spacing.'],
-    [6.2, 'BP2 · 768 · MD', 'The right rail joins at 300. Page padding grows to P2 = 24.'],
-    [9.6, 'BP3 · 1024 · LG', 'No change for the river: two columns keep widening (660). Dashed: Rev A dropped to 398 here.'],
-    [12.4, 'JUST BELOW BP4', 'Two columns at their widest: the river reaches 915.'],
-    [13.9, 'BP4 · 1280 · XL', 'The left rail (300) joins and padding grows to 48. Three columns start at 552.'],
-    [17.0, 'MX · 1360', 'Content stops growing. The river holds at 632.'],
-    [20.0, 'WIDER THAN MX', 'No more breakpoints (2xl is retired): extra width becomes margin.']],
+    [3.6, 'BP1 · 640 · SM', 'No column change. sm only adjusts type and spacing.'],
+    [5.2, 'BP2 · 768 · MD', 'The right rail joins at 300. Page padding grows to P2 = 24.'],
+    [8.0, 'BP3 · 1024 · LG', 'No change for the river: two columns keep widening (660). Dashed: Rev B kept two columns to 1279.'],
+    [10.2, 'JUST BELOW BR1', 'Two columns at their widest: the river reaches 775.'],
+    [11.5, 'BR1 · 1140 · RAIL', 'The left rail joins at 240 (--layout-rail-compact). Three columns start at 520.'],
+    [14.5, 'BR2 · 1200 · RAIL-FULL', 'The left rail widens to 300. The river is 520 again.'],
+    [17.3, 'BP4 · 1280 · XL', 'Padding grows to 48; the columns do not change. The river is 552.'],
+    [19.2, 'MX · 1360', 'Content stops growing. The river holds at 632.'],
+    [21.4, 'WIDER THAN MX', 'No more breakpoints (2xl is retired): extra width becomes margin.']],
   reader: [[24.0, 'READER · BASE', 'One column. The article fills the panel.'],
     [26.4, 'READER · BP2', 'The panel insets 24 from the window and pads 24, like every page.'],
     [28.5, 'READER · BP3', 'The 300 ad rail joins beside the article (gap 16).'],
@@ -111,7 +114,7 @@ kit.scene('layout-breakpoints', {
     this.dot = mk('circle', { r: 6, fill: '#111' }, live);
     this.dotT = tx(0, 0, '', 'dt', {}, live);
     this.gTitle = tx(X0, GY - 12, '', 'dts', {}, live);
-    this.ghostT = tx(X0 + 1920 * S, GY - 12, 'dashed = Rev A (left rail at BP3)', 'dts', { 'text-anchor': 'end' }, live);
+    this.ghostT = tx(X0 + 1920 * S, GY - 12, 'dashed = Rev B (left rail at BP4)', 'dts', { 'text-anchor': 'end' }, live);
 
     /* sheet layer */
     const camWrap = this.sheetWrap = mk('g', {});
@@ -119,7 +122,7 @@ kit.scene('layout-breakpoints', {
     const holder = mk('g', { transform: 'translate(110,10)' }, cam);
     const doc = new DOMParser().parseFromString(SHEET, 'image/svg+xml');
     const sh = document.importNode(doc.documentElement, true); sh.setAttribute('x', 0); sh.setAttribute('y', 0); holder.appendChild(sh);
-    const clip = mk('clipPath', { id: 'wipe' }, defs); this.wipe = mk('rect', { x: 110, y: 0, width: 0, height: 1080 }, clip);
+    const clip = mk('clipPath', { id: 'wipe' }, defs); this.wipe = mk('rect', { x: 0, y: 0, width: 0, height: 1080 }, clip);
     holder.setAttribute('clip-path', 'url(#wipe)');
     this.mode = null;
   },
@@ -130,9 +133,10 @@ kit.scene('layout-breakpoints', {
     this.ticks.innerHTML = ''; this.rows.innerHTML = ''; this.gGrid.innerHTML = '';
     const RY = this.RY, mk = this.mk, tx = this.tx;
     const marks = mode === 'blocks' ? [[0, '0', ''], [260, '260', 'CM'], [536, '536', 'Q2'], [812, '812', 'Q3'], [1088, '1088', 'Q4'], [1200, '1200', '']]
+      : mode === 'river' ? [[0, '0', 'BASE'], [640, '640', 'BP1'], [768, '768', 'BP2'], [1024, '1024', 'BP3'], [1140, '1140', 'BR1'], [1200, '1200', 'BR2'], [1280, '1280', 'BP4'], [1360, '1360', 'MX'], [1920, '1920', '']]
       : [[0, '0', 'BASE'], [640, '640', 'BP1'], [768, '768', 'BP2'], [1024, '1024', 'BP3'], [1280, '1280', 'BP4'], [1360, '1360', 'MX'], [1920, '1920', '']];
     marks.forEach(([v, n, c]) => { const x = X0 + v * S2; mk('line', { x1: x, y1: RY - 6, x2: x, y2: RY + 70, class: v ? 'ph' : 'tick' }, this.ticks); tx(x, RY - 30, n, 'dt', { 'text-anchor': 'middle' }, this.ticks); if (c) tx(x, RY - 12, c, 'dts', { 'text-anchor': 'middle' }, this.ticks); });
-    const cells = mode === 'river' ? [[0, 768, '1 COL'], [768, 1280, '2 COL · +RR'], [1280, 1920, '3 COL · +LL']]
+    const cells = mode === 'river' ? [[0, 768, '1 COL'], [768, 1140, '2 COL · +RR'], [1140, 1200, '240'], [1200, 1920, '3 COL · LL 300']]
       : mode === 'reader' ? [[0, 1024, '1 COL'], [1024, 1280, '2 · +AD'], [1280, 1920, '3 · +RC']]
         : [[0, 536, '1 COL'], [536, 812, '2'], [812, 1088, '3'], [1088, 1200, '4']];
     this.cellEls = cells.map(([a, b, l]) => { const r = mk('rect', { x: X0 + a * S2, y: RY + 14, width: (b - a) * S2, height: 22, class: 'cell' }, this.rows); tx(X0 + a * S2 + 8, RY + 29, l, 'sl', { 'text-anchor': 'start' }, this.rows); return { r, a, b }; });
@@ -140,8 +144,8 @@ kit.scene('layout-breakpoints', {
     this.gf = f; this.gmax = gmax; this.vmin = mode === 'blocks' ? 300 : mode === 'reader' ? 390 : 320;
     [0, mode === 'blocks' ? 260 : 400, mode === 'blocks' ? 520 : 800].forEach(w => { const y = GY + GH - w / gmax * GH; mk('line', { x1: X0, y1: y, x2: X0 + vmax * S2, y2: y, class: w ? 'ph' : 'thin' }, this.gGrid); tx(X0 - 10, y + 4, String(w), 'dts', { 'text-anchor': 'end' }, this.gGrid); });
     this.gTitle.textContent = mode === 'river' ? 'RV · river width vs window width' : mode === 'reader' ? 'AR · article width vs window width' : 'card width vs block width';
-    // ghost of the Rev A river (left rail at BP3)
-    if (mode === 'river') { const g = v => { if (v < 768) return v - 32; if (v < 1024) return v - 364; const inner = v >= 1280 ? Math.min(v - 96, 1264) : v - 48; return inner - Math.max(240, Math.min(300, 0.24 * v)) - 332; }; this.ghost.setAttribute('d', this.path(g, 320, 1920, gmax)); } else this.ghost.setAttribute('d', '');
+    // ghost of the Rev B river (left rail at BP4)
+    if (mode === 'river') { const g = v => { if (v < 768) return v - 32; if (v < 1280) return v - 364; return Math.min(v - 96, 1264) - 632; }; this.ghost.setAttribute('d', this.path(g, 320, 1920, gmax)); } else this.ghost.setAttribute('d', '');
   },
 
   path(f, a, b, gmax) { let d = ''; const pt = v => (X0 + v * S).toFixed(1) + ',' + (GY + GH - f(v) / gmax * GH).toFixed(1); for (let v = a; v < b; v += 4) d += (d ? ' L' : 'M') + pt(v); return d + (d ? ' L' : 'M') + pt(b); },
@@ -196,7 +200,7 @@ kit.scene('layout-breakpoints', {
       const w = this.gf(vi); this.trail.setAttribute('d', this.path(this.gf, this.vmin, Math.max(this.vmin, vi), this.gmax));
       const gy = GY + GH - w / this.gmax * GH; this.dot.setAttribute('cx', px); this.dot.setAttribute('cy', gy);
       this.dotT.setAttribute('x', px + 12); this.dotT.setAttribute('y', gy - 10); this.dotT.textContent = Math.round(w);
-      this.ghost.style.opacity = this.ghostT.style.opacity = mode === 'river' ? eo(seg(t, 9.6, 10.4)) : 0;
+      this.ghost.style.opacity = this.ghostT.style.opacity = mode === 'river' ? eo(seg(t, 8.0, 8.8)) : 0;
     }
     // sheet
     this.sheetWrap.style.display = t < 45.6 ? 'none' : '';

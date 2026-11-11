@@ -251,7 +251,8 @@ export const ProductionLayoutAnatomy: Story = {
             <>
               Hearst+ pages and the story reader are rail layouts. <span className="font-medium text-foreground">PageContainer</span>{" "}
               owns the 1360 cap and the 16 · 24 · 48 padding; inside it the river or article is fluid and the rails are{" "}
-              <span className="font-mono">--layout-rail</span> (300) with <span className="font-mono">--layout-gap</span> (16) between them.
+              <span className="font-mono">--layout-rail</span> (300) with <span className="font-mono">--layout-gap</span> (16) between them. The left rail starts at{" "}
+              <span className="font-mono">--layout-rail-compact</span> (240) from 1140 and widens to 300 at 1200.
               Resize with the viewport toolbar to watch the rails join.
             </>
           }
@@ -260,16 +261,19 @@ export const ProductionLayoutAnatomy: Story = {
             <div className="space-y-2">
               <p><span className="font-semibold">Base:</span> one fluid track.</p>
               <p><span className="font-semibold">md (768):</span> river + right rail.</p>
-              <p><span className="font-semibold">xl (1280):</span> left rail + river + right rail.</p>
+              <p><span className="font-semibold">rail (1140):</span> left rail (240) + river + right rail.</p>
+              <p><span className="font-semibold">rail-full (1200):</span> left rail widens to 300.</p>
+              <p><span className="font-semibold">xl (1280):</span> padding grows to 48; no column change.</p>
               <p className="text-muted-foreground">A left rail holding controls with no fallback (filters, video queue, block sections) may join at lg.</p>
             </div>
           }
           rightTitle="Measured river width"
           rightBody={
             <div className="space-y-2">
-              <p>358 at 390 · 404 at 768 · 660 at 1024 · 915 at 1279</p>
+              <p>358 at 390 · 404 at 768 · 660 at 1024 · 775 at 1139</p>
+              <p>520 at 1140 · 579 at 1199 · 520 at 1200 · 599 at 1279</p>
               <p>552 at 1280 · 632 from 1360 (content cap).</p>
-              <p className="text-muted-foreground">The river never drops below 404 once the right rail is in.</p>
+              <p className="text-muted-foreground">The river never drops below 404 once the right rail is in, or below 520 once the left rail is in.</p>
             </div>
           }
         />
@@ -278,9 +282,9 @@ export const ProductionLayoutAnatomy: Story = {
           data-production-grid-contract="hearst-plus-river"
           className={`grid min-w-0 grid-cols-[minmax(0,1fr)] ${RAIL_LAYOUT.classes.gutter} gap-y-6 ${RAIL_LAYOUT.classes.twoColumn} ${RAIL_LAYOUT.classes.threeColumn}`}
         >
-          <div className="hidden xl:block"><Block>Left rail<br />--layout-rail · xl</Block></div>
+          <div className={RAIL_LAYOUT.classes.leftRail}><Block>Left rail<br />240 at rail · 300 at rail-full</Block></div>
           <Block tone="brand">Story river<br />minmax(0, 1fr)</Block>
-          <div className="hidden md:block"><Block>Right rail<br />--layout-rail · md</Block></div>
+          <div className={RAIL_LAYOUT.classes.rightRail}><Block>Right rail<br />--layout-rail · md</Block></div>
         </div>
 
         <div className="mt-6 border-t border-border pt-4">
@@ -289,7 +293,7 @@ export const ProductionLayoutAnatomy: Story = {
             <code>{`grid min-w-0 grid-cols-[minmax(0,1fr)] ${RAIL_LAYOUT.classes.gutter} gap-y-6
 ${RAIL_LAYOUT.classes.twoColumn}
 ${RAIL_LAYOUT.classes.threeColumn}
-left rail: hidden xl:block · right rail: hidden md:block`}</code>
+left rail: ${RAIL_LAYOUT.classes.leftRail} · right rail: ${RAIL_LAYOUT.classes.rightRail}`}</code>
           </pre>
           <p className="mt-3 text-sm text-muted-foreground">
             The reader follows the same contract: ad rail at <span className="font-mono">lg</span>, context rail at{" "}
@@ -308,7 +312,8 @@ left rail: hidden xl:block · right rail: hidden md:block`}</code>
       "grid-cols-[minmax(0,1fr)]",
       "gap-x-[var(--layout-gap)]",
       "md:grid-cols-[minmax(0,1fr)_var(--layout-rail)]",
-      "xl:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]",
+      "rail:grid-cols-[var(--layout-rail-compact)_minmax(0,1fr)_var(--layout-rail)]",
+      "rail-full:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]",
     );
   },
   parameters: {
@@ -560,7 +565,8 @@ export const ResponsiveBehavior: Story = {
             changes column count at <code>md</code> and <code>lg</code>; its
             padding grows from 24 to 48 at <code>xl</code>. Rail layouts add
             their right rail at <code>md</code> and left rail at{" "}
-            <code>xl</code>. <code>2xl</code> is retired.
+            <code>rail</code> (1140, 240 wide), widening it at{" "}
+            <code>rail-full</code> (1200, 300 wide). <code>2xl</code> is retired.
           </p>
         </PageContainer>
       </div>
@@ -651,7 +657,9 @@ const specBreakpoints = [
   ["sm", "640", "No column change (type and spacing only)", "No change"],
   ["md", "768", "Right rail joins · padding 24", "Panel insets 24 · one column"],
   ["lg", "1024", "No river change · filter rails may join", "Ad rail joins"],
-  ["xl", "1280", "Left rail joins · padding 48", "Context rail joins · padding 48"],
+  ["rail", "1140", "Left rail joins at 240", "No change"],
+  ["rail-full", "1200", "Left rail widens to 300", "No change"],
+  ["xl", "1280", "Padding 48", "Context rail joins · padding 48"],
   ["MX", "1360", "Content stops growing", "Panel stops growing"],
   ["2xl", "1536", "Retired", "Retired"],
 ] as const;
@@ -660,7 +668,11 @@ const specRiver = [
   ["390", "—", "358", "—"],
   ["768", "—", "404", "300"],
   ["1024", "—", "660", "300"],
-  ["1279", "—", "915", "300"],
+  ["1139", "—", "775", "300"],
+  ["1140", "240", "520", "300"],
+  ["1199", "240", "579", "300"],
+  ["1200", "300", "520", "300"],
+  ["1279", "300", "599", "300"],
   ["1280", "300", "552", "300"],
   ["1440+", "300", "632", "300"],
 ] as const;
@@ -706,16 +718,16 @@ export const BreakpointsAndGridSpecs: Story = {
     <div className="bg-background py-12">
       <PageContainer>
         <StoryCheatSheet
-          kicker="UI-LAYOUT-001 · Rev B"
+          kicker="UI-LAYOUT-001 · Rev C"
           title="Breakpoints and grid, measured"
           intro={
             <>
-              Measured with Playwright in the running app at 320–1920. Breakpoints are min-width: 640 · 768 · 1024 · 1280, content capped at 1360.
-              Tokens: <span className="font-mono">--layout-gap</span> 16, <span className="font-mono">--layout-rail</span> 300, <span className="font-mono">--width-content-max</span> 1360.
+              Measured with Playwright in the running app at 320–1920. Breakpoints are min-width: 640 · 768 · 1024 · 1280, plus the rail-layout breakpoints 1140 and 1200; content capped at 1360.
+              Tokens: <span className="font-mono">--layout-gap</span> 16, <span className="font-mono">--layout-rail</span> 300, <span className="font-mono">--layout-rail-compact</span> 240, <span className="font-mono">--width-content-max</span> 1360.
             </>
           }
           leftTitle="Pages"
-          leftBody={<p>1 column → river + right rail at md → three columns at xl. Padding 16 · 24 · 48.</p>}
+          leftBody={<p>1 column → river + right rail at md → three columns at 1140 (left rail 240) → left rail 300 at 1200. Padding 16 · 24 · 48.</p>}
           rightTitle="Reader and blocks"
           rightBody={<p>Reader: ad rail at lg, context rail at xl. Block grids follow their container: 2 · 3 · 4 columns at 536 · 812 · 1088.</p>}
         />

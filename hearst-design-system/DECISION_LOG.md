@@ -2,6 +2,13 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-11-11: Left rail joins at 1140px
+
+- **Context:** A 1280px laptop at 150% Windows scaling reports about 1265px of page width, so index pages lost their left rail on common laptops.
+- **Decision:** Rail layouts add the left rail at a `rail` breakpoint of 1140px, 240px wide (`--layout-rail-compact`), and widen it to the standard 300px at `rail-full` (1200px). The river is 520px at both joins. Blocks that switch to two columns at 536px of container width stay single-column just after each join.
+- **Scope:** Destination, section, and publication indexes, plus the Local News newspapers, TV, Events, Games, and feed loading states. The reader's context rail stays at xl.
+- **Canonical rule:** `STYLE.md` responsive rules; `APP_RULES.md` For You rail breakpoints.
+
 ## 2026-11-11: Carousel text card takes the banner color; vault audit
 
 - **Context:** The featured carousel's text card was black on every page, so it never matched the section or brand around it. An audit of the vault's canonical files against the shipped app also found stale values (utility-bar navy, Hearst+ blue, E&W and publication fonts, Road & Track color), retired modules still described as live (Today's Edit, carousel indicators and Follow row, Global Story Inventory), and wrong layout breakpoints.

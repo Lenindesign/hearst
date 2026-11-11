@@ -6955,8 +6955,8 @@ function LifestyleRiverHomePage({
         isBlocksHomepage
           ? "lg:grid-cols-1"
           : useResponsiveDestinationRails
-            // Left rail joins at xl so the river never narrows below its two-column width.
-            ? "md:grid-cols-[minmax(0,1fr)_var(--layout-rail)] xl:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]"
+            // Left rail joins at the rail breakpoint (240px at 1140, 300px at 1200) so the river never narrows below its two-column width.
+            ? "md:grid-cols-[minmax(0,1fr)_var(--layout-rail)] rail:grid-cols-[var(--layout-rail-compact)_minmax(0,1fr)_var(--layout-rail)] rail-full:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]"
             : "lg:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]",
       )}>
         {fullWidthFeaturedHero && leadStory ? (
@@ -7000,7 +7000,7 @@ function LifestyleRiverHomePage({
           </div>
         ) : null}
 
-        {!isBlocksHomepage ? <div className={useResponsiveDestinationRails ? "hidden xl:block" : undefined}>
+        {!isBlocksHomepage ? <div className={useResponsiveDestinationRails ? "hidden rail:block" : undefined}>
         <LifestyleDiscoverySidebar
           profile={profile}
           topStories={moduleAllocation.dailyHabitStories}
@@ -7752,7 +7752,7 @@ function LifestyleRiverHomePage({
                     : moduleAllocation.trendingStories.slice(0, 3)}
                   onOpenStory={(story) => openStory(story.id)}
                   title={initialBrandName ? `Trending ${initialBrandName}` : contextualModuleHeading ? `Trending in ${contextualModuleHeading}` : destination === "all" ? "Trending Across Hearst" : "Trending Across Brands"}
-                  className="xl:hidden"
+                  className="rail:hidden"
                 />
               ) : null}
               <ContentReaderAdvertisement ad={rightRailAd} currentTopic={rightRailAdTopic} layout="rail" accent={featuredCardColors} />

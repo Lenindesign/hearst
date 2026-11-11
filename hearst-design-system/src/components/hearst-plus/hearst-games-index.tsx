@@ -157,8 +157,8 @@ export function HearstGamesIndex() {
 
   return (
     <>
-      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-[var(--layout-gap)] lg:grid-cols-[minmax(0,1fr)_var(--layout-rail)] xl:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]">
-        <aside className="hidden min-w-0 space-y-5 xl:block">
+      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-[var(--layout-gap)] lg:grid-cols-[minmax(0,1fr)_var(--layout-rail)] rail:grid-cols-[var(--layout-rail-compact)_minmax(0,1fr)_var(--layout-rail)] rail-full:grid-cols-[var(--layout-rail)_minmax(0,1fr)_var(--layout-rail)]">
+        <aside className="hidden min-w-0 space-y-5 rail:block">
           <section className="rounded-card border border-border bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)]">
             <h2 className="type-k1 text-[var(--hp-sidebar-heading,var(--color-primary,var(--primary)))]">
               Your daily habit
