@@ -185,10 +185,9 @@ export const PublicationScopedArticles: Story = {
     publicationStories.forEach((story) => {
       expect(story.brand).toBe("Cosmopolitan");
     });
-    await expect(canvas.getAllByText("Cosmopolitan", { exact: true })).toHaveLength(
-      publicationStories.length,
-    );
-    await expect(brandIcons).toHaveLength(publicationStories.length);
+    // A single-brand rail doesn't repeat the brand on every row (rows show source only when brands mix).
+    await expect(canvas.queryAllByText("Cosmopolitan", { exact: true })).toHaveLength(0);
+    await expect(brandIcons).toHaveLength(0);
     await expect(canvas.queryByText(/Cosmopolitan ·/)).not.toBeInTheDocument();
   },
 };

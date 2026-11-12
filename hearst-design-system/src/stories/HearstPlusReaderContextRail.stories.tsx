@@ -156,9 +156,12 @@ export const ReaderIntentOnly: Story = {
         name: /^Open story:/,
       }),
     ).not.toBeInTheDocument();
+    // The card summary and the desktop empty state both carry the message.
     await expect(
-      within(rail).getByText("Save stories as you browse and they will appear here."),
-    ).toBeVisible();
+      within(rail)
+        .getAllByText("Save stories to build your reading list.")
+        .some((element) => element.checkVisibility()),
+    ).toBe(true);
     await expect(within(rail).getByText("Explore Communities")).toBeVisible();
   },
 };

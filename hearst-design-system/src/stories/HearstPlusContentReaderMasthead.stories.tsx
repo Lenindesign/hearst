@@ -195,7 +195,7 @@ export const PublicationScope: Story = {
       getHearstBrandRoute(expectedStory.brandSlug),
     );
     await expect(
-      canvas.getByText(`Reading ${expectedStory.brand}`),
+      canvas.getByText(/^Reading \d+ of \d+ stories$/),
     ).toBeVisible();
     await expect(
       canvas.getByRole("navigation", {

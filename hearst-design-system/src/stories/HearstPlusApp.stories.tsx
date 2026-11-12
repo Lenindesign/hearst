@@ -62,7 +62,7 @@ export const CarouselReaderFocusRestoration: Story = {
       name: "Today’s Picks",
     });
     const firstSelector = carousel.querySelector<HTMLButtonElement>(
-      'button[aria-label^="Open story:"][aria-hidden="false"]'
+      'article[aria-hidden="false"] > button[aria-label^="Open story:"]'
     );
 
     await expect(firstSelector).not.toBeNull();
@@ -70,7 +70,7 @@ export const CarouselReaderFocusRestoration: Story = {
     await userEvent.keyboard("{Enter}");
 
     const opener = carousel.querySelector<HTMLButtonElement>(
-      'button[aria-label^="Open story:"][aria-hidden="false"]'
+      'article[aria-hidden="false"] > button[aria-label^="Open story:"]'
     );
     await expect(opener).not.toBeNull();
     const openerLabel = opener!.getAttribute("aria-label");
@@ -89,7 +89,7 @@ export const CarouselReaderFocusRestoration: Story = {
     await waitFor(() => {
       const matchingSelector = Array.from(
         carousel.querySelectorAll<HTMLButtonElement>(
-          'button[aria-label^="Open story:"][aria-hidden="false"]'
+          'article[aria-hidden="false"] > button[aria-label^="Open story:"]'
         )
       ).find((element) =>
         element.getAttribute("aria-label")?.endsWith(`: ${storyTitle}`)
@@ -112,7 +112,8 @@ export const RiverReaderReturnContext: Story = {
     const getRiverCards = () =>
       Array.from(
         canvasElement.querySelectorAll<HTMLElement>(
-          "#hearst-story-river article[data-story-id]"
+          // Carousel slides are also story articles inside the river; skip them.
+          '#hearst-story-river article[data-story-id]:not([data-story-module="featured-story"])'
         )
       );
     await waitFor(() => expect(getRiverCards().length).toBeGreaterThan(2));

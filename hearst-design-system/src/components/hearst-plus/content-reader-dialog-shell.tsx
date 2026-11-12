@@ -183,6 +183,8 @@ export function ContentReaderDialogShell({
             document.querySelectorAll<HTMLElement>("[aria-label]"),
           ).find((element) =>
             element.getAttribute("aria-label") === returnFocusLabel
+            // Cards label their wrapper and their opener the same way; only the opener takes focus.
+            && element.tabIndex >= 0
             && isVisibleFocusTarget(element)
           );
 

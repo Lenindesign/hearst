@@ -157,12 +157,12 @@ export const TodaysPicks: Story = {
     const canvas = within(canvasElement);
     const carousel = canvas.getByRole("article", { name: "Today’s Picks" });
     const slides = carousel.querySelectorAll(
-      'button[aria-label^="Open story:"]:not([data-carousel-clone="true"])',
+      'article[aria-label^="Open story:"]:not([data-carousel-clone="true"])',
     );
     await expect(slides).toHaveLength(5);
     await expect(
       carousel.querySelectorAll(
-        'button[aria-label^="Open story:"][aria-hidden="false"]',
+        'article[aria-label^="Open story:"][aria-hidden="false"]',
       ),
     ).toHaveLength(1);
     await expect(
@@ -200,7 +200,10 @@ export const Interactions: Story = {
     );
     await expect(secondSlide).toHaveAttribute("aria-hidden", "false");
     await expect(secondSlide).not.toHaveAttribute("inert");
-    await expect(secondSlide).toHaveAttribute("tabindex", "0");
+    // Keyboard focus lands on the slide's full-bleed "Open story" button.
+    await expect(
+      secondSlide?.querySelector('button[aria-label^="Open story:"]'),
+    ).toHaveAttribute("tabindex", "0");
     await expect(
       canvas.getByRole("status", { name: "Active story" }),
     ).toHaveTextContent(mixedStories[1].id);
@@ -307,6 +310,7 @@ export const WrapSwipe: Story = {
           cancelable: true,
           pointerId,
           pointerType: "touch",
+          isPrimary: true,
           button: 0,
           clientX: startX,
           clientY: y,
@@ -318,6 +322,7 @@ export const WrapSwipe: Story = {
           cancelable: true,
           pointerId,
           pointerType: "touch",
+          isPrimary: true,
           button: 0,
           clientX: endX,
           clientY: y,
@@ -329,6 +334,7 @@ export const WrapSwipe: Story = {
           cancelable: true,
           pointerId,
           pointerType: "touch",
+          isPrimary: true,
           button: 0,
           clientX: endX,
           clientY: y,
@@ -342,6 +348,7 @@ export const WrapSwipe: Story = {
         cancelable: true,
         pointerId: 42,
         pointerType: "touch",
+        isPrimary: true,
         button: 0,
         clientX: startX,
         clientY: y,
@@ -353,6 +360,7 @@ export const WrapSwipe: Story = {
         cancelable: true,
         pointerId: 42,
         pointerType: "touch",
+        isPrimary: true,
         button: 0,
         clientX: endX,
         clientY: y,
@@ -366,6 +374,7 @@ export const WrapSwipe: Story = {
         cancelable: true,
         pointerId: 42,
         pointerType: "touch",
+        isPrimary: true,
         button: 0,
         clientX: endX,
         clientY: y,

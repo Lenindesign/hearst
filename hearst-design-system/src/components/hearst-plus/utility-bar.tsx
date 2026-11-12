@@ -338,7 +338,7 @@ export function UtilityBar({
                 : darkMode
                   ? "text-[var(--component-navigation-utility-content-knockout)] opacity-85 hover:bg-white hover:text-black hover:opacity-100"
                   : "text-primary-foreground hover:bg-white hover:text-black",
-              allDestinationIsActive && !allDestinationIsOpen && openDestinationMenu !== null && "bg-transparent text-primary-foreground/70 hover:bg-transparent hover:text-primary-foreground/70"
+              allDestinationIsActive && !allDestinationIsOpen && openDestinationMenu !== null && cn("bg-transparent hover:bg-transparent", darkMode ? "text-[var(--component-navigation-utility-content-knockout)] hover:text-[var(--component-navigation-utility-content-knockout)]" : "text-primary-foreground hover:text-primary-foreground")
             )}
           >
             <span className={cn("uppercase", capAlignedLabelClassName(allDestinationSection.label))}>{allDestinationSection.label}</span>
@@ -387,7 +387,7 @@ export function UtilityBar({
                           : darkMode
                             ? "text-[var(--component-navigation-utility-content-knockout)] opacity-85 hover:bg-white hover:text-black hover:opacity-100"
                             : "text-primary-foreground hover:bg-white hover:text-black",
-                        isActive && !isOpen && openDestinationMenu !== null && "bg-transparent text-primary-foreground/70 hover:bg-transparent hover:text-primary-foreground/70"
+                        isActive && !isOpen && openDestinationMenu !== null && cn("bg-transparent hover:bg-transparent", darkMode ? "text-[var(--component-navigation-utility-content-knockout)] hover:text-[var(--component-navigation-utility-content-knockout)]" : "text-primary-foreground hover:text-primary-foreground")
                       )}
                     >
                       <span className={cn("uppercase", capAlignedLabelClassName(section.label))}>{section.label}</span>
@@ -413,7 +413,7 @@ export function UtilityBar({
                         : darkMode
                           ? "text-[var(--component-navigation-utility-content-knockout)] opacity-85 hover:bg-white hover:text-black hover:opacity-100"
                           : "text-primary-foreground hover:bg-white hover:text-black",
-                      isActive && !isOpen && openDestinationMenu !== null && "bg-transparent text-primary-foreground/70 hover:bg-transparent hover:text-primary-foreground/70"
+                      isActive && !isOpen && openDestinationMenu !== null && cn("bg-transparent hover:bg-transparent", darkMode ? "text-[var(--component-navigation-utility-content-knockout)] hover:text-[var(--component-navigation-utility-content-knockout)]" : "text-primary-foreground hover:text-primary-foreground")
                     )}
                   >
                     <span className={cn("uppercase", capAlignedLabelClassName(section.label))}>{section.label}</span>
@@ -775,7 +775,7 @@ export function UtilityBar({
                       size="sm"
                       role="menuitem"
                       onClick={() => setOpenDestinationMenu(null)}
-                      className="mb-1 min-h-8 w-full justify-start rounded-lg px-2 text-sm font-bold text-slate-900 hover:bg-slate-100 hover:text-slate-950"
+                      className={cn("mb-1 min-h-8 w-full justify-start rounded-lg px-2 text-sm font-bold", menuDarkMode ? "text-white hover:bg-white/10 hover:text-white" : "text-slate-900 hover:bg-slate-100 hover:text-slate-950")}
                     >
                       Explore {section.label}
                     </LinkComponent>

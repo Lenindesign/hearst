@@ -55,11 +55,12 @@ export const NavigationShell: Story = {
     const canvas = within(canvasElement);
     const banner = canvas.getByRole("banner");
     await expect(banner).toHaveAttribute("data-current-product-page", "blueprint");
+    // The header has a desktop and a phone "Spec pages" nav; only the visible one is in the tree.
     const navigation = within(banner).getByRole("navigation", {
-      name: "Prototype navigation",
+      name: "Spec pages",
     });
     await expect(
-      within(navigation).getByRole("link", { name: "Open prototype" })
+      within(navigation).getByRole("link", { name: /^(Open prototype|Prototype)$/ })
     ).toHaveAttribute("href", "/hearst-plus/");
     await expect(
       within(banner).getByRole("link", { name: "Hearst Magazines" })
@@ -90,11 +91,12 @@ export const PhoneNavigation: Story = {
     const canvas = within(canvasElement);
     const banner = canvas.getByRole("banner");
     await expect(banner).toHaveAttribute("data-current-product-page", "tokens");
+    // The header has a desktop and a phone "Spec pages" nav; only the visible one is in the tree.
     const navigation = within(banner).getByRole("navigation", {
-      name: "Prototype navigation",
+      name: "Spec pages",
     });
     await expect(
-      within(navigation).getByRole("link", { name: "Prototype" })
+      within(navigation).getByRole("link", { name: /^(Open prototype|Prototype)$/ })
     ).toHaveAttribute("href", "/hearst-plus/");
     for (const link of within(navigation).getAllByRole("link")) {
       await expect(link.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);

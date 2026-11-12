@@ -7,7 +7,7 @@ const externalBaseUrl = process.env.HEARST_APP_URL?.replace(/\/$/, "");
 let baseUrl = externalBaseUrl ?? `http://127.0.0.1:${defaultPort}`;
 let appProcess;
 const carouselSelector = 'article[aria-roledescription="carousel"][aria-label="Today’s Picks"]';
-const realSlideSelector = 'button[aria-label^="Open story:"]:not([data-carousel-clone="true"])';
+const realSlideSelector = 'article[aria-label^="Open story:"]:not([data-carousel-clone="true"])';
 
 async function waitForApp(url, timeoutMs = 60_000) {
   const startedAt = Date.now();
@@ -73,7 +73,8 @@ async function readSlideState(carousel) {
     slides.map((slide) => ({
       ariaHidden: slide.getAttribute("aria-hidden"),
       inert: slide.hasAttribute("inert"),
-      tabIndex: slide.tabIndex,
+      // Focus lands on the slide's full-bleed "Open story" button, not the slide article.
+      tabIndex: (slide.querySelector('button[aria-label^="Open story:"]') ?? slide).tabIndex,
     }))
   );
 }
