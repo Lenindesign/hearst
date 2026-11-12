@@ -71,6 +71,29 @@ const guards = [
   ["G4", "Dark mode primary", "The primary color is lifted until it reaches 4.5:1 on the dark surface."],
 ] as const;
 
+const hygieneClasses = [
+  ["Exact or semantic", "12", "A token whose job fits, exact or within tolerance: ready for a pull request."],
+  ["Gap", "28", "No token's job covers it. Groups (some rows in two): Brutalist home art direction 12, shadows 5, nav slate grays 5, Delish modal palette 4, overlays 2, near misses 2, one-offs 2. The adapted skill now reports route art direction as Scoped instead."],
+  ["Ambiguous", "2", "Two tokens fit and nothing picks one; a person decides."],
+  ["Not mapped", "31 occurrences", "Not a color to map: logo and illustration art, an unused prop, and audit false positives such as HTML entities."],
+] as const;
+
+const hygieneSwaps = [
+  ["Dark mega menu panel", "#15181D", "--component-navigation-utility-megamenu-background-knockout", "#151A21 (ΔE 0.9)"],
+  ["A&E watch page surface", "#050608", "--component-video-feed-surface-deep", "#05070A (ΔE 0.6)"],
+  ["Games preview card", "#102A43", "--brand-7", "same"],
+  ["Local News reader dialog", "#2B6FAF ×4", "localNewsTheme.colors[\"1\"]", "same"],
+  ["Delish onboarding labels", "#667085", "text-muted-foreground", "same under Lifestyle"],
+  ["Autoweek module headings (light)", "#242424", "--brand-11", "same"],
+] as const;
+
+const hygieneOpen = [
+  ["Scoped art direction", "Give the Brutalist home and the Delish onboarding modal named palette configs, as BRAND_STYLES.md requires for scoped art direction."],
+  ["Shadows", "Only two shadow tokens exist. The carousel panel shadow (0 6px 18px rgba(0,0,0,.2)) is documented in STYLE.md but has no token."],
+  ["Menu grays", "Five slate classes in the nav menus sit ΔE 4–7 from the nearest tokens. Accept that shift, or add a menu-text token."],
+  ["Left on purpose", "Ad palettes are campaign creative and stay literal; a theme token would turn the ad dark in dark mode."],
+] as const;
+
 const sectionLabels: Record<string, string> = {
   lifestyle: "Lifestyle",
   autos: "Autos",
@@ -295,7 +318,7 @@ export default function TokenSpecsPage() {
             One component contract, 29 brand expressions. Design decisions live as tokens in Git, a single build turns them into brand data, and the runtime scopes them as CSS custom properties so every Button, Card and headline renders in the right brand without a line of brand-specific code.
           </p>
           <nav aria-label="On this page" className="mt-7 flex flex-wrap gap-2">
-            {[["Pipeline", "#pipeline"], ["Tiers", "#tiers"], ["Resolve", "#resolve"], ["Scopes", "#scopes"], ["Film", "#film"], ["Drawing", "#drawing"], ["Brand guides", "#brands"]].map(([label, href]) => (
+            {[["Pipeline", "#pipeline"], ["Tiers", "#tiers"], ["Resolve", "#resolve"], ["Scopes", "#scopes"], ["Hygiene", "#hygiene"], ["Film", "#film"], ["Drawing", "#drawing"], ["Brand guides", "#brands"]].map(([label, href]) => (
               <ButtonStyleLink key={href} href={href} variant="ghost" className="px-3">{label}</ButtonStyleLink>
             ))}
           </nav>
@@ -348,8 +371,23 @@ export default function TokenSpecsPage() {
           <SpecTable caption="Runtime guards" headers={["Guard", "Rule", "Behavior"]} rows={guards} />
         </section>
 
+        <section aria-labelledby="hygiene" className={sectionClass}>
+          <SectionHeading id="hygiene" eyebrow="05 · Token hygiene" title="Hard-coded values, mapped to tokens by their job.">
+            The repo audit (npx tsx scripts/audit-tokens.ts --ci) flags new hard-coded colors. The token-mapping skill, adapted from design.how to HDS, then maps each one to a token by what it is for before its value, so a text gray is never matched to a border token that happens to share its hex. It is read-only and runs per mode and brand scope.
+          </SectionHeading>
+          <SpecTable caption="First pass, 2026-11-12: 55 flagged fingerprints, 213 lines read" headers={["Class", "Rows", "What it means"]} rows={hygieneClasses} />
+          <SpecTable caption="Swapped in PR #6 (rendered color unchanged or within ΔE OK 1)" headers={["Where", "Was", "Now", "Renders"]} rows={hygieneSwaps} mono={[1, 2]} />
+          <p className="type-d2 max-w-3xl text-muted-foreground">
+            Result: the audit dropped from 55 to 51 new fingerprints. Of the 12 swappable rows, 6 shipped; 4 ad palette values, 1 fallback and 1 Delish surface with no token in scope were left on purpose.
+          </p>
+          <SpecTable caption="Still to decide" headers={["Decision", "What is open"]} rows={hygieneOpen} />
+          <p className="type-d2 max-w-3xl text-muted-foreground">
+            To run it: ask an agent to &ldquo;map the hard-coded colors in this diff to HDS tokens&rdquo;. The skill lives in <code>.agents/skills/token-mapping</code> (linked for Claude Code), and the pull request checklist asks for it whenever the audit reports a new fingerprint.
+          </p>
+        </section>
+
         <section aria-labelledby="film" className={sectionClass}>
-          <SectionHeading id="film" eyebrow="05 · Motion film" title="Watch a token travel.">
+          <SectionHeading id="film" eyebrow="06 · Motion film" title="Watch a token travel.">
             The four tiers stack up, a token name assembles part by part, one button token resolves down its alias chain and then swaps value brand by brand, the pipeline carries it to the browser, scopes nest, guards correct a failing color, and every brand guide passes by.
           </SectionHeading>
           <figure className="min-w-0">
@@ -367,7 +405,7 @@ export default function TokenSpecsPage() {
         </section>
 
         <section aria-labelledby="drawing" className={sectionClass}>
-          <SectionHeading id="drawing" eyebrow="06 · Dimensional drawing" title="UI-TOKEN-001 · token architecture.">
+          <SectionHeading id="drawing" eyebrow="07 · Dimensional drawing" title="UI-TOKEN-001 · token architecture.">
             The pipeline, the four tiers, one alias chain, the name anatomy, the scope cascade, the runtime guards and the brand boundary on one sheet.
           </SectionHeading>
           <figure className="min-w-0">
@@ -389,7 +427,7 @@ export default function TokenSpecsPage() {
         </section>
 
         <section aria-labelledby="brands" className={sectionClass}>
-          <SectionHeading id="brands" eyebrow="07 · Brand guides" title="29 brand themes, generated from the tokens.">
+          <SectionHeading id="brands" eyebrow="08 · Brand guides" title="29 brand themes, generated from the tokens.">
             {`${publications.length} publications and ${baseThemes.length} base themes. Swatches, fonts and radius are read from src/lib/brands.ts and each preview renders inside that brand's token scope. The official CTA under each preview is the brand's live-site header CTA, captured ${brandCtaCapturedAt}; its typeface, weight, case and tracking are now brand tokens, so the HDS Button below it renders the same way.`}
           </SectionHeading>
           {bySection.map(({ section, label, brands: sectionBrands }) => (

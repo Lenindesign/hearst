@@ -155,7 +155,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
     <tr><th>Layer</th><th>What it is</th><th>Where it lives</th><th>Measured</th></tr>
     <tr><td>1 · Vaults</td><td><b>Hearst+ app vault</b>: the canonical product and design memory agents must read before UI changes. <b>Design Brain</b>: separate Hearst-wide guidance.</td><td><code>hearst-design-system/</code> (Obsidian) · <code>~/Documents/…/Design Brain</code></td><td class="n">7 canonical files · 5 notes · 9 docs · Design Brain 208 notes</td></tr>
     <tr><td>2 · Rules</td><td>HDS Constitution (8 articles), agent charter, runbooks</td><td><code>.agents/rules/</code>, repo root</td><td class="n">8 articles · 9 runbook roles</td></tr>
-    <tr><td>3 · Skills</td><td>Instructions an agent loads for a kind of task</td><td><code>.cursor/skills/</code>, <code>.agents/skills/</code>, <code>hearst-design-system/.agents/skills/</code>, personal</td><td class="n">8 role · 5 repo · 4 personal</td></tr>
+    <tr><td>3 · Skills</td><td>Instructions an agent loads for a kind of task</td><td><code>.cursor/skills/</code>, <code>.agents/skills/</code>, <code>hearst-design-system/.agents/skills/</code>, personal</td><td class="n">8 role · 8 repo · 2 personal</td></tr>
     <tr><td>4 · Agents</td><td>Roles with a file boundary, sequenced per request</td><td>Charter and runbooks</td><td class="n">9 roles</td></tr>
     <tr><td>5 · Repo</td><td>Token JSON → generated → UI primitives → modules → page archetypes</td><td><code>hearst-design-system/</code></td><td class="n">29 brands · 148 component files · 28 metadata · 59 stories</td></tr>
     <tr><td>6 · Outputs</td><td>App on Netlify, Storybook, Figma variables, Pencil specs, spec pages</td><td>Netlify · Figma · <code>.pen</code></td><td class="n">28 brand <code>.pen</code> files + 1</td></tr>
@@ -187,9 +187,9 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
   <div class="tw"><table>
     <tr><th>Home</th><th>Skills</th><th>Used for</th></tr>
     <tr><td><code>.cursor/skills/</code></td><td><code>hearst-token-architect</code>, <code>hearst-frontend-component</code>, <code>hearst-grid-system</code>, <code>hearst-storybook-docs</code>, <code>hearst-figma-sync</code>, <code>hearst-pencil-design</code>, <code>hearst-qa-review</code>, <code>hearst-devops-deploy</code></td><td>One per agent role</td></tr>
-    <tr><td><code>.agents/</code> (root)</td><td><code>hds-constitution</code> (skill + rule), <code>handoff</code>, <code>oil-ui</code></td><td>The constitution; handing work to another agent; UI exploration</td></tr>
+    <tr><td><code>.agents/</code> (root, linked in <code>.claude/skills/</code>)</td><td><code>hds-constitution</code> (skill + rule), <code>handoff</code>, <code>oil-ui</code>, <code>dimensional-drawing</code>, <code>dimensional-drawing-motion</code>, <code>token-mapping</code></td><td>The constitution; handing work to another agent; UI exploration; these spec sheets and films; mapping hard-coded values to HDS tokens before a pull request (adapted from design.how, see <a href="/token-specs/#hygiene">Tokens &amp; brands › Token hygiene</a>)</td></tr>
     <tr><td><code>hearst-design-system/.agents/</code></td><td><code>impeccable</code>, <code>brand-interstitial-ads</code></td><td>Design critique and polish; Ambient Reader ads</td></tr>
-    <tr><td>Personal (<code>~/.claude/skills</code>)</td><td><code>dimensional-drawing</code>, <code>dimensional-drawing-motion</code>, <code>grill-with-ui</code>, <code>hearst-workbench</code></td><td>These spec sheets and films; design interviews; project setup</td></tr>
+    <tr><td>Personal (<code>~/.claude/skills</code>)</td><td><code>grill-with-ui</code>, <code>hearst-workbench</code></td><td>Design interviews; project setup</td></tr>
     <tr><td>Design Brain</td><td>67 <code>SKILL.md</code> entry points</td><td>Navigating the Hearst-wide vault (not used by the app)</td></tr>
   </table></div>
 </section>
@@ -268,7 +268,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
   <article class="block" id="f3">
     <span class="id">F3 · DOC DRIFT</span>
     <h3>Skills live in four places, and the charter names one</h3>
-    <p>The charter says local agent instructions live in <code>.cursor/skills/</code>. Skills also live in <code>.agents/skills/</code>, <code>hearst-design-system/.agents/skills/</code> and the vault (67 entry points), with no single index. <b>Fix:</b> add a skills registry to the charter: name, home, owner, and when to use it.</p>
+    <p>The charter says local agent instructions live in <code>.cursor/skills/</code>. Skills also live in <code>.agents/skills/</code>, <code>hearst-design-system/.agents/skills/</code> and the vault (67 entry points), with no single index. <code>skills-lock.json</code> now records the source and version of the third-party skills (<code>handoff</code>, <code>oil-ui</code>, <code>token-mapping</code>), which is a start. <b>Fix:</b> add a skills registry to the charter: name, home, owner, and when to use it.</p>
   </article>
   <article class="block" id="f4">
     <span class="id">F4 · COVERAGE</span>
