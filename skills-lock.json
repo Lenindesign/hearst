@@ -12,6 +12,14 @@
       "sourceType": "github",
       "skillPath": "SKILL.md",
       "computedHash": "27bb1e441b7fd01f1f30f67cf2503461896ca1b032d40bcfb6a88fc2f99993f1"
+    },
+    "token-mapping": {
+      "source": "arla6ka/design.how",
+      "sourceType": "github",
+      "skillPath": "skills/token-mapping/SKILL.md",
+      "sourceCommit": "419fa5af1721",
+      "computedHash": "c65eb18bcbe34d6e33b3f6998684dd7b11f87b2e98db6f343a20cefa56151a06",
+      "modified": "Adapted to HDS: token sources, scopes, Scoped class, gap threshold; bundles build-design-system/scripts/oklch.mjs"
     }
   }
 }

@@ -14,4 +14,5 @@ Tick each box, or write "n/a" with a reason. The owner checks these before appro
 - [ ] **Storybook updated.** Stories for any component, token or layout I changed still match the app (`hearst-design-system/src/stories/`), and they render on the preview's `/storybook/`.
 - [ ] **Specs updated.** If I changed something that has a spec page (`/layout-specs/`, `/cta-specs/`, the reader, carousel or system specs), its tables, drawing and film still match. Use the `dimensional-drawing` and `dimensional-drawing-motion` skills.
 - [ ] **Checked in the preview.** Phone (390), tablet (768) and desktop (1280+) widths, light and dark, with no sideways scrolling.
+- [ ] **No new hard-coded colors.** `npx tsx scripts/audit-tokens.ts --ci` in `hearst-design-system/` reports no new fingerprints, or each new value is mapped with the `token-mapping` skill and explained here.
 - [ ] **Type check passes.** `npx tsc --noEmit` in `hearst-design-system/`.
