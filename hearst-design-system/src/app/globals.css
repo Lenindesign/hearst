@@ -1482,31 +1482,39 @@
   }
   .type-t5 { font-size: 1rem; line-height: 1.25rem; letter-spacing: 0; text-wrap: balance; }
   .type-t6 { font-size: 0.875rem; line-height: 1.25rem; letter-spacing: 0.3px; font-weight: 700; text-wrap: balance; }
-  /* Fashion & Luxury uses a slightly more expressive headline scale throughout its story cards. */
-  .hearst-plus-theme[data-destination-mode="flux"] .headline.type-t1 { font-size: calc(2rem * 1.1); line-height: calc(2.25rem * 1.1); }
-  .hearst-plus-theme[data-destination-mode="flux"] .headline.type-t2 { font-size: calc(1.5rem * 1.1); line-height: calc(1.75rem * 1.1); }
-  .hearst-plus-theme[data-destination-mode="flux"] .headline.type-t3,
-  .hearst-plus-theme[data-destination-mode="flux"] .headline.story-card-headline { font-size: calc(1.25rem * 1.1); line-height: calc(1.5rem * 1.1); }
-  .hearst-plus-theme[data-destination-mode="flux"] .headline.type-t4 { font-size: calc(1.375rem * 1.1); line-height: calc(1.75rem * 1.1); }
-  .hearst-plus-theme[data-destination-mode="flux"] .headline.type-t5 { font-size: calc(1rem * 1.1); line-height: calc(1.25rem * 1.1); }
-  .hearst-plus-theme[data-destination-mode="flux"] .headline.type-t6 { font-size: calc(0.875rem * 1.1); line-height: calc(1.25rem * 1.1); }
-  /* Keep the carousel at its original headline scale; the 10% Fashion & Luxury
-     increase is intended for the story cards around it. */
-  .hearst-plus-theme[data-destination-mode="flux"] .headline.featured-carousel-headline { font-size: 1.65rem; line-height: 1.75rem; }
-  .hearst-plus-theme[data-destination-mode="flux"] .brand-promotion-story-headline { font-size: 22px; line-height: 30.8px; }
-  @media (min-width: 768px) {
-    .hearst-plus-theme[data-destination-mode="flux"] .headline.type-t1 { font-size: calc(3rem * 1.1); line-height: calc(3.25rem * 1.1); }
-    .hearst-plus-theme[data-destination-mode="flux"] .headline.type-t2 { font-size: calc(2rem * 1.1); line-height: calc(2.25rem * 1.1); }
-    .hearst-plus-theme[data-destination-mode="flux"] .headline.type-t3,
-    .hearst-plus-theme[data-destination-mode="flux"] .headline.story-card-headline { font-size: calc(1.5rem * 1.1); line-height: calc(1.75rem * 1.1); }
-    .hearst-plus-theme[data-destination-mode="flux"] .headline.type-t4 { font-size: calc(1.75rem * 1.1); line-height: calc(2rem * 1.1); }
-    .hearst-plus-theme[data-destination-mode="flux"] .headline.featured-carousel-headline { font-size: 2.2rem; line-height: 2.25rem; }
+  /* Story-card headlines should use the full content width. Balanced wrapping
+     can leave conspicuous unused space at the line end, especially in compact
+     and mobile cards; the card's own padding defines the text boundary. */
+  .hearst-plus-theme [data-story-brand] .headline,
+  .hearst-plus-theme .story-card-headline {
+    text-wrap: wrap;
   }
   /* Featured carousel cards use a slightly larger T2 headline while retaining
      the same line-height rhythm so the shorter overlay still fits its copy. */
   .featured-carousel-headline { font-size: 1.65rem; line-height: 1.75rem; }
   @media (min-width: 768px) {
     .featured-carousel-headline { font-size: 2.2rem; line-height: 2.25rem; }
+  }
+  /* ELLE headlines receive a restrained 5% increase only on the Fashion & Luxury
+     destination. The story-brand marker keeps other publications at the shared scale. */
+  .hearst-plus-theme[data-destination-mode="flux"] [data-story-brand="elle"] .headline.type-t1 { font-size: calc(2rem * 1.05); line-height: calc(2.25rem * 1.05); }
+  .hearst-plus-theme[data-destination-mode="flux"] [data-story-brand="elle"] .headline.type-t2 { font-size: calc(1.5rem * 1.05); line-height: calc(1.75rem * 1.05); }
+  .hearst-plus-theme[data-destination-mode="flux"] [data-story-brand="elle"] .headline.type-t3,
+  .hearst-plus-theme[data-destination-mode="flux"] [data-story-brand="elle"] .headline.story-card-headline { font-size: calc(1.25rem * 1.05); line-height: calc(1.5rem * 1.05); }
+  .hearst-plus-theme[data-destination-mode="flux"] [data-story-brand="elle"] .headline.type-t4 { font-size: calc(1.375rem * 1.05); line-height: calc(1.75rem * 1.05); }
+  .hearst-plus-theme[data-destination-mode="flux"] [data-story-brand="elle"] .headline.type-t5 { font-size: calc(1rem * 1.05); line-height: calc(1.25rem * 1.05); }
+  .hearst-plus-theme[data-destination-mode="flux"] [data-story-brand="elle"] :is(.headline.type-t6, .type-t6) { font-size: calc(0.875rem * 1.05); line-height: calc(1.25rem * 1.05); }
+  .hearst-plus-theme[data-destination-mode="flux"] [data-story-brand="elle"] .headline.featured-carousel-headline { font-size: calc(1.65rem * 1.05); line-height: calc(1.75rem * 1.05); }
+  .hearst-plus-theme[data-destination-mode="flux"] [data-brand-promotion="elle"] .brand-promotion-secondary-headline { font-size: 21px; line-height: 1.17; }
+  @media (min-width: 768px) {
+    .hearst-plus-theme[data-destination-mode="flux"] [data-story-brand="elle"] .headline.type-t1 { font-size: calc(3rem * 1.05); line-height: calc(3.25rem * 1.05); }
+    .hearst-plus-theme[data-destination-mode="flux"] [data-story-brand="elle"] .headline.type-t2 { font-size: calc(2rem * 1.05); line-height: calc(2.25rem * 1.05); }
+    .hearst-plus-theme[data-destination-mode="flux"] [data-story-brand="elle"] .headline.type-t3,
+    .hearst-plus-theme[data-destination-mode="flux"] [data-story-brand="elle"] .headline.story-card-headline { font-size: calc(1.5rem * 1.05); line-height: calc(1.75rem * 1.05); }
+    .hearst-plus-theme[data-destination-mode="flux"] [data-story-brand="elle"] .headline.type-t4 { font-size: calc(1.75rem * 1.05); line-height: calc(2rem * 1.05); }
+    .hearst-plus-theme[data-destination-mode="flux"] [data-story-brand="elle"] :is(.headline.type-t5, .type-t5) { font-size: calc(1rem * 1.05); line-height: calc(1.25rem * 1.05); }
+    .hearst-plus-theme[data-destination-mode="flux"] [data-story-brand="elle"] :is(.headline.type-t6, .type-t6) { font-size: calc(0.875rem * 1.05); line-height: calc(1.25rem * 1.05); }
+    .hearst-plus-theme[data-destination-mode="flux"] [data-story-brand="elle"] .headline.featured-carousel-headline { font-size: calc(2.2rem * 1.05); line-height: calc(2.25rem * 1.05); }
   }
   .type-d1 { font-size: 1.25rem; line-height: 1.75rem; letter-spacing: 0; text-wrap: pretty; }
   .type-b1 { font-size: 1.125rem; line-height: 1.75rem; letter-spacing: 0; text-wrap: pretty; }

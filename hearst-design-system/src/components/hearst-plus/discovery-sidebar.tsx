@@ -253,6 +253,7 @@ export function LifestyleDiscoverySidebar({
             onClick={() => onOpenStory(story)}
             data-story-module="daily-habit"
             data-story-id={story.id}
+            data-story-brand={story.brandSlug}
             className="group block w-full border-b border-border pb-3 text-left last:border-0 last:pb-0 focus:outline-none focus:ring-2 focus:ring-primary/30"
             aria-label={`Open story: ${story.title}`}
           >
