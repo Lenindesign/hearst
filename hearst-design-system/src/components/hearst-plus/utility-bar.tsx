@@ -200,8 +200,9 @@ export function UtilityBar({
     openDestinationMenu === "flux" ||
     openDestinationMenu === "ew";
   const isConceptMenu = openDestinationMenu === "all" || isLifestyleMenu || isInternationalMenu;
-  // Mega menus use a consistent white surface across every destination.
-  const menuDarkMode = false;
+  // The utility strip may use a dark treatment for a brand masthead (for
+  // example Flux), but dropdown surfaces follow the reader's actual theme.
+  const menuDarkMode = colorMode === "dark";
 
   const updateBrandMenuPosition = React.useCallback(() => {
     const barBounds = utilityBarRef.current?.getBoundingClientRect();
@@ -331,16 +332,16 @@ export function UtilityBar({
             onMouseLeave={closeWhenPointerLeavesMenu}
             onFocus={(event) => openDestination(allDestinationSection.mode, event.currentTarget)}
             className={cn(
-              "z-10 inline-flex h-full min-h-8 min-w-7 shrink-0 cursor-pointer items-center justify-center gap-1 rounded-none border-0 px-2 py-0 text-[11px] font-medium leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:min-w-0 sm:text-xs",
+              "z-10 inline-flex h-full min-h-8 min-w-7 shrink-0 cursor-pointer items-center justify-center gap-1 rounded-none border-0 px-2 py-0 text-[11px] font-medium leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:min-w-0 sm:text-[11px]",
               allDestinationIsActive || allDestinationIsOpen
                 ? "bg-white text-black hover:bg-white hover:text-black"
                 : darkMode
                   ? "text-[var(--component-navigation-utility-content-knockout)] opacity-85 hover:bg-white hover:text-black hover:opacity-100"
                   : "text-primary-foreground hover:bg-white hover:text-black",
-              allDestinationIsActive && !allDestinationIsOpen && openDestinationMenu !== null && "opacity-50"
+              allDestinationIsActive && !allDestinationIsOpen && openDestinationMenu !== null && "bg-transparent text-primary-foreground/70 hover:bg-transparent hover:text-primary-foreground/70"
             )}
           >
-            <span className={capAlignedLabelClassName(allDestinationSection.label)}>{allDestinationSection.label}</span>
+            <span className={cn("uppercase", capAlignedLabelClassName(allDestinationSection.label))}>{allDestinationSection.label}</span>
             <ChevronDown className={cn("size-3 transition-transform", allDestinationIsOpen && "rotate-180")} aria-hidden="true" />
           </LinkComponent>
           <div
@@ -380,16 +381,16 @@ export function UtilityBar({
                       onMouseLeave={closeWhenPointerLeavesMenu}
                       onFocus={(event) => openDestination(section.mode, event.currentTarget)}
                       className={cn(
-                        "relative z-10 inline-flex h-full min-h-8 min-w-7 cursor-pointer items-center justify-center gap-1 rounded-none border-0 px-2 py-0 text-[11px] font-medium leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:min-w-0 sm:text-xs",
+                        "relative z-10 inline-flex h-full min-h-8 min-w-7 cursor-pointer items-center justify-center gap-1 rounded-none border-0 px-2 py-0 text-[11px] font-medium leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:min-w-0 sm:text-[11px]",
                         isActive || isOpen
                           ? "bg-white text-black hover:bg-white hover:text-black"
                           : darkMode
                             ? "text-[var(--component-navigation-utility-content-knockout)] opacity-85 hover:bg-white hover:text-black hover:opacity-100"
                             : "text-primary-foreground hover:bg-white hover:text-black",
-                        isActive && !isOpen && openDestinationMenu !== null && "opacity-50"
+                        isActive && !isOpen && openDestinationMenu !== null && "bg-transparent text-primary-foreground/70 hover:bg-transparent hover:text-primary-foreground/70"
                       )}
                     >
-                      <span className={capAlignedLabelClassName(section.label)}>{section.label}</span>
+                      <span className={cn("uppercase", capAlignedLabelClassName(section.label))}>{section.label}</span>
                       <ChevronDown className={cn("size-3 transition-transform", isOpen && "rotate-180")} aria-hidden="true" />
                     </LinkComponent>
                   ) : <LinkComponent
@@ -406,16 +407,16 @@ export function UtilityBar({
                     onMouseLeave={closeWhenPointerLeavesMenu}
                     onFocus={(event) => openDestination(menuMode, event.currentTarget)}
                     className={cn(
-                      "relative z-10 inline-flex h-full min-h-8 min-w-7 cursor-pointer items-center justify-center rounded-none px-2 py-0 text-[11px] font-medium leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:min-w-0 sm:text-xs",
+                      "relative z-10 inline-flex h-full min-h-8 min-w-7 cursor-pointer items-center justify-center rounded-none px-2 py-0 text-[11px] font-medium leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:min-w-0 sm:text-[11px]",
                       isActive || isOpen
                         ? "bg-white text-black hover:bg-white hover:text-black"
                         : darkMode
                           ? "text-[var(--component-navigation-utility-content-knockout)] opacity-85 hover:bg-white hover:text-black hover:opacity-100"
                           : "text-primary-foreground hover:bg-white hover:text-black",
-                      isActive && !isOpen && openDestinationMenu !== null && "opacity-50"
+                      isActive && !isOpen && openDestinationMenu !== null && "bg-transparent text-primary-foreground/70 hover:bg-transparent hover:text-primary-foreground/70"
                     )}
                   >
-                    <span className={capAlignedLabelClassName(section.label)}>{section.label}</span>
+                    <span className={cn("uppercase", capAlignedLabelClassName(section.label))}>{section.label}</span>
                   </LinkComponent>}
                 </React.Fragment>
               );
@@ -459,7 +460,8 @@ export function UtilityBar({
             role="menu"
             aria-label={`${openSection.label} menu`}
             className={cn(
-              "max-h-[calc(100dvh-2rem)] w-full max-w-none overscroll-contain overflow-y-auto rounded-b-2xl rounded-t-none border border-slate-200 bg-white p-5 text-slate-950 shadow-[0_18px_50px_rgba(15,23,42,0.16)] sm:p-8",
+              "max-h-[calc(100dvh-2rem)] w-full max-w-none overscroll-contain overflow-y-auto rounded-b-2xl rounded-t-none border-x border-b border-t-0 px-5 pt-3 pb-5 shadow-[0_18px_50px_rgba(15,23,42,0.16)] sm:px-8 sm:pt-5 sm:pb-8",
+              menuDarkMode ? "border-[#2A2E35] bg-[#15181D] text-white shadow-[0_18px_50px_rgba(0,0,0,0.45)]" : "border-slate-200 bg-white text-slate-950",
               isInternationalMenu && "xl:p-2.5",
             )}
           >
@@ -471,10 +473,10 @@ export function UtilityBar({
                 menuSlideDirection === "left" && "slide-in-from-left-4",
               )}
             >
-            <div className={cn("mb-4 border-b pb-3", isConceptMenu ? "border-slate-200" : menuDarkMode ? "border-white/15" : "border-border", isInternationalMenu && "xl:mb-1 xl:pb-1")}>
-              <div className="flex flex-wrap items-end justify-between gap-3">
-              <div>
-              <p className={cn("text-sm font-bold", isConceptMenu && "text-lg tracking-tight")}>
+            <div className={cn("mb-4 border-b pb-3", menuDarkMode ? "border-white/15" : isConceptMenu ? "border-slate-200" : "border-border", isInternationalMenu && "xl:mb-1 xl:pb-1")}>
+              <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+              <div className={cn("min-w-0", isConceptMenu && "flex flex-wrap items-baseline gap-x-3 gap-y-1")}>
+              <p className={cn("text-sm font-bold", isConceptMenu && "shrink-0 text-lg tracking-tight")}>
                 {openDestinationMenu === "all"
                   ? "Hearst"
                   : isLifestyleMenu
@@ -487,7 +489,7 @@ export function UtilityBar({
                     ? "Hearst around the world"
                     : `${openSection.label} brands`}
               </p>
-              {openDestinationMenu === "all" || isLifestyleMenu ? <p className="mt-1 max-w-xl text-sm font-normal leading-5 text-slate-600">{openDestinationMenu === "all" ? "Find stories and publications by what you love." : brandSectionDescriptions.lifestyle}</p> : isInternationalMenu ? <p className="mt-1 max-w-xl text-sm font-normal leading-5 text-slate-600">Discover trusted Hearst publications from seven countries.</p> : null}
+              {openDestinationMenu === "all" || isLifestyleMenu ? <p className={cn("mt-1 max-w-xl text-sm font-normal leading-5", menuDarkMode ? "text-white/75" : "text-slate-600", isConceptMenu && "mt-0 min-w-0 max-w-full truncate")}>{openDestinationMenu === "all" ? "Find stories and publications by what you love." : brandSectionDescriptions.lifestyle}</p> : isInternationalMenu ? <p className={cn("mt-0 min-w-0 max-w-full truncate text-sm font-normal leading-5", menuDarkMode ? "text-white/75" : "text-slate-600")}>Discover trusted Hearst publications from seven countries.</p> : null}
               </div>
               {isConceptMenu ? (
                 <LinkComponent
@@ -497,7 +499,7 @@ export function UtilityBar({
                   size="sm"
                   role="menuitem"
                   onClick={() => setOpenDestinationMenu(null)}
-                  className="min-h-9 rounded-full border border-slate-200 px-4 font-semibold text-slate-900 hover:bg-slate-50 hover:text-slate-950"
+                  className={cn("min-h-9 rounded-full border px-4 font-semibold", menuDarkMode ? "border-white/20 text-white hover:bg-white/10 hover:text-white" : "border-slate-200 text-slate-900 hover:bg-slate-50 hover:text-slate-950")}
                 >
                   {openDestinationMenu === "all" ? "Go to All stories" : isLifestyleMenu ? "View Lifestyle" : "Explore International"}
                 </LinkComponent>
@@ -524,15 +526,15 @@ export function UtilityBar({
                           setOpenDestinationMenu(null);
                         }}
                         className={cn(
-                          "min-h-10 w-full justify-between rounded-lg px-3 py-2 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+                          "group min-h-10 w-full justify-between rounded-lg px-3 py-2 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
                           menuDarkMode
                             ? "text-[var(--component-navigation-utility-content-knockout)] hover:bg-white/10 hover:text-white"
-                            : "text-foreground hover:bg-muted hover:text-foreground"
+                            : "text-slate-900 hover:bg-slate-100 hover:text-slate-950 focus-visible:bg-slate-100 focus-visible:text-slate-950"
                         )}
                       >
                         <span className="grid min-w-0 gap-0.5 text-left">
                           <span className="truncate">{localNewsOptions[0].label}</span>
-                          <span className={cn("truncate text-[11px] font-medium", menuDarkMode ? "text-white/65" : "text-muted-foreground")}>
+                          <span className={cn("truncate text-[11px] font-medium", menuDarkMode ? "text-white/65" : "text-slate-600 group-hover:text-slate-700 group-focus-visible:text-slate-700")}>
                             {localNewsOptions[0].description}
                           </span>
                         </span>
@@ -554,7 +556,7 @@ export function UtilityBar({
                                   "min-h-8 w-full justify-between rounded-lg px-3 py-1.5 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
                                   menuDarkMode
                                     ? "text-[var(--component-navigation-utility-content-knockout)] hover:bg-white/10 hover:text-white"
-                                    : "text-foreground hover:bg-muted hover:text-foreground"
+                                  : "text-slate-900 hover:bg-slate-100 hover:text-slate-950 focus-visible:bg-slate-100 focus-visible:text-slate-950"
                                 )}
                                 title={`${station.callSign} · ${station.market}`}
                               >
@@ -610,15 +612,15 @@ export function UtilityBar({
                           setOpenDestinationMenu(null);
                         }}
                         className={cn(
-                          "min-h-10 w-full justify-between rounded-lg px-3 py-2 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+                          "group min-h-10 w-full justify-between rounded-lg px-3 py-2 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
                           menuDarkMode
                             ? "text-[var(--component-navigation-utility-content-knockout)] hover:bg-white/10 hover:text-white"
-                            : "text-foreground hover:bg-muted hover:text-foreground"
+                            : "text-slate-900 hover:bg-slate-100 hover:text-slate-950 focus-visible:bg-slate-100 focus-visible:text-slate-950"
                         )}
                       >
                         <span className="grid min-w-0 gap-0.5 text-left">
                           <span className="truncate">{localNewsOptions[1].label}</span>
-                          <span className={cn("truncate text-[11px] font-medium", menuDarkMode ? "text-white/65" : "text-muted-foreground")}>
+                          <span className={cn("truncate text-[11px] font-medium", menuDarkMode ? "text-white/65" : "text-slate-600 group-hover:text-slate-700 group-focus-visible:text-slate-700")}>
                             {localNewsOptions[1].description}
                           </span>
                         </span>
@@ -640,7 +642,7 @@ export function UtilityBar({
                                   "min-h-8 w-full justify-between rounded-lg px-3 py-1.5 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
                                   menuDarkMode
                                     ? "text-[var(--component-navigation-utility-content-knockout)] hover:bg-white/10 hover:text-white"
-                                    : "text-foreground hover:bg-muted hover:text-foreground"
+                                    : "text-slate-900 hover:bg-slate-100 hover:text-slate-950 focus-visible:bg-slate-100 focus-visible:text-slate-950"
                                 )}
                                 title={publication.publicationName}
                               >
@@ -744,7 +746,7 @@ export function UtilityBar({
                                   key={`${country}-${feed.name}`}
                                   feed={feed}
                                   darkMode={menuDarkMode}
-                                  lightSurface={isConceptMenu}
+                                  lightSurface={!menuDarkMode && isConceptMenu}
                                   onClick={() => setOpenDestinationMenu(null)}
                                 />
                               ))}
@@ -778,7 +780,7 @@ export function UtilityBar({
                       Explore {section.label}
                     </LinkComponent>
                   ) : null}
-                  {(openDestinationMenu === "all" || isLifestyleMenu) ? <p id={`hearst-brand-menu-${section.mode}`} className="mb-2 text-xs font-semibold leading-5 text-slate-600">{brandSectionDescriptions[section.mode]}</p> : null}
+                  {(openDestinationMenu === "all" || isLifestyleMenu) ? <p id={`hearst-brand-menu-${section.mode}`} className={cn("mb-2 text-xs font-semibold leading-5", menuDarkMode ? "text-white/75" : "text-slate-600")}>{brandSectionDescriptions[section.mode]}</p> : null}
                   <div className={cn(
                     "grid gap-1",
                     (isLifestyleMenu || isFourColumnBrandMenu) && "sm:grid-cols-2 lg:grid-cols-4",
@@ -802,7 +804,7 @@ export function UtilityBar({
                               ? "text-[var(--component-navigation-utility-content-knockout)] hover:bg-white/10 hover:text-white"
                               : isConceptMenu
                                 ? "text-slate-800 hover:bg-slate-100 hover:text-slate-950"
-                                : "text-foreground hover:bg-muted hover:text-foreground",
+                              : "text-slate-900 hover:bg-slate-100 hover:text-slate-950 focus-visible:bg-slate-100 focus-visible:text-slate-950",
                             isSelectedBrand && (
                               menuDarkMode
                                 ? "bg-white/[0.08]"
@@ -863,7 +865,7 @@ function EntertainmentMenuLink({
         "min-h-8 w-full justify-between rounded-lg px-3 py-1.5 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
         darkMode
           ? "text-[var(--component-navigation-utility-content-knockout)] hover:bg-white/10 hover:text-white"
-          : "text-foreground hover:bg-muted hover:text-foreground"
+          : "text-slate-900 hover:bg-slate-100 hover:text-slate-950 focus-visible:bg-slate-100 focus-visible:text-slate-950"
       )}
     >
       <span className="flex min-w-0 items-center gap-2.5">
@@ -930,7 +932,7 @@ function InternationalFeedLink({
           ? "text-slate-800 hover:bg-slate-100 hover:text-slate-950"
           : darkMode
           ? "text-[var(--component-navigation-utility-content-knockout)] hover:bg-white/10 hover:text-white"
-          : "text-foreground hover:bg-muted hover:text-foreground",
+          : "text-slate-900 hover:bg-slate-100 hover:text-slate-950 focus-visible:bg-slate-100 focus-visible:text-slate-950",
       )}
     >
       <span

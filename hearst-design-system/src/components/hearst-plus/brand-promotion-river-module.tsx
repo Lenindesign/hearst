@@ -96,7 +96,7 @@ export function BrandPromotionRiverModule({
     return (
       <span className={cn(
         "flex items-center gap-2 type-k1",
-        isAEFamilyPromotion ? "text-[#79B9FF]" : "text-[var(--hp-sidebar-heading,var(--primary))]",
+        isAEFamilyPromotion ? "text-[#79B9FF]" : "text-foreground",
       )}>
         <BrandSourceIcon brand={story.brand} brandSlug={story.brandSlug} />
         {formatLabel}
@@ -145,14 +145,14 @@ export function BrandPromotionRiverModule({
               aria-label={`Editorial spotlight: ${promotion.brand}`}
               className={cn(
                 "type-k1",
-                isAEFamilyPromotion ? "text-[#79B9FF]" : "text-[var(--hp-sidebar-heading,var(--primary))]",
+                isAEFamilyPromotion ? "text-[#79B9FF]" : "text-foreground",
               )}
             >
               Editorial spotlight
             </h2>
             <p className={cn(
-              "type-b2 mt-1",
-              isAEFamilyPromotion ? "text-white/70" : "text-muted-foreground",
+              "type-b2 mt-1 text-[#465468]",
+              isAEFamilyPromotion && "text-white/85",
             )}>
               {description}
             </p>
@@ -160,25 +160,25 @@ export function BrandPromotionRiverModule({
         </div>
       </div>
 
-      <div className={cn("min-w-0 p-5 sm:p-6", isAEFamilyPromotion && "bg-[#0D1014]")}>
-        <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1fr)]">
+      <div className={cn("@container/brand-promotion min-w-0 p-5 sm:p-6", isAEFamilyPromotion && "bg-[#0D1014]")}>
+        <div className="grid items-start gap-5 @min-[820px]/brand-promotion:grid-cols-[minmax(0,1.8fr)_minmax(0,1fr)]">
           <PromotionStoryAction
             story={featuredStory}
             onOpenStory={onOpenStory}
-            className="group min-w-0 self-start text-left focus:outline-none focus:ring-2 focus:ring-primary/30"
+            className="group w-full min-w-0 self-start text-left focus:outline-none focus:ring-2 focus:ring-primary/30"
           >
             <LifestyleRiverImage story={featuredStory} className="aspect-[4/3] w-full rounded-[8px]" />
             <span className="mt-4 block">
               {renderFormatLabel(featuredStory)}
               <span className={cn(
-                "headline type-t3 mt-2 line-clamp-3 underline-offset-4 group-hover:underline group-focus-visible:underline",
+                "headline type-t3 mt-2 w-full md:w-3/4 xl:w-full line-clamp-3 underline-offset-4 group-hover:underline group-focus-visible:underline",
                 isAEFamilyPromotion ? "text-white" : "text-foreground",
               )}>
                 {featuredStory.title}
               </span>
               <span className={cn(
-                "type-b2 mt-2 line-clamp-3 [display:-webkit-box]",
-                isAEFamilyPromotion ? "text-white/70" : "text-muted-foreground",
+                "type-d2 mt-2 line-clamp-3 [display:-webkit-box] text-[#465468]",
+                isAEFamilyPromotion && "text-white/85",
               )}>
                 {featuredStory.summary}
               </span>
@@ -200,14 +200,14 @@ export function BrandPromotionRiverModule({
                 <span className="min-w-0">
                   {renderFormatLabel(story)}
                   <span className={cn(
-                    "headline type-t5 mt-1 line-clamp-3 underline-offset-4 group-hover:underline group-focus-visible:underline",
+                    "headline mt-1 text-[20px] leading-7 line-clamp-3 underline-offset-4 group-hover:underline group-focus-visible:underline",
                     isAEFamilyPromotion ? "text-white" : "text-foreground",
                   )}>
                     {story.title}
                   </span>
                   <span className={cn(
-                    "type-c1 mt-1 block",
-                    isAEFamilyPromotion ? "text-white/60" : "text-muted-foreground",
+                    "type-b2 mt-1 block text-[#465468]",
+                    isAEFamilyPromotion && "text-white/85",
                   )}>
                     {story.topic} · {getLifestyleByline(story)}
                   </span>

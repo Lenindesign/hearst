@@ -1654,10 +1654,10 @@ export function MainNav({
         {/* Full-bleed art, trimmed of any baked-in side bars so it always reaches both edges. */}
         <div
           className={cn(
-            // The art's own ratio on wider screens; phones use a taller crop so the overlaid controls fit. The ratio
-            // goes through a custom property because an inline aspect-ratio would override the phone class.
-            "relative w-full overflow-hidden aspect-[var(--banner-aspect)]",
-            mastheadBanner.pattern === "brand-wall" || mastheadBanner.logoSize === "section" ? "max-sm:aspect-[5/1]" : "max-sm:aspect-[3/1]",
+            "relative w-full overflow-hidden",
+            mastheadBanner.pattern === "brand-wall" || mastheadBanner.logoSize === "section"
+              ? "h-[117px] max-lg:h-[95px] max-sm:h-[78px]"
+              : "aspect-[var(--banner-aspect)] max-sm:aspect-[3/1]",
           )}
           style={{ "--banner-aspect": `${mastheadBanner.width - (mastheadBanner.cropX?.left ?? 0) - (mastheadBanner.cropX?.right ?? 0)} / ${mastheadBanner.height}` } as React.CSSProperties}
         >
@@ -1697,7 +1697,8 @@ export function MainNav({
         />
         {mastheadBanner.overlayLogo ? (
           <div className={cn(
-            "pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-center",
+            "pointer-events-none absolute inset-x-0 bottom-0 flex justify-center",
+            "items-center",
             mastheadBanner.logoDescriptor || mastheadDescriptorOverride ? "px-4 sm:px-24" : "px-24",
             underUtilityBar ? "top-8" : "top-0",
           )}>
@@ -1707,9 +1708,9 @@ export function MainNav({
                   slug={mastheadBanner.logoSlug ?? mastheadSlug}
                   color={mastheadBanner.logoColor === "native" ? undefined : "#fff"}
                   decorative
-                  className="flex h-[8px] w-auto shrink-0 items-center [&_svg]:block [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full sm:h-[10px] lg:h-[12px]"
+                  className="flex h-[11.05px] w-auto shrink-0 items-center [&_svg]:block [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full sm:h-[12.89px] lg:h-[16.57px]"
                 />
-                <span className="mt-2 shrink-0 font-serif text-lg font-normal italic leading-none tracking-normal sm:text-3xl lg:text-[34px]">
+                <span className="mt-2 shrink-0 font-serif text-[22.1px] font-normal italic leading-none tracking-normal sm:text-[34.99px] lg:text-[44.19px]">
                   {mastheadDescriptorOverride ?? mastheadBanner.logoDescriptor}
                 </span>
               </div>
@@ -3190,7 +3191,9 @@ export function LifestyleRiverCard({
       <article
         className={cn(
           "group/card relative grid min-w-0 cursor-pointer items-center gap-4 overflow-hidden rounded-card bg-[var(--hp-surface)] p-4 shadow-[var(--hp-shadow-card)] sm:p-5",
-          editorialRow ? "grid-cols-[minmax(0,28%)_minmax(0,1fr)]" : "grid-cols-[112px_minmax(0,1fr)] sm:grid-cols-[168px_minmax(0,1fr)]",
+          editorialRow
+            ? "grid-cols-[clamp(88px,24%,128px)_minmax(0,1fr)] gap-3 p-3 sm:gap-3 sm:p-3"
+            : "grid-cols-[112px_minmax(0,1fr)] sm:grid-cols-[168px_minmax(0,1fr)]",
           stretchToFeature && "@min-[820px]/hp-block:h-full @min-[820px]/hp-block:min-h-0",
         )}
         data-story-module="river"
@@ -5021,6 +5024,7 @@ function LifestyleRiverHomePage({
   feedError = null,
   onRequestNextFeedPage,
 }: LifestyleRiverHomePageProps) {
+  const { colorMode } = useTheme();
   const destinationConfigs = useDestinationConfigs();
   const searchParams = useSearchParams();
   const isSectionsHomepage = sectionsHomepage || searchParams?.get("layout") === "sections";
@@ -5029,6 +5033,9 @@ function LifestyleRiverHomePage({
   const enlargeBlocksSectionHeadings = destination === "all" && !initialBrandSlug;
   const riverLayout = savedRiverLayout === "list" ? "list" : "cards";
   const featuredCardColors = getFeaturedCardColors(destination, initialBrandSlug);
+  const carouselCardColors = colorMode === "dark"
+    ? { ...featuredCardColors, background: "var(--card)" }
+    : featuredCardColors;
   const fullWidthFeaturedHero = forceFullWidthFeaturedHero || (!isSectionsHomepage && !isBlocksHomepage && savedRiverLayout === "full-width-hero");
   const config = destinationConfig ?? destinationConfigs[destination];
   const { account, updatePreferences, addComment } = useReaderAccount();
@@ -6967,7 +6974,7 @@ function LifestyleRiverHomePage({
               </p>
             ) : null}
             <FeaturedStoryCarousel
-              cardColors={featuredCardColors}
+              cardColors={carouselCardColors}
               key={`full-width:${leadStory.id}:${heroStories.map((story) => story.id).join("|")}`}
               stories={heroStories}
               layoutMode={riverLayout}
@@ -7046,7 +7053,7 @@ function LifestyleRiverHomePage({
             <>
               {!fullWidthFeaturedHero && !isBlocksHomepage ? (
                 <FeaturedStoryCarousel
-                  cardColors={featuredCardColors}
+                  cardColors={carouselCardColors}
                   key={`${leadStory.id}:${heroStories.map((story) => story.id).join("|")}`}
                   // The slide layout's track already reserves 24 px below the card for its shadow, so it tucks in;
                   // the list layout has no such padding and keeps the river's full 26 px gap.
@@ -7115,7 +7122,7 @@ function LifestyleRiverHomePage({
                       </div>
                       <div className="min-w-0 space-y-6">
                         <FeaturedStoryCarousel
-                          cardColors={featuredCardColors}
+                          cardColors={carouselCardColors}
                           key={`blocks:${leadStory.id}:${heroStories.map((story) => story.id).join("|")}`}
                           stories={heroStories}
                           layoutMode={riverLayout}
@@ -8596,6 +8603,7 @@ export function HomePageTemplate({
     <div
       className="hearst-plus-theme min-h-screen bg-[var(--hp-background)] font-brand"
       data-filter-brand={selectedBrand?.slug}
+      data-destination-mode={destinationMode}
       data-mode={colorMode}
       style={homePageThemeCssVars as React.CSSProperties}
     >

@@ -187,7 +187,7 @@ export function ReaderActionBar({
             )}
           >
             <Bookmark
-              className="h-4 w-4"
+              className="h-[21px] w-[21px]"
               weight={saved ? "fill" : "regular"}
               aria-hidden
             />
@@ -198,7 +198,7 @@ export function ReaderActionBar({
             title={`${commentCount} comments`}
             className="group inline-flex h-11 min-w-11 shrink-0 items-center justify-center gap-1 text-sm text-muted-foreground transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30 sm:h-7 sm:min-w-0"
           >
-            <MessageCircle className="h-4 w-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-focus-visible:-translate-y-0.5" aria-hidden />
+            <MessageCircle className="h-[21px] w-[21px] transition-transform duration-200 group-hover:-translate-y-0.5 group-focus-visible:-translate-y-0.5" aria-hidden />
             <span className="tabular-nums">{commentCount}</span>
           </a>
         </div>
