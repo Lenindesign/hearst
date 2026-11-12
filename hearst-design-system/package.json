@@ -10,6 +10,7 @@
     "test:unit": "node --import tsx --test src/lib/*.test.ts src/components/ui/*.test.ts",
     "test:a11y:carousel": "node scripts/test-featured-carousel-a11y.mjs",
     "test:reader-return": "node scripts/test-reader-return.mjs",
+    "test:skeleton-match": "node scripts/test-skeleton-match.mjs",
     "test:storybook:docs": "node scripts/test-storybook-docs.mjs",
     "test:storybook:responsive": "node scripts/test-storybook-responsive.mjs",
     "verify:storybook:deployment": "node scripts/verify-storybook-deployment.mjs",

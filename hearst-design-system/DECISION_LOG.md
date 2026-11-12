@@ -9,6 +9,12 @@ Use this file for concise, dated context behind product and design decisions. Du
 - **Scope:** Every featured carousel in card layout (Hearst+ home, destinations, sections, publication pages).
 - **Canonical rule:** `STYLE.md`, Carousels and sliders.
 
+## 2026-11-12: Loading skeleton matches the loaded layout
+
+- **Context:** The river's loading skeleton drew a 16:9 bordered hero, no river cards and short rail boxes, so the page jumped when the feed arrived (the main column changed height, for example 549 → 595px at 1440 and 738 → 423px at 390).
+- **Decision:** The skeleton mirrors the loaded cards layout box for box at every breakpoint, and the carousel parallax rests at its designed position on load so the skeleton and the loaded panel agree. A regression (`npm run test:skeleton-match`) fails on any box that moves more than 1px.
+- **Canonical rule:** `STYLE.md` › Loading states.
+
 ## 2026-11-12: Stories open in place
 
 - **Context:** Opening a river story flickered and closing it landed somewhere else. Opening did a full `router.push` to the server-rendered `/read/` route, so the reader drew twice and its images reloaded. Closing pushed the feed route again, which refetched and rebuilt the river from its first batch, and the scroll restore then jumped three times (2600 → 748 → 616 → 438px).
