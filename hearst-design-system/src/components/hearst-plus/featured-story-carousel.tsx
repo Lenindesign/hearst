@@ -518,7 +518,8 @@ export function FeaturedStoryCarousel({
                     "relative w-full overflow-hidden rounded-card bg-transparent shadow-none",
                     layoutMode !== "list" && "featured-carousel-photo",
                     layoutMode === "list"
-                      ? "h-full min-h-0"
+                      // List rows: the photo meets the text panel flush, so only its outer (left) corners round.
+                      ? "h-full min-h-0 rounded-r-none"
                       : "h-auto aspect-[5/3]",
                   )}>
                     {layoutMode === "list" ? (
