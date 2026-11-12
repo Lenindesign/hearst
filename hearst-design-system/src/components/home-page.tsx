@@ -8179,12 +8179,12 @@ export function HomePageTemplate({
     () => ({
       ...selectedBrandCssVars,
       "--hp-section-title": selectedBrand?.slug === "autoweek"
-        ? colorMode === "light" ? "#242424" : "var(--foreground)"
+        ? colorMode === "light" ? "var(--brand-11)" : "var(--foreground)"
         : colorMode === "dark"
           ? "var(--primary)"
           : "color-mix(in oklab, var(--primary) 78%, var(--foreground) 22%)",
       "--hp-sidebar-heading": selectedBrand?.slug === "autoweek"
-        ? colorMode === "light" ? "#242424" : "var(--foreground)"
+        ? colorMode === "light" ? "var(--brand-11)" : "var(--foreground)"
         : colorMode === "dark"
           ? "var(--primary)"
           : "color-mix(in oklab, var(--primary) 78%, var(--foreground) 22%)",

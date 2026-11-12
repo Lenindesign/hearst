@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type RefObject } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
+import { localNewsTheme } from "@/lib/theme-options";
 import { ContentReaderDialogShell, rememberContentReaderReturnFocus } from "@/components/hearst-plus/content-reader-dialog-shell";
 import { ContentReaderMasthead } from "@/components/hearst-plus/content-reader-masthead";
 import { FeaturedStoryCarousel } from "@/components/hearst-plus/featured-story-carousel";
@@ -564,10 +565,11 @@ function NewspaperReaderModal({
       onClose={onClose}
       returnFocusElementRef={returnFocusElementRef}
       style={{
-        "--primary": "#2B6FAF",
-        "--hp-primary": "#2B6FAF",
-        "--hp-section-title": "#2B6FAF",
-        "--hp-sidebar-heading": "#2B6FAF",
+        // Portaled outside the page wrapper, so the Local News brand color comes from its theme.
+        "--primary": localNewsTheme.colors["1"],
+        "--hp-primary": localNewsTheme.colors["1"],
+        "--hp-section-title": localNewsTheme.colors["1"],
+        "--hp-sidebar-heading": localNewsTheme.colors["1"],
       } as CSSProperties}
     >
       <ContentReaderMasthead

@@ -548,7 +548,7 @@ function LabyrinthGame() {
 function LabyrinthPreview({ compact = false }: { compact?: boolean }) {
   return (
     <div className={cn(
-      "overflow-hidden rounded-[8px] border border-border bg-[#102A43]",
+      "overflow-hidden rounded-[8px] border border-border bg-[var(--brand-7)]",
       compact ? "absolute inset-0 p-2" : "mt-4 p-3 sm:p-5"
     )}>
       <svg viewBox="0 0 560 270" role="img" aria-label="Preview of a winding maze" className={cn(

@@ -461,7 +461,7 @@ export function UtilityBar({
             aria-label={`${openSection.label} menu`}
             className={cn(
               "max-h-[calc(100dvh-2rem)] w-full max-w-none overscroll-contain overflow-y-auto rounded-b-2xl rounded-t-none border-x border-b border-t-0 px-5 pt-3 pb-5 shadow-[0_18px_50px_rgba(15,23,42,0.16)] sm:px-8 sm:pt-5 sm:pb-8",
-              menuDarkMode ? "border-[#2A2E35] bg-[#15181D] text-white shadow-[0_18px_50px_rgba(0,0,0,0.45)]" : "border-slate-200 bg-white text-slate-950",
+              menuDarkMode ? "border-[#2A2E35] bg-[var(--component-navigation-utility-megamenu-background-knockout)] text-white shadow-[0_18px_50px_rgba(0,0,0,0.45)]" : "border-slate-200 bg-white text-slate-950",
               isInternationalMenu && "xl:p-2.5",
             )}
           >
