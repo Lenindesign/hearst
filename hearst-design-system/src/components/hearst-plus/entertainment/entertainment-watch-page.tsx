@@ -670,7 +670,7 @@ export function EntertainmentWatchPage({
 
   if (initialShowSlug) {
     return (
-      <div className="min-h-screen bg-[#050608] text-white">
+      <div className="min-h-screen bg-[var(--component-video-feed-surface-deep)] text-white">
         <UtilityBar activeDestinationOverride="A&E Family" darkMode />
         <MainNav
           brandSlug="hearst-all"
@@ -688,7 +688,7 @@ export function EntertainmentWatchPage({
 
   return (
     <div
-      className="min-h-screen bg-[#050608] text-white"
+      className="min-h-screen bg-[var(--component-video-feed-surface-deep)] text-white"
       style={{
         "--primary": "#B9913F",
         "--hp-primary": "#B9913F",
@@ -712,7 +712,7 @@ export function EntertainmentWatchPage({
         mastheadLogoOverride={mastheadLogo ? { ...mastheadLogo, tone: "white" } : null}
         darkMode
       />
-      <main className="overflow-hidden bg-[#050608]">
+      <main className="overflow-hidden bg-[var(--component-video-feed-surface-deep)]">
         <section className="relative min-h-[calc(100svh-112px)] overflow-hidden md:min-h-[min(82vh,820px)]">
           {activeHero.imageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -723,8 +723,8 @@ export function EntertainmentWatchPage({
               style={{ objectPosition: activeHero.heroImagePosition ?? "center center" }}
             />
           ) : null}
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,#050608_0%,rgba(5,6,8,0.96)_24%,rgba(5,6,8,0.55)_58%,rgba(5,6,8,0.2)_100%)]" />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,6,8,0.08)_0%,rgba(5,6,8,0.18)_48%,#050608_100%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,var(--component-video-feed-surface-deep)_0%,rgba(5,6,8,0.96)_24%,rgba(5,6,8,0.55)_58%,rgba(5,6,8,0.2)_100%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,6,8,0.08)_0%,rgba(5,6,8,0.18)_48%,var(--component-video-feed-surface-deep)_100%)]" />
           <div className="relative mx-auto flex min-h-[calc(100svh-112px)] max-w-[1440px] items-end px-5 pb-28 pt-24 md:min-h-[min(82vh,820px)] md:px-8 md:pb-36 lg:px-10">
             <div className="max-w-2xl">
               <div className="mb-5 flex items-center gap-3">
@@ -878,7 +878,7 @@ function ChannelRow({
             </CarouselItem>
           ))}
         </CarouselContent>
-        <span className="pointer-events-none absolute inset-y-1 right-0 z-10 hidden w-20 bg-gradient-to-l from-[#050608] to-transparent md:block" aria-hidden="true" />
+        <span className="pointer-events-none absolute inset-y-1 right-0 z-10 hidden w-20 bg-gradient-to-l from-[var(--component-video-feed-surface-deep)] to-transparent md:block" aria-hidden="true" />
         <CarouselPrevious
           size="icon-touch"
           className="left-3 z-20 hidden border-white bg-white text-black shadow-[0_10px_30px_rgba(0,0,0,0.35)] hover:bg-[#B9913F] disabled:opacity-0 md:inline-flex"
@@ -1085,7 +1085,7 @@ function ShowDetailModal({
       aria-labelledby="entertainment-show-modal-title"
     >
       <div className="absolute inset-0" onClick={onClose} />
-      <div className="absolute inset-0 mx-auto flex h-dvh w-full max-w-[1380px] flex-col overflow-hidden bg-[#050608] shadow-2xl sm:inset-6 sm:h-auto sm:w-auto sm:rounded-[8px] sm:ring-1 sm:ring-white/14">
+      <div className="absolute inset-0 mx-auto flex h-dvh w-full max-w-[1380px] flex-col overflow-hidden bg-[var(--component-video-feed-surface-deep)] shadow-2xl sm:inset-6 sm:h-auto sm:w-auto sm:rounded-[8px] sm:ring-1 sm:ring-white/14">
         <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-5 py-3 md:px-6">
           <div className="flex min-w-0 items-center gap-3">
             <BrandPill brand={show.brand} compact />

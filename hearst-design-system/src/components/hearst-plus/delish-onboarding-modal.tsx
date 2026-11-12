@@ -1143,7 +1143,7 @@ function CardProfileBlock({
     <div className="flex min-w-0 gap-4">
       <span className="shrink-0">{icon}</span>
       <div className="min-w-0">
-        <p className="text-xs font-black uppercase tracking-[0.08em] text-[#667085]">{label}</p>
+        <p className="text-xs font-black uppercase tracking-[0.08em] text-muted-foreground">{label}</p>
         <p className="type-d2 mt-1 break-words font-normal text-[#101828]">{value}</p>
       </div>
     </div>
@@ -1163,7 +1163,7 @@ function CardChipBlock({
     <div className="flex min-w-0 gap-4">
       <span className="shrink-0">{icon}</span>
       <div className="min-w-0">
-        <p className="text-xs font-black uppercase tracking-[0.08em] text-[#667085]">{label}</p>
+        <p className="text-xs font-black uppercase tracking-[0.08em] text-muted-foreground">{label}</p>
         <div className="mt-3 flex flex-wrap gap-2">
           {items.slice(0, 5).map((item) => (
             <span
