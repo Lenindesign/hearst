@@ -6,8 +6,11 @@ on:
     - cron: "15 10 * * *"
   workflow_dispatch:
 
+# main is protected by the "Protect main" ruleset, so the bot pushes to its own
+# branch and opens (or updates) a pull request for the owner to approve.
 permissions:
   contents: write
+  pull-requests: write
 
 concurrency:
   group: refresh-hearst-story-feed
@@ -22,16 +25,12 @@ jobs:
         working-directory: hearst-design-system
 
     steps:
-      - name: Check out main over HTTPS
+      - name: Check out main
         uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 0
           persist-credentials: true
-          # main is protected by the "Protect main" ruleset. The bot pushes with a
-          # write deploy key, which the ruleset lets bypass. Without the secret,
-          # checkout falls back to GITHUB_TOKEN and the push to main is rejected.
-          ssh-key: ${{ secrets.FEED_BOT_DEPLOY_KEY }}
 
       - name: Use Node.js
         uses: actions/setup-node@v4
@@ -52,7 +51,10 @@ jobs:
       - name: Verify the application build
         run: npm run build
 
-      - name: Publish the new daily edition
+      - name: Open a pull request with the new daily edition
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: bot/daily-story-feed
         run: |
           git config user.name "hearst-feed-bot"
           git config user.email "hearst-feed-bot@users.noreply.github.com"
@@ -68,5 +70,14 @@ jobs:
             echo "No story changes to publish."
             exit 0
           fi
-          git commit -m "chore: refresh daily Hearst story feed"
-          git push origin HEAD:main
+          EDITION="$(date -u +%Y-%m-%d)"
+          git switch -c "$BRANCH"
+          git commit -m "chore: refresh daily Hearst story feed ($EDITION)"
+          # One rolling branch: each run replaces the previous unmerged edition.
+          git push --force origin "$BRANCH"
+          BODY="Daily story feed refresh for $EDITION, built and validated by the scheduled workflow (feed:validate and next build passed). Approve and merge to publish. If a newer edition arrives first, this PR is updated in place."
+          if gh pr view "$BRANCH" --json state --jq .state 2>/dev/null | grep -q OPEN; then
+            gh pr edit "$BRANCH" --title "Daily story feed: $EDITION" --body "$BODY"
+          else
+            gh pr create --base main --head "$BRANCH" --title "Daily story feed: $EDITION" --body "$BODY"
+          fi
