@@ -28,6 +28,10 @@ jobs:
           ref: main
           fetch-depth: 0
           persist-credentials: true
+          # main is protected by the "Protect main" ruleset. The bot pushes with a
+          # write deploy key, which the ruleset lets bypass. Without the secret,
+          # checkout falls back to GITHUB_TOKEN and the push to main is rejected.
+          ssh-key: ${{ secrets.FEED_BOT_DEPLOY_KEY }}
 
       - name: Use Node.js
         uses: actions/setup-node@v4
