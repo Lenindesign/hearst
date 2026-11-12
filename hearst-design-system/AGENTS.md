@@ -31,3 +31,11 @@ Keep rule ownership clear:
 When guidance is repeated in a bridge or summary document, the owner listed above remains canonical. Update the canonical owner first, then synchronize any summary that still needs the rule for discoverability.
 
 When a user establishes a durable rule, update the appropriate canonical file in the same change. Preserve documented exceptions and never let one destination or brand treatment leak into another surface.
+
+## Working with collaborators
+
+`main` is protected: every change from a collaborator goes through a pull request that the repository owner approves, and merging it publishes to production. Netlify builds a deploy preview for each pull request, including Storybook at `/storybook/`.
+
+- Work on a branch and open a pull request. Fill in every item of the pull request checklist (`.github/pull_request_template.md`): vault, Storybook, specs, preview widths, and the type check.
+- A change is not done until the vault, the Storybook stories, and any affected spec page agree with the app. Update them in the same pull request.
+- Shared skills live in the repository so every collaborator's agent has the same tools: `.agents/skills/` (Codex) with links in `.claude/skills/` (Claude Code). Use `dimensional-drawing` for spec sheets and `dimensional-drawing-motion` for their films; spec sources live in `output/specs/` and publish to `public/specs/`.
