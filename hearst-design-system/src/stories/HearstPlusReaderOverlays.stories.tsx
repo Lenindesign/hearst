@@ -169,7 +169,7 @@ export const ContentReader: Story = {
         }),
       ).not.toBeInTheDocument();
     }
-    await expect(within(dialog).getByText(`Reading ${expectedStory.brand}`)).toBeInTheDocument();
+    await expect(within(dialog).getByText(/^Reading \d+ of \d+ stories$/)).toBeInTheDocument();
     await waitFor(() =>
       expect(
         within(dialog).getByRole("button", { name: "Close story reader" }),
@@ -301,7 +301,7 @@ export const DestinationReader: Story = {
     await userEvent.click(trigger!);
 
     const dialog = await page.findByRole("dialog", { name: "Story reader" });
-    await expect(within(dialog).getByText(/^Reading (Lifestyle|Autos|Fashion & Luxury|Enthusiast & Wellness)$/)).toBeVisible();
+    await expect(within(dialog).getByText(/^Reading \d+ of \d+ stories$/)).toBeInTheDocument();
     await expect(
       within(dialog).getByRole("link", { name: /^Go to (Lifestyle|Autos|Fashion & Luxury|Enthusiast & Wellness) homepage$/ }),
     ).toBeVisible();

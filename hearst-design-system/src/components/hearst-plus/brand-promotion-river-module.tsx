@@ -151,7 +151,7 @@ export function BrandPromotionRiverModule({
               Editorial spotlight
             </h2>
             <p className={cn(
-              "type-b2 mt-1 text-[#465468]",
+              "type-b2 mt-1 text-muted-foreground",
               isAEFamilyPromotion && "text-white/85",
             )}>
               {description}
@@ -177,7 +177,7 @@ export function BrandPromotionRiverModule({
                 {featuredStory.title}
               </span>
               <span className={cn(
-                "type-d2 mt-2 line-clamp-3 [display:-webkit-box] text-[#465468]",
+                "type-d2 mt-2 line-clamp-3 [display:-webkit-box] text-muted-foreground",
                 isAEFamilyPromotion && "text-white/85",
               )}>
                 {featuredStory.summary}
@@ -206,7 +206,7 @@ export function BrandPromotionRiverModule({
                     {story.title}
                   </span>
                   <span className={cn(
-                    "type-b2 mt-1 block text-[#465468]",
+                    "type-b2 mt-1 block text-muted-foreground",
                     isAEFamilyPromotion && "text-white/85",
                   )}>
                     {story.topic} · {getLifestyleByline(story)}

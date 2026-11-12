@@ -221,10 +221,8 @@ export function ContentReaderAdvertisement({
           <div>
             {/* Headline and deck sit together under the photo; the headline takes the vertical's CTA color
                 (--component-ad-headline falls back to the text color when that color would not read). */}
-            <p
-              className="type-t3 font-brand-secondary font-bold"
-              style={{ color: "var(--component-ad-headline, var(--foreground))" }}
-            >
+            {/* The accent is darkened for a light surface; on dark surfaces the headline uses the text color. */}
+            <p className="type-t3 font-brand-secondary font-bold text-[var(--component-ad-headline,var(--foreground))] dark:text-foreground">
               {ad.title}
             </p>
             <p

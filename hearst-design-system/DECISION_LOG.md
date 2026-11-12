@@ -2,6 +2,13 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-11-12: Featured carousel scroll parallax
+
+- **Context:** The owner asked for a subtle, refined parallax on the carousel text panel across the app.
+- **Decision:** The panel drifts up to 28px and the photo sinks up to about 11px (inside 12px of overscan) while the carousel scrolls through the viewport, eased and one-directional so the panel never clips at the track's bottom padding. Off for reduced motion and the list layout. An earlier 16px panel-only version read as too faint.
+- **Scope:** Every featured carousel in card layout (Hearst+ home, destinations, sections, publication pages).
+- **Canonical rule:** `STYLE.md`, Carousels and sliders.
+
 ## 2026-11-11: Left rail joins at 1140px
 
 - **Context:** A 1280px laptop at 150% Windows scaling reports about 1265px of page width, so index pages lost their left rail on common laptops.

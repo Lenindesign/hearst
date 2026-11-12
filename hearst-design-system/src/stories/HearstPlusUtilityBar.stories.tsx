@@ -46,7 +46,7 @@ export const LightGuest: Story = {
     const destinationNav = canvas.getByRole("navigation", {
       name: "Hearst destination sections",
     });
-    const allLink = within(destinationNav).getByRole("link", { name: "All" });
+    const allLink = within(destinationNav).getByRole("link", { name: /^All section menu/ });
     await expect(allLink).toHaveAttribute("aria-current", "page");
 
     const lifestyleLink = within(destinationNav).getByRole("link", {
@@ -153,7 +153,7 @@ export const MobileLayout: Story = {
     );
 
     for (const control of [
-      within(destinationNav).getByRole("link", { name: "All" }),
+      within(destinationNav).getByRole("link", { name: /^All section menu/ }),
       canvas.getByRole("button", { name: "Sign in or sign up" }),
     ]) {
       const rect = control.getBoundingClientRect();

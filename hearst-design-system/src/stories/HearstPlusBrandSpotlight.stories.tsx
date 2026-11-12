@@ -70,7 +70,7 @@ export const Default: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
     const region = canvas.getByRole("region", {
-      name: `Brand spotlight: ${productionPromotion.brand}`,
+      name: `Editorial spotlight: ${productionPromotion.brand}`,
     });
     const storyActions = region.querySelectorAll('[aria-label^="Open story:"]');
 
@@ -121,7 +121,7 @@ export const ResponsiveMobile: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const region = canvas.getByRole("region", {
-      name: `Brand spotlight: ${productionPromotion.brand}`,
+      name: `Editorial spotlight: ${productionPromotion.brand}`,
     });
 
     await expect(region.getBoundingClientRect().width).toBeLessThanOrEqual(
@@ -148,7 +148,7 @@ export const Zoom200Mobile: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const region = canvas.getByRole("region", {
-      name: `Brand spotlight: ${productionPromotion.brand}`,
+      name: `Editorial spotlight: ${productionPromotion.brand}`,
     });
     const regionRect = region.getBoundingClientRect();
     const contentRight = regionRect.right - 20;
@@ -171,7 +171,7 @@ export const NoEligiblePromotion: Story = {
     const canvas = within(canvasElement);
 
     await expect(
-      canvas.queryByRole("region", { name: /^Brand spotlight:/ }),
+      canvas.queryByRole("region", { name: /^Editorial spotlight:/ }),
     ).not.toBeInTheDocument();
     await expect(canvas.getByText("Production story river")).toBeVisible();
   },

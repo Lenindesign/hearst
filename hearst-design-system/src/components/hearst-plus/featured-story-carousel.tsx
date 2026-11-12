@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { BrandSourceIcon } from "@/components/hearst-plus/brand-source-icon";
 import { useTheme } from "@/components/theme-provider";
 import { usePrefersReducedMotion } from "@/components/hearst-plus/use-prefers-reduced-motion";
+import { useScrollParallax } from "@/components/hearst-plus/use-scroll-parallax";
 import { formatVideoDuration } from "@/components/hearst-plus/video-format";
 import { getHearstAutoResearchCarRating } from "@/lib/hearst-auto-research-cars";
 
@@ -92,6 +93,14 @@ export function FeaturedStoryCarousel({
 }: FeaturedStoryCarouselProps) {
   const { colorMode } = useTheme();
   const prefersReducedMotion = usePrefersReducedMotion();
+  const carouselRef = React.useRef<HTMLElement>(null);
+  // The text card drifts up to 28px and the photo down about 11px as the
+  // carousel scrolls through the viewport (STYLE.md, featured carousel scroll parallax).
+  useScrollParallax(carouselRef, {
+    enabled: layoutMode !== "list" && !prefersReducedMotion,
+    travel: 28,
+    property: "--featured-card-parallax",
+  });
   const initialActualIndex = React.useMemo(() => {
     const initialIndex = initialStoryId
       ? stories.findIndex((story) => story.id === initialStoryId)
@@ -368,6 +377,7 @@ export function FeaturedStoryCarousel({
 
   return (
     <article
+      ref={carouselRef}
       className={cn(
         "group relative min-w-0 overscroll-x-none overflow-hidden",
         className,
@@ -456,7 +466,7 @@ export function FeaturedStoryCarousel({
                 : cn(
                     "headline type-t2 featured-carousel-headline break-words",
                     scrimDirection === "left-to-right"
-                      ? "line-clamp-none w-full max-w-full"
+                      ? "line-clamp-3 w-full max-w-full"
                       : "line-clamp-3 w-full max-w-full",
                   ),
             );
@@ -516,7 +526,8 @@ export function FeaturedStoryCarousel({
                     ) : (
                       <div
                         className={cn(
-                          "absolute inset-y-0 left-[-5%] w-[110%]",
+                          // 12px of overscan above and below hides the edges while the photo drifts.
+                          "absolute inset-y-[-12px] left-[-5%] w-[110%]",
                           "ease-[cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none",
                           isDragging || !trackTransitionEnabled
                             ? "!transition-none"
@@ -526,6 +537,9 @@ export function FeaturedStoryCarousel({
                           // The image content travels 8% less than its slide,
                           // leaving the text card to lead the carousel motion.
                           transform: `translate3d(calc(${(trackIndex - visualIndex) * (100 / 13.75)}% - ${dragOffset * 0.08}px), 0, 0)`,
+                          // Counter-drift: the photo sinks while the card rises (max 11.2px, within the overscan).
+                          translate: "0 calc(var(--featured-card-parallax, 0px) * -0.4)",
+                          transitionProperty: "transform",
                         }}
                       >
                         {renderImage(story, index, index === activeIndex)}
@@ -540,7 +554,7 @@ export function FeaturedStoryCarousel({
                       ? "relative col-start-2 row-start-1 flex min-w-0 flex-col justify-center bg-card p-4 pt-12 text-foreground sm:p-6 sm:pt-12"
                       : cn(
                           cn(
-                            "pointer-events-none relative z-10 col-start-1 row-start-2 mx-[6px] -mt-10 flex h-[200px] min-w-0 flex-col rounded-card px-5 py-2.5 shadow-[0_6px_18px_rgba(0,0,0,0.20)] ease-[cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none sm:mx-[18px] sm:-mt-12 sm:h-[220px] sm:px-6 sm:py-3",
+                            "pointer-events-none relative z-10 col-start-1 row-start-2 mx-[6px] -mt-10 flex h-[224px] min-w-0 flex-col overflow-hidden rounded-card px-5 py-2.5 shadow-[0_6px_18px_rgba(0,0,0,0.20)] ease-[cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none sm:mx-[18px] sm:-mt-12 sm:h-[240px] sm:px-6 sm:py-3",
                             scrimDirection === "left-to-right" && "lg:mx-[33px]",
                           ),
                           isDragging || !trackTransitionEnabled
@@ -555,6 +569,10 @@ export function FeaturedStoryCarousel({
                     // Let the text card lead by 10px while the photo
                     // catches up through its delayed, shorter parallax motion.
                     transform: `translate3d(${-(trackIndex - visualIndex) * 10}px, 0, 0)`,
+                    // Scroll parallax rides on `translate`, outside the slide
+                    // transition, so it follows the page without lag.
+                    translate: "0 var(--featured-card-parallax, 0px)",
+                    transitionProperty: "transform",
                   } as React.CSSProperties}
                 >
                   <div className={cn(
@@ -609,7 +627,7 @@ export function FeaturedStoryCarousel({
                   )}
                   {layoutMode !== "list" && story.summary ? (
                     <p className={cn(
-                      "mt-3 line-clamp-2 w-full max-w-full text-sm leading-[1.265] text-[var(--featured-card-fg)] opacity-85 sm:text-base",
+                      "mt-3 line-clamp-2 w-full max-w-full text-sm leading-5 text-[var(--featured-card-fg)] opacity-85 sm:text-base sm:leading-6",
                     )}>
                       {story.summary}
                     </p>

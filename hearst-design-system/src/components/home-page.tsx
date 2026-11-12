@@ -5033,8 +5033,10 @@ function LifestyleRiverHomePage({
   const enlargeBlocksSectionHeadings = destination === "all" && !initialBrandSlug;
   const riverLayout = savedRiverLayout === "list" ? "list" : "cards";
   const featuredCardColors = getFeaturedCardColors(destination, initialBrandSlug);
+  // Dark mode swaps the panel to the card surface, so the text must follow it:
+  // banner foregrounds (e.g. #121212 on light brands) would vanish on a dark card.
   const carouselCardColors = colorMode === "dark"
-    ? { ...featuredCardColors, background: "var(--card)" }
+    ? { ...featuredCardColors, background: "var(--card)", foreground: "var(--card-foreground)" }
     : featuredCardColors;
   const fullWidthFeaturedHero = forceFullWidthFeaturedHero || (!isSectionsHomepage && !isBlocksHomepage && savedRiverLayout === "full-width-hero");
   const config = destinationConfig ?? destinationConfigs[destination];
@@ -8177,12 +8179,12 @@ export function HomePageTemplate({
     () => ({
       ...selectedBrandCssVars,
       "--hp-section-title": selectedBrand?.slug === "autoweek"
-        ? colorMode === "light" ? "#242424" : selectedBrandTheme?.colors["11"] ?? "var(--foreground)"
+        ? colorMode === "light" ? "#242424" : "var(--foreground)"
         : colorMode === "dark"
           ? "var(--primary)"
           : "color-mix(in oklab, var(--primary) 78%, var(--foreground) 22%)",
       "--hp-sidebar-heading": selectedBrand?.slug === "autoweek"
-        ? colorMode === "light" ? "#242424" : selectedBrandTheme?.colors["11"] ?? "var(--foreground)"
+        ? colorMode === "light" ? "#242424" : "var(--foreground)"
         : colorMode === "dark"
           ? "var(--primary)"
           : "color-mix(in oklab, var(--primary) 78%, var(--foreground) 22%)",
