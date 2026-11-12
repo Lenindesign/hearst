@@ -9,6 +9,13 @@ Use this file for concise, dated context behind product and design decisions. Du
 - **Scope:** Every featured carousel in card layout (Hearst+ home, destinations, sections, publication pages).
 - **Canonical rule:** `STYLE.md`, Carousels and sliders.
 
+## 2026-11-12: Stories open in place
+
+- **Context:** Opening a river story flickered and closing it landed somewhere else. Opening did a full `router.push` to the server-rendered `/read/` route, so the reader drew twice and its images reloaded. Closing pushed the feed route again, which refetched and rebuilt the river from its first batch, and the scroll restore then jumped three times (2600 → 748 → 616 → 438px).
+- **Decision:** In-app surfaces open the reader as a layer and change only the address with a shallow history entry; Close and Back step back to the page's entry. Added open and close motion, focus return without scrolling, and instant display of cached story images.
+- **Scope:** Every reader opened through `openStory` (river, carousel, rails, search). Direct `/read/` visits keep the server route.
+- **Canonical rule:** `APP_RULES.md` › Story routes; `STYLE.md` › Reader.
+
 ## 2026-11-11: Left rail joins at 1140px
 
 - **Context:** A 1280px laptop at 150% Windows scaling reports about 1265px of page width, so index pages lost their left rail on common laptops.

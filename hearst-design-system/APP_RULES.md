@@ -69,6 +69,17 @@ Read `PRODUCT.md` for intent. Open the relevant section of `STYLE.md` only when 
 - Article surfaces for Lifestyle, Autos, and Enthusiast & Wellness remain white with dark, readable text.
 - An explicit reader theme toggle may override the section default for the current experience.
 
+## Story routes
+
+Opening and closing a story must feel like lifting a page off the feed and putting it back, never like loading a new site.
+
+- **Open in place.** From the river, carousel, rails, search or any in-app surface, the reader opens as a layer over the page already on screen (`openStory` in `home-page.tsx`). Only the address changes: a shallow history entry (`history.pushState` with `hearstReaderOverlay`) to `/read/<story>/?from=<page>`, so the link can be shared and Back works. Never `router.push` to `/read/` from an in-app surface: a full navigation unmounts the river, refetches it, and the reader renders twice.
+- **Close returns to exactly where the reader left.** Close, Escape, the backdrop and Back step back to the page's own history entry. The page under the reader never unmounts, refetches or re-sorts, so scroll position, the surrounding stories and loaded pages are unchanged, and focus returns to the opener without scrolling. Re-ranking that follows a read (for example demoting read stories) applies on the next visit, not on return.
+- **Back and Forward move the layer.** Back from `/read/` closes the reader; Forward reopens the same story, both without a page load.
+- **Direct visits keep the full route.** Opening a `/read/` link directly or refreshing it renders the server reader page, and closing goes to its `from` page with the scroll snapshot as a fallback.
+- **Tabs and sections** change the address with `history.pushState` too (no reload), and switching the story inside the reader replaces the entry instead of stacking new ones.
+- Regression: open a story about 2,600px down the Hearst+ river and close it by button, Escape and Back. `scrollY` and the card's position must be unchanged to the pixel, and focus must be on the card's opener.
+
 ## Reader modal
 
 - On mobile, the standard reader occupies the complete visual viewport and replaces app-level chrome with one reader header and one contextual category row. Desktop retains the centered, inset reader surface. While the reader is open, the app shell beneath it is inert and absent from the accessibility tree.

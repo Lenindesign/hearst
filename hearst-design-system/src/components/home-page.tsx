@@ -5253,6 +5253,38 @@ function LifestyleRiverHomePage({
     return true;
   }, []);
 
+  // True while the open reader owns a shallow /read/ history entry pushed by openStory.
+  const readerOverlayHistoryRef = React.useRef(false);
+  // Set while closeStory steps back, so the entry it lands on can never reopen a reader.
+  const readerClosingViaBackRef = React.useRef(false);
+  const openStoryIdRef = React.useRef(openStoryId);
+  React.useEffect(() => {
+    openStoryIdRef.current = openStoryId;
+  }, [openStoryId]);
+  React.useEffect(() => {
+    // Back and Forward move between the page and its reader layer without a page load.
+    const syncReaderFromHistory = (event: PopStateEvent) => {
+      if (readerClosingViaBackRef.current) {
+        readerClosingViaBackRef.current = false;
+        return;
+      }
+      const match = window.location.pathname.match(/^\/read\/([^/]+)\/?$/);
+      if (match && event.state?.hearstReaderOverlay) {
+        readerOverlayHistoryRef.current = true;
+        const storyId = event.state.hearstReaderStory ?? decodeURIComponent(match[1]);
+        if (openStoryIdRef.current !== storyId) setOpenStoryId(storyId);
+        return;
+      }
+      if (!match && openStoryIdRef.current && !initialOpenStoryId) {
+        readerOverlayHistoryRef.current = false;
+        setInitialCommentStoryId(null);
+        setOpenStoryId(null);
+      }
+    };
+    window.addEventListener("popstate", syncReaderFromHistory);
+    return () => window.removeEventListener("popstate", syncReaderFromHistory);
+  }, [initialOpenStoryId, setOpenStoryId]);
+
   const openStory = React.useCallback((storyId: string, options?: { openComments?: boolean }) => {
     setInitialCommentStoryId(options?.openComments ? storyId : null);
     readerReturnFocusElementRef.current = rememberContentReaderReturnFocus(
@@ -5283,14 +5315,19 @@ function LifestyleRiverHomePage({
       returnHref,
       singleBrandName ? initialBrandSlug : undefined,
     );
-    if (options?.openComments) {
-      const readerUrl = new URL(readerHref, window.location.origin);
-      readerUrl.searchParams.set("comments", "1");
-      router.push(`${readerUrl.pathname}${readerUrl.search}${readerUrl.hash}`, { scroll: false });
-    } else {
-      router.push(readerHref, { scroll: false });
-    }
-  }, [initialBrandSlug, rememberReaderRiverReturnContext, rememberSessionContinueReadingStory, router, setOpenStoryId, singleBrandName, storyOpenReturnHref]);
+    const readerUrl = new URL(readerHref, window.location.origin);
+    if (options?.openComments) readerUrl.searchParams.set("comments", "1");
+    // APP_RULES › Story routes: the reader opens as a layer over the page that is
+    // already on screen. Only the address changes (a shallow history entry Next
+    // syncs into usePathname), so the river is never unmounted, refetched or
+    // re-sorted, and Back or Close returns to exactly where the reader left it.
+    window.history.pushState(
+      { ...window.history.state, hearstReaderOverlay: true, hearstReaderStory: storyId },
+      "",
+      `${readerUrl.pathname}${readerUrl.search}${readerUrl.hash}`,
+    );
+    readerOverlayHistoryRef.current = true;
+  }, [initialBrandSlug, rememberReaderRiverReturnContext, rememberSessionContinueReadingStory, setOpenStoryId, singleBrandName, storyOpenReturnHref]);
 
   const switchReaderStory = React.useCallback((storyId: string) => {
     recordStoryOpened(storyId);
@@ -5312,6 +5349,14 @@ function LifestyleRiverHomePage({
     const closingStoryId = openStoryId;
     setInitialCommentStoryId(null);
     setOpenStoryId(null);
+    if (readerOverlayHistoryRef.current && window.history.state?.hearstReaderOverlay) {
+      // Opened as a layer: step back to the page's own entry. The page under the
+      // reader never moved, so there is no scroll to restore.
+      readerOverlayHistoryRef.current = false;
+      readerClosingViaBackRef.current = true;
+      window.history.back();
+      return;
+    }
     if (pathname?.startsWith("/read/")) {
       router.push(currentReaderReturnHref, { scroll: false });
       // Anchor to the story card when we know it; the saved raw scroll offset

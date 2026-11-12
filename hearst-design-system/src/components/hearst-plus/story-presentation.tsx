@@ -43,9 +43,18 @@ export function LifestyleRiverImage({
   const imageKey = `${story.id}-${story.image}`;
   const [loadedImageKey, setLoadedImageKey] = React.useState<string | null>(null);
   const loaded = loadedImageKey === imageKey;
+  const imageRef = React.useRef<HTMLImageElement | null>(null);
+  // An image the browser already has (the card the reader opened from loaded it)
+  // shows at once instead of fading in from blank, so opening a story has no
+  // empty first frame. Layout effect: it runs before the first paint.
+  React.useLayoutEffect(() => {
+    const image = imageRef.current;
+    if (image?.complete && image.naturalWidth > 0) setLoadedImageKey(imageKey);
+  }, [imageKey]);
 
   return (
     <Image
+      ref={imageRef}
       key={imageKey}
       src={story.image}
       alt={alt ?? `${story.brand}: ${story.title}`}

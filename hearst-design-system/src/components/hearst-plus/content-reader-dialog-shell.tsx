@@ -40,6 +40,8 @@ function readStoredReturnFocusLabel() {
   }
 }
 
+const readerExitMs = 120;
+
 export function rememberContentReaderReturnFocus(element: Element | null) {
   const returnFocusElement = element instanceof HTMLElement && element !== document.body
     ? element
@@ -90,6 +92,20 @@ export function ContentReaderDialogShell({
   const onCloseRef = React.useRef(onClose);
   const nestedDialogOpenRef = React.useRef(nestedDialogOpen);
   const [returnFocusLabel] = React.useState(readStoredReturnFocusLabel);
+  // Close plays a 120ms fade before the reader unmounts (STYLE.md › Reader motion).
+  const [closing, setClosing] = React.useState(false);
+  const closingRef = React.useRef(false);
+  const requestClose = React.useCallback(() => {
+    if (closingRef.current) return;
+    closingRef.current = true;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) {
+      onCloseRef.current();
+      return;
+    }
+    setClosing(true);
+    window.setTimeout(() => onCloseRef.current(), readerExitMs);
+  }, []);
 
   React.useEffect(() => {
     onCloseRef.current = onClose;
@@ -120,7 +136,7 @@ export function ContentReaderDialogShell({
 
       if (event.key === "Escape") {
         event.preventDefault();
-        onCloseRef.current();
+        requestClose();
         return;
       }
 
@@ -172,8 +188,10 @@ export function ContentReaderDialogShell({
           focusRestoreVersion !== restoreVersion
         ) return;
 
+        // The page under the reader keeps its scroll position, so returning focus
+        // must not scroll it (APP_RULES › Story routes).
         if (returnFocusElement && isVisibleFocusTarget(returnFocusElement)) {
-          returnFocusElement.focus();
+          returnFocusElement.focus({ preventScroll: true });
           clearStoredReturnFocusLabel();
           return;
         }
@@ -189,7 +207,7 @@ export function ContentReaderDialogShell({
           );
 
           if (labelledReturnTarget) {
-            labelledReturnTarget.focus();
+            labelledReturnTarget.focus({ preventScroll: true });
             clearStoredReturnFocusLabel();
             return;
           }
@@ -211,7 +229,7 @@ export function ContentReaderDialogShell({
             : null;
 
           if (carouselSelectorTarget) {
-            carouselSelectorTarget.focus();
+            carouselSelectorTarget.focus({ preventScroll: true });
             clearStoredReturnFocusLabel();
             return;
           }
@@ -224,24 +242,33 @@ export function ContentReaderDialogShell({
 
       window.requestAnimationFrame(restoreFocus);
     };
-  }, [portalTarget, returnFocusElementRef, returnFocusLabel]);
+  }, [portalTarget, requestClose, returnFocusElementRef, returnFocusLabel]);
 
   if (!portalTarget) return null;
 
   return createPortal(
     <div
       ref={dialogRef}
-      className="fixed inset-0 z-[200] bg-foreground/55 backdrop-blur-sm"
+      className="reader-layer fixed inset-0 z-[200]"
+      data-state={closing ? "closing" : "open"}
+      onClickCapture={(event) => {
+        // The masthead Close button routes through the same exit fade.
+        if (event.target instanceof Element && event.target.closest("[data-reader-close]")) {
+          event.preventDefault();
+          event.stopPropagation();
+          requestClose();
+        }
+      }}
       role="dialog"
       aria-modal="true"
       aria-label={ariaLabel}
       tabIndex={-1}
     >
-      <div className="absolute inset-0" onClick={onClose} />
+      <div className="reader-backdrop absolute inset-0 bg-foreground/55 backdrop-blur-sm" onClick={requestClose} />
       <div
         ref={contentRef}
         className={cn(
-          "hearst-plus-theme absolute inset-0 isolate mx-auto flex h-[100dvh] w-full max-w-[1360px] flex-col overflow-x-hidden overflow-y-auto overscroll-contain bg-background text-foreground shadow-2xl [scrollbar-gutter:stable]",
+          "reader-panel hearst-plus-theme absolute inset-0 isolate mx-auto flex h-[100dvh] w-full max-w-[1360px] flex-col overflow-x-hidden overflow-y-auto overscroll-contain bg-background text-foreground shadow-2xl [scrollbar-gutter:stable]",
           "sm:inset-6 sm:h-auto sm:w-auto sm:rounded-[8px]",
         )}
         data-brand={brand.slug}

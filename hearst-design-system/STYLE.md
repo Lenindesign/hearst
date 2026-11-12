@@ -100,6 +100,8 @@ The complete brand registry is documented in `BRAND_STYLES.md`. Canonical HDS pu
 
 ## Reader
 
+- Reader motion: on open, the backdrop fades in over 160ms and the panel rises 12px into place over 220ms (`cubic-bezier(0.2, 0, 0, 1)`); Close, Escape and the backdrop reverse it in 120ms before the reader unmounts. Back closes without the fade, the way browser navigation feels. Reduced motion shows and hides the reader with no animation. The keyframes end on `transform: none` so fixed children are never trapped. `APP_RULES.md` › Story routes owns the routing behavior.
+- No blank first frame: a story image the browser already has (the card that opened the reader loaded it) shows at once; only images that are still loading fade in.
 - The reader action bar appears directly under the headline and story identity metadata.
 - Reader theme follows the active article section by default. Brand-origin entries inherit the active publication's registered logo, colors, headline font, body font, and semantic controls while preserving the shared reader structure.
 - In the desktop reader masthead, align every active publication logo to the left edge of the shared brand slot while preserving its natural aspect ratio and normalized visual height.
