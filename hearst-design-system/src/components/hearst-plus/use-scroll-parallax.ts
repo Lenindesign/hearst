@@ -16,10 +16,10 @@ type ScrollParallaxOptions = {
 /**
  * Writes a subtle scroll-linked offset to a CSS custom property on `ref`.
  *
- * The value runs from 0px when the element enters the bottom of the viewport
- * to `-travel` px when it leaves the top, so foreground layers that read it
- * drift up slightly faster than the page. It never goes positive, so a layer
- * can't move below its resting place. Work only runs while the element is
+ * The value starts at 0px wherever the element is when the page loads and
+ * moves toward `-travel` px as it scrolls up and out of the viewport, so
+ * foreground layers that read it drift up slightly faster than the page. It
+ * never goes positive, so a layer can't move below its resting place. Work only runs while the element is
  * visible, and the value eases toward its target for a damped, settled feel.
  */
 export function useScrollParallax<T extends HTMLElement>(
@@ -38,6 +38,10 @@ export function useScrollParallax<T extends HTMLElement>(
     let visible = false;
     let current = Number.NaN;
     let target = 0;
+    // The first reading becomes the resting point, so the layer sits exactly
+    // where it is designed (and where the loading skeleton drew it) until the
+    // reader scrolls, then drifts up from there.
+    let rest = Number.NaN;
 
     const measure = () => {
       const rect = element.getBoundingClientRect();
@@ -45,7 +49,9 @@ export function useScrollParallax<T extends HTMLElement>(
       // 1 while the element's centre is below the viewport, -1 once it is above.
       const offset = (rect.top + rect.height / 2 - viewport / 2) / (viewport / 2 + rect.height / 2);
       const clamped = Math.max(-1, Math.min(1, offset));
-      target = ((clamped - 1) / 2) * travel;
+      const raw = ((clamped - 1) / 2) * travel;
+      if (Number.isNaN(rest)) rest = raw;
+      target = Math.min(0, raw - rest);
     };
 
     const tick = () => {
