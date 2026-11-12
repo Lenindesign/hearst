@@ -1657,3 +1657,21 @@
 .reference-source a[href="/hearst-plus-reference/"] {
   display: none !important;
 }
+
+/* Reader motion (STYLE.md › Reader motion): the dimmed backdrop fades in, the
+   panel rises 12px into place from 40% opacity, and Close reverses it in 120ms.
+   The panel never starts fully transparent, and the final keyframes use
+   transform: none so the panel never keeps a containing block for fixed children. */
+@keyframes reader-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes reader-backdrop-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes reader-panel-in { from { opacity: 0.4; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@keyframes reader-panel-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(8px); } }
+.reader-layer .reader-backdrop { animation: reader-backdrop-in 160ms ease-out both; }
+.reader-layer .reader-panel { animation: reader-panel-in 220ms cubic-bezier(0.2, 0, 0, 1) both; }
+.reader-layer[data-state="closing"] { pointer-events: none; }
+.reader-layer[data-state="closing"] .reader-backdrop { animation: reader-backdrop-out 120ms ease-in both; }
+.reader-layer[data-state="closing"] .reader-panel { animation: reader-panel-out 120ms ease-in both; }
+@media (prefers-reduced-motion: reduce) {
+  .reader-layer .reader-backdrop,
+  .reader-layer .reader-panel { animation: none; }
+}
