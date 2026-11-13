@@ -71,7 +71,7 @@ The complete brand registry is documented in `BRAND_STYLES.md`. Canonical HDS pu
 
 ## Carousels and sliders
 
-- Carousel headlines display no more than three lines and use an ellipsis when truncated.
+- Carousel headlines display no more than three lines and use an ellipsis when truncated. The featured carousel headline is 26.4 / 32px, then 35.2 / 40px from 768px, so the hover underline fits inside the third line. It takes no underline buffer below the clamp, because a buffer under a tight line exposes the top of the clamped fourth line.
 - Carousel descriptions display no more than two lines and use an ellipsis when truncated.
 - The carousel must remain responsive without clipping text at supported breakpoints.
 - Featured carousel story panels take the page's banner color from `getFeaturedCardColors` (`src/lib/brand-banners.ts`): the Hearst+ brand-wall navy on the home, the section banner on destinations, and the brand's bar color (`palette-background-utility`) on publication pages. White text sits on that color darkened just enough for 5.5:1; light brand colors (Autoweek, Good Housekeeping, Veranda) keep their color with `#121212` text. Carousels outside these pages default to black. In dark mode the panel switches to the card surface (`--card`) with the card text color (`--card-foreground`), never the banner foreground, so light-brand text can't vanish on a dark card. Index-page rail ads use the same page colors (`accent` on `ContentReaderAdvertisement`): the CTA takes the card color and text color, and the headline takes the card color darkened until it reaches 4.5:1 on the ad surface. The in-reader ad keeps the theme primary. The panel carries a soft drop shadow (`0 6px 18px rgba(0,0,0,0.2)`); add no other surface behind it. Crop carousel photos edge-to-edge in a consistent 5:3 frame with no bottom fade. The list layout uses the card surface instead, and its photo rounds only its outer (left) corners so it meets the text panel flush.
@@ -106,6 +106,7 @@ The complete brand registry is documented in `BRAND_STYLES.md`. Canonical HDS pu
 ## Reader
 
 - Reader motion: on open, the backdrop fades in over 160ms and the panel rises 12px into place over 220ms (`cubic-bezier(0.2, 0, 0, 1)`); Close, Escape and the backdrop reverse it in 120ms before the reader unmounts. Back closes without the fade, the way browser navigation feels. Reduced motion shows and hides the reader with no animation. The keyframes end on `transform: none` so fixed children are never trapped. `APP_RULES.md` › Story routes owns the routing behavior.
+- Reader rails (context rail and ad rail) stick 16px (`--layout-gap`) below the masthead once it collapses to 64px on scroll (`sticky top-20`), and stay 16px clear of the panel's bottom edge (`max-h-[calc(100dvh-9rem)]`).
 - No blank first frame: a story image the browser already has (the card that opened the reader loaded it) shows at once; only images that are still loading fade in.
 - The reader action bar appears directly under the headline and story identity metadata.
 - Reader theme follows the active article section by default. Brand-origin entries inherit the active publication's registered logo, colors, headline font, body font, and semantic controls while preserving the shared reader structure.

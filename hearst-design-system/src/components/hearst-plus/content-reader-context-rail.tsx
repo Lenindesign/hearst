@@ -73,7 +73,8 @@ export function ContentReaderContextRail({
       className="hidden xl:block"
       aria-label="Contextual story recommendations"
     >
-      <div className="sticky top-32 max-h-[calc(100dvh-10rem)] space-y-4 overflow-y-auto overscroll-contain pb-12 pr-1">
+      {/* Sticks 16px (--layout-gap) below the reader masthead once it collapses to 64px on scroll (STYLE.md › Reader). */}
+      <div className="sticky top-20 max-h-[calc(100dvh-9rem)] space-y-4 overflow-y-auto overscroll-contain pb-12 pr-1">
         {recommendations.sharedIntent.length > 0 ? (
           <TrendingStoryRail
             stories={recommendations.sharedIntent}
