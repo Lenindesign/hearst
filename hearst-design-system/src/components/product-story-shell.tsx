@@ -3,6 +3,7 @@ import Image from "next/image";
 import type { CSSProperties } from "react";
 import { DraggableBrandLogoMarquee } from "@/components/brand-logo-marquee";
 import { SiteFooter } from "@/components/fre/site-footer";
+import { SpecNavActive } from "@/components/specs/spec-nav-active";
 import { entertainmentWebsiteFeedConfigs } from "@/lib/hearst-entertainment-story-feeds";
 import { hearstNewspaperPublications } from "@/lib/hearst-newspaper-feed-framework";
 import { brands, type BrandTheme } from "@/lib/brands";
@@ -82,6 +83,8 @@ export function ProductHeader({ current, appearance = "light" }: { current: Prod
 
   const renderLinks = (compact: boolean) => specNavLinks.map((item) => {
     const active = item.id === current;
+    // Chapter links of /specs/: SpecNavActive marks the chapter being read with data-active (styled in globals.css).
+    const chapter = item.href.startsWith("/specs/#") ? item.href.slice("/specs/#".length) : undefined;
     const className = `relative inline-flex min-h-11 shrink-0 items-center whitespace-nowrap border-b-2 ${compact ? "px-3" : "px-2"} ${active ? activeTone : `border-transparent ${linkTone}`} ${linkFocus}`;
     if (item.external) {
       return <a key={item.href} href={item.href} target="_blank" rel="noopener noreferrer" className={className}>{item.label}<span className="sr-only"> (opens in a new tab)</span></a>;
@@ -90,7 +93,7 @@ export function ProductHeader({ current, appearance = "light" }: { current: Prod
     if (item.href.endsWith(".html")) {
       return <a key={item.href} href={item.href} className={className}>{item.label}</a>;
     }
-    return <Link key={item.href} href={item.href} aria-current={active ? "page" : undefined} className={className}>{item.label}</Link>;
+    return <Link key={item.href} href={item.href} aria-current={active ? "page" : undefined} data-spec-chapter={chapter} className={className}>{item.label}</Link>;
   });
 
   return (
@@ -124,6 +127,7 @@ export function ProductHeader({ current, appearance = "light" }: { current: Prod
           </Link>
         </nav>
       </div>
+      {current === "specs" ? <SpecNavActive /> : null}
     </header>
   );
 }

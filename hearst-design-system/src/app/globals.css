@@ -1678,3 +1678,14 @@
   .reader-layer .reader-backdrop,
   .reader-layer .reader-panel { animation: none; }
 }
+
+/* Specifications page header: the chapter being read (SpecNavActive sets data-active)
+   gets the same underline and ink as the current page link. Navy headers use the knockout ink. */
+header[data-current-product-page] a[data-spec-chapter][data-active="true"] {
+  border-bottom-color: var(--primary);
+  color: var(--foreground);
+}
+header[data-current-product-page].text-primary-foreground a[data-spec-chapter][data-active="true"] {
+  border-bottom-color: var(--primary-foreground);
+  color: var(--primary-foreground);
+}
