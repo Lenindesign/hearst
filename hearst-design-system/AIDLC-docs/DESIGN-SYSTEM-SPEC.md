@@ -21,6 +21,11 @@ canonical token files, and verified automation are the evidence to reconcile.
 | GitHub workflow | `../.github/workflows/hearst-design-system-quality.yml` | Current repository quality and application-build automation |
 | Feed refresh workflow | `../.github/workflows/refresh-hearst-story-feed.yml` | Daily RSS refresh that opens a PR (the nested `hearst-design-system/.github/workflows/rss-refresh.yml` is inert: GitHub only runs root workflows) |
 
+The token JSON in `tokens/` is the only authority for token values. Nothing is
+synced in from outside the repository (the Design Brain vault's AI Enabler
+`design-system-token-sync` workflow does not apply to this app); a value changes
+only through a reviewed edit to the JSON and `npm run build-tokens`.
+
 Figma and Pencil do not override canonical Git tokens or shipped production
 behavior. A design artifact can support a specification but cannot substitute
 for a production import site, executable interaction, or responsive route.
