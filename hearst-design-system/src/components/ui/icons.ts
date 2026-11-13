@@ -71,7 +71,6 @@ export { PersonSimpleTaiChiIcon as PersonSimpleTaiChi } from "@phosphor-icons/re
 export { SneakerMoveIcon as SneakerMove } from "@phosphor-icons/react/dist/ssr/SneakerMove";
 export { TrashIcon as Trash2 } from "@phosphor-icons/react/dist/ssr/Trash";
 export { TrendUpIcon as TrendingUp } from "@phosphor-icons/react/dist/ssr/TrendUp";
-export { TrophyIcon as Trophy } from "@phosphor-icons/react/dist/ssr/Trophy";
 export { UserIcon as User } from "@phosphor-icons/react/dist/ssr/User";
 export { UserCircleIcon as CircleUserRound } from "@phosphor-icons/react/dist/ssr/UserCircle";
 export { UsersThreeIcon as UsersThree } from "@phosphor-icons/react/dist/ssr/UsersThree";
