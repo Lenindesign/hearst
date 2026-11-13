@@ -18,6 +18,8 @@ Before changing any destination, brand page, carousel, river, sidebar, card, vid
 
 Do not load every canonical document for a narrowly scoped change.
 
+This repository's vault is the only product and design memory. Do not read, search, cite or copy from the Design Brain vault (`~/Documents/ChatGPT/Design Brain`) or any other knowledge base outside the repository, even when it is available in the session; if a rule seems missing, ask the owner and add it to the canonical file here.
+
 Keep rule ownership clear:
 
 - HDS token architecture and component contracts belong in `AIDLC-docs/DESIGN-SYSTEM-SPEC.md`.
