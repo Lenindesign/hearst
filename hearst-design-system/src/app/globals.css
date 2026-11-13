@@ -176,12 +176,13 @@
 
 /* WebKit line clamping clips text decorations placed below the last line box.
    Reserve a small internal buffer for hover/focus underlines, then offset it
-   with a negative margin so card layout and spacing do not grow. */
+   with a negative margin so card layout and spacing do not grow.
+   The featured carousel is left out on purpose: its 32 / 40px line heights
+   leave room for the underline inside the third line, and the buffer would
+   expose the top of the clamped fourth line (STYLE.md › Carousels). */
 .hearst-plus-theme :is(
   [class~="group-hover/card:underline"],
   [class~="group-focus-within/card:underline"],
-  [class~="group-hover/featured-slide:underline"],
-  [class~="group-focus-visible/featured-slide:underline"],
   [class~="group-hover/video-card:underline"],
   [class~="group-focus-visible/video-card:underline"],
   [class~="group-hover:underline"],
@@ -1492,7 +1493,7 @@
   .hearst-plus-theme[data-destination-mode="flux"] .headline.type-t6 { font-size: calc(0.875rem * 1.1); line-height: calc(1.25rem * 1.1); }
   /* Keep the carousel at its original headline scale; the 10% Fashion & Luxury
      increase is intended for the story cards around it. */
-  .hearst-plus-theme[data-destination-mode="flux"] .headline.featured-carousel-headline { font-size: 1.65rem; line-height: 1.75rem; }
+  .hearst-plus-theme[data-destination-mode="flux"] .headline.featured-carousel-headline { font-size: 1.65rem; line-height: 2rem; }
   .hearst-plus-theme[data-destination-mode="flux"] .brand-promotion-story-headline { font-size: 22px; line-height: 30.8px; }
   @media (min-width: 768px) {
     .hearst-plus-theme[data-destination-mode="flux"] .headline.type-t1 { font-size: calc(3rem * 1.1); line-height: calc(3.25rem * 1.1); }
@@ -1500,13 +1501,15 @@
     .hearst-plus-theme[data-destination-mode="flux"] .headline.type-t3,
     .hearst-plus-theme[data-destination-mode="flux"] .headline.story-card-headline { font-size: calc(1.5rem * 1.1); line-height: calc(1.75rem * 1.1); }
     .hearst-plus-theme[data-destination-mode="flux"] .headline.type-t4 { font-size: calc(1.75rem * 1.1); line-height: calc(2rem * 1.1); }
-    .hearst-plus-theme[data-destination-mode="flux"] .headline.featured-carousel-headline { font-size: 2.2rem; line-height: 2.25rem; }
+    .hearst-plus-theme[data-destination-mode="flux"] .headline.featured-carousel-headline { font-size: 2.2rem; line-height: 2.5rem; }
   }
-  /* Featured carousel cards use a slightly larger T2 headline while retaining
-     the same line-height rhythm so the shorter overlay still fits its copy. */
-  .featured-carousel-headline { font-size: 1.65rem; line-height: 1.75rem; }
+  /* Featured carousel cards use a slightly larger T2 headline. Line heights
+     follow the headline rule (4 · round(size · ratio ÷ 4)): 26.4 / 32 and
+     35.2 / 40. A tighter line lets the clamped fourth line's capitals show
+     inside the underline buffer below the third line. */
+  .featured-carousel-headline { font-size: 1.65rem; line-height: 2rem; }
   @media (min-width: 768px) {
-    .featured-carousel-headline { font-size: 2.2rem; line-height: 2.25rem; }
+    .featured-carousel-headline { font-size: 2.2rem; line-height: 2.5rem; }
   }
   .type-d1 { font-size: 1.25rem; line-height: 1.75rem; letter-spacing: 0; text-wrap: pretty; }
   .type-b1 { font-size: 1.125rem; line-height: 1.75rem; letter-spacing: 0; text-wrap: pretty; }
