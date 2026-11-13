@@ -200,6 +200,8 @@ import { ContextualRiverAdvertisement } from "./hearst-plus/contextual-river-adv
 import { DisplayAdvertisement, toyotaCertifiedUsedHalfPage } from "./hearst-plus/display-advertisement";
 import { LocalNewsRail } from "./hearst-plus/local-news-rail";
 import { BrandPromotionRiverModule } from "./hearst-plus/brand-promotion-river-module";
+import { StoryAwardCard, StoryAwardRibbon } from "./hearst-plus/story-award";
+import { getRiverStoryAward, getStoryAward } from "@/lib/story-awards";
 import {
   getBrandPromotionForSlot,
   type BrandPromotionMatch,
@@ -3184,6 +3186,7 @@ export function LifestyleRiverCard({
   const galleryPreview = useGalleryPreview(story, kind === "gallery" && isExplicitGalleryStory(story));
   const currentLayout = useRiverLayout();
   const layout = layoutOverride ?? currentLayout;
+  const storyAward = getStoryAward(story.id);
 
   // List layout: a compact row (thumbnail left, text right) for scanning many stories quickly.
   if (layout === "list" && !featured) {
@@ -3286,6 +3289,7 @@ export function LifestyleRiverCard({
           playing={videoPlaying}
           onTogglePlaying={() => setVideoPlaying((playing) => !playing)}
         />
+        {storyAward && !isVideo ? <StoryAwardRibbon award={storyAward} className="absolute left-3 top-3 z-20" /> : null}
       </div>
       <div className={cn(
         "story-card-content relative min-w-0",
@@ -5743,17 +5747,30 @@ function LifestyleRiverHomePage({
     && activeFilter === "For You"
     && delishVerticalVideoStories.length > 0
     && (effectiveBrandFilters.length === 0 || effectiveBrandFilters.includes("Delish"));
+  // Award announcement (APP_RULES.md › Award announcements): while an award is active, the river opens with
+  // its card, so the winning story leaves Today's Picks and the river to appear once on the page.
+  const riverStoryAward = !usingVideoTabFeed && activeFilter === "For You"
+    ? getRiverStoryAward({ destination, brandSlug: initialBrandSlug })
+    : null;
+  const riverAwardStory = riverStoryAward
+    ? displayStories.find((story) => story.id === riverStoryAward.storyId)
+    : undefined;
+  const riverAwardRelatedStories = riverStoryAward && riverAwardStory
+    ? riverStoryAward.relatedStoryIds.flatMap((id) => displayStories.find((story) => story.id === id) ?? [])
+    : [];
+  const awardStoryIds = new Set(riverAwardStory ? [riverAwardStory.id] : []);
+  const heroCandidateStories = awardStoryIds.size ? displayStories.filter((story) => !awardStoryIds.has(story.id)) : displayStories;
   const todaysPickCandidates = shouldUseTodaysPicks
-    ? displayStories.flatMap((story) => {
+    ? heroCandidateStories.flatMap((story) => {
         if (!story.publishedAt) return [];
         const publishedTime = Date.parse(story.publishedAt);
         const ageInHours = (Date.now() - publishedTime) / 3_600_000;
         if (!Number.isFinite(publishedTime) || ageInHours < 0 || ageInHours > TODAYS_PICKS_FRESHNESS_WINDOW_HOURS) return [];
         return [{ ...story, age: Math.floor(ageInHours) }];
       })
-    : visibleStories;
+    : visibleStories.filter((story) => !awardStoryIds.has(story.id));
   const latestAvailablePickCandidates = shouldUseTodaysPicks && todaysPickCandidates.length === 0
-    ? displayStories
+    ? heroCandidateStories
       .filter((story) => Boolean(story.publishedAt) && Number.isFinite(Date.parse(story.publishedAt!)) && Date.parse(story.publishedAt!) <= Date.now())
       .sort((first, second) => Date.parse(second.publishedAt!) - Date.parse(first.publishedAt!))
     : todaysPickCandidates;
@@ -7553,8 +7570,18 @@ function LifestyleRiverHomePage({
                 </div>
               ) : (() => {
                 const usedPromotionBrandSlugs = new Set<string>();
+                const awardCard = riverStoryAward && riverAwardStory ? (
+                  <StoryAwardCard
+                    key={`award-${riverStoryAward.id}`}
+                    award={riverStoryAward}
+                    story={riverAwardStory}
+                    relatedStories={riverAwardRelatedStories}
+                    destination={destination}
+                    onOpenStory={openStory}
+                  />
+                ) : null;
 
-                return riverStories.map((story, index) => {
+                return [awardCard, ...riverStories.filter((story) => !awardStoryIds.has(story.id)).map((story, index) => {
                 const storyPosition = index + heroStories.length + 1;
                 // Single-brand mode shows a clean brand river — no cross-brand
                 // sponsor/promo/ad modules interleaved.
@@ -7628,7 +7655,7 @@ function LifestyleRiverHomePage({
                     ) : null}
                   </React.Fragment>
                 );
-                });
+                })];
               })()}
 
               {delishShortsRiverInsertIndex === riverStories.length ? (

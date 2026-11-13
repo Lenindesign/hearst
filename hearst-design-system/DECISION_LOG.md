@@ -2,6 +2,14 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-11-13: Award announcement card
+
+- **Context:** MotorTrend named the Rivian R2 its 2027 SUV of the Year, and the story read like any other river card.
+- **Decision:** Awards get one full-width card at the top of the river in the awarding publication's colors, built only from the winning story's own data, plus a ribbon on the winner's other cards.
+- **Scope:** The awarding publication's page and the destinations listed for the award, during the award's dates.
+- **Exceptions:** None.
+- **Canonical rule:** `APP_RULES.md` › Award announcements.
+
 ## 2026-11-13: One specifications page
 
 - **Context:** The specs lived on nine separate pages in two looks (four app routes and five static HTML files), so the header had nine spec links and the documents drifted apart.

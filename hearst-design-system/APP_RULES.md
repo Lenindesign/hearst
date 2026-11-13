@@ -139,6 +139,14 @@ Opening and closing a story must feel like lifting a page off the feed and putti
 - Activity is in-app only: pending, approved and reply notices appear in the left rail's Activity list with a new-item count. There is no email.
 - On phones, the left rail becomes a horizontal chip row (Home, joined groups, All groups) above the feed, a group's About collapses above its feed, and the right rail is hidden.
 
+## Award announcements
+
+- A publication's award (MotorTrend's 2027 SUV of the Year is the first) is announced with one award card (`StoryAwardCard`) at the top of the river, before the first story. It shows on the awarding publication's page and on the destinations listed for the award, only in the default For You view, and only between the award's start and end dates in `src/lib/story-awards.ts`. One award card per page.
+- The card is editorial, not advertising: it carries no Advertisement disclosure, and its content is the winning story's own headline, summary, byline and photo, plus at most one related story from the same award package. Never add claims, specs or prices the story does not state.
+- Colors are the awarding publication's card colors from `getFeaturedCardColors` (the featured carousel pair), never another brand's. When the winning photo already shows the publication's award mark, the card adds no seal (`photoCarriesMark`).
+- While its card shows, the winning story leaves Today's Picks and the river so it appears once on the page. Elsewhere, the winner's standard cards carry the award ribbon (`StoryAwardRibbon`) on the photo.
+- Spec: `/specs/#blocks-cards` (card type 10). Storybook: Hearst Plus / Components / Award Announcement.
+
 ## Featured carousel
 
 - Only the active featured slide is operable and exposed to assistive technology. Inactive slides remain rendered for animation but are `inert`, `aria-hidden`, and removed from sequential focus.
