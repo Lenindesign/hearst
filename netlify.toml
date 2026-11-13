@@ -6,6 +6,62 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
+# Every spec is a chapter of the single specifications page (/specs/). Old spec URLs open
+# the page at their chapter; force overrides the static .html files that used to live there.
+[[redirects]]
+  from = "/cta-specs"
+  to = "/specs/#cta"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/layout-specs"
+  to = "/specs/#layout"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/type-specs"
+  to = "/specs/#type"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/token-specs"
+  to = "/specs/#tokens"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/specs/blocks-spec.html"
+  to = "/specs/#blocks"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/specs/nav-spec.html"
+  to = "/specs/#nav"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/specs/reader-spec.html"
+  to = "/specs/#reader"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/specs/carousel-spec.html"
+  to = "/specs/#carousel"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/specs/system-spec.html"
+  to = "/specs/#system"
+  status = 301
+  force = true
+
 # When the UI is at /storybook/, Storybook fetches ./index.json → /storybook/index.json.
 # A catch-all /storybook/* → index.html makes that URL return HTML → JSON.parse throws.
 # Map JSON + iframe first; only then serve the HTML shell.

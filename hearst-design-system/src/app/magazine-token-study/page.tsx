@@ -330,7 +330,7 @@ export default function MagazineTokenStudyPage() {
               <li><strong className="text-foreground">Theme scope for overlays.</strong> Dialogs portaled to &lt;body&gt; copy the nearest theme scope, so they keep the brand.</li>
               <li><strong className="text-foreground">Type and layout standards.</strong> Line height, tracking, and spacing roles (UI-TYPE-001) and the rail layout contract (UI-LAYOUT-001) are CSS utilities and custom properties, not yet token JSON.</li>
             </ul>
-            <p className="type-c1 mt-3 text-muted-foreground">The magazine-side Storybook and repository observations above are unchanged from October 31. Current Hearst+ detail: <Link href="/token-specs/" className="font-semibold text-foreground underline underline-offset-2">Tokens and brand guides</Link>.</p>
+            <p className="type-c1 mt-3 text-muted-foreground">The magazine-side Storybook and repository observations above are unchanged from October 31. Current Hearst+ detail: <Link href="/specs/#tokens" className="font-semibold text-foreground underline underline-offset-2">Tokens and brand guides</Link>.</p>
           </div>
         </section>
 

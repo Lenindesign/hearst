@@ -1,11 +1,9 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import type { CSSProperties } from "react";
-import type { Metadata } from "next";
 
 import { BrandLogo } from "@/components/brand-logo";
-import { ButtonStyleLink } from "@/components/cta-specs/button-brand-preview";
-import { ProductFooter, ProductHeader } from "@/components/product-story-shell";
+import { SpecChapter, SpecFilm, SpecSection, SpecSheet, SpecSubhead, SpecTable } from "@/components/specs/spec-kit";
 import { Button } from "@/components/ui/button";
 import { brandCtaCapturedAt, brandCtaSpecs, type BrandCtaSpec } from "@/lib/brand-cta-specs";
 import { brands, type BrandTheme } from "@/lib/brands";
@@ -14,11 +12,6 @@ import { getBrandLogoSrc } from "@/lib/logos";
 import { brandToCssVars } from "@/lib/theme-css-vars";
 import { themeOptions } from "@/lib/theme-options";
 import { cn } from "@/lib/utils";
-
-export const metadata: Metadata = {
-  title: "Tokens and Brand Guides | Hearst+",
-  description: "How Hearst+ design tokens flow from Git to components, how one token resolves for each brand, the runtime scopes and guards, and a generated style guide for all 29 brand themes.",
-};
 
 const pipeline = [
   ["P1", "Source", "tokens/ in Git: core, semantic and component JSON, one file per brand, and _meta.json for production font overrides. The only place a value is authored."],
@@ -103,6 +96,11 @@ const sectionLabels: Record<string, string> = {
 
 const BASE_THEMES = new Set(["white-label", "fre"]);
 
+/** Renders the listed columns as monospace code, as the token tables did on their own page. */
+function mono(rows: readonly (readonly string[])[], columns: readonly number[]) {
+  return rows.map((row) => row.map((cell, index) => (columns.includes(index) ? <code key={index} className="font-mono text-[0.8125rem]">{cell}</code> : cell)));
+}
+
 /** Logos whose SVG paints itself white (a --primary: #fff default) need the logo component to set a color. */
 function isKnockoutLogo(src: string) {
   try {
@@ -161,60 +159,23 @@ function brandSwatches(brand: BrandTheme) {
     .slice(0, 8);
 }
 
-function SectionHeading({ id, eyebrow, title, children }: { id: string; eyebrow: string; title: string; children?: React.ReactNode }) {
-  return (
-    <div className="max-w-3xl">
-      <p className="type-k1 text-muted-foreground">{eyebrow}</p>
-      <h2 id={id} className="headline type-t2 mt-3">{title}</h2>
-      {children ? <p className="type-d2 mt-3 text-muted-foreground">{children}</p> : null}
-    </div>
-  );
-}
-
-function SpecTable({ caption, headers, rows, mono = [] }: { caption: string; headers: string[]; rows: readonly (readonly string[])[]; mono?: number[] }) {
-  return (
-    <div className="overflow-x-auto rounded-card bg-card shadow-[var(--hp-shadow-card)]">
-      <table className="w-full min-w-[40rem] border-collapse text-left">
-        <caption className="sr-only">{caption}</caption>
-        <thead>
-          <tr>
-            {headers.map((header) => (
-              <th key={header} scope="col" className="type-k1 border-b border-border px-4 py-3 text-muted-foreground">{header}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => (
-            <tr key={row.join("|")} className="border-b border-border last:border-b-0">
-              {row.map((cell, index) => (
-                <td key={`${row[0]}-${index}`} className={cn("type-b2 px-4 py-3 align-top", index === 0 && "font-semibold", mono.includes(index) && "font-mono text-[0.8125rem]")}>
-                  {cell}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
 function BrandGuide({ brand }: { brand: BrandTheme }) {
   const logo = getBrandLogoSrc(brand.slug);
   const swatches = brandSwatches(brand);
   const radius = brand.componentTokens["component-button-radius-default"] ?? 0;
   const primary = brand.componentTokens["component-button-background-primary-solid-default"];
   const cta = brandCtaSpecs[brand.slug];
+  const id = `tokens-brand-${brand.slug}`;
   return (
     <article
-      id={`brand-${brand.slug}`}
-      className="flex min-w-0 scroll-mt-24 flex-col overflow-hidden rounded-card border border-border bg-card shadow-[var(--hp-shadow-card)]"
-      aria-labelledby={`brand-${brand.slug}-name`}
+      id={id}
+      className="flex min-w-0 scroll-mt-28 flex-col overflow-hidden rounded-card border border-border bg-card shadow-[var(--hp-shadow-card)]"
+      aria-labelledby={`${id}-name`}
     >
       <div className="flex h-24 items-center justify-center border-b border-border bg-white px-6">
         {logo && !isKnockoutLogo(logo) ? (
           // eslint-disable-next-line @next/next/no-img-element -- brand logo SVG in its own colors
-          <img src={logo} alt={`${brand.name} logo`} className="max-h-12 w-auto max-w-full object-contain" />
+          <img src={logo} alt={`${brand.name} logo`} loading="lazy" decoding="async" className="max-h-12 w-auto max-w-full object-contain" />
         ) : logo ? (
           <BrandLogo
             slug={brand.slug}
@@ -227,7 +188,7 @@ function BrandGuide({ brand }: { brand: BrandTheme }) {
       </div>
       <div className="flex flex-1 flex-col gap-4 p-5">
         <div className="flex items-baseline justify-between gap-3">
-          <h3 id={`brand-${brand.slug}-name`} className="type-t5 font-bold">{brand.name}</h3>
+          <h5 id={`${id}-name`} className="type-t5 font-bold">{brand.name}</h5>
           <code className="type-c1 text-muted-foreground">{brand.slug}</code>
         </div>
         <div>
@@ -296,9 +257,7 @@ function BrandGuide({ brand }: { brand: BrandTheme }) {
   );
 }
 
-const sectionClass = "scroll-mt-24 space-y-6 border-t border-border pt-10";
-
-export default function TokenSpecsPage() {
+export function TokensChapter() {
   const publications = brands.filter((brand) => !BASE_THEMES.has(brand.slug));
   const baseThemes = brands.filter((brand) => BASE_THEMES.has(brand.slug));
   const bySection = Object.keys(sectionLabels).map((section) => ({
@@ -308,145 +267,103 @@ export default function TokenSpecsPage() {
   }));
 
   return (
-    <div className="hearst-plus-theme min-h-screen bg-background font-sans text-foreground">
-      <ProductHeader current="token-specs" />
-      <main className="mx-auto max-w-[1360px] space-y-14 px-5 py-10 md:px-10 md:py-16">
-        <header className="max-w-4xl">
-          <p className="type-k1 text-muted-foreground">HDS foundations · Tokens</p>
-          <h1 className="headline type-t1 mt-4">Tokens and brand guides</h1>
-          <p className="type-d1 mt-5 max-w-3xl text-muted-foreground">
-            One component contract, 29 brand expressions. Design decisions live as tokens in Git, a single build turns them into brand data, and the runtime scopes them as CSS custom properties so every Button, Card and headline renders in the right brand without a line of brand-specific code.
-          </p>
-          <nav aria-label="On this page" className="mt-7 flex flex-wrap gap-2">
-            {[["Pipeline", "#pipeline"], ["Tiers", "#tiers"], ["Resolve", "#resolve"], ["Scopes", "#scopes"], ["Hygiene", "#hygiene"], ["Film", "#film"], ["Drawing", "#drawing"], ["Brand guides", "#brands"]].map(([label, href]) => (
-              <ButtonStyleLink key={href} href={href} variant="ghost" className="px-3">{label}</ButtonStyleLink>
-            ))}
-          </nav>
-        </header>
+    <SpecChapter
+      id="tokens"
+      number="04"
+      kicker="HDS foundations · Tokens"
+      title="Tokens and brand guides"
+      lede={<p>One component contract, 29 brand expressions. Design decisions live as tokens in Git, a single build turns them into brand data, and the runtime scopes them as CSS custom properties so every Button, Card and headline renders in the right brand without a line of brand-specific code.</p>}
+      contents={[["Pipeline", "#tokens-pipeline"], ["Tiers", "#tokens-tiers"], ["Resolve", "#tokens-resolve"], ["Scopes", "#tokens-scopes"], ["Hygiene", "#tokens-hygiene"], ["Film", "#tokens-film"], ["Drawing", "#tokens-drawing"], ["Brand guides", "#tokens-brands"]]}
+    >
+      <SpecSection id="tokens-pipeline" kicker="04.1 · Pipeline" title="From Git to a rendered pixel." intro={<p>Seven stages, each with one job. A value is authored once in tokens/ and reaches every brand through generated data and runtime scope.</p>}>
+        <ol className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          {pipeline.map(([code, name, body]) => (
+            <li key={code} className="rounded-card bg-card p-5 shadow-[var(--hp-shadow-card)]">
+              <p className="type-k1 text-muted-foreground">{code}</p>
+              <p className="type-t5 mt-1 font-bold">{name}</p>
+              <p className="type-b2 mt-2 text-muted-foreground">{body}</p>
+            </li>
+          ))}
+        </ol>
+      </SpecSection>
 
-        <section aria-labelledby="pipeline" className={sectionClass}>
-          <SectionHeading id="pipeline" eyebrow="01 · Pipeline" title="From Git to a rendered pixel.">
-            Seven stages, each with one job. A value is authored once in tokens/ and reaches every brand through generated data and runtime scope.
-          </SectionHeading>
-          <ol className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-            {pipeline.map(([code, name, body]) => (
-              <li key={code} className="rounded-card bg-card p-5 shadow-[var(--hp-shadow-card)]">
-                <p className="type-k1 text-muted-foreground">{code}</p>
-                <p className="type-t5 mt-1 font-bold">{name}</p>
-                <p className="type-b2 mt-2 text-muted-foreground">{body}</p>
+      <SpecSection id="tokens-tiers" kicker="04.2 · Tiers and names" title="Four tiers, one naming grammar." intro={<p>Each tier aliases the one below it. Components only read the semantic and component tiers, so a brand can change a color without touching a component.</p>}>
+        <SpecTable caption="Token tiers" headers={["Tier", "Name", "Files", "Tokens", "What lives here"]} rows={mono(tierRows, [2])} codeFirst={false} />
+        <div className="rounded-card bg-card p-5 shadow-[var(--hp-shadow-card)]">
+          <SpecSubhead>Anatomy of a token name</SpecSubhead>
+          <ol className="mt-4 flex flex-wrap gap-2">
+            {nameParts.map(([part, role, detail]) => (
+              <li key={part} className="min-w-[8.5rem] flex-1 rounded-[6px] border border-border p-3">
+                <code className="type-b2 font-mono font-semibold">{part}</code>
+                <p className="type-k1 mt-2 text-muted-foreground">{role}</p>
+                <p className="type-c1 mt-1 text-muted-foreground">{detail}</p>
               </li>
             ))}
           </ol>
-        </section>
+        </div>
+      </SpecSection>
 
-        <section aria-labelledby="tiers" className={sectionClass}>
-          <SectionHeading id="tiers" eyebrow="02 · Tiers and names" title="Four tiers, one naming grammar.">
-            Each tier aliases the one below it. Components only read the semantic and component tiers, so a brand can change a color without touching a component.
-          </SectionHeading>
-          <SpecTable caption="Token tiers" headers={["Tier", "Name", "Files", "Tokens", "What lives here"]} rows={tierRows} mono={[2]} />
-          <div className="rounded-card bg-card p-5 shadow-[var(--hp-shadow-card)]">
-            <p className="type-k1 text-muted-foreground">Anatomy of a token name</p>
-            <ol className="mt-4 flex flex-wrap gap-2">
-              {nameParts.map(([part, role, detail]) => (
-                <li key={part} className="min-w-[8.5rem] flex-1 rounded-[6px] border border-border p-3">
-                  <code className="type-b2 font-mono font-semibold">{part}</code>
-                  <p className="type-k1 mt-2 text-muted-foreground">{role}</p>
-                  <p className="type-c1 mt-1 text-muted-foreground">{detail}</p>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
+      <SpecSection id="tokens-resolve" kicker="04.3 · Resolve one token" title="Same name, different brand, different value." intro={<p>The primary button background follows its aliases down to a core gray in the default theme. Cosmopolitan&rsquo;s brand file resolves the same name to its red, and the runtime sets it as a CSS custom property the Button reads.</p>}>
+        <SpecTable caption="Alias chain for the primary button background" headers={["Step", "Token or selector", "Resolves to"]} rows={mono(chain, [1, 2])} codeFirst={false} />
+      </SpecSection>
 
-        <section aria-labelledby="resolve" className={sectionClass}>
-          <SectionHeading id="resolve" eyebrow="03 · Resolve one token" title="Same name, different brand, different value.">
-            The primary button background follows its aliases down to a core gray in the default theme. Cosmopolitan&rsquo;s brand file resolves the same name to its red, and the runtime sets it as a CSS custom property the Button reads.
-          </SectionHeading>
-          <SpecTable caption="Alias chain for the primary button background" headers={["Step", "Token or selector", "Resolves to"]} rows={chain} mono={[1, 2]} />
-        </section>
+      <SpecSection id="tokens-scopes" kicker="04.4 · Scopes and guards" title="The nearest scope wins, and guards keep it readable.">
+        <SpecTable caption="CSS custom property scopes" headers={["Scope", "Selector", "What it sets"]} rows={mono(scopes, [1])} codeFirst={false} />
+        <SpecTable caption="Runtime guards" headers={["Guard", "Rule", "Behavior"]} rows={guards} codeFirst={false} />
+      </SpecSection>
 
-        <section aria-labelledby="scopes" className={sectionClass}>
-          <SectionHeading id="scopes" eyebrow="04 · Scopes and guards" title="The nearest scope wins, and guards keep it readable." />
-          <SpecTable caption="CSS custom property scopes" headers={["Scope", "Selector", "What it sets"]} rows={scopes} mono={[1]} />
-          <SpecTable caption="Runtime guards" headers={["Guard", "Rule", "Behavior"]} rows={guards} />
-        </section>
+      <SpecSection id="tokens-hygiene" kicker="04.5 · Token hygiene" title="Hard-coded values, mapped to tokens by their job." intro={<p>The repo audit (npx tsx scripts/audit-tokens.ts --ci) flags new hard-coded colors. The token-mapping skill, adapted from design.how to HDS, then maps each one to a token by what it is for before its value, so a text gray is never matched to a border token that happens to share its hex. It is read-only and runs per mode and brand scope.</p>}>
+        <SpecTable caption="First pass, 2026-11-12: 55 flagged fingerprints, 213 lines read" headers={["Class", "Rows", "What it means"]} rows={hygieneClasses} codeFirst={false} />
+        <SpecTable caption="Swapped in PR #6 (rendered color unchanged or within ΔE OK 1)" headers={["Where", "Was", "Now", "Renders"]} rows={mono(hygieneSwaps, [1, 2])} codeFirst={false} />
+        <p className="max-w-3xl leading-7 text-muted-foreground">
+          Result: the audit dropped from 55 to 51 new fingerprints. Of the 12 swappable rows, 6 shipped; 4 ad palette values, 1 fallback and 1 Delish surface with no token in scope were left on purpose.
+        </p>
+        <SpecTable caption="Still to decide" headers={["Decision", "What is open"]} rows={hygieneOpen} codeFirst={false} />
+        <p className="max-w-3xl leading-7 text-muted-foreground">
+          To run it: ask an agent to &ldquo;map the hard-coded colors in this diff to HDS tokens&rdquo;. The skill lives in <code>.agents/skills/token-mapping</code> (linked for Claude Code), and the pull request checklist asks for it whenever the audit reports a new fingerprint.
+        </p>
+      </SpecSection>
 
-        <section aria-labelledby="hygiene" className={sectionClass}>
-          <SectionHeading id="hygiene" eyebrow="05 · Token hygiene" title="Hard-coded values, mapped to tokens by their job.">
-            The repo audit (npx tsx scripts/audit-tokens.ts --ci) flags new hard-coded colors. The token-mapping skill, adapted from design.how to HDS, then maps each one to a token by what it is for before its value, so a text gray is never matched to a border token that happens to share its hex. It is read-only and runs per mode and brand scope.
-          </SectionHeading>
-          <SpecTable caption="First pass, 2026-11-12: 55 flagged fingerprints, 213 lines read" headers={["Class", "Rows", "What it means"]} rows={hygieneClasses} />
-          <SpecTable caption="Swapped in PR #6 (rendered color unchanged or within ΔE OK 1)" headers={["Where", "Was", "Now", "Renders"]} rows={hygieneSwaps} mono={[1, 2]} />
-          <p className="type-d2 max-w-3xl text-muted-foreground">
-            Result: the audit dropped from 55 to 51 new fingerprints. Of the 12 swappable rows, 6 shipped; 4 ad palette values, 1 fallback and 1 Delish surface with no token in scope were left on purpose.
-          </p>
-          <SpecTable caption="Still to decide" headers={["Decision", "What is open"]} rows={hygieneOpen} />
-          <p className="type-d2 max-w-3xl text-muted-foreground">
-            To run it: ask an agent to &ldquo;map the hard-coded colors in this diff to HDS tokens&rdquo;. The skill lives in <code>.agents/skills/token-mapping</code> (linked for Claude Code), and the pull request checklist asks for it whenever the audit reports a new fingerprint.
-          </p>
-        </section>
+      <SpecSection id="tokens-film" kicker="04.6 · Motion film" title="Watch a token travel." intro={<p>The four tiers stack up, a token name assembles part by part, one button token resolves down its alias chain and then swaps value brand by brand, the pipeline carries it to the browser, scopes nest, guards correct a failing color, and every brand guide passes by.</p>}>
+        <SpecFilm
+          src="/specs/token-film.mp4"
+          poster="/specs/token-drawing.svg"
+          label="Motion film of the token architecture: four token tiers stack from core to brand with their counts; a token name assembles into tier, component, property, intent, variant and state; the primary button background resolves from the component tier to a core gray, then the brand tier swaps its value for Cosmopolitan, Esquire, Car and Driver and others while a sample button changes color; the seven pipeline stages light up from Git to components; nested CSS scopes show the nearest scope winning and a dialog copying its theme; a failing label contrast is corrected by the guard; then each brand's logo, colors, fonts and radius pass in a tour, and the drawing sheet resolves."
+        />
+      </SpecSection>
 
-        <section aria-labelledby="film" className={sectionClass}>
-          <SectionHeading id="film" eyebrow="06 · Motion film" title="Watch a token travel.">
-            The four tiers stack up, a token name assembles part by part, one button token resolves down its alias chain and then swaps value brand by brand, the pipeline carries it to the browser, scopes nest, guards correct a failing color, and every brand guide passes by.
-          </SectionHeading>
-          <figure className="min-w-0">
-            <video
-              src="/specs/token-film.mp4"
-              poster="/specs/token-drawing.svg"
-              controls
-              muted
-              playsInline
-              preload="metadata"
-              aria-label="Motion film of the token architecture: four token tiers stack from core to brand with their counts; a token name assembles into tier, component, property, intent, variant and state; the primary button background resolves from the component tier to a core gray, then the brand tier swaps its value for Cosmopolitan, Esquire, Car and Driver and others while a sample button changes color; the seven pipeline stages light up from Git to components; nested CSS scopes show the nearest scope winning and a dialog copying its theme; a failing label contrast is corrected by the guard; then each brand's logo, colors, fonts and radius pass in a tour, and the drawing sheet resolves."
-              className="block aspect-video w-full rounded-card bg-white shadow-[var(--hp-shadow-card)]"
-            />
-          </figure>
-        </section>
+      <SpecSection id="tokens-drawing" kicker="04.7 · Dimensional drawing" title="UI-TOKEN-001 · token architecture." intro={<p>The pipeline, the four tiers, one alias chain, the name anatomy, the scope cascade, the runtime guards and the brand boundary on one sheet.</p>}>
+        <SpecSheet
+          src="/specs/token-drawing.svg"
+          width={1700}
+          height={1060}
+          href="/specs/token-drawing.html"
+          caption="Rev A · 2026-11-09 · schematic"
+          alt="Dimensional drawing of the token architecture, revision A: a seven-stage pipeline from token JSON in Git through the build, generated brand data, the runtime, CSS scopes and Tailwind to components; four token tiers with 624 core, 412 semantic, 398 component and 29 brand files of 607 tokens; the primary button background resolving through palette aliases to #1C1C1C, and to #D70000 for Cosmopolitan; the six-part token name; nested scopes from :root to the publication wrapper and the portal root; four runtime guards; what a brand may set and what the system fixes; and tables."
+        />
+      </SpecSection>
 
-        <section aria-labelledby="drawing" className={sectionClass}>
-          <SectionHeading id="drawing" eyebrow="07 · Dimensional drawing" title="UI-TOKEN-001 · token architecture.">
-            The pipeline, the four tiers, one alias chain, the name anatomy, the scope cascade, the runtime guards and the brand boundary on one sheet.
-          </SectionHeading>
-          <figure className="min-w-0">
-            <div className="overflow-x-auto rounded-card bg-white shadow-[var(--hp-shadow-card)]">
-              {/* eslint-disable-next-line @next/next/no-img-element -- static vector drawing */}
-              <img
-                src="/specs/token-drawing.svg"
-                width={1700}
-                height={1060}
-                alt="Dimensional drawing of the token architecture, revision A: a seven-stage pipeline from token JSON in Git through the build, generated brand data, the runtime, CSS scopes and Tailwind to components; four token tiers with 624 core, 412 semantic, 398 component and 29 brand files of 607 tokens; the primary button background resolving through palette aliases to #1C1C1C, and to #D70000 for Cosmopolitan; the six-part token name; nested scopes from :root to the publication wrapper and the portal root; four runtime guards; what a brand may set and what the system fixes; and tables."
-                className="block h-auto w-full min-w-[960px]"
-              />
-            </div>
-            <figcaption className="type-b2 mt-3 flex flex-wrap items-center justify-between gap-3 text-muted-foreground">
-              <span>Rev A · 2026-11-09 · schematic</span>
-              <ButtonStyleLink href="/specs/token-drawing.html">Open the full sheet with notes</ButtonStyleLink>
-            </figcaption>
-          </figure>
-        </section>
-
-        <section aria-labelledby="brands" className={sectionClass}>
-          <SectionHeading id="brands" eyebrow="08 · Brand guides" title="29 brand themes, generated from the tokens.">
-            {`${publications.length} publications and ${baseThemes.length} base themes. Swatches, fonts and radius are read from src/lib/brands.ts and each preview renders inside that brand's token scope. The official CTA under each preview is the brand's live-site header CTA, captured ${brandCtaCapturedAt}; its typeface, weight, case and tracking are now brand tokens, so the HDS Button below it renders the same way.`}
-          </SectionHeading>
-          {bySection.map(({ section, label, brands: sectionBrands }) => (
-            <div key={section} className="space-y-4">
-              <h3 className="type-k1 text-muted-foreground">{label} · {sectionBrands.length}</h3>
-              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                {sectionBrands.map((brand) => <BrandGuide key={brand.slug} brand={brand} />)}
-              </div>
-            </div>
-          ))}
-          <div className="space-y-4">
-            <h3 className="type-k1 text-muted-foreground">Base themes · {baseThemes.length}</h3>
+      <SpecSection
+        id="tokens-brands"
+        kicker="04.8 · Brand guides"
+        title="29 brand themes, generated from the tokens."
+        intro={<p>{`${publications.length} publications and ${baseThemes.length} base themes. Swatches, fonts and radius are read from src/lib/brands.ts and each preview renders inside that brand's token scope. The official CTA under each preview is the brand's live-site header CTA, captured ${brandCtaCapturedAt}; its typeface, weight, case and tracking are now brand tokens, so the HDS Button below it renders the same way.`}</p>}
+      >
+        {bySection.map(({ section, label, brands: sectionBrands }) => (
+          <div key={section} className="space-y-4">
+            <SpecSubhead>{label} · {sectionBrands.length}</SpecSubhead>
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {baseThemes.map((brand) => <BrandGuide key={brand.slug} brand={brand} />)}
+              {sectionBrands.map((brand) => <BrandGuide key={brand.slug} brand={brand} />)}
             </div>
           </div>
-        </section>
-      </main>
-      <ProductFooter />
-    </div>
+        ))}
+        <div className="space-y-4">
+          <SpecSubhead>Base themes · {baseThemes.length}</SpecSubhead>
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {baseThemes.map((brand) => <BrandGuide key={brand.slug} brand={brand} />)}
+          </div>
+        </div>
+      </SpecSection>
+    </SpecChapter>
   );
 }

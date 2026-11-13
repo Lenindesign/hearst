@@ -791,7 +791,7 @@ export const BreakpointsAndGridSpecs: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Measured breakpoints and column widths for pages, the reader and block grids, with the UI-LAYOUT-001 dimensional drawing and motion film. The same specs live on the app's /layout-specs/ page.",
+        story: "Measured breakpoints and column widths for pages, the reader and block grids, with the UI-LAYOUT-001 dimensional drawing and motion film. The same specs live on the app's /specs/#layout page.",
       },
     },
   },

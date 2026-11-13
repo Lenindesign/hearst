@@ -52,22 +52,23 @@ const entertainmentPrimaryColor = getThemeColor("hearst-entertainment", "1", "va
 const knockoutContentColor = "var(--palette-content-knockout, white)";
 const neutralAccentColor = "var(--muted)";
 
-export type ProductPageId = "reference" | "story" | "value" | "blueprint" | "ads" | "articles" | "tokens" | "hds" | "architecture" | "ai-in-hds" | "constitution" | "design-agent" | "magazine-token-study" | "cta-specs" | "layout-specs" | "type-specs" | "token-specs";
+export type ProductPageId = "reference" | "story" | "value" | "blueprint" | "ads" | "articles" | "tokens" | "hds" | "architecture" | "ai-in-hds" | "constitution" | "design-agent" | "magazine-token-study" | "specs";
 
 const productLinkFocus =
   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
 
 /** Spec and reference pages, in reading order. Shown in the sticky product header on every product page. */
 const specNavLinks: { id?: ProductPageId; label: string; href: string; external?: boolean }[] = [
-  { id: "cta-specs", label: "CTAs", href: "/cta-specs/" },
-  { id: "layout-specs", label: "Breakpoints & grid", href: "/layout-specs/" },
-  { id: "type-specs", label: "Type metrics", href: "/type-specs/" },
-  { id: "token-specs", label: "Tokens & brands", href: "/token-specs/" },
-  { label: "Blocks spec", href: "/specs/blocks-spec.html" },
-  { label: "Nav spec", href: "/specs/nav-spec.html" },
-  { label: "Reader spec", href: "/specs/reader-spec.html" },
-  { label: "Carousel spec", href: "/specs/carousel-spec.html" },
-  { label: "System spec", href: "/specs/system-spec.html" },
+  // Every spec is a chapter of the single specifications page (/specs/); only Storybook is a separate site.
+  { label: "CTAs", href: "/specs/#cta" },
+  { label: "Breakpoints & grid", href: "/specs/#layout" },
+  { label: "Type metrics", href: "/specs/#type" },
+  { label: "Tokens & brands", href: "/specs/#tokens" },
+  { label: "Blocks", href: "/specs/#blocks" },
+  { label: "Nav", href: "/specs/#nav" },
+  { label: "Reader", href: "/specs/#reader" },
+  { label: "Carousel", href: "/specs/#carousel" },
+  { label: "System", href: "/specs/#system" },
   { label: "Storybook", href: PROD_STORYBOOK_URL, external: true },
 ];
 

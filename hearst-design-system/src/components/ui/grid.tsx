@@ -15,7 +15,7 @@
  *   one rail width).
  * - The 4 / 8 / 12 `Grid` and `Col`: editorial compositions such as article,
  *   events and newsstand pages, and columns inside a region.
- * See /layout-specs/ for the measured columns, drawing and film.
+ * See /specs/#layout for the measured columns, drawing and film.
  *
  * - `PageContainer` constrains content to `--width-content-max` and applies the
  *   responsive outer padding.

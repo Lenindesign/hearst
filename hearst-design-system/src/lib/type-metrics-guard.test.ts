@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 /**
- * Type metrics standard UI-TYPE-001 (/type-specs/): files migrated to the type-* role utilities must not
+ * Type metrics standard UI-TYPE-001 (/specs/#type): files migrated to the type-* role utilities must not
  * bring back one-off line heights or letter spacing. Rule-conformant fixed steps (leading-5…leading-10) and
  * leading-none for single-line display are allowed; ratios like leading-tight/snug/relaxed, arbitrary
  * leading-[…] and tracking-* one-offs are not. Add a file here once it is migrated.
