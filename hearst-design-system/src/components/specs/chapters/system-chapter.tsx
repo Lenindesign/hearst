@@ -3,7 +3,7 @@ import { SpecChapter, SpecColumns, SpecFilm, SpecProse, SpecSection, SpecSheet, 
 
 /** Agentic design system spec (HP-SYS-SPEC · Rev A · 2026-11-11), converted from public/specs/system-spec.html. */
 const stackRows = [
-  ["1 · Vaults", <><b>Hearst+ app vault</b>: the canonical product and design memory agents must read before UI changes. <b>Design Brain</b>: separate Hearst-wide guidance.</>, <><code>hearst-design-system/</code> (Obsidian) · <code>~/Documents/…/Design Brain</code></>, "7 canonical files · 5 notes · 9 docs · Design Brain 208 notes"],
+  ["1 · Vaults", <><b>Hearst+ app vault</b>: the canonical product and design memory agents must read before UI changes. <b>Design Brain</b>: separate Hearst-wide guidance that agents must not use for this app.</>, <><code>hearst-design-system/</code> (Obsidian) · <code>~/Documents/…/Design Brain</code></>, "7 canonical files · 5 notes · 9 docs · Design Brain 208 notes"],
   ["2 · Rules", "HDS Constitution (8 articles), agent charter, runbooks", <><code>.agents/rules/</code>, repo root</>, "8 articles · 9 runbook roles"],
   ["3 · Skills", "Instructions an agent loads for a kind of task", <><code>.cursor/skills/</code>, <code>.agents/skills/</code>, <code>hearst-design-system/.agents/skills/</code>, personal</>, "8 role · 8 repo · 2 personal"],
   ["4 · Agents", "Roles with a file boundary, sequenced per request", "Charter and runbooks", "9 roles"],
@@ -118,7 +118,7 @@ export function SystemChapter() {
         <SpecTable caption="Hearst+ vault canonical files" headers={["File", "Owns", "Lines"]} rows={vaultRows} numeric={[2]} />
         <SpecSubhead>Design Brain (separate)</SpecSubhead>
         <SpecProse>
-          <p>A Hearst-wide knowledge base in <code>~/Documents/ChatGPT/Design Brain</code>: 208 notes in 7 sections (start here 14, constitution 45, design system 21, feature reasoning 5, editorial 9 deprecated, brand playbooks 110, prototype 4) with 67 skill entry points. Nothing in the Hearst+ app links to it. Its notes use Must / Should / May and the statuses Draft, In review, Ready, Deprecated.</p>
+          <p>A Hearst-wide knowledge base in <code>~/Documents/ChatGPT/Design Brain</code>: 208 notes in 7 sections (start here 14, constitution 45, design system 21, feature reasoning 5, editorial 9 deprecated, brand playbooks 110, prototype 4) with 67 skill entry points. Nothing in the Hearst+ app links to it, and agents must not read or copy from it (<code>AGENTS.md</code>, decided 2026-11-13). Its notes use Must / Should / May and the statuses Draft, In review, Ready, Deprecated.</p>
         </SpecProse>
       </SpecSection>
 
@@ -190,8 +190,8 @@ export function SystemChapter() {
           <TaggedFinding id="system-f4" tag="F4 · COVERAGE" title="28 metadata files for 148 component files">
             <p>The review rules say new components need metadata and Storybook coverage. Some of the 148 files are sub-parts, so not every file needs its own metadata, but the gap is large. <b>Next step:</b> list the exported components without metadata and add them in small PRs.</p>
           </TaggedFinding>
-          <TaggedFinding id="system-f5" tag="F5 · NEEDS A DECISION" title="The Hearst+ vault and the Design Brain don’t know about each other">
-            <p>The app’s vault is what agents read; the Design Brain holds Hearst-wide principles, UX laws and 110 brand playbooks the app never sees. <b>Options:</b> link the relevant Design Brain notes from <code>VAULT_HOME.md</code> (for example principles and brand playbooks), or state in both homes that they are independent.</p>
+          <TaggedFinding id="system-f5" tag="F5 · DECIDED" title="The Hearst+ vault and the Design Brain stay independent">
+            <p>The app’s vault is what agents read; the Design Brain holds Hearst-wide principles, UX laws and 110 brand playbooks the app never sees. <b>Decision (2026-11-13):</b> the app does not use the Design Brain. <code>AGENTS.md</code> tells agents not to read, cite or copy from it; a missing rule is added to the repository vault instead.</p>
           </TaggedFinding>
         </FindingList>
       </SpecSection>

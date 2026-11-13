@@ -2,6 +2,14 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-11-13: The app does not use the Design Brain
+
+- **Context:** The system spec (finding F5) asked whether the Hearst+ vault should link to the separate Hearst-wide Design Brain vault.
+- **Decision:** No. Agents must not read, search, cite or copy from the Design Brain or any knowledge base outside the repository. Missing rules are added to the repository vault.
+- **Scope:** Every agent and collaborator working in this repository.
+- **Exceptions:** None.
+- **Canonical rule:** `AGENTS.md`.
+
 ## 2026-11-13: One specifications page
 
 - **Context:** The specs lived on nine separate pages in two looks (four app routes and five static HTML files), so the header had nine spec links and the documents drifted apart.
