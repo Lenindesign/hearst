@@ -46,7 +46,7 @@ export function LocalNewsRail({ layout = "rail" }: { layout?: "rail" | "grid" })
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Local news stories">
         {stories.slice(0, 4).map((story) => {
           const station = getHearstTVStationById(story.stationId);
-          return <a key={story.id} href={`/hearst-plus/local-news/?story=${encodeURIComponent(story.id)}#tv-stations`} data-story-brand={story.brandSlug} className="group overflow-hidden rounded-card bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30">
+          return <a key={story.id} href={`/hearst-plus/local-news/?story=${encodeURIComponent(story.id)}#tv-stations`} data-story-brand="hearst-local-news" className="group overflow-hidden rounded-card bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30">
             <div className="aspect-video bg-muted bg-cover bg-center" style={story.imageUrl ? { backgroundImage: `url(${story.imageUrl})` } : undefined} role={story.imageUrl ? "img" : undefined} aria-label={story.imageUrl ? story.title : undefined} />
             <div className="p-4"><p className="type-k1 text-primary">{station?.callSign ?? "Hearst TV"} · {station?.market ?? "Local News"}</p><h3 className="headline type-t3 mt-2 line-clamp-3 font-bold underline-offset-4 group-hover:underline group-focus-visible:underline">{story.title}</h3></div>
           </a>;
@@ -80,7 +80,7 @@ export function LocalNewsRail({ layout = "rail" }: { layout?: "rail" | "grid" })
             <li key={story.id}>
               <a
                 href={`/hearst-plus/local-news/?story=${encodeURIComponent(story.id)}#tv-stations`}
-                data-story-brand={story.brandSlug}
+                data-story-brand="hearst-local-news"
                 className="group grid min-h-20 w-full grid-cols-[48px_minmax(0,1fr)] items-start gap-3 rounded-[6px] py-3 text-left focus:outline-none focus:ring-2 focus:ring-primary/30"
               >
                 <span className="relative block h-12 w-12">
