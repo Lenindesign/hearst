@@ -1,6 +1,6 @@
 /**
  * Primary header CTA of each publication's live site, captured with Playwright (Chromium, 1440 px)
- * from the homepage on 2026-11-09. Read-only reference for the brand guides on /token-specs/: the token
+ * from the homepage on 2026-11-09. Read-only reference for the brand guides on /specs/#tokens: the token
  * source now carries the typography as component-button-font-family, -font-weight, -text-transform and
  * -letter-spacing (promoted from this capture); this file stays as the dated reference sample.
  */

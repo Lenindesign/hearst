@@ -2,6 +2,14 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-11-13: One specifications page
+
+- **Context:** The specs lived on nine separate pages in two looks (four app routes and five static HTML files), so the header had nine spec links and the documents drifted apart.
+- **Decision:** Every spec is a chapter of `/specs/`, built from one spec kit (`src/components/specs/spec-kit.tsx`). The header links to the chapter anchors; Storybook stays its own site. Films load nothing until played. The old URLs redirect permanently to their chapter (`netlify.toml` and `next.config.ts`).
+- **Scope:** CTAs, breakpoints and grid, type, tokens and brands, blocks, nav, reader, carousel, system. Full drawing sheets (`/specs/*-drawing.html`) stay standalone.
+- **Exceptions:** None.
+- **Canonical rule:** `AGENTS.md` › Working with collaborators.
+
 ## 2026-11-12: Featured carousel scroll parallax
 
 - **Context:** The owner asked for a subtle, refined parallax on the carousel text panel across the app.

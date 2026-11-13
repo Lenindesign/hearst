@@ -1109,7 +1109,7 @@
 
   /* Layout tokens */
   --width-content-max: 1360px;
-  /* Layout contract (see /layout-specs/): one gutter and one rail width for
+  /* Layout contract (see /specs/#layout): one gutter and one rail width for
      every rail layout. Pages and the reader pad 16 · 24 · 48 (base · md · xl). */
   --layout-gap: 1rem;
   --layout-rail: 300px;
@@ -1465,7 +1465,7 @@
       display: block;
     }
   }
-  /* Type metrics standard UI-TYPE-001 (/type-specs/). LH = 4 · round(size · ratio ÷ 4): text roles use
+  /* Type metrics standard UI-TYPE-001 (/specs/#type). LH = 4 · round(size · ratio ÷ 4): text roles use
      the HDS font.line-height token for their size, headlines use RH. Tracking is the HDS
      font.letter-spacing token; caps labels +0.1em; display 40 px and up −0.01em. Headline roles set
      metrics only; the face and weight come from .headline and the brand. Steps up at md (768). */
@@ -1677,4 +1677,15 @@
 @media (prefers-reduced-motion: reduce) {
   .reader-layer .reader-backdrop,
   .reader-layer .reader-panel { animation: none; }
+}
+
+/* Specifications page header: the chapter being read (SpecNavActive sets data-active)
+   gets the same underline and ink as the current page link. Navy headers use the knockout ink. */
+header[data-current-product-page] a[data-spec-chapter][data-active="true"] {
+  border-bottom-color: var(--primary);
+  color: var(--foreground);
+}
+header[data-current-product-page].text-primary-foreground a[data-spec-chapter][data-active="true"] {
+  border-bottom-color: var(--primary-foreground);
+  color: var(--primary-foreground);
 }

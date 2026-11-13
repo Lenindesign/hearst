@@ -4,7 +4,21 @@ const nextConfig: NextConfig = {
   // Netlify serves Storybook at `/storybook/` (trailing slash). Without this,
   // Next strips the slash (301 to `/storybook`) while Netlify adds it back → redirect loop.
   trailingSlash: true,
-  // /token-specs reads logo SVGs with a dynamic public/ path, so file tracing pulls the whole public folder
+  // Old spec URLs open the single specifications page at their chapter (netlify.toml has the same list).
+  async redirects() {
+    return [
+      { source: "/cta-specs", destination: "/specs/#cta", permanent: true },
+      { source: "/layout-specs", destination: "/specs/#layout", permanent: true },
+      { source: "/type-specs", destination: "/specs/#type", permanent: true },
+      { source: "/token-specs", destination: "/specs/#tokens", permanent: true },
+      { source: "/specs/blocks-spec.html", destination: "/specs/#blocks", permanent: true },
+      { source: "/specs/nav-spec.html", destination: "/specs/#nav", permanent: true },
+      { source: "/specs/reader-spec.html", destination: "/specs/#reader", permanent: true },
+      { source: "/specs/carousel-spec.html", destination: "/specs/#carousel", permanent: true },
+      { source: "/specs/system-spec.html", destination: "/specs/#system", permanent: true },
+    ];
+  },
+  // The tokens chapter of /specs reads logo SVGs with a dynamic public/ path, so file tracing pulls the whole public folder
   // (spec films, images, video fixtures) into the Netlify server function and pushes it past the AWS Lambda
   // size limit. The server only needs public/logos at runtime; everything else is served from the CDN.
   outputFileTracingExcludes: {

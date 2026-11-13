@@ -3,6 +3,7 @@ import Image from "next/image";
 import type { CSSProperties } from "react";
 import { DraggableBrandLogoMarquee } from "@/components/brand-logo-marquee";
 import { SiteFooter } from "@/components/fre/site-footer";
+import { SpecNavActive } from "@/components/specs/spec-nav-active";
 import { entertainmentWebsiteFeedConfigs } from "@/lib/hearst-entertainment-story-feeds";
 import { hearstNewspaperPublications } from "@/lib/hearst-newspaper-feed-framework";
 import { brands, type BrandTheme } from "@/lib/brands";
@@ -52,22 +53,23 @@ const entertainmentPrimaryColor = getThemeColor("hearst-entertainment", "1", "va
 const knockoutContentColor = "var(--palette-content-knockout, white)";
 const neutralAccentColor = "var(--muted)";
 
-export type ProductPageId = "reference" | "story" | "value" | "blueprint" | "ads" | "articles" | "tokens" | "hds" | "architecture" | "ai-in-hds" | "constitution" | "design-agent" | "magazine-token-study" | "cta-specs" | "layout-specs" | "type-specs" | "token-specs";
+export type ProductPageId = "reference" | "story" | "value" | "blueprint" | "ads" | "articles" | "tokens" | "hds" | "architecture" | "ai-in-hds" | "constitution" | "design-agent" | "magazine-token-study" | "specs";
 
 const productLinkFocus =
   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
 
 /** Spec and reference pages, in reading order. Shown in the sticky product header on every product page. */
 const specNavLinks: { id?: ProductPageId; label: string; href: string; external?: boolean }[] = [
-  { id: "cta-specs", label: "CTAs", href: "/cta-specs/" },
-  { id: "layout-specs", label: "Breakpoints & grid", href: "/layout-specs/" },
-  { id: "type-specs", label: "Type metrics", href: "/type-specs/" },
-  { id: "token-specs", label: "Tokens & brands", href: "/token-specs/" },
-  { label: "Blocks spec", href: "/specs/blocks-spec.html" },
-  { label: "Nav spec", href: "/specs/nav-spec.html" },
-  { label: "Reader spec", href: "/specs/reader-spec.html" },
-  { label: "Carousel spec", href: "/specs/carousel-spec.html" },
-  { label: "System spec", href: "/specs/system-spec.html" },
+  // Every spec is a chapter of the single specifications page (/specs/); only Storybook is a separate site.
+  { label: "CTAs", href: "/specs/#cta" },
+  { label: "Breakpoints & grid", href: "/specs/#layout" },
+  { label: "Type metrics", href: "/specs/#type" },
+  { label: "Tokens & brands", href: "/specs/#tokens" },
+  { label: "Blocks", href: "/specs/#blocks" },
+  { label: "Nav", href: "/specs/#nav" },
+  { label: "Reader", href: "/specs/#reader" },
+  { label: "Carousel", href: "/specs/#carousel" },
+  { label: "System", href: "/specs/#system" },
   { label: "Storybook", href: PROD_STORYBOOK_URL, external: true },
 ];
 
@@ -81,6 +83,8 @@ export function ProductHeader({ current, appearance = "light" }: { current: Prod
 
   const renderLinks = (compact: boolean) => specNavLinks.map((item) => {
     const active = item.id === current;
+    // Chapter links of /specs/: SpecNavActive marks the chapter being read with data-active (styled in globals.css).
+    const chapter = item.href.startsWith("/specs/#") ? item.href.slice("/specs/#".length) : undefined;
     const className = `relative inline-flex min-h-11 shrink-0 items-center whitespace-nowrap border-b-2 ${compact ? "px-3" : "px-2"} ${active ? activeTone : `border-transparent ${linkTone}`} ${linkFocus}`;
     if (item.external) {
       return <a key={item.href} href={item.href} target="_blank" rel="noopener noreferrer" className={className}>{item.label}<span className="sr-only"> (opens in a new tab)</span></a>;
@@ -89,7 +93,7 @@ export function ProductHeader({ current, appearance = "light" }: { current: Prod
     if (item.href.endsWith(".html")) {
       return <a key={item.href} href={item.href} className={className}>{item.label}</a>;
     }
-    return <Link key={item.href} href={item.href} aria-current={active ? "page" : undefined} className={className}>{item.label}</Link>;
+    return <Link key={item.href} href={item.href} aria-current={active ? "page" : undefined} data-spec-chapter={chapter} className={className}>{item.label}</Link>;
   });
 
   return (
@@ -123,6 +127,7 @@ export function ProductHeader({ current, appearance = "light" }: { current: Prod
           </Link>
         </nav>
       </div>
+      {current === "specs" ? <SpecNavActive /> : null}
     </header>
   );
 }
