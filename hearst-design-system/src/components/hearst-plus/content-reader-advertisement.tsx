@@ -189,7 +189,7 @@ export function ContentReaderAdvertisement({
           "flex flex-col overflow-hidden rounded-[8px] border border-border bg-background",
           isRail
             ? "w-full lg:h-[600px]"
-            : "sticky top-32 h-[600px] max-h-[calc(100dvh-10rem)] w-[300px]",
+            : "sticky top-20 h-[600px] max-h-[calc(100dvh-9rem)] w-[300px]",
         )}
         style={{
           backgroundColor: ad.palette.background,
