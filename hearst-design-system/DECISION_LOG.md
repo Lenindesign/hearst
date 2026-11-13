@@ -5,10 +5,10 @@ Use this file for concise, dated context behind product and design decisions. Du
 ## 2026-11-13: The app does not use the Design Brain
 
 - **Context:** The system spec (finding F5) asked whether the Hearst+ vault should link to the separate Hearst-wide Design Brain vault.
-- **Decision:** No. Agents must not read, search, cite or copy from the Design Brain or any knowledge base outside the repository. Missing rules are added to the repository vault.
+- **Decision:** No. Agents must not read, search, cite or copy from the Design Brain or any knowledge base outside the repository. Missing rules are added to the repository vault. This also settles F1: the repository's token JSON is the only authority for token values, and the Design Brain's AI Enabler token sync does not apply.
 - **Scope:** Every agent and collaborator working in this repository.
 - **Exceptions:** None.
-- **Canonical rule:** `AGENTS.md`.
+- **Canonical rule:** `AGENTS.md`; token authority in `AIDLC-docs/DESIGN-SYSTEM-SPEC.md`.
 
 ## 2026-11-13: One specifications page
 

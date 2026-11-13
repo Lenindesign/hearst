@@ -178,8 +178,8 @@ export function SystemChapter() {
 
       <SpecSection id="system-findings" kicker="09.7 · For the design system team" title="Findings" intro={<p>These come from comparing the charter, the runbooks, the skills and the vault. Nothing has been changed.</p>}>
         <FindingList>
-          <TaggedFinding id="system-f1" tag="F1 · NEEDS A DECISION" title="Two places claim to own token values">
-            <p>The agent charter says Git token JSON is the source of truth. The Design Brain readme (a separate vault the app doesn’t use) says to sync official token JSON and CSS from AI Enabler with <code>design-system-token-sync</code>. The Hearst+ vault agrees with the charter: brand token JSON under <code>tokens/brands/</code> is canonical. <b>Fix:</b> name one authority and describe the other as a sync target, in both documents.</p>
+          <TaggedFinding id="system-f1" tag="F1 · DECIDED" title="Git token JSON is the only authority for token values">
+            <p>The agent charter says Git token JSON is the source of truth, and the Hearst+ vault agrees: token JSON under <code>tokens/</code> (brands in <code>tokens/brands/</code>) is canonical. The Design Brain readme’s AI Enabler sync (<code>design-system-token-sync</code>) belonged to a vault the app no longer uses. <b>Decision (2026-11-13):</b> the repository’s token JSON is the one authority; nothing is synced in from the Design Brain or AI Enabler (<code>AIDLC-docs/DESIGN-SYSTEM-SPEC.md</code>).</p>
           </TaggedFinding>
           <TaggedFinding id="system-f2" tag="F2 · DOC DRIFT" title="Eight roles in the charter, nine in the runbook, eight role skills">
             <p>The charter lists 8 roles. The runbook adds a Grid System agent, for 9. The 8 role skills include Grid System but have no Publication Stylist skill. <b>Fix:</b> add Grid System to the charter and either add a <code>hearst-publication-stylist</code> skill or fold that role into Token Architect.</p>
