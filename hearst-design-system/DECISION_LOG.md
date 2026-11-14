@@ -2,6 +2,14 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-11-14: The daily feed publishes itself
+
+- **Context:** The daily feed workflow ran, but each edition waited in a pull request for owner approval, so the live catalog fell behind whenever no one merged it.
+- **Decision:** After import, validation and build pass, the workflow pushes the edition to `main` with a write deploy key (`FEED_DEPLOY_KEY`), which the `Protect main` ruleset already lets bypass review. The pull request is kept as the record and shows as merged.
+- **Scope:** Only the generated feed files the workflow commits.
+- **Exceptions:** Without the key, or when the edition conflicts with `main`, the pull request stays open for manual approval.
+- **Canonical rule:** `APP_RULES.md` (daily RSS refresh).
+
 ## 2026-11-13: The app does not use the Design Brain
 
 - **Context:** The system spec (finding F5) asked whether the Hearst+ vault should link to the separate Hearst-wide Design Brain vault.

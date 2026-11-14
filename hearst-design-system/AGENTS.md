@@ -36,7 +36,7 @@ When a user establishes a durable rule, update the appropriate canonical file in
 
 ## Working with collaborators
 
-`main` is protected: every change from a collaborator goes through a pull request that the repository owner approves, and merging it publishes to production. Netlify builds a deploy preview for each pull request, including Storybook at `/storybook/`.
+`main` is protected: every change from a collaborator goes through a pull request that the repository owner approves, and merging it publishes to production. The one exception is the daily feed workflow, which publishes validated story feed editions itself (see `APP_RULES.md`). Netlify builds a deploy preview for each pull request, including Storybook at `/storybook/`.
 
 - Work on a branch and open a pull request. Fill in every item of the pull request checklist (`.github/pull_request_template.md`): vault, Storybook, specs, preview widths, and the type check.
 - A change is not done until the vault, the Storybook stories, and any affected spec page agree with the app. Update them in the same pull request.
