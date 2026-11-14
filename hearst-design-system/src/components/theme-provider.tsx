@@ -42,7 +42,8 @@ const GOOGLE_FONTS: Record<string, string> = {
   "Shippori Mincho": "Shippori+Mincho:wght@400;500;600;700;800",
 };
 
-function useGoogleFonts(fonts: string[]) {
+/** Loads the brand's Google fonts. A page with several brand scopes passes a distinct linkId per scope. */
+export function useGoogleFonts(fonts: string[], linkId = "brand-google-fonts") {
   const fontKey = fonts.join(",");
 
   useEffect(() => {
@@ -58,7 +59,7 @@ function useGoogleFonts(fonts: string[]) {
 
     if (families.length === 0) return;
 
-    const id = "brand-google-fonts";
+    const id = linkId;
     let link = document.getElementById(id) as HTMLLinkElement | null;
     const href = `https://fonts.googleapis.com/css2?${families.map((f) => `family=${f}`).join("&")}&display=swap`;
 
@@ -71,7 +72,7 @@ function useGoogleFonts(fonts: string[]) {
       link.href = href;
       document.head.appendChild(link);
     }
-  }, [fontKey]);
+  }, [fontKey, linkId]);
 }
 
 export function ThemeProvider({

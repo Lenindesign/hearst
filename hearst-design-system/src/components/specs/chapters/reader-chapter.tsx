@@ -1,5 +1,7 @@
 import { Col, ColGroup, FindingList, TaggedFinding } from "@/components/specs/chapters/chapter-parts";
 import { SpecChapter, SpecColumns, SpecFilm, SpecSection, SpecSheet, SpecTable } from "@/components/specs/spec-kit";
+import { LiveViewport } from "@/components/specs/live/live-kit";
+import { getLiveReaderStoryId } from "@/components/specs/live/live-data";
 
 /** Content reader spec (HP-READ-SPEC · Rev A · 2026-11-11), converted from public/specs/reader-spec.html. */
 const breakpointRows = [
@@ -31,6 +33,7 @@ const tokenRows = [
 ] as const;
 
 export function ReaderChapter() {
+  const readerStoryId = getLiveReaderStoryId();
   return (
     <SpecChapter
       id="reader"
@@ -45,6 +48,7 @@ export function ReaderChapter() {
         ["Measured", <>Playwright · Chromium · <code>/read/&#123;story&#125;</code> opened from <code>/hearst-plus/</code> · viewports 390, 640, 768, 1024, 1280, 1440 · light mode</>],
       ]}
       contents={[
+        ["Live reference", "#reader-live"],
         ["Film", "#reader-film"],
         ["Anatomy", "#reader-anatomy"],
         ["Breakpoints", "#reader-breakpoints"],
@@ -54,6 +58,16 @@ export function ReaderChapter() {
         ["Findings", "#reader-findings"],
       ]}
     >
+      <SpecSection id="reader-live" kicker="07 · Live reference" title="The real reader, at any window width." intro={<p>A story open in the production reader at <code>/read/</code>, in a frame that acts as the browser window. The ad rail joins at lg (1024) and the context rail at xl (1280); scroll inside the frame to see the masthead stay put.</p>}>
+        <LiveViewport
+          src={`/read/${readerStoryId}/`}
+          title="Hearst+ reader at the selected window width"
+          widths={[{ width: 390, label: "390 phone" }, { width: 1024, label: "1024 lg" }, { width: 1280, label: "1280 xl" }, { width: 1440, label: "1440" }]}
+          defaultWidth={1280}
+          height={900}
+        />
+      </SpecSection>
+
       <SpecSection id="reader-film" kicker="07.0 · Walkthrough" title="How the reader works" intro={<p>The film animates the reader on a wireframe drawn from the measured geometry: opening, the shell, the masthead, the columns at each width, the article, scrolling, the story queue, focus and the layer order. It ends on the two drawing sheets.</p>}>
         <SpecFilm
           src="/specs/reader-film.mp4"

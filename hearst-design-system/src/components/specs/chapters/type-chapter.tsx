@@ -2,6 +2,8 @@ import type { CSSProperties } from "react";
 
 import { SpecChapter, SpecFilm, SpecSection, SpecSheet, SpecTable } from "@/components/specs/spec-kit";
 import { cn } from "@/lib/utils";
+import { TypeStacksLive } from "@/components/specs/live/story-live";
+import { getLiveStoriesByBrand, liveBrandSlugs } from "@/components/specs/live/live-data";
 
 type Role = {
   code: string;
@@ -89,6 +91,7 @@ function roleStyle(role: Role): CSSProperties {
 }
 
 export function TypeChapter() {
+  const liveStories = getLiveStoriesByBrand(liveBrandSlugs, 2);
   return (
     <SpecChapter
       id="type"
@@ -96,8 +99,12 @@ export function TypeChapter() {
       kicker="HDS foundations · Typography"
       title="Type metrics"
       lede={<p>One standard for line height, letter spacing and the space between editorial text roles: headlines, decks, bylines, date stamps, eyebrows, captions and paragraphs. Line height comes from the size and snaps to a 4 px grid, tracking comes from the HDS token, and every brand keeps the same metrics.</p>}
-      contents={[["Today", "#type-today"], ["Rule", "#type-rule"], ["Roles", "#type-roles"], ["Spacing", "#type-spacing"], ["Film", "#type-film"], ["Drawing", "#type-drawing"], ["Rules", "#type-rules"]]}
+      contents={[["Live reference", "#type-live"], ["Today", "#type-today"], ["Rule", "#type-rule"], ["Roles", "#type-roles"], ["Spacing", "#type-spacing"], ["Film", "#type-film"], ["Drawing", "#type-drawing"], ["Rules", "#type-rules"]]}
     >
+      <SpecSection id="type-live" kicker="03 · Live reference" title="The standard on the real card and reader." intro={<p>The two stacks this chapter measures, rendered by the production components. Switch publications to see the faces change while every size, line height and gap holds.</p>}>
+        <TypeStacksLive storiesByBrand={liveStories} />
+      </SpecSection>
+
       <SpecSection id="type-today" kicker="03.1 · Before and after" title="What the standard replaced." intro={<p>HDS defines a line height and a letter spacing for every type size (font.line-height and font.letter-spacing), but they never reached the app&rsquo;s CSS, so components set their own values. The role utilities (type-t1 … type-k1 in globals.css) now carry the standard on the cards, rails, carousel and reader. The &ldquo;Before&rdquo; column was measured in Chromium on the Hearst+ home river and the reader at 390 and 1440 px.</p>}>
         <SpecTable caption="Typography audit" headers={["What", "Before", "Standard", "Notes"]} rows={auditRows} />
       </SpecSection>

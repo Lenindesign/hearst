@@ -1,4 +1,5 @@
 import { SpecChapter, SpecFilm, SpecSection, SpecSheet, SpecSubhead, SpecTable } from "@/components/specs/spec-kit";
+import { LiveViewport } from "@/components/specs/live/live-kit";
 
 /** Re-measured with Playwright in Chromium at 320–1920 px after the layout contract (Rev C, 2026-11-11) was applied. */
 const breakpointRows = [
@@ -69,8 +70,18 @@ export function LayoutChapter() {
       kicker="HDS foundations · Layout"
       title="Breakpoints and grid"
       lede={<p>Four min-width breakpoints (640, 768, 1024, 1280), two rail-layout breakpoints (1140, 1200) and a 1360 content maximum. Pages go from one column to two at 768 and three at 1140, where the left rail joins at 240 before widening to 300 at 1200; the reader adds its rails at 1024 and 1280; block grids follow their own width. Rail layouts share one gutter (16) and a 300 rail width, and every page uses one container padding (16 · 24 · 48). Every value here was measured in the running app.</p>}
-      contents={[["Breakpoints", "#layout-breakpoints"], ["Contract", "#layout-contract"], ["Film", "#layout-film"], ["Drawing", "#layout-drawing"], ["Columns", "#layout-columns"], ["Changes", "#layout-changes"]]}
+      contents={[["Live reference", "#layout-live"], ["Breakpoints", "#layout-breakpoints"], ["Contract", "#layout-contract"], ["Film", "#layout-film"], ["Drawing", "#layout-drawing"], ["Columns", "#layout-columns"], ["Changes", "#layout-changes"]]}
     >
+      <SpecSection id="layout-live" kicker="02 · Live reference" title="The real home, at any window width." intro={<p>The Hearst+ home running in a frame that acts as the browser window. Pick a width to watch the rails join: one column below md, the right rail at 768, the left rail at 1140 at its compact 240, widening to 300 at 1200, and the content stopping at 1360.</p>}>
+        <LiveViewport
+          src="/hearst-plus/"
+          title="Hearst+ home at the selected window width"
+          widths={[{ width: 390, label: "390" }, { width: 768, label: "768 md" }, { width: 1024, label: "1024 lg" }, { width: 1140, label: "1140 rail" }, { width: 1280, label: "1280 xl" }, { width: 1440, label: "1440" }]}
+          defaultWidth={1280}
+          height={900}
+        />
+      </SpecSection>
+
       <SpecSection id="layout-breakpoints" kicker="02.1 · Breakpoints" title="What changes at each width." intro={<p>Each breakpoint is a min-width: its layout holds until the next one. Uses counts Tailwind prefixes in the app source.</p>}>
         <SpecTable caption="Breakpoints and what changes" headers={["Breakpoint", "Min width", "Uses", "Homepage river", "Story reader"]} rows={breakpointRows} numeric={[1, 2]} />
       </SpecSection>

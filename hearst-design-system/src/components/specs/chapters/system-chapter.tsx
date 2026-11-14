@@ -1,5 +1,6 @@
 import { Col, ColGroup, FindingList, NumberedList, SmallNote, TaggedFinding } from "@/components/specs/chapters/chapter-parts";
 import { SpecChapter, SpecColumns, SpecFilm, SpecProse, SpecSection, SpecSheet, SpecSubhead, SpecTable } from "@/components/specs/spec-kit";
+import { SystemLive } from "@/components/specs/live/system-live";
 
 /** Agentic design system spec (HP-SYS-SPEC · Rev A · 2026-11-11), converted from public/specs/system-spec.html. */
 const stackRows = [
@@ -72,6 +73,7 @@ export function SystemChapter() {
         ["Counted", "Repo and vault on 2026-11-11 · brands, components, metadata, stories, notes, skills"],
       ]}
       contents={[
+        ["Live reference", "#system-live"],
         ["Film", "#system-film"],
         ["The stack", "#system-stack"],
         ["Vault", "#system-vault"],
@@ -82,6 +84,10 @@ export function SystemChapter() {
         ["Findings", "#system-findings"],
       ]}
     >
+      <SpecSection id="system-live" kicker="09 · Live reference" title="The vault, read at build time." intro={<p>The canonical files, their first headings and lengths, the steps agents follow, and the repository counts, read from the files when this page is built rather than typed here.</p>}>
+        <SystemLive />
+      </SpecSection>
+
       <SpecSection id="system-film" kicker="09.0 · Walkthrough" title="How the system works" intro={<p>The film builds the stack layer by layer, then walks through the two vaults, the skills, the nine agents, the repo’s layers, routing, the change loop with its stop gate, the sources of truth and the four workflows. It ends on the two drawing sheets.</p>}>
         <SpecFilm
           src="/specs/system-film.mp4"

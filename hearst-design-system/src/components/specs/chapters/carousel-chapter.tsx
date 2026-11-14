@@ -1,5 +1,7 @@
 import { Col, ColGroup, FindingList, NumberedList, SmallNote, TaggedFinding } from "@/components/specs/chapters/chapter-parts";
 import { SpecChapter, SpecColumns, SpecFilm, SpecSection, SpecSheet, SpecTable } from "@/components/specs/spec-kit";
+import { CarouselLive } from "@/components/specs/live/story-live";
+import { getLiveStoriesByBrand, liveBrandSlugs } from "@/components/specs/live/live-data";
 
 /** Featured story carousel spec (HP-CAR-SPEC · Rev A · 2026-11-11), converted from public/specs/carousel-spec.html. */
 
@@ -81,6 +83,7 @@ const tokenRows = [
 ] as const;
 
 export function CarouselChapter() {
+  const liveStories = getLiveStoriesByBrand(liveBrandSlugs, 5);
   return (
     <SpecChapter
       id="carousel"
@@ -95,6 +98,7 @@ export function CarouselChapter() {
         ["Measured", <>Playwright · Chromium · <code>/hearst-plus/</code> and <code>/hearst-plus/full-width-hero/</code> · viewports 390, 640, 768, 1024, 1280, 1440 · light mode</>],
       ]}
       contents={[
+        ["Live reference", "#carousel-live"],
         ["Film", "#carousel-film"],
         ["Anatomy", "#carousel-anatomy"],
         ["Card color", "#carousel-card-color"],
@@ -106,6 +110,10 @@ export function CarouselChapter() {
         ["Findings", "#carousel-findings"],
       ]}
     >
+      <SpecSection id="carousel-live" kicker="08 · Live reference" title="The real carousel." intro={<p>The production carousel with five stories. Hearst+ mixes publications like Today&rsquo;s Picks; a publication shows its own stories on its own card color.</p>}>
+        <CarouselLive storiesByBrand={liveStories} />
+      </SpecSection>
+
       <SpecSection id="carousel-film" kicker="08.0 · Walkthrough" title="How the carousel works" intro={<p>The film animates the carousel on a wireframe drawn from the measured geometry: its parts and sizes, the looping track, the parallax at a tenth of the speed, swipe, what pauses autoplay, focus, the list layout and one finding. It ends on the two drawing sheets.</p>}>
         <SpecFilm
           src="/specs/carousel-film.mp4"

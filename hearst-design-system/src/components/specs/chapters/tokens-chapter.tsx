@@ -12,6 +12,7 @@ import { getBrandLogoSrc } from "@/lib/logos";
 import { brandToCssVars } from "@/lib/theme-css-vars";
 import { themeOptions } from "@/lib/theme-options";
 import { cn } from "@/lib/utils";
+import { TokensLive } from "@/components/specs/live/tokens-live";
 
 const pipeline = [
   ["P1", "Source", "tokens/ in Git: core, semantic and component JSON, one file per brand, and _meta.json for production font overrides. The only place a value is authored."],
@@ -273,8 +274,12 @@ export function TokensChapter() {
       kicker="HDS foundations · Tokens"
       title="Tokens and brand guides"
       lede={<p>One component contract, 29 brand expressions. Design decisions live as tokens in Git, a single build turns them into brand data, and the runtime scopes them as CSS custom properties so every Button, Card and headline renders in the right brand without a line of brand-specific code.</p>}
-      contents={[["Pipeline", "#tokens-pipeline"], ["Tiers", "#tokens-tiers"], ["Resolve", "#tokens-resolve"], ["Scopes", "#tokens-scopes"], ["Hygiene", "#tokens-hygiene"], ["Film", "#tokens-film"], ["Drawing", "#tokens-drawing"], ["Brand guides", "#tokens-brands"]]}
+      contents={[["Live reference", "#tokens-live"], ["Pipeline", "#tokens-pipeline"], ["Tiers", "#tokens-tiers"], ["Resolve", "#tokens-resolve"], ["Scopes", "#tokens-scopes"], ["Hygiene", "#tokens-hygiene"], ["Film", "#tokens-film"], ["Drawing", "#tokens-drawing"], ["Brand guides", "#tokens-brands"]]}
     >
+      <SpecSection id="tokens-live" kicker="04 · Live reference" title="One component, resolved by the nearest scope." intro={<p>A brand scope wraps the production components the way a page does. Switch brands and read back what the browser resolved for each token.</p>}>
+        <TokensLive />
+      </SpecSection>
+
       <SpecSection id="tokens-pipeline" kicker="04.1 · Pipeline" title="From Git to a rendered pixel." intro={<p>Seven stages, each with one job. A value is authored once in tokens/ and reaches every brand through generated data and runtime scope.</p>}>
         <ol className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
           {pipeline.map(([code, name, body]) => (
