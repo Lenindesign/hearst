@@ -50,6 +50,7 @@ function PromotionStoryAction({
       <Link
         href={`/hearst-plus/entertainment/a-e/${showSlug}/`}
         className={cn("block", className)}
+        data-story-brand={story.brandSlug}
         aria-label={`Open ${story.title} show page`}
       >
         {children}
@@ -62,6 +63,7 @@ function PromotionStoryAction({
       type="button"
       onClick={() => onOpenStory(story.id)}
       className={className}
+      data-story-brand={story.brandSlug}
       aria-label={`Open story: ${story.title}`}
     >
       {children}
@@ -112,6 +114,7 @@ export function BrandPromotionRiverModule({
           ? "border-[#2A2E35] bg-[#0D1014] text-white"
           : "border-border bg-[var(--hp-surface)]",
       )}
+      data-brand-promotion={promotion.brandSlug}
       aria-labelledby={headingId}
     >
       <div className={cn(
@@ -200,7 +203,7 @@ export function BrandPromotionRiverModule({
                 <span className="min-w-0">
                   {renderFormatLabel(story)}
                   <span className={cn(
-                    "headline mt-1 text-[20px] leading-7 line-clamp-3 underline-offset-4 group-hover:underline group-focus-visible:underline",
+                    "headline brand-promotion-secondary-headline mt-1 text-[20px] leading-7 line-clamp-3 underline-offset-4 group-hover:underline group-focus-visible:underline",
                     isAEFamilyPromotion ? "text-white" : "text-foreground",
                   )}>
                     {story.title}
