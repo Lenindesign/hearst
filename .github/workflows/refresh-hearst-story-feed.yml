@@ -6,8 +6,12 @@ on:
     - cron: "15 10 * * *"
   workflow_dispatch:
 
-# main is protected by the "Protect main" ruleset, so the bot pushes to its own
-# branch and opens (or updates) a pull request for the owner to approve.
+# main is protected by the "Protect main" ruleset. The bot pushes to its own
+# branch and opens a pull request as the record of each edition, then publishes
+# it by pushing the same commit to main with the FEED_DEPLOY_KEY deploy key (the
+# ruleset lets deploy keys bypass review). GitHub then marks the pull request
+# merged. Without that secret the pull request stays open for manual approval.
+# A run that fails import, validation or build publishes nothing.
 permissions:
   contents: write
   pull-requests: write
@@ -31,6 +35,8 @@ jobs:
           ref: main
           fetch-depth: 0
           persist-credentials: true
+          # Empty until the secret exists; checkout then falls back to the token.
+          ssh-key: ${{ secrets.FEED_DEPLOY_KEY }}
 
       - name: Use Node.js
         uses: actions/setup-node@v4
@@ -51,10 +57,11 @@ jobs:
       - name: Verify the application build
         run: npm run build
 
-      - name: Open a pull request with the new daily edition
+      - name: Open a pull request and publish the new daily edition
         env:
           GH_TOKEN: ${{ github.token }}
           BRANCH: bot/daily-story-feed
+          AUTO_PUBLISH: ${{ secrets.FEED_DEPLOY_KEY != '' }}
         run: |
           git config user.name "hearst-feed-bot"
           git config user.email "hearst-feed-bot@users.noreply.github.com"
@@ -73,11 +80,30 @@ jobs:
           EDITION="$(date -u +%Y-%m-%d)"
           git switch -c "$BRANCH"
           git commit -m "chore: refresh daily Hearst story feed ($EDITION)"
+          # If main moved during the run, replay the edition on top of it.
+          git fetch origin main
+          if ! git rebase origin/main; then
+            git rebase --abort
+            echo "::error::The edition conflicts with the current main; publish it by hand."
+            AUTO_PUBLISH=false
+          fi
           # One rolling branch: each run replaces the previous unmerged edition.
-          git push --force origin "$BRANCH"
-          BODY="Daily story feed refresh for $EDITION, built and validated by the scheduled workflow (feed:validate and next build passed). Approve and merge to publish. If a newer edition arrives first, this PR is updated in place."
+          git push --force origin "HEAD:$BRANCH"
+          if [ "$AUTO_PUBLISH" = "true" ]; then
+            BODY="Daily story feed refresh for $EDITION, built and validated by the scheduled workflow (feed:validate and next build passed). Published automatically: the workflow pushes this commit to main."
+          else
+            BODY="Daily story feed refresh for $EDITION, built and validated by the scheduled workflow (feed:validate and next build passed). Approve and merge to publish. If a newer edition arrives first, this PR is updated in place."
+          fi
           if gh pr view "$BRANCH" --json state --jq .state 2>/dev/null | grep -q OPEN; then
             gh pr edit "$BRANCH" --title "Daily story feed: $EDITION" --body "$BODY"
           else
             gh pr create --base main --head "$BRANCH" --title "Daily story feed: $EDITION" --body "$BODY"
+          fi
+          if [ "$AUTO_PUBLISH" = "true" ]; then
+            git push origin "HEAD:main"
+            echo "Published the $EDITION edition to main."
+          else
+            echo "::notice::Pull request left open for approval."
+            # A conflicted edition must show as a failed run.
+            git merge-base --is-ancestor origin/main HEAD || exit 1
           fi
