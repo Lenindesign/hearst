@@ -28,6 +28,12 @@ const nextConfig: NextConfig = {
       "./public/figma-exports/**/*",
       "./public/**/*.mp4",
       "./public/**/*.webm",
+      // The specs System chapter reads vault files and counts repo files from process.cwd() at build time, which makes
+      // tracing pull in the whole app folder. /specs is static, so none of these are needed at runtime.
+      "./output/**/*",
+      "./tests/**/*",
+      "./.agents/**/*",
+      "./tsconfig.tsbuildinfo",
     ],
   },
   images: {
