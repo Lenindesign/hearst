@@ -33,11 +33,11 @@ const newsreader = Newsreader({
   preload: false,
 });
 
-// Hearst+ headline face.
+// Hearst+ headline face. Variable font (weights 400–900), loaded like Newsreader: listing discrete weights can make
+// Google return the same file for each, and Turbopack's next/font resolver fails on the duplicate URLs.
 const schibstedGrotesk = Schibsted_Grotesk({
   variable: "--font-schibsted-grotesk",
   subsets: ["latin"],
-  weight: ["700", "800"],
   display: "swap",
   preload: false,
 });
