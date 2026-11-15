@@ -3,6 +3,8 @@ import type React from "react";
 import { SpanTable, SpecCallout, SpecNote, SpecTag, span } from "@/components/specs/chapters/blocks-nav-kit";
 import { PATTERN_MEASUREMENTS } from "@/components/specs/chapters/blocks-pattern-data";
 import { SpecChapter, SpecColumns, SpecFilm, SpecFinding, SpecProse, SpecSection, SpecSheet, SpecSubhead, SpecTable } from "@/components/specs/spec-kit";
+import { BlocksLive } from "@/components/specs/live/story-live";
+import { getLiveStoriesByBrand, liveBrandSlugs } from "@/components/specs/live/live-data";
 
 const link = "underline underline-offset-4";
 
@@ -233,6 +235,7 @@ const findingRows = [
 ] as const;
 
 export function BlocksChapter() {
+  const liveStories = getLiveStoriesByBrand(liveBrandSlugs, 8);
   return (
     <SpecChapter
       id="blocks"
@@ -247,6 +250,7 @@ export function BlocksChapter() {
         ["Measured", "Playwright · Chromium · viewports 390, 768, 1024, 1280, 1440, 1600 · fonts loaded · light mode"],
       ]}
       contents={[
+        ["Live reference", "#blocks-live"],
         ["Composition model", "#blocks-model"],
         ["Foundations", "#blocks-foundations"],
         ["Story card", "#blocks-story-card"],
@@ -258,6 +262,10 @@ export function BlocksChapter() {
       ]}
     >
       {/* ---------- 00 Model ---------- */}
+      <SpecSection id="blocks-live" kicker="05 · Live reference" title="Real blocks, real stories." intro={<p>Two block modes and their story cards, rendered by the production components with stories from the selected publication.</p>}>
+        <BlocksLive storiesByBrand={liveStories} />
+      </SpecSection>
+
       <SpecSection id="blocks-model" kicker="05.0 · How the parts combine" title="Composition model">
         <SpecColumns columns={3}>
           <div>

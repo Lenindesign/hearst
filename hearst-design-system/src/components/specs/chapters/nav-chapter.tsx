@@ -1,5 +1,6 @@
 import { SpanTable, SpecNote, span } from "@/components/specs/chapters/blocks-nav-kit";
 import { SpecChapter, SpecColumns, SpecFilm, SpecFinding, SpecSection, SpecSheet, SpecSubhead, SpecTable } from "@/components/specs/spec-kit";
+import { LiveViewport } from "@/components/specs/live/live-kit";
 
 const filmChapters = [
   [0, "The header: three bands"],
@@ -70,6 +71,7 @@ export function NavChapter() {
         ["Measured", <>Playwright · Chromium · <code>/hearst-plus/</code> and a brand page · viewports 390, 640, 768, 1024, 1280, 1440 · light mode</>],
       ]}
       contents={[
+        ["Live reference", "#nav-live"],
         ["Film", "#nav-film"],
         ["Anatomy", "#nav-anatomy"],
         ["Breakpoints", "#nav-breakpoints"],
@@ -80,6 +82,16 @@ export function NavChapter() {
         ["Findings", "#nav-findings"],
       ]}
     >
+      <SpecSection id="nav-live" kicker="06 · Live reference" title="The real header, at any window width." intro={<p>The production utility bar and main navigation on the Hearst+ home, in a frame that acts as the browser window. Scroll inside the frame past 96 px to see the compact bar, and open the menus, search and the phone drawer; they work as they do in the app.</p>}>
+        <LiveViewport
+          src="/hearst-plus/"
+          title="Hearst+ header at the selected window width"
+          widths={[{ width: 390, label: "390 phone" }, { width: 768, label: "768 md" }, { width: 1280, label: "1280 xl" }]}
+          defaultWidth={1280}
+          height={600}
+        />
+      </SpecSection>
+
       <SpecSection id="nav-film" kicker="06.0 · Walkthrough" title="How the header works" intro={<p>The film animates every behavior on a wireframe drawn from the measured geometry. It covers layout, the mega menu, scrolling at both sizes, breakpoints, the drawer, search and the layer order, and ends on the two drawing sheets.</p>}>
         <SpecFilm
           src="/specs/nav-film.mp4"

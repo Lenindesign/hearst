@@ -1,5 +1,9 @@
+import { readFileSync } from "node:fs";
+import path from "node:path";
+
 import { Col, ColGroup, FindingList, NumberedList, SmallNote, TaggedFinding } from "@/components/specs/chapters/chapter-parts";
 import { SpecChapter, SpecColumns, SpecFilm, SpecProse, SpecSection, SpecSheet, SpecSubhead, SpecTable } from "@/components/specs/spec-kit";
+import { SystemLive } from "@/components/specs/live/system-live";
 
 /** Agentic design system spec (HP-SYS-SPEC · Rev A · 2026-11-11), converted from public/specs/system-spec.html. */
 const stackRows = [
@@ -11,16 +15,27 @@ const stackRows = [
   ["6 · Outputs", "App on Netlify, Storybook, Figma variables, Pencil specs, spec pages", <>Netlify · Figma · <code>.pen</code></>, <>28 brand <code>.pen</code> files + 1</>],
 ] as const;
 
-const vaultRows = [
-  ["VAULT_HOME.md", "The map of the vault and who owns what", "—"],
-  ["AIDLC-docs/DESIGN-SYSTEM-SPEC.md", "Token architecture, generated outputs, component contracts", "—"],
-  ["PRODUCT.md", "Purpose, audience and design principles. Read first.", "58"],
-  ["DESIGN.md", "Routes design tools to the right owner (a bridge, not a source)", "22"],
-  ["STYLE.md", "Shared visual, responsive, accessibility and interaction rules", "153"],
-  ["BRAND_STYLES.md", "Destination and publication colors, fonts and logos", "188"],
-  ["APP_RULES.md", "Personalization, feeds, readers and scoped exceptions", "179"],
-  ["DECISION_LOG.md", "Dated decisions that may graduate into a rule file", "288"],
+/** Line counts are read from the files when the page is built, so they cannot go stale. */
+const vaultFiles = [
+  ["VAULT_HOME.md", "The map of the vault and who owns what"],
+  ["AIDLC-docs/DESIGN-SYSTEM-SPEC.md", "Token architecture, generated outputs, component contracts"],
+  ["PRODUCT.md", "Purpose, audience and design principles. Read first."],
+  ["DESIGN.md", "Routes design tools to the right owner (a bridge, not a source)"],
+  ["STYLE.md", "Shared visual, responsive, accessibility and interaction rules"],
+  ["BRAND_STYLES.md", "Destination and publication colors, fonts and logos"],
+  ["APP_RULES.md", "Personalization, feeds, readers and scoped exceptions"],
+  ["DECISION_LOG.md", "Dated decisions that may graduate into a rule file"],
 ] as const;
+
+function lineCount(file: string) {
+  try {
+    return String(readFileSync(path.join(process.cwd(), file), "utf8").split("\n").length);
+  } catch {
+    return "—";
+  }
+}
+
+const vaultRows = vaultFiles.map(([file, owns]) => [file, owns, lineCount(file)]);
 
 const skillRows = [
   [
@@ -72,6 +87,7 @@ export function SystemChapter() {
         ["Counted", "Repo and vault on 2026-11-11 · brands, components, metadata, stories, notes, skills"],
       ]}
       contents={[
+        ["Live reference", "#system-live"],
         ["Film", "#system-film"],
         ["The stack", "#system-stack"],
         ["Vault", "#system-vault"],
@@ -82,6 +98,10 @@ export function SystemChapter() {
         ["Findings", "#system-findings"],
       ]}
     >
+      <SpecSection id="system-live" kicker="09 · Live reference" title="The vault, read at build time." intro={<p>The canonical files, their first headings and lengths, the steps agents follow, and the repository counts, read from the files when this page is built rather than typed here.</p>}>
+        <SystemLive />
+      </SpecSection>
+
       <SpecSection id="system-film" kicker="09.0 · Walkthrough" title="How the system works" intro={<p>The film builds the stack layer by layer, then walks through the two vaults, the skills, the nine agents, the repo’s layers, routing, the change loop with its stop gate, the sources of truth and the four workflows. It ends on the two drawing sheets.</p>}>
         <SpecFilm
           src="/specs/system-film.mp4"

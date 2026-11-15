@@ -4,9 +4,7 @@ import * as React from "react";
 
 import { Button, buttonVariants, capAlignButtonLabel } from "@/components/ui/button";
 import { Bookmark, ChevronRight, Trash2 } from "@/components/ui/icons";
-import { getHearstBrandSection, hearstSectionThemeSlugs } from "@/lib/hearst-routes";
-import { brandToCssVars } from "@/lib/theme-css-vars";
-import { themeOptions } from "@/lib/theme-options";
+import { useBrandVars } from "@/components/specs/live/live-kit";
 import { cn } from "@/lib/utils";
 
 /** Brands chosen to show the radius range: 0 (Cosmopolitan, square), 4 (Car and Driver, Hearst+), 64 (Esquire, pill). */
@@ -14,7 +12,7 @@ const previewBrands = [
   { slug: "cosmopolitan", label: "Cosmopolitan" },
   { slug: "esquire", label: "Esquire" },
   { slug: "car-and-driver", label: "Car and Driver" },
-  { slug: "hearst-plus", label: "Hearst+" },
+  { slug: "hearst-all", label: "Hearst+" },
 ] as const;
 
 /** "Sign up" has a descender, so capAlignedLabel="auto" leaves it on normal metrics. */
@@ -29,17 +27,6 @@ const variants = [
   ["destructive", "Delete"],
   ["link", "Link action"],
 ] as const;
-
-/** Same theme merge as the Storybook ThemeDecorator: section base, then the brand. */
-function useBrandVars(slug: string) {
-  return React.useMemo(() => {
-    const brand = themeOptions.find((option) => option.slug === slug) ?? themeOptions[0];
-    const isSectionTheme = brand.slug.startsWith("hearst-") || brand.slug === "white-label" || brand.slug === "fre";
-    const baseSlug = isSectionTheme ? brand.slug : hearstSectionThemeSlugs[getHearstBrandSection(brand.slug)];
-    const base = themeOptions.find((option) => option.slug === baseSlug) ?? brand;
-    return { ...brandToCssVars(base, "light"), ...brandToCssVars(brand, "light") } as React.CSSProperties;
-  }, [slug]);
-}
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (

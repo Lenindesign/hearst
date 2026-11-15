@@ -2,6 +2,22 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-11-14: One film of every spec chapter
+
+- **Context:** The owner wanted a single video of all the spec films, including the new live references.
+- **Decision:** `/specs/` opens with a combined film (`public/specs/specs-all-films.mp4`, 21 minutes) with a jump button per chapter. It is encoded at about 540 kbps so it stays under GitHub's 100 MB file limit; the build scripts are in `output/specs/all-films/`.
+- **Scope:** The top of `/specs/`. Each chapter keeps its own film.
+- **Exceptions:** None.
+- **Canonical rule:** `STYLE.md` (specifications page); `AGENTS.md` › Working with collaborators.
+
+## 2026-11-14: Every spec chapter shows the real thing
+
+- **Context:** Only the CTA chapter rendered its production component. The other chapters described components with drawings, films and tables, so a reader could not check the spec against what ships.
+- **Decision:** Each chapter of `/specs/` opens with a Live reference. Type, tokens, blocks and carousel render the production components under a brand picker (`LiveBrandFrame`); breakpoints and grid, nav and reader show the real app route in a frame at a chosen window width (`LiveViewport`); system reads the vault files when the page is built. The Hearst+ option uses the `hearst-all` theme, the Hearst+ destination.
+- **Scope:** The nine chapters of `/specs/`. The CTA chapter keeps its existing live reference.
+- **Exceptions:** None.
+- **Canonical rule:** `STYLE.md` (specifications page live references); `AGENTS.md` › Working with collaborators.
+
 ## 2026-11-14: The daily feed publishes itself
 
 - **Context:** The daily feed workflow ran, but each edition waited in a pull request for owner approval, so the live catalog fell behind whenever no one merged it.
