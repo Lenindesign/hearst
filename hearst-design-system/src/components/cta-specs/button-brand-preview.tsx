@@ -12,7 +12,7 @@ const previewBrands = [
   { slug: "cosmopolitan", label: "Cosmopolitan" },
   { slug: "esquire", label: "Esquire" },
   { slug: "car-and-driver", label: "Car and Driver" },
-  { slug: "hearst-plus", label: "Hearst+" },
+  { slug: "hearst-all", label: "Hearst+" },
 ] as const;
 
 /** "Sign up" has a descender, so capAlignedLabel="auto" leaves it on normal metrics. */
