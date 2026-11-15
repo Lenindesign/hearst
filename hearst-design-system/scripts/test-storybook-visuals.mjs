@@ -395,7 +395,12 @@ async function captureCase(browser, origin, visualCase) {
   await page.clock.setFixedTime(new Date("2026-07-26T20:00:00-07:00"));
   const browserErrors = [];
   page.on("console", (message) => {
-    if (message.type() === "error") browserErrors.push(message.text());
+    if (message.type() !== "error") return;
+    // Third-party embeds (Instagram, Facebook, YouTube) log their own errors
+    // from the live web; only errors raised by Storybook's own code fail a case.
+    const sourceUrl = message.location()?.url ?? "";
+    if (sourceUrl && !sourceUrl.startsWith(origin)) return;
+    browserErrors.push(message.text());
   });
   page.on("pageerror", (error) => browserErrors.push(error.message));
 
@@ -427,20 +432,44 @@ async function captureCase(browser, origin, visualCase) {
       timeout: 30_000,
     });
   }
-  await page.evaluate(async () => {
-    await document.fonts.ready;
-    await Promise.all(
-      [...document.images].map((image) =>
-        image.complete
-          ? Promise.resolve()
-          : new Promise((resolveImage) => {
-              image.addEventListener("load", resolveImage, { once: true });
-              image.addEventListener("error", resolveImage, { once: true });
-            }),
+  const unsettled = await page.evaluate(async () => {
+    // Every wait is capped: an offscreen lazy image or a stalled request must
+    // fail this case with a message, never hang the whole run.
+    const unsettledWaits = [];
+    const capped = (label, promise, ms = 15_000) =>
+      Promise.race([
+        promise,
+        new Promise((resolveTimeout) =>
+          setTimeout(() => {
+            unsettledWaits.push(label);
+            resolveTimeout();
+          }, ms),
+        ),
+      ]);
+
+    await capped("fonts", document.fonts.ready);
+    // Lazy images below the fold never load in a headless capture unless asked.
+    for (const image of document.images) {
+      if (image.loading === "lazy") image.loading = "eager";
+    }
+    await capped(
+      "images",
+      Promise.all(
+        [...document.images].map((image) =>
+          image.complete
+            ? Promise.resolve()
+            : new Promise((resolveImage) => {
+                image.addEventListener("load", resolveImage, { once: true });
+                image.addEventListener("error", resolveImage, { once: true });
+              }),
+        ),
       ),
     );
-    await Promise.all(
-      [...document.images].map((image) => image.decode?.().catch(() => undefined)),
+    await capped(
+      "image decode",
+      Promise.all(
+        [...document.images].map((image) => image.decode?.().catch(() => undefined)),
+      ),
     );
 
     const backgroundImageUrls = new Set();
@@ -456,7 +485,7 @@ async function captureCase(browser, origin, visualCase) {
       collectBackgroundImageUrls(getComputedStyle(element, "::after").backgroundImage);
     }
 
-    await Promise.all(
+    await capped("background images", Promise.all(
       [...backgroundImageUrls].map(async (source) => {
         const image = new Image();
         await new Promise((resolveImage) => {
@@ -468,11 +497,19 @@ async function captureCase(browser, origin, visualCase) {
         image.src = source;
         await image.decode?.().catch(() => undefined);
       }),
+    ));
+    await capped(
+      "animation frame",
+      new Promise((resolveFrame) =>
+        requestAnimationFrame(() => requestAnimationFrame(resolveFrame)),
+      ),
+      2_000,
     );
-    await new Promise((resolveFrame) =>
-      requestAnimationFrame(() => requestAnimationFrame(resolveFrame)),
-    );
+    return unsettledWaits;
   });
+  if (unsettled.length > 0) {
+    throw new Error(`${visualCase.name} did not settle within 15s: ${unsettled.join(", ")}.`);
+  }
   await page.addStyleTag({
     content:
       "*,*::before,*::after{animation:none!important;caret-color:transparent!important;transition:none!important}",
@@ -530,7 +567,14 @@ async function run() {
 
   try {
     for (const visualCase of selectedCases) {
-      let actual = await captureCase(browser, origin, visualCase);
+      let actual;
+      try {
+        actual = await captureCase(browser, origin, visualCase);
+      } catch (error) {
+        // One broken story must not hide the rest of the run's results.
+        results.push({ name: visualCase.name, status: "failed", reason: String(error?.message ?? error).split("\n")[0] });
+        continue;
+      }
       const baselinePath = join(baselineRoot, `${visualCase.name}.png`);
 
       if (updateBaselines) {

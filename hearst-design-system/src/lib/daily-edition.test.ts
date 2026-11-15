@@ -61,7 +61,7 @@ test("resolves one record per edition key and preserves its creation time", () =
   });
 });
 
-test("refreshes a versioned edition with stories outside the prior edition", () => {
+test("refreshes a versioned edition with stories outside the prior edition, including a new lead", () => {
   const records = resolveDailyEdition(
     [{
       editionKey: "2026-07-24:all:todays-picks",
@@ -78,7 +78,8 @@ test("refreshes a versioned edition with stories outside the prior edition", () 
 
   assert.deepEqual(records[0], {
     editionKey: "2026-07-24:all:todays-picks",
-    storyIds: ["lead", "wellness", "travel", "design", "beauty"],
+    // The prior edition's lead is deprioritized too, so the first unused story leads.
+    storyIds: ["same-brand", "wellness", "travel", "design", "beauty"],
     createdAt: 20,
     selectionVersion: 2,
   });

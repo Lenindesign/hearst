@@ -135,7 +135,7 @@ export function ReaderActionBar({
           <ReaderPublicationDates
             publishedAt={publishedAt}
             updatedAt={article?.updatedAt}
-            className="shrink-0"
+            className="min-w-0 max-w-full"
           />
         </div>
         <div className="flex w-full shrink-0 items-center justify-center gap-1 sm:w-auto sm:justify-end sm:self-auto sm:gap-2">
