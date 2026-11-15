@@ -2,14 +2,13 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
-## 2026-11-15: Visual screenshots leave CI until they use a frozen fixture
+## 2026-11-15: Visual screenshots run in CI against a frozen feed edition
 
-- **Context:** With CI running again, 35 of 47 visual cases differed from their July baselines. The cases render the feed snapshot the daily bot rewrites each morning, under a fixed July 26 test clock, so some show different stories and the Lifestyle home shows its empty state.
-- **Decision:** The owner chose to run `npm run quality:ci` (every quality step except `test:visual`) in GitHub Actions. The visual test script no longer hangs and stays available locally.
-- **Scope:** The root quality workflow only; `npm run quality` still includes the visual test.
+- **Context:** With CI running again, 35 of 47 visual cases differed from their July baselines. The cases rendered the feed snapshot the daily bot rewrites each morning, under a fixed July 26 test clock, so some showed different stories and the Lifestyle home showed its empty state because November stories counted as future-dated. One case, `featured-carousel-saved-1280`, timed out because its story was deleted on 2026-10-04 when Save moved from the carousel to the reader.
+- **Decision:** The owner first took `test:visual` out of CI. It is back: the visual Storybook build reads the frozen 2026-11-14 edition in `tests/visual-fixtures/`, the test clock is that edition's evening (from `manifest.json`), the orphaned saved-story case and baseline are removed, and the 46 baselines were re-recorded on the owner's Mac (macOS 26.5) and reviewed one by one; CI on `macos-15` uploads any failing capture as an artifact so a platform difference can be adopted. `quality:ci` now runs the same steps as `quality`. A case pointing at a missing story fails at once with its name.
+- **Scope:** The Storybook visual regression test and the root quality workflow. Storybook itself and the app still show the daily edition.
 - **Exceptions:** None.
 - **Canonical rule:** `AIDLC-docs/DESIGN-SYSTEM-SPEC.md` § Quality gates.
-- **Follow-up:** Give the visual stories a frozen fixture the bot does not touch, align the test clock, re-record the baselines on macOS 15, and return the test to CI.
 
 ## 2026-11-15: CI runs again; token debt accepted into the baseline
 

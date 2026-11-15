@@ -1,5 +1,5 @@
 import { createReadStream } from "node:fs";
-import { access, mkdir, readdir, writeFile } from "node:fs/promises";
+import { access, mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import { createServer } from "node:http";
 import { extname, join, normalize, resolve } from "node:path";
 import { chromium } from "playwright";
@@ -9,7 +9,12 @@ const updateBaselines = process.argv.includes("--update");
 const requestedCaseName = process.argv
   .find((argument) => argument.startsWith("--case="))
   ?.slice("--case=".length);
-const staticRoot = resolve("storybook-static");
+// Built by `npm run build-storybook:visual` with the frozen feed edition in
+// tests/visual-fixtures/, never from the daily snapshot in storybook-static.
+const staticRoot = resolve("storybook-static-visual");
+const fixtureManifest = JSON.parse(
+  await readFile(resolve("tests/visual-fixtures/manifest.json"), "utf8"),
+);
 const baselineRoot = resolve("tests/visual-baselines");
 const failureRoot = resolve("output/playwright/visual-regression");
 const pixelThreshold = 32;
@@ -255,12 +260,6 @@ const cases = [
     viewport: { width: 390, height: 844 },
   },
   {
-    name: "featured-carousel-saved-1280",
-    id: "hearst-plus-components-featured-carousel--saved-story",
-    globals: "brand:hearst-all",
-    viewport: { width: 1280, height: 760 },
-  },
-  {
     name: "river-advertisement-prototype-1280",
     id: "hearst-plus-components-river-advertisement--prototype-creative",
     globals: "brand:hearst-all",
@@ -389,10 +388,10 @@ async function captureCase(browser, origin, visualCase) {
     timezoneId: "America/Los_Angeles",
   });
   const page = await context.newPage();
-  // Production personalization is daypart-aware. Pin the review clock to the
-  // evening state represented by the approved baselines so a run crossing
-  // 10 p.m. cannot silently change ranked content.
-  await page.clock.setFixedTime(new Date("2026-07-26T20:00:00-07:00"));
+  // Production personalization is daypart-aware and stories expire after 72
+  // hours. Pin the clock to the frozen edition's evening so the fixture stays
+  // fresh and a run crossing 10 p.m. cannot change ranked content.
+  await page.clock.setFixedTime(new Date(fixtureManifest.clock));
   const browserErrors = [];
   page.on("console", (message) => {
     if (message.type() !== "error") return;
@@ -550,7 +549,7 @@ async function run() {
   }
 
   await access(join(staticRoot, "index.html")).catch(() => {
-    throw new Error("storybook-static is missing. Run `npm run build-storybook` first.");
+    throw new Error("storybook-static-visual is missing. Run `npm run build-storybook:visual` first.");
   });
   await mkdir(baselineRoot, { recursive: true });
   const expectedBaselineFiles = new Set(cases.map((visualCase) => `${visualCase.name}.png`));
@@ -559,6 +558,19 @@ async function run() {
   if (orphanedBaselines.length > 0) {
     throw new Error(
       `Orphaned visual baselines are not tied to a current production-backed case:\n${orphanedBaselines.join("\n")}`,
+    );
+  }
+  // A case whose story was renamed or deleted would only show up as a 30s
+  // wait for #storybook-root; name it instead.
+  const storybookIndex = JSON.parse(await readFile(join(staticRoot, "index.json"), "utf8"));
+  const missingStories = selectedCases.filter(
+    (visualCase) => !storybookIndex.entries?.[visualCase.id],
+  );
+  if (missingStories.length > 0) {
+    throw new Error(
+      `Visual cases point at stories that no longer exist:\n${missingStories
+        .map((visualCase) => `${visualCase.name} (${visualCase.id})`)
+        .join("\n")}`,
     );
   }
   const { server, origin } = await startStaticServer();

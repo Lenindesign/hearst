@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import remarkGfmModule from "remark-gfm";
@@ -68,6 +69,33 @@ const config = {
 
     viteConfig.css ||= {};
     viteConfig.css.postcss = path.resolve(storybookDirectory, "..");
+
+    // The visual regression build (`npm run test:visual`) renders the frozen
+    // feed edition in tests/visual-fixtures/ instead of the daily snapshot the
+    // feed workflow rewrites, so its baselines only change when a story does.
+    if (process.env.STORYBOOK_VISUAL_FIXTURES === "1") {
+      const projectRoot = path.resolve(storybookDirectory, "..");
+      const manifest = JSON.parse(
+        readFileSync(path.join(projectRoot, "tests/visual-fixtures/manifest.json"), "utf8")
+      );
+      const frozenByLivePath = new Map(
+        manifest.files.map((file) => [
+          path.join(projectRoot, file),
+          path.join(projectRoot, "tests/visual-fixtures", path.basename(file)),
+        ])
+      );
+      viteConfig.plugins = [
+        {
+          name: "hearst-visual-fixtures",
+          enforce: "pre",
+          load(id) {
+            const frozenPath = frozenByLivePath.get(id.split("?")[0]);
+            return frozenPath ? readFileSync(frozenPath, "utf8") : null;
+          },
+        },
+        ...(viteConfig.plugins ?? []),
+      ];
+    }
 
     if (process.env.STORYBOOK_BASE) {
       viteConfig.base = process.env.STORYBOOK_BASE;
