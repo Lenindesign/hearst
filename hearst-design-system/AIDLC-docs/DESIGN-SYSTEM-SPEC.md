@@ -369,13 +369,16 @@ The current `quality` command includes:
   errors, browser errors, and horizontal page overflow.
 
 The token audit is a ratchet against `reports/token-audit-baseline.json`
-(2026-10-12: 1,717 findings across 576 fingerprints). As of 2026-11-11 it fails
-with 54 new or increased fingerprints (for example
-`brutalist-home-page.tsx` and `club-activity-route-map.tsx`), so
-`npm run quality` fails at `tokens:audit:ci` until they are fixed.
+(refreshed 2026-11-15: 1,618 known violations). It fails only on new or
+increased fingerprints.
 
-The root GitHub workflow runs this quality command and then the application
-build for matching pull requests, `main` pushes, and manual dispatch.
+The root GitHub workflow (`macos-15`) runs `npm run quality:ci` and then the
+application build for matching pull requests, `main` pushes, and manual
+dispatch. `quality:ci` is `quality` without `test:visual`: the visual cases
+render the daily feed snapshot under a fixed July 2026 clock, so their stored
+screenshots go stale with every feed refresh. The visual test stays out of CI
+until its stories use a frozen fixture; run `npm run test:visual` locally when
+reviewing visual changes.
 
 Automated success is not WCAG conformance and does not prove screen-reader
 usability, 200% zoom, forced colors, reduced motion, touch behavior, or external

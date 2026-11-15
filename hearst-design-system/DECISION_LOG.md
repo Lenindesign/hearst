@@ -2,6 +2,15 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-11-15: Visual screenshots leave CI until they use a frozen fixture
+
+- **Context:** With CI running again, 35 of 47 visual cases differed from their July baselines. The cases render the feed snapshot the daily bot rewrites each morning, under a fixed July 26 test clock, so some show different stories and the Lifestyle home shows its empty state.
+- **Decision:** The owner chose to run `npm run quality:ci` (every quality step except `test:visual`) in GitHub Actions. The visual test script no longer hangs and stays available locally.
+- **Scope:** The root quality workflow only; `npm run quality` still includes the visual test.
+- **Exceptions:** None.
+- **Canonical rule:** `AIDLC-docs/DESIGN-SYSTEM-SPEC.md` § Quality gates.
+- **Follow-up:** Give the visual stories a frozen fixture the bot does not touch, align the test clock, re-record the baselines on macOS 15, and return the test to CI.
+
 ## 2026-11-15: CI runs again; token debt accepted into the baseline
 
 - **Context:** The quality workflow asked for GitHub's retired `macos-14` runner, so every run was cancelled and no check ran for at least five days. Once it ran on `macos-15`, it found stale component metadata, a Bicycling-only button token that broke brand key parity, and 103 hard-coded color fingerprints added since the last token audit baseline.
