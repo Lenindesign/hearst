@@ -132,7 +132,7 @@ export function NavChapter() {
               <ul>
                 <li><b>Banner</b> (Hearst+ and destinations): full-bleed art at its own ratio from 640 (W ÷ 11.54), and a 5:1 crop below 640. The lockup is centered. On the Hearst+ home the banner starts under the bar (<code>-mt-8 pt-8</code>).</li>
                 <li><b>Logo row</b> (brand pages): <code>h-20 sm:h-24</code> (80 · 96) with the brand logo centered.</li>
-                <li><b>Controls</b>: 12 below the bar on banners, vertically centered in the logo row. They are 44 × 44 below 640 and 28 × 28 from 640, radius 4, with a 14 icon. Left: the menu button (below 640) or the four layout toggles (from 640, gap 4). Right: theme and search, gap 8.</li>
+                <li><b>Controls</b>: 12 below the bar on banners, vertically centered in the logo row. They are 44 × 44 below 640 and 28 × 28 from 640, radius 4, with a 14 icon. Left: the menu button (below 640) or the four layout toggles (from 640, gap 4), each with a short native tooltip (Cards, List, Full-width hero, Editorial blocks) like the theme button. Right: theme and search, gap 8.</li>
               </ul>
             </div>
           </div>
