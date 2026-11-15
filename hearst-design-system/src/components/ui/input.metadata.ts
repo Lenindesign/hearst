@@ -41,6 +41,7 @@ const metadata: ComponentMetadata = {
     "homepage-layouts",
     "input-page",
     "reader-account-ui",
+    "mens-health-training-club",
   ],
   brandAware: true,
   responsive: false,

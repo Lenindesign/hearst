@@ -12,6 +12,7 @@ const metadata: ComponentMetadata = {
     "ThemeColorMode",
     "ThemeContextType",
     "useTheme",
+    "useGoogleFonts",
   ],
   whenToUse: [
     "A routed Hearst experience needs production brand tokens and theme context",
@@ -71,6 +72,10 @@ const metadata: ComponentMetadata = {
     "token-dashboard",
     "tokens-page",
     "typography-page",
+    "content-reader-dialog-shell",
+    "featured-story-carousel",
+    "hearst-plus-study-shell",
+    "live-kit",
   ],
   brandAware: true,
   responsive: false,

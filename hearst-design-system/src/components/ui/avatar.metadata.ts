@@ -46,7 +46,11 @@ const metadata: ComponentMetadata = {
     other: [],
   },
   dependencies: [],
-  usedBy: ["reader-action-bar", "reader-account-ui"],
+  usedBy: [
+    "reader-action-bar",
+    "reader-account-ui",
+    "club-activity-card",
+  ],
   brandAware: true,
   responsive: false,
   variants: ["sm", "default", "lg"],

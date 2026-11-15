@@ -55,6 +55,8 @@ const metadata: ComponentMetadata = {
     "ui/icons",
     "ui/input",
     "ui/use-modal-isolation",
+    "ui/checkbox",
+    "ui/tabs",
   ],
   usedBy: [
     "community-client",

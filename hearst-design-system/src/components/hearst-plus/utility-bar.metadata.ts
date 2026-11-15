@@ -56,6 +56,8 @@ const metadata: ComponentMetadata = {
     "hot-rod-events-page",
     "international-feed-page",
     "local-news-global-header",
+    "blocks-library-experience",
+    "hearst-events-experience",
   ],
   brandAware: true,
   responsive: true,

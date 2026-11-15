@@ -2,6 +2,14 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-11-15: CI runs again; token debt accepted into the baseline
+
+- **Context:** The quality workflow asked for GitHub's retired `macos-14` runner, so every run was cancelled and no check ran for at least five days. Once it ran on `macos-15`, it found stale component metadata, a Bicycling-only button token that broke brand key parity, and 103 hard-coded color fingerprints added since the last token audit baseline.
+- **Decision:** The workflow runs on `macos-15`. The metadata was synced to the source graph, every other brand gets `component-button-font-size-adjust: none` (the CSS fallback, so nothing renders differently), and the owner chose to refresh `reports/token-audit-baseline.json` (1,618 known violations) instead of migrating the new colors first.
+- **Scope:** The accepted fingerprints are mostly in `brutalist-home-page.tsx`, `club-activity-route-map.tsx`, `delish-onboarding-modal.tsx` and `blocks-library-experience.tsx`. They remain token debt to migrate; the gate now blocks only new regressions.
+- **Exceptions:** None.
+- **Canonical rule:** `AIDLC-docs/DESIGN-SYSTEM-SPEC.md` (token authority); `STYLE.md` (semantic color).
+
 ## 2026-11-14: One film of every spec chapter
 
 - **Context:** The owner wanted a single video of all the spec films, including the new live references.

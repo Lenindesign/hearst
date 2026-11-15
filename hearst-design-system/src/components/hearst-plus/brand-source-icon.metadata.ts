@@ -48,6 +48,7 @@ const metadata: ComponentMetadata = {
     "utility-bar",
     "vertical-video-carousel",
     "video-cards",
+    "community-home-river-card",
   ],
   brandAware: true,
   responsive: true,
