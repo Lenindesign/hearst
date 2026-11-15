@@ -35,6 +35,23 @@ const nextConfig: NextConfig = {
       "./.agents/**/*",
       "./tsconfig.tsbuildinfo",
     ],
+    // The same build-time reads also reach src/, tokens/ and the vault files at the app root. /specs is prerendered and
+    // only needs public/logos (tokens chapter) at runtime, so keep the rest of the app folder out of its trace.
+    "/specs": [
+      "./src/**/*",
+      "./tokens/**/*",
+      "./scripts/**/*",
+      "./reports/**/*",
+      "./notes/**/*",
+      "./docs/**/*",
+      "./AIDLC-docs/**/*",
+      "./vault-assets/**/*",
+      "./*.md",
+      "./*.pen",
+      "./*.json",
+      "./*.ts",
+      "./*.mjs",
+    ],
   },
   images: {
     remotePatterns: [
