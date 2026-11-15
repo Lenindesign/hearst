@@ -61,6 +61,7 @@ const metadata: ComponentMetadata = {
     "four-across-grid",
     "related-articles",
     "homepage-layouts",
+    "hearst-events-experience",
   ],
   brandAware: true,
   responsive: true,

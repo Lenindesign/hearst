@@ -495,6 +495,10 @@
     "type": "string",
     "value": "0.4px"
   },
+  "component-button-font-size-adjust": {
+    "type": "string",
+    "value": "none"
+  },
   "component-card-background-neutral": {
     "type": "color",
     "value": "#ffffff"

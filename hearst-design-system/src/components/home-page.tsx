@@ -591,14 +591,14 @@ function RiverLayoutToggle({
   const isSectionsRoute = pathname === "/hearst-plus/sections" || searchParams?.get("layout") === "sections";
   const isFullWidthHero = pathname === "/hearst-plus/full-width-hero" || (!isSectionsRoute && layout === "full-width-hero");
   const options = [
-    { value: "cards", label: "Show stories as cards", Icon: LayoutCards },
-    { value: "list", label: "Show stories as a list", Icon: LayoutList },
-    { value: "full-width-hero", label: "Show stories with a full-width hero", Icon: LayoutFullWidth },
-    { value: "blocks", label: "Show stories in editorial blocks", Icon: LayoutSections },
+    { value: "cards", label: "Show stories as cards", hint: "Cards", Icon: LayoutCards },
+    { value: "list", label: "Show stories as a list", hint: "List", Icon: LayoutList },
+    { value: "full-width-hero", label: "Show stories with a full-width hero", hint: "Full-width hero", Icon: LayoutFullWidth },
+    { value: "blocks", label: "Show stories in editorial blocks", hint: "Editorial blocks", Icon: LayoutSections },
   ] as const;
   return (
     <div role="group" aria-label="Story layout" className="hidden items-center gap-1 sm:flex">
-      {options.map(({ value, label, Icon }) => (
+      {options.map(({ value, label, hint, Icon }) => (
         <Button
           key={value}
           type="button"
@@ -608,7 +608,7 @@ function RiverLayoutToggle({
             ? isBlocksRoute
             : !isBlocksRoute && !isSectionsRoute && (value === "full-width-hero" ? isFullWidthHero : !isFullWidthHero && layout === value)}
           aria-label={label}
-          title={label}
+          title={hint}
           className={cn("hearst-plus-layout-toggle h-7 w-7 rounded-[4px]", buttonClassName)}
           onClick={() => {
             const params = new URLSearchParams(searchParams?.toString() ?? "");

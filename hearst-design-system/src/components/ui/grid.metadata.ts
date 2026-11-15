@@ -20,6 +20,7 @@ export const gridMetadata: ComponentMetadata = {
     "PageContainer",
     "PageContainerProps",
     "useBreakpoint",
+    "RAIL_LAYOUT",
   ],
   whenToUse: [
     "As the default reusable spatial foundation for pages and templates.",

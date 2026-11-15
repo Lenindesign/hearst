@@ -50,6 +50,8 @@ const metadata: ComponentMetadata = {
     "hearst-plus/video-format",
     "lifestyle-river-types",
     "ui/icons",
+    "theme-provider",
+    "hearst-plus/use-scroll-parallax",
   ],
   usedBy: [
     "entertainment-channel-stories-page",

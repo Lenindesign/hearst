@@ -41,12 +41,14 @@ const metadata: ComponentMetadata = {
   },
   dependencies: [
     "ui/use-modal-isolation",
+    "theme-provider",
   ],
   usedBy: [
     "entertainment-channel-stories-page",
     "hearst-tv-feed-experience",
     "home-page",
     "newspaper-feeds-section",
+    "hearst-events-experience",
   ],
   brandAware: false,
   responsive: true,

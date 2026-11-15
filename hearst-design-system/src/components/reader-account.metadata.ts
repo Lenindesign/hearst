@@ -35,6 +35,7 @@ const metadata: ComponentMetadata = {
     "home-page",
     "reader-account-ui",
     "utility-bar",
+    "live-kit",
   ],
   brandAware: false,
   responsive: false,
