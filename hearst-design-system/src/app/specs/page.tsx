@@ -10,6 +10,7 @@ import { ReaderChapter } from "@/components/specs/chapters/reader-chapter";
 import { SystemChapter } from "@/components/specs/chapters/system-chapter";
 import { TokensChapter } from "@/components/specs/chapters/tokens-chapter";
 import { TypeChapter } from "@/components/specs/chapters/type-chapter";
+import { SpecFilm } from "@/components/specs/spec-kit";
 
 export const metadata: Metadata = {
   title: "Specifications | Hearst+",
@@ -30,6 +31,19 @@ const chapters = [
   ["system", "System"],
 ] as const;
 
+/** Start of each chapter in the combined film (public/specs/specs-all-films.mp4), in seconds. */
+const filmChapters = [
+  [4, "CTAs"],
+  [55, "Breakpoints & grid"],
+  [147, "Type metrics"],
+  [258, "Tokens & brands"],
+  [432, "Blocks"],
+  [692, "Nav"],
+  [860, "Reader"],
+  [1008, "Carousel"],
+  [1136, "System"],
+] as const;
+
 export default function SpecsPage() {
   return (
     <div className="hearst-plus-theme min-h-screen bg-background font-sans text-foreground">
@@ -39,7 +53,7 @@ export default function SpecsPage() {
           <p className="type-k1 text-muted-foreground">Hearst Design System · Hearst+</p>
           <h1 className="headline mt-4 text-balance text-4xl leading-[1.05] sm:text-6xl">Specifications</h1>
           <p className="mt-5 max-w-3xl text-lg leading-8 text-muted-foreground">
-            Every Hearst+ specification in one document. Each chapter covers one part of the system with values measured in the running app, a dimensional drawing and a motion film. Component behavior and live examples are in Storybook.
+            Every Hearst+ specification in one document. Each chapter covers one part of the system with values measured in the running app, a dimensional drawing, a motion film and a live reference of the real thing. Every state and variant of each component is in Storybook.
           </p>
           <nav aria-label="Chapters" className="mt-7 flex flex-wrap gap-2">
             {chapters.map(([id, label], index) => (
@@ -54,6 +68,23 @@ export default function SpecsPage() {
             ))}
           </nav>
         </header>
+
+        <section id="specs-film" aria-labelledby="specs-film-title" className="scroll-mt-28 space-y-6">
+          <div className="max-w-3xl">
+            <p className="type-k1 text-muted-foreground">All chapters · 21 min</p>
+            <h2 id="specs-film-title" className="headline mt-3 text-2xl leading-tight sm:text-3xl">Watch every chapter</h2>
+            <p className="mt-3 leading-7 text-muted-foreground">
+              Every chapter&rsquo;s motion film in page order, each followed by a recording of its live reference. Pick a chapter to jump to it.
+            </p>
+          </div>
+          <SpecFilm
+            src="/specs/specs-all-films.mp4"
+            poster="/specs/specs-all-films-poster.jpg"
+            label="All specification films in chapter order, each followed by a recording of the chapter's live reference. 21 minutes, no sound."
+            caption={<p><b className="text-foreground">All chapters · 21:02 · no sound.</b> Nine chapters, ten films and nine live references. <a href="/specs/specs-all-films.mp4" className="underline underline-offset-4">Download the film</a>.</p>}
+            chapters={filmChapters}
+          />
+        </section>
 
         <CtaChapter />
         <LayoutChapter />

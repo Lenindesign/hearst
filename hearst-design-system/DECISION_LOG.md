@@ -2,6 +2,14 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-11-14: One film of every spec chapter
+
+- **Context:** The owner wanted a single video of all the spec films, including the new live references.
+- **Decision:** `/specs/` opens with a combined film (`public/specs/specs-all-films.mp4`, 21 minutes) with a jump button per chapter. It is encoded at about 540 kbps so it stays under GitHub's 100 MB file limit; the build scripts are in `output/specs/all-films/`.
+- **Scope:** The top of `/specs/`. Each chapter keeps its own film.
+- **Exceptions:** None.
+- **Canonical rule:** `STYLE.md` (specifications page); `AGENTS.md` › Working with collaborators.
+
 ## 2026-11-14: Every spec chapter shows the real thing
 
 - **Context:** Only the CTA chapter rendered its production component. The other chapters described components with drawings, films and tables, so a reader could not check the spec against what ships.
