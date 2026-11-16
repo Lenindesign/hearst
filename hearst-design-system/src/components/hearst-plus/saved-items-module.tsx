@@ -81,6 +81,7 @@ export function SavedItemsModule({
                   <button
                     type="button"
                     onClick={() => onOpenStory(story, { suggestionPosition: index + 1 })}
+                    data-story-brand={story.brandSlug}
                     className="group grid min-h-16 min-w-0 flex-1 grid-cols-[48px_minmax(0,1fr)] items-center gap-3 rounded-[6px] text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
                     aria-label={`Open suggested story: ${story.title}`}
                   >

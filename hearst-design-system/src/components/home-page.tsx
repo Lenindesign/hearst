@@ -3038,6 +3038,7 @@ export function RichPhotoGalleryCard({
       className="group/card relative min-w-0 cursor-pointer overflow-hidden rounded-card bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]"
       data-story-module="river"
       data-story-id={story.id}
+      data-story-brand={story.brandSlug}
     >
       <button
         type="button"
@@ -3112,7 +3113,7 @@ function CompactPhotoGalleryCard({
   onSave?: () => void;
 }) {
   return (
-    <article className="group/card compact-photo-gallery relative min-w-0 cursor-pointer overflow-hidden rounded-card bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]">
+    <article className="group/card compact-photo-gallery relative min-w-0 cursor-pointer overflow-hidden rounded-card bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)]" data-story-brand={story.brandSlug}>
       <button type="button" onClick={onOpen} className="peer absolute inset-0 z-10 rounded-card focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/60" aria-label={`Open photo gallery: ${story.title}`} />
       <div className="compact-photo-gallery__images grid aspect-video grid-cols-2 gap-0.5 overflow-hidden bg-border">
         {images.slice(0, 4).map((image, index) => <div key={image.src} className={cn("compact-photo-gallery__image relative min-w-0 overflow-hidden bg-muted", index === 2 && "compact-photo-gallery__image--small", index === 3 && "compact-photo-gallery__image--large")}><Image src={image.src} alt={image.alt} fill sizes={index === 0 ? "(max-width: 640px) 50vw, 40vw" : "(max-width: 640px) 50vw, 20vw"} className="object-cover transition-transform duration-200 group-hover/card:scale-[1.02]" /></div>)}
@@ -3199,6 +3200,7 @@ export function LifestyleRiverCard({
         data-story-module="river"
         data-story-layout="list"
         data-story-id={story.id}
+        data-story-brand={story.brandSlug}
       >
         <button
           type="button"
@@ -3270,6 +3272,7 @@ export function LifestyleRiverCard({
       )}
       data-story-module="river"
       data-story-id={story.id}
+      data-story-brand={story.brandSlug}
     >
       <button
         type="button"
@@ -4715,9 +4718,11 @@ function LifestyleStoryReaderModal({
                         </div>
                         {!useInterReaderTypography ? (
                           <>
-                            <h2 className="headline type-t1">
-                              {story.title}
-                            </h2>
+                            <div data-story-brand={story.brandSlug}>
+                              <h2 className="headline type-t1">
+                                {story.title}
+                              </h2>
+                            </div>
                             {readerActionBar}
                           </>
                         ) : null}

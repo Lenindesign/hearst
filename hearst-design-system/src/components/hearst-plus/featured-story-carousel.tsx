@@ -498,6 +498,7 @@ export function FeaturedStoryCarousel({
                 data-carousel-clone={isClone ? "true" : undefined}
                 data-media-kind={story.videoUrl ? "video" : "article"}
                 data-story-id={story.id}
+                data-story-brand={story.brandSlug}
                 data-story-module="featured-story"
               >
                 <button

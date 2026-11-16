@@ -476,6 +476,7 @@ export function VideoIndexCard({
       className="group/video-card overflow-hidden rounded-card border border-border bg-[var(--hp-surface)] shadow-[var(--hp-shadow-card)] transition-colors"
       data-story-module="river"
       data-story-id={story.id}
+      data-story-brand={story.brandSlug}
     >
       <VideoPlaySurface story={story} featured />
       <div className={compact ? "p-3" : "p-4 sm:p-5"}>

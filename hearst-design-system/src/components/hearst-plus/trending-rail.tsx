@@ -62,6 +62,7 @@ export function TrendingStoryRail({
               type="button"
               onClick={() => onOpenStory(story)}
               data-story-id={story.id}
+              data-story-brand={story.brandSlug}
               className="group grid min-h-20 w-full grid-cols-[48px_minmax(0,1fr)] items-start gap-3 rounded-[6px] py-3 text-left focus:outline-none focus:ring-2 focus:ring-primary/30"
               aria-label={`Open story: ${story.title}`}
             >
