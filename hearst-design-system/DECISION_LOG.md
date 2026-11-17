@@ -117,6 +117,13 @@ Use this file for concise, dated context behind product and design decisions. Du
 - **Exceptions:** Sections, Local News, A&E and brand pages keep a bar in their own primary color, which reads better over their colored banners; dark-mode pages keep the dark knockout bar.
 - **Canonical rule:** `STYLE.md` Hearst+ shell styling.
 
+## 2026-11-17: Cool page canvas
+
+- **Context:** The owner asked for a cool gray canvas in place of the warm `#ECE9E3`.
+- **Decision:** The Hearst+ light canvas becomes `#EDEEF4`. Contrast improves: subtle text `#5B6676` goes from 4.80 to 5.03:1, and the shared blue `#2B6FAF` from 4.34 to 4.54:1, so it now passes on the canvas too. White modules separate slightly less (1.16:1 against 1.21:1).
+- **Scope:** Every Hearst+ light page (`.hearst-plus-theme` and `--hp-background` in `globals.css`, `hearst-plus-theme.ts`), including the reader. Dark mode is unchanged.
+- **Canonical rule:** `APP_RULES.md` page canvas; `STYLE.md` contrast; `BRAND_STYLES.md` HDS page token.
+
 ## 2026-10-11: Darker page canvas
 
 - **Context:** With module outlines removed, white cards on the `#F4F2EE` canvas separated only by a faint shadow, so the page read as flat.

@@ -12,7 +12,7 @@ const link = "underline underline-offset-4";
 
 const surfaceRows = [
   [<code key="t">--hp-surface</code>, "#FFFFFF", "Card and widget surface"],
-  [<code key="t">--hp-background</code>, "#ECE9E3", "Page canvas"],
+  [<code key="t">--hp-background</code>, "#EDEEF4", "Page canvas"],
   [<code key="t">--hp-shadow-card</code>, "0 2px 6px rgb(15 23 42 / .05)", <>Every Hearst+ card and widget. Any element with this class gets <code>border-width: 0 !important</code> (globals.css), so the shadow and surface separate the card from the page.</>],
   [<><code>--hp-radius-card</code> → <code>--radius</code></>, "8px", <>Card corners (production cards use the literal <code>rounded-[8px]</code>)</>],
   [<code key="t">--border</code>, "#C7D9EA", "Inner dividers, thumbnail rims"],
@@ -230,7 +230,7 @@ const findingRows = [
   [<>F11 <SpecTag>new</SpecTag></>, "Save icon: the old rule required a heart, which reads as “like” for a save-for-later action.", <>Decided 2026-11-06: save uses the <b>bookmark</b> (outline / fill) on the card save button, story action row, reader action bar, Shorts and image viewers, and Saved Items headings and suggestions. The heart is kept for likes and favorites. Library navigation moves to the <b>books</b> icon. <code>APP_RULES.md</code> and <code>DECISION_LOG.md</code> are updated.</>, "APP_RULES save icon rule (changed); Constitution Art. IV bookmark action", "Done · 2026-11-06"],
   [<>F12 <SpecTag>new</SpecTag></>, <>Some headlines change color on hover: the Community card (<code>text-primary</code>) and the production Card Row (<code>--hp-sidebar-heading</code>).</>, "Keep the headline color and underline on hover or focus, like the story card.", "STYLE.md: headlines keep color; underline is the cue", "Done · 2026-11-06"],
   ["F9", "No timestamp on the card; the Constitution's river contract asks for one.", <><b>Recommend</b> an optional date slot in the meta row after the byline, short and absolute (e.g. &ldquo;Jul 20&rdquo;, Pacific). It hides with the byline below a 20rem container and is omitted when the source date is invalid, never generated.</>, "Constitution Art. IV; APP_RULES date rules", "Decide · editorial"],
-  ["F10", "Kicker blue: the Constitution says #2D75B9; the token is #2B6FAF.", <><b>Recommend</b> keeping the token and changing the Constitution to name <code>--primary</code>, not a hex. Neither blue reaches 4.5:1 for 11px text on the #ECE9E3 canvas (#2B6FAF 4.34, #2D75B9 3.98), though both pass on white cards. So add a canvas kicker token at <b>#2A6CAB</b>: 4.52 on the canvas, 5.48 on white.</>, "Constitution Art. II; WCAG 1.4.3", "Decide · brand"],
+  ["F10", "Kicker blue: the Constitution says #2D75B9; the token is #2B6FAF.", <><b>Recommend</b> keeping the token and changing the Constitution to name <code>--primary</code>, not a hex. On the #EDEEF4 canvas the token passes 4.5:1 for 11px text (#2B6FAF 4.54) but the Constitution blue does not (#2D75B9 4.16); both pass on white cards. So no separate canvas kicker token is needed once the Constitution names the token.</>, "Constitution Art. II; WCAG 1.4.3", "Decide · brand"],
   [<>F13 <SpecTag>new</SpecTag></>, <>STYLE.md says content cards show no per-card Save, but production passes <code>onSave</code> to every block card.</>, <><b>Recommend</b> keeping one bookmark toggle in the meta row and clarifying STYLE.md to allow a single save control while still banning action rows. The alternative is to remove it and save only from the reader.</>, "STYLE.md content-card rule vs production", "Decide · product"],
 ] as const;
 

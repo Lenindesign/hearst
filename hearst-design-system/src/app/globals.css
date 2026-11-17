@@ -20,7 +20,7 @@
 }
 
 .hearst-plus-theme {
-  --background: #ECE9E3;
+  --background: #EDEEF4;
   --foreground: var(--palette-content-default, #121212);
   --card: #ffffff;
   --card-foreground: var(--palette-content-default, #121212);
@@ -41,7 +41,7 @@
   --hp-font-ui: "Inter", system-ui, sans-serif;
   --hp-font-headline: var(--font-schibsted-grotesk, "Schibsted Grotesk"), system-ui, sans-serif;
   --hp-font-headline-weight: 800;
-  --hp-background: #ECE9E3;
+  --hp-background: #EDEEF4;
   --hp-nav: var(--primary);
   /* Shared Hearst+ navy uses the canonical core information-blue token, not a brand-scoped primary. */
   --hp-utility-bar: var(--palette-alert-info-1000);

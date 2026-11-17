@@ -6,7 +6,7 @@ Read `PRODUCT.md` for intent. Open the relevant section of `STYLE.md` only when 
 
 ## Theme and surfaces
 
-- The default page canvas is `#ECE9E3`; content modules use white surfaces.
+- The default page canvas is `#EDEEF4`, a cool light gray, on every Hearst+ light page; content modules use white surfaces.
 - Explicit light/dark choices made in Hearst's shared theme controls are saved as one preference and apply across destinations and publication routes, reloads, and browser tabs. When no choice exists, follow the system color-scheme preference.
 - AutoWeek uses dark neutral `#242424` for editorial and module-title text on light surfaces. Keep AutoWeek yellow `#FFC84E` for utility backgrounds, active navigation underlines, numbered badges, carousel indicators, and other brand accents; do not use the yellow as foreground title text on white.
 - Every destination and article reader uses the same global color mode. With no saved choice, initialize from the system color-scheme preference; persist an explicit toggle globally so it applies across sections, brand pages, and article templates.
