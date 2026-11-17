@@ -110,7 +110,8 @@ export function ReaderChapter() {
             <ColGroup title="2 · Masthead">
               <ul>
                 <li><b>Box</b>: <code>sticky top-0 z-[110]</code>, background, 1 px bottom border.</li>
-                <li><b>Top row</b>: 64 tall from 640 (padding 12 / 24), 69 below 640 (padding 12 / 16). Logo slot up to 230 wide; destinations or publications from 1024; round Close, 28 from 640 and 44 below. From 640 a 28 round modal / full-page toggle sits 8 left of Close (tooltip <code>Full page</code> or <code>Modal</code>).</li>
+                <li><b>Top row</b>: 64 tall from 640 (padding 12 / 24), 69 below 640 (padding 12 / 16). Logo slot up to 230 wide; destinations or publications from 1024; round Close, 28 from 640 and 44 below. From 640 a 28 round modal / full-page toggle sits 8 left of Close (tooltip <code>Full page</code> or <code>Modal</code>). Left of it, the end-of-article toggle (44 below 640, 28 from 640; tooltip <code>Related stories</code> or <code>Next story</code>).</li>
+                <li><b>End of article</b>: Next story keeps the continuous queue. Related stories ends the article with four home river cards under a <code>Related stories</code> kicker, in the article column, 16 apart.</li>
                 <li><b>Filter row</b>: 46 tall. Topic filters hug their labels, 24 apart, centered from 640; below 640 they scroll sideways. The active one has a 2 px underline.</li>
               </ul>
             </ColGroup>

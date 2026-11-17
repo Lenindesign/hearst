@@ -22,13 +22,14 @@ import {
   getComponentStoryForBrand,
 } from "./hearst-plus-component-fixtures";
 import { hearstPlusStoryData } from "./hearst-plus-story-data";
-import { setReaderPresentation } from "@/components/hearst-plus/reader-presentation";
+import { setReaderEndOfArticle, setReaderPresentation } from "@/components/hearst-plus/reader-presentation";
 
 interface ContentReaderMastheadExampleProps {
   brandSlug?: string;
   destination?: HearstBrandSection;
   origin?: "publication" | "destination";
   showLoadingState?: boolean;
+  showEndOfArticleToggle?: boolean;
 }
 
 function getReaderFilters(destination: HearstBrandSection) {
@@ -42,6 +43,7 @@ function ContentReaderMastheadExample({
   destination = "lifestyle",
   origin = "publication",
   showLoadingState = false,
+  showEndOfArticleToggle = false,
 }: ContentReaderMastheadExampleProps) {
   const sourceStory = getComponentStoryForBrand(brandSlug);
   const activeDestination = origin === "publication"
@@ -111,6 +113,7 @@ function ContentReaderMastheadExample({
     >
       <div className="mx-auto max-w-[1360px] overflow-hidden rounded-[8px] border border-border bg-background shadow-sm">
         <ContentReaderMasthead
+          showEndOfArticleToggle={showEndOfArticleToggle}
           logoHref={logoHref}
           contextLabel={contextLabel}
           logoSlug={logoSlug}
@@ -339,5 +342,35 @@ export const PresentationToggle: Story = {
     await expect(
       await canvas.findByRole("button", { name: "View stories on a full page" }),
     ).toBeVisible();
+  },
+};
+
+export const EndOfArticleToggle: Story = {
+  name: "Next story or related stories toggle",
+  render: () => (
+    <ContentReaderMastheadExample brandSlug="delish" showEndOfArticleToggle />
+  ),
+  globals: {
+    brand: "delish",
+  },
+  play: async ({ canvasElement }) => {
+    setReaderEndOfArticle("next");
+    setReaderPresentation("modal");
+    const canvas = within(canvasElement);
+    const toggle = await canvas.findByRole("button", {
+      name: "Show related stories at the end of each article",
+    });
+    await expect(toggle).toHaveAttribute("title", "Related stories");
+    // The toggle sits directly left of the modal / full-page toggle.
+    await expect(toggle.nextElementSibling).toHaveAttribute(
+      "aria-label",
+      "View stories on a full page",
+    );
+    await userEvent.click(toggle);
+    const nextToggle = await canvas.findByRole("button", {
+      name: "Show the next story at the end of each article",
+    });
+    await expect(nextToggle).toHaveAttribute("title", "Next story");
+    await userEvent.click(nextToggle);
   },
 };
