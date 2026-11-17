@@ -3491,6 +3491,8 @@ function getVehicleStoryLinkLabel(story: LifestyleRiverStory) {
 
 const readerRelatedFirstBatch = 8;
 const readerRelatedBatch = 4;
+// The related-cards rail ad changes every 2000px of scroll, like the home river rail.
+const readerRelatedAdRotationPx = 2000;
 
 /**
  * Related story cards that end the article when the reader chooses "Related stories"
@@ -3516,7 +3518,9 @@ function ReaderRelatedStories({
   onSave: (story: LifestyleRiverStory) => void;
 }) {
   const [visibleCount, setVisibleCount] = React.useState(readerRelatedFirstBatch);
+  const [adRotation, setAdRotation] = React.useState(0);
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
+  const sectionRef = React.useRef<HTMLDivElement | null>(null);
   const relatedStories = React.useMemo(() => {
     const excludedIds = new Set(excludedStories.map((story) => story.id));
     return rankLifestyleRelatedStories(
@@ -3542,10 +3546,26 @@ function ReaderRelatedStories({
     return () => observer.disconnect();
   }, [hasMore, relatedStories.length, visibleCount]);
 
+  React.useEffect(() => {
+    const section = sectionRef.current;
+    const root = section?.closest<HTMLElement>("[data-reader-scroll-container]");
+    if (!section || !root) return;
+    const update = () => {
+      const scrolledPast = root.getBoundingClientRect().top - section.getBoundingClientRect().top;
+      setAdRotation(Math.max(0, Math.floor(scrolledPast / readerRelatedAdRotationPx)));
+    };
+    update();
+    root.addEventListener("scroll", update, { passive: true });
+    return () => root.removeEventListener("scroll", update);
+  }, []);
+
   if (!relatedStories.length) return null;
+  // Slot 0 is the article's own ad; the related rail starts on the next one.
+  const ad = getLifestyleReaderAd(currentStory, 1 + adRotation);
+  const adTopic = ad?.topics.includes(currentStory.topic) ? currentStory.topic : ad?.topics[0] ?? currentStory.topic;
 
   return (
-    <div className="mt-8 grid gap-x-[var(--layout-gap)] lg:grid-cols-[minmax(0,1fr)_var(--layout-rail)]">
+    <div ref={sectionRef} className="mt-8 grid gap-x-[var(--layout-gap)] lg:grid-cols-[minmax(0,1fr)_var(--layout-rail)]">
       <section aria-labelledby="reader-related-stories-title" data-reader-related-stories>
         <div className="mb-4 flex items-center gap-3">
           <h2 id="reader-related-stories-title" className="type-k1 text-primary">
@@ -3570,6 +3590,8 @@ function ReaderRelatedStories({
           {`Showing ${Math.min(visibleCount, relatedStories.length)} of ${relatedStories.length} related stories`}
         </p>
       </section>
+      {/* A direct grid item: it stretches the full card list, so the ad stays sticky beside it. */}
+      <ContentReaderAdvertisement key={ad?.id} ad={ad} currentTopic={adTopic} />
     </div>
   );
 }
