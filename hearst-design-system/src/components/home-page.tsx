@@ -184,8 +184,10 @@ import {
 import {
   getLifestyleCommentCount,
   getReadyLiveArticle,
+  rankLifestyleRelatedStories,
   type LifestyleStoryComment,
 } from "./hearst-plus/content-reader-model";
+import { useReaderEndOfArticle } from "./hearst-plus/reader-presentation";
 import { ContentReaderComments } from "./hearst-plus/content-reader-comments";
 import { VehicleDetailsReaderModule } from "./hearst-plus/vehicle-details-reader-module";
 import { ContentReaderContextRail } from "./hearst-plus/content-reader-context-rail";
@@ -3490,6 +3492,113 @@ function getVehicleStoryLinkLabel(story: LifestyleRiverStory) {
   return format;
 }
 
+const readerRelatedFirstBatch = 8;
+const readerRelatedBatch = 4;
+// The related-cards rail ad changes every 2000px of scroll, like the home river rail.
+const readerRelatedAdRotationPx = 2000;
+
+/**
+ * Related story cards that end the article when the reader chooses "Related stories"
+ * over the continuous next story (APP_RULES › Reader modal). Every other story in the
+ * reader's queue appears, most related first, in the home river format; cards render
+ * in batches as the reader nears the end, like the river, and open in the same layer.
+ */
+function ReaderRelatedStories({
+  currentStory,
+  excludedStories,
+  stories,
+  savedIds,
+  layout,
+  onOpenStory,
+  onSave,
+}: {
+  currentStory: LifestyleRiverStory;
+  excludedStories: LifestyleRiverStory[];
+  stories: LifestyleRiverStory[];
+  savedIds: string[];
+  layout: RiverLayout;
+  onOpenStory: (storyId: string) => void;
+  onSave: (story: LifestyleRiverStory) => void;
+}) {
+  const [visibleCount, setVisibleCount] = React.useState(readerRelatedFirstBatch);
+  const [adRotation, setAdRotation] = React.useState(0);
+  const sentinelRef = React.useRef<HTMLDivElement | null>(null);
+  const sectionRef = React.useRef<HTMLDivElement | null>(null);
+  const relatedStories = React.useMemo(() => {
+    const excludedIds = new Set(excludedStories.map((story) => story.id));
+    return rankLifestyleRelatedStories(
+      currentStory,
+      stories.filter((story) => !excludedIds.has(story.id)),
+    );
+  }, [currentStory, excludedStories, stories]);
+  const hasMore = visibleCount < relatedStories.length;
+
+  React.useEffect(() => {
+    const node = sentinelRef.current;
+    const root = node?.closest<HTMLElement>("[data-reader-scroll-container]") ?? null;
+    if (!node || !hasMore) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisibleCount((count) => Math.min(count + readerRelatedBatch, relatedStories.length));
+        }
+      },
+      { root, rootMargin: "600px" },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [hasMore, relatedStories.length, visibleCount]);
+
+  React.useEffect(() => {
+    const section = sectionRef.current;
+    const root = section?.closest<HTMLElement>("[data-reader-scroll-container]");
+    if (!section || !root) return;
+    const update = () => {
+      const scrolledPast = root.getBoundingClientRect().top - section.getBoundingClientRect().top;
+      setAdRotation(Math.max(0, Math.floor(scrolledPast / readerRelatedAdRotationPx)));
+    };
+    update();
+    root.addEventListener("scroll", update, { passive: true });
+    return () => root.removeEventListener("scroll", update);
+  }, []);
+
+  if (!relatedStories.length) return null;
+  // Slot 0 is the article's own ad; the related rail starts on the next one.
+  const ad = getLifestyleReaderAd(currentStory, 1 + adRotation);
+  const adTopic = ad?.topics.includes(currentStory.topic) ? currentStory.topic : ad?.topics[0] ?? currentStory.topic;
+
+  return (
+    <div ref={sectionRef} className="mt-8 grid gap-x-[var(--layout-gap)] lg:grid-cols-[minmax(0,1fr)_var(--layout-rail)]">
+      <section aria-labelledby="reader-related-stories-title" data-reader-related-stories>
+        <div className="mb-4 flex items-center gap-3">
+          <h2 id="reader-related-stories-title" className="type-k1 text-primary">
+            Related stories
+          </h2>
+          <span className="h-px flex-1 bg-border" aria-hidden="true" />
+        </div>
+        <div className="grid gap-4">
+          {relatedStories.slice(0, visibleCount).map((story) => (
+            <LifestyleRiverCard
+              key={story.id}
+              story={story}
+              onOpen={() => onOpenStory(story.id)}
+              saved={savedIds.includes(story.id)}
+              onSave={() => onSave(story)}
+              layoutOverride={layout}
+            />
+          ))}
+        </div>
+        <div ref={sentinelRef} aria-hidden="true" className="h-px" />
+        <p className="sr-only" role="status" aria-live="polite">
+          {`Showing ${Math.min(visibleCount, relatedStories.length)} of ${relatedStories.length} related stories`}
+        </p>
+      </section>
+      {/* A direct grid item: it stretches the full card list, so the ad stays sticky beside it. */}
+      <ContentReaderAdvertisement key={ad?.id} ad={ad} currentTopic={adTopic} />
+    </div>
+  );
+}
+
 function LifestyleStoryReaderModal({
   stories,
   availableStories,
@@ -3584,6 +3693,10 @@ function LifestyleStoryReaderModal({
   }, [readerAvailableStoryPool]);
   const readerStories = readerQueueModel.stories;
   const [visibleReaderCount, setVisibleReaderCount] = React.useState(1);
+  // Next story (continuous queue) or related cards at the end of the article (APP_RULES › Reader modal).
+  const showRelatedAtArticleEnd = useReaderEndOfArticle() === "related";
+  // Related cards use the reader's home river format: list stays a list, every other layout shows cards.
+  const riverLayoutForRelated: RiverLayout = useRiverLayout() === "list" ? "list" : "cards";
   const [liveArticles, setLiveArticles] = React.useState<Record<string, ReaderArticleLoadState>>(() => (
     openStoryId && initialLiveArticle
       ? { [openStoryId]: { status: "ready", data: initialLiveArticle } }
@@ -4206,7 +4319,7 @@ function LifestyleStoryReaderModal({
     const node = sentinelRef.current;
     const root = scrollRef.current;
 
-    if (!node || !root || !openStoryId || visibleReaderCount >= storyQueue.length) return;
+    if (!node || !root || !openStoryId || showRelatedAtArticleEnd || visibleReaderCount >= storyQueue.length) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -4219,7 +4332,7 @@ function LifestyleStoryReaderModal({
 
     observer.observe(node);
     return () => observer.disconnect();
-  }, [openStoryId, storyQueue.length, visibleReaderCount]);
+  }, [openStoryId, showRelatedAtArticleEnd, storyQueue.length, visibleReaderCount]);
 
   React.useEffect(() => {
     const root = scrollRef.current;
@@ -4521,6 +4634,7 @@ function LifestyleStoryReaderModal({
           onSelectMastheadItem={selectReaderMastheadItem}
           onSelectFilter={selectReaderFilter}
           onClose={onClose}
+          showEndOfArticleToggle
         />
 
         <div
@@ -4829,7 +4943,20 @@ function LifestyleStoryReaderModal({
               );
             })}
 
-            <div ref={sentinelRef} className="flex justify-center py-8">
+            {showRelatedAtArticleEnd && visibleReaderStories.length ? (
+              <ReaderRelatedStories
+                key={visibleReaderStories[visibleReaderStories.length - 1].id}
+                currentStory={visibleReaderStories[visibleReaderStories.length - 1]}
+                excludedStories={visibleReaderStories}
+                stories={storyQueue}
+                savedIds={savedIds}
+                layout={riverLayoutForRelated}
+                onOpenStory={selectReaderStory}
+                onSave={onSave}
+              />
+            ) : null}
+
+            <div ref={sentinelRef} className={cn("flex justify-center py-8", showRelatedAtArticleEnd && "hidden")}>
               {visibleReaderCount < storyQueue.length ? (
                 <p className="text-sm text-[var(--hp-text-ui)]">Loading the next story...</p>
               ) : (

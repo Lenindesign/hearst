@@ -86,3 +86,7 @@ export { SquaresFourIcon as LayoutCards } from "@phosphor-icons/react/dist/ssr/S
 export { ListBulletsIcon as LayoutList } from "@phosphor-icons/react/dist/ssr/ListBullets";
 export { RectangleIcon as LayoutFullWidth } from "@phosphor-icons/react/dist/ssr/Rectangle";
 export { RowsIcon as LayoutSections } from "@phosphor-icons/react/dist/ssr/Rows";
+export { ArrowsOutSimpleIcon as ReaderFullPage } from "@phosphor-icons/react/dist/ssr/ArrowsOutSimple";
+export { ArrowsInSimpleIcon as ReaderModal } from "@phosphor-icons/react/dist/ssr/ArrowsInSimple";
+export { CardsThreeIcon as ReaderRelatedStories } from "@phosphor-icons/react/dist/ssr/CardsThree";
+export { ArrowLineDownIcon as ReaderNextStory } from "@phosphor-icons/react/dist/ssr/ArrowLineDown";

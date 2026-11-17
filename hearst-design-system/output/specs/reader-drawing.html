@@ -86,14 +86,14 @@ svg{display:block;width:100%;min-width:1100px;height:auto}
   <header class="tb">
     <div class="big">
       <div><div class="lbl">UI component · dimensional drawing</div><h1>Content reader</h1></div>
-      <div class="v">Hearst+ story reader: scrim, inset shell, sticky masthead, context rail, article, ad rail and the endless story queue. Sheet 1 is structure; sheet 2 is queue, scroll and focus logic. Values measured in the running app.</div>
+      <div class="v">Hearst+ story reader: scrim, inset shell, sticky masthead, context rail, article, ad rail and the story queue. Sheet 1 is structure; sheet 2 is queue, scroll and focus logic; sheet 3 is the reader options (modal or full page, next story or related cards). Values measured in the running app.</div>
     </div>
     <div><div class="lbl">Dwg no.</div><div class="v">HP-READ-001</div></div>
-    <div><div class="lbl">Rev</div><div class="v">A · 2026-11-11</div></div>
-    <div><div class="lbl">Sheets</div><div class="v">2</div></div>
+    <div><div class="lbl">Rev</div><div class="v">B · 2026-11-17</div></div>
+    <div><div class="lbl">Sheets</div><div class="v">3</div></div>
     <div><div class="lbl">Units</div><div class="v">CSS px @ 1× · rem = 16</div></div>
     <div><div class="lbl">Scale</div><div class="v">Noted per view</div></div>
-    <div><div class="lbl">Source</div><div class="v">content-reader-dialog-shell.tsx · content-reader-masthead.tsx · content-reader-context-rail.tsx · content-reader-advertisement.tsx · home-page.tsx (reader)</div></div>
+    <div><div class="lbl">Source</div><div class="v">content-reader-dialog-shell.tsx · content-reader-masthead.tsx · content-reader-context-rail.tsx · content-reader-advertisement.tsx · reader-presentation.ts · home-page.tsx (reader)</div></div>
     <div class="notes">
       <div><span class="nh">NOTES:<span>(UNLESS OTHERWISE SPECIFIED)</span></span><ol>
         <li>Do not scale from screen. Read the numbers.</li>
@@ -117,9 +117,11 @@ svg{display:block;width:100%;min-width:1100px;height:auto}
     </div>
   </header>
   <div class="sheetwrap"><div class="scroll"><svg id="sh1" viewBox="0 0 1700 1060" role="img" aria-label="Content reader sheet 1, structure: plan at 1440, plan at 390, breakpoint columns, article top, action bar and close details, variable tables"></svg></div>
-  <div class="foot"><span>2026-11-11 &nbsp;|&nbsp; UI component reference · Hearst+ reader</span><span><b>Content reader, structure</b> &nbsp;|&nbsp; 1 of 2</span></div></div>
+  <div class="foot"><span>2026-11-17 &nbsp;|&nbsp; UI component reference · Hearst+ reader</span><span><b>Content reader, structure</b> &nbsp;|&nbsp; 1 of 3</span></div></div>
   <div class="sheetwrap"><div class="scroll"><svg id="sh2" viewBox="0 0 1700 1060" role="img" aria-label="Content reader sheet 2, logic: viewport placement, layer order, story queue and reading anchor, active story rules, focus flow, article width by viewport and thresholds"></svg></div>
-  <div class="foot"><span>2026-11-11 &nbsp;|&nbsp; UI component reference · Hearst+ reader</span><span><b>Content reader, logic</b> &nbsp;|&nbsp; 2 of 2</span></div></div>
+  <div class="foot"><span>2026-11-17 &nbsp;|&nbsp; UI component reference · Hearst+ reader</span><span><b>Content reader, logic</b> &nbsp;|&nbsp; 2 of 3</span></div></div>
+  <div class="sheetwrap"><div class="scroll"><svg id="sh3" viewBox="0 0 1700 1060" role="img" aria-label="Content reader sheet 3, reader options: modal and full-page plans, the masthead control group at desktop and phone, icon states, the two saved choices, and the end of an article with the next story or related story cards"></svg></div>
+  <div class="foot"><span>2026-11-17 &nbsp;|&nbsp; UI component reference · Hearst+ reader</span><span><b>Content reader, reader options</b> &nbsp;|&nbsp; 3 of 3</span></div></div>
 </div>
 <script>
 (function(){
@@ -168,7 +170,7 @@ function article(x,y,w,k,o){o=o||{};const p=(o.pad||28)*k,iw=w-2*p,ih=iw*9/16;
    SHEET 1 · STRUCTURE
    ===================================================================== */
 begin('sh1');
-notes([[1,'SCRIM · FIXED INSET 0 · Z 200 · 55 % + BLUR 8'],[2,'SHELL · INSET 24 SM+ · MAX 1360 · R 8'],[3,'MASTHEAD · STICKY TOP 0 · Z 110'],[4,'CONTEXT RAIL · XL+ · STICKY 128'],[5,'ARTICLE · BORDER 1 · R 8 · PAD 20 · 28 SM'],[6,'AD RAIL · LG+ · 300 × 600 · STICKY 128'],[0,'THE SHELL IS THE SCROLL CONTAINER'],[0,'CONTENT COLUMN = MAX 768, CENTERED IN ARTICLE'],[0,'QUEUE, SCROLL AND FOCUS LOGIC: SEE SHEET 2']]);
+notes([[1,'SCRIM · FIXED INSET 0 · Z 200 · 55 % + BLUR 8'],[2,'SHELL · INSET 24 SM+ · MAX 1360 · R 8'],[3,'MASTHEAD · STICKY TOP 0 · Z 110'],[4,'CONTEXT RAIL · XL+ · STICKY 128'],[5,'ARTICLE · BORDER 1 · R 8 · PAD 20 · 28 SM'],[6,'AD RAIL · LG+ · 300 × 600 · STICKY 128'],[0,'THE SHELL IS THE SCROLL CONTAINER'],[0,'CONTENT COLUMN = MAX 768, CENTERED IN ARTICLE'],[0,'QUEUE, SCROLL AND FOCUS LOGIC: SEE SHEET 2'],[0,'END · PRESENTATION TOGGLES, FULL PAGE: SHEET 3']]);
 
 /* ---- plan 1 · xl 1440 · 0.5:1 ---- */
 (function(){const k=.5,X=470,Y=96,VW=1440*k,VH=900*k;
@@ -178,7 +180,7 @@ notes([[1,'SCRIM · FIXED INSET 0 · Z 200 · 55 % + BLUR 8'],[2,'SHELL · INSET
  rr(SX,SY,SW,64*k,0,'obj');rr(SX,SY+64*k,SW,46*k,0,'obj');
  rr(SX+24*k,SY+18*k,230*k,28*k,0,'slot');slotLabel(SX+24*k,SY+18*k,230*k,28*k,'LOGO SLOT');
  rr(SX+666*k,SY+19*k,626*k*.62,26*k,0,'slot');slotLabel(SX+666*k,SY+19*k,626*k*.62,26*k,'DESTINATIONS · LG+');
- rr(SX+SW-52*k,SY+18*k,28*k,28*k,14*k,'hug');
+ rr(SX+SW-52*k,SY+18*k,28*k,28*k,14*k,'hug');rr(SX+SW-88*k,SY+18*k,28*k,28*k,14*k,'obj');rr(SX+SW-124*k,SY+18*k,28*k,28*k,14*k,'obj');
  rr(SX+389*k,SY+64*k,582*k,46*k,0,'slot');slotLabel(SX+389*k,SY+64*k,582*k,46*k,'TOPIC FILTERS · HUG · CENTERED');
  // grid
  const GY=SY+135*k-24*k+24*k;const c1=SX+48*k,c2=c1+316*k,c3=c2+632*k+16*k;
@@ -197,7 +199,7 @@ notes([[1,'SCRIM · FIXED INSET 0 · Z 200 · 55 % + BLUR 8'],[2,'SHELL · INSET
  dimV(Y,SY,X+VW+14,X+VW,X+VW,'I1 24',{side:'r'});dimV(GY-24*k,GY,X+VW+14,SX+SW,SX+SW,'S2 24',{side:'r',dy:-4});
  dimV(GY,GY+600*k,X+VW+44,c3+300*k,c3+300*k,'AD 600',{side:'r'});
  nb(X+14,Y+14,1);nb(SX+SW-12,SY+SH-12,2);nb(SX+SW/2+200,SY+10,3);nb(c1+12,GY+12,4);nb(c2+632*k-12,GY+12,5);nb(c3+300*k-12,GY+300*k*.9+150,6);
- detailRef(SX+SW-38*k,SY+32*k,16,'DETAIL C',X+VW+60,Y+40);
+ detailRef(SX+SW-38*k,SY+32*k,16,'DETAIL C',X+VW+60,Y+40);detailRef(SX+SW-92*k,SY+32*k,24,'DETAIL D · SHEET 3',X+VW-90,Y-62);
  detailRef(c2+632*k-60*k,GY+(28+323+24+16+28+104+24+27)*k,22,'DETAIL B',X+VW+60,GY+250);
  title(X+VW/2,Y+VH+70,'PLAN · XL 1440 · READER OPEN OVER THE HOME','SCALE 0.5:1 · 3 COLUMNS · RAIL | ARTICLE | AD');
 })();
@@ -205,7 +207,7 @@ notes([[1,'SCRIM · FIXED INSET 0 · Z 200 · 55 % + BLUR 8'],[2,'SHELL · INSET
 /* ---- plan 2 · base 390 · 0.5:1 ---- */
 (function(){const k=.5,X=56,Y=330,W=390*k,H=900*k;
  rr(X,Y,W,H,0,'well');rr(X,Y,W,69*k,0,'obj');rr(X,Y+69*k,W,46*k,0,'obj');
- rr(X+16*k,Y+22*k,150*k,24*k,0,'slot');rr(X+W-60*k,Y+12*k,44*k,44*k,22*k,'hug');
+ rr(X+16*k,Y+22*k,150*k,24*k,0,'slot');rr(X+W-60*k,Y+12*k,44*k,44*k,22*k,'hug');rr(X+W-112*k,Y+12*k,44*k,44*k,22*k,'obj');
  rr(X+16*k,Y+69*k,W-16*k,46*k,0,'slot');slotLabel(X+16*k,Y+69*k,W-16*k,46*k,'FILTERS · SCROLL X');
  article(X+16*k,Y+140*k,358*k,k,{h:H-140*k,pad:20,hh:72});
  dimH(X,X+W,Y-16,Y,Y,'390 · FULL VIEWPORT');
@@ -340,6 +342,128 @@ notes([[1,'OPEN · FOCUS MOVES TO CLOSE'],[2,'TAB WRAPS INSIDE THE SHELL'],[3,'E
 /* ---- keyboard ---- */
 (function(){const fw=[64,100,100];fw.hdr=['Key','Does','When'];
  table(1404,560,'KEYBOARD',[['ESC','CLOSES','NO NESTED LAYER'],['TAB','NEXT · WRAPS','INSIDE SHELL'],['⇧ TAB','PREV · WRAPS','INSIDE SHELL'],['P','AMBIENT READER','NOT IN A FIELD'],['CLICK','SCRIM CLOSES','OUTSIDE SHELL']],fw);
+})();
+
+/* =====================================================================
+   SHEET 3 · READER OPTIONS
+   ===================================================================== */
+begin('sh3');
+notes([[1,'END OF ARTICLE · 44 · 28 SM · ALL WIDTHS'],[2,'PRESENTATION · 28 · SM+ ONLY'],[3,'CLOSE · UNCHANGED · SEE SHEET 1'],[4,'FULL PAGE · INSET 0 · R 0 · NO SHADOW'],[5,'RELATED · ALL QUEUE STORIES · CARDS'],[0,'BOTH CHOICES ARE GLOBAL AND PERSIST'],[0,'SWITCHING KEEPS THE READING POSITION'],[0,'TOGGLE 1: STANDARD HEARST+ READER ONLY']]);
+
+/* glyphs, drawn schematically inside a control circle */
+function glyph(kind,cx,cy,s){const h=s/2;
+ if(kind==='out'){arrowLine(cx-h*.15,cy+h*.15,cx-h*.75,cy+h*.75);arrowLine(cx+h*.15,cy-h*.15,cx+h*.75,cy-h*.75)}
+ if(kind==='in'){arrowLine(cx-h*.8,cy+h*.8,cx-h*.12,cy+h*.12);arrowLine(cx+h*.8,cy-h*.8,cx+h*.12,cy-h*.12)}
+ if(kind==='cards'){[0,1,2].forEach(i=>rr(cx-h*.7+i*h*.15,cy-h*.55+i*h*.2,h*1.1,h*.75,1.5,i===2?'obj':'thin'))}
+ if(kind==='down'){arrowLine(cx,cy-h*.8,cx,cy+h*.35);line(cx-h*.6,cy+h*.75,cx+h*.6,cy+h*.75,'obj')}}
+
+/* ---- plans · modal vs full page at 1920 · 0.2:1 ---- */
+function shellPlan(X,Y,page){const k=.2,VW=1920*k,VH=1080*k;
+ rr(X,Y,VW,VH,0,'thin');
+ const SW=1360*k,SX=page?X:X+(1920-1360)/2*k,SY=page?Y:Y+24*k,SH=page?VH:VH-48*k,W=page?VW:SW;
+ if(!page)hat(X,Y,VW,VH);
+ rr(SX,SY,W,SH,page?0:8*k,'well');
+ if(!page)mk('rect',{x:SX-4,y:SY-3,width:W+8,height:SH+9,rx:4,class:'env'});
+ rr(SX,SY,W,110*k,0,'obj');line(SX,SY+64*k,SX+W,SY+64*k,'thin');
+ const CX=X+(VW-SW)/2;// content box always 1360 centred
+ if(page){mk('rect',{x:CX,y:SY+1,width:SW,height:64*k-2,class:'slot'});
+  mk('line',{x1:CX,y1:SY+SH-2,x2:CX,y2:SY+110*k+2,class:'ph'});mk('line',{x1:CX+SW,y1:SY+SH-2,x2:CX+SW,y2:SY+110*k+2,class:'ph'})}
+ rr(CX+24*k,SY+18*k,230*k,28*k,0,'slot');
+ [52,88,124].forEach((o,i)=>rr(CX+SW-o*k,SY+18*k,28*k,28*k,14*k,i?'obj':'hug'));
+ const GY=SY+(110+24)*k,c1=CX+48*k,c2=c1+316*k,c3=c2+648*k,gh=SY+SH-GY-6;
+ rr(c1,GY,296*k,gh*.7,4*k,'obj');rr(c2,GY,632*k,gh,4*k,'obj');slotLabel(c2,GY,632*k,gh,'ARTICLE');rr(c3,GY,300*k,600*k,4*k,'obj');
+ mk('line',{x1:X+VW/2,y1:Y-10,x2:X+VW/2,y2:Y+VH+10,class:'cl'});
+ return {VW,VH,SX,SY,SW,W,CX}}
+(function(){const Y=96;
+ const a=shellPlan(470,Y,false),X2=890,b=shellPlan(X2,Y,true);
+ dimH(470,470+a.VW,Y-40,Y,Y,'VIEWPORT 1920');dimH(a.SX,a.SX+a.SW,Y-16,a.SY,a.SY,'W1 1360');
+ dimH(470,a.SX,Y+a.VH+16,Y+a.VH,a.SY+a.VH-48*.2,'280',{below:true});
+ dimV(Y,a.SY,470-12,470,470,'I1 24',{side:'l'});
+ nb(470+a.VW-12,Y+a.VH-12,2);
+ title(470+a.VW/2,Y+a.VH+58,'PLAN · MODAL · 1920','SCALE 0.2:1 · DEFAULT · INSET 24 · R 8 · SHADOW 2XL');
+ dimH(X2,X2+b.VW,Y-40,Y,Y,'VIEWPORT 1920 · I1 0');dimH(b.CX,b.CX+b.SW,Y-16,Y,Y,'W1 1360 · ROW + CONTENT');
+ dimH(X2,b.CX,Y+b.VH+16,Y+b.VH,Y+b.VH,'BG',{below:true});
+ callout(X2+6,Y+14,X2-10,Y+a.VH+30,'MASTHEAD · FULL BLEED',-1);
+ callout(b.CX+b.SW-2,Y+10,X2+b.VW+14,Y+60,'ROW MAX 1360',1);
+ nb(X2+b.VW-12,Y+b.VH-12,4);
+ title(X2+b.VW/2,Y+b.VH+58,'PLAN · FULL PAGE · 1920','SCALE 0.2:1 · INSET 0 · R 0 · NO SHADOW');
+ detailRef(b.CX+b.SW-(88*.2),Y+32*.2,14,'DETAIL D',b.CX+b.SW+40,Y-30);
+})();
+
+/* ---- detail D · control group · 3:1 (sm+) ---- */
+(function(){const k=3,X=500,Y=470,z=28*k,g=8*k,cy=Y+z/2;
+ const xs=[X,X+z+g,X+2*(z+g)],names=['END OF ARTICLE','PRESENTATION','CLOSE'],kinds=['cards','out',null];
+ line(X-30,cy,X+3*z+2*g+30,cy,'cl');
+ xs.forEach((x,i)=>{mk('circle',{cx:x+z/2,cy:cy,r:z/2,class:i===2?'hug':'obj'});
+  const ic=16*k;rr(x+(z-ic)/2,cy-ic/2,ic,ic,0,'slot');
+  if(kinds[i])glyph(kinds[i],x+z/2,cy,ic*.8);else{line(x+z/2-12,cy-12,x+z/2+12,cy+12,'obj');line(x+z/2+12,cy-12,x+z/2-12,cy+12,'obj')}
+  tx(x+z/2,Y+z+40,names[i],'dts',{'text-anchor':'middle'});nb(x+z/2,Y-36,i+1)});
+ dimH(xs[0],xs[0]+z,Y-14,cy,cy,'Z3 28');dimH(xs[0]+z,xs[1],Y-14,cy,cy,'S8 8',{dy:-12});dimH(xs[1],xs[1]+z,Y-14,cy,cy,'Z4 28');dimH(xs[1]+z,xs[2],Y-14,cy,cy,'S8',{dy:-12});dimH(xs[2],xs[2]+z,Y-14,cy,cy,'Z1 28');
+ dimH(xs[0],xs[2]+z,Y+z+64,Y+z,Y+z,'GROUP 3·Z + 2·S8 = 100',{below:true});
+ callout(xs[2]+z/2+24,cy+24,xs[2]+z+40,cy+44,'I 16 · (Z − I) ÷ 2 = 6',1);
+ title(X+(3*z+2*g)/2,Y+z+120,'DETAIL D · MASTHEAD CONTROLS','SCALE 3:1 · SM+ · OUTLINE · R FULL · RIGHT OF THE TOP ROW');
+})();
+
+/* ---- detail D1 · control group · base · 1.5:1 ---- */
+(function(){const k=1.5,X=1120,Y=480,z=44*k,g=8*k,cy=Y+z/2;
+ mk('circle',{cx:X+z/2,cy:cy,r:z/2,class:'obj'});glyph('cards',X+z/2,cy,16*k*.8);
+ const x2=X+z+g;mk('circle',{cx:x2+z/2,cy:cy,r:z/2,class:'hug'});line(x2+z/2-8,cy-8,x2+z/2+8,cy+8,'obj');line(x2+z/2+8,cy-8,x2+z/2-8,cy+8,'obj');
+ mk('circle',{cx:X-g-14*k,cy:cy,r:14*k,class:'ph'});tx(X-g-14*k,cy+z/2+14,'Z4 · NOT SHOWN','sl',{'text-anchor':'middle'});
+ dimH(X,X+z,Y-14,cy,cy,'Z3 44');dimH(X+z,x2,Y-14,cy,cy,'S8 8',{dy:-12});dimH(x2,x2+z,Y-14,cy,cy,'Z1 44');
+ title(X+z+g/2,Y+z+80,'DETAIL D1 · BASE < 640','SCALE 1.5:1 · TOUCH 44 · NO PRESENTATION TOGGLE');
+})();
+
+/* ---- detail E · icon states ---- */
+(function(){const X=60,Y=340,r=20,rows=[['out','MODAL','ARROWS OUT','FULL PAGE'],['in','FULL PAGE','ARROWS IN','MODAL'],['cards','NEXT STORY','CARDS THREE','RELATED STORIES'],['down','RELATED','ARROW LINE DOWN','NEXT STORY']];
+ tx(X+54,Y-14,'STATE','dts');tx(X+160,Y-14,'ICON','dts');tx(X+290,Y-14,'TITLE (HINT)','dts');
+ rows.forEach(([g,st,ic,hint],i)=>{const y=Y+i*58,cy=y+r;mk('circle',{cx:X+r,cy:cy,r:r,class:'obj'});glyph(g,X+r,cy,16*1.4);
+  tx(X+54,cy+4,st,'nt');tx(X+160,cy+4,ic,'sl');tx(X+290,cy+4,hint,'sl');line(X,y+r*2+9,X+380,y+r*2+9,'ph')});
+ tx(X,Y+4*58+16,'THE ICON SHOWS WHERE A CLICK GOES. ARIA-LABEL GIVES THE FULL ACTION.','sl');
+ title(X+190,Y+4*58+52,'DETAIL E · ICON STATES','SCALE 2:1 · NATIVE TOOLTIP FROM TITLE');
+})();
+
+/* ---- state · the two saved choices ---- */
+(function(){const X=60,Y=690,bw=120,bh=40;
+ [[0,'MODAL','FULL PAGE','KEY · HEARST-READER-PRESENTATION'],[1,'NEXT STORY','RELATED','KEY · HEARST-READER-END-OF-ARTICLE']].forEach(([i,a,b,key])=>{const y=Y+i*96;
+  rr(X,y,bw,bh,4,'hug');tx(X+bw/2,y+24,a,'dts',{'text-anchor':'middle'});rr(X+bw+110,y,bw,bh,4,'obj');tx(X+bw*1.5+110,y+24,b,'dts',{'text-anchor':'middle'});
+  arrowLine(X+bw+6,y+13,X+bw+104,y+13);arrowLine(X+bw+104,y+27,X+bw+6,y+27);tx(X+bw+55,y+8,'CLICK','sl',{'text-anchor':'middle'});
+  tx(X,y+bh+16,key+' · LOCAL STORAGE · DEFAULT LEFT','sl')});
+ title(X+175,Y+226,'STATE · TWO GLOBAL CHOICES','SAVED PER BROWSER · SYNC ACROSS TABS · NO RELOAD');
+})();
+
+/* ---- end of article · next story vs related cards · 0.4:1 ---- */
+function endCol(X,Y,related){const k=.4,A=632*k,G=16*k,R=300*k,H=270;
+ rr(X,Y,A,44,4,'obj');rr(X+A+G,Y,R,44,4,'obj');slotLabel(X,Y+4,A,24,'STORY 1 · END · COMMENTS');slotLabel(X+A+G,Y+4,R,24,'AD RAIL');
+ const y0=Y+44;
+ if(!related){const yd=y0+40*k*2;line(X+10,yd,X+A/2-40,yd);line(X+A/2+40,yd,X+A-10,yd);tx(X+A/2,yd+3,'UP NEXT','sl',{'text-anchor':'middle'});
+  dimV(y0,yd,X-12,X,X,'S7 40',{side:'l'});
+  rr(X,yd+32,A,H-(yd+32-Y)-50,4,'obj');slotLabel(X,yd+32,A,40,'STORY 2 · MOUNTS');rr(X+A+G,yd+32,R,90,4,'obj');
+  mk('rect',{x:X,y:Y+H-36,width:A,height:22,class:'slot'});slotLabel(X,Y+H-36,A,22,'SENTINEL · 600 EARLY');
+  return}
+ const ys=y0+32*k*2,yk=ys,kh=14;rr(X,yk,124,kh,0,'hug');slotLabel(X,yk,124,kh,'K1 · RELATED STORIES');line(X+132,yk+kh/2,X+A,yk+kh/2,'ph');
+ dimV(y0,ys,X-12,X,X,'S9 32',{side:'l'});
+ const yc=yk+kh+16*k*2,ch=66;
+ [0,1].forEach(i=>{const y=yc+i*(ch+G*2);rr(X,y,A,ch,4,'obj');xbox(X+8,y+8,A*.44,ch-16,'well');
+  rr(X+A*.44+16,y+8,A*.5-14,8,0,'hug');rr(X+A*.44+16,y+20,A*.5-14,18,0,'slot');slotLabel(X+A*.44+16,y+20,A*.5-14,18,'HEADLINE');
+  rr(X+A*.44+16,y+42,A*.5-14,16,0,'slot');slotLabel(X+A*.44+16,y+42,A*.5-14,16,'SUMMARY · 3 LINES')});
+ const yz=yc+2*(ch+G*2);mk('rect',{x:X,y:yz,width:A,height:20,class:'slot'});slotLabel(X,yz,A,20,'+4 PER BATCH · TO THE END OF THE QUEUE');
+ mk('rect',{x:X+A+G,y:yk,width:R,height:yz+20-yk,class:'slot'});rr(X+A+G,yk,R,120,4,'obj');xbox(X+A+G,yk,R,54,'well');slotLabel(X+A+G,yk+70,R,16,'AD · STICKY 80');slotLabel(X+A+G,yk+(yz+20-yk)/2+30,R,16,'NEXT AD EVERY 2000');
+ dimV(yk+kh,yc,X-12,X,X,'S10 16',{side:'l'});dimV(yc+ch,yc+ch+G*2,X-12,X,X,'G 16',{side:'l'});
+ dimH(X,X+A,yz+34,yz+20,yz+20,'A · FLEX',{below:true});dimH(X+A+G,X+A+G+R,yz+34,yz+20,yz+20,'R 300',{below:true});
+ nb(X+A-10,yk-10,5)}
+(function(){const Y=700;
+ endCol(470,Y,false);title(470+.4*948/2,Y+320,'END · NEXT STORY (DEFAULT)','SCALE 0.4:1 · CONTINUOUS QUEUE · SEE SHEET 2');
+ endCol(900,Y,true);title(900+.4*948/2,Y+320,'END · RELATED STORIES','SCALE 0.4:1 · QUEUE STOPS · N − 1 CARDS · OPEN IN PLACE');
+})();
+
+/* ---- tables ---- */
+(function(){const X=1404,ws=[40,112,112];let y=70;
+ y=table(X,y,'SIZE · CONTROLS',[['Z3','end toggle','44 · 28 SM'],['Z4','presentation','— · 28 SM'],['Z1','close','44 · 28 SM'],['S8','control gap','8'],['I','icon','16']],ws);
+ y=table(X,y,'FULL PAGE',[['I1','shell inset','0 (MODAL 24)'],['R1','shell radius','0 (MODAL 8)'],['SH','shadow','NONE (2XL)'],['W1','row · content','MAX 1360'],['BG','side area','READER BG']],ws);
+ y=table(X,y,'RELATED CARDS',[['N','cards','QUEUE − 1'],['B1','first batch','8'],['B','next batch','+4 · 600 EARLY'],['S9','section top','32'],['S10','kicker gap','16'],['G','card gap','16'],['A','column','FLEX'],['LT','layout','LIST · ELSE CARDS'],['AR','rail ad','STICKY · 2000 / AD']],ws);
+ const fw=[64,100,100];fw.hdr=['Choice','Values','Default'];
+ y=table(X,y,'SAVED CHOICES',[['PRESENT.','MODAL · PAGE','MODAL'],['END','NEXT · RELATED','NEXT']],fw);
+ tx(X,y-16,'RELATED POOL = THE READER QUEUE,','sl');tx(X,y-4,'MINUS STORIES ON SCREEN. SCOPE HOLDS.','sl');
 })();
 document.body.dataset.ready='1';})();
 </script></body></html>

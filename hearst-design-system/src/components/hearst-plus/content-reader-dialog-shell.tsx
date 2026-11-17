@@ -7,6 +7,7 @@ import { useTheme } from "@/components/theme-provider";
 import { useBodyPortalTarget, useModalIsolation } from "@/components/ui/use-modal-isolation";
 import { brandToCssVars } from "@/lib/theme-css-vars";
 import { cn } from "@/lib/utils";
+import { useReaderPresentation } from "./reader-presentation";
 
 const readerReturnFocusStorageKey = "hearst-reader-return-focus-label";
 const focusableSelector =
@@ -88,6 +89,7 @@ export function ContentReaderDialogShell({
 }: ContentReaderDialogShellProps) {
   const { brand } = useTheme();
   const portalTarget = useBodyPortalTarget();
+  const presentation = useReaderPresentation();
   const dialogRef = React.useRef<HTMLDivElement | null>(null);
   const onCloseRef = React.useRef(onClose);
   const nestedDialogOpenRef = React.useRef(nestedDialogOpen);
@@ -269,8 +271,13 @@ export function ContentReaderDialogShell({
         ref={contentRef}
         className={cn(
           "reader-panel hearst-plus-theme absolute inset-0 isolate mx-auto flex h-[100dvh] w-full max-w-[1360px] flex-col overflow-x-hidden overflow-y-auto overscroll-contain bg-background text-foreground shadow-2xl [scrollbar-gutter:stable]",
-          "sm:inset-6 sm:h-auto sm:w-auto sm:rounded-[8px]",
+          // Modal: inset, rounded panel over the dimmed page. Full page: fills the window
+          // and the content keeps the 1360px reader width (globals.css › Reader presentation).
+          presentation === "page"
+            ? "sm:max-w-none sm:rounded-none sm:shadow-none"
+            : "sm:inset-6 sm:h-auto sm:w-auto sm:rounded-[8px]",
         )}
+        data-reader-presentation={presentation}
         data-brand={brand.slug}
         data-mode={mode}
         data-reader-destination={destination}

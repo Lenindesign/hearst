@@ -3,10 +3,16 @@
 import React from "react";
 import { BrandLogo } from "@/components/brand-logo";
 import { Button } from "@/components/ui/button";
-import { SpinnerGap, X } from "@/components/ui/icons";
+import { ReaderFullPage, ReaderModal, ReaderNextStory, ReaderRelatedStories, SpinnerGap, X } from "@/components/ui/icons";
 import { LinkComponent } from "@/components/ui/link";
 import { cn } from "@/lib/utils";
 import { ReaderMastheadCarousel } from "./reader-masthead-carousel";
+import {
+  setReaderEndOfArticle,
+  setReaderPresentation,
+  useReaderEndOfArticle,
+  useReaderPresentation,
+} from "./reader-presentation";
 
 export interface ContentReaderMastheadItem {
   key: string;
@@ -41,6 +47,10 @@ interface ContentReaderMastheadProps {
   closeLabel?: string;
   statusLabel?: string;
   sectionNavigationLabel?: string;
+  /** Show the modal / full-page toggle left of Close (from 640px; phones are always full screen). */
+  showPresentationToggle?: boolean;
+  /** Show the next-story / related-cards toggle left of the presentation toggle. Only readers that render related cards at the end of an article opt in. */
+  showEndOfArticleToggle?: boolean;
 }
 
 export function ContentReaderMasthead({
@@ -62,7 +72,13 @@ export function ContentReaderMasthead({
   closeLabel = "Close story reader",
   statusLabel,
   sectionNavigationLabel = `${sectionLabel} reader sections`,
+  showPresentationToggle = true,
+  showEndOfArticleToggle = false,
 }: ContentReaderMastheadProps) {
+  const presentation = useReaderPresentation();
+  const isFullPage = presentation === "page";
+  const endOfArticle = useReaderEndOfArticle();
+  const showsRelated = endOfArticle === "related";
   const [hasScrolled, setHasScrolled] = React.useState(false);
 
   React.useEffect(() => {
@@ -97,7 +113,7 @@ export function ContentReaderMasthead({
   );
 
   return (
-    <div className="sticky top-0 z-[110] border-b border-border bg-background">
+    <div className="sticky top-0 z-[110] border-b border-border bg-background" data-reader-masthead>
       <div className="flex min-h-16 items-center justify-between gap-4 border-b border-border/70 px-4 py-3 sm:px-6">
         <div className="flex min-w-0 flex-1 items-center gap-4">
           <LinkComponent
@@ -162,6 +178,45 @@ export function ContentReaderMasthead({
             </button>
           ))}
         </ReaderMastheadCarousel>
+        <div className="flex shrink-0 items-center gap-2">
+        {showEndOfArticleToggle ? (
+          <Button
+            variant="outline"
+            size="icon-sm"
+            onClick={() => setReaderEndOfArticle(showsRelated ? "next" : "related")}
+            aria-label={
+              showsRelated
+                ? "Show the next story at the end of each article"
+                : "Show related stories at the end of each article"
+            }
+            title={showsRelated ? "Next story" : "Related stories"}
+            data-reader-end-of-article-toggle
+            className="h-11 w-11 rounded-full sm:h-7 sm:w-7"
+          >
+            {showsRelated ? (
+              <ReaderNextStory className="h-4 w-4" aria-hidden />
+            ) : (
+              <ReaderRelatedStories className="h-4 w-4" aria-hidden />
+            )}
+          </Button>
+        ) : null}
+        {showPresentationToggle ? (
+          <Button
+            variant="outline"
+            size="icon-sm"
+            onClick={() => setReaderPresentation(isFullPage ? "modal" : "page")}
+            aria-label={isFullPage ? "View stories in a modal" : "View stories on a full page"}
+            title={isFullPage ? "Modal" : "Full page"}
+            data-reader-presentation-toggle
+            className="hidden h-7 w-7 rounded-full sm:inline-flex"
+          >
+            {isFullPage ? (
+              <ReaderModal className="h-4 w-4" aria-hidden />
+            ) : (
+              <ReaderFullPage className="h-4 w-4" aria-hidden />
+            )}
+          </Button>
+        ) : null}
         <Button
           variant="outline"
           size="icon-sm"
@@ -172,6 +227,7 @@ export function ContentReaderMasthead({
         >
           <X className="h-4 w-4" aria-hidden />
         </Button>
+        </div>
       </div>
       <nav
         className={cn(

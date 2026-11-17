@@ -57,6 +57,7 @@ const metadata: ComponentMetadata = {
     "dark reader",
     "phone full-viewport",
     "inset desktop",
+    "full page desktop",
     "nested dialog isolated",
   ],
   slots: [
@@ -66,6 +67,7 @@ const metadata: ComponentMetadata = {
     "The shell owns modality and geometry, not publication identity or article content; those remain child production components.",
     "The backdrop is intentionally non-semantic. The shell itself is the single dialog named Story reader.",
     "Focus restoration first uses the live opener, then a stored aria-label after routed return, and retries for up to three seconds while the route remounts.",
+    "From 640px the shell reads the global reader presentation (reader-presentation.ts): modal is the inset panel, page fills the window and centers the content at 1360px. The masthead toggle sets it. The same module holds the end-of-article choice (next story or related cards), which only the Hearst+ reader renders.",
     "Setting nestedDialogOpen suppresses this shell's Escape and Tab handling while the topmost gallery or Ambient Reader owns focus.",
   ],
   storybook: {

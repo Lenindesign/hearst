@@ -1,6 +1,6 @@
-// Content reader (HP-READ-001 · Rev A) → motion film, ~126 s: how the Hearst+ story reader is built and how it behaves.
-// Pure function of time. Geometry measured in the running app (2026-11-11, viewports 390–1440);
-// build-reader-scene.mjs embeds the two drawing sheets for the closing tour.
+// Content reader (HP-READ-001 · Rev B) → motion film, ~148 s: how the Hearst+ story reader is built and how it behaves.
+// Pure function of time. Geometry measured in the running app (2026-11-11 and 2026-11-17, viewports 390–1920);
+// build-reader-scene.mjs embeds the three drawing sheets for the closing tour.
 const { seg, lerp, eo, eio, clamp01 } = kit;
 const NS = 'http://www.w3.org/2000/svg';
 const SHEETS = __SHEETS__;
@@ -62,21 +62,23 @@ const UPNEXT = 96;
 function reader(x, y, vw, vh, k, o) {
   o = o || {}; const s = o.scroll || 0, op1 = o.open == null ? 1 : o.open;
   const id = 'kc' + (CLIP++), X = px => x + px * k, Y = py => y + py * k;
-  const ins = INSET(vw), sw = SHELLW(vw), sx = (vw - sw) / 2, sy = ins, sh = vh - 2 * ins;
+  const pg = o.page || 0, ins0 = INSET(vw), ins = ins0 * (1 - pg), sw = lerp(SHELLW(vw), Math.min(vw, 1360), pg), shW = lerp(SHELLW(vw), vw, pg);
+  const sx = (vw - shW) / 2, sy = ins, sh = vh - 2 * ins, off = (shW - sw) / 2, rad = 8 * (1 - pg) * (ins0 ? 1 : 0), rel = o.related || 0;
   let q = '';
   // page behind + scrim
   q += Rc(X(0), Y(0), vw * k, vh * k, 'kwell');
   for (let i = 0; i < 6; i++) q += Rc(X(24 + (i % 3) * (vw - 48) / 3 + 8), Y(40 + Math.floor(i / 3) * 300), ((vw - 48) / 3 - 16) * k, 260 * k, 'kcard', rx(8 * k));
   q += Rc(X(0), Y(0), vw * k, vh * k, 'kscrim', op(.55 * (o.scrim == null ? 1 : o.scrim)));
   if (op1 > 0) {
-    const g = lerp(.94, 1, eo(op1)), gw = sw * g, gh = sh * g, gx = sx + (sw - gw) / 2, gy = sy + (sh - gh) / 2;
-    const sid = 'ks' + (CLIP++), SX = px => X(gx) + px * k * g, SY = py => Y(gy) + py * k * g, kk = k * g;
+    const g = lerp(.94, 1, eo(op1)), gw = shW * g, gh = sh * g, gx = sx + (shW - gw) / 2, gy = sy + (sh - gh) / 2;
+    const sid = 'ks' + (CLIP++), SXs = px => X(gx) + px * k * g, SX = px => SXs(px + off), SY = py => Y(gy) + py * k * g, kk = k * g;
     let c = '';
-    c += Rc(SX(0), SY(0), gw * k, gh * k, 'kshell');
+    c += Rc(SXs(0), SY(0), gw * k, gh * k, 'kshell');
     const n = o.stories || 1; let ty = MASTH(vw) + PADY - s; const boxes = [];
     for (let i = 0; i < n; i++) { const b = storyBox(vw, ty, i); boxes.push(b); ty += b.h + UPNEXT; }
     const C = boxes[0].c;
     boxes.forEach((b, i) => {
+      const c0 = c;
       if (i > 0) { const uy = b.ty - UPNEXT / 2; c += Ln(SX(C.ax), SY(uy), SX(C.ax + C.art / 2 - 50), SY(uy), 'kthin') + Ln(SX(C.ax + C.art / 2 + 50), SY(uy), SX(C.ax + C.art), SY(uy), 'kthin') + T(SX(C.ax + C.art / 2), SY(uy) + 5, 'UP NEXT', 'ksl', 'text-anchor="middle"'); }
       if (b.ty > sh + 200 || b.ty + b.h < -200) return;
       c += Rc(SX(C.ax), SY(b.ty), C.art * kk, b.h * kk, 'kobj', rx(8 * kk));
@@ -87,41 +89,64 @@ function reader(x, y, vw, vh, k, o) {
       for (let yy = b.bodyY; yy < b.bodyY + b.bodyH; yy += 28) { if (yy - s * 0 > sh + 400) break; const para = Math.floor((yy - b.bodyY) / 196); if (((yy - b.bodyY) % 196) >= 168) continue; c += Rc(SX(b.cx), SY(yy + 8), b.cw * ((yy / 28) % 7 === 6 ? .55 : 1) * kk, 10 * kk, 'kbar'); }
       c += Rc(SX(b.cx), SY(b.comY), b.cw * kk, 260 * kk, 'kwell', rx(8 * kk)) + T(SX(b.cx + b.cw / 2), SY(b.comY + 130), 'COMMENTS', 'ksl', 'text-anchor="middle"');
       b.sx = SX; b.sy = SY;
+      if (i > 0 && rel > 0) c = c0 + G(1 - rel, c.slice(c0.length));
     });
+    // related story cards end the first article (o.related)
+    if (rel > 0) {
+      const b = boxes[0], y0 = b.ty + b.h + 32, mw = C.art, ch = mw * 9 / 16 + 150;
+      let r = Rc(SX(C.ax), SY(y0), 190 * kk, 16 * kk, 'khug') + T(SX(C.ax + 95), SY(y0 + 12), 'RELATED STORIES', 'ksl', 'text-anchor="middle"') + Ln(SX(C.ax + 202), SY(y0 + 7), SX(C.ax + mw), SY(y0 + 7), 'kthin');
+      for (let j = 0; j < 4; j++) {
+        const cy = y0 + 30 + j * (ch + 16);
+        r += Rc(SX(C.ax), SY(cy), mw * kk, ch * kk, 'kobj', rx(8 * kk)) + Rc(SX(C.ax), SY(cy), mw * kk, mw * 9 / 16 * kk, 'kwell', rx(8 * kk)) +
+          `<path d="M${f1(SX(C.ax))},${f1(SY(cy))} l${f1(mw * kk)},${f1(mw * 9 / 16 * kk)} m0,${f1(-mw * 9 / 16 * kk)} l${f1(-mw * kk)},${f1(mw * 9 / 16 * kk)}" class="kph"/>` +
+          Rc(SX(C.ax + 20), SY(cy + mw * 9 / 16 + 20), 160 * kk, 12 * kk, 'khug') + Rc(SX(C.ax + 20), SY(cy + mw * 9 / 16 + 44), (mw - 40) * .9 * kk, 22 * kk, 'kbar') + Rc(SX(C.ax + 20), SY(cy + mw * 9 / 16 + 76), (mw - 40) * .6 * kk, 22 * kk, 'kbar') + Rc(SX(C.ax + 20), SY(cy + mw * 9 / 16 + 112), (mw - 40) * kk, 10 * kk, 'kbar');
+      }
+      c += G(rel, r);
+    }
     // rails (sticky 128 inside the scroller)
     const top0 = MASTH(vw) + PADY, rt = Math.max(top0 - s, 128);
     if (C.rail) { [[0, 577, 'TRENDING'], [593, 395, 'SAVED · SUGGESTED']].forEach(([o2, h, l]) => { c += Rc(SX(C.x0), SY(rt + o2), 296 * kk, h * kk, 'kobj', rx(8 * kk)) + T(SX(C.x0 + 148), SY(rt + o2 + 24), l, 'ksl', 'text-anchor="middle"'); for (let j = 0; j < 4 && !o2; j++) c += Rc(SX(C.x0 + 16), SY(rt + 48 + j * 110), 72 * kk, 72 * kk, 'kwell', rx(4 * kk)) + Rc(SX(C.x0 + 100), SY(rt + 52 + j * 110), 170 * kk, 12 * kk, 'kbar'); }); }
     if (C.ad) { const ax = C.ax + C.art + 16; c += Rc(SX(ax), SY(rt), 300 * kk, 600 * kk, 'kobj', rx(8 * kk)) + Rc(SX(ax), SY(rt), 300 * kk, 268 * kk, 'kwell') + T(SX(ax + 150), SY(rt + 140), 'AD', 'ksl', 'text-anchor="middle"') + Rc(SX(ax + 24), SY(rt + 300), 200 * kk, 16 * kk, 'khug') + Rc(SX(ax + 24), SY(rt + 520), 252 * kk, 40 * kk, 'khug', rx(4 * kk)); }
     // masthead (sticky top 0)
     const rh = ROWH(vw), zz = Z(vw);
-    c += Rc(SX(0), SY(0), sw * kk, MASTH(vw) * kk, 'kobj') + Ln(SX(0), SY(rh), SX(sw), SY(rh), 'kthin');
+    c += Rc(SXs(0), SY(0), shW * kk, MASTH(vw) * kk, 'kobj') + Ln(SX(0), SY(rh), SX(sw), SY(rh), 'kthin');
     const lp = vw < 640 ? 16 : 24;
     c += Rc(SX(lp), SY((rh - 28) / 2), Math.min(230, sw * .4) * kk, 28 * kk, 'kslot') + T(SX(lp + Math.min(230, sw * .4) / 2), SY(rh / 2) + 4, 'LOGO', 'ksl', 'text-anchor="middle"');
     if (vw >= 1024) c += Rc(SX(sw / 2 + 20), SY((rh - 26) / 2), (sw / 2 - lp - zz - 40) * .7 * kk, 26 * kk, 'kslot') + T(SX(sw / 2 + 20 + (sw / 2 - lp - zz - 40) * .35), SY(rh / 2) + 4, 'DESTINATIONS', 'ksl', 'text-anchor="middle"');
     const clx = sw - lp - zz, cly = vw < 640 ? 12 : (rh - zz) / 2;
     c += `<circle cx="${f1(SX(clx + zz / 2))}" cy="${f1(SY(cly + zz / 2))}" r="${f1(zz / 2 * kk)}" class="kctl"/>` + Ln(SX(clx + zz / 2 - 5), SY(cly + zz / 2 - 5), SX(clx + zz / 2 + 5), SY(cly + zz / 2 + 5), 'kthin') + Ln(SX(clx + zz / 2 + 5), SY(cly + zz / 2 - 5), SX(clx + zz / 2 - 5), SY(cly + zz / 2 + 5), 'kthin');
+    const tg = [[clx - (zz + 8), vw >= 640 ? (pg > .5 ? 'in' : 'out') : null], [clx - (vw >= 640 ? 2 : 1) * (zz + 8), rel > .5 ? 'down' : 'cards']];
+    tg.forEach(([tx2, kind]) => { if (!kind) return; c += `<circle cx="${f1(SX(tx2 + zz / 2))}" cy="${f1(SY(cly + zz / 2))}" r="${f1(zz / 2 * kk)}" class="kctl"/>` + glyph(kind, SX(tx2 + zz / 2), SY(cly + zz / 2), zz / 2 * kk); });
     const fw = Math.min(582, sw - 2 * lp), fx = vw < 640 ? lp : (sw - fw) / 2;
     for (let j = 0; j < 8; j++) { const wj = [55, 53, 65, 37, 37, 75, 63, 29][j], xj = fx + [0, 79, 156, 246, 306, 367, 466, 553][j]; if (xj + wj > sw) break; c += Rc(SX(xj), SY(rh + 15), wj * kk, 14 * kk, j === (o.active || 0) ? 'khug' : 'kslot'); if (j === (o.active || 0)) c += Rc(SX(xj), SY(rh + FILTH - 3), wj * kk, 2 * kk, 'kfill'); }
     // back to top
     if (s > 320) { const bz = vw < 640 ? 44 : 28; c += G(eo(clamp01((s - 320) / 80)), `<circle cx="${f1(SX(sw - 32 - bz / 2))}" cy="${f1(SY(sh - 32 - bz / 2))}" r="${f1(bz / 2 * kk)}" class="kctl"/>` + T(SX(sw - 32 - bz / 2), SY(sh - 32 - bz / 2) + 5, '↑', 'kdt', 'text-anchor="middle"')); }
     if (o.focus) { const f = o.focus; c += focusRing(SX(f[0]), SY(f[1]), f[2] * kk, f[3] * kk, f[4] || 0, 1); }
     if (o.over) c += o.over(SX, SY, kk, boxes, { sw, sh, clx, cly, zz });
-    o.geo = { SX, SY, kk, sw, sh, sx: gx, sy: gy, boxes, clx, cly, zz, rh };
-    q += G(eo(clamp01(op1 * 1.6)), `<clipPath id="${sid}"><rect x="${f1(SX(0))}" y="${f1(SY(0))}" width="${f1(gw * k)}" height="${f1(gh * k)}" ${rx(8 * kk * (ins ? 1 : 0))}/></clipPath><g clip-path="url(#${sid})">${c}</g>` + Rc(SX(0), SY(0), gw * k, gh * k, 'kframe2', rx(8 * kk * (ins ? 1 : 0))));
+    o.geo = { SX, SXs, SY, kk, sw, shW, sh, sx: gx, sy: gy, boxes, clx, cly, zz, rh };
+    q += G(eo(clamp01(op1 * 1.6)), `<clipPath id="${sid}"><rect x="${f1(SXs(0))}" y="${f1(SY(0))}" width="${f1(gw * k)}" height="${f1(gh * k)}" ${rx(rad * kk)}/></clipPath><g clip-path="url(#${sid})">${c}</g>` + Rc(SXs(0), SY(0), gw * k, gh * k, 'kframe2', rx(rad * kk)));
   }
   return `<clipPath id="${id}"><rect x="${f1(x)}" y="${f1(y)}" width="${f1(vw * k)}" height="${f1(vh * k)}"/></clipPath><g clip-path="url(#${id})">${q}</g>` + Rc(x, y, vw * k, vh * k, 'kframe');
 }
 let CLIP = 0;
+/* control glyphs: arrows out / in, stacked cards, arrow down to a line */
+function glyph(kind, cx, cy, r) {
+  const a = r * .5, L = (x1, y1, x2, y2) => Ln(cx + x1, cy + y1, cx + x2, cy + y2, 'kthin');
+  if (kind === 'out') return L(-a * .2, a * .2, -a, a) + L(-a, a, -a, a * .35) + L(-a, a, -a * .35, a) + L(a * .2, -a * .2, a, -a) + L(a, -a, a, -a * .35) + L(a, -a, a * .35, -a);
+  if (kind === 'in') return L(-a, a, -a * .2, a * .2) + L(-a * .2, a * .2, -a * .2, a * .85) + L(-a * .2, a * .2, -a * .85, a * .2) + L(a, -a, a * .2, -a * .2) + L(a * .2, -a * .2, a * .2, -a * .85) + L(a * .2, -a * .2, a * .85, -a * .2);
+  if (kind === 'cards') return [0, 1, 2].map(i => Rc(cx - a + i * a * .25, cy - a * .8 + i * a * .3, a * 1.4, a, 'kctl')).join('');
+  return L(0, -a, 0, a * .4) + L(0, a * .4, -a * .4, 0) + L(0, a * .4, a * .4, 0) + L(-a * .7, a, a * .7, a);
+}
 
 /* ---------- chapters ---------- */
-const CH = [0, 10, 22, 34, 50, 64, 78, 94, 106, 114, 126];
+const CH = [0, 10, 22, 34, 50, 64, 78, 94, 106, 114, 130, 148];
 const END = CH[CH.length - 1];
 const CAPS = [
   [0, 'THE READER', 'Open any story and it reads in place: a modal shell over the page you came from.'],
   [5, 'THE READER', 'One dialog named Story reader. The page behind is dimmed, blurred and made inert.'],
   [10, 'THE SHELL', 'Phones: full screen, no radius. From 640: 24 px inside the viewport with an 8 px radius.'],
   [16, 'THE SHELL · 1360 MAX', 'Past 1408 the shell stops at 1360 and centers. The shell itself is the scroll container.'],
-  [22, 'MASTHEAD · STICKY', 'Two rows that stay on top: logo, destinations and Close (64), then topic filters (46).'],
+  [22, 'MASTHEAD · STICKY', 'Two rows that stay on top: logo, destinations, two option toggles and Close (64), then topic filters (46).'],
   [28, 'MASTHEAD · PHONE', 'Below 640 the row grows to 69 so Close can be a 44 px target. Filters scroll sideways.'],
   [34, 'COLUMNS', 'One article column on phones and tablets. The 300 ad rail joins at 1024, the context rail at 1280.'],
   [42, 'COLUMNS · WATCH THE ARTICLE', 'Each rail takes 316 px. At 1280 the article is 504 wide, its narrowest above 640.'],
@@ -135,8 +160,13 @@ const CAPS = [
   [94, 'FOCUS', 'On open, focus moves to Close. Tab and Shift+Tab wrap inside the shell.'],
   [100, 'CLOSING', 'Escape, the scrim or Close shuts it. Focus returns to the card that opened it.'],
   [106, 'LAYERS', 'Nested gallery, back to top, masthead, rails, stories, shell, click catcher, scrim, page.'],
-  [114, 'THE DRAWING · SHEET 1', 'Structure: plans at 1440 and 390, columns per breakpoint, details and variable tables.'],
-  [120, 'THE DRAWING · SHEET 2', 'Logic: viewport placement, layers, story queue, active-story rules, focus and thresholds.'],
+  [114, 'READER OPTIONS · MODAL OR FULL PAGE', 'The button left of Close switches the reader between the inset modal and a full page.'],
+  [118, 'READER OPTIONS · FULL PAGE', 'Inset, radius and shadow go. The masthead runs full width; its row and the content stay 1360, centered.'],
+  [122, 'READER OPTIONS · WHAT COMES NEXT', 'By default the next story loads below. The button further left chooses related stories instead.'],
+  [126, 'READER OPTIONS · RELATED STORIES', 'The queue stops. A home river card for every other story ends the article; each opens in the same reader.'],
+  [130, 'THE DRAWING · SHEET 1', 'Structure: plans at 1440 and 390, columns per breakpoint, details and variable tables.'],
+  [136, 'THE DRAWING · SHEET 2', 'Logic: viewport placement, layers, story queue, active-story rules, focus and thresholds.'],
+  [142, 'THE DRAWING · SHEET 3', 'Reader options: modal and full-page plans, the control group, icon states and the end of an article.'],
 ];
 
 kit.scene('reader', {
@@ -336,12 +366,52 @@ kit.scene('reader', {
     return G(a, s);
   },
 
+  /* K · reader options */
+  K(t) {
+    const lt = t - CH[9]; const a = win(lt, 0, CH[10] - CH[9] + .1, .4, .5); if (a <= 0) return '';
+    let s = '';
+    // K1 · modal → full page, at a 1600 window
+    const a1 = win(lt, 0, 8.1, .2, .5);
+    if (a1 > 0) {
+      const vw = 1600, vh = 900, k = .74, x = 120, y = 190, pg = eio(seg(lt, 3.4, 4.6));
+      const o = { page: pg }; let r = reader(x, y, vw, vh, k, o); const g = o.geo;
+      const px = g.SX(g.clx - (g.zz + 8) + g.zz / 2), py = g.SY(g.cly + g.zz / 2);
+      r += ptr(px, py, win(lt, 1.2, 4.2, .4, .3), clamp01((lt - 2.8) / .4));
+      r += DH(g.SXs(0), g.SXs(g.shW), y - 24, 'SHELL ' + Math.round(g.shW) + (pg > .99 ? ' · FULL WIDTH' : ''));
+      r += G(eo(seg(lt, 5, 5.6)), DH(g.SX(0), g.SX(g.sw), y + vh * k + 30, 'ROW + CONTENT 1360'));
+      const RX = x + vw * k + 40;
+      r += T(RX, 300, pg > .5 ? 'FULL PAGE' : 'MODAL', 'kread') + T(RX, 336, pg > .5 ? 'tooltip · Modal' : 'tooltip · Full page', 'kdts');
+      r += T(RX, 410, 'INSET ' + Math.round(INSET(vw) * (1 - pg)), 'kvt') + T(RX, 446, 'RADIUS ' + Math.round(8 * (1 - pg)), 'kvt') + T(RX, 482, pg > .5 ? 'NO SHADOW' : 'SHADOW 2XL', 'kvt');
+      r += G(eo(seg(lt, 5, 5.6)), T(RX, 560, 'ROW + CONTENT', 'kvt') + T(RX, 592, 'max 1360, centered', 'krule'));
+      r += G(eo(seg(lt, 6, 6.6)), T(RX, 660, '28 round · from 640', 'krule') + T(RX, 692, 'phones: full screen', 'krule'));
+      s += G(a1, r);
+    }
+    // K2 · next story → related cards, at 1440
+    const a2 = win(lt, 8, 16.1, .5, .5);
+    if (a2 > 0) {
+      const vw = 1440, vh = 900, k = .82, x = (1920 - vw * k) / 2 - 140, y = 190, b0 = storyBox(vw, 0, 0);
+      const rel = eio(seg(lt, 11, 12));
+      const sc = MASTH(vw) + PADY + b0.h - 620 + lerp(0, 700, eio(seg(lt, 12.4, 15.4)));
+      const o = { scroll: sc, stories: 2, related: rel }; let r = reader(x, y, vw, vh, k, o); const g = o.geo;
+      const px = g.SX(g.clx - 2 * (g.zz + 8) + g.zz / 2), py = g.SY(g.cly + g.zz / 2);
+      r += ptr(px, py, win(lt, 9.2, 12.2, .4, .3), clamp01((lt - 10.6) / .4));
+      const RX = x + vw * k + 40;
+      r += T(RX, 300, rel > .5 ? 'RELATED' : 'NEXT STORY', 'kread') + T(RX, 336, rel > .5 ? 'tooltip · Next story' : 'tooltip · Related stories', 'kdts');
+      r += G(1 - rel, T(RX, 410, 'UP NEXT', 'kvt') + T(RX, 442, 'the queue continues', 'krule'));
+      r += G(rel, T(RX, 410, 'EVERY QUEUE STORY', 'kvt') + T(RX, 442, 'same format as the home', 'krule') + T(RX, 474, 'from the reader queue', 'krule') + T(RX, 506, 'open in the same reader', 'krule'));
+      r += G(eo(seg(lt, 13, 13.6)), T(RX, 584, '8, then 4 more as you scroll', 'krule') + T(RX, 616, '32 below · 16 apart', 'krule') + T(RX, 648, 'ad rail: sticky, new ad every 2000', 'krule'));
+      r += G(eo(seg(lt, 14, 14.6)), T(RX, 716, 'SAVED IN THE BROWSER', 'kdts') + T(RX, 744, 'for every reader', 'kdts'));
+      s += G(a2, r);
+    }
+    return G(a, s);
+  },
+
   /* J · sheet tour */
   J(t) {
-    const lt = t - CH[9]; const a = win(lt, 0, CH[10] - CH[9] + .5, .5, .8); if (a <= 0) return '';
+    const lt = t - CH[10]; const a = win(lt, 0, CH[11] - CH[10] + .5, .5, .8); if (a <= 0) return '';
     let s = '';
-    [[0, 6.2], [6, 12.5]].forEach(([t0, t1], i) => {
-      const aa = win(lt, t0, t1, .6, i ? .1 : .5); if (aa <= 0) return;
+    [[0, 6.2], [6, 12.2], [12, 18.5]].forEach(([t0, t1], i) => {
+      const aa = win(lt, t0, t1, .6, i === 2 ? .1 : .5); if (aa <= 0) return;
       const z = lerp(1, 1.05, seg(lt, t0, t1)), w = 1700 * .835 * z, h = 1060 * .835 * z;
       s += G(aa, `<image href="${SHEETS[i]}" x="${f1(960 - w / 2)}" y="${f1(165 + (900 - h) / 2)}" width="${f1(w)}" height="${f1(h)}"/>`);
     });
@@ -351,6 +421,6 @@ kit.scene('reader', {
   render(t) {
     CLIP = 0;
     this.header(t);
-    this.live.innerHTML = [this.A(t), this.B(t), this.C(t), this.D(t), this.E(t), this.F(t), this.G2(t), this.H(t), this.I(t), this.J(t)].join('');
+    this.live.innerHTML = [this.A(t), this.B(t), this.C(t), this.D(t), this.E(t), this.F(t), this.G2(t), this.H(t), this.I(t), this.K(t), this.J(t)].join('');
   },
 });
