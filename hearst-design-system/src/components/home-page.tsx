@@ -182,9 +182,9 @@ import {
   rememberContentReaderReturnFocus,
 } from "./hearst-plus/content-reader-dialog-shell";
 import {
-  getLifestyleArticleRecommendations,
   getLifestyleCommentCount,
   getReadyLiveArticle,
+  rankLifestyleRelatedStories,
   type LifestyleStoryComment,
 } from "./hearst-plus/content-reader-model";
 import { useReaderEndOfArticle } from "./hearst-plus/reader-presentation";
@@ -3489,10 +3489,14 @@ function getVehicleStoryLinkLabel(story: LifestyleRiverStory) {
   return format;
 }
 
+const readerRelatedFirstBatch = 8;
+const readerRelatedBatch = 4;
+
 /**
  * Related story cards that end the article when the reader chooses "Related stories"
- * over the continuous next story (APP_RULES › Reader modal). Cards use the home river
- * format and open in the same reader layer.
+ * over the continuous next story (APP_RULES › Reader modal). Every other story in the
+ * reader's queue appears, most related first, in the home river format; cards render
+ * in batches as the reader nears the end, like the river, and open in the same layer.
  */
 function ReaderRelatedStories({
   currentStory,
@@ -3503,7 +3507,7 @@ function ReaderRelatedStories({
   onOpenStory,
   onSave,
 }: {
-  currentStory: LifestyleRiverStory | undefined;
+  currentStory: LifestyleRiverStory;
   excludedStories: LifestyleRiverStory[];
   stories: LifestyleRiverStory[];
   savedIds: string[];
@@ -3511,12 +3515,33 @@ function ReaderRelatedStories({
   onOpenStory: (storyId: string) => void;
   onSave: (story: LifestyleRiverStory) => void;
 }) {
-  if (!currentStory) return null;
-  const excludedIds = new Set(excludedStories.map((story) => story.id));
-  const relatedStories = getLifestyleArticleRecommendations(
-    currentStory,
-    stories.filter((story) => !excludedIds.has(story.id)),
-  );
+  const [visibleCount, setVisibleCount] = React.useState(readerRelatedFirstBatch);
+  const sentinelRef = React.useRef<HTMLDivElement | null>(null);
+  const relatedStories = React.useMemo(() => {
+    const excludedIds = new Set(excludedStories.map((story) => story.id));
+    return rankLifestyleRelatedStories(
+      currentStory,
+      stories.filter((story) => !excludedIds.has(story.id)),
+    );
+  }, [currentStory, excludedStories, stories]);
+  const hasMore = visibleCount < relatedStories.length;
+
+  React.useEffect(() => {
+    const node = sentinelRef.current;
+    const root = node?.closest<HTMLElement>("[data-reader-scroll-container]") ?? null;
+    if (!node || !hasMore) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisibleCount((count) => Math.min(count + readerRelatedBatch, relatedStories.length));
+        }
+      },
+      { root, rootMargin: "600px" },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [hasMore, relatedStories.length, visibleCount]);
+
   if (!relatedStories.length) return null;
 
   return (
@@ -3529,7 +3554,7 @@ function ReaderRelatedStories({
           <span className="h-px flex-1 bg-border" aria-hidden="true" />
         </div>
         <div className="grid gap-4">
-          {relatedStories.map((story) => (
+          {relatedStories.slice(0, visibleCount).map((story) => (
             <LifestyleRiverCard
               key={story.id}
               story={story}
@@ -3540,6 +3565,10 @@ function ReaderRelatedStories({
             />
           ))}
         </div>
+        <div ref={sentinelRef} aria-hidden="true" className="h-px" />
+        <p className="sr-only" role="status" aria-live="polite">
+          {`Showing ${Math.min(visibleCount, relatedStories.length)} of ${relatedStories.length} related stories`}
+        </p>
       </section>
     </div>
   );
@@ -4887,8 +4916,9 @@ function LifestyleStoryReaderModal({
               );
             })}
 
-            {showRelatedAtArticleEnd ? (
+            {showRelatedAtArticleEnd && visibleReaderStories.length ? (
               <ReaderRelatedStories
+                key={visibleReaderStories[visibleReaderStories.length - 1].id}
                 currentStory={visibleReaderStories[visibleReaderStories.length - 1]}
                 excludedStories={visibleReaderStories}
                 stories={storyQueue}

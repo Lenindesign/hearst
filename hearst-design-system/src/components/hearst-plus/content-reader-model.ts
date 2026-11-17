@@ -173,7 +173,11 @@ export function scoreLifestyleRelatedStory(
   );
 }
 
-export function getLifestyleArticleRecommendations(
+/**
+ * Every other story, most related first: same-topic stories lead, then the rest by
+ * related-story score. The reader's related-cards ending uses the whole list.
+ */
+export function rankLifestyleRelatedStories(
   currentStory: LifestyleRiverStory,
   stories: LifestyleRiverStory[],
 ) {
@@ -199,6 +203,12 @@ export function getLifestyleArticleRecommendations(
     .filter(
       (story, index, array) =>
         array.findIndex((candidate) => candidate.id === story.id) === index,
-    )
-    .slice(0, 4);
+    );
+}
+
+export function getLifestyleArticleRecommendations(
+  currentStory: LifestyleRiverStory,
+  stories: LifestyleRiverStory[],
+) {
+  return rankLifestyleRelatedStories(currentStory, stories).slice(0, 4);
 }
