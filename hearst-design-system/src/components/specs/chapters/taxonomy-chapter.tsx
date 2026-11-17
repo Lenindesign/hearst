@@ -7,7 +7,7 @@ import {
   readerInterests,
   taxonomyStories,
 } from "@/components/specs/chapters/taxonomy-data";
-import { SpecChapter, SpecColumns, SpecFinding, SpecProse, SpecSection, SpecTable } from "@/components/specs/spec-kit";
+import { SpecChapter, SpecColumns, SpecFilm, SpecFinding, SpecProse, SpecSection, SpecSheet, SpecTable } from "@/components/specs/spec-kit";
 import { LiveViewport } from "@/components/specs/live/live-kit";
 import {
   getHearstAllBrands,
@@ -94,6 +94,20 @@ const interestRows = readerInterests.map(({ label, route, theme }) => [
   theme,
 ]);
 
+const link = "underline underline-offset-4";
+
+/** Start of each beat in the chapter film (public/specs/taxonomy-film.mp4), in seconds. */
+const filmChapters = [
+  [0, "The layer stack"],
+  [11, "Today: four cohort names"],
+  [17, "The reader masthead"],
+  [22, "Regroup: 29 brands"],
+  [35, "Eight interests"],
+  [46, "Three lookups and the topic map"],
+  [57, "Routes and phases"],
+  [68, "The drawing sheets"],
+] as const;
+
 const surfaceRows = [
   ["Utility bar switcher and brand menus", <><code>utility-bar.tsx</code> (labels hard-coded in three places)</>, "One tab per group; brands listed by group"],
   ["Phone menu: Browse Hearst+ and Browse brands", <><code>home-page.tsx</code></>, <><code>hearstReaderSections</code>, brands grouped by group</>],
@@ -135,10 +149,13 @@ export function TaxonomyChapter() {
         ["Doc", "HP-TAX-PROP · Draft · 2026-11-17"],
         ["Status", <b key="status">Proposal for owner review. App code, routes and vault rules are unchanged.</b>],
         ["Source", <><code>hearst-routes.ts</code>, the four feed snapshots, <code>taxonomy-data.ts</code> (proposal only)</>],
+        ["Drawing", <><a href="/specs/taxonomy-drawing.html" className={link}>HP-TAX-001</a> · 2 sheets</>],
         ["Counts", <>{taxonomyStories.length} stories in today&rsquo;s validated snapshot, read when the page is built</>],
       ]}
       contents={[
         ["Live reference", "#taxonomy-live"],
+        ["Film", "#taxonomy-film"],
+        ["Drawing", "#taxonomy-drawing"],
         ["Where it lives", "#taxonomy-surfaces"],
         ["Brands today", "#taxonomy-brands"],
         ["Option A", "#taxonomy-option-a"],
@@ -168,6 +185,38 @@ export function TaxonomyChapter() {
           rows={currentRows}
           numeric={[2]}
           codeFirst={false}
+        />
+      </SpecSection>
+
+      <SpecSection id="taxonomy-film" kicker="10.0 · Walkthrough" title="How the proposal works" intro={<p>The film builds the layer stack, shows today&rsquo;s cohort names in the utility bar and masthead, moves the 29 brands into five families, grows the eight interests from today&rsquo;s counts, then follows a story through the three lookups, the route migration and the phases. It ends on the two drawing sheets.</p>}>
+        <SpecFilm
+          src="/specs/taxonomy-film.mp4"
+          poster="/specs/taxonomy-film-poster.jpg"
+          label="Reader taxonomy film · 1:21 · no sound. Captions at the top of each scene say what is happening; codes match the drawing."
+          caption={<p><b className="text-foreground">Reader taxonomy film · 1:21 · no sound.</b> A proposal, so it is not part of the combined film at the top of the page. Pick a chapter to jump to it. <a href="/specs/taxonomy-film.mp4" className={link}>Download the taxonomy film</a>.</p>}
+          chapters={filmChapters}
+        />
+      </SpecSection>
+
+      <SpecSection
+        id="taxonomy-drawing"
+        kicker="10.0 · Drawing HP-TAX-001 · Draft · Sheets 1–2"
+        title="The drawing"
+        intro={<p>Sheet 1 is the structure: the exploded layer stack, the utility bar now and proposed, the masthead descriptor and the cohort-to-family regroup matrix. Sheet 2 is the logic: the three lookups, the topic map, route migration, the phases and the open decisions. The full drawing with its notes is in <a href="/specs/taxonomy-drawing.html" className={link}>taxonomy-drawing.html</a>.</p>}
+      >
+        <SpecSheet
+          src="/specs/taxonomy-drawing-sheet-1.jpg"
+          width={1936}
+          height={1232}
+          href="/specs/taxonomy-drawing.html"
+          alt="Drawing sheet 1, structure: the exploded stack from stories and hidden cohorts up to brands, families, interests and reader surfaces; the utility bar with four cohort slots and with eight interest slots; the masthead lockup with its live-text descriptor; the matrix of four cohorts by five families with the five brands that move; and count tables."
+        />
+        <SpecSheet
+          src="/specs/taxonomy-drawing-sheet-2.jpg"
+          width={1936}
+          height={1232}
+          href="/specs/taxonomy-drawing.html"
+          alt="Drawing sheet 2, logic: a story feeding three lookups (cohort to ads, analytics and ingestion; interest to the utility bar, masthead and onboarding; family to the brand directory and theme); the topic map with the autos rule; the route migration table; the three phases with the option A stop line; and tables comparing the options, listing open decisions and theme borrowing."
         />
       </SpecSection>
 
@@ -332,7 +381,7 @@ export function TaxonomyChapter() {
             <li><b>Category rows.</b> Subtopics under each interest (Food → Recipes, Cooking, Drinks), or format tabs (Videos, Shopping)?</li>
           </NumberedList>
         </SpecProse>
-        <SmallNote>Not covered yet: a dimensional drawing and a film for this chapter, and this chapter in the combined film. They can follow once a direction is chosen.</SmallNote>
+        <SmallNote>This chapter is an exploration, so its film is not part of the combined film at the top of the page. Add it there once a direction is chosen.</SmallNote>
       </SpecSection>
     </SpecChapter>
   );
