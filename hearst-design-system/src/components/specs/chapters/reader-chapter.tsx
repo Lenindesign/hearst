@@ -24,7 +24,7 @@ const keyboardRows = [
 
 const tokenRows = [
   ["Scrim", <><code>--foreground</code> at 55% + blur 8</>, "oklab(0.145 …) / .55"],
-  ["Shell", <code key="c">--background</code>, "rgb(236 233 227)"],
+  ["Shell", <code key="c">--background</code>, "rgb(237 238 244)"],
   ["Article card", <><code>bg-card</code> · <code>border-border</code></>, "#FFFFFF · rgb(214 218 219)"],
   ["Comments", <><code>--hp-neutral-surface</code> → <code>--palette-neutral-100</code></>, "rgb(245 245 245)"],
   ["Kicker, active filter", <><code>--primary</code> (brand)</>, "per brand"],
