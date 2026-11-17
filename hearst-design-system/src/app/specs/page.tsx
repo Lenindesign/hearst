@@ -8,6 +8,7 @@ import { LayoutChapter } from "@/components/specs/chapters/layout-chapter";
 import { NavChapter } from "@/components/specs/chapters/nav-chapter";
 import { ReaderChapter } from "@/components/specs/chapters/reader-chapter";
 import { SystemChapter } from "@/components/specs/chapters/system-chapter";
+import { TaxonomyChapter } from "@/components/specs/chapters/taxonomy-chapter";
 import { TokensChapter } from "@/components/specs/chapters/tokens-chapter";
 import { TypeChapter } from "@/components/specs/chapters/type-chapter";
 import { SpecFilm } from "@/components/specs/spec-kit";
@@ -29,6 +30,7 @@ const chapters = [
   ["reader", "Reader"],
   ["carousel", "Carousel"],
   ["system", "System"],
+  ["taxonomy", "Taxonomy"],
 ] as const;
 
 /** Start of each chapter in the combined film (public/specs/specs-all-films.mp4), in seconds. */
@@ -95,6 +97,7 @@ export default function SpecsPage() {
         <ReaderChapter />
         <CarouselChapter />
         <SystemChapter />
+        <TaxonomyChapter />
       </main>
       <ProductFooter />
     </div>

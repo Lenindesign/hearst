@@ -52,6 +52,7 @@ const defaultProductLinkGroups: SiteFooterLinkGroup[] = [
       { label: "Content reader spec", href: "/specs/#reader" },
       { label: "Featured carousel spec", href: "/specs/#carousel" },
       { label: "Agentic system spec", href: "/specs/#system" },
+      { label: "Reader taxonomy proposal", href: "/specs/#taxonomy" },
       { label: "Storybook", href: PROD_STORYBOOK_URL },
     ],
   },
