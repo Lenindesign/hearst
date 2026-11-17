@@ -35,13 +35,13 @@ const chapters = [
 const filmChapters = [
   [4, "CTAs"],
   [56, "Breakpoints & grid"],
-  [149, "Type metrics"],
-  [259, "Tokens & brands"],
-  [433, "Blocks"],
-  [693, "Nav"],
-  [861, "Reader"],
-  [1031, "Carousel"],
-  [1159, "System"],
+  [156, "Type metrics"],
+  [267, "Tokens & brands"],
+  [441, "Blocks"],
+  [701, "Nav"],
+  [870, "Reader"],
+  [1039, "Carousel"],
+  [1168, "System"],
 ] as const;
 
 export default function SpecsPage() {
@@ -81,7 +81,7 @@ export default function SpecsPage() {
             src="/specs/specs-all-films.mp4"
             poster="/specs/specs-all-films-poster.jpg"
             label="All specification films in chapter order, each followed by a recording of the chapter's live reference. 21 minutes, no sound."
-            caption={<p><b className="text-foreground">All chapters · 21:26 · no sound.</b> Nine chapters, ten films and nine live references. <a href="/specs/specs-all-films.mp4" className="underline underline-offset-4">Download the film</a>.</p>}
+            caption={<p><b className="text-foreground">All chapters · 21:34 · no sound.</b> Nine chapters, ten films and nine live references. <a href="/specs/specs-all-films.mp4" className="underline underline-offset-4">Download the film</a>.</p>}
             chapters={filmChapters}
           />
         </section>
