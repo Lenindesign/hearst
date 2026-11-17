@@ -3,7 +3,7 @@ import { SpecChapter, SpecColumns, SpecFilm, SpecSection, SpecSheet, SpecTable }
 import { LiveViewport } from "@/components/specs/live/live-kit";
 import { getLiveReaderStoryId } from "@/components/specs/live/live-data";
 
-/** Content reader spec (HP-READ-SPEC · Rev A · 2026-11-11), converted from public/specs/reader-spec.html. */
+/** Content reader spec (HP-READ-SPEC · Rev B · 2026-11-17), converted from public/specs/reader-spec.html. */
 const breakpointRows = [
   ["0", "Full viewport · radius 0", "Row 69 · Close 44 · filters scroll", "Article only · padding 16", "358 at 390"],
   ["sm 640", "Inset 24 · radius 8", "Row 64 · Close 28 · filters centered", "Article only · card padding 28", "560 at 640"],
@@ -53,6 +53,7 @@ export function ReaderChapter() {
         ["Anatomy", "#reader-anatomy"],
         ["Breakpoints", "#reader-breakpoints"],
         ["Scroll and queue", "#reader-scroll"],
+        ["Reader options", "#reader-options"],
         ["Keyboard and focus", "#reader-keyboard"],
         ["Tokens", "#reader-tokens"],
         ["Findings", "#reader-findings"],
@@ -68,12 +69,12 @@ export function ReaderChapter() {
         />
       </SpecSection>
 
-      <SpecSection id="reader-film" kicker="07.0 · Walkthrough" title="How the reader works" intro={<p>The film animates the reader on a wireframe drawn from the measured geometry: opening, the shell, the masthead, the columns at each width, the article, scrolling, the story queue, focus and the layer order. It ends on the two drawing sheets.</p>}>
+      <SpecSection id="reader-film" kicker="07.0 · Walkthrough" title="How the reader works" intro={<p>The film animates the reader on a wireframe drawn from the measured geometry: opening, the shell, the masthead, the columns at each width, the article, scrolling, the story queue, focus, the layer order and the two reader options (modal or full page, next story or related cards). It ends on the three drawing sheets.</p>}>
         <SpecFilm
           src="/specs/reader-film.mp4"
           poster="/specs/reader-film-poster.jpg"
-          label="Content reader film · 2:06 · no sound."
-          caption={<p><b className="text-foreground">Content reader film · 2:06 · no sound.</b> Captions at the top of each scene say what is happening; dimensions use the drawing&apos;s codes. Pick a chapter to jump to it.</p>}
+          label="Content reader film · 2:28 · no sound."
+          caption={<p><b className="text-foreground">Content reader film · 2:28 · no sound.</b> Captions at the top of each scene say what is happening; dimensions use the drawing&apos;s codes. Pick a chapter to jump to it.</p>}
           chapters={[
             [0, "Opening a story"],
             [10, "The shell: inset and 1360 max"],
@@ -84,18 +85,19 @@ export function ReaderChapter() {
             [78, "The story queue and active story"],
             [94, "Focus, keyboard and closing"],
             [106, "Layer order"],
-            [114, "The drawing sheets"],
+            [114, "Reader options: full page and related stories"],
+            [130, "The drawing sheets"],
           ]}
         />
       </SpecSection>
 
-      <SpecSection id="reader-anatomy" kicker="07.1 · Drawing HP-READ-001 · Rev A · Sheet 1" title="Anatomy" intro={<p>The reader is one dialog, named Story reader, portaled to the body. A scrim covers the page; the shell sits on it and is itself the scroll container. Inside, a sticky masthead sits over a grid of up to three columns. The full drawing is in <a href="/specs/reader-drawing.html" className="font-semibold text-foreground underline underline-offset-4">reader-drawing.html</a>.</p>}>
+      <SpecSection id="reader-anatomy" kicker="07.1 · Drawing HP-READ-001 · Rev B · Sheet 1" title="Anatomy" intro={<p>The reader is one dialog, named Story reader, portaled to the body. A scrim covers the page; the shell sits on it and is itself the scroll container. Inside, a sticky masthead sits over a grid of up to three columns. The full drawing is in <a href="/specs/reader-drawing.html" className="font-semibold text-foreground underline underline-offset-4">reader-drawing.html</a>.</p>}>
         <SpecSheet
           src="/specs/reader-drawing-sheet-1.jpg"
           width={1936}
-          height={1209}
+          height={1233}
           href="/specs/reader-drawing.html"
-          alt="Drawing sheet 1, structure: the reader at 1440 and at 390 with dimensions, the columns at each breakpoint, details of the article top, the action bar and the close control, and variable tables."
+          alt="Drawing sheet 1, structure: the reader at 1440 and at 390 with dimensions (the masthead shows the two option toggles left of Close), the columns at each breakpoint, details of the article top, the action bar and the close control, and variable tables."
         />
         <SpecColumns>
           <Col>
@@ -111,7 +113,7 @@ export function ReaderChapter() {
               <ul>
                 <li><b>Box</b>: <code>sticky top-0 z-[110]</code>, background, 1 px bottom border.</li>
                 <li><b>Top row</b>: 64 tall from 640 (padding 12 / 24), 69 below 640 (padding 12 / 16). Logo slot up to 230 wide; destinations or publications from 1024; round Close, 28 from 640 and 44 below. From 640 a 28 round modal / full-page toggle sits 8 left of Close (tooltip <code>Full page</code> or <code>Modal</code>). Left of it, the end-of-article toggle (44 below 640, 28 from 640; tooltip <code>Related stories</code> or <code>Next story</code>).</li>
-                <li><b>End of article</b>: Next story keeps the continuous queue. Related stories ends the article with four home river cards under a <code>Related stories</code> kicker, in the article column, 16 apart.</li>
+                <li><b>End of article</b>: Next story keeps the continuous queue. Related stories ends the article with a home river card for every other story in the queue under a <code>Related stories</code> kicker, in the article column, 16 apart.</li>
                 <li><b>Filter row</b>: 46 tall. Topic filters hug their labels, 24 apart, centered from 640; below 640 they scroll sideways. The active one has a 2 px underline.</li>
               </ul>
             </ColGroup>
@@ -146,7 +148,7 @@ export function ReaderChapter() {
         <SpecSheet
           src="/specs/reader-drawing-sheet-2.jpg"
           width={1936}
-          height={1208}
+          height={1232}
           href="/specs/reader-drawing.html"
           alt="Drawing sheet 2, logic: viewport placement at three sizes, the layer order, the story queue with the reading anchor and sentinel, active-story rules, the focus flow, article width by viewport, thresholds and keyboard."
         />
@@ -177,15 +179,45 @@ export function ReaderChapter() {
         </SpecColumns>
       </SpecSection>
 
-      <SpecSection id="reader-keyboard" kicker="07.4 · Accessibility" title="Keyboard and focus">
+      <SpecSection id="reader-options" kicker="07.4 · Drawing HP-READ-001 · Sheet 3" title="Reader options" intro={<p>Two round buttons left of Close set how stories are read. Both choices are global, saved in the browser, and switch in place without losing the reading position. <code>APP_RULES.md</code> › Reader modal owns the behavior.</p>}>
+        <SpecSheet
+          src="/specs/reader-drawing-sheet-3.jpg"
+          width={1936}
+          height={1233}
+          href="/specs/reader-drawing.html"
+          alt="Drawing sheet 3, reader options: the modal and full-page plans at 1920, the masthead control group at desktop and phone with dimensions, the four icon states, the two saved choices, and the end of an article with the next story or the related story cards."
+        />
+        <SpecColumns>
+          <Col>
+            <ColGroup title="Modal or full page">
+              <ul>
+                <li><b>Toggle</b>: 28 round outline button 8 left of Close, from 640 only. Expand arrows (tooltip <code>Full page</code>) or inward arrows (<code>Modal</code>). Phones are always full viewport.</li>
+                <li><b>Full page</b>: the shell drops the 24 inset, radius 8 and shadow and fills the window. The masthead runs full bleed; its top row and the content stay centered at 1360 on the reader background.</li>
+                <li>Saved as <code>hearst-reader-presentation</code> (<code>modal</code> or <code>page</code>); default modal. Every standard reader reads it.</li>
+              </ul>
+            </ColGroup>
+          </Col>
+          <Col>
+            <ColGroup title="Next story or related stories">
+              <ul>
+                <li><b>Toggle</b>: 8 left of the presentation toggle, 44 below 640 and 28 from 640. Stacked cards (tooltip <code>Related stories</code>) or a down arrow to a line (<code>Next story</code>). Shown in the Hearst+ standard reader only.</li>
+                <li><b>Related</b>: the queue stops after the current article, which ends with a <code>Related stories</code> kicker and a home river card for every other story in the queue (list rows when the home is in list layout), most related first, 32 below the article, 16 apart, in the article column. The first 8 render at once and 4 more join each time the end comes within 600, like the river. From 1024 the rail beside them keeps a sticky 300 × 600 ad that changes every 2000 of scroll, like the home rail. They come from the reader&apos;s own queue, so the scope holds, and open in the same reader.</li>
+                <li>Saved as <code>hearst-reader-end-of-article</code> (<code>next</code> or <code>related</code>); default next.</li>
+              </ul>
+            </ColGroup>
+          </Col>
+        </SpecColumns>
+      </SpecSection>
+
+      <SpecSection id="reader-keyboard" kicker="07.5 · Accessibility" title="Keyboard and focus">
         <SpecTable caption="Content reader keyboard and focus" headers={["Moment", "What happens"]} rows={keyboardRows} codeFirst={false} />
       </SpecSection>
 
-      <SpecSection id="reader-tokens" kicker="07.5 · Tokens" title="Tokens">
+      <SpecSection id="reader-tokens" kicker="07.6 · Tokens" title="Tokens">
         <SpecTable caption="Content reader tokens" headers={["Part", "Token", "Rendered (light, Men’s Health)"]} rows={tokenRows} codeFirst={false} />
       </SpecSection>
 
-      <SpecSection id="reader-findings" kicker="07.6 · For the design system team" title="Findings" intro={<p>These come from comparing the measurements with the source. Nothing has been changed in code.</p>}>
+      <SpecSection id="reader-findings" kicker="07.7 · For the design system team" title="Findings" intro={<p>These come from comparing the measurements with the source. Nothing has been changed in code.</p>}>
         <FindingList>
           <TaggedFinding id="reader-f1" tag="F1 · LAYOUT" title="The article is narrowest at 1280">
             <p>At 1280 both 300 rails are on, so the article is 504 wide with a 446 text column, narrower than at 768 (672) or 1024 (612). Here the measured 30-Day Challenge headline takes two lines at 48 px; longer headlines take three. <b>Options:</b> bring the context rail in from 1440 instead of 1280, or keep it at 1280 and use 48 → 24 grid padding there.</p>
