@@ -103,13 +103,14 @@ export function ReaderChapter() {
               <ul>
                 <li><b>Scrim</b>: <code>fixed inset-0 z-[200]</code>, <code>bg-foreground/55</code> with <code>backdrop-blur-sm</code> (8). A full-size click catcher under the shell closes the reader.</li>
                 <li><b>Shell</b>: full viewport below 640 (<code>h-[100dvh]</code>, no radius). From 640 it sits 24 inside every edge with radius 8 and <code>shadow-2xl</code>. It stops at 1360 and centers (from a 1408 viewport).</li>
+                <li><b>Full page</b> (the toggle left of Close, saved for every reader): from 640 the shell fills the window with no inset, radius or shadow; the masthead row and the content center at 1360 on the reader background. Phones are unchanged.</li>
                 <li><b>Scrolling</b>: the shell scrolls (<code>overflow-y-auto overscroll-contain</code>, stable scrollbar gutter), not the page. It carries the brand&apos;s CSS variables and <code>data-mode</code>.</li>
               </ul>
             </ColGroup>
             <ColGroup title="2 · Masthead">
               <ul>
                 <li><b>Box</b>: <code>sticky top-0 z-[110]</code>, background, 1 px bottom border.</li>
-                <li><b>Top row</b>: 64 tall from 640 (padding 12 / 24), 69 below 640 (padding 12 / 16). Logo slot up to 230 wide; destinations or publications from 1024; round Close, 28 from 640 and 44 below.</li>
+                <li><b>Top row</b>: 64 tall from 640 (padding 12 / 24), 69 below 640 (padding 12 / 16). Logo slot up to 230 wide; destinations or publications from 1024; round Close, 28 from 640 and 44 below. From 640 a 28 round modal / full-page toggle sits 8 left of Close (tooltip <code>Full page</code> or <code>Modal</code>).</li>
                 <li><b>Filter row</b>: 46 tall. Topic filters hug their labels, 24 apart, centered from 640; below 640 they scroll sideways. The active one has a 2 px underline.</li>
               </ul>
             </ColGroup>

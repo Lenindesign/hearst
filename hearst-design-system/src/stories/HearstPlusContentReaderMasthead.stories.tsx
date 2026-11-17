@@ -22,6 +22,7 @@ import {
   getComponentStoryForBrand,
 } from "./hearst-plus-component-fixtures";
 import { hearstPlusStoryData } from "./hearst-plus-story-data";
+import { setReaderPresentation } from "@/components/hearst-plus/reader-presentation";
 
 interface ContentReaderMastheadExampleProps {
   brandSlug?: string;
@@ -308,5 +309,35 @@ export const MobilePublication: Story = {
     await expect(closeTarget.height).toBeGreaterThanOrEqual(44);
     await userEvent.click(closeButton);
     await expect(canvas.getByText("Close reader")).toBeVisible();
+  },
+};
+
+export const PresentationToggle: Story = {
+  name: "Modal or full-page toggle",
+  render: () => <ContentReaderMastheadExample brandSlug="delish" />,
+  globals: {
+    brand: "delish",
+  },
+  play: async ({ canvasElement }) => {
+    setReaderPresentation("modal");
+    const canvas = within(canvasElement);
+    const toggle = await canvas.findByRole("button", {
+      name: "View stories on a full page",
+    });
+    await expect(toggle).toHaveAttribute("title", "Full page");
+    // The toggle sits directly left of Close.
+    await expect(toggle.nextElementSibling).toHaveAttribute(
+      "aria-label",
+      "Close story reader",
+    );
+    await userEvent.click(toggle);
+    const modalToggle = await canvas.findByRole("button", {
+      name: "View stories in a modal",
+    });
+    await expect(modalToggle).toHaveAttribute("title", "Modal");
+    await userEvent.click(modalToggle);
+    await expect(
+      await canvas.findByRole("button", { name: "View stories on a full page" }),
+    ).toBeVisible();
   },
 };
