@@ -29,14 +29,31 @@ import {
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 
-type HearstDestinationSection = {
+export type HearstDestinationSection = {
   mode: UtilityDestinationMode;
   label: string;
   href: string;
   hasBrandMenu?: boolean;
 };
 
-type UtilityDestinationMode = HearstDestinationMode | "local-news" | "entertainment-culture" | "international";
+/** `interest:` modes exist only on the taxonomy preview route (sectionsOverride). */
+type UtilityDestinationMode = HearstDestinationMode | "local-news" | "entertainment-culture" | "international" | `interest:${string}`;
+
+/** One headed group of brands in a destination menu. */
+export type UtilityBrandMenuGroup = {
+  mode: string;
+  label: string;
+  description: string;
+  /** "Explore …" link in the All menu; groups without a page omit it. */
+  href?: string;
+  brands: readonly { brand: string; brandSlug: string }[];
+};
+
+/** Replaces the brand menus: `all` for the All menu, `byMode` for each section's own menu. */
+export type UtilityBrandMenuGroups = {
+  all: UtilityBrandMenuGroup[];
+  byMode: Partial<Record<string, UtilityBrandMenuGroup[]>>;
+};
 
 export const hearstDestinationSections = [
   { mode: "all", label: "All", href: getHearstDestinationRoute("all"), hasBrandMenu: true },
@@ -68,6 +85,14 @@ const brandSectionDescriptions: Record<HearstBrandSection, string> = {
   flux: "Fashion, culture and design",
   ew: "Fitness, health, science and gear",
 };
+
+const defaultBrandMenuGroups: UtilityBrandMenuGroup[] = brandMenuSections.map((section) => ({
+  mode: section.mode,
+  label: section.label,
+  description: brandSectionDescriptions[section.mode],
+  href: getHearstDestinationRoute(section.mode),
+  brands: getHearstSectionBrands(section.mode),
+}));
 
 const localNewsOptions = [
   { label: "TV Stations", href: "/hearst-plus/local-news/#tv-stations", description: "Hearst Television feeds" },
@@ -127,6 +152,10 @@ export interface UtilityBarProps {
   hideDestinationNav?: boolean;
   /** The page's banner runs up behind the bar: transparent at the top, solid once the page scrolls. */
   overBanner?: boolean;
+  /** Replaces the destination sections (first entry is All). Used only by the taxonomy preview route. */
+  sectionsOverride?: HearstDestinationSection[];
+  /** Replaces the brand menus that go with sectionsOverride. */
+  brandMenuGroupsOverride?: UtilityBrandMenuGroups;
 }
 
 export function UtilityBar({
@@ -137,7 +166,10 @@ export function UtilityBar({
   darkMode: darkModeProp = false,
   hideDestinationNav = false,
   overBanner = false,
+  sectionsOverride,
+  brandMenuGroupsOverride,
 }: UtilityBarProps) {
+  const destinationSections = sectionsOverride ?? hearstDestinationSections;
   const { brand, colorMode } = useTheme();
   // Videos and the Flux destination masthead use a knockout utility bar so the strip
   // matches the dark masthead instead of inheriting Flux's blue primary color.
@@ -184,13 +216,15 @@ export function UtilityBar({
     return () => window.removeEventListener("scroll", update);
   }, [overBanner]);
   const transparent = overBanner && !scrolled;
-  const openSection = hearstDestinationSections.find((section) => section.mode === openDestinationMenu);
-  const allDestinationSection = hearstDestinationSections[0];
+  const openSection = destinationSections.find((section) => section.mode === openDestinationMenu);
+  const allDestinationSection = destinationSections[0];
   const allDestinationIsActive = allDestinationSection.label === activeDestinationLabel;
   const allDestinationIsOpen = allDestinationSection.mode === openDestinationMenu;
-  const visibleBrandSections = openDestinationMenu === "all"
-    ? brandMenuSections
-    : brandMenuSections.filter((section) => section.mode === openDestinationMenu);
+  const visibleBrandSections = brandMenuGroupsOverride
+    ? (openDestinationMenu === "all" ? brandMenuGroupsOverride.all : brandMenuGroupsOverride.byMode[openDestinationMenu ?? ""] ?? [])
+    : openDestinationMenu === "all"
+      ? defaultBrandMenuGroups
+      : defaultBrandMenuGroups.filter((section) => section.mode === openDestinationMenu);
   const isLocalNewsMenu = openDestinationMenu === "local-news";
   const isEntertainmentCultureMenu = openDestinationMenu === "entertainment-culture";
   const isLifestyleMenu = openDestinationMenu === "lifestyle";
@@ -198,7 +232,8 @@ export function UtilityBar({
   const isFourColumnBrandMenu =
     openDestinationMenu === "autos" ||
     openDestinationMenu === "flux" ||
-    openDestinationMenu === "ew";
+    openDestinationMenu === "ew" ||
+    Boolean(openDestinationMenu?.startsWith("interest:"));
   const isConceptMenu = openDestinationMenu === "all" || isLifestyleMenu || isInternationalMenu;
   // The utility strip may use a dark treatment for a brand masthead (for
   // example Flux), but dropdown surfaces follow the reader's actual theme.
@@ -230,8 +265,8 @@ export function UtilityBar({
     mode: UtilityDestinationMode | null,
     trigger: HTMLElement,
   ) => {
-    const previousModeIndex = hearstDestinationSections.findIndex((section) => section.mode === openDestinationMenu);
-    const nextModeIndex = hearstDestinationSections.findIndex((section) => section.mode === mode);
+    const previousModeIndex = destinationSections.findIndex((section) => section.mode === openDestinationMenu);
+    const nextModeIndex = destinationSections.findIndex((section) => section.mode === mode);
     if (previousModeIndex >= 0 && nextModeIndex >= 0 && previousModeIndex !== nextModeIndex) {
       setMenuSlideDirection(nextModeIndex > previousModeIndex ? "right" : "left");
     }
@@ -349,7 +384,7 @@ export function UtilityBar({
             className="h-full min-w-0 flex-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             <div className="flex h-full min-w-max items-center gap-1 px-0.5">
-            {hearstDestinationSections.slice(1).map((section) => {
+            {destinationSections.slice(1).map((section) => {
               const isActive = section.label === activeDestinationLabel;
               const isOpen = section.mode === openDestinationMenu;
               const menuMode = section.hasBrandMenu ? section.mode : null;
@@ -506,7 +541,7 @@ export function UtilityBar({
               ) : null}
               </div>
             </div>
-            <div className={cn("grid gap-5", openDestinationMenu === "all" && "sm:grid-cols-2 lg:grid-cols-4")}>
+            <div className={cn("grid gap-5", openDestinationMenu === "all" && "sm:grid-cols-2", openDestinationMenu === "all" && (visibleBrandSections.length === 5 ? "lg:grid-cols-5" : "lg:grid-cols-4"))}>
               {isLocalNewsMenu ? (
                 <section aria-labelledby="hearst-brand-menu-local-news">
                   <div className="mb-2">
@@ -767,9 +802,9 @@ export function UtilityBar({
                       </p>
                     </div>
                   ) : null}
-                  {openDestinationMenu === "all" ? (
+                  {openDestinationMenu === "all" && section.href ? (
                     <LinkComponent
-                      href={getHearstDestinationRoute(section.mode)}
+                      href={section.href}
                       variant="neutral"
                       underline={false}
                       size="sm"
@@ -779,13 +814,17 @@ export function UtilityBar({
                     >
                       Explore {section.label}
                     </LinkComponent>
+                  ) : openDestinationMenu === "all" ? (
+                    <p className={cn("mb-1 flex min-h-8 items-center px-2 text-sm font-bold", menuDarkMode ? "text-white" : "text-slate-900")}>
+                      {section.label}
+                    </p>
                   ) : null}
-                  {(openDestinationMenu === "all" || isLifestyleMenu) ? <p id={`hearst-brand-menu-${section.mode}`} className={cn("mb-2 text-xs font-semibold leading-5", menuDarkMode ? "text-white/75" : "text-slate-600")}>{brandSectionDescriptions[section.mode]}</p> : null}
+                  {(openDestinationMenu === "all" || isLifestyleMenu) ? <p id={`hearst-brand-menu-${section.mode}`} className={cn("mb-2 text-xs font-semibold leading-5", menuDarkMode ? "text-white/75" : "text-slate-600")}>{section.description}</p> : null}
                   <div className={cn(
                     "grid gap-1",
                     (isLifestyleMenu || isFourColumnBrandMenu) && "sm:grid-cols-2 lg:grid-cols-4",
                   )}>
-                    {getHearstSectionBrands(section.mode).map((menuBrand) => {
+                    {section.brands.map((menuBrand) => {
                       const isSelectedBrand = selectedBrand?.slug === menuBrand.brandSlug;
 
                       return (

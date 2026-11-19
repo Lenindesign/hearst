@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Taxonomy Drawing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;600;700&display=swap">
+<style>
+/* Layout: one Apple-style dimensional drawing sheet (notes · section · plan · tables · details · layouts · title block), black on white, single light theme by design. */
+:root{--paper:#ececec;--sheet:#ffffff;--ink:#111;--ink2:#444;--ink3:#7a7a7a;--fill:#f3f3f3;--fill2:#e6e6e6;--f:'Arimo','Helvetica Neue',Helvetica,Arial,sans-serif;color-scheme:light}
+body{background:var(--paper);color:var(--ink);font-family:var(--f)}
+.wrap{max-width:1760px;margin:0 auto;padding-block:24px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.scroll{overflow-x:auto;background:var(--sheet);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+svg{display:block;width:100%;min-width:1100px;height:auto}
+.tb{background:var(--sheet);border:1.5px solid var(--ink);display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr;margin-bottom:24px}
+.tb>div{border-right:1px solid #d0d0d0;border-bottom:1px solid #d0d0d0;padding:10px 12px;min-width:0}
+.tb .big{grid-row:span 2;display:flex;flex-direction:column;justify-content:space-between;gap:12px}
+.tb h1{font-size:clamp(26px,4vw,40px);line-height:1;margin:0;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.lbl{text-transform:uppercase;letter-spacing:.08em;font-size:12px;color:var(--ink3);font-weight:600}
+.tb .v{font-size:13px;margin-top:2px;font-variant-numeric:tabular-nums}
+.tb .notes{grid-column:1/-1;border-right:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:6px 24px;font-size:13px;color:var(--ink2)}
+.tb .notes ol{margin:4px 0 0;padding-left:18px}
+.tb .figs{grid-column:1/-1;border-right:0;border-bottom:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px 18px}
+.tb .figs .v{font-size:17px}
+@media (max-width:640px){.tb{grid-template-columns:1fr 1fr}.tb .big{grid-column:1/-1;grid-row:auto}}
+.sheetwrap{margin-bottom:28px}
+.foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--ink2);padding:10px 2px 0}
+.foot b{font-weight:600;color:var(--ink)}
+/* drawing */
+.u{font-family:var(--f);text-transform:uppercase;letter-spacing:.07em}
+.border{fill:none;stroke:var(--ink);stroke-width:1.2}
+.obj{fill:var(--sheet);stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round}
+.well{fill:var(--fill);stroke:var(--ink);stroke-width:1}
+.slot{fill:none;stroke:var(--ink2);stroke-width:.8;stroke-dasharray:4 3}
+.hug{fill:var(--fill2);stroke:var(--ink);stroke-width:1}
+.thin{fill:none;stroke:var(--ink);stroke-width:.8}
+.ph{fill:none;stroke:var(--ink3);stroke-width:.8;stroke-dasharray:14 3 3 3}
+.cl{fill:none;stroke:var(--ink3);stroke-width:.7;stroke-dasharray:16 3 2 3}
+.cut{stroke:var(--ink);stroke-width:2}
+.dl{stroke:var(--ink);stroke-width:.7;fill:none}
+.ext{stroke:var(--ink);stroke-width:.55;fill:none}
+.arrow{fill:var(--ink)}
+.hl{stroke:var(--ink2);stroke-width:.7}
+.hs{stroke:var(--ink);stroke-width:.8}
+.env{fill:none;stroke:var(--ink);stroke-width:.8;stroke-dasharray:10 3 2 3}
+.dt{font:400 11px var(--f);fill:var(--ink);paint-order:stroke;stroke:var(--sheet);stroke-width:4px;stroke-linejoin:round}
+.dts{font:400 9.5px var(--f);fill:var(--ink2);letter-spacing:.06em;text-transform:uppercase;paint-order:stroke;stroke:var(--sheet);stroke-width:3px}
+.sl{font:400 9px var(--f);fill:var(--ink2);letter-spacing:.08em;text-transform:uppercase}
+.nt{font:400 11.5px var(--f);fill:var(--ink);letter-spacing:.06em;text-transform:uppercase}
+.nth{font:700 13px var(--f);fill:var(--ink);letter-spacing:.06em}
+.vt{font:400 12px var(--f);fill:var(--ink);letter-spacing:.1em;text-transform:uppercase}
+.vtb{font:400 20px var(--f);fill:var(--ink);letter-spacing:.06em}
+.nb{fill:var(--sheet);stroke:var(--ink);stroke-width:.9}
+.nbt{font:400 9.5px var(--f);fill:var(--ink)}
+.lead{stroke:var(--ink);stroke-width:.7;fill:none}
+.dot{fill:var(--ink)}
+.th{font:400 10.5px var(--f);fill:var(--ink);letter-spacing:.05em;text-transform:uppercase}
+.tc{font:400 10.5px var(--f);fill:var(--ink)}
+.tbk{font:400 7px var(--f);fill:var(--ink2);letter-spacing:.04em;text-transform:uppercase}
+.tbt{font:700 15px var(--f);fill:var(--ink)}
+.tbv{font:400 17px var(--f);fill:var(--ink);letter-spacing:.06em}
+
+/* title block restyled to match the drawing sheet: thin black rules, plain caps lettering */
+.tb{border:1.2px solid var(--ink);border-radius:16px;overflow:hidden}
+.tb>div{border-right:.8px solid var(--ink);border-bottom:.8px solid var(--ink);padding:10px 14px}
+.tb>div:nth-child(4),.tb>div:nth-child(7){border-right:0}
+.tb .lbl{font-size:9.5px;font-weight:400;letter-spacing:.06em;color:var(--ink2)}
+.tb h1{font-weight:400;letter-spacing:.1em;font-size:clamp(28px,4vw,44px);margin-top:4px}
+.tb .v{font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink)}
+.tb .big .v{font-size:11px;color:var(--ink2);line-height:1.6}
+.tb .notes{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);line-height:1.9}
+.tb .notes ol{padding-left:20px}
+.tb .nh{font-weight:700;font-size:13px;letter-spacing:.06em}
+.tb .nh span{font-weight:400;font-size:11.5px;margin-left:6px}
+.tb .figs>div{border-left:.8px solid var(--ink);padding-left:14px}
+.tb .figs>div:first-child{border-left:0;padding-left:0}
+.tb .figs .v{font-size:18px;letter-spacing:.06em;text-transform:none;margin-top:4px}
+.foot{font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+.foot b{font-weight:700}
+</style>
+<style>body{margin:0}.tb .notes ol li{margin:0}</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="tb">
+    <div class="big">
+      <div><div class="lbl">Information architecture · dimensional drawing · proposal</div><h1>Reader taxonomy</h1></div>
+      <div class="v">How Hearst+ would group stories and brands for readers while the four sales cohorts stay a hidden layer for ads, analytics and ingestion. Sheet 1 is the structure: the layer stack, the utility bar, the masthead and the brand regrouping. Sheet 2 is the logic: the two lookups, the topic map, route migration and the phases. Recommended option C. Counts measured in the feed snapshot.</div>
+    </div>
+    <div><div class="lbl">Dwg no.</div><div class="v">HP-TAX-001</div></div>
+    <div><div class="lbl">Rev</div><div class="v">Draft · 2026-11-17</div></div>
+    <div><div class="lbl">Sheets</div><div class="v">2</div></div>
+    <div><div class="lbl">Units</div><div class="v">Counts · not to scale</div></div>
+    <div><div class="lbl">Scale</div><div class="v">Schematic</div></div>
+    <div><div class="lbl">Source</div><div class="v">src/lib/hearst-routes.ts · src/components/specs/chapters/taxonomy-data.ts · *-river-data.ts (2026-11-17 snapshot)</div></div>
+    <div class="notes">
+      <div><span class="nh">NOTES:<span>(UNLESS OTHERWISE SPECIFIED)</span></span><ol>
+        <li>Proposal. Nothing on this drawing is implemented; app routes and rules are unchanged.</li>
+        <li>Schematic. Box sizes carry no meaning; counts are in the tables.</li>
+        <li>Story counts from the 2026-11-17 validated feed snapshot (859 stories).</li>
+        <li>C = sales cohort (hidden) · F = brand family · I = reader interest.</li></ol></div>
+      <div><span class="nh" aria-hidden="true">&nbsp;</span><ol start="5">
+        <li>Solid = reader-facing · gray fill = hidden layer · hatched = unchanged by the proposal.</li>
+        <li>Labels are working names; final wording is an owner decision [TBD].</li>
+        <li>Redirect status and analytics field names are [TBD].</li>
+        <li>Grayscale by design.</li></ol></div>
+    </div>
+    <div class="figs">
+      <div><div class="lbl">C · cohorts (hidden)</div><div class="v">4</div></div>
+      <div><div class="lbl">F · brand families</div><div class="v">5</div></div>
+      <div><div class="lbl">I · interests</div><div class="v">8</div></div>
+      <div><div class="lbl">N · brands</div><div class="v">29</div></div>
+      <div><div class="lbl">M · brands that move</div><div class="v">5</div></div>
+      <div><div class="lbl">T · feed topics mapped</div><div class="v">39 → 8</div></div>
+      <div><div class="lbl">ST · stories</div><div class="v">859</div></div>
+    </div>
+  </header>
+  <div class="sheetwrap"><div class="scroll"><svg id="sh1" viewBox="0 0 1700 1060" role="img" aria-label="Reader taxonomy sheet 1, structure: exploded layer stack from stories to reader surfaces, the utility bar now and proposed, the masthead descriptor, the cohort-to-family regrouping matrix and count tables"></svg></div>
+  <div class="foot"><span>2026-11-17 &nbsp;|&nbsp; Information architecture · Hearst+ proposal</span><span><b>Reader taxonomy, structure</b> &nbsp;|&nbsp; 1 of 2</span></div></div>
+  <div class="sheetwrap"><div class="scroll"><svg id="sh2" viewBox="0 0 1700 1060" role="img" aria-label="Reader taxonomy sheet 2, logic: the cohort, interest and family lookups, the topic map with the autos rule, route migration, the three phases and the option comparison"></svg></div>
+  <div class="foot"><span>2026-11-17 &nbsp;|&nbsp; Information architecture · Hearst+ proposal</span><span><b>Reader taxonomy, logic</b> &nbsp;|&nbsp; 2 of 2</span></div></div>
+</div>
+<script>
+(function(){
+const NS='http://www.w3.org/2000/svg';let sv,A,HAT,uid=0;
+function mk(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)if(a[k]!=null)e.setAttribute(k,a[k]);(p||sv).appendChild(e);return e}
+function tx(x,y,s,c,a,p){const t=mk('text',Object.assign({x:x,y:y,class:c||'dt'},a||{}),p);t.textContent=s;return t}
+function begin(id){sv=document.getElementById(id);sv.innerHTML='';const n=uid++;const d=mk('defs',{});const m=mk('marker',{id:'ar'+n,viewBox:'0 0 10 10',refX:10,refY:5,markerWidth:7,markerHeight:7,orient:'auto-start-reverse',markerUnits:'userSpaceOnUse'},d);mk('path',{d:'M0,1.7 L10,5 L0,8.3 z',class:'arrow'},m);
+ const pt=mk('pattern',{id:'hat'+n,width:5,height:5,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'},d);mk('line',{x1:0,y1:0,x2:0,y2:5,class:'hl'},pt);A='url(#ar'+n+')';HAT='url(#hat'+n+')';rr(20,20,1660,1020,16,'border')}
+function dimH(x1,x2,y,e1,e2,l,o){o=o||{};[[x1,e1],[x2,e2]].forEach(([x,e])=>{if(e==null)return;const s=Math.sign(y-e)||1;mk('line',{x1:x,y1:e+s*3,x2:x,y2:y+s*5,class:'ext'})});
+ if(x2-x1>=28)mk('line',{x1:x1,y1:y,x2:x2,y2:y,class:'dl','marker-start':A,'marker-end':A});else{mk('line',{x1:x1-13,y1:y,x2:x1,y2:y,class:'dl','marker-end':A});mk('line',{x1:x2+13,y1:y,x2:x2,y2:y,class:'dl','marker-end':A});mk('line',{x1:x1,y1:y,x2:x2,y2:y,class:'dl'})}
+ tx((x1+x2)/2+(o.dx||0),(o.below?y+13:y-4)+(o.dy||0),l,o.c||'dt',{'text-anchor':'middle'})}
+function dimV(y1,y2,x,e1,e2,l,o){o=o||{};[[y1,e1],[y2,e2]].forEach(([y,e])=>{if(e==null)return;const s=Math.sign(x-e)||1;mk('line',{x1:e+s*3,y1:y,x2:x+s*5,y2:y,class:'ext'})});
+ if(y2-y1>=28)mk('line',{x1:x,y1:y1,x2:x,y2:y2,class:'dl','marker-start':A,'marker-end':A});else{mk('line',{x1:x,y1:y1-13,x2:x,y2:y1,class:'dl','marker-end':A});mk('line',{x1:x,y1:y2+13,x2:x,y2:y2,class:'dl','marker-end':A});mk('line',{x1:x,y1:y1,x2:x,y2:y2,class:'dl'})}
+ const c=(y1+y2)/2+(o.dy||0);if(o.side){const r=o.side==='r';const lx=(r?x+6:x-6)+(o.dx||0);if(o.dx)mk('line',{x1:x+(r?2:-2),y1:(y1+y2)/2,x2:lx+(r?-2:2),y2:c,class:'lead'});tx(lx,c+4,l,o.c||'dt',{'text-anchor':r?'start':'end'})}else tx(x-5,c,l,o.c||'dt',{'text-anchor':'middle',transform:'rotate(-90 '+(x-5)+' '+c+')'})}
+function callout(px,py,ex,ey,l,dir,c){const s=dir||(ex>=px?1:-1);mk('circle',{cx:px,cy:py,r:1.8,class:'dot'});mk('polyline',{points:px+','+py+' '+ex+','+ey+' '+(ex+s*10)+','+ey,class:'lead'});tx(ex+s*14,ey+4,l,c||'dt',{'text-anchor':s>0?'start':'end'})}
+function rad(cx,cy,r,c,l,L){const sx=c.includes('l')?-1:1,sy=c.includes('t')?-1:1;const ox=cx-sx*r,oy=cy-sy*r;const px=ox+sx*r*Math.SQRT1_2,py=oy+sy*r*Math.SQRT1_2;callout(px,py,px+sx*L,py+sy*L,l,sx)}
+function nb(x,y,n){mk('rect',{x:x-6,y:y-6,width:12,height:12,class:'nb'});tx(x,y+3.5,String(n),'nbt',{'text-anchor':'middle'})}
+function rr(x,y,w,h,r,c){return mk('rect',{x:x,y:y,width:w,height:h,rx:r,class:c})}
+function slotLabel(x,y,w,h,l,al){tx(al==='l'?x+6:x+w/2,y+h/2+3.2,l,'sl',{'text-anchor':al==='l'?'start':'middle'})}
+function title(x,y,t,s){tx(x,y,t,'vt',{'text-anchor':'middle'});if(s)tx(x,y+14,s,'dts',{'text-anchor':'middle'})}
+function notes(list){const NX=50,NY=58;tx(NX,NY,'NOTES:','nth');tx(NX+62,NY,'(UNLESS OTHERWISE SPECIFIED)','nt');
+ list.forEach(([n,t],i)=>{const y=NY+30+i*22;if(n){nb(NX+6,y-4,n);tx(NX+22,y,t,'nt')}else tx(NX+22,y,t,'nt')})}
+function table(x,y,ttl,rows,ws){ws=ws||[42,100,88];const rh=17;tx(x,y-8,ttl,'vt');
+ const all=[ws.length===3&&!ws.hdr?['Code','Variable','Value']:ws.hdr].concat(rows);all.forEach((r,i)=>{let cx2=x;r.forEach((c,j)=>{mk('rect',{x:cx2,y:y+i*rh,width:ws[j],height:rh,class:'thin'});tx(cx2+(j?ws[j]/2:5),y+i*rh+12,c,i?'tc':'th',{'text-anchor':j?'middle':'start'});cx2+=ws[j]})});return y+all.length*rh+34}
+function detailRef(cx,cy,r,lbl,lx,ly){mk('circle',{cx:cx,cy:cy,r:r,class:'ph'});const a=Math.atan2(ly-cy,lx-cx);mk('line',{x1:cx+r*Math.cos(a),y1:cy+r*Math.sin(a),x2:lx,y2:ly,class:'lead'});tx(lx+(lx<cx?-4:4),ly+4,lbl,'dts',{'text-anchor':lx<cx?'end':'start'})}
+function xbox(x,y,w,h,cls){rr(x,y,w,h,0,cls||'thin');mk('path',{d:'M'+x+','+y+' L'+(x+w)+','+(y+h)+' M'+(x+w)+','+y+' L'+x+','+(y+h),class:'thin'})}
+/* ---------- shared helpers for this drawing ---------- */
+function hat(x,y,w,h){mk('rect',{x:x,y:y,width:w,height:h,fill:HAT,class:'hs'})}
+function line(x1,y1,x2,y2,c){return mk('line',{x1:x1,y1:y1,x2:x2,y2:y2,class:c||'thin'})}
+function arrowLine(x1,y1,x2,y2,c){mk('line',{x1:x1,y1:y1,x2:x2,y2:y2,class:c||'dl','marker-end':A})}
+function box(x,y,w,h,t,s,cls,r){rr(x,y,w,h,r==null?4:r,cls||'obj');tx(x+w/2,y+h/2+(s?-3:3.5),t,'dts',{'text-anchor':'middle'});if(s)tx(x+w/2,y+h/2+10,s,'sl',{'text-anchor':'middle'})}
+function diamond(cx,cy,w,h,t){mk('path',{d:`M${cx},${cy-h/2} L${cx+w/2},${cy} L${cx},${cy+h/2} L${cx-w/2},${cy} Z`,class:'obj'});tx(cx,cy+3.5,t,'sl',{'text-anchor':'middle'})}
+/* skewed plate for the exploded stack */
+function plateIso(x,y,w,d,cls){mk('path',{d:`M${x+d},${y} H${x+d+w} L${x+w},${y+d*.55} H${x} Z`,class:cls||'obj'})}
+/* ---------- shared helpers for this drawing ---------- */
+function hat(x,y,w,h){mk('rect',{x:x,y:y,width:w,height:h,fill:HAT,class:'hs'})}
+function line(x1,y1,x2,y2,c){return mk('line',{x1:x1,y1:y1,x2:x2,y2:y2,class:c||'thin'})}
+function arrowLine(x1,y1,x2,y2,c){mk('line',{x1:x1,y1:y1,x2:x2,y2:y2,class:c||'dl','marker-end':A})}
+function box(x,y,w,h,t,s,cls,r){rr(x,y,w,h,r==null?4:r,cls||'obj');tx(x+w/2,y+h/2+(s?-3:3.5),t,'dts',{'text-anchor':'middle'});if(s)tx(x+w/2,y+h/2+10,s,'sl',{'text-anchor':'middle'})}
+function diamond(cx,cy,w,h,t){mk('path',{d:`M${cx},${cy-h/2} L${cx+w/2},${cy} L${cx},${cy+h/2} L${cx-w/2},${cy} Z`,class:'obj'});tx(cx,cy+3.5,t,'sl',{'text-anchor':'middle'})}
+function plateIso(x,y,w,d,cls){mk('path',{d:`M${x+d},${y} H${x+d+w} L${x+w},${y+d*.55} H${x} Z`,class:cls||'obj'})}
+/* a pill track of n slots; labels optional */
+function pill(x,y,w,h,labels,activeIdx,dividerBefore){rr(x,y,w,h,h/2,'well');const pad=4,lead=58,gap=4;
+ rr(x+pad,y+pad,lead,h-2*pad,(h-2*pad)/2,'hug');tx(x+pad+lead/2,y+h/2+3.2,'ALL','sl',{'text-anchor':'middle'});
+ const n=labels.length,avail=w-2*pad-lead-gap-(dividerBefore!=null?10:0),sw=(avail-(n-1)*gap)/n;let cx=x+pad+lead+gap;
+ labels.forEach((l,i)=>{if(i===dividerBefore){line(cx+2,y+5,cx+2,y+h-5);cx+=10}rr(cx,y+pad,sw,h-2*pad,(h-2*pad)/2,i===activeIdx?'obj':'slot');tx(cx+sw/2,y+h/2+3.2,l,'sl',{'text-anchor':'middle'});cx+=sw+gap});}
+
+/* =====================================================================
+   SHEET 1 · STRUCTURE
+   ===================================================================== */
+begin('sh1');
+notes([[1,'STORIES · 859 IN THE FEED SNAPSHOT'],[2,'COHORTS · HIDDEN · ADS, ANALYTICS, INGESTION'],[3,'BRANDS · ONE PAGE EACH AT /BRANDS/{SLUG}/'],[4,'BRAND FAMILIES · DIRECTORY HEADINGS + THEME'],[5,'INTERESTS · PRIMARY NAVIGATION'],[6,'READER SURFACES · BAR, MASTHEAD, ONBOARDING'],[0,'READERS NEVER SEE A COHORT NAME'],[0,'A BRAND HAS ONE FAMILY, MANY INTERESTS'],[0,'LOOKUPS, ROUTES AND PHASES: SEE SHEET 2']]);
+
+/* ---- exploded stack ---- */
+(function(){const X=470,W=560,D=110,Y0=80,G=72,H=D*.55;
+ const L=[
+  ['6 · READER SURFACES','UTILITY BAR · READER MASTHEAD · ONBOARDING · SEARCH · BROWSE BRANDS','obj'],
+  ['5 · INTERESTS · I = 8','FOOD · HOME & DESIGN · STYLE & BEAUTY · HEALTH & FITNESS · CARS · CULTURE · SHOPPING · TECH & GEAR','obj'],
+  ['4 · BRAND FAMILIES · F = 5','HOME & FOOD · STYLE & CULTURE · HEALTH & FITNESS · CARS · TECH & GEAR','obj'],
+  ['3 · BRANDS · N = 29','PUBLICATION PAGES · OWN THEME · UNCHANGED','obj'],
+  ['2 · SALES COHORTS · C = 4 · HIDDEN','LIFESTYLE · AUTOS · FASHION & LUXURY · ENTHUSIAST & WELLNESS','well'],
+  ['1 · STORIES · ST = 859','FEED TOPIC STRINGS · T = 39 · FOUR SNAPSHOT FILES','well']];
+ L.forEach(([a,b,c],i)=>{const y=Y0+i*G;plateIso(X,y,W,D,c);const cx=X+(W+D)/2;tx(cx,y+H/2-1,a,'vt',{'text-anchor':'middle'});tx(cx,y+H/2+14,b,'sl',{'text-anchor':'middle'});nb(X+D+14,y+12,6-i)});
+ hat(X+525,Y0+3*G+20,24,H-34);
+ const yb=Y0+5*G+H;
+ arrowLine(X-14,yb,X-14,Y0+6);tx(X-20,(Y0+yb)/2,'WHAT READERS SEE','sl',{'text-anchor':'middle',transform:`rotate(-90 ${X-20} ${(Y0+yb)/2})`});
+ mk('line',{x1:X-36,y1:Y0+4*G+4,x2:X-36,y2:yb,class:'ph'});tx(X-42,Y0+4.6*G+12,'HIDDEN','sl',{'text-anchor':'middle',transform:`rotate(-90 ${X-42} ${Y0+4.6*G+12})`});
+ title(X+(W+D)/2,yb+34,'EXPLODED · TAXONOMY STACK','BOTTOM: WHAT WE PUBLISH · TOP: WHAT READERS NAVIGATE');
+})();
+
+/* ---- detail A · the utility bar, now and proposed ---- */
+(function(){const X=56,Y=330,W=340,h=26;
+ tx(X,Y,'NOW · C1–C4 + LOCAL NEWS','dts');
+ pill(X,Y+10,W,h,['C1','C2','C3','C4','LN'],1,4);
+ tx(X,Y+58,'LABELS = COHORT NAMES (INTERNAL)','sl');
+ tx(X,Y+96,'PROPOSED · I1–I8 + LOCAL NEWS','dts');
+ pill(X,Y+106,W,h,['I1','I2','I3','I4','I5','I6','I7','I8','LN'],0,8);
+ tx(X,Y+154,'LABELS = INTERESTS · OVERFLOW SCROLLS INSIDE THE PILL','sl');
+ detailRef(X+W-34,Y+119,20,'HOVER MENU · BRANDS BY INTEREST',X+W-70,Y+180);
+ title(X+W/2,Y+214,'DETAIL A · UTILITY BAR','SCHEMATIC · SLOT GEOMETRY PER NAV SPEC HP-NAV-001');
+})();
+
+/* ---- detail B · masthead descriptor ---- */
+(function(){const X=56,Y=600,W=340;
+ rr(X,Y,W,70,6,'obj');
+ rr(X+24,Y+20,110,30,2,'hug');tx(X+79,Y+39,'HEARST+ LOCKUP','sl',{'text-anchor':'middle'});
+ line(X+146,Y+18,X+146,Y+52);
+ rr(X+158,Y+22,160,26,2,'slot');tx(X+238,Y+39,'DESCRIPTOR · LIVE TEXT','sl',{'text-anchor':'middle'});
+ nb(X+W-10,Y+10,6);
+ dimH(X+158,X+318,Y+86,Y+48,Y+48,'D · HUG',{below:true,c:'dts'});
+ tx(X,Y+124,'NOW · DESCRIPTOR = COHORT LABEL','sl');
+ tx(X,Y+140,'PROPOSED · DESCRIPTOR = INTEREST OF THE STORY','sl');
+ tx(X,Y+156,'TINT · THEME BORROWED FROM THE FAMILY','sl');
+ tx(X,Y+172,'COMPACT PHONE SVGS FOR C3, C4 NEED NEW ART [TBD]','sl');
+ title(X+W/2,Y+206,'DETAIL B · READER MASTHEAD','LOCKUP GEOMETRY UNCHANGED · ONLY THE DESCRIPTOR CHANGES');
+})();
+
+/* ---- regroup matrix · cohorts × families ---- */
+(function(){const X=470,Y=600,lw=190,cw=140,rh=68;
+ const F=['F1 · HOME & FOOD','F2 · STYLE & CULTURE','F3 · HEALTH & FITNESS','F4 · CARS','F5 · TECH & GEAR'];
+ const home=[0,1,2,3,4];// family whose home cohort is the row: C1→F1, C2→F4, C3→F2, C4→F3/F5
+ const R=[
+  ['C1 · LIFESTYLE',{0:['COUNTRY LIVING · DELISH','GOOD HOUSEKEEPING','HOUSE BEAUTIFUL · REDBOOK','PIONEER WOMAN · WOMAN’S DAY'],1:['COSMOPOLITAN','SEVENTEEN','MOVES'],2:['PREVENTION','','MOVES']},[0]],
+  ['C2 · AUTOS',{3:['AUTOWEEK · HOT ROD','BRING A TRAILER','CAR AND DRIVER','MOTORTREND · ROAD & TRACK']},[3]],
+  ['C3 · FASHION & LUXURY',{0:['ELLE DÉCOR','VERANDA','MOVES'],1:['ELLE · ESQUIRE','HARPER’S BAZAAR','TOWN & COUNTRY']},[1]],
+  ['C4 · ENTHUSIAST & WELLNESS',{2:['MEN’S HEALTH','WOMEN’S HEALTH','RUNNER’S WORLD · BICYCLING','OPRAH DAILY'],4:['POPULAR MECHANICS','BEST PRODUCTS','']},[2,4]]];
+ const cnt={'0,0':7,'0,1':2,'0,2':1,'1,3':6,'2,0':2,'2,1':4,'3,2':5,'3,4':2};
+ F.forEach((f,j)=>tx(X+lw+j*cw+cw/2,Y-8,f,'sl',{'text-anchor':'middle'}));
+ R.forEach(([l,cells,homeCols],i)=>{const y=Y+i*rh;tx(X,y+rh/2+3,l,'dts');
+  F.forEach((f,j)=>{const c=cells[j];const moved=c&&c.includes('MOVES');rr(X+lw+j*cw,y,cw,rh,0,c?(moved?'hug':'obj'):'thin');
+   if(c){tx(X+lw+j*cw+8,y+14,'N = '+cnt[i+','+j],'dts');c.forEach((s,k)=>{if(s&&s!=='MOVES')tx(X+lw+j*cw+8,y+28+k*10,s,'tbk')});if(moved)tx(X+lw+(j+1)*cw-6,y+14,'M','dts',{'text-anchor':'end'})}})});
+ dimH(X+lw,X+lw+5*cw,Y+4*rh+16,Y+4*rh,Y+4*rh,'F1–F5 · ONE FAMILY PER BRAND · ΣN = 29',{below:true,c:'dts'});
+ title(X+lw+2.5*cw-40,Y+4*rh+60,'REGROUP MATRIX · COHORT → FAMILY','GRAY = BRAND MOVES OUT OF ITS COHORT’S FAMILY (M = 5) · OPTION A ALONE');
+})();
+
+/* ---- tables ---- */
+(function(){const X=1404,ws=[40,112,112];let y=70;
+ y=table(X,y,'COUNTS',[['C','sales cohorts','4 · HIDDEN'],['F','brand families','5'],['I','interests','8'],['N','brands','29'],['M','brands that move','5'],['T','feed topic strings','39'],['ST','stories (snapshot)','859']],ws);
+ y=table(X,y,'INTERESTS',[['I1','food','70'],['I2','home & design','86'],['I3','style & beauty','93'],['I4','health & fitness','145'],['I5','cars','200'],['I6','culture','147'],['I7','shopping','56'],['I8','tech & gear','62'],['ΣI','= ST','859']],ws);
+ y=table(X,y,'FAMILIES',[['F1','home & food','9 BRANDS'],['F2','style & culture','6 BRANDS'],['F3','health & fitness','6 BRANDS'],['F4','cars','6 BRANDS'],['F5','tech & gear','2 BRANDS'],['ΣF','= N','29']],ws);
+ table(X,y,'COHORTS (HIDDEN)',[['C1','lifestyle','10 BRANDS'],['C2','autos','6 BRANDS'],['C3','fashion & luxury','6 BRANDS'],['C4','enthusiast & well.','7 BRANDS']],ws);
+})();
+
+/* =====================================================================
+   SHEET 2 · LOGIC
+   ===================================================================== */
+begin('sh2');
+notes([[1,'COHORT LOOKUP · BY BRAND · UNCHANGED'],[2,'INTEREST LOOKUP · PER STORY · NEW'],[3,'FAMILY LOOKUP · PER BRAND · NEW'],[4,'TOPIC MAP · 39 FEED STRINGS → 8 INTERESTS'],[5,'ROUTES · ONE MIGRATION, THEN STABLE'],[6,'PHASES · STOP AFTER 1 = OPTION A'],[0,'ADS FOLLOW THE COHORT, NEVER THE PAGE LABEL'],[0,'MATCH ON KEYS, NEVER ON LABEL STRINGS'],[0,'REDIRECT STATUS AND FIELD NAMES [TBD]']]);
+
+/* ---- three lookups ---- */
+(function(){const X=470,Y=76;
+ box(X,Y+96,110,44,'STORY','BRAND · TOPIC','hug');
+ const rows=[[Y,'COHORT','C1–C4 · HIDDEN','well',1,[['ADS','ELIGIBILITY'],['ANALYTICS','DESTINATION'],['INGESTION','SNAPSHOTS']]],
+  [Y+96,'INTEREST','I1–I8','obj',2,[['UTILITY BAR','PRIMARY NAV'],['MASTHEAD','DESCRIPTOR'],['ONBOARDING','PICKER']]],
+  [Y+192,'FAMILY','F1–F5 · BY BRAND','obj',3,[['BROWSE BRANDS','HEADINGS'],['THEME','BORROWED'],['BRAND PICKER','ONBOARDING']]]];
+ rows.forEach(([y,t,s,c,n,outs])=>{arrowLine(X+110,Y+118,X+190,y+22);box(X+190,y,150,44,t,s,c);nb(X+334,y+6,n);
+  outs.forEach(([a,b],k)=>{const ox=X+400+k*150;arrowLine(k?ox-12:X+340,y+22,ox,y+22);box(ox,y,130,44,a,b,c==='well'?'well':'obj')})});
+ tx(X+190,Y+262,'getHearstBrandSection(brand) · getReaderInterest(story) · getBrandFamily(brand)','sl');
+ title(X+445,Y+296,'THREE LOOKUPS · ONE STORY','GRAY = HIDDEN · SOLID = READER-FACING');
+})();
+
+/* ---- topic map with the autos rule ---- */
+(function(){const X=470,Y=440;
+ box(X,Y+30,120,44,'FEED TOPIC','T = 39 STRINGS','hug');
+ arrowLine(X+120,Y+52,X+180,Y+52);diamond(X+250,Y+52,140,60,'COHORT = C2?');
+ arrowLine(X+250,Y+22,X+250,Y-8);box(X+200,Y-52,100,44,'I5 · CARS','ALL AUTOS','obj');tx(X+258,Y+12,'YES','sl');
+ arrowLine(X+320,Y+52,X+380,Y+52);tx(X+340,Y+44,'NO','sl');
+ box(X+380,Y+30,130,44,'TOPIC MAP','STRING → INTEREST','obj');nb(X+504,Y+36,4);
+ const I=['I1 FOOD · 9','I2 HOME · 7','I3 STYLE · 3','I4 HEALTH · 3','I6 CULTURE · 13','I7 SHOPPING · 2','I8 TECH · 2'];
+ I.forEach((s,k)=>{const y=Y-34+k*24;arrowLine(X+510,Y+52,X+580,y+9);rr(X+580,y,170,18,2,'slot');tx(X+588,y+12,s+' STRINGS','sl')});
+ tx(X,Y+110,'EXAMPLES · “FOOD COOKING” → I1 · “DESIGN” → I2 · “WHAT TO BUY” → I7 · “GEAR” → I8 · “LIFE” → I6','sl');
+ tx(X,Y+126,'UNMAPPED STRINGS TODAY · 0 · NEW FEED TOPICS NEED A ROW BEFORE THEY SHOW','sl');
+ title(X+380,Y+160,'TOPIC MAP · STORY → INTEREST','AUTO-COHORT STORIES ARE CARS WHATEVER THEIR FEED TOPIC');
+})();
+
+/* ---- route migration ---- */
+(function(){const X=470,Y=700,cw=[300,300,140],rh=22;
+ const rows=[['/hearst-lifestyle/food/','/hearst-plus/food/','301 [TBD]'],['/hearst-autos/{category}/','/hearst-plus/cars/{category}/','301 [TBD]'],['/hearst-flux/style/','/hearst-plus/style-and-beauty/','301 [TBD]'],['/hearst-ew/fitness/','/hearst-plus/health-and-fitness/','301 [TBD]'],['/{cohort}/{brand}/','/brands/{brand}/','301 [TBD]'],['/autos/hot-rod/events/','/brands/hot-rod/events/','301 [TBD]']];
+ const hdr=['NOW','PROPOSED','STATUS'];[hdr].concat(rows).forEach((r,i)=>{let cx=X;r.forEach((c,j)=>{rr(cx,Y+i*rh,cw[j],rh,0,'thin');tx(cx+8,Y+i*rh+15,c,i?'tc':'th');cx+=cw[j]});if(i)arrowLine(X+cw[0]-26,Y+i*rh+11,X+cw[0]-6,Y+i*rh+11)});
+ nb(X+cw[0]+cw[1]+cw[2]+14,Y+8,5);
+ title(X+370,Y+7*rh+36,'ROUTE MIGRATION','/BRANDS/{SLUG}/ ALREADY EXISTS AS A SHIM · BRAND URLS NEVER MOVE AGAIN');
+})();
+
+/* ---- phases ---- */
+(function(){const X=56,Y=330,W=340;
+ const P=[['1 · SPLIT + RENAME','READER GROUPING BESIDE THE COHORT','MATCH ON KEYS · /BRANDS/{SLUG}/'],['2 · INTEREST LAYER','TOPIC MAP · /HEARST-PLUS/{INTEREST}/','BAR, MASTHEAD, ONBOARDING'],['3 · RETIRE GROUP ROUTES','REDIRECT TO THE CLOSEST INTEREST','UPDATE VAULT · STORYBOOK · SPECS']];
+ P.forEach(([a,b,c],i)=>{const y=Y+i*96;rr(X+i*24,y,W-i*24,64,4,i?'obj':'hug');tx(X+i*24+12,y+20,a,'dts');tx(X+i*24+12,y+36,b,'sl');tx(X+i*24+12,y+50,c,'sl');if(i<2)arrowLine(X+i*24+30,y+64,X+(i+1)*24+30,y+96)});
+ mk('line',{x1:X-8,y1:Y+80,x2:X+W+8,y2:Y+80,class:'ph'});tx(X+W,Y+92,'STOP HERE = OPTION A','sl',{'text-anchor':'end'});
+ nb(X+W-10,Y+10,6);
+ title(X+W/2,Y+3*96+20,'PHASES · OPTION C','EACH PHASE SHIPS ON ITS OWN');
+})();
+
+/* ---- left bottom · what stays ---- */
+(function(){const X=56,Y=720,W=340;
+ rr(X,Y,W,150,4,'obj');hat(X+W-26,Y,26,150);
+ const L=['AD ELIGIBILITY · KEYED ON C','ANALYTICS · STAYS C · ADD INTEREST [TBD]','FEED IMPORT · FOUR SNAPSHOT FILES BY C','BRAND PAGES · OWN PUBLICATION THEME','LOCAL NEWS · A&E FAMILY · OUTSIDE THE FOUR','LOCKUP GEOMETRY · LIVE-TEXT DESCRIPTOR'];
+ L.forEach((s,i)=>tx(X+12,Y+22+i*22,s,'sl'));
+ title(X+W/2,Y+180,'DETAIL C · UNCHANGED','HATCHED = THE PROPOSAL DOES NOT TOUCH IT');
+})();
+
+/* ---- tables ---- */
+(function(){const X=1404;let y=70;const ws=[96,56,56,56];ws.hdr=['','A','B','C'];
+ y=table(X,y,'OPTIONS',[['reader clarity','FAIR','BEST','BEST'],['interests first','PART','YES','YES'],['keeps themes','YES','NO','YES'],['ad cohorts','MAP','APART','APART'],['url churn','SOME','ALL','ONCE'],['topic map','NO','YES','YES'],['effort','SMALL','LARGE','PHASED']],ws);
+ tx(X,y-20,'A = REGROUP · B = INTERESTS · C = BOTH (REC.)','sl');
+ const w2=[40,112,112];
+ y=table(X,y+6,'OPEN DECISIONS',[['Q1','label wording','[TBD]'],['Q2','tech & gear','[TBD]'],['Q3','url + redirects','[TBD]'],['Q4','ad on mixed page','[TBD]'],['Q5','analytics field','[TBD]'],['Q6','brand home interest','[TBD]'],['Q7','interest themes','[TBD]'],['Q8','category rows','[TBD]']],w2);
+ table(X,y,'THEME BORROWING',[['I1–I2','food · home','LIFESTYLE'],['I3, I6','style · culture','FASHION & LUX.'],['I4','health & fitness','ENTH. & WELL.'],['I5','cars','AUTOS'],['I7–I8','shop · tech','HEARST+']],w2);
+})();
+
+document.body.dataset.ready='1';})();
+</script></body></html>

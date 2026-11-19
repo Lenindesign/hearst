@@ -70,6 +70,7 @@ const specNavLinks: { id?: ProductPageId; label: string; href: string; external?
   { label: "Reader", href: "/specs/#reader" },
   { label: "Carousel", href: "/specs/#carousel" },
   { label: "System", href: "/specs/#system" },
+  { label: "Taxonomy", href: "/specs/#taxonomy" },
   { label: "Storybook", href: PROD_STORYBOOK_URL, external: true },
 ];
 

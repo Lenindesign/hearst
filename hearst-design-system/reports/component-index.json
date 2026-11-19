@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-15T11:04:43.073Z",
-  "totalComponents": 166,
+  "generatedAt": "2026-11-19T18:07:03.296Z",
+  "totalComponents": 167,
   "byLevel": {
     "template": 29,
-    "molecule": 56,
-    "organism": 55,
+    "molecule": 55,
+    "organism": 57,
     "atom": 26
   },
   "byNamespace": {
@@ -49,7 +49,7 @@
     "reader-account-ui.tsx": 1,
     "reader-account.tsx": 1,
     "special-offers.tsx": 1,
-    "specs": 18,
+    "specs": 19,
     "theme-provider.tsx": 1,
     "token-dashboard.tsx": 1,
     "token-inspector.tsx": 1,
@@ -60,8 +60,8 @@
   },
   "metadataCoverage": {
     "componentsWithMetadata": 28,
-    "componentsWithoutMetadata": 138,
-    "coveragePercent": 16.9,
+    "componentsWithoutMetadata": 139,
+    "coveragePercent": 16.8,
     "validMetadata": 28,
     "invalidMetadata": 0
   },
@@ -71,11 +71,11 @@
   },
   "storyCoverage": {
     "directlySpecifiedComponents": 56,
-    "productionUsedWithoutDirectStory": 102,
+    "productionUsedWithoutDirectStory": 103,
     "integratedSpecifiedComponents": 1,
     "infrastructureClassifiedComponents": 1,
     "specifiedComponents": 57,
-    "productionUsedWithoutStorybookSpecification": 100
+    "productionUsedWithoutStorybookSpecification": 101
   },
   "dependencyGraph": {
     "accordion-page": [
@@ -340,14 +340,16 @@
     ],
     "content-reader-dialog-shell": [
       "theme-provider",
-      "ui/use-modal-isolation"
+      "ui/use-modal-isolation",
+      "hearst-plus/reader-presentation"
     ],
     "content-reader-masthead": [
       "brand-logo",
       "ui/button",
       "ui/icons",
       "ui/link",
-      "hearst-plus/reader-masthead-carousel"
+      "hearst-plus/reader-masthead-carousel",
+      "hearst-plus/reader-presentation"
     ],
     "content-reader-recommendations": [
       "lifestyle-river-types",
@@ -714,6 +716,7 @@
       "hearst-plus/content-reader-masthead",
       "hearst-plus/content-reader-dialog-shell",
       "hearst-plus/content-reader-model",
+      "hearst-plus/reader-presentation",
       "hearst-plus/content-reader-comments",
       "hearst-plus/vehicle-details-reader-module",
       "hearst-plus/content-reader-context-rail",
@@ -876,6 +879,12 @@
       "specs/chapters/chapter-parts",
       "specs/spec-kit",
       "specs/live/system-live"
+    ],
+    "taxonomy-chapter": [
+      "specs/chapters/chapter-parts",
+      "specs/chapters/taxonomy-data",
+      "specs/spec-kit",
+      "specs/live/live-kit"
     ],
     "tokens-chapter": [
       "brand-logo",
@@ -1337,6 +1346,7 @@
       "layout-chapter",
       "nav-chapter",
       "reader-chapter",
+      "taxonomy-chapter",
       "story-live",
       "tokens-live"
     ],
@@ -1590,6 +1600,11 @@
       "content-reader-recommendations",
       "home-page"
     ],
+    "reader-presentation": [
+      "content-reader-dialog-shell",
+      "content-reader-masthead",
+      "home-page"
+    ],
     "reader-masthead-carousel": [
       "content-reader-masthead"
     ],
@@ -1825,6 +1840,7 @@
       "nav-chapter",
       "reader-chapter",
       "system-chapter",
+      "taxonomy-chapter",
       "tokens-chapter",
       "type-chapter",
       "system-live"
@@ -1843,13 +1859,17 @@
     "chapter-parts": [
       "carousel-chapter",
       "reader-chapter",
-      "system-chapter"
+      "system-chapter",
+      "taxonomy-chapter"
     ],
     "button-brand-preview": [
       "cta-chapter"
     ],
     "system-live": [
       "system-chapter"
+    ],
+    "taxonomy-data": [
+      "taxonomy-chapter"
     ],
     "tokens-live": [
       "tokens-chapter"
@@ -3206,7 +3226,7 @@
         "src/stories/FRE.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 237
+      "lineCount": 238
     },
     {
       "name": "site-header",
@@ -3470,7 +3490,7 @@
         "src/stories/HearstPlusBrandSpotlight.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 223
+      "lineCount": 226
     },
     {
       "name": "brand-source-icon",
@@ -4016,10 +4036,11 @@
         "ContentReaderDialogShell",
         "ContentReaderDialogShellProps"
       ],
-      "level": "molecule",
+      "level": "organism",
       "dependencies": [
         "theme-provider",
-        "ui/use-modal-isolation"
+        "ui/use-modal-isolation",
+        "hearst-plus/reader-presentation"
       ],
       "tokens": {
         "cssVariables": [],
@@ -4050,7 +4071,7 @@
         ],
         "rationale": "The shell has no production-meaningful empty state. Five Reader Overlays stories exercise it through the exact HomePageTemplate composition, including publication and destination identity, forward and reverse focus wrapping, Escape and opener restoration, nested gallery isolation, Ambient Reader handoff, and article failure. An isolated shell story would remove the behavior its API exists to coordinate."
       },
-      "lineCount": 287
+      "lineCount": 294
     },
     {
       "name": "content-reader-masthead",
@@ -4066,7 +4087,8 @@
         "ui/button",
         "ui/icons",
         "ui/link",
-        "hearst-plus/reader-masthead-carousel"
+        "hearst-plus/reader-masthead-carousel",
+        "hearst-plus/reader-presentation"
       ],
       "tokens": {
         "cssVariables": [
@@ -4098,7 +4120,7 @@
         "src/stories/HearstPlusContentReaderMasthead.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 211
+      "lineCount": 267
     },
     {
       "name": "content-reader-recommendations",
@@ -4323,7 +4345,7 @@
         "src/stories/HearstPlusDiscoverySidebar.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 424
+      "lineCount": 425
     },
     {
       "name": "display-advertisement",
@@ -4620,7 +4642,7 @@
         ],
         "rationale": "Seven direct stories import the production component and specify mixed article/video allocation, active-slide semantics, reader actions, mobile targets, saved state, publication treatment, single-story fallback, empty allocation, and reduced-motion behavior."
       },
-      "lineCount": 710
+      "lineCount": 711
     },
     {
       "name": "feed-states",
@@ -5041,7 +5063,7 @@
       ],
       "storybookStories": [],
       "storybookSpecification": null,
-      "lineCount": 120
+      "lineCount": 121
     },
     {
       "name": "local-news-source-toggle",
@@ -5584,7 +5606,7 @@
       ],
       "storybookStories": [],
       "storybookSpecification": null,
-      "lineCount": 119
+      "lineCount": 120
     },
     {
       "name": "stakeholder-personalization-console",
@@ -5864,7 +5886,7 @@
         "src/stories/HearstPlusTrendingRails.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 148
+      "lineCount": 149
     },
     {
       "name": "utility-bar",
@@ -5872,6 +5894,9 @@
       "exports": [
         "UtilityBar",
         "hearstDestinationSections",
+        "HearstDestinationSection",
+        "UtilityBrandMenuGroup",
+        "UtilityBrandMenuGroups",
         "UtilityBarProps"
       ],
       "level": "organism",
@@ -5910,6 +5935,7 @@
       "hasHardcodedColors": true,
       "metadataPath": "src/components/hearst-plus/utility-bar.metadata.ts",
       "applicationUseSites": [
+        "src/app/hearst-plus/taxonomy/taxonomy-preview-page.tsx",
         "src/components/hearst-plus/blocks-library-experience.tsx",
         "src/components/hearst-plus/community-forums-page.tsx",
         "src/components/hearst-plus/entertainment/entertainment-channel-stories-page.tsx",
@@ -5924,7 +5950,7 @@
         "src/stories/HearstPlusUtilityBar.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 961
+      "lineCount": 1000
     },
     {
       "name": "vehicle-details-reader-module",
@@ -6066,7 +6092,7 @@
         "src/stories/HearstPlusVideoCards.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 582
+      "lineCount": 583
     },
     {
       "name": "hearst-plus-brief-samples",
@@ -6246,6 +6272,7 @@
         "hearst-plus/content-reader-masthead",
         "hearst-plus/content-reader-dialog-shell",
         "hearst-plus/content-reader-model",
+        "hearst-plus/reader-presentation",
         "hearst-plus/content-reader-comments",
         "hearst-plus/vehicle-details-reader-module",
         "hearst-plus/content-reader-context-rail",
@@ -6290,10 +6317,10 @@
           "--secondary",
           "--hp-shadow-card",
           "--hp-sidebar-heading",
-          "--component-card-background-default",
-          "--palette-background-default",
           "--layout-gap",
           "--layout-rail",
+          "--component-card-background-default",
+          "--palette-background-default",
           "--content-reader-article-surface",
           "--component-video-feed-border-default",
           "--component-video-feed-content-headline",
@@ -6351,6 +6378,7 @@
         "src/app/hearst-plus/motortrend-videos/page.tsx",
         "src/app/hearst-plus/page.tsx",
         "src/app/hearst-plus/sections/page.tsx",
+        "src/app/hearst-plus/taxonomy/taxonomy-preview-page.tsx",
         "src/app/hearst-section-brand-page.tsx",
         "src/app/read/[storyId]/page.tsx",
         "src/app/single-brand/[brandSlug]/article/[storyId]/page.tsx",
@@ -6376,7 +6404,7 @@
         "src/stories/LifestyleDestinationApp.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 9007
+      "lineCount": 9175
     },
     {
       "name": "homepage-layouts",
@@ -6954,7 +6982,7 @@
         ],
         "rationale": "The direct stories import the exact routed exports and separate them from reader-facing components. They specify desktop and phone navigation, current-page semantics, 44px targets, the non-interactive diagram boundary, both story-card concepts, portfolio and destination maps, journey/ranking evidence, architecture/palette guidance, brand style tiles, marquee behavior, and the shared footer."
       },
-      "lineCount": 854
+      "lineCount": 855
     },
     {
       "name": "reader-account-ui",
@@ -7242,7 +7270,8 @@
       "applicationUseSites": [
         "src/components/specs/chapters/carousel-chapter.tsx",
         "src/components/specs/chapters/reader-chapter.tsx",
-        "src/components/specs/chapters/system-chapter.tsx"
+        "src/components/specs/chapters/system-chapter.tsx",
+        "src/components/specs/chapters/taxonomy-chapter.tsx"
       ],
       "storybookStories": [],
       "storybookSpecification": null,
@@ -7369,7 +7398,7 @@
       ],
       "storybookStories": [],
       "storybookSpecification": null,
-      "lineCount": 202
+      "lineCount": 236
     },
     {
       "name": "system-chapter",
@@ -7400,6 +7429,35 @@
       "storybookStories": [],
       "storybookSpecification": null,
       "lineCount": 221
+    },
+    {
+      "name": "taxonomy-chapter",
+      "path": "src/components/specs/chapters/taxonomy-chapter.tsx",
+      "exports": [
+        "TaxonomyChapter"
+      ],
+      "level": "organism",
+      "dependencies": [
+        "specs/chapters/chapter-parts",
+        "specs/chapters/taxonomy-data",
+        "specs/spec-kit",
+        "specs/live/live-kit"
+      ],
+      "tokens": {
+        "cssVariables": [],
+        "tailwindSemantics": [],
+        "classes": []
+      },
+      "brandAware": false,
+      "responsive": false,
+      "hasHardcodedColors": false,
+      "metadataPath": null,
+      "applicationUseSites": [
+        "src/app/specs/page.tsx"
+      ],
+      "storybookStories": [],
+      "storybookSpecification": null,
+      "lineCount": 418
     },
     {
       "name": "tokens-chapter",
@@ -7525,6 +7583,7 @@
         "src/components/specs/chapters/layout-chapter.tsx",
         "src/components/specs/chapters/nav-chapter.tsx",
         "src/components/specs/chapters/reader-chapter.tsx",
+        "src/components/specs/chapters/taxonomy-chapter.tsx",
         "src/components/specs/live/story-live.tsx",
         "src/components/specs/live/tokens-live.tsx"
       ],
@@ -7708,6 +7767,7 @@
         "src/components/specs/chapters/nav-chapter.tsx",
         "src/components/specs/chapters/reader-chapter.tsx",
         "src/components/specs/chapters/system-chapter.tsx",
+        "src/components/specs/chapters/taxonomy-chapter.tsx",
         "src/components/specs/chapters/tokens-chapter.tsx",
         "src/components/specs/chapters/type-chapter.tsx",
         "src/components/specs/live/system-live.tsx"
@@ -7820,6 +7880,7 @@
         "src/app/hearst-plus/page.tsx",
         "src/app/hearst-plus/sections/page.tsx",
         "src/app/hearst-plus/shop/page.tsx",
+        "src/app/hearst-plus/taxonomy/taxonomy-preview-page.tsx",
         "src/app/hearst-section-brand-page.tsx",
         "src/app/home/page.tsx",
         "src/app/layout-system/page.tsx",

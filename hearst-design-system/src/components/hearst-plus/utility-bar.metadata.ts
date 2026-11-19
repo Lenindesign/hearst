@@ -10,6 +10,9 @@ const metadata: ComponentMetadata = {
     "UtilityBar",
     "UtilityBarProps",
     "hearstDestinationSections",
+    "HearstDestinationSection",
+    "UtilityBrandMenuGroup",
+    "UtilityBrandMenuGroups",
   ],
   whenToUse: [
     "A Hearst+ destination or publication page needs the shared top-level destination switcher",
@@ -71,6 +74,7 @@ const metadata: ComponentMetadata = {
     "mobile horizontal destination navigation",
   ],
   caveats: [
+    "sectionsOverride and brandMenuGroupsOverride exist only for the taxonomy preview route (/hearst-plus/taxonomy/). Without them the bar renders the production destinations and cohort brand menus unchanged.",
     "The mobile bar is 44px tall so its required touch targets remain inside the layout boundary; desktop retains the compact 32px bar.",
     "Destination links open their publication menu on hover or keyboard focus and still navigate to the canonical destination route.",
     "Publication icons reuse BrandSourceIcon so failed remote assets preserve deterministic source initials.",
