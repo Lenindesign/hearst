@@ -199,7 +199,7 @@ export function TaxonomyChapter() {
         intro={
           <>
             <p>
-              The same Hearst+ app with the proposed taxonomy in its navigation. The eight interests lead the utility bar, the section row and the phone menu; each interest has its own page; hover All to see the brands grouped into the five families, or an interest to see the brands that publish it. Stories, ads and analytics still run on the sales cohorts, as they would after phase 1.
+              The same Hearst+ app with the proposed taxonomy in its navigation. The utility bar says where: All, the eight interests, and More for Local News, A&amp;E Family and International. The section row says what kind: on All it holds Videos, Events, Community and Games, and on an interest it holds that interest&rsquo;s subtopics, built from the feed topics mapped to it, plus its videos. Hover All to see the brands grouped into the five families, or an interest to see the brands that publish it. Stories, ads and analytics still run on the sales cohorts, as they would after phase 1.
             </p>
             <p>
               Not in the preview yet: the story reader&rsquo;s masthead, onboarding and search still use today&rsquo;s names, and interests use the Hearst+ theme rather than borrowing a family theme (open decision Q7).{" "}

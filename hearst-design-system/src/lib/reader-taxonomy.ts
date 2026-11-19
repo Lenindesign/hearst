@@ -150,10 +150,93 @@ export function getReaderInterestFilterKey(label: ReaderInterest) {
   return `interest:${getReaderInterestSlug(label)}`;
 }
 
-export function getReaderInterestFromFilter(filter: string): ReaderInterest | undefined {
+/**
+ * Subtopics shown in the section row of an interest page, built from the feed
+ * topic strings already mapped to that interest. Every interest also gets a
+ * Videos subtopic (its stories that have a video).
+ */
+export const readerInterestSubtopics: Record<ReaderInterest, readonly { label: string; slug: string; topics: readonly string[] }[]> = {
+  Food: [
+    { label: "Recipes", slug: "recipes", topics: ["Food", "Food Cooking"] },
+    { label: "Food News", slug: "food-news", topics: ["Food News"] },
+    // Country Living files both recipes and drinks under "Food Drinks", so the label says both.
+    { label: "Food & Drink", slug: "food-and-drink", topics: ["Food Drinks", "Food Cocktails"] },
+    { label: "Nutrition", slug: "nutrition", topics: ["Food Nutrition"] },
+    { label: "Holidays & Entertaining", slug: "holidays-and-entertaining", topics: ["Holidays Celebrations", "Entertaining"] },
+    { label: "Kitchen Tools", slug: "kitchen-tools", topics: ["Kitchen Tools"] },
+  ],
+  "Home & Design": [
+    { label: "Home", slug: "home", topics: ["Home", "Home Lifestyle"] },
+    { label: "Design", slug: "design", topics: ["Design"] },
+    { label: "DIY & Crafts", slug: "diy-and-crafts", topics: ["Diy Crafts"] },
+    { label: "Remodeling", slug: "remodeling", topics: ["Home Remodeling", "Home Maintenance"] },
+    { label: "Real Estate", slug: "real-estate", topics: ["Real Estate"] },
+  ],
+  "Style & Beauty": [
+    { label: "Style", slug: "style", topics: ["Style"] },
+    { label: "Beauty", slug: "beauty", topics: ["Style Beauty", "Beauty"] },
+  ],
+  "Health & Fitness": [
+    { label: "Fitness", slug: "fitness", topics: ["Fitness"] },
+    { label: "Wellness", slug: "wellness", topics: ["Wellness"] },
+    { label: "Body", slug: "body", topics: ["Body"] },
+  ],
+  Cars: [
+    { label: "News", slug: "news", topics: ["News", "Features"] },
+    { label: "Reviews", slug: "reviews", topics: ["Reviews", "Buying Guides"] },
+    { label: "EVs", slug: "evs", topics: ["EVs"] },
+    { label: "Racing", slug: "racing", topics: ["Racing"] },
+    { label: "Performance", slug: "performance", topics: ["Performance"] },
+    { label: "Trucks", slug: "trucks", topics: ["Trucks"] },
+    { label: "Classics", slug: "classics", topics: ["Classics"] },
+  ],
+  Culture: [
+    { label: "Entertainment", slug: "entertainment", topics: ["Entertainment", "News Entertainment"] },
+    { label: "Culture", slug: "culture", topics: ["Culture", "Features"] },
+    { label: "Events", slug: "events", topics: ["Events"] },
+    { label: "Relationships", slug: "relationships", topics: ["Relationships", "Pleasure"] },
+    { label: "Life", slug: "life", topics: ["Life", "Ree Drummond Life", "Family", "Lifestyle"] },
+    { label: "Travel", slug: "travel", topics: ["Travel"] },
+    { label: "Horoscopes", slug: "horoscopes", topics: ["Horoscopes"] },
+  ],
+  Shopping: [
+    { label: "Shopping", slug: "shopping", topics: ["Shopping"] },
+    { label: "What to Buy", slug: "what-to-buy", topics: ["What To Buy"] },
+  ],
+  "Tech & Gear": [
+    { label: "Gear", slug: "gear", topics: ["Gear"] },
+    { label: "Tech", slug: "tech", topics: ["Tech"] },
+  ],
+};
+
+/** Filter key for a subtopic (`interest:food/recipes`), or for an interest's videos (`interest:food/videos`). */
+export function getReaderSubtopicFilterKey(label: ReaderInterest, subtopicSlug: string) {
+  return `${getReaderInterestFilterKey(label)}/${subtopicSlug}`;
+}
+
+function parseReaderInterestFilter(filter: string) {
   if (!filter.startsWith("interest:")) return undefined;
-  const slug = filter.slice("interest:".length);
-  return readerInterests.find((interest) => getReaderInterestSlug(interest.label) === slug)?.label;
+  const [slug, subtopicSlug] = filter.slice("interest:".length).split("/");
+  const interest = readerInterests.find((candidate) => getReaderInterestSlug(candidate.label) === slug)?.label;
+  return interest ? { interest, subtopicSlug } : undefined;
+}
+
+export function getReaderInterestFromFilter(filter: string): ReaderInterest | undefined {
+  return parseReaderInterestFilter(filter)?.interest;
+}
+
+/**
+ * Whether a story matches an `interest:` filter key. Returns undefined for any
+ * other filter so production filters keep their own meaning.
+ */
+export function storyMatchesReaderInterestFilter(story: LifestyleRiverStory, filter: string): boolean | undefined {
+  const parsed = parseReaderInterestFilter(filter);
+  if (!parsed) return undefined;
+  if (getProposedInterest(story) !== parsed.interest) return false;
+  if (!parsed.subtopicSlug) return true;
+  if (parsed.subtopicSlug === "videos") return Boolean(story.videoUrl);
+  const subtopic = readerInterestSubtopics[parsed.interest].find((candidate) => candidate.slug === parsed.subtopicSlug);
+  return subtopic ? subtopic.topics.includes(story.topic) : false;
 }
 
 export function getReaderInterestBySlug(slug: string): ReaderInterest | undefined {

@@ -404,6 +404,8 @@ export interface HomePageTemplateProps {
   utilitySectionsOverride?: HearstDestinationSection[];
   /** Taxonomy preview only: replaces the brand menus and the phone menu's brand groups. */
   utilityBrandMenuGroupsOverride?: UtilityBrandMenuGroups;
+  /** Taxonomy preview only: the phone menu's tiles when they differ from utilitySectionsOverride (no More menu on phones). */
+  mobileSectionsOverride?: HearstDestinationSection[];
 }
 
 interface ProgressiveFeedPage {
@@ -1264,7 +1266,7 @@ export function MainNav({
             <nav aria-label="Main navigation" className="mt-3 grid grid-cols-2 gap-2">
               {(mobileSectionsOverride
                 ? mobileSectionsOverride
-                    .filter((section) => section.mode !== "international")
+                    .filter((section) => section.mode !== "international" && section.mode !== "more")
                     .map((section) => ({ label: section.label, href: section.href, mode: section.label === mobileActiveSectionLabel ? "__active" : section.mode }))
                 : [
                 { label: "All", href: "/hearst-plus/sections/", mode: "all" },
@@ -8336,6 +8338,7 @@ export function HomePageTemplate({
   mastheadDescriptorOverride,
   utilitySectionsOverride,
   utilityBrandMenuGroupsOverride,
+  mobileSectionsOverride,
 }: HomePageTemplateProps = {}) {
   const { brand, colorMode } = useTheme();
   const { account } = useReaderAccount();
@@ -8840,7 +8843,7 @@ export function HomePageTemplate({
         navLinkHrefOverrides={navLinkHrefOverrides}
         mastheadLogoOverride={mastheadLogoOverride}
         mastheadDescriptorOverride={mastheadDescriptorOverride}
-        mobileSectionsOverride={utilitySectionsOverride}
+        mobileSectionsOverride={mobileSectionsOverride ?? utilitySectionsOverride}
         mobileBrandGroupsOverride={utilityBrandMenuGroupsOverride?.all}
         mobileActiveSectionLabel={utilitySectionsOverride ? activeDestinationOverride : undefined}
         extendBannerUnderUtilityBar={hearstPlusHomeBanner}

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-19T18:07:03.296Z",
+  "generatedAt": "2026-11-19T18:44:28.963Z",
   "totalComponents": 167,
   "byLevel": {
     "template": 29,
@@ -5896,6 +5896,7 @@
         "hearstDestinationSections",
         "HearstDestinationSection",
         "UtilityBrandMenuGroup",
+        "UtilityMenuLink",
         "UtilityBrandMenuGroups",
         "UtilityBarProps"
       ],
@@ -5950,7 +5951,7 @@
         "src/stories/HearstPlusUtilityBar.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 1000
+      "lineCount": 1027
     },
     {
       "name": "vehicle-details-reader-module",
@@ -6404,7 +6405,7 @@
         "src/stories/LifestyleDestinationApp.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 9175
+      "lineCount": 9178
     },
     {
       "name": "homepage-layouts",
