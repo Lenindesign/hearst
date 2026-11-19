@@ -223,7 +223,7 @@ import {
 } from "./hearst-plus/publication-onboarding-modal";
 import { StakeholderPersonalizationConsole } from "./hearst-plus/stakeholder-personalization-console";
 import { HearstTVLocalNewsRiver } from "./hearst-plus/hearst-tv-feed-experience";
-import { hearstDestinationSections, UtilityBar } from "./hearst-plus/utility-bar";
+import { hearstDestinationSections, UtilityBar, type HearstDestinationSection, type UtilityBrandMenuGroup, type UtilityBrandMenuGroups } from "./hearst-plus/utility-bar";
 import { useModalIsolation } from "./ui/use-modal-isolation";
 import {
   normalizeStorySearchText,
@@ -396,6 +396,14 @@ export interface HomePageTemplateProps {
    * river skeleton in place of the river (used by International while its edition feeds load).
    */
   riverLoading?: boolean;
+  /** Display labels for navLinksOverride keys (taxonomy preview: `interest:food` → Food). */
+  navLinkLabelOverrides?: Partial<Record<string, string>>;
+  /** Italic descriptor beside the HEARST+ wordmark in the masthead banner. */
+  mastheadDescriptorOverride?: string;
+  /** Taxonomy preview only: replaces the utility bar and phone-menu sections (first entry is All). */
+  utilitySectionsOverride?: HearstDestinationSection[];
+  /** Taxonomy preview only: replaces the brand menus and the phone menu's brand groups. */
+  utilityBrandMenuGroupsOverride?: UtilityBrandMenuGroups;
 }
 
 interface ProgressiveFeedPage {
@@ -667,6 +675,9 @@ export function MainNav({
   onMobileStoryOpen,
   onMobileBrandToggle,
   onMobileBrandClear,
+  mobileSectionsOverride,
+  mobileBrandGroupsOverride,
+  mobileActiveSectionLabel,
 }: {
   brandSlug: string;
   activeFilter?: string;
@@ -698,6 +709,12 @@ export function MainNav({
   onMobileStoryOpen?: (storyId: string) => void;
   onMobileBrandToggle?: (brandName: string) => void;
   onMobileBrandClear?: () => void;
+  /** Taxonomy preview only: the phone menu's Browse Hearst+ tiles (first entry is All). */
+  mobileSectionsOverride?: HearstDestinationSection[];
+  /** Taxonomy preview only: the phone menu's Browse brands groups. */
+  mobileBrandGroupsOverride?: UtilityBrandMenuGroup[];
+  /** Taxonomy preview only: the label of the current tile in mobileSectionsOverride. */
+  mobileActiveSectionLabel?: string;
 }) {
   const destinationConfigs = useDestinationConfigs();
   const { brand, colorMode, toggleColorMode } = useTheme();
@@ -1245,7 +1262,11 @@ export function MainNav({
               Browse Hearst+
             </h2>
             <nav aria-label="Main navigation" className="mt-3 grid grid-cols-2 gap-2">
-              {[
+              {(mobileSectionsOverride
+                ? mobileSectionsOverride
+                    .filter((section) => section.mode !== "international")
+                    .map((section) => ({ label: section.label, href: section.href, mode: section.label === mobileActiveSectionLabel ? "__active" : section.mode }))
+                : [
                 { label: "All", href: "/hearst-plus/sections/", mode: "all" },
                 ...hearstReaderSections.map((section) => ({
                   label: section.label,
@@ -1254,13 +1275,13 @@ export function MainNav({
                 })),
                 { label: "Local News", href: "/hearst-plus/local-news/", mode: "local-news" },
                 { label: "A&E Family", href: "/hearst-plus/entertainment/", mode: "entertainment-culture" },
-              ].map((section) => (
+              ]).map((section) => (
                 <Link
                   key={section.mode}
                   href={section.href}
                   onClick={closeMobileMenu}
                   aria-current={
-                    section.mode === (selectedBrand ? getHearstBrandSection(selectedBrand.slug) : getDestinationMode(brandSlug))
+                    (mobileSectionsOverride ? section.mode === "__active" : section.mode === (selectedBrand ? getHearstBrandSection(selectedBrand.slug) : getDestinationMode(brandSlug)))
                       ? "page"
                       : undefined
                   }
@@ -1269,7 +1290,7 @@ export function MainNav({
                     darkMode
                       ? "border-white/15 bg-white/[0.03] text-white hover:bg-white/[0.08]"
                       : "border-border bg-background hover:border-primary/45 hover:bg-muted/40",
-                    section.mode === (selectedBrand ? getHearstBrandSection(selectedBrand.slug) : getDestinationMode(brandSlug)) && "border-primary/50 bg-primary/5"
+                    (mobileSectionsOverride ? section.mode === "__active" : section.mode === (selectedBrand ? getHearstBrandSection(selectedBrand.slug) : getDestinationMode(brandSlug))) && "border-primary/50 bg-primary/5"
                   )}
                 >
                   {section.label}
@@ -1286,13 +1307,17 @@ export function MainNav({
               <span className={cn("text-xs", darkMode ? "text-white/60" : "text-muted-foreground")}>{getHearstAllBrands().length} publications</span>
             </div>
             <div className="mt-4 space-y-5">
-              {hearstReaderSections.map((section) => (
+              {(mobileBrandGroupsOverride ?? hearstReaderSections.map((section) => ({
+                mode: section.mode,
+                label: section.label,
+                brands: getHearstSectionBrands(section.mode),
+              }))).map((section) => (
                 <div key={section.mode}>
                   <h3 className={cn("mb-2 text-xs font-semibold", darkMode ? "text-white/65" : "text-muted-foreground")}>
                     {section.label}
                   </h3>
                   <div className="grid grid-cols-2 gap-2">
-                    {getHearstSectionBrands(section.mode).map((sectionBrand) => {
+                    {section.brands.map((sectionBrand) => {
                       const active = selectedBrand?.slug === sectionBrand.brandSlug;
                       return (
                         <Link
@@ -8307,6 +8332,10 @@ export function HomePageTemplate({
   blocksHomepage = false,
   singleBrandName,
   riverLoading = false,
+  navLinkLabelOverrides,
+  mastheadDescriptorOverride,
+  utilitySectionsOverride,
+  utilityBrandMenuGroupsOverride,
 }: HomePageTemplateProps = {}) {
   const { brand, colorMode } = useTheme();
   const { account } = useReaderAccount();
@@ -8796,6 +8825,8 @@ export function HomePageTemplate({
         darkMode={useVideosDarkHeader}
         hideDestinationNav={Boolean(singleBrandName)}
         overBanner={hearstPlusHomeBanner}
+        sectionsOverride={utilitySectionsOverride}
+        brandMenuGroupsOverride={utilityBrandMenuGroupsOverride}
       />
 
       {/* Main Nav — full width background, content constrained */}
@@ -8805,8 +8836,13 @@ export function HomePageTemplate({
         onFilterChange={handleLifestyleFilterChange}
         selectedBrand={selectedBrand}
         navLinksOverride={navLinksOverride}
+        navLinkLabelOverrides={navLinkLabelOverrides}
         navLinkHrefOverrides={navLinkHrefOverrides}
         mastheadLogoOverride={mastheadLogoOverride}
+        mastheadDescriptorOverride={mastheadDescriptorOverride}
+        mobileSectionsOverride={utilitySectionsOverride}
+        mobileBrandGroupsOverride={utilityBrandMenuGroupsOverride?.all}
+        mobileActiveSectionLabel={utilitySectionsOverride ? activeDestinationOverride : undefined}
         extendBannerUnderUtilityBar={hearstPlusHomeBanner}
         showRiverLayoutToggle
         includeVideos={hasScopedVideoFeed}

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-19T17:54:57.195Z",
+  "generatedAt": "2026-11-19T18:07:03.296Z",
   "totalComponents": 167,
   "byLevel": {
     "template": 29,
@@ -5894,6 +5894,9 @@
       "exports": [
         "UtilityBar",
         "hearstDestinationSections",
+        "HearstDestinationSection",
+        "UtilityBrandMenuGroup",
+        "UtilityBrandMenuGroups",
         "UtilityBarProps"
       ],
       "level": "organism",
@@ -5932,6 +5935,7 @@
       "hasHardcodedColors": true,
       "metadataPath": "src/components/hearst-plus/utility-bar.metadata.ts",
       "applicationUseSites": [
+        "src/app/hearst-plus/taxonomy/taxonomy-preview-page.tsx",
         "src/components/hearst-plus/blocks-library-experience.tsx",
         "src/components/hearst-plus/community-forums-page.tsx",
         "src/components/hearst-plus/entertainment/entertainment-channel-stories-page.tsx",
@@ -5946,7 +5950,7 @@
         "src/stories/HearstPlusUtilityBar.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 961
+      "lineCount": 1000
     },
     {
       "name": "vehicle-details-reader-module",
@@ -6374,6 +6378,7 @@
         "src/app/hearst-plus/motortrend-videos/page.tsx",
         "src/app/hearst-plus/page.tsx",
         "src/app/hearst-plus/sections/page.tsx",
+        "src/app/hearst-plus/taxonomy/taxonomy-preview-page.tsx",
         "src/app/hearst-section-brand-page.tsx",
         "src/app/read/[storyId]/page.tsx",
         "src/app/single-brand/[brandSlug]/article/[storyId]/page.tsx",
@@ -6399,7 +6404,7 @@
         "src/stories/LifestyleDestinationApp.stories.tsx"
       ],
       "storybookSpecification": null,
-      "lineCount": 9139
+      "lineCount": 9175
     },
     {
       "name": "homepage-layouts",
@@ -7452,7 +7457,7 @@
       ],
       "storybookStories": [],
       "storybookSpecification": null,
-      "lineCount": 389
+      "lineCount": 418
     },
     {
       "name": "tokens-chapter",
@@ -7875,6 +7880,7 @@
         "src/app/hearst-plus/page.tsx",
         "src/app/hearst-plus/sections/page.tsx",
         "src/app/hearst-plus/shop/page.tsx",
+        "src/app/hearst-plus/taxonomy/taxonomy-preview-page.tsx",
         "src/app/hearst-section-brand-page.tsx",
         "src/app/home/page.tsx",
         "src/app/layout-system/page.tsx",

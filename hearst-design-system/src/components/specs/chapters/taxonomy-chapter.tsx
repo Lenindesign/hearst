@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { Col, ColGroup, NumberedList, SmallNote } from "@/components/specs/chapters/chapter-parts";
 import {
   brandFamilies,
@@ -142,18 +144,20 @@ export function TaxonomyChapter() {
       title="Reader taxonomy"
       lede={
         <p>
-          Hearst+ groups its publications into four destinations named after internal sales cohorts: {Object.values(hearstReaderSectionLabels).join(", ")}. Those names work for ads and measurement, not for readers. This chapter maps where the taxonomy lives, what each brand actually publishes, and compares three reader-facing alternatives. It is a proposal: nothing here is implemented.
+          Hearst+ groups its publications into four destinations named after internal sales cohorts: {Object.values(hearstReaderSectionLabels).join(", ")}. Those names work for ads and measurement, not for readers. This chapter maps where the taxonomy lives, what each brand actually publishes, and compares three reader-facing alternatives. It is a proposal: the live navigation is unchanged, and option C runs as a separate <Link href="/hearst-plus/taxonomy/" className="underline underline-offset-4">taxonomy preview</Link>.
         </p>
       }
       meta={[
         ["Doc", "HP-TAX-PROP · Draft · 2026-11-17"],
-        ["Status", <b key="status">Proposal for owner review. App code, routes and vault rules are unchanged.</b>],
+        ["Status", <b key="status">Proposal for owner review. The live navigation, routes, ads and analytics are unchanged.</b>],
+        ["Preview", <><Link href="/hearst-plus/taxonomy/" className={link}>/hearst-plus/taxonomy/</Link> · option C with the production feed</>],
         ["Source", <><code>hearst-routes.ts</code>, the four feed snapshots, <code>taxonomy-data.ts</code> (proposal only)</>],
         ["Drawing", <><a href="/specs/taxonomy-drawing.html" className={link}>HP-TAX-001</a> · 2 sheets</>],
         ["Counts", <>{taxonomyStories.length} stories in today&rsquo;s validated snapshot, read when the page is built</>],
       ]}
       contents={[
         ["Live reference", "#taxonomy-live"],
+        ["Try the preview", "#taxonomy-preview"],
         ["Film", "#taxonomy-film"],
         ["Drawing", "#taxonomy-drawing"],
         ["Where it lives", "#taxonomy-surfaces"],
@@ -185,6 +189,31 @@ export function TaxonomyChapter() {
           rows={currentRows}
           numeric={[2]}
           codeFirst={false}
+        />
+      </SpecSection>
+
+      <SpecSection
+        id="taxonomy-preview"
+        kicker="10 · Preview"
+        title="Option C, running on today's feed."
+        intro={
+          <>
+            <p>
+              The same Hearst+ app with the proposed taxonomy in its navigation. The eight interests lead the utility bar, the section row and the phone menu; each interest has its own page; hover All to see the brands grouped into the five families, or an interest to see the brands that publish it. Stories, ads and analytics still run on the sales cohorts, as they would after phase 1.
+            </p>
+            <p>
+              Not in the preview yet: the story reader&rsquo;s masthead, onboarding and search still use today&rsquo;s names, and interests use the Hearst+ theme rather than borrowing a family theme (open decision Q7).{" "}
+              <Link href="/hearst-plus/taxonomy/" className={link}>Open the taxonomy preview</Link>.
+            </p>
+          </>
+        }
+      >
+        <LiveViewport
+          src="/hearst-plus/taxonomy/food/"
+          title="Hearst+ taxonomy preview, Food interest, at the selected window width"
+          widths={[{ width: 390, label: "390 phone" }, { width: 768, label: "768 md" }, { width: 1280, label: "1280 xl" }]}
+          defaultWidth={1280}
+          height={640}
         />
       </SpecSection>
 
