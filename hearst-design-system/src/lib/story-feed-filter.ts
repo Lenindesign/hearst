@@ -1,7 +1,7 @@
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { isHearstAutoResearchCar } from "@/lib/hearst-auto-research-cars";
 import { getHearstBrandSection } from "@/lib/hearst-routes";
-import { getProposedInterest, getReaderInterestFromFilter } from "@/lib/reader-taxonomy";
+import { storyMatchesReaderInterestFilter } from "@/lib/reader-taxonomy";
 
 export function storyMatchesLifestyleFilter(
   story: LifestyleRiverStory,
@@ -11,8 +11,8 @@ export function storyMatchesLifestyleFilter(
   if (filter === "Videos") return Boolean(story.videoUrl);
 
   // Taxonomy preview only: `interest:` keys never appear in production filters.
-  const interest = getReaderInterestFromFilter(filter);
-  if (interest) return getProposedInterest(story) === interest;
+  const interestMatch = storyMatchesReaderInterestFilter(story, filter);
+  if (interestMatch !== undefined) return interestMatch;
 
   if (filter === "Research Cars") return isHearstAutoResearchCar(story);
 

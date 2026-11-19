@@ -8,6 +8,7 @@ import {
   getReaderInterestFromFilter,
   getReaderTaxonomyPreviewRoute,
 } from "@/lib/reader-taxonomy";
+import { insertVideosFilter } from "@/lib/hearst-personalization-model";
 import { storyMatchesLifestyleFilter } from "@/lib/story-feed-filter";
 
 function makeStory(overrides: Partial<LifestyleRiverStory> = {}): LifestyleRiverStory {
@@ -57,4 +58,20 @@ test("production filters keep their meaning", () => {
   // "Kitchen Tools" maps to the Food interest but is not a production Food story.
   assert.equal(storyMatchesLifestyleFilter(makeStory({ topic: "Kitchen Tools" }), "Food"), false);
   assert.equal(storyMatchesLifestyleFilter(makeStory({ topic: "Kitchen Tools" }), "interest:food"), true);
+});
+
+test("subtopic and videos keys stay inside their interest", () => {
+  const recipe = makeStory({ topic: "Food Cooking" });
+  const news = makeStory({ topic: "Food News" });
+  assert.equal(storyMatchesLifestyleFilter(recipe, "interest:food/recipes"), true);
+  assert.equal(storyMatchesLifestyleFilter(news, "interest:food/recipes"), false);
+  assert.equal(storyMatchesLifestyleFilter(news, "interest:food/food-news"), true);
+  assert.equal(storyMatchesLifestyleFilter(makeStory({ videoUrl: "https://example.com/v.mp4" }), "interest:food/videos"), true);
+  assert.equal(storyMatchesLifestyleFilter(makeStory({ videoUrl: "https://example.com/v.mp4", brand: "Elle", brandSlug: "elle", topic: "Style" }), "interest:food/videos"), false);
+  assert.equal(storyMatchesLifestyleFilter(recipe, "interest:food/unknown"), false);
+});
+
+test("the Videos tab is not added twice when an interest row has its own", () => {
+  assert.deepEqual(insertVideosFilter(["interest:food", "interest:food/videos"]), ["interest:food", "interest:food/videos"]);
+  assert.ok(insertVideosFilter(["Food", "Home"]).includes("Videos"));
 });

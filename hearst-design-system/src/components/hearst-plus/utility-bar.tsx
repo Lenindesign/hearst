@@ -37,7 +37,7 @@ export type HearstDestinationSection = {
 };
 
 /** `interest:` modes exist only on the taxonomy preview route (sectionsOverride). */
-type UtilityDestinationMode = HearstDestinationMode | "local-news" | "entertainment-culture" | "international" | `interest:${string}`;
+type UtilityDestinationMode = HearstDestinationMode | "local-news" | "entertainment-culture" | "international" | "more" | `interest:${string}`;
 
 /** One headed group of brands in a destination menu. */
 export type UtilityBrandMenuGroup = {
@@ -49,10 +49,15 @@ export type UtilityBrandMenuGroup = {
   brands: readonly { brand: string; brandSlug: string }[];
 };
 
+/** One link in a plain link menu, such as the taxonomy preview's More menu. */
+export type UtilityMenuLink = { label: string; href: string; description?: string };
+
 /** Replaces the brand menus: `all` for the All menu, `byMode` for each section's own menu. */
 export type UtilityBrandMenuGroups = {
   all: UtilityBrandMenuGroup[];
   byMode: Partial<Record<string, UtilityBrandMenuGroup[]>>;
+  /** Sections whose menu is a plain list of links instead of brands (taxonomy preview: More). */
+  linksByMode?: Partial<Record<string, UtilityMenuLink[]>>;
 };
 
 export const hearstDestinationSections = [
@@ -229,6 +234,7 @@ export function UtilityBar({
   const isEntertainmentCultureMenu = openDestinationMenu === "entertainment-culture";
   const isLifestyleMenu = openDestinationMenu === "lifestyle";
   const isInternationalMenu = openDestinationMenu === "international";
+  const linkMenu = openDestinationMenu ? brandMenuGroupsOverride?.linksByMode?.[openDestinationMenu] : undefined;
   const isFourColumnBrandMenu =
     openDestinationMenu === "autos" ||
     openDestinationMenu === "flux" ||
@@ -522,6 +528,8 @@ export function UtilityBar({
                     ? "A&E Family brands"
                     : isInternationalMenu
                     ? "Hearst around the world"
+                    : linkMenu
+                    ? "More from Hearst"
                     : `${openSection.label} brands`}
               </p>
               {openDestinationMenu === "all" || isLifestyleMenu ? <p className={cn("mt-1 max-w-xl text-sm font-normal leading-5", menuDarkMode ? "text-white/75" : "text-slate-600", isConceptMenu && "mt-0 min-w-0 max-w-full truncate")}>{openDestinationMenu === "all" ? "Find stories and publications by what you love." : brandSectionDescriptions.lifestyle}</p> : isInternationalMenu ? <p className={cn("mt-0 min-w-0 max-w-full truncate text-sm font-normal leading-5", menuDarkMode ? "text-white/75" : "text-slate-600")}>Discover trusted Hearst publications from seven countries.</p> : null}
@@ -541,6 +549,25 @@ export function UtilityBar({
               ) : null}
               </div>
             </div>
+            {linkMenu ? (
+              <div className="grid gap-1 sm:grid-cols-3">
+                {linkMenu.map((menuLink) => (
+                  <LinkComponent
+                    key={menuLink.href}
+                    href={menuLink.href}
+                    variant="neutral"
+                    underline={false}
+                    size="sm"
+                    role="menuitem"
+                    onClick={() => setOpenDestinationMenu(null)}
+                    className={cn("h-auto min-h-11 w-full flex-col items-start justify-center gap-0.5 rounded-lg px-3 py-2 text-left", menuDarkMode ? "text-white hover:bg-white/10 hover:text-white" : "text-slate-900 hover:bg-slate-100 hover:text-slate-950")}
+                  >
+                    <span className="text-sm font-semibold">{menuLink.label}</span>
+                    {menuLink.description ? <span className={cn("text-xs font-normal", menuDarkMode ? "text-white/70" : "text-slate-600")}>{menuLink.description}</span> : null}
+                  </LinkComponent>
+                ))}
+              </div>
+            ) : null}
             <div className={cn("grid gap-5", openDestinationMenu === "all" && "sm:grid-cols-2", openDestinationMenu === "all" && (visibleBrandSections.length === 5 ? "lg:grid-cols-5" : "lg:grid-cols-4"))}>
               {isLocalNewsMenu ? (
                 <section aria-labelledby="hearst-brand-menu-local-news">

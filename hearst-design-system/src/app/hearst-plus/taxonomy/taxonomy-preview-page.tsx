@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { HomePageTemplate } from "@/components/home-page";
-import type { HearstDestinationSection, UtilityBrandMenuGroup, UtilityBrandMenuGroups } from "@/components/hearst-plus/utility-bar";
+import type { HearstDestinationSection, UtilityBrandMenuGroup, UtilityBrandMenuGroups, UtilityMenuLink } from "@/components/hearst-plus/utility-bar";
 import { taxonomyStories } from "@/components/specs/chapters/taxonomy-data";
 import { ThemeProvider } from "@/components/theme-provider";
 import { getHearstDestinationStaticData } from "@/lib/hearst-destination-data";
@@ -13,8 +13,11 @@ import {
   brandFamilies,
   getProposedInterest,
   getReaderInterestFilterKey,
+  getReaderSubtopicFilterKey,
   getReaderTaxonomyPreviewRoute,
+  readerInterestSubtopics,
   readerInterests,
+  storyMatchesReaderInterestFilter,
   type ReaderInterest,
 } from "@/lib/reader-taxonomy";
 
@@ -46,7 +49,7 @@ function getInterestStoryCount(interest: ReaderInterest) {
 
 const interestModes = new Map(readerInterests.map(({ label }) => [label, getReaderInterestFilterKey(label)]));
 
-const sections: HearstDestinationSection[] = [
+const allAndInterestSections: HearstDestinationSection[] = [
   { mode: "all", label: "All", href: getReaderTaxonomyPreviewRoute(), hasBrandMenu: true },
   ...readerInterests.map(({ label }) => ({
     mode: interestModes.get(label) as `interest:${string}`,
@@ -54,9 +57,26 @@ const sections: HearstDestinationSection[] = [
     href: getReaderTaxonomyPreviewRoute(label),
     hasBrandMenu: true,
   })),
-  { mode: "local-news", label: "Local News", href: "/hearst-plus/local-news/", hasBrandMenu: true },
-  { mode: "entertainment-culture", label: "A&E Family", href: "/hearst-plus/entertainment/", hasBrandMenu: true },
-  { mode: "international", label: "International", href: "/hearst-plus/international/", hasBrandMenu: true },
+];
+
+/** Local News, A&E Family and International sit behind More, so the bar holds All, eight interests and More. */
+const moreLinks: UtilityMenuLink[] = [
+  { label: "Local News", href: "/hearst-plus/local-news/", description: "Stations and newspapers near you" },
+  { label: "A&E Family", href: "/hearst-plus/entertainment/", description: "A&E, HISTORY, Lifetime and more" },
+  { label: "International", href: "/hearst-plus/international/", description: "Hearst editions in seven countries" },
+];
+
+const sections: HearstDestinationSection[] = [
+  ...allAndInterestSections,
+  // The trigger opens the menu on hover and focus; a click goes to its first entry.
+  { mode: "more", label: "More", href: moreLinks[0].href, hasBrandMenu: true },
+];
+
+/** Phones have no More menu: the drawer lists the interests and the other sections as tiles. */
+const mobileSections: HearstDestinationSection[] = [
+  ...allAndInterestSections,
+  { mode: "local-news", label: "Local News", href: "/hearst-plus/local-news/" },
+  { mode: "entertainment-culture", label: "A&E Family", href: "/hearst-plus/entertainment/" },
 ];
 
 const familyGroups: UtilityBrandMenuGroup[] = brandFamilies.map((family) => ({
@@ -68,6 +88,7 @@ const familyGroups: UtilityBrandMenuGroup[] = brandFamilies.map((family) => ({
 
 const brandMenuGroups: UtilityBrandMenuGroups = {
   all: familyGroups,
+  linksByMode: { more: moreLinks },
   byMode: Object.fromEntries(
     readerInterests.map(({ label }) => [
       interestModes.get(label) as string,
@@ -81,15 +102,44 @@ const brandMenuGroups: UtilityBrandMenuGroups = {
   ),
 };
 
-const navLinks = readerInterests.map(({ label }) => getReaderInterestFilterKey(label));
-const navLinkLabels = Object.fromEntries(readerInterests.map(({ label }) => [getReaderInterestFilterKey(label), label]));
-const navLinkHrefs = Object.fromEntries(readerInterests.map(({ label }) => [getReaderInterestFilterKey(label), getReaderTaxonomyPreviewRoute(label)]));
+/**
+ * The section row says "what kind" while the utility bar says "where": on All it holds the
+ * content types that are not interests, which keep their own pages; on an interest it holds
+ * that interest's subtopics (those with enough stories today) and its videos, filtered in place.
+ */
+const MIN_SUBTOPIC_STORIES = 2;
+
+const allRowLinks = ["Videos", "Events", "Community", "Games"];
+const allRowHrefs: Record<string, string> = {
+  Videos: "/hearst-plus/videos/",
+  Events: "/hearst-plus/events/",
+  Community: "/communities/",
+  Games: "/hearst-plus/games/",
+};
+
+function getInterestRow(interest: ReaderInterest) {
+  const interestKey = getReaderInterestFilterKey(interest);
+  const subtopics = readerInterestSubtopics[interest].filter((subtopic) => {
+    const key = getReaderSubtopicFilterKey(interest, subtopic.slug);
+    return taxonomyStories.filter((story) => storyMatchesReaderInterestFilter(story, key)).length >= MIN_SUBTOPIC_STORIES;
+  });
+  const videosKey = getReaderSubtopicFilterKey(interest, "videos");
+  return {
+    links: [interestKey, ...subtopics.map((subtopic) => getReaderSubtopicFilterKey(interest, subtopic.slug)), videosKey],
+    labels: {
+      [interestKey]: `All ${interest}`,
+      ...Object.fromEntries(subtopics.map((subtopic) => [getReaderSubtopicFilterKey(interest, subtopic.slug), subtopic.label])),
+      [videosKey]: "Videos",
+    } as Record<string, string>,
+  };
+}
 
 export async function TaxonomyPreviewPage({ interest }: { interest?: ReaderInterest }) {
   const [liveFeedData, videoFeedData] = await Promise.all([
     getLocalStoryFeed({ destination: "all" }),
     getPersonalizeVideoFeed({ destination: "all" }),
   ]);
+  const row = interest ? getInterestRow(interest) : undefined;
 
   return (
     <ThemeProvider defaultBrandSlug="hearst-all">
@@ -100,13 +150,14 @@ export async function TaxonomyPreviewPage({ interest }: { interest?: ReaderInter
         videoFeedData={videoFeedData}
         onboardingBrandInventory={getHearstAllStoryInventory()}
         initialFilter={interest ? getReaderInterestFilterKey(interest) : undefined}
-        navLinksOverride={navLinks}
-        navLinkLabelOverrides={navLinkLabels}
-        navLinkHrefOverrides={navLinkHrefs}
+        navLinksOverride={row ? row.links : allRowLinks}
+        navLinkLabelOverrides={row?.labels}
+        navLinkHrefOverrides={row ? undefined : allRowHrefs}
         mastheadDescriptorOverride={interest}
         activeDestinationOverride={interest ?? "All"}
         utilitySectionsOverride={sections}
         utilityBrandMenuGroupsOverride={brandMenuGroups}
+        mobileSectionsOverride={mobileSections}
       />
       <aside
         aria-label="Taxonomy preview"

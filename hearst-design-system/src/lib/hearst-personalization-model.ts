@@ -458,7 +458,8 @@ export function getReaderDestinationLabel(
 }
 
 export function insertVideosFilter(filters: string[]) {
-  if (filters.includes("Videos")) return filters;
+  // `/videos` keys are the taxonomy preview's per-interest Videos tab (`interest:food/videos`).
+  if (filters.some((filter) => filter === "Videos" || filter.endsWith("/videos"))) return filters;
 
   const carsIndex = filters.indexOf("Cars");
   if (carsIndex >= 0) {

@@ -13,6 +13,7 @@ const metadata: ComponentMetadata = {
     "HearstDestinationSection",
     "UtilityBrandMenuGroup",
     "UtilityBrandMenuGroups",
+    "UtilityMenuLink",
   ],
   whenToUse: [
     "A Hearst+ destination or publication page needs the shared top-level destination switcher",
