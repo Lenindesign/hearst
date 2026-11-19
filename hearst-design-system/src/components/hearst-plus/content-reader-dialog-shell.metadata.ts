@@ -42,6 +42,7 @@ const metadata: ComponentMetadata = {
   dependencies: [
     "ui/use-modal-isolation",
     "theme-provider",
+    "hearst-plus/reader-presentation",
   ],
   usedBy: [
     "entertainment-channel-stories-page",
