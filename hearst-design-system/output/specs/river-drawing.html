@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>River Logic Drawing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;600;700&display=swap">
+<style>
+/* Layout: one Apple-style dimensional drawing sheet (notes · section · plan · tables · details · layouts · title block), black on white, single light theme by design. */
+:root{--paper:#ececec;--sheet:#ffffff;--ink:#111;--ink2:#444;--ink3:#7a7a7a;--fill:#f3f3f3;--fill2:#e6e6e6;--f:'Arimo','Helvetica Neue',Helvetica,Arial,sans-serif;color-scheme:light}
+body{background:var(--paper);color:var(--ink);font-family:var(--f)}
+.wrap{max-width:1760px;margin:0 auto;padding-block:24px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.scroll{overflow-x:auto;background:var(--sheet);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+svg{display:block;width:100%;min-width:1100px;height:auto}
+.tb{background:var(--sheet);border:1.5px solid var(--ink);display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr;margin-bottom:24px}
+.tb>div{border-right:1px solid #d0d0d0;border-bottom:1px solid #d0d0d0;padding:10px 12px;min-width:0}
+.tb .big{grid-row:span 2;display:flex;flex-direction:column;justify-content:space-between;gap:12px}
+.tb h1{font-size:clamp(26px,4vw,40px);line-height:1;margin:0;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.lbl{text-transform:uppercase;letter-spacing:.08em;font-size:12px;color:var(--ink3);font-weight:600}
+.tb .v{font-size:13px;margin-top:2px;font-variant-numeric:tabular-nums}
+.tb .notes{grid-column:1/-1;border-right:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:6px 24px;font-size:13px;color:var(--ink2)}
+.tb .notes ol{margin:4px 0 0;padding-left:18px}
+.tb .figs{grid-column:1/-1;border-right:0;border-bottom:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px 18px}
+.tb .figs .v{font-size:17px}
+@media (max-width:640px){.tb{grid-template-columns:1fr 1fr}.tb .big{grid-column:1/-1;grid-row:auto}}
+.sheetwrap{margin-bottom:28px}
+.foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--ink2);padding:10px 2px 0}
+.foot b{font-weight:600;color:var(--ink)}
+/* drawing */
+.u{font-family:var(--f);text-transform:uppercase;letter-spacing:.07em}
+.border{fill:none;stroke:var(--ink);stroke-width:1.2}
+.obj{fill:var(--sheet);stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round}
+.well{fill:var(--fill);stroke:var(--ink);stroke-width:1}
+.slot{fill:none;stroke:var(--ink2);stroke-width:.8;stroke-dasharray:4 3}
+.hug{fill:var(--fill2);stroke:var(--ink);stroke-width:1}
+.thin{fill:none;stroke:var(--ink);stroke-width:.8}
+.ph{fill:none;stroke:var(--ink3);stroke-width:.8;stroke-dasharray:14 3 3 3}
+.cl{fill:none;stroke:var(--ink3);stroke-width:.7;stroke-dasharray:16 3 2 3}
+.cut{stroke:var(--ink);stroke-width:2}
+.dl{stroke:var(--ink);stroke-width:.7;fill:none}
+.ext{stroke:var(--ink);stroke-width:.55;fill:none}
+.arrow{fill:var(--ink)}
+.hl{stroke:var(--ink2);stroke-width:.7}
+.hs{stroke:var(--ink);stroke-width:.8}
+.env{fill:none;stroke:var(--ink);stroke-width:.8;stroke-dasharray:10 3 2 3}
+.dt{font:400 11px var(--f);fill:var(--ink);paint-order:stroke;stroke:var(--sheet);stroke-width:4px;stroke-linejoin:round}
+.dts{font:400 9.5px var(--f);fill:var(--ink2);letter-spacing:.06em;text-transform:uppercase;paint-order:stroke;stroke:var(--sheet);stroke-width:3px}
+.sl{font:400 9px var(--f);fill:var(--ink2);letter-spacing:.08em;text-transform:uppercase}
+.nt{font:400 11.5px var(--f);fill:var(--ink);letter-spacing:.06em;text-transform:uppercase}
+.nth{font:700 13px var(--f);fill:var(--ink);letter-spacing:.06em}
+.vt{font:400 12px var(--f);fill:var(--ink);letter-spacing:.1em;text-transform:uppercase}
+.vtb{font:400 20px var(--f);fill:var(--ink);letter-spacing:.06em}
+.nb{fill:var(--sheet);stroke:var(--ink);stroke-width:.9}
+.nbt{font:400 9.5px var(--f);fill:var(--ink)}
+.lead{stroke:var(--ink);stroke-width:.7;fill:none}
+.dot{fill:var(--ink)}
+.th{font:400 10.5px var(--f);fill:var(--ink);letter-spacing:.05em;text-transform:uppercase}
+.tc{font:400 10.5px var(--f);fill:var(--ink)}
+.tbk{font:400 7px var(--f);fill:var(--ink2);letter-spacing:.04em;text-transform:uppercase}
+.tbt{font:700 15px var(--f);fill:var(--ink)}
+.tbv{font:400 17px var(--f);fill:var(--ink);letter-spacing:.06em}
+
+/* title block restyled to match the drawing sheet: thin black rules, plain caps lettering */
+.tb{border:1.2px solid var(--ink);border-radius:16px;overflow:hidden}
+.tb>div{border-right:.8px solid var(--ink);border-bottom:.8px solid var(--ink);padding:10px 14px}
+.tb>div:nth-child(4),.tb>div:nth-child(7){border-right:0}
+.tb .lbl{font-size:9.5px;font-weight:400;letter-spacing:.06em;color:var(--ink2)}
+.tb h1{font-weight:400;letter-spacing:.1em;font-size:clamp(28px,4vw,44px);margin-top:4px}
+.tb .v{font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink)}
+.tb .big .v{font-size:11px;color:var(--ink2);line-height:1.6}
+.tb .notes{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);line-height:1.9}
+.tb .notes ol{padding-left:20px}
+.tb .nh{font-weight:700;font-size:13px;letter-spacing:.06em}
+.tb .nh span{font-weight:400;font-size:11.5px;margin-left:6px}
+.tb .figs>div{border-left:.8px solid var(--ink);padding-left:14px}
+.tb .figs>div:first-child{border-left:0;padding-left:0}
+.tb .figs .v{font-size:18px;letter-spacing:.06em;text-transform:none;margin-top:4px}
+.foot{font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+.foot b{font-weight:700}
+</style>
+<style>body{margin:0}.tb .notes ol li{margin:0}</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="tb">
+    <div class="big">
+      <div><div class="lbl">Logic · dimensional drawing</div><h1>River logic</h1></div>
+      <div class="v">How the story river and its trending modules choose stories: the daily import, the page pool, the score, variety and cadence rules, module allocation, stable order and growth. One sheet; today's selection is in the spec chapter.</div>
+    </div>
+    <div><div class="lbl">Dwg no.</div><div class="v">HP-RIVER-001</div></div>
+    <div><div class="lbl">Rev</div><div class="v">A · 2026-11-20</div></div>
+    <div><div class="lbl">Sheets</div><div class="v">1</div></div>
+    <div><div class="lbl">Units</div><div class="v">Points · stories · hours</div></div>
+    <div><div class="lbl">Scale</div><div class="v">Schematic · score bar 0.5 px / pt</div></div>
+    <div><div class="lbl">Source</div><div class="v">hearst-personalization-model.ts · river-selection.ts · story-module-allocation.ts · daily-edition.ts · home-page-feed-model.ts · stable-story-order.ts · import-*-rss.mjs</div></div>
+    <div class="notes">
+      <div><span class="nh">NOTES:<span>(UNLESS OTHERWISE SPECIFIED)</span></span><ol>
+        <li>Read the codes; the tables give each value.</li>
+        <li>Steps 1–2 run once a day on the server; steps 3–9 run in the browser on every visit and filter change.</li>
+        <li>Stories are slots. Titles, brands and images are not drawn.</li>
+        <li>Letters A, B, C stand for brands in the variety detail.</li></ol></div>
+      <div><span class="nh" aria-hidden="true">&nbsp;</span><ol start="5">
+        <li>E = editorial story · C = current-feed story or video.</li>
+        <li>A story is used once per page: the first module to take it keeps it.</li>
+        <li>Today's counts and order: see the River logic chapter on /specs/.</li>
+        <li>Grayscale by design.</li></ol></div>
+    </div>
+    <div class="figs">
+      <div><div class="lbl">N1 · first page</div><div class="v">20 / group</div></div>
+      <div><div class="lbl">N2 · snapshot feed</div><div class="v">10 / brand</div></div>
+      <div><div class="lbl">R0 · first river page</div><div class="v">16 cards</div></div>
+      <div><div class="lbl">K · today's picks</div><div class="v">5 · ≤ 72 h</div></div>
+      <div><div class="lbl">TR · trending</div><div class="v">5 · 1 / brand</div></div>
+      <div><div class="lbl">V · variety</div><div class="v">≤ 2 in a row</div></div>
+      <div><div class="lbl">PG · server page</div><div class="v">32 stories</div></div>
+    </div>
+  </header>
+  <div class="sheetwrap"><div class="scroll"><svg id="sh1" viewBox="0 0 1700 1060" role="img" aria-label="River logic sheet: pipeline, page pool, score stack, variety rule, cadence, module allocation, growth and tables"></svg></div>
+  <div class="foot"><span>2026-11-20 &nbsp;|&nbsp; UI component reference · Hearst+ river</span><span><b>River logic, selection</b> &nbsp;|&nbsp; 1 of 1</span></div></div>
+</div>
+<script>
+(function(){
+const NS='http://www.w3.org/2000/svg';let sv,A,HAT,uid=0;
+function mk(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)if(a[k]!=null)e.setAttribute(k,a[k]);(p||sv).appendChild(e);return e}
+function tx(x,y,s,c,a,p){const t=mk('text',Object.assign({x:x,y:y,class:c||'dt'},a||{}),p);t.textContent=s;return t}
+function begin(id){sv=document.getElementById(id);sv.innerHTML='';const n=uid++;const d=mk('defs',{});const m=mk('marker',{id:'ar'+n,viewBox:'0 0 10 10',refX:10,refY:5,markerWidth:7,markerHeight:7,orient:'auto-start-reverse',markerUnits:'userSpaceOnUse'},d);mk('path',{d:'M0,1.7 L10,5 L0,8.3 z',class:'arrow'},m);
+ const pt=mk('pattern',{id:'hat'+n,width:5,height:5,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'},d);mk('line',{x1:0,y1:0,x2:0,y2:5,class:'hl'},pt);A='url(#ar'+n+')';HAT='url(#hat'+n+')';rr(20,20,1660,1020,16,'border')}
+function dimH(x1,x2,y,e1,e2,l,o){o=o||{};[[x1,e1],[x2,e2]].forEach(([x,e])=>{if(e==null)return;const s=Math.sign(y-e)||1;mk('line',{x1:x,y1:e+s*3,x2:x,y2:y+s*5,class:'ext'})});
+ if(x2-x1>=28)mk('line',{x1:x1,y1:y,x2:x2,y2:y,class:'dl','marker-start':A,'marker-end':A});else{mk('line',{x1:x1-13,y1:y,x2:x1,y2:y,class:'dl','marker-end':A});mk('line',{x1:x2+13,y1:y,x2:x2,y2:y,class:'dl','marker-end':A});mk('line',{x1:x1,y1:y,x2:x2,y2:y,class:'dl'})}
+ tx((x1+x2)/2+(o.dx||0),(o.below?y+13:y-4)+(o.dy||0),l,o.c||'dt',{'text-anchor':'middle'})}
+function dimV(y1,y2,x,e1,e2,l,o){o=o||{};[[y1,e1],[y2,e2]].forEach(([y,e])=>{if(e==null)return;const s=Math.sign(x-e)||1;mk('line',{x1:e+s*3,y1:y,x2:x+s*5,y2:y,class:'ext'})});
+ if(y2-y1>=28)mk('line',{x1:x,y1:y1,x2:x,y2:y2,class:'dl','marker-start':A,'marker-end':A});else{mk('line',{x1:x,y1:y1-13,x2:x,y2:y1,class:'dl','marker-end':A});mk('line',{x1:x,y1:y2+13,x2:x,y2:y2,class:'dl','marker-end':A});mk('line',{x1:x,y1:y1,x2:x,y2:y2,class:'dl'})}
+ const c=(y1+y2)/2+(o.dy||0);if(o.side){const r=o.side==='r';const lx=(r?x+6:x-6)+(o.dx||0);if(o.dx)mk('line',{x1:x+(r?2:-2),y1:(y1+y2)/2,x2:lx+(r?-2:2),y2:c,class:'lead'});tx(lx,c+4,l,o.c||'dt',{'text-anchor':r?'start':'end'})}else tx(x-5,c,l,o.c||'dt',{'text-anchor':'middle',transform:'rotate(-90 '+(x-5)+' '+c+')'})}
+function callout(px,py,ex,ey,l,dir,c){const s=dir||(ex>=px?1:-1);mk('circle',{cx:px,cy:py,r:1.8,class:'dot'});mk('polyline',{points:px+','+py+' '+ex+','+ey+' '+(ex+s*10)+','+ey,class:'lead'});tx(ex+s*14,ey+4,l,c||'dt',{'text-anchor':s>0?'start':'end'})}
+function rad(cx,cy,r,c,l,L){const sx=c.includes('l')?-1:1,sy=c.includes('t')?-1:1;const ox=cx-sx*r,oy=cy-sy*r;const px=ox+sx*r*Math.SQRT1_2,py=oy+sy*r*Math.SQRT1_2;callout(px,py,px+sx*L,py+sy*L,l,sx)}
+function nb(x,y,n){mk('rect',{x:x-6,y:y-6,width:12,height:12,class:'nb'});tx(x,y+3.5,String(n),'nbt',{'text-anchor':'middle'})}
+function rr(x,y,w,h,r,c){return mk('rect',{x:x,y:y,width:w,height:h,rx:r,class:c})}
+function slotLabel(x,y,w,h,l,al){tx(al==='l'?x+6:x+w/2,y+h/2+3.2,l,'sl',{'text-anchor':al==='l'?'start':'middle'})}
+function title(x,y,t,s){tx(x,y,t,'vt',{'text-anchor':'middle'});if(s)tx(x,y+14,s,'dts',{'text-anchor':'middle'})}
+function notes(list){const NX=50,NY=58;tx(NX,NY,'NOTES:','nth');tx(NX+62,NY,'(UNLESS OTHERWISE SPECIFIED)','nt');
+ list.forEach(([n,t],i)=>{const y=NY+30+i*22;if(n){nb(NX+6,y-4,n);tx(NX+22,y,t,'nt')}else tx(NX+22,y,t,'nt')})}
+function table(x,y,ttl,rows,ws){ws=ws||[42,100,88];const rh=17;tx(x,y-8,ttl,'vt');
+ const all=[ws.length===3&&!ws.hdr?['Code','Variable','Value']:ws.hdr].concat(rows);all.forEach((r,i)=>{let cx2=x;r.forEach((c,j)=>{mk('rect',{x:cx2,y:y+i*rh,width:ws[j],height:rh,class:'thin'});tx(cx2+(j?ws[j]/2:5),y+i*rh+12,c,i?'tc':'th',{'text-anchor':j?'middle':'start'});cx2+=ws[j]})});return y+all.length*rh+34}
+function detailRef(cx,cy,r,lbl,lx,ly){mk('circle',{cx:cx,cy:cy,r:r,class:'ph'});const a=Math.atan2(ly-cy,lx-cx);mk('line',{x1:cx+r*Math.cos(a),y1:cy+r*Math.sin(a),x2:lx,y2:ly,class:'lead'});tx(lx+(lx<cx?-4:4),ly+4,lbl,'dts',{'text-anchor':lx<cx?'end':'start'})}
+function xbox(x,y,w,h,cls){rr(x,y,w,h,0,cls||'thin');mk('path',{d:'M'+x+','+y+' L'+(x+w)+','+(y+h)+' M'+(x+w)+','+y+' L'+x+','+(y+h),class:'thin'})}
+/* ---------- shared helpers for this drawing ---------- */
+function hat(x,y,w,h){mk('rect',{x:x,y:y,width:w,height:h,fill:HAT,class:'hs'})}
+function line(x1,y1,x2,y2,c){return mk('line',{x1:x1,y1:y1,x2:x2,y2:y2,class:c||'thin'})}
+function arrowLine(x1,y1,x2,y2){mk('line',{x1:x1,y1:y1,x2:x2,y2:y2,class:'dl','marker-end':A})}
+function plate(x,y,w,lbl,sub,cls){const d=26,h=30;mk('path',{d:'M'+(x+d)+','+y+' H'+(x+d+w)+' L'+(x+w)+','+(y+h)+' H'+x+' Z',class:cls||'obj'});
+ mk('polyline',{points:(x+d+w-4)+','+(y+h/2)+' '+(x+d+w+16)+','+(y+h/2),class:'lead'});tx(x+d+w+20,y+h/2-1,lbl,'dts');if(sub)tx(x+d+w+20,y+h/2+11,sub,'sl')}
+function textLines(x,y,w,n,gap,last){for(let i=0;i<n;i++){const ww=i===n-1?w*(last||.6):w;line(x,y+i*gap,x+ww,y+i*gap,'ph')}}
+/* article block, generic: returns bottom y */
+function article(x,y,w,k,o){o=o||{};const p=(o.pad||28)*k,iw=w-2*p,ih=iw*9/16;
+ rr(x,y,w,o.h,8*k,'obj');
+ xbox(x+p,y+p,iw,ih,'well');rr(x+p,y+p,iw,ih,4*k,'thin');slotLabel(x+p,y+p+ih/2-12,iw,24,'LEAD MEDIA · 16:9 · R4');
+ let yy=y+p+ih+24*k;rr(x+p,yy,iw*.32,16*k,0,'hug');slotLabel(x+p,yy,iw*.32,16*k,'KICKER');
+ yy+=28*k;const hh=(o.hh||104)*k;rr(x+p,yy,iw,hh,0,'slot');slotLabel(x+p,yy,iw,hh,'HEADLINE SLOT · T1 · FILL');
+ yy+=hh+24*k;const bh=54*k;line(x+p,yy,x+p+iw,yy);line(x+p,yy+bh,x+p+iw,yy+bh);rr(x+p,yy+12*k,iw*.5,30*k,0,'slot');slotLabel(x+p,yy+12*k,iw*.5,30*k,'BYLINE · FLEX','l');
+ [0,1,2].forEach(i=>rr(x+p+iw-(3-i)*36*k+8*k,yy+13*k,28*k,28*k,14*k,'hug'));
+ yy+=bh+24*k;rr(x+p,yy,iw,o.h-(yy-y)-p,0,'slot');slotLabel(x+p,yy+16,iw,16,'BODY SLOT · 18 / 28 · MAX 768');
+ return {p,iw,ih,bar:yy-24*k-bh,body:yy}}
+
+
+/* =====================================================================
+   SHEET 1 · RIVER LOGIC
+   ===================================================================== */
+begin('sh1');
+notes([[1,'IMPORT · DAILY 10:15 UTC · VALIDATED'],[2,'POOL · N1 + N2 + VIDEO · DE-DUPLICATED'],[3,'SCORE · SUM OF P1–P12 PER READER'],[4,'VARIETY · NO 3 IN A ROW · BRAND OR TOPIC'],[5,'MODULES TAKE FIRST · RIVER KEEPS ≥ 4'],[6,'STABLE ORDER · APPEND ONLY · PER VISIT'],[0,'HIDDEN STORIES LEAVE BEFORE RANKING'],[0,'FILTERS RUN ON THE RANKED LIST (STEP 5)'],[0,'TODAY\'S SELECTION: SPEC CHAPTER 11']]);
+
+/* ---- pipeline · 9 steps ---- */
+(function(){const X=470,Y=104,W=88,G=13,H=58;
+ const st=[['IMPORT','RSS · SITEMAP'],['CATALOG','BRAND ORDER'],['POOL','N1 + N2 + VIDEO'],['SCORE','P1 – P12'],['VARIETY','V ≤ 2'],['CADENCE','5 · 1 · 1 · 3:1'],['MODULES','K · H · TR'],['STABLE','APPEND ONLY'],['GROW','R0 · +R1 · PG']];
+ st.forEach(([a,b],i)=>{const x=X+i*(W+G);rr(x,Y,W,H,4,i<2?'hug':'obj');tx(x+W/2,Y+25,a,'dts',{'text-anchor':'middle'});tx(x+W/2,Y+41,b,'sl',{'text-anchor':'middle'});nb(x+10,Y+10,i+1);if(i<8)arrowLine(x+W+1,Y+H/2,x+W+G-1,Y+H/2)});
+ const bx=(i)=>X+i*(W+G);
+ line(bx(0),Y-16,bx(1)+W,Y-16);line(bx(0),Y-20,bx(0),Y-12);line(bx(1)+W,Y-20,bx(1)+W,Y-12);tx((bx(0)+bx(1)+W)/2,Y-22,'SERVER · ONCE A DAY','sl',{'text-anchor':'middle'});
+ line(bx(2),Y-16,bx(8)+W,Y-16);line(bx(2),Y-20,bx(2),Y-12);line(bx(8)+W,Y-20,bx(8)+W,Y-12);tx((bx(2)+bx(8)+W)/2,Y-22,'BROWSER · EVERY VISIT · EVERY FILTER CHANGE','sl',{'text-anchor':'middle'});
+ /* filter tap between variety and cadence */
+ const fx=bx(4)+W+G/2;line(fx,Y+H+4,fx,Y+H+26,'ph');tx(fx,Y+H+38,'FILTERS','sl',{'text-anchor':'middle'});
+ title(X+(9*W+8*G)/2,Y+H+70,'PIPELINE · FEED TO RIVER','SCHEMATIC · STEPS 1–9 · STEP 2 RE-USED BY EVERY PAGE');
+})();
+
+/* ---- pool · three sources ---- */
+(function(){const X=470,Y=290;
+ const src=[['FIRST PAGE','N1 PER GROUP · CATALOG ORDER'],['SNAPSHOT FEED','N2 PER BRAND · ALL BRANDS'],['VIDEO FEED','PER REQUEST · CURRENT']];
+ src.forEach(([a,b],i)=>{const y=Y+i*40;plate(X,y,170,a,b,i===2?'well':'obj')});
+ const mx=X+640,my=Y+20;rr(mx,my,150,60,4,'hug');tx(mx+75,my+28,'POOL P','dts',{'text-anchor':'middle'});tx(mx+75,my+44,'DE-DUPED BY URL · ID','sl',{'text-anchor':'middle'});
+ [0,1,2].forEach(i=>{line(X+500,Y+15+i*40,X+540,Y+15+i*40,'lead');arrowLine(X+540,Y+15+i*40,mx-2,my+30)});
+ nb(mx+142,my+8,2);
+ title(X+420,Y+150,'POOL · STEP 3','THREE SOURCES MERGE · PAGES OF PG JOIN LATER (STEP 9)');
+})();
+
+/* ---- score stack · 0.5 px per point ---- */
+(function(){const X=118,Z=640,k=.5,W=54;
+ const parts=[['P1','POPULARITY','55–100',100],['P2','RECENCY','≤ 60',60],['P3','FOLLOWED TOPIC','18 · 34',34],['P4','FOLLOWED BRAND','16',16],['P5','SAVED TAGS','≤ 48',48],['P6','MORE LIKE THIS','≤ 66',66],['P7','TIME OF DAY','≤ 34',34],['P8','EDITORIAL LEAD','24',24],['P9','FRESH SINCE VISIT','24',24],['P10','NEW EDITION','≤ 28',28]];
+ let y=Z;parts.forEach(([c,l,v,p],i)=>{const h=p*k;y-=h;rr(X,y,W,h,0,i%2?'obj':'hug');tx(X+W+12,y+h/2+4,c+' · '+l+' · '+v,'sl');});
+ /* negatives below zero */
+ const nh=140*k;hat(X,Z,W,nh);rr(X,Z,W,nh,0,'thin');tx(X+W+12,Z+nh/2+4,'P11 · PREVIOUS LEAD · −140','sl');
+ rr(X,Z+nh+8,W,14,0,'slot');tx(X+W+12,Z+nh+19,'P12 · HIDDEN · −500 · REMOVED','sl');
+ line(X-24,Z,X+W+8,Z,'cut');tx(X-28,Z+4,'0','dt',{'text-anchor':'end'});
+ dimV(y,Z,X-14,X,X,'≤ 434',{side:'l'});
+ nb(X+W/2,y-12,3);
+ title(X+120,Z+nh+56,'SCORE · STEP 4','SCALE 0.5 PX / POINT · MAX PER PART · ONBOARDING RAISES P3 P5 P6');
+})();
+
+/* ---- variety rule ---- */
+(function(){const X=1096,Y=478,S=34,G=8;
+ const by=['A','A','A','B','C','A','D'],af=['A','A','B','A','C','A','D'];
+ tx(X,Y-6,'BY SCORE','sl');tx(X,Y+S+40,'AFTER VARIETY','sl');
+ by.forEach((c,i)=>{rr(X+i*(S+G),Y,S,S,3,c==='A'?'hug':'obj');tx(X+i*(S+G)+S/2,Y+S/2+5,c,'dt',{'text-anchor':'middle'})});
+ af.forEach((c,i)=>{const y=Y+S+46;rr(X+i*(S+G),y,S,S,3,c==='A'?'hug':'obj');tx(X+i*(S+G)+S/2,y+S/2+5,c,'dt',{'text-anchor':'middle'})});
+ /* third A deferred, B pulled up */
+ mk('path',{d:'M'+(X+2*(S+G)+S/2)+','+(Y+S+2)+' C'+(X+2*(S+G)+S/2)+','+(Y+S+24)+' '+(X+3*(S+G)+S/2)+','+(Y+S+20)+' '+(X+3*(S+G)+S/2)+','+(Y+S+44),class:'dl','marker-end':A});
+ mk('path',{d:'M'+(X+3*(S+G)+S/2)+','+(Y+S+2)+' C'+(X+3*(S+G)+S/2)+','+(Y+S+22)+' '+(X+2*(S+G)+S/2)+','+(Y+S+22)+' '+(X+2*(S+G)+S/2)+','+(Y+S+44),class:'dl','marker-end':A});
+ dimH(X,X+2*(S+G)-G,Y+2*S+64,Y+2*S+46,Y+2*S+46,'V ≤ 2',{below:true});
+ nb(X+7*(S+G)+6,Y+6,4);
+ title(X+(7*S+6*G)/2,Y+2*S+110,'VARIETY · STEP 5','NEVER A 3RD IN A ROW · SAME RULE FOR TOPIC');
+})();
+
+/* ---- cadence ---- */
+(function(){const X=470,Y=500,S=24,G=4;
+ const seq='EEEEECECEEECEEEC'.split('');
+ seq.forEach((c,i)=>{const x=X+i*(S+G);rr(x,Y,S,S,2,c==='C'?'hug':'obj');tx(x+S/2,Y+S/2+4,c,'sl',{'text-anchor':'middle'});tx(x+S/2,Y-6,String(i+1),'sl',{'text-anchor':'middle'})});
+ dimH(X,X+5*(S+G)-G,Y+S+18,Y+S,Y+S,'5 E',{below:true});
+ dimH(X+5*(S+G),X+8*(S+G)-G,Y+S+18,Y+S,Y+S,'C · E · C',{below:true});
+ dimH(X+8*(S+G),X+12*(S+G)-G,Y+S+18,Y+S,Y+S,'3 E : 1 C',{below:true});
+ tx(X+16*(S+G)+8,Y+S/2+4,'… REPEATS','sl');
+ title(X+(16*(S+G))/2,Y+S+70,'CADENCE · STEP 6','POSITIONS IN THE RANKED LIST · BEFORE MODULES TAKE THEIRS');
+})();
+
+/* ---- module allocation ---- */
+(function(){const X=470,Y=660,S=14,G=3,N=16;
+ for(let i=0;i<N;i++){rr(X,Y+i*(S+G),70,S,2,'obj');tx(X+35,Y+i*(S+G)+11,String(i+1),'sl',{'text-anchor':'middle'})}
+ tx(X+35,Y-10,'RANKED LIST','sl',{'text-anchor':'middle'});
+ const M=[['TODAY\'S PICKS','K 5 · PUBLISHED ≤ T1 · 1 PER BRAND FIRST · FIXED FOR THE DAY (DAILY EDITION)',0],['YOUR DAILY HABIT','H 3 · NEXT UNUSED IN RANKED ORDER',1],['TRENDING','TR 5 · BY POPULARITY · 1 PER BRAND FIRST · 3 BELOW 1140',2],['RIVER','EVERYTHING LEFT · ≥ 4 · SHOWN R0 THEN +R1',3]];
+ const BX=X+170,BW=330;
+ M.forEach(([a,b,i])=>{const y=Y+i*72;rr(BX,y,BW,60,4,i===3?'hug':'obj');tx(BX+14,y+20,a,'dts');
+  const words=b.split(' · ');let ln='',ly=y+36;words.forEach(w=>{if((ln+' · '+w).length>44&&ln){tx(BX+14,ly,ln,'sl');ln=w;ly+=13}else ln=ln?ln+' · '+w:w});tx(BX+14,ly,ln,'sl');
+  arrowLine(X+72,Y+([1,6,9,13][i])*(S+G)-8,BX-2,y+30)});
+ nb(BX+BW-12,Y+10,5);
+ title(X+250,Y+N*(S+G)+26,'MODULES · STEP 7','EACH STORY IS USED ONCE · ORDER OF TAKING: K, H, TR, RIVER');
+})();
+
+/* ---- grow + stable order ---- */
+(function(){const X=1110,Y=702,W=270,S=9,G=2;
+ rr(X,Y,W,292,4,'thin');
+ for(let i=0;i<16;i++)rr(X+20,Y+14+i*(S+G),W-40,S,2,'obj');
+ for(let i=0;i<4;i++)rr(X+20,Y+14+(16+i)*(S+G),W-40,S,2,'hug');
+ const ys=Y+14+20*(S+G)+6;line(X+10,ys,X+W-10,ys,'cut');tx(X+W/2,ys+16,'SENTINEL · 600 EARLY','sl',{'text-anchor':'middle'});
+ mk('rect',{x:X+20,y:ys+26,width:W-40,height:40,class:'slot'});tx(X+W/2,ys+50,'NEXT PG · RANKED · APPENDED','sl',{'text-anchor':'middle'});
+ dimV(Y+14,Y+14+16*(S+G)-G,X-12,X+20,X+20,'R0 16',{side:'l'});dimV(Y+14+16*(S+G),Y+14+20*(S+G)-G,X-12,X+20,X+20,'R1 +4',{side:'l'});
+ nb(X+W-12,Y+12,6);
+ title(X+W/2,Y+318,'GROW · STEPS 8–9','SHOWN ORDER NEVER CHANGES IN A VISIT · NEW STORIES JOIN AT THE END');
+})();
+
+/* ---- tables ---- */
+(function(){const X=1404,ws=[40,112,112];let y=70;
+ y=table(X,y,'SCORE PARTS',[['P1','popularity','55–100 (IMPORT)'],['P2','recency','48·36·18·8 +12'],['P3','followed topic','18 · 34 ONB.'],['P4','followed brand','16'],['P5','saved tags','14/24 + ≤ 24'],['P6','more like this','22/34 + ≤ 32'],['P7','time of day','16 · 10 · 8'],['P8','editorial lead','24'],['P9','fresh since visit','24'],['P10','new edition','28 · 10'],['P11','previous lead','−140'],['P12','hidden','REMOVED']],ws);
+ y=table(X,y,'SIZES',[['N1','first page','20 / GROUP'],['N2','snapshot feed','10 / BRAND'],['K','today\'s picks','5'],['H','daily habit','3'],['TR','trending','5 · 3 < 1140'],['R0','river page','16'],['R1','more cards','+4'],['PG','server page','32']],ws);
+ y=table(X,y,'TIME',[['T0','import','10:15 UTC'],['T1','picks window','72 H'],['D1','morning','5 – 12'],['D2','afternoon','12 – 17'],['D3','evening','17 – 22'],['D4','late night','22 – 5']],ws);
+})();
+document.body.dataset.ready='1';})();
+</script></body></html>

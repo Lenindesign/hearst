@@ -7,6 +7,7 @@ import { CtaChapter } from "@/components/specs/chapters/cta-chapter";
 import { LayoutChapter } from "@/components/specs/chapters/layout-chapter";
 import { NavChapter } from "@/components/specs/chapters/nav-chapter";
 import { ReaderChapter } from "@/components/specs/chapters/reader-chapter";
+import { RiverChapter } from "@/components/specs/chapters/river-chapter";
 import { SystemChapter } from "@/components/specs/chapters/system-chapter";
 import { TaxonomyChapter } from "@/components/specs/chapters/taxonomy-chapter";
 import { TokensChapter } from "@/components/specs/chapters/tokens-chapter";
@@ -31,6 +32,7 @@ const chapters = [
   ["carousel", "Carousel"],
   ["system", "System"],
   ["taxonomy", "Taxonomy"],
+  ["river", "River logic"],
 ] as const;
 
 /** Start of each chapter in the combined film (public/specs/specs-all-films.mp4), in seconds. */
@@ -44,6 +46,7 @@ const filmChapters = [
   [870, "Reader"],
   [1039, "Carousel"],
   [1168, "System"],
+  [1294, "River logic"],
 ] as const;
 
 export default function SpecsPage() {
@@ -82,8 +85,8 @@ export default function SpecsPage() {
           <SpecFilm
             src="/specs/specs-all-films.mp4"
             poster="/specs/specs-all-films-poster.jpg"
-            label="All specification films in chapter order, each followed by a recording of the chapter's live reference. 21 minutes, no sound."
-            caption={<p><b className="text-foreground">All chapters · 21:34 · no sound.</b> Nine chapters, ten films and nine live references. <a href="/specs/specs-all-films.mp4" className="underline underline-offset-4">Download the film</a>.</p>}
+            label="All specification films in chapter order, each followed by a recording of the chapter's live reference. 23 minutes, no sound."
+            caption={<p><b className="text-foreground">All chapters · 22:49 · no sound.</b> Ten chapters, eleven films and ten live references; the Taxonomy proposal has its own film. <a href="/specs/specs-all-films.mp4" className="underline underline-offset-4">Download the film</a>.</p>}
             chapters={filmChapters}
           />
         </section>
@@ -98,6 +101,7 @@ export default function SpecsPage() {
         <CarouselChapter />
         <SystemChapter />
         <TaxonomyChapter />
+        <RiverChapter />
       </main>
       <ProductFooter />
     </div>

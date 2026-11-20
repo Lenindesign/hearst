@@ -71,6 +71,7 @@ const specNavLinks: { id?: ProductPageId; label: string; href: string; external?
   { label: "Carousel", href: "/specs/#carousel" },
   { label: "System", href: "/specs/#system" },
   { label: "Taxonomy", href: "/specs/#taxonomy" },
+  { label: "River logic", href: "/specs/#river" },
   { label: "Storybook", href: PROD_STORYBOOK_URL, external: true },
 ];
 

@@ -21,11 +21,11 @@ def card(name, kicker, title, sub, right):
 films = [("button","CTAs","UI-BTN-001 · Action button"),("layout","Breakpoints & grid","Watch the layout reflow"),
  ("type","Type metrics","Watch the standard explained"),("token","Tokens & brands","Watch a token travel"),
  ("story-card","Blocks","Story card film"),("blocks","Blocks","Every block pattern"),("nav","Nav","How the header works"),
- ("reader","Reader","How the reader works"),("carousel","Carousel","How the carousel works"),("system","System","How the system works")]
-chap = {"CTAs":1,"Breakpoints & grid":2,"Type metrics":3,"Tokens & brands":4,"Blocks":5,"Nav":6,"Reader":7,"Carousel":8,"System":9}
-card("00-open","HEARST DESIGN SYSTEM · HEARST+","Specifications","Every spec film, in chapter order · 9 chapters · 10 films","THE FILMS")
+ ("reader","Reader","How the reader works"),("carousel","Carousel","How the carousel works"),("system","System","How the system works"),("river","River logic","How the river chooses stories")]
+chap = {"CTAs":1,"Breakpoints & grid":2,"Type metrics":3,"Tokens & brands":4,"Blocks":5,"Nav":6,"Reader":7,"Carousel":8,"System":9,"River logic":11}
+card("00-open","HEARST DESIGN SYSTEM · HEARST+","Specifications","Every spec film, in chapter order · 10 chapters · 11 films","THE FILMS")
 for i,(slug,c,sub) in enumerate(films,1):
-    card(f"{i:02d}-{slug}", f"CHAPTER {chap[c]:02d} · {c.upper()}", c, sub, f"FILM {i} OF 10")
+    card(f"{i:02d}-{slug}", f"CHAPTER {chap[c]:02d} · {c.upper()}", c, sub, f"FILM {i} OF 11")
 
 lives = [("cta","CTAs","Live reference · the production Button under four brands"),
  ("layout","Breakpoints & grid","Live reference · the real home from 390 to 1440 px"),
@@ -35,7 +35,8 @@ lives = [("cta","CTAs","Live reference · the production Button under four brand
  ("nav","Nav","Live reference · the real header at three widths"),
  ("reader","Reader","Live reference · a story open in the real reader"),
  ("carousel","Carousel","Live reference · the real featured carousel"),
- ("system","System","Live reference · the vault, read at build time")]
+ ("system","System","Live reference · the vault, read at build time"),
+ ("river","River logic","Live reference · the real river, today")]
 for i,(slug,c,sub) in enumerate(lives,1):
-    card(f"live-{i:02d}-{slug}", f"CHAPTER {chap[c]:02d} · {c.upper()}", c, sub, f"LIVE {i} OF 9")
-card("00-open","HEARST DESIGN SYSTEM · HEARST+","Specifications","Every spec film and live reference, in chapter order · 9 chapters","THE FILMS")
+    card(f"live-{i:02d}-{slug}", f"CHAPTER {chap[c]:02d} · {c.upper()}", c, sub, f"LIVE {i} OF 10")
+card("00-open","HEARST DESIGN SYSTEM · HEARST+","Specifications","Every spec film and live reference, in chapter order · 10 chapters","THE FILMS")
