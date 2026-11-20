@@ -48,11 +48,20 @@ jobs:
       - name: Install Chromium
         run: npx playwright install chromium
 
-      # The visual screenshot test is off in CI until its stories use a frozen
-      # fixture: they render the daily feed snapshot, so the stored screenshots
-      # go stale with every feed refresh. Run `npm run test:visual` locally.
-      - name: Run token, unit, Storybook, carousel, and responsive checks
+      # The visual screenshot cases render the frozen feed edition in
+      # tests/visual-fixtures/, so a daily feed refresh never changes them.
+      - name: Run token, unit, Storybook, carousel, visual, and responsive checks
         run: npm run quality:ci
+
+      # A failing visual case writes its capture here. Download the artifact to
+      # review it and, when the new render is correct, adopt it as the baseline.
+      - name: Upload failing visual captures
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-regression-actuals
+          path: hearst-design-system/output/playwright/visual-regression/
+          if-no-files-found: ignore
 
       - name: Build the application
         run: npm run build

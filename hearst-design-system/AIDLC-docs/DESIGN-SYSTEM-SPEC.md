@@ -372,13 +372,26 @@ The token audit is a ratchet against `reports/token-audit-baseline.json`
 (refreshed 2026-11-15: 1,618 known violations). It fails only on new or
 increased fingerprints.
 
-The root GitHub workflow (`macos-15`) runs `npm run quality:ci` and then the
-application build for matching pull requests, `main` pushes, and manual
-dispatch. `quality:ci` is `quality` without `test:visual`: the visual cases
-render the daily feed snapshot under a fixed July 2026 clock, so their stored
-screenshots go stale with every feed refresh. The visual test stays out of CI
-until its stories use a frozen fixture; run `npm run test:visual` locally when
-reviewing visual changes.
+The visual-regression cases render a frozen feed edition, not the daily
+snapshot. `npm run test:visual` builds Storybook into `storybook-static-visual/`
+with `STORYBOOK_VISUAL_FIXTURES=1`, which swaps the feed files the daily
+workflow rewrites (`src/stories/generated/hearst-plus-fixtures.ts` and the four
+`src/components/*-river-data.ts` files) for the copies in
+`tests/visual-fixtures/`. The test clock comes from that folder's
+`manifest.json`: 8 p.m. Los Angeles on the frozen edition's day, so the stories
+stay inside the 72-hour freshness window and personalization stays on its
+evening daypart. The daily feed workflow never touches the folder. To move the
+visual test to a newer edition, run `npm run visual:fixtures:freeze`, then
+`npm run test:visual:update` on a Mac, and review every changed PNG in
+`tests/visual-baselines/`. A case whose story id is missing from the Storybook
+index fails at once with its name.
+
+The root GitHub workflow (`macos-15`) runs `npm run quality:ci` (the same steps
+as `quality`) and then the application build for matching pull requests,
+`main` pushes, and manual dispatch. Baselines are macOS Chromium captures and
+CI compares them on `macos-15`; a failing case uploads its capture as the
+`visual-regression-actuals` artifact, so a platform difference can be reviewed
+and adopted as the new baseline.
 
 Automated success is not WCAG conformance and does not prove screen-reader
 usability, 200% zoom, forced colors, reduced motion, touch behavior, or external
