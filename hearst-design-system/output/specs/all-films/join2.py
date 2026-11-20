@@ -50,6 +50,7 @@ chapters = [
     ("reader", [("08", "reader")]),
     ("carousel", [("09", "carousel")]),
     ("system", [("10", "system")]),
+    ("river", [("11", "river")]),
 ]
 
 parts = [card("00-open", 4)]

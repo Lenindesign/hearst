@@ -100,6 +100,10 @@ const chapters = {
     },
   },
   system: { id: "system-live", offset: 96, run: async (p) => { await sleep(2500); await smoothScrollBy(p, 560, 5000); await sleep(3000); } },
+  river: {
+    id: "river-live", iframe: "/hearst-plus/", offset: 96,
+    run: async (p) => { await sleep(3000); for (const w of ["1280 xl", "390 phone", "1440"]) await pick(p, "river-live", w, 3600); },
+  },
 };
 
 const browser = await chromium.launch();
