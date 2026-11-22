@@ -32,6 +32,7 @@ import { hearstEvents } from "@/lib/hearst-events";
 import { getHearstAutoResearchCarRating } from "@/lib/hearst-auto-research-cars";
 import { getResearchCarFacet } from "@/lib/hearst-auto-research-car-catalog";
 import { normalizeReaderReturnHref } from "@/lib/story-routes";
+import { canOptimizeImageSrc } from "@/lib/remote-image-patterns";
 import {
   appendAmbientReaderHref,
   appendReaderReturnHref,
@@ -174,6 +175,7 @@ import {
   isYearMakeModelStory,
   LifestyleCardModule,
   LifestyleRiverImage,
+  getLifestyleRiverImagePreload,
   type LifestyleCardKind,
 } from "./hearst-plus/story-presentation";
 import { ContentReaderMasthead } from "./hearst-plus/content-reader-masthead";
@@ -7133,6 +7135,7 @@ function LifestyleRiverHomePage({
               scrimDirection="left-to-right"
               editionLabel={shouldUseTodaysPicks ? (isShowingLatestAvailableStories ? "Latest available" : "Today’s Picks") : undefined}
               initialStoryId={leadStory.id}
+              getImagePreload={getLifestyleRiverImagePreload}
               renderImage={(story, _index, active) => (
                 <LifestyleRiverImage
                   story={story}
@@ -7213,6 +7216,7 @@ function LifestyleRiverHomePage({
                   layoutMode={riverLayout}
                   editionLabel={shouldUseTodaysPicks ? (isShowingLatestAvailableStories ? "Latest available" : "Today’s Picks") : undefined}
                   initialStoryId={leadStory.id}
+                  getImagePreload={getLifestyleRiverImagePreload}
                   renderImage={(story, _index, active) => (
                     <LifestyleRiverImage
                       story={story}
@@ -7279,6 +7283,7 @@ function LifestyleRiverHomePage({
                           layoutMode={riverLayout}
                           editionLabel={shouldUseTodaysPicks ? (isShowingLatestAvailableStories ? "Latest available" : "Today’s Picks") : undefined}
                           initialStoryId={leadStory.id}
+                          getImagePreload={getLifestyleRiverImagePreload}
                           renderImage={(story, _index, active) => (
                             <LifestyleRiverImage
                               story={story}
@@ -7842,7 +7847,7 @@ function LifestyleRiverHomePage({
                                 loading="lazy"
                                 className="h-full w-full object-cover object-top"
                                 style={{ objectPosition: "center top" }}
-                                unoptimized
+                                unoptimized={!canOptimizeImageSrc(story.image)}
                               />
                             </span>
                             <span className="block p-3">

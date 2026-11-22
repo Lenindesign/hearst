@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect, userEvent, waitFor, within } from "@storybook/test";
-import { FeaturedStoryCarousel } from "@/components/hearst-plus";
+import { FeaturedStoryCarousel, getLifestyleRiverImagePreload } from "@/components/hearst-plus";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { hearstPlusStoryData } from "./hearst-plus-story-data";
 
@@ -46,6 +46,13 @@ function getTranslateX(element: Element) {
   return matrix.m41;
 }
 
+const storyImageSizes = "(max-width: 640px) 100vw, 720px";
+
+// Warms the next and previous slides with the same resized file StoryImage requests.
+function preloadStoryImage(story: LifestyleRiverStory) {
+  return getLifestyleRiverImagePreload(story, storyImageSizes);
+}
+
 function StoryImage({
   story,
   active,
@@ -59,7 +66,7 @@ function StoryImage({
       alt={`${story.brand}: ${story.title}`}
       width={1200}
       height={675}
-      sizes="(max-width: 640px) 100vw, 720px"
+      sizes={storyImageSizes}
       className="h-full w-full bg-muted object-cover"
       preload={active}
     />
@@ -101,6 +108,7 @@ function FeaturedCarouselExample({
           stories={stories}
           editionLabel={featuredMode ? undefined : editionLabel}
           initialStoryId={initialStoryId}
+          getImagePreload={preloadStoryImage}
           renderImage={(story, _index, active) => (
             <StoryImage story={story} active={active} />
           )}

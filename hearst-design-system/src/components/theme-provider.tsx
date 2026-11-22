@@ -24,9 +24,9 @@ export function useTheme() {
   return ctx;
 }
 
+// Inter and Newsreader are not listed: app/layout.tsx serves both through next/font as variable fonts under the same
+// family names, so requesting them here downloaded every Inter and Newsreader file twice.
 const GOOGLE_FONTS: Record<string, string> = {
-  "Inter": "Inter:wght@300;400;500;600;700;800;900",
-  "Newsreader": "Newsreader:wght@400;500;600;700;800",
   "Barlow Condensed": "Barlow+Condensed:wght@300;400;500;600;700",
   "Barlow Semi Condensed": "Barlow+Semi+Condensed:wght@300;400;500;600;700",
   "Knockout Condensed": "Barlow+Condensed:wght@700;800;900",
@@ -51,15 +51,19 @@ export function useGoogleFonts(fonts: string[], linkId = "brand-google-fonts") {
     const seen = new Set<string>();
     const requestedFonts = fontKey.split(",").filter(Boolean);
 
-    for (const font of ["Inter", "Newsreader", ...requestedFonts]) {
+    for (const font of requestedFonts) {
       if (!font || seen.has(font)) continue;
       seen.add(font);
       if (GOOGLE_FONTS[font]) families.push(GOOGLE_FONTS[font]);
     }
 
-    if (families.length === 0) return;
-
     const id = linkId;
+    if (families.length === 0) {
+      // A brand with only self-hosted fonts drops the previous brand's stylesheet.
+      document.getElementById(id)?.remove();
+      return;
+    }
+
     let link = document.getElementById(id) as HTMLLinkElement | null;
     const href = `https://fonts.googleapis.com/css2?${families.map((f) => `family=${f}`).join("&")}&display=swap`;
 

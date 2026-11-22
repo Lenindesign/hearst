@@ -6,6 +6,7 @@ import {
   FeaturedStoryCarousel,
   LifestyleRiverCard,
   LifestyleRiverImage,
+  getLifestyleRiverImagePreload,
   ReaderArticleBody,
 } from "@/components/hearst-plus";
 import { EditorialHomepageSection } from "@/components/home-page";
@@ -117,6 +118,7 @@ export function CarouselLive({ storiesByBrand, brands = liveBrands }: { storiesB
               editionLabel="Today’s Picks"
               cardColors={getFeaturedCardColors("all", slug.startsWith("hearst-") ? null : slug)}
               onOpenStory={noop}
+              getImagePreload={getLifestyleRiverImagePreload}
               renderImage={(story, _index, active) => (
                 <LifestyleRiverImage story={story} className="h-full w-full" priority={active} />
               )}
