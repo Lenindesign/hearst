@@ -7,6 +7,7 @@ const metadata: ComponentMetadata = {
   level: "organism",
   path: "hearst-plus/featured-story-carousel.tsx",
   exports: [
+    "CarouselImagePreload",
     "FeaturedStoryCarousel",
     "FeaturedStoryCarouselProps",
   ],
