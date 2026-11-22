@@ -44,4 +44,5 @@ next-env.d.ts
 
 # storybook
 /storybook-static
+/storybook-static-visual
 /public/storybook

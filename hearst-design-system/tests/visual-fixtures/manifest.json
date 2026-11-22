@@ -1,0 +1,12 @@
+{
+  "note": "Frozen feed edition for the Storybook visual regression test. Written by scripts/freeze-visual-fixtures.mjs; the daily feed workflow never touches this folder.",
+  "editionAt": "2026-11-14T16:38:43.376Z",
+  "clock": "2026-11-14T20:00:00-08:00",
+  "files": [
+    "src/stories/generated/hearst-plus-fixtures.ts",
+    "src/components/lifestyle-river-data.ts",
+    "src/components/autos-river-data.ts",
+    "src/components/flux-river-data.ts",
+    "src/components/ew-river-data.ts"
+  ]
+}
