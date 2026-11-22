@@ -26,6 +26,7 @@ The brand layer extends the Hearst Design System foundation used by the applicat
 - Semantic CSS mapping, font aliases, and dark-mode derivation: `src/lib/theme-css-vars.ts`
 - Masthead logos and compact brand icons: `src/lib/logos.ts`
 - Font loading and font-face declarations: `src/app/layout.tsx` and `src/app/globals.css`
+- Runtime brand fonts from Google Fonts: `useGoogleFonts` in `src/components/theme-provider.tsx`. Inter and Newsreader are served only by `next/font` in `layout.tsx` (variable fonts with every weight, Inter in every script Google offers), so `useGoogleFonts` never requests them; it loads only the other brand families.
 
 Do not edit generated TypeScript or CSS. For a publication, update its canonical token JSON and rebuild the generated outputs. For an app-only destination composition, update `src/lib/theme-options.ts`. Then validate and synchronize this registry.
 

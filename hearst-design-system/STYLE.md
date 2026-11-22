@@ -153,6 +153,12 @@ The complete brand registry is documented in `BRAND_STYLES.md`. Canonical HDS pu
 - For compact buttons and pills, opt short labels without descender glyphs into cap-height alignment with the shared `.hds-cap-aligned-label` utility or the `Button` primitive's `capAlignedLabel` prop. `Button` defaults to `capAlignedLabel="auto"`, which applies the trim only to plain-text labels without descender glyphs and leaves other labels on normal metrics; pass `capAlignedLabel={false}` only when a label must keep line-box metrics. Use it for all-caps labels and other confirmed no-descender text; leave labels containing descenders (lowercase `g`, `j`, `p`, `q`, `y`, or uppercase `J` and `Q`) on normal line-box metrics so their glyphs never get clipped. Supported browsers trim the label to `cap alphabetic`; browsers without text-box trimming keep the default alignment.
 - Test desktop and mobile when changing shared mastheads, carousels, sidebars, cards, or readers.
 
+## Images and fonts
+
+- Request images at the size they display. Story images go through `next/image` with `sizes` that match the rendered box (a 48px thumbnail asks for `48px`, not the card default). Use `unoptimized` only when the optimizer would refuse the source: `canOptimizeImageSrc` (`src/lib/remote-image-patterns.ts`, the same host list `next.config.ts` allows) decides, so allowed hosts are always resized.
+- Code that warms an image ahead of time (the featured carousel's next and previous slides, the reader's next stories) requests the same resized file the image will render, never the source original: `getLifestyleRiverImagePreload` returns the `src`, `srcSet` and `sizes` `LifestyleRiverImage` uses, and carousels pass it as `getImagePreload`.
+- A font family is loaded once. Families `src/app/layout.tsx` serves through `next/font` (Inter, Newsreader) are not requested again from the Google Fonts stylesheet; `BRAND_STYLES.md` owns which families load where.
+
 ## Implementation checklist
 
 Before considering a UI change complete:

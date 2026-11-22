@@ -18,14 +18,15 @@ const geistMono = Geist_Mono({
 
 const inter = Inter({
   variable: "--font-inter",
-  subsets: ["latin"],
+  // Every script Inter covers, as the Google Fonts stylesheet used to provide. Files load only for glyphs a page uses.
+  subsets: ["latin", "latin-ext", "cyrillic", "cyrillic-ext", "greek", "greek-ext", "vietnamese"],
   display: "swap",
   preload: false,
 });
 
 const newsreader = Newsreader({
   variable: "--font-newsreader",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext", "vietnamese"],
   // Variable font (weights 200–800). Listing discrete weights makes Google return the same file for each,
   // and Turbopack's next/font resolver fails on the duplicate URLs ("queries have exactly one entry").
   style: ["normal", "italic"],

@@ -53,6 +53,7 @@ export {
 } from "@/components/hearst-plus/featured-story-carousel";
 
 export type {
+  CarouselImagePreload,
   FeaturedStoryCarouselProps,
 } from "@/components/hearst-plus/featured-story-carousel";
 
@@ -140,6 +141,7 @@ export {
   getLifestyleCardKind,
   getLifestyleImagePosition,
   getLifestyleKindLabel,
+  getLifestyleRiverImagePreload,
   isExplicitGalleryStory,
   isYearMakeModelStory,
   LifestyleCardModule,

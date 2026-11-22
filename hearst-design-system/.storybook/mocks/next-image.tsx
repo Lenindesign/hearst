@@ -85,4 +85,13 @@ const Image = React.forwardRef<HTMLImageElement, StorybookImageProps>(
 
 Image.displayName = "Image";
 
+/**
+ * Matches the mock above: Storybook renders the source as given, so the props it would apply are the
+ * source itself, with no optimizer srcset.
+ */
+export function getImageProps({ src, sizes, alt = "" }: StorybookImageProps) {
+  const resolvedSrc = typeof src === "string" ? src : src.src;
+  return { props: { src: resolvedSrc, srcSet: undefined as string | undefined, sizes, alt } };
+}
+
 export default Image;

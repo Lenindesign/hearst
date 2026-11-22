@@ -2,6 +2,15 @@
 
 Use this file for concise, dated context behind product and design decisions. Durable rules must also be added to `STYLE.md`, `BRAND_STYLES.md`, or `APP_RULES.md`.
 
+## 2026-11-22: Images load at display size; Inter and Newsreader load once
+
+- **Context:** The owner said the site loads slowly. Measurements on the deployed site found the featured carousel preloading 3000px originals (2.7 MB and 0.9 MB on `/hearst-lifestyle/`) for slides that render a resized copy, so each slide image downloaded twice; 48px Saved and 180px suggestion thumbnails loading originals (one 427 KB) because they were marked `unoptimized`; the trending rail asking 640px images for 48px thumbnails; and Inter and Newsreader downloading twice, from `next/font` and from the runtime Google Fonts stylesheet.
+- **Decision:** The owner approved these three fixes as the first speed change. Preloads use the resized file, `unoptimized` is kept only for hosts the optimizer refuses, and the Google Fonts stylesheet no longer requests the two families `next/font` serves.
+- **Scope:** Image requests and font loading; no visual change intended.
+- **Exceptions:** Livvic and Petrona still come from the Google stylesheet too, because `next/font` serves only some of their weights. The 300 × 600 rail ad PNG stays unoptimized so the creative renders as supplied.
+- **Canonical rule:** `STYLE.md` § Images and fonts; `BRAND_STYLES.md` font loading.
+- **Follow-up:** Remaining findings (video preview size, caching dynamic pages, code splitting, hero image before hydration, `/specs/` main-thread cost) await the owner's choice.
+
 ## 2026-11-15: Visual screenshots leave CI until they use a frozen fixture
 
 - **Context:** With CI running again, 35 of 47 visual cases differed from their July baselines. The cases render the feed snapshot the daily bot rewrites each morning, under a fixed July 26 test clock, so some show different stories and the Lifestyle home shows its empty state.

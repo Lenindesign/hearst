@@ -18,6 +18,8 @@ import { useScrollParallax } from "@/components/hearst-plus/use-scroll-parallax"
 import { formatVideoDuration } from "@/components/hearst-plus/video-format";
 import { getHearstAutoResearchCarRating } from "@/lib/hearst-auto-research-cars";
 
+export type CarouselImagePreload = { src: string; srcSet?: string; sizes?: string };
+
 export type FeaturedStoryCarouselProps = {
   className?: string;
   stories: LifestyleRiverStory[];
@@ -32,6 +34,11 @@ export type FeaturedStoryCarouselProps = {
     index: number,
     active: boolean,
   ) => React.ReactNode;
+  /**
+   * The source the next and previous slides are warmed with. Must match what `renderImage` requests,
+   * or the slide downloads twice. Defaults to `story.image` for slides that render a plain `<img>`.
+   */
+  getImagePreload?: (story: LifestyleRiverStory) => CarouselImagePreload | undefined;
   editionLabel?: string;
   initialStoryId?: string;
   getCommentCount?: (story: LifestyleRiverStory) => number;
@@ -74,6 +81,10 @@ function ResearchCarRating({ rating, lightMode }: { rating: string; lightMode: b
   );
 }
 
+function defaultImagePreload(story: LifestyleRiverStory): CarouselImagePreload | undefined {
+  return story.image ? { src: story.image } : undefined;
+}
+
 export function FeaturedStoryCarousel({
   className,
   stories,
@@ -81,6 +92,7 @@ export function FeaturedStoryCarousel({
   scrimDirection = "bottom",
   cardColors = { background: "black", foreground: "white" },
   renderImage,
+  getImagePreload = defaultImagePreload,
   editionLabel,
   initialStoryId,
   getCommentCount = defaultCommentCount,
@@ -152,11 +164,10 @@ export function FeaturedStoryCarousel({
       (activeIndex - 1 + stories.length) % stories.length;
     const nextIndex = (activeIndex + 1) % stories.length;
 
-    return [
-      stories[previousIndex]?.image,
-      stories[nextIndex]?.image,
-    ].filter((src): src is string => Boolean(src));
-  }, [activeIndex, hasMultipleStories, stories]);
+    return [stories[previousIndex], stories[nextIndex]]
+      .map((story) => (story ? getImagePreload(story) : undefined))
+      .filter((source): source is CarouselImagePreload => Boolean(source?.src));
+  }, [activeIndex, getImagePreload, hasMultipleStories, stories]);
 
   React.useEffect(() => {
     if (editionLabel && stories.length > 0) onEditionImpression?.();
@@ -183,9 +194,12 @@ export function FeaturedStoryCarousel({
       return;
     }
 
-    adjacentPreloadSources.forEach((src) => {
+    adjacentPreloadSources.forEach(({ src, srcSet, sizes }) => {
       const preloadImage = new window.Image();
       preloadImage.decoding = "async";
+      // sizes and srcset go first so the browser picks the same candidate the slide will.
+      if (sizes) preloadImage.sizes = sizes;
+      if (srcSet) preloadImage.srcset = srcSet;
       preloadImage.src = src;
     });
   }, [adjacentPreloadSources]);

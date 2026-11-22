@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { ChefHat, ShoppingBag, Star } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
@@ -22,12 +22,27 @@ export {
   type LifestyleCardKind,
 } from "./story-presentation-model";
 
+const lifestyleRiverImageSizes = "(max-width: 640px) 100vw, (max-width: 1024px) 66vw, 640px";
+
+/**
+ * The resized source set `LifestyleRiverImage` requests, so code that warms an image ahead of time
+ * (the featured carousel's next and previous slides) fetches the same file instead of the full-size original.
+ */
+export function getLifestyleRiverImagePreload(
+  story: Pick<LifestyleRiverStory, "image">,
+  sizes = lifestyleRiverImageSizes,
+) {
+  if (!story.image) return undefined;
+  const { props } = getImageProps({ src: story.image, alt: "", width: 1200, height: 675, sizes });
+  return { src: props.src, srcSet: props.srcSet, sizes: props.sizes };
+}
+
 export function LifestyleRiverImage({
   story,
   className,
   priority = false,
   alt,
-  sizes = "(max-width: 640px) 100vw, (max-width: 1024px) 66vw, 640px",
+  sizes = lifestyleRiverImageSizes,
   objectPosition,
   unoptimized = false,
 }: {

@@ -71,6 +71,7 @@ export function TrendingStoryRail({
                   <LifestyleRiverImage
                     story={story}
                     alt=""
+                    sizes="48px"
                     className="h-full w-full transition-transform duration-250 ease-out group-hover:scale-[1.025] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                     unoptimized={unoptimizedImages}
                   />

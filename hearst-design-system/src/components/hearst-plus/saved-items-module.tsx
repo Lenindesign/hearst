@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import { canOptimizeImageSrc } from "@/lib/remote-image-patterns";
 import type { LifestyleRiverStory } from "@/components/lifestyle-river-types";
 import { Button } from "@/components/ui/button";
 import { Bookmark } from "@/components/ui/icons";
@@ -86,7 +87,7 @@ export function SavedItemsModule({
                     aria-label={`Open suggested story: ${story.title}`}
                   >
                     <span className="relative block size-12 overflow-hidden rounded-[6px] bg-muted" aria-hidden>
-                      {story.image ? <Image src={story.image} alt="" fill sizes="48px" className="object-cover" unoptimized /> : null}
+                      {story.image ? <Image src={story.image} alt="" fill sizes="48px" className="object-cover" unoptimized={!canOptimizeImageSrc(story.image)} /> : null}
                     </span>
                     <span className="min-w-0">
                       <span className="line-clamp-2 type-t6 underline-offset-2 group-hover:underline group-focus-visible:underline">
