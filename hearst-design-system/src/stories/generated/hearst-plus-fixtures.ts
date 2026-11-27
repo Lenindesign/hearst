@@ -20,521 +20,527 @@ export const storybookFixtureData = {
   "lifestyle": {
     "stories": [
       {
-        "id": "cosmopolitan-entertainment-tv-a74522526-the-hunting-wives-season-2-cast-characters",
+        "id": "cosmopolitan-lifestyle-a74550956-amazon-blue-floral-reversible-bedding-set-black-friday-deal",
         "brand": "Cosmopolitan",
         "brandSlug": "cosmopolitan",
-        "topic": "Entertainment",
-        "title": "Meet the Cast and Characters of ‘ The Hunting Wives’ Season 2",
-        "summary": "This show gives a new meaning to Blue Texas.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/a2a2a9f3-4dfd-485e-8f5d-ec7393f66e7f.jpg",
-        "imageCredit": "Netflix",
-        "byline": "Leah Marilla Thomas",
+        "topic": "Lifestyle",
+        "title": "My Favorite Black Friday Find So Far? This Chic Floral, Reversible Bedding Set Under $40",
+        "summary": "No gatekeeping here!",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/7c77f2ba-14e0-415e-b41e-8eb62393f0a4.png",
+        "imageCredit": "Design by Cosmopolitan",
+        "byline": "Megan Uy",
         "readTime": "3 min read",
-        "publishedAt": "2026-11-26T18:00:00.000Z",
-        "sourceUrl": "https://www.cosmopolitan.com/entertainment/tv/a74522526/the-hunting-wives-season-2-cast-characters/",
+        "publishedAt": "2026-11-27T18:32:32.000Z",
+        "sourceUrl": "https://www.cosmopolitan.com/lifestyle/a74550956/amazon-blue-floral-reversible-bedding-set-black-friday-deal/",
         "popularity": 100,
         "signal": "Most Popular",
         "tags": [
-          "entertainment",
+          "lifestyle",
           "cosmopolitan",
-          "meet",
-          "cast",
-          "characters",
-          "hunting"
+          "favorite",
+          "black",
+          "friday",
+          "find"
         ],
-        "age": 1
+        "age": 0
       },
       {
-        "id": "cosmopolitan-entertainment-books-a74509871-the-hunger-games-books-in-order",
+        "id": "cosmopolitan-entertainment-tv-a74551245-how-to-watch-dancing-with-the-stars-holiday-special",
         "brand": "Cosmopolitan",
         "brandSlug": "cosmopolitan",
         "topic": "Entertainment",
-        "title": "How to Read ‘The Hunger Games’ Books in Order of Release",
-        "summary": "Another, please?",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/9714509f-1d8c-41a1-8e4b-083234ef0beb.jpg",
-        "imageCredit": "Courtesy of Lionsgate",
-        "byline": "Leah Marilla Thomas",
+        "title": "All About the ‘Dancing With the Stars’ Holiday Special—and How to Tune In",
+        "summary": "DWTS isn’t over just yet!",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/15acf9fb-58a2-404f-ab28-32567b942c34.jpg",
+        "imageCredit": "Disney",
+        "byline": "Mehera Bonner",
         "readTime": "3 min read",
-        "publishedAt": "2026-11-26T17:00:00.000Z",
-        "sourceUrl": "https://www.cosmopolitan.com/entertainment/books/a74509871/the-hunger-games-books-in-order/",
+        "publishedAt": "2026-11-27T18:19:05.000Z",
+        "sourceUrl": "https://www.cosmopolitan.com/entertainment/tv/a74551245/how-to-watch-dancing-with-the-stars-holiday-special/",
         "popularity": 99,
         "signal": "Trending",
         "tags": [
           "entertainment",
           "cosmopolitan",
-          "read",
-          "hunger",
-          "games",
-          "books"
+          "about",
+          "dancing",
+          "with",
+          "stars"
         ],
-        "age": 2
+        "age": 1
       },
       {
-        "id": "cosmopolitan-relationships-a74477496-holiday-date-ideas",
+        "id": "cosmopolitan-style-beauty-beauty-g74549277-best-glossier-makeup-skincare",
         "brand": "Cosmopolitan",
         "brandSlug": "cosmopolitan",
-        "topic": "Relationships",
-        "title": "16 Festive Holiday Date Ideas for the Most Wonderful Time of Year",
-        "summary": "And the most romantic time, too.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/36f4a696-8b7b-42eb-84e7-8fc9f490f484.jpg",
-        "imageCredit": "Getty Images",
+        "topic": "Style Beauty",
+        "title": "Before You Shop Glossier’s Black Friday Sale, Here’s Our Ranking of the 15 Best Products",
+        "summary": "Happy 25% off!",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/5029434d-29bd-41a9-ada6-e2fb5983c6dc.png",
+        "imageCredit": "Courtesy of Glossier",
+        "byline": "Beth Gillette, Daisy Maldonado",
         "readTime": "3 min read",
-        "publishedAt": "2026-11-26T14:00:00.000Z",
-        "sourceUrl": "https://www.cosmopolitan.com/relationships/a74477496/holiday-date-ideas/",
+        "publishedAt": "2026-11-27T18:05:38.000Z",
+        "sourceUrl": "https://www.cosmopolitan.com/style-beauty/beauty/g74549277/best-glossier-makeup-skincare/",
         "popularity": 98,
         "signal": "Editor Pick",
         "tags": [
-          "relationships",
+          "style beauty",
           "cosmopolitan",
-          "festive",
-          "holiday",
-          "date",
-          "ideas"
+          "style",
+          "beauty",
+          "before",
+          "shop"
         ],
-        "age": 5
+        "age": 1
       },
       {
-        "id": "country-living-shopping-antiques-a74523045-how-to-ask-for-a-family-heirloom",
+        "id": "country-living-shopping-deals-sales-a74550886-walmart-black-friday-sale",
         "brand": "Country Living",
         "brandSlug": "country-living",
         "topic": "Shopping",
-        "title": "Is It Ever Okay to Tell a Relative You Want Their Antiques Someday?",
-        "summary": "Here’s how to do it thoughtfully.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/cd3ac0bf-efec-47d1-a1f3-b0cd3b84ab1d.jpg",
-        "imageCredit": "Becky Luigart-Stayner for Country Living",
-        "byline": "Jennifer Barger",
-        "readTime": "3 min read",
-        "publishedAt": "2026-11-26T16:00:00.000Z",
-        "sourceUrl": "https://www.countryliving.com/shopping/antiques/a74523045/how-to-ask-for-a-family-heirloom/",
+        "title": "Walmart’s Black Friday Sale Is Full of Deals up to 67% off for Your Home and Holiday List",
+        "summary": "Dyson is up to 40% off right now.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/305f8f3a-fd8c-4598-8ba6-1a1beffc5a80.jpg",
+        "imageCredit": "Product Shot Image",
+        "byline": "Anvita Reddy",
+        "readTime": "4 min read",
+        "publishedAt": "2026-11-27T19:03:38.000Z",
+        "sourceUrl": "https://www.countryliving.com/shopping/deals-sales/a74550886/walmart-black-friday-sale/",
         "popularity": 72,
         "signal": "Most Popular",
         "tags": [
           "shopping",
           "country living",
-          "ever",
-          "okay",
-          "tell",
-          "relative"
+          "walmart",
+          "black",
+          "friday",
+          "sale"
         ],
-        "age": 3
+        "age": 0
       },
       {
-        "id": "country-living-gardening-garden-ideas-a74510788-thanksgiving-or-christmas-cactus",
+        "id": "country-living-shopping-gifts-a74550804-black-friday-amazon-toy-deals-2026",
         "brand": "Country Living",
         "brandSlug": "country-living",
-        "topic": "Home",
-        "title": "Your Christmas Cactus Might Actually Be a Thanksgiving Cactus",
-        "summary": "Think you’ve been caring for a Christmas cactus? Look closer. The shape of its stem segments can reveal whether it’s actually a Thanksgiving cactus.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/a629ee3e-41ca-4e80-af09-ce9078626455.jpeg",
-        "imageCredit": "Евгения Матвеец",
-        "byline": "Charlyne Mattox",
-        "readTime": "4 min read",
-        "publishedAt": "2026-11-26T14:00:00.000Z",
-        "sourceUrl": "https://www.countryliving.com/gardening/garden-ideas/a74510788/thanksgiving-or-christmas-cactus/",
+        "topic": "Shopping",
+        "title": "Amazon’s Black Friday Deals Are Here—These Are the Best Toy Discounts",
+        "summary": "Get those gifts before the chaos begins!",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/891da8dc-07ad-4bb8-ba13-21b5c2c5f634.jpeg",
+        "imageCredit": "Product Shot Image",
+        "byline": "Angel Madison",
+        "readTime": "3 min read",
+        "publishedAt": "2026-11-27T17:47:11.000Z",
+        "sourceUrl": "https://www.countryliving.com/shopping/gifts/a74550804/black-friday-amazon-toy-deals-2026/",
         "popularity": 71,
         "signal": "Trending",
         "tags": [
-          "home",
+          "shopping",
           "country living",
-          "your",
-          "christmas",
-          "cactus",
-          "might"
+          "amazon",
+          "black",
+          "friday",
+          "deals"
         ],
-        "age": 5
+        "age": 1
       },
       {
-        "id": "country-living-gardening-outdoors-a74522024-ginkgo-leaf-drop-explained",
+        "id": "country-living-gardening-garden-ideas-a74510990-norfolk-island-pine-houseplant-care",
         "brand": "Country Living",
         "brandSlug": "country-living",
         "topic": "Home",
-        "title": "Why Ginkgo Trees Drop All Their Leaves in a Day",
-        "summary": "A ginkgo can go from golden to bare in a day! Here’s how.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/ginkgo-grove-royalty-free-image-1764016986.pjpeg",
-        "imageCredit": "Dennis Govoni",
-        "byline": "Terri Robertson",
+        "title": "How to Keep a Norfolk Island Pine Alive After the Holidays",
+        "summary": "This small evergreen can live for years indoors. Give it bright light, steady moisture, and a spot away from heat vents to help prevent drooping and branch drop.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/3ee113b8-81f3-4080-96dc-b41e3e8a44a6.jpeg",
+        "imageCredit": "Solidago",
+        "byline": "Charlyne Mattox, Arricca Elin SanSone",
         "readTime": "4 min read",
-        "publishedAt": "2026-11-25T18:00:00.000Z",
-        "sourceUrl": "https://www.countryliving.com/gardening/outdoors/a74522024/ginkgo-leaf-drop-explained/",
+        "publishedAt": "2026-11-27T17:16:21.000Z",
+        "sourceUrl": "https://www.countryliving.com/gardening/garden-ideas/a74510990/norfolk-island-pine-houseplant-care/",
         "popularity": 70,
         "signal": "Editor Pick",
         "tags": [
           "home",
           "country living",
-          "ginkgo",
-          "trees",
-          "drop",
-          "their"
+          "keep",
+          "norfolk",
+          "island",
+          "pine"
         ],
-        "age": 25
+        "age": 2
       },
       {
-        "id": "delish-cooking-recipe-ideas-a42109789-green-beans-almondine-recipe",
+        "id": "delish-food-news-a74549688-celsius-cranberry-apple-costco-exclusive-cheers-pack",
         "brand": "Delish",
         "brandSlug": "delish",
-        "topic": "Food",
-        "title": "Green Beans Almondine",
-        "summary": "Delish editors recommend this food story.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/8f774572-ecbb-4c6d-80fc-14133f80d67d.jpg",
-        "imageCredit": "PHOTO: ERIK BERNSTEIN; FOOD STYLING: BROOKE CAISON",
-        "readTime": "3 min read",
-        "publishedAt": "2026-11-26T15:21:56.000Z",
-        "sourceUrl": "https://www.delish.com/cooking/recipe-ideas/a42109789/green-beans-almondine-recipe/",
+        "topic": "Food News",
+        "title": "Celsius Just Released A New Costco-Exclusive Holiday Flavor—And Fans Want It Everywhere",
+        "summary": "You might need to call in a favor from Santa for this one.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/3cc4913d-4d19-43dd-a4c4-8b3e993ff11b.jpeg",
+        "imageCredit": "KairosDee",
+        "byline": "Sean Abrams",
+        "readTime": "4 min read",
+        "publishedAt": "2026-11-27T15:57:13.000Z",
+        "sourceUrl": "https://www.delish.com/food-news/a74549688/celsius-cranberry-apple-costco-exclusive-cheers-pack/",
         "popularity": 90,
         "signal": "Most Popular",
         "tags": [
-          "food",
+          "food news",
           "delish",
-          "green",
-          "beans",
-          "almondine"
+          "food",
+          "news",
+          "celsius",
+          "just"
         ],
-        "age": 4
+        "age": 3
       },
       {
-        "id": "delish-cooking-recipe-ideas-a50157-thanksgiving-cauliflower-recipe",
+        "id": "delish-food-news-a74549340-cinemark-werwulf-popcorn-bucket-2026-fan-reactions",
         "brand": "Delish",
         "brandSlug": "delish",
-        "topic": "Food",
-        "title": "Thanksgiving Cauliflower",
-        "summary": "Delish editors recommend this food story.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/thanksgiving-cauliflower-index-66f466a94313a.jpg",
-        "imageCredit": "PHOTO: ANDREW BUI; FOOD STYLING: ADRIENNE ANDERSON",
+        "topic": "Food News",
+        "title": "The New Werwulf Popcorn Bucket Is Dividing Fans—And Christmas Might Be To Blame",
+        "summary": "Santa definitely didn’t sign off on this one.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/403fc135-c78f-40cb-ab65-cfadcf618732.jpeg",
+        "imageCredit": "Tashi-Delek",
+        "byline": "Sean Abrams",
         "readTime": "3 min read",
-        "publishedAt": "2026-11-26T14:53:50.000Z",
-        "sourceUrl": "https://www.delish.com/cooking/recipe-ideas/a50157/thanksgiving-cauliflower-recipe/",
+        "publishedAt": "2026-11-27T14:27:28.000Z",
+        "sourceUrl": "https://www.delish.com/food-news/a74549340/cinemark-werwulf-popcorn-bucket-2026-fan-reactions/",
         "popularity": 89,
         "signal": "Trending",
         "tags": [
-          "food",
+          "food news",
           "delish",
-          "thanksgiving",
-          "cauliflower"
+          "food",
+          "news",
+          "werwulf",
+          "popcorn"
         ],
-        "age": 4
+        "age": 5
       },
       {
-        "id": "delish-cooking-recipe-ideas-a42028408-best-cranberry-apple-quinoa-salad-recipe",
+        "id": "delish-cooking-recipe-ideas-a74511890-dijon-balsamic-chicken-thighs-recipe",
         "brand": "Delish",
         "brandSlug": "delish",
         "topic": "Food",
-        "title": "Cranberry Apple Quinoa Salad",
+        "title": "Dijon Balsamic Chicken Thighs",
         "summary": "Delish editors recommend this food story.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/d7f760ab-d078-4318-adbb-e545c86cd0bb.jpg",
-        "imageCredit": "PHOTO: ERIK BERNSTEIN; FOOD STYLING: BARRETT WASHBURNE",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/2f5841ca-48a0-40c1-acea-86a18a30cb2d.jpg",
+        "imageCredit": "PHOTO: LINDA PUGLIESE; FOOD STYLING: BROOKE CAISON",
         "readTime": "3 min read",
-        "publishedAt": "2026-11-26T14:40:00.000Z",
-        "sourceUrl": "https://www.delish.com/cooking/recipe-ideas/a42028408/best-cranberry-apple-quinoa-salad-recipe/",
+        "publishedAt": "2026-11-27T13:30:00.000Z",
+        "sourceUrl": "https://www.delish.com/cooking/recipe-ideas/a74511890/dijon-balsamic-chicken-thighs-recipe/",
         "popularity": 88,
         "signal": "Editor Pick",
         "tags": [
           "food",
           "delish",
-          "cranberry",
-          "apple",
-          "quinoa",
-          "salad"
+          "dijon",
+          "balsamic",
+          "chicken",
+          "thighs"
         ],
-        "age": 4
+        "age": 6
       },
       {
-        "id": "good-housekeeping-entertainment-a74510961-vintage-rockettes-photos",
+        "id": "good-housekeeping-what-to-buy-a74550546-black-friday-deals-under-25",
         "brand": "Good Housekeeping",
         "brandSlug": "good-housekeeping",
-        "topic": "Entertainment",
-        "title": "21 Dazzling Old-School Photos of the Radio City Rockettes",
-        "summary": "Kickstart the holiday season with a look at the iconic dance troupe through the years.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/0fa3cdea-eda7-48d2-a358-7245ecd506fb.jpeg",
-        "imageCredit": "Hulton Archive",
-        "byline": "Karla Pope",
+        "topic": "What To Buy",
+        "title": "If You Only Want to Spend $25, Here Are 10 Black Friday Deals You Should Check Out",
+        "summary": "These popular products make for great stocking stuffers and white elephant gifts, too!",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/4ef6a025-3d5a-4c9b-8b03-5644e06351fc.png",
+        "imageCredit": "Product Shot Image",
+        "byline": "Isabella Cavallo",
         "readTime": "4 min read",
-        "publishedAt": "2026-11-26T12:07:00.000Z",
-        "sourceUrl": "https://www.goodhousekeeping.com/entertainment/a74510961/vintage-rockettes-photos/",
-        "popularity": 57,
-        "signal": "Trending",
-        "tags": [
-          "entertainment",
-          "good housekeeping",
-          "dazzling",
-          "old-school",
-          "photos",
-          "radio"
-        ],
-        "age": 7
-      },
-      {
-        "id": "good-housekeeping-relationships-pets-a74511338-national-dog-show-winner-2026",
-        "brand": "Good Housekeeping",
-        "brandSlug": "good-housekeeping",
-        "topic": "Relationships",
-        "title": "This Rare Dog Breed Just Won the National Dog Show",
-        "summary": "He’s the best boy of all.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/2c9ddc3b-086c-442b-be16-9c2a66ac8784.jpeg",
-        "imageCredit": "NBC",
-        "byline": "Sarah Vincent",
-        "readTime": "3 min read",
-        "publishedAt": "2026-11-26T19:04:00.000Z",
-        "sourceUrl": "https://www.goodhousekeeping.com/relationships/pets/a74511338/national-dog-show-winner-2026/",
+        "publishedAt": "2026-11-27T19:28:08.000Z",
+        "sourceUrl": "https://www.goodhousekeeping.com/what-to-buy/a74550546/black-friday-deals-under-25/",
         "popularity": 62,
         "signal": "Most Popular",
         "tags": [
-          "relationships",
+          "what to buy",
           "good housekeeping",
-          "this",
-          "rare",
-          "breed",
-          "just"
+          "what",
+          "only",
+          "want",
+          "spend"
         ],
         "age": 0
       },
       {
-        "id": "good-housekeeping-relationships-a74509562-small-acts-kindness-benefit-relationships",
+        "id": "good-housekeeping-what-to-buy-sales-shopping-news-a74551041-advent-calendars-on-amazon-last-minute",
         "brand": "Good Housekeeping",
         "brandSlug": "good-housekeeping",
-        "topic": "Relationships",
-        "title": "12 Surprisingly Simple Ways to Strengthen Your Relationships",
-        "summary": "Love doesn't always have to be about grand gestures.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/f7da6518-a3a3-44f6-bf5a-723488c3e750.jpeg",
-        "imageCredit": "Tim Robberts",
-        "readTime": "3 min read",
-        "publishedAt": "2026-11-26T14:15:00.000Z",
-        "sourceUrl": "https://www.goodhousekeeping.com/relationships/a74509562/small-acts-kindness-benefit-relationships/",
+        "topic": "What To Buy",
+        "title": "Advent Calendar Season Starts Tuesday! Amazon Has Some Good Last-Minute Deals",
+        "summary": "Some of our top picks for both kids and adults are still available.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/8d3f73c2-5ff3-4841-96fa-6a8353c12251.jpg",
+        "imageCredit": "Amazon",
+        "byline": "Jessica Dukes",
+        "readTime": "4 min read",
+        "publishedAt": "2026-11-27T18:54:38.000Z",
+        "sourceUrl": "https://www.goodhousekeeping.com/what-to-buy/sales-shopping-news/a74551041/advent-calendars-on-amazon-last-minute/",
         "popularity": 61,
         "signal": "Trending",
         "tags": [
-          "relationships",
+          "what to buy",
           "good housekeeping",
-          "surprisingly",
-          "simple",
-          "ways",
-          "strengthen"
+          "what",
+          "advent",
+          "calendar",
+          "season"
         ],
-        "age": 5
+        "age": 0
       },
       {
-        "id": "house-beautiful-shopping-best-stores-a74521234-wayfair-black-friday-sale-2026",
+        "id": "good-housekeeping-what-to-buy-sales-shopping-news-a74550939-hoda-kotb-bio-oil-black-friday",
+        "brand": "Good Housekeeping",
+        "brandSlug": "good-housekeeping",
+        "topic": "What To Buy",
+        "title": "Hoda Kotb Uses This $8 Skincare Oil “Like It’s Going Out of Style”",
+        "summary": "“I use it like it's going out of style.”",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/e21ef034-5c40-4755-a635-211511c7721b.jpeg",
+        "imageCredit": "NBC",
+        "byline": "Shanon Maglente",
+        "readTime": "3 min read",
+        "publishedAt": "2026-11-27T18:36:56.000Z",
+        "sourceUrl": "https://www.goodhousekeeping.com/what-to-buy/sales-shopping-news/a74550939/hoda-kotb-bio-oil-black-friday/",
+        "popularity": 60,
+        "signal": "Editor Pick",
+        "tags": [
+          "what to buy",
+          "good housekeeping",
+          "what",
+          "hoda",
+          "kotb",
+          "uses"
+        ],
+        "age": 0
+      },
+      {
+        "id": "house-beautiful-shopping-best-stores-a74551057-albany-park-black-friday-sale-2026",
         "brand": "House Beautiful",
         "brandSlug": "house-beautiful",
         "topic": "Shopping",
-        "title": "I Scrolled Through Wayfair’s Black Friday Sale and Found the Only Deals Worth Shopping",
-        "summary": "Save up to 70 percent on mattresses, holiday decor, and furniture.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/328d5f14-b53a-4ff3-8a51-3e77407cefc7.jpg",
-        "imageCredit": "Product Shot Image",
-        "byline": "Anvita Reddy",
-        "readTime": "4 min read",
-        "publishedAt": "2026-11-26T16:30:00.000Z",
-        "sourceUrl": "https://www.housebeautiful.com/shopping/best-stores/a74521234/wayfair-black-friday-sale-2026/",
+        "title": "This Sofa Is the Crown Jewel of My Apartment—and It's $560 Off for Black Friday",
+        "summary": "Did I mention there’s free white-glove delivery?",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/6655f470-1978-4357-b360-c1634faa1eba.jpeg",
+        "imageCredit": "Albany Park",
+        "byline": "Janae McKenzie",
+        "readTime": "3 min read",
+        "publishedAt": "2026-11-27T18:22:22.000Z",
+        "sourceUrl": "https://www.housebeautiful.com/shopping/best-stores/a74551057/albany-park-black-friday-sale-2026/",
         "popularity": 80,
         "signal": "Most Popular",
         "tags": [
           "shopping",
           "house beautiful",
-          "scrolled",
-          "through",
-          "wayfair",
-          "black"
+          "this",
+          "sofa",
+          "crown",
+          "jewel"
         ],
-        "age": 3
+        "age": 1
       },
       {
-        "id": "house-beautiful-room-decorating-bathrooms-g74511574-small-bathroom-personality-ideas",
-        "brand": "House Beautiful",
-        "brandSlug": "house-beautiful",
-        "topic": "Home",
-        "title": "5 Designer-Approved Ways to Make a Small Bathroom Feel Full of Personality",
-        "summary": "Tiny spaces don’t have to play it safe.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/small-bathroom-makeover-green-stripe-tiles-6942fb93a8bc1.jpg",
-        "imageCredit": "James French",
-        "byline": "Evelyn Richards",
-        "readTime": "3 min read",
-        "publishedAt": "2026-11-26T15:30:00.000Z",
-        "sourceUrl": "https://www.housebeautiful.com/room-decorating/bathrooms/g74511574/small-bathroom-personality-ideas/",
-        "popularity": 79,
-        "signal": "Trending",
-        "tags": [
-          "home",
-          "house beautiful",
-          "designer-approved",
-          "ways",
-          "make",
-          "small"
-        ],
-        "age": 4
-      },
-      {
-        "id": "house-beautiful-shopping-best-stores-a74509956-nectar-mattress-black-friday-sale-2026",
+        "id": "house-beautiful-shopping-best-stores-a74478719-best-black-friday-furniture-sales-2026",
         "brand": "House Beautiful",
         "brandSlug": "house-beautiful",
         "topic": "Shopping",
-        "title": "The Affordable Mattress Brand I’ve Been Sleeping on for 9 Years Has the Best Black Friday Deal Right Now",
-        "summary": "It’s hands-down the best I’ve ever tested.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/fae72db8-5efb-433d-8324-6057107e1b0d.jpg",
-        "imageCredit": "Product Shot Image",
-        "byline": "Marina Liao",
+        "title": "50+ Incredible Black Friday Furniture Deals That Go WAY Beyond Free Shipping",
+        "summary": "Including rare deals from brands like Thuma, Design Within Reach, and more.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/02a54beb-7db5-4ba7-b19f-9959aad52182.jpeg",
+        "imageCredit": "CB2",
+        "byline": "Janae McKenzie",
         "readTime": "4 min read",
-        "publishedAt": "2026-11-26T14:30:00.000Z",
-        "sourceUrl": "https://www.housebeautiful.com/shopping/best-stores/a74509956/nectar-mattress-black-friday-sale-2026/",
+        "publishedAt": "2026-11-27T17:40:00.000Z",
+        "sourceUrl": "https://www.housebeautiful.com/shopping/best-stores/a74478719/best-black-friday-furniture-sales-2026/",
+        "popularity": 79,
+        "signal": "Trending",
+        "tags": [
+          "shopping",
+          "house beautiful",
+          "incredible",
+          "black",
+          "friday",
+          "furniture"
+        ],
+        "age": 1
+      },
+      {
+        "id": "house-beautiful-shopping-best-stores-a74550097-dyson-black-friday-sales-deals-2026",
+        "brand": "House Beautiful",
+        "brandSlug": "house-beautiful",
+        "topic": "Shopping",
+        "title": "Dyson’s Black Friday Deals Are Here—Get Vacuums and Air Purifiers up to 55% Off",
+        "summary": "This is your chance to get a new model at its lowest price all year.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/894e105a-c92c-4d49-8449-99532a23bfee.jpg",
+        "imageCredit": "Product Shot Image",
+        "byline": "Anvita Reddy",
+        "readTime": "4 min read",
+        "publishedAt": "2026-11-27T17:37:00.000Z",
+        "sourceUrl": "https://www.housebeautiful.com/shopping/best-stores/a74550097/dyson-black-friday-sales-deals-2026/",
         "popularity": 78,
         "signal": "Editor Pick",
         "tags": [
           "shopping",
           "house beautiful",
-          "affordable",
-          "mattress",
-          "brand",
-          "been"
+          "dyson",
+          "black",
+          "friday",
+          "deals"
         ],
-        "age": 5
+        "age": 1
       },
       {
-        "id": "pioneer-woman-home-lifestyle-entertaining-a74469518-make-home-smell-good-for-holiday-guests",
+        "id": "pioneer-woman-food-cooking-recipes-a74511385-thanksgiving-leftovers-nachos-recipe",
         "brand": "The Pioneer Woman",
         "brandSlug": "pioneer-woman",
-        "topic": "Home Lifestyle",
-        "title": "10 Simple Ways to Make Your Home Smell Amazing Before Holiday Guests Arrive",
-        "summary": "It’s simmer pot season.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/b2eeda6f-ff9a-43e3-a26a-2b654c0b1eb1.jpeg",
-        "imageCredit": "alvarez",
-        "byline": "Lilly Blomquist",
+        "topic": "Food Cooking",
+        "title": "Thanksgiving Leftovers Nachos",
+        "summary": "Turkey, stuffing, mashed potatoes, and cranberry sauce get piled onto crunchy chips with plenty of cheese.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/a4e9787d-0de5-4949-946a-3b76a58a14e9.jpeg",
+        "imageCredit": "C.W Newell",
         "readTime": "3 min read",
-        "publishedAt": "2026-11-26T11:00:00.000Z",
-        "sourceUrl": "https://www.thepioneerwoman.com/home-lifestyle/entertaining/a74469518/make-home-smell-good-for-holiday-guests/",
+        "publishedAt": "2026-11-27T12:30:00.000Z",
+        "sourceUrl": "https://www.thepioneerwoman.com/food-cooking/recipes/a74511385/thanksgiving-leftovers-nachos-recipe/",
         "popularity": 98,
         "signal": "Most Popular",
         "tags": [
-          "home lifestyle",
+          "food cooking",
           "the pioneer woman",
-          "home",
-          "lifestyle",
-          "simple",
-          "ways"
+          "food",
+          "cooking",
+          "thanksgiving",
+          "leftovers"
         ],
-        "age": 8
+        "age": 7
       },
       {
-        "id": "pioneer-woman-news-entertainment-a74521794-how-to-watch-macys-thanksgiving-day-parade-2026",
-        "brand": "The Pioneer Woman",
-        "brandSlug": "pioneer-woman",
-        "topic": "News Entertainment",
-        "title": "How to Watch the 100th Macy’s Thanksgiving Day Parade",
-        "summary": "It isn't Turkey Day until the floats come out.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/how-to-watch-macys-thanksgiving-day-parade-69249610a841d.png",
-        "imageCredit": "NBC / Contributor",
-        "byline": "Lilly Blomquist",
-        "readTime": "3 min read",
-        "publishedAt": "2026-11-26T01:15:03.000Z",
-        "sourceUrl": "https://www.thepioneerwoman.com/news-entertainment/a74521794/how-to-watch-macys-thanksgiving-day-parade-2026/",
-        "popularity": 97,
-        "signal": "Trending",
-        "tags": [
-          "news entertainment",
-          "the pioneer woman",
-          "news",
-          "entertainment",
-          "watch",
-          "100th"
-        ],
-        "age": 18
-      },
-      {
-        "id": "pioneer-woman-ree-drummond-life-a74522128-alex-drummond-jcrew-rollneck-sweater-sale-2026",
+        "id": "pioneer-woman-ree-drummond-life-a74444768-alex-drummond-favorite-christmas-decorations",
         "brand": "The Pioneer Woman",
         "brandSlug": "pioneer-woman",
         "topic": "Ree Drummond Life",
-        "title": "Alex Drummond Says This Famous J.Crew Sweater is ‘Everything’—and It's on Sale Now",
-        "summary": "Shop it in multiple colors for 40% off.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/882398ce-43da-4af1-8e16-c59ad02dc151.png",
-        "imageCredit": "Alex Drummond",
-        "byline": "Macie Reynolds",
+        "title": "Shop Alex Drummond’s Favorite Christmas Decorations",
+        "summary": "George’s stocking made the list, of course!",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/e189912d-0f7c-4a54-866c-7fc9d5dacfd3.jpg",
+        "imageCredit": "Buff Strickland",
+        "byline": "Kelly O'Sullivan",
         "readTime": "3 min read",
-        "publishedAt": "2026-11-25T15:00:00.000Z",
-        "sourceUrl": "https://www.thepioneerwoman.com/ree-drummond-life/a74522128/alex-drummond-jcrew-rollneck-sweater-sale-2026/",
-        "popularity": 96,
-        "signal": "Editor Pick",
+        "publishedAt": "2026-11-27T11:00:00.000Z",
+        "sourceUrl": "https://www.thepioneerwoman.com/ree-drummond-life/a74444768/alex-drummond-favorite-christmas-decorations/",
+        "popularity": 97,
+        "signal": "Trending",
         "tags": [
           "ree drummond life",
           "the pioneer woman",
           "drummond",
           "life",
-          "alex",
-          "says"
+          "shop",
+          "alex"
         ],
-        "age": 28
+        "age": 8
       },
       {
-        "id": "prevention-food-nutrition-a74417769-honey-vs-maple-syrup-vs-sugar",
-        "brand": "Prevention",
-        "brandSlug": "prevention",
-        "topic": "Food Nutrition",
-        "title": "Honey, Maple Syrup, or Sugar: Is Any Sweetener Actually Healthiest? A Dietitian Explains.",
-        "summary": "They all add sweetness, but how do they stack up nutritionally?",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/a3ac7c26-e42f-493e-a3f1-3fdd01711508.jpeg",
-        "imageCredit": "SimpleImages",
-        "byline": "Lauren Manaker, M.S., R.D.N., L.D.",
-        "readTime": "4 min read",
-        "publishedAt": "2026-11-26T13:29:00.000Z",
-        "sourceUrl": "https://www.prevention.com/food-nutrition/a74417769/honey-vs-maple-syrup-vs-sugar/",
-        "popularity": 70,
-        "signal": "Most Popular",
+        "id": "pioneer-woman-food-cooking-meals-menus-g74453879-leftover-mashed-potato-recipes",
+        "brand": "The Pioneer Woman",
+        "brandSlug": "pioneer-woman",
+        "topic": "Food Cooking",
+        "title": "14 Leftover Mashed Potato Recipes That Are Worth Making Extras",
+        "summary": "Yesterday's side dish can be tonight’s dinner.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/turkey-croquettes-recipe-2x1-69247c1a06a12.jpg",
+        "imageCredit": "C.W. Newell",
+        "byline": "Kara Zauberman",
+        "readTime": "3 min read",
+        "publishedAt": "2026-11-26T20:44:29.000Z",
+        "sourceUrl": "https://www.thepioneerwoman.com/food-cooking/meals-menus/g74453879/leftover-mashed-potato-recipes/",
+        "popularity": 96,
+        "signal": "Editor Pick",
         "tags": [
-          "food nutrition",
-          "prevention",
+          "food cooking",
+          "the pioneer woman",
           "food",
-          "nutrition",
-          "honey",
-          "maple"
+          "cooking",
+          "leftover",
+          "mashed"
         ],
-        "age": 6
+        "age": 22
       },
       {
-        "id": "prevention-health-health-conditions-a74541040-walking-for-digestion",
+        "id": "prevention-fitness-workout-clothes-gear-a74480750-best-apple-watch-black-friday-deals-2026",
         "brand": "Prevention",
         "brandSlug": "prevention",
         "topic": "Wellness",
-        "title": "This 1 Habit Can Help You Digest Better After a Meal, According to Experts",
-        "summary": "Make this action part of your routine to enjoy a buffet of health benefits and support healthy aging.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/5e86e917-8979-4f7e-9e60-6d9c5478ff40.jpeg",
-        "imageCredit": "MoMo Productions",
-        "byline": "Lauren Manaker, M.S., R.D.N., L.D.",
+        "title": "Every Apple Watch Is at a Record-Low Price for Black Friday—Grab One Before They Sell Out",
+        "summary": "The SE 3, Series 12, and Ultra 4 are the cheapest we’ve ever seen them on Amazon.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/524a6884-d906-40f5-9b2c-59efd1cd5626.jpg",
+        "imageCredit": "Product Shot Image",
+        "byline": "Angel Madison",
         "readTime": "4 min read",
-        "publishedAt": "2026-11-26T13:16:24.000Z",
-        "sourceUrl": "https://www.prevention.com/health/health-conditions/a74541040/walking-for-digestion/",
-        "popularity": 69,
-        "signal": "Trending",
+        "publishedAt": "2026-11-27T16:46:00.000Z",
+        "sourceUrl": "https://www.prevention.com/fitness/workout-clothes-gear/a74480750/best-apple-watch-black-friday-deals-2026/",
+        "popularity": 70,
+        "signal": "Most Popular",
         "tags": [
           "wellness",
           "prevention",
-          "this",
-          "habit",
-          "help",
-          "digest"
+          "every",
+          "apple",
+          "watch",
+          "record-low"
         ],
-        "age": 6
+        "age": 2
       },
       {
-        "id": "prevention-food-nutrition-a74431273-what-happens-when-you-skip-breakfast",
+        "id": "prevention-life-a74359113-black-friday-mattress-sales-2026",
         "brand": "Prevention",
         "brandSlug": "prevention",
-        "topic": "Food Nutrition",
-        "title": "Here’s What Really Happens to Your Body When You Skip Breakfast, According to Dietitians",
-        "summary": "It’s the most important meal of the day for a reason.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/b4834dee-4e2d-4037-abc2-9be16fcf7da2.jpeg",
-        "imageCredit": "fcafotodigital",
-        "byline": "Stephanie Kasulka",
+        "topic": "Shopping",
+        "title": "The Best Black Friday Mattress Deals: Over 50% Off Editor-Tested Favorites",
+        "summary": "We found the best deals from brands we trust, like Saatva, Avocado, and Helix.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/74527a3a-1148-4d3c-8803-9b6ad70ff901.jpeg",
+        "imageCredit": "Product Shot Image",
+        "byline": "Jessica Dukes",
         "readTime": "4 min read",
-        "publishedAt": "2026-11-26T12:18:00.000Z",
-        "sourceUrl": "https://www.prevention.com/food-nutrition/a74431273/what-happens-when-you-skip-breakfast/",
+        "publishedAt": "2026-11-27T15:42:00.000Z",
+        "sourceUrl": "https://www.prevention.com/life/a74359113/black-friday-mattress-sales-2026/",
+        "popularity": 69,
+        "signal": "Trending",
+        "tags": [
+          "shopping",
+          "prevention",
+          "best",
+          "black",
+          "friday",
+          "mattress"
+        ],
+        "age": 3
+      },
+      {
+        "id": "prevention-fitness-workout-clothes-gear-a74361765-brooks-vs-hoka-black-friday-deals-2026",
+        "brand": "Prevention",
+        "brandSlug": "prevention",
+        "topic": "Wellness",
+        "title": "Hoka Vs. Brooks Black Friday Deals 2026: One Brand Is Offering the Better Savings on Shoes",
+        "summary": "But both are podiatrist favorites and discounted for the shopping “holiday.”",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/2f41ebd8-9c89-4e7b-bf74-d96dd1eb0fc6.png",
+        "imageCredit": "Product Shot Image",
+        "byline": "Charlotte Lewis Finigan",
+        "readTime": "4 min read",
+        "publishedAt": "2026-11-27T14:48:00.000Z",
+        "sourceUrl": "https://www.prevention.com/fitness/workout-clothes-gear/a74361765/brooks-vs-hoka-black-friday-deals-2026/",
         "popularity": 68,
         "signal": "Editor Pick",
         "tags": [
-          "food nutrition",
+          "wellness",
           "prevention",
-          "food",
-          "nutrition",
-          "here",
-          "what"
+          "hoka",
+          "brooks",
+          "black",
+          "friday"
         ],
-        "age": 7
+        "age": 4
       },
       {
         "id": "redbook-life-charity-g4632-funny-animal-pictures",
@@ -559,7 +565,7 @@ export const storybookFixtureData = {
           "animal",
           "photos"
         ],
-        "age": 81001
+        "age": 81025
       },
       {
         "id": "redbook-life-charity-g60982152-odd-day-off-activities",
@@ -583,7 +589,7 @@ export const storybookFixtureData = {
           "activities",
           "refreshing"
         ],
-        "age": 20741
+        "age": 20765
       },
       {
         "id": "redbook-body-health-fitness-g61444461-best-manuka-honey-tips",
@@ -608,7 +614,7 @@ export const storybookFixtureData = {
           "know",
           "about"
         ],
-        "age": 20741
+        "age": 20765
       },
       {
         "id": "seventeen-celebrity-a64285586-clairo-interview-2025",
@@ -631,7 +637,7 @@ export const storybookFixtureData = {
           "clairo",
           "clarity"
         ],
-        "age": 14360
+        "age": 14384
       },
       {
         "id": "seventeen-love-dating-advice-a43920146-otp-meaning-definition",
@@ -655,7 +661,7 @@ export const storybookFixtureData = {
           "does",
           "mean"
         ],
-        "age": 30934
+        "age": 30958
       },
       {
         "id": "seventeen-celebrity-music-g43379992-duet-karaoke-songs",
@@ -680,7 +686,7 @@ export const storybookFixtureData = {
           "karaoke",
           "songs"
         ],
-        "age": 32280
+        "age": 32304
       },
       {
         "id": "womans-day-food-recipes-cooking-tips-a74344735-ninja-eversear-frying-pan-review",
@@ -705,7 +711,7 @@ export const storybookFixtureData = {
           "always",
           "stick"
         ],
-        "age": 509
+        "age": 533
       },
       {
         "id": "womans-day-life-a60824667-funny-pirate-jokes",
@@ -730,7 +736,7 @@ export const storybookFixtureData = {
           "that",
           "arrrr"
         ],
-        "age": 22154
+        "age": 22178
       },
       {
         "id": "womans-day-life-g39739621-gift-ideas-for-eid",
@@ -755,7 +761,7 @@ export const storybookFixtureData = {
           "that",
           "celebrate"
         ],
-        "age": 23879
+        "age": 23903
       }
     ],
     "sourceNotes": [
@@ -784,7 +790,7 @@ export const storybookFixtureData = {
         "brand": "Good Housekeeping",
         "brandSlug": "good-housekeeping",
         "feedCount": 7,
-        "importedCount": 285,
+        "importedCount": 282,
         "selectedCount": 28
       },
       {
@@ -834,122 +840,124 @@ export const storybookFixtureData = {
   "autos": {
     "stories": [
       {
-        "id": "autoweek-photos-a74542902-gallery-ford-gt41-hypercar-photos",
+        "id": "autoweek-photos-a74544986-gallery-2028-volvo-xc60-phev-drive-photos",
         "brand": "Autoweek",
         "brandSlug": "autoweek",
-        "topic": "Trucks",
-        "title": "Gallery: Ford GT41 Hypercar Photos",
-        "summary": "The new WEC prototype carries the GT40’s legacy into a modern Hypercar program targeting an overall victory in 2027.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/8bdcbb94-cd7b-41cd-93b6-6b6aa16d3fb9.jpg",
-        "imageCredit": "Ford Racing",
-        "readTime": "4 min read",
-        "publishedAt": "2026-11-26T18:00:00.000Z",
-        "sourceUrl": "https://www.autoweek.com/photos/a74542902/gallery-ford-gt41-hypercar-photos/",
-        "popularity": 100,
-        "signal": "Most Popular",
+        "topic": "EVs",
+        "title": "Gallery: 2028 Volvo XC60 PHEV Photos",
+        "summary": "Bigger battery means twice the all-electric range—78 miles.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/b22dfd97-f0c3-471e-a5b7-9dda7128628d.jpg",
+        "imageCredit": "Volvo",
+        "byline": "Mark Vaughn",
+        "readTime": "3 min read",
+        "publishedAt": "2026-11-27T18:40:32.000Z",
+        "sourceUrl": "https://www.autoweek.com/photos/a74544986/gallery-2028-volvo-xc60-phev-drive-photos/",
+        "popularity": 82,
+        "signal": "Editor Pick",
         "tags": [
-          "trucks",
+          "evs",
           "autoweek",
           "gallery",
-          "ford",
-          "gt41",
-          "hypercar",
+          "2028",
+          "volvo",
+          "xc60",
+          "phev",
           "photos"
         ],
-        "age": 1
+        "age": 0
       },
       {
-        "id": "autoweek-racing-more-racing-a74542832-ford-le-mans-prototype-gt41-debuts",
+        "id": "autoweek-racing-nascar-a74551560-judge-denies-jgr-request-to-extend-injunction-to-spire",
         "brand": "Autoweek",
         "brandSlug": "autoweek",
         "topic": "Racing",
-        "title": "Ford’s New GT41 Le Mans Prototype Debuts at Detroit Lions Game",
-        "summary": "The 2027 WEC prototype made its public debut at Ford Field as Ford sets its sights on an overall Le Mans victory nearly 60 years after the GT40’s historic run.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/8344c2eb-8a02-4fea-bf48-3f6584995764.jpg",
-        "imageCredit": "Ford Racing",
-        "byline": "Jonathan Ingram",
+        "title": "Judge Denies JGR Request to Extend Gabehart Injunction to Spire",
+        "summary": "The ruling keeps restrictions on Chris Gabehart in place but rejects Joe Gibbs Racing’s broader request to impose an injunction on Spire Motorsports.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/4cda214e-7811-4bfd-bbd0-412b1a10e32e.jpeg",
+        "imageCredit": "Meg Oliphant",
+        "byline": "Deb Williams",
         "readTime": "4 min read",
-        "publishedAt": "2026-11-26T18:00:00.000Z",
-        "sourceUrl": "https://www.autoweek.com/racing/more-racing/a74542832/ford-le-mans-prototype-gt41-debuts/",
+        "publishedAt": "2026-11-27T19:22:13.000Z",
+        "sourceUrl": "https://www.autoweek.com/racing/nascar/a74551560/judge-denies-jgr-request-to-extend-injunction-to-spire/",
+        "popularity": 100,
+        "signal": "Most Popular",
+        "tags": [
+          "racing",
+          "autoweek",
+          "judge",
+          "denies",
+          "request",
+          "extend",
+          "gabehart"
+        ],
+        "age": 0
+      },
+      {
+        "id": "autoweek-racing-more-racing-a74551458-motogp-champ-marc-marquez-retires-at-33",
+        "brand": "Autoweek",
+        "brandSlug": "autoweek",
+        "topic": "Racing",
+        "title": "MotoGP’s Greatest Modern Champ, Marc Marquez Retires at 33",
+        "summary": "The eight-time premier-class title winner will retire after Sunday’s Valencia finale, ending one of the sport’s greatest careers.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/82ebb698-e377-4fae-8b16-6ea14a5d610a.jpeg",
+        "imageCredit": "NurPhoto",
+        "byline": "Phillip Horton",
+        "readTime": "4 min read",
+        "publishedAt": "2026-11-27T18:59:37.000Z",
+        "sourceUrl": "https://www.autoweek.com/racing/more-racing/a74551458/motogp-champ-marc-marquez-retires-at-33/",
         "popularity": 94,
         "signal": "Editor Pick",
         "tags": [
           "racing",
           "autoweek",
-          "ford",
-          "gt41",
-          "mans",
-          "prototype",
-          "debuts"
-        ],
-        "age": 1
-      },
-      {
-        "id": "autoweek-racing-formula-1-a74542418-f1-2027-grid-set-as-haas-confirms-bearman",
-        "brand": "Autoweek",
-        "brandSlug": "autoweek",
-        "topic": "Racing",
-        "title": "F1’s 2027 Grid Is Finally Set as Haas Confirms Bearman",
-        "summary": "Oliver Bearman will return alongside rookie Rafael Câmara, completing a 22-driver lineup that otherwise remains unchanged from 2026.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/870a8d1d-1264-4807-87d7-38c76d4a4dc6.jpeg",
-        "imageCredit": "Clive Rose",
-        "byline": "Phillip Horton",
-        "readTime": "4 min read",
-        "publishedAt": "2026-11-26T16:47:26.000Z",
-        "sourceUrl": "https://www.autoweek.com/racing/formula-1/a74542418/f1-2027-grid-set-as-haas-confirms-bearman/",
-        "popularity": 88,
-        "signal": "Most Popular",
-        "tags": [
-          "racing",
-          "autoweek",
-          "2027",
-          "grid",
-          "finally",
-          "haas",
-          "confirms"
-        ],
-        "age": 2
-      },
-      {
-        "id": "bring-a-trailer-listing-1972-chevrolet-nova-92",
-        "brand": "Bring a Trailer",
-        "brandSlug": "bring-a-trailer",
-        "topic": "EVs",
-        "title": "1972 Chevrolet Nova SS Coupe",
-        "summary": "This 1972 Chevrolet Nova SS coupe was fitted with a 350ci V8 and a 700R4 automatic transmission circa 2021, and it has a 12-bolt rear axle with a Truetrac differential and 3.42 gears. The body is finished in gold with SS emblems, black bodyside moldings, and a beige-finished roof, and the cabin is appointed with beige vinyl upholstery, gold carpets, a center console, a retro-look stereo, and air conditioning. Other equipment includes Torq Thrust wheels, four-wheel disc brakes, power steering, a dual exhaust system, a front air dam, a Holley carburetor, and an aluminum intake manifold. Acquired by the selling dealer in 2026, this Nova SS coupe is now offered with service records and an Indiana title.",
-        "image": "https://bringatrailer.com/wp-content/uploads/2026/11/IMG_5797-scaled-copy-2026-11-24-q0x-42ce55f7e1ff272bb3e434349f7b9ed1.jpg?w=940",
-        "imageCredit": "",
-        "byline": "bringatrailer",
-        "readTime": "6 min read",
-        "publishedAt": "2026-11-26T19:10:05.000Z",
-        "sourceUrl": "https://bringatrailer.com/listing/1972-chevrolet-nova-92/",
-        "popularity": 99,
-        "signal": "Trending",
-        "tags": [
-          "evs",
-          "bring a trailer",
-          "bring",
-          "trailer",
-          "1972",
-          "chevrolet",
-          "nova",
-          "coupe"
+          "motogp",
+          "greatest",
+          "modern",
+          "champ",
+          "marc"
         ],
         "age": 0
       },
       {
-        "id": "bring-a-trailer-listing-2019-bmw-r-ninet-6",
+        "id": "bring-a-trailer-es-listing-1973-porsche-911t-coupe-66",
         "brand": "Bring a Trailer",
         "brandSlug": "bring-a-trailer",
         "topic": "Classics",
-        "title": "1,100-Mile 2019 BMW R nineT Scrambler at No Reserve",
-        "summary": "This 2019 BMW R nineT Scrambler was purchased new by its current owner who has ridden it 1,100 miles. It is finished in Stereo Metallic Matt and is powered by a 1,170cc opposed-twin linked with a six-speed transmission and an enclosed driveshaft. Features include black-finished alloy wheels, an oil cooler, a conventional fork, a Paralever single-sided swingarm, triple anti-lock disc brakes with Brembo front calipers, a brown leather seat, hand brush guards, heated grips, a USB charger, a RAM device mount, bar-end mirrors, a headlight guard, and an Akrapovič exhaust system. This R9TSCR is now offered at no reserve by the seller on behalf of its current owner with service records, a dealer spec sheet, an owner's manual, and a clean Washington title in the current owner's name.",
-        "image": "https://bringatrailer.com/wp-content/uploads/2026/10/IMG_9600-copy-2026-11-05-hdc-258e189bba1291233b014c2ec2249b3f.jpg?w=940",
+        "title": "RS-Style 1973 Porsche 911T Coupe",
+        "summary": "This 1973 Porsche 911T coupe was modified as a Carrera RS tribute by CPR Classics between 2014 and 2017. Work included refinishing the body in Albert Blue over red leather as well as installing a 2.45-liter flat-six with mechanical fuel injection and a five-speed manual transaxle with RS-specification gearing. Additional equipment consists of flared rear fenders, a fiberglass RS-style ducktail decklid and front valence, staggered-width Fuchs-style wheels, Bilstein shocks, an RS fuel tank, XPEL paint protection film, sport seats, and a pair of Heuer rally timers. The current owner purchased the car on BaT in November 2022 , and since that time RS-style stripes and stickers were added and Avon tires were mounted along with a MOMO Prototipo steering wheel. This 911T is now offered in Oregon on consignment by 911r, BaT Local Partner , with the removed factory steering wheel, records, and a clean California title.",
+        "image": "https://bringatrailer.com/wp-content/uploads/2026/11/40779_EXT_001-scaled-69a605e1090d19c90d25cdb4187e120c.jpg?w=940",
         "imageCredit": "",
         "byline": "bringatrailer",
         "readTime": "6 min read",
-        "publishedAt": "2026-11-26T19:00:07.000Z",
-        "sourceUrl": "https://bringatrailer.com/listing/2019-bmw-r-ninet-6/",
+        "publishedAt": "2026-11-27T17:50:16.000Z",
+        "sourceUrl": "https://bringatrailer.com/es/listing/1973-porsche-911t-coupe-66/",
+        "popularity": 99,
+        "signal": "Trending",
+        "tags": [
+          "classics",
+          "bring a trailer",
+          "bring",
+          "trailer",
+          "rs-style",
+          "1973",
+          "porsche",
+          "911t"
+        ],
+        "age": 1
+      },
+      {
+        "id": "bring-a-trailer-es-listing-1987-toyota-land-cruiser-fj60-203",
+        "brand": "Bring a Trailer",
+        "brandSlug": "bring-a-trailer",
+        "topic": "Classics",
+        "title": "1987 Toyota Land Cruiser FJ60 4-Speed",
+        "summary": "This 1987 Toyota Land Cruiser FJ60 was acquired by the seller in 2025, and work since then has reportedly included refinishing the body in brown, reupholstering the seating surfaces in gray vinyl, installing a 2\" Old Man Emu suspension lift, and replacing the front brake calipers, headliner, and carpeting. The truck is powered by a 4.2-liter 2F inline-six linked with a four-speed manual transmission and a two-speed transfer case, and it is further equipped with black-finished 15\" wheels, locking front hubs, a locking center console, a radio, manual crank windows, and air conditioning. This FJ60 shows 201k miles and is now offered with the owner’s manuals, a Haynes repair manual, spare parts, a clean Carfax report, and a Colorado title in the seller’s name.",
+        "image": "https://bringatrailer.com/wp-content/uploads/2026/11/20261007_095123-scaled-copy-2026-11-24-5zb-c14d2087f6b32dc8f98b7d170680c66b.jpg?w=940",
+        "imageCredit": "",
+        "byline": "bringatrailer",
+        "readTime": "6 min read",
+        "publishedAt": "2026-11-27T17:40:05.000Z",
+        "sourceUrl": "https://bringatrailer.com/es/listing/1987-toyota-land-cruiser-fj60-203/",
         "popularity": 93,
         "signal": "Continue",
         "tags": [
@@ -957,26 +965,26 @@ export const storybookFixtureData = {
           "bring a trailer",
           "bring",
           "trailer",
-          "100-mile",
-          "2019",
-          "ninet",
-          "scrambler"
+          "1987",
+          "toyota",
+          "land",
+          "cruiser"
         ],
-        "age": 0
+        "age": 1
       },
       {
-        "id": "bring-a-trailer-listing-2008-pontiac-g8-22",
+        "id": "bring-a-trailer-es-listing-1923-ford-model-t-75",
         "brand": "Bring a Trailer",
         "brandSlug": "bring-a-trailer",
         "topic": "Classics",
-        "title": "2008 Pontiac G8 GT",
-        "summary": "This 2008 Pontiac G8 GT remained with its original owner for two years before it was purchased in 2010 by the seller. Power is provided by a 6.0-liter V8 linked with a six-speed automatic transmission and a limited-slip differential. The car rides on 18\" five-spoke alloy wheels, and the Panther Black Metallic-finished bodywork features a sunroof, a rear spoiler, and dual hood scoops, while the Onyx and Red leather-trimmed cabin houses heated power-adjustable front seats, a Blaupunkt sound system, and dual-zone automatic climate control. This G8 GT has been driven 100k miles and is now offered with a clean Carfax report and a Missouri title in the seller's name.",
-        "image": "https://bringatrailer.com/wp-content/uploads/2026/11/DSC00008-scaled-copy-2026-11-23-exx-d7acfa03405e3c57e51610873edbf6d2.jpg?w=940",
+        "title": "SBC-Powered &#8217;23 Ford T-Bucket w/6&#215;2 Intake",
+        "summary": "This T-bucket hot rod, known as “Deuces Wild,” is powered by a small-block Chevrolet V8 with six two-barrel carburetors. The build features a fiberglass T-Bucket body, chrome tube front axle with hairpins, front disc brakes, rear ladder bars, chrome transverse leaf spring, rear coil springs, Weld Racing wheels, and wide Hoosier rear tires. Finished in Pink and Cream with Maroon and Pink scallop graphics over pleated Mauve upholstery, the car also features a Maroon soft top, wood dashboard, AutoMeter instrumentation, lap belts, and side-exit exhaust. The selling dealer acquired the car in 2026 from an estate, and recommissioning work performed since included a tune-up, fluid service, and mounting new rear Hoosier tires. This Model T is now offered with an Indiana title.",
+        "image": "https://bringatrailer.com/wp-content/uploads/2026/10/10576_23_fitw-copy-2026-11-20-ytg-c3634ce21b724f478c6859fde2fee604.jpg?w=940",
         "imageCredit": "",
         "byline": "bringatrailer",
         "readTime": "6 min read",
-        "publishedAt": "2026-11-26T18:50:06.000Z",
-        "sourceUrl": "https://bringatrailer.com/listing/2008-pontiac-g8-22/",
+        "publishedAt": "2026-11-27T17:30:18.000Z",
+        "sourceUrl": "https://bringatrailer.com/es/listing/1923-ford-model-t-75/",
         "popularity": 87,
         "signal": "Trending",
         "tags": [
@@ -984,10 +992,12 @@ export const storybookFixtureData = {
           "bring a trailer",
           "bring",
           "trailer",
-          "2008",
-          "pontiac"
+          "sbc-powered",
+          "8217",
+          "ford",
+          "t-bucket"
         ],
-        "age": 0
+        "age": 2
       },
       {
         "id": "car-and-driver-photos-a74522047-1979-buick-century-turbo-coupe-archive-test-gallery",
@@ -1002,7 +1012,7 @@ export const storybookFixtureData = {
         "readTime": "4 min read",
         "publishedAt": "2026-11-26T14:00:00.000Z",
         "sourceUrl": "https://www.caranddriver.com/photos/a74522047/1979-buick-century-turbo-coupe-archive-test-gallery/",
-        "popularity": 68,
+        "popularity": 90,
         "signal": "Most Popular",
         "tags": [
           "reviews",
@@ -1014,59 +1024,57 @@ export const storybookFixtureData = {
           "buick",
           "century"
         ],
-        "age": 5
+        "age": 29
       },
       {
-        "id": "car-and-driver-news-a74523024-ford-gt41-le-mans-hypercar-revealed",
-        "brand": "Car and Driver",
-        "brandSlug": "car-and-driver",
-        "topic": "EVs",
-        "title": "Ford’s Next Le Mans Dream Is Finally Here: Meet the GT41",
-        "summary": "FoMoCo’s latest race car was built with one goal in mind: Get back on the top step of the Le Mans podium.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/fc8eb32d-a1a4-48e1-b7a7-cbcfff3f585a.jpg",
-        "imageCredit": "Ford",
-        "byline": "Jack Fitzgerald",
-        "readTime": "4 min read",
-        "publishedAt": "2026-11-26T19:00:00.000Z",
-        "sourceUrl": "https://www.caranddriver.com/news/a74523024/ford-gt41-le-mans-hypercar-revealed/",
-        "popularity": 98,
-        "signal": "Editor Pick",
-        "tags": [
-          "evs",
-          "car and driver",
-          "driver",
-          "ford",
-          "next",
-          "mans",
-          "dream",
-          "finally"
-        ],
-        "age": 0
-      },
-      {
-        "id": "car-and-driver-shopping-advice-a74520310-dually-pickup-trucks-vans-explained",
+        "id": "car-and-driver-shopping-advice-a74532122-gooseneck-hitch-explained",
         "brand": "Car and Driver",
         "brandSlug": "car-and-driver",
         "topic": "Reviews",
-        "title": "Dually Noted: The Reasons Why Some Pickup Trucks and Vans Come with Dual Rear Wheels",
-        "summary": "Dually pickup trucks and vans may look tough, but these models have four rear wheels and tires for reasons that have nothing to do with vanity.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/2019-ram-3500-limited-diesel-dually-106-1559052935.jpg",
-        "imageCredit": "Brad Fick",
-        "byline": "David Gluckman",
+        "title": "Gooseneck Hitches Explained",
+        "summary": "If a run-of-the-mill rear-mounted hitch won’t do, then a gooseneck hitch may be worth looking into.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/2023-ford-super-duty-119-6491faccb1df8.jpg",
+        "imageCredit": "Ford",
+        "byline": "Brendan McAleer",
+        "readTime": "3 min read",
+        "publishedAt": "2026-11-27T17:00:00.000Z",
+        "sourceUrl": "https://www.caranddriver.com/shopping-advice/a74532122/gooseneck-hitch-explained/",
+        "popularity": 98,
+        "signal": "Editor Pick",
+        "tags": [
+          "reviews",
+          "car and driver",
+          "driver",
+          "gooseneck",
+          "hitches",
+          "explained"
+        ],
+        "age": 2
+      },
+      {
+        "id": "car-and-driver-news-a74531030-elvis-themed-gmc-custom-van-bring-a-trailer-auction",
+        "brand": "Car and Driver",
+        "brandSlug": "car-and-driver",
+        "topic": "Reviews",
+        "title": "Buy This Custom 1978 GMC Van, and Elvis Is Your Co-Pilot",
+        "summary": "With this GMC Vandura on Bring a Trailer, every drive is like a trip to Graceland.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/feaf7ac0-4727-4084-95f5-567b5b2ab477.jpg",
+        "imageCredit": "Bring a Trailer",
+        "byline": "Brendan McAleer",
         "readTime": "4 min read",
-        "publishedAt": "2026-11-26T16:00:00.000Z",
-        "sourceUrl": "https://www.caranddriver.com/shopping-advice/a74520310/dually-pickup-trucks-vans-explained/",
+        "publishedAt": "2026-11-27T16:00:00.000Z",
+        "sourceUrl": "https://www.caranddriver.com/news/a74531030/elvis-themed-gmc-custom-van-bring-a-trailer-auction/",
         "popularity": 92,
         "signal": "Most Popular",
         "tags": [
           "reviews",
           "car and driver",
           "driver",
-          "dually",
-          "noted",
-          "reasons",
-          "some",
-          "pickup"
+          "this",
+          "custom",
+          "1978",
+          "elvis",
+          "your"
         ],
         "age": 3
       },
@@ -1083,8 +1091,8 @@ export const storybookFixtureData = {
         "readTime": "4 min read",
         "publishedAt": "2026-11-11T00:33:03.000Z",
         "sourceUrl": "https://www.hotrod.com/events/sema-2026-hottest-engine-bays-engines-gallery",
-        "popularity": 81,
-        "signal": "Continue",
+        "popularity": 75,
+        "signal": "Trending",
         "tags": [
           "evs",
           "hot rod",
@@ -1095,7 +1103,34 @@ export const storybookFixtureData = {
           "bays",
           "wildest"
         ],
-        "age": 379
+        "age": 402
+      },
+      {
+        "id": "hot-rod-features-what-happened-to-cruise-nights-hot-rodding",
+        "brand": "HOT ROD",
+        "brandSlug": "hot-rod",
+        "topic": "Performance",
+        "title": "What Happened to Cruise Nights? How Hot Rodding’s Favorite Ritual Evolved",
+        "summary": "Once a common staple of hot rodding the nightly cruise-in has been replaced with something new.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/7f910795-f6d5-4f4d-bfbc-dd19d4ae94fd.jpg",
+        "imageCredit": "Steven Rupp",
+        "byline": "Steven Rupp",
+        "readTime": "4 min read",
+        "publishedAt": "2026-11-27T11:00:00.000Z",
+        "sourceUrl": "https://www.hotrod.com/features/what-happened-to-cruise-nights-hot-rodding",
+        "popularity": 97,
+        "signal": "Continue",
+        "tags": [
+          "performance",
+          "hot rod",
+          "what",
+          "happened",
+          "cruise",
+          "nights",
+          "rodding",
+          "favorite"
+        ],
+        "age": 8
       },
       {
         "id": "hot-rod-features-1000-hp-carbon-fiber-chevrolet-tahoe-race-car",
@@ -1110,8 +1145,8 @@ export const storybookFixtureData = {
         "readTime": "4 min read",
         "publishedAt": "2026-11-26T11:00:00.000Z",
         "sourceUrl": "https://www.hotrod.com/features/1000-hp-carbon-fiber-chevrolet-tahoe-race-car",
-        "popularity": 97,
-        "signal": "Continue",
+        "popularity": 91,
+        "signal": "Trending",
         "tags": [
           "evs",
           "hot rod",
@@ -1122,112 +1157,85 @@ export const storybookFixtureData = {
           "race",
           "underneath"
         ],
-        "age": 8
+        "age": 32
       },
       {
-        "id": "hot-rod-events-2026-tmi-trim-awards-sema-best-custom-car-interiors",
-        "brand": "HOT ROD",
-        "brandSlug": "hot-rod",
-        "topic": "EVs",
-        "title": "TMI Shows You the Hottest Interiors at the 2026 SEMA Show, And the Winners Are?",
-        "summary": "Industry’s top builders honored during the nation’s largest automotive interior design competition.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/facf305c-e8ed-4c1c-a510-f81faed170bd.jpg",
-        "imageCredit": "TMI",
-        "byline": "Steven Rupp",
-        "readTime": "4 min read",
-        "publishedAt": "2026-11-26T10:00:00.000Z",
-        "sourceUrl": "https://www.hotrod.com/events/2026-tmi-trim-awards-sema-best-custom-car-interiors",
-        "popularity": 91,
-        "signal": "Trending",
-        "tags": [
-          "evs",
-          "hot rod",
-          "shows",
-          "hottest",
-          "interiors",
-          "2026",
-          "sema",
-          "show"
-        ],
-        "age": 9
-      },
-      {
-        "id": "motortrend-features-best-used-jeep-grand-cherokee-years-to-buy",
+        "id": "motortrend-reviews-first-test-2007-saleen-parnelli-jones-mustang-boss-302-archive",
         "brand": "MotorTrend",
         "brandSlug": "motortrend",
-        "topic": "Buying Guides",
-        "title": "Which Used Jeep Grand Cherokee Is the Best to Buy? We Look at the Last Three Generations",
-        "summary": "We guide you through the past three Jeep Grand Cherokee generations and outline the good and not so good about Jeep’s midsize SUV.",
-        "image": "https://hips.hearstapps.com/mtg-prod/65c4072203061a0008ab0a67/2021-jeep-grand-cherokee-16.jpg",
+        "topic": "EVs",
+        "title": "Forget the Boss 302: This Saleen Mustang Had Parnelli Jones’ Name on It",
+        "summary": "The 2007 Saleen Parnelli Jones Mustang paid tribute to the legendary Boss 302 with 500 limited-edition cars and serious track performance.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/105543a3-aad1-4c28-964b-9255b6469747.jpg",
         "imageCredit": "MotorTrend",
-        "byline": "Kristen Lee",
+        "byline": "Ron Kiino",
         "readTime": "4 min read",
-        "publishedAt": "2026-11-26T14:00:00.000Z",
-        "sourceUrl": "https://www.motortrend.com/features/best-used-jeep-grand-cherokee-years-to-buy",
+        "publishedAt": "2026-11-27T14:00:00.000Z",
+        "sourceUrl": "https://www.motortrend.com/reviews/first-test-2007-saleen-parnelli-jones-mustang-boss-302-archive",
         "popularity": 96,
         "signal": "Most Popular",
         "tags": [
-          "buying guides",
+          "evs",
           "motortrend",
-          "buying",
-          "guides",
-          "which",
-          "used",
-          "jeep",
-          "grand"
+          "forget",
+          "boss",
+          "this",
+          "saleen",
+          "mustang",
+          "parnelli"
         ],
         "age": 5
       },
       {
-        "id": "motortrend-reviews-first-test-2027-gmc-sierra-elevation",
+        "id": "motortrend-features-2027-subaru-cars-lineup-updates-changes",
         "brand": "MotorTrend",
         "brandSlug": "motortrend",
-        "topic": "EVs",
-        "title": "The 2027 Sierra Is a Budget Truck That Forgot to Act Cheap",
-        "summary": "GMC’s latest no-frills Sierra arrives with a surprisingly luxurious interior, more power, and improved towing.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/73e82b8d-d180-4e75-8377-8add7d60fb96.jpg",
+        "topic": "Features",
+        "title": "The 2027 Subaru Cars Lineup: Two Special Editions and a New Base Impreza",
+        "summary": "Subaru makes the Impreza more affordable for 2027 and throws enthusiasts a bone with nostalgic versions of its sporty models.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/c7251981-fbfe-4568-aeb4-a77a72e4ae4f.jpg",
         "imageCredit": "MotorTrend",
-        "byline": "Matt Crisara",
+        "byline": "Billy Rehbock",
         "readTime": "4 min read",
-        "publishedAt": "2026-11-26T13:00:00.000Z",
-        "sourceUrl": "https://www.motortrend.com/reviews/first-test-2027-gmc-sierra-elevation",
+        "publishedAt": "2026-11-27T13:00:00.000Z",
+        "sourceUrl": "https://www.motortrend.com/features/2027-subaru-cars-lineup-updates-changes",
         "popularity": 90,
         "signal": "Editor Pick",
         "tags": [
-          "evs",
+          "features",
           "motortrend",
           "2027",
-          "sierra",
-          "budget",
-          "truck",
-          "that",
-          "forgot"
+          "subaru",
+          "cars",
+          "lineup",
+          "special"
         ],
         "age": 6
       },
       {
-        "id": "motortrend-features-wild-stories-that-shaped-american-auto-industry",
+        "id": "motortrend-reviews-first-test-2027-chevrolet-silverado-zr2",
         "brand": "MotorTrend",
         "brandSlug": "motortrend",
-        "topic": "Features",
-        "title": "America’s Auto Industry Was Built on Some Truly Wild Gambles",
-        "summary": "From GM’s early battles to the Edsel and Chrysler Turbine, these seven stories reveal the ambition, mistakes, and schemes that shaped Detroit’s history.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/150a91f3-4828-428a-bb03-649804091893.jpg",
+        "topic": "EVs",
+        "title": "Tested: Chevrolet’s 2027 Silverado ZR2 Builds on the Previous Truck’s Winning Formula",
+        "summary": "Chevy’s previous off-road-ready 2027 Chevrolet Silverado ZR2 blew our mind on the trail; the new ZR2 Silverado will blow your mind on the drive home, too.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/cb86451e-e9d3-4b96-a54f-09cb2922dc75.jpg",
         "imageCredit": "MotorTrend",
-        "byline": "Frank Markus",
+        "byline": "Matt Crisara",
         "readTime": "4 min read",
-        "publishedAt": "2026-11-26T12:00:00.000Z",
-        "sourceUrl": "https://www.motortrend.com/features/wild-stories-that-shaped-american-auto-industry",
+        "publishedAt": "2026-11-27T12:00:00.000Z",
+        "sourceUrl": "https://www.motortrend.com/reviews/first-test-2027-chevrolet-silverado-zr2",
         "popularity": 84,
         "signal": "Most Popular",
         "tags": [
-          "features",
+          "evs",
           "motortrend",
-          "america",
-          "auto",
-          "industry",
-          "built",
-          "some"
+          "tested",
+          "chevrolet",
+          "2027",
+          "silverado",
+          "builds",
+          "previous"
         ],
         "age": 7
       },
@@ -1244,7 +1252,7 @@ export const storybookFixtureData = {
         "readTime": "4 min read",
         "publishedAt": "2026-11-24T15:00:00.000Z",
         "sourceUrl": "https://www.roadandtrack.com/photos/a74512751/see-every-angle-of-the-porsche-718-boxster-ev-prototype/",
-        "popularity": 79,
+        "popularity": 59,
         "signal": "Continue",
         "tags": [
           "evs",
@@ -1256,61 +1264,61 @@ export const storybookFixtureData = {
           "porsche",
           "boxster"
         ],
-        "age": 52
+        "age": 76
       },
       {
-        "id": "road-and-track-news-a74532696-ford-gt41-le-mans-race-car-reveal",
+        "id": "road-and-track-car-culture-a74389010-pay-now-save-later-volume-38",
         "brand": "Road & Track",
         "brandSlug": "road-and-track",
-        "topic": "EVs",
-        "title": "One More Than GT40: The Ford GT41 Le Mans Hypercar Is Finally Here",
-        "summary": "Yes, it’s about 41 inches tall. But that’s not really why it bears that name.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/68ed5b54-3bdf-4f0c-b458-fb7e199bff96.jpg",
-        "imageCredit": "Ford",
-        "byline": "Mike Austin",
+        "topic": "News",
+        "title": "Pay Now, Save Later: Why It Makes Sense to Buy a More Expensive Old Car",
+        "summary": "A clean used ride is both easier and cheaper to enjoy.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/decc4528-0b6c-4e68-b44b-9d6982795729.jpg",
+        "imageCredit": "Illustration by Micha Huigen",
+        "byline": "Matt Farah",
         "readTime": "4 min read",
-        "publishedAt": "2026-11-26T18:00:00.000Z",
-        "sourceUrl": "https://www.roadandtrack.com/news/a74532696/ford-gt41-le-mans-race-car-reveal/",
+        "publishedAt": "2026-11-27T13:00:00.000Z",
+        "sourceUrl": "https://www.roadandtrack.com/car-culture/a74389010/pay-now-save-later-volume-38/",
         "popularity": 95,
         "signal": "Trending",
         "tags": [
-          "evs",
+          "news",
           "road & track",
           "road",
           "track",
-          "more",
-          "than",
-          "gt40",
-          "ford"
+          "save",
+          "later",
+          "makes",
+          "sense"
         ],
-        "age": 1
+        "age": 6
       },
       {
-        "id": "road-and-track-reviews-a74527434-tested-2027-audi-sq7",
+        "id": "road-and-track-car-culture-a74389066-save-now-pay-later-volume-38",
         "brand": "Road & Track",
         "brandSlug": "road-and-track",
-        "topic": "EVs",
-        "title": "Tested: 2027 Audi SQ7 Is the Punchier 3-Row SUV",
-        "summary": "Audi's twin-turbo V-8 makes plenty of the right noises, and a deft chassis makes it fun on a twisting road as well.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/f3ca7dc6-2393-4255-a520-29bc90ad94fa.jpg",
-        "imageCredit": "Audi",
-        "byline": "Zac Palmer",
+        "topic": "News",
+        "title": "Save Now, Pay Later: Why It Makes Sense to Buy a Less Expensive Old Car",
+        "summary": "Life is too short to wait for the perfect vehicle.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/5422f4b3-a8b6-4425-9da5-dd698f8901f3.jpg",
+        "imageCredit": "Illustration by Micha Huigen",
+        "byline": "Aaron Brown",
         "readTime": "4 min read",
-        "publishedAt": "2026-11-26T14:00:00.000Z",
-        "sourceUrl": "https://www.roadandtrack.com/reviews/a74527434/tested-2027-audi-sq7/",
+        "publishedAt": "2026-11-27T13:00:00.000Z",
+        "sourceUrl": "https://www.roadandtrack.com/car-culture/a74389066/save-now-pay-later-volume-38/",
         "popularity": 89,
         "signal": "Continue",
         "tags": [
-          "evs",
+          "news",
           "road & track",
           "road",
           "track",
-          "tested",
-          "2027",
-          "audi",
-          "punchier"
+          "save",
+          "later",
+          "makes",
+          "sense"
         ],
-        "age": 5
+        "age": 6
       }
     ],
     "sourceNotes": [
@@ -1339,14 +1347,14 @@ export const storybookFixtureData = {
         "brand": "HOT ROD",
         "brandSlug": "hot-rod",
         "feedCount": 1,
-        "importedCount": 49,
+        "importedCount": 48,
         "selectedCount": 36
       },
       {
         "brand": "MotorTrend",
         "brandSlug": "motortrend",
         "feedCount": 3,
-        "importedCount": 53,
+        "importedCount": 52,
         "selectedCount": 36
       },
       {
@@ -1361,81 +1369,135 @@ export const storybookFixtureData = {
   "flux": {
     "stories": [
       {
-        "id": "elle-beauty-makeup-skin-care-a74509506-best-perfumes-to-feel-like-the-main-character",
+        "id": "elle-fashion-shopping-a74492846-frame-black-friday-sale-2026",
         "brand": "Elle",
         "brandSlug": "elle",
-        "topic": "Beauty",
-        "title": "These Perfumes Are Basically Main Character Energy in a Bottle",
-        "summary": "Discover the scents that turn an everyday entrance into a scene.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/429c417f-b008-4025-aaa1-620e2eae822d.jpg",
-        "imageCredit": "NurPhoto via Getty Images",
-        "byline": "Natalia Trejo",
-        "readTime": "3 min read",
-        "publishedAt": "2026-11-26T19:00:00.000Z",
-        "sourceUrl": "https://www.elle.com/beauty/makeup-skin-care/a74509506/best-perfumes-to-feel-like-the-main-character/",
+        "topic": "Style",
+        "title": "Frame’s Black Friday Sale Is a Denim Lover’s Dream",
+        "summary": "Pairs worn by Selena Gomez, Bella Hadid, and Kendall Jenner are 30 percent off.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/a61da03e-1f36-4af3-b0ab-b9431dc7986e.png",
+        "imageCredit": "FRAME",
+        "byline": "Sarah Maberry",
+        "readTime": "4 min read",
+        "publishedAt": "2026-11-27T19:06:00.000Z",
+        "sourceUrl": "https://www.elle.com/fashion/shopping/a74492846/frame-black-friday-sale-2026/",
         "popularity": 100,
         "signal": "Most Popular",
         "tags": [
-          "beauty",
+          "style",
           "elle",
-          "these",
-          "perfumes",
-          "basically",
-          "main",
-          "character"
+          "frame",
+          "black",
+          "friday",
+          "sale",
+          "denim"
         ],
         "age": 0
       },
       {
-        "id": "elle-beauty-hair-g68810646-how-to-style-hair-for-women-over-50",
+        "id": "elle-beauty-a74523554-best-eye-makeup-for-women-over-40",
         "brand": "Elle",
         "brandSlug": "elle",
-        "topic": "Style",
-        "title": "The Most Flattering Hairstyles for Women Over 50, From Bobs to Long Layers",
-        "summary": "The most flattering styles are less about age and more about shape, movement, and hair health.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/7f468992-6fe2-4130-96d0-8991b3c4fac5.jpeg",
-        "imageCredit": "Kevin Winter/GA",
+        "topic": "Beauty",
+        "title": "The Best Eye Makeup to Wear Over 40, From Cream Shadows to Soft Liners",
+        "summary": "Soft browns and subtle shimmer can define eyes without emphasizing fine lines.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/f3ee4dd9-81de-47c3-b191-4ba892eba15f.jpeg",
+        "imageCredit": "Frazer Harrison",
         "byline": "Nykia Spradley",
         "readTime": "4 min read",
-        "publishedAt": "2026-11-26T17:00:00.000Z",
-        "sourceUrl": "https://www.elle.com/beauty/hair/g68810646/how-to-style-hair-for-women-over-50/",
+        "publishedAt": "2026-11-27T19:00:00.000Z",
+        "sourceUrl": "https://www.elle.com/beauty/a74523554/best-eye-makeup-for-women-over-40/",
         "popularity": 94,
         "signal": "Editor Pick",
         "tags": [
-          "style",
+          "beauty",
           "elle",
-          "most",
-          "flattering",
-          "hairstyles",
-          "women",
-          "over"
+          "best",
+          "makeup",
+          "wear",
+          "over",
+          "from"
         ],
-        "age": 2
+        "age": 0
       },
       {
-        "id": "elle-fashion-trend-reports-a74506769-luxury-fashion-distressed-trend-2026",
+        "id": "elle-culture-celebrities-a74549848-meghan-markle-prince-harry-thanksgiving-christmas-plans-2026",
         "brand": "Elle",
         "brandSlug": "elle",
-        "topic": "Style",
-        "title": "Why Is Fashion So Obsessed With Distressing?",
-        "summary": "In 2026, fashion is getting messy with distressing.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/7ffb1ed3-d50d-442e-b0fa-8a3faffd083f.jpg",
-        "imageCredit": "Spotlight / Launchmetrics",
-        "byline": "Kristen Bateman",
+        "topic": "Culture",
+        "title": "Inside Meghan Markle and Prince Harry’s Plans for Their First Thanksgiving Back in the U.K.",
+        "summary": "Elle editors recommend this culture story.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/e9a17d9c-e0cc-4258-8bc8-52572d7dd871.jpeg",
+        "imageCredit": "Christopher Furlong",
+        "byline": "Ecleen Luzmila Caraballo",
         "readTime": "3 min read",
-        "publishedAt": "2026-11-26T15:00:00.000Z",
-        "sourceUrl": "https://www.elle.com/fashion/trend-reports/a74506769/luxury-fashion-distressed-trend-2026/",
+        "publishedAt": "2026-11-27T17:58:40.000Z",
+        "sourceUrl": "https://www.elle.com/culture/celebrities/a74549848/meghan-markle-prince-harry-thanksgiving-christmas-plans-2026/",
         "popularity": 88,
         "signal": "Most Popular",
         "tags": [
-          "style",
+          "culture",
           "elle",
-          "fashion",
-          "obsessed",
-          "with",
-          "distressing"
+          "inside",
+          "meghan",
+          "markle",
+          "prince",
+          "harry"
+        ],
+        "age": 1
+      },
+      {
+        "id": "elle-decor-shopping-a74480834-parachute-comforter-review-sale",
+        "brand": "Elle Décor",
+        "brandSlug": "elle-decor",
+        "topic": "Design",
+        "title": "Obsession: The Comforter That Keeps Me in Bed",
+        "summary": "Parachute’s Comforter adds the right amount of weight and warmth when the temperature drops—and it’s on sale right now.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/ff7c2b44-8e05-4eeb-9ff6-123964f3842b.jpg",
+        "imageCredit": "Parachute",
+        "byline": "Sean Kim",
+        "readTime": "4 min read",
+        "publishedAt": "2026-11-27T15:00:00.000Z",
+        "sourceUrl": "https://www.elledecor.com/shopping/a74480834/parachute-comforter-review-sale/",
+        "popularity": 99,
+        "signal": "Trending",
+        "tags": [
+          "design",
+          "elle décor",
+          "elle",
+          "obsession",
+          "comforter",
+          "that",
+          "keeps"
         ],
         "age": 4
+      },
+      {
+        "id": "elle-decor-shopping-a74549066-saatva-sale-black-friday-2026",
+        "brand": "Elle Décor",
+        "brandSlug": "elle-decor",
+        "topic": "Design",
+        "title": "Saatva’s Luxury Mattresses Are 20 Percent Off for Black Friday—Only With Our Exclusive Code",
+        "summary": "Readers can save up to $1,000 through December 1.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/612d4357-75e3-442a-8cf0-47527ff9b6d7.jpg",
+        "imageCredit": "Product Shot Image",
+        "byline": "Anvita Reddy",
+        "readTime": "4 min read",
+        "publishedAt": "2026-11-27T14:08:07.000Z",
+        "sourceUrl": "https://www.elledecor.com/shopping/a74549066/saatva-sale-black-friday-2026/",
+        "popularity": 93,
+        "signal": "Continue",
+        "tags": [
+          "design",
+          "elle décor",
+          "elle",
+          "saatva",
+          "luxury",
+          "mattresses",
+          "percent",
+          "black"
+        ],
+        "age": 5
       },
       {
         "id": "elle-decor-life-culture-entertaining-a74523230-shoes-off-house-etiquette",
@@ -1450,7 +1512,7 @@ export const storybookFixtureData = {
         "readTime": "4 min read",
         "publishedAt": "2026-11-26T15:00:00.000Z",
         "sourceUrl": "https://www.elledecor.com/life-culture/entertaining/a74523230/shoes-off-house-etiquette/",
-        "popularity": 99,
+        "popularity": 87,
         "signal": "Trending",
         "tags": [
           "design",
@@ -1462,138 +1524,85 @@ export const storybookFixtureData = {
           "their",
           "shoes"
         ],
-        "age": 4
+        "age": 28
       },
       {
-        "id": "elle-decor-life-culture-travel-a74520963-valentina-de-santis-grand-hotel-tremezzo-interview",
-        "brand": "Elle Décor",
-        "brandSlug": "elle-decor",
-        "topic": "Design",
-        "title": "On the Couch with Valentina De Santis",
-        "summary": "The third-generation Lake Como hotelier shares her favorite places to travel, shop, and dine—both in Italy and abroad.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/a3f0ac44-b1e4-4b27-a9dd-afaef45d0cf4.jpg",
-        "imageCredit": "John Russo",
-        "byline": "Annie Goldsmith",
-        "readTime": "4 min read",
-        "publishedAt": "2026-11-25T19:50:26.000Z",
-        "sourceUrl": "https://www.elledecor.com/life-culture/travel/a74520963/valentina-de-santis-grand-hotel-tremezzo-interview/",
-        "popularity": 93,
-        "signal": "Continue",
-        "tags": [
-          "design",
-          "elle décor",
-          "elle",
-          "couch",
-          "with",
-          "valentina",
-          "santis"
-        ],
-        "age": 23
-      },
-      {
-        "id": "elle-decor-life-culture-travel-a74512276-the-beverly-hills-hotel-renovation-ken-fulk",
-        "brand": "Elle Décor",
-        "brandSlug": "elle-decor",
-        "topic": "Design",
-        "title": "The Beverly Hills Hotel Is Getting Its Biggest Update Since the 1940’s",
-        "summary": "Old Hollywood glamour meets contemporary panache in the hotel’s landmark refresh.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/df3afef7-0eab-4d1c-b084-16f9a16e7bb9.jpg",
-        "imageCredit": "Slim Aarons",
-        "byline": "Stephen Wallis",
-        "readTime": "4 min read",
-        "publishedAt": "2026-11-25T18:30:20.000Z",
-        "sourceUrl": "https://www.elledecor.com/life-culture/travel/a74512276/the-beverly-hills-hotel-renovation-ken-fulk/",
-        "popularity": 87,
-        "signal": "Trending",
-        "tags": [
-          "design",
-          "elle décor",
-          "elle",
-          "beverly",
-          "hills",
-          "hotel",
-          "getting",
-          "biggest"
-        ],
-        "age": 25
-      },
-      {
-        "id": "esquire-news-politics-politics-a74532549-plymouth-rock-dighton-rock-american-history-thanksgiving",
-        "brand": "Esquire",
-        "brandSlug": "esquire",
-        "topic": "Features",
-        "title": "Forget Plymouth Rock This Thanksgiving. American History Is Better Reflected by a Different Stone.",
-        "summary": "Instead of staring at a boulder in a hole in the ground, drive 42 minutes west to the town of Berkley, where our country’s complicated past is plain to see.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/8a7c9788-0b51-4a85-b651-29ae58503619.jpeg",
-        "imageCredit": "Bettmann",
-        "byline": "Charles P. Pierce",
-        "readTime": "4 min read",
-        "publishedAt": "2026-11-26T17:00:00.000Z",
-        "sourceUrl": "https://www.esquire.com/news-politics/politics/a74532549/plymouth-rock-dighton-rock-american-history-thanksgiving/",
-        "popularity": 98,
-        "signal": "Editor Pick",
-        "tags": [
-          "features",
-          "esquire",
-          "forget",
-          "plymouth",
-          "rock",
-          "this",
-          "thanksgiving"
-        ],
-        "age": 2
-      },
-      {
-        "id": "esquire-lifestyle-a74503508-gifts-for-dads-who-dont-want-anything-2026",
+        "id": "esquire-style-mens-fashion-a74251445-levis-505-jeans-black-friday-cyber-monday-sale",
         "brand": "Esquire",
         "brandSlug": "esquire",
         "topic": "Style",
-        "title": "26 Gifts for the Dad Who Said He Didn’t Want Anything",
-        "summary": "Don’t fall for that one.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/be0ec7b4-ede4-4076-aa54-1f0d674cc5cf.jpg",
-        "imageCredit": "Quince/Carl Friedrik/CB2",
-        "byline": "Juan Pablo Lopez",
+        "title": "Every Pair of Levi’s Is on Sale for Black Friday, Starting at 40% Off",
+        "summary": "They’re the best cheap jeans money can buy, and they’re at the best price of the year.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/e2711fe3-8adf-48b4-929b-6a68d2b31fca.png",
+        "imageCredit": "Levi's",
+        "byline": "Sarah Maberry",
+        "readTime": "4 min read",
+        "publishedAt": "2026-11-27T18:21:05.000Z",
+        "sourceUrl": "https://www.esquire.com/style/mens-fashion/a74251445/levis-505-jeans-black-friday-cyber-monday-sale/",
+        "popularity": 98,
+        "signal": "Editor Pick",
+        "tags": [
+          "style",
+          "esquire",
+          "every",
+          "pair",
+          "levi",
+          "sale",
+          "black"
+        ],
+        "age": 1
+      },
+      {
+        "id": "esquire-lifestyle-a74480406-lego-deals-amazon-black-friday-2026",
+        "brand": "Esquire",
+        "brandSlug": "esquire",
+        "topic": "Style",
+        "title": "Amazon’s Lego Deals Are Rarely This Good",
+        "summary": "Some great sets are up to 40% off.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/3b4c96db-aae1-4e57-bd2f-53a95cd953be.png",
+        "imageCredit": "Lego",
+        "byline": "Angel Madison",
         "readTime": "3 min read",
-        "publishedAt": "2026-11-25T22:00:30.000Z",
-        "sourceUrl": "https://www.esquire.com/lifestyle/a74503508/gifts-for-dads-who-dont-want-anything-2026/",
+        "publishedAt": "2026-11-27T16:45:00.000Z",
+        "sourceUrl": "https://www.esquire.com/lifestyle/a74480406/lego-deals-amazon-black-friday-2026/",
         "popularity": 92,
         "signal": "Most Popular",
         "tags": [
           "style",
           "esquire",
-          "gifts",
-          "said",
-          "didn",
-          "want",
-          "anything"
+          "amazon",
+          "lego",
+          "deals",
+          "rarely",
+          "this"
         ],
-        "age": 21
+        "age": 2
       },
       {
-        "id": "esquire-lifestyle-a74361860-best-gifts-for-snobs",
+        "id": "esquire-lifestyle-tech-a74467012-macbook-neo-black-friday-amazon-sale-2026",
         "brand": "Esquire",
         "brandSlug": "esquire",
         "topic": "Style",
-        "title": "The 33 Best Gifts for the Snobbiest People You Know",
-        "summary": "We found the stuff they don’t already own.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/e5c1352e-d51b-4050-bf47-3c1b2966850f.png",
-        "imageCredit": "Brunello Cucinelli, Bvlgari, L'Objet, Lucy's Lamps, Meraki, Parfums de Marly",
-        "byline": "Lauren Gruber",
+        "title": "The MacBook Neo Is on Sale for the First Time Ever",
+        "summary": "The cheapest MacBook just got even cheaper.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/2c05eab0-df1a-4131-971a-de084381fde0.png",
+        "imageCredit": "Apple",
+        "byline": "Madison McGee",
         "readTime": "3 min read",
-        "publishedAt": "2026-11-25T20:50:00.000Z",
-        "sourceUrl": "https://www.esquire.com/lifestyle/a74361860/best-gifts-for-snobs/",
+        "publishedAt": "2026-11-27T16:11:05.000Z",
+        "sourceUrl": "https://www.esquire.com/lifestyle/tech/a74467012/macbook-neo-black-friday-amazon-sale-2026/",
         "popularity": 86,
         "signal": "Editor Pick",
         "tags": [
           "style",
           "esquire",
-          "best",
-          "gifts",
-          "snobbiest",
-          "people",
-          "know"
+          "macbook",
+          "sale",
+          "first",
+          "time",
+          "ever"
         ],
-        "age": 22
+        "age": 3
       },
       {
         "id": "harpers-bazaar-celebrity-latest-a74533467-amanda-seyfried-carolina-herrera-floral-cutout-dress-photos",
@@ -1608,8 +1617,8 @@ export const storybookFixtureData = {
         "readTime": "4 min read",
         "publishedAt": "2026-11-25T18:31:05.000Z",
         "sourceUrl": "https://www.harpersbazaar.com/celebrity/latest/a74533467/amanda-seyfried-carolina-herrera-floral-cutout-dress-photos/",
-        "popularity": 61,
-        "signal": "Continue",
+        "popularity": 87,
+        "signal": "Trending",
         "tags": [
           "culture",
           "harper's bazaar",
@@ -1620,60 +1629,61 @@ export const storybookFixtureData = {
           "makes",
           "case"
         ],
-        "age": 25
+        "age": 48
       },
       {
-        "id": "harpers-bazaar-culture-travel-dining-a74532952-berkshires-weekend-getaway-nyc",
+        "id": "harpers-bazaar-fashion-trends-a74455502-demellier-black-friday-sale-2026",
         "brand": "Harper's Bazaar",
         "brandSlug": "harpers-bazaar",
-        "topic": "Culture",
-        "title": "The Berkshires Are Made for a Soft-Life Getaway",
-        "summary": "Two hours from New York City, this corner of Massachusetts pairs farm-fresh finds and open-air beauty with restorative retreats",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/8cad19ae-4b90-4c88-89ea-87b95b389ce0.jpg",
-        "imageCredit": "Miraval Berkshires",
-        "readTime": "4 min read",
-        "publishedAt": "2026-11-26T15:00:00.000Z",
-        "sourceUrl": "https://www.harpersbazaar.com/culture/travel-dining/a74532952/berkshires-weekend-getaway-nyc/",
+        "topic": "Style",
+        "title": "Everything to Know About DeMellier’s Black Friday Sale",
+        "summary": "Shop the bags both royals and editors carry—at a fraction of the price",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/65146b93-36ad-4064-9f0b-b25abd56326a.jpeg",
+        "imageCredit": "DeMellier",
+        "byline": "Sam Peters",
+        "readTime": "3 min read",
+        "publishedAt": "2026-11-27T19:13:16.000Z",
+        "sourceUrl": "https://www.harpersbazaar.com/fashion/trends/a74455502/demellier-black-friday-sale-2026/",
         "popularity": 97,
         "signal": "Continue",
         "tags": [
-          "culture",
+          "style",
           "harper's bazaar",
           "harper",
           "bazaar",
-          "berkshires",
-          "made",
-          "soft-life",
-          "getaway"
+          "everything",
+          "know",
+          "about",
+          "demellier"
         ],
-        "age": 4
+        "age": 0
       },
       {
-        "id": "harpers-bazaar-beauty-nails-a74521735-jennifer-lopez-apple-cider-manicure",
+        "id": "harpers-bazaar-fashion-trends-a74443888-best-black-friday-sales-deals-2026",
         "brand": "Harper's Bazaar",
         "brandSlug": "harpers-bazaar",
-        "topic": "Beauty",
-        "title": "Jennifer Lopez’s “Spiced Apple Cider” Manicure Is the Coziest Winter Nail Trend",
-        "summary": "The perfect manicure for minimalists this season",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/9d9534e5-cf14-48e0-aa62-2b69378fe72d.jpg",
-        "imageCredit": "(C)KevinMazur",
-        "byline": "Aisha Nozari",
+        "topic": "Style",
+        "title": "The Best Black Friday Sales to Shop Right Now",
+        "summary": "A one-stop shop for the best fashion and beauty sales on the web",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/a1d3e055-56ed-4094-b7be-979a606d19bb.jpg",
+        "imageCredit": "SARAH OLIVERI",
+        "byline": "Sam Peters",
         "readTime": "3 min read",
-        "publishedAt": "2026-11-26T14:00:00.000Z",
-        "sourceUrl": "https://www.harpersbazaar.com/beauty/nails/a74521735/jennifer-lopez-apple-cider-manicure/",
+        "publishedAt": "2026-11-27T18:48:16.000Z",
+        "sourceUrl": "https://www.harpersbazaar.com/fashion/trends/a74443888/best-black-friday-sales-deals-2026/",
         "popularity": 91,
         "signal": "Trending",
         "tags": [
-          "beauty",
+          "style",
           "harper's bazaar",
           "harper",
           "bazaar",
-          "jennifer",
-          "lopez",
-          "spiced",
-          "apple"
+          "best",
+          "black",
+          "friday",
+          "sales"
         ],
-        "age": 5
+        "age": 0
       },
       {
         "id": "town-and-country-leisure-arts-and-culture-a74443088-the-altruists-set-photos-madison-hu",
@@ -1688,8 +1698,8 @@ export const storybookFixtureData = {
         "readTime": "4 min read",
         "publishedAt": "2026-11-25T16:00:00.000Z",
         "sourceUrl": "https://www.townandcountrymag.com/leisure/arts-and-culture/a74443088/the-altruists-set-photos-madison-hu/",
-        "popularity": 66,
-        "signal": "Editor Pick",
+        "popularity": 82,
+        "signal": "Most Popular",
         "tags": [
           "culture",
           "town & country",
@@ -1700,61 +1710,112 @@ export const storybookFixtureData = {
           "altruists",
           "with"
         ],
-        "age": 27
+        "age": 51
       },
       {
-        "id": "town-and-country-leisure-sporting-a74508653-25th-annual-national-dog-show-winner-2026",
+        "id": "town-and-country-leisure-arts-and-culture-a73824785-who-are-caroline-ellisons-parents-facts",
         "brand": "Town & Country",
         "brandSlug": "town-and-country",
-        "topic": "Leisure",
-        "title": "Rocker Wins Best in Show at the 25th Annual National Dog Show",
-        "summary": "“He loves all the commotion, all the people, all day. He's had the best day,” Rocker’s handler said of his victory.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/8c4220ea-d51d-4c48-af81-aa911933d71d.jpg",
-        "imageCredit": "Steve Donahue/SeeSpotRunPhotos",
-        "byline": "Emily Burack",
-        "readTime": "4 min read",
-        "publishedAt": "2026-11-26T19:00:00.000Z",
-        "sourceUrl": "https://www.townandcountrymag.com/leisure/sporting/a74508653/25th-annual-national-dog-show-winner-2026/",
+        "topic": "Culture",
+        "title": "Who Are Caroline Ellison’s Parents?",
+        "summary": "The MIT professors have kept a much lower profile than Sam Bankman-Fried’s parents.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/178097e7-0992-4003-bbc8-cc4da6788e35.jpg",
+        "imageCredit": "Netflix",
+        "byline": "Rachel King",
+        "readTime": "3 min read",
+        "publishedAt": "2026-11-27T19:00:00.000Z",
+        "sourceUrl": "https://www.townandcountrymag.com/leisure/arts-and-culture/a73824785/who-are-caroline-ellisons-parents-facts/",
         "popularity": 96,
         "signal": "Most Popular",
         "tags": [
-          "leisure",
+          "culture",
           "town & country",
           "town",
           "country",
-          "rocker",
-          "wins",
-          "best",
-          "show"
+          "caroline",
+          "ellison",
+          "parents"
         ],
         "age": 0
       },
       {
-        "id": "town-and-country-society-tradition-a74321444-heywood-hill-1-mayfair-private-library-details",
+        "id": "town-and-country-style-a74452923-oprahs-favorite-things-black-friday-sale-2026",
         "brand": "Town & Country",
         "brandSlug": "town-and-country",
-        "topic": "Events",
-        "title": "Inside London’s Most Exclusive New Library with the Royal Family’s Favorite Bookseller",
-        "summary": "The noble family behind Queen Camilla’s favorite Mayfair bookshop takes T&C behind the shelves in a $2.7 billion new destination on Hyde Park.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/5ca36900-6ee3-4f8f-bc3b-18ddf81ed326.jpg",
-        "imageCredit": "CAUDWELL/Andy Paradise",
-        "byline": "Rachel King",
+        "topic": "Style",
+        "title": "So Many of Oprah’s Favorite Things Are on Sale for Black Friday",
+        "summary": "Oprah’s recommendations are up to 53 percent off, just in time for gifting season.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/ecc21d3b-f3df-42bc-8c5f-fd357b4523ce.png",
+        "imageCredit": "Product Shot Image",
+        "byline": "Madison McGee",
         "readTime": "4 min read",
-        "publishedAt": "2026-11-26T14:00:00.000Z",
-        "sourceUrl": "https://www.townandcountrymag.com/society/tradition/a74321444/heywood-hill-1-mayfair-private-library-details/",
+        "publishedAt": "2026-11-27T17:01:00.000Z",
+        "sourceUrl": "https://www.townandcountrymag.com/style/a74452923/oprahs-favorite-things-black-friday-sale-2026/",
         "popularity": 90,
         "signal": "Editor Pick",
         "tags": [
-          "events",
+          "style",
           "town & country",
           "town",
           "country",
-          "inside",
-          "london",
-          "most",
-          "exclusive"
+          "many",
+          "oprah",
+          "favorite",
+          "things"
         ],
-        "age": 5
+        "age": 2
+      },
+      {
+        "id": "veranda-luxury-lifestyle-artwork-a74443345-art-restoration-cleaning-signs",
+        "brand": "Veranda",
+        "brandSlug": "veranda",
+        "topic": "Style",
+        "title": "How to Know When Your Art Needs Restoration, According to an Expert",
+        "summary": "Protecting a beloved painting starts long before visible damage appears.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/shonda-rhimes-la-apartment-living-room-vertical-696a7839247f9.jpg",
+        "imageCredit": "Michael Mundy for VERANDA",
+        "byline": "Sarah DiMarco",
+        "readTime": "3 min read",
+        "publishedAt": "2026-11-27T16:00:00.000Z",
+        "sourceUrl": "https://www.veranda.com/luxury-lifestyle/artwork/a74443345/art-restoration-cleaning-signs/",
+        "popularity": 95,
+        "signal": "Trending",
+        "tags": [
+          "style",
+          "veranda",
+          "know",
+          "when",
+          "your",
+          "needs",
+          "restoration"
+        ],
+        "age": 3
+      },
+      {
+        "id": "veranda-decorating-ideas-a74491071-ben-pentreath-and-charlie-mccormick-christmas-traditions",
+        "brand": "Veranda",
+        "brandSlug": "veranda",
+        "topic": "Design",
+        "title": "Ben Pentreath and Charlie McCormick Give Holiday Decorating a Madcap Twist—Dancing Cats Included",
+        "summary": "Before we lose our souls to scrolling the news or come undone in the retail frenzy, this English power duo reminds us that the holidays can be quite grounding—and a lot of fun.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/cca56edd-2c5e-4dcf-9654-3e6ebff9c593.jpg",
+        "imageCredit": "Courtesy of Ben Pentreath",
+        "byline": "Ellen McGauley",
+        "readTime": "4 min read",
+        "publishedAt": "2026-11-27T13:00:00.000Z",
+        "sourceUrl": "https://www.veranda.com/decorating-ideas/a74491071/ben-pentreath-and-charlie-mccormick-christmas-traditions/",
+        "popularity": 89,
+        "signal": "Continue",
+        "tags": [
+          "design",
+          "veranda",
+          "pentreath",
+          "charlie",
+          "mccormick",
+          "give",
+          "holiday"
+        ],
+        "age": 6
       },
       {
         "id": "veranda-travel-a74521036-best-luxury-travel-deals-black-friday-cyber-monday-travel-tuesday",
@@ -1769,7 +1830,7 @@ export const storybookFixtureData = {
         "readTime": "4 min read",
         "publishedAt": "2026-11-25T16:05:37.000Z",
         "sourceUrl": "https://www.veranda.com/travel/a74521036/best-luxury-travel-deals-black-friday-cyber-monday-travel-tuesday/",
-        "popularity": 95,
+        "popularity": 83,
         "signal": "Trending",
         "tags": [
           "design",
@@ -1780,59 +1841,7 @@ export const storybookFixtureData = {
           "deals",
           "score"
         ],
-        "age": 27
-      },
-      {
-        "id": "veranda-travel-a74311812-northern-ireland-homes-gardens-tour",
-        "brand": "Veranda",
-        "brandSlug": "veranda",
-        "topic": "Design",
-        "title": "How to Tour Northern Ireland Like an Editor",
-        "summary": "Rare plant collections, grand interiors, and centuries-old estates make County Down a dream destination for design lovers.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/7b731aa8-9ace-4f22-8c31-55cfced8b988.png",
-        "imageCredit": "Courtesy of National Trust",
-        "byline": "Rachael Burrow Rummel",
-        "readTime": "4 min read",
-        "publishedAt": "2026-11-25T16:00:00.000Z",
-        "sourceUrl": "https://www.veranda.com/travel/a74311812/northern-ireland-homes-gardens-tour/",
-        "popularity": 89,
-        "signal": "Continue",
-        "tags": [
-          "design",
-          "veranda",
-          "tour",
-          "northern",
-          "ireland",
-          "like",
-          "editor"
-        ],
-        "age": 27
-      },
-      {
-        "id": "veranda-decorating-ideas-house-tours-a74348627-molyneux-france-chateaux-house-tour",
-        "brand": "Veranda",
-        "brandSlug": "veranda",
-        "topic": "Design",
-        "title": "A Crumbling 800-Year-Old French Château Is Reborn as a Whimsical Country Escape",
-        "summary": "Peacocks strut through the garden, sculptures fill the galleries, and the moat makes quite a first impression.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/f52437e4-cd7f-4394-88ce-90983e980b42.jpg",
-        "imageCredit": "Alexandre Bailhache",
-        "byline": "Jean Bond Rafferty",
-        "readTime": "4 min read",
-        "publishedAt": "2026-11-25T15:00:00.000Z",
-        "sourceUrl": "https://www.veranda.com/decorating-ideas/house-tours/a74348627/molyneux-france-chateaux-house-tour/",
-        "popularity": 83,
-        "signal": "Trending",
-        "tags": [
-          "design",
-          "veranda",
-          "crumbling",
-          "800-year-old",
-          "french",
-          "teau",
-          "reborn"
-        ],
-        "age": 28
+        "age": 51
       }
     ],
     "sourceNotes": [
@@ -1883,18 +1892,18 @@ export const storybookFixtureData = {
   "ew": {
     "stories": [
       {
-        "id": "best-products-parenting-kids-g38572529-gifts-for-11-year-old-girls",
+        "id": "best-products-lifestyle-a74344796-best-black-friday-deals-2026",
         "brand": "Best Products",
         "brandSlug": "best-products",
         "topic": "Gear",
-        "title": "44 Gifts for 11-Year-Old Girls They'll Brag About to Their Friends",
-        "summary": "These pass the vibe check for socializing, relaxing, and self-care!",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/11-year-old-girl-gifts-1641573894.jpg",
+        "title": "All the Best Black Friday Deals, According to Shopping Editors",
+        "summary": "All the deals, all in one place. Happy shopping!",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/123c5589-5e0c-408c-840c-01d7f7804856.jpg",
         "imageCredit": "Getty Images",
-        "byline": "Jill Layton, Jamie Kenney",
+        "byline": "Sidney Lee",
         "readTime": "3 min read",
-        "publishedAt": "2026-11-25T20:11:00.000Z",
-        "sourceUrl": "https://www.bestproducts.com/parenting/kids/g38572529/gifts-for-11-year-old-girls/",
+        "publishedAt": "2026-11-27T15:22:00.000Z",
+        "sourceUrl": "https://www.bestproducts.com/lifestyle/a74344796/best-black-friday-deals-2026/",
         "popularity": 100,
         "signal": "Most Popular",
         "tags": [
@@ -1902,38 +1911,11 @@ export const storybookFixtureData = {
           "best products",
           "best",
           "products",
-          "gifts",
-          "11-year-old",
-          "girls",
-          "they"
+          "black",
+          "friday",
+          "deals"
         ],
-        "age": 23
-      },
-      {
-        "id": "best-products-parenting-g37406841-gifts-for-2-year-olds",
-        "brand": "Best Products",
-        "brandSlug": "best-products",
-        "topic": "Gear",
-        "title": "Best Gifts for 2-Year-Olds That Spark Instant Joy",
-        "summary": "With toddlers, every day brings something new. These toys will keep things even more interesting.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/81up8nsixel-ac-sl1500-699139ae74e55.jpg",
-        "imageCredit": "Step2",
-        "byline": "Jamie Kenney, Jessica Dukes",
-        "readTime": "4 min read",
-        "publishedAt": "2026-11-25T17:55:00.000Z",
-        "sourceUrl": "https://www.bestproducts.com/parenting/g37406841/gifts-for-2-year-olds/",
-        "popularity": 93,
-        "signal": "Continue",
-        "tags": [
-          "gear",
-          "best products",
-          "best",
-          "products",
-          "gifts",
-          "2-year-olds",
-          "that"
-        ],
-        "age": 25
+        "age": 4
       },
       {
         "id": "best-products-tech-gadgets-a70226058-best-amazon-deals-2026",
@@ -1946,10 +1928,10 @@ export const storybookFixtureData = {
         "imageCredit": "Product Shot Image",
         "byline": "Sarah Connor",
         "readTime": "4 min read",
-        "publishedAt": "2026-11-25T14:39:00.000Z",
+        "publishedAt": "2026-11-27T14:14:00.000Z",
         "sourceUrl": "https://www.bestproducts.com/tech/gadgets/a70226058/best-amazon-deals-2026/",
-        "popularity": 86,
-        "signal": "Editor Pick",
+        "popularity": 93,
+        "signal": "Continue",
         "tags": [
           "gear",
           "best products",
@@ -1959,164 +1941,193 @@ export const storybookFixtureData = {
           "deals",
           "save"
         ],
-        "age": 29
+        "age": 5
       },
       {
-        "id": "bicycling-culture-a74465936-charity-bike-rides-century",
+        "id": "best-products-parenting-kids-a74389029-best-black-friday-toy-deals-2026",
+        "brand": "Best Products",
+        "brandSlug": "best-products",
+        "topic": "Gear",
+        "title": "Black Friday 2026 Toy Deals: The Best Sales to Shop Now",
+        "summary": "Shop discounts on toys kids will love, from popular building sets and games to creative gifts for every age.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/429520dd-ced9-4b01-b022-27e715d3dbd3.png",
+        "imageCredit": "Product Shot Image",
+        "byline": "Cat Bowen",
+        "readTime": "4 min read",
+        "publishedAt": "2026-11-27T12:54:15.000Z",
+        "sourceUrl": "https://www.bestproducts.com/parenting/kids/a74389029/best-black-friday-toy-deals-2026/",
+        "popularity": 86,
+        "signal": "Editor Pick",
+        "tags": [
+          "gear",
+          "best products",
+          "best",
+          "products",
+          "black",
+          "friday",
+          "2026",
+          "deals"
+        ],
+        "age": 6
+      },
+      {
+        "id": "bicycling-bikes-gear-a74453290-zwift-black-friday-deals-2026",
         "brand": "Bicycling",
         "brandSlug": "bicycling",
         "topic": "Fitness",
-        "title": "In Praise of the Charity Ride, One of the Most Underrated Ways to Tackle Your First Century—or Any Big Cycling Goal",
-        "summary": "To knock off his longest ride ever, Daniel Varghese entered the Best Buddies Challenge NYC. He assumed the 105-mile fundraiser would be a cookie-filled romp. He should have listened to Alberto Contador.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/9356ba9e-b472-4ee4-b757-782978c597df.jpg",
-        "imageCredit": "Best Buddies International",
+        "title": "Our Editors Tested the Zwift Ride Against Pricier Indoor Bikes. Now It’s $999 for Black Friday",
+        "summary": "Save on the Zwift Ride, Wahoo Kickr Core 2, and Cog & Click upgrades for indoor miles this winter.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/6de898d8-5b91-4bd8-84de-11e96359d1dd.jpg",
+        "imageCredit": "Trevor Raab",
+        "byline": "Tara Seplavy",
         "readTime": "4 min read",
-        "publishedAt": "2026-11-25T19:38:21.000Z",
-        "sourceUrl": "https://www.bicycling.com/culture/a74465936/charity-bike-rides-century/",
+        "publishedAt": "2026-11-27T18:30:00.000Z",
+        "sourceUrl": "https://www.bicycling.com/bikes-gear/a74453290/zwift-black-friday-deals-2026/",
         "popularity": 99,
         "signal": "Trending",
         "tags": [
           "fitness",
           "bicycling",
-          "praise",
-          "charity",
+          "editors",
+          "tested",
+          "zwift",
           "ride",
-          "most",
-          "underrated"
+          "against"
         ],
-        "age": 24
+        "age": 1
       },
       {
-        "id": "bicycling-health-nutrition-a74531413-gu-pumpkin-spice-pie",
+        "id": "bicycling-bikes-gear-a74425073-garmin-black-friday-deals-2026",
         "brand": "Bicycling",
         "brandSlug": "bicycling",
         "topic": "Fitness",
-        "title": "We Had Too Many Pumpkin Spice Gels, So Naturally We Turned Them Into a Pie",
-        "summary": "A weirdly successful Thanksgiving dessert made with GU gels—and yes, there’s a recipe.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/30546829-542c-43ee-8b30-0932b19c01e8.jpeg",
-        "imageCredit": "Jason Griffin",
-        "byline": "Jason Griffin",
+        "title": "Garmin Black Friday Deals Are Live—These Editor-Picked Bike Computers, Radars, and Watches Are Worth Buying",
+        "summary": "Garmin gear rarely gets deep discounts—these Black Friday picks are worth jumping on.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/r0003861-68ed1c0a7043e.jpg",
+        "imageCredit": "Dan Chabanov",
+        "byline": "Tara Seplavy",
         "readTime": "4 min read",
-        "publishedAt": "2026-11-25T18:21:23.000Z",
-        "sourceUrl": "https://www.bicycling.com/health-nutrition/a74531413/gu-pumpkin-spice-pie/",
+        "publishedAt": "2026-11-27T18:00:00.000Z",
+        "sourceUrl": "https://www.bicycling.com/bikes-gear/a74425073/garmin-black-friday-deals-2026/",
         "popularity": 92,
         "signal": "Most Popular",
         "tags": [
           "fitness",
           "bicycling",
-          "many",
-          "pumpkin",
-          "spice",
-          "gels",
-          "naturally"
+          "garmin",
+          "black",
+          "friday",
+          "deals",
+          "live"
         ],
-        "age": 25
+        "age": 1
       },
       {
-        "id": "bicycling-bikes-gear-g70226024-best-ebike-deals-2026",
+        "id": "bicycling-bikes-gear-a74414227-rei-black-friday-sale-2026",
         "brand": "Bicycling",
         "brandSlug": "bicycling",
         "topic": "Fitness",
-        "title": "Black Friday E-Bike Deals Are Here: Save Big on Editor-Tested Picks From Specialized, Cannondale, Aventon, and Lectric",
-        "summary": "From sub-$1,000 commuters to cargo haulers and E-MTBs, score savings on these e-bikes now.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/50ed32ca-2cfa-43c7-ad4a-56fb86f88488.jpg",
-        "imageCredit": "THOMAS HENGGE",
+        "title": "Garmin Radar, Wahoo Trainers, Pearl Izumi Gear, and Gravel Bikes: The REI Black Friday Deals Cyclists Should See",
+        "summary": "Our editors picked the REI Black Friday cycling deals worth shopping before they sell out.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/0939e254-a1e3-4916-8169-3f5ef2416390.jpeg",
+        "imageCredit": "Michael M. Santiago",
         "byline": "Tara Seplavy",
         "readTime": "4 min read",
-        "publishedAt": "2026-11-25T18:00:00.000Z",
-        "sourceUrl": "https://www.bicycling.com/bikes-gear/g70226024/best-ebike-deals-2026/",
+        "publishedAt": "2026-11-27T14:00:00.000Z",
+        "sourceUrl": "https://www.bicycling.com/bikes-gear/a74414227/rei-black-friday-sale-2026/",
         "popularity": 85,
         "signal": "Continue",
         "tags": [
           "fitness",
           "bicycling",
-          "black",
-          "friday",
-          "e-bike",
-          "deals",
-          "here"
+          "garmin",
+          "radar",
+          "wahoo",
+          "trainers",
+          "pearl"
         ],
-        "age": 25
+        "age": 5
       },
       {
-        "id": "mens-health-fitness-a74456157-the-hybrid-training-formula-to-run-fast-and-lift-heavy",
-        "brand": "Men's Health",
-        "brandSlug": "mens-health",
-        "topic": "Fitness",
-        "title": "The Hybrid Training Formula to Run Fast and Lift Heavy",
-        "summary": "Get the split right, then pick shoes that match the work.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/d4bdd687-ea92-4fa3-ade5-e751dc8b6c01.jpeg",
-        "imageCredit": "Altra",
-        "readTime": "3 min read",
-        "publishedAt": "2026-11-25T20:20:00.000Z",
-        "sourceUrl": "https://www.menshealth.com/fitness/a74456157/the-hybrid-training-formula-to-run-fast-and-lift-heavy/",
-        "popularity": 98,
-        "signal": "Editor Pick",
-        "tags": [
-          "fitness",
-          "men's health",
-          "health",
-          "hybrid",
-          "training",
-          "formula",
-          "fast",
-          "lift"
-        ],
-        "age": 23
-      },
-      {
-        "id": "mens-health-fitness-g30199601-best-treadmills",
-        "brand": "Men's Health",
-        "brandSlug": "mens-health",
-        "topic": "Fitness",
-        "title": "The Best Treadmills for Your Home Gym, Tested by Fitness Editors",
-        "summary": "We've logged hundreds of miles on each during our testing.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/e565342f-5797-402b-b1b9-814ce4528401.jpg",
-        "imageCredit": "Courtesy of Retailer",
-        "byline": "Charles Thorp, NASM",
-        "readTime": "3 min read",
-        "publishedAt": "2026-11-25T19:49:00.000Z",
-        "sourceUrl": "https://www.menshealth.com/fitness/g30199601/best-treadmills/",
-        "popularity": 91,
-        "signal": "Trending",
-        "tags": [
-          "fitness",
-          "men's health",
-          "health",
-          "best",
-          "treadmills",
-          "your",
-          "home",
-          "tested"
-        ],
-        "age": 23
-      },
-      {
-        "id": "mens-health-entertainment-g74533614-best-action-movies-ranked",
+        "id": "mens-health-grooming-a74534065-braun-black-friday-deals-2026",
         "brand": "Men's Health",
         "brandSlug": "mens-health",
         "topic": "Wellness",
-        "title": "These Are the 46 Best Action Movies Ever Made",
-        "summary": "Hell yeah.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/53bb2e7b-432e-4388-984c-a464acf6dbf9.png",
-        "imageCredit": "MH Illustration/Getty",
-        "byline": "Men's Health Editorial",
-        "readTime": "3 min read",
-        "publishedAt": "2026-11-25T18:07:56.000Z",
-        "sourceUrl": "https://www.menshealth.com/entertainment/g74533614/best-action-movies-ranked/",
-        "popularity": 84,
-        "signal": "Most Popular",
+        "title": "Braun Makes the Best Electric Razor and Beard Trimmer. Its Best Prime Day Deal Is on Something Even Better.",
+        "summary": "Don't worry, the Series 9 razor and trimmer are also on sale.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/24118268-377f-4b78-8b8f-1f8ef9760c87.png",
+        "imageCredit": "JASON SPEAKMAN",
+        "byline": "Sean Zucker",
+        "readTime": "4 min read",
+        "publishedAt": "2026-11-27T17:30:23.000Z",
+        "sourceUrl": "https://www.menshealth.com/grooming/a74534065/braun-black-friday-deals-2026/",
+        "popularity": 98,
+        "signal": "Editor Pick",
         "tags": [
           "wellness",
           "men's health",
           "health",
-          "these",
+          "braun",
+          "makes",
           "best",
-          "action",
-          "movies",
-          "ever"
+          "electric",
+          "razor"
         ],
-        "age": 25
+        "age": 2
+      },
+      {
+        "id": "mens-health-style-a74550315-black-friday-dress-shoe-sale",
+        "brand": "Men's Health",
+        "brandSlug": "mens-health",
+        "topic": "Wellness",
+        "title": "Black Friday Dress Shoe Sale: Our Editor-Tested Favorites Are Up to 64% Off",
+        "summary": "Derbies, loafers, oxfords—it’s all here for a fraction of the price.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/2cc360a3-63f5-4afb-b893-43bf88f30ead.png",
+        "imageCredit": "Courtesy of Retailer",
+        "byline": "Joseph Cheatham",
+        "readTime": "4 min read",
+        "publishedAt": "2026-11-27T17:17:24.000Z",
+        "sourceUrl": "https://www.menshealth.com/style/a74550315/black-friday-dress-shoe-sale/",
+        "popularity": 91,
+        "signal": "Trending",
+        "tags": [
+          "wellness",
+          "men's health",
+          "health",
+          "black",
+          "friday",
+          "dress",
+          "shoe",
+          "sale"
+        ],
+        "age": 2
+      },
+      {
+        "id": "mens-health-fitness-g32968569-best-ellipticals",
+        "brand": "Men's Health",
+        "brandSlug": "mens-health",
+        "topic": "Fitness",
+        "title": "The 6 Best Ellipticals Right Now, Tested and Reviewed by Fitness Experts",
+        "summary": "Your elliptical routine doesn't need to be limited to the fitness club.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/cfdc80b6-0d7d-44ba-bb01-ea73476de923.jpg",
+        "imageCredit": "Courtesy of Retailer",
+        "byline": "Charles Thorp, NASM",
+        "readTime": "4 min read",
+        "publishedAt": "2026-11-27T16:21:00.000Z",
+        "sourceUrl": "https://www.menshealth.com/fitness/g32968569/best-ellipticals/",
+        "popularity": 84,
+        "signal": "Most Popular",
+        "tags": [
+          "fitness",
+          "men's health",
+          "health",
+          "best",
+          "ellipticals",
+          "right",
+          "tested",
+          "reviewed"
+        ],
+        "age": 3
       },
       {
         "id": "oprah-daily-style-a74493175-quince-black-friday-cyber-monday-sale-2026",
@@ -2129,7 +2140,7 @@ export const storybookFixtureData = {
         "imageCredit": "Product Shot Image",
         "byline": "Sienna Livermore",
         "readTime": "4 min read",
-        "publishedAt": "2026-11-26T11:00:00.000Z",
+        "publishedAt": "2026-11-27T16:04:00.000Z",
         "sourceUrl": "https://www.oprahdaily.com/style/a74493175/quince-black-friday-cyber-monday-sale-2026/",
         "popularity": 97,
         "signal": "Continue",
@@ -2143,100 +2154,102 @@ export const storybookFixtureData = {
           "friday",
           "deals"
         ],
-        "age": 8
+        "age": 3
       },
       {
-        "id": "oprah-daily-life-a74286806-9-small-businesses-to-support-this-holiday-season",
-        "brand": "Oprah Daily",
-        "brandSlug": "oprah-daily",
-        "topic": "Life",
-        "title": "9 Small Businesses to Support This Holiday Season",
-        "summary": "With Intuit QuickBooks in their corner and mindful shoppers behind them, independent makers around the country can have their best years yet.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/d315bc29-397f-4267-aef1-63c358c4ddbd.jpg",
-        "imageCredit": "Hearst Owned",
-        "readTime": "4 min read",
-        "publishedAt": "2026-11-25T19:00:00.000Z",
-        "sourceUrl": "https://www.oprahdaily.com/life/a74286806/9-small-businesses-to-support-this-holiday-season/",
-        "popularity": 90,
-        "signal": "Editor Pick",
-        "tags": [
-          "life",
-          "oprah daily",
-          "oprah",
-          "daily",
-          "small",
-          "businesses",
-          "support",
-          "this"
-        ],
-        "age": 24
-      },
-      {
-        "id": "oprah-daily-style-a74348950-walking-shoes-black-friday-deals-2026",
+        "id": "oprah-daily-life-a74323297-apple-black-friday-deals-2026",
         "brand": "Oprah Daily",
         "brandSlug": "oprah-daily",
         "topic": "Gear",
-        "title": "Best Black Friday Walking Shoe Deals: Save on Editor-Loved Sneakers, Flats, Boots, and More",
-        "summary": "Footwear O-ward winners are up to 64 percent off.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/2f42cabe-48b7-47ca-a23e-123c06bc7de9.jpg",
+        "title": "We Found Record-Low Black Friday Prices on Apple Tech, Including Oprah-Loved AirPods",
+        "summary": "Apple tech makes quite the impressive holiday gift.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/618f2d89-407c-40bb-b9e8-1bfed97380d0.jpg",
         "imageCredit": "Product Shot Image",
-        "byline": "Sidney Lee",
-        "readTime": "4 min read",
-        "publishedAt": "2026-11-25T15:14:00.000Z",
-        "sourceUrl": "https://www.oprahdaily.com/style/a74348950/walking-shoes-black-friday-deals-2026/",
-        "popularity": 83,
-        "signal": "Trending",
+        "byline": "Jessica Dukes",
+        "readTime": "3 min read",
+        "publishedAt": "2026-11-27T16:00:00.000Z",
+        "sourceUrl": "https://www.oprahdaily.com/life/a74323297/apple-black-friday-deals-2026/",
+        "popularity": 90,
+        "signal": "Editor Pick",
         "tags": [
           "gear",
           "oprah daily",
           "oprah",
           "daily",
-          "best",
+          "found",
+          "record-low",
           "black",
-          "friday",
-          "walking"
+          "friday"
         ],
-        "age": 28
+        "age": 3
       },
       {
-        "id": "popular-mechanics-video-a74520492-astounding-pop-mech-show-ep-73",
-        "brand": "Popular Mechanics",
-        "brandSlug": "popular-mechanics",
-        "topic": "Tech",
-        "title": "The Unexpected Origins of the Chainsaw",
-        "summary": "Before chainsaws cut trees, they helped deliver babies.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/3edea586-acf0-4a41-9cc1-5f6d2e3858e9.jpg",
-        "imageCredit": "Hearst Owned",
-        "byline": "PopMech Editors",
-        "readTime": "3 min read",
-        "publishedAt": "2026-11-26T10:00:00.000Z",
-        "sourceUrl": "https://www.popularmechanics.com/video/a74520492/astounding-pop-mech-show-ep-73/",
-        "popularity": 96,
-        "signal": "Most Popular",
+        "id": "oprah-daily-life-a74312041-cozy-earth-black-friday-sale-2026",
+        "brand": "Oprah Daily",
+        "brandSlug": "oprah-daily",
+        "topic": "Life",
+        "title": "Cozy Earth’s Black Friday Sale Means at Least 20% Off Oprah-Selected Gifts & Editor Favorites",
+        "summary": "Use our exclusive code OPRAHDAILY at checkout for discounts on editor-approved bedding, blankets, and pajamas.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/2cb36bd7-006e-4bf7-933e-42fc78ea1277.jpg",
+        "imageCredit": "Product Shot Image",
+        "byline": "Angel Madison",
+        "readTime": "4 min read",
+        "publishedAt": "2026-11-27T15:39:00.000Z",
+        "sourceUrl": "https://www.oprahdaily.com/life/a74312041/cozy-earth-black-friday-sale-2026/",
+        "popularity": 83,
+        "signal": "Trending",
         "tags": [
-          "tech",
-          "popular mechanics",
-          "popular",
-          "mechanics",
-          "unexpected",
-          "origins",
-          "chainsaw"
+          "life",
+          "oprah daily",
+          "oprah",
+          "daily",
+          "cozy",
+          "earth",
+          "black",
+          "friday"
         ],
-        "age": 9
+        "age": 3
       },
       {
-        "id": "popular-mechanics-adventure-outdoor-gear-a37679766-best-trail-cameras",
+        "id": "popular-mechanics-technology-gear-a71535355-best-amazon-deals-2026",
         "brand": "Popular Mechanics",
         "brandSlug": "popular-mechanics",
         "topic": "Gear",
-        "title": "The 8 Best Trail Cameras for Hunting, Wildlife Watching, and Even Home Security",
-        "summary": "These expert-tested trail cams help hunters and wildlife watchers capture what happens off-grid.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/24b23f66-cef8-47f9-8718-fa4f86c5e816.png",
-        "imageCredit": "Justin Park",
-        "byline": "Justin Park",
+        "title": "We Found the Best Black Friday Amazon Sales on Power Tools, Power Stations, Apple Tech, and More",
+        "summary": "Editor-tested gear is deeply discounted ahead of Black Friday.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/9bd0db55-bb0b-40ab-8252-2e32a5b2f955.png",
+        "imageCredit": "Trevor Raab",
+        "byline": "Tim Kohut",
         "readTime": "4 min read",
-        "publishedAt": "2026-11-25T23:00:00.000Z",
-        "sourceUrl": "https://www.popularmechanics.com/adventure/outdoor-gear/a37679766/best-trail-cameras/",
+        "publishedAt": "2026-11-27T16:04:57.000Z",
+        "sourceUrl": "https://www.popularmechanics.com/technology/gear/a71535355/best-amazon-deals-2026/",
+        "popularity": 96,
+        "signal": "Most Popular",
+        "tags": [
+          "gear",
+          "popular mechanics",
+          "popular",
+          "mechanics",
+          "found",
+          "best",
+          "black",
+          "friday"
+        ],
+        "age": 3
+      },
+      {
+        "id": "popular-mechanics-culture-gaming-a74379364-black-friday-gaming-deals-2026",
+        "brand": "Popular Mechanics",
+        "brandSlug": "popular-mechanics",
+        "topic": "Gear",
+        "title": "We Rounded Up the Best Black Friday Gaming Deals We Found So Far. Save up to 57% on Editor-Tested Favorites.",
+        "summary": "The deals are already flowing.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/f34b15ce-32be-4980-a6be-ba3be66f6507.png",
+        "imageCredit": "Thomas Hengge",
+        "byline": "Tim Kohut",
+        "readTime": "4 min read",
+        "publishedAt": "2026-11-27T15:37:11.000Z",
+        "sourceUrl": "https://www.popularmechanics.com/culture/gaming/a74379364/black-friday-gaming-deals-2026/",
         "popularity": 89,
         "signal": "Continue",
         "tags": [
@@ -2244,26 +2257,26 @@ export const storybookFixtureData = {
           "popular mechanics",
           "popular",
           "mechanics",
+          "rounded",
           "best",
-          "trail",
-          "cameras",
-          "hunting"
+          "black",
+          "friday"
         ],
-        "age": 20
+        "age": 3
       },
       {
-        "id": "popular-mechanics-adventure-outdoor-gear-a2975-best-pocket-knives",
+        "id": "popular-mechanics-technology-gear-a74361030-black-friday-phone-deals-2026",
         "brand": "Popular Mechanics",
         "brandSlug": "popular-mechanics",
         "topic": "Gear",
-        "title": "The 7 Best Pocket Knives for Everyday Tasks and Outdoor Adventures",
-        "summary": "Our favorite folders, flippers, and automatics from Benchmade, CRKT, Case, and more.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/vosteed-ultra-thin-pocket-knife-005-691f2d4159946.jpg",
-        "imageCredit": "Justin Park",
-        "byline": "Justin Park",
+        "title": "Best Black Friday Phone Deals: Save Hundreds Now on Your Next Upgrade",
+        "summary": "These editor-approved phones are on sale for Black Friday, so get in before the holiday shopping season rush starts.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/1af09e4e-70a7-4692-a170-5b7318532bd7.png",
+        "imageCredit": "Stefan Vazharov",
+        "byline": "Stefan Vazharov",
         "readTime": "4 min read",
-        "publishedAt": "2026-11-25T22:57:00.000Z",
-        "sourceUrl": "https://www.popularmechanics.com/adventure/outdoor-gear/a2975/best-pocket-knives/",
+        "publishedAt": "2026-11-27T15:21:00.000Z",
+        "sourceUrl": "https://www.popularmechanics.com/technology/gear/a74361030/black-friday-phone-deals-2026/",
         "popularity": 82,
         "signal": "Editor Pick",
         "tags": [
@@ -2272,11 +2285,11 @@ export const storybookFixtureData = {
           "popular",
           "mechanics",
           "best",
-          "pocket",
-          "knives",
-          "everyday"
+          "black",
+          "friday",
+          "phone"
         ],
-        "age": 20
+        "age": 4
       },
       {
         "id": "runners-world-news-a74507712-ncaa-cross-country-championships-photos-2026",
@@ -2290,8 +2303,8 @@ export const storybookFixtureData = {
         "readTime": "3 min read",
         "publishedAt": "2026-11-23T16:40:13.000Z",
         "sourceUrl": "https://www.runnersworld.com/news/a74507712/ncaa-cross-country-championships-photos-2026/",
-        "popularity": 65,
-        "signal": "Trending",
+        "popularity": 90,
+        "signal": "Editor Pick",
         "tags": [
           "fitness",
           "runner's world",
@@ -2302,21 +2315,21 @@ export const storybookFixtureData = {
           "from",
           "ncaa"
         ],
-        "age": 74
+        "age": 98
       },
       {
-        "id": "runners-world-training-a74523737-at-home-workout-runners",
+        "id": "runners-world-gear-g70222395-best-running-shoe-deals-2026",
         "brand": "Runner's World",
         "brandSlug": "runners-world",
         "topic": "Fitness",
-        "title": "Start the Day Strong With This 30-Minute Workout You Can Do Right at Home",
-        "summary": "Burn every muscle of the body while revving the heart rate.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/289a04dc-5536-4a61-9903-76ce515b9e1f.jpg",
-        "imageCredit": "Trevor Raab",
-        "byline": "Mallory Creveling, CPT",
+        "title": "Score Gear of the Year Winner Adidas Adizero Evo SL on Sale for Black Friday, Plus Tons More Shoe Deals",
+        "summary": "These Black Friday deals include daily trainers, stability shoes, and marathon racers by top brands, including Brooks, Asics, and more.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/ce18963e-b8fd-4991-b74a-d283a18a78ea.png",
+        "imageCredit": "Thomas Hengge",
+        "byline": "Amanda Furrer",
         "readTime": "4 min read",
-        "publishedAt": "2026-11-26T15:03:23.000Z",
-        "sourceUrl": "https://www.runnersworld.com/training/a74523737/at-home-workout-runners/",
+        "publishedAt": "2026-11-27T16:29:00.000Z",
+        "sourceUrl": "https://www.runnersworld.com/gear/g70222395/best-running-shoe-deals-2026/",
         "popularity": 95,
         "signal": "Trending",
         "tags": [
@@ -2324,26 +2337,26 @@ export const storybookFixtureData = {
           "runner's world",
           "runner",
           "world",
-          "start",
-          "strong",
-          "with",
-          "this"
+          "score",
+          "gear",
+          "year",
+          "winner"
         ],
-        "age": 4
+        "age": 3
       },
       {
-        "id": "runners-world-runners-stories-a74508651-running-after-heart-surgery",
+        "id": "runners-world-gear-g73747156-best-amazon-running-shoe-deals",
         "brand": "Runner's World",
         "brandSlug": "runners-world",
         "topic": "Fitness",
-        "title": "I Thought I Was Getting Slower Because of Age. Then an Incidental Scan Revealed the Real Problem—and Likely Saved My Life.",
-        "summary": "A longtime runner reflects on an unexpected diagnosis and the chance to start over.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/53901150-c9de-49ca-a25b-beb549e06808.jpg",
-        "imageCredit": "Courtesy Caleb Daniloff",
-        "byline": "Caleb Daniloff",
+        "title": "Editor-Favorite Running Shoes Are Marked Down on Amazon for Black Friday—Save on Brooks, Asics, Saucony, and More",
+        "summary": "These deals include daily trainers, stability shoes, and marathon racers.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/0a8ede9b-cad9-459e-8d22-c782da4846e5.png",
+        "imageCredit": "Thomas Hengge",
+        "byline": "Cat Bowen, Amanda Furrer",
         "readTime": "4 min read",
-        "publishedAt": "2026-11-25T19:27:29.000Z",
-        "sourceUrl": "https://www.runnersworld.com/runners-stories/a74508651/running-after-heart-surgery/",
+        "publishedAt": "2026-11-27T15:49:00.000Z",
+        "sourceUrl": "https://www.runnersworld.com/gear/g73747156/best-amazon-running-shoe-deals/",
         "popularity": 88,
         "signal": "Most Popular",
         "tags": [
@@ -2351,26 +2364,26 @@ export const storybookFixtureData = {
           "runner's world",
           "runner",
           "world",
-          "thought",
-          "getting",
-          "slower",
-          "because"
+          "editor-favorite",
+          "running",
+          "shoes",
+          "marked"
         ],
-        "age": 24
+        "age": 3
       },
       {
-        "id": "womens-health-health-a74524654-ovarian-cancer-early-test-study",
+        "id": "womens-health-beauty-a74550324-black-friday-shampoo-sales-2026",
         "brand": "Women's Health",
         "brandSlug": "womens-health",
         "topic": "Wellness",
-        "title": "Researchers Just Figured Out a Way to Detect Ovarian Cancer Earlier Than Ever",
-        "summary": "This could be life-saving.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/77856265-2293-454a-80b1-e21fad1b69ba.jpg",
-        "imageCredit": "Getty Images",
-        "byline": "Korin Miller",
-        "readTime": "3 min read",
-        "publishedAt": "2026-11-26T12:00:00.000Z",
-        "sourceUrl": "https://www.womenshealthmag.com/health/a74524654/ovarian-cancer-early-test-study/",
+        "title": "The Best Black Friday Shampoo Deals to Grab Before Your Favorite Brands Sell Out",
+        "summary": "Take up to 50 percent off these hairstylist-approved picks.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/2a930eae-d768-4d33-b23a-af283fa0d9b8.png",
+        "imageCredit": "Fable & Mane",
+        "byline": "Nicole Saunders",
+        "readTime": "4 min read",
+        "publishedAt": "2026-11-27T17:42:43.000Z",
+        "sourceUrl": "https://www.womenshealthmag.com/beauty/a74550324/black-friday-shampoo-sales-2026/",
         "popularity": 94,
         "signal": "Editor Pick",
         "tags": [
@@ -2378,53 +2391,52 @@ export const storybookFixtureData = {
           "women's health",
           "women",
           "health",
-          "researchers",
-          "just",
-          "figured",
-          "detect"
+          "best",
+          "black",
+          "friday",
+          "shampoo"
         ],
-        "age": 7
+        "age": 1
       },
       {
-        "id": "womens-health-style-a74521943-on-black-friday-sale-2026",
+        "id": "womens-health-fitness-a74533573-strength-training-transformation-upper-body",
         "brand": "Women's Health",
         "brandSlug": "womens-health",
-        "topic": "Wellness",
-        "title": "Our Favorite On Shoes Are Up to 37% Off for Black Friday",
-        "summary": "Score stylish sneakers for less before they sell out.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/3619cb8e-065a-4f61-8b07-0ad9c1df2485.png",
-        "imageCredit": "On",
-        "byline": "Shannen Zitz",
-        "readTime": "3 min read",
-        "publishedAt": "2026-11-26T05:00:00.000Z",
-        "sourceUrl": "https://www.womenshealthmag.com/style/a74521943/on-black-friday-sale-2026/",
+        "topic": "Fitness",
+        "title": "'I Kickstarted My Upper-Body Strength Transformation Using Only A 25-Lb. Bag Of Rice'",
+        "summary": "\"I developed so much discipline that translated into every other aspect of my life.\"",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/strength-training-transformation-upper-body-discipline-699e19a73d277.jpg",
+        "imageCredit": "Pilar Lewis",
+        "readTime": "4 min read",
+        "publishedAt": "2026-11-27T17:00:00.000Z",
+        "sourceUrl": "https://www.womenshealthmag.com/fitness/a74533573/strength-training-transformation-upper-body/",
         "popularity": 87,
         "signal": "Trending",
         "tags": [
-          "wellness",
+          "fitness",
           "women's health",
           "women",
           "health",
-          "favorite",
-          "shoes",
-          "black",
-          "friday"
+          "kickstarted",
+          "upper-body",
+          "strength",
+          "transformation"
         ],
-        "age": 14
+        "age": 2
       },
       {
-        "id": "womens-health-life-g29994452-cooling-sheets",
+        "id": "womens-health-beauty-a74544948-black-friday-microcurrent-device-sale-2026",
         "brand": "Women's Health",
         "brandSlug": "womens-health",
         "topic": "Wellness",
-        "title": "9 Best Cooling Sheets for More Comfortable Sleep, Tested by Editors",
-        "summary": "We tested dozens of cooling sheets. My Sheets Rock makes the best.",
-        "image": "https://hips.hearstapps.com/hmg-prod/images/f31e86d7-26f2-4fb2-9045-03982f46d718.png",
-        "imageCredit": "Hearst Owned",
-        "byline": "Korin Miller",
+        "title": "Black Friday Microcurrent Device Sales: Save Up to 64% on Our Favorite Face Sculpting Tools",
+        "summary": "Enjoy major discounts on NuFace, Medicube, and more.",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/a907e228-905a-4d65-bbb9-c4057b36e327.png",
+        "imageCredit": "NuFace",
+        "byline": "Nicole Saunders",
         "readTime": "4 min read",
-        "publishedAt": "2026-11-25T23:02:00.000Z",
-        "sourceUrl": "https://www.womenshealthmag.com/life/g29994452/cooling-sheets/",
+        "publishedAt": "2026-11-27T15:45:09.000Z",
+        "sourceUrl": "https://www.womenshealthmag.com/beauty/a74544948/black-friday-microcurrent-device-sale-2026/",
         "popularity": 80,
         "signal": "Most Popular",
         "tags": [
@@ -2432,12 +2444,12 @@ export const storybookFixtureData = {
           "women's health",
           "women",
           "health",
-          "best",
-          "cooling",
-          "sheets",
-          "more"
+          "black",
+          "friday",
+          "microcurrent",
+          "device"
         ],
-        "age": 20
+        "age": 3
       }
     ],
     "sourceNotes": [
@@ -2497,79 +2509,98 @@ export const storybookFixtureData = {
 export const storybookGalleryImagesByBrand: Record<string, StorybookGalleryImage[]> = {
   "cosmopolitan": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/a2a2a9f3-4dfd-485e-8f5d-ec7393f66e7f.jpg",
-      "alt": "Meet the Cast and Characters of ‘ The Hunting Wives’ Season 2",
-      "credit": "Netflix"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/7c77f2ba-14e0-415e-b41e-8eb62393f0a4.png",
+      "alt": "My Favorite Black Friday Find So Far? This Chic Floral, Reversible Bedding Set Under $40",
+      "credit": "Design by Cosmopolitan"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/9714509f-1d8c-41a1-8e4b-083234ef0beb.jpg",
-      "alt": "How to Read ‘The Hunger Games’ Books in Order of Release",
-      "credit": "Courtesy of Lionsgate"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/15acf9fb-58a2-404f-ab28-32567b942c34.jpg",
+      "alt": "All About the ‘Dancing With the Stars’ Holiday Special—and How to Tune In",
+      "credit": "Disney"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/36f4a696-8b7b-42eb-84e7-8fc9f490f484.jpg",
-      "alt": "16 Festive Holiday Date Ideas for the Most Wonderful Time of Year",
-      "credit": "Getty Images"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/5029434d-29bd-41a9-ada6-e2fb5983c6dc.png",
+      "alt": "Before You Shop Glossier’s Black Friday Sale, Here’s Our Ranking of the 15 Best Products",
+      "credit": "Courtesy of Glossier"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/30e9624a-2249-4392-80f3-3fb0fe1fa3e4.jpeg",
-      "alt": "5 Fall Outfits I'm Stealing Straight From Taylor Swift",
-      "credit": "MEGA"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/ff29eab2-1b21-432f-8c29-c8c090ffdbc1.png",
+      "alt": "Want an LED Mask? Score Up to $250 Off These Editor-Tested Picks for Black Friday",
+      "credit": "Hearst Owned"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/80fb3881-38f6-46a3-9e9a-d595bb3f09e1.jpg",
-      "alt": "50 Percent of People In Relationships Would Take a Trip Together to Solve Their Problems",
-      "credit": "Jacobs Stock Photography Ltd/ Getty"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/855eb980-2488-48a9-9654-429e44291c4a.jpg",
+      "alt": "Everything We Know About ‘The Hunting Wives’ Season 3",
+      "credit": "DANA HAWLEY/NETFLIX"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/95b35b8c-f34a-4694-a242-15d2a71d0a5a.jpg",
-      "alt": "Your December Horoscope by Zodiac Sign",
-      "credit": "Khadija Horton/Getty Images"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/57c757c0-a2cc-432f-9169-653c02fdda85.jpeg",
+      "alt": "15 Best Amazon Dresses I’d Buy Again and Again—All Under $50",
+      "credit": "Moritz Scholz"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/ebc0e76a-d936-4711-9425-23c124fa4eb4.jpg",
-      "alt": "Your Pisces Monthly Horoscope for December 2026",
-      "credit": "Getty Images/Khadija Horton"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/ed946110-01d2-4dd8-9922-fe00cc955842.png",
+      "alt": "Here's How to Stack LELO's Black Friday Discounts on Its Bestsellers and Get a Free Toy",
+      "credit": "Lelo / Cosmopolitan"
     }
   ],
   "country-living": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/cd3ac0bf-efec-47d1-a1f3-b0cd3b84ab1d.jpg",
-      "alt": "Is It Ever Okay to Tell a Relative You Want Their Antiques Someday?",
-      "credit": "Becky Luigart-Stayner for Country Living"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/a629ee3e-41ca-4e80-af09-ce9078626455.jpeg",
-      "alt": "Your Christmas Cactus Might Actually Be a Thanksgiving Cactus",
-      "credit": "Евгения Матвеец"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/ginkgo-grove-royalty-free-image-1764016986.pjpeg",
-      "alt": "Why Ginkgo Trees Drop All Their Leaves in a Day",
-      "credit": "Dennis Govoni"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/c1ee9e13-96e0-4a36-a21d-3a8b855d8501.jpg",
-      "alt": "I Found the Cutest, Non-Tacky Christmas Sweaters on Amazon",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/305f8f3a-fd8c-4598-8ba6-1a1beffc5a80.jpg",
+      "alt": "Walmart’s Black Friday Sale Is Full of Deals up to 67% off for Your Home and Holiday List",
       "credit": "Product Shot Image"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/ebc9b761-c982-412d-8af7-76e092cb2112.jpeg",
-      "alt": "Ella Langley Calls Her New Song “Live, Real, and Raw”",
-      "credit": "Kevin Mazur"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/891da8dc-07ad-4bb8-ba13-21b5c2c5f634.jpeg",
+      "alt": "Amazon’s Black Friday Deals Are Here—These Are the Best Toy Discounts",
+      "credit": "Product Shot Image"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/c4e6ff72-875d-4b0a-b894-8578a633076d.jpeg",
-      "alt": "How to Make a Thanksgiving Centerpiece From Your Garden",
-      "credit": "Eva-Katalin"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/3ee113b8-81f3-4080-96dc-b41e3e8a44a6.jpeg",
+      "alt": "How to Keep a Norfolk Island Pine Alive After the Holidays",
+      "credit": "Solidago"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/alyson-morgan-wisconsin-home-christmas-exterior-6723d62a2cb6a.jpg",
-      "alt": "16 Christmas Porch Ideas That Make a Merry First Impression",
-      "credit": "Adam Albright for Country Living"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/ed93fa97-731a-4df5-b8ba-6047c1f70818.jpeg",
+      "alt": "Save 20% on a Saatva Mattress With Our Exclusive Discount Code",
+      "credit": "Saatva"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/a03afeaa-9510-4e68-88a9-f8b4d3fa0053.jpeg",
+      "alt": "Amazon’s Black Friday Sale Is in Full Swing and Prices Are Still Dropping—Here’s What We’d Buy",
+      "credit": "Product Shot Image"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/clx020126gatherfoodfeature-002-6949a333a33ea.jpg",
+      "alt": "8 Easy Ways to Use Up Leftover Thanksgiving Turkey",
+      "credit": "Becky Luigart-Stayner for Country Living"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/82cca436-ea92-4b34-a4f3-e38f9ab150f9.jpeg",
+      "alt": "Black Friday LEGO Deals Have Officially Arrived—and Popular Sets Are Up to 54% Off",
+      "credit": "Product Shot Image"
     }
   ],
   "delish": [
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/3cc4913d-4d19-43dd-a4c4-8b3e993ff11b.jpeg",
+      "alt": "Celsius Just Released A New Costco-Exclusive Holiday Flavor—And Fans Want It Everywhere",
+      "credit": "KairosDee"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/403fc135-c78f-40cb-ab65-cfadcf618732.jpeg",
+      "alt": "The New Werwulf Popcorn Bucket Is Dividing Fans—And Christmas Might Be To Blame",
+      "credit": "Tashi-Delek"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/2f5841ca-48a0-40c1-acea-86a18a30cb2d.jpg",
+      "alt": "Dijon Balsamic Chicken Thighs",
+      "credit": "PHOTO: LINDA PUGLIESE; FOOD STYLING: BROOKE CAISON"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/24e4845c-d82c-4224-9e06-f111a471762b.jpg",
+      "alt": "The Great British Baking Show Crowns Moyin Its 2026 Winner After An Unforgettable Season"
+    },
     {
       "src": "https://hips.hearstapps.com/hmg-prod/images/8f774572-ecbb-4c6d-80fc-14133f80d67d.jpg",
       "alt": "Green Beans Almondine",
@@ -2584,103 +2615,98 @@ export const storybookGalleryImagesByBrand: Record<string, StorybookGalleryImage
       "src": "https://hips.hearstapps.com/hmg-prod/images/d7f760ab-d078-4318-adbb-e545c86cd0bb.jpg",
       "alt": "Cranberry Apple Quinoa Salad",
       "credit": "PHOTO: ERIK BERNSTEIN; FOOD STYLING: BARRETT WASHBURNE"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/3e150466-e4ef-41c8-8150-d38053523790.jpg",
-      "alt": "Figgy Pudding Cookies",
-      "credit": "PHOTO: RACHEL VANNI; FOOD STYLING: MONICA PIERINI"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/7c238fd9-a370-4d70-b1af-7984ca0720b4.jpg",
-      "alt": "McDonald’s Is Reportedly Testing A Major Chicken Menu Overhaul—Here’s What We Know",
-      "credit": "NurPhoto via Getty Images"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/70bdb054-f2e4-4ddc-9c73-60358c532aa8.jpg",
-      "alt": "Homemade Turkey Stock",
-      "credit": "PHOTO: PARKER FEIERBACH"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/c4ea9c37-9435-438e-aa2d-bc6312d2692c.jpg",
-      "alt": "Polar Bear Cookies",
-      "credit": "PHOTO: LINDA PUGLIESE; FOOD STYLING: CHRISTINE ALBANO"
     }
   ],
   "good-housekeeping": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/0fa3cdea-eda7-48d2-a358-7245ecd506fb.jpeg",
-      "alt": "21 Dazzling Old-School Photos of the Radio City Rockettes",
-      "credit": "Hulton Archive"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/4ef6a025-3d5a-4c9b-8b03-5644e06351fc.png",
+      "alt": "If You Only Want to Spend $25, Here Are 10 Black Friday Deals You Should Check Out",
+      "credit": "Product Shot Image"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/2c9ddc3b-086c-442b-be16-9c2a66ac8784.jpeg",
-      "alt": "This Rare Dog Breed Just Won the National Dog Show",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/8d3f73c2-5ff3-4841-96fa-6a8353c12251.jpg",
+      "alt": "Advent Calendar Season Starts Tuesday! Amazon Has Some Good Last-Minute Deals",
+      "credit": "Amazon"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/e21ef034-5c40-4755-a635-211511c7721b.jpeg",
+      "alt": "Hoda Kotb Uses This $8 Skincare Oil “Like It’s Going Out of Style”",
       "credit": "NBC"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/f7da6518-a3a3-44f6-bf5a-723488c3e750.jpeg",
-      "alt": "12 Surprisingly Simple Ways to Strengthen Your Relationships",
-      "credit": "Tim Robberts"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/2c762091-eb3b-46ba-8681-59a5d8c60ad5.jpg",
+      "alt": "PetSmart’s Black Friday Sale Has Major Savings for Pet Parents, Including Up to 50% Off Holiday Toys and Apparel",
+      "credit": "Petsmart"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/2ae3c549-df0e-4704-9346-eba6cf07b02f.jpeg",
-      "alt": "Here’s How Much the Rockettes Make During the Holiday Season",
-      "credit": "John Lamparski"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/92ee7230-e666-48f6-8389-be9e80b1dc00.png",
+      "alt": "10 Brands Giving Out Actually Good Free Gifts With Your Black Friday Purchase",
+      "credit": "Product Shot Image"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/kelly-dawson-living-room-bartlam-69668500c155f.jpg",
-      "alt": "How a Quarterly Decluttering Routine Made My Small Apartment Easier to Manage",
-      "credit": "Amy Bartlam Photography"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/45f69fb0-1144-44e6-828d-3b3022956b4f.jpg",
+      "alt": "American Girl Fans, I Got You! Here Are the Best Black Friday Deals",
+      "credit": "American Girl"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/how-to-watch-stream-national-dog-show-2022-1668618703.jpeg",
-      "alt": "How to Watch and Stream the 2026 National Dog Show This Thanksgiving",
-      "credit": "NBC"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/213be74b-c294-4646-b892-360008a1eac6.jpeg",
-      "alt": "This Dog Breed Has Won the National Dog Show More Than Any Other",
-      "credit": "Mark Makela"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/f1663b23-06e6-4d82-a302-4d2f1cc0388d.png",
+      "alt": "10 Trendiest Gifts for Women Under $25—All on Sale for Black Friday",
+      "credit": "Product Shot Image"
     }
   ],
   "house-beautiful": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/328d5f14-b53a-4ff3-8a51-3e77407cefc7.jpg",
-      "alt": "I Scrolled Through Wayfair’s Black Friday Sale and Found the Only Deals Worth Shopping",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/6655f470-1978-4357-b360-c1634faa1eba.jpeg",
+      "alt": "This Sofa Is the Crown Jewel of My Apartment—and It's $560 Off for Black Friday",
+      "credit": "Albany Park"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/02a54beb-7db5-4ba7-b19f-9959aad52182.jpeg",
+      "alt": "50+ Incredible Black Friday Furniture Deals That Go WAY Beyond Free Shipping",
+      "credit": "CB2"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/894e105a-c92c-4d49-8449-99532a23bfee.jpg",
+      "alt": "Dyson’s Black Friday Deals Are Here—Get Vacuums and Air Purifiers up to 55% Off",
       "credit": "Product Shot Image"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/small-bathroom-makeover-green-stripe-tiles-6942fb93a8bc1.jpg",
-      "alt": "5 Designer-Approved Ways to Make a Small Bathroom Feel Full of Personality",
-      "credit": "James French"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/fae72db8-5efb-433d-8324-6057107e1b0d.jpg",
-      "alt": "The Affordable Mattress Brand I’ve Been Sleeping on for 9 Years Has the Best Black Friday Deal Right Now",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/7b881777-2c26-4db6-aba9-38c454821bcd.jpg",
+      "alt": "The Best Editor-Vetted Black Friday Mattress Deals",
       "credit": "Product Shot Image"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/fb56cf99-e3f2-43f8-9844-318437b99f60.jpg",
-      "alt": "5 Thanksgiving Hosting Tips That’ll Make Your Dinner Parties Feel More Special Any Time of Year",
-      "credit": "Marcel's Culinary Experience"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/61fb5f27-ff56-4ab9-9eb4-19acac70da89.jpeg",
+      "alt": "Wayfair’s Fairytale “Corner Cabin” Is an Instant Backyard Charm—and It’s $1,000 Off During Black Friday",
+      "credit": "Wayfair"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/e6d2b550-e49b-42d2-b874-3109d26dedfb.jpg",
-      "alt": "14 Design Within Reach Finds Designers Say Are Worth Buying for Your Home",
-      "credit": "Designer: Barrett Oswald Designs; Photographer: Tim Lenz"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/17ea3c9c-909e-485b-bc04-4b09691138cd.jpg",
+      "alt": "I Found the 16 Best-Looking Couches on Sale for Black Friday, and They’re Surprisingly Good Deals",
+      "credit": "Lulu and Georgia"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/d9bad652-dedf-4607-8847-33058174bfee.jpg",
-      "alt": "Roborock’s Smartest Robot Vacuum and Mop Saved Me Hours of Cleaning—and It’s $650 Off Right Now",
-      "credit": "Soumi Sarkar"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/197fc764-26b6-4ca4-a9d8-da84845c10dc.jpeg",
-      "alt": "7 Home Organizing Trends That Will Be EVERYWHERE in 2027, According to Pros",
-      "credit": "onurdongel"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/b1bb0af5-f0cc-40f5-8c4b-176d9f9caf46.jpg",
+      "alt": "My Favorite Humidifier That Revived My Parched Skin Has a Really Good Black Friday Deal",
+      "credit": "Product Shot Image"
     }
   ],
   "pioneer-woman": [
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/a4e9787d-0de5-4949-946a-3b76a58a14e9.jpeg",
+      "alt": "Thanksgiving Leftovers Nachos",
+      "credit": "C.W Newell"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/e189912d-0f7c-4a54-866c-7fc9d5dacfd3.jpg",
+      "alt": "Shop Alex Drummond’s Favorite Christmas Decorations",
+      "credit": "Buff Strickland"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/turkey-croquettes-recipe-2x1-69247c1a06a12.jpg",
+      "alt": "14 Leftover Mashed Potato Recipes That Are Worth Making Extras",
+      "credit": "C.W. Newell"
+    },
     {
       "src": "https://hips.hearstapps.com/hmg-prod/images/b2eeda6f-ff9a-43e3-a26a-2b654c0b1eb1.jpeg",
       "alt": "10 Simple Ways to Make Your Home Smell Amazing Before Holiday Guests Arrive",
@@ -2700,48 +2726,33 @@ export const storybookGalleryImagesByBrand: Record<string, StorybookGalleryImage
       "src": "https://hips.hearstapps.com/hmg-prod/images/thanksgiving-side-dishes-68dacdaf8d7b1.jpg",
       "alt": "Why Thanksgiving Cleanup is So Much Easier with a DIY Leftovers Station",
       "credit": "Ralph Smith"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/fcc4dca4-ffb5-44f4-90d3-960d529f0e19.jpeg",
-      "alt": "Leftover Turkey Cranberry Sliders",
-      "credit": "Gordon Sawyer"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/871253ca-96fa-4093-8912-fd0d41ab4f3c.jpg",
-      "alt": "Can You Put Grandma’s Good China in the Dishwasher? An Expert Weighs In",
-      "credit": "Con Poulos"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/a1e9fd8b-7996-4b9f-99dd-c0e0744ebc0b.jpg",
-      "alt": "How to Keep Gravy from Forming a Skin",
-      "credit": "Con Poulos"
     }
   ],
   "prevention": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/a3ac7c26-e42f-493e-a3f1-3fdd01711508.jpeg",
-      "alt": "Honey, Maple Syrup, or Sugar: Is Any Sweetener Actually Healthiest? A Dietitian Explains.",
-      "credit": "SimpleImages"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/5e86e917-8979-4f7e-9e60-6d9c5478ff40.jpeg",
-      "alt": "This 1 Habit Can Help You Digest Better After a Meal, According to Experts",
-      "credit": "MoMo Productions"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/b4834dee-4e2d-4037-abc2-9be16fcf7da2.jpeg",
-      "alt": "Here’s What Really Happens to Your Body When You Skip Breakfast, According to Dietitians",
-      "credit": "fcafotodigital"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/91bfa704-f701-4343-9834-b6f5da6128bf.png",
-      "alt": "On’s Black Friday Flash Sale Includes 30% Off Editor-Tested Walking Shoes",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/524a6884-d906-40f5-9b2c-59efd1cd5626.jpg",
+      "alt": "Every Apple Watch Is at a Record-Low Price for Black Friday—Grab One Before They Sell Out",
       "credit": "Product Shot Image"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/09f76868-bf5c-452b-b94a-5be577bf8dd3.jpg",
-      "alt": "How to Improve Flexibility and Mobility Over Time",
-      "credit": "Hearst Owned"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/74527a3a-1148-4d3c-8803-9b6ad70ff901.jpeg",
+      "alt": "The Best Black Friday Mattress Deals: Over 50% Off Editor-Tested Favorites",
+      "credit": "Product Shot Image"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/2f41ebd8-9c89-4e7b-bf74-d96dd1eb0fc6.png",
+      "alt": "Hoka Vs. Brooks Black Friday Deals 2026: One Brand Is Offering the Better Savings on Shoes",
+      "credit": "Product Shot Image"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/a8428b47-1fc9-47c4-8078-4674de093912.png",
+      "alt": "Shop the Best Black Friday Deals on Editor-Tested Walking Shoes, Starting at $60",
+      "credit": "Jenn Gonick"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/saatva-cyber-week-sale-2025-692f1f2a13e6c.jpg",
+      "alt": "Saatva’s Black Friday Mattress Sale Is Live—Our Exclusive Discount Code Saves You 20%",
+      "credit": "Product Shot Image"
     },
     {
       "src": "https://hips.hearstapps.com/hmg-prod/images/c9f2f69c-5ef9-4d32-ba91-7e032e3e1222.png",
@@ -2749,9 +2760,9 @@ export const storybookGalleryImagesByBrand: Record<string, StorybookGalleryImage
       "credit": "Hearst Owned"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/2f41ebd8-9c89-4e7b-bf74-d96dd1eb0fc6.png",
-      "alt": "Hoka Vs. Brooks Black Friday Deals 2026: One Brand Is Offering the Better Savings on Shoes",
-      "credit": "Product Shot Image"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/4d8f49e6-33f2-4870-993b-f11f64e31e5a.jpeg",
+      "alt": "Type 2 Diabetes Might Raise Your Alzheimer’s Risk by 53%, Scientists Find",
+      "credit": "Viktoriya Skorikova"
     }
   ],
   "redbook": [
@@ -2837,22 +2848,32 @@ export const storybookGalleryImagesByBrand: Record<string, StorybookGalleryImage
       "credit": "Difydave"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/a2a2a9f3-4dfd-485e-8f5d-ec7393f66e7f.jpg",
-      "alt": "Meet the Cast and Characters of ‘ The Hunting Wives’ Season 2",
-      "credit": "Netflix"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/7c77f2ba-14e0-415e-b41e-8eb62393f0a4.png",
+      "alt": "My Favorite Black Friday Find So Far? This Chic Floral, Reversible Bedding Set Under $40",
+      "credit": "Design by Cosmopolitan"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/9714509f-1d8c-41a1-8e4b-083234ef0beb.jpg",
-      "alt": "How to Read ‘The Hunger Games’ Books in Order of Release",
-      "credit": "Courtesy of Lionsgate"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/15acf9fb-58a2-404f-ab28-32567b942c34.jpg",
+      "alt": "All About the ‘Dancing With the Stars’ Holiday Special—and How to Tune In",
+      "credit": "Disney"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/36f4a696-8b7b-42eb-84e7-8fc9f490f484.jpg",
-      "alt": "16 Festive Holiday Date Ideas for the Most Wonderful Time of Year",
-      "credit": "Getty Images"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/5029434d-29bd-41a9-ada6-e2fb5983c6dc.png",
+      "alt": "Before You Shop Glossier’s Black Friday Sale, Here’s Our Ranking of the 15 Best Products",
+      "credit": "Courtesy of Glossier"
     }
   ],
   "autoweek": [
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/b22dfd97-f0c3-471e-a5b7-9dda7128628d.jpg",
+      "alt": "Gallery: 2028 Volvo XC60 PHEV Photos",
+      "credit": "Volvo"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/acc3022a-ae96-4600-b167-754c5426838d.jpg",
+      "alt": "Gallery: 2028 Volvo XC90 PHEV Photos",
+      "credit": "Volvo"
+    },
     {
       "src": "https://hips.hearstapps.com/hmg-prod/images/8bdcbb94-cd7b-41cd-93b6-6b6aa16d3fb9.jpg",
       "alt": "Gallery: Ford GT41 Hypercar Photos",
@@ -2864,59 +2885,49 @@ export const storybookGalleryImagesByBrand: Record<string, StorybookGalleryImage
       "credit": "Courtesy of Retromobile New York"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/480e990f-0eb6-42a0-841c-174fcd324ccd.jpg",
-      "alt": "Gallery: Volkswagen ID. Polo GTI Clubsport Concept Photos",
-      "credit": "Volkswagen"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/4cda214e-7811-4bfd-bbd0-412b1a10e32e.jpeg",
+      "alt": "Judge Denies JGR Request to Extend Gabehart Injunction to Spire",
+      "credit": "Meg Oliphant"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/885d1b20-4863-4bf7-9147-0caa95cea4d7.jpg",
-      "alt": "Gallery: 2027 Hyundai Elantra Photos",
-      "credit": "Hyundai"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/82ebb698-e377-4fae-8b16-6ea14a5d610a.jpeg",
+      "alt": "MotoGP’s Greatest Modern Champ, Marc Marquez Retires at 33",
+      "credit": "NurPhoto"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/8344c2eb-8a02-4fea-bf48-3f6584995764.jpg",
-      "alt": "Ford’s New GT41 Le Mans Prototype Debuts at Detroit Lions Game",
-      "credit": "Ford Racing"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/870a8d1d-1264-4807-87d7-38c76d4a4dc6.jpeg",
-      "alt": "F1’s 2027 Grid Is Finally Set as Haas Confirms Bearman",
-      "credit": "Clive Rose"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/aa479309-d19d-487a-bfe2-a3f8ce317f00.png",
-      "alt": "Do Chinese Automakers Steal Western Car Designs? Court Says Yes",
-      "credit": "BYD"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/e1901690-f0f1-47d3-a36c-01547b257f2d.jpg",
+      "alt": "2028 Volvo XC60 PHEV Will Have the Most EV Range in America",
+      "credit": "Volvo"
     }
   ],
   "bring-a-trailer": [
     {
-      "src": "https://bringatrailer.com/wp-content/uploads/2026/11/IMG_5797-scaled-copy-2026-11-24-q0x-42ce55f7e1ff272bb3e434349f7b9ed1.jpg?w=940",
-      "alt": "1972 Chevrolet Nova SS Coupe"
+      "src": "https://bringatrailer.com/wp-content/uploads/2026/11/40779_EXT_001-scaled-69a605e1090d19c90d25cdb4187e120c.jpg?w=940",
+      "alt": "RS-Style 1973 Porsche 911T Coupe"
     },
     {
-      "src": "https://bringatrailer.com/wp-content/uploads/2026/10/IMG_9600-copy-2026-11-05-hdc-258e189bba1291233b014c2ec2249b3f.jpg?w=940",
-      "alt": "1,100-Mile 2019 BMW R nineT Scrambler at No Reserve"
+      "src": "https://bringatrailer.com/wp-content/uploads/2026/11/20261007_095123-scaled-copy-2026-11-24-5zb-c14d2087f6b32dc8f98b7d170680c66b.jpg?w=940",
+      "alt": "1987 Toyota Land Cruiser FJ60 4-Speed"
     },
     {
-      "src": "https://bringatrailer.com/wp-content/uploads/2026/11/DSC00008-scaled-copy-2026-11-23-exx-d7acfa03405e3c57e51610873edbf6d2.jpg?w=940",
-      "alt": "2008 Pontiac G8 GT"
+      "src": "https://bringatrailer.com/wp-content/uploads/2026/10/10576_23_fitw-copy-2026-11-20-ytg-c3634ce21b724f478c6859fde2fee604.jpg?w=940",
+      "alt": "SBC-Powered &#8217;23 Ford T-Bucket w/6&#215;2 Intake"
     },
     {
-      "src": "https://bringatrailer.com/wp-content/uploads/2026/11/IMG_7046-scaled-copy-2026-10-23-nzd-bcc739e7621ab1286c706cbfc51dc36c-gNg1FY.jpg?w=940",
-      "alt": "1971 Kawasaki H1 Mach III"
+      "src": "https://bringatrailer.com/wp-content/uploads/2026/11/IMG_3272-scaled-copy-2026-11-12-lvd-403b0c69e38771dea6c633bae7d28d0f.jpg?w=940",
+      "alt": "1993 Ford F-250 XLT 7.5L 4×4 5-Speed"
     },
     {
-      "src": "https://bringatrailer.com/wp-content/uploads/2026/11/PXL_20261003_1409048602-scaled-copy-2026-11-24-hwl-81c7b7e4457cc6158db0726875fd796f.jpg?w=940",
-      "alt": "5.3L-Powered 1974 Toyota Land Cruiser FJ40"
+      "src": "https://bringatrailer.com/wp-content/uploads/2026/11/Ivan_-_1997_Porsche_911_Turbo-154-scaled-copy-2026-11-25-4jl-f58eee0f19115a5228870383c6f654d6.jpg?w=940",
+      "alt": "Petrol Blue Metallic 1997 Porsche 911 Turbo"
     },
     {
-      "src": "https://bringatrailer.com/wp-content/uploads/2026/11/20261109_151916-scaled-copy-2026-11-18-kn0-8bec57fb2245e3b016a7911e5f10175a.jpg?w=940",
-      "alt": "350-Powered 1935 Ford 5-Window Coupe"
+      "src": "https://bringatrailer.com/wp-content/uploads/2026/11/IMG_2688-scaled-copy-2026-11-24-x7d-6da26968139a467185853b92069251a2.jpg?w=940",
+      "alt": "2018 Audi Q7 3.0T Prestige at No Reserve"
     },
     {
-      "src": "https://bringatrailer.com/wp-content/uploads/2026/11/782-scaled-copy-2026-11-24-o4n-1ca345c0efb2668c68a48e54072f0c59.jpg?w=940",
-      "alt": "2011 Lexus GX460 Premium"
+      "src": "https://bringatrailer.com/wp-content/uploads/2026/11/IMG_3953_4-scaled-copy-2026-11-23-30d-1a38d75321ced44c9e9ae7a13de77a9a.jpg?w=155&#38;h=105&#38;crop=1",
+      "alt": "Yesterday&#8217;s comments of note"
     }
   ],
   "car-and-driver": [
@@ -2946,20 +2957,25 @@ export const storybookGalleryImagesByBrand: Record<string, StorybookGalleryImage
       "credit": "Porsche"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/b33d99f1-ee91-42be-bc2f-f35eced3754f.jpg",
-      "alt": "View Interior Photos of the 2028 Mercedes-Benz GLA EV",
-      "credit": "Mercedes-Benz"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/2023-ford-super-duty-119-6491faccb1df8.jpg",
+      "alt": "Gooseneck Hitches Explained",
+      "credit": "Ford"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/fc8eb32d-a1a4-48e1-b7a7-cbcfff3f585a.jpg",
-      "alt": "Ford’s Next Le Mans Dream Is Finally Here: Meet the GT41",
-      "credit": "Ford"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/feaf7ac0-4727-4084-95f5-567b5b2ab477.jpg",
+      "alt": "Buy This Custom 1978 GMC Van, and Elvis Is Your Co-Pilot",
+      "credit": "Bring a Trailer"
     }
   ],
   "hot-rod": [
     {
       "src": "https://hips.hearstapps.com/hmg-prod/images/d784cc2f-b0fa-4670-a6e7-dc72c7976180.jpg",
       "alt": "SEMA 2026’s Hottest Engine Bays: The Wildest Engines From the Show—Gallery",
+      "credit": "Steven Rupp"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/7f910795-f6d5-4f4d-bfbc-dd19d4ae94fd.jpg",
+      "alt": "What Happened to Cruise Nights? How Hot Rodding’s Favorite Ritual Evolved",
       "credit": "Steven Rupp"
     },
     {
@@ -2986,47 +3002,42 @@ export const storybookGalleryImagesByBrand: Record<string, StorybookGalleryImage
       "src": "https://hips.hearstapps.com/hmg-prod/images/ce09bd28-a342-4b77-acc8-5b03bca24e4e.jpg",
       "alt": "Beyond the Show Cars: 10 New SEMA Products That Stood Out",
       "credit": "John McGann"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/3c3e90b4-e32d-4b2a-a39d-3d83a29d6b35.jpg",
-      "alt": "Direct Connection Adds Six Hemi Crate Packages to the V-8 Mix",
-      "credit": "Dodge"
     }
   ],
   "motortrend": [
     {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/105543a3-aad1-4c28-964b-9255b6469747.jpg",
+      "alt": "Forget the Boss 302: This Saleen Mustang Had Parnelli Jones’ Name on It",
+      "credit": "MotorTrend"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/c7251981-fbfe-4568-aeb4-a77a72e4ae4f.jpg",
+      "alt": "The 2027 Subaru Cars Lineup: Two Special Editions and a New Base Impreza",
+      "credit": "MotorTrend"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/cb86451e-e9d3-4b96-a54f-09cb2922dc75.jpg",
+      "alt": "Tested: Chevrolet’s 2027 Silverado ZR2 Builds on the Previous Truck’s Winning Formula",
+      "credit": "MotorTrend"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/5e9f2e56-1484-4131-b282-62c2a3957190.jpg",
+      "alt": "The 2028 Volvo XC60 T8 Doubles Its EV Range. Is That Enough to Keep It Competitive?",
+      "credit": "MotorTrend"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/083a61e3-b6ae-4fd8-8837-3196e44c68a5.jpg",
+      "alt": "The 2028 Volvo XC90 T8 Just Got a Massive Range Boost",
+      "credit": "MotorTrend"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/df862a2c-dcde-4b21-858b-d725551db45f.jpg",
+      "alt": "Ford’s New GT41 Hypercar Revives Its Le Mans Rivalry With Ferrari",
+      "credit": "MotorTrend"
+    },
+    {
       "src": "https://hips.hearstapps.com/mtg-prod/65c4072203061a0008ab0a67/2021-jeep-grand-cherokee-16.jpg",
       "alt": "Which Used Jeep Grand Cherokee Is the Best to Buy? We Look at the Last Three Generations",
-      "credit": "MotorTrend"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/73e82b8d-d180-4e75-8377-8add7d60fb96.jpg",
-      "alt": "The 2027 Sierra Is a Budget Truck That Forgot to Act Cheap",
-      "credit": "MotorTrend"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/150a91f3-4828-428a-bb03-649804091893.jpg",
-      "alt": "America’s Auto Industry Was Built on Some Truly Wild Gambles",
-      "credit": "MotorTrend"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/90cc9bb5-ba57-4970-86a8-2d122b1487d8.jpg",
-      "alt": "We Tried Out Pirelli’s Smart Cyber Tire. Here’s Why It’s Fascinating Tech With Big Upside",
-      "credit": "MotorTrend"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/d71af329-f09f-42a9-8b3f-36ea2d2a6401.jpg",
-      "alt": "RE Amemiya Proved the Mazda RX-7 Still Had Plenty of Life Left",
-      "credit": "MotorTrend"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/9098eae1-a612-41c2-8dce-ef3317af522b.jpg",
-      "alt": "Genesis, Act II: Luxury Brand Has Big Plans as It Enters Its Second Decade",
-      "credit": "MotorTrend"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/5e07a50c-6cc9-40ac-9063-767b38417154.jpg",
-      "alt": "Tested: Remember When Good EVs Were Too Expensive? The 2027 Kia EV3 Is Helping to Change That",
       "credit": "MotorTrend"
     }
   ],
@@ -3037,6 +3048,26 @@ export const storybookGalleryImagesByBrand: Record<string, StorybookGalleryImage
       "credit": "Porsche"
     },
     {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/decc4528-0b6c-4e68-b44b-9d6982795729.jpg",
+      "alt": "Pay Now, Save Later: Why It Makes Sense to Buy a More Expensive Old Car",
+      "credit": "Illustration by Micha Huigen"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/5422f4b3-a8b6-4425-9da5-dd698f8901f3.jpg",
+      "alt": "Save Now, Pay Later: Why It Makes Sense to Buy a Less Expensive Old Car",
+      "credit": "Illustration by Micha Huigen"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/tvr-1650979167.jpeg",
+      "alt": "TVR Returns From The Dead. Again",
+      "credit": "TVR"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/6738296b-6708-4a93-9498-eb7f002cf080.jpg",
+      "alt": "Tested: The 2028 Volvo XC60 T8 Is the Rangiest Plug-In Hybrid",
+      "credit": "Volvo"
+    },
+    {
       "src": "https://hips.hearstapps.com/hmg-prod/images/68ed5b54-3bdf-4f0c-b458-fb7e199bff96.jpg",
       "alt": "One More Than GT40: The Ford GT41 Le Mans Hypercar Is Finally Here",
       "credit": "Ford"
@@ -3045,66 +3076,56 @@ export const storybookGalleryImagesByBrand: Record<string, StorybookGalleryImage
       "src": "https://hips.hearstapps.com/hmg-prod/images/f3ca7dc6-2393-4255-a520-29bc90ad94fa.jpg",
       "alt": "Tested: 2027 Audi SQ7 Is the Punchier 3-Row SUV",
       "credit": "Audi"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/d63c0d78-a096-460e-8014-d56ec6e2d648.jpg",
-      "alt": "A Change of Tune: How the 2000s Changed How We Listen to Music in Cars",
-      "credit": "Illustration by Sophie Donaj"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/24a56daf-7fca-4d06-9186-15962481c97e.jpg",
-      "alt": "The Acura Integra Type S Is Now on Sale in Japan—As an Acura, Not a Honda",
-      "credit": "Acura"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/733b5749-f9be-46c9-a4f0-a74b08c3ad24.jpg",
-      "alt": "Carnegie Mellon’s Buggy Is the 100-Year-Old Race Series You Never Knew About, But Won’t Be Able to Stop Watching",
-      "credit": "CMU Buggy / Allen Howard"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/df3bfd8d-1f5d-4189-bb37-3fcc1d0cbe1c.jpeg",
-      "alt": "Gordon Ramsay Is the New Host of the BBC’s ‘Top Gear’",
-      "credit": "Alex Bierens de Haan"
     }
   ],
   "elle": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/429c417f-b008-4025-aaa1-620e2eae822d.jpg",
-      "alt": "These Perfumes Are Basically Main Character Energy in a Bottle",
-      "credit": "NurPhoto via Getty Images"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/a61da03e-1f36-4af3-b0ab-b9431dc7986e.png",
+      "alt": "Frame’s Black Friday Sale Is a Denim Lover’s Dream",
+      "credit": "FRAME"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/7f468992-6fe2-4130-96d0-8991b3c4fac5.jpeg",
-      "alt": "The Most Flattering Hairstyles for Women Over 50, From Bobs to Long Layers",
-      "credit": "Kevin Winter/GA"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/f3ee4dd9-81de-47c3-b191-4ba892eba15f.jpeg",
+      "alt": "The Best Eye Makeup to Wear Over 40, From Cream Shadows to Soft Liners",
+      "credit": "Frazer Harrison"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/7ffb1ed3-d50d-442e-b0fa-8a3faffd083f.jpg",
-      "alt": "Why Is Fashion So Obsessed With Distressing?",
-      "credit": "Spotlight / Launchmetrics"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/e9a17d9c-e0cc-4258-8bc8-52572d7dd871.jpeg",
+      "alt": "Inside Meghan Markle and Prince Harry’s Plans for Their First Thanksgiving Back in the U.K.",
+      "credit": "Christopher Furlong"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/15684ffd-bb4e-492e-965f-14783777800b.jpg",
-      "alt": "Knee-High Boots and Jeans Are a Classic Combo—Here’s How to Style Them",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/ee828d30-74eb-488a-a863-d67ad0a01fcd.jpg",
+      "alt": "Lululemon’s Black Friday Sale Is Here—Shop These Fan Favorites Before They Sell Out",
+      "credit": "Lululemon"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/ba46dd82-39a3-443a-ba2e-0bc060a46647.jpeg",
+      "alt": "The Best Amazon Black Friday Deals to Shop Before They Sell Out",
+      "credit": "Edward Berthelot"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/78f4f6b8-dc96-4766-88dc-4d13567a3312.jpg",
+      "alt": "Glitter Makeup Is Taking Over Party Season—These Picks Make It Wearable",
       "credit": "Getty Images"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/f91ab168-26cd-40b9-9f72-2e5d84dbe7c9.jpg",
-      "alt": "11 Engagement Nail Ideas That Feel Romantic, Polished, and Photo-Ready",
-      "credit": "Getty Images/iStockphoto"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/pisces-final-65c5440b949f5.jpg",
-      "alt": "Pisces Daily Horoscope",
-      "credit": "Spiros Halaris"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/bc4d6795-23fc-410a-b935-0fae696ea987.jpg",
-      "alt": "The Rings of Power Season 4: Everything We Know So Far",
-      "credit": "Amazon Prime Video"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/d2e6deda-8309-41eb-b706-0ccd0e11ad5f.jpg",
+      "alt": "The Best Black Friday Deals ELLE Editors Are Shopping, From Fashion and Beauty to Tech and Home",
+      "credit": "Ugg, Ring Concierge, Levi's, Prada Beauty, Medicube"
     }
   ],
   "elle-decor": [
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/ff7c2b44-8e05-4eeb-9ff6-123964f3842b.jpg",
+      "alt": "Obsession: The Comforter That Keeps Me in Bed",
+      "credit": "Parachute"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/612d4357-75e3-442a-8cf0-47527ff9b6d7.jpg",
+      "alt": "Saatva’s Luxury Mattresses Are 20 Percent Off for Black Friday—Only With Our Exclusive Code",
+      "credit": "Product Shot Image"
+    },
     {
       "src": "https://hips.hearstapps.com/hmg-prod/images/2f820c1c-1560-497e-83d7-947a25f09ec6.jpeg",
       "alt": "Is It Rude to Ask Guests to Take Their Shoes Off at Your House?",
@@ -3129,53 +3150,43 @@ export const storybookGalleryImagesByBrand: Record<string, StorybookGalleryImage
       "src": "https://hips.hearstapps.com/hmg-prod/images/ed-article-real-estate-65f1fa90aca8f.png",
       "alt": "Inside Anmer Hall, Kate Middleton and Prince William’s Country Retreat",
       "credit": "Photo by Indigo/Getty Images; Photo by Stephen Pond/Getty Images"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/69af75ce-98f5-441b-8453-b0b2a40b383e.jpg",
-      "alt": "A Landmark All-Lalanne Sale Is Heading to Sotheby’s",
-      "credit": "Jamie Chung"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/43bfc6f9-3c5a-4cb7-815f-19e8e703212e.jpg",
-      "alt": "Carolina Herrera Takes Miami with a New Art-Filled Boutique",
-      "credit": "Joe Schildhorn/BFA.com"
     }
   ],
   "esquire": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/8a7c9788-0b51-4a85-b651-29ae58503619.jpeg",
-      "alt": "Forget Plymouth Rock This Thanksgiving. American History Is Better Reflected by a Different Stone.",
-      "credit": "Bettmann"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/e2711fe3-8adf-48b4-929b-6a68d2b31fca.png",
+      "alt": "Every Pair of Levi’s Is on Sale for Black Friday, Starting at 40% Off",
+      "credit": "Levi's"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/be0ec7b4-ede4-4076-aa54-1f0d674cc5cf.jpg",
-      "alt": "26 Gifts for the Dad Who Said He Didn’t Want Anything",
-      "credit": "Quince/Carl Friedrik/CB2"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/3b4c96db-aae1-4e57-bd2f-53a95cd953be.png",
+      "alt": "Amazon’s Lego Deals Are Rarely This Good",
+      "credit": "Lego"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/e5c1352e-d51b-4050-bf47-3c1b2966850f.png",
-      "alt": "The 33 Best Gifts for the Snobbiest People You Know",
-      "credit": "Brunello Cucinelli, Bvlgari, L'Objet, Lucy's Lamps, Meraki, Parfums de Marly"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/2c05eab0-df1a-4131-971a-de084381fde0.png",
+      "alt": "The MacBook Neo Is on Sale for the First Time Ever",
+      "credit": "Apple"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/d514c4c2-600e-457a-9e47-a6a9b81578ae.jpg",
-      "alt": "Why The Rings of Power Will Never Be the Same After the Season 3 Finale",
-      "credit": "Ben Rothstein/Prime"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/3b9870a1-f882-4453-bb3a-c2f129638f6b.jpg",
+      "alt": "Don’t Skip Hoka’s Black Friday Sale on Its Best Sneakers",
+      "credit": "Hoka"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/708fac45-5eda-4a46-b2ad-6f33d5b45c88.png",
-      "alt": "How Does Owen Wilson Find His Zen?",
-      "credit": "Esquire"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/616ef6be-4a1c-458c-a6ac-e91b827a07be.png",
+      "alt": "Lululemon’s Black Friday Sale Is Stacked",
+      "credit": "Lululemon"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/4f68f14e-9095-4beb-aac6-c7be476bdb81.jpg",
-      "alt": "The 70+ Best Black Friday Deals We’re Shopping This Year",
-      "credit": "Apple/New Balance/Levi's/J. Crew/Therabody/The North Face"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/b7088dfd-36f6-4e23-bda1-c075de6186a4.png",
+      "alt": "Amazon’s Black Friday MacBook Deals Are Pretty Impressive",
+      "credit": "Apple"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/0db302ad-4c3b-4cdb-a48f-8697e8e07b04.jpg",
-      "alt": "13 Menswear Sales Worth Shopping on Black Friday",
-      "credit": "Levi’s/Del Toro /Lacoste"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/0cf61dca-a7fa-4f51-907f-332c0fa57160.png",
+      "alt": "The Only Apple Deals Worth Your Dollar This Black Friday",
+      "credit": "Apple"
     }
   ],
   "harpers-bazaar": [
@@ -3200,19 +3211,18 @@ export const storybookGalleryImagesByBrand: Record<string, StorybookGalleryImage
       "credit": "Ida Marie Odgaard/EPA/Shutterstock"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/a2406e8e-c89a-40c7-92bd-0d5ccdb2ec13.jpg",
-      "alt": "Sophia Laforteza Reunites With Fellow Katseye Members on a Stylish Evening Out",
-      "credit": "STAR INFLUX LA / BACKGRID"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/65146b93-36ad-4064-9f0b-b25abd56326a.jpeg",
+      "alt": "Everything to Know About DeMellier’s Black Friday Sale",
+      "credit": "DeMellier"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/dba60a46-9fa0-40e1-a2b9-3beb3db7842d.jpeg",
-      "alt": "Simone Ashley and Nicola Coughlan Have a Bridgerton Reunion on the Only Murders in London Red Carpet",
-      "credit": "Shane Anthony Sinclair"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/a1d3e055-56ed-4094-b7be-979a606d19bb.jpg",
+      "alt": "The Best Black Friday Sales to Shop Right Now",
+      "credit": "SARAH OLIVERI"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/8cad19ae-4b90-4c88-89ea-87b95b389ce0.jpg",
-      "alt": "The Berkshires Are Made for a Soft-Life Getaway",
-      "credit": "Miraval Berkshires"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/c2d4ff0c-7940-4f98-8e5b-e998330146ce.jpg",
+      "alt": "All the Best Black Friday 2026 Beauty Deals to Shop Now"
     }
   ],
   "town-and-country": [
@@ -3237,22 +3247,32 @@ export const storybookGalleryImagesByBrand: Record<string, StorybookGalleryImage
       "credit": "Alex Dani"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/8c4220ea-d51d-4c48-af81-aa911933d71d.jpg",
-      "alt": "Rocker Wins Best in Show at the 25th Annual National Dog Show",
-      "credit": "Steve Donahue/SeeSpotRunPhotos"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/178097e7-0992-4003-bbc8-cc4da6788e35.jpg",
+      "alt": "Who Are Caroline Ellison’s Parents?",
+      "credit": "Netflix"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/5ca36900-6ee3-4f8f-bc3b-18ddf81ed326.jpg",
-      "alt": "Inside London’s Most Exclusive New Library with the Royal Family’s Favorite Bookseller",
-      "credit": "CAUDWELL/Andy Paradise"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/ecc21d3b-f3df-42bc-8c5f-fd357b4523ce.png",
+      "alt": "So Many of Oprah’s Favorite Things Are on Sale for Black Friday",
+      "credit": "Product Shot Image"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/5ce7a3f6-7194-4078-ab9d-f2e10fe73976.jpg",
-      "alt": "From the Archives: Pumpkin Power",
-      "credit": "Town & Country Archives, 1985"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/346e7366-9c8b-4625-a00a-3e30f3537d97.jpg",
+      "alt": "Effective Altruism on The Altruists , Explained",
+      "credit": "Netflix"
     }
   ],
   "veranda": [
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/shonda-rhimes-la-apartment-living-room-vertical-696a7839247f9.jpg",
+      "alt": "How to Know When Your Art Needs Restoration, According to an Expert",
+      "credit": "Michael Mundy for VERANDA"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/cca56edd-2c5e-4dcf-9654-3e6ebff9c593.jpg",
+      "alt": "Ben Pentreath and Charlie McCormick Give Holiday Decorating a Madcap Twist—Dancing Cats Included",
+      "credit": "Courtesy of Ben Pentreath"
+    },
     {
       "src": "https://hips.hearstapps.com/hmg-prod/images/cfa1d7a1-a37d-40d4-a25f-99aed77e1cb5.jpg",
       "alt": "The 12 Best Luxury Travel Deals to Score This Black Friday and Cyber Monday",
@@ -3277,32 +3297,22 @@ export const storybookGalleryImagesByBrand: Record<string, StorybookGalleryImage
       "src": "https://hips.hearstapps.com/hmg-prod/images/5a38a724-02b7-4f1a-9fdd-fd4f390cdbda.jpg",
       "alt": "The Designer Advice Everyone Wants to Know",
       "credit": "Brian Woodcock for VERANDA"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/3baaf768-eb87-4830-bf99-db93eef8aedd.png",
-      "alt": "Your Personal Playbook for Living Beautifully",
-      "credit": "Boz Gagovski for VERANDA"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/girl-holding-tall-stack-of-christmas-presents-royalty-free-image-1695224107.jpg",
-      "alt": "21 Playful Gifts for the Kiddos in Your Life",
-      "credit": "Klaus Vedfelt"
     }
   ],
   "best-products": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/11-year-old-girl-gifts-1641573894.jpg",
-      "alt": "44 Gifts for 11-Year-Old Girls They'll Brag About to Their Friends",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/123c5589-5e0c-408c-840c-01d7f7804856.jpg",
+      "alt": "All the Best Black Friday Deals, According to Shopping Editors",
       "credit": "Getty Images"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/81up8nsixel-ac-sl1500-699139ae74e55.jpg",
-      "alt": "Best Gifts for 2-Year-Olds That Spark Instant Joy",
-      "credit": "Step2"
     },
     {
       "src": "https://hips.hearstapps.com/hmg-prod/images/eb247344-44a7-4f4d-968c-2204076a4644.png",
       "alt": "The Best Amazon Deals: Save Up to 45% Off on Editor-Approved Tech, Home Essentials, and More",
+      "credit": "Product Shot Image"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/429520dd-ced9-4b01-b022-27e715d3dbd3.png",
+      "alt": "Black Friday 2026 Toy Deals: The Best Sales to Shop Now",
       "credit": "Product Shot Image"
     },
     {
@@ -3311,22 +3321,37 @@ export const storybookGalleryImagesByBrand: Record<string, StorybookGalleryImage
       "credit": "Stefan Vazharov"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/429520dd-ced9-4b01-b022-27e715d3dbd3.png",
-      "alt": "Black Friday 2026 Toy Deals: The Best Sales to Shop Now",
-      "credit": "Product Shot Image"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/11-year-old-girl-gifts-1641573894.jpg",
+      "alt": "44 Gifts for 11-Year-Old Girls They'll Brag About to Their Friends",
+      "credit": "Getty Images"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/d0393684-2b49-4a1f-bd71-19809982c969.jpg",
+      "alt": "Best Gifts for 2-Year-Olds That Spark Instant Joy",
+      "credit": "Getty Images"
     },
     {
       "src": "https://hips.hearstapps.com/hmg-prod/images/d784f69d-774c-48f3-9410-f0ea97acee2b.png",
       "alt": "Lola Blankets’ Black Friday Sale Is Here, Saving You 50%",
       "credit": "Product Shot Image"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/2c05eab0-df1a-4131-971a-de084381fde0.png",
-      "alt": "The MacBook Neo Is on Sale for the First Time Ever",
-      "credit": "Apple"
     }
   ],
   "bicycling": [
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/6de898d8-5b91-4bd8-84de-11e96359d1dd.jpg",
+      "alt": "Our Editors Tested the Zwift Ride Against Pricier Indoor Bikes. Now It’s $999 for Black Friday",
+      "credit": "Trevor Raab"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/r0003861-68ed1c0a7043e.jpg",
+      "alt": "Garmin Black Friday Deals Are Live—These Editor-Picked Bike Computers, Radars, and Watches Are Worth Buying",
+      "credit": "Dan Chabanov"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/0939e254-a1e3-4916-8169-3f5ef2416390.jpeg",
+      "alt": "Garmin Radar, Wahoo Trainers, Pearl Izumi Gear, and Gravel Bikes: The REI Black Friday Deals Cyclists Should See",
+      "credit": "Michael M. Santiago"
+    },
     {
       "src": "https://hips.hearstapps.com/hmg-prod/images/9356ba9e-b472-4ee4-b757-782978c597df.jpg",
       "alt": "In Praise of the Charity Ride, One of the Most Underrated Ways to Tackle Your First Century—or Any Big Cycling Goal",
@@ -3346,58 +3371,43 @@ export const storybookGalleryImagesByBrand: Record<string, StorybookGalleryImage
       "src": "https://hips.hearstapps.com/hmg-prod/images/93f6fe93-42c2-4a51-9219-49e21bb38a9c.jpeg",
       "alt": "Upgrade Your Winter Rides for Less With the Best Black Friday Cycling Deals Our Editors Found",
       "credit": "Trevor Raab"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/7113a6dd-b966-4b3d-b3b9-c2121fe33ac4.jpeg",
-      "alt": "This Winter I’m Turning to the CORE Temperature Monitor to Help Unlock My Strongest Season Yet",
-      "credit": "Jason Griffin"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/45804baf-1fb7-442d-a8ab-2618f59d0c6a.jpg",
-      "alt": "Our Editors Tested Winter Cycling Gear in the Coldest Temps. Which 11 Picks Deliver Real Warmth?",
-      "credit": "Trevor Raab"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/4857e790-e177-4dbe-b937-5b8999bcb0c3.jpg",
-      "alt": "Why Do Cyclists Care So Much About Freehub Sound? We Put Them to the Test",
-      "credit": "Hearst Owned"
     }
   ],
   "mens-health": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/d4bdd687-ea92-4fa3-ade5-e751dc8b6c01.jpeg",
-      "alt": "The Hybrid Training Formula to Run Fast and Lift Heavy",
-      "credit": "Altra"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/24118268-377f-4b78-8b8f-1f8ef9760c87.png",
+      "alt": "Braun Makes the Best Electric Razor and Beard Trimmer. Its Best Prime Day Deal Is on Something Even Better.",
+      "credit": "JASON SPEAKMAN"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/e565342f-5797-402b-b1b9-814ce4528401.jpg",
-      "alt": "The Best Treadmills for Your Home Gym, Tested by Fitness Editors",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/2cc360a3-63f5-4afb-b893-43bf88f30ead.png",
+      "alt": "Black Friday Dress Shoe Sale: Our Editor-Tested Favorites Are Up to 64% Off",
       "credit": "Courtesy of Retailer"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/53bb2e7b-432e-4388-984c-a464acf6dbf9.png",
-      "alt": "These Are the 46 Best Action Movies Ever Made",
-      "credit": "MH Illustration/Getty"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/best-new-tv2-69af0a607373b.png",
-      "alt": "The 61 Best New Shows of 2026 (and 1 More We Can't Wait For)",
-      "credit": "Jason Speakman/MH Illustration/Netflix/HBO/Apple TV/Prime Video/ABC"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/fddf819c-9ccc-4bdf-9538-9876b098746a.png",
-      "alt": "The Best Black Friday Fitness Deals, According to Our Editors",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/cfdc80b6-0d7d-44ba-bb01-ea73476de923.jpg",
+      "alt": "The 6 Best Ellipticals Right Now, Tested and Reviewed by Fitness Experts",
       "credit": "Courtesy of Retailer"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/a66b1f05-a181-47e3-a47e-a6db0c3f8066.png",
-      "alt": "The 94 Best Movies of 2026 So Far (and 11 More We Can't Wait For)",
-      "credit": "MH Illustration/Jason Speakman/Universal/Mubi/A24/Marvel/Warner Bros/Paramount/Sony/Searchlight/Ketchup"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/e3e9fe75-efca-44c5-af83-14b5750db450.png",
+      "alt": "Our Top-Tested Pickleball Paddle Is on Sale for Black Friday",
+      "credit": "Retailer"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/gettyimages-2114666425-69af121ac3dfc.jpg",
-      "alt": "21 Ways Men Can Make Their Orgasms Even Better",
-      "credit": "Tomekbudujedomek"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/fa34ac5e-031e-473e-a2d2-5d235fd9960a.png",
+      "alt": "Vuori vs. Lululemon? These Black Friday 50% Off Deals Have Me Torn",
+      "credit": "Courtesy of Retailer"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/854a3408-2728-49f7-9248-4d0187babbf0.png",
+      "alt": "Mack Weldon Marked Down the Best Underwear I’ve Tested for Black Friday",
+      "credit": "Courtesy of Retailer"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/b180457d-91b4-4052-9be6-e87e35013be2.png",
+      "alt": "Apple Black Friday Deals Are Live. These Editor-Tested Watches and AirPods Are Actually Worth Buying.",
+      "credit": "Brett Williams"
     }
   ],
   "oprah-daily": [
@@ -3407,9 +3417,14 @@ export const storybookGalleryImagesByBrand: Record<string, StorybookGalleryImage
       "credit": "Product Shot Image"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/d315bc29-397f-4267-aef1-63c358c4ddbd.jpg",
-      "alt": "9 Small Businesses to Support This Holiday Season",
-      "credit": "Hearst Owned"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/618f2d89-407c-40bb-b9e8-1bfed97380d0.jpg",
+      "alt": "We Found Record-Low Black Friday Prices on Apple Tech, Including Oprah-Loved AirPods",
+      "credit": "Product Shot Image"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/2cb36bd7-006e-4bf7-933e-42fc78ea1277.jpg",
+      "alt": "Cozy Earth’s Black Friday Sale Means at Least 20% Off Oprah-Selected Gifts & Editor Favorites",
+      "credit": "Product Shot Image"
     },
     {
       "src": "https://hips.hearstapps.com/hmg-prod/images/2f42cabe-48b7-47ca-a23e-123c06bc7de9.jpg",
@@ -3427,50 +3442,46 @@ export const storybookGalleryImagesByBrand: Record<string, StorybookGalleryImage
       "credit": "Getty Images"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/ce84d986-338f-4025-bb87-ecaba955d9cc.jpg",
-      "alt": "All of the New Oprah’s Favorite Things on Sale for Black Friday",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/1f9f77ff-af75-413e-bda9-553ad3561d1b.jpg",
+      "alt": "Black Friday Lola Blanket Deals: Take 50% Off Sitewide For a Limited Time",
       "credit": "Hearst Owned"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/32b09f0c-905e-4d7b-8e6d-12adcfccf589.jpg",
-      "alt": "Long-Distance Friendship Gifts That Make the Miles Feel Smaller",
-      "credit": "Product Shot Image"
     }
   ],
   "popular-mechanics": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/3edea586-acf0-4a41-9cc1-5f6d2e3858e9.jpg",
-      "alt": "The Unexpected Origins of the Chainsaw",
-      "credit": "Hearst Owned"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/24b23f66-cef8-47f9-8718-fa4f86c5e816.png",
-      "alt": "The 8 Best Trail Cameras for Hunting, Wildlife Watching, and Even Home Security",
-      "credit": "Justin Park"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/vosteed-ultra-thin-pocket-knife-005-691f2d4159946.jpg",
-      "alt": "The 7 Best Pocket Knives for Everyday Tasks and Outdoor Adventures",
-      "credit": "Justin Park"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/battery-tender-800-amp-002-68ac8b03a61d9.jpg",
-      "alt": "The 7 Best Portable Jump Starters to Bring Your Vehicle Back to Life",
-      "credit": "Doug Newcomb"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/cd0a2d55-95e3-4f24-9277-b45983dbc511.jpg",
-      "alt": "The 8 Best Electric Scooters Built for the Daily Commute—And Beyond"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/c461de47-e066-438b-8bfd-0d8f2b829998.jpg",
-      "alt": "The 9 Best Binoculars, According to Our Tests and Research",
-      "credit": "Justin Park"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/jeep-energizer-flashlight-016-691f67b2a9d10.jpg",
-      "alt": "The 6 Best Flashlights for Everyday Use",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/9bd0db55-bb0b-40ab-8252-2e32a5b2f955.png",
+      "alt": "We Found the Best Black Friday Amazon Sales on Power Tools, Power Stations, Apple Tech, and More",
       "credit": "Trevor Raab"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/f34b15ce-32be-4980-a6be-ba3be66f6507.png",
+      "alt": "We Rounded Up the Best Black Friday Gaming Deals We Found So Far. Save up to 57% on Editor-Tested Favorites.",
+      "credit": "Thomas Hengge"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/1af09e4e-70a7-4692-a170-5b7318532bd7.png",
+      "alt": "Best Black Friday Phone Deals: Save Hundreds Now on Your Next Upgrade",
+      "credit": "Stefan Vazharov"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/2230df37-a95b-438e-b947-ed016b065d89.png",
+      "alt": "Black Friday Deals Are Live, and These DeWalt Tools Are Up to 63% Off",
+      "credit": "Trevor Raab"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/8691ac0c-5006-4425-a074-a0d663a84a31.png",
+      "alt": "Amazon’s Secret Lego Section Is Stacked With Deals—Take Over 50% Off During Black Friday",
+      "credit": "Product Shot Image"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/5940f257-5091-468f-9383-bbcd9beff743.png",
+      "alt": "Our Favorite Multitools Are on Sale for Over 40% Off For Black Friday",
+      "credit": "Thomas Hengge"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/02dfd5d4-68c1-4d5a-83f6-4ec199415ced.png",
+      "alt": "Take Up to 60% Off Dozens of Editor-Tested TVs During Black Friday",
+      "credit": "Winston Zhou"
     }
   ],
   "runners-world": [
@@ -3480,97 +3491,97 @@ export const storybookGalleryImagesByBrand: Record<string, StorybookGalleryImage
       "credit": "Itai Epstein"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/289a04dc-5536-4a61-9903-76ce515b9e1f.jpg",
-      "alt": "Start the Day Strong With This 30-Minute Workout You Can Do Right at Home",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/ce18963e-b8fd-4991-b74a-d283a18a78ea.png",
+      "alt": "Score Gear of the Year Winner Adidas Adizero Evo SL on Sale for Black Friday, Plus Tons More Shoe Deals",
+      "credit": "Thomas Hengge"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/0a8ede9b-cad9-459e-8d22-c782da4846e5.png",
+      "alt": "Editor-Favorite Running Shoes Are Marked Down on Amazon for Black Friday—Save on Brooks, Asics, Saucony, and More",
+      "credit": "Thomas Hengge"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/aecea685-fd88-4c36-8e4d-fb3f7039309a.png",
+      "alt": "Your Favorite Running Kit for Less: Shop Bandit’s Rare Black Friday Sale Now",
+      "credit": "Product Shot Image"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/943e49dc-5056-4dde-a2d8-500ff7fcf133.png",
+      "alt": "All the Brooks Running Shoes and Apparel on Sale Now for Black Friday",
       "credit": "Trevor Raab"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/53901150-c9de-49ca-a25b-beb549e06808.jpg",
-      "alt": "I Thought I Was Getting Slower Because of Age. Then an Incidental Scan Revealed the Real Problem—and Likely Saved My Life.",
-      "credit": "Courtesy Caleb Daniloff"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/d25b649f-052f-42d5-84bd-acb99b27deaa.png",
+      "alt": "Our Editors’ Favorite lululemon Running Gear Starts at Just $39 for Black Friday",
+      "credit": "Thomas Hengge"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/516ecd05-765f-4fb8-bea9-caa744e73bb3.jpeg",
-      "alt": "Your Holiday Gift for Every Type of Fitness Enthusiast",
-      "credit": "Altra"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/16896abc-75ca-4ce0-8230-cb3534d5e7b2.png",
-      "alt": "Hoka’s Award-Winning Arahi 8 Just Dropped to Under $100",
-      "credit": "Trevor Raab"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/58d3f5d3-e38e-46bb-b854-55a8b59b7ccc.jpg",
-      "alt": "‘Just a Guy With a Boat on His Head’: He’s Running 52 Marathons in 52 Weeks—While Carrying a Canoe Every Step",
-      "credit": "Dan Barnhart"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/29fa7cc1-a18d-4552-b970-aefc28e937d6.png",
-      "alt": "Shop Treadmill Sales to Save Up to 30% on Top Treadmills for Black Friday",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/c284555c-2383-4dbf-b425-205d8fb10eb9.png",
+      "alt": "Our Editors Found the Best Walking Shoes on Sale for Black Friday—Save Up to 50%",
       "credit": "Trevor Raab"
     }
   ],
   "womens-health": [
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/77856265-2293-454a-80b1-e21fad1b69ba.jpg",
-      "alt": "Researchers Just Figured Out a Way to Detect Ovarian Cancer Earlier Than Ever",
-      "credit": "Getty Images"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/2a930eae-d768-4d33-b23a-af283fa0d9b8.png",
+      "alt": "The Best Black Friday Shampoo Deals to Grab Before Your Favorite Brands Sell Out",
+      "credit": "Fable & Mane"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/3619cb8e-065a-4f61-8b07-0ad9c1df2485.png",
-      "alt": "Our Favorite On Shoes Are Up to 37% Off for Black Friday",
-      "credit": "On"
+      "src": "https://hips.hearstapps.com/hmg-prod/images/strength-training-transformation-upper-body-discipline-699e19a73d277.jpg",
+      "alt": "'I Kickstarted My Upper-Body Strength Transformation Using Only A 25-Lb. Bag Of Rice'",
+      "credit": "Pilar Lewis"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/f31e86d7-26f2-4fb2-9045-03982f46d718.png",
-      "alt": "9 Best Cooling Sheets for More Comfortable Sleep, Tested by Editors",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/a907e228-905a-4d65-bbb9-c4057b36e327.png",
+      "alt": "Black Friday Microcurrent Device Sales: Save Up to 64% on Our Favorite Face Sculpting Tools",
+      "credit": "NuFace"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/7b5c78e8-4280-46a8-8fca-c5eadc8fe884.png",
+      "alt": "The Vuori and Baleaf Black Friday Leggings Deals We’re Shopping This Year",
+      "credit": "Vuori"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/5f41ccea-9987-46d4-9d92-9056cea1c469.png",
+      "alt": "Women’s Health Readers Can Unlock Exclusive Savings on Saatva Mattresses for Black Friday",
       "credit": "Hearst Owned"
     },
     {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/ead893f5-9c4f-4fbb-9055-0932a66a58b6.jpg",
-      "alt": "The Secrets to Whole-Life Training",
-      "credit": "Altra"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/go-big-or-go-home-69979360a5504.jpg",
-      "alt": "Lifting Heavy Isn’t the Whole Story When It Comes to Building Strength. Here's What to Do Instead.",
-      "credit": "Getty Images/Jason Speakman"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/39977545-6a3b-4c4e-beea-41845ef32a22.jpeg",
-      "alt": "16 Best Strength Training Exercises to Build Muscle and Strength Fast",
-      "credit": "Tanavit Somdash"
-    },
-    {
-      "src": "https://hips.hearstapps.com/hmg-prod/images/93fa43a9-b0a9-48cb-84d4-f2700a5cf80c.png",
-      "alt": "Lululemon’s Rare Black Friday Sale Has 40% Off Align Leggings",
+      "src": "https://hips.hearstapps.com/hmg-prod/images/apple-sale-1-69ab151ad6224.jpg",
+      "alt": "Best Black Friday Apple Deals: Save Up to 41% on AirPods, iPads, and More",
       "credit": "Hearst Owned"
+    },
+    {
+      "src": "https://hips.hearstapps.com/hmg-prod/images/b2d7d08d-1b85-45dd-baff-0c3f61ec5dd8.jpg",
+      "alt": "The Best Walking Shoe Black Friday Deals: Save Up to 63% on Sneakers Our Editors Swear By",
+      "credit": "hearst owned"
     }
   ]
 };
 
 export const storybookTodayEditHoroscopeStory: LifestyleRiverStory = {
-  "id": "cosmopolitan-lifestyle-a74237890-december-monthly-horoscope-2026",
-  "brand": "Cosmopolitan",
-  "brandSlug": "cosmopolitan",
-  "topic": "Lifestyle",
-  "title": "Your December Horoscope by Zodiac Sign",
-  "summary": "We’re wrapping up the year with great momentum going into the new year.",
-  "image": "https://hips.hearstapps.com/hmg-prod/images/95b35b8c-f34a-4694-a242-15d2a71d0a5a.jpg",
-  "imageCredit": "Khadija Horton/Getty Images",
-  "byline": "Stephanie Campos",
-  "readTime": "3 min read",
-  "publishedAt": "2026-11-26T00:00:00.000Z",
-  "sourceUrl": "https://www.cosmopolitan.com/lifestyle/a74237890/december-monthly-horoscope-2026/",
-  "popularity": 95,
-  "signal": "Trending",
+  "id": "country-living-shopping-antiques-a74146656-what-to-thrift-holiday-season-zodiac-sign",
+  "brand": "Country Living",
+  "brandSlug": "country-living",
+  "topic": "Shopping",
+  "title": "What Your Zodiac Sign Says You Should Thrift This Holiday Season",
+  "summary": "Your next great vintage find? It might just be written in the stars.",
+  "image": "https://hips.hearstapps.com/hmg-prod/images/vintage-christmas-decorations-trends-1669157215.jpg",
+  "imageCredit": "BECKY LUIGART-STAYNER",
+  "byline": "Michaele Lehman",
+  "readTime": "4 min read",
+  "publishedAt": "2026-11-23T21:46:06.000Z",
+  "sourceUrl": "https://www.countryliving.com/shopping/antiques/a74146656/what-to-thrift-holiday-season-zodiac-sign/",
+  "popularity": 96,
+  "signal": "Editor Pick",
   "tags": [
-    "lifestyle",
-    "cosmopolitan",
+    "shopping",
+    "country living",
+    "what",
     "your",
-    "december",
-    "horoscope",
-    "zodiac"
+    "zodiac",
+    "sign"
   ],
-  "age": 19
+  "age": 93
 };
